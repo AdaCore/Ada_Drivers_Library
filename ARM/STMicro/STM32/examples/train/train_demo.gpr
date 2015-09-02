@@ -1,0 +1,36 @@
+project Train_Demo is
+
+   for Languages use ("Ada");
+
+   for Main use ("train_demo.adb");
+
+   for Source_Dirs use ("src", "../common", "../../drivers", "../../boards", "../../devices", "../../components", "../../utils");
+
+   for Object_Dir use "obj";
+
+   for Target use "arm-eabi";
+
+   for Runtime ("Ada") use "ravenscar-sfp-stm32f4";
+
+   package Compiler is
+      for Default_Switches ("ada") use
+        ("-O2", "-gnatwa", "-gnatQ", "-gnatw.X", "-ffunction-sections", "-fdata-sections");
+   end Compiler;
+
+    package Linker is
+      for Default_Switches ("ada") use
+        ("-Wl,-Map,train.map",
+         "-Wl,--gc-sections");
+    end Linker;
+
+   package Naming is
+      for Implementation ("last_chance_handler") use "last_chance_handler-stm32f429xx.adb";
+   end Naming;
+
+   package Ide is
+      for Program_Host use "localhost:4242";
+      for Communication_Protocol use "remote";
+   end Ide;
+
+end Train_Demo;
+

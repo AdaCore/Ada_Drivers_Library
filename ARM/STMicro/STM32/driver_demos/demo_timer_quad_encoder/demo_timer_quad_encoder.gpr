@@ -1,0 +1,53 @@
+project Demo_Timer_Quad_Encoder is
+
+   for Languages use ("Ada");
+   for Main use ("demo_encoder.adb");
+
+   for Source_Dirs use ("src", "../../drivers", "../../boards", "../../devices", "../../components", "../../utils");
+
+   type Build_Modes is ("debug", "production");
+   Build_Mode : Build_Modes := external ("Build", "debug");
+
+   for Object_Dir use "obj/" & Build_Mode;
+
+   for Target use "arm-eabi";
+
+   type Target_Boards is ("STM32F4-Disco", "STM32F429-Disco");
+   Target_Board : Target_Boards := external ("Target_Board", "STM32F4-Disco");
+
+   for Runtime ("ada") use "ravenscar-full-stm32f4";
+
+   package Compiler is
+      case Build_Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use ("-g", "-gnatwa", "-gnata", "-gnatQ", "-gnatw.X"); -- disable warnings about exceptions and LCH
+
+         when "production" =>
+            for Default_Switches ("ada") use ("-O2", "-gnatw.X", "-ffunction-sections", "-fdata-sections");
+            --  for Switches ("last_chance_handler-stm32f407xx.adb") use ("-gnatw.X", "-g");
+      end case;
+   end Compiler;
+
+   package Naming is
+      case Target_Board is
+         when "STM32F4-Disco" =>
+            for body ("last_chance_handler") use "last_chance_handler-stm32f407xx.adb";
+         when "STM32F429-Disco" =>
+            for body ("last_chance_handler") use "last_chance_handler-stm32f429xx.adb";
+      end case;
+   end Naming;
+
+   package Linker is
+      for Default_Switches ("ada") use (
+         "-Wl,-Map,test.map",
+         "-Wl,--gc-sections");
+     --, "-Wl,--print-gc-sections");
+    end Linker;
+
+   package Ide is
+      for Program_Host use "localhost:4242";
+      for Communication_Protocol use "remote";
+   end Ide;
+
+end Demo_Timer_Quad_Encoder;
+

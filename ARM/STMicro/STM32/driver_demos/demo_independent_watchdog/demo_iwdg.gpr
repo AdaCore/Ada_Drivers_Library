@@ -1,0 +1,63 @@
+project Demo_IWDG is
+
+   for Languages use ("Ada");
+   for Main use ("demo_iwdg.adb");
+
+   for Source_Dirs use ("src", "../../drivers", "../../boards", "../../devices", "../../components", "../../utils");
+
+   for Object_Dir use "obj";
+
+   type Build_Modes is ("debug", "production");
+   Build_Mode : Build_Modes := external ("Build", "debug");
+
+   type Runtimes is ("full", "sfp");
+   RTL : Runtimes := external ("RTL", "full");
+
+   for Runtime ("ada") use "ravenscar-" & RTL & "-stm32f4";
+   for Target use "arm-eabi";
+
+   type Target_Boards is ("STM32F4-Disco", "STM32F429-Disco");
+   Target_Board : Target_Boards := external ("Target_Board", "STM32F4-Disco");
+
+   package Compiler is
+      case Build_Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use ("-g", "-gnatwa", "-gnata", "-gnatQ", "-gnatw.X"); -- disable warnings about exceptions and LCH
+
+         when "production" =>
+            for Default_Switches ("ada") use ("-O2", "-gnatw.X");
+            --  for Switches ("last_chance_handler-stm32f407xx.adb") use ("-gnatw.X", "-g");
+      end case;
+   end Compiler;
+
+   package Naming is
+      case Target_Board is
+         when "STM32F4-Disco" =>
+            for body ("last_chance_handler") use "last_chance_handler-stm32f407xx.adb";
+         when "STM32F429-Disco" =>
+            for body ("last_chance_handler") use "last_chance_handler-stm32f429xx.adb";
+      end case;
+   end Naming;
+
+   package Builder is
+      for Global_Configuration_Pragmas use "gnat.adc";
+
+      case Build_Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use ("-g");
+
+         when "production" =>
+            for Default_Switches ("ada") use ();
+      end case;
+   end Builder;
+
+   package Ide is
+--        for Gnat use "arm-eabi-gnat";
+--        for Gnatlist use "arm-eabi-gnatls";
+--        for Debugger_Command use "arm-eabi-gdb";
+      for Program_Host use "localhost:4242";
+      for Communication_Protocol use "remote";
+   end Ide;
+
+end Demo_IWDG;
+
