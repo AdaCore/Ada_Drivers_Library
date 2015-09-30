@@ -83,6 +83,14 @@ package body STM32F42xxx is
          USART3_Clock_Enable;
       elsif This'Address = USART6_Base then
          USART6_Clock_Enable;
+      elsif This'Address = UART4_Base then
+         UART4_Clock_Enable;
+      elsif This'Address = UART5_Base then
+         UART5_Clock_Enable;
+      elsif This'Address = UART7_Base then
+         UART7_Clock_Enable;
+      elsif This'Address = UART8_Base then
+         UART8_Clock_Enable;
       else
          raise Unknown_Device;
       end if;
