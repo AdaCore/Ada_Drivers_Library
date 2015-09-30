@@ -8,7 +8,7 @@ project Demo_Timer_Quad_Encoder is
    type Build_Modes is ("debug", "production");
    Build_Mode : Build_Modes := external ("Build", "debug");
 
-   for Object_Dir use "obj/" & Build_Mode;
+   for Object_Dir use "obj";
 
    for Target use "arm-eabi";
 
@@ -24,7 +24,6 @@ project Demo_Timer_Quad_Encoder is
 
          when "production" =>
             for Default_Switches ("ada") use ("-O2", "-gnatw.X", "-ffunction-sections", "-fdata-sections");
-            --  for Switches ("last_chance_handler-stm32f407xx.adb") use ("-gnatw.X", "-g");
       end case;
    end Compiler;
 
@@ -39,9 +38,8 @@ project Demo_Timer_Quad_Encoder is
 
    package Linker is
       for Default_Switches ("ada") use (
-         "-Wl,-Map,test.map",
+         "-Wl,-Map,demo.map",
          "-Wl,--gc-sections");
-     --, "-Wl,--print-gc-sections");
     end Linker;
 
    package Ide is
