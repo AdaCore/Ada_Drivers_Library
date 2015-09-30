@@ -31,7 +31,7 @@
 
 with System.Machine_Code;  use System.Machine_Code;
 
-package body STM32F4.F407_FPU is
+package body STM32F4.FPU is
 
    use System, ASCII;
 
@@ -64,4 +64,4 @@ package body STM32F4.F407_FPU is
       return Result;
    end FPSCR;
 
-end STM32F4.F407_FPU;
+end STM32F4.FPU;

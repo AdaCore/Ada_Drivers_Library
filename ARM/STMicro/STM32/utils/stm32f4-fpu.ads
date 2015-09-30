@@ -32,6 +32,9 @@
 --  The Floating-point unit (FPU) provides IEEE754-compliant operations on
 --  single precision, 32-bit, floating-point values.
 
+--  Of particular interest may be the Sqrt function, implemented as a single
+--  machine code instruction.
+
 --  See ST Micro Application Note AN4044: "Using floating-point unit (FPU) with
 --  STM32F405/07xx and STM32F415/417xx microcontrollers" March 2012, Doc ID
 --  022737 Rev 1, file "DM00047230.pdf"
@@ -41,7 +44,7 @@
 --  May 2014 DocID022708 Rev 4, file "DM00046982.pdf"
 --  especially section 4.6.4
 
-package STM32F4.F407_FPU is
+package STM32F4.FPU is
 
    function Sqrt (X : Float) return Float;
 
@@ -74,8 +77,8 @@ package STM32F4.F407_FPU is
       -- flush to zero
       IDC       : Boolean;
       Reserved4 : Bits_2;
-      -- inexact result: the rounded (and returned) value is different from the
-      -- mathematically exact result of the operation
+      -- inexact result: the rounded (and returned) value is different from
+      -- the mathematically exact result of the operation
       IXC       : Boolean;
       -- underflow, result is a denorm
       UFC       : Boolean;
@@ -111,5 +114,5 @@ package STM32F4.F407_FPU is
 
    function FPSCR return Status_Control_Register;
 
-end STM32F4.F407_FPU;
+end STM32F4.FPU;
 
