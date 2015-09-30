@@ -37,7 +37,6 @@ package body Encoder_Emulator is
 
    procedure Start is
    begin
-      --  HAL_TIM_Encoder_Start ------
       Enable_Channel (Emulator_Timer, Channel_1);
       Enable_Channel (Emulator_Timer, Channel_2);
       Enable (Emulator_Timer);
@@ -106,7 +105,6 @@ package body Encoder_Emulator is
    procedure Initialize is
       Configuration : GPIO_Port_Configuration;
    begin
-      --  HAL_TIM_OC_MspInit ------------
       Enable_Clock (Emulator_Port);
 
       Enable_Clock (Emulator_Timer);
@@ -115,13 +113,10 @@ package body Encoder_Emulator is
       Configuration.Output_Type := Push_Pull;
       Configuration.Resistors := Pull_Up;
       Configuration.Speed := Speed_100MHz;
---        Configuration.Locked := True;
 
       Configure_IO (Emulator_Port, Emulator_Pins, Configuration);
       Configure_Alternate_Function (Emulator_Port, Emulator_Pins, Emulator_AF);
-      ----------------------------------
 
-      --  Init_TIM_Emulator ------------
       Configure
         (Emulator_Timer,
          Prescaler     => 0,
@@ -130,7 +125,6 @@ package body Encoder_Emulator is
          Counter_Mode  => Up);
 
       Emulate_Forward_Direction;
-      ----------------------------------
    end Initialize;
 
 begin
