@@ -60,7 +60,6 @@ package body Motor is
    procedure Initialize is
       Configuration : GPIO_Port_Configuration;
    begin
-      --  HAL_TIM_Encoder_MspInit ---------------
       Enable_Clock (Encoder_Tach0_Port);
       Enable_Clock (Encoder_Tach1_Port);
 
@@ -77,9 +76,7 @@ package body Motor is
 
       Configure_IO (Encoder_Tach1_Port, Encoder_Tach1_Pin, Configuration);
       Configure_Alternate_Function (Encoder_Tach1_Port, Encoder_Tach1_Pin, Encoder_AF);
-      --------------------------------------------
 
-      --  HAL_TIM_Encoder_Init  --------------------------
       Configure_Encoder_Interface
         (Encoder_Timer,
          Mode         => Encoder_Mode_TI1_TI2,
@@ -120,8 +117,3 @@ package body Motor is
 begin
    Initialize;
 end Motor;
-
--- example: https://my.st.com/public/STe2ecommunities/mcu/Lists/STM32Discovery/Flat.aspx?RootFolder=https%3a%2f%2fmy.st.com%2fpublic%2fSTe2ecommunities%2fmcu%2fLists%2fSTM32Discovery%2fEncoder%20Interface%20on%20TIM2-TIM5&FolderCTID=0x01200200770978C69A1141439FE559EB459D75800084C20D8867EAD444A5987D47BE638E0F&currentviews=2123
-
-
--- example: http://stackoverflow.com/questions/12065800/stm32-rotary-encoder-config
