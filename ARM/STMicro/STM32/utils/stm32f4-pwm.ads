@@ -29,7 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This file provides a convenient PWM generation abstract data type.
+--  This file provides a convenient pulse width modulation (PWM) generation
+--  abstract data type.
 
 --  Example use:
 
@@ -61,15 +62,15 @@
 with STM32F4.GPIO;   use STM32F4.GPIO;
 with STM32F4.Timers; use STM32F4.Timers;
 
-package STM32F4.PWM_Generation is
+package STM32F4.PWM is
    pragma Elaborate_Body;
 
    type PWM_Modulator is limited private;
 
    subtype Percentage is Integer range 0 .. 100;
 
-   procedure Set_Duty_Cycle (This : in out PWM_Modulator;  Value : Percentage)
-     with Inline;
+   procedure Set_Duty_Cycle (This : in out PWM_Modulator;  Value : Percentage);
+   --  Sets the pulse width such that the requested percentage is achieved.
 
    function Current_Duty_Cycle (This : PWM_Modulator) return Percentage
      with Inline;
@@ -77,8 +78,9 @@ package STM32F4.PWM_Generation is
    subtype Microseconds is Word;
 
    procedure Set_Duty_Time (This : in out PWM_Modulator; Value : Microseconds);
-   --  Attempts to set the output such that the requested number of
-   --  microseconds is achieved.
+   --  Set the pulse width such that the requested number of microseconds is
+   --  achieved. Raises Invalid_Request if the requested time is greater than
+   --  the previously configured period.
 
    procedure Initialise_PWM_Modulator
      (This                   : in out PWM_Modulator;
@@ -109,4 +111,4 @@ private
       Frequency      : Word;
    end record;
 
-end STM32F4.PWM_Generation;
+end STM32F4.PWM;

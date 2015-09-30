@@ -31,7 +31,7 @@
 
 with STM32F4.RCC; use STM32F4.RCC;
 
-package body STM32F4.PWM_Generation is
+package body STM32F4.PWM is
 
    subtype Hertz is Word;
 
@@ -247,4 +247,4 @@ package body STM32F4.PWM_Generation is
       This'Address = TIM13_Base or
       This'Address = TIM14_Base);
 
-end STM32F4.PWM_Generation;
+end STM32F4.PWM;
