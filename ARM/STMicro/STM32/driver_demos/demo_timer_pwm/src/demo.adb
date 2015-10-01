@@ -38,19 +38,23 @@
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
 with STM32F4_Discovery; use STM32F4_Discovery;
---  The selection of the STM32F4_Discovery board is not essential, as compared
---  for example to using the STM32F429_Discovery board. We use one of them to
---  get the GPIO port, timer, and LEDs used by this demo.
+--  In this specific case we are using one of the four LEDs on the F4_Disco
+--  board, which is tied to a specific timer and channel on that board. As such
+--  it would be possible to use a different board, but inconvenient. The PWM
+--  package itself is independent of the boards.
 
+with STM32F4.PWM;    use STM32F4.PWM;
 with STM32F4.GPIO;   use STM32F4.GPIO;
 with STM32F4.Timers; use STM32F4.Timers;
 with STM32F4.RCC;    use STM32F4.RCC;
 
 procedure Demo is
 
-   Period : constant := 1000;
+   Output : PWM_Modulator;
 
-   Output_Channel : Timer_Channel renames Channel_2;
+   Output_Timer : Timer renames Timer_4;
+
+   Output_Channel : constant Timer_Channel := Channel_2;
    --  The LED driven by this example is determined by the channel selected.
    --  That is so because each channel of Timer_4 is connected to a specific
    --  LED in the alternate function configuration. We will initialize all four
@@ -62,24 +66,11 @@ procedure Demo is
    --  Channel_3 is connected to the red LED.
    --  Channel_4 is connected to the blue LED.
 
-   --------------------
-   -- Configure_LEDs --
-   --------------------
-
-   procedure Configure_LEDs is
-      Configuration : GPIO_Port_Configuration;
-   begin
-      Enable_Clock (GPIO_D);
-
-      Configuration.Mode        := Mode_AF;  -- essential
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Speed       := Speed_50MHz;
-      Configuration.Resistors   := Floating;
-
-      Configure_IO (Port   => GPIO_D,
-                    Pins   => All_LEDs,
-                    Config => Configuration);
-   end Configure_LEDs;
+   Output_Point : constant GPIO_Point := (GPIO_D'Access, Orange);
+   --  This must match the GPIO port/pin for the selected Output_Channel value.
+   --  On the F4_Disco boards the LEDs are on GPIO_D, and the color names
+   --  specify the pin numbers in that package, so we can use the color
+   --  name for the pin.
 
    --  The SFP run-time library for these boards is intended for certified
    --  environments and so does not contain the full set of facilities defined
@@ -114,48 +105,31 @@ procedure Demo is
    --  that value, thus the waxing/waning effect.
 
 begin
-   Configure_LEDs;
+   Initialise_PWM_Modulator
+     (Output,
+      Requested_Frequency    => 30_000.0, -- arbitrary
+      PWM_Timer              => Output_Timer'Access,
+      PWM_AF                 => GPIO_AF_TIM4,
+      Enable_PWM_Timer_Clock => TIM4_Clock_Enable'Access);
 
-   Enable_Clock (Timer_4);
-
-   Reset (Timer_4);
-
-   Configure
-     (Timer_4,
-      Prescaler     => 1,
-      Period        => Period,
-      Clock_Divisor => Div1,
-      Counter_Mode  => Up);
-
-   Configure_Channel_Output
-     (Timer_4,
-      Channel  => Output_Channel,
-      Mode     => PWM1,
-      State    => Enable,
-      Pulse    => 0,
-      Polarity => High);
-
-   Set_Autoreload_Preload (Timer_4, True);
-
-   Configure_Alternate_Function (GPIO_D, All_LEDs, AF => GPIO_AF_TIM4);
-   --  Note we configured the LEDs to be in the AF mode in Configure_LEDs
-
-   Enable_Channel (Timer_4, Output_Channel);
-
-   Enable (Timer_4);
+   Attach_PWM_Channel
+     (Output,
+      Output_Channel,
+      Output_Point,
+      GPIOD_Clock_Enable'Access);
 
    declare
       use STM32F4;
       Arg       : Long_Float := 0.0;
-      Pulse     : Half_Word;
+      Value     : Percentage;
       Increment : constant Long_Float := 0.00003;
       --  The Increment value controls the rate at which the brightness
       --  increases and decreases. The value is more or less arbitrary, but
       --  note that the effect of optimization is observable.
    begin
       loop
-         Pulse := Half_Word (Long_Float (Period / 2) * (1.0 + Sine (Arg)));
-         Set_Compare_Value (Timer_4, Output_Channel, Pulse);
+         Value := Percentage (50.0 * (1.0 + Sine (Arg)));
+         Set_Duty_Cycle (Output, Output_Channel, Value);
          Arg := Arg + Increment;
       end loop;
    end;
