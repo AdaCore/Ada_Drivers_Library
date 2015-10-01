@@ -58,17 +58,21 @@ package body STM32F4.PWM is
    -- Set_Duty_Cycle --
    --------------------
 
-   procedure Set_Duty_Cycle (This : in out PWM_Modulator; Value : Percentage) is
+   procedure Set_Duty_Cycle
+     (This    : in out PWM_Modulator;
+      Channel : Timer_Channel;
+      Value   : Percentage)
+   is
       Pulse : Half_Word;
    begin
-      This.Duty_Cycle := Value;
+      This.Outputs (Channel).Duty_Cycle := Value;
       if Value = 0 then
-         Set_Compare_Value (This.Output_Timer.all, This.Output_Channel, Half_Word (0));
+         Set_Compare_Value (This.Output_Timer.all, Channel, Half_Word (0));
       else
          Pulse := Half_Word ((This.Timer_Period + 1) * Word (Value) / 100) - 1;
          --  NB: for a Value of 0, the computation of Pulse wraps around to
          --  65535, so we only compute it when not zero
-         Set_Compare_Value (This.Output_Timer.all, This.Output_Channel, Pulse);
+         Set_Compare_Value (This.Output_Timer.all, Channel, Pulse);
       end if;
    end Set_Duty_Cycle;
 
@@ -76,7 +80,11 @@ package body STM32F4.PWM is
    -- Set_Duty_Time --
    -------------------
 
-   procedure Set_Duty_Time (This : in out PWM_Modulator; Value : Microseconds) is
+   procedure Set_Duty_Time
+     (This    : in out PWM_Modulator;
+      Channel : Timer_Channel;
+      Value   : Microseconds)
+   is
       Pulse         : Half_Word;
       Period        : constant Word := This.Timer_Period + 1;
       uS_Per_Period : constant Word := 1_000_000 / This.Frequency;
@@ -85,16 +93,20 @@ package body STM32F4.PWM is
          raise Invalid_Request with "duty time too high";
       end if;
       Pulse := Half_Word ((Period * Value) / uS_per_Period) - 1;
-      Set_Compare_Value (This.Output_Timer.all, This.Output_Channel, Pulse);
+      Set_Compare_Value (This.Output_Timer.all, Channel, Pulse);
    end Set_Duty_Time;
 
    ------------------------
    -- Current_Duty_Cycle --
    ------------------------
 
-   function Current_Duty_Cycle (This : PWM_Modulator) return Percentage is
+   function Current_Duty_Cycle
+     (This    : PWM_Modulator;
+      Channel : Timer_Channel)
+      return Percentage
+   is
    begin
-      return This.Duty_Cycle;
+      return This.Outputs (Channel).Duty_Cycle;
    end Current_Duty_Cycle;
 
    ------------------------------
@@ -106,19 +118,12 @@ package body STM32F4.PWM is
       Requested_Frequency    : Float;
       PWM_Timer              : not null access Timer;
       PWM_AF                 : GPIO_Alternate_Function;
-      Output                 : GPIO_Point;
-      PWM_Output_Channel     : Timer_Channel;
-      Enable_PWM_Port_Clock  : not null access procedure;
       Enable_PWM_Timer_Clock : not null access procedure)
    is
       Prescalar : Word;
    begin
       This.Output_Timer := PWM_Timer;
-      This.Output_Channel := PWM_Output_Channel;
-
-      Enable_PWM_Port_Clock.all;
-
-      Configure_PWM_GPIO (Output, PWM_AF);
+      This.AF := PWM_AF;
 
       Enable_PWM_Timer_Clock.all;
 
@@ -138,20 +143,49 @@ package body STM32F4.PWM is
          Clock_Divisor => Div1,
          Counter_Mode  => Up);
 
+      Set_Autoreload_Preload (PWM_Timer.all, True);
+
+      Enable (PWM_Timer.all);
+
+      for Channel in Timer_Channel loop
+         This.Outputs (Channel).Attached := False;
+      end loop;
+   end Initialise_PWM_Modulator;
+
+   ------------------------
+   -- Attach_PWM_Channel --
+   ------------------------
+
+   procedure Attach_PWM_Channel
+     (This    : in out PWM_Modulator;
+      Channel : Timer_Channel;
+      Point   : GPIO_Point;
+      Enable_GPIO_Port_Clock : not null access procedure)
+   is
+   begin
+      This.Outputs (Channel).Attached := True;
+
+      Enable_GPIO_Port_Clock.all;
+
+      Configure_PWM_GPIO (Point, This.AF);
+
       Configure_Channel_Output
-        (PWM_Timer.all,
-         Channel  => PWM_Output_Channel,
+        (This.Output_Timer.all,
+         Channel  => Channel,
          Mode     => PWM1,
          State    => Disable,
          Pulse    => 0,
          Polarity => High);
 
-      Set_Autoreload_Preload (PWM_Timer.all, True);
+      Enable_Channel (This.Output_Timer.all, Channel);
+   end Attach_PWM_Channel;
 
-      Enable_Channel (PWM_Timer.all, PWM_Output_Channel);
+   --------------
+   -- Attached --
+   --------------
 
-      Enable (PWM_Timer.all);
-   end Initialise_PWM_Modulator;
+   function Attached (This : PWM_Modulator;  Channel : Timer_Channel) return Boolean is
+     (This.Outputs (Channel).Attached);
 
    ------------------------
    -- Configure_PWM_GPIO --

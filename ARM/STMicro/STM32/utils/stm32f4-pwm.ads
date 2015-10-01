@@ -32,32 +32,24 @@
 --  This file provides a convenient pulse width modulation (PWM) generation
 --  abstract data type.
 
---  Example use:
+--  Example use, with arbitrary hardware selections:
 
---     PWM : PWM_Modulator;
+--     Output : PWM_Modulator;
 --
 --     Initialise_PWM_Modulator
---       (PWM,
---        Frequency              => 45_000.0, -- arbitrary
+--       (Output,
+--        Requested_Frequency    => 30_000.0,
 --        PWM_Timer              => Timer_4'Access,
 --        PWM_AF                 => GPIO_AF_TIM4,
---        Output                 => (GPIO_D'Access, Pin_12),
---        PWM_Output_Channel     => Channel_1,
---        Enable_PWM_Port_Clock  => GPIOD_Clock_Enable'Access,
---        Enable_PWM_Timer_Clock => TIM4_Clock_Enable'Access);
+--        Enable_PWM_Timer_Clock => RCC.TIM4_Clock_Enable'Access);
 --
---     declare
---        Value : Percentage := 0;
---     begin
---        loop
---           for K in 0 .. 10 loop
---              Value := K * 10;
---              Print (Value);
---              Set_Duty_Cycle (PWM, Value);
---              delay until Clock + Seconds (3);
---           end loop;
---        end loop;
---     end;
+--     Attach_PWM_Channel
+--       (Output,
+--        Channel_2,
+--        (GPIO_D'Access, Pin_13),  -- must match selected channel
+--        RCC.GPIOD_Clock_Enable'Access);
+--
+--     Set_Duty_Cycle (Output, Channel_2, Value);
 
 with STM32F4.GPIO;   use STM32F4.GPIO;
 with STM32F4.Timers; use STM32F4.Timers;
@@ -67,31 +59,54 @@ package STM32F4.PWM is
 
    type PWM_Modulator is limited private;
 
-   subtype Percentage is Integer range 0 .. 100;
-
-   procedure Set_Duty_Cycle (This : in out PWM_Modulator;  Value : Percentage);
-   --  Sets the pulse width such that the requested percentage is achieved.
-
-   function Current_Duty_Cycle (This : PWM_Modulator) return Percentage
-     with Inline;
-
-   subtype Microseconds is Word;
-
-   procedure Set_Duty_Time (This : in out PWM_Modulator; Value : Microseconds);
-   --  Set the pulse width such that the requested number of microseconds is
-   --  achieved. Raises Invalid_Request if the requested time is greater than
-   --  the previously configured period.
-
    procedure Initialise_PWM_Modulator
      (This                   : in out PWM_Modulator;
       Requested_Frequency    : Float;
       PWM_Timer              : not null access Timer;
       PWM_AF                 : GPIO_Alternate_Function;
-      Output                 : GPIO_Point;
-      PWM_Output_Channel     : Timer_Channel;
-      Enable_PWM_Port_Clock  : not null access procedure;
       Enable_PWM_Timer_Clock : not null access procedure)
-     with Post => Current_Duty_Cycle (This) = 0;
+     with Post =>
+       (for all Channel in Timer_Channel => (not Attached (This, Channel)));
+   --  Initializes the specified timer for PWM generation at the requested
+   --  frequency.
+
+   procedure Attach_PWM_Channel
+     (This                   : in out PWM_Modulator;
+      Channel                : Timer_Channel;
+      Point                  : GPIO_Point;
+      Enable_GPIO_Port_Clock : not null access procedure)
+     with Post => Attached (This, Channel);
+   --  Initializes the channel on the timer associated with This, and the
+   --  corresponding GPIO port/pin pair, for PWM output. May be called multiple
+   --  times for the same PWM_Modulator object, with different channels,
+   --  because the corresponding timer can drive multiple channels (assuming
+   --  such a timer is in use).
+
+   subtype Percentage is Integer range 0 .. 100;
+
+   procedure Set_Duty_Cycle
+     (This    : in out PWM_Modulator;
+      Channel : Timer_Channel;
+      Value   : Percentage)
+     with Pre => Attached (This, Channel) or else raise Not_Attached;
+   --  Sets the pulse width such that the requested percentage is achieved.
+
+   function Current_Duty_Cycle
+     (This : PWM_Modulator; Channel : Timer_Channel)
+      return Percentage
+     with Inline,
+          Pre => Attached (This, Channel) or else raise Not_Attached;
+
+   subtype Microseconds is Word;
+
+   procedure Set_Duty_Time
+     (This    : in out PWM_Modulator;
+      Channel : Timer_Channel;
+      Value   : Microseconds)
+     with Pre => Attached (This, Channel) or else raise Not_Attached;
+   --  Set the pulse width such that the requested number of microseconds is
+   --  achieved. Raises Invalid_Request if the requested time is greater than
+   --  the previously configured period.
 
    Invalid_Request : exception;
    --  Raised when the requested frequency is too high or too low for the given
@@ -100,15 +115,28 @@ package STM32F4.PWM is
    --  Set_Duty_Time
 
    Unknown_Timer : exception;
+   --  Raised if a timer that is not physically present is passed to
+   --  Initialize_PWM_Modulator
+
+   Not_Attached : exception;
+
+   function Attached (This : PWM_Modulator;  Channel : Timer_Channel) return Boolean;
 
 private
 
+   type PWM_Output is record
+      Duty_Cycle : Percentage := 0;
+      Attached   : Boolean := False;
+   end record;
+
+   type PWM_Outputs is array (Timer_Channel) of PWM_Output;
+
    type PWM_Modulator is record
-      Duty_Cycle     : Percentage := 0;
-      Output_Timer   : access Timer;
-      Output_Channel : Timer_Channel;
-      Timer_Period   : Word;
-      Frequency      : Word;
+      Output_Timer : access Timer;
+      Outputs      : PWM_Outputs;
+      Timer_Period : Word;
+      Frequency    : Word;
+      AF           : GPIO_Alternate_Function;
    end record;
 
 end STM32F4.PWM;
