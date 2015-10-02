@@ -57,9 +57,10 @@ procedure Demo is
    Output_Channel : constant Timer_Channel := Channel_2;
    --  The LED driven by this example is determined by the channel selected.
    --  That is so because each channel of Timer_4 is connected to a specific
-   --  LED in the alternate function configuration. We will initialize all four
-   --  LEDs to be in the AF mode for Timer_4 and so any of them will work. The
-   --  particular channel selected is completely arbitrary.
+   --  LED in the alternate function configuration on this board. We will
+   --  initialize one of the LEDs to be in the AF mode for Timer_4. The
+   --  particular channel selected is completely arbitrary, as long as the
+   --  selected GPIO port/pin for the LED matches the selected channel.
 
    --  Channel_1 is connected to the green LED.
    --  Channel_2 is connected to the orange LED.
@@ -68,14 +69,15 @@ procedure Demo is
 
    Output_Point : constant GPIO_Point := (GPIO_D'Access, Orange);
    --  This must match the GPIO port/pin for the selected Output_Channel value.
-   --  On the F4_Disco boards the LEDs are on GPIO_D, and the color names
+   --  On the STM32F4 Disco boards the LEDs are on GPIO_D, and the color names
    --  specify the pin numbers in that package, so we can use the color
    --  name for the pin.
 
    --  The SFP run-time library for these boards is intended for certified
    --  environments and so does not contain the full set of facilities defined
    --  by the Ada language. The elementary functions are not included, for
-   --  example.
+   --  example. In contrast, the Ravenscar "full" run-times do have these
+   --  functions.
 
    --  Therefore there are four choices: 1) use the "ravescar-full-stm32f4"
    --  runtime library, 2) pull the sources for the language-defined elementary
