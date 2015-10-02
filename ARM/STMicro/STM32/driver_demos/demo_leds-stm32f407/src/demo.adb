@@ -29,7 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  The file declares the main procedure for the demonstration.
+--  The file declares the main procedure for the demonstration. The LEDs
+--  will blink "in a circle" on the board. The blue user button generates
+--  an interrupt that changes the direction.
 
 with Driver;               pragma Unreferenced (Driver);
 --  The Driver package contains the task that actually controls the app so

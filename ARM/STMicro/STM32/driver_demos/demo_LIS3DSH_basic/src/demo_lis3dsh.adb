@@ -33,8 +33,9 @@
 --  (The LIS3DSH is used on later versions of the STM32F4 Discovery boards,
 --  designated by the number MB997C printed on the top of the board.)
 --
---  The LEDs surrounding the accelerometer are enabled and disabled as the
---  values read from the accelerometer vary due to board movement.
+--  The LEDs surrounding the accelerometer will flash on and off as the board
+--  is moved, reflecting the directions of the accelerations measured by the
+--  device.
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
