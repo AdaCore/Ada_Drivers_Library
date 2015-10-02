@@ -43,6 +43,10 @@ package body Driver is
 
    procedure Initialize;
 
+   ----------------
+   -- Controller --
+   ----------------
+
    task body Controller is
       Period       : constant Time_Span := Milliseconds (2000);  -- arbitrary
       Next_Release : Time := Clock;
@@ -55,6 +59,10 @@ package body Driver is
          delay until Next_Release;
       end loop;
    end Controller;
+
+   ----------------
+   -- Initialize --
+   ----------------
 
    procedure Initialize is
       Configuration : GPIO_Port_Configuration;

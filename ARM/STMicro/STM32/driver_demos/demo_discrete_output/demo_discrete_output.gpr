@@ -2,9 +2,9 @@ project Demo_Discrete_Output is
 
    for Languages use ("Ada");
    for Main use ("demo.adb");
-   
-   for Source_Dirs use ("src", "../../drivers", "../../boards", "../../components", "../../utils");
-  
+
+   for Source_Dirs use ("src", "../../drivers", "../../devices", "../../boards", "../../components", "../../utils");
+
    for Object_Dir use "obj";
 
    type Build_Modes is

@@ -33,14 +33,16 @@
 --  pin on the board.  The pin is intended to be connected to an external
 --  circuit, say that of one that controls an external LED.  The driver will
 --  drive the pin high and low, iteratively, indefinitely.
-
-with System;
+--
+--  A task is not necessary but the demo can serve as an example of the
+--  structure of more realistic applications.
 
 package Driver is
 
    task Controller is
       pragma Storage_Size (4 * 1024);
-      pragma Priority (System.Default_Priority);
+      --  Setting the storage size is highly recommended because the default is
+      --  much larger than 4K, likely too large.
    end Controller;
 
 end Driver;
