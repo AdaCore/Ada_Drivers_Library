@@ -29,7 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  The file declares the main procedure for the demonstration.
+--  The file declares the main procedure for an alternative version of the
+--  demonstration. This one uses polling to recognize completion of the DMA
+--  transfer.
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 --  The "last chance handler" is an AdaCore-defined routine that is called when
@@ -38,7 +40,6 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 --  somewhere in the closure of the context clauses.
 
 with STM32F4.DMA;  use STM32F4.DMA;
---  with STM32F4.Reset_Clock_Control; use STM32F4.Reset_Clock_Control;
 
 with STM32F4.F407_LEDs;  use STm32F4.F407_LEDs;
 with Ada.Real_Time;      use Ada.Real_Time;
@@ -59,7 +60,7 @@ procedure Demo_DMA is
 
 begin
    Initialize_LEDs;
-   
+
    --  just to signal that we are indeed running...
    for K in 1 .. 3 loop
       LED_On (Green);

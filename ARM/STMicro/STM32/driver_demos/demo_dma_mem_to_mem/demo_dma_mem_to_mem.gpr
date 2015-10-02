@@ -21,12 +21,12 @@ project Demo_DMA_Mem_to_Mem is
                "-gnatw.X");
          when "production" =>
             for Default_Switches ("ada") use
-              ("-O1",
+              ("-O2",
                "-gnatw.X");
       end case;
    end Compiler;
 
-  type Boards is ("STM32F4-DISCO", "STM32F429-DISCO");
+   type Boards is ("STM32F4-DISCO", "STM32F429-DISCO");
    Board : Boards := external ("BOARD", "STM32F4-DISCO");
 
    package Naming is
@@ -38,26 +38,20 @@ project Demo_DMA_Mem_to_Mem is
       end case;
    end Naming;
 
-   -- RTL := "\GNATPRO\7.3.0w-arm_elf\arm-eabi\lib\gnat\ravenscar-sfp-stm32f4";
-   RTL := "ravenscar-sfp-stm32f4";
+   for Runtime ("Ada") use "ravenscar-sfp-stm32f4";
+   for Target use "arm-eabi";
 
    package Builder is
       for Global_Configuration_Pragmas use "gnat.adc";
       case Build_Mode is
          when "debug" =>
-            for Default_Switches ("ada") use
-            ("-g",
-             "--RTS=" & RTL);
+            for Default_Switches ("ada") use ("-g");
          when "production" =>
-            for Default_Switches ("ada") use
-            ("--RTS=" & RTL);
+            for Default_Switches ("ada") use ();
       end case;
    end Builder;
 
    package Ide is
-      for Gnat use "arm-eabi-gnat";
-      for Gnatlist use "arm-eabi-gnatls --RTS=" & RTL;
-      for Debugger_Command use "arm-eabi-gdb";
       for Program_Host use "localhost:4242";
       for Communication_Protocol use "remote";
    end Ide;
