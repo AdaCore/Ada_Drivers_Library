@@ -13,6 +13,8 @@ project Demo_L3DG20 is
    type Runtimes is ("full", "sfp");
    RTL : Runtimes := external ("RTL", "full");
 
+   for Runtime ("Ada") use "ravenscar-" & RTL & "-stm32f4";
+
    for Target use "arm-eabi";
 
    type Target_Boards is ("STM32F4-Disco", "STM32F429-Disco");
