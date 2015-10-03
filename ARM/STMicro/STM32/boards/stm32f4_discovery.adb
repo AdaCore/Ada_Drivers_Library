@@ -41,8 +41,6 @@
 
 package body STM32F4_Discovery is
 
-   LED_Port : GPIO_Port renames GPIO_D;
-
    -------------
    -- Turn_On --
    -------------

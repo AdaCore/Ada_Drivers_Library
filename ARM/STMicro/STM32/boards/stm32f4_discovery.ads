@@ -83,6 +83,10 @@ package STM32F4_Discovery is
    procedure All_LEDs_On  with Inline;
    procedure Toggle_LEDs (These : GPIO_Pins) with Inline;
 
+   LED_Port : GPIO_Port renames STM32F40xxx.GPIO_D;
+   --  Available for clients requiring a reference. Note that Initialize_LEDs
+   --  will configure the GPIO port/pins for LED usage, specifically.
+
    Accelerometer : Three_Axis_Accelerometer;
 
    GPIO_A : GPIO_Port renames STM32F40xxx.GPIO_A;

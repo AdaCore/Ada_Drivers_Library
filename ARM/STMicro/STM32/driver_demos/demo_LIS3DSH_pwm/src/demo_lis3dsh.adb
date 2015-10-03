@@ -57,97 +57,33 @@ with STM32F4.LIS3DSH;   use STM32F4.LIS3DSH;  -- on the F4 Disco board
 with STM32F4.GPIO;      use STM32F4.GPIO;
 with STM32F4.Timers;    use STM32F4.Timers;
 with STM32F4.RCC;       use STM32F4.RCC;
+with STM32F4.PWM;       use STM32F4.PWM;
 
 use STM32F4;
+
+with Demo_PWM_Settings; use Demo_PWM_Settings;
 
 procedure Demo_LIS3DSH is
 
    Next_Release : Time := Clock;
    Period       : constant Time_Span := Milliseconds (100);  -- arbitrary
 
-   LED_Timer : Timer renames Timer_4;
-   --  we use Timer_4 and GPIO_D because the channels of Timer_4 can drive the
-   --  LEDs connected via the alternate function mode with GPIO_D
-
-   Timer_Period : constant := 1000;
-
-   procedure Configure_LEDs;
-   --  Initializes the four user LEDs on the F4 Discovery board and connects
-   --  them to Timer_4.
-
-   procedure Configure_Timer;
-   --  Initializes Timer_4 and the four channels for PWM.
-
-   function Pulse (Acceleration : Axis_Acceleration) return Half_Word;
-   --  Computes the pulse for the PWM. The approach is to first compute the
+   function Brightness (Acceleration : Axis_Acceleration) return Percentage;
+   --  Computes the output for the PWM. The approach is to compute the
    --  percentage of the given acceleration relative to a maximum acceleration
-   --  of 1 G. That percentage is then applied to the timer period, giving the
-   --  pulse width.
+   --  of 1 G.
 
    procedure Drive_LEDs;
    --  Sets the pulse width for the two axes read from the accelerometer so
    --  that the brightness varies with the angle of the board.
 
-   --------------------
-   -- Configure_LEDs --
-   --------------------
+   ----------------
+   -- Brightness --
+   ----------------
 
-   procedure Configure_LEDs is
-      Configuration : GPIO_Port_Configuration;
-   begin
-      Enable_Clock (GPIO_D);
-
-      Configuration.Mode        := Mode_AF;  -- essential
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Speed       := Speed_50MHz;
-      Configuration.Resistors   := Floating;
-
-      Configure_IO (Port   => GPIO_D,
-                    Pins   => All_LEDs,
-                    Config => Configuration);
-
-      Configure_Alternate_Function (GPIO_D, All_LEDs, AF => GPIO_AF_TIM4);
-   end Configure_LEDs;
-
-   ---------------------
-   -- Configure_Timer --
-   ---------------------
-
-   procedure Configure_Timer is
-   begin
-      Enable_Clock (Timer_4);
-
-      Reset (Timer_4);
-
-      Configure
-        (Timer_4,
-         Prescaler     => 1,
-         Period        => Timer_Period,
-         Clock_Divisor => Div1,
-         Counter_Mode  => Up);
-
-      for Next_Channel in Timer_Channel loop
-         Configure_Channel_Output
-           (Timer_4,
-            Channel  => Next_Channel,
-            Mode     => PWM1,
-            State    => Enable,
-            Pulse    => 0,
-            Polarity => High);
-      end loop;
-
-      Set_Autoreload_Preload (Timer_4, True);
-   end Configure_Timer;
-
-   -----------
-   -- Pulse --
-   -----------
-
-   function Pulse (Acceleration : Axis_Acceleration) return Half_Word is
-      Percentage      : Float;
-      Result          : Word;
+   function Brightness (Acceleration : Axis_Acceleration) return Percentage is
+      Result          : Percentage;
       Bracketed_Value : Axis_Acceleration;
-      Duty_Period     : constant Word := Current_Autoreload (Timer_4);
       Max_1g          : constant Axis_Acceleration := 1000;
       --  The approximate reading from the accelerometer for 1g, in
       --  milligravities, used because this demo is for a person holding the
@@ -165,10 +101,9 @@ procedure Demo_LIS3DSH is
       else
          Bracketed_Value := Axis_Acceleration'Max (Acceleration, -Max_1g);
       end if;
-      Percentage := (Float (abs (Bracketed_Value)) / Float (Max_1g)) * 100.0;
-      Result := (Word (Percentage) * (Duty_Period + 1)) / 100;
-      return Half_Word (Result);
-   end Pulse;
+      Result := Percentage ((Float (abs (Bracketed_Value)) / Float (Max_1g)) * 100.0);
+      return Result;
+   end Brightness;
 
    ----------------
    -- Drive_LEDs --
@@ -178,32 +113,32 @@ procedure Demo_LIS3DSH is
       Axes           : Axes_Accelerations;
       High_Threshold : constant Axis_Acceleration := 30;  -- arbitrary
       Low_Threshold  : constant Axis_Acceleration := -30;  -- arbitrary
-      Off            : constant Half_Word := 0;
+      Off            : constant Percentage := 0;
    begin
       Get_Accelerations (Accelerometer, Axes);
 
       if Axes.X < Low_Threshold then
-         Set_Compare_Value (LED_Timer, Channel_1, Pulse (Axes.X));
+         Set_Duty_Cycle (PWM_Output, Channel_1, Brightness (Axes.X));
       else
-         Set_Compare_Value (LED_Timer, Channel_1, Off);
+         Set_Duty_Cycle (PWM_Output, Channel_1, Off);
       end if;
 
       if Axes.X > High_Threshold then
-         Set_Compare_Value (LED_Timer, Channel_3, Pulse (Axes.X));
+         Set_Duty_Cycle (PWM_Output, Channel_3, Brightness (Axes.X));
       else
-         Set_Compare_Value (LED_Timer, Channel_3, Off);
+         Set_Duty_Cycle (PWM_Output, Channel_3, Off);
       end if;
 
       if Axes.Y > High_Threshold then
-         Set_Compare_Value (LED_Timer, Channel_2, Pulse (Axes.Y));
+         Set_Duty_Cycle (PWM_Output, Channel_2, Brightness (Axes.Y));
       else
-         Set_Compare_Value (LED_Timer, Channel_2, Off);
+         Set_Duty_Cycle (PWM_Output, Channel_2, Off);
       end if;
 
       if Axes.Y < Low_Threshold then
-         Set_Compare_Value (LED_Timer, Channel_4, Pulse (Axes.Y));
+         Set_Duty_Cycle (PWM_Output, Channel_4, Brightness (Axes.Y));
       else
-         Set_Compare_Value (LED_Timer, Channel_4, Off);
+         Set_Duty_Cycle (PWM_Output, Channel_4, Off);
       end if;
    end Drive_LEDs;
 
@@ -221,15 +156,36 @@ begin
       raise Program_Error with "invalid accelerometer";
    end if;
 
-   Configure_Timer;
+   Initialise_PWM_Modulator
+     (PWM_Output,
+      Requested_Frequency    => PWM_Frequency,
+      PWM_Timer              => PWM_Output_Timer'Access,
+      PWM_AF                 => PWM_Output_AF,
+      Enable_PWM_Timer_Clock => Output_Timer_Clock_Enable'Access);
 
-   Configure_LEDs;
+   Attach_PWM_Channel
+     (PWM_Output,
+      Channel                => Channel_1,
+      Point                  => Channel_1_Point,
+      Enable_GPIO_Port_Clock => Channel_GPIO_Clock_Enable'Access);
 
-   for Next_Channel in Timer_Channel loop
-      Enable_Channel (Timer_4, Next_Channel);
-   end loop;
+   Attach_PWM_Channel
+     (PWM_Output,
+      Channel                => Channel_2,
+      Point                  => Channel_2_Point,
+      Enable_GPIO_Port_Clock => Channel_GPIO_Clock_Enable'Access);
 
-   Enable (Timer_4);
+   Attach_PWM_Channel
+     (PWM_Output,
+      Channel                => Channel_3,
+      Point                  => Channel_3_Point,
+      Enable_GPIO_Port_Clock => Channel_GPIO_Clock_Enable'Access);
+
+   Attach_PWM_Channel
+     (PWM_Output,
+      Channel                => Channel_4,
+      Point                  => Channel_4_Point,
+      Enable_GPIO_Port_Clock => Channel_GPIO_Clock_Enable'Access);
 
    loop
       Drive_LEDs;

@@ -67,11 +67,8 @@ procedure Demo is
    --  Channel_3 is connected to the red LED.
    --  Channel_4 is connected to the blue LED.
 
-   Output_Point : constant GPIO_Point := (GPIO_D'Access, Orange);
+   Output_Point : constant GPIO_Point := (LED_Port'Access, Orange);
    --  This must match the GPIO port/pin for the selected Output_Channel value.
-   --  On the STM32F4 Disco boards the LEDs are on GPIO_D, and the color names
-   --  specify the pin numbers in that package, so we can use the color
-   --  name for the pin.
 
    --  The SFP run-time library for these boards is intended for certified
    --  environments and so does not contain the full set of facilities defined

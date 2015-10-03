@@ -41,8 +41,6 @@
 
 package body STM32F429_Discovery is
 
-   LED_Port : GPIO_Port renames GPIO_G;
-
    -------------
    -- Turn_On --
    -------------

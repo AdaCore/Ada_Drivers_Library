@@ -79,6 +79,9 @@ package STM32F429_Discovery is
    procedure All_LEDs_Off with Inline;
    procedure All_LEDs_On  with Inline;
 
+   LED_Port : GPIO_Port renames STM32F42xxx.GPIO_G;
+   --  Available for clients requiring a reference. Note that Initialize_LEDs
+   --  will configure the GPIO port/pins for LED usage, specifically.
 
 -- declarations for the gyro etc here....
 
