@@ -69,19 +69,20 @@ begin
    delay until Clock + Milliseconds (10);
 
    Configure_Accelerometer
-     (Output_DataRate => Data_Rate_100Hz,
+     (Accelerometer,
+      Output_DataRate => Data_Rate_100Hz,
       Axes_Enable     => XYZ_Enabled,
       SPI_Wire        => Serial_Interface_4Wire,
       Self_Test       => Self_Test_Normal,
       Full_Scale      => Fullscale_2g,
       Filter_BW       => Filter_800Hz);
 
-   if Device_Id /= I_Am_LIS3DSH then
+   if Device_Id (Accelerometer) /= I_Am_LIS3DSH then
       Panic;
    end if;
 
    loop
-      Get_Accelerations (Axes);
+      Get_Accelerations (Accelerometer, Axes);
 
       if Axes.X > Threshold then
          Turn_On (Red);

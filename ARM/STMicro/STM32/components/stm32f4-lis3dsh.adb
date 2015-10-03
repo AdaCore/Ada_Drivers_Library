@@ -62,20 +62,20 @@ package body STM32F4.LIS3DSH is
    -- Configured --
    ----------------
 
-   function Configured return Boolean is
-     (Device_Configured);
+   function Configured (This : Three_Axis_Accelerometer) return Boolean is
+     (This.Device_Configured);
 
    -----------------------
    -- Get_Accelerations --
    -----------------------
 
-   procedure Get_Accelerations (Axes : out Axes_Accelerations) is
+   procedure Get_Accelerations
+     (This : Three_Axis_Accelerometer;
+      Axes : out Axes_Accelerations)
+   is
 
       Buffer : array (0 .. 5) of Byte with Alignment => 2, Size => 48;
       Scaled : Float;
-
-      Sensitivity : constant Float := Selected_Sensitivity;
-      -- via the Full_Scale setting in CTRL5
 
       use Interfaces;
 
@@ -98,21 +98,21 @@ package body STM32F4.LIS3DSH is
       Get_X : declare
          Raw : Integer_16 renames As_Pointer (Buffer(0)'Address).all;
       begin
-         Scaled := Float (Raw) * Sensitivity;
+         Scaled := Float (Raw) * This.Sensitivity;
          Axes.X := Axis_Acceleration (Scaled);
       end Get_X;
 
       Get_Y : declare
          Raw : Integer_16 renames As_Pointer (Buffer(2)'Address).all;
       begin
-         Scaled := Float (Raw) * Sensitivity;
+         Scaled := Float (Raw) * This.Sensitivity;
          Axes.Y := Axis_Acceleration (Scaled);
       end Get_Y;
 
       Get_Z : declare
          Raw : Integer_16 renames As_Pointer (Buffer(4)'Address).all;
       begin
-         Scaled := Float (Raw) * Sensitivity;
+         Scaled := Float (Raw) * This.Sensitivity;
          Axes.Z := Axis_Acceleration (Scaled);
       end Get_Z;
    end Get_Accelerations;
@@ -122,7 +122,8 @@ package body STM32F4.LIS3DSH is
    -----------------------------
 
    procedure Configure_Accelerometer
-     (Output_DataRate : Data_Rate_Power_Mode_Selection;
+     (This            : out Three_Axis_Accelerometer;
+      Output_DataRate : Data_Rate_Power_Mode_Selection;
       Axes_Enable     : Direction_XYZ_Selection;
       SPI_Wire        : SPI_Serial_Interface_Mode_Selection;
       Self_Test       : Self_Test_Selection;
@@ -147,14 +148,28 @@ package body STM32F4.LIS3DSH is
       Value := Byte (Shift_Right (Temp, 8)); -- the high byte
       AIO.Write (Value, CTRL_REG5);
 
-      Device_Configured := True;
+      case Full_Scale is
+         when Fullscale_2g =>
+            This.Sensitivity := Sensitivity_0_06mg;
+         when Fullscale_4g =>
+            This.Sensitivity := Sensitivity_0_12mg;
+         when Fullscale_6g =>
+            This.Sensitivity := Sensitivity_0_18mg;
+         when Fullscale_8g =>
+            This.Sensitivity := Sensitivity_0_24mg;
+         when Fullscale_16g =>
+            This.Sensitivity := Sensitivity_0_73mg;
+      end case;
+
+      This.Device_Configured := True;
    end Configure_Accelerometer;
 
    ---------------
    -- Device_Id --
    ---------------
 
-   function Device_Id return Byte is
+   function Device_Id (This : Three_Axis_Accelerometer) return Byte is
+      pragma Unreferenced (This);
       Response : Byte;
    begin
       AIO.Initialize;
@@ -170,7 +185,8 @@ package body STM32F4.LIS3DSH is
    -- Reboot --
    ------------
 
-   procedure Reboot is
+   procedure Reboot (This : Three_Axis_Accelerometer) is
+      pragma Unreferenced (This);
       Value : Byte;
       Force_Reboot : constant Byte := 2#1000_0000#;
    begin
@@ -189,7 +205,8 @@ package body STM32F4.LIS3DSH is
    --------------------------
 
    procedure Configure_Interrupts
-     (Interrupt_Request          : Interrupt_Request_Selection;
+     (This                       : in out Three_Axis_Accelerometer;
+      Interrupt_Request          : Interrupt_Request_Selection;
       Interrupt_Selection_Enable : Interrupt_Selection_Enablers;
       Interrupt_Signal           : Interrupt_Signal_Active_Selection;
       State_Machine1_Enable      : Boolean;
@@ -197,6 +214,7 @@ package body STM32F4.LIS3DSH is
       State_Machine2_Enable      : Boolean;
       State_Machine2_Interrupt   : State_Machine_Routed_Interrupt)
    is
+      pragma Unreferenced (This);
       CTRL : Byte;
    begin
       CTRL := Interrupt_Selection_Enable'Enum_Rep or
@@ -222,12 +240,13 @@ package body STM32F4.LIS3DSH is
    -- Configure_Click_Interrupt --
    -------------------------------
 
-   procedure Configure_Click_Interrupt is
+   procedure Configure_Click_Interrupt (This : in out Three_Axis_Accelerometer) is
    begin
       AIO.Configure_Interrupt;
 
       Configure_Interrupts
-        (Interrupt_Request          => Interrupt_Request_Latched,
+        (This,
+         Interrupt_Request          => Interrupt_Request_Latched,
          Interrupt_Selection_Enable => Interrupt_2_Enable,
          Interrupt_Signal           => Interrupt_Signal_High,
          State_Machine1_Enable      => False,
@@ -256,7 +275,11 @@ package body STM32F4.LIS3DSH is
    -- Set_Low_Power --
    -------------------
 
-   procedure Set_Low_Power (Mode : Data_Rate_Power_Mode_Selection) is
+   procedure Set_Low_Power
+     (This : in out Three_Axis_Accelerometer;
+      Mode : Data_Rate_Power_Mode_Selection)
+   is
+      pragma Unreferenced (This);
       Value : Byte;
    begin
       AIO.Read (Value, CTRL_REG4);
@@ -269,7 +292,11 @@ package body STM32F4.LIS3DSH is
    -- Set_Data_Rate --
    -------------------
 
-   procedure Set_Data_Rate (DataRate : Data_Rate_Power_Mode_Selection) is
+   procedure Set_Data_Rate
+     (This     : in out Three_Axis_Accelerometer;
+      DataRate : Data_Rate_Power_Mode_Selection)
+   is
+      pragma Unreferenced (This);
       Value : Byte;
    begin
       AIO.Read (Value, CTRL_REG4);
@@ -282,7 +309,11 @@ package body STM32F4.LIS3DSH is
    -- Set_Full_Scale --
    --------------------
 
-   procedure Set_Full_Scale (Scale : Full_Scale_Selection) is
+   procedure Set_Full_Scale
+     (This : in out Three_Axis_Accelerometer;
+      Scale : Full_Scale_Selection)
+   is
+      pragma Unreferenced (This);
       Value : Byte;
    begin
       AIO.Read (Value, CTRL_REG5);
@@ -302,7 +333,8 @@ package body STM32F4.LIS3DSH is
    -- Selected_Sensitivity --
    --------------------------
 
-   function Selected_Sensitivity return Float is
+   function Selected_Sensitivity (This : Three_Axis_Accelerometer) return Float is
+      pragma Unreferenced (This);
       CTRL5 : Byte;
    begin
       AIO.Read (CTRL5, CTRL_REG5);
@@ -324,7 +356,8 @@ package body STM32F4.LIS3DSH is
    -- Temperature --
    -----------------
 
-   function Temperature return Byte is
+   function Temperature (This : Three_Axis_Accelerometer) return Byte is
+      pragma Unreferenced (This);
       Result : Byte;
    begin
       AIO.Initialize;

@@ -51,6 +51,8 @@ with STM32F4.I2C;     use STM32F4.I2C;
 with STM32F4.SPI;     use STM32F4.SPI;
 with STM32F4.Timers;  use STM32F4.Timers;
 
+with STM32F4.LIS3DSH;   use STM32F4.LIS3DSH;
+
 with Ada.Interrupts.Names; use Ada.Interrupts;
 
 package STM32F4_Discovery is
@@ -81,9 +83,7 @@ package STM32F4_Discovery is
    procedure All_LEDs_On  with Inline;
    procedure Toggle_LEDs (These : GPIO_Pins) with Inline;
 
-
--- declarations for the accelerometer etc here....
-
+   Accelerometer : Three_Axis_Accelerometer;
 
    GPIO_A : GPIO_Port renames STM32F40xxx.GPIO_A;
    GPIO_B : GPIO_Port renames STM32F40xxx.GPIO_B;

@@ -52,7 +52,7 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 with Ada.Real_Time;     use Ada.Real_Time;
 
 with STM32F4_Discovery; use STM32F4_Discovery;
-with STM32F4.LIS3DSH;   use STM32F4.LIS3DSH;  -- on the F4 Disco boards
+with STM32F4.LIS3DSH;   use STM32F4.LIS3DSH;  -- on the F4 Disco board
 
 with STM32F4.GPIO;      use STM32F4.GPIO;
 with STM32F4.Timers;    use STM32F4.Timers;
@@ -180,7 +180,7 @@ procedure Demo_LIS3DSH is
       Low_Threshold  : constant Axis_Acceleration := -30;  -- arbitrary
       Off            : constant Half_Word := 0;
    begin
-      Get_Accelerations (Axes);
+      Get_Accelerations (Accelerometer, Axes);
 
       if Axes.X < Low_Threshold then
          Set_Compare_Value (LED_Timer, Channel_1, Pulse (Axes.X));
@@ -209,14 +209,15 @@ procedure Demo_LIS3DSH is
 
 begin
    Configure_Accelerometer
-     (Output_DataRate => Data_Rate_100Hz,
+     (Accelerometer,
+      Output_DataRate => Data_Rate_100Hz,
       Axes_Enable     => XYZ_Enabled,
       SPI_Wire        => Serial_Interface_4Wire,
       Self_Test       => Self_Test_Normal,
       Full_Scale      => Fullscale_2g,
       Filter_BW       => Filter_800Hz);
 
-   if Device_Id /= I_Am_LIS3DSH then
+   if Device_Id (Accelerometer) /= I_Am_LIS3DSH then
       raise Program_Error with "invalid accelerometer";
    end if;
 

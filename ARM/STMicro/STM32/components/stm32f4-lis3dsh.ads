@@ -46,14 +46,18 @@ with Interfaces;
 
 package STM32F4.LIS3DSH is
 
+   type Three_Axis_Accelerometer is limited private;
+
    type Axis_Acceleration is new Interfaces.Integer_16;
 
    type Axes_Accelerations is record
       X, Y, Z : Axis_Acceleration;
    end record;
 
-   procedure Get_Accelerations (Axes : out Axes_Accelerations)
-     with Pre => Configured;
+   procedure Get_Accelerations
+     (This : Three_Axis_Accelerometer;
+      Axes : out Axes_Accelerations)
+     with Pre => Configured (This);
 
    --  Note that the axes are orientated relative to the accelerometer chip
    --  itself, of course. According to the LIS3DSH datasheet (Doc ID 022405
@@ -67,7 +71,7 @@ package STM32F4.LIS3DSH is
    --  axis runs through the chip itself, orthogonal to the plane of the board,
    --  and will indicate 1G when the board is resting level.
 
-   function Device_Id return Byte;
+   function Device_Id (This : Three_Axis_Accelerometer) return Byte;
 
    I_Am_LIS3DSH : constant := 16#3F#;
 
@@ -161,25 +165,32 @@ package STM32F4.LIS3DSH is
       Serial_Interface_3Wire => 16#01#);
 
    procedure Configure_Accelerometer
-     (Output_DataRate : Data_Rate_Power_Mode_Selection;
+     (This            : out Three_Axis_Accelerometer;
+      Output_DataRate : Data_Rate_Power_Mode_Selection;
       Axes_Enable     : Direction_XYZ_Selection;
       SPI_Wire        : SPI_Serial_Interface_Mode_Selection;
       Self_Test       : Self_Test_Selection;
       Full_Scale      : Full_Scale_Selection;
       Filter_BW       : Anti_Aliasing_Filter_Bandwidth)
-     with Post => Configured;
+     with Post => Configured (This);
 
-   procedure Set_Full_Scale (Scale : Full_Scale_Selection)
-     with Pre => Configured;
+   procedure Set_Full_Scale
+     (This  : in out Three_Axis_Accelerometer;
+      Scale : Full_Scale_Selection)
+     with Pre => Configured (This);
 
-   procedure Set_Low_Power (Mode : Data_Rate_Power_Mode_Selection)
-     with Pre => Configured;
+   procedure Set_Low_Power
+     (This : in out Three_Axis_Accelerometer;
+      Mode : Data_Rate_Power_Mode_Selection)
+     with Pre => Configured (This);
 
-   procedure Set_Data_Rate (DataRate : Data_Rate_Power_Mode_Selection)
-     with Pre => Configured;
+   procedure Set_Data_Rate
+     (This     : in out Three_Axis_Accelerometer;
+      DataRate : Data_Rate_Power_Mode_Selection)
+     with Pre => Configured (This);
 
-   function Selected_Sensitivity return Float
-     with Pre => Configured;
+   function Selected_Sensitivity (This : Three_Axis_Accelerometer) return Float
+     with Pre => Configured (This);
    --  The value determined by the current setting of Full_Scale, as set by
    --  a prior call to Configure_Accelerometer.
 
@@ -191,7 +202,7 @@ package STM32F4.LIS3DSH is
    Sensitivity_0_24mg : constant := 0.24;  -- 0.24 mg/digit
    Sensitivity_0_73mg : constant := 0.73;  -- 0.73 mg/digit
 
-   procedure Reboot;
+   procedure Reboot (This : Three_Axis_Accelerometer);
 
    type State_Machine_Routed_Interrupt is
      (SM_INT1,
@@ -231,31 +242,40 @@ package STM32F4.LIS3DSH is
       Interrupt_Signal_High => 2#0100_0000#);
 
    procedure Configure_Interrupts
-     (Interrupt_Request          : Interrupt_Request_Selection;
+     (This                       : in out Three_Axis_Accelerometer;
+      Interrupt_Request          : Interrupt_Request_Selection;
       Interrupt_Selection_Enable : Interrupt_Selection_Enablers;
       Interrupt_Signal           : Interrupt_Signal_Active_Selection;
       State_Machine1_Enable      : Boolean;
       State_Machine1_Interrupt   : State_Machine_Routed_Interrupt;
       State_Machine2_Enable      : Boolean;
       State_Machine2_Interrupt   : State_Machine_Routed_Interrupt)
-     with Pre => Configured;
+     with Pre => Configured (This);
 
-   procedure Configure_Click_Interrupt
-     with Pre => Configured;
+   procedure Configure_Click_Interrupt (This : in out Three_Axis_Accelerometer)
+     with Pre => Configured (This);
 
-   function Temperature return Byte;
+   function Temperature (This : Three_Axis_Accelerometer) return Byte;
    --   Zero corresponds to approx. 25 degrees Celsius
 
-   function Configured return Boolean;
+   function Configured (This : Three_Axis_Accelerometer) return Boolean;
 
 private
 
-   Device_Configured : Boolean := False;
-   --  Ensures the device has been configured via some prior call to
-   --  Configure_Accelerometer. In addition, this flag also ensures that
-   --  the I/O facility has been initialized because Configure_Accelerometer
-   --  does that initialization too. Those routines that do NOT require prior
-   --  configuration explicitly initialize the I/O facility.
+   type Three_Axis_Accelerometer is record
+      --  Ensures the device has been configured via some prior call to
+      --  Configure_Accelerometer. In addition, this flag also ensures that
+      --  the I/O facility has been initialized because Configure_Accelerometer
+      --  does that initialization too. Those routines that do NOT require
+      --  prior configuration explicitly initialize the I/O facility.
+      Device_Configured : Boolean := False;
+      --  The value determined by the current setting of Full_Scale, as set
+      --  by a prior call to Configure_Accelerometer. Storing this value is
+      --  an optimization over querying the chip, which is what the function
+      --  Selected_Sensitivity actually does. This component should always
+      --  provide the same value as that function.
+      Sensitivity : Float;
+   end record;
 
    type Register_Address is new Byte;
    --  Prevent accidentally mixing addresses and data in I/O calls
