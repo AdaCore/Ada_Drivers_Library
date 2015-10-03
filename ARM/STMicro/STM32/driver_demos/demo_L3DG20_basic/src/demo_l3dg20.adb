@@ -141,17 +141,17 @@ begin
       Get_Raw_Angle_Rates (Gyro, Axes);
 
       Draw_String ((0, 50), "Pitch:" & Axes.X'Img & "  ",
-                   Font       => BMP_Fonts.Font16x24,
+                   Font       => BMP_Fonts.Font12x12,
                    Foreground => LCD.White,
                    Background => LCD.Black);
 
       Draw_String ((0, 80), "Roll: " & Axes.Y'Img & "  ",
-                   Font       => BMP_Fonts.Font16x24,
+                   Font       => BMP_Fonts.Font12x12,
                    Foreground => LCD.White,
                    Background => LCD.Black);
 
       Draw_String ((0, 110), "Yaw:  " & Axes.Z'Img & "  ",
-                   Font       => BMP_Fonts.Font16x24,
+                   Font       => BMP_Fonts.Font12x12,
                    Foreground => LCD.White,
                    Background => LCD.Black);
    end loop;

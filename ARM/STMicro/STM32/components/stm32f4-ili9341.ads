@@ -142,8 +142,8 @@ private
    Selected_Width  : Natural;
    Selected_Height : Natural;
 
-   procedure Send_Data (Data : Byte);
-   procedure Send_Command (Cmd : Byte);
+   procedure Send_Data    (Data : Byte) with Inline;
+   procedure Send_Command (Cmd : Byte)  with Inline;
 
    procedure Set_Cursor_Position
      (X1 : Width;

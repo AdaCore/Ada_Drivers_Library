@@ -37,7 +37,7 @@ package body STM32F4.ILI9341 is
    procedure Init_LCD;
 
    procedure Chip_Select_High with Inline;
-   procedure Chip_Select_Low with Inline;
+   procedure Chip_Select_Low  with Inline;
 
    procedure Init_SPI;
 
@@ -116,7 +116,8 @@ package body STM32F4.ILI9341 is
       ILI9341.Reset := Reset;
       ILI9341.SPI_Chip := SPI_Chip;
 
-      Config := (Mode => Mode_Out, Output_Type => Push_Pull, Resistors => Floating, Speed => Speed_25MHz, Locked => False);
+      Config := (Mode => Mode_Out, Output_Type => Push_Pull,
+                 Resistors => Floating, Speed => Speed_25MHz, Locked => False);
 
       Enable_WRX_GPIO_Clock.all;
       Configure_IO (WRX.Port.all, WRX.Pin, Config);
