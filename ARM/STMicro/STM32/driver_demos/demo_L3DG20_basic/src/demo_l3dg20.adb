@@ -49,14 +49,37 @@ with STM32F4.GPIO;  use STM32F4.GPIO;
 with STM32F4;       use STM32F4;
 with STM32F4.RCC;   use STM32F4.RCC;
 
+use STM32F4;
+
 procedure Demo_L3DG20 is
 
    Axes : L3DG20.Raw_Angle_Rates;
 
+   --------------------
+   -- Configure_Gyro --
+   --------------------
+
    procedure Configure_Gyro is
    begin
-      L3DG20.Configure
-        (Power_Mode       => L3GD20_Mode_Active,  -- ie enabled
+      Initialize_Gyro_Hardware
+        (Gyro,
+         L3GD20_SPI                  => SPI_5'Access,
+         SPI_GPIO                    => GPIO_F'Access,
+         SPI_GPIO_AF                 => GPIO_AF_SPI5,
+         SCK_Pin                     => Pin_7,
+         MISO_Pin                    => Pin_8,
+         MOSI_Pin                    => Pin_9,
+         CS_GPIO                     => GPIO_C'Access,
+         CS_Pin                      => Pin_1,
+         Int_GPIO                    => GPIO_A'Access,
+         Enable_SPI_Clock            => RCC.SPI5_Clock_Enable'Access,
+         Enable_SPI_GPIO_Clock       => RCC.GPIOF_Clock_Enable'Access,
+         Enable_Chip_Select_Clock    => RCC.GPIOC_Clock_Enable'Access,
+         Enable_GPIO_Interrupt_Clock => RCC.GPIOA_Clock_Enable'Access);
+
+      Configure
+        (Gyro,
+         Power_Mode       => L3GD20_Mode_Active,  -- ie enabled
          Output_DataRate  => L3GD20_Output_DataRate_4,
          Axes_Enable      => L3GD20_Axes_Enable,
          Band_Width       => L3GD20_Bandwidth_4,
@@ -64,19 +87,28 @@ procedure Demo_L3DG20 is
          Endianness       => L3GD20_BLE_LSB,
          Full_Scale       => L3GD20_Fullscale_2000);
 
-      L3DG20.Configure_Filter
-        (Mode_Selection   => L3GD20_HPM_Normal_Mode_Res,
+      Configure_Filter
+        (Gyro,
+         Mode_Selection   => L3GD20_HPM_Normal_Mode_Res,
          CutOff_Frequency => L3GD20_HPFCF_0);
 
-      L3DG20.Enable_Filter;
+      Enable_Filter (Gyro);
 
       --  We cannot check it before configuring the device above.
-      if L3DG20.Device_Id /= L3DG20.I_Am_L3GD20 then
+      if L3DG20.Device_Id (Gyro) /= L3DG20.I_Am_L3GD20 then
          raise Program_Error with "No L3DG20 found";
       end if;
    end Configure_Gyro;
 
+   ---------
+   -- LCD --
+   ---------
+
    package LCD renames STM32F4.ILI9341; use LCD;
+
+   -----------------
+   -- LCD_Drawing --
+   -----------------
 
    package LCD_Drawing is new Bitmapped_Drawing
      (Color     => LCD.Colors,
@@ -106,7 +138,7 @@ begin
    Configure_Gyro;
 
    loop
-      L3DG20.Get_Raw_Angle_Rates (Axes);
+      Get_Raw_Angle_Rates (Gyro, Axes);
 
       Draw_String ((0, 50), "Pitch:" & Axes.X'Img & "  ",
                    Font       => BMP_Fonts.Font16x24,

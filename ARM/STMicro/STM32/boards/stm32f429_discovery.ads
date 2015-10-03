@@ -50,6 +50,7 @@ with STM32F4.USARTs;  use STM32F4.USARTs;
 with STM32F4.I2C;     use STM32F4.I2C;
 with STM32F4.SPI;     use STM32F4.SPI;
 with STM32F4.Timers;  use STM32F4.Timers;
+with STM32F4.L3DG20;  use STM32F4.L3DG20;
 
 with Ada.Interrupts.Names;  use Ada.Interrupts;
 
@@ -83,8 +84,7 @@ package STM32F429_Discovery is
    --  Available for clients requiring a reference. Note that Initialize_LEDs
    --  will configure the GPIO port/pins for LED usage, specifically.
 
--- declarations for the gyro etc here....
-
+   Gyro : Three_Axis_Gyroscope;
 
    GPIO_A : GPIO_Port renames STM32F42xxx.GPIO_A;
    GPIO_B : GPIO_Port renames STM32F42xxx.GPIO_B;

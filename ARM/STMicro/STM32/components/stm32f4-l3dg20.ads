@@ -47,7 +47,6 @@
 
 with STM32F4.SPI;  use STM32F4.SPI;
 with STM32F4.GPIO; use STM32F4.GPIO;
-with STM32F4.RCC;
 
 with Interfaces;   use Interfaces;
 
@@ -55,6 +54,26 @@ with Ada.Interrupts.Names; use Ada.Interrupts.Names;
 use Ada.Interrupts;
 
 package STM32F4.L3DG20 is
+
+   type Three_Axis_Gyroscope is limited private;
+
+   --  Define the hardware for the gyro to use. MUST be called first. Note that
+   --  procedure Configure must be called as well, at some point after this.
+   procedure Initialize_Gyro_Hardware
+     (This                        : out Three_Axis_Gyroscope;
+      L3GD20_SPI                  : access SPI_Port;
+      SPI_GPIO                    : access GPIO_Port;
+      SPI_GPIO_AF                 : GPIO_Alternate_Function;
+      SCK_Pin                     : GPIO_Pin;
+      MISO_Pin                    : GPIO_Pin;
+      MOSI_Pin                    : GPIO_Pin;
+      CS_GPIO                     : access GPIO_Port;
+      CS_Pin                      : GPIO_Pin;
+      Int_GPIO                    : access GPIO_Port;
+      Enable_SPI_Clock            : not null access procedure;
+      Enable_SPI_GPIO_Clock       : not null access procedure;
+      Enable_Chip_Select_Clock    : not null access procedure;
+      Enable_GPIO_Interrupt_Clock : not null access procedure);
 
    type Power_Mode_Selection is
      (L3GD20_Mode_Powerdown,
@@ -135,8 +154,10 @@ package STM32F4.L3DG20 is
      (L3GD20_BLE_LSB => 16#00#,
       L3GD20_BLE_MSB => 16#40#);
 
+   --  Set up the gyro behavior.  Must be called prior to using the gyro.
    procedure Configure
-     (Power_Mode       : Power_Mode_Selection;
+     (This             : in out Three_Axis_Gyroscope;
+      Power_Mode       : Power_Mode_Selection;
       Output_DataRate  : Output_DataRate_Selection;
       Axes_Enable      : Axes_Selection;
       Band_Width       : BandWidth_Selection;
@@ -183,16 +204,19 @@ package STM32F4.L3DG20 is
       L3GD20_HPFCF_9 => 16#09#);
 
    procedure Configure_Filter
-     (Mode_Selection   : High_Pass_Filter_Mode;
+     (This             : in out Three_Axis_Gyroscope;
+      Mode_Selection   : High_Pass_Filter_Mode;
       CutOff_Frequency : High_Pass_Cut_Off_Frequency);
 
-   procedure Enable_Filter;
+   procedure Enable_Filter (This : in out Three_Axis_Gyroscope);
 
-   procedure Disable_Filter;
+   procedure Disable_Filter (This : in out Three_Axis_Gyroscope);
 
    type Sample_Counter is mod 2 ** 6;
 
-   procedure Set_Duration_Counter (Value : Sample_Counter);
+   procedure Set_Duration_Counter
+     (This  : in out Three_Axis_Gyroscope;
+      Value : Sample_Counter);
    --  Loads the INT1_DURATION register with the specified Value and enables
    --  the "wait" option so that the interrupt is not generated unless any
    --  sample value is beyond a threshold for the corresponding amount of time.
@@ -206,15 +230,20 @@ package STM32F4.L3DG20 is
       X_High_Interrupt,
       X_Low_Interrupt);
 
-   procedure Enable_Event (Event : Axes_Interrupts);
+   procedure Enable_Event
+     (This  : in out Three_Axis_Gyroscope;
+      Event : Axes_Interrupts);
 
-   procedure Disable_Event (Event : Axes_Interrupts);
+   procedure Disable_Event
+     (This  : in out Three_Axis_Gyroscope;
+      Event : Axes_Interrupts);
 
    type Axis_Sample_Threshold is new Half_Word range 0 .. 2 ** 15;
    --  Threshold values do not use the high-order bit
 
    procedure Set_Threshold
-     (Event : Axes_Interrupts;
+     (This  : in out Three_Axis_Gyroscope;
+      Event : Axes_Interrupts;
       Value : Axis_Sample_Threshold);
    --  Writes the two-byte threshold value into the two threshold registers for
    --  the specified interrupt event.  Does not enable the event itself.
@@ -236,7 +265,8 @@ package STM32F4.L3DG20 is
       L3GD20_Interrupt1_High_Edge => 16#00#);
 
    procedure Configure_Interrupt1
-     (Triggers       : Threshold_Event_List;
+     (This           : in out Three_Axis_Gyroscope;
+      Triggers       : Threshold_Event_List;
       Latched        : Boolean := False;
       Active_Edge    : Interrupt1_Active_Edge := L3GD20_Interrupt1_High_Edge;
       Combine_Events : Boolean := False;
@@ -272,15 +302,17 @@ package STM32F4.L3DG20 is
    --  generated if both thresholds are exceeded. Otherwise either one is
    --  sufficient for the interrupt to be generated.
 
-   procedure Enable_Interrupt1;
+   procedure Enable_Interrupt1 (This : in out Three_Axis_Gyroscope);
 
-   procedure Disable_Interrupt1;
+   procedure Disable_Interrupt1 (This : in out Three_Axis_Gyroscope);
 
    type Pin_Modes is (Push_Pull, Open_Drain);
 
    for Pin_Modes use (Push_Pull => 0,  Open_Drain => 2#0001_0000#);
 
-   procedure Set_Interrupt_Pin_Mode (Mode : Pin_Modes);
+   procedure Set_Interrupt_Pin_Mode
+     (This : in out Three_Axis_Gyroscope;
+      Mode : Pin_Modes);
 
    type Interrupt1_Sources is record
       Interrupts_Active : Boolean;
@@ -303,14 +335,14 @@ package STM32F4.L3DG20 is
       X_Low_Interrupt   at 0 range 0 .. 0;
    end record;
 
-   function Interrupt1_Source return Interrupt1_Sources;
+   function Interrupt1_Source (This : Three_Axis_Gyroscope) return Interrupt1_Sources;
 
    I_Am_L3GD20 : constant := 16#D4#;
 
-   function Device_Id return Byte;
+   function Device_Id (This : Three_Axis_Gyroscope) return Byte;
    --  Will return I_Am_L3GD20 when functioning properly
 
-   function Data_Status return Byte;
+   function Data_Status (This : Three_Axis_Gyroscope) return Byte;
 
    type Raw_Angle_Rates is record
       X : Integer_16;  -- roll
@@ -318,19 +350,21 @@ package STM32F4.L3DG20 is
       Z : Integer_16;  -- yaw
    end record;
 
-   procedure Get_Raw_Angle_Rates (Rates : out Raw_Angle_Rates);
+   procedure Get_Raw_Angle_Rates
+     (This  : Three_Axis_Gyroscope;
+      Rates : out Raw_Angle_Rates);
    --  Poll for the latest data. Raises Program_Error if the status indicates
    --  no data available after a certain number of attempts. Does NOT apply the
    --  specified sensitity scaling as determined by the Full_Scale_Selection
    --  passed to procedure Configure.
 
-   function Selected_Sensitivity return Float;
+   function Selected_Sensitivity (This : Three_Axis_Gyroscope) return Float;
    --  Returns the value resulting from the Full_Scale_Selection specified to
    --  procedure Configure. Can be used to manually scale unscaled results,
    --  which is done automatically in procedure Get_Angle_Rates but not by
    --  Get_Unscaled_Angle_Rates
 
-   procedure Reboot;
+   procedure Reboot (This : Three_Axis_Gyroscope);
 
    type FIFO_Modes is
      (L3GD20_Bypass_Mode,
@@ -347,40 +381,40 @@ package STM32F4.L3DG20 is
       L3GD20_Bypass_To_Stream_Mode => 2#011#,
       L3GD20_Stream_To_FIFO_Mode   => 2#100#);
 
-   procedure Enable_FIFO (Mode : FIFO_Modes);
+   procedure Enable_FIFO (This : in out Three_Axis_Gyroscope; Mode : FIFO_Modes);
    --  Enables the FIFO and sets the specified mode
 
-   procedure Disable_FIFO;
+   procedure Disable_FIFO (This : in out Three_Axis_Gyroscope);
 
    FIFO_Depth : constant := 32;
    --  the number of 16-bit quantities that the hardware FIFO can contain
 
    type FIFO_Level is new Byte range 0 .. FIFO_Depth - 1;
 
-   procedure Set_Watermark (Level : FIFO_Level);
+   procedure Set_Watermark (This : in out Three_Axis_Gyroscope; Level : FIFO_Level);
 
-   function Current_FIFO_Depth return FIFO_Level;
+   function Current_FIFO_Depth (This : Three_Axis_Gyroscope) return FIFO_Level;
    --  The number of entries currently in the hardware FIFO
 
-   function FIFO_Below_Watermark return Boolean;
+   function FIFO_Below_Watermark (This : Three_Axis_Gyroscope) return Boolean;
 
-   function FIFO_Empty return Boolean;
+   function FIFO_Empty (This : Three_Axis_Gyroscope) return Boolean;
 
-   function FIFO_Overrun return Boolean;
+   function FIFO_Overrun (This : Three_Axis_Gyroscope) return Boolean;
 
    --  Interrupt 2 controls
 
-   procedure Enable_Data_Ready_Interrupt;
-   procedure Disable_Data_Ready_Interrupt;
+   procedure Enable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope);
+   procedure Disable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope);
 
-   procedure Enable_Watermark_Interrupt;
-   procedure Disable_Watermark_Interrupt;
+   procedure Enable_Watermark_Interrupt (This : in out Three_Axis_Gyroscope);
+   procedure Disable_Watermark_Interrupt (This : in out Three_Axis_Gyroscope);
 
-   procedure Enable_Overrun_Interrupt;
-   procedure Disable_Overrun_Interrupt;
+   procedure Enable_Overrun_Interrupt (This : in out Three_Axis_Gyroscope);
+   procedure Disable_Overrun_Interrupt (This : in out Three_Axis_Gyroscope);
 
-   procedure Enable_FIFO_Empty_Interrupt;
-   procedure Disable_FIFO_Empty_Interrupt;
+   procedure Enable_FIFO_Empty_Interrupt (This : in out Three_Axis_Gyroscope);
+   procedure Disable_FIFO_Empty_Interrupt (This : in out Three_Axis_Gyroscope);
 
    --  The following are the interrupt definitions necessary for client-defined
    --  interrupt handlers:
@@ -394,12 +428,24 @@ package STM32F4.L3DG20 is
 
 private
 
+   type Three_Axis_Gyroscope is record
+      L3GD20_SPI  : access SPI_Port;
+      SPI_GPIO    : access GPIO_Port;
+      SPI_GPIO_AF : GPIO_Alternate_Function;
+      SCK_Pin     : GPIO_Pin;
+      MISO_Pin    : GPIO_Pin;
+      MOSI_Pin    : GPIO_Pin;
+      CS_GPIO     : access GPIO_Port;
+      CS_Pin      : GPIO_Pin;
+      Int_GPIO    : access GPIO_Port;
+   end record;
+
    type Register is new Byte;
 
-   procedure Write (Addr : Register;  Data : Byte);
+   procedure Write (This : Three_Axis_Gyroscope; Addr : Register;  Data : Byte);
    --  Writes Data to the specified register within the gyro chip
 
-   procedure Read (Addr : Register; Data : out Byte);
+   procedure Read (This : Three_Axis_Gyroscope; Addr : Register; Data : out Byte);
    --  Reads Data from the specified register within the gyro chip
 
    --  L3GD20 Registers
@@ -430,45 +476,5 @@ private
    INT1_TSH_ZH   : constant Register := 16#36#; --  Interrupt 1 Threshold Z
    INT1_TSH_ZL   : constant Register := 16#37#; --  Interrupt 1 Threshold Z
    INT1_Duration : constant Register := 16#38#; --  Interrupt 1 Duration
-
-   --  SPI and GPIO definitions. We use the addresses defined by the STM32F4
-   --  root package to declare the GPIO and SPI devices rather than simply
-   --  referencing those declared in the board-specific *_Discovery packages
-   --  to get the device declarations because this is a component-level driver
-   --  that could conceivably be used on any given board, not just a Discovery
-   --  or evaluation board. For the same reason, we reference the clock enabler
-   --  procedures defined in the RCC package rathet than more convenient
-   --  routines defined in the *_Discovery packages. Of course, use within an
-   --  application requires the developer to be cognizant of the devices and
-   --  pins in use here, so we put them in the package declaration (albeit in
-   --  the private part).
-
-   L3GD20_SPI : SPI_Port with Address => SPI5_Base;
-
-   SPI_GPIO_AF : constant GPIO_Alternate_Function := GPIO_AF_SPI5;
-   -- must match the selected SPI port
-
-   procedure Enable_SPI_Clock renames RCC.SPI5_Clock_Enable;
-   --  must match selected SPI port
-
-   SPI_GPIO : GPIO_Port with Address => GPIOF_Base;
-
-   procedure Enable_SPI_GPIO_Clock renames RCC.GPIOF_Clock_Enable;
-   --  must match selected SPI_GPIO port
-
-   SCK_Pin  : constant GPIO_Pin := Pin_7;
-   MISO_Pin : constant GPIO_Pin := Pin_8;
-   MOSI_Pin : constant GPIO_Pin := Pin_9;
-
-   CS_GPIO : GPIO_Port with Address => GPIOC_Base;
-   CS_Pin  : constant GPIO_Pin := Pin_1;
-
-   procedure Enable_Chip_Select_Clock renames RCC.GPIOC_Clock_Enable;
-   --  must match selected CS_GPIO port
-
-   Int_GPIO : GPIO_Port with Address => GPIOA_Base;
-
-   procedure Enable_GPIO_Interrupt_Clock renames RCC.GPIOA_Clock_Enable;
-   --  must match selected Int_GPIO port
 
 end STM32F4.L3DG20;
