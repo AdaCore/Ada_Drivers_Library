@@ -1,21 +1,23 @@
 project demo_basic_timer_interrupts is
 
    for Languages use ("Ada");
+
    for Main use ("demo.adb");
-   
+
    for Source_Dirs use ("src", "../../drivers", "../../boards", "../../devices", "../../components", "../../utils");
-   
+
    for Object_Dir use "obj";
-   type Build_Modes is
-      ("debug", "production");
+
+   type Build_Modes is ("debug", "production");
+
    Build_Mode : Build_Modes := external ("Build", "debug");
+
    for Runtime ("ada") use "ravenscar-sfp-stm32f4";
+
    for Target use "arm-eabi";
 
    package Compiler is
-
       case Build_Mode is
-
          when "debug" =>
             for Default_Switches ("ada") use ("-g", "-gnatwa", "-gnata", "-gnatQ", "-gnatw.X"); -- disable warnings about exceptions and LCH
 
@@ -43,9 +45,6 @@ project demo_basic_timer_interrupts is
    end Builder;
 
    package Ide is
-      for Gnat use "arm-eabi-gnat";
-      --        for Gnatlist use "arm-eabi-gnatls";
-      --        for Debugger_Command use "arm-eabi-gdb";
       for Program_Host use "localhost:4242";
       for Communication_Protocol use "remote";
    end Ide;
