@@ -26,17 +26,8 @@ project Demo_USART_DMA_Continuous is
       end case;
    end Compiler;
 
-
-   type Boards is ("STM32F4-DISCO", "STM32F429-DISCO");
-   Board : Boards := external ("BOARD", "STM32F4-DISCO");
-
    package Naming is
-      case Board is
-         when "STM32F4-DISCO" =>
-            for Implementation ("last_chance_handler") use "last_chance_handler-stm32f407xx.adb";
-         when "STM32F429-DISCO" =>
-            for Implementation ("last_chance_handler") use "last_chance_handler-stm32f429xx.adb";
-      end case;
+      for Implementation ("last_chance_handler") use "last_chance_handler-stm32f407xx.adb";
    end Naming;
 
    for Runtime ("Ada") use "ravenscar-sfp-stm32f4";
