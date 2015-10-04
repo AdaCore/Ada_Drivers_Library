@@ -39,7 +39,6 @@ package body Encoder_Emulator is
    begin
       Enable_Channel (Emulator_Timer, Channel_1);
       Enable_Channel (Emulator_Timer, Channel_2);
-      Enable (Emulator_Timer);
    end Start;
 
    ----------
@@ -123,6 +122,8 @@ package body Encoder_Emulator is
          Period        => Emulator_Period,
          Clock_Divisor => Div1,
          Counter_Mode  => Up);
+
+      Enable (Emulator_Timer);
 
       Emulate_Forward_Direction;
    end Initialize;
