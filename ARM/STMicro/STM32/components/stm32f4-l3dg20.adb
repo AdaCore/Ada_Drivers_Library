@@ -41,8 +41,7 @@
 
 with Ada.Unchecked_Conversion;
 
-with GNAT.Byte_Swapping; use GNAT.Byte_Swapping;
-with STM32F4.SYSCFG;     use STM32F4.SYSCFG;
+with STM32F4.SYSCFG;  use STM32F4.SYSCFG;
 
 package body STM32F4.L3DG20 is
 
@@ -217,8 +216,6 @@ package body STM32F4.L3DG20 is
    procedure Init_Chip_Select (This : in out Three_Axis_Gyroscope) is
       GPIO_Conf : GPIO_Port_Configuration;
    begin
---        Enable_Chip_Select_Clock;
-
       GPIO_Conf.Speed := Speed_25MHz;
       GPIO_Conf.Mode := Mode_OUT;
       GPIO_Conf.Output_Type := Push_Pull;
@@ -235,8 +232,6 @@ package body STM32F4.L3DG20 is
    procedure Init_SPI_IO_Pins (This : in out Three_Axis_Gyroscope) is
       GPIO_Conf : GPIO_Port_Configuration;
    begin
---        Enable_SPI_GPIO_Clock;
-
       GPIO_Conf.Speed       := Speed_100MHz;
       GPIO_Conf.Mode        := Mode_AF;
       GPIO_Conf.Output_Type := Push_Pull;
@@ -258,8 +253,6 @@ package body STM32F4.L3DG20 is
    procedure Init_SPI (This : in out Three_Axis_Gyroscope) is
       SPI_Conf  : SPI_Configuration;
    begin
---        Enable_SPI_Clock;
-
       Init_SPI_IO_Pins (This);
 
       SPI.Disable (This.L3GD20_SPI.all);
@@ -297,8 +290,6 @@ package body STM32F4.L3DG20 is
    procedure Configure_Interrupt_Pins (This : in out Three_Axis_Gyroscope) is
       GPIO_Conf : GPIO_Port_Configuration;
    begin
---        Enable_GPIO_Interrupt_Clock;
-
       GPIO_Conf.Speed := Speed_50MHz;
       GPIO_Conf.Mode := Mode_In;
       GPIO_Conf.Output_Type := Push_Pull;
@@ -345,7 +336,7 @@ package body STM32F4.L3DG20 is
    ----------------------
 
    procedure Configure_Filter
-     (This : in out Three_Axis_Gyroscope;
+     (This             : in out Three_Axis_Gyroscope;
       Mode_Selection   : High_Pass_Filter_Mode;
       CutOff_Frequency : High_Pass_Cut_Off_Frequency)
    is
@@ -465,6 +456,9 @@ package body STM32F4.L3DG20 is
       --  sequence representing a signed Integer_16 quantity. That's why the
       --  alignment of Reg_Data is set as well.
 
+      function BSwap_16 (X : Integer_16) return Integer_16;
+      pragma Import (Intrinsic, BSwap_16, "__builtin_bswap16");
+
       Max_Status_Attempts : constant := 1_000;  -- semi-arbitrary
    begin
       for K in 1 .. Max_Status_Attempts loop
@@ -484,15 +478,14 @@ package body STM32F4.L3DG20 is
       Read (This, OUT_Z_L, Received (4));
       Read (This, OUT_Z_H, Received (5));
 
-      --  convert received data into integer_16 quantities, taking selected
-      --  endianess into account
       Unscaled (0) := As_Pointer (Received (0)'Address).all;
       Unscaled (1) := As_Pointer (Received (2)'Address).all;
       Unscaled (2) := As_Pointer (Received (4)'Address).all;
+
       if (Ctrl4 and Endian_Selection_Mask) = L3GD20_BLE_MSB'Enum_Rep then
-         Swap2 (Unscaled (0)'Address);
-         Swap2 (Unscaled (1)'Address);
-         Swap2 (Unscaled (2)'Address);
+         Unscaled (0) := BSwap_16 (Unscaled (0));
+         Unscaled (1) := BSwap_16 (Unscaled (1));
+         Unscaled (2) := BSwap_16 (Unscaled (2));
       end if;
 
       if Unscaled (0) = 16#FF#

@@ -442,10 +442,18 @@ private
 
    type Register is new Byte;
 
-   procedure Write (This : Three_Axis_Gyroscope; Addr : Register;  Data : Byte);
+   procedure Write
+     (This : Three_Axis_Gyroscope;
+      Addr : Register;
+      Data : Byte)
+     with Inline;
    --  Writes Data to the specified register within the gyro chip
 
-   procedure Read (This : Three_Axis_Gyroscope; Addr : Register; Data : out Byte);
+   procedure Read
+     (This : Three_Axis_Gyroscope;
+      Addr : Register;
+      Data : out Byte)
+     with Inline;
    --  Reads Data from the specified register within the gyro chip
 
    --  L3GD20 Registers
