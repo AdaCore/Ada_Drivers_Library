@@ -12,10 +12,7 @@ project Demo_Timer_Quad_Encoder is
 
    for Target use "arm-eabi";
 
-   type Target_Boards is ("STM32F4-Disco", "STM32F429-Disco");
-   Target_Board : Target_Boards := external ("Target_Board", "STM32F4-Disco");
-
-   for Runtime ("ada") use "ravenscar-full-stm32f4";
+   for Runtime ("ada") use "ravenscar-sfp-stm32f4";
 
    package Compiler is
       case Build_Mode is
@@ -28,12 +25,7 @@ project Demo_Timer_Quad_Encoder is
    end Compiler;
 
    package Naming is
-      case Target_Board is
-         when "STM32F4-Disco" =>
-            for body ("last_chance_handler") use "last_chance_handler-stm32f407xx.adb";
-         when "STM32F429-Disco" =>
-            for body ("last_chance_handler") use "last_chance_handler-stm32f429xx.adb";
-      end case;
+      for body ("last_chance_handler") use "last_chance_handler-stm32f429xx.adb";
    end Naming;
 
    package Linker is
