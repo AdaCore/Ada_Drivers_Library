@@ -10,15 +10,9 @@ project Demo_L3DG20 is
    type Build_Modes is ("debug", "production");
    Build_Mode : Build_Modes := external ("Build", "debug");
 
-   type Runtimes is ("full", "sfp");
-   RTL : Runtimes := external ("RTL", "full");
-
-   for Runtime ("Ada") use "ravenscar-" & RTL & "-stm32f4";
+   for Runtime ("Ada") use "ravenscar-sfp-stm32f4";
 
    for Target use "arm-eabi";
-
-   type Target_Boards is ("STM32F4-Disco", "STM32F429-Disco");
-   Target_Board : Target_Boards := external ("Target_Board", "STM32F4-Disco");
 
    package Compiler is
       case Build_Mode is
@@ -31,12 +25,7 @@ project Demo_L3DG20 is
    end Compiler;
 
    package Naming is
-      case Target_Board is
-         when "STM32F4-Disco" =>
-            for body ("last_chance_handler") use "last_chance_handler-stm32f407xx.adb";
-         when "STM32F429-Disco" =>
-            for body ("last_chance_handler") use "last_chance_handler-stm32f429xx.adb";
-      end case;
+      for body ("last_chance_handler") use "last_chance_handler-stm32f429xx.adb";
    end Naming;
 
     package Linker is
