@@ -34,7 +34,8 @@
 --   @author  MCD Application Team                                          --
 --   @version V1.1.0                                                        --
 --   @date    19-June-2014                                                  --
---   @brief   Header file of DMA HAL module.                                --
+--   @brief   This file includes the LCD driver for ILI9341 Liquid Crystal  --
+--            Display Modules of STM32F429I-Discovery kit (MB1075).         --
 --                                                                          --
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------

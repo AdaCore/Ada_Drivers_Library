@@ -30,11 +30,12 @@
 --                                                                          --
 --  This file is based on:                                                  --
 --                                                                          --
---   @file    stm32f4_discovery.h                                           --
+--   @file    lis3dsh.c                                                     --
 --   @author  MCD Application Team                                          --
 --   @version V1.1.0                                                        --
 --   @date    19-June-2014                                                  --
---   @brief   Header file of DMA HAL module.                                --
+--   @brief   This file provides a set of functions needed to manage the    --
+--            LIS3DSH MEMS Accelerometer.                                   --
 --                                                                          --
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------

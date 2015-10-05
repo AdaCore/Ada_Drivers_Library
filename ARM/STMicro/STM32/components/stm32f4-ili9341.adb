@@ -27,6 +27,18 @@
 --   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
 --   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
+--                                                                          --
+--  This file is based on:                                                  --
+--                                                                          --
+--   @file    ili9341.c                                                      --
+--   @author  MCD Application Team                                          --
+--   @version V1.0.2                                                        --
+--   @date    02-December-2014                                              --
+--   @brief   This file provides a set of functions needed to manage the    --
+--            L3GD20, ST MEMS motion sensor,  3-axis digital output         --
+--            gyroscope.                                                    --
+--                                                                          --
+--   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time;  use Ada.Real_Time;

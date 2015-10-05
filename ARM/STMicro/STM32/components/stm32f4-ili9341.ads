@@ -27,6 +27,15 @@
 --   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
 --   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
+--  This file is based on:                                                  --
+--                                                                          --
+--   @file    ili9341.h                                                     --
+--   @author  MCD Application Team                                          --
+--   @version V1.0.2                                                        --
+--   @date    02-December-2014                                              --
+--   @brief   This file includes the LCD driver for ILI9341 LCD.            --
+--                                                                          --
+--   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
 --  This file provides the component driver for the ILI9341 LCD on the

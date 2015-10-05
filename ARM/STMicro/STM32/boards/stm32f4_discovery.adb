@@ -34,7 +34,9 @@
 --   @author  MCD Application Team                                          --
 --   @version V1.1.0                                                        --
 --   @date    19-June-2014                                                  --
---   @brief   Header file of DMA HAL module.                                --
+--   @brief  This file provides set of firmware functions to manage Leds    --
+--           and push-button available on STM32F42-Discovery Kit from       --
+--           STMicroelectronics.                                            --
 --                                                                          --
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------

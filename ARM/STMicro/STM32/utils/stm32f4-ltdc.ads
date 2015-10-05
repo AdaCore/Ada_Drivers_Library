@@ -34,7 +34,8 @@
 --   @author  MCD Application Team                                          --
 --   @version V1.1.0                                                        --
 --   @date    19-June-2014                                                  --
---   @brief   Header file of DMA HAL module.                                --
+--   @brief   This file contains all the functions prototypes for the       --
+--            stm32f429i_discovery_lcd.c driver.                            --
 --                                                                          --
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------

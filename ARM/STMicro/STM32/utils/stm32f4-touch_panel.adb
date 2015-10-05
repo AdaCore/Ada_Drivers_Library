@@ -34,7 +34,9 @@
 --   @author  MCD Application Team                                          --
 --   @version V1.1.0                                                        --
 --   @date    19-June-2014                                                  --
---   @brief   Header file of DMA HAL module.                                --
+--   @brief   This file provides a set of functions needed to manage Touch  --
+--            screen available with STMPE811 IO Expander device mounted on  --
+--            STM32F429I-Discovery Kit.                                     --
 --                                                                          --
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
