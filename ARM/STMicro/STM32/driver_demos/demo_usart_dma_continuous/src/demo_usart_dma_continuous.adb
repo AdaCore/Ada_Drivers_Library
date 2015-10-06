@@ -56,6 +56,9 @@ procedure Demo_USART_DMA_Continuous is
 
    Source_Block  : constant Data := "abcdefghijklmnopqrstuvwxyz";
 
+   -------------------------------
+   -- Initialize_GPIO_Port_Pins --
+   -------------------------------
 
    procedure Initialize_GPIO_Port_Pins is
       Configuration : GPIO_Port_Configuration;
@@ -78,6 +81,9 @@ procedure Demo_USART_DMA_Continuous is
          AF   => Transceiver_AF);
    end Initialize_GPIO_Port_Pins;
 
+   ----------------------
+   -- Initialize_USART --
+   ----------------------
 
    procedure Initialize_USART is
    begin
@@ -93,6 +99,9 @@ procedure Demo_USART_DMA_Continuous is
       Set_Flow_Control (Transceiver, No_Flow_Control);
    end Initialize_USART;
 
+   --------------------
+   -- Initialize_DMA --
+   --------------------
 
    procedure Initialize_DMA is
       Configuration : DMA_Stream_Configuration;
@@ -118,6 +127,9 @@ procedure Demo_USART_DMA_Continuous is
       --  note the controller is disabled by the call to Configure
    end Initialize_DMA;
 
+   ----------------
+   -- Blink_LEDs --
+   ----------------
 
    procedure Blink_LEDs is
    begin
