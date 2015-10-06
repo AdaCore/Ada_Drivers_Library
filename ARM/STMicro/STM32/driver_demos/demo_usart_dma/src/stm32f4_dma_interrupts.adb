@@ -33,13 +33,11 @@ with STM32F4.USARTs;  use STM32F4.USARTs;
 
 package body STM32F4_DMA_Interrupts is
 
-
    -------------------------------
    -- Finalize_DMA_Transmission --
    -------------------------------
 
    procedure Finalize_DMA_Transmission (Transceiver : in out USART) is
-      --  see static void USART_DMATransmitCplt
    begin
       loop
          exit when Status (Transceiver, Transmission_Complete_Indicated);
@@ -47,8 +45,6 @@ package body STM32F4_DMA_Interrupts is
       Clear_Status (Transceiver, Transmission_Complete_Indicated);
       Disable_DMA_Transmit_Requests (Transceiver);
    end Finalize_DMA_Transmission;
-
-
 
    -------------
    -- Handler --
