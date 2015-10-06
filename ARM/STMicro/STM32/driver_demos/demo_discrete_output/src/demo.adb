@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 --  A simple demo for toggling a GPIO pin using a periodic task. We use GPIO
---  Port C, pin 15, an arbitrary choice. You'll need to hock up a multimeter
+--  Port C, pin 15, an arbitrary choice. You'll need to hook up a multimeter
 --  to that pin to see the effect, or an external circuit (e.g., to an LED).
 
 with Driver;               pragma Unreferenced (Driver);
