@@ -49,33 +49,32 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
 procedure Demo_USART is
 
+   Outgoing : aliased Message (Physical_Size => 1024);  -- arbitrary size
+
    -----------------------------
    -- Initialize_STMicro_UART --
    -----------------------------
 
    procedure Initialize_STMicro_UART is
+      Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (Transceiver);
       Enable_Clock (IO_Port);
 
-      declare
-         Configuration : GPIO_Port_Configuration;
-      begin
-         Configuration.Mode := Mode_AF;
-         Configuration.Speed := Speed_50MHz;
-         Configuration.Output_Type := Push_Pull;
-         Configuration.Resistors := Pull_Up;
+      Configuration.Mode := Mode_AF;
+      Configuration.Speed := Speed_50MHz;
+      Configuration.Output_Type := Push_Pull;
+      Configuration.Resistors := Pull_Up;
 
-         Configure_IO
-           (Port => IO_Port,
-            Pins => Rx_Pin & Tx_Pin,
-            Config => Configuration);
+      Configure_IO
+        (Port => IO_Port,
+         Pins => Rx_Pin & Tx_Pin,
+         Config => Configuration);
 
-         Configure_Alternate_Function
-           (Port => IO_Port,
-            Pins => Rx_Pin & Tx_Pin,
-            AF   => Transceiver_AF);
-      end;
+      Configure_Alternate_Function
+        (Port => IO_Port,
+         Pins => Rx_Pin & Tx_Pin,
+         AF   => Transceiver_AF);
    end Initialize_STMicro_UART;
 
    ----------------
@@ -98,9 +97,9 @@ procedure Demo_USART is
       Enable (Transceiver);
    end Initialize;
 
-
-   Outgoing : aliased Message (Physical_Size => 1024);  -- arbitrary size
-
+   --------------
+   -- Interact --
+   --------------
 
    procedure Interact is
       Received : aliased Message (Physical_Size => 1024);  -- arbitrary size
@@ -115,7 +114,6 @@ procedure Demo_USART is
          Suspend_Until_True (Outgoing.Transmission_Complete);
       end loop;
    end Interact;
-
 
 begin
    Initialize;

@@ -42,6 +42,9 @@ procedure Demo_USART is
    TX_Pin : constant GPIO_Pin := Pin_7;
    RX_Pin : constant GPIO_Pin := Pin_6;
 
+   -----------------------------
+   -- Initialize_STMicro_UART --
+   -----------------------------
 
    procedure Initialize_STMicro_UART is
       Configuration : GPIO_Port_Configuration;
@@ -65,6 +68,9 @@ procedure Demo_USART is
          AF   => GPIO_AF_USART1);
    end Initialize_STMicro_UART;
 
+   ----------------
+   -- Initialize --
+   ----------------
 
    procedure Initialize is
    begin
@@ -82,6 +88,9 @@ procedure Demo_USART is
       Enable (USART_1);
    end Initialize;
 
+   ----------------------
+   -- Await_Send_Ready --
+   ----------------------
 
    procedure Await_Send_Ready (This : USART) is
    begin
@@ -90,13 +99,15 @@ procedure Demo_USART is
       end loop;
    end Await_Send_Ready;
 
+   ------------------
+   -- Put_Blocking --
+   ------------------
 
    procedure Put_Blocking (This : in out USART;  Data : Half_Word) is
    begin
       Await_Send_Ready (This);
       Transmit (This, Data);
    end Put_Blocking;
-
 
 begin
    Initialize;
