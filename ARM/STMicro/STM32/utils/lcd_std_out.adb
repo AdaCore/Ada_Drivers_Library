@@ -159,6 +159,7 @@ package body LCD_Std_Out is
          X := Char_Count * Char_Width;
       end if;
       Draw_Char (X, Current_Y, Msg);
+      Char_Count := Char_Count + 1;
    end Put;
 
    --------------
