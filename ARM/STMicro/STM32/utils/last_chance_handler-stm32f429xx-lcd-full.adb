@@ -57,8 +57,6 @@ with STM32F4.ILI9341;
 with Ada.Exceptions.Traceback;  use Ada.Exceptions.Traceback;
 with GNAT.Debug_Utilities;      use GNAT.Debug_Utilities;
 
-pragma Warnings (Off, "'noreturn'*");
-
 package body Last_Chance_Handler is
 
    package LCD_Drawing is new Bitmapped_Drawing
