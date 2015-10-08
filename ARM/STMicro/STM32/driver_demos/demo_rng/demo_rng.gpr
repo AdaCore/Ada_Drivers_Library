@@ -27,7 +27,8 @@ project Demo_RNG is
    end Compiler;
 
    package Naming is
-      for Body ("last_chance_handler") use "last_chance_handler-stm32f407xx.adb";
+      for Spec ("last_chance_handler") use "last_chance_handler-sfp.ads";
+      for Body ("last_chance_handler") use "last_chance_handler-stm32f429xx-sfp.adb";
    end Naming;
 
    package Builder is

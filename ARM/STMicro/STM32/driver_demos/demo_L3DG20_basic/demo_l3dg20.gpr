@@ -25,7 +25,8 @@ project Demo_L3DG20 is
    end Compiler;
 
    package Naming is
-      for body ("last_chance_handler") use "last_chance_handler-stm32f429xx.adb";
+      for Spec ("last_chance_handler") use "last_chance_handler-sfp.ads";
+      for Body ("last_chance_handler") use "last_chance_handler-stm32f429xx-sfp.adb";
    end Naming;
 
     package Linker is

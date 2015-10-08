@@ -29,70 +29,27 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This version of the LCH writes the exception name and message (if any),
---  followed by the traceback, if any, to the LCD. It uses the package
---  LCD_Std_Out, and that package body elaboration assignes GPIO ports
---  and pins, as well as a SPI port, to initialize the ILI9341 component.
+--  This version of the LCH only toggles the Red LED.
 
---  Note this version requires building with the ravenscar-full runtime.
+--  Note this version is for use with the ravenscar-full runtime.
 
---  The non-symbolic traceback addresses are written to the LCD. From these
---  addresses you can get the symbolic traceback using arm-eabi-addr2line on
---  the command line. For example:
---
---  arm-eabi-addr2line -e <executable> --functions --demangle <address> ...
---
---  Note that you must build with the "-E" binder switch for the traceback
---  addresses to be stored with exception occurrences.
---
---  See the GNAT User Guide, section 8.1.14. Stack Traceback for details.
-
-with Ada.Real_Time;        use Ada.Real_Time;
-with STM32F429_Discovery;  use STM32F429_Discovery;
-with LCD_Std_Out;
-with Bitmapped_Drawing;
-with BMP_Fonts;
-with STM32F4.ILI9341;
-
-with Ada.Exceptions.Traceback;  use Ada.Exceptions.Traceback;
-with GNAT.Debug_Utilities;      use GNAT.Debug_Utilities;
-
-pragma Warnings (Off, "'noreturn'*");
+with STM32F4_Discovery;  use STM32F4_Discovery;
+with Ada.Real_Time;      use Ada.Real_Time;
 
 package body Last_Chance_Handler is
-
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => STM32F4.ILI9341.Colors,
-      Set_Pixel => STM32F4.ILI9341.Set_Pixel);
-
-   package LCD_Text is new LCD_Std_Out (LCD_Drawing);
-   --  we use the LCD_Std_Out generic, rather than directly using the Drawing
-   --  package, because we want the text to wrap around the screen if necessary
 
    -------------------------
    -- Last_Chance_Handler --
    -------------------------
 
    procedure Last_Chance_Handler (Error : Exception_Occurrence) is
-      Buffer : constant Tracebacks_Array := Tracebacks (Error);
-      Msg    : constant String := Exception_Message (Error);
+      pragma Unreferenced (Error);
    begin
-      Initialize_LEDs;  -- in case no other use in the application
+      Initialize_LEDs;
+
       All_LEDs_Off;
 
-      LCD_Text.Set_Font (To => BMP_Fonts.Font12x12);
-
-      LCD_Text.Put_Line (Exception_Name (Error));
-      if Msg /= "" then
-         LCD_Text.Put_Line (Msg);
-      end if;
-      LCD_Text.New_Line;
-      LCD_Text.Put_Line ("Traceback:");
-
-      for E of Buffer loop
-         LCD_Text.Put_Line (Image_C (E));
-      end loop;
-
+      --  No-return procedure...
       loop
          Toggle (Red);
          delay until Clock + Milliseconds (500);

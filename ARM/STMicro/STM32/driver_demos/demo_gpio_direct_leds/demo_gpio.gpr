@@ -7,8 +7,7 @@ project Demo_GPIO is
 
    for Object_Dir use "obj";
 
-   type Build_Modes is
-      ("debug", "production");
+   type Build_Modes is ("debug", "production");
 
    Build_Mode : Build_Modes := external ("Build", "debug");
 
@@ -29,7 +28,8 @@ project Demo_GPIO is
    end Compiler;
 
    package Naming is
-      for Body ("last_chance_handler") use "last_chance_handler-stm32f407xx.adb";
+      for Spec ("last_chance_handler") use "last_chance_handler-sfp.ads";
+      for Body ("last_chance_handler") use "last_chance_handler-stm32f407xx-sfp.adb";
    end Naming;
 
    package Builder is

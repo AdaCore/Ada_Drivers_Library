@@ -27,7 +27,8 @@ project Demo_USART_DMA is
    end Compiler;
 
    package Naming is
-      for Implementation ("last_chance_handler") use "last_chance_handler-stm32f407xx.adb";
+      for Spec ("last_chance_handler") use "last_chance_handler-sfp.ads";
+      for Body ("last_chance_handler") use "last_chance_handler-stm32f407xx-sfp.adb";
    end Naming;
 
    for Runtime ("Ada") use "ravenscar-sfp-stm32f4";

@@ -28,7 +28,8 @@ project demo_basic_timer_interrupts is
    end Compiler;
 
    package Naming is
-      for Body ("last_chance_handler") use "last_chance_handler-stm32f407xx.adb";
+      for Spec ("last_chance_handler") use "last_chance_handler-sfp.ads";
+      for Body ("last_chance_handler") use "last_chance_handler-stm32f407xx-sfp.adb";
    end Naming;
 
    package Builder is

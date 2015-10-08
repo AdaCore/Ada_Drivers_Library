@@ -29,98 +29,84 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This version of the LCH writes the exception message and the traceback to
---  the LCD. It uses the package LCD_Std_Out, and that package body elaboration
---  assignes GPIO ports and pins, as well as a SPI port, to initialize the
---  ILI9341 component.
+--  This version of the LCH writes information about the unhandled exception
+--  to the LCD. Note that it uses the package LCD_Std_Out, and that package
+--  body's elaboration assignes GPIO ports and pins, as well as a SPI port,
+--  to initialize the ILI9341 component.
 
---  Note this version is for use with the ravenscar-sfp runtime.
+--  Note this version is for use with the ravenscar-sfp runtime, in which full
+--  exception semantics are not available.
 
-with STM32F429_Discovery;     use STM32F429_Discovery;
+with STM32F429_Discovery;  use STM32F429_Discovery;
+
 with LCD_Std_Out;
 with Bitmapped_Drawing;
 with BMP_Fonts;
 with STM32F4.ILI9341;
 
-with Ada.Real_Time;           use Ada.Real_Time;
-with System.Storage_Elements; use System.Storage_Elements;
+with Ada.Real_Time;  use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
-
-pragma Warnings (Off);
-with System.Traceback;
-with System.Traceback_Entries;
-pragma Warnings (On);
-with GNAT.Debug_Utilities;
-
---  From the printed non-symbolic traceback you can get the symbolic traceback
---  using arm-eabi-addr2line on the command line. Specifically, given the
---  addresses displayed on the LCD when an exception is raised, first re-build
---  the application with the "-E" binder switch (and the "-g" builder switch).
---  For example:
---
---  gprbuild -P <project-file> -bargs -E
---
---  Then pass that newly-built executable and those addresses to an invocation
---  of arm-eabi-addr2line. For example:
---
---  arm-eabi-addr2line -e <executable> --functions --demangle <address> ...
---
---  See the GNAT User Guide, section 8.1.14. Stack Traceback for details.
 
 package body Last_Chance_Handler is
 
-   type Integer_Pointer is access all Integer with Storage_Size => 0;
-
-   function As_Integer_Pointer is new Ada.Unchecked_Conversion
-     (Source => System.Address, Target => Integer_Pointer);
-
-   Traceback       : System.Traceback_Entries.Tracebacks_Array (1 .. 64);
-   Traceback_Count : Natural;
+   -----------------
+   -- LCD_Drawing --
+   -----------------
 
    package LCD_Drawing is new Bitmapped_Drawing
      (Color     => STM32F4.ILI9341.Colors,
       Set_Pixel => STM32F4.ILI9341.Set_Pixel);
 
+   --------------
+   -- LCD_Text --
+   --------------
+
    package LCD_Text is new LCD_Std_Out (LCD_Drawing);
    --  we use the LCD_Std_Out generic, rather than directly using the Drawing
    --  package, because we want the text to wrap around the screen if necessary
+
+   ---------
+   -- Put --
+   ---------
+
+   procedure Put (Ptr : System.Address) is
+
+      type C_String_Ptr is access String (1 .. Positive'Last) with
+        Storage_Size => 0, Size => Standard'Address_Size;
+
+      function As_C_String_Ptr is new Ada.Unchecked_Conversion
+        (System.Address, C_String_Ptr);
+
+      Msg_Str : constant C_String_Ptr := As_C_String_Ptr (Ptr);
+
+   begin
+      for J in Msg_Str'Range loop
+         exit when Msg_Str (J) = Character'Val (0);
+         LCD_Text.Put (Msg_Str (J));
+      end loop;
+   end Put;
 
    -------------------------
    -- Last_Chance_Handler --
    -------------------------
 
    procedure Last_Chance_Handler (Msg : System.Address; Line : Integer) is
-      pragma Unreferenced (Line);
-
-      Length : constant Integer := As_Integer_Pointer (Msg + 8).all;
-
-      subtype Message is String (1 .. Length);
-      --  the string at Msg.all is not null-terminated, apparently, so we
-      --  need to avoid the bounds representation issue.
-
-      type Message_Pointer is access all Message with
-        Size => Standard'Address_Size,
-        Storage_Size => 0;
-
-      function As_Message_Pointer is new Ada.Unchecked_Conversion
-        (Source => System.Address, Target => Message_Pointer);
-
-      Message_Content : Message renames As_Message_Pointer (Msg + 12).all;
-
    begin
       Initialize_LEDs;  -- in case no other use in the application
       All_LEDs_Off;
 
       LCD_Text.Set_Font (To => BMP_Fonts.Font12x12);
 
-      LCD_Text.Put_Line (Message_Content);
+      if Line /= 0 then
+         LCD_Text.Put ("Predefined exception at ");
+         Put (Msg);
+         LCD_Text.Put (" line");
+         LCD_Text.Put (Line'Img);
+      else
+         LCD_Text.Put ("User-defined exception, message: ");
+         Put (Msg);
+      end if;
       LCD_Text.New_Line;
-      LCD_Text.Put_Line ("Traceback:");
-
-      System.Traceback.Call_Chain (Traceback, Traceback'Length, Traceback_Count);
-      for J in 1 .. Traceback_Count loop
-         LCD_Text.Put_Line (GNAT.Debug_Utilities.Image_C (Traceback (J)));
-      end loop;
 
       loop
          Toggle (Red);
