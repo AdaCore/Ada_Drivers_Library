@@ -34,21 +34,21 @@
 --  assignes GPIO ports and pins, as well as a SPI port, to initialize the
 --  ILI9341 component.
 
-with STM32F429_Discovery;     use STM32F429_Discovery;
+--  Note this version requires the ravenscar-full runtime.
+
+with Ada.Real_Time;        use Ada.Real_Time;
+with STM32F429_Discovery;  use STM32F429_Discovery;
 with LCD_Std_Out;
 with Bitmapped_Drawing;
 with BMP_Fonts;
 with STM32F4.ILI9341;
 
-with Ada.Real_Time;           use Ada.Real_Time;
-with System.Storage_Elements; use System.Storage_Elements;
-with Ada.Unchecked_Conversion;
-
 pragma Warnings (Off);
 with System.Traceback;
 with System.Traceback_Entries;
 pragma Warnings (On);
-with GNAT.Debug_Utilities;
+
+with GNAT.Debug_Utilities; use GNAT.Debug_Utilities;
 
 --  From the printed non-symbolic traceback you can get the symbolic traceback
 --  using arm-eabi-addr2line on the command line. Specifically, given the
@@ -67,11 +67,6 @@ with GNAT.Debug_Utilities;
 
 package body Last_Chance_Handler is
 
-   type Integer_Pointer is access all Integer with Storage_Size => 0;
-
-   function As_Integer_Pointer is new Ada.Unchecked_Conversion
-     (Source => System.Address, Target => Integer_Pointer);
-
    Traceback       : System.Traceback_Entries.Tracebacks_Array (1 .. 64);
    Traceback_Count : Natural;
 
@@ -87,31 +82,15 @@ package body Last_Chance_Handler is
    -- Last_Chance_Handler --
    -------------------------
 
-   procedure Last_Chance_Handler (Msg : System.Address; Line : Integer) is
-      pragma Unreferenced (Line);
-
-      Length : constant Integer := As_Integer_Pointer (Msg + 8).all;
-
-      subtype Message is String (1 .. Length);
-      --  the string at Msg.all is not null-terminated, apparently, so we
-      --  need to avoid the bounds representation issue.
-
-      type Message_Pointer is access all Message with
-        Size => Standard'Address_Size,
-        Storage_Size => 0;
-
-      function As_Message_Pointer is new Ada.Unchecked_Conversion
-        (Source => System.Address, Target => Message_Pointer);
-
-      Message_Content : Message renames As_Message_Pointer (Msg + 12).all;
-
+   procedure Last_Chance_Handler (Error : Exception_Occurrence) is
    begin
       Initialize_LEDs;  -- in case no other use in the application
       All_LEDs_Off;
 
       LCD_Text.Set_Font (To => BMP_Fonts.Font12x12);
 
-      LCD_Text.Put_Line (Message_Content);
+      LCD_Text.Put_Line (Exception_Name (Error));
+      LCD_Text.Put_Line (Exception_Message (Error));
       LCD_Text.New_Line;
       LCD_Text.Put_Line ("Traceback:");
 

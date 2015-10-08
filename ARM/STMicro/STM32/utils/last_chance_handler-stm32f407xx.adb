@@ -29,6 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  This version of the LCH only toggles the Red LED.
+
+--  Note this version is for use with the ravenscar-sfp runtime.
+
 with STM32F4_Discovery;  use STM32F4_Discovery;
 with Ada.Real_Time;      use Ada.Real_Time;
 
