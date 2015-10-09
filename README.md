@@ -3,11 +3,11 @@
 
 This repository contains Ada source code and complete sample GNAT projects for
 selected bare-board platforms supported by GNAT.  Initially the repository
-contains software for ARM platforms, but we intend this to be a location for
-both AdaCore and the community in general to contribute support for additional
-processors, platforms, and vendors in the future.
+contains software for ARM platforms from a specific vendor, but we intend this
+to be a location for both AdaCore and the community in general to contribute
+support for additional processors, platforms, and vendors in the future.
 
-For the ARM platform, parts of the STM32 family by ST Microelectronics are
+For the ARM platform, parts of the STM32 family by STMicroelectronics are
 initially supported.
 
 
@@ -44,8 +44,10 @@ that target will also suffice.
 4. Content
 ----------
 
-Initial provision is for the hardware devices made available on the "STM32F4
-Discovery" and the "STM32F429 Discovery" boards.
+Initial provision is for the hardware in the STM32F4 family of 32-bit MCUs, as
+defined in the "RM0090 Reference Manual" (Doc ID 018909 Rev 6, Feb 2014) by
+STMicroelectronics and made available on the "STM32F4 Discovery" and the
+"STM32F429 Discovery" kit boards.
 
 Specifically, there are low-level device drivers, small demonstration programs
 for those drivers, higher-level component drivers, and larger example
@@ -57,6 +59,6 @@ The small driver demonstration programs and the larger applications programs are
 provided as full projects, including GNAT project files, and are ready to build
 either within GPS or on the command-line.
 
-Not all devices defined by those two initially-supported boards are supported.
-We encourage contributions of high-level drivers such as those for CAN Bus, USB,
-and Ethernet.
+Not all devices defined by the Reference Manual are supported, and not all those
+supported are complete. We encourage contributions of corrections, enhancements,
+and new drivers.
