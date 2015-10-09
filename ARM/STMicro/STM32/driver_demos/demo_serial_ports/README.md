@@ -27,5 +27,5 @@ We use an app named HyperSerialPort on the host.  Once the cable is connected it
 will appear like a COM port so use the "Refresh" button in the Settings dialog
 to find the port represented by the cable.
 
-The USART is set to: 15200, N81, no flow control so change the app's connection
+The USART is set to: 115_200, N81, no flow control so change the app's connection
 accordingly.
