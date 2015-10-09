@@ -1,23 +1,21 @@
 You need a way to connect the GPIO pins on the target board to a serial port on
 your host computer.
 
-I use a USB cable specifically designed to appear as a COM port:
+You can use a USB cable specifically designed to appear as a COM port:
 
-Mouser Part No: 	895-TTL-232R-5V
-Manufacturer Part No: 	TTL-232R-5V
-Manufacturer: 	FTDI
-Description: 	USB Cables / IEEE 1394 Cables USB Embedded Serial Conv 5V 0.1" Header
-
-It costs approx $22.
+* Mouser Part No: 	895-TTL-232R-5V
+* Manufacturer Part No: 	TTL-232R-5V
+* Manufacturer: 	FTDI
+* Description: 	USB Cables / IEEE 1394 Cables USB Embedded Serial Conv 5V 0.1" Header
 
 The end of the cable is a female header, described in the datasheet
 (`DS_TTL-232R_CABLES-217672.pdf`).  See pages 10 and 11 in particular.
 
 Using male-to-female connector wires, connect the following on the STM32F4:
 
-   header pin 1, the black wire's header slot, to a ground pin on the board
-   header pin 4, the orange wire's header slot, to PA2
-   header pin 5, the yellow wire's header slot, to PA3
+* header pin 1, the black wire's header slot, to a ground pin on the board
+* header pin 4, the orange wire's header slot, to **PA2**
+* header pin 5, the yellow wire's header slot, to **PA3**
 
 Header pin 4 on the cable is TXD, the transmit data output.
 Header pin 5 on the cable is RXD, the receive data input.
