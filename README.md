@@ -49,11 +49,11 @@ defined in the "RM0090 Reference Manual" (Doc ID 018909 Rev 6, Feb 2014) by
 STMicroelectronics and made available on the "STM32F4 Discovery" and the
 "STM32F429 Discovery" kit boards.
 
-Specifically, there are low-level device drivers, small demonstration programs
-for those drivers, higher-level component drivers, and larger example
-applications.  "Component" drivers are those that are implemented using the
-lower-level device drivers (e.g., SPI or GPIO), such as the gyroscope and
-accelerometer on the Discovery boards.
+Specifically, there are low-level device drivers, higher-level component drivers,
+small demonstration programs for the drivers, and larger example applications.
+"Component" drivers are those that are implemented using the lower-level device
+drivers (e.g., SPI or GPIO), such as the gyroscope and accelerometer on the
+Discovery boards.
 
 The small driver demonstration programs and the larger applications programs are
 provided as full projects, including GNAT project files, and are ready to build
