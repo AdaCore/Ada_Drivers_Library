@@ -5,10 +5,7 @@ This repository contains Ada source code and complete sample GNAT projects for
 selected bare-board platforms supported by GNAT.  Initially the repository
 contains software for ARM platforms from a specific vendor, but we intend this
 to be a location for both AdaCore and the community in general to contribute
-support for additional processors, platforms, and vendors in the future.
-
-For the ARM platform, parts of the STM32 family by STMicroelectronics are
-initially supported.
+support for additional processors, platforms, and vendors.
 
 
 2. License
