@@ -59,9 +59,17 @@ with GNAT.Debug_Utilities;      use GNAT.Debug_Utilities;
 
 package body Last_Chance_Handler is
 
+   -----------------
+   -- LCD_Drawing --
+   -----------------
+
    package LCD_Drawing is new Bitmapped_Drawing
      (Color     => STM32F4.ILI9341.Colors,
       Set_Pixel => STM32F4.ILI9341.Set_Pixel);
+
+   --------------
+   -- LCD_Text --
+   --------------
 
    package LCD_Text is new LCD_Std_Out (LCD_Drawing);
    --  we use the LCD_Std_Out generic, rather than directly using the Drawing
@@ -72,24 +80,24 @@ package body Last_Chance_Handler is
    -------------------------
 
    procedure Last_Chance_Handler (Error : Exception_Occurrence) is
-      Buffer : constant Tracebacks_Array := Tracebacks (Error);
-      Msg    : constant String := Exception_Message (Error);
    begin
-      Initialize_LEDs;  -- in case no other use in the application
+      Initialize_LEDs;  -- in case no other use already within the application
       All_LEDs_Off;
 
       LCD_Text.Set_Font (To => BMP_Fonts.Font12x12);
 
-      LCD_Text.Put_Line (Exception_Name (Error));
-      if Msg /= "" then
-         LCD_Text.Put_Line (Msg);
-      end if;
-      LCD_Text.New_Line;
-      LCD_Text.Put_Line ("Traceback:");
+      No_Exceptions_Propagated : begin
+         LCD_Text.Put_Line (Exception_Name (Error));
+         LCD_Text.Put_Line (Exception_Message (Error));
+         LCD_Text.New_Line;
+         LCD_Text.Put_Line ("Traceback:");
 
-      for E of Buffer loop
-         LCD_Text.Put_Line (Image_C (E));
-      end loop;
+         for Call_Stack_Address of Tracebacks (Error) loop
+            LCD_Text.Put_Line (Image_C (Call_Stack_Address));
+         end loop;
+      exception
+         when others => null;
+      end No_Exceptions_Propagated;
 
       loop
          Toggle (Red);
