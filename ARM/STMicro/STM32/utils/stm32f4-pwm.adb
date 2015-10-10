@@ -177,6 +177,8 @@ package body STM32F4.PWM is
          Pulse    => 0,
          Polarity => High);
 
+      Set_Compare_Value (This.Output_Timer.all, Channel, Half_Word (0));
+
       Enable_Channel (This.Output_Timer.all, Channel);
    end Attach_PWM_Channel;
 

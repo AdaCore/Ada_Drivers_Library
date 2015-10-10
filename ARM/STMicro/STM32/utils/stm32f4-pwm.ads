@@ -68,14 +68,16 @@ package STM32F4.PWM is
      with Post =>
        (for all Channel in Timer_Channel => (not Attached (This, Channel)));
    --  Initializes the specified timer for PWM generation at the requested
-   --  frequency.
+   --  frequency. You must attach at least one channel to the modulator in
+   --  order to drive PWM output values.
 
    procedure Attach_PWM_Channel
      (This                   : in out PWM_Modulator;
       Channel                : Timer_Channel;
       Point                  : GPIO_Point;
       Enable_GPIO_Port_Clock : not null access procedure)
-     with Post => Attached (This, Channel);
+     with Post => Attached (This, Channel) and
+                  Current_Duty_Cycle (This, Channel) = 0;
    --  Initializes the channel on the timer associated with This, and the
    --  corresponding GPIO port/pin pair, for PWM output. May be called multiple
    --  times for the same PWM_Modulator object, with different channels,
@@ -88,7 +90,9 @@ package STM32F4.PWM is
      (This    : in out PWM_Modulator;
       Channel : Timer_Channel;
       Value   : Percentage)
-     with Pre => Attached (This, Channel) or else raise Not_Attached;
+     with Inline,
+          Pre  => Attached (This, Channel) or else raise Not_Attached,
+          Post => Current_Duty_Cycle (This, Channel) = Value;
    --  Sets the pulse width such that the requested percentage is achieved.
 
    function Current_Duty_Cycle
@@ -103,10 +107,11 @@ package STM32F4.PWM is
      (This    : in out PWM_Modulator;
       Channel : Timer_Channel;
       Value   : Microseconds)
-     with Pre => Attached (This, Channel) or else raise Not_Attached;
+     with Inline,
+          Pre => Attached (This, Channel) or else raise Not_Attached;
    --  Set the pulse width such that the requested number of microseconds is
    --  achieved. Raises Invalid_Request if the requested time is greater than
-   --  the previously configured period.
+   --  the period previously configured via Initialise_PWM_Modulator.
 
    Invalid_Request : exception;
    --  Raised when the requested frequency is too high or too low for the given
