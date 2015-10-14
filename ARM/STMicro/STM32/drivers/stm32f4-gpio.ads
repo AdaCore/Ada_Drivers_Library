@@ -170,9 +170,7 @@ package STM32F4.GPIO is
    procedure Toggle (This : in out GPIO_Point)
      with
        Inline,
-       Post => (if Set (This)'Old then not Set (This) else Set (This));
-
-   Locking_Error : exception;
+       Post => (if Set (This'Old) then not Set (This) else Set (This));
 
    procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin) with
      Pre  => not Locked (Port, Pin),
