@@ -455,6 +455,18 @@ package body STM32F4.GPIO is
    -----------------------
 
    procedure Configure_Trigger
+     (Point   : GPIO_Point;
+      Trigger : External_Triggers)
+   is
+   begin
+      Configure_Trigger (Point.Port.all, Point.Pin, Trigger);
+   end Configure_Trigger;
+
+   -----------------------
+   -- Configure_Trigger --
+   -----------------------
+
+   procedure Configure_Trigger
      (Port    : in out GPIO_Port;
       Pins    : GPIO_Pins;
       Trigger : External_Triggers)

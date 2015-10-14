@@ -275,6 +275,12 @@ package STM32F4.GPIO is
    --  For each pin of Pins on the specified Port, configures the
    --  characteristics specified by Trigger
 
+   procedure Configure_Trigger
+     (Point   : GPIO_Point;
+      Trigger : External_Triggers);
+   --  For Point.Pin on Point.Port.all, configures the
+   --  characteristics specified by Trigger
+
    type GPIO_Alternate_Function is private;
 
    procedure Configure_Alternate_Function
