@@ -210,14 +210,6 @@ package body STM32F4.GPIO is
       use System.Machine_Code;
       use ASCII;
    begin
-      --  Verify not already locked. Even though we check for prior locking
-      --  in the precondition, and one should never check in the body what is
-      --  checked in a precondition, we always want to know when this error
-      --  arises, even if not debugging explicitly.
-      if (Port.LCKR and Pin'Enum_Rep) = Pin'Enum_Rep then
-         raise Locking_Error;
-      end if;
-
       --  As per the Reference Manual (RM0090; Doc ID 018909 Rev 6) pg 282,
       --  a specific sequence is required to set the Lock bit. Throughout the
       --  sequence the same value for the lower 15 bits of the word must be
@@ -250,15 +242,15 @@ package body STM32F4.GPIO is
 
       Asm ("orr  r3, %2, #65536"  & LF & HT &
            "str  r3, %0"          & LF & HT &
-           "ldr  r3, %0"          & LF & HT &  -- temp <- pin or LCCK  line 164
-           "str  r3, [%1, #28]"   & LF & HT &  -- temp -> lckr         line 167
-           "str  %2, [%1, #28]"   & LF & HT &  -- pin -> lckr          line 170
+           "ldr  r3, %0"          & LF & HT &  -- temp <- pin or LCCK
+           "str  r3, [%1, #28]"   & LF & HT &  -- temp -> lckr
+           "str  %2, [%1, #28]"   & LF & HT &  -- pin -> lckr
            "ldr  r3, %0"          & LF & HT &
-           "str  r3, [%1, #28]"   & LF & HT &  -- temp -> lckr         line 173
+           "str  r3, [%1, #28]"   & LF & HT &  -- temp -> lckr
            "ldr  r3, [%1, #28]"   & LF & HT &
-           "str  r3, %0"          & LF & HT &  -- temp <- lckr         line 176
+           "str  r3, %0"          & LF & HT &  -- temp <- lckr
            "ldr  r3, [%1, #28]"   & LF & HT &
-           "str  r3, %0"          & LF & HT,   -- temp <- lckr         line 179
+           "str  r3, %0"          & LF & HT,   -- temp <- lckr
            Inputs => (Address'Asm_Input ("r", Port'Address), -- %1
                      (GPIO_Pin'Asm_Input ("r", Pin))),            -- %2
            Outputs => (Word'Asm_Output ("=m", Temp)),  -- %0

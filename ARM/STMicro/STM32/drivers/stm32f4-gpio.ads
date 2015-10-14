@@ -174,8 +174,9 @@ package STM32F4.GPIO is
 
    Locking_Error : exception;
 
-   procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin)
-     with Post => Locked (Port, Pin);
+   procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin) with
+     Pre  => not Locked (Port, Pin),
+     Post => Locked (Port, Pin);
    --  Lock the current configuration of the given port/pin pair until the MCU
    --  is reset. Raises Locking_Error if already locked, but not given as an
    --  explicit precondition because we check it in the body and one should
@@ -186,8 +187,9 @@ package STM32F4.GPIO is
    function Locked (Port : GPIO_Port;  Pin : GPIO_Pin) return Boolean
      with Inline;
 
-   procedure Lock (Port : in out GPIO_Port;  Pins : GPIO_Pins)
-     with Post => (for all Pin of Pins => (Locked (Port, Pin)));
+   procedure Lock (Port : in out GPIO_Port;  Pins : GPIO_Pins) with
+     Pre  => (for all Pin of Pins => not Locked (Port, Pin)),
+     Post => (for all Pin of Pins => Locked (Port, Pin));
    --  Lock the current configuration of the specified pins on the given port
    --  until the MCU is reset. Raises Locking_Error if any of the pins on
    --  the specified port are already locked, but not given as an explicit
