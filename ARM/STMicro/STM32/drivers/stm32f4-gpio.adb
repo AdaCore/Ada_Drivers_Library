@@ -269,6 +269,24 @@ package body STM32F4.GPIO is
       end loop;
    end Lock;
 
+   ----------
+   -- Lock --
+   ----------
+
+   procedure Lock (Point : GPIO_Point) is
+   begin
+      Lock (Point.Port.all, Point.Pin);
+   end Lock;
+
+   ------------
+   -- Locked --
+   ------------
+
+   function Locked (Point : GPIO_Point) return Boolean is
+   begin
+      return Locked (Point.Port.all, Point.Pin);
+   end Locked;
+
    ------------------
    -- Configure_IO --
    ------------------
@@ -334,6 +352,18 @@ package body STM32F4.GPIO is
       end if;
    end Configure_IO;
 
+   ------------------
+   -- Configure_IO --
+   ------------------
+
+   procedure Configure_IO
+     (Point  : GPIO_Point;
+      Config : GPIO_Port_Configuration)
+   is
+   begin
+      Configure_IO (Point.Port.all, Point.Pin, Config);
+   end Configure_IO;
+
    -------------------
    -- Current_Input --
    -------------------
@@ -373,6 +403,18 @@ package body STM32F4.GPIO is
       Index : constant Integer := GPIO_Pin'Pos (Pin);
    begin
       Port.AFR (Index) := Bits_4 (AF);
+   end Configure_Alternate_Function;
+
+   ----------------------------------
+   -- Configure_Alternate_Function --
+   ----------------------------------
+
+   procedure Configure_Alternate_Function
+     (Point : GPIO_Point;
+      AF    : GPIO_Alternate_Function)
+   is
+   begin
+      Configure_Alternate_Function (Point.Port.all, Point.Pin, AF);
    end Configure_Alternate_Function;
 
    ----------------------------------

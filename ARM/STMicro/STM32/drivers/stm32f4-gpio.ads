@@ -170,11 +170,7 @@ package STM32F4.GPIO is
      Pre  => not Locked (Port, Pin),
      Post => Locked (Port, Pin);
    --  Lock the current configuration of the given port/pin pair until the MCU
-   --  is reset. Raises Locking_Error if already locked, but not given as an
-   --  explicit precondition because we check it in the body and one should
-   --  not check in both places. We check in the body explicitly because we
-   --  always want to know about it, even if not in a debugging phase with
-   --  the pre/postcondition checks enabled.
+   --  is reset.
 
    function Locked (Port : GPIO_Port;  Pin : GPIO_Pin) return Boolean with
      Inline;
@@ -183,12 +179,16 @@ package STM32F4.GPIO is
      Pre  => (for all Pin of Pins => not Locked (Port, Pin)),
      Post => (for all Pin of Pins => Locked (Port, Pin));
    --  Lock the current configuration of the specified pins on the given port
-   --  until the MCU is reset. Raises Locking_Error if any of the pins on
-   --  the specified port are already locked, but not given as an explicit
-   --  precondition because we check it in the body and one should not check
-   --  in both places. We check in the body explicitly because we always
-   --  want to know about it, even if not in a debugging phase with the
-   --  pre/postcondition checks enabled.
+   --  until the MCU is reset.
+
+   procedure Lock (Point : GPIO_Point) with
+     Pre  => not Locked (Point),
+     Post => Locked (Point);
+   --  Lock the current configuration of the given port/pin pair until the MCU
+   --  is reset.
+
+   function Locked (Point : GPIO_Point) return Boolean with
+     Inline;
 
    type Pin_IO_Modes is (Mode_In, Mode_Out, Mode_AF, Mode_Analog);
 
@@ -241,6 +241,12 @@ package STM32F4.GPIO is
    --  For each pin of Pins on the specified Port, configures the
    --  characteristics specified by Config
 
+   procedure Configure_IO
+     (Point  : GPIO_Point;
+      Config : GPIO_Port_Configuration);
+   --  For Point.Pin on the Point.Port.all, configures the
+   --  characteristics specified by Config
+
    type External_Triggers is
      (Interrupt_Rising_Edge,
       Interrupt_Falling_Edge,
@@ -283,6 +289,12 @@ package STM32F4.GPIO is
       Pins : GPIO_Pins;
       AF   : GPIO_Alternate_Function);
    --  For each pin of Pins on the specified Port, sets the alternate function
+   --  specified by AF
+
+   procedure Configure_Alternate_Function
+     (Point : GPIO_Point;
+      AF    : GPIO_Alternate_Function);
+   --  For Point.Pin on Point.Port.all, sets the alternate function
    --  specified by AF
 
    GPIO_AF_RTC_50Hz  : constant GPIO_Alternate_Function;
