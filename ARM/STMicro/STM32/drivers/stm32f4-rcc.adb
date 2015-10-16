@@ -579,6 +579,16 @@ package body STM32F4.RCC is
       Register.APB2ENR := Register.APB2ENR or APB2ENR_ADC1EN;
    end ADC1_Clock_Enable;
 
+   procedure ADC2_Clock_Enable is
+   begin
+      Register.APB2ENR := Register.APB2ENR or APB2ENR_ADC2EN;
+   end ADC2_Clock_Enable;
+
+   procedure ADC3_Clock_Enable is
+   begin
+      Register.APB2ENR := Register.APB2ENR or APB2ENR_ADC3EN;
+   end ADC3_Clock_Enable;
+
    procedure SDIO_Clock_Enable is
    begin
       Register.APB2ENR := Register.APB2ENR or APB2ENR_SDIOEN;

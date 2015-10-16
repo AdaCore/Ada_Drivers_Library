@@ -153,6 +153,8 @@ package STM32F4.RCC is
    procedure USART1_Clock_Enable with Inline;
    procedure USART6_Clock_Enable with Inline;
    procedure ADC1_Clock_Enable with Inline;
+   procedure ADC2_Clock_Enable with Inline;
+   procedure ADC3_Clock_Enable with Inline;
    procedure SDIO_Clock_Enable with Inline;
    procedure SPI1_Clock_Enable with Inline;
    procedure SPI4_Clock_Enable with Inline;
