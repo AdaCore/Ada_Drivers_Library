@@ -43,6 +43,7 @@
 --  manufactured by ST Microelectronics.  For example, an STM32F405.
 
 with STM32F4.GPIO;    use STM32F4.GPIO;
+with STM32F4.ADC;     use STM32F4.ADC;
 with STM32F4.DMA;     use STM32F4.DMA;
 with STM32F4.USARTs;  use STM32F4.USARTs;
 with STM32F4.I2C;     use STM32F4.I2C;
@@ -69,6 +70,16 @@ package STM32F40xxx is
    GPIO_I : aliased GPIO_Port with Volatile, Address => GPIOI_Base;
 
    procedure Enable_Clock (This : aliased in out GPIO_Port);
+
+   ADC_1 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC1_Base;
+   ADC_2 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC2_Base;
+   ADC_3 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC3_Base;
+
+   ADC_VBat        : constant ADC_Point := (ADC_1'Access, Channel => VBat_Channel);
+   ADC_Temperature : constant ADC_Point := (ADC_1'Access, Channel => 16);
+   --  see RM pg 410, section 13.10, also pg 389
+
+   procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter);
 
    USART_1 : aliased USART with Volatile, Address => USART1_Base;
    USART_2 : aliased USART with Volatile, Address => USART2_Base;

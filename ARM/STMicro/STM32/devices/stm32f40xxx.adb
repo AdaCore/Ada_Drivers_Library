@@ -69,6 +69,23 @@ package body STM32F40xxx is
    -- Enable_Clock --
    ------------------
 
+   procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter) is
+   begin
+      if This'Address = ADC1_Base then
+         ADC1_Clock_Enable;
+      elsif This'Address = ADC2_Base then
+         ADC2_Clock_Enable;
+      elsif This'Address = ADC3_Base then
+         ADC3_Clock_Enable;
+      else
+         raise Unknown_Device;
+      end if;
+   end Enable_Clock;
+
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
    procedure Enable_Clock (This : aliased in out USART) is
    begin
       if This'Address = USART1_Base then

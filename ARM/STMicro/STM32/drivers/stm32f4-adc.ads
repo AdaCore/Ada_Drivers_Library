@@ -18,11 +18,10 @@ package STM32F4.ADC is
 
    type Analog_Input_Channel is range 0 .. 18;
 
-   --  TODO: define constants named ADC_Temperature_Channel in STM32Fxxx.ads packages,
-   --     with renamings in the *_Discovery packages:
-   --       for STM32F40xxx, value is Channel 16
-   --       for STM32F42xxx, value is Channel 18 (same as VBat)
-   --  see RM pg 410, section 13.10, also pg 389
+   type ADC_Point is record
+      ADC     : access Analog_To_Digital_Converter;
+      Channel : Analog_Input_Channel;
+   end record;
 
    VBat_Channel : constant Analog_Input_Channel := 18;
    --  see RM pg 410, section 13.10; also pg 389 section 13.3.3
@@ -152,7 +151,7 @@ package STM32F4.ADC is
       Triple_Interleaved                                     => 2#10111#,
       Triple_Alternate_Trigger                               => 2#11001#);
 
-   procedure Configure
+   procedure Configure_Common
      (Mode           : Multi_ADC_Mode_Selections := Independent;
       Prescalar      : ADC_Prescalars            := PCLK2_Div_2;
       DMA_Mode       : Multi_ADC_DMA_Modes       := Disabled;
@@ -411,6 +410,7 @@ private
       JDR4  : Data_Register;
       DR    : Data_Register;
    end record with
+     Volatile,
      Size => 20 * 32;
 
    for Analog_To_Digital_Converter use record
@@ -519,6 +519,6 @@ private
 
    Common : Common_Registers with
      Volatile,
-     Address => ADC1_Base + 16#300#;
+     Address => ADC_Base;
 
 end STM32F4.ADC;

@@ -25,11 +25,11 @@ package body STM32F4.ADC is
    function Enabled (This : Analog_To_Digital_Converter) return Boolean is
      (This.CR2.ADC_Enabled);
 
-   ---------------
-   -- Configure --
-   ---------------
+   ----------------------
+   -- Configure_Common --
+   ----------------------
 
-   procedure Configure
+   procedure Configure_Common
      (Mode           : Multi_ADC_Mode_Selections := Independent;
       Prescalar      : ADC_Prescalars            := PCLK2_Div_2;
       DMA_Mode       : Multi_ADC_DMA_Modes       := Disabled;
@@ -40,6 +40,6 @@ package body STM32F4.ADC is
       Common.CR.Sampling_Delay     := Sampling_Delay;
       Common.CR.Multi_ADC_DMA_Mode := DMA_Mode;
       Common.CR.ADC_Prescalar      := Prescalar;
-   end Configure;
+   end Configure_Common;
 
 end STM32F4.ADC;

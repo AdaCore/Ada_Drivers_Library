@@ -46,6 +46,7 @@
 with STM32F40xxx;
 
 with STM32F4.GPIO;    use STM32F4.GPIO;
+with STM32F4.ADC;     use STM32F4.ADC;
 with STM32F4.DMA;     use STM32F4.DMA;
 with STM32F4.USARTs;  use STM32F4.USARTs;
 with STM32F4.I2C;     use STM32F4.I2C;
@@ -111,6 +112,16 @@ package STM32F4_Discovery is
    --  Configures the GPIO port/pin for the blue user button. Sufficient
    --  for polling the button, and necessary for having the button generate
    --  interrupts.
+
+   ADC_1 : Analog_To_Digital_Converter renames STM32F40xxx.ADC_1;
+   ADC_2 : Analog_To_Digital_Converter renames STM32F40xxx.ADC_2;
+   ADC_3 : Analog_To_Digital_Converter renames STM32F40xxx.ADC_3;
+
+   ADC_VBat        : ADC_Point renames STM32F40xxx.ADC_VBat;
+   ADC_Temperature : ADC_Point renames STM32F40xxx.ADC_Temperature;
+
+   procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter)
+      renames STM32F40xxx.Enable_Clock;
 
    USART_1 : USART renames STM32F40xxx.USART_1;
    USART_2 : USART renames STM32F40xxx.USART_2;
