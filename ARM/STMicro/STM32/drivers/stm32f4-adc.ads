@@ -1,4 +1,7 @@
+with Ada.Real_Time; use Ada.Real_Time;
+
 package STM32F4.ADC is
+   pragma Elaborate_Body;
 
    type Analog_To_Digital_Converter is limited private;
 
@@ -16,15 +19,21 @@ package STM32F4.ADC is
       ADC_Resolution_8_Bits,   -- 11 ADC Clock cycles
       ADC_Resolution_6_Bits);  --  9 ADC Clock cycles
 
-   type Analog_Input_Channel is range 0 .. 18;
+   type Analog_Input_Channel is mod 19; -- thus 0 .. 18 for 19 total channels
 
    type ADC_Point is record
       ADC     : access Analog_To_Digital_Converter;
       Channel : Analog_Input_Channel;
    end record;
 
+   subtype VRef_TemperatureSensor_Channel is Analog_Input_Channel range 16 .. 17;
+
+   VRef_Channel : constant VRef_TemperatureSensor_Channel := 17;
+   --  see RM pg 389 section 13.3.3
+
    VBat_Channel : constant Analog_Input_Channel := 18;
    --  see RM pg 410, section 13.10; also pg 389 section 13.3.3
+   --  Note only available with ADC_1
 
    type Channel_Sampling_Times is
      (Sample_3_Cycles,
@@ -89,6 +98,113 @@ package STM32F4.ADC is
 
    type Watchdog_Threshold is new Bits_12;
 
+   type Regular_Channel_Sequence_Count is range 1 .. 16;
+
+   type Injected_Channel_Sequence_Count is range 1 .. 4;
+
+   type ADC_Conversion_Descriptor is record
+      Channel     : Analog_Input_Channel;
+      Sample_Time : Channel_Sampling_Times;
+      VBat        : Boolean := False;
+      VRef_Temp   : Boolean := False;
+   end record;
+
+   type Regular_Channel_Conversions is
+     array (Regular_Channel_Sequence_Count range <>) of ADC_Conversion_Descriptor;
+
+   No_Regular_Conversions : constant Regular_Channel_Conversions (1 .. 0) := (others => <>);
+
+   type Injected_Channel_Conversions is
+     array (Injected_Channel_Sequence_Count range <>) of ADC_Conversion_Descriptor;
+
+   No_Injected_Conversions : constant Injected_Channel_Conversions (1 .. 0) := (others => <>);
+
+   procedure Configure
+     (This       : out Analog_To_Digital_Converter;
+      Continuous : Boolean;
+      Resolution : Conversion_Resolution;
+      Alignment  : Data_Alignment;
+      Enable_EOC : Boolean;
+      Regular    : Regular_Channel_Conversions  := No_Regular_Conversions;
+      Injected   : Injected_Channel_Conversions := No_Injected_Conversions)
+     with
+       Pre => ((Regular = No_Regular_Conversions xor Injected = No_Injected_Conversions)
+               or else raise Invalid_Configuration),
+       Post => (if Regular'Length > 0 or Injected'Length > 0 then Scan_Mode_Enabled (This)) and
+               Conversions_Expected (This) = Regular'Length + Injected'Length;
+   --  Note that the order of the Regular and Injected channel conversions in
+   --  the arrays is the order in which they are scanned.
+
+   Invalid_Configuration : exception;
+
+   function Conversion_Value (This : Analog_To_Digital_Converter) return Half_Word
+     with Inline;
+
+   function Conversions_Expected (This : Analog_To_Digital_Converter) return Natural;
+   --  returns the total number of conversions to be done
+
+   function Scan_Mode_Enabled (This : Analog_To_Digital_Converter) return Boolean
+     with Inline;
+   --  returns whether only one channel is converted, or if multiple channels
+   --  are involved (i.e., scanned)
+
+   function EOC_Enabled (This : Analog_To_Digital_Converter) return Boolean with Inline;
+
+   function DMA_Enabled (This : Analog_To_Digital_Converter) return Boolean with Inline;
+
+   procedure Start_Conversion (This : in out Analog_To_Digital_Converter);
+
+   procedure Poll_For_Conversion_Complete (This : in out Analog_To_Digital_Converter) with
+     Pre => EOC_Enabled (This) xor DMA_Enabled (This);
+
+   --  status and interrupt management  ---------------------------------------
+
+   type ADC_Status_Flag is
+     (Overrun,
+      Regular_Channel_Conversion_Started,
+      Injected_Channel_Conversion_Started,
+      Injected_Channel_Conversion_Complete,
+      Regular_Channel_Conversion_Complete,
+      Analog_Watchdog_Event_Occurred);
+
+   function Status
+     (This : Analog_To_Digital_Converter;
+      Flag : ADC_Status_Flag)
+      return Boolean
+     with Inline;
+
+   procedure Clear_Status
+     (This : in out Analog_To_Digital_Converter;
+      Flag : ADC_Status_Flag)
+     with
+       Inline,
+       Post => not Status (This, Flag);
+
+   type ADC_Interrupt is
+     (Overrun,
+      Injected_Channel_Conversion_Complete,
+      Regular_Channel_Conversion_Complete,
+      Analog_Watchdog_Event);
+
+   procedure Enable_Interrupts
+     (This   : in out Analog_To_Digital_Converter;
+      Source : ADC_Interrupt)
+     with
+       Inline,
+       Post => Interrupt_Enabled (This, Source);
+
+   procedure Disable_Interrupts
+     (This   : in out Analog_To_Digital_Converter;
+      Source : ADC_Interrupt)
+     with
+       Inline,
+       Post => not Interrupt_Enabled (This, Source);
+
+   function Interrupt_Enabled
+     (This   : Analog_To_Digital_Converter;
+      Source : ADC_Interrupt)
+     return Boolean;
+
    --  common  ----------------------------------------------------------------
 
    type ADC_Prescalars is
@@ -151,13 +267,32 @@ package STM32F4.ADC is
       Triple_Interleaved                                     => 2#10111#,
       Triple_Alternate_Trigger                               => 2#11001#);
 
-   procedure Configure_Common
+   procedure Configure_ADC_Common
      (Mode           : Multi_ADC_Mode_Selections := Independent;
       Prescalar      : ADC_Prescalars            := PCLK2_Div_2;
       DMA_Mode       : Multi_ADC_DMA_Modes       := Disabled;
       Sampling_Delay : Sampling_Delay_Selections := Sampling_Delay_5_Cycles);
 
 private
+
+   ADC_Stabilization                : constant Time_Span := Microseconds (3);
+   Temperature_Sensor_Stabilization : constant Time_Span := Microseconds (10);
+
+   procedure Configure_Regular_Channel
+     (This        : in out Analog_To_Digital_Converter;
+      Channel     : Analog_Input_Channel;
+      Rank        : Regular_Channel_Sequence_Count;
+      Sample_Time : Channel_Sampling_Times;
+      VBat        : Boolean := False;
+      VRef_Temp   : Boolean := False)
+     with
+       Pre => (if VBat then This'Address = ADC1_Base and Channel = VBat_Channel) and
+              (if VBat then not VRef_Temp) and
+              (if VRef_Temp then
+                 This'Address = ADC1_Base and
+                 Channel in VRef_TemperatureSensor_Channel) and
+              (if VRef_Temp then not VBat);
+
 
    type Status_Register is record
       Reserved_31_6                        : Bits_26;
@@ -194,7 +329,7 @@ private
       Auto_Injected_Group_Conversion_Enabled : Boolean;  -- JAUTO
       Analog_Single_Channel_Watchdog_Enabled : Boolean;  -- AWDSGL
       Scan_Mode_Enabled                      : Boolean;  -- SCAN
-      Injected_Channels_Interrupt_Enabled    : Boolean;  -- JEOCIE
+      Injected_EOC_Interrupt_Enabled         : Boolean;  -- JEOCIE
       Analog_Watchdog_Interrupt_Enabled      : Boolean;  -- AWDIE
       EOC_Interrupt_Enabled                  : Boolean;  -- EOCIE
       Analog_Watchdog_Channel_Selected       : Analog_Input_Channel;  -- AWDCH
@@ -215,7 +350,7 @@ private
       Auto_Injected_Group_Conversion_Enabled at 0 range 10 .. 10;
       Analog_Single_Channel_Watchdog_Enabled at 0 range  9 .. 9;
       Scan_Mode_Enabled                      at 0 range  8 .. 8;
-      Injected_Channels_Interrupt_Enabled    at 0 range  7 .. 7;
+      Injected_EOC_Interrupt_Enabled         at 0 range  7 .. 7;
       Analog_Watchdog_Interrupt_Enabled      at 0 range  6 .. 6;
       EOC_Interrupt_Enabled                  at 0 range  5 .. 5;
       Analog_Watchdog_Channel_Selected       at 0 range  0 .. 4;
@@ -313,18 +448,16 @@ private
       Threshold      at 0 range 0 .. 11;
    end record;
 
-   type Channel_Sequence_Count is range 1 .. 16;
-
-   type Channel_Group is
-     array (Channel_Sequence_Count range <>) of Analog_Input_Channel
+   type Regular_Channel_Group is
+     array (Regular_Channel_Sequence_Count range <>) of Analog_Input_Channel
      with Component_Size => 5;
 
    type Regular_Sequence_Register_1 is record
       Reserved_31_24 : Bits_8;
       Length         : Bits_4;
-      -- really the type for Length is Channel_Sequence_Count, but using a
+      -- really the type for Length is Regular_Channel_Sequence_Count, but using a
       -- biased representation ("0" => 1 conversion, etc) to hold 16 values
-      SQ             : Channel_Group (13 .. 16);
+      SQ             : Regular_Channel_Group (13 .. 16);
    end record with
      Volatile_Full_Access,
      Size => 32;
@@ -337,7 +470,7 @@ private
 
    type Regular_Sequence_Register_2 is record
       Reserved_31_30 : Bits_2;
-      SQ             : Channel_Group (7 .. 12);
+      SQ             : Regular_Channel_Group (7 .. 12);
    end record with
      Volatile_Full_Access,
      Size => 32;
@@ -349,7 +482,7 @@ private
 
    type Regular_Sequence_Register_3 is record
       Reserved_31_30 : Bits_2;
-      SQ             : Channel_Group (1 .. 6);
+      SQ             : Regular_Channel_Group (1 .. 6);
    end record with
      Volatile_Full_Access,
      Size => 32;
@@ -359,13 +492,17 @@ private
       SQ             at 0 range  0 .. 29;
    end record;
 
+   type Injected_Channel_Group is
+     array (Injected_Channel_Sequence_Count) of Analog_Input_Channel
+     with Component_Size => 5;
+
    type Injected_Sequence_Register is record
       Reserved_31_22 : Bits_10;
       Length         : Bits_2;
-      -- really the type for Length is a subtype of Channel_Sequence_Count with
+      -- really the type for Length is a subtype of Injected_Channel_Sequence_Count with
       -- a range of range 1 .. 4, but using a biased representation ("0" => 1
       -- conversion, etc) to hold 4 values
-      SQ             : Channel_Group (1 .. 4);
+      SQ             : Injected_Channel_Group;
    end record with
      Volatile_Full_Access,
      Size => 32;
