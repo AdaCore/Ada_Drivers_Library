@@ -81,6 +81,11 @@ package STM32F42xxx is
    ADC_Temperature : constant ADC_Point := ADC_VBat;
    --  see RM pg 410, section 13.10, also pg 389
 
+   VBat_Bridge_Divisor : constant := 4;
+   --  The VBAT pin is internally connected to a bridge divider. The actual
+   --  voltage is the raw conversion value * the divisor. See section 13.11,
+   --  pg 412 of the RM.
+
    procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter);
 
    USART_1 : aliased USART with Volatile, Address => USART1_Base;

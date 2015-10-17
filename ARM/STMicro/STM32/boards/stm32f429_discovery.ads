@@ -118,6 +118,8 @@ package STM32F429_Discovery is
    ADC_VBat        : ADC_Point renames STM32F42xxx.ADC_VBat;
    ADC_Temperature : ADC_Point renames STM32F42xxx.ADC_Temperature;
 
+   VBat_Bridge_Divisor : constant := STM32F42xxx.VBat_Bridge_Divisor;
+
    procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter)
       renames STM32F42xxx.Enable_Clock;
 
