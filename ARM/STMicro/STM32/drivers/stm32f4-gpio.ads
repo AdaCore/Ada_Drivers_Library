@@ -214,6 +214,11 @@ package STM32F4.GPIO is
       Speed_100MHz => 3); -- very high
    for Pin_Output_Speeds'Size use 2;
 
+   Speed_Low       : Pin_Output_Speeds renames Speed_2MHz;
+   Speed_Medium    : Pin_Output_Speeds renames Speed_25MHz;
+   Speed_High      : Pin_Output_Speeds renames Speed_50MHz;
+   Speed_Very_High : Pin_Output_Speeds renames Speed_100MHz;
+
    type Internal_Pin_Resistors is (Floating, Pull_Up, Pull_Down);
 
    for Internal_Pin_Resistors use (Floating => 0, Pull_Up => 1, Pull_Down => 2);
