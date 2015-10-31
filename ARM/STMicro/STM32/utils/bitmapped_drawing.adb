@@ -169,6 +169,10 @@ package body Bitmapped_Drawing is
       Draw_Line ((Start.X, Stop.Y), Start, Hue, Thickness);
    end Draw_Rectangle;
 
+   --------------------
+   -- Fill_Rectangle --
+   --------------------
+
    procedure Fill_Rectangle
      (Start, Stop : Display_Point;
       Hue         : Color)
