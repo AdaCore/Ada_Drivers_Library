@@ -320,7 +320,7 @@ package body STM32F4.ILI9341 is
    begin
       GPIO.Set (Reset.Port.all, Reset.Pin);
       Send_Command (ILI9341_RESET);
-      delay until Clock + Milliseconds (5);  -- per document ILI9341_DS_V1.02
+      delay until Clock + Milliseconds (5);
 
       Send_Command (ILI9341_POWERA);
       Send_Data (16#39#);
@@ -414,7 +414,9 @@ package body STM32F4.ILI9341 is
       Send_Data (16#0F#);
       Send_Command (ILI9341_SLEEP_OUT);
 
-      delay until Clock + Milliseconds (200);  -- per document ILI9341_DS_V1.02
+      delay until Clock + Milliseconds (20);
+      -- document ILI9341_DS_V1.02, section 11.2, pg 205 says we need either
+      -- 120ms or 5ms, depending on the mode, but seems incorrect.
 
       Send_Command (ILI9341_DISPLAY_ON);
       Send_Command (ILI9341_GRAM);
