@@ -414,7 +414,7 @@ package body STM32F4.ILI9341 is
       Send_Data (16#0F#);
       Send_Command (ILI9341_SLEEP_OUT);
 
-      delay until Clock + Milliseconds (5);  -- per document ILI9341_DS_V1.02
+      delay until Clock + Milliseconds (200);  -- per document ILI9341_DS_V1.02
 
       Send_Command (ILI9341_DISPLAY_ON);
       Send_Command (ILI9341_GRAM);
