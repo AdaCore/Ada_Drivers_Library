@@ -744,10 +744,35 @@ package body STM32F4.RCC is
       Register.AHB1RSTR := Register.AHB1RSTR or AHB1RSTR_GPIOERST;
    end GPIOE_Force_Reset;
 
+   procedure GPIOF_Force_Reset is
+   begin
+      Register.AHB1RSTR := Register.AHB1RSTR or AHB1RSTR_GPIOFRST;
+   end GPIOF_Force_Reset;
+
+   procedure GPIOG_Force_Reset is
+   begin
+      Register.AHB1RSTR := Register.AHB1RSTR or AHB1RSTR_GPIOGRST;
+   end GPIOG_Force_Reset;
+
    procedure GPIOH_Force_Reset is
    begin
       Register.AHB1RSTR := Register.AHB1RSTR or AHB1RSTR_GPIOHRST;
    end GPIOH_Force_Reset;
+
+   procedure GPIOI_Force_Reset is
+   begin
+      Register.AHB1RSTR := Register.AHB1RSTR or AHB1RSTR_GPIOIRST;
+   end GPIOI_Force_Reset;
+
+   procedure GPIOJ_Force_Reset is
+   begin
+      Register.AHB1RSTR := Register.AHB1RSTR or AHB1RSTR_GPIOJRST;
+   end GPIOJ_Force_Reset;
+
+   procedure GPIOK_Force_Reset is
+   begin
+      Register.AHB1RSTR := Register.AHB1RSTR or AHB1RSTR_GPIOKRST;
+   end GPIOK_Force_Reset;
 
    procedure CRC_Force_Reset is
    begin
@@ -815,6 +840,16 @@ package body STM32F4.RCC is
    begin
       Register.AHB1RSTR := Register.AHB1RSTR and not AHB1RSTR_GPIOIRST;
    end GPIOI_Release_Reset;
+
+   procedure GPIOJ_Release_Reset is
+   begin
+      Register.AHB1RSTR := Register.AHB1RSTR and not AHB1RSTR_GPIOJRST;
+   end GPIOJ_Release_Reset;
+
+   procedure GPIOK_Release_Reset is
+   begin
+      Register.AHB1RSTR := Register.AHB1RSTR and not AHB1RSTR_GPIOKRST;
+   end GPIOK_Release_Reset;
 
    procedure CRC_Release_Reset is
    begin
@@ -932,6 +967,31 @@ package body STM32F4.RCC is
       Register.APB1RSTR := Register.APB1RSTR or APB1RSTR_USART2RST;
    end USART2_Force_Reset;
 
+   procedure USART3_Force_Reset is
+   begin
+      Register.APB1RSTR := Register.APB1RSTR or APB1RSTR_USART3RST;
+   end USART3_Force_Reset;
+
+   procedure UART4_Force_Reset is
+   begin
+      Register.APB1RSTR := Register.APB1RSTR or APB1RSTR_UART4RST;
+   end UART4_Force_Reset;
+
+   procedure UART5_Force_Reset is
+   begin
+      Register.APB1RSTR := Register.APB1RSTR or APB1RSTR_UART5RST;
+   end UART5_Force_Reset;
+
+   procedure UART7_Force_Reset is
+   begin
+      Register.APB1RSTR := Register.APB1RSTR or APB1RSTR_UART7RST;
+   end UART7_Force_Reset;
+
+   procedure UART8_Force_Reset is
+   begin
+      Register.APB1RSTR := Register.APB1RSTR or APB1RSTR_UART8RST;
+   end UART8_Force_Reset;
+
    procedure I2C1_Force_Reset is
    begin
       Register.APB1RSTR := Register.APB1RSTR or APB1RSTR_I2C1RST;
@@ -1021,6 +1081,31 @@ package body STM32F4.RCC is
    begin
       Register.APB1RSTR := Register.APB1RSTR and not APB1RSTR_USART2RST;
    end USART2_Release_Reset;
+
+   procedure USART3_Release_Reset is
+   begin
+      Register.APB1RSTR := Register.APB1RSTR and not APB1RSTR_USART3RST;
+   end USART3_Release_Reset;
+
+   procedure UART4_Release_Reset is
+   begin
+      Register.APB1RSTR := Register.APB1RSTR and not APB1RSTR_UART4RST;
+   end UART4_Release_Reset;
+
+   procedure UART5_Release_Reset is
+   begin
+      Register.APB1RSTR := Register.APB1RSTR and not APB1RSTR_UART5RST;
+   end UART5_Release_Reset;
+
+   procedure UART7_Release_Reset is
+   begin
+      Register.APB1RSTR := Register.APB1RSTR and not APB1RSTR_UART7RST;
+   end UART7_Release_Reset;
+
+   procedure UART8_Release_Reset is
+   begin
+      Register.APB1RSTR := Register.APB1RSTR and not APB1RSTR_UART8RST;
+   end UART8_Release_Reset;
 
    procedure I2C1_Release_Reset is
    begin

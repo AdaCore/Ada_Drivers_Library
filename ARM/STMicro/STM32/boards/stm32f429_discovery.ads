@@ -115,13 +115,16 @@ package STM32F429_Discovery is
    ADC_2 : Analog_To_Digital_Converter renames STM32F42xxx.ADC_2;
    ADC_3 : Analog_To_Digital_Converter renames STM32F42xxx.ADC_3;
 
-   ADC_VBat        : ADC_Point renames STM32F42xxx.ADC_VBat;
-   ADC_Temperature : ADC_Point renames STM32F42xxx.ADC_Temperature;
+   VBat               : ADC_Point renames STM32F42xxx.VBat;
+   Temperature_Sensor : ADC_Point renames STM32F42xxx.Temperature_Sensor;
 
    VBat_Bridge_Divisor : constant := STM32F42xxx.VBat_Bridge_Divisor;
 
    procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter)
       renames STM32F42xxx.Enable_Clock;
+
+   procedure Reset_All_ADC_Units
+     renames STM32F42xxx.Reset_All_ADC_Units;
 
    --  Note that some of these are really UARTs, not USARTs
    USART_1 : USART renames STM32F42xxx.USART_1;

@@ -188,7 +188,12 @@ package STM32F4.RCC is
    procedure GPIOC_Force_Reset with Inline;
    procedure GPIOD_Force_Reset with Inline;
    procedure GPIOE_Force_Reset with Inline;
+   procedure GPIOF_Force_Reset with Inline;
+   procedure GPIOG_Force_Reset with Inline;
    procedure GPIOH_Force_Reset with Inline;
+   procedure GPIOI_Force_Reset with Inline;
+   procedure GPIOJ_Force_Reset with Inline;
+   procedure GPIOK_Force_Reset with Inline;
    procedure CRC_Force_Reset with Inline;
    procedure DMA1_Force_Reset with Inline;
    procedure DMA2_Force_Reset with Inline;
@@ -203,6 +208,8 @@ package STM32F4.RCC is
    procedure GPIOG_Release_Reset with Inline;
    procedure GPIOH_Release_Reset with Inline;
    procedure GPIOI_Release_Reset with Inline;
+   procedure GPIOJ_Release_Reset with Inline;
+   procedure GPIOK_Release_Reset with Inline;
    procedure CRC_Release_Reset with Inline;
    procedure DMA1_Release_Reset with Inline;
    procedure DMA2_Release_Reset with Inline;
@@ -230,6 +237,11 @@ package STM32F4.RCC is
    procedure SPI2_Force_Reset with Inline;
    procedure SPI3_Force_Reset with Inline;
    procedure USART2_Force_Reset with Inline;
+   procedure USART3_Force_Reset with Inline;
+   procedure UART4_Force_Reset with Inline;
+   procedure UART5_Force_Reset with Inline;
+   procedure UART7_Force_Reset with Inline;
+   procedure UART8_Force_Reset with Inline;
    procedure I2C1_Force_Reset with Inline;
    procedure I2C2_Force_Reset with Inline;
    procedure I2C3_Force_Reset with Inline;
@@ -249,6 +261,11 @@ package STM32F4.RCC is
    procedure SPI2_Release_Reset with Inline;
    procedure SPI3_Release_Reset with Inline;
    procedure USART2_Release_Reset with Inline;
+   procedure USART3_Release_Reset with Inline;
+   procedure UART4_Release_Reset with Inline;
+   procedure UART5_Release_Reset with Inline;
+   procedure UART7_Release_Reset with Inline;
+   procedure UART8_Release_Reset with Inline;
    procedure I2C1_Release_Reset with Inline;
    procedure I2C2_Release_Reset with Inline;
    procedure I2C3_Release_Reset with Inline;
@@ -575,6 +592,8 @@ private
    AHB1RSTR_GPIOGRST  : constant := 16#00000040#;
    AHB1RSTR_GPIOHRST  : constant := 16#00000080#;
    AHB1RSTR_GPIOIRST  : constant := 16#00000100#;
+   AHB1RSTR_GPIOJRST  : constant := 16#00000200#;
+   AHB1RSTR_GPIOKRST  : constant := 16#00000400#;
    AHB1RSTR_CRCRST    : constant := 16#00001000#;
    AHB1RSTR_DMA1RST   : constant := 16#00200000#;
    AHB1RSTR_DMA2RST   : constant := 16#00400000#;
@@ -616,6 +635,8 @@ private
    APB1RSTR_CAN2RST   : constant := 16#04000000#;
    APB1RSTR_PWRRST    : constant := 16#10000000#;
    APB1RSTR_DACRST    : constant := 16#20000000#;
+   APB1RSTR_UART7RST  : constant := 16#40000000#;
+   APB1RSTR_UART8RST  : constant := 16#80000000#;
 
    ------------------  Constants for RCC_APB2RSTR register  -------------------
 

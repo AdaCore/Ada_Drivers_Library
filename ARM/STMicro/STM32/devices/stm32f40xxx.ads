@@ -71,12 +71,16 @@ package STM32F40xxx is
 
    procedure Enable_Clock (This : aliased in out GPIO_Port);
 
+   procedure Reset (This : aliased in out GPIO_Port);
+
    ADC_1 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC1_Base;
    ADC_2 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC2_Base;
    ADC_3 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC3_Base;
 
-   ADC_VBat        : constant ADC_Point := (ADC_1'Access, Channel => VBat_Channel);
-   ADC_Temperature : constant ADC_Point := (ADC_1'Access, Channel => 16);
+   VBat : constant ADC_Point := (ADC_1'Access, Channel => VBat_Channel);
+
+   Temperature_Channel : constant TemperatureSensor_Channel := 16;
+   Temperature_Sensor  : constant ADC_Point := (ADC_1'Access, Channel => Temperature_Channel);
    --  see RM pg 410, section 13.10, also pg 389
 
    VBat_Bridge_Divisor : constant := 2;
@@ -86,6 +90,8 @@ package STM32F40xxx is
 
    procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter);
 
+   procedure Reset_All_ADC_Units;
+
    USART_1 : aliased USART with Volatile, Address => USART1_Base;
    USART_2 : aliased USART with Volatile, Address => USART2_Base;
    USART_3 : aliased USART with Volatile, Address => USART3_Base;
@@ -93,10 +99,14 @@ package STM32F40xxx is
 
    procedure Enable_Clock (This : aliased in out USART);
 
+   procedure Reset (This : aliased in out USART);
+
    DMA_1 : aliased DMA_Controller with Volatile, Address => DMA1_Base;
    DMA_2 : aliased DMA_Controller with Volatile, Address => DMA2_Base;
 
    procedure Enable_Clock (This : aliased in out DMA_Controller);
+
+   procedure Reset (This : aliased in out DMA_Controller);
 
    I2C_1 : aliased I2C_Port with Volatile, Address => I2C1_Base;
    I2C_2 : aliased I2C_Port with Volatile, Address => I2C2_Base;

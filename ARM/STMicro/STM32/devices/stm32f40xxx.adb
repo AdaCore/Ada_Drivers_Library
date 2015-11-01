@@ -65,6 +65,44 @@ package body STM32F40xxx is
       end if;
    end Enable_Clock;
 
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : aliased in out GPIO_Port) is
+   begin
+      if This'Address = GPIOA_Base then
+         GPIOA_Force_Reset;
+         GPIOA_Release_Reset;
+      elsif This'Address = GPIOB_Base then
+         GPIOB_Force_Reset;
+         GPIOB_Release_Reset;
+      elsif This'Address = GPIOC_Base then
+         GPIOC_Force_Reset;
+         GPIOC_Release_Reset;
+      elsif This'Address = GPIOD_Base then
+         GPIOD_Force_Reset;
+         GPIOD_Release_Reset;
+      elsif This'Address = GPIOE_Base then
+         GPIOE_Force_Reset;
+         GPIOE_Release_Reset;
+      elsif This'Address = GPIOF_Base then
+         GPIOF_Force_Reset;
+         GPIOF_Release_Reset;
+      elsif This'Address = GPIOG_Base then
+         GPIOG_Force_Reset;
+         GPIOG_Release_Reset;
+      elsif This'Address = GPIOH_Base then
+         GPIOH_Force_Reset;
+         GPIOH_Release_Reset;
+      elsif This'Address = GPIOI_Base then
+         GPIOI_Force_Reset;
+         GPIOI_Release_Reset;
+      else
+         raise Unknown_Device;
+      end if;
+   end Reset;
+
    ------------------
    -- Enable_Clock --
    ------------------
@@ -81,6 +119,16 @@ package body STM32F40xxx is
          raise Unknown_Device;
       end if;
    end Enable_Clock;
+
+   -------------------------
+   -- Reset_All_ADC_Units --
+   -------------------------
+
+   procedure Reset_All_ADC_Units is
+   begin
+      ADC_Force_Reset;
+      ADC_Release_Reset;
+   end Reset_All_ADC_Units;
 
    ------------------
    -- Enable_Clock --
@@ -101,6 +149,29 @@ package body STM32F40xxx is
       end if;
    end Enable_Clock;
 
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : aliased in out USART) is
+   begin
+      if This'Address = USART1_Base then
+         USART1_Force_Reset;
+         USART1_Release_Reset;
+      elsif This'Address = USART2_Base then
+         USART2_Force_Reset;
+         USART2_Release_Reset;
+      elsif This'Address = USART3_Base then
+         USART3_Force_Reset;
+         USART3_Release_Reset;
+      elsif This'Address = USART6_Base then
+         USART6_Force_Reset;
+         USART6_Release_Reset;
+      else
+         raise Unknown_Device;
+      end if;
+   end Reset;
+
    ------------------
    -- Enable_Clock --
    ------------------
@@ -115,6 +186,23 @@ package body STM32F40xxx is
          raise Unknown_Device;
       end if;
    end Enable_Clock;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : aliased in out DMA_Controller) is
+   begin
+      if This'Address = STM32F4.DMA1_Base then
+         DMA1_Force_Reset;
+         DMA1_Release_Reset;
+      elsif This'Address = STM32F4.DMA2_Base then
+         DMA2_Force_Reset;
+         DMA2_Release_Reset;
+      else
+         raise Unknown_Device;
+      end if;
+   end Reset;
 
    ------------------
    -- Enable_Clock --

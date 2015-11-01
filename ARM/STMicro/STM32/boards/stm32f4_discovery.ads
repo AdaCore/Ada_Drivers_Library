@@ -117,13 +117,16 @@ package STM32F4_Discovery is
    ADC_2 : Analog_To_Digital_Converter renames STM32F40xxx.ADC_2;
    ADC_3 : Analog_To_Digital_Converter renames STM32F40xxx.ADC_3;
 
-   ADC_VBat        : ADC_Point renames STM32F40xxx.ADC_VBat;
-   ADC_Temperature : ADC_Point renames STM32F40xxx.ADC_Temperature;
+   VBat               : ADC_Point renames STM32F40xxx.VBat;
+   Temperature_Sensor : ADC_Point renames STM32F40xxx.Temperature_Sensor;
 
    VBat_Bridge_Divisor : constant := STM32F40xxx.VBat_Bridge_Divisor;
 
    procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter)
-      renames STM32F40xxx.Enable_Clock;
+     renames STM32F40xxx.Enable_Clock;
+
+   procedure Reset_All_ADC_Units
+     renames STM32F40xxx.Reset_All_ADC_Units;
 
    USART_1 : USART renames STM32F40xxx.USART_1;
    USART_2 : USART renames STM32F40xxx.USART_2;
