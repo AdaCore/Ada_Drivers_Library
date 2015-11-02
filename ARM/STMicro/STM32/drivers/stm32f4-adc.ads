@@ -705,7 +705,7 @@ private
 
    ADC_Stabilization                : constant Time_Span := Microseconds (3);
    Temperature_Sensor_Stabilization : constant Time_Span := Microseconds (10);
-   --  The RM, section 13.3.6, says stabilization times are required. Thes
+   --  The RM, section 13.3.6, says stabilization times are required. These
    --  values are specified in the datasheets, eg section 5.3.20, pg 129,
    --  and section 5.3.21, pg 134, of the STM32F405/7xx, DocID022152 Rev 4.
 

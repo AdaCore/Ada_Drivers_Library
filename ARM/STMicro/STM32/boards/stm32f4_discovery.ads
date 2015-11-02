@@ -104,6 +104,9 @@ package STM32F4_Discovery is
    procedure Enable_Clock (This : aliased in out GPIO_Port)
      renames STM32F40xxx.Enable_Clock;
 
+   procedure Reset (This : aliased in out GPIO_Port)
+     renames STM32F40xxx.Reset;
+
    User_Button_Port      : GPIO_Port renames GPIO_A;
    User_Button_Pin       : constant GPIO_Pin := Pin_0;
    User_Button_Interrupt : constant Interrupt_Id := Names.EXTI0_Interrupt;
@@ -136,11 +139,17 @@ package STM32F4_Discovery is
    procedure Enable_Clock (This : aliased in out USART)
      renames STM32F40xxx.Enable_Clock;
 
+   procedure Reset (This : aliased in out USART)
+     renames STM32F40xxx.Reset;
+
    DMA_1 : DMA_Controller renames STM32F40xxx.DMA_1;
    DMA_2 : DMA_Controller renames STM32F40xxx.DMA_2;
 
    procedure Enable_Clock (This : aliased in out DMA_Controller)
      renames STM32F40xxx.Enable_Clock;
+
+   procedure Reset (This : aliased in out DMA_Controller)
+     renames STM32F40xxx.Reset;
 
    I2C_1 : I2C_Port renames STM32F40xxx.I2C_1;
    I2C_2 : I2C_Port renames STM32F40xxx.I2C_2;
