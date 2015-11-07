@@ -103,7 +103,7 @@ package STM32F4.ADC is
 
    function Enabled (This : Analog_To_Digital_Converter) return Boolean;
 
-   type Conversion_Resolution is
+   type ADC_Resolution is
      (ADC_Resolution_12_Bits,  -- 15 ADC Clock cycles
       ADC_Resolution_10_Bits,  -- 13 ADC Clock cycles
       ADC_Resolution_8_Bits,   -- 11 ADC Clock cycles
@@ -113,13 +113,13 @@ package STM32F4.ADC is
 
    procedure Configure_Unit
      (This       : in out Analog_To_Digital_Converter;
-      Resolution : Conversion_Resolution;
+      Resolution : ADC_Resolution;
       Alignment  : Data_Alignment) with
      Post => Current_Resolution (This) = Resolution and
              Current_Alignment (This) = Alignment;
 
    function Current_Resolution (This : Analog_To_Digital_Converter)
-      return Conversion_Resolution;
+      return ADC_Resolution;
 
    function Current_Alignment (This : Analog_To_Digital_Converter)
       return Data_Alignment;
@@ -756,7 +756,7 @@ private
    type Control_Register_1 is record
       Reserved_31_27                         : Bits_5;
       Overrun_Interrupt_Enable               : Boolean;
-      Resolution                             : Conversion_Resolution;
+      Resolution                             : ADC_Resolution;
       Watchdog_Regular_Channels_Enabled      : Boolean;
       Watchdog_Injected_Channels_Enabled     : Boolean;
       Reserved_21_16                         : Bits_6;

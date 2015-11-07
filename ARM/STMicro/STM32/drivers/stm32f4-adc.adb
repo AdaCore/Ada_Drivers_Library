@@ -150,7 +150,7 @@ package body STM32F4.ADC is
 
    procedure Configure_Unit
      (This       : in out Analog_To_Digital_Converter;
-      Resolution : Conversion_Resolution;
+      Resolution : ADC_Resolution;
       Alignment  : Data_Alignment)
    is
    begin
@@ -164,7 +164,7 @@ package body STM32F4.ADC is
 
    function Current_Resolution
      (This : Analog_To_Digital_Converter)
-      return Conversion_Resolution
+      return ADC_Resolution
    is (This.CR1.Resolution);
 
    -----------------------
