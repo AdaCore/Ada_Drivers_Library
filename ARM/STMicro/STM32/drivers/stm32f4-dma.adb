@@ -228,11 +228,11 @@ package body STM32F4.DMA is
    -------------------------
 
    procedure Configure_Data_Flow
-     (Unit              : in out DMA_Controller;
-      Stream            : DMA_Stream_Selector;
-      Source            : Address;
-      Destination       : Address;
-      Data_Count : Half_Word)
+     (Unit        : in out DMA_Controller;
+      Stream      : DMA_Stream_Selector;
+      Source      : Address;
+      Destination : Address;
+      Data_Count  : Half_Word)
    is
       This_Stream : DMA_Stream renames Unit.Streams (Stream);
    begin
