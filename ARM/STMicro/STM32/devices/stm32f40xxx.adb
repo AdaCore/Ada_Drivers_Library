@@ -134,6 +134,27 @@ package body STM32F40xxx is
    -- Enable_Clock --
    ------------------
 
+   procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter) is
+      pragma Unreferenced (This);
+   begin
+      RCC.DAC_Clock_Enable;
+   end Enable_Clock;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : aliased in out Digital_To_Analog_Converter) is
+      pragma Unreferenced (This);
+   begin
+      RCC.DAC_Force_Reset;
+      RCC.DAC_Release_Reset;
+   end Reset;
+
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
    procedure Enable_Clock (This : aliased in out USART) is
    begin
       if This'Address = USART1_Base then

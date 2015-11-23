@@ -118,6 +118,7 @@ package STM32F4.RCC is
    procedure UART4_Clock_Enable with Inline;
    procedure UART5_Clock_Enable with Inline;
    procedure UART7_Clock_Enable with Inline;
+   procedure DAC_Clock_Enable with Inline;
    procedure UART8_Clock_Enable with Inline;
 
    procedure I2C1_Clock_Enable with Inline;
@@ -142,6 +143,7 @@ package STM32F4.RCC is
    procedure UART4_Clock_Disable with Inline;
    procedure UART5_Clock_Disable with Inline;
    procedure UART7_Clock_Disable with Inline;
+   procedure DAC_Clock_Disable with Inline;
    procedure UART8_Clock_Disable with Inline;
    procedure I2C1_Clock_Disable with Inline;
    procedure I2C2_Clock_Disable with Inline;
@@ -242,6 +244,7 @@ package STM32F4.RCC is
    procedure UART5_Force_Reset with Inline;
    procedure UART7_Force_Reset with Inline;
    procedure UART8_Force_Reset with Inline;
+   procedure DAC_Force_Reset with Inline;
    procedure I2C1_Force_Reset with Inline;
    procedure I2C2_Force_Reset with Inline;
    procedure I2C3_Force_Reset with Inline;
@@ -266,6 +269,7 @@ package STM32F4.RCC is
    procedure UART5_Release_Reset with Inline;
    procedure UART7_Release_Reset with Inline;
    procedure UART8_Release_Reset with Inline;
+   procedure DAC_Release_Reset with Inline;
    procedure I2C1_Release_Reset with Inline;
    procedure I2C2_Release_Reset with Inline;
    procedure I2C3_Release_Reset with Inline;

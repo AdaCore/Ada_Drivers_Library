@@ -53,6 +53,7 @@ with STM32F4.I2C;     use STM32F4.I2C;
 with STM32F4.SPI;     use STM32F4.SPI;
 with STM32F4.Timers;  use STM32F4.Timers;
 with STM32F4.L3DG20;  use STM32F4.L3DG20;
+with STM32F4.DAC;     use STM32F4.DAC;
 
 with Ada.Interrupts.Names;  use Ada.Interrupts;
 
@@ -128,6 +129,17 @@ package STM32F429_Discovery is
 
    procedure Reset_All_ADC_Units
      renames STM32F42xxx.Reset_All_ADC_Units;
+
+   DAC_1 : Digital_To_Analog_Converter renames STM32F42xxx.DAC_1;
+
+   DAC_Channel_1_IO : GPIO_Point renames STM32F42xxx.DAC_Channel_1_IO;
+   DAC_Channel_2_IO : GPIO_Point renames STM32F42xxx.DAC_Channel_2_IO;
+
+   procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter)
+     renames STM32F42xxx.Enable_Clock;
+
+   procedure Reset (This : aliased in out Digital_To_Analog_Converter)
+     renames STM32F42xxx.Reset;
 
    --  Note that some of these are really UARTs, not USARTs
    USART_1 : USART renames STM32F42xxx.USART_1;

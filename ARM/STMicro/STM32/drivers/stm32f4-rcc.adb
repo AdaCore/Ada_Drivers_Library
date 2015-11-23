@@ -419,6 +419,11 @@ package body STM32F4.RCC is
       Register.APB1ENR := Register.APB1ENR or APB1ENR_UART7EN;
    end UART7_Clock_Enable;
 
+   procedure DAC_Clock_Enable is
+   begin
+      Register.APB1ENR := Register.APB1ENR or APB1ENR_DACEN;
+   end DAC_Clock_Enable;
+
    procedure UART8_Clock_Enable is
    begin
       Register.APB1ENR := Register.APB1ENR or APB1ENR_UART8EN;
@@ -528,6 +533,11 @@ package body STM32F4.RCC is
    begin
       Register.APB1ENR := Register.APB1ENR and not APB1ENR_UART7EN;
    end UART7_Clock_Disable;
+
+   procedure DAC_Clock_Disable is
+   begin
+      Register.APB1ENR := Register.APB1ENR and not APB1ENR_DACEN;
+   end DAC_Clock_Disable;
 
    procedure UART8_Clock_Disable is
    begin
@@ -987,6 +997,11 @@ package body STM32F4.RCC is
       Register.APB1RSTR := Register.APB1RSTR or APB1RSTR_UART7RST;
    end UART7_Force_Reset;
 
+   procedure DAC_Force_Reset is
+   begin
+      Register.APB1RSTR := Register.APB1RSTR or APB1RSTR_DACRST;
+   end DAC_Force_Reset;
+
    procedure UART8_Force_Reset is
    begin
       Register.APB1RSTR := Register.APB1RSTR or APB1RSTR_UART8RST;
@@ -1106,6 +1121,11 @@ package body STM32F4.RCC is
    begin
       Register.APB1RSTR := Register.APB1RSTR and not APB1RSTR_UART8RST;
    end UART8_Release_Reset;
+
+   procedure DAC_Release_Reset is
+   begin
+      Register.APB1RSTR := Register.APB1RSTR and not APB1RSTR_DACRST;
+   end DAC_Release_Reset;
 
    procedure I2C1_Release_Reset is
    begin

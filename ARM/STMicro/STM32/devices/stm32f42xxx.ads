@@ -49,6 +49,7 @@ with STM32F4.USARTs;  use STM32F4.USARTs;
 with STM32F4.I2C;     use STM32F4.I2C;
 with STM32F4.SPI;     use STM32F4.SPI;
 with STM32F4.Timers;  use STM32F4.Timers;
+with STM32F4.DAC;     use STM32F4.DAC;
 
 use STM32F4;  -- for base addresses
 
@@ -91,6 +92,15 @@ package STM32F42xxx is
    procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter);
 
    procedure Reset_All_ADC_Units;
+
+   DAC_1 : aliased Digital_To_Analog_Converter with Volatile, Address => DAC_Base;
+
+   DAC_Channel_1_IO : constant GPIO_Point := (GPIO_A'Access, Pin_4);
+   DAC_Channel_2_IO : constant GPIO_Point := (GPIO_A'Access, Pin_5);
+
+   procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter);
+
+   procedure Reset (This : aliased in out Digital_To_Analog_Converter);
 
    USART_1 : aliased USART with Volatile, Address => USART1_Base;
    USART_2 : aliased USART with Volatile, Address => USART2_Base;
