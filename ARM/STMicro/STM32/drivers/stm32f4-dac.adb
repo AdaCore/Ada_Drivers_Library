@@ -30,7 +30,7 @@
 --                                                                          --
 --  This file is based on:                                                  --
 --                                                                          --
---   @file    stm32f4xx_hal_dac.h and stm32f4xx_hal_dac_ex.h                --
+--   @file    stm32f4xx_hal_dac.c and stm32f4xx_hal_dac_ex.c                --
 --   @author  MCD Application Team                                          --
 --   @version V1.3.1                                                        --
 --   @date    25-March-2015                                                 --
