@@ -157,7 +157,7 @@ begin
                                      then Max_12bit_Resolution
                                      else Max_8bit_Resolution);
    begin
-      Put (0, 0, "VRef+ is 3.0V"); -- but you may not see that voltage!
+      Put (0, 0, "VRef+ is 3.3V"); -- but you may not see that voltage!
       Put (0, 25, "Button advances");
       Put (0, 52, "Current %:");
       loop
