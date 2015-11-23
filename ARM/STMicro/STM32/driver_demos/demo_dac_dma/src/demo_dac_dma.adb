@@ -147,7 +147,7 @@ procedure Demo_DAC_DMA is
          exit when Set (User_Button_Port, User_Button_Pin);
       end loop Await_Pressed;
 
-      Await_Released :  loop
+      Await_Released : loop
          exit when not Set (User_Button_Port, User_Button_Pin);
       end loop Await_Released;
    end Await_Button;
