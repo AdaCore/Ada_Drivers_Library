@@ -173,9 +173,11 @@ package body STM32F4.Touch_Panel is
       GPIO_Conf.Mode        := Mode_AF;
       GPIO_Conf.Output_Type := Open_Drain;
       GPIO_Conf.Resistors   := Floating;
-      GPIO_Conf.Locked      := True;
       Configure_IO (SCL_GPIO, SCL_Pin, GPIO_Conf);
       Configure_IO (SDA_GPIO, SDA_Pin, GPIO_Conf);
+
+      Lock (SCL_GPIO, SCL_Pin);
+      Lock (SDA_GPIO, SDA_Pin);
    end TP_Ctrl_Lines;
 
    procedure TP_I2C_Config is

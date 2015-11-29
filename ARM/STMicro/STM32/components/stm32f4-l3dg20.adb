@@ -222,9 +222,10 @@ package body STM32F4.L3DG20 is
       GPIO_Conf.Mode := Mode_OUT;
       GPIO_Conf.Output_Type := Push_Pull;
       GPIO_Conf.Resistors := Pull_Up;
---        GPIO_Conf.Locked := True;
 
       Configure_IO (This.CS_GPIO.all, This.CS_Pin, GPIO_Conf);
+
+      Lock (This.CS_GPIO.all, This.CS_Pin);
    end Init_Chip_Select;
 
    ----------------------
@@ -238,7 +239,6 @@ package body STM32F4.L3DG20 is
       GPIO_Conf.Mode        := Mode_AF;
       GPIO_Conf.Output_Type := Push_Pull;
       GPIO_Conf.Resistors   := Floating;
---        GPIO_Conf.Locked := True;
 
       Configure_IO (This.SPI_GPIO.all, This.SCK_Pin & This.MISO_Pin & This.MOSI_Pin, GPIO_Conf);
 
@@ -246,6 +246,8 @@ package body STM32F4.L3DG20 is
         (This.SPI_GPIO.all,
          This.SCK_Pin & This.MISO_Pin & This.MOSI_Pin,
          This.SPI_GPIO_AF);
+
+      Lock (This.SPI_GPIO.all, This.SCK_Pin & This.MISO_Pin & This.MOSI_Pin);
    end Init_SPI_IO_Pins;
 
    --------------
@@ -296,9 +298,9 @@ package body STM32F4.L3DG20 is
       GPIO_Conf.Mode := Mode_In;
       GPIO_Conf.Output_Type := Push_Pull;
       GPIO_Conf.Resistors := Floating;
---        GPIO_Conf.Locked := True;
 
       Configure_IO (This.Int_GPIO.all, Int1_Pin & Int2_Pin, GPIO_Conf);
+      Lock (This.Int_GPIO.all, Int1_Pin & Int2_Pin);
    end Configure_Interrupt_Pins;
 
    ---------------

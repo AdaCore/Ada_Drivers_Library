@@ -241,7 +241,6 @@ package STM32F4.GPIO is
       Output_Type : Pin_Output_Types;
       Speed       : Pin_Output_Speeds;
       Resistors   : Internal_Pin_Resistors;
-      Locked      : Boolean := False;
    end record;
 
    procedure Configure_IO

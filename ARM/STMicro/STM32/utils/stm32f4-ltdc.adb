@@ -72,7 +72,6 @@ package body STM32F4.LTDC is
       Conf.Mode        := Mode_AF;
       Conf.Output_Type := Push_Pull;
       Conf.Resistors   := Floating;
-      Conf.Locked      := True;
       Configure_IO (GPIO_A, (Pin_3, Pin_4, Pin_6, Pin_11, Pin_12), Conf);
 
       Configure_Alternate_Function (GPIO_B, (Pin_0, Pin_1), GPIO_AF_LTDC_2);
@@ -95,6 +94,13 @@ package body STM32F4.LTDC is
                                     GPIO_AF_LTDC);
       Configure_Alternate_Function (GPIO_G, (Pin_10, Pin_12), GPIO_AF_LTDC_2);
       Configure_IO (GPIO_G, (Pin_6, Pin_7, Pin_10, Pin_11, Pin_12), Conf);
+
+      Lock (GPIO_A, (Pin_3, Pin_4, Pin_6, Pin_11, Pin_12));
+      Lock (GPIO_B, (Pin_0, Pin_1, Pin_8, Pin_9, Pin_10, Pin_11));
+      Lock (GPIO_C, (Pin_6, Pin_7, Pin_10));
+      Lock (GPIO_D, (Pin_3, Pin_6));
+      Lock (GPIO_F, Pin_10);
+      Lock (GPIO_G, (Pin_6, Pin_7, Pin_10, Pin_11, Pin_12));
    end Init_LCD_GPIO;
 
    ------------------
@@ -118,10 +124,13 @@ package body STM32F4.LTDC is
       Conf.Mode        := Mode_AF;
       Conf.Output_Type := Push_Pull;
       Conf.Resistors   := Pull_Down;
-      Conf.Locked      := True;
       Configure_IO (SCK_GPIO, SCK_Pin, Conf);
       Configure_IO (MISO_GPIO, MISO_Pin, Conf);
       Configure_IO (MOSI_GPIO, MOSI_Pin, Conf);
+
+      Lock (SCK_GPIO, SCK_Pin);
+      Lock (MISO_GPIO, MISO_Pin);
+      Lock (MOSI_GPIO, MOSI_Pin);
 
       Reset (LCD_SPI);
 
@@ -167,11 +176,13 @@ package body STM32F4.LTDC is
       Conf.Mode        := Mode_Out;
       Conf.Output_Type := Push_Pull;
       Conf.Resistors   := Floating;
-      Conf.Locked      := True;
       Configure_IO (NCS_GPIO, NCS_Pin, Conf);
+      Lock (NCS_GPIO, NCS_Pin);
 
       Configure_IO (WRX_GPIO, WRX_Pin, Conf);
-      Chip_Select (false);
+      Lock (WRX_GPIO, WRX_Pin);
+
+      Chip_Select (False);
    end LCD_CtrlLinesConfig;
 
    ----------------------

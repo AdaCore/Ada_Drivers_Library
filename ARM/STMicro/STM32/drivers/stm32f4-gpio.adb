@@ -333,10 +333,6 @@ package body STM32F4.GPIO is
       Port.OTYPER  := OTYPER;
       Port.OSPEEDR := OSPEEDR;
       Port.PUPDR   := PUPDR;
-
-      if Config.Locked then
-         Lock (Port, Pins);
-      end if;
    end Configure_IO;
 
    ------------------
@@ -364,10 +360,6 @@ package body STM32F4.GPIO is
       Port.OTYPER  := OTYPER;
       Port.OSPEEDR := OSPEEDR;
       Port.PUPDR   := PUPDR;
-
-      if Config.Locked then
-         Lock (Port, Pin);
-      end if;
    end Configure_IO;
 
    ------------------

@@ -129,17 +129,20 @@ package body STM32F4.ILI9341 is
       ILI9341.SPI_Chip := SPI_Chip;
 
       Config := (Mode => Mode_Out, Output_Type => Push_Pull,
-                 Resistors => Floating, Speed => Speed_25MHz, Locked => False);
+                 Resistors => Floating, Speed => Speed_25MHz);
 
       Enable_WRX_GPIO_Clock.all;
       Configure_IO (WRX.Port.all, WRX.Pin, Config);
+      Lock (WRX.Port.all, WRX.Pin);
 
       Enable_CS_GPIO_Clock.all;
       Configure_IO (Chip_Select.Port.all, Chip_Select.Pin, Config);
+      Lock (Chip_Select.Port.all, Chip_Select.Pin);
 
       Enable_Reset_GPIO_Clock.all;
       Config.Speed := Speed_2MHz;  -- low
       Configure_IO (Reset.Port.all, Reset.Pin, Config);
+      Lock (Reset.Port.all, Reset.Pin);
 
       Chip_Select_High;
 
@@ -148,6 +151,7 @@ package body STM32F4.ILI9341 is
       Config.Mode := Mode_AF;
       Configure_IO (SPI_GPIO.all, SCK_Pin & MISO_Pin & MOSI_Pin, Config);
       Configure_Alternate_Function (SPI_GPIO.all, SCK_Pin & MISO_Pin & MOSI_Pin, SPI_AF);
+      Lock (SPI_GPIO.all, SCK_Pin & MISO_Pin & MOSI_Pin);
 
       Enable_SPI_Clock.all;
       Init_SPI;
