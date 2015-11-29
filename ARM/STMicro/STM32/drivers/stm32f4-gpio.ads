@@ -174,15 +174,14 @@ package STM32F4.GPIO is
    procedure Toggle (This : in out GPIO_Point) with
      Inline,
      Post => (if Set (This'Old) then not Set (This) else Set (This));
-   --  For This.Port.all, negates all of the output data register bis
-   --  specified by This.Pin (one becomes zero and vice versa). Other pins are
-   --  unaffected.
+   --  For This.Port.all, negates the output data register bit specified by
+   --  This.Pin (one becomes zero and vice versa). Other pins are unaffected.
 
    procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin) with
      Pre  => not Locked (Port, Pin),
      Post => Locked (Port, Pin);
-   --  Lock the current configuration of the given port/pin pair until the MCU
-   --  is reset.
+   --  For the given GPIO port, locks the current configuration of Pin until
+   --  the MCU is reset.
 
    function Locked (Port : GPIO_Port;  Pin : GPIO_Pin) return Boolean with
      Inline;
@@ -190,13 +189,13 @@ package STM32F4.GPIO is
    procedure Lock (Port : in out GPIO_Port;  Pins : GPIO_Pins) with
      Pre  => (for all Pin of Pins => not Locked (Port, Pin)),
      Post => (for all Pin of Pins => Locked (Port, Pin));
-   --  Lock the current configuration of the specified pins on the given port
+   --  Locks the current configuration of the specified pins on the given port
    --  until the MCU is reset.
 
    procedure Lock (Point : GPIO_Point) with
      Pre  => not Locked (Point),
      Post => Locked (Point);
-   --  Lock the current configuration of the given port/pin pair until the MCU
+   --  Locks the current configuration of the given port/pin pair until the MCU
    --  is reset.
 
    function Locked (Point : GPIO_Point) return Boolean with
