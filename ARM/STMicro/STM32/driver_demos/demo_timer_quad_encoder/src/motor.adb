@@ -69,7 +69,6 @@ package body Motor is
       Configuration.Output_Type := Push_Pull;
       Configuration.Resistors := Pull_Up;
       Configuration.Speed := Speed_100MHz;
---        Configuration.Locked := True;
 
       Configure_IO (Encoder_Tach0_Port, Encoder_Tach0_Pin, Configuration);
       Configure_Alternate_Function (Encoder_Tach0_Port, Encoder_Tach0_Pin, Encoder_AF);
