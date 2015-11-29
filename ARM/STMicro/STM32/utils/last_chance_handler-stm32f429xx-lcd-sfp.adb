@@ -97,6 +97,8 @@ package body Last_Chance_Handler is
 
       LCD_Text.Set_Font (To => BMP_Fonts.Font12x12);
 
+      LCD_Text.Clear_Screen;
+
       if Line /= 0 then
          LCD_Text.Put ("Predefined exception at ");
          Put (Msg);

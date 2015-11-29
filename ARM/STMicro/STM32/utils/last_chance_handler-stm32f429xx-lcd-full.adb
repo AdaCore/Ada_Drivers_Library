@@ -86,6 +86,8 @@ package body Last_Chance_Handler is
 
       LCD_Text.Set_Font (To => BMP_Fonts.Font12x12);
 
+      LCD_Text.Clear_Screen;
+
       No_Exceptions_Propagated : begin
          LCD_Text.Put_Line (Exception_Name (Error));
          LCD_Text.Put_Line (Exception_Message (Error));

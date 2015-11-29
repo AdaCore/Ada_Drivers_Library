@@ -94,6 +94,8 @@ package LCD_Std_Out is
    --  Configures the screen orientation and fills the screen with the current
    --  background color. All previously displayed content is lost.
 
+   procedure Clear_Screen;
+
    ----------------------------------------------------------------------------
 
    --  These routines maintain a logical line and column, such that text will

@@ -91,14 +91,20 @@ package body LCD_Std_Out is
    procedure Set_Orientation (To : in LCD.Orientations) is
    begin
       LCD.Set_Orientation (To);
-
       Recompute_Screen_Dimensions (Current_Font);
+      Clear_Screen;
+   end Set_Orientation;
 
+   ------------------
+   -- Clear_Screen --
+   ------------------
+
+   procedure Clear_Screen is
+   begin
+      LCD.Fill (Current_Background_Color);
       Current_Y := LCD.Height'First;
       Char_Count := 0;
-
-      LCD.Fill (Current_Background_Color);
-   end Set_Orientation;
+   end Clear_Screen;
 
    ---------
    -- Put --
@@ -224,10 +230,10 @@ begin
       MISO_Pin,
       MOSI_Pin);
 
-   --  We don't actually call LCD_Std_Out.Initialize because the values for
-   --  the package global state are already initialized to the default values.
-   --  However we do need to clear/fill the screen and set the orientation,
-   --  which Initialize does do, so we call those routines explicitly.
+   --  The values for the package global state are already initialized to the
+   --  default values. However we do need to clear/fill the screen and set
+   --  the orientation, which Initialize does do, so we call those routines
+   --  explicitly.
 
    LCD.Set_Orientation (To => Default_Orientation);
 
