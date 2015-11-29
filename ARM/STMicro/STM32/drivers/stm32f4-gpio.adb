@@ -45,6 +45,15 @@ with System.Machine_Code;
 
 package body STM32F4.GPIO is
 
+   procedure Lock_The_Pin (Port : in out GPIO_Port;  Pin : GPIO_Pin);
+   --  This is the routine that actually locks the pin for the port. It is an
+   --  internal routine and has no preconditions. We use it to avoid redundant
+   --  calls to the precondition that checks that the pin is not already
+   --  locked. The redundancy would otherwise occur because the routine that
+   --  locks an array of pins is implemented by calling the routine that locks
+   --  a single pin: both those Lock routines have a precondition that checks
+   --  that the pin(s) is not already being locked.
+
    -------------
    -- Any_Set --
    -------------
@@ -63,8 +72,9 @@ package body STM32F4.GPIO is
    ---------
 
    function Set (Port : GPIO_Port;  Pin : GPIO_Pin) return Boolean is
+      Pin_Mask : constant Half_Word := GPIO_Pin'Enum_Rep (Pin);
    begin
-      return (Port.IDR and Pin'Enum_Rep) = Pin'Enum_Rep;
+      return (Port.IDR and Pin_Mask) = Pin_Mask;
    end Set;
 
    ---------
@@ -72,8 +82,9 @@ package body STM32F4.GPIO is
    ---------
 
    function Set (This : GPIO_Point) return Boolean is
+      Pin_Mask : constant Half_Word := GPIO_Pin'Enum_Rep (This.Pin);
    begin
-      return Set (This.Port.all, This.Pin);
+      return (This.Port.IDR and Pin_Mask) = Pin_Mask;
    end Set;
 
    -------------
@@ -117,7 +128,7 @@ package body STM32F4.GPIO is
 
    procedure Set (This : in out GPIO_Point) is
    begin
-      Set (This.Port.all, This.Pin);
+      This.Port.BSRR_Set := GPIO_Pin'Enum_Rep (This.Pin);
    end Set;
 
    -----------
@@ -148,7 +159,7 @@ package body STM32F4.GPIO is
 
    procedure Clear (This : in out GPIO_Point) is
    begin
-      Clear (This.Port.all, This.Pin);
+      This.Port.BSRR_Reset := GPIO_Pin'Enum_Rep (This.Pin);
    end Clear;
 
    ------------
@@ -187,7 +198,7 @@ package body STM32F4.GPIO is
 
    procedure Toggle (This : in out GPIO_Point) is
    begin
-      Toggle (This.Port.all, This.Pin);
+      This.Port.ODR := This.Port.ODR xor GPIO_Pin'Enum_Rep (This.Pin);
    end Toggle;
 
    ------------
@@ -199,11 +210,11 @@ package body STM32F4.GPIO is
       return (Port.LCKR and Pin'Enum_Rep) = Pin'Enum_Rep;
    end Locked;
 
-   ----------
-   -- Lock --
-   ----------
+   ------------------
+   -- Lock_The_Pin --
+   ------------------
 
-   procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
+   procedure Lock_The_Pin (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
       Temp : Word;
       pragma Volatile (Temp);
 
@@ -256,7 +267,14 @@ package body STM32F4.GPIO is
            Outputs => (Word'Asm_Output ("=m", Temp)),  -- %0
            Volatile => True,
            Clobber  => ("r2, r3"));
-   end Lock;
+   end Lock_The_Pin;
+
+   ----------
+   -- Lock --
+   ----------
+
+   procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin)
+      renames Lock_The_Pin;
 
    ----------
    -- Lock --
@@ -265,7 +283,7 @@ package body STM32F4.GPIO is
    procedure Lock (Port : in out GPIO_Port;  Pins : GPIO_Pins) is
    begin
       for Pin of Pins loop
-         Lock (Port, Pin);
+         Lock_The_Pin (Port, Pin);
       end loop;
    end Lock;
 
@@ -275,7 +293,7 @@ package body STM32F4.GPIO is
 
    procedure Lock (Point : GPIO_Point) is
    begin
-      Lock (Point.Port.all, Point.Pin);
+      Lock_The_Pin (Point.Port.all, Point.Pin);
    end Lock;
 
    ------------
