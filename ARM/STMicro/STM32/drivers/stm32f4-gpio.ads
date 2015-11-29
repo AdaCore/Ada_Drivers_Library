@@ -107,13 +107,17 @@ package STM32F4.GPIO is
 
    function Set (Port : GPIO_Port;  Pins : GPIO_Pins) return Boolean
      renames Any_Set;
-   --  for the sake of readability when only one pin is specified in GPIO_Pins
+   --  Defined for readability when only one pin is specified in GPIO_Pins
 
    function Set (Port : GPIO_Port;  Pin : GPIO_Pin) return Boolean with
      Inline;
+   --  Returns True if the bit specified by Pin is set (not zero) in the Port
+   --  input data register; returns False otherwise.
 
    function Set (This : GPIO_Point) return Boolean with
      Inline;
+   --  Returns True if the bit specified by This.Pin is set (not zero) in the
+   --  input data register of This.Port.all; returns False otherwise.
 
    function All_Set (Port : GPIO_Port;  Pins : GPIO_Pins) return Boolean with
      Inline;
@@ -123,48 +127,56 @@ package STM32F4.GPIO is
    procedure Set (Port : in out GPIO_Port;  Pin : GPIO_Pin) with
      Inline,
      Post => Set (Port, Pin);
-   --  For the given GPIO port, sets the pins specified by Pin to
-   --  one. Other pins are unaffected.
+   --  For the given GPIO port, sets the output data register bit specified by
+   --  Pin to one. Other pins are unaffected.
 
    procedure Set (Port : in out GPIO_Port;  Pins : GPIO_Pins) with
      Inline,
      Post => All_Set (Port, Pins);
-   --  For the given GPIO port, sets of all of the pins specified by Pins to
-   --  one. Other pins are unaffected.
+   --  For the given GPIO port, sets all of the output data register bits
+   --  specified by Pins to one. Other pins are unaffected.
 
    procedure Set (This : in out GPIO_Point) with
      Inline,
      Post => Set (This);
+   --  For This.Port.all, sets the output data register bit specified by
+   --  This.Pin to one. Other pins are unaffected.
 
    procedure Clear (Port : in out GPIO_Port;  Pin : GPIO_Pin) with
      Inline,
      Post => not Set (Port, Pin);
-   --  For the given GPIO port, sets the pin specified by Pin to
-   --  zero. Other pins are unaffected.
+   --  For the given GPIO port, sets the output data register bit specified by
+   --  Pin to zero. Other pins are unaffected.
 
    procedure Clear (Port : in out GPIO_Port;  Pins : GPIO_Pins) with
      Inline,
      Post => not All_Set (Port, Pins);
-   --  For the given GPIO port, sets of all of the pins specified by Pins to
-   --  zero. Other pins are unaffected.
+   --  For the given GPIO port, sets of all of the output data register bits
+   --  specified by Pins to zero. Other pins are unaffected.
 
    procedure Clear (This : in out GPIO_Point) with
      Inline,
      Post => not Set (This);
+   --  For This.Port.all, sets the output data register bit specified by
+   --  This.Pin to zero. Other pins are unaffected.
 
    procedure Toggle (Port : in out GPIO_Port;  Pin : GPIO_Pin) with
      Inline,
      Post => (if Set (Port, Pin)'Old then not Set (Port, Pin) else Set (Port, Pin));
-   --  For the given GPIO port, negates the pin specified by Pin (ones
-   --  become zeros and vice versa). Other pins are unaffected.
+   --  For the given GPIO port, negates the output data register bit specified
+   --  by Pin (one becomes zero and vice versa). Other pins are unaffected.
 
    procedure Toggle (Port : in out GPIO_Port;  Pins : GPIO_Pins) with Inline;
-   --  For the given GPIO port, negates all of the pins specified by Pins (ones
-   --  become zeros and vice versa). Other pins are unaffected.
+   --  For the given GPIO port, negates all of the output data register bis
+   --  specified by Pins (ones become zeros and vice versa). Other pins are
+   --  unaffected.
 
    procedure Toggle (This : in out GPIO_Point) with
      Inline,
      Post => (if Set (This'Old) then not Set (This) else Set (This));
+   --  For This.Port.all, negates all of the output data register bis
+   --  specified by This.Pin (one becomes zero and vice versa). Other pins are
+   --  unaffected.
 
    procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin) with
      Pre  => not Locked (Port, Pin),
