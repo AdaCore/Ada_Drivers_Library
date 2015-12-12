@@ -151,6 +151,8 @@ private
    Selected_Width  : Natural;
    Selected_Height : Natural;
 
+   Initialized : Boolean := False;
+
    procedure Send_Data    (Data : Byte) with Inline;
    procedure Send_Command (Cmd : Byte)  with Inline;
 

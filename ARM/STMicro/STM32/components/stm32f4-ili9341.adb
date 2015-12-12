@@ -123,6 +123,10 @@ package body STM32F4.ILI9341 is
    is
       Config : GPIO_Port_Configuration;
    begin
+      if Initialized then
+         return;
+      end if;
+
       ILI9341.Chip_Select := Chip_Select;
       ILI9341.WRX := WRX;
       ILI9341.Reset := Reset;
@@ -161,6 +165,8 @@ package body STM32F4.ILI9341 is
       Selected_Width := Device_Width;
       Selected_Height := Device_Height;
       Selected_Orientation := Portrait_2;
+
+      Initialized := True;
     end Initialize;
 
    ---------------
