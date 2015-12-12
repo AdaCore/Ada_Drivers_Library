@@ -67,10 +67,10 @@ package body STM32F4.PWM is
    begin
       This.Outputs (Channel).Duty_Cycle := Value;
       if Value = 0 then
-         Set_Compare_Value (This.Output_Timer.all, Channel, Half_Word (0));
+         Set_Compare_Value (This.Output_Timer.all, Channel, Half_Word'(0));
       else
          Pulse := Half_Word ((This.Timer_Period + 1) * Word (Value) / 100) - 1;
-         --  NB: for a Value of 0, the computation of Pulse wraps around to
+         --  for a Value of 0, the computation of Pulse wraps around to
          --  65535, so we only compute it when not zero
          Set_Compare_Value (This.Output_Timer.all, Channel, Pulse);
       end if;
@@ -209,6 +209,8 @@ package body STM32F4.PWM is
                     Config => Configuration);
 
       Configure_Alternate_Function (Output.Port.all, Output.Pin, AF => PWM_AF);
+
+      Lock (Output.Port.all, Output.Pin);
    end Configure_PWM_GPIO;
 
    ----------------------------------
