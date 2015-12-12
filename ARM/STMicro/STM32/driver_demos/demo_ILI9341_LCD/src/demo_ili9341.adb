@@ -59,14 +59,14 @@ begin
       Enable_WRX_GPIO_Clock   => GPIOD_Clock_Enable'Access,
       Reset                   => (GPIO_D'Access, Pin_12),
       Enable_Reset_GPIO_Clock => GPIOD_Clock_Enable'Access,
-      SPI_Chip                => SPI_5'Access,
-      Enable_SPI_Clock        => SPI5_Clock_Enable'Access,
-      SPI_GPIO                => GPIO_F'Access,
-      Enable_SPI_GPIO_Clock   => GPIOF_Clock_Enable'Access,
-      SPI_AF                  => GPIO_AF_SPI5,
-      SCK_Pin                 => Pin_7,
-      MISO_Pin                => Pin_8,
-      MOSI_Pin                => Pin_9);
+      SPI_Chip                => SPI_6'Access,
+      Enable_SPI_Clock        => SPI6_Clock_Enable'Access,
+      SPI_GPIO                => GPIO_G'Access,
+      Enable_SPI_GPIO_Clock   => GPIOG_Clock_Enable'Access,
+      SPI_AF                  => GPIO_AF_SPI6,
+      SCK_Pin                 => Pin_13,
+      MISO_Pin                => Pin_12,
+      MOSI_Pin                => Pin_14);
 
    LCD.Set_Orientation (To => LCD.Portrait_2);
 
