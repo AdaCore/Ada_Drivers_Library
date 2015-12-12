@@ -148,7 +148,7 @@ private
 
    Enable_WRX_GPIO_Clock : constant access procedure := GPIOD_Clock_Enable'Access;
 
-   Reset : constant GPIO_Point := (GPIO_D'Access, Pin_12);
+   Reset : constant GPIO_Point := (GPIO_D'Access, Pin_11);
 
    Enable_Reset_GPIO_Clock : constant access procedure := GPIOD_Clock_Enable'Access;
 
