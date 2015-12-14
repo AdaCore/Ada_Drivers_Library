@@ -137,16 +137,16 @@ package body STM32F4.ILI9341 is
 
       Enable_WRX_GPIO_Clock.all;
       Configure_IO (WRX.Port.all, WRX.Pin, Config);
-      Lock (WRX.Port.all, WRX.Pin);
+--        Lock (WRX.Port.all, WRX.Pin);
 
       Enable_CS_GPIO_Clock.all;
       Configure_IO (Chip_Select.Port.all, Chip_Select.Pin, Config);
-      Lock (Chip_Select.Port.all, Chip_Select.Pin);
+--        Lock (Chip_Select.Port.all, Chip_Select.Pin);
 
       Enable_Reset_GPIO_Clock.all;
       Config.Speed := Speed_2MHz;  -- low
       Configure_IO (Reset.Port.all, Reset.Pin, Config);
-      Lock (Reset.Port.all, Reset.Pin);
+--        Lock (Reset.Port.all, Reset.Pin);
 
       Chip_Select_High;
 
@@ -155,7 +155,7 @@ package body STM32F4.ILI9341 is
       Config.Mode := Mode_AF;
       Configure_IO (SPI_GPIO.all, SCK_Pin & MISO_Pin & MOSI_Pin, Config);
       Configure_Alternate_Function (SPI_GPIO.all, SCK_Pin & MISO_Pin & MOSI_Pin, SPI_AF);
-      Lock (SPI_GPIO.all, SCK_Pin & MISO_Pin & MOSI_Pin);
+--        Lock (SPI_GPIO.all, SCK_Pin & MISO_Pin & MOSI_Pin);
 
       Enable_SPI_Clock.all;
       Init_SPI;
