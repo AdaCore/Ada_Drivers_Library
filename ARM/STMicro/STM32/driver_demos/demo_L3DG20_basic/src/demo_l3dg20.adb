@@ -64,13 +64,13 @@ procedure Demo_L3DG20 is
       Initialize_Gyro_Hardware
         (Gyro,
          L3GD20_SPI                  => SPI_5'Access,
-         SPI_GPIO                    => GPIO_F'Access,
+         SPI_GPIO                    => GPIO_F'Access,  -- required, see F429 Disco UG (UM1670), pg 23
          SPI_GPIO_AF                 => GPIO_AF_SPI5,
-         SCK_Pin                     => Pin_7,
-         MISO_Pin                    => Pin_8,
-         MOSI_Pin                    => Pin_9,
-         CS_GPIO                     => GPIO_C'Access,
-         CS_Pin                      => Pin_1,
+         SCK_Pin                     => Pin_7,          -- required, see F429 Disco UG (UM1670), pg 23
+         MISO_Pin                    => Pin_8,          -- required, see F429 Disco UG (UM1670), pg 23
+         MOSI_Pin                    => Pin_9,          -- required, see F429 Disco UG (UM1670), pg 23
+         CS_GPIO                     => GPIO_C'Access,  -- required, see F429 Disco UG (UM1670), pg 21
+         CS_Pin                      => Pin_1,          -- required, see F429 Disco UG (UM1670), pg 21
          Int_GPIO                    => GPIO_A'Access,
          Enable_SPI_Clock            => RCC.SPI5_Clock_Enable'Access,
          Enable_SPI_GPIO_Clock       => RCC.GPIOF_Clock_Enable'Access,
