@@ -135,6 +135,8 @@ begin
 
    LCD.Set_Orientation (To => LCD.Portrait_2);
 
+   LCD.Fill (Black);
+
    Configure_Gyro;
 
    loop
