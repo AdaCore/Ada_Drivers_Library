@@ -45,22 +45,22 @@
 --  be required to initialize the ILI9341, something that this package does
 --  automatically.
 
-with STM32F4.RCC;  use STM32F4.RCC;
-with STM32F4.GPIO; use STM32F4.GPIO;
-with STM32F4.SPI;  use STM32F4.SPI;
+with STM32.RCC;  use STM32.RCC;
+with STM32.GPIO; use STM32.GPIO;
+with STM32.SPI;  use STM32.SPI;
 
 with STM32F429_Discovery;  use STM32F429_Discovery;
 
-with STM32F4.ILI9341;
+with STM32.ILI9341;
 with BMP_Fonts;          use BMP_Fonts;
 with Bitmapped_Drawing;
 
 generic
    with package Drawing is new Bitmapped_Drawing
-     (Color => STM32F4.ILI9341.Colors, Set_Pixel => <>);
+     (Color => STM32.ILI9341.Colors, Set_Pixel => <>);
 package LCD_Std_Out is
 
-   package LCD renames STM32F4.ILI9341;
+   package LCD renames STM32.ILI9341;
 
    Black       : LCD.Colors renames LCD.Black;
    Blue        : LCD.Colors renames LCD.Blue;

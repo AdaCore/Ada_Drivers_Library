@@ -42,16 +42,16 @@
 --  This file provides declarations for devices on the STM32F42xxx MCUs
 --  manufactured by ST Microelectronics.  For example, an STM32F429.
 
-with STM32F4.GPIO;    use STM32F4.GPIO;
-with STM32F4.ADC;     use STM32F4.ADC;
-with STM32F4.DMA;     use STM32F4.DMA;
-with STM32F4.USARTs;  use STM32F4.USARTs;
-with STM32F4.I2C;     use STM32F4.I2C;
-with STM32F4.SPI;     use STM32F4.SPI;
-with STM32F4.Timers;  use STM32F4.Timers;
-with STM32F4.DAC;     use STM32F4.DAC;
+with STM32.GPIO;    use STM32.GPIO;
+with STM32.ADC;     use STM32.ADC;
+with STM32.DMA;     use STM32.DMA;
+with STM32.USARTs;  use STM32.USARTs;
+with STM32.I2C;     use STM32.I2C;
+with STM32.SPI;     use STM32.SPI;
+with STM32.Timers;  use STM32.Timers;
+with STM32.DAC;     use STM32.DAC;
 
-use STM32F4;  -- for base addresses
+use STM32;  -- for base addresses
 
 package STM32F42xxx is
    pragma Elaborate_Body;

@@ -1,0 +1,84 @@
+project STM32 is
+
+   type Board_Type is ("STM32F4-DISCO",
+                       "STM32F429-DISCO",
+                       "STM32F7-DISCO");
+   Board : Board_Type := external ("BOARD", "STM32F429-DISCO");
+
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
+
+   type LCH_Type is ("led", "lcd");
+   LCH : LCH_Type := external ("LCH", "lcd");
+
+   for Source_Dirs use
+     ("boards",
+      "components",
+      "devices",
+      "drivers",
+      "utils");
+   for Object_Dir use "obj/" & Board & "/" & RTS;
+   for Library_Name use "stm32";
+   for Library_Dir use "lib/" & Board & "/" & RTS;
+   for Target use "arm-eabi";
+
+   case Board is
+      when "STM32F4-DISCO" =>
+         for Runtime ("Ada") use RTS & "-stm32f4";
+         for Source_Dirs use Project'Source_Dirs &
+            ("svd/stm32f40x");
+         case RTS is
+            when "ravenscar-sfp" =>
+               for Source_Dirs use Project'Source_Dirs &
+                 ("utils/sfp",
+                  "utils/sfp/stm32f407");
+            when "ravenscar-full" =>
+               for Source_Dirs use Project'Source_Dirs &
+                 ("utils/full",
+                  "utils/full/stm32f407");
+         end case;
+
+      when "STM32F429-DISCO" =>
+         for Runtime ("Ada") use RTS & "-stm32f4";
+         for Source_Dirs use Project'Source_Dirs &
+            ("svd/stm32f429x");
+         case RTS is
+            when "ravenscar-sfp" =>
+               for Source_Dirs use Project'Source_Dirs &
+                 ("utils/sfp",
+                  "utils/sfp/stm32f429/" & LCH);
+            when "ravenscar-full" =>
+               for Source_Dirs use Project'Source_Dirs &
+                 ("utils/full",
+                  "utils/full/stm32f429/" & LCH);
+         end case;
+
+      when "STM32F7-DISCO" =>
+         for Runtime ("Ada") use RTS & "-stm32f7";
+         for Source_Dirs use Project'Source_Dirs & ("svd/stm32f7x");
+         case RTS is
+            when "ravenscar-sfp" =>
+               for Source_Dirs use Project'Source_Dirs &
+                 ("utils/sfp",
+                  "utils/sfp/stm32f429/" & LCH);
+            when "ravenscar-full" =>
+               for Source_Dirs use Project'Source_Dirs &
+                 ("utils/full",
+                  "utils/full/stm32f429/" & LCH);
+         end case;
+   end case;
+
+   package Compiler is
+      for Default_Switches ("ada") use
+        ("-O2", "-gnatwa", "-gnatQ", "-gnatw.X");
+   end Compiler;
+
+   package Ide is
+      for Gnat use "arm-eabi-gnat";
+      for Gnatlist use "arm-eabi-gnatls";
+      for Debugger_Command use "arm-eabi-gdb";
+      for Program_Host use "localhost:4242";
+      for Communication_Protocol use "remote";
+   end Ide;
+
+end STM32;

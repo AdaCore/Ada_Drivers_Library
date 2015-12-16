@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4; use STM32F4;
+with STM32; use STM32;
 
 package body Bitmapped_Drawing is
 

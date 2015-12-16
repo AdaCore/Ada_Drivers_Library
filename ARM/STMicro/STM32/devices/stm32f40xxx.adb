@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4.RCC; use STM32F4.RCC;
+with STM32.RCC; use STM32.RCC;
 with System;
 
 package body STM32F40xxx is
@@ -199,9 +199,9 @@ package body STM32F40xxx is
 
    procedure Enable_Clock (This : aliased in out DMA_Controller) is
    begin
-      if This'Address = STM32F4.DMA1_Base then
+      if This'Address = STM32.DMA1_Base then
          DMA1_Clock_Enable;
-      elsif This'Address = STM32F4.DMA2_Base then
+      elsif This'Address = STM32.DMA2_Base then
          DMA2_Clock_Enable;
       else
          raise Unknown_Device;
@@ -214,10 +214,10 @@ package body STM32F40xxx is
 
    procedure Reset (This : aliased in out DMA_Controller) is
    begin
-      if This'Address = STM32F4.DMA1_Base then
+      if This'Address = STM32.DMA1_Base then
          DMA1_Force_Reset;
          DMA1_Release_Reset;
-      elsif This'Address = STM32F4.DMA2_Base then
+      elsif This'Address = STM32.DMA2_Base then
          DMA2_Force_Reset;
          DMA2_Release_Reset;
       else
