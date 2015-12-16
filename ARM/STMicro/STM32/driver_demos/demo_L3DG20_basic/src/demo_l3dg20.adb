@@ -31,10 +31,12 @@
 
 --  This program demonstrates the on-board gyro provided by the L3DG20 chip
 --  on the STM32F429 Discovery boards. The pitch, roll, and yaw values are
---  continuously displayed on the LCD. Move the board to see them change.
---  The values will be positive or negative, depending on the direction of
---  movement. Note that the values are not constant, even when the board is
---  not moving, due to noise.
+--  continuously displayed on the LCD, as are the adjusted raw values. Move
+--  the board to see them change. The values will be positive or negative,
+--  depending on the direction of movement. Note that the values are not
+--  constant, even when the board is not moving, due to noise.
+
+--  NB: You may need to reset the board after downloading.
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 with Interfaces;   use Interfaces;
@@ -45,11 +47,11 @@ with STM32_Board;  use STM32_Board;
 with STM32.L3DG20; use STM32.L3DG20;
 
 with Bitmapped_Drawing;
-with BMP_Fonts;
+with BMP_Fonts;     use BMP_Fonts;
 with STM32.ILI9341;
-with STM32;        use STM32;
-with STM32.GPIO;   use STM32.GPIO;
-with STM32.RCC;    use STM32.RCC;
+with STM32;         use STM32;
+with STM32.GPIO;    use STM32.GPIO;
+with STM32.RCC;     use STM32.RCC;
 
 procedure Demo_L3DG20 is
 
@@ -58,26 +60,60 @@ procedure Demo_L3DG20 is
 
    Sensitivity : Float;
 
-   Selected_Font : constant BMP_Fonts.BMP_Font := BMP_Fonts.Font12x12;
-   Line_Height   : constant Positive := BMP_Fonts.Char_Height (Selected_Font) + 4;
+   Selected_Font : constant BMP_Font := Font12x12;
+   Line_Height   : constant Positive := Char_Height (Selected_Font) + 4;
+
+   --  the locations on the screen for the stable offsets
+   Line1_Stable : constant Natural := 0;
+   Line2_Stable : constant Natural := Line1_Stable + Line_Height;
+   Line3_Stable : constant Natural := Line2_Stable + Line_Height;
+
+   --  the locations on the screen for values after the offset is removed
+   Line1_Adjusted : constant Natural := 55; -- leaves room for printing stable values
+   Line2_Adjusted : constant Natural := Line1_Adjusted + Line_Height;
+   Line3_Adjusted : constant Natural := Line2_Adjusted + Line_Height;
+
+   --  the column number for displaying adjusted values dynamically, based on
+   --  the length of the longest static label
+   Col_Adjusted : constant Natural := String'("Adjusted X:")'Length * Char_Width (Selected_Font);
+
+   --  the locations on the screen for the final scaled values
+   Line1_Scaled : constant Natural := 110; -- leaves room for printing adjusted values
+   Line2_Scaled : constant Natural := Line1_Scaled + Line_Height;
+   Line3_Scaled : constant Natural := Line2_Scaled + Line_Height;
+
+   --  the column number for displaying the final values dynamically, based on
+   --  the length of the longest static label
+   Col_Scaled : constant Natural := String'("Pitch:")'Length * Char_Width (Selected_Font);
+
+   procedure Get_Gyro_Offsets
+     (Offsets      : out Angle_Rates;
+      Sample_Count : in Long_Integer);
+   --  computes the averages for the gyro values returned when the board is
+   --  motionless
+
+   procedure Configure_Gyro;
+   --  configures the on-board gyro chip
 
    --------------------
    -- Configure_Gyro --
    --------------------
 
    procedure Configure_Gyro is
+      -- For the page numbers shown below, the required values are specified in
+      -- the STM32F429 Discovery kit User Manual (UM1670) on those pages.
    begin
       Initialize_Gyro_Hardware
         (Gyro,
          L3GD20_SPI                  => SPI_5'Access,
-         SPI_GPIO                    => GPIO_F'Access,  -- required, see F429 Disco UG (UM1670), pg 23
+         SPI_GPIO                    => GPIO_F'Access,  -- required, pg 23
          SPI_GPIO_AF                 => GPIO_AF_SPI5,
-         SCK_Pin                     => Pin_7,          -- required, see F429 Disco UG (UM1670), pg 23
-         MISO_Pin                    => Pin_8,          -- required, see F429 Disco UG (UM1670), pg 23
-         MOSI_Pin                    => Pin_9,          -- required, see F429 Disco UG (UM1670), pg 23
-         CS_GPIO                     => GPIO_C'Access,  -- required, see F429 Disco UG (UM1670), pg 21
-         CS_Pin                      => Pin_1,          -- required, see F429 Disco UG (UM1670), pg 21
-         Int_GPIO                    => GPIO_A'Access,
+         SCK_Pin                     => Pin_7,          -- required, pg 23
+         MISO_Pin                    => Pin_8,          -- required, pg 23
+         MOSI_Pin                    => Pin_9,          -- required, pg 23
+         CS_GPIO                     => GPIO_C'Access,  -- required, pg 21
+         CS_Pin                      => Pin_1,          -- required, pg 21
+         Int_GPIO                    => GPIO_A'Access,  -- required, pg 19
          Enable_SPI_Clock            => RCC.SPI5_Clock_Enable'Access,
          Enable_SPI_GPIO_Clock       => RCC.GPIOF_Clock_Enable'Access,
          Enable_Chip_Select_Clock    => RCC.GPIOC_Clock_Enable'Access,
@@ -85,7 +121,7 @@ procedure Demo_L3DG20 is
 
       Configure
         (Gyro,
-         Power_Mode       => L3GD20_Mode_Active,  -- ie enabled
+         Power_Mode       => L3GD20_Mode_Active,
          Output_DataRate  => L3GD20_Output_DataRate_4,
          Axes_Enable      => L3GD20_Axes_Enable,
          Band_Width       => L3GD20_Bandwidth_4,
@@ -120,53 +156,34 @@ procedure Demo_L3DG20 is
      (Color     => LCD.Colors,
       Set_Pixel => LCD.Set_Pixel);
 
-   use LCD_Drawing;
-
    -----------
    -- Print --
    -----------
 
-   procedure Print (Location : Display_Point; Msg : String) is
+   procedure Print (Location : LCD_Drawing.Display_Point;  Msg : String) is
+      --  a convenience routine for writing to the LCD
    begin
-      Draw_String (Location,
-                   Msg,
-                   Selected_Font,
-                   Foreground => White,
-                   Background => Black);
+      LCD_Drawing.Draw_String
+        (Location,
+         Msg,
+         Selected_Font,
+         Foreground => LCD.White,  -- arbitrary
+         Background => LCD.Black); -- arbitrary
    end Print;
-
-   -------------
-   -- Display --
-   -------------
-
-   procedure Display
-     (Rates      : Angle_Rates;
-      First_Line : Natural;
-      X_Prefix   : String;
-      Y_Prefix   : String;
-      Z_Prefix   : String)
-   is
-      Line1 : constant Natural := First_Line;
-      Line2 : constant Natural := First_Line + Line_Height;
-      Line3 : constant Natural := First_Line + 2 * Line_Height;
-   begin
-      Print ((0, Line1), X_Prefix & Rates.X'Img & "  ");
-      Print ((0, Line2), Y_Prefix & Rates.Y'Img & "  ");
-      Print ((0, Line3), Z_Prefix & Rates.Z'Img & "  ");
-   end Display;
 
    ----------------------
    -- Get_Gyro_Offsets --
    ----------------------
 
-   procedure Get_Gyro_Offsets (Offsets : out Angle_Rates) is
-      Sample       : Angle_Rates;
-      Sample_Count : constant := 200; -- arbitrary
-      Total_X      : Long_Integer := 0;
-      Total_Y      : Long_Integer := 0;
-      Total_Z      : Long_Integer := 0;
+   procedure Get_Gyro_Offsets
+     (Offsets      : out Angle_Rates;
+      Sample_Count : in Long_Integer)
+   is
+      Sample  : Angle_Rates;
+      Total_X : Long_Integer := 0;
+      Total_Y : Long_Integer := 0;
+      Total_Z : Long_Integer := 0;
    begin
-      Offsets := (others => 0);
       for K in 1 .. Sample_Count loop
          Get_Raw_Angle_Rates (Gyro, Sample);
          Total_X := Total_X + Long_Integer (Sample.X);
@@ -197,41 +214,50 @@ begin
 
    LCD.Set_Orientation (To => LCD.Portrait_2);
 
-   LCD.Fill (Black);
+   LCD.Fill (LCD.Black);
 
    Configure_Gyro;
 
    Sensitivity := Selected_Sensitivity (Gyro);
 
-   Get_Gyro_Offsets (Stable);
+   Get_Gyro_Offsets (Stable, Sample_Count => 100);  -- arbitrary count
 
-   Display (Stable,
-            First_Line => 0,
-            X_Prefix   => "Stable X:",
-            Y_Prefix   => "Stable Y:",
-            Z_Prefix   => "Stable Z:");
+   --  print the constant offsets computed when the device is motionless
+   Print ((0, Line1_Stable), "Stable X:" & Stable.X'Img);
+   Print ((0, Line2_Stable), "Stable Y:" & Stable.Y'Img);
+   Print ((0, Line3_Stable), "Stable Z:" & Stable.Z'Img);
+
+   --  print the static labels for the values after the offset is removed
+   Print ((0, Line1_Adjusted), "Adjusted X:");
+   Print ((0, Line2_Adjusted), "Adjusted Y:");
+   Print ((0, Line3_Adjusted), "Adjusted Z:");
+
+   --  print the static labels for the final scaled values
+   Print ((0, Line1_Scaled), "Pitch:");
+   Print ((0, Line2_Scaled), "Roll:");
+   Print ((0, Line3_Scaled), "Yaw:");
 
    loop
       Get_Raw_Angle_Rates (Gyro, Axes);
 
+      --  remove the computed stable offsets from the raw values
       Axes.X := Axes.X - Stable.X;
       Axes.Y := Axes.Y - Stable.Y;
       Axes.Z := Axes.Z - Stable.Z;
 
-      Display (Axes,
-               First_Line => 55,
-               X_Prefix   => "Adjusted X:",
-               Y_Prefix   => "Adjusted Y:",
-               Z_Prefix   => "Adjusted Z:");
+      --  print the values after the stable offset is removed
+      Print ((Col_Adjusted, Line1_Adjusted), Axes.X'Img & "   ");
+      Print ((Col_Adjusted, Line2_Adjusted), Axes.Y'Img & "   ");
+      Print ((Col_Adjusted, Line3_Adjusted), Axes.Z'Img & "   ");
 
+      --  scale the adjusted values
       Axes.X := Angle_Rate (Float (Axes.X) * Sensitivity);
       Axes.Y := Angle_Rate (Float (Axes.Y) * Sensitivity);
       Axes.Z := Angle_Rate (Float (Axes.Z) * Sensitivity);
 
-      Display (Axes,
-               First_Line => 110,
-               X_Prefix   => "Pitch:",
-               Y_Prefix   => "Roll: ",
-               Z_Prefix   => "Yaw:  ");
+      --  print the final scaled values
+      Print ((Col_Scaled, Line1_Scaled), Axes.X'Img & "  ");
+      Print ((Col_Scaled, Line2_Scaled), Axes.Y'Img & "  ");
+      Print ((Col_Scaled, Line3_Scaled), Axes.Z'Img & "  ");
    end loop;
 end Demo_L3DG20;
