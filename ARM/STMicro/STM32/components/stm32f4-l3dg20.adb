@@ -445,23 +445,23 @@ package body STM32F4.L3DG20 is
 
    procedure Get_Raw_Angle_Rates
      (This  : Three_Axis_Gyroscope;
-      Rates : out Raw_Angle_Rates)
+      Rates : out Angle_Rates)
    is
       Ctrl4       : Byte;
       Status      : Byte;
-      Received    : array (0 .. 5) of Byte with Alignment => Integer_16'Alignment;
-      Unscaled    : array (0 .. 2) of Integer_16;
+      Received    : array (0 .. 5) of Byte with Alignment => Angle_Rate'Alignment;
+      Unscaled    : array (0 .. 2) of Angle_Rate;
 
-      type Integer16_Pointer is access all Integer_16 with Storage_Size => 0;
+      type Angle_Rate_Pointer is access all Angle_Rate with Storage_Size => 0;
 
       function As_Pointer is new Ada.Unchecked_Conversion
-        (Source => System.Address, Target => Integer16_Pointer);
+        (Source => System.Address, Target => Angle_Rate_Pointer);
       --  So that we can treat the address of a byte as a pointer to a two-byte
-      --  sequence representing a signed Integer_16 quantity. That's why the
+      --  sequence representing a signed integer quantity. That's why the
       --  alignment of Reg_Data is set as well.
 
-      function BSwap_16 (X : Integer_16) return Integer_16;
-      pragma Import (Intrinsic, BSwap_16, "__builtin_bswap16");
+      function Swap_Bytes (X : Angle_Rate) return Angle_Rate;
+      pragma Import (Intrinsic, Swap_Bytes, "__builtin_bswap16");
 
       Max_Status_Attempts : constant := 1_000;  -- semi-arbitrary
    begin
@@ -487,9 +487,9 @@ package body STM32F4.L3DG20 is
       Unscaled (2) := As_Pointer (Received (4)'Address).all;
 
       if (Ctrl4 and Endian_Selection_Mask) = L3GD20_BLE_MSB'Enum_Rep then
-         Unscaled (0) := BSwap_16 (Unscaled (0));
-         Unscaled (1) := BSwap_16 (Unscaled (1));
-         Unscaled (2) := BSwap_16 (Unscaled (2));
+         Unscaled (0) := Swap_Bytes (Unscaled (0));
+         Unscaled (1) := Swap_Bytes (Unscaled (1));
+         Unscaled (2) := Swap_Bytes (Unscaled (2));
       end if;
 
       if Unscaled (0) = 16#FF#

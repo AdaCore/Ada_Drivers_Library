@@ -345,15 +345,17 @@ package STM32F4.L3DG20 is
 
    function Data_Status (This : Three_Axis_Gyroscope) return Byte;
 
-   type Raw_Angle_Rates is record
-      X : Integer_16;  -- roll
-      Y : Integer_16;  -- pitch
-      Z : Integer_16;  -- yaw
+   type Angle_Rate is new Integer_16;
+
+   type Angle_Rates is record
+      X : Angle_Rate;  -- pitch
+      Y : Angle_Rate;  -- roll
+      Z : Angle_Rate;  -- yaw
    end record;
 
    procedure Get_Raw_Angle_Rates
      (This  : Three_Axis_Gyroscope;
-      Rates : out Raw_Angle_Rates);
+      Rates : out Angle_Rates);
    --  Poll for the latest data. Raises Program_Error if the status indicates
    --  no data available after a certain number of attempts. Does NOT apply the
    --  specified sensitity scaling as determined by the Full_Scale_Selection
