@@ -35,7 +35,7 @@
 with Ada.Interrupts.Names;
 with Ada.Synchronous_Task_Control;  use Ada.Synchronous_Task_Control;
 
-with STM32F4.ADC; use STM32F4.ADC;
+with STM32.ADC; use STM32.ADC;
 
 package ADC_Interrupt_Handling is
 

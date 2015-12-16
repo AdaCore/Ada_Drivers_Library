@@ -38,9 +38,9 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 --  predefined version. We need it in the executable but never call it directly
 --  so it must be somewhere in the closure of the context clauses.
 
-with STM32F4_Discovery;  use STM32F4_Discovery;
-with Ada.Real_Time;      use Ada.Real_Time;
-with STM32F4.DMA;        use STM32F4.DMA;
+with STM32_Board;    use STM32_Board;
+with Ada.Real_Time;  use Ada.Real_Time;
+with STM32.DMA;      use STM32.DMA;
 
 procedure Demo_DMA.Main is
 
@@ -94,7 +94,7 @@ begin
    if Event_Kind in Direct_Mode_Error_Interrupt | FIFO_Error_Interrupt | Transfer_Error_Interrupt then
       --  signal the problem and loop forever
       loop
-         Toggle (Blue);
+         Toggle (Green);
          delay until Clock + Milliseconds (200);
       end loop;
    end if;

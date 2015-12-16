@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4_Discovery;  use STM32F4_Discovery;
+with STM32_Board;  use STM32_Board;
 
 package body STM32F4_Timer_Interrupts is
 
@@ -49,7 +49,7 @@ package body STM32F4_Timer_Interrupts is
          if Status (Timer_3, Timer_CC1_Indicated) then
             Clear_Pending_Interrupt (Timer_3, Timer_CC1_Interrupt);
 
-            Toggle (Blue);
+            Toggle (Green);
 
             Current := Current_Capture_Value (Timer_3, Channel_1);
             Set_Compare_Value (Timer_3, Channel_1, Current + Channel_1_Period);
@@ -67,7 +67,7 @@ package body STM32F4_Timer_Interrupts is
          if Status (Timer_3, Timer_CC3_Indicated) then
             Clear_Pending_Interrupt (Timer_3, Timer_CC3_Interrupt);
 
-            Toggle (Orange);
+            Toggle (Red);
 
             Current := Current_Capture_Value (Timer_3, Channel_3);
             Set_Compare_Value (Timer_3, Channel_3, Current + Channel_3_Period);

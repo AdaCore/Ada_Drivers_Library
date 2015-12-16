@@ -29,12 +29,12 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4.LTDC;
+with STM32.LTDC;
 
 package Screen_Interface is
 
-   subtype Width  is STM32F4.LTDC.Width;
-   subtype Height is STM32F4.LTDC.Height;
+   subtype Width  is STM32.LTDC.Width;
+   subtype Height is STM32.LTDC.Height;
 
    type Touch_State is record
       Touch_Detected : Boolean;
@@ -50,20 +50,20 @@ package Screen_Interface is
    function "+" (P1, P2 : Point) return Point is (P1.X + P2.X, P1.Y + P2.Y);
    function "-" (P1, P2 : Point) return Point is (P1.X - P2.X, P1.Y - P2.Y);
 
-   subtype Color is STM32F4.LTDC.Pixel;
+   subtype Color is STM32.LTDC.Pixel;
 
-   Black      : Color renames STM32F4.LTDC.Black;
-   White      : Color renames STM32F4.LTDC.White;
-   Red        : Color renames STM32F4.LTDC.Red;
-   Green      : Color renames STM32F4.LTDC.Green;
-   Blue       : Color renames STM32F4.LTDC.Blue;
-   Gray       : Color renames STM32F4.LTDC.Gray;
-   Light_Gray : Color renames STM32F4.LTDC.Light_Gray;
-   Sky_Blue   : Color renames STM32F4.LTDC.Sky_Blue;
-   Yellow     : Color renames STM32F4.LTDC.Yellow;
-   Orange     : Color renames STM32F4.LTDC.Orange;
-   Pink       : Color renames STM32F4.LTDC.Pink;
-   Violet     : Color renames STM32F4.LTDC.Violet;
+   Black      : Color renames STM32.LTDC.Black;
+   White      : Color renames STM32.LTDC.White;
+   Red        : Color renames STM32.LTDC.Red;
+   Green      : Color renames STM32.LTDC.Green;
+   Blue       : Color renames STM32.LTDC.Blue;
+   Gray       : Color renames STM32.LTDC.Gray;
+   Light_Gray : Color renames STM32.LTDC.Light_Gray;
+   Sky_Blue   : Color renames STM32.LTDC.Sky_Blue;
+   Yellow     : Color renames STM32.LTDC.Yellow;
+   Orange     : Color renames STM32.LTDC.Orange;
+   Pink       : Color renames STM32.LTDC.Pink;
+   Violet     : Color renames STM32.LTDC.Violet;
 
    procedure Initialize;
 

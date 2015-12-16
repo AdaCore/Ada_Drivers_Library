@@ -29,9 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F429_Discovery; use STM32F429_Discovery;
-with Button;              use Button;
-with Ada.Real_Time;       use Ada.Real_Time;
+with STM32_Board;    use STM32_Board;
+with Button;         use Button;
+with Ada.Real_Time;  use Ada.Real_Time;
 
 package body Driver is
 

@@ -30,10 +30,10 @@
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time; use Ada.Real_Time;
-with STM32F4;       use STM32F4;
-with STM32F4.GPIO;  use STM32F4.GPIO;
+with STM32;         use STM32;
+with STM32.GPIO;    use STM32.GPIO;
 
-with STM32F4_Discovery;  use STM32F4_Discovery;  -- arbitrary
+with STM32_Board;   use STM32_Board;
 
 package body Driver is
 

@@ -30,9 +30,9 @@
 ------------------------------------------------------------------------------
 
 with Serial_Port;          use Serial_Port;
-with STM32F4_Discovery;    use STM32F4_Discovery;
-with STM32F4.GPIO;         use STM32F4.GPIO;
-with STM32F4.USARTs;       use STM32F4.USARTs;
+with STM32_Board;          use STM32_Board;
+with STM32.GPIO;           use STM32.GPIO;
+with STM32.USARTs;         use STM32.USARTs;
 with Ada.Interrupts;       use Ada.Interrupts;
 with Ada.Interrupts.Names; use Ada.Interrupts.Names;
 

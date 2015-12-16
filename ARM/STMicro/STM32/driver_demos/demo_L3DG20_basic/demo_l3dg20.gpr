@@ -1,18 +1,19 @@
+with "../../stm32";
+
 project Demo_L3DG20 is
 
-   for Languages use ("Ada");
-   for Main use ("demo_l3dg20.adb");
-
-   for Source_Dirs use ("src", "../../drivers", "../../boards", "../../devices", "../../components", "../../utils");
-
-   for Object_Dir use "obj";
-
+   type Board_Type is ("STM32F429-DISCO");
+   Board : Board_Type := external ("BOARD", "STM32F429-DISCO");
    type Build_Modes is ("debug", "production");
    Build_Mode : Build_Modes := external ("Build", "debug");
 
-   for Runtime ("Ada") use "ravenscar-sfp-stm32f4";
+   for Languages use ("Ada");
+   for Main use ("demo_l3dg20.adb");
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
 
-   for Target use "arm-eabi";
+   for Target use STM32'Target;
+   for Runtime ("Ada") use STM32'Runtime ("Ada");
 
    package Compiler is
       case Build_Mode is
@@ -24,11 +25,6 @@ project Demo_L3DG20 is
       end case;
    end Compiler;
 
-   package Naming is
-      for Spec ("last_chance_handler") use "last_chance_handler-sfp.ads";
-      for Body ("last_chance_handler") use "last_chance_handler-stm32f429xx-sfp.adb";
-   end Naming;
-
     package Linker is
       for Default_Switches ("ada") use (
          "-Wl,-Map,demo_l3dg20.map",
@@ -36,10 +32,6 @@ project Demo_L3DG20 is
      --, "-Wl,--print-gc-sections");  -- prints the sections removed
     end Linker;
 
-   package Ide is
-      for Program_Host use "localhost:4242";
-      for Communication_Protocol use "remote";
-   end Ide;
+   package Ide renames STM32.Ide;
 
 end Demo_L3DG20;
-

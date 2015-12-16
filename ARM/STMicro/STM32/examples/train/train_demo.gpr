@@ -1,16 +1,20 @@
+with "../../stm32";
+
 project Train_Demo is
+
+   Board : STM32.Board_Type := external ("BOARD", "STM32F429-DISCO");
+   RTS   : STM32.RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
 
    for Languages use ("Ada");
 
    for Main use ("train_demo.adb");
 
-   for Source_Dirs use ("src", "../common", "../../drivers", "../../boards", "../../devices", "../../components", "../../utils");
+   for Source_Dirs use ("src", "../common");
 
    for Object_Dir use "obj";
 
-   for Target use "arm-eabi";
-
-   for Runtime ("Ada") use "ravenscar-sfp-stm32f4";
+   for Target use STM32'Target;
+   for Runtime ("Ada") use STM32'Runtime ("Ada");
 
    package Compiler is
       for Default_Switches ("ada") use
@@ -23,15 +27,6 @@ project Train_Demo is
          "-Wl,--gc-sections");
     end Linker;
 
-   package Naming is
-      for Spec ("last_chance_handler") use "last_chance_handler-sfp.ads";
-      for Body ("last_chance_handler") use "last_chance_handler-stm32f429xx-sfp.adb";
-   end Naming;
-
-   package Ide is
-      for Program_Host use "localhost:4242";
-      for Communication_Protocol use "remote";
-   end Ide;
+    package Ide renames STM32.Ide;
 
 end Train_Demo;
-

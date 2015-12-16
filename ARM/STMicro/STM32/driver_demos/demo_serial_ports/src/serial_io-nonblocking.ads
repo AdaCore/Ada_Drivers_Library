@@ -29,9 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4;        use STM32F4;
-with STM32F4.GPIO;   use STM32F4.GPIO;
-with STM32F4.USARTs; use STM32F4.USARTs;
+with STM32;          use STM32;
+with STM32.GPIO;     use STM32.GPIO;
+with STM32.USARTs;   use STM32.USARTs;
 with Ada.Interrupts; use Ada.Interrupts;
 
 package Serial_IO.Nonblocking is

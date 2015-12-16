@@ -38,18 +38,16 @@
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 
-with STM32F429_Discovery;  use STM32F429_Discovery;
+with STM32_Board;  use STM32_Board;
 
-with STM32F4.L3DG20;  use STM32F4.L3DG20;
+with STM32.L3DG20; use STM32.L3DG20;
 
 with Bitmapped_Drawing;
 with BMP_Fonts;
-with STM32F4.ILI9341;
-with STM32F4.GPIO;  use STM32F4.GPIO;
-with STM32F4;       use STM32F4;
-with STM32F4.RCC;   use STM32F4.RCC;
-
-use STM32F4;
+with STM32.ILI9341;
+with STM32;        use STM32;
+with STM32.GPIO;   use STM32.GPIO;
+with STM32.RCC;    use STM32.RCC;
 
 procedure Demo_L3DG20 is
 
@@ -110,7 +108,7 @@ procedure Demo_L3DG20 is
    -- LCD --
    ---------
 
-   package LCD renames STM32F4.ILI9341; use LCD;
+   package LCD renames STM32.ILI9341; use LCD;
 
    -----------------
    -- LCD_Drawing --

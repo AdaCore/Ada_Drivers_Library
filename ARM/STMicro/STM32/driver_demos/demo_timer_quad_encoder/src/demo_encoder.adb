@@ -60,7 +60,7 @@
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 with Ada.Real_Time;        use Ada.Real_Time;
 
-with STM32F429_Discovery;  use STM32F429_Discovery;
+with STM32_Board;          use STM32_Board;
 
 with Motor;
 with Encoder_Emulator;

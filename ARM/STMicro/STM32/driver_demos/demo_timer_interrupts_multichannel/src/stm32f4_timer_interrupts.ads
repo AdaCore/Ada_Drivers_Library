@@ -33,9 +33,9 @@
 --  demonstration.
 
 with Ada.Interrupts.Names; use Ada.Interrupts.Names;
-with STM32F4;              use STM32F4;
-with STM32F4.RCC;          use STM32F4.RCC;
-with STM32F4.Timers;       use STM32F4.Timers;
+with STM32;                use STM32;
+with STM32.RCC;            use STM32.RCC;
+with STM32.Timers;         use STM32.Timers;
 
 package STM32F4_Timer_Interrupts is
 

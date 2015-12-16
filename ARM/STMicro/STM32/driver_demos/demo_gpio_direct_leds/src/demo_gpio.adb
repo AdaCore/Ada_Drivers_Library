@@ -43,13 +43,13 @@
 
 with STM32F40xxx;   use STM32F40xxx;
 
-with STM32F4.GPIO;  use STM32F4.GPIO;
+with STM32.GPIO;    use STM32.GPIO;
 with Ada.Real_Time; use Ada.Real_Time;
-with STM32F4.RCC;
+with STM32.RCC;
 
 procedure Demo_GPIO is
 
-   use STM32F4;
+   use STM32;
 
    All_LEDs : constant GPIO_Pins := Pin_12 & Pin_13 & Pin_14 & Pin_15;
 

@@ -31,11 +31,11 @@
 
 with Ada.Interrupts;        use Ada.Interrupts;
 with Ada.Interrupts.Names;  use Ada.Interrupts.Names;
-with STM32F4.RCC;           use STM32F4.RCC;
-with STM32F4.GPIO;          use STM32F4.GPIO;
+with STM32.RCC;             use STM32.RCC;
+with STM32.GPIO;            use STM32.GPIO;
 with Serial_IO.Nonblocking; use Serial_IO.Nonblocking;
 
-with STM32F4_Discovery;           use STM32F4_Discovery;
+with STM32_Board;           use STM32_Board;
 
 package Peripherals_Nonblocking is
 

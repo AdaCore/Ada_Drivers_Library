@@ -32,8 +32,8 @@
 --  A simple demo using a timing event to blink an LED.
 
 with Blinker;
-with Ada.Real_Time;      use Ada.Real_Time;
-with STM32F4_Discovery;  use STM32F4_Discovery;
+with Ada.Real_Time; use Ada.Real_Time;
+with STM32_Board;   use STM32_Board;
 
 procedure Demo_Timing_Events is
 begin

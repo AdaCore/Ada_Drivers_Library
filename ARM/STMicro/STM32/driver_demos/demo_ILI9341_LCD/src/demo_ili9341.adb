@@ -32,18 +32,18 @@
 --  This program demonstrates some basic functionality of the ILI9341 LCD
 --  component driver, combined with the Bitmapped_Drawing generic package.
 
-with STM32F4.RCC;  use STM32F4.RCC;
-with STM32F4.GPIO; use STM32F4.GPIO;
+with STM32.RCC;          use STM32.RCC;
+with STM32.GPIO;         use STM32.GPIO;
 
 with Bitmapped_Drawing;
-with STM32F4.ILI9341;
-with BMP_Fonts;            use BMP_Fonts;
+with STM32.ILI9341;
+with BMP_Fonts;          use BMP_Fonts;
 
-with STM32F429_Discovery;  use STM32F429_Discovery;
+with STM32_Board;        use STM32_Board;
 
 procedure Demo_ILI9341 is
 
-   package LCD renames STM32F4.ILI9341; use LCD;
+   package LCD renames STM32.ILI9341; use LCD;
 
    package LCD_Drawing is new Bitmapped_Drawing
      (Color     => LCD.Colors,

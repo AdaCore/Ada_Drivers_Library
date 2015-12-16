@@ -29,10 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4.Touch_Panel;
+with STM32.Touch_Panel;
 
-with STM32F4;     use STM32F4;
-with STM32F4.LTDC; use STM32F4.LTDC;
+with STM32;     use STM32;
+with STM32.LTDC; use STM32.LTDC;
 
 package body Screen_Interface is
 
@@ -49,9 +49,9 @@ package body Screen_Interface is
       if not Initialized then
          Initialized := True;
 
-         STM32F4.LTDC.Initialize;
-         STM32F4.LTDC.Set_Background (16#00#, 16#00#, 16#00#);
-         STM32F4.Touch_Panel.Initialize;
+         STM32.LTDC.Initialize;
+         STM32.LTDC.Set_Background (16#00#, 16#00#, 16#00#);
+         STM32.Touch_Panel.Initialize;
 
          --  At init the draw layer is the one displayed, this will keep
          --  compatibility with projects not doing double buffering.
@@ -86,9 +86,9 @@ package body Screen_Interface is
 
    function Current_Touch_State return Touch_State is
       TS    : Touch_State;
-      ST_TS : STM32F4.Touch_Panel.TP_State;
+      ST_TS : STM32.Touch_Panel.TP_State;
    begin
-      ST_TS := STM32F4.Touch_Panel.Current_State;
+      ST_TS := STM32.Touch_Panel.Current_State;
 
       TS.Touch_Detected := ST_TS.Touch_Detected;
       TS.X := ST_TS.X;
@@ -102,7 +102,7 @@ package body Screen_Interface is
 
    procedure Set_Pixel (P : Point; Col : Color) is
    begin
-      STM32F4.LTDC.Set_Pixel (Draw_Layer, P.X, P.Y, Col);
+      STM32.LTDC.Set_Pixel (Draw_Layer, P.X, P.Y, Col);
    end Set_Pixel;
 
    ---------------
@@ -111,7 +111,7 @@ package body Screen_Interface is
 
    procedure Set_Pixel (X, Y : Natural; Col : Color) is
    begin
-      STM32F4.LTDC.Set_Pixel (Draw_Layer, X, Y, Col);
+      STM32.LTDC.Set_Pixel (Draw_Layer, X, Y, Col);
    end Set_Pixel;
 
    -----------------

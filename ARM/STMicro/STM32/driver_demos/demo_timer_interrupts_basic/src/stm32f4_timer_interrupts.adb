@@ -29,9 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4_Discovery;  use STM32F4_Discovery;
+with STM32_Board;   use STM32_Board;
 
-with STM32F4.Timers;  use STM32F4.Timers;
+with STM32.Timers;  use STM32.Timers;
 
 package body STM32F4_Timer_Interrupts is
 
@@ -50,7 +50,7 @@ package body STM32F4_Timer_Interrupts is
          if Status (Timer_7, Timer_Update_Indicated) then
             if Interrupt_Enabled (Timer_7, Timer_Update_Interrupt) then
                Clear_Pending_Interrupt (Timer_7, Timer_Update_Interrupt);
-               Toggle (Blue);
+               Toggle (Green);
             end if;
          end if;
       end IRQ_Handler;

@@ -45,19 +45,19 @@
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 
-with STM32F429_Discovery;  use STM32F429_Discovery;
+with STM32_Board;  use STM32_Board;
 
-with STM32F4;        use STM32F4;
-with STM32F4.DAC;    use STM32F4.DAC;
-with STM32F4.DMA;    use STM32F4.DMA;
-with STM32F4.GPIO;   use STM32F4.GPIO;
-with STM32F4.Timers; use STM32F4.Timers;
+with STM32;        use STM32;
+with STM32.DAC;    use STM32.DAC;
+with STM32.DMA;    use STM32.DMA;
+with STM32.GPIO;   use STM32.GPIO;
+with STM32.Timers; use STM32.Timers;
 
 with System;
 
 with Bitmapped_Drawing;
 with BMP_Fonts;
-with STM32F4.ILI9341;
+with STM32.ILI9341;
 
 procedure Demo_DAC_DMA is
 
@@ -109,15 +109,15 @@ procedure Demo_DAC_DMA is
    -----------------
 
    package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => STM32F4.ILI9341.Colors,
-      Set_Pixel => STM32F4.ILI9341.Set_Pixel);
+     (Color     => STM32.ILI9341.Colors,
+      Set_Pixel => STM32.ILI9341.Set_Pixel);
 
    ---------
    -- Put --
    ---------
 
    procedure Put (X, Y : Natural; Msg : String) is
-      use LCD_Drawing, BMP_Fonts, STM32F4.ILI9341;
+      use LCD_Drawing, BMP_Fonts, STM32.ILI9341;
    begin
       Draw_String
         ((X, Y),

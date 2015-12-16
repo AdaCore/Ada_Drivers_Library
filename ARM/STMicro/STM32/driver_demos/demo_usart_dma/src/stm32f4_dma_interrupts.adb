@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4.USARTs;  use STM32F4.USARTs;
+with STM32.USARTs;  use STM32.USARTs;
 
 package body STM32F4_DMA_Interrupts is
 

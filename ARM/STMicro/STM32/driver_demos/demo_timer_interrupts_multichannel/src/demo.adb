@@ -37,13 +37,13 @@
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 
-with STM32F4_Discovery;        use STM32F4_Discovery;
+with STM32_Board;              use STM32_Board;
 
-with STM32F4.Timers;           use STM32F4.Timers;
+with STM32.Timers;           use STM32.Timers;
 with STM32F4_Timer_Interrupts; use STM32F4_Timer_Interrupts;
 
 procedure Demo is
-   use STM32F4;
+   use STM32;
 begin
    Initialize_LEDs;
 

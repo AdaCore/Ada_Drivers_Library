@@ -31,8 +31,8 @@
 
 with Ada.Interrupts.Names;   use Ada.Interrupts.Names;
 with STM32F4_DMA_Interrupts;
-with STM32F4_Discovery;      use STM32F4_Discovery;
-with STM32F4.DMA;            use  STM32F4.DMA;
+with STM32_Board;            use STM32_Board;
+with STM32.DMA;              use STM32.DMA;
 
 package Demo_DMA is
 

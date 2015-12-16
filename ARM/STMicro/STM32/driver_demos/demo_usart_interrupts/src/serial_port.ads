@@ -31,9 +31,9 @@
 
 with Ada.Interrupts;                use Ada.Interrupts;
 with Ada.Synchronous_Task_Control;  use Ada.Synchronous_Task_Control;
-with STM32F4.USARTs;                use STM32F4.USARTs;
+with STM32.USARTs;                  use STM32.USARTs;
 
-use STM32F4;
+use STM32;
 
 package Serial_Port is
 

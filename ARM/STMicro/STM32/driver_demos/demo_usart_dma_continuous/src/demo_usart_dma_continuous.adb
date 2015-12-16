@@ -36,16 +36,16 @@
 --  executes. Note that all the LEDs flash initially, before any characters
 --  are sent, as a confirmation of overall execution.
 
-with STM32F4;           use STM32F4;
-with STM32F4.DMA;       use STM32F4.DMA;
-with STM32F4.GPIO;      use STM32F4.GPIO;
-with STM32F4.USARTs;    use STM32F4.USARTs;
+with STM32;           use STM32;
+with STM32.DMA;       use STM32.DMA;
+with STM32.GPIO;      use STM32.GPIO;
+with STM32.USARTs;    use STM32.USARTs;
 
-with STM32F4_Discovery; use STM32F4_Discovery;
+with STM32_Board;     use STM32_Board;
 
-with Ada.Real_Time;     use Ada.Real_Time;
+with Ada.Real_Time;   use Ada.Real_Time;
 
-with Peripherals;       use Peripherals;
+with Peripherals;     use Peripherals;
 
 procedure Demo_USART_DMA_Continuous is
 

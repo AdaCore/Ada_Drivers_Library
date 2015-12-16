@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time;
-with STM32F4.RNG.Interrupts;  use STM32F4.RNG.Interrupts;
+with STM32.RNG.Interrupts;     use STM32.RNG.Interrupts;
 with Ada.Unchecked_Conversion;
 with Interfaces;
 with Screen_Interface;

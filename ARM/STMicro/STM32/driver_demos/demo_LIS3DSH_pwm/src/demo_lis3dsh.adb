@@ -51,15 +51,15 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
 with Ada.Real_Time;     use Ada.Real_Time;
 
-with STM32F4_Discovery; use STM32F4_Discovery;
-with STM32F4.LIS3DSH;   use STM32F4.LIS3DSH;  -- on the F4 Disco board
+with STM32_Board;       use STM32_Board;
+with STM32.LIS3DSH;     use STM32.LIS3DSH;  -- on the F4 Disco board
 
-with STM32F4.GPIO;      use STM32F4.GPIO;
-with STM32F4.Timers;    use STM32F4.Timers;
-with STM32F4.RCC;       use STM32F4.RCC;
-with STM32F4.PWM;       use STM32F4.PWM;
+with STM32.GPIO;        use STM32.GPIO;
+with STM32.Timers;      use STM32.Timers;
+with STM32.RCC;         use STM32.RCC;
+with STM32.PWM;         use STM32.PWM;
 
-use STM32F4;
+use STM32;
 
 with Demo_PWM_Settings; use Demo_PWM_Settings;
 

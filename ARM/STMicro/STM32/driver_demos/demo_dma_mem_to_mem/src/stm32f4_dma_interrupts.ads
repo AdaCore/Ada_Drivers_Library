@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Interrupts;  use Ada.Interrupts;
-with STM32F4.DMA;     use  STM32F4.DMA;
+with STM32.DMA;       use STM32.DMA;
 
 package STM32F4_DMA_Interrupts is
 

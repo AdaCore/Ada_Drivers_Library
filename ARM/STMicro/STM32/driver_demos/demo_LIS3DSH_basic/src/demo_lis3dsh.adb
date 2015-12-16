@@ -39,11 +39,11 @@
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
-with Ada.Real_Time;     use Ada.Real_Time;
-with STM32F4_Discovery; use STM32F4_Discovery;
-with STM32F4.LIS3DSH;   use STM32F4.LIS3DSH;
+with Ada.Real_Time;        use Ada.Real_Time;
+with STM32_Board;          use STM32_Board;
+with STM32.LIS3DSH;        use STM32.LIS3DSH;
 
-use STM32F4;
+use STM32;
 
 procedure Demo_LIS3DSH is
 

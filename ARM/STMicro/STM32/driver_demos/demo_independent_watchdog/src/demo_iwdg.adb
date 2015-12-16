@@ -46,9 +46,9 @@
 
 with Last_Chance_Handler;    pragma Unreferenced (Last_Chance_Handler);
 
-with STM32F4.IWDG;      use STM32F4.IWDG;
-with Ada.Real_Time;     use Ada.Real_Time;
-with STM32F4_Discovery; use STM32F4_Discovery;  -- arbitrary
+with STM32.IWDG;    use STM32.IWDG;
+with Ada.Real_Time; use Ada.Real_Time;
+with STM32_Board;   use STM32_Board;  -- arbitrary
 
 procedure Demo_IWDG is
 begin

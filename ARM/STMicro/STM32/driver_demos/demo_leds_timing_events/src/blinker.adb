@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4_Discovery;  use STM32F4_Discovery;
+with STM32_Board;  use STM32_Board;
 
 package body Blinker is
 
@@ -39,7 +39,7 @@ package body Blinker is
 
    procedure Start (Interval : in Time_Span) is
    begin
-      Toggle (Blue);
+      Toggle (Green);
       Blinker.Interval := Start.Interval;
       Next_Beat := Clock + Start.Interval;
       Set_Handler (Pulse, Next_Beat, Control.Action'Access);
@@ -67,7 +67,7 @@ package body Blinker is
 
       procedure Action (Event : in out Timing_Event) is
       begin
-         Toggle (Blue);
+         Toggle (Green);
          Next_Beat := Next_Beat + Interval;
          Set_Handler (Event, Next_Beat, Control.Action'Access);
       end Action;

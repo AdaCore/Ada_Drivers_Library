@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4_Discovery;  use STM32F4_Discovery;
+with STM32_Board;  use STM32_Board;
 
 package body ADC_Interrupt_Handling is
 

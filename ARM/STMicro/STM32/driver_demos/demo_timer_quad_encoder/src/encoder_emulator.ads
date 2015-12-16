@@ -48,11 +48,11 @@
 --        Encoder_Emulator.Emulate_Forward_Direction;
 --        Encoder_Emulator.Start;
 
-with STM32F4.GPIO;        use STM32F4.GPIO;
-with STM32F4.Timers;      use STM32F4.Timers;
-with STM32F429_Discovery; use STM32F429_Discovery;
-with STM32F4.RCC;
-with STM32F4;             use STM32F4;
+with STM32.GPIO;    use STM32.GPIO;
+with STM32.Timers;  use STM32.Timers;
+with STM32_Board;   use STM32_Board;
+with STM32.RCC;
+with STM32;         use STM32;
 
 package Encoder_Emulator is
    pragma Elaborate_Body;

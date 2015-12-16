@@ -35,9 +35,9 @@
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
-with STM32F4_Discovery;  use STM32F4_Discovery;
+with STM32_Board;     use STM32_Board;
 
-with STM32F4.Timers;  use STM32F4.Timers;
+with STM32.Timers;    use STM32.Timers;
 with Ada.Real_Time;   use Ada.Real_Time;
 
 with STM32F4_Timer_Interrupts;  pragma Unreferenced (STM32F4_Timer_Interrupts);

@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4.DMA;       use STM32F4.DMA;
+with STM32.DMA;         use STM32.DMA;
 with Peripherals;       use Peripherals;
 
 package STM32F4_DMA_Interrupts is

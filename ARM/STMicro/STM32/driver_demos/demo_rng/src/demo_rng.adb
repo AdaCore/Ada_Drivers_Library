@@ -33,20 +33,17 @@
 
 --  Note that you may need to cycle power on the board.
 
-with STM32F429_Discovery;  pragma Unreferenced (STM32F429_Discovery);
-
-with STM32F4.ILI9341;
+with STM32.ILI9341;
 with Bitmapped_Drawing;
 with LCD_Std_Out;
 
---  with STM32F4.RNG.Polling;  use STM32F4.RNG.Polling;
-with STM32F4.RNG.Interrupts;  use STM32F4.RNG.Interrupts;
+with STM32.RNG.Interrupts;  use STM32.RNG.Interrupts;
 
 procedure Demo_RNG is
 
    package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => STM32F4.ILI9341.Colors,
-      Set_Pixel => STM32F4.ILI9341.Set_Pixel);
+     (Color     => STM32.ILI9341.Colors,
+      Set_Pixel => STM32.ILI9341.Set_Pixel);
 
    package LCD_Text is new LCD_Std_Out (LCD_Drawing);
    --  we use the LCD_Std_Out generic, rather than directly using the Drawing

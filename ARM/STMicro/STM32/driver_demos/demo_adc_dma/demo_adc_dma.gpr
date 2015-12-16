@@ -1,19 +1,18 @@
+with "../../stm32";
+
 project Demo_ADC_DMA is
 
-   for Languages use ("Ada");
-
-   for Main use ("demo_adc_vbat_dma");
-
-   for Source_Dirs use ("src", "../../drivers", "../../boards", "../../devices", "../../components", "../../utils");
-
+   Board : STM32.Board_Type := external ("BOARD", "STM32F429-DISCO");
    type Build_Modes is ("debug", "production");
    Build_Mode : Build_Modes := external ("Build", "production");
 
+   for Languages use ("Ada");
+   for Main use ("demo_adc_vbat_dma");
+   for Source_Dirs use ("src");
    for Object_Dir use "obj/" & Build_Mode;
 
-   for Target use "arm-eabi";
-
-   for Runtime ("ada") use "ravenscar-sfp-stm32f4";
+   for Target use STM32'Target;
+   for Runtime ("Ada") use STM32'Runtime ("Ada");
 
    package Compiler is
       case Build_Mode is
@@ -28,14 +27,11 @@ project Demo_ADC_DMA is
                "-fdata-sections");
 
          when "production" =>
-            for Default_Switches ("ada") use ("-O3", "-gnatp", "-gnatw.X", "-ffunction-sections", "-fdata-sections");
+            for Default_Switches ("ada") use
+              ("-O3", "-gnatp", "-gnatw.X",
+               "-ffunction-sections", "-fdata-sections");
       end case;
    end Compiler;
-
-   package Naming is
-      for spec ("last_chance_handler") use "last_chance_handler-sfp.ads";
-      for body ("last_chance_handler") use "last_chance_handler-stm32f429xx-lcd-sfp.adb";
-   end Naming;
 
    package Builder is
       case Build_Mode is
@@ -51,10 +47,6 @@ project Demo_ADC_DMA is
       for Default_Switches ("ada") use ("-Wl,--gc-sections");
    end Linker;
 
-   package Ide is
-      for Program_Host use "localhost:4242";
-      for Communication_Protocol use "remote";
-   end Ide;
+   package Ide renames STM32.Ide;
 
 end Demo_ADC_DMA;
-

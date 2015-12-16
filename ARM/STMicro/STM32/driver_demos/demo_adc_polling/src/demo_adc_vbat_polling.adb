@@ -36,12 +36,12 @@
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
-with STM32F429_Discovery;  use STM32F429_Discovery;
+with STM32_Board;  use STM32_Board;
 
-with STM32F4;      use STM32F4;
-with STM32F4.ADC;  use STM32F4.ADC;
+with STM32;      use STM32;
+with STM32.ADC;  use STM32.ADC;
 
-with STM32F4.ILI9341;
+with STM32.ILI9341;
 with Bitmapped_Drawing;
 with BMP_Fonts;
 
@@ -61,8 +61,8 @@ procedure Demo_ADC_VBat_Polling is
    -----------------
 
    package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => STM32F4.ILI9341.Colors,
-      Set_Pixel => STM32F4.ILI9341.Set_Pixel);
+     (Color     => STM32.ILI9341.Colors,
+      Set_Pixel => STM32.ILI9341.Set_Pixel);
 
    -----------
    -- Print --
@@ -70,7 +70,7 @@ procedure Demo_ADC_VBat_Polling is
 
    procedure Print (X, Y : Natural; Value : Word; Suffix : String := "") is
       Value_Image : constant String := Value'Img;
-      use LCD_Drawing, BMP_Fonts, STM32F4.ILI9341;
+      use LCD_Drawing, BMP_Fonts, STM32.ILI9341;
    begin
       Draw_String
         ((X, Y),
