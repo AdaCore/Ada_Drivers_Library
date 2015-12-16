@@ -169,14 +169,12 @@ procedure Demo_L3DG20 is
    -- Get_Gyro_Offsets --
    ----------------------
 
-   procedure Get_Gyro_Offsets
-     (Offsets      : out Angle_Rates;
-      Sample_Count : in Long_Integer)
-   is
-      Sample  : Angle_Rates;
-      Total_X : Long_Integer := 0;
-      Total_Y : Long_Integer := 0;
-      Total_Z : Long_Integer := 0;
+   procedure Get_Gyro_Offsets (Offsets : out Angle_Rates) is
+      Sample       : Angle_Rates;
+      Sample_Count : constant := 200; -- arbitrary
+      Total_X      : Long_Integer := 0;
+      Total_Y      : Long_Integer := 0;
+      Total_Z      : Long_Integer := 0;
    begin
       for K in 1 .. Sample_Count loop
          Get_Raw_Angle_Rates (Gyro, Sample);
