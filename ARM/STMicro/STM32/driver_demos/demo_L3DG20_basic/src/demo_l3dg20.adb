@@ -91,7 +91,7 @@ procedure Demo_L3DG20 is
          Band_Width       => L3GD20_Bandwidth_4,
          BlockData_Update => L3GD20_BlockDataUpdate_Continous,
          Endianness       => L3GD20_BLE_LSB,
-         Full_Scale       => L3GD20_Fullscale_2000);
+         Full_Scale       => L3GD20_Fullscale_250);
 
       Configure_Filter
         (Gyro,
@@ -162,17 +162,20 @@ procedure Demo_L3DG20 is
    procedure Get_Gyro_Offsets (Offsets : out Angle_Rates) is
       Sample       : Angle_Rates;
       Sample_Count : constant := 200; -- arbitrary
+      Total_X      : Long_Integer := 0;
+      Total_Y      : Long_Integer := 0;
+      Total_Z      : Long_Integer := 0;
    begin
       Offsets := (others => 0);
       for K in 1 .. Sample_Count loop
          Get_Raw_Angle_Rates (Gyro, Sample);
-         Offsets.X := Offsets.X + Sample.X;
-         Offsets.Y := Offsets.Y + Sample.Y;
-         Offsets.Z := Offsets.Z + Sample.Z;
+         Total_X := Total_X + Long_Integer (Sample.X);
+         Total_Y := Total_Y + Long_Integer (Sample.Y);
+         Total_Z := Total_Z + Long_Integer (Sample.Z);
       end loop;
-      Offsets.X := Offsets.X / Sample_Count;
-      Offsets.Y := Offsets.Y / Sample_Count;
-      Offsets.Z := Offsets.Z / Sample_Count;
+      Offsets.X := Angle_Rate (Total_X / Sample_Count);
+      Offsets.Y := Angle_Rate (Total_Y / Sample_Count);
+      Offsets.Z := Angle_Rate (Total_Z / Sample_Count);
    end Get_Gyro_Offsets;
 
 begin
