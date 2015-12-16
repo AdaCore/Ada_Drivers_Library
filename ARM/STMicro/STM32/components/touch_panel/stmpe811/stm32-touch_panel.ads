@@ -44,7 +44,7 @@ with STM32.LTDC;
 with STM32.I2C;   use STM32.I2C;
 with STM32.GPIO;  use STM32.GPIO;
 
-with STM32F429_Discovery;  use STM32F429_Discovery;
+with STM32_Board;  use STM32_Board;
 
 package STM32.Touch_Panel is
 

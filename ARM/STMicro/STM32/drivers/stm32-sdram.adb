@@ -45,7 +45,7 @@ with STM32;      use STM32;
 with STM32.GPIO; use STM32.GPIO;
 with STM32.RCC;  use STM32.RCC;
 
-with STM32F429_Discovery;  use STM32F429_Discovery;
+with STM32_Board;  use STM32_Board;
 
 package body STM32.SDRAM is
 

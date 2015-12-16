@@ -12,8 +12,7 @@ project STM32 is
    LCH : LCH_Type := external ("LCH", "lcd");
 
    for Source_Dirs use
-     ("boards",
-      "components",
+     ("components",
       "devices",
       "drivers",
       "utils");
@@ -26,45 +25,54 @@ project STM32 is
       when "STM32F4-DISCO" =>
          for Runtime ("Ada") use RTS & "-stm32f4";
          for Source_Dirs use Project'Source_Dirs &
-            ("svd/stm32f40x");
+            ("svd/stm32f40x",
+             "boards/stm32f4_discovery",
+             "components/gyro/lis3dsh");
          case RTS is
             when "ravenscar-sfp" =>
                for Source_Dirs use Project'Source_Dirs &
-                 ("utils/sfp",
-                  "utils/sfp/stm32f407");
+                 ("utils/lch_sfp",
+                  "utils/lch_sfp/led");
             when "ravenscar-full" =>
                for Source_Dirs use Project'Source_Dirs &
-                 ("utils/full",
-                  "utils/full/stm32f407");
+                 ("utils/lch_full",
+                  "utils/lch_full/led");
          end case;
 
       when "STM32F429-DISCO" =>
          for Runtime ("Ada") use RTS & "-stm32f4";
          for Source_Dirs use Project'Source_Dirs &
-            ("svd/stm32f429x");
+            ("svd/stm32f429x",
+             "boards/stm32f429_discovery",
+             "components/lcd/ili9341",
+             "components/touch_panel/stmpe811",
+             "components/gyro/l3gd20",
+             "utils/gui");
          case RTS is
             when "ravenscar-sfp" =>
                for Source_Dirs use Project'Source_Dirs &
-                 ("utils/sfp",
-                  "utils/sfp/stm32f429/" & LCH);
+                 ("utils/lch_sfp",
+                  "utils/lch_sfp/" & LCH);
             when "ravenscar-full" =>
                for Source_Dirs use Project'Source_Dirs &
-                 ("utils/full",
-                  "utils/full/stm32f429/" & LCH);
+                 ("utils/lch_full",
+                  "utils/lch_full/" & LCH);
          end case;
 
       when "STM32F7-DISCO" =>
          for Runtime ("Ada") use RTS & "-stm32f7";
-         for Source_Dirs use Project'Source_Dirs & ("svd/stm32f7x");
+         for Source_Dirs use Project'Source_Dirs &
+            ("svd/stm32f7x",
+             "boards/stm32f7_discovery");
          case RTS is
             when "ravenscar-sfp" =>
                for Source_Dirs use Project'Source_Dirs &
-                 ("utils/sfp",
-                  "utils/sfp/stm32f429/" & LCH);
+                 ("utils/lch_sfp",
+                  "utils/lch_sfp/" & LCH);
             when "ravenscar-full" =>
                for Source_Dirs use Project'Source_Dirs &
-                 ("utils/full",
-                  "utils/full/stm32f429/" & LCH);
+                 ("utils/lch_full",
+                  "utils/lch_full/" & LCH);
          end case;
    end case;
 

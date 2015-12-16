@@ -29,27 +29,87 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This version of the LCH only toggles the Red LED.
+--  This version of the LCH writes information about the unhandled exception
+--  to the LCD. Note that it uses the package LCD_Std_Out, and that package
+--  body's elaboration assignes GPIO ports and pins, as well as a SPI port,
+--  to initialize the ILI9341 component.
 
---  Note this version is for use with the ravenscar-sfp runtime.
+--  Note this version is for use with the ravenscar-sfp runtime, in which full
+--  exception semantics are not available.
 
-with STM32F429_Discovery;  use STM32F429_Discovery;
-with Ada.Real_Time;        use Ada.Real_Time;
+with STM32_Board;       use STM32_Board;
+
+with LCD_Std_Out;
+with Bitmapped_Drawing;
+with BMP_Fonts;
+with STM32.ILI9341;
+
+with Ada.Real_Time;     use Ada.Real_Time;
+with Ada.Unchecked_Conversion;
 
 package body Last_Chance_Handler is
+
+   -----------------
+   -- LCD_Drawing --
+   -----------------
+
+   package LCD_Drawing is new Bitmapped_Drawing
+     (Color     => STM32.ILI9341.Colors,
+      Set_Pixel => STM32.ILI9341.Set_Pixel);
+
+   --------------
+   -- LCD_Text --
+   --------------
+
+   package LCD_Text is new LCD_Std_Out (LCD_Drawing);
+   --  we use the LCD_Std_Out generic, rather than directly using the Drawing
+   --  package, because we want the text to wrap around the screen if necessary
+
+   ---------
+   -- Put --
+   ---------
+
+   procedure Put (Ptr : System.Address) is
+
+      type C_String_Ptr is access String (1 .. Positive'Last) with
+        Storage_Size => 0, Size => Standard'Address_Size;
+
+      function As_C_String_Ptr is new Ada.Unchecked_Conversion
+        (System.Address, C_String_Ptr);
+
+      Msg_Str : constant C_String_Ptr := As_C_String_Ptr (Ptr);
+
+   begin
+      for J in Msg_Str'Range loop
+         exit when Msg_Str (J) = Character'Val (0);
+         LCD_Text.Put (Msg_Str (J));
+      end loop;
+   end Put;
 
    -------------------------
    -- Last_Chance_Handler --
    -------------------------
 
    procedure Last_Chance_Handler (Msg : System.Address; Line : Integer) is
-      pragma Unreferenced (Msg, Line);
    begin
-      Initialize_LEDs;
-
+      Initialize_LEDs;  -- in case no other use in the application
       All_LEDs_Off;
 
-      --  No-return procedure...
+      LCD_Text.Set_Font (To => BMP_Fonts.Font12x12);
+
+      LCD_Text.Clear_Screen;
+
+      if Line /= 0 then
+         LCD_Text.Put ("Predefined exception at ");
+         Put (Msg);
+         LCD_Text.Put (" line");
+         LCD_Text.Put (Line'Img);
+      else
+         LCD_Text.Put ("User-defined exception, message: ");
+         Put (Msg);
+      end if;
+      LCD_Text.New_Line;
+
       loop
          Toggle (Red);
          delay until Clock + Milliseconds (500);

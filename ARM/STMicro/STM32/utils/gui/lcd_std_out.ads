@@ -49,7 +49,7 @@ with STM32.RCC;  use STM32.RCC;
 with STM32.GPIO; use STM32.GPIO;
 with STM32.SPI;  use STM32.SPI;
 
-with STM32F429_Discovery;  use STM32F429_Discovery;
+with STM32_Board;  use STM32_Board;
 
 with STM32.ILI9341;
 with BMP_Fonts;          use BMP_Fonts;

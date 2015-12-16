@@ -58,7 +58,7 @@ with STM32.LIS3DSH;   use STM32.LIS3DSH;
 
 with Ada.Interrupts.Names; use Ada.Interrupts;
 
-package STM32F4_Discovery is
+package STM32_Board is
    pragma Elaborate_Body;
 
    subtype User_LED is GPIO_Pin;
@@ -204,4 +204,4 @@ package STM32F4_Discovery is
    procedure Reset (This : in out Timer)
      renames STM32F40xxx.Reset;
 
-end STM32F4_Discovery;
+end STM32_Board;

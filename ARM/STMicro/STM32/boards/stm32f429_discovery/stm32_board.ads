@@ -59,7 +59,7 @@ with Ada.Interrupts.Names;  use Ada.Interrupts;
 
 use STM32;  -- for base addresses
 
-package STM32F429_Discovery is
+package STM32_Board is
    pragma Elaborate_Body;
 
    subtype User_LED is GPIO_Pin;
@@ -210,4 +210,4 @@ package STM32F429_Discovery is
    procedure Reset (This : in out Timer)
       renames STM32F42xxx.Reset;
 
-end STM32F429_Discovery;
+end STM32_Board;

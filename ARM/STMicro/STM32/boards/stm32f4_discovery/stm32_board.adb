@@ -30,18 +30,18 @@
 --                                                                          --
 --  This file is based on:                                                  --
 --                                                                          --
---   @file    stm32f429i_discovery.c                                        --
+--   @file    stm32f4_discovery.c                                           --
 --   @author  MCD Application Team                                          --
 --   @version V1.1.0                                                        --
 --   @date    19-June-2014                                                  --
 --   @brief  This file provides set of firmware functions to manage Leds    --
---           and push-button available on STM32F429I-Discovery Kit from     --
+--           and push-button available on STM32F42-Discovery Kit from       --
 --           STMicroelectronics.                                            --
 --                                                                          --
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-package body STM32F429_Discovery is
+package body STM32_Board is
 
    -------------
    -- Turn_On --
@@ -85,7 +85,7 @@ package body STM32F429_Discovery is
 
    procedure All_LEDs_Off is
    begin
-      Clear (LED_Port, ALL_LEDs);
+      Clear (LED_Port, All_LEDs);
    end All_LEDs_Off;
 
    -----------------
@@ -94,7 +94,7 @@ package body STM32F429_Discovery is
 
    procedure All_LEDs_On is
    begin
-      Set (LED_Port, ALL_LEDs);
+      Set (LED_Port, All_LEDs);
    end All_LEDs_On;
 
    ---------------------
@@ -102,16 +102,17 @@ package body STM32F429_Discovery is
    ---------------------
 
    procedure Initialize_LEDs is
-      Conf : GPIO_Port_Configuration;
+      Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (LED_Port);
 
-      Conf.Mode        := Mode_Out;
-      Conf.Output_Type := Push_Pull;
-      Conf.Speed       := Speed_100MHz;
-      Conf.Resistors   := Floating;
-
-      Configure_IO (LED_Port, All_LEDs, Conf);
+      Configuration.Mode        := Mode_Out;
+      Configuration.Output_Type := Push_Pull;
+      Configuration.Speed       := Speed_100MHz;
+      Configuration.Resistors   := Floating;
+      Configure_IO (Port => LED_Port,
+                    Pins => All_LEDs,
+                    Config => Configuration);
    end Initialize_LEDs;
 
    --------------------------------
@@ -129,4 +130,4 @@ package body STM32F429_Discovery is
       Configure_IO (User_Button_Port, User_Button_Pin, Config);
    end Configure_User_Button_GPIO;
 
-end STM32F429_Discovery;
+end STM32_Board;
