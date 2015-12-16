@@ -47,10 +47,11 @@ with STM32.Board;  use STM32.Board;
 with STM32.L3DG20; use STM32.L3DG20;
 
 with Bitmapped_Drawing;
-with BMP_Fonts;     use BMP_Fonts;
-with STM32.ILI9341;
-with STM32;         use STM32;
-with STM32.GPIO;    use STM32.GPIO;
+with BMP_Fonts;           use BMP_Fonts;
+with STM32.LCD;           use STM32.LCD;
+with STM32.DMA2D.Polling; use STM32.DMA2D;
+with STM32;               use STM32;
+with STM32.GPIO;          use STM32.GPIO;
 
 procedure Demo_L3DG20 is
 
@@ -136,19 +137,11 @@ procedure Demo_L3DG20 is
       end if;
    end Configure_Gyro;
 
-   ---------
-   -- LCD --
-   ---------
-
-   package LCD renames STM32.ILI9341; use LCD;
-
    -----------------
    -- LCD_Drawing --
    -----------------
 
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => LCD.Colors,
-      Set_Pixel => LCD.Set_Pixel);
+   package LCD_Drawing renames Bitmapped_Drawing;
 
    -----------
    -- Print --
@@ -158,23 +151,26 @@ procedure Demo_L3DG20 is
       --  a convenience routine for writing to the LCD
    begin
       LCD_Drawing.Draw_String
-        (Location,
+        (LCD_Drawing.Screen_Buffer,
+         Location,
          Msg,
          Selected_Font,
-         Foreground => LCD.White,  -- arbitrary
-         Background => LCD.Black); -- arbitrary
+         Foreground => Bitmapped_Drawing.White,  -- arbitrary
+         Background => Bitmapped_Drawing.Black); -- arbitrary
    end Print;
 
    ----------------------
    -- Get_Gyro_Offsets --
    ----------------------
 
-   procedure Get_Gyro_Offsets (Offsets : out Angle_Rates) is
-      Sample       : Angle_Rates;
-      Sample_Count : constant := 200; -- arbitrary
-      Total_X      : Long_Integer := 0;
-      Total_Y      : Long_Integer := 0;
-      Total_Z      : Long_Integer := 0;
+   procedure Get_Gyro_Offsets
+     (Offsets      : out Angle_Rates;
+      Sample_Count : in Long_Integer)
+   is
+      Sample  : Angle_Rates;
+      Total_X : Long_Integer := 0;
+      Total_Y : Long_Integer := 0;
+      Total_Z : Long_Integer := 0;
    begin
       for K in 1 .. Sample_Count loop
          Get_Raw_Angle_Rates (Gyro, Sample);
@@ -188,19 +184,12 @@ procedure Demo_L3DG20 is
    end Get_Gyro_Offsets;
 
 begin
-   LCD.Initialize
-     (Chip_Select             => LCD_CSX,
-      WRX                     => LCD_WRX_DCX,
-      Reset                   => LCD_RESET,
-      SPI_Chip                => SPI_5'Access,
-      SPI_AF                  => GPIO_AF_SPI5,
-      SCK_Pin                 => SPI5_SCK,
-      MISO_Pin                => SPI5_MISO,
-      MOSI_Pin                => SPI5_MOSI);
+   STM32.LCD.Initialize (STM32.LCD.Pixel_Fmt_ARGB1555);
+   STM32.DMA2D.Polling.Initialize;
 
-   LCD.Set_Orientation (To => LCD.Portrait_2);
+   STM32.LCD.Set_Orientation (STM32.LCD.Portrait);
 
-   LCD.Fill (LCD.Black);
+   STM32.DMA2D.DMA2D_Fill (LCD_Drawing.Screen_Buffer, 0);
 
    Configure_Gyro;
 
