@@ -53,7 +53,13 @@ use STM32F4;
 
 procedure Demo_L3DG20 is
 
-   Axes : L3DG20.Raw_Angle_Rates;
+   Axes   : L3DG20.Angle_Rates;
+   Stable : L3DG20.Angle_Rates;
+
+   Sensitivity : Float;
+
+   Selected_Font : constant BMP_Fonts.BMP_Font := BMP_Fonts.Font12x12;
+   Line_Height   : constant Positive := BMP_Fonts.Char_Height (Selected_Font) + 4;
 
    --------------------
    -- Configure_Gyro --
@@ -116,6 +122,59 @@ procedure Demo_L3DG20 is
 
    use LCD_Drawing;
 
+   -----------
+   -- Print --
+   -----------
+
+   procedure Print (Location : Display_Point; Msg : String) is
+   begin
+      Draw_String (Location,
+                   Msg,
+                   Selected_Font,
+                   Foreground => White,
+                   Background => Black);
+   end Print;
+
+   -------------
+   -- Display --
+   -------------
+
+   procedure Display
+     (Rates      : Angle_Rates;
+      First_Line : Natural;
+      X_Prefix   : String;
+      Y_Prefix   : String;
+      Z_Prefix   : String)
+   is
+      Line1 : constant Natural := First_Line;
+      Line2 : constant Natural := First_Line + Line_Height;
+      Line3 : constant Natural := First_Line + 2 * Line_Height;
+   begin
+      Print ((0, Line1), X_Prefix & Rates.X'Img & "  ");
+      Print ((0, Line2), Y_Prefix & Rates.Y'Img & "  ");
+      Print ((0, Line3), Z_Prefix & Rates.Z'Img & "  ");
+   end Display;
+
+   ----------------------
+   -- Get_Gyro_Offsets --
+   ----------------------
+
+   procedure Get_Gyro_Offsets (Offsets : out Angle_Rates) is
+      Sample       : Angle_Rates;
+      Sample_Count : constant := 200; -- arbitrary
+   begin
+      Offsets := (others => 0);
+      for K in 1 .. Sample_Count loop
+         Get_Raw_Angle_Rates (Gyro, Sample);
+         Offsets.X := Offsets.X + Sample.X;
+         Offsets.Y := Offsets.Y + Sample.Y;
+         Offsets.Z := Offsets.Z + Sample.Z;
+      end loop;
+      Offsets.X := Offsets.X / Sample_Count;
+      Offsets.Y := Offsets.Y / Sample_Count;
+      Offsets.Z := Offsets.Z / Sample_Count;
+   end Get_Gyro_Offsets;
+
 begin
    LCD.Initialize
      (Chip_Select             => (GPIO_C'Access, Pin_2),
@@ -139,22 +198,37 @@ begin
 
    Configure_Gyro;
 
+   Sensitivity := Selected_Sensitivity (Gyro);
+
+   Get_Gyro_Offsets (Stable);
+
+   Display (Stable,
+            First_Line => 0,
+            X_Prefix   => "Stable X:",
+            Y_Prefix   => "Stable Y:",
+            Z_Prefix   => "Stable Z:");
+
    loop
       Get_Raw_Angle_Rates (Gyro, Axes);
 
-      Draw_String ((0, 50), "Pitch:" & Axes.X'Img & "  ",
-                   Font       => BMP_Fonts.Font12x12,
-                   Foreground => LCD.White,
-                   Background => LCD.Black);
+      Axes.X := Axes.X - Stable.X;
+      Axes.Y := Axes.Y - Stable.Y;
+      Axes.Z := Axes.Z - Stable.Z;
 
-      Draw_String ((0, 80), "Roll: " & Axes.Y'Img & "  ",
-                   Font       => BMP_Fonts.Font12x12,
-                   Foreground => LCD.White,
-                   Background => LCD.Black);
+      Display (Axes,
+               First_Line => 55,
+               X_Prefix   => "Adjusted X:",
+               Y_Prefix   => "Adjusted Y:",
+               Z_Prefix   => "Adjusted Z:");
 
-      Draw_String ((0, 110), "Yaw:  " & Axes.Z'Img & "  ",
-                   Font       => BMP_Fonts.Font12x12,
-                   Foreground => LCD.White,
-                   Background => LCD.Black);
+      Axes.X := Angle_Rate (Float (Axes.X) * Sensitivity);
+      Axes.Y := Angle_Rate (Float (Axes.Y) * Sensitivity);
+      Axes.Z := Angle_Rate (Float (Axes.Z) * Sensitivity);
+
+      Display (Axes,
+               First_Line => 110,
+               X_Prefix   => "Pitch:",
+               Y_Prefix   => "Roll: ",
+               Z_Prefix   => "Yaw:  ");
    end loop;
 end Demo_L3DG20;
