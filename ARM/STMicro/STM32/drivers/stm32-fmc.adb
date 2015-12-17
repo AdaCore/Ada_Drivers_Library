@@ -39,6 +39,8 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with Interfaces; use Interfaces;
+
 package body STM32.FMC is
 
    procedure FMC_SDRAM_Init (SDRAM_Conf : FMC_SDRAM_Init_Config) is

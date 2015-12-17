@@ -39,6 +39,9 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with Interfaces;          use Interfaces;
+with STM32_SVD.GPIO;      use STM32_SVD.GPIO, STM32_SVD;
+
 with STM32.RCC;
 with STM32.SYSCFG;
 with System.Machine_Code;
@@ -64,7 +67,7 @@ package body STM32.GPIO is
       for Pin of Pins loop
          These_Pins := These_Pins or Pin'Enum_Rep;
       end loop;
-      return (Port.IDR and These_Pins) /= 0;
+      return (Port.IDR.IDR.Val and These_Pins) /= 0;
    end Any_Set;
 
    ---------
@@ -74,7 +77,7 @@ package body STM32.GPIO is
    function Set (Port : GPIO_Port;  Pin : GPIO_Pin) return Boolean is
       Pin_Mask : constant Half_Word := GPIO_Pin'Enum_Rep (Pin);
    begin
-      return (Port.IDR and Pin_Mask) = Pin_Mask;
+      return (Port.IDR.IDR.Val and Pin_Mask) = Pin_Mask;
    end Set;
 
    ---------
@@ -84,7 +87,7 @@ package body STM32.GPIO is
    function Set (This : GPIO_Point) return Boolean is
       Pin_Mask : constant Half_Word := GPIO_Pin'Enum_Rep (This.Pin);
    begin
-      return (This.Port.IDR and Pin_Mask) = Pin_Mask;
+      return (This.Port.IDR.IDR.Val and Pin_Mask) = Pin_Mask;
    end Set;
 
    -------------
@@ -97,7 +100,7 @@ package body STM32.GPIO is
       for Pin of Pins loop
          These_Pins := These_Pins or Pin'Enum_Rep;
       end loop;
-      return (Port.IDR and These_Pins) = These_Pins;
+      return (Port.IDR.IDR.Val and These_Pins) = These_Pins;
    end All_Set;
 
    ---------
@@ -106,7 +109,7 @@ package body STM32.GPIO is
 
    procedure Set (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
    begin
-      Port.BSRR_Set := Pin'Enum_Rep;
+      Port.BSRR.BS.Val := Pin'Enum_Rep;
    end Set;
 
    ---------
@@ -119,7 +122,7 @@ package body STM32.GPIO is
       for Pin of Pins loop
          These_Pins := These_Pins or Pin'Enum_Rep;
       end loop;
-      Port.BSRR_Set := These_Pins'Enum_Rep;
+      Port.BSRR.BS.Val := These_Pins'Enum_Rep;
    end Set;
 
    ---------
@@ -128,7 +131,7 @@ package body STM32.GPIO is
 
    procedure Set (This : in out GPIO_Point) is
    begin
-      This.Port.BSRR_Set := GPIO_Pin'Enum_Rep (This.Pin);
+      This.Port.BSRR.BS.Val := GPIO_Pin'Enum_Rep (This.Pin);
    end Set;
 
    -----------
@@ -137,7 +140,7 @@ package body STM32.GPIO is
 
    procedure Clear (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
    begin
-      Port.BSRR_Reset := Pin'Enum_Rep;
+      Port.BSRR.BR.Val := Pin'Enum_Rep;
    end Clear;
 
    -----------
@@ -150,7 +153,7 @@ package body STM32.GPIO is
       for Pin of Pins loop
          These_Pins := These_Pins or Pin'Enum_Rep;
       end loop;
-      Port.BSRR_Reset := These_Pins;
+      Port.BSRR.BR.Val := These_Pins;
    end Clear;
 
    -----------
@@ -159,7 +162,7 @@ package body STM32.GPIO is
 
    procedure Clear (This : in out GPIO_Point) is
    begin
-      This.Port.BSRR_Reset := GPIO_Pin'Enum_Rep (This.Pin);
+      This.Port.BSRR.BR.Val := GPIO_Pin'Enum_Rep (This.Pin);
    end Clear;
 
    ------------
@@ -172,7 +175,7 @@ package body STM32.GPIO is
                        "subp always fails",
                        "hardware-specific interaction for IDR and ODR");
    begin
-      Port.ODR := Port.ODR xor Pin'Enum_Rep;
+      Port.ODR.ODR.Val := Port.ODR.ODR.Val xor Pin'Enum_Rep;
    end Toggle;
    pragma Annotate (CodePeer,
                     False_Positive,
@@ -189,7 +192,7 @@ package body STM32.GPIO is
       for Pin of Pins loop
          These_Pins := These_Pins or Pin'Enum_Rep;
       end loop;
-      Port.ODR := Port.ODR xor These_Pins;
+      Port.ODR.ODR.Val := Port.ODR.ODR.Val xor These_Pins;
    end Toggle;
 
    ------------
@@ -198,7 +201,8 @@ package body STM32.GPIO is
 
    procedure Toggle (This : in out GPIO_Point) is
    begin
-      This.Port.ODR := This.Port.ODR xor GPIO_Pin'Enum_Rep (This.Pin);
+      This.Port.ODR.ODR.Val :=
+        This.Port.ODR.ODR.Val xor GPIO_Pin'Enum_Rep (This.Pin);
    end Toggle;
 
    ------------
@@ -207,7 +211,7 @@ package body STM32.GPIO is
 
    function Locked (Port : GPIO_Port;  Pin : GPIO_Pin) return Boolean is
    begin
-      return (Port.LCKR and Pin'Enum_Rep) = Pin'Enum_Rep;
+      return Port.LCKR.LCK.Arr (Pin'Enum_Rep) = 1;
    end Locked;
 
    ------------------
@@ -314,25 +318,28 @@ package body STM32.GPIO is
       Pins   : GPIO_Pins;
       Config : GPIO_Port_Configuration)
    is
-      MODER   : Pin_Modes_Register := Port.MODER;
-      OTYPER  : Output_Types_Register := Port.OTYPER;
-      OSPEEDR : Output_Speeds_Register := Port.OSPEEDR;
-      PUPDR   : Resistors_Register := Port.PUPDR;
+      MODER   : MODER_Union   := Port.MODER.MODER;
+      OTYPER  : OT_Union      := Port.OTYPER.OT;
+      OSPEEDR : OSPEEDR_Union := Port.OSPEEDR.OSPEEDR;
+      PUPDR   : PUPDR_Union   := Port.PUPDR.PUPDR;
    begin
       for Pin of Pins loop
          declare
             Index : constant Integer := GPIO_Pin'Pos (Pin); -- 0 .. 15
          begin
-            MODER (Index)   := Config.Mode;
-            OTYPER (Index)  := Config.Output_Type;
-            OSPEEDR (Index) := Config.Speed;
-            PUPDR (Index)   := Config.Resistors;
+            MODER.Arr (Index)   := Pin_IO_Modes'Enum_Rep (Config.Mode);
+            OTYPER.Arr (Index)  :=
+              Pin_Output_Types'Enum_Rep (Config.Output_Type);
+            OSPEEDR.Arr (Index) := Pin_Output_Speeds'Enum_Rep (Config.Speed);
+            PUPDR.Arr (Index)   :=
+              Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
          end;
       end loop;
-      Port.MODER   := MODER;
-      Port.OTYPER  := OTYPER;
-      Port.OSPEEDR := OSPEEDR;
-      Port.PUPDR   := PUPDR;
+
+      Port.MODER.MODER     := MODER;
+      Port.OTYPER.OT       := OTYPER;
+      Port.OSPEEDR.OSPEEDR := OSPEEDR;
+      Port.PUPDR.PUPDR     := PUPDR;
    end Configure_IO;
 
    ------------------
@@ -344,22 +351,22 @@ package body STM32.GPIO is
       Pin    : GPIO_Pin;
       Config : GPIO_Port_Configuration)
    is
-      MODER   : Pin_Modes_Register := Port.MODER;
-      OTYPER  : Output_Types_Register := Port.OTYPER;
-      OSPEEDR : Output_Speeds_Register := Port.OSPEEDR;
-      PUPDR   : Resistors_Register := Port.PUPDR;
+      MODER   : MODER_Union   := Port.MODER.MODER;
+      OTYPER  : OT_Union      := Port.OTYPER.OT;
+      OSPEEDR : OSPEEDR_Union := Port.OSPEEDR.OSPEEDR;
+      PUPDR   : PUPDR_Union   := Port.PUPDR.PUPDR;
 
       Index : constant Integer := GPIO_Pin'Pos (Pin);
    begin
-      MODER (Index)   := Config.Mode;
-      OTYPER (Index)  := Config.Output_Type;
-      OSPEEDR (Index) := Config.Speed;
-      PUPDR (Index)   := Config.Resistors;
+      MODER.Arr (Index)   := Pin_IO_Modes'Enum_Rep (Config.Mode);
+      OTYPER.Arr (Index)  := Pin_Output_Types'Enum_Rep (Config.Output_Type);
+      OSPEEDR.Arr (Index) := Pin_Output_Speeds'Enum_Rep (Config.Speed);
+      PUPDR.Arr (Index)  := Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
 
-      Port.MODER   := MODER;
-      Port.OTYPER  := OTYPER;
-      Port.OSPEEDR := OSPEEDR;
-      Port.PUPDR   := PUPDR;
+      Port.MODER.MODER     := MODER;
+      Port.OTYPER.OT       := OTYPER;
+      Port.OSPEEDR.OSPEEDR := OSPEEDR;
+      Port.PUPDR.PUPDR     := PUPDR;
    end Configure_IO;
 
    ------------------
@@ -380,7 +387,7 @@ package body STM32.GPIO is
 
    function Current_Input (Port : GPIO_Port) return Half_Word is
    begin
-      return Port.IDR;
+      return Port.IDR.IDR.Val;
    end Current_Input;
 
    --------------------
@@ -389,7 +396,7 @@ package body STM32.GPIO is
 
    function Current_Output (Port : GPIO_Port) return Half_Word is
    begin
-      return Port.ODR;
+      return Port.ODR.ODR.Val;
    end Current_Output;
 
    ------------------
@@ -398,7 +405,7 @@ package body STM32.GPIO is
 
    procedure Write_Output (Port : in out GPIO_Port; Data : Half_Word) is
    begin
-      Port.ODR := Data;
+      Port.ODR.ODR.Val := Data;
    end Write_Output;
 
    ----------------------------------
@@ -412,7 +419,11 @@ package body STM32.GPIO is
    is
       Index : constant Integer := GPIO_Pin'Pos (Pin);
    begin
-      Port.AFR (Index) := Bits_4 (AF);
+      if Index < 8 then
+         Port.AFRL.AFRL.Arr (Index) := UInt4 (AF);
+      else
+         Port.AFRH.AFRH.Arr (Index - 8) := UInt4 (AF);
+      end if;
    end Configure_Alternate_Function;
 
    ----------------------------------

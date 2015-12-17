@@ -39,6 +39,7 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with Interfaces; use Interfaces;
 with Ada.Unchecked_Conversion;
 
 package body STM32.DAC is

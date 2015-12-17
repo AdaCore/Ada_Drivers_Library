@@ -29,7 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.RCC; use STM32.RCC;
+with Interfaces; use Interfaces;
+with STM32.RCC;  use STM32.RCC;
+
+with STM32_SVD;
 
 package body STM32.PWM is
 
@@ -266,23 +269,23 @@ package body STM32.PWM is
    --------------------------
 
    function Has_HCLOCK_Frequency (This : Timer) return Boolean is
-     (This'Address = TIM1_Base or
-      This'Address = TIM8_Base or
-      This'Address = TIM9_Base or
-      This'Address = TIM10_Base or
-      This'Address = TIM11_Base);
+     (This'Address = STM32_SVD.TIM1_Base or
+      This'Address = STM32_SVD.TIM8_Base or
+      This'Address = STM32_SVD.TIM9_Base or
+      This'Address = STM32_SVD.TIM10_Base or
+      This'Address = STM32_SVD.TIM11_Base);
 
    ---------------------------
    -- Has_PCLOCK2_Frequency --
    ---------------------------
 
    function Has_PCLOCK2_Frequency (This : Timer) return Boolean is
-     (This'Address = TIM3_Base or
-      This'Address = TIM4_Base or
-      This'Address = TIM6_Base or
-      This'Address = TIM7_Base or
-      This'Address = TIM12_Base or
-      This'Address = TIM13_Base or
-      This'Address = TIM14_Base);
+     (This'Address = STM32_SVD.TIM3_Base or
+      This'Address = STM32_SVD.TIM4_Base or
+      This'Address = STM32_SVD.TIM6_Base or
+      This'Address = STM32_SVD.TIM7_Base or
+      This'Address = STM32_SVD.TIM12_Base or
+      This'Address = STM32_SVD.TIM13_Base or
+      This'Address = STM32_SVD.TIM14_Base);
 
 end STM32.PWM;

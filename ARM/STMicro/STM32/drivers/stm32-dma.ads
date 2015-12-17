@@ -82,6 +82,7 @@
 pragma Restrictions (No_Elaboration_Code);
 
 with Ada.Real_Time;  use Ada.Real_Time;
+with Interfaces;     use Interfaces;
 
 package STM32.DMA is
 

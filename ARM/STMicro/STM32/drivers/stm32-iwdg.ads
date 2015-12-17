@@ -132,7 +132,7 @@ private
    end record;
 
    Watchdog : Watchdog_Registers
-     with Address => IWDG_Base;
+     with Address => STM32_SVD.IWDG_Base;
 
    --  commands to the watchdog hardware
 

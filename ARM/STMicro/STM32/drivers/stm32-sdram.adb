@@ -39,13 +39,14 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with Interfaces;    use Interfaces;
 with Ada.Real_Time; use Ada.Real_Time;
 
-with STM32;      use STM32;
-with STM32.GPIO; use STM32.GPIO;
-with STM32.RCC;  use STM32.RCC;
+with STM32;         use STM32;
+with STM32.GPIO;    use STM32.GPIO;
+with STM32.RCC;     use STM32.RCC;
 
-with STM32_Board;  use STM32_Board;
+with STM32_Board;   use STM32_Board;
 
 package body STM32.SDRAM is
 

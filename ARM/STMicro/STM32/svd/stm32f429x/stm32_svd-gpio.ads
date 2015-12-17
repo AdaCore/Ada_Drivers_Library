@@ -85,9 +85,9 @@ package STM32_SVD.GPIO is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype GPIOB_OSPEEDR_OSPEEDR0_Field is STM32_SVD.UInt2;
+   subtype OSPEEDR_OSPEEDR0_Field is STM32_SVD.UInt2;
 
-   type OSPEEDR_Field_Array is array (0 .. 15) of GPIOB_OSPEEDR_OSPEEDR0_Field
+   type OSPEEDR_Field_Array is array (0 .. 15) of OSPEEDR_OSPEEDR0_Field
      with Component_Size => 2, Size => 32;
 
    --  Type definition for OSPEEDR
@@ -109,14 +109,14 @@ package STM32_SVD.GPIO is
    end record;
 
    --  GPIO port output speed register
-   type GPIOB_OSPEEDR_Register is record
+   type OSPEEDR_Register is record
       --  Port x configuration bits (y = 0..15)
       OSPEEDR : OSPEEDR_Union := (As_Array => False, Val => 16#0#);
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for GPIOB_OSPEEDR_Register use record
+   for OSPEEDR_Register use record
       OSPEEDR at 0 range 0 .. 31;
    end record;
 
@@ -412,39 +412,39 @@ package STM32_SVD.GPIO is
    --  General-purpose I/Os
    type GPIO_Peripheral is record
       --  GPIO port mode register
-      MODER         : MODER_Register;
+      MODER   : MODER_Register;
       --  GPIO port output type register
-      OTYPER        : OTYPER_Register;
+      OTYPER  : OTYPER_Register;
       --  GPIO port output speed register
-      GPIOB_OSPEEDR : GPIOB_OSPEEDR_Register;
+      OSPEEDR : OSPEEDR_Register;
       --  GPIO port pull-up/pull-down register
-      PUPDR         : PUPDR_Register;
+      PUPDR   : PUPDR_Register;
       --  GPIO port input data register
-      IDR           : IDR_Register;
+      IDR     : IDR_Register;
       --  GPIO port output data register
-      ODR           : ODR_Register;
+      ODR     : ODR_Register;
       --  GPIO port bit set/reset register
-      BSRR          : BSRR_Register;
+      BSRR    : BSRR_Register;
       --  GPIO port configuration lock register
-      LCKR          : LCKR_Register;
+      LCKR    : LCKR_Register;
       --  GPIO alternate function low register
-      AFRL          : AFRL_Register;
+      AFRL    : AFRL_Register;
       --  GPIO alternate function high register
-      AFRH          : AFRH_Register;
+      AFRH    : AFRH_Register;
    end record
      with Volatile;
 
    for GPIO_Peripheral use record
-      MODER         at 0 range 0 .. 31;
-      OTYPER        at 4 range 0 .. 31;
-      GPIOB_OSPEEDR at 8 range 0 .. 31;
-      PUPDR         at 12 range 0 .. 31;
-      IDR           at 16 range 0 .. 31;
-      ODR           at 20 range 0 .. 31;
-      BSRR          at 24 range 0 .. 31;
-      LCKR          at 28 range 0 .. 31;
-      AFRL          at 32 range 0 .. 31;
-      AFRH          at 36 range 0 .. 31;
+      MODER   at 0 range 0 .. 31;
+      OTYPER  at 4 range 0 .. 31;
+      OSPEEDR at 8 range 0 .. 31;
+      PUPDR   at 12 range 0 .. 31;
+      IDR     at 16 range 0 .. 31;
+      ODR     at 20 range 0 .. 31;
+      BSRR    at 24 range 0 .. 31;
+      LCKR    at 28 range 0 .. 31;
+      AFRL    at 32 range 0 .. 31;
+      AFRH    at 36 range 0 .. 31;
    end record;
 
    --  General-purpose I/Os

@@ -44,6 +44,8 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
+private with STM32_SVD.GPIO;
+
 package STM32.GPIO is
 
    type GPIO_Port is limited private;
@@ -370,57 +372,7 @@ package STM32.GPIO is
 
 private
 
-   type Reserved_246X32 is array (1 ..  246) of Word
-     with Component_Size => 32, Size => 246*32;
-
-   type Bits_16x4 is array (0 ..  15) of Bits_4
-     with Component_Size => 4, Size => 64;
-
-   type Pin_Modes_Register is array (0 .. 15) of Pin_IO_Modes;
-   for Pin_Modes_Register'Component_Size use Pin_IO_Modes'Size;
-
-   type Output_Types_Register is array (0 .. 31) of Pin_Output_Types;
-   for Output_Types_Register'Component_Size use Pin_Output_Types'Size;
-
-   type Output_Speeds_Register is array (0 .. 15) of Pin_Output_Speeds;
-   for Output_Speeds_Register'Component_Size use Pin_Output_Speeds'Size;
-
-   type Resistors_Register is array (0 .. 15) of Internal_Pin_Resistors;
-   for Resistors_Register'Component_Size use Internal_Pin_Resistors'Size;
-
-   type GPIO_Port is limited record
-      MODER      : Pin_Modes_Register;
-      OTYPER     : Output_Types_Register;
-      OSPEEDR    : Output_Speeds_Register;
-      PUPDR      : Resistors_Register;
-      IDR        : Half_Word;       --  input data register
-      Reserved_1 : Half_Word;
-      ODR        : Half_Word;       --  output data register
-      Reserved_2 : Half_Word;
-      BSRR_Set   : Half_Word;       --  bit set register
-      BSRR_Reset : Half_Word;       --  bit reset register
-      LCKR       : Word with Atomic;
-      AFR        : Bits_16x4;       --  alternate function registers
-      Reserved_4 : Reserved_246x32;
-   end record with
-     Volatile,
-     Size => 16#400# * 8;
-
-   for GPIO_Port use record
-      MODER      at 0  range 0 .. 31;
-      OTYPER     at 4  range 0 .. 31;
-      OSPEEDR    at 8  range 0 .. 31;
-      PUPDR      at 12 range 0 .. 31;
-      IDR        at 16 range 0 .. 15;
-      Reserved_1 at 18 range 0 .. 15;
-      ODR        at 20 range 0 .. 15;
-      Reserved_2 at 22 range 0 .. 15;
-      BSRR_Set   at 24 range 0 .. 15;
-      BSRR_Reset at 26 range 0 .. 15;
-      LCKR       at 28 range 0 .. 31;
-      AFR        at 32 range 0 .. 63;
-      Reserved_4 at 40 range 0 .. 7871;
-   end record;
+   type GPIO_Port is new STM32_SVD.GPIO.GPIO_Peripheral;
 
    LCCK : constant Word := 16#0001_0000#;
    --  As per the Reference Manual (RM0090; Doc ID 018909 Rev 6) pg 282,

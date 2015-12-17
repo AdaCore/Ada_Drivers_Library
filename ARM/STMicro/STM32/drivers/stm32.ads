@@ -32,16 +32,17 @@
 --  This file provides type definitions for the STM32F4 (ARM Cortex M4F)
 --  microcontrollers from ST Microelectronics.
 
-with Interfaces;
 with System.Storage_Elements;
 use System;
 use type System.Storage_Elements.Storage_Offset;
 
+with STM32_SVD;
+
 package STM32 is
 
-   type Word      is new Interfaces.Unsigned_32;  -- for shift/rotate
-   type Half_Word is new Interfaces.Unsigned_16;  -- for shift/rotate
-   type Byte      is new Interfaces.Unsigned_8;   -- for shift/rotate
+   subtype Word      is STM32_SVD.Word;
+   subtype Half_Word is STM32_SVD.Short;
+   subtype Byte      is STM32_SVD.Byte;   -- for shift/rotate
 
    type Bits_1  is mod 2**1  with Size => 1;
    type Bits_2  is mod 2**2  with Size => 2;
@@ -77,90 +78,5 @@ package STM32 is
    type Bits_32x1 is array (0 .. 31) of Bits_1 with Pack, Size => 32;
    type Bits_16x2 is array (0 .. 15) of Bits_2 with Pack, Size => 32;
    type Bits_8x4  is array (0 ..  7) of Bits_4 with Pack, Size => 32;
-
-   --  Define address bases for the various system components
-
-   Peripheral_Base : constant Address := System'To_Address (16#4000_0000#);
-
-   APB1_Peripheral_Base : constant Address := Peripheral_Base;
-   APB2_Peripheral_Base : constant Address := Peripheral_Base + 16#0001_0000#;
-   AHB1_Peripheral_Base : constant Address := Peripheral_Base + 16#0002_0000#;
-   AHB2_Peripheral_Base : constant Address := Peripheral_Base + 16#1000_0000#;
-
-   GPIOA_Base : constant Address := AHB1_Peripheral_Base + 16#0000#;
-   GPIOB_Base : constant Address := AHB1_Peripheral_Base + 16#0400#;
-   GPIOC_Base : constant Address := AHB1_Peripheral_Base + 16#0800#;
-   GPIOD_Base : constant Address := AHB1_Peripheral_Base + 16#0C00#;
-   GPIOE_Base : constant Address := AHB1_Peripheral_Base + 16#1000#;
-   GPIOF_Base : constant Address := AHB1_Peripheral_Base + 16#1400#;
-   GPIOG_Base : constant Address := AHB1_Peripheral_Base + 16#1800#;
-   GPIOH_Base : constant Address := AHB1_Peripheral_Base + 16#1C00#;
-   GPIOI_Base : constant Address := AHB1_Peripheral_Base + 16#2000#;
-   GPIOJ_Base : constant Address := AHB1_Peripheral_Base + 16#2400#;
-   GPIOK_Base : constant Address := AHB1_Peripheral_Base + 16#2800#;
-
-   RCC_Base     : constant Address := AHB1_Peripheral_Base + 16#3800#;
-   FLASH_Base   : constant Address := AHB1_Peripheral_Base + 16#3C00#;
-   DMA1_Base    : constant Address := AHB1_Peripheral_Base + 16#6000#;
-   DMA2_Base    : constant Address := AHB1_Peripheral_Base + 16#6400#;
-   ETH_Base     : constant Address := AHB1_Peripheral_Base + 16#8000#;
-   ETH_MAC_Base : constant Address := ETH_Base;
-   ETH_MMC_Base : constant Address := ETH_Base + 16#0100#;
-   ETH_PTP_Base : constant Address := ETH_Base + 16#0700#;
-   ETH_DMA_Base : constant Address := ETH_Base + 16#1000#;
-   DMA2D_BASE   : constant Address := AHB1_Peripheral_Base + 16#B000#;
-
-   RNG_BASE     : constant Address := AHB2_Peripheral_Base + 16#6_0800#;
-
-   TIM2_Base    : constant Address := APB1_Peripheral_Base + 16#0000#;
-   TIM3_Base    : constant Address := APB1_Peripheral_Base + 16#0400#;
-   TIM4_Base    : constant Address := APB1_Peripheral_Base + 16#0800#;
-   TIM5_Base    : constant Address := APB1_Peripheral_Base + 16#0C00#;
-   TIM6_Base    : constant Address := APB1_Peripheral_Base + 16#1000#;
-   TIM7_Base    : constant Address := APB1_Peripheral_Base + 16#1400#;
-   TIM12_Base   : constant Address := APB1_Peripheral_Base + 16#1800#;
-   TIM13_Base   : constant Address := APB1_Peripheral_Base + 16#1C00#;
-   TIM14_Base   : constant Address := APB1_Peripheral_Base + 16#2000#;
-   RTC_Base     : constant Address := APB1_Peripheral_Base + 16#2800#;
-   WWDG_Base    : constant Address := APB1_Peripheral_Base + 16#2C00#;
-   IWDG_Base    : constant Address := APB1_Peripheral_Base + 16#3000#;
-   I2S2ext_Base : constant Address := APB1_Peripheral_Base + 16#3400#;
-   SPI2_Base    : constant Address := APB1_Peripheral_Base + 16#3800#;
-   SPI3_Base    : constant Address := APB1_Peripheral_Base + 16#3C00#;
-   I2S3ext_Base : constant Address := APB1_Peripheral_Base + 16#4000#;
-   USART2_Base  : constant Address := APB1_Peripheral_Base + 16#4400#;
-   USART3_Base  : constant Address := APB1_Peripheral_Base + 16#4800#;
-   UART4_Base   : constant Address := APB1_Peripheral_Base + 16#4C00#;
-   UART5_Base   : constant Address := APB1_Peripheral_Base + 16#5000#;
-   I2C1_Base    : constant Address := APB1_Peripheral_Base + 16#5400#;
-   I2C2_Base    : constant Address := APB1_Peripheral_Base + 16#5800#;
-   I2C3_Base    : constant Address := APB1_Peripheral_Base + 16#5C00#;
-   CAN1_Base    : constant Address := APB1_Peripheral_Base + 16#6400#;
-   CAN2_Base    : constant Address := APB1_Peripheral_Base + 16#6800#;
-   PWR_Base     : constant Address := APB1_Peripheral_Base + 16#7000#;
-   DAC_Base     : constant Address := APB1_Peripheral_Base + 16#7400#;
-   UART7_BASE   : constant Address := APB1_Peripheral_Base + 16#7800#;
-   UART8_BASE   : constant Address := APB1_Peripheral_Base + 16#7C00#;
-
-   TIM1_Base   : constant Address := APB2_Peripheral_Base + 16#0000#;
-   TIM8_Base   : constant Address := APB2_Peripheral_Base + 16#0400#;
-   USART1_Base : constant Address := APB2_Peripheral_Base + 16#1000#;
-   USART6_Base : constant Address := APB2_Peripheral_Base + 16#1400#;
-   ADC1_Base   : constant Address := APB2_Peripheral_Base + 16#2000#;
-   ADC2_Base   : constant Address := APB2_Peripheral_Base + 16#2100#;
-   ADC3_Base   : constant Address := APB2_Peripheral_Base + 16#2200#;
-   ADC_Base    : constant Address := APB2_Peripheral_Base + 16#2300#;
-   SDIO_Base   : constant Address := APB2_Peripheral_Base + 16#2C00#;
-   SPI1_Base   : constant Address := APB2_Peripheral_Base + 16#3000#;
-   SPI4_BASE   : constant Address := APB2_Peripheral_Base + 16#3400#;
-   SYSCFG_Base : constant Address := APB2_Peripheral_Base + 16#3800#;
-   EXTI_Base   : constant Address := APB2_Peripheral_Base + 16#3C00#;
-   TIM9_Base   : constant Address := APB2_Peripheral_Base + 16#4000#;
-   TIM10_Base  : constant Address := APB2_Peripheral_Base + 16#4400#;
-   TIM11_Base  : constant Address := APB2_Peripheral_Base + 16#4800#;
-   SPI5_BASE   : constant Address := APB2_Peripheral_Base + 16#5000#;
-   SPI6_BASE   : constant Address := APB2_Peripheral_Base + 16#5400#;
-   SAI1_BASE   : constant Address := APB2_Peripheral_Base + 16#5800#;
-   LTDC_BASE   : constant Address := APB2_Peripheral_Base + 16#6800#;
 
 end STM32;

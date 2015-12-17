@@ -44,6 +44,9 @@
 
 with STM32.GPIO;  use STM32.GPIO;
 
+private with STM32.Device;
+private with STM32_SVD;
+
 package STM32.SYSCFG is
 
    procedure Connect_External_Interrupt
@@ -69,6 +72,8 @@ package STM32.SYSCFG is
 
 private
 
+   use STM32.Device;
+
    type Boolean32 is array (0 .. 31) of Boolean;
    for Boolean32'Component_Size use 1;
 
@@ -93,7 +98,7 @@ private
 
    EXTI : EXTI_Registers with
      Volatile,
-     Address => EXTI_Base;
+     Address => STM32_SVD.EXTI_Base;
    pragma Import (Ada, EXTI);
 
    --  see pg 298 of "RM0090 Reference manual" in file named DM00031020.pdf
@@ -132,34 +137,6 @@ private
    --  are numeric values, starting with zero for port A and increasing
    --  monotonically. These values are ensured by the aspect clause on the
    --  type GPIO_Port_Id.
-
-   type GPIO_Port_Id is
-     (GPIO_Port_A, GPIO_Port_B, GPIO_Port_C, GPIO_Port_D, GPIO_Port_E, GPIO_Port_F,
-      GPIO_Port_G, GPIO_Port_H, GPIO_Port_I, GPIO_Port_J, GPIO_Port_K);
-      -- TODO: rather ugly to have this board-specific range here, but if we
-      -- put it in STM32F4.GPIO it will be just as bad, and if we put it in
-      -- STM32F4[29].Discovery that will create a dependence on that package here,
-      -- which is not the intent
-
-   for GPIO_Port_Id'Size use 4;
-
-   pragma Compile_Time_Error
-     (not (GPIO_Port_Id'First = GPIO_Port_A and GPIO_Port_Id'Last = GPIO_Port_K and
-           GPIO_Port_A'Enum_Rep = 0 and
-           GPIO_Port_B'Enum_Rep = 1 and
-           GPIO_Port_C'Enum_Rep = 2 and
-           GPIO_Port_D'Enum_Rep = 3 and
-           GPIO_Port_E'Enum_Rep = 4 and
-           GPIO_Port_F'Enum_Rep = 5 and
-           GPIO_Port_G'Enum_Rep = 6 and
-           GPIO_Port_H'Enum_Rep = 7 and
-           GPIO_Port_I'Enum_Rep = 8 and
-           GPIO_Port_J'Enum_Rep = 9 and
-           GPIO_Port_K'Enum_Rep = 10),
-      "Invalid representation for type GPIO_Port_Id");
-   --  Confirming, but depended upon so we check it.
-
-   function As_GPIO_Port_Id (Port : GPIO_Port) return GPIO_Port_Id with Inline;
 
    type EXTI_N_List is array (0 .. 3) of GPIO_Port_Id;
    --  NB: if you change the indexes you need to change the calculations in
@@ -208,7 +185,7 @@ private
 
    SYSCFG : SYSCFG_Registers with
      Volatile,
-     Address => SYSCFG_Base;
+     Address => STM32_SVD.SYSCFG_Base;
    pragma Import (Ada, SYSCFG);
 
 end STM32.SYSCFG;

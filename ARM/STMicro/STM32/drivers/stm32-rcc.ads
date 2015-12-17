@@ -42,6 +42,8 @@
 --  This file provides Reset and Clock Control definitions for the STM32F4
 --  (ARM Cortex M4F) microcontrollers from ST Microelectronics.
 
+private with STM32_SVD;
+
 package STM32.RCC is
 
    type RCC_System_Clocks is record
@@ -397,7 +399,7 @@ private
 
    Register : RCC_Registers with
      Volatile,
-     Address => RCC_Base,
+     Address => STM32_SVD.RCC_Base,
      Import;
 
    ---------------------  Constants for RCC_CR register  ---------------------

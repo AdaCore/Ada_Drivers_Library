@@ -42,6 +42,7 @@
 --  This file provides Nested Vector interrupt Controller definitions for the
 --  STM32F4 (ARM Cortex M4F) microcontrollers from ST Microelectronics.
 
+with Interfaces;
 with System;
 with Ada.Interrupts; use Ada.Interrupts;
 
@@ -98,6 +99,8 @@ package STM32.NVIC is  -- the Nested Vectored Interrupt Controller
    procedure Reset_System;
 
 private
+
+   use Interfaces;
 
    type Words is array (Natural range <>) of Word;
    type Bytes is array (Natural range <>) of Byte;

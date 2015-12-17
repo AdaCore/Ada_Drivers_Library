@@ -67,6 +67,8 @@
 
 with Ada.Real_Time; use Ada.Real_Time;
 
+private with STM32_SVD;
+
 package STM32.ADC is
    pragma Elaborate_Body;
 
@@ -630,17 +632,12 @@ package STM32.ADC is
    function VBat_Conversion
      (This    : Analog_To_Digital_Converter;
       Channel : Analog_Input_Channel)
-      return Boolean
-   is
-     (This'Address = ADC1_Base and Channel = VBat_Channel);
+      return Boolean with Inline;
 
    function VRef_TemperatureSensor_Conversion
      (This    : Analog_To_Digital_Converter;
       Channel : Analog_Input_Channel)
-      return Boolean
-   is
-     (This'Address = ADC1_Base and
-      (Channel in VRef_Channel | TemperatureSensor_Channel));
+      return Boolean with Inline;
    --  Returns whether the ADC unit and channel specified are that of a VRef
    --  OR a temperature sensor conversion. Note that one control bit is used
    --  to enable either one, ie it is shared.
@@ -702,6 +699,8 @@ package STM32.ADC is
          Injected_Conversions_Expected (This) = These'Length);
 
 private
+
+   use STM32_SVD;
 
    ADC_Stabilization                : constant Time_Span := Microseconds (3);
    Temperature_Sensor_Stabilization : constant Time_Span := Microseconds (10);
@@ -1076,6 +1075,19 @@ private
 
    Common : Common_Registers with
      Volatile,
-     Address => ADC_Base;
+     Address => C_ADC_Base;
+
+   function VBat_Conversion
+     (This    : Analog_To_Digital_Converter;
+      Channel : Analog_Input_Channel)
+      return Boolean
+   is (This'Address = ADC1_Base and Channel = VBat_Channel);
+
+   function VRef_TemperatureSensor_Conversion
+     (This    : Analog_To_Digital_Converter;
+      Channel : Analog_Input_Channel)
+      return Boolean
+   is (This'Address = ADC1_Base and
+         (Channel in VRef_Channel | TemperatureSensor_Channel));
 
 end STM32.ADC;

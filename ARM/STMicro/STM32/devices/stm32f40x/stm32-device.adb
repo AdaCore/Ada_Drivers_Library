@@ -30,11 +30,8 @@
 ------------------------------------------------------------------------------
 
 with STM32.RCC; use STM32.RCC;
-with System;
 
-package body STM32F40xxx is
-
-   use type System.Address;
+package body STM32.Device is
 
    ------------------
    -- Enable_Clock --
@@ -103,6 +100,36 @@ package body STM32F40xxx is
       end if;
    end Reset;
 
+   ---------------------
+   -- As_GPIO_Port_Id --
+   ---------------------
+
+   function As_GPIO_Port_Id (Port : GPIO_Port) return GPIO_Port_Id is
+   begin
+      -- TODO: rather ugly to have this board-specific range here
+      if Port'Address = GPIOA_Base then
+         return GPIO_Port_A;
+      elsif Port'Address = GPIOB_Base then
+         return GPIO_Port_B;
+      elsif Port'Address = GPIOC_Base then
+         return GPIO_Port_C;
+      elsif Port'Address = GPIOD_Base then
+         return GPIO_Port_D;
+      elsif Port'Address = GPIOE_Base then
+         return GPIO_Port_E;
+      elsif Port'Address = GPIOF_Base then
+         return GPIO_Port_F;
+      elsif Port'Address = GPIOG_Base then
+         return GPIO_Port_G;
+      elsif Port'Address = GPIOH_Base then
+         return GPIO_Port_H;
+      elsif Port'Address = GPIOI_Base then
+         return GPIO_Port_I;
+      else
+         raise Program_Error;
+      end if;
+   end As_GPIO_Port_Id;
+
    ------------------
    -- Enable_Clock --
    ------------------
@@ -137,7 +164,7 @@ package body STM32F40xxx is
    procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter) is
       pragma Unreferenced (This);
    begin
-      RCC.DAC_Clock_Enable;
+      STM32.RCC.DAC_Clock_Enable;
    end Enable_Clock;
 
    -----------
@@ -147,8 +174,8 @@ package body STM32F40xxx is
    procedure Reset (This : aliased in out Digital_To_Analog_Converter) is
       pragma Unreferenced (This);
    begin
-      RCC.DAC_Force_Reset;
-      RCC.DAC_Release_Reset;
+      STM32.RCC.DAC_Force_Reset;
+      STM32.RCC.DAC_Release_Reset;
    end Reset;
 
    ------------------
@@ -199,9 +226,9 @@ package body STM32F40xxx is
 
    procedure Enable_Clock (This : aliased in out DMA_Controller) is
    begin
-      if This'Address = STM32.DMA1_Base then
+      if This'Address = STM32_SVD.DMA1_Base then
          DMA1_Clock_Enable;
-      elsif This'Address = STM32.DMA2_Base then
+      elsif This'Address = STM32_SVD.DMA2_Base then
          DMA2_Clock_Enable;
       else
          raise Unknown_Device;
@@ -214,10 +241,10 @@ package body STM32F40xxx is
 
    procedure Reset (This : aliased in out DMA_Controller) is
    begin
-      if This'Address = STM32.DMA1_Base then
+      if This'Address = STM32_SVD.DMA1_Base then
          DMA1_Force_Reset;
          DMA1_Release_Reset;
-      elsif This'Address = STM32.DMA2_Base then
+      elsif This'Address = STM32_SVD.DMA2_Base then
          DMA2_Force_Reset;
          DMA2_Release_Reset;
       else
@@ -391,4 +418,4 @@ package body STM32F40xxx is
       end if;
    end Reset;
 
-end STM32F40xxx;
+end STM32.Device;

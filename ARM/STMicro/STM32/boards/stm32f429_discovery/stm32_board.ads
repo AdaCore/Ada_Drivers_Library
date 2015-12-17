@@ -43,7 +43,7 @@
 --  This file provides declarations for devices on the STM32F429 Discovery kits
 --  manufactured by ST Microelectronics.
 
-with STM32F42xxx;
+with STM32.Device;
 
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.ADC;     use STM32.ADC;
@@ -83,29 +83,29 @@ package STM32_Board is
    procedure All_LEDs_Off with Inline;
    procedure All_LEDs_On  with Inline;
 
-   LED_Port : GPIO_Port renames STM32F42xxx.GPIO_G;
+   LED_Port : GPIO_Port renames STM32.Device.GPIO_G;
    --  Available for clients requiring a reference. Note that Initialize_LEDs
    --  will configure the GPIO port/pins for LED usage, specifically.
 
    Gyro : Three_Axis_Gyroscope;
 
-   GPIO_A : GPIO_Port renames STM32F42xxx.GPIO_A;
-   GPIO_B : GPIO_Port renames STM32F42xxx.GPIO_B;
-   GPIO_C : GPIO_Port renames STM32F42xxx.GPIO_C;
-   GPIO_D : GPIO_Port renames STM32F42xxx.GPIO_D;
-   GPIO_E : GPIO_Port renames STM32F42xxx.GPIO_E;
-   GPIO_F : GPIO_Port renames STM32F42xxx.GPIO_F;
-   GPIO_G : GPIO_Port renames STM32F42xxx.GPIO_G;
-   GPIO_H : GPIO_Port renames STM32F42xxx.GPIO_H;
-   GPIO_I : GPIO_Port renames STM32F42xxx.GPIO_I;
-   GPIO_J : GPIO_Port renames STM32F42xxx.GPIO_J;
-   GPIO_K : GPIO_Port renames STM32F42xxx.GPIO_K;
+   GPIO_A : GPIO_Port renames STM32.Device.GPIO_A;
+   GPIO_B : GPIO_Port renames STM32.Device.GPIO_B;
+   GPIO_C : GPIO_Port renames STM32.Device.GPIO_C;
+   GPIO_D : GPIO_Port renames STM32.Device.GPIO_D;
+   GPIO_E : GPIO_Port renames STM32.Device.GPIO_E;
+   GPIO_F : GPIO_Port renames STM32.Device.GPIO_F;
+   GPIO_G : GPIO_Port renames STM32.Device.GPIO_G;
+   GPIO_H : GPIO_Port renames STM32.Device.GPIO_H;
+   GPIO_I : GPIO_Port renames STM32.Device.GPIO_I;
+   GPIO_J : GPIO_Port renames STM32.Device.GPIO_J;
+   GPIO_K : GPIO_Port renames STM32.Device.GPIO_K;
 
    procedure Enable_Clock (This : aliased in out GPIO_Port)
-      renames STM32F42xxx.Enable_Clock;
+      renames STM32.Device.Enable_Clock;
 
    procedure Reset (This : aliased in out GPIO_Port)
-     renames STM32F42xxx.Reset;
+     renames STM32.Device.Reset;
 
    User_Button_Port      : GPIO_Port renames GPIO_A;
    User_Button_Pin       : constant GPIO_Pin := Pin_0;
@@ -115,99 +115,99 @@ package STM32_Board is
    --  Configures the GPIO port/pin for the user button. Sufficient for polling
    --  the button, and necessary for having the button generate interrupts.
 
-   ADC_1 : Analog_To_Digital_Converter renames STM32F42xxx.ADC_1;
-   ADC_2 : Analog_To_Digital_Converter renames STM32F42xxx.ADC_2;
-   ADC_3 : Analog_To_Digital_Converter renames STM32F42xxx.ADC_3;
+   ADC_1 : Analog_To_Digital_Converter renames STM32.Device.ADC_1;
+   ADC_2 : Analog_To_Digital_Converter renames STM32.Device.ADC_2;
+   ADC_3 : Analog_To_Digital_Converter renames STM32.Device.ADC_3;
 
-   VBat               : ADC_Point renames STM32F42xxx.VBat;
-   Temperature_Sensor : ADC_Point renames STM32F42xxx.Temperature_Sensor;
+   VBat               : ADC_Point renames STM32.Device.VBat;
+   Temperature_Sensor : ADC_Point renames STM32.Device.Temperature_Sensor;
 
-   VBat_Bridge_Divisor : constant := STM32F42xxx.VBat_Bridge_Divisor;
+   VBat_Bridge_Divisor : constant := STM32.Device.VBat_Bridge_Divisor;
 
    procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter)
-      renames STM32F42xxx.Enable_Clock;
+      renames STM32.Device.Enable_Clock;
 
    procedure Reset_All_ADC_Units
-     renames STM32F42xxx.Reset_All_ADC_Units;
+     renames STM32.Device.Reset_All_ADC_Units;
 
-   DAC_1 : Digital_To_Analog_Converter renames STM32F42xxx.DAC_1;
+   DAC_1 : Digital_To_Analog_Converter renames STM32.Device.DAC_1;
 
-   DAC_Channel_1_IO : GPIO_Point renames STM32F42xxx.DAC_Channel_1_IO;
-   DAC_Channel_2_IO : GPIO_Point renames STM32F42xxx.DAC_Channel_2_IO;
+   DAC_Channel_1_IO : GPIO_Point renames STM32.Device.DAC_Channel_1_IO;
+   DAC_Channel_2_IO : GPIO_Point renames STM32.Device.DAC_Channel_2_IO;
 
    procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter)
-     renames STM32F42xxx.Enable_Clock;
+     renames STM32.Device.Enable_Clock;
 
    procedure Reset (This : aliased in out Digital_To_Analog_Converter)
-     renames STM32F42xxx.Reset;
+     renames STM32.Device.Reset;
 
    --  Note that some of these are really UARTs, not USARTs
-   USART_1 : USART renames STM32F42xxx.USART_1;
-   USART_2 : USART renames STM32F42xxx.USART_2;
-   USART_3 : USART renames STM32F42xxx.USART_3;
-   UART_4  : USART renames STM32F42xxx.UART_4;
-   UART_5  : USART renames STM32F42xxx.UART_5;
-   USART_6 : USART renames STM32F42xxx.USART_6;
-   UART_7  : USART renames STM32F42xxx.UART_7;
-   UART_8  : USART renames STM32F42xxx.UART_8;
+   USART_1 : USART renames STM32.Device.USART_1;
+   USART_2 : USART renames STM32.Device.USART_2;
+   USART_3 : USART renames STM32.Device.USART_3;
+   UART_4  : USART renames STM32.Device.UART_4;
+   UART_5  : USART renames STM32.Device.UART_5;
+   USART_6 : USART renames STM32.Device.USART_6;
+   UART_7  : USART renames STM32.Device.UART_7;
+   UART_8  : USART renames STM32.Device.UART_8;
 
    procedure Enable_Clock (This : aliased in out USART)
-      renames STM32F42xxx.Enable_Clock;
+      renames STM32.Device.Enable_Clock;
 
    procedure Reset (This : aliased in out USART)
-     renames STM32F42xxx.Reset;
+     renames STM32.Device.Reset;
 
-   DMA_1 : DMA_Controller renames STM32F42xxx.DMA_1;
-   DMA_2 : DMA_Controller renames STM32F42xxx.DMA_2;
+   DMA_1 : DMA_Controller renames STM32.Device.DMA_1;
+   DMA_2 : DMA_Controller renames STM32.Device.DMA_2;
 
    procedure Enable_Clock (This : aliased in out DMA_Controller)
-      renames STM32F42xxx.Enable_Clock;
+      renames STM32.Device.Enable_Clock;
 
    procedure Reset (This : aliased in out DMA_Controller)
-     renames STM32F42xxx.Reset;
+     renames STM32.Device.Reset;
 
-   I2C_1 : I2C_Port renames STM32F42xxx.I2C_1;
-   I2C_2 : I2C_Port renames STM32F42xxx.I2C_2;
-   I2C_3 : I2C_Port renames STM32F42xxx.I2C_3;
+   I2C_1 : I2C_Port renames STM32.Device.I2C_1;
+   I2C_2 : I2C_Port renames STM32.Device.I2C_2;
+   I2C_3 : I2C_Port renames STM32.Device.I2C_3;
 
    procedure Enable_Clock (This : aliased in out I2C_Port)
-      renames STM32F42xxx.Enable_Clock;
+      renames STM32.Device.Enable_Clock;
 
    procedure Reset (This : in out I2C_Port)
-      renames STM32F42xxx.Reset;
+      renames STM32.Device.Reset;
 
-   SPI_1 : SPI_Port renames STM32F42xxx.SPI_1;
-   SPI_2 : SPI_Port renames STM32F42xxx.SPI_2;
-   SPI_3 : SPI_Port renames STM32F42xxx.SPI_3;
-   SPI_4 : SPI_Port renames STM32F42xxx.SPI_4;
-   SPI_5 : SPI_Port renames STM32F42xxx.SPI_5;
-   SPI_6 : SPI_Port renames STM32F42xxx.SPI_6;
+   SPI_1 : SPI_Port renames STM32.Device.SPI_1;
+   SPI_2 : SPI_Port renames STM32.Device.SPI_2;
+   SPI_3 : SPI_Port renames STM32.Device.SPI_3;
+   SPI_4 : SPI_Port renames STM32.Device.SPI_4;
+   SPI_5 : SPI_Port renames STM32.Device.SPI_5;
+   SPI_6 : SPI_Port renames STM32.Device.SPI_6;
 
    procedure Enable_Clock (This : aliased in out SPI_Port)
-      renames STM32F42xxx.Enable_Clock;
+      renames STM32.Device.Enable_Clock;
 
    procedure Reset (This : in out SPI_Port)
-      renames STM32F42xxx.Reset;
+      renames STM32.Device.Reset;
 
-   Timer_1  : Timer renames STM32F42xxx.Timer_1;
-   Timer_2  : Timer renames STM32F42xxx.Timer_2;
-   Timer_3  : Timer renames STM32F42xxx.Timer_3;
-   Timer_4  : Timer renames STM32F42xxx.Timer_4;
-   Timer_5  : Timer renames STM32F42xxx.Timer_5;
-   Timer_6  : Timer renames STM32F42xxx.Timer_6;
-   Timer_7  : Timer renames STM32F42xxx.Timer_7;
-   Timer_8  : Timer renames STM32F42xxx.Timer_8;
-   Timer_9  : Timer renames STM32F42xxx.Timer_9;
-   Timer_10 : Timer renames STM32F42xxx.Timer_10;
-   Timer_11 : Timer renames STM32F42xxx.Timer_11;
-   Timer_12 : Timer renames STM32F42xxx.Timer_12;
-   Timer_13 : Timer renames STM32F42xxx.Timer_13;
-   Timer_14 : Timer renames STM32F42xxx.Timer_14;
+   Timer_1  : Timer renames STM32.Device.Timer_1;
+   Timer_2  : Timer renames STM32.Device.Timer_2;
+   Timer_3  : Timer renames STM32.Device.Timer_3;
+   Timer_4  : Timer renames STM32.Device.Timer_4;
+   Timer_5  : Timer renames STM32.Device.Timer_5;
+   Timer_6  : Timer renames STM32.Device.Timer_6;
+   Timer_7  : Timer renames STM32.Device.Timer_7;
+   Timer_8  : Timer renames STM32.Device.Timer_8;
+   Timer_9  : Timer renames STM32.Device.Timer_9;
+   Timer_10 : Timer renames STM32.Device.Timer_10;
+   Timer_11 : Timer renames STM32.Device.Timer_11;
+   Timer_12 : Timer renames STM32.Device.Timer_12;
+   Timer_13 : Timer renames STM32.Device.Timer_13;
+   Timer_14 : Timer renames STM32.Device.Timer_14;
 
    procedure Enable_Clock (This : in out Timer)
-      renames STM32F42xxx.Enable_Clock;
+      renames STM32.Device.Enable_Clock;
 
    procedure Reset (This : in out Timer)
-      renames STM32F42xxx.Reset;
+      renames STM32.Device.Reset;
 
 end STM32_Board;

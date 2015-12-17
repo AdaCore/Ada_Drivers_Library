@@ -1,4 +1,6 @@
---  Automatically generated from CMSIS-SVD description file
+--  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  see https://github.com/AdaCore/svd2ada
+
 pragma Restrictions (No_Elaboration_Code);
 
 with System;

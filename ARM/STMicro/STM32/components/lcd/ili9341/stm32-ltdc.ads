@@ -41,11 +41,13 @@
 ------------------------------------------------------------------------------
 
 with System;
-with STM32.GPIO; use STM32.GPIO;
-with STM32.SPI;  use STM32.SPI;
-with STM32.RCC;  use STM32.RCC;
+with Interfaces;  use Interfaces;
 
-with STM32_Board;  use STM32_Board;
+with STM32.GPIO;  use STM32.GPIO;
+with STM32.SPI;   use STM32.SPI;
+with STM32.RCC;   use STM32.RCC;
+
+with STM32_Board; use STM32_Board;
 
 package STM32.LTDC is
 

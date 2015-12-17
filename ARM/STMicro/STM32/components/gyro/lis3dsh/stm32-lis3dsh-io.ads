@@ -48,10 +48,13 @@
 
 with Ada.Interrupts.Names;  use Ada.Interrupts.Names;
 
-with STM32;      use STM32;
-with STM32.GPIO; use STM32.GPIO;
-with STM32.SPI;  use STM32.SPI;
+with STM32;        use STM32;
+with STM32.GPIO;   use STM32.GPIO;
+with STM32.SPI;    use STM32.SPI;
 with STM32.RCC;
+with STM32.Device; use STM32.Device;
+
+private with STM32_SVD;
 
 private package STM32.LIS3DSH.IO is
 
@@ -76,10 +79,12 @@ private package STM32.LIS3DSH.IO is
 
 private
 
+   use STM32_SVD;
+
    IO_Initialized : Boolean := False;
 
    Chip_Select_Pin  : GPIO_Pin  renames Pin_3;
-   Chip_Select_Port : GPIO_Port with Address => GPIOE_Base;
+   Chip_Select_Port : GPIO_Port renames GPIO_E;
 
    procedure Enable_SPIx_Chip_Select_Clock renames RCC.GPIOE_Clock_Enable;
 
@@ -94,7 +99,7 @@ private
 
    procedure Enable_SPIx_Clock renames RCC.SPI1_Clock_Enable;
 
-   SPIx_GPIO_Port : GPIO_Port with Address => GPIOA_Base;
+   SPIx_GPIO_Port : GPIO_Port renames GPIO_A;
    SPIx_SCK_Pin   : GPIO_Pin renames Pin_5;
    SPIx_MISO_Pin  : GPIO_Pin renames Pin_6;
    SPIx_MOSI_Pin  : GPIO_Pin renames Pin_7;

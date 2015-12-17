@@ -42,6 +42,7 @@
 
 with Ada.Unchecked_Conversion;
 with System;
+with Interfaces;       use Interfaces;
 with STM32.LIS3DSH.IO;
 
 package body STM32.LIS3DSH is
@@ -77,8 +78,6 @@ package body STM32.LIS3DSH is
 
       Buffer : array (0 .. 5) of Byte with Alignment => 2, Size => 48;
       Scaled : Float;
-
-      use Interfaces;
 
       type Integer16_Pointer is access all Integer_16
         with Storage_Size => 0;

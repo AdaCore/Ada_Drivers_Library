@@ -42,6 +42,8 @@
 --  This file provides register definitions for the STM32F4 (ARM Cortex M4F)
 --  microcontrollers from ST Microelectronics.
 
+with STM32_SVD;    use STM32_SVD;
+
 package body STM32.SYSCFG is
 
    --------------------------------
@@ -173,39 +175,5 @@ package body STM32.SYSCFG is
    begin
       EXTI.PR (GPIO_Pin'Pos (Pin)) := 1;  -- yes, value is one to clear it
    end Clear_External_Interrupt;
-
-   ---------------------
-   -- As_GPIO_Port_Id --
-   ---------------------
-
-   function As_GPIO_Port_Id (Port : GPIO_Port) return GPIO_Port_Id is
-   begin
-      -- TODO: rather ugly to have this board-specific range here
-      if Port'Address = GPIOA_Base then
-         return GPIO_Port_A;
-      elsif Port'Address = GPIOB_Base then
-         return GPIO_Port_B;
-      elsif Port'Address = GPIOC_Base then
-         return GPIO_Port_C;
-      elsif Port'Address = GPIOD_Base then
-         return GPIO_Port_D;
-      elsif Port'Address = GPIOE_Base then
-         return GPIO_Port_E;
-      elsif Port'Address = GPIOF_Base then
-         return GPIO_Port_F;
-      elsif Port'Address = GPIOG_Base then
-         return GPIO_Port_G;
-      elsif Port'Address = GPIOH_Base then
-         return GPIO_Port_H;
-      elsif Port'Address = GPIOI_Base then
-         return GPIO_Port_I;
-      elsif Port'Address = GPIOJ_Base then
-         return GPIO_Port_J;
-      elsif Port'Address = GPIOK_Base then
-         return GPIO_Port_K;
-      else
-         raise Program_Error;
-      end if;
-   end As_GPIO_Port_Id;
 
 end STM32.SYSCFG;

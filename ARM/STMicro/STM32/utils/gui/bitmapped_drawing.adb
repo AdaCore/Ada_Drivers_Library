@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32; use STM32;
+with Interfaces; use Interfaces;
 
 package body Bitmapped_Drawing is
 

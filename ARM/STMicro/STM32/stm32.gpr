@@ -12,8 +12,7 @@ project STM32 is
    LCH : LCH_Type := external ("LCH", "lcd");
 
    for Source_Dirs use
-     ("devices",
-      "drivers",
+     ("drivers",
       "utils");
    for Object_Dir use "obj/" & Board & "/" & RTS;
    for Library_Name use "stm32";
@@ -26,6 +25,7 @@ project STM32 is
          for Source_Dirs use Project'Source_Dirs &
             ("svd/stm32f40x",
              "boards/stm32f4_discovery",
+             "devices/stm32f40x",
              "components/gyro/lis3dsh");
          case RTS is
             when "ravenscar-sfp" =>
@@ -43,6 +43,7 @@ project STM32 is
          for Source_Dirs use Project'Source_Dirs &
             ("svd/stm32f429x",
              "boards/stm32f429_discovery",
+             "devices/stm32f42x",
              "components/lcd/ili9341",
              "components/touch_panel/stmpe811",
              "components/gyro/l3gd20",
@@ -62,7 +63,8 @@ project STM32 is
          for Runtime ("Ada") use RTS & "-stm32f7";
          for Source_Dirs use Project'Source_Dirs &
             ("svd/stm32f7x",
-             "boards/stm32f7_discovery");
+             "boards/stm32f7_discovery",
+             "devices/stm32f7x");
          case RTS is
             when "ravenscar-sfp" =>
                for Source_Dirs use Project'Source_Dirs &

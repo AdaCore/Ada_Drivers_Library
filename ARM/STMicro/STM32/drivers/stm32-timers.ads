@@ -44,7 +44,8 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
---  with System;  use System;
+with Interfaces;         use Interfaces;
+with STM32_SVD;
 
 package STM32.Timers is
 
@@ -913,7 +914,7 @@ package STM32.Timers is
    procedure Configure_Timer_2_Remapping
      (This   : in out Timer;
       Option : Timer_2_Remapping_Options)
-     with Pre => This'Address = TIM2_Base;
+     with Pre => This'Address = STM32_SVD.TIM2_Base;
 
    type Timer_5_Remapping_Options is --  see RM pg 633
      (TIM5_GPIO,
@@ -924,7 +925,7 @@ package STM32.Timers is
    procedure Configure_Timer_5_Remapping
      (This   : in out Timer;
       Option : Timer_5_Remapping_Options)
-     with Pre => This'Address = TIM5_Base;
+     with Pre => This'Address = STM32_SVD.TIM5_Base;
 
    type Timer_11_Remapping_Options is
      (TIM11_GPIO,
@@ -937,7 +938,7 @@ package STM32.Timers is
    procedure Configure_Timer_11_Remapping
      (This   : in out Timer;
       Option : Timer_11_Remapping_Options)
-     with Pre => This'Address = TIM11_Base;
+     with Pre => This'Address = STM32_SVD.TIM11_Base;
 
    ----------------------------------------------------------------------------
 
@@ -947,23 +948,23 @@ package STM32.Timers is
 
    --  Timers 6 and 7
    function Basic_Timer (This : Timer) return Boolean is
-     (This'Address = TIM6_Base or
-      This'Address = TIM7_Base);
+     (This'Address = STM32_SVD.TIM6_Base or
+      This'Address = STM32_SVD.TIM7_Base);
 
    --  Timers 1 and 8
    function Advanced_Timer (This : Timer) return Boolean is
-     (This'Address = TIM1_Base or
-      This'Address = TIM8_Base);
+     (This'Address = STM32_SVD.TIM1_Base or
+      This'Address = STM32_SVD.TIM8_Base);
 
    --  Timers 2 and 5
    function Has_32bit_Counter (This : Timer) return Boolean is
-     (This'Address = TIM2_Base or
+     (This'Address = STM32_SVD.TIM2_Base or
       --  The RM register map for timers 2 through 5, pg 634, indicates that
       --  only timer 2 and timer 5 actually have the upper half of the counter
       --  available, and that the others must keep it reserved. This would
       --  appear to contradict the text in the introduction to those timers,
       --  but section 18.2 indicates the restriction explicitly.
-      This'Address = TIM5_Base);
+      This'Address = STM32_SVD.TIM5_Base);
 
    --  Timers 2 and 5
    function Has_32bit_CC_Values (This : Timer) return Boolean
@@ -971,54 +972,54 @@ package STM32.Timers is
 
    --  Timers 1 .. 8
    function Trigger_Output_Selectable (This : Timer) return Boolean is
-     (This'Address = TIM1_Base or
-      This'Address = TIM2_Base or
-      This'Address = TIM3_Base or
-      This'Address = TIM4_Base or
-      This'Address = TIM5_Base or
-      This'Address = TIM6_Base or
-      This'Address = TIM7_Base or
-      This'Address = TIM8_Base);
+     (This'Address = STM32_SVD.TIM1_Base or
+      This'Address = STM32_SVD.TIM2_Base or
+      This'Address = STM32_SVD.TIM3_Base or
+      This'Address = STM32_SVD.TIM4_Base or
+      This'Address = STM32_SVD.TIM5_Base or
+      This'Address = STM32_SVD.TIM6_Base or
+      This'Address = STM32_SVD.TIM7_Base or
+      This'Address = STM32_SVD.TIM8_Base);
 
    --  Timers 1 .. 5, 8, 9, 12
    function Has_At_Least_2_CC_Channels (This : Timer) return Boolean is
-     (This'Address = TIM1_Base or
-      This'Address = TIM2_Base or
-      This'Address = TIM3_Base or
-      This'Address = TIM4_Base or
-      This'Address = TIM5_Base or
-      This'Address = TIM8_Base or
-      This'Address = TIM9_Base or
-      This'Address = TIM12_Base);
+     (This'Address = STM32_SVD.TIM1_Base or
+      This'Address = STM32_SVD.TIM2_Base or
+      This'Address = STM32_SVD.TIM3_Base or
+      This'Address = STM32_SVD.TIM4_Base or
+      This'Address = STM32_SVD.TIM5_Base or
+      This'Address = STM32_SVD.TIM8_Base or
+      This'Address = STM32_SVD.TIM9_Base or
+      This'Address = STM32_SVD.TIM12_Base);
 
    --  Timers 1 .. 5, 8
    function Hall_Sensor_Supported (This : Timer) return Boolean is
-     (This'Address = TIM1_Base or
-      This'Address = TIM2_Base or
-      This'Address = TIM3_Base or
-      This'Address = TIM4_Base or
-      This'Address = TIM5_Base or
-      This'Address = TIM8_Base);
+     (This'Address = STM32_SVD.TIM1_Base or
+      This'Address = STM32_SVD.TIM2_Base or
+      This'Address = STM32_SVD.TIM3_Base or
+      This'Address = STM32_SVD.TIM4_Base or
+      This'Address = STM32_SVD.TIM5_Base or
+      This'Address = STM32_SVD.TIM8_Base);
 
   --  Timers 1 .. 5, 8, 9, 12
    function Clock_Management_Supported (This : Timer) return Boolean is
-     (This'Address = TIM1_Base or
-      This'Address = TIM2_Base or
-      This'Address = TIM3_Base or
-      This'Address = TIM4_Base or
-      This'Address = TIM5_Base or
-      This'Address = TIM8_Base or
-      This'Address = TIM9_Base or
-      This'Address = TIM12_Base);
+     (This'Address = STM32_SVD.TIM1_Base or
+      This'Address = STM32_SVD.TIM2_Base or
+      This'Address = STM32_SVD.TIM3_Base or
+      This'Address = STM32_SVD.TIM4_Base or
+      This'Address = STM32_SVD.TIM5_Base or
+      This'Address = STM32_SVD.TIM8_Base or
+      This'Address = STM32_SVD.TIM9_Base or
+      This'Address = STM32_SVD.TIM12_Base);
 
    --  Timers 1 .. 5, 8
    function Has_At_Least_3_CC_Channels (This : Timer) return Boolean is
-     (This'Address = TIM1_Base or
-      This'Address = TIM2_Base or
-      This'Address = TIM3_Base or
-      This'Address = TIM4_Base or
-      This'Address = TIM5_Base or
-      This'Address = TIM8_Base);
+     (This'Address = STM32_SVD.TIM1_Base or
+      This'Address = STM32_SVD.TIM2_Base or
+      This'Address = STM32_SVD.TIM3_Base or
+      This'Address = STM32_SVD.TIM4_Base or
+      This'Address = STM32_SVD.TIM5_Base or
+      This'Address = STM32_SVD.TIM8_Base);
 
    --  Timers 1 .. 5, 8
    function Has_At_Least_4_CC_Channels (This : Timer) return Boolean
@@ -1033,79 +1034,79 @@ package STM32.Timers is
 
    --  Timers 1 .. 5, 8
    function Input_XOR_Supported (This : Timer) return Boolean is
-     (This'Address = TIM1_Base or
-      This'Address = TIM2_Base or
-      This'Address = TIM3_Base or
-      This'Address = TIM4_Base or
-      This'Address = TIM5_Base or
-      This'Address = TIM8_Base);
+     (This'Address = STM32_SVD.TIM1_Base or
+      This'Address = STM32_SVD.TIM2_Base or
+      This'Address = STM32_SVD.TIM3_Base or
+      This'Address = STM32_SVD.TIM4_Base or
+      This'Address = STM32_SVD.TIM5_Base or
+      This'Address = STM32_SVD.TIM8_Base);
 
    --  Timers 1 .. 8
    function DMA_Supported (This : Timer) return Boolean is
-     (This'Address = TIM1_Base or
-      This'Address = TIM2_Base or
-      This'Address = TIM3_Base or
-      This'Address = TIM4_Base or
-      This'Address = TIM5_Base or
-      This'Address = TIM6_Base or
-      This'Address = TIM7_Base or
-      This'Address = TIM8_Base);
+     (This'Address = STM32_SVD.TIM1_Base or
+      This'Address = STM32_SVD.TIM2_Base or
+      This'Address = STM32_SVD.TIM3_Base or
+      This'Address = STM32_SVD.TIM4_Base or
+      This'Address = STM32_SVD.TIM5_Base or
+      This'Address = STM32_SVD.TIM6_Base or
+      This'Address = STM32_SVD.TIM7_Base or
+      This'Address = STM32_SVD.TIM8_Base);
 
    --  Timers 1 .. 5, 8, 9, 12
    function Slave_Mode_Supported (This : Timer) return Boolean is
-     (This'Address = TIM1_Base or
-      This'Address = TIM2_Base or
-      This'Address = TIM3_Base or
-      This'Address = TIM4_Base or
-      This'Address = TIM5_Base or
-      This'Address = TIM8_Base or
-      This'Address = TIM9_Base or
-      This'Address = TIM12_Base);
+     (This'Address = STM32_SVD.TIM1_Base or
+      This'Address = STM32_SVD.TIM2_Base or
+      This'Address = STM32_SVD.TIM3_Base or
+      This'Address = STM32_SVD.TIM4_Base or
+      This'Address = STM32_SVD.TIM5_Base or
+      This'Address = STM32_SVD.TIM8_Base or
+      This'Address = STM32_SVD.TIM9_Base or
+      This'Address = STM32_SVD.TIM12_Base);
 
    --  Timers 1 .. 5, 8
    function External_Trigger_Supported (This : Timer) return Boolean is
-     (This'Address = TIM1_Base or
-      This'Address = TIM2_Base or
-      This'Address = TIM3_Base or
-      This'Address = TIM4_Base or
-      This'Address = TIM5_Base or
-      This'Address = TIM8_Base);
+     (This'Address = STM32_SVD.TIM1_Base or
+      This'Address = STM32_SVD.TIM2_Base or
+      This'Address = STM32_SVD.TIM3_Base or
+      This'Address = STM32_SVD.TIM4_Base or
+      This'Address = STM32_SVD.TIM5_Base or
+      This'Address = STM32_SVD.TIM8_Base);
 
    --  Timers 2, 5, 11
    function Remapping_Capability_Supported (This : Timer) return Boolean is
-     (This'Address = TIM2_Base or
-      This'Address = TIM5_Base or
-      This'Address = TIM11_Base);
+     (This'Address = STM32_SVD.TIM2_Base or
+      This'Address = STM32_SVD.TIM5_Base or
+      This'Address = STM32_SVD.TIM11_Base);
 
    --  Not all timers support output on all channels
    function Specific_Channel_Output_Supported
      (This : Timer;  Channel : Timer_Channel)
       return Boolean
    is
-     (This'Address = TIM1_Base or
-      This'Address = TIM2_Base or
-      This'Address = TIM3_Base or
-      This'Address = TIM4_Base or
-      This'Address = TIM5_Base or
-      This'Address = TIM8_Base
+     (This'Address = STM32_SVD.TIM1_Base or
+      This'Address = STM32_SVD.TIM2_Base or
+      This'Address = STM32_SVD.TIM3_Base or
+      This'Address = STM32_SVD.TIM4_Base or
+      This'Address = STM32_SVD.TIM5_Base or
+      This'Address = STM32_SVD.TIM8_Base
       --  all the above can be with any of the four channels
       or
-      (This'Address = TIM9_Base and
+      (This'Address = STM32_SVD.TIM9_Base and
        Channel in Channel_1 | Channel_2)
       or
-      (This'Address = TIM10_Base and
+      (This'Address = STM32_SVD.TIM10_Base and
        Channel = Channel_1)
       or
-      (This'Address = TIM11_Base and
+      (This'Address = STM32_SVD.TIM11_Base and
        Channel = Channel_1)
       or
-      (This'Address = TIM12_Base and
+      (This'Address = STM32_SVD.TIM12_Base and
        Channel in Channel_1 | Channel_2)
       or
-      (This'Address = TIM13_Base and
+      (This'Address = STM32_SVD.TIM13_Base and
        Channel = Channel_1)
       or
-      (This'Address = TIM14_Base and
+      (This'Address = STM32_SVD.TIM14_Base and
        Channel = Channel_1));
 
    --  Timers 1 and 8, channels 1 .. 3
@@ -1113,8 +1114,8 @@ package STM32.Timers is
      (This : Timer;  Channel : Timer_Channel)
       return Boolean
    is
-     ((This'Address = TIM1_Base or
-       This'Address = TIM8_Base) and
+     ((This'Address = STM32_SVD.TIM1_Base or
+       This'Address = STM32_SVD.TIM8_Base) and
        Channel in Channel_1 | Channel_2 | Channel_3);
 
 private

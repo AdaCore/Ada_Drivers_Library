@@ -1,4 +1,6 @@
---  Automatically generated from CMSIS-SVD description file
+--  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  see https://github.com/AdaCore/svd2ada
+
 pragma Restrictions (No_Elaboration_Code);
 
 with System;
@@ -3022,8 +3024,12 @@ package STM32_SVD.USB_OTG_HS is
       OTG_HS_DIEPDMA5    : STM32_SVD.Word;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS4    : OTG_HS_DTXFSTS_Register;
+      --  OTG device endpoint-5 control register
+      OTG_HS_DIEP        : OTG_HS_DIEPCTL_Register;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS6    : OTG_HS_DTXFSTS_Register;
+      --  OTG device endpoint-5 interrupt register
+      OTG_HS_DIEP        : OTG_HS_DIEPINT_Register;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS7    : OTG_HS_DTXFSTS_Register;
       --  OTG_HS device endpoint transfer size register
@@ -3128,7 +3134,9 @@ package STM32_SVD.USB_OTG_HS is
       OTG_HS_DIEPTSIZ4   at 400 range 0 .. 31;
       OTG_HS_DIEPDMA5    at 404 range 0 .. 31;
       OTG_HS_DTXFSTS4    at 408 range 0 .. 31;
+      OTG_HS_DIEP        at 416 range 0 .. 31;
       OTG_HS_DTXFSTS6    at 420 range 0 .. 31;
+      OTG_HS_DIEP        at 424 range 0 .. 31;
       OTG_HS_DTXFSTS7    at 428 range 0 .. 31;
       OTG_HS_DIEPTSIZ5   at 432 range 0 .. 31;
       OTG_HS_DTXFSTS5    at 440 range 0 .. 31;

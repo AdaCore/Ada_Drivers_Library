@@ -114,6 +114,6 @@ private
      with Volatile, Size => 96;
 
    RNG : RNG_Registers
-     with Address => RNG_Base;
+     with Address => STM32_SVD.RNG_Base;
 
 end STM32.RNG;

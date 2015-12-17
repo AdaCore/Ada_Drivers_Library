@@ -1,4 +1,6 @@
---  Automatically generated from CMSIS-SVD description file
+--  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  see https://github.com/AdaCore/svd2ada
+
 with Ada.Interrupts;  use Ada.Interrupts;
 
 --  Definition of the device's interrupts

@@ -30,7 +30,7 @@
 --                                                                          --
 --  This file is based on:                                                  --
 --                                                                          --
---   @file    stm32f40[5|7]xx.h                                             --
+--   @file    stm32f429xx.h                                                 --
 --   @author  MCD Application Team                                          --
 --   @version V1.1.0                                                        --
 --   @date    19-June-2014                                                  --
@@ -39,8 +39,9 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
---  This file provides declarations for devices on the STM32F40xxx MCUs
---  manufactured by ST Microelectronics.  For example, an STM32F405.
+--  This file provides declarations for devices on the STM32F42xxx MCUs
+--  manufactured by ST Microelectronics.  For example, an STM32F429.
+
 
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.ADC;     use STM32.ADC;
@@ -51,40 +52,48 @@ with STM32.SPI;     use STM32.SPI;
 with STM32.Timers;  use STM32.Timers;
 with STM32.DAC;     use STM32.DAC;
 
-use STM32;  -- for base addresses
+with STM32_SVD;     use STM32_SVD;
 
-package STM32F40xxx is
+package STM32.Device is
    pragma Elaborate_Body;
 
    Unknown_Device : exception;
    --  Raised by the routines below for a device passed as an actual parameter
    --  when that device is not present on the given hardware instance.
 
-   GPIO_A : aliased GPIO_Port with Volatile, Address => GPIOA_Base;
-   GPIO_B : aliased GPIO_Port with Volatile, Address => GPIOB_Base;
-   GPIO_C : aliased GPIO_Port with Volatile, Address => GPIOC_Base;
-   GPIO_D : aliased GPIO_Port with Volatile, Address => GPIOD_Base;
-   GPIO_E : aliased GPIO_Port with Volatile, Address => GPIOE_Base;
-   GPIO_F : aliased GPIO_Port with Volatile, Address => GPIOF_Base;
-   GPIO_G : aliased GPIO_Port with Volatile, Address => GPIOG_Base;
-   GPIO_H : aliased GPIO_Port with Volatile, Address => GPIOH_Base;
-   GPIO_I : aliased GPIO_Port with Volatile, Address => GPIOI_Base;
+   GPIO_A : aliased GPIO_Port with Import, Volatile, Address => GPIOA_Base;
+   GPIO_B : aliased GPIO_Port with Import, Volatile, Address => GPIOB_Base;
+   GPIO_C : aliased GPIO_Port with Import, Volatile, Address => GPIOC_Base;
+   GPIO_D : aliased GPIO_Port with Import, Volatile, Address => GPIOD_Base;
+   GPIO_E : aliased GPIO_Port with Import, Volatile, Address => GPIOE_Base;
+   GPIO_F : aliased GPIO_Port with Import, Volatile, Address => GPIOF_Base;
+   GPIO_G : aliased GPIO_Port with Import, Volatile, Address => GPIOG_Base;
+   GPIO_H : aliased GPIO_Port with Import, Volatile, Address => GPIOH_Base;
+   GPIO_I : aliased GPIO_Port with Import, Volatile, Address => GPIOI_Base;
+   GPIO_J : aliased GPIO_Port with Import, Volatile, Address => GPIOJ_Base;
+   GPIO_K : aliased GPIO_Port with Import, Volatile, Address => GPIOK_Base;
 
    procedure Enable_Clock (This : aliased in out GPIO_Port);
 
    procedure Reset (This : aliased in out GPIO_Port);
 
+   type GPIO_Port_Id is
+     (GPIO_Port_A, GPIO_Port_B, GPIO_Port_C, GPIO_Port_D, GPIO_Port_E,
+      GPIO_Port_F, GPIO_Port_G, GPIO_Port_H, GPIO_Port_I, GPIO_Port_J,
+      GPIO_Port_K)
+     with Size => 4;
+
+   function As_GPIO_Port_Id (Port : GPIO_Port) return GPIO_Port_Id with Inline;
+
    ADC_1 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC1_Base;
    ADC_2 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC2_Base;
    ADC_3 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC3_Base;
 
-   VBat : constant ADC_Point := (ADC_1'Access, Channel => VBat_Channel);
-
-   Temperature_Channel : constant TemperatureSensor_Channel := 16;
-   Temperature_Sensor  : constant ADC_Point := (ADC_1'Access, Channel => Temperature_Channel);
+   VBat               : constant ADC_Point := (ADC_1'Access, Channel => VBat_Channel);
+   Temperature_Sensor : constant ADC_Point := VBat;
    --  see RM pg 410, section 13.10, also pg 389
 
-   VBat_Bridge_Divisor : constant := 2;
+   VBat_Bridge_Divisor : constant := 4;
    --  The VBAT pin is internally connected to a bridge divider. The actual
    --  voltage is the raw conversion value * the divisor. See section 13.11,
    --  pg 412 of the RM.
@@ -105,7 +114,11 @@ package STM32F40xxx is
    USART_1 : aliased USART with Volatile, Address => USART1_Base;
    USART_2 : aliased USART with Volatile, Address => USART2_Base;
    USART_3 : aliased USART with Volatile, Address => USART3_Base;
+   UART_4  : aliased USART with Volatile, Address => UART4_Base;
+   UART_5  : aliased USART with Volatile, Address => UART5_Base;
    USART_6 : aliased USART with Volatile, Address => USART6_Base;
+   UART_7  : aliased USART with Volatile, Address => UART7_Base;
+   UART_8  : aliased USART with Volatile, Address => UART8_Base;
 
    procedure Enable_Clock (This : aliased in out USART);
 
@@ -129,6 +142,9 @@ package STM32F40xxx is
    SPI_1 : aliased SPI_Port with Volatile, Address => SPI1_Base;
    SPI_2 : aliased SPI_Port with Volatile, Address => SPI2_Base;
    SPI_3 : aliased SPI_Port with Volatile, Address => SPI3_Base;
+   SPI_4 : aliased SPI_Port with Volatile, Address => SPI4_Base;
+   SPI_5 : aliased SPI_Port with Volatile, Address => SPI5_Base;
+   SPI_6 : aliased SPI_Port with Volatile, Address => SPI6_Base;
 
    procedure Enable_Clock (This : aliased in out SPI_Port);
 
@@ -167,4 +183,22 @@ package STM32F40xxx is
 
    procedure Reset (This : in out Timer);
 
-end STM32F40xxx;
+private
+
+   pragma Compile_Time_Error
+     (not (GPIO_Port_Id'First = GPIO_Port_A and GPIO_Port_Id'Last = GPIO_Port_K and
+           GPIO_Port_A'Enum_Rep = 0 and
+           GPIO_Port_B'Enum_Rep = 1 and
+           GPIO_Port_C'Enum_Rep = 2 and
+           GPIO_Port_D'Enum_Rep = 3 and
+           GPIO_Port_E'Enum_Rep = 4 and
+           GPIO_Port_F'Enum_Rep = 5 and
+           GPIO_Port_G'Enum_Rep = 6 and
+           GPIO_Port_H'Enum_Rep = 7 and
+           GPIO_Port_I'Enum_Rep = 8 and
+           GPIO_Port_J'Enum_Rep = 9 and
+           GPIO_Port_K'Enum_Rep = 10),
+      "Invalid representation for type GPIO_Port_Id");
+   --  Confirming, but depended upon so we check it.
+
+end STM32.Device;
