@@ -33,8 +33,8 @@
 
 --  Note this version is for use with the ravenscar-full runtime.
 
-with STM32F4_Discovery;  use STM32F4_Discovery;
-with Ada.Real_Time;      use Ada.Real_Time;
+with STM32_Board;   use STM32_Board;
+with Ada.Real_Time; use Ada.Real_Time;
 
 package body Last_Chance_Handler is
 

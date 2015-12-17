@@ -48,7 +48,7 @@
 --  See the GNAT User Guide, section 8.1.14. Stack Traceback for details.
 
 with Ada.Real_Time;        use Ada.Real_Time;
-with STM32F429_Discovery;  use STM32F429_Discovery;
+with STM32_Board;          use STM32_Board;
 with LCD_Std_Out;
 with Bitmapped_Drawing;
 with BMP_Fonts;
