@@ -253,7 +253,8 @@ package STM32.Device is
 
    procedure Reset_All_ADC_Units;
 
-   DAC_1 : aliased Digital_To_Analog_Converter with Volatile, Address => DAC_Base;
+   DAC_1 : aliased Digital_To_Analog_Converter
+     with Import, Volatile, Address => DAC_Base;
 
    DAC_Channel_1_IO : GPIO_Point renames PA4;
    DAC_Channel_2_IO : GPIO_Point renames PA5;

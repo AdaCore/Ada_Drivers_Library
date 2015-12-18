@@ -41,6 +41,8 @@
 
 with Ada.Unchecked_Conversion;
 
+with STM32_SVD.DAC; use STM32_SVD.DAC;
+
 package body STM32.DAC is
 
    ------------
@@ -54,9 +56,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            This.CR.Channel_1_Enabled := True;
+            This.CR.EN1 := 1;
          when Channel_2 =>
-            This.CR.Channel_2_Enabled := True;
+            This.CR.EN2 := 1;
       end case;
    end Enable;
 
@@ -71,9 +73,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            This.CR.Channel_1_Enabled := False;
+            This.CR.EN1 := 0;
          when Channel_2 =>
-            This.CR.Channel_2_Enabled := False;
+            This.CR.EN2 := 0;
       end case;
    end Disable;
 
@@ -88,9 +90,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            return This.CR.Channel_1_Enabled;
+            return This.CR.EN1 = 1;
          when Channel_2 =>
-            return This.CR.Channel_2_Enabled;
+            return This.CR.EN2 = 1;
       end case;
    end Enabled;
 
@@ -113,12 +115,14 @@ package body STM32.DAC is
                when DAC_Resolution_12_Bits =>
                   case Alignment is
                      when Left_Aligned =>
-                        This.DHR_12_Left_1.Data := Bits_12 (Value and Max_12bit_Resolution);
+                        This.DHR12L1.DACC1DHR :=
+                          Bits_12 (Value and Max_12bit_Resolution);
                      when Right_Aligned =>
-                        This.DHR_12_Right_1.Data := Bits_12 (Value and Max_12bit_Resolution);
+                        This.DHR12R1.DACC1DHR :=
+                          Bits_12 (Value and Max_12bit_Resolution);
                   end case;
                when DAC_Resolution_8_Bits =>
-                  This.DHR_8_Right_1.Data := Byte (Value and Max_8bit_Resolution);
+                  This.DHR8R1.DACC1DHR := Byte (Value and Max_8bit_Resolution);
             end case;
 
          when Channel_2 =>
@@ -126,12 +130,14 @@ package body STM32.DAC is
                when DAC_Resolution_12_Bits =>
                   case Alignment is
                      when Left_Aligned =>
-                        This.DHR_12_Left_2.Data := Bits_12 (Value and Max_12bit_Resolution);
+                        This.DHR12L2.DACC1DHR :=
+                          Bits_12 (Value and Max_12bit_Resolution);
                      when Right_Aligned =>
-                        This.DHR_12_Right_2.Data := Bits_12 (Value and Max_12bit_Resolution);
+                        This.DHR12R2.DACC1DHR :=
+                          Bits_12 (Value and Max_12bit_Resolution);
                   end case;
                when DAC_Resolution_8_Bits =>
-                  This.DHR_8_Right_2.Data := Byte (Value and Max_8bit_Resolution);
+                  This.DHR8R2.DACC1DHR := Byte (Value and Max_8bit_Resolution);
             end case;
 
       end case;
@@ -148,9 +154,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            This.SWTRIGR.Channel_1_Software_Trigger_Enabled := True; -- cleared by hardware
+            This.SWTRIGR.SWTRIG.Arr (0) := 1; -- cleared by hardware
          when Channel_2 =>
-            This.SWTRIGR.Channel_2_Software_Trigger_Enabled := True; -- cleared by hardware
+            This.SWTRIGR.SWTRIG.Arr (1) := 1; -- cleared by hardware
       end case;
    end Trigger_Conversion_By_Software;
 
@@ -166,9 +172,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            return Word (This.DOR1.Data);
+            return Word (This.DOR1.DACC1DOR);
          when Channel_2 =>
-            return Word (This.DOR2.Data);
+            return Word (This.DOR2.DACC1DOR);
       end case;
    end Converted_Output_Value;
 
@@ -188,15 +194,21 @@ package body STM32.DAC is
          when DAC_Resolution_12_Bits =>
             case Alignment is
                when Left_Aligned =>
-                  This.DHR_12_Left_Dual.Channel_1_Data := Bits_12 (Channel_1_Value and Max_12bit_Resolution);
-                  This.DHR_12_Left_Dual.Channel_2_Data := Bits_12 (Channel_2_Value and Max_12bit_Resolution);
+                  This.DHR12LD.DACC1DHR :=
+                    Bits_12 (Channel_1_Value and Max_12bit_Resolution);
+                  This.DHR12LD.DACC2DHR :=
+                    Bits_12 (Channel_2_Value and Max_12bit_Resolution);
                when Right_Aligned =>
-                  This.DHR_12_Right_Dual.Channel_1_Data := Bits_12 (Channel_1_Value and Max_12bit_Resolution);
-                  This.DHR_12_Right_Dual.Channel_2_Data := Bits_12 (Channel_2_Value and Max_12bit_Resolution);
+                  This.DHR12RD.DACC1DHR :=
+                    Bits_12 (Channel_1_Value and Max_12bit_Resolution);
+                  This.DHR12RD.DACC2DHR :=
+                    Bits_12 (Channel_2_Value and Max_12bit_Resolution);
             end case;
          when DAC_Resolution_8_Bits =>
-            This.DHR_8_Right_Dual.Channel_1_Data := Byte (Channel_1_Value and Max_8bit_Resolution);
-            This.DHR_8_Right_Dual.Channel_2_Data := Byte (Channel_2_Value and Max_8bit_Resolution);
+            This.DHR8RD.DACC1DHR :=
+              Byte (Channel_1_Value and Max_8bit_Resolution);
+            This.DHR8RD.DACC2DHR :=
+              Byte (Channel_2_Value and Max_8bit_Resolution);
       end case;
    end Set_Dual_Output_Voltages;
 
@@ -209,8 +221,8 @@ package body STM32.DAC is
    is
       Result : Dual_Channel_Output;
    begin
-      Result.Channel_1_Data := Half_Word (This.DOR1.Data);
-      Result.Channel_2_Data := Half_Word (This.DOR2.Data);
+      Result.Channel_1_Data := Half_Word (This.DOR1.DACC1DOR);
+      Result.Channel_2_Data := Half_Word (This.DOR2.DACC1DOR);
       return Result;
    end Converted_Dual_Output_Value;
 
@@ -225,9 +237,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            This.CR.Channel_1_Output_Buffer_Enabled := True;
+            This.CR.BOFF1 := 1;
          when Channel_2 =>
-            This.CR.Channel_2_Output_Buffer_Enabled := True;
+            This.CR.BOFF2 := 1;
       end case;
    end Enable_Output_Buffer;
 
@@ -242,9 +254,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            This.CR.Channel_1_Output_Buffer_Enabled := False;
+            This.CR.BOFF1 := 0;
          when Channel_2 =>
-            This.CR.Channel_2_Output_Buffer_Enabled := False;
+            This.CR.BOFF2 := 0;
       end case;
    end Disable_Output_Buffer;
 
@@ -260,9 +272,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            return This.CR.Channel_1_Output_Buffer_Enabled;
+            return This.CR.BOFF1 = 1;
          when Channel_2 =>
-            return This.CR.Channel_2_Output_Buffer_Enabled;
+            return This.CR.BOFF2 = 1;
       end case;
    end Output_Buffer_Enabled;
 
@@ -278,9 +290,11 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            This.CR.Channel_1_Trigger_Selection := Trigger;
+            This.CR.TSEL1 :=
+              External_Event_Trigger_Selection'Enum_Rep (Trigger);
          when Channel_2 =>
-            This.CR.Channel_2_Trigger_Selection := Trigger;
+            This.CR.TSEL2 :=
+              External_Event_Trigger_Selection'Enum_Rep (Trigger);
       end case;
    end Select_Trigger;
 
@@ -296,9 +310,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            return This.CR.Channel_1_Trigger_Selection;
+            return External_Event_Trigger_Selection'Val (This.CR.TSEL1);
          when Channel_2 =>
-            return This.CR.Channel_2_Trigger_Selection;
+            return External_Event_Trigger_Selection'Val (This.CR.TSEL2);
       end case;
    end Trigger_Selection;
 
@@ -313,9 +327,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            This.CR.Channel_1_Trigger_Enabled := True;
+            This.CR.TEN1 := 1;
          when Channel_2 =>
-            This.CR.Channel_2_Trigger_Enabled := True;
+            This.CR.TEN2 := 1;
       end case;
    end Enable_Trigger;
 
@@ -330,9 +344,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            This.CR.Channel_1_Trigger_Enabled := False;
+            This.CR.TEN1 := 0;
          when Channel_2 =>
-            This.CR.Channel_2_Trigger_Enabled := False;
+            This.CR.TEN2 := 0;
       end case;
    end Disable_Trigger;
 
@@ -348,9 +362,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            return This.CR.Channel_1_Trigger_Enabled;
+            return This.CR.TEN1 = 1;
          when Channel_2 =>
-            return This.CR.Channel_2_Trigger_Enabled;
+            return This.CR.TEN2 = 1;
       end case;
    end Trigger_Enabled;
 
@@ -365,9 +379,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            This.CR.Channel_1_DMA_Enabled := True;
+            This.CR.DMAEN1 := 1;
          when Channel_2 =>
-            This.CR.Channel_2_DMA_Enabled := True;
+            This.CR.DMAEN2 := 1;
       end case;
    end Enable_DMA;
 
@@ -382,9 +396,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            This.CR.Channel_1_DMA_Enabled := False;
+            This.CR.DMAEN1 := 0;
          when Channel_2 =>
-            This.CR.Channel_2_DMA_Enabled := False;
+            This.CR.DMAEN2 := 0;
       end case;
    end Disable_DMA;
 
@@ -400,9 +414,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            return This.CR.Channel_1_DMA_Enabled;
+            return This.CR.DMAEN1 = 1;
          when Channel_2 =>
-            return This.CR.Channel_2_DMA_Enabled;
+            return This.CR.DMAEN2 = 1;
       end case;
    end DMA_Enabled;
 
@@ -418,9 +432,9 @@ package body STM32.DAC is
    begin
       case Flag is
          when DMA_Underrun_Channel_1 =>
-            return This.SR.Channel_1_DMA_Underrun;
+            return This.SR.DMAUDR1 = 1;
          when DMA_Underrun_Channel_2 =>
-            return This.SR.Channel_2_DMA_Underrun;
+            return This.SR.DMAUDR2 = 1;
       end case;
    end Status;
 
@@ -435,9 +449,9 @@ package body STM32.DAC is
    begin
       case Flag is
          when DMA_Underrun_Channel_1 =>
-            This.SR.Channel_1_DMA_Underrun := True;  -- set to 1 to clear
+            This.SR.DMAUDR1 := 1; -- set to 1 to clear
          when DMA_Underrun_Channel_2 =>
-            This.SR.Channel_2_DMA_Underrun := True;  -- set to 1 to clear
+            This.SR.DMAUDR2 := 1; -- set to 1 to clear
       end case;
    end Clear_Status;
 
@@ -452,9 +466,9 @@ package body STM32.DAC is
    begin
       case Source is
          when DMA_Underrun_Channel_1 =>
-            This.CR.Channel_1_DMA_Underrun_Interrupt_Enabled := True;
+            This.CR.DMAUDRIE1 := 1;
          when DMA_Underrun_Channel_2 =>
-            This.CR.Channel_2_DMA_Underrun_Interrupt_Enabled := True;
+            This.CR.DMAUDRIE2 := 1;
       end case;
    end Enable_Interrupts;
 
@@ -469,9 +483,9 @@ package body STM32.DAC is
    begin
       case Source is
          when DMA_Underrun_Channel_1 =>
-            This.CR.Channel_1_DMA_Underrun_Interrupt_Enabled := False;
+            This.CR.DMAUDRIE1 := 0;
          when DMA_Underrun_Channel_2 =>
-            This.CR.Channel_2_DMA_Underrun_Interrupt_Enabled := False;
+            This.CR.DMAUDRIE2 := 0;
       end case;
    end Disable_Interrupts;
 
@@ -487,9 +501,9 @@ package body STM32.DAC is
    begin
       case Source is
          when DMA_Underrun_Channel_1 =>
-            return This.CR.Channel_1_DMA_Underrun_Interrupt_Enabled;
+            return This.CR.DMAUDRIE1 = 1;
          when DMA_Underrun_Channel_2 =>
-            return This.CR.Channel_2_DMA_Underrun_Interrupt_Enabled;
+            return This.CR.DMAUDRIE2 = 1;
       end case;
    end Interrupt_Enabled;
 
@@ -502,7 +516,7 @@ package body STM32.DAC is
       return DAC_Interrupts
    is
    begin
-      if This.CR.Channel_1_DMA_Underrun_Interrupt_Enabled then
+      if This.CR.DMAUDRIE1 = 1 then
          return DMA_Underrun_Channel_1;
       else
          return DMA_Underrun_Channel_2;
@@ -520,9 +534,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            This.SR.Channel_1_DMA_Underrun := False;
+            This.SR.DMAUDR1 := 0;
          when Channel_2 =>
-            This.SR.Channel_2_DMA_Underrun := False;
+            This.SR.DMAUDR2 := 0;
       end case;
    end Clear_Interrupt_Pending;
 
@@ -545,9 +559,11 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            This.CR.Channel_1_Wave_Generation_Enabled := Selection.Kind;
+            This.CR.WAVE1 :=
+              Wave_Generation_Selection'Enum_Rep (Selection.Kind);
          when Channel_2 =>
-            This.CR.Channel_2_Wave_Generation_Enabled := Selection.Kind;
+            This.CR.WAVE2 :=
+              Wave_Generation_Selection'Enum_Rep (Selection.Kind);
       end case;
 
       case Selection.Kind is
@@ -558,17 +574,17 @@ package body STM32.DAC is
          when Noise_Wave =>
             case Channel is
                when Channel_1 =>
-                  This.CR.Channel_1_Mask_Amplitude_Selector := As_Bits_4 (Selection.Mask);
+                  This.CR.MAMP1 := As_Bits_4 (Selection.Mask);
                when Channel_2 =>
-                  This.CR.Channel_2_Mask_Amplitude_Selector := As_Bits_4 (Selection.Mask);
+                  This.CR.MAMP2 := As_Bits_4 (Selection.Mask);
             end case;
 
          when Triangle_Wave =>
             case Channel is
                when Channel_1 =>
-                  This.CR.Channel_1_Mask_Amplitude_Selector := As_Bits_4 (Selection.Amplitude);
+                  This.CR.MAMP1 := As_Bits_4 (Selection.Amplitude);
                when Channel_2 =>
-                  This.CR.Channel_2_Mask_Amplitude_Selector := As_Bits_4 (Selection.Amplitude);
+                  This.CR.MAMP2 := As_Bits_4 (Selection.Amplitude);
             end case;
 
       end case;
@@ -594,9 +610,9 @@ package body STM32.DAC is
    begin
       case Channel is
          when Channel_1 =>
-            Kind := This.CR.Channel_1_Wave_Generation_Enabled;
+            Kind := Wave_Generation_Selection'Val (This.CR.WAVE1);
          when Channel_2 =>
-            Kind := This.CR.Channel_2_Wave_Generation_Enabled;
+            Kind := Wave_Generation_Selection'Val (This.CR.WAVE2);
       end case;
       declare
          Result : Wave_Generation (Kind);
@@ -608,17 +624,17 @@ package body STM32.DAC is
             when Noise_Wave =>
                case Channel is
                   when Channel_1 =>
-                     Result.Mask := As_Mask (This.CR.Channel_1_Mask_Amplitude_Selector);
+                     Result.Mask := As_Mask (This.CR.MAMP1);
                   when Channel_2 =>
-                     Result.Mask := As_Mask (This.CR.Channel_2_Mask_Amplitude_Selector);
+                     Result.Mask := As_Mask (This.CR.MAMP2);
                end case;
 
             when Triangle_Wave =>
                case Channel is
                   when Channel_1 =>
-                     Result.Amplitude := As_Amplitude (This.CR.Channel_1_Mask_Amplitude_Selector);
+                     Result.Amplitude := As_Amplitude (This.CR.MAMP1);
                   when Channel_2 =>
-                     Result.Amplitude := As_Amplitude (This.CR.Channel_2_Mask_Amplitude_Selector);
+                     Result.Amplitude := As_Amplitude (This.CR.MAMP2);
                end case;
          end case;
 
@@ -646,12 +662,12 @@ package body STM32.DAC is
                when DAC_Resolution_12_Bits =>
                   case Alignment is
                      when Left_Aligned =>
-                        Result := This.DHR_12_Left_1'Address;
+                        Result := This.DHR12L1'Address;
                      when Right_Aligned =>
-                        Result := This.DHR_12_Right_1'Address;
+                        Result := This.DHR12R1'Address;
                   end case;
                when DAC_Resolution_8_Bits =>
-                  Result := This.DHR_8_Right_1'Address;
+                  Result := This.DHR8R1'Address;
             end case;
 
          when Channel_2 =>
@@ -659,12 +675,12 @@ package body STM32.DAC is
                when DAC_Resolution_12_Bits =>
                   case Alignment is
                      when Left_Aligned =>
-                        Result := This.DHR_12_Left_2'Address;
+                        Result := This.DHR12L2'Address;
                      when Right_Aligned =>
-                        Result := This.DHR_12_Right_2'Address;
+                        Result := This.DHR12R2'Address;
                   end case;
                when DAC_Resolution_8_Bits =>
-                  Result := This.DHR_8_Right_2'Address;
+                  Result := This.DHR8R2'Address;
             end case;
 
       end case;
