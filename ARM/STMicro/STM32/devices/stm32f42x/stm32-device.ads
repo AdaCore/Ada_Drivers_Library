@@ -324,12 +324,12 @@ package STM32.Device is
 
    procedure Reset (This : in out I2C_Port);
 
-   SPI_1 : aliased SPI_Port with Volatile, Address => SPI1_Base;
-   SPI_2 : aliased SPI_Port with Volatile, Address => SPI2_Base;
-   SPI_3 : aliased SPI_Port with Volatile, Address => SPI3_Base;
-   SPI_4 : aliased SPI_Port with Volatile, Address => SPI4_Base;
-   SPI_5 : aliased SPI_Port with Volatile, Address => SPI5_Base;
-   SPI_6 : aliased SPI_Port with Volatile, Address => SPI6_Base;
+   SPI_1 : aliased SPI_Port with Import, Volatile, Address => SPI1_Base;
+   SPI_2 : aliased SPI_Port with Import, Volatile, Address => SPI2_Base;
+   SPI_3 : aliased SPI_Port with Import, Volatile, Address => SPI3_Base;
+   SPI_4 : aliased SPI_Port with Import, Volatile, Address => SPI4_Base;
+   SPI_5 : aliased SPI_Port with Import, Volatile, Address => SPI5_Base;
+   SPI_6 : aliased SPI_Port with Import, Volatile, Address => SPI6_Base;
 
    procedure Enable_Clock (This : aliased in out SPI_Port);
 

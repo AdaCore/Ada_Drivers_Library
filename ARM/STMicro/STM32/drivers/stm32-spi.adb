@@ -39,9 +39,12 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with STM32.RCC;  use STM32.RCC;
 with Ada.Unchecked_Conversion;
 with System;
+
+with STM32_SVD.SPI; use STM32_SVD.SPI;
+
+with STM32.RCC;     use STM32.RCC;
 
 package body STM32.SPI is
 
@@ -71,43 +74,43 @@ package body STM32.SPI is
    begin
       case Conf.Mode is
          when Master =>
-            Port.CTRL1.Master_Select := 1;
-            Port.CTRL1.Slave_Select  := 1;
+            Port.CR1.MSTR := 1;
+            Port.CR1.SSI  := 1;
          when Slave =>
-            Port.CTRL1.Master_Select := 0;
-            Port.CTRL1.Slave_Select  := 0;
+            Port.CR1.MSTR := 0;
+            Port.CR1.SSI  := 0;
       end case;
 
       case Conf.Direction is
          when D2Lines_FullDuplex =>
-            Port.CTRL1.BiDir_Mode   := 0;
-            Port.CTRL1.Output_BiDir := 0;
-            Port.CTRL1.RXOnly       := 0;
+            Port.CR1.BIDIMODE := 0;
+            Port.CR1.BIDIOE   := 0;
+            Port.CR1.RXONLY   := 0;
          when D2Lines_RxOnly =>
-            Port.CTRL1.BiDir_Mode   := 0;
-            Port.CTRL1.Output_BiDir := 0;
-            Port.CTRL1.RXOnly       := 1;
+            Port.CR1.BIDIMODE := 0;
+            Port.CR1.BIDIOE   := 0;
+            Port.CR1.RXONLY   := 1;
          when D1Line_Rx =>
-            Port.CTRL1.BiDir_Mode   := 1;
-            Port.CTRL1.Output_BiDir := 0;
-            Port.CTRL1.RXOnly       := 0;
+            Port.CR1.BIDIMODE := 1;
+            Port.CR1.BIDIOE   := 0;
+            Port.CR1.RXONLY   := 0;
          when D1Line_Tx =>
-            Port.CTRL1.BiDir_Mode   := 1;
-            Port.CTRL1.Output_BiDir := 1;
-            Port.CTRL1.RXOnly       := 0;
+            Port.CR1.BIDIMODE := 1;
+            Port.CR1.BIDIOE   := 1;
+            Port.CR1.RXONLY   := 0;
       end case;
 
-      Port.CTRL1.Data_Frame_Fmt := (if Conf.Data_Size = Data_16 then 1 else 0);
-      Port.CTRL1.Clock_Polarity := (if Conf.Clock_Polarity = High then 1 else 0);
-      Port.CTRL1.Clock_Phase    := (if Conf.Clock_Phase = P2Edge then 1 else 0);
-      Port.CTRL1.Soft_Slave_Mgt := (if Conf.Slave_Management = Software_Managed then 1 else 0);
-      Port.CTRL1.Baud_Rate_Ctrl := Baud_Rate_Value (Conf.Baud_Rate_Prescaler);
-      Port.CTRL1.LSB_First      := (if Conf.First_Bit = LSB then 1 else 0);
+      Port.CR1.DFF      := (if Conf.Data_Size = Data_16 then 1 else 0);
+      Port.CR1.CPOL     := (if Conf.Clock_Polarity = High then 1 else 0);
+      Port.CR1.CPHA     := (if Conf.Clock_Phase = P2Edge then 1 else 0);
+      Port.CR1.SSM      := (if Conf.Slave_Management = Software_Managed then 1 else 0);
+      Port.CR1.BR       := Baud_Rate_Value (Conf.Baud_Rate_Prescaler);
+      Port.CR1.LSBFIRST := (if Conf.First_Bit = LSB then 1 else 0);
 
       --  Activate the SPI mode (Reset I2SMOD bit in I2SCFGR register)
-      Port.I2S_Conf.Mode_Select := 0;
+      Port.I2SCFGR.I2SMOD := 0;
 
-      Port.CRC_Poly := Conf.CRC_Poly;
+      Port.CRCPR.CRCPOLY := Conf.CRC_Poly;
    end Configure;
 
    ------------
@@ -116,7 +119,7 @@ package body STM32.SPI is
 
    procedure Enable (Port : in out SPI_Port) is
    begin
-      Port.CTRL1.SPI_Enable := 1;
+      Port.CR1.SPE := 1;
    end Enable;
 
    -------------
@@ -125,7 +128,7 @@ package body STM32.SPI is
 
    procedure Disable (Port : in out SPI_Port) is
    begin
-      Port.CTRL1.SPI_Enable := 0;
+      Port.CR1.SPE := 0;
    end Disable;
 
    -------------
@@ -134,7 +137,7 @@ package body STM32.SPI is
 
    function Enabled (Port : SPI_Port) return Boolean is
    begin
-      return Port.CTRL1.SPI_Enable = 1;
+      return Port.CR1.SPE = 1;
    end Enabled;
 
    ----------
@@ -143,7 +146,7 @@ package body STM32.SPI is
 
    procedure Send (Port : in out SPI_Port; Data : Half_Word) is
    begin
-      Port.Data := Data;
+      Port.DR.DR := Data;
    end Send;
 
    ----------
@@ -152,7 +155,7 @@ package body STM32.SPI is
 
    function Data (Port : SPI_Port) return Half_Word is
    begin
-      return Port.Data;
+      return Port.DR.DR;
    end Data;
 
    ----------
@@ -179,7 +182,7 @@ package body STM32.SPI is
 
    function Tx_Is_Empty (Port : SPI_Port) return Boolean is
    begin
-      return Port.Status.TX_Buffer_Empty;
+      return Port.SR.TXE = 1;
    end Tx_Is_Empty;
 
    -----------------
@@ -188,7 +191,7 @@ package body STM32.SPI is
 
    function Rx_Is_Empty (Port : SPI_Port) return Boolean is
    begin
-      return not Port.Status.RX_Buffer_Not_Empty;
+      return Port.SR.RXNE = 0;
    end Rx_Is_Empty;
 
    ----------
@@ -197,7 +200,7 @@ package body STM32.SPI is
 
    function Busy (Port : SPI_Port) return Boolean is
    begin
-      return Port.Status.Busy_Flag;
+      return Port.SR.BSY = 1;
    end Busy;
 
    ------------------
@@ -206,7 +209,7 @@ package body STM32.SPI is
 
    function Current_Mode (Port : SPI_Port) return SPI_Mode is
    begin
-      if Port.CTRL1.Master_Select = 1 and Port.CTRL1.Slave_Select = 1 then
+      if Port.CR1.MSTR = 1 and Port.CR1.SSI = 1 then
          return Master;
       else
          return Slave;
@@ -217,22 +220,22 @@ package body STM32.SPI is
    -- Current_Data_Direction --
    ----------------------------
 
-   function Current_Data_Direction (Port : SPI_Port) return SPI_Data_Direction is
-
-      Direction_Mask : constant := 2#1100_0100_0000_0000#;
-
-      function As_Half_Word is new Ada.Unchecked_Conversion
-        (Source => SPI_Control_Register, Target => Half_Word);
-
+   function Current_Data_Direction (Port : SPI_Port) return SPI_Data_Direction
+   is
    begin
-      case As_Half_Word (Port.CTRL1) and Direction_Mask is
-         when 0 => return D2Lines_FullDuplex;
-         when 1 => return D2Lines_RxOnly;
-         when 4 => return D1Line_Rx;
-         when 6 => return D1Line_Tx;
-         when others =>
-            raise Program_Error;
-      end case;
+      if Port.CR1.BIDIMODE = 0 then
+         if Port.CR1.RXONLY = 0 then
+            return D2Lines_FullDuplex;
+         else
+            return D2Lines_RxOnly;
+         end if;
+      else
+         if Port.CR1.BIDIOE = 0 then
+            return D1Line_Rx;
+         else
+            return D1Line_Tx;
+         end if;
+      end if;
    end Current_Data_Direction;
 
    -----------------
@@ -240,7 +243,7 @@ package body STM32.SPI is
    -----------------
 
    function CRC_Enabled (Port : SPI_Port) return Boolean is
-      (Port.CTRL1.CRC_Enable = 1);
+      (Port.CR1.CRCEN = 1);
 
    ----------------------------
    -- Channel_Side_Indicated --
@@ -248,7 +251,7 @@ package body STM32.SPI is
 
    function Channel_Side_Indicated (Port : SPI_Port) return Boolean is
    begin
-      return Port.Status.Channel_Side;
+      return Port.SR.CHSIDE = 1;
    end Channel_Side_Indicated;
 
    ------------------------
@@ -257,7 +260,7 @@ package body STM32.SPI is
 
    function Underrun_Indicated (Port : SPI_Port) return Boolean is
    begin
-      return Port.Status.Underrun_Flag;
+      return Port.SR.UDR = 1;
    end Underrun_Indicated;
 
    -------------------------
@@ -266,7 +269,7 @@ package body STM32.SPI is
 
    function CRC_Error_Indicated (Port : SPI_Port) return Boolean is
    begin
-      return Port.Status.CRC_Error_Flag;
+      return Port.SR.CRCERR = 1;
    end CRC_Error_Indicated;
 
    --------------------------
@@ -275,7 +278,7 @@ package body STM32.SPI is
 
    function Mode_Fault_Indicated (Port : SPI_Port) return Boolean is
    begin
-      return Port.Status.Mode_Fault;
+      return Port.SR.MODF = 1;
    end Mode_Fault_Indicated;
 
    -----------------------
@@ -284,7 +287,7 @@ package body STM32.SPI is
 
    function Overrun_Indicated (Port : SPI_Port) return Boolean is
    begin
-      return Port.Status.Overrun_Flag;
+      return Port.SR.OVR = 1;
    end Overrun_Indicated;
 
    -------------------------------
@@ -293,7 +296,7 @@ package body STM32.SPI is
 
    function Frame_Fmt_Error_Indicated (Port : SPI_Port) return Boolean is
    begin
-      return Port.Status.Frame_Fmt_Error;
+      return Port.SR.TIFRFE = 1;
    end Frame_Fmt_Error_Indicated;
 
    -------------------
@@ -302,10 +305,10 @@ package body STM32.SPI is
 
    procedure Clear_Overrun (Port : SPI_Port) is
       Dummy1 : Half_Word;
-      Dummy2 : SPI_Status_Register;
+      Dummy2 : SR_Register;
    begin
-      Dummy1 := Port.Data;
-      Dummy2 := Port.Status;
+      Dummy1 := Port.DR.DR;
+      Dummy2 := Port.SR;
    end Clear_Overrun;
 
    ---------------
@@ -314,8 +317,8 @@ package body STM32.SPI is
 
    procedure Reset_CRC (Port : in out SPI_Port) is
    begin
-      Port.CTRL1.CRC_Enable := 0;
-      Port.CTRL1.CRC_Enable := 1;
+      Port.CR1.CRCEN := 0;
+      Port.CR1.CRCEN := 1;
    end Reset_CRC;
 
    -------------------------
@@ -324,9 +327,12 @@ package body STM32.SPI is
 
    function Is_Data_Frame_16bit (Port : SPI_Port) return Boolean is
    begin
-      return Port.Ctrl1.Data_Frame_Fmt = 1;
+      return Port.CR1.DFF = 1;
    end Is_Data_Frame_16bit;
 
+   --------------
+   -- Transmit --
+   --------------
 
    procedure Transmit
      (Port     : in out SPI_Port;
@@ -338,9 +344,8 @@ package body STM32.SPI is
          Reset_CRC (Port);
       end if;
 
---      if(hspi->Init.Direction == SPI_DIRECTION_1LINE)
       if Current_Data_Direction (Port) = D1Line_Tx  then  --  ??? right value to compare???
-         Port.CTRL1.Output_BiDir := 1;
+         Port.CR1.BIDIOE := 1;
       end if;
          Clear_Overrun (Port);
 
@@ -383,16 +388,15 @@ package body STM32.SPI is
          Reset_CRC (Port);
       end if;
 
---      if(hspi->Init.Direction == SPI_DIRECTION_1LINE)
       if Current_Data_Direction (Port) = D1Line_Tx  then  --  ??? right value to compare???
-         Port.CTRL1.Output_BiDir := 1;
+         Port.CR1.BIDIOE := 1;
       end if;
 
       if not Enabled (Port) then
          Enable (Port);
       end if;
 
-      Port.Data := Half_Word (Outgoing);
+      Port.DR.DR := Half_Word (Outgoing);
 
       while not Tx_Is_Empty (Port) loop
          null;
@@ -458,13 +462,13 @@ package body STM32.SPI is
          Enable (Port);
       end if;
 
-      Port.Data := 0; -- generate clock
+      Port.DR.DR := 0; -- generate clock
 
       while Rx_Is_Empty (Port) loop
          null;
       end loop;
 
-      Incoming := Byte (Port.Data);
+      Incoming := Byte (Port.DR.DR);
 
       if CRC_Enabled (Port) then
          while Rx_Is_Empty (Port) loop
@@ -473,7 +477,7 @@ package body STM32.SPI is
          Read_CRC: declare
             Dummy : Half_Word;
          begin
-            Dummy := Port.Data;
+            Dummy := Port.DR.DR;
          end Read_CRC;
       end if;
 
@@ -520,7 +524,7 @@ package body STM32.SPI is
          Read_CRC: declare
             Dummy : Half_Word;
          begin
-            Dummy := Port.Data;
+            Dummy := Port.DR.DR;
          end Read_CRC;
       end if;
 
@@ -555,11 +559,11 @@ package body STM32.SPI is
          raise Program_Error;
       end if;
 
-      Port.Data := Half_Word (Outgoing);
+      Port.DR.DR := Half_Word (Outgoing);
 
       -- enable CRC transmission
       if CRC_Enabled (Port) then
-         Port.Ctrl1.CRC_Next := 1;
+         Port.CR1.CRCNEXT := 1;
       end if;
 
       -- wait until data is received
@@ -567,7 +571,7 @@ package body STM32.SPI is
          null;
       end loop;
 
-      Incoming := Byte (Port.Data);
+      Incoming := Byte (Port.DR.DR);
 
       -- Read CRC byte to close CRC calculation
       if CRC_Enabled (Port) then
@@ -578,7 +582,7 @@ package body STM32.SPI is
          Read_CRC: declare
             Dummy : Half_Word;
          begin
-            Dummy := Port.Data;
+            Dummy := Port.DR.DR;
          end Read_CRC;
       end if;
 
@@ -606,7 +610,8 @@ package body STM32.SPI is
       Incoming_Index : Natural := Incoming'First;
    begin
       if Current_Mode (Port) = Slave or else Tx_Count = 1 then
-         Port.Data := As_Half_Word_Pointer (Outgoing (Outgoing_Index)'Address).all;
+         Port.DR.DR :=
+           As_Half_Word_Pointer (Outgoing (Outgoing_Index)'Address).all;
          Outgoing_Index := Outgoing_Index + 2;
          Tx_Count := Tx_Count - 1;
       end if;
@@ -615,7 +620,7 @@ package body STM32.SPI is
 
          -- enable CRC transmission
          if CRC_Enabled (Port) then
-            Port.Ctrl1.CRC_Next := 1;
+            Port.CR1.CRCNEXT := 1;
          end if;
 
          -- wait until data is received
@@ -623,7 +628,7 @@ package body STM32.SPI is
             null;
          end loop;
 
-         As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all := Port.Data;
+         As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all := Port.DR.DR;
          Incoming_Index := Incoming_Index + 2;
 
          return;
@@ -635,13 +640,13 @@ package body STM32.SPI is
             null;
          end loop;
 
-         Port.Data := As_Half_Word_Pointer (Outgoing (Outgoing_Index)'Address).all;
+         Port.DR.DR := As_Half_Word_Pointer (Outgoing (Outgoing_Index)'Address).all;
          Outgoing_Index := Outgoing_Index + 2;
          Tx_Count := Tx_Count - 1;
 
          -- enable CRC transmission
          if Tx_Count = 0 and CRC_Enabled (Port) then
-            Port.Ctrl1.CRC_Next := 1;
+            Port.CR1.CRCNEXT := 1;
          end if;
 
          -- wait until data is received
@@ -649,7 +654,7 @@ package body STM32.SPI is
             null;
          end loop;
 
-         As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all := Port.Data;
+         As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all := Port.DR.DR;
          Incoming_Index := Incoming_Index + 2;
       end loop;
 
@@ -660,7 +665,7 @@ package body STM32.SPI is
             null;
          end loop;
 
-         As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all := Port.Data;
+         As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all := Port.DR.DR;
          Incoming_Index := Incoming_Index + 2;
       end if;
    end Send_Receive_16bit_Mode;
@@ -680,7 +685,7 @@ package body STM32.SPI is
       Incoming_Index : Natural := Incoming'First;
    begin
       if Current_Mode (Port) = Slave or else Tx_Count = 1 then
-         Port.Data := Half_Word (Outgoing (Outgoing_Index));
+         Port.DR.DR := Half_Word (Outgoing (Outgoing_Index));
          Outgoing_Index := Outgoing_Index + 1;
          Tx_Count := Tx_Count - 1;
       end if;
@@ -689,7 +694,7 @@ package body STM32.SPI is
 
          -- enable CRC transmission
          if CRC_Enabled (Port) then
-            Port.Ctrl1.CRC_Next := 1;
+            Port.CR1.CRCNEXT := 1;
          end if;
 
          -- wait until data is received
@@ -697,7 +702,7 @@ package body STM32.SPI is
             null;
          end loop;
 
-         Incoming (Incoming_Index) := Byte (Port.Data);
+         Incoming (Incoming_Index) := Byte (Port.DR.DR);
 
          return;
 
@@ -709,13 +714,13 @@ package body STM32.SPI is
             null;
          end loop;
 
-         Port.Data := Half_Word (Outgoing (Outgoing_Index));
+         Port.DR.DR := Half_Word (Outgoing (Outgoing_Index));
          Outgoing_Index := Outgoing_Index + 1;
          Tx_Count := Tx_Count - 1;
 
          -- enable CRC transmission
          if Tx_Count = 0 and CRC_Enabled (Port) then
-            Port.Ctrl1.CRC_Next := 1;
+            Port.CR1.CRCNEXT := 1;
          end if;
 
          -- wait until data is received
@@ -723,7 +728,7 @@ package body STM32.SPI is
             null;
          end loop;
 
-         Incoming (Incoming_Index) := Byte (Port.Data);
+         Incoming (Incoming_Index) := Byte (Port.DR.DR);
          Incoming_Index := Incoming_Index + 1;
       end loop;
 
@@ -751,7 +756,7 @@ package body STM32.SPI is
       Index    : Natural := Outgoing'First;
    begin
       if Current_Mode (Port) = Slave or else Tx_Count = 1 then
-         Port.Data := As_Half_Word_Pointer (Outgoing (Index)'Address).all;
+         Port.DR.DR := As_Half_Word_Pointer (Outgoing (Index)'Address).all;
          Index := Index + 2;
          Tx_Count := Tx_Count - 1;
       end if;
@@ -762,13 +767,13 @@ package body STM32.SPI is
             null;
          end loop;
 
-         Port.Data := As_Half_Word_Pointer (Outgoing (Index)'Address).all;
+         Port.DR.DR := As_Half_Word_Pointer (Outgoing (Index)'Address).all;
          Index := Index + 2;
          Tx_Count := Tx_Count - 1;
       end loop;
 
       if CRC_Enabled (Port) then
-         Port.Ctrl1.CRC_Next := 1;
+         Port.CR1.CRCNEXT := 1;
       end if;
    end Send_16bit_Mode;
 
@@ -785,7 +790,7 @@ package body STM32.SPI is
       Index    : Natural := Outgoing'First;
    begin
       if Current_Mode (Port) = Slave or else Tx_Count = 1 then
-         Port.Data := Half_Word (Outgoing (Index));
+         Port.DR.DR := Half_Word (Outgoing (Index));
          Index := Index + 1;
          Tx_Count := Tx_Count - 1;
       end if;
@@ -796,13 +801,13 @@ package body STM32.SPI is
             null;
          end loop;
 
-         Port.Data := Half_Word (Outgoing (Index));
+         Port.DR.DR := Half_Word (Outgoing (Index));
          Index := Index + 1;
          Tx_Count := Tx_Count - 1;
       end loop;
 
       if CRC_Enabled (Port) then
-         Port.Ctrl1.CRC_Next := 1;
+         Port.CR1.CRCNEXT := 1;
       end if;
    end Send_8bit_Mode;
 
@@ -820,12 +825,12 @@ package body STM32.SPI is
    begin
       for K in 1 .. Count loop
          if Generate_Clock then
-            Port.Data := 0;
+            Port.DR.DR := 0;
          end if;
          while not Tx_Is_Empty (Port) loop
             null;
          end loop;
-         As_Half_Word_Pointer (Incoming (Index)'Address).all := Port.Data;
+         As_Half_Word_Pointer (Incoming (Index)'Address).all := Port.DR.DR;
          Index := Index + 2;
       end loop;
    end Receive_16bit_Mode;
@@ -844,12 +849,12 @@ package body STM32.SPI is
    begin
       for K in 1 .. Count loop
          if Generate_Clock then
-            Port.Data := 0;
+            Port.DR.DR := 0;
          end if;
          while not Tx_Is_Empty (Port) loop
             null;
          end loop;
-         Incoming (Index) := Byte (Port.Data);
+         Incoming (Index) := Byte (Port.DR.DR);
          Index := Index + 1;
       end loop;
    end Receive_8bit_Mode;

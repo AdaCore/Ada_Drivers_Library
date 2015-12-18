@@ -90,7 +90,7 @@ private
 
    procedure Enable_Device_Interrupt_GPIO_Clock renames RCC.GPIOE_Clock_Enable;
 
-   SPIx    : SPI_Port with Address => SPI1_Base;
+   SPIx    : SPI_Port renames SPI_1;
    SPIx_AF : GPIO_Alternate_Function renames GPIO_AF_SPI1;
 
    procedure Enable_SPIx_Clock renames RCC.SPI1_Clock_Enable;
