@@ -316,9 +316,9 @@ package STM32.Device is
 
    procedure Reset (This : aliased in out DMA_Controller);
 
-   I2C_1 : aliased I2C_Port with Volatile, Address => I2C1_Base;
-   I2C_2 : aliased I2C_Port with Volatile, Address => I2C2_Base;
-   I2C_3 : aliased I2C_Port with Volatile, Address => I2C3_Base;
+   I2C_1 : aliased I2C_Port with Import, Volatile, Address => I2C1_Base;
+   I2C_2 : aliased I2C_Port with Import, Volatile, Address => I2C2_Base;
+   I2C_3 : aliased I2C_Port with Import, Volatile, Address => I2C3_Base;
 
    procedure Enable_Clock (This : aliased in out I2C_Port);
 

@@ -42,6 +42,8 @@
 --  This file provides definitions for the STM32F4 (ARM Cortex M4F
 --  from ST Microelectronics) Inter-Integrated Circuit (I2C) facility.
 
+private with STM32_SVD.I2C;
+
 package STM32.I2C is
 
    type I2C_Port is limited private;
@@ -51,34 +53,17 @@ package STM32.I2C is
       SMBusDevice_Mode,
       SMBusHost_Mode);
 
-   for I2C_Device_Mode use
-     (I2C_Mode         => 16#0000#,
-      SMBusDevice_Mode => 16#0002#,
-      SMBusHost_Mode   => 16#000A#);
-
    type I2C_Duty_Cycle is
      (DutyCycle_16_9,
       DutyCycle_2);
 
-   for I2C_Duty_Cycle use
-     (DutyCycle_16_9 => 16#4000#,
-      DutyCycle_2    => 16#BFFF#);
-
    type I2C_Acknowledgement is (Ack_Disable, Ack_Enable);
-
-   for I2C_Acknowledgement use
-     (Ack_Enable  => 16#0400#,
-      Ack_Disable => 16#0000#);
 
    type I2C_Direction is (Transmitter, Receiver);
 
    type I2C_Acknowledge_Address is
      (AcknowledgedAddress_7bit,
       AcknowledgedAddress_10bit);
-
-   for I2C_Acknowledge_Address use
-     (AcknowledgedAddress_7bit  => 16#4000#,
-      AcknowledgedAddress_10bit => 16#C000#);
 
    procedure Configure
      (Port        : in out I2C_Port;
@@ -149,7 +134,7 @@ package STM32.I2C is
      (Port     : I2C_Port;
       Queried  : I2C_Status_Flag;
       State    : I2C_State;
-      Time_Out : Natural := 1_000_000);  -- milliseconds
+      Time_Out : Natural := 1_000);  -- milliseconds
 
    I2C_Timeout : exception;
    --  Raised by Wait_For_Flag
@@ -178,11 +163,6 @@ package STM32.I2C is
       Event_Interrupt,
       Buffer_Interrupt);
 
-   for I2C_Interrupt use
-     (Error_Interrupt  => 16#0100#,
-      Event_Interrupt  => 16#0200#,
-      Buffer_Interrupt => 16#0400#);
-
    procedure Enable_Interrupt
      (Port   : in out I2C_Port;
       Source : I2C_Interrupt)
@@ -200,87 +180,6 @@ package STM32.I2C is
 
 private
 
-   type I2C_Port is record
-      CR1       : Half_Word;
-      Reserved1 : Half_Word;
-      CR2       : Half_Word;
-      Reserved2 : Half_Word;
-      OAR1      : Half_Word;
-      Reserved3 : Half_Word;
-      OAR2      : Half_Word;
-      Reserved4 : Half_Word;
-      DR        : Half_Word;
-      Reserved5 : Half_Word;
-      SR1       : Half_Word;
-      Reserved6 : Half_Word;
-      SR2       : Half_Word;
-      Reserved7 : Half_Word;
-      CCR       : Half_Word;
-      Reserved8 : Half_Word;
-      TRISE     : Half_Word;
-      Reserved9 : Half_Word;
-      FLTR      : Half_Word;
-      Reserved0 : Half_Word;
-   end record
-     with Volatile, Size => 20 * 16;
-
-   for I2C_Port use record
-      CR1       at 0  range 0 .. 15;
-      Reserved1 at 2  range 0 .. 15;
-      CR2       at 4  range 0 .. 15;
-      Reserved2 at 6  range 0 .. 15;
-      OAR1      at 8  range 0 .. 15;
-      Reserved3 at 10 range 0 .. 15;
-      OAR2      at 12 range 0 .. 15;
-      Reserved4 at 14 range 0 .. 15;
-      DR        at 16 range 0 .. 15;
-      Reserved5 at 18 range 0 .. 15;
-      SR1       at 20 range 0 .. 15;
-      Reserved6 at 22 range 0 .. 15;
-      SR2       at 24 range 0 .. 15;
-      Reserved7 at 26 range 0 .. 15;
-      CCR       at 28 range 0 .. 15;
-      Reserved8 at 30 range 0 .. 15;
-      TRISE     at 32 range 0 .. 15;
-      Reserved9 at 34 range 0 .. 15;
-      FLTR      at 36 range 0 .. 15;
-      Reserved0 at 38 range 0 .. 15;
-   end record;
-
-   CR1_PE        : constant := 16#0001#; --  Peripheral Enable
-   CR1_SMBUS     : constant := 16#0002#; --  SMBus Mode
-   CR1_SMBTYPE   : constant := 16#0008#; --  SMBus Type
-   CR1_ENARP     : constant := 16#0010#; --  ARP Enable
-   CR1_ENPEC     : constant := 16#0020#; --  PEC Enable
-   CR1_ENGC      : constant := 16#0040#; --  General Call Enable
-   CR1_NOSTRETCH : constant := 16#0080#; --  Clock Stretching Disable (Slave mode)
-   CR1_START     : constant := 16#0100#; --  Start Generation
-   CR1_STOP      : constant := 16#0200#; --  Stop Generation
-   CR1_ACK       : constant := 16#0400#; --  Acknowledge Enable
-   CR1_POS       : constant := 16#0800#; --  Acknowledge/PEC Position (for data reception)
-   CR1_PEC       : constant := 16#1000#; --  Packet Error Checking
-   CR1_ALERT     : constant := 16#2000#; --  SMBus Alert
-   CR1_SWRST     : constant := 16#8000#; --  Software Reset
-
-   CR1_Clear_Mask : constant := 16#FBF5#;
-
-   CR2_FREQ      : constant := 16#003F#; --  Peripheral Clock Frequency bits
-
-   CCR_CCR       : constant := 16#0FFF#; --  Clock Control Register
-   CCR_FS        : constant := 16#8000#;  -- Master Mode Selection fast/std
-
-   I2C_OAR1_ADD0 : constant := 16#0001#;
-   I2C_OAR1_ADD1 : constant := 16#0002#;
-   I2C_OAR1_ADD2 : constant := 16#0004#;
-   I2C_OAR1_ADD3 : constant := 16#0008#;
-   I2C_OAR1_ADD4 : constant := 16#0010#;
-   I2C_OAR1_ADD5 : constant := 16#0020#;
-   I2C_OAR1_ADD6 : constant := 16#0040#;
-   I2C_OAR1_ADD7 : constant := 16#0080#;
-   I2C_OAR1_ADD8 : constant := 16#0100#;
-   I2C_OAR1_ADD9 : constant := 16#0200#;
-
-   I2C_Direction_Transmitter : constant := 16#00#;
-   I2C_Direction_Receiver    : constant := 16#01#;
+   type I2C_Port is new STM32_SVD.I2C.I2C_Peripheral;
 
 end STM32.I2C;

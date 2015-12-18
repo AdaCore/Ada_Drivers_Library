@@ -43,16 +43,9 @@ with Ada.Real_Time; use Ada.Real_Time;
 
 with STM32.RCC;     use STM32.RCC;
 
+with STM32_SVD.I2C; use STM32_SVD.I2C;
+
 package body STM32.I2C is
-
-   subtype I2C_SR1_Flag is I2C_Status_Flag range Start_Bit .. SMB_Alert;
-   subtype I2C_SR2_Flag is I2C_Status_Flag range Master_Slave_Mode .. Dual_Flag;
-
-   SR1_Flag_Pos : constant array (I2C_SR1_Flag) of Half_Word :=
-     (2**0, 2**1, 2**2, 2**3, 2**4, 2**6, 2**7, 2**8, 2**9, 2**10, 2**11, 2**12, 2**14, 2**15);
-
-   SR2_Flag_Pos : constant array (I2C_SR2_Flag) of Half_Word :=
-     (2**0, 2**1, 2**2, 2**4, 2**5, 2**6, 2**7);
 
    ---------------
    -- Configure --
@@ -67,42 +60,53 @@ package body STM32.I2C is
       Ack         : I2C_Acknowledgement;
       Ack_Address : I2C_Acknowledge_Address)
    is
-      CR2, CR1   : Half_Word;
-      CCR        : Half_Word := 0;
+      CR1        : CR1_Register;
+      CCR        : CCR_Register;
+      OAR1       : OAR1_Register;
       PCLK1      : constant Word := System_Clock_Frequencies.PCLK1;
       Freq_Range : constant Half_Word := Half_Word (PCLK1 / 1_000_000);
    begin
       --  Load CR2 and clear FREQ
-      CR2 := Port.CR2 and (not CR2_FREQ);
-
-      Port.CR2 := CR2 or Freq_Range;
+      Port.CR2 :=
+        (LAST    => 0,
+         DMAEN   => 0,
+         ITBUFEN => 0,
+         ITEVTEN => 0,
+         ITERREN => 0,
+         FREQ    => UInt6 (Freq_Range),
+         others  => <>);
 
       Set_State (Port, Disabled);
 
       if Clock_Speed <= 100_000 then
-         CCR := Half_Word (PCLK1 / (Clock_Speed * 2));
+        --  Mode selection to Standard Mode
+         CCR.F_S := 0;
+         CCR.CCR := UInt12 (PCLK1 / (Clock_Speed * 2));
 
-         if CCR < 4 then
-            CCR := 4;
+         if CCR.CCR < 4 then
+            CCR.CCR := 4;
          end if;
-         Port.TRISE := Freq_Range + 1;
+
+         Port.TRISE.TRISE := UInt6 (Freq_Range + 1);
+
       else
          --  Fast mode
+         CCR.F_S := 1;
 
          if Duty_Cycle = DutyCycle_2 then
-            CCR := Half_Word (PCLK1 / (Clock_Speed * 3));
+            CCR.CCR := UInt12 (Pclk1 / (Clock_Speed * 3));
          else
-            CCR := Half_Word (PCLK1 / (Clock_Speed * 25));
-            CCR := CCR or DutyCycle_16_9'Enum_Rep;
+            CCR.CCR := UInt12 (Pclk1 / (Clock_Speed * 25));
+            CCR.DUTY := 1;
          end if;
 
-         if (CCR and CCR_CCR) = 0 then
-            CCR := 1;
+         if CCR.CCR = 0 then
+            CCR.CCR := 1;
          end if;
 
-         CCR := CCR or CCR_FS;
+         CCR.CCR := CCR.CCR or 16#80#;
 
-         Port.TRISE := (Freq_Range * 300) / 1000 + 1;
+         Port.TRISE.TRISE := UInt6 ((Word (Freq_Range) * 300) / 1000 + 1);
       end if;
 
       Port.CCR := CCR;
@@ -110,13 +114,34 @@ package body STM32.I2C is
       Set_State (Port, Enabled);
 
       CR1 := Port.CR1;
-
-      CR1 := CR1 and CR1_Clear_Mask;
-
-      CR1 := CR1 or Mode'Enum_Rep or Ack'Enum_Rep;
+      case Mode is
+         when I2C_Mode =>
+            CR1.SMBUS := 0;
+            CR1.SMBTYPE := 0;
+         when SMBusDevice_Mode =>
+            CR1.SMBUS := 1;
+            CR1.SMBTYPE := 0;
+         when SMBusHost_Mode =>
+            CR1.SMBUS := 1;
+            CR1.SMBTYPE := 1;
+      end case;
+      CR1.ACK := I2C_Acknowledgement'Enum_Rep (Ack);
       Port.CR1 := CR1;
 
-      Port.OAR1 := Ack_Address'Enum_Rep or Own_Address'Enum_Rep;
+      OAR1.ADDMODE := (if Ack_Address = AcknowledgedAddress_10bit
+                       then 1 else 0);
+      case Ack_Address is
+         when AcknowledgedAddress_7bit =>
+            OAR1.ADD0  := 0;
+            OAR1.ADD7  := UInt7 (Own_Address / 2);
+            OAR1.ADD10 := 0;
+         when AcknowledgedAddress_10bit =>
+            OAR1.Add0  := Bit (Own_Address and 2#1#);
+            OAR1.ADD7  := UInt7 ((Own_Address / 2) and 2#1111111#);
+            OAR1.Add10 := UInt2 (Own_Address / 2 ** 8);
+      end case;
+
+      Port.OAR1 := OAR1;
    end Configure;
 
    ---------------
@@ -125,11 +150,7 @@ package body STM32.I2C is
 
    procedure Set_State (Port : in out I2C_Port; State : I2C_State) is
    begin
-      if State = Enabled then
-         Port.CR1 := Port.CR1 or CR1_PE;
-      else
-         Port.CR1 := Port.CR1 and (not CR1_PE);
-      end if;
+      Port.CR1.PE := (if State = Enabled then 1 else 0);
    end Set_State;
 
    ------------------
@@ -138,7 +159,7 @@ package body STM32.I2C is
 
    function Port_Enabled (Port : I2C_Port) return Boolean is
    begin
-      return (Port.CR1 and CR1_PE) /= 0;
+      return Port.CR1.PE = 1;
    end Port_Enabled;
 
    --------------------
@@ -147,11 +168,7 @@ package body STM32.I2C is
 
    procedure Generate_Start (Port : in out I2C_Port; State : I2C_State) is
    begin
-      if State = Enabled then
-         Port.CR1 := Port.CR1 or CR1_START;
-      else
-         Port.CR1 := Port.CR1 and (not CR1_START);
-      end if;
+      Port.CR1.START := (if State = Enabled then 1 else 0);
    end Generate_Start;
 
    -------------------
@@ -160,11 +177,7 @@ package body STM32.I2C is
 
    procedure Generate_Stop (Port : in out I2C_Port; State : I2C_State) is
    begin
-      if State = Enabled then
-         Port.CR1 := Port.CR1 or CR1_STOP;
-      else
-         Port.CR1 := Port.CR1 and (not CR1_STOP);
-      end if;
+      Port.CR1.STOP := (if State = Enabled then 1 else 0);
    end Generate_Stop;
 
    --------------------
@@ -176,15 +189,15 @@ package body STM32.I2C is
       Address   : Byte;
       Direction : I2C_Direction)
    is
-      Destination : Half_Word := Half_Word (Address);
+      Destination : Byte;
    begin
       if Direction = Receiver then
-         Destination := Destination or I2C_OAR1_ADD0;
+         Destination := Address or 2#1#;
       else
-         Destination := Destination and (not I2C_OAR1_ADD0);
+         Destination := Address and (not 2#1#);
       end if;
 
-      Port.DR := Destination;
+      Port.DR.DR := Destination;
    end Send_7Bit_Address;
 
    --------------
@@ -193,11 +206,50 @@ package body STM32.I2C is
 
    function Status (Port : I2C_Port; Flag : I2C_Status_Flag) return Boolean is
    begin
-      if Flag in I2C_SR1_Flag then
-         return (Port.SR1 and SR1_Flag_Pos (Flag)) /= 0;
-      else
-         return (Port.SR2 and SR2_Flag_Pos (Flag)) /= 0;
-      end if;
+      case Flag is
+         when Start_Bit =>
+            return Port.SR1.SB = 1;
+         when Address_Sent =>
+            return Port.SR1.ADDR = 1;
+         when Byte_Transfer_Finished =>
+            return Port.SR1.BTF = 1;
+         when Address_Sent_10bit =>
+            return Port.SR1.ADD10 = 1;
+         when Stop_Detection =>
+            return Port.SR1.STOPF = 1;
+         when Rx_Data_Register_Not_Empty =>
+            return Port.SR1.RxNE = 1;
+         when Tx_Data_Register_Empty =>
+            return Port.SR1.TxE = 1;
+         when Bus_Error =>
+            return Port.SR1.BERR = 1;
+         when Arbitration_Lost =>
+            return Port.SR1.ARLO = 1;
+         when Ack_Failure =>
+            return Port.SR1.AF = 1;
+         when UnderOverrun =>
+            return Port.SR1.OVR = 1;
+         when Packet_Error =>
+            return Port.SR1.PECERR = 1;
+         when Timeout =>
+            return Port.SR1.TIMEOUT = 1;
+         when SMB_Alert =>
+            return Port.SR1.SMBALERT = 1;
+         when Master_Slave_Mode =>
+            return Port.SR2.MSL = 1;
+         when Busy =>
+            return Port.SR2.BUSY = 1;
+         when Transmitter_Receiver_Mode =>
+            return Port.SR2.TRA = 1;
+         when General_Call =>
+            return Port.SR2.GENCALL = 1;
+         when SMB_Default =>
+            return Port.SR2.SMBDEFAULT = 1;
+         when SMB_Host =>
+            return Port.SR2.SMBHOST = 1;
+         when Dual_Flag =>
+            return Port.SR2.DUALF = 1;
+      end case;
    end Status;
 
    ----------------
@@ -208,25 +260,33 @@ package body STM32.I2C is
      (Port   : in out I2C_Port;
       Target : Clearable_I2C_Status_Flag)
    is
+      Unref  : Bit with Unreferenced;
    begin
-      --  note that only a subset of the status flags can be cleared
-      Port.SR1 := not SR1_Flag_Pos (Target);
-      --  We do not, and must not, use the read-modify-write pattern because
-      --  it leaves a window of vulnerability open to changes to the state
-      --  after the read but before the write. The hardware for this register
-      --  is designed so that writing other bits will not change them. This is
-      --  indicated by the "rc_w0" notation in the status register definition.
-      --  See the RM, page 57 for that notation explanation.
+      case Target is
+         when Bus_Error =>
+            Port.SR1.BERR := 0;
+         when Arbitration_Lost =>
+            Port.SR1.ARLO := 0;
+         when Ack_Failure =>
+            Port.SR1.AF := 0;
+         when UnderOverrun =>
+            Port.SR1.OVR := 0;
+         when Packet_Error =>
+            Port.SR1.PECERR := 0;
+         when Timeout =>
+            Port.SR1.TIMEOUT := 0;
+         when SMB_Alert =>
+            Port.SR1.SMBALERT := 0;
+      end case;
    end Clear_Status;
 
    -------------------------------
    -- Clear_Address_Sent_Status --
    -------------------------------
 
-   procedure Clear_Address_Sent_Status (Port : in out I2C_Port) is
-      Temp : Half_Word with Volatile;
-      ADDR_Mask : Half_Word renames SR1_Flag_Pos (Address_Sent);
-      STOP_Mask : Half_Word renames SR1_Flag_Pos (Stop_Detection);
+   procedure Clear_Address_Sent_Status (Port : in out I2C_Port)
+   is
+      Unref  : Bit with Volatile, Unreferenced;
    begin
       --  To clear the ADDR flag we have to read SR2 after reading SR1.
       --  However, per the RM, section 27.6.7, page 850, we should only read
@@ -234,9 +294,8 @@ package body STM32.I2C is
       --  flag is cleared, because the Address_Sent flag could be set in
       --  the middle of reading SR1 and SR2 but will be cleared by the
       --  read sequence nonetheless.
-      Temp := Port.SR1;
-      if ((Temp and ADDR_Mask) = 1) or ((Temp and STOP_Mask) = 0) then
-         Temp := Port.SR2;
+      if Status (Port, Start_Bit) or else Status (Port, Stop_Detection) then
+         Unref := Port.SR2.MSL;
       end if;
    end Clear_Address_Sent_Status;
 
@@ -245,10 +304,10 @@ package body STM32.I2C is
    ---------------------------------
 
    procedure Clear_Stop_Detection_Status (Port : in out I2C_Port) is
-      Temp : Half_Word with Volatile, Unreferenced;
+      Unref  : Bit with Volatile, Unreferenced;
    begin
-      Temp := Port.SR1;
-      Port.CR1 := Port.CR1 or CR1_PE;
+      Unref := Port.SR1.STOPF;
+      Port.CR1.PE := 1;
    end Clear_Stop_Detection_Status;
 
    -------------------
@@ -259,7 +318,7 @@ package body STM32.I2C is
      (Port     : I2C_Port;
       Queried  : I2C_Status_Flag;
       State    : I2C_State;
-      Time_Out : Natural := 1_000_000)
+      Time_Out : Natural := 1_000)
    is
       Expected : constant Boolean := State = Enabled;
       Deadline : constant Time := Clock + Milliseconds (Time_Out);
@@ -277,7 +336,7 @@ package body STM32.I2C is
 
    procedure Send_Data (Port : in out I2C_Port; Data : Byte) is
    begin
-      Port.DR := Half_Word (Data);
+      Port.DR.DR := Data;
    end Send_Data;
 
    ---------------
@@ -286,7 +345,7 @@ package body STM32.I2C is
 
    function Read_Data (Port : I2C_Port) return Byte is
    begin
-      return Byte (Port.DR);
+      return Port.DR.DR;
    end Read_Data;
 
    --------------------
@@ -295,11 +354,7 @@ package body STM32.I2C is
 
    procedure Set_Ack_Config (Port : in out I2C_Port; State : I2C_State) is
    begin
-      if State = Enabled then
-         Port.CR1 := Port.CR1 or CR1_ACK;
-      else
-         Port.CR1 := Port.CR1 and (not CR1_ACK);
-      end if;
+      Port.CR1.ACK := (if State = Enabled then 1 else 0);
    end Set_Ack_Config;
 
    ---------------------
@@ -311,11 +366,7 @@ package body STM32.I2C is
       Pos  : I2C_Nack_Position)
    is
    begin
-      if Pos = Next then
-         Port.CR1 := Port.CR1 or CR1_POS;
-      else
-         Port.CR1 := Port.CR1 and (not CR1_POS);
-      end if;
+      Port.CR1.POS := (if Pos = Next then 1 else 0);
    end Set_Nack_Config;
 
    -----------
@@ -401,8 +452,19 @@ package body STM32.I2C is
       Source : I2C_Interrupt)
    is
    begin
-      Port.CR2 := Port.CR2 or Source'Enum_Rep;
+      case Source is
+         when Error_Interrupt =>
+            Port.CR2.ITERREN := 1;
+         when Event_Interrupt =>
+            Port.CR2.ITEVTEN := 1;
+         when Buffer_Interrupt =>
+            Port.CR2.ITBUFEN := 1;
+      end case;
    end Enable_Interrupt;
+
+   -----------------------
+   -- Disable_Interrupt --
+   -----------------------
 
    -----------------------
    -- Disable_Interrupt --
@@ -413,7 +475,14 @@ package body STM32.I2C is
       Source : I2C_Interrupt)
    is
    begin
-      Port.CR2 := Port.CR2 and not Source'Enum_Rep;
+      case Source is
+         when Error_Interrupt =>
+            Port.CR2.ITERREN := 0;
+         when Event_Interrupt =>
+            Port.CR2.ITEVTEN := 0;
+         when Buffer_Interrupt =>
+            Port.CR2.ITBUFEN := 0;
+      end case;
    end Disable_Interrupt;
 
    -------------
@@ -426,7 +495,14 @@ package body STM32.I2C is
       return Boolean
    is
    begin
-      return (Port.CR2 and Source'Enum_Rep) = Source'Enum_Rep;
+      case Source is
+         when Error_Interrupt =>
+            return Port.CR2.ITERREN = 1;
+         when Event_Interrupt =>
+            return Port.CR2.ITEVTEN = 1;
+         when Buffer_Interrupt =>
+            return Port.CR2.ITBUFEN = 1;
+      end case;
    end Enabled;
 
 end STM32.I2C;
