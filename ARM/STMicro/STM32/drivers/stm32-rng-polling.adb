@@ -49,7 +49,7 @@ package body STM32.RNG.Polling is
       Discard : Unsigned_32;
    begin
       Enable_RNG_Clock;
-      RNG.Control.Generator_Enabled := True;
+      Enable_RNG;
 
       --  Discard the first randomly generated number, according to STM32F4
       --  docs.
@@ -62,10 +62,10 @@ package body STM32.RNG.Polling is
 
    function Random return Interfaces.Unsigned_32 is
    begin
-      while not RNG.Status.Data_Ready loop
+      while RNG_Data_Ready loop
          null;
       end loop;
-      return Unsigned_32 (RNG.Data);
+      return RNG_Data;
    end Random;
 
 end STM32.RNG.Polling;

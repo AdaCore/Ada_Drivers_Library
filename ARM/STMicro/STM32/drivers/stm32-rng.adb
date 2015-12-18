@@ -39,6 +39,8 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with STM32_SVD.RNG; use STM32_SVD.RNG;
+
 with STM32.RCC;
 
 package body STM32.RNG is
@@ -55,7 +57,7 @@ package body STM32.RNG is
 
    procedure Enable_RNG is
    begin
-      RNG.Control.Generator_Enabled := True;
+      RNG_Periph.CR.RNGEN := 1;
    end Enable_RNG;
 
    -----------------
@@ -64,15 +66,26 @@ package body STM32.RNG is
 
    procedure Disable_RNG is
    begin
-      RNG.Control.Generator_Enabled := False;
+      RNG_Periph.CR.RNGEN := 0;
    end Disable_RNG;
+
+   ---------------
+   -- Reset_RNG --
+   ---------------
+
+   procedure Reset_RNG
+   is
+   begin
+      RNG_Periph.CR.RNGEN := 0;
+      RNG_Periph.CR.RNGEN := 1;
+   end Reset_RNG;
 
    -----------------
    -- RNG_Enabled --
    -----------------
 
    function RNG_Enabled return Boolean is
-      (RNG.Control.Generator_Enabled);
+      (RNG_Periph.CR.RNGEN = 1);
 
    --------------------------
    -- Enable_RNG_Interrupt --
@@ -80,7 +93,7 @@ package body STM32.RNG is
 
    procedure Enable_RNG_Interrupt is
    begin
-      RNG.Control.Interrupt_Enabled := True;
+      RNG_Periph.CR.IE := 1;
    end Enable_RNG_Interrupt;
 
    ---------------------------
@@ -89,7 +102,7 @@ package body STM32.RNG is
 
    procedure Disable_RNG_Interrupt is
    begin
-      RNG.Control.Interrupt_Enabled := False;
+      RNG_Periph.CR.IE := 0;
    end Disable_RNG_Interrupt;
 
    ---------------------------
@@ -97,20 +110,54 @@ package body STM32.RNG is
    ---------------------------
 
    function RNG_Interrupt_Enabled return Boolean is
-      (RNG.Control.Interrupt_Enabled);
+      (RNG_Periph.CR.IE = 1);
+
+   --------------
+   -- RNG_Data --
+   --------------
+
+   function RNG_Data return Word
+     is (RNG_Periph.DR);
+
+   --------------------
+   -- RNG_Data_Ready --
+   --------------------
+
+   function RNG_Data_Ready return Boolean
+     is (RNG_Periph.SR.DRDY = 1);
 
    ---------------------------
    -- RNG_Seed_Error_Status --
    ---------------------------
 
    function RNG_Seed_Error_Status return Boolean is
-      (RNG.Status.SECS);
+      (RNG_Periph.SR.SECS = 1);
 
    ----------------------------
    -- RNG_Clock_Error_Status --
    ----------------------------
 
    function RNG_Clock_Error_Status return Boolean is
-      (RNG.Status.CECS);
+      (RNG_Periph.SR.CECS = 1);
+
+   ---------------------------------
+   -- Clear_RNG_Seed_Error_Status --
+   ---------------------------------
+
+   procedure Clear_RNG_Seed_Error_Status
+   is
+   begin
+      RNG_Periph.SR.SECS := 0;
+   end Clear_RNG_Seed_Error_Status;
+
+   ----------------------------------
+   -- Clear_RNG_Clock_Error_Status --
+   ----------------------------------
+
+   procedure Clear_RNG_Clock_Error_Status
+   is
+   begin
+      RNG_Periph.SR.CECS := 0;
+   end Clear_RNG_Clock_Error_Status;
 
 end STM32.RNG;

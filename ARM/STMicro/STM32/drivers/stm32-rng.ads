@@ -51,6 +51,8 @@ package STM32.RNG is
 
    procedure Disable_RNG;
 
+   procedure Reset_RNG;
+
    procedure Enable_RNG_Clock;
 
    function RNG_Enabled return Boolean;
@@ -61,59 +63,16 @@ package STM32.RNG is
 
    function RNG_Interrupt_Enabled return Boolean;
 
+   function RNG_Data return Word;
+
+   function RNG_Data_Ready return Boolean;
+
    function RNG_Seed_Error_Status return Boolean;
 
    function RNG_Clock_Error_Status return Boolean;
 
-private
+   procedure Clear_RNG_Seed_Error_Status;
 
-   type RNG_Control_Register is record
-      Reserved1         : Bits_28;
-      Interrupt_Enabled : Boolean;
-      Generator_Enabled : Boolean;
-      Reserved2         : Bits_2;
-   end record
-     with Volatile_Full_Access, Size => 32;
-
-   for RNG_Control_Register use record
-      Reserved1         at 0 range 4 .. 31;
-      Interrupt_Enabled at 0 range 3 .. 3;
-      Generator_Enabled at 0 range 2 .. 2;
-      Reserved2         at 0 range 0 .. 1;
-   end record;
-
-   type RNG_Status_Register is record
-      Reserved1   : Bits_25;
-      Seed_Error  : Boolean;
-      Clock_Error : Boolean;
-      Reserved2   : Bits_2;
-      SECS        : Boolean;  -- Seed Error Current Status
-      CECS        : Boolean;  -- Clock Error Current Status
-      Data_Ready  : Boolean;
-   end record
-     with Volatile_Full_Access, Size => 32;
-
-   for RNG_Status_Register use record
-      Reserved1   at 0 range 7 .. 31;
-      Seed_Error  at 0 range 6 .. 6;
-      Clock_Error at 0 range 5 .. 5;
-      Reserved2   at 0 range 3 .. 4;
-      SECS        at 0 range 2 .. 2;
-      CECS        at 0 range 1 .. 1;
-      Data_Ready  at 0 range 0 .. 0;
-   end record;
-
-   type RNG_Data_Register is mod 2**32
-     with Atomic, Size => 32;
-
-   type RNG_Registers is record
-      Control : RNG_Control_Register;
-      Status  : RNG_Status_Register;
-      Data    : RNG_Data_Register;
-   end record
-     with Volatile, Size => 96;
-
-   RNG : RNG_Registers
-     with Address => STM32_SVD.RNG_Base;
+   procedure Clear_RNG_Clock_Error_Status;
 
 end STM32.RNG;

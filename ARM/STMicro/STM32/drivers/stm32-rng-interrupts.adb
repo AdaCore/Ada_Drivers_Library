@@ -95,9 +95,7 @@ package body STM32.RNG.Interrupts is
             Data_Available := False;
          end if;
 
-         if not RNG.Control.Generator_Enabled then
-            RNG.Control.Generator_Enabled := True;
-         end if;
+         Enable_RNG;
       end Get_Random_32;
 
       -----------------------
@@ -107,30 +105,29 @@ package body STM32.RNG.Interrupts is
       procedure Interrupt_Handler is
          Current : Unsigned_32;
       begin
-         if RNG.Status.Seed_Error then
-            RNG.Status.Seed_Error := False;
+         if RNG_Seed_Error_Status then
+            Clear_RNG_Seed_Error_Status;
 
             --  Clear then set the RNGEN bit to reinitialize and restart
             --  the RNG.
-            RNG.Control.Generator_Enabled := False;
-            RNG.Control.Generator_Enabled := True;
+            Reset_RNG;
          end if;
 
-         if RNG.Status.Clock_Error then
+         if RNG_Clock_Error_Status then
             --  TODO: reconfigure the clock and make sure it's okay
 
             --  Clear the bit.
-            RNG.Status.Clock_Error := False;
+            Clear_RNG_Clock_Error_Status;
          end if;
 
-         if RNG.Status.Data_Ready then
-            Current := Unsigned_32 (RNG.Data);
+         if RNG_Data_Ready then
+            Current := RNG_Data;
 
             if Current /= Last then
                --  This number is good.
                if (Buffer.Head + 1) mod Buffer.Content'Length = Buffer.Tail then
                   --  But our buffer is full.  Turn off the RNG.
-                  RNG.Control.Generator_Enabled := False;
+                  Disable_RNG;
                else
                   --  Add this new data to our buffer.
                   Buffer.Head := (Buffer.Head + 1) mod Buffer.Content'Length;
@@ -153,8 +150,8 @@ package body STM32.RNG.Interrupts is
       Discard : Unsigned_32;
    begin
       Enable_RNG_Clock;
-      RNG.Control.Interrupt_Enabled := True;
-      RNG.Control.Generator_Enabled := True;
+      Enable_RNG_Interrupt;
+      Enable_RNG;
 
       --  Discard the first randomly generated number, according to STM32F4
       --  docs.
