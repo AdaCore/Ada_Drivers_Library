@@ -42,14 +42,19 @@
 --  This file provides register definitions for the STM32F4 (ARM Cortex M4F)
 --  microcontrollers from ST Microelectronics.
 
+with STM32_SVD.EXTI;   use STM32_SVD.EXTI;
+with STM32_SVD.SYSCFG; use STM32_SVD.SYSCFG;
+
+with STM32.Device;     use STM32.Device;
+
 package body STM32.SYSCFG is
 
    procedure Connect_External_Interrupt
      (Port : GPIO_Port;
       Pin  : GPIO_Pin_Index)
    is
-      CR_Index   : Integer range EXTI_Control_Registers'Range;
-      EXTI_Index : Integer range EXTI_n_List'Range;
+      CR_Index   : Integer range 0 .. 3;
+      EXTI_Index : Integer range EXTI_Field_Array'Range;
       Port_Name  : constant GPIO_Port_Id := As_GPIO_Port_Id (Port);
    begin
       --  First we find the control register, of the four possible, that
@@ -78,8 +83,20 @@ package body STM32.SYSCFG is
       --  numeric representation values matching what the hardware expects,
       --  that is, the values 0 .. n-1, which we get automatically unless
       --  overridden.
-
-      SYSCFG.EXTICR (CR_Index).EXTI (EXTI_Index) := Port_Name;
+      case CR_Index is
+         when 0 =>
+            SYSCFG_Periph.EXTICR1.EXTI.Arr (EXTI_Index) :=
+              GPIO_Port_Id'Enum_Rep (Port_Name);
+         when 1 =>
+            SYSCFG_Periph.EXTICR2.EXTI.Arr (EXTI_Index) :=
+              GPIO_Port_Id'Enum_Rep (Port_Name);
+         when 2 =>
+            SYSCFG_Periph.EXTICR3.EXTI.Arr (EXTI_Index) :=
+              GPIO_Port_Id'Enum_Rep (Port_Name);
+         when 3 =>
+            SYSCFG_Periph.EXTICR4.EXTI.Arr (EXTI_Index) :=
+              GPIO_Port_Id'Enum_Rep (Port_Name);
+      end case;
    end Connect_External_Interrupt;
 
      --------------------------------
@@ -132,13 +149,19 @@ package body STM32.SYSCFG is
       Set_External_Trigger (This_Pin, Trigger);
    end Set_External_Trigger;
 
+   --------------------------
+   -- Set_External_Trigger --
+   --------------------------
+
    procedure Set_External_Trigger
      (Pin     : GPIO_Pin_Index;
       Trigger : External_Triggers)
    is
    begin
-      EXTI.IMR (Pin) := Trigger in Interrupt_Triggers;
-      EXTI.EMR (Pin) := Trigger in Event_Triggers;
+      EXTI_Periph.IMR.MR.Arr (Pin) :=
+        (if Trigger in Interrupt_Triggers then 1 else 0);
+      EXTI_Periph.EMR.MR.Arr (Pin) :=
+        (if Trigger in Event_Triggers then 1 else 0);
    end Set_External_Trigger;
 
    --------------------------
@@ -178,16 +201,18 @@ package body STM32.SYSCFG is
    is
    begin
       --  all those that are/include rising edge
-      EXTI.RTSR (Pin) := Trigger in Interrupt_Rising_Edge  |
-                           Interrupt_Rising_Falling_Edge |
-                           Event_Rising_Edge  |
-                           Event_Rising_Falling_Edge;
+      EXTI_Periph.RTSR.TR.Arr (Pin) :=
+        Boolean'Enum_Rep (Trigger in Interrupt_Rising_Edge  |
+                                     Interrupt_Rising_Falling_Edge |
+                                     Event_Rising_Edge  |
+                                     Event_Rising_Falling_Edge);
 
       -- all those that are/include falling edge
-      EXTI.FTSR (Pin) := Trigger in Interrupt_Falling_Edge |
-                             Interrupt_Rising_Falling_Edge |
-                             Event_Falling_Edge |
-                             Event_Rising_Falling_Edge;
+      EXTI_Periph.FTSR.TR.Arr (Pin) :=
+        Boolean'Enum_Rep (Trigger in Interrupt_Falling_Edge |
+                                     Interrupt_Rising_Falling_Edge |
+                                     Event_Falling_Edge |
+                                     Event_Rising_Falling_Edge);
    end Select_Trigger_Edge;
 
    -------------------------
@@ -210,7 +235,8 @@ package body STM32.SYSCFG is
 
    procedure Clear_External_Interrupt (Pin : GPIO_Pin) is
    begin
-      EXTI.PR (GPIO_Pin'Pos (Pin)) := 1;  -- yes, value is one to clear it
+      EXTI_Periph.PR.PR.Arr (GPIO_Pin'Pos (Pin)) := 1;
+      -- yes, value is one to clear it
    end Clear_External_Interrupt;
 
    ------------------------------
@@ -219,7 +245,7 @@ package body STM32.SYSCFG is
 
    procedure Clear_External_Interrupt (Pin : GPIO_Pin_Index) is
    begin
-      EXTI.PR (Pin) := 1; --  Set to 1 to clear
+      EXTI_Periph.PR.PR.Arr (Pin) := 1; --  Set to 1 to clear
    end Clear_External_Interrupt;
 
 end STM32.SYSCFG;
