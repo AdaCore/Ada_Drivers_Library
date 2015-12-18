@@ -41,6 +41,8 @@
 
 with STM32.RCC;
 
+with STM32_SVD.USART; use STM32_SVD.USART;
+
 package body STM32.USARTs is
 
    ---------------
@@ -64,7 +66,7 @@ package body STM32.USARTs is
 
    procedure Enable (This : in out USART) is
    begin
-      This.CR1 := This.CR1 or CR1_UE;
+      This.CR1.UE := 1;
    end Enable;
 
    -------------
@@ -73,7 +75,7 @@ package body STM32.USARTs is
 
    procedure Disable (This : in out USART) is
    begin
-      This.CR1 := This.CR1 and (not CR1_UE);
+      This.CR1.UE := 0;
    end Disable;
 
    -------------
@@ -81,19 +83,16 @@ package body STM32.USARTs is
    -------------
 
    function Enabled (This : USART) return Boolean is
-     ((This.CR1 and CR1_UE) = CR1_UE);
+     (This.CR1.UE = 1);
 
    -------------------
    -- Set_Stop_Bits --
    -------------------
 
-   procedure Set_Stop_Bits (This : in out USART; To : Stop_Bits) is
-      Temp : Half_Word;
-      USART_CR2_STOPBITS_MASK : constant Half_Word := 16#3000#;
+   procedure Set_Stop_Bits (This : in out USART; To : Stop_Bits)
+   is
    begin
-      Temp := This.CR2;
-      Temp := (Temp and (not USART_CR2_STOPBITS_MASK)) or To'Enum_Rep;
-      This.CR2 := Temp;
+      This.CR2.STOP := Stop_Bits'Enum_Rep (To);
    end Set_Stop_Bits;
 
    ---------------------
@@ -105,11 +104,7 @@ package body STM32.USARTs is
       To : Word_Lengths)
    is
    begin
-      if To = Word_Length_8 then
-         This.CR1 := This.CR1 and (not CR1_M);
-      else
-         This.CR1 := This.CR1 or CR1_M;
-      end if;
+      This.CR1.M := (if To = Word_Length_8 then 0 else 1);
    end Set_Word_Length;
 
    ----------------
@@ -117,12 +112,18 @@ package body STM32.USARTs is
    ----------------
 
    procedure Set_Parity (This : in out USART; To : Parities) is
-      Temp : Half_Word;
-      USART_PARITY_MASK : constant Half_Word := CR1_PS or CR1_PCE;
    begin
-      Temp := This.CR1;
-      Temp := (Temp and (not USART_PARITY_MASK)) or To'Enum_Rep;
-      This.CR1 := Temp;
+      case To is
+         when No_Parity =>
+            This.CR1.PCE := 0;
+            This.CR1.PS  := 0;
+         when Even_Parity =>
+            This.CR1.PCE := 1;
+            This.CR1.PS  := 0;
+         when Odd_Parity =>
+            This.CR1.PCE := 1;
+            This.CR1.PS  := 1;
+      end case;
    end Set_Parity;
 
    -------------------
@@ -133,11 +134,11 @@ package body STM32.USARTs is
       Clock        : constant Word := APB_Clock (This);
       Int_Divider  : constant Word := (25 * Clock) / (4 * To);
       Frac_Divider : constant Word := Int_Divider rem 100;
-      BRR          : Half_Word;
    begin
-      BRR := (Half_Word (Frac_Divider * 16) + 50) / 100 mod 16
-               or Half_Word (Int_Divider / 100 * 16);
-      This.BRR := BRR;
+      This.BRR.DIV_Fraction :=
+        BRR_DIV_Fraction_Field (((Frac_Divider * 16) + 50) / 100 mod 16);
+      This.BRR.DIV_Mantissa :=
+        BRR_DIV_Mantissa_Field (Int_Divider / 100);
    end Set_Baud_Rate;
 
    --------------
@@ -145,12 +146,9 @@ package body STM32.USARTs is
    --------------
 
    procedure Set_Mode (This : in out USART;  To : UART_Modes) is
-      Temp : Half_Word;
-      USART_MODE_MASK : constant Half_Word := CR1_RE or CR1_TE;
    begin
-      Temp := This.CR1;
-      Temp := (Temp and (not USART_MODE_MASK)) or To'Enum_Rep;
-      This.CR1 := Temp;
+      This.CR1.RE := (if To = Tx_Mode then 0 else 1);
+      This.CR1.TE := (if To = Rx_Mode then 0 else 1);
    end Set_Mode;
 
    ----------------------
@@ -158,28 +156,37 @@ package body STM32.USARTs is
    ----------------------
 
    procedure Set_Flow_Control (This : in out USART;  To : Flow_Control) is
-      Temp : Half_Word;
-      USART_FLOWCONTROL_MASK : constant Half_Word := CR3_RTSE or CR3_CTSE;
    begin
-      Temp := This.CR3;
-      Temp := (Temp and (not USART_FLOWCONTROL_MASK)) or To'Enum_Rep;
-      This.CR3 := Temp;
+      case To is
+         when No_Flow_Control =>
+            This.CR3.RTSE := 0;
+            This.CR3.CTSE := 0;
+         when RTS_Flow_Control =>
+            This.CR3.RTSE := 1;
+            This.CR3.CTSE := 0;
+         when CTS_Flow_Control =>
+            This.CR3.RTSE := 0;
+            This.CR3.CTSE := 1;
+         when RTS_CTS_Flow_Control =>
+            This.CR3.RTSE := 1;
+            This.CR3.CTSE := 1;
+      end case;
    end Set_Flow_Control;
 
    ---------
    -- Put --
    ---------
 
-   procedure Transmit (This : in out USART;  Data : Half_Word) is
+   procedure Transmit (This : in out USART;  Data : Bits_9) is
    begin
-      This.DR := Data and USART_DR_MASK;
+      This.DR.DR := Data;
    end Transmit;
 
    ---------
    -- Get --
    ---------
 
-   procedure Receive (This : USART;  Data : out Half_Word) is
+   procedure Receive (This : USART;  Data : out Bits_9) is
    begin
       Data := Current_Input (This);
    end Receive;
@@ -188,16 +195,15 @@ package body STM32.USARTs is
    -- Current_Input --
    -------------------
 
-   function Current_Input (This : USART) return Half_Word is (This.DR);
+   function Current_Input (This : USART) return Bits_9 is (This.DR.DR);
 
    --------------
    -- Tx_Ready --
    --------------
 
    function Tx_Ready (This : USART) return Boolean is
-      Result : constant Status_Register := This.SR;
    begin
-      return Result.Transmit_Data_Register_Empty_Flag;
+      return This.SR.TXE = 1;
    end Tx_Ready;
 
    --------------
@@ -205,9 +211,8 @@ package body STM32.USARTs is
    --------------
 
    function Rx_Ready (This : USART) return Boolean is
-      Result : constant Status_Register := This.SR;
    begin
-      return Result.Read_Data_Register_Not_Empty_Flag;
+      return This.SR.RXNE = 1;
    end Rx_Ready;
 
    ------------
@@ -215,32 +220,28 @@ package body STM32.USARTs is
    ------------
 
    function Status (This : USART; Flag : USART_Status_Flag) return Boolean is
-      Result : constant Status_Register := This.SR;
-      --  TODO: if this proves too expensive, change the type back to an
-      --  unsigned integer and use an enum rep clause in combination with
-      --  'Enum_Rep to do bit masking
    begin
       case Flag is
          when Parity_Error_Indicated =>
-            return Result.Parity_Error_Flag;
+            return This.SR.PE = 1;
          when Framing_Error_Indicated =>
-            return Result.Framing_Error_Flag;
+            return This.SR.FE = 1;
          when USART_Noise_Error_Indicated =>
-            return Result.Noise_Error_Flag;
+            return This.SR.NF = 1;
          when Overrun_Error_Indicated =>
-            return Result.OverRun_Error_Flag;
+            return This.SR.ORE = 1;
          when Idle_Line_Detection_Indicated =>
-            return Result.IDLE_Line_Detected_Flag;
+            return This.SR.IDLE = 1;
          when Read_Data_Register_Not_Empty =>
-            return Result.Read_Data_Register_Not_Empty_Flag;
+            return This.SR.RXNE = 1;
          when Transmission_Complete_Indicated =>
-            return Result.Transmission_Complete_Flag;
+            return This.SR.TC = 1;
          when Transmit_Data_Register_Empty =>
-            return Result.Transmit_Data_Register_Empty_Flag;
+            return This.SR.TXE = 1;
          when Line_Break_Detection_Indicated =>
-            return Result.IDLE_Line_Detected_Flag;
+            return This.SR.LBD = 1;
          when Clear_To_Send_Indicated =>
-            return Result.Clear_To_Send_Flag;
+            return This.SR.CTS = 1;
       end case;
    end Status;
 
@@ -249,64 +250,30 @@ package body STM32.USARTs is
    ------------------
 
    procedure Clear_Status (This : in out USART;  Flag : USART_Status_Flag) is
-      --  TODO: Have a look at the code generated for this. If this proves too
-      --  expensive, change the type back to an unsigned integer and use an
-      --  enum rep clause in combination with 'Enum_Rep to do bit masking.
-
-      --  A temporary used so that we access the SR as a whole, since we cannot
-      --  directly set/clear a bit.
-      Flag_Cleared : Status_Register;
    begin
-      --  We do not, and must not, use the read-modify-write pattern because
-      --  it leaves a window of vulnerability open to changes to the state
-      --  after the read but before the write. The hardware for this register
-      --  is designed so that writing other bits will not change them. This is
-      --  indicated by the "rc_w0" notation in the status register definition.
-      --  See the RM, page 57 for that notation explanation. However, we still
-      --  must access the register as a whole, hence the use of Flag_Cleared.
-
-      Flag_Cleared := (Reserved0 => 0, Reserved1 => 0, others => True);
-      --  By setting the others to True (ie 1), the bits in the SR will not be
-      --  changed, by hardware design, so any changes to the device's status
-      --  will not be lost. Remember that the SR reflects the state of the
-      --  device and so can change outside the flow of control of the CPU.
-
       case Flag is
          when Parity_Error_Indicated =>
-            Flag_Cleared.Parity_Error_Flag                 := False;
+            This.SR.PE := 0;
          when Framing_Error_Indicated =>
-            Flag_Cleared.Framing_Error_Flag                := False;
+            This.SR.FE := 0;
          when USART_Noise_Error_Indicated =>
-            Flag_Cleared.Noise_Error_Flag                  := False;
+            This.SR.NF := 0;
          when Overrun_Error_Indicated =>
-            Flag_Cleared.OverRun_Error_Flag                := False;
+            This.SR.ORE := 0;
          when Idle_Line_Detection_Indicated =>
-            Flag_Cleared.IDLE_Line_Detected_Flag           := False;
+            This.SR.IDLE := 0;
          when Read_Data_Register_Not_Empty =>
-            Flag_Cleared.Read_Data_Register_Not_Empty_Flag := False;
+            This.SR.RXNE := 0;
          when Transmission_Complete_Indicated =>
-            Flag_Cleared.Transmission_Complete_Flag        := False;
+            This.SR.TC := 0;
          when Transmit_Data_Register_Empty =>
-            Flag_Cleared.Transmit_Data_Register_Empty_Flag := False;
+            This.SR.TXE := 0;
          when Line_Break_Detection_Indicated =>
-            Flag_Cleared.IDLE_Line_Detected_Flag           := False;
+            This.SR.LBD := 0;
          when Clear_To_Send_Indicated =>
-            Flag_Cleared.Clear_To_Send_Flag                := False;
+            This.SR.CTS := 0;
       end case;
-
-      This.SR := Flag_Cleared;
    end Clear_Status;
-
-
-   Interrupt_Enablers : constant array (USART_Interrupt) of Half_Word :=
-     (Parity_Error                 => CR1_PEIE,
-      Transmit_Data_Register_Empty => CR1_TXEIE,
-      Transmission_Complete        => CR1_TCIE,
-      Received_Data_Not_Empty      => CR1_RXNEIE,
-      Idle_Line_Detection          => CR1_IDLEIE,
-      Line_Break_Detection         => CR2_LBDIE,
-      Clear_To_Send                => CR3_CTSIE,
-      Error                        => CR3_EIE);
 
    -----------------------
    -- Enable_Interrupts --
@@ -316,15 +283,24 @@ package body STM32.USARTs is
      (This   : in out USART;
       Source : USART_Interrupt)
    is
-      Mask : Half_Word renames Interrupt_Enablers (Source);
    begin
       case Source is
-         when Parity_Error .. Idle_Line_Detection =>
-            This.CR1 := This.CR1 or Mask;
+         when Parity_Error =>
+            This.CR1.PEIE := 1;
+         when Transmit_Data_Register_Empty =>
+            This.CR1.TXEIE := 1;
+         when Transmission_Complete =>
+            This.CR1.TCIE := 1;
+         when Received_Data_Not_Empty =>
+            This.CR1.RXNEIE := 1;
+         when Idle_Line_Detection =>
+            This.CR1.IDLEIE := 1;
          when Line_Break_Detection =>
-            This.CR2 := This.CR2 or Mask;
-         when Clear_To_Send | Error =>
-            This.CR3 := This.CR3 or Mask;
+            This.CR2.LBDIE := 1;
+         when Clear_To_Send =>
+            This.CR3.CTSIE := 1;
+         when Error =>
+            This.CR3.EIE := 1;
       end case;
    end Enable_Interrupts;
 
@@ -336,15 +312,24 @@ package body STM32.USARTs is
      (This   : in out USART;
       Source : USART_Interrupt)
    is
-      Mask : Half_Word renames Interrupt_Enablers (Source);
    begin
       case Source is
-         when Parity_Error .. Idle_Line_Detection =>
-            This.CR1 := This.CR1 and (not Mask);
+         when Parity_Error =>
+            This.CR1.PEIE := 0;
+         when Transmit_Data_Register_Empty =>
+            This.CR1.TXEIE := 0;
+         when Transmission_Complete =>
+            This.CR1.TCIE := 0;
+         when Received_Data_Not_Empty =>
+            This.CR1.RXNEIE := 0;
+         when Idle_Line_Detection =>
+            This.CR1.IDLEIE := 0;
          when Line_Break_Detection =>
-            This.CR2 := This.CR2 and (not Mask);
-         when Clear_To_Send | Error =>
-            This.CR3 := This.CR3 and (not Mask);
+            This.CR2.LBDIE := 0;
+         when Clear_To_Send =>
+            This.CR3.CTSIE := 0;
+         when Error =>
+            This.CR3.EIE := 0;
       end case;
    end Disable_Interrupts;
 
@@ -357,15 +342,24 @@ package body STM32.USARTs is
       Source : USART_Interrupt)
       return Boolean
    is
-      Mask : Half_Word renames Interrupt_Enablers (Source);
    begin
       case Source is
-         when Parity_Error .. Idle_Line_Detection =>
-            return (This.CR1 and Mask) = Mask;
+         when Parity_Error =>
+            return This.CR1.PEIE = 1;
+         when Transmit_Data_Register_Empty =>
+            return This.CR1.TXEIE = 1;
+         when Transmission_Complete =>
+            return This.CR1.TCIE = 1;
+         when Received_Data_Not_Empty =>
+            return This.CR1.RXNEIE = 1;
+         when Idle_Line_Detection =>
+            return This.CR1.IDLEIE = 1;
          when Line_Break_Detection =>
-            return (This.CR2 and Mask) = Mask;
-         when Clear_To_Send | Error =>
-            return (This.CR3 and Mask) = Mask;
+            return This.CR2.LBDIE = 1;
+         when Clear_To_Send =>
+            return This.CR3.CTSIE = 1;
+         when Error =>
+            return This.CR3.EIE = 1;
       end case;
    end Interrupt_Enabled;
 
@@ -375,7 +369,7 @@ package body STM32.USARTs is
 
    procedure Enable_DMA_Transmit_Requests (This : in out USART) is
    begin
-      This.CR3 := This.CR3 or CR3_DMAT;
+      This.CR3.DMAT := 1;
    end Enable_DMA_Transmit_Requests;
 
    ---------------------------------
@@ -384,7 +378,7 @@ package body STM32.USARTs is
 
    procedure Enable_DMA_Receive_Requests (This : in out USART) is
    begin
-      This.CR3 := This.CR3 or CR3_DMAR;
+      This.CR3.DMAR := 1;
    end Enable_DMA_Receive_Requests;
 
    -----------------------------------
@@ -393,7 +387,7 @@ package body STM32.USARTs is
 
    procedure Disable_DMA_Transmit_Requests (This : in out USART) is
    begin
-      This.CR3 := This.CR3 and (not CR3_DMAT);
+      This.CR3.DMAT := 0;
    end Disable_DMA_Transmit_Requests;
 
    ----------------------------------
@@ -402,7 +396,7 @@ package body STM32.USARTs is
 
    procedure Disable_DMA_Receive_Requests (This : in out USART) is
    begin
-      This.CR3 := This.CR3 and (not CR3_DMAR);
+      This.CR3.DMAR := 1;
    end Disable_DMA_Receive_Requests;
 
    -----------------------------------
@@ -410,14 +404,14 @@ package body STM32.USARTs is
    -----------------------------------
 
    function DMA_Transmit_Requests_Enabled  (This : USART) return Boolean is
-     ((This.CR3 and CR3_DMAT) = CR3_DMAT);
+      (This.CR3.DMAT = 1);
 
    ----------------------------------
    -- DMA_Receive_Requests_Enabled --
    ----------------------------------
 
    function DMA_Receive_Requests_Enabled  (This : USART) return Boolean is
-     ((This.CR3 and CR3_DMAR) = CR3_DMAR);
+      (This.CR3.DMAR = 1);
 
    -----------------------------
    -- Resume_DMA_Transmission --

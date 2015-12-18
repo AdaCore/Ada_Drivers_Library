@@ -262,10 +262,12 @@ package STM32.Device is
 
    procedure Reset (This : aliased in out Digital_To_Analog_Converter);
 
-   USART_1 : aliased USART with Volatile, Address => USART1_Base;
-   USART_2 : aliased USART with Volatile, Address => USART2_Base;
-   USART_3 : aliased USART with Volatile, Address => USART3_Base;
-   USART_6 : aliased USART with Volatile, Address => USART6_Base;
+   USART_1 : aliased USART with Import, Volatile, Address => USART1_Base;
+   USART_2 : aliased USART with Import, Volatile, Address => USART2_Base;
+   USART_3 : aliased USART with Import, Volatile, Address => USART3_Base;
+   UART_4  : aliased USART with Import, Volatile, Address => UART4_Base;
+   UART_5  : aliased USART with Import, Volatile, Address => UART5_Base;
+   USART_6 : aliased USART with Import, Volatile, Address => USART6_Base;
 
    procedure Enable_Clock (This : aliased in out USART);
 
