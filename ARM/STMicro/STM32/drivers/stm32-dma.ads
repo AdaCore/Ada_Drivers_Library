@@ -83,6 +83,8 @@ pragma Restrictions (No_Elaboration_Code);
 
 with Ada.Real_Time;  use Ada.Real_Time;
 
+private with STM32_SVD.DMA;
+
 package STM32.DMA is
 
    type DMA_Controller is limited private;
@@ -609,147 +611,6 @@ package STM32.DMA is
 
 private
 
-   type Stream_Config_Register is record
-      Reserved1         : Bits_4;
-      Channel           : DMA_Channel_Selector;
-      M_Burst           : DMA_Memory_Burst;
-      P_Burst           : DMA_Peripheral_Burst;
-      Reserved2         : Bits_1;
-      Current_Target    : Memory_Buffer_Target;
-      Double_Buffered   : Boolean;
-      Priority          : DMA_Priority_Level;
-      P_Inc_Offset_Size : Bits_1;
-      M_Data_Size       : DMA_Data_Transfer_Widths;
-      P_Data_Size       : DMA_Data_Transfer_Widths;
-      M_Inc_Mode        : Boolean;
-      P_Inc_Mode        : Boolean;
-      Circular_Mode     : Boolean;
-      Direction         : DMA_Data_Transfer_Direction;
-      P_Flow_Controller : Boolean;
-      TCI_Enabled       : Boolean;  -- transfer complete interrupt enabled
-      HTI_Enabled       : Boolean;  -- half-transfer complete enabled
-      TEI_Enabled       : Boolean;  -- transfer error interrupt enabled
-      DMEI_Enabled      : Boolean;  -- direct mode error interrupt enabled
-      Stream_Enabled    : Boolean;
-   end record
-        with Volatile_Full_Access, Size => 32;
-
-   for Stream_Config_Register use record
-      Reserved1         at 0 range 28 .. 31;
-      Channel           at 0 range 25 .. 27;
-      M_Burst           at 0 range 23 .. 24;
-      P_Burst           at 0 range 21 .. 22;
-      Reserved2         at 0 range 20 .. 20;
-      Current_Target    at 0 range 19 .. 19;
-      Double_Buffered   at 0 range 18 .. 18;
-      Priority          at 0 range 16 .. 17;
-      P_Inc_Offset_Size at 0 range 15 .. 15;
-      M_Data_Size       at 0 range 13 .. 14;
-      P_Data_Size       at 0 range 11 .. 12;
-      M_Inc_Mode        at 0 range 10 .. 10;
-      P_Inc_Mode        at 0 range  9 .. 9;
-      Circular_Mode     at 0 range  8 .. 8;
-      Direction         at 0 range  6 .. 7;
-      P_Flow_Controller at 0 range  5 .. 5;
-      TCI_Enabled       at 0 range  4 .. 4;
-      HTI_Enabled       at 0 range  3 .. 3;
-      TEI_Enabled       at 0 range  2 .. 2;
-      DMEI_Enabled      at 0 range  1 .. 1;
-      Stream_Enabled    at 0 range  0 .. 0;
-   end record;
-
-   type FIFO_Control_Register is record
-      Reserved1              : Half_Word;
-      Reserved2              : Byte;
-      FIFO_Interrupt_Enabled : Boolean;
-      Reserved3              : Bits_1;
-      FIFO_Status            : DMA_FIFO_Filling_State;
-      Direct_Mode_Enabled    : Boolean;
-      FIFO_Threshold         : DMA_FIFO_Threshold_Level;
-   end record
-        with Volatile_Full_Access, Size => 32;
-
-   for FIFO_Control_Register use record
-      Reserved1              at 0 range 16 .. 31;
-      Reserved2              at 0 range  8 .. 15;
-      FIFO_Interrupt_Enabled at 0 range  7 .. 7;
-      Reserved3              at 0 range  6 .. 6;
-      FIFO_Status            at 0 range  3 .. 5;
-      Direct_Mode_Enabled    at 0 range  2 .. 2;
-      FIFO_Threshold         at 0 range  0 .. 1;
-   end record;
-
-   type DMA_Stream is record
-      CR   : Stream_Config_Register;
-      NDTR : Word;    -- note that the upper half must remain at reset value
-      PAR  : Address; -- peripheral address register
-      M0AR : Address; -- memory 0 address register
-      M1AR : Address; -- memory 1 address register
-      FCR  : FIFO_Control_Register;
-   end record
-        with Volatile, Size => 192;  -- 24 bytes
-
-   for DMA_Stream use record
-      CR   at 0  range 0 .. 31;
-      NDTR at 4  range 0 .. 31;
-      PAR  at 8  range 0 .. 31;
-      M0AR at 12 range 0 .. 31;
-      M1AR at 16 range 0 .. 31;
-      FCR  at 20 range 0 .. 31;
-   end record;
-
-   type DMA_Streams is array (DMA_Stream_Selector) of DMA_Stream;
-
-   for DMA_Streams'Component_Size use 192;
-
-   type DMA_Controller is record
-      LISR    : Word with Atomic;  --  contains flags for stream0 .. stream3
-      HISR    : Word with Atomic;  --  contains flags for stream4 .. stream7
-      LIFCR   : Word with Atomic;  --  DMA low interrupt flag clear register
-      HIFCR   : Word with Atomic;  --  DMA high interrupt flag clear register
-      Streams : DMA_Streams;
-   end record
-        with Volatile, Size => 1664; -- 208 * 8
-
-   for DMA_Controller use record
-      LISR    at 0  range 0 .. 31;
-      HISR    at 4  range 0 .. 31;
-      LIFCR   at 8  range 0 .. 31;
-      HIFCR   at 12 range 0 .. 31;
-      Streams at 16 range 0 .. 8 * 192 - 1;
-   end record;
-
-   ---------------------------
-   -- Set_Interrupt_Enabler --
-   ---------------------------
-
-   procedure Set_Interrupt_Enabler
-     (This_Stream : in out DMA_Stream;
-      Source      : DMA_Interrupt;
-      Value       : Boolean);
-   --  An internal routine, used to enable and disable the specified interrupt
-
-   subtype Stream_Group is Integer range 0 .. 3;
-
-   subtype Bit_Numbers is Byte range 0 .. 31;
-
-   type Status_Flag_Bit_Numbers is array (Stream_Group) of Bit_Numbers;
-
-   Status_Flag_Bits : constant array (DMA_Status_Flag) of Status_Flag_Bit_Numbers :=
-      (FIFO_Error_Indicated             => (0, 6,  16, 22),
-       Direct_Mode_Error_Indicated      => (2, 8,  18, 24),
-       Transfer_Error_Indicated         => (3, 9,  19, 25),
-       Half_Transfer_Complete_Indicated => (4, 10, 20, 26),
-       Transfer_Complete_Indicated      => (5, 11, 21, 27));
-   --  DMA status flag bit numbers definitions. These are the bit numbers
-   --  for the flags within the given status registers. For example, the
-   --  FEIF flag for stream 0 and stream 4 is at bit 0 in the LISR and HISR,
-   --  respectively. For stream 1 and stream 5 that flag is at bit 6, and so
-   --  on. Alternatively, we could precompute the bit patterns and then
-   --  determine at run-time which pattern to use, but the array-based
-   --  approach seems clearer.
-   --
-   --  See the STMicro Reference Manual RM0090, Doc Id 018909 Rev 6, section
-   --  10.5 for the bit numbers.
+   type DMA_Controller is new STM32_SVD.DMA.DMA_Peripheral;
 
 end STM32.DMA;
