@@ -34,23 +34,24 @@
 
 package STM32.IWDG is -- the Independent Watchdog
 
-   subtype Countdown_Value is Half_Word range 0 .. 4095;
+   subtype Countdown_Value is UInt12;
 
-   type Prescalars is
+   type Prescalers is
      (Divider_4,
       Divider_8,
       Divider_16,
       Divider_32,
       Divider_64,
       Divider_128,
-      Divider_256);
+      Divider_256)
+     with Size => 3;
    --  These are the values used to control the rate at which the watchdog
    --  countdown timer counts down to zero. The clock driving the watchdog
    --  downcounter is approximately 32KHz. Thus, for example, dividing by
    --  32 gives about 1 millisecond per count.
 
    procedure Initialize_Watchdog
-     (Prescalar : Prescalars;
+     (Prescaler : Prescalers;
       Count     : Countdown_Value);
    --  Sets the watchdog operating parameters. See the ST Micro RM0090
    --  Reference Manual, table 106 (pg 691) for the minimum and maximum timeout
@@ -67,77 +68,5 @@ package STM32.IWDG is -- the Independent Watchdog
    procedure Reset_Watchdog;
    --  Reloads the countdown value so that the hardware reset interrupt
    --  is not generated.
-
-private
-
-   type Key_Register is record
-      Reserved : Half_Word;
-      Value    : Half_Word;
-   end record
-     with Volatile_Full_Access, Size => 32;
-
-   for Key_Register use record
-      Reserved at 0 range 16 .. 31;
-      Value    at 0 range  0 .. 15;
-   end record;
-
-   type Prescalar_Register is record
-      Reserved : Bits_29;
-      Value    : Prescalars;
-   end record
-     with Volatile_Full_Access, Size => 32;
-
-   for Prescalar_Register use record
-      Reserved at 0 range 3 .. 31;
-      Value    at 0 range 0 .. 2;
-   end record;
-
-   type Reload_Register is record
-      Reserved : Bits_20;
-      Value    : Countdown_Value;
-   end record
-     with Volatile_Full_Access, Size => 32;
-
-   for Reload_Register use record
-      Reserved at 0 range 12 .. 31;
-      Value    at 0 range  0 .. 11;
-   end record;
-
-   type Status_Register is record
-      Reserved       : Bits_30;
-      Reload_Busy    : Boolean;
-      Prescalar_Busy : Boolean;
-   end record
-     with Volatile_Full_Access, Size => 32;
-
-   for Status_Register use record
-      Reserved       at 0 range 2 .. 31;
-      Reload_Busy    at 0 range 1 .. 1;
-      Prescalar_Busy at 0 range 0 .. 0;
-   end record;
-
-   type Watchdog_Registers is record
-      Key       : Key_Register;
-      Prescalar : Prescalar_Register;
-      Reload    : Reload_Register;
-      Status    : Status_Register;
-   end record
-      with Volatile, Size => 4 * 32;
-
-   for Watchdog_Registers use record
-      Key       at 0  range 0 .. 31;
-      Prescalar at 4  range 0 .. 31;
-      Reload    at 8  range 0 .. 31;
-      Status    at 12 range 0 .. 31;
-   end record;
-
-   Watchdog : Watchdog_Registers
-     with Address => STM32_SVD.IWDG_Base;
-
-   --  commands to the watchdog hardware
-
-   Reload_Counter : constant Half_Word := 16#AAAA#;
-   Enable_Access  : constant Half_Word := 16#5555#;
-   Start          : constant Half_Word := 16#CCCC#;
 
 end STM32.IWDG;

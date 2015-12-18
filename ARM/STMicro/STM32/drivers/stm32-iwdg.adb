@@ -29,20 +29,35 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with STM32_SVD.RCC;  use STM32_SVD.RCC;
+with STM32_SVD.IWDG; use STM32_SVD.IWDG;
+
 package body STM32.IWDG is
+
+   --  commands to the watchdog hardware
+
+   Reload_Counter : constant Half_Word := 16#AAAA#;
+   Enable_Access  : constant Half_Word := 16#5555#;
+   Start          : constant Half_Word := 16#CCCC#;
 
    -------------------------
    -- Initialize_Watchdog --
    -------------------------
 
    procedure Initialize_Watchdog
-     (Prescalar : Prescalars;
+     (Prescaler : Prescalers;
       Count     : Countdown_Value)
    is
    begin
-      Watchdog.Key.Value := Enable_Access;
-      Watchdog.Prescalar.Value := Prescalar;
-      Watchdog.Reload.Value := Count;
+      --  Check if we're resuming from a watchdog reset
+      if RCC_Periph.CSR.WDGRSTF = 1 then
+         --  Clear the reset flag
+         RCC_Periph.CSR.RMVF := 1;
+      end if;
+
+      IWDG_Periph.KR.KEY := Enable_Access;
+      IWDG_Periph.PR.PR  := Prescalers'Enum_Rep (Prescaler);
+      IWDG_Periph.RLR.RL := Count;
    end Initialize_Watchdog;
 
    --------------------
@@ -51,8 +66,8 @@ package body STM32.IWDG is
 
    procedure Start_Watchdog is
    begin
-      Watchdog.Key.Value := Start;
-      Watchdog.Key.Value := Watchdog.Reload.Value;
+      IWDG_Periph.KR.KEY := Reload_Counter;
+      IWDG_Periph.KR.KEY := Start;
    end Start_Watchdog;
 
    --------------------
@@ -61,10 +76,10 @@ package body STM32.IWDG is
 
    procedure Reset_Watchdog is
    begin
-      while Watchdog.Status.Reload_Busy loop
+      while IWDG_Periph.SR.RVU = 1 loop
          null;  -- TODO: use a timeout instead of infinitely looping
       end loop;
-      Watchdog.Key.Value := Reload_Counter;
+      IWDG_Periph.KR.KEY := Reload_Counter;
    end Reset_Watchdog;
 
 end STM32.IWDG;
