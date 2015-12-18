@@ -41,8 +41,6 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with Interfaces;     use Interfaces;
-
 with Ada.Real_Time;  use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 
@@ -138,16 +136,16 @@ package body STM32.ILI9341 is
                  Resistors => Floating, Speed => Speed_25MHz);
 
       Enable_WRX_GPIO_Clock.all;
-      Configure_IO (WRX.Port.all, WRX.Pin, Config);
+      Configure_IO (WRX, Config);
 --        Lock (WRX.Port.all, WRX.Pin);
 
       Enable_CS_GPIO_Clock.all;
-      Configure_IO (Chip_Select.Port.all, Chip_Select.Pin, Config);
+      Configure_IO (Chip_Select, Config);
 --        Lock (Chip_Select.Port.all, Chip_Select.Pin);
 
       Enable_Reset_GPIO_Clock.all;
       Config.Speed := Speed_2MHz;  -- low
-      Configure_IO (Reset.Port.all, Reset.Pin, Config);
+      Configure_IO (Reset, Config);
 --        Lock (Reset.Port.all, Reset.Pin);
 
       Chip_Select_High;
@@ -288,7 +286,7 @@ package body STM32.ILI9341 is
 
    procedure Chip_Select_High is
    begin
-      GPIO.Set (Chip_Select.Port.all, Chip_Select.Pin);
+      GPIO.Set (Chip_Select);
    end Chip_Select_High;
 
    ---------------------
@@ -297,7 +295,7 @@ package body STM32.ILI9341 is
 
    procedure Chip_Select_Low is
    begin
-      GPIO.Clear (Chip_Select.Port.all, Chip_Select.Pin);
+      GPIO.Clear (Chip_Select);
    end Chip_Select_Low;
 
    ---------------
@@ -306,7 +304,7 @@ package body STM32.ILI9341 is
 
    procedure Send_Data (Data : Byte) is
    begin
-      GPIO.Set (WRX.Port.all, WRX.Pin);
+      GPIO.Set (WRX);
       Chip_Select_Low;
       SPI.Transmit (SPI_Chip.all, Data);
       Chip_Select_High;
@@ -318,7 +316,7 @@ package body STM32.ILI9341 is
 
    procedure Send_Command (Cmd : Byte) is
    begin
-      GPIO.Clear (WRX.Port.all, WRX.Pin);
+      GPIO.Clear (WRX);
       Chip_Select_Low;
       SPI.Transmit (SPI_Chip.all, Cmd);
       Chip_Select_High;
@@ -330,7 +328,7 @@ package body STM32.ILI9341 is
 
    procedure Init_LCD is
    begin
-      GPIO.Set (Reset.Port.all, Reset.Pin);
+      GPIO.Set (Reset);
       Send_Command (ILI9341_RESET);
       delay until Clock + Milliseconds (5);
 

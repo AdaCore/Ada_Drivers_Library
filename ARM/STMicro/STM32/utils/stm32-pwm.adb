@@ -29,10 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
 with STM32.RCC;  use STM32.RCC;
-
-with STM32_SVD;
 
 package body STM32.PWM is
 
@@ -207,13 +204,12 @@ package body STM32.PWM is
       Configuration.Speed       := Speed_100MHz;
       Configuration.Resistors   := Pull_Down;
 
-      Configure_IO (Port   => Output.Port.all,
-                    Pin    => Output.Pin,
+      Configure_IO (Point  => Output,
                     Config => Configuration);
 
-      Configure_Alternate_Function (Output.Port.all, Output.Pin, AF => PWM_AF);
+      Configure_Alternate_Function (Output, AF => PWM_AF);
 
-      Lock (Output.Port.all, Output.Pin);
+      Lock (Output);
    end Configure_PWM_GPIO;
 
    ----------------------------------

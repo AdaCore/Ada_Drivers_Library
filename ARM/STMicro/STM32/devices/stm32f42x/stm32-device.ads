@@ -52,8 +52,6 @@ with STM32.SPI;     use STM32.SPI;
 with STM32.Timers;  use STM32.Timers;
 with STM32.DAC;     use STM32.DAC;
 
-with STM32_SVD;     use STM32_SVD;
-
 package STM32.Device is
    pragma Elaborate_Body;
 
@@ -73,9 +71,19 @@ package STM32.Device is
    GPIO_J : aliased GPIO_Port with Import, Volatile, Address => GPIOJ_Base;
    GPIO_K : aliased GPIO_Port with Import, Volatile, Address => GPIOK_Base;
 
-   procedure Enable_Clock (This : aliased in out GPIO_Port);
+   procedure Enable_Clock (This : aliased in out GPIO_Port)
+     with Inline;
+   procedure Enable_Clock (Point : GPIO_Point)
+     with Inline;
+   procedure Enable_Clock (Points : GPIO_Points)
+     with Inline;
 
-   procedure Reset (This : aliased in out GPIO_Port);
+   procedure Reset (This : aliased in out GPIO_Port)
+     with Inline;
+   procedure Reset (Point : GPIO_Point)
+     with Inline;
+   procedure Reset (Points : GPIO_Points)
+     with Inline;
 
    type GPIO_Port_Id is
      (GPIO_Port_A, GPIO_Port_B, GPIO_Port_C, GPIO_Port_D, GPIO_Port_E,
@@ -84,6 +92,183 @@ package STM32.Device is
      with Size => 4;
 
    function As_GPIO_Port_Id (Port : GPIO_Port) return GPIO_Port_Id with Inline;
+
+   PA0  : constant GPIO_Point := (GPIO_A'Access, 0);
+   PA1  : constant GPIO_Point := (GPIO_A'Access, 1);
+   PA2  : constant GPIO_Point := (GPIO_A'Access, 2);
+   PA3  : constant GPIO_Point := (GPIO_A'Access, 3);
+   PA4  : constant GPIO_Point := (GPIO_A'Access, 4);
+   PA5  : constant GPIO_Point := (GPIO_A'Access, 5);
+   PA6  : constant GPIO_Point := (GPIO_A'Access, 6);
+   PA7  : constant GPIO_Point := (GPIO_A'Access, 7);
+   PA8  : constant GPIO_Point := (GPIO_A'Access, 8);
+   PA9  : constant GPIO_Point := (GPIO_A'Access, 9);
+   PA10 : constant GPIO_Point := (GPIO_A'Access, 10);
+   PA11 : constant GPIO_Point := (GPIO_A'Access, 11);
+   PA12 : constant GPIO_Point := (GPIO_A'Access, 12);
+   PA13 : constant GPIO_Point := (GPIO_A'Access, 13);
+   PA14 : constant GPIO_Point := (GPIO_A'Access, 14);
+   PA15 : constant GPIO_Point := (GPIO_A'Access, 15);
+   PB0  : constant GPIO_Point := (GPIO_B'Access, 0);
+   PB1  : constant GPIO_Point := (GPIO_B'Access, 1);
+   PB2  : constant GPIO_Point := (GPIO_B'Access, 2);
+   PB3  : constant GPIO_Point := (GPIO_B'Access, 3);
+   PB4  : constant GPIO_Point := (GPIO_B'Access, 4);
+   PB5  : constant GPIO_Point := (GPIO_B'Access, 5);
+   PB6  : constant GPIO_Point := (GPIO_B'Access, 6);
+   PB7  : constant GPIO_Point := (GPIO_B'Access, 7);
+   PB8  : constant GPIO_Point := (GPIO_B'Access, 8);
+   PB9  : constant GPIO_Point := (GPIO_B'Access, 9);
+   PB10 : constant GPIO_Point := (GPIO_B'Access, 10);
+   PB11 : constant GPIO_Point := (GPIO_B'Access, 11);
+   PB12 : constant GPIO_Point := (GPIO_B'Access, 12);
+   PB13 : constant GPIO_Point := (GPIO_B'Access, 13);
+   PB14 : constant GPIO_Point := (GPIO_B'Access, 14);
+   PB15 : constant GPIO_Point := (GPIO_B'Access, 15);
+   PC0  : constant GPIO_Point := (GPIO_C'Access, 0);
+   PC1  : constant GPIO_Point := (GPIO_C'Access, 1);
+   PC2  : constant GPIO_Point := (GPIO_C'Access, 2);
+   PC3  : constant GPIO_Point := (GPIO_C'Access, 3);
+   PC4  : constant GPIO_Point := (GPIO_C'Access, 4);
+   PC5  : constant GPIO_Point := (GPIO_C'Access, 5);
+   PC6  : constant GPIO_Point := (GPIO_C'Access, 6);
+   PC7  : constant GPIO_Point := (GPIO_C'Access, 7);
+   PC8  : constant GPIO_Point := (GPIO_C'Access, 8);
+   PC9  : constant GPIO_Point := (GPIO_C'Access, 9);
+   PC10 : constant GPIO_Point := (GPIO_C'Access, 10);
+   PC11 : constant GPIO_Point := (GPIO_C'Access, 11);
+   PC12 : constant GPIO_Point := (GPIO_C'Access, 12);
+   PC13 : constant GPIO_Point := (GPIO_C'Access, 13);
+   PC14 : constant GPIO_Point := (GPIO_C'Access, 14);
+   PC15 : constant GPIO_Point := (GPIO_C'Access, 15);
+   PD0  : constant GPIO_Point := (GPIO_D'Access, 0);
+   PD1  : constant GPIO_Point := (GPIO_D'Access, 1);
+   PD2  : constant GPIO_Point := (GPIO_D'Access, 2);
+   PD3  : constant GPIO_Point := (GPIO_D'Access, 3);
+   PD4  : constant GPIO_Point := (GPIO_D'Access, 4);
+   PD5  : constant GPIO_Point := (GPIO_D'Access, 5);
+   PD6  : constant GPIO_Point := (GPIO_D'Access, 6);
+   PD7  : constant GPIO_Point := (GPIO_D'Access, 7);
+   PD8  : constant GPIO_Point := (GPIO_D'Access, 8);
+   PD9  : constant GPIO_Point := (GPIO_D'Access, 9);
+   PD10 : constant GPIO_Point := (GPIO_D'Access, 10);
+   PD11 : constant GPIO_Point := (GPIO_D'Access, 11);
+   PD12 : constant GPIO_Point := (GPIO_D'Access, 12);
+   PD13 : constant GPIO_Point := (GPIO_D'Access, 13);
+   PD14 : constant GPIO_Point := (GPIO_D'Access, 14);
+   PD15 : constant GPIO_Point := (GPIO_D'Access, 15);
+   PE0  : constant GPIO_Point := (GPIO_E'Access, 0);
+   PE1  : constant GPIO_Point := (GPIO_E'Access, 1);
+   PE2  : constant GPIO_Point := (GPIO_E'Access, 2);
+   PE3  : constant GPIO_Point := (GPIO_E'Access, 3);
+   PE4  : constant GPIO_Point := (GPIO_E'Access, 4);
+   PE5  : constant GPIO_Point := (GPIO_E'Access, 5);
+   PE6  : constant GPIO_Point := (GPIO_E'Access, 6);
+   PE7  : constant GPIO_Point := (GPIO_E'Access, 7);
+   PE8  : constant GPIO_Point := (GPIO_E'Access, 8);
+   PE9  : constant GPIO_Point := (GPIO_E'Access, 9);
+   PE10 : constant GPIO_Point := (GPIO_E'Access, 10);
+   PE11 : constant GPIO_Point := (GPIO_E'Access, 11);
+   PE12 : constant GPIO_Point := (GPIO_E'Access, 12);
+   PE13 : constant GPIO_Point := (GPIO_E'Access, 13);
+   PE14 : constant GPIO_Point := (GPIO_E'Access, 14);
+   PE15 : constant GPIO_Point := (GPIO_E'Access, 15);
+   PF0  : constant GPIO_Point := (GPIO_F'Access, 0);
+   PF1  : constant GPIO_Point := (GPIO_F'Access, 1);
+   PF2  : constant GPIO_Point := (GPIO_F'Access, 2);
+   PF3  : constant GPIO_Point := (GPIO_F'Access, 3);
+   PF4  : constant GPIO_Point := (GPIO_F'Access, 4);
+   PF5  : constant GPIO_Point := (GPIO_F'Access, 5);
+   PF6  : constant GPIO_Point := (GPIO_F'Access, 6);
+   PF7  : constant GPIO_Point := (GPIO_F'Access, 7);
+   PF8  : constant GPIO_Point := (GPIO_F'Access, 8);
+   PF9  : constant GPIO_Point := (GPIO_F'Access, 9);
+   PF10 : constant GPIO_Point := (GPIO_F'Access, 10);
+   PF11 : constant GPIO_Point := (GPIO_F'Access, 11);
+   PF12 : constant GPIO_Point := (GPIO_F'Access, 12);
+   PF13 : constant GPIO_Point := (GPIO_F'Access, 13);
+   PF14 : constant GPIO_Point := (GPIO_F'Access, 14);
+   PF15 : constant GPIO_Point := (GPIO_F'Access, 15);
+   PG0  : constant GPIO_Point := (GPIO_G'Access, 0);
+   PG1  : constant GPIO_Point := (GPIO_G'Access, 1);
+   PG2  : constant GPIO_Point := (GPIO_G'Access, 2);
+   PG3  : constant GPIO_Point := (GPIO_G'Access, 3);
+   PG4  : constant GPIO_Point := (GPIO_G'Access, 4);
+   PG5  : constant GPIO_Point := (GPIO_G'Access, 5);
+   PG6  : constant GPIO_Point := (GPIO_G'Access, 6);
+   PG7  : constant GPIO_Point := (GPIO_G'Access, 7);
+   PG8  : constant GPIO_Point := (GPIO_G'Access, 8);
+   PG9  : constant GPIO_Point := (GPIO_G'Access, 9);
+   PG10 : constant GPIO_Point := (GPIO_G'Access, 10);
+   PG11 : constant GPIO_Point := (GPIO_G'Access, 11);
+   PG12 : constant GPIO_Point := (GPIO_G'Access, 12);
+   PG13 : constant GPIO_Point := (GPIO_G'Access, 13);
+   PG14 : constant GPIO_Point := (GPIO_G'Access, 14);
+   PG15 : constant GPIO_Point := (GPIO_G'Access, 15);
+   PH0  : constant GPIO_Point := (GPIO_H'Access, 0);
+   PH1  : constant GPIO_Point := (GPIO_H'Access, 1);
+   PH2  : constant GPIO_Point := (GPIO_H'Access, 2);
+   PH3  : constant GPIO_Point := (GPIO_H'Access, 3);
+   PH4  : constant GPIO_Point := (GPIO_H'Access, 4);
+   PH5  : constant GPIO_Point := (GPIO_H'Access, 5);
+   PH6  : constant GPIO_Point := (GPIO_H'Access, 6);
+   PH7  : constant GPIO_Point := (GPIO_H'Access, 7);
+   PH8  : constant GPIO_Point := (GPIO_H'Access, 8);
+   PH9  : constant GPIO_Point := (GPIO_H'Access, 9);
+   PH10 : constant GPIO_Point := (GPIO_H'Access, 10);
+   PH11 : constant GPIO_Point := (GPIO_H'Access, 11);
+   PH12 : constant GPIO_Point := (GPIO_H'Access, 12);
+   PH13 : constant GPIO_Point := (GPIO_H'Access, 13);
+   PH14 : constant GPIO_Point := (GPIO_H'Access, 14);
+   PH15 : constant GPIO_Point := (GPIO_H'Access, 15);
+   PI0  : constant GPIO_Point := (GPIO_I'Access, 0);
+   PI1  : constant GPIO_Point := (GPIO_I'Access, 1);
+   PI2  : constant GPIO_Point := (GPIO_I'Access, 2);
+   PI3  : constant GPIO_Point := (GPIO_I'Access, 3);
+   PI4  : constant GPIO_Point := (GPIO_I'Access, 4);
+   PI5  : constant GPIO_Point := (GPIO_I'Access, 5);
+   PI6  : constant GPIO_Point := (GPIO_I'Access, 6);
+   PI7  : constant GPIO_Point := (GPIO_I'Access, 7);
+   PI8  : constant GPIO_Point := (GPIO_I'Access, 8);
+   PI9  : constant GPIO_Point := (GPIO_I'Access, 9);
+   PI10 : constant GPIO_Point := (GPIO_I'Access, 10);
+   PI11 : constant GPIO_Point := (GPIO_I'Access, 11);
+   PI12 : constant GPIO_Point := (GPIO_I'Access, 12);
+   PI13 : constant GPIO_Point := (GPIO_I'Access, 13);
+   PI14 : constant GPIO_Point := (GPIO_I'Access, 14);
+   PI15 : constant GPIO_Point := (GPIO_I'Access, 15);
+   PJ0  : constant GPIO_Point := (GPIO_J'Access, 0);
+   PJ1  : constant GPIO_Point := (GPIO_J'Access, 1);
+   PJ2  : constant GPIO_Point := (GPIO_J'Access, 2);
+   PJ3  : constant GPIO_Point := (GPIO_J'Access, 3);
+   PJ4  : constant GPIO_Point := (GPIO_J'Access, 4);
+   PJ5  : constant GPIO_Point := (GPIO_J'Access, 5);
+   PJ6  : constant GPIO_Point := (GPIO_J'Access, 6);
+   PJ7  : constant GPIO_Point := (GPIO_J'Access, 7);
+   PJ8  : constant GPIO_Point := (GPIO_J'Access, 8);
+   PJ9  : constant GPIO_Point := (GPIO_J'Access, 9);
+   PJ10 : constant GPIO_Point := (GPIO_J'Access, 10);
+   PJ11 : constant GPIO_Point := (GPIO_J'Access, 11);
+   PJ12 : constant GPIO_Point := (GPIO_J'Access, 12);
+   PJ13 : constant GPIO_Point := (GPIO_J'Access, 13);
+   PJ14 : constant GPIO_Point := (GPIO_J'Access, 14);
+   PJ15 : constant GPIO_Point := (GPIO_J'Access, 15);
+   PK0  : constant GPIO_Point := (GPIO_K'Access, 0);
+   PK1  : constant GPIO_Point := (GPIO_K'Access, 1);
+   PK2  : constant GPIO_Point := (GPIO_K'Access, 2);
+   PK3  : constant GPIO_Point := (GPIO_K'Access, 3);
+   PK4  : constant GPIO_Point := (GPIO_K'Access, 4);
+   PK5  : constant GPIO_Point := (GPIO_K'Access, 5);
+   PK6  : constant GPIO_Point := (GPIO_K'Access, 6);
+   PK7  : constant GPIO_Point := (GPIO_K'Access, 7);
+   PK8  : constant GPIO_Point := (GPIO_K'Access, 8);
+   PK9  : constant GPIO_Point := (GPIO_K'Access, 9);
+   PK10 : constant GPIO_Point := (GPIO_K'Access, 10);
+   PK11 : constant GPIO_Point := (GPIO_K'Access, 11);
+   PK12 : constant GPIO_Point := (GPIO_K'Access, 12);
+   PK13 : constant GPIO_Point := (GPIO_K'Access, 13);
+   PK14 : constant GPIO_Point := (GPIO_K'Access, 14);
+   PK15 : constant GPIO_Point := (GPIO_K'Access, 15);
 
    ADC_1 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC1_Base;
    ADC_2 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC2_Base;
@@ -104,8 +289,8 @@ package STM32.Device is
 
    DAC_1 : aliased Digital_To_Analog_Converter with Volatile, Address => DAC_Base;
 
-   DAC_Channel_1_IO : constant GPIO_Point := (GPIO_A'Access, Pin_4);
-   DAC_Channel_2_IO : constant GPIO_Point := (GPIO_A'Access, Pin_5);
+   DAC_Channel_1_IO : constant GPIO_Point := (GPIO_A'Access, 4);
+   DAC_Channel_2_IO : constant GPIO_Point := (GPIO_A'Access, 5);
 
    procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter);
 

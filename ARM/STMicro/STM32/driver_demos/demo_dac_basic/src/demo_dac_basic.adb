@@ -43,11 +43,14 @@
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 
-with STM32_Board;  use STM32_Board;
+with Interfaces;   use Interfaces;
 
-with STM32;       use STM32;
-with STM32.DAC;   use STM32.DAC;
-with STM32.GPIO;  use STM32.GPIO;
+with STM32_Board;  use STM32_Board;
+with STM32.Device; use STM32.Device;
+
+with STM32;        use STM32;
+with STM32.DAC;    use STM32.DAC;
+with STM32.GPIO;   use STM32.GPIO;
 
 with Bitmapped_Drawing;
 with BMP_Fonts;
@@ -104,11 +107,11 @@ procedure Demo_DAC_Basic is
    procedure Await_Button is
    begin
       Await_Pressed : loop
-         exit when Set (User_Button_Port, User_Button_Pin);
+         exit when Set (User_Button_Point);
       end loop Await_Pressed;
 
       Await_Released : loop
-         exit when not Set (User_Button_Port, User_Button_Pin);
+         exit when not Set (User_Button_Point);
       end loop Await_Released;
    end Await_Button;
 

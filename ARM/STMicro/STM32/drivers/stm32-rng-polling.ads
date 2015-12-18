@@ -44,8 +44,6 @@
 --
 --  Random numbers are acquired by polling the on-board generator.
 
-with Interfaces; use Interfaces;
-
 package STM32.RNG.Polling is
 
    procedure Initialize_RNG with

@@ -38,10 +38,7 @@
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
 with STM32_Board;  use STM32_Board;
---  In this specific case we are using one of the four LEDs on the F4_Disco
---  board, which is tied to a specific timer and channel on that board. As such
---  it would be possible to use a different board, but inconvenient. The PWM
---  package itself is independent of the boards.
+with STM32.Device; use STM32.Device;
 
 with STM32.PWM;    use STM32.PWM;
 with STM32.GPIO;   use STM32.GPIO;
@@ -67,7 +64,7 @@ procedure Demo is
    --  Channel_3 is connected to the red LED.
    --  Channel_4 is connected to the blue LED.
 
-   Output_Point : constant GPIO_Point := (LED_Port'Access, Green);
+   Output_Point : constant GPIO_Point := Green;
    --  This must match the GPIO port/pin for the selected Output_Channel value.
 
    --  The SFP run-time library for these boards is intended for certified

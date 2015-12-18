@@ -69,7 +69,7 @@ package body Button is
       procedure Interrupt_Handler is
          Now : constant Time := Clock;
       begin
-         Clear_External_Interrupt (User_Button_Pin);
+         Clear_External_Interrupt (User_Button_Point.Pin);
 
          --  Debouncing
          if Now - Last_Time >= Debounce_Time then
@@ -100,8 +100,8 @@ package body Button is
    procedure Initialize is
    begin
       Configure_User_Button_GPIO;
-      Connect_External_Interrupt (User_Button_Port, User_Button_Pin);
-      Configure_Trigger (User_Button_Port, User_Button_Pin, Interrupt_Rising_Edge);
+      Connect_External_Interrupt (User_Button_Point);
+      Configure_Trigger (User_Button_Point, Interrupt_Rising_Edge);
    end Initialize;
 
 begin

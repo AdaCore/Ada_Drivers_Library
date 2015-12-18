@@ -39,8 +39,6 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
-
 package body STM32.RCC is
 
    HSE_VALUE : constant :=  8_000_000; --  External oscillator in Hz

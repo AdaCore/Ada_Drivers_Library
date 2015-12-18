@@ -48,9 +48,11 @@
 --        Encoder_Emulator.Emulate_Forward_Direction;
 --        Encoder_Emulator.Start;
 
+with Interfaces;    use Interfaces;
+
+with STM32.Device;  use STM32.Device;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.Timers;  use STM32.Timers;
-with STM32_Board;   use STM32_Board;
 with STM32.RCC;
 with STM32;         use STM32;
 

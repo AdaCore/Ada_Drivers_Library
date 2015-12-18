@@ -44,9 +44,6 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
-with Interfaces;         use Interfaces;
-with STM32_SVD;
-
 package STM32.Timers is
 
    type Timer is limited private;
@@ -1322,7 +1319,7 @@ private
 
    type TIMx_CCMRx is record
       Descriptors : TIMx_CCMRx_Lower_Half;
-      Reserved    : Bits_16;
+      Reserved    : Half_Word;
    end record with Volatile_Full_Access, Size => 32;
 
    for TIMx_CCMRx use record

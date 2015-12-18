@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32_Board;  use STM32_Board;
+with STM32.Device;  use STM32.Device;
 
 package body ADC_Interrupt_Handling is
 

@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 with Serial_Port;          use Serial_Port;
-with STM32_Board;          use STM32_Board;
+with STM32.Device;         use STM32.Device;
 with STM32.GPIO;           use STM32.GPIO;
 with STM32.USARTs;         use STM32.USARTs;
 with Ada.Interrupts;       use Ada.Interrupts;

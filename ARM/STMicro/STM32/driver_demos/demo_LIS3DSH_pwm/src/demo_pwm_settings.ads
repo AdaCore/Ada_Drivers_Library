@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 with STM32_Board;     use STM32_Board;
+with STM32.Device;    use STM32.Device;
 with STM32.GPIO;      use STM32.GPIO;
 with STM32.Timers;    use STM32.Timers;
 with STM32.RCC;       use STM32.RCC;
@@ -54,13 +55,13 @@ package Demo_PWM_Settings is
    --  Channel_3 is connected to the red LED.
    --  Channel_4 is connected to the blue LED.
 
-   Channel_1_Point : constant GPIO_Point := (LED_Port'Access, Green);
+   Channel_1_Point : constant GPIO_Point := Green;
 
-   Channel_2_Point : constant GPIO_Point := (LED_Port'Access, Orange);
+   Channel_2_Point : constant GPIO_Point := Orange;
 
-   Channel_3_Point : constant GPIO_Point := (LED_Port'Access, Red);
+   Channel_3_Point : constant GPIO_Point := Red;
 
-   Channel_4_Point : constant GPIO_Point := (LED_Port'Access, Blue);
+   Channel_4_Point : constant GPIO_Point := Blue;
 
    procedure Channel_GPIO_Clock_Enable
      renames GPIOD_Clock_Enable;

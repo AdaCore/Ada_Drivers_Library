@@ -27,68 +27,22 @@
 --   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
 --   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
+--                                                                          --
+--  This file is based on:                                                  --
+--                                                                          --
+--   @file    stm32f4xx_hal_sdram.h                                         --
+--   @author  MCD Application Team                                          --
+--   @version V1.1.0                                                        --
+--   @date    19-June-2014                                                  --
+--   @brief   Header file of SDRAM HAL module.                              --
+--                                                                          --
+--   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
---  This file declares the main procedure for a timer demonstration using four
---  channels generating interrupts at different rates. Four LEDs are driven at
---  these different rates, without a periodic software task required. We use
---  the F4_Disco board for the sake of the four LEDs but another board could
---  be used, with different LED configurations.
+package STM32.SDRAM is
 
-with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
+   Bank_Address : constant := 16#D000_0000#;
 
-with STM32_Board;              use STM32_Board;
-with STM32.Device;             use STM32.Device;
-with STM32.Timers;             use STM32.Timers;
-with STM32F4_Timer_Interrupts; use STM32F4_Timer_Interrupts;
+   procedure Initialize;
 
-procedure Demo is
-   use STM32;
-begin
-   Initialize_LEDs;
-
-   --  set up the timer base
-
-   Enable_Clock (Timer_3);
-
-   Reset (Timer_3);
-
-   Configure
-     (Timer_3,
-      Prescaler     => Prescaler,
-      Period        => Word (Half_Word'Last),  -- all the way up
-      Clock_Divisor => Div1,
-      Counter_Mode  => Up);
-
-   Configure_Prescaler
-     (Timer_3,
-      Prescaler   => Prescaler,
-      Reload_Mode => Immediate);
-
-   --  configure the channel outputs
-
-   for Next_Channel in Timer_Channel loop
-      Configure_Channel_Output
-        (Timer_3,
-         Channel  => Next_Channel,
-         Mode     => Timing,
-         State    => Enable,
-         Pulse    => Channel_Periods (Next_Channel),
-         Polarity => High);
-
-      Set_Output_Preload_Enable (Timer_3, Next_Channel, False);
-   end loop;
-
-   --  enable the timer's four channel interrupts and go
-
-   Enable_Interrupt
-     (Timer_3,
-      Timer_CC1_Interrupt & Timer_CC2_Interrupt &
-      Timer_CC3_Interrupt & Timer_CC4_Interrupt);
-
-   Enable (Timer_3);
-
-   loop
-      null;
-   end loop;
-end Demo;
+end STM32.SDRAM;

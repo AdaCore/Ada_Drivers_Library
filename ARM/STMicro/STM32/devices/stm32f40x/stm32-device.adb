@@ -62,6 +62,28 @@ package body STM32.Device is
       end if;
    end Enable_Clock;
 
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
+   procedure Enable_Clock (Point : GPIO_Point)
+   is
+   begin
+      Enable_Clock (Point.Port.all);
+   end Enable_Clock;
+
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
+   procedure Enable_Clock (Points : GPIO_Points)
+   is
+   begin
+      for Point of Points loop
+         Enable_Clock (Point.Port.all);
+      end loop;
+   end Enable_Clock;
+
    -----------
    -- Reset --
    -----------
@@ -98,6 +120,39 @@ package body STM32.Device is
       else
          raise Unknown_Device;
       end if;
+   end Reset;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (Point : GPIO_Point) is
+   begin
+      Reset (Point.Port.all);
+   end Reset;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (Points : GPIO_Points)
+   is
+      Do_Reset : Boolean;
+   begin
+      for J in Points'Range loop
+         Do_Reset := True;
+         for K in Points'First .. J - 1 loop
+            if Points (K).Port = Points (J).Port then
+               Do_Reset := False;
+
+               exit;
+            end if;
+         end loop;
+
+         if Do_Reset then
+            Reset (Points (J).Port.all);
+         end if;
+      end loop;
    end Reset;
 
    ---------------------

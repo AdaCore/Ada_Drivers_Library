@@ -39,14 +39,17 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with Interfaces;    use Interfaces;
+with Ada.Unchecked_Conversion;
 with Ada.Real_Time; use Ada.Real_Time;
 
 with STM32;         use STM32;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.RCC;     use STM32.RCC;
+with STM32.FMC;     use STM32.FMC;
 
-with STM32_Board;   use STM32_Board;
+with STM32.Device;  use STM32.Device;
+
+with SDRAM_Reg;     use SDRAM_Reg;
 
 package body STM32.SDRAM is
 
@@ -138,68 +141,54 @@ package body STM32.SDRAM is
    ------------------------
 
    procedure SDRAM_InitSequence is
-      Cmd : FMC_SDRAM_Cmd_Conf;
+      Mode_Reg : SDRAM_Mode_Register;
+      function To_UInt10 is new Ada.Unchecked_Conversion
+        (SDRAM_Mode_Register, UInt10);
    begin
-      Cmd.CommandMode            := FMC_Command_Mode_CLK_Enabled;
-      Cmd.CommandTarget          := FMC_Command_Target_bank2;
-      Cmd.AutoRefreshNumber      := 1;
-      Cmd.ModeRegisterDefinition := 0;
-
       loop
-         exit when not FMC_Get_Flag (FMC_Bank2_SDRAM, FMC_FLAG_Busy);
+         exit when not FMC_SDRAM_Busy;
       end loop;
 
-      FMC_SDRAM_Cmd (Cmd);
+      FMC_SDRAM_Cmd ((Mode   => FMC_Command_Mode_CLK_Enabled,
+                      Target => FMC_Bank2_SDRAM));
 
       Relative_Delay (100);
 
-      Cmd.CommandMode            := FMC_Command_Mode_PALL;
-      Cmd.CommandTarget          := FMC_Command_Target_bank2;
-      Cmd.AutoRefreshNumber      := 1;
-      Cmd.ModeRegisterDefinition := 0;
-
       loop
-         exit when not FMC_Get_Flag (FMC_Bank2_SDRAM, FMC_FLAG_Busy);
+         exit when not FMC_SDRAM_Busy;
       end loop;
 
-      FMC_SDRAM_Cmd (Cmd);
-
-      Cmd.CommandMode            := FMC_Command_Mode_AutoRefresh;
-      Cmd.CommandTarget          := FMC_Command_Target_bank2;
-      Cmd.AutoRefreshNumber      := 4;
-      Cmd.ModeRegisterDefinition := 0;
+      FMC_SDRAM_Cmd ((Mode   => FMC_Command_Mode_PALL,
+                      Target => FMC_Bank2_SDRAM));
 
       loop
-         exit when not FMC_Get_Flag (FMC_Bank2_SDRAM, FMC_FLAG_Busy);
+         exit when not FMC_SDRAM_Busy;
       end loop;
 
-      FMC_SDRAM_Cmd (Cmd);
+      FMC_SDRAM_Cmd ((Mode                => FMC_Command_Mode_AutoRefresh,
+                      Target              => FMC_Bank2_SDRAM,
+                      Auto_Refresh_Number => 4));
 
       loop
-         exit when not FMC_Get_Flag (FMC_Bank2_SDRAM, FMC_FLAG_Busy);
+         exit when not FMC_SDRAM_Busy;
       end loop;
 
-      FMC_SDRAM_Cmd (Cmd);
+      Mode_Reg :=
+        (Burst_Length     => Burst_Length_2,
+         Burst_Type       => Burst_Sequential,
+         Latency_Mode     => CAS_Latency_3,
+         Operating_Mode   => <>,
+         Write_Burst_Mode => Burst_Mode_Single_Location_Access);
 
-      Cmd.CommandMode            := FMC_Command_Mode_LoadMode;
-      Cmd.CommandTarget          := FMC_Command_Target_bank2;
-      Cmd.AutoRefreshNumber      := 1;
-      Cmd.ModeRegisterDefinition := SDRAM_MODEREG_BURST_LENGTH_2 or
-        SDRAM_MODEREG_BURST_TYPE_SEQUENTIAL or
-        SDRAM_MODEREG_CAS_LATENCY_3 or
-        SDRAM_MODEREG_OPERATING_MODE_STANDARD or
-        SDRAM_MODEREG_WRITEBURST_MODE_SINGLE;
-
-      loop
-         exit when not FMC_Get_Flag (FMC_Bank2_SDRAM, FMC_FLAG_Busy);
-      end loop;
-
-      FMC_SDRAM_Cmd (Cmd);
+      FMC_SDRAM_Cmd ((Mode                => FMC_Command_Mode_LoadMode,
+                      Target              => FMC_Bank2_SDRAM,
+                      SDRAM_Mode_Register =>
+                        FMC_SDRAM_Mode_Register (To_UInt10 (Mode_Reg))));
 
       FMC_Set_Refresh_Count (1386);
 
       loop
-         exit when not FMC_Get_Flag (FMC_Bank2_SDRAM, FMC_FLAG_Busy);
+         exit when not FMC_SDRAM_Busy;
       end loop;
    end SDRAM_InitSequence;
 
@@ -226,12 +215,12 @@ package body STM32.SDRAM is
       SDRAM_Conf.Bank               := FMC_Bank2_SDRAM;
       SDRAM_Conf.ColumnBitsNumber   := FMC_ColumnBits_Number_8b;
       SDRAM_Conf.RowBitsNumber      := FMC_RowBits_Number_12b;
-      SDRAM_Conf.SDMemoryDataWidth  := SDRAM_MEMORY_WIDTH;
+      SDRAM_Conf.SDMemoryDataWidth  := FMC_SDMemory_Width_16b;
       SDRAM_Conf.InternalBankNumber := FMC_InternalBank_Number_4;
-      SDRAM_Conf.CASLatency         := SDRAM_CAS_LATENCY;
+      SDRAM_Conf.CASLatency         := FMC_CAS_Latency_3;
       SDRAM_Conf.WriteProtection    := FMC_Write_Protection_Disable;
-      SDRAM_Conf.SDClockPeriod      := SDCLOCK_PERIOD;
-      SDRAM_Conf.ReadBurst          := SDRAM_READBURST;
+      SDRAM_Conf.SDClockPeriod      := FMC_SDClock_Period_2;
+      SDRAM_Conf.ReadBurst          := FMC_Read_Burst_Disable;
       SDRAM_Conf.ReadPipeDelay      := FMC_ReadPipe_Delay_1;
       SDRAM_Conf.Timing_Conf        := Timing_Conf;
 

@@ -37,7 +37,9 @@
 --  not moving, due to noise.
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
+with Interfaces;   use Interfaces;
 
+with STM32.Device; use STM32.Device;
 with STM32_Board;  use STM32_Board;
 
 with STM32.L3DG20; use STM32.L3DG20;
@@ -175,11 +177,11 @@ procedure Demo_L3DG20 is
 
 begin
    LCD.Initialize
-     (Chip_Select             => (GPIO_C'Access, Pin_2),
+     (Chip_Select             => PC2,
       Enable_CS_GPIO_Clock    => GPIOC_Clock_Enable'Access,
-      WRX                     => (GPIO_D'Access, Pin_13),
+      WRX                     => PD13,
       Enable_WRX_GPIO_Clock   => GPIOD_Clock_Enable'Access,
-      Reset                   => (GPIO_D'Access, Pin_12),
+      Reset                   => PD12,
       Enable_Reset_GPIO_Clock => GPIOD_Clock_Enable'Access,
       SPI_Chip                => SPI_5'Access,
       Enable_SPI_Clock        => SPI5_Clock_Enable'Access,

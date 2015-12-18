@@ -45,6 +45,9 @@
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 
+with Interfaces;   use Interfaces;
+
+with STM32.Device; use STM32.Device;
 with STM32_Board;  use STM32_Board;
 
 with STM32;        use STM32;
@@ -144,11 +147,11 @@ procedure Demo_DAC_DMA is
    procedure Await_Button is
    begin
       Await_Pressed : loop
-         exit when Set (User_Button_Port, User_Button_Pin);
+         exit when Set (User_Button_Point);
       end loop Await_Pressed;
 
       Await_Released : loop
-         exit when not Set (User_Button_Port, User_Button_Pin);
+         exit when not Set (User_Button_Point);
       end loop Await_Released;
    end Await_Button;
 

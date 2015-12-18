@@ -35,7 +35,7 @@ with STM32.RCC;             use STM32.RCC;
 with STM32.GPIO;            use STM32.GPIO;
 with Serial_IO.Nonblocking; use Serial_IO.Nonblocking;
 
-with STM32_Board;           use STM32_Board;
+with STM32.Device;          use STM32.Device;
 
 package Peripherals_Nonblocking is
 

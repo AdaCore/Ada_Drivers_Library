@@ -45,8 +45,6 @@
 --  Random numbers are acquired by responding to interrupts from the on-board
 --  generator.
 
-with Interfaces;  use Interfaces;
-
 package STM32.RNG.Interrupts is
 
    procedure Initialize_RNG with

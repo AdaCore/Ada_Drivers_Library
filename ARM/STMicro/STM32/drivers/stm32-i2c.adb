@@ -39,7 +39,6 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with Interfaces;    use Interfaces;
 with Ada.Real_Time; use Ada.Real_Time;
 
 with STM32.RCC;     use STM32.RCC;

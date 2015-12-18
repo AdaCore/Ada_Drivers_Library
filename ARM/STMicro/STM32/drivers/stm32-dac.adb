@@ -39,7 +39,6 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
 with Ada.Unchecked_Conversion;
 
 package body STM32.DAC is
@@ -119,7 +118,7 @@ package body STM32.DAC is
                         This.DHR_12_Right_1.Data := Bits_12 (Value and Max_12bit_Resolution);
                   end case;
                when DAC_Resolution_8_Bits =>
-                  This.DHR_8_Right_1.Data := Bits_8 (Value and Max_8bit_Resolution);
+                  This.DHR_8_Right_1.Data := Byte (Value and Max_8bit_Resolution);
             end case;
 
          when Channel_2 =>
@@ -132,7 +131,7 @@ package body STM32.DAC is
                         This.DHR_12_Right_2.Data := Bits_12 (Value and Max_12bit_Resolution);
                   end case;
                when DAC_Resolution_8_Bits =>
-                  This.DHR_8_Right_2.Data := Bits_8 (Value and Max_8bit_Resolution);
+                  This.DHR_8_Right_2.Data := Byte (Value and Max_8bit_Resolution);
             end case;
 
       end case;
@@ -196,8 +195,8 @@ package body STM32.DAC is
                   This.DHR_12_Right_Dual.Channel_2_Data := Bits_12 (Channel_2_Value and Max_12bit_Resolution);
             end case;
          when DAC_Resolution_8_Bits =>
-            This.DHR_8_Right_Dual.Channel_1_Data := Bits_8 (Channel_1_Value and Max_8bit_Resolution);
-            This.DHR_8_Right_Dual.Channel_2_Data := Bits_8 (Channel_2_Value and Max_8bit_Resolution);
+            This.DHR_8_Right_Dual.Channel_1_Data := Byte (Channel_1_Value and Max_8bit_Resolution);
+            This.DHR_8_Right_Dual.Channel_2_Data := Byte (Channel_2_Value and Max_8bit_Resolution);
       end case;
    end Set_Dual_Output_Voltages;
 

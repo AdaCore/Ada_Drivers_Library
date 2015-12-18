@@ -39,7 +39,6 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
 with STM32.RCC;  use STM32.RCC;
 with Ada.Unchecked_Conversion;
 with System;

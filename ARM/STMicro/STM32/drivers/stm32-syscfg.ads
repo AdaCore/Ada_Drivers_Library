@@ -53,10 +53,16 @@ package STM32.SYSCFG is
      (Port : GPIO_Port;  Pin  : GPIO_Pin) with Inline;
 
    procedure Connect_External_Interrupt
+     (Point  : GPIO_Point) with Inline;
+
+   procedure Connect_External_Interrupt
      (Port : GPIO_Port;  Pins : GPIO_Pins) with Inline;
 
    procedure Set_External_Trigger
      (Pin  : GPIO_Pin;   Trigger : External_Triggers) with Inline;
+
+   procedure Set_External_Trigger
+     (Pin  : GPIO_Pin_Index;   Trigger : External_Triggers) with Inline;
 
    procedure Set_External_Trigger
      (Pins : GPIO_Pins;  Trigger : External_Triggers) with Inline;
@@ -66,9 +72,14 @@ package STM32.SYSCFG is
      (Pin  : GPIO_Pin;   Trigger : External_Triggers) with Inline;
 
    procedure Select_Trigger_Edge
+     (Pin  : GPIO_Pin_Index;   Trigger : External_Triggers) with Inline;
+
+   procedure Select_Trigger_Edge
      (Pins : GPIO_Pins;  Trigger : External_Triggers) with Inline;
 
    procedure Clear_External_Interrupt (Pin : GPIO_Pin) with Inline;
+
+   procedure Clear_External_Interrupt (Pin : GPIO_Pin_Index) with Inline;
 
 private
 

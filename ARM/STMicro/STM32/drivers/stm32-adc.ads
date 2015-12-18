@@ -67,8 +67,6 @@
 
 with Ada.Real_Time; use Ada.Real_Time;
 
-private with STM32_SVD;
-
 package STM32.ADC is
    pragma Elaborate_Body;
 
@@ -700,8 +698,6 @@ package STM32.ADC is
 
 private
 
-   use STM32_SVD;
-
    ADC_Stabilization                : constant Time_Span := Microseconds (3);
    Temperature_Sensor_Stabilization : constant Time_Span := Microseconds (10);
    --  The RM, section 13.3.6, says stabilization times are required. These
@@ -889,7 +885,7 @@ private
      with Component_Size => 5;
 
    type Regular_Sequence_Register_1 is record
-      Reserved_31_24 : Bits_8;
+      Reserved_31_24 : Byte;
       Length         : Bits_4;  -- Regular_Channel_Rank but biased
       SQ             : Regular_Channel_Group (13 .. 16);
    end record with
@@ -945,7 +941,7 @@ private
    end record;
 
    type Data_Register is record
-      Reserved_31_16 : Bits_16;
+      Reserved_31_16 : Half_Word;
       Data           : Half_Word;
    end record with
      Volatile_Full_Access,
@@ -1031,7 +1027,7 @@ private
      Component_Size => 8;
 
    type Common_Control_Register is record
-      Reserved_31_24        : Bits_8;
+      Reserved_31_24        : Byte;
       TSVREF_Enabled        : Boolean;
       Vbat_Channel_Enabled  : Boolean;
       Reserved_21_18        : Bits_4;

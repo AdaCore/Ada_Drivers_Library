@@ -42,7 +42,6 @@
 
 with Ada.Unchecked_Conversion;
 with System;
-with Interfaces;       use Interfaces;
 with STM32.LIS3DSH.IO;
 
 package body STM32.LIS3DSH is

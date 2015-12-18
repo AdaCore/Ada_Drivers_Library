@@ -27,43 +27,57 @@
 --   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
 --   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
---                                                                          --
---  This file is based on:                                                  --
---                                                                          --
---   @file    stm32f4xx_hal_sdram.h                                         --
---   @author  MCD Application Team                                          --
---   @version V1.1.0                                                        --
---   @date    19-June-2014                                                  --
---   @brief   Header file of SDRAM HAL module.                              --
---                                                                          --
---   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with STM32.FMC; use STM32.FMC;
+with STM32_SVD; use STM32_SVD;
 
-package STM32.SDRAM is
+package SDRAM_Reg is
 
-   Bank_Address : constant := 16#D000_0000#;
+   type SDRAM_Burst_Length is
+     (Burst_Length_1,
+      Burst_Length_2,
+      Burst_Length_4,
+      Burst_Length_8,
+      Burst_Length_Page)
+     with Size => 3;
+   for SDRAM_Burst_Length use
+     (Burst_Length_1    => 2#000#,
+      Burst_Length_2    => 2#001#,
+      Burst_Length_4    => 2#010#,
+      Burst_Length_8    => 2#011#,
+      Burst_Length_Page => 2#111#);
 
-   procedure Initialize;
+   type SDRAM_Burst_Type is
+     (Burst_Sequential,
+      Burst_Interleaved)
+     with Size => 1;
 
-private
+   type SDRAM_CAS_Latency is
+     (CAS_Latency_2,
+      CAS_Latency_3)
+     with Size => 3;
+   for SDRAM_CAS_Latency use
+     (CAS_Latency_2 => 2#010#,
+      CAS_Latency_3 => 2#011#);
 
-   SDRAM_MEMORY_WIDTH : constant := FMC_SDMemory_Width_16b;
-   SDRAM_CAS_LATENCY  : constant := FMC_CAS_Latency_3;
-   SDCLOCK_PERIOD     : constant := FMC_SDClock_Period_2;
-   SDRAM_READBURST    : constant := FMC_Read_Burst_Disable;
+   type SDRAM_Write_Burst_Mode is
+     (Burst_Mode_Programmed_Length,
+      Burst_Mode_Single_Location_Access)
+     with Size => 2;
 
-   SDRAM_MODEREG_BURST_LENGTH_1             : constant := 16#0000#;
-   SDRAM_MODEREG_BURST_LENGTH_2             : constant := 16#0001#;
-   SDRAM_MODEREG_BURST_LENGTH_4             : constant := 16#0002#;
-   SDRAM_MODEREG_BURST_LENGTH_8             : constant := 16#0004#;
-   SDRAM_MODEREG_BURST_TYPE_SEQUENTIAL      : constant := 16#0000#;
-   SDRAM_MODEREG_BURST_TYPE_INTERLEAVED     : constant := 16#0008#;
-   SDRAM_MODEREG_CAS_LATENCY_2              : constant := 16#0020#;
-   SDRAM_MODEREG_CAS_LATENCY_3              : constant := 16#0030#;
-   SDRAM_MODEREG_OPERATING_MODE_STANDARD    : constant := 16#0000#;
-   SDRAM_MODEREG_WRITEBURST_MODE_PROGRAMMED : constant := 16#0000#;
-   SDRAM_MODEREG_WRITEBURST_MODE_SINGLE     : constant := 16#0200#;
+   type SDRAM_Mode_Register is record
+      Burst_Length     : SDRAM_Burst_Length;
+      Burst_Type       : SDRAM_Burst_Type;
+      Latency_Mode     : SDRAM_CAS_Latency;
+      Operating_Mode   : UInt2 := 0;
+      Write_Burst_Mode : SDRAM_Write_Burst_Mode;
+   end record with Size => 10;
+   for SDRAM_Mode_Register use record
+      Burst_Length     at 0 range 0 .. 2;
+      Burst_Type       at 0 range 3 .. 3;
+      Latency_Mode     at 0 range 4 .. 6;
+      Operating_Mode   at 0 range 7 .. 8;
+      Write_Burst_Mode at 0 range 9 .. 9;
+   end record;
 
-end STM32.SDRAM;
+end SDRAM_Reg;

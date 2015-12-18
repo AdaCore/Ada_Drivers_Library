@@ -33,13 +33,12 @@ with Ada.Real_Time; use Ada.Real_Time;
 with STM32;         use STM32;
 with STM32.GPIO;    use STM32.GPIO;
 
-with STM32_Board;   use STM32_Board;
+with STM32.Device;  use STM32.Device;
 
 package body Driver is
 
    --  We use GPIO Port C, pin 15, an arbitrary choice.
-   Output_Port : GPIO_Port renames GPIO_C;
-   Output_Pin  : constant GPIO_Pin := Pin_15;
+   Output : GPIO_Point renames PC15;
 
    procedure Initialize;
 
@@ -53,7 +52,7 @@ package body Driver is
    begin
       Initialize;
       loop
-         Toggle (Output_Port, Output_Pin);
+         Toggle (Output);
 
          Next_Release := Next_Release + Period;
          delay until Next_Release;
@@ -67,13 +66,13 @@ package body Driver is
    procedure Initialize is
       Configuration : GPIO_Port_Configuration;
    begin
-      Enable_Clock (Output_Port);
+      Enable_Clock (Output);
 
       Configuration.Mode        := Mode_Out;
       Configuration.Output_Type := Push_Pull;
       Configuration.Speed       := Speed_100MHz;
       Configuration.Resistors   := Floating;
-      Configure_IO (Output_Port, Output_Pin, Configuration);
+      Configure_IO (Output, Configuration);
    end Initialize;
 
 end Driver;

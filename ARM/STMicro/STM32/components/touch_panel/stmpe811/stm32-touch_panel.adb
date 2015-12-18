@@ -75,8 +75,8 @@ package body STM32.Touch_Panel is
 
       Generate_Stop (TP_I2C, Enabled);
 
-      Data := Half_Word (Read_Data (TP_I2C)) * (2**8);
-      Data := Data or Half_Word (Read_Data (TP_I2C));
+      Data := Half_Word (I2C.Read_Data (TP_I2C)) * (2**8);
+      Data := Data or Half_Word (I2C.Read_Data (TP_I2C));
 
       Set_Ack_Config (TP_I2C, Enabled);
       Set_Nack_Config (TP_I2C, Current);
@@ -157,8 +157,7 @@ package body STM32.Touch_Panel is
    procedure TP_Ctrl_Lines is
       GPIO_Conf : GPIO_Port_Configuration;
    begin
-      Enable_Clock (SDA_GPIO);
-      Enable_Clock (SCL_GPIO);
+      Enable_Clock (GPIO_Points'(SDA, SCL));
 
       Enable_Clock (TP_I2C);
 
@@ -166,18 +165,17 @@ package body STM32.Touch_Panel is
 
       Enable_Clock (TP_I2C);
 
-      Configure_Alternate_Function (SCL_GPIO, SCL_Pin, SCL_AF);
-      Configure_Alternate_Function (SDA_GPIO, SDA_Pin, SDA_AF);
+      Configure_Alternate_Function (SCL, SCL_AF);
+      Configure_Alternate_Function (SDA, SDA_AF);
 
       GPIO_Conf.Speed       := Speed_25MHz;
       GPIO_Conf.Mode        := Mode_AF;
       GPIO_Conf.Output_Type := Open_Drain;
       GPIO_Conf.Resistors   := Floating;
-      Configure_IO (SCL_GPIO, SCL_Pin, GPIO_Conf);
-      Configure_IO (SDA_GPIO, SDA_Pin, GPIO_Conf);
+      Configure_IO (GPIO_Points'(SCL, SDA), GPIO_Conf);
 
-      Lock (SCL_GPIO, SCL_Pin);
-      Lock (SDA_GPIO, SDA_Pin);
+      Lock (SCL);
+      Lock (SDA);
    end TP_Ctrl_Lines;
 
    procedure TP_I2C_Config is

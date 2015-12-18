@@ -204,7 +204,7 @@ private
       Err_Int_Enable          : Bits_1;
       RX_Not_Empty_Int_Enable : Bits_1;
       TX_Empty_Int_Enable     : Bits_1;
-      Reserved_2              : Bits_8;
+      Reserved_2              : Byte;
    end record with Pack, Volatile_Full_Access, Size => 16;
 
    type SPI_I2S_Config_Register is record
@@ -221,7 +221,7 @@ private
    end record with Pack, Volatile_Full_Access, Size => 16;
 
    type SPI_I2S_Prescale_Register is record
-      Linear_Prescaler      : Bits_8;
+      Linear_Prescaler      : Byte;
       Odd_Factor            : Bits_1;
       Master_CLK_Out_Enable : Bits_1;
       Reserved              : Bits_6;

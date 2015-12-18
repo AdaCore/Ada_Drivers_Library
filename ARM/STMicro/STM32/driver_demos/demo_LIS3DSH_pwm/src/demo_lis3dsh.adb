@@ -49,6 +49,7 @@
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
+with Interfaces;        use Interfaces;
 with Ada.Real_Time;     use Ada.Real_Time;
 
 with STM32_Board;       use STM32_Board;

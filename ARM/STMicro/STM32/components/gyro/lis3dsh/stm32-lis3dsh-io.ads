@@ -54,8 +54,6 @@ with STM32.SPI;    use STM32.SPI;
 with STM32.RCC;
 with STM32.Device; use STM32.Device;
 
-private with STM32_SVD;
-
 private package STM32.LIS3DSH.IO is
 
    procedure Initialize
@@ -78,8 +76,6 @@ private package STM32.LIS3DSH.IO is
    function Initialized return Boolean;
 
 private
-
-   use STM32_SVD;
 
    IO_Initialized : Boolean := False;
 

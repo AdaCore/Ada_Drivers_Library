@@ -43,49 +43,13 @@
 
 package body STM32_Board is
 
-   -------------
-   -- Turn_On --
-   -------------
-
-   procedure Turn_On (This : User_LED) is
-   begin
-      Set (LED_Port, This);
-   end Turn_On;
-
-   --------------
-   -- Turn_Off --
-   --------------
-
-   procedure Turn_Off (This : User_LED) is
-   begin
-      Clear (LED_Port, This);
-   end Turn_Off;
-
-   ------------
-   -- Toggle --
-   ------------
-
-   procedure Toggle (This : User_LED) is
-   begin
-      Toggle (LED_Port, This);
-   end Toggle;
-
-   -----------------
-   -- Toggle_LEDs --
-   -----------------
-
-   procedure Toggle_LEDs (These : GPIO_Pins) is
-   begin
-      Toggle (LED_Port, These);
-   end Toggle_LEDs;
-
    ------------------
    -- All_LEDs_Off --
    ------------------
 
    procedure All_LEDs_Off is
    begin
-      Clear (LED_Port, All_LEDs);
+      Clear (All_LEDs);
    end All_LEDs_Off;
 
    -----------------
@@ -94,7 +58,7 @@ package body STM32_Board is
 
    procedure All_LEDs_On is
    begin
-      Set (LED_Port, All_LEDs);
+      Set (All_LEDs);
    end All_LEDs_On;
 
    ---------------------
@@ -104,14 +68,13 @@ package body STM32_Board is
    procedure Initialize_LEDs is
       Configuration : GPIO_Port_Configuration;
    begin
-      Enable_Clock (LED_Port);
+      Enable_Clock (All_LEDs);
 
       Configuration.Mode        := Mode_Out;
       Configuration.Output_Type := Push_Pull;
       Configuration.Speed       := Speed_100MHz;
       Configuration.Resistors   := Floating;
-      Configure_IO (Port => LED_Port,
-                    Pins => All_LEDs,
+      Configure_IO (All_LEDs,
                     Config => Configuration);
    end Initialize_LEDs;
 
@@ -122,12 +85,12 @@ package body STM32_Board is
    procedure Configure_User_Button_GPIO is
       Config : GPIO_Port_Configuration;
    begin
-      Enable_Clock (User_Button_Port);
+      Enable_Clock (User_Button_Point);
 
       Config.Mode := Mode_In;
       Config.Resistors := Floating;
 
-      Configure_IO (User_Button_Port, User_Button_Pin, Config);
+      Configure_IO (User_Button_Point, Config);
    end Configure_User_Button_GPIO;
 
 end STM32_Board;

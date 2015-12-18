@@ -39,11 +39,7 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
-
 with STM32.RCC;
-
-with STM32_SVD;  use STM32_SVD;
 
 package body STM32.USARTs is
 

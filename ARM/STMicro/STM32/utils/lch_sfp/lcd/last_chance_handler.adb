@@ -38,6 +38,7 @@
 --  exception semantics are not available.
 
 with STM32_Board;       use STM32_Board;
+with STM32.GPIO;        use STM32.GPIO;
 
 with LCD_Std_Out;
 with Bitmapped_Drawing;

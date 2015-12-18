@@ -2,7 +2,8 @@ with "../../stm32";
 
 project Demo_ADC_DMA is
 
-   Board : STM32.Board_Type := external ("BOARD", "STM32F429-DISCO");
+   type Board_Type is ("STM32F429-DISCO");
+   Board : Board_Type := external ("BOARD", "STM32F429-DISCO");
    type Build_Modes is ("debug", "production");
    Build_Mode : Build_Modes := external ("Build", "production");
 

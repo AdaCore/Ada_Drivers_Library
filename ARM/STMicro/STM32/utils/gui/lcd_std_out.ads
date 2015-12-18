@@ -49,7 +49,7 @@ with STM32.RCC;  use STM32.RCC;
 with STM32.GPIO; use STM32.GPIO;
 with STM32.SPI;  use STM32.SPI;
 
-with STM32_Board;  use STM32_Board;
+with STM32.Device; use STM32.Device;
 
 with STM32.ILI9341;
 with BMP_Fonts;          use BMP_Fonts;
@@ -140,15 +140,15 @@ private
 
    --  The STM32F4.ILI9341 is automatically initialized with the following:
 
-   Chip_Select : constant GPIO_Point := (GPIO_C'Access, Pin_2);
+   Chip_Select : GPIO_Point renames PC2;
 
    Enable_CS_GPIO_Clock : constant access procedure := GPIOC_Clock_Enable'Access;
 
-   WRX : constant GPIO_Point := (GPIO_D'Access, Pin_13);
+   WRX : GPIO_Point renames PD13;
 
    Enable_WRX_GPIO_Clock : constant access procedure := GPIOD_Clock_Enable'Access;
 
-   Reset : constant GPIO_Point := (GPIO_D'Access, Pin_11);
+   Reset : GPIO_Point renames PD11;
 
    Enable_Reset_GPIO_Clock : constant access procedure := GPIOD_Clock_Enable'Access;
 

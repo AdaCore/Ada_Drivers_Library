@@ -33,6 +33,8 @@
 --  demonstration.
 
 with Ada.Interrupts.Names; use Ada.Interrupts.Names;
+with Interfaces;           use Interfaces;
+
 with STM32;                use STM32;
 with STM32.RCC;            use STM32.RCC;
 with STM32.Timers;         use STM32.Timers;

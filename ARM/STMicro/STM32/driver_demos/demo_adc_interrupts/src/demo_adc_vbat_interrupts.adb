@@ -36,14 +36,16 @@
 
 with ADC_Interrupt_Handling;
 with Ada.Synchronous_Task_Control;  use Ada.Synchronous_Task_Control;
+with Interfaces;                    use Interfaces;
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
+with STM32.Device;  use STM32.Device;
 with STM32_Board;   use STM32_Board;
 
 with STM32;         use STM32;
 with STM32.ADC;     use STM32.ADC;
-
+with STM32.GPIO;    use STM32.GPIO;
 with STM32.ILI9341;
 with Bitmapped_Drawing;
 with BMP_Fonts;

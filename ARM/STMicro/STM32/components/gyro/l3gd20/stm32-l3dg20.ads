@@ -49,8 +49,6 @@
 with STM32.SPI;  use STM32.SPI;
 with STM32.GPIO; use STM32.GPIO;
 
-with Interfaces;   use Interfaces;
-
 with Ada.Interrupts.Names; use Ada.Interrupts.Names;
 use Ada.Interrupts;
 

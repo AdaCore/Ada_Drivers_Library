@@ -29,9 +29,11 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with Interfaces; use Interfaces;
+
 with STM32.Touch_Panel;
 
-with STM32;     use STM32;
+with STM32;      use STM32;
 with STM32.LTDC; use STM32.LTDC;
 
 package body Screen_Interface is

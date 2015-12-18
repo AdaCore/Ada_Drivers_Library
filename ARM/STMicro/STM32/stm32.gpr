@@ -44,6 +44,8 @@ project STM32 is
             ("svd/stm32f429x",
              "boards/stm32f429_discovery",
              "devices/stm32f42x",
+             "drivers/fmc",
+             "components/sdram/IS42S1640J",
              "components/lcd/ili9341",
              "components/touch_panel/stmpe811",
              "components/gyro/l3gd20",
@@ -64,7 +66,8 @@ project STM32 is
          for Source_Dirs use Project'Source_Dirs &
             ("svd/stm32f7x",
              "boards/stm32f7_discovery",
-             "devices/stm32f7x");
+             "devices/stm32f7x",
+             "drivers/fmc");
          case RTS is
             when "ravenscar-sfp" =>
                for Source_Dirs use Project'Source_Dirs &

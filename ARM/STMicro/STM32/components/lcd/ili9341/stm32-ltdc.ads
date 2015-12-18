@@ -41,13 +41,12 @@
 ------------------------------------------------------------------------------
 
 with System;
-with Interfaces;  use Interfaces;
 
-with STM32.GPIO;  use STM32.GPIO;
-with STM32.SPI;   use STM32.SPI;
-with STM32.RCC;   use STM32.RCC;
+with STM32.GPIO;   use STM32.GPIO;
+with STM32.SPI;    use STM32.SPI;
+with STM32.RCC;    use STM32.RCC;
 
-with STM32_Board; use STM32_Board;
+with STM32.Device; use STM32.Device;
 
 package STM32.LTDC is
 
@@ -355,8 +354,8 @@ private
 
    --  Current Position Status Register
    type CPS_Registers is record
-      CYPOS : Bits_16;
-      CXPOS : Bits_16;
+      CYPOS : Half_Word;
+      CXPOS : Half_Word;
    end record with Pack, Volatile_Full_Access, Size => 32;
 
    --  Current Display Status Register

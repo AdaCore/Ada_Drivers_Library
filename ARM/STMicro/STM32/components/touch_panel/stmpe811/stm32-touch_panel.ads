@@ -40,13 +40,11 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with Interfaces;  use Interfaces;
-
 with STM32.LTDC;
-with STM32.I2C;   use STM32.I2C;
-with STM32.GPIO;  use STM32.GPIO;
+with STM32.I2C;    use STM32.I2C;
+with STM32.GPIO;   use STM32.GPIO;
 
-with STM32_Board; use STM32_Board;
+with STM32.Device; use STM32.Device;
 
 package STM32.Touch_Panel is
 
@@ -63,12 +61,10 @@ package STM32.Touch_Panel is
 
 private
 
-   SCL_GPIO : GPIO_Port renames GPIO_A;
-   SCL_Pin  : constant GPIO_Pin := Pin_8;
+   SCL      : GPIO_Point renames PA8;
    SCL_AF   : GPIO_Alternate_Function := GPIO_AF_I2C3;
 
-   SDA_GPIO : GPIO_Port renames GPIO_C;
-   SDA_Pin  : constant GPIO_Pin := Pin_9;
+   SDA      : GPIO_Point renames PC9;
    SDA_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C3;
 
    TP_I2C   : I2C_Port renames I2C_3;

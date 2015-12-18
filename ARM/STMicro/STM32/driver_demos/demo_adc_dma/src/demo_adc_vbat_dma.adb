@@ -35,14 +35,17 @@
 --  Note that you will likely need to reset the board manually after loading.
 
 with Ada.Real_Time; use Ada.Real_Time;
+with Interfaces;    use Interfaces;
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
 with STM32_Board;   use STM32_Board;
 
+with STM32.Device;  use STM32.Device;
 with STM32;         use STM32;
 with STM32.ADC;     use STM32.ADC;
 with STM32.DMA;     use STM32.DMA;
+with STM32.GPIO;    use STM32.GPIO;
 
 with STM32.ILI9341;
 with Bitmapped_Drawing;

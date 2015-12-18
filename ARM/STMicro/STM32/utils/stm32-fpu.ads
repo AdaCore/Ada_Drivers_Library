@@ -73,7 +73,7 @@ package STM32.FPU is
       -- rounding mode
       RM        : Rounding_Mode;
       Reserved2 : Bits_6;
-      Reserved3 : Bits_8;
+      Reserved3 : Byte;
       -- flush to zero
       IDC       : Boolean;
       Reserved4 : Bits_2;

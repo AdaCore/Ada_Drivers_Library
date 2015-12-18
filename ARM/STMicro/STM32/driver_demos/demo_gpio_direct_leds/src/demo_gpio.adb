@@ -41,7 +41,7 @@
 --  Note that using the STM32F4_Discovery package would make this even easier
 --  but that is not what this program demonstrates.
 
-with STM32F40xxx;   use STM32F40xxx;
+with STM32_Board;   use STM32_Board;
 
 with STM32.GPIO;    use STM32.GPIO;
 with Ada.Real_Time; use Ada.Real_Time;
@@ -50,8 +50,6 @@ with STM32.RCC;
 procedure Demo_GPIO is
 
    use STM32;
-
-   All_LEDs : constant GPIO_Pins := Pin_12 & Pin_13 & Pin_14 & Pin_15;
 
    Period : constant Time_Span := Milliseconds (250);
    Next   : Time := Clock;
@@ -67,7 +65,7 @@ procedure Demo_GPIO is
       Configuration.Output_Type := Push_Pull;
       Configuration.Speed       := Speed_100MHz;
       Configuration.Resistors   := Floating;
-      Configure_IO (Port => GPIO_D, Pins => All_LEDs, Config => Configuration);
+      Configure_IO (All_LEDs, Config => Configuration);
    end Initialize_LEDs;
 
 begin
@@ -75,9 +73,9 @@ begin
 
    loop
       if Enabled then
-         Set (GPIO_D, All_LEDs);
+         Set (All_LEDs);
       else
-         Clear (GPIO_D, All_LEDs);
+         Clear (All_LEDs);
       end if;
       Enabled := not Enabled;
       Next := Next + Period;

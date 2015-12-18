@@ -42,17 +42,11 @@
 --  This file provides register definitions for the STM32F4 (ARM Cortex M4F)
 --  microcontrollers from ST Microelectronics.
 
-with STM32_SVD;    use STM32_SVD;
-
 package body STM32.SYSCFG is
-
-   --------------------------------
-   -- Connect_External_Interrupt --
-   --------------------------------
 
    procedure Connect_External_Interrupt
      (Port : GPIO_Port;
-      Pin  : GPIO_Pin)
+      Pin  : GPIO_Pin_Index)
    is
       CR_Index   : Integer range EXTI_Control_Registers'Range;
       EXTI_Index : Integer range EXTI_n_List'Range;
@@ -70,7 +64,7 @@ package body STM32.SYSCFG is
       --  Note that that means we are dependent upon the order of the Pin
       --  declarations because we require GPIO_Pin'Pos(Pin_n) to be 'n', ie
       --  Pin_0 should be at position 0, Pin_1 at position 1, and so forth.
-      CR_Index := GPIO_Pin'Pos (Pin) / 4;
+      CR_Index := Pin / 4;
 
       --  Now we must find which EXTI_n value to use, of the four possible,
       --  within the control register. We are depending on the GPIO_Port type
@@ -86,6 +80,29 @@ package body STM32.SYSCFG is
       --  overridden.
 
       SYSCFG.EXTICR (CR_Index).EXTI (EXTI_Index) := Port_Name;
+   end Connect_External_Interrupt;
+
+     --------------------------------
+   -- Connect_External_Interrupt --
+   --------------------------------
+
+   procedure Connect_External_Interrupt
+     (Port : GPIO_Port;
+      Pin  : GPIO_Pin)
+   is
+   begin
+      Connect_External_Interrupt (Port, GPIO_Pin'Pos (Pin));
+   end Connect_External_Interrupt;
+
+   --------------------------------
+   -- Connect_External_Interrupt --
+   --------------------------------
+
+   procedure Connect_External_Interrupt
+     (Point  : GPIO_Point)
+   is
+   begin
+      Connect_External_Interrupt (Point.Port.all, Point.Pin);
    end Connect_External_Interrupt;
 
    --------------------------------
@@ -110,10 +127,18 @@ package body STM32.SYSCFG is
      (Pin     : GPIO_Pin;
       Trigger : External_Triggers)
    is
-      This_Pin : constant Integer range 0 .. 15 := GPIO_Pin'Pos (Pin);
+      This_Pin : constant GPIO_Pin_Index := GPIO_Pin'Pos (Pin);
    begin
-      EXTI.IMR (This_Pin) := Trigger in Interrupt_Triggers;
-      EXTI.EMR (This_Pin) := Trigger in Event_Triggers;
+      Set_External_Trigger (This_Pin, Trigger);
+   end Set_External_Trigger;
+
+   procedure Set_External_Trigger
+     (Pin     : GPIO_Pin_Index;
+      Trigger : External_Triggers)
+   is
+   begin
+      EXTI.IMR (Pin) := Trigger in Interrupt_Triggers;
+      EXTI.EMR (Pin) := Trigger in Event_Triggers;
    end Set_External_Trigger;
 
    --------------------------
@@ -138,19 +163,31 @@ package body STM32.SYSCFG is
      (Pin     : GPIO_Pin;
       Trigger : External_Triggers)
    is
-      This_Pin : constant Integer range 0 .. 15 := GPIO_Pin'Pos (Pin);
+      This_Pin : constant GPIO_Pin_Index := GPIO_Pin'Pos (Pin);
+   begin
+      Select_Trigger_Edge (This_Pin, Trigger);
+   end Select_Trigger_Edge;
+
+   -------------------------
+   -- Select_Trigger_Edge --
+   -------------------------
+
+   procedure Select_Trigger_Edge
+     (Pin     : GPIO_Pin_Index;
+      Trigger : External_Triggers)
+   is
    begin
       --  all those that are/include rising edge
-      EXTI.RTSR (This_Pin) := Trigger in Interrupt_Rising_Edge  |
-                                         Interrupt_Rising_Falling_Edge |
-                                         Event_Rising_Edge  |
-                                         Event_Rising_Falling_Edge;
+      EXTI.RTSR (Pin) := Trigger in Interrupt_Rising_Edge  |
+                           Interrupt_Rising_Falling_Edge |
+                           Event_Rising_Edge  |
+                           Event_Rising_Falling_Edge;
 
       -- all those that are/include falling edge
-      EXTI.FTSR (This_Pin) := Trigger in Interrupt_Falling_Edge |
-                                         Interrupt_Rising_Falling_Edge |
-                                         Event_Falling_Edge |
-                                         Event_Rising_Falling_Edge;
+      EXTI.FTSR (Pin) := Trigger in Interrupt_Falling_Edge |
+                             Interrupt_Rising_Falling_Edge |
+                             Event_Falling_Edge |
+                             Event_Rising_Falling_Edge;
    end Select_Trigger_Edge;
 
    -------------------------
@@ -174,6 +211,15 @@ package body STM32.SYSCFG is
    procedure Clear_External_Interrupt (Pin : GPIO_Pin) is
    begin
       EXTI.PR (GPIO_Pin'Pos (Pin)) := 1;  -- yes, value is one to clear it
+   end Clear_External_Interrupt;
+
+   ------------------------------
+   -- Clear_External_Interrupt --
+   ------------------------------
+
+   procedure Clear_External_Interrupt (Pin : GPIO_Pin_Index) is
+   begin
+      EXTI.PR (Pin) := 1; --  Set to 1 to clear
    end Clear_External_Interrupt;
 
 end STM32.SYSCFG;

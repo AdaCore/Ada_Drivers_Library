@@ -394,7 +394,7 @@ private
    end record;
 
    type Left_Aligned_12bit_Data_Holding_Register is record
-      Reserved_31_16 : Bits_16;
+      Reserved_31_16 : Half_Word;
       Data           : Bits_12;
       Reserved_3_0   : Bits_4;
    end record with Volatile_Full_Access, Size => 32;
@@ -407,7 +407,7 @@ private
 
    type Right_Aligned_8bit_Data_Holding_Register is record
       Reserved_31_8 : Bits_24;
-      Data          : Bits_8;
+      Data          : Byte;
    end record with Volatile_Full_Access, Size => 32;
 
    for Right_Aligned_8bit_Data_Holding_Register use record
@@ -444,9 +444,9 @@ private
    end record;
 
    type Dual_Right_Aligned_8bit_Data_Holding_Register is record
-      Reserved_31_16 : Bits_16;
-      Channel_2_Data : Bits_8;
-      Channel_1_Data : Bits_8;
+      Reserved_31_16 : Half_Word;
+      Channel_2_Data : Byte;
+      Channel_1_Data : Byte;
    end record with Volatile_Full_Access, Size => 32;
 
    for Dual_Right_Aligned_8bit_Data_Holding_Register use record
