@@ -40,7 +40,7 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with STM32.NVIC;
+with Cortex_M.NVIC;
 
 package body STM32.LIS3DSH.IO is
 
@@ -204,11 +204,11 @@ package body STM32.LIS3DSH.IO is
                          Device_Interrupt2_Pin,
                          Trigger => Interrupt_Rising_Edge);
 
-      STM32.NVIC.Set_Priority (Device_Int2_EXTI_IRQn,
-                                 Preempt_Priority => 16#F#,
-                                 Subpriority      => 0);
+      Cortex_M.NVIC.Set_Priority (Device_Int2_EXTI_IRQn,
+                                  Preempt_Priority => 16#F#,
+                                  Subpriority      => 0);
 
-      STM32.NVIC.Enable_Interrupt (Device_Int2_EXTI_IRQn);
+      Cortex_M.NVIC.Enable_Interrupt (Device_Int2_EXTI_IRQn);
    end Configure_Interrupt;
 
 end STM32.LIS3DSH.IO;

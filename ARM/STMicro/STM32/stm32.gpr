@@ -12,7 +12,8 @@ project STM32 is
    LCH : LCH_Type := external ("LCH", "lcd");
 
    for Source_Dirs use
-     ("drivers",
+     ("cortex_m",
+      "drivers",
       "utils");
    for Object_Dir use "obj/" & Board & "/" & RTS;
    for Library_Name use "stm32";

@@ -41,7 +41,7 @@
 
 with Memory_Barriers;
 
-package body STM32.NVIC is
+package body Cortex_M.NVIC is
 
    -----------------------
    -- Priority_Grouping --
@@ -236,5 +236,5 @@ package body STM32.NVIC is
       pragma Warnings (On);
    end Reset_System;
 
-end STM32.NVIC;
+end Cortex_M.NVIC;
 

@@ -43,9 +43,10 @@
 --  STM32F4 (ARM Cortex M4F) microcontrollers from ST Microelectronics.
 
 with System;
+with Interfaces;     use Interfaces;
 with Ada.Interrupts; use Ada.Interrupts;
 
-package STM32.NVIC is  -- the Nested Vectored Interrupt Controller
+package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
 
    --  0 bits for pre-emption priority;  4 bits for subpriority
    Priority_Group_0 : constant Word := 16#00000007#;
@@ -213,6 +214,6 @@ private
 
    NVIC_PRIO_BITS : constant := 4;  -- STM32F4XX uses 4 bits for the priority levels
 
-end STM32.NVIC;
+end Cortex_M.NVIC;
 
 
