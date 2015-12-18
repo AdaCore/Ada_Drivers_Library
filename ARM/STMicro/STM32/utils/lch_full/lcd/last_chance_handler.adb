@@ -47,12 +47,13 @@
 --
 --  See the GNAT User Guide, section 8.1.14. Stack Traceback for details.
 
-with Ada.Real_Time;        use Ada.Real_Time;
-with STM32_Board;          use STM32_Board;
+with Ada.Real_Time;             use Ada.Real_Time;
+with STM32_Board;               use STM32_Board;
 with LCD_Std_Out;
 with Bitmapped_Drawing;
 with BMP_Fonts;
 with STM32.ILI9341;
+with STM32.GPIO;                use STM32.GPIO;
 
 with Ada.Exceptions.Traceback;  use Ada.Exceptions.Traceback;
 with GNAT.Debug_Utilities;      use GNAT.Debug_Utilities;

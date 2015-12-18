@@ -48,6 +48,7 @@ with STM32.RCC;     use STM32.RCC;
 with STM32.FMC;     use STM32.FMC;
 
 with STM32.Device;  use STM32.Device;
+with STM32_Board;   use STM32_Board;
 
 with SDRAM_Reg;     use SDRAM_Reg;
 
@@ -60,68 +61,16 @@ package body STM32.SDRAM is
    procedure Configure_GPIO is
       Conf : GPIO_Port_Configuration;
    begin
-      Enable_Clock (GPIO_B);
-      Enable_Clock (GPIO_C);
-      Enable_Clock (GPIO_D);
-      Enable_Clock (GPIO_E);
-      Enable_Clock (GPIO_F);
-      Enable_Clock (GPIO_G);
+      Enable_Clock (SDRAM_PINS);
 
       Conf.Speed       := Speed_50MHz;
       Conf.Mode        := Mode_AF;
       Conf.Output_Type := Push_Pull;
       Conf.Resistors   := Floating;
 
-      Configure_Alternate_Function (GPIO_B, (Pin_5, Pin_6), GPIO_AF_FMC);
-
-      Configure_IO (GPIO_B, (Pin_5, Pin_6), Conf);
-
-      Lock (GPIO_B, (Pin_5, Pin_6));
-
-      Configure_Alternate_Function (GPIO_C, Pin_0,  GPIO_AF_FMC);
-
-      Configure_IO (GPIO_C, Pin_0, Conf);
-
-      Lock (GPIO_C, Pin_0);
-
-      Configure_Alternate_Function (GPIO_D,
-                                    (Pin_0, Pin_1, Pin_8, Pin_9, Pin_10,
-                                     Pin_14, Pin_15),
-                                    GPIO_AF_FMC);
-
-      Configure_IO (GPIO_D, (Pin_0, Pin_1, Pin_8, Pin_9, Pin_10, Pin_14, Pin_15), Conf);
-
-      Lock (GPIO_D, (Pin_0, Pin_1, Pin_8, Pin_9, Pin_10, Pin_14, Pin_15));
-
-      Configure_Alternate_Function (GPIO_E, (Pin_0, Pin_1, Pin_7, Pin_8, Pin_9,
-                                             Pin_10, Pin_11, Pin_12, Pin_13,
-                                             Pin_14, Pin_15), GPIO_AF_FMC);
-
-      Configure_IO (GPIO_E, (Pin_0, Pin_1, Pin_7, Pin_8, Pin_9, Pin_10, Pin_11,
-                             Pin_12, Pin_13, Pin_14, Pin_15), Conf);
-
-      Lock (GPIO_E, (Pin_0, Pin_1, Pin_7, Pin_8, Pin_9, Pin_10, Pin_11,
-                             Pin_12, Pin_13, Pin_14, Pin_15));
-
-      Configure_Alternate_Function (GPIO_F,
-                                    (Pin_0, Pin_1, Pin_2, Pin_3, Pin_4, Pin_5,
-                                     Pin_11, Pin_12, Pin_13, Pin_14, Pin_15),
-                                    GPIO_AF_FMC);
-
-      Configure_IO (GPIO_F, (Pin_0, Pin_1, Pin_2, Pin_3, Pin_4, Pin_5,
-                             Pin_11, Pin_12, Pin_13, Pin_14, Pin_15), Conf);
-
-      Lock (GPIO_F, (Pin_0, Pin_1, Pin_2, Pin_3, Pin_4, Pin_5,
-                     Pin_11, Pin_12, Pin_13, Pin_14, Pin_15));
-
-      Configure_Alternate_Function (GPIO_G,
-                                    (Pin_0, Pin_1, Pin_4, Pin_5,
-                                     Pin_8, Pin_15),
-                                    GPIO_AF_FMC);
-
-      Configure_IO (GPIO_G, (Pin_0, Pin_1, Pin_4, Pin_5, Pin_8, Pin_15), Conf);
-
-      Lock (GPIO_G, (Pin_0, Pin_1, Pin_4, Pin_5, Pin_8, Pin_15));
+      Configure_Alternate_Function (SDRAM_PINS, GPIO_AF_FMC);
+      Configure_IO (SDRAM_PINS, Conf);
+      Lock (SDRAM_PINS);
    end Configure_GPIO;
 
    --------------------
