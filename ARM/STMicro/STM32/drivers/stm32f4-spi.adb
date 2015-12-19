@@ -327,6 +327,9 @@ package body STM32F4.SPI is
       return Port.Ctrl1.Data_Frame_Fmt = 1;
    end Is_Data_Frame_16bit;
 
+   --------------
+   -- Transmit --
+   --------------
 
    procedure Transmit
      (Port     : in out SPI_Port;
@@ -338,7 +341,6 @@ package body STM32F4.SPI is
          Reset_CRC (Port);
       end if;
 
---      if(hspi->Init.Direction == SPI_DIRECTION_1LINE)
       if Current_Data_Direction (Port) = D1Line_Tx  then  --  ??? right value to compare???
          Port.CTRL1.Output_BiDir := 1;
       end if;
@@ -383,7 +385,6 @@ package body STM32F4.SPI is
          Reset_CRC (Port);
       end if;
 
---      if(hspi->Init.Direction == SPI_DIRECTION_1LINE)
       if Current_Data_Direction (Port) = D1Line_Tx  then  --  ??? right value to compare???
          Port.CTRL1.Output_BiDir := 1;
       end if;
