@@ -91,6 +91,14 @@ package STM32.L3DG20 is
       L3GD20_Output_DataRate_3 => 16#80#,
       L3GD20_Output_DataRate_4 => 16#C0#);
 
+   --  See App Note 4505, pg 8, Table 3.
+   function Data_Rate_Hertz (Selection : Output_DataRate_Selection) return Float is
+     (case Selection is
+         when L3GD20_Output_DataRate_1 =>  95.0,
+         when L3GD20_Output_DataRate_2 => 190.0,
+         when L3GD20_Output_DataRate_3 => 380.0,
+         when L3GD20_Output_DataRate_4 => 760.0);
+
    type Axes_Selection is
      (L3GD20_Axes_Disable,
       L3GD20_Y_Enable,
@@ -205,6 +213,8 @@ package STM32.L3DG20 is
    procedure Enable_Filter (This : in out Three_Axis_Gyroscope);
 
    procedure Disable_Filter (This : in out Three_Axis_Gyroscope);
+
+   function Reference_Value (This : Three_Axis_Gyroscope) return Byte;
 
    type Sample_Counter is mod 2 ** 6;
 
@@ -353,6 +363,10 @@ package STM32.L3DG20 is
    --  no data available after a certain number of attempts. Does NOT apply the
    --  specified sensitity scaling as determined by the Full_Scale_Selection
    --  passed to procedure Configure.
+
+   Timeout : exception;
+   --  raised by Get_Raw_Angle_Rates when data is not ready within a reasonable
+   --  time
 
    function Selected_Sensitivity (This : Three_Axis_Gyroscope) return Float;
    --  Returns the value resulting from the Full_Scale_Selection specified to

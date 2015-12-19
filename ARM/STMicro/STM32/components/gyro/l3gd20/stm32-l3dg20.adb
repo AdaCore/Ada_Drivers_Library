@@ -371,6 +371,17 @@ package body STM32.L3DG20 is
       Write (This, CTRL_REG5, Ctrl5);
    end Disable_Filter;
 
+   ---------------------
+   -- Reference_Value --
+   ---------------------
+
+   function Reference_Value (This : Three_Axis_Gyroscope) return Byte is
+      Result : Byte;
+   begin
+      Read (This, Reference, Result);
+      return Result;
+   end Reference_Value;
+
    -----------------
    -- Data_Status --
    -----------------
@@ -457,13 +468,15 @@ package body STM32.L3DG20 is
       function Swap_Bytes (X : Angle_Rate) return Angle_Rate;
       pragma Import (Intrinsic, Swap_Bytes, "__builtin_bswap16");
 
-      Max_Status_Attempts : constant := 1_000;  -- semi-arbitrary
+      Max_Status_Attempts : constant := 1_500;
+      --  This timeout value is semi-arbitrary but must be sufficient for the
+      --  slower data rate options.
    begin
       for K in 1 .. Max_Status_Attempts loop
          Status := Data_Status (This);
          exit when (Status and XYZ_Data_Available) /= 0;
          if K = Max_Status_Attempts then
-            raise Program_Error with "Timeout getting data status";
+            raise Timeout with "no angle rate data";
          end if;
       end loop;
 
