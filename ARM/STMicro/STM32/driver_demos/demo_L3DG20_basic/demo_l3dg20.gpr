@@ -10,7 +10,7 @@ project Demo_L3DG20 is
    type Build_Modes is ("debug", "production");
    Build_Mode : Build_Modes := external ("Build", "debug");
 
-   for Runtime ("Ada") use "ravenscar-sfp-stm32f4";
+   for Runtime ("Ada") use "ravenscar-full-stm32f4";
 
    for Target use "arm-eabi";
 
@@ -25,11 +25,11 @@ project Demo_L3DG20 is
    end Compiler;
 
    package Naming is
-      for Spec ("last_chance_handler") use "last_chance_handler-sfp.ads";
-      for Body ("last_chance_handler") use "last_chance_handler-stm32f429xx-lcd-sfp.adb";
+      for Spec ("last_chance_handler") use "last_chance_handler-full.ads";
+      for Body ("last_chance_handler") use "last_chance_handler-stm32f429xx-lcd-full.adb";
    end Naming;
 
-    package Linker is
+   package Linker is
       for Default_Switches ("ada") use (
          "-Wl,-Map,demo_l3dg20.map",
          "-Wl,--gc-sections");

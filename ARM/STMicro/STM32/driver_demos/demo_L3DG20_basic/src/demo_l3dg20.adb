@@ -60,6 +60,12 @@ procedure Demo_L3DG20 is
 
    Sensitivity : Float;
 
+   Scaled_X  : Float;
+   Scaled_Y  : Float;
+   Scaled_Z  : Float;
+
+   --  these constants are used for displaying values on the LCD
+
    Selected_Font : constant BMP_Font := Font12x12;
    Line_Height   : constant Positive := Char_Height (Selected_Font) + 4;
 
@@ -78,13 +84,13 @@ procedure Demo_L3DG20 is
    Col_Adjusted : constant Natural := String'("Adjusted X:")'Length * Char_Width (Selected_Font);
 
    --  the locations on the screen for the final scaled values
-   Line1_Scaled : constant Natural := 110; -- leaves room for printing adjusted values
-   Line2_Scaled : constant Natural := Line1_Scaled + Line_Height;
-   Line3_Scaled : constant Natural := Line2_Scaled + Line_Height;
+   Line1_Final : constant Natural := 110; -- leaves room for printing adjusted values
+   Line2_Final : constant Natural := Line1_Final + Line_Height;
+   Line3_Final : constant Natural := Line2_Final + Line_Height;
 
    --  the column number for displaying the final values dynamically, based on
    --  the length of the longest static label
-   Col_Scaled : constant Natural := String'("Pitch:")'Length * Char_Width (Selected_Font);
+   Final_Column : constant Natural := String'("X:")'Length * Char_Width (Selected_Font);
 
    procedure Get_Gyro_Offsets
      (Offsets      : out Angle_Rates;
@@ -100,9 +106,9 @@ procedure Demo_L3DG20 is
    --------------------
 
    procedure Configure_Gyro is
+   begin
       -- For the page numbers shown below, the required values are specified in
       -- the STM32F429 Discovery kit User Manual (UM1670) on those pages.
-   begin
       Initialize_Gyro_Hardware
         (Gyro,
          L3GD20_SPI                  => SPI_5'Access,
@@ -122,19 +128,19 @@ procedure Demo_L3DG20 is
       Configure
         (Gyro,
          Power_Mode       => L3GD20_Mode_Active,
-         Output_DataRate  => L3GD20_Output_DataRate_4,
+         Output_Data_Rate => L3GD20_Output_Data_Rate_95Hz,
          Axes_Enable      => L3GD20_Axes_Enable,
-         Band_Width       => L3GD20_Bandwidth_4,
+         Bandwidth        => L3GD20_Bandwidth_1,
          BlockData_Update => L3GD20_BlockDataUpdate_Continous,
          Endianness       => L3GD20_BLE_LSB,
          Full_Scale       => L3GD20_Fullscale_250);
 
-      Configure_Filter
+      Configure_High_Pass_Filter
         (Gyro,
-         Mode_Selection   => L3GD20_HPM_Normal_Mode_Res,
-         CutOff_Frequency => L3GD20_HPFCF_0);
+         Mode_Selection   => L3GD20_HPM_Normal_Mode_Reset,
+         Cutoff_Frequency => L3GD20_HPFCF_0);
 
-      Enable_Filter (Gyro);
+      Enable_High_Pass_Filter (Gyro);
 
       --  We cannot check it before configuring the device above.
       if L3DG20.Device_Id (Gyro) /= L3DG20.I_Am_L3GD20 then
@@ -233,9 +239,9 @@ begin
    Print ((0, Line3_Adjusted), "Adjusted Z:");
 
    --  print the static labels for the final scaled values
-   Print ((0, Line1_Scaled), "Pitch:");
-   Print ((0, Line2_Scaled), "Roll:");
-   Print ((0, Line3_Scaled), "Yaw:");
+   Print ((0, Line1_Final), "X:");
+   Print ((0, Line2_Final), "Y:");
+   Print ((0, Line3_Final), "Z:");
 
    loop
       Get_Raw_Angle_Rates (Gyro, Axes);
@@ -251,13 +257,13 @@ begin
       Print ((Col_Adjusted, Line3_Adjusted), Axes.Z'Img & "   ");
 
       --  scale the adjusted values
-      Axes.X := Angle_Rate (Float (Axes.X) * Sensitivity);
-      Axes.Y := Angle_Rate (Float (Axes.Y) * Sensitivity);
-      Axes.Z := Angle_Rate (Float (Axes.Z) * Sensitivity);
+      Scaled_X := Float (Axes.X) * Sensitivity;
+      Scaled_Y := Float (Axes.Y) * Sensitivity;
+      Scaled_Z := Float (Axes.Z) * Sensitivity;
 
-      --  print the final scaled values
-      Print ((Col_Scaled, Line1_Scaled), Axes.X'Img & "  ");
-      Print ((Col_Scaled, Line2_Scaled), Axes.Y'Img & "  ");
-      Print ((Col_Scaled, Line3_Scaled), Axes.Z'Img & "  ");
+      --  print the final values
+      Print ((Final_Column, Line1_Final), Scaled_X'Img & "  ");
+      Print ((Final_Column, Line2_Final), Scaled_Y'Img & "  ");
+      Print ((Final_Column, Line3_Final), Scaled_Z'Img & "  ");
    end loop;
 end Demo_L3DG20;
