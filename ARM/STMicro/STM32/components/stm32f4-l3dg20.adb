@@ -312,9 +312,9 @@ package body STM32F4.L3DG20 is
    procedure Configure
      (This             : in out Three_Axis_Gyroscope;
       Power_Mode       : Power_Mode_Selection;
-      Output_DataRate  : Output_Data_Rate_Selection;
+      Output_Data_Rate : Output_Data_Rate_Selection;
       Axes_Enable      : Axes_Selection;
-      Band_Width       : Bandwidth_Selection;
+      Bandwidth        : Bandwidth_Selection;
       BlockData_Update : Block_Data_Update_Selection;
       Endianness       : Endian_Data_Selection;
       Full_Scale       : Full_Scale_Selection)
@@ -322,10 +322,10 @@ package body STM32F4.L3DG20 is
       Ctrl1 : Byte;
       Ctrl4 : Byte;
    begin
-      Ctrl1 := As_Byte (Power_Mode)      or
-               As_Byte (Output_DataRate) or
-               As_Byte (Axes_Enable)     or
-               As_Byte (Band_Width);
+      Ctrl1 := As_Byte (Power_Mode)       or
+               As_Byte (Output_Data_Rate) or
+               As_Byte (Axes_Enable)      or
+               As_Byte (Bandwidth);
 
       Ctrl4 := As_Byte (BlockData_Update) or
                As_Byte (Endianness)       or
