@@ -4,8 +4,8 @@ project Demo_L3DG20 is
 
    type Board_Type is ("STM32F429-DISCO");
    Board : Board_Type := external ("BOARD", "STM32F429-DISCO");
-   type Build_Modes is ("debug", "production");
-   Build_Mode : Build_Modes := external ("Build", "debug");
+   type RTS_Profile_Type is ("ravenscar-full");
+   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-full");
 
    for Languages use ("Ada");
    for Main use ("demo_l3dg20.adb");
@@ -26,6 +26,7 @@ project Demo_L3DG20 is
    end Compiler;
 
     package Linker is
+ing floating point values
       for Default_Switches ("ada") use (
          "-Wl,-Map,demo_l3dg20.map",
          "-Wl,--gc-sections");
