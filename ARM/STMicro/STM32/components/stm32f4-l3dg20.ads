@@ -85,26 +85,26 @@ package STM32F4.L3DG20 is
      (L3GD20_Mode_Powerdown => 16#00#,
       L3GD20_Mode_Active    => 16#08#);
 
-   type Output_DataRate_Selection is
-     (L3GD20_Output_DataRate_1,
-      L3GD20_Output_DataRate_2,
-      L3GD20_Output_DataRate_3,
-      L3GD20_Output_DataRate_4)
+   type Output_Data_Rate_Selection is
+     (L3GD20_Output_Data_Rate_95Hz,
+      L3GD20_Output_Data_Rate_190Hz,
+      L3GD20_Output_Data_Rate_380Hz,
+      L3GD20_Output_Data_Rate_760Hz)
      with Size => 8;
 
-   for Output_DataRate_Selection use
-     (L3GD20_Output_DataRate_1 => 16#00#,
-      L3GD20_Output_DataRate_2 => 16#40#,
-      L3GD20_Output_DataRate_3 => 16#80#,
-      L3GD20_Output_DataRate_4 => 16#C0#);
+   for Output_Data_Rate_Selection use
+     (L3GD20_Output_Data_Rate_95Hz  => 16#00#,
+      L3GD20_Output_Data_Rate_190Hz => 16#40#,
+      L3GD20_Output_Data_Rate_380Hz => 16#80#,
+      L3GD20_Output_Data_Rate_760Hz => 16#C0#);
 
    --  See App Note 4505, pg 8, Table 3.
-   function Data_Rate_Hertz (Selection : Output_DataRate_Selection) return Float is
+   function Data_Rate_Hertz (Selection : Output_Data_Rate_Selection) return Float is
      (case Selection is
-         when L3GD20_Output_DataRate_1 =>  95.0,
-         when L3GD20_Output_DataRate_2 => 190.0,
-         when L3GD20_Output_DataRate_3 => 380.0,
-         when L3GD20_Output_DataRate_4 => 760.0);
+         when L3GD20_Output_Data_Rate_95Hz  =>  95.0,
+         when L3GD20_Output_Data_Rate_190Hz => 190.0,
+         when L3GD20_Output_Data_Rate_380Hz => 380.0,
+         when L3GD20_Output_Data_Rate_760Hz => 760.0);
 
    type Axes_Selection is
      (L3GD20_Axes_Disable,
@@ -121,14 +121,15 @@ package STM32F4.L3DG20 is
       L3GD20_Axes_Enable  => 16#07#,
       L3GD20_Axes_Disable => 16#00#);
 
-   type BandWidth_Selection is
+   --  See App Note 4505, pg 8, Table 3.
+   type Bandwidth_Selection is
      (L3GD20_Bandwidth_1,
       L3GD20_Bandwidth_2,
       L3GD20_Bandwidth_3,
       L3GD20_Bandwidth_4)
      with Size => 8;
 
-   for BandWidth_Selection use
+   for Bandwidth_Selection use
      (L3GD20_Bandwidth_1 => 16#00#,
       L3GD20_Bandwidth_2 => 16#10#,
       L3GD20_Bandwidth_3 => 16#20#,
@@ -167,27 +168,31 @@ package STM32F4.L3DG20 is
    procedure Configure
      (This             : in out Three_Axis_Gyroscope;
       Power_Mode       : Power_Mode_Selection;
-      Output_DataRate  : Output_DataRate_Selection;
+      Output_DataRate  : Output_Data_Rate_Selection;
       Axes_Enable      : Axes_Selection;
-      Band_Width       : BandWidth_Selection;
+      Band_Width       : Bandwidth_Selection;
       BlockData_Update : Block_Data_Update_Selection;
       Endianness       : Endian_Data_Selection;
       Full_Scale       : Full_Scale_Selection);
 
+   --  See App Note 4505, pg 17, Table 14.
    type High_Pass_Filter_Mode is
-     (L3GD20_HPM_Normal_Mode_Res,
-      L3GD20_HPM_Ref_Signal,
-      L3GD20_HPM_Normal_Mode,
-      L3GD20_HPM_Autoreset_Int)
+     (L3GD20_HPM_Normal_Mode_Reset,  -- filter is reset by reading the Reference register
+      L3GD20_HPM_Reference_Signal,   -- output data is input - Reference register
+      L3GD20_HPM_Normal_Mode,        -- filter is reset by reading the Reference register
+      L3GD20_HPM_Autoreset_Int)      -- filter is auto-reset on configured interrupt
      with Size => 8;
 
    for High_Pass_Filter_Mode use
-     (L3GD20_HPM_Normal_Mode_Res => 16#00#,
-      L3GD20_HPM_Ref_Signal      => 16#10#,
-      L3GD20_HPM_Normal_Mode     => 16#20#,
-      L3GD20_HPM_Autoreset_Int   => 16#30#);
+     (L3GD20_HPM_Normal_Mode_Reset => 16#00#,
+      L3GD20_HPM_Reference_Signal  => 16#10#,
+      L3GD20_HPM_Normal_Mode       => 16#20#,
+      L3GD20_HPM_Autoreset_Int     => 16#30#);
 
-   type High_Pass_Cut_Off_Frequency is
+   --  See App Note 4505, pg 17, Table 13 for the resulting frequencies. As
+   --  shown in that table, the frequencies selected by these enumerals are
+   --  a function of the configured output data rate selected elsewhere.
+   type High_Pass_Cutoff_Frequency is
      (L3GD20_HPFCF_0,
       L3GD20_HPFCF_1,
       L3GD20_HPFCF_2,
@@ -200,7 +205,7 @@ package STM32F4.L3DG20 is
       L3GD20_HPFCF_9)
      with Size => 8;
 
-   for High_Pass_Cut_Off_Frequency use
+   for High_Pass_Cutoff_Frequency use  -- confirming
      (L3GD20_HPFCF_0 => 16#00#,
       L3GD20_HPFCF_1 => 16#01#,
       L3GD20_HPFCF_2 => 16#02#,
@@ -212,14 +217,14 @@ package STM32F4.L3DG20 is
       L3GD20_HPFCF_8 => 16#08#,
       L3GD20_HPFCF_9 => 16#09#);
 
-   procedure Configure_Filter
+   procedure Configure_High_Pass_Filter
      (This             : in out Three_Axis_Gyroscope;
       Mode_Selection   : High_Pass_Filter_Mode;
-      CutOff_Frequency : High_Pass_Cut_Off_Frequency);
+      Cutoff_Frequency : High_Pass_Cutoff_Frequency);
 
-   procedure Enable_Filter (This : in out Three_Axis_Gyroscope);
+   procedure Enable_High_Pass_Filter (This : in out Three_Axis_Gyroscope);
 
-   procedure Disable_Filter (This : in out Three_Axis_Gyroscope);
+   procedure Disable_High_Pass_Filter (This : in out Three_Axis_Gyroscope);
 
    function Reference_Value (This : Three_Axis_Gyroscope) return Byte;
 
@@ -376,10 +381,10 @@ package STM32F4.L3DG20 is
    --  time
 
    function Selected_Sensitivity (This : Three_Axis_Gyroscope) return Float;
-   --  Returns the value resulting from the Full_Scale_Selection specified to
-   --  procedure Configure. Can be used to manually scale unscaled results,
-   --  which is done automatically in procedure Get_Angle_Rates but not by
-   --  Get_Unscaled_Angle_Rates
+   --  Queries the device to get the value resulting from the
+   --  Full_Scale_Selection specified to procedure Configure. Used to scale
+   --  raw angle rates. Note that the values are in terms if millidegrees per
+   --  second, so to use these values you should multiply, rather than divide.
 
    procedure Reboot (This : Three_Axis_Gyroscope);
 
