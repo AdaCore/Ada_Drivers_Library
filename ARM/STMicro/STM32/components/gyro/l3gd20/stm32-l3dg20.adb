@@ -49,6 +49,8 @@ with STM32.Device;  use STM32.Device;
 
 package body STM32.L3DG20 is
 
+   --  the following are per Table 4 of the L3DG20 Datasheet, pg 9.
+   --  the values are millidegrees per second, so we scale accordingly
    Sensitivity_250dps  : constant := 8.75 * 0.001; -- mdps/digit
    Sensitivity_500dps  : constant := 17.5 * 0.001; -- mdps/digit
    Sensitivity_2000dps : constant := 70.0 * 0.001; -- mdps/digit
@@ -58,7 +60,7 @@ package body STM32.L3DG20 is
    --  bit definitions for the CTRL_REG3 register
 
    INT1_Interrupt_Enable            : constant := 2#1000_0000#;
-   Interrupt_Pin_Mode_Bit           : constant := 2#0001_0000#;  -- PP_OD
+   Interrupt_Pin_Mode_Bit           : constant := 2#0001_0000#;
    INT2_Data_Ready_Interrupt_Enable : constant := 2#0000_1000#;
    INT2_Watermark_Interrupt_Enable  : constant := 2#0000_0100#;
    INT2_Overrun_Interrupt_Enable    : constant := 2#0000_0010#;
@@ -73,7 +75,7 @@ package body STM32.L3DG20 is
 
    Boot_Bit               : constant := 2#1000_0000#;
    FIFO_Enable_Bit        : constant := 2#0100_0000#;
-   HighPass_Filter_Enable : constant := 2#0001_0000#; -- 16#10#;
+   HighPass_Filter_Enable : constant := 2#0001_0000#;
 
    --  bit definitions for the STATUS register
 
@@ -108,19 +110,19 @@ package body STM32.L3DG20 is
      (Source => High_Pass_Filter_Mode, Target => Byte);
 
    function As_Byte is new Ada.Unchecked_Conversion
-     (Source => High_Pass_Cut_Off_Frequency, Target => Byte);
+     (Source => High_Pass_Cutoff_Frequency, Target => Byte);
 
    function As_Byte is new Ada.Unchecked_Conversion
      (Source => Power_Mode_Selection, Target => Byte);
 
    function As_Byte is new Ada.Unchecked_Conversion
-     (Source => Output_DataRate_Selection, Target => Byte);
+     (Source => Output_Data_Rate_Selection, Target => Byte);
 
    function As_Byte is new Ada.Unchecked_Conversion
      (Source => Axes_Selection, Target => Byte);
 
    function As_Byte is new Ada.Unchecked_Conversion
-     (Source => BandWidth_Selection, Target => Byte);
+     (Source => Bandwidth_Selection, Target => Byte);
 
    function As_Byte is new Ada.Unchecked_Conversion
      (Source => Block_Data_Update_Selection, Target => Byte);
@@ -304,9 +306,9 @@ package body STM32.L3DG20 is
    procedure Configure
      (This             : in out Three_Axis_Gyroscope;
       Power_Mode       : Power_Mode_Selection;
-      Output_DataRate  : Output_DataRate_Selection;
+      Output_DataRate  : Output_Data_Rate_Selection;
       Axes_Enable      : Axes_Selection;
-      Band_Width       : BandWidth_Selection;
+      Band_Width       : Bandwidth_Selection;
       BlockData_Update : Block_Data_Update_Selection;
       Endianness       : Endian_Data_Selection;
       Full_Scale       : Full_Scale_Selection)
@@ -329,47 +331,47 @@ package body STM32.L3DG20 is
       Configure_Interrupt_Pins (This);
    end Configure;
 
-   ----------------------
-   -- Configure_Filter --
-   ----------------------
+   --------------------------------
+   -- Configure_High_Pass_Filter --
+   --------------------------------
 
-   procedure Configure_Filter
+   procedure Configure_High_Pass_Filter
      (This             : in out Three_Axis_Gyroscope;
       Mode_Selection   : High_Pass_Filter_Mode;
-      CutOff_Frequency : High_Pass_Cut_Off_Frequency)
+      Cutoff_Frequency : High_Pass_Cutoff_Frequency)
    is
       Ctrl2 : Byte;
    begin
       --  note that the two high-order bits must remain zero, per the datasheet
-      Ctrl2 := As_Byte (Mode_Selection) or As_Byte (CutOff_Frequency);
+      Ctrl2 := As_Byte (Mode_Selection) or As_Byte (Cutoff_Frequency);
       Write (This, CTRL_REG2, Ctrl2);
-   end Configure_Filter;
+   end Configure_High_Pass_Filter;
 
-   -------------------
-   -- Enable_Filter --
-   -------------------
+   -----------------------------
+   -- Enable_High_Pass_Filter --
+   -----------------------------
 
-   procedure Enable_Filter (This : in out Three_Axis_Gyroscope) is
+   procedure Enable_High_Pass_Filter (This : in out Three_Axis_Gyroscope) is
       Ctrl5 : Byte;
    begin
       Read (This, CTRL_REG5, Ctrl5);
       --  set HPen bit
       Ctrl5 := Ctrl5 or HighPass_Filter_Enable;
       Write (This, CTRL_REG5, Ctrl5);
-   end Enable_Filter;
+   end Enable_High_Pass_Filter;
 
-   --------------------
-   -- Disable_Filter --
-   --------------------
+   ------------------------------
+   -- Disable_High_Pass_Filter --
+   ------------------------------
 
-   procedure Disable_Filter (This : in out Three_Axis_Gyroscope) is
+   procedure Disable_High_Pass_Filter (This : in out Three_Axis_Gyroscope) is
       Ctrl5 : Byte;
    begin
       Read (This, CTRL_REG5, Ctrl5);
       --  clear HPen bit
       Ctrl5 := Ctrl5 and (not HighPass_Filter_Enable);
       Write (This, CTRL_REG5, Ctrl5);
-   end Disable_Filter;
+   end Disable_High_Pass_Filter;
 
    ---------------------
    -- Reference_Value --
