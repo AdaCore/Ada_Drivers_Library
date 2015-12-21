@@ -45,7 +45,6 @@
 --  be required to initialize the ILI9341, something that this package does
 --  automatically.
 
-with STM32.RCC;  use STM32.RCC;
 with STM32.GPIO; use STM32.GPIO;
 with STM32.SPI;  use STM32.SPI;
 
@@ -141,28 +140,14 @@ private
    --  The STM32F4.ILI9341 is automatically initialized with the following:
 
    Chip_Select : GPIO_Point renames PC2;
+   WRX         : GPIO_Point renames PD13;
+   Reset       : GPIO_Point renames PD11;
+   SPI_Chip    : access SPI_Port := SPI_5'Access;
+   SPI_GPIO    : access GPIO_Port := GPIO_F'Access;
 
-   Enable_CS_GPIO_Clock : constant access procedure := GPIOC_Clock_Enable'Access;
-
-   WRX : GPIO_Point renames PD13;
-
-   Enable_WRX_GPIO_Clock : constant access procedure := GPIOD_Clock_Enable'Access;
-
-   Reset : GPIO_Point renames PD11;
-
-   Enable_Reset_GPIO_Clock : constant access procedure := GPIOD_Clock_Enable'Access;
-
-   SPI_Chip : access SPI_Port := SPI_5'Access;
-
-   Enable_SPI_Clock : constant access procedure := SPI5_Clock_Enable'Access;
-
-   SPI_GPIO : access GPIO_Port := GPIO_F'Access;
-
-   Enable_SPI_GPIO_Clock : constant access procedure := GPIOF_Clock_Enable'Access;
-
-   SPI_AF   : constant GPIO_Alternate_Function := GPIO_AF_SPI5;
-   SCK_Pin  : constant GPIO_Pin := Pin_7;
-   MISO_Pin : constant GPIO_Pin := Pin_8;
-   MOSI_Pin : constant GPIO_Pin := Pin_9;
+   SPI_AF      : constant GPIO_Alternate_Function := GPIO_AF_SPI5;
+   SCK_Pin     : constant GPIO_Pin := Pin_7;
+   MISO_Pin    : constant GPIO_Pin := Pin_8;
+   MOSI_Pin    : constant GPIO_Pin := Pin_9;
 
 end LCD_Std_Out;

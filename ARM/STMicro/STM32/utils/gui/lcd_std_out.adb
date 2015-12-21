@@ -29,6 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with STM32.Board; use STM32.Board;
+
 package body LCD_Std_Out is
 
    --  We don't make the current font visible to clients because changing it
@@ -216,19 +218,13 @@ package body LCD_Std_Out is
 begin
    LCD.Initialize
      (Chip_Select,
-      Enable_CS_GPIO_Clock,
       WRX,
-      Enable_WRX_GPIO_Clock,
       Reset,
-      Enable_Reset_GPIO_Clock,
       SPI_Chip,
-      Enable_SPI_Clock,
-      SPI_GPIO,
-      Enable_SPI_GPIO_Clock,
       SPI_AF,
-      SCK_Pin,
-      MISO_Pin,
-      MOSI_Pin);
+      SPI5_SCK,
+      SPI5_MISO,
+      SPI5_MOSI);
 
    --  The values for the package global state are already initialized to the
    --  default values. However we do need to clear/fill the screen and set
