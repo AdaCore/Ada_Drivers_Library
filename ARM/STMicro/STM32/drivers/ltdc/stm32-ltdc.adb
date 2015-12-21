@@ -46,7 +46,6 @@ with STM32_SVD.LTDC; use STM32_SVD.LTDC;
 with STM32_SVD.RCC;  use STM32_SVD.RCC;
 
 with STM32.SDRAM;    use STM32.SDRAM;
-with STM32.RCC;      use STM32.RCC;
 
 package body STM32.LTDC is
 

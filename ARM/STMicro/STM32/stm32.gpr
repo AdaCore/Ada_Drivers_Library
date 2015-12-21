@@ -50,6 +50,8 @@ project STM32 is
              "boards/stm32f429_discovery",
              "devices/stm32f42x",
              "drivers/fmc",
+             "drivers/dma2d",
+             "drivers/ltdc",
              "components/sdram",
              "components/lcd/ili9341",
              "components/touch_panel/stmpe811",
