@@ -59,7 +59,7 @@ package body STM32.LIS3DSH.IO is
 
    procedure Chip_Select_High is
    begin
-      GPIO.Set (Chip_Select_Port, Chip_Select_Pin);
+      GPIO.Set (Chip_Select_Pin);
    end Chip_Select_High;
 
    ---------------------
@@ -68,7 +68,7 @@ package body STM32.LIS3DSH.IO is
 
    procedure Chip_Select_Low is
    begin
-      GPIO.Clear (Chip_Select_Port, Chip_Select_Pin);
+      GPIO.Clear (Chip_Select_Pin);
    end Chip_Select_Low;
 
    -------------------
@@ -78,20 +78,18 @@ package body STM32.LIS3DSH.IO is
    procedure Init_SPI_GPIO is
       Config : GPIO_Port_Configuration;
    begin
-      Enable_SPIx_GPIO_Clock;
+      Enable_Clock (SPIx_SCK_Pin & SPIx_MISO_Pin & SPIx_MOSI_Pin);
 
       Config.Output_Type := Push_Pull;
       Config.Resistors := Floating;
       Config.Speed := Speed_50MHz;
       Config.Mode := Mode_AF;
 
-      Configure_IO (SPIx_GPIO_Port,
-                    SPIx_SCK_Pin & SPIx_MISO_Pin & SPIx_MOSI_Pin,
+      Configure_IO (SPIx_SCK_Pin & SPIx_MISO_Pin & SPIx_MOSI_Pin,
                     Config);
 
       Configure_Alternate_Function
-        (SPIx_GPIO_Port,
-         SPIx_SCK_Pin & SPIx_MISO_Pin & SPIx_MOSI_Pin,
+        (SPIx_SCK_Pin & SPIx_MISO_Pin & SPIx_MOSI_Pin,
          SPIx_AF);
    end Init_SPI_GPIO;
 
@@ -102,7 +100,7 @@ package body STM32.LIS3DSH.IO is
    procedure Init_SPI is
       Config : SPI_Configuration;
    begin
-      Enable_SPIx_Clock;
+      Enable_Clock (SPIx);
 
       Config.Mode := Master;
       Config.Baud_Rate_Prescaler := BRP_32;
@@ -126,13 +124,13 @@ package body STM32.LIS3DSH.IO is
    procedure Init_LIS3DSH_Chip_Select is
       Config : GPIO_Port_Configuration;
    begin
-      Enable_SPIx_Chip_Select_Clock;
+      Enable_Clock (Chip_Select_Pin);
 
       Config.Mode := Mode_Out;
       Config.Output_Type := Push_Pull;
       Config.Resistors := Pull_Up;
       Config.Speed := Speed_25MHz;
-      Configure_IO (Chip_Select_Port, Chip_Select_Pin, Config);
+      Configure_IO (Chip_Select_Pin, Config);
 
       Chip_Select_High;
    end Init_LIS3DSH_Chip_Select;
@@ -190,18 +188,16 @@ package body STM32.LIS3DSH.IO is
    procedure Configure_Interrupt is
       Config : GPIO_Port_Configuration;
    begin
-      Enable_Device_Interrupt_GPIO_Clock;
+      Enable_Clock (Device_Interrupt1_Pin & Device_Interrupt2_Pin);
 
       Config.Mode := Mode_In;
       Config.Speed := Speed_50MHz;
       Config.Resistors := Floating;
 
-      Configure_IO (Device_Interrupt_GPIO_Port,
-                    Device_Interrupt2_Pin,
+      Configure_IO (Device_Interrupt2_Pin,
                     Config);
 
-      Configure_Trigger (Device_Interrupt_GPIO_Port,
-                         Device_Interrupt2_Pin,
+      Configure_Trigger (Device_Interrupt2_Pin,
                          Trigger => Interrupt_Rising_Edge);
 
       Cortex_M.NVIC.Set_Priority (Device_Int2_EXTI_IRQn,

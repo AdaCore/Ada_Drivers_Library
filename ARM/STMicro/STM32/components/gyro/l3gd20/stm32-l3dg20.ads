@@ -61,18 +61,13 @@ package STM32.L3DG20 is
    procedure Initialize_Gyro_Hardware
      (This                        : out Three_Axis_Gyroscope;
       L3GD20_SPI                  : access SPI_Port;
-      SPI_GPIO                    : access GPIO_Port;
       SPI_GPIO_AF                 : GPIO_Alternate_Function;
-      SCK_Pin                     : GPIO_Pin;
-      MISO_Pin                    : GPIO_Pin;
-      MOSI_Pin                    : GPIO_Pin;
-      CS_GPIO                     : access GPIO_Port;
-      CS_Pin                      : GPIO_Pin;
-      Int_GPIO                    : access GPIO_Port;
-      Enable_SPI_Clock            : not null access procedure;
-      Enable_SPI_GPIO_Clock       : not null access procedure;
-      Enable_Chip_Select_Clock    : not null access procedure;
-      Enable_GPIO_Interrupt_Clock : not null access procedure);
+      SCK_Pin                     : GPIO_Point;
+      MISO_Pin                    : GPIO_Point;
+      MOSI_Pin                    : GPIO_Point;
+      CS_Pin                      : GPIO_Point;
+      Int1_Pin                    : GPIO_Point;
+      Int2_Pin                    : GPIO_Point);
 
    type Power_Mode_Selection is
      (L3GD20_Mode_Powerdown,
@@ -420,9 +415,6 @@ package STM32.L3DG20 is
    --  The following are the interrupt definitions necessary for client-defined
    --  interrupt handlers:
 
-   Int1_Pin : constant GPIO_Pin := Pin_1;
-   Int2_Pin : constant GPIO_Pin := Pin_2;
-
    Int1_Interrupt : constant Interrupt_ID := EXTI1_Interrupt;
    --  NB: the line number 'n' in EXTIn_Interrupt must match the GPIO pin
    --  number associated with the interrupt, so pin 1 uses EXTI1 etc.
@@ -431,14 +423,13 @@ private
 
    type Three_Axis_Gyroscope is record
       L3GD20_SPI  : access SPI_Port;
-      SPI_GPIO    : access GPIO_Port;
       SPI_GPIO_AF : GPIO_Alternate_Function;
-      SCK_Pin     : GPIO_Pin;
-      MISO_Pin    : GPIO_Pin;
-      MOSI_Pin    : GPIO_Pin;
-      CS_GPIO     : access GPIO_Port;
-      CS_Pin      : GPIO_Pin;
-      Int_GPIO    : access GPIO_Port;
+      SCK_Pin     : GPIO_Point;
+      MISO_Pin    : GPIO_Point;
+      MOSI_Pin    : GPIO_Point;
+      CS_Pin      : GPIO_Point;
+      Int1_Pin    : GPIO_Point;
+      Int2_Pin    : GPIO_Point;
    end record;
 
    type Register is new Byte;

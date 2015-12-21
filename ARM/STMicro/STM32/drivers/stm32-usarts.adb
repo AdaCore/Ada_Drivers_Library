@@ -39,7 +39,7 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with STM32.RCC;
+with STM32.Device;    use STM32.Device;
 
 with STM32_SVD.USART; use STM32_SVD.USART;
 
@@ -50,7 +50,6 @@ package body STM32.USARTs is
    ---------------
 
    function APB_Clock (This : USART) return Word is
-      use STM32.RCC;
       Clocks : constant RCC_System_Clocks := System_Clock_Frequencies;
    begin
       if This'Address = USART1_Base or This'Address = USART6_Base then

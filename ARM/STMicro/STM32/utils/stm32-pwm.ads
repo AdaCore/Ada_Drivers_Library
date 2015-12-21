@@ -63,8 +63,7 @@ package STM32.PWM is
      (This                   : in out PWM_Modulator;
       Requested_Frequency    : Float;
       PWM_Timer              : not null access Timer;
-      PWM_AF                 : GPIO_Alternate_Function;
-      Enable_PWM_Timer_Clock : not null access procedure)
+      PWM_AF                 : GPIO_Alternate_Function)
      with Post =>
        (for all Channel in Timer_Channel => (not Attached (This, Channel)));
    --  Initializes the specified timer for PWM generation at the requested
@@ -74,8 +73,7 @@ package STM32.PWM is
    procedure Attach_PWM_Channel
      (This                   : in out PWM_Modulator;
       Channel                : Timer_Channel;
-      Point                  : GPIO_Point;
-      Enable_GPIO_Port_Clock : not null access procedure)
+      Point                  : GPIO_Point)
      with Post => Attached (This, Channel) and
                   Current_Duty_Cycle (This, Channel) = 0;
    --  Initializes the channel on the timer associated with This, and the

@@ -45,6 +45,8 @@ with Ada.Unchecked_Conversion;
 
 with STM32.SYSCFG;  use STM32.SYSCFG;
 
+with STM32.Device;  use STM32.Device;
+
 package body STM32.L3DG20 is
 
    Sensitivity_250dps  : constant := 8.75 * 0.001; -- mdps/digit
@@ -138,35 +140,23 @@ package body STM32.L3DG20 is
    procedure Initialize_Gyro_Hardware
      (This                        : out Three_Axis_Gyroscope;
       L3GD20_SPI                  : access SPI_Port;
-      SPI_GPIO                    : access GPIO_Port;
       SPI_GPIO_AF                 : GPIO_Alternate_Function;
-      SCK_Pin                     : GPIO_Pin;
-      MISO_Pin                    : GPIO_Pin;
-      MOSI_Pin                    : GPIO_Pin;
-      CS_GPIO                     : access GPIO_Port;
-      CS_Pin                      : GPIO_Pin;
-      Int_GPIO                    : access GPIO_Port;
-      Enable_SPI_Clock            : not null access procedure;
-      Enable_SPI_GPIO_Clock       : not null access procedure;
-      Enable_Chip_Select_Clock    : not null access procedure;
-      Enable_GPIO_Interrupt_Clock : not null access procedure)
+      SCK_Pin                     : GPIO_Point;
+      MISO_Pin                    : GPIO_Point;
+      MOSI_Pin                    : GPIO_Point;
+      CS_Pin                      : GPIO_Point;
+      Int1_Pin                    : GPIO_Point;
+      Int2_Pin                    : GPIO_Point)
    is
    begin
       This.L3GD20_SPI  := L3GD20_SPI;
-      This.SPI_GPIO    := SPI_GPIO;
       This.SPI_GPIO_AF := SPI_GPIO_AF;
       This.SCK_Pin     := SCK_Pin;
       This.MISO_Pin    := MISO_Pin;
       This.MOSI_Pin    := MOSI_Pin;
-      This.CS_GPIO     := CS_GPIO;
       This.CS_Pin      := CS_Pin;
-      This.Int_GPIO    := Int_GPIO;
-
-      Enable_SPI_Clock.all;
-      Enable_SPI_GPIO_Clock.all;
-      Enable_Chip_Select_Clock.all;
-      Enable_GPIO_Interrupt_Clock.all;
-
+      This.Int1_Pin    := Int1_Pin;
+      This.Int2_Pin    := Int2_Pin;
       Initialize_Device_IO (This);
    end Initialize_Gyro_Hardware;
 
@@ -181,9 +171,9 @@ package body STM32.L3DG20 is
       --  means we must drive the pin low.
    begin
       if Enabled then
-         GPIO.Clear (This.CS_GPIO.all, This.CS_Pin);
+         GPIO.Clear (This.CS_Pin);
       else
-         GPIO.Set (This.CS_GPIO.all, This.CS_Pin);
+         GPIO.Set (This.CS_Pin);
       end if;
    end Chip_Select;
 
@@ -218,14 +208,16 @@ package body STM32.L3DG20 is
    procedure Init_Chip_Select (This : in out Three_Axis_Gyroscope) is
       GPIO_Conf : GPIO_Port_Configuration;
    begin
+      Enable_Clock (This.CS_Pin);
+
       GPIO_Conf.Speed := Speed_25MHz;
       GPIO_Conf.Mode := Mode_OUT;
       GPIO_Conf.Output_Type := Push_Pull;
       GPIO_Conf.Resistors := Pull_Up;
 
-      Configure_IO (This.CS_GPIO.all, This.CS_Pin, GPIO_Conf);
+      Configure_IO (This.CS_Pin, GPIO_Conf);
 
-      Lock (This.CS_GPIO.all, This.CS_Pin);
+      Lock (This.CS_Pin);
    end Init_Chip_Select;
 
    ----------------------
@@ -235,19 +227,20 @@ package body STM32.L3DG20 is
    procedure Init_SPI_IO_Pins (This : in out Three_Axis_Gyroscope) is
       GPIO_Conf : GPIO_Port_Configuration;
    begin
+      Enable_Clock (This.SCK_Pin & This.MISO_Pin & This.MOSI_Pin);
+
       GPIO_Conf.Speed       := Speed_100MHz;
       GPIO_Conf.Mode        := Mode_AF;
       GPIO_Conf.Output_Type := Push_Pull;
       GPIO_Conf.Resistors   := Floating;
 
-      Configure_IO (This.SPI_GPIO.all, This.SCK_Pin & This.MISO_Pin & This.MOSI_Pin, GPIO_Conf);
+      Configure_IO (This.SCK_Pin & This.MISO_Pin & This.MOSI_Pin, GPIO_Conf);
 
       Configure_Alternate_Function
-        (This.SPI_GPIO.all,
-         This.SCK_Pin & This.MISO_Pin & This.MOSI_Pin,
+        (This.SCK_Pin & This.MISO_Pin & This.MOSI_Pin,
          This.SPI_GPIO_AF);
 
-      Lock (This.SPI_GPIO.all, This.SCK_Pin & This.MISO_Pin & This.MOSI_Pin);
+      Lock (This.SCK_Pin & This.MISO_Pin & This.MOSI_Pin);
    end Init_SPI_IO_Pins;
 
    --------------
@@ -294,13 +287,14 @@ package body STM32.L3DG20 is
    procedure Configure_Interrupt_Pins (This : in out Three_Axis_Gyroscope) is
       GPIO_Conf : GPIO_Port_Configuration;
    begin
+      Enable_Clock (This.Int1_Pin & This.Int2_Pin);
       GPIO_Conf.Speed := Speed_50MHz;
       GPIO_Conf.Mode := Mode_In;
       GPIO_Conf.Output_Type := Push_Pull;
       GPIO_Conf.Resistors := Floating;
 
-      Configure_IO (This.Int_GPIO.all, Int1_Pin & Int2_Pin, GPIO_Conf);
-      Lock (This.Int_GPIO.all, Int1_Pin & Int2_Pin);
+      Configure_IO (This.Int1_Pin & This.Int2_Pin, GPIO_Conf);
+      Lock (This.Int1_Pin & This.Int2_Pin);
    end Configure_Interrupt_Pins;
 
    ---------------
@@ -579,9 +573,9 @@ package body STM32.L3DG20 is
 
       --  should these calls really be done here, rather than in a higher level
       --  abstraction (eg a "Gyro" ADT), or by the client???
-      Connect_External_Interrupt (This.Int_GPIO.all, Int1_Pin);
+      Connect_External_Interrupt (This.Int1_Pin);
 
-      Configure_Trigger (This.Int_GPIO.all, Int1_Pin, Interrupt_Falling_Edge);
+      Configure_Trigger (This.Int1_Pin, Interrupt_Falling_Edge);
       -- hardcoded edge, should use ActiveEdge ???
    end Enable_Interrupt1;
 

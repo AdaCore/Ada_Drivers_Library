@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.RCC;  use STM32.RCC;
+with STM32.Device;  use STM32.Device;
 
 package body STM32.PWM is
 
@@ -117,15 +117,14 @@ package body STM32.PWM is
      (This                   : in out PWM_Modulator;
       Requested_Frequency    : Float;
       PWM_Timer              : not null access Timer;
-      PWM_AF                 : GPIO_Alternate_Function;
-      Enable_PWM_Timer_Clock : not null access procedure)
+      PWM_AF                 : GPIO_Alternate_Function)
    is
       Prescalar : Word;
    begin
       This.Output_Timer := PWM_Timer;
       This.AF := PWM_AF;
 
-      Enable_PWM_Timer_Clock.all;
+      Enable_Clock (PWM_Timer.all);
 
       Compute_Prescalar_and_Period
         (PWM_Timer,
@@ -159,13 +158,12 @@ package body STM32.PWM is
    procedure Attach_PWM_Channel
      (This    : in out PWM_Modulator;
       Channel : Timer_Channel;
-      Point   : GPIO_Point;
-      Enable_GPIO_Port_Clock : not null access procedure)
+      Point   : GPIO_Point)
    is
    begin
       This.Outputs (Channel).Attached := True;
 
-      Enable_GPIO_Port_Clock.all;
+      Enable_CLock (Point);
 
       Configure_PWM_GPIO (Point, This.AF);
 
