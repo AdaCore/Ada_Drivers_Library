@@ -52,6 +52,8 @@ with STM32.SPI;     use STM32.SPI;
 with STM32.Timers;  use STM32.Timers;
 with STM32.DAC;     use STM32.DAC;
 
+private with STM32_SVD.RCC;
+
 package STM32.Device is
    pragma Elaborate_Body;
 
@@ -314,7 +316,6 @@ package STM32.Device is
    DMA_2 : aliased DMA_Controller with Import, Volatile, Address => DMA2_Base;
 
    procedure Enable_Clock (This : aliased in out DMA_Controller);
-
    procedure Reset (This : aliased in out DMA_Controller);
 
    I2C_1 : aliased I2C_Port with Import, Volatile, Address => I2C1_Base;
@@ -322,7 +323,6 @@ package STM32.Device is
    I2C_3 : aliased I2C_Port with Import, Volatile, Address => I2C3_Base;
 
    procedure Enable_Clock (This : aliased in out I2C_Port);
-
    procedure Reset (This : in out I2C_Port);
 
    SPI_1 : aliased SPI_Port with Import, Volatile, Address => SPI1_Base;
@@ -333,7 +333,6 @@ package STM32.Device is
    SPI_6 : aliased SPI_Port with Import, Volatile, Address => SPI6_Base;
 
    procedure Enable_Clock (This : aliased in out SPI_Port);
-
    procedure Reset (This : in out SPI_Port);
 
    Timer_1 : aliased Timer with Volatile, Address => TIM1_Base;
@@ -366,8 +365,31 @@ package STM32.Device is
    pragma Import (Ada, Timer_14);
 
    procedure Enable_Clock (This : in out Timer);
-
    procedure Reset (This : in out Timer);
+
+   -----------------------------
+   -- Reset and Clock Control --
+   -----------------------------
+
+   type ABP_Timer_Prescaler_Mode is
+     ( --  If the APB prescaler (PPRE1, PPRE2 in the RCC_CFGR register) is
+       --  configured to a division factor of 1, TIMxCLK = PCLKx. Otherwise,
+       --  the timer clock frequencies are set to twice to the frequency of
+       --  the APB domain to which the timers are connected :
+       --  TIMxCLK = 2xPCLKx.
+       Mode_0,
+       --  If the APB prescaler (PPRE1, PPRE2 in the RCC_CFGR register) is
+       --  configured to a division factor of 1, 2 or 4, TIMxCLK = HCLK.
+       --  Otherwise, the timer clock frequencies are set to four times to the
+       --  frequency of the APB domain to which the timers are connected :
+       --  TIMxCLK = 4xPCLKx.
+       Mode_1)
+     with Size => 1;
+   function Get_ABP_Timer_Prescaler_Mode
+     return ABP_Timer_Prescaler_Mode;
+
+   procedure Set_PLLSAIDIVR
+     (Factor : UInt2);
 
 private
 
@@ -386,5 +408,11 @@ private
            GPIO_Port_K'Enum_Rep = 10),
       "Invalid representation for type GPIO_Port_Id");
    --  Confirming, but depended upon so we check it.
+
+   function Get_ABP_Timer_Prescaler_Mode
+     return ABP_Timer_Prescaler_Mode
+   is
+     (ABP_Timer_Prescaler_Mode'Val
+        (STM32_SVD.RCC.RCC_Periph.DCKCFGR.TIMPRE));
 
 end STM32.Device;
