@@ -178,8 +178,51 @@ package STM32.FMC is
 
    procedure FMC_SDRAM_Init (SDRAM_Conf : FMC_SDRAM_Init_Config);
 
-   type FMC_SDRAM_Mode_Register is mod 2 ** 13
-     with Size => 13;
+   --------------------------
+   --  SDRAM Mode Register --
+   --------------------------
+
+   type SDRAM_Mode_Burst_Length is
+     (SDRAM_Mode_Burst_Length_1,
+      SDRAM_Mode_Burst_Length_2,
+      SDRAM_Mode_Burst_Length_4,
+      SDRAM_Mode_Burst_Length_8)
+     with Size => 3;
+   for SDRAM_Mode_Burst_Length use
+     (SDRAM_Mode_Burst_Length_1 => 16#0#,
+      SDRAM_Mode_Burst_Length_2 => 16#1#,
+      SDRAM_Mode_Burst_Length_4 => 16#2#,
+      SDRAM_Mode_Burst_Length_8 => 16#4#);
+
+   type SDRAM_Mode_Burst_Type is
+     (SDRAM_Mode_Burst_Sequential,
+      SDRAM_Mode_Burst_Interleaved)
+     with Size => 1;
+
+   type SDRAM_Mode_CAS_Latency is
+     (SDRAM_Mode_CAS_Latency_2,
+      SDRAM_Mode_CAS_Latency_3)
+     with Size => 2;
+   for SDRAM_Mode_CAS_Latency use
+     (SDRAM_Mode_CAS_Latency_2 => 2,
+      SDRAM_Mode_CAS_Latency_3 => 3);
+
+   type SDRAM_Mode_Operating_Mode is
+     (SDRAM_Mode_Writeburst_Mode_Programmed,
+      SDRAM_Mode_Writeburst_Mode_Single);
+
+   type SDRAM_Mode_Register is record
+      Burst_Length   : SDRAM_Mode_Burst_Length;
+      Burst_Type     : SDRAM_Mode_Burst_Type;
+      CAS_Latency    : SDRAM_Mode_CAS_Latency;
+      Operating_Mode : SDRAM_Mode_Operating_Mode;
+   end record with Size => 13;
+   for SDRAM_Mode_Register use record
+      Burst_Length at 0 range 0 .. 2;
+      Burst_Type   at 0 range 3 .. 3;
+      CAS_Latency  at 0 range 4 .. 5;
+      Operating_Mode at 0 range 9 .. 9;
+   end record;
 
    type SDRAM_Command (Mode : FMC_SDRAM_Cmd_Mode) is record
       Target : FMC_SDRAM_Cmd_Target_Bank;
@@ -187,7 +230,7 @@ package STM32.FMC is
          when FMC_Command_Mode_AutoRefresh =>
             Auto_Refresh_Number : FMC_SDRAM_Timing;
          when FMC_Command_Mode_LoadMode =>
-            SDRAM_Mode_Register : FMC_SDRAM_Mode_Register;
+            Mode_Register       : SDRAM_Mode_Register;
          when others =>
             null;
       end case;

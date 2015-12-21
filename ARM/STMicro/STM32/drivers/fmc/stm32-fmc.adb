@@ -133,12 +133,14 @@ package body STM32.FMC is
 
    procedure FMC_SDRAM_Cmd (Cmd : SDRAM_Command) is
       SDCMR : SDCMR_Register;
+      function To_UInt13 is new Ada.Unchecked_Conversion
+        (SDRAM_Mode_Register, UInt13);
    begin
       case Cmd.Mode is
          when FMC_Command_Mode_AutoRefresh =>
             SDCMR.NRFS := FMC_SDRAM_Timing'Enum_Rep (Cmd.Auto_Refresh_Number);
          when FMC_Command_Mode_LoadMode =>
-            SDCMR.MRD  := UInt13 (Cmd.SDRAM_Mode_Register);
+            SDCMR.MRD  := To_UInt13 (Cmd.Mode_Register);
          when others =>
             null;
       end case;
