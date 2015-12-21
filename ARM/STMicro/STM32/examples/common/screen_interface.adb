@@ -33,8 +33,9 @@ with Interfaces; use Interfaces;
 
 with STM32.Touch_Panel;
 
-with STM32;      use STM32;
-with STM32.LTDC; use STM32.LTDC;
+with STM32;                 use STM32;
+with STM32.DMA2D.Interrupt; use STM32.DMA2D;
+with STM32.LCD;             use STM32.LCD;
 
 package body Screen_Interface is
 
@@ -51,14 +52,15 @@ package body Screen_Interface is
       if not Initialized then
          Initialized := True;
 
-         STM32.LTDC.Initialize;
-         STM32.LTDC.Set_Background (16#00#, 16#00#, 16#00#);
+         STM32.DMA2D.Interrupt.Initialize;
+         STM32.LCD.Initialize;
          STM32.Touch_Panel.Initialize;
 
          --  At init the draw layer is the one displayed, this will keep
          --  compatibility with projects not doing double buffering.
 
          Draw_Layer := Layer1;
+         Fill_Screen (Black);
          Set_Layer_State (Layer1, Enabled);
          Set_Layer_State (Layer2, Disabled);
       end if;
@@ -104,7 +106,7 @@ package body Screen_Interface is
 
    procedure Set_Pixel (P : Point; Col : Color) is
    begin
-      STM32.LTDC.Set_Pixel (Draw_Layer, P.X, P.Y, Col);
+      STM32.LCD.Set_Pixel (Draw_Layer, P.X, P.Y, Col);
    end Set_Pixel;
 
    ---------------
@@ -113,7 +115,7 @@ package body Screen_Interface is
 
    procedure Set_Pixel (X, Y : Natural; Col : Color) is
    begin
-      STM32.LTDC.Set_Pixel (Draw_Layer, X, Y, Col);
+      STM32.LCD.Set_Pixel (Draw_Layer, X, Y, Col);
    end Set_Pixel;
 
    -----------------
@@ -121,9 +123,15 @@ package body Screen_Interface is
    -----------------
 
    procedure Fill_Screen (Col : Color) is
-      FB : constant Frame_Buffer_Access := Current_Frame_Buffer (Draw_Layer);
    begin
-      FB.all := (others => Col);
+      --  ??? Use DMA2D to fill the buffer
+      DMA2D_Fill
+        (Buffer =>
+           (Addr => STM32.LCD.Current_Frame_Buffer (Draw_Layer),
+            Width => STM32.LCD.LCD_PIXEL_WIDTH,
+            Height => STM32.LCD.LCD_PIXEL_HEIGHT,
+            Color_Mode => STM32.LCD.Get_Pixel_Fmt),
+         Color => Word (Col));
    end Fill_Screen;
 
    --------------

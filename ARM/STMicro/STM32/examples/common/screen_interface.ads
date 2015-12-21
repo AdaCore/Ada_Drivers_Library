@@ -29,12 +29,12 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.LTDC;
+with STM32.LCD;
 
 package Screen_Interface is
 
-   subtype Width  is STM32.LTDC.Width;
-   subtype Height is STM32.LTDC.Height;
+   subtype Width  is STM32.LCD.Width;
+   subtype Height is STM32.LCD.Height;
 
    type Touch_State is record
       Touch_Detected : Boolean;
@@ -50,20 +50,20 @@ package Screen_Interface is
    function "+" (P1, P2 : Point) return Point is (P1.X + P2.X, P1.Y + P2.Y);
    function "-" (P1, P2 : Point) return Point is (P1.X - P2.X, P1.Y - P2.Y);
 
-   subtype Color is STM32.LTDC.Pixel;
+   subtype Color is STM32.Half_Word;
 
-   Black      : Color renames STM32.LTDC.Black;
-   White      : Color renames STM32.LTDC.White;
-   Red        : Color renames STM32.LTDC.Red;
-   Green      : Color renames STM32.LTDC.Green;
-   Blue       : Color renames STM32.LTDC.Blue;
-   Gray       : Color renames STM32.LTDC.Gray;
-   Light_Gray : Color renames STM32.LTDC.Light_Gray;
-   Sky_Blue   : Color renames STM32.LTDC.Sky_Blue;
-   Yellow     : Color renames STM32.LTDC.Yellow;
-   Orange     : Color renames STM32.LTDC.Orange;
-   Pink       : Color renames STM32.LTDC.Pink;
-   Violet     : Color renames STM32.LTDC.Violet;
+   Black      : Color := 2#1_00000_00000_00000#;
+   White      : Color := 2#1_11111_11111_11111#;
+   Red        : Color := 2#1_11111_00000_00000#;
+   Green      : Color := 2#1_00000_11111_00000#;
+   Blue       : Color := 2#1_00000_00000_11111#;
+   Gray       : Color := 2#1_10111_10111_10111#;
+   Light_Gray : Color := 2#1_11100_11100_11100#;
+   Sky_Blue   : Color := 2#1_10011_11010_11111#;
+   Yellow     : Color := 2#1_11111_11111_00000#;
+   Orange     : Color := 2#1_11111_10101_00000#;
+   Pink       : Color := 2#1_11111_01101_10111#;
+   Violet     : Color := 2#1_10011_00110_11010#;
 
    procedure Initialize;
 
