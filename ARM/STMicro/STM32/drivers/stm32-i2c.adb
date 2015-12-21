@@ -66,6 +66,12 @@ package body STM32.I2C is
       PCLK1      : constant Word := System_Clock_Frequencies.PCLK1;
       Freq_Range : constant Half_Word := Half_Word (PCLK1 / 1_000_000);
    begin
+      if Freq_Range < 2 or else Freq_Range > 42 then
+         raise Program_Error with
+           "PCLK1 too high or too low: expected 2-42 MHz, current" &
+           Freq_Range'Img & " MHz";
+      end if;
+
       --  Load CR2 and clear FREQ
       Port.CR2 :=
         (LAST    => 0,
@@ -288,15 +294,9 @@ package body STM32.I2C is
    is
       Unref  : Bit with Volatile, Unreferenced;
    begin
-      --  To clear the ADDR flag we have to read SR2 after reading SR1.
-      --  However, per the RM, section 27.6.7, page 850, we should only read
-      --  SR2 if the Address_Sent flag is set in SR1, or if the Stop_Detection
-      --  flag is cleared, because the Address_Sent flag could be set in
-      --  the middle of reading SR1 and SR2 but will be cleared by the
-      --  read sequence nonetheless.
-      if Status (Port, Start_Bit) or else Status (Port, Stop_Detection) then
-         Unref := Port.SR2.MSL;
-      end if;
+      --  ADDR is cleared after reading both SR1 and SR2
+      Unref := Port.SR1.ADDR;
+      Unref := Port.SR2.MSL;
    end Clear_Address_Sent_Status;
 
    ---------------------------------
