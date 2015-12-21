@@ -52,7 +52,7 @@ with STM32.LIS3DSH;   use STM32.LIS3DSH;
 
 with Ada.Interrupts.Names; use Ada.Interrupts;
 
-package STM32_Board is
+package STM32.Board is
    pragma Elaborate_Body;
 
    subtype User_LED is GPIO_Point;
@@ -128,4 +128,4 @@ package STM32_Board is
    --  for polling the button, and necessary for having the button generate
    --  interrupts.
 
-end STM32_Board;
+end STM32.Board;

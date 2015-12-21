@@ -41,7 +41,7 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-package body STM32_Board is
+package body STM32.Board is
 
    ------------------
    -- All_LEDs_Off --
@@ -93,4 +93,4 @@ package body STM32_Board is
       Configure_IO (User_Button_Point, Config);
    end Configure_User_Button_GPIO;
 
-end STM32_Board;
+end STM32.Board;

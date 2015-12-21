@@ -330,6 +330,21 @@ package STM32.Device is
 
    procedure Reset (This : in out Timer);
 
+   -----------------------------
+   -- Reset and Clock Control --
+   -----------------------------
+
+   type RCC_System_Clocks is record
+      SYSCLK  : Word;
+      HCLK    : Word;
+      PCLK1   : Word;
+      PCLK2   : Word;
+      TIMCLK1 : Word;
+      TIMCLK2 : Word;
+   end record;
+
+   function System_Clock_Frequencies return RCC_System_Clocks;
+
 private
 
    pragma Compile_Time_Error

@@ -29,9 +29,25 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.RCC; use STM32.RCC;
+pragma Warnings (Off, "* is an internal GNAT unit");
+with System.BB.Parameters;
+pragma Warnings (On, "* is an internal GNAT unit");
+
+with STM32_SVD.RCC; use STM32_SVD.RCC;
 
 package body STM32.Device is
+
+   HSE_VALUE : constant := System.BB.Parameters.HSE_Clock;
+   --  External oscillator in Hz
+
+   HSI_VALUE : constant := 16_000_000;
+   --  Internal oscillator in Hz
+
+   HPRE_Presc_Table : constant array (UInt4) of Word :=
+     (1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 8, 16, 64, 128, 256, 512);
+
+   PPRE_Presc_Table : constant array (UInt3) of Word :=
+     (1, 1, 1, 1, 2, 4, 8, 16);
 
    ------------------
    -- Enable_Clock --
@@ -40,23 +56,23 @@ package body STM32.Device is
    procedure Enable_Clock (This : aliased in out GPIO_Port) is
    begin
       if This'Address = GPIOA_Base then
-         GPIOA_Clock_Enable;
+         RCC_Periph.AHB1ENR.GPIOAEN := 1;
       elsif This'Address = GPIOB_Base then
-         GPIOB_Clock_Enable;
+         RCC_Periph.AHB1ENR.GPIOBEN := 1;
       elsif This'Address = GPIOC_Base then
-         GPIOC_Clock_Enable;
+         RCC_Periph.AHB1ENR.GPIOCEN := 1;
       elsif This'Address = GPIOD_Base then
-         GPIOD_Clock_Enable;
+         RCC_Periph.AHB1ENR.GPIODEN := 1;
       elsif This'Address = GPIOE_Base then
-         GPIOE_Clock_Enable;
+         RCC_Periph.AHB1ENR.GPIOEEN := 1;
       elsif This'Address = GPIOF_Base then
-         GPIOF_Clock_Enable;
+         RCC_Periph.AHB1ENR.GPIOFEN := 1;
       elsif This'Address = GPIOG_Base then
-         GPIOG_Clock_Enable;
+         RCC_Periph.AHB1ENR.GPIOGEN := 1;
       elsif This'Address = GPIOH_Base then
-         GPIOH_Clock_Enable;
+         RCC_Periph.AHB1ENR.GPIOHEN := 1;
       elsif This'Address = GPIOI_Base then
-         GPIOI_Clock_Enable;
+         RCC_Periph.AHB1ENR.GPIOIEN := 1;
       else
          raise Unknown_Device;
       end if;
@@ -91,32 +107,32 @@ package body STM32.Device is
    procedure Reset (This : aliased in out GPIO_Port) is
    begin
       if This'Address = GPIOA_Base then
-         GPIOA_Force_Reset;
-         GPIOA_Release_Reset;
+         RCC_Periph.AHB1RSTR.GPIOARST := 1;
+         RCC_Periph.AHB1RSTR.GPIOARST := 0;
       elsif This'Address = GPIOB_Base then
-         GPIOB_Force_Reset;
-         GPIOB_Release_Reset;
+         RCC_Periph.AHB1RSTR.GPIOBRST := 1;
+         RCC_Periph.AHB1RSTR.GPIOBRST := 0;
       elsif This'Address = GPIOC_Base then
-         GPIOC_Force_Reset;
-         GPIOC_Release_Reset;
+         RCC_Periph.AHB1RSTR.GPIOCRST := 1;
+         RCC_Periph.AHB1RSTR.GPIOCRST := 0;
       elsif This'Address = GPIOD_Base then
-         GPIOD_Force_Reset;
-         GPIOD_Release_Reset;
+         RCC_Periph.AHB1RSTR.GPIODRST := 1;
+         RCC_Periph.AHB1RSTR.GPIODRST := 0;
       elsif This'Address = GPIOE_Base then
-         GPIOE_Force_Reset;
-         GPIOE_Release_Reset;
+         RCC_Periph.AHB1RSTR.GPIOERST := 1;
+         RCC_Periph.AHB1RSTR.GPIOERST := 0;
       elsif This'Address = GPIOF_Base then
-         GPIOF_Force_Reset;
-         GPIOF_Release_Reset;
+         RCC_Periph.AHB1RSTR.GPIOFRST := 1;
+         RCC_Periph.AHB1RSTR.GPIOFRST := 0;
       elsif This'Address = GPIOG_Base then
-         GPIOG_Force_Reset;
-         GPIOG_Release_Reset;
+         RCC_Periph.AHB1RSTR.GPIOGRST := 1;
+         RCC_Periph.AHB1RSTR.GPIOGRST := 0;
       elsif This'Address = GPIOH_Base then
-         GPIOH_Force_Reset;
-         GPIOH_Release_Reset;
+         RCC_Periph.AHB1RSTR.GPIOHRST := 1;
+         RCC_Periph.AHB1RSTR.GPIOHRST := 0;
       elsif This'Address = GPIOI_Base then
-         GPIOI_Force_Reset;
-         GPIOI_Release_Reset;
+         RCC_Periph.AHB1RSTR.GPIOIRST := 1;
+         RCC_Periph.AHB1RSTR.GPIOIRST := 0;
       else
          raise Unknown_Device;
       end if;
@@ -192,11 +208,11 @@ package body STM32.Device is
    procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter) is
    begin
       if This'Address = ADC1_Base then
-         ADC1_Clock_Enable;
+         RCC_Periph.APB2ENR.ADC1EN := 1;
       elsif This'Address = ADC2_Base then
-         ADC2_Clock_Enable;
+         RCC_Periph.APB2ENR.ADC2EN := 1;
       elsif This'Address = ADC3_Base then
-         ADC3_Clock_Enable;
+         RCC_Periph.APB2ENR.ADC3EN := 1;
       else
          raise Unknown_Device;
       end if;
@@ -208,8 +224,8 @@ package body STM32.Device is
 
    procedure Reset_All_ADC_Units is
    begin
-      ADC_Force_Reset;
-      ADC_Release_Reset;
+      RCC_Periph.APB2RSTR.ADCRST := 1;
+      RCC_Periph.APB2RSTR.ADCRST := 0;
    end Reset_All_ADC_Units;
 
    ------------------
@@ -219,7 +235,7 @@ package body STM32.Device is
    procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter) is
       pragma Unreferenced (This);
    begin
-      STM32.RCC.DAC_Clock_Enable;
+      RCC_Periph.APB1ENR.DACEN := 1;
    end Enable_Clock;
 
    -----------
@@ -229,8 +245,8 @@ package body STM32.Device is
    procedure Reset (This : aliased in out Digital_To_Analog_Converter) is
       pragma Unreferenced (This);
    begin
-      STM32.RCC.DAC_Force_Reset;
-      STM32.RCC.DAC_Release_Reset;
+      RCC_Periph.APB1RSTR.DACRST := 1;
+      RCC_Periph.APB1RSTR.DACRST := 0;
    end Reset;
 
    ------------------
@@ -240,13 +256,13 @@ package body STM32.Device is
    procedure Enable_Clock (This : aliased in out USART) is
    begin
       if This'Address = USART1_Base then
-         USART1_Clock_Enable;
+         RCC_Periph.APB2ENR.USART1EN := 1;
       elsif This'Address = USART2_Base then
-         USART2_Clock_Enable;
+         RCC_Periph.APB1ENR.USART2EN := 1;
       elsif This'Address = USART3_Base then
-         USART3_Clock_Enable;
+         RCC_Periph.APB1ENR.USART3EN := 1;
       elsif This'Address = USART6_Base then
-         USART6_Clock_Enable;
+         RCC_Periph.APB2ENR.USART6EN := 1;
       else
          raise Unknown_Device;
       end if;
@@ -259,17 +275,17 @@ package body STM32.Device is
    procedure Reset (This : aliased in out USART) is
    begin
       if This'Address = USART1_Base then
-         USART1_Force_Reset;
-         USART1_Release_Reset;
+         RCC_Periph.APB2RSTR.USART1RST := 1;
+         RCC_Periph.APB2RSTR.USART1RST := 0;
       elsif This'Address = USART2_Base then
-         USART2_Force_Reset;
-         USART2_Release_Reset;
+         RCC_Periph.APB1RSTR.UART2RST := 1;
+         RCC_Periph.APB1RSTR.UART2RST := 0;
       elsif This'Address = USART3_Base then
-         USART3_Force_Reset;
-         USART3_Release_Reset;
+         RCC_Periph.APB1RSTR.UART3RST := 1;
+         RCC_Periph.APB1RSTR.UART3RST := 0;
       elsif This'Address = USART6_Base then
-         USART6_Force_Reset;
-         USART6_Release_Reset;
+         RCC_Periph.APB2RSTR.USART6RST := 1;
+         RCC_Periph.APB2RSTR.USART6RST := 0;
       else
          raise Unknown_Device;
       end if;
@@ -282,9 +298,9 @@ package body STM32.Device is
    procedure Enable_Clock (This : aliased in out DMA_Controller) is
    begin
       if This'Address = STM32_SVD.DMA1_Base then
-         DMA1_Clock_Enable;
+         RCC_Periph.AHB1ENR.DMA1EN := 1;
       elsif This'Address = STM32_SVD.DMA2_Base then
-         DMA2_Clock_Enable;
+         RCC_Periph.AHB1ENR.DMA2EN := 1;
       else
          raise Unknown_Device;
       end if;
@@ -297,11 +313,11 @@ package body STM32.Device is
    procedure Reset (This : aliased in out DMA_Controller) is
    begin
       if This'Address = STM32_SVD.DMA1_Base then
-         DMA1_Force_Reset;
-         DMA1_Release_Reset;
+         RCC_Periph.AHB1RSTR.DMA1RST := 1;
+         RCC_Periph.AHB1RSTR.DMA1RST := 0;
       elsif This'Address = STM32_SVD.DMA2_Base then
-         DMA2_Force_Reset;
-         DMA2_Release_Reset;
+         RCC_Periph.AHB1RSTR.DMA2RST := 1;
+         RCC_Periph.AHB1RSTR.DMA2RST := 0;
       else
          raise Unknown_Device;
       end if;
@@ -314,11 +330,11 @@ package body STM32.Device is
    procedure Enable_Clock (This : aliased in out I2C_Port) is
    begin
       if This'Address = I2C1_Base then
-         I2C1_Clock_Enable;
+         RCC_Periph.APB1ENR.I2C1EN := 1;
       elsif This'Address = I2C2_Base then
-         I2C2_Clock_Enable;
+         RCC_Periph.APB1ENR.I2C2EN := 1;
       elsif This'Address = I2C3_Base then
-         I2C3_Clock_Enable;
+         RCC_Periph.APB1ENR.I2C3EN := 1;
       else
          raise Unknown_Device;
       end if;
@@ -331,14 +347,14 @@ package body STM32.Device is
    procedure Reset (This : in out I2C_Port) is
    begin
       if This'Address = I2C1_Base then
-         I2C1_Force_Reset;
-         I2C1_Release_Reset;
+         RCC_Periph.APB1RSTR.I2C1RST := 1;
+         RCC_Periph.APB1RSTR.I2C1RST := 0;
       elsif This'Address = I2C2_Base then
-         I2C2_Force_Reset;
-         I2C2_Release_Reset;
+         RCC_Periph.APB1RSTR.I2C2RST := 1;
+         RCC_Periph.APB1RSTR.I2C2RST := 0;
       elsif This'Address = I2C3_Base then
-         I2C3_Force_Reset;
-         I2C3_Release_Reset;
+         RCC_Periph.APB1RSTR.I2C3RST := 1;
+         RCC_Periph.APB1RSTR.I2C3RST := 0;
       else
          raise Unknown_Device;
       end if;
@@ -351,11 +367,11 @@ package body STM32.Device is
    procedure Enable_Clock (This : aliased in out SPI_Port) is
    begin
       if This'Address = SPI1_Base then
-         SPI1_Clock_Enable;
+         RCC_Periph.APB2ENR.SPI1EN := 1;
       elsif This'Address = SPI2_Base then
-         SPI2_Clock_Enable;
+         RCC_Periph.APB1ENR.SPI2EN := 1;
       elsif This'Address = SPI3_Base then
-         SPI3_Clock_Enable;
+         RCC_Periph.APB1ENR.SPI3EN := 1;
       else
          raise Unknown_Device;
       end if;
@@ -368,14 +384,14 @@ package body STM32.Device is
    procedure Reset (This : in out SPI_Port) is
    begin
       if This'Address = SPI1_Base then
-         SPI1_Force_Reset;
-         SPI1_Release_Reset;
+         RCC_Periph.APB2RSTR.SPI1RST := 1;
+         RCC_Periph.APB2RSTR.SPI1RST := 0;
       elsif This'Address = SPI2_Base then
-         SPI2_Force_Reset;
-         SPI2_Release_Reset;
+         RCC_Periph.APB1RSTR.SPI2RST := 1;
+         RCC_Periph.APB1RSTR.SPI2RST := 0;
       elsif This'Address = SPI3_Base then
-         SPI3_Force_Reset;
-         SPI3_Release_Reset;
+         RCC_Periph.APB1RSTR.SPI3RST := 1;
+         RCC_Periph.APB1RSTR.SPI3RST := 0;
       else
          raise Unknown_Device;
       end if;
@@ -388,33 +404,33 @@ package body STM32.Device is
    procedure Enable_Clock (This : in out Timer) is
    begin
       if This'Address = TIM1_Base then
-         TIM1_Clock_Enable;
+         RCC_Periph.APB2ENR.TIM1EN := 1;
       elsif This'Address = TIM2_Base then
-         TIM2_Clock_Enable;
+         RCC_Periph.APB1ENR.TIM2EN := 1;
       elsif This'Address = TIM3_Base then
-         TIM3_Clock_Enable;
+         RCC_Periph.APB1ENR.TIM3EN := 1;
       elsif This'Address = TIM4_Base then
-         TIM4_Clock_Enable;
+         RCC_Periph.APB1ENR.TIM4EN := 1;
       elsif This'Address = TIM5_Base then
-         TIM5_Clock_Enable;
+         RCC_Periph.APB1ENR.TIM5EN := 1;
       elsif This'Address = TIM6_Base then
-         TIM6_Clock_Enable;
+         RCC_Periph.APB1ENR.TIM6EN := 1;
       elsif This'Address = TIM7_Base then
-         TIM7_Clock_Enable;
+         RCC_Periph.APB1ENR.TIM7EN := 1;
       elsif This'Address = TIM8_Base then
-         TIM8_Clock_Enable;
+         RCC_Periph.APB2ENR.TIM8EN := 1;
       elsif This'Address = TIM9_Base then
-         TIM9_Clock_Enable;
+         RCC_Periph.APB2ENR.TIM9EN := 1;
       elsif This'Address = TIM10_Base then
-         TIM10_Clock_Enable;
+         RCC_Periph.APB2ENR.TIM10EN := 1;
       elsif This'Address = TIM11_Base then
-         TIM11_Clock_Enable;
+         RCC_Periph.APB2ENR.TIM11EN := 1;
       elsif This'Address = TIM12_Base then
-         TIM12_Clock_Enable;
+         RCC_Periph.APB1ENR.TIM12EN := 1;
       elsif This'Address = TIM13_Base then
-         TIM13_Clock_Enable;
+         RCC_Periph.APB1ENR.TIM13EN := 1;
       elsif This'Address = TIM14_Base then
-         TIM14_Clock_Enable;
+         RCC_Periph.APB1ENR.TIM14EN := 1;
       else
          raise Unknown_Device;
       end if;
@@ -427,50 +443,119 @@ package body STM32.Device is
    procedure Reset (This : in out Timer) is
    begin
       if This'Address = TIM1_Base then
-         TIM1_Force_Reset;
-         TIM1_Release_Reset;
+         RCC_Periph.APB2RSTR.TIM1RST := 1;
+         RCC_Periph.APB2RSTR.TIM1RST := 0;
       elsif This'Address = TIM2_Base then
-         TIM2_Force_Reset;
-         TIM2_Release_Reset;
+         RCC_Periph.APB1RSTR.TIM2RST := 1;
+         RCC_Periph.APB1RSTR.TIM2RST := 0;
       elsif This'Address = TIM3_Base then
-         TIM3_Force_Reset;
-         TIM3_Release_Reset;
+         RCC_Periph.APB1RSTR.TIM3RST := 1;
+         RCC_Periph.APB1RSTR.TIM3RST := 0;
       elsif This'Address = TIM4_Base then
-         TIM4_Force_Reset;
-         TIM4_Release_Reset;
+         RCC_Periph.APB1RSTR.TIM4RST := 1;
+         RCC_Periph.APB1RSTR.TIM4RST := 0;
       elsif This'Address = TIM5_Base then
-         TIM5_Force_Reset;
-         TIM5_Release_Reset;
+         RCC_Periph.APB1RSTR.TIM5RST := 1;
+         RCC_Periph.APB1RSTR.TIM5RST := 0;
       elsif This'Address = TIM6_Base then
-         TIM6_Force_Reset;
-         TIM6_Release_Reset;
+         RCC_Periph.APB1RSTR.TIM6RST := 1;
+         RCC_Periph.APB1RSTR.TIM6RST := 0;
       elsif This'Address = TIM7_Base then
-         TIM7_Force_Reset;
-         TIM7_Release_Reset;
+         RCC_Periph.APB1RSTR.TIM7RST := 1;
+         RCC_Periph.APB1RSTR.TIM7RST := 0;
       elsif This'Address = TIM8_Base then
-         TIM8_Force_Reset;
-         TIM8_Release_Reset;
+         RCC_Periph.APB2RSTR.TIM8RST := 1;
+         RCC_Periph.APB2RSTR.TIM8RST := 0;
       elsif This'Address = TIM9_Base then
-         TIM9_Force_Reset;
-         TIM9_Release_Reset;
+         RCC_Periph.APB2RSTR.TIM9RST := 1;
+         RCC_Periph.APB2RSTR.TIM9RST := 0;
       elsif This'Address = TIM10_Base then
-         TIM10_Force_Reset;
-         TIM10_Release_Reset;
+         RCC_Periph.APB2RSTR.TIM10RST := 1;
+         RCC_Periph.APB2RSTR.TIM10RST := 0;
       elsif This'Address = TIM11_Base then
-         TIM11_Force_Reset;
-         TIM11_Release_Reset;
+         RCC_Periph.APB2RSTR.TIM11RST := 1;
+         RCC_Periph.APB2RSTR.TIM11RST := 0;
       elsif This'Address = TIM12_Base then
-         TIM12_Force_Reset;
-         TIM12_Release_Reset;
+         RCC_Periph.APB1RSTR.TIM12RST := 1;
+         RCC_Periph.APB1RSTR.TIM12RST := 0;
       elsif This'Address = TIM13_Base then
-         TIM13_Force_Reset;
-         TIM13_Release_Reset;
+         RCC_Periph.APB1RSTR.TIM13RST := 1;
+         RCC_Periph.APB1RSTR.TIM13RST := 0;
       elsif This'Address = TIM14_Base then
-         TIM14_Force_Reset;
-         TIM14_Release_Reset;
+         RCC_Periph.APB1RSTR.TIM14RST := 1;
+         RCC_Periph.APB1RSTR.TIM14RST := 0;
       else
          raise Unknown_Device;
       end if;
    end Reset;
+
+   ------------------------------
+   -- System_Clock_Frequencies --
+   ------------------------------
+
+   function System_Clock_Frequencies return RCC_System_Clocks
+   is
+      Source       : constant UInt2 := RCC_Periph.CFGR.SWS.Val;
+      Result       : RCC_System_Clocks;
+   begin
+      case Source is
+         when 0 =>
+            --  HSI as source
+            Result.SYSCLK := HSI_VALUE;
+         when 1 =>
+            --  HSE as source
+            Result.SYSCLK := HSE_VALUE;
+         when 2 =>
+            --  PLL as source
+            declare
+               Pllsource : constant Bit := RCC_Periph.PLLCFGR.PLLSRC;
+               Pllm      : constant Word :=
+                             Word (RCC_Periph.PLLCFGR.PLLM.Val);
+               Plln      : constant Word :=
+                             Word (RCC_Periph.PLLCFGR.PLLN.Val);
+               Pllp      : constant Word :=
+                             (Word (RCC_Periph.PLLCFGR.PLLP.Val) + 1) * 2;
+               Pllvco    : Word;
+            begin
+               if Pllsource = 0 then
+                  Pllvco := (HSI_VALUE / Pllm) * Plln;
+               else
+                  Pllvco := (HSE_VALUE / Pllm) * Plln;
+               end if;
+               Result.SYSCLK := Pllvco / Pllp;
+            end;
+         when others =>
+            Result.SYSCLK := HSI_VALUE;
+      end case;
+
+      declare
+         HPRE  : constant UInt4 := RCC_Periph.CFGR.HPRE;
+         PPRE1 : constant UInt3 := RCC_Periph.CFGR.PPRE.Arr (0);
+         PPRE2 : constant UInt3 := RCC_Periph.CFGR.PPRE.Arr (1);
+      begin
+         Result.HCLK  := Result.SYSCLK / HPRE_Presc_Table (HPRE);
+         Result.PCLK1 := Result.HCLK / PPRE_Presc_Table (PPRE1);
+         Result.PCLK2 := Result.HCLK / PPRE_Presc_Table (PPRE2);
+
+         --  Timer clocks
+         --  If the APB prescaler (PPRE1, PPRE2 in the RCC_CFGR register)
+         --  is configured to a division factor of 1, TIMxCLK = PCLKx.
+         --  Otherwise, the timer clock frequencies are set to twice to the
+         --  frequency of the APB domain to which the timers are connected :
+         --  TIMxCLK = 2xPCLKx.
+         if PPRE_Presc_Table (PPRE1) = 1 then
+            Result.TIMCLK1 := Result.PCLK1;
+         else
+            Result.TIMCLK1 := Result.PCLK1 * 2;
+         end if;
+         if PPRE_Presc_Table (PPRE2) = 1 then
+            Result.TIMCLK2 := Result.PCLK2;
+         else
+            Result.TIMCLK2 := Result.PCLK2 * 2;
+         end if;
+      end;
+
+      return Result;
+   end System_Clock_Frequencies;
 
 end STM32.Device;

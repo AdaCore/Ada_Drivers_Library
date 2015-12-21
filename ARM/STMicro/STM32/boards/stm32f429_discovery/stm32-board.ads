@@ -150,6 +150,7 @@ package STM32.Board is
    --  Chip select and Data/Command select fot the LCD screen
    LCD_CSX      : GPIO_Point renames PC2;
    LCD_WRX_DCX  : GPIO_Point renames PD13;
+   LCD_RESET    : GPIO_Point renames PD12;
 
    --  RGB connection
    LCD_VSYNC    : GPIO_Point renames PA4;

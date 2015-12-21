@@ -30,42 +30,25 @@
 ------------------------------------------------------------------------------
 pragma Restrictions (No_Elaboration_Code);
 
-with STM32_SVD;
-
 package STM32.RCC is
 
-   type RCC_System_Clocks is record
-      SYSCLK  : Word;
-      HCLK    : Word;
-      PCLK1   : Word;
-      PCLK2   : Word;
-      TIMCLK1 : Word;
-      TIMCLK2 : Word;
-   end record;
-
-   function System_Clock_Frequencies return RCC_System_Clocks;
-
-   type PLLSAI_DivR is new STM32_SVD.UInt2;
-   PLLSAI_DIV2  : constant PLLSAI_DivR := 0;
-   PLLSAI_DIV4  : constant PLLSAI_DivR := 1;
-   PLLSAI_DIV8  : constant PLLSAI_DivR := 2;
-   PLLSAI_DIV16 : constant PLLSAI_DivR := 3;
-
-   procedure Set_PLLSAI_Factors
-     (LCD  : STM32_SVD.UInt3;
-      VCO  : STM32_SVD.UInt9;
-      DivR : PLLSAI_DivR);
-
-   procedure Enable_PLLSAI;
-   procedure Disable_PLLSAI;
-   function PLLSAI_Ready return Boolean;
+--     type RCC_System_Clocks is record
+--        SYSCLK  : Word;
+--        HCLK    : Word;
+--        PCLK1   : Word;
+--        PCLK2   : Word;
+--        TIMCLK1 : Word;
+--        TIMCLK2 : Word;
+--     end record;
+--
+--     function System_Clock_Frequencies return RCC_System_Clocks;
 
    --  Part below is obsolete and should be moved to the corresponding driver.
 
    procedure CRC_Clock_Enable with Inline;
    procedure BKPSRAM_Clock_Enable with Inline;
-   procedure CCMDATARAMEN_Clock_Enable with Inline;
-   procedure DMA2D_Clock_Enable with Inline;
+--     procedure CCMDATARAMEN_Clock_Enable with Inline;
+--     procedure DMA2D_Clock_Enable with Inline;
    procedure WWDG_Clock_Enable with Inline;
 
 --     procedure SDIO_Clock_Enable with Inline;
@@ -83,8 +66,8 @@ package STM32.RCC is
    procedure CRC_Force_Reset with Inline;
    procedure CRC_Release_Reset with Inline;
 
-   procedure DMA2D_Force_Reset with Inline;
-   procedure DMA2D_Release_Reset with Inline;
+--     procedure DMA2D_Force_Reset with Inline;
+--     procedure DMA2D_Release_Reset with Inline;
 
    procedure OTGFS_Force_Reset with Inline;
    procedure OTGFS_Release_Reset with Inline;

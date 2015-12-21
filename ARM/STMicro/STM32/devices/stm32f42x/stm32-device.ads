@@ -52,8 +52,6 @@ with STM32.SPI;     use STM32.SPI;
 with STM32.Timers;  use STM32.Timers;
 with STM32.DAC;     use STM32.DAC;
 
-private with STM32_SVD.RCC;
-
 package STM32.Device is
    pragma Elaborate_Body;
 
@@ -371,25 +369,31 @@ package STM32.Device is
    -- Reset and Clock Control --
    -----------------------------
 
-   type ABP_Timer_Prescaler_Mode is
-     ( --  If the APB prescaler (PPRE1, PPRE2 in the RCC_CFGR register) is
-       --  configured to a division factor of 1, TIMxCLK = PCLKx. Otherwise,
-       --  the timer clock frequencies are set to twice to the frequency of
-       --  the APB domain to which the timers are connected :
-       --  TIMxCLK = 2xPCLKx.
-       Mode_0,
-       --  If the APB prescaler (PPRE1, PPRE2 in the RCC_CFGR register) is
-       --  configured to a division factor of 1, 2 or 4, TIMxCLK = HCLK.
-       --  Otherwise, the timer clock frequencies are set to four times to the
-       --  frequency of the APB domain to which the timers are connected :
-       --  TIMxCLK = 4xPCLKx.
-       Mode_1)
-     with Size => 1;
-   function Get_ABP_Timer_Prescaler_Mode
-     return ABP_Timer_Prescaler_Mode;
+   type RCC_System_Clocks is record
+      SYSCLK  : Word;
+      HCLK    : Word;
+      PCLK1   : Word;
+      PCLK2   : Word;
+      TIMCLK1 : Word;
+      TIMCLK2 : Word;
+   end record;
 
-   procedure Set_PLLSAIDIVR
-     (Factor : UInt2);
+   function System_Clock_Frequencies return RCC_System_Clocks;
+
+   type PLLSAI_DivR is new STM32_SVD.UInt2;
+   PLLSAI_DIV2  : constant PLLSAI_DivR := 0;
+   PLLSAI_DIV4  : constant PLLSAI_DivR := 1;
+   PLLSAI_DIV8  : constant PLLSAI_DivR := 2;
+   PLLSAI_DIV16 : constant PLLSAI_DivR := 3;
+
+   procedure Set_PLLSAI_Factors
+     (LCD  : STM32_SVD.UInt3;
+      VCO  : STM32_SVD.UInt9;
+      DivR : PLLSAI_DivR);
+
+   procedure Enable_PLLSAI;
+   procedure Disable_PLLSAI;
+   function PLLSAI_Ready return Boolean;
 
 private
 
@@ -408,11 +412,5 @@ private
            GPIO_Port_K'Enum_Rep = 10),
       "Invalid representation for type GPIO_Port_Id");
    --  Confirming, but depended upon so we check it.
-
-   function Get_ABP_Timer_Prescaler_Mode
-     return ABP_Timer_Prescaler_Mode
-   is
-     (ABP_Timer_Prescaler_Mode'Val
-        (STM32_SVD.RCC.RCC_Periph.DCKCFGR.TIMPRE));
 
 end STM32.Device;
