@@ -40,7 +40,7 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with STM32.LTDC;
+with STM32.LCD;
 with STM32.I2C;    use STM32.I2C;
 with STM32.GPIO;   use STM32.GPIO;
 
@@ -50,8 +50,8 @@ package STM32.Touch_Panel is
 
    type TP_State is record
       Touch_Detected : Boolean;
-      X : LTDC.Width;
-      Y : LTDC.Height;
+      X : LCD.Width;
+      Y : LCD.Height;
       Z : Half_Word;
    end record;
 

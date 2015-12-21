@@ -42,7 +42,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time; use Ada.Real_Time;
-with STM32.RCC;
 
 package body STM32.Touch_Panel is
 
@@ -83,6 +82,10 @@ package body STM32.Touch_Panel is
 
       return Data;
    end Read_Data;
+
+   -------------------
+   -- Read_Register --
+   -------------------
 
    function Read_Register (Reg_Addr : Byte) return Byte is
       Data : Byte;
@@ -125,6 +128,10 @@ package body STM32.Touch_Panel is
       return Data;
    end Read_Register;
 
+   --------------------
+   -- Write_Register --
+   --------------------
+
    procedure Write_Register (Reg_Addr : Byte; Data : Byte) is
    begin
       Generate_Start (TP_I2C, Enabled);
@@ -154,6 +161,10 @@ package body STM32.Touch_Panel is
       Generate_Stop (TP_I2C, Enabled);
    end Write_Register;
 
+   -------------------
+   -- TP_Ctrl_Lines --
+   -------------------
+
    procedure TP_Ctrl_Lines is
       GPIO_Conf : GPIO_Port_Configuration;
    begin
@@ -178,22 +189,29 @@ package body STM32.Touch_Panel is
       Lock (SDA);
    end TP_Ctrl_Lines;
 
+   -------------------
+   -- TP_I2C_Config --
+   -------------------
+
    procedure TP_I2C_Config is
    begin
-      STM32.RCC.I2C3_Force_Reset;
-      STM32.RCC.I2C3_Release_Reset;
+      Reset (TP_I2C);
 
       Configure
         (TP_I2C,
          Mode        => I2C_Mode,
          Duty_Cycle  => DutyCycle_2,
          Own_Address => 16#00#,
-         Ack         => Ack_Enable,
+         Ack         => Ack_Disable,
          Ack_Address => AcknowledgedAddress_7bit,
-         Clock_Speed => 1_000);
+         Clock_Speed => 100_000);
 
       Set_State (TP_I2C, Enabled);
    end TP_I2C_Config;
+
+   ---------------
+   -- IOE_Reset --
+   ---------------
 
    procedure IOE_Reset is
    begin
@@ -204,6 +222,10 @@ package body STM32.Touch_Panel is
 
       Write_Register (IOE_REG_SYS_CTRL1, 16#00#);
    end IOE_Reset;
+
+   --------------------------
+   -- IOE_Function_Command --
+   --------------------------
 
    procedure IOE_Function_Command (Func : Byte; Enabled : Boolean) is
       Reg : Byte := Read_Register (IOE_REG_SYS_CTRL2);
@@ -219,6 +241,10 @@ package body STM32.Touch_Panel is
       Write_Register (IOE_REG_SYS_CTRL2, Reg);
    end IOE_Function_Command;
 
+   -------------------
+   -- IOE_AF_Config --
+   -------------------
+
    procedure IOE_AF_Config (Pin : Byte; Enabled : Boolean) is
       Reg : Byte := Read_Register (IOE_REG_GPIO_AF);
    begin
@@ -231,11 +257,19 @@ package body STM32.Touch_Panel is
       Write_Register (IOE_REG_GPIO_AF, Reg);
    end IOE_AF_Config;
 
+   ----------------
+   -- Get_IOE_ID --
+   ----------------
+
    function Get_IOE_ID return Half_Word is
    begin
       return (Half_Word (Read_Register (0)) * (2**8))
         or Half_Word (Read_Register (1));
    end Get_IOE_ID;
+
+   ----------------
+   -- Initialize --
+   ----------------
 
    procedure Initialize is
    begin
@@ -278,7 +312,7 @@ package body STM32.Touch_Panel is
       Write_Register (IOE_REG_INT_STA, 16#FF#);
    end Initialize;
 
-   function Read_X return LTDC.Width is
+   function Read_X return LCD.Width is
       X, XR : Integer;
       Raw_X : Half_Word;
    begin
@@ -293,15 +327,15 @@ package body STM32.Touch_Panel is
 
       XR := X / 15;
 
-      if XR < LTDC.Width'First then
-         XR := LTDC.Width'First;
-      elsif XR > LTDC.Width'Last then
-         XR := LTDC.Width'Last;
+      if XR < LCD.Width'First then
+         XR := LCD.Width'First;
+      elsif XR > LCD.Width'Last then
+         XR := LCD.Width'Last;
       end if;
-      return LTDC.Width (XR);
+      return LCD.Width (XR);
    end Read_X;
 
-   function Read_Y return LTDC.Height is
+   function Read_Y return LCD.Height is
       Y, YR : Integer;
       Raw_Y : Half_Word;
    begin
@@ -312,12 +346,12 @@ package body STM32.Touch_Panel is
 
       YR := Y / 11;
 
-      if YR < LTDC.Height'First then
-         YR := LTDC.Height'First;
-      elsif YR > LTDC.Height'Last then
-         YR := LTDC.Height'Last;
+      if YR < LCD.Height'First then
+         YR := LCD.Height'First;
+      elsif YR > LCD.Height'Last then
+         YR := LCD.Height'Last;
       end if;
-      return LTDC.Height (YR);
+      return LCD.Height (YR);
    end Read_Y;
 
    function Read_Z return Half_Word is
@@ -328,8 +362,8 @@ package body STM32.Touch_Panel is
    function Current_State return TP_State is
       State : TP_State;
       Ctrl : Byte;
-      X : LTDC.Width  := 0;
-      Y : LTDC.Height := 0;
+      X : LCD.Width  := 0;
+      Y : LCD.Height := 0;
       Z : Half_Word  := 0;
    begin
       --  Check Touch detected bit in CTRL register
