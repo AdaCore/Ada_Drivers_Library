@@ -38,13 +38,10 @@ package Serial_IO.Nonblocking is
    pragma Elaborate_Body;
 
    type Peripheral_Descriptor is record
-      Port               : not null access GPIO_Port;
       Transceiver        : not null access USART;
-      Enable_Port_Clock  : not null access procedure;
-      Enable_USART_Clock : not null access procedure;
       Transceiver_AF     : GPIO_Alternate_Function;
-      Tx_Pin             : GPIO_Pin;
-      Rx_Pin             : GPIO_Pin;
+      Tx_Pin             : GPIO_Point;
+      Rx_Pin             : GPIO_Point;
    end record;
 
    type Serial_Port

@@ -52,12 +52,11 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 with Interfaces;        use Interfaces;
 with Ada.Real_Time;     use Ada.Real_Time;
 
-with STM32_Board;       use STM32_Board;
+with STM32.Board;       use STM32.Board;
 with STM32.LIS3DSH;     use STM32.LIS3DSH;  -- on the F4 Disco board
 
 with STM32.GPIO;        use STM32.GPIO;
 with STM32.Timers;      use STM32.Timers;
-with STM32.RCC;         use STM32.RCC;
 with STM32.PWM;         use STM32.PWM;
 
 use STM32;
@@ -161,32 +160,27 @@ begin
      (PWM_Output,
       Requested_Frequency    => PWM_Frequency,
       PWM_Timer              => PWM_Output_Timer'Access,
-      PWM_AF                 => PWM_Output_AF,
-      Enable_PWM_Timer_Clock => Output_Timer_Clock_Enable'Access);
+      PWM_AF                 => PWM_Output_AF);
 
    Attach_PWM_Channel
      (PWM_Output,
       Channel                => Channel_1,
-      Point                  => Channel_1_Point,
-      Enable_GPIO_Port_Clock => Channel_GPIO_Clock_Enable'Access);
+      Point                  => Channel_1_Point);
 
    Attach_PWM_Channel
      (PWM_Output,
       Channel                => Channel_2,
-      Point                  => Channel_2_Point,
-      Enable_GPIO_Port_Clock => Channel_GPIO_Clock_Enable'Access);
+      Point                  => Channel_2_Point);
 
    Attach_PWM_Channel
      (PWM_Output,
       Channel                => Channel_3,
-      Point                  => Channel_3_Point,
-      Enable_GPIO_Port_Clock => Channel_GPIO_Clock_Enable'Access);
+      Point                  => Channel_3_Point);
 
    Attach_PWM_Channel
      (PWM_Output,
       Channel                => Channel_4,
-      Point                  => Channel_4_Point,
-      Enable_GPIO_Port_Clock => Channel_GPIO_Clock_Enable'Access);
+      Point                  => Channel_4_Point);
 
    loop
       Drive_LEDs;

@@ -29,6 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with STM32.Device; use STM32.Device;
+
 package body Serial_IO.Nonblocking is
 
    ----------------
@@ -39,9 +41,8 @@ package body Serial_IO.Nonblocking is
       Configuration : GPIO_Port_Configuration;
    begin
       --  Must enable the port's clock *prior* to configuring the pins!
-      This.Device.Enable_Port_Clock.all;
-
-      This.Device.Enable_USART_Clock.all;
+      Enable_Clock (This.Device.Rx_Pin & This.Device.Tx_Pin);
+      Enable_Clock (This.Device.Transceiver.all);
 
       Configuration.Mode        := Mode_AF;
       Configuration.Speed       := Speed_50MHz;
@@ -49,14 +50,12 @@ package body Serial_IO.Nonblocking is
       Configuration.Resistors   := Pull_Up;
 
       Configure_IO
-        (Port => This.Device.Port.all,
-         Pins => This.Device.Rx_Pin & This.Device.Tx_Pin,
+        (Points => This.Device.Rx_Pin & This.Device.Tx_Pin,
          Config => Configuration);
 
       Configure_Alternate_Function
-        (Port => This.Device.Port.all,
-         Pins => This.Device.Rx_Pin & This.Device.Tx_Pin,
-         AF   => This.Device.Transceiver_AF);
+        (Points => This.Device.Rx_Pin & This.Device.Tx_Pin,
+         AF     => This.Device.Transceiver_AF);
 
       This.Initialized := True;
    end Initialize;

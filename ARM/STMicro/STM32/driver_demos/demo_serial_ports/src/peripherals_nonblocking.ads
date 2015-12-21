@@ -40,13 +40,10 @@ with STM32.Device;          use STM32.Device;
 package Peripherals_Nonblocking is
 
    Hardware : aliased Peripheral_Descriptor :=
-                (Port               => GPIO_B'Access,
-                 Transceiver        => USART_1'Access,
-                 Enable_Port_Clock  => GPIOB_Clock_Enable'Access,
-                 Enable_USART_Clock => USART1_Clock_Enable'Access,
+                (Transceiver        => USART_1'Access,
                  Transceiver_AF     => GPIO_AF_USART1,
-                 Tx_Pin             => Pin_6,
-                 Rx_Pin             => Pin_7);
+                 Tx_Pin             => PB6,
+                 Rx_Pin             => PB7);
 
    Transceiver_Interrupt : constant Interrupt_Id := USART1_Interrupt;
 

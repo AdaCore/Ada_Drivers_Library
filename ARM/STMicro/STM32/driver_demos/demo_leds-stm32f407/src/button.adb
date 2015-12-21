@@ -32,7 +32,7 @@
 with Ada.Real_Time; use Ada.Real_Time;
 with STM32.SYSCFG;  use STM32.SYSCFG;
 with STM32.GPIO;    use STM32.GPIO;
-with STM32_Board;   use STM32_Board;
+with STM32.Board;   use STM32.Board;
 
 package body Button is
 

@@ -37,13 +37,12 @@
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
-with STM32_Board;  use STM32_Board;
+with STM32.Board;  use STM32.Board;
 with STM32.Device; use STM32.Device;
 
 with STM32.PWM;    use STM32.PWM;
 with STM32.GPIO;   use STM32.GPIO;
 with STM32.Timers; use STM32.Timers;
-with STM32.RCC;    use STM32.RCC;
 
 procedure Demo is
 
@@ -106,14 +105,12 @@ begin
      (Output,
       Requested_Frequency    => 30_000.0, -- arbitrary
       PWM_Timer              => Output_Timer'Access,
-      PWM_AF                 => GPIO_AF_TIM4,
-      Enable_PWM_Timer_Clock => TIM4_Clock_Enable'Access);
+      PWM_AF                 => GPIO_AF_TIM4);
 
    Attach_PWM_Channel
      (Output,
       Output_Channel,
-      Output_Point,
-      GPIOD_Clock_Enable'Access);
+      Output_Point);
 
    declare
       use STM32;

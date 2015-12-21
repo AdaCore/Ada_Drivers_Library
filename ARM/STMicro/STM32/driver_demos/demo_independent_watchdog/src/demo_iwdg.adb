@@ -48,13 +48,13 @@ with Last_Chance_Handler;    pragma Unreferenced (Last_Chance_Handler);
 
 with STM32.IWDG;    use STM32.IWDG;
 with Ada.Real_Time; use Ada.Real_Time;
-with STM32_Board;   use STM32_Board;  -- arbitrary
+with STM32.Board;   use STM32.Board;
 
 procedure Demo_IWDG is
 begin
    Initialize_LEDs;
 
-   Initialize_Watchdog (Prescalar => Divider_32, Count => 4095);
+   Initialize_Watchdog (Prescaler => Divider_32, Count => 4095);
    --  The clock driving the watchdog downcounter is approximately 32KHz, so
    --  dividing by 32 gives about 1 millisecond per count. Thus an initial
    --  (and reloaded) count of 4095 gives approximately that many milliseconds

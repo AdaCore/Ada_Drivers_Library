@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32_Board;     use STM32_Board;
+with STM32.Board;     use STM32.Board;
 with STM32.Device;    use STM32.Device;
 with STM32.GPIO;      use STM32.GPIO;
 with STM32.Timers;    use STM32.Timers;
@@ -43,8 +43,6 @@ package Demo_PWM_Settings is
    PWM_Output_Timer : Timer renames Timer_4;
 
    PWM_Output_AF : constant GPIO_Alternate_Function := GPIO_AF_TIM4;
-
-   procedure Output_Timer_Clock_Enable renames TIM4_Clock_Enable;
 
    PWM_Frequency : constant := 10_000.0;  -- arbitrary
 
@@ -62,10 +60,5 @@ package Demo_PWM_Settings is
    Channel_3_Point : constant GPIO_Point := Red;
 
    Channel_4_Point : constant GPIO_Point := Blue;
-
-   procedure Channel_GPIO_Clock_Enable
-     renames GPIOD_Clock_Enable;
-   --  the LEDs on the F4_Disco are all on GPIO_D, which is also the value of
-   --  LED_Port
 
 end Demo_PWM_Settings;

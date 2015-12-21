@@ -32,7 +32,6 @@
 --  This program demonstrates some basic functionality of the ILI9341 LCD
 --  component driver, combined with the Bitmapped_Drawing generic package.
 
-with STM32.RCC;          use STM32.RCC;
 with STM32.GPIO;         use STM32.GPIO;
 
 with Bitmapped_Drawing;
@@ -54,19 +53,13 @@ procedure Demo_ILI9341 is
 begin
    LCD.Initialize
      (Chip_Select             => PC2,
-      Enable_CS_GPIO_Clock    => GPIOC_Clock_Enable'Access,
       WRX                     => PD13,
-      Enable_WRX_GPIO_Clock   => GPIOD_Clock_Enable'Access,
       Reset                   => PD12,
-      Enable_Reset_GPIO_Clock => GPIOD_Clock_Enable'Access,
       SPI_Chip                => SPI_5'Access,
-      Enable_SPI_Clock        => SPI5_Clock_Enable'Access,
-      SPI_GPIO                => GPIO_F'Access,
-      Enable_SPI_GPIO_Clock   => GPIOF_Clock_Enable'Access,
       SPI_AF                  => GPIO_AF_SPI5,
-      SCK_Pin                 => Pin_7,
-      MISO_Pin                => Pin_8,
-      MOSI_Pin                => Pin_9);
+      SCK_Pin                 => PF7,
+      MISO_Pin                => PF8,
+      MOSI_Pin                => PF9);
 
    LCD.Set_Orientation (To => LCD.Portrait_2);
 

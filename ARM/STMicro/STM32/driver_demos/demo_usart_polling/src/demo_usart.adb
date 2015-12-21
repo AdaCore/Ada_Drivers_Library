@@ -106,7 +106,7 @@ procedure Demo_USART is
    procedure Put_Blocking (This : in out USART;  Data : Half_Word) is
    begin
       Await_Send_Ready (This);
-      Transmit (This, Data);
+      Transmit (This, Bits_9 (Data));
    end Put_Blocking;
 
 begin

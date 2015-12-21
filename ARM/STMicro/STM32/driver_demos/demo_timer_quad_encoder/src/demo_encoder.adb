@@ -30,9 +30,9 @@
 ------------------------------------------------------------------------------
 
 --  Demonstrates the encoder interface provided by the ST Micro timers. We use
---  a timer (TIM3) to emulate a quadrature encoder, providing the two 
---  off-phase signals into another timer (TIM1) working in the encoder 
---  interface mode (the "motor"). The emulated encoder outputs are connected 
+--  a timer (TIM3) to emulate a quadrature encoder, providing the two
+--  off-phase signals into another timer (TIM1) working in the encoder
+--  interface mode (the "motor"). The emulated encoder outputs are connected
 --  to the motor using jumper wires connecting the corresponding pins.
 
 --      Emulated_Encoder                                 Motor
@@ -60,7 +60,7 @@
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 with Ada.Real_Time;        use Ada.Real_Time;
 
-with STM32_Board;          use STM32_Board;
+with STM32.Board;          use STM32.Board;
 
 with Motor;
 with Encoder_Emulator;

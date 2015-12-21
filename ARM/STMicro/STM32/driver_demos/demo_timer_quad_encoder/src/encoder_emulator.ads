@@ -53,7 +53,6 @@ with Interfaces;    use Interfaces;
 with STM32.Device;  use STM32.Device;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.Timers;  use STM32.Timers;
-with STM32.RCC;
 with STM32;         use STM32;
 
 package Encoder_Emulator is
@@ -78,6 +77,6 @@ private
 
    Emulator_AF    : constant GPIO_Alternate_Function := GPIO_AF_TIM3;
 
-   Emulator_Period : constant Word := ((RCC.System_Clock_Frequencies.SYSCLK / 4) / 10000) - 1;
+   Emulator_Period : constant Word := ((System_Clock_Frequencies.SYSCLK / 4) / 10000) - 1;
 
 end Encoder_Emulator;

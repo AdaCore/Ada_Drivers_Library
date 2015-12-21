@@ -37,7 +37,7 @@
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 
-with STM32_Board;              use STM32_Board;
+with STM32.Board;              use STM32.Board;
 with STM32.Device;             use STM32.Device;
 with STM32.Timers;             use STM32.Timers;
 with STM32F4_Timer_Interrupts; use STM32F4_Timer_Interrupts;

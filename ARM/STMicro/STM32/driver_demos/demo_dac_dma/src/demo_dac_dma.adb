@@ -48,7 +48,7 @@ with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 with Interfaces;   use Interfaces;
 
 with STM32.Device; use STM32.Device;
-with STM32_Board;  use STM32_Board;
+with STM32.Board;  use STM32.Board;
 
 with STM32;        use STM32;
 with STM32.DAC;    use STM32.DAC;

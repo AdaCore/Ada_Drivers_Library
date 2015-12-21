@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32_Board;    use STM32_Board;
+with STM32.Board;    use STM32.Board;
 with Button;         use Button;
 with Ada.Real_Time;  use Ada.Real_Time;
 

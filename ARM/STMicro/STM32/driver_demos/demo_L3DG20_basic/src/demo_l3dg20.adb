@@ -42,7 +42,7 @@ with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 with Interfaces;   use Interfaces;
 
 with STM32.Device; use STM32.Device;
-with STM32_Board;  use STM32_Board;
+with STM32.Board;  use STM32.Board;
 
 with STM32.L3DG20; use STM32.L3DG20;
 
@@ -51,7 +51,6 @@ with BMP_Fonts;     use BMP_Fonts;
 with STM32.ILI9341;
 with STM32;         use STM32;
 with STM32.GPIO;    use STM32.GPIO;
-with STM32.RCC;     use STM32.RCC;
 
 procedure Demo_L3DG20 is
 
@@ -105,19 +104,14 @@ procedure Demo_L3DG20 is
    begin
       Initialize_Gyro_Hardware
         (Gyro,
-         L3GD20_SPI                  => SPI_5'Access,
-         SPI_GPIO                    => GPIO_F'Access,  -- required, pg 23
-         SPI_GPIO_AF                 => GPIO_AF_SPI5,
-         SCK_Pin                     => Pin_7,          -- required, pg 23
-         MISO_Pin                    => Pin_8,          -- required, pg 23
-         MOSI_Pin                    => Pin_9,          -- required, pg 23
-         CS_GPIO                     => GPIO_C'Access,  -- required, pg 21
-         CS_Pin                      => Pin_1,          -- required, pg 21
-         Int_GPIO                    => GPIO_A'Access,  -- required, pg 19
-         Enable_SPI_Clock            => RCC.SPI5_Clock_Enable'Access,
-         Enable_SPI_GPIO_Clock       => RCC.GPIOF_Clock_Enable'Access,
-         Enable_Chip_Select_Clock    => RCC.GPIOC_Clock_Enable'Access,
-         Enable_GPIO_Interrupt_Clock => RCC.GPIOA_Clock_Enable'Access);
+         L3GD20_SPI  => SPI_5'Access,
+         SPI_GPIO_AF => GPIO_AF_SPI5,
+         SCK_Pin     => SPI5_SCK,       -- required, pg 23
+         MISO_Pin    => SPI5_MISO,      -- required, pg 23
+         MOSI_Pin    => SPI5_MOSI,      -- required, pg 23
+         CS_Pin      => NCS_MEMS_SPI,
+         Int1_Pin    => MEMS_INT1,
+         Int2_Pin    => MEMS_INT2);
 
       Configure
         (Gyro,
@@ -197,20 +191,14 @@ procedure Demo_L3DG20 is
 
 begin
    LCD.Initialize
-     (Chip_Select             => PC2,
-      Enable_CS_GPIO_Clock    => GPIOC_Clock_Enable'Access,
-      WRX                     => PD13,
-      Enable_WRX_GPIO_Clock   => GPIOD_Clock_Enable'Access,
-      Reset                   => PD12,
-      Enable_Reset_GPIO_Clock => GPIOD_Clock_Enable'Access,
+     (Chip_Select             => LCD_CSX,
+      WRX                     => LCD_WRX_DCX,
+      Reset                   => LCD_RESET,
       SPI_Chip                => SPI_5'Access,
-      Enable_SPI_Clock        => SPI5_Clock_Enable'Access,
-      SPI_GPIO                => GPIO_F'Access,
-      Enable_SPI_GPIO_Clock   => GPIOF_Clock_Enable'Access,
       SPI_AF                  => GPIO_AF_SPI5,
-      SCK_Pin                 => Pin_7,
-      MISO_Pin                => Pin_8,
-      MOSI_Pin                => Pin_9);
+      SCK_Pin                 => SPI5_SCK,
+      MISO_Pin                => SPI5_MISO,
+      MOSI_Pin                => SPI5_MOSI);
 
    LCD.Set_Orientation (To => LCD.Portrait_2);
 

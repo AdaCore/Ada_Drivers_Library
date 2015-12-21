@@ -31,7 +31,7 @@
 
 with STM32;       use STM32;
 with STM32.GPIO;  use STM32.GPIO;
-with STM32_Board; use STM32_Board;
+with STM32.Board; use STM32.Board;
 with STM32.RCC;   use STM32.RCC;
 
 with Serial_IO.Blocking;  use Serial_IO.Blocking;

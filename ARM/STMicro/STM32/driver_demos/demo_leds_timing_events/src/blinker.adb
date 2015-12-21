@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32_Board;  use STM32_Board;
+with STM32.Board;  use STM32.Board;
 with STM32.GPIO;   use STM32.GPIO;
 
 package body Blinker is

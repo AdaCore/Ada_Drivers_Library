@@ -38,7 +38,7 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 --  predefined version. We need it in the executable but never call it directly
 --  so it must be somewhere in the closure of the context clauses.
 
-with STM32_Board;    use STM32_Board;
+with STM32.Board;    use STM32.Board;
 with STM32.Device;   use STM32.Device;
 
 with Ada.Real_Time;  use Ada.Real_Time;

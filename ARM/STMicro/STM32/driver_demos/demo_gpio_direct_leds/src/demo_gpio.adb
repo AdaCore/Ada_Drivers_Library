@@ -41,11 +41,11 @@
 --  Note that using the STM32F4_Discovery package would make this even easier
 --  but that is not what this program demonstrates.
 
-with STM32_Board;   use STM32_Board;
+with STM32.Device;  use STM32.Device;
+with STM32.Board;   use STM32.Board;
 
 with STM32.GPIO;    use STM32.GPIO;
 with Ada.Real_Time; use Ada.Real_Time;
-with STM32.RCC;
 
 procedure Demo_GPIO is
 
@@ -59,7 +59,7 @@ procedure Demo_GPIO is
    procedure Initialize_LEDs is
       Configuration : GPIO_Port_Configuration;
    begin
-      RCC.GPIOD_Clock_Enable;
+      Enable_Clock (All_LEDs);
 
       Configuration.Mode        := Mode_Out;
       Configuration.Output_Type := Push_Pull;
