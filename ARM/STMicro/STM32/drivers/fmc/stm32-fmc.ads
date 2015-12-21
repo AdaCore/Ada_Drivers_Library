@@ -240,8 +240,6 @@ package STM32.FMC is
 
    function FMC_SDRAM_Busy return Boolean with Inline;
 
-   function FMC_Get_Flag (Bank : Word; Flag : Word) return Boolean;
-
    function FMC_SDRAM_Get_Status
      (Bank : FMC_SDRAM_Bank_Type) return FMC_SDRAM_Status_Mode;
 

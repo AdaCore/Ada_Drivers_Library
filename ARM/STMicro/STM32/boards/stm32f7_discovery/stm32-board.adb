@@ -29,32 +29,57 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This version of the LCH only toggles the Red LED.
 
---  Note this version is for use with the ravenscar-full runtime.
+package body STM32.Board is
 
-with STM32.Board;   use STM32.Board;
-with STM32.GPIO;    use STM32.GPIO;
-with Ada.Real_Time; use Ada.Real_Time;
+   ------------------
+   -- All_LEDs_Off --
+   ------------------
 
-package body Last_Chance_Handler is
-
-   -------------------------
-   -- Last_Chance_Handler --
-   -------------------------
-
-   procedure Last_Chance_Handler (Error : Exception_Occurrence) is
-      pragma Unreferenced (Error);
+   procedure All_LEDs_Off is
    begin
-      Initialize_LEDs;
+      Clear (ALL_LEDs);
+   end All_LEDs_Off;
 
-      All_LEDs_Off;
+   -----------------
+   -- All_LEDs_On --
+   -----------------
 
-      --  No-return procedure...
-      loop
-         Toggle (LCH_LED);
-         delay until Clock + Milliseconds (500);
-      end loop;
-   end Last_Chance_Handler;
+   procedure All_LEDs_On is
+   begin
+      Set (ALL_LEDs);
+   end All_LEDs_On;
 
-end Last_Chance_Handler;
+   ---------------------
+   -- Initialize_LEDs --
+   ---------------------
+
+   procedure Initialize_LEDs is
+      Conf : GPIO_Port_Configuration;
+   begin
+      Enable_Clock (ALL_LEDs);
+
+      Conf.Mode        := Mode_Out;
+      Conf.Output_Type := Push_Pull;
+      Conf.Speed       := Speed_100MHz;
+      Conf.Resistors   := Floating;
+
+      Configure_IO (All_LEDs, Conf);
+   end Initialize_LEDs;
+
+   --------------------------------
+   -- Configure_User_Button_GPIO --
+   --------------------------------
+
+   procedure Configure_User_Button_GPIO is
+      Config : GPIO_Port_Configuration;
+   begin
+      Enable_Clock (User_Button_Point);
+
+      Config.Mode := Mode_In;
+      Config.Resistors := Floating;
+
+      Configure_IO (User_Button_Point, Config);
+   end Configure_User_Button_GPIO;
+
+end STM32.Board;

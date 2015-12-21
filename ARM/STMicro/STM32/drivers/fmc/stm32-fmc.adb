@@ -161,31 +161,6 @@ package body STM32.FMC is
       return FMC_Periph.SDSR.BUSY = 1;
    end FMC_SDRAM_Busy;
 
-   ------------------
-   -- FMC_Get_Flag --
-   ------------------
-
-   function FMC_Get_Flag (Bank : Word; Flag : Word) return Boolean is
-      Reg : Word;
-      function To_Word is new Ada.Unchecked_Conversion
-        (SR_Register, Word);
-      function To_Word is new Ada.Unchecked_Conversion
-        (SDSR_Register, Word);
-   begin
-      case Bank is
-         when FMC_Bank2_NAND =>
-            Reg := To_Word (FMC_Periph.SR2);
-         when FMC_Bank3_NAND =>
-            Reg := To_Word (FMC_Periph.SR3);
-         when FMC_Bank4_PCCARD =>
-            Reg := To_Word (FMC_Periph.SR4);
-         when others =>
-            Reg := To_Word (FMC_Periph.SDSR);
-      end case;
-
-      return (Reg and Flag) /= 0;
-   end FMC_Get_Flag;
-
    --------------------------
    -- FMC_SDRAM_Get_Status --
    --------------------------
