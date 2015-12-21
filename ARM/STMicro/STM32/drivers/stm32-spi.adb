@@ -44,8 +44,6 @@ with System;
 
 with STM32_SVD.SPI; use STM32_SVD.SPI;
 
-with STM32.RCC;     use STM32.RCC;
-
 package body STM32.SPI is
 
    Baud_Rate_Value : constant array (SPI_Baud_Rate_Prescaler) of Bits_3 :=
@@ -175,6 +173,17 @@ package body STM32.SPI is
    begin
       return Byte (Half_Word'(Data (Port)));
    end Data;
+
+   -------------
+   -- Is_Busy --
+   -------------
+
+   function Is_Busy (Port : SPI_Port) return Boolean is
+   begin
+      return (Rx_Is_Empty (Port)
+              and then not Tx_Is_Empty (Port))
+        or else Busy (Port);
+   end Is_Busy;
 
    -----------------
    -- Tx_Is_Empty --
@@ -347,7 +356,8 @@ package body STM32.SPI is
       if Current_Data_Direction (Port) = D1Line_Tx  then  --  ??? right value to compare???
          Port.CR1.BIDIOE := 1;
       end if;
-         Clear_Overrun (Port);
+
+      Clear_Overrun (Port);
 
       if not Enabled (Port) then
          Enable (Port);

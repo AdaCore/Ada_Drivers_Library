@@ -99,6 +99,9 @@ package STM32.SPI is
    function Data (Port : SPI_Port) return Byte
      with Inline;
 
+   function Is_Busy (Port : SPI_Port) return Boolean
+     with Inline;
+
    function Rx_Is_Empty (Port : SPI_Port) return Boolean
      with Inline;
 
