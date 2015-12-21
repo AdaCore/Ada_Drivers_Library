@@ -39,9 +39,8 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with STM32_SVD.RCC; use STM32_SVD.RCC;
 with STM32_SVD.RNG; use STM32_SVD.RNG;
-
-with STM32.RCC;
 
 package body STM32.RNG is
 
@@ -49,7 +48,10 @@ package body STM32.RNG is
    -- Enable_RNG_Clock --
    ----------------------
 
-   procedure Enable_RNG_Clock renames STM32.RCC.RNG_Clock_Enable;
+   procedure Enable_RNG_Clock is
+   begin
+      RCC_Periph.AHB2ENR.RNGEN := 1;
+   end Enable_RNG_Clock;
 
    ----------------
    -- Enable_RNG --
