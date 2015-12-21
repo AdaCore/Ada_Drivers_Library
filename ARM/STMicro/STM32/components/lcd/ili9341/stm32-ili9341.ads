@@ -97,19 +97,13 @@ package STM32.ILI9341 is
 
    procedure Initialize
      (Chip_Select             : GPIO_Point;
-      Enable_CS_GPIO_Clock    : not null access procedure;
       WRX                     : GPIO_Point;
-      Enable_WRX_GPIO_Clock   : not null access procedure;
       Reset                   : GPIO_Point;
-      Enable_Reset_GPIO_Clock : not null access procedure;
       SPI_Chip                : access SPI_Port;
-      Enable_SPI_Clock        : not null access procedure;
-      SPI_GPIO                : access GPIO_Port;
-      Enable_SPI_GPIO_Clock   : not null access procedure;
       SPI_AF                  : GPIO_Alternate_Function;
-      SCK_Pin                 : GPIO_Pin;
-      MISO_Pin                : GPIO_Pin;
-      MOSI_Pin                : GPIO_Pin);
+      SCK_Pin                 : GPIO_Point;
+      MISO_Pin                : GPIO_Point;
+      MOSI_Pin                : GPIO_Point);
    --  Initializes the device. Afterward, the device is also enabled so there
    --  is no immediate need to call Enable_Display.
 

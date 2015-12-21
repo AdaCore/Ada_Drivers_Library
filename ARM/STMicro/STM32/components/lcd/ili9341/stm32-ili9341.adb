@@ -44,6 +44,8 @@
 with Ada.Real_Time;  use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 
+with STM32.Device; use STM32.Device;
+
 package body STM32.ILI9341 is
 
    procedure Init_LCD;
@@ -107,19 +109,13 @@ package body STM32.ILI9341 is
 
    procedure Initialize
      (Chip_Select             : GPIO_Point;
-      Enable_CS_GPIO_Clock    : not null access procedure;
       WRX                     : GPIO_Point;
-      Enable_WRX_GPIO_Clock   : not null access procedure;
       Reset                   : GPIO_Point;
-      Enable_Reset_GPIO_Clock : not null access procedure;
       SPI_Chip                : access SPI_Port;
-      Enable_SPI_Clock        : not null access procedure;
-      SPI_GPIO                : access GPIO_Port;
-      Enable_SPI_GPIO_Clock   : not null access procedure;
       SPI_AF                  : GPIO_Alternate_Function;
-      SCK_Pin                 : GPIO_Pin;
-      MISO_Pin                : GPIO_Pin;
-      MOSI_Pin                : GPIO_Pin)
+      SCK_Pin                 : GPIO_Point;
+      MISO_Pin                : GPIO_Point;
+      MOSI_Pin                : GPIO_Point)
    is
       Config : GPIO_Port_Configuration;
    begin
@@ -135,29 +131,29 @@ package body STM32.ILI9341 is
       Config := (Mode => Mode_Out, Output_Type => Push_Pull,
                  Resistors => Floating, Speed => Speed_25MHz);
 
-      Enable_WRX_GPIO_Clock.all;
+      Enable_Clock (WRX);
       Configure_IO (WRX, Config);
 --        Lock (WRX.Port.all, WRX.Pin);
 
-      Enable_CS_GPIO_Clock.all;
+      Enable_Clock (Chip_Select);
       Configure_IO (Chip_Select, Config);
 --        Lock (Chip_Select.Port.all, Chip_Select.Pin);
 
-      Enable_Reset_GPIO_Clock.all;
+      Enable_Clock (Reset);
       Config.Speed := Speed_2MHz;  -- low
       Configure_IO (Reset, Config);
 --        Lock (Reset.Port.all, Reset.Pin);
 
       Chip_Select_High;
 
-      Enable_SPI_GPIO_Clock.all;
+      Enable_Clock (SCK_Pin & MISO_Pin & MOSI_Pin);
       Config.Speed := Speed_100MHz; -- high
       Config.Mode := Mode_AF;
-      Configure_IO (SPI_GPIO.all, SCK_Pin & MISO_Pin & MOSI_Pin, Config);
-      Configure_Alternate_Function (SPI_GPIO.all, SCK_Pin & MISO_Pin & MOSI_Pin, SPI_AF);
+      Configure_IO (SCK_Pin & MISO_Pin & MOSI_Pin, Config);
+      Configure_Alternate_Function (SCK_Pin & MISO_Pin & MOSI_Pin, SPI_AF);
 --        Lock (SPI_GPIO.all, SCK_Pin & MISO_Pin & MOSI_Pin);
 
-      Enable_SPI_Clock.all;
+      Enable_Clock (SPI_Chip.all);
       Init_SPI;
 
       Init_LCD;
