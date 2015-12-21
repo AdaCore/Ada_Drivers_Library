@@ -201,7 +201,7 @@ package body STM32.GPIO is
 
    procedure Clear (This : GPIO_Point) is
    begin
-      This.Port.BSRR.BR.Arr (this.Pin) := 0;
+      This.Port.BSRR.BR.Arr (this.Pin) := 1;
    end Clear;
 
    -----------
@@ -368,9 +368,9 @@ package body STM32.GPIO is
    -- Lock --
    ----------
 
-   procedure Lock (Pin : GPIO_Point) is
+   procedure Lock (Point : GPIO_Point) is
    begin
-      Lock_The_Pin (Pin.Port.all, 2 ** Pin.Pin);
+      Lock_The_Pin (Point.Port.all, Shift_Left (1, Point.Pin));
    end Lock;
 
    ----------
@@ -380,7 +380,7 @@ package body STM32.GPIO is
    procedure Lock (Points : GPIO_Points) is
    begin
       for Point of Points loop
-         Lock_The_Pin (Point.Port.all, 2 ** Point.Pin);
+         Lock (Point);
       end loop;
    end Lock;
 
@@ -452,21 +452,25 @@ package body STM32.GPIO is
      (Point  : GPIO_Point;
       Config : GPIO_Port_Configuration)
    is
-      MODER   : MODER_Union   := Point.Port.MODER.MODER;
-      OTYPER  : OT_Union      := Point.Port.OTYPER.OT;
-      OSPEEDR : OSPEEDR_Union := Point.Port.OSPEEDR.OSPEEDR;
-      PUPDR   : PUPDR_Union   := Point.Port.PUPDR.PUPDR;
+      MODER   : MODER_Register   := Point.Port.MODER;
+      OTYPER  : OTYPER_Register  := Point.Port.OTYPER;
+      OSPEEDR : OSPEEDR_Register := Point.Port.OSPEEDR;
+      PUPDR   : PUPDR_Register   := Point.Port.PUPDR;
 
    begin
-      MODER.Arr (Point.Pin)   := Pin_IO_Modes'Enum_Rep (Config.Mode);
-      OTYPER.Arr (Point.Pin)  := Pin_Output_Types'Enum_Rep (Config.Output_Type);
-      OSPEEDR.Arr (Point.Pin) := Pin_Output_Speeds'Enum_Rep (Config.Speed);
-      PUPDR.Arr (Point.Pin)   := Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
+      MODER.MODER.Arr (Point.Pin)     :=
+        Pin_IO_Modes'Enum_Rep (Config.Mode);
+      OTYPER.OT.Arr (Point.Pin)       :=
+        Pin_Output_Types'Enum_Rep (Config.Output_Type);
+      OSPEEDR.OSPEEDR.Arr (Point.Pin) :=
+        Pin_Output_Speeds'Enum_Rep (Config.Speed);
+      PUPDR.PUPDR.Arr (Point.Pin)     :=
+        Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
 
-      Point.Port.MODER.MODER     := MODER;
-      Point.Port.OTYPER.OT       := OTYPER;
-      Point.Port.OSPEEDR.OSPEEDR := OSPEEDR;
-      Point.Port.PUPDR.PUPDR     := PUPDR;
+      Point.Port.MODER   := MODER;
+      Point.Port.OTYPER  := OTYPER;
+      Point.Port.OSPEEDR := OSPEEDR;
+      Point.Port.PUPDR   := PUPDR;
    end Configure_IO;
 
    ------------------
