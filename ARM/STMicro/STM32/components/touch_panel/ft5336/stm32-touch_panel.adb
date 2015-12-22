@@ -5,6 +5,7 @@ with STM32.Board;   use STM32.Board;
 with STM32.Device;  use STM32.Device;
 with STM32.I2C;     use STM32.I2C;
 with STM32.GPIO;    use STM32.GPIO;
+with STM32.LCD;
 
 package body STM32.Touch_Panel is
 
@@ -475,6 +476,7 @@ package body STM32.Touch_Panel is
 
       RX   : Natural;
       RY   : Natural;
+      Rtmp : Natural;
       Ret  : TP_Touch_State;
       Regs : FT5336_Pressure_Registers;
       Tmp  : Short_HL_Type;
@@ -524,10 +526,17 @@ package body STM32.Touch_Panel is
          return Ret;
       end if;
 
-      RX := Natural'Max (LCD.Width'First, RX);
-      RY := Natural'Max (LCD.Height'First, RY);
-      RX := Natural'Min (LCD.Width'Last, RX);
-      RY := Natural'Min (LCD.Height'Last, RY);
+      if LCD.SwapXY then
+         RTmp := RX;
+         RX   := RY;
+         RY   := RTmp;
+         RX   := STM32.LCD.Pixel_Width - RX - 1;
+      end if;
+
+      RX := Natural'Max (0, RX);
+      RY := Natural'Max (0, RY);
+      RX := Natural'Min (LCD.Pixel_Width - 1, RX);
+      RY := Natural'Min (LCD.Pixel_Height - 1, RY);
 
       Ret.X := RX;
       Ret.Y := RY;

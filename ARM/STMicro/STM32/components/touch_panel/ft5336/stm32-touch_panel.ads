@@ -1,10 +1,8 @@
-with STM32.LCD;
-
 package STM32.Touch_Panel is
 
    type TP_Touch_State is record
-      X      : LCD.Width;
-      Y      : LCD.Height;
+      X      : Natural;
+      Y      : Natural;
       Weight : Natural;
    end record;
 
