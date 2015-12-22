@@ -50,31 +50,13 @@
 with Ada.Real_Time;             use Ada.Real_Time;
 with STM32.Board;               use STM32.Board;
 with LCD_Std_Out;
-with Bitmapped_Drawing;
 with BMP_Fonts;
-with STM32.ILI9341;
 with STM32.GPIO;                use STM32.GPIO;
 
 with Ada.Exceptions.Traceback;  use Ada.Exceptions.Traceback;
 with GNAT.Debug_Utilities;      use GNAT.Debug_Utilities;
 
 package body Last_Chance_Handler is
-
-   -----------------
-   -- LCD_Drawing --
-   -----------------
-
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => STM32.ILI9341.Colors,
-      Set_Pixel => STM32.ILI9341.Set_Pixel);
-
-   --------------
-   -- LCD_Text --
-   --------------
-
-   package LCD_Text is new LCD_Std_Out (LCD_Drawing);
-   --  we use the LCD_Std_Out generic, rather than directly using the Drawing
-   --  package, because we want the text to wrap around the screen if necessary
 
    -------------------------
    -- Last_Chance_Handler --
@@ -85,25 +67,25 @@ package body Last_Chance_Handler is
       Initialize_LEDs;  -- in case no other use already within the application
       All_LEDs_Off;
 
-      LCD_Text.Set_Font (To => BMP_Fonts.Font12x12);
+      LCD_Std_Out.Set_Font (To => BMP_Fonts.Font12x12);
 
-      LCD_Text.Clear_Screen;
+      LCD_Std_Out.Clear_Screen;
 
       No_Exceptions_Propagated : begin
-         LCD_Text.Put_Line (Exception_Name (Error));
-         LCD_Text.Put_Line (Exception_Message (Error));
-         LCD_Text.New_Line;
-         LCD_Text.Put_Line ("Traceback:");
+         LCD_Std_Out.Put_Line (Exception_Name (Error));
+         LCD_Std_Out.Put_Line (Exception_Message (Error));
+         LCD_Std_Out.New_Line;
+         LCD_Std_Out.Put_Line ("Traceback:");
 
          for Call_Stack_Address of Tracebacks (Error) loop
-            LCD_Text.Put_Line (Image_C (Call_Stack_Address));
+            LCD_Std_Out.Put_Line (Image_C (Call_Stack_Address));
          end loop;
       exception
          when others => null;
       end No_Exceptions_Propagated;
 
       loop
-         Toggle (Red);
+         Toggle (LCH_LED);
          delay until Clock + Milliseconds (500);
       end loop;
    end Last_Chance_Handler;

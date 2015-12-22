@@ -41,28 +41,14 @@ with STM32.Board;       use STM32.Board;
 with STM32.GPIO;        use STM32.GPIO;
 
 with LCD_Std_Out;
-with Bitmapped_Drawing;
 with BMP_Fonts;
-with STM32.ILI9341;
 
 with Ada.Real_Time;     use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 
 package body Last_Chance_Handler is
 
-   -----------------
-   -- LCD_Drawing --
-   -----------------
-
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => STM32.ILI9341.Colors,
-      Set_Pixel => STM32.ILI9341.Set_Pixel);
-
-   --------------
-   -- LCD_Text --
-   --------------
-
-   package LCD_Text is new LCD_Std_Out (LCD_Drawing);
+   package LCD_Text renames LCD_Std_Out;
    --  we use the LCD_Std_Out generic, rather than directly using the Drawing
    --  package, because we want the text to wrap around the screen if necessary
 
@@ -112,7 +98,7 @@ package body Last_Chance_Handler is
       LCD_Text.New_Line;
 
       loop
-         Toggle (Red);
+         Toggle (LCH_LED);
          delay until Clock + Milliseconds (500);
       end loop;
    end Last_Chance_Handler;
