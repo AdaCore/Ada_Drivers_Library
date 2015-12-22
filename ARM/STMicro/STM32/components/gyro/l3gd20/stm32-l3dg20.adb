@@ -470,9 +470,10 @@ package body STM32.L3DG20 is
       function Swap_Bytes (X : Angle_Rate) return Angle_Rate;
       pragma Import (Intrinsic, Swap_Bytes, "__builtin_bswap16");
 
-      Max_Status_Attempts : constant := 1_500;
-      --  This timeout value is semi-arbitrary but must be sufficient for the
-      --  slower data rate options.
+      Max_Status_Attempts : constant := 10_000;
+      --  This timeout value is arbitrary but must be sufficient for the
+      --  slower gyro data rate options and higher clock rates.  It need not be
+      --  as small as possible, the point is not to hang forever.
    begin
       for K in 1 .. Max_Status_Attempts loop
          Status := Data_Status (This);
