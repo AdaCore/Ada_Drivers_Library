@@ -80,10 +80,12 @@ project STM32 is
              "devices/stm32f7x",
              "drivers/i2c_stm32f7",
              "drivers/fmc",
+             "drivers/dma2d",
              "drivers/ltdc",
              "components/sdram",
              "components/lcd/rortech_stm32f7disco",
-             "components/touch_panel/ft5336");
+             "components/touch_panel/ft5336",
+             "utils/gui");
          case RTS is
             when "ravenscar-sfp" =>
                for Source_Dirs use Project'Source_Dirs &
