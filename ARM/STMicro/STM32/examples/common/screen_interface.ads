@@ -29,22 +29,19 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.LCD;
+with STM32;
 
 package Screen_Interface is
 
-   subtype Width  is STM32.LCD.Width;
-   subtype Height is STM32.LCD.Height;
-
    type Touch_State is record
       Touch_Detected : Boolean;
-      X : Width;
-      Y : Height;
+      X : Natural;
+      Y : Natural;
    end record;
 
    type Point is record
-      X : Width;
-      Y : Height;
+      X : Natural;
+      Y : Natural;
    end record;
 
    function "+" (P1, P2 : Point) return Point is (P1.X + P2.X, P1.Y + P2.Y);

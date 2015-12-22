@@ -31,34 +31,36 @@
 
 with Tracks_Display;   use Tracks_Display;
 with Screen_Interface; use Screen_Interface;
-with Drawing;      --          use Drawing;
+with Bitmapped_Drawing;      --          use Drawing;
 with Trains;           use Trains;
 with BMP_Fonts;        use BMP_Fonts;
 
 package body Railroad is
 
+   package Drawing renames Bitmapped_Drawing;
+
    Block_Size : constant := 40; --  Pixels
 
    --  Touch Areas
-   subtype Spawn_X is Screen_Interface.Width range
-     Width (Block_Size * 1.5) .. Width (Block_Size * 4.5);
-   subtype Spawn_Y is Height range
-     Height (Block_Size * 0.9) .. Height (Block_Size * 1.9);
+   subtype Spawn_X is Natural range
+     Natural (Block_Size * 1.5) .. Natural (Block_Size * 4.5);
+   subtype Spawn_Y is Natural range
+     Natural (Block_Size * 0.9) .. Natural (Block_Size * 1.9);
 
-   subtype Sw1_X is Width range
-     Width (Block_Size * 5.0) .. Width (Block_Size * 6.0 - 1.0);
-   subtype Sw1_Y is Height range
-     Height (Block_Size * 5.0) .. Height (Block_Size * 6.0);
+   subtype Sw1_X is Natural range
+     Natural (Block_Size * 5.0) .. Natural (Block_Size * 6.0 - 1.0);
+   subtype Sw1_Y is Natural range
+     Natural (Block_Size * 5.0) .. Natural (Block_Size * 6.0);
 
-   subtype Sw2_X is Width range
-     Width (Block_Size * 1.5) .. Width (Block_Size * 2.5);
-   subtype Sw2_Y is Height range
-     Height (Block_Size * 4.0) .. Height (Block_Size * 5.0);
+   subtype Sw2_X is Natural range
+     Natural (Block_Size * 1.5) .. Natural (Block_Size * 2.5);
+   subtype Sw2_Y is Natural range
+     Natural (Block_Size * 4.0) .. Natural (Block_Size * 5.0);
 
-   subtype Sw3_X is Width range
-     Width (Block_Size * 3.5) .. Width (Block_Size * 4.5 - 1.0);
-   subtype Sw3_Y is Height range
-     Height (Block_Size * 2.0) .. Height (Block_Size * 3.3);
+   subtype Sw3_X is Natural range
+     Natural (Block_Size * 3.5) .. Natural (Block_Size * 4.5 - 1.0);
+   subtype Sw3_Y is Natural range
+     Natural (Block_Size * 2.0) .. Natural (Block_Size * 3.3);
 
    Out_Loop_Track_Nbr : constant Positive := (6 + 4 + 6 + 4);
    In_Loop_Track_Nbr : constant Positive := (3 + 1 + 3 + 1);
@@ -85,9 +87,10 @@ package body Railroad is
    -- Create_Outer_Loop --
    -----------------------
 
-   procedure Create_Outer_Loop is
-      WLast : constant := Width'Last + 1;
-      HLast : constant := Height'Last + 1;
+   procedure Create_Outer_Loop
+   is
+      WLast             : constant Natural := 6 * Block_Size;
+      HLast             : constant Natural := 8 * Block_Size;
       Top_Line_First    : constant Positive := 1;
       Top_Line_Last     : constant Positive := 6;
       Left_Line_First   : constant Positive := Top_Line_Last + 1;
@@ -104,8 +107,8 @@ package body Railroad is
             Index : constant Positive := Cnt;
          begin
             Build_Straight_Track (Straight_Tracks (Index),
-                                  (X, Height (Block_Size * Cnt)),
-                                  (X, Height (Block_Size * (Cnt + 1))));
+                                  (X, Block_Size * Cnt),
+                                  (X, Block_Size * (Cnt + 1)));
             Set_Sign_Position (Straight_Tracks (Index), Top);
 
             if Cnt > 1 then
@@ -119,12 +122,12 @@ package body Railroad is
       --  Left Line
       for Cnt in 1 .. 4 loop
          declare
-            Y     : constant := HLast - (Block_Size / 2);
+            Y     : constant Natural := HLast - (Block_Size / 2);
             Index : constant Positive := Cnt + Top_Line_Last;
          begin
             Build_Straight_Track (Straight_Tracks (Index),
-                                  (Width (Block_Size * Cnt), Y),
-                                  (Width (Block_Size * (Cnt + 1)), Y));
+                                  (Block_Size * Cnt, Y),
+                                  (Block_Size * (Cnt + 1), Y));
             Set_Sign_Position (Straight_Tracks (Index), Left);
             if Cnt > 1 then
                Connect_Track (Straight_Tracks (Index - 1),
@@ -137,12 +140,12 @@ package body Railroad is
       --  Bottom Line
       for Cnt in 1 .. 6 loop
          declare
-            X     : constant := WLast - (Block_Size / 2);
+            X     : constant Natural := WLast - (Block_Size / 2);
             Index : constant Positive := Cnt + Left_Line_Last;
          begin
             Build_Straight_Track (Straight_Tracks (Index),
-                                  (X, HLast - Height (Block_Size * Cnt)),
-                                  (X, HLast - Height (Block_Size * (Cnt + 1))));
+                                  (X, HLast - Block_Size * Cnt),
+                                  (X, HLast - Block_Size * (Cnt + 1)));
             Set_Sign_Position (Straight_Tracks (Index), Bottom);
 
             if Cnt > 1 then
@@ -160,8 +163,8 @@ package body Railroad is
             Index : constant Positive := Cnt + Bottom_Line_Last;
          begin
             Build_Straight_Track (Straight_Tracks (Index),
-                                  (WLast - Width (Block_Size * Cnt), Y),
-                                  (WLast - Width (Block_Size * (Cnt + 1)), Y));
+                                  (WLast - Block_Size * Cnt, Y),
+                                  (WLast - Block_Size * (Cnt + 1), Y));
             Set_Sign_Position (Straight_Tracks (Index), Right);
 
             if Cnt > 1 then
@@ -222,11 +225,11 @@ package body Railroad is
 
       --  Spawn Track
       Build_Straight_Track (Spawn_Tracks (1),
-                            (Width (Block_Size),  Height (2 * Block_Size)),
-                            (Width (Block_Size),  Height (3 * Block_Size)));
+                            (Block_Size,  2 * Block_Size),
+                            (Block_Size,  3 * Block_Size));
       Build_Straight_Track (Spawn_Tracks (2),
-                            (Width (Block_Size),  Height (3 * Block_Size)),
-                            (Width (Block_Size / 2),  Height (4 * Block_Size)));
+                            (Block_Size,  3 * Block_Size),
+                            (Block_Size / 2,  4 * Block_Size));
       Connect_Track (Spawn_Tracks (1), Spawn_Tracks (2)'Access, null);
       Connect_Track (Spawn_Tracks (2), Straight_Tracks (4)'Access, null);
    end Create_Outer_Loop;
@@ -236,7 +239,7 @@ package body Railroad is
    -----------------------
 
    procedure Create_Inner_Loop is
-      HLast : constant := Height'Last + 1;
+      HLast             : constant Natural := 8 * Block_Size;
       Top_Line_First    : constant Positive := Out_Loop_Track_Nbr + 1;
       Top_Line_Last     : constant Positive := Top_Line_First + 2;
       Left_Line_First   : constant Positive := Top_Line_Last + 1;
@@ -250,13 +253,13 @@ package body Railroad is
       --  Top Line
       for Cnt in 1 .. 3 loop
          declare
-            X      : constant Width := Width (Block_Size * 2);
+            X      : constant Natural := Block_Size * 2;
             Y_Base : constant := Block_Size * 2;
             Index  : constant Positive := Top_Line_First + Cnt - 1;
          begin
             Build_Straight_Track (Straight_Tracks (Index),
-                            (X, Height (Y_Base + Block_Size * Cnt)),
-                            (X, Height (Y_Base + Block_Size * (Cnt + 1))));
+                            (X, Y_Base + Block_Size * Cnt),
+                            (X, Y_Base + Block_Size * (Cnt + 1)));
             Set_Sign_Position (Straight_Tracks (Index), Top);
 
             if Cnt > 1 then
@@ -276,24 +279,24 @@ package body Railroad is
          Index : constant Positive := Left_Line_First;
       begin
          Build_Straight_Track (Straight_Tracks (Index),
-                         (Width (Block_Size * 2.5),
-                          Height (Block_Size * 6.5)),
-                         (Width (Block_Size * 3.5),
-                          Height (Block_Size * 6.5)));
+                         (Natural (Block_Size * 2.5),
+                          Natural (Block_Size * 6.5)),
+                         (Natural (Block_Size * 3.5),
+                          Natural (Block_Size * 6.5)));
          Set_Sign_Position (Straight_Tracks (Index), Left);
       end;
 
       --  Bottom Line
       for Cnt in 1 .. 3 loop
          declare
-            X     : constant := Width (Block_Size * 4);
+            X      : constant := Natural (Block_Size * 4);
             Y_Base : constant := Block_Size;
-            Index : constant Positive := Cnt + Left_Line_Last;
+            Index  : constant Positive := Cnt + Left_Line_Last;
          begin
             Build_Straight_Track (Straight_Tracks (Index),
-                            (X, HLast - Height (Y_Base + Block_Size * Cnt)),
+                            (X, HLast - Y_Base - Block_Size * Cnt),
                             (X, HLast
-                               - Height (Y_Base + Block_Size * (Cnt + 1))));
+                               - Y_Base - Block_Size * (Cnt + 1)));
             Set_Sign_Position (Straight_Tracks (Index), Bottom);
 
             if Cnt > 1 then
@@ -309,20 +312,20 @@ package body Railroad is
          Index : constant Positive := Right_Line_First;
       begin
          Build_Straight_Track (Straight_Tracks (Index),
-                         (Width (Block_Size * 3.5),
-                          Height (Block_Size * 2.5)),
-                         (Width (Block_Size * 2.5),
-                          Height (Block_Size * 2.5)));
+                         (Natural (Block_Size * 3.5),
+                          Natural (Block_Size * 2.5)),
+                         (Natural (Block_Size * 2.5),
+                          Natural (Block_Size * 2.5)));
 
          Set_Sign_Position (Straight_Tracks (Index), Right);
       end;
 
       --  Top Right Curve
       Build_Curve_Track (Curve_Tracks (5),
-                   (Width (Block_Size * 2.5), Height (Block_Size * 2.5)),
-                   (Width (Block_Size * 2.0), Height (Block_Size * 2.5)),
-                   (Width (Block_Size * 2.0), Height (Block_Size * 2.5)),
-                   (Width (Block_Size * 2.0), Height (Block_Size * 3.0)));
+                   (Natural (Block_Size * 2.5), Natural (Block_Size * 2.5)),
+                   (Natural (Block_Size * 2.0), Natural (Block_Size * 2.5)),
+                   (Natural (Block_Size * 2.0), Natural (Block_Size * 2.5)),
+                   (Natural (Block_Size * 2.0), Natural (Block_Size * 3.0)));
       Set_Sign_Position (Curve_Tracks (5), Right);
       Connect_Track (Straight_Tracks (Right_Line_Last),
                   Curve_Tracks (5)'Access, null);
@@ -331,10 +334,10 @@ package body Railroad is
 
       --  Top Left Curve
       Build_Curve_Track (Curve_Tracks (6),
-                   (Width (Block_Size * 2.0), Height (Block_Size * 6.0)),
-                   (Width (Block_Size * 2.0), Height (Block_Size * 6.5)),
-                   (Width (Block_Size * 2.0), Height (Block_Size * 6.5)),
-                   (Width (Block_Size * 2.5), Height (Block_Size * 6.5)));
+                   (Natural (Block_Size * 2.0), Natural (Block_Size * 6.0)),
+                   (Natural (Block_Size * 2.0), Natural (Block_Size * 6.5)),
+                   (Natural (Block_Size * 2.0), Natural (Block_Size * 6.5)),
+                   (Natural (Block_Size * 2.5), Natural (Block_Size * 6.5)));
       Set_Sign_Position (Curve_Tracks (6), Top);
       Connect_Track (Straight_Tracks (Top_Line_Last),
                      Curve_Tracks (6)'Access, null);
@@ -343,10 +346,10 @@ package body Railroad is
 
       --  Bottom Left Curve
       Build_Curve_Track (Curve_Tracks (7),
-                   (Width (Block_Size * 3.5), Height (Block_Size * 6.5)),
-                   (Width (Block_Size * 4.0), Height (Block_Size * 6.5)),
-                   (Width (Block_Size * 4.0), Height (Block_Size * 6.5)),
-                   (Width (Block_Size * 4.0), Height (Block_Size * 6.0)));
+                   (Natural (Block_Size * 3.5), Natural (Block_Size * 6.5)),
+                   (Natural (Block_Size * 4.0), Natural (Block_Size * 6.5)),
+                   (Natural (Block_Size * 4.0), Natural (Block_Size * 6.5)),
+                   (Natural (Block_Size * 4.0), Natural (Block_Size * 6.0)));
       Set_Sign_Position (Curve_Tracks (7), Left);
       Connect_Track (Straight_Tracks (Left_Line_Last),
                      Curve_Tracks (7)'Access, null);
@@ -355,10 +358,10 @@ package body Railroad is
 
       --  Bottom Right Curve
       Build_Curve_Track (Curve_Tracks (8),
-                   (Width (Block_Size * 4.0), Height (Block_Size * 3.0)),
-                   (Width (Block_Size * 4.0), Height (Block_Size * 2.5)),
-                   (Width (Block_Size * 4.0), Height (Block_Size * 2.5)),
-                   (Width (Block_Size * 3.5), Height (Block_Size * 2.5)));
+                   (Natural (Block_Size * 4.0), Natural (Block_Size * 3.0)),
+                   (Natural (Block_Size * 4.0), Natural (Block_Size * 2.5)),
+                   (Natural (Block_Size * 4.0), Natural (Block_Size * 2.5)),
+                   (Natural (Block_Size * 3.5), Natural (Block_Size * 2.5)));
       --  There is a switch here so we move the sign to the other side of the
       --  track so that it won't overlap with switche's sign.
       Set_Sign_Position (Curve_Tracks (8), Top);
@@ -508,38 +511,48 @@ package body Railroad is
       end loop;
 
       --  Draw touch areas
-      Drawing.Draw_Rectangle ((Sw1_X'First, Sw1_Y'First),
-            (Sw1_X'Last, Sw1_Y'Last),
-            White);
-      Drawing.Draw_Rectangle ((Sw2_X'First, Sw2_Y'First),
-            (Sw2_X'Last, Sw2_Y'Last),
-            White);
-      Drawing.Draw_Rectangle ((Sw3_X'First, Sw3_Y'First),
-            (Sw3_X'Last, Sw3_Y'Last),
-            White);
+      Drawing.Draw_Rectangle
+        (Drawing.Screen_Buffer,
+         (Sw1_X'First, Sw1_Y'First),
+         (Sw1_X'Last, Sw1_Y'Last),
+         Drawing.White);
+      Drawing.Draw_Rectangle
+        (Drawing.Screen_Buffer,
+         (Sw2_X'First, Sw2_Y'First),
+         (Sw2_X'Last, Sw2_Y'Last),
+         Drawing.White);
+      Drawing.Draw_Rectangle
+        (Drawing.Screen_Buffer,
+         (Sw3_X'First, Sw3_Y'First),
+         (Sw3_X'Last, Sw3_Y'Last),
+         Drawing.White);
 
       if Can_Spawn_Train then
          Drawing.Draw_Rectangle
-           ((Spawn_X'First, Spawn_Y'First),
+           (Drawing.Screen_Buffer,
+            (Spawn_X'First, Spawn_Y'First),
             (Spawn_X'Last, Spawn_Y'Last),
-            White);
+            Drawing.White);
          Drawing.Draw_String
-           (Start      => (Spawn_X'First + 5, Spawn_Y'First + 5),
+           (Drawing.Screen_Buffer,
+            Start      => (Spawn_X'First + 5, Spawn_Y'First + 5),
             Msg        => "Touch here to",
             Font       => Font8x8,
-            Foreground => Screen_Interface.White,
-            Background => Screen_Interface.Black);
+            Foreground => Drawing.White,
+            Background => Drawing.Black);
          Drawing.Draw_String
-           (Start      => (Spawn_X'First + 5, Spawn_Y'First + 22),
+           (Drawing.Screen_Buffer,
+            Start      => (Spawn_X'First + 5, Spawn_Y'First + 22),
             Msg        => "spawn a train",
             Font       => Font8x8,
-            Foreground => Screen_Interface.White,
-            Background => Screen_Interface.Black);
+            Foreground => Drawing.White,
+            Background => Drawing.Black);
       else
          Drawing.Fill_Rectangle
-           ((Spawn_X'First, Spawn_Y'First),
+           (Drawing.Screen_Buffer,
+            (Spawn_X'First, Spawn_Y'First),
             (Spawn_X'Last, Spawn_Y'Last),
-            Screen_Interface.Black);
+            Drawing.Black);
       end if;
    end Draw_Layout;
 

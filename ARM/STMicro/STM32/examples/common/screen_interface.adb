@@ -34,7 +34,7 @@ with Interfaces; use Interfaces;
 with STM32.Touch_Panel;
 
 with STM32;                 use STM32;
-with STM32.DMA2D.Interrupt; use STM32.DMA2D;
+with STM32.DMA2D.Polling;   use STM32.DMA2D;
 with STM32.LCD;             use STM32.LCD;
 
 package body Screen_Interface is
@@ -52,8 +52,9 @@ package body Screen_Interface is
       if not Initialized then
          Initialized := True;
 
-         STM32.DMA2D.Interrupt.Initialize;
+         STM32.DMA2D.Polling.Initialize;
          STM32.LCD.Initialize;
+         STM32.LCD.Set_Orientation (Portrait);
          STM32.Touch_Panel.Initialize;
 
          --  At init the draw layer is the one displayed, this will keep
@@ -90,13 +91,19 @@ package body Screen_Interface is
 
    function Current_Touch_State return Touch_State is
       TS    : Touch_State;
-      ST_TS : STM32.Touch_Panel.TP_State;
+      ST_TS : constant STM32.Touch_Panel.TP_State :=
+                STM32.Touch_Panel.Get_State;
    begin
-      ST_TS := STM32.Touch_Panel.Current_State;
+      TS.Touch_Detected := ST_TS'Length > 0;
 
-      TS.Touch_Detected := ST_TS.Touch_Detected;
-      TS.X := ST_TS.X;
-      TS.Y := ST_TS.Y;
+      if TS.Touch_Detected then
+         TS.X := ST_TS (1).X;
+         TS.Y := ST_TS (1).Y;
+      else
+         TS.X := 0;
+         TS.Y := 0;
+      end if;
+
       return TS;
    end Current_Touch_State;
 
@@ -127,10 +134,11 @@ package body Screen_Interface is
       --  ??? Use DMA2D to fill the buffer
       DMA2D_Fill
         (Buffer =>
-           (Addr => STM32.LCD.Current_Frame_Buffer (Draw_Layer),
-            Width => STM32.LCD.LCD_PIXEL_WIDTH,
-            Height => STM32.LCD.LCD_PIXEL_HEIGHT,
-            Color_Mode => STM32.LCD.Get_Pixel_Fmt),
+           (Addr       => STM32.LCD.Current_Frame_Buffer (Draw_Layer),
+            Width      => STM32.LCD.Pixel_Width,
+            Height     => STM32.LCD.Pixel_Height,
+            Color_Mode => STM32.LCD.Get_Pixel_Fmt,
+            Swap_X_Y   => STM32.LCD.SwapXY),
          Color => Word (Col));
    end Fill_Screen;
 
