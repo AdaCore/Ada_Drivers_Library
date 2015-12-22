@@ -197,12 +197,12 @@ package body Init is
    begin
       --  Horizontal start and stop = sync + Back Porch
       WHPC.WHSTPOS := UInt12 (LCD_HBP + 1);
-      WHPC.WHSPPOS := UInt12 (LCD_PIXEL_WIDTH + LCD_HBP);
+      WHPC.WHSPPOS := UInt12 (LCD_Width + LCD_HBP);
       L.LWHPCR := WHPC;
 
       --  Vertical start and stop
       WVPC.WVSTPOS := UInt11 (LCD_VBP + 1);
-      WVPC.WVSPPOS := UInt11 (LCD_PIXEL_HEIGHT + LCD_VBP);
+      WVPC.WVSPPOS := UInt11 (LCD_Height + LCD_VBP);
       L.LWVPCR := WVPC;
 
       L.LPFCR.PF := Pixel_Format'Enum_Rep (Config);
@@ -219,11 +219,11 @@ package body Init is
       BFC.BF2 := BF2;
       L.LBFCR := BFC;
 
-      CFBL.CFBLL := UInt13 (LCD_PIXEL_WIDTH * Pixel_Size (Config)) + 3;
-      CFBL.CFBP := UInt13 (LCD_PIXEL_WIDTH * Pixel_Size (Config));
+      CFBL.CFBLL := UInt13 (LCD_Width * Pixel_Size (Config)) + 3;
+      CFBL.CFBP := UInt13 (LCD_Width * Pixel_Size (Config));
       L.LCFBLR := CFBL;
 
-      L.LCFBLNR.CFBLNBR := UInt11 (LCD_PIXEL_HEIGHT);
+      L.LCFBLNR.CFBLNBR := UInt11 (LCD_Height);
 
       Set_Layer_CFBA (Layer, Frame_Buffer_Array (Layer));
 

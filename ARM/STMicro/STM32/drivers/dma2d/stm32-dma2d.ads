@@ -146,13 +146,15 @@ package STM32.DMA2D is
       Width      : Natural;
       Height     : Natural;
       Color_Mode : DMA2D_Color_Mode;
+      Swap_X_Y   : Boolean;
    end record;
 
    Null_Buffer : constant DMA2D_Buffer :=
                    (Addr       => System'To_Address (0),
                     Width      => 0,
                     Height     => 0,
-                    Color_Mode => DMA2D_Color_Mode'First);
+                    Color_Mode => DMA2D_Color_Mode'First,
+                    Swap_X_Y   => False);
 
    procedure DMA2D_Fill
      (Buffer      : DMA2D_Buffer;
@@ -167,9 +169,15 @@ package STM32.DMA2D is
    --  Same as above, using the destination buffer native color representation
 
    procedure DMA2D_Set_Pixel
-     (Buffer    : DMA2D_Buffer;
-      X, Y      : Natural;
-      Color     : DMA2D_Color;
+     (Buffer      : DMA2D_Buffer;
+      X, Y        : Natural;
+      Color       : DMA2D_Color;
+      Synchronous : Boolean := False);
+
+   procedure DMA2D_Set_Pixel_Blend
+     (Buffer      : DMA2D_Buffer;
+      X, Y        : Natural;
+      Color       : DMA2D_Color;
       Synchronous : Boolean := False);
 
    procedure DMA2D_Fill_Rect
@@ -229,14 +237,6 @@ package STM32.DMA2D is
       Y         : Integer;
       Width     : Integer;
       Synchronous : Boolean := False);
-   --  Draws a vertical line
-
-   procedure DMA2D_Fill_Circle
-     (Buffer    : DMA2D_Buffer;
-      Color     : DMA2D_Color;
-      X0        : Integer;
-      Y0        : Integer;
-      R         : Integer);
    --  Draws a vertical line
 
 private

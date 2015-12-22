@@ -14,8 +14,8 @@ package body STM32.DMA2D is
      (Col : DMA2D_Color; CM : DMA2D_Color_Mode)
       return Word;
 
-   DMA2D_Wait_Transfer : DMA2D_Sync_Procedure;
-   DMA2D_Init_Transfer : DMA2D_Sync_Procedure;
+   DMA2D_Wait_Transfer : DMA2D_Sync_Procedure := null;
+   DMA2D_Init_Transfer : DMA2D_Sync_Procedure := null;
 
    --------------
    -- To_OCOLR --
@@ -55,6 +55,15 @@ package body STM32.DMA2D is
       end case;
    end To_OCOLR;
 
+   -----------------------
+   -- DMA2D_Initialized --
+   -----------------------
+
+   function DMA2D_Initialized return Boolean is
+   begin
+      return DMA2D_Init_Transfer /= null;
+   end DMA2D_Initialized;
+
    ------------------
    -- DMA2D_DeInit --
    ------------------
@@ -63,6 +72,8 @@ package body STM32.DMA2D is
    begin
       RCC_Periph.AHB1ENR.DMA2DEN := 1;
       RCC_Periph.AHB1ENR.DMA2DEN := 0;
+      DMA2D_Init_Transfer := null;
+      DMA2D_Wait_Transfer := null;
    end DMA2D_DeInit;
 
    ----------------
@@ -74,6 +85,9 @@ package body STM32.DMA2D is
       Wait : DMA2D_Sync_Procedure)
    is
    begin
+      if DMA2D_Initialized then
+         return;
+      end if;
       DMA2D_Init_Transfer := Init;
       DMA2D_Wait_Transfer := Wait;
 
@@ -137,28 +151,47 @@ package body STM32.DMA2D is
       Synchronous : Boolean := False)
    is
       function Conv is new Ada.Unchecked_Conversion (Word, OCOLR_Register);
-      Offset        : constant Word := Word (Y * Buffer.Width + X);
-      Start_Address : constant Word :=
-                        To_Word (Buffer.Addr) +
-                        (Offset * Word (STM32.LCD.Bytes_Per_Pixel
-                                          (Buffer.Color_Mode)));
-
    begin
-      DMA2D_Wait_Transfer.all;
+      if Buffer.Swap_X_Y then
+         declare
+            Buf2 : DMA2D_Buffer := Buffer;
+         begin
+            Buf2.Swap_X_Y := False;
+            Buf2.Width := Buffer.Height;
+            Buf2.Height := Buffer.Width;
+            DMA2D_Fill_Rect (Buf2, Color,
+                             Y,
+                             Buffer.Width - X - Width,
+                             Height,
+                             WIdth,
+                             Synchronous);
+         end;
+      else
+         declare
+            Offset : constant Word := Word (Y * Buffer.Width + X);
+            Off    : constant Word :=
+                       To_Word (Buffer.Addr) +
+                       (Offset * Word (STM32.LCD.Bytes_Per_Pixel
+                        (Buffer.Color_Mode)));
 
-      DMA2D_Periph.CR.MODE := DMA2D_MODE'Enum_Rep (R2M);
-      DMA2D_Periph.OPFCCR :=
-        (CM     => DMA2D_Color_Mode'Enum_Rep (Buffer.Color_Mode),
-         others => <>);
-      DMA2D_Periph.OCOLR  := Conv (To_OCOLR (Color, Buffer.Color_Mode));
-      DMA2D_Periph.OMAR   := Start_Address;
-      DMA2D_Periph.OOR.LO := UInt14 (Buffer.Width -  Width);
-      DMA2D_Periph.NLR :=
-        (NL => Short (Height), PL => UInt14 (Width), others => <>);
+         begin
+            DMA2D_Wait_Transfer.all;
 
-      DMA2D_Init_Transfer.all;
-      if Synchronous then
-         DMA2D_Wait_Transfer.all;
+            DMA2D_Periph.CR.MODE := DMA2D_MODE'Enum_Rep (R2M);
+            DMA2D_Periph.OPFCCR :=
+              (CM     => DMA2D_Color_Mode'Enum_Rep (Buffer.Color_Mode),
+               others => <>);
+            DMA2D_Periph.OCOLR  := Conv (To_OCOLR (Color, Buffer.Color_Mode));
+            DMA2D_Periph.OMAR   := Off;
+            DMA2D_Periph.OOR.LO := UInt14 (Buffer.Width -  Width);
+            DMA2D_Periph.NLR :=
+              (NL => Short (Height), PL => UInt14 (Width), others => <>);
+
+            DMA2D_Init_Transfer.all;
+            if Synchronous then
+               DMA2D_Wait_Transfer.all;
+            end if;
+         end;
       end if;
    end DMA2D_Fill_Rect;
 
@@ -334,42 +367,42 @@ package body STM32.DMA2D is
       DMA2D_Fill_Rect (Buffer, Color, NX, Y, NW, 1, Synchronous);
    end DMA2D_Draw_Horizontal_Line;
 
-   -----------------------
-   -- DMA2D_Draw_Circle --
-   -----------------------
-
-   procedure DMA2D_Fill_Circle
-     (Buffer    : DMA2D_Buffer;
-      Color     : DMA2D_Color;
-      X0        : Integer;
-      Y0        : Integer;
-      R         : Integer)
-   is
-      F     : Integer := 1 - R;
-      ddF_X : Integer := 1;
-      ddF_Y : Integer := -(2 * R);
-      X     : Integer := 0;
-      Y     : Integer := R;
-   begin
-      DMA2D_Draw_Vertical_Line (Buffer, Color, X0, Y0 - R, 2 * R);
-      DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - R, Y0, 2 * R);
-
-      while X < Y loop
-         if F >= 0 then
-            Y := Y - 1;
-            ddF_Y := ddF_Y + 2;
-            F := F + ddF_Y;
-         end if;
-         X := X + 1;
-         ddF_X := ddF_X + 2;
-         F := F + ddF_X;
-
-         DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - X, Y0 + Y, 2 * X);
-         DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - X, Y0 - Y, 2 * X);
-         DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - Y, Y0 + X, 2 * Y);
-         DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - Y, Y0 - X, 2 * Y);
-      end loop;
-   end DMA2D_Fill_Circle;
+--     -----------------------
+--     -- DMA2D_Draw_Circle --
+--     -----------------------
+--
+--     procedure DMA2D_Fill_Circle
+--       (Buffer    : DMA2D_Buffer;
+--        Color     : DMA2D_Color;
+--        X0        : Integer;
+--        Y0        : Integer;
+--        R         : Integer)
+--     is
+--        F     : Integer := 1 - R;
+--        ddF_X : Integer := 1;
+--        ddF_Y : Integer := -(2 * R);
+--        X     : Integer := 0;
+--        Y     : Integer := R;
+--     begin
+--        DMA2D_Draw_Vertical_Line (Buffer, Color, X0, Y0 - R, 2 * R);
+--        DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - R, Y0, 2 * R);
+--
+--        while X < Y loop
+--           if F >= 0 then
+--              Y := Y - 1;
+--              ddF_Y := ddF_Y + 2;
+--              F := F + ddF_Y;
+--           end if;
+--           X := X + 1;
+--           ddF_X := ddF_X + 2;
+--           F := F + ddF_X;
+--
+--           DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - X, Y0 + Y, 2 * X);
+--           DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - X, Y0 - Y, 2 * X);
+--           DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - Y, Y0 + X, 2 * Y);
+--           DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - Y, Y0 - X, 2 * Y);
+--        end loop;
+--     end DMA2D_Fill_Circle;
 
    ---------------------
    -- DMA2D_Set_Pixel --
@@ -382,7 +415,11 @@ package body STM32.DMA2D is
       Synchronous : Boolean := False)
    is
       function Conv is new Ada.Unchecked_Conversion (Word, OCOLR_Register);
-      Idx  : constant Natural := (Y * Buffer.Width) + X;
+      X0   : constant Natural := (if Buffer.Swap_X_Y then Y else X);
+      Y0   : constant Natural := (if Buffer.Swap_X_Y then Buffer.Width - X else Y);
+      W    : constant Natural :=
+               (if Buffer.Swap_X_Y then Buffer.Height else Buffer.Width);
+      Idx  : constant Natural := (Y0 * W) + X0;
       BPP  : constant Natural := Bytes_Per_Pixel (Buffer.Color_Mode);
       Off  : constant System.Storage_Elements.Storage_Offset :=
                System.Storage_Elements.Storage_Offset (Idx * BPP);
@@ -402,5 +439,67 @@ package body STM32.DMA2D is
          DMA2D_Wait_Transfer.all;
       end if;
    end DMA2D_Set_Pixel;
+
+   ---------------------------
+   -- DMA2D_Set_Pixel_Blend --
+   ---------------------------
+
+   procedure DMA2D_Set_Pixel_Blend
+     (Buffer      : DMA2D_Buffer;
+      X, Y        : Natural;
+      Color       : DMA2D_Color;
+      Synchronous : Boolean := False)
+   is
+      X0   : constant Natural := (if Buffer.Swap_X_Y then Y else X);
+      Y0   : constant Natural := (if Buffer.Swap_X_Y then Buffer.Width - X else Y);
+      W    : constant Natural :=
+               (if Buffer.Swap_X_Y then Buffer.Height else Buffer.Width);
+      Idx  : constant Natural := (Y0 * W) + X0;
+      BPP  : constant Natural := Bytes_Per_Pixel (Buffer.Color_Mode);
+      Off  : constant System.Storage_Elements.Storage_Offset :=
+               System.Storage_Elements.Storage_Offset (Idx * BPP);
+      Dead : Boolean := False with Unreferenced;
+   begin
+      DMA2D_Wait_Transfer.all;
+
+      --  PFC and blending
+      DMA2D_Periph.CR.MODE := DMA2D_MODE'Enum_Rep (M2M_BLEND);
+
+      --  SOURCE CONFIGURATION
+      DMA2D_Periph.FGPFCCR.CM    := Pixel_Fmt_ARGB8888'Enum_Rep;
+      DMA2D_Periph.FGMAR         := To_Word (Color'Address);
+      DMA2D_Periph.FGPFCCR.AM    := DMA2D_AM'Enum_Rep (NO_MODIF);
+      DMA2D_Periph.FGPFCCR.ALPHA := 255;
+      DMA2D_Periph.FGPFCCR.CS    := 0;
+      DMA2D_Periph.FGPFCCR.START := DMA2D_START'Enum_Rep (Not_Started);
+      DMA2D_Periph.FGOR          := (LO => 0, others => <>);
+      DMA2D_Periph.FGPFCCR.CCM   := Pixel_Fmt_ARGB8888'Enum_Rep;
+
+      --  Setup the Background buffer to the destination buffer
+      DMA2D_Periph.BGPFCCR.CM    :=
+        DMA2D_COlor_mode'Enum_Rep (Buffer.Color_Mode);
+      DMA2D_Periph.BGMAR         := To_Word (Buffer.Addr + Off);
+      DMA2D_Periph.BGPFCCR.CS    := 0;
+      DMA2D_Periph.BGPFCCR.START := DMA2D_START'Enum_Rep (Not_Started);
+      DMA2D_Periph.BGOR          := (LO     => UInt14 (Buffer.Width - 1),
+                                     others => <>);
+      DMA2D_Periph.BGPFCCR.CCM   := 0; -- ARGB888
+
+      --  DST CONFIGURATION
+      DMA2D_Periph.OPFCCR.CM  :=
+        DMA2D_Color_Mode'Enum_Rep (Buffer.Color_Mode);
+      DMA2D_Periph.OMAR       := To_Word (Buffer.Addr + Off);
+      DMA2D_Periph.OOR        := (LO     => UInt14 (Buffer.Width - 1),
+                                  others => <>);
+
+      DMA2D_Periph.NLR := (NL     => 1,
+                           PL     => 1,
+                           others => <>);
+
+      DMA2D_Init_Transfer.all;
+      if Synchronous then
+         DMA2D_Wait_Transfer.all;
+      end if;
+   end DMA2D_Set_Pixel_Blend;
 
 end STM32.DMA2D;

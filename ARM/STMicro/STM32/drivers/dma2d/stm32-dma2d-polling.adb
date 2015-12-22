@@ -33,6 +33,8 @@ with STM32_SVD.DMA2D; use STM32_SVD.DMA2D;
 
 package body STM32.DMA2D.Polling is
 
+   Transferring : Boolean := False;
+
    ---------------------------
    -- DMA2D_InitAndTransfer --
    ---------------------------
@@ -41,11 +43,22 @@ package body STM32.DMA2D.Polling is
    is
    begin
       DMA2D_Periph.CR.START := DMA2D_START'Enum_Rep (Start);
+      Transferring := True;
    end DMA2D_Init_Transfer;
+
+   -------------------------
+   -- DMA2D_Wait_Transfer --
+   -------------------------
 
    procedure DMA2D_Wait_Transfer
    is
    begin
+      if not Transferring then
+         return;
+      end if;
+
+      Transferring := False;
+
       if DMA2D_Periph.ISR.CEIF = 1 then --  Conf error
          return;
       elsif DMA2D_Periph.ISR.TEIF = 1 then -- Transfer error
@@ -56,6 +69,7 @@ package body STM32.DMA2D.Polling is
                exit;
             end if;
          end loop;
+
          DMA2D_Periph.IFCR.CTCIF := 1; --  Clear the TCIF flag
       end if;
    end DMA2D_Wait_Transfer;

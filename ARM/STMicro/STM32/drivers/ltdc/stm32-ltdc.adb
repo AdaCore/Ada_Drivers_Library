@@ -50,26 +50,49 @@ with STM32.SDRAM;    use STM32.SDRAM;
 package body STM32.LTDC is
 
    Frame_Buffer_Array : array (LCD_Layer) of Frame_Buffer_Access;
-   Current_Pixel_Fmt : Pixel_Format := Pixel_Fmt_ARGB1555;
+   Current_Pixel_Fmt  : Pixel_Format := Pixel_Fmt_ARGB1555;
+   Swap_X_Y           : Boolean := False;
 
    type FB32 is array (Natural range 0 .. LCD_Height - 1,
                        Natural range 0 .. LCD_Width - 1) of Word
      with Component_Size => 32, Volatile;
+   type Swap_FB32 is array (Natural range 0 .. LCD_Width - 1,
+                            Natural range 0 .. LCD_Height - 1) of Word
+     with Component_Size => 32, Volatile;
    type FB24 is array (Natural range 0 .. LCD_Height - 1,
                        Natural range 0 .. (LCD_Width * 3) - 1) of Byte
+     with Component_Size => 8, Volatile;
+   type Swap_FB24 is array (Natural range 0 .. LCD_Width - 1,
+                            Natural range 0 .. LCD_Height * 3 - 1) of Byte
      with Component_Size => 8, Volatile;
    type FB16 is array (Natural range 0 .. LCD_Height - 1,
                        Natural range 0 .. LCD_Width - 1) of Short
      with Component_Size => 16, Volatile;
+   type Swap_FB16 is array (Natural range 0 .. LCD_Width - 1,
+                            Natural range 0 .. LCD_Height - 1) of Short
+     with Component_Size => 16, Volatile;
 
-   type Frame_Buffer (Pixel_Fmt : Pixel_Format) is record
-      case Pixel_Fmt is
-         when Pixel_Fmt_ARGB8888 =>
-            Arr32 : FB32;
-         when Pixel_Fmt_RGB888 =>
-            Arr24 : FB24;
-         when others =>
-            Arr16 : FB16;
+   type Frame_Buffer (Pixel_Fmt : Pixel_Format;
+                      Swap      : Boolean) is record
+      case Swap is
+         when False =>
+            case Pixel_Fmt is
+            when Pixel_Fmt_ARGB8888 =>
+               Arr32 : FB32;
+            when Pixel_Fmt_RGB888 =>
+               Arr24 : FB24;
+            when others =>
+               Arr16 : FB16;
+            end case;
+         when True =>
+            case Pixel_Fmt is
+            when Pixel_Fmt_ARGB8888 =>
+               SwArr32 : Swap_FB32;
+            when Pixel_Fmt_RGB888 =>
+               SwArr24 : Swap_FB24;
+            when others =>
+               SwArr16 : Swap_FB16;
+            end case;
       end case;
    end record with Unchecked_Union, Volatile;
 
@@ -203,15 +226,51 @@ package body STM32.LTDC is
       return Frame_Buffer_Array (Layer);
    end Current_Frame_Buffer;
 
---     ---------------------
---     -- Set_Layer_State --
---     ---------------------
---
---     procedure Set_Layer_State (Layer : LCD_Layer; State : Layer_State) is
---        L : constant Layer_Access := Get_Layer (Layer);
---     begin
---        L.LCR.LEN := (if State = Enabled then 1 else 0);
---     end Set_Layer_State;
+   ---------------------
+   -- Set_Orientation --
+   ---------------------
+
+   procedure Set_Orientation (Orientation : Orientation_Mode)
+   is
+   begin
+      case Orientation is
+         when Portrait =>
+            Swap_X_Y := LCD_Width > LCD_Height;
+         when Landscape =>
+            Swap_X_Y := LCD_Height > LCD_Width;
+      end case;
+   end Set_Orientation;
+
+   ---------------------
+   -- Get_Orientation --
+   ---------------------
+
+   function Get_Orientation return Orientation_Mode
+   is
+   begin
+      return (if Pixel_Width > Pixel_Height then Landscape else Portrait);
+   end Get_Orientation;
+
+   ------------
+   -- SwapXY --
+   ------------
+
+   function SwapXY return Boolean
+   is (Swap_X_Y);
+
+   -----------------
+   -- Pixel_Width --
+   -----------------
+
+   function Pixel_Width return Natural
+   is (if Swap_X_Y then LCD_Height else LCD_Width);
+
+   ------------------
+   -- Pixel_Height --
+   ------------------
+
+   function Pixel_Height return Natural
+   is (if Swap_X_Y then LCD_Width else LCD_Height);
 
    --------------------
    -- Set_Background --
@@ -229,8 +288,8 @@ package body STM32.LTDC is
 
    procedure Set_Pixel
      (Layer : LCD_Layer;
-      X     : Width;
-      Y     : Height;
+      X     : Natural;
+      Y     : Natural;
       Value : Word)
    is
       function To_FB_Access is new Ada.Unchecked_Conversion
@@ -238,13 +297,17 @@ package body STM32.LTDC is
       Buff : constant Frame_Buffer_Int_Access :=
                To_FB_Access (Frame_Buffer_Array (Layer));
    begin
-      if Y >= LCD_PIXEL_HEIGHT
-        or else X >= LCD_PIXEL_WIDTH
+      if Y >= Pixel_Height
+        or else X >= Pixel_Width
       then
          return;
       end if;
 
-      Buff.Arr32 (Y, X) := Value;
+      if not Swap_X_Y then
+         Buff.Arr32 (Y, X) := Value;
+      else
+         Buff.SwArr32 (X, Y) := Value;
+      end if;
    end Set_Pixel;
 
    ---------------
@@ -253,8 +316,8 @@ package body STM32.LTDC is
 
    procedure Set_Pixel
      (Layer : LCD_Layer;
-      X     : Width;
-      Y     : Height;
+      X     : Natural;
+      Y     : Natural;
       Value : UInt24)
    is
       function To_FB_Access is new Ada.Unchecked_Conversion
@@ -262,18 +325,27 @@ package body STM32.LTDC is
       Buff : constant Frame_Buffer_Int_Access :=
                To_FB_Access (Frame_Buffer_Array (Layer));
    begin
-      if Y >= LCD_PIXEL_HEIGHT
-        or else X >= LCD_PIXEL_WIDTH
+      if Y >= Pixel_Height
+        or else X >= Pixel_Width
       then
          return;
       end if;
 
-      --  Red:
-      Buff.Arr24 (Y, (X * 3) + 2) := Byte (Value and 16#FF#);
-      --  Green:
-      Buff.Arr24 (Y, (X * 3) + 1) := Byte ((Value and 16#FF00#) / (2 ** 8));
-      --  Blue:
-      Buff.Arr24 (Y, (X * 3) + 0) := Byte ((Value and 16#FF0000#) / (2 ** 16));
+      if not Swap_X_Y then
+         --  Red:
+         Buff.Arr24 (Y, (X * 3) + 2) := Byte (Value and 16#FF#);
+         --  Green:
+         Buff.Arr24 (Y, (X * 3) + 1) := Byte ((Value and 16#FF00#) / (2 ** 8));
+         --  Blue:
+         Buff.Arr24 (Y, (X * 3) + 0) := Byte ((Value and 16#FF0000#) / (2 ** 16));
+      else
+         --  Red:
+         Buff.SwArr24 (X, (Y * 3) + 2) := Byte (Value and 16#FF#);
+         --  Green:
+         Buff.SwArr24 (X, (Y * 3) + 1) := Byte ((Value and 16#FF00#) / (2 ** 8));
+         --  Blue:
+         Buff.SwArr24 (X, (Y * 3) + 0) := Byte ((Value and 16#FF0000#) / (2 ** 16));
+      end if;
    end Set_Pixel;
 
    ---------------
@@ -282,8 +354,8 @@ package body STM32.LTDC is
 
    procedure Set_Pixel
      (Layer : LCD_Layer;
-      X     : Width;
-      Y     : Height;
+      X     : Natural;
+      Y     : Natural;
       Value : Half_Word)
    is
       function To_FB_Access is new Ada.Unchecked_Conversion
@@ -291,13 +363,17 @@ package body STM32.LTDC is
       Buff : constant Frame_Buffer_Int_Access :=
                To_FB_Access (Frame_Buffer_Array (Layer));
    begin
-      if Y >= LCD_PIXEL_HEIGHT
-        or else X >= LCD_PIXEL_WIDTH
+      if Y >= Pixel_Height
+        or else X >= Pixel_Width
       then
          return;
       end if;
 
-      Buff.Arr16 (Y, X) := Value;
+      if not Swap_X_Y then
+         Buff.Arr16 (Y, X) := Value;
+      else
+         Buff.SwArr16 (X, Y) := Value;
+      end if;
    end Set_Pixel;
 
    -----------------
@@ -306,8 +382,8 @@ package body STM32.LTDC is
 
    function Pixel_Value
      (Layer : LCD_Layer;
-      X     : Width;
-      Y     : Height)
+      X     : Natural;
+      Y     : Natural)
       return Word
    is
       function To_FB_Access is new Ada.Unchecked_Conversion
@@ -315,7 +391,11 @@ package body STM32.LTDC is
       Buff : constant Frame_Buffer_Int_Access :=
                To_FB_Access (Frame_Buffer_Array (Layer));
    begin
-      return Buff.Arr32 (Y, X);
+      if not Swap_X_Y then
+         return Buff.Arr32 (Y, X);
+      else
+         return Buff.SwArr32 (X, Y);
+      end if;
    end Pixel_Value;
 
    -----------------
@@ -324,8 +404,8 @@ package body STM32.LTDC is
 
    function Pixel_Value
      (Layer : LCD_Layer;
-      X     : Width;
-      Y     : Height)
+      X     : Natural;
+      Y     : Natural)
       return UInt24
    is
       function To_FB_Access is new Ada.Unchecked_Conversion
@@ -334,9 +414,16 @@ package body STM32.LTDC is
                To_FB_Access (Frame_Buffer_Array (Layer));
       Ret : UInt24;
    begin
-      Ret := UInt24 (Buff.Arr24 (Y, X * 3 + 2)) or
-        UInt24 (Buff.Arr24 (Y, X * 3 + 1)) * 2 ** 8 or
-        UInt24 (Buff.Arr24 (Y, X * 3 + 0)) * 2 ** 16;
+      if not Swap_X_Y then
+         Ret := UInt24 (Buff.Arr24 (Y, X * 3 + 2)) or
+           UInt24 (Buff.Arr24 (Y, X * 3 + 1)) * 2 ** 8 or
+           UInt24 (Buff.Arr24 (Y, X * 3 + 0)) * 2 ** 16;
+      else
+         Ret := UInt24 (Buff.SwArr24 (X, Y * 3 + 2)) or
+           UInt24 (Buff.SwArr24 (X, Y * 3 + 1)) * 2 ** 8 or
+           UInt24 (Buff.SwArr24 (X, Y * 3 + 0)) * 2 ** 16;
+      end if;
+
       return Ret;
    end Pixel_Value;
 
@@ -346,8 +433,8 @@ package body STM32.LTDC is
 
    function Pixel_Value
      (Layer : LCD_Layer;
-      X     : Width;
-      Y     : Height)
+      X     : Natural;
+      Y     : Natural)
       return Half_Word
    is
       function To_FB_Access is new Ada.Unchecked_Conversion
@@ -355,7 +442,11 @@ package body STM32.LTDC is
       Buff : constant Frame_Buffer_Int_Access :=
                To_FB_Access (Frame_Buffer_Array (Layer));
    begin
-      return Buff.Arr16 (Y, X);
+      if not Swap_X_Y then
+         return Buff.Arr16 (Y, X);
+      else
+         return Buff.SwArr16 (X, Y);
+      end if;
    end Pixel_Value;
 
 end STM32.LTDC;

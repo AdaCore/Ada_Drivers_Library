@@ -62,13 +62,7 @@ generic
 
 package STM32.LTDC is
 
-   LCD_PIXEL_WIDTH  : constant Positive := LCD_Width;
-   LCD_PIXEL_HEIGHT : constant Positive := LCD_Height;
-
    type LCD_Layer is (Layer1, Layer2);
-
-   subtype Width is Natural range 0 .. (LCD_PIXEL_WIDTH - 1);
-   subtype Height is Natural range 0 .. (LCD_PIXEL_HEIGHT - 1);
 
    --  These bits defines the color format
    type Pixel_Format is
@@ -99,24 +93,39 @@ package STM32.LTDC is
      (Layer : LCD_Layer)
       return Frame_Buffer_Access;
 
+   type Orientation_Mode is
+     (Portrait,
+      Landscape);
+
+   procedure Set_Orientation (Orientation : Orientation_Mode);
+   --  The hardware does not support such translation natively.
+   --  Setting an orientation that is different from the standard one
+   --  will affect the behavior of Set_Pixel and the various subprograms of
+   --  DMA2D.
+
+   function Get_Orientation return Orientation_Mode;
+   function SwapXY return Boolean;
+   function Pixel_Width return Natural;
+   function Pixel_Height return Natural;
+
    procedure Set_Pixel
      (Layer : LCD_Layer;
-      X     : Width;
-      Y     : Height;
+      X     : Natural;
+      Y     : Natural;
       Value : Word)
      with Pre => Get_Pixel_Fmt = Pixel_Fmt_ARGB8888;
 
    procedure Set_Pixel
      (Layer : LCD_Layer;
-      X     : Width;
-      Y     : Height;
+      X     : Natural;
+      Y     : Natural;
       Value : UInt24)
      with Pre => Get_Pixel_Fmt = Pixel_Fmt_RGB888;
 
    procedure Set_Pixel
      (Layer : LCD_Layer;
-      X     : Width;
-      Y     : Height;
+      X     : Natural;
+      Y     : Natural;
       Value : Half_Word)
      with Pre =>
        Get_Pixel_Fmt /= Pixel_Fmt_ARGB8888 and then
@@ -124,22 +133,22 @@ package STM32.LTDC is
 
    function Pixel_Value
      (Layer : LCD_Layer;
-      X     : Width;
-      Y     : Height)
+      X     : Natural;
+      Y     : Natural)
       return Word
      with Pre => Get_Pixel_Fmt = Pixel_Fmt_ARGB8888;
 
    function Pixel_Value
      (Layer : LCD_Layer;
-      X     : Width;
-      Y     : Height)
+      X     : Natural;
+      Y     : Natural)
       return UInt24
      with Pre => Get_Pixel_Fmt = Pixel_Fmt_RGB888;
 
    function Pixel_Value
      (Layer : LCD_Layer;
-      X     : Width;
-      Y     : Height)
+      X     : Natural;
+      Y     : Natural)
       return Half_Word
      with Pre =>
        Get_Pixel_Fmt /= Pixel_Fmt_ARGB8888 and then
