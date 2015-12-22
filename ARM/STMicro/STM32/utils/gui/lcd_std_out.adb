@@ -29,9 +29,11 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.Board; use STM32.Board;
+with STM32.DMA2D.Polling; use STM32.DMA2D;
 
 package body LCD_Std_Out is
+
+   use Bitmapped_Drawing;
 
    --  We don't make the current font visible to clients because changing it
    --  requires recomputation of the screen layout (eg the char height) and
@@ -42,15 +44,15 @@ package body LCD_Std_Out is
    Char_Width  : Natural := BMP_Fonts.Char_Width (Current_Font);
    Char_Height : Natural := BMP_Fonts.Char_Height (Current_Font);
 
-   Max_Width   : Natural := LCD.Device_Width - Char_Width;
+   Max_Width   : Natural := STM32.LCD.Pixel_Width - Char_Width;
    --  The last place on the current "line" on the LCD where a char of the
    --  current font size can be printed
 
-   Max_Height : Natural := LCD.Device_Height - Char_Height;
+   Max_Height : Natural := STM32.LCD.Pixel_Height - Char_Height;
    --  The last "line" on the LCD where a char of this current font size can be
    --  printed
 
-   Current_Y : LCD.Height := LCD.Height'First;
+   Current_Y : Natural := 0;
    --  The current "line" that the text will appear upon. Note this wraps
    --  around to the top of the screen.
 
@@ -72,8 +74,8 @@ package body LCD_Std_Out is
    begin
       Char_Width  := BMP_Fonts.Char_Width (Font);
       Char_Height := BMP_Fonts.Char_Height (Font);
-      Max_Width   := LCD.Current_Width - Char_Width;
-      Max_Height  := LCD.Current_Height - Char_Height;
+      Max_Width   := STM32.LCD.Pixel_Width - Char_Width - 1;
+      Max_Height  := STM32.LCD.Pixel_Height - Char_Height - 1;
    end Recompute_Screen_Dimensions;
 
    --------------
@@ -90,9 +92,9 @@ package body LCD_Std_Out is
    -- Set_Orientation --
    ---------------------
 
-   procedure Set_Orientation (To : in LCD.Orientations) is
+   procedure Set_Orientation (To : in STM32.LCD.Orientation_Mode) is
    begin
-      LCD.Set_Orientation (To);
+      STM32.LCD.Set_Orientation (To);
       Recompute_Screen_Dimensions (Current_Font);
       Clear_Screen;
    end Set_Orientation;
@@ -103,8 +105,8 @@ package body LCD_Std_Out is
 
    procedure Clear_Screen is
    begin
-      LCD.Fill (Current_Background_Color);
-      Current_Y := LCD.Height'First;
+      DMA2D_Fill (Screen_Buffer, Current_Background_Color);
+      Current_Y := 0;
       Char_Count := 0;
    end Clear_Screen;
 
@@ -113,23 +115,13 @@ package body LCD_Std_Out is
    ---------
 
    procedure Put (Msg : String) is
-      X : LCD.Width;
    begin
       for C of Msg loop
-         if Char_Count * Char_Width > Max_Width then
-            --  go to the next line down
-            Current_Y := Current_Y + Char_Height;
-            if Current_Y > Max_Height then
-               Current_Y := LCD.Height'First;
-            end if;
-            --  and start at beginning of the line
-            X := LCD.Width'First;
-            Char_Count := 0;
+         if C = ASCII.LF then
+            New_Line;
          else
-            X := Char_Count * Char_Width;
+            Put (C);
          end if;
-         Draw_Char (X, Current_Y, C);
-         Char_Count := Char_Count + 1;
       end loop;
    end Put;
 
@@ -139,8 +131,9 @@ package body LCD_Std_Out is
 
    procedure Draw_Char (X, Y : Natural; Msg : Character) is
    begin
-      Drawing.Draw_Char
-        (Start      => (X, Y),
+      Bitmapped_Drawing.Draw_Char
+        (Screen_Buffer,
+         Start      => (X, Y),
          Char       => Msg,
          Font       => Current_Font,
          Foreground => Current_Text_Color,
@@ -152,16 +145,16 @@ package body LCD_Std_Out is
    ---------
 
    procedure Put (Msg : Character) is
-      X : LCD.Width;
+      X : Natural;
    begin
       if Char_Count * Char_Width > Max_Width then
          --  go to the next line down
          Current_Y := Current_Y + Char_Height;
          if Current_Y > Max_Height then
-            Current_Y := LCD.Height'First;
+            Current_Y := 0;
          end if;
          --  and start at beginning of the line
-         X := LCD.Width'First;
+         X := 0;
          Char_Count := 0;
       else
          X := Char_Count * Char_Width;
@@ -178,7 +171,7 @@ package body LCD_Std_Out is
    begin
       Char_Count := 0; -- next char printed will be at the start of a new line
       if Current_Y + Char_Height > Max_Height then
-         Current_Y := LCD.Height'First;
+         Current_Y := 0;
       else
          Current_Y := Current_Y + Char_Height;
       end if;
@@ -216,22 +209,16 @@ package body LCD_Std_Out is
    end Put;
 
 begin
-   LCD.Initialize
-     (Chip_Select,
-      WRX,
-      Reset,
-      SPI_Chip,
-      SPI_AF,
-      SPI5_SCK,
-      SPI5_MISO,
-      SPI5_MOSI);
+   STM32.LCD.Initialize (STM32.LCD.Pixel_Fmt_ARGB1555);
+   STM32.DMA2D.Polling.Initialize;
 
-   --  The values for the package global state are already initialized to the
-   --  default values. However we do need to clear/fill the screen and set
-   --  the orientation, which Initialize does do, so we call those routines
-   --  explicitly.
+--     --  The values for the package global state are already initialized to the
+--     --  default values. However we do need to clear/fill the screen and set
+--     --  the orientation, which Initialize does do, so we call those routines
+--     --  explicitly.
+--
+--     LCD.Set_Orientation (To => Default_Orientation);
 
-   LCD.Set_Orientation (To => Default_Orientation);
+   Clear_Screen;
 
-   LCD.Fill (Default_Background_Color);
 end LCD_Std_Out;

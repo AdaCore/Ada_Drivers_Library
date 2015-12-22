@@ -31,26 +31,51 @@
 
 with Interfaces; use Interfaces;
 
+with STM32.LCD;
+
 package body Bitmapped_Drawing is
+
+   function Screen_Buffer return DMA2D_Buffer
+   is
+   begin
+      return (Addr       => STM32.LCD.Current_Frame_Buffer (STM32.LCD.Layer1),
+              Width      => STM32.LCD.Pixel_Width,
+              Height     => STM32.LCD.Pixel_Height,
+              Color_Mode => STM32.LCD.Get_Pixel_Fmt,
+              Swap_X_Y   => STM32.LCD.SwapXY);
+   end Screen_Buffer;
 
    ---------------
    -- Draw_Char --
    ---------------
 
    procedure Draw_Char
-     (Start      : Display_Point;
+     (Buffer     : DMA2D_Buffer;
+      Start      : Display_Point;
       Char       : Character;
       Font       : BMP_Font;
-      Foreground : Color;
-      Background : Color)
+      Foreground : DMA2D_Color;
+      Background : DMA2D_Color)
    is
    begin
       for H in 0 .. Char_Height (Font) - 1 loop
          for W in 0 .. Char_Width (Font) - 1 loop
             if (Data (Font, Char, H) and Mask (Font, W)) /= 0 then
-               Set_Pixel (Start.X + W, Start.Y + H, Foreground);
+               if Foreground.Alpha /= 255 then
+                  DMA2D_Set_Pixel_Blend
+                    (Buffer, Start.X + W, Start.Y + H, Foreground);
+               else
+                  DMA2D_Set_Pixel
+                    (Buffer, Start.X + W, Start.Y + H, Foreground);
+               end if;
             else
-               Set_Pixel (Start.X + W, Start.Y + H, Background);
+               if Background.Alpha /= 255 then
+                  DMA2D_Set_Pixel_Blend
+                    (Buffer, Start.X + W, Start.Y + H, Background);
+               else
+                  DMA2D_Set_Pixel
+                    (Buffer, Start.X + W, Start.Y + H, Background);
+               end if;
             end if;
          end loop;
       end loop;
@@ -61,17 +86,20 @@ package body Bitmapped_Drawing is
    -----------------
 
    procedure Draw_String
-     (Start          : Display_Point;
+     (Buffer     : DMA2D_Buffer;
+      Start      : Display_Point;
       Msg        : String;
       Font       : BMP_Font;
-      Foreground : Color;
-      Background : Color)
+      Foreground : DMA2D_Color;
+      Background : DMA2D_Color)
    is
       Count : Natural := 0;
    begin
       for C of Msg loop
+         exit when Start.X > Buffer.Width;
          Draw_Char
-           ((Start.X + Count * Char_Width (Font), Start.Y),
+           (Buffer,
+            (Start.X + Count * Char_Width (Font), Start.Y),
             C,
             Font,
             Foreground,
@@ -86,8 +114,9 @@ package body Bitmapped_Drawing is
    ---------------
 
    procedure Draw_Line
-     (Start, Stop : Display_Point;
-      Hue         : Color;
+     (Buffer      : DMA2D_Buffer;
+      Start, Stop : Display_Point;
+      Hue         : DMA2D_Color;
       Thickness   : Natural := 1)
    is
       DX     : constant Float := abs Float (Stop.X - Start.X);
@@ -98,6 +127,8 @@ package body Bitmapped_Drawing is
       Step_X : Integer := 1;
       Step_Y : Integer := 1;
 
+      procedure Draw_Point (P : Display_Point) with Inline;
+
       ----------------
       -- Draw_Point --
       ----------------
@@ -105,17 +136,16 @@ package body Bitmapped_Drawing is
       procedure Draw_Point (P : Display_Point) is
       begin
          if Thickness /= 1 then
-            Draw_Line ((P.X - (Thickness / 2), P.Y),
-                  (P.X + (Thickness / 2), P.Y),
-                  Hue, 1);
-            Draw_Line ((P.X, P.Y -(Thickness / 2)),
-                  (P.X, P.Y + (Thickness / 2)),
-                  Hue, 1);
+            DMA2D_Fill_Rect
+              (Buffer, Hue,
+               P.X - (Thickness / 2),
+               P.Y - (Thickness / 2),
+               Thickness,
+               Thickness);
          else
-            Set_Pixel (P.X, P.Y, Hue);
+            DMA2D_Set_Pixel (Buffer, P.X, P.Y, Hue);
          end if;
       end Draw_Point;
-      pragma Inline (Draw_Point);
 
    begin
       if Start.X > Stop.X then
@@ -158,15 +188,33 @@ package body Bitmapped_Drawing is
    --------------------
 
    procedure Draw_Rectangle
-     (Start, Stop : Display_Point;
-      Hue         : Color;
+     (Buffer      : DMA2D_Buffer;
+      Start, Stop : Display_Point;
+      Hue         : DMA2D_Color;
       Thickness   : Natural := 1)
    is
+      X0, Y0, X1, Y1 : Natural;
    begin
-      Draw_Line (Start, (Stop.X, Start.Y), Hue, Thickness);
-      Draw_Line ((Stop.X, Start.Y), Stop, Hue, Thickness);
-      Draw_Line (Stop, (Start.X, Stop.Y), Hue, Thickness);
-      Draw_Line ((Start.X, Stop.Y), Start, Hue, Thickness);
+      X0 := Natural'Min (Start.X, Stop.X);
+      Y0 := Natural'Min (Start.Y, Stop.Y);
+      X1 := Natural'Max (Start.X, Stop.X);
+      Y1 := Natural'Max (Start.Y, Stop.Y);
+      DMA2D_Fill_Rect
+        (Buffer, Hue,
+         X0 - Thickness / 2, Y0,
+         Thickness, Y1 - Y0);
+      DMA2D_Fill_Rect
+        (Buffer, Hue,
+         X1 - Thickness / 2, Y0,
+         Thickness, Y1 - Y0);
+      DMA2D_Fill_Rect
+        (Buffer, Hue,
+         X0, Y0 - Thickness / 2,
+         X1 - X0, Thickness);
+      DMA2D_Fill_Rect
+        (Buffer, Hue,
+         X0, Y1 - Thickness / 2,
+         X1 - X0, Thickness);
    end Draw_Rectangle;
 
    --------------------
@@ -174,18 +222,18 @@ package body Bitmapped_Drawing is
    --------------------
 
    procedure Fill_Rectangle
-     (Start, Stop : Display_Point;
-      Hue         : Color)
+     (Buffer      : DMA2D_Buffer;
+      Start, Stop : Display_Point;
+      Hue         : DMA2D_Color)
    is
-      P1 :  Display_Point := Start;
-      P2 : Display_Point := (Start.X, Stop.Y);
+      X0, Y0, X1, Y1 : Natural;
    begin
-      loop
-         Draw_Line (P2, P1, Hue);
-         exit when P2.X = Stop.X;
-         P1.X := P1.X + 1;
-         P2.X := P2.X + 1;
-      end loop;
+      X0 := Natural'Min (Start.X, Stop.X);
+      Y0 := Natural'Min (Start.Y, Stop.Y);
+      X1 := Natural'Max (Start.X, Stop.X);
+      Y1 := Natural'Max (Start.Y, Stop.Y);
+      DMA2D_Fill_Rect (Buffer, Hue,
+                       X0, Y0, X1 - X0 + 1, Y1 - Y0 + 1);
    end Fill_Rectangle;
 
    --  http://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Cubic
@@ -194,8 +242,9 @@ package body Bitmapped_Drawing is
    ------------------
 
    procedure Cubic_Bezier
-     (P1, P2, P3, P4 : Display_Point;
-      Hue            : Color;
+     (Buffer         : DMA2D_Buffer;
+      P1, P2, P3, P4 : Display_Point;
+      Hue            : DMA2D_Color;
       N              : Positive := 20;
       Thickness      : Natural := 1)
    is
@@ -220,7 +269,8 @@ package body Bitmapped_Drawing is
          end;
       end loop;
       for I in Points'First .. Points'Last - 1 loop
-         Draw_Line (Points (I), Points (I + 1), Hue, Thickness => Thickness);
+         Draw_Line (Buffer, Points (I), Points (I + 1), Hue,
+                    Thickness => Thickness);
       end loop;
    end Cubic_Bezier;
 
@@ -230,9 +280,10 @@ package body Bitmapped_Drawing is
    -----------------
 
    procedure Draw_Circle
-     (Center : Display_Point;
+     (Buffer : DMA2D_Buffer;
+      Center : Display_Point;
       Radius : Natural;
-      Hue    : Color;
+      Hue    : DMA2D_Color;
       Fill   : Boolean := False)
    is
       F     : Integer := 1 - Radius;
@@ -243,15 +294,15 @@ package body Bitmapped_Drawing is
    begin
       if Fill then
          for Cnt in 1 .. Radius loop
-            Draw_Circle (Center, Cnt, Hue, False);
+            Draw_Circle (Buffer, Center, Cnt, Hue, False);
          end loop;
          return;
       end if;
 
-      Set_Pixel (Center.X, Center.Y + Radius, Hue);
-      Set_Pixel (Center.X, Center.Y - Radius, Hue);
-      Set_Pixel (Center.X + Radius, Center.Y, Hue);
-      Set_Pixel (Center.X - Radius, Center.Y, Hue);
+      DMA2D_Set_Pixel (Buffer, Center.X, Center.Y + Radius, Hue);
+      DMA2D_Set_Pixel (Buffer, Center.X, Center.Y - Radius, Hue);
+      DMA2D_Set_Pixel (Buffer, Center.X + Radius, Center.Y, Hue);
+      DMA2D_Set_Pixel (Buffer, Center.X - Radius, Center.Y, Hue);
       while X < Y loop
          if F >= 0 then
             Y := Y - 1;
@@ -261,14 +312,14 @@ package body Bitmapped_Drawing is
          X := X + 1;
          ddF_X := ddF_X + 2;
          F := F + ddF_X + 1;
-         Set_Pixel (Center.X + X, Center.Y + Y, Hue);
-         Set_Pixel (Center.X - X, Center.Y + Y, Hue);
-         Set_Pixel (Center.X + X, Center.Y - Y, Hue);
-         Set_Pixel (Center.X - X, Center.Y - Y, Hue);
-         Set_Pixel (Center.X + Y, Center.Y + X, Hue);
-         Set_Pixel (Center.X - Y, Center.Y + X, Hue);
-         Set_Pixel (Center.X + Y, Center.Y - X, Hue);
-         Set_Pixel (Center.X - Y, Center.Y - X, Hue);
+         DMA2D_Set_Pixel (Buffer, Center.X + X, Center.Y + Y, Hue);
+         DMA2D_Set_Pixel (Buffer, Center.X - X, Center.Y + Y, Hue);
+         DMA2D_Set_Pixel (Buffer, Center.X + X, Center.Y - Y, Hue);
+         DMA2D_Set_Pixel (Buffer, Center.X - X, Center.Y - Y, Hue);
+         DMA2D_Set_Pixel (Buffer, Center.X + Y, Center.Y + X, Hue);
+         DMA2D_Set_Pixel (Buffer, Center.X - Y, Center.Y + X, Hue);
+         DMA2D_Set_Pixel (Buffer, Center.X + Y, Center.Y - X, Hue);
+         DMA2D_Set_Pixel (Buffer, Center.X - Y, Center.Y - X, Hue);
       end loop;
    end Draw_Circle;
 

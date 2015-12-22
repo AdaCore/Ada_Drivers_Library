@@ -61,57 +61,83 @@
 --  There is no control over colors or screen orientation. If that is required,
 --  see the LCD_Std_Out package.
 
-with BMP_Fonts; use BMP_Fonts;
+with BMP_Fonts;   use BMP_Fonts;
+with STM32.DMA2D; use STM32.DMA2D;
 
-generic
-   type Color is (<>);
-   with procedure Set_Pixel (X : Natural; Y : Natural; Hue : Color);
 package Bitmapped_Drawing is
+
+   subtype Colors is DMA2D_Color;
+
+   Black       : constant Colors := (255, 0, 0, 0);
+   Blue        : constant Colors := (255, 0, 0, 255);
+   Light_Blue  : constant Colors := (255, 173, 216, 230);
+   Brown       : constant Colors := (255, 165, 42, 42);
+   Cyan        : constant Colors := (255, 0, 255, 255);
+   Gray        : constant Colors := (255, 190, 190, 190);
+   Light_Gray  : constant Colors := (255, 211, 211, 211);
+   Green       : constant Colors := (255, 0, 255, 0);
+   Light_Green : constant Colors := (255, 144, 238, 144);
+   Magenta     : constant Colors := (255, 255, 0, 255);
+   Red         : constant Colors := (255, 255, 0, 0);
+   Orange      : constant Colors := (255, 255, 69, 0);
+   Violet      : constant Colors := (255, 238, 130, 238);
+   Yellow      : constant Colors := (255, 255, 255, 0);
+   White       : constant Colors := (255, 255, 255, 255);
 
    type Display_Point is record
       X : Natural;
       Y : Natural;
    end record;
 
+   function Screen_Buffer return DMA2D_Buffer;
+   --  Returns the LCD Frame buffer for Layer 1
+
    procedure Draw_Line
-     (Start, Stop : Display_Point;
-      Hue         : Color;
+     (Buffer      : DMA2D_Buffer;
+      Start, Stop : Display_Point;
+      Hue         : DMA2D_Color;
       Thickness   : Natural := 1);
 
    procedure Draw_Rectangle
-     (Start, Stop : Display_Point;
-      Hue         : Color;
+     (Buffer      : DMA2D_Buffer;
+      Start, Stop : Display_Point;
+      Hue         : DMA2D_Color;
       Thickness   : Natural := 1);
 
    procedure Fill_Rectangle
-     (Start, Stop : Display_Point;
-      Hue         : Color);
+     (Buffer      : DMA2D_Buffer;
+      Start, Stop : Display_Point;
+      Hue         : DMA2D_Color);
 
    procedure Cubic_Bezier
-     (P1, P2, P3, P4 : Display_Point;
-      Hue            : Color;
+     (Buffer         : DMA2D_Buffer;
+      P1, P2, P3, P4 : Display_Point;
+      Hue            : DMA2D_Color;
       N              : Positive := 20;
       Thickness      : Natural := 1);
 
    procedure Draw_Circle
-     (Center : Display_Point;
+     (Buffer : DMA2D_Buffer;
+      Center : Display_Point;
       Radius : Natural;
-      Hue    : Color;
+      Hue    : DMA2D_Color;
       Fill   : Boolean := False);
 
    procedure Draw_Char
-     (Start      : Display_Point;
+     (Buffer     : DMA2D_Buffer;
+      Start      : Display_Point;
       Char       : Character;
       Font       : BMP_Font;
-      Foreground : Color;
-      Background : Color);
+      Foreground : DMA2D_Color;
+      Background : DMA2D_Color);
 
    procedure Draw_String
-     (Start      : Display_Point;
+     (Buffer     : DMA2D_Buffer;
+      Start      : Display_Point;
       Msg        : String;
       Font       : BMP_Font;
-      Foreground : Color;
-      Background : Color);
+      Foreground : DMA2D_Color;
+      Background : DMA2D_Color);
 
 end Bitmapped_Drawing;
 

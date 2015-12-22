@@ -48,48 +48,44 @@
 with STM32.GPIO; use STM32.GPIO;
 with STM32.SPI;  use STM32.SPI;
 
-with STM32.Device; use STM32.Device;
+with STM32.Device;       use STM32.Device;
+with STM32.LCD;
 
-with STM32.ILI9341;
 with BMP_Fonts;          use BMP_Fonts;
 with Bitmapped_Drawing;
 
-generic
-   with package Drawing is new Bitmapped_Drawing
-     (Color => STM32.ILI9341.Colors, Set_Pixel => <>);
 package LCD_Std_Out is
 
-   package LCD renames STM32.ILI9341;
+   Black       : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Black;
+   Blue        : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Blue;
+   Light_Blue  : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Light_Blue;
+   Green       : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Green;
+   Cyan        : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Cyan;
+   Gray        : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Gray;
+   Magenta     : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Magenta;
+   Light_Green : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Light_Green;
+   Brown       : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Brown;
+   Red         : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Red;
+   Orange      : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Orange;
+   Yellow      : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Yellow;
+   White       : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.White;
 
-   Black       : LCD.Colors renames LCD.Black;
-   Blue        : LCD.Colors renames LCD.Blue;
-   Light_Blue  : LCD.Colors renames LCD.Light_Blue;
-   Green       : LCD.Colors renames LCD.Green;
-   Cyan        : LCD.Colors renames LCD.Cyan;
-   Gray        : LCD.Colors renames LCD.Gray;
-   Magenta     : LCD.Colors renames LCD.Magenta;
-   Light_Green : LCD.Colors renames LCD.Light_Green;
-   Brown       : LCD.Colors renames LCD.Brown;
-   Red         : LCD.Colors renames LCD.Red;
-   Orange      : LCD.Colors renames LCD.Orange;
-   Yellow      : LCD.Colors renames LCD.Yellow;
-   White       : LCD.Colors renames LCD.White;
-
-   Default_Text_Color       : constant LCD.Colors := White;
-   Default_Background_Color : constant LCD.Colors := Black;
+   Default_Text_Color       : constant Bitmapped_Drawing.Colors := White;
+   Default_Background_Color : constant Bitmapped_Drawing.Colors := Black;
    Default_Font             : constant BMP_Font := Font16x24;
-   Default_Orientation      : constant LCD.Orientations := LCD.Portrait_2;
+--     Default_Orientation      : constant LCD.Orientations := LCD.Portrait_2;
 
    --  Changes to these current values will appear on subsequent calls to the
    --  output routines.
-   Current_Text_Color       : LCD.Colors := Default_Text_Color;
-   Current_Background_Color : LCD.Colors := Default_Background_Color;
+   Current_Text_Color       : Bitmapped_Drawing.Colors := Default_Text_Color;
+   Current_Background_Color : Bitmapped_Drawing.Colors :=
+                                Default_Background_Color;
 
    procedure Set_Font (To : in BMP_Font);
    --  Changes the current font setting so that subsequent output is in the
    --  specified font.
 
-   procedure Set_Orientation (To : in LCD.Orientations);
+   procedure Set_Orientation (To : in STM32.LCD.Orientation_Mode);
    --  Configures the screen orientation and fills the screen with the current
    --  background color. All previously displayed content is lost.
 
