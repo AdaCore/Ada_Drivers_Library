@@ -29,10 +29,18 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+<<<<<<< HEAD
 with Ada.Real_Time; use Ada.Real_Time;
 with STM32.Board;   use STM32.Board;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.SYSCFG;  use STM32.SYSCFG;
+=======
+with Ada.Real_Time;       use Ada.Real_Time;
+with STM32F429_Discovery; use STM32F429_Discovery;
+with STM32F4.GPIO;        use STM32F4.GPIO;
+with STM32F4.SYSCFG;      use STM32F4.SYSCFG;
+with STM32F4.EXTI;        use STM32F4.EXTI;
+>>>>>>> 885a927... New EXTI package, thus some functionality moved out of SYSCFG package.
 
 package body Button is
 

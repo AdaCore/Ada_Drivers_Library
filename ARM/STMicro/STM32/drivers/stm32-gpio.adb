@@ -584,15 +584,20 @@ package body STM32.GPIO is
    procedure Configure_Trigger
      (Port    : in out GPIO_Port;
       Pin     : GPIO_Pin;
-      Trigger : External_Triggers)
+      Trigger : EXTI.External_Triggers)
    is
       use STM32.SYSCFG, STM32.RCC;
+      use STM32.EXTI;
+      Line : constant External_Line_Number := External_Line_Number'Val (GPIO_Pin'Pos (Pin));
    begin
-      SYSCFG_Clock_Enable;
+      RCC.SYSCFG_Clock_Enable;
+      SYSCFG.Connect_External_Interrupt (Port, Pin);
 
-      Connect_External_Interrupt (Port, Pin);
-      Set_External_Trigger (Pin, Trigger);
-      Select_Trigger_Edge (Pin, Trigger);
+      if Trigger in Interrupt_Triggers then
+         Enable_External_Interrupt (Line, Trigger);
+      else
+         Enable_External_Event (Line, Trigger);
+      end if;
    end Configure_Trigger;
 
    -----------------------
@@ -601,15 +606,20 @@ package body STM32.GPIO is
 
    procedure Configure_Trigger
      (Point   : GPIO_Point;
-      Trigger : External_Triggers)
+      Trigger : EXTI.External_Triggers)
    is
+      use STM32.EXTI;
+      Line : constant External_Line_Number := External_Line_Number'Val (Point.Pin);
       use STM32.SYSCFG, STM32.RCC;
    begin
       SYSCFG_Clock_Enable;
 
       Connect_External_Interrupt (Point);
-      Set_External_Trigger (Point.Pin, Trigger);
-      Select_Trigger_Edge (Point.Pin, Trigger);
+      if Trigger in Interrupt_Triggers then
+         Enable_External_Interrupt (Line, Trigger);
+      else
+         Enable_External_Event (Line, Trigger);
+      end if;
    end Configure_Trigger;
 
    -----------------------
@@ -618,7 +628,7 @@ package body STM32.GPIO is
 
    procedure Configure_Trigger
      (Points  : GPIO_Points;
-      Trigger : External_Triggers)
+      Trigger : EXTI.External_Triggers)
    is
    begin
       for Point of Points loop
@@ -633,7 +643,7 @@ package body STM32.GPIO is
    procedure Configure_Trigger
      (Port    : in out GPIO_Port;
       Pins    : GPIO_Pins;
-      Trigger : External_Triggers)
+      Trigger : EXTI.External_Triggers)
    is
    begin
       for Pin of Pins loop

@@ -43,6 +43,7 @@
 
 with Ada.Unchecked_Conversion;
 
+with STM32.EXTI;    use STM32.EXTI;
 with STM32.SYSCFG;  use STM32.SYSCFG;
 
 with STM32.Device;  use STM32.Device;

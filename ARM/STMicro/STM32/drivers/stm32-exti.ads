@@ -39,24 +39,75 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
---  This file provides register definitions for the STM32F4 (ARM Cortex M4F)
+--  This file provides register definitions for the STM32 (ARM Cortex M4/7F)
 --  microcontrollers from ST Microelectronics.
 
-with STM32.GPIO;  use STM32.GPIO;
+package STM32.EXTI is
 
-package STM32.SYSCFG is
+   type External_Line_Number is
+     (EXTI_Line_0,
+      EXTI_Line_1,
+      EXTI_Line_2,
+      EXTI_Line_3,
+      EXTI_Line_4,
+      EXTI_Line_5,
+      EXTI_Line_6,
+      EXTI_Line_7,
+      EXTI_Line_8,
+      EXTI_Line_9,
+      EXTI_Line_10,
+      EXTI_Line_11,
+      EXTI_Line_12,
+      EXTI_Line_13,
+      EXTI_Line_14,
+      EXTI_Line_15,
+      EXTI_Line_16,
+      EXTI_Line_17,
+      EXTI_Line_18,
+      EXTI_Line_19,
+      EXTI_Line_20,
+      EXTI_Line_21,
+      EXTI_Line_22);
 
-   procedure Connect_External_Interrupt
-     (Port : GPIO_Port;  Pin  : GPIO_Pin) with Inline;
+   type External_Triggers is
+     (Interrupt_Rising_Edge,
+      Interrupt_Falling_Edge,
+      Interrupt_Rising_Falling_Edge,
+      Event_Rising_Edge,
+      Event_Falling_Edge,
+      Event_Rising_Falling_Edge);
 
-   procedure Connect_External_Interrupt
-     (Point  : GPIO_Point) with Inline;
+   subtype Interrupt_Triggers is External_Triggers
+      range Interrupt_Rising_Edge .. Interrupt_Rising_Falling_Edge;
 
-   procedure Connect_External_Interrupt
-     (Port : GPIO_Port;  Pins : GPIO_Pins) with Inline;
+   subtype Event_Triggers is External_Triggers
+      range Event_Rising_Edge .. Event_Rising_Falling_Edge;
 
-   procedure Clear_External_Interrupt (Pin : GPIO_Pin) with Inline;
+   procedure Enable_External_Interrupt
+     (Line    : External_Line_Number;
+      Trigger : Interrupt_Triggers)
+     with Inline;
 
-   procedure Clear_External_Interrupt (Pin : GPIO_Pin_Index) with Inline;
+   procedure Disable_External_Interrupt (Line : External_Line_Number)
+     with Inline;
 
-end STM32.SYSCFG;
+   procedure Enable_External_Event
+     (Line    : External_Line_Number;
+      Trigger : Event_Triggers)
+     with Inline;
+
+   procedure Disable_External_Event (Line : External_Line_Number)
+     with Inline;
+
+
+   procedure Generate_SWI (Line : External_Line_Number)
+     with Inline;
+
+   function External_Interrupt_Pending (Line : External_Line_Number)
+     return Boolean
+     with Inline;
+
+   procedure Clear_External_Interrupt (Line : External_Line_Number)
+     with Inline;
+
+end STM32.EXTI;

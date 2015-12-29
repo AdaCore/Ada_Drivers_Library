@@ -42,21 +42,101 @@
 --  This file provides register definitions for the STM32F4 (ARM Cortex M4F)
 --  microcontrollers from ST Microelectronics.
 
-with STM32.GPIO;  use STM32.GPIO;
+with STM32_SVD.EXTI; use STM32_SVD.EXTI;
 
-package STM32.SYSCFG is
+package body STM32.EXTI is
 
-   procedure Connect_External_Interrupt
-     (Port : GPIO_Port;  Pin  : GPIO_Pin) with Inline;
+   -------------------------------
+   -- Enable_External_Interrupt --
+   -------------------------------
 
-   procedure Connect_External_Interrupt
-     (Point  : GPIO_Point) with Inline;
+   procedure Enable_External_Interrupt
+     (Line    : External_Line_Number;
+      Trigger : Interrupt_Triggers)
+   is
+      Index : constant Natural := External_Line_Number'Pos (Line);
+   begin
+      EXTI_Periph.IMR.MR.Arr (Index) := 1;
+      EXTI_Periph.RTSR.TR.Arr (Index) :=
+        (if Trigger in Interrupt_Rising_Edge  | Interrupt_Rising_Falling_Edge
+         then 1 else 0);
+      EXTI_Periph.FTSR.TR.Arr (Index) :=
+        (if Trigger in Interrupt_Falling_Edge | Interrupt_Rising_Falling_Edge
+         then 1 else 0);
+   end Enable_External_Interrupt;
 
-   procedure Connect_External_Interrupt
-     (Port : GPIO_Port;  Pins : GPIO_Pins) with Inline;
+   --------------------------------
+   -- Disable_External_Interrupt --
+   --------------------------------
 
-   procedure Clear_External_Interrupt (Pin : GPIO_Pin) with Inline;
+   procedure Disable_External_Interrupt (Line : External_Line_Number) is
+      Index : constant Natural := External_Line_Number'Pos (Line);
+   begin
+      EXTI_Periph.IMR.MR.Arr (Index)  := 0;
+      EXTI_Periph.RTSR.TR.Arr (Index) := 0;
+      EXTI_Periph.FTSR.TR.Arr (Index) := 0;
+   end Disable_External_Interrupt;
 
-   procedure Clear_External_Interrupt (Pin : GPIO_Pin_Index) with Inline;
+   ---------------------------
+   -- Enable_External_Event --
+   ---------------------------
 
-end STM32.SYSCFG;
+   procedure Enable_External_Event
+     (Line    : External_Line_Number;
+      Trigger : Event_Triggers)
+   is
+      Index : constant Natural := External_Line_Number'Pos (Line);
+   begin
+      EXTI_Periph.EMR.MR.Arr (Index)  := 1;
+      EXTI_Periph.RTSR.TR.Arr (Index) :=
+        (if Trigger in Interrupt_Rising_Edge  | Interrupt_Rising_Falling_Edge
+         then 1 else 0);
+      EXTI_Periph.FTSR.TR.Arr (Index) :=
+        (if Trigger in Interrupt_Falling_Edge | Interrupt_Rising_Falling_Edge
+         then 1 else 0);
+   end Enable_External_Event;
+
+   ----------------------------
+   -- Disable_External_Event --
+   ----------------------------
+
+   procedure Disable_External_Event (Line : External_Line_Number) is
+      Index : constant Natural := External_Line_Number'Pos (Line);
+   begin
+      EXTI_Periph.EMR.MR.Arr (Index)  := 0;
+      EXTI_Periph.RTSR.TR.Arr (Index) := 0;
+      EXTI_Periph.FTSR.TR.Arr (Index) := 0;
+   end Disable_External_Event;
+
+   ------------------
+   -- Generate_SWI --
+   ------------------
+
+   procedure Generate_SWI (Line : External_Line_Number) is
+   begin
+      EXTI_Periph.SWIER.SWIER.Arr (External_Line_Number'Pos (Line)) := 1;
+   end Generate_SWI;
+
+   --------------------------------
+   -- External_Interrupt_Pending --
+   --------------------------------
+
+   function External_Interrupt_Pending (Line : External_Line_Number)
+     return Boolean
+   is
+   begin
+      return EXTI_Periph.PR.PR.Arr (External_Line_Number'Pos (Line)) = 1;
+   end External_Interrupt_Pending;
+
+   ------------------------------
+   -- Clear_External_Interrupt --
+   ------------------------------
+
+   procedure Clear_External_Interrupt (Line : External_Line_Number) is
+   begin
+      -- yes, one to clear
+      EXTI_Periph.PR.PR.Arr (External_Line_Number'Pos (Line)) := 1;
+   end Clear_External_Interrupt;
+
+
+end STM32.EXTI;

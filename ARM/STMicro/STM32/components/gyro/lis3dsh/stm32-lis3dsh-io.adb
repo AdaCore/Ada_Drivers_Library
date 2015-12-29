@@ -40,7 +40,12 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+<<<<<<< HEAD:ARM/STMicro/STM32/components/gyro/lis3dsh/stm32-lis3dsh-io.adb
 with Cortex_M.NVIC;
+=======
+with STM32F4.NVIC;
+with STM32F4.EXTI;
+>>>>>>> 885a927... New EXTI package, thus some functionality moved out of SYSCFG package.:ARM/STMicro/STM32/components/stm32f4-lis3dsh-io.adb
 
 package body STM32.LIS3DSH.IO is
 
@@ -197,8 +202,14 @@ package body STM32.LIS3DSH.IO is
       Configure_IO (Device_Interrupt2_Pin,
                     Config);
 
+<<<<<<< HEAD:ARM/STMicro/STM32/components/gyro/lis3dsh/stm32-lis3dsh-io.adb
       Configure_Trigger (Device_Interrupt2_Pin,
                          Trigger => Interrupt_Rising_Edge);
+=======
+      Configure_Trigger (Device_Interrupt_GPIO_Port,
+                         Device_Interrupt2_Pin,
+                         Trigger => EXTI.Interrupt_Rising_Edge);
+>>>>>>> 885a927... New EXTI package, thus some functionality moved out of SYSCFG package.:ARM/STMicro/STM32/components/stm32f4-lis3dsh-io.adb
 
       Cortex_M.NVIC.Set_Priority (Device_Int2_EXTI_IRQn,
                                   Preempt_Priority => 16#F#,

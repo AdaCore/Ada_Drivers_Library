@@ -45,6 +45,8 @@
 with STM32_SVD.EXTI;   use STM32_SVD.EXTI;
 with STM32_SVD.SYSCFG; use STM32_SVD.SYSCFG;
 
+with STM32.EXTI;
+
 with STM32.Device;     use STM32.Device;
 
 package body STM32.SYSCFG is
@@ -136,107 +138,14 @@ package body STM32.SYSCFG is
       end loop;
    end Connect_External_Interrupt;
 
-   --------------------------
-   -- Set_External_Trigger --
-   --------------------------
-
-   procedure Set_External_Trigger
-     (Pin     : GPIO_Pin;
-      Trigger : External_Triggers)
-   is
-      This_Pin : constant GPIO_Pin_Index := GPIO_Pin'Pos (Pin);
-   begin
-      Set_External_Trigger (This_Pin, Trigger);
-   end Set_External_Trigger;
-
-   --------------------------
-   -- Set_External_Trigger --
-   --------------------------
-
-   procedure Set_External_Trigger
-     (Pin     : GPIO_Pin_Index;
-      Trigger : External_Triggers)
-   is
-   begin
-      EXTI_Periph.IMR.MR.Arr (Pin) :=
-        (if Trigger in Interrupt_Triggers then 1 else 0);
-      EXTI_Periph.EMR.MR.Arr (Pin) :=
-        (if Trigger in Event_Triggers then 1 else 0);
-   end Set_External_Trigger;
-
-   --------------------------
-   -- Set_External_Trigger --
-   --------------------------
-
-   procedure Set_External_Trigger
-     (Pins    : GPIO_Pins;
-      Trigger : External_Triggers)
-   is
-   begin
-      for Pin of Pins loop
-         Set_External_Trigger (Pin, Trigger);
-      end loop;
-   end Set_External_Trigger;
-
-   -------------------------
-   -- Select_Trigger_Edge --
-   -------------------------
-
-   procedure Select_Trigger_Edge
-     (Pin     : GPIO_Pin;
-      Trigger : External_Triggers)
-   is
-      This_Pin : constant GPIO_Pin_Index := GPIO_Pin'Pos (Pin);
-   begin
-      Select_Trigger_Edge (This_Pin, Trigger);
-   end Select_Trigger_Edge;
-
-   -------------------------
-   -- Select_Trigger_Edge --
-   -------------------------
-
-   procedure Select_Trigger_Edge
-     (Pin     : GPIO_Pin_Index;
-      Trigger : External_Triggers)
-   is
-   begin
-      --  all those that are/include rising edge
-      EXTI_Periph.RTSR.TR.Arr (Pin) :=
-        Boolean'Enum_Rep (Trigger in Interrupt_Rising_Edge  |
-                                     Interrupt_Rising_Falling_Edge |
-                                     Event_Rising_Edge  |
-                                     Event_Rising_Falling_Edge);
-
-      -- all those that are/include falling edge
-      EXTI_Periph.FTSR.TR.Arr (Pin) :=
-        Boolean'Enum_Rep (Trigger in Interrupt_Falling_Edge |
-                                     Interrupt_Rising_Falling_Edge |
-                                     Event_Falling_Edge |
-                                     Event_Rising_Falling_Edge);
-   end Select_Trigger_Edge;
-
-   -------------------------
-   -- Select_Trigger_Edge --
-   -------------------------
-
-   procedure Select_Trigger_Edge
-     (Pins    : GPIO_Pins;
-      Trigger : External_Triggers)
-   is
-   begin
-      for Pin of Pins loop
-         Select_Trigger_Edge (Pin, Trigger);
-      end loop;
-   end Select_Trigger_Edge;
-
    ------------------------------
    -- Clear_External_Interrupt --
    ------------------------------
 
    procedure Clear_External_Interrupt (Pin : GPIO_Pin) is
+      use STM32.EXTI;
    begin
-      EXTI_Periph.PR.PR.Arr (GPIO_Pin'Pos (Pin)) := 1;
-      -- yes, value is one to clear it
+      Clear_External_Interrupt (External_Line_Number'Val (GPIO_Pin'Pos (Pin)));
    end Clear_External_Interrupt;
 
    ------------------------------
