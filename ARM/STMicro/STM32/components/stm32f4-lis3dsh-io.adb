@@ -41,6 +41,7 @@
 ------------------------------------------------------------------------------
 
 with STM32F4.NVIC;
+with STM32F4.EXTI;
 
 package body STM32F4.LIS3DSH.IO is
 
@@ -202,7 +203,7 @@ package body STM32F4.LIS3DSH.IO is
 
       Configure_Trigger (Device_Interrupt_GPIO_Port,
                          Device_Interrupt2_Pin,
-                         Trigger => Interrupt_Rising_Edge);
+                         Trigger => EXTI.Interrupt_Rising_Edge);
 
       STM32F4.NVIC.Set_Priority (Device_Int2_EXTI_IRQn,
                                  Preempt_Priority => 16#F#,

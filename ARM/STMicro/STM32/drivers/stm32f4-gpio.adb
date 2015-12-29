@@ -449,15 +449,19 @@ package body STM32F4.GPIO is
    procedure Configure_Trigger
      (Port    : in out GPIO_Port;
       Pin     : GPIO_Pin;
-      Trigger : External_Triggers)
+      Trigger : EXTI.External_Triggers)
    is
-      use STM32F4.SYSCFG, STM32F4.RCC;
+      use STM32F4.EXTI;
+      Line : constant External_Line_Number := External_Line_Number'Val (GPIO_Pin'Pos (Pin));
    begin
-      SYSCFG_Clock_Enable;
+      RCC.SYSCFG_Clock_Enable;
+      SYSCFG.Connect_External_Interrupt (Port, Pin);
 
-      Connect_External_Interrupt (Port, Pin);
-      Set_External_Trigger (Pin, Trigger);
-      Select_Trigger_Edge (Pin, Trigger);
+      if Trigger in Interrupt_Triggers then
+         Enable_External_Interrupt (Line, Trigger);
+      else
+         Enable_External_Event (Line, Trigger);
+      end if;
    end Configure_Trigger;
 
    -----------------------
@@ -466,7 +470,7 @@ package body STM32F4.GPIO is
 
    procedure Configure_Trigger
      (Point   : GPIO_Point;
-      Trigger : External_Triggers)
+      Trigger : EXTI.External_Triggers)
    is
    begin
       Configure_Trigger (Point.Port.all, Point.Pin, Trigger);
@@ -479,7 +483,7 @@ package body STM32F4.GPIO is
    procedure Configure_Trigger
      (Port    : in out GPIO_Port;
       Pins    : GPIO_Pins;
-      Trigger : External_Triggers)
+      Trigger : EXTI.External_Triggers)
    is
    begin
       for Pin of Pins loop

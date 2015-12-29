@@ -42,108 +42,90 @@
 --  This file provides register definitions for the STM32F4 (ARM Cortex M4F)
 --  microcontrollers from ST Microelectronics.
 
-with STM32F4.EXTI;
+package body STM32F4.EXTI is
 
-package body STM32F4.SYSCFG is
+   -------------------------------
+   -- Enable_External_Interrupt --
+   -------------------------------
 
-   --------------------------------
-   -- Connect_External_Interrupt --
-   --------------------------------
-
-   procedure Connect_External_Interrupt
-     (Port : GPIO_Port;
-      Pin  : GPIO_Pin)
+   procedure Enable_External_Interrupt
+     (Line    : External_Line_Number;
+      Trigger : Interrupt_Triggers)
    is
-      CR_Index   : Integer range EXTI_Control_Registers'Range;
-      EXTI_Index : Integer range EXTI_n_List'Range;
-      Port_Name  : constant GPIO_Port_Id := As_GPIO_Port_Id (Port);
+      Index : constant Index32 := External_Line_Number'Pos (Line);
    begin
-      --  First we find the control register, of the four possible, that
-      --  contains the EXTI_n value for pin 'n' specified by the Pin parameter.
-      --  In effect, this is what we are doing for the EXTICR index:
-      --    case GPIO_Pin'Pos (Pin) is
-      --       when  0 .. 3  => CR_Index := 0;
-      --       when  4 .. 7  => CR_Index := 1;
-      --       when  8 .. 11 => CR_Index := 2;
-      --       when 12 .. 15 => CR_Index := 3;
-      --    end case;
-      --  Note that that means we are dependent upon the order of the Pin
-      --  declarations because we require GPIO_Pin'Pos(Pin_n) to be 'n', ie
-      --  Pin_0 should be at position 0, Pin_1 at position 1, and so forth.
-      CR_Index := GPIO_Pin'Pos (Pin) / 4;
-
-      --  Now we must find which EXTI_n value to use, of the four possible,
-      --  within the control register. We are depending on the GPIO_Port type
-      --  being an enumeration and that the enumeral order is alphabetical on
-      --  the Port letter, such that in effect GPIO_A'Pos = 0, GPIO_B'Pos = 1,
-      --  and so on.
-      EXTI_Index := GPIO_Port_Id'Pos (Port_Name) mod 4;  -- ie 0 .. 3
-
-      --  Finally we assign the port 'number' to the EXTI_n value within the
-      --  control register. We depend upon the Port enumerals' underlying
-      --  numeric representation values matching what the hardware expects,
-      --  that is, the values 0 .. n-1, which we get automatically unless
-      --  overridden.
-
-      SYSCFG.EXTICR (CR_Index).EXTI (EXTI_Index) := Port_Name;
-   end Connect_External_Interrupt;
+      EXTI.IMR (Index) := True;
+      EXTI.RTSR (Index) := Trigger in Interrupt_Rising_Edge  | Interrupt_Rising_Falling_Edge;
+      EXTI.FTSR (Index) := Trigger in Interrupt_Falling_Edge | Interrupt_Rising_Falling_Edge;
+   end Enable_External_Interrupt;
 
    --------------------------------
-   -- Connect_External_Interrupt --
+   -- Disable_External_Interrupt --
    --------------------------------
 
-   procedure Connect_External_Interrupt
-     (Port : GPIO_Port;
-      Pins : GPIO_Pins)
+   procedure Disable_External_Interrupt (Line : External_Line_Number) is
+      Index : constant Index32 := External_Line_Number'Pos (Line);
+   begin
+      EXTI.IMR (Index) := False;
+      EXTI.RTSR (Index) := False;
+      EXTI.FTSR (Index) := False;
+   end Disable_External_Interrupt;
+
+   ---------------------------
+   -- Enable_External_Event --
+   ---------------------------
+
+   procedure Enable_External_Event
+     (Line    : External_Line_Number;
+      Trigger : Event_Triggers)
+   is
+      Index : constant Index32 := External_Line_Number'Pos (Line);
+   begin
+      EXTI.EMR (Index) := True;
+      EXTI.RTSR (Index) := Trigger in Event_Rising_Edge  | Event_Rising_Falling_Edge;
+      EXTI.FTSR (Index) := Trigger in Event_Falling_Edge | Event_Rising_Falling_Edge;
+   end Enable_External_Event;
+
+   ----------------------------
+   -- Disable_External_Event --
+   ----------------------------
+
+   procedure Disable_External_Event (Line : External_Line_Number) is
+      Index : constant Index32 := External_Line_Number'Pos (Line);
+   begin
+      EXTI.EMR (Index) := False;
+      EXTI.RTSR (Index) := False;
+      EXTI.FTSR (Index) := False;
+   end Disable_External_Event;
+
+   ------------------
+   -- Generate_SWI --
+   ------------------
+
+   procedure Generate_SWI (Line : External_Line_Number) is
+   begin
+      EXTI.SWIER (External_Line_Number'Pos (Line)) := 1;
+   end Generate_SWI;
+
+   --------------------------------
+   -- External_Interrupt_Pending --
+   --------------------------------
+
+   function External_Interrupt_Pending (Line : External_Line_Number)
+     return Boolean
    is
    begin
-      for Pin of Pins loop
-         Connect_External_Interrupt (Port, Pin);
-      end loop;
-   end Connect_External_Interrupt;
+      return EXTI.PR (External_Line_Number'Pos (Line)) = 1;
+   end External_Interrupt_Pending;
 
    ------------------------------
    -- Clear_External_Interrupt --
    ------------------------------
 
-   procedure Clear_External_Interrupt (Pin : GPIO_Pin) is
-      use STM32F4.EXTI;
+   procedure Clear_External_Interrupt (Line : External_Line_Number) is
    begin
-      Clear_External_Interrupt (External_Line_Number'Val (GPIO_Pin'Pos (Pin)));
+      EXTI.PR (External_Line_Number'Pos (Line)) := 1;  -- yes, one to clear
    end Clear_External_Interrupt;
 
-   ---------------------
-   -- As_GPIO_Port_Id --
-   ---------------------
 
-   function As_GPIO_Port_Id (Port : GPIO_Port) return GPIO_Port_Id is
-   begin
-      -- TODO: rather ugly to have this board-specific range here
-      if Port'Address = GPIOA_Base then
-         return GPIO_Port_A;
-      elsif Port'Address = GPIOB_Base then
-         return GPIO_Port_B;
-      elsif Port'Address = GPIOC_Base then
-         return GPIO_Port_C;
-      elsif Port'Address = GPIOD_Base then
-         return GPIO_Port_D;
-      elsif Port'Address = GPIOE_Base then
-         return GPIO_Port_E;
-      elsif Port'Address = GPIOF_Base then
-         return GPIO_Port_F;
-      elsif Port'Address = GPIOG_Base then
-         return GPIO_Port_G;
-      elsif Port'Address = GPIOH_Base then
-         return GPIO_Port_H;
-      elsif Port'Address = GPIOI_Base then
-         return GPIO_Port_I;
-      elsif Port'Address = GPIOJ_Base then
-         return GPIO_Port_J;
-      elsif Port'Address = GPIOK_Base then
-         return GPIO_Port_K;
-      else
-         raise Program_Error;
-      end if;
-   end As_GPIO_Port_Id;
-
-end STM32F4.SYSCFG;
+end STM32F4.EXTI;

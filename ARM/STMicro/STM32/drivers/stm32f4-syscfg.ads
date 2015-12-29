@@ -39,64 +39,33 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
---  This file provides register definitions for the STM32F4 (ARM Cortex M4F)
---  microcontrollers from ST Microelectronics.
+--  This file provides selected SYSCFG routines for the STM32F4 (ARM Cortex
+--  M4F) microcontrollers from ST Microelectronics.
 
 with STM32F4.GPIO;  use STM32F4.GPIO;
 
 package STM32F4.SYSCFG is
 
    procedure Connect_External_Interrupt
-     (Port : GPIO_Port;  Pin  : GPIO_Pin) with Inline;
+     (Port : GPIO_Port;
+      Pin  : GPIO_Pin)
+     with Inline;
 
    procedure Connect_External_Interrupt
-     (Port : GPIO_Port;  Pins : GPIO_Pins) with Inline;
-
-   procedure Set_External_Trigger
-     (Pin  : GPIO_Pin;   Trigger : External_Triggers) with Inline;
-
-   procedure Set_External_Trigger
-     (Pins : GPIO_Pins;  Trigger : External_Triggers) with Inline;
-
-   --  TODO: consider merging these two into those of Set_External_Trigger ???
-   procedure Select_Trigger_Edge
-     (Pin  : GPIO_Pin;   Trigger : External_Triggers) with Inline;
-
-   procedure Select_Trigger_Edge
-     (Pins : GPIO_Pins;  Trigger : External_Triggers) with Inline;
+     (Port : GPIO_Port;
+      Pins : GPIO_Pins)
+     with Inline;
 
    procedure Clear_External_Interrupt (Pin : GPIO_Pin) with Inline;
+   --  for convenience
+   --  accesses the EXTI registers to clear the line corresponding to the pin
 
 private
 
-   type Boolean32 is array (0 .. 31) of Boolean;
-   for Boolean32'Component_Size use 1;
-
-   type EXTI_Registers is record
-      IMR   : Boolean32;   -- Interrupt Mask Register
-      EMR   : Boolean32;   -- Event Mask Register
-      RTSR  : Boolean32;   -- Rising Trigger Selection Register
-      FTSR  : Boolean32;   -- Falling Trigger Selection Register
-      SWIER : Bits_32x1;   -- Software Interrupt Event Register
-      PR    : Bits_32x1;   -- Pending Register
-   end record
-     with Volatile;
-
-   for EXTI_Registers use record
-      IMR   at 0  range 0 .. 31;
-      EMR   at 4  range 0 .. 31;
-      RTSR  at 8  range 0 .. 31;
-      FTSR  at 12 range 0 .. 31;
-      SWIER at 16 range 0 .. 31;
-      PR    at 20 range 0 .. 31;
-   end record;
-
-   EXTI : EXTI_Registers with
-     Volatile,
-     Address => EXTI_Base;
-   pragma Import (Ada, EXTI);
-
    --  see pg 298 of "RM0090 Reference manual" in file named DM00031020.pdf
+
+   --  The register layouts are slightly different for the F40x and F42x families,
+   --  but the parts concerning the GPIO pins are identical.
 
    --  There are four EXTICR registers in SYSCFG. Each register logically
    --  contains four EXTI_n values, each of which is 4 bits in length, for

@@ -33,6 +33,7 @@ with Ada.Real_Time;       use Ada.Real_Time;
 with STM32F429_Discovery; use STM32F429_Discovery;
 with STM32F4.GPIO;        use STM32F4.GPIO;
 with STM32F4.SYSCFG;      use STM32F4.SYSCFG;
+with STM32F4.EXTI;        use STM32F4.EXTI;
 
 package body Button is
 

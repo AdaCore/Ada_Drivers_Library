@@ -44,6 +44,8 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32F4.EXTI;
+
 package STM32F4.GPIO is
 
    type GPIO_Port is limited private;
@@ -262,37 +264,23 @@ package STM32F4.GPIO is
    --  For Point.Pin on the Point.Port.all, configures the
    --  characteristics specified by Config
 
-   type External_Triggers is
-     (Interrupt_Rising_Edge,
-      Interrupt_Falling_Edge,
-      Interrupt_Rising_Falling_Edge,
-      Event_Rising_Edge,
-      Event_Falling_Edge,
-      Event_Rising_Falling_Edge);
-
-   subtype Interrupt_Triggers is External_Triggers
-      range Interrupt_Rising_Edge .. Interrupt_Rising_Falling_Edge;
-
-   subtype Event_Triggers is External_Triggers
-      range Event_Rising_Edge .. Event_Rising_Falling_Edge;
-
    procedure Configure_Trigger
      (Port    : in out GPIO_Port;
       Pin     : GPIO_Pin;
-      Trigger : External_Triggers);
+      Trigger : EXTI.External_Triggers);
    --  For Pin on the specified Port, configures the
    --  characteristics specified by Trigger
 
    procedure Configure_Trigger
      (Port    : in out GPIO_Port;
       Pins    : GPIO_Pins;
-      Trigger : External_Triggers);
+      Trigger : EXTI.External_Triggers);
    --  For each pin of Pins on the specified Port, configures the
    --  characteristics specified by Trigger
 
    procedure Configure_Trigger
      (Point   : GPIO_Point;
-      Trigger : External_Triggers);
+      Trigger : EXTI.External_Triggers);
    --  For Point.Pin on Point.Port.all, configures the
    --  characteristics specified by Trigger
 
