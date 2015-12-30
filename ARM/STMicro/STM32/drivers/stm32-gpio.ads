@@ -309,21 +309,21 @@ package STM32.GPIO is
      (Port    : in out GPIO_Port;
       Pin     : GPIO_Pin;
       Trigger : EXTI.External_Triggers);
-   --  For Pin on the specified Port, configures the
-   --  characteristics specified by Trigger
+   --  Connects the external line for Port and Pin, and enables the external
+   --  Trigger.  Enables the SYSCFG clock.
 
    procedure Configure_Trigger
      (Port    : in out GPIO_Port;
       Pins    : GPIO_Pins;
       Trigger : EXTI.External_Triggers);
-   --  For each pin of Pins on the specified Port, configures the
-   --  characteristics specified by Trigger
+   --  For each pin of Pins on the specified Port, connects the external line
+   --  and enables the external Trigger.  Enables the SYSCFG clock.
 
    procedure Configure_Trigger
      (Point   : GPIO_Point;
       Trigger : EXTI.External_Triggers);
-   --  For Point.Pin on Point.Port.all, configures the
-   --  characteristics specified by Trigger
+   --  For Point.Pin on Point.Port.all, connects the external line and enables
+   --  the external Trigger.  Enables the SYSCFG clock.
 
    procedure Configure_Trigger
      (Points  : GPIO_Points;
