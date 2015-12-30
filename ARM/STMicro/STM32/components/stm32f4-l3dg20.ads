@@ -156,13 +156,13 @@ package STM32F4.L3DG20 is
       L3GD20_BlockDataUpdate_Single    => 16#80#);
 
    type Endian_Data_Selection is
-     (L3GD20_BLE_LSB,
-      L3GD20_BLE_MSB)
+     (L3GD20_Little_Endian,
+      L3GD20_Big_Endian)
      with Size => 8;
 
    for Endian_Data_Selection use
-     (L3GD20_BLE_LSB => 16#00#,
-      L3GD20_BLE_MSB => 16#40#);
+     (L3GD20_Little_Endian => 16#00#,
+      L3GD20_Big_Endian    => 16#40#);
 
    --  Set up the gyro behavior.  Must be called prior to using the gyro.
    procedure Configure
@@ -226,7 +226,7 @@ package STM32F4.L3DG20 is
 
    procedure Disable_High_Pass_Filter (This : in out Three_Axis_Gyroscope);
 
-   function Reference_Value (This : Three_Axis_Gyroscope) return Byte;
+   function Reference_Value (This : Three_Axis_Gyroscope) return Byte with Inline;
 
    type Sample_Counter is mod 2 ** 6;
 
@@ -358,7 +358,30 @@ package STM32F4.L3DG20 is
    function Device_Id (This : Three_Axis_Gyroscope) return Byte;
    --  Will return I_Am_L3GD20 when functioning properly
 
-   function Data_Status (This : Three_Axis_Gyroscope) return Byte;
+   type Gyro_Data_Status is record
+      ZYX_Overrun   : Boolean;
+      Z_Overrun     : Boolean;
+      Y_Overrun     : Boolean;
+      X_Overrun     : Boolean;
+      ZYX_Available : Boolean;
+      Z_Available   : Boolean;
+      Y_Available   : Boolean;
+      X_Available   : Boolean;
+   end record
+     with Size => 8;
+
+   for Gyro_Data_Status use record
+      ZYX_Overrun   at 0 range 7 .. 7;
+      Z_Overrun     at 0 range 6 .. 6;
+      Y_Overrun     at 0 range 5 .. 5;
+      X_Overrun     at 0 range 4 .. 4;
+      ZYX_Available at 0 range 3 .. 3;
+      Z_Available   at 0 range 2 .. 2;
+      Y_Available   at 0 range 1 .. 1;
+      X_Available   at 0 range 0 .. 0;
+   end record;
+
+   function Data_Status (This : Three_Axis_Gyroscope) return Gyro_Data_Status with Inline;
 
    type Angle_Rate is new Integer_16;
 
@@ -371,20 +394,19 @@ package STM32F4.L3DG20 is
    procedure Get_Raw_Angle_Rates
      (This  : Three_Axis_Gyroscope;
       Rates : out Angle_Rates);
-   --  Poll for the latest data. Raises Program_Error if the status indicates
-   --  no data available after a certain number of attempts. Does NOT apply the
-   --  specified sensitity scaling as determined by the Full_Scale_Selection
-   --  passed to procedure Configure.
+   --  Returns the latest data, swapping bytes if required by the endianess
+   --  selected by a previous call to Configure.
+   --  NB: does NOT check whether the gyro status indicates data are ready.
+   --  NB: does NOT apply any sensitity scaling.
 
-   Timeout : exception;
-   --  raised by Get_Raw_Angle_Rates when data is not ready within a reasonable
-   --  time
-
-   function Selected_Sensitivity (This : Three_Axis_Gyroscope) return Float;
-   --  Queries the device to get the value resulting from the
-   --  Full_Scale_Selection specified to procedure Configure. Used to scale
-   --  raw angle rates. Note that the values are in terms if millidegrees per
-   --  second, so to use these values you should multiply, rather than divide.
+   function Full_Scale_Sensitivity (This : Three_Axis_Gyroscope) return Float;
+   --  Returns the sensitivity per LSB based on the Full_Scale_Selection
+   --  specified to procedure Configure. Used to scale raw angle rates. Note
+   --  that the values are already in terms of millidegrees per second per
+   --  digit, so to use these values you should multiply, rather than divide.
+   --  NB: These values are not measured on the specific device on the board
+   --  in use. Instead, they are statistical averages determined at the factory
+   --  for this component family, so you will likely need to tweak them a bit.
 
    procedure Reboot (This : Three_Axis_Gyroscope);
 

@@ -44,6 +44,7 @@
 with Ada.Unchecked_Conversion;
 
 with STM32F4.SYSCFG;  use STM32F4.SYSCFG;
+with STM32F4.EXTI;    use STM32F4.EXTI;
 
 package body STM32F4.L3DG20 is
 
@@ -74,10 +75,6 @@ package body STM32F4.L3DG20 is
    Boot_Bit               : constant := 2#1000_0000#;
    FIFO_Enable_Bit        : constant := 2#0100_0000#;
    HighPass_Filter_Enable : constant := 2#0001_0000#;
-
-   --  bit definitions for the STATUS register
-
-   XYZ_Data_Available : constant := 2#0000_1000#;
 
    --  bit definitions for the FIFO_CTRL register
 
@@ -394,11 +391,13 @@ package body STM32F4.L3DG20 is
    -- Data_Status --
    -----------------
 
-   function Data_Status (This : Three_Axis_Gyroscope) return Byte is
+   function Data_Status (This : Three_Axis_Gyroscope) return Gyro_Data_Status is
       Result : Byte;
+      function As_Gyro_Data_Status is
+        new Ada.Unchecked_Conversion (Source => Byte, Target => Gyro_Data_Status);
    begin
-      Read (This, STATUS, Result);
-      return Result;
+      Read (This, Status, Result);
+      return As_Gyro_Data_Status (Result);
    end Data_Status;
 
    ---------------
@@ -425,18 +424,15 @@ package body STM32F4.L3DG20 is
       Write (This, CTRL_REG5, Ctrl5);
    end Reboot;
 
-   --------------------------
-   -- Selected_Sensitivity --
-   --------------------------
+   ----------------------------
+   -- Full_Scale_Sensitivity --
+   ----------------------------
 
-   function Selected_Sensitivity (This : Three_Axis_Gyroscope) return Float is
-      Ctrl4 : Byte;
+   function Full_Scale_Sensitivity (This : Three_Axis_Gyroscope) return Float is
+      Ctrl4  : Byte;
       Result : Float;
       Fullscale_Selection : Byte;
    begin
-      --  we could store this value within the package, so that we would not
-      --  need to query the register again...
-
       Read (This, CTRL_REG4, Ctrl4);
 
       Fullscale_Selection := Ctrl4 and Fullscale_Selection_Bits;
@@ -450,7 +446,7 @@ package body STM32F4.L3DG20 is
       end if;
 
       return Result;
-   end Selected_Sensitivity;
+   end Full_Scale_Sensitivity;
 
    -------------------------
    -- Get_Raw_Angle_Rates --
@@ -460,35 +456,23 @@ package body STM32F4.L3DG20 is
      (This  : Three_Axis_Gyroscope;
       Rates : out Angle_Rates)
    is
-      Ctrl4       : Byte;
-      Status      : Byte;
-      Received    : array (0 .. 5) of Byte with Alignment => Angle_Rate'Alignment;
-      Unscaled    : array (0 .. 2) of Angle_Rate;
+      Ctrl4 : Byte;
+
+      type Buffer is array (0 .. 5) of Byte with Component_Size => 8;
+
+      Received : Buffer with Alignment => Angle_Rate'Alignment;
 
       type Angle_Rate_Pointer is access all Angle_Rate with Storage_Size => 0;
 
-      function As_Pointer is new Ada.Unchecked_Conversion
+      function As_Angle_Rate_Pointer is new Ada.Unchecked_Conversion
         (Source => System.Address, Target => Angle_Rate_Pointer);
       --  So that we can treat the address of a byte as a pointer to a two-byte
-      --  sequence representing a signed integer quantity. That's why the
-      --  alignment of Reg_Data is set as well.
+      --  sequence representing a signed integer quantity. That's also why the
+      --  alignment of Received is specified.
 
-      function Swap_Bytes (X : Angle_Rate) return Angle_Rate;
+      function Swap_Bytes (Input : Angle_Rate) return Angle_Rate;
       pragma Import (Intrinsic, Swap_Bytes, "__builtin_bswap16");
-
-      Max_Status_Attempts : constant := 10_000;
-      --  This timeout value is arbitrary but must be sufficient for the
-      --  slower gyro data rate options and higher clock rates.  It need not be
-      --  as small as possible, the point is not to hang forever.
    begin
-      for K in 1 .. Max_Status_Attempts loop
-         Status := Data_Status (This);
-         exit when (Status and XYZ_Data_Available) /= 0;
-         if K = Max_Status_Attempts then
-            raise Timeout with "no angle rate data";
-         end if;
-      end loop;
-
       Read (This, CTRL_REG4, Ctrl4);
 
       Read (This, OUT_X_L, Received (0));
@@ -498,25 +482,14 @@ package body STM32F4.L3DG20 is
       Read (This, OUT_Z_L, Received (4));
       Read (This, OUT_Z_H, Received (5));
 
-      Unscaled (0) := As_Pointer (Received (0)'Address).all;
-      Unscaled (1) := As_Pointer (Received (2)'Address).all;
-      Unscaled (2) := As_Pointer (Received (4)'Address).all;
+      Rates.X := As_Angle_Rate_Pointer (Received (0)'Address).all;
+      Rates.Y := As_Angle_Rate_Pointer (Received (2)'Address).all;
+      Rates.Z := As_Angle_Rate_Pointer (Received (4)'Address).all;
 
-      if (Ctrl4 and Endian_Selection_Mask) = L3GD20_BLE_MSB'Enum_Rep then
-         Unscaled (0) := Swap_Bytes (Unscaled (0));
-         Unscaled (1) := Swap_Bytes (Unscaled (1));
-         Unscaled (2) := Swap_Bytes (Unscaled (2));
-      end if;
-
-      if Unscaled (0) = 16#FF#
-        or Unscaled (1) = 16#FF#
-        or Unscaled (2) = 16#FF#
-      then
-         Rates := (others => 0);
-      else
-         Rates.X := Unscaled (0);
-         Rates.Y := Unscaled (1);
-         Rates.Z := Unscaled (2);
+      if (Ctrl4 and Endian_Selection_Mask) = L3GD20_Big_Endian'Enum_Rep then
+         Rates.X := Swap_Bytes (Rates.X);
+         Rates.Y := Swap_Bytes (Rates.Y);
+         Rates.Z := Swap_Bytes (Rates.Z);
       end if;
    end Get_Raw_Angle_Rates;
 
