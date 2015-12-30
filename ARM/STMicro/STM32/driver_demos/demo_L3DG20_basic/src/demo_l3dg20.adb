@@ -56,7 +56,7 @@ with STM32.GPIO;          use STM32.GPIO;
 procedure Demo_L3DG20 is
 
    Axes   : L3DG20.Angle_Rates;
-   Stable : L3DG20.Angle_Rates;
+   Stable : L3DG20.Angle_Rates;  -- the values when the board is motionless
 
    Sensitivity : Float;
 
@@ -101,6 +101,15 @@ procedure Demo_L3DG20 is
    procedure Configure_Gyro;
    --  configures the on-board gyro chip
 
+   Timeout : exception;
+   --  raised by Await_Data_Ready when data is not ready within a reasonable
+   --  time
+
+   procedure Await_Data_Ready (This : in out Three_Axis_Gyroscope);
+   --  Polls the gyro data status, returning when data for all three axes are
+   --  available. Raises Timeout when a "reasonable" number of attempts have
+   --  been made.
+
    --------------------
    -- Configure_Gyro --
    --------------------
@@ -127,8 +136,8 @@ procedure Demo_L3DG20 is
          Axes_Enable      => L3GD20_Axes_Enable,
          Bandwidth        => L3GD20_Bandwidth_1,
          BlockData_Update => L3GD20_BlockDataUpdate_Continous,
-         Endianness       => L3GD20_BLE_LSB,
-         Full_Scale       => L3GD20_Fullscale_250);
+         Endianness       => L3GD20_Little_Endian,
+         Full_Scale       => L3GD20_Fullscale_2000);
 
       Configure_High_Pass_Filter
         (Gyro,
@@ -165,6 +174,28 @@ procedure Demo_L3DG20 is
          Background => Bitmapped_Drawing.Black); -- arbitrary
    end Print;
 
+   --------------------------
+   -- Print_Static_Content --
+   --------------------------
+
+   procedure Print_Static_Content is
+   begin
+      --  print the constant offsets computed when the device is motionless
+      Print ((0, Line1_Stable), "Stable X:" & Stable.X'Img);
+      Print ((0, Line2_Stable), "Stable Y:" & Stable.Y'Img);
+      Print ((0, Line3_Stable), "Stable Z:" & Stable.Z'Img);
+
+      --  print the static labels for the values after the offset is removed
+      Print ((0, Line1_Adjusted), "Adjusted X:");
+      Print ((0, Line2_Adjusted), "Adjusted Y:");
+      Print ((0, Line3_Adjusted), "Adjusted Z:");
+
+      --  print the static labels for the final values
+      Print ((0, Line1_Final), "X:");
+      Print ((0, Line2_Final), "Y:");
+      Print ((0, Line3_Final), "Z:");
+   end Print_Static_Content;
+
    ----------------------
    -- Get_Gyro_Offsets --
    ----------------------
@@ -189,6 +220,24 @@ procedure Demo_L3DG20 is
       Offsets.Z := Angle_Rate (Total_Z / Sample_Count);
    end Get_Gyro_Offsets;
 
+   ----------------------
+   -- Await_Data_Ready --
+   ----------------------
+
+   procedure Await_Data_Ready (This : in out Three_Axis_Gyroscope) is
+      Max_Status_Attempts : constant := 10_000;
+      --  This timeout value is arbitrary but must be sufficient for the
+      --  slower gyro data rate options and higher clock rates.  It need not be
+      --  as small as possible, the point is not to hang forever.
+   begin
+      for K in 1 .. Max_Status_Attempts loop
+         exit when Data_Status (This).ZYX_Available;
+         if K = Max_Status_Attempts then
+            raise Timeout with "no angle rate data";
+         end if;
+      end loop;
+   end Await_Data_Ready;
+
 begin
    STM32.LCD.Initialize (STM32.LCD.Pixel_Fmt_ARGB1555);
    STM32.DMA2D.Polling.Initialize;
@@ -199,26 +248,15 @@ begin
 
    Configure_Gyro;
 
-   Sensitivity := Selected_Sensitivity (Gyro);
+   Sensitivity := Full_Scale_Sensitivity (Gyro);
 
    Get_Gyro_Offsets (Stable, Sample_Count => 100);  -- arbitrary count
 
-   --  print the constant offsets computed when the device is motionless
-   Print ((0, Line1_Stable), "Stable X:" & Stable.X'Img);
-   Print ((0, Line2_Stable), "Stable Y:" & Stable.Y'Img);
-   Print ((0, Line3_Stable), "Stable Z:" & Stable.Z'Img);
-
-   --  print the static labels for the values after the offset is removed
-   Print ((0, Line1_Adjusted), "Adjusted X:");
-   Print ((0, Line2_Adjusted), "Adjusted Y:");
-   Print ((0, Line3_Adjusted), "Adjusted Z:");
-
-   --  print the static labels for the final scaled values
-   Print ((0, Line1_Final), "X:");
-   Print ((0, Line2_Final), "Y:");
-   Print ((0, Line3_Final), "Z:");
+   Print_Static_Content;
 
    loop
+      Await_Data_Ready (Gyro);
+
       Get_Raw_Angle_Rates (Gyro, Axes);
 
       --  remove the computed stable offsets from the raw values

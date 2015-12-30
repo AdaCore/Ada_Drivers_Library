@@ -16,17 +16,16 @@ project Demo_L3DG20 is
    for Runtime ("Ada") use STM32'Runtime ("Ada");
 
    package Compiler is
-      case Build_Mode is
-         when "debug" =>
+      case STM32.Build is
+         when "Debug" =>
             for Default_Switches ("ada") use ("-g", "-gnatwa", "-gnata", "-gnatQ", "-gnatw.X", "-ffunction-sections", "-fdata-sections");
 
-         when "production" =>
+         when "Production" =>
             for Default_Switches ("ada") use ("-O3", "-gnatw.X", "-ffunction-sections", "-fdata-sections");
       end case;
    end Compiler;
 
     package Linker is
-ing floating point values
       for Default_Switches ("ada") use (
          "-Wl,-Map,demo_l3dg20.map",
          "-Wl,--gc-sections");
