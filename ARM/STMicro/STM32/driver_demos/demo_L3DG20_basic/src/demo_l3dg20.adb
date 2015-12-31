@@ -222,6 +222,7 @@ procedure Demo_L3DG20 is
       Total_Z : Long_Integer := 0;
    begin
       for K in 1 .. Sample_Count loop
+         Await_Data_Ready (Gyro);
          Get_Raw_Angle_Rates (Gyro, Sample);
          Total_X := Total_X + Long_Integer (Sample.X);
          Total_Y := Total_Y + Long_Integer (Sample.Y);
