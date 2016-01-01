@@ -283,8 +283,7 @@ package body Bitmapped_Drawing is
      (Buffer : DMA2D_Buffer;
       Center : Display_Point;
       Radius : Natural;
-      Hue    : DMA2D_Color;
-      Fill   : Boolean := False)
+      Hue    : DMA2D_Color)
    is
       F     : Integer := 1 - Radius;
       ddF_X : Integer := 0;
@@ -292,13 +291,6 @@ package body Bitmapped_Drawing is
       X     : Integer := 0;
       Y     : Integer := Radius;
    begin
-      if Fill then
-         for Cnt in 1 .. Radius loop
-            Draw_Circle (Buffer, Center, Cnt, Hue, False);
-         end loop;
-         return;
-      end if;
-
       DMA2D_Set_Pixel (Buffer, Center.X, Center.Y + Radius, Hue);
       DMA2D_Set_Pixel (Buffer, Center.X, Center.Y - Radius, Hue);
       DMA2D_Set_Pixel (Buffer, Center.X + Radius, Center.Y, Hue);
@@ -322,5 +314,113 @@ package body Bitmapped_Drawing is
          DMA2D_Set_Pixel (Buffer, Center.X - Y, Center.Y - X, Hue);
       end loop;
    end Draw_Circle;
+
+   -----------------
+   -- Fill_Circle --
+   -----------------
+
+   procedure Fill_Circle
+     (Buffer : DMA2D_Buffer;
+      Center : Display_Point;
+      Radius : Natural;
+      Hue    : DMA2D_Color)
+   is
+      procedure Draw_Horizontal_Line (X, Y : Integer; Width : Natural);
+      procedure Draw_Vertical_Line (X, Y : Integer; Height : Natural);
+
+      --------------------------
+      -- Draw_Horizontal_Line --
+      --------------------------
+
+      procedure Draw_Horizontal_Line (X, Y : Integer; Width : Natural)
+      is
+         X1, W1 : Natural;
+      begin
+         if Y < 0 or else Y >= STM32.LCD.Pixel_Height then
+            return;
+         end if;
+
+         if X + Width < 0 or else X >= STM32.LCD.Pixel_Width then
+            return;
+         end if;
+
+         if X < 0 then
+            X1 := 0;
+            W1 := Width + X;
+         else
+            X1 := X;
+            W1 := Width;
+         end if;
+
+         if X1 + W1 >= STM32.LCD.Pixel_Width then
+            W1 := Stm32.LCD.Pixel_Width - X1 - 1;
+         end if;
+
+         DMA2D_Fill_Rect (Buffer, Hue, X1, Y, W1, 1);
+      end Draw_Horizontal_Line;
+
+      ------------------------
+      -- Draw_Vertical_Line --
+      ------------------------
+
+      procedure Draw_Vertical_Line (X, Y : Integer; Height : Natural)
+      is
+         Y1, H1 : Natural;
+      begin
+         if X < 0 or else X >= STM32.LCD.Pixel_Width then
+            return;
+         end if;
+
+         if Y + Height < 0 or else Y >= STM32.LCD.Pixel_Height then
+            return;
+         end if;
+
+         if Y < 0 then
+            Y1 := 0;
+            H1 := Height + Y;
+         else
+            Y1 := Y;
+            H1 := Height;
+         end if;
+
+         if Y1 + H1 >= STM32.LCD.Pixel_Height then
+            H1 := Stm32.LCD.Pixel_Height - Y1 - 1;
+         end if;
+
+         DMA2D_Fill_Rect (Buffer, Hue, X, Y1, 1, H1);
+      end Draw_Vertical_Line;
+
+      F     : Integer := 1 - Radius;
+      ddF_X : Integer := 1;
+      ddF_Y : Integer := -(2 * Radius);
+      X     : Integer := 0;
+      Y     : Integer := Radius;
+
+   begin
+      Draw_Vertical_Line
+        (Center.X,
+         Center.Y - Radius,
+         2 * Radius);
+      Draw_Horizontal_Line
+        (Center.X - Radius,
+         Center.Y,
+         2 * Radius);
+
+      while X < Y loop
+         if F >= 0 then
+            Y := Y - 1;
+            ddF_Y := ddF_Y + 2;
+            F := F + ddF_Y;
+         end if;
+         X := X + 1;
+         ddF_X := ddF_X + 2;
+         F := F + ddF_X;
+
+         Draw_Horizontal_Line (Center.X - X, Center.Y + Y, 2 * X);
+         Draw_Horizontal_Line (Center.X - X, Center.Y - Y, 2 * X);
+         Draw_Horizontal_Line (Center.X - Y, Center.Y + X, 2 * Y);
+         Draw_Horizontal_Line (Center.X - Y, Center.Y - X, 2 * Y);
+      end loop;
+   end Fill_Circle;
 
 end Bitmapped_Drawing;

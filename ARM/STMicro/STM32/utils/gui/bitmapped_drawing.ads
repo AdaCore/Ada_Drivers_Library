@@ -120,8 +120,13 @@ package Bitmapped_Drawing is
      (Buffer : DMA2D_Buffer;
       Center : Display_Point;
       Radius : Natural;
-      Hue    : DMA2D_Color;
-      Fill   : Boolean := False);
+      Hue    : DMA2D_Color);
+
+   procedure Fill_Circle
+     (Buffer : DMA2D_Buffer;
+      Center : Display_Point;
+      Radius : Natural;
+      Hue    : DMA2D_Color);
 
    procedure Draw_Char
      (Buffer     : DMA2D_Buffer;
