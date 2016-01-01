@@ -93,6 +93,9 @@ package STM32.LTDC is
      (Layer : LCD_Layer)
       return Frame_Buffer_Access;
 
+   procedure Set_Frame_Buffer
+     (Layer : LCD_Layer; Addr : Frame_Buffer_Access);
+
    type Orientation_Mode is
      (Portrait,
       Landscape);
@@ -105,8 +108,12 @@ package STM32.LTDC is
 
    function Get_Orientation return Orientation_Mode;
    function SwapXY return Boolean;
+
    function Pixel_Width return Natural;
+   --  Current Width of the display. This depends on the current orientation.
+
    function Pixel_Height return Natural;
+   --  Current Height of the display. This depends on the current orientation.
 
    procedure Set_Pixel
      (Layer : LCD_Layer;

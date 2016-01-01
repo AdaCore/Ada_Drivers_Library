@@ -117,6 +117,8 @@ package body STM32.LTDC is
          FBA   : Frame_Buffer_Access);
       --  Sets the frame buffer of the specified layer
 
+      function Get_Layer_CFBA
+        (Layer : LCD_Layer) return Frame_Buffer_Access;
       --  Gets the frame buffer of the specified layer
 
       procedure LTDC_Init;
@@ -175,7 +177,6 @@ package body STM32.LTDC is
       Current_Pixel_Fmt := Pixel_Fmt;
 
       Frame_Buffer_Array (Layer1) := STM32.SDRAM.Reserve (FB_Size);
-      Frame_Buffer_Array (Layer2) := STM32.SDRAM.Reserve (FB_Size);
 
       Init.Layer_Init
         (Layer1, Pixel_Fmt,
@@ -221,10 +222,15 @@ package body STM32.LTDC is
    function Current_Frame_Buffer
      (Layer : LCD_Layer)
       return Frame_Buffer_Access
-   is
-   begin
-      return Frame_Buffer_Array (Layer);
-   end Current_Frame_Buffer;
+     renames Init.Get_Layer_CFBA;
+
+   ----------------------
+   -- Set_Frame_Buffer --
+   ----------------------
+
+   procedure Set_Frame_Buffer
+     (Layer : LCD_Layer; Addr : Frame_Buffer_Access)
+      renames Init.Set_Layer_CFBA;
 
    ---------------------
    -- Set_Orientation --

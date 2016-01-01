@@ -83,6 +83,20 @@ package body Init is
          L.LCFBAR := To_Word (FBA);
    end Set_Layer_CFBA;
 
+   --------------------
+   -- Get_Layer_CFBA --
+   --------------------
+
+   function Get_Layer_CFBA
+     (Layer : LCD_Layer) return Frame_Buffer_Access
+   is
+      L : constant Layer_Access := Get_Layer (Layer);
+      function To_FBA is new Ada.Unchecked_Conversion
+        (Word, Frame_Buffer_Access);
+   begin
+      return To_FBA (L.LCFBAR);
+   end Get_Layer_CFBA;
+
    ---------------------
    -- Set_Layer_State --
    ---------------------
@@ -93,6 +107,13 @@ package body Init is
    is
       L : constant Layer_Access := Get_Layer (Layer);
    begin
+      if State and then Frame_Buffer_Array (Layer) = Null_Address then
+         Frame_Buffer_Array (Layer) := STM32.SDRAM.Reserve
+           (Word (LCD_Width * LCD_Height * Pixel_Size (Current_Pixel_Fmt)));
+         Set_Layer_CFBA (Layer, Frame_Buffer_Array (Layer));
+         Reload_Config (Immediate => True);
+      end if;
+
       L.LCR.LEN := (if state then 1 else 0);
    end Set_Layer_State;
 
