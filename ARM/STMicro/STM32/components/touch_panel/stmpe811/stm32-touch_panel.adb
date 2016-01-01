@@ -43,10 +43,105 @@
 
 with Ada.Real_Time; use Ada.Real_Time;
 
+with STM32.LCD;
+with STM32.I2C;    use STM32.I2C;
+with STM32.GPIO;   use STM32.GPIO;
+
+with STM32.Device; use STM32.Device;
+
 package body STM32.Touch_Panel is
 
-   function Read_Data (Data_Addr : Byte) return Half_Word is
-      Data : Half_Word;
+   SCL      : GPIO_Point renames PA8;
+   SCL_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C3;
+
+   SDA      : GPIO_Point renames PC9;
+   SDA_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C3;
+
+   TP_I2C   : I2C_Port renames I2C_3;
+
+   IOE_ADDR : constant Byte := 16#82#;
+
+   pragma Warnings (Off, "constant * is not referenced");
+   --  Control Registers
+   IOE_REG_SYS_CTRL1    : constant Byte := 16#03#;
+   IOE_REG_SYS_CTRL2    : constant Byte := 16#04#;
+   IOE_REG_SPI_CFG      : constant Byte := 16#08#;
+
+   --  Touch Panel Registers
+   IOE_REG_TSC_CTRL     : constant Byte := 16#40#;
+   IOE_REG_TSC_CFG      : constant Byte := 16#41#;
+   IOE_REG_WDM_TR_X     : constant Byte := 16#42#;
+   IOE_REG_WDM_TR_Y     : constant Byte := 16#44#;
+   IOE_REG_WDM_BL_X     : constant Byte := 16#46#;
+   IOE_REG_WDM_BL_Y     : constant Byte := 16#48#;
+   IOE_REG_FIFO_TH      : constant Byte := 16#4A#;
+   IOE_REG_FIFO_STA     : constant Byte := 16#4B#;
+   IOE_REG_FIFO_SIZE    : constant Byte := 16#4C#;
+   IOE_REG_TSC_DATA_X   : constant Byte := 16#4D#;
+   IOE_REG_TSC_DATA_Y   : constant Byte := 16#4F#;
+   IOE_REG_TSC_DATA_Z   : constant Byte := 16#51#;
+   IOE_REG_TSC_DATA_XYZ : constant Byte := 16#52#;
+   IOE_REG_TSC_FRACT_Z  : constant Byte := 16#56#;
+   IOE_REG_TSC_DATA     : constant Byte := 16#57#;
+   IOE_REG_TSC_I_DRIVE  : constant Byte := 16#58#;
+   IOE_REG_TSC_SHIELD   : constant Byte := 16#59#;
+
+   --  IOE GPIO Registers
+   IOE_REG_GPIO_SET_PIN : constant Byte := 16#10#;
+   IOE_REG_GPIO_CLR_PIN : constant Byte := 16#11#;
+   IOE_REG_GPIO_MP_STA  : constant Byte := 16#12#;
+   IOE_REG_GPIO_DIR     : constant Byte := 16#13#;
+   IOE_REG_GPIO_ED      : constant Byte := 16#14#;
+   IOE_REG_GPIO_RE      : constant Byte := 16#15#;
+   IOE_REG_GPIO_FE      : constant Byte := 16#16#;
+   IOE_REG_GPIO_AF      : constant Byte := 16#17#;
+
+   --  IOE Functions
+   IOE_ADC_FCT          : constant Byte := 16#01#;
+   IOE_TSC_FCT          : constant Byte := 16#02#;
+   IOE_IO_FCT           : constant Byte := 16#04#;
+
+   --  ADC Registers
+   IOE_REG_ADC_INT_EN   : constant Byte := 16#0E#;
+   IOE_REG_ADC_INT_STA  : constant Byte := 16#0F#;
+   IOE_REG_ADC_CTRL1    : constant Byte := 16#20#;
+   IOE_REG_ADC_CTRL2    : constant Byte := 16#21#;
+   IOE_REG_ADC_CAPT     : constant Byte := 16#22#;
+   IOE_REG_ADC_DATA_CH0 : constant Byte := 16#30#;
+   IOE_REG_ADC_DATA_CH1 : constant Byte := 16#32#;
+   IOE_REG_ADC_DATA_CH2 : constant Byte := 16#34#;
+   IOE_REG_ADC_DATA_CH3 : constant Byte := 16#36#;
+   IOE_REG_ADC_DATA_CH4 : constant Byte := 16#38#;
+   IOE_REG_ADC_DATA_CH5 : constant Byte := 16#3A#;
+   IOE_REG_ADC_DATA_CH6 : constant Byte := 16#3B#;
+   IOE_REG_ADC_DATA_CH7 : constant Byte := 16#3C#;
+
+   --  Interrupt Control Registers
+   IOE_REG_INT_CTRL     : constant Byte := 16#09#;
+   IOE_REG_INT_EN       : constant Byte := 16#0A#;
+   IOE_REG_INT_STA      : constant Byte := 16#0B#;
+   IOE_REG_GPIO_INT_EN  : constant Byte := 16#0C#;
+   IOE_REG_GPIO_INT_STA : constant Byte := 16#0D#;
+
+   --  touch Panel Pins
+   TOUCH_YD             : constant Byte := 16#02#;
+   TOUCH_XD             : constant Byte := 16#04#;
+   TOUCH_YU             : constant Byte := 16#08#;
+   TOUCH_XU             : constant Byte := 16#10#;
+   TOUCH_IO_ALL         : constant Byte :=
+     TOUCH_YD or TOUCH_XD or TOUCH_YU or TOUCH_XU;
+   pragma Warnings (On, "constant * is not referenced");
+
+   type TSC_Data is array (Positive range <>) of Byte;
+
+   ---------------
+   -- Read_Data --
+   ---------------
+
+   function Read_Data (Data_Addr : Byte; Length : Natural) return TSC_Data
+   is
+     Data : TSC_Data (1 .. Length);
+
    begin
       Generate_Start (TP_I2C, Enabled);
       Wait_For_State (TP_I2C, Start_Bit, Enabled);
@@ -74,8 +169,9 @@ package body STM32.Touch_Panel is
 
       Generate_Stop (TP_I2C, Enabled);
 
-      Data := Half_Word (I2C.Read_Data (TP_I2C)) * (2**8);
-      Data := Data or Half_Word (I2C.Read_Data (TP_I2C));
+      for J in Data'Range loop
+         Data (J) := Read_Data (TP_I2C);
+      end loop;
 
       Set_Ack_Config (TP_I2C, Enabled);
       Set_Nack_Config (TP_I2C, Current);
@@ -273,19 +369,30 @@ package body STM32.Touch_Panel is
 
    procedure Initialize is
    begin
+      if not Initialize then
+         Raise Program_Error;
+      end if;
+   end Initialize;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   function Initialize return Boolean is
+   begin
       TP_Ctrl_Lines;
       TP_I2C_Config;
 
       delay until Clock + Milliseconds (100);
 
       if Get_IOE_ID /= 16#0811# then
-         raise Program_Error;
+         return False;
       end if;
 
       IOE_Reset;
 
       IOE_Function_Command (IOE_ADC_FCT, true);
-      IOE_Function_Command (IOE_TP_FCT, true);
+      IOE_Function_Command (IOE_TSC_FCT, true);
 
       Write_Register (IOE_REG_ADC_CTRL1, 16#49#);
 
@@ -295,7 +402,7 @@ package body STM32.Touch_Panel is
 
       IOE_AF_Config (TOUCH_IO_ALL, false);
 
-      Write_Register (IOE_REG_TP_CFG, 16#9A#);
+      Write_Register (IOE_REG_TSC_CFG, 16#9A#);
 
       Write_Register (IOE_REG_FIFO_TH, 16#01#);
 
@@ -303,86 +410,97 @@ package body STM32.Touch_Panel is
 
       Write_Register (IOE_REG_FIFO_TH, 16#00#);
 
-      Write_Register (IOE_REG_TP_FRACT_XYZ, 16#00#);
+      Write_Register (IOE_REG_TSC_FRACT_Z, 16#00#);
 
-      Write_Register (IOE_REG_TP_I_DRIVE, 16#01#);
+      Write_Register (IOE_REG_TSC_I_DRIVE, 16#01#);
 
-      Write_Register (IOE_REG_TP_CTRL, 16#01#);
+      Write_Register (IOE_REG_TSC_CTRL, 16#01#);
 
       Write_Register (IOE_REG_INT_STA, 16#FF#);
+
+      return True;
    end Initialize;
 
-   function Read_X return LCD.Width is
-      X, XR : Integer;
-      Raw_X : Half_Word;
-   begin
-      Raw_X := Read_Data (IOE_REG_TP_DATA_X);
-      X := Integer (Raw_X);
+   ------------------
+   -- Detect_Touch --
+   ------------------
 
-      if X <= 3000 then
-         X := 3900 - X;
+   function Detect_Touch return Natural
+   is
+      Val : constant Byte := Read_Register (IOE_REG_TSC_CTRL) and 16#80#;
+   begin
+      if Val = 0 then
+         Write_Register (IOE_REG_FIFO_STA, 16#01#);
+         Write_Register (IOE_REG_FIFO_STA, 16#00#);
+
+         return 0;
       else
-         X := 3800 - X;
+         return 1;
       end if;
+   end Detect_Touch;
 
-      XR := X / 15;
+   ---------------
+   -- Get_State --
+   ---------------
 
-      if XR < LCD.Width'First then
-         XR := LCD.Width'First;
-      elsif XR > LCD.Width'Last then
-         XR := LCD.Width'Last;
-      end if;
-      return LCD.Width (XR);
-   end Read_X;
-
-   function Read_Y return LCD.Height is
-      Y, YR : Integer;
-      Raw_Y : Half_Word;
+   function Get_State return TP_State
+   is
+      State     : TP_Touch_State;
+      Raw_X     : Word;
+      Raw_Y     : Word;
+      Raw_Z     : Word;
+      X         : Integer;
+      Y         : Integer;
    begin
-      Raw_Y := Read_Data (IOE_REG_TP_DATA_Y);
-      Y := Integer (Raw_Y);
 
-      Y := Y - 360;
-
-      YR := Y / 11;
-
-      if YR < LCD.Height'First then
-         YR := LCD.Height'First;
-      elsif YR > LCD.Height'Last then
-         YR := LCD.Height'Last;
-      end if;
-      return LCD.Height (YR);
-   end Read_Y;
-
-   function Read_Z return Half_Word is
-   begin
-      return Read_Data (IOE_REG_TP_DATA_Z);
-   end Read_Z;
-
-   function Current_State return TP_State is
-      State : TP_State;
-      Ctrl : Byte;
-      X : LCD.Width  := 0;
-      Y : LCD.Height := 0;
-      Z : Half_Word  := 0;
-   begin
       --  Check Touch detected bit in CTRL register
-      Ctrl := Read_Register (IOE_REG_TP_CTRL);
-      State.Touch_Detected := (Ctrl and 16#80#) /= 0;
-
-      if State.Touch_Detected then
-         X := Read_X;
-         Y := Read_Y;
-         Z := Read_Z;
+      if Detect_Touch = 0 then
+         return (1 .. 0 => <>);
       end if;
 
-      State.X := X;
-      State.Y := Y;
-      State.Z := Z;
+      declare
+         Data_X : constant TSC_Data := Read_Data (IOE_REG_TSC_DATA_X, 2);
+         Data_Y : constant TSC_Data := Read_Data (IOE_REG_TSC_DATA_Y, 2);
+         Data_Z : constant TSC_Data := Read_Data (IOE_REG_TSC_DATA_Z, 1);
+         Z_Frac : constant TSC_Data := Read_Data (IOE_REG_TSC_FRACT_Z, 1);
+
+      begin
+         Raw_X := 2 ** 12 -
+           (Shift_Left (Word (Data_X (1)) and 16#0F#, 8) or Word (Data_X (2)));
+         Raw_Y :=
+           Shift_Left (Word (Data_Y (1)) and 16#0F#, 8) or Word (Data_Y (2));
+         Raw_Z :=
+           Shift_Right (Word (Data_Z (1)), Natural (Z_Frac (1) and 2#111#));
+      end;
+
+      --  Now we adapt the 12 bit resolution to the LCD width.
+      X :=
+        Integer
+          (Shift_Right (Raw_X * (Word (LCD.LCD_Natural_Width) + 32), 12)) - 16;
+      X := Integer'Max (X, 0);
+      X := Integer'Min (X, LCD.LCD_Natural_Width - 1);
+
+      --  Do the same for Y
+      Y := Integer (Raw_Y);
+      Y := Y - 360;
+      Y := Y / 11;
+      Y := Integer'Max (Y, 0);
+      Y := Integer'Min (Y, LCD.LCD_Natural_Height);
+
+      if not LCD.SwapXY then
+         State.X := X;
+         State.Y := Y;
+      else
+         State.X := LCD.LCD_Natural_Height - Y - 1;
+         State.Y := X;
+      end if;
+
+      State.Weight := Integer'Max (Integer (Raw_Z), 8);
 
       Write_Register (IOE_REG_FIFO_STA, 16#01#);
       Write_Register (IOE_REG_FIFO_STA, 16#00#);
-      return State;
-   end Current_State;
+
+      return (1 => State);
+   end Get_State;
 
 end STM32.Touch_Panel;

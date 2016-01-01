@@ -58,6 +58,7 @@ project STM32 is
              "drivers/ltdc",
              "components/sdram",
              "components/lcd/ili9341",
+             "components/touch_panel",
              "components/touch_panel/stmpe811",
              "components/gyro/l3gd20",
              "utils/gui");
@@ -84,6 +85,7 @@ project STM32 is
              "drivers/ltdc",
              "components/sdram",
              "components/lcd/rortech_stm32f7disco",
+             "components/touch_panel",
              "components/touch_panel/ft5336",
              "utils/gui");
          case RTS is
