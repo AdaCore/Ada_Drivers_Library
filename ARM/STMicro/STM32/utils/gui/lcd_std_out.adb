@@ -59,12 +59,36 @@ package body LCD_Std_Out is
    Char_Count : Natural := 0;
    --  The number of characters currently printed on the current line
 
+   Initialized : Boolean := False;
+
    procedure Draw_Char (X, Y : Natural; Msg : Character);
    --  Convenience routine for call Drawing.Draw_Char
 
    procedure Recompute_Screen_Dimensions (Font : BMP_Font);
    --  Determins the max height and width for the specified font, given the
    --  current LCD orientation
+
+   procedure Check_Initialized with Inline;
+   --  Ensures that the LCD display is initialized and DMA2D
+   --  is up and running
+
+   ------------------------
+   -- Assert_Initialized --
+   ------------------------
+
+   procedure Check_Initialized
+   is
+   begin
+      if Initialized then
+         return;
+      end if;
+
+      Initialized := True;
+
+      STM32.LCD.Initialize (STM32.LCD.Pixel_Fmt_ARGB1555);
+      STM32.DMA2D.Polling.Initialize;
+      Clear_Screen;
+   end Check_Initialized;
 
    ---------------------------------
    -- Recompute_Screen_Dimensions --
@@ -105,6 +129,7 @@ package body LCD_Std_Out is
 
    procedure Clear_Screen is
    begin
+      Check_Initialized;
       DMA2D_Fill (Screen_Buffer, Current_Background_Color);
       Current_Y := 0;
       Char_Count := 0;
@@ -131,6 +156,7 @@ package body LCD_Std_Out is
 
    procedure Draw_Char (X, Y : Natural; Msg : Character) is
    begin
+      Check_Initialized;
       Bitmapped_Drawing.Draw_Char
         (Screen_Buffer,
          Start      => (X, Y),
@@ -207,18 +233,5 @@ package body LCD_Std_Out is
          Count := Count + 1;
       end loop;
    end Put;
-
-begin
-   STM32.LCD.Initialize (STM32.LCD.Pixel_Fmt_ARGB1555);
-   STM32.DMA2D.Polling.Initialize;
-
---     --  The values for the package global state are already initialized to the
---     --  default values. However we do need to clear/fill the screen and set
---     --  the orientation, which Initialize does do, so we call those routines
---     --  explicitly.
---
---     LCD.Set_Orientation (To => Default_Orientation);
-
-   Clear_Screen;
 
 end LCD_Std_Out;
