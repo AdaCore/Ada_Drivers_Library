@@ -25,6 +25,10 @@ project STM32 is
    for Library_Dir use "lib/" & Board & "/" & RTS;
    for Target use "arm-eabi";
 
+   package Builder is
+      for Default_Switches ("Ada") use ("-g");
+   end Builder;
+
    case Board is
       when "STM32F4-DISCO" =>
          for Runtime ("Ada") use RTS & "-stm32f4";
