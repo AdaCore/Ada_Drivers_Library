@@ -167,7 +167,11 @@ package body STM32.LTDC is
                   Word
                     (LCD_Width * LCD_Height * Pixel_Size (Pixel_Fmt));
    begin
-      Initialize_LCD;
+      if Initialized then
+         return;
+      end if;
+
+      Pre_LTDC_Initialize;
 
       delay until Clock + Milliseconds (200);
 
@@ -196,7 +200,18 @@ package body STM32.LTDC is
       LTDC_Periph.GCR.DEN := 1;
 
       Reload_Config (True);
+
+      Post_LTDC_Initialize;
    end Initialize;
+
+   -----------------
+   -- Initialized --
+   -----------------
+
+   function Initialized return Boolean is
+   begin
+      return Frame_Buffer_Array (Layer1) /= Null_Address;
+   end Initialized;
 
    ----------------
    -- Pixel_Size --

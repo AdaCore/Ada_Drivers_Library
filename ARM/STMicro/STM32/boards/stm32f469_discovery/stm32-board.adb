@@ -29,21 +29,56 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.LTDC;
-with STM32.LCD_ILI9341;
+package body STM32.Board is
 
---  This is the ILI9341 LCD display driver controlled via the LTDC peripheral.
-package STM32.LCD is new
-  STM32.LTDC (LCD_Width            => 240,
-              LCD_Height           => 320,
-              LCD_HSync            => 10,
-              LCD_HBP              => 20,
-              LCD_HFP              => 10,
-              LCD_VSYNC            => 2,
-              LCD_VBP              => 2,
-              LCD_VFP              => 4,
-              PLLSAI_N             => 192,
-              PLLSAI_R             => 4,
-              DivR                 => 8,
-              Pre_LTDC_Initialize  => STM32.LCD_ILI9341.Initialize,
-              Post_LTDC_Initialize => STM32.LCD_ILI9341.Post_Init);
+   ------------------
+   -- All_LEDs_Off --
+   ------------------
+
+   procedure All_LEDs_Off is
+   begin
+     Set (ALL_LEDs);
+   end All_LEDs_Off;
+
+   -----------------
+   -- All_LEDs_On --
+   -----------------
+
+   procedure All_LEDs_On is
+   begin
+      Clear (ALL_LEDs);
+   end All_LEDs_On;
+
+   ---------------------
+   -- Initialize_LEDs --
+   ---------------------
+
+   procedure Initialize_LEDs is
+      Conf : GPIO_Port_Configuration;
+   begin
+      Enable_Clock (ALL_LEDs);
+
+      Conf.Mode        := Mode_Out;
+      Conf.Output_Type := Push_Pull;
+      Conf.Speed       := Speed_100MHz;
+      Conf.Resistors   := Floating;
+
+      Configure_IO (All_LEDs, Conf);
+   end Initialize_LEDs;
+
+   --------------------------------
+   -- Configure_User_Button_GPIO --
+   --------------------------------
+
+   procedure Configure_User_Button_GPIO is
+      Config : GPIO_Port_Configuration;
+   begin
+      Enable_Clock (User_Button_Point);
+
+      Config.Mode := Mode_In;
+      Config.Resistors := Floating;
+
+      Configure_IO (User_Button_Point, Config);
+   end Configure_User_Button_GPIO;
+
+end STM32.Board;

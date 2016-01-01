@@ -98,6 +98,8 @@ package STM32.Board is
                           STM32.FMC.FMC_Bank1_SDRAM;
    SDRAM_Mem_Width    : constant STM32.FMC.FMC_SDRAM_Memory_Bus_Width :=
                           STM32.FMC.FMC_SDMemory_Width_16b;
+   SDRAM_Row_Bits     : constant STM32.FMC.FMC_SDRAM_Row_Address_Bits :=
+                          STM32.FMC.FMC_RowBits_Number_12b;
    SDRAM_CAS_Latency  : constant STM32.FMC.FMC_SDRAM_CAS_Latency :=
                           STM32.FMC.FMC_CAS_Latency_2;
    SDRAM_CLOCK_Period : constant STM32.FMC.FMC_SDRAM_Clock_Configuration :=

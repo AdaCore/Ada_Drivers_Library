@@ -142,7 +142,6 @@ package body Init is
 
    procedure LTDC_Init
    is
-      VCO      : constant := 192;
       DivR_Val : PLLSAI_DivR;
 
    begin
@@ -163,27 +162,23 @@ package body Init is
       Disable_PLLSAI;
       Set_PLLSAI_Factors
         (LCD  => PLLSAI_R,
-         VCO  => VCO,
+         VCO  => PLLSAI_N,
          DivR => DivR_Val);
       Enable_PLLSAI;
 
-      --  Synchronisation size
-      LTDC_Periph.SSCR.HSW := SSCR_HSW_Field (LCD_HSync);
-      LTDC_Periph.SSCR.VSH := SSCR_VSH_Field (LCD_VSync);
-
-      --  Accumulated back porch
-      LTDC_Periph.BPCR.AHBP := BPCR_AHBP_Field (LCD_HBP);
-      LTDC_Periph.BPCR.AVBP := BPCR_AVBP_Field (LCD_VBP);
-
-      --  Accumulated active width and height
+      --  Horizontal timing configuration
+      LTDC_Periph.SSCR.HSW := SSCR_HSW_Field (LCD_HSync - 1);
+      LTDC_Periph.BPCR.AHBP := BPCR_AHBP_Field (LCD_HSync + LCD_HBP - 1);
       LTDC_Periph.AWCR.AAW :=
-        AWCR_AAW_Field (LCD_Width + LCD_HSync + LCD_HBP - 1);
+        AWCR_AAW_Field (LCD_HSync + LCD_HBP + LCD_Width - 1);
+      LTDC_Periph.TWCR.TOTALW :=
+        TWCR_TOTALW_Field (LCD_HSync + LCD_HBP + LCD_Width + LCD_HFP - 1);
+
+      --  Vertical timing configuration
+      LTDC_Periph.SSCR.VSH := SSCR_VSH_Field (LCD_VSync - 1);
+      LTDC_Periph.BPCR.AVBP := BPCR_AVBP_Field (LCD_VBP + LCD_VSync - 1);
       LTDC_Periph.AWCR.AAH :=
         AWCR_AAH_FIeld (LCD_Height + LCD_VSync + LCD_VBP - 1);
-
-      --  Total width and height
-      LTDC_Periph.TWCR.TOTALW :=
-        TWCR_TOTALW_Field (LCD_Width + LCD_HSync + LCD_HBP + LCD_HFP - 1);
       LTDC_Periph.TWCR.TOTALH :=
         TWCR_TOTALH_Field (LCD_Height + LCD_VSync + LCD_VBP + LCD_VFP - 1);
 
@@ -217,13 +212,13 @@ package body Init is
       CFBL : L1CFBLR_Register := L.LCFBLR;
    begin
       --  Horizontal start and stop = sync + Back Porch
-      WHPC.WHSTPOS := UInt12 (LCD_HBP + 1);
-      WHPC.WHSPPOS := UInt12 (LCD_Width + LCD_HBP);
+      WHPC.WHSTPOS := UInt12 (LTDC_Periph.BPCR.AHBP) + 1;
+      WHPC.WHSPPOS := UInt12 (LCD_Width) + UInt12 (LTDC_Periph.BPCR.AHBP);
       L.LWHPCR := WHPC;
 
       --  Vertical start and stop
-      WVPC.WVSTPOS := UInt11 (LCD_VBP + 1);
-      WVPC.WVSPPOS := UInt11 (LCD_Height + LCD_VBP);
+      WVPC.WVSTPOS := UInt11 (LTDC_Periph.BPCR.AVBP) + 1;
+      WVPC.WVSPPOS := UInt11 (LCD_Height) + UInt11 (LTDC_Periph.BPCR.AVBP);
       L.LWVPCR := WVPC;
 
       L.LPFCR.PF := Pixel_Format'Enum_Rep (Config);

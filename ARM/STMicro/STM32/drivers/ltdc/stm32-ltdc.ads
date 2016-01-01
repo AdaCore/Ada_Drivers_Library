@@ -55,12 +55,17 @@ generic
    LCD_VBP    : Natural;
    LCD_VFP    : Natural;
 
+   PLLSAI_N   : UInt9; --  192 in general
    PLLSAI_R   : UInt3;
    DivR       : Natural;
 
-   with procedure Initialize_LCD;
+   with procedure Pre_LTDC_Initialize;
+   with procedure Post_LTDC_Initialize;
 
 package STM32.LTDC is
+
+   LCD_Natural_Width  : constant Natural := LCD_Width;
+   LCD_Natural_Height : constant Natural := LCD_Height;
 
    type LCD_Layer is (Layer1, Layer2);
 
@@ -82,6 +87,8 @@ package STM32.LTDC is
    type Layer_State is (Enabled, Disabled);
 
    procedure Initialize (Pixel_Fmt : Pixel_Format := Pixel_Fmt_ARGB1555);
+
+   function Initialized return Boolean;
 
    procedure Set_Background (R, G, B : Byte);
 

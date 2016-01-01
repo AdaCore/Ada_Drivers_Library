@@ -135,7 +135,7 @@ package body STM32.SDRAM is
       -- FMC_INIT --
       --------------
 
-     RCC_Periph.AHB3ENR.FMCEN := 1;
+      RCC_Periph.AHB3ENR.FMCEN := 1;
 
       --  90 MHz of SD clock frequency (180MHz / 2)
       --  1 Clock cycle = 1 / 90MHz = 11.1ns
@@ -159,8 +159,8 @@ package body STM32.SDRAM is
 
       SDRAM_Conf.Bank               := SDRAM_Bank;
       SDRAM_Conf.ColumnBitsNumber   := FMC_ColumnBits_Number_8b;
-      SDRAM_Conf.RowBitsNumber      := FMC_RowBits_Number_12b;
-      SDRAM_Conf.SDMemoryDataWidth  := FMC_SDMemory_Width_16b;
+      SDRAM_Conf.RowBitsNumber      := SDRAM_Row_Bits;
+      SDRAM_Conf.SDMemoryDataWidth  := SDRAM_Mem_Width;
       SDRAM_Conf.InternalBankNumber := FMC_InternalBank_Number_4;
       SDRAM_Conf.CASLatency         := SDRAM_CAS_Latency;
       SDRAM_Conf.WriteProtection    := FMC_Write_Protection_Disable;
