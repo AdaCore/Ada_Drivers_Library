@@ -1,0 +1,51 @@
+with "../../STM32";
+
+project Balls_Demo is
+
+   type Board_Type is ("STM32F429-DISCO",
+                       "STM32F469-DISCO",
+                       "STM32F7-DISCO");
+   Board : Board_Type := external ("BOARD", "STM32F7-DISCO");
+
+   type LOADER_Type is
+      ("RAM", "ROM");
+   LOADER : LOADER_Type := external ("LOADER", "ROM");
+
+   for Languages use ("Ada");
+   for Main use ("demo.adb");
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Target use "arm-eabi";
+
+   case Board is
+      when "STM32F429-DISCO" =>
+         for Runtime ("Ada") use "ravenscar-sfp-stm32f4";
+      when "STM32F469-DISCO" =>
+         for Runtime ("Ada") use "ravenscar-sfp-stm32f4";
+      when "STM32F7-DISCO" =>
+         for Runtime ("Ada") use "ravenscar-sfp-stm32f7";
+   end case;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-g", "-O2", "-gnatwa", "-gnatQ", "-gnatw.X");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-g");
+   end Builder;
+
+
+   package Ide is
+      for Gnat use "arm-eabi-gnat";
+      for Gnatlist use "arm-eabi-gnatls";
+      for Debugger_Command use "arm-eabi-gdb";
+      for Program_Host use "localhost:4242";
+      for Communication_Protocol use "remote";
+   end Ide;
+
+   package Linker is
+      for Default_Switches ("ada") use
+        ("-Wl,--defsym=__stack_size=16384", "-v", "-v");
+   end Linker;
+
+end Balls_Demo;
