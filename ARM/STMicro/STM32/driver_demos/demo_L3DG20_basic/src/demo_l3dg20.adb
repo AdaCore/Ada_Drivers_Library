@@ -74,8 +74,17 @@ procedure Demo_L3DG20 is
    Line2_Stable : constant Natural := Line1_Stable + Line_Height;
    Line3_Stable : constant Natural := Line2_Stable + Line_Height;
 
+   --  the locations on the screen for the raw values
+   Line1_Raw : constant Natural := 55; -- leaves room for printing stable values
+   Line2_Raw : constant Natural := Line1_Raw + Line_Height;
+   Line3_Raw : constant Natural := Line2_Raw + Line_Height;
+
+   --  the column number for displaying raw values dynamically, based on
+   --  the length of the longest static label
+   Col_Raw : constant Natural := String'("Raw X:")'Length * Char_Width (Selected_Font);
+
    --  the locations on the screen for values after the offset is removed
-   Line1_Adjusted : constant Natural := 55; -- leaves room for printing stable values
+   Line1_Adjusted : constant Natural := 110; -- leaves room for printing stable values
    Line2_Adjusted : constant Natural := Line1_Adjusted + Line_Height;
    Line3_Adjusted : constant Natural := Line2_Adjusted + Line_Height;
 
@@ -84,7 +93,7 @@ procedure Demo_L3DG20 is
    Col_Adjusted : constant Natural := String'("Adjusted X:")'Length * Char_Width (Selected_Font);
 
    --  the locations on the screen for the final scaled values
-   Line1_Final : constant Natural := 110; -- leaves room for printing adjusted values
+   Line1_Final : constant Natural := 165; -- leaves room for printing adjusted values
    Line2_Final : constant Natural := Line1_Final + Line_Height;
    Line3_Final : constant Natural := Line2_Final + Line_Height;
 
@@ -197,6 +206,11 @@ procedure Demo_L3DG20 is
       Print ((0, Line2_Stable), "Stable Y:" & Stable.Y'Img);
       Print ((0, Line3_Stable), "Stable Z:" & Stable.Z'Img);
 
+      --  print the static labels for the values before the offset is removed
+      Print ((0, Line1_Raw), "Raw X:");
+      Print ((0, Line2_Raw), "Raw Y:");
+      Print ((0, Line3_Raw), "Raw Z:");
+
       --  print the static labels for the values after the offset is removed
       Print ((0, Line1_Adjusted), "Adjusted X:");
       Print ((0, Line2_Adjusted), "Adjusted Y:");
@@ -276,6 +290,8 @@ begin
 
    Sensitivity := Full_Scale_Sensitivity (Gyro);
 
+   Print ((0,0), "Calibrating");
+
    Get_Gyro_Offsets (Stable, Sample_Count => 100);  -- arbitrary count
 
    Print_Static_Content;
@@ -284,6 +300,11 @@ begin
       Await_Data_Ready (Gyro);
 
       Get_Raw_Angle_Rates (Gyro, Axes);
+
+      --  print the raw values
+      Print ((Col_Raw, Line1_Raw), Axes.X'Img & "   ");
+      Print ((Col_Raw, Line2_Raw), Axes.Y'Img & "   ");
+      Print ((Col_Raw, Line3_Raw), Axes.Z'Img & "   ");
 
       --  remove the computed stable offsets from the raw values
       Axes.X := Axes.X - Stable.X;
