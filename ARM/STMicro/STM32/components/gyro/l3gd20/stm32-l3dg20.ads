@@ -313,8 +313,7 @@ package STM32.L3DG20 is
    procedure Set_FIFO_Watermark (This : in out Three_Axis_Gyroscope; Level : FIFO_Level);
 
    type Angle_Rates_FIFO_Buffer is array (FIFO_Level range <>) of Angle_Rates with
-     Component_Size => 48,
-     Alignment      => Angle_Rate'Alignment;
+     Alignment => Angle_Rate'Alignment;
 
    procedure Get_Raw_Angle_Rates_FIFO
      (This   : in out Three_Axis_Gyroscope;
