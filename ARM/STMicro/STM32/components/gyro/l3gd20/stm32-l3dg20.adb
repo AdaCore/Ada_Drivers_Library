@@ -57,6 +57,7 @@ package body STM32.L3DG20 is
    Sensitivity_2000dps : constant := 70.0 * 0.001; -- mdps/digit
 
    ReadWrite_CMD : constant := 16#80#;
+   MultiByte_CMD       : constant := 16#40#;
 
    --  bit definitions for the CTRL_REG3 register
 
@@ -130,6 +131,16 @@ package body STM32.L3DG20 is
    function As_Byte is new Ada.Unchecked_Conversion
      (Source => Full_Scale_Selection, Target => Byte);
 
+   type Angle_Rate_Pointer is access all Angle_Rate with Storage_Size => 0;
+
+   function As_Angle_Rate_Pointer is new Ada.Unchecked_Conversion
+     (Source => System.Address, Target => Angle_Rate_Pointer);
+   --  So that we can treat the address of a byte as a pointer to a two-byte
+   --  sequence representing a signed integer quantity.
+
+   procedure Swap2 (Location : System.Address) with Inline;
+   --  swaps the two bytes at Location and Location+1
+
    procedure Initialize_Device_IO (This : in out Three_Axis_Gyroscope);
 
    ------------------------------
@@ -199,6 +210,40 @@ package body STM32.L3DG20 is
       SPI.Receive (This.L3GD20_SPI.all, Data);
       Chip_Select (This, Enabled => False);
    end Read;
+
+   ----------------
+   -- Read_Bytes --
+   ----------------
+
+   procedure Read_Bytes
+     (This   : Three_Axis_Gyroscope;
+      Addr   : Register;
+      Buffer : out Byte_Buffer;
+      Count  : Natural)
+   is
+      Index : Natural := Buffer'First;
+      Port  : SPI_Port renames This.L3GD20_SPI.all;
+      Generate_Clock : constant Boolean := Current_Mode (Port) = Master;
+   begin
+      Chip_Select (This, Enabled => True);
+      SPI.Transmit (Port, Byte (Addr) or READWRITE_CMD or MULTIBYTE_CMD);
+
+      for K in 1 .. Count loop
+         if Generate_Clock then
+            while not SPI.Tx_Is_Empty (Port) loop
+               null;
+            end loop;
+            SPI.Send (Port, Byte'(16#FF#));
+         end if;
+         while SPI.Rx_Is_Empty (Port) loop
+            null;
+         end loop;
+         Buffer (Index) := Byte'(SPI.Data (Port));
+         Index := Index + 1;
+      end loop;
+
+      Chip_Select (This, Enabled => False);
+   end Read_Bytes;
 
    ----------------------
    -- Init_Chip_Select --
@@ -328,6 +373,19 @@ package body STM32.L3DG20 is
       Configure_Interrupt_Pins (This);
    end Configure;
 
+   -----------
+   -- Sleep --
+   -----------
+
+   procedure Sleep (This : in out Three_Axis_Gyroscope) is
+      Ctrl1      : Byte;
+      Sleep_Mode : constant := 2#1000#;  -- per the Datasheet, Table 22, pg 32
+   begin
+      Read (This, CTRL_REG1, Ctrl1);
+      Ctrl1 := Ctrl1 or Sleep_Mode;
+      Write (This, CTRL_REG1, Ctrl1);
+   end Sleep;
+
    --------------------------------
    -- Configure_High_Pass_Filter --
    --------------------------------
@@ -380,6 +438,15 @@ package body STM32.L3DG20 is
       Read (This, Reference, Result);
       return Result;
    end Reference_Value;
+
+   -------------------
+   -- Set_Reference --
+   -------------------
+
+   procedure Set_Reference (This : in out Three_Axis_Gyroscope; Value : Byte) is
+   begin
+      Write (This, Reference, Value);
+   end Set_Reference;
 
    -----------------
    -- Data_Status --
@@ -661,25 +728,32 @@ package body STM32.L3DG20 is
       end case;
    end Set_Threshold;
 
-   -----------------
-   -- Enable_FIFO --
-   -----------------
+   -------------------
+   -- Set_FIFO_Mode --
+   -------------------
 
-   procedure Enable_FIFO
+   procedure Set_FIFO_Mode
      (This : in out Three_Axis_Gyroscope;
       Mode : FIFO_Modes)
    is
-      Ctrl5 : Byte;
-      FIFO : Byte;
+      FIFO  : Byte;
    begin
-      Read (This, CTRL_REG5, Ctrl5);
-      Ctrl5 := Ctrl5 or FIFO_Enable_Bit;
-      Write (This, CTRL_REG5, Ctrl5);
-
       Read (This, FIFO_CTRL, FIFO);
       FIFO := FIFO and (not FIFO_Mode_Bits);  -- clear the current bits
       FIFO := FIFO or Mode'Enum_Rep;
       Write (This, FIFO_CTRL, FIFO);
+   end Set_FIFO_Mode;
+
+   -----------------
+   -- Enable_FIFO --
+   -----------------
+
+   procedure Enable_FIFO (This : in out Three_Axis_Gyroscope) is
+      Ctrl5 : Byte;
+   begin
+      Read (This, CTRL_REG5, Ctrl5);
+      Ctrl5 := Ctrl5 or FIFO_Enable_Bit;
+      Write (This, CTRL_REG5, Ctrl5);
    end Enable_FIFO;
 
    ------------------
@@ -694,11 +768,11 @@ package body STM32.L3DG20 is
       Write (This, CTRL_REG5, Ctrl5);
    end Disable_FIFO;
 
-   -------------------
-   -- Set_Watermark --
-   -------------------
+   ------------------------
+   -- Set_FIFO_Watermark --
+   ------------------------
 
-   procedure Set_Watermark
+   procedure Set_FIFO_Watermark
      (This  : in out Three_Axis_Gyroscope;
       Level : FIFO_Level)
    is
@@ -708,7 +782,50 @@ package body STM32.L3DG20 is
       Value := Value and (not Watermark_Threshold_Bits); -- clear the bits
       Value := Value or Byte (Level);
       Write (This, FIFO_CTRL, Value);
-   end Set_Watermark;
+   end Set_FIFO_Watermark;
+
+   ------------------------------
+   -- Get_Raw_Angle_Rates_FIFO --
+   ------------------------------
+
+   procedure Get_Raw_Angle_Rates_FIFO
+     (This   : in out Three_Axis_Gyroscope;
+      Buffer : out Angle_Rates_FIFO_Buffer)
+   is
+      Ctrl4 : Byte;
+
+      Angle_Rate_Size : constant Integer := 6;  -- bytes
+      Bytes_To_Read   : constant Integer := Buffer'Length * Angle_Rate_Size;
+      Received        : SPI.Byte_Buffer (0 .. Bytes_To_Read - 1);
+    begin
+      Read (This, CTRL_REG4, Ctrl4);
+
+      Read_Bytes (This, OUT_X_L, Received, Bytes_To_Read);
+
+      if (Ctrl4 and Endian_Selection_Mask) = L3GD20_Big_Endian'Enum_Rep then
+         declare
+            J : Integer := 0;
+         begin
+            for K in Received'First .. Received'Last / 2 loop
+               Swap2 (Received (J)'Address);
+               J := J + 2;
+            end loop;
+         end;
+      end if;
+
+      declare
+         J : Integer := 0;
+      begin
+         for K in Buffer'Range loop
+            Buffer (K).X := As_Angle_Rate_Pointer (Received (J)'Address).all;
+            J := J + 2;
+            Buffer (K).Y := As_Angle_Rate_Pointer (Received (J)'Address).all;
+            J := J + 2;
+            Buffer (K).Z := As_Angle_Rate_Pointer (Received (J)'Address).all;
+            J := J + 2;
+         end loop;
+      end;
+   end Get_Raw_Angle_Rates_FIFO;
 
    ------------------------
    -- Current_FIFO_Depth --
@@ -782,53 +899,53 @@ package body STM32.L3DG20 is
       Write (This, CTRL_REG3, Ctrl3);
    end Disable_Data_Ready_Interrupt;
 
-   --------------------------------
-   -- Enable_Watermark_Interrupt --
-   --------------------------------
+   -------------------------------------
+   -- Enable_FIFO_Watermark_Interrupt --
+   -------------------------------------
 
-   procedure Enable_Watermark_Interrupt (This : in out Three_Axis_Gyroscope) is
+   procedure Enable_FIFO_Watermark_Interrupt (This : in out Three_Axis_Gyroscope) is
       Ctrl3 : Byte;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 or INT2_Watermark_Interrupt_Enable;
       Write (This, CTRL_REG3, Ctrl3);
-   end Enable_Watermark_Interrupt;
+   end Enable_FIFO_Watermark_Interrupt;
 
-   ---------------------------------
-   -- Disable_Watermark_Interrupt --
-   ---------------------------------
+   --------------------------------------
+   -- Disable_FIFO_Watermark_Interrupt --
+   --------------------------------------
 
-   procedure Disable_Watermark_Interrupt (This : in out Three_Axis_Gyroscope) is
+   procedure Disable_FIFO_Watermark_Interrupt (This : in out Three_Axis_Gyroscope) is
       Ctrl3 : Byte;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and (not INT2_Watermark_Interrupt_Enable);
       Write (This, CTRL_REG3, Ctrl3);
-   end Disable_Watermark_Interrupt;
+   end Disable_FIFO_Watermark_Interrupt;
 
-   ------------------------------
-   -- Enable_Overrun_Interrupt --
-   ------------------------------
+   -----------------------------------
+   -- Enable_FIFO_Overrun_Interrupt --
+   -----------------------------------
 
-   procedure Enable_Overrun_Interrupt (This : in out Three_Axis_Gyroscope) is
+   procedure Enable_FIFO_Overrun_Interrupt (This : in out Three_Axis_Gyroscope) is
       Ctrl3 : Byte;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 or INT2_Overrun_Interrupt_Enable;
       Write (This, CTRL_REG3, Ctrl3);
-   end Enable_Overrun_Interrupt;
+   end Enable_FIFO_Overrun_Interrupt;
 
-   -------------------------------
-   -- Disable_Overrun_Interrupt --
-   -------------------------------
+   ------------------------------------
+   -- Disable_FIFO_Overrun_Interrupt --
+   ------------------------------------
 
-   procedure Disable_Overrun_Interrupt (This : in out Three_Axis_Gyroscope) is
+   procedure Disable_FIFO_Overrun_Interrupt (This : in out Three_Axis_Gyroscope) is
       Ctrl3 : Byte;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and (not INT2_Overrun_Interrupt_Enable);
       Write (This, CTRL_REG3, Ctrl3);
-   end Disable_Overrun_Interrupt;
+   end Disable_FIFO_Overrun_Interrupt;
 
    ---------------------------------
    -- Enable_FIFO_Empty_Interrupt --
@@ -853,5 +970,18 @@ package body STM32.L3DG20 is
       Ctrl3 := Ctrl3 and (not INT2_FIFO_Empty_Interrupt_Enable);
       Write (This, CTRL_REG3, Ctrl3);
    end Disable_FIFO_Empty_Interrupt;
+
+   -----------
+   -- Swap2 --
+   -----------
+
+   procedure Swap2 (Location : System.Address) is
+      X : Half_Word;
+      for X'Address use Location;
+      function Bswap_16 (X : Half_Word) return Half_Word;
+      pragma Import (Intrinsic, Bswap_16, "__builtin_bswap16");
+   begin
+      X := Bswap_16 (X);
+   end Swap2;
 
 end STM32.L3DG20;
