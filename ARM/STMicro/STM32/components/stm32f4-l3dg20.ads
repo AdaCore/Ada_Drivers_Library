@@ -170,6 +170,15 @@ package STM32F4.L3DG20 is
       Endianness       : Endian_Data_Selection;
       Full_Scale       : Full_Scale_Selection);
 
+   function Full_Scale_Sensitivity (This : Three_Axis_Gyroscope) return Float;
+   --  Returns the sensitivity per LSB based on the Full_Scale_Selection
+   --  specified to procedure Configure. Used to scale raw angle rates. Note
+   --  that the values are already in terms of millidegrees per second per
+   --  digit, so to use these values you should multiply, rather than divide.
+   --  NB: These values are not measured on the specific device on the board
+   --  in use. Instead, they are statistical averages determined at the factory
+   --  for this component family, so you will likely need to tweak them a bit.
+
    --  See App Note 4505, pg 17, Table 14.
    type High_Pass_Filter_Mode is
      (L3GD20_HPM_Normal_Mode_Reset,  -- filter is reset by reading the Reference register
@@ -282,15 +291,6 @@ package STM32F4.L3DG20 is
    --  selected by a previous call to Configure.
    --  NB: does NOT check whether the gyro status indicates data are ready.
    --  NB: does NOT apply any sensitity scaling.
-
-   function Full_Scale_Sensitivity (This : Three_Axis_Gyroscope) return Float;
-   --  Returns the sensitivity per LSB based on the Full_Scale_Selection
-   --  specified to procedure Configure. Used to scale raw angle rates. Note
-   --  that the values are already in terms of millidegrees per second per
-   --  digit, so to use these values you should multiply, rather than divide.
-   --  NB: These values are not measured on the specific device on the board
-   --  in use. Instead, they are statistical averages determined at the factory
-   --  for this component family, so you will likely need to tweak them a bit.
 
    type FIFO_Modes is
      (L3GD20_Bypass_Mode,
