@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                   Copyright (C) 2015-2016, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -51,9 +51,6 @@ with STM32F4.GPIO; use STM32F4.GPIO;
 
 with Interfaces;   use Interfaces;
 
-with Ada.Interrupts.Names; use Ada.Interrupts.Names;
-use Ada.Interrupts;
-
 package STM32F4.L3DG20 is
 
    type Three_Axis_Gyroscope is limited private;
@@ -70,11 +67,9 @@ package STM32F4.L3DG20 is
       MOSI_Pin                    : GPIO_Pin;
       CS_GPIO                     : access GPIO_Port;
       CS_Pin                      : GPIO_Pin;
-      Int_GPIO                    : access GPIO_Port;
       Enable_SPI_Clock            : not null access procedure;
       Enable_SPI_GPIO_Clock       : not null access procedure;
-      Enable_Chip_Select_Clock    : not null access procedure;
-      Enable_GPIO_Interrupt_Clock : not null access procedure);
+      Enable_Chip_Select_Clock    : not null access procedure);
 
    type Power_Mode_Selection is
      (L3GD20_Mode_Powerdown,
@@ -175,6 +170,9 @@ package STM32F4.L3DG20 is
       Endianness       : Endian_Data_Selection;
       Full_Scale       : Full_Scale_Selection);
 
+   procedure Sleep (This : in out Three_Axis_Gyroscope);
+   --  See App Note 4505, pg 9
+
    --  See App Note 4505, pg 17, Table 14.
    type High_Pass_Filter_Mode is
      (L3GD20_HPM_Normal_Mode_Reset,  -- filter is reset by reading the Reference register
@@ -227,6 +225,8 @@ package STM32F4.L3DG20 is
    procedure Disable_High_Pass_Filter (This : in out Three_Axis_Gyroscope);
 
    function Reference_Value (This : Three_Axis_Gyroscope) return Byte with Inline;
+
+   procedure Set_Reference (This : in out Three_Axis_Gyroscope; Value : Byte) with Inline;
 
    type Sample_Counter is mod 2 ** 6;
 
@@ -386,10 +386,17 @@ package STM32F4.L3DG20 is
    type Angle_Rate is new Integer_16;
 
    type Angle_Rates is record
-      X : Angle_Rate;  -- pitch
+      X : Angle_Rate;  -- pitch, per Figure 2, pg 7 of the Datasheet
       Y : Angle_Rate;  -- roll
       Z : Angle_Rate;  -- yaw
+   end record with Size => 3 * 16;
+
+   for Angle_Rates use record
+      X at 0 range 0 .. 15;
+      Y at 2 range 0 .. 15;
+      Z at 4 range 0 .. 15;
    end record;
+   --  confirming, but required, eg for matching FIFO content format
 
    procedure Get_Raw_Angle_Rates
      (This  : Three_Axis_Gyroscope;
@@ -414,31 +421,41 @@ package STM32F4.L3DG20 is
      (L3GD20_Bypass_Mode,
       L3GD20_FIFO_Mode,
       L3GD20_Stream_Mode,
-      L3GD20_Bypass_To_Stream_Mode,
-      L3GD20_Stream_To_FIFO_Mode)
+      L3GD20_Stream_To_FIFO_Mode,
+      L3GD20_Bypass_To_Stream_Mode)
      with Size => 8;
 
    for FIFO_Modes use  -- confirming
      (L3GD20_Bypass_Mode           => 2#000#,
       L3GD20_FIFO_Mode             => 2#001#,
       L3GD20_Stream_Mode           => 2#010#,
-      L3GD20_Bypass_To_Stream_Mode => 2#011#,
-      L3GD20_Stream_To_FIFO_Mode   => 2#100#);
+      L3GD20_Stream_To_FIFO_Mode   => 2#011#,
+      L3GD20_Bypass_To_Stream_Mode => 2#100#);
 
-   procedure Enable_FIFO (This : in out Three_Axis_Gyroscope; Mode : FIFO_Modes);
-   --  Enables the FIFO and sets the specified mode
+   procedure Set_FIFO_Mode (This : in out Three_Axis_Gyroscope; Mode : FIFO_Modes);
+
+   procedure Enable_FIFO (This : in out Three_Axis_Gyroscope);
 
    procedure Disable_FIFO (This : in out Three_Axis_Gyroscope);
 
-   FIFO_Depth : constant := 32;
-   --  the number of 16-bit quantities that the hardware FIFO can contain
+   subtype FIFO_Level is Integer range 0 .. 31;
 
-   type FIFO_Level is new Byte range 0 .. FIFO_Depth - 1;
+   procedure Set_FIFO_Watermark (This : in out Three_Axis_Gyroscope; Level : FIFO_Level);
 
-   procedure Set_Watermark (This : in out Three_Axis_Gyroscope; Level : FIFO_Level);
+   type Angle_Rates_FIFO_Buffer is array (FIFO_Level range <>) of Angle_Rates with
+     Component_Size => 48,
+     Alignment      => Angle_Rate'Alignment;
+
+   procedure Get_Raw_Angle_Rates_FIFO
+     (This   : in out Three_Axis_Gyroscope;
+      Buffer : out Angle_Rates_FIFO_Buffer);
+   --  Returns the latest raw data in the FIFO, swapping bytes if required by
+   --  the endianess selected by a previous call to Configure. Fills the entire
+   --  buffer passed.
+   --  NB: does NOT apply any sensitity scaling.
 
    function Current_FIFO_Depth (This : Three_Axis_Gyroscope) return FIFO_Level;
-   --  The number of entries currently in the hardware FIFO
+   --  The number of unread entries currently in the hardware FIFO
 
    function FIFO_Below_Watermark (This : Three_Axis_Gyroscope) return Boolean;
 
@@ -451,24 +468,14 @@ package STM32F4.L3DG20 is
    procedure Enable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope);
    procedure Disable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope);
 
-   procedure Enable_Watermark_Interrupt (This : in out Three_Axis_Gyroscope);
-   procedure Disable_Watermark_Interrupt (This : in out Three_Axis_Gyroscope);
+   procedure Enable_FIFO_Watermark_Interrupt (This : in out Three_Axis_Gyroscope);
+   procedure Disable_FIFO_Watermark_Interrupt (This : in out Three_Axis_Gyroscope);
 
    procedure Enable_Overrun_Interrupt (This : in out Three_Axis_Gyroscope);
    procedure Disable_Overrun_Interrupt (This : in out Three_Axis_Gyroscope);
 
    procedure Enable_FIFO_Empty_Interrupt (This : in out Three_Axis_Gyroscope);
    procedure Disable_FIFO_Empty_Interrupt (This : in out Three_Axis_Gyroscope);
-
-   --  The following are the interrupt definitions necessary for client-defined
-   --  interrupt handlers:
-
-   Int1_Pin : constant GPIO_Pin := Pin_1;
-   Int2_Pin : constant GPIO_Pin := Pin_2;
-
-   Int1_Interrupt : constant Interrupt_ID := EXTI1_Interrupt;
-   --  NB: the line number 'n' in EXTIn_Interrupt must match the GPIO pin
-   --  number associated with the interrupt, so pin 1 uses EXTI1 etc.
 
 private
 
@@ -481,7 +488,6 @@ private
       MOSI_Pin    : GPIO_Pin;
       CS_GPIO     : access GPIO_Port;
       CS_Pin      : GPIO_Pin;
-      Int_GPIO    : access GPIO_Port;
    end record;
 
    type Register is new Byte;
@@ -499,6 +505,14 @@ private
       Data : out Byte)
      with Inline;
    --  Reads Data from the specified register within the gyro chip
+
+   procedure Read_Bytes
+     (This   : Three_Axis_Gyroscope;
+      Addr   : Register;
+      Buffer : out Byte_Buffer;
+      Count  : Natural);
+   --  Reads Count bytes into Buffer, starting at the specified register within
+   --  the gyro chip
 
    --  L3GD20 Registers
 

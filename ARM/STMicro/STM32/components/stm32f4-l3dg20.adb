@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                   Copyright (C) 2015-2016, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -55,6 +55,7 @@ package body STM32F4.L3DG20 is
    Sensitivity_2000dps : constant := 70.0 * 0.001; -- mdps/digit
 
    ReadWrite_CMD : constant := 16#80#;
+   MultiByte_CMD : constant := 16#40#;
 
    --  bit definitions for the CTRL_REG3 register
 
@@ -128,6 +129,16 @@ package body STM32F4.L3DG20 is
    function As_Byte is new Ada.Unchecked_Conversion
      (Source => Full_Scale_Selection, Target => Byte);
 
+   type Angle_Rate_Pointer is access all Angle_Rate with Storage_Size => 0;
+
+   function As_Angle_Rate_Pointer is new Ada.Unchecked_Conversion
+     (Source => System.Address, Target => Angle_Rate_Pointer);
+   --  So that we can treat the address of a byte as a pointer to a two-byte
+   --  sequence representing a signed integer quantity.
+
+   procedure Swap2 (Location : System.Address) with Inline;
+   --  swaps the two bytes at Location and Location+1
+
    procedure Initialize_Device_IO (This : in out Three_Axis_Gyroscope);
 
    ------------------------------
@@ -144,11 +155,9 @@ package body STM32F4.L3DG20 is
       MOSI_Pin                    : GPIO_Pin;
       CS_GPIO                     : access GPIO_Port;
       CS_Pin                      : GPIO_Pin;
-      Int_GPIO                    : access GPIO_Port;
       Enable_SPI_Clock            : not null access procedure;
       Enable_SPI_GPIO_Clock       : not null access procedure;
-      Enable_Chip_Select_Clock    : not null access procedure;
-      Enable_GPIO_Interrupt_Clock : not null access procedure)
+      Enable_Chip_Select_Clock    : not null access procedure)
    is
    begin
       This.L3GD20_SPI  := L3GD20_SPI;
@@ -159,12 +168,10 @@ package body STM32F4.L3DG20 is
       This.MOSI_Pin    := MOSI_Pin;
       This.CS_GPIO     := CS_GPIO;
       This.CS_Pin      := CS_Pin;
-      This.Int_GPIO    := Int_GPIO;
 
       Enable_SPI_Clock.all;
       Enable_SPI_GPIO_Clock.all;
       Enable_Chip_Select_Clock.all;
-      Enable_GPIO_Interrupt_Clock.all;
 
       Initialize_Device_IO (This);
    end Initialize_Gyro_Hardware;
@@ -210,6 +217,40 @@ package body STM32F4.L3DG20 is
       Chip_Select (This, Enabled => False);
    end Read;
 
+   ----------------
+   -- Read_Bytes --
+   ----------------
+
+   procedure Read_Bytes
+     (This   : Three_Axis_Gyroscope;
+      Addr   : Register;
+      Buffer : out Byte_Buffer;
+      Count  : Natural)
+   is
+      Index : Natural := Buffer'First;
+      Port  : SPI_Port renames This.L3GD20_SPI.all;
+      Generate_Clock : constant Boolean := Current_Mode (Port) = Master;
+   begin
+      Chip_Select (This, Enabled => True);
+      SPI.Transmit (Port, Byte (Addr) or READWRITE_CMD or MULTIBYTE_CMD);
+
+      for K in 1 .. Count loop
+         if Generate_Clock then
+            while not SPI.Tx_Is_Empty (Port) loop
+               null;
+            end loop;
+            SPI.Send (Port, Byte'(16#FF#));
+         end if;
+         while SPI.Rx_Is_Empty (Port) loop
+            null;
+         end loop;
+         Buffer (Index) := Byte'(SPI.Data (Port));
+         Index := Index + 1;
+      end loop;
+
+      Chip_Select (This, Enabled => False);
+   end Read_Bytes;
+
    ----------------------
    -- Init_Chip_Select --
    ----------------------
@@ -223,8 +264,6 @@ package body STM32F4.L3DG20 is
       GPIO_Conf.Resistors := Pull_Up;
 
       Configure_IO (This.CS_GPIO.all, This.CS_Pin, GPIO_Conf);
-
-      Lock (This.CS_GPIO.all, This.CS_Pin);
    end Init_Chip_Select;
 
    ----------------------
@@ -245,8 +284,6 @@ package body STM32F4.L3DG20 is
         (This.SPI_GPIO.all,
          This.SCK_Pin & This.MISO_Pin & This.MOSI_Pin,
          This.SPI_GPIO_AF);
-
-      Lock (This.SPI_GPIO.all, This.SCK_Pin & This.MISO_Pin & This.MOSI_Pin);
    end Init_SPI_IO_Pins;
 
    --------------
@@ -286,22 +323,6 @@ package body STM32F4.L3DG20 is
       Init_SPI (This);
    end Initialize_Device_IO;
 
-   ------------------------------
-   -- Configure_Interrupt_Pins --
-   ------------------------------
-
-   procedure Configure_Interrupt_Pins (This : in out Three_Axis_Gyroscope) is
-      GPIO_Conf : GPIO_Port_Configuration;
-   begin
-      GPIO_Conf.Speed := Speed_50MHz;
-      GPIO_Conf.Mode := Mode_In;
-      GPIO_Conf.Output_Type := Push_Pull;
-      GPIO_Conf.Resistors := Floating;
-
-      Configure_IO (This.Int_GPIO.all, Int1_Pin & Int2_Pin, GPIO_Conf);
-      Lock (This.Int_GPIO.all, Int1_Pin & Int2_Pin);
-   end Configure_Interrupt_Pins;
-
    ---------------
    -- Configure --
    ---------------
@@ -330,9 +351,20 @@ package body STM32F4.L3DG20 is
 
       Write (This, CTRL_REG1, Ctrl1);
       Write (This, CTRL_REG4, Ctrl4);
-
-      Configure_Interrupt_Pins (This);
    end Configure;
+
+   -----------
+   -- Sleep --
+   -----------
+
+   procedure Sleep (This : in out Three_Axis_Gyroscope) is
+      Ctrl1      : Byte;
+      Sleep_Mode : constant := 2#1000#;  -- per the Datasheet, Table 22, pg 32
+   begin
+      Read (This, CTRL_REG1, Ctrl1);
+      Ctrl1 := Ctrl1 or Sleep_Mode;
+      Write (This, CTRL_REG1, Ctrl1);
+   end Sleep;
 
    --------------------------------
    -- Configure_High_Pass_Filter --
@@ -387,14 +419,23 @@ package body STM32F4.L3DG20 is
       return Result;
    end Reference_Value;
 
+   -------------------
+   -- Set_Reference --
+   -------------------
+
+   procedure Set_Reference (This : in out Three_Axis_Gyroscope; Value : Byte) is
+   begin
+      Write (This, Reference, Value);
+   end Set_Reference;
+
    -----------------
    -- Data_Status --
    -----------------
 
    function Data_Status (This : Three_Axis_Gyroscope) return Gyro_Data_Status is
       Result : Byte;
-      function As_Gyro_Data_Status is
-        new Ada.Unchecked_Conversion (Source => Byte, Target => Gyro_Data_Status);
+      function As_Gyro_Data_Status is new Ada.Unchecked_Conversion
+        (Source => Byte, Target => Gyro_Data_Status);
    begin
       Read (This, Status, Result);
       return As_Gyro_Data_Status (Result);
@@ -458,39 +499,32 @@ package body STM32F4.L3DG20 is
    is
       Ctrl4 : Byte;
 
-      type Buffer is array (0 .. 5) of Byte with Component_Size => 8;
+      Bytes_To_Read : constant Integer := 6;
+      -- the number of bytes in an Angle_Rates record object
 
-      Received : Buffer with Alignment => Angle_Rate'Alignment;
-
-      type Angle_Rate_Pointer is access all Angle_Rate with Storage_Size => 0;
-
-      function As_Angle_Rate_Pointer is new Ada.Unchecked_Conversion
-        (Source => System.Address, Target => Angle_Rate_Pointer);
-      --  So that we can treat the address of a byte as a pointer to a two-byte
-      --  sequence representing a signed integer quantity. That's also why the
-      --  alignment of Received is specified.
-
-      function Swap_Bytes (Input : Angle_Rate) return Angle_Rate;
-      pragma Import (Intrinsic, Swap_Bytes, "__builtin_bswap16");
-   begin
+      Received : SPI.Byte_Buffer (1 .. Bytes_To_Read);
+      --  The byte buffer overlaid on top of the outgoing record parameter.
+    begin
       Read (This, CTRL_REG4, Ctrl4);
 
-      Read (This, OUT_X_L, Received (0));
-      Read (This, OUT_X_H, Received (1));
-      Read (This, OUT_Y_L, Received (2));
-      Read (This, OUT_Y_H, Received (3));
-      Read (This, OUT_Z_L, Received (4));
-      Read (This, OUT_Z_H, Received (5));
-
-      Rates.X := As_Angle_Rate_Pointer (Received (0)'Address).all;
-      Rates.Y := As_Angle_Rate_Pointer (Received (2)'Address).all;
-      Rates.Z := As_Angle_Rate_Pointer (Received (4)'Address).all;
+      Read_Bytes (This, OUT_X_L, Received, Bytes_To_Read);
+      --  The above has the effect of separate reads, as follows:
+      --    Read (This, OUT_X_L, Received (1));
+      --    Read (This, OUT_X_H, Received (2));
+      --    Read (This, OUT_Y_L, Received (3));
+      --    Read (This, OUT_Y_H, Received (4));
+      --    Read (This, OUT_Z_L, Received (5));
+      --    Read (This, OUT_Z_H, Received (6));
 
       if (Ctrl4 and Endian_Selection_Mask) = L3GD20_Big_Endian'Enum_Rep then
-         Rates.X := Swap_Bytes (Rates.X);
-         Rates.Y := Swap_Bytes (Rates.Y);
-         Rates.Z := Swap_Bytes (Rates.Z);
+         Swap2 (Received (1)'Address);
+         Swap2 (Received (3)'Address);
+         Swap2 (Received (5)'Address);
       end if;
+
+      Rates.X := As_Angle_Rate_Pointer (Received (1)'Address).all;
+      Rates.Y := As_Angle_Rate_Pointer (Received (3)'Address).all;
+      Rates.Z := As_Angle_Rate_Pointer (Received (5)'Address).all;
    end Get_Raw_Angle_Rates;
 
    --------------------------
@@ -565,13 +599,6 @@ package body STM32F4.L3DG20 is
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 or INT1_Interrupt_Enable;
       Write (This, CTRL_REG3, Ctrl3);
-
-      --  should these calls really be done here, rather than in a higher level
-      --  abstraction (eg a "Gyro" ADT), or by the client???
-      Connect_External_Interrupt (This.Int_GPIO.all, Int1_Pin);
-
-      Configure_Trigger (This.Int_GPIO.all, Int1_Pin, Interrupt_Falling_Edge);
-      -- hardcoded edge, should use ActiveEdge ???
    end Enable_Interrupt1;
 
    ------------------------
@@ -667,25 +694,32 @@ package body STM32F4.L3DG20 is
       end case;
    end Set_Threshold;
 
-   -----------------
-   -- Enable_FIFO --
-   -----------------
+   -------------------
+   -- Set_FIFO_Mode --
+   -------------------
 
-   procedure Enable_FIFO
+   procedure Set_FIFO_Mode
      (This : in out Three_Axis_Gyroscope;
       Mode : FIFO_Modes)
    is
-      Ctrl5 : Byte;
-      FIFO : Byte;
+      FIFO  : Byte;
    begin
-      Read (This, CTRL_REG5, Ctrl5);
-      Ctrl5 := Ctrl5 or FIFO_Enable_Bit;
-      Write (This, CTRL_REG5, Ctrl5);
-
       Read (This, FIFO_CTRL, FIFO);
       FIFO := FIFO and (not FIFO_Mode_Bits);  -- clear the current bits
       FIFO := FIFO or Mode'Enum_Rep;
       Write (This, FIFO_CTRL, FIFO);
+   end Set_FIFO_Mode;
+
+   -----------------
+   -- Enable_FIFO --
+   -----------------
+
+   procedure Enable_FIFO (This : in out Three_Axis_Gyroscope) is
+      Ctrl5 : Byte;
+   begin
+      Read (This, CTRL_REG5, Ctrl5);
+      Ctrl5 := Ctrl5 or FIFO_Enable_Bit;
+      Write (This, CTRL_REG5, Ctrl5);
    end Enable_FIFO;
 
    ------------------
@@ -700,11 +734,11 @@ package body STM32F4.L3DG20 is
       Write (This, CTRL_REG5, Ctrl5);
    end Disable_FIFO;
 
-   -------------------
-   -- Set_Watermark --
-   -------------------
+   ------------------------
+   -- Set_FIFO_Watermark --
+   ------------------------
 
-   procedure Set_Watermark
+   procedure Set_FIFO_Watermark
      (This  : in out Three_Axis_Gyroscope;
       Level : FIFO_Level)
    is
@@ -714,7 +748,50 @@ package body STM32F4.L3DG20 is
       Value := Value and (not Watermark_Threshold_Bits); -- clear the bits
       Value := Value or Byte (Level);
       Write (This, FIFO_CTRL, Value);
-   end Set_Watermark;
+   end Set_FIFO_Watermark;
+
+   ------------------------------
+   -- Get_Raw_Angle_Rates_FIFO --
+   ------------------------------
+
+   procedure Get_Raw_Angle_Rates_FIFO
+     (This   : in out Three_Axis_Gyroscope;
+      Buffer : out Angle_Rates_FIFO_Buffer)
+   is
+      Ctrl4 : Byte;
+
+      Angle_Rate_Size : constant Integer := 6;  -- bytes
+      Bytes_To_Read   : constant Integer := Buffer'Length * Angle_Rate_Size;
+      Received        : SPI.Byte_Buffer (0 .. Bytes_To_Read - 1);
+    begin
+      Read (This, CTRL_REG4, Ctrl4);
+
+      Read_Bytes (This, OUT_X_L, Received, Bytes_To_Read);
+
+      if (Ctrl4 and Endian_Selection_Mask) = L3GD20_Big_Endian'Enum_Rep then
+         declare
+            J : Integer := 0;
+         begin
+            for K in Received'First .. Received'Last / 2 loop
+               Swap2 (Received (J)'Address);
+               J := J + 2;
+            end loop;
+         end;
+      end if;
+
+      declare
+         J : Integer := 0;
+      begin
+         for K in Buffer'Range loop
+            Buffer (K).X := As_Angle_Rate_Pointer (Received (J)'Address).all;
+            J := J + 2;
+            Buffer (K).Y := As_Angle_Rate_Pointer (Received (J)'Address).all;
+            J := J + 2;
+            Buffer (K).Z := As_Angle_Rate_Pointer (Received (J)'Address).all;
+            J := J + 2;
+         end loop;
+      end;
+   end Get_Raw_Angle_Rates_FIFO;
 
    ------------------------
    -- Current_FIFO_Depth --
@@ -788,29 +865,29 @@ package body STM32F4.L3DG20 is
       Write (This, CTRL_REG3, Ctrl3);
    end Disable_Data_Ready_Interrupt;
 
-   --------------------------------
-   -- Enable_Watermark_Interrupt --
-   --------------------------------
+   -------------------------------------
+   -- Enable_FIFO_Watermark_Interrupt --
+   -------------------------------------
 
-   procedure Enable_Watermark_Interrupt (This : in out Three_Axis_Gyroscope) is
+   procedure Enable_FIFO_Watermark_Interrupt (This : in out Three_Axis_Gyroscope) is
       Ctrl3 : Byte;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 or INT2_Watermark_Interrupt_Enable;
       Write (This, CTRL_REG3, Ctrl3);
-   end Enable_Watermark_Interrupt;
+   end Enable_FIFO_Watermark_Interrupt;
 
-   ---------------------------------
-   -- Disable_Watermark_Interrupt --
-   ---------------------------------
+   --------------------------------------
+   -- Disable_FIFO_Watermark_Interrupt --
+   --------------------------------------
 
-   procedure Disable_Watermark_Interrupt (This : in out Three_Axis_Gyroscope) is
+   procedure Disable_FIFO_Watermark_Interrupt (This : in out Three_Axis_Gyroscope) is
       Ctrl3 : Byte;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and (not INT2_Watermark_Interrupt_Enable);
       Write (This, CTRL_REG3, Ctrl3);
-   end Disable_Watermark_Interrupt;
+   end Disable_FIFO_Watermark_Interrupt;
 
    ------------------------------
    -- Enable_Overrun_Interrupt --
@@ -859,5 +936,18 @@ package body STM32F4.L3DG20 is
       Ctrl3 := Ctrl3 and (not INT2_FIFO_Empty_Interrupt_Enable);
       Write (This, CTRL_REG3, Ctrl3);
    end Disable_FIFO_Empty_Interrupt;
+
+   -----------
+   -- Swap2 --
+   -----------
+
+   procedure Swap2 (Location : System.Address) is
+      X : Half_Word;
+      for X'Address use Location;
+      function Bswap_16 (X : Half_Word) return Half_Word;
+      pragma Import (Intrinsic, Bswap_16, "__builtin_bswap16");
+   begin
+      X := Bswap_16 (X);
+   end Swap2;
 
 end STM32F4.L3DG20;

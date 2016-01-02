@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                   Copyright (C) 2015-2016, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -137,11 +137,9 @@ procedure Demo_L3DG20 is
          MOSI_Pin                    => Pin_9,          -- required, pg 23
          CS_GPIO                     => GPIO_C'Access,  -- required, pg 21
          CS_Pin                      => Pin_1,          -- required, pg 21
-         Int_GPIO                    => GPIO_A'Access,  -- required, pg 19
          Enable_SPI_Clock            => RCC.SPI5_Clock_Enable'Access,
          Enable_SPI_GPIO_Clock       => RCC.GPIOF_Clock_Enable'Access,
-         Enable_Chip_Select_Clock    => RCC.GPIOC_Clock_Enable'Access,
-         Enable_GPIO_Interrupt_Clock => RCC.GPIOA_Clock_Enable'Access);
+         Enable_Chip_Select_Clock    => RCC.GPIOC_Clock_Enable'Access);
 
       Configure
         (Gyro,
