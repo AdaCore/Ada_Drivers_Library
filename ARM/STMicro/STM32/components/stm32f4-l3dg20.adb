@@ -889,29 +889,29 @@ package body STM32F4.L3DG20 is
       Write (This, CTRL_REG3, Ctrl3);
    end Disable_FIFO_Watermark_Interrupt;
 
-   ------------------------------
-   -- Enable_Overrun_Interrupt --
-   ------------------------------
+   -----------------------------------
+   -- Enable_FIFO_Overrun_Interrupt --
+   -----------------------------------
 
-   procedure Enable_Overrun_Interrupt (This : in out Three_Axis_Gyroscope) is
+   procedure Enable_FIFO_Overrun_Interrupt (This : in out Three_Axis_Gyroscope) is
       Ctrl3 : Byte;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 or INT2_Overrun_Interrupt_Enable;
       Write (This, CTRL_REG3, Ctrl3);
-   end Enable_Overrun_Interrupt;
+   end Enable_FIFO_Overrun_Interrupt;
 
-   -------------------------------
-   -- Disable_Overrun_Interrupt --
-   -------------------------------
+   ------------------------------------
+   -- Disable_FIFO_Overrun_Interrupt --
+   ------------------------------------
 
-   procedure Disable_Overrun_Interrupt (This : in out Three_Axis_Gyroscope) is
+   procedure Disable_FIFO_Overrun_Interrupt (This : in out Three_Axis_Gyroscope) is
       Ctrl3 : Byte;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and (not INT2_Overrun_Interrupt_Enable);
       Write (This, CTRL_REG3, Ctrl3);
-   end Disable_Overrun_Interrupt;
+   end Disable_FIFO_Overrun_Interrupt;
 
    ---------------------------------
    -- Enable_FIFO_Empty_Interrupt --

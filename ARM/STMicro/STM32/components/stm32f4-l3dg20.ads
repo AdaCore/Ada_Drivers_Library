@@ -170,9 +170,6 @@ package STM32F4.L3DG20 is
       Endianness       : Endian_Data_Selection;
       Full_Scale       : Full_Scale_Selection);
 
-   procedure Sleep (This : in out Three_Axis_Gyroscope);
-   --  See App Note 4505, pg 9
-
    --  See App Note 4505, pg 17, Table 14.
    type High_Pass_Filter_Mode is
      (L3GD20_HPM_Normal_Mode_Reset,  -- filter is reset by reading the Reference register
@@ -227,6 +224,135 @@ package STM32F4.L3DG20 is
    function Reference_Value (This : Three_Axis_Gyroscope) return Byte with Inline;
 
    procedure Set_Reference (This : in out Three_Axis_Gyroscope; Value : Byte) with Inline;
+
+   procedure Sleep (This : in out Three_Axis_Gyroscope);
+   --  See App Note 4505, pg 9
+
+   procedure Reboot (This : Three_Axis_Gyroscope);
+
+   I_Am_L3GD20 : constant := 16#D4#;
+
+   function Device_Id (This : Three_Axis_Gyroscope) return Byte;
+   --  Will return I_Am_L3GD20 when functioning properly
+
+   type Gyro_Data_Status is record
+      ZYX_Overrun   : Boolean;
+      Z_Overrun     : Boolean;
+      Y_Overrun     : Boolean;
+      X_Overrun     : Boolean;
+      ZYX_Available : Boolean;
+      Z_Available   : Boolean;
+      Y_Available   : Boolean;
+      X_Available   : Boolean;
+   end record
+     with Size => 8;
+
+   for Gyro_Data_Status use record
+      ZYX_Overrun   at 0 range 7 .. 7;
+      Z_Overrun     at 0 range 6 .. 6;
+      Y_Overrun     at 0 range 5 .. 5;
+      X_Overrun     at 0 range 4 .. 4;
+      ZYX_Available at 0 range 3 .. 3;
+      Z_Available   at 0 range 2 .. 2;
+      Y_Available   at 0 range 1 .. 1;
+      X_Available   at 0 range 0 .. 0;
+   end record;
+
+   function Data_Status (This : Three_Axis_Gyroscope) return Gyro_Data_Status with Inline;
+
+   type Angle_Rate is new Integer_16;
+
+   type Angle_Rates is record
+      X : Angle_Rate;  -- pitch, per Figure 2, pg 7 of the Datasheet
+      Y : Angle_Rate;  -- roll
+      Z : Angle_Rate;  -- yaw
+   end record with Size => 3 * 16;
+
+   for Angle_Rates use record
+      X at 0 range 0 .. 15;
+      Y at 2 range 0 .. 15;
+      Z at 4 range 0 .. 15;
+   end record;
+   --  confirming, but required, eg for matching FIFO content format
+
+   procedure Get_Raw_Angle_Rates
+     (This  : Three_Axis_Gyroscope;
+      Rates : out Angle_Rates);
+   --  Returns the latest data, swapping bytes if required by the endianess
+   --  selected by a previous call to Configure.
+   --  NB: does NOT check whether the gyro status indicates data are ready.
+   --  NB: does NOT apply any sensitity scaling.
+
+   function Full_Scale_Sensitivity (This : Three_Axis_Gyroscope) return Float;
+   --  Returns the sensitivity per LSB based on the Full_Scale_Selection
+   --  specified to procedure Configure. Used to scale raw angle rates. Note
+   --  that the values are already in terms of millidegrees per second per
+   --  digit, so to use these values you should multiply, rather than divide.
+   --  NB: These values are not measured on the specific device on the board
+   --  in use. Instead, they are statistical averages determined at the factory
+   --  for this component family, so you will likely need to tweak them a bit.
+
+   type FIFO_Modes is
+     (L3GD20_Bypass_Mode,
+      L3GD20_FIFO_Mode,
+      L3GD20_Stream_Mode,
+      L3GD20_Stream_To_FIFO_Mode,
+      L3GD20_Bypass_To_Stream_Mode)
+     with Size => 8;
+
+   for FIFO_Modes use  -- confirming
+     (L3GD20_Bypass_Mode           => 2#000#,
+      L3GD20_FIFO_Mode             => 2#001#,
+      L3GD20_Stream_Mode           => 2#010#,
+      L3GD20_Stream_To_FIFO_Mode   => 2#011#,
+      L3GD20_Bypass_To_Stream_Mode => 2#100#);
+
+   procedure Set_FIFO_Mode (This : in out Three_Axis_Gyroscope; Mode : FIFO_Modes);
+
+   procedure Enable_FIFO (This : in out Three_Axis_Gyroscope);
+
+   procedure Disable_FIFO (This : in out Three_Axis_Gyroscope);
+
+   subtype FIFO_Level is Integer range 0 .. 31;
+
+   procedure Set_FIFO_Watermark (This : in out Three_Axis_Gyroscope; Level : FIFO_Level);
+
+   type Angle_Rates_FIFO_Buffer is array (FIFO_Level range <>) of Angle_Rates with
+     Component_Size => 48,
+     Alignment      => Angle_Rate'Alignment;
+
+   procedure Get_Raw_Angle_Rates_FIFO
+     (This   : in out Three_Axis_Gyroscope;
+      Buffer : out Angle_Rates_FIFO_Buffer);
+   --  Returns the latest raw data in the FIFO, swapping bytes if required by
+   --  the endianess selected by a previous call to Configure. Fills the entire
+   --  buffer passed.
+   --  NB: does NOT apply any sensitity scaling.
+
+   function Current_FIFO_Depth (This : Three_Axis_Gyroscope) return FIFO_Level;
+   --  The number of unread entries currently in the hardware FIFO
+
+   function FIFO_Below_Watermark (This : Three_Axis_Gyroscope) return Boolean;
+
+   function FIFO_Empty (This : Three_Axis_Gyroscope) return Boolean;
+
+   function FIFO_Overrun (This : Three_Axis_Gyroscope) return Boolean;
+
+   --  Interrupt 2 controls
+
+   procedure Enable_Data_Ready_Interrupt  (This : in out Three_Axis_Gyroscope);
+   procedure Disable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope);
+
+   procedure Enable_FIFO_Watermark_Interrupt  (This : in out Three_Axis_Gyroscope);
+   procedure Disable_FIFO_Watermark_Interrupt (This : in out Three_Axis_Gyroscope);
+
+   procedure Enable_FIFO_Overrun_Interrupt  (This : in out Three_Axis_Gyroscope);
+   procedure Disable_FIFO_Overrun_Interrupt (This : in out Three_Axis_Gyroscope);
+
+   procedure Enable_FIFO_Empty_Interrupt  (This : in out Three_Axis_Gyroscope);
+   procedure Disable_FIFO_Empty_Interrupt (This : in out Three_Axis_Gyroscope);
+
+   --  Interrupt 1 facilities
 
    type Sample_Counter is mod 2 ** 6;
 
@@ -352,130 +478,6 @@ package STM32F4.L3DG20 is
    end record;
 
    function Interrupt1_Source (This : Three_Axis_Gyroscope) return Interrupt1_Sources;
-
-   I_Am_L3GD20 : constant := 16#D4#;
-
-   function Device_Id (This : Three_Axis_Gyroscope) return Byte;
-   --  Will return I_Am_L3GD20 when functioning properly
-
-   type Gyro_Data_Status is record
-      ZYX_Overrun   : Boolean;
-      Z_Overrun     : Boolean;
-      Y_Overrun     : Boolean;
-      X_Overrun     : Boolean;
-      ZYX_Available : Boolean;
-      Z_Available   : Boolean;
-      Y_Available   : Boolean;
-      X_Available   : Boolean;
-   end record
-     with Size => 8;
-
-   for Gyro_Data_Status use record
-      ZYX_Overrun   at 0 range 7 .. 7;
-      Z_Overrun     at 0 range 6 .. 6;
-      Y_Overrun     at 0 range 5 .. 5;
-      X_Overrun     at 0 range 4 .. 4;
-      ZYX_Available at 0 range 3 .. 3;
-      Z_Available   at 0 range 2 .. 2;
-      Y_Available   at 0 range 1 .. 1;
-      X_Available   at 0 range 0 .. 0;
-   end record;
-
-   function Data_Status (This : Three_Axis_Gyroscope) return Gyro_Data_Status with Inline;
-
-   type Angle_Rate is new Integer_16;
-
-   type Angle_Rates is record
-      X : Angle_Rate;  -- pitch, per Figure 2, pg 7 of the Datasheet
-      Y : Angle_Rate;  -- roll
-      Z : Angle_Rate;  -- yaw
-   end record with Size => 3 * 16;
-
-   for Angle_Rates use record
-      X at 0 range 0 .. 15;
-      Y at 2 range 0 .. 15;
-      Z at 4 range 0 .. 15;
-   end record;
-   --  confirming, but required, eg for matching FIFO content format
-
-   procedure Get_Raw_Angle_Rates
-     (This  : Three_Axis_Gyroscope;
-      Rates : out Angle_Rates);
-   --  Returns the latest data, swapping bytes if required by the endianess
-   --  selected by a previous call to Configure.
-   --  NB: does NOT check whether the gyro status indicates data are ready.
-   --  NB: does NOT apply any sensitity scaling.
-
-   function Full_Scale_Sensitivity (This : Three_Axis_Gyroscope) return Float;
-   --  Returns the sensitivity per LSB based on the Full_Scale_Selection
-   --  specified to procedure Configure. Used to scale raw angle rates. Note
-   --  that the values are already in terms of millidegrees per second per
-   --  digit, so to use these values you should multiply, rather than divide.
-   --  NB: These values are not measured on the specific device on the board
-   --  in use. Instead, they are statistical averages determined at the factory
-   --  for this component family, so you will likely need to tweak them a bit.
-
-   procedure Reboot (This : Three_Axis_Gyroscope);
-
-   type FIFO_Modes is
-     (L3GD20_Bypass_Mode,
-      L3GD20_FIFO_Mode,
-      L3GD20_Stream_Mode,
-      L3GD20_Stream_To_FIFO_Mode,
-      L3GD20_Bypass_To_Stream_Mode)
-     with Size => 8;
-
-   for FIFO_Modes use  -- confirming
-     (L3GD20_Bypass_Mode           => 2#000#,
-      L3GD20_FIFO_Mode             => 2#001#,
-      L3GD20_Stream_Mode           => 2#010#,
-      L3GD20_Stream_To_FIFO_Mode   => 2#011#,
-      L3GD20_Bypass_To_Stream_Mode => 2#100#);
-
-   procedure Set_FIFO_Mode (This : in out Three_Axis_Gyroscope; Mode : FIFO_Modes);
-
-   procedure Enable_FIFO (This : in out Three_Axis_Gyroscope);
-
-   procedure Disable_FIFO (This : in out Three_Axis_Gyroscope);
-
-   subtype FIFO_Level is Integer range 0 .. 31;
-
-   procedure Set_FIFO_Watermark (This : in out Three_Axis_Gyroscope; Level : FIFO_Level);
-
-   type Angle_Rates_FIFO_Buffer is array (FIFO_Level range <>) of Angle_Rates with
-     Component_Size => 48,
-     Alignment      => Angle_Rate'Alignment;
-
-   procedure Get_Raw_Angle_Rates_FIFO
-     (This   : in out Three_Axis_Gyroscope;
-      Buffer : out Angle_Rates_FIFO_Buffer);
-   --  Returns the latest raw data in the FIFO, swapping bytes if required by
-   --  the endianess selected by a previous call to Configure. Fills the entire
-   --  buffer passed.
-   --  NB: does NOT apply any sensitity scaling.
-
-   function Current_FIFO_Depth (This : Three_Axis_Gyroscope) return FIFO_Level;
-   --  The number of unread entries currently in the hardware FIFO
-
-   function FIFO_Below_Watermark (This : Three_Axis_Gyroscope) return Boolean;
-
-   function FIFO_Empty (This : Three_Axis_Gyroscope) return Boolean;
-
-   function FIFO_Overrun (This : Three_Axis_Gyroscope) return Boolean;
-
-   --  Interrupt 2 controls
-
-   procedure Enable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope);
-   procedure Disable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope);
-
-   procedure Enable_FIFO_Watermark_Interrupt (This : in out Three_Axis_Gyroscope);
-   procedure Disable_FIFO_Watermark_Interrupt (This : in out Three_Axis_Gyroscope);
-
-   procedure Enable_Overrun_Interrupt (This : in out Three_Axis_Gyroscope);
-   procedure Disable_Overrun_Interrupt (This : in out Three_Axis_Gyroscope);
-
-   procedure Enable_FIFO_Empty_Interrupt (This : in out Three_Axis_Gyroscope);
-   procedure Disable_FIFO_Empty_Interrupt (This : in out Three_Axis_Gyroscope);
 
 private
 
