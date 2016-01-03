@@ -871,7 +871,7 @@ package body STM32.L3DG20 is
    begin
       Read (This, FIFO_SRC, Result);
       Result := Result and FIFO_Empty_Bit;
-      return Result = 1;
+      return Result = FIFO_Empty_Bit;
    end FIFO_Empty;
 
    ------------------
@@ -883,7 +883,7 @@ package body STM32.L3DG20 is
    begin
       Read (This, FIFO_SRC, Result);
       Result := Result and FIFO_Overrun_Bit;
-      return Result = 1;
+      return Result = FIFO_Overrun_Bit;
    end FIFO_Overrun;
 
    ---------------------------------
