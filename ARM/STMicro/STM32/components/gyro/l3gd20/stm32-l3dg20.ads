@@ -292,11 +292,11 @@ package STM32.L3DG20 is
      with Size => 8;
 
    for FIFO_Modes use  -- confirming
-     (L3GD20_Bypass_Mode           => 2#000#,
-      L3GD20_FIFO_Mode             => 2#001#,
-      L3GD20_Stream_Mode           => 2#010#,
-      L3GD20_Stream_To_FIFO_Mode   => 2#011#,
-      L3GD20_Bypass_To_Stream_Mode => 2#100#);
+     (L3GD20_Bypass_Mode           => 2#0000_0000#,
+      L3GD20_FIFO_Mode             => 2#0010_0000#,
+      L3GD20_Stream_Mode           => 2#0100_0000#,
+      L3GD20_Stream_To_FIFO_Mode   => 2#0110_0000#,
+      L3GD20_Bypass_To_Stream_Mode => 2#1000_0000#);
 
    procedure Set_FIFO_Mode (This : in out Three_Axis_Gyroscope; Mode : FIFO_Modes);
 
