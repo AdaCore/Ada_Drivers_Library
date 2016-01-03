@@ -330,6 +330,8 @@ package STM32.L3DG20 is
 
    --  Interrupt 2 controls
 
+   procedure Disable_Int2_Interrupts (This : in out Three_Axis_Gyroscope);
+
    procedure Enable_Data_Ready_Interrupt  (This : in out Three_Axis_Gyroscope);
    procedure Disable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope);
 
@@ -343,6 +345,8 @@ package STM32.L3DG20 is
    procedure Disable_FIFO_Empty_Interrupt (This : in out Three_Axis_Gyroscope);
 
    --  Interrupt 1 facilities
+
+   procedure Disable_Int1_Interrupts (This : in out Three_Axis_Gyroscope);
 
    type Sample_Counter is mod 2 ** 6;
 
@@ -475,6 +479,9 @@ package STM32.L3DG20 is
    --  See App Note 4505, pg 9
 
    procedure Reboot (This : Three_Axis_Gyroscope);
+
+   procedure Reset (This : in out Three_Axis_Gyroscope);
+   --  writes default values to all writable registers
 
    I_Am_L3GD20 : constant := 16#D4#;
 
