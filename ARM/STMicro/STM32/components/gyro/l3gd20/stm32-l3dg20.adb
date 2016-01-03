@@ -472,6 +472,17 @@ package body STM32.L3DG20 is
       return Result;
    end Device_Id;
 
+   -----------------
+   -- Temperature --
+   -----------------
+
+   function Temperature (This : Three_Axis_Gyroscope) return Byte is
+      Result : Byte;
+   begin
+      Read (This, OUT_Temp, Result);
+      return Result;
+   end Temperature;
+
    ------------
    -- Reboot --
    ------------
