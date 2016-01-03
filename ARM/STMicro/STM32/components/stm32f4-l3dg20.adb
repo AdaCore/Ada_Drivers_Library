@@ -888,6 +888,30 @@ package body STM32F4.L3DG20 is
       Write (This, CTRL_REG3, Ctrl3);
    end Enable_FIFO_Watermark_Interrupt;
 
+   -----------------------------
+   -- Disable_Int1_Interrupts --
+   -----------------------------
+
+   procedure Disable_Int1_Interrupts (This : in out Three_Axis_Gyroscope) is
+      Ctrl3 : Byte;
+   begin
+      Read (This, CTRL_REG3, Ctrl3);
+      Ctrl3 := Ctrl3 and 2#0001_1111#;
+      Write (This, CTRL_REG3, Ctrl3);
+   end Disable_Int1_Interrupts;
+
+   -----------------------------
+   -- Disable_Int2_Interrupts --
+   -----------------------------
+
+   procedure Disable_Int2_Interrupts (This : in out Three_Axis_Gyroscope) is
+      Ctrl3 : Byte;
+   begin
+      Read (This, CTRL_REG3, Ctrl3);
+      Ctrl3 := Ctrl3 and 2#1111_0000#;
+      Write (This, CTRL_REG3, Ctrl3);
+   end Disable_Int2_Interrupts;
+
    --------------------------------------
    -- Disable_FIFO_Watermark_Interrupt --
    --------------------------------------
@@ -960,5 +984,29 @@ package body STM32F4.L3DG20 is
    begin
       X := Bswap_16 (X);
    end Swap2;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : in out Three_Axis_Gyroscope) is
+   begin
+      --  per the Datasheet, Table 17, pg 29
+      Write (This, CTRL_REG1, 2#0000_0111#);
+      Write (This, CTRL_REG2, 0);
+      Write (This, CTRL_REG3, 0);
+      Write (This, CTRL_REG4, 0);
+      Write (This, CTRL_REG5, 0);
+      Write (This, Reference, 0);
+      Write (This, FIFO_CTRL, 0);
+      Write (This, INT1_CFG, 0);
+      Write (This, INT1_TSH_ZL, 0);
+      Write (This, INT1_TSH_ZH, 0);
+      Write (This, INT1_TSH_YL, 0);
+      Write (This, INT1_TSH_YH, 0);
+      Write (This, INT1_TSH_XL, 0);
+      Write (This, INT1_TSH_XH, 0);
+      Write (This, INT1_Duration, 0);
+   end Reset;
 
 end STM32F4.L3DG20;
