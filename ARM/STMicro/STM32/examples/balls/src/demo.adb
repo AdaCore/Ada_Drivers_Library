@@ -112,7 +112,7 @@ procedure Demo is
    function Collides (M1, M2 : Moving_Object) return Boolean;
    procedure Handle_Collision (M1, M2 : in out Moving_Object);
 
-   Objects      : array (1 .. 40) of Moving_Object;
+   Objects      : array (1 .. 15) of Moving_Object;
 
 --     LCD_Config   : LCD_Configuration;
    FG_Buffer    : DMA2D_Buffer;
@@ -214,6 +214,8 @@ procedure Demo is
 
       Sp1     : Vector;
       Sp2     : Vector;
+
+      --  Simplified mass: equal to R
       Mass1   : constant Float := Float (M1.R);
       Mass2   : constant Float := Float (M2.R);
       dT      : Float := 0.0;
@@ -245,38 +247,53 @@ procedure Demo is
       Tan_Sp1 := M1.Speed - Proj1;
       Tan_Sp2 := M2.Speed - Proj2;
 
-      --  Should take masses into account:
-      --  sp1 = ((m1 - m2)* sp1 + 2 * m2 * sp2) / (m1 + m2)
+      --  Transfer the projected speed from one object to the other
       Sp1 := (Proj1 * (Mass1 - Mass2) + Proj2 * 2.0 * Mass2) / (Mass1 + Mass2);
       Sp2 := (Proj2 * (Mass2 - Mass1) + Proj1 * 2.0 * Mass1) / (Mass1 + Mass2);
 
+      --  Calculate the final speed of the objects:
+      --  initial tangantial speed + calculated projected speed
       M1.Speed := Sp1 + Tan_Sp1;
       M2.Speed := Sp2 + Tan_Sp2;
 
+      --  Now replay from the time of the impact with the new speed
       M1.Center := M1.Center + M1.Speed * dT;
       M2.Center := M2.Center + M2.Speed * dT;
       M1.N_Hue  := M1.N_Hue + 32;
       M2.N_Hue  := M2.N_Hue + 32;
    end Handle_Collision;
 
-   procedure Init_Balls is
+   ----------------
+   -- Init_Balls --
+   ----------------
+
+   procedure Init_Balls
+   is
+      Size   : constant Integer :=
+                 Natural'Min (Pixel_Width, Pixel_Height);
+      R_Min  : constant Natural :=
+                 Size / 24;
+      R_Var  : constant Word :=
+                 Word (R_Min) * 4 / 5;
+      SP_Max : constant Integer :=
+                 Size / 7;
    begin
       for J in Objects'Range loop
          loop
             declare
                O     : Moving_Object renames Objects (J);
                R     : constant Integer :=
-                         Integer (RNG.Interrupts.Random mod 8) + 10;
+                         Integer (RNG.Interrupts.Random mod R_Var) + R_Min;
                Col   : constant Byte :=
                          Byte (RNG.Interrupts.Random mod 255);
                X_Raw : constant Word :=
-                         RNG.Interrupts.Random mod Word (Pixel_Width - R);
+                         (RNG.Interrupts.Random mod Word (Pixel_Width - 2 * R)) + Word (R);
                Y_Raw : constant Word :=
-                         RNG.Interrupts.Random mod Word (Pixel_Height - R);
+                         (RNG.Interrupts.Random mod Word (Pixel_Height - 2 * R)) + Word (R);
                Sp_X  : constant Integer :=
-                         Integer (RNG.Interrupts.Random mod 50) - 25;
+                         Integer (RNG.Interrupts.Random mod Word (SP_Max * 2 + 1)) - SP_Max;
                Sp_Y  : constant Integer :=
-                         Integer (RNG.Interrupts.Random mod 50) - 25;
+                         Integer (RNG.Interrupts.Random mod Word (SP_Max * 2 + 1)) - SP_Max;
                Redo  : Boolean := False;
 
             begin
@@ -305,10 +322,6 @@ procedure Demo is
    end Init_Balls;
 
 begin
---     LCD_Config :=
---       (Layer_Background => Layer_Double_Buffer,
---        Layer_Foreground => Layer_Inactive,
---        Pixel_Fmt        => DMA2D.ARGB1555);
    STM32.LCD.Initialize (Pixel_Fmt_ARGB1555);
    STM32.DMA2D.Interrupt.Initialize;
    Double_Buffer.Initialize ((Layer_Background => Layer_Double_Buffer,
@@ -322,7 +335,7 @@ begin
 
    loop
       FG_Buffer := Double_Buffer.Get_Hidden_Buffer (Background);
-      STM32.DMA2D.DMA2D_Fill (FG_Buffer, White);
+      STM32.DMA2D.DMA2D_Fill (FG_Buffer, Black);
 
       for M of Objects loop
          if M.N_Hue /= M.Col.Hue then
@@ -336,21 +349,23 @@ begin
 --        end if;
 
       for O of Objects loop
-         if (O.Speed (X) < 0.0 and then I (O.Center (X)) < O.R)
+         O.Center := O.Center + O.Speed;
+
+         if (O.Speed (X) < 0.0 and then I (O.Center (X)) <= O.R)
            or else (O.Speed (X) > 0.0
                     and then I (O.Center (X)) + O.R >= Pixel_Width - 1)
          then
             O.Speed (X) := -O.Speed (X);
+            O.Center (X) := O.Center (X) + O.Speed (X);
          end if;
 
-         if (O.Speed (Y) < 0.0 and then I (O.Center (Y)) < O.R)
+         if (O.Speed (Y) < 0.0 and then I (O.Center (Y)) <= O.R)
            or else (O.Speed (Y) > 0.0
                     and then I (O.Center (Y)) + O.R >= Pixel_Height - 1)
          then
             O.Speed (Y) := -O.Speed (Y);
+            O.Center (Y) := O.Center (Y) + O.Speed (Y);
          end if;
-
-         O.Center := O.Center + O.Speed;
       end loop;
 
       for J in Objects'First .. Objects'Last - 1 loop
