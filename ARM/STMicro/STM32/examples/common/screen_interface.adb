@@ -36,12 +36,13 @@ with STM32.Touch_Panel;
 with STM32;                 use STM32;
 with STM32.DMA2D.Polling;   use STM32.DMA2D;
 with STM32.LCD;             use STM32.LCD;
+with Double_Buffer;         use Double_Buffer;
 
 package body Screen_Interface is
 
-   Draw_Layer : LCD_Layer := Layer1;
-
    Initialized : Boolean := False;
+
+   Current_Buffer : DMA2D_Buffer;
 
    ----------------
    -- Initialize --
@@ -52,18 +53,18 @@ package body Screen_Interface is
       if not Initialized then
          Initialized := True;
 
-         STM32.DMA2D.Polling.Initialize;
          STM32.LCD.Initialize;
          STM32.LCD.Set_Orientation (Portrait);
+         STM32.DMA2D.Polling.Initialize;
          STM32.Touch_Panel.Initialize;
+         Double_Buffer.Initialize
+           ((Layer_Background => Layer_Single_Buffer,
+             Layer_Foreground => Layer_Inactive));
 
          --  At init the draw layer is the one displayed, this will keep
          --  compatibility with projects not doing double buffering.
-
-         Draw_Layer := Layer1;
+         Current_Buffer := Double_Buffer.Get_Visible_Buffer (Layer1);
          Fill_Screen (Black);
-         Set_Layer_State (Layer1, Enabled);
-         Set_Layer_State (Layer2, Disabled);
       end if;
    end Initialize;
 
@@ -73,16 +74,8 @@ package body Screen_Interface is
 
    procedure Swap_Buffers is
    begin
-      if Draw_Layer = Layer1 then
-         Draw_Layer := Layer2;
-         Set_Layer_State (Layer1, Enabled);
-         Set_Layer_State (Layer2, Disabled);
-      else
-         Draw_Layer := Layer1;
-         Set_Layer_State (Layer1, Disabled);
-         Set_Layer_State (Layer2, Enabled);
-      end if;
-      Reload_Config (Immediate => False);
+      Double_Buffer.Swap_Buffers (VSync => True);
+      Current_Buffer := Double_Buffer.Get_Hidden_Buffer;
    end Swap_Buffers;
 
    -------------------------
@@ -113,7 +106,7 @@ package body Screen_Interface is
 
    procedure Set_Pixel (P : Point; Col : Color) is
    begin
-      STM32.LCD.Set_Pixel (Draw_Layer, P.X, P.Y, Col);
+      STM32.DMA2D.DMA2D_Set_Pixel (Current_Buffer, P.X, P.Y, Word (Col));
    end Set_Pixel;
 
    ---------------
@@ -122,7 +115,7 @@ package body Screen_Interface is
 
    procedure Set_Pixel (X, Y : Natural; Col : Color) is
    begin
-      STM32.LCD.Set_Pixel (Draw_Layer, X, Y, Col);
+      STM32.DMA2D.DMA2D_Set_Pixel (Current_Buffer, X, Y, Word (Col));
    end Set_Pixel;
 
    -----------------
@@ -133,13 +126,8 @@ package body Screen_Interface is
    begin
       --  ??? Use DMA2D to fill the buffer
       DMA2D_Fill
-        (Buffer =>
-           (Addr       => STM32.LCD.Current_Frame_Buffer (Draw_Layer),
-            Width      => STM32.LCD.Pixel_Width,
-            Height     => STM32.LCD.Pixel_Height,
-            Color_Mode => STM32.LCD.Get_Pixel_Fmt,
-            Swap_X_Y   => STM32.LCD.SwapXY),
-         Color => Word (Col));
+        (Buffer => Current_Buffer,
+         Color  => Word (Col));
    end Fill_Screen;
 
    --------------

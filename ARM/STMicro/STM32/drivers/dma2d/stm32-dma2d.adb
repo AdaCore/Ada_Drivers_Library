@@ -150,6 +150,26 @@ package body STM32.DMA2D is
       Height      : Integer;
       Synchronous : Boolean := False)
    is
+   begin
+      DMA2D_Fill_Rect
+        (Buffer,
+         To_OCOLR (Color, Buffer.Color_Mode),
+         X, Y, Width, Height, Synchronous);
+   end DMA2D_Fill_Rect;
+
+   ---------------------
+   -- DMA2D_Fill_Rect --
+   ---------------------
+
+   procedure DMA2D_Fill_Rect
+     (Buffer      : DMA2D_Buffer;
+      Color       : Word;
+      X           : Integer;
+      Y           : Integer;
+      Width       : Integer;
+      Height      : Integer;
+      Synchronous : Boolean := False)
+   is
       function Conv is new Ada.Unchecked_Conversion (Word, OCOLR_Register);
    begin
       if Buffer.Swap_X_Y then
@@ -181,7 +201,7 @@ package body STM32.DMA2D is
             DMA2D_Periph.OPFCCR :=
               (CM     => DMA2D_Color_Mode'Enum_Rep (Buffer.Color_Mode),
                others => <>);
-            DMA2D_Periph.OCOLR  := Conv (To_OCOLR (Color, Buffer.Color_Mode));
+            DMA2D_Periph.OCOLR  := Conv (Color);
             DMA2D_Periph.OMAR   := Off;
             DMA2D_Periph.OOR.LO := UInt14 (Buffer.Width -  Width);
             DMA2D_Periph.NLR :=
@@ -414,6 +434,21 @@ package body STM32.DMA2D is
       Color       : DMA2D_Color;
       Synchronous : Boolean := False)
    is
+   begin
+      DMA2D_Set_Pixel
+        (Buffer, X, Y, To_OCOLR (Color, Buffer.Color_Mode), Synchronous);
+   end DMA2D_Set_Pixel;
+
+   ---------------------
+   -- DMA2D_Set_Pixel --
+   ---------------------
+
+   procedure DMA2D_Set_Pixel
+     (Buffer      : DMA2D_Buffer;
+      X, Y        : Integer;
+      Color       : Word;
+      Synchronous : Boolean := False)
+   is
       function Conv is new Ada.Unchecked_Conversion (Word, OCOLR_Register);
       X0   : constant Integer := (if Buffer.Swap_X_Y then Y else X);
       Y0   : constant Integer := (if Buffer.Swap_X_Y then Buffer.Width - X else Y);
@@ -435,7 +470,7 @@ package body STM32.DMA2D is
 
       DMA2D_Periph.CR.MODE   := DMA2D_MODE'Enum_Rep (R2M);
       DMA2D_Periph.OPFCCR.CM := As_UInt3 (Buffer.Color_Mode);
-      DMA2D_Periph.OCOLR     := Conv (To_OCOLR (Color, Buffer.Color_Mode));
+      DMA2D_Periph.OCOLR     := Conv (Color);
       DMA2D_Periph.OMAR      := To_Word (Buffer.Addr + Off);
       DMA2D_Periph.OOR       := (LO => 1, others => <>);
       DMA2D_Periph.NLR       := (NL => 1, PL => 1, others => <>);

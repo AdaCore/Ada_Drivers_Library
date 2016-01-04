@@ -314,20 +314,18 @@ package body Tracks_Display is
    begin
       if (Track.Entry_Sign.Coord /= (0, 0)) then
          if not Track.Entry_Sign.Disabled then
-            Draw_Circle
+            Fill_Circle
               (Screen_Buffer,
                As_Display_Point (Track.Entry_Sign.Coord),
                Entry_Sign_Size / 2,
-               Entry_Sign_Pixel (Track.Entry_Sign.Color),
-               True);
+               Entry_Sign_Pixel (Track.Entry_Sign.Color));
          else
             --  Draw a black circle to "erase" the previous drawing
-            Draw_Circle
+            Fill_Circle
               (Screen_Buffer,
                As_Display_Point (Track.Entry_Sign.Coord),
                Entry_Sign_Size / 2,
-               Bitmapped_Drawing.Black,
-               True);
+               Bitmapped_Drawing.Black);
          end if;
       end if;
    end Draw_Sign;

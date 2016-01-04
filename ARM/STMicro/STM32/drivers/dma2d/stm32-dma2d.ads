@@ -174,6 +174,13 @@ package STM32.DMA2D is
       Color       : DMA2D_Color;
       Synchronous : Boolean := False);
 
+   procedure DMA2D_Set_Pixel
+     (Buffer      : DMA2D_Buffer;
+      X, Y        : Integer;
+      Color       : Word;
+      Synchronous : Boolean := False);
+   --  Same as above, using the destination buffer native color representation
+
    procedure DMA2D_Set_Pixel_Blend
      (Buffer      : DMA2D_Buffer;
       X, Y        : Integer;
@@ -189,6 +196,16 @@ package STM32.DMA2D is
       Height      : Integer;
       Synchronous : Boolean := False);
    --  Fill the specified area of the buffer with 'Color'
+
+   procedure DMA2D_Fill_Rect
+     (Buffer      : DMA2D_Buffer;
+      Color       : Word;
+      X           : Integer;
+      Y           : Integer;
+      Width       : Integer;
+      Height      : Integer;
+      Synchronous : Boolean := False);
+   --  Same as above, using the destination buffer native color representation
 
    procedure DMA2D_Draw_Rect
      (Buffer    : DMA2D_Buffer;
