@@ -5,9 +5,13 @@ package body Init is
    type LCD_Polarity is
      (Polarity_Active_Low,
       Polarity_Active_High) with Size => 1;
+   type LCD_PC_Polarity is
+     (Input_Pixel_Clock,
+      Inverted_Input_Pixel_Clock) with Size => 1;
    pragma Warnings (On, "* is not referenced");
 
    function To_Bit is new Ada.Unchecked_Conversion (LCD_Polarity, Bit);
+   function To_Bit is new Ada.Unchecked_Conversion (LCD_PC_Polarity, Bit);
 
    --  Extracted from STM32F429x.LTDC
    type Layer_Type is record
@@ -147,6 +151,11 @@ package body Init is
    begin
       RCC_Periph.APB2ENR.LTDCEN := 1;
 
+      LTDC_Periph.GCR.VSPOL := To_Bit (Polarity_Active_Low);
+      LTDC_Periph.GCR.HSPOL := To_Bit (Polarity_Active_Low);
+      LTDC_Periph.GCR.DEPOL := To_Bit (Polarity_Active_Low);
+      LTDC_Periph.GCR.PCPOL := To_Bit (Input_Pixel_Clock);
+
       if DivR = 2 then
          DivR_Val := PLLSAI_DIV2;
       elsif DivR = 4 then
@@ -166,26 +175,31 @@ package body Init is
          DivR => DivR_Val);
       Enable_PLLSAI;
 
-      --  Horizontal timing configuration
-      LTDC_Periph.SSCR.HSW := SSCR_HSW_Field (LCD_HSync - 1);
-      LTDC_Periph.BPCR.AHBP := BPCR_AHBP_Field (LCD_HSync + LCD_HBP - 1);
-      LTDC_Periph.AWCR.AAW :=
-        AWCR_AAW_Field (LCD_HSync + LCD_HBP + LCD_Width - 1);
-      LTDC_Periph.TWCR.TOTALW :=
-        TWCR_TOTALW_Field (LCD_HSync + LCD_HBP + LCD_Width + LCD_HFP - 1);
+      --  Synchronization size
+      LTDC_Periph.SSCR :=
+        (HSW => SSCR_HSW_Field (LCD_HSync - 1),
+         VSH => SSCR_VSH_Field (LCD_VSync - 1),
+         others => <>);
 
-      --  Vertical timing configuration
-      LTDC_Periph.SSCR.VSH := SSCR_VSH_Field (LCD_VSync - 1);
-      LTDC_Periph.BPCR.AVBP := BPCR_AVBP_Field (LCD_VBP + LCD_VSync - 1);
-      LTDC_Periph.AWCR.AAH :=
-        AWCR_AAH_FIeld (LCD_Height + LCD_VSync + LCD_VBP - 1);
-      LTDC_Periph.TWCR.TOTALH :=
-        TWCR_TOTALH_Field (LCD_Height + LCD_VSync + LCD_VBP + LCD_VFP - 1);
+      --  Accumulated Back Porch
+      LTDC_Periph.BPCR :=
+        (AHBP => BPCR_AHBP_Field (LCD_HSync + LCD_HBP - 1),
+         AVBP => BPCR_AVBP_Field (LCD_VSync + LCD_VBP - 1),
+         others => <>);
 
-      LTDC_Periph.GCR.VSPOL := To_Bit (Polarity_Active_Low);
-      LTDC_Periph.GCR.HSPOL := To_Bit (Polarity_Active_Low);
-      LTDC_Periph.GCR.DEPOL := To_Bit (Polarity_Active_Low);
-      LTDC_Periph.GCR.PCPOL := To_Bit (Polarity_Active_Low);
+      --  Accumulated Active Width/Height
+      LTDC_Periph.AWCR :=
+        (AAW => AWCR_AAW_Field (LCD_HSync + LCD_HBP + LCD_Width - 1),
+         AAH => AWCR_AAH_FIeld (LCD_VSync + LCD_VBP + LCD_Height - 1),
+         others => <>);
+
+      --  VTotal Width/Height
+      LTDC_Periph.TWCR :=
+        (TOTALW =>
+           TWCR_TOTALW_Field (LCD_HSync + LCD_HBP + LCD_Width + LCD_HFP - 1),
+         TOTALH =>
+           TWCR_TOTALH_Field (LCD_VSync + LCD_VBP + LCD_Height + LCD_VFP - 1),
+         others => <>);
 
       --  Background color to black
       LTDC_Periph.BCCR.BC := 0;
@@ -205,35 +219,28 @@ package body Init is
       BF1, BF2 : UInt3)
    is
       L    : constant Layer_Access := Get_Layer (Layer);
-      WHPC : L1WHPCR_Register := L.LWHPCR;
-      WVPC : L1WVPCR_Register := L.LWVPCR;
-      DCC  : L1DCCR_Register  := L.LDCCR;
-      BFC  : L1BFCR_Register  := L.LBFCR;
       CFBL : L1CFBLR_Register := L.LCFBLR;
    begin
       --  Horizontal start and stop = sync + Back Porch
-      WHPC.WHSTPOS := UInt12 (LTDC_Periph.BPCR.AHBP) + 1;
-      WHPC.WHSPPOS := UInt12 (LCD_Width) + UInt12 (LTDC_Periph.BPCR.AHBP);
-      L.LWHPCR := WHPC;
+      L.LWHPCR :=
+        (WHSTPOS => UInt12 (LCD_HSync + LCD_HBP),
+         WHSPPOS => UInt12 (LCD_HSync + LCD_HBP + LCD_Width - 1),
+         others  => <>);
 
       --  Vertical start and stop
-      WVPC.WVSTPOS := UInt11 (LTDC_Periph.BPCR.AVBP) + 1;
-      WVPC.WVSPPOS := UInt11 (LCD_Height) + UInt11 (LTDC_Periph.BPCR.AVBP);
-      L.LWVPCR := WVPC;
+      L.LWVPCR :=
+        (WVSTPOS => UInt11 (LCD_VSync + LCD_VBP),
+         WVSPPOS => UInt11 (LCD_VSync + LCD_VBP + LCD_Height - 1),
+         others  => <>);
 
       L.LPFCR.PF := Pixel_Format'Enum_Rep (Config);
 
       L.LCACR.CONSTA := 255;
 
-      DCC.DCBLUE  := 0;
-      DCC.DCGREEN := 0;
-      DCC.DCRED   := 0;
-      DCC.DCALPHA := 0;
-      L.LDCCR := DCC;
+      L.LDCCR := (others => 0);
 
-      BFC.BF1 := BF1;
-      BFC.BF2 := BF2;
-      L.LBFCR := BFC;
+      L.LBFCR.BF1 := BF1;
+      L.LBFCR.BF2 := BF2;
 
       CFBL.CFBLL := UInt13 (LCD_Width * Pixel_Size (Config)) + 3;
       CFBL.CFBP := UInt13 (LCD_Width * Pixel_Size (Config));
