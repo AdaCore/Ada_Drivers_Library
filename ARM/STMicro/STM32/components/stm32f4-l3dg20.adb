@@ -543,7 +543,7 @@ package body STM32F4.L3DG20 is
    --------------------------
 
    procedure Configure_Interrupt1
-     (This : in out Three_Axis_Gyroscope;
+     (This           : in out Three_Axis_Gyroscope;
       Triggers       : Threshold_Event_List;
       Latched        : Boolean := False;
       Active_Edge    : Interrupt1_Active_Edge := L3GD20_Interrupt1_High_Edge;
