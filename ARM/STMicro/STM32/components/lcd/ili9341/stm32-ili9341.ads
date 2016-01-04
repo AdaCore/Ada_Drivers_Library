@@ -126,9 +126,9 @@ package STM32.ILI9341 is
 
    --  These values reflect the currently selected orientation
 
-   function Current_Width return Natural;
+   function Current_Width return Natural with Inline;
 
-   function Current_Height return Natural;
+   function Current_Height return Natural with Inline;
 
    function Current_Orientation return Orientations;
 
