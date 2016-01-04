@@ -170,13 +170,13 @@ package STM32.DMA2D is
 
    procedure DMA2D_Set_Pixel
      (Buffer      : DMA2D_Buffer;
-      X, Y        : Natural;
+      X, Y        : Integer;
       Color       : DMA2D_Color;
       Synchronous : Boolean := False);
 
    procedure DMA2D_Set_Pixel_Blend
      (Buffer      : DMA2D_Buffer;
-      X, Y        : Natural;
+      X, Y        : Integer;
       Color       : DMA2D_Color;
       Synchronous : Boolean := False);
 

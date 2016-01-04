@@ -409,22 +409,28 @@ package body STM32.DMA2D is
    ---------------------
 
    procedure DMA2D_Set_Pixel
-     (Buffer    : DMA2D_Buffer;
-      X, Y      : Natural;
-      Color     : DMA2D_Color;
+     (Buffer      : DMA2D_Buffer;
+      X, Y        : Integer;
+      Color       : DMA2D_Color;
       Synchronous : Boolean := False)
    is
       function Conv is new Ada.Unchecked_Conversion (Word, OCOLR_Register);
-      X0   : constant Natural := (if Buffer.Swap_X_Y then Y else X);
-      Y0   : constant Natural := (if Buffer.Swap_X_Y then Buffer.Width - X else Y);
+      X0   : constant Integer := (if Buffer.Swap_X_Y then Y else X);
+      Y0   : constant Integer := (if Buffer.Swap_X_Y then Buffer.Width - X else Y);
       W    : constant Natural :=
                (if Buffer.Swap_X_Y then Buffer.Height else Buffer.Width);
-      Idx  : constant Natural := (Y0 * W) + X0;
+      Idx  : constant Integer := (Y0 * W) + X0;
       BPP  : constant Natural := Bytes_Per_Pixel (Buffer.Color_Mode);
       Off  : constant System.Storage_Elements.Storage_Offset :=
                System.Storage_Elements.Storage_Offset (Idx * BPP);
       Dead : Boolean := False with Unreferenced;
    begin
+      if X < 0 or else Y < 0
+        or else X >= Buffer.Width or else Y >= Buffer.Height
+      then
+         return;
+      end if;
+
       DMA2D_Wait_Transfer.all;
 
       DMA2D_Periph.CR.MODE   := DMA2D_MODE'Enum_Rep (R2M);
@@ -446,7 +452,7 @@ package body STM32.DMA2D is
 
    procedure DMA2D_Set_Pixel_Blend
      (Buffer      : DMA2D_Buffer;
-      X, Y        : Natural;
+      X, Y        : Integer;
       Color       : DMA2D_Color;
       Synchronous : Boolean := False)
    is
@@ -460,6 +466,12 @@ package body STM32.DMA2D is
                System.Storage_Elements.Storage_Offset (Idx * BPP);
       Dead : Boolean := False with Unreferenced;
    begin
+      if X < 0 or else Y < 0
+        or else X >= Buffer.Width or else Y >= Buffer.Height
+      then
+         return;
+      end if;
+
       DMA2D_Wait_Transfer.all;
 
       --  PFC and blending
