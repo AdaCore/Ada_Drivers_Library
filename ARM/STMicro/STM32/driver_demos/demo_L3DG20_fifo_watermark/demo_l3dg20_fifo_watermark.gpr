@@ -10,7 +10,7 @@ project Demo_L3DG20_FIFO_Watermark is
 
    for Object_Dir use "obj/" & Build_Mode;
 
-   for Runtime ("Ada") use "/gnatpro/my_runtimes/ravenscar-full-stm32f429";
+   for Runtime ("Ada") use "ravenscar-full-stm32f4";
 
    for Target use "arm-eabi";
 
