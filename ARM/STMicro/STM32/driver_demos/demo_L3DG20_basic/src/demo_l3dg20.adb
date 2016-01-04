@@ -106,6 +106,8 @@ procedure Demo_L3DG20 is
          Enable_SPI_GPIO_Clock       => RCC.GPIOF_Clock_Enable'Access,
          Enable_Chip_Select_Clock    => RCC.GPIOC_Clock_Enable'Access);
 
+      Reset (Gyro);
+
       Configure
         (Gyro,
          Power_Mode       => L3GD20_Mode_Active,
@@ -114,7 +116,7 @@ procedure Demo_L3DG20 is
          Bandwidth        => L3GD20_Bandwidth_1,
          BlockData_Update => L3GD20_BlockDataUpdate_Continous,
          Endianness       => L3GD20_Little_Endian,
-         Full_Scale       => L3GD20_Fullscale_2000);
+         Full_Scale       => L3GD20_Fullscale_250);
 
       Configure_High_Pass_Filter
         (Gyro,
@@ -179,7 +181,7 @@ begin
 
    Sensitivity := Full_Scale_Sensitivity (Gyro);
 
-   Print ((0,0), "Calibrating");
+   Print ((0, 0), "Calibrating");
 
    Get_Gyro_Offsets (Stable, Sample_Count => 100);  -- arbitrary count
 
