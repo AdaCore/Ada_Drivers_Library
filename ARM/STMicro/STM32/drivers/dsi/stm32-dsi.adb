@@ -2,6 +2,7 @@ with Ada.Real_Time;     use Ada.Real_Time;
 
 pragma Warnings (Off, "* is an internal GNAT unit");
 with System.BB.Parameters; use System.BB.Parameters;
+with System.STM32F4;       use System.STM32F4;
 pragma Warnings (On, "* is an internal GNAT unit");
 
 with STM32_SVD.DSIHOST; use STM32_SVD.DSIHOST;
@@ -130,9 +131,10 @@ package body STM32.DSI is
          TempIDF          : constant Word :=
                               (if PLL_IN_Div > 0 then Word (PLL_IN_Div) else 1);
          Unit_Interval_x4 : constant Word :=
-                              (4_000_000 * TempIDF *
-                                    2 ** DSI_PLL_ODF'Enum_Rep (PLL_OUT_Div)) /
-                              ((Word (HSE_Clock) / 1000) * Word (PLL_N_Div));
+                              (4_000_000 * TempIDF
+                               * 2 ** DSI_PLL_ODF'Enum_Rep (PLL_OUT_Div))
+                              / ((Word (HSE_Clock (MCU_ID.DEV_ID) / 1000)) *
+                                   Word (PLL_N_Div));
       begin
          DSIHOST_Periph.DSI_WPCR1.UIX4 := UInt6 (Unit_Interval_x4);
       end;

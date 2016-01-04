@@ -16,6 +16,9 @@ project STM32 is
    type LCH_Type is ("led", "lcd");
    LCH : LCH_Type := external ("LCH", "lcd");
 
+   type Build_Type is ("Production", "Debug");
+   Build : Build_Type := external ("BUILD", "Production");
+
    for Source_Dirs use
      ("cortex_m",
       "drivers",
@@ -24,14 +27,19 @@ project STM32 is
    for Library_Name use "stm32";
    for Library_Dir use "lib/" & Board & "/" & RTS;
    for Target use "arm-eabi";
+   for Runtime ("Ada") use RTS & "-stm32f4";
 
    package Builder is
-      for Default_Switches ("Ada") use ("-g");
+      case Build is
+         when "Production" =>
+            for Default_Switches ("Ada") use ("-O3");
+         when "Debug" =>
+            for Default_Switches ("Ada") use ("-g", "-O0");
+      end case;
    end Builder;
 
    case Board is
       when "STM32F4-DISCO" =>
-         for Runtime ("Ada") use RTS & "-stm32f4";
          for Source_Dirs use Project'Source_Dirs &
             ("svd/stm32f40x",
              "boards/stm32f4_discovery",
@@ -51,7 +59,6 @@ project STM32 is
          end case;
 
       when "STM32F429-DISCO" =>
-         for Runtime ("Ada") use RTS & "-stm32f4";
          for Source_Dirs use Project'Source_Dirs &
             ("svd/stm32f429x",
              "boards/stm32f429_discovery",
@@ -79,7 +86,6 @@ project STM32 is
          end case;
 
       when "STM32F469-DISCO" =>
-         for Runtime ("Ada") use RTS & "-stm32f4";
          for Source_Dirs use Project'Source_Dirs &
             ("svd/stm32f46_79x",
              "boards/stm32f469_discovery",
@@ -108,7 +114,6 @@ project STM32 is
          end case;
 
       when "STM32F7-DISCO" =>
-         for Runtime ("Ada") use RTS & "-stm32f7";
          for Source_Dirs use Project'Source_Dirs &
             ("svd/stm32f7x",
              "boards/stm32f7_discovery",
@@ -135,8 +140,14 @@ project STM32 is
    end case;
 
    package Compiler is
-      for Default_Switches ("ada") use
-        ("-O2", "-gnatwa", "-gnatQ", "-gnatw.X");
+      case Build is
+         when "Production" =>
+            for Default_Switches ("Ada") use ("-O3");
+         when "Debug" =>
+            for Default_Switches ("Ada") use ("-g", "-O0");
+      end case;
+      for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
+        ("-gnatwa", "-gnatQ", "-gnatw.X");
    end Compiler;
 
    package Ide is
