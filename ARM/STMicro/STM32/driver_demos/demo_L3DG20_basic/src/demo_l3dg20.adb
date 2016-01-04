@@ -36,6 +36,8 @@
 --  depending on the direction of movement. Note that the values are not
 --  constant, even when the board is not moving, due to noise.
 
+--  Polling is used to determine when gyro data are available.
+
 --  NB: You may need to reset the board after downloading.
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
@@ -46,12 +48,10 @@ with STM32.Board;  use STM32.Board;
 
 with STM32.L3DG20; use STM32.L3DG20;
 
-with Bitmapped_Drawing;
-with BMP_Fonts;           use BMP_Fonts;
-with STM32.LCD;           use STM32.LCD;
-with STM32.DMA2D.Polling; use STM32.DMA2D;
 with STM32;               use STM32;
 with STM32.GPIO;          use STM32.GPIO;
+
+with Output_Utils; use Output_Utils;
 
 procedure Demo_L3DG20 is
 
@@ -63,34 +63,6 @@ procedure Demo_L3DG20 is
    Scaled_X  : Float;
    Scaled_Y  : Float;
    Scaled_Z  : Float;
-
-   --  these constants are used for displaying values on the LCD
-
-   Selected_Font : constant BMP_Font := Font12x12;
-   Line_Height   : constant Positive := Char_Height (Selected_Font) + 4;
-
-   --  the locations on the screen for the stable offsets
-   Line1_Stable : constant Natural := 0;
-   Line2_Stable : constant Natural := Line1_Stable + Line_Height;
-   Line3_Stable : constant Natural := Line2_Stable + Line_Height;
-
-   --  the locations on the screen for values after the offset is removed
-   Line1_Adjusted : constant Natural := 55; -- leaves room for printing stable values
-   Line2_Adjusted : constant Natural := Line1_Adjusted + Line_Height;
-   Line3_Adjusted : constant Natural := Line2_Adjusted + Line_Height;
-
-   --  the column number for displaying adjusted values dynamically, based on
-   --  the length of the longest static label
-   Col_Adjusted : constant Natural := String'("Adjusted X:")'Length * Char_Width (Selected_Font);
-
-   --  the locations on the screen for the final scaled values
-   Line1_Final : constant Natural := 110; -- leaves room for printing adjusted values
-   Line2_Final : constant Natural := Line1_Final + Line_Height;
-   Line3_Final : constant Natural := Line2_Final + Line_Height;
-
-   --  the column number for displaying the final values dynamically, based on
-   --  the length of the longest static label
-   Final_Column : constant Natural := String'("X:")'Length * Char_Width (Selected_Font);
 
    procedure Get_Gyro_Offsets
      (Offsets      : out Angle_Rates;
@@ -152,50 +124,6 @@ procedure Demo_L3DG20 is
       end if;
    end Configure_Gyro;
 
-   -----------------
-   -- LCD_Drawing --
-   -----------------
-
-   package LCD_Drawing renames Bitmapped_Drawing;
-
-   -----------
-   -- Print --
-   -----------
-
-   procedure Print (Location : LCD_Drawing.Display_Point;  Msg : String) is
-      --  a convenience routine for writing to the LCD
-   begin
-      LCD_Drawing.Draw_String
-        (LCD_Drawing.Screen_Buffer,
-         Location,
-         Msg,
-         Selected_Font,
-         Foreground => Bitmapped_Drawing.White,  -- arbitrary
-         Background => Bitmapped_Drawing.Black); -- arbitrary
-   end Print;
-
-   --------------------------
-   -- Print_Static_Content --
-   --------------------------
-
-   procedure Print_Static_Content is
-   begin
-      --  print the constant offsets computed when the device is motionless
-      Print ((0, Line1_Stable), "Stable X:" & Stable.X'Img);
-      Print ((0, Line2_Stable), "Stable Y:" & Stable.Y'Img);
-      Print ((0, Line3_Stable), "Stable Z:" & Stable.Z'Img);
-
-      --  print the static labels for the values after the offset is removed
-      Print ((0, Line1_Adjusted), "Adjusted X:");
-      Print ((0, Line2_Adjusted), "Adjusted Y:");
-      Print ((0, Line3_Adjusted), "Adjusted Z:");
-
-      --  print the static labels for the final values
-      Print ((0, Line1_Final), "X:");
-      Print ((0, Line2_Final), "Y:");
-      Print ((0, Line3_Final), "Z:");
-   end Print_Static_Content;
-
    ----------------------
    -- Get_Gyro_Offsets --
    ----------------------
@@ -239,12 +167,7 @@ procedure Demo_L3DG20 is
    end Await_Data_Ready;
 
 begin
-   STM32.LCD.Initialize (STM32.LCD.Pixel_Fmt_ARGB1555);
-   STM32.DMA2D.Polling.Initialize;
-
-   STM32.LCD.Set_Orientation (STM32.LCD.Portrait);
-
-   STM32.DMA2D.DMA2D_Fill (LCD_Drawing.Screen_Buffer, 0);
+   Initialize_Display;
 
    Configure_Gyro;
 
@@ -252,7 +175,7 @@ begin
 
    Get_Gyro_Offsets (Stable, Sample_Count => 100);  -- arbitrary count
 
-   Print_Static_Content;
+   Print_Static_Content (Stable);
 
    loop
       Await_Data_Ready (Gyro);
