@@ -131,6 +131,8 @@ procedure Demo_L3DG20 is
          Endianness       => L3GD20_Little_Endian,
          Full_Scale       => L3GD20_Fullscale_250);
 
+      Enable_Low_Pass_Filter (Gyro);
+
       --  We cannot check it before configuring the device above.
       if L3DG20.Device_Id (Gyro) /= L3DG20.I_Am_L3GD20 then
          raise Program_Error with "No L3DG20 found";

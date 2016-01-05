@@ -76,6 +76,7 @@ package body STM32F4.L3DG20 is
    Boot_Bit               : constant := 2#1000_0000#;
    FIFO_Enable_Bit        : constant := 2#0100_0000#;
    HighPass_Filter_Enable : constant := 2#0001_0000#;
+   LowPass_Filter_Enable  : constant := 2#0000_0010#;
 
    --  bit definitions for the FIFO_CTRL register
 
@@ -407,6 +408,31 @@ package body STM32F4.L3DG20 is
       Ctrl5 := Ctrl5 and (not HighPass_Filter_Enable);
       Write (This, CTRL_REG5, Ctrl5);
    end Disable_High_Pass_Filter;
+
+   ----------------------------
+   -- Enable_Low_Pass_Filter --
+   ----------------------------
+
+   procedure Enable_Low_Pass_Filter (This : in out Three_Axis_Gyroscope) is
+      Ctrl5 : Byte;
+   begin
+      Read (This, CTRL_REG5, Ctrl5);
+      Ctrl5 := Ctrl5 or LowPass_Filter_Enable;
+      Write (This, CTRL_REG5, Ctrl5);
+   end Enable_Low_Pass_Filter;
+
+   -----------------------------
+   -- Disable_Low_Pass_Filter --
+   -----------------------------
+
+   procedure Disable_Low_Pass_Filter (This : in out Three_Axis_Gyroscope) is
+      Ctrl5 : Byte;
+   begin
+      Read (This, CTRL_REG5, Ctrl5);
+      --  clear HPen bit
+      Ctrl5 := Ctrl5 and (not LowPass_Filter_Enable);
+      Write (This, CTRL_REG5, Ctrl5);
+   end Disable_Low_Pass_Filter;
 
    ---------------------
    -- Reference_Value --

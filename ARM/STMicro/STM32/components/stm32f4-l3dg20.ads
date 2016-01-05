@@ -170,6 +170,18 @@ package STM32F4.L3DG20 is
       Endianness       : Endian_Data_Selection;
       Full_Scale       : Full_Scale_Selection);
 
+   procedure Enable_Low_Pass_Filter (This : in out Three_Axis_Gyroscope);
+   --  See App Note 4505, pg 15, Figure 5 and Table 9 for the concept. Enables
+   --  the low pass filter LPF2 in the diagrams, for output to the data
+   --  registers and the FIFO. The value of LPF2 is determined by the output
+   --  data rate and bandwidth selections specified when calling procedure
+   --  Configure. These values are shown in the App Note, pg 16, Table 11.
+   --  The filter allows frequencies lower than the LPF2 "cutoff" value, and
+   --  attenuates those at or above the cutoff. Note that the high pass filter
+   --  is independent of the low pass filter.
+
+   procedure Disable_Low_Pass_Filter (This : in out Three_Axis_Gyroscope);
+
    function Full_Scale_Sensitivity (This : Three_Axis_Gyroscope) return Float;
    --  Returns the sensitivity per LSB based on the Full_Scale_Selection
    --  specified to procedure Configure. Used to scale raw angle rates. Note
@@ -229,6 +241,8 @@ package STM32F4.L3DG20 is
       Cutoff_Frequency : High_Pass_Cutoff_Frequency);
 
    procedure Enable_High_Pass_Filter (This : in out Three_Axis_Gyroscope);
+   --  Allows frequencies higher than the cutoff specified to procedure
+   --  Configure_High_Pass_Filter, and attenuates those at or below it.
 
    procedure Disable_High_Pass_Filter (This : in out Three_Axis_Gyroscope);
 
