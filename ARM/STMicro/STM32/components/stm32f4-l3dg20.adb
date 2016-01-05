@@ -508,13 +508,14 @@ package body STM32F4.L3DG20 is
      (This  : Three_Axis_Gyroscope;
       Rates : out Angle_Rates)
    is
+
       Ctrl4 : Byte;
 
-      Bytes_To_Read : constant Integer := 6;
+      Bytes_To_Read : constant Integer := 6;  -- ie, three 2-byte integers
       -- the number of bytes in an Angle_Rates record object
 
       Received : SPI.Byte_Buffer (1 .. Bytes_To_Read);
-      --  The byte buffer overlaid on top of the outgoing record parameter.
+
     begin
       Read (This, CTRL_REG4, Ctrl4);
 
