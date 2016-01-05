@@ -171,6 +171,8 @@ procedure Demo_L3DG20 is
          BlockData_Update => L3GD20_BlockDataUpdate_Continous,
          Endianness       => L3GD20_Little_Endian,
          Full_Scale       => L3GD20_Fullscale_250);
+
+      Enable_Low_Pass_Filter (Gyro);
    end Configure_Gyro;
 
    ------------------------------

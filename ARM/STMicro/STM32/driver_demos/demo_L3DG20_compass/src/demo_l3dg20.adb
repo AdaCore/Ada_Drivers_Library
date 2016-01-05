@@ -43,6 +43,9 @@
 --  Discovery board, so when testing this program you must rotate the board
 --  about the center of the gyro, not the center of the board.
 
+--  The gyro will inevitably exhibit drift (because the F429 Discovery board
+--  does not have an on-board accelerometer to provide corrective input).
+
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 
 with Ada.Real_Time;  use Ada.Real_Time;
@@ -65,7 +68,8 @@ procedure Demo_L3DG20 is
 
    Sensitivity       : Float;
    Sensitivity_Tweak : constant Float := 1.55;
-   -- The tweak varies by actual device, so experiment.
+   -- The value varies by actual device, so experiment. The sensitivities
+   -- specified by the datasheet are statistical, not guaranteed.
 
    Threshold : constant := 10;  -- tuning
    --  New readings that do not vary by more than the threshold are ignored.
@@ -145,12 +149,7 @@ procedure Demo_L3DG20 is
          Endianness       => L3GD20_Little_Endian,
          Full_Scale       => L3GD20_Fullscale_250);
 
-      Configure_High_Pass_Filter
-        (Gyro,
-         Mode_Selection   => L3GD20_HPM_Normal_Mode_Reset,
-         Cutoff_Frequency => L3GD20_HPFCF_0);
-
-      Enable_High_Pass_Filter (Gyro);
+      Enable_Low_Pass_Filter (Gyro);
 
       --  We cannot check it before configuring the device above.
       if L3DG20.Device_Id (Gyro) /= L3DG20.I_Am_L3GD20 then

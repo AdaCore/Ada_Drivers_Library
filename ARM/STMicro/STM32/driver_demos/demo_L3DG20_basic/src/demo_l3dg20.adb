@@ -113,12 +113,7 @@ procedure Demo_L3DG20 is
          Endianness       => L3GD20_Little_Endian,
          Full_Scale       => L3GD20_Fullscale_250);
 
-      Configure_High_Pass_Filter
-        (Gyro,
-         Mode_Selection   => L3GD20_HPM_Normal_Mode_Reset,
-         Cutoff_Frequency => L3GD20_HPFCF_0);
-
-      Enable_High_Pass_Filter (Gyro);
+      Enable_Low_Pass_Filter (Gyro);
 
       --  We cannot check it before configuring the device above.
       if L3DG20.Device_Id (Gyro) /= L3DG20.I_Am_L3GD20 then
