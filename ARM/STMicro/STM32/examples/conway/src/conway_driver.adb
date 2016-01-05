@@ -33,9 +33,13 @@ with Ada.Real_Time;
 with STM32.RNG.Interrupts;     use STM32.RNG.Interrupts;
 with Ada.Unchecked_Conversion;
 with Interfaces;
-with Screen_Interface;
+with STM32_SVD;
+with STM32.LCD; use STM32.LCD;
+with STM32.DMA2D.Polling;
 
 package body Conway_Driver is
+
+   Format : constant Pixel_Format := Pixel_Fmt_ARGB1555;
 
    type Cell is (Alive, Dead)
      with Size => 1;
@@ -44,7 +48,7 @@ package body Conway_Driver is
      array (Integer range <>, Integer range <>) of Cell
      with Pack;
 
-   G, G2 : Grid (Screen_Interface.Width, Screen_Interface.Height);
+   G, G2 : Grid (0 .. 199, 0 .. 199);
 
    procedure Draw_Grid;
    procedure Randomize_Grid;
@@ -55,22 +59,44 @@ package body Conway_Driver is
    ---------------
 
    procedure Draw_Grid is
-      use Screen_Interface;
-
-      Color : Screen_Interface.Color;
    begin
-      for I in G'Range (1) loop
-         for J in G'Range (2) loop
-            case G (I, J) is
-               when Alive =>
-                  Color := White;
-               when Dead =>
-                  Color := Blue;
-            end case;
-
-            Set_Pixel (P => (I, J), Col => Color);
-         end loop;
-      end loop;
+      case Format is
+         when Pixel_Fmt_ARGB1555 =>
+            declare
+               Colors : constant array (Cell) of Stm32.Half_Word :=
+                 (Alive => 16#ffff#, Dead => 16#801f#);
+            begin
+               for I in G'Range (1) loop
+                  for J in G'Range (2) loop
+                     Set_Pixel (Layer1, I, J, Colors (G (I, J)));
+                  end loop;
+               end loop;
+            end;
+         when Pixel_Fmt_ARGB8888 =>
+            declare
+               Colors : constant array (Cell) of Stm32.Word :=
+                 (Alive => 16#ffffffff#, Dead => 16#ff0000ff#);
+            begin
+               for I in G'Range (1) loop
+                  for J in G'Range (2) loop
+                     Set_Pixel (Layer1, I, J, Colors (G (I, J)));
+                  end loop;
+               end loop;
+            end;
+         when Pixel_Fmt_RGB888 =>
+            declare
+               Colors : constant array (Cell) of STM32_SVD.Uint24 :=
+                 (Alive => 16#ffffff#, Dead => 16#ff0000#);
+            begin
+               for I in G'Range (1) loop
+                  for J in G'Range (2) loop
+                     Set_Pixel (Layer1, I, J, Colors (G (I, J)));
+                  end loop;
+               end loop;
+            end;
+         when others =>
+            raise Program_Error;
+      end case;
    end Draw_Grid;
 
    --------------------
@@ -216,16 +242,25 @@ package body Conway_Driver is
       Next_Activation : Time;
    begin
       Initialize_RNG;
-      Screen_Interface.Initialize;
-      Screen_Interface.Swap_Buffers;
+      STM32.LCD.Initialize (Format);
+      STM32.LCD.Set_Orientation (Portrait);
+      STM32.DMA2D.Polling.Initialize;
+
       Randomize_Grid;
+      STM32.DMA2D.DMA2D_Fill
+        (Buffer =>
+           (Addr       => STM32.LCD.Current_Frame_Buffer (Layer1),
+            Width      => STM32.LCD.Pixel_Width,
+            Height     => STM32.LCD.Pixel_Height,
+            Color_Mode => STM32.LCD.Get_Pixel_Fmt,
+            Swap_X_Y   => STM32.LCD.SwapXY),
+         Color => 0);
 
       Next_Activation := Clock + Period;
       loop
          delay until Next_Activation;
          Next_Activation := Next_Activation + Period;
 
-         Screen_Interface.Swap_Buffers;
          Step;
          Draw_Grid;
       end loop;
