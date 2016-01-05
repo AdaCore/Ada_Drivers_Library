@@ -53,50 +53,15 @@ package body STM32.LTDC is
    Current_Pixel_Fmt  : Pixel_Format := Pixel_Fmt_ARGB1555;
    Swap_X_Y           : Boolean := False;
 
-   type FB32 is array (Natural range 0 .. LCD_Height - 1,
-                       Natural range 0 .. LCD_Width - 1) of Word
-     with Component_Size => 32, Volatile;
-   type Swap_FB32 is array (Natural range 0 .. LCD_Width - 1,
-                            Natural range 0 .. LCD_Height - 1) of Word
-     with Component_Size => 32, Volatile;
-   type FB24 is array (Natural range 0 .. LCD_Height - 1,
-                       Natural range 0 .. (LCD_Width * 3) - 1) of Byte
-     with Component_Size => 8, Volatile;
-   type Swap_FB24 is array (Natural range 0 .. LCD_Width - 1,
-                            Natural range 0 .. LCD_Height * 3 - 1) of Byte
-     with Component_Size => 8, Volatile;
-   type FB16 is array (Natural range 0 .. LCD_Height - 1,
-                       Natural range 0 .. LCD_Width - 1) of Short
-     with Component_Size => 16, Volatile;
-   type Swap_FB16 is array (Natural range 0 .. LCD_Width - 1,
-                            Natural range 0 .. LCD_Height - 1) of Short
-     with Component_Size => 16, Volatile;
+   subtype LCD_Height_Range is Natural range 0 .. LCD_Height - 1;
+   subtype LCD_Width_Range is Natural range 0 .. LCD_Width - 1;
 
-   type Frame_Buffer (Pixel_Fmt : Pixel_Format;
-                      Swap      : Boolean) is record
-      case Swap is
-         when False =>
-            case Pixel_Fmt is
-            when Pixel_Fmt_ARGB8888 =>
-               Arr32 : FB32;
-            when Pixel_Fmt_RGB888 =>
-               Arr24 : FB24;
-            when others =>
-               Arr16 : FB16;
-            end case;
-         when True =>
-            case Pixel_Fmt is
-            when Pixel_Fmt_ARGB8888 =>
-               SwArr32 : Swap_FB32;
-            when Pixel_Fmt_RGB888 =>
-               SwArr24 : Swap_FB24;
-            when others =>
-               SwArr16 : Swap_FB16;
-            end case;
-      end case;
-   end record with Unchecked_Union, Volatile;
-
-   type Frame_Buffer_Int_Access is access all Frame_Buffer;
+   type FB32 is array (LCD_Height_Range, LCD_Width_Range) of Word
+     with Component_Size => 32, Volatile;
+   type FB24 is array (LCD_Height_Range, 0 .. LCD_Height * 3 - 1) of Byte
+     with Component_Size => 8, Volatile;
+   type FB16 is array (LCD_Height_Range, LCD_Width_Range) of Short
+     with Component_Size => 16, Volatile;
 
    function Pixel_Size (Fmt : Pixel_Format) return Positive;
 
@@ -303,6 +268,26 @@ package body STM32.LTDC is
         UInt24 (R * 2 ** 16) or UInt24 (G * 2 ** 8) or UInt24 (B);
    end Set_Background;
 
+   procedure Convert (X, Y : Natural;
+                      Ok   : out Boolean;
+                      X0   : out LCD_Width_Range;
+                      Y0   : out LCD_Height_Range)
+   is
+   begin
+      if Y >= Pixel_Height or else X >= Pixel_Width then
+         Ok := False;
+      else
+         Ok := True;
+         if not Swap_X_Y then
+            Y0 := Y;
+            X0 := X;
+         else
+            Y0 := LCD_Height - 1 - X;
+            X0 := Y;
+         end if;
+      end if;
+   end Convert;
+
    ---------------
    -- Set_Pixel --
    ---------------
@@ -313,21 +298,14 @@ package body STM32.LTDC is
       Y     : Natural;
       Value : Word)
    is
-      function To_FB_Access is new Ada.Unchecked_Conversion
-        (System.Address, Frame_Buffer_Int_Access);
-      Buff : constant Frame_Buffer_Int_Access :=
-               To_FB_Access (Frame_Buffer_Array (Layer));
+      FB : FB32 with Import, Address => Frame_Buffer_Array (Layer);
+      X0 : LCD_Height_Range;
+      Y0 : LCD_Width_Range;
+      Ok : Boolean;
    begin
-      if Y >= Pixel_Height
-        or else X >= Pixel_Width
-      then
-         return;
-      end if;
-
-      if not Swap_X_Y then
-         Buff.Arr32 (Y, X) := Value;
-      else
-         Buff.SwArr32 (X, Y) := Value;
+      Convert (X, Y, Ok, X0, Y0);
+      if Ok then
+         FB (Y0, X0) := Value;
       end if;
    end Set_Pixel;
 
@@ -341,31 +319,19 @@ package body STM32.LTDC is
       Y     : Natural;
       Value : UInt24)
    is
-      function To_FB_Access is new Ada.Unchecked_Conversion
-        (System.Address, Frame_Buffer_Int_Access);
-      Buff : constant Frame_Buffer_Int_Access :=
-               To_FB_Access (Frame_Buffer_Array (Layer));
+      FB : FB24 with Import, Address => Frame_Buffer_Array (Layer);
+      X0 : LCD_Height_Range;
+      Y0 : LCD_Width_Range;
+      Ok : Boolean;
    begin
-      if Y >= Pixel_Height
-        or else X >= Pixel_Width
-      then
-         return;
-      end if;
-
-      if not Swap_X_Y then
+      Convert (X, Y, Ok, X0, Y0);
+      if Ok then
          --  Red:
-         Buff.Arr24 (Y, (X * 3) + 2) := Byte (Value and 16#FF#);
+         FB (Y0, (X0 * 3) + 2) := Byte (Value and 16#FF#);
          --  Green:
-         Buff.Arr24 (Y, (X * 3) + 1) := Byte ((Value and 16#FF00#) / (2 ** 8));
+         FB (Y0, (X0 * 3) + 1) := Byte ((Value and 16#FF00#) / (2 ** 8));
          --  Blue:
-         Buff.Arr24 (Y, (X * 3) + 0) := Byte ((Value and 16#FF0000#) / (2 ** 16));
-      else
-         --  Red:
-         Buff.SwArr24 (X, (Y * 3) + 2) := Byte (Value and 16#FF#);
-         --  Green:
-         Buff.SwArr24 (X, (Y * 3) + 1) := Byte ((Value and 16#FF00#) / (2 ** 8));
-         --  Blue:
-         Buff.SwArr24 (X, (Y * 3) + 0) := Byte ((Value and 16#FF0000#) / (2 ** 16));
+         FB (Y0, (X0 * 3) + 0) := Byte ((Value and 16#FF0000#) / (2 ** 16));
       end if;
    end Set_Pixel;
 
@@ -379,21 +345,14 @@ package body STM32.LTDC is
       Y     : Natural;
       Value : Half_Word)
    is
-      function To_FB_Access is new Ada.Unchecked_Conversion
-        (System.Address, Frame_Buffer_Int_Access);
-      Buff : constant Frame_Buffer_Int_Access :=
-               To_FB_Access (Frame_Buffer_Array (Layer));
+      FB : FB16 with Import, Address => Frame_Buffer_Array (Layer);
+      X0 : LCD_Height_Range;
+      Y0 : LCD_Width_Range;
+      Ok : Boolean;
    begin
-      if Y >= Pixel_Height
-        or else X >= Pixel_Width
-      then
-         return;
-      end if;
-
-      if not Swap_X_Y then
-         Buff.Arr16 (Y, X) := Value;
-      else
-         Buff.SwArr16 (X, Y) := Value;
+      Convert (X, Y, Ok, X0, Y0);
+      if Ok then
+         FB (Y0, X0) := Value;
       end if;
    end Set_Pixel;
 
@@ -407,15 +366,16 @@ package body STM32.LTDC is
       Y     : Natural)
       return Word
    is
-      function To_FB_Access is new Ada.Unchecked_Conversion
-        (System.Address, Frame_Buffer_Int_Access);
-      Buff : constant Frame_Buffer_Int_Access :=
-               To_FB_Access (Frame_Buffer_Array (Layer));
+      FB : FB32 with Import, Address => Frame_Buffer_Array (Layer);
+      X0 : LCD_Height_Range;
+      Y0 : LCD_Width_Range;
+      Ok : Boolean;
    begin
-      if not Swap_X_Y then
-         return Buff.Arr32 (Y, X);
+      Convert (X, Y, Ok, X0, Y0);
+      if Ok then
+         return FB (Y0, X0);
       else
-         return Buff.SwArr32 (X, Y);
+         return 0;
       end if;
    end Pixel_Value;
 
@@ -429,23 +389,19 @@ package body STM32.LTDC is
       Y     : Natural)
       return UInt24
    is
-      function To_FB_Access is new Ada.Unchecked_Conversion
-        (System.Address, Frame_Buffer_Int_Access);
-      Buff : constant Frame_Buffer_Int_Access :=
-               To_FB_Access (Frame_Buffer_Array (Layer));
-      Ret : UInt24;
+      FB : FB24 with Import, Address => Frame_Buffer_Array (Layer);
+      X0 : LCD_Height_Range;
+      Y0 : LCD_Width_Range;
+      Ok : Boolean;
    begin
-      if not Swap_X_Y then
-         Ret := UInt24 (Buff.Arr24 (Y, X * 3 + 2)) or
-           UInt24 (Buff.Arr24 (Y, X * 3 + 1)) * 2 ** 8 or
-           UInt24 (Buff.Arr24 (Y, X * 3 + 0)) * 2 ** 16;
+      Convert (X, Y, Ok, X0, Y0);
+      if Ok then
+         return UInt24 (FB (Y0, X0 * 3 + 2)) or
+           UInt24 (FB (Y0, X0 * 3 + 1)) * 2 ** 8 or
+           UInt24 (FB (Y0, X0 * 3 + 0)) * 2 ** 16;
       else
-         Ret := UInt24 (Buff.SwArr24 (X, Y * 3 + 2)) or
-           UInt24 (Buff.SwArr24 (X, Y * 3 + 1)) * 2 ** 8 or
-           UInt24 (Buff.SwArr24 (X, Y * 3 + 0)) * 2 ** 16;
+         return 0;
       end if;
-
-      return Ret;
    end Pixel_Value;
 
    -----------------
@@ -458,17 +414,17 @@ package body STM32.LTDC is
       Y     : Natural)
       return Half_Word
    is
-      function To_FB_Access is new Ada.Unchecked_Conversion
-        (System.Address, Frame_Buffer_Int_Access);
-      Buff : constant Frame_Buffer_Int_Access :=
-               To_FB_Access (Frame_Buffer_Array (Layer));
+      FB : FB16 with Import, Address => Frame_Buffer_Array (Layer);
+      X0 : LCD_Height_Range;
+      Y0 : LCD_Width_Range;
+      Ok : Boolean;
    begin
-      if not Swap_X_Y then
-         return Buff.Arr16 (Y, X);
+      Convert (X, Y, Ok, X0, Y0);
+      if Ok then
+         return FB (Y0, X0);
       else
-         return Buff.SwArr16 (X, Y);
+         return 0;
       end if;
    end Pixel_Value;
 
 end STM32.LTDC;
-
