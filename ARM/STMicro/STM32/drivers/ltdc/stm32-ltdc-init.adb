@@ -1,3 +1,5 @@
+with STM32_SVD.Interrupts;
+
 separate (STM32.LTDC)
 package body Init is
 
@@ -59,6 +61,55 @@ package body Init is
      with Import, Address => LTDC_Periph.L1CR'Address;
    G_Layer2_Reg : aliased Layer_Type
      with Import, Address => LTDC_Periph.L2CR'Address;
+
+   protected Sync is
+      --  A call to Prepare_Wait_VBR must be followed by a call to
+      --  Wait. Wait until register reload.
+      procedure Prepare_Wait_VBR;
+
+      --  Wait for an interrupt.
+      entry Wait;
+
+      procedure Interrupt;
+      pragma Attach_Handler
+        (Interrupt, STM32_SVD.Interrupts.LCD_TFT_Interrupt);
+   private
+      Triggered : Boolean := False;
+   end Sync;
+
+   protected body Sync is
+      ----------------------
+      -- Prepare_Wait_VBR --
+      ----------------------
+
+      procedure Prepare_Wait_VBR is
+      begin
+         Triggered := False;
+         LTDC_Periph.IER.RRIE := 1;
+      end Prepare_Wait_VBR;
+
+      ----------
+      -- Wait --
+      ----------
+
+      entry Wait when Triggered is
+      begin
+         null;
+      end Wait;
+
+      ---------------
+      -- Interrupt --
+      ---------------
+
+      procedure Interrupt
+      is
+      begin
+         LTDC_Periph.IER :=
+           (RRIE => 0, TERRIE => 0, FUIE => 0, LIE => 0, others => <>);
+         LTDC_Periph.ICR.CRRIF := 1;
+         Triggered := True;
+      end Interrupt;
+   end Sync;
 
    ---------------
    -- Get_Layer --
@@ -134,9 +185,15 @@ package body Init is
          end loop;
       else
          LTDC_Periph.SRCR.VBR := 1;
-         loop
-            exit when LTDC_Periph.SRCR.VBR = 0;
-         end loop;
+         if True then
+            Sync.Prepare_Wait_VBR;
+            Sync.Wait;
+         else
+            --  Polling
+            loop
+               exit when LTDC_Periph.SRCR.VBR = 0;
+            end loop;
+         end if;
       end if;
    end Reload_Config;
 

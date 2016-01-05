@@ -39,7 +39,7 @@ with STM32.DMA2D.Polling;
 
 package body Conway_Driver is
 
-   Format : constant Pixel_Format := Pixel_Fmt_ARGB1555;
+   Format : constant Pixel_Format := Pixel_Fmt_RGB888;
 
    type Cell is (Alive, Dead)
      with Size => 1;
@@ -50,7 +50,7 @@ package body Conway_Driver is
 
    G, G2 : Grid (0 .. 199, 0 .. 199);
 
-   procedure Draw_Grid;
+   procedure Draw_Grid (L : LCD_Layer);
    procedure Randomize_Grid;
    procedure Step;
 
@@ -58,7 +58,7 @@ package body Conway_Driver is
    -- Draw_Grid --
    ---------------
 
-   procedure Draw_Grid is
+   procedure Draw_Grid (L : LCD_Layer) is
    begin
       case Format is
          when Pixel_Fmt_ARGB1555 =>
@@ -68,7 +68,7 @@ package body Conway_Driver is
             begin
                for I in G'Range (1) loop
                   for J in G'Range (2) loop
-                     Set_Pixel (Layer1, I, J, Colors (G (I, J)));
+                     Set_Pixel (L, I, J, Colors (G (I, J)));
                   end loop;
                end loop;
             end;
@@ -79,7 +79,7 @@ package body Conway_Driver is
             begin
                for I in G'Range (1) loop
                   for J in G'Range (2) loop
-                     Set_Pixel (Layer1, I, J, Colors (G (I, J)));
+                     Set_Pixel (L, I, J, Colors (G (I, J)));
                   end loop;
                end loop;
             end;
@@ -90,7 +90,7 @@ package body Conway_Driver is
             begin
                for I in G'Range (1) loop
                   for J in G'Range (2) loop
-                     Set_Pixel (Layer1, I, J, Colors (G (I, J)));
+                     Set_Pixel (L, I, J, Colors (G (I, J)));
                   end loop;
                end loop;
             end;
@@ -234,35 +234,44 @@ package body Conway_Driver is
    ------------
 
    task body Driver is
-      use Ada.Real_Time;
-
-      Period : constant Time_Span := Milliseconds (250);
-      --  The amount of time to wait between displaying iterations.
-
-      Next_Activation : Time;
    begin
       Initialize_RNG;
       STM32.LCD.Initialize (Format);
       STM32.LCD.Set_Orientation (Portrait);
       STM32.DMA2D.Polling.Initialize;
 
-      Randomize_Grid;
-      STM32.DMA2D.DMA2D_Fill
-        (Buffer =>
-           (Addr       => STM32.LCD.Current_Frame_Buffer (Layer1),
-            Width      => STM32.LCD.Pixel_Width,
-            Height     => STM32.LCD.Pixel_Height,
-            Color_Mode => STM32.LCD.Get_Pixel_Fmt,
-            Swap_X_Y   => STM32.LCD.SwapXY),
-         Color => 0);
+      --  Initialize (side effect of enabled) and clear layers.
+      Set_Layer_State (Layer1, Enabled);
+      Set_Layer_State (Layer2, Enabled);
+      for I in LCD_Layer loop
+         STM32.DMA2D.DMA2D_Fill
+           (Buffer =>
+              (Addr       => STM32.LCD.Current_Frame_Buffer (I),
+               Width      => STM32.LCD.Pixel_Width,
+               Height     => STM32.LCD.Pixel_Height,
+               Color_Mode => STM32.LCD.Get_Pixel_Fmt,
+               Swap_X_Y   => STM32.LCD.SwapXY),
+            Color => 0);
+      end loop;
 
-      Next_Activation := Clock + Period;
       loop
-         delay until Next_Activation;
-         Next_Activation := Next_Activation + Period;
+         Randomize_Grid;
 
-         Step;
-         Draw_Grid;
+         loop
+            Step;
+            Draw_Grid (Layer1);
+            Set_Layer_State (Layer1, Enabled);
+            Set_Layer_State (Layer2, Disabled);
+
+            Reload_Config (False);
+
+            Step;
+            Draw_Grid (Layer2);
+            Set_Layer_State (Layer1, Disabled);
+            Set_Layer_State (Layer2, Enabled);
+
+            Reload_Config (False);
+         end loop;
       end loop;
    end Driver;
 

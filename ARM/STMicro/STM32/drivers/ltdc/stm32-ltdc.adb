@@ -58,7 +58,7 @@ package body STM32.LTDC is
 
    type FB32 is array (LCD_Height_Range, LCD_Width_Range) of Word
      with Component_Size => 32, Volatile;
-   type FB24 is array (LCD_Height_Range, 0 .. LCD_Height * 3 - 1) of Byte
+   type FB24 is array (LCD_Height_Range, 0 .. LCD_Width * 3 - 1) of Byte
      with Component_Size => 8, Volatile;
    type FB16 is array (LCD_Height_Range, LCD_Width_Range) of Short
      with Component_Size => 16, Volatile;
