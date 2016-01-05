@@ -528,41 +528,28 @@ package body STM32.L3DG20 is
      (This  : Three_Axis_Gyroscope;
       Rates : out Angle_Rates)
    is
+
       Ctrl4 : Byte;
 
-      type Buffer is array (0 .. 5) of Byte with Component_Size => 8;
+      Bytes_To_Read : constant Integer := 6;  -- ie, three 2-byte integers
+      -- the number of bytes in an Angle_Rates record object
 
-      Received : Buffer with Alignment => Angle_Rate'Alignment;
+      Received : SPI.Byte_Buffer (1 .. Bytes_To_Read);
 
-      type Angle_Rate_Pointer is access all Angle_Rate with Storage_Size => 0;
-
-      function As_Angle_Rate_Pointer is new Ada.Unchecked_Conversion
-        (Source => System.Address, Target => Angle_Rate_Pointer);
-      --  So that we can treat the address of a byte as a pointer to a two-byte
-      --  sequence representing a signed integer quantity. That's also why the
-      --  alignment of Received is specified.
-
-      function Swap_Bytes (Input : Angle_Rate) return Angle_Rate;
-      pragma Import (Intrinsic, Swap_Bytes, "__builtin_bswap16");
-   begin
+    begin
       Read (This, CTRL_REG4, Ctrl4);
 
-      Read (This, OUT_X_L, Received (0));
-      Read (This, OUT_X_H, Received (1));
-      Read (This, OUT_Y_L, Received (2));
-      Read (This, OUT_Y_H, Received (3));
-      Read (This, OUT_Z_L, Received (4));
-      Read (This, OUT_Z_H, Received (5));
-
-      Rates.X := As_Angle_Rate_Pointer (Received (0)'Address).all;
-      Rates.Y := As_Angle_Rate_Pointer (Received (2)'Address).all;
-      Rates.Z := As_Angle_Rate_Pointer (Received (4)'Address).all;
+      Read_Bytes (This, OUT_X_L, Received, Bytes_To_Read);
 
       if (Ctrl4 and Endian_Selection_Mask) = L3GD20_Big_Endian'Enum_Rep then
-         Rates.X := Swap_Bytes (Rates.X);
-         Rates.Y := Swap_Bytes (Rates.Y);
-         Rates.Z := Swap_Bytes (Rates.Z);
+         Swap2 (Received (1)'Address);
+         Swap2 (Received (3)'Address);
+         Swap2 (Received (5)'Address);
       end if;
+
+      Rates.X := As_Angle_Rate_Pointer (Received (1)'Address).all;
+      Rates.Y := As_Angle_Rate_Pointer (Received (3)'Address).all;
+      Rates.Z := As_Angle_Rate_Pointer (Received (5)'Address).all;
    end Get_Raw_Angle_Rates;
 
    --------------------------
