@@ -1,3 +1,5 @@
+with STM32.DSI;
+
 package STM32.LCDInit is
 
    type LCD_Orientation is
@@ -14,12 +16,12 @@ package STM32.LCDInit is
    HFP        : constant := 120;
 
    Default_Orientation : constant LCD_Orientation := Landscape;
+   DSI_LCD_Color_Mode : constant STM32.DSI.DSI_Color_Mode := STM32.DSI.RGB565;
 
-   procedure Pre_LTDC_Initialize (Orientation : LCD_Orientation);
+   procedure Pre_LTDC_Initialize;
 
    procedure Post_LTDC_Initialize (Orientation : LCD_Orientation);
 
-   procedure Default_Preinit;
    procedure Default_Postinit;
 
 end STM32.LCDInit;

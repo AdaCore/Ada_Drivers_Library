@@ -85,17 +85,21 @@ package body OTM8009A is
    --  : Y direction LCD GRAM boundaries depending on LCD orientation mode
    --  XS[15:0] = 16#000 = 0, XE[15:0] = 16#31F = 799 for landscape mode :
    --   apply to CASET
-   --  YS[15:0] = 16#000 = 0, YE[15:0] = 16#31F = 799 for portrait mode :
+   --  YS[15:0] = 16#000 = 0, YE[15:0] = 16#1DF = 479 for landscape mode :
    --   apply to PASET
-   lcdRegData27 : constant DSI_Data :=
+   lcdRegData27_Landscape : constant DSI_Data :=
                     (16#00#, 16#00#, 16#03#, 16#1F#, CMD_CASET);
+   lcdRegData28_Landscape : constant DSI_Data :=
+                    (16#00#, 16#00#, 16#01#, 16#DF#, CMD_PASET);
 
    --  XS[15:0] = 16#000 = 0, XE[15:0] = 16#1DF = 479 for portrait mode :
    --   apply to CASET
-   --  YS[15:0] = 16#000 = 0, YE[15:0] = 16#1DF = 479 for landscape mode :
+   --  YS[15:0] = 16#000 = 0, YE[15:0] = 16#31F = 799 for portrait mode :
    --   apply to PASET
-   lcdRegData28 : constant DSI_Data :=
-                    (16#00#, 16#00#, 16#01#, 16#DF#, CMD_PASET);
+   lcdRegData27_Portrait  : constant DSI_Data :=
+                    (16#00#, 16#00#, 16#01#, 16#DF#, CMD_CASET);
+   lcdRegData28_Portrait  : constant DSI_Data :=
+                    (16#00#, 16#00#, 16#03#, 16#1F#, CMD_PASET);
 
 
    ShortRegData1  : constant DSI_Data := (CMD_NOP, 16#00#);
@@ -134,13 +138,9 @@ package body OTM8009A is
    ShortRegData34 : constant DSI_Data := (CMD_NOP, 16#E0#);
    ShortRegData35 : constant DSI_Data := (CMD_NOP, 16#F0#);
    ShortRegData36 : constant DSI_Data := (CMD_SLPOUT, 16#00#);
-   ShortRegData37 : constant DSI_Data := (CMD_COLMOD, COLMOD_RGB565);
-   ShortRegData38 : constant DSI_Data := (CMD_COLMOD, COLMOD_RGB888);
-   ShortRegData39 : constant DSI_Data := (CMD_MADCTR, MADCTR_MODE_LANDSCAPE);
-   ShortRegData40 : constant DSI_Data := (CMD_WRDISBV, 16#7F#);
-   ShortRegData41 : constant DSI_Data := (CMD_WRCTRLD, 16#2C#);
-   ShortRegData42 : constant DSI_Data := (CMD_WRCABC, 16#02#);
-   ShortRegData43 : constant DSI_Data := (CMD_WRCABCMB, 16#FF#);
+   ShortRegData39l : constant DSI_Data := (CMD_MADCTR, MADCTR_MODE_LANDSCAPE);
+   ShortRegData39p : constant DSI_Data := (CMD_MADCTR, MADCTR_MODE_PORTRAIT);
+
    ShortRegData44 : constant DSI_Data := (CMD_DISPON, 16#00#);
    ShortRegData45 : constant DSI_Data := (CMD_RAMWR, 16#00#);
    ShortRegData46 : constant DSI_Data := (16#CF#, 16#00#);
@@ -352,17 +352,21 @@ package body OTM8009A is
 
       case Color_Mode is
          when RGB565 =>
-            DSI_IO_WriteCmd (ShortRegData37);
+            DSI_IO_WriteCmd ((CMD_COLMOD, COLMOD_RGB565));
          when RGB888 =>
-            DSI_IO_WriteCmd (ShortRegData38);
+            DSI_IO_WriteCmd ((CMD_COLMOD, COLMOD_RGB888));
       end case;
 
       if Orientation = Landscape then
          --  Send command to configure display in landscape orientation
          --  mode. By default the orientation mode is portrait
-         DSI_IO_WriteCmd (ShortRegData39);
-         DSI_IO_WriteCmd (lcdRegData27);
-         DSI_IO_WriteCmd (lcdRegData28);
+         DSI_IO_WriteCmd (ShortRegData39l);
+         DSI_IO_WriteCmd (lcdRegData27_Landscape);
+         DSI_IO_WriteCmd (lcdRegData28_Landscape);
+      else
+         DSI_IO_WriteCmd (ShortRegData39p);
+         DSI_IO_WriteCmd (lcdRegData27_Portrait);
+         DSI_IO_WriteCmd (lcdRegData28_Portrait);
       end if;
 
       --------------------------------------------------------------
@@ -372,18 +376,18 @@ package body OTM8009A is
       --    defaut is 0 (lowest Brightness),
       --    0xFF is highest Brightness,
       --    try 0x7F : intermediate value
-      DSI_IO_WriteCmd (ShortRegData40);
+      DSI_IO_WriteCmd ((CMD_WRDISBV, 16#FF#));
 
       --  defaut is 0, try 0x2C - Brightness Control Block, Display Dimming
       --  & BackLight on
-      DSI_IO_WriteCmd (ShortRegData41);
+      DSI_IO_WriteCmd ((CMD_WRCTRLD, 16#2C#));
 
       --  defaut is 0, try 0x02 - image Content based Adaptive Brightness
       --  [Still Picture]
-      DSI_IO_WriteCmd (ShortRegData42);
+      DSI_IO_WriteCmd ((CMD_WRCABC, 16#02#));
 
       --  defaut is 0 (lowest Brightness), 0xFF is highest Brightness
-      DSI_IO_WriteCmd (ShortRegData43);
+      DSI_IO_WriteCmd ((CMD_WRCABCMB, 16#FF#));
 
       ------------------------------------------------------------
       --  CABC : Content Adaptive Backlight Control section end --

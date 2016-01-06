@@ -58,34 +58,16 @@ package body STM32.LCDInit is
                      Output_Type => Open_Drain,
                      Speed       => Speed_50MHz,
                      Resistors   => Floating));
---        Enable_Clock (LCD_BL_CTRL);
---        Configure_IO (LCD_BL_CTRL,
---                      (Mode        => Mode_Out,
---                       Output_Type => Push_Pull,
---                       Speed       => Speed_50MHz,
---                       Resistors   => Pull_Down));
 
       --  Activate XRES active low
-      Reset (LCD_XRES);
+      Clear (LCD_XRES);
 
-      delay until Clock + Milliseconds (20);
+      delay until Clock + Microseconds (20);
 
       Set (LCD_XRES);
 
-      delay until Clock + Milliseconds (10);
-
-      Reset (LCD_BL_CTRL);
---        Set (LCD_BL_CTRL);
+      delay until Clock + Microseconds (10);
    end LCD_Reset;
-
-   ---------------------
-   -- Default_Preinit --
-   ---------------------
-
-   procedure Default_Preinit is
-   begin
-      Pre_LTDC_Initialize (Default_Orientation);
-   end Default_Preinit;
 
    ----------------------
    -- Default_Postinit --
@@ -100,18 +82,24 @@ package body STM32.LCDInit is
    -- Pre_LTDC_Initialize --
    -------------------------
 
-   procedure Pre_LTDC_Initialize (Orientation : LCD_Orientation)
+   procedure Pre_LTDC_Initialize
    is
-      Lane_Byte_Clk_kHz : constant := 62500;
-      LCD_Clock_kHz     : constant := 27429;
-      Clk_Ratio         : constant Word := Lane_Byte_Clk_kHz / LCD_Clock_kHz;
-      X_Size            : constant UInt15 := (if Orientation = Landscape
-                                              then LCD_WIDTH else LCD_HEIGHT);
-      Y_Size            : constant UInt14 := (if Orientation = Landscape
-                                              then LCD_HEIGHT else LCD_WIDTH);
+--        Lane_Byte_Clk_kHz : constant := 62500;
+--        LCD_Clock_kHz     : constant := 27429;
+      Clk_Ratio         : constant Word := 2; -- Lane_Byte_Clk_kHz / LCD_Clock_kHz;
+      X_Size            : constant UInt15 := LCD_WIDTH;
+      Y_Size            : constant UInt14 := LCD_HEIGHT;
 
    begin
       LCD_Reset;
+
+      Enable_Clock (LCD_BL_CTRL);
+      Configure_IO (LCD_BL_CTRL,
+                    (Mode        => Mode_Out,
+                     Output_Type => Open_Drain,
+                     Speed       => Speed_Low,
+                     Resistors   => Floating));
+      Set (LCD_BL_CTRL);
 
       --  Init clocks on DSI, LTDC and DMA2D
       RCC_Periph.APB2ENR.LTDCEN := 1;
@@ -134,7 +122,7 @@ package body STM32.LCDInit is
       --  VCO / ODF => 500 MHz
       STM32.DSI.DSI_Initialize
         (Auto_Clock_Lane_Control  => False,
-         TX_Escape_Clock_Division => Byte (Lane_Byte_Clk_kHz / 15_620),
+         TX_Escape_Clock_Division => 4, -- Byte (Lane_Byte_Clk_kHz / 15_620),
          Number_Of_Lanes          => Two_Data_Lanes,
          PLL_N_Div                => 125,
          PLL_IN_Div               => PLL_IN_DIV2,
@@ -142,7 +130,7 @@ package body STM32.LCDInit is
 
       STM32.DSI.DSI_Setup_Video
         (Virtual_Channel             => LCD_Channel, --  Only one display
-         Color_Coding                => RGB888,
+         Color_Coding                => DSI_LCD_Color_Mode,
          Loosely_Packed              => False,
          Video_Mode                  => Video_Mode_Burst,
          Packet_Size                 => X_Size,
@@ -153,7 +141,7 @@ package body STM32.LCDInit is
          DataEn_Polarity             => Active_High,
          HSync_Active_Duration       => UInt13 (HSYNC * Clk_Ratio),
          HSync_BackPorch             => UInt13 (HBP   * Clk_Ratio),
-         HLine_Duration              => UInt15 (Word (X_Size + HSYNC + HBP + HFP) * Clk_Ratio),
+         HLine_Duration              => (X_Size + HSYNC + HBP + HFP) * UInt15 (Clk_Ratio),
          VSync_Active_Duration       => VSYNC,
          VSync_BackPorch             => VBP,
          VSync_FrontPorch            => VFP,
@@ -181,11 +169,15 @@ package body STM32.LCDInit is
    is
    begin
       --  LCD panel init
+      pragma Warnings (Off, "condition is always *");
       LCD_Display.Initialize
-        (LCD_Display.RGB888,
+        ((if DSI_LCD_Color_Mode = RGB565
+         then LCD_Display.RGB565
+         else LCD_Display.RGB888),
          (if Orientation = Landscape
           then LCD_Display.Landscape
           else LCD_Display.Portrait));
+      pragma Warnings (On, "condition is always *");
    end Post_LTDC_Initialize;
 
 end STM32.LCDInit;
