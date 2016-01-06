@@ -29,19 +29,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4.ILI9341;
 with Bitmapped_Drawing;
-with BMP_Fonts; use BMP_Fonts;
+with BMP_Fonts;           use BMP_Fonts;
+with STM32.LCD;           use STM32.LCD;
+with STM32.DMA2D.Polling; use STM32.DMA2D;
 
-with STM32F4.L3DG20; use STM32F4.L3DG20;
+with STM32.L3DG20;        use STM32.L3DG20;
 
 package Output_Utils is
 
-   package LCD renames STM32F4.ILI9341;
-
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => LCD.Colors,
-      Set_Pixel => LCD.Set_Pixel);
+   package LCD_Drawing renames Bitmapped_Drawing;
 
    procedure Print_Static_Content
      (Stable : Angle_Rates;
@@ -61,7 +58,7 @@ package Output_Utils is
    Heading_Line  : constant Natural := 60;   --  arbitrary
 
    --  the column number for displaying the final values dynamically, based on
-   --  the length of the longest static label
-   Heading_Column : constant Natural := String'("Heading:")'Length * Char_Width (Selected_Font);
-
+    --  the length of the longest static label
+   Heading_Column : constant Natural :=
+                      String'("Heading:")'Length * Char_Width (Selected_Font);
 end Output_Utils;

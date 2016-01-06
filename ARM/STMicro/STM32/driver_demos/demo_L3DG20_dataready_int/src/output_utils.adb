@@ -29,13 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F429_Discovery;  use STM32F429_Discovery;
-
-with STM32F4.GPIO;   use STM32F4.GPIO;
-with STM32F4.RCC;    use STM32F4.RCC;
-with STM32F4.SYSCFG; use STM32F4.SYSCFG;
-with STM32F4.EXTI;   use STM32F4.EXTI;
-
 package body Output_Utils is
 
    -----------
@@ -46,11 +39,12 @@ package body Output_Utils is
       --  a convenience routine for writing to the LCD
    begin
       LCD_Drawing.Draw_String
-        (Location,
+        (LCD_Drawing.Screen_Buffer,
+         Location,
          Msg,
          Selected_Font,
-         Foreground => LCD.White,  -- arbitrary
-         Background => LCD.Black); -- arbitrary
+         Foreground => LCD_Drawing.White,  -- arbitrary
+         Background => LCD_Drawing.Black); -- arbitrary
    end Print;
 
    --------------------------
@@ -81,25 +75,12 @@ package body Output_Utils is
 
    procedure Initialize_Display is
    begin
-      LCD.Initialize
-        (Chip_Select             => (GPIO_C'Access, Pin_2),
-         Enable_CS_GPIO_Clock    => GPIOC_Clock_Enable'Access,
-         WRX                     => (GPIO_D'Access, Pin_13),
-         Enable_WRX_GPIO_Clock   => GPIOD_Clock_Enable'Access,
-         Reset                   => (GPIO_D'Access, Pin_12),
-         Enable_Reset_GPIO_Clock => GPIOD_Clock_Enable'Access,
-         SPI_Chip                => SPI_5'Access,
-         Enable_SPI_Clock        => SPI5_Clock_Enable'Access,
-         SPI_GPIO                => GPIO_F'Access,
-         Enable_SPI_GPIO_Clock   => GPIOF_Clock_Enable'Access,
-         SPI_AF                  => GPIO_AF_SPI5,
-         SCK_Pin                 => Pin_7,
-         MISO_Pin                => Pin_8,
-         MOSI_Pin                => Pin_9);
+      STM32.LCD.Initialize (STM32.LCD.Pixel_Fmt_ARGB1555);
+      STM32.DMA2D.Polling.Initialize;
 
-      LCD.Set_Orientation (To => LCD.Portrait_2);
+      STM32.LCD.Set_Orientation (STM32.LCD.Portrait);
 
-      LCD.Fill (LCD.Black);
+      STM32.DMA2D.DMA2D_Fill (LCD_Drawing.Screen_Buffer, 0);
    end Initialize_Display;
 
 end Output_Utils;

@@ -54,19 +54,18 @@
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 
-with STM32F429_Discovery;  use STM32F429_Discovery;
-
 with Gyro_Interrupts;
 with Output_Utils;   use Output_Utils;
 
 with Ada.Synchronous_Task_Control; use Ada.Synchronous_Task_Control;
+with Interfaces;                   use Interfaces;
 
-with STM32F4.L3DG20; use STM32F4.L3DG20;
-with STM32F4.GPIO;   use STM32F4.GPIO;
-with STM32F4.RCC;    use STM32F4.RCC;
-with STM32F4.SYSCFG; use STM32F4.SYSCFG;
-with STM32F4.EXTI;   use STM32F4.EXTI;
-with STM32F4;        use STM32F4;
+with STM32;        use STM32;
+with STM32.Device; use STM32.Device;
+with STM32.Board;  use STM32.Board;
+with STM32.EXTI;   use STM32.EXTI;
+with STM32.GPIO;   use STM32.GPIO;
+with STM32.L3DG20; use STM32.L3DG20;
 
 procedure Demo_L3DG20 is
 
@@ -150,17 +149,14 @@ procedure Demo_L3DG20 is
       -- the STM32F429 Discovery kit User Manual (UM1670) on those pages.
       Initialize_Gyro_Hardware
         (Gyro,
-         L3GD20_SPI                  => SPI_5'Access,
-         SPI_GPIO                    => GPIO_F'Access,  -- required, pg 23
-         SPI_GPIO_AF                 => GPIO_AF_SPI5,
-         SCK_Pin                     => Pin_7,          -- required, pg 23
-         MISO_Pin                    => Pin_8,          -- required, pg 23
-         MOSI_Pin                    => Pin_9,          -- required, pg 23
-         CS_GPIO                     => GPIO_C'Access,  -- required, pg 21
-         CS_Pin                      => Pin_1,          -- required, pg 21
-         Enable_SPI_Clock            => RCC.SPI5_Clock_Enable'Access,
-         Enable_SPI_GPIO_Clock       => RCC.GPIOF_Clock_Enable'Access,
-         Enable_Chip_Select_Clock    => RCC.GPIOC_Clock_Enable'Access);
+         L3GD20_SPI  => SPI_5'Access,
+         SPI_GPIO_AF => GPIO_AF_SPI5,
+         SCK_Pin     => SPI5_SCK,       -- required, pg 23
+         MISO_Pin    => SPI5_MISO,      -- required, pg 23
+         MOSI_Pin    => SPI5_MOSI,      -- required, pg 23
+         CS_Pin      => NCS_MEMS_SPI,
+         Int1_Pin    => MEMS_INT1,
+         Int2_Pin    => MEMS_INT2);
 
       Reset (Gyro);
 
@@ -183,18 +179,17 @@ procedure Demo_L3DG20 is
 
    procedure Configure_Gyro_Interrupt is
       Config : GPIO_Port_Configuration;
-      Point  : constant GPIO_Point := (GPIO_A'Access, Pin_2);
       --  This is the required port/pin configuration on STM32F429 Disco
       --  boards for interrupt 2 on the L3DG30 gyro. See the F429 Disco
       --  User Manual, Table 6, pg 19.
    begin
-      Enable_Clock (Point.Port.all);
+      Enable_Clock (MEMS_INT2);
       Config.Mode := Mode_In;
       Config.Resistors := Floating;
       Config.Speed := Speed_50MHz;
-      Configure_IO (Point, Config);
+      Configure_IO (MEMS_INT2, Config);
 
-      Configure_Trigger (Point.Port.all, Point.Pin, Interrupt_Rising_Edge);
+      Configure_Trigger (MEMS_INT2, Interrupt_Rising_Edge);
    end Configure_Gyro_Interrupt;
 
    ----------------------

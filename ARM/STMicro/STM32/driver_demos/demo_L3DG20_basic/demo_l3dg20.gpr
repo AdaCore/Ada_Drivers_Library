@@ -18,11 +18,15 @@ project Demo_L3DG20 is
    package Compiler is
       case STM32.Build is
          when "Debug" =>
-            for Default_Switches ("ada") use ("-g", "-gnatwa", "-gnata", "-gnatQ", "-gnatw.X", "-ffunction-sections", "-fdata-sections");
+            for Default_Switches ("ada") use
+              ("-g", "-gnatwa", "-gnata", "-gnatQ");
 
          when "Production" =>
-            for Default_Switches ("ada") use ("-O3", "-gnatw.X", "-ffunction-sections", "-fdata-sections");
+            for Default_Switches ("ada") use ("-O3");
       end case;
+
+      for Default_Switches ("Ada") use COmpiler'Default_Switches ("Ada") &
+        ("-gnatw.X", "-ffunction-sections", "-fdata-sections");
    end Compiler;
 
     package Linker is

@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4.EXTI;  use STM32F4.EXTI;
+with STM32.EXTI;  use STM32.EXTI;
 
 package body Gyro_Interrupts is
 

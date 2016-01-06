@@ -1,45 +1,41 @@
+with "../../stm32";
+
 project Demo_L3DG20_FIFO is
+
+   type Board_Type is ("STM32F429-DISCO");
+   Board : Board_Type := external ("BOARD", "STM32F429-DISCO");
+   type RTS_Profile_Type is ("ravenscar-full");
+   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-full");
 
    for Languages use ("Ada");
    for Main use ("demo_l3dg20.adb");
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
 
-   for Source_Dirs use ("src", "../../drivers", "../../boards", "../../devices", "../../components", "../../utils");
-
-   type Build_Modes is ("debug", "production");
-   Build_Mode : Build_Modes := external ("Build", "debug");
-
-   for Object_Dir use "obj/" & Build_Mode;
-
-   for Runtime ("Ada") use "/gnatpro/my_runtimes/ravenscar-full-stm32f429";
-
-   for Target use "arm-eabi";
+   for Target use STM32'Target;
+   for Runtime ("Ada") use STM32'Runtime ("Ada");
 
    package Compiler is
-      case Build_Mode is
-         when "debug" =>
-            for Default_Switches ("ada") use ("-g", "-gnatwa", "-gnata", "-gnatQ", "-gnatw.X", "-ffunction-sections", "-fdata-sections");
+      case STM32.Build is
+         when "Debug" =>
+            for Default_Switches ("ada") use
+              ("-g", "-gnatwa", "-gnata", "-gnatQ");
 
-         when "production" =>
-            for Default_Switches ("ada") use ("-O3", "-gnatw.X", "-ffunction-sections", "-fdata-sections");
+         when "Production" =>
+            for Default_Switches ("ada") use ("-O3");
       end case;
+
+      for Default_Switches ("Ada") use COmpiler'Default_Switches ("Ada") &
+        ("-gnatw.X", "-ffunction-sections", "-fdata-sections");
    end Compiler;
 
-   package Naming is
-      for Spec ("last_chance_handler") use "last_chance_handler-full.ads";
-      for Body ("last_chance_handler") use "last_chance_handler-stm32f429xx-lcd-full.adb";
-   end Naming;
-
-   package Linker is
+    package Linker is
       for Default_Switches ("ada") use (
          "-Wl,-Map,demo_l3dg20.map",
          "-Wl,--gc-sections");
      --, "-Wl,--print-gc-sections");  -- prints the sections removed
     end Linker;
 
-   package Ide is
-      for Program_Host use "localhost:4242";
-      for Communication_Protocol use "remote";
-   end Ide;
+   package Ide renames STM32.Ide;
 
 end Demo_L3DG20_FIFO;
-

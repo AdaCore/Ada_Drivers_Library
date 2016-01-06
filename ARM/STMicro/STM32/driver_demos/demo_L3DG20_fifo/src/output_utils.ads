@@ -29,19 +29,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4.ILI9341;
 with Bitmapped_Drawing;
-with BMP_Fonts; use BMP_Fonts;
+with BMP_Fonts;           use BMP_Fonts;
+with STM32.LCD;           use STM32.LCD;
+with STM32.DMA2D.Polling; use STM32.DMA2D;
 
-with STM32F4.L3DG20; use STM32F4.L3DG20;
+with STM32.L3DG20;        use STM32.L3DG20;
 
 package Output_Utils is
 
-   package LCD renames STM32F4.ILI9341;
-
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => LCD.Colors,
-      Set_Pixel => LCD.Set_Pixel);
+   package LCD_Drawing renames Bitmapped_Drawing;
 
    procedure Print_Static_Content (Stable : Angle_Rates);
 
@@ -49,6 +46,8 @@ package Output_Utils is
 
    procedure Initialize_Display;
    --  call this first
+
+   --  these constants are used for displaying values on the LCD
 
    Selected_Font : constant BMP_Font := Font12x12;
    Line_Height   : constant Positive := Char_Height (Selected_Font) + 4;
@@ -58,8 +57,17 @@ package Output_Utils is
    Line2_Stable : constant Natural := Line1_Stable + Line_Height;
    Line3_Stable : constant Natural := Line2_Stable + Line_Height;
 
-   --  the locations on the screen for adjusted values
-   Line1_Adjusted : constant Natural := 55; -- leaves room for printing stable values
+   --  the locations on the screen for the raw values
+   Line1_Raw : constant Natural := 55; -- leaves room for printing stable values
+   Line2_Raw : constant Natural := Line1_Raw + Line_Height;
+   Line3_Raw : constant Natural := Line2_Raw + Line_Height;
+
+   --  the column number for displaying raw values dynamically, based on
+   --  the length of the longest static label
+   Col_Raw : constant Natural := String'("Raw X:")'Length * Char_Width (Selected_Font);
+
+   --  the locations on the screen for values after the offset is removed
+   Line1_Adjusted : constant Natural := 110; -- leaves room for printing stable values
    Line2_Adjusted : constant Natural := Line1_Adjusted + Line_Height;
    Line3_Adjusted : constant Natural := Line2_Adjusted + Line_Height;
 
@@ -68,7 +76,7 @@ package Output_Utils is
    Col_Adjusted : constant Natural := String'("Adjusted X:")'Length * Char_Width (Selected_Font);
 
    --  the locations on the screen for the final scaled values
-   Line1_Final : constant Natural := 110; -- leaves room for printing adjusted values
+   Line1_Final : constant Natural := 165; -- leaves room for printing adjusted values
    Line2_Final : constant Natural := Line1_Final + Line_Height;
    Line3_Final : constant Natural := Line2_Final + Line_Height;
 
