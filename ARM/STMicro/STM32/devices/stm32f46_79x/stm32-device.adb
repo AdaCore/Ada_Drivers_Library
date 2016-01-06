@@ -360,21 +360,62 @@ package body STM32.Device is
       end if;
    end Reset;
 
+   ----------------
+   -- As_Port_Id --
+   ----------------
+
+   function As_Port_Id (Port : I2C_Port) return I2C_Port_Id is
+   begin
+      if Port'Address = I2C1_Base then
+         return I2C_1;
+      elsif Port'Address = I2C2_Base then
+         return I2C_2;
+      elsif Port'Address = I2C3_Base then
+         return I2C_3;
+      else
+         raise Unknown_Device;
+      end if;
+   end As_Port_Id;
+
+   -------------
+   -- As_Port --
+   -------------
+
+   function As_Port (Id : I2C_Port_Id) return access I2C_Port is
+   begin
+      case Id is
+         when I2C_1 =>
+            return I2C_Port_1'Access;
+         when I2C_2 =>
+            return I2C_Port_2'Access;
+         when I2C_3 =>
+            return I2C_Port_3'Access;
+      end case;
+   end As_Port;
+
    ------------------
    -- Enable_Clock --
    ------------------
 
    procedure Enable_Clock (This : aliased in out I2C_Port) is
    begin
-      if This'Address = I2C1_Base then
-         RCC_Periph.APB1ENR.I2C1EN := 1;
-      elsif This'Address = I2C2_Base then
-         RCC_Periph.APB1ENR.I2C2EN := 1;
-      elsif This'Address = I2C3_Base then
-         RCC_Periph.APB1ENR.I2C3EN := 1;
-      else
-         raise Unknown_Device;
-      end if;
+      Enable_Clock (As_Port_Id (This));
+   end Enable_Clock;
+
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
+   procedure Enable_Clock (This : I2C_Port_Id) is
+   begin
+      case This is
+         when I2C_1 =>
+            RCC_Periph.APB1ENR.I2C1EN := 1;
+         when I2C_2 =>
+            RCC_Periph.APB1ENR.I2C2EN := 1;
+         when I2C_3 =>
+            RCC_Periph.APB1ENR.I2C3EN := 1;
+      end case;
    end Enable_Clock;
 
    -----------
@@ -383,18 +424,26 @@ package body STM32.Device is
 
    procedure Reset (This : in out I2C_Port) is
    begin
-      if This'Address = I2C1_Base then
-         RCC_Periph.APB1RSTR.I2C1RST := 1;
-         RCC_Periph.APB1RSTR.I2C1RST := 0;
-      elsif This'Address = I2C2_Base then
-         RCC_Periph.APB1RSTR.I2C2RST := 1;
-         RCC_Periph.APB1RSTR.I2C2RST := 0;
-      elsif This'Address = I2C3_Base then
-         RCC_Periph.APB1RSTR.I2C3RST := 1;
-         RCC_Periph.APB1RSTR.I2C3RST := 0;
-      else
-         raise Unknown_Device;
-      end if;
+      Reset (As_Port_Id (This));
+   end Reset;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : I2C_Port_Id) is
+   begin
+      case This is
+         when I2C_1 =>
+            RCC_Periph.APB1RSTR.I2C1RST := 1;
+            RCC_Periph.APB1RSTR.I2C1RST := 0;
+         when I2C_2 =>
+            RCC_Periph.APB1RSTR.I2C2RST := 1;
+            RCC_Periph.APB1RSTR.I2C2RST := 0;
+         when I2C_3 =>
+            RCC_Periph.APB1RSTR.I2C3RST := 1;
+            RCC_Periph.APB1RSTR.I2C3RST := 0;
+      end case;
    end Reset;
 
    ------------------

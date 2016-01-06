@@ -57,7 +57,7 @@ package body STM32.Touch_Panel is
    SDA      : GPIO_Point renames PC9;
    SDA_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C3;
 
-   TP_I2C   : I2C_Port renames I2C_3;
+   TP_I2C   : I2C_Port_Id renames I2C_3;
 
    IOE_ADDR : constant Byte := 16#82#;
 
@@ -132,7 +132,7 @@ package body STM32.Touch_Panel is
      TOUCH_YD or TOUCH_XD or TOUCH_YU or TOUCH_XU;
    pragma Warnings (On, "constant * is not referenced");
 
-   type TSC_Data is array (Positive range <>) of Byte;
+   subtype TSC_Data is I2C_Data;
 
    ---------------
    -- Read_Data --
@@ -140,41 +140,16 @@ package body STM32.Touch_Panel is
 
    function Read_Data (Data_Addr : Byte; Length : Natural) return TSC_Data
    is
-     Data : TSC_Data (1 .. Length);
+      Data   : TSC_Data (1 .. Length);
+      Status : I2C_Status;
 
    begin
-      Generate_Start (TP_I2C, Enabled);
-      Wait_For_State (TP_I2C, Start_Bit, Enabled);
+      Mem_Read (TP_I2C, UInt10 (IOE_ADDR),
+                Short (Data_Addr), Memory_Size_8b, Data, Status);
 
-      Send_7Bit_Address (TP_I2C, IOE_ADDR, Transmitter);
-      Wait_For_State (TP_I2C, Address_Sent, Enabled);
-      Clear_Address_Sent_Status (TP_I2C);
-
-      Wait_For_State (TP_I2C, Tx_Data_Register_Empty, Enabled);
-
-      Send_Data (TP_I2C, Data_Addr);
-
-      Generate_Start (TP_I2C, Enabled);
-      Wait_For_State (TP_I2C, Start_Bit, Enabled);
-
-      Send_7Bit_Address (TP_I2C, IOE_ADDR, Receiver);
-      Wait_For_State (TP_I2C, Address_Sent, Enabled);
-
-      Set_Ack_Config (TP_I2C, Disabled);
-      Set_Nack_Config (TP_I2C, Next);
-
-      Clear_Address_Sent_Status (TP_I2C);
-
-      Wait_For_State (TP_I2C, Byte_Transfer_Finished, Enabled);
-
-      Generate_Stop (TP_I2C, Enabled);
-
-      for J in Data'Range loop
-         Data (J) := Read_Data (TP_I2C);
-      end loop;
-
-      Set_Ack_Config (TP_I2C, Enabled);
-      Set_Nack_Config (TP_I2C, Current);
+      if Status /= Ok then
+         raise Program_Error with "Timeout while reading TC data";
+      end if;
 
       return Data;
    end Read_Data;
@@ -183,45 +158,20 @@ package body STM32.Touch_Panel is
    -- Read_Register --
    -------------------
 
-   function Read_Register (Reg_Addr : Byte) return Byte is
-      Data : Byte;
+   function Read_Register (Reg_Addr : Byte) return Byte
+   is
+      Data : TSC_Data (1 .. 1);
+      Status : I2C_Status;
+
    begin
-      Generate_Start (TP_I2C, Enabled);
-      Wait_For_State (TP_I2C, Start_Bit, Enabled);
+      Mem_Read (TP_I2C, UInt10 (IOE_ADDR),
+                Short (Reg_Addr), Memory_Size_8b, Data, Status);
 
-      Set_Ack_Config (TP_I2C, Disabled);
+      if Status /= Ok then
+         raise Program_Error with "Timeout while reading TC data";
+      end if;
 
-      Send_7Bit_Address (TP_I2C, IOE_ADDR, Transmitter);
-      Wait_For_State (TP_I2C, Address_Sent, Enabled);
-      Clear_Address_Sent_Status (TP_I2C);
-
-      Wait_For_State (TP_I2C, Tx_Data_Register_Empty, Enabled);
-
-      Send_Data (TP_I2C, Reg_Addr);
-
-      while
-         not Status (TP_I2C, Tx_Data_Register_Empty) or else
-         not Status (TP_I2C, Byte_Transfer_Finished)
-      loop
-         null;
-      end loop;
-
-      Generate_Start (TP_I2C, Enabled);
-      Wait_For_State (TP_I2C, Start_Bit, Enabled);
-
-      Send_7Bit_Address (TP_I2C, IOE_ADDR, Receiver);
-      Wait_For_State (TP_I2C, Address_Sent, Enabled);
-      Clear_Address_Sent_Status (TP_I2C);
-
-      Wait_For_State (TP_I2C, Rx_Data_Register_Not_Empty, Enabled);
-
-      Generate_Stop (TP_I2C, Enabled);
-
-      Data := Read_Data (TP_I2C);
-
-      Set_Ack_Config (TP_I2C, Enabled);
-
-      return Data;
+      return Data (1);
    end Read_Register;
 
    --------------------
@@ -229,32 +179,15 @@ package body STM32.Touch_Panel is
    --------------------
 
    procedure Write_Register (Reg_Addr : Byte; Data : Byte) is
+      Status : I2C_Status;
+
    begin
-      Generate_Start (TP_I2C, Enabled);
-      Wait_For_State (TP_I2C, Start_Bit, Enabled);
+      Mem_Write (TP_I2C, UInt10 (IOE_ADDR),
+                Short (Reg_Addr), Memory_Size_8b, (1 => Data), Status);
 
-      Set_Ack_Config (TP_I2C, Disabled);
-
-      Send_7Bit_Address (TP_I2C, IOE_ADDR, Transmitter);
-      Wait_For_State (TP_I2C, Address_Sent, Enabled);
-      Clear_Address_Sent_Status (TP_I2C);
-
-      Wait_For_State (TP_I2C, Tx_Data_Register_Empty, Enabled);
-
-      Send_Data (TP_I2C, Reg_Addr);
-
-      Wait_For_State (TP_I2C, Tx_Data_Register_Empty, Enabled);
-
-      Send_Data (TP_I2C, Data);
-
-      while
-        not Status (TP_I2C, Tx_Data_Register_Empty) or else
-        not Status (TP_I2C, Byte_Transfer_Finished)
-      loop
-         null;
-      end loop;
-
-      Generate_Stop (TP_I2C, Enabled);
+      if Status /= Ok then
+         raise Program_Error with "Timeout while reading TC data";
+      end if;
    end Write_Register;
 
    -------------------
@@ -291,18 +224,19 @@ package body STM32.Touch_Panel is
 
    procedure TP_I2C_Config is
    begin
-      Reset (TP_I2C);
+      if not Port_Enabled (TP_I2C) then
+         Reset (TP_I2C);
 
-      Configure
-        (TP_I2C,
-         Mode        => I2C_Mode,
-         Duty_Cycle  => DutyCycle_2,
-         Own_Address => 16#00#,
-         Ack         => Ack_Disable,
-         Ack_Address => AcknowledgedAddress_7bit,
-         Clock_Speed => 100_000);
-
-      Set_State (TP_I2C, Enabled);
+         Configure
+           (TP_I2C,
+            (Mode                     => I2C_Mode,
+             Duty_Cycle               => DutyCycle_2,
+             Own_Address              => 16#00#,
+             Addressing_Mode          => Addressing_Mode_7bit,
+             General_Call_Enabled     => False,
+             Clock_Stretching_Enabled => True,
+             Clock_Speed              => 100_000));
+      end if;
    end TP_I2C_Config;
 
    ---------------

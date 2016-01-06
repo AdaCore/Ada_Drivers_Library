@@ -41,39 +41,177 @@
 
 with Ada.Real_Time; use Ada.Real_Time;
 
-with STM32.Device;  use STM32.Device;
-
 with STM32_SVD.I2C; use STM32_SVD.I2C;
 
 package body STM32.I2C is
+
+   type I2C_Status_Flag is
+     (Start_Bit,
+      Address_Sent,
+      Byte_Transfer_Finished,
+      Address_Sent_10bit,
+      Stop_Detection,
+      Rx_Data_Register_Not_Empty,
+      Tx_Data_Register_Empty,
+      Bus_Error,
+      Arbitration_Lost,
+      Ack_Failure,
+      UnderOverrun,
+      Packet_Error,
+      Timeout,
+      SMB_Alert,
+      Master_Slave_Mode,
+      Busy,
+      Transmitter_Receiver_Mode,
+      General_Call,
+      SMB_Default,
+      SMB_Host,
+      Dual_Flag);
+
+--     subtype Clearable_I2C_Status_Flag is
+--       I2C_Status_Flag range Bus_Error .. SMB_Alert;
+
+   type I2C_State is
+     (Reset,
+      Ready,
+      Master_Busy_Tx,
+      Master_Busy_Rx,
+      Mem_Busy_Tx,
+      Mem_Busy_Rx);
+
+   type I2C_Port_Handle is record
+      Config   : I2C_Configuration;
+      State    : I2C_State := Reset;
+      Periph   : access I2C_Port := null;
+   end record;
+
+   I2C_Handles : array (I2C_Port_Id) of I2C_Port_Handle;
+
+   procedure Configure
+     (Handle : in out I2C_Port_Handle;
+      Port   : I2C_Port_Id;
+      Conf   : I2C_Configuration);
+
+   --  Low level flag handling
+
+   function Flag_Status (Port : I2C_Port; Flag : I2C_Status_Flag) return Boolean;
+--     procedure Clear_Flag
+--       (Port   : in out I2C_Port;
+--        Target : Clearable_I2C_Status_Flag);
+   procedure Clear_Address_Sent_Status (Port : in out I2C_Port);
+--     procedure Clear_Stop_Detection_Status (Port : in out I2C_Port);
+
+   --  Higher level flag handling
+
+   procedure Wait_Flag
+     (Handle  : in out I2C_Port_Handle;
+      Flag    :        I2C_Status_Flag;
+      F_State :        Boolean;
+      Timeout :        Duration;
+      Status  :    out I2C_Status);
+
+   procedure Wait_Master_Flag
+     (Handle  : in out I2C_Port_Handle;
+      Flag    :        I2C_Status_Flag;
+      Timeout :        Duration;
+      Status  :    out I2C_Status);
+
+   procedure Master_Request_Write
+     (Handle  : in out I2C_Port_Handle;
+      Addr    :        UInt10;
+      Timeout :        Duration;
+      Status  :    out I2C_Status);
+
+   procedure Master_Request_Read
+     (Handle  : in out I2C_Port_Handle;
+      Addr    :        UInt10;
+      Timeout :        Duration;
+      Status  :    out I2C_Status);
+
+   procedure Mem_Request_Write
+     (Handle        : in out I2C_Port_Handle;
+      Addr          :        UInt10;
+      Mem_Addr      :        Short;
+      Mem_Addr_Size :        I2C_Memory_Address_Size;
+      Timeout       :        Duration;
+      Status        :    out I2C_Status);
+
+   procedure Mem_Request_Read
+     (Handle        : in out I2C_Port_Handle;
+      Addr          :        UInt10;
+      Mem_Addr      :        Short;
+      Mem_Addr_Size :        I2C_Memory_Address_Size;
+      Timeout       :        Duration;
+      Status        :    out I2C_Status);
+
+   procedure Master_Transmit
+     (Handle  : in out I2C_Port_Handle;
+      Addr    : UInt10;
+      Data    : I2C_Data;
+      Status  : out I2C_Status;
+      Timeout : Duration);
+
+   procedure Master_Receive
+     (Handle  : in out I2C_Port_Handle;
+      Addr    : UInt10;
+      Data    : out I2C_Data;
+      Status  : out I2C_Status;
+      Timeout : Duration);
+
+   procedure Mem_Write
+     (Handle        : in out I2C_Port_Handle;
+      Addr          : UInt10;
+      Mem_Addr      : Short;
+      Mem_Addr_Size : I2C_Memory_Address_Size;
+      Data          : I2C_Data;
+      Status        : out I2C_Status;
+      Timeout       : Duration);
+
+   procedure Mem_Read
+     (Handle        : in out I2C_Port_Handle;
+      Addr          : UInt10;
+      Mem_Addr      : Short;
+      Mem_Addr_Size : I2C_Memory_Address_Size;
+      Data          : out I2C_Data;
+      Status        : out I2C_Status;
+      Timeout       : Duration);
 
    ---------------
    -- Configure --
    ---------------
 
    procedure Configure
-     (Port        : in out I2C_Port;
-      Clock_Speed : Word;
-      Mode        : I2C_Device_Mode;
-      Duty_Cycle  : I2C_Duty_Cycle;
-      Own_Address : Half_Word;
-      Ack         : I2C_Acknowledgement;
-      Ack_Address : I2C_Acknowledge_Address)
+     (Handle : in out I2C_Port_Handle;
+      Port   : I2C_Port_Id;
+      Conf   : I2C_Configuration)
    is
       CR1        : CR1_Register;
       CCR        : CCR_Register;
       OAR1       : OAR1_Register;
       PCLK1      : constant Word := System_Clock_Frequencies.PCLK1;
       Freq_Range : constant Half_Word := Half_Word (PCLK1 / 1_000_000);
+
    begin
+      if Handle.State /= Reset then
+         return;
+      end if;
+
+      Handle.Periph := As_Port (Port);
+      Handle.Config := Conf;
+
+      Enable_Clock (Handle.Periph.all);
+
+      --  Disable the I2C port
       if Freq_Range < 2 or else Freq_Range > 42 then
          raise Program_Error with
            "PCLK1 too high or too low: expected 2-42 MHz, current" &
            Freq_Range'Img & " MHz";
       end if;
 
+      Set_State (Port, False);
+
       --  Load CR2 and clear FREQ
-      Port.CR2 :=
+      Handle.Periph.CR2 :=
         (LAST    => 0,
          DMAEN   => 0,
          ITBUFEN => 0,
@@ -82,27 +220,26 @@ package body STM32.I2C is
          FREQ    => UInt6 (Freq_Range),
          others  => <>);
 
-      Set_State (Port, Disabled);
-
-      if Clock_Speed <= 100_000 then
+      --  Set the port timing
+      if Conf.Clock_Speed <= 100_000 then
         --  Mode selection to Standard Mode
          CCR.F_S := 0;
-         CCR.CCR := UInt12 (PCLK1 / (Clock_Speed * 2));
+         CCR.CCR := UInt12 (PCLK1 / (Conf.Clock_Speed * 2));
 
          if CCR.CCR < 4 then
             CCR.CCR := 4;
          end if;
 
-         Port.TRISE.TRISE := UInt6 (Freq_Range + 1);
+         Handle.Periph.TRISE.TRISE := UInt6 (Freq_Range + 1);
 
       else
          --  Fast mode
          CCR.F_S := 1;
 
-         if Duty_Cycle = DutyCycle_2 then
-            CCR.CCR := UInt12 (Pclk1 / (Clock_Speed * 3));
+         if Conf.Duty_Cycle = DutyCycle_2 then
+            CCR.CCR := UInt12 (Pclk1 / (Conf.Clock_Speed * 3));
          else
-            CCR.CCR := UInt12 (Pclk1 / (Clock_Speed * 25));
+            CCR.CCR := UInt12 (Pclk1 / (Conf.Clock_Speed * 25));
             CCR.DUTY := 1;
          end if;
 
@@ -112,15 +249,14 @@ package body STM32.I2C is
 
          CCR.CCR := CCR.CCR or 16#80#;
 
-         Port.TRISE.TRISE := UInt6 ((Word (Freq_Range) * 300) / 1000 + 1);
+         Handle.Periph.TRISE.TRISE :=
+           UInt6 ((Word (Freq_Range) * 300) / 1000 + 1);
       end if;
 
-      Port.CCR := CCR;
+      Handle.Periph.CCR := CCR;
 
-      Set_State (Port, Enabled);
-
-      CR1 := Port.CR1;
-      case Mode is
+      --  CR1 configuration
+      case Conf.Mode is
          when I2C_Mode =>
             CR1.SMBUS := 0;
             CR1.SMBTYPE := 0;
@@ -131,86 +267,37 @@ package body STM32.I2C is
             CR1.SMBUS := 1;
             CR1.SMBTYPE := 1;
       end case;
-      CR1.ACK := I2C_Acknowledgement'Enum_Rep (Ack);
-      Port.CR1 := CR1;
+      CR1.ENGC      := (if Conf.General_Call_Enabled then 1 else 0);
+      CR1.NOSTRETCH := (if Conf.Clock_Stretching_Enabled then 0 else 1);
+      Handle.Periph.CR1 := CR1;
 
-      OAR1.ADDMODE := (if Ack_Address = AcknowledgedAddress_10bit
+      --  Address mode (slave mode) configuration
+      OAR1.ADDMODE := (if Conf.Addressing_Mode = Addressing_Mode_10bit
                        then 1 else 0);
-      case Ack_Address is
-         when AcknowledgedAddress_7bit =>
+      case Conf.Addressing_Mode is
+         when Addressing_Mode_7bit =>
             OAR1.ADD0  := 0;
-            OAR1.ADD7  := UInt7 (Own_Address / 2);
+            OAR1.ADD7  := UInt7 (Conf.Own_Address / 2);
             OAR1.ADD10 := 0;
-         when AcknowledgedAddress_10bit =>
-            OAR1.Add0  := Bit (Own_Address and 2#1#);
-            OAR1.ADD7  := UInt7 ((Own_Address / 2) and 2#1111111#);
-            OAR1.Add10 := UInt2 (Own_Address / 2 ** 8);
+         when Addressing_Mode_10bit =>
+            OAR1.Add0  := Bit (Conf.Own_Address and 2#1#);
+            OAR1.ADD7  := UInt7 ((Conf.Own_Address / 2) and 2#1111111#);
+            OAR1.Add10 := UInt2 (Conf.Own_Address / 2 ** 8);
       end case;
 
-      Port.OAR1 := OAR1;
+      Handle.Periph.OAR1 := OAR1;
+
+      Set_State (Port, True);
+      Handle.State := Ready;
    end Configure;
 
-   ---------------
-   -- Set_State --
-   ---------------
+   -----------------
+   -- Flag_Status --
+   -----------------
 
-   procedure Set_State (Port : in out I2C_Port; State : I2C_State) is
-   begin
-      Port.CR1.PE := (if State = Enabled then 1 else 0);
-   end Set_State;
-
-   ------------------
-   -- Port_Enabled --
-   ------------------
-
-   function Port_Enabled (Port : I2C_Port) return Boolean is
-   begin
-      return Port.CR1.PE = 1;
-   end Port_Enabled;
-
-   --------------------
-   -- Generate_Start --
-   --------------------
-
-   procedure Generate_Start (Port : in out I2C_Port; State : I2C_State) is
-   begin
-      Port.CR1.START := (if State = Enabled then 1 else 0);
-   end Generate_Start;
-
-   -------------------
-   -- Generate_Stop --
-   -------------------
-
-   procedure Generate_Stop (Port : in out I2C_Port; State : I2C_State) is
-   begin
-      Port.CR1.STOP := (if State = Enabled then 1 else 0);
-   end Generate_Stop;
-
-   --------------------
-   -- Send_7Bit_Addr --
-   --------------------
-
-   procedure Send_7Bit_Address
-     (Port      : in out I2C_Port;
-      Address   : Byte;
-      Direction : I2C_Direction)
+   function Flag_Status
+     (Port : I2C_Port; Flag : I2C_Status_Flag) return Boolean
    is
-      Destination : Byte;
-   begin
-      if Direction = Receiver then
-         Destination := Address or 2#1#;
-      else
-         Destination := Address and (not 2#1#);
-      end if;
-
-      Port.DR.DR := Destination;
-   end Send_7Bit_Address;
-
-   --------------
-   -- Get_Flag --
-   --------------
-
-   function Status (Port : I2C_Port; Flag : I2C_Status_Flag) return Boolean is
    begin
       case Flag is
          when Start_Bit =>
@@ -256,35 +343,35 @@ package body STM32.I2C is
          when Dual_Flag =>
             return Port.SR2.DUALF = 1;
       end case;
-   end Status;
+   end Flag_Status;
 
-   ----------------
-   -- Clear_Flag --
-   ----------------
-
-   procedure Clear_Status
-     (Port   : in out I2C_Port;
-      Target : Clearable_I2C_Status_Flag)
-   is
-      Unref  : Bit with Unreferenced;
-   begin
-      case Target is
-         when Bus_Error =>
-            Port.SR1.BERR := 0;
-         when Arbitration_Lost =>
-            Port.SR1.ARLO := 0;
-         when Ack_Failure =>
-            Port.SR1.AF := 0;
-         when UnderOverrun =>
-            Port.SR1.OVR := 0;
-         when Packet_Error =>
-            Port.SR1.PECERR := 0;
-         when Timeout =>
-            Port.SR1.TIMEOUT := 0;
-         when SMB_Alert =>
-            Port.SR1.SMBALERT := 0;
-      end case;
-   end Clear_Status;
+--     ----------------
+--     -- Clear_Flag --
+--     ----------------
+--
+--     procedure Clear_Flag
+--       (Port   : in out I2C_Port;
+--        Target : Clearable_I2C_Status_Flag)
+--     is
+--        Unref  : Bit with Unreferenced;
+--     begin
+--        case Target is
+--           when Bus_Error =>
+--              Port.SR1.BERR := 0;
+--           when Arbitration_Lost =>
+--              Port.SR1.ARLO := 0;
+--           when Ack_Failure =>
+--              Port.SR1.AF := 0;
+--           when UnderOverrun =>
+--              Port.SR1.OVR := 0;
+--           when Packet_Error =>
+--              Port.SR1.PECERR := 0;
+--           when Timeout =>
+--              Port.SR1.TIMEOUT := 0;
+--           when SMB_Alert =>
+--              Port.SR1.SMBALERT := 0;
+--        end case;
+--     end Clear_Flag;
 
    -------------------------------
    -- Clear_Address_Sent_Status --
@@ -299,149 +386,868 @@ package body STM32.I2C is
       Unref := Port.SR2.MSL;
    end Clear_Address_Sent_Status;
 
-   ---------------------------------
-   -- Clear_Stop_Detection_Status --
-   ---------------------------------
+--     ---------------------------------
+--     -- Clear_Stop_Detection_Status --
+--     ---------------------------------
+--
+--     procedure Clear_Stop_Detection_Status (Port : in out I2C_Port) is
+--        Unref  : Bit with Volatile, Unreferenced;
+--     begin
+--        Unref := Port.SR1.STOPF;
+--        Port.CR1.PE := 1;
+--     end Clear_Stop_Detection_Status;
 
-   procedure Clear_Stop_Detection_Status (Port : in out I2C_Port) is
-      Unref  : Bit with Volatile, Unreferenced;
-   begin
-      Unref := Port.SR1.STOPF;
-      Port.CR1.PE := 1;
-   end Clear_Stop_Detection_Status;
+   ---------------
+   -- Wait_Flag --
+   ---------------
 
-   -------------------
-   -- Wait_For_Flag --
-   -------------------
-
-   procedure Wait_For_State
-     (Port     : I2C_Port;
-      Queried  : I2C_Status_Flag;
-      State    : I2C_State;
-      Time_Out : Natural := 1_000)
+   procedure Wait_Flag
+     (Handle  : in out I2C_Port_Handle;
+      Flag    :        I2C_Status_Flag;
+      F_State :        Boolean;
+      Timeout :        Duration;
+      Status  :    out I2C_Status)
    is
-      Expected : constant Boolean := State = Enabled;
-      Deadline : constant Time := Clock + Milliseconds (Time_Out);
+      Start : constant Time := Clock;
    begin
-      while Status (Port, Queried) /= Expected loop
-         if Clock >= Deadline then
-            raise I2C_Timeout;
+      while Flag_Status (Handle.Periph.all, Flag) = F_State loop
+         if To_Duration (Clock - Start) > Timeout then
+            Handle.State := Ready;
+            Status       := Err_Timeout;
+
+            return;
          end if;
       end loop;
-   end Wait_For_State;
 
-   ---------------
-   -- Send_Data --
-   ---------------
+      Status := Ok;
+   end Wait_Flag;
 
-   procedure Send_Data (Port : in out I2C_Port; Data : Byte) is
-   begin
-      Port.DR.DR := Data;
-   end Send_Data;
+   ----------------------
+   -- Wait_Master_Flag --
+   ----------------------
 
-   ---------------
-   -- Read_Data --
-   ---------------
-
-   function Read_Data (Port : I2C_Port) return Byte is
-   begin
-      return Port.DR.DR;
-   end Read_Data;
-
-   --------------------
-   -- Set_Ack_Config --
-   --------------------
-
-   procedure Set_Ack_Config (Port : in out I2C_Port; State : I2C_State) is
-   begin
-      Port.CR1.ACK := (if State = Enabled then 1 else 0);
-   end Set_Ack_Config;
-
-   ---------------------
-   -- Set_Nack_Config --
-   ---------------------
-
-   procedure Set_Nack_Config
-     (Port : in out I2C_Port;
-      Pos  : I2C_Nack_Position)
+   procedure Wait_Master_Flag
+     (Handle  : in out I2C_Port_Handle;
+      Flag    :        I2C_Status_Flag;
+      Timeout :        Duration;
+      Status  :    out I2C_Status)
    is
+      Start : constant Time := Clock;
    begin
-      Port.CR1.POS := (if Pos = Next then 1 else 0);
-   end Set_Nack_Config;
+      while not Flag_Status (Handle.Periph.all, Flag) loop
+         if Handle.Periph.SR1.AF = 1 then
+            --  Generate STOP
+            Handle.Periph.CR1.STOP := 1;
 
-   -----------
-   -- Start --
-   -----------
+            --  Clear the AF flag
+            Handle.Periph.SR1.Af := 0;
+            Handle.State := Ready;
+            Status       := Err_Error;
 
-   procedure Start
-     (Port      : in out I2C_Port;
-      Address   : Byte;
-      Direction : I2C_Direction)
-   is
-   begin
-      Generate_Start (Port, Enabled);
-      Wait_For_State (Port, Start_Bit, Enabled);
+            return;
+         end if;
 
-      Set_Ack_Config (Port, Enabled);
+         if To_Duration (Clock - Start) > Timeout then
+            Handle.State := Ready;
+            Status       := Err_Timeout;
 
-      Send_7Bit_Address (Port, Address, Direction);
-
-      while not Status (Port, Address_Sent) loop
-         if Status (Port, Ack_Failure) then
-            raise Program_Error;
+            return;
          end if;
       end loop;
-      Clear_Address_Sent_Status (Port);
-   end Start;
 
-   --------------
-   -- Read_Ack --
-   --------------
+      Status := Ok;
+   end Wait_Master_Flag;
 
-   function Read_Ack (Port : in out I2C_Port) return Byte is
+   --------------------------
+   -- Master_Request_Write --
+   --------------------------
+
+   procedure Master_Request_Write
+     (Handle  : in out I2C_Port_Handle;
+      Addr    :        UInt10;
+      Timeout :        Duration;
+      Status  :    out I2C_Status)
+   is
    begin
-      Set_Ack_Config (Port, Enabled);
-      Wait_For_State (Port, Rx_Data_Register_Not_Empty, Enabled);
-      return Read_Data (Port);
-   end Read_Ack;
+      Handle.Periph.CR1.START := 1;
 
-   ---------------
-   -- Read_Nack --
-   ---------------
+      Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
 
-   function Read_Nack (Port : in out I2C_Port) return Byte is
+      if Status /= Ok then
+         return;
+      end if;
+
+      if Handle.Config.Addressing_Mode = Addressing_Mode_7bit then
+         Handle.Periph.DR.DR := Byte (Addr) and not 2#1#;
+      else
+         declare
+            MSB : constant Byte :=
+                    Byte (Shift_Right (Short (Addr) and 16#300#, 7));
+            LSB : constant Byte :=
+                    Byte (Addr and 16#FF#);
+         begin
+            --  We need to send 2#1111_MSB0# when MSB are the 3 most
+            --  significant bits of the address
+            Handle.Periph.DR.DR := MSB or 16#F0#;
+
+            Wait_Master_Flag (Handle, Address_Sent_10bit, Timeout, Status);
+
+            if Status /= OK then
+               return;
+            end if;
+
+            Handle.Periph.DR.DR := LSB;
+         end;
+      end if;
+
+      Wait_Master_Flag (Handle, Address_Sent, Timeout, Status);
+   end Master_Request_Write;
+
+   --------------------------
+   -- Master_Request_Write --
+   --------------------------
+
+   procedure Master_Request_Read
+     (Handle  : in out I2C_Port_Handle;
+      Addr    :        UInt10;
+      Timeout :        Duration;
+      Status  :    out I2C_Status)
+   is
    begin
-      Set_Ack_Config (Port, Disabled);
-      Generate_Stop (Port, Enabled);
-      Wait_For_State (Port, Rx_Data_Register_Not_Empty, Enabled);
-      return Read_Data (Port);
-   end Read_Nack;
+      Handle.Periph.CR1.ACK := 1;
+      Handle.Periph.CR1.START := 1;
 
-   -----------
-   -- Write --
-   -----------
+      Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
 
-   procedure Write (Port : in out I2C_Port; Data : Byte) is
+      if Status /= Ok then
+         return;
+      end if;
+
+      if Handle.Config.Addressing_Mode = Addressing_Mode_7bit then
+         Handle.Periph.DR.DR := Byte (Addr) or 2#1#;
+      else
+         declare
+            MSB : constant Byte :=
+                    Byte (Shift_Right (Short (Addr) and 16#300#, 7));
+            LSB : constant Byte :=
+                    Byte (Addr and 16#FF#);
+         begin
+            --  We need to write the address bit. So let's start with a
+            --  write header
+            --  We need to send 2#1111_MSB0# when MSB are the 3 most
+            --  significant bits of the address
+            Handle.Periph.DR.DR := MSB or 16#F0#;
+
+            Wait_Master_Flag (Handle, Address_Sent_10bit, Timeout, Status);
+
+            if Status /= OK then
+               return;
+            end if;
+
+            Handle.Periph.DR.DR := LSB;
+
+            Wait_Master_Flag (Handle, Address_Sent, Timeout, Status);
+
+            if Status /= OK then
+               return;
+            end if;
+
+            Clear_Address_Sent_Status (Handle.Periph.all);
+
+            --  Generate a re-start
+            Handle.Periph.CR1.START := 1;
+
+            Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
+
+            if Status /= OK then
+               return;
+            end if;
+
+            --  resend the MSB with the read bit set.
+            Handle.Periph.DR.DR := MSB or 16#F1#;
+         end;
+      end if;
+
+      Wait_Master_Flag (Handle, Address_Sent, Timeout, Status);
+   end Master_Request_Read;
+
+   -----------------------
+   -- Mem_Request_Write --
+   -----------------------
+
+   procedure Mem_Request_Write
+     (Handle        : in out I2C_Port_Handle;
+      Addr          :        UInt10;
+      Mem_Addr      :        Short;
+      Mem_Addr_Size :        I2C_Memory_Address_Size;
+      Timeout       :        Duration;
+      Status        :    out I2C_Status)
+   is
    begin
-      Wait_For_State (Port, Tx_Data_Register_Empty, Enabled);
-      Send_Data (Port, Data);
+      Handle.Periph.CR1.START := 1;
 
-      while
-        not Status (Port, Tx_Data_Register_Empty) or else
-        not Status (Port, Byte_Transfer_Finished)
-      loop
-         null;
+      Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
+
+      if Status /= Ok then
+         return;
+      end if;
+
+      --  Send slave address
+      Handle.Periph.DR.DR := Byte (Addr) and not 2#1#;
+      Wait_Master_Flag (Handle, Address_Sent, Timeout, Status);
+
+      if Status /= Ok then
+         return;
+      end if;
+
+      Clear_Address_Sent_Status (Handle.Periph.all);
+
+      --  Wait until TXE flag is set
+      Wait_Flag (Handle, Tx_Data_Register_Empty, False, Timeout, Status);
+
+      if Status /= Ok then
+         return;
+      end if;
+
+      case Mem_Addr_Size is
+         when Memory_Size_8b =>
+            Handle.Periph.DR.DR := Byte (Mem_Addr);
+         when Memory_Size_16b =>
+            Handle.Periph.DR.DR := Byte (Shift_Right (Mem_Addr, 8));
+
+            Wait_Flag (Handle, Tx_Data_Register_Empty, False, Timeout, Status);
+
+            if Status /= Ok then
+               return;
+            end if;
+
+            Handle.Periph.DR.DR := Byte (Mem_Addr and 16#FF#);
+      end case;
+   end Mem_Request_Write;
+
+   ----------------------
+   -- Mem_Request_Read --
+   ----------------------
+
+   procedure Mem_Request_Read
+     (Handle        : in out I2C_Port_Handle;
+      Addr          :        UInt10;
+      Mem_Addr      :        Short;
+      Mem_Addr_Size :        I2C_Memory_Address_Size;
+      Timeout       :        Duration;
+      Status        :    out I2C_Status)
+   is
+   begin
+      Handle.Periph.CR1.ACK := 1;
+      Handle.Periph.CR1.START := 1;
+
+      Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
+
+      if Status /= Ok then
+         return;
+      end if;
+
+      --  Send slave address in write mode
+      Handle.Periph.DR.DR := Byte (Addr) and not 16#1#;
+
+      Wait_Master_Flag (Handle, Address_Sent, Timeout, Status);
+
+      if Status /= Ok then
+         return;
+      end if;
+
+      Clear_Address_Sent_Status (Handle.Periph.all);
+
+      --  Wait until TXE flag is set
+      Wait_Flag (Handle, Tx_Data_Register_Empty, False, Timeout, Status);
+
+      if Status /= Ok then
+         return;
+      end if;
+
+      case Mem_Addr_Size is
+         when Memory_Size_8b =>
+            Handle.Periph.DR.DR := Byte (Mem_Addr);
+         when Memory_Size_16b =>
+            Handle.Periph.DR.DR := Byte (Shift_Right (Mem_Addr, 8));
+
+            Wait_Flag (Handle, Tx_Data_Register_Empty, False, Timeout, Status);
+
+            if Status /= Ok then
+               return;
+            end if;
+
+            Handle.Periph.DR.DR := Byte (Mem_Addr and 16#FF#);
+      end case;
+
+      --  We now need to reset and send the slave address in read mode
+      Handle.Periph.CR1.START := 1;
+
+      Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
+
+      if Status /= Ok then
+         return;
+      end if;
+
+      --  Send slave address in read mode
+      Handle.Periph.DR.DR := Byte (Addr) or 16#1#;
+
+      Wait_Master_Flag (Handle, Address_Sent, Timeout, Status);
+   end Mem_Request_Read;
+
+   ---------------------
+   -- Master_Transmit --
+   ---------------------
+
+   procedure Master_Transmit
+     (Handle  : in out I2C_Port_Handle;
+      Addr    : UInt10;
+      Data    : I2C_Data;
+      Status  : out I2C_Status;
+      Timeout : Duration)
+   is
+      Idx : Natural := Data'First;
+
+   begin
+      if Handle.State = Reset then
+         Status := Err_Error;
+         return;
+
+      elsif Data'Length = 0 then
+         Status := Err_Error;
+         return;
+      end if;
+
+      Wait_Flag (Handle, Busy, True, Timeout, Status);
+
+      if Status /= Ok then
+         Status := Busy;
+         return;
+      end if;
+
+      if Handle.State /= Ready then
+         Status := Busy;
+         return;
+      end if;
+
+      Handle.State := Master_Busy_Tx;
+
+      Handle.Periph.CR1.POS := 0;
+
+      Master_Request_Write (Handle, Addr, Timeout, Status);
+
+      if Status /= Ok then
+         return;
+      end if;
+
+      Clear_Address_Sent_Status (Handle.Periph.all);
+
+      while Idx <= Data'Last loop
+         Wait_Flag (Handle, Tx_Data_Register_Empty, False, Timeout, Status);
+
+         if Status /= OK then
+            return;
+         end if;
+
+         Handle.Periph.DR.DR := Data (Idx);
+         Idx := Idx + 1;
+
+         if Idx <= Data'Last then
+            Wait_Flag (Handle, Byte_Transfer_Finished, True, Timeout, Status);
+
+            if Status = OK then
+               Handle.Periph.DR.DR := Data (Idx);
+               Idx := Idx + 1;
+            end if;
+         end if;
       end loop;
-   end Write;
 
-   ----------
-   -- Stop --
-   ----------
+      Wait_Flag (Handle, Tx_Data_Register_Empty, False, Timeout, Status);
 
-   procedure Stop (Port : in out I2C_Port) is
+      if Status /= OK then
+         return;
+      end if;
+
+      --  Generate STOP
+      Handle.Periph.CR1.STOP := 1;
+      Handle.State := Ready;
+   end Master_Transmit;
+
+   --------------------
+   -- Master_Receive --
+   --------------------
+
+   procedure Master_Receive
+     (Handle  : in out I2C_Port_Handle;
+      Addr    : UInt10;
+      Data    : out I2C_Data;
+      Status  : out I2C_Status;
+      Timeout : Duration)
+   is
+      Idx : Natural := Data'First;
+
    begin
-      Generate_Stop (Port, Enabled);
-   end Stop;
+      if Handle.State = Reset then
+         Status := Err_Error;
+         return;
+
+      elsif Data'Length = 0 then
+         Status := Err_Error;
+         return;
+      end if;
+
+      Wait_Flag (Handle, Busy, True, Timeout, Status);
+
+      if Status /= Ok then
+         Status := Busy;
+         return;
+      end if;
+
+      if Handle.State /= Ready then
+         Status := Busy;
+         return;
+      end if;
+
+      Handle.State := Master_Busy_Rx;
+
+      Handle.Periph.CR1.POS := 0;
+
+      Master_Request_Read (Handle, Addr, Timeout, Status);
+
+      if Status /= Ok then
+         return;
+      end if;
+
+      if Data'Length = 1 then
+         Handle.Periph.CR1.ACK := 0;
+         Clear_Address_Sent_Status (Handle.Periph.all);
+         Handle.Periph.CR1.STOP := 1;
+
+      elsif Data'Length = 2 then
+         Handle.Periph.CR1.ACK := 0;
+         Handle.Periph.CR1.POS := 1;
+         Clear_Address_Sent_Status (Handle.Periph.all);
+
+      else
+         --  Automatic acknowledge
+         Handle.Periph.CR1.ACK := 1;
+         Clear_Address_Sent_Status (Handle.Periph.all);
+      end if;
+
+      while Idx <= Data'Last loop
+         if Idx = Data'Last then
+            --  One byte to read
+            Wait_Flag
+              (Handle, Rx_Data_Register_Not_Empty, False, Timeout, Status);
+            if Status /= Ok then
+               return;
+            end if;
+
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+
+         elsif Idx + 1 = Data'Last then
+            --  Two bytes to read
+            Wait_Flag (Handle, Byte_Transfer_Finished, False, Timeout, Status);
+            if Status /= Ok then
+               return;
+            end if;
+
+            Handle.Periph.CR1.STOP := 1;
+
+            --  read the data from DR
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+
+         elsif Idx + 2 = Data'Last then
+            --  Three bytes to read
+            Wait_Flag (Handle, Byte_Transfer_Finished, False, Timeout, Status);
+            if Status /= Ok then
+               return;
+            end if;
+
+            Handle.Periph.CR1.ACK := 0;
+
+            --  read the data from DR
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+
+            Wait_Flag (Handle, Byte_Transfer_Finished, False, Timeout, Status);
+            if Status /= Ok then
+               return;
+            end if;
+
+            Handle.Periph.CR1.STOP := 1;
+
+            --  read the data from DR
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+
+         else
+            --  One byte to read
+            Wait_Flag
+              (Handle, Rx_Data_Register_Not_Empty, False, Timeout, Status);
+            if Status /= Ok then
+               return;
+            end if;
+
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+
+            Wait_Flag (Handle, Byte_Transfer_Finished, False, Timeout, Status);
+
+            if Status = Ok then
+               Data (Idx) := Handle.Periph.DR.DR;
+               Idx := Idx + 1;
+            end if;
+
+         end if;
+      end loop;
+
+      Handle.State := Ready;
+   end Master_Receive;
+
+   ---------------
+   -- Mem_Write --
+   ---------------
+
+   procedure Mem_Write
+     (Handle        : in out I2C_Port_Handle;
+      Addr          : UInt10;
+      Mem_Addr      : Short;
+      Mem_Addr_Size : I2C_Memory_Address_Size;
+      Data          : I2C_Data;
+      Status        : out I2C_Status;
+      Timeout       : Duration)
+   is
+      Idx : Natural := Data'First;
+
+   begin
+      if Handle.State = Reset then
+         Status := Err_Error;
+         return;
+
+      elsif Data'Length = 0 then
+         Status := Err_Error;
+         return;
+      end if;
+
+      Wait_Flag (Handle, Busy, True, Timeout, Status);
+
+      if Status /= Ok then
+         Status := Busy;
+         return;
+      end if;
+
+      if Handle.State /= Ready then
+         Status := Busy;
+         return;
+      end if;
+
+      Handle.State := Mem_Busy_Tx;
+      Handle.Periph.CR1.POS := 0;
+
+      Mem_Request_Write
+        (Handle, Addr, Mem_Addr, Mem_Addr_Size, Timeout, Status);
+
+      if Status /= Ok then
+         return;
+      end if;
+
+      while Idx <= Data'Last loop
+         Wait_Flag (Handle, Tx_Data_Register_Empty, False, Timeout, Status);
+
+         if Status /= OK then
+            return;
+         end if;
+
+         Handle.Periph.DR.DR := Data (Idx);
+         Idx := Idx + 1;
+
+         if Idx <= Data'Last then
+            Wait_Flag (Handle, Byte_Transfer_Finished, True, Timeout, Status);
+
+            if Status = OK then
+               Handle.Periph.DR.DR := Data (Idx);
+               Idx := Idx + 1;
+            end if;
+         end if;
+      end loop;
+
+      Wait_Flag (Handle, Tx_Data_Register_Empty, False, Timeout, Status);
+
+      if Status /= OK then
+         return;
+      end if;
+
+      --  Generate STOP
+      Handle.Periph.CR1.STOP := 1;
+      Handle.State := Ready;
+   end Mem_Write;
+
+   --------------
+   -- Mem_Read --
+   --------------
+
+   procedure Mem_Read
+     (Handle        : in out I2C_Port_Handle;
+      Addr          : UInt10;
+      Mem_Addr      : Short;
+      Mem_Addr_Size : I2C_Memory_Address_Size;
+      Data          : out I2C_Data;
+      Status        : out I2C_Status;
+      Timeout       : Duration)
+   is
+      Idx : Natural := Data'First;
+
+   begin
+      if Handle.State = Reset then
+         Status := Err_Error;
+         return;
+
+      elsif Data'Length = 0 then
+         Status := Err_Error;
+         return;
+      end if;
+
+      Wait_Flag (Handle, Busy, True, Timeout, Status);
+
+      if Status /= Ok then
+         Status := Busy;
+         return;
+      end if;
+
+      if Handle.State /= Ready then
+         Status := Busy;
+         return;
+      end if;
+
+      Handle.State := Mem_Busy_Rx;
+
+      Handle.Periph.CR1.POS := 0;
+
+      Mem_Request_Read
+        (Handle, Addr, Mem_Addr, Mem_Addr_Size, Timeout, Status);
+
+      if Status /= Ok then
+         return;
+      end if;
+
+      if Data'Length = 1 then
+         Handle.Periph.CR1.ACK := 0;
+         Clear_Address_Sent_Status (Handle.Periph.all);
+         Handle.Periph.CR1.STOP := 1;
+
+      elsif Data'Length = 2 then
+         Handle.Periph.CR1.ACK := 0;
+         Handle.Periph.CR1.POS := 1;
+         Clear_Address_Sent_Status (Handle.Periph.all);
+
+      else
+         --  Automatic acknowledge
+         Handle.Periph.CR1.ACK := 1;
+         Clear_Address_Sent_Status (Handle.Periph.all);
+      end if;
+
+      while Idx <= Data'Last loop
+         if Idx = Data'Last then
+            --  One byte to read
+            Wait_Flag
+              (Handle, Rx_Data_Register_Not_Empty, False, Timeout, Status);
+            if Status /= Ok then
+               return;
+            end if;
+
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+
+         elsif Idx + 1 = Data'Last then
+            --  Two bytes to read
+            Wait_Flag (Handle, Byte_Transfer_Finished, False, Timeout, Status);
+            if Status /= Ok then
+               return;
+            end if;
+
+            Handle.Periph.CR1.STOP := 1;
+
+            --  read the data from DR
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+
+         elsif Idx + 2 = Data'Last then
+            --  Three bytes to read
+            Wait_Flag (Handle, Byte_Transfer_Finished, False, Timeout, Status);
+            if Status /= Ok then
+               return;
+            end if;
+
+            Handle.Periph.CR1.ACK := 0;
+
+            --  read the data from DR
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+
+            Wait_Flag (Handle, Byte_Transfer_Finished, False, Timeout, Status);
+            if Status /= Ok then
+               return;
+            end if;
+
+            Handle.Periph.CR1.STOP := 1;
+
+            --  read the data from DR
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+
+         else
+            --  One byte to read
+            Wait_Flag
+              (Handle, Rx_Data_Register_Not_Empty, False, Timeout, Status);
+            if Status /= Ok then
+               return;
+            end if;
+
+            Data (Idx) := Handle.Periph.DR.DR;
+            Idx := Idx + 1;
+
+            Wait_Flag (Handle, Byte_Transfer_Finished, False, Timeout, Status);
+
+            if Status = Ok then
+               Data (Idx) := Handle.Periph.DR.DR;
+               Idx := Idx + 1;
+            end if;
+
+         end if;
+      end loop;
+
+      Handle.State := Ready;
+   end Mem_Read;
+
+   ---------------
+   -- Configure --
+   ---------------
+
+   procedure Configure
+     (Port        : I2C_Port_Id; Conf : I2C_Configuration)
+   is
+   begin
+      Configure (I2C_Handles (Port), Port, Conf);
+   end Configure;
+
+   ---------------------
+   -- Master_Transmit --
+   ---------------------
+
+   procedure Master_Transmit
+     (Port    : I2C_Port_Id;
+      Addr    : UInt10;
+      Data    : I2C_Data;
+      Status  : out I2C_Status;
+      Timeout : Natural := 1000)
+   is
+   begin
+      Master_Transmit
+        (I2C_Handles (Port),
+         Addr,
+         Data,
+         Status,
+         Duration (Timeout) / 1000.0);
+   end Master_Transmit;
+
+   --------------------
+   -- Master_Receive --
+   --------------------
+
+   procedure Master_Receive
+     (Port    : I2C_Port_Id;
+      Addr    : UInt10;
+      Data    : out I2C_Data;
+      Status  : out I2C_Status;
+      Timeout : Natural := 1000)
+   is
+   begin
+      Master_Receive
+        (I2C_Handles (Port),
+         Addr,
+         Data,
+         Status,
+         Duration (Timeout) / 1000.0);
+   end Master_Receive;
+
+   ---------------
+   -- Mem_Write --
+   ---------------
+
+   procedure Mem_Write
+     (Port          : I2C_Port_Id;
+      Addr          : UInt10;
+      Mem_Addr      : Short;
+      Mem_Addr_Size : I2C_Memory_Address_Size;
+      Data          : I2C_Data;
+      Status        : out I2C_Status;
+      Timeout       : Natural := 1000)
+   is
+   begin
+      Mem_Write
+        (I2C_Handles (Port),
+         Addr,
+         Mem_Addr,
+         Mem_Addr_Size,
+         Data, Status,
+         Duration (Timeout) / 1000.0);
+   end Mem_Write;
+
+   --------------
+   -- Mem_Read --
+   --------------
+
+   procedure Mem_Read
+     (Port          : I2C_Port_Id;
+      Addr          : UInt10;
+      Mem_Addr      : Short;
+      Mem_Addr_Size : I2C_Memory_Address_Size;
+      Data          : out I2C_Data;
+      Status        : out I2C_Status;
+      Timeout       : Natural := 1000)
+   is
+   begin
+      Mem_Read
+        (I2C_Handles (Port),
+         Addr,
+         Mem_Addr,
+         Mem_Addr_Size,
+         Data, Status,
+         Duration (Timeout) / 1000.0);
+   end Mem_Read;
+
+   ---------------
+   -- Set_State --
+   ---------------
+
+   procedure Set_State (Port : I2C_Port_Id; Enabled : Boolean)
+   is
+      Periph : constant access I2C_Port := As_Port (Port);
+   begin
+      Periph.CR1.PE := (if Enabled then 1 else 0);
+   end Set_State;
+
+   ------------------
+   -- Port_Enabled --
+   ------------------
+
+   function Port_Enabled (Port : I2C_Port_Id) return Boolean
+   is
+      Periph : constant access I2C_Port := As_Port (Port);
+   begin
+      return Periph.CR1.PE = 1;
+   end Port_Enabled;
 
    ----------------------
    -- Enable_Interrupt --
@@ -461,10 +1267,6 @@ package body STM32.I2C is
             Port.CR2.ITBUFEN := 1;
       end case;
    end Enable_Interrupt;
-
-   -----------------------
-   -- Disable_Interrupt --
-   -----------------------
 
    -----------------------
    -- Disable_Interrupt --

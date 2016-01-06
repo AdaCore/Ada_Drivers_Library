@@ -9,7 +9,7 @@ with STM32.LCD;
 
 package body STM32.Touch_Panel is
 
-   TP_I2C   : I2C_Port_Id renames I2C_Port_3;
+   TP_I2C   : I2C_Port_Id renames I2C_3;
 
    --  I2C Slave address of touchscreen FocalTech FT5336
    TP_ADDR  : constant := 16#70#;
@@ -330,7 +330,7 @@ package body STM32.Touch_Panel is
    begin
       Enable_Clock (Pins);
 
-      Reset (Peripheral (TP_I2C).all);
+      Reset (TP_I2C);
 
       Configure_Alternate_Function (Pins, GPIO_AF_I2C3);
       Configure_IO (Pins,
@@ -347,12 +347,12 @@ package body STM32.Touch_Panel is
 
    procedure TP_I2C_Config
    is
-      I2C_Conf : I2C_Config;
+      I2C_Conf : I2C_Configuration;
    begin
       --  Wait at least 200ms after power up before accessing the TP registers
       My_Delay (200);
 
-      Reset (Peripheral (TP_I2C).all);
+      Reset (TP_I2C);
 
       I2C_Conf.Own_Address := 16#00#;
       I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;

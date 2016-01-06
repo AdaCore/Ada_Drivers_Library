@@ -42,11 +42,15 @@
 --  This file provides definitions for the STM32F4 (ARM Cortex M4F
 --  from ST Microelectronics) Inter-Integrated Circuit (I2C) facility.
 
-private with STM32_SVD.I2C;
+with STM32.Device; use STM32.Device;
 
 package STM32.I2C is
 
-   type I2C_Port is limited private;
+   type I2C_Status is
+     (Ok,
+      Err_Error,
+      Err_Timeout,
+      Busy);
 
    type I2C_Device_Mode is
      (I2C_Mode,
@@ -61,102 +65,148 @@ package STM32.I2C is
 
    type I2C_Direction is (Transmitter, Receiver);
 
-   type I2C_Acknowledge_Address is
-     (AcknowledgedAddress_7bit,
-      AcknowledgedAddress_10bit);
+   type I2C_Addressing_Mode is
+     (Addressing_Mode_7bit,
+      Addressing_Mode_10bit);
+
+    type I2C_Memory_Address_Size is
+     (Memory_Size_8b,
+      Memory_Size_16b);
+
+  type I2C_Configuration is record
+      Clock_Speed              : Word;
+      Mode                     : I2C_Device_Mode;
+      Duty_Cycle               : I2C_Duty_Cycle;
+
+      Addressing_Mode          : I2C_Addressing_Mode;
+      Own_Address              : STM32_SVD.UInt10;
+
+      --  an I2C general call dispatches the same data to all connected
+      --  devices.
+      General_Call_Enabled     : Boolean := False;
+
+      --  Clock stretching is a mean for a slave device to slow down the
+      --  i2c clock in order to process the communication.
+      Clock_Stretching_Enabled : Boolean := True;
+   end record;
+
+   type I2C_Data is array (Natural range <>) of Byte;
 
    procedure Configure
-     (Port        : in out I2C_Port;
-      Clock_Speed : Word;
-      Mode        : I2C_Device_Mode;
-      Duty_Cycle  : I2C_Duty_Cycle;
-      Own_Address : Half_Word;
-      Ack         : I2C_Acknowledgement;
-      Ack_Address : I2C_Acknowledge_Address)
+     (Port        : I2C_Port_Id; Conf : I2C_Configuration)
      with Post => Port_Enabled (Port);
 
-   type I2C_State is (Enabled, Disabled);
+   procedure Set_State (Port : I2C_Port_Id; Enabled : Boolean);
+   function Port_Enabled (Port : I2C_Port_Id) return Boolean;
 
-   procedure Set_State (Port : in out I2C_Port; State : I2C_State);
+   procedure Master_Transmit
+     (Port    : I2C_Port_Id;
+      Addr    : UInt10;
+      Data    : I2C_Data;
+      Status  : out I2C_Status;
+      Timeout : Natural := 1000);
 
-   function Port_Enabled (Port : I2C_Port) return Boolean;
+   procedure Master_Receive
+     (Port    : I2C_Port_Id;
+      Addr    : UInt10;
+      Data    : out I2C_Data;
+      Status  : out I2C_Status;
+      Timeout : Natural := 1000);
 
-   procedure Generate_Start (Port : in out I2C_Port; State : I2C_State);
+   procedure Mem_Write
+     (Port          : I2C_Port_Id;
+      Addr          : UInt10;
+      Mem_Addr      : Short;
+      Mem_Addr_Size : I2C_Memory_Address_Size;
+      Data          : I2C_Data;
+      Status        : out I2C_Status;
+      Timeout       : Natural := 1000);
 
-   procedure Generate_Stop (Port : in out I2C_Port; State : I2C_State);
+   procedure Mem_Read
+     (Port          : I2C_Port_Id;
+      Addr          : UInt10;
+      Mem_Addr      : Short;
+      Mem_Addr_Size : I2C_Memory_Address_Size;
+      Data          : out I2C_Data;
+      Status        : out I2C_Status;
+      Timeout       : Natural := 1000);
 
-   procedure Send_7Bit_Address
-     (Port      : in out I2C_Port;
-      Address   : Byte;
-      Direction : I2C_Direction);
-
-   procedure Send_Data (Port : in out I2C_Port; Data : Byte);
-
-   function Read_Data (Port : I2C_Port) return Byte;
-
-   type I2C_Status_Flag is
-     (Start_Bit,
-      Address_Sent,
-      Byte_Transfer_Finished,
-      Address_Sent_10bit,
-      Stop_Detection,
-      Rx_Data_Register_Not_Empty,
-      Tx_Data_Register_Empty,
-      Bus_Error,
-      Arbitration_Lost,
-      Ack_Failure,
-      UnderOverrun,
-      Packet_Error,
-      Timeout,
-      SMB_Alert,
-      Master_Slave_Mode,
-      Busy,
-      Transmitter_Receiver_Mode,
-      General_Call,
-      SMB_Default,
-      SMB_Host,
-      Dual_Flag);
-
-   function Status (Port : I2C_Port; Flag : I2C_Status_Flag) return Boolean;
-
-   subtype Clearable_I2C_Status_Flag is
-     I2C_Status_Flag range Bus_Error .. SMB_Alert;
-
-   procedure Clear_Status
-     (Port   : in out I2C_Port;
-      Target : Clearable_I2C_Status_Flag);
-
-   procedure Clear_Address_Sent_Status (Port : in out I2C_Port);
-
-   procedure Clear_Stop_Detection_Status (Port : in out I2C_Port);
-
-   procedure Wait_For_State
-     (Port     : I2C_Port;
-      Queried  : I2C_Status_Flag;
-      State    : I2C_State;
-      Time_Out : Natural := 1_000);  -- milliseconds
-
-   I2C_Timeout : exception;
-   --  Raised by Wait_For_Flag
-
-   procedure Set_Ack_Config (Port : in out I2C_Port; State : I2C_State);
-
-   type I2C_Nack_Position is (Next, Current);
-
-   procedure Set_Nack_Config (Port : in out I2C_Port; Pos : I2C_Nack_Position);
-
-   procedure Start
-     (Port      : in out I2C_Port;
-      Address   : Byte;
-      Direction : I2C_Direction);
-
-   function Read_Ack (Port : in out I2C_Port) return Byte;
-
-   function Read_Nack (Port : in out I2C_Port) return Byte;
-
-   procedure Write (Port : in out I2C_Port; Data : Byte);
-
-   procedure Stop (Port : in out I2C_Port);
+--     procedure Generate_Start (Port : in out I2C_Port; State : I2C_State);
+--
+--     procedure Generate_Stop (Port : in out I2C_Port; State : I2C_State);
+--
+--     procedure Send_7Bit_Address
+--       (Port      : in out I2C_Port;
+--        Address   : Byte;
+--        Direction : I2C_Direction);
+--
+--     procedure Send_Data (Port : in out I2C_Port; Data : Byte);
+--
+--     function Read_Data (Port : I2C_Port) return Byte;
+--
+--     type I2C_Status_Flag is
+--       (Start_Bit,
+--        Address_Sent,
+--        Byte_Transfer_Finished,
+--        Address_Sent_10bit,
+--        Stop_Detection,
+--        Rx_Data_Register_Not_Empty,
+--        Tx_Data_Register_Empty,
+--        Bus_Error,
+--        Arbitration_Lost,
+--        Ack_Failure,
+--        UnderOverrun,
+--        Packet_Error,
+--        Timeout,
+--        SMB_Alert,
+--        Master_Slave_Mode,
+--        Busy,
+--        Transmitter_Receiver_Mode,
+--        General_Call,
+--        SMB_Default,
+--        SMB_Host,
+--        Dual_Flag);
+--
+--     function Status (Port : I2C_Port; Flag : I2C_Status_Flag) return Boolean;
+--
+--     subtype Clearable_I2C_Status_Flag is
+--       I2C_Status_Flag range Bus_Error .. SMB_Alert;
+--
+--     procedure Clear_Status
+--       (Port   : in out I2C_Port;
+--        Target : Clearable_I2C_Status_Flag);
+--
+--     procedure Clear_Address_Sent_Status (Port : in out I2C_Port);
+--
+--     procedure Clear_Stop_Detection_Status (Port : in out I2C_Port);
+--
+--     procedure Wait_For_State
+--       (Port     : I2C_Port;
+--        Queried  : I2C_Status_Flag;
+--        State    : I2C_State;
+--        Time_Out : Natural := 1_000);  -- milliseconds
+--
+--     I2C_Timeout : exception;
+--     --  Raised by Wait_For_Flag
+--
+--     procedure Set_Ack_Config (Port : in out I2C_Port; State : I2C_State);
+--
+--     type I2C_Nack_Position is (Next, Current);
+--
+--     procedure Set_Nack_Config (Port : in out I2C_Port; Pos : I2C_Nack_Position);
+--
+--     procedure Start
+--       (Port      : in out I2C_Port;
+--        Address   : Byte;
+--        Direction : I2C_Direction);
+--
+--     function Read_Ack (Port : in out I2C_Port) return Byte;
+--
+--     function Read_Nack (Port : in out I2C_Port) return Byte;
+--
+--     procedure Write (Port : in out I2C_Port; Data : Byte);
+--
+--     procedure Stop (Port : in out I2C_Port);
 
    type I2C_Interrupt is
      (Error_Interrupt,
@@ -177,9 +227,5 @@ package STM32.I2C is
      (Port   : in out I2C_Port;
       Source : I2C_Interrupt)
      return Boolean;
-
-private
-
-   type I2C_Port is new STM32_SVD.I2C.I2C_Peripheral;
 
 end STM32.I2C;

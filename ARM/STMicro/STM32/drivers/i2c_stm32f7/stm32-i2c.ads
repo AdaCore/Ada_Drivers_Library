@@ -25,21 +25,12 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This file provides definitions for the STM32F4 (ARM Cortex M4F
+--  This file provides definitions for the STM32F7 (ARM Cortex M7F
 --  from ST Microelectronics) Inter-Integrated Circuit (I2C) facility.
 
-private with STM32_SVD.I2C;
+with STM32.Device; use STM32.Device;
 
 package STM32.I2C is
-
-   type I2C_Port is limited private;
-
-   --  ??? Port_Id and convertions to/from I2C_Port should be elsewherer
-   --  in the devices folder, as the number of I2C port is device-specific
-   type I2C_Port_Id is (I2C_Port_1, I2C_Port_2, I2C_Port_3, I2C_Port_4);
-
-   function Peripheral (Id : I2C_Port_Id) return access I2C_Port;
-   function Id (Port: I2C_Port) return I2C_Port_Id;
 
    type I2C_Status is
      (Ok,
@@ -57,7 +48,7 @@ package STM32.I2C is
      (Memory_Size_8b,
       Memory_Size_16b);
 
-   type I2C_Config is record
+   type I2C_Configuration is record
       Clock_Speed              : Word;
       Addressing_Mode          : I2C_Addressing_Mode;
       Own_Address              : STM32_SVD.UInt10;
@@ -79,7 +70,7 @@ package STM32.I2C is
    function Port_Enabled (Port : I2C_Port_Id) return Boolean
      with Inline;
 
-   procedure Configure (Port : I2C_Port_Id; Conf : I2C_Config)
+   procedure Configure (Port : I2C_Port_Id; Conf : I2C_Configuration)
      with Post => Port_Enabled (Port);
 
    procedure Master_Transmit
@@ -113,9 +104,5 @@ package STM32.I2C is
       Data          : out I2C_Data;
       Status        : out I2C_Status;
       Timeout       : Natural := 1000);
-
-private
-
-   type I2C_Port is new STM32_SVD.I2C.I2C_Peripheral;
 
 end STM32.I2C;
