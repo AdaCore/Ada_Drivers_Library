@@ -1,0 +1,36 @@
+with "../../STM32";
+
+project Draw_Demo is
+
+   type Board_Type is ("STM32F429-DISCO",
+                       "STM32F469-DISCO",
+                       "STM32F7-DISCO");
+   Board : Board_Type := external ("BOARD", "STM32F7-DISCO");
+
+   type LOADER_Type is
+      ("RAM", "ROM");
+   LOADER : LOADER_Type := external ("LOADER", "ROM");
+
+   for Languages use ("Ada");
+   for Main use ("draw.adb");
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Target use STM32'Target;
+   for Runtime ("Ada") use STM32'Runtime ("Ada");
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-g", "-O2", "-gnatwa", "-gnatQ", "-gnatw.X");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-g");
+   end Builder;
+
+   package Ide renames STM32.Ide;
+
+   package Linker is
+      for Default_Switches ("ada") use
+        ("-Wl,--defsym=__stack_size=16384", "-v", "-v");
+   end Linker;
+
+end Draw_Demo;
