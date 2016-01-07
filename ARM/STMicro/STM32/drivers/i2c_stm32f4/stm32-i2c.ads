@@ -75,8 +75,8 @@ package STM32.I2C is
 
   type I2C_Configuration is record
       Clock_Speed              : Word;
-      Mode                     : I2C_Device_Mode;
-      Duty_Cycle               : I2C_Duty_Cycle;
+      Mode                     : I2C_Device_Mode :=I2C_Mode;
+      Duty_Cycle               : I2C_Duty_Cycle  := DutyCycle_2;
 
       Addressing_Mode          : I2C_Addressing_Mode;
       Own_Address              : STM32_SVD.UInt10;

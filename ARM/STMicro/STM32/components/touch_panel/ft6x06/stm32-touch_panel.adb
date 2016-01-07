@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Based on ft5336.h from MCD Application Team
+--  Based on ft6x06.h from MCD Application Team
 
 with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
@@ -42,10 +42,8 @@ with STM32.LCD;
 
 package body STM32.Touch_Panel is
 
-   TP_I2C   : I2C_Port_Id renames I2C_3;
-
    --  I2C Slave address of touchscreen FocalTech FT5336
-   TP_ADDR  : constant := 16#70#;
+   TP_ADDR  : constant := 16#54#;
 
    procedure My_Delay (Ms : Integer);
    --  Wait the specified number of milliseconds
@@ -81,69 +79,64 @@ package body STM32.Touch_Panel is
    pragma Warnings (Off, "* is not referenced");
 
    ------------------------------------------------------------
-   -- Definitions for FT5336 I2C register addresses on 8 bit --
+   -- Definitions for FT6206 I2C register addresses on 8 bit --
    ------------------------------------------------------------
 
-   --  Current mode register of the FT5336 (R/W)
-   FT5336_DEV_MODE_REG                 : constant Byte := 16#00#;
+   --  Current mode register of the FT6206 (R/W)
+   FT6206_DEV_MODE_REG                 : constant Byte := 16#00#;
 
-   --  Possible values of FT5336_DEV_MODE_REG
-   FT5336_DEV_MODE_WORKING             : constant Byte := 16#00#;
-   FT5336_DEV_MODE_FACTORY             : constant Byte := 16#04#;
+   --  Possible values of FT6206_DEV_MODE_REG
+   FT6206_DEV_MODE_WORKING             : constant Byte := 16#00#;
+   FT6206_DEV_MODE_FACTORY             : constant Byte := 16#04#;
 
-   FT5336_DEV_MODE_MASK                : constant Byte := 16#07#;
-   FT5336_DEV_MODE_SHIFT               : constant Byte := 16#04#;
+   FT6206_DEV_MODE_MASK                : constant Byte := 16#07#;
+   FT6206_DEV_MODE_SHIFT               : constant Byte := 16#04#;
 
    --  Gesture ID register
-   FT5336_GEST_ID_REG                  : constant Byte := 16#01#;
+   FT6206_GEST_ID_REG                  : constant Byte := 16#01#;
 
-   --  Possible values of FT5336_GEST_ID_REG
-   FT5336_GEST_ID_NO_GESTURE           : constant Byte := 16#00#;
-   FT5336_GEST_ID_MOVE_UP              : constant Byte := 16#10#;
-   FT5336_GEST_ID_MOVE_RIGHT           : constant Byte := 16#14#;
-   FT5336_GEST_ID_MOVE_DOWN            : constant Byte := 16#18#;
-   FT5336_GEST_ID_MOVE_LEFT            : constant Byte := 16#1C#;
-   FT5336_GEST_ID_SINGLE_CLICK         : constant Byte := 16#20#;
-   FT5336_GEST_ID_DOUBLE_CLICK         : constant Byte := 16#22#;
-   FT5336_GEST_ID_ROTATE_CLOCKWISE     : constant Byte := 16#28#;
-   FT5336_GEST_ID_ROTATE_C_CLOCKWISE   : constant Byte := 16#29#;
-   FT5336_GEST_ID_ZOOM_IN              : constant Byte := 16#40#;
-   FT5336_GEST_ID_ZOOM_OUT             : constant Byte := 16#49#;
+   --  Possible values of FT6206_GEST_ID_REG
+   FT6206_GEST_ID_NO_GESTURE           : constant Byte := 16#00#;
+   FT6206_GEST_ID_MOVE_UP              : constant Byte := 16#10#;
+   FT6206_GEST_ID_MOVE_RIGHT           : constant Byte := 16#14#;
+   FT6206_GEST_ID_MOVE_DOWN            : constant Byte := 16#18#;
+   FT6206_GEST_ID_MOVE_LEFT            : constant Byte := 16#1C#;
+   FT6206_GEST_ID_ZOOM_IN              : constant Byte := 16#40#;
+   FT6206_GEST_ID_ZOOM_OUT             : constant Byte := 16#49#;
 
    --  Touch Data Status register : gives number of active touch points (0..5)
-   FT5336_TD_STAT_REG                  : constant Byte := 16#02#;
+   FT6206_TD_STAT_REG                  : constant Byte := 16#02#;
 
-   --  Values related to FT5336_TD_STAT_REG
-   FT5336_TD_STAT_MASK                 : constant Byte := 16#0F#;
-   FT5336_TD_STAT_SHIFT                : constant Byte := 16#00#;
+   --  Values related to FT6206_TD_STAT_REG
+   FT6206_TD_STAT_MASK                 : constant Byte := 16#0F#;
+   FT6206_TD_STAT_SHIFT                : constant Byte := 16#00#;
 
    --  Values Pn_XH and Pn_YH related
-   FT5336_TOUCH_EVT_FLAG_PRESS_DOWN    : constant Byte := 16#00#;
-   FT5336_TOUCH_EVT_FLAG_LIFT_UP       : constant Byte := 16#01#;
-   FT5336_TOUCH_EVT_FLAG_CONTACT       : constant Byte := 16#02#;
-   FT5336_TOUCH_EVT_FLAG_NO_EVENT      : constant Byte := 16#03#;
+   FT6206_TOUCH_EVT_FLAG_PRESS_DOWN    : constant Byte := 16#00#;
+   FT6206_TOUCH_EVT_FLAG_LIFT_UP       : constant Byte := 16#01#;
+   FT6206_TOUCH_EVT_FLAG_CONTACT       : constant Byte := 16#02#;
+   FT6206_TOUCH_EVT_FLAG_NO_EVENT      : constant Byte := 16#03#;
 
-   FT5336_TOUCH_EVT_FLAG_SHIFT         : constant Byte := 16#06#;
-   FT5336_TOUCH_EVT_FLAG_MASK          : constant Byte := 2#1100_0000#;
+   FT6206_TOUCH_EVT_FLAG_SHIFT         : constant Byte := 16#06#;
+   FT6206_TOUCH_EVT_FLAG_MASK          : constant Byte := 2#1100_0000#;
 
-   FT5336_TOUCH_POS_MSB_MASK           : constant Byte := 16#0F#;
-   FT5336_TOUCH_POS_MSB_SHIFT          : constant Byte := 16#00#;
+   FT6206_TOUCH_POS_MSB_MASK           : constant Byte := 16#0F#;
+   FT6206_TOUCH_POS_MSB_SHIFT          : constant Byte := 16#00#;
 
    --  Values Pn_XL and Pn_YL related
-   FT5336_TOUCH_POS_LSB_MASK           : constant Byte := 16#FF#;
-   FT5336_TOUCH_POS_LSB_SHIFT          : constant Byte := 16#00#;
-
+   FT6206_TOUCH_POS_LSB_MASK           : constant Byte := 16#FF#;
+   FT6206_TOUCH_POS_LSB_SHIFT          : constant Byte := 16#00#;
 
    --  Values Pn_WEIGHT related
-   FT5336_TOUCH_WEIGHT_MASK            : constant Byte := 16#FF#;
-   FT5336_TOUCH_WEIGHT_SHIFT           : constant Byte := 16#00#;
+   FT6206_TOUCH_WEIGHT_MASK            : constant Byte := 16#FF#;
+   FT6206_TOUCH_WEIGHT_SHIFT           : constant Byte := 16#00#;
 
 
-   --  Values related to FT5336_Pn_MISC_REG
-   FT5336_TOUCH_AREA_MASK              : constant Byte := 2#0100_0000#;
-   FT5336_TOUCH_AREA_SHIFT             : constant Byte := 16#04#;
+   --  Values related to FT6206_Pn_MISC_REG
+   FT6206_TOUCH_AREA_MASK              : constant Byte := 2#0100_0000#;
+   FT6206_TOUCH_AREA_SHIFT             : constant Byte := 16#04#;
 
-   type FT5336_Pressure_Registers is record
+   type FT6206_Pressure_Registers is record
       XH_Reg     : Byte;
       XL_Reg     : Byte;
       YH_Reg     : Byte;
@@ -154,8 +147,8 @@ package body STM32.Touch_Panel is
       Misc_Reg   : Byte;
    end record;
 
-   FT5336_Px_Regs                : constant array (Byte range <>)
-                                      of FT5336_Pressure_Registers  :=
+   FT6206_Px_Regs                : constant array (Byte range <>)
+                                      of FT6206_Pressure_Registers  :=
                                      (1  => (XH_Reg     => 16#03#,
                                              XL_Reg     => 16#04#,
                                              YH_Reg     => 16#05#,
@@ -167,141 +160,93 @@ package body STM32.Touch_Panel is
                                              YH_Reg     => 16#0B#,
                                              YL_Reg     => 16#0C#,
                                              Weight_Reg => 16#0D#,
-                                             Misc_Reg   => 16#0E#),
-                                      3  => (XH_Reg     => 16#0F#,
-                                             XL_Reg     => 16#10#,
-                                             YH_Reg     => 16#11#,
-                                             YL_Reg     => 16#12#,
-                                             Weight_Reg => 16#13#,
-                                             Misc_Reg   => 16#14#),
-                                      4  => (XH_Reg     => 16#15#,
-                                             XL_Reg     => 16#16#,
-                                             YH_Reg     => 16#17#,
-                                             YL_Reg     => 16#18#,
-                                             Weight_Reg => 16#19#,
-                                             Misc_Reg   => 16#1A#),
-                                      5  => (XH_Reg     => 16#1B#,
-                                             XL_Reg     => 16#1C#,
-                                             YH_Reg     => 16#1D#,
-                                             YL_Reg     => 16#1E#,
-                                             Weight_Reg => 16#1F#,
-                                             Misc_Reg   => 16#20#),
-                                      6  => (XH_Reg     => 16#21#,
-                                             XL_Reg     => 16#22#,
-                                             YH_Reg     => 16#23#,
-                                             YL_Reg     => 16#24#,
-                                             Weight_Reg => 16#25#,
-                                             Misc_Reg   => 16#26#),
-                                      7  => (XH_Reg     => 16#27#,
-                                             XL_Reg     => 16#28#,
-                                             YH_Reg     => 16#29#,
-                                             YL_Reg     => 16#2A#,
-                                             Weight_Reg => 16#2B#,
-                                             Misc_Reg   => 16#2C#),
-                                      8  => (XH_Reg     => 16#2D#,
-                                             XL_Reg     => 16#2E#,
-                                             YH_Reg     => 16#2F#,
-                                             YL_Reg     => 16#30#,
-                                             Weight_Reg => 16#31#,
-                                             Misc_Reg   => 16#32#),
-                                      9  => (XH_Reg     => 16#33#,
-                                             XL_Reg     => 16#34#,
-                                             YH_Reg     => 16#35#,
-                                             YL_Reg     => 16#36#,
-                                             Weight_Reg => 16#37#,
-                                             Misc_Reg   => 16#38#),
-                                      10 => (XH_Reg     => 16#39#,
-                                             XL_Reg     => 16#3A#,
-                                             YH_Reg     => 16#3B#,
-                                             YL_Reg     => 16#3C#,
-                                             Weight_Reg => 16#3D#,
-                                             Misc_Reg   => 16#3E#));
+                                             Misc_Reg   => 16#0E#));
 
    --  Threshold for touch detection
-   FT5336_TH_GROUP_REG                 : constant Byte := 16#80#;
+   FT6206_TH_GROUP_REG                 : constant Byte := 16#80#;
 
-   --  Values FT5336_TH_GROUP_REG : threshold related
-   FT5336_THRESHOLD_MASK               : constant Byte := 16#FF#;
-   FT5336_THRESHOLD_SHIFT              : constant Byte := 16#00#;
+   --  Values FT6206_TH_GROUP_REG : threshold related
+   FT6206_THRESHOLD_MASK               : constant Byte := 16#FF#;
+   FT6206_THRESHOLD_SHIFT              : constant Byte := 16#00#;
 
    --  Filter function coefficients
-   FT5336_TH_DIFF_REG                  : constant Byte := 16#85#;
+   FT6206_TH_DIFF_REG                  : constant Byte := 16#85#;
 
    --  Control register
-   FT5336_CTRL_REG                     : constant Byte := 16#86#;
+   FT6206_CTRL_REG                     : constant Byte := 16#86#;
 
-   --  Values related to FT5336_CTRL_REG
+   --  Values related to FT6206_CTRL_REG
 
    --  Will keep the Active mode when there is no touching
-   FT5336_CTRL_KEEP_ACTIVE_MODE        : constant Byte := 16#00#;
+   FT6206_CTRL_KEEP_ACTIVE_MODE        : constant Byte := 16#00#;
 
    --  Switching from Active mode to Monitor mode automatically when there
    --  is no touching
-   FT5336_CTRL_KEEP_AUTO_SWITCH_MONITOR_MODE : constant Byte := 16#01#;
+   FT6206_CTRL_KEEP_AUTO_SWITCH_MONITOR_MODE : constant Byte := 16#01#;
 
    --  The time period of switching from Active mode to Monitor mode when
    --  there is no touching
-   FT5336_TIMEENTERMONITOR_REG               : constant Byte := 16#87#;
+   FT6206_TIMEENTERMONITOR_REG               : constant Byte := 16#87#;
 
    --  Report rate in Active mode
-   FT5336_PERIODACTIVE_REG             : constant Byte := 16#88#;
+   FT6206_PERIODACTIVE_REG             : constant Byte := 16#88#;
 
    --  Report rate in Monitor mode
-   FT5336_PERIODMONITOR_REG            : constant Byte := 16#89#;
+   FT6206_PERIODMONITOR_REG            : constant Byte := 16#89#;
 
    --  The value of the minimum allowed angle while Rotating gesture mode
-   FT5336_RADIAN_VALUE_REG             : constant Byte := 16#91#;
+   FT6206_RADIAN_VALUE_REG             : constant Byte := 16#91#;
 
    --  Maximum offset while Moving Left and Moving Right gesture
-   FT5336_OFFSET_LEFT_RIGHT_REG        : constant Byte := 16#92#;
+   FT6206_OFFSET_LEFT_RIGHT_REG        : constant Byte := 16#92#;
 
    --  Maximum offset while Moving Up and Moving Down gesture
-   FT5336_OFFSET_UP_DOWN_REG           : constant Byte := 16#93#;
+   FT6206_OFFSET_UP_DOWN_REG           : constant Byte := 16#93#;
 
    --  Minimum distance while Moving Left and Moving Right gesture
-   FT5336_DISTANCE_LEFT_RIGHT_REG      : constant Byte := 16#94#;
+   FT6206_DISTANCE_LEFT_RIGHT_REG      : constant Byte := 16#94#;
 
    --  Minimum distance while Moving Up and Moving Down gesture
-   FT5336_DISTANCE_UP_DOWN_REG         : constant Byte := 16#95#;
+   FT6206_DISTANCE_UP_DOWN_REG         : constant Byte := 16#95#;
 
    --  Maximum distance while Zoom In and Zoom Out gesture
-   FT5336_DISTANCE_ZOOM_REG            : constant Byte := 16#96#;
+   FT6206_DISTANCE_ZOOM_REG            : constant Byte := 16#96#;
 
    --  High 8-bit of LIB Version info
-   FT5336_LIB_VER_H_REG                : constant Byte := 16#A1#;
+   FT6206_LIB_VER_H_REG                : constant Byte := 16#A1#;
 
    --  Low 8-bit of LIB Version info
-   FT5336_LIB_VER_L_REG                : constant Byte := 16#A2#;
+   FT6206_LIB_VER_L_REG                : constant Byte := 16#A2#;
 
    --  Chip Selecting
-   FT5336_CIPHER_REG                   : constant Byte := 16#A3#;
+   FT6206_CIPHER_REG                   : constant Byte := 16#A3#;
 
    --  Interrupt mode register (used when in interrupt mode)
-   FT5336_GMODE_REG                    : constant Byte := 16#A4#;
+   FT6206_GMODE_REG                    : constant Byte := 16#A4#;
 
-   FT5336_G_MODE_INTERRUPT_MASK        : constant Byte := 16#03#;
+   FT6206_G_MODE_INTERRUPT_MASK        : constant Byte := 16#03#;
 
-   --  Possible values of FT5336_GMODE_REG
-   FT5336_G_MODE_INTERRUPT_POLLING     : constant Byte := 16#00#;
-   FT5336_G_MODE_INTERRUPT_TRIGGER     : constant Byte := 16#01#;
+   --  Possible values of FT6206_GMODE_REG
+   FT6206_G_MODE_INTERRUPT_POLLING     : constant Byte := 16#00#;
+   FT6206_G_MODE_INTERRUPT_TRIGGER     : constant Byte := 16#01#;
 
-   --  Current power mode the FT5336 system is in (R)
-   FT5336_PWR_MODE_REG                 : constant Byte := 16#A5#;
+   --  Current power mode the FT6206 system is in (R)
+   FT6206_PWR_MODE_REG                 : constant Byte := 16#A5#;
 
-   --  FT5336 firmware version
-   FT5336_FIRMID_REG                   : constant Byte := 16#A6#;
+   --  FT6206 firmware version
+   FT6206_FIRMID_REG                   : constant Byte := 16#A6#;
 
-   --  FT5336 Chip identification register
-   FT5336_CHIP_ID_REG                  : constant Byte := 16#A8#;
+   --  FT6206 Chip identification register
+   FT6206_CHIP_ID_REG                  : constant Byte := 16#A8#;
 
-   --   Possible values of FT5336_CHIP_ID_REG
-   FT5336_ID_VALUE                     : constant Byte := 16#51#;
+   --   Possible values of FT6206_CHIP_ID_REG
+   FT6206_ID_VALUE                     : constant Byte := 16#11#;
 
    --  Release code version
-   FT5336_RELEASE_CODE_ID_REG          : constant Byte := 16#AF#;
+   FT6206_RELEASE_CODE_ID_REG          : constant Byte := 16#AF#;
 
-   --  Current operating mode the FT5336 system is in (R)
-   FT5336_STATE_REG                    : constant Byte := 16#BC#;
+   --  Current operating mode the FT6206 system is in (R)
+   FT6206_STATE_REG                    : constant Byte := 16#BC#;
 
    pragma Warnings (On, "* is not referenced");
 
@@ -365,13 +310,22 @@ package body STM32.Touch_Panel is
 
       Reset (TP_I2C);
 
-      Configure_Alternate_Function (Pins, GPIO_AF_I2C3);
+      Configure_Alternate_Function (Pins, GPIO_AF_I2C1);
       Configure_IO (Pins,
                     (Speed       => Speed_25MHz,
                      Mode        => Mode_AF,
                      Output_Type => Open_Drain,
                      Resistors   => Floating));
       Lock (Pins);
+
+      Enable_Clock (TP_INT);
+
+      Configure_IO (TP_INT,
+                    (Speed       => Speed_50MHz,
+                     Mode        => Mode_In,
+                     Output_Type => Open_Drain,
+                     Resistors   => Pull_Up));
+      Lock (TP_INT);
    end TP_Init_Pins;
 
    -------------------
@@ -385,16 +339,18 @@ package body STM32.Touch_Panel is
       --  Wait at least 200ms after power up before accessing the TP registers
       My_Delay (200);
 
-      Reset (TP_I2C);
+      if not I2C.Port_Enabled (TP_I2C) then
+         Reset (TP_I2C);
 
-      I2C_Conf.Own_Address := 16#00#;
-      I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;
-      I2C_Conf.General_Call_Enabled := False;
-      I2C_Conf.Clock_Stretching_Enabled := True;
+         I2C_Conf.Own_Address := 16#00#;
+         I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;
+         I2C_Conf.General_Call_Enabled := False;
+         I2C_Conf.Clock_Stretching_Enabled := True;
 
-      I2C_Conf.Clock_Speed := 100_000;
+         I2C_Conf.Clock_Speed := 100_000;
 
-      Configure (TP_I2C, I2C_Conf);
+         Configure (TP_I2C, I2C_Conf);
+      end if;
    end TP_I2C_Config;
 
    ---------------------------
@@ -407,12 +363,12 @@ package body STM32.Touch_Panel is
       Status    : I2C_Status with Unreferenced;
    begin
       if Enabled then
-         Reg_Value := FT5336_G_MODE_INTERRUPT_TRIGGER;
+         Reg_Value := FT6206_G_MODE_INTERRUPT_TRIGGER;
       else
-         Reg_Value := FT5336_G_MODE_INTERRUPT_POLLING;
+         Reg_Value := FT6206_G_MODE_INTERRUPT_POLLING;
       end if;
 
-      TP_Write (FT5336_GMODE_REG, Reg_Value, Status);
+      TP_Write (FT6206_GMODE_REG, Reg_Value, Status);
    end TP_Set_Use_Interrupts;
 
    -------------
@@ -425,9 +381,9 @@ package body STM32.Touch_Panel is
       Status : I2C_Status;
    begin
       for J in 1 .. 3 loop
-         Id := TP_Read (FT5336_CHIP_ID_REG, Status);
+         Id := TP_Read (FT6206_CHIP_ID_REG, Status);
 
-         if Id = FT5336_ID_VALUE then
+         if Id = FT6206_ID_VALUE then
             return True;
          end if;
 
@@ -472,15 +428,15 @@ package body STM32.Touch_Panel is
      Status   : I2C_Status;
      Nb_Touch : Byte := 0;
    begin
-      Nb_Touch := TP_Read (FT5336_TD_STAT_REG, Status);
+      Nb_Touch := TP_Read (FT6206_TD_STAT_REG, Status);
 
       if Status /= Ok then
          return 0;
       end if;
 
-      Nb_Touch := Nb_Touch and FT5336_TD_STAT_MASK;
+      Nb_Touch := Nb_Touch and FT6206_TD_STAT_MASK;
 
-      if Nb_Touch > FT5336_Px_Regs'Last then
+      if Nb_Touch > FT6206_Px_Regs'Last then
          --  Overflow: set to 0
          Nb_Touch := 0;
       end if;
@@ -511,7 +467,7 @@ package body STM32.Touch_Panel is
       RY   : Natural;
       Rtmp : Natural;
       Ret  : TP_Touch_State;
-      Regs : FT5336_Pressure_Registers;
+      Regs : FT6206_Pressure_Registers;
       Tmp  : Short_HL_Type;
 
    begin
@@ -522,7 +478,7 @@ package body STM32.Touch_Panel is
 
       --  X/Y are swaped from the screen coordinates
 
-      Regs := FT5336_Px_Regs (Touch_Id);
+      Regs := FT6206_Px_Regs (Touch_Id);
 
       Tmp.Low := TP_Read (Regs.XL_Reg, Status);
 
@@ -530,7 +486,7 @@ package body STM32.Touch_Panel is
          return Ret;
       end if;
 
-      Tmp.High := TP_Read (Regs.XH_Reg, Status) and FT5336_TOUCH_POS_MSB_MASK;
+      Tmp.High := TP_Read (Regs.XH_Reg, Status) and FT6206_TOUCH_POS_MSB_MASK;
 
       if Status /= Ok then
          return Ret;
@@ -544,7 +500,7 @@ package body STM32.Touch_Panel is
          return Ret;
       end if;
 
-      Tmp.High := TP_Read (Regs.YH_Reg, Status) and FT5336_TOUCH_POS_MSB_MASK;
+      Tmp.High := TP_Read (Regs.YH_Reg, Status) and FT6206_TOUCH_POS_MSB_MASK;
 
       if Status /= Ok then
          return Ret;
@@ -559,6 +515,10 @@ package body STM32.Touch_Panel is
          return Ret;
       end if;
 
+      if Ret.Weight = 0 then
+         Ret.Weight := 50;
+      end if;
+
       if LCD.SwapXY then
          RTmp := RX;
          RX   := RY;
@@ -570,6 +530,9 @@ package body STM32.Touch_Panel is
       RY := Natural'Max (0, RY);
       RX := Natural'Min (LCD.Pixel_Width - 1, RX);
       RY := Natural'Min (LCD.Pixel_Height - 1, RY);
+
+      --  ??? On the STM32F426, Y is returned reverted
+      RY := STM32.LCD.LCD_Natural_Height - RY - 1;
 
       Ret.X := RX;
       Ret.Y := RY;

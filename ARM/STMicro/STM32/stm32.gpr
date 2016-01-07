@@ -100,9 +100,8 @@ project STM32 is
              "components/button",
              "components/sdram",
              "components/lcd/otm8009a",
-             --  "components/touch_panel",
-             --  "components/touch_panel/stmpe811",
-             --  "components/gyro/l3gd20",
+             "components/touch_panel",
+             "components/touch_panel/ft6x06",
              "utils/gui");
          case RTS is
             when "ravenscar-sfp" =>

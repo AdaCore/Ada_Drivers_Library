@@ -147,6 +147,21 @@ package STM32.Board is
    LCD_BL_CTRL : GPIO_Point renames PA3;
    DSIHOST_TE  : GPIO_Point renames PJ2;
 
+   -----------------
+   -- Touch Panel --
+   -----------------
+
+   TP_I2C   : I2C_Port_Id renames I2C_1;
+
+   I2C1_SCL : GPIO_Point renames PB8;
+   I2C1_SDA : GPIO_Point renames PB9;
+
+   TP_INT   : GPIO_Point renames PJ5;
+
+   TP_Pins  : constant GPIO_Points :=
+                (I2C1_SCL, I2C1_SDA);
+
+
    --  User button
 
    User_Button_Point     : GPIO_Point renames PA0;
