@@ -60,7 +60,8 @@ package body Double_Buffer is
    ----------------
 
    procedure Initialize
-     (Config : LCD_Configuration)
+     (Layer_Background : Layer_Activation_Type := Layer_Single_Buffer;
+      Layer_Foreground : Layer_Activation_Type := Layer_Inactive)
    is
       FB_Size : constant Word :=
                   Word (Pixel_Width *
@@ -71,7 +72,7 @@ package body Double_Buffer is
            "LCD needs to be initialized before the double buffer";
       end if;
 
-      case Config.Layer_Background is
+      case Layer_Background is
          when Layer_Inactive =>
             STM32.LCD.Set_Layer_State (Layer1, Disabled);
          when Layer_Single_Buffer =>
@@ -83,7 +84,7 @@ package body Double_Buffer is
             Frame_Buffers (Layer1, FB2) := STM32.SDRAM.Reserve (FB_Size);
       end case;
 
-      case Config.Layer_Foreground is
+      case Layer_Foreground is
          when Layer_Inactive =>
             STM32.LCD.Set_Layer_State (Layer2, Disabled);
          when Layer_Single_Buffer =>

@@ -45,13 +45,9 @@ package Double_Buffer is
    Background : STM32.LCD.LCD_Layer renames STM32.LCD.Layer1;
    Foreground : STM32.LCD.LCD_Layer renames STM32.LCD.Layer2;
 
-   type LCD_Configuration is record
-      Layer_Background     : Layer_Activation_Type := Layer_Single_Buffer;
-      Layer_Foreground     : Layer_Activation_Type := Layer_Inactive;
-   end record;
-
    procedure Initialize
-     (Config : LCD_Configuration);
+     (Layer_Background : Layer_Activation_Type := Layer_Single_Buffer;
+      Layer_Foreground : Layer_Activation_Type := Layer_Inactive);
 
    procedure Swap_Buffers (VSync : Boolean := True);
 
