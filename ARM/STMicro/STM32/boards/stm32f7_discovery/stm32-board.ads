@@ -144,8 +144,8 @@ package STM32.Board is
 
    --  User button
 
-   User_Button_Point     : GPIO_Point renames PA0;
-   User_Button_Interrupt : constant Interrupt_Id := Names.EXTI0_Interrupt;
+   User_Button_Point     : GPIO_Point renames PI11;
+   User_Button_Interrupt : constant Interrupt_Id := Names.EXTI15_10_Interrupt;
 
    procedure Configure_User_Button_GPIO;
    --  Configures the GPIO port/pin for the blue user button. Sufficient
