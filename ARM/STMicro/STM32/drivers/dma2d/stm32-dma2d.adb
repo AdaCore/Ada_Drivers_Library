@@ -456,7 +456,7 @@ package body STM32.DMA2D is
    is
       function Conv is new Ada.Unchecked_Conversion (Word, OCOLR_Register);
       X0   : constant Integer := (if Buffer.Swap_X_Y then Y else X);
-      Y0   : constant Integer := (if Buffer.Swap_X_Y then Buffer.Width - X else Y);
+      Y0   : constant Integer := (if Buffer.Swap_X_Y then Buffer.Width - 1 - X else Y);
       W    : constant Natural :=
                (if Buffer.Swap_X_Y then Buffer.Height else Buffer.Width);
       Idx  : constant Integer := (Y0 * W) + X0;
@@ -497,7 +497,7 @@ package body STM32.DMA2D is
       Synchronous : Boolean := False)
    is
       X0   : constant Natural := (if Buffer.Swap_X_Y then Y else X);
-      Y0   : constant Natural := (if Buffer.Swap_X_Y then Buffer.Width - X else Y);
+      Y0   : constant Natural := (if Buffer.Swap_X_Y then Buffer.Width - 1 - X else Y);
       W    : constant Natural :=
                (if Buffer.Swap_X_Y then Buffer.Height else Buffer.Width);
       Idx  : constant Natural := (Y0 * W) + X0;
