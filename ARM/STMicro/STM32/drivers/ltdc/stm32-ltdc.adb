@@ -65,6 +65,12 @@ package body STM32.LTDC is
 
    function Pixel_Size (Fmt : Pixel_Format) return Positive;
 
+   procedure Convert
+     (X, Y : Natural;
+      Ok   : out Boolean;
+      X0   : out LCD_Width_Range;
+      Y0   : out LCD_Height_Range);
+
    ----------
    -- Init --
    ----------
@@ -268,10 +274,15 @@ package body STM32.LTDC is
         UInt24 (R * 2 ** 16) or UInt24 (G * 2 ** 8) or UInt24 (B);
    end Set_Background;
 
-   procedure Convert (X, Y : Natural;
-                      Ok   : out Boolean;
-                      X0   : out LCD_Width_Range;
-                      Y0   : out LCD_Height_Range)
+   -------------
+   -- Convert --
+   -------------
+
+   procedure Convert
+     (X, Y : Natural;
+      Ok   : out Boolean;
+      X0   : out LCD_Width_Range;
+      Y0   : out LCD_Height_Range)
    is
    begin
       if Y >= Pixel_Height or else X >= Pixel_Width then
@@ -299,8 +310,8 @@ package body STM32.LTDC is
       Value : Word)
    is
       FB : FB32 with Import, Address => Frame_Buffer_Array (Layer);
-      X0 : LCD_Height_Range;
-      Y0 : LCD_Width_Range;
+      X0 : LCD_Width_Range;
+      Y0 : LCD_Height_Range;
       Ok : Boolean;
    begin
       Convert (X, Y, Ok, X0, Y0);
@@ -320,8 +331,8 @@ package body STM32.LTDC is
       Value : UInt24)
    is
       FB : FB24 with Import, Address => Frame_Buffer_Array (Layer);
-      X0 : LCD_Height_Range;
-      Y0 : LCD_Width_Range;
+      X0 : LCD_Width_Range;
+      Y0 : LCD_Height_Range;
       Ok : Boolean;
    begin
       Convert (X, Y, Ok, X0, Y0);
@@ -346,8 +357,8 @@ package body STM32.LTDC is
       Value : Half_Word)
    is
       FB : FB16 with Import, Address => Frame_Buffer_Array (Layer);
-      X0 : LCD_Height_Range;
-      Y0 : LCD_Width_Range;
+      X0 : LCD_Width_Range;
+      Y0 : LCD_Height_Range;
       Ok : Boolean;
    begin
       Convert (X, Y, Ok, X0, Y0);
@@ -367,8 +378,8 @@ package body STM32.LTDC is
       return Word
    is
       FB : FB32 with Import, Address => Frame_Buffer_Array (Layer);
-      X0 : LCD_Height_Range;
-      Y0 : LCD_Width_Range;
+      X0 : LCD_Width_Range;
+      Y0 : LCD_Height_Range;
       Ok : Boolean;
    begin
       Convert (X, Y, Ok, X0, Y0);
@@ -390,8 +401,8 @@ package body STM32.LTDC is
       return UInt24
    is
       FB : FB24 with Import, Address => Frame_Buffer_Array (Layer);
-      X0 : LCD_Height_Range;
-      Y0 : LCD_Width_Range;
+      X0 : LCD_Width_Range;
+      Y0 : LCD_Height_Range;
       Ok : Boolean;
    begin
       Convert (X, Y, Ok, X0, Y0);
@@ -415,8 +426,8 @@ package body STM32.LTDC is
       return Half_Word
    is
       FB : FB16 with Import, Address => Frame_Buffer_Array (Layer);
-      X0 : LCD_Height_Range;
-      Y0 : LCD_Width_Range;
+      X0 : LCD_Width_Range;
+      Y0 : LCD_Height_Range;
       Ok : Boolean;
    begin
       Convert (X, Y, Ok, X0, Y0);
