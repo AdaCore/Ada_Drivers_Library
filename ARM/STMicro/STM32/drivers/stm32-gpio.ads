@@ -305,6 +305,11 @@ package STM32.GPIO is
    --  For Point.Pin on the Point.Port.all, configures the
    --  characteristics specified by Config
 
+   function Get_Interrupt_Line_Number
+     (Point : GPIO_Point) return EXTI.External_Line_Number;
+   --  Returns the external interrupt line number that corresponds to the
+   --  GPIO point.
+
    procedure Configure_Trigger
      (Port    : in out GPIO_Port;
       Pin     : GPIO_Pin;

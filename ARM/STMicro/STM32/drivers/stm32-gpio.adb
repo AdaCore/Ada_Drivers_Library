@@ -577,6 +577,17 @@ package body STM32.GPIO is
       end loop;
    end Configure_Alternate_Function;
 
+   -------------------------------
+   -- Get_Interrupt_Line_Number --
+   -------------------------------
+
+   function Get_Interrupt_Line_Number
+     (Point : GPIO_Point) return EXTI.External_Line_Number
+   is
+   begin
+      return EXTI.External_Line_Number'Val (Point.Pin);
+   end Get_Interrupt_Line_Number;
+
    -----------------------
    -- Configure_Trigger --
    -----------------------
