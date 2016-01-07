@@ -58,8 +58,8 @@ package body Screen_Interface is
          STM32.DMA2D.Polling.Initialize;
          STM32.Touch_Panel.Initialize;
          Double_Buffer.Initialize
-           ((Layer_Background => Layer_Single_Buffer,
-             Layer_Foreground => Layer_Inactive));
+           (Layer_Background => Layer_Single_Buffer,
+            Layer_Foreground => Layer_Inactive);
 
          --  At init the draw layer is the one displayed, this will keep
          --  compatibility with projects not doing double buffering.

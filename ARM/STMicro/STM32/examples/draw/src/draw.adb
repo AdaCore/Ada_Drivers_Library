@@ -56,8 +56,8 @@ begin
    --  Initialize LCD
    STM32.LCD.Initialize (Pixel_Fmt_RGB888);
    STM32.DMA2D.Interrupt.Initialize;
-   Double_Buffer.Initialize ((Layer_Background => Layer_Single_Buffer,
-                              Layer_Foreground => Layer_Inactive));
+   Double_Buffer.Initialize (Layer_Background => Layer_Single_Buffer,
+                             Layer_Foreground => Layer_Inactive);
    FG_Buffer := Double_Buffer.Get_Visible_Buffer (Background);
 
    --  Initialize touch panel

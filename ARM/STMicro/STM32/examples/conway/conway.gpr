@@ -13,9 +13,7 @@ project Conway is
 
    for Runtime ("Ada") use STM32'Runtime ("Ada");
 
-   package Compiler is
-      for Default_Switches ("Ada") use ("-O3");
-   end Compiler;
+   package Compiler renames STM32.Compiler;
 
    package Ide renames STM32.Ide;
 

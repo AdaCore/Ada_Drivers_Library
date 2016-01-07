@@ -324,8 +324,8 @@ procedure Demo is
 begin
    STM32.LCD.Initialize (Pixel_Fmt_ARGB1555);
    STM32.DMA2D.Interrupt.Initialize;
-   Double_Buffer.Initialize ((Layer_Background => Layer_Double_Buffer,
-                              Layer_Foreground => Layer_Inactive));
+   Double_Buffer.Initialize (Layer_Background => Layer_Double_Buffer,
+                             Layer_Foreground => Layer_Inactive);
    STM32.RNG.Interrupts.Initialize_RNG;
 --     STM32.Button.Initialize;
 

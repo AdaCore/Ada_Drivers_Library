@@ -29,152 +29,154 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Real_Time;
-with STM32.RNG.Interrupts;     use STM32.RNG.Interrupts;
 with Ada.Unchecked_Conversion;
-with Interfaces;
-with STM32_SVD;
-with STM32.LCD; use STM32.LCD;
-with STM32.DMA2D.Polling;
+with Interfaces;               use Interfaces;
+with System;                   use System;
+
+with STM32.Button;             use STM32.Button;
+with STM32.LCD;                use STM32.LCD;
+with STM32.DMA2D.Polling;      use STM32.DMA2D;
+with STM32.RNG.Interrupts;     use STM32.RNG.Interrupts;
+with STM32.SDRAM;
+
+with Double_Buffer;            use Double_Buffer;
 
 package body Conway_Driver is
+   use STM32;
 
-   Format : constant Pixel_Format := Pixel_Fmt_RGB888;
+   type Width is mod LCD_Natural_Width;
+   type Height is mod LCD_Natural_Height;
 
-   type Cell is (Alive, Dead)
+   type Pattern is record
+      W   : Natural;
+      H   : Natural;
+      RLE : access constant String;
+   end record;
+
+   Ptrn1_RLE : aliased constant String :=
+                 "2bo14bo34bo5b$o2bo2b3o7bob4o15b2o11b2obo4b$o2bo12b3obobo9bo5bo7bo3bo7b" &
+                 "$bobo2bo21b3o2bobob3o5bobobo4bo3b$2b2o6bo4bo16b6o2bo2bo3bo3bo2bo3b$bob" &
+                 "o3b2o5bo3b2o6b2ob2o2bo2b2o2bobob2o2bo9b$2bo5bob2o2bo3b2o6b2o4bobobo2bo" &
+                 "2bobobo6b2o2bo$2bo4b3o2bo9b3o7b3obob2o5bo7b3obo$12b9o3bo8b2ob3o3b4o9bo" &
+                 "bo2$12b9o3bo8b2ob3o3b4o9bobo$2bo4b3o2bo9b3o7b3obob2o5bo7b3obo$2bo5bob" &
+                 "2o2bo3b2o6b2o4bobobo2bo2bobobo6b2o2bo$bobo3b2o5bo3b2o6b2ob2o2bo2b2o2bo" &
+                 "bob2o2bo9b$2b2o6bo4bo16b6o2bo2bo3bo3bo2bo3b$bobo2bo21b3o2bobob3o5bobob" &
+                 "o4bo3b$o2bo12b3obobo9bo5bo7bo3bo7b$o2bo2b3o7bob4o15b2o11b2obo4b$2bo14b" &
+                 "o34bo!";
+   Ptrn1 : constant Pattern :=
+             (W   => 58,
+              H   => 19,
+              RLE => Ptrn1_RLE'Access);
+
+   Ptrn2_RLE : aliased constant String :=
+                 "4bo6bo4b$3bobob2obobo3b$3b2o2b2o2b2o3b$7b2o7b2$5b2o2b2o5b$5b2o2b2o5b$" &
+                 "6b4o6b$6bo2bo6b$5bo4bo5b$5bo4bo5b$5bob2obo5b$6bo2bo6b$6bo2bo6b2$o14bo$" &
+                 "2o4bo2bo4b2o$o5b4o5bo$b2o4b2o4b2ob$2bo10bo2b$obo10bobo$b5o4b5ob$3bo2b" &
+                 "4o2bo3b$2bo4b2o4bo2b$6bo2bo6b$7b2o7b$4b2ob2ob2o4b2$3bo8bo3b$2b3o6b3o2b" &
+                 "$2bo2bo4bo2bo2b$b2o10b2o!";
+   Ptrn2 : constant Pattern :=
+             (W   => 16,
+              H   => 32,
+              RLE => Ptrn2_RLE'Access);
+
+   --  Name: 23334M
+   --  Author: Tomas Rokicki
+   Ptrn3_RLE : aliased constant String :=
+                 "2bo2b$2o3b$bo3b$o2bob$4bo$bo2bo$2bobo$bo!";
+   Ptrn3 : constant Pattern :=
+             (W   => 5,
+              H   => 8,
+              RLE => Ptrn3_RLE'Access);
+
+   Patterns  : constant array (Positive range <>) of Pattern :=
+                 (Ptrn1, Ptrn2, Ptrn3);
+
+   type Cell_State is (Dead, Alive)
      with Size => 1;
+   type Neighbor_Cnt is range 0 .. 8
+     with Size => 7;
 
-   type Grid is
-     array (Integer range <>, Integer range <>) of Cell
-     with Pack;
+   type Cell is record
+      State    : Cell_State := Dead;
+      Neighbor : Neighbor_Cnt := 0;
+   end record with Pack, Size => 8;
 
-   G, G2 : Grid (0 .. 199, 0 .. 199);
+   type Line is array (Width) of Cell;
 
-   procedure Draw_Grid (L : LCD_Layer);
-   procedure Randomize_Grid;
+   type Grid is array (Height) of Line;
+   type Grid_Access is access all Grid;
+
+   function To_Grid is new Ada.Unchecked_Conversion
+     (System.Address, Grid_Access);
+
+   G, G2, Tmp : Grid_Access;
+
+   Format : constant Pixel_Format := Pixel_Fmt_ARGB1555;
+   Colors : constant array (Cell_State) of Stm32.Word :=
+              (case Format is
+                  when Pixel_Fmt_ARGB1555 => (Alive => 16#ffff#, Dead => 16#801f#),
+                  when Pixel_Fmt_ARGB4444 => (Alive => 16#ffff#, Dead => 16#f00f#),
+                  when Pixel_Fmt_ARGB8888 => (Alive => 16#ffffffff#, Dead => 16#ff0000ff#),
+                  when Pixel_Fmt_RGB565   => (Alive => 16#ffff#, Dead => 16#001f#),
+                  when Pixel_Fmt_RGB888   => (Alive => 16#ffffff#, Dead => 16#0000ff#));
+
+   Buffer : DMA2D_Buffer;
+
+   procedure Draw_Grid;
+   function Init_Grid (Ptrn : Pattern) return Boolean;
    procedure Step;
 
    ---------------
    -- Draw_Grid --
    ---------------
 
-   procedure Draw_Grid (L : LCD_Layer) is
+   procedure Draw_Grid is
    begin
-      case Format is
-         when Pixel_Fmt_ARGB1555 =>
-            declare
-               Colors : constant array (Cell) of Stm32.Half_Word :=
-                 (Alive => 16#ffff#, Dead => 16#801f#);
-            begin
-               for I in G'Range (1) loop
-                  for J in G'Range (2) loop
-                     Set_Pixel (L, I, J, Colors (G (I, J)));
-                  end loop;
-               end loop;
-            end;
-         when Pixel_Fmt_ARGB8888 =>
-            declare
-               Colors : constant array (Cell) of Stm32.Word :=
-                 (Alive => 16#ffffffff#, Dead => 16#ff0000ff#);
-            begin
-               for I in G'Range (1) loop
-                  for J in G'Range (2) loop
-                     Set_Pixel (L, I, J, Colors (G (I, J)));
-                  end loop;
-               end loop;
-            end;
-         when Pixel_Fmt_RGB888 =>
-            declare
-               Colors : constant array (Cell) of STM32_SVD.Uint24 :=
-                 (Alive => 16#ffffff#, Dead => 16#ff0000#);
-            begin
-               for I in G'Range (1) loop
-                  for J in G'Range (2) loop
-                     Set_Pixel (L, I, J, Colors (G (I, J)));
-                  end loop;
-               end loop;
-            end;
-         when others =>
-            raise Program_Error;
-      end case;
-   end Draw_Grid;
-
-   --------------------
-   -- Randomize_Grid --
-   --------------------
-
-   procedure Randomize_Grid is
-      use Interfaces;
-
-      type Cell_Array is array (0 .. 31) of Cell with Pack;
-      function To_Cell_Array is
-        new Ada.Unchecked_Conversion
-          (Source => Unsigned_32,
-           Target => Cell_Array);
-
-      Tmp : Unsigned_32;
-   begin
-      --  Start with a blank canvas.
-      G := (others => (others => Dead));
-
-      for I in G'Range (1) loop
-         Tmp := Random;
-         for J in G'Range (2) loop
-            if J mod 32 = 0 then
-               Tmp := Random;
-            end if;
-            G (I, J) := To_Cell_Array (Tmp)(J mod 32);
+      for Y in Grid'Range loop
+         for X in Line'Range loop
+            DMA2D_Set_Pixel
+              (Buffer, Natural (X), Natural (Y),
+               Colors (G (Y) (X).State));
          end loop;
       end loop;
-   end Randomize_Grid;
+   end Draw_Grid;
 
-   ----------
-   -- Step --
-   ----------
+   ---------------
+   -- Init_Grid --
+   ---------------
 
-   procedure Step is
-
-      function Count_Neighbors (I, J : Integer) return Natural
-        with Pre  => I in G'Range(1) and
-                     J in G'Range(2),
-             Post => Count_Neighbors'Result in 0 .. 8;
+   function Init_Grid (Ptrn : Pattern) return Boolean
+   is
+      function Count_Neighbors
+        (Y : Height;
+         X : Width) return Neighbor_Cnt
+        with Inline;
 
       ---------------------
       -- Count_Neighbors --
       ---------------------
 
-      function Count_Neighbors (I, J : Integer) return Natural is
+      function Count_Neighbors
+        (Y : Height;
+         X : Width) return Neighbor_Cnt
+      is
          type Coordinates is record
-            X : Integer;
-            Y : Integer;
+            X : Width;
+            Y : Height;
          end record;
 
-         Neighbors : array (1 .. 8) of Coordinates :=
-           ( (I - 1, J - 1), (I, J - 1), (I + 1, J - 1),
-             (I - 1, J    ),             (I + 1, J    ),
-             (I - 1, J + 1), (I, J + 1), (I + 1, J + 1) );
+         Neighbors : constant array (1 .. 8) of Coordinates :=
+           ( (X - 1, Y - 1), (X, Y - 1), (X + 1, Y - 1),
+             (X - 1, Y    ),             (X + 1, Y    ),
+             (X - 1, Y + 1), (X, Y + 1), (X + 1, Y + 1) );
          --  Enumerate all of the coordinates we're supposed to check.
 
-         Count : Natural := 0;
+         Count : Neighbor_Cnt := 0;
       begin
          for Idx in Neighbors'Range loop
             --  Implement wraparound for coordinates that end up off
             --  our grid.
-            if Neighbors (Idx).X < G'First (1) then
-               Neighbors (Idx).X := G'Last (1);
-            end if;
-            if Neighbors (Idx).X > G'Last (1) then
-               Neighbors (Idx).X := G'First (1);
-            end if;
-            if Neighbors (Idx).Y < G'First (2) then
-               Neighbors (Idx).Y := G'Last (2);
-            end if;
-            if Neighbors (Idx).Y > G'Last (2) then
-               Neighbors (Idx).Y := G'First (2);
-            end if;
-
-            --  If our neighbor is alive, increment the count.
-            if G (Neighbors (Idx).X, Neighbors (Idx).Y) = Alive then
+            if G (Neighbors (Idx).Y) (Neighbors (Idx).X).State = Alive then
                Count := Count + 1;
             end if;
          end loop;
@@ -182,8 +184,118 @@ package body Conway_Driver is
          return Count;
       end Count_Neighbors;
 
-      Neighbors : Natural;
+   begin
 
+      G.all := (others => (others => (Dead, 0)));
+
+      if Ptrn.W > Line'Length
+        or else Ptrn.H > Grid'Length
+      then
+         return False;
+      end if;
+
+      declare
+         Y : Height := Height (Natural (Grid'Length) - Ptrn.H) / 2;
+         X : Width;
+         Length : Width;
+         C      : Character;
+         Idx    : Natural := Ptrn.RLE'First;
+         Cur    : Natural;
+      begin
+         Main_Loop :
+         loop
+            X := Width (Natural (Line'Length) - Ptrn.W) / 2;
+
+            Line_Loop :
+            loop
+               Cur := Idx;
+               while Ptrn.RLE (Cur) in '0' .. '9' loop
+                  Cur := Cur + 1;
+               end loop;
+
+               if Cur = Idx then
+                  Length := 1;
+               else
+                  Length := Width'Value (Ptrn.RLE (Idx .. Cur - 1));
+               end if;
+
+               C := Ptrn.RLE (Cur);
+
+               Idx := Cur + 1;
+
+               if C = 'b' then
+                  X := X + Length;
+
+               elsif C = 'o' then
+                  for J in 1 .. Length loop
+                     G (Y) (X + J - 1).State := Alive;
+                  end loop;
+                  X := X + Length;
+
+               elsif C = '$' then
+                  exit Line_Loop;
+
+               elsif C = '!' then
+                  exit Main_Loop;
+               end if;
+            end loop Line_Loop;
+
+            Y := Y + 1;
+         end loop Main_Loop;
+      end;
+
+      --  We now count for each cell the number of active neighbours
+      for Y in Grid'Range loop
+         for X in  Line'Range loop
+            G (Y) (X).Neighbor := Count_Neighbors (Y, X);
+         end loop;
+      end loop;
+
+      Draw_Grid;
+
+      return True;
+   end Init_Grid;
+
+   ----------
+   -- Step --
+   ----------
+
+   procedure Step is
+
+      type Coordinates is record
+         X : Width;
+         Y : Height;
+      end record;
+
+      ----------------------
+      -- Update_Neighbors --
+      ----------------------
+
+      procedure Update_Neighbors
+        (X     : Width;
+         Y     : Height;
+         State : Cell_State)
+      is
+         Neighbors : constant array (1 .. 8) of Coordinates :=
+                       ( (X - 1, Y - 1), (X, Y - 1), (X + 1, Y - 1),
+                         (X - 1, Y    ),             (X + 1, Y    ),
+                         (X - 1, Y + 1), (X, Y + 1), (X + 1, Y + 1) );
+
+      begin
+         for Idx in Neighbors'Range loop
+            --  Implement wraparound for coordinates that end up off
+            --  our grid.
+            if State = Alive then
+               G2 (Neighbors (Idx).Y) (Neighbors (Idx).X).Neighbor :=
+                 G2 (Neighbors (Idx).Y) (Neighbors (Idx).X).Neighbor + 1;
+            else
+               G2 (Neighbors (Idx).Y) (Neighbors (Idx).X).Neighbor :=
+                 G2 (Neighbors (Idx).Y) (Neighbors (Idx).X).Neighbor - 1;
+            end if;
+         end loop;
+      end Update_Neighbors;
+
+      function As_Byte is new Ada.Unchecked_Conversion (Cell, Byte);
    begin
       --
       --  For every cell in the Grid, we'll determine whether or not the
@@ -202,75 +314,94 @@ package body Conway_Driver is
       --     live cell, as if by reproduction.
       --
 
-      G2 := G;
+      G2.all := G.all;
+      DMA2D_Copy_Rect
+        (Double_Buffer.Get_Visible_Buffer (Background),
+         0, 0,
+         Buffer,
+         0, 0,
+         Null_Buffer,
+         0, 0,
+         Buffer.Width, Buffer.Height);
 
-      for I in G'Range(1) loop
-         for J in G'Range(2) loop
+      for Y in Grid'Range loop
+         for X in Line'Range loop
+            if As_Byte (G (Y) (X)) /= 0 then
+               case G (Y) (X).State is
+                  when Alive =>
+                     if G (Y) (X).Neighbor not in 2 .. 3 then
+                        G2 (Y) (X).State := Dead;
+                        Update_Neighbors (X, Y, Dead);
+                        DMA2D_Set_Pixel
+                          (Buffer, Natural (X), Natural (Y),
+                           Colors (Dead));
+                     end if;
 
-            Neighbors := Count_Neighbors (I, J);
-
-            case G (I, J) is
-
-               when Alive =>
-                  if Neighbors < 2 or Neighbors > 3 then
-                     G2 (I, J) := Dead;
-                  end if;
-
-               when Dead =>
-                  if Neighbors = 3 then
-                     G2 (I, J) := Alive;
-                  end if;
-
-            end case;
-
+                  when Dead =>
+                     if G (Y) (X).Neighbor = 3 then
+                        G2 (Y) (X).State := Alive;
+                        Update_Neighbors (X, Y, Alive);
+                        DMA2D_Set_Pixel
+                          (Buffer, Natural (X), Natural (Y),
+                           Colors (Alive));
+                     end if;
+               end case;
+            end if;
          end loop;
       end loop;
 
+      --  Swap buffers
+      Tmp := G;
       G := G2;
+      G2 := Tmp;
    end Step;
 
    ------------
    -- Driver --
    ------------
 
-   task body Driver is
+   task body Driver
+   is
+      Ptrn : Positive := Patterns'First;
+      Res  : Boolean;
    begin
       Initialize_RNG;
       STM32.LCD.Initialize (Format);
-      STM32.LCD.Set_Orientation (Portrait);
+--        STM32.LCD.Set_Orientation (Portrait);
       STM32.DMA2D.Polling.Initialize;
+      Double_Buffer.Initialize
+        (Layer_Background => Double_Buffer.Layer_Double_Buffer,
+         Layer_Foreground => Double_Buffer.Layer_Inactive);
+      STM32.SDRAM.Initialize;
+      STM32.Button.Initialize;
 
-      --  Initialize (side effect of enabled) and clear layers.
-      Set_Layer_State (Layer1, Enabled);
-      Set_Layer_State (Layer2, Enabled);
-      for I in LCD_Layer loop
-         STM32.DMA2D.DMA2D_Fill
-           (Buffer =>
-              (Addr       => STM32.LCD.Current_Frame_Buffer (I),
-               Width      => STM32.LCD.Pixel_Width,
-               Height     => STM32.LCD.Pixel_Height,
-               Color_Mode => STM32.LCD.Get_Pixel_Fmt,
-               Swap_X_Y   => STM32.LCD.SwapXY),
-            Color => 0);
-      end loop;
+      DMA2D_Fill (Double_Buffer.Get_Visible_Buffer (Background), Color => 0);
+      DMA2D_Fill (Double_Buffer.Get_Hidden_Buffer (Background), Color => 0);
+
+      G  := To_Grid (STM32.SDRAM.Reserve (Grid'Size / 8));
+      G2 := To_Grid (STM32.SDRAM.Reserve (Grid'Size / 8));
 
       loop
-         Randomize_Grid;
+         Buffer := Get_Hidden_Buffer (Background);
+         loop
+            Res := Init_Grid (Patterns (Ptrn));
+
+            Ptrn := Ptrn + 1;
+            if Ptrn > Patterns'Last then
+               Ptrn := Patterns'First;
+            end if;
+
+            exit when Res;
+         end loop;
+
+         Swap_Buffers;
 
          loop
+            Buffer := Get_Hidden_Buffer (Background);
             Step;
-            Draw_Grid (Layer1);
-            Set_Layer_State (Layer1, Enabled);
-            Set_Layer_State (Layer2, Disabled);
+            Swap_Buffers (True);
 
-            Reload_Config (False);
-
-            Step;
-            Draw_Grid (Layer2);
-            Set_Layer_State (Layer1, Disabled);
-            Set_Layer_State (Layer2, Enabled);
-
-            Reload_Config (False);
+            exit when STM32.Button.Has_Been_Pressed;
          end loop;
       end loop;
    end Driver;
