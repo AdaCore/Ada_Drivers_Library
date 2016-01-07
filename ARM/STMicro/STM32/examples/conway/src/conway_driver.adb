@@ -79,7 +79,7 @@ package body Conway_Driver is
               H   => 32,
               RLE => Ptrn2_RLE'Access);
 
-   --  Name: 23334M
+   --  Name:   23334M
    --  Author: Tomas Rokicki
    Ptrn3_RLE : aliased constant String :=
                  "2bo2b$2o3b$bo3b$o2bob$4bo$bo2bo$2bobo$bo!";
@@ -88,8 +88,35 @@ package body Conway_Driver is
               H   => 8,
               RLE => Ptrn3_RLE'Access);
 
+   --  Name:   7468M
+   --  Author: Tomas Rokicki
+   Ptrn4_RLE : aliased constant String :=
+                 "4bob$4b2o$2ob2ob$o!";
+   Ptrn4 : constant Pattern :=
+             (W   => 6,
+              H   => 4,
+              RLE => Ptrn4_RLE'Access);
+
+   --  Name: Acorn
+   --  Author Charles Coderman
+   Ptrn5_RLE : aliased constant String :=
+                 "bo5b$3bo3b$2o2b3o!";
+   Ptrn5 : constant Pattern :=
+             (W   => 7,
+              H   => 3,
+              RLE => Ptrn5_RLE'Access);
+
+   --  Name: Blom
+   --  Author: Dean Hickerson
+   Ptrn6_RLE : aliased constant String :=
+                 "o10bo$b4o6bo$2b2o7bo$10bob$8bobo!";
+   Ptrn6     : constant Pattern :=
+                   (W   => 12,
+                    H   => 5,
+                    RLE => Ptrn6_RLE'Access);
+
    Patterns  : constant array (Positive range <>) of Pattern :=
-                 (Ptrn1, Ptrn2, Ptrn3);
+                 (Ptrn1, Ptrn2, Ptrn3, Ptrn4, Ptrn5, Ptrn6);
 
    type Cell_State is (Dead, Alive)
      with Size => 1;
@@ -152,6 +179,8 @@ package body Conway_Driver is
          X : Width) return Neighbor_Cnt
         with Inline;
 
+      function To_Width (S : String) return Width;
+
       ---------------------
       -- Count_Neighbors --
       ---------------------
@@ -183,6 +212,23 @@ package body Conway_Driver is
 
          return Count;
       end Count_Neighbors;
+
+      --------------
+      -- To_Width --
+      --------------
+
+      function To_Width (S : String) return Width
+      is
+         Ret : Width := 0;
+         Tmp : Width;
+      begin
+         for C of S loop
+            Tmp := Character'Pos (C) - Character'Pos ('0');
+            Ret := Ret * 10 + Tmp;
+         end loop;
+
+         return Ret;
+      end To_Width;
 
    begin
 
@@ -216,7 +262,7 @@ package body Conway_Driver is
                if Cur = Idx then
                   Length := 1;
                else
-                  Length := Width'Value (Ptrn.RLE (Idx .. Cur - 1));
+                  Length := To_Width (Ptrn.RLE (Idx .. Cur - 1));
                end if;
 
                C := Ptrn.RLE (Cur);

@@ -31,7 +31,7 @@
 with STM32.LCD;             use STM32.LCD;
 with STM32.DMA2D.Interrupt; use STM32.DMA2D;
 with STM32.Touch_Panel;     use STM32.Touch_Panel;
---  with STM32.Button;
+with STM32.Button;
 
 with Bitmapped_Drawing;     use Bitmapped_Drawing;
 with Double_Buffer;         use Double_Buffer;
@@ -64,7 +64,7 @@ begin
    STM32.Touch_Panel.Initialize;
 
    --  Initialize button
---     STM32.Button.Initialize;
+   STM32.Button.Initialize;
 
    --  Clear LCD (set background)
    Clear;
@@ -72,20 +72,20 @@ begin
    --  The application: set pixel where the finger is (so that you
    --  cannot see what you are drawing).
    loop
---        if STM32.Button.Has_Been_Pressed then
---           Clear;
---        else
-      declare
-         State : constant TP_State := Get_State;
-      begin
-         for Touch of State loop
-            --  Workaround some strange readings from the STM32F429 TP
-            if Touch.X < FG_Buffer.Width - 1 then
-               Fill_Circle
-                 (FG_Buffer, (Touch.X, Touch.Y), Touch.Weight / 4, Red);
-            end if;
-         end loop;
-      end;
---        end if;
+      if STM32.Button.Has_Been_Pressed then
+         Clear;
+      else
+         declare
+            State : constant TP_State := Get_State;
+         begin
+            for Touch of State loop
+               --  Workaround some strange readings from the STM32F429 TP
+               if Touch.X < FG_Buffer.Width - 1 then
+                  Fill_Circle
+                    (FG_Buffer, (Touch.X, Touch.Y), Touch.Weight / 4, Red);
+               end if;
+            end loop;
+         end;
+      end if;
    end loop;
 end Draw;
