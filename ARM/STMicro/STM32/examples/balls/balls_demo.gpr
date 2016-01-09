@@ -1,4 +1,4 @@
-with "../../STM32";
+with "../../stm32";
 
 project Balls_Demo is
 

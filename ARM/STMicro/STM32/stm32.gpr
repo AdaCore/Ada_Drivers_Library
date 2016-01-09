@@ -27,7 +27,6 @@ project STM32 is
    for Library_Name use "stm32";
    for Library_Dir use "lib/" & Board & "/" & RTS;
    for Target use "arm-eabi";
-   for Runtime ("Ada") use RTS & "-stm32f4";
 
    package Builder is
       case Build is
@@ -40,6 +39,7 @@ project STM32 is
 
    case Board is
       when "STM32F4-DISCO" =>
+         for Runtime ("Ada") use RTS & "-stm32f4";
          for Source_Dirs use Project'Source_Dirs &
             ("svd/stm32f40x",
              "boards/stm32f4_discovery",
@@ -59,6 +59,7 @@ project STM32 is
          end case;
 
       when "STM32F429-DISCO" =>
+         for Runtime ("Ada") use RTS & "-stm32f429disco";
          for Source_Dirs use Project'Source_Dirs &
             ("svd/stm32f429x",
              "boards/stm32f429_discovery",
@@ -87,6 +88,7 @@ project STM32 is
          end case;
 
       when "STM32F469-DISCO" =>
+         for Runtime ("Ada") use RTS & "-stm32f469disco";
          for Source_Dirs use Project'Source_Dirs &
             ("svd/stm32f46_79x",
              "boards/stm32f469_discovery",
@@ -115,6 +117,7 @@ project STM32 is
          end case;
 
       when "STM32F7-DISCO" =>
+         for Runtime ("Ada") use RTS & "-stm32f7disco";
          for Source_Dirs use Project'Source_Dirs &
             ("svd/stm32f7x",
              "boards/stm32f7_discovery",
@@ -128,6 +131,7 @@ project STM32 is
              "components/lcd/rortech_stm32f7disco",
              "components/touch_panel",
              "components/touch_panel/ft5336",
+             "components/eth",
              "utils/gui");
          case RTS is
             when "ravenscar-sfp" =>

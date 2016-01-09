@@ -115,4 +115,3 @@ package STM32.FPU is
    function FPSCR return Status_Control_Register;
 
 end STM32.FPU;
-

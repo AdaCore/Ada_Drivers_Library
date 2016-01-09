@@ -87,8 +87,9 @@ package STM32.ADC is
    --  See RM pg 410, section 13.10; also pg 389 section 13.3.3
    --  Note only available with ADC_1
 
-   subtype TemperatureSensor_Channel is Analog_Input_Channel with
-     Static_Predicate => TemperatureSensor_Channel in 16 | VBat_Channel;
+   subtype TemperatureSensor_Channel is Analog_Input_Channel;
+   --  ??? The below predicate does not compile with GNAT GPL 2015.
+   --  with Static_Predicate => TemperatureSensor_Channel in 16 | VBat_Channel;
    --  See RM pg 389 section 13.3.3. On some MCUs the temperature channel is
    --  the same as the VBat channel, on others it is channel 16. Note only
    --  available with ADC_1

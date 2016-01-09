@@ -190,6 +190,6 @@ package STM32_SVD.Interrupts is
 
    DMA2D_Interrupt: constant Interrupt_ID := 92;
 
---     QUADSPI_Interrupt: constant Interrupt_ID := 93;
+   QUADSPI_Interrupt: constant Interrupt_ID := 93;
 
 end STM32_SVD.Interrupts;
