@@ -162,6 +162,10 @@ procedure Demo_L3DG20 is
          Enable_SPI_GPIO_Clock       => RCC.GPIOF_Clock_Enable'Access,
          Enable_Chip_Select_Clock    => RCC.GPIOC_Clock_Enable'Access);
 
+      if L3DG20.Device_Id (Gyro) /= L3DG20.I_Am_L3GD20 then
+         raise Program_Error with "No L3DG20 found";
+      end if;
+
       Reset (Gyro);
 
       Configure
@@ -173,8 +177,6 @@ procedure Demo_L3DG20 is
          BlockData_Update => L3GD20_BlockDataUpdate_Continous,
          Endianness       => L3GD20_Little_Endian,
          Full_Scale       => L3GD20_Fullscale_250);
-
-      Enable_Low_Pass_Filter (Gyro);
    end Configure_Gyro;
 
    ------------------------------
