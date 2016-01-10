@@ -41,6 +41,7 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 with System;
 with Interfaces;            use Interfaces;
 
+with STM32.Button;          use STM32.Button;
 with STM32.LCD;             use STM32.LCD;
 with STM32.DMA2D.Interrupt; use STM32.DMA2D;
 with STM32.RNG.Interrupts;  use STM32.RNG.Interrupts;
@@ -114,8 +115,8 @@ procedure Demo is
 
    Objects      : array (1 .. 15) of Moving_Object;
 
---     LCD_Config   : LCD_Configuration;
    FG_Buffer    : DMA2D_Buffer;
+   White_Background : Boolean := False;
 
    ------------
    -- To_RGB --
@@ -215,9 +216,9 @@ procedure Demo is
       Sp1     : Vector;
       Sp2     : Vector;
 
-      --  Simplified mass: equal to R
-      Mass1   : constant Float := Float (M1.R);
-      Mass2   : constant Float := Float (M2.R);
+      --  Simplified mass: equal to R^2
+      Mass1   : constant Float := Float (M1.R ** 2);
+      Mass2   : constant Float := Float (M2.R ** 2);
       dT      : Float := 0.0;
       Old1, Old2 : Vector;
 
@@ -327,26 +328,26 @@ begin
    Double_Buffer.Initialize (Layer_Background => Layer_Double_Buffer,
                              Layer_Foreground => Layer_Inactive);
    STM32.RNG.Interrupts.Initialize_RNG;
---     STM32.Button.Initialize;
-
---     STM32.LCD.Set_Layer_Alpha (BG, 255);
+   STM32.Button.Initialize;
 
    Init_Balls;
 
    loop
+      if STM32.Button.Has_Been_Pressed then
+         White_Background := not White_Background;
+      end if;
+
       FG_Buffer := Double_Buffer.Get_Hidden_Buffer (Background);
-      STM32.DMA2D.DMA2D_Fill (FG_Buffer, Black);
+
+      STM32.DMA2D.DMA2D_Fill
+        (FG_Buffer,
+         (if White_Background then White else Black));
 
       for M of Objects loop
          if M.N_Hue /= M.Col.Hue then
             M.Col.Hue := M.Col.Hue + 1;
          end if;
       end loop;
-
---        if STM32.Button.Has_Been_Pressed then
---           --           dY := - dY;
---           Init_Balls;
---        end if;
 
       for O of Objects loop
          O.Center := O.Center + O.Speed;
