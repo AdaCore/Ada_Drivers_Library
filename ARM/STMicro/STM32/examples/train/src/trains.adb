@@ -34,7 +34,7 @@ package body Trains with
 is
 
    procedure Update_Track_Signal (Track : Track_Id) with
-     Global => (Input  => (Trains, Cur_Num_Trains),
+     Global => (Input  => (Trains, Cur_Num_Trains, Previous_Tracks, Tracks),
                 In_Out => Track_Signals),
      Pre  => Track_Signals (Track) = Orange,
      Post => (if (for some T in Train_Id range 1 .. Cur_Num_Trains =>
