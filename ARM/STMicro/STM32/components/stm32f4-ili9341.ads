@@ -53,6 +53,7 @@ with STM32F4.GPIO; use STM32F4.GPIO;
 with STM32F4.SPI;  use STM32F4.SPI;
 
 package STM32F4.ILI9341 is
+   pragma Elaborate_Body;
 
    Device_Width  : constant := 240;
    Device_Height : constant := 320;
