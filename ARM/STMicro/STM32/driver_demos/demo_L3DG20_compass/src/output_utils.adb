@@ -73,24 +73,8 @@ package body Output_Utils is
 
    procedure Initialize_Display is
    begin
-      LCD.Initialize
-        (Chip_Select             => (GPIO_C'Access, Pin_2),
-         Enable_CS_GPIO_Clock    => GPIOC_Clock_Enable'Access,
-         WRX                     => (GPIO_D'Access, Pin_13),
-         Enable_WRX_GPIO_Clock   => GPIOD_Clock_Enable'Access,
-         Reset                   => (GPIO_D'Access, Pin_12),
-         Enable_Reset_GPIO_Clock => GPIOD_Clock_Enable'Access,
-         SPI_Chip                => SPI_5'Access,
-         Enable_SPI_Clock        => SPI5_Clock_Enable'Access,
-         SPI_GPIO                => GPIO_F'Access,
-         Enable_SPI_GPIO_Clock   => GPIOF_Clock_Enable'Access,
-         SPI_AF                  => GPIO_AF_SPI5,
-         SCK_Pin                 => Pin_7,
-         MISO_Pin                => Pin_8,
-         MOSI_Pin                => Pin_9);
-
+      Initialize_LCD_Hardware;
       LCD.Set_Orientation (To => LCD.Portrait_2);
-
       LCD.Fill (LCD.Black);
    end Initialize_Display;
 

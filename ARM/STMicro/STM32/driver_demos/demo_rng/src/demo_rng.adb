@@ -33,7 +33,7 @@
 
 --  Note that you may need to cycle power on the board.
 
-with STM32F429_Discovery;  pragma Unreferenced (STM32F429_Discovery);
+with STM32F429_Discovery;  use STM32F429_Discovery;
 
 with STM32F4.ILI9341;
 with Bitmapped_Drawing;
@@ -55,6 +55,8 @@ procedure Demo_RNG is
    use LCD_Text;
 
 begin
+   Initialize_LCD_Hardware;
+   LCD_Text.Initialize;
    Initialize_RNG;
    loop
       Put_Line (Random'Img & "  ");

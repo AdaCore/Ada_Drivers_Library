@@ -103,26 +103,6 @@ procedure Demo_L3DG20 is
 
    procedure Configure_Gyro is
    begin
-      -- For the page numbers shown below, the required values are specified in
-      -- the STM32F429 Discovery kit User Manual (UM1670) on those pages.
-      Initialize_Gyro_Hardware
-        (Gyro,
-         L3GD20_SPI                  => SPI_5'Access,
-         SPI_GPIO                    => GPIO_F'Access,  -- required, pg 23
-         SPI_GPIO_AF                 => GPIO_AF_SPI5,
-         SCK_Pin                     => Pin_7,          -- required, pg 23
-         MISO_Pin                    => Pin_8,          -- required, pg 23
-         MOSI_Pin                    => Pin_9,          -- required, pg 23
-         CS_GPIO                     => GPIO_C'Access,  -- required, pg 21
-         CS_Pin                      => Pin_1,          -- required, pg 21
-         Enable_SPI_Clock            => RCC.SPI5_Clock_Enable'Access,
-         Enable_SPI_GPIO_Clock       => RCC.GPIOF_Clock_Enable'Access,
-         Enable_Chip_Select_Clock    => RCC.GPIOC_Clock_Enable'Access);
-
-      if L3DG20.Device_Id (Gyro) /= L3DG20.I_Am_L3GD20 then
-         raise Program_Error with "No L3DG20 found";
-      end if;
-
       Reset (Gyro);
 
       Configure
@@ -184,7 +164,7 @@ procedure Demo_L3DG20 is
 
 begin
    Initialize_Display;
-
+   Initialize_Gyro_Hardware;
    Configure_Gyro;
 
    Configure_Gyro_Interrupt;

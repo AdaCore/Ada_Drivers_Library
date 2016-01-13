@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -45,20 +45,16 @@
 --  be required to initialize the ILI9341, something that this package does
 --  automatically.
 
-with STM32F4.RCC;  use STM32F4.RCC;
-with STM32F4.GPIO; use STM32F4.GPIO;
-with STM32F4.SPI;  use STM32F4.SPI;
-
-with STM32F429_Discovery;  use STM32F429_Discovery;
-
 with STM32F4.ILI9341;
-with BMP_Fonts;          use BMP_Fonts;
+with BMP_Fonts;  use BMP_Fonts;
 with Bitmapped_Drawing;
 
 generic
    with package Drawing is new Bitmapped_Drawing
      (Color => STM32F4.ILI9341.Colors, Set_Pixel => <>);
 package LCD_Std_Out is
+
+   procedure Initialize;
 
    package LCD renames STM32F4.ILI9341;
 
@@ -135,34 +131,5 @@ package LCD_Std_Out is
    --  Prints the string, starting at the specified location. Has no other
    --  effect whatsoever, especially none on the state of the current logical
    --  line or logical column. Does not wrap around.
-
-private
-
-   --  The STM32F4.ILI9341 is automatically initialized with the following:
-
-   Chip_Select : constant GPIO_Point := (GPIO_C'Access, Pin_2);
-
-   Enable_CS_GPIO_Clock : constant access procedure := GPIOC_Clock_Enable'Access;
-
-   WRX : constant GPIO_Point := (GPIO_D'Access, Pin_13);
-
-   Enable_WRX_GPIO_Clock : constant access procedure := GPIOD_Clock_Enable'Access;
-
-   Reset : constant GPIO_Point := (GPIO_D'Access, Pin_11);
-
-   Enable_Reset_GPIO_Clock : constant access procedure := GPIOD_Clock_Enable'Access;
-
-   SPI_Chip : access SPI_Port := SPI_5'Access;
-
-   Enable_SPI_Clock : constant access procedure := SPI5_Clock_Enable'Access;
-
-   SPI_GPIO : access GPIO_Port := GPIO_F'Access;
-
-   Enable_SPI_GPIO_Clock : constant access procedure := GPIOF_Clock_Enable'Access;
-
-   SPI_AF   : constant GPIO_Alternate_Function := GPIO_AF_SPI5;
-   SCK_Pin  : constant GPIO_Pin := Pin_7;
-   MISO_Pin : constant GPIO_Pin := Pin_8;
-   MOSI_Pin : constant GPIO_Pin := Pin_9;
 
 end LCD_Std_Out;

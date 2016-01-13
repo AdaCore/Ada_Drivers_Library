@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -88,6 +88,15 @@ package STM32F429_Discovery is
    --  will configure the GPIO port/pins for LED usage, specifically.
 
    Gyro : Three_Axis_Gyroscope;
+
+   procedure Initialize_Gyro_Hardware;
+   --  Initializes and configures the GPIO, SPI, etc. for the on-board L3GD20
+   --  gyro as required for the F429 Disco board. See the STM32F429 Discovery
+   --  kit User Manual (UM1670) for specifics.
+
+   procedure Initialize_LCD_Hardware;
+   --  Initializes and configures the GPIO, SPI, etc. for the on-board ILI9341
+   --  LCD as required for the F429 Disco board
 
    GPIO_A : GPIO_Port renames STM32F42xxx.GPIO_A;
    GPIO_B : GPIO_Port renames STM32F42xxx.GPIO_B;

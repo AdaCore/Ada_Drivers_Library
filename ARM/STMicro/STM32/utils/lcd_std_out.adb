@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -213,29 +213,17 @@ package body LCD_Std_Out is
       end loop;
    end Put;
 
-begin
-   LCD.Initialize
-     (Chip_Select,
-      Enable_CS_GPIO_Clock,
-      WRX,
-      Enable_WRX_GPIO_Clock,
-      Reset,
-      Enable_Reset_GPIO_Clock,
-      SPI_Chip,
-      Enable_SPI_Clock,
-      SPI_GPIO,
-      Enable_SPI_GPIO_Clock,
-      SPI_AF,
-      SCK_Pin,
-      MISO_Pin,
-      MOSI_Pin);
+   ----------------
+   -- Initialize --
+   ----------------
 
-   --  The values for the package global state are already initialized to the
-   --  default values. However we do need to clear/fill the screen and set
-   --  the orientation, which Initialize does do, so we call those routines
-   --  explicitly.
+   procedure Initialize is
+   begin
+      --  The values for the package global state are already initialized to the
+      --  default values. However we do need to clear/fill the screen and set
+      --  the orientation.
+      LCD.Set_Orientation (To => Default_Orientation);
+      LCD.Fill (Default_Background_Color);
+   end Initialize;
 
-   LCD.Set_Orientation (To => Default_Orientation);
-
-   LCD.Fill (Default_Background_Color);
 end LCD_Std_Out;
