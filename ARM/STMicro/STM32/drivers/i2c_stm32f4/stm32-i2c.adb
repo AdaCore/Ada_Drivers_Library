@@ -202,9 +202,9 @@ package body STM32.I2C is
       Enable_Clock (Handle.Periph.all);
 
       --  Disable the I2C port
-      if Freq_Range < 2 or else Freq_Range > 42 then
+      if Freq_Range < 2 or else Freq_Range > 45 then
          raise Program_Error with
-           "PCLK1 too high or too low: expected 2-42 MHz, current" &
+           "PCLK1 too high or too low: expected 2-45 MHz, current" &
            Freq_Range'Img & " MHz";
       end if;
 
