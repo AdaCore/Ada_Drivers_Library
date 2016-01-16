@@ -35,6 +35,7 @@ with STM32.LCD;
 private with STM32_SVD;
 
 package STM32.DMA2D is
+
    type DMA2D_Color is record
       Alpha : Byte;
       Red   : Byte;
@@ -48,6 +49,9 @@ package STM32.DMA2D is
       Green at 1 range 0 .. 7;
       Blue  at 0 range 0 .. 7;
    end record;
+
+   Black : constant DMA2D_Color := (255, 0, 0, 0);
+   White : constant DMA2D_Color := (255, 255, 255, 255);
 
    --  This bit is set and cleared by software. It cannot be modified
    --  while a transfer is ongoing.
