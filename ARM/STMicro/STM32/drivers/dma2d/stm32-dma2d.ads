@@ -260,6 +260,10 @@ package STM32.DMA2D is
       Synchronous : Boolean := False);
    --  Draws a vertical line
 
+   function DMA2D_Color_To_Word
+     (Buffer : DMA2D_Buffer; Col : DMA2D_Color)
+      return Word;
+
 private
 
    function As_UInt3 is new Ada.Unchecked_Conversion

@@ -423,6 +423,18 @@ package body STM32.DMA2D is
       DMA2D_Fill_Rect (Buffer, Color, NX, Y, NW, 1, Synchronous);
    end DMA2D_Draw_Horizontal_Line;
 
+   -------------------------
+   -- DMA2D_Color_To_Word --
+   -------------------------
+
+   function DMA2D_Color_To_Word
+     (Buffer : DMA2D_Buffer; Col : DMA2D_Color)
+      return Word
+   is
+   begin
+      return To_OCOLR (Col, Buffer.Color_Mode);
+   end DMA2D_Color_To_Word;
+
 --     -----------------------
 --     -- DMA2D_Draw_Circle --
 --     -----------------------
