@@ -28,6 +28,11 @@
 --  A very simple draw application.
 --  Use your finger to draw pixels.
 
+with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
+--  The "last chance handler" is the user-defined routine that is called when
+--  an exception is propagated. We need it in the executable, therefore it
+--  must be somewhere in the closure of the context clauses.
+
 with STM32.LCD;             use STM32.LCD;
 with STM32.DMA2D.Interrupt; use STM32.DMA2D;
 with STM32.Touch_Panel;     use STM32.Touch_Panel;
