@@ -10,8 +10,8 @@ package STM32.LCD is new
               LCD_VSYNC      => 10,
               LCD_VBP        => 2,
               LCD_VFP        => 2,
-              PLLSAI_N       => 200,
-              PLLSAI_R       => 5,
-              DivR           => 2,
+              PLLSAI_N       => 192,
+              PLLSAI_R       => 4,
+              DivR           => 4,
               Pre_LTDC_Initialize => STM32.LCDInit.Initialize,
               Post_LTDC_Initialize => STM32.LCDInit.Post_Init);
