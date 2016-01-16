@@ -341,7 +341,7 @@ begin
 
       STM32.DMA2D.DMA2D_Fill
         (FG_Buffer,
-         (if White_Background then White else Black));
+         (if White_Background then DMA2D.White else DMA2D.Black));
 
       for M of Objects loop
          if M.N_Hue /= M.Col.Hue then
