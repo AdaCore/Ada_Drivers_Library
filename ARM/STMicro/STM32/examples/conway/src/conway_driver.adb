@@ -115,8 +115,17 @@ package body Conway_Driver is
                     H   => 5,
                     RLE => Ptrn6_RLE'Access);
 
+   --  Name: Bunnies
+   --  Author: Robert Wainwright and Andrew Trevorrow
+   Ptrn7_RLE : aliased constant String :=
+                 "o5bob$2bo3bob$2bo2bobo$bobo!";
+   Ptrn7     : constant Pattern :=
+                   (W   => 8,
+                    H   => 4,
+                    RLE => Ptrn7_RLE'Access);
+
    Patterns  : constant array (Positive range <>) of Pattern :=
-                 (Ptrn1, Ptrn2, Ptrn3, Ptrn4, Ptrn5, Ptrn6);
+                 (Ptrn1, Ptrn2, Ptrn3, Ptrn4, Ptrn5, Ptrn6, Ptrn7);
 
    type Cell_State is (Dead, Alive)
      with Size => 1;
