@@ -419,7 +419,14 @@ package body STM32.Touch_Panel is
       Y := Y - 360;
       Y := Y / 11;
       Y := Integer'Max (Y, 0);
-      Y := Integer'Min (Y, LCD.LCD_Natural_Height);
+      Y := Integer'Min (Y, LCD.LCD_Natural_Height - 1);
+
+      --  ??? There seems to be a strange behavior of this touch panel where
+      --  sometimes it reports dummy points at X = LCD_Natural_Width.
+      --  Let's filter this out
+      if X = LCD.LCD_Natural_Width - 1 then
+         return (1 .. 0 => <>);
+      end if;
 
       if not LCD.SwapXY then
          State.X := X;

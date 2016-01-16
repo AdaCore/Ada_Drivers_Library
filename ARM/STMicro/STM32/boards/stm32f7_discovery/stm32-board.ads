@@ -137,10 +137,8 @@ package STM32.Board is
    LCD_RGB_AF9   : constant GPIO_Points :=
                      (1 => PG12); -- B4
 
-
-
+   TP_I2C   : I2C_Port_Id renames I2C_3;
    TP_Pins : constant GPIO_Points := (LCD_SDA, LCD_SCL);
-
 
    --  User button
 

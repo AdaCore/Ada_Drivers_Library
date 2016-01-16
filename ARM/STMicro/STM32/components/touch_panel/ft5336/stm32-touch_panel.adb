@@ -42,8 +42,6 @@ with STM32.LCD;
 
 package body STM32.Touch_Panel is
 
-   TP_I2C   : I2C_Port_Id renames I2C_3;
-
    --  I2C Slave address of touchscreen FocalTech FT5336
    TP_ADDR  : constant := 16#70#;
 
