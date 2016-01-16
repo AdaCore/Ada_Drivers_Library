@@ -62,7 +62,7 @@ package body STM32.RNG.Polling is
 
    function Random return Interfaces.Unsigned_32 is
    begin
-      while RNG_Data_Ready loop
+      while not RNG_Data_Ready loop
          null;
       end loop;
       return RNG_Data;
