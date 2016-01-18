@@ -343,7 +343,7 @@ private
    type Pin_Modes_Register is array (0 .. 15) of Pin_IO_Modes;
    for Pin_Modes_Register'Component_Size use Pin_IO_Modes'Size;
 
-   type Output_Types_Register is array (0 .. 31) of Pin_Output_Types;
+   type Output_Types_Register is array (0 .. 15) of Pin_Output_Types;
    for Output_Types_Register'Component_Size use Pin_Output_Types'Size;
 
    type Output_Speeds_Register is array (0 .. 15) of Pin_Output_Speeds;
@@ -355,12 +355,13 @@ private
    type GPIO_Port is limited record
       MODER      : Pin_Modes_Register;
       OTYPER     : Output_Types_Register;
+      Reserved_1 : Half_Word;
       OSPEEDR    : Output_Speeds_Register;
       PUPDR      : Resistors_Register;
       IDR        : Half_Word;       --  input data register
-      Reserved_1 : Half_Word;
-      ODR        : Half_Word;       --  output data register
       Reserved_2 : Half_Word;
+      ODR        : Half_Word;       --  output data register
+      Reserved_3 : Half_Word;
       BSRR_Set   : Half_Word;       --  bit set register
       BSRR_Reset : Half_Word;       --  bit reset register
       LCKR       : Word with Atomic;
@@ -372,13 +373,14 @@ private
 
    for GPIO_Port use record
       MODER      at 0  range 0 .. 31;
-      OTYPER     at 4  range 0 .. 31;
+      OTYPER     at 4  range 0 .. 15;
+      Reserved_1 at 6  range 0 .. 15;
       OSPEEDR    at 8  range 0 .. 31;
       PUPDR      at 12 range 0 .. 31;
       IDR        at 16 range 0 .. 15;
-      Reserved_1 at 18 range 0 .. 15;
+      Reserved_2 at 18 range 0 .. 15;
       ODR        at 20 range 0 .. 15;
-      Reserved_2 at 22 range 0 .. 15;
+      Reserved_3 at 22 range 0 .. 15;
       BSRR_Set   at 24 range 0 .. 15;
       BSRR_Reset at 26 range 0 .. 15;
       LCKR       at 28 range 0 .. 31;
