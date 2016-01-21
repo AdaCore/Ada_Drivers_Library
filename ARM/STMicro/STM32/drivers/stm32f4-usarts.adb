@@ -131,7 +131,7 @@ package body STM32F4.USARTs is
 
    procedure Set_Baud_Rate (This : in out USART; To : Baud_Rates) is
       Clock        : constant Word := APB_Clock (This);
-      Int_Divider  : constant Word := (25 * Clock) / (4 * To);
+      Int_Divider  : constant Word := (25 * Clock) / (2 * To);
       Frac_Divider : constant Word := Int_Divider rem 100;
       BRR          : Half_Word;
    begin
