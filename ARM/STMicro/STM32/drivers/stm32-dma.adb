@@ -122,7 +122,7 @@ package body STM32.DMA is
    ------------
 
    procedure Enable
-     (Unit   : in out DMA_Controller;
+     (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector)
    is
    begin
@@ -147,7 +147,7 @@ package body STM32.DMA is
    -------------
 
    procedure Disable
-     (Unit   : in out DMA_Controller;
+     (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector)
    is
    begin
@@ -189,7 +189,7 @@ package body STM32.DMA is
    ----------------------
 
    procedure Enable_Interrupt
-     (Unit   : in out DMA_Controller;
+     (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector;
       Source : DMA_Interrupt)
    is
@@ -202,7 +202,7 @@ package body STM32.DMA is
    -----------------------
 
    procedure Disable_Interrupt
-     (Unit   : in out DMA_Controller;
+     (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector;
       Source : DMA_Interrupt)
    is
@@ -246,7 +246,7 @@ package body STM32.DMA is
    --------------------
 
    procedure Start_Transfer
-     (Unit        : in out DMA_Controller;
+     (Unit        : DMA_Controller;
       Stream      : DMA_Stream_Selector;
       Source      : Address;
       Destination : Address;
@@ -270,7 +270,7 @@ package body STM32.DMA is
    ------------------------------------
 
    procedure Start_Transfer_With_Interrupts
-     (Unit               : in out DMA_Controller;
+     (Unit               : DMA_Controller;
       Stream             : DMA_Stream_Selector;
       Source             : Address;
       Destination        : Address;
@@ -301,7 +301,7 @@ package body STM32.DMA is
    -------------------------
 
    procedure Configure_Data_Flow
-     (Unit        : in out DMA_Controller;
+     (Unit        : DMA_Controller;
       Stream      : DMA_Stream_Selector;
       Source      : Address;
       Destination : Address;
@@ -327,7 +327,7 @@ package body STM32.DMA is
    --------------------
 
    procedure Abort_Transfer
-     (Unit   : in out DMA_Controller;
+     (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector;
       Result : out DMA_Error_Code)
    is
@@ -720,7 +720,7 @@ package body STM32.DMA is
    -----------------
 
    procedure Set_Counter
-     (Unit       : in out DMA_Controller;
+     (Unit       : DMA_Controller;
       Stream     : DMA_Stream_Selector;
       Data_Count : Half_Word)
    is
@@ -774,7 +774,7 @@ package body STM32.DMA is
    ---------------
 
    procedure Configure
-     (Unit   : in out DMA_Controller;
+     (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector;
       Config : DMA_Stream_Configuration)
    is
@@ -944,7 +944,7 @@ package body STM32.DMA is
    -----------------------
 
    procedure Set_Memory_Buffer
-     (Unit   : in out DMA_Controller;
+     (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector;
       Buffer : Memory_Buffer_Target;
       To     : System.Address)
@@ -966,7 +966,7 @@ package body STM32.DMA is
    ----------------------------------
 
    procedure Select_Current_Memory_Buffer
-     (Unit   : in out DMA_Controller;
+     (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector;
       Buffer : Memory_Buffer_Target)
    is
@@ -980,7 +980,7 @@ package body STM32.DMA is
    ------------------------------------
 
    procedure Configure_Double_Buffered_Mode
-     (Unit              : in out DMA_Controller;
+     (Unit              : DMA_Controller;
       Stream            : DMA_Stream_Selector;
       Buffer_0_Value    : Address;
       Buffer_1_Value    : Address;
@@ -997,7 +997,7 @@ package body STM32.DMA is
    ---------------------------------
 
    procedure Enable_Double_Buffered_Mode
-     (Unit   : in out DMA_Controller;
+     (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector)
    is
    begin
@@ -1009,7 +1009,7 @@ package body STM32.DMA is
    ----------------------------------
 
    procedure Disable_Double_Buffered_Mode
-     (Unit   : in out DMA_Controller;
+     (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector)
    is
    begin

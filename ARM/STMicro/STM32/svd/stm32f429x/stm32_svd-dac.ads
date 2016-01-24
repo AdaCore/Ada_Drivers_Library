@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F429x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.DAC is
@@ -12,36 +13,25 @@ package STM32_SVD.DAC is
    -- Registers --
    ---------------
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_EN1_Field is STM32_SVD.Bit;
-
    subtype CR_BOFF1_Field is STM32_SVD.Bit;
-
    subtype CR_TEN1_Field is STM32_SVD.Bit;
-
    subtype CR_TSEL1_Field is STM32_SVD.UInt3;
-
    subtype CR_WAVE1_Field is STM32_SVD.UInt2;
-
    subtype CR_MAMP1_Field is STM32_SVD.UInt4;
-
    subtype CR_DMAEN1_Field is STM32_SVD.Bit;
-
    subtype CR_DMAUDRIE1_Field is STM32_SVD.Bit;
-
    subtype CR_EN2_Field is STM32_SVD.Bit;
-
    subtype CR_BOFF2_Field is STM32_SVD.Bit;
-
    subtype CR_TEN2_Field is STM32_SVD.Bit;
-
    subtype CR_TSEL2_Field is STM32_SVD.UInt3;
-
    subtype CR_WAVE2_Field is STM32_SVD.UInt2;
-
    subtype CR_MAMP2_Field is STM32_SVD.UInt4;
-
    subtype CR_DMAEN2_Field is STM32_SVD.Bit;
-
    subtype CR_DMAUDRIE2_Field is STM32_SVD.Bit;
 
    --  control register
@@ -107,25 +97,38 @@ package STM32_SVD.DAC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   subtype SWTRIGR_SWTRIG1_Field is STM32_SVD.Bit;
+   ----------------------
+   -- SWTRIGR_Register --
+   ----------------------
 
-   type SWTRIG_Field_Array is array (0 .. 1) of SWTRIGR_SWTRIG1_Field
+   --------------------
+   -- SWTRIGR.SWTRIG --
+   --------------------
+
+   --  SWTRIGR_SWTRIG array element
+   subtype SWTRIGR_SWTRIG_Element is STM32_SVD.Bit;
+
+   --  SWTRIGR_SWTRIG array
+   type SWTRIGR_SWTRIG_Field_Array is array (0 .. 1)
+     of SWTRIGR_SWTRIG_Element
      with Component_Size => 1, Size => 2;
 
-   --  Type definition for SWTRIG
-   type SWTRIG_Union (As_Array : Boolean := False) is record
+   --  Type definition for SWTRIGR_SWTRIG
+   type SWTRIGR_SWTRIG_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of SWTRIG1
+            --  SWTRIG as a value
             Val : STM32_SVD.UInt2;
          when True =>
-            --  Array vision of SWTRIG1
-            Arr : SWTRIG_Field_Array;
+            --  SWTRIG as an array
+            Arr : SWTRIGR_SWTRIG_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 2;
 
-   for SWTRIG_Union use record
+   for SWTRIGR_SWTRIG_Field use record
       Val at 0 range 0 .. 1;
       Arr at 0 range 0 .. 1;
    end record;
@@ -133,7 +136,8 @@ package STM32_SVD.DAC is
    --  software trigger register
    type SWTRIGR_Register is record
       --  DAC channel1 software trigger
-      SWTRIG        : SWTRIG_Union := (As_Array => False, Val => 16#0#);
+      SWTRIG        : SWTRIGR_SWTRIG_Field :=
+                       (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_2_31 : STM32_SVD.UInt30 := 16#0#;
    end record
@@ -144,6 +148,10 @@ package STM32_SVD.DAC is
       SWTRIG        at 0 range 0 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
+
+   ---------------------
+   -- DHR12R_Register --
+   ---------------------
 
    subtype DHR12R1_DACC1DHR_Field is STM32_SVD.UInt12;
 
@@ -161,6 +169,10 @@ package STM32_SVD.DAC is
       DACC1DHR       at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
+
+   ---------------------
+   -- DHR12L_Register --
+   ---------------------
 
    subtype DHR12L1_DACC1DHR_Field is STM32_SVD.UInt12;
 
@@ -182,6 +194,10 @@ package STM32_SVD.DAC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- DHR8R_Register --
+   --------------------
+
    subtype DHR8R1_DACC1DHR_Field is STM32_SVD.Byte;
 
    --  channel1 8-bit right aligned data holding register
@@ -199,8 +215,11 @@ package STM32_SVD.DAC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype DHR12RD_DACC1DHR_Field is STM32_SVD.UInt12;
+   ----------------------
+   -- DHR12RD_Register --
+   ----------------------
 
+   subtype DHR12RD_DACC1DHR_Field is STM32_SVD.UInt12;
    subtype DHR12RD_DACC2DHR_Field is STM32_SVD.UInt12;
 
    --  Dual DAC 12-bit right-aligned data holding register
@@ -224,8 +243,11 @@ package STM32_SVD.DAC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype DHR12LD_DACC1DHR_Field is STM32_SVD.UInt12;
+   ----------------------
+   -- DHR12LD_Register --
+   ----------------------
 
+   subtype DHR12LD_DACC1DHR_Field is STM32_SVD.UInt12;
    subtype DHR12LD_DACC2DHR_Field is STM32_SVD.UInt12;
 
    --  DUAL DAC 12-bit left aligned data holding register
@@ -249,8 +271,11 @@ package STM32_SVD.DAC is
       DACC2DHR       at 0 range 20 .. 31;
    end record;
 
-   subtype DHR8RD_DACC1DHR_Field is STM32_SVD.Byte;
+   ---------------------
+   -- DHR8RD_Register --
+   ---------------------
 
+   subtype DHR8RD_DACC1DHR_Field is STM32_SVD.Byte;
    subtype DHR8RD_DACC2DHR_Field is STM32_SVD.Byte;
 
    --  DUAL DAC 8-bit right aligned data holding register
@@ -271,6 +296,10 @@ package STM32_SVD.DAC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ------------------
+   -- DOR_Register --
+   ------------------
+
    subtype DOR1_DACC1DOR_Field is STM32_SVD.UInt12;
 
    --  channel1 data output register
@@ -288,8 +317,11 @@ package STM32_SVD.DAC is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   subtype SR_DMAUDR1_Field is STM32_SVD.Bit;
+   -----------------
+   -- SR_Register --
+   -----------------
 
+   subtype SR_DMAUDR1_Field is STM32_SVD.Bit;
    subtype SR_DMAUDR2_Field is STM32_SVD.Bit;
 
    --  status register
@@ -372,6 +404,6 @@ package STM32_SVD.DAC is
 
    --  Digital-to-analog converter
    DAC_Periph : aliased DAC_Peripheral
-     with Import, Address => System'To_Address(16#40007400#);
+     with Import, Address => System'To_Address (16#40007400#);
 
 end STM32_SVD.DAC;

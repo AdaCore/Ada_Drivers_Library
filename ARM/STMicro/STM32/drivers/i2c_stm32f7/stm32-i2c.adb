@@ -137,6 +137,7 @@ package body STM32.I2C is
       Handle.Config := Conf;
 
       Enable_Clock (Handle.Periph.all);
+      Reset (Handle.Periph.all);
 
       --  Disable the I2C port
       Handle.Periph.CR1.PE := 0;
@@ -853,6 +854,13 @@ package body STM32.I2C is
    begin
       return Periph.CR1.PE = 1;
    end Port_Enabled;
+
+   function Is_Configured (Port : I2C_Port_Id) return Boolean
+   is
+      Handle : I2C_Port_Handle renames I2C_Handles (Port);
+   begin
+      return Is_Configured (Handle);
+   end Is_Configured;
 
    ---------------------
    -- Master_Transmit --

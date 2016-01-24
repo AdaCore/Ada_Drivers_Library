@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F46_79x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.CRYP is
@@ -12,20 +13,17 @@ package STM32_SVD.CRYP is
    -- Registers --
    ---------------
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_ALGODIR_Field is STM32_SVD.Bit;
-
    subtype CR_ALGOMODE0_Field is STM32_SVD.UInt3;
-
    subtype CR_DATATYPE_Field is STM32_SVD.UInt2;
-
    subtype CR_KEYSIZE_Field is STM32_SVD.UInt2;
-
    subtype CR_FFLUSH_Field is STM32_SVD.Bit;
-
    subtype CR_CRYPEN_Field is STM32_SVD.Bit;
-
    subtype CR_GCM_CCMPH_Field is STM32_SVD.UInt2;
-
    subtype CR_ALGOMODE3_Field is STM32_SVD.Bit;
 
    --  control register
@@ -73,14 +71,14 @@ package STM32_SVD.CRYP is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR_IFEM_Field is STM32_SVD.Bit;
-
    subtype SR_IFNF_Field is STM32_SVD.Bit;
-
    subtype SR_OFNE_Field is STM32_SVD.Bit;
-
    subtype SR_OFFU_Field is STM32_SVD.Bit;
-
    subtype SR_BUSY_Field is STM32_SVD.Bit;
 
    --  status register
@@ -110,8 +108,11 @@ package STM32_SVD.CRYP is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   subtype DMACR_DIEN_Field is STM32_SVD.Bit;
+   --------------------
+   -- DMACR_Register --
+   --------------------
 
+   subtype DMACR_DIEN_Field is STM32_SVD.Bit;
    subtype DMACR_DOEN_Field is STM32_SVD.Bit;
 
    --  DMA control register
@@ -132,8 +133,11 @@ package STM32_SVD.CRYP is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   subtype IMSCR_INIM_Field is STM32_SVD.Bit;
+   --------------------
+   -- IMSCR_Register --
+   --------------------
 
+   subtype IMSCR_INIM_Field is STM32_SVD.Bit;
    subtype IMSCR_OUTIM_Field is STM32_SVD.Bit;
 
    --  interrupt mask set/clear register
@@ -154,8 +158,11 @@ package STM32_SVD.CRYP is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   subtype RISR_INRIS_Field is STM32_SVD.Bit;
+   -------------------
+   -- RISR_Register --
+   -------------------
 
+   subtype RISR_INRIS_Field is STM32_SVD.Bit;
    subtype RISR_OUTRIS_Field is STM32_SVD.Bit;
 
    --  raw interrupt status register
@@ -176,8 +183,11 @@ package STM32_SVD.CRYP is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   subtype MISR_INMIS_Field is STM32_SVD.Bit;
+   -------------------
+   -- MISR_Register --
+   -------------------
 
+   subtype MISR_INMIS_Field is STM32_SVD.Bit;
    subtype MISR_OUTMIS_Field is STM32_SVD.Bit;
 
    --  masked interrupt status register
@@ -198,424 +208,388 @@ package STM32_SVD.CRYP is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   subtype K0LR_b224_Field is STM32_SVD.Bit;
+   -------------------
+   -- K0LR_Register --
+   -------------------
 
-   type b_Field_Array is array (0 .. 31) of K0LR_b224_Field
+   --  K0LR_b array element
+   subtype K0LR_b_Element is STM32_SVD.Bit;
+
+   --  K0LR_b array
+   type K0LR_b_Field_Array is array (0 .. 31) of K0LR_b_Element
      with Component_Size => 1, Size => 32;
 
-   --  Type definition for b
-   type b_Union (As_Array : Boolean := False) is record
+   --  key registers
+   type K0LR_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of b224
+            --  b as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of b224
-            Arr : b_Field_Array;
+            --  b as an array
+            Arr : K0LR_b_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
-
-   for b_Union use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
-   end record;
-
-   --  key registers
-   type K0LR_Register is record
-      --  b224
-      b : b_Union := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for K0LR_Register use record
-      b at 0 range 0 .. 31;
-   end record;
-
-   subtype K0RR_b192_Field is STM32_SVD.Bit;
-
-   type b_Field_Array_1 is array (0 .. 31) of K0RR_b192_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for b
-   type b_Union_1 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of b192
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of b192
-            Arr : b_Field_Array_1;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for b_Union_1 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- K0RR_Register --
+   -------------------
+
+   --  K0RR_b array element
+   subtype K0RR_b_Element is STM32_SVD.Bit;
+
+   --  K0RR_b array
+   type K0RR_b_Field_Array is array (0 .. 31) of K0RR_b_Element
+     with Component_Size => 1, Size => 32;
+
    --  key registers
-   type K0RR_Register is record
-      --  b192
-      b : b_Union_1 := (As_Array => False, Val => 16#0#);
+   type K0RR_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  b as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  b as an array
+            Arr : K0RR_b_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for K0RR_Register use record
-      b at 0 range 0 .. 31;
-   end record;
-
-   subtype K1LR_b160_Field is STM32_SVD.Bit;
-
-   type b_Field_Array_2 is array (0 .. 31) of K1LR_b160_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for b
-   type b_Union_2 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of b160
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of b160
-            Arr : b_Field_Array_2;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for b_Union_2 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- K1LR_Register --
+   -------------------
+
+   --  K1LR_b array element
+   subtype K1LR_b_Element is STM32_SVD.Bit;
+
+   --  K1LR_b array
+   type K1LR_b_Field_Array is array (0 .. 31) of K1LR_b_Element
+     with Component_Size => 1, Size => 32;
+
    --  key registers
-   type K1LR_Register is record
-      --  b160
-      b : b_Union_2 := (As_Array => False, Val => 16#0#);
+   type K1LR_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  b as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  b as an array
+            Arr : K1LR_b_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for K1LR_Register use record
-      b at 0 range 0 .. 31;
-   end record;
-
-   subtype K1RR_b128_Field is STM32_SVD.Bit;
-
-   type b_Field_Array_3 is array (0 .. 31) of K1RR_b128_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for b
-   type b_Union_3 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of b128
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of b128
-            Arr : b_Field_Array_3;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for b_Union_3 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- K1RR_Register --
+   -------------------
+
+   --  K1RR_b array element
+   subtype K1RR_b_Element is STM32_SVD.Bit;
+
+   --  K1RR_b array
+   type K1RR_b_Field_Array is array (0 .. 31) of K1RR_b_Element
+     with Component_Size => 1, Size => 32;
+
    --  key registers
-   type K1RR_Register is record
-      --  b128
-      b : b_Union_3 := (As_Array => False, Val => 16#0#);
+   type K1RR_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  b as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  b as an array
+            Arr : K1RR_b_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for K1RR_Register use record
-      b at 0 range 0 .. 31;
-   end record;
-
-   subtype K2LR_b96_Field is STM32_SVD.Bit;
-
-   type b_Field_Array_4 is array (0 .. 31) of K2LR_b96_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for b
-   type b_Union_4 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of b96
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of b96
-            Arr : b_Field_Array_4;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for b_Union_4 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- K2LR_Register --
+   -------------------
+
+   --  K2LR_b array element
+   subtype K2LR_b_Element is STM32_SVD.Bit;
+
+   --  K2LR_b array
+   type K2LR_b_Field_Array is array (0 .. 31) of K2LR_b_Element
+     with Component_Size => 1, Size => 32;
+
    --  key registers
-   type K2LR_Register is record
-      --  b96
-      b : b_Union_4 := (As_Array => False, Val => 16#0#);
+   type K2LR_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  b as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  b as an array
+            Arr : K2LR_b_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for K2LR_Register use record
-      b at 0 range 0 .. 31;
-   end record;
-
-   subtype K2RR_b64_Field is STM32_SVD.Bit;
-
-   type b_Field_Array_5 is array (0 .. 31) of K2RR_b64_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for b
-   type b_Union_5 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of b64
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of b64
-            Arr : b_Field_Array_5;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for b_Union_5 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- K2RR_Register --
+   -------------------
+
+   --  K2RR_b array element
+   subtype K2RR_b_Element is STM32_SVD.Bit;
+
+   --  K2RR_b array
+   type K2RR_b_Field_Array is array (0 .. 31) of K2RR_b_Element
+     with Component_Size => 1, Size => 32;
+
    --  key registers
-   type K2RR_Register is record
-      --  b64
-      b : b_Union_5 := (As_Array => False, Val => 16#0#);
+   type K2RR_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  b as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  b as an array
+            Arr : K2RR_b_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for K2RR_Register use record
-      b at 0 range 0 .. 31;
-   end record;
-
-   subtype K3LR_b32_Field is STM32_SVD.Bit;
-
-   type b_Field_Array_6 is array (0 .. 31) of K3LR_b32_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for b
-   type b_Union_6 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of b32
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of b32
-            Arr : b_Field_Array_6;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for b_Union_6 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- K3LR_Register --
+   -------------------
+
+   --  K3LR_b array element
+   subtype K3LR_b_Element is STM32_SVD.Bit;
+
+   --  K3LR_b array
+   type K3LR_b_Field_Array is array (0 .. 31) of K3LR_b_Element
+     with Component_Size => 1, Size => 32;
+
    --  key registers
-   type K3LR_Register is record
-      --  b32
-      b : b_Union_6 := (As_Array => False, Val => 16#0#);
+   type K3LR_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  b as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  b as an array
+            Arr : K3LR_b_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for K3LR_Register use record
-      b at 0 range 0 .. 31;
-   end record;
-
-   subtype K3RR_b0_Field is STM32_SVD.Bit;
-
-   type b_Field_Array_7 is array (0 .. 31) of K3RR_b0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for b
-   type b_Union_7 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of b0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of b0
-            Arr : b_Field_Array_7;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for b_Union_7 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- K3RR_Register --
+   -------------------
+
+   --  K3RR_b array element
+   subtype K3RR_b_Element is STM32_SVD.Bit;
+
+   --  K3RR_b array
+   type K3RR_b_Field_Array is array (0 .. 31) of K3RR_b_Element
+     with Component_Size => 1, Size => 32;
+
    --  key registers
-   type K3RR_Register is record
-      --  b0
-      b : b_Union_7 := (As_Array => False, Val => 16#0#);
+   type K3RR_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  b as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  b as an array
+            Arr : K3RR_b_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for K3RR_Register use record
-      b at 0 range 0 .. 31;
-   end record;
-
-   subtype IV0LR_IV31_Field is STM32_SVD.Bit;
-
-   type IV_Field_Array is array (0 .. 31) of IV0LR_IV31_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for IV
-   type IV_Union (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of IV31
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of IV31
-            Arr : IV_Field_Array;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for IV_Union use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   --------------------
+   -- IV0LR_Register --
+   --------------------
+
+   --  IV0LR_IV array element
+   subtype IV0LR_IV_Element is STM32_SVD.Bit;
+
+   --  IV0LR_IV array
+   type IV0LR_IV_Field_Array is array (0 .. 31) of IV0LR_IV_Element
+     with Component_Size => 1, Size => 32;
+
    --  initialization vector registers
-   type IV0LR_Register is record
-      --  IV31
-      IV : IV_Union := (As_Array => False, Val => 16#0#);
+   type IV0LR_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  IV as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  IV as an array
+            Arr : IV0LR_IV_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for IV0LR_Register use record
-      IV at 0 range 0 .. 31;
-   end record;
-
-   subtype IV0RR_IV63_Field is STM32_SVD.Bit;
-
-   type IV_Field_Array_1 is array (0 .. 31) of IV0RR_IV63_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for IV
-   type IV_Union_1 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of IV63
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of IV63
-            Arr : IV_Field_Array_1;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for IV_Union_1 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   --------------------
+   -- IV0RR_Register --
+   --------------------
+
+   --  IV0RR_IV array element
+   subtype IV0RR_IV_Element is STM32_SVD.Bit;
+
+   --  IV0RR_IV array
+   type IV0RR_IV_Field_Array is array (0 .. 31) of IV0RR_IV_Element
+     with Component_Size => 1, Size => 32;
+
    --  initialization vector registers
-   type IV0RR_Register is record
-      --  IV63
-      IV : IV_Union_1 := (As_Array => False, Val => 16#0#);
+   type IV0RR_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  IV as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  IV as an array
+            Arr : IV0RR_IV_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for IV0RR_Register use record
-      IV at 0 range 0 .. 31;
-   end record;
-
-   subtype IV1LR_IV95_Field is STM32_SVD.Bit;
-
-   type IV_Field_Array_2 is array (0 .. 31) of IV1LR_IV95_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for IV
-   type IV_Union_2 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of IV95
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of IV95
-            Arr : IV_Field_Array_2;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for IV_Union_2 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   --------------------
+   -- IV1LR_Register --
+   --------------------
+
+   --  IV1LR_IV array element
+   subtype IV1LR_IV_Element is STM32_SVD.Bit;
+
+   --  IV1LR_IV array
+   type IV1LR_IV_Field_Array is array (0 .. 31) of IV1LR_IV_Element
+     with Component_Size => 1, Size => 32;
+
    --  initialization vector registers
-   type IV1LR_Register is record
-      --  IV95
-      IV : IV_Union_2 := (As_Array => False, Val => 16#0#);
+   type IV1LR_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  IV as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  IV as an array
+            Arr : IV1LR_IV_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for IV1LR_Register use record
-      IV at 0 range 0 .. 31;
-   end record;
-
-   subtype IV1RR_IV127_Field is STM32_SVD.Bit;
-
-   type IV_Field_Array_3 is array (0 .. 31) of IV1RR_IV127_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for IV
-   type IV_Union_3 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of IV127
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of IV127
-            Arr : IV_Field_Array_3;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for IV_Union_3 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   --------------------
+   -- IV1RR_Register --
+   --------------------
+
+   --  IV1RR_IV array element
+   subtype IV1RR_IV_Element is STM32_SVD.Bit;
+
+   --  IV1RR_IV array
+   type IV1RR_IV_Field_Array is array (0 .. 31) of IV1RR_IV_Element
+     with Component_Size => 1, Size => 32;
+
    --  initialization vector registers
-   type IV1RR_Register is record
-      --  IV127
-      IV : IV_Union_3 := (As_Array => False, Val => 16#0#);
+   type IV1RR_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  IV as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  IV as an array
+            Arr : IV1RR_IV_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for IV1RR_Register use record
-      IV at 0 range 0 .. 31;
+      Val at 0 range 0 .. 31;
+      Arr at 0 range 0 .. 31;
    end record;
 
    -----------------
@@ -740,6 +714,6 @@ package STM32_SVD.CRYP is
 
    --  Cryptographic processor
    CRYP_Periph : aliased CRYP_Peripheral
-     with Import, Address => System'To_Address(16#50060000#);
+     with Import, Address => System'To_Address (16#50060000#);
 
 end STM32_SVD.CRYP;

@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F40x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.EXTI is
@@ -12,25 +13,37 @@ package STM32_SVD.EXTI is
    -- Registers --
    ---------------
 
-   subtype IMR_MR0_Field is STM32_SVD.Bit;
+   ------------------
+   -- IMR_Register --
+   ------------------
 
-   type MR_Field_Array is array (0 .. 22) of IMR_MR0_Field
+   ------------
+   -- IMR.MR --
+   ------------
+
+   --  IMR_MR array element
+   subtype IMR_MR_Element is STM32_SVD.Bit;
+
+   --  IMR_MR array
+   type IMR_MR_Field_Array is array (0 .. 22) of IMR_MR_Element
      with Component_Size => 1, Size => 23;
 
-   --  Type definition for MR
-   type MR_Union (As_Array : Boolean := False) is record
+   --  Type definition for IMR_MR
+   type IMR_MR_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of MR0
+            --  MR as a value
             Val : STM32_SVD.UInt23;
          when True =>
-            --  Array vision of MR0
-            Arr : MR_Field_Array;
+            --  MR as an array
+            Arr : IMR_MR_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 23;
 
-   for MR_Union use record
+   for IMR_MR_Field use record
       Val at 0 range 0 .. 22;
       Arr at 0 range 0 .. 22;
    end record;
@@ -38,7 +51,7 @@ package STM32_SVD.EXTI is
    --  Interrupt mask register (EXTI_IMR)
    type IMR_Register is record
       --  Interrupt Mask on line 0
-      MR             : MR_Union := (As_Array => False, Val => 16#0#);
+      MR             : IMR_MR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_23_31 : STM32_SVD.UInt9 := 16#0#;
    end record
@@ -50,25 +63,37 @@ package STM32_SVD.EXTI is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   subtype EMR_MR0_Field is STM32_SVD.Bit;
+   ------------------
+   -- EMR_Register --
+   ------------------
 
-   type MR_Field_Array_1 is array (0 .. 22) of EMR_MR0_Field
+   ------------
+   -- EMR.MR --
+   ------------
+
+   --  EMR_MR array element
+   subtype EMR_MR_Element is STM32_SVD.Bit;
+
+   --  EMR_MR array
+   type EMR_MR_Field_Array is array (0 .. 22) of EMR_MR_Element
      with Component_Size => 1, Size => 23;
 
-   --  Type definition for MR
-   type MR_Union_1 (As_Array : Boolean := False) is record
+   --  Type definition for EMR_MR
+   type EMR_MR_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of MR0
+            --  MR as a value
             Val : STM32_SVD.UInt23;
          when True =>
-            --  Array vision of MR0
-            Arr : MR_Field_Array_1;
+            --  MR as an array
+            Arr : EMR_MR_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 23;
 
-   for MR_Union_1 use record
+   for EMR_MR_Field use record
       Val at 0 range 0 .. 22;
       Arr at 0 range 0 .. 22;
    end record;
@@ -76,7 +101,7 @@ package STM32_SVD.EXTI is
    --  Event mask register (EXTI_EMR)
    type EMR_Register is record
       --  Event Mask on line 0
-      MR             : MR_Union_1 := (As_Array => False, Val => 16#0#);
+      MR             : EMR_MR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_23_31 : STM32_SVD.UInt9 := 16#0#;
    end record
@@ -88,25 +113,37 @@ package STM32_SVD.EXTI is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   subtype RTSR_TR0_Field is STM32_SVD.Bit;
+   -------------------
+   -- RTSR_Register --
+   -------------------
 
-   type TR_Field_Array is array (0 .. 22) of RTSR_TR0_Field
+   -------------
+   -- RTSR.TR --
+   -------------
+
+   --  RTSR_TR array element
+   subtype RTSR_TR_Element is STM32_SVD.Bit;
+
+   --  RTSR_TR array
+   type RTSR_TR_Field_Array is array (0 .. 22) of RTSR_TR_Element
      with Component_Size => 1, Size => 23;
 
-   --  Type definition for TR
-   type TR_Union (As_Array : Boolean := False) is record
+   --  Type definition for RTSR_TR
+   type RTSR_TR_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of TR0
+            --  TR as a value
             Val : STM32_SVD.UInt23;
          when True =>
-            --  Array vision of TR0
-            Arr : TR_Field_Array;
+            --  TR as an array
+            Arr : RTSR_TR_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 23;
 
-   for TR_Union use record
+   for RTSR_TR_Field use record
       Val at 0 range 0 .. 22;
       Arr at 0 range 0 .. 22;
    end record;
@@ -114,7 +151,7 @@ package STM32_SVD.EXTI is
    --  Rising Trigger selection register (EXTI_RTSR)
    type RTSR_Register is record
       --  Rising trigger event configuration of line 0
-      TR             : TR_Union := (As_Array => False, Val => 16#0#);
+      TR             : RTSR_TR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_23_31 : STM32_SVD.UInt9 := 16#0#;
    end record
@@ -126,25 +163,37 @@ package STM32_SVD.EXTI is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   subtype FTSR_TR0_Field is STM32_SVD.Bit;
+   -------------------
+   -- FTSR_Register --
+   -------------------
 
-   type TR_Field_Array_1 is array (0 .. 22) of FTSR_TR0_Field
+   -------------
+   -- FTSR.TR --
+   -------------
+
+   --  FTSR_TR array element
+   subtype FTSR_TR_Element is STM32_SVD.Bit;
+
+   --  FTSR_TR array
+   type FTSR_TR_Field_Array is array (0 .. 22) of FTSR_TR_Element
      with Component_Size => 1, Size => 23;
 
-   --  Type definition for TR
-   type TR_Union_1 (As_Array : Boolean := False) is record
+   --  Type definition for FTSR_TR
+   type FTSR_TR_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of TR0
+            --  TR as a value
             Val : STM32_SVD.UInt23;
          when True =>
-            --  Array vision of TR0
-            Arr : TR_Field_Array_1;
+            --  TR as an array
+            Arr : FTSR_TR_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 23;
 
-   for TR_Union_1 use record
+   for FTSR_TR_Field use record
       Val at 0 range 0 .. 22;
       Arr at 0 range 0 .. 22;
    end record;
@@ -152,7 +201,7 @@ package STM32_SVD.EXTI is
    --  Falling Trigger selection register (EXTI_FTSR)
    type FTSR_Register is record
       --  Falling trigger event configuration of line 0
-      TR             : TR_Union_1 := (As_Array => False, Val => 16#0#);
+      TR             : FTSR_TR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_23_31 : STM32_SVD.UInt9 := 16#0#;
    end record
@@ -164,25 +213,37 @@ package STM32_SVD.EXTI is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   subtype SWIER_SWIER0_Field is STM32_SVD.Bit;
+   --------------------
+   -- SWIER_Register --
+   --------------------
 
-   type SWIER_Field_Array is array (0 .. 22) of SWIER_SWIER0_Field
+   -----------------
+   -- SWIER.SWIER --
+   -----------------
+
+   --  SWIER array element
+   subtype SWIER_Element is STM32_SVD.Bit;
+
+   --  SWIER array
+   type SWIER_Field_Array is array (0 .. 22) of SWIER_Element
      with Component_Size => 1, Size => 23;
 
    --  Type definition for SWIER
-   type SWIER_Union (As_Array : Boolean := False) is record
+   type SWIER_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of SWIER0
+            --  SWIER as a value
             Val : STM32_SVD.UInt23;
          when True =>
-            --  Array vision of SWIER0
+            --  SWIER as an array
             Arr : SWIER_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 23;
 
-   for SWIER_Union use record
+   for SWIER_Field use record
       Val at 0 range 0 .. 22;
       Arr at 0 range 0 .. 22;
    end record;
@@ -190,7 +251,7 @@ package STM32_SVD.EXTI is
    --  Software interrupt event register (EXTI_SWIER)
    type SWIER_Register is record
       --  Software Interrupt on line 0
-      SWIER          : SWIER_Union := (As_Array => False, Val => 16#0#);
+      SWIER          : SWIER_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_23_31 : STM32_SVD.UInt9 := 16#0#;
    end record
@@ -202,25 +263,37 @@ package STM32_SVD.EXTI is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   subtype PR_PR0_Field is STM32_SVD.Bit;
+   -----------------
+   -- PR_Register --
+   -----------------
 
-   type PR_Field_Array is array (0 .. 22) of PR_PR0_Field
+   -----------
+   -- PR.PR --
+   -----------
+
+   --  PR array element
+   subtype PR_Element is STM32_SVD.Bit;
+
+   --  PR array
+   type PR_Field_Array is array (0 .. 22) of PR_Element
      with Component_Size => 1, Size => 23;
 
    --  Type definition for PR
-   type PR_Union (As_Array : Boolean := False) is record
+   type PR_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of PR0
+            --  PR as a value
             Val : STM32_SVD.UInt23;
          when True =>
-            --  Array vision of PR0
+            --  PR as an array
             Arr : PR_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 23;
 
-   for PR_Union use record
+   for PR_Field use record
       Val at 0 range 0 .. 22;
       Arr at 0 range 0 .. 22;
    end record;
@@ -228,7 +301,7 @@ package STM32_SVD.EXTI is
    --  Pending register (EXTI_PR)
    type PR_Register is record
       --  Pending bit 0
-      PR             : PR_Union := (As_Array => False, Val => 16#0#);
+      PR             : PR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_23_31 : STM32_SVD.UInt9 := 16#0#;
    end record
@@ -272,6 +345,6 @@ package STM32_SVD.EXTI is
 
    --  External interrupt/event controller
    EXTI_Periph : aliased EXTI_Peripheral
-     with Import, Address => System'To_Address(16#40013C00#);
+     with Import, Address => System'To_Address (16#40013C00#);
 
 end STM32_SVD.EXTI;

@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F429x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.RTC is
@@ -12,18 +13,16 @@ package STM32_SVD.RTC is
    -- Registers --
    ---------------
 
+   -----------------
+   -- TR_Register --
+   -----------------
+
    subtype TR_SU_Field is STM32_SVD.UInt4;
-
    subtype TR_ST_Field is STM32_SVD.UInt3;
-
    subtype TR_MNU_Field is STM32_SVD.UInt4;
-
    subtype TR_MNT_Field is STM32_SVD.UInt3;
-
    subtype TR_HU_Field is STM32_SVD.UInt4;
-
    subtype TR_HT_Field is STM32_SVD.UInt2;
-
    subtype TR_PM_Field is STM32_SVD.Bit;
 
    --  time register
@@ -65,18 +64,16 @@ package STM32_SVD.RTC is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
+   -----------------
+   -- DR_Register --
+   -----------------
+
    subtype DR_DU_Field is STM32_SVD.UInt4;
-
    subtype DR_DT_Field is STM32_SVD.UInt2;
-
    subtype DR_MU_Field is STM32_SVD.UInt4;
-
    subtype DR_MT_Field is STM32_SVD.Bit;
-
    subtype DR_WDU_Field is STM32_SVD.UInt3;
-
    subtype DR_YU_Field is STM32_SVD.UInt4;
-
    subtype DR_YT_Field is STM32_SVD.UInt4;
 
    --  date register
@@ -115,42 +112,28 @@ package STM32_SVD.RTC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_WCKSEL_Field is STM32_SVD.UInt3;
-
    subtype CR_TSEDGE_Field is STM32_SVD.Bit;
-
    subtype CR_REFCKON_Field is STM32_SVD.Bit;
-
    subtype CR_FMT_Field is STM32_SVD.Bit;
-
    subtype CR_DCE_Field is STM32_SVD.Bit;
-
    subtype CR_ALRAE_Field is STM32_SVD.Bit;
-
    subtype CR_ALRBE_Field is STM32_SVD.Bit;
-
    subtype CR_WUTE_Field is STM32_SVD.Bit;
-
    subtype CR_TSE_Field is STM32_SVD.Bit;
-
    subtype CR_ALRAIE_Field is STM32_SVD.Bit;
-
    subtype CR_ALRBIE_Field is STM32_SVD.Bit;
-
    subtype CR_WUTIE_Field is STM32_SVD.Bit;
-
    subtype CR_TSIE_Field is STM32_SVD.Bit;
-
    subtype CR_ADD1H_Field is STM32_SVD.Bit;
-
    subtype CR_SUB1H_Field is STM32_SVD.Bit;
-
    subtype CR_BKP_Field is STM32_SVD.Bit;
-
    subtype CR_POL_Field is STM32_SVD.Bit;
-
    subtype CR_OSEL_Field is STM32_SVD.UInt2;
-
    subtype CR_COE_Field is STM32_SVD.Bit;
 
    --  control register
@@ -228,36 +211,25 @@ package STM32_SVD.RTC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   ------------------
+   -- ISR_Register --
+   ------------------
+
    subtype ISR_ALRAWF_Field is STM32_SVD.Bit;
-
    subtype ISR_ALRBWF_Field is STM32_SVD.Bit;
-
    subtype ISR_WUTWF_Field is STM32_SVD.Bit;
-
    subtype ISR_SHPF_Field is STM32_SVD.Bit;
-
    subtype ISR_INITS_Field is STM32_SVD.Bit;
-
    subtype ISR_RSF_Field is STM32_SVD.Bit;
-
    subtype ISR_INITF_Field is STM32_SVD.Bit;
-
    subtype ISR_INIT_Field is STM32_SVD.Bit;
-
    subtype ISR_ALRAF_Field is STM32_SVD.Bit;
-
    subtype ISR_ALRBF_Field is STM32_SVD.Bit;
-
    subtype ISR_WUTF_Field is STM32_SVD.Bit;
-
    subtype ISR_TSF_Field is STM32_SVD.Bit;
-
    subtype ISR_TSOVF_Field is STM32_SVD.Bit;
-
    subtype ISR_TAMP1F_Field is STM32_SVD.Bit;
-
    subtype ISR_TAMP2F_Field is STM32_SVD.Bit;
-
    subtype ISR_RECALPF_Field is STM32_SVD.Bit;
 
    --  initialization and status register
@@ -323,8 +295,11 @@ package STM32_SVD.RTC is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
-   subtype PRER_PREDIV_S_Field is STM32_SVD.UInt15;
+   -------------------
+   -- PRER_Register --
+   -------------------
 
+   subtype PRER_PREDIV_S_Field is STM32_SVD.UInt15;
    subtype PRER_PREDIV_A_Field is STM32_SVD.UInt7;
 
    --  prescaler register
@@ -348,6 +323,10 @@ package STM32_SVD.RTC is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
+   -------------------
+   -- WUTR_Register --
+   -------------------
+
    subtype WUTR_WUT_Field is STM32_SVD.Short;
 
    --  wakeup timer register
@@ -365,8 +344,11 @@ package STM32_SVD.RTC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype CALIBR_DC_Field is STM32_SVD.UInt5;
+   ---------------------
+   -- CALIBR_Register --
+   ---------------------
 
+   subtype CALIBR_DC_Field is STM32_SVD.UInt5;
    subtype CALIBR_DCS_Field is STM32_SVD.Bit;
 
    --  calibration register
@@ -390,32 +372,23 @@ package STM32_SVD.RTC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   ---------------------
+   -- ALRMAR_Register --
+   ---------------------
+
    subtype ALRMAR_SU_Field is STM32_SVD.UInt4;
-
    subtype ALRMAR_ST_Field is STM32_SVD.UInt3;
-
    subtype ALRMAR_MSK1_Field is STM32_SVD.Bit;
-
    subtype ALRMAR_MNU_Field is STM32_SVD.UInt4;
-
    subtype ALRMAR_MNT_Field is STM32_SVD.UInt3;
-
    subtype ALRMAR_MSK2_Field is STM32_SVD.Bit;
-
    subtype ALRMAR_HU_Field is STM32_SVD.UInt4;
-
    subtype ALRMAR_HT_Field is STM32_SVD.UInt2;
-
    subtype ALRMAR_PM_Field is STM32_SVD.Bit;
-
    subtype ALRMAR_MSK3_Field is STM32_SVD.Bit;
-
    subtype ALRMAR_DU_Field is STM32_SVD.UInt4;
-
    subtype ALRMAR_DT_Field is STM32_SVD.UInt2;
-
    subtype ALRMAR_WDSEL_Field is STM32_SVD.Bit;
-
    subtype ALRMAR_MSK4_Field is STM32_SVD.Bit;
 
    --  alarm A register
@@ -469,32 +442,23 @@ package STM32_SVD.RTC is
       MSK4  at 0 range 31 .. 31;
    end record;
 
+   ---------------------
+   -- ALRMBR_Register --
+   ---------------------
+
    subtype ALRMBR_SU_Field is STM32_SVD.UInt4;
-
    subtype ALRMBR_ST_Field is STM32_SVD.UInt3;
-
    subtype ALRMBR_MSK1_Field is STM32_SVD.Bit;
-
    subtype ALRMBR_MNU_Field is STM32_SVD.UInt4;
-
    subtype ALRMBR_MNT_Field is STM32_SVD.UInt3;
-
    subtype ALRMBR_MSK2_Field is STM32_SVD.Bit;
-
    subtype ALRMBR_HU_Field is STM32_SVD.UInt4;
-
    subtype ALRMBR_HT_Field is STM32_SVD.UInt2;
-
    subtype ALRMBR_PM_Field is STM32_SVD.Bit;
-
    subtype ALRMBR_MSK3_Field is STM32_SVD.Bit;
-
    subtype ALRMBR_DU_Field is STM32_SVD.UInt4;
-
    subtype ALRMBR_DT_Field is STM32_SVD.UInt2;
-
    subtype ALRMBR_WDSEL_Field is STM32_SVD.Bit;
-
    subtype ALRMBR_MSK4_Field is STM32_SVD.Bit;
 
    --  alarm B register
@@ -548,6 +512,10 @@ package STM32_SVD.RTC is
       MSK4  at 0 range 31 .. 31;
    end record;
 
+   ------------------
+   -- WPR_Register --
+   ------------------
+
    subtype WPR_KEY_Field is STM32_SVD.Byte;
 
    --  write protection register
@@ -564,6 +532,10 @@ package STM32_SVD.RTC is
       KEY           at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
+
+   ------------------
+   -- SSR_Register --
+   ------------------
 
    subtype SSR_SS_Field is STM32_SVD.Short;
 
@@ -582,8 +554,11 @@ package STM32_SVD.RTC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype SHIFTR_SUBFS_Field is STM32_SVD.UInt15;
+   ---------------------
+   -- SHIFTR_Register --
+   ---------------------
 
+   subtype SHIFTR_SUBFS_Field is STM32_SVD.UInt15;
    subtype SHIFTR_ADD1S_Field is STM32_SVD.Bit;
 
    --  shift control register
@@ -604,16 +579,15 @@ package STM32_SVD.RTC is
       ADD1S          at 0 range 31 .. 31;
    end record;
 
+   -------------------
+   -- TSTR_Register --
+   -------------------
+
    subtype TSTR_TAMP1E_Field is STM32_SVD.Bit;
-
    subtype TSTR_TAMP1TRG_Field is STM32_SVD.Bit;
-
    subtype TSTR_TAMPIE_Field is STM32_SVD.Bit;
-
    subtype TSTR_TAMP1INSEL_Field is STM32_SVD.Bit;
-
    subtype TSTR_TSINSEL_Field is STM32_SVD.Bit;
-
    subtype TSTR_ALARMOUTTYPE_Field is STM32_SVD.Bit;
 
    --  time stamp time register
@@ -649,14 +623,14 @@ package STM32_SVD.RTC is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
+   -------------------
+   -- TSDR_Register --
+   -------------------
+
    subtype TSDR_DU_Field is STM32_SVD.UInt4;
-
    subtype TSDR_DT_Field is STM32_SVD.UInt2;
-
    subtype TSDR_MU_Field is STM32_SVD.UInt4;
-
    subtype TSDR_MT_Field is STM32_SVD.Bit;
-
    subtype TSDR_WDU_Field is STM32_SVD.UInt3;
 
    --  time stamp date register
@@ -689,6 +663,10 @@ package STM32_SVD.RTC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- TSSSR_Register --
+   --------------------
+
    subtype TSSSR_SS_Field is STM32_SVD.Short;
 
    --  timestamp sub second register
@@ -706,27 +684,39 @@ package STM32_SVD.RTC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   -------------------
+   -- CALR_Register --
+   -------------------
+
    subtype CALR_CALM_Field is STM32_SVD.UInt9;
 
-   subtype CALR_CALW16_Field is STM32_SVD.Bit;
+   ---------------
+   -- CALR.CALW --
+   ---------------
 
-   type CALW_Field_Array is array (0 .. 1) of CALR_CALW16_Field
+   --  CALR_CALW array element
+   subtype CALR_CALW_Element is STM32_SVD.Bit;
+
+   --  CALR_CALW array
+   type CALR_CALW_Field_Array is array (0 .. 1) of CALR_CALW_Element
      with Component_Size => 1, Size => 2;
 
-   --  Type definition for CALW
-   type CALW_Union (As_Array : Boolean := False) is record
+   --  Type definition for CALR_CALW
+   type CALR_CALW_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of CALW16
+            --  CALW as a value
             Val : STM32_SVD.UInt2;
          when True =>
-            --  Array vision of CALW16
-            Arr : CALW_Field_Array;
+            --  CALW as an array
+            Arr : CALR_CALW_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 2;
 
-   for CALW_Union use record
+   for CALR_CALW_Field use record
       Val at 0 range 0 .. 1;
       Arr at 0 range 0 .. 1;
    end record;
@@ -740,7 +730,7 @@ package STM32_SVD.RTC is
       --  unspecified
       Reserved_9_12  : STM32_SVD.UInt4 := 16#0#;
       --  Use a 16-second calibration cycle period
-      CALW           : CALW_Union := (As_Array => False, Val => 16#0#);
+      CALW           : CALR_CALW_Field := (As_Array => False, Val => 16#0#);
       --  Increase frequency of RTC by 488.5 ppm
       CALP           : CALR_CALP_Field := 16#0#;
       --  unspecified
@@ -757,30 +747,22 @@ package STM32_SVD.RTC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- TAFCR_Register --
+   --------------------
+
    subtype TAFCR_TAMP1E_Field is STM32_SVD.Bit;
-
    subtype TAFCR_TAMP1TRG_Field is STM32_SVD.Bit;
-
    subtype TAFCR_TAMPIE_Field is STM32_SVD.Bit;
-
    subtype TAFCR_TAMP2E_Field is STM32_SVD.Bit;
-
    subtype TAFCR_TAMP2TRG_Field is STM32_SVD.Bit;
-
    subtype TAFCR_TAMPTS_Field is STM32_SVD.Bit;
-
    subtype TAFCR_TAMPFREQ_Field is STM32_SVD.UInt3;
-
    subtype TAFCR_TAMPFLT_Field is STM32_SVD.UInt2;
-
    subtype TAFCR_TAMPPRCH_Field is STM32_SVD.UInt2;
-
    subtype TAFCR_TAMPPUDIS_Field is STM32_SVD.Bit;
-
    subtype TAFCR_TAMP1INSEL_Field is STM32_SVD.Bit;
-
    subtype TAFCR_TSINSEL_Field is STM32_SVD.Bit;
-
    subtype TAFCR_ALARMOUTTYPE_Field is STM32_SVD.Bit;
 
    --  tamper and alternate function configuration register
@@ -837,8 +819,11 @@ package STM32_SVD.RTC is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
-   subtype ALRMASSR_SS_Field is STM32_SVD.UInt15;
+   -----------------------
+   -- ALRMASSR_Register --
+   -----------------------
 
+   subtype ALRMASSR_SS_Field is STM32_SVD.UInt15;
    subtype ALRMASSR_MASKSS_Field is STM32_SVD.UInt4;
 
    --  alarm A sub second register
@@ -862,8 +847,11 @@ package STM32_SVD.RTC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype ALRMBSSR_SS_Field is STM32_SVD.UInt15;
+   -----------------------
+   -- ALRMBSSR_Register --
+   -----------------------
 
+   subtype ALRMBSSR_SS_Field is STM32_SVD.UInt15;
    subtype ALRMBSSR_MASKSS_Field is STM32_SVD.UInt4;
 
    --  alarm B sub second register
@@ -1018,6 +1006,6 @@ package STM32_SVD.RTC is
 
    --  Real-time clock
    RTC_Periph : aliased RTC_Peripheral
-     with Import, Address => System'To_Address(16#40002800#);
+     with Import, Address => System'To_Address (16#40002800#);
 
 end STM32_SVD.RTC;

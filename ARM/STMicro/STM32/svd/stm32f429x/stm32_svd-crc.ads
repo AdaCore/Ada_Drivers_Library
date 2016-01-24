@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F429x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.CRC is
@@ -11,6 +12,10 @@ package STM32_SVD.CRC is
    ---------------
    -- Registers --
    ---------------
+
+   ------------------
+   -- IDR_Register --
+   ------------------
 
    subtype IDR_IDR_Field is STM32_SVD.Byte;
 
@@ -28,6 +33,10 @@ package STM32_SVD.CRC is
       IDR           at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
+
+   -----------------
+   -- CR_Register --
+   -----------------
 
    subtype CR_CR_Field is STM32_SVD.Bit;
 
@@ -69,6 +78,6 @@ package STM32_SVD.CRC is
 
    --  Cryptographic processor
    CRC_Periph : aliased CRC_Peripheral
-     with Import, Address => System'To_Address(16#40023000#);
+     with Import, Address => System'To_Address (16#40023000#);
 
 end STM32_SVD.CRC;

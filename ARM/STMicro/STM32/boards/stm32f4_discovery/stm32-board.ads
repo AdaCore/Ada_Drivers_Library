@@ -68,6 +68,7 @@ package STM32.Board is
    LED6 : User_LED renames Blue;
 
    All_LEDs : constant GPIO_Points := LED3 & LED4 & LED5 & LED6;
+   LCH_LED  : GPIO_Point renames Red;
 
    procedure Initialize_LEDs;
    --  MUST be called prior to any use of the LEDs

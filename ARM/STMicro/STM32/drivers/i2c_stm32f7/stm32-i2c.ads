@@ -71,7 +71,9 @@ package STM32.I2C is
      with Inline;
 
    procedure Configure (Port : I2C_Port_Id; Conf : I2C_Configuration)
-     with Post => Port_Enabled (Port);
+     with Pre => not Is_Configured (Port), Post => Is_Configured (Port);
+
+   function Is_Configured (Port : I2C_Port_Id) return Boolean;
 
    procedure Master_Transmit
      (Port    : I2C_Port_Id;

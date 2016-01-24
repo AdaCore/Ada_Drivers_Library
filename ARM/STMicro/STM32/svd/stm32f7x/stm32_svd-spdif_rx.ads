@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F7x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.SPDIF_RX is
@@ -12,30 +13,22 @@ package STM32_SVD.SPDIF_RX is
    -- Registers --
    ---------------
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_SPDIFEN_Field is STM32_SVD.UInt2;
-
    subtype CR_RXDMAEN_Field is STM32_SVD.Bit;
-
    subtype CR_RXSTEO_Field is STM32_SVD.Bit;
-
    subtype CR_DRFMT_Field is STM32_SVD.UInt2;
-
    subtype CR_PMSK_Field is STM32_SVD.Bit;
-
    subtype CR_VMSK_Field is STM32_SVD.Bit;
-
    subtype CR_CUMSK_Field is STM32_SVD.Bit;
-
    subtype CR_PTMSK_Field is STM32_SVD.Bit;
-
    subtype CR_CBDMAEN_Field is STM32_SVD.Bit;
-
    subtype CR_CHSEL_Field is STM32_SVD.Bit;
-
    subtype CR_NBTR_Field is STM32_SVD.UInt2;
-
    subtype CR_WFA_Field is STM32_SVD.Bit;
-
    subtype CR_INSEL_Field is STM32_SVD.UInt3;
 
    --  Control register
@@ -92,18 +85,16 @@ package STM32_SVD.SPDIF_RX is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
+   ------------------
+   -- IMR_Register --
+   ------------------
+
    subtype IMR_RXNEIE_Field is STM32_SVD.Bit;
-
    subtype IMR_CSRNEIE_Field is STM32_SVD.Bit;
-
    subtype IMR_PERRIE_Field is STM32_SVD.Bit;
-
    subtype IMR_OVRIE_Field is STM32_SVD.Bit;
-
    subtype IMR_SBLKIE_Field is STM32_SVD.Bit;
-
    subtype IMR_SYNCDIE_Field is STM32_SVD.Bit;
-
    subtype IMR_IFEIE_Field is STM32_SVD.Bit;
 
    --  Interrupt mask register
@@ -139,24 +130,19 @@ package STM32_SVD.SPDIF_RX is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR_RXNE_Field is STM32_SVD.Bit;
-
    subtype SR_CSRNE_Field is STM32_SVD.Bit;
-
    subtype SR_PERR_Field is STM32_SVD.Bit;
-
    subtype SR_OVR_Field is STM32_SVD.Bit;
-
    subtype SR_SBD_Field is STM32_SVD.Bit;
-
    subtype SR_SYNCD_Field is STM32_SVD.Bit;
-
    subtype SR_FERR_Field is STM32_SVD.Bit;
-
    subtype SR_SERR_Field is STM32_SVD.Bit;
-
    subtype SR_TERR_Field is STM32_SVD.Bit;
-
    subtype SR_WIDTH5_Field is STM32_SVD.UInt15;
 
    --  Status register
@@ -204,12 +190,13 @@ package STM32_SVD.SPDIF_RX is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   -------------------
+   -- IFCR_Register --
+   -------------------
+
    subtype IFCR_PERRCF_Field is STM32_SVD.Bit;
-
    subtype IFCR_OVRCF_Field is STM32_SVD.Bit;
-
    subtype IFCR_SBDCF_Field is STM32_SVD.Bit;
-
    subtype IFCR_SYNCDCF_Field is STM32_SVD.Bit;
 
    --  Interrupt Flag Clear register
@@ -239,16 +226,15 @@ package STM32_SVD.SPDIF_RX is
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
 
+   -----------------
+   -- DR_Register --
+   -----------------
+
    subtype DR_DR_Field is STM32_SVD.UInt24;
-
    subtype DR_PE_Field is STM32_SVD.Bit;
-
    subtype DR_V_Field is STM32_SVD.Bit;
-
    subtype DR_U_Field is STM32_SVD.Bit;
-
    subtype DR_C_Field is STM32_SVD.Bit;
-
    subtype DR_PT_Field is STM32_SVD.UInt2;
 
    --  Data input register
@@ -281,10 +267,12 @@ package STM32_SVD.SPDIF_RX is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
+   ------------------
+   -- CSR_Register --
+   ------------------
+
    subtype CSR_USR_Field is STM32_SVD.Short;
-
    subtype CSR_CS_Field is STM32_SVD.Byte;
-
    subtype CSR_SOB_Field is STM32_SVD.Bit;
 
    --  Channel Status register
@@ -308,8 +296,11 @@ package STM32_SVD.SPDIF_RX is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   subtype DIR_THI_Field is STM32_SVD.UInt13;
+   ------------------
+   -- DIR_Register --
+   ------------------
 
+   subtype DIR_THI_Field is STM32_SVD.UInt13;
    subtype DIR_TLO_Field is STM32_SVD.UInt13;
 
    --  Debug Information register
@@ -368,6 +359,6 @@ package STM32_SVD.SPDIF_RX is
 
    --  Receiver Interface
    SPDIF_RX_Periph : aliased SPDIF_RX_Peripheral
-     with Import, Address => System'To_Address(16#40004000#);
+     with Import, Address => System'To_Address (16#40004000#);
 
 end STM32_SVD.SPDIF_RX;

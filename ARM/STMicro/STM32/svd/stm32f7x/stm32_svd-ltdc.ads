@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F7x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.LTDC is
@@ -12,8 +13,11 @@ package STM32_SVD.LTDC is
    -- Registers --
    ---------------
 
-   subtype SSCR_VSH_Field is STM32_SVD.UInt11;
+   -------------------
+   -- SSCR_Register --
+   -------------------
 
+   subtype SSCR_VSH_Field is STM32_SVD.UInt11;
    subtype SSCR_HSW_Field is STM32_SVD.UInt10;
 
    --  Synchronization Size Configuration Register
@@ -37,8 +41,11 @@ package STM32_SVD.LTDC is
       Reserved_26_31 at 0 range 26 .. 31;
    end record;
 
-   subtype BPCR_AVBP_Field is STM32_SVD.UInt11;
+   -------------------
+   -- BPCR_Register --
+   -------------------
 
+   subtype BPCR_AVBP_Field is STM32_SVD.UInt11;
    subtype BPCR_AHBP_Field is STM32_SVD.UInt10;
 
    --  Back Porch Configuration Register
@@ -62,8 +69,11 @@ package STM32_SVD.LTDC is
       Reserved_26_31 at 0 range 26 .. 31;
    end record;
 
-   subtype AWCR_AAH_Field is STM32_SVD.UInt11;
+   -------------------
+   -- AWCR_Register --
+   -------------------
 
+   subtype AWCR_AAH_Field is STM32_SVD.UInt11;
    subtype AWCR_AAW_Field is STM32_SVD.UInt10;
 
    --  Active Width Configuration Register
@@ -87,8 +97,11 @@ package STM32_SVD.LTDC is
       Reserved_26_31 at 0 range 26 .. 31;
    end record;
 
-   subtype TWCR_TOTALH_Field is STM32_SVD.UInt11;
+   -------------------
+   -- TWCR_Register --
+   -------------------
 
+   subtype TWCR_TOTALH_Field is STM32_SVD.UInt11;
    subtype TWCR_TOTALW_Field is STM32_SVD.UInt10;
 
    --  Total Width Configuration Register
@@ -112,22 +125,18 @@ package STM32_SVD.LTDC is
       Reserved_26_31 at 0 range 26 .. 31;
    end record;
 
+   ------------------
+   -- GCR_Register --
+   ------------------
+
    subtype GCR_LTDCEN_Field is STM32_SVD.Bit;
-
    subtype GCR_DBW_Field is STM32_SVD.UInt3;
-
    subtype GCR_DGW_Field is STM32_SVD.UInt3;
-
    subtype GCR_DRW_Field is STM32_SVD.UInt3;
-
    subtype GCR_DEN_Field is STM32_SVD.Bit;
-
    subtype GCR_PCPOL_Field is STM32_SVD.Bit;
-
    subtype GCR_DEPOL_Field is STM32_SVD.Bit;
-
    subtype GCR_VSPOL_Field is STM32_SVD.Bit;
-
    subtype GCR_HSPOL_Field is STM32_SVD.Bit;
 
    --  Global Control Register
@@ -181,8 +190,11 @@ package STM32_SVD.LTDC is
       HSPOL          at 0 range 31 .. 31;
    end record;
 
-   subtype SRCR_IMR_Field is STM32_SVD.Bit;
+   -------------------
+   -- SRCR_Register --
+   -------------------
 
+   subtype SRCR_IMR_Field is STM32_SVD.Bit;
    subtype SRCR_VBR_Field is STM32_SVD.Bit;
 
    --  Shadow Reload Configuration Register
@@ -203,6 +215,10 @@ package STM32_SVD.LTDC is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
+   -------------------
+   -- BCCR_Register --
+   -------------------
+
    subtype BCCR_BC_Field is STM32_SVD.UInt24;
 
    --  Background Color Configuration Register
@@ -220,12 +236,13 @@ package STM32_SVD.LTDC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   ------------------
+   -- IER_Register --
+   ------------------
+
    subtype IER_LIE_Field is STM32_SVD.Bit;
-
    subtype IER_FUIE_Field is STM32_SVD.Bit;
-
    subtype IER_TERRIE_Field is STM32_SVD.Bit;
-
    subtype IER_RRIE_Field is STM32_SVD.Bit;
 
    --  Interrupt Enable Register
@@ -252,12 +269,13 @@ package STM32_SVD.LTDC is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
+   ------------------
+   -- ISR_Register --
+   ------------------
+
    subtype ISR_LIF_Field is STM32_SVD.Bit;
-
    subtype ISR_FUIF_Field is STM32_SVD.Bit;
-
    subtype ISR_TERRIF_Field is STM32_SVD.Bit;
-
    subtype ISR_RRIF_Field is STM32_SVD.Bit;
 
    --  Interrupt Status Register
@@ -284,12 +302,13 @@ package STM32_SVD.LTDC is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
+   ------------------
+   -- ICR_Register --
+   ------------------
+
    subtype ICR_CLIF_Field is STM32_SVD.Bit;
-
    subtype ICR_CFUIF_Field is STM32_SVD.Bit;
-
    subtype ICR_CTERRIF_Field is STM32_SVD.Bit;
-
    subtype ICR_CRRIF_Field is STM32_SVD.Bit;
 
    --  Interrupt Clear Register
@@ -316,6 +335,10 @@ package STM32_SVD.LTDC is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
+   --------------------
+   -- LIPCR_Register --
+   --------------------
+
    subtype LIPCR_LIPOS_Field is STM32_SVD.UInt11;
 
    --  Line Interrupt Position Configuration Register
@@ -333,8 +356,11 @@ package STM32_SVD.LTDC is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
-   subtype CPSR_CYPOS_Field is STM32_SVD.Short;
+   -------------------
+   -- CPSR_Register --
+   -------------------
 
+   subtype CPSR_CYPOS_Field is STM32_SVD.Short;
    subtype CPSR_CXPOS_Field is STM32_SVD.Short;
 
    --  Current Position Status Register
@@ -352,12 +378,13 @@ package STM32_SVD.LTDC is
       CXPOS at 0 range 16 .. 31;
    end record;
 
+   -------------------
+   -- CDSR_Register --
+   -------------------
+
    subtype CDSR_VDES_Field is STM32_SVD.Bit;
-
    subtype CDSR_HDES_Field is STM32_SVD.Bit;
-
    subtype CDSR_VSYNCS_Field is STM32_SVD.Bit;
-
    subtype CDSR_HSYNCS_Field is STM32_SVD.Bit;
 
    --  Current Display Status Register
@@ -384,10 +411,12 @@ package STM32_SVD.LTDC is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
+   -------------------
+   -- L1CR_Register --
+   -------------------
+
    subtype L1CR_LEN_Field is STM32_SVD.Bit;
-
    subtype L1CR_COLKEN_Field is STM32_SVD.Bit;
-
    subtype L1CR_CLUTEN_Field is STM32_SVD.Bit;
 
    --  Layerx Control Register
@@ -414,8 +443,11 @@ package STM32_SVD.LTDC is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   subtype L1WHPCR_WHSTPOS_Field is STM32_SVD.UInt12;
+   ----------------------
+   -- L1WHPCR_Register --
+   ----------------------
 
+   subtype L1WHPCR_WHSTPOS_Field is STM32_SVD.UInt12;
    subtype L1WHPCR_WHSPPOS_Field is STM32_SVD.UInt12;
 
    --  Layerx Window Horizontal Position Configuration Register
@@ -439,8 +471,11 @@ package STM32_SVD.LTDC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype L1WVPCR_WVSTPOS_Field is STM32_SVD.UInt11;
+   ----------------------
+   -- L1WVPCR_Register --
+   ----------------------
 
+   subtype L1WVPCR_WVSTPOS_Field is STM32_SVD.UInt11;
    subtype L1WVPCR_WVSPPOS_Field is STM32_SVD.UInt11;
 
    --  Layerx Window Vertical Position Configuration Register
@@ -464,10 +499,12 @@ package STM32_SVD.LTDC is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
+   ---------------------
+   -- L1CKCR_Register --
+   ---------------------
+
    subtype L1CKCR_CKBLUE_Field is STM32_SVD.Byte;
-
    subtype L1CKCR_CKGREEN_Field is STM32_SVD.Byte;
-
    subtype L1CKCR_CKRED_Field is STM32_SVD.Byte;
 
    --  Layerx Color Keying Configuration Register
@@ -491,6 +528,10 @@ package STM32_SVD.LTDC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   ---------------------
+   -- L1PFCR_Register --
+   ---------------------
+
    subtype L1PFCR_PF_Field is STM32_SVD.UInt3;
 
    --  Layerx Pixel Format Configuration Register
@@ -507,6 +548,10 @@ package STM32_SVD.LTDC is
       PF            at 0 range 0 .. 2;
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
+
+   ---------------------
+   -- L1CACR_Register --
+   ---------------------
 
    subtype L1CACR_CONSTA_Field is STM32_SVD.Byte;
 
@@ -525,12 +570,13 @@ package STM32_SVD.LTDC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   ---------------------
+   -- L1DCCR_Register --
+   ---------------------
+
    subtype L1DCCR_DCBLUE_Field is STM32_SVD.Byte;
-
    subtype L1DCCR_DCGREEN_Field is STM32_SVD.Byte;
-
    subtype L1DCCR_DCRED_Field is STM32_SVD.Byte;
-
    subtype L1DCCR_DCALPHA_Field is STM32_SVD.Byte;
 
    --  Layerx Default Color Configuration Register
@@ -554,8 +600,11 @@ package STM32_SVD.LTDC is
       DCALPHA at 0 range 24 .. 31;
    end record;
 
-   subtype L1BFCR_BF2_Field is STM32_SVD.UInt3;
+   ---------------------
+   -- L1BFCR_Register --
+   ---------------------
 
+   subtype L1BFCR_BF2_Field is STM32_SVD.UInt3;
    subtype L1BFCR_BF1_Field is STM32_SVD.UInt3;
 
    --  Layerx Blending Factors Configuration Register
@@ -579,8 +628,11 @@ package STM32_SVD.LTDC is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
-   subtype L1CFBLR_CFBLL_Field is STM32_SVD.UInt13;
+   ----------------------
+   -- L1CFBLR_Register --
+   ----------------------
 
+   subtype L1CFBLR_CFBLL_Field is STM32_SVD.UInt13;
    subtype L1CFBLR_CFBP_Field is STM32_SVD.UInt13;
 
    --  Layerx Color Frame Buffer Length Register
@@ -604,6 +656,10 @@ package STM32_SVD.LTDC is
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
+   -----------------------
+   -- L1CFBLNR_Register --
+   -----------------------
+
    subtype L1CFBLNR_CFBLNBR_Field is STM32_SVD.UInt11;
 
    --  Layerx ColorFrame Buffer Line Number Register
@@ -621,12 +677,13 @@ package STM32_SVD.LTDC is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
+   -----------------------
+   -- L1CLUTWR_Register --
+   -----------------------
+
    subtype L1CLUTWR_BLUE_Field is STM32_SVD.Byte;
-
    subtype L1CLUTWR_GREEN_Field is STM32_SVD.Byte;
-
    subtype L1CLUTWR_RED_Field is STM32_SVD.Byte;
-
    subtype L1CLUTWR_CLUTADD_Field is STM32_SVD.Byte;
 
    --  Layerx CLUT Write Register
@@ -650,10 +707,12 @@ package STM32_SVD.LTDC is
       CLUTADD at 0 range 24 .. 31;
    end record;
 
+   -------------------
+   -- L2CR_Register --
+   -------------------
+
    subtype L2CR_LEN_Field is STM32_SVD.Bit;
-
    subtype L2CR_COLKEN_Field is STM32_SVD.Bit;
-
    subtype L2CR_CLUTEN_Field is STM32_SVD.Bit;
 
    --  Layerx Control Register
@@ -680,8 +739,11 @@ package STM32_SVD.LTDC is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   subtype L2WHPCR_WHSTPOS_Field is STM32_SVD.UInt12;
+   ----------------------
+   -- L2WHPCR_Register --
+   ----------------------
 
+   subtype L2WHPCR_WHSTPOS_Field is STM32_SVD.UInt12;
    subtype L2WHPCR_WHSPPOS_Field is STM32_SVD.UInt12;
 
    --  Layerx Window Horizontal Position Configuration Register
@@ -705,8 +767,11 @@ package STM32_SVD.LTDC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype L2WVPCR_WVSTPOS_Field is STM32_SVD.UInt11;
+   ----------------------
+   -- L2WVPCR_Register --
+   ----------------------
 
+   subtype L2WVPCR_WVSTPOS_Field is STM32_SVD.UInt11;
    subtype L2WVPCR_WVSPPOS_Field is STM32_SVD.UInt11;
 
    --  Layerx Window Vertical Position Configuration Register
@@ -730,10 +795,12 @@ package STM32_SVD.LTDC is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
+   ---------------------
+   -- L2CKCR_Register --
+   ---------------------
+
    subtype L2CKCR_CKBLUE_Field is STM32_SVD.Byte;
-
    subtype L2CKCR_CKGREEN_Field is STM32_SVD.UInt7;
-
    subtype L2CKCR_CKRED_Field is STM32_SVD.UInt9;
 
    --  Layerx Color Keying Configuration Register
@@ -757,6 +824,10 @@ package STM32_SVD.LTDC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   ---------------------
+   -- L2PFCR_Register --
+   ---------------------
+
    subtype L2PFCR_PF_Field is STM32_SVD.UInt3;
 
    --  Layerx Pixel Format Configuration Register
@@ -773,6 +844,10 @@ package STM32_SVD.LTDC is
       PF            at 0 range 0 .. 2;
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
+
+   ---------------------
+   -- L2CACR_Register --
+   ---------------------
 
    subtype L2CACR_CONSTA_Field is STM32_SVD.Byte;
 
@@ -791,12 +866,13 @@ package STM32_SVD.LTDC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   ---------------------
+   -- L2DCCR_Register --
+   ---------------------
+
    subtype L2DCCR_DCBLUE_Field is STM32_SVD.Byte;
-
    subtype L2DCCR_DCGREEN_Field is STM32_SVD.Byte;
-
    subtype L2DCCR_DCRED_Field is STM32_SVD.Byte;
-
    subtype L2DCCR_DCALPHA_Field is STM32_SVD.Byte;
 
    --  Layerx Default Color Configuration Register
@@ -820,8 +896,11 @@ package STM32_SVD.LTDC is
       DCALPHA at 0 range 24 .. 31;
    end record;
 
-   subtype L2BFCR_BF2_Field is STM32_SVD.UInt3;
+   ---------------------
+   -- L2BFCR_Register --
+   ---------------------
 
+   subtype L2BFCR_BF2_Field is STM32_SVD.UInt3;
    subtype L2BFCR_BF1_Field is STM32_SVD.UInt3;
 
    --  Layerx Blending Factors Configuration Register
@@ -845,8 +924,11 @@ package STM32_SVD.LTDC is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
-   subtype L2CFBLR_CFBLL_Field is STM32_SVD.UInt13;
+   ----------------------
+   -- L2CFBLR_Register --
+   ----------------------
 
+   subtype L2CFBLR_CFBLL_Field is STM32_SVD.UInt13;
    subtype L2CFBLR_CFBP_Field is STM32_SVD.UInt13;
 
    --  Layerx Color Frame Buffer Length Register
@@ -870,6 +952,10 @@ package STM32_SVD.LTDC is
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
+   -----------------------
+   -- L2CFBLNR_Register --
+   -----------------------
+
    subtype L2CFBLNR_CFBLNBR_Field is STM32_SVD.UInt11;
 
    --  Layerx ColorFrame Buffer Line Number Register
@@ -887,12 +973,13 @@ package STM32_SVD.LTDC is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
+   -----------------------
+   -- L2CLUTWR_Register --
+   -----------------------
+
    subtype L2CLUTWR_BLUE_Field is STM32_SVD.Byte;
-
    subtype L2CLUTWR_GREEN_Field is STM32_SVD.Byte;
-
    subtype L2CLUTWR_RED_Field is STM32_SVD.Byte;
-
    subtype L2CLUTWR_CLUTADD_Field is STM32_SVD.Byte;
 
    --  Layerx CLUT Write Register
@@ -1041,6 +1128,6 @@ package STM32_SVD.LTDC is
 
    --  LCD-TFT Controller
    LTDC_Periph : aliased LTDC_Peripheral
-     with Import, Address => System'To_Address(16#40016800#);
+     with Import, Address => System'To_Address (16#40016800#);
 
 end STM32_SVD.LTDC;

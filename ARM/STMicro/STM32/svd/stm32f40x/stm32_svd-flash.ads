@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F40x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.FLASH is
@@ -12,16 +13,15 @@ package STM32_SVD.FLASH is
    -- Registers --
    ---------------
 
+   ------------------
+   -- ACR_Register --
+   ------------------
+
    subtype ACR_LATENCY_Field is STM32_SVD.UInt3;
-
    subtype ACR_PRFTEN_Field is STM32_SVD.Bit;
-
    subtype ACR_ICEN_Field is STM32_SVD.Bit;
-
    subtype ACR_DCEN_Field is STM32_SVD.Bit;
-
    subtype ACR_ICRST_Field is STM32_SVD.Bit;
-
    subtype ACR_DCRST_Field is STM32_SVD.Bit;
 
    --  Flash access control register
@@ -57,18 +57,16 @@ package STM32_SVD.FLASH is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR_EOP_Field is STM32_SVD.Bit;
-
    subtype SR_OPERR_Field is STM32_SVD.Bit;
-
    subtype SR_WRPERR_Field is STM32_SVD.Bit;
-
    subtype SR_PGAERR_Field is STM32_SVD.Bit;
-
    subtype SR_PGPERR_Field is STM32_SVD.Bit;
-
    subtype SR_PGSERR_Field is STM32_SVD.Bit;
-
    subtype SR_BSY_Field is STM32_SVD.Bit;
 
    --  Status register
@@ -110,22 +108,18 @@ package STM32_SVD.FLASH is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_PG_Field is STM32_SVD.Bit;
-
    subtype CR_SER_Field is STM32_SVD.Bit;
-
    subtype CR_MER_Field is STM32_SVD.Bit;
-
    subtype CR_SNB_Field is STM32_SVD.UInt4;
-
    subtype CR_PSIZE_Field is STM32_SVD.UInt2;
-
    subtype CR_STRT_Field is STM32_SVD.Bit;
-
    subtype CR_EOPIE_Field is STM32_SVD.Bit;
-
    subtype CR_ERRIE_Field is STM32_SVD.Bit;
-
    subtype CR_LOCK_Field is STM32_SVD.Bit;
 
    --  Control register
@@ -176,20 +170,17 @@ package STM32_SVD.FLASH is
       LOCK           at 0 range 31 .. 31;
    end record;
 
+   --------------------
+   -- OPTCR_Register --
+   --------------------
+
    subtype OPTCR_OPTLOCK_Field is STM32_SVD.Bit;
-
    subtype OPTCR_OPTSTRT_Field is STM32_SVD.Bit;
-
    subtype OPTCR_BOR_LEV_Field is STM32_SVD.UInt2;
-
    subtype OPTCR_WDG_SW_Field is STM32_SVD.Bit;
-
    subtype OPTCR_nRST_STOP_Field is STM32_SVD.Bit;
-
    subtype OPTCR_nRST_STDBY_Field is STM32_SVD.Bit;
-
    subtype OPTCR_RDP_Field is STM32_SVD.Byte;
-
    subtype OPTCR_nWRP_Field is STM32_SVD.UInt12;
 
    --  Flash option control register
@@ -263,6 +254,6 @@ package STM32_SVD.FLASH is
 
    --  FLASH
    FLASH_Periph : aliased FLASH_Peripheral
-     with Import, Address => System'To_Address(16#40023C00#);
+     with Import, Address => System'To_Address (16#40023C00#);
 
 end STM32_SVD.FLASH;

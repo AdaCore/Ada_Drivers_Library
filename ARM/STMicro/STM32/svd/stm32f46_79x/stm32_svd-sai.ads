@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F46_79x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.SAI is
@@ -11,6 +12,10 @@ package STM32_SVD.SAI is
    ---------------
    -- Registers --
    ---------------
+
+   ------------------
+   -- GCR_Register --
+   ------------------
 
    subtype GCR_SYNCOUT_Field is STM32_SVD.UInt2;
 
@@ -29,28 +34,21 @@ package STM32_SVD.SAI is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
+   -------------------
+   -- ACR1_Register --
+   -------------------
+
    subtype ACR1_MODE_Field is STM32_SVD.UInt2;
-
    subtype ACR1_PRTCFG_Field is STM32_SVD.UInt2;
-
    subtype ACR1_DS_Field is STM32_SVD.UInt3;
-
    subtype ACR1_LSBFIRST_Field is STM32_SVD.Bit;
-
    subtype ACR1_CKSTR_Field is STM32_SVD.Bit;
-
    subtype ACR1_SYNCEN_Field is STM32_SVD.UInt2;
-
    subtype ACR1_MONO_Field is STM32_SVD.Bit;
-
    subtype ACR1_OutDri_Field is STM32_SVD.Bit;
-
    subtype ACR1_SAIAEN_Field is STM32_SVD.Bit;
-
    subtype ACR1_DMAEN_Field is STM32_SVD.Bit;
-
    subtype ACR1_NODIV_Field is STM32_SVD.Bit;
-
    subtype ACR1_MCJDIV_Field is STM32_SVD.UInt4;
 
    --  AConfiguration register 1
@@ -110,20 +108,17 @@ package STM32_SVD.SAI is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   -------------------
+   -- ACR2_Register --
+   -------------------
+
    subtype ACR2_FTH_Field is STM32_SVD.UInt3;
-
    subtype ACR2_FFLUS_Field is STM32_SVD.Bit;
-
    subtype ACR2_TRIS_Field is STM32_SVD.Bit;
-
    subtype ACR2_MUTE_Field is STM32_SVD.Bit;
-
    subtype ACR2_MUTEVAL_Field is STM32_SVD.Bit;
-
    subtype ACR2_MUTECN_Field is STM32_SVD.UInt6;
-
    subtype ACR2_CPL_Field is STM32_SVD.Bit;
-
    subtype ACR2_COMP_Field is STM32_SVD.UInt2;
 
    --  AConfiguration register 2
@@ -162,14 +157,14 @@ package STM32_SVD.SAI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- AFRCR_Register --
+   --------------------
+
    subtype AFRCR_FRL_Field is STM32_SVD.Byte;
-
    subtype AFRCR_FSALL_Field is STM32_SVD.UInt7;
-
    subtype AFRCR_FSDEF_Field is STM32_SVD.Bit;
-
    subtype AFRCR_FSPOL_Field is STM32_SVD.Bit;
-
    subtype AFRCR_FSOFF_Field is STM32_SVD.Bit;
 
    --  AFRCR
@@ -202,12 +197,13 @@ package STM32_SVD.SAI is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
+   ---------------------
+   -- ASLOTR_Register --
+   ---------------------
+
    subtype ASLOTR_FBOFF_Field is STM32_SVD.UInt5;
-
    subtype ASLOTR_SLOTSZ_Field is STM32_SVD.UInt2;
-
    subtype ASLOTR_NBSLOT_Field is STM32_SVD.UInt4;
-
    subtype ASLOTR_SLOTEN_Field is STM32_SVD.Short;
 
    --  ASlot register
@@ -237,18 +233,16 @@ package STM32_SVD.SAI is
       SLOTEN         at 0 range 16 .. 31;
    end record;
 
+   ------------------
+   -- AIM_Register --
+   ------------------
+
    subtype AIM_OVRUDRIE_Field is STM32_SVD.Bit;
-
    subtype AIM_MUTEDET_Field is STM32_SVD.Bit;
-
    subtype AIM_WCKCFG_Field is STM32_SVD.Bit;
-
    subtype AIM_FREQIE_Field is STM32_SVD.Bit;
-
    subtype AIM_CNRDYIE_Field is STM32_SVD.Bit;
-
    subtype AIM_AFSDETIE_Field is STM32_SVD.Bit;
-
    subtype AIM_LFSDET_Field is STM32_SVD.Bit;
 
    --  AInterrupt mask register2
@@ -284,20 +278,17 @@ package STM32_SVD.SAI is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   ------------------
+   -- ASR_Register --
+   ------------------
+
    subtype ASR_OVRUDR_Field is STM32_SVD.Bit;
-
    subtype ASR_MUTEDET_Field is STM32_SVD.Bit;
-
    subtype ASR_WCKCFG_Field is STM32_SVD.Bit;
-
    subtype ASR_FREQ_Field is STM32_SVD.Bit;
-
    subtype ASR_CNRDY_Field is STM32_SVD.Bit;
-
    subtype ASR_AFSDET_Field is STM32_SVD.Bit;
-
    subtype ASR_LFSDET_Field is STM32_SVD.Bit;
-
    subtype ASR_FLVL_Field is STM32_SVD.UInt3;
 
    --  AStatus register
@@ -339,16 +330,15 @@ package STM32_SVD.SAI is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
+   ---------------------
+   -- ACLRFR_Register --
+   ---------------------
+
    subtype ACLRFR_OVRUDR_Field is STM32_SVD.Bit;
-
    subtype ACLRFR_MUTEDET_Field is STM32_SVD.Bit;
-
    subtype ACLRFR_WCKCFG_Field is STM32_SVD.Bit;
-
    subtype ACLRFR_CNRDY_Field is STM32_SVD.Bit;
-
    subtype ACLRFR_CAFSDET_Field is STM32_SVD.Bit;
-
    subtype ACLRFR_LFSDET_Field is STM32_SVD.Bit;
 
    --  AClear flag register
@@ -384,28 +374,21 @@ package STM32_SVD.SAI is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   -------------------
+   -- BCR1_Register --
+   -------------------
+
    subtype BCR1_MODE_Field is STM32_SVD.UInt2;
-
    subtype BCR1_PRTCFG_Field is STM32_SVD.UInt2;
-
    subtype BCR1_DS_Field is STM32_SVD.UInt3;
-
    subtype BCR1_LSBFIRST_Field is STM32_SVD.Bit;
-
    subtype BCR1_CKSTR_Field is STM32_SVD.Bit;
-
    subtype BCR1_SYNCEN_Field is STM32_SVD.UInt2;
-
    subtype BCR1_MONO_Field is STM32_SVD.Bit;
-
    subtype BCR1_OutDri_Field is STM32_SVD.Bit;
-
    subtype BCR1_SAIBEN_Field is STM32_SVD.Bit;
-
    subtype BCR1_DMAEN_Field is STM32_SVD.Bit;
-
    subtype BCR1_NODIV_Field is STM32_SVD.Bit;
-
    subtype BCR1_MCJDIV_Field is STM32_SVD.UInt4;
 
    --  BConfiguration register 1
@@ -465,20 +448,17 @@ package STM32_SVD.SAI is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   -------------------
+   -- BCR2_Register --
+   -------------------
+
    subtype BCR2_FTH_Field is STM32_SVD.UInt3;
-
    subtype BCR2_FFLUS_Field is STM32_SVD.Bit;
-
    subtype BCR2_TRIS_Field is STM32_SVD.Bit;
-
    subtype BCR2_MUTE_Field is STM32_SVD.Bit;
-
    subtype BCR2_MUTEVAL_Field is STM32_SVD.Bit;
-
    subtype BCR2_MUTECN_Field is STM32_SVD.UInt6;
-
    subtype BCR2_CPL_Field is STM32_SVD.Bit;
-
    subtype BCR2_COMP_Field is STM32_SVD.UInt2;
 
    --  BConfiguration register 2
@@ -517,14 +497,14 @@ package STM32_SVD.SAI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- BFRCR_Register --
+   --------------------
+
    subtype BFRCR_FRL_Field is STM32_SVD.Byte;
-
    subtype BFRCR_FSALL_Field is STM32_SVD.UInt7;
-
    subtype BFRCR_FSDEF_Field is STM32_SVD.Bit;
-
    subtype BFRCR_FSPOL_Field is STM32_SVD.Bit;
-
    subtype BFRCR_FSOFF_Field is STM32_SVD.Bit;
 
    --  BFRCR
@@ -557,12 +537,13 @@ package STM32_SVD.SAI is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
+   ---------------------
+   -- BSLOTR_Register --
+   ---------------------
+
    subtype BSLOTR_FBOFF_Field is STM32_SVD.UInt5;
-
    subtype BSLOTR_SLOTSZ_Field is STM32_SVD.UInt2;
-
    subtype BSLOTR_NBSLOT_Field is STM32_SVD.UInt4;
-
    subtype BSLOTR_SLOTEN_Field is STM32_SVD.Short;
 
    --  BSlot register
@@ -592,18 +573,16 @@ package STM32_SVD.SAI is
       SLOTEN         at 0 range 16 .. 31;
    end record;
 
+   ------------------
+   -- BIM_Register --
+   ------------------
+
    subtype BIM_OVRUDRIE_Field is STM32_SVD.Bit;
-
    subtype BIM_MUTEDET_Field is STM32_SVD.Bit;
-
    subtype BIM_WCKCFG_Field is STM32_SVD.Bit;
-
    subtype BIM_FREQIE_Field is STM32_SVD.Bit;
-
    subtype BIM_CNRDYIE_Field is STM32_SVD.Bit;
-
    subtype BIM_AFSDETIE_Field is STM32_SVD.Bit;
-
    subtype BIM_LFSDETIE_Field is STM32_SVD.Bit;
 
    --  BInterrupt mask register2
@@ -639,20 +618,17 @@ package STM32_SVD.SAI is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   ------------------
+   -- BSR_Register --
+   ------------------
+
    subtype BSR_OVRUDR_Field is STM32_SVD.Bit;
-
    subtype BSR_MUTEDET_Field is STM32_SVD.Bit;
-
    subtype BSR_WCKCFG_Field is STM32_SVD.Bit;
-
    subtype BSR_FREQ_Field is STM32_SVD.Bit;
-
    subtype BSR_CNRDY_Field is STM32_SVD.Bit;
-
    subtype BSR_AFSDET_Field is STM32_SVD.Bit;
-
    subtype BSR_LFSDET_Field is STM32_SVD.Bit;
-
    subtype BSR_FLVL_Field is STM32_SVD.UInt3;
 
    --  BStatus register
@@ -694,16 +670,15 @@ package STM32_SVD.SAI is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
+   ---------------------
+   -- BCLRFR_Register --
+   ---------------------
+
    subtype BCLRFR_OVRUDR_Field is STM32_SVD.Bit;
-
    subtype BCLRFR_MUTEDET_Field is STM32_SVD.Bit;
-
    subtype BCLRFR_WCKCFG_Field is STM32_SVD.Bit;
-
    subtype BCLRFR_CNRDY_Field is STM32_SVD.Bit;
-
    subtype BCLRFR_CAFSDET_Field is STM32_SVD.Bit;
-
    subtype BCLRFR_LFSDET_Field is STM32_SVD.Bit;
 
    --  BClear flag register
@@ -804,6 +779,6 @@ package STM32_SVD.SAI is
 
    --  Serial audio interface
    SAI_Periph : aliased SAI_Peripheral
-     with Import, Address => System'To_Address(16#40015800#);
+     with Import, Address => System'To_Address (16#40015800#);
 
 end STM32_SVD.SAI;

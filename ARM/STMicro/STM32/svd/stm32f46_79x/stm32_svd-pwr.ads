@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F46_79x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.PWR is
@@ -12,32 +13,23 @@ package STM32_SVD.PWR is
    -- Registers --
    ---------------
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_LPDS_Field is STM32_SVD.Bit;
-
    subtype CR_PDDS_Field is STM32_SVD.Bit;
-
    subtype CR_CWUF_Field is STM32_SVD.Bit;
-
    subtype CR_CSBF_Field is STM32_SVD.Bit;
-
    subtype CR_PVDE_Field is STM32_SVD.Bit;
-
    subtype CR_PLS_Field is STM32_SVD.UInt3;
-
    subtype CR_DBP_Field is STM32_SVD.Bit;
-
    subtype CR_FPDS_Field is STM32_SVD.Bit;
-
    subtype CR_LPLVDS_Field is STM32_SVD.Bit;
-
    subtype CR_MRLVDS_Field is STM32_SVD.Bit;
-
    subtype CR_VOS_Field is STM32_SVD.UInt2;
-
    subtype CR_ODEN_Field is STM32_SVD.Bit;
-
    subtype CR_ODSWEN_Field is STM32_SVD.Bit;
-
    subtype CR_UDEN_Field is STM32_SVD.UInt2;
 
    --  power control register
@@ -97,24 +89,19 @@ package STM32_SVD.PWR is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
+   ------------------
+   -- CSR_Register --
+   ------------------
+
    subtype CSR_WUF_Field is STM32_SVD.Bit;
-
    subtype CSR_SBF_Field is STM32_SVD.Bit;
-
    subtype CSR_PVDO_Field is STM32_SVD.Bit;
-
    subtype CSR_BRR_Field is STM32_SVD.Bit;
-
    subtype CSR_EWUP_Field is STM32_SVD.Bit;
-
    subtype CSR_BRE_Field is STM32_SVD.Bit;
-
    subtype CSR_VOSRDY_Field is STM32_SVD.Bit;
-
    subtype CSR_ODRDY_Field is STM32_SVD.Bit;
-
    subtype CSR_ODSWRDY_Field is STM32_SVD.Bit;
-
    subtype CSR_UDRDY_Field is STM32_SVD.UInt2;
 
    --  power control/status register
@@ -188,6 +175,6 @@ package STM32_SVD.PWR is
 
    --  Power control
    PWR_Periph : aliased PWR_Peripheral
-     with Import, Address => System'To_Address(16#40007000#);
+     with Import, Address => System'To_Address (16#40007000#);
 
 end STM32_SVD.PWR;

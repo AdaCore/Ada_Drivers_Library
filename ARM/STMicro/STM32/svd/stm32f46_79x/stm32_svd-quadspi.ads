@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F46_79x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.QUADSPI is
@@ -12,36 +13,25 @@ package STM32_SVD.QUADSPI is
    -- Registers --
    ---------------
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_EN_Field is STM32_SVD.Bit;
-
    subtype CR_ABORT_Field is STM32_SVD.Bit;
-
    subtype CR_DMAEN_Field is STM32_SVD.Bit;
-
    subtype CR_TCEN_Field is STM32_SVD.Bit;
-
    subtype CR_SSHIFT_Field is STM32_SVD.Bit;
-
    subtype CR_DFM_Field is STM32_SVD.Bit;
-
    subtype CR_FSEL_Field is STM32_SVD.Bit;
-
    subtype CR_FTHRES_Field is STM32_SVD.UInt5;
-
    subtype CR_TEIE_Field is STM32_SVD.Bit;
-
    subtype CR_TCIE_Field is STM32_SVD.Bit;
-
    subtype CR_FTIE_Field is STM32_SVD.Bit;
-
    subtype CR_SMIE_Field is STM32_SVD.Bit;
-
    subtype CR_TOIE_Field is STM32_SVD.Bit;
-
    subtype CR_APMS_Field is STM32_SVD.Bit;
-
    subtype CR_PMM_Field is STM32_SVD.Bit;
-
    subtype CR_PRESCALER_Field is STM32_SVD.Byte;
 
    --  control register
@@ -110,10 +100,12 @@ package STM32_SVD.QUADSPI is
       PRESCALER      at 0 range 24 .. 31;
    end record;
 
+   ------------------
+   -- DCR_Register --
+   ------------------
+
    subtype DCR_CKMODE_Field is STM32_SVD.Bit;
-
    subtype DCR_CSHT_Field is STM32_SVD.UInt3;
-
    subtype DCR_FSIZE_Field is STM32_SVD.UInt5;
 
    --  device configuration register
@@ -143,18 +135,16 @@ package STM32_SVD.QUADSPI is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR_TEF_Field is STM32_SVD.Bit;
-
    subtype SR_TCF_Field is STM32_SVD.Bit;
-
    subtype SR_FTF_Field is STM32_SVD.Bit;
-
    subtype SR_SMF_Field is STM32_SVD.Bit;
-
    subtype SR_TOF_Field is STM32_SVD.Bit;
-
    subtype SR_BUSY_Field is STM32_SVD.Bit;
-
    subtype SR_FLEVEL_Field is STM32_SVD.UInt7;
 
    --  status register
@@ -193,12 +183,13 @@ package STM32_SVD.QUADSPI is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
+   ------------------
+   -- FCR_Register --
+   ------------------
+
    subtype FCR_CTEF_Field is STM32_SVD.Bit;
-
    subtype FCR_CTCF_Field is STM32_SVD.Bit;
-
    subtype FCR_CSMF_Field is STM32_SVD.Bit;
-
    subtype FCR_CTOF_Field is STM32_SVD.Bit;
 
    --  flag clear register
@@ -228,28 +219,21 @@ package STM32_SVD.QUADSPI is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
+   ------------------
+   -- CCR_Register --
+   ------------------
+
    subtype CCR_INSTRUCTION_Field is STM32_SVD.Byte;
-
    subtype CCR_IMODE_Field is STM32_SVD.UInt2;
-
    subtype CCR_ADMODE_Field is STM32_SVD.UInt2;
-
    subtype CCR_ADSIZE_Field is STM32_SVD.UInt2;
-
    subtype CCR_ABMODE_Field is STM32_SVD.UInt2;
-
    subtype CCR_ABSIZE_Field is STM32_SVD.UInt2;
-
    subtype CCR_DCYC_Field is STM32_SVD.UInt5;
-
    subtype CCR_DMODE_Field is STM32_SVD.UInt2;
-
    subtype CCR_FMODE_Field is STM32_SVD.UInt2;
-
    subtype CCR_SIOO_Field is STM32_SVD.Bit;
-
    subtype CCR_DHHC_Field is STM32_SVD.Bit;
-
    subtype CCR_DDRM_Field is STM32_SVD.Bit;
 
    --  communication configuration register
@@ -303,6 +287,10 @@ package STM32_SVD.QUADSPI is
       DDRM           at 0 range 31 .. 31;
    end record;
 
+   ------------------
+   -- PIR_Register --
+   ------------------
+
    subtype PIR_INTERVAL_Field is STM32_SVD.Short;
 
    --  polling interval register
@@ -319,6 +307,10 @@ package STM32_SVD.QUADSPI is
       INTERVAL       at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
+
+   -------------------
+   -- LPTR_Register --
+   -------------------
 
    subtype LPTR_TIMEOUT_Field is STM32_SVD.Short;
 
@@ -390,6 +382,6 @@ package STM32_SVD.QUADSPI is
 
    --  QuadSPI interface
    QUADSPI_Periph : aliased QUADSPI_Peripheral
-     with Import, Address => System'To_Address(16#A0001000#);
+     with Import, Address => System'To_Address (16#A0001000#);
 
 end STM32_SVD.QUADSPI;

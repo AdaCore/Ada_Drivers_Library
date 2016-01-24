@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F46_79x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.SPI is
@@ -12,32 +13,23 @@ package STM32_SVD.SPI is
    -- Registers --
    ---------------
 
+   ------------------
+   -- CR1_Register --
+   ------------------
+
    subtype CR1_CPHA_Field is STM32_SVD.Bit;
-
    subtype CR1_CPOL_Field is STM32_SVD.Bit;
-
    subtype CR1_MSTR_Field is STM32_SVD.Bit;
-
    subtype CR1_BR_Field is STM32_SVD.UInt3;
-
    subtype CR1_SPE_Field is STM32_SVD.Bit;
-
    subtype CR1_LSBFIRST_Field is STM32_SVD.Bit;
-
    subtype CR1_SSI_Field is STM32_SVD.Bit;
-
    subtype CR1_SSM_Field is STM32_SVD.Bit;
-
    subtype CR1_RXONLY_Field is STM32_SVD.Bit;
-
    subtype CR1_DFF_Field is STM32_SVD.Bit;
-
    subtype CR1_CRCNEXT_Field is STM32_SVD.Bit;
-
    subtype CR1_CRCEN_Field is STM32_SVD.Bit;
-
    subtype CR1_BIDIOE_Field is STM32_SVD.Bit;
-
    subtype CR1_BIDIMODE_Field is STM32_SVD.Bit;
 
    --  control register 1
@@ -94,18 +86,16 @@ package STM32_SVD.SPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ------------------
+   -- CR2_Register --
+   ------------------
+
    subtype CR2_RXDMAEN_Field is STM32_SVD.Bit;
-
    subtype CR2_TXDMAEN_Field is STM32_SVD.Bit;
-
    subtype CR2_SSOE_Field is STM32_SVD.Bit;
-
    subtype CR2_FRF_Field is STM32_SVD.Bit;
-
    subtype CR2_ERRIE_Field is STM32_SVD.Bit;
-
    subtype CR2_RXNEIE_Field is STM32_SVD.Bit;
-
    subtype CR2_TXEIE_Field is STM32_SVD.Bit;
 
    --  control register 2
@@ -144,22 +134,18 @@ package STM32_SVD.SPI is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR_RXNE_Field is STM32_SVD.Bit;
-
    subtype SR_TXE_Field is STM32_SVD.Bit;
-
    subtype SR_CHSIDE_Field is STM32_SVD.Bit;
-
    subtype SR_UDR_Field is STM32_SVD.Bit;
-
    subtype SR_CRCERR_Field is STM32_SVD.Bit;
-
    subtype SR_MODF_Field is STM32_SVD.Bit;
-
    subtype SR_OVR_Field is STM32_SVD.Bit;
-
    subtype SR_BSY_Field is STM32_SVD.Bit;
-
    subtype SR_TIFRFE_Field is STM32_SVD.Bit;
 
    --  status register
@@ -201,6 +187,10 @@ package STM32_SVD.SPI is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
+   -----------------
+   -- DR_Register --
+   -----------------
+
    subtype DR_DR_Field is STM32_SVD.Short;
 
    --  data register
@@ -217,6 +207,10 @@ package STM32_SVD.SPI is
       DR             at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
+
+   --------------------
+   -- CRCPR_Register --
+   --------------------
 
    subtype CRCPR_CRCPOLY_Field is STM32_SVD.Short;
 
@@ -235,6 +229,10 @@ package STM32_SVD.SPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ---------------------
+   -- RXCRCR_Register --
+   ---------------------
+
    subtype RXCRCR_RxCRC_Field is STM32_SVD.Short;
 
    --  RX CRC register
@@ -251,6 +249,10 @@ package STM32_SVD.SPI is
       RxCRC          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
+
+   ---------------------
+   -- TXCRCR_Register --
+   ---------------------
 
    subtype TXCRCR_TxCRC_Field is STM32_SVD.Short;
 
@@ -269,20 +271,17 @@ package STM32_SVD.SPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ----------------------
+   -- I2SCFGR_Register --
+   ----------------------
+
    subtype I2SCFGR_CHLEN_Field is STM32_SVD.Bit;
-
    subtype I2SCFGR_DATLEN_Field is STM32_SVD.UInt2;
-
    subtype I2SCFGR_CKPOL_Field is STM32_SVD.Bit;
-
    subtype I2SCFGR_I2SSTD_Field is STM32_SVD.UInt2;
-
    subtype I2SCFGR_PCMSYNC_Field is STM32_SVD.Bit;
-
    subtype I2SCFGR_I2SCFG_Field is STM32_SVD.UInt2;
-
    subtype I2SCFGR_I2SE_Field is STM32_SVD.Bit;
-
    subtype I2SCFGR_I2SMOD_Field is STM32_SVD.Bit;
 
    --  I2S configuration register
@@ -324,10 +323,12 @@ package STM32_SVD.SPI is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
+   --------------------
+   -- I2SPR_Register --
+   --------------------
+
    subtype I2SPR_I2SDIV_Field is STM32_SVD.Byte;
-
    subtype I2SPR_ODD_Field is STM32_SVD.Bit;
-
    subtype I2SPR_MCKOE_Field is STM32_SVD.Bit;
 
    --  I2S prescaler register
@@ -392,34 +393,34 @@ package STM32_SVD.SPI is
 
    --  Serial peripheral interface
    I2S2ext_Periph : aliased SPI_Peripheral
-     with Import, Address => System'To_Address(16#40003400#);
+     with Import, Address => System'To_Address (16#40003400#);
 
    --  Serial peripheral interface
    SPI2_Periph : aliased SPI_Peripheral
-     with Import, Address => System'To_Address(16#40003800#);
+     with Import, Address => System'To_Address (16#40003800#);
 
    --  Serial peripheral interface
    SPI3_Periph : aliased SPI_Peripheral
-     with Import, Address => System'To_Address(16#40003C00#);
+     with Import, Address => System'To_Address (16#40003C00#);
 
    --  Serial peripheral interface
    I2S3ext_Periph : aliased SPI_Peripheral
-     with Import, Address => System'To_Address(16#40004000#);
+     with Import, Address => System'To_Address (16#40004000#);
 
    --  Serial peripheral interface
    SPI1_Periph : aliased SPI_Peripheral
-     with Import, Address => System'To_Address(16#40013000#);
+     with Import, Address => System'To_Address (16#40013000#);
 
    --  Serial peripheral interface
    SPI4_Periph : aliased SPI_Peripheral
-     with Import, Address => System'To_Address(16#40013400#);
+     with Import, Address => System'To_Address (16#40013400#);
 
    --  Serial peripheral interface
    SPI5_Periph : aliased SPI_Peripheral
-     with Import, Address => System'To_Address(16#40015000#);
+     with Import, Address => System'To_Address (16#40015000#);
 
    --  Serial peripheral interface
    SPI6_Periph : aliased SPI_Peripheral
-     with Import, Address => System'To_Address(16#40015400#);
+     with Import, Address => System'To_Address (16#40015400#);
 
 end STM32_SVD.SPI;

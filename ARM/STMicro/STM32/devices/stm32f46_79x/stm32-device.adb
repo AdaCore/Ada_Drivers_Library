@@ -31,7 +31,6 @@
 
 pragma Warnings (Off, "* is an internal GNAT unit");
 with System.BB.Parameters;
-with System.STM32F4;
 pragma Warnings (On, "* is an internal GNAT unit");
 
 with STM32_SVD.RCC; use STM32_SVD.RCC;
@@ -39,8 +38,7 @@ with STM32_SVD.RCC; use STM32_SVD.RCC;
 package body STM32.Device is
 
    HSE_VALUE : constant Word :=
-                 Word (System.BB.Parameters.HSE_Clock
-                        (System.STM32F4.MCU_ID.DEV_ID));
+                 Word (System.BB.Parameters.HSE_Clock);
    --  External oscillator in Hz
 
    HSI_VALUE : constant := 16_000_000;

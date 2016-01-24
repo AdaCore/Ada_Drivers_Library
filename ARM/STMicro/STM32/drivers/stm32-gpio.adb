@@ -393,10 +393,10 @@ package body STM32.GPIO is
       Pins   : GPIO_Pins;
       Config : GPIO_Port_Configuration)
    is
-      MODER   : MODER_Union   := Port.MODER.MODER;
-      OTYPER  : OT_Union      := Port.OTYPER.OT;
-      OSPEEDR : OSPEEDR_Union := Port.OSPEEDR.OSPEEDR;
-      PUPDR   : PUPDR_Union   := Port.PUPDR.PUPDR;
+      MODER   : MODER_Register   := Port.MODER;
+      OTYPER  : OTYPER_OT_Field  := Port.OTYPER.OT;
+      OSPEEDR : OSPEEDR_Register := Port.OSPEEDR;
+      PUPDR   : PUPDR_Register   := Port.PUPDR;
    begin
       for Pin of Pins loop
          declare
@@ -411,10 +411,10 @@ package body STM32.GPIO is
          end;
       end loop;
 
-      Port.MODER.MODER     := MODER;
-      Port.OTYPER.OT       := OTYPER;
-      Port.OSPEEDR.OSPEEDR := OSPEEDR;
-      Port.PUPDR.PUPDR     := PUPDR;
+      Port.MODER     := MODER;
+      Port.OTYPER.OT := OTYPER;
+      Port.OSPEEDR   := OSPEEDR;
+      Port.PUPDR     := PUPDR;
    end Configure_IO;
 
    ------------------
@@ -426,10 +426,10 @@ package body STM32.GPIO is
       Pin    : GPIO_Pin;
       Config : GPIO_Port_Configuration)
    is
-      MODER   : MODER_Union   := Port.MODER.MODER;
-      OTYPER  : OT_Union      := Port.OTYPER.OT;
-      OSPEEDR : OSPEEDR_Union := Port.OSPEEDR.OSPEEDR;
-      PUPDR   : PUPDR_Union   := Port.PUPDR.PUPDR;
+      MODER   : MODER_Register   := Port.MODER;
+      OTYPER  : OTYPER_OT_Field  := Port.OTYPER.OT;
+      OSPEEDR : OSPEEDR_Register := Port.OSPEEDR;
+      PUPDR   : PUPDR_Register   := Port.PUPDR;
 
       Index : constant Integer := GPIO_Pin'Pos (Pin);
    begin
@@ -438,10 +438,10 @@ package body STM32.GPIO is
       OSPEEDR.Arr (Index) := Pin_Output_Speeds'Enum_Rep (Config.Speed);
       PUPDR.Arr (Index)  := Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
 
-      Port.MODER.MODER     := MODER;
-      Port.OTYPER.OT       := OTYPER;
-      Port.OSPEEDR.OSPEEDR := OSPEEDR;
-      Port.PUPDR.PUPDR     := PUPDR;
+      Port.MODER     := MODER;
+      Port.OTYPER.OT := OTYPER;
+      Port.OSPEEDR   := OSPEEDR;
+      Port.PUPDR     := PUPDR;
    end Configure_IO;
 
    ------------------
@@ -458,13 +458,13 @@ package body STM32.GPIO is
       PUPDR   : PUPDR_Register   := Point.Port.PUPDR;
 
    begin
-      MODER.MODER.Arr (Point.Pin)     :=
+      MODER.Arr (Point.Pin)     :=
         Pin_IO_Modes'Enum_Rep (Config.Mode);
       OTYPER.OT.Arr (Point.Pin)       :=
         Pin_Output_Types'Enum_Rep (Config.Output_Type);
-      OSPEEDR.OSPEEDR.Arr (Point.Pin) :=
+      OSPEEDR.Arr (Point.Pin) :=
         Pin_Output_Speeds'Enum_Rep (Config.Speed);
-      PUPDR.PUPDR.Arr (Point.Pin)     :=
+      PUPDR.Arr (Point.Pin)     :=
         Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
 
       Point.Port.MODER   := MODER;
@@ -526,9 +526,9 @@ package body STM32.GPIO is
       Index : constant Integer := GPIO_Pin'Pos (Pin);
    begin
       if Index < 8 then
-         Port.AFRL.AFRL.Arr (Index) := UInt4 (AF);
+         Port.AFRL.Arr (Index) := UInt4 (AF);
       else
-         Port.AFRH.AFRH.Arr (Index - 8) := UInt4 (AF);
+         Port.AFRH.Arr (Index - 8) := UInt4 (AF);
       end if;
    end Configure_Alternate_Function;
 
@@ -542,9 +542,9 @@ package body STM32.GPIO is
    is
    begin
       if Point.Pin < 8 then
-         Point.Port.AFRL.AFRL.Arr (Point.Pin) := UInt4 (AF);
+         Point.Port.AFRL.Arr (Point.Pin) := UInt4 (AF);
       else
-         Point.Port.AFRH.AFRH.Arr (Point.Pin - 8) := UInt4 (AF);
+         Point.Port.AFRH.Arr (Point.Pin - 8) := UInt4 (AF);
       end if;
    end Configure_Alternate_Function;
 

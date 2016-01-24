@@ -42,11 +42,16 @@
 --  This file provides declarations for devices on the STM32F42xxx MCUs
 --  manufactured by ST Microelectronics.  For example, an STM32F429.
 
+pragma Warnings (Off, "* is an internal GNAT unit");
+private with System.BB.Parameters;
+pragma Warnings (On, "* is an internal GNAT unit");
+
+with STM32_SVD.DMA;
 with STM32_SVD.I2C;
+with STM32_SVD.SAI;
 
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.ADC;     use STM32.ADC;
-with STM32.DMA;     use STM32.DMA;
 --  with STM32.USARTs;  use STM32.USARTs;
 --  with STM32.I2C;     use STM32.I2C;
 with STM32.SPI;     use STM32.SPI;
@@ -59,6 +64,12 @@ package STM32.Device is
    Unknown_Device : exception;
    --  Raised by the routines below for a device passed as an actual parameter
    --  when that device is not present on the given hardware instance.
+
+   HSI_VALUE      : constant := 16_000_000;
+   --  Internal oscillator in Hz
+
+   HSE_VALUE      : constant Word;
+   --  External oscillator in Hz
 
    GPIO_A : aliased GPIO_Port with Import, Volatile, Address => GPIOA_Base;
    GPIO_B : aliased GPIO_Port with Import, Volatile, Address => GPIOB_Base;
@@ -296,7 +307,6 @@ package STM32.Device is
    DAC_Channel_2_IO : constant GPIO_Point := PA5;
 
    procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter);
-
    procedure Reset (This : aliased in out Digital_To_Analog_Converter);
 
 --     USART_1 : aliased USART with Import, Volatile, Address => USART1_Base;
@@ -312,8 +322,10 @@ package STM32.Device is
 --
 --     procedure Reset (This : aliased in out USART);
 
-   DMA_1 : aliased DMA_Controller with Import, Volatile, Address => DMA1_Base;
-   DMA_2 : aliased DMA_Controller with Import, Volatile, Address => DMA2_Base;
+   subtype DMA_Controller is STM32_SVD.DMA.DMA_Peripheral;
+
+   DMA_1 : DMA_Controller renames STM32_SVD.DMA.DMA1_Periph;
+   DMA_2 : DMA_Controller renames STM32_SVD.DMA.DMA2_Periph;
 
    procedure Enable_Clock (This : aliased in out DMA_Controller);
    procedure Reset (This : aliased in out DMA_Controller);
@@ -322,10 +334,10 @@ package STM32.Device is
 
    type I2C_Port_Id is (I2C_1, I2C_2, I2C_3, I2C_4);
 
-   I2C_Port_1 : aliased I2C_Port with Import, Volatile, Address => I2C1_Base;
-   I2C_Port_2 : aliased I2C_Port with Import, Volatile, Address => I2C2_Base;
-   I2C_Port_3 : aliased I2C_Port with Import, Volatile, Address => I2C3_Base;
-   I2C_Port_4 : aliased I2C_Port with Import, Volatile, Address => I2C4_Base;
+   I2C_Port_1 : I2C_Port renames STM32_SVD.I2C.I2C1_Periph;
+   I2C_Port_2 : I2C_Port renames STM32_SVD.I2C.I2C2_Periph;
+   I2C_Port_3 : I2C_Port renames STM32_SVD.I2C.I2C3_Periph;
+   I2C_Port_4 : I2C_Port renames STM32_SVD.I2C.I2C4_Periph;
 
    function As_Port_Id (Port : I2C_Port) return I2C_Port_Id with Inline;
    function As_Port (Id : I2C_Port_Id) return access I2C_Port with Inline;
@@ -376,6 +388,14 @@ package STM32.Device is
    procedure Enable_Clock (This : in out Timer);
    procedure Reset (This : in out Timer);
 
+   subtype SAI_Port is STM32_SVD.SAI.SAI_Peripheral;
+
+   SAI_1 : SAI_Port renames STM32_SVD.SAI.SAI1_Periph;
+   SAI_2 : SAI_Port renames STM32_SVD.SAI.SAI2_Periph;
+
+   procedure Enable_Clock (This : in out SAI_Port);
+   procedure Reset (This : in out SAI_Port);
+
    -----------------------------
    -- Reset and Clock Control --
    -----------------------------
@@ -406,7 +426,15 @@ package STM32.Device is
    procedure Disable_PLLSAI;
    function PLLSAI_Ready return Boolean;
 
+   procedure Configure_SAI_I2S_Clock
+     (Periph     : SAI_Port;
+      PLLI2SN    : UInt9;
+      PLLI2SQ    : UInt4;
+      PLLI2SDIVQ : UInt5);
+
 private
+
+   HSE_VALUE : constant Word := System.BB.Parameters.HSE_Clock;
 
    pragma Compile_Time_Error
      (not (GPIO_Port_Id'First = GPIO_Port_A and GPIO_Port_Id'Last = GPIO_Port_K and

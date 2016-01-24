@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F7x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.I2C is
@@ -12,44 +13,29 @@ package STM32_SVD.I2C is
    -- Registers --
    ---------------
 
+   ------------------
+   -- CR1_Register --
+   ------------------
+
    subtype CR1_PE_Field is STM32_SVD.Bit;
-
    subtype CR1_TXIE_Field is STM32_SVD.Bit;
-
    subtype CR1_RXIE_Field is STM32_SVD.Bit;
-
    subtype CR1_ADDRIE_Field is STM32_SVD.Bit;
-
    subtype CR1_NACKIE_Field is STM32_SVD.Bit;
-
    subtype CR1_STOPIE_Field is STM32_SVD.Bit;
-
    subtype CR1_TCIE_Field is STM32_SVD.Bit;
-
    subtype CR1_ERRIE_Field is STM32_SVD.Bit;
-
    subtype CR1_DNF_Field is STM32_SVD.UInt4;
-
    subtype CR1_ANFOFF_Field is STM32_SVD.Bit;
-
    subtype CR1_TXDMAEN_Field is STM32_SVD.Bit;
-
    subtype CR1_RXDMAEN_Field is STM32_SVD.Bit;
-
    subtype CR1_SBC_Field is STM32_SVD.Bit;
-
    subtype CR1_NOSTRETCH_Field is STM32_SVD.Bit;
-
    subtype CR1_WUPEN_Field is STM32_SVD.Bit;
-
    subtype CR1_GCEN_Field is STM32_SVD.Bit;
-
    subtype CR1_SMBHEN_Field is STM32_SVD.Bit;
-
    subtype CR1_SMBDEN_Field is STM32_SVD.Bit;
-
    subtype CR1_ALERTEN_Field is STM32_SVD.Bit;
-
    subtype CR1_PECEN_Field is STM32_SVD.Bit;
 
    --  Control register 1
@@ -127,26 +113,20 @@ package STM32_SVD.I2C is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   ------------------
+   -- CR2_Register --
+   ------------------
+
    subtype CR2_SADD_Field is STM32_SVD.UInt10;
-
    subtype CR2_RD_WRN_Field is STM32_SVD.Bit;
-
    subtype CR2_ADD10_Field is STM32_SVD.Bit;
-
    subtype CR2_HEAD10R_Field is STM32_SVD.Bit;
-
    subtype CR2_START_Field is STM32_SVD.Bit;
-
    subtype CR2_STOP_Field is STM32_SVD.Bit;
-
    subtype CR2_NACK_Field is STM32_SVD.Bit;
-
    subtype CR2_NBYTES_Field is STM32_SVD.Byte;
-
    subtype CR2_RELOAD_Field is STM32_SVD.Bit;
-
    subtype CR2_AUTOEND_Field is STM32_SVD.Bit;
-
    subtype CR2_PECBYTE_Field is STM32_SVD.Bit;
 
    --  Control register 2
@@ -194,10 +174,12 @@ package STM32_SVD.I2C is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
+   -------------------
+   -- OAR1_Register --
+   -------------------
+
    subtype OAR1_OA1_Field is STM32_SVD.UInt10;
-
    subtype OAR1_OA1MODE_Field is STM32_SVD.Bit;
-
    subtype OAR1_OA1EN_Field is STM32_SVD.Bit;
 
    --  Own address register 1
@@ -224,10 +206,12 @@ package STM32_SVD.I2C is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   -------------------
+   -- OAR2_Register --
+   -------------------
+
    subtype OAR2_OA2_Field is STM32_SVD.UInt7;
-
    subtype OAR2_OA2MSK_Field is STM32_SVD.UInt3;
-
    subtype OAR2_OA2EN_Field is STM32_SVD.Bit;
 
    --  Own address register 2
@@ -257,14 +241,14 @@ package STM32_SVD.I2C is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ----------------------
+   -- TIMINGR_Register --
+   ----------------------
+
    subtype TIMINGR_SCLL_Field is STM32_SVD.Byte;
-
    subtype TIMINGR_SCLH_Field is STM32_SVD.Byte;
-
    subtype TIMINGR_SDADEL_Field is STM32_SVD.UInt4;
-
    subtype TIMINGR_SCLDEL_Field is STM32_SVD.UInt4;
-
    subtype TIMINGR_PRESC_Field is STM32_SVD.UInt4;
 
    --  Timing register
@@ -294,14 +278,14 @@ package STM32_SVD.I2C is
       PRESC          at 0 range 28 .. 31;
    end record;
 
+   -----------------------
+   -- TIMEOUTR_Register --
+   -----------------------
+
    subtype TIMEOUTR_TIMEOUTA_Field is STM32_SVD.UInt12;
-
    subtype TIMEOUTR_TIDLE_Field is STM32_SVD.Bit;
-
    subtype TIMEOUTR_TIMOUTEN_Field is STM32_SVD.Bit;
-
    subtype TIMEOUTR_TIMEOUTB_Field is STM32_SVD.UInt12;
-
    subtype TIMEOUTR_TEXTEN_Field is STM32_SVD.Bit;
 
    --  Status register 1
@@ -334,38 +318,26 @@ package STM32_SVD.I2C is
       TEXTEN         at 0 range 31 .. 31;
    end record;
 
+   ------------------
+   -- ISR_Register --
+   ------------------
+
    subtype ISR_TXE_Field is STM32_SVD.Bit;
-
    subtype ISR_TXIS_Field is STM32_SVD.Bit;
-
    subtype ISR_RXNE_Field is STM32_SVD.Bit;
-
    subtype ISR_ADDR_Field is STM32_SVD.Bit;
-
    subtype ISR_NACKF_Field is STM32_SVD.Bit;
-
    subtype ISR_STOPF_Field is STM32_SVD.Bit;
-
    subtype ISR_TC_Field is STM32_SVD.Bit;
-
    subtype ISR_TCR_Field is STM32_SVD.Bit;
-
    subtype ISR_BERR_Field is STM32_SVD.Bit;
-
    subtype ISR_ARLO_Field is STM32_SVD.Bit;
-
    subtype ISR_OVR_Field is STM32_SVD.Bit;
-
    subtype ISR_PECERR_Field is STM32_SVD.Bit;
-
    subtype ISR_TIMEOUT_Field is STM32_SVD.Bit;
-
    subtype ISR_ALERT_Field is STM32_SVD.Bit;
-
    subtype ISR_BUSY_Field is STM32_SVD.Bit;
-
    subtype ISR_DIR_Field is STM32_SVD.Bit;
-
    subtype ISR_ADDCODE_Field is STM32_SVD.UInt7;
 
    --  Interrupt and Status register
@@ -434,22 +406,18 @@ package STM32_SVD.I2C is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   ------------------
+   -- ICR_Register --
+   ------------------
+
    subtype ICR_ADDRCF_Field is STM32_SVD.Bit;
-
    subtype ICR_NACKCF_Field is STM32_SVD.Bit;
-
    subtype ICR_STOPCF_Field is STM32_SVD.Bit;
-
    subtype ICR_BERRCF_Field is STM32_SVD.Bit;
-
    subtype ICR_ARLOCF_Field is STM32_SVD.Bit;
-
    subtype ICR_OVRCF_Field is STM32_SVD.Bit;
-
    subtype ICR_PECCF_Field is STM32_SVD.Bit;
-
    subtype ICR_TIMOUTCF_Field is STM32_SVD.Bit;
-
    subtype ICR_ALERTCF_Field is STM32_SVD.Bit;
 
    --  Interrupt clear register
@@ -497,6 +465,10 @@ package STM32_SVD.I2C is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
+   -------------------
+   -- PECR_Register --
+   -------------------
+
    subtype PECR_PEC_Field is STM32_SVD.Byte;
 
    --  PEC register
@@ -514,6 +486,10 @@ package STM32_SVD.I2C is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   -------------------
+   -- RXDR_Register --
+   -------------------
+
    subtype RXDR_RXDATA_Field is STM32_SVD.Byte;
 
    --  Receive data register
@@ -530,6 +506,10 @@ package STM32_SVD.I2C is
       RXDATA        at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
+
+   -------------------
+   -- TXDR_Register --
+   -------------------
 
    subtype TXDR_TXDATA_Field is STM32_SVD.Byte;
 
@@ -595,18 +575,18 @@ package STM32_SVD.I2C is
 
    --  Inter-integrated circuit
    I2C1_Periph : aliased I2C_Peripheral
-     with Import, Address => System'To_Address(16#40005400#);
+     with Import, Address => System'To_Address (16#40005400#);
 
    --  Inter-integrated circuit
    I2C2_Periph : aliased I2C_Peripheral
-     with Import, Address => System'To_Address(16#40005800#);
+     with Import, Address => System'To_Address (16#40005800#);
 
    --  Inter-integrated circuit
    I2C3_Periph : aliased I2C_Peripheral
-     with Import, Address => System'To_Address(16#40005C00#);
+     with Import, Address => System'To_Address (16#40005C00#);
 
    --  Inter-integrated circuit
    I2C4_Periph : aliased I2C_Peripheral
-     with Import, Address => System'To_Address(16#40006000#);
+     with Import, Address => System'To_Address (16#40006000#);
 
 end STM32_SVD.I2C;

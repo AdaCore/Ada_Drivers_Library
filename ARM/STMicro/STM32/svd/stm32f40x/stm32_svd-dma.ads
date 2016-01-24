@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F40x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.DMA is
@@ -12,44 +13,29 @@ package STM32_SVD.DMA is
    -- Registers --
    ---------------
 
+   -------------------
+   -- LISR_Register --
+   -------------------
+
    subtype LISR_FEIF0_Field is STM32_SVD.Bit;
-
    subtype LISR_DMEIF0_Field is STM32_SVD.Bit;
-
    subtype LISR_TEIF0_Field is STM32_SVD.Bit;
-
    subtype LISR_HTIF0_Field is STM32_SVD.Bit;
-
    subtype LISR_TCIF0_Field is STM32_SVD.Bit;
-
    subtype LISR_FEIF1_Field is STM32_SVD.Bit;
-
    subtype LISR_DMEIF1_Field is STM32_SVD.Bit;
-
    subtype LISR_TEIF1_Field is STM32_SVD.Bit;
-
    subtype LISR_HTIF1_Field is STM32_SVD.Bit;
-
    subtype LISR_TCIF1_Field is STM32_SVD.Bit;
-
    subtype LISR_FEIF2_Field is STM32_SVD.Bit;
-
    subtype LISR_DMEIF2_Field is STM32_SVD.Bit;
-
    subtype LISR_TEIF2_Field is STM32_SVD.Bit;
-
    subtype LISR_HTIF2_Field is STM32_SVD.Bit;
-
    subtype LISR_TCIF2_Field is STM32_SVD.Bit;
-
    subtype LISR_FEIF3_Field is STM32_SVD.Bit;
-
    subtype LISR_DMEIF3_Field is STM32_SVD.Bit;
-
    subtype LISR_TEIF3_Field is STM32_SVD.Bit;
-
    subtype LISR_HTIF3_Field is STM32_SVD.Bit;
-
    subtype LISR_TCIF3_Field is STM32_SVD.Bit;
 
    --  low interrupt status register
@@ -139,44 +125,29 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   -------------------
+   -- HISR_Register --
+   -------------------
+
    subtype HISR_FEIF4_Field is STM32_SVD.Bit;
-
    subtype HISR_DMEIF4_Field is STM32_SVD.Bit;
-
    subtype HISR_TEIF4_Field is STM32_SVD.Bit;
-
    subtype HISR_HTIF4_Field is STM32_SVD.Bit;
-
    subtype HISR_TCIF4_Field is STM32_SVD.Bit;
-
    subtype HISR_FEIF5_Field is STM32_SVD.Bit;
-
    subtype HISR_DMEIF5_Field is STM32_SVD.Bit;
-
    subtype HISR_TEIF5_Field is STM32_SVD.Bit;
-
    subtype HISR_HTIF5_Field is STM32_SVD.Bit;
-
    subtype HISR_TCIF5_Field is STM32_SVD.Bit;
-
    subtype HISR_FEIF6_Field is STM32_SVD.Bit;
-
    subtype HISR_DMEIF6_Field is STM32_SVD.Bit;
-
    subtype HISR_TEIF6_Field is STM32_SVD.Bit;
-
    subtype HISR_HTIF6_Field is STM32_SVD.Bit;
-
    subtype HISR_TCIF6_Field is STM32_SVD.Bit;
-
    subtype HISR_FEIF7_Field is STM32_SVD.Bit;
-
    subtype HISR_DMEIF7_Field is STM32_SVD.Bit;
-
    subtype HISR_TEIF7_Field is STM32_SVD.Bit;
-
    subtype HISR_HTIF7_Field is STM32_SVD.Bit;
-
    subtype HISR_TCIF7_Field is STM32_SVD.Bit;
 
    --  high interrupt status register
@@ -266,44 +237,29 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   --------------------
+   -- LIFCR_Register --
+   --------------------
+
    subtype LIFCR_CFEIF0_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CDMEIF0_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CTEIF0_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CHTIF0_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CTCIF0_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CFEIF1_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CDMEIF1_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CTEIF1_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CHTIF1_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CTCIF1_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CFEIF2_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CDMEIF2_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CTEIF2_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CHTIF2_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CTCIF2_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CFEIF3_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CDMEIF3_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CTEIF3_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CHTIF3_Field is STM32_SVD.Bit;
-
    subtype LIFCR_CTCIF3_Field is STM32_SVD.Bit;
 
    --  low interrupt flag clear register
@@ -393,44 +349,29 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   --------------------
+   -- HIFCR_Register --
+   --------------------
+
    subtype HIFCR_CFEIF4_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CDMEIF4_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CTEIF4_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CHTIF4_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CTCIF4_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CFEIF5_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CDMEIF5_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CTEIF5_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CHTIF5_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CTCIF5_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CFEIF6_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CDMEIF6_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CTEIF6_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CHTIF6_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CTCIF6_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CFEIF7_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CDMEIF7_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CTEIF7_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CHTIF7_Field is STM32_SVD.Bit;
-
    subtype HIFCR_CTCIF7_Field is STM32_SVD.Bit;
 
    --  high interrupt flag clear register
@@ -520,42 +461,28 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   -------------------
+   -- S0CR_Register --
+   -------------------
+
    subtype S0CR_EN_Field is STM32_SVD.Bit;
-
    subtype S0CR_DMEIE_Field is STM32_SVD.Bit;
-
    subtype S0CR_TEIE_Field is STM32_SVD.Bit;
-
    subtype S0CR_HTIE_Field is STM32_SVD.Bit;
-
    subtype S0CR_TCIE_Field is STM32_SVD.Bit;
-
    subtype S0CR_PFCTRL_Field is STM32_SVD.Bit;
-
    subtype S0CR_DIR_Field is STM32_SVD.UInt2;
-
    subtype S0CR_CIRC_Field is STM32_SVD.Bit;
-
    subtype S0CR_PINC_Field is STM32_SVD.Bit;
-
    subtype S0CR_MINC_Field is STM32_SVD.Bit;
-
    subtype S0CR_PSIZE_Field is STM32_SVD.UInt2;
-
    subtype S0CR_MSIZE_Field is STM32_SVD.UInt2;
-
    subtype S0CR_PINCOS_Field is STM32_SVD.Bit;
-
    subtype S0CR_PL_Field is STM32_SVD.UInt2;
-
    subtype S0CR_DBM_Field is STM32_SVD.Bit;
-
    subtype S0CR_CT_Field is STM32_SVD.Bit;
-
    subtype S0CR_PBURST_Field is STM32_SVD.UInt2;
-
    subtype S0CR_MBURST_Field is STM32_SVD.UInt2;
-
    subtype S0CR_CHSEL_Field is STM32_SVD.UInt3;
 
    --  stream x configuration register
@@ -630,6 +557,10 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   ---------------------
+   -- S0NDTR_Register --
+   ---------------------
+
    subtype S0NDTR_NDT_Field is STM32_SVD.Short;
 
    --  stream x number of data register
@@ -647,12 +578,13 @@ package STM32_SVD.DMA is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- S0FCR_Register --
+   --------------------
+
    subtype S0FCR_FTH_Field is STM32_SVD.UInt2;
-
    subtype S0FCR_DMDIS_Field is STM32_SVD.Bit;
-
    subtype S0FCR_FS_Field is STM32_SVD.UInt3;
-
    subtype S0FCR_FEIE_Field is STM32_SVD.Bit;
 
    --  stream x FIFO control register
@@ -682,44 +614,29 @@ package STM32_SVD.DMA is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   -------------------
+   -- S1CR_Register --
+   -------------------
+
    subtype S1CR_EN_Field is STM32_SVD.Bit;
-
    subtype S1CR_DMEIE_Field is STM32_SVD.Bit;
-
    subtype S1CR_TEIE_Field is STM32_SVD.Bit;
-
    subtype S1CR_HTIE_Field is STM32_SVD.Bit;
-
    subtype S1CR_TCIE_Field is STM32_SVD.Bit;
-
    subtype S1CR_PFCTRL_Field is STM32_SVD.Bit;
-
    subtype S1CR_DIR_Field is STM32_SVD.UInt2;
-
    subtype S1CR_CIRC_Field is STM32_SVD.Bit;
-
    subtype S1CR_PINC_Field is STM32_SVD.Bit;
-
    subtype S1CR_MINC_Field is STM32_SVD.Bit;
-
    subtype S1CR_PSIZE_Field is STM32_SVD.UInt2;
-
    subtype S1CR_MSIZE_Field is STM32_SVD.UInt2;
-
    subtype S1CR_PINCOS_Field is STM32_SVD.Bit;
-
    subtype S1CR_PL_Field is STM32_SVD.UInt2;
-
    subtype S1CR_DBM_Field is STM32_SVD.Bit;
-
    subtype S1CR_CT_Field is STM32_SVD.Bit;
-
    subtype S1CR_ACK_Field is STM32_SVD.Bit;
-
    subtype S1CR_PBURST_Field is STM32_SVD.UInt2;
-
    subtype S1CR_MBURST_Field is STM32_SVD.UInt2;
-
    subtype S1CR_CHSEL_Field is STM32_SVD.UInt3;
 
    --  stream x configuration register
@@ -794,6 +711,10 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   ---------------------
+   -- S1NDTR_Register --
+   ---------------------
+
    subtype S1NDTR_NDT_Field is STM32_SVD.Short;
 
    --  stream x number of data register
@@ -811,12 +732,13 @@ package STM32_SVD.DMA is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- S1FCR_Register --
+   --------------------
+
    subtype S1FCR_FTH_Field is STM32_SVD.UInt2;
-
    subtype S1FCR_DMDIS_Field is STM32_SVD.Bit;
-
    subtype S1FCR_FS_Field is STM32_SVD.UInt3;
-
    subtype S1FCR_FEIE_Field is STM32_SVD.Bit;
 
    --  stream x FIFO control register
@@ -846,44 +768,29 @@ package STM32_SVD.DMA is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   -------------------
+   -- S2CR_Register --
+   -------------------
+
    subtype S2CR_EN_Field is STM32_SVD.Bit;
-
    subtype S2CR_DMEIE_Field is STM32_SVD.Bit;
-
    subtype S2CR_TEIE_Field is STM32_SVD.Bit;
-
    subtype S2CR_HTIE_Field is STM32_SVD.Bit;
-
    subtype S2CR_TCIE_Field is STM32_SVD.Bit;
-
    subtype S2CR_PFCTRL_Field is STM32_SVD.Bit;
-
    subtype S2CR_DIR_Field is STM32_SVD.UInt2;
-
    subtype S2CR_CIRC_Field is STM32_SVD.Bit;
-
    subtype S2CR_PINC_Field is STM32_SVD.Bit;
-
    subtype S2CR_MINC_Field is STM32_SVD.Bit;
-
    subtype S2CR_PSIZE_Field is STM32_SVD.UInt2;
-
    subtype S2CR_MSIZE_Field is STM32_SVD.UInt2;
-
    subtype S2CR_PINCOS_Field is STM32_SVD.Bit;
-
    subtype S2CR_PL_Field is STM32_SVD.UInt2;
-
    subtype S2CR_DBM_Field is STM32_SVD.Bit;
-
    subtype S2CR_CT_Field is STM32_SVD.Bit;
-
    subtype S2CR_ACK_Field is STM32_SVD.Bit;
-
    subtype S2CR_PBURST_Field is STM32_SVD.UInt2;
-
    subtype S2CR_MBURST_Field is STM32_SVD.UInt2;
-
    subtype S2CR_CHSEL_Field is STM32_SVD.UInt3;
 
    --  stream x configuration register
@@ -958,6 +865,10 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   ---------------------
+   -- S2NDTR_Register --
+   ---------------------
+
    subtype S2NDTR_NDT_Field is STM32_SVD.Short;
 
    --  stream x number of data register
@@ -975,12 +886,13 @@ package STM32_SVD.DMA is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- S2FCR_Register --
+   --------------------
+
    subtype S2FCR_FTH_Field is STM32_SVD.UInt2;
-
    subtype S2FCR_DMDIS_Field is STM32_SVD.Bit;
-
    subtype S2FCR_FS_Field is STM32_SVD.UInt3;
-
    subtype S2FCR_FEIE_Field is STM32_SVD.Bit;
 
    --  stream x FIFO control register
@@ -1010,44 +922,29 @@ package STM32_SVD.DMA is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   -------------------
+   -- S3CR_Register --
+   -------------------
+
    subtype S3CR_EN_Field is STM32_SVD.Bit;
-
    subtype S3CR_DMEIE_Field is STM32_SVD.Bit;
-
    subtype S3CR_TEIE_Field is STM32_SVD.Bit;
-
    subtype S3CR_HTIE_Field is STM32_SVD.Bit;
-
    subtype S3CR_TCIE_Field is STM32_SVD.Bit;
-
    subtype S3CR_PFCTRL_Field is STM32_SVD.Bit;
-
    subtype S3CR_DIR_Field is STM32_SVD.UInt2;
-
    subtype S3CR_CIRC_Field is STM32_SVD.Bit;
-
    subtype S3CR_PINC_Field is STM32_SVD.Bit;
-
    subtype S3CR_MINC_Field is STM32_SVD.Bit;
-
    subtype S3CR_PSIZE_Field is STM32_SVD.UInt2;
-
    subtype S3CR_MSIZE_Field is STM32_SVD.UInt2;
-
    subtype S3CR_PINCOS_Field is STM32_SVD.Bit;
-
    subtype S3CR_PL_Field is STM32_SVD.UInt2;
-
    subtype S3CR_DBM_Field is STM32_SVD.Bit;
-
    subtype S3CR_CT_Field is STM32_SVD.Bit;
-
    subtype S3CR_ACK_Field is STM32_SVD.Bit;
-
    subtype S3CR_PBURST_Field is STM32_SVD.UInt2;
-
    subtype S3CR_MBURST_Field is STM32_SVD.UInt2;
-
    subtype S3CR_CHSEL_Field is STM32_SVD.UInt3;
 
    --  stream x configuration register
@@ -1122,6 +1019,10 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   ---------------------
+   -- S3NDTR_Register --
+   ---------------------
+
    subtype S3NDTR_NDT_Field is STM32_SVD.Short;
 
    --  stream x number of data register
@@ -1139,12 +1040,13 @@ package STM32_SVD.DMA is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- S3FCR_Register --
+   --------------------
+
    subtype S3FCR_FTH_Field is STM32_SVD.UInt2;
-
    subtype S3FCR_DMDIS_Field is STM32_SVD.Bit;
-
    subtype S3FCR_FS_Field is STM32_SVD.UInt3;
-
    subtype S3FCR_FEIE_Field is STM32_SVD.Bit;
 
    --  stream x FIFO control register
@@ -1174,44 +1076,29 @@ package STM32_SVD.DMA is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   -------------------
+   -- S4CR_Register --
+   -------------------
+
    subtype S4CR_EN_Field is STM32_SVD.Bit;
-
    subtype S4CR_DMEIE_Field is STM32_SVD.Bit;
-
    subtype S4CR_TEIE_Field is STM32_SVD.Bit;
-
    subtype S4CR_HTIE_Field is STM32_SVD.Bit;
-
    subtype S4CR_TCIE_Field is STM32_SVD.Bit;
-
    subtype S4CR_PFCTRL_Field is STM32_SVD.Bit;
-
    subtype S4CR_DIR_Field is STM32_SVD.UInt2;
-
    subtype S4CR_CIRC_Field is STM32_SVD.Bit;
-
    subtype S4CR_PINC_Field is STM32_SVD.Bit;
-
    subtype S4CR_MINC_Field is STM32_SVD.Bit;
-
    subtype S4CR_PSIZE_Field is STM32_SVD.UInt2;
-
    subtype S4CR_MSIZE_Field is STM32_SVD.UInt2;
-
    subtype S4CR_PINCOS_Field is STM32_SVD.Bit;
-
    subtype S4CR_PL_Field is STM32_SVD.UInt2;
-
    subtype S4CR_DBM_Field is STM32_SVD.Bit;
-
    subtype S4CR_CT_Field is STM32_SVD.Bit;
-
    subtype S4CR_ACK_Field is STM32_SVD.Bit;
-
    subtype S4CR_PBURST_Field is STM32_SVD.UInt2;
-
    subtype S4CR_MBURST_Field is STM32_SVD.UInt2;
-
    subtype S4CR_CHSEL_Field is STM32_SVD.UInt3;
 
    --  stream x configuration register
@@ -1286,6 +1173,10 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   ---------------------
+   -- S4NDTR_Register --
+   ---------------------
+
    subtype S4NDTR_NDT_Field is STM32_SVD.Short;
 
    --  stream x number of data register
@@ -1303,12 +1194,13 @@ package STM32_SVD.DMA is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- S4FCR_Register --
+   --------------------
+
    subtype S4FCR_FTH_Field is STM32_SVD.UInt2;
-
    subtype S4FCR_DMDIS_Field is STM32_SVD.Bit;
-
    subtype S4FCR_FS_Field is STM32_SVD.UInt3;
-
    subtype S4FCR_FEIE_Field is STM32_SVD.Bit;
 
    --  stream x FIFO control register
@@ -1338,44 +1230,29 @@ package STM32_SVD.DMA is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   -------------------
+   -- S5CR_Register --
+   -------------------
+
    subtype S5CR_EN_Field is STM32_SVD.Bit;
-
    subtype S5CR_DMEIE_Field is STM32_SVD.Bit;
-
    subtype S5CR_TEIE_Field is STM32_SVD.Bit;
-
    subtype S5CR_HTIE_Field is STM32_SVD.Bit;
-
    subtype S5CR_TCIE_Field is STM32_SVD.Bit;
-
    subtype S5CR_PFCTRL_Field is STM32_SVD.Bit;
-
    subtype S5CR_DIR_Field is STM32_SVD.UInt2;
-
    subtype S5CR_CIRC_Field is STM32_SVD.Bit;
-
    subtype S5CR_PINC_Field is STM32_SVD.Bit;
-
    subtype S5CR_MINC_Field is STM32_SVD.Bit;
-
    subtype S5CR_PSIZE_Field is STM32_SVD.UInt2;
-
    subtype S5CR_MSIZE_Field is STM32_SVD.UInt2;
-
    subtype S5CR_PINCOS_Field is STM32_SVD.Bit;
-
    subtype S5CR_PL_Field is STM32_SVD.UInt2;
-
    subtype S5CR_DBM_Field is STM32_SVD.Bit;
-
    subtype S5CR_CT_Field is STM32_SVD.Bit;
-
    subtype S5CR_ACK_Field is STM32_SVD.Bit;
-
    subtype S5CR_PBURST_Field is STM32_SVD.UInt2;
-
    subtype S5CR_MBURST_Field is STM32_SVD.UInt2;
-
    subtype S5CR_CHSEL_Field is STM32_SVD.UInt3;
 
    --  stream x configuration register
@@ -1450,6 +1327,10 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   ---------------------
+   -- S5NDTR_Register --
+   ---------------------
+
    subtype S5NDTR_NDT_Field is STM32_SVD.Short;
 
    --  stream x number of data register
@@ -1467,12 +1348,13 @@ package STM32_SVD.DMA is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- S5FCR_Register --
+   --------------------
+
    subtype S5FCR_FTH_Field is STM32_SVD.UInt2;
-
    subtype S5FCR_DMDIS_Field is STM32_SVD.Bit;
-
    subtype S5FCR_FS_Field is STM32_SVD.UInt3;
-
    subtype S5FCR_FEIE_Field is STM32_SVD.Bit;
 
    --  stream x FIFO control register
@@ -1502,44 +1384,29 @@ package STM32_SVD.DMA is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   -------------------
+   -- S6CR_Register --
+   -------------------
+
    subtype S6CR_EN_Field is STM32_SVD.Bit;
-
    subtype S6CR_DMEIE_Field is STM32_SVD.Bit;
-
    subtype S6CR_TEIE_Field is STM32_SVD.Bit;
-
    subtype S6CR_HTIE_Field is STM32_SVD.Bit;
-
    subtype S6CR_TCIE_Field is STM32_SVD.Bit;
-
    subtype S6CR_PFCTRL_Field is STM32_SVD.Bit;
-
    subtype S6CR_DIR_Field is STM32_SVD.UInt2;
-
    subtype S6CR_CIRC_Field is STM32_SVD.Bit;
-
    subtype S6CR_PINC_Field is STM32_SVD.Bit;
-
    subtype S6CR_MINC_Field is STM32_SVD.Bit;
-
    subtype S6CR_PSIZE_Field is STM32_SVD.UInt2;
-
    subtype S6CR_MSIZE_Field is STM32_SVD.UInt2;
-
    subtype S6CR_PINCOS_Field is STM32_SVD.Bit;
-
    subtype S6CR_PL_Field is STM32_SVD.UInt2;
-
    subtype S6CR_DBM_Field is STM32_SVD.Bit;
-
    subtype S6CR_CT_Field is STM32_SVD.Bit;
-
    subtype S6CR_ACK_Field is STM32_SVD.Bit;
-
    subtype S6CR_PBURST_Field is STM32_SVD.UInt2;
-
    subtype S6CR_MBURST_Field is STM32_SVD.UInt2;
-
    subtype S6CR_CHSEL_Field is STM32_SVD.UInt3;
 
    --  stream x configuration register
@@ -1614,6 +1481,10 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   ---------------------
+   -- S6NDTR_Register --
+   ---------------------
+
    subtype S6NDTR_NDT_Field is STM32_SVD.Short;
 
    --  stream x number of data register
@@ -1631,12 +1502,13 @@ package STM32_SVD.DMA is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- S6FCR_Register --
+   --------------------
+
    subtype S6FCR_FTH_Field is STM32_SVD.UInt2;
-
    subtype S6FCR_DMDIS_Field is STM32_SVD.Bit;
-
    subtype S6FCR_FS_Field is STM32_SVD.UInt3;
-
    subtype S6FCR_FEIE_Field is STM32_SVD.Bit;
 
    --  stream x FIFO control register
@@ -1666,44 +1538,29 @@ package STM32_SVD.DMA is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   -------------------
+   -- S7CR_Register --
+   -------------------
+
    subtype S7CR_EN_Field is STM32_SVD.Bit;
-
    subtype S7CR_DMEIE_Field is STM32_SVD.Bit;
-
    subtype S7CR_TEIE_Field is STM32_SVD.Bit;
-
    subtype S7CR_HTIE_Field is STM32_SVD.Bit;
-
    subtype S7CR_TCIE_Field is STM32_SVD.Bit;
-
    subtype S7CR_PFCTRL_Field is STM32_SVD.Bit;
-
    subtype S7CR_DIR_Field is STM32_SVD.UInt2;
-
    subtype S7CR_CIRC_Field is STM32_SVD.Bit;
-
    subtype S7CR_PINC_Field is STM32_SVD.Bit;
-
    subtype S7CR_MINC_Field is STM32_SVD.Bit;
-
    subtype S7CR_PSIZE_Field is STM32_SVD.UInt2;
-
    subtype S7CR_MSIZE_Field is STM32_SVD.UInt2;
-
    subtype S7CR_PINCOS_Field is STM32_SVD.Bit;
-
    subtype S7CR_PL_Field is STM32_SVD.UInt2;
-
    subtype S7CR_DBM_Field is STM32_SVD.Bit;
-
    subtype S7CR_CT_Field is STM32_SVD.Bit;
-
    subtype S7CR_ACK_Field is STM32_SVD.Bit;
-
    subtype S7CR_PBURST_Field is STM32_SVD.UInt2;
-
    subtype S7CR_MBURST_Field is STM32_SVD.UInt2;
-
    subtype S7CR_CHSEL_Field is STM32_SVD.UInt3;
 
    --  stream x configuration register
@@ -1778,6 +1635,10 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   ---------------------
+   -- S7NDTR_Register --
+   ---------------------
+
    subtype S7NDTR_NDT_Field is STM32_SVD.Short;
 
    --  stream x number of data register
@@ -1795,12 +1656,13 @@ package STM32_SVD.DMA is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------
+   -- S7FCR_Register --
+   --------------------
+
    subtype S7FCR_FTH_Field is STM32_SVD.UInt2;
-
    subtype S7FCR_DMDIS_Field is STM32_SVD.Bit;
-
    subtype S7FCR_FS_Field is STM32_SVD.UInt3;
-
    subtype S7FCR_FEIE_Field is STM32_SVD.Bit;
 
    --  stream x FIFO control register
@@ -2000,10 +1862,10 @@ package STM32_SVD.DMA is
 
    --  DMA controller
    DMA1_Periph : aliased DMA_Peripheral
-     with Import, Address => System'To_Address(16#40026000#);
+     with Import, Address => System'To_Address (16#40026000#);
 
    --  DMA controller
    DMA2_Periph : aliased DMA_Peripheral
-     with Import, Address => System'To_Address(16#40026400#);
+     with Import, Address => System'To_Address (16#40026400#);
 
 end STM32_SVD.DMA;

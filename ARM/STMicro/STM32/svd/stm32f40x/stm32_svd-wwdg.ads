@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F40x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.WWDG is
@@ -12,8 +13,11 @@ package STM32_SVD.WWDG is
    -- Registers --
    ---------------
 
-   subtype CR_T_Field is STM32_SVD.UInt7;
+   -----------------
+   -- CR_Register --
+   -----------------
 
+   subtype CR_T_Field is STM32_SVD.UInt7;
    subtype CR_WDGA_Field is STM32_SVD.Bit;
 
    --  Control register
@@ -34,27 +38,39 @@ package STM32_SVD.WWDG is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   ------------------
+   -- CFR_Register --
+   ------------------
+
    subtype CFR_W_Field is STM32_SVD.UInt7;
 
-   subtype CFR_WDGTB0_Field is STM32_SVD.Bit;
+   ---------------
+   -- CFR.WDGTB --
+   ---------------
 
-   type WDGTB_Field_Array is array (0 .. 1) of CFR_WDGTB0_Field
+   --  CFR_WDGTB array element
+   subtype CFR_WDGTB_Element is STM32_SVD.Bit;
+
+   --  CFR_WDGTB array
+   type CFR_WDGTB_Field_Array is array (0 .. 1) of CFR_WDGTB_Element
      with Component_Size => 1, Size => 2;
 
-   --  Type definition for WDGTB
-   type WDGTB_Union (As_Array : Boolean := False) is record
+   --  Type definition for CFR_WDGTB
+   type CFR_WDGTB_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of WDGTB0
+            --  WDGTB as a value
             Val : STM32_SVD.UInt2;
          when True =>
-            --  Array vision of WDGTB0
-            Arr : WDGTB_Field_Array;
+            --  WDGTB as an array
+            Arr : CFR_WDGTB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 2;
 
-   for WDGTB_Union use record
+   for CFR_WDGTB_Field use record
       Val at 0 range 0 .. 1;
       Arr at 0 range 0 .. 1;
    end record;
@@ -66,7 +82,7 @@ package STM32_SVD.WWDG is
       --  7-bit window value
       W              : CFR_W_Field := 16#7F#;
       --  Timer base
-      WDGTB          : WDGTB_Union := (As_Array => False, Val => 16#0#);
+      WDGTB          : CFR_WDGTB_Field := (As_Array => False, Val => 16#0#);
       --  Early wakeup interrupt
       EWI            : CFR_EWI_Field := 16#0#;
       --  unspecified
@@ -81,6 +97,10 @@ package STM32_SVD.WWDG is
       EWI            at 0 range 9 .. 9;
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
+
+   -----------------
+   -- SR_Register --
+   -----------------
 
    subtype SR_EWIF_Field is STM32_SVD.Bit;
 
@@ -122,6 +142,6 @@ package STM32_SVD.WWDG is
 
    --  Window watchdog
    WWDG_Periph : aliased WWDG_Peripheral
-     with Import, Address => System'To_Address(16#40002C00#);
+     with Import, Address => System'To_Address (16#40002C00#);
 
 end STM32_SVD.WWDG;

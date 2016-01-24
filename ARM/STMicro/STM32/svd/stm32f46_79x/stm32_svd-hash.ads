@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F46_79x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.HASH is
@@ -12,24 +13,19 @@ package STM32_SVD.HASH is
    -- Registers --
    ---------------
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_INIT_Field is STM32_SVD.Bit;
-
    subtype CR_DMAE_Field is STM32_SVD.Bit;
-
    subtype CR_DATATYPE_Field is STM32_SVD.UInt2;
-
    subtype CR_MODE_Field is STM32_SVD.Bit;
-
    subtype CR_ALGO0_Field is STM32_SVD.Bit;
-
    subtype CR_NBW_Field is STM32_SVD.UInt4;
-
    subtype CR_DINNE_Field is STM32_SVD.Bit;
-
    subtype CR_MDMAT_Field is STM32_SVD.Bit;
-
    subtype CR_LKEY_Field is STM32_SVD.Bit;
-
    subtype CR_ALGO1_Field is STM32_SVD.Bit;
 
    --  control register
@@ -83,8 +79,11 @@ package STM32_SVD.HASH is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
-   subtype STR_NBLW_Field is STM32_SVD.UInt5;
+   ------------------
+   -- STR_Register --
+   ------------------
 
+   subtype STR_NBLW_Field is STM32_SVD.UInt5;
    subtype STR_DCAL_Field is STM32_SVD.Bit;
 
    --  start register
@@ -108,8 +107,11 @@ package STM32_SVD.HASH is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
-   subtype IMR_DINIE_Field is STM32_SVD.Bit;
+   ------------------
+   -- IMR_Register --
+   ------------------
 
+   subtype IMR_DINIE_Field is STM32_SVD.Bit;
    subtype IMR_DCIE_Field is STM32_SVD.Bit;
 
    --  interrupt enable register
@@ -130,12 +132,13 @@ package STM32_SVD.HASH is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR_DINIS_Field is STM32_SVD.Bit;
-
    subtype SR_DCIS_Field is STM32_SVD.Bit;
-
    subtype SR_DMAS_Field is STM32_SVD.Bit;
-
    subtype SR_BUSY_Field is STM32_SVD.Bit;
 
    --  status register
@@ -392,6 +395,6 @@ package STM32_SVD.HASH is
 
    --  Hash processor
    HASH_Periph : aliased HASH_Peripheral
-     with Import, Address => System'To_Address(16#50060400#);
+     with Import, Address => System'To_Address (16#50060400#);
 
 end STM32_SVD.HASH;

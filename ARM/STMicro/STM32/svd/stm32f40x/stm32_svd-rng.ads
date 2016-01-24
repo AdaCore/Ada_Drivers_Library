@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F40x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.RNG is
@@ -12,8 +13,11 @@ package STM32_SVD.RNG is
    -- Registers --
    ---------------
 
-   subtype CR_RNGEN_Field is STM32_SVD.Bit;
+   -----------------
+   -- CR_Register --
+   -----------------
 
+   subtype CR_RNGEN_Field is STM32_SVD.Bit;
    subtype CR_IE_Field is STM32_SVD.Bit;
 
    --  control register
@@ -37,14 +41,14 @@ package STM32_SVD.RNG is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR_DRDY_Field is STM32_SVD.Bit;
-
    subtype SR_CECS_Field is STM32_SVD.Bit;
-
    subtype SR_SECS_Field is STM32_SVD.Bit;
-
    subtype SR_CEIS_Field is STM32_SVD.Bit;
-
    subtype SR_SEIS_Field is STM32_SVD.Bit;
 
    --  status register
@@ -100,6 +104,6 @@ package STM32_SVD.RNG is
 
    --  Random number generator
    RNG_Periph : aliased RNG_Peripheral
-     with Import, Address => System'To_Address(16#50060800#);
+     with Import, Address => System'To_Address (16#50060800#);
 
 end STM32_SVD.RNG;

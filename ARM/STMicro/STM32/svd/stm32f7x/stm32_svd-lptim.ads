@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F7x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.LPTIM is
@@ -12,18 +13,16 @@ package STM32_SVD.LPTIM is
    -- Registers --
    ---------------
 
+   ------------------
+   -- ISR_Register --
+   ------------------
+
    subtype ISR_CMPM_Field is STM32_SVD.Bit;
-
    subtype ISR_ARRM_Field is STM32_SVD.Bit;
-
    subtype ISR_EXTTRIG_Field is STM32_SVD.Bit;
-
    subtype ISR_CMPOK_Field is STM32_SVD.Bit;
-
    subtype ISR_ARROK_Field is STM32_SVD.Bit;
-
    subtype ISR_UP_Field is STM32_SVD.Bit;
-
    subtype ISR_DOWN_Field is STM32_SVD.Bit;
 
    --  Interrupt and Status Register
@@ -59,18 +58,16 @@ package STM32_SVD.LPTIM is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   ------------------
+   -- ICR_Register --
+   ------------------
+
    subtype ICR_CMPMCF_Field is STM32_SVD.Bit;
-
    subtype ICR_ARRMCF_Field is STM32_SVD.Bit;
-
    subtype ICR_EXTTRIGCF_Field is STM32_SVD.Bit;
-
    subtype ICR_CMPOKCF_Field is STM32_SVD.Bit;
-
    subtype ICR_ARROKCF_Field is STM32_SVD.Bit;
-
    subtype ICR_UPCF_Field is STM32_SVD.Bit;
-
    subtype ICR_DOWNCF_Field is STM32_SVD.Bit;
 
    --  Interrupt Clear Register
@@ -106,18 +103,16 @@ package STM32_SVD.LPTIM is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   ------------------
+   -- IER_Register --
+   ------------------
+
    subtype IER_CMPMIE_Field is STM32_SVD.Bit;
-
    subtype IER_ARRMIE_Field is STM32_SVD.Bit;
-
    subtype IER_EXTTRIGIE_Field is STM32_SVD.Bit;
-
    subtype IER_CMPOKIE_Field is STM32_SVD.Bit;
-
    subtype IER_ARROKIE_Field is STM32_SVD.Bit;
-
    subtype IER_UPIE_Field is STM32_SVD.Bit;
-
    subtype IER_DOWNIE_Field is STM32_SVD.Bit;
 
    --  Interrupt Enable Register
@@ -153,30 +148,22 @@ package STM32_SVD.LPTIM is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   -------------------
+   -- CFGR_Register --
+   -------------------
+
    subtype CFGR_CKSEL_Field is STM32_SVD.Bit;
-
    subtype CFGR_CKPOL_Field is STM32_SVD.UInt2;
-
    subtype CFGR_CKFLT_Field is STM32_SVD.UInt2;
-
    subtype CFGR_TRGFLT_Field is STM32_SVD.UInt2;
-
    subtype CFGR_PRESC_Field is STM32_SVD.UInt3;
-
    subtype CFGR_TRIGSEL_Field is STM32_SVD.UInt3;
-
    subtype CFGR_TRIGEN_Field is STM32_SVD.UInt2;
-
    subtype CFGR_TIMOUT_Field is STM32_SVD.Bit;
-
    subtype CFGR_WAVE_Field is STM32_SVD.Bit;
-
    subtype CFGR_WAVPOL_Field is STM32_SVD.Bit;
-
    subtype CFGR_PRELOAD_Field is STM32_SVD.Bit;
-
    subtype CFGR_COUNTMODE_Field is STM32_SVD.Bit;
-
    subtype CFGR_ENC_Field is STM32_SVD.Bit;
 
    --  Configuration Register
@@ -242,10 +229,12 @@ package STM32_SVD.LPTIM is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_ENABLE_Field is STM32_SVD.Bit;
-
    subtype CR_SNGSTRT_Field is STM32_SVD.Bit;
-
    subtype CR_CNTSTRT_Field is STM32_SVD.Bit;
 
    --  Control Register
@@ -269,6 +258,10 @@ package STM32_SVD.LPTIM is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
+   ------------------
+   -- CMP_Register --
+   ------------------
+
    subtype CMP_CMP_Field is STM32_SVD.Short;
 
    --  Compare Register
@@ -286,6 +279,10 @@ package STM32_SVD.LPTIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ------------------
+   -- ARR_Register --
+   ------------------
+
    subtype ARR_ARR_Field is STM32_SVD.Short;
 
    --  Autoreload Register
@@ -302,6 +299,10 @@ package STM32_SVD.LPTIM is
       ARR            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
+
+   ------------------
+   -- CNT_Register --
+   ------------------
 
    subtype CNT_CNT_Field is STM32_SVD.Short;
 
@@ -358,6 +359,6 @@ package STM32_SVD.LPTIM is
 
    --  Low power timer
    LPTIM1_Periph : aliased LPTIM1_Peripheral
-     with Import, Address => System'To_Address(16#40002400#);
+     with Import, Address => System'To_Address (16#40002400#);
 
 end STM32_SVD.LPTIM;
