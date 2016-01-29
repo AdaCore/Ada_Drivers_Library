@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -131,14 +131,37 @@ package body STM32F4.USARTs is
 
    procedure Set_Baud_Rate (This : in out USART; To : Baud_Rates) is
       Clock        : constant Word := APB_Clock (This);
-      Int_Divider  : constant Word := (25 * Clock) / (4 * To);
+      Over_By_8    : constant Boolean := (This.CR1 and CR1_OVER8) = CR1_OVER8;
+      Int_Scale    : constant Word := (if Over_By_8 then 2 else 4);
+      Int_Divider  : constant Word := (25 * Clock) / (Int_Scale * To);
       Frac_Divider : constant Word := Int_Divider rem 100;
       BRR          : Half_Word;
    begin
-      BRR := (Half_Word (Frac_Divider * 16) + 50) / 100 mod 16
-               or Half_Word (Int_Divider / 100 * 16);
+      --  the integer part of the divi
+      if Over_By_8 then
+         BRR := (Half_Word (Frac_Divider * 8) + 50) / 100 mod 8
+              or Half_Word (Int_Divider / 100 * 16);
+      else
+         BRR := (Half_Word (Frac_Divider * 16) + 50) / 100 mod 16
+              or Half_Word (Int_Divider / 100 * 16);
+      end if;
       This.BRR := BRR;
    end Set_Baud_Rate;
+
+   ---------------------------
+   -- Set_Oversampling_Mode --
+   ---------------------------
+
+   procedure Set_Oversampling_Mode (This : in out USART; To : Oversampling_Modes) is
+      CR1 : Half_Word := This.CR1;
+   begin
+      if To = Oversampling_By_8 then
+         CR1 := CR1 or CR1_OVER8;
+      else
+         CR1 := CR1 and not CR1_OVER8;
+      end if;
+      This.CR1 := CR1;
+   end Set_Oversampling_Mode;
 
    --------------
    -- Set_Mode --
