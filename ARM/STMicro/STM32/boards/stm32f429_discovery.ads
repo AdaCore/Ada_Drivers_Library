@@ -52,7 +52,7 @@ with STM32F4.USARTs;  use STM32F4.USARTs;
 with STM32F4.I2C;     use STM32F4.I2C;
 with STM32F4.SPI;     use STM32F4.SPI;
 with STM32F4.Timers;  use STM32F4.Timers;
-with STM32F4.L3DG20;  use STM32F4.L3DG20;
+with STM32F4.L3GD20;  use STM32F4.L3GD20;
 with STM32F4.DAC;     use STM32F4.DAC;
 
 with Ada.Interrupts.Names;  use Ada.Interrupts;

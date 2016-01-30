@@ -31,11 +31,6 @@
 
 with STM32F429_Discovery;  use STM32F429_Discovery;
 
-with STM32F4.GPIO;   use STM32F4.GPIO;
-with STM32F4.RCC;    use STM32F4.RCC;
-with STM32F4.SYSCFG; use STM32F4.SYSCFG;
-with STM32F4.EXTI;   use STM32F4.EXTI;
-
 package body Output_Utils is
 
    -----------

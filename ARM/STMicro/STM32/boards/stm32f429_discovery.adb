@@ -140,7 +140,7 @@ package body STM32F429_Discovery is
    begin
       -- For the page numbers shown below, the required values are specified in
       -- the STM32F429 Discovery kit User Manual (UM1670) on those pages.
-      L3DG20.Initialize_Gyro_Hardware
+      L3GD20.Initialize_Gyro_Hardware
         (Gyro,
          L3GD20_SPI                  => SPI_5'Access,
          SPI_GPIO                    => GPIO_F'Access,  -- required, pg 23
@@ -154,8 +154,8 @@ package body STM32F429_Discovery is
          Enable_SPI_GPIO_Clock       => RCC.GPIOF_Clock_Enable'Access,
          Enable_Chip_Select_Clock    => RCC.GPIOC_Clock_Enable'Access);
 
-      if L3DG20.Device_Id (Gyro) /= L3DG20.I_Am_L3GD20 then
-         raise Program_Error with "No L3DG20 found";
+      if L3GD20.Device_Id (Gyro) /= L3GD20.I_Am_L3GD20 then
+         raise Program_Error with "No L3GD20 found";
       end if;
    end Initialize_Gyro_Hardware;
 
