@@ -40,10 +40,10 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
---  This file provides a driver for the L3DG20 gyroscope from ST
+--  This file provides a driver for the L3GD20 gyroscope from ST
 --  Microelectronics.
 
---  See datasheet "L3DG20 MEMS motion sensor: three-axis digital output
+--  See datasheet "L3GD20 MEMS motion sensor: three-axis digital output
 --  gyroscope" DocID022116 Rev 2, dated February 2013, file number DM00036465
 
 with STM32F4.SPI;  use STM32F4.SPI;
@@ -51,7 +51,7 @@ with STM32F4.GPIO; use STM32F4.GPIO;
 
 with Interfaces;   use Interfaces;
 
-package STM32F4.L3DG20 is
+package STM32F4.L3GD20 is
 
    type Three_Axis_Gyroscope is limited private;
 
@@ -576,4 +576,4 @@ private
    INT1_TSH_ZL   : constant Register := 16#37#; --  Interrupt 1 Threshold Z
    INT1_Duration : constant Register := 16#38#; --  Interrupt 1 Duration
 
-end STM32F4.L3DG20;
+end STM32F4.L3GD20;

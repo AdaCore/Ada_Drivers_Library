@@ -33,7 +33,7 @@ with STM32F4.ILI9341;
 with Bitmapped_Drawing;
 with BMP_Fonts; use BMP_Fonts;
 
-with STM32F4.L3DG20; use STM32F4.L3DG20;
+with STM32F4.L3GD20; use STM32F4.L3GD20;
 
 package Output_Utils is
 

@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This program demonstrates the on-board gyro provided by the L3DG20 chip on
+--  This program demonstrates the on-board gyro provided by the L3GD20 chip on
 --  the STM32F429 Discovery boards. Data availability is determined by polling
 --  a status flag.
 --
@@ -52,7 +52,7 @@ with Ada.Real_Time;  use Ada.Real_Time;
 
 with STM32F429_Discovery;  use STM32F429_Discovery;
 
-with STM32F4.L3DG20; use STM32F4.L3DG20;
+with STM32F4.L3GD20; use STM32F4.L3GD20;
 with STM32F4.GPIO;   use STM32F4.GPIO;
 with STM32F4;        use STM32F4;
 with STM32F4.RCC;    use STM32F4.RCC;
@@ -61,10 +61,10 @@ with STM32F4.EXTI;   use STM32F4.EXTI;
 
 with Output_Utils;   use Output_Utils;
 
-procedure Demo_L3DG20 is
+procedure Demo_L3GD20 is
 
-   Raw    : L3DG20.Angle_Rates;
-   Stable : L3DG20.Angle_Rates;  -- the values when the board is motionless
+   Raw    : L3GD20.Angle_Rates;
+   Stable : L3GD20.Angle_Rates;  -- the values when the board is motionless
 
    Sensitivity       : Float;
    Sensitivity_Tweak : constant Float := 1.55;
@@ -215,4 +215,4 @@ begin
       Next_Release := Next_Release + Sample_Period;
       delay until Next_Release;
    end loop;
-end Demo_L3DG20;
+end Demo_L3GD20;

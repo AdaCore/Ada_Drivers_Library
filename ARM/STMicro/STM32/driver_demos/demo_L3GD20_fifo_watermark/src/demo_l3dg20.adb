@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This program demonstrates the on-board gyro provided by the L3DG20 chip
+--  This program demonstrates the on-board gyro provided by the L3GD20 chip
 --  on the STM32F429 Discovery boards. The pitch, roll, and yaw values are
 --  continuously displayed on the LCD, as are the adjusted raw values. Move
 --  the board to see them change. The values will be positive or negative,
@@ -38,21 +38,20 @@
 
 --  NB: You may need to reset the board after downloading!
 
---  This program demonstrates use of the gyro's on-board FIFO, driven by an
---  interrupt signalling that the FIFO is full. Note that the specifically
---  configured gyro's FIFO mode is such that the entire FIFO is full when the
---  interrupt is generated, and that no further filling occurs until explicitly
---  enabled by the application.
---
---  The FIFO contains 32 sets of raw values for the three X, Y, and Z axes.
---  We read all 32 of them, average them into one set of three axis readings,
---  and use that for further processing. In particular, on each iteration
---  we subtract the stable bias offset from each axis value and scale by the
---  selected sensitivity. The adjusted and scaled values are displayed on
---  each iteration. The stable bias offsets are also displayed, initially
---  (not iteratively since they are not recomputed).
+--  This program demonstrates use of the gyro's on-board FIFO, driven by
+--  an interrupt signalling that the FIFO is partially full. In particular,
+--  the gyro generates an interrupt when the FIFO has at least the number of
+--  entries specified by a "watermark" configured by the main program. The
+--  FIFO contains at least that many sets of raw values for the three X, Y, and
+--  Z axes. We read all those actually in the FIFO, even if greater than the
+--  number specified by the watermark. We then average them into one set of
+--  three axis readings, and use that for further processing. In particular,
+--  on each iteration we subtract the stable bias offset from each axis value
+--  and scale by the selected sensitivity. The adjusted and scaled values are
+--  displayed on each iteration. The stable bias offsets are also displayed,
+--  initially (not iteratively since they are not recomputed).
 
-with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
+with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
 with STM32F429_Discovery;  use STM32F429_Discovery;
 
@@ -61,23 +60,25 @@ with Output_Utils;   use Output_Utils;
 
 with Ada.Synchronous_Task_Control; use Ada.Synchronous_Task_Control;
 
-with STM32F4.L3DG20; use STM32F4.L3DG20;
+with STM32F4.L3GD20; use STM32F4.L3GD20;
 with STM32F4.GPIO;   use STM32F4.GPIO;
+with STM32F4;        use STM32F4;
 with STM32F4.RCC;    use STM32F4.RCC;
 with STM32F4.SYSCFG; use STM32F4.SYSCFG;
 with STM32F4.EXTI;   use STM32F4.EXTI;
-with STM32F4;        use STM32F4;
 
-procedure Demo_L3DG20 is
+procedure Demo_L3GD20 is
 
-   Axes   : L3DG20.Angle_Rates;
-   Stable : L3DG20.Angle_Rates;  -- the values when the board is motionless
+   Axes   : L3GD20.Angle_Rates;
+   Stable : L3GD20.Angle_Rates;  -- the values when the board is motionless
 
    Sensitivity : Float;
 
    Scaled_X  : Float;
    Scaled_Y  : Float;
    Scaled_Z  : Float;
+
+   FIFO_Watermark   : constant L3GD20.FIFO_Level := 15;  -- arbitrary, 1/2 of the FIFO content
 
    procedure Get_Gyro_Offsets
      (Offsets      : out Angle_Rates;
@@ -90,13 +91,8 @@ procedure Demo_L3DG20 is
    --  Configures the on-board gyro chip
 
    procedure Await_Averaged_Angle_Rates (Rates : out Angle_Rates);
-   --  Waits for the signal from the interrupt handler signalling that the FIFO
-   --  is full, then averages those values and sets the output parameter Rates
-   --  to that average.
 
    function Averaged_Rates (Buffer : Angle_Rates_FIFO_Buffer) return Angle_Rates;
-   --  Returns a single Angle_Rate record containing the averages for the X, Y,
-   --  and Z axis data in the Buffer
 
    procedure Configure_Gyro_Interrupt;
    --  Configures the gyro's FIFO interrupt (interrupt #2) on the
@@ -112,11 +108,13 @@ procedure Demo_L3DG20 is
    --------------------------------
 
    procedure Await_Averaged_Angle_Rates (Rates : out Angle_Rates) is
-      FIFO_Buffer : Angle_Rates_FIFO_Buffer (L3DG20.FIFO_Level);  -- entire FIFO
+      FIFO_Buffer  : Angle_Rates_FIFO_Buffer (FIFO_Level);  -- entire FIFO
+      Actual_Depth : FIFO_Level;
    begin
       Suspend_Until_True (Gyro_Interrupts.Event);
-      Get_Raw_Angle_Rates_FIFO (Gyro, FIFO_Buffer);
-      Rates := Averaged_Rates (FIFO_Buffer);
+      Actual_Depth := Current_FIFO_Depth (Gyro);
+      Get_Raw_Angle_Rates_FIFO (Gyro, FIFO_Buffer (1 .. Actual_Depth));
+      Rates := Averaged_Rates (FIFO_Buffer (1 .. Actual_Depth));
    end Await_Averaged_Angle_Rates;
 
    --------------------
@@ -213,11 +211,10 @@ procedure Demo_L3DG20 is
 
    procedure Reset_And_Start_Collecting is
    begin
-      --  going into Bypass_Mode resets the FIFO hardware and is essential
+      --  Going to Bypass_Mode resets the FIFO hardware and is essential
       Set_FIFO_Mode (Gyro, L3GD20_Bypass_Mode);
 
-      --  going into FIFO_Mode begins the collection into the hardware FIFO
-      --  (and is also essential for this design)
+      --  Going into FIFO_Mode begins the collection into the hardware FIFO
       Set_FIFO_Mode (Gyro, L3GD20_FIFO_Mode);
    end Reset_and_Start_Collecting;
 
@@ -228,7 +225,9 @@ begin
 
    Configure_Gyro_Interrupt;
 
-   Enable_FIFO_Overrun_Interrupt (Gyro);  --  L3DG30 gyro interrupt 2
+   Enable_FIFO_Watermark_Interrupt (Gyro);  --  L3DG30 gyro interrupt 2
+
+   Set_FIFO_Watermark (Gyro, FIFO_Watermark);
 
    Sensitivity := Full_Scale_Sensitivity (Gyro);
 
@@ -242,16 +241,14 @@ begin
 
    Set_FIFO_Mode (Gyro, L3GD20_FIFO_Mode);
    --  The device starts in Bypass_Mode, in which no data are collected into
-   --  the gyro's hardware FIFO, so going into FIFO_Mode begins the collection
-   --  and will cause the FIFO Full interrupt to be generated.
+   --  the gyro's hardware FIFO, so going into FIFO_Mode begins the collection.
 
    loop
       Await_Averaged_Angle_Rates (Axes);
       Reset_And_Start_Collecting;
       --  the FIFO is filling while we display the data
 
-      --  TODO: use the Reference mode to do this subtraction automatically!?
-      --  See section 4.3.2 of the 4505 App Note, pg 18
+      --  TODO: use the Reference mode to do this automatically!?  section 4.3.2 of the 4505 App Note, pg 18
       Axes.X := Axes.X - Stable.X;
       Axes.Y := Axes.Y - Stable.Y;
       Axes.Z := Axes.Z - Stable.Z;
@@ -269,4 +266,4 @@ begin
       Print ((Final_Column, Line2_Final), Scaled_Y'Img & "  ");
       Print ((Final_Column, Line3_Final), Scaled_Z'Img & "  ");
    end loop;
-end Demo_L3DG20;
+end Demo_L3GD20;

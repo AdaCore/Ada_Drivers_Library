@@ -46,9 +46,9 @@ with Ada.Unchecked_Conversion;
 with STM32F4.SYSCFG;  use STM32F4.SYSCFG;
 with STM32F4.EXTI;    use STM32F4.EXTI;
 
-package body STM32F4.L3DG20 is
+package body STM32F4.L3GD20 is
 
-   --  the following are per Table 4 of the L3DG20 Datasheet, pg 9.
+   --  the following are per Table 4 of the L3GD20 Datasheet, pg 9.
    --  the values are millidegrees per second, so we scale accordingly
    Sensitivity_250dps  : constant := 8.75 * 0.001; -- mdps/digit
    Sensitivity_500dps  : constant := 17.5 * 0.001; -- mdps/digit
@@ -1036,4 +1036,4 @@ package body STM32F4.L3DG20 is
       Write (This, INT1_Duration, 0);
    end Reset;
 
-end STM32F4.L3DG20;
+end STM32F4.L3GD20;
