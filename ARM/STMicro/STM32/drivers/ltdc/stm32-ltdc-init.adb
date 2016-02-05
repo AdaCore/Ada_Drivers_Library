@@ -160,16 +160,22 @@ package body Init is
      (Layer : LCD_Layer;
       State : Boolean)
    is
-      L : constant Layer_Access := Get_Layer (Layer);
+      L   : constant Layer_Access := Get_Layer (Layer);
+      Val : constant Bit := (if State then 1 else 0);
    begin
       if State and then Frame_Buffer_Array (Layer) = Null_Address then
          Frame_Buffer_Array (Layer) := STM32.SDRAM.Reserve
            (Word (LCD_Width * LCD_Height * Pixel_Size (Current_Pixel_Fmt)));
          Set_Layer_CFBA (Layer, Frame_Buffer_Array (Layer));
-         Reload_Config (Immediate => True);
       end if;
 
-      L.LCR.LEN := (if state then 1 else 0);
+      if L.LCR.LEN /= Val then
+         L.LCR.LEN := Val;
+         Reload_Config (Immediate => True);
+      else
+
+         L.LCR.LEN := (if state then 1 else 0);
+      end if;
    end Set_Layer_State;
 
    -------------------

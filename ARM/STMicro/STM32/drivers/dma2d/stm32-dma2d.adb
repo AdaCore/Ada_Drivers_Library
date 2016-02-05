@@ -295,7 +295,6 @@ package body STM32.DMA2D is
       Bg_BPP  : constant Natural := Bytes_Per_Pixel (Bg_Buffer.Color_Mode);
       Bg_Off  : constant System.Storage_Elements.Storage_Offset :=
                   System.Storage_Elements.Storage_Offset (Bg_Idx * Bg_BPP);
-      Use_PFC : Boolean;
 
    begin
       DMA2D_Wait_Transfer.all;
@@ -303,38 +302,36 @@ package body STM32.DMA2D is
       if Bg_Buffer /= Null_Buffer then
          --  PFC and blending
          DMA2D_Periph.CR.MODE := DMA2D_MODE'Enum_Rep (M2M_BLEND);
-         Use_PFC := True;
 
       elsif Src_Buffer.Color_Mode = Dst_Buffer.Color_Mode then
          --  Direct memory transfer
          DMA2D_Periph.CR.MODE := DMA2D_MODE'Enum_Rep (M2M);
-         Use_PFC := False;
 
       else
          --  Requires color conversion
+         --  ??? TODO
          DMA2D_Periph.CR.Mode := DMA2D_Mode'Enum_Rep (M2M_PFC);
-         Use_PFC := True;
       end if;
 
       --  SOURCE CONFIGURATION
-      DMA2D_Periph.FGPFCCR.CM    :=
-        DMA2D_Color_Mode'Enum_Rep (Src_Buffer.Color_Mode);
-      DMA2D_Periph.FGMAR         := To_Word (Src_Buffer.Addr + Src_Off);
-      DMA2D_Periph.FGPFCCR.AM    := DMA2D_AM'Enum_Rep (NO_MODIF);
-      DMA2D_Periph.FGPFCCR.ALPHA := 255;
-      DMA2D_Periph.FGPFCCR.CS    := 0;
-      DMA2D_Periph.FGPFCCR.START :=
-        DMA2D_START'Enum_Rep ((if Use_PFC then Start else Not_Started));
+      DMA2D_Periph.FGPFCCR :=
+        (CM    => DMA2D_Color_Mode'Enum_Rep (Src_Buffer.Color_Mode),
+         AM    => DMA2D_AM'Enum_Rep (NO_MODIF),
+         ALPHA => 255,
+         others => <>);
+--        DMA2D_Periph.FGPFCCR.CS    := 0;
+--        DMA2D_Periph.FGPFCCR.START := Not_Started;
+--        DMA2D_Periph.FGPFCCR.CCM := 0; -- ARGB8888 CLUT color mode
       DMA2D_Periph.FGOR          :=
         (LO => UInt14 (Src_Buffer.Width - Width), others => <>);
-      DMA2D_Periph.FGPFCCR.CCM := 0; -- ARGB8888 CLUT color mode
+      DMA2D_Periph.FGMAR         := To_Word (Src_Buffer.Addr + Src_Off);
 
       if Bg_Buffer /= Null_Buffer then
          DMA2D_Periph.BGPFCCR.CM    :=
            DMA2D_COlor_mode'Enum_Rep (Bg_Buffer.Color_Mode);
          DMA2D_Periph.BGMAR         := To_Word (Bg_Buffer.Addr + Bg_Off);
          DMA2D_Periph.BGPFCCR.CS    := 0;
-         DMA2D_Periph.BGPFCCR.START := DMA2D_START'Enum_Rep (Start);
+         DMA2D_Periph.BGPFCCR.START := DMA2D_START'Enum_Rep (Not_Started);
          DMA2D_Periph.BGOR          :=
            (LO => UInt14 (Bg_Buffer.Width - Width), others => <>);
          DMA2D_Periph.BGPFCCR.CCM   := 0; -- ARGB888
