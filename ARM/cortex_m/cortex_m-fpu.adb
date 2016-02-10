@@ -30,8 +30,9 @@
 ------------------------------------------------------------------------------
 
 with System.Machine_Code;  use System.Machine_Code;
+with System; use System;
 
-package body STM32.FPU is
+package body Cortex_M.FPU is
 
    use ASCII;
 
@@ -64,4 +65,4 @@ package body STM32.FPU is
       return Result;
    end FPSCR;
 
-end STM32.FPU;
+end Cortex_M.FPU;

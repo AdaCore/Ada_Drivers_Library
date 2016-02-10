@@ -44,7 +44,7 @@
 --  May 2014 DocID022708 Rev 4, file "DM00046982.pdf"
 --  especially section 4.6.4
 
-package STM32.FPU is
+package Cortex_M.FPU is
 
    function Sqrt (X : Float) return Float;
 
@@ -53,6 +53,10 @@ package STM32.FPU is
       To_Plus_Infinity,
       To_Minus_Infinity,
       To_Zero);
+
+   type Bits_1  is mod 2**1 with Size => 1;
+   type Bits_2  is mod 2**2 with Size => 2;
+   type Bits_6  is mod 2**6 with Size => 6;
 
    type Status_Control_Register is record
       -- negative condition flag
@@ -114,4 +118,4 @@ package STM32.FPU is
 
    function FPSCR return Status_Control_Register;
 
-end STM32.FPU;
+end Cortex_M.FPU;

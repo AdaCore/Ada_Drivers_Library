@@ -1,0 +1,12 @@
+project STM32F7x extends "../../cortex_m/cortex_m.gpr" is
+
+   for Source_Dirs use Project'Source_Dirs &
+     ("drivers",
+      "svd/stm32f7x",
+      "devices/stm32f7x",
+      "drivers/i2c_stm32f7",
+      "drivers/fmc",
+      "drivers/dma2d",
+      "drivers/ltdc");
+
+end STM32F7x;
