@@ -1,0 +1,32 @@
+with "../../boards/stm32f7_discovery/stm32f7_discovery.gpr";
+
+project Conway is
+
+   RTS : STM32F7_Discovery.RTS_Profile_Type :=
+       external ("RTS", "ravenscar-sfp");
+
+   for Languages use ("Ada");
+
+   for Source_Dirs use ("src", "../common", "../common/gui");
+
+   for Object_Dir use "obj";
+   for Main use ("conway_demo.adb");
+
+   for Target use STM32F7_Discovery'Target;
+   for Runtime ("Ada") use STM32F7_Discovery'Runtime ("Ada");
+
+   type LCH_Type is ("led", "lcd");
+   LCH : LCH_Type := external ("LCH", "lcd");
+
+   case RTS is
+      when "ravenscar-sfp" =>
+         for Source_Dirs use Project'Source_Dirs &
+           ("../common/lch_sfp",
+            "../common/lch_sfp/led");
+      when "ravenscar-full" =>
+         for Source_Dirs use Project'Source_Dirs &
+           ("../common/lch_full",
+            "../common/lch_full/led");
+   end case;
+
+end Conway;

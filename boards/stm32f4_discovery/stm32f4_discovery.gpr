@@ -8,21 +8,5 @@ project STM32F4_Discovery extends "../../ARM/STMicro/STM32/stm32f40x.gpr" is
    for Runtime ("Ada") use RTS & "-stm32f4";
    for Source_Dirs use Project'Source_Dirs &
             ("src/",
-             "../../components/gyro/lis3dsh",
-             "../../ARM/STMicro/STM32/utils/gui");
-
-   type LCH_Type is ("led", "lcd");
-   LCH : LCH_Type := external ("LCH", "lcd");
-
-   case RTS is
-      when "ravenscar-sfp" =>
-         for Source_Dirs use Project'Source_Dirs &
-           ("../../ARM/STMicro/STM32/utils/lch_sfp",
-            "../../ARM/STMicro/STM32/utils/lch_sfp/led");
-      when "ravenscar-full" =>
-         for Source_Dirs use Project'Source_Dirs &
-           ("../../ARM/STMicro/STM32/utils/lch_full",
-            "../../ARM/STMicro/STM32/utils/lch_full/led");
-   end case;
-
+             "../../components/gyro/lis3dsh");
 end STM32F4_Discovery;

@@ -1,34 +1,18 @@
-
 project STM32F429_Discovery extends "../../ARM/STMicro/STM32/stm32f42x.gpr" is
 
-  type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
    RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
 
    for Object_Dir use "obj/";
+   for Target use "arm-eabi";
    for Runtime ("Ada") use RTS & "-stm32f429disco";
    for Source_Dirs use Project'Source_Dirs &
             ("src",
              "../../components/button",
              "../../components/sdram",
-             "../../components/lcd/otm8009a",
+             "../../components/lcd/ili9341",
              "../../components/touch_panel",
-             "../../components/touch_panel/ft6x06",
-             "../../components/gyro/l3gd20",
-             "../../ARM/STMicro/STM32/utils//gui");
-
-   type LCH_Type is ("led", "lcd");
-   LCH : LCH_Type := external ("LCH", "lcd");
-
-   case RTS is
-      when "ravenscar-sfp" =>
-         for Source_Dirs use Project'Source_Dirs &
-           ("../../ARM/STMicro/STM32/utils/lch_sfp",
-            "../../ARM/STMicro/STM32/utils/lch_sfp/led");
-      when "ravenscar-full" =>
-         for Source_Dirs use Project'Source_Dirs &
-           ("../../ARM/STMicro/STM32/utils/lch_full",
-            "../../ARM/STMicro/STM32/utils/lch_full/led");
-   end case;
-
+             "../../components/touch_panel/stmpe811",
+             "../../components/gyro/l3gd20");
 end STM32F429_Discovery;
 

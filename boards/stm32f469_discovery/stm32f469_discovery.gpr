@@ -12,21 +12,6 @@ project STM32F469_Discovery extends "../../ARM/STMicro/STM32/stm32f46_79x.gpr" i
              "../../components/sdram",
              "../../components/lcd/otm8009a",
              "../../components/touch_panel",
-             "../../components/touch_panel/ft6x06",
-             "../../ARM/STMicro/STM32/utils/gui");
-
-   type LCH_Type is ("led", "lcd");
-   LCH : LCH_Type := external ("LCH", "lcd");
-
-   case RTS is
-      when "ravenscar-sfp" =>
-         for Source_Dirs use Project'Source_Dirs &
-           ("../../ARM/STMicro/STM32/utils/lch_sfp",
-            "../../ARM/STMicro/STM32/utils/lch_sfp/led");
-      when "ravenscar-full" =>
-         for Source_Dirs use Project'Source_Dirs &
-           ("../../ARM/STMicro/STM32/utils/lch_full",
-            "../../ARM/STMicro/STM32/utils/lch_full/led");
-   end case;
+             "../../components/touch_panel/ft6x06");
 
 end STM32F469_Discovery;
