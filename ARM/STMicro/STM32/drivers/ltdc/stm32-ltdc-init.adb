@@ -79,8 +79,8 @@ package body Init is
       pragma Attach_Handler
         (Interrupt, STM32_SVD.Interrupts.LCD_TFT_Interrupt);
    private
-      Pending : Boolean := False;
-      Buffers : Pending_Buffers := (others => 0);
+      Not_Pending : Boolean := True;
+      Buffers     : Pending_Buffers := (others => 0);
    end Sync;
 
    protected body Sync is
@@ -93,7 +93,7 @@ package body Init is
          Buffer : Word)
       is
       begin
-         Pending := True;
+         Not_Pending := False;
          LTDC_Periph.IER.LIE := 1;
          LTDC_Periph.LIPCR.LIPOS := 0;
          Buffers (Layer) := Buffer;
@@ -103,7 +103,7 @@ package body Init is
       -- Wait --
       ----------
 
-      entry Wait when not Pending is
+      entry Wait when Not_Pending is
       begin
          null;
       end Wait;
@@ -131,7 +131,7 @@ package body Init is
             exit when LTDC_Periph.SRCR.IMR = 0;
          end loop;
 
-         Pending := False;
+         Not_Pending := True;
          LTDC_Periph.IER.LIE := 1;
       end Apply_Immediate;
 
