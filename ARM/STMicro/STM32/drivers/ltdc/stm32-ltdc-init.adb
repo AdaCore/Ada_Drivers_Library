@@ -62,10 +62,15 @@ package body Init is
    G_Layer2_Reg : aliased Layer_Type
      with Import, Address => LTDC_Periph.L2CR'Address;
 
+   type Pending_Buffers is array (LCD_Layer) of Word;
+
    protected Sync is
-      --  A call to Prepare_Wait_VBR must be followed by a call to
-      --  Wait. Wait until register reload.
-      procedure Prepare_Wait_VBR;
+      --  Sets the next buffer to setup
+      procedure Set_Pending (Layer  : LCD_Layer;
+                             Buffer : Word);
+
+      --  Apply pending buffers without waiting for the interrupt
+      procedure Apply_Immediate;
 
       --  Wait for an interrupt.
       entry Wait;
@@ -74,28 +79,61 @@ package body Init is
       pragma Attach_Handler
         (Interrupt, STM32_SVD.Interrupts.LCD_TFT_Interrupt);
    private
-      Triggered : Boolean := False;
+      Pending : Boolean := False;
+      Buffers : Pending_Buffers := (others => 0);
    end Sync;
 
    protected body Sync is
-      ----------------------
-      -- Prepare_Wait_VBR --
-      ----------------------
+      -----------------
+      -- Set_Pending --
+      -----------------
 
-      procedure Prepare_Wait_VBR is
+      procedure Set_Pending
+        (Layer  : LCD_Layer;
+         Buffer : Word)
+      is
       begin
-         Triggered := False;
-         LTDC_Periph.IER.RRIE := 1;
-      end Prepare_Wait_VBR;
+         Pending := True;
+         LTDC_Periph.IER.LIE := 1;
+         LTDC_Periph.LIPCR.LIPOS := 0;
+         Buffers (Layer) := Buffer;
+      end Set_Pending;
 
       ----------
       -- Wait --
       ----------
 
-      entry Wait when Triggered is
+      entry Wait when not Pending is
       begin
          null;
       end Wait;
+
+      ---------------------
+      -- Apply_Immediate --
+      ---------------------
+
+      procedure Apply_Immediate is
+      begin
+         LTDC_Periph.IER.LIE := 0;
+
+         if Buffers (Layer1) /= 0 then
+            LTDC_Periph.L1CFBAR := Buffers (Layer1);
+            Buffers (Layer1) := 0;
+         end if;
+
+         if Buffers (Layer2) /= 0 then
+            LTDC_Periph.L2CFBAR := Buffers (Layer2);
+            Buffers (Layer2) := 0;
+         end if;
+
+         LTDC_Periph.SRCR.IMR := 1;
+         loop
+            exit when LTDC_Periph.SRCR.IMR = 0;
+         end loop;
+
+         Pending := False;
+         LTDC_Periph.IER.LIE := 1;
+      end Apply_Immediate;
 
       ---------------
       -- Interrupt --
@@ -104,10 +142,10 @@ package body Init is
       procedure Interrupt
       is
       begin
-         LTDC_Periph.IER :=
-           (RRIE => 0, TERRIE => 0, FUIE => 0, LIE => 0, others => <>);
-         LTDC_Periph.ICR.CRRIF := 1;
-         Triggered := True;
+         LTDC_Periph.IER.LIE := 0;
+         LTDC_Periph.ICR.CLIF  := 1;
+
+         Apply_Immediate;
       end Interrupt;
    end Sync;
 
@@ -131,11 +169,12 @@ package body Init is
    procedure Set_Layer_CFBA (Layer : LCD_Layer;
                              FBA   : Frame_Buffer_Access)
    is
-      L : constant Layer_Access := Get_Layer (Layer);
+--        L : constant Layer_Access := Get_Layer (Layer);
       function To_Word is new Ada.Unchecked_Conversion
         (Frame_Buffer_Access, Word);
    begin
-         L.LCFBAR := To_Word (FBA);
+      Sync.Set_Pending (Layer, To_Word (FBA));
+--           L.LCFBAR := To_Word (FBA);
    end Set_Layer_CFBA;
 
    --------------------
@@ -185,21 +224,9 @@ package body Init is
    procedure Reload_Config (Immediate : Boolean) is
    begin
       if Immediate then
-         LTDC_Periph.SRCR.IMR := 1;
-         loop
-            exit when LTDC_Periph.SRCR.IMR = 0;
-         end loop;
+         Sync.Apply_Immediate;
       else
-         LTDC_Periph.SRCR.VBR := 1;
-         if True then
-            Sync.Prepare_Wait_VBR;
-            Sync.Wait;
-         else
-            --  Polling
-            loop
-               exit when LTDC_Periph.SRCR.VBR = 0;
-            end loop;
-         end if;
+         Sync.Wait;
       end if;
    end Reload_Config;
 

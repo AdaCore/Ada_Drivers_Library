@@ -64,6 +64,7 @@ package body STM32.Board is
       Conf.Resistors   := Floating;
 
       Configure_IO (All_LEDs, Conf);
+      All_LEDs_Off;
    end Initialize_LEDs;
 
    --------------------------------

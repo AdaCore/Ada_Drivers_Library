@@ -31,9 +31,8 @@ project STM32 is
    package Builder is
       case Build is
          when "Production" =>
-            for Default_Switches ("Ada") use ("-O3");
          when "Debug" =>
-            for Default_Switches ("Ada") use ("-g", "-O0");
+            for Default_Switches ("Ada") use ("-g");
       end case;
    end Builder;
 
@@ -153,7 +152,7 @@ project STM32 is
          when "Production" =>
             for Default_Switches ("Ada") use ("-O3");
          when "Debug" =>
-            for Default_Switches ("Ada") use ("-g", "-O0");
+            for Default_Switches ("Ada") use ("-O0");
       end case;
       for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
         ("-gnatwa", "-gnatQ", "-gnatw.X");

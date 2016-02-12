@@ -44,14 +44,15 @@ package STM32.DMA2D is
    end record;
 
    for DMA2D_Color use record
-      Alpha at 3 range 0 .. 7;
-      Red   at 2 range 0 .. 7;
-      Green at 1 range 0 .. 7;
       Blue  at 0 range 0 .. 7;
+      Green at 1 range 0 .. 7;
+      Red   at 2 range 0 .. 7;
+      Alpha at 3 range 0 .. 7;
    end record;
 
-   Black : constant DMA2D_Color := (255, 0, 0, 0);
-   White : constant DMA2D_Color := (255, 255, 255, 255);
+   Black       : constant DMA2D_Color := (255, 0, 0, 0);
+   White       : constant DMA2D_Color := (255, 255, 255, 255);
+   Transparent : constant DMA2D_Color := (others => 0);
 
    --  This bit is set and cleared by software. It cannot be modified
    --  while a transfer is ongoing.
@@ -262,7 +263,11 @@ package STM32.DMA2D is
 
    function DMA2D_Color_To_Word
      (Buffer : DMA2D_Buffer; Col : DMA2D_Color)
-      return Word;
+     return Word;
+   --  Translates the DMA2D Color into native buffer color
+
+   procedure DMA2D_Wait_Transfer;
+   --  Makes sure the DMA2D transfers are done
 
 private
 

@@ -193,9 +193,16 @@ package body STM32.SDRAM is
 
    function Reserve (Amount : Word) return System.Address
    is
-      Ret : constant System.Address := System'To_Address (G_Base_Addr);
+      Ret          : constant System.Address :=
+                       System'To_Address (G_Base_Addr);
+      Rounded_Size : Word;
+
    begin
-      G_Base_Addr := G_Base_Addr + Amount;
+      Rounded_Size := Amount + Standard'Maximum_Alignment;
+      Rounded_Size :=
+        Rounded_Size - Rounded_Size rem Standard'Maximum_Alignment;
+
+      G_Base_Addr := G_Base_Addr + Rounded_Size;
 
       return Ret;
    end Reserve;

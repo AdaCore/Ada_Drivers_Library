@@ -45,8 +45,8 @@ package body STM32.DMA2D is
      (Col : DMA2D_Color; CM : DMA2D_Color_Mode)
       return Word;
 
-   DMA2D_Wait_Transfer : DMA2D_Sync_Procedure := null;
-   DMA2D_Init_Transfer : DMA2D_Sync_Procedure := null;
+   DMA2D_Wait_Transfer_Int : DMA2D_Sync_Procedure := null;
+   DMA2D_Init_Transfer_Int : DMA2D_Sync_Procedure := null;
 
    --------------
    -- To_OCOLR --
@@ -92,7 +92,7 @@ package body STM32.DMA2D is
 
    function DMA2D_Initialized return Boolean is
    begin
-      return DMA2D_Init_Transfer /= null;
+      return DMA2D_Init_Transfer_Int /= null;
    end DMA2D_Initialized;
 
    ------------------
@@ -103,8 +103,8 @@ package body STM32.DMA2D is
    begin
       RCC_Periph.AHB1ENR.DMA2DEN := 1;
       RCC_Periph.AHB1ENR.DMA2DEN := 0;
-      DMA2D_Init_Transfer := null;
-      DMA2D_Wait_Transfer := null;
+      DMA2D_Init_Transfer_Int := null;
+      DMA2D_Wait_Transfer_Int := null;
    end DMA2D_DeInit;
 
    ----------------
@@ -119,8 +119,8 @@ package body STM32.DMA2D is
       if DMA2D_Initialized then
          return;
       end if;
-      DMA2D_Init_Transfer := Init;
-      DMA2D_Wait_Transfer := Wait;
+      DMA2D_Init_Transfer_Int := Init;
+      DMA2D_Wait_Transfer_Int := Wait;
 
       RCC_Periph.AHB1ENR.DMA2DEN := 1;
       RCC_Periph.AHB1RSTR.DMA2RST := 1;
@@ -151,7 +151,7 @@ package body STM32.DMA2D is
    is
       function Conv is new Ada.Unchecked_Conversion (Word, OCOLR_Register);
    begin
-      DMA2D_Wait_Transfer.all;
+      DMA2D_Wait_Transfer_Int.all;
 
       DMA2D_Periph.CR.MODE   := DMA2D_MODE'Enum_Rep (R2M);
       DMA2D_Periph.OPFCCR.CM := As_UInt3 (Buffer.Color_Mode);
@@ -162,9 +162,9 @@ package body STM32.DMA2D is
                                  PL     => UInt14 (Buffer.Width),
                                  others => <>);
 
-      DMA2D_Init_Transfer.all;
+      DMA2D_Init_Transfer_Int.all;
       if Synchronous then
-         DMA2D_Wait_Transfer.all;
+         DMA2D_Wait_Transfer_Int.all;
       end if;
    end DMA2D_Fill;
 
@@ -226,7 +226,7 @@ package body STM32.DMA2D is
                         (Buffer.Color_Mode)));
 
          begin
-            DMA2D_Wait_Transfer.all;
+            DMA2D_Wait_Transfer_Int.all;
 
             DMA2D_Periph.CR.MODE := DMA2D_MODE'Enum_Rep (R2M);
             DMA2D_Periph.OPFCCR :=
@@ -238,9 +238,9 @@ package body STM32.DMA2D is
             DMA2D_Periph.NLR :=
               (NL => Short (Height), PL => UInt14 (Width), others => <>);
 
-            DMA2D_Init_Transfer.all;
+            DMA2D_Init_Transfer_Int.all;
             if Synchronous then
-               DMA2D_Wait_Transfer.all;
+               DMA2D_Wait_Transfer_Int.all;
             end if;
          end;
       end if;
@@ -297,7 +297,7 @@ package body STM32.DMA2D is
                   System.Storage_Elements.Storage_Offset (Bg_Idx * Bg_BPP);
 
    begin
-      DMA2D_Wait_Transfer.all;
+      DMA2D_Wait_Transfer_Int.all;
 
       if Bg_Buffer /= Null_Buffer then
          --  PFC and blending
@@ -348,9 +348,9 @@ package body STM32.DMA2D is
                            PL     => UInt14 (Width),
                            others => <>);
 
-      DMA2D_Init_Transfer.all;
+      DMA2D_Init_Transfer_Int.all;
       if Synchronous then
-         DMA2D_Wait_Transfer.all;
+         DMA2D_Wait_Transfer_Int.all;
       end if;
    end DMA2D_Copy_Rect;
 
@@ -511,7 +511,7 @@ package body STM32.DMA2D is
          return;
       end if;
 
-      DMA2D_Wait_Transfer.all;
+      DMA2D_Wait_Transfer_Int.all;
 
       DMA2D_Periph.CR.MODE   := DMA2D_MODE'Enum_Rep (R2M);
       DMA2D_Periph.OPFCCR.CM := As_UInt3 (Buffer.Color_Mode);
@@ -520,9 +520,9 @@ package body STM32.DMA2D is
       DMA2D_Periph.OOR       := (LO => 1, others => <>);
       DMA2D_Periph.NLR       := (NL => 1, PL => 1, others => <>);
 
-      DMA2D_Init_Transfer.all;
+      DMA2D_Init_Transfer_Int.all;
       if Synchronous then
-         DMA2D_Wait_Transfer.all;
+         DMA2D_Wait_Transfer_Int.all;
       end if;
    end DMA2D_Set_Pixel;
 
@@ -552,7 +552,7 @@ package body STM32.DMA2D is
          return;
       end if;
 
-      DMA2D_Wait_Transfer.all;
+      DMA2D_Wait_Transfer_Int.all;
 
       --  PFC and blending
       DMA2D_Periph.CR.MODE := DMA2D_MODE'Enum_Rep (M2M_BLEND);
@@ -588,10 +588,19 @@ package body STM32.DMA2D is
                            PL     => 1,
                            others => <>);
 
-      DMA2D_Init_Transfer.all;
+      DMA2D_Init_Transfer_Int.all;
       if Synchronous then
-         DMA2D_Wait_Transfer.all;
+         DMA2D_Wait_Transfer_Int.all;
       end if;
    end DMA2D_Set_Pixel_Blend;
+
+   -------------------------
+   -- DMA2D_Wait_Transfer --
+   -------------------------
+
+   procedure DMA2D_Wait_Transfer is
+   begin
+      DMA2D_Wait_Transfer_Int.all;
+   end DMA2D_Wait_Transfer;
 
 end STM32.DMA2D;

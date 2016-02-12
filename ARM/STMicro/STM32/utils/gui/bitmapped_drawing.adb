@@ -61,21 +61,11 @@ package body Bitmapped_Drawing is
       for H in 0 .. Char_Height (Font) - 1 loop
          for W in 0 .. Char_Width (Font) - 1 loop
             if (Data (Font, Char, H) and Mask (Font, W)) /= 0 then
-               if Foreground.Alpha /= 255 then
-                  DMA2D_Set_Pixel_Blend
-                    (Buffer, Start.X + W, Start.Y + H, Foreground);
-               else
-                  DMA2D_Set_Pixel
-                    (Buffer, Start.X + W, Start.Y + H, Foreground);
-               end if;
+               DMA2D_Set_Pixel
+                 (Buffer, Start.X + W, Start.Y + H, Foreground);
             else
-               if Background.Alpha /= 255 then
-                  DMA2D_Set_Pixel_Blend
-                    (Buffer, Start.X + W, Start.Y + H, Background);
-               else
-                  DMA2D_Set_Pixel
-                    (Buffer, Start.X + W, Start.Y + H, Background);
-               end if;
+               DMA2D_Set_Pixel
+                 (Buffer, Start.X + W, Start.Y + H, Background);
             end if;
          end loop;
       end loop;
@@ -96,7 +86,7 @@ package body Bitmapped_Drawing is
       Count : Natural := 0;
    begin
       for C of Msg loop
-         exit when Start.X > Buffer.Width;
+         exit when Start.X + Count * Char_Width (Font) > Buffer.Width;
          Draw_Char
            (Buffer,
             (Start.X + Count * Char_Width (Font), Start.Y),

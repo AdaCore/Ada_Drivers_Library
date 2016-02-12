@@ -46,6 +46,7 @@ package STM32.DSI is
      (One_Data_Lane,
       Two_Data_Lanes)
      with Size => 2;
+   --  Values 2#10# and 2#11# are reserved
 
    subtype DSI_PLLN_Div is UInt7 range 10 .. 125;
    subtype DSI_PLL_IDF is UInt4 range 0 .. 7;
@@ -95,9 +96,31 @@ package STM32.DSI is
    type DSI_Polarity is
      (Active_High,
       Active_Low)
+     with Size => 1;
+
+   type DSI_Edge is
+     (Falling_Edge,
+      Rising_Edge)
+     with Size => 1;
+
+   type DSI_TE_Polarity is
+     (Rising_Edge,
+      Falling_Edge)
      with size => 1;
 
-   procedure DSI_Setup_Video
+   type DSI_Tearing_Effect_Source is
+     (TE_DSI_Link,
+      TE_External)
+     with Size => 1;
+
+   type DSI_Flow_Control is
+     (Flow_Control_CRC_RX,
+      Flow_Control_ECC_RX,
+      Flow_Control_BTA,
+      Flow_Control_EOTP_RX,
+      Flow_Control_EOTP_TX);
+
+   procedure DSI_Setup_Video_Mode
      (Virtual_Channel             : DSI_Virtual_Channel_ID;
       Color_Coding                : DSI_Color_Mode;
       Loosely_Packed              : Boolean;
@@ -109,12 +132,12 @@ package STM32.DSI is
       VSync_Polarity              : DSI_Polarity;
       DataEn_Polarity             : DSI_Polarity;
       HSync_Active_Duration       : Bits_13;
-      HSync_BackPorch             : Bits_13;
-      HLine_Duration              : Bits_15;
+      Horizontal_BackPorch        : Bits_13;
+      Horizontal_Line             : Bits_15;
       VSync_Active_Duration       : Bits_10;
-      VSync_BackPorch             : Bits_10;
-      VSync_FrontPorch            : Bits_10;
-      Vertical_Active_Duration    : Bits_14;
+      Vertical_BackPorch          : Bits_10;
+      Vertical_FrontPorch         : Bits_10;
+      Vertical_Active             : Bits_14;
       LP_Command_Enabled          : Boolean;
       LP_Largest_Packet_Size      : Byte;
       LP_VACT_Largest_Packet_Size : Byte;
@@ -126,8 +149,40 @@ package STM32.DSI is
       LP_V_Sync_Active_Enable     : Boolean;
       Frame_BTA_Ack_Enable        : Boolean);
 
+   procedure DSI_Setup_Adapted_Command_Mode
+     (Virtual_Channel             : DSI_Virtual_Channel_ID;
+      Color_Coding                : DSI_Color_Mode;
+      Command_Size                : Short;
+      Tearing_Effect_Source       : DSI_Tearing_Effect_Source;
+      Tearing_Effect_Polarity     : DSI_TE_Polarity;
+      HSync_Polarity              : DSI_Polarity;
+      VSync_Polarity              : DSI_Polarity;
+      DataEn_Polarity             : DSI_Polarity;
+      VSync_Edge                  : DSI_Edge;
+      Automatic_Refresh           : Boolean;
+      TE_Acknowledge_Request      : Boolean);
+
+   procedure DSI_Setup_Command
+     (LP_Gen_Short_Write_No_P  : Boolean := True;
+      LP_Gen_Short_Write_One_P : Boolean := True;
+      LP_Gen_Short_Write_Two_P : Boolean := True;
+      LP_Gen_Short_Read_No_P   : Boolean := True;
+      LP_Gen_Short_Read_One_P  : Boolean := True;
+      LP_Gen_Short_Read_Two_P  : Boolean := True;
+      LP_Gen_Long_Write        : Boolean := True;
+      LP_DCS_Short_Write_No_P  : Boolean := True;
+      LP_DCS_Short_Write_One_P : Boolean := True;
+      LP_DCS_Short_Read_No_P   : Boolean := True;
+      LP_DCS_Long_Write        : Boolean := True;
+      LP_Max_Read_Packet       : Boolean := False;
+      Acknowledge_Request      : Boolean := False);
+
+   procedure DSI_Setup_Flow_Control
+     (Flow_Control : DSI_Flow_Control);
+
    procedure DSI_Start;
    procedure DSI_Stop;
+   procedure DSI_Refresh;
 
    type DSI_Data is array (Positive range <>) of Byte;
 
