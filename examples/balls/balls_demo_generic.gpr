@@ -1,9 +1,8 @@
-with "../../boards/stm32f469_discovery/stm32f469_discovery.gpr";
 
-project Balls_Demo is
+project Balls_Demo_Generic is
 
-   RTS : STM32F469_Discovery.RTS_Profile_Type :=
-       external ("RTS", "ravenscar-sfp");
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
 
    type LOADER_Type is
       ("RAM", "ROM");
@@ -12,9 +11,6 @@ project Balls_Demo is
    for Languages use ("Ada");
    for Main use ("demo.adb");
    for Source_Dirs use ("src", "../common", "../common/gui");
-   for Object_Dir use "obj";
-   for Target use STM32F469_Discovery'Target;
-   for Runtime ("Ada") use STM32F469_Discovery'Runtime ("Ada");
 
    package Compiler is
       for Default_Switches ("ada") use ("-g", "-O2", "-gnatwa", "-gnatQ", "-gnatw.X");
@@ -43,4 +39,4 @@ project Balls_Demo is
             "../common/lch_full/led");
    end case;
 
-end Balls_Demo;
+end Balls_Demo_Generic;
