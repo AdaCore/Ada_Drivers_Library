@@ -1,11 +1,7 @@
 project STM32F469_Discovery extends "../../ARM/STMicro/STM32/stm32f46_79x.gpr" is
 
-   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
-   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
-
    for Object_Dir use "obj/";
    for Target use "arm-eabi";
-   for Runtime ("Ada") use RTS & "-stm32f469disco";
    for Source_Dirs use Project'Source_Dirs &
             ("src/",
              "../../components/button",
