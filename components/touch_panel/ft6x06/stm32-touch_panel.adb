@@ -143,7 +143,7 @@ package body STM32.Touch_Panel is
 
       Reset (TP_I2C);
 
-      Configure_Alternate_Function (Pins, GPIO_AF_I2C1);
+      Configure_Alternate_Function (Pins, GPIO_AF_I2C);
       Configure_IO (Pins,
                     (Speed       => Speed_25MHz,
                      Mode        => Mode_AF,

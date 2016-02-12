@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F46_79x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.DCMI is
@@ -12,26 +13,20 @@ package STM32_SVD.DCMI is
    -- Registers --
    ---------------
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_CAPTURE_Field is STM32_SVD.Bit;
-
    subtype CR_CM_Field is STM32_SVD.Bit;
-
    subtype CR_CROP_Field is STM32_SVD.Bit;
-
    subtype CR_JPEG_Field is STM32_SVD.Bit;
-
    subtype CR_ESS_Field is STM32_SVD.Bit;
-
    subtype CR_PCKPOL_Field is STM32_SVD.Bit;
-
    subtype CR_HSPOL_Field is STM32_SVD.Bit;
-
    subtype CR_VSPOL_Field is STM32_SVD.Bit;
-
    subtype CR_FCRC_Field is STM32_SVD.UInt2;
-
    subtype CR_EDM_Field is STM32_SVD.UInt2;
-
    subtype CR_ENABLE_Field is STM32_SVD.Bit;
 
    --  control register 1
@@ -82,10 +77,12 @@ package STM32_SVD.DCMI is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR_HSYNC_Field is STM32_SVD.Bit;
-
    subtype SR_VSYNC_Field is STM32_SVD.Bit;
-
    subtype SR_FNE_Field is STM32_SVD.Bit;
 
    --  status register
@@ -109,14 +106,14 @@ package STM32_SVD.DCMI is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
+   ------------------
+   -- RIS_Register --
+   ------------------
+
    subtype RIS_FRAME_RIS_Field is STM32_SVD.Bit;
-
    subtype RIS_OVR_RIS_Field is STM32_SVD.Bit;
-
    subtype RIS_ERR_RIS_Field is STM32_SVD.Bit;
-
    subtype RIS_VSYNC_RIS_Field is STM32_SVD.Bit;
-
    subtype RIS_LINE_RIS_Field is STM32_SVD.Bit;
 
    --  raw interrupt status register
@@ -146,14 +143,14 @@ package STM32_SVD.DCMI is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
+   ------------------
+   -- IER_Register --
+   ------------------
+
    subtype IER_FRAME_IE_Field is STM32_SVD.Bit;
-
    subtype IER_OVR_IE_Field is STM32_SVD.Bit;
-
    subtype IER_ERR_IE_Field is STM32_SVD.Bit;
-
    subtype IER_VSYNC_IE_Field is STM32_SVD.Bit;
-
    subtype IER_LINE_IE_Field is STM32_SVD.Bit;
 
    --  interrupt enable register
@@ -183,14 +180,14 @@ package STM32_SVD.DCMI is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
+   ------------------
+   -- MIS_Register --
+   ------------------
+
    subtype MIS_FRAME_MIS_Field is STM32_SVD.Bit;
-
    subtype MIS_OVR_MIS_Field is STM32_SVD.Bit;
-
    subtype MIS_ERR_MIS_Field is STM32_SVD.Bit;
-
    subtype MIS_VSYNC_MIS_Field is STM32_SVD.Bit;
-
    subtype MIS_LINE_MIS_Field is STM32_SVD.Bit;
 
    --  masked interrupt status register
@@ -220,14 +217,14 @@ package STM32_SVD.DCMI is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
+   ------------------
+   -- ICR_Register --
+   ------------------
+
    subtype ICR_FRAME_ISC_Field is STM32_SVD.Bit;
-
    subtype ICR_OVR_ISC_Field is STM32_SVD.Bit;
-
    subtype ICR_ERR_ISC_Field is STM32_SVD.Bit;
-
    subtype ICR_VSYNC_ISC_Field is STM32_SVD.Bit;
-
    subtype ICR_LINE_ISC_Field is STM32_SVD.Bit;
 
    --  interrupt clear register
@@ -257,12 +254,13 @@ package STM32_SVD.DCMI is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
+   -------------------
+   -- ESCR_Register --
+   -------------------
+
    subtype ESCR_FSC_Field is STM32_SVD.Byte;
-
    subtype ESCR_LSC_Field is STM32_SVD.Byte;
-
    subtype ESCR_LEC_Field is STM32_SVD.Byte;
-
    subtype ESCR_FEC_Field is STM32_SVD.Byte;
 
    --  embedded synchronization code register
@@ -286,12 +284,13 @@ package STM32_SVD.DCMI is
       FEC at 0 range 24 .. 31;
    end record;
 
+   -------------------
+   -- ESUR_Register --
+   -------------------
+
    subtype ESUR_FSU_Field is STM32_SVD.Byte;
-
    subtype ESUR_LSU_Field is STM32_SVD.Byte;
-
    subtype ESUR_LEU_Field is STM32_SVD.Byte;
-
    subtype ESUR_FEU_Field is STM32_SVD.Byte;
 
    --  embedded synchronization unmask register
@@ -315,8 +314,11 @@ package STM32_SVD.DCMI is
       FEU at 0 range 24 .. 31;
    end record;
 
-   subtype CWSTRT_HOFFCNT_Field is STM32_SVD.UInt14;
+   ---------------------
+   -- CWSTRT_Register --
+   ---------------------
 
+   subtype CWSTRT_HOFFCNT_Field is STM32_SVD.UInt14;
    subtype CWSTRT_VST_Field is STM32_SVD.UInt13;
 
    --  crop window start
@@ -340,8 +342,11 @@ package STM32_SVD.DCMI is
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
-   subtype CWSIZE_CAPCNT_Field is STM32_SVD.UInt14;
+   ---------------------
+   -- CWSIZE_Register --
+   ---------------------
 
+   subtype CWSIZE_CAPCNT_Field is STM32_SVD.UInt14;
    subtype CWSIZE_VLINE_Field is STM32_SVD.UInt14;
 
    --  crop window size
@@ -365,39 +370,36 @@ package STM32_SVD.DCMI is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   subtype DR_Byte0_Field is STM32_SVD.Byte;
+   -----------------
+   -- DR_Register --
+   -----------------
 
-   type Byte_Field_Array is array (0 .. 3) of DR_Byte0_Field
+   --  DR_Byte array element
+   subtype DR_Byte_Element is STM32_SVD.Byte;
+
+   --  DR_Byte array
+   type DR_Byte_Field_Array is array (0 .. 3) of DR_Byte_Element
      with Component_Size => 8, Size => 32;
 
-   --  Type definition for Byte
-   type Byte_Union (As_Array : Boolean := False) is record
+   --  data register
+   type DR_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of Byte0
+            --  Byte as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of Byte0
-            Arr : Byte_Field_Array;
+            --  Byte as an array
+            Arr : DR_Byte_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
-
-   for Byte_Union use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
-   end record;
-
-   --  data register
-   type DR_Register is record
-      --  Data byte 0
-      Byte : Byte_Union := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for DR_Register use record
-      Byte at 0 range 0 .. 31;
+      Val at 0 range 0 .. 31;
+      Arr at 0 range 0 .. 31;
    end record;
 
    -----------------
@@ -447,6 +449,6 @@ package STM32_SVD.DCMI is
 
    --  Digital camera interface
    DCMI_Periph : aliased DCMI_Peripheral
-     with Import, Address => System'To_Address(16#50050000#);
+     with Import, Address => System'To_Address (16#50050000#);
 
 end STM32_SVD.DCMI;

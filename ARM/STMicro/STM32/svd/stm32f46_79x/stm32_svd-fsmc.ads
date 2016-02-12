@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F46_79x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.FSMC is
@@ -12,32 +13,23 @@ package STM32_SVD.FSMC is
    -- Registers --
    ---------------
 
+   -------------------
+   -- BCR1_Register --
+   -------------------
+
    subtype BCR1_MBKEN_Field is STM32_SVD.Bit;
-
    subtype BCR1_MUXEN_Field is STM32_SVD.Bit;
-
    subtype BCR1_MTYP_Field is STM32_SVD.UInt2;
-
    subtype BCR1_MWID_Field is STM32_SVD.UInt2;
-
    subtype BCR1_FACCEN_Field is STM32_SVD.Bit;
-
    subtype BCR1_BURSTEN_Field is STM32_SVD.Bit;
-
    subtype BCR1_WAITPOL_Field is STM32_SVD.Bit;
-
    subtype BCR1_WAITCFG_Field is STM32_SVD.Bit;
-
    subtype BCR1_WREN_Field is STM32_SVD.Bit;
-
    subtype BCR1_WAITEN_Field is STM32_SVD.Bit;
-
    subtype BCR1_EXTMOD_Field is STM32_SVD.Bit;
-
    subtype BCR1_ASYNCWAIT_Field is STM32_SVD.Bit;
-
    subtype BCR1_CBURSTRW_Field is STM32_SVD.Bit;
-
    subtype BCR1_CCLKEN_Field is STM32_SVD.Bit;
 
    --  SRAM/NOR-Flash chip-select control register 1
@@ -103,18 +95,16 @@ package STM32_SVD.FSMC is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
+   ------------------
+   -- BTR_Register --
+   ------------------
+
    subtype BTR1_ADDSET_Field is STM32_SVD.UInt4;
-
    subtype BTR1_ADDHLD_Field is STM32_SVD.UInt4;
-
    subtype BTR1_DATAST_Field is STM32_SVD.Byte;
-
    subtype BTR1_BUSTURN_Field is STM32_SVD.UInt4;
-
    subtype BTR1_CLKDIV_Field is STM32_SVD.UInt4;
-
    subtype BTR1_DATLAT_Field is STM32_SVD.UInt4;
-
    subtype BTR1_ACCMOD_Field is STM32_SVD.UInt2;
 
    --  SRAM/NOR-Flash chip-select timing register 1
@@ -150,32 +140,23 @@ package STM32_SVD.FSMC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
+   ------------------
+   -- BCR_Register --
+   ------------------
+
    subtype BCR2_MBKEN_Field is STM32_SVD.Bit;
-
    subtype BCR2_MUXEN_Field is STM32_SVD.Bit;
-
    subtype BCR2_MTYP_Field is STM32_SVD.UInt2;
-
    subtype BCR2_MWID_Field is STM32_SVD.UInt2;
-
    subtype BCR2_FACCEN_Field is STM32_SVD.Bit;
-
    subtype BCR2_BURSTEN_Field is STM32_SVD.Bit;
-
    subtype BCR2_WAITPOL_Field is STM32_SVD.Bit;
-
    subtype BCR2_WRAPMOD_Field is STM32_SVD.Bit;
-
    subtype BCR2_WAITCFG_Field is STM32_SVD.Bit;
-
    subtype BCR2_WREN_Field is STM32_SVD.Bit;
-
    subtype BCR2_WAITEN_Field is STM32_SVD.Bit;
-
    subtype BCR2_EXTMOD_Field is STM32_SVD.Bit;
-
    subtype BCR2_ASYNCWAIT_Field is STM32_SVD.Bit;
-
    subtype BCR2_CBURSTRW_Field is STM32_SVD.Bit;
 
    --  SRAM/NOR-Flash chip-select control register 2
@@ -238,20 +219,17 @@ package STM32_SVD.FSMC is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
+   ------------------
+   -- PCR_Register --
+   ------------------
+
    subtype PCR_PWAITEN_Field is STM32_SVD.Bit;
-
    subtype PCR_PBKEN_Field is STM32_SVD.Bit;
-
    subtype PCR_PTYP_Field is STM32_SVD.Bit;
-
    subtype PCR_PWID_Field is STM32_SVD.UInt2;
-
    subtype PCR_ECCEN_Field is STM32_SVD.Bit;
-
    subtype PCR_TCLR_Field is STM32_SVD.UInt4;
-
    subtype PCR_TAR_Field is STM32_SVD.UInt4;
-
    subtype PCR_ECCPS_Field is STM32_SVD.UInt3;
 
    --  PC Card/NAND Flash control register 3
@@ -296,18 +274,16 @@ package STM32_SVD.FSMC is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR_IRS_Field is STM32_SVD.Bit;
-
    subtype SR_ILS_Field is STM32_SVD.Bit;
-
    subtype SR_IFS_Field is STM32_SVD.Bit;
-
    subtype SR_IREN_Field is STM32_SVD.Bit;
-
    subtype SR_ILEN_Field is STM32_SVD.Bit;
-
    subtype SR_IFEN_Field is STM32_SVD.Bit;
-
    subtype SR_FEMPT_Field is STM32_SVD.Bit;
 
    --  FIFO status and interrupt register 3
@@ -343,12 +319,13 @@ package STM32_SVD.FSMC is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   -------------------
+   -- PMEM_Register --
+   -------------------
+
    subtype PMEM_MEMSETx_Field is STM32_SVD.Byte;
-
    subtype PMEM_MEMWAITx_Field is STM32_SVD.Byte;
-
    subtype PMEM_MEMHOLDx_Field is STM32_SVD.Byte;
-
    subtype PMEM_MEMHIZx_Field is STM32_SVD.Byte;
 
    --  Common memory space timing register 3
@@ -372,12 +349,13 @@ package STM32_SVD.FSMC is
       MEMHIZx  at 0 range 24 .. 31;
    end record;
 
+   -------------------
+   -- PATT_Register --
+   -------------------
+
    subtype PATT_ATTSETx_Field is STM32_SVD.Byte;
-
    subtype PATT_ATTWAITx_Field is STM32_SVD.Byte;
-
    subtype PATT_ATTHOLDx_Field is STM32_SVD.Byte;
-
    subtype PATT_ATTHIZx_Field is STM32_SVD.Byte;
 
    --  Attribute memory space timing register 3
@@ -401,16 +379,15 @@ package STM32_SVD.FSMC is
       ATTHIZx  at 0 range 24 .. 31;
    end record;
 
+   -------------------
+   -- BWTR_Register --
+   -------------------
+
    subtype BWTR1_ADDSET_Field is STM32_SVD.UInt4;
-
    subtype BWTR1_ADDHLD_Field is STM32_SVD.UInt4;
-
    subtype BWTR1_DATAST_Field is STM32_SVD.Byte;
-
    subtype BWTR1_CLKDIV_Field is STM32_SVD.UInt4;
-
    subtype BWTR1_DATLAT_Field is STM32_SVD.UInt4;
-
    subtype BWTR1_ACCMOD_Field is STM32_SVD.UInt2;
 
    --  SRAM/NOR-Flash write timing registers 1
@@ -446,22 +423,18 @@ package STM32_SVD.FSMC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
+   -------------------
+   -- SDCR_Register --
+   -------------------
+
    subtype SDCR1_NC_Field is STM32_SVD.UInt2;
-
    subtype SDCR1_NR_Field is STM32_SVD.UInt2;
-
    subtype SDCR1_MWID_Field is STM32_SVD.UInt2;
-
    subtype SDCR1_NB_Field is STM32_SVD.Bit;
-
    subtype SDCR1_CAS_Field is STM32_SVD.UInt2;
-
    subtype SDCR1_WP_Field is STM32_SVD.Bit;
-
    subtype SDCR1_SDCLK_Field is STM32_SVD.UInt2;
-
    subtype SDCR1_RBURST_Field is STM32_SVD.Bit;
-
    subtype SDCR1_RPIPE_Field is STM32_SVD.UInt2;
 
    --  SDRAM Control Register 1
@@ -503,18 +476,16 @@ package STM32_SVD.FSMC is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
+   -------------------
+   -- SDTR_Register --
+   -------------------
+
    subtype SDTR1_TMRD_Field is STM32_SVD.UInt4;
-
    subtype SDTR1_TXSR_Field is STM32_SVD.UInt4;
-
    subtype SDTR1_TRAS_Field is STM32_SVD.UInt4;
-
    subtype SDTR1_TRC_Field is STM32_SVD.UInt4;
-
    subtype SDTR1_TWR_Field is STM32_SVD.UInt4;
-
    subtype SDTR1_TRP_Field is STM32_SVD.UInt4;
-
    subtype SDTR1_TRCD_Field is STM32_SVD.UInt4;
 
    --  SDRAM Timing register 1
@@ -550,33 +521,44 @@ package STM32_SVD.FSMC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   --------------------
+   -- SDCMR_Register --
+   --------------------
+
    subtype SDCMR_MODE_Field is STM32_SVD.UInt3;
 
-   subtype SDCMR_CTB2_Field is STM32_SVD.Bit;
+   ---------------
+   -- SDCMR.CTB --
+   ---------------
 
-   type CTB_Field_Array is array (0 .. 1) of SDCMR_CTB2_Field
+   --  SDCMR_CTB array element
+   subtype SDCMR_CTB_Element is STM32_SVD.Bit;
+
+   --  SDCMR_CTB array
+   type SDCMR_CTB_Field_Array is array (0 .. 1) of SDCMR_CTB_Element
      with Component_Size => 1, Size => 2;
 
-   --  Type definition for CTB
-   type CTB_Union (As_Array : Boolean := False) is record
+   --  Type definition for SDCMR_CTB
+   type SDCMR_CTB_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of CTB2
+            --  CTB as a value
             Val : STM32_SVD.UInt2;
          when True =>
-            --  Array vision of CTB2
-            Arr : CTB_Field_Array;
+            --  CTB as an array
+            Arr : SDCMR_CTB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 2;
 
-   for CTB_Union use record
+   for SDCMR_CTB_Field use record
       Val at 0 range 0 .. 1;
       Arr at 0 range 0 .. 1;
    end record;
 
    subtype SDCMR_NRFS_Field is STM32_SVD.UInt4;
-
    subtype SDCMR_MRD_Field is STM32_SVD.UInt13;
 
    --  SDRAM Command Mode register
@@ -584,7 +566,7 @@ package STM32_SVD.FSMC is
       --  Command mode
       MODE           : SDCMR_MODE_Field := 16#0#;
       --  Command target bank 2
-      CTB            : CTB_Union := (As_Array => False, Val => 16#0#);
+      CTB            : SDCMR_CTB_Field := (As_Array => False, Val => 16#0#);
       --  Number of Auto-refresh
       NRFS           : SDCMR_NRFS_Field := 16#0#;
       --  Mode Register definition
@@ -603,10 +585,12 @@ package STM32_SVD.FSMC is
       Reserved_22_31 at 0 range 22 .. 31;
    end record;
 
+   --------------------
+   -- SDRTR_Register --
+   --------------------
+
    subtype SDRTR_CRE_Field is STM32_SVD.Bit;
-
    subtype SDRTR_COUNT_Field is STM32_SVD.UInt13;
-
    subtype SDRTR_REIE_Field is STM32_SVD.Bit;
 
    --  SDRAM Refresh Timer register
@@ -630,27 +614,39 @@ package STM32_SVD.FSMC is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
+   -------------------
+   -- SDSR_Register --
+   -------------------
+
    subtype SDSR_RE_Field is STM32_SVD.Bit;
 
-   subtype SDSR_MODES1_Field is STM32_SVD.UInt2;
+   ----------------
+   -- SDSR.MODES --
+   ----------------
 
-   type MODES_Field_Array is array (0 .. 1) of SDSR_MODES1_Field
+   --  SDSR_MODES array element
+   subtype SDSR_MODES_Element is STM32_SVD.UInt2;
+
+   --  SDSR_MODES array
+   type SDSR_MODES_Field_Array is array (0 .. 1) of SDSR_MODES_Element
      with Component_Size => 2, Size => 4;
 
-   --  Type definition for MODES
-   type MODES_Union (As_Array : Boolean := False) is record
+   --  Type definition for SDSR_MODES
+   type SDSR_MODES_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of MODES1
+            --  MODES as a value
             Val : STM32_SVD.UInt4;
          when True =>
-            --  Array vision of MODES1
-            Arr : MODES_Field_Array;
+            --  MODES as an array
+            Arr : SDSR_MODES_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 4;
 
-   for MODES_Union use record
+   for SDSR_MODES_Field use record
       Val at 0 range 0 .. 3;
       Arr at 0 range 0 .. 3;
    end record;
@@ -662,7 +658,7 @@ package STM32_SVD.FSMC is
       --  Refresh error flag
       RE            : SDSR_RE_Field := 16#0#;
       --  Status Mode for Bank 1
-      MODES         : MODES_Union := (As_Array => False, Val => 16#0#);
+      MODES         : SDSR_MODES_Field := (As_Array => False, Val => 16#0#);
       --  Busy status
       BUSY          : SDSR_BUSY_Field := 16#0#;
       --  unspecified
@@ -764,6 +760,6 @@ package STM32_SVD.FSMC is
 
    --  Flexible memory controller
    FMC_Periph : aliased FMC_Peripheral
-     with Import, Address => System'To_Address(16#A0000000#);
+     with Import, Address => System'To_Address (16#A0000000#);
 
 end STM32_SVD.FSMC;

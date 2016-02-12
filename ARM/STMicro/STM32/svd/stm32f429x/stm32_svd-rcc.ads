@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F429x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.RCC is
@@ -12,28 +13,21 @@ package STM32_SVD.RCC is
    -- Registers --
    ---------------
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_HSION_Field is STM32_SVD.Bit;
-
    subtype CR_HSIRDY_Field is STM32_SVD.Bit;
-
    subtype CR_HSITRIM_Field is STM32_SVD.UInt5;
-
    subtype CR_HSICAL_Field is STM32_SVD.Byte;
-
    subtype CR_HSEON_Field is STM32_SVD.Bit;
-
    subtype CR_HSERDY_Field is STM32_SVD.Bit;
-
    subtype CR_HSEBYP_Field is STM32_SVD.Bit;
-
    subtype CR_CSSON_Field is STM32_SVD.Bit;
-
    subtype CR_PLLON_Field is STM32_SVD.Bit;
-
    subtype CR_PLLRDY_Field is STM32_SVD.Bit;
-
    subtype CR_PLLI2SON_Field is STM32_SVD.Bit;
-
    subtype CR_PLLI2SRDY_Field is STM32_SVD.Bit;
 
    --  clock control register
@@ -90,111 +84,27 @@ package STM32_SVD.RCC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype PLLCFGR_PLLM0_Field is STM32_SVD.Bit;
+   ----------------------
+   -- PLLCFGR_Register --
+   ----------------------
 
-   type PLLM_Field_Array is array (0 .. 5) of PLLCFGR_PLLM0_Field
-     with Component_Size => 1, Size => 6;
-
-   --  Type definition for PLLM
-   type PLLM_Union (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of PLLM0
-            Val : STM32_SVD.UInt6;
-         when True =>
-            --  Array vision of PLLM0
-            Arr : PLLM_Field_Array;
-      end case;
-   end record
-     with Unchecked_Union, Size => 6;
-
-   for PLLM_Union use record
-      Val at 0 range 0 .. 5;
-      Arr at 0 range 0 .. 5;
-   end record;
-
-   subtype PLLCFGR_PLLN0_Field is STM32_SVD.Bit;
-
-   type PLLN_Field_Array is array (0 .. 8) of PLLCFGR_PLLN0_Field
-     with Component_Size => 1, Size => 9;
-
-   --  Type definition for PLLN
-   type PLLN_Union (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of PLLN0
-            Val : STM32_SVD.UInt9;
-         when True =>
-            --  Array vision of PLLN0
-            Arr : PLLN_Field_Array;
-      end case;
-   end record
-     with Unchecked_Union, Size => 9;
-
-   for PLLN_Union use record
-      Val at 0 range 0 .. 8;
-      Arr at 0 range 0 .. 8;
-   end record;
-
-   subtype PLLCFGR_PLLP0_Field is STM32_SVD.Bit;
-
-   type PLLP_Field_Array is array (0 .. 1) of PLLCFGR_PLLP0_Field
-     with Component_Size => 1, Size => 2;
-
-   --  Type definition for PLLP
-   type PLLP_Union (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of PLLP0
-            Val : STM32_SVD.UInt2;
-         when True =>
-            --  Array vision of PLLP0
-            Arr : PLLP_Field_Array;
-      end case;
-   end record
-     with Unchecked_Union, Size => 2;
-
-   for PLLP_Union use record
-      Val at 0 range 0 .. 1;
-      Arr at 0 range 0 .. 1;
-   end record;
-
+   subtype PLLCFGR_PLLM_Field is STM32_SVD.UInt6;
+   subtype PLLCFGR_PLLN_Field is STM32_SVD.UInt9;
+   subtype PLLCFGR_PLLP_Field is STM32_SVD.UInt2;
    subtype PLLCFGR_PLLSRC_Field is STM32_SVD.Bit;
-
-   subtype PLLCFGR_PLLQ0_Field is STM32_SVD.Bit;
-
-   type PLLQ_Field_Array is array (0 .. 3) of PLLCFGR_PLLQ0_Field
-     with Component_Size => 1, Size => 4;
-
-   --  Type definition for PLLQ
-   type PLLQ_Union (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of PLLQ0
-            Val : STM32_SVD.UInt4;
-         when True =>
-            --  Array vision of PLLQ0
-            Arr : PLLQ_Field_Array;
-      end case;
-   end record
-     with Unchecked_Union, Size => 4;
-
-   for PLLQ_Union use record
-      Val at 0 range 0 .. 3;
-      Arr at 0 range 0 .. 3;
-   end record;
+   subtype PLLCFGR_PLLQ_Field is STM32_SVD.UInt4;
 
    --  PLL configuration register
    type PLLCFGR_Register is record
       --  Division factor for the main PLL (PLL) and audio PLL (PLLI2S) input
       --  clock
-      PLLM           : PLLM_Union := (As_Array => False, Val => 16#0#);
+      PLLM           : PLLCFGR_PLLM_Field := 16#10#;
       --  Main PLL (PLL) multiplication factor for VCO
-      PLLN           : PLLN_Union := (As_Array => False, Val => 16#0#);
+      PLLN           : PLLCFGR_PLLN_Field := 16#C0#;
       --  unspecified
       Reserved_15_15 : STM32_SVD.Bit := 16#0#;
       --  Main PLL (PLL) division factor for main system clock
-      PLLP           : PLLP_Union := (As_Array => False, Val => 16#0#);
+      PLLP           : PLLCFGR_PLLP_Field := 16#0#;
       --  unspecified
       Reserved_18_21 : STM32_SVD.UInt4 := 16#0#;
       --  Main PLL(PLL) and audio PLL (PLLI2S) entry clock source
@@ -203,7 +113,7 @@ package STM32_SVD.RCC is
       Reserved_23_23 : STM32_SVD.Bit := 16#0#;
       --  Main PLL (PLL) division factor for USB OTG FS, SDIO and random number
       --  generator clocks
-      PLLQ           : PLLQ_Union := (As_Array => False, Val => 16#0#);
+      PLLQ           : PLLCFGR_PLLQ_Field := 16#4#;
       --  unspecified
       Reserved_28_31 : STM32_SVD.UInt4 := 16#2#;
    end record
@@ -222,101 +132,64 @@ package STM32_SVD.RCC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype CFGR_SW0_Field is STM32_SVD.Bit;
+   -------------------
+   -- CFGR_Register --
+   -------------------
 
-   type SW_Field_Array is array (0 .. 1) of CFGR_SW0_Field
-     with Component_Size => 1, Size => 2;
-
-   --  Type definition for SW
-   type SW_Union (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of SW0
-            Val : STM32_SVD.UInt2;
-         when True =>
-            --  Array vision of SW0
-            Arr : SW_Field_Array;
-      end case;
-   end record
-     with Unchecked_Union, Size => 2;
-
-   for SW_Union use record
-      Val at 0 range 0 .. 1;
-      Arr at 0 range 0 .. 1;
-   end record;
-
-   subtype CFGR_SWS0_Field is STM32_SVD.Bit;
-
-   type SWS_Field_Array is array (0 .. 1) of CFGR_SWS0_Field
-     with Component_Size => 1, Size => 2;
-
-   --  Type definition for SWS
-   type SWS_Union (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of SWS0
-            Val : STM32_SVD.UInt2;
-         when True =>
-            --  Array vision of SWS0
-            Arr : SWS_Field_Array;
-      end case;
-   end record
-     with Unchecked_Union, Size => 2;
-
-   for SWS_Union use record
-      Val at 0 range 0 .. 1;
-      Arr at 0 range 0 .. 1;
-   end record;
-
+   subtype CFGR_SW_Field is STM32_SVD.UInt2;
+   subtype CFGR_SWS_Field is STM32_SVD.UInt2;
    subtype CFGR_HPRE_Field is STM32_SVD.UInt4;
 
-   subtype CFGR_PPRE1_Field is STM32_SVD.UInt3;
+   ---------------
+   -- CFGR.PPRE --
+   ---------------
 
-   type PPRE_Field_Array is array (0 .. 1) of CFGR_PPRE1_Field
+   --  CFGR_PPRE array element
+   subtype CFGR_PPRE_Element is STM32_SVD.UInt3;
+
+   --  CFGR_PPRE array
+   type CFGR_PPRE_Field_Array is array (0 .. 1) of CFGR_PPRE_Element
      with Component_Size => 3, Size => 6;
 
-   --  Type definition for PPRE
-   type PPRE_Union (As_Array : Boolean := False) is record
+   --  Type definition for CFGR_PPRE
+   type CFGR_PPRE_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of PPRE1
+            --  PPRE as a value
             Val : STM32_SVD.UInt6;
          when True =>
-            --  Array vision of PPRE1
-            Arr : PPRE_Field_Array;
+            --  PPRE as an array
+            Arr : CFGR_PPRE_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 6;
 
-   for PPRE_Union use record
+   for CFGR_PPRE_Field use record
       Val at 0 range 0 .. 5;
       Arr at 0 range 0 .. 5;
    end record;
 
    subtype CFGR_RTCPRE_Field is STM32_SVD.UInt5;
-
    subtype CFGR_MCO1_Field is STM32_SVD.UInt2;
-
    subtype CFGR_I2SSRC_Field is STM32_SVD.Bit;
-
    subtype CFGR_MCO1PRE_Field is STM32_SVD.UInt3;
-
    subtype CFGR_MCO2PRE_Field is STM32_SVD.UInt3;
-
    subtype CFGR_MCO2_Field is STM32_SVD.UInt2;
 
    --  clock configuration register
    type CFGR_Register is record
       --  System clock switch
-      SW           : SW_Union := (As_Array => False, Val => 16#0#);
+      SW           : CFGR_SW_Field := 16#0#;
       --  System clock switch status
-      SWS          : SWS_Union := (As_Array => False, Val => 16#0#);
+      SWS          : CFGR_SWS_Field := 16#0#;
       --  AHB prescaler
       HPRE         : CFGR_HPRE_Field := 16#0#;
       --  unspecified
       Reserved_8_9 : STM32_SVD.UInt2 := 16#0#;
       --  APB Low speed prescaler (APB1)
-      PPRE         : PPRE_Union := (As_Array => False, Val => 16#0#);
+      PPRE         : CFGR_PPRE_Field := (As_Array => False, Val => 16#0#);
       --  HSE division factor for RTC clock
       RTCPRE       : CFGR_RTCPRE_Field := 16#0#;
       --  Microcontroller clock output 1
@@ -347,50 +220,32 @@ package STM32_SVD.RCC is
       MCO2         at 0 range 30 .. 31;
    end record;
 
+   ------------------
+   -- CIR_Register --
+   ------------------
+
    subtype CIR_LSIRDYF_Field is STM32_SVD.Bit;
-
    subtype CIR_LSERDYF_Field is STM32_SVD.Bit;
-
    subtype CIR_HSIRDYF_Field is STM32_SVD.Bit;
-
    subtype CIR_HSERDYF_Field is STM32_SVD.Bit;
-
    subtype CIR_PLLRDYF_Field is STM32_SVD.Bit;
-
    subtype CIR_PLLI2SRDYF_Field is STM32_SVD.Bit;
-
    subtype CIR_PLLSAIRDYF_Field is STM32_SVD.Bit;
-
    subtype CIR_CSSF_Field is STM32_SVD.Bit;
-
    subtype CIR_LSIRDYIE_Field is STM32_SVD.Bit;
-
    subtype CIR_LSERDYIE_Field is STM32_SVD.Bit;
-
    subtype CIR_HSIRDYIE_Field is STM32_SVD.Bit;
-
    subtype CIR_HSERDYIE_Field is STM32_SVD.Bit;
-
    subtype CIR_PLLRDYIE_Field is STM32_SVD.Bit;
-
    subtype CIR_PLLI2SRDYIE_Field is STM32_SVD.Bit;
-
    subtype CIR_PLLSAIRDYIE_Field is STM32_SVD.Bit;
-
    subtype CIR_LSIRDYC_Field is STM32_SVD.Bit;
-
    subtype CIR_LSERDYC_Field is STM32_SVD.Bit;
-
    subtype CIR_HSIRDYC_Field is STM32_SVD.Bit;
-
    subtype CIR_HSERDYC_Field is STM32_SVD.Bit;
-
    subtype CIR_PLLRDYC_Field is STM32_SVD.Bit;
-
    subtype CIR_PLLI2SRDYC_Field is STM32_SVD.Bit;
-
    subtype CIR_PLLSAIRDYC_Field is STM32_SVD.Bit;
-
    subtype CIR_CSSC_Field is STM32_SVD.Bit;
 
    --  clock interrupt register
@@ -477,38 +332,26 @@ package STM32_SVD.RCC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   -----------------------
+   -- AHB1RSTR_Register --
+   -----------------------
+
    subtype AHB1RSTR_GPIOARST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_GPIOBRST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_GPIOCRST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_GPIODRST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_GPIOERST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_GPIOFRST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_GPIOGRST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_GPIOHRST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_GPIOIRST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_GPIOJRST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_GPIOKRST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_CRCRST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_DMA1RST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_DMA2RST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_DMA2DRST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_ETHMACRST_Field is STM32_SVD.Bit;
-
    subtype AHB1RSTR_OTGHSRST_Field is STM32_SVD.Bit;
 
    --  AHB1 peripheral reset register
@@ -586,10 +429,12 @@ package STM32_SVD.RCC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
+   -----------------------
+   -- AHB2RSTR_Register --
+   -----------------------
+
    subtype AHB2RSTR_DCMIRST_Field is STM32_SVD.Bit;
-
    subtype AHB2RSTR_RNGRST_Field is STM32_SVD.Bit;
-
    subtype AHB2RSTR_OTGFSRST_Field is STM32_SVD.Bit;
 
    --  AHB2 peripheral reset register
@@ -616,6 +461,10 @@ package STM32_SVD.RCC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   -----------------------
+   -- AHB3RSTR_Register --
+   -----------------------
+
    subtype AHB3RSTR_FMCRST_Field is STM32_SVD.Bit;
 
    --  AHB3 peripheral reset register
@@ -633,54 +482,34 @@ package STM32_SVD.RCC is
       Reserved_1_31 at 0 range 1 .. 31;
    end record;
 
+   -----------------------
+   -- APB1RSTR_Register --
+   -----------------------
+
    subtype APB1RSTR_TIM2RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_TIM3RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_TIM4RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_TIM5RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_TIM6RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_TIM7RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_TIM12RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_TIM13RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_TIM14RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_WWDGRST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_SPI2RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_SPI3RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_UART2RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_UART3RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_UART4RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_UART5RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_I2C1RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_I2C2RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_I2C3RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_CAN1RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_CAN2RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_PWRRST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_DACRST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_UART7RST_Field is STM32_SVD.Bit;
-
    subtype APB1RSTR_UART8RST_Field is STM32_SVD.Bit;
 
    --  APB1 peripheral reset register
@@ -782,36 +611,25 @@ package STM32_SVD.RCC is
       UART8RST       at 0 range 31 .. 31;
    end record;
 
+   -----------------------
+   -- APB2RSTR_Register --
+   -----------------------
+
    subtype APB2RSTR_TIM1RST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_TIM8RST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_USART1RST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_USART6RST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_ADCRST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_SDIORST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_SPI1RST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_SPI4RST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_SYSCFGRST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_TIM9RST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_TIM10RST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_TIM11RST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_SPI5RST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_SPI6RST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_SAI1RST_Field is STM32_SVD.Bit;
-
    subtype APB2RSTR_LTDCRST_Field is STM32_SVD.Bit;
 
    --  APB2 peripheral reset register
@@ -892,50 +710,32 @@ package STM32_SVD.RCC is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
+   ----------------------
+   -- AHB1ENR_Register --
+   ----------------------
+
    subtype AHB1ENR_GPIOAEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_GPIOBEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_GPIOCEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_GPIODEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_GPIOEEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_GPIOFEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_GPIOGEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_GPIOHEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_GPIOIEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_GPIOJEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_GPIOKEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_CRCEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_BKPSRAMEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_CCMDATARAMEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_DMA1EN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_DMA2EN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_DMA2DEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_ETHMACEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_ETHMACTXEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_ETHMACRXEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_ETHMACPTPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_OTGHSEN_Field is STM32_SVD.Bit;
-
    subtype AHB1ENR_OTGHSULPIEN_Field is STM32_SVD.Bit;
 
    --  AHB1 peripheral clock register
@@ -1031,10 +831,12 @@ package STM32_SVD.RCC is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   ----------------------
+   -- AHB2ENR_Register --
+   ----------------------
+
    subtype AHB2ENR_DCMIEN_Field is STM32_SVD.Bit;
-
    subtype AHB2ENR_RNGEN_Field is STM32_SVD.Bit;
-
    subtype AHB2ENR_OTGFSEN_Field is STM32_SVD.Bit;
 
    --  AHB2 peripheral clock enable register
@@ -1061,6 +863,10 @@ package STM32_SVD.RCC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   ----------------------
+   -- AHB3ENR_Register --
+   ----------------------
+
    subtype AHB3ENR_FMCEN_Field is STM32_SVD.Bit;
 
    --  AHB3 peripheral clock enable register
@@ -1078,54 +884,34 @@ package STM32_SVD.RCC is
       Reserved_1_31 at 0 range 1 .. 31;
    end record;
 
+   ----------------------
+   -- APB1ENR_Register --
+   ----------------------
+
    subtype APB1ENR_TIM2EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_TIM3EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_TIM4EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_TIM5EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_TIM6EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_TIM7EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_TIM12EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_TIM13EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_TIM14EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_WWDGEN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_SPI2EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_SPI3EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_USART2EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_USART3EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_UART4EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_UART5EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_I2C1EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_I2C2EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_I2C3EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_CAN1EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_CAN2EN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_PWREN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_DACEN_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_UART7ENR_Field is STM32_SVD.Bit;
-
    subtype APB1ENR_UART8ENR_Field is STM32_SVD.Bit;
 
    --  APB1 peripheral clock enable register
@@ -1227,40 +1013,27 @@ package STM32_SVD.RCC is
       UART8ENR       at 0 range 31 .. 31;
    end record;
 
+   ----------------------
+   -- APB2ENR_Register --
+   ----------------------
+
    subtype APB2ENR_TIM1EN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_TIM8EN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_USART1EN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_USART6EN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_ADC1EN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_ADC2EN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_ADC3EN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_SDIOEN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_SPI1EN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_SPI4ENR_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_SYSCFGEN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_TIM9EN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_TIM10EN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_TIM11EN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_SPI5ENR_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_SPI6ENR_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_SAI1EN_Field is STM32_SVD.Bit;
-
    subtype APB2ENR_LTDCEN_Field is STM32_SVD.Bit;
 
    --  APB2 peripheral clock enable register
@@ -1344,56 +1117,35 @@ package STM32_SVD.RCC is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
+   ------------------------
+   -- AHB1LPENR_Register --
+   ------------------------
+
    subtype AHB1LPENR_GPIOALPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_GPIOBLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_GPIOCLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_GPIODLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_GPIOELPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_GPIOFLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_GPIOGLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_GPIOHLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_GPIOILPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_GPIOJLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_GPIOKLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_CRCLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_FLITFLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_SRAM1LPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_SRAM2LPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_BKPSRAMLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_SRAM3LPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_DMA1LPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_DMA2LPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_DMA2DLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_ETHMACLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_ETHMACTXLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_ETHMACRXLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_ETHMACPTPLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_OTGHSLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB1LPENR_OTGHSULPILPEN_Field is STM32_SVD.Bit;
 
    --  AHB1 peripheral clock enable in low power mode register
@@ -1498,10 +1250,12 @@ package STM32_SVD.RCC is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   ------------------------
+   -- AHB2LPENR_Register --
+   ------------------------
+
    subtype AHB2LPENR_DCMILPEN_Field is STM32_SVD.Bit;
-
    subtype AHB2LPENR_RNGLPEN_Field is STM32_SVD.Bit;
-
    subtype AHB2LPENR_OTGFSLPEN_Field is STM32_SVD.Bit;
 
    --  AHB2 peripheral clock enable in low power mode register
@@ -1528,6 +1282,10 @@ package STM32_SVD.RCC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   ------------------------
+   -- AHB3LPENR_Register --
+   ------------------------
+
    subtype AHB3LPENR_FMCLPEN_Field is STM32_SVD.Bit;
 
    --  AHB3 peripheral clock enable in low power mode register
@@ -1545,54 +1303,34 @@ package STM32_SVD.RCC is
       Reserved_1_31 at 0 range 1 .. 31;
    end record;
 
+   ------------------------
+   -- APB1LPENR_Register --
+   ------------------------
+
    subtype APB1LPENR_TIM2LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_TIM3LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_TIM4LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_TIM5LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_TIM6LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_TIM7LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_TIM12LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_TIM13LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_TIM14LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_WWDGLPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_SPI2LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_SPI3LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_USART2LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_USART3LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_UART4LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_UART5LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_I2C1LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_I2C2LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_I2C3LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_CAN1LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_CAN2LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_PWRLPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_DACLPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_UART7LPEN_Field is STM32_SVD.Bit;
-
    subtype APB1LPENR_UART8LPEN_Field is STM32_SVD.Bit;
 
    --  APB1 peripheral clock enable in low power mode register
@@ -1694,40 +1432,27 @@ package STM32_SVD.RCC is
       UART8LPEN      at 0 range 31 .. 31;
    end record;
 
+   ------------------------
+   -- APB2LPENR_Register --
+   ------------------------
+
    subtype APB2LPENR_TIM1LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_TIM8LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_USART1LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_USART6LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_ADC1LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_ADC2LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_ADC3LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_SDIOLPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_SPI1LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_SPI4LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_SYSCFGLPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_TIM9LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_TIM10LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_TIM11LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_SPI5LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_SPI6LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_SAI1LPEN_Field is STM32_SVD.Bit;
-
    subtype APB2LPENR_LTDCLPEN_Field is STM32_SVD.Bit;
 
    --  APB2 peripheral clock enabled in low power mode register
@@ -1811,37 +1536,46 @@ package STM32_SVD.RCC is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
+   -------------------
+   -- BDCR_Register --
+   -------------------
+
    subtype BDCR_LSEON_Field is STM32_SVD.Bit;
-
    subtype BDCR_LSERDY_Field is STM32_SVD.Bit;
-
    subtype BDCR_LSEBYP_Field is STM32_SVD.Bit;
 
-   subtype BDCR_RTCSEL0_Field is STM32_SVD.Bit;
+   -----------------
+   -- BDCR.RTCSEL --
+   -----------------
 
-   type RTCSEL_Field_Array is array (0 .. 1) of BDCR_RTCSEL0_Field
+   --  BDCR_RTCSEL array element
+   subtype BDCR_RTCSEL_Element is STM32_SVD.Bit;
+
+   --  BDCR_RTCSEL array
+   type BDCR_RTCSEL_Field_Array is array (0 .. 1) of BDCR_RTCSEL_Element
      with Component_Size => 1, Size => 2;
 
-   --  Type definition for RTCSEL
-   type RTCSEL_Union (As_Array : Boolean := False) is record
+   --  Type definition for BDCR_RTCSEL
+   type BDCR_RTCSEL_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of RTCSEL0
+            --  RTCSEL as a value
             Val : STM32_SVD.UInt2;
          when True =>
-            --  Array vision of RTCSEL0
-            Arr : RTCSEL_Field_Array;
+            --  RTCSEL as an array
+            Arr : BDCR_RTCSEL_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 2;
 
-   for RTCSEL_Union use record
+   for BDCR_RTCSEL_Field use record
       Val at 0 range 0 .. 1;
       Arr at 0 range 0 .. 1;
    end record;
 
    subtype BDCR_RTCEN_Field is STM32_SVD.Bit;
-
    subtype BDCR_BDRST_Field is STM32_SVD.Bit;
 
    --  Backup domain control register
@@ -1855,7 +1589,7 @@ package STM32_SVD.RCC is
       --  unspecified
       Reserved_3_7   : STM32_SVD.UInt5 := 16#0#;
       --  RTC clock source selection
-      RTCSEL         : RTCSEL_Union := (As_Array => False, Val => 16#0#);
+      RTCSEL         : BDCR_RTCSEL_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_10_14 : STM32_SVD.UInt5 := 16#0#;
       --  RTC clock enable
@@ -1880,24 +1614,19 @@ package STM32_SVD.RCC is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
+   ------------------
+   -- CSR_Register --
+   ------------------
+
    subtype CSR_LSION_Field is STM32_SVD.Bit;
-
    subtype CSR_LSIRDY_Field is STM32_SVD.Bit;
-
    subtype CSR_RMVF_Field is STM32_SVD.Bit;
-
    subtype CSR_BORRSTF_Field is STM32_SVD.Bit;
-
    subtype CSR_PADRSTF_Field is STM32_SVD.Bit;
-
    subtype CSR_PORRSTF_Field is STM32_SVD.Bit;
-
    subtype CSR_SFTRSTF_Field is STM32_SVD.Bit;
-
    subtype CSR_WDGRSTF_Field is STM32_SVD.Bit;
-
    subtype CSR_WWDGRSTF_Field is STM32_SVD.Bit;
-
    subtype CSR_LPWRRSTF_Field is STM32_SVD.Bit;
 
    --  clock control & status register
@@ -1942,12 +1671,13 @@ package STM32_SVD.RCC is
       LPWRRSTF      at 0 range 31 .. 31;
    end record;
 
+   --------------------
+   -- SSCGR_Register --
+   --------------------
+
    subtype SSCGR_MODPER_Field is STM32_SVD.UInt13;
-
    subtype SSCGR_INCSTEP_Field is STM32_SVD.UInt15;
-
    subtype SSCGR_SPREADSEL_Field is STM32_SVD.Bit;
-
    subtype SSCGR_SSCGEN_Field is STM32_SVD.Bit;
 
    --  spread spectrum clock generation register
@@ -1974,10 +1704,12 @@ package STM32_SVD.RCC is
       SSCGEN         at 0 range 31 .. 31;
    end record;
 
+   -------------------------
+   -- PLLI2SCFGR_Register --
+   -------------------------
+
    subtype PLLI2SCFGR_PLLI2SN_Field is STM32_SVD.UInt9;
-
    subtype PLLI2SCFGR_PLLI2SQ_Field is STM32_SVD.UInt4;
-
    subtype PLLI2SCFGR_PLLI2SR_Field is STM32_SVD.UInt3;
 
    --  PLLI2S configuration register
@@ -2007,10 +1739,12 @@ package STM32_SVD.RCC is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   -------------------------
+   -- PLLSAICFGR_Register --
+   -------------------------
+
    subtype PLLSAICFGR_PLLSAIN_Field is STM32_SVD.UInt9;
-
    subtype PLLSAICFGR_PLLSAIQ_Field is STM32_SVD.UInt4;
-
    subtype PLLSAICFGR_PLLSAIR_Field is STM32_SVD.UInt3;
 
    --  PLLSAICFGR
@@ -2040,16 +1774,15 @@ package STM32_SVD.RCC is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   ----------------------
+   -- DCKCFGR_Register --
+   ----------------------
+
    subtype DCKCFGR_PLLI2SDIVQ_Field is STM32_SVD.UInt5;
-
    subtype DCKCFGR_PLLSAIDIVQ_Field is STM32_SVD.UInt5;
-
    subtype DCKCFGR_PLLSAIDIVR_Field is STM32_SVD.UInt2;
-
    subtype DCKCFGR_SAI1ASRC_Field is STM32_SVD.UInt2;
-
    subtype DCKCFGR_SAI1BSRC_Field is STM32_SVD.UInt2;
-
    subtype DCKCFGR_TIMPRE_Field is STM32_SVD.Bit;
 
    --  DCKCFGR
@@ -2180,6 +1913,6 @@ package STM32_SVD.RCC is
 
    --  Reset and clock control
    RCC_Periph : aliased RCC_Peripheral
-     with Import, Address => System'To_Address(16#40023800#);
+     with Import, Address => System'To_Address (16#40023800#);
 
 end STM32_SVD.RCC;

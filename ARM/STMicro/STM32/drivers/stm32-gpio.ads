@@ -96,6 +96,8 @@ package STM32.GPIO is
       Pin  : GPIO_Pin_Index;
    end record;
 
+   No_Point : constant GPIO_Point := (null, 0);
+
    type GPIO_Pins is array (Positive range <>) of GPIO_Pin;
    --  Note that, in addition to aggregates, the language-defined catenation
    --  operator "&" is available for types GPIO_Pin and GPIO_Pins, allowing one
@@ -378,9 +380,7 @@ package STM32.GPIO is
    GPIO_AF_TIM9      : constant GPIO_Alternate_Function;
    GPIO_AF_TIM10     : constant GPIO_Alternate_Function;
    GPIO_AF_TIM11     : constant GPIO_Alternate_Function;
-   GPIO_AF_I2C1      : constant GPIO_Alternate_Function;
-   GPIO_AF_I2C2      : constant GPIO_Alternate_Function;
-   GPIO_AF_I2C3      : constant GPIO_Alternate_Function;
+   GPIO_AF_I2C       : constant GPIO_Alternate_Function;
    GPIO_AF_SPI1      : constant GPIO_Alternate_Function;
    GPIO_AF_SPI2      : constant GPIO_Alternate_Function;
    GPIO_AF5_I2S3ext  : constant GPIO_Alternate_Function;
@@ -405,6 +405,7 @@ package STM32.GPIO is
    GPIO_AF_LTDC_2    : constant GPIO_Alternate_Function;
    GPIO_AF_OTG_FS    : constant GPIO_Alternate_Function;
    GPIO_AF_OTG_HS    : constant GPIO_Alternate_Function;
+   GPIO_AF_SAI2      : constant GPIO_Alternate_Function;
    GPIO_AF_ETH       : constant GPIO_Alternate_Function;
    GPIO_AF_FSMC      : constant GPIO_Alternate_Function;
    GPIO_AF_OTG_HS_FS : constant GPIO_Alternate_Function;
@@ -444,9 +445,7 @@ private
    GPIO_AF_TIM9      : constant GPIO_Alternate_Function := 3;
    GPIO_AF_TIM10     : constant GPIO_Alternate_Function := 3;
    GPIO_AF_TIM11     : constant GPIO_Alternate_Function := 3;
-   GPIO_AF_I2C1      : constant GPIO_Alternate_Function := 4;
-   GPIO_AF_I2C2      : constant GPIO_Alternate_Function := 4;
-   GPIO_AF_I2C3      : constant GPIO_Alternate_Function := 4;
+   GPIO_AF_I2C       : constant GPIO_Alternate_Function := 4;
    GPIO_AF_SPI1      : constant GPIO_Alternate_Function := 5;
    GPIO_AF_SPI2      : constant GPIO_Alternate_Function := 5;
    GPIO_AF5_I2S3ext  : constant GPIO_Alternate_Function := 5;
@@ -471,6 +470,7 @@ private
    GPIO_AF_LTDC_2    : constant GPIO_Alternate_Function := 9;
    GPIO_AF_OTG_FS    : constant GPIO_Alternate_Function := 10;
    GPIO_AF_OTG_HS    : constant GPIO_Alternate_Function := 10;
+   GPIO_AF_SAI2      : constant GPIO_Alternate_Function := 10;
    GPIO_AF_ETH       : constant GPIO_Alternate_Function := 11;
    GPIO_AF_FSMC      : constant GPIO_Alternate_Function := 12;
    GPIO_AF_OTG_HS_FS : constant GPIO_Alternate_Function := 12;

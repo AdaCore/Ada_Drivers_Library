@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F7x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.USB_OTG_FS is
@@ -12,40 +13,27 @@ package STM32_SVD.USB_OTG_FS is
    -- Registers --
    ---------------
 
+   -----------------------------
+   -- OTG_FS_GOTGCTL_Register --
+   -----------------------------
+
    subtype OTG_FS_GOTGCTL_SRQSCS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_SRQ_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_VBVALOEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_VBVALOVAL_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_AVALOEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_AVALOVAL_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_BVALOEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_BVALOVAL_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_HNGSCS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_HNPRQ_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_HSHNPEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_DHNPEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_EHEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_CIDSTS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_DBCT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_ASVLD_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_BSVLD_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGCTL_OTGVER_Field is STM32_SVD.Bit;
 
    --  OTG_FS control and status register (OTG_FS_GOTGCTL)
@@ -117,18 +105,16 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_GOTGINT_Register --
+   -----------------------------
+
    subtype OTG_FS_GOTGINT_SEDET_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGINT_SRSSCHG_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGINT_HNSSCHG_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGINT_HNGDET_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGINT_ADTOCHG_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGINT_DBCDNE_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GOTGINT_IDCHNG_Field is STM32_SVD.Bit;
 
    --  OTG_FS interrupt register (OTG_FS_GOTGINT)
@@ -173,10 +159,12 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_GAHBCFG_Register --
+   -----------------------------
+
    subtype OTG_FS_GAHBCFG_GINT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GAHBCFG_TXFELVL_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GAHBCFG_PTXFELVL_Field is STM32_SVD.Bit;
 
    --  OTG_FS AHB configuration register (OTG_FS_GAHBCFG)
@@ -203,18 +191,16 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_GUSBCFG_Register --
+   -----------------------------
+
    subtype OTG_FS_GUSBCFG_TOCAL_Field is STM32_SVD.UInt3;
-
    subtype OTG_FS_GUSBCFG_PHYSEL_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GUSBCFG_SRPCAP_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GUSBCFG_HNPCAP_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GUSBCFG_TRDT_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_GUSBCFG_FHMOD_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GUSBCFG_FDMOD_Field is STM32_SVD.Bit;
 
    --  OTG_FS USB configuration register (OTG_FS_GUSBCFG)
@@ -259,18 +245,16 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_GRSTCTL_Register --
+   -----------------------------
+
    subtype OTG_FS_GRSTCTL_CSRST_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GRSTCTL_HSRST_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GRSTCTL_FCRST_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GRSTCTL_RXFFLSH_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GRSTCTL_TXFFLSH_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GRSTCTL_TXFNUM_Field is STM32_SVD.UInt5;
-
    subtype OTG_FS_GRSTCTL_AHBIDL_Field is STM32_SVD.Bit;
 
    --  OTG_FS reset register (OTG_FS_GRSTCTL)
@@ -309,56 +293,35 @@ package STM32_SVD.USB_OTG_FS is
       AHBIDL         at 0 range 31 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_GINTSTS_Register --
+   -----------------------------
+
    subtype OTG_FS_GINTSTS_CMOD_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_MMIS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_OTGINT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_SOF_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_RXFLVL_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_NPTXFE_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_GINAKEFF_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_GOUTNAKEFF_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_ESUSP_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_USBSUSP_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_USBRST_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_ENUMDNE_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_ISOODRP_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_EOPF_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_IEPINT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_OEPINT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_IISOIXFR_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_IPXFR_INCOMPISOOUT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_RSTDET_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_HPRTINT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_HCINT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_PTXFE_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_CIDSCHG_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_DISCINT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_SRQINT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTSTS_WKUPINT_Field is STM32_SVD.Bit;
 
    --  OTG_FS core interrupt register (OTG_FS_GINTSTS)
@@ -461,56 +424,35 @@ package STM32_SVD.USB_OTG_FS is
       WKUPINT            at 0 range 31 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_GINTMSK_Register --
+   -----------------------------
+
    subtype OTG_FS_GINTMSK_MMISM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_OTGINT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_SOFM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_RXFLVLM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_NPTXFEM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_GINAKEFFM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_GONAKEFFM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_ESUSPM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_USBSUSPM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_USBRST_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_ENUMDNEM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_ISOODRPM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_EOPFM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_IEPINT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_OEPINT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_IISOIXFRM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_IPXFRM_IISOOXFRM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_RSTDETM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_PRTIM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_HCIM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_PTXFEM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_LPMIN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_CIDSCHGM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_DISCINT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_SRQIM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GINTMSK_WUIM_Field is STM32_SVD.Bit;
 
    --  OTG_FS interrupt mask register (OTG_FS_GINTMSK)
@@ -613,14 +555,14 @@ package STM32_SVD.USB_OTG_FS is
       WUIM             at 0 range 31 .. 31;
    end record;
 
+   ------------------------------------
+   -- OTG_FS_GRXSTSR_Device_Register --
+   ------------------------------------
+
    subtype OTG_FS_GRXSTSR_Device_EPNUM_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_GRXSTSR_Device_BCNT_Field is STM32_SVD.UInt11;
-
    subtype OTG_FS_GRXSTSR_Device_DPID_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_GRXSTSR_Device_PKTSTS_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_GRXSTSR_Device_FRMNUM_Field is STM32_SVD.UInt4;
 
    --  OTG_FS Receive status debug read(Device mode)
@@ -650,12 +592,13 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
+   ----------------------------------
+   -- OTG_FS_GRXSTSR_Host_Register --
+   ----------------------------------
+
    subtype OTG_FS_GRXSTSR_Host_CHNUM_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_GRXSTSR_Host_BCNT_Field is STM32_SVD.UInt11;
-
    subtype OTG_FS_GRXSTSR_Host_DPID_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_GRXSTSR_Host_PKTSTS_Field is STM32_SVD.UInt4;
 
    --  OTG_FS Receive status debug read(Host mode)
@@ -682,14 +625,14 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
+   ------------------------------------
+   -- OTG_FS_GRXSTSP_Device_Register --
+   ------------------------------------
+
    subtype OTG_FS_GRXSTSP_Device_EPNUM_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_GRXSTSP_Device_BCNT_Field is STM32_SVD.UInt11;
-
    subtype OTG_FS_GRXSTSP_Device_DPID_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_GRXSTSP_Device_PKTSTS_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_GRXSTSP_Device_FRMNUM_Field is STM32_SVD.UInt4;
 
    --  OTG status read and pop register (Device mode)
@@ -719,12 +662,13 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
+   ----------------------------------
+   -- OTG_FS_GRXSTSP_Host_Register --
+   ----------------------------------
+
    subtype OTG_FS_GRXSTSP_Host_CHNUM_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_GRXSTSP_Host_BCNT_Field is STM32_SVD.UInt11;
-
    subtype OTG_FS_GRXSTSP_Host_DPID_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_GRXSTSP_Host_PKTSTS_Field is STM32_SVD.UInt4;
 
    --  OTG status read and pop register (Host mode)
@@ -751,6 +695,10 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_GRXFSIZ_Register --
+   -----------------------------
+
    subtype OTG_FS_GRXFSIZ_RXFD_Field is STM32_SVD.Short;
 
    --  OTG_FS Receive FIFO size register (OTG_FS_GRXFSIZ)
@@ -768,8 +716,11 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_FS_DIEPTXF0_Device_TX0FSA_Field is STM32_SVD.Short;
+   -------------------------------------
+   -- OTG_FS_DIEPTXF0_Device_Register --
+   -------------------------------------
 
+   subtype OTG_FS_DIEPTXF0_Device_TX0FSA_Field is STM32_SVD.Short;
    subtype OTG_FS_DIEPTXF0_Device_TX0FD_Field is STM32_SVD.Short;
 
    --  OTG_FS Endpoint 0 Transmit FIFO size
@@ -787,32 +738,38 @@ package STM32_SVD.USB_OTG_FS is
       TX0FD  at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_FS_DIEPTXF0_Host_NPTXFSA_Field is STM32_SVD.Short;
+   ------------------------------------
+   -- OTG_FS_HNPTXFSIZ_Host_Register --
+   ------------------------------------
 
-   subtype OTG_FS_DIEPTXF0_Host_NPTXFD_Field is STM32_SVD.Short;
+   subtype OTG_FS_HNPTXFSIZ_Host_NPTXFSA_Field is STM32_SVD.Short;
+   subtype OTG_FS_HNPTXFSIZ_Host_NPTXFD_Field is STM32_SVD.Short;
 
    --  OTG_FS Host non-periodic transmit FIFO size register
-   type OTG_FS_DIEPTXF0_Host_Register is record
+   type OTG_FS_HNPTXFSIZ_Host_Register is record
       --  Non-periodic transmit RAM start address
-      NPTXFSA : OTG_FS_DIEPTXF0_Host_NPTXFSA_Field := 16#200#;
+      NPTXFSA : OTG_FS_HNPTXFSIZ_Host_NPTXFSA_Field := 16#200#;
       --  Non-periodic TxFIFO depth
-      NPTXFD  : OTG_FS_DIEPTXF0_Host_NPTXFD_Field := 16#0#;
+      NPTXFD  : OTG_FS_HNPTXFSIZ_Host_NPTXFD_Field := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for OTG_FS_DIEPTXF0_Host_Register use record
+   for OTG_FS_HNPTXFSIZ_Host_Register use record
       NPTXFSA at 0 range 0 .. 15;
       NPTXFD  at 0 range 16 .. 31;
    end record;
 
+   ------------------------------
+   -- OTG_FS_HNPTXSTS_Register --
+   ------------------------------
+
    subtype OTG_FS_HNPTXSTS_NPTXFSAV_Field is STM32_SVD.Short;
-
    subtype OTG_FS_HNPTXSTS_NPTQXSAV_Field is STM32_SVD.Byte;
-
    subtype OTG_FS_HNPTXSTS_NPTXQTOP_Field is STM32_SVD.UInt7;
 
-   --  OTG_FS non-periodic transmit FIFO/queue status register (OTG_FS_GNPTXSTS)
+   --  OTG_FS non-periodic transmit FIFO/queue status register
+   --  (OTG_FS_GNPTXSTS)
    type OTG_FS_HNPTXSTS_Register is record
       --  Non-periodic TxFIFO space available
       NPTXFSAV       : OTG_FS_HNPTXSTS_NPTXFSAV_Field := 16#200#;
@@ -833,22 +790,18 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_GI2CCTL_Register --
+   -----------------------------
+
    subtype OTG_FS_GI2CCTL_RWDATA_Field is STM32_SVD.Byte;
-
    subtype OTG_FS_GI2CCTL_REGADDR_Field is STM32_SVD.Byte;
-
    subtype OTG_FS_GI2CCTL_ADDR_Field is STM32_SVD.UInt7;
-
    subtype OTG_FS_GI2CCTL_I2CEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GI2CCTL_ACK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GI2CCTL_I2CDEVADR_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_GI2CCTL_I2CDATSE0_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GI2CCTL_RW_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GI2CCTL_BSYDNE_Field is STM32_SVD.Bit;
 
    --  OTG I2C access register
@@ -893,24 +846,19 @@ package STM32_SVD.USB_OTG_FS is
       BSYDNE         at 0 range 31 .. 31;
    end record;
 
+   ---------------------------
+   -- OTG_FS_GCCFG_Register --
+   ---------------------------
+
    subtype OTG_FS_GCCFG_DCDET_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GCCFG_PDET_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GCCFG_SDET_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GCCFG_PS2DET_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GCCFG_PWRDWN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GCCFG_BCDEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GCCFG_DCDEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GCCFG_PDEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GCCFG_SDEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GCCFG_VBDEN_Field is STM32_SVD.Bit;
 
    --  OTG_FS general core configuration register (OTG_FS_GCCFG)
@@ -958,34 +906,24 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_22_31 at 0 range 22 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_GLPMCFG_Register --
+   -----------------------------
+
    subtype OTG_FS_GLPMCFG_LPMEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GLPMCFG_LPMACK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GLPMCFG_BESL_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_GLPMCFG_REMWAKE_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GLPMCFG_L1SSEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GLPMCFG_BESLTHRS_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_GLPMCFG_L1DSEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GLPMCFG_LPMRST_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_GLPMCFG_SLPSTS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GLPMCFG_L1RSMOK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GLPMCFG_LPMCHIDX_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_GLPMCFG_LPMRCNT_Field is STM32_SVD.UInt3;
-
    subtype OTG_FS_GLPMCFG_SNDLPM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GLPMCFG_LPMRCNTSTS_Field is STM32_SVD.UInt3;
-
    subtype OTG_FS_GLPMCFG_ENBESL_Field is STM32_SVD.Bit;
 
    --  OTG core LPM configuration register
@@ -1045,8 +983,11 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
-   subtype OTG_FS_GPWRDN_ADPMEN_Field is STM32_SVD.Bit;
+   ----------------------------
+   -- OTG_FS_GPWRDN_Register --
+   ----------------------------
 
+   subtype OTG_FS_GPWRDN_ADPMEN_Field is STM32_SVD.Bit;
    subtype OTG_FS_GPWRDN_ADPIF_Field is STM32_SVD.Bit;
 
    --  OTG power down register
@@ -1070,34 +1011,24 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_GADPCTL_Register --
+   -----------------------------
+
    subtype OTG_FS_GADPCTL_PRBDSCHG_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_GADPCTL_PRBDELTA_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_GADPCTL_PRBPER_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_GADPCTL_RTIM_Field is STM32_SVD.UInt11;
-
    subtype OTG_FS_GADPCTL_ENAPRB_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GADPCTL_ENASNS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GADPCTL_ADPRST_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GADPCTL_ADPEN_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GADPCTL_ADPPRBIF_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GADPCTL_ADPSNSIF_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GADPCTL_ADPTOIF_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GADPCTL_ADPPRBIM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GADPCTL_ADPSNSIM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GADPCTL_ADPTOIM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_GADPCTL_AR_Field is STM32_SVD.UInt2;
 
    --  OTG ADP timer, control and status register
@@ -1157,8 +1088,11 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
-   subtype OTG_FS_HPTXFSIZ_PTXSA_Field is STM32_SVD.Short;
+   ------------------------------
+   -- OTG_FS_HPTXFSIZ_Register --
+   ------------------------------
 
+   subtype OTG_FS_HPTXFSIZ_PTXSA_Field is STM32_SVD.Short;
    subtype OTG_FS_HPTXFSIZ_PTXFSIZ_Field is STM32_SVD.Short;
 
    --  OTG_FS Host periodic transmit FIFO size register (OTG_FS_HPTXFSIZ)
@@ -1176,8 +1110,11 @@ package STM32_SVD.USB_OTG_FS is
       PTXFSIZ at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_FS_DIEPTXF1_INEPTXSA_Field is STM32_SVD.Short;
+   -----------------------------
+   -- OTG_FS_DIEPTXF_Register --
+   -----------------------------
 
+   subtype OTG_FS_DIEPTXF1_INEPTXSA_Field is STM32_SVD.Short;
    subtype OTG_FS_DIEPTXF1_INEPTXFD_Field is STM32_SVD.Short;
 
    --  OTG_FS device IN endpoint transmit FIFO size register (OTG_FS_DIEPTXF1)
@@ -1195,8 +1132,11 @@ package STM32_SVD.USB_OTG_FS is
       INEPTXFD at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_FS_HCFG_FSLSPCS_Field is STM32_SVD.UInt2;
+   --------------------------
+   -- OTG_FS_HCFG_Register --
+   --------------------------
 
+   subtype OTG_FS_HCFG_FSLSPCS_Field is STM32_SVD.UInt2;
    subtype OTG_FS_HCFG_FSLSS_Field is STM32_SVD.Bit;
 
    --  OTG_FS host configuration register (OTG_FS_HCFG)
@@ -1217,6 +1157,10 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
+   --------------------------
+   -- OTG_FS_HFIR_Register --
+   --------------------------
+
    subtype OTG_FS_HFIR_FRIVL_Field is STM32_SVD.Short;
 
    --  OTG_FS Host frame interval register
@@ -1234,8 +1178,11 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_FS_HFNUM_FRNUM_Field is STM32_SVD.Short;
+   ---------------------------
+   -- OTG_FS_HFNUM_Register --
+   ---------------------------
 
+   subtype OTG_FS_HFNUM_FRNUM_Field is STM32_SVD.Short;
    subtype OTG_FS_HFNUM_FTREM_Field is STM32_SVD.Short;
 
    --  OTG_FS host frame number/frame time remaining register (OTG_FS_HFNUM)
@@ -1253,13 +1200,16 @@ package STM32_SVD.USB_OTG_FS is
       FTREM at 0 range 16 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_HPTXSTS_Register --
+   -----------------------------
+
    subtype OTG_FS_HPTXSTS_PTXFSAVL_Field is STM32_SVD.Short;
-
    subtype OTG_FS_HPTXSTS_PTXQSAV_Field is STM32_SVD.Byte;
-
    subtype OTG_FS_HPTXSTS_PTXQTOP_Field is STM32_SVD.Byte;
 
-   --  OTG_FS_Host periodic transmit FIFO/queue status register (OTG_FS_HPTXSTS)
+   --  OTG_FS_Host periodic transmit FIFO/queue status register
+   --  (OTG_FS_HPTXSTS)
    type OTG_FS_HPTXSTS_Register is record
       --  Periodic transmit data FIFO space available
       PTXFSAVL : OTG_FS_HPTXSTS_PTXFSAVL_Field := 16#100#;
@@ -1276,6 +1226,10 @@ package STM32_SVD.USB_OTG_FS is
       PTXQSAV  at 0 range 16 .. 23;
       PTXQTOP  at 0 range 24 .. 31;
    end record;
+
+   ---------------------------
+   -- OTG_FS_HAINT_Register --
+   ---------------------------
 
    subtype OTG_FS_HAINT_HAINT_Field is STM32_SVD.Short;
 
@@ -1294,6 +1248,10 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ------------------------------
+   -- OTG_FS_HAINTMSK_Register --
+   ------------------------------
+
    subtype OTG_FS_HAINTMSK_HAINTM_Field is STM32_SVD.Short;
 
    --  OTG_FS host all channels interrupt mask register
@@ -1311,30 +1269,22 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------------
+   -- OTG_FS_HPRT_Register --
+   --------------------------
+
    subtype OTG_FS_HPRT_PCSTS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HPRT_PCDET_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HPRT_PENA_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HPRT_PENCHNG_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HPRT_POCA_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HPRT_POCCHNG_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HPRT_PRES_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HPRT_PSUSP_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HPRT_PRST_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HPRT_PLSTS_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_HPRT_PPWR_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HPRT_PTCTL_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_HPRT_PSPD_Field is STM32_SVD.UInt2;
 
    --  OTG_FS host port control and status register (OTG_FS_HPRT)
@@ -1391,24 +1341,19 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
+   ----------------------------
+   -- OTG_FS_HCCHAR_Register --
+   ----------------------------
+
    subtype OTG_FS_HCCHAR0_MPSIZ_Field is STM32_SVD.UInt11;
-
    subtype OTG_FS_HCCHAR0_EPNUM_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_HCCHAR0_EPDIR_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCCHAR0_LSDEV_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCCHAR0_EPTYP_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_HCCHAR0_MCNT_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_HCCHAR0_DAD_Field is STM32_SVD.UInt7;
-
    subtype OTG_FS_HCCHAR0_ODDFRM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCCHAR0_CHDIS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCCHAR0_CHENA_Field is STM32_SVD.Bit;
 
    --  OTG_FS host channel-0 characteristics register (OTG_FS_HCCHAR0)
@@ -1453,22 +1398,18 @@ package STM32_SVD.USB_OTG_FS is
       CHENA          at 0 range 31 .. 31;
    end record;
 
+   ---------------------------
+   -- OTG_FS_HCINT_Register --
+   ---------------------------
+
    subtype OTG_FS_HCINT0_XFRC_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINT0_CHH_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINT0_STALL_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINT0_NAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINT0_ACK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINT0_TXERR_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINT0_BBERR_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINT0_FRMOR_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINT0_DTERR_Field is STM32_SVD.Bit;
 
    --  OTG_FS host channel-0 interrupt register (OTG_FS_HCINT0)
@@ -1516,24 +1457,19 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
+   ------------------------------
+   -- OTG_FS_HCINTMSK_Register --
+   ------------------------------
+
    subtype OTG_FS_HCINTMSK0_XFRCM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINTMSK0_CHHM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINTMSK0_STALLM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINTMSK0_NAKM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINTMSK0_ACKM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINTMSK0_NYET_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINTMSK0_TXERRM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINTMSK0_BBERRM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINTMSK0_FRMORM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_HCINTMSK0_DTERRM_Field is STM32_SVD.Bit;
 
    --  OTG_FS host channel-0 mask register (OTG_FS_HCINTMSK0)
@@ -1581,10 +1517,12 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
+   ----------------------------
+   -- OTG_FS_HCTSIZ_Register --
+   ----------------------------
+
    subtype OTG_FS_HCTSIZ0_XFRSIZ_Field is STM32_SVD.UInt19;
-
    subtype OTG_FS_HCTSIZ0_PKTCNT_Field is STM32_SVD.UInt10;
-
    subtype OTG_FS_HCTSIZ0_DPID_Field is STM32_SVD.UInt2;
 
    --  OTG_FS host channel-0 transfer size register
@@ -1608,12 +1546,13 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   --------------------------
+   -- OTG_FS_DCFG_Register --
+   --------------------------
+
    subtype OTG_FS_DCFG_DSPD_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_DCFG_NZLSOHSK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DCFG_DAD_Field is STM32_SVD.UInt7;
-
    subtype OTG_FS_DCFG_PFIVL_Field is STM32_SVD.UInt2;
 
    --  OTG_FS device configuration register (OTG_FS_DCFG)
@@ -1643,24 +1582,19 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
+   --------------------------
+   -- OTG_FS_DCTL_Register --
+   --------------------------
+
    subtype OTG_FS_DCTL_RWUSIG_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DCTL_SDIS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DCTL_GINSTS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DCTL_GONSTS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DCTL_TCTL_Field is STM32_SVD.UInt3;
-
    subtype OTG_FS_DCTL_SGINAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DCTL_CGINAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DCTL_SGONAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DCTL_CGONAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DCTL_POPRGDNE_Field is STM32_SVD.Bit;
 
    --  OTG_FS device control register (OTG_FS_DCTL)
@@ -1705,12 +1639,13 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
+   --------------------------
+   -- OTG_FS_DSTS_Register --
+   --------------------------
+
    subtype OTG_FS_DSTS_SUSPSTS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DSTS_ENUMSPD_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_DSTS_EERR_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DSTS_FNSOF_Field is STM32_SVD.UInt14;
 
    --  OTG_FS device status register (OTG_FS_DSTS)
@@ -1740,19 +1675,19 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_22_31 at 0 range 22 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_DIEPMSK_Register --
+   -----------------------------
+
    subtype OTG_FS_DIEPMSK_XFRCM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPMSK_EPDM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPMSK_TOM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPMSK_ITTXFEMSK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPMSK_INEPNMM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPMSK_INEPNEM_Field is STM32_SVD.Bit;
 
-   --  OTG_FS device IN endpoint common interrupt mask register (OTG_FS_DIEPMSK)
+   --  OTG_FS device IN endpoint common interrupt mask register
+   --  (OTG_FS_DIEPMSK)
    type OTG_FS_DIEPMSK_Register is record
       --  Transfer completed interrupt mask
       XFRCM         : OTG_FS_DIEPMSK_XFRCM_Field := 16#0#;
@@ -1785,12 +1720,13 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_DOEPMSK_Register --
+   -----------------------------
+
    subtype OTG_FS_DOEPMSK_XFRCM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPMSK_EPDM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPMSK_STUPM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPMSK_OTEPDM_Field is STM32_SVD.Bit;
 
    --  OTG_FS device OUT endpoint common interrupt mask register
@@ -1821,8 +1757,11 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   subtype OTG_FS_DAINT_IEPINT_Field is STM32_SVD.Short;
+   ---------------------------
+   -- OTG_FS_DAINT_Register --
+   ---------------------------
 
+   subtype OTG_FS_DAINT_IEPINT_Field is STM32_SVD.Short;
    subtype OTG_FS_DAINT_OEPINT_Field is STM32_SVD.Short;
 
    --  OTG_FS device all endpoints interrupt register (OTG_FS_DAINT)
@@ -1840,8 +1779,11 @@ package STM32_SVD.USB_OTG_FS is
       OEPINT at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_FS_DAINTMSK_IEPM_Field is STM32_SVD.Short;
+   ------------------------------
+   -- OTG_FS_DAINTMSK_Register --
+   ------------------------------
 
+   subtype OTG_FS_DAINTMSK_IEPM_Field is STM32_SVD.Short;
    subtype OTG_FS_DAINTMSK_OEPINT_Field is STM32_SVD.Short;
 
    --  OTG_FS all endpoints interrupt mask register (OTG_FS_DAINTMSK)
@@ -1858,6 +1800,10 @@ package STM32_SVD.USB_OTG_FS is
       IEPM   at 0 range 0 .. 15;
       OEPINT at 0 range 16 .. 31;
    end record;
+
+   ------------------------------
+   -- OTG_FS_DVBUSDIS_Register --
+   ------------------------------
 
    subtype OTG_FS_DVBUSDIS_VBUSDT_Field is STM32_SVD.Short;
 
@@ -1876,6 +1822,10 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------------------
+   -- OTG_FS_DVBUSPULSE_Register --
+   --------------------------------
+
    subtype OTG_FS_DVBUSPULSE_DVBUSP_Field is STM32_SVD.UInt12;
 
    --  OTG_FS device VBUS pulsing time register
@@ -1892,6 +1842,10 @@ package STM32_SVD.USB_OTG_FS is
       DVBUSP         at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
+
+   --------------------------------
+   -- OTG_FS_DIEPEMPMSK_Register --
+   --------------------------------
 
    subtype OTG_FS_DIEPEMPMSK_INEPTXFEM_Field is STM32_SVD.Short;
 
@@ -1910,24 +1864,19 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ------------------------------
+   -- OTG_FS_DIEPCTL0_Register --
+   ------------------------------
+
    subtype OTG_FS_DIEPCTL0_MPSIZ_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_DIEPCTL0_USBAEP_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL0_NAKSTS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL0_EPTYP_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_DIEPCTL0_STALL_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL0_TXFNUM_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_DIEPCTL0_CNAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL0_SNAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL0_EPDIS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL0_EPENA_Field is STM32_SVD.Bit;
 
    --  OTG_FS device control IN endpoint 0 control register (OTG_FS_DIEPCTL0)
@@ -1981,16 +1930,15 @@ package STM32_SVD.USB_OTG_FS is
       EPENA          at 0 range 31 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_DIEPINT_Register --
+   -----------------------------
+
    subtype OTG_FS_DIEPINT0_XFRC_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPINT0_EPDISD_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPINT0_TOC_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPINT0_ITTXFE_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPINT0_INEPNE_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPINT0_TXFE_Field is STM32_SVD.Bit;
 
    --  device endpoint-x interrupt register
@@ -2029,8 +1977,11 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype OTG_FS_DIEPTSIZ0_XFRSIZ_Field is STM32_SVD.UInt7;
+   -------------------------------
+   -- OTG_FS_DIEPTSIZ0_Register --
+   -------------------------------
 
+   subtype OTG_FS_DIEPTSIZ0_XFRSIZ_Field is STM32_SVD.UInt7;
    subtype OTG_FS_DIEPTSIZ0_PKTCNT_Field is STM32_SVD.UInt2;
 
    --  device endpoint-0 transfer size register
@@ -2054,6 +2005,10 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_DTXFSTS_Register --
+   -----------------------------
+
    subtype OTG_FS_DTXFSTS0_INEPTFSAV_Field is STM32_SVD.Short;
 
    --  OTG_FS device IN endpoint transmit FIFO status register
@@ -2071,30 +2026,22 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_DIEPCTL_Register --
+   -----------------------------
+
    subtype OTG_FS_DIEPCTL1_MPSIZ_Field is STM32_SVD.UInt11;
-
    subtype OTG_FS_DIEPCTL1_USBAEP_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL1_EONUM_DPID_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL1_NAKSTS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL1_EPTYP_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_DIEPCTL1_Stall_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL1_TXFNUM_Field is STM32_SVD.UInt4;
-
    subtype OTG_FS_DIEPCTL1_CNAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL1_SNAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL1_SD0PID_SEVNFRM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL1_SODDFRM_SD1PID_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL1_EPDIS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DIEPCTL1_EPENA_Field is STM32_SVD.Bit;
 
    --  OTG device endpoint-1 control register
@@ -2151,10 +2098,12 @@ package STM32_SVD.USB_OTG_FS is
       EPENA          at 0 range 31 .. 31;
    end record;
 
+   ------------------------------
+   -- OTG_FS_DIEPTSIZ_Register --
+   ------------------------------
+
    subtype OTG_FS_DIEPTSIZ1_XFRSIZ_Field is STM32_SVD.UInt19;
-
    subtype OTG_FS_DIEPTSIZ1_PKTCNT_Field is STM32_SVD.UInt10;
-
    subtype OTG_FS_DIEPTSIZ1_MCNT_Field is STM32_SVD.UInt2;
 
    --  device endpoint-1 transfer size register
@@ -2178,24 +2127,19 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   ------------------------------
+   -- OTG_FS_DOEPCTL0_Register --
+   ------------------------------
+
    subtype OTG_FS_DOEPCTL0_MPSIZ_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_DOEPCTL0_USBAEP_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL0_NAKSTS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL0_EPTYP_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_DOEPCTL0_SNPM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL0_Stall_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL0_CNAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL0_SNAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL0_EPDIS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL0_EPENA_Field is STM32_SVD.Bit;
 
    --  device endpoint-0 control register
@@ -2249,14 +2193,14 @@ package STM32_SVD.USB_OTG_FS is
       EPENA          at 0 range 31 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_DOEPINT_Register --
+   -----------------------------
+
    subtype OTG_FS_DOEPINT0_XFRC_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPINT0_EPDISD_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPINT0_STUP_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPINT0_OTEPDIS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPINT0_B2BSTUP_Field is STM32_SVD.Bit;
 
    --  device endpoint-0 interrupt register
@@ -2292,10 +2236,12 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   -------------------------------
+   -- OTG_FS_DOEPTSIZ0_Register --
+   -------------------------------
+
    subtype OTG_FS_DOEPTSIZ0_XFRSIZ_Field is STM32_SVD.UInt7;
-
    subtype OTG_FS_DOEPTSIZ0_PKTCNT_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPTSIZ0_STUPCNT_Field is STM32_SVD.UInt2;
 
    --  device OUT endpoint-0 transfer size register
@@ -2325,30 +2271,22 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_DOEPCTL_Register --
+   -----------------------------
+
    subtype OTG_FS_DOEPCTL1_MPSIZ_Field is STM32_SVD.UInt11;
-
    subtype OTG_FS_DOEPCTL1_USBAEP_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL1_EONUM_DPID_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL1_NAKSTS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL1_EPTYP_Field is STM32_SVD.UInt2;
-
    subtype OTG_FS_DOEPCTL1_SNPM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL1_Stall_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL1_CNAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL1_SNAK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL1_SD0PID_SEVNFRM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL1_SODDFRM_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL1_EPDIS_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_DOEPCTL1_EPENA_Field is STM32_SVD.Bit;
 
    --  device endpoint-1 control register
@@ -2405,10 +2343,12 @@ package STM32_SVD.USB_OTG_FS is
       EPENA          at 0 range 31 .. 31;
    end record;
 
+   ------------------------------
+   -- OTG_FS_DOEPTSIZ_Register --
+   ------------------------------
+
    subtype OTG_FS_DOEPTSIZ1_XFRSIZ_Field is STM32_SVD.UInt19;
-
    subtype OTG_FS_DOEPTSIZ1_PKTCNT_Field is STM32_SVD.UInt10;
-
    subtype OTG_FS_DOEPTSIZ1_RXDPID_STUPCNT_Field is STM32_SVD.UInt2;
 
    --  device OUT endpoint-1 transfer size register
@@ -2432,10 +2372,12 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   -----------------------------
+   -- OTG_FS_PCGCCTL_Register --
+   -----------------------------
+
    subtype OTG_FS_PCGCCTL_STPPCLK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_PCGCCTL_GATEHCLK_Field is STM32_SVD.Bit;
-
    subtype OTG_FS_PCGCCTL_PHYSUSP_Field is STM32_SVD.Bit;
 
    --  OTG_FS power and clock gating control register (OTG_FS_PCGCCTL)
@@ -2462,156 +2404,118 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   type OTG_FS_GRXSTSR_Discriminent is
-     (Device,
-      Host);
-
-   type OTG_FS_GRXSTSR_Aliased_Register (Disc : OTG_FS_GRXSTSR_Discriminent := Device) is record
-      case Disc is
-         when Device =>
-            Device : OTG_FS_GRXSTSR_Device_Register;
-         when Host =>
-            Host : OTG_FS_GRXSTSR_Host_Register;
-      end case;
-   end record
-     with Unchecked_Union;
-
-   for OTG_FS_GRXSTSR_Aliased_Register use record
-      Device at 0 range 0 .. 31;
-      Host at 0 range 0 .. 31;
-   end record;
-
-   type OTG_FS_GRXSTSP_Discriminent is
-     (Device,
-      Host);
-
-   type OTG_FS_GRXSTSP_Aliased_Register (Disc : OTG_FS_GRXSTSP_Discriminent := Device) is record
-      case Disc is
-         when Device =>
-            Device : OTG_FS_GRXSTSP_Device_Register;
-         when Host =>
-            Host : OTG_FS_GRXSTSP_Host_Register;
-      end case;
-   end record
-     with Unchecked_Union;
-
-   for OTG_FS_GRXSTSP_Aliased_Register use record
-      Device at 0 range 0 .. 31;
-      Host at 0 range 0 .. 31;
-   end record;
-
-   type OTG_FS_DIEPTXF0_Discriminent is
-     (Device,
-      Host);
-
-   type OTG_FS_DIEPTXF0_Aliased_Register (Disc : OTG_FS_DIEPTXF0_Discriminent := Device) is record
-      case Disc is
-         when Device =>
-            Device : OTG_FS_DIEPTXF0_Device_Register;
-         when Host =>
-            Host : OTG_FS_DIEPTXF0_Host_Register;
-      end case;
-   end record
-     with Unchecked_Union;
-
-   for OTG_FS_DIEPTXF0_Aliased_Register use record
-      Device at 0 range 0 .. 31;
-      Host at 0 range 0 .. 31;
-   end record;
-
    -----------------
    -- Peripherals --
    -----------------
 
+   type OTG_FS_Mode is
+     (Host,
+      Device);
+
    --  USB on the go full speed
-   type OTG_FS_GLOBAL_Peripheral is record
+   type OTG_FS_GLOBAL_Peripheral
+     (Mode : OTG_FS_Mode := Host)
+   is record
       --  OTG_FS control and status register (OTG_FS_GOTGCTL)
-      OTG_FS_GOTGCTL  : OTG_FS_GOTGCTL_Register;
+      OTG_FS_GOTGCTL         : OTG_FS_GOTGCTL_Register;
       --  OTG_FS interrupt register (OTG_FS_GOTGINT)
-      OTG_FS_GOTGINT  : OTG_FS_GOTGINT_Register;
+      OTG_FS_GOTGINT         : OTG_FS_GOTGINT_Register;
       --  OTG_FS AHB configuration register (OTG_FS_GAHBCFG)
-      OTG_FS_GAHBCFG  : OTG_FS_GAHBCFG_Register;
+      OTG_FS_GAHBCFG         : OTG_FS_GAHBCFG_Register;
       --  OTG_FS USB configuration register (OTG_FS_GUSBCFG)
-      OTG_FS_GUSBCFG  : OTG_FS_GUSBCFG_Register;
+      OTG_FS_GUSBCFG         : OTG_FS_GUSBCFG_Register;
       --  OTG_FS reset register (OTG_FS_GRSTCTL)
-      OTG_FS_GRSTCTL  : OTG_FS_GRSTCTL_Register;
+      OTG_FS_GRSTCTL         : OTG_FS_GRSTCTL_Register;
       --  OTG_FS core interrupt register (OTG_FS_GINTSTS)
-      OTG_FS_GINTSTS  : OTG_FS_GINTSTS_Register;
+      OTG_FS_GINTSTS         : OTG_FS_GINTSTS_Register;
       --  OTG_FS interrupt mask register (OTG_FS_GINTMSK)
-      OTG_FS_GINTMSK  : OTG_FS_GINTMSK_Register;
-      --  OTG_FS Receive status debug read(Device mode)
-      OTG_FS_GRXSTSR  : OTG_FS_GRXSTSR_Aliased_Register;
-      --  OTG status read and pop register (Device mode)
-      OTG_FS_GRXSTSP  : OTG_FS_GRXSTSP_Aliased_Register;
+      OTG_FS_GINTMSK         : OTG_FS_GINTMSK_Register;
       --  OTG_FS Receive FIFO size register (OTG_FS_GRXFSIZ)
-      OTG_FS_GRXFSIZ  : OTG_FS_GRXFSIZ_Register;
-      --  OTG_FS Endpoint 0 Transmit FIFO size
-      OTG_FS_DIEPTXF0 : OTG_FS_DIEPTXF0_Aliased_Register;
+      OTG_FS_GRXFSIZ         : OTG_FS_GRXFSIZ_Register;
       --  OTG_FS non-periodic transmit FIFO/queue status register
       --  (OTG_FS_GNPTXSTS)
-      OTG_FS_HNPTXSTS : OTG_FS_HNPTXSTS_Register;
+      OTG_FS_HNPTXSTS        : OTG_FS_HNPTXSTS_Register;
       --  OTG I2C access register
-      OTG_FS_GI2CCTL  : OTG_FS_GI2CCTL_Register;
+      OTG_FS_GI2CCTL         : OTG_FS_GI2CCTL_Register;
       --  OTG_FS general core configuration register (OTG_FS_GCCFG)
-      OTG_FS_GCCFG    : OTG_FS_GCCFG_Register;
+      OTG_FS_GCCFG           : OTG_FS_GCCFG_Register;
       --  core ID register
-      OTG_FS_CID      : STM32_SVD.Word;
+      OTG_FS_CID             : STM32_SVD.Word;
       --  OTG core LPM configuration register
-      OTG_FS_GLPMCFG  : OTG_FS_GLPMCFG_Register;
+      OTG_FS_GLPMCFG         : OTG_FS_GLPMCFG_Register;
       --  OTG power down register
-      OTG_FS_GPWRDN   : OTG_FS_GPWRDN_Register;
+      OTG_FS_GPWRDN          : OTG_FS_GPWRDN_Register;
       --  OTG ADP timer, control and status register
-      OTG_FS_GADPCTL  : OTG_FS_GADPCTL_Register;
+      OTG_FS_GADPCTL         : OTG_FS_GADPCTL_Register;
       --  OTG_FS Host periodic transmit FIFO size register (OTG_FS_HPTXFSIZ)
-      OTG_FS_HPTXFSIZ : OTG_FS_HPTXFSIZ_Register;
+      OTG_FS_HPTXFSIZ        : OTG_FS_HPTXFSIZ_Register;
       --  OTG_FS device IN endpoint transmit FIFO size register
       --  (OTG_FS_DIEPTXF1)
-      OTG_FS_DIEPTXF1 : OTG_FS_DIEPTXF_Register;
+      OTG_FS_DIEPTXF1        : OTG_FS_DIEPTXF_Register;
       --  OTG_FS device IN endpoint transmit FIFO size register
       --  (OTG_FS_DIEPTXF2)
-      OTG_FS_DIEPTXF2 : OTG_FS_DIEPTXF_Register;
+      OTG_FS_DIEPTXF2        : OTG_FS_DIEPTXF_Register;
       --  OTG_FS device IN endpoint transmit FIFO size register
       --  (OTG_FS_DIEPTXF3)
-      OTG_FS_DIEPTXF3 : OTG_FS_DIEPTXF_Register;
+      OTG_FS_DIEPTXF3        : OTG_FS_DIEPTXF_Register;
       --  OTG_FS device IN endpoint transmit FIFO size register
       --  (OTG_FS_DIEPTXF4)
-      OTG_FS_DIEPTXF4 : OTG_FS_DIEPTXF_Register;
+      OTG_FS_DIEPTXF4        : OTG_FS_DIEPTXF_Register;
       --  OTG_FS device IN endpoint transmit FIFO size register
       --  (OTG_FS_DIEPTXF5)
-      OTG_FS_DIEPTXF5 : OTG_FS_DIEPTXF_Register;
+      OTG_FS_DIEPTXF5        : OTG_FS_DIEPTXF_Register;
+      case Mode is
+         when Host =>
+            --  OTG_FS Receive status debug read(Host mode)
+            OTG_FS_GRXSTSR_Host : OTG_FS_GRXSTSR_Host_Register;
+            --  OTG status read and pop register (Host mode)
+            OTG_FS_GRXSTSP_Host : OTG_FS_GRXSTSP_Host_Register;
+            --  OTG_FS Host non-periodic transmit FIFO size register
+            OTG_FS_HNPTXFSIZ_Host : OTG_FS_HNPTXFSIZ_Host_Register;
+         when Device =>
+            --  OTG_FS Receive status debug read(Device mode)
+            OTG_FS_GRXSTSR_Device : OTG_FS_GRXSTSR_Device_Register;
+            --  OTG status read and pop register (Device mode)
+            OTG_FS_GRXSTSP_Device : OTG_FS_GRXSTSP_Device_Register;
+            --  OTG_FS Endpoint 0 Transmit FIFO size
+            OTG_FS_DIEPTXF0_Device : OTG_FS_DIEPTXF0_Device_Register;
+      end case;
    end record
-     with Volatile;
+     with Unchecked_Union, Volatile;
 
    for OTG_FS_GLOBAL_Peripheral use record
-      OTG_FS_GOTGCTL  at 0 range 0 .. 31;
-      OTG_FS_GOTGINT  at 4 range 0 .. 31;
-      OTG_FS_GAHBCFG  at 8 range 0 .. 31;
-      OTG_FS_GUSBCFG  at 12 range 0 .. 31;
-      OTG_FS_GRSTCTL  at 16 range 0 .. 31;
-      OTG_FS_GINTSTS  at 20 range 0 .. 31;
-      OTG_FS_GINTMSK  at 24 range 0 .. 31;
-      OTG_FS_GRXSTSR  at 28 range 0 .. 31;
-      OTG_FS_GRXSTSP  at 32 range 0 .. 31;
-      OTG_FS_GRXFSIZ  at 36 range 0 .. 31;
-      OTG_FS_DIEPTXF0 at 40 range 0 .. 31;
-      OTG_FS_HNPTXSTS at 44 range 0 .. 31;
-      OTG_FS_GI2CCTL  at 48 range 0 .. 31;
-      OTG_FS_GCCFG    at 56 range 0 .. 31;
-      OTG_FS_CID      at 60 range 0 .. 31;
-      OTG_FS_GLPMCFG  at 84 range 0 .. 31;
-      OTG_FS_GPWRDN   at 88 range 0 .. 31;
-      OTG_FS_GADPCTL  at 96 range 0 .. 31;
-      OTG_FS_HPTXFSIZ at 256 range 0 .. 31;
-      OTG_FS_DIEPTXF1 at 260 range 0 .. 31;
-      OTG_FS_DIEPTXF2 at 264 range 0 .. 31;
-      OTG_FS_DIEPTXF3 at 268 range 0 .. 31;
-      OTG_FS_DIEPTXF4 at 272 range 0 .. 31;
-      OTG_FS_DIEPTXF5 at 276 range 0 .. 31;
+      OTG_FS_GOTGCTL         at 0 range 0 .. 31;
+      OTG_FS_GOTGINT         at 4 range 0 .. 31;
+      OTG_FS_GAHBCFG         at 8 range 0 .. 31;
+      OTG_FS_GUSBCFG         at 12 range 0 .. 31;
+      OTG_FS_GRSTCTL         at 16 range 0 .. 31;
+      OTG_FS_GINTSTS         at 20 range 0 .. 31;
+      OTG_FS_GINTMSK         at 24 range 0 .. 31;
+      OTG_FS_GRXFSIZ         at 36 range 0 .. 31;
+      OTG_FS_HNPTXSTS        at 44 range 0 .. 31;
+      OTG_FS_GI2CCTL         at 48 range 0 .. 31;
+      OTG_FS_GCCFG           at 56 range 0 .. 31;
+      OTG_FS_CID             at 60 range 0 .. 31;
+      OTG_FS_GLPMCFG         at 84 range 0 .. 31;
+      OTG_FS_GPWRDN          at 88 range 0 .. 31;
+      OTG_FS_GADPCTL         at 96 range 0 .. 31;
+      OTG_FS_HPTXFSIZ        at 256 range 0 .. 31;
+      OTG_FS_DIEPTXF1        at 260 range 0 .. 31;
+      OTG_FS_DIEPTXF2        at 264 range 0 .. 31;
+      OTG_FS_DIEPTXF3        at 268 range 0 .. 31;
+      OTG_FS_DIEPTXF4        at 272 range 0 .. 31;
+      OTG_FS_DIEPTXF5        at 276 range 0 .. 31;
+      OTG_FS_GRXSTSR_Host    at 28 range 0 .. 31;
+      OTG_FS_GRXSTSP_Host    at 32 range 0 .. 31;
+      OTG_FS_HNPTXFSIZ_Host  at 40 range 0 .. 31;
+      OTG_FS_GRXSTSR_Device  at 28 range 0 .. 31;
+      OTG_FS_GRXSTSP_Device  at 32 range 0 .. 31;
+      OTG_FS_DIEPTXF0_Device at 40 range 0 .. 31;
    end record;
 
    --  USB on the go full speed
    OTG_FS_GLOBAL_Periph : aliased OTG_FS_GLOBAL_Peripheral
-     with Import, Address => System'To_Address(16#50000000#);
+     with Import, Address => System'To_Address (16#50000000#);
 
    --  USB on the go full speed
    type OTG_FS_HOST_Peripheral is record
@@ -2789,7 +2693,7 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_HOST_Periph : aliased OTG_FS_HOST_Peripheral
-     with Import, Address => System'To_Address(16#50000400#);
+     with Import, Address => System'To_Address (16#50000400#);
 
    --  USB on the go full speed
    type OTG_FS_DEVICE_Peripheral is record
@@ -2815,7 +2719,8 @@ package STM32_SVD.USB_OTG_FS is
       OTG_FS_DVBUSPULSE : OTG_FS_DVBUSPULSE_Register;
       --  OTG_FS device IN endpoint FIFO empty interrupt mask register
       OTG_FS_DIEPEMPMSK : OTG_FS_DIEPEMPMSK_Register;
-      --  OTG_FS device control IN endpoint 0 control register (OTG_FS_DIEPCTL0)
+      --  OTG_FS device control IN endpoint 0 control register
+      --  (OTG_FS_DIEPCTL0)
       OTG_FS_DIEPCTL0   : OTG_FS_DIEPCTL0_Register;
       --  device endpoint-x interrupt register
       OTG_FS_DIEPINT0   : OTG_FS_DIEPINT_Register;
@@ -2959,7 +2864,7 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_DEVICE_Periph : aliased OTG_FS_DEVICE_Peripheral
-     with Import, Address => System'To_Address(16#50000800#);
+     with Import, Address => System'To_Address (16#50000800#);
 
    --  USB on the go full speed
    type OTG_FS_PWRCLK_Peripheral is record
@@ -2974,6 +2879,6 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_PWRCLK_Periph : aliased OTG_FS_PWRCLK_Peripheral
-     with Import, Address => System'To_Address(16#50000E00#);
+     with Import, Address => System'To_Address (16#50000E00#);
 
 end STM32_SVD.USB_OTG_FS;

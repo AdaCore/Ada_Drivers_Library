@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F40x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.GPIO is
@@ -12,60 +13,69 @@ package STM32_SVD.GPIO is
    -- Registers --
    ---------------
 
-   subtype MODER_MODER0_Field is STM32_SVD.UInt2;
+   --------------------
+   -- MODER_Register --
+   --------------------
 
-   type MODER_Field_Array is array (0 .. 15) of MODER_MODER0_Field
+   --  MODER array element
+   subtype MODER_Element is STM32_SVD.UInt2;
+
+   --  MODER array
+   type MODER_Field_Array is array (0 .. 15) of MODER_Element
      with Component_Size => 2, Size => 32;
 
-   --  Type definition for MODER
-   type MODER_Union (As_Array : Boolean := False) is record
+   --  GPIO port mode register
+   type MODER_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of MODER0
+            --  MODER as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of MODER0
+            --  MODER as an array
             Arr : MODER_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
+          Bit_Order => System.Low_Order_First;
 
-   for MODER_Union use record
+   for MODER_Register use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
-   --  GPIO port mode register
-   type MODER_Register is record
-      --  Port x configuration bits (y = 0..15)
-      MODER : MODER_Union := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
+   ---------------------
+   -- OTYPER_Register --
+   ---------------------
 
-   for MODER_Register use record
-      MODER at 0 range 0 .. 31;
-   end record;
+   ---------------
+   -- OTYPER.OT --
+   ---------------
 
-   subtype OTYPER_OT0_Field is STM32_SVD.Bit;
+   --  OTYPER_OT array element
+   subtype OTYPER_OT_Element is STM32_SVD.Bit;
 
-   type OT_Field_Array is array (0 .. 15) of OTYPER_OT0_Field
+   --  OTYPER_OT array
+   type OTYPER_OT_Field_Array is array (0 .. 15) of OTYPER_OT_Element
      with Component_Size => 1, Size => 16;
 
-   --  Type definition for OT
-   type OT_Union (As_Array : Boolean := False) is record
+   --  Type definition for OTYPER_OT
+   type OTYPER_OT_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of OT0
+            --  OT as a value
             Val : STM32_SVD.Short;
          when True =>
-            --  Array vision of OT0
-            Arr : OT_Field_Array;
+            --  OT as an array
+            Arr : OTYPER_OT_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 16;
 
-   for OT_Union use record
+   for OTYPER_OT_Field use record
       Val at 0 range 0 .. 15;
       Arr at 0 range 0 .. 15;
    end record;
@@ -73,7 +83,7 @@ package STM32_SVD.GPIO is
    --  GPIO port output type register
    type OTYPER_Register is record
       --  Port x configuration bits (y = 0..15)
-      OT             : OT_Union := (As_Array => False, Val => 16#0#);
+      OT             : OTYPER_OT_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_16_31 : STM32_SVD.Short := 16#0#;
    end record
@@ -85,95 +95,101 @@ package STM32_SVD.GPIO is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype OSPEEDR_OSPEEDR0_Field is STM32_SVD.UInt2;
+   ----------------------
+   -- OSPEEDR_Register --
+   ----------------------
 
-   type OSPEEDR_Field_Array is array (0 .. 15) of OSPEEDR_OSPEEDR0_Field
+   --  OSPEEDR array element
+   subtype OSPEEDR_Element is STM32_SVD.UInt2;
+
+   --  OSPEEDR array
+   type OSPEEDR_Field_Array is array (0 .. 15) of OSPEEDR_Element
      with Component_Size => 2, Size => 32;
 
-   --  Type definition for OSPEEDR
-   type OSPEEDR_Union (As_Array : Boolean := False) is record
+   --  GPIO port output speed register
+   type OSPEEDR_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of OSPEEDR0
+            --  OSPEEDR as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of OSPEEDR0
+            --  OSPEEDR as an array
             Arr : OSPEEDR_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
-
-   for OSPEEDR_Union use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
-   end record;
-
-   --  GPIO port output speed register
-   type OSPEEDR_Register is record
-      --  Port x configuration bits (y = 0..15)
-      OSPEEDR : OSPEEDR_Union := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for OSPEEDR_Register use record
-      OSPEEDR at 0 range 0 .. 31;
-   end record;
-
-   subtype PUPDR_PUPDR0_Field is STM32_SVD.UInt2;
-
-   type PUPDR_Field_Array is array (0 .. 15) of PUPDR_PUPDR0_Field
-     with Component_Size => 2, Size => 32;
-
-   --  Type definition for PUPDR
-   type PUPDR_Union (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of PUPDR0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of PUPDR0
-            Arr : PUPDR_Field_Array;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for PUPDR_Union use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   --------------------
+   -- PUPDR_Register --
+   --------------------
+
+   --  PUPDR array element
+   subtype PUPDR_Element is STM32_SVD.UInt2;
+
+   --  PUPDR array
+   type PUPDR_Field_Array is array (0 .. 15) of PUPDR_Element
+     with Component_Size => 2, Size => 32;
+
    --  GPIO port pull-up/pull-down register
-   type PUPDR_Register is record
-      --  Port x configuration bits (y = 0..15)
-      PUPDR : PUPDR_Union := (As_Array => False, Val => 16#0#);
+   type PUPDR_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  PUPDR as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  PUPDR as an array
+            Arr : PUPDR_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for PUPDR_Register use record
-      PUPDR at 0 range 0 .. 31;
+      Val at 0 range 0 .. 31;
+      Arr at 0 range 0 .. 31;
    end record;
 
-   subtype IDR_IDR0_Field is STM32_SVD.Bit;
+   ------------------
+   -- IDR_Register --
+   ------------------
 
-   type IDR_Field_Array is array (0 .. 15) of IDR_IDR0_Field
+   -------------
+   -- IDR.IDR --
+   -------------
+
+   --  IDR array element
+   subtype IDR_Element is STM32_SVD.Bit;
+
+   --  IDR array
+   type IDR_Field_Array is array (0 .. 15) of IDR_Element
      with Component_Size => 1, Size => 16;
 
    --  Type definition for IDR
-   type IDR_Union (As_Array : Boolean := False) is record
+   type IDR_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of IDR0
+            --  IDR as a value
             Val : STM32_SVD.Short;
          when True =>
-            --  Array vision of IDR0
+            --  IDR as an array
             Arr : IDR_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 16;
 
-   for IDR_Union use record
+   for IDR_Field use record
       Val at 0 range 0 .. 15;
       Arr at 0 range 0 .. 15;
    end record;
@@ -181,7 +197,7 @@ package STM32_SVD.GPIO is
    --  GPIO port input data register
    type IDR_Register is record
       --  Port input data (y = 0..15)
-      IDR            : IDR_Union := (As_Array => False, Val => 16#0#);
+      IDR            : IDR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_16_31 : STM32_SVD.Short := 16#0#;
    end record
@@ -193,25 +209,37 @@ package STM32_SVD.GPIO is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype ODR_ODR0_Field is STM32_SVD.Bit;
+   ------------------
+   -- ODR_Register --
+   ------------------
 
-   type ODR_Field_Array is array (0 .. 15) of ODR_ODR0_Field
+   -------------
+   -- ODR.ODR --
+   -------------
+
+   --  ODR array element
+   subtype ODR_Element is STM32_SVD.Bit;
+
+   --  ODR array
+   type ODR_Field_Array is array (0 .. 15) of ODR_Element
      with Component_Size => 1, Size => 16;
 
    --  Type definition for ODR
-   type ODR_Union (As_Array : Boolean := False) is record
+   type ODR_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of ODR0
+            --  ODR as a value
             Val : STM32_SVD.Short;
          when True =>
-            --  Array vision of ODR0
+            --  ODR as an array
             Arr : ODR_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 16;
 
-   for ODR_Union use record
+   for ODR_Field use record
       Val at 0 range 0 .. 15;
       Arr at 0 range 0 .. 15;
    end record;
@@ -219,7 +247,7 @@ package STM32_SVD.GPIO is
    --  GPIO port output data register
    type ODR_Register is record
       --  Port output data (y = 0..15)
-      ODR            : ODR_Union := (As_Array => False, Val => 16#0#);
+      ODR            : ODR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_16_31 : STM32_SVD.Short := 16#0#;
    end record
@@ -231,48 +259,68 @@ package STM32_SVD.GPIO is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype BSRR_BS0_Field is STM32_SVD.Bit;
+   -------------------
+   -- BSRR_Register --
+   -------------------
 
-   type BS_Field_Array is array (0 .. 15) of BSRR_BS0_Field
+   -------------
+   -- BSRR.BS --
+   -------------
+
+   --  BSRR_BS array element
+   subtype BSRR_BS_Element is STM32_SVD.Bit;
+
+   --  BSRR_BS array
+   type BSRR_BS_Field_Array is array (0 .. 15) of BSRR_BS_Element
      with Component_Size => 1, Size => 16;
 
-   --  Type definition for BS
-   type BS_Union (As_Array : Boolean := False) is record
+   --  Type definition for BSRR_BS
+   type BSRR_BS_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of BS0
+            --  BS as a value
             Val : STM32_SVD.Short;
          when True =>
-            --  Array vision of BS0
-            Arr : BS_Field_Array;
+            --  BS as an array
+            Arr : BSRR_BS_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 16;
 
-   for BS_Union use record
+   for BSRR_BS_Field use record
       Val at 0 range 0 .. 15;
       Arr at 0 range 0 .. 15;
    end record;
 
-   subtype BSRR_BR0_Field is STM32_SVD.Bit;
+   -------------
+   -- BSRR.BR --
+   -------------
 
-   type BR_Field_Array is array (0 .. 15) of BSRR_BR0_Field
+   --  BSRR_BR array element
+   subtype BSRR_BR_Element is STM32_SVD.Bit;
+
+   --  BSRR_BR array
+   type BSRR_BR_Field_Array is array (0 .. 15) of BSRR_BR_Element
      with Component_Size => 1, Size => 16;
 
-   --  Type definition for BR
-   type BR_Union (As_Array : Boolean := False) is record
+   --  Type definition for BSRR_BR
+   type BSRR_BR_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of BR0
+            --  BR as a value
             Val : STM32_SVD.Short;
          when True =>
-            --  Array vision of BR0
-            Arr : BR_Field_Array;
+            --  BR as an array
+            Arr : BSRR_BR_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 16;
 
-   for BR_Union use record
+   for BSRR_BR_Field use record
       Val at 0 range 0 .. 15;
       Arr at 0 range 0 .. 15;
    end record;
@@ -280,9 +328,9 @@ package STM32_SVD.GPIO is
    --  GPIO port bit set/reset register
    type BSRR_Register is record
       --  Port x set bit y (y= 0..15)
-      BS : BS_Union := (As_Array => False, Val => 16#0#);
+      BS : BSRR_BS_Field := (As_Array => False, Val => 16#0#);
       --  Port x set bit y (y= 0..15)
-      BR : BR_Union := (As_Array => False, Val => 16#0#);
+      BR : BSRR_BR_Field := (As_Array => False, Val => 16#0#);
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -292,25 +340,37 @@ package STM32_SVD.GPIO is
       BR at 0 range 16 .. 31;
    end record;
 
-   subtype LCKR_LCK0_Field is STM32_SVD.Bit;
+   -------------------
+   -- LCKR_Register --
+   -------------------
 
-   type LCK_Field_Array is array (0 .. 15) of LCKR_LCK0_Field
+   --------------
+   -- LCKR.LCK --
+   --------------
+
+   --  LCKR_LCK array element
+   subtype LCKR_LCK_Element is STM32_SVD.Bit;
+
+   --  LCKR_LCK array
+   type LCKR_LCK_Field_Array is array (0 .. 15) of LCKR_LCK_Element
      with Component_Size => 1, Size => 16;
 
-   --  Type definition for LCK
-   type LCK_Union (As_Array : Boolean := False) is record
+   --  Type definition for LCKR_LCK
+   type LCKR_LCK_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of LCK0
+            --  LCK as a value
             Val : STM32_SVD.Short;
          when True =>
-            --  Array vision of LCK0
-            Arr : LCK_Field_Array;
+            --  LCK as an array
+            Arr : LCKR_LCK_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 16;
 
-   for LCK_Union use record
+   for LCKR_LCK_Field use record
       Val at 0 range 0 .. 15;
       Arr at 0 range 0 .. 15;
    end record;
@@ -320,7 +380,7 @@ package STM32_SVD.GPIO is
    --  GPIO port configuration lock register
    type LCKR_Register is record
       --  Port x lock bit y (y= 0..15)
-      LCK            : LCK_Union := (As_Array => False, Val => 16#0#);
+      LCK            : LCKR_LCK_Field := (As_Array => False, Val => 16#0#);
       --  Port x lock bit y (y= 0..15)
       LCKK           : LCKR_LCKK_Field := 16#0#;
       --  unspecified
@@ -335,74 +395,68 @@ package STM32_SVD.GPIO is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
-   subtype AFRL_AFRL0_Field is STM32_SVD.UInt4;
+   -------------------
+   -- AFRL_Register --
+   -------------------
 
-   type AFRL_Field_Array is array (0 .. 7) of AFRL_AFRL0_Field
+   --  AFRL array element
+   subtype AFRL_Element is STM32_SVD.UInt4;
+
+   --  AFRL array
+   type AFRL_Field_Array is array (0 .. 7) of AFRL_Element
      with Component_Size => 4, Size => 32;
 
-   --  Type definition for AFRL
-   type AFRL_Union (As_Array : Boolean := False) is record
+   --  GPIO alternate function low register
+   type AFRL_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of AFRL0
+            --  AFRL as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of AFRL0
+            --  AFRL as an array
             Arr : AFRL_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
-
-   for AFRL_Union use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
-   end record;
-
-   --  GPIO alternate function low register
-   type AFRL_Register is record
-      --  Alternate function selection for port x bit y (y = 0..7)
-      AFRL : AFRL_Union := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for AFRL_Register use record
-      AFRL at 0 range 0 .. 31;
-   end record;
-
-   subtype AFRH_AFRH8_Field is STM32_SVD.UInt4;
-
-   type AFRH_Field_Array is array (0 .. 7) of AFRH_AFRH8_Field
-     with Component_Size => 4, Size => 32;
-
-   --  Type definition for AFRH
-   type AFRH_Union (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of AFRH8
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of AFRH8
-            Arr : AFRH_Field_Array;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for AFRH_Union use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- AFRH_Register --
+   -------------------
+
+   --  AFRH array element
+   subtype AFRH_Element is STM32_SVD.UInt4;
+
+   --  AFRH array
+   type AFRH_Field_Array is array (0 .. 7) of AFRH_Element
+     with Component_Size => 4, Size => 32;
+
    --  GPIO alternate function high register
-   type AFRH_Register is record
-      --  Alternate function selection for port x bit y (y = 8..15)
-      AFRH : AFRH_Union := (As_Array => False, Val => 16#0#);
+   type AFRH_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  AFRH as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  AFRH as an array
+            Arr : AFRH_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for AFRH_Register use record
-      AFRH at 0 range 0 .. 31;
+      Val at 0 range 0 .. 31;
+      Arr at 0 range 0 .. 31;
    end record;
 
    -----------------
@@ -449,38 +503,38 @@ package STM32_SVD.GPIO is
 
    --  General-purpose I/Os
    GPIOA_Periph : aliased GPIO_Peripheral
-     with Import, Address => System'To_Address(16#40020000#);
+     with Import, Address => System'To_Address (16#40020000#);
 
    --  General-purpose I/Os
    GPIOB_Periph : aliased GPIO_Peripheral
-     with Import, Address => System'To_Address(16#40020400#);
+     with Import, Address => System'To_Address (16#40020400#);
 
    --  General-purpose I/Os
    GPIOC_Periph : aliased GPIO_Peripheral
-     with Import, Address => System'To_Address(16#40020800#);
+     with Import, Address => System'To_Address (16#40020800#);
 
    --  General-purpose I/Os
    GPIOD_Periph : aliased GPIO_Peripheral
-     with Import, Address => System'To_Address(16#40020C00#);
+     with Import, Address => System'To_Address (16#40020C00#);
 
    --  General-purpose I/Os
    GPIOE_Periph : aliased GPIO_Peripheral
-     with Import, Address => System'To_Address(16#40021000#);
+     with Import, Address => System'To_Address (16#40021000#);
 
    --  General-purpose I/Os
    GPIOF_Periph : aliased GPIO_Peripheral
-     with Import, Address => System'To_Address(16#40021400#);
+     with Import, Address => System'To_Address (16#40021400#);
 
    --  General-purpose I/Os
    GPIOG_Periph : aliased GPIO_Peripheral
-     with Import, Address => System'To_Address(16#40021800#);
+     with Import, Address => System'To_Address (16#40021800#);
 
    --  General-purpose I/Os
    GPIOH_Periph : aliased GPIO_Peripheral
-     with Import, Address => System'To_Address(16#40021C00#);
+     with Import, Address => System'To_Address (16#40021C00#);
 
    --  General-purpose I/Os
    GPIOI_Periph : aliased GPIO_Peripheral
-     with Import, Address => System'To_Address(16#40022000#);
+     with Import, Address => System'To_Address (16#40022000#);
 
 end STM32_SVD.GPIO;

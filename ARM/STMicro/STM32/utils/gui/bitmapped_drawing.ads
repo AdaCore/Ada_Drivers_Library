@@ -83,6 +83,7 @@ package Bitmapped_Drawing is
    Violet      : constant Colors := (255, 238, 130, 238);
    Yellow      : constant Colors := (255, 255, 255, 0);
    White       : constant Colors := (255, 255, 255, 255);
+   Transparent : constant Colors := (0, 0, 0, 0);
 
    type Display_Point is record
       X : Natural;
@@ -103,6 +104,12 @@ package Bitmapped_Drawing is
       Start, Stop : Display_Point;
       Hue         : DMA2D_Color;
       Thickness   : Natural := 1);
+
+   procedure Fill
+     (Buffer      : DMA2D_Buffer;
+      Hue         : DMA2D_Color;
+      Synchronous : Boolean := False)
+      renames STM32.DMA2D.DMA2D_Fill;
 
    procedure Fill_Rectangle
      (Buffer      : DMA2D_Buffer;

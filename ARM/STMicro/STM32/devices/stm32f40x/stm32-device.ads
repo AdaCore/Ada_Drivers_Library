@@ -42,11 +42,12 @@
 --  This file provides declarations for devices on the STM32F40xxx MCUs
 --  manufactured by ST Microelectronics.  For example, an STM32F405.
 
+with STM32_SVD.I2C;
+with STM32_SVD.DMA;
+
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.ADC;     use STM32.ADC;
-with STM32.DMA;     use STM32.DMA;
 with STM32.USARTs;  use STM32.USARTs;
-with STM32.I2C;     use STM32.I2C;
 with STM32.SPI;     use STM32.SPI;
 with STM32.Timers;  use STM32.Timers;
 with STM32.DAC;     use STM32.DAC;
@@ -274,20 +275,29 @@ package STM32.Device is
 
    procedure Reset (This : aliased in out USART);
 
-   DMA_1 : aliased DMA_Controller with Import, Volatile, Address => DMA1_Base;
-   DMA_2 : aliased DMA_Controller with Import, Volatile, Address => DMA2_Base;
+   subtype DMA_Controller is STM32_SVD.DMA.DMA_Peripheral;
+
+   DMA_1 : DMA_Controller renames STM32_SVD.DMA.DMA1_Periph;
+   DMA_2 : DMA_Controller renames STM32_SVD.DMA.DMA2_Periph;
 
    procedure Enable_Clock (This : aliased in out DMA_Controller);
 
    procedure Reset (This : aliased in out DMA_Controller);
 
-   I2C_1 : aliased I2C_Port with Import, Volatile, Address => I2C1_Base;
-   I2C_2 : aliased I2C_Port with Import, Volatile, Address => I2C2_Base;
-   I2C_3 : aliased I2C_Port with Import, Volatile, Address => I2C3_Base;
+   subtype I2C_Port is STM32_SVD.I2C.I2C_Peripheral;
 
+   type I2C_Port_Id is (I2C_1, I2C_2, I2C_3);
+
+   I2C_Port_1 : aliased I2C_Port with Import, Volatile, Address => I2C1_Base;
+   I2C_Port_2 : aliased I2C_Port with Import, Volatile, Address => I2C2_Base;
+   I2C_Port_3 : aliased I2C_Port with Import, Volatile, Address => I2C3_Base;
+
+   function As_Port_Id (Port : I2C_Port) return I2C_Port_Id with Inline;
+   function As_Port (Id : I2C_Port_Id) return access I2C_Port with Inline;
    procedure Enable_Clock (This : aliased in out I2C_Port);
-
+   procedure Enable_Clock (This : I2C_Port_Id);
    procedure Reset (This : in out I2C_Port);
+   procedure Reset (This : I2C_Port_Id);
 
    SPI_1 : aliased SPI_Port with Import, Volatile, Address => SPI1_Base;
    SPI_2 : aliased SPI_Port with Import, Volatile, Address => SPI2_Base;

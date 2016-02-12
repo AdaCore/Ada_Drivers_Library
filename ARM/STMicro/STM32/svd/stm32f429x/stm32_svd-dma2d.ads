@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F429x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.DMA2D is
@@ -12,24 +13,19 @@ package STM32_SVD.DMA2D is
    -- Registers --
    ---------------
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_START_Field is STM32_SVD.Bit;
-
    subtype CR_SUSP_Field is STM32_SVD.Bit;
-
    subtype CR_ABORT_Field is STM32_SVD.Bit;
-
    subtype CR_TEIE_Field is STM32_SVD.Bit;
-
    subtype CR_TCIE_Field is STM32_SVD.Bit;
-
    subtype CR_TWIE_Field is STM32_SVD.Bit;
-
    subtype CR_CAEIE_Field is STM32_SVD.Bit;
-
    subtype CR_CTCIE_Field is STM32_SVD.Bit;
-
    subtype CR_CEIE_Field is STM32_SVD.Bit;
-
    subtype CR_MODE_Field is STM32_SVD.UInt2;
 
    --  control register
@@ -80,16 +76,15 @@ package STM32_SVD.DMA2D is
       Reserved_18_31 at 0 range 18 .. 31;
    end record;
 
+   ------------------
+   -- ISR_Register --
+   ------------------
+
    subtype ISR_TEIF_Field is STM32_SVD.Bit;
-
    subtype ISR_TCIF_Field is STM32_SVD.Bit;
-
    subtype ISR_TWIF_Field is STM32_SVD.Bit;
-
    subtype ISR_CAEIF_Field is STM32_SVD.Bit;
-
    subtype ISR_CTCIF_Field is STM32_SVD.Bit;
-
    subtype ISR_CEIF_Field is STM32_SVD.Bit;
 
    --  Interrupt Status Register
@@ -122,16 +117,15 @@ package STM32_SVD.DMA2D is
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
 
+   -------------------
+   -- IFCR_Register --
+   -------------------
+
    subtype IFCR_CTEIF_Field is STM32_SVD.Bit;
-
    subtype IFCR_CTCIF_Field is STM32_SVD.Bit;
-
    subtype IFCR_CTWIF_Field is STM32_SVD.Bit;
-
    subtype IFCR_CAECIF_Field is STM32_SVD.Bit;
-
    subtype IFCR_CCTCIF_Field is STM32_SVD.Bit;
-
    subtype IFCR_CCEIF_Field is STM32_SVD.Bit;
 
    --  interrupt flag clear register
@@ -164,6 +158,10 @@ package STM32_SVD.DMA2D is
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
 
+   -------------------
+   -- FGOR_Register --
+   -------------------
+
    subtype FGOR_LO_Field is STM32_SVD.UInt14;
 
    --  foreground offset register
@@ -180,6 +178,10 @@ package STM32_SVD.DMA2D is
       LO             at 0 range 0 .. 13;
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
+
+   -------------------
+   -- BGOR_Register --
+   -------------------
 
    subtype BGOR_LO_Field is STM32_SVD.UInt14;
 
@@ -198,16 +200,15 @@ package STM32_SVD.DMA2D is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
+   ----------------------
+   -- FGPFCCR_Register --
+   ----------------------
+
    subtype FGPFCCR_CM_Field is STM32_SVD.UInt4;
-
    subtype FGPFCCR_CCM_Field is STM32_SVD.Bit;
-
    subtype FGPFCCR_START_Field is STM32_SVD.Bit;
-
    subtype FGPFCCR_CS_Field is STM32_SVD.Byte;
-
    subtype FGPFCCR_AM_Field is STM32_SVD.UInt2;
-
    subtype FGPFCCR_ALPHA_Field is STM32_SVD.Byte;
 
    --  foreground PFC control register
@@ -243,10 +244,12 @@ package STM32_SVD.DMA2D is
       ALPHA          at 0 range 24 .. 31;
    end record;
 
+   ---------------------
+   -- FGCOLR_Register --
+   ---------------------
+
    subtype FGCOLR_BLUE_Field is STM32_SVD.Byte;
-
    subtype FGCOLR_GREEN_Field is STM32_SVD.Byte;
-
    subtype FGCOLR_RED_Field is STM32_SVD.Byte;
 
    --  foreground color register
@@ -270,16 +273,15 @@ package STM32_SVD.DMA2D is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   ----------------------
+   -- BGPFCCR_Register --
+   ----------------------
+
    subtype BGPFCCR_CM_Field is STM32_SVD.UInt4;
-
    subtype BGPFCCR_CCM_Field is STM32_SVD.Bit;
-
    subtype BGPFCCR_START_Field is STM32_SVD.Bit;
-
    subtype BGPFCCR_CS_Field is STM32_SVD.Byte;
-
    subtype BGPFCCR_AM_Field is STM32_SVD.UInt2;
-
    subtype BGPFCCR_ALPHA_Field is STM32_SVD.Byte;
 
    --  background PFC control register
@@ -315,10 +317,12 @@ package STM32_SVD.DMA2D is
       ALPHA          at 0 range 24 .. 31;
    end record;
 
+   ---------------------
+   -- BGCOLR_Register --
+   ---------------------
+
    subtype BGCOLR_BLUE_Field is STM32_SVD.Byte;
-
    subtype BGCOLR_GREEN_Field is STM32_SVD.Byte;
-
    subtype BGCOLR_RED_Field is STM32_SVD.Byte;
 
    --  background color register
@@ -342,6 +346,10 @@ package STM32_SVD.DMA2D is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   ---------------------
+   -- OPFCCR_Register --
+   ---------------------
+
    subtype OPFCCR_CM_Field is STM32_SVD.UInt3;
 
    --  output PFC control register
@@ -359,12 +367,13 @@ package STM32_SVD.DMA2D is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
+   --------------------
+   -- OCOLR_Register --
+   --------------------
+
    subtype OCOLR_BLUE_Field is STM32_SVD.Byte;
-
    subtype OCOLR_GREEN_Field is STM32_SVD.Byte;
-
    subtype OCOLR_RED_Field is STM32_SVD.Byte;
-
    subtype OCOLR_APLHA_Field is STM32_SVD.Byte;
 
    --  output color register
@@ -388,6 +397,10 @@ package STM32_SVD.DMA2D is
       APLHA at 0 range 24 .. 31;
    end record;
 
+   ------------------
+   -- OOR_Register --
+   ------------------
+
    subtype OOR_LO_Field is STM32_SVD.UInt14;
 
    --  output offset register
@@ -405,8 +418,11 @@ package STM32_SVD.DMA2D is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   subtype NLR_NL_Field is STM32_SVD.Short;
+   ------------------
+   -- NLR_Register --
+   ------------------
 
+   subtype NLR_NL_Field is STM32_SVD.Short;
    subtype NLR_PL_Field is STM32_SVD.UInt14;
 
    --  number of line register
@@ -427,6 +443,10 @@ package STM32_SVD.DMA2D is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
+   ------------------
+   -- LWR_Register --
+   ------------------
+
    subtype LWR_LW_Field is STM32_SVD.Short;
 
    --  line watermark register
@@ -444,8 +464,11 @@ package STM32_SVD.DMA2D is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype AMTCR_EN_Field is STM32_SVD.Bit;
+   --------------------
+   -- AMTCR_Register --
+   --------------------
 
+   subtype AMTCR_EN_Field is STM32_SVD.Bit;
    subtype AMTCR_DT_Field is STM32_SVD.Byte;
 
    --  AHB master timer configuration register
@@ -469,12 +492,13 @@ package STM32_SVD.DMA2D is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ---------------------
+   -- FGCLUT_Register --
+   ---------------------
+
    subtype FGCLUT_BLUE_Field is STM32_SVD.Byte;
-
    subtype FGCLUT_GREEN_Field is STM32_SVD.Byte;
-
    subtype FGCLUT_RED_Field is STM32_SVD.Byte;
-
    subtype FGCLUT_APLHA_Field is STM32_SVD.Byte;
 
    --  FGCLUT
@@ -498,12 +522,13 @@ package STM32_SVD.DMA2D is
       APLHA at 0 range 24 .. 31;
    end record;
 
+   ---------------------
+   -- BGCLUT_Register --
+   ---------------------
+
    subtype BGCLUT_BLUE_Field is STM32_SVD.Byte;
-
    subtype BGCLUT_GREEN_Field is STM32_SVD.Byte;
-
    subtype BGCLUT_RED_Field is STM32_SVD.Byte;
-
    subtype BGCLUT_APLHA_Field is STM32_SVD.Byte;
 
    --  BGCLUT
@@ -607,6 +632,6 @@ package STM32_SVD.DMA2D is
 
    --  DMA2D controller
    DMA2D_Periph : aliased DMA2D_Peripheral
-     with Import, Address => System'To_Address(16#4002B000#);
+     with Import, Address => System'To_Address (16#4002B000#);
 
 end STM32_SVD.DMA2D;

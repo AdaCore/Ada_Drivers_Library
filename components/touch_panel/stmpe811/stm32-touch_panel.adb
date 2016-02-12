@@ -52,10 +52,10 @@ with STM32.Device; use STM32.Device;
 package body STM32.Touch_Panel is
 
    SCL      : GPIO_Point renames PA8;
-   SCL_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C3;
+   SCL_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C;
 
    SDA      : GPIO_Point renames PC9;
-   SDA_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C3;
+   SDA_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C;
 
    TP_I2C   : I2C_Port_Id renames I2C_3;
 

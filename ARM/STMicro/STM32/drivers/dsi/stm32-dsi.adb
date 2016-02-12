@@ -2,7 +2,6 @@ with Ada.Real_Time;     use Ada.Real_Time;
 
 pragma Warnings (Off, "* is an internal GNAT unit");
 with System.BB.Parameters; use System.BB.Parameters;
-with System.STM32F4;       use System.STM32F4;
 pragma Warnings (On, "* is an internal GNAT unit");
 
 with STM32_SVD.DSIHOST; use STM32_SVD.DSIHOST;
@@ -60,6 +59,16 @@ package body STM32.DSI is
    is
       Start : Time;
    begin
+      Enable_Clock (DSIHOST_TE);
+      Configure_IO
+        (DSIHOST_TE,
+         Config =>
+           (Mode        => Mode_AF,
+            Output_Type => Push_Pull,
+            Speed       => Speed_50MHz,
+            Resistors   => Floating));
+      Configure_Alternate_Function (DSIHOST_TE, GPIO_AF_DSI);
+
       --  Enable the regulator
       DSIHOST_Periph.DSI_WRPCR.REGEN := 1;
 
@@ -70,17 +79,11 @@ package body STM32.DSI is
          end if;
       end loop;
 
+      --  Enable the DSI clock
       RCC_Periph.APB2ENR.DSIEN := 1;
 
-      Enable_Clock (DSIHOST_TE);
-      Configure_Alternate_Function (DSIHOST_TE, GPIO_AF_DSI);
-      Configure_IO
-        (DSIHOST_TE,
-         Config =>
-           (Mode        => Mode_AF,
-            Output_Type => Push_Pull,
-            Speed       => Speed_50MHz,
-            Resistors   => Floating));
+      --  Make sure the DSI peripheral is OFF
+      DSI_Stop;
 
       ---------------------------
       -- Configure the DSI PLL --
@@ -127,14 +130,18 @@ package body STM32.DSI is
       --  Calculate the bit period in high-speed mode in unit of 0.25 ns.
       --  The equation is UIX4 = IntegerPart ((1000/F_PHY_Mhz) * 4)
       --  Where F_PHY_Mhz = (PLLNDIV * HSE_MHz) / (IDF * ODF)
+      --  => UIX4 = 4_000 * IDF * ODV / (PLLNDIV * HSE_MHz)
       declare
-         TempIDF          : constant Word :=
-                              (if PLL_IN_Div > 0 then Word (PLL_IN_Div) else 1);
+         HSE_MHz          : constant Word := HSE_Clock / 1_000_000;
+         IDF              : constant Word :=
+                              (if PLL_IN_Div > 0
+                               then Word (PLL_IN_Div) else 1);
+         ODF              : constant Word :=
+                              Shift_Left
+                                (1, DSI_PLL_ODF'Enum_Rep (PLL_OUT_Div));
+         PLLN             : constant Word := Word (PLL_N_Div);
          Unit_Interval_x4 : constant Word :=
-                              (4_000_000 * TempIDF
-                               * 2 ** DSI_PLL_ODF'Enum_Rep (PLL_OUT_Div))
-                              / ((Word (HSE_Clock (MCU_ID.DEV_ID) / 1000)) *
-                                   Word (PLL_N_Div));
+                              (4_000 * IDF * ODF / (PLLN * HSE_MHz));
       begin
          DSIHOST_Periph.DSI_WPCR1.UIX4 := UInt6 (Unit_Interval_x4);
       end;
@@ -154,11 +161,8 @@ package body STM32.DSI is
 
    procedure DSI_Deinit is
    begin
-      --  Disable the DSI wrapper
-      DSIHOST_Periph.DSI_WCR.DSIEN := 0;
-
-      --  Disable the DSI host
-      DSIHOST_Periph.DSI_CR.EN := 0;
+      --  Disable the DSI wrapper and host
+      DSI_Stop;
 
       --  D-PHY clock and digital disable
       DSIHOST_Periph.DSI_PCTLR.DEN := 0;
@@ -171,11 +175,11 @@ package body STM32.DSI is
       DSIHOST_Periph.DSI_WRPCR.REGEN := 0;
    end DSI_Deinit;
 
-   ---------------------
-   -- DSI_Setup_Video --
-   ---------------------
+   --------------------------
+   -- DSI_Setup_Video_Mode --
+   --------------------------
 
-   procedure DSI_Setup_Video
+   procedure DSI_Setup_Video_Mode
      (Virtual_Channel             : DSI_Virtual_Channel_ID;
       Color_Coding                : DSI_Color_Mode;
       Loosely_Packed              : Boolean;
@@ -187,12 +191,12 @@ package body STM32.DSI is
       VSync_Polarity              : DSI_Polarity;
       DataEn_Polarity             : DSI_Polarity;
       HSync_Active_Duration       : Bits_13;
-      HSync_BackPorch             : Bits_13;
-      HLine_Duration              : Bits_15;
+      Horizontal_BackPorch        : Bits_13;
+      Horizontal_Line             : Bits_15;
       VSync_Active_Duration       : Bits_10;
-      VSync_BackPorch             : Bits_10;
-      VSync_FrontPorch            : Bits_10;
-      Vertical_Active_Duration    : Bits_14;
+      Vertical_BackPorch          : Bits_10;
+      Vertical_FrontPorch         : Bits_10;
+      Vertical_Active             : Bits_14;
       LP_Command_Enabled          : Boolean;
       LP_Largest_Packet_Size      : Byte;
       LP_VACT_Largest_Packet_Size : Byte;
@@ -244,18 +248,18 @@ package body STM32.DSI is
       --  cycles
       DSIHOST_Periph.DSI_VHSACR.HSA := HSync_Active_Duration;
       --  Set the Horizontal Back Porch
-      DSIHOST_Periph.DSI_VHBPCR.HBP := HSync_BackPorch;
+      DSIHOST_Periph.DSI_VHBPCR.HBP := Horizontal_BackPorch;
       --  Total line time (HSA+HBP+HACT+HFP
-      DSIHOST_Periph.DSI_VLCR.HLINE := HLine_Duration;
+      DSIHOST_Periph.DSI_VLCR.HLINE := Horizontal_Line;
 
       --  Set the Vertical Synchronization Active
       DSIHOST_Periph.DSI_VVSACR.VSA := VSync_Active_Duration;
       --  VBP
-      DSIHOST_Periph.DSI_VVBPCR.VBP := VSync_BackPorch;
+      DSIHOST_Periph.DSI_VVBPCR.VBP := Vertical_BackPorch;
       --  VFP
-      DSIHOST_Periph.DSI_VVFPCR.VFP := VSync_FrontPorch;
+      DSIHOST_Periph.DSI_VVFPCR.VFP := Vertical_FrontPorch;
       --  Vertical Active Period
-      DSIHOST_Periph.DSI_VVACR.VA   := Vertical_Active_Duration;
+      DSIHOST_Periph.DSI_VVACR.VA   := Vertical_Active;
 
       --  Configure the command transmission mode
       DSIHOST_Periph.DSI_VMCR.LPCE  := Boolean'Enum_Rep (LP_Command_Enabled);
@@ -278,7 +282,133 @@ package body STM32.DSI is
 
       DSIHOST_Periph.DSI_VMCR.FBTAAE :=
         Boolean'Enum_Rep (Frame_BTA_Ack_Enable);
-   end DSI_Setup_Video;
+   end DSI_Setup_Video_Mode;
+
+   ------------------------------------
+   -- DSI_Setup_Adapted_Command_Mode --
+   ------------------------------------
+
+   procedure DSI_Setup_Adapted_Command_Mode
+     (Virtual_Channel             : DSI_Virtual_Channel_ID;
+      Color_Coding                : DSI_Color_Mode;
+      Command_Size                : Short;
+      Tearing_Effect_Source       : DSI_Tearing_Effect_Source;
+      Tearing_Effect_Polarity     : DSI_TE_Polarity;
+      HSync_Polarity              : DSI_Polarity;
+      VSync_Polarity              : DSI_Polarity;
+      DataEn_Polarity             : DSI_Polarity;
+      VSync_Edge                  : DSI_Edge;
+      Automatic_Refresh           : Boolean;
+      TE_Acknowledge_Request      : Boolean)
+   is
+   begin
+      --  Select the command mode by setting CMDM and DSIM bits
+      DSIHOST_Periph.DSI_MCR.CMDM := 1;
+      DSIHOST_Periph.DSI_WCFGR.DSIM := 1;
+
+      --  Select the virtual channel for the LTDC interface traffic
+      DSIHOST_Periph.DSI_LVCIDR.VCID := Virtual_Channel;
+
+      --  Configure the polarity of control signals
+      DSIHOST_Periph.DSI_LPCR.HSP   := DSI_Polarity'Enum_Rep (HSync_Polarity);
+      DSIHOST_Periph.DSI_LPCR.VSP   := DSI_Polarity'Enum_Rep (VSync_Polarity);
+      DSIHOST_Periph.DSI_LPCR.DEP   := DSI_Polarity'Enum_Rep (DataEn_Polarity);
+
+      --  Select the color coding for the host
+      DSIHOST_Periph.DSI_LCOLCR.COLC := DSI_Color_Mode'Enum_Rep (Color_Coding);
+      --  ... and for the wrapper
+      DSIHOST_Periph.DSI_WCFGR.COLMUX :=
+        DSI_Color_Mode'Enum_Rep (Color_Coding);
+
+      --  Configure the maximum allowed size for write memory command
+      DSIHOST_Periph.DSI_LCCR.CMDSIZE := Command_Size;
+
+      --  Configure the tearing effect source and polarity
+      DSIHOST_Periph.DSI_WCFGR.TESRC :=
+        DSI_Tearing_Effect_Source'Enum_Rep (Tearing_Effect_Source);
+      DSIHOST_Periph.DSI_WCFGR.TEPOL :=
+        DSI_TE_Polarity'Enum_Rep (Tearing_Effect_Polarity);
+      DSIHOST_Periph.DSI_WCFGR.AR    :=
+        Boolean'Enum_Rep (Automatic_Refresh);
+      DSIHOST_Periph.DSI_WCFGR.VSPOL :=
+        DSI_EDGE'Enum_Rep (VSync_Edge);
+
+      --  Tearing effect acknowledge request
+      DSIHOST_Periph.DSI_CMCR.TEARE :=
+        Boolean'Enum_Rep (TE_Acknowledge_Request);
+   end DSI_Setup_Adapted_Command_Mode;
+
+   -----------------------
+   -- DSI_Setup_Command --
+   -----------------------
+
+   procedure DSI_Setup_Command
+     (LP_Gen_Short_Write_No_P  : Boolean := True;
+      LP_Gen_Short_Write_One_P : Boolean := True;
+      LP_Gen_Short_Write_Two_P : Boolean := True;
+      LP_Gen_Short_Read_No_P   : Boolean := True;
+      LP_Gen_Short_Read_One_P  : Boolean := True;
+      LP_Gen_Short_Read_Two_P  : Boolean := True;
+      LP_Gen_Long_Write        : Boolean := True;
+      LP_DCS_Short_Write_No_P  : Boolean := True;
+      LP_DCS_Short_Write_One_P : Boolean := True;
+      LP_DCS_Short_Read_No_P   : Boolean := True;
+      LP_DCS_Long_Write        : Boolean := True;
+      LP_Max_Read_Packet       : Boolean := False;
+      Acknowledge_Request      : Boolean := False)
+   is
+   begin
+      DSIHOST_Periph.DSI_CMCR.GSW0TX :=
+        Boolean'Enum_Rep (LP_Gen_Short_Write_No_P);
+      DSIHOST_Periph.DSI_CMCR.GSW1TX :=
+        Boolean'Enum_Rep (LP_Gen_Short_Write_One_P);
+      DSIHOST_Periph.DSI_CMCR.GSW2TX :=
+        Boolean'Enum_Rep (LP_Gen_Short_Write_Two_P);
+      DSIHOST_Periph.DSI_CMCR.GSR0TX :=
+        Boolean'Enum_Rep (LP_Gen_Short_Read_No_P);
+      DSIHOST_Periph.DSI_CMCR.GSR1TX :=
+        Boolean'Enum_Rep (LP_Gen_Short_Read_One_P);
+      DSIHOST_Periph.DSI_CMCR.GSR2TX :=
+        Boolean'Enum_Rep (LP_Gen_Short_Read_Two_P);
+      DSIHOST_Periph.DSI_CMCR.GLWTX :=
+        Boolean'Enum_Rep (LP_Gen_Long_Write);
+      DSIHOST_Periph.DSI_CMCR.DSW0TX :=
+        Boolean'Enum_Rep (LP_DCS_Short_Write_No_P);
+      DSIHOST_Periph.DSI_CMCR.DSW1TX :=
+        Boolean'Enum_Rep (LP_DCS_Short_Write_One_P);
+      DSIHOST_Periph.DSI_CMCR.DSR0TX :=
+        Boolean'Enum_Rep (LP_DCS_Short_Read_No_P);
+      DSIHOST_Periph.DSI_CMCR.DLWTX :=
+        Boolean'Enum_Rep (LP_DCS_Long_Write);
+      DSIHOST_Periph.DSI_CMCR.MRDPS :=
+        Boolean'Enum_Rep (LP_Max_Read_Packet);
+      DSIHOST_Periph.DSI_CMCR.ARE :=
+        Boolean'Enum_Rep (Acknowledge_Request);
+
+   end DSI_Setup_Command;
+
+   ----------------------------
+   -- DSI_Setup_Flow_Control --
+   ----------------------------
+
+   procedure DSI_Setup_Flow_Control
+     (Flow_Control : DSI_Flow_Control)
+   is
+   begin
+      DSIHOST_Periph.DSI_PCR := (others =>  <>);
+      case Flow_Control is
+         when Flow_Control_CRC_RX =>
+            DSIHOST_Periph.DSI_PCR.CRCRXE := 1;
+         when Flow_Control_ECC_RX =>
+            DSIHOST_Periph.DSI_PCR.ECCRXE := 1;
+         when Flow_Control_BTA =>
+            DSIHOST_Periph.DSI_PCR.BTAE := 1;
+         when Flow_Control_EOTP_RX =>
+            DSIHOST_Periph.DSI_PCR.ETRXE := 1;
+         when Flow_Control_EOTP_TX =>
+            DSIHOST_Periph.DSI_PCR.ETTXE := 1;
+      end case;
+   end DSI_Setup_Flow_Control;
 
    ---------------
    -- DSI_Start --
@@ -304,6 +434,15 @@ package body STM32.DSI is
       DSIHOST_Periph.DSI_WCR.DSIEN := 0;
    end DSI_Stop;
 
+   -----------------
+   -- DSI_Refresh --
+   -----------------
+
+   procedure DSI_Refresh
+   is
+   begin
+      DSIHOST_Periph.DSI_WCR.LTDCEN := 1;
+   end DSI_Refresh;
    ---------------------
    -- DSI_Short_Write --
    ---------------------
@@ -356,16 +495,16 @@ package body STM32.DSI is
          end if;
       end loop;
 
-      Value.DATA.Arr (0) := Param1;
+      Value.Arr (0) := Param1;
       Off   := 1;
 
       for Param of Parameters loop
-         Value.DATA.Arr (Off) := Param;
+         Value.Arr (Off) := Param;
          Off := Off + 1;
-         if Off > Value.DATA.Arr'Last then
+         if Off > Value.Arr'Last then
             DSIHOST_Periph.DSI_GPDR := Value;
-            Value.DATA.Val := 0;
-            Off            := 0;
+            Value.Val := 0;
+            Off       := 0;
          end if;
       end loop;
 

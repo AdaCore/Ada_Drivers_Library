@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F7x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.DBG is
@@ -12,8 +13,11 @@ package STM32_SVD.DBG is
    -- Registers --
    ---------------
 
-   subtype DBGMCU_IDCODE_DEV_ID_Field is STM32_SVD.UInt12;
+   ----------------------------
+   -- DBGMCU_IDCODE_Register --
+   ----------------------------
 
+   subtype DBGMCU_IDCODE_DEV_ID_Field is STM32_SVD.UInt12;
    subtype DBGMCU_IDCODE_REV_ID_Field is STM32_SVD.Short;
 
    --  IDCODE
@@ -34,14 +38,14 @@ package STM32_SVD.DBG is
       REV_ID         at 0 range 16 .. 31;
    end record;
 
+   ------------------------
+   -- DBGMCU_CR_Register --
+   ------------------------
+
    subtype DBGMCU_CR_DBG_SLEEP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_CR_DBG_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_CR_DBG_STANDBY_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_CR_TRACE_IOEN_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_CR_TRACE_MODE_Field is STM32_SVD.UInt2;
 
    --  Control Register
@@ -74,36 +78,25 @@ package STM32_SVD.DBG is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   -----------------------------
+   -- DBGMCU_APB1_FZ_Register --
+   -----------------------------
+
    subtype DBGMCU_APB1_FZ_DBG_TIM2_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_TIM3_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_TIM4_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_TIM5_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_TIM6_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_TIM7_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_TIM12_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_TIM13_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_TIM14_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_WWDG_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_IWDEG_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_J2C1_SMBUS_TIMEOUT_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_J2C2_SMBUS_TIMEOUT_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_J2C3SMBUS_TIMEOUT_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_CAN1_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB1_FZ_DBG_CAN2_STOP_Field is STM32_SVD.Bit;
 
    --  Debug MCU APB1 Freeze registe
@@ -135,11 +128,14 @@ package STM32_SVD.DBG is
       --  unspecified
       Reserved_13_20         : STM32_SVD.Byte := 16#0#;
       --  DBG_J2C1_SMBUS_TIMEOUT
-      DBG_J2C1_SMBUS_TIMEOUT : DBGMCU_APB1_FZ_DBG_J2C1_SMBUS_TIMEOUT_Field := 16#0#;
+      DBG_J2C1_SMBUS_TIMEOUT : DBGMCU_APB1_FZ_DBG_J2C1_SMBUS_TIMEOUT_Field :=
+                                16#0#;
       --  DBG_J2C2_SMBUS_TIMEOUT
-      DBG_J2C2_SMBUS_TIMEOUT : DBGMCU_APB1_FZ_DBG_J2C2_SMBUS_TIMEOUT_Field := 16#0#;
+      DBG_J2C2_SMBUS_TIMEOUT : DBGMCU_APB1_FZ_DBG_J2C2_SMBUS_TIMEOUT_Field :=
+                                16#0#;
       --  DBG_J2C3SMBUS_TIMEOUT
-      DBG_J2C3SMBUS_TIMEOUT  : DBGMCU_APB1_FZ_DBG_J2C3SMBUS_TIMEOUT_Field := 16#0#;
+      DBG_J2C3SMBUS_TIMEOUT  : DBGMCU_APB1_FZ_DBG_J2C3SMBUS_TIMEOUT_Field :=
+                                16#0#;
       --  unspecified
       Reserved_24_24         : STM32_SVD.Bit := 16#0#;
       --  DBG_CAN1_STOP
@@ -175,14 +171,14 @@ package STM32_SVD.DBG is
       Reserved_27_31         at 0 range 27 .. 31;
    end record;
 
+   -----------------------------
+   -- DBGMCU_APB2_FZ_Register --
+   -----------------------------
+
    subtype DBGMCU_APB2_FZ_DBG_TIM1_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB2_FZ_DBG_TIM8_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB2_FZ_DBG_TIM9_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB2_FZ_DBG_TIM10_STOP_Field is STM32_SVD.Bit;
-
    subtype DBGMCU_APB2_FZ_DBG_TIM11_STOP_Field is STM32_SVD.Bit;
 
    --  Debug MCU APB2 Freeze registe
@@ -241,6 +237,6 @@ package STM32_SVD.DBG is
 
    --  Debug support
    DBG_Periph : aliased DBG_Peripheral
-     with Import, Address => System'To_Address(16#E0042000#);
+     with Import, Address => System'To_Address (16#E0042000#);
 
 end STM32_SVD.DBG;

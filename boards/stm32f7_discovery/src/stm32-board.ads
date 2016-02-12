@@ -35,7 +35,6 @@
 with STM32.Device;  use STM32.Device;
 
 with STM32.GPIO;    use STM32.GPIO;
---  with STM32.SPI;     use STM32.SPI;
 with STM32.ADC;     use STM32.ADC;
 with STM32.FMC;     use STM32.FMC;
 
@@ -110,6 +109,13 @@ package STM32.Board is
                           STM32.FMC.FMC_ReadPipe_Delay_0;
    SDRAM_Refresh_Cnt  : constant := 1539;
 
+   ---------
+   -- I2C --
+   ---------
+
+   procedure Initialize_I2C_GPIO (Port : I2C_Port_Id);
+   procedure Configure_I2C (Port : I2C_Port_Id);
+
    ------------------------
    --  GPIO Pins for LCD --
    ------------------------
@@ -123,8 +129,6 @@ package STM32.Board is
    LCD_DE        : GPIO_Point renames PK7;
    LCD_INT       : GPIO_Point renames PI13;
 
-   LCD_SDA       : GPIO_Point renames PH8;
-   LCD_SCL       : GPIO_Point renames PH7;
    NC1           : GPIO_Point renames PI8;
 
    LCD_CTRL_PINS : constant GPIO_Points :=
@@ -138,7 +142,27 @@ package STM32.Board is
                      (1 => PG12); -- B4
 
    TP_I2C   : I2C_Port_Id renames I2C_3;
-   TP_Pins : constant GPIO_Points := (LCD_SDA, LCD_SCL);
+
+   -----------
+   -- Audio --
+   -----------
+
+   --  Audio out
+   SAI2_MCLK_A : GPIO_Point renames PI4;
+   SAI2_SCK_A  : GPIO_Point renames PI5;
+   SAI2_SD_A   : GPIO_Point renames PI6;
+   SAI2_FS_A   : GPIO_Point renames PI7;
+
+   --  Audio in
+   SAI2_SD_B   : GPIO_Point renames PG10;
+
+   --  Audio interrupts
+   TP_PH15     : GPIO_Point renames PH15;
+
+   Audio_I2C   : I2C_Port_Id renames I2C_3;
+   Audio_INT   : GPIO_Point renames PD6;
+
+   Audio_DMA   : DMA_Controller renames DMA_2;
 
    --  User button
 

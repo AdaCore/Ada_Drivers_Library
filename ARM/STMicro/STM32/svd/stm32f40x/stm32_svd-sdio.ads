@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F40x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.SDIO is
@@ -11,6 +12,10 @@ package STM32_SVD.SDIO is
    ---------------
    -- Registers --
    ---------------
+
+   --------------------
+   -- POWER_Register --
+   --------------------
 
    subtype POWER_PWRCTRL_Field is STM32_SVD.UInt2;
 
@@ -29,18 +34,16 @@ package STM32_SVD.SDIO is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
+   --------------------
+   -- CLKCR_Register --
+   --------------------
+
    subtype CLKCR_CLKDIV_Field is STM32_SVD.Byte;
-
    subtype CLKCR_CLKEN_Field is STM32_SVD.Bit;
-
    subtype CLKCR_PWRSAV_Field is STM32_SVD.Bit;
-
    subtype CLKCR_BYPASS_Field is STM32_SVD.Bit;
-
    subtype CLKCR_WIDBUS_Field is STM32_SVD.UInt2;
-
    subtype CLKCR_NEGEDGE_Field is STM32_SVD.Bit;
-
    subtype CLKCR_HWFC_EN_Field is STM32_SVD.Bit;
 
    --  SDI clock control register
@@ -76,22 +79,18 @@ package STM32_SVD.SDIO is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
+   ------------------
+   -- CMD_Register --
+   ------------------
+
    subtype CMD_CMDINDEX_Field is STM32_SVD.UInt6;
-
    subtype CMD_WAITRESP_Field is STM32_SVD.UInt2;
-
    subtype CMD_WAITINT_Field is STM32_SVD.Bit;
-
    subtype CMD_WAITPEND_Field is STM32_SVD.Bit;
-
    subtype CMD_CPSMEN_Field is STM32_SVD.Bit;
-
    subtype CMD_SDIOSuspend_Field is STM32_SVD.Bit;
-
    subtype CMD_ENCMDcompl_Field is STM32_SVD.Bit;
-
    subtype CMD_nIEN_Field is STM32_SVD.Bit;
-
    subtype CMD_CE_ATACMD_Field is STM32_SVD.Bit;
 
    --  command register
@@ -133,6 +132,10 @@ package STM32_SVD.SDIO is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
+   ----------------------
+   -- RESPCMD_Register --
+   ----------------------
+
    subtype RESPCMD_RESPCMD_Field is STM32_SVD.UInt6;
 
    --  command response register
@@ -149,6 +152,10 @@ package STM32_SVD.SDIO is
       RESPCMD       at 0 range 0 .. 5;
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
+
+   -------------------
+   -- DLEN_Register --
+   -------------------
 
    subtype DLEN_DATALENGTH_Field is STM32_SVD.UInt25;
 
@@ -167,22 +174,18 @@ package STM32_SVD.SDIO is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
+   --------------------
+   -- DCTRL_Register --
+   --------------------
+
    subtype DCTRL_DTEN_Field is STM32_SVD.Bit;
-
    subtype DCTRL_DTDIR_Field is STM32_SVD.Bit;
-
    subtype DCTRL_DTMODE_Field is STM32_SVD.Bit;
-
    subtype DCTRL_DMAEN_Field is STM32_SVD.Bit;
-
    subtype DCTRL_DBLOCKSIZE_Field is STM32_SVD.UInt4;
-
    subtype DCTRL_RWSTART_Field is STM32_SVD.Bit;
-
    subtype DCTRL_RWSTOP_Field is STM32_SVD.Bit;
-
    subtype DCTRL_RWMOD_Field is STM32_SVD.Bit;
-
    subtype DCTRL_SDIOEN_Field is STM32_SVD.Bit;
 
    --  data control register
@@ -225,6 +228,10 @@ package STM32_SVD.SDIO is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
+   ---------------------
+   -- DCOUNT_Register --
+   ---------------------
+
    subtype DCOUNT_DATACOUNT_Field is STM32_SVD.UInt25;
 
    --  data counter register
@@ -242,52 +249,33 @@ package STM32_SVD.SDIO is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
+   ------------------
+   -- STA_Register --
+   ------------------
+
    subtype STA_CCRCFAIL_Field is STM32_SVD.Bit;
-
    subtype STA_DCRCFAIL_Field is STM32_SVD.Bit;
-
    subtype STA_CTIMEOUT_Field is STM32_SVD.Bit;
-
    subtype STA_DTIMEOUT_Field is STM32_SVD.Bit;
-
    subtype STA_TXUNDERR_Field is STM32_SVD.Bit;
-
    subtype STA_RXOVERR_Field is STM32_SVD.Bit;
-
    subtype STA_CMDREND_Field is STM32_SVD.Bit;
-
    subtype STA_CMDSENT_Field is STM32_SVD.Bit;
-
    subtype STA_DATAEND_Field is STM32_SVD.Bit;
-
    subtype STA_STBITERR_Field is STM32_SVD.Bit;
-
    subtype STA_DBCKEND_Field is STM32_SVD.Bit;
-
    subtype STA_CMDACT_Field is STM32_SVD.Bit;
-
    subtype STA_TXACT_Field is STM32_SVD.Bit;
-
    subtype STA_RXACT_Field is STM32_SVD.Bit;
-
    subtype STA_TXFIFOHE_Field is STM32_SVD.Bit;
-
    subtype STA_RXFIFOHF_Field is STM32_SVD.Bit;
-
    subtype STA_TXFIFOF_Field is STM32_SVD.Bit;
-
    subtype STA_RXFIFOF_Field is STM32_SVD.Bit;
-
    subtype STA_TXFIFOE_Field is STM32_SVD.Bit;
-
    subtype STA_RXFIFOE_Field is STM32_SVD.Bit;
-
    subtype STA_TXDAVL_Field is STM32_SVD.Bit;
-
    subtype STA_RXDAVL_Field is STM32_SVD.Bit;
-
    subtype STA_SDIOIT_Field is STM32_SVD.Bit;
-
    subtype STA_CEATAEND_Field is STM32_SVD.Bit;
 
    --  status register
@@ -375,30 +363,22 @@ package STM32_SVD.SDIO is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   ------------------
+   -- ICR_Register --
+   ------------------
+
    subtype ICR_CCRCFAILC_Field is STM32_SVD.Bit;
-
    subtype ICR_DCRCFAILC_Field is STM32_SVD.Bit;
-
    subtype ICR_CTIMEOUTC_Field is STM32_SVD.Bit;
-
    subtype ICR_DTIMEOUTC_Field is STM32_SVD.Bit;
-
    subtype ICR_TXUNDERRC_Field is STM32_SVD.Bit;
-
    subtype ICR_RXOVERRC_Field is STM32_SVD.Bit;
-
    subtype ICR_CMDRENDC_Field is STM32_SVD.Bit;
-
    subtype ICR_CMDSENTC_Field is STM32_SVD.Bit;
-
    subtype ICR_DATAENDC_Field is STM32_SVD.Bit;
-
    subtype ICR_STBITERRC_Field is STM32_SVD.Bit;
-
    subtype ICR_DBCKENDC_Field is STM32_SVD.Bit;
-
    subtype ICR_SDIOITC_Field is STM32_SVD.Bit;
-
    subtype ICR_CEATAENDC_Field is STM32_SVD.Bit;
 
    --  interrupt clear register
@@ -455,52 +435,33 @@ package STM32_SVD.SDIO is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   -------------------
+   -- MASK_Register --
+   -------------------
+
    subtype MASK_CCRCFAILIE_Field is STM32_SVD.Bit;
-
    subtype MASK_DCRCFAILIE_Field is STM32_SVD.Bit;
-
    subtype MASK_CTIMEOUTIE_Field is STM32_SVD.Bit;
-
    subtype MASK_DTIMEOUTIE_Field is STM32_SVD.Bit;
-
    subtype MASK_TXUNDERRIE_Field is STM32_SVD.Bit;
-
    subtype MASK_RXOVERRIE_Field is STM32_SVD.Bit;
-
    subtype MASK_CMDRENDIE_Field is STM32_SVD.Bit;
-
    subtype MASK_CMDSENTIE_Field is STM32_SVD.Bit;
-
    subtype MASK_DATAENDIE_Field is STM32_SVD.Bit;
-
    subtype MASK_STBITERRIE_Field is STM32_SVD.Bit;
-
    subtype MASK_DBCKENDIE_Field is STM32_SVD.Bit;
-
    subtype MASK_CMDACTIE_Field is STM32_SVD.Bit;
-
    subtype MASK_TXACTIE_Field is STM32_SVD.Bit;
-
    subtype MASK_RXACTIE_Field is STM32_SVD.Bit;
-
    subtype MASK_TXFIFOHEIE_Field is STM32_SVD.Bit;
-
    subtype MASK_RXFIFOHFIE_Field is STM32_SVD.Bit;
-
    subtype MASK_TXFIFOFIE_Field is STM32_SVD.Bit;
-
    subtype MASK_RXFIFOFIE_Field is STM32_SVD.Bit;
-
    subtype MASK_TXFIFOEIE_Field is STM32_SVD.Bit;
-
    subtype MASK_RXFIFOEIE_Field is STM32_SVD.Bit;
-
    subtype MASK_TXDAVLIE_Field is STM32_SVD.Bit;
-
    subtype MASK_RXDAVLIE_Field is STM32_SVD.Bit;
-
    subtype MASK_SDIOITIE_Field is STM32_SVD.Bit;
-
    subtype MASK_CEATAENDIE_Field is STM32_SVD.Bit;
 
    --  mask register
@@ -587,6 +548,10 @@ package STM32_SVD.SDIO is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   ----------------------
+   -- FIFOCNT_Register --
+   ----------------------
+
    subtype FIFOCNT_FIFOCOUNT_Field is STM32_SVD.UInt24;
 
    --  FIFO counter register
@@ -672,6 +637,6 @@ package STM32_SVD.SDIO is
 
    --  Secure digital input/output interface
    SDIO_Periph : aliased SDIO_Peripheral
-     with Import, Address => System'To_Address(16#40012C00#);
+     with Import, Address => System'To_Address (16#40012C00#);
 
 end STM32_SVD.SDIO;

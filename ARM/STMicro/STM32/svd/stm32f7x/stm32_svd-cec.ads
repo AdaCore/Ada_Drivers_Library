@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F7x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.CEC is
@@ -12,10 +13,12 @@ package STM32_SVD.CEC is
    -- Registers --
    ---------------
 
+   -----------------
+   -- CR_Register --
+   -----------------
+
    subtype CR_CECEN_Field is STM32_SVD.Bit;
-
    subtype CR_TXSOM_Field is STM32_SVD.Bit;
-
    subtype CR_TXEOM_Field is STM32_SVD.Bit;
 
    --  control register
@@ -39,22 +42,18 @@ package STM32_SVD.CEC is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
+   -------------------
+   -- CFGR_Register --
+   -------------------
+
    subtype CFGR_SFT_Field is STM32_SVD.UInt3;
-
    subtype CFGR_RXTOL_Field is STM32_SVD.Bit;
-
    subtype CFGR_BRESTP_Field is STM32_SVD.Bit;
-
    subtype CFGR_BREGEN_Field is STM32_SVD.Bit;
-
    subtype CFGR_LBPEGEN_Field is STM32_SVD.Bit;
-
    subtype CFGR_BRDNOGEN_Field is STM32_SVD.Bit;
-
    subtype CFGR_SFTOP_Field is STM32_SVD.Bit;
-
    subtype CFGR_OAR_Field is STM32_SVD.UInt15;
-
    subtype CFGR_LSTN_Field is STM32_SVD.Bit;
 
    --  configuration register
@@ -96,6 +95,10 @@ package STM32_SVD.CEC is
       LSTN          at 0 range 31 .. 31;
    end record;
 
+   -------------------
+   -- TXDR_Register --
+   -------------------
+
    subtype TXDR_TXD_Field is STM32_SVD.Byte;
 
    --  Tx data register
@@ -112,6 +115,10 @@ package STM32_SVD.CEC is
       TXD           at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
+
+   -------------------
+   -- RXDR_Register --
+   -------------------
 
    subtype RXDR_RXDR_Field is STM32_SVD.Byte;
 
@@ -130,30 +137,22 @@ package STM32_SVD.CEC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   ------------------
+   -- ISR_Register --
+   ------------------
+
    subtype ISR_RXBR_Field is STM32_SVD.Bit;
-
    subtype ISR_RXEND_Field is STM32_SVD.Bit;
-
    subtype ISR_RXOVR_Field is STM32_SVD.Bit;
-
    subtype ISR_BRE_Field is STM32_SVD.Bit;
-
    subtype ISR_SBPE_Field is STM32_SVD.Bit;
-
    subtype ISR_LBPE_Field is STM32_SVD.Bit;
-
    subtype ISR_RXACKE_Field is STM32_SVD.Bit;
-
    subtype ISR_ARBLST_Field is STM32_SVD.Bit;
-
    subtype ISR_TXBR_Field is STM32_SVD.Bit;
-
    subtype ISR_TXEND_Field is STM32_SVD.Bit;
-
    subtype ISR_TXUDR_Field is STM32_SVD.Bit;
-
    subtype ISR_TXERR_Field is STM32_SVD.Bit;
-
    subtype ISR_TXACKE_Field is STM32_SVD.Bit;
 
    --  Interrupt and Status Register
@@ -207,30 +206,22 @@ package STM32_SVD.CEC is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
+   ------------------
+   -- IER_Register --
+   ------------------
+
    subtype IER_RXBRIE_Field is STM32_SVD.Bit;
-
    subtype IER_RXENDIE_Field is STM32_SVD.Bit;
-
    subtype IER_RXOVRIE_Field is STM32_SVD.Bit;
-
    subtype IER_BREIE_Field is STM32_SVD.Bit;
-
    subtype IER_SBPEIE_Field is STM32_SVD.Bit;
-
    subtype IER_LBPEIE_Field is STM32_SVD.Bit;
-
    subtype IER_RXACKIE_Field is STM32_SVD.Bit;
-
    subtype IER_ARBLSTIE_Field is STM32_SVD.Bit;
-
    subtype IER_TXBRIE_Field is STM32_SVD.Bit;
-
    subtype IER_TXENDIE_Field is STM32_SVD.Bit;
-
    subtype IER_TXUDRIE_Field is STM32_SVD.Bit;
-
    subtype IER_TXERRIE_Field is STM32_SVD.Bit;
-
    subtype IER_TXACKIE_Field is STM32_SVD.Bit;
 
    --  interrupt enable register
@@ -316,6 +307,6 @@ package STM32_SVD.CEC is
 
    --  HDMI-CEC controller
    CEC_Periph : aliased CEC_Peripheral
-     with Import, Address => System'To_Address(16#40006C00#);
+     with Import, Address => System'To_Address (16#40006C00#);
 
 end STM32_SVD.CEC;

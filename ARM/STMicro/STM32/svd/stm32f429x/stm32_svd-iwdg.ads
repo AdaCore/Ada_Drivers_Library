@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F429x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.IWDG is
@@ -11,6 +12,10 @@ package STM32_SVD.IWDG is
    ---------------
    -- Registers --
    ---------------
+
+   -----------------
+   -- KR_Register --
+   -----------------
 
    subtype KR_KEY_Field is STM32_SVD.Short;
 
@@ -29,6 +34,10 @@ package STM32_SVD.IWDG is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   -----------------
+   -- PR_Register --
+   -----------------
+
    subtype PR_PR_Field is STM32_SVD.UInt3;
 
    --  Prescaler register
@@ -45,6 +54,10 @@ package STM32_SVD.IWDG is
       PR            at 0 range 0 .. 2;
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
+
+   ------------------
+   -- RLR_Register --
+   ------------------
 
    subtype RLR_RL_Field is STM32_SVD.UInt12;
 
@@ -63,8 +76,11 @@ package STM32_SVD.IWDG is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   subtype SR_PVU_Field is STM32_SVD.Bit;
+   -----------------
+   -- SR_Register --
+   -----------------
 
+   subtype SR_PVU_Field is STM32_SVD.Bit;
    subtype SR_RVU_Field is STM32_SVD.Bit;
 
    --  Status register
@@ -111,6 +127,6 @@ package STM32_SVD.IWDG is
 
    --  Independent watchdog
    IWDG_Periph : aliased IWDG_Peripheral
-     with Import, Address => System'To_Address(16#40003000#);
+     with Import, Address => System'To_Address (16#40003000#);
 
 end STM32_SVD.IWDG;

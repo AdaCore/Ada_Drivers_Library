@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F40x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.TIM is
@@ -12,20 +13,17 @@ package STM32_SVD.TIM is
    -- Registers --
    ---------------
 
+   ------------------
+   -- CR1_Register --
+   ------------------
+
    subtype CR1_CEN_Field is STM32_SVD.Bit;
-
    subtype CR1_UDIS_Field is STM32_SVD.Bit;
-
    subtype CR1_URS_Field is STM32_SVD.Bit;
-
    subtype CR1_OPM_Field is STM32_SVD.Bit;
-
    subtype CR1_DIR_Field is STM32_SVD.Bit;
-
    subtype CR1_CMS_Field is STM32_SVD.UInt2;
-
    subtype CR1_ARPE_Field is STM32_SVD.Bit;
-
    subtype CR1_CKD_Field is STM32_SVD.UInt2;
 
    --  control register 1
@@ -64,28 +62,21 @@ package STM32_SVD.TIM is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
+   ------------------
+   -- CR2_Register --
+   ------------------
+
    subtype CR2_CCPC_Field is STM32_SVD.Bit;
-
    subtype CR2_CCUS_Field is STM32_SVD.Bit;
-
    subtype CR2_CCDS_Field is STM32_SVD.Bit;
-
    subtype CR2_MMS_Field is STM32_SVD.UInt3;
-
    subtype CR2_TI1S_Field is STM32_SVD.Bit;
-
    subtype CR2_OIS1_Field is STM32_SVD.Bit;
-
    subtype CR2_OIS1N_Field is STM32_SVD.Bit;
-
    subtype CR2_OIS2_Field is STM32_SVD.Bit;
-
    subtype CR2_OIS2N_Field is STM32_SVD.Bit;
-
    subtype CR2_OIS3_Field is STM32_SVD.Bit;
-
    subtype CR2_OIS3N_Field is STM32_SVD.Bit;
-
    subtype CR2_OIS4_Field is STM32_SVD.Bit;
 
    --  control register 2
@@ -139,18 +130,16 @@ package STM32_SVD.TIM is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
+   -------------------
+   -- SMCR_Register --
+   -------------------
+
    subtype SMCR_SMS_Field is STM32_SVD.UInt3;
-
    subtype SMCR_TS_Field is STM32_SVD.UInt3;
-
    subtype SMCR_MSM_Field is STM32_SVD.Bit;
-
    subtype SMCR_ETF_Field is STM32_SVD.UInt4;
-
    subtype SMCR_ETPS_Field is STM32_SVD.UInt2;
-
    subtype SMCR_ECE_Field is STM32_SVD.Bit;
-
    subtype SMCR_ETP_Field is STM32_SVD.Bit;
 
    --  slave mode control register
@@ -189,34 +178,24 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   -------------------
+   -- DIER_Register --
+   -------------------
+
    subtype DIER_UIE_Field is STM32_SVD.Bit;
-
    subtype DIER_CC1IE_Field is STM32_SVD.Bit;
-
    subtype DIER_CC2IE_Field is STM32_SVD.Bit;
-
    subtype DIER_CC3IE_Field is STM32_SVD.Bit;
-
    subtype DIER_CC4IE_Field is STM32_SVD.Bit;
-
    subtype DIER_COMIE_Field is STM32_SVD.Bit;
-
    subtype DIER_TIE_Field is STM32_SVD.Bit;
-
    subtype DIER_BIE_Field is STM32_SVD.Bit;
-
    subtype DIER_UDE_Field is STM32_SVD.Bit;
-
    subtype DIER_CC1DE_Field is STM32_SVD.Bit;
-
    subtype DIER_CC2DE_Field is STM32_SVD.Bit;
-
    subtype DIER_CC3DE_Field is STM32_SVD.Bit;
-
    subtype DIER_CC4DE_Field is STM32_SVD.Bit;
-
    subtype DIER_COMDE_Field is STM32_SVD.Bit;
-
    subtype DIER_TDE_Field is STM32_SVD.Bit;
 
    --  DMA/Interrupt enable register
@@ -276,28 +255,21 @@ package STM32_SVD.TIM is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR_UIF_Field is STM32_SVD.Bit;
-
    subtype SR_CC1IF_Field is STM32_SVD.Bit;
-
    subtype SR_CC2IF_Field is STM32_SVD.Bit;
-
    subtype SR_CC3IF_Field is STM32_SVD.Bit;
-
    subtype SR_CC4IF_Field is STM32_SVD.Bit;
-
    subtype SR_COMIF_Field is STM32_SVD.Bit;
-
    subtype SR_TIF_Field is STM32_SVD.Bit;
-
    subtype SR_BIF_Field is STM32_SVD.Bit;
-
    subtype SR_CC1OF_Field is STM32_SVD.Bit;
-
    subtype SR_CC2OF_Field is STM32_SVD.Bit;
-
    subtype SR_CC3OF_Field is STM32_SVD.Bit;
-
    subtype SR_CC4OF_Field is STM32_SVD.Bit;
 
    --  status register
@@ -351,20 +323,17 @@ package STM32_SVD.TIM is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
+   ------------------
+   -- EGR_Register --
+   ------------------
+
    subtype EGR_UG_Field is STM32_SVD.Bit;
-
    subtype EGR_CC1G_Field is STM32_SVD.Bit;
-
    subtype EGR_CC2G_Field is STM32_SVD.Bit;
-
    subtype EGR_CC3G_Field is STM32_SVD.Bit;
-
    subtype EGR_CC4G_Field is STM32_SVD.Bit;
-
    subtype EGR_COMG_Field is STM32_SVD.Bit;
-
    subtype EGR_TG_Field is STM32_SVD.Bit;
-
    subtype EGR_BG_Field is STM32_SVD.Bit;
 
    --  event generation register
@@ -403,24 +372,19 @@ package STM32_SVD.TIM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   ---------------------------
+   -- CCMR1_Output_Register --
+   ---------------------------
+
    subtype CCMR1_Output_CC1S_Field is STM32_SVD.UInt2;
-
    subtype CCMR1_Output_OC1FE_Field is STM32_SVD.Bit;
-
    subtype CCMR1_Output_OC1PE_Field is STM32_SVD.Bit;
-
    subtype CCMR1_Output_OC1M_Field is STM32_SVD.UInt3;
-
    subtype CCMR1_Output_OC1CE_Field is STM32_SVD.Bit;
-
    subtype CCMR1_Output_CC2S_Field is STM32_SVD.UInt2;
-
    subtype CCMR1_Output_OC2FE_Field is STM32_SVD.Bit;
-
    subtype CCMR1_Output_OC2PE_Field is STM32_SVD.Bit;
-
    subtype CCMR1_Output_OC2M_Field is STM32_SVD.UInt3;
-
    subtype CCMR1_Output_OC2CE_Field is STM32_SVD.Bit;
 
    --  capture/compare mode register 1 (output mode)
@@ -465,16 +429,15 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------------
+   -- CCMR1_Input_Register --
+   --------------------------
+
    subtype CCMR1_Input_CC1S_Field is STM32_SVD.UInt2;
-
    subtype CCMR1_Input_ICPCS_Field is STM32_SVD.UInt2;
-
    subtype CCMR1_Input_IC1F_Field is STM32_SVD.UInt4;
-
    subtype CCMR1_Input_CC2S_Field is STM32_SVD.UInt2;
-
    subtype CCMR1_Input_IC2PCS_Field is STM32_SVD.UInt2;
-
    subtype CCMR1_Input_IC2F_Field is STM32_SVD.UInt4;
 
    --  capture/compare mode register 1 (input mode)
@@ -507,24 +470,19 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ---------------------------
+   -- CCMR2_Output_Register --
+   ---------------------------
+
    subtype CCMR2_Output_CC3S_Field is STM32_SVD.UInt2;
-
    subtype CCMR2_Output_OC3FE_Field is STM32_SVD.Bit;
-
    subtype CCMR2_Output_OC3PE_Field is STM32_SVD.Bit;
-
    subtype CCMR2_Output_OC3M_Field is STM32_SVD.UInt3;
-
    subtype CCMR2_Output_OC3CE_Field is STM32_SVD.Bit;
-
    subtype CCMR2_Output_CC4S_Field is STM32_SVD.UInt2;
-
    subtype CCMR2_Output_OC4FE_Field is STM32_SVD.Bit;
-
    subtype CCMR2_Output_OC4PE_Field is STM32_SVD.Bit;
-
    subtype CCMR2_Output_OC4M_Field is STM32_SVD.UInt3;
-
    subtype CCMR2_Output_OC4CE_Field is STM32_SVD.Bit;
 
    --  capture/compare mode register 2 (output mode)
@@ -569,16 +527,15 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   --------------------------
+   -- CCMR2_Input_Register --
+   --------------------------
+
    subtype CCMR2_Input_CC3S_Field is STM32_SVD.UInt2;
-
    subtype CCMR2_Input_IC3PSC_Field is STM32_SVD.UInt2;
-
    subtype CCMR2_Input_IC3F_Field is STM32_SVD.UInt4;
-
    subtype CCMR2_Input_CC4S_Field is STM32_SVD.UInt2;
-
    subtype CCMR2_Input_IC4PSC_Field is STM32_SVD.UInt2;
-
    subtype CCMR2_Input_IC4F_Field is STM32_SVD.UInt4;
 
    --  capture/compare mode register 2 (input mode)
@@ -611,32 +568,23 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   -------------------
+   -- CCER_Register --
+   -------------------
+
    subtype CCER_CC1E_Field is STM32_SVD.Bit;
-
    subtype CCER_CC1P_Field is STM32_SVD.Bit;
-
    subtype CCER_CC1NE_Field is STM32_SVD.Bit;
-
    subtype CCER_CC1NP_Field is STM32_SVD.Bit;
-
    subtype CCER_CC2E_Field is STM32_SVD.Bit;
-
    subtype CCER_CC2P_Field is STM32_SVD.Bit;
-
    subtype CCER_CC2NE_Field is STM32_SVD.Bit;
-
    subtype CCER_CC2NP_Field is STM32_SVD.Bit;
-
    subtype CCER_CC3E_Field is STM32_SVD.Bit;
-
    subtype CCER_CC3P_Field is STM32_SVD.Bit;
-
    subtype CCER_CC3NE_Field is STM32_SVD.Bit;
-
    subtype CCER_CC3NP_Field is STM32_SVD.Bit;
-
    subtype CCER_CC4E_Field is STM32_SVD.Bit;
-
    subtype CCER_CC4P_Field is STM32_SVD.Bit;
 
    --  capture/compare enable register
@@ -693,6 +641,10 @@ package STM32_SVD.TIM is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
+   ------------------
+   -- CNT_Register --
+   ------------------
+
    subtype CNT_CNT_Field is STM32_SVD.Short;
 
    --  counter
@@ -709,6 +661,10 @@ package STM32_SVD.TIM is
       CNT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
+
+   ------------------
+   -- PSC_Register --
+   ------------------
 
    subtype PSC_PSC_Field is STM32_SVD.Short;
 
@@ -727,6 +683,10 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ------------------
+   -- ARR_Register --
+   ------------------
+
    subtype ARR_ARR_Field is STM32_SVD.Short;
 
    --  auto-reload register
@@ -743,6 +703,10 @@ package STM32_SVD.TIM is
       ARR            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
+
+   ------------------
+   -- RCR_Register --
+   ------------------
 
    subtype RCR_REP_Field is STM32_SVD.Byte;
 
@@ -761,6 +725,10 @@ package STM32_SVD.TIM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   ------------------
+   -- CCR_Register --
+   ------------------
+
    subtype CCR1_CCR1_Field is STM32_SVD.Short;
 
    --  capture/compare register 1
@@ -778,20 +746,17 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   -------------------
+   -- BDTR_Register --
+   -------------------
+
    subtype BDTR_DTG_Field is STM32_SVD.Byte;
-
    subtype BDTR_LOCK_Field is STM32_SVD.UInt2;
-
    subtype BDTR_OSSI_Field is STM32_SVD.Bit;
-
    subtype BDTR_OSSR_Field is STM32_SVD.Bit;
-
    subtype BDTR_BKE_Field is STM32_SVD.Bit;
-
    subtype BDTR_BKP_Field is STM32_SVD.Bit;
-
    subtype BDTR_AOE_Field is STM32_SVD.Bit;
-
    subtype BDTR_MOE_Field is STM32_SVD.Bit;
 
    --  break and dead-time register
@@ -830,8 +795,11 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DCR_DBA_Field is STM32_SVD.UInt5;
+   ------------------
+   -- DCR_Register --
+   ------------------
 
+   subtype DCR_DBA_Field is STM32_SVD.UInt5;
    subtype DCR_DBL_Field is STM32_SVD.UInt5;
 
    --  DMA control register
@@ -855,6 +823,10 @@ package STM32_SVD.TIM is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
+   -------------------
+   -- DMAR_Register --
+   -------------------
+
    subtype DMAR_DMAB_Field is STM32_SVD.Short;
 
    --  DMA address for full transfer
@@ -872,8 +844,11 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype CCR2_CCR2_L_Field is STM32_SVD.Short;
+   ------------------
+   -- CCR_Register --
+   ------------------
 
+   subtype CCR2_CCR2_L_Field is STM32_SVD.Short;
    subtype CCR2_CCR2_H_Field is STM32_SVD.Short;
 
    --  capture/compare register 2
@@ -890,6 +865,10 @@ package STM32_SVD.TIM is
       CCR2_L at 0 range 0 .. 15;
       CCR2_H at 0 range 16 .. 31;
    end record;
+
+   -----------------
+   -- OR_Register --
+   -----------------
 
    subtype OR_ITR1_RMP_Field is STM32_SVD.UInt2;
 
@@ -911,44 +890,6 @@ package STM32_SVD.TIM is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   type CCMR1_Discriminent is
-     (Output,
-      Input);
-
-   type CCMR1_Aliased_Register (Disc : CCMR1_Discriminent := Output) is record
-      case Disc is
-         when Output =>
-            Output : CCMR1_Output_Register;
-         when Input =>
-            Input : CCMR1_Input_Register;
-      end case;
-   end record
-     with Unchecked_Union;
-
-   for CCMR1_Aliased_Register use record
-      Output at 0 range 0 .. 31;
-      Input at 0 range 0 .. 31;
-   end record;
-
-   type CCMR2_Discriminent is
-     (Output,
-      Input);
-
-   type CCMR2_Aliased_Register (Disc : CCMR2_Discriminent := Output) is record
-      case Disc is
-         when Output =>
-            Output : CCMR2_Output_Register;
-         when Input =>
-            Input : CCMR2_Input_Register;
-      end case;
-   end record
-     with Unchecked_Union;
-
-   for CCMR2_Aliased_Register use record
-      Output at 0 range 0 .. 31;
-      Input at 0 range 0 .. 31;
-   end record;
-
    -----------------
    -- Peripherals --
    -----------------
@@ -968,9 +909,9 @@ package STM32_SVD.TIM is
       --  event generation register
       EGR   : EGR_Register;
       --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register;
+      CCMR1 : CCMR1_Output_Register;
       --  capture/compare mode register 2 (output mode)
-      CCMR2 : CCMR2_Aliased_Register;
+      CCMR2 : CCMR2_Output_Register;
       --  capture/compare enable register
       CCER  : CCER_Register;
       --  counter
@@ -1020,11 +961,11 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM2_Periph : aliased TIM2_Peripheral
-     with Import, Address => System'To_Address(16#40000000#);
+     with Import, Address => System'To_Address (16#40000000#);
 
    --  General-purpose-timers
    TIM5_Periph : aliased TIM2_Peripheral
-     with Import, Address => System'To_Address(16#40000C00#);
+     with Import, Address => System'To_Address (16#40000C00#);
 
    --  General purpose timers
    type TIM3_Peripheral is record
@@ -1041,9 +982,9 @@ package STM32_SVD.TIM is
       --  event generation register
       EGR   : EGR_Register;
       --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register;
+      CCMR1 : CCMR1_Output_Register;
       --  capture/compare mode register 2 (output mode)
-      CCMR2 : CCMR2_Aliased_Register;
+      CCMR2 : CCMR2_Output_Register;
       --  capture/compare enable register
       CCER  : CCER_Register;
       --  counter
@@ -1090,11 +1031,11 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM3_Periph : aliased TIM3_Peripheral
-     with Import, Address => System'To_Address(16#40000400#);
+     with Import, Address => System'To_Address (16#40000400#);
 
    --  General purpose timers
    TIM4_Periph : aliased TIM3_Peripheral
-     with Import, Address => System'To_Address(16#40000800#);
+     with Import, Address => System'To_Address (16#40000800#);
 
    --  Basic timers
    type TIM6_Peripheral is record
@@ -1130,11 +1071,11 @@ package STM32_SVD.TIM is
 
    --  Basic timers
    TIM6_Periph : aliased TIM6_Peripheral
-     with Import, Address => System'To_Address(16#40001000#);
+     with Import, Address => System'To_Address (16#40001000#);
 
    --  Basic timers
    TIM7_Periph : aliased TIM6_Peripheral
-     with Import, Address => System'To_Address(16#40001400#);
+     with Import, Address => System'To_Address (16#40001400#);
 
    --  General purpose timers
    type TIM12_Peripheral is record
@@ -1151,7 +1092,7 @@ package STM32_SVD.TIM is
       --  event generation register
       EGR   : EGR_Register;
       --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register;
+      CCMR1 : CCMR1_Output_Register;
       --  capture/compare enable register
       CCER  : CCER_Register;
       --  counter
@@ -1185,11 +1126,11 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM12_Periph : aliased TIM12_Peripheral
-     with Import, Address => System'To_Address(16#40001800#);
+     with Import, Address => System'To_Address (16#40001800#);
 
    --  General purpose timers
    TIM9_Periph : aliased TIM12_Peripheral
-     with Import, Address => System'To_Address(16#40014000#);
+     with Import, Address => System'To_Address (16#40014000#);
 
    --  General-purpose-timers
    type TIM13_Peripheral is record
@@ -1202,7 +1143,7 @@ package STM32_SVD.TIM is
       --  event generation register
       EGR   : EGR_Register;
       --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register;
+      CCMR1 : CCMR1_Output_Register;
       --  capture/compare enable register
       CCER  : CCER_Register;
       --  counter
@@ -1231,15 +1172,15 @@ package STM32_SVD.TIM is
 
    --  General-purpose-timers
    TIM13_Periph : aliased TIM13_Peripheral
-     with Import, Address => System'To_Address(16#40001C00#);
+     with Import, Address => System'To_Address (16#40001C00#);
 
    --  General-purpose-timers
    TIM14_Periph : aliased TIM13_Peripheral
-     with Import, Address => System'To_Address(16#40002000#);
+     with Import, Address => System'To_Address (16#40002000#);
 
    --  General-purpose-timers
    TIM10_Periph : aliased TIM13_Peripheral
-     with Import, Address => System'To_Address(16#40014400#);
+     with Import, Address => System'To_Address (16#40014400#);
 
    --  Advanced-timers
    type TIM1_Peripheral is record
@@ -1256,9 +1197,9 @@ package STM32_SVD.TIM is
       --  event generation register
       EGR   : EGR_Register;
       --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register;
+      CCMR1 : CCMR1_Output_Register;
       --  capture/compare mode register 2 (output mode)
-      CCMR2 : CCMR2_Aliased_Register;
+      CCMR2 : CCMR2_Output_Register;
       --  capture/compare enable register
       CCER  : CCER_Register;
       --  counter
@@ -1311,11 +1252,11 @@ package STM32_SVD.TIM is
 
    --  Advanced-timers
    TIM1_Periph : aliased TIM1_Peripheral
-     with Import, Address => System'To_Address(16#40010000#);
+     with Import, Address => System'To_Address (16#40010000#);
 
    --  Advanced-timers
    TIM8_Periph : aliased TIM1_Peripheral
-     with Import, Address => System'To_Address(16#40010400#);
+     with Import, Address => System'To_Address (16#40010400#);
 
    --  General-purpose-timers
    type TIM11_Peripheral is record
@@ -1328,7 +1269,7 @@ package STM32_SVD.TIM is
       --  event generation register
       EGR   : EGR_Register;
       --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register;
+      CCMR1 : CCMR1_Output_Register;
       --  capture/compare enable register
       CCER  : CCER_Register;
       --  counter
@@ -1360,6 +1301,6 @@ package STM32_SVD.TIM is
 
    --  General-purpose-timers
    TIM11_Periph : aliased TIM11_Peripheral
-     with Import, Address => System'To_Address(16#40014800#);
+     with Import, Address => System'To_Address (16#40014800#);
 
 end STM32_SVD.TIM;

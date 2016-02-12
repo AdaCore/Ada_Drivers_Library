@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F46_79x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.DSIHOST is
@@ -11,6 +12,10 @@ package STM32_SVD.DSIHOST is
    ---------------
    -- Registers --
    ---------------
+
+   ---------------------
+   -- DSI_CR_Register --
+   ---------------------
 
    subtype DSI_CR_EN_Field is STM32_SVD.Bit;
 
@@ -29,8 +34,11 @@ package STM32_SVD.DSIHOST is
       Reserved_1_31 at 0 range 1 .. 31;
    end record;
 
-   subtype DSIHSOT_CCR_TXECKDIV_Field is STM32_SVD.Byte;
+   --------------------------
+   -- DSIHSOT_CCR_Register --
+   --------------------------
 
+   subtype DSIHSOT_CCR_TXECKDIV_Field is STM32_SVD.Byte;
    subtype DSIHSOT_CCR_TOCKDIV_Field is STM32_SVD.Byte;
 
    --  DSI HOST Clock Control Register
@@ -51,6 +59,10 @@ package STM32_SVD.DSIHOST is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   -------------------------
+   -- DSI_LVCIDR_Register --
+   -------------------------
+
    subtype DSI_LVCIDR_VCID_Field is STM32_SVD.UInt2;
 
    --  DSI Host LTDC VCID Register
@@ -68,8 +80,11 @@ package STM32_SVD.DSIHOST is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   subtype DSI_LCOLCR_COLC_Field is STM32_SVD.UInt4;
+   -------------------------
+   -- DSI_LCOLCR_Register --
+   -------------------------
 
+   subtype DSI_LCOLCR_COLC_Field is STM32_SVD.UInt4;
    subtype DSI_LCOLCR_LPE_Field is STM32_SVD.Bit;
 
    --  DSI Host LTDC Color Coding Register
@@ -93,10 +108,12 @@ package STM32_SVD.DSIHOST is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_LPCR_Register --
+   -----------------------
+
    subtype DSI_LPCR_DEP_Field is STM32_SVD.Bit;
-
    subtype DSI_LPCR_VSP_Field is STM32_SVD.Bit;
-
    subtype DSI_LPCR_HSP_Field is STM32_SVD.Bit;
 
    --  DSI Host LTDC Polarity Configuration Register
@@ -120,8 +137,11 @@ package STM32_SVD.DSIHOST is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype DSI_LPMCR_VLPSIZE_Field is STM32_SVD.Byte;
+   ------------------------
+   -- DSI_LPMCR_Register --
+   ------------------------
 
+   subtype DSI_LPMCR_VLPSIZE_Field is STM32_SVD.Byte;
    subtype DSI_LPMCR_LPSIZE_Field is STM32_SVD.Byte;
 
    --  DSI Host Low-Power Mode Configuration Register
@@ -145,14 +165,14 @@ package STM32_SVD.DSIHOST is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   ----------------------
+   -- DSI_PCR_Register --
+   ----------------------
+
    subtype DSI_PCR_ETTXE_Field is STM32_SVD.Bit;
-
    subtype DSI_PCR_ETRXE_Field is STM32_SVD.Bit;
-
    subtype DSI_PCR_BTAE_Field is STM32_SVD.Bit;
-
    subtype DSI_PCR_ECCRXE_Field is STM32_SVD.Bit;
-
    subtype DSI_PCR_CRCRXE_Field is STM32_SVD.Bit;
 
    --  DSI Host Protocol Configuration Register
@@ -182,6 +202,10 @@ package STM32_SVD.DSIHOST is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
+   -------------------------
+   -- DSI_GVCIDR_Register --
+   -------------------------
+
    subtype DSI_GVCIDR_VCID_Field is STM32_SVD.UInt2;
 
    --  DSI Host Generic VCID Register
@@ -198,6 +222,10 @@ package STM32_SVD.DSIHOST is
       VCID          at 0 range 0 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
+
+   ----------------------
+   -- DSI_MCR_Register --
+   ----------------------
 
    subtype DSI_MCR_CMDM_Field is STM32_SVD.Bit;
 
@@ -216,28 +244,21 @@ package STM32_SVD.DSIHOST is
       Reserved_1_31 at 0 range 1 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_VMCR_Register --
+   -----------------------
+
    subtype DSI_VMCR_VMT_Field is STM32_SVD.UInt2;
-
    subtype DSI_VMCR_LPVSAE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCR_LPVBPE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCR_LPVFPE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCR_LVAE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCR_LPHBPE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCR_LPHFE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCR_FBTAAE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCR_LPCE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCR_PGE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCR_PGM_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCR_PGO_Field is STM32_SVD.Bit;
 
    --  DSI Host Video mode Configuration Register
@@ -297,6 +318,10 @@ package STM32_SVD.DSIHOST is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_VPCR_Register --
+   -----------------------
+
    subtype DSI_VPCR_VPSIZE_Field is STM32_SVD.UInt15;
 
    --  DSI Host Video Packet Configuration Register
@@ -313,6 +338,10 @@ package STM32_SVD.DSIHOST is
       VPSIZE         at 0 range 0 .. 14;
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
+
+   -----------------------
+   -- DSI_VCCR_Register --
+   -----------------------
 
    subtype DSI_VCCR_NUMC_Field is STM32_SVD.UInt14;
 
@@ -331,6 +360,10 @@ package STM32_SVD.DSIHOST is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
+   ------------------------
+   -- DSI_VNPCR_Register --
+   ------------------------
+
    subtype DSI_VNPCR_NPSIZE_Field is STM32_SVD.UInt14;
 
    --  DSI Host Video Null Packet Configuration Register
@@ -347,6 +380,10 @@ package STM32_SVD.DSIHOST is
       NPSIZE         at 0 range 0 .. 13;
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
+
+   -------------------------
+   -- DSI_VHSACR_Register --
+   -------------------------
 
    subtype DSI_VHSACR_HSA_Field is STM32_SVD.UInt13;
 
@@ -365,6 +402,10 @@ package STM32_SVD.DSIHOST is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
+   -------------------------
+   -- DSI_VHBPCR_Register --
+   -------------------------
+
    subtype DSI_VHBPCR_HBP_Field is STM32_SVD.UInt13;
 
    --  DSI Host Video HBP Configuration Register
@@ -381,6 +422,10 @@ package STM32_SVD.DSIHOST is
       HBP            at 0 range 0 .. 12;
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
+
+   -----------------------
+   -- DSI_VLCR_Register --
+   -----------------------
 
    subtype DSI_VLCR_HLINE_Field is STM32_SVD.UInt15;
 
@@ -399,6 +444,10 @@ package STM32_SVD.DSIHOST is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
+   -------------------------
+   -- DSI_VVSACR_Register --
+   -------------------------
+
    subtype DSI_VVSACR_VSA_Field is STM32_SVD.UInt10;
 
    --  DSI Host Video VSA Configuration Register
@@ -415,6 +464,10 @@ package STM32_SVD.DSIHOST is
       VSA            at 0 range 0 .. 9;
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
+
+   -------------------------
+   -- DSI_VVBPCR_Register --
+   -------------------------
 
    subtype DSI_VVBPCR_VBP_Field is STM32_SVD.UInt10;
 
@@ -433,6 +486,10 @@ package STM32_SVD.DSIHOST is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
+   -------------------------
+   -- DSI_VVFPCR_Register --
+   -------------------------
+
    subtype DSI_VVFPCR_VFP_Field is STM32_SVD.UInt10;
 
    --  DSI Host Video VFP Configuration Register
@@ -449,6 +506,10 @@ package STM32_SVD.DSIHOST is
       VFP            at 0 range 0 .. 9;
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
+
+   ------------------------
+   -- DSI_VVACR_Register --
+   ------------------------
 
    subtype DSI_VVACR_VA_Field is STM32_SVD.UInt14;
 
@@ -467,6 +528,10 @@ package STM32_SVD.DSIHOST is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_LCCR_Register --
+   -----------------------
+
    subtype DSI_LCCR_CMDSIZE_Field is STM32_SVD.Short;
 
    --  DSI Host LTDC Command Configuration Register
@@ -484,32 +549,23 @@ package STM32_SVD.DSIHOST is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_CMCR_Register --
+   -----------------------
+
    subtype DSI_CMCR_TEARE_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_ARE_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_GSW0TX_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_GSW1TX_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_GSW2TX_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_GSR0TX_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_GSR1TX_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_GSR2TX_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_GLWTX_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_DSW0TX_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_DSW1TX_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_DSR0TX_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_DLWTX_Field is STM32_SVD.Bit;
-
    subtype DSI_CMCR_MRDPS_Field is STM32_SVD.Bit;
 
    --  DSI Host Command mode Configuration Register
@@ -575,12 +631,13 @@ package STM32_SVD.DSIHOST is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_GHCR_Register --
+   -----------------------
+
    subtype DSI_GHCR_DT_Field is STM32_SVD.UInt6;
-
    subtype DSI_GHCR_VCID_Field is STM32_SVD.UInt2;
-
    subtype DSI_GHCR_WCLSB_Field is STM32_SVD.Byte;
-
    subtype DSI_GHCR_WCMSB_Field is STM32_SVD.Byte;
 
    --  DSI Host Generic Header Configuration Register
@@ -607,53 +664,48 @@ package STM32_SVD.DSIHOST is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DSI_GPDR_DATA1_Field is STM32_SVD.Byte;
+   -----------------------
+   -- DSI_GPDR_Register --
+   -----------------------
 
-   type DATA_Field_Array is array (0 .. 3) of DSI_GPDR_DATA1_Field
+   --  DSI_GPDR_DATA array element
+   subtype DSI_GPDR_DATA_Element is STM32_SVD.Byte;
+
+   --  DSI_GPDR_DATA array
+   type DSI_GPDR_DATA_Field_Array is array (0 .. 3) of DSI_GPDR_DATA_Element
      with Component_Size => 8, Size => 32;
 
-   --  Type definition for DATA
-   type DATA_Union (As_Array : Boolean := False) is record
+   --  DSI Host Generic Payload Data Register
+   type DSI_GPDR_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of DATA1
+            --  DATA as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of DATA1
-            Arr : DATA_Field_Array;
+            --  DATA as an array
+            Arr : DSI_GPDR_DATA_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
+          Bit_Order => System.Low_Order_First;
 
-   for DATA_Union use record
+   for DSI_GPDR_Register use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
-   --  DSI Host Generic Payload Data Register
-   type DSI_GPDR_Register is record
-      --  Payload Byte 1
-      DATA : DATA_Union := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DSI_GPDR_Register use record
-      DATA at 0 range 0 .. 31;
-   end record;
+   -----------------------
+   -- DSI_GPSR_Register --
+   -----------------------
 
    subtype DSI_GPSR_CMDFE_Field is STM32_SVD.Bit;
-
    subtype DSI_GPSR_CMDFF_Field is STM32_SVD.Bit;
-
    subtype DSI_GPSR_PWRFE_Field is STM32_SVD.Bit;
-
    subtype DSI_GPSR_PWRFF_Field is STM32_SVD.Bit;
-
    subtype DSI_GPSR_PRDFE_Field is STM32_SVD.Bit;
-
    subtype DSI_GPSR_PRDFF_Field is STM32_SVD.Bit;
-
    subtype DSI_GPSR_RCB_Field is STM32_SVD.Bit;
 
    --  DSI Host Generic Packet Status Register
@@ -689,8 +741,11 @@ package STM32_SVD.DSIHOST is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
-   subtype DSI_TCCR1_LPRX_TOCNT_Field is STM32_SVD.Short;
+   ------------------------
+   -- DSI_TCCR1_Register --
+   ------------------------
 
+   subtype DSI_TCCR1_LPRX_TOCNT_Field is STM32_SVD.Short;
    subtype DSI_TCCR1_HSTX_TOCNT_Field is STM32_SVD.Short;
 
    --  DSI Host Timeout Counter Configuration Register1
@@ -707,6 +762,10 @@ package STM32_SVD.DSIHOST is
       LPRX_TOCNT at 0 range 0 .. 15;
       HSTX_TOCNT at 0 range 16 .. 31;
    end record;
+
+   -----------------------
+   -- DSI_TCCR_Register --
+   -----------------------
 
    subtype DSI_TCCR2_HSRD_TOCNT_Field is STM32_SVD.Short;
 
@@ -725,8 +784,11 @@ package STM32_SVD.DSIHOST is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DSI_TCCR4_HSWR_TOCNT_Field is STM32_SVD.Short;
+   ------------------------
+   -- DSI_TCCR4_Register --
+   ------------------------
 
+   subtype DSI_TCCR4_HSWR_TOCNT_Field is STM32_SVD.Short;
    subtype DSI_TCCR4_PM_Field is STM32_SVD.Bit;
 
    --  DSI Host Timeout Counter Configuration Register4
@@ -750,8 +812,11 @@ package STM32_SVD.DSIHOST is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   subtype DSI_CLCR_DPCC_Field is STM32_SVD.Bit;
+   -----------------------
+   -- DSI_CLCR_Register --
+   -----------------------
 
+   subtype DSI_CLCR_DPCC_Field is STM32_SVD.Bit;
    subtype DSI_CLCR_ACR_Field is STM32_SVD.Bit;
 
    --  DSI Host Clock Lane Configuration Register
@@ -772,8 +837,11 @@ package STM32_SVD.DSIHOST is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   subtype DSI_CLTCR_LP2HS_TIME_Field is STM32_SVD.UInt10;
+   ------------------------
+   -- DSI_CLTCR_Register --
+   ------------------------
 
+   subtype DSI_CLTCR_LP2HS_TIME_Field is STM32_SVD.UInt10;
    subtype DSI_CLTCR_HS2LP_TIME_Field is STM32_SVD.UInt10;
 
    --  DSI Host Clock Lane Timer Configuration Register
@@ -797,10 +865,12 @@ package STM32_SVD.DSIHOST is
       Reserved_26_31 at 0 range 26 .. 31;
    end record;
 
+   ------------------------
+   -- DSI_DLTCR_Register --
+   ------------------------
+
    subtype DSI_DLTCR_MRD_TIME_Field is STM32_SVD.UInt15;
-
    subtype DSI_DLTCR_LP2HS_TIME_Field is STM32_SVD.Byte;
-
    subtype DSI_DLTCR_HS2LP_TIME_Field is STM32_SVD.Byte;
 
    --  DSI Host Data Lane Timer Configuration Register
@@ -824,8 +894,11 @@ package STM32_SVD.DSIHOST is
       HS2LP_TIME     at 0 range 24 .. 31;
    end record;
 
-   subtype DSI_PCTLR_DEN_Field is STM32_SVD.Bit;
+   ------------------------
+   -- DSI_PCTLR_Register --
+   ------------------------
 
+   subtype DSI_PCTLR_DEN_Field is STM32_SVD.Bit;
    subtype DSI_PCTLR_CKE_Field is STM32_SVD.Bit;
 
    --  DSI Host PHY Control Register
@@ -849,8 +922,11 @@ package STM32_SVD.DSIHOST is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype DSI_PCCONFR_NL_Field is STM32_SVD.UInt2;
+   --------------------------
+   -- DSI_PCCONFR_Register --
+   --------------------------
 
+   subtype DSI_PCCONFR_NL_Field is STM32_SVD.UInt2;
    subtype DSI_PCCONFR_SW_TIME_Field is STM32_SVD.Byte;
 
    --  DSI Host PHY Configuration Register
@@ -874,12 +950,13 @@ package STM32_SVD.DSIHOST is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_PUCR_Register --
+   -----------------------
+
    subtype DSI_PUCR_URCL_Field is STM32_SVD.Bit;
-
    subtype DSI_PUCR_UECL_Field is STM32_SVD.Bit;
-
    subtype DSI_PUCR_URDL_Field is STM32_SVD.Bit;
-
    subtype DSI_PUCR_UEDL_Field is STM32_SVD.Bit;
 
    --  DSI Host PHY ULPS Control Register
@@ -906,6 +983,10 @@ package STM32_SVD.DSIHOST is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
+   ------------------------
+   -- DSI_PTTCR_Register --
+   ------------------------
+
    subtype DSI_PTTCR_TX_TRIG_Field is STM32_SVD.UInt4;
 
    --  DSI Host PHY TX Triggers Configuration Register
@@ -923,20 +1004,17 @@ package STM32_SVD.DSIHOST is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
+   ----------------------
+   -- DSI_PSR_Register --
+   ----------------------
+
    subtype DSI_PSR_PD_Field is STM32_SVD.Bit;
-
    subtype DSI_PSR_PSSC_Field is STM32_SVD.Bit;
-
    subtype DSI_PSR_UANC_Field is STM32_SVD.Bit;
-
    subtype DSI_PSR_PSS0_Field is STM32_SVD.Bit;
-
    subtype DSI_PSR_UAN0_Field is STM32_SVD.Bit;
-
    subtype DSI_PSR_RUE0_Field is STM32_SVD.Bit;
-
    subtype DSI_PSR_PSS1_Field is STM32_SVD.Bit;
-
    subtype DSI_PSR_UAN1_Field is STM32_SVD.Bit;
 
    --  DSI Host PHY Status Register
@@ -978,48 +1056,68 @@ package STM32_SVD.DSIHOST is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
-   subtype DSI_ISR0_AE0_Field is STM32_SVD.Bit;
+   -----------------------
+   -- DSI_ISR0_Register --
+   -----------------------
 
-   type AE_Field_Array is array (0 .. 15) of DSI_ISR0_AE0_Field
+   -----------------
+   -- DSI_ISR0.AE --
+   -----------------
+
+   --  DSI_ISR0_AE array element
+   subtype DSI_ISR0_AE_Element is STM32_SVD.Bit;
+
+   --  DSI_ISR0_AE array
+   type DSI_ISR0_AE_Field_Array is array (0 .. 15) of DSI_ISR0_AE_Element
      with Component_Size => 1, Size => 16;
 
-   --  Type definition for AE
-   type AE_Union (As_Array : Boolean := False) is record
+   --  Type definition for DSI_ISR0_AE
+   type DSI_ISR0_AE_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of AE0
+            --  AE as a value
             Val : STM32_SVD.Short;
          when True =>
-            --  Array vision of AE0
-            Arr : AE_Field_Array;
+            --  AE as an array
+            Arr : DSI_ISR0_AE_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 16;
 
-   for AE_Union use record
+   for DSI_ISR0_AE_Field use record
       Val at 0 range 0 .. 15;
       Arr at 0 range 0 .. 15;
    end record;
 
-   subtype DSI_ISR0_PE0_Field is STM32_SVD.Bit;
+   -----------------
+   -- DSI_ISR0.PE --
+   -----------------
 
-   type PE_Field_Array is array (0 .. 4) of DSI_ISR0_PE0_Field
+   --  DSI_ISR0_PE array element
+   subtype DSI_ISR0_PE_Element is STM32_SVD.Bit;
+
+   --  DSI_ISR0_PE array
+   type DSI_ISR0_PE_Field_Array is array (0 .. 4) of DSI_ISR0_PE_Element
      with Component_Size => 1, Size => 5;
 
-   --  Type definition for PE
-   type PE_Union (As_Array : Boolean := False) is record
+   --  Type definition for DSI_ISR0_PE
+   type DSI_ISR0_PE_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of PE0
+            --  PE as a value
             Val : STM32_SVD.UInt5;
          when True =>
-            --  Array vision of PE0
-            Arr : PE_Field_Array;
+            --  PE as an array
+            Arr : DSI_ISR0_PE_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 5;
 
-   for PE_Union use record
+   for DSI_ISR0_PE_Field use record
       Val at 0 range 0 .. 4;
       Arr at 0 range 0 .. 4;
    end record;
@@ -1027,9 +1125,9 @@ package STM32_SVD.DSIHOST is
    --  DSI Host Interrupt & Status Register 0
    type DSI_ISR0_Register is record
       --  Acknowledge Error 0
-      AE             : AE_Union := (As_Array => False, Val => 16#0#);
+      AE             : DSI_ISR0_AE_Field := (As_Array => False, Val => 16#0#);
       --  PHY Error 0
-      PE             : PE_Union := (As_Array => False, Val => 16#0#);
+      PE             : DSI_ISR0_PE_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_21_31 : STM32_SVD.UInt11 := 16#0#;
    end record
@@ -1042,30 +1140,22 @@ package STM32_SVD.DSIHOST is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_ISR1_Register --
+   -----------------------
+
    subtype DSI_ISR1_TOHSTX_Field is STM32_SVD.Bit;
-
    subtype DSI_ISR1_TOLPRX_Field is STM32_SVD.Bit;
-
    subtype DSI_ISR1_ECCSE_Field is STM32_SVD.Bit;
-
    subtype DSI_ISR1_ECCME_Field is STM32_SVD.Bit;
-
    subtype DSI_ISR1_CRCE_Field is STM32_SVD.Bit;
-
    subtype DSI_ISR1_PSE_Field is STM32_SVD.Bit;
-
    subtype DSI_ISR1_EOTPE_Field is STM32_SVD.Bit;
-
    subtype DSI_ISR1_LPWRE_Field is STM32_SVD.Bit;
-
    subtype DSI_ISR1_GCWRE_Field is STM32_SVD.Bit;
-
    subtype DSI_ISR1_GPWRE_Field is STM32_SVD.Bit;
-
    subtype DSI_ISR1_GPTXE_Field is STM32_SVD.Bit;
-
    subtype DSI_ISR1_GPRDE_Field is STM32_SVD.Bit;
-
    subtype DSI_ISR1_GPRXE_Field is STM32_SVD.Bit;
 
    --  DSI Host Interrupt & Status Register 1
@@ -1119,46 +1209,30 @@ package STM32_SVD.DSIHOST is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_IER0_Register --
+   -----------------------
+
    subtype DSI_IER0_AE0IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE1IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE2IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE3IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE4IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE5IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE6IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE7IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE8IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE9IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE10IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE11IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE12IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE13IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE14IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_AE15IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_PE0IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_PE1IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_PE2IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_PE3IE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER0_PE4IE_Field is STM32_SVD.Bit;
 
    --  DSI Host Interrupt Enable Register 0
@@ -1236,30 +1310,22 @@ package STM32_SVD.DSIHOST is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_IER1_Register --
+   -----------------------
+
    subtype DSI_IER1_TOHSTXIE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER1_TOLPRXIE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER1_ECCSEIE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER1_ECCMEIE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER1_CRCEIE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER1_PSEIE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER1_EOTPEIE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER1_LPWREIE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER1_GCWREIE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER1_GPWREIE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER1_GPTXEIE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER1_GPRDEIE_Field is STM32_SVD.Bit;
-
    subtype DSI_IER1_GPRXEIE_Field is STM32_SVD.Bit;
 
    --  DSI Host Interrupt Enable Register 1
@@ -1313,48 +1379,68 @@ package STM32_SVD.DSIHOST is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   subtype DSI_FIR0_FAE0_Field is STM32_SVD.Bit;
+   -----------------------
+   -- DSI_FIR0_Register --
+   -----------------------
 
-   type FAE_Field_Array is array (0 .. 15) of DSI_FIR0_FAE0_Field
+   ------------------
+   -- DSI_FIR0.FAE --
+   ------------------
+
+   --  DSI_FIR0_FAE array element
+   subtype DSI_FIR0_FAE_Element is STM32_SVD.Bit;
+
+   --  DSI_FIR0_FAE array
+   type DSI_FIR0_FAE_Field_Array is array (0 .. 15) of DSI_FIR0_FAE_Element
      with Component_Size => 1, Size => 16;
 
-   --  Type definition for FAE
-   type FAE_Union (As_Array : Boolean := False) is record
+   --  Type definition for DSI_FIR0_FAE
+   type DSI_FIR0_FAE_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of FAE0
+            --  FAE as a value
             Val : STM32_SVD.Short;
          when True =>
-            --  Array vision of FAE0
-            Arr : FAE_Field_Array;
+            --  FAE as an array
+            Arr : DSI_FIR0_FAE_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 16;
 
-   for FAE_Union use record
+   for DSI_FIR0_FAE_Field use record
       Val at 0 range 0 .. 15;
       Arr at 0 range 0 .. 15;
    end record;
 
-   subtype DSI_FIR0_FPE0_Field is STM32_SVD.Bit;
+   ------------------
+   -- DSI_FIR0.FPE --
+   ------------------
 
-   type FPE_Field_Array is array (0 .. 4) of DSI_FIR0_FPE0_Field
+   --  DSI_FIR0_FPE array element
+   subtype DSI_FIR0_FPE_Element is STM32_SVD.Bit;
+
+   --  DSI_FIR0_FPE array
+   type DSI_FIR0_FPE_Field_Array is array (0 .. 4) of DSI_FIR0_FPE_Element
      with Component_Size => 1, Size => 5;
 
-   --  Type definition for FPE
-   type FPE_Union (As_Array : Boolean := False) is record
+   --  Type definition for DSI_FIR0_FPE
+   type DSI_FIR0_FPE_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of FPE0
+            --  FPE as a value
             Val : STM32_SVD.UInt5;
          when True =>
-            --  Array vision of FPE0
-            Arr : FPE_Field_Array;
+            --  FPE as an array
+            Arr : DSI_FIR0_FPE_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 5;
 
-   for FPE_Union use record
+   for DSI_FIR0_FPE_Field use record
       Val at 0 range 0 .. 4;
       Arr at 0 range 0 .. 4;
    end record;
@@ -1362,9 +1448,11 @@ package STM32_SVD.DSIHOST is
    --  DSI Host Force Interrupt Register 0
    type DSI_FIR0_Register is record
       --  Force Acknowledge Error 0
-      FAE            : FAE_Union := (As_Array => False, Val => 16#0#);
+      FAE            : DSI_FIR0_FAE_Field :=
+                        (As_Array => False, Val => 16#0#);
       --  Force PHY Error 0
-      FPE            : FPE_Union := (As_Array => False, Val => 16#0#);
+      FPE            : DSI_FIR0_FPE_Field :=
+                        (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_21_31 : STM32_SVD.UInt11 := 16#0#;
    end record
@@ -1377,30 +1465,22 @@ package STM32_SVD.DSIHOST is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_FIR1_Register --
+   -----------------------
+
    subtype DSI_FIR1_FTOHSTX_Field is STM32_SVD.Bit;
-
    subtype DSI_FIR1_FTOLPRX_Field is STM32_SVD.Bit;
-
    subtype DSI_FIR1_FECCSE_Field is STM32_SVD.Bit;
-
    subtype DSI_FIR1_FECCME_Field is STM32_SVD.Bit;
-
    subtype DSI_FIR1_FCRCE_Field is STM32_SVD.Bit;
-
    subtype DSI_FIR1_FPSE_Field is STM32_SVD.Bit;
-
    subtype DSI_FIR1_FEOTPE_Field is STM32_SVD.Bit;
-
    subtype DSI_FIR1_FLPWRE_Field is STM32_SVD.Bit;
-
    subtype DSI_FIR1_FGCWRE_Field is STM32_SVD.Bit;
-
    subtype DSI_FIR1_FGPWRE_Field is STM32_SVD.Bit;
-
    subtype DSI_FIR1_FGPTXE_Field is STM32_SVD.Bit;
-
    subtype DSI_FIR1_FGPRDE_Field is STM32_SVD.Bit;
-
    subtype DSI_FIR1_FGPRXE_Field is STM32_SVD.Bit;
 
    --  DSI Host Force Interrupt Register 1
@@ -1454,8 +1534,11 @@ package STM32_SVD.DSIHOST is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   subtype DSI_VSCR_EN_Field is STM32_SVD.Bit;
+   -----------------------
+   -- DSI_VSCR_Register --
+   -----------------------
 
+   subtype DSI_VSCR_EN_Field is STM32_SVD.Bit;
    subtype DSI_VSCR_UR_Field is STM32_SVD.Bit;
 
    --  DSI Host Video Shadow Control Register
@@ -1479,6 +1562,10 @@ package STM32_SVD.DSIHOST is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
+   --------------------------
+   -- DSI_LCVCIDR_Register --
+   --------------------------
+
    subtype DSI_LCVCIDR_VCID_Field is STM32_SVD.UInt2;
 
    --  DSI Host LTDC Current VCID Register
@@ -1496,8 +1583,11 @@ package STM32_SVD.DSIHOST is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   subtype DSI_LCCCR_COLC_Field is STM32_SVD.UInt4;
+   ------------------------
+   -- DSI_LCCCR_Register --
+   ------------------------
 
+   subtype DSI_LCCCR_COLC_Field is STM32_SVD.UInt4;
    subtype DSI_LCCCR_LPE_Field is STM32_SVD.Bit;
 
    --  DSI Host LTDC Current Color Coding Register
@@ -1521,8 +1611,11 @@ package STM32_SVD.DSIHOST is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
-   subtype DSI_LPMCCR_VLPSIZE_Field is STM32_SVD.Byte;
+   -------------------------
+   -- DSI_LPMCCR_Register --
+   -------------------------
 
+   subtype DSI_LPMCCR_VLPSIZE_Field is STM32_SVD.Byte;
    subtype DSI_LPMCCR_LPSIZE_Field is STM32_SVD.Byte;
 
    --  DSI Host Low-power Mode Current Configuration Register
@@ -1546,22 +1639,18 @@ package STM32_SVD.DSIHOST is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
+   ------------------------
+   -- DSI_VMCCR_Register --
+   ------------------------
+
    subtype DSI_VMCCR_VMT_Field is STM32_SVD.UInt2;
-
    subtype DSI_VMCCR_LPVSAE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCCR_LPVBPE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCCR_LPVFPE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCCR_LVAE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCCR_LPHBPE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCCR_LPHFE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCCR_FBTAAE_Field is STM32_SVD.Bit;
-
    subtype DSI_VMCCR_LPCE_Field is STM32_SVD.Bit;
 
    --  DSI Host Video mode Current Configuration Register
@@ -1606,6 +1695,10 @@ package STM32_SVD.DSIHOST is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ------------------------
+   -- DSI_VPCCR_Register --
+   ------------------------
+
    subtype DSI_VPCCR_VPSIZE_Field is STM32_SVD.UInt15;
 
    --  DSI Host Video Packet Current Configuration Register
@@ -1622,6 +1715,10 @@ package STM32_SVD.DSIHOST is
       VPSIZE         at 0 range 0 .. 14;
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
+
+   ------------------------
+   -- DSI_VCCCR_Register --
+   ------------------------
 
    subtype DSI_VCCCR_NUMC_Field is STM32_SVD.UInt14;
 
@@ -1640,6 +1737,10 @@ package STM32_SVD.DSIHOST is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
+   -------------------------
+   -- DSI_VNPCCR_Register --
+   -------------------------
+
    subtype DSI_VNPCCR_NPSIZE_Field is STM32_SVD.UInt14;
 
    --  DSI Host Video Null Packet Current Configuration Register
@@ -1656,6 +1757,10 @@ package STM32_SVD.DSIHOST is
       NPSIZE         at 0 range 0 .. 13;
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
+
+   --------------------------
+   -- DSI_VHSACCR_Register --
+   --------------------------
 
    subtype DSI_VHSACCR_HSA_Field is STM32_SVD.UInt13;
 
@@ -1674,6 +1779,10 @@ package STM32_SVD.DSIHOST is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
+   --------------------------
+   -- DSI_VHBPCCR_Register --
+   --------------------------
+
    subtype DSI_VHBPCCR_HBP_Field is STM32_SVD.UInt13;
 
    --  DSI Host Video HBP Current Configuration Register
@@ -1690,6 +1799,10 @@ package STM32_SVD.DSIHOST is
       HBP            at 0 range 0 .. 12;
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
+
+   ------------------------
+   -- DSI_VLCCR_Register --
+   ------------------------
 
    subtype DSI_VLCCR_HLINE_Field is STM32_SVD.UInt15;
 
@@ -1708,6 +1821,10 @@ package STM32_SVD.DSIHOST is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
+   --------------------------
+   -- DSI_VVSACCR_Register --
+   --------------------------
+
    subtype DSI_VVSACCR_VSA_Field is STM32_SVD.UInt10;
 
    --  DSI Host Video VSA Current Configuration Register
@@ -1724,6 +1841,10 @@ package STM32_SVD.DSIHOST is
       VSA            at 0 range 0 .. 9;
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
+
+   --------------------------
+   -- DSI_VVBPCCR_Register --
+   --------------------------
 
    subtype DSI_VVBPCCR_VBP_Field is STM32_SVD.UInt10;
 
@@ -1742,6 +1863,10 @@ package STM32_SVD.DSIHOST is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
+   --------------------------
+   -- DSI_VVFPCCR_Register --
+   --------------------------
+
    subtype DSI_VVFPCCR_VFP_Field is STM32_SVD.UInt10;
 
    --  DSI Host Video VFP Current Configuration Register
@@ -1758,6 +1883,10 @@ package STM32_SVD.DSIHOST is
       VFP            at 0 range 0 .. 9;
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
+
+   -------------------------
+   -- DSI_VVACCR_Register --
+   -------------------------
 
    subtype DSI_VVACCR_VA_Field is STM32_SVD.UInt14;
 
@@ -1776,16 +1905,15 @@ package STM32_SVD.DSIHOST is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
+   ------------------------
+   -- DSI_WCFGR_Register --
+   ------------------------
+
    subtype DSI_WCFGR_DSIM_Field is STM32_SVD.Bit;
-
    subtype DSI_WCFGR_COLMUX_Field is STM32_SVD.UInt3;
-
    subtype DSI_WCFGR_TESRC_Field is STM32_SVD.Bit;
-
    subtype DSI_WCFGR_TEPOL_Field is STM32_SVD.Bit;
-
    subtype DSI_WCFGR_AR_Field is STM32_SVD.Bit;
-
    subtype DSI_WCFGR_VSPOL_Field is STM32_SVD.Bit;
 
    --  DSI Wrapper Configuration Register
@@ -1818,12 +1946,13 @@ package STM32_SVD.DSIHOST is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   ----------------------
+   -- DSI_WCR_Register --
+   ----------------------
+
    subtype DSI_WCR_COLM_Field is STM32_SVD.Bit;
-
    subtype DSI_WCR_SHTDN_Field is STM32_SVD.Bit;
-
    subtype DSI_WCR_LTDCEN_Field is STM32_SVD.Bit;
-
    subtype DSI_WCR_DSIEN_Field is STM32_SVD.Bit;
 
    --  DSI Wrapper Control Register
@@ -1850,14 +1979,14 @@ package STM32_SVD.DSIHOST is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_WIER_Register --
+   -----------------------
+
    subtype DSI_WIER_TEIE_Field is STM32_SVD.Bit;
-
    subtype DSI_WIER_ERIE_Field is STM32_SVD.Bit;
-
    subtype DSI_WIER_PLLLIE_Field is STM32_SVD.Bit;
-
    subtype DSI_WIER_PLLUIE_Field is STM32_SVD.Bit;
-
    subtype DSI_WIER_RRIE_Field is STM32_SVD.Bit;
 
    --  DSI Wrapper Interrupt Enable Register
@@ -1893,20 +2022,17 @@ package STM32_SVD.DSIHOST is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_WISR_Register --
+   -----------------------
+
    subtype DSI_WISR_TEIF_Field is STM32_SVD.Bit;
-
    subtype DSI_WISR_ERIF_Field is STM32_SVD.Bit;
-
    subtype DSI_WISR_BUSY_Field is STM32_SVD.Bit;
-
    subtype DSI_WISR_PLLLS_Field is STM32_SVD.Bit;
-
    subtype DSI_WISR_PLLLIF_Field is STM32_SVD.Bit;
-
    subtype DSI_WISR_PLLUIF_Field is STM32_SVD.Bit;
-
    subtype DSI_WISR_RRS_Field is STM32_SVD.Bit;
-
    subtype DSI_WISR_RRIF_Field is STM32_SVD.Bit;
 
    --  DSI Wrapper Interrupt & Status Register
@@ -1951,14 +2077,14 @@ package STM32_SVD.DSIHOST is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
+   ------------------------
+   -- DSI_WIFCR_Register --
+   ------------------------
+
    subtype DSI_WIFCR_CTEIF_Field is STM32_SVD.Bit;
-
    subtype DSI_WIFCR_CERIF_Field is STM32_SVD.Bit;
-
    subtype DSI_WIFCR_CPLLLIF_Field is STM32_SVD.Bit;
-
    subtype DSI_WIFCR_CPLLUIF_Field is STM32_SVD.Bit;
-
    subtype DSI_WIFCR_CRRIF_Field is STM32_SVD.Bit;
 
    --  DSI Wrapper Interrupt Flag Clear Register
@@ -1994,84 +2120,92 @@ package STM32_SVD.DSIHOST is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   subtype DSI_WPCR1_UIX4_Field is STM32_SVD.UInt6;
+   ------------------------
+   -- DSI_WPCR1_Register --
+   ------------------------
 
+   subtype DSI_WPCR1_UIX4_Field is STM32_SVD.UInt6;
    subtype DSI_WPCR1_SWCL_Field is STM32_SVD.Bit;
 
-   subtype DSI_WPCR1_SWDL0_Field is STM32_SVD.Bit;
+   --------------------
+   -- DSI_WPCR1.SWDL --
+   --------------------
 
-   type SWDL_Field_Array is array (0 .. 1) of DSI_WPCR1_SWDL0_Field
+   --  DSI_WPCR1_SWDL array element
+   subtype DSI_WPCR1_SWDL_Element is STM32_SVD.Bit;
+
+   --  DSI_WPCR1_SWDL array
+   type DSI_WPCR1_SWDL_Field_Array is array (0 .. 1)
+     of DSI_WPCR1_SWDL_Element
      with Component_Size => 1, Size => 2;
 
-   --  Type definition for SWDL
-   type SWDL_Union (As_Array : Boolean := False) is record
+   --  Type definition for DSI_WPCR1_SWDL
+   type DSI_WPCR1_SWDL_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of SWDL0
+            --  SWDL as a value
             Val : STM32_SVD.UInt2;
          when True =>
-            --  Array vision of SWDL0
-            Arr : SWDL_Field_Array;
+            --  SWDL as an array
+            Arr : DSI_WPCR1_SWDL_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 2;
 
-   for SWDL_Union use record
+   for DSI_WPCR1_SWDL_Field use record
       Val at 0 range 0 .. 1;
       Arr at 0 range 0 .. 1;
    end record;
 
    subtype DSI_WPCR1_HSICL_Field is STM32_SVD.Bit;
 
-   subtype DSI_WPCR1_HSIDL0_Field is STM32_SVD.Bit;
+   ---------------------
+   -- DSI_WPCR1.HSIDL --
+   ---------------------
 
-   type HSIDL_Field_Array is array (0 .. 1) of DSI_WPCR1_HSIDL0_Field
+   --  DSI_WPCR1_HSIDL array element
+   subtype DSI_WPCR1_HSIDL_Element is STM32_SVD.Bit;
+
+   --  DSI_WPCR1_HSIDL array
+   type DSI_WPCR1_HSIDL_Field_Array is array (0 .. 1)
+     of DSI_WPCR1_HSIDL_Element
      with Component_Size => 1, Size => 2;
 
-   --  Type definition for HSIDL
-   type HSIDL_Union (As_Array : Boolean := False) is record
+   --  Type definition for DSI_WPCR1_HSIDL
+   type DSI_WPCR1_HSIDL_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of HSIDL0
+            --  HSIDL as a value
             Val : STM32_SVD.UInt2;
          when True =>
-            --  Array vision of HSIDL0
-            Arr : HSIDL_Field_Array;
+            --  HSIDL as an array
+            Arr : DSI_WPCR1_HSIDL_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 2;
 
-   for HSIDL_Union use record
+   for DSI_WPCR1_HSIDL_Field use record
       Val at 0 range 0 .. 1;
       Arr at 0 range 0 .. 1;
    end record;
 
    subtype DSI_WPCR1_FTXSMCL_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_FTXSMDL_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_CDOFFDL_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_TDDL_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_PDEN_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_TCLKPREPEN_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_TCLKZEROEN_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_THSPREPEN_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_THSTRAILEN_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_THSZEROEN_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_TLPXDEN_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_THSEXITEN_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_TLPXCEN_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR1_TCLKPOSTEN_Field is STM32_SVD.Bit;
 
    --  DSI Wrapper PHY Configuration Register 1
@@ -2081,11 +2215,13 @@ package STM32_SVD.DSIHOST is
       --  Swap Clock Lane pins
       SWCL           : DSI_WPCR1_SWCL_Field := 16#0#;
       --  Swap Data Lane 0 pins
-      SWDL           : SWDL_Union := (As_Array => False, Val => 16#0#);
+      SWDL           : DSI_WPCR1_SWDL_Field :=
+                        (As_Array => False, Val => 16#0#);
       --  Invert Hight-Speed data signal on Clock Lane
       HSICL          : DSI_WPCR1_HSICL_Field := 16#0#;
       --  Invert the Hight-Speed data signal on Data Lane 0
-      HSIDL          : HSIDL_Union := (As_Array => False, Val => 16#0#);
+      HSIDL          : DSI_WPCR1_HSIDL_Field :=
+                        (As_Array => False, Val => 16#0#);
       --  Force in TX Stop Mode the Clock Lane
       FTXSMCL        : DSI_WPCR1_FTXSMCL_Field := 16#0#;
       --  Force in TX Stop Mode the Data Lanes
@@ -2149,22 +2285,18 @@ package STM32_SVD.DSIHOST is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
+   ------------------------
+   -- DSI_WPCR2_Register --
+   ------------------------
+
    subtype DSI_WPCR2_HSTXDCL_Field is STM32_SVD.UInt2;
-
    subtype DSI_WPCR2_HSTXDLL_Field is STM32_SVD.UInt2;
-
    subtype DSI_WPCR2_LPSRCL_Field is STM32_SVD.UInt2;
-
    subtype DSI_WPCR2_LPSRDL_Field is STM32_SVD.UInt2;
-
    subtype DSI_WPCR2_SDCC_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR2_HSTXSRCCL_Field is STM32_SVD.UInt2;
-
    subtype DSI_WPCR2_HSTXSRCDL_Field is STM32_SVD.UInt2;
-
    subtype DSI_WPCR2_FLPRXLPM_Field is STM32_SVD.Bit;
-
    subtype DSI_WPCR2_LPRXFT_Field is STM32_SVD.UInt2;
 
    --  DSI Wrapper PHY Configuration Register 2
@@ -2221,12 +2353,13 @@ package STM32_SVD.DSIHOST is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
+   -----------------------
+   -- DSI_WPCR_Register --
+   -----------------------
+
    subtype DSI_WPCR3_TCLKPREP_Field is STM32_SVD.Byte;
-
    subtype DSI_WPCR3_TCLKZEO_Field is STM32_SVD.Byte;
-
    subtype DSI_WPCR3_THSPREP_Field is STM32_SVD.Byte;
-
    subtype DSI_WPCR3_THSTRAIL_Field is STM32_SVD.Byte;
 
    --  DSI Wrapper PHY Configuration Register 3
@@ -2250,6 +2383,10 @@ package STM32_SVD.DSIHOST is
       THSTRAIL at 0 range 24 .. 31;
    end record;
 
+   ------------------------
+   -- DSI_WPCR5_Register --
+   ------------------------
+
    subtype DSI_WPCR5_THSZERO_Field is STM32_SVD.Byte;
 
    --  DSI Wrapper PHY Configuration Register 5
@@ -2267,14 +2404,14 @@ package STM32_SVD.DSIHOST is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
+   ------------------------
+   -- DSI_WRPCR_Register --
+   ------------------------
+
    subtype DSI_WRPCR_PLLEN_Field is STM32_SVD.Bit;
-
    subtype DSI_WRPCR_NDIV_Field is STM32_SVD.UInt7;
-
    subtype DSI_WRPCR_IDF_Field is STM32_SVD.UInt4;
-
    subtype DSI_WRPCR_ODF_Field is STM32_SVD.UInt2;
-
    subtype DSI_WRPCR_REGEN_Field is STM32_SVD.Bit;
 
    --  DSI Wrapper Regulator and PLL Control Register
@@ -2546,6 +2683,6 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host
    DSIHOST_Periph : aliased DSIHOST_Peripheral
-     with Import, Address => System'To_Address(16#40016C00#);
+     with Import, Address => System'To_Address (16#40016C00#);
 
 end STM32_SVD.DSIHOST;

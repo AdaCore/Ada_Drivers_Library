@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F7x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.PWR is
@@ -12,32 +13,23 @@ package STM32_SVD.PWR is
    -- Registers --
    ---------------
 
+   ------------------
+   -- CR1_Register --
+   ------------------
+
    subtype CR1_LPDS_Field is STM32_SVD.Bit;
-
    subtype CR1_PDDS_Field is STM32_SVD.Bit;
-
    subtype CR1_CSBF_Field is STM32_SVD.Bit;
-
    subtype CR1_PVDE_Field is STM32_SVD.Bit;
-
    subtype CR1_PLS_Field is STM32_SVD.UInt3;
-
    subtype CR1_DBP_Field is STM32_SVD.Bit;
-
    subtype CR1_FPDS_Field is STM32_SVD.Bit;
-
    subtype CR1_LPUDS_Field is STM32_SVD.Bit;
-
    subtype CR1_MRUDS_Field is STM32_SVD.Bit;
-
    subtype CR1_ADCDC1_Field is STM32_SVD.Bit;
-
    subtype CR1_VOS_Field is STM32_SVD.UInt2;
-
    subtype CR1_ODEN_Field is STM32_SVD.Bit;
-
    subtype CR1_ODSWEN_Field is STM32_SVD.Bit;
-
    subtype CR1_UDEN_Field is STM32_SVD.UInt2;
 
    --  power control register
@@ -100,22 +92,18 @@ package STM32_SVD.PWR is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
+   -------------------
+   -- CSR1_Register --
+   -------------------
+
    subtype CSR1_WUIF_Field is STM32_SVD.Bit;
-
    subtype CSR1_SBF_Field is STM32_SVD.Bit;
-
    subtype CSR1_PVDO_Field is STM32_SVD.Bit;
-
    subtype CSR1_BRR_Field is STM32_SVD.Bit;
-
    subtype CSR1_BRE_Field is STM32_SVD.Bit;
-
    subtype CSR1_VOSRDY_Field is STM32_SVD.Bit;
-
    subtype CSR1_ODRDY_Field is STM32_SVD.Bit;
-
    subtype CSR1_ODSWRDY_Field is STM32_SVD.Bit;
-
    subtype CSR1_UDRDY_Field is STM32_SVD.UInt2;
 
    --  power control/status register
@@ -166,48 +154,68 @@ package STM32_SVD.PWR is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
-   subtype CR2_CWUPF1_Field is STM32_SVD.Bit;
+   ------------------
+   -- CR2_Register --
+   ------------------
 
-   type CWUPF_Field_Array is array (0 .. 5) of CR2_CWUPF1_Field
+   ---------------
+   -- CR2.CWUPF --
+   ---------------
+
+   --  CR2_CWUPF array element
+   subtype CR2_CWUPF_Element is STM32_SVD.Bit;
+
+   --  CR2_CWUPF array
+   type CR2_CWUPF_Field_Array is array (0 .. 5) of CR2_CWUPF_Element
      with Component_Size => 1, Size => 6;
 
-   --  Type definition for CWUPF
-   type CWUPF_Union (As_Array : Boolean := False) is record
+   --  Type definition for CR2_CWUPF
+   type CR2_CWUPF_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of CWUPF1
+            --  CWUPF as a value
             Val : STM32_SVD.UInt6;
          when True =>
-            --  Array vision of CWUPF1
-            Arr : CWUPF_Field_Array;
+            --  CWUPF as an array
+            Arr : CR2_CWUPF_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 6;
 
-   for CWUPF_Union use record
+   for CR2_CWUPF_Field use record
       Val at 0 range 0 .. 5;
       Arr at 0 range 0 .. 5;
    end record;
 
-   subtype CR2_WUPP1_Field is STM32_SVD.Bit;
+   --------------
+   -- CR2.WUPP --
+   --------------
 
-   type WUPP_Field_Array is array (0 .. 5) of CR2_WUPP1_Field
+   --  CR2_WUPP array element
+   subtype CR2_WUPP_Element is STM32_SVD.Bit;
+
+   --  CR2_WUPP array
+   type CR2_WUPP_Field_Array is array (0 .. 5) of CR2_WUPP_Element
      with Component_Size => 1, Size => 6;
 
-   --  Type definition for WUPP
-   type WUPP_Union (As_Array : Boolean := False) is record
+   --  Type definition for CR2_WUPP
+   type CR2_WUPP_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of WUPP1
+            --  WUPP as a value
             Val : STM32_SVD.UInt6;
          when True =>
-            --  Array vision of WUPP1
-            Arr : WUPP_Field_Array;
+            --  WUPP as an array
+            Arr : CR2_WUPP_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 6;
 
-   for WUPP_Union use record
+   for CR2_WUPP_Field use record
       Val at 0 range 0 .. 5;
       Arr at 0 range 0 .. 5;
    end record;
@@ -215,11 +223,11 @@ package STM32_SVD.PWR is
    --  power control register
    type CR2_Register is record
       --  Clear Wakeup Pin flag for PA0
-      CWUPF          : CWUPF_Union := (As_Array => False, Val => 16#0#);
+      CWUPF          : CR2_CWUPF_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_6_7   : STM32_SVD.UInt2 := 16#0#;
       --  Wakeup pin polarity bit for PA0
-      WUPP           : WUPP_Union := (As_Array => False, Val => 16#0#);
+      WUPP           : CR2_WUPP_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_14_31 : STM32_SVD.UInt18 := 16#0#;
    end record
@@ -233,48 +241,68 @@ package STM32_SVD.PWR is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   subtype CSR2_WUPF1_Field is STM32_SVD.Bit;
+   -------------------
+   -- CSR2_Register --
+   -------------------
 
-   type WUPF_Field_Array is array (0 .. 5) of CSR2_WUPF1_Field
+   ---------------
+   -- CSR2.WUPF --
+   ---------------
+
+   --  CSR2_WUPF array element
+   subtype CSR2_WUPF_Element is STM32_SVD.Bit;
+
+   --  CSR2_WUPF array
+   type CSR2_WUPF_Field_Array is array (0 .. 5) of CSR2_WUPF_Element
      with Component_Size => 1, Size => 6;
 
-   --  Type definition for WUPF
-   type WUPF_Union (As_Array : Boolean := False) is record
+   --  Type definition for CSR2_WUPF
+   type CSR2_WUPF_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of WUPF1
+            --  WUPF as a value
             Val : STM32_SVD.UInt6;
          when True =>
-            --  Array vision of WUPF1
-            Arr : WUPF_Field_Array;
+            --  WUPF as an array
+            Arr : CSR2_WUPF_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 6;
 
-   for WUPF_Union use record
+   for CSR2_WUPF_Field use record
       Val at 0 range 0 .. 5;
       Arr at 0 range 0 .. 5;
    end record;
 
-   subtype CSR2_EWUP1_Field is STM32_SVD.Bit;
+   ---------------
+   -- CSR2.EWUP --
+   ---------------
 
-   type EWUP_Field_Array is array (0 .. 5) of CSR2_EWUP1_Field
+   --  CSR2_EWUP array element
+   subtype CSR2_EWUP_Element is STM32_SVD.Bit;
+
+   --  CSR2_EWUP array
+   type CSR2_EWUP_Field_Array is array (0 .. 5) of CSR2_EWUP_Element
      with Component_Size => 1, Size => 6;
 
-   --  Type definition for EWUP
-   type EWUP_Union (As_Array : Boolean := False) is record
+   --  Type definition for CSR2_EWUP
+   type CSR2_EWUP_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of EWUP1
+            --  EWUP as a value
             Val : STM32_SVD.UInt6;
          when True =>
-            --  Array vision of EWUP1
-            Arr : EWUP_Field_Array;
+            --  EWUP as an array
+            Arr : CSR2_EWUP_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 6;
 
-   for EWUP_Union use record
+   for CSR2_EWUP_Field use record
       Val at 0 range 0 .. 5;
       Arr at 0 range 0 .. 5;
    end record;
@@ -282,11 +310,11 @@ package STM32_SVD.PWR is
    --  power control/status register
    type CSR2_Register is record
       --  Wakeup Pin flag for PA0
-      WUPF           : WUPF_Union := (As_Array => False, Val => 16#0#);
+      WUPF           : CSR2_WUPF_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_6_7   : STM32_SVD.UInt2 := 16#0#;
       --  Enable Wakeup pin for PA0
-      EWUP           : EWUP_Union := (As_Array => False, Val => 16#0#);
+      EWUP           : CSR2_EWUP_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_14_31 : STM32_SVD.UInt18 := 16#0#;
    end record
@@ -326,6 +354,6 @@ package STM32_SVD.PWR is
 
    --  Power control
    PWR_Periph : aliased PWR_Peripheral
-     with Import, Address => System'To_Address(16#40007000#);
+     with Import, Address => System'To_Address (16#40007000#);
 
 end STM32_SVD.PWR;

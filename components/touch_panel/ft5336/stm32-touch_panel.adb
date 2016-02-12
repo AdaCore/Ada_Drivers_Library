@@ -37,16 +37,12 @@ with Ada.Unchecked_Conversion;
 with STM32.Board;   use STM32.Board;
 with STM32.Device;  use STM32.Device;
 with STM32.I2C;     use STM32.I2C;
-with STM32.GPIO;    use STM32.GPIO;
 with STM32.LCD;
 
 package body STM32.Touch_Panel is
 
    --  I2C Slave address of touchscreen FocalTech FT5336
    TP_ADDR  : constant := 16#70#;
-
-   procedure My_Delay (Ms : Integer);
-   --  Wait the specified number of milliseconds
 
    function TP_Read (Reg : Byte; Status : out I2C_Status) return Byte
      with Inline;
@@ -55,12 +51,6 @@ package body STM32.Touch_Panel is
    procedure TP_Write (Reg : Byte; Data :  Byte; Status : out I2C_Status)
      with Inline;
    --  Write a Touch Panel register value
-
-   procedure TP_Init_Pins;
-   --  Initializes the Touch Panel GPIO pins
-
-   procedure TP_I2C_Config;
-   --  Initializes the I2C bus
 
    function Check_Id return Boolean;
    --  Check the device Id: returns true on a FT5336 touch panel, False is
@@ -303,18 +293,6 @@ package body STM32.Touch_Panel is
 
    pragma Warnings (On, "* is not referenced");
 
-   --------------
-   -- My_Delay --
-   --------------
-
-   procedure My_Delay (Ms : Integer) is
-      Next_Start : Time := Clock;
-      Period    : constant Time_Span := Milliseconds (Ms);
-   begin
-      Next_Start := Next_Start + Period;
-      delay until Next_Start;
-   end My_Delay;
-
    -------------
    -- TS_Read --
    -------------
@@ -350,50 +328,6 @@ package body STM32.Touch_Panel is
          Status,
          1000);
    end TP_Write;
-
-   ---------------
-   -- Init_Pins --
-   ---------------
-
-   procedure TP_Init_Pins
-   is
-      Pins : constant GPIO_Points := TP_Pins;
-   begin
-      Enable_Clock (Pins);
-
-      Reset (TP_I2C);
-
-      Configure_Alternate_Function (Pins, GPIO_AF_I2C3);
-      Configure_IO (Pins,
-                    (Speed       => Speed_25MHz,
-                     Mode        => Mode_AF,
-                     Output_Type => Open_Drain,
-                     Resistors   => Floating));
-      Lock (Pins);
-   end TP_Init_Pins;
-
-   -------------------
-   -- TP_I2C_Config --
-   -------------------
-
-   procedure TP_I2C_Config
-   is
-      I2C_Conf : I2C_Configuration;
-   begin
-      --  Wait at least 200ms after power up before accessing the TP registers
-      My_Delay (200);
-
-      Reset (TP_I2C);
-
-      I2C_Conf.Own_Address := 16#00#;
-      I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;
-      I2C_Conf.General_Call_Enabled := False;
-      I2C_Conf.Clock_Stretching_Enabled := True;
-
-      I2C_Conf.Clock_Speed := 100_000;
-
-      Configure (TP_I2C, I2C_Conf);
-   end TP_I2C_Config;
 
    ---------------------------
    -- TP_Set_Use_Interrupts --
@@ -443,8 +377,12 @@ package body STM32.Touch_Panel is
 
    function Initialize return Boolean is
    begin
-      TP_Init_Pins;
-      TP_I2C_Config;
+      Initialize_I2C_GPIO (TP_I2C);
+
+      --  Wait at least 200ms after power up before accessing the TP registers
+      delay until Clock + Milliseconds (200);
+
+      Configure_I2C (TP_I2C);
 
       TP_Set_Use_Interrupts (False);
 

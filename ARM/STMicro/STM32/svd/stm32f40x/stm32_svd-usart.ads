@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F40x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.USART is
@@ -12,24 +13,19 @@ package STM32_SVD.USART is
    -- Registers --
    ---------------
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR_PE_Field is STM32_SVD.Bit;
-
    subtype SR_FE_Field is STM32_SVD.Bit;
-
    subtype SR_NF_Field is STM32_SVD.Bit;
-
    subtype SR_ORE_Field is STM32_SVD.Bit;
-
    subtype SR_IDLE_Field is STM32_SVD.Bit;
-
    subtype SR_RXNE_Field is STM32_SVD.Bit;
-
    subtype SR_TC_Field is STM32_SVD.Bit;
-
    subtype SR_TXE_Field is STM32_SVD.Bit;
-
    subtype SR_LBD_Field is STM32_SVD.Bit;
-
    subtype SR_CTS_Field is STM32_SVD.Bit;
 
    --  Status register
@@ -74,6 +70,10 @@ package STM32_SVD.USART is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
+   -----------------
+   -- DR_Register --
+   -----------------
+
    subtype DR_DR_Field is STM32_SVD.UInt9;
 
    --  Data register
@@ -91,8 +91,11 @@ package STM32_SVD.USART is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
-   subtype BRR_DIV_Fraction_Field is STM32_SVD.UInt4;
+   ------------------
+   -- BRR_Register --
+   ------------------
 
+   subtype BRR_DIV_Fraction_Field is STM32_SVD.UInt4;
    subtype BRR_DIV_Mantissa_Field is STM32_SVD.UInt12;
 
    --  Baud rate register
@@ -113,34 +116,24 @@ package STM32_SVD.USART is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ------------------
+   -- CR1_Register --
+   ------------------
+
    subtype CR1_SBK_Field is STM32_SVD.Bit;
-
    subtype CR1_RWU_Field is STM32_SVD.Bit;
-
    subtype CR1_RE_Field is STM32_SVD.Bit;
-
    subtype CR1_TE_Field is STM32_SVD.Bit;
-
    subtype CR1_IDLEIE_Field is STM32_SVD.Bit;
-
    subtype CR1_RXNEIE_Field is STM32_SVD.Bit;
-
    subtype CR1_TCIE_Field is STM32_SVD.Bit;
-
    subtype CR1_TXEIE_Field is STM32_SVD.Bit;
-
    subtype CR1_PEIE_Field is STM32_SVD.Bit;
-
    subtype CR1_PS_Field is STM32_SVD.Bit;
-
    subtype CR1_PCE_Field is STM32_SVD.Bit;
-
    subtype CR1_WAKE_Field is STM32_SVD.Bit;
-
    subtype CR1_M_Field is STM32_SVD.Bit;
-
    subtype CR1_UE_Field is STM32_SVD.Bit;
-
    subtype CR1_OVER8_Field is STM32_SVD.Bit;
 
    --  Control register 1
@@ -203,22 +196,18 @@ package STM32_SVD.USART is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ------------------
+   -- CR2_Register --
+   ------------------
+
    subtype CR2_ADD_Field is STM32_SVD.UInt4;
-
    subtype CR2_LBDL_Field is STM32_SVD.Bit;
-
    subtype CR2_LBDIE_Field is STM32_SVD.Bit;
-
    subtype CR2_LBCL_Field is STM32_SVD.Bit;
-
    subtype CR2_CPHA_Field is STM32_SVD.Bit;
-
    subtype CR2_CPOL_Field is STM32_SVD.Bit;
-
    subtype CR2_CLKEN_Field is STM32_SVD.Bit;
-
    subtype CR2_STOP_Field is STM32_SVD.UInt2;
-
    subtype CR2_LINEN_Field is STM32_SVD.Bit;
 
    --  Control register 2
@@ -266,28 +255,21 @@ package STM32_SVD.USART is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
+   ------------------
+   -- CR3_Register --
+   ------------------
+
    subtype CR3_EIE_Field is STM32_SVD.Bit;
-
    subtype CR3_IREN_Field is STM32_SVD.Bit;
-
    subtype CR3_IRLP_Field is STM32_SVD.Bit;
-
    subtype CR3_HDSEL_Field is STM32_SVD.Bit;
-
    subtype CR3_NACK_Field is STM32_SVD.Bit;
-
    subtype CR3_SCEN_Field is STM32_SVD.Bit;
-
    subtype CR3_DMAR_Field is STM32_SVD.Bit;
-
    subtype CR3_DMAT_Field is STM32_SVD.Bit;
-
    subtype CR3_RTSE_Field is STM32_SVD.Bit;
-
    subtype CR3_CTSE_Field is STM32_SVD.Bit;
-
    subtype CR3_CTSIE_Field is STM32_SVD.Bit;
-
    subtype CR3_ONEBIT_Field is STM32_SVD.Bit;
 
    --  Control register 3
@@ -338,8 +320,11 @@ package STM32_SVD.USART is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   subtype GTPR_PSC_Field is STM32_SVD.Byte;
+   -------------------
+   -- GTPR_Register --
+   -------------------
 
+   subtype GTPR_PSC_Field is STM32_SVD.Byte;
    subtype GTPR_GT_Field is STM32_SVD.Byte;
 
    --  Guard time and prescaler register
@@ -395,19 +380,19 @@ package STM32_SVD.USART is
 
    --  Universal synchronous asynchronous receiver transmitter
    USART2_Periph : aliased USART2_Peripheral
-     with Import, Address => System'To_Address(16#40004400#);
+     with Import, Address => System'To_Address (16#40004400#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART3_Periph : aliased USART2_Peripheral
-     with Import, Address => System'To_Address(16#40004800#);
+     with Import, Address => System'To_Address (16#40004800#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART1_Periph : aliased USART2_Peripheral
-     with Import, Address => System'To_Address(16#40011000#);
+     with Import, Address => System'To_Address (16#40011000#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART6_Periph : aliased USART2_Peripheral
-     with Import, Address => System'To_Address(16#40011400#);
+     with Import, Address => System'To_Address (16#40011400#);
 
    --  Universal synchronous asynchronous receiver transmitter
    type UART4_Peripheral is record
@@ -437,10 +422,10 @@ package STM32_SVD.USART is
 
    --  Universal synchronous asynchronous receiver transmitter
    UART4_Periph : aliased UART4_Peripheral
-     with Import, Address => System'To_Address(16#40004C00#);
+     with Import, Address => System'To_Address (16#40004C00#);
 
    --  Universal synchronous asynchronous receiver transmitter
    UART5_Periph : aliased UART4_Peripheral
-     with Import, Address => System'To_Address(16#40005000#);
+     with Import, Address => System'To_Address (16#40005000#);
 
 end STM32_SVD.USART;

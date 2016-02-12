@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F46_79x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.NVIC is
@@ -11,6 +12,10 @@ package STM32_SVD.NVIC is
    ---------------
    -- Registers --
    ---------------
+
+   -------------------
+   -- ICTR_Register --
+   -------------------
 
    subtype ICTR_INTLINESNUM_Field is STM32_SVD.UInt4;
 
@@ -29,40 +34,41 @@ package STM32_SVD.NVIC is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
-   subtype IPR0_IPR_N0_Field is STM32_SVD.Byte;
+   ------------------
+   -- IPR_Register --
+   ------------------
 
-   type IPR_N_Field_Array is array (0 .. 3) of IPR0_IPR_N0_Field
+   --  IPR0_IPR_N array element
+   subtype IPR0_IPR_N_Element is STM32_SVD.Byte;
+
+   --  IPR0_IPR_N array
+   type IPR0_IPR_N_Field_Array is array (0 .. 3) of IPR0_IPR_N_Element
      with Component_Size => 8, Size => 32;
 
-   --  Type definition for IPR_N
-   type IPR_N_Union (As_Array : Boolean := False) is record
+   --  Interrupt Priority Register
+   type IPR_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of IPR_N0
+            --  IPR_N as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of IPR_N0
-            Arr : IPR_N_Field_Array;
+            --  IPR_N as an array
+            Arr : IPR0_IPR_N_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
+          Bit_Order => System.Low_Order_First;
 
-   for IPR_N_Union use record
+   for IPR_Register use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
-   --  Interrupt Priority Register
-   type IPR_Register is record
-      --  IPR_N0
-      IPR_N : IPR_N_Union := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for IPR_Register use record
-      IPR_N at 0 range 0 .. 31;
-   end record;
+   -------------------
+   -- STIR_Register --
+   -------------------
 
    subtype STIR_INTID_Field is STM32_SVD.UInt9;
 
@@ -209,6 +215,6 @@ package STM32_SVD.NVIC is
 
    --  Nested Vectored Interrupt Controller
    NVIC_Periph : aliased NVIC_Peripheral
-     with Import, Address => System'To_Address(16#E000E000#);
+     with Import, Address => System'To_Address (16#E000E000#);
 
 end STM32_SVD.NVIC;

@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F40x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.SYSCFG is
@@ -11,6 +12,10 @@ package STM32_SVD.SYSCFG is
    ---------------
    -- Registers --
    ---------------
+
+   --------------------
+   -- MEMRM_Register --
+   --------------------
 
    subtype MEMRM_MEM_MODE_Field is STM32_SVD.UInt2;
 
@@ -28,6 +33,10 @@ package STM32_SVD.SYSCFG is
       MEM_MODE      at 0 range 0 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
+
+   ------------------
+   -- PMC_Register --
+   ------------------
 
    subtype PMC_MII_RMII_SEL_Field is STM32_SVD.Bit;
 
@@ -49,25 +58,37 @@ package STM32_SVD.SYSCFG is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype EXTICR1_EXTI0_Field is STM32_SVD.UInt4;
+   ---------------------
+   -- EXTICR_Register --
+   ---------------------
 
-   type EXTI_Field_Array is array (0 .. 3) of EXTICR1_EXTI0_Field
+   ------------------
+   -- EXTICR1.EXTI --
+   ------------------
+
+   --  EXTICR1_EXTI array element
+   subtype EXTICR1_EXTI_Element is STM32_SVD.UInt4;
+
+   --  EXTICR1_EXTI array
+   type EXTICR1_EXTI_Field_Array is array (0 .. 3) of EXTICR1_EXTI_Element
      with Component_Size => 4, Size => 16;
 
-   --  Type definition for EXTI
-   type EXTI_Union (As_Array : Boolean := False) is record
+   --  Type definition for EXTICR1_EXTI
+   type EXTICR1_EXTI_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of EXTI0
+            --  EXTI as a value
             Val : STM32_SVD.Short;
          when True =>
-            --  Array vision of EXTI0
-            Arr : EXTI_Field_Array;
+            --  EXTI as an array
+            Arr : EXTICR1_EXTI_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 16;
 
-   for EXTI_Union use record
+   for EXTICR1_EXTI_Field use record
       Val at 0 range 0 .. 15;
       Arr at 0 range 0 .. 15;
    end record;
@@ -75,7 +96,8 @@ package STM32_SVD.SYSCFG is
    --  external interrupt configuration register 1
    type EXTICR_Register is record
       --  EXTI x configuration (x = 0 to 3)
-      EXTI           : EXTI_Union := (As_Array => False, Val => 16#0#);
+      EXTI           : EXTICR1_EXTI_Field :=
+                        (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_16_31 : STM32_SVD.Short := 16#0#;
    end record
@@ -87,8 +109,11 @@ package STM32_SVD.SYSCFG is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype CMPCR_CMP_PD_Field is STM32_SVD.Bit;
+   --------------------
+   -- CMPCR_Register --
+   --------------------
 
+   subtype CMPCR_CMP_PD_Field is STM32_SVD.Bit;
    subtype CMPCR_READY_Field is STM32_SVD.Bit;
 
    --  Compensation cell control register
@@ -147,6 +172,6 @@ package STM32_SVD.SYSCFG is
 
    --  System configuration controller
    SYSCFG_Periph : aliased SYSCFG_Peripheral
-     with Import, Address => System'To_Address(16#40013800#);
+     with Import, Address => System'To_Address (16#40013800#);
 
 end STM32_SVD.SYSCFG;

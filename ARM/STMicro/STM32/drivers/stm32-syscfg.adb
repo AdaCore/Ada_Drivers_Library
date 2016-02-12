@@ -56,7 +56,7 @@ package body STM32.SYSCFG is
       Pin  : GPIO_Pin_Index)
    is
       CR_Index   : Integer range 0 .. 3;
-      EXTI_Index : Integer range EXTI_Field_Array'Range;
+      EXTI_Index : Integer range EXTICR1_EXTI_Field_Array'Range;
       Port_Name  : constant GPIO_Port_Id := As_GPIO_Port_Id (Port);
    begin
       --  First we find the control register, of the four possible, that

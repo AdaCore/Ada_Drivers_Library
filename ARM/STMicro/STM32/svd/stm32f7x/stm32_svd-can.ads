@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F7x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.CAN is
@@ -12,24 +13,19 @@ package STM32_SVD.CAN is
    -- Registers --
    ---------------
 
+   ------------------
+   -- MCR_Register --
+   ------------------
+
    subtype MCR_INRQ_Field is STM32_SVD.Bit;
-
    subtype MCR_SLEEP_Field is STM32_SVD.Bit;
-
    subtype MCR_TXFP_Field is STM32_SVD.Bit;
-
    subtype MCR_RFLM_Field is STM32_SVD.Bit;
-
    subtype MCR_NART_Field is STM32_SVD.Bit;
-
    subtype MCR_AWUM_Field is STM32_SVD.Bit;
-
    subtype MCR_ABOM_Field is STM32_SVD.Bit;
-
    subtype MCR_TTCM_Field is STM32_SVD.Bit;
-
    subtype MCR_RESET_Field is STM32_SVD.Bit;
-
    subtype MCR_DBF_Field is STM32_SVD.Bit;
 
    --  master control register
@@ -77,22 +73,18 @@ package STM32_SVD.CAN is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
+   ------------------
+   -- MSR_Register --
+   ------------------
+
    subtype MSR_INAK_Field is STM32_SVD.Bit;
-
    subtype MSR_SLAK_Field is STM32_SVD.Bit;
-
    subtype MSR_ERRI_Field is STM32_SVD.Bit;
-
    subtype MSR_WKUI_Field is STM32_SVD.Bit;
-
    subtype MSR_SLAKI_Field is STM32_SVD.Bit;
-
    subtype MSR_TXM_Field is STM32_SVD.Bit;
-
    subtype MSR_RXM_Field is STM32_SVD.Bit;
-
    subtype MSR_SAMP_Field is STM32_SVD.Bit;
-
    subtype MSR_RX_Field is STM32_SVD.Bit;
 
    --  master status register
@@ -137,80 +129,85 @@ package STM32_SVD.CAN is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
+   ------------------
+   -- TSR_Register --
+   ------------------
+
    subtype TSR_RQCP0_Field is STM32_SVD.Bit;
-
    subtype TSR_TXOK0_Field is STM32_SVD.Bit;
-
    subtype TSR_ALST0_Field is STM32_SVD.Bit;
-
    subtype TSR_TERR0_Field is STM32_SVD.Bit;
-
    subtype TSR_ABRQ0_Field is STM32_SVD.Bit;
-
    subtype TSR_RQCP1_Field is STM32_SVD.Bit;
-
    subtype TSR_TXOK1_Field is STM32_SVD.Bit;
-
    subtype TSR_ALST1_Field is STM32_SVD.Bit;
-
    subtype TSR_TERR1_Field is STM32_SVD.Bit;
-
    subtype TSR_ABRQ1_Field is STM32_SVD.Bit;
-
    subtype TSR_RQCP2_Field is STM32_SVD.Bit;
-
    subtype TSR_TXOK2_Field is STM32_SVD.Bit;
-
    subtype TSR_ALST2_Field is STM32_SVD.Bit;
-
    subtype TSR_TERR2_Field is STM32_SVD.Bit;
-
    subtype TSR_ABRQ2_Field is STM32_SVD.Bit;
-
    subtype TSR_CODE_Field is STM32_SVD.UInt2;
 
-   subtype TSR_TME0_Field is STM32_SVD.Bit;
+   -------------
+   -- TSR.TME --
+   -------------
 
-   type TME_Field_Array is array (0 .. 2) of TSR_TME0_Field
+   --  TSR_TME array element
+   subtype TSR_TME_Element is STM32_SVD.Bit;
+
+   --  TSR_TME array
+   type TSR_TME_Field_Array is array (0 .. 2) of TSR_TME_Element
      with Component_Size => 1, Size => 3;
 
-   --  Type definition for TME
-   type TME_Union (As_Array : Boolean := False) is record
+   --  Type definition for TSR_TME
+   type TSR_TME_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of TME0
+            --  TME as a value
             Val : STM32_SVD.UInt3;
          when True =>
-            --  Array vision of TME0
-            Arr : TME_Field_Array;
+            --  TME as an array
+            Arr : TSR_TME_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 3;
 
-   for TME_Union use record
+   for TSR_TME_Field use record
       Val at 0 range 0 .. 2;
       Arr at 0 range 0 .. 2;
    end record;
 
-   subtype TSR_LOW0_Field is STM32_SVD.Bit;
+   -------------
+   -- TSR.LOW --
+   -------------
 
-   type LOW_Field_Array is array (0 .. 2) of TSR_LOW0_Field
+   --  TSR_LOW array element
+   subtype TSR_LOW_Element is STM32_SVD.Bit;
+
+   --  TSR_LOW array
+   type TSR_LOW_Field_Array is array (0 .. 2) of TSR_LOW_Element
      with Component_Size => 1, Size => 3;
 
-   --  Type definition for LOW
-   type LOW_Union (As_Array : Boolean := False) is record
+   --  Type definition for TSR_LOW
+   type TSR_LOW_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of LOW0
+            --  LOW as a value
             Val : STM32_SVD.UInt3;
          when True =>
-            --  Array vision of LOW0
-            Arr : LOW_Field_Array;
+            --  LOW as an array
+            Arr : TSR_LOW_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 3;
 
-   for LOW_Union use record
+   for TSR_LOW_Field use record
       Val at 0 range 0 .. 2;
       Arr at 0 range 0 .. 2;
    end record;
@@ -256,9 +253,9 @@ package STM32_SVD.CAN is
       --  CODE
       CODE           : TSR_CODE_Field := 16#0#;
       --  Lowest priority flag for mailbox 0
-      TME            : TME_Union := (As_Array => False, Val => 16#1#);
+      TME            : TSR_TME_Field := (As_Array => False, Val => 16#1#);
       --  Lowest priority flag for mailbox 0
-      LOW            : LOW_Union := (As_Array => False, Val => 16#0#);
+      LOW            : TSR_LOW_Field := (As_Array => False, Val => 16#0#);
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -287,12 +284,13 @@ package STM32_SVD.CAN is
       LOW            at 0 range 29 .. 31;
    end record;
 
+   -------------------
+   -- RF0R_Register --
+   -------------------
+
    subtype RF0R_FMP0_Field is STM32_SVD.UInt2;
-
    subtype RF0R_FULL0_Field is STM32_SVD.Bit;
-
    subtype RF0R_FOVR0_Field is STM32_SVD.Bit;
-
    subtype RF0R_RFOM0_Field is STM32_SVD.Bit;
 
    --  receive FIFO 0 register
@@ -322,12 +320,13 @@ package STM32_SVD.CAN is
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
 
+   -------------------
+   -- RF1R_Register --
+   -------------------
+
    subtype RF1R_FMP1_Field is STM32_SVD.UInt2;
-
    subtype RF1R_FULL1_Field is STM32_SVD.Bit;
-
    subtype RF1R_FOVR1_Field is STM32_SVD.Bit;
-
    subtype RF1R_RFOM1_Field is STM32_SVD.Bit;
 
    --  receive FIFO 1 register
@@ -357,32 +356,23 @@ package STM32_SVD.CAN is
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
 
+   ------------------
+   -- IER_Register --
+   ------------------
+
    subtype IER_TMEIE_Field is STM32_SVD.Bit;
-
    subtype IER_FMPIE0_Field is STM32_SVD.Bit;
-
    subtype IER_FFIE0_Field is STM32_SVD.Bit;
-
    subtype IER_FOVIE0_Field is STM32_SVD.Bit;
-
    subtype IER_FMPIE1_Field is STM32_SVD.Bit;
-
    subtype IER_FFIE1_Field is STM32_SVD.Bit;
-
    subtype IER_FOVIE1_Field is STM32_SVD.Bit;
-
    subtype IER_EWGIE_Field is STM32_SVD.Bit;
-
    subtype IER_EPVIE_Field is STM32_SVD.Bit;
-
    subtype IER_BOFIE_Field is STM32_SVD.Bit;
-
    subtype IER_LECIE_Field is STM32_SVD.Bit;
-
    subtype IER_ERRIE_Field is STM32_SVD.Bit;
-
    subtype IER_WKUIE_Field is STM32_SVD.Bit;
-
    subtype IER_SLKIE_Field is STM32_SVD.Bit;
 
    --  interrupt enable register
@@ -445,16 +435,15 @@ package STM32_SVD.CAN is
       Reserved_18_31 at 0 range 18 .. 31;
    end record;
 
+   ------------------
+   -- ESR_Register --
+   ------------------
+
    subtype ESR_EWGF_Field is STM32_SVD.Bit;
-
    subtype ESR_EPVF_Field is STM32_SVD.Bit;
-
    subtype ESR_BOFF_Field is STM32_SVD.Bit;
-
    subtype ESR_LEC_Field is STM32_SVD.UInt3;
-
    subtype ESR_TEC_Field is STM32_SVD.Byte;
-
    subtype ESR_REC_Field is STM32_SVD.Byte;
 
    --  interrupt enable register
@@ -490,16 +479,15 @@ package STM32_SVD.CAN is
       REC           at 0 range 24 .. 31;
    end record;
 
+   ------------------
+   -- BTR_Register --
+   ------------------
+
    subtype BTR_BRP_Field is STM32_SVD.UInt10;
-
    subtype BTR_TS1_Field is STM32_SVD.UInt4;
-
    subtype BTR_TS2_Field is STM32_SVD.UInt3;
-
    subtype BTR_SJW_Field is STM32_SVD.UInt2;
-
    subtype BTR_LBKM_Field is STM32_SVD.Bit;
-
    subtype BTR_SILM_Field is STM32_SVD.Bit;
 
    --  bit timing register
@@ -538,14 +526,14 @@ package STM32_SVD.CAN is
       SILM           at 0 range 31 .. 31;
    end record;
 
+   -------------------
+   -- TI0R_Register --
+   -------------------
+
    subtype TI0R_TXRQ_Field is STM32_SVD.Bit;
-
    subtype TI0R_RTR_Field is STM32_SVD.Bit;
-
    subtype TI0R_IDE_Field is STM32_SVD.Bit;
-
    subtype TI0R_EXID_Field is STM32_SVD.UInt18;
-
    subtype TI0R_STID_Field is STM32_SVD.UInt11;
 
    --  TX mailbox identifier register
@@ -572,10 +560,12 @@ package STM32_SVD.CAN is
       STID at 0 range 21 .. 31;
    end record;
 
+   --------------------
+   -- TDT0R_Register --
+   --------------------
+
    subtype TDT0R_DLC_Field is STM32_SVD.UInt4;
-
    subtype TDT0R_TGT_Field is STM32_SVD.Bit;
-
    subtype TDT0R_TIME_Field is STM32_SVD.Short;
 
    --  mailbox data length control and time stamp register
@@ -602,84 +592,78 @@ package STM32_SVD.CAN is
       TIME          at 0 range 16 .. 31;
    end record;
 
-   subtype TDL0R_DATA0_Field is STM32_SVD.Byte;
+   --------------------
+   -- TDL0R_Register --
+   --------------------
 
-   type DATA_Field_Array is array (0 .. 3) of TDL0R_DATA0_Field
+   --  TDL0R_DATA array element
+   subtype TDL0R_DATA_Element is STM32_SVD.Byte;
+
+   --  TDL0R_DATA array
+   type TDL0R_DATA_Field_Array is array (0 .. 3) of TDL0R_DATA_Element
      with Component_Size => 8, Size => 32;
 
-   --  Type definition for DATA
-   type DATA_Union (As_Array : Boolean := False) is record
+   --  mailbox data low register
+   type TDL0R_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of DATA0
+            --  DATA as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of DATA0
-            Arr : DATA_Field_Array;
+            --  DATA as an array
+            Arr : TDL0R_DATA_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
-
-   for DATA_Union use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
-   end record;
-
-   --  mailbox data low register
-   type TDL0R_Register is record
-      --  DATA0
-      DATA : DATA_Union := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for TDL0R_Register use record
-      DATA at 0 range 0 .. 31;
-   end record;
-
-   subtype TDH0R_DATA4_Field is STM32_SVD.Byte;
-
-   type DATA_Field_Array_1 is array (0 .. 3) of TDH0R_DATA4_Field
-     with Component_Size => 8, Size => 32;
-
-   --  Type definition for DATA
-   type DATA_Union_1 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of DATA4
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of DATA4
-            Arr : DATA_Field_Array_1;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for DATA_Union_1 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   --------------------
+   -- TDH0R_Register --
+   --------------------
+
+   --  TDH0R_DATA array element
+   subtype TDH0R_DATA_Element is STM32_SVD.Byte;
+
+   --  TDH0R_DATA array
+   type TDH0R_DATA_Field_Array is array (0 .. 3) of TDH0R_DATA_Element
+     with Component_Size => 8, Size => 32;
+
    --  mailbox data high register
-   type TDH0R_Register is record
-      --  DATA4
-      DATA : DATA_Union_1 := (As_Array => False, Val => 16#0#);
+   type TDH0R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  DATA as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  DATA as an array
+            Arr : TDH0R_DATA_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for TDH0R_Register use record
-      DATA at 0 range 0 .. 31;
+      Val at 0 range 0 .. 31;
+      Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- TI1R_Register --
+   -------------------
+
    subtype TI1R_TXRQ_Field is STM32_SVD.Bit;
-
    subtype TI1R_RTR_Field is STM32_SVD.Bit;
-
    subtype TI1R_IDE_Field is STM32_SVD.Bit;
-
    subtype TI1R_EXID_Field is STM32_SVD.UInt18;
-
    subtype TI1R_STID_Field is STM32_SVD.UInt11;
 
    --  mailbox identifier register
@@ -706,10 +690,12 @@ package STM32_SVD.CAN is
       STID at 0 range 21 .. 31;
    end record;
 
+   --------------------
+   -- TDT1R_Register --
+   --------------------
+
    subtype TDT1R_DLC_Field is STM32_SVD.UInt4;
-
    subtype TDT1R_TGT_Field is STM32_SVD.Bit;
-
    subtype TDT1R_TIME_Field is STM32_SVD.Short;
 
    --  mailbox data length control and time stamp register
@@ -736,84 +722,78 @@ package STM32_SVD.CAN is
       TIME          at 0 range 16 .. 31;
    end record;
 
-   subtype TDL1R_DATA0_Field is STM32_SVD.Byte;
+   --------------------
+   -- TDL1R_Register --
+   --------------------
 
-   type DATA_Field_Array_2 is array (0 .. 3) of TDL1R_DATA0_Field
+   --  TDL1R_DATA array element
+   subtype TDL1R_DATA_Element is STM32_SVD.Byte;
+
+   --  TDL1R_DATA array
+   type TDL1R_DATA_Field_Array is array (0 .. 3) of TDL1R_DATA_Element
      with Component_Size => 8, Size => 32;
 
-   --  Type definition for DATA
-   type DATA_Union_2 (As_Array : Boolean := False) is record
+   --  mailbox data low register
+   type TDL1R_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of DATA0
+            --  DATA as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of DATA0
-            Arr : DATA_Field_Array_2;
+            --  DATA as an array
+            Arr : TDL1R_DATA_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
-
-   for DATA_Union_2 use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
-   end record;
-
-   --  mailbox data low register
-   type TDL1R_Register is record
-      --  DATA0
-      DATA : DATA_Union_2 := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for TDL1R_Register use record
-      DATA at 0 range 0 .. 31;
-   end record;
-
-   subtype TDH1R_DATA4_Field is STM32_SVD.Byte;
-
-   type DATA_Field_Array_3 is array (0 .. 3) of TDH1R_DATA4_Field
-     with Component_Size => 8, Size => 32;
-
-   --  Type definition for DATA
-   type DATA_Union_3 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of DATA4
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of DATA4
-            Arr : DATA_Field_Array_3;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for DATA_Union_3 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   --------------------
+   -- TDH1R_Register --
+   --------------------
+
+   --  TDH1R_DATA array element
+   subtype TDH1R_DATA_Element is STM32_SVD.Byte;
+
+   --  TDH1R_DATA array
+   type TDH1R_DATA_Field_Array is array (0 .. 3) of TDH1R_DATA_Element
+     with Component_Size => 8, Size => 32;
+
    --  mailbox data high register
-   type TDH1R_Register is record
-      --  DATA4
-      DATA : DATA_Union_3 := (As_Array => False, Val => 16#0#);
+   type TDH1R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  DATA as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  DATA as an array
+            Arr : TDH1R_DATA_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for TDH1R_Register use record
-      DATA at 0 range 0 .. 31;
+      Val at 0 range 0 .. 31;
+      Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- TI2R_Register --
+   -------------------
+
    subtype TI2R_TXRQ_Field is STM32_SVD.Bit;
-
    subtype TI2R_RTR_Field is STM32_SVD.Bit;
-
    subtype TI2R_IDE_Field is STM32_SVD.Bit;
-
    subtype TI2R_EXID_Field is STM32_SVD.UInt18;
-
    subtype TI2R_STID_Field is STM32_SVD.UInt11;
 
    --  mailbox identifier register
@@ -840,10 +820,12 @@ package STM32_SVD.CAN is
       STID at 0 range 21 .. 31;
    end record;
 
+   --------------------
+   -- TDT2R_Register --
+   --------------------
+
    subtype TDT2R_DLC_Field is STM32_SVD.UInt4;
-
    subtype TDT2R_TGT_Field is STM32_SVD.Bit;
-
    subtype TDT2R_TIME_Field is STM32_SVD.Short;
 
    --  mailbox data length control and time stamp register
@@ -870,82 +852,77 @@ package STM32_SVD.CAN is
       TIME          at 0 range 16 .. 31;
    end record;
 
-   subtype TDL2R_DATA0_Field is STM32_SVD.Byte;
+   --------------------
+   -- TDL2R_Register --
+   --------------------
 
-   type DATA_Field_Array_4 is array (0 .. 3) of TDL2R_DATA0_Field
+   --  TDL2R_DATA array element
+   subtype TDL2R_DATA_Element is STM32_SVD.Byte;
+
+   --  TDL2R_DATA array
+   type TDL2R_DATA_Field_Array is array (0 .. 3) of TDL2R_DATA_Element
      with Component_Size => 8, Size => 32;
 
-   --  Type definition for DATA
-   type DATA_Union_4 (As_Array : Boolean := False) is record
+   --  mailbox data low register
+   type TDL2R_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of DATA0
+            --  DATA as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of DATA0
-            Arr : DATA_Field_Array_4;
+            --  DATA as an array
+            Arr : TDL2R_DATA_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
-
-   for DATA_Union_4 use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
-   end record;
-
-   --  mailbox data low register
-   type TDL2R_Register is record
-      --  DATA0
-      DATA : DATA_Union_4 := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for TDL2R_Register use record
-      DATA at 0 range 0 .. 31;
-   end record;
-
-   subtype TDH2R_DATA4_Field is STM32_SVD.Byte;
-
-   type DATA_Field_Array_5 is array (0 .. 3) of TDH2R_DATA4_Field
-     with Component_Size => 8, Size => 32;
-
-   --  Type definition for DATA
-   type DATA_Union_5 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of DATA4
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of DATA4
-            Arr : DATA_Field_Array_5;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for DATA_Union_5 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   --------------------
+   -- TDH2R_Register --
+   --------------------
+
+   --  TDH2R_DATA array element
+   subtype TDH2R_DATA_Element is STM32_SVD.Byte;
+
+   --  TDH2R_DATA array
+   type TDH2R_DATA_Field_Array is array (0 .. 3) of TDH2R_DATA_Element
+     with Component_Size => 8, Size => 32;
+
    --  mailbox data high register
-   type TDH2R_Register is record
-      --  DATA4
-      DATA : DATA_Union_5 := (As_Array => False, Val => 16#0#);
+   type TDH2R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  DATA as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  DATA as an array
+            Arr : TDH2R_DATA_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for TDH2R_Register use record
-      DATA at 0 range 0 .. 31;
+      Val at 0 range 0 .. 31;
+      Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- RI0R_Register --
+   -------------------
+
    subtype RI0R_RTR_Field is STM32_SVD.Bit;
-
    subtype RI0R_IDE_Field is STM32_SVD.Bit;
-
    subtype RI0R_EXID_Field is STM32_SVD.UInt18;
-
    subtype RI0R_STID_Field is STM32_SVD.UInt11;
 
    --  receive FIFO mailbox identifier register
@@ -972,10 +949,12 @@ package STM32_SVD.CAN is
       STID         at 0 range 21 .. 31;
    end record;
 
+   --------------------
+   -- RDT0R_Register --
+   --------------------
+
    subtype RDT0R_DLC_Field is STM32_SVD.UInt4;
-
    subtype RDT0R_FMI_Field is STM32_SVD.Byte;
-
    subtype RDT0R_TIME_Field is STM32_SVD.Short;
 
    --  mailbox data high register
@@ -999,82 +978,77 @@ package STM32_SVD.CAN is
       TIME         at 0 range 16 .. 31;
    end record;
 
-   subtype RDL0R_DATA0_Field is STM32_SVD.Byte;
+   --------------------
+   -- RDL0R_Register --
+   --------------------
 
-   type DATA_Field_Array_6 is array (0 .. 3) of RDL0R_DATA0_Field
+   --  RDL0R_DATA array element
+   subtype RDL0R_DATA_Element is STM32_SVD.Byte;
+
+   --  RDL0R_DATA array
+   type RDL0R_DATA_Field_Array is array (0 .. 3) of RDL0R_DATA_Element
      with Component_Size => 8, Size => 32;
 
-   --  Type definition for DATA
-   type DATA_Union_6 (As_Array : Boolean := False) is record
+   --  mailbox data high register
+   type RDL0R_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of DATA0
+            --  DATA as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of DATA0
-            Arr : DATA_Field_Array_6;
+            --  DATA as an array
+            Arr : RDL0R_DATA_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
-
-   for DATA_Union_6 use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
-   end record;
-
-   --  mailbox data high register
-   type RDL0R_Register is record
-      --  DATA0
-      DATA : DATA_Union_6 := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for RDL0R_Register use record
-      DATA at 0 range 0 .. 31;
-   end record;
-
-   subtype RDH0R_DATA4_Field is STM32_SVD.Byte;
-
-   type DATA_Field_Array_7 is array (0 .. 3) of RDH0R_DATA4_Field
-     with Component_Size => 8, Size => 32;
-
-   --  Type definition for DATA
-   type DATA_Union_7 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of DATA4
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of DATA4
-            Arr : DATA_Field_Array_7;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for DATA_Union_7 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   --------------------
+   -- RDH0R_Register --
+   --------------------
+
+   --  RDH0R_DATA array element
+   subtype RDH0R_DATA_Element is STM32_SVD.Byte;
+
+   --  RDH0R_DATA array
+   type RDH0R_DATA_Field_Array is array (0 .. 3) of RDH0R_DATA_Element
+     with Component_Size => 8, Size => 32;
+
    --  receive FIFO mailbox data high register
-   type RDH0R_Register is record
-      --  DATA4
-      DATA : DATA_Union_7 := (As_Array => False, Val => 16#0#);
+   type RDH0R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  DATA as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  DATA as an array
+            Arr : RDH0R_DATA_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for RDH0R_Register use record
-      DATA at 0 range 0 .. 31;
+      Val at 0 range 0 .. 31;
+      Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- RI1R_Register --
+   -------------------
+
    subtype RI1R_RTR_Field is STM32_SVD.Bit;
-
    subtype RI1R_IDE_Field is STM32_SVD.Bit;
-
    subtype RI1R_EXID_Field is STM32_SVD.UInt18;
-
    subtype RI1R_STID_Field is STM32_SVD.UInt11;
 
    --  mailbox data high register
@@ -1101,10 +1075,12 @@ package STM32_SVD.CAN is
       STID         at 0 range 21 .. 31;
    end record;
 
+   --------------------
+   -- RDT1R_Register --
+   --------------------
+
    subtype RDT1R_DLC_Field is STM32_SVD.UInt4;
-
    subtype RDT1R_FMI_Field is STM32_SVD.Byte;
-
    subtype RDT1R_TIME_Field is STM32_SVD.Short;
 
    --  mailbox data high register
@@ -1128,78 +1104,75 @@ package STM32_SVD.CAN is
       TIME         at 0 range 16 .. 31;
    end record;
 
-   subtype RDL1R_DATA0_Field is STM32_SVD.Byte;
+   --------------------
+   -- RDL1R_Register --
+   --------------------
 
-   type DATA_Field_Array_8 is array (0 .. 3) of RDL1R_DATA0_Field
+   --  RDL1R_DATA array element
+   subtype RDL1R_DATA_Element is STM32_SVD.Byte;
+
+   --  RDL1R_DATA array
+   type RDL1R_DATA_Field_Array is array (0 .. 3) of RDL1R_DATA_Element
      with Component_Size => 8, Size => 32;
 
-   --  Type definition for DATA
-   type DATA_Union_8 (As_Array : Boolean := False) is record
+   --  mailbox data high register
+   type RDL1R_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of DATA0
+            --  DATA as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of DATA0
-            Arr : DATA_Field_Array_8;
+            --  DATA as an array
+            Arr : RDL1R_DATA_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
-
-   for DATA_Union_8 use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
-   end record;
-
-   --  mailbox data high register
-   type RDL1R_Register is record
-      --  DATA0
-      DATA : DATA_Union_8 := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for RDL1R_Register use record
-      DATA at 0 range 0 .. 31;
-   end record;
-
-   subtype RDH1R_DATA4_Field is STM32_SVD.Byte;
-
-   type DATA_Field_Array_9 is array (0 .. 3) of RDH1R_DATA4_Field
-     with Component_Size => 8, Size => 32;
-
-   --  Type definition for DATA
-   type DATA_Union_9 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of DATA4
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of DATA4
-            Arr : DATA_Field_Array_9;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for DATA_Union_9 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   --------------------
+   -- RDH1R_Register --
+   --------------------
+
+   --  RDH1R_DATA array element
+   subtype RDH1R_DATA_Element is STM32_SVD.Byte;
+
+   --  RDH1R_DATA array
+   type RDH1R_DATA_Field_Array is array (0 .. 3) of RDH1R_DATA_Element
+     with Component_Size => 8, Size => 32;
+
    --  mailbox data high register
-   type RDH1R_Register is record
-      --  DATA4
-      DATA : DATA_Union_9 := (As_Array => False, Val => 16#0#);
+   type RDH1R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  DATA as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  DATA as an array
+            Arr : RDH1R_DATA_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for RDH1R_Register use record
-      DATA at 0 range 0 .. 31;
+      Val at 0 range 0 .. 31;
+      Arr at 0 range 0 .. 31;
    end record;
 
-   subtype FMR_FINIT_Field is STM32_SVD.Bit;
+   ------------------
+   -- FMR_Register --
+   ------------------
 
+   subtype FMR_FINIT_Field is STM32_SVD.Bit;
    subtype FMR_CAN2SB_Field is STM32_SVD.UInt6;
 
    --  filter master register
@@ -1223,25 +1196,37 @@ package STM32_SVD.CAN is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   subtype FM1R_FBM0_Field is STM32_SVD.Bit;
+   -------------------
+   -- FM1R_Register --
+   -------------------
 
-   type FBM_Field_Array is array (0 .. 27) of FM1R_FBM0_Field
+   --------------
+   -- FM1R.FBM --
+   --------------
+
+   --  FM1R_FBM array element
+   subtype FM1R_FBM_Element is STM32_SVD.Bit;
+
+   --  FM1R_FBM array
+   type FM1R_FBM_Field_Array is array (0 .. 27) of FM1R_FBM_Element
      with Component_Size => 1, Size => 28;
 
-   --  Type definition for FBM
-   type FBM_Union (As_Array : Boolean := False) is record
+   --  Type definition for FM1R_FBM
+   type FM1R_FBM_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of FBM0
+            --  FBM as a value
             Val : STM32_SVD.UInt28;
          when True =>
-            --  Array vision of FBM0
-            Arr : FBM_Field_Array;
+            --  FBM as an array
+            Arr : FM1R_FBM_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 28;
 
-   for FBM_Union use record
+   for FM1R_FBM_Field use record
       Val at 0 range 0 .. 27;
       Arr at 0 range 0 .. 27;
    end record;
@@ -1249,7 +1234,7 @@ package STM32_SVD.CAN is
    --  filter mode register
    type FM1R_Register is record
       --  Filter mode
-      FBM            : FBM_Union := (As_Array => False, Val => 16#0#);
+      FBM            : FM1R_FBM_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
    end record
@@ -1261,25 +1246,37 @@ package STM32_SVD.CAN is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype FS1R_FSC0_Field is STM32_SVD.Bit;
+   -------------------
+   -- FS1R_Register --
+   -------------------
 
-   type FSC_Field_Array is array (0 .. 27) of FS1R_FSC0_Field
+   --------------
+   -- FS1R.FSC --
+   --------------
+
+   --  FS1R_FSC array element
+   subtype FS1R_FSC_Element is STM32_SVD.Bit;
+
+   --  FS1R_FSC array
+   type FS1R_FSC_Field_Array is array (0 .. 27) of FS1R_FSC_Element
      with Component_Size => 1, Size => 28;
 
-   --  Type definition for FSC
-   type FSC_Union (As_Array : Boolean := False) is record
+   --  Type definition for FS1R_FSC
+   type FS1R_FSC_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of FSC0
+            --  FSC as a value
             Val : STM32_SVD.UInt28;
          when True =>
-            --  Array vision of FSC0
-            Arr : FSC_Field_Array;
+            --  FSC as an array
+            Arr : FS1R_FSC_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 28;
 
-   for FSC_Union use record
+   for FS1R_FSC_Field use record
       Val at 0 range 0 .. 27;
       Arr at 0 range 0 .. 27;
    end record;
@@ -1287,7 +1284,7 @@ package STM32_SVD.CAN is
    --  filter scale register
    type FS1R_Register is record
       --  Filter scale configuration
-      FSC            : FSC_Union := (As_Array => False, Val => 16#0#);
+      FSC            : FS1R_FSC_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
    end record
@@ -1299,25 +1296,37 @@ package STM32_SVD.CAN is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype FFA1R_FFA0_Field is STM32_SVD.Bit;
+   --------------------
+   -- FFA1R_Register --
+   --------------------
 
-   type FFA_Field_Array is array (0 .. 27) of FFA1R_FFA0_Field
+   ---------------
+   -- FFA1R.FFA --
+   ---------------
+
+   --  FFA1R_FFA array element
+   subtype FFA1R_FFA_Element is STM32_SVD.Bit;
+
+   --  FFA1R_FFA array
+   type FFA1R_FFA_Field_Array is array (0 .. 27) of FFA1R_FFA_Element
      with Component_Size => 1, Size => 28;
 
-   --  Type definition for FFA
-   type FFA_Union (As_Array : Boolean := False) is record
+   --  Type definition for FFA1R_FFA
+   type FFA1R_FFA_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of FFA0
+            --  FFA as a value
             Val : STM32_SVD.UInt28;
          when True =>
-            --  Array vision of FFA0
-            Arr : FFA_Field_Array;
+            --  FFA as an array
+            Arr : FFA1R_FFA_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 28;
 
-   for FFA_Union use record
+   for FFA1R_FFA_Field use record
       Val at 0 range 0 .. 27;
       Arr at 0 range 0 .. 27;
    end record;
@@ -1325,7 +1334,7 @@ package STM32_SVD.CAN is
    --  filter FIFO assignment register
    type FFA1R_Register is record
       --  Filter FIFO assignment for filter 0
-      FFA            : FFA_Union := (As_Array => False, Val => 16#0#);
+      FFA            : FFA1R_FFA_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
    end record
@@ -1337,25 +1346,37 @@ package STM32_SVD.CAN is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype FA1R_FACT0_Field is STM32_SVD.Bit;
+   -------------------
+   -- FA1R_Register --
+   -------------------
 
-   type FACT_Field_Array is array (0 .. 27) of FA1R_FACT0_Field
+   ---------------
+   -- FA1R.FACT --
+   ---------------
+
+   --  FA1R_FACT array element
+   subtype FA1R_FACT_Element is STM32_SVD.Bit;
+
+   --  FA1R_FACT array
+   type FA1R_FACT_Field_Array is array (0 .. 27) of FA1R_FACT_Element
      with Component_Size => 1, Size => 28;
 
-   --  Type definition for FACT
-   type FACT_Union (As_Array : Boolean := False) is record
+   --  Type definition for FA1R_FACT
+   type FA1R_FACT_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of FACT0
+            --  FACT as a value
             Val : STM32_SVD.UInt28;
          when True =>
-            --  Array vision of FACT0
-            Arr : FACT_Field_Array;
+            --  FACT as an array
+            Arr : FA1R_FACT_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 28;
 
-   for FACT_Union use record
+   for FA1R_FACT_Field use record
       Val at 0 range 0 .. 27;
       Arr at 0 range 0 .. 27;
    end record;
@@ -1363,7 +1384,7 @@ package STM32_SVD.CAN is
    --  filter activation register
    type FA1R_Register is record
       --  Filter active
-      FACT           : FACT_Union := (As_Array => False, Val => 16#0#);
+      FACT           : FA1R_FACT_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
    end record
@@ -1375,984 +1396,900 @@ package STM32_SVD.CAN is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype F0R1_FB0_Field is STM32_SVD.Bit;
+   ------------------
+   -- F0R_Register --
+   ------------------
 
-   type FB_Field_Array is array (0 .. 31) of F0R1_FB0_Field
+   --  F0R1_FB array element
+   subtype F0R1_FB_Element is STM32_SVD.Bit;
+
+   --  F0R1_FB array
+   type F0R1_FB_Field_Array is array (0 .. 31) of F0R1_FB_Element
      with Component_Size => 1, Size => 32;
 
-   --  Type definition for FB
-   type FB_Union (As_Array : Boolean := False) is record
+   --  Filter bank 0 register 1
+   type F0R_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of FB0
+            --  FB as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array;
+            --  FB as an array
+            Arr : F0R1_FB_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
-   end record;
-
-   --  Filter bank 0 register 1
-   type F0R_Register is record
-      --  Filter bits
-      FB : FB_Union := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F0R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F1R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_1 is array (0 .. 31) of F1R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_1 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_1;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_1 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   ------------------
+   -- F1R_Register --
+   ------------------
+
+   --  F1R1_FB array element
+   subtype F1R1_FB_Element is STM32_SVD.Bit;
+
+   --  F1R1_FB array
+   type F1R1_FB_Field_Array is array (0 .. 31) of F1R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 1 register 1
-   type F1R_Register is record
-      --  Filter bits
-      FB : FB_Union_1 := (As_Array => False, Val => 16#0#);
+   type F1R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F1R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F1R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F2R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_2 is array (0 .. 31) of F2R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_2 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_2;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_2 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   ------------------
+   -- F2R_Register --
+   ------------------
+
+   --  F2R1_FB array element
+   subtype F2R1_FB_Element is STM32_SVD.Bit;
+
+   --  F2R1_FB array
+   type F2R1_FB_Field_Array is array (0 .. 31) of F2R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 2 register 1
-   type F2R_Register is record
-      --  Filter bits
-      FB : FB_Union_2 := (As_Array => False, Val => 16#0#);
+   type F2R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F2R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F2R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F3R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_3 is array (0 .. 31) of F3R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_3 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_3;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_3 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   ------------------
+   -- F3R_Register --
+   ------------------
+
+   --  F3R1_FB array element
+   subtype F3R1_FB_Element is STM32_SVD.Bit;
+
+   --  F3R1_FB array
+   type F3R1_FB_Field_Array is array (0 .. 31) of F3R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 3 register 1
-   type F3R_Register is record
-      --  Filter bits
-      FB : FB_Union_3 := (As_Array => False, Val => 16#0#);
+   type F3R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F3R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F3R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F4R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_4 is array (0 .. 31) of F4R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_4 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_4;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_4 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   ------------------
+   -- F4R_Register --
+   ------------------
+
+   --  F4R1_FB array element
+   subtype F4R1_FB_Element is STM32_SVD.Bit;
+
+   --  F4R1_FB array
+   type F4R1_FB_Field_Array is array (0 .. 31) of F4R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 4 register 1
-   type F4R_Register is record
-      --  Filter bits
-      FB : FB_Union_4 := (As_Array => False, Val => 16#0#);
+   type F4R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F4R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F4R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F5R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_5 is array (0 .. 31) of F5R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_5 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_5;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_5 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   ------------------
+   -- F5R_Register --
+   ------------------
+
+   --  F5R1_FB array element
+   subtype F5R1_FB_Element is STM32_SVD.Bit;
+
+   --  F5R1_FB array
+   type F5R1_FB_Field_Array is array (0 .. 31) of F5R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 5 register 1
-   type F5R_Register is record
-      --  Filter bits
-      FB : FB_Union_5 := (As_Array => False, Val => 16#0#);
+   type F5R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F5R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F5R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F6R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_6 is array (0 .. 31) of F6R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_6 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_6;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_6 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   ------------------
+   -- F6R_Register --
+   ------------------
+
+   --  F6R1_FB array element
+   subtype F6R1_FB_Element is STM32_SVD.Bit;
+
+   --  F6R1_FB array
+   type F6R1_FB_Field_Array is array (0 .. 31) of F6R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 6 register 1
-   type F6R_Register is record
-      --  Filter bits
-      FB : FB_Union_6 := (As_Array => False, Val => 16#0#);
+   type F6R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F6R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F6R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F7R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_7 is array (0 .. 31) of F7R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_7 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_7;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_7 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   ------------------
+   -- F7R_Register --
+   ------------------
+
+   --  F7R1_FB array element
+   subtype F7R1_FB_Element is STM32_SVD.Bit;
+
+   --  F7R1_FB array
+   type F7R1_FB_Field_Array is array (0 .. 31) of F7R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 7 register 1
-   type F7R_Register is record
-      --  Filter bits
-      FB : FB_Union_7 := (As_Array => False, Val => 16#0#);
+   type F7R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F7R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F7R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F8R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_8 is array (0 .. 31) of F8R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_8 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_8;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_8 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   ------------------
+   -- F8R_Register --
+   ------------------
+
+   --  F8R1_FB array element
+   subtype F8R1_FB_Element is STM32_SVD.Bit;
+
+   --  F8R1_FB array
+   type F8R1_FB_Field_Array is array (0 .. 31) of F8R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 8 register 1
-   type F8R_Register is record
-      --  Filter bits
-      FB : FB_Union_8 := (As_Array => False, Val => 16#0#);
+   type F8R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F8R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F8R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F9R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_9 is array (0 .. 31) of F9R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_9 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_9;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_9 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   ------------------
+   -- F9R_Register --
+   ------------------
+
+   --  F9R1_FB array element
+   subtype F9R1_FB_Element is STM32_SVD.Bit;
+
+   --  F9R1_FB array
+   type F9R1_FB_Field_Array is array (0 .. 31) of F9R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 9 register 1
-   type F9R_Register is record
-      --  Filter bits
-      FB : FB_Union_9 := (As_Array => False, Val => 16#0#);
+   type F9R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F9R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F9R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F10R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_10 is array (0 .. 31) of F10R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_10 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_10;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_10 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F10R_Register --
+   -------------------
+
+   --  F10R1_FB array element
+   subtype F10R1_FB_Element is STM32_SVD.Bit;
+
+   --  F10R1_FB array
+   type F10R1_FB_Field_Array is array (0 .. 31) of F10R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 10 register 1
-   type F10R_Register is record
-      --  Filter bits
-      FB : FB_Union_10 := (As_Array => False, Val => 16#0#);
+   type F10R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F10R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F10R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F11R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_11 is array (0 .. 31) of F11R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_11 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_11;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_11 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F11R_Register --
+   -------------------
+
+   --  F11R1_FB array element
+   subtype F11R1_FB_Element is STM32_SVD.Bit;
+
+   --  F11R1_FB array
+   type F11R1_FB_Field_Array is array (0 .. 31) of F11R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 11 register 1
-   type F11R_Register is record
-      --  Filter bits
-      FB : FB_Union_11 := (As_Array => False, Val => 16#0#);
+   type F11R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F11R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F11R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F12R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_12 is array (0 .. 31) of F12R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_12 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_12;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_12 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F12R_Register --
+   -------------------
+
+   --  F12R1_FB array element
+   subtype F12R1_FB_Element is STM32_SVD.Bit;
+
+   --  F12R1_FB array
+   type F12R1_FB_Field_Array is array (0 .. 31) of F12R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 4 register 1
-   type F12R_Register is record
-      --  Filter bits
-      FB : FB_Union_12 := (As_Array => False, Val => 16#0#);
+   type F12R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F12R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F12R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F13R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_13 is array (0 .. 31) of F13R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_13 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_13;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_13 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F13R_Register --
+   -------------------
+
+   --  F13R1_FB array element
+   subtype F13R1_FB_Element is STM32_SVD.Bit;
+
+   --  F13R1_FB array
+   type F13R1_FB_Field_Array is array (0 .. 31) of F13R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 13 register 1
-   type F13R_Register is record
-      --  Filter bits
-      FB : FB_Union_13 := (As_Array => False, Val => 16#0#);
+   type F13R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F13R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F13R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F14R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_14 is array (0 .. 31) of F14R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_14 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_14;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_14 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F14R_Register --
+   -------------------
+
+   --  F14R1_FB array element
+   subtype F14R1_FB_Element is STM32_SVD.Bit;
+
+   --  F14R1_FB array
+   type F14R1_FB_Field_Array is array (0 .. 31) of F14R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 14 register 1
-   type F14R_Register is record
-      --  Filter bits
-      FB : FB_Union_14 := (As_Array => False, Val => 16#0#);
+   type F14R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F14R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F14R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F15R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_15 is array (0 .. 31) of F15R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_15 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_15;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_15 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F15R_Register --
+   -------------------
+
+   --  F15R1_FB array element
+   subtype F15R1_FB_Element is STM32_SVD.Bit;
+
+   --  F15R1_FB array
+   type F15R1_FB_Field_Array is array (0 .. 31) of F15R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 15 register 1
-   type F15R_Register is record
-      --  Filter bits
-      FB : FB_Union_15 := (As_Array => False, Val => 16#0#);
+   type F15R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F15R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F15R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F16R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_16 is array (0 .. 31) of F16R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_16 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_16;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_16 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F16R_Register --
+   -------------------
+
+   --  F16R1_FB array element
+   subtype F16R1_FB_Element is STM32_SVD.Bit;
+
+   --  F16R1_FB array
+   type F16R1_FB_Field_Array is array (0 .. 31) of F16R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 16 register 1
-   type F16R_Register is record
-      --  Filter bits
-      FB : FB_Union_16 := (As_Array => False, Val => 16#0#);
+   type F16R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F16R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F16R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F17R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_17 is array (0 .. 31) of F17R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_17 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_17;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_17 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F17R_Register --
+   -------------------
+
+   --  F17R1_FB array element
+   subtype F17R1_FB_Element is STM32_SVD.Bit;
+
+   --  F17R1_FB array
+   type F17R1_FB_Field_Array is array (0 .. 31) of F17R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 17 register 1
-   type F17R_Register is record
-      --  Filter bits
-      FB : FB_Union_17 := (As_Array => False, Val => 16#0#);
+   type F17R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F17R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F17R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F18R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_18 is array (0 .. 31) of F18R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_18 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_18;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_18 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F18R_Register --
+   -------------------
+
+   --  F18R1_FB array element
+   subtype F18R1_FB_Element is STM32_SVD.Bit;
+
+   --  F18R1_FB array
+   type F18R1_FB_Field_Array is array (0 .. 31) of F18R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 18 register 1
-   type F18R_Register is record
-      --  Filter bits
-      FB : FB_Union_18 := (As_Array => False, Val => 16#0#);
+   type F18R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F18R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F18R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F19R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_19 is array (0 .. 31) of F19R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_19 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_19;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_19 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F19R_Register --
+   -------------------
+
+   --  F19R1_FB array element
+   subtype F19R1_FB_Element is STM32_SVD.Bit;
+
+   --  F19R1_FB array
+   type F19R1_FB_Field_Array is array (0 .. 31) of F19R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 19 register 1
-   type F19R_Register is record
-      --  Filter bits
-      FB : FB_Union_19 := (As_Array => False, Val => 16#0#);
+   type F19R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F19R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F19R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F20R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_20 is array (0 .. 31) of F20R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_20 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_20;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_20 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F20R_Register --
+   -------------------
+
+   --  F20R1_FB array element
+   subtype F20R1_FB_Element is STM32_SVD.Bit;
+
+   --  F20R1_FB array
+   type F20R1_FB_Field_Array is array (0 .. 31) of F20R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 20 register 1
-   type F20R_Register is record
-      --  Filter bits
-      FB : FB_Union_20 := (As_Array => False, Val => 16#0#);
+   type F20R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F20R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F20R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F21R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_21 is array (0 .. 31) of F21R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_21 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_21;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_21 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F21R_Register --
+   -------------------
+
+   --  F21R1_FB array element
+   subtype F21R1_FB_Element is STM32_SVD.Bit;
+
+   --  F21R1_FB array
+   type F21R1_FB_Field_Array is array (0 .. 31) of F21R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 21 register 1
-   type F21R_Register is record
-      --  Filter bits
-      FB : FB_Union_21 := (As_Array => False, Val => 16#0#);
+   type F21R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F21R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F21R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F22R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_22 is array (0 .. 31) of F22R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_22 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_22;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_22 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F22R_Register --
+   -------------------
+
+   --  F22R1_FB array element
+   subtype F22R1_FB_Element is STM32_SVD.Bit;
+
+   --  F22R1_FB array
+   type F22R1_FB_Field_Array is array (0 .. 31) of F22R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 22 register 1
-   type F22R_Register is record
-      --  Filter bits
-      FB : FB_Union_22 := (As_Array => False, Val => 16#0#);
+   type F22R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F22R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F22R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F23R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_23 is array (0 .. 31) of F23R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_23 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_23;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_23 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F23R_Register --
+   -------------------
+
+   --  F23R1_FB array element
+   subtype F23R1_FB_Element is STM32_SVD.Bit;
+
+   --  F23R1_FB array
+   type F23R1_FB_Field_Array is array (0 .. 31) of F23R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 23 register 1
-   type F23R_Register is record
-      --  Filter bits
-      FB : FB_Union_23 := (As_Array => False, Val => 16#0#);
+   type F23R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F23R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F23R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F24R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_24 is array (0 .. 31) of F24R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_24 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_24;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_24 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F24R_Register --
+   -------------------
+
+   --  F24R1_FB array element
+   subtype F24R1_FB_Element is STM32_SVD.Bit;
+
+   --  F24R1_FB array
+   type F24R1_FB_Field_Array is array (0 .. 31) of F24R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 24 register 1
-   type F24R_Register is record
-      --  Filter bits
-      FB : FB_Union_24 := (As_Array => False, Val => 16#0#);
+   type F24R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F24R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F24R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F25R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_25 is array (0 .. 31) of F25R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_25 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_25;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_25 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F25R_Register --
+   -------------------
+
+   --  F25R1_FB array element
+   subtype F25R1_FB_Element is STM32_SVD.Bit;
+
+   --  F25R1_FB array
+   type F25R1_FB_Field_Array is array (0 .. 31) of F25R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 25 register 1
-   type F25R_Register is record
-      --  Filter bits
-      FB : FB_Union_25 := (As_Array => False, Val => 16#0#);
+   type F25R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F25R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F25R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F26R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_26 is array (0 .. 31) of F26R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_26 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_26;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_26 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F26R_Register --
+   -------------------
+
+   --  F26R1_FB array element
+   subtype F26R1_FB_Element is STM32_SVD.Bit;
+
+   --  F26R1_FB array
+   type F26R1_FB_Field_Array is array (0 .. 31) of F26R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 26 register 1
-   type F26R_Register is record
-      --  Filter bits
-      FB : FB_Union_26 := (As_Array => False, Val => 16#0#);
+   type F26R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F26R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F26R_Register use record
-      FB at 0 range 0 .. 31;
-   end record;
-
-   subtype F27R1_FB0_Field is STM32_SVD.Bit;
-
-   type FB_Field_Array_27 is array (0 .. 31) of F27R1_FB0_Field
-     with Component_Size => 1, Size => 32;
-
-   --  Type definition for FB
-   type FB_Union_27 (As_Array : Boolean := False) is record
-      case As_Array is
-         when False =>
-            --  Value vision of FB0
-            Val : STM32_SVD.Word;
-         when True =>
-            --  Array vision of FB0
-            Arr : FB_Field_Array_27;
-      end case;
-   end record
-     with Unchecked_Union, Size => 32;
-
-   for FB_Union_27 use record
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
 
+   -------------------
+   -- F27R_Register --
+   -------------------
+
+   --  F27R1_FB array element
+   subtype F27R1_FB_Element is STM32_SVD.Bit;
+
+   --  F27R1_FB array
+   type F27R1_FB_Field_Array is array (0 .. 31) of F27R1_FB_Element
+     with Component_Size => 1, Size => 32;
+
    --  Filter bank 27 register 1
-   type F27R_Register is record
-      --  Filter bits
-      FB : FB_Union_27 := (As_Array => False, Val => 16#0#);
+   type F27R_Register
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  FB as a value
+            Val : STM32_SVD.Word;
+         when True =>
+            --  FB as an array
+            Arr : F27R1_FB_Field_Array;
+      end case;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for F27R_Register use record
-      FB at 0 range 0 .. 31;
+      Val at 0 range 0 .. 31;
+      Arr at 0 range 0 .. 31;
    end record;
 
    -----------------
@@ -2636,10 +2573,10 @@ package STM32_SVD.CAN is
 
    --  Controller area network
    CAN1_Periph : aliased CAN_Peripheral
-     with Import, Address => System'To_Address(16#40006400#);
+     with Import, Address => System'To_Address (16#40006400#);
 
    --  Controller area network
    CAN2_Periph : aliased CAN_Peripheral
-     with Import, Address => System'To_Address(16#40006800#);
+     with Import, Address => System'To_Address (16#40006800#);
 
 end STM32_SVD.CAN;

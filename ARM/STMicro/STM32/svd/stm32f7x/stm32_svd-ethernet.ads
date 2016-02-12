@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F7x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.Ethernet is
@@ -12,36 +13,25 @@ package STM32_SVD.Ethernet is
    -- Registers --
    ---------------
 
+   --------------------
+   -- MACCR_Register --
+   --------------------
+
    subtype MACCR_RE_Field is STM32_SVD.Bit;
-
    subtype MACCR_TE_Field is STM32_SVD.Bit;
-
    subtype MACCR_DC_Field is STM32_SVD.Bit;
-
    subtype MACCR_BL_Field is STM32_SVD.UInt2;
-
    subtype MACCR_APCS_Field is STM32_SVD.Bit;
-
    subtype MACCR_RD_Field is STM32_SVD.Bit;
-
    subtype MACCR_IPCO_Field is STM32_SVD.Bit;
-
    subtype MACCR_DM_Field is STM32_SVD.Bit;
-
    subtype MACCR_LM_Field is STM32_SVD.Bit;
-
    subtype MACCR_ROD_Field is STM32_SVD.Bit;
-
    subtype MACCR_FES_Field is STM32_SVD.Bit;
-
    subtype MACCR_CSD_Field is STM32_SVD.Bit;
-
    subtype MACCR_IFG_Field is STM32_SVD.UInt3;
-
    subtype MACCR_JD_Field is STM32_SVD.Bit;
-
    subtype MACCR_WD_Field is STM32_SVD.Bit;
-
    subtype MACCR_CSTF_Field is STM32_SVD.Bit;
 
    --  Ethernet MAC configuration register
@@ -119,26 +109,20 @@ package STM32_SVD.Ethernet is
       Reserved_26_31 at 0 range 26 .. 31;
    end record;
 
+   ---------------------
+   -- MACFFR_Register --
+   ---------------------
+
    subtype MACFFR_PM_Field is STM32_SVD.Bit;
-
    subtype MACFFR_HU_Field is STM32_SVD.Bit;
-
    subtype MACFFR_HM_Field is STM32_SVD.Bit;
-
    subtype MACFFR_DAIF_Field is STM32_SVD.Bit;
-
    subtype MACFFR_RAM_Field is STM32_SVD.Bit;
-
    subtype MACFFR_BFD_Field is STM32_SVD.Bit;
-
    subtype MACFFR_PCF_Field is STM32_SVD.Bit;
-
    subtype MACFFR_SAIF_Field is STM32_SVD.Bit;
-
    subtype MACFFR_SAF_Field is STM32_SVD.Bit;
-
    subtype MACFFR_HPF_Field is STM32_SVD.Bit;
-
    subtype MACFFR_RA_Field is STM32_SVD.Bit;
 
    --  Ethernet MAC frame filter register
@@ -186,14 +170,14 @@ package STM32_SVD.Ethernet is
       RA             at 0 range 31 .. 31;
    end record;
 
+   -----------------------
+   -- MACMIIAR_Register --
+   -----------------------
+
    subtype MACMIIAR_MB_Field is STM32_SVD.Bit;
-
    subtype MACMIIAR_MW_Field is STM32_SVD.Bit;
-
    subtype MACMIIAR_CR_Field is STM32_SVD.UInt3;
-
    subtype MACMIIAR_MR_Field is STM32_SVD.UInt5;
-
    subtype MACMIIAR_PA_Field is STM32_SVD.UInt5;
 
    --  Ethernet MAC MII address register
@@ -226,6 +210,10 @@ package STM32_SVD.Ethernet is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   -----------------------
+   -- MACMIIDR_Register --
+   -----------------------
+
    subtype MACMIIDR_TD_Field is STM32_SVD.Short;
 
    --  Ethernet MAC MII data register
@@ -243,18 +231,16 @@ package STM32_SVD.Ethernet is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ---------------------
+   -- MACFCR_Register --
+   ---------------------
+
    subtype MACFCR_FCB_Field is STM32_SVD.Bit;
-
    subtype MACFCR_TFCE_Field is STM32_SVD.Bit;
-
    subtype MACFCR_RFCE_Field is STM32_SVD.Bit;
-
    subtype MACFCR_UPFD_Field is STM32_SVD.Bit;
-
    subtype MACFCR_PLT_Field is STM32_SVD.UInt2;
-
    subtype MACFCR_ZQPD_Field is STM32_SVD.Bit;
-
    subtype MACFCR_PT_Field is STM32_SVD.Short;
 
    --  Ethernet MAC flow control register
@@ -293,8 +279,11 @@ package STM32_SVD.Ethernet is
       PT            at 0 range 16 .. 31;
    end record;
 
-   subtype MACVLANTR_VLANTI_Field is STM32_SVD.Short;
+   ------------------------
+   -- MACVLANTR_Register --
+   ------------------------
 
+   subtype MACVLANTR_VLANTI_Field is STM32_SVD.Short;
    subtype MACVLANTR_VLANTC_Field is STM32_SVD.Bit;
 
    --  Ethernet MAC VLAN tag register
@@ -315,18 +304,16 @@ package STM32_SVD.Ethernet is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
+   ------------------------
+   -- MACPMTCSR_Register --
+   ------------------------
+
    subtype MACPMTCSR_PD_Field is STM32_SVD.Bit;
-
    subtype MACPMTCSR_MPE_Field is STM32_SVD.Bit;
-
    subtype MACPMTCSR_WFE_Field is STM32_SVD.Bit;
-
    subtype MACPMTCSR_MPR_Field is STM32_SVD.Bit;
-
    subtype MACPMTCSR_WFR_Field is STM32_SVD.Bit;
-
    subtype MACPMTCSR_GU_Field is STM32_SVD.Bit;
-
    subtype MACPMTCSR_WFFRPR_Field is STM32_SVD.Bit;
 
    --  Ethernet MAC PMT control and status register
@@ -368,16 +355,15 @@ package STM32_SVD.Ethernet is
       WFFRPR         at 0 range 31 .. 31;
    end record;
 
+   ----------------------
+   -- MACDBGR_Register --
+   ----------------------
+
    subtype MACDBGR_CR_Field is STM32_SVD.Bit;
-
    subtype MACDBGR_CSR_Field is STM32_SVD.Bit;
-
    subtype MACDBGR_ROR_Field is STM32_SVD.Bit;
-
    subtype MACDBGR_MCF_Field is STM32_SVD.Bit;
-
    subtype MACDBGR_MCP_Field is STM32_SVD.Bit;
-
    subtype MACDBGR_MCFHP_Field is STM32_SVD.Bit;
 
    --  Ethernet MAC debug register
@@ -410,14 +396,14 @@ package STM32_SVD.Ethernet is
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
 
+   --------------------
+   -- MACSR_Register --
+   --------------------
+
    subtype MACSR_PMTS_Field is STM32_SVD.Bit;
-
    subtype MACSR_MMCS_Field is STM32_SVD.Bit;
-
    subtype MACSR_MMCRS_Field is STM32_SVD.Bit;
-
    subtype MACSR_MMCTS_Field is STM32_SVD.Bit;
-
    subtype MACSR_TSTS_Field is STM32_SVD.Bit;
 
    --  Ethernet MAC interrupt status register
@@ -453,8 +439,11 @@ package STM32_SVD.Ethernet is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
-   subtype MACIMR_PMTIM_Field is STM32_SVD.Bit;
+   ---------------------
+   -- MACIMR_Register --
+   ---------------------
 
+   subtype MACIMR_PMTIM_Field is STM32_SVD.Bit;
    subtype MACIMR_TSTIM_Field is STM32_SVD.Bit;
 
    --  Ethernet MAC interrupt mask register
@@ -481,8 +470,11 @@ package STM32_SVD.Ethernet is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
-   subtype MACA0HR_MACA0H_Field is STM32_SVD.Short;
+   ----------------------
+   -- MACA0HR_Register --
+   ----------------------
 
+   subtype MACA0HR_MACA0H_Field is STM32_SVD.Short;
    subtype MACA0HR_MO_Field is STM32_SVD.Bit;
 
    --  Ethernet MAC address 0 high register
@@ -503,12 +495,13 @@ package STM32_SVD.Ethernet is
       MO             at 0 range 31 .. 31;
    end record;
 
+   ----------------------
+   -- MACA1HR_Register --
+   ----------------------
+
    subtype MACA1HR_MACA1H_Field is STM32_SVD.Short;
-
    subtype MACA1HR_MBC_Field is STM32_SVD.UInt6;
-
    subtype MACA1HR_SA_Field is STM32_SVD.Bit;
-
    subtype MACA1HR_AE_Field is STM32_SVD.Bit;
 
    --  Ethernet MAC address 1 high register
@@ -535,12 +528,13 @@ package STM32_SVD.Ethernet is
       AE             at 0 range 31 .. 31;
    end record;
 
+   ----------------------
+   -- MACA2HR_Register --
+   ----------------------
+
    subtype MACA2HR_MAC2AH_Field is STM32_SVD.Short;
-
    subtype MACA2HR_MBC_Field is STM32_SVD.UInt6;
-
    subtype MACA2HR_SA_Field is STM32_SVD.Bit;
-
    subtype MACA2HR_AE_Field is STM32_SVD.Bit;
 
    --  Ethernet MAC address 2 high register
@@ -567,6 +561,10 @@ package STM32_SVD.Ethernet is
       AE             at 0 range 31 .. 31;
    end record;
 
+   ----------------------
+   -- MACA2LR_Register --
+   ----------------------
+
    subtype MACA2LR_MACA2L_Field is STM32_SVD.UInt31;
 
    --  Ethernet MAC address 2 low register
@@ -584,12 +582,13 @@ package STM32_SVD.Ethernet is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   ----------------------
+   -- MACA3HR_Register --
+   ----------------------
+
    subtype MACA3HR_MACA3H_Field is STM32_SVD.Short;
-
    subtype MACA3HR_MBC_Field is STM32_SVD.UInt6;
-
    subtype MACA3HR_SA_Field is STM32_SVD.Bit;
-
    subtype MACA3HR_AE_Field is STM32_SVD.Bit;
 
    --  Ethernet MAC address 3 high register
@@ -616,16 +615,15 @@ package STM32_SVD.Ethernet is
       AE             at 0 range 31 .. 31;
    end record;
 
+   --------------------
+   -- MMCCR_Register --
+   --------------------
+
    subtype MMCCR_CR_Field is STM32_SVD.Bit;
-
    subtype MMCCR_CSR_Field is STM32_SVD.Bit;
-
    subtype MMCCR_ROR_Field is STM32_SVD.Bit;
-
    subtype MMCCR_MCF_Field is STM32_SVD.Bit;
-
    subtype MMCCR_MCP_Field is STM32_SVD.Bit;
-
    subtype MMCCR_MCFHP_Field is STM32_SVD.Bit;
 
    --  Ethernet MMC control register
@@ -658,10 +656,12 @@ package STM32_SVD.Ethernet is
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
 
+   ---------------------
+   -- MMCRIR_Register --
+   ---------------------
+
    subtype MMCRIR_RFCES_Field is STM32_SVD.Bit;
-
    subtype MMCRIR_RFAES_Field is STM32_SVD.Bit;
-
    subtype MMCRIR_RGUFS_Field is STM32_SVD.Bit;
 
    --  Ethernet MMC receive interrupt register
@@ -691,10 +691,12 @@ package STM32_SVD.Ethernet is
       Reserved_18_31 at 0 range 18 .. 31;
    end record;
 
+   ---------------------
+   -- MMCTIR_Register --
+   ---------------------
+
    subtype MMCTIR_TGFSCS_Field is STM32_SVD.Bit;
-
    subtype MMCTIR_TGFMSCS_Field is STM32_SVD.Bit;
-
    subtype MMCTIR_TGFS_Field is STM32_SVD.Bit;
 
    --  Ethernet MMC transmit interrupt register
@@ -724,10 +726,12 @@ package STM32_SVD.Ethernet is
       Reserved_22_31 at 0 range 22 .. 31;
    end record;
 
+   ----------------------
+   -- MMCRIMR_Register --
+   ----------------------
+
    subtype MMCRIMR_RFCEM_Field is STM32_SVD.Bit;
-
    subtype MMCRIMR_RFAEM_Field is STM32_SVD.Bit;
-
    subtype MMCRIMR_RGUFM_Field is STM32_SVD.Bit;
 
    --  Ethernet MMC receive interrupt mask register
@@ -757,10 +761,12 @@ package STM32_SVD.Ethernet is
       Reserved_18_31 at 0 range 18 .. 31;
    end record;
 
+   ----------------------
+   -- MMCTIMR_Register --
+   ----------------------
+
    subtype MMCTIMR_TGFSCM_Field is STM32_SVD.Bit;
-
    subtype MMCTIMR_TGFMSCM_Field is STM32_SVD.Bit;
-
    subtype MMCTIMR_TGFM_Field is STM32_SVD.Bit;
 
    --  Ethernet MMC transmit interrupt mask register
@@ -787,36 +793,25 @@ package STM32_SVD.Ethernet is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
+   ----------------------
+   -- PTPTSCR_Register --
+   ----------------------
+
    subtype PTPTSCR_TSE_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSFCU_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSSTI_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSSTU_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSITE_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TTSARU_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSSARFE_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSSSR_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSPTPPSV2E_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSSPTPOEFE_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSSIPV6FE_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSSIPV4FE_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSSEME_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSSMRME_Field is STM32_SVD.Bit;
-
    subtype PTPTSCR_TSCNT_Field is STM32_SVD.UInt2;
-
    subtype PTPTSCR_TSPFFMAE_Field is STM32_SVD.Bit;
 
    --  Ethernet PTP time stamp control register
@@ -882,6 +877,10 @@ package STM32_SVD.Ethernet is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
+   ----------------------
+   -- PTPSSIR_Register --
+   ----------------------
+
    subtype PTPSSIR_STSSI_Field is STM32_SVD.Byte;
 
    --  Ethernet PTP subsecond increment register
@@ -899,8 +898,11 @@ package STM32_SVD.Ethernet is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype PTPTSLR_STSS_Field is STM32_SVD.UInt31;
+   ----------------------
+   -- PTPTSLR_Register --
+   ----------------------
 
+   subtype PTPTSLR_STSS_Field is STM32_SVD.UInt31;
    subtype PTPTSLR_STPNS_Field is STM32_SVD.Bit;
 
    --  Ethernet PTP time stamp low register
@@ -918,8 +920,11 @@ package STM32_SVD.Ethernet is
       STPNS at 0 range 31 .. 31;
    end record;
 
-   subtype PTPTSLUR_TSUSS_Field is STM32_SVD.UInt31;
+   -----------------------
+   -- PTPTSLUR_Register --
+   -----------------------
 
+   subtype PTPTSLUR_TSUSS_Field is STM32_SVD.UInt31;
    subtype PTPTSLUR_TSUPNS_Field is STM32_SVD.Bit;
 
    --  Ethernet PTP time stamp low update register
@@ -937,8 +942,11 @@ package STM32_SVD.Ethernet is
       TSUPNS at 0 range 31 .. 31;
    end record;
 
-   subtype PTPTSSR_TSSO_Field is STM32_SVD.Bit;
+   ----------------------
+   -- PTPTSSR_Register --
+   ----------------------
 
+   subtype PTPTSSR_TSSO_Field is STM32_SVD.Bit;
    subtype PTPTSSR_TSTTR_Field is STM32_SVD.Bit;
 
    --  Ethernet PTP time stamp status register
@@ -959,8 +967,11 @@ package STM32_SVD.Ethernet is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   subtype PTPPPSCR_TSSO_Field is STM32_SVD.Bit;
+   -----------------------
+   -- PTPPPSCR_Register --
+   -----------------------
 
+   subtype PTPPPSCR_TSSO_Field is STM32_SVD.Bit;
    subtype PTPPPSCR_TSTTR_Field is STM32_SVD.Bit;
 
    --  Ethernet PTP PPS control register
@@ -981,28 +992,21 @@ package STM32_SVD.Ethernet is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
+   ---------------------
+   -- DMABMR_Register --
+   ---------------------
+
    subtype DMABMR_SR_Field is STM32_SVD.Bit;
-
    subtype DMABMR_DA_Field is STM32_SVD.Bit;
-
    subtype DMABMR_DSL_Field is STM32_SVD.UInt5;
-
    subtype DMABMR_EDFE_Field is STM32_SVD.Bit;
-
    subtype DMABMR_PBL_Field is STM32_SVD.UInt6;
-
    subtype DMABMR_RTPR_Field is STM32_SVD.UInt2;
-
    subtype DMABMR_FB_Field is STM32_SVD.Bit;
-
    subtype DMABMR_RDP_Field is STM32_SVD.UInt6;
-
    subtype DMABMR_USP_Field is STM32_SVD.Bit;
-
    subtype DMABMR_FPM_Field is STM32_SVD.Bit;
-
    subtype DMABMR_AAB_Field is STM32_SVD.Bit;
-
    subtype DMABMR_MB_Field is STM32_SVD.Bit;
 
    --  Ethernet DMA bus mode register
@@ -1053,46 +1057,30 @@ package STM32_SVD.Ethernet is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
+   --------------------
+   -- DMASR_Register --
+   --------------------
+
    subtype DMASR_TS_Field is STM32_SVD.Bit;
-
    subtype DMASR_TPSS_Field is STM32_SVD.Bit;
-
    subtype DMASR_TBUS_Field is STM32_SVD.Bit;
-
    subtype DMASR_TJTS_Field is STM32_SVD.Bit;
-
    subtype DMASR_ROS_Field is STM32_SVD.Bit;
-
    subtype DMASR_TUS_Field is STM32_SVD.Bit;
-
    subtype DMASR_RS_Field is STM32_SVD.Bit;
-
    subtype DMASR_RBUS_Field is STM32_SVD.Bit;
-
    subtype DMASR_RPSS_Field is STM32_SVD.Bit;
-
    subtype DMASR_PWTS_Field is STM32_SVD.Bit;
-
    subtype DMASR_ETS_Field is STM32_SVD.Bit;
-
    subtype DMASR_FBES_Field is STM32_SVD.Bit;
-
    subtype DMASR_ERS_Field is STM32_SVD.Bit;
-
    subtype DMASR_AIS_Field is STM32_SVD.Bit;
-
    subtype DMASR_NIS_Field is STM32_SVD.Bit;
-
    subtype DMASR_RPS_Field is STM32_SVD.UInt3;
-
    subtype DMASR_TPS_Field is STM32_SVD.UInt3;
-
    subtype DMASR_EBS_Field is STM32_SVD.UInt3;
-
    subtype DMASR_MMCS_Field is STM32_SVD.Bit;
-
    subtype DMASR_PMTS_Field is STM32_SVD.Bit;
-
    subtype DMASR_TSTS_Field is STM32_SVD.Bit;
 
    --  Ethernet DMA status register
@@ -1176,28 +1164,21 @@ package STM32_SVD.Ethernet is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
+   ---------------------
+   -- DMAOMR_Register --
+   ---------------------
+
    subtype DMAOMR_SR_Field is STM32_SVD.Bit;
-
    subtype DMAOMR_OSF_Field is STM32_SVD.Bit;
-
    subtype DMAOMR_RTC_Field is STM32_SVD.UInt2;
-
    subtype DMAOMR_FUGF_Field is STM32_SVD.Bit;
-
    subtype DMAOMR_FEF_Field is STM32_SVD.Bit;
-
    subtype DMAOMR_ST_Field is STM32_SVD.Bit;
-
    subtype DMAOMR_TTC_Field is STM32_SVD.UInt3;
-
    subtype DMAOMR_FTF_Field is STM32_SVD.Bit;
-
    subtype DMAOMR_TSF_Field is STM32_SVD.Bit;
-
    subtype DMAOMR_DFRF_Field is STM32_SVD.Bit;
-
    subtype DMAOMR_RSF_Field is STM32_SVD.Bit;
-
    subtype DMAOMR_DTCEFD_Field is STM32_SVD.Bit;
 
    --  Ethernet DMA operation mode register
@@ -1263,34 +1244,24 @@ package STM32_SVD.Ethernet is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
+   ---------------------
+   -- DMAIER_Register --
+   ---------------------
+
    subtype DMAIER_TIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_TPSIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_TBUIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_TJTIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_ROIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_TUIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_RIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_RBUIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_RPSIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_RWTIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_ETIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_FBEIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_ERIE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_AISE_Field is STM32_SVD.Bit;
-
    subtype DMAIER_NISE_Field is STM32_SVD.Bit;
 
    --  Ethernet DMA interrupt enable register
@@ -1353,12 +1324,13 @@ package STM32_SVD.Ethernet is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
+   ------------------------
+   -- DMAMFBOCR_Register --
+   ------------------------
+
    subtype DMAMFBOCR_MFC_Field is STM32_SVD.Short;
-
    subtype DMAMFBOCR_OMFC_Field is STM32_SVD.Bit;
-
    subtype DMAMFBOCR_MFA_Field is STM32_SVD.UInt11;
-
    subtype DMAMFBOCR_OFOC_Field is STM32_SVD.Bit;
 
    --  Ethernet DMA missed frame and buffer overflow counter register
@@ -1384,6 +1356,10 @@ package STM32_SVD.Ethernet is
       OFOC           at 0 range 28 .. 28;
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
+
+   -----------------------
+   -- DMARSWTR_Register --
+   -----------------------
 
    subtype DMARSWTR_RSWTC_Field is STM32_SVD.Byte;
 
@@ -1479,7 +1455,7 @@ package STM32_SVD.Ethernet is
 
    --  Ethernet: media access control (MAC)
    Ethernet_MAC_Periph : aliased Ethernet_MAC_Peripheral
-     with Import, Address => System'To_Address(16#40028000#);
+     with Import, Address => System'To_Address (16#40028000#);
 
    --  Ethernet: MAC management counters
    type Ethernet_MMC_Peripheral is record
@@ -1525,7 +1501,7 @@ package STM32_SVD.Ethernet is
 
    --  Ethernet: MAC management counters
    Ethernet_MMC_Periph : aliased Ethernet_MMC_Peripheral
-     with Import, Address => System'To_Address(16#40028100#);
+     with Import, Address => System'To_Address (16#40028100#);
 
    --  Ethernet: Precision time protocol
    type Ethernet_PTP_Peripheral is record
@@ -1570,7 +1546,7 @@ package STM32_SVD.Ethernet is
 
    --  Ethernet: Precision time protocol
    Ethernet_PTP_Periph : aliased Ethernet_PTP_Peripheral
-     with Import, Address => System'To_Address(16#40028700#);
+     with Import, Address => System'To_Address (16#40028700#);
 
    --  Ethernet: DMA controller operation
    type Ethernet_DMA_Peripheral is record
@@ -1624,6 +1600,6 @@ package STM32_SVD.Ethernet is
 
    --  Ethernet: DMA controller operation
    Ethernet_DMA_Periph : aliased Ethernet_DMA_Peripheral
-     with Import, Address => System'To_Address(16#40029000#);
+     with Import, Address => System'To_Address (16#40029000#);
 
 end STM32_SVD.Ethernet;

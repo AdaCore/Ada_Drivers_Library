@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F7x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.ADC is
@@ -12,16 +13,15 @@ package STM32_SVD.ADC is
    -- Registers --
    ---------------
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR_AWD_Field is STM32_SVD.Bit;
-
    subtype SR_EOC_Field is STM32_SVD.Bit;
-
    subtype SR_JEOC_Field is STM32_SVD.Bit;
-
    subtype SR_JSTRT_Field is STM32_SVD.Bit;
-
    subtype SR_STRT_Field is STM32_SVD.Bit;
-
    subtype SR_OVR_Field is STM32_SVD.Bit;
 
    --  status register
@@ -54,32 +54,23 @@ package STM32_SVD.ADC is
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
 
+   ------------------
+   -- CR1_Register --
+   ------------------
+
    subtype CR1_AWDCH_Field is STM32_SVD.UInt5;
-
    subtype CR1_EOCIE_Field is STM32_SVD.Bit;
-
    subtype CR1_AWDIE_Field is STM32_SVD.Bit;
-
    subtype CR1_JEOCIE_Field is STM32_SVD.Bit;
-
    subtype CR1_SCAN_Field is STM32_SVD.Bit;
-
    subtype CR1_AWDSGL_Field is STM32_SVD.Bit;
-
    subtype CR1_JAUTO_Field is STM32_SVD.Bit;
-
    subtype CR1_DISCEN_Field is STM32_SVD.Bit;
-
    subtype CR1_JDISCEN_Field is STM32_SVD.Bit;
-
    subtype CR1_DISCNUM_Field is STM32_SVD.UInt3;
-
    subtype CR1_JAWDEN_Field is STM32_SVD.Bit;
-
    subtype CR1_AWDEN_Field is STM32_SVD.Bit;
-
    subtype CR1_RES_Field is STM32_SVD.UInt2;
-
    subtype CR1_OVRIE_Field is STM32_SVD.Bit;
 
    --  control register 1
@@ -139,28 +130,21 @@ package STM32_SVD.ADC is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
+   ------------------
+   -- CR2_Register --
+   ------------------
+
    subtype CR2_ADON_Field is STM32_SVD.Bit;
-
    subtype CR2_CONT_Field is STM32_SVD.Bit;
-
    subtype CR2_DMA_Field is STM32_SVD.Bit;
-
    subtype CR2_DDS_Field is STM32_SVD.Bit;
-
    subtype CR2_EOCS_Field is STM32_SVD.Bit;
-
    subtype CR2_ALIGN_Field is STM32_SVD.Bit;
-
    subtype CR2_JEXTSEL_Field is STM32_SVD.UInt4;
-
    subtype CR2_JEXTEN_Field is STM32_SVD.UInt2;
-
    subtype CR2_JSWSTART_Field is STM32_SVD.Bit;
-
    subtype CR2_EXTSEL_Field is STM32_SVD.UInt4;
-
    subtype CR2_EXTEN_Field is STM32_SVD.UInt2;
-
    subtype CR2_SWSTART_Field is STM32_SVD.Bit;
 
    --  control register 2
@@ -220,6 +204,10 @@ package STM32_SVD.ADC is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   -------------------
+   -- JOFR_Register --
+   -------------------
+
    subtype JOFR1_JOFFSET1_Field is STM32_SVD.UInt12;
 
    --  injected channel data offset register x
@@ -236,6 +224,10 @@ package STM32_SVD.ADC is
       JOFFSET1       at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
+
+   ------------------
+   -- HTR_Register --
+   ------------------
 
    subtype HTR_HT_Field is STM32_SVD.UInt12;
 
@@ -254,6 +246,10 @@ package STM32_SVD.ADC is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
+   ------------------
+   -- LTR_Register --
+   ------------------
+
    subtype LTR_LT_Field is STM32_SVD.UInt12;
 
    --  watchdog lower threshold register
@@ -271,25 +267,37 @@ package STM32_SVD.ADC is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   subtype SQR1_SQ13_Field is STM32_SVD.UInt5;
+   -------------------
+   -- SQR1_Register --
+   -------------------
 
-   type SQ_Field_Array is array (0 .. 3) of SQR1_SQ13_Field
+   -------------
+   -- SQR1.SQ --
+   -------------
+
+   --  SQR1_SQ array element
+   subtype SQR1_SQ_Element is STM32_SVD.UInt5;
+
+   --  SQR1_SQ array
+   type SQR1_SQ_Field_Array is array (0 .. 3) of SQR1_SQ_Element
      with Component_Size => 5, Size => 20;
 
-   --  Type definition for SQ
-   type SQ_Union (As_Array : Boolean := False) is record
+   --  Type definition for SQR1_SQ
+   type SQR1_SQ_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of SQ13
+            --  SQ as a value
             Val : STM32_SVD.UInt20;
          when True =>
-            --  Array vision of SQ13
-            Arr : SQ_Field_Array;
+            --  SQ as an array
+            Arr : SQR1_SQ_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 20;
 
-   for SQ_Union use record
+   for SQR1_SQ_Field use record
       Val at 0 range 0 .. 19;
       Arr at 0 range 0 .. 19;
    end record;
@@ -299,7 +307,7 @@ package STM32_SVD.ADC is
    --  regular sequence register 1
    type SQR1_Register is record
       --  13th conversion in regular sequence
-      SQ             : SQ_Union := (As_Array => False, Val => 16#0#);
+      SQ             : SQR1_SQ_Field := (As_Array => False, Val => 16#0#);
       --  Regular channel sequence length
       L              : SQR1_L_Field := 16#0#;
       --  unspecified
@@ -314,25 +322,37 @@ package STM32_SVD.ADC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype SQR2_SQ7_Field is STM32_SVD.UInt5;
+   ------------------
+   -- SQR_Register --
+   ------------------
 
-   type SQ_Field_Array_1 is array (0 .. 5) of SQR2_SQ7_Field
+   -------------
+   -- SQR2.SQ --
+   -------------
+
+   --  SQR2_SQ array element
+   subtype SQR2_SQ_Element is STM32_SVD.UInt5;
+
+   --  SQR2_SQ array
+   type SQR2_SQ_Field_Array is array (0 .. 5) of SQR2_SQ_Element
      with Component_Size => 5, Size => 30;
 
-   --  Type definition for SQ
-   type SQ_Union_1 (As_Array : Boolean := False) is record
+   --  Type definition for SQR2_SQ
+   type SQR2_SQ_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of SQ7
+            --  SQ as a value
             Val : STM32_SVD.UInt30;
          when True =>
-            --  Array vision of SQ7
-            Arr : SQ_Field_Array_1;
+            --  SQ as an array
+            Arr : SQR2_SQ_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 30;
 
-   for SQ_Union_1 use record
+   for SQR2_SQ_Field use record
       Val at 0 range 0 .. 29;
       Arr at 0 range 0 .. 29;
    end record;
@@ -340,7 +360,7 @@ package STM32_SVD.ADC is
    --  regular sequence register 2
    type SQR_Register is record
       --  7th conversion in regular sequence
-      SQ             : SQ_Union_1 := (As_Array => False, Val => 16#0#);
+      SQ             : SQR2_SQ_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_30_31 : STM32_SVD.UInt2 := 16#0#;
    end record
@@ -352,25 +372,37 @@ package STM32_SVD.ADC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   subtype JSQR_JSQ1_Field is STM32_SVD.UInt5;
+   -------------------
+   -- JSQR_Register --
+   -------------------
 
-   type JSQ_Field_Array is array (0 .. 3) of JSQR_JSQ1_Field
+   --------------
+   -- JSQR.JSQ --
+   --------------
+
+   --  JSQR_JSQ array element
+   subtype JSQR_JSQ_Element is STM32_SVD.UInt5;
+
+   --  JSQR_JSQ array
+   type JSQR_JSQ_Field_Array is array (0 .. 3) of JSQR_JSQ_Element
      with Component_Size => 5, Size => 20;
 
-   --  Type definition for JSQ
-   type JSQ_Union (As_Array : Boolean := False) is record
+   --  Type definition for JSQR_JSQ
+   type JSQR_JSQ_Field
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of JSQ1
+            --  JSQ as a value
             Val : STM32_SVD.UInt20;
          when True =>
-            --  Array vision of JSQ1
-            Arr : JSQ_Field_Array;
+            --  JSQ as an array
+            Arr : JSQR_JSQ_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 20;
 
-   for JSQ_Union use record
+   for JSQR_JSQ_Field use record
       Val at 0 range 0 .. 19;
       Arr at 0 range 0 .. 19;
    end record;
@@ -380,7 +412,7 @@ package STM32_SVD.ADC is
    --  injected sequence register
    type JSQR_Register is record
       --  1st conversion in injected sequence
-      JSQ            : JSQ_Union := (As_Array => False, Val => 16#0#);
+      JSQ            : JSQR_JSQ_Field := (As_Array => False, Val => 16#0#);
       --  Injected sequence length
       JL             : JSQR_JL_Field := 16#0#;
       --  unspecified
@@ -394,6 +426,10 @@ package STM32_SVD.ADC is
       JL             at 0 range 20 .. 21;
       Reserved_22_31 at 0 range 22 .. 31;
    end record;
+
+   ------------------
+   -- JDR_Register --
+   ------------------
 
    subtype JDR1_JDATA_Field is STM32_SVD.Short;
 
@@ -412,6 +448,10 @@ package STM32_SVD.ADC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   -----------------
+   -- DR_Register --
+   -----------------
+
    subtype DR_DATA_Field is STM32_SVD.Short;
 
    --  regular data register
@@ -429,40 +469,27 @@ package STM32_SVD.ADC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
+   ------------------
+   -- CSR_Register --
+   ------------------
+
    subtype CSR_AWD1_Field is STM32_SVD.Bit;
-
    subtype CSR_EOC1_Field is STM32_SVD.Bit;
-
    subtype CSR_JEOC1_Field is STM32_SVD.Bit;
-
    subtype CSR_JSTRT1_Field is STM32_SVD.Bit;
-
    subtype CSR_STRT1_Field is STM32_SVD.Bit;
-
    subtype CSR_OVR1_Field is STM32_SVD.Bit;
-
    subtype CSR_AWD2_Field is STM32_SVD.Bit;
-
    subtype CSR_EOC2_Field is STM32_SVD.Bit;
-
    subtype CSR_JEOC2_Field is STM32_SVD.Bit;
-
    subtype CSR_JSTRT2_Field is STM32_SVD.Bit;
-
    subtype CSR_STRT2_Field is STM32_SVD.Bit;
-
    subtype CSR_OVR2_Field is STM32_SVD.Bit;
-
    subtype CSR_AWD3_Field is STM32_SVD.Bit;
-
    subtype CSR_EOC3_Field is STM32_SVD.Bit;
-
    subtype CSR_JEOC3_Field is STM32_SVD.Bit;
-
    subtype CSR_JSTRT3_Field is STM32_SVD.Bit;
-
    subtype CSR_STRT3_Field is STM32_SVD.Bit;
-
    subtype CSR_OVR3_Field is STM32_SVD.Bit;
 
    --  ADC Common status register
@@ -537,18 +564,16 @@ package STM32_SVD.ADC is
       Reserved_22_31 at 0 range 22 .. 31;
    end record;
 
+   ------------------
+   -- CCR_Register --
+   ------------------
+
    subtype CCR_MULT_Field is STM32_SVD.UInt5;
-
    subtype CCR_DELAY_Field is STM32_SVD.UInt4;
-
    subtype CCR_DDS_Field is STM32_SVD.Bit;
-
    subtype CCR_DMA_Field is STM32_SVD.UInt2;
-
    subtype CCR_ADCPRE_Field is STM32_SVD.UInt2;
-
    subtype CCR_VBATE_Field is STM32_SVD.Bit;
-
    subtype CCR_TSVREFE_Field is STM32_SVD.Bit;
 
    --  ADC common control register
@@ -593,39 +618,36 @@ package STM32_SVD.ADC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype CDR_DATA1_Field is STM32_SVD.Short;
+   ------------------
+   -- CDR_Register --
+   ------------------
 
-   type DATA_Field_Array is array (0 .. 1) of CDR_DATA1_Field
+   --  CDR_DATA array element
+   subtype CDR_DATA_Element is STM32_SVD.Short;
+
+   --  CDR_DATA array
+   type CDR_DATA_Field_Array is array (0 .. 1) of CDR_DATA_Element
      with Component_Size => 16, Size => 32;
 
-   --  Type definition for DATA
-   type DATA_Union (As_Array : Boolean := False) is record
+   --  ADC common regular data register for dual and triple modes
+   type CDR_Register
+     (As_Array : Boolean := False)
+   is record
       case As_Array is
          when False =>
-            --  Value vision of DATA1
+            --  DATA as a value
             Val : STM32_SVD.Word;
          when True =>
-            --  Array vision of DATA1
-            Arr : DATA_Field_Array;
+            --  DATA as an array
+            Arr : CDR_DATA_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32;
-
-   for DATA_Union use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
-   end record;
-
-   --  ADC common regular data register for dual and triple modes
-   type CDR_Register is record
-      --  1st data item of a pair of regular conversions
-      DATA : DATA_Union := (As_Array => False, Val => 16#0#);
-   end record
-     with Volatile_Full_Access, Size => 32,
+     with Unchecked_Union, Size => 32, Volatile_Full_Access,
           Bit_Order => System.Low_Order_First;
 
    for CDR_Register use record
-      DATA at 0 range 0 .. 31;
+      Val at 0 range 0 .. 31;
+      Arr at 0 range 0 .. 31;
    end record;
 
    -----------------
@@ -702,15 +724,15 @@ package STM32_SVD.ADC is
 
    --  Analog-to-digital converter
    ADC1_Periph : aliased ADC1_Peripheral
-     with Import, Address => System'To_Address(16#40012000#);
+     with Import, Address => System'To_Address (16#40012000#);
 
    --  Analog-to-digital converter
    ADC2_Periph : aliased ADC1_Peripheral
-     with Import, Address => System'To_Address(16#40012100#);
+     with Import, Address => System'To_Address (16#40012100#);
 
    --  Analog-to-digital converter
    ADC3_Periph : aliased ADC1_Peripheral
-     with Import, Address => System'To_Address(16#40012200#);
+     with Import, Address => System'To_Address (16#40012200#);
 
    --  Common ADC registers
    type C_ADC_Peripheral is record
@@ -731,6 +753,6 @@ package STM32_SVD.ADC is
 
    --  Common ADC registers
    C_ADC_Periph : aliased C_ADC_Peripheral
-     with Import, Address => System'To_Address(16#40012300#);
+     with Import, Address => System'To_Address (16#40012300#);
 
 end STM32_SVD.ADC;

@@ -1,8 +1,9 @@
---  Automatically generated from CMSIS-SVD description file by SVD2Ada
+--  Automatically generated from STM32F40x.svd2ada by SVD2Ada
 --  see https://github.com/AdaCore/svd2ada
 
 pragma Restrictions (No_Elaboration_Code);
 
+with STM32_SVD;
 with System;
 
 package STM32_SVD.FSMC is
@@ -12,30 +13,22 @@ package STM32_SVD.FSMC is
    -- Registers --
    ---------------
 
+   -------------------
+   -- BCR1_Register --
+   -------------------
+
    subtype BCR1_MBKEN_Field is STM32_SVD.Bit;
-
    subtype BCR1_MUXEN_Field is STM32_SVD.Bit;
-
    subtype BCR1_MTYP_Field is STM32_SVD.UInt2;
-
    subtype BCR1_MWID_Field is STM32_SVD.UInt2;
-
    subtype BCR1_FACCEN_Field is STM32_SVD.Bit;
-
    subtype BCR1_BURSTEN_Field is STM32_SVD.Bit;
-
    subtype BCR1_WAITPOL_Field is STM32_SVD.Bit;
-
    subtype BCR1_WAITCFG_Field is STM32_SVD.Bit;
-
    subtype BCR1_WREN_Field is STM32_SVD.Bit;
-
    subtype BCR1_WAITEN_Field is STM32_SVD.Bit;
-
    subtype BCR1_EXTMOD_Field is STM32_SVD.Bit;
-
    subtype BCR1_ASYNCWAIT_Field is STM32_SVD.Bit;
-
    subtype BCR1_CBURSTRW_Field is STM32_SVD.Bit;
 
    --  SRAM/NOR-Flash chip-select control register 1
@@ -98,18 +91,16 @@ package STM32_SVD.FSMC is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
+   ------------------
+   -- BTR_Register --
+   ------------------
+
    subtype BTR1_ADDSET_Field is STM32_SVD.UInt4;
-
    subtype BTR1_ADDHLD_Field is STM32_SVD.UInt4;
-
    subtype BTR1_DATAST_Field is STM32_SVD.Byte;
-
    subtype BTR1_BUSTURN_Field is STM32_SVD.UInt4;
-
    subtype BTR1_CLKDIV_Field is STM32_SVD.UInt4;
-
    subtype BTR1_DATLAT_Field is STM32_SVD.UInt4;
-
    subtype BTR1_ACCMOD_Field is STM32_SVD.UInt2;
 
    --  SRAM/NOR-Flash chip-select timing register 1
@@ -145,32 +136,23 @@ package STM32_SVD.FSMC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
+   ------------------
+   -- BCR_Register --
+   ------------------
+
    subtype BCR2_MBKEN_Field is STM32_SVD.Bit;
-
    subtype BCR2_MUXEN_Field is STM32_SVD.Bit;
-
    subtype BCR2_MTYP_Field is STM32_SVD.UInt2;
-
    subtype BCR2_MWID_Field is STM32_SVD.UInt2;
-
    subtype BCR2_FACCEN_Field is STM32_SVD.Bit;
-
    subtype BCR2_BURSTEN_Field is STM32_SVD.Bit;
-
    subtype BCR2_WAITPOL_Field is STM32_SVD.Bit;
-
    subtype BCR2_WRAPMOD_Field is STM32_SVD.Bit;
-
    subtype BCR2_WAITCFG_Field is STM32_SVD.Bit;
-
    subtype BCR2_WREN_Field is STM32_SVD.Bit;
-
    subtype BCR2_WAITEN_Field is STM32_SVD.Bit;
-
    subtype BCR2_EXTMOD_Field is STM32_SVD.Bit;
-
    subtype BCR2_ASYNCWAIT_Field is STM32_SVD.Bit;
-
    subtype BCR2_CBURSTRW_Field is STM32_SVD.Bit;
 
    --  SRAM/NOR-Flash chip-select control register 2
@@ -233,20 +215,17 @@ package STM32_SVD.FSMC is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
+   ------------------
+   -- PCR_Register --
+   ------------------
+
    subtype PCR2_PWAITEN_Field is STM32_SVD.Bit;
-
    subtype PCR2_PBKEN_Field is STM32_SVD.Bit;
-
    subtype PCR2_PTYP_Field is STM32_SVD.Bit;
-
    subtype PCR2_PWID_Field is STM32_SVD.UInt2;
-
    subtype PCR2_ECCEN_Field is STM32_SVD.Bit;
-
    subtype PCR2_TCLR_Field is STM32_SVD.UInt4;
-
    subtype PCR2_TAR_Field is STM32_SVD.UInt4;
-
    subtype PCR2_ECCPS_Field is STM32_SVD.UInt3;
 
    --  PC Card/NAND Flash control register 2
@@ -291,18 +270,16 @@ package STM32_SVD.FSMC is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
+   -----------------
+   -- SR_Register --
+   -----------------
+
    subtype SR2_IRS_Field is STM32_SVD.Bit;
-
    subtype SR2_ILS_Field is STM32_SVD.Bit;
-
    subtype SR2_IFS_Field is STM32_SVD.Bit;
-
    subtype SR2_IREN_Field is STM32_SVD.Bit;
-
    subtype SR2_ILEN_Field is STM32_SVD.Bit;
-
    subtype SR2_IFEN_Field is STM32_SVD.Bit;
-
    subtype SR2_FEMPT_Field is STM32_SVD.Bit;
 
    --  FIFO status and interrupt register 2
@@ -338,12 +315,13 @@ package STM32_SVD.FSMC is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   -------------------
+   -- PMEM_Register --
+   -------------------
+
    subtype PMEM2_MEMSETx_Field is STM32_SVD.Byte;
-
    subtype PMEM2_MEMWAITx_Field is STM32_SVD.Byte;
-
    subtype PMEM2_MEMHOLDx_Field is STM32_SVD.Byte;
-
    subtype PMEM2_MEMHIZx_Field is STM32_SVD.Byte;
 
    --  Common memory space timing register 2
@@ -367,12 +345,13 @@ package STM32_SVD.FSMC is
       MEMHIZx  at 0 range 24 .. 31;
    end record;
 
+   -------------------
+   -- PATT_Register --
+   -------------------
+
    subtype PATT2_ATTSETx_Field is STM32_SVD.Byte;
-
    subtype PATT2_ATTWAITx_Field is STM32_SVD.Byte;
-
    subtype PATT2_ATTHOLDx_Field is STM32_SVD.Byte;
-
    subtype PATT2_ATTHIZx_Field is STM32_SVD.Byte;
 
    --  Attribute memory space timing register 2
@@ -396,12 +375,13 @@ package STM32_SVD.FSMC is
       ATTHIZx  at 0 range 24 .. 31;
    end record;
 
+   -------------------
+   -- PIO4_Register --
+   -------------------
+
    subtype PIO4_IOSETx_Field is STM32_SVD.Byte;
-
    subtype PIO4_IOWAITx_Field is STM32_SVD.Byte;
-
    subtype PIO4_IOHOLDx_Field is STM32_SVD.Byte;
-
    subtype PIO4_IOHIZx_Field is STM32_SVD.Byte;
 
    --  I/O space timing register 4
@@ -425,16 +405,15 @@ package STM32_SVD.FSMC is
       IOHIZx  at 0 range 24 .. 31;
    end record;
 
+   -------------------
+   -- BWTR_Register --
+   -------------------
+
    subtype BWTR1_ADDSET_Field is STM32_SVD.UInt4;
-
    subtype BWTR1_ADDHLD_Field is STM32_SVD.UInt4;
-
    subtype BWTR1_DATAST_Field is STM32_SVD.Byte;
-
    subtype BWTR1_CLKDIV_Field is STM32_SVD.UInt4;
-
    subtype BWTR1_DATLAT_Field is STM32_SVD.UInt4;
-
    subtype BWTR1_ACCMOD_Field is STM32_SVD.UInt2;
 
    --  SRAM/NOR-Flash write timing registers 1
@@ -565,6 +544,6 @@ package STM32_SVD.FSMC is
 
    --  Flexible static memory controller
    FSMC_Periph : aliased FSMC_Peripheral
-     with Import, Address => System'To_Address(16#A0000000#);
+     with Import, Address => System'To_Address (16#A0000000#);
 
 end STM32_SVD.FSMC;

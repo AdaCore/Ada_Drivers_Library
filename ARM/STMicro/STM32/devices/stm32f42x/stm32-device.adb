@@ -31,7 +31,6 @@
 
 pragma Warnings (Off, "* is an internal GNAT unit");
 with System.BB.Parameters;
-with System.STM32F4;
 pragma Warnings (On, "* is an internal GNAT unit");
 
 with STM32_SVD.RCC; use STM32_SVD.RCC;
@@ -39,8 +38,7 @@ with STM32_SVD.RCC; use STM32_SVD.RCC;
 package body STM32.Device is
 
    HSE_VALUE : constant Word :=
-                 Word (System.BB.Parameters.HSE_Clock
-                        (System.STM32F4.MCU_ID.DEV_ID));
+                 Word (System.BB.Parameters.HSE_Clock);
    --  External oscillator in Hz
 
    HSI_VALUE : constant := 16_000_000;
@@ -596,7 +594,7 @@ package body STM32.Device is
 
    function System_Clock_Frequencies return RCC_System_Clocks
    is
-      Source       : constant UInt2 := RCC_Periph.CFGR.SWS.Val;
+      Source       : constant UInt2 := RCC_Periph.CFGR.SWS;
       Result       : RCC_System_Clocks;
    begin
       case Source is
@@ -611,11 +609,11 @@ package body STM32.Device is
             declare
                Pllsource : constant Bit := RCC_Periph.PLLCFGR.PLLSRC;
                Pllm      : constant Word :=
-                             Word (RCC_Periph.PLLCFGR.PLLM.Val);
+                             Word (RCC_Periph.PLLCFGR.PLLM);
                Plln      : constant Word :=
-                             Word (RCC_Periph.PLLCFGR.PLLN.Val);
+                             Word (RCC_Periph.PLLCFGR.PLLN);
                Pllp      : constant Word :=
-                             (Word (RCC_Periph.PLLCFGR.PLLP.Val) + 1) * 2;
+                             (Word (RCC_Periph.PLLCFGR.PLLP) + 1) * 2;
                Pllvco    : Word;
             begin
                if Pllsource = 0 then

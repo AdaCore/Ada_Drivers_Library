@@ -76,8 +76,8 @@ package body STM32.LTDC is
    ----------
 
    package Init is
-      BF1_Constant_Alpha : constant := 2#100#;
-      BF2_Constant_Alpha : constant := 2#101#;
+--        BF1_Constant_Alpha : constant := 2#100#;
+--        BF2_Constant_Alpha : constant := 2#101#;
       BF1_Pixel_Alpha    : constant := 2#110#;
       BF2_Pixel_Alpha    : constant := 2#111#;
 
@@ -155,8 +155,8 @@ package body STM32.LTDC is
 
       Init.Layer_Init
         (Layer1, Pixel_Fmt,
-         Init.BF1_Constant_Alpha,
-         Init.BF2_Constant_Alpha);
+         Init.BF1_Pixel_Alpha,
+         Init.BF2_Pixel_Alpha);
       Init.Layer_Init
         (Layer2, Pixel_Fmt,
          Init.BF1_Pixel_Alpha,
@@ -269,9 +269,11 @@ package body STM32.LTDC is
    --------------------
 
    procedure Set_Background (R, G, B : Byte) is
+      RShift : constant Word := Shift_Left (Word (R), 16);
+      GShift : constant Word := Shift_Left (Word (G), 8);
    begin
       LTDC_Periph.BCCR.BC :=
-        UInt24 (R * 2 ** 16) or UInt24 (G * 2 ** 8) or UInt24 (B);
+        UInt24 (RShift) or UInt24 (GShift) or UInt24 (B);
    end Set_Background;
 
    -------------

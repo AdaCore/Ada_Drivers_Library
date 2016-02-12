@@ -29,22 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-pragma Warnings (Off, "* is an internal GNAT unit");
-with System.BB.Parameters;
-with System.STM32F4;
-pragma Warnings (On, "* is an internal GNAT unit");
-
 with STM32_SVD.RCC; use STM32_SVD.RCC;
 
 package body STM32.Device is
 
-   HSE_VALUE : constant Word :=
-                 Word (System.BB.Parameters.HSE_Clock
-                        (System.STM32F4.MCU_ID.DEV_ID));
-   --  External oscillator in Hz
-
-   HSI_VALUE : constant := 16_000_000;
-   --  Internal oscillator in Hz
 
    HPRE_Presc_Table : constant array (UInt4) of Word :=
      (1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 8, 16, 64, 128, 256, 512);
@@ -599,13 +587,47 @@ package body STM32.Device is
       end if;
    end Reset;
 
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
+   procedure Enable_Clock (This : in out SAI_Port)
+   is
+   begin
+      if This'Address = SAI1_Base then
+         RCC_Periph.APB2ENR.SAI1EN := 1;
+      elsif This'Address = SAI2_Base then
+         RCC_Periph.APB2ENR.SAI2EN := 1;
+      else
+         raise Unknown_Device;
+      end if;
+   end Enable_Clock;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : in out SAI_Port)
+   is
+   begin
+      if This'Address = SAI1_Base then
+         RCC_Periph.APB2RSTR.SAI1RST := 1;
+         RCC_Periph.APB2RSTR.SAI1RST := 0;
+      elsif This'Address = SAI2_Base then
+         RCC_Periph.APB2RSTR.SAI2RST := 1;
+         RCC_Periph.APB2RSTR.SAI2RST := 0;
+      else
+         raise Unknown_Device;
+      end if;
+   end Reset;
+
    ------------------------------
    -- System_Clock_Frequencies --
    ------------------------------
 
    function System_Clock_Frequencies return RCC_System_Clocks
    is
-      Source       : constant UInt2 := RCC_Periph.CFGR.SWS.Val;
+      Source       : constant UInt2 := RCC_Periph.CFGR.SWS;
       Result       : RCC_System_Clocks;
    begin
       case Source is
@@ -620,11 +642,11 @@ package body STM32.Device is
             declare
                Pllsource : constant Bit := RCC_Periph.PLLCFGR.PLLSRC;
                Pllm      : constant Word :=
-                             Word (RCC_Periph.PLLCFGR.PLLM.Val);
+                             Word (RCC_Periph.PLLCFGR.PLLM);
                Plln      : constant Word :=
-                             Word (RCC_Periph.PLLCFGR.PLLN.Val);
+                             Word (RCC_Periph.PLLCFGR.PLLN);
                Pllp      : constant Word :=
-                             (Word (RCC_Periph.PLLCFGR.PLLP.Val) + 1) * 2;
+                             (Word (RCC_Periph.PLLCFGR.PLLP) + 1) * 2;
                Pllvco    : Word;
             begin
                if Pllsource = 0 then
@@ -740,5 +762,38 @@ package body STM32.Device is
       --  The exact bit name is device-specific
       RCC_Periph.DKCFGR1.PLLSAIDIVR := UInt2 (DivR);
    end Set_PLLSAI_Factors;
+
+   -------------------------
+   -- Configure_SAI_Clock --
+   -------------------------
+
+   procedure Configure_SAI_I2S_Clock
+     (Periph     : SAI_Port;
+      PLLI2SN    : UInt9;
+      PLLI2SQ    : UInt4;
+      PLLI2SDIVQ : UInt5)
+   is
+      PLLI2SCFGR : PLLI2SCFGR_Register := RCC_Periph.PLLI2SCFGR;
+   begin
+      --  We will configure the PLLSAI2 clock from a PLLI2S source.
+      --  SAI2SEL (page 188 of the STM32F7xx Ref manual):
+      --  00: SAI2 clock = PLLSAI_Q / PLLSAIDIVQ
+      --  01: SAI2 clock = PLLI2S_Q / PLLI2SDIVQ
+      --  10: SAI2 clock = AF input frequency
+      --  11: invalid
+      if Periph'Address = SAI1_Base then
+         RCC_Periph.DKCFGR1.SAI1SEL := 2#01#;
+      elsif Periph'Address = SAI2_Base then
+         RCC_Periph.DKCFGR1.SAI2SEL := 2#01#;
+      else
+         raise Unknown_Device;
+      end if;
+
+      PLLI2SCFGR.PLLI2SN := PLLI2SN;
+      PLLI2SCFGR.PLLI2SQ := PLLI2SQ;
+      RCC_Periph.PLLI2SCFGR := PLLI2SCFGR;
+
+      RCC_Periph.DKCFGR1.PLLI2SDIV := PLLI2SDIVQ;
+   end Configure_SAI_I2S_Clock;
 
 end STM32.Device;
