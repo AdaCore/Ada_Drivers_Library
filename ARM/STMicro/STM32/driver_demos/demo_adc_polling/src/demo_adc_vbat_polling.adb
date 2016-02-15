@@ -47,9 +47,6 @@ with BMP_Fonts;
 
 procedure Demo_ADC_VBat_Polling is
 
-   All_Regular_Conversions : constant Regular_Channel_Conversions :=
-      (1 => (Channel => VBat.Channel, Sample_Time => Sample_15_Cycles));
-
    Counts  : Word;
    Voltage : Word;  -- in millivolts
 
@@ -98,14 +95,14 @@ begin
    Configure_Unit
      (VBat.ADC.all,
       Resolution => ADC_Resolution_12_Bits,
-      Alignment  => Left_Aligned);
+      Alignment  => Right_Aligned);
 
    Configure_Regular_Conversions
      (VBat.ADC.all,
       Continuous  => False,
       Trigger     => Software_Triggered,
       Enable_EOC  => True,
-      Conversions => All_Regular_Conversions);
+      Conversions => (1 => (VBat.Channel, Sample_Time => Sample_112_Cycles)));
 
    Enable (VBat.ADC.all);
 

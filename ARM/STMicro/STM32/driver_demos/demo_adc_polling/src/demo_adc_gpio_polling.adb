@@ -119,7 +119,7 @@ begin
    Configure_Unit
      (Converter,
       Resolution => ADC_Resolution_12_Bits,
-      Alignment  => Left_Aligned);
+      Alignment  => Right_Aligned);
 
    Configure_Regular_Conversions
      (Converter,

@@ -98,14 +98,14 @@ begin
    Configure_Unit
      (ADC_1,
       Resolution => ADC_Resolution_12_Bits,
-      Alignment  => Left_Aligned);
+      Alignment  => Right_Aligned);
 
    Configure_Regular_Conversions
      (ADC_1,
-      Continuous => False,
-      Trigger    => Software_Triggered,
-      Enable_EOC => True,
-      Conversions   => All_Regular_Conversions);
+      Continuous  => False,
+      Trigger     => Software_Triggered,
+      Enable_EOC  => True,
+      Conversions => All_Regular_Conversions);
 
    Enable (ADC_1);
 

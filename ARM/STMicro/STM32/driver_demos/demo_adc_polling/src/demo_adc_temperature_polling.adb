@@ -123,7 +123,7 @@ begin
    Configure_Unit
      (Temperature_Sensor.ADC.all,
       Resolution => ADC_Resolution_12_Bits,
-      Alignment  => Left_Aligned);
+      Alignment  => Right_Aligned);
 
    Configure_Regular_Conversions
      (Temperature_Sensor.ADC.all,

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -109,7 +109,7 @@ package STM32F4.ADC is
       ADC_Resolution_8_Bits,   -- 11 ADC Clock cycles
       ADC_Resolution_6_Bits);  --  9 ADC Clock cycles
 
-   type Data_Alignment is (Left_Aligned, Right_Aligned);
+   type Data_Alignment is (Right_Aligned, Left_Aligned);
 
    procedure Configure_Unit
      (This       : in out Analog_To_Digital_Converter;
