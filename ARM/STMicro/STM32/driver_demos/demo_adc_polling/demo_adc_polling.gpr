@@ -4,7 +4,8 @@ project Demo_ADC_Polling is
 
    for Main use ("demo_adc_temperature_polling",
                  "demo_adc_vref_polling",
-                 "demo_adc_vbat_polling");
+                 "demo_adc_vbat_polling",
+                 "demo_adc_gpio_polling");
 
    for Source_Dirs use ("src", "../../drivers", "../../boards", "../../devices", "../../components", "../../utils");
 
