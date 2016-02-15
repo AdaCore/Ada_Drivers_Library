@@ -1,0 +1,42 @@
+
+project Draw_Demo_Generic is
+
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
+
+   type LOADER_Type is
+      ("RAM", "ROM");
+   LOADER : LOADER_Type := external ("LOADER", "ROM");
+
+   for Languages use ("Ada");
+   for Main use ("draw.adb");
+   for Source_Dirs use ("src", "../common", "../common/gui");
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-g", "-O2", "-gnatwa", "-gnatQ", "-gnatw.X");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-g");
+   end Builder;
+
+   package Linker is
+      for Default_Switches ("ada") use
+        ("-Wl,--defsym=__stack_size=16384", "-v", "-v");
+   end Linker;
+
+   type LCH_Type is ("led", "lcd");
+   LCH : LCH_Type := external ("LCH", "lcd");
+
+   case RTS is
+      when "ravenscar-sfp" =>
+         for Source_Dirs use Project'Source_Dirs &
+           ("../common/lch_sfp",
+            "../common/lch_sfp/led");
+      when "ravenscar-full" =>
+         for Source_Dirs use Project'Source_Dirs &
+           ("../common/lch_full",
+            "../common/lch_full/led");
+   end case;
+
+end Draw_Demo_Generic;

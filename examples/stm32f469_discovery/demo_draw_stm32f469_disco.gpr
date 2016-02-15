@@ -1,0 +1,13 @@
+with "../../boards/stm32f469_discovery/stm32f469_discovery.gpr";
+
+project Demo_Draw_Stm32f469_Disco extends "../draw/draw_demo_generic" is
+
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
+
+   for Target use "arm-eabi";
+   for Runtime ("Ada") use RTS & "-stm32f469disco";
+
+   for Object_Dir use "obj-draw-" & Project'Runtime ("Ada");
+
+end Demo_Draw_Stm32f469_Disco;

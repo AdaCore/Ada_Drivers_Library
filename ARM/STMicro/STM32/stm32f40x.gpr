@@ -1,0 +1,10 @@
+project STM32F40x extends "../../cortex_m/cortex_m.gpr" is
+
+   for Source_Dirs use Project'Source_Dirs &
+     ("drivers",
+      "svd/stm32f40x",
+      "devices/stm32f40x",
+      "drivers/i2c_stm32f4",
+      "drivers/uart_stm32f4");
+
+end STM32F40x;

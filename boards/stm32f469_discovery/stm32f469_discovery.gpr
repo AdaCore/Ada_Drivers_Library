@@ -1,0 +1,13 @@
+project STM32F469_Discovery extends "../../ARM/STMicro/STM32/stm32f46_79x.gpr" is
+
+   for Object_Dir use "obj/";
+   for Target use "arm-eabi";
+   for Source_Dirs use Project'Source_Dirs &
+            ("src/",
+             "../../components/button",
+             "../../components/sdram",
+             "../../components/lcd/otm8009a",
+             "../../components/touch_panel",
+             "../../components/touch_panel/ft6x06");
+
+end STM32F469_Discovery;

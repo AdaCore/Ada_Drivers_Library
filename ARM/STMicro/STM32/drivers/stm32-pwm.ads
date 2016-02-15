@@ -82,6 +82,14 @@ package STM32.PWM is
    --  because the corresponding timer can drive multiple channels (assuming
    --  such a timer is in use).
 
+   procedure Enable_PWM_Channel
+     (This    : in out PWM_Modulator;
+      Channel : Timer_Channel);
+
+   procedure Disable_PWM_Channel
+     (This    : in out PWM_Modulator;
+      Channel : Timer_Channel);
+
    subtype Percentage is Integer range 0 .. 100;
 
    procedure Set_Duty_Cycle

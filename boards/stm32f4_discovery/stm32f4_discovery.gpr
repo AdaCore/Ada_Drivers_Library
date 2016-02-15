@@ -1,0 +1,8 @@
+project STM32F4_Discovery extends "../../ARM/STMicro/STM32/stm32f40x.gpr" is
+
+   for Object_Dir use "obj/";
+   for Target use "arm-eabi";
+   for Source_Dirs use Project'Source_Dirs &
+            ("src/",
+             "../../components/gyro/lis3dsh");
+end STM32F4_Discovery;
