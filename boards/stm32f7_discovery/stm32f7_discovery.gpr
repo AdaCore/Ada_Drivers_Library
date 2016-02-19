@@ -6,7 +6,7 @@ project STM32F7_Discovery extends "../../ARM/STMicro/STM32/stm32f7x.gpr" is
 
    for Object_Dir use "obj/";
    for Target use "arm-eabi";
-   for Source_Dirs use Project'Source_Dirs &
+   for Source_Dirs use
             ("src/",
              "../../components/button",
              "../../components/sdram",

@@ -27,15 +27,15 @@ package body Tracks_Display is
 
    Entry_Sign_Size : constant := 6;
 
-   Entry_Sign_Pixel : constant array (Entry_Sign_Color) of Colors
+   Entry_Sign_Pixel : constant array (Entry_Sign_Color) of Graphics_Color
      := (Green => Bitmapped_Drawing.Green,
          Orange => Bitmapped_Drawing.Orange,
          Red => Bitmapped_Drawing.Red);
 
-   Track_Color      : constant Colors := Bitmapped_Drawing.Light_Gray;
+   Track_Color      : constant Graphics_Color := Bitmapped_Drawing.Light_Gray;
    Track_Thickness  : constant := 4;
    Train_Thickness  : constant := 2;
-   Switch_Color     : constant Colors := Bitmapped_Drawing.Violet;
+   Switch_Color     : constant Graphics_Color := Bitmapped_Drawing.Violet;
    Switch_Thickness : constant := 2;
 
    use type Trains.Train_Id;
@@ -45,7 +45,7 @@ package body Tracks_Display is
    function Last_Bogie_Track (Train : Displayed_Train) return Trains.Track_Id;
 
    function As_Display_Point (Input : Screen_Interface.Point)
-     return Bitmapped_Drawing.Display_Point;
+     return Bitmapped_Drawing.Point;
 
    --------------------------
    -- Build_Straight_Track --
@@ -53,7 +53,7 @@ package body Tracks_Display is
 
    procedure Build_Straight_Track
      (Track : in out Displayed_Track;
-      Start, Stop : Point)
+      Start, Stop : Screen_Interface.Point)
    is
       Diff_X : constant Float := (Float(Stop.X) - Float(Start.X))
         / (Float (Track.Points'Length) - 1.0);
@@ -82,7 +82,7 @@ package body Tracks_Display is
 
    procedure Build_Curve_Track
      (Track          : in out Displayed_Track;
-      P1, P2, P3, P4 : Point)
+      P1, P2, P3, P4 : Screen_Interface.Point)
    is
    begin
       for I in Track.Points'Range loop
@@ -121,8 +121,9 @@ package body Tracks_Display is
      (Track : in out Displayed_Track;
       Pos   : Entry_Sign_Position)
    is
-      First : constant Point := Track.Points (Track.Points'First);
-      Coord  : Point;
+      First : constant Screen_Interface.Point :=
+                Track.Points (Track.Points'First);
+      Coord  : Screen_Interface.Point;
    begin
       case Pos is
          when Top =>
@@ -359,8 +360,10 @@ package body Tracks_Display is
       if Track.Switchable then
          For Cnt in Target.Points'First .. Target.Points'First + 10 loop
             declare
-               P1 : constant Point := Target.all.Points (Cnt);
-               P2 : constant Point := Target.all.Points (Cnt + 1);
+               P1 : constant Screen_Interface.Point :=
+                      Target.all.Points (Cnt);
+               P2 : constant Screen_Interface.Point :=
+                      Target.all.Points (Cnt + 1);
             begin
                Draw_Line
                  (Screen_Buffer,
@@ -378,16 +381,18 @@ package body Tracks_Display is
    ----------------
 
    procedure Draw_Train (Train : Displayed_Train) is
-      Train_Color : Colors;
+      Train_Color : Graphics_Color;
    begin
       for Index in Train.Bogies'First .. Train.Bogies'Last - 1 loop
          declare
             B1     : constant Bogie := Train.Bogies (Index);
             Track1 : constant Track_Access := B1.Track;
-            P1     : constant Point := Track1.Points (B1.Track_Pos);
+            P1     : constant Screen_Interface.Point :=
+                       Track1.Points (B1.Track_Pos);
             B2     : constant Bogie := Train.Bogies (Index + 1);
             Track2 : constant Track_Access := B2.Track;
-            P2     : constant Point := Track2.Points (B2.Track_Pos);
+            P2     : constant Screen_Interface.Point :=
+                       Track2.Points (B2.Track_Pos);
          begin
             case Train.Speed is
                when 0 =>
@@ -453,7 +458,7 @@ package body Tracks_Display is
    -- Location --
    --------------
 
-   function Location (This : Bogie) return Point is
+   function Location (This : Bogie) return Screen_Interface.Point is
    begin
       return This.Track.Points (This.Track_Pos);
    end Location;
@@ -482,7 +487,8 @@ package body Tracks_Display is
    -- Start_Coord --
    -----------------
 
-   function Start_Coord (Track : Displayed_Track) return Point is
+   function Start_Coord (Track : Displayed_Track) return Screen_Interface.Point
+   is
    begin
       return Track.Points (1);
    end Start_Coord;
@@ -491,7 +497,8 @@ package body Tracks_Display is
    -- End_Coord --
    ---------------
 
-   function End_Coord (Track : Displayed_Track) return Point is
+   function End_Coord (Track : Displayed_Track) return Screen_Interface.Point
+   is
    begin
       return Track.Points (Track.Points'Last);
    end End_Coord;
@@ -502,7 +509,7 @@ package body Tracks_Display is
 
    function As_Display_Point
      (Input : Screen_Interface.Point)
-      return Bitmapped_Drawing.Display_Point
+      return Bitmapped_Drawing.Point
    is
      (Input.X, Input.Y);
 

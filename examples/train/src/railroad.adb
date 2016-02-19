@@ -505,25 +505,29 @@ package body Railroad is
       --  Draw touch areas
       Drawing.Draw_Rectangle
         (Drawing.Screen_Buffer,
-         (Sw1_X'First, Sw1_Y'First),
-         (Sw1_X'Last, Sw1_Y'Last),
+         (Position => (Sw1_X'First, Sw1_Y'First),
+          Width    => Sw1_X'Last - Sw1_X'First + 1,
+          Height   => Sw1_Y'Last - Sw1_Y'First + 1),
          Drawing.White);
       Drawing.Draw_Rectangle
         (Drawing.Screen_Buffer,
-         (Sw2_X'First, Sw2_Y'First),
-         (Sw2_X'Last, Sw2_Y'Last),
+         (Position => (Sw2_X'First, Sw2_Y'First),
+          Width    => Sw2_X'Last - Sw2_X'First + 1,
+          Height   => Sw2_Y'Last - Sw2_Y'First + 1),
          Drawing.White);
       Drawing.Draw_Rectangle
         (Drawing.Screen_Buffer,
-         (Sw3_X'First, Sw3_Y'First),
-         (Sw3_X'Last, Sw3_Y'Last),
+         (Position => (Sw3_X'First, Sw3_Y'First),
+          Width    => Sw3_X'Last - Sw3_X'First + 1,
+          Height   => Sw3_Y'Last - Sw3_Y'First + 1),
          Drawing.White);
 
       if Can_Spawn_Train then
          Drawing.Draw_Rectangle
            (Drawing.Screen_Buffer,
-            (Spawn_X'First, Spawn_Y'First),
-            (Spawn_X'Last, Spawn_Y'Last),
+            (Position => (Spawn_X'First, Spawn_Y'First),
+             Width    => Spawn_X'Last - Spawn_X'First + 1,
+             Height   => Spawn_Y'Last - Spawn_Y'First + 1),
             Drawing.White);
          Drawing.Draw_String
            (Drawing.Screen_Buffer,
@@ -542,8 +546,9 @@ package body Railroad is
       else
          Drawing.Fill_Rectangle
            (Drawing.Screen_Buffer,
-            (Spawn_X'First, Spawn_Y'First),
-            (Spawn_X'Last, Spawn_Y'Last),
+            (Position => (Spawn_X'First, Spawn_Y'First),
+             Width    => Spawn_X'Last - Spawn_X'First + 1,
+             Height   => Spawn_Y'Last - Spawn_Y'First + 1),
             Drawing.Black);
       end if;
    end Draw_Layout;

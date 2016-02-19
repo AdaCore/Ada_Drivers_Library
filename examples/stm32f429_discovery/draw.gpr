@@ -1,0 +1,8 @@
+with "../../boards/stm32f429_discovery/stm32f429_discovery.gpr";
+
+project Draw extends "../draw/draw_generic" is
+
+   for Runtime ("Ada") use Shared.RTS & "-stm32f429disco";
+   for Object_Dir use "obj/draw";
+
+end Draw;

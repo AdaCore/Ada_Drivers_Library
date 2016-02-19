@@ -1,0 +1,68 @@
+project Shared is
+
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
+
+   type LOADER_Type is
+      ("RAM", "ROM");
+   LOADER : LOADER_Type := external ("LOADER", "ROM");
+
+   type BUILD_TYPE is
+      ("Debug", "Production");
+   Build : BUILD_Type := external ("BUILD", "Debug");
+
+   type LCH_Type is ("led", "lcd");
+   LCH : LCH_Type := external ("LCH", "lcd");
+
+   for Languages use ("Ada");
+   for Target use "arm-eabi";
+   for Source_Dirs use ("gui");
+
+   case RTS is
+      when "ravenscar-sfp" =>
+         for Source_Dirs use Project'Source_Dirs & ("lch_sfp");
+         case LCH is
+            when "led" =>
+               for Source_Dirs use Project'Source_Dirs & ("lch_sfp/led");
+            when "lcd" =>
+               for Source_Dirs use Project'Source_Dirs & ("lch_sfp/lcd");
+         end case;
+      when "ravenscar-full" =>
+         for Source_Dirs use Project'Source_Dirs & ("lch_full");
+         case LCH is
+            when "led" =>
+               for Source_Dirs use Project'Source_Dirs & ("lch_full/led");
+            when "lcd" =>
+               for Source_Dirs use Project'Source_Dirs & ("lch_full/lcd");
+         end case;
+   end case;
+
+   package Compiler is
+      case Build is
+         when "Production" =>
+            for Default_Switches ("Ada") use ("-O3");
+         when "Debug" =>
+            for Default_Switches ("Ada") use ("-O0");
+      end case;
+      for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
+        ("-gnatwa", "-gnatQ", "-gnatw.X");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-g");
+   end Builder;
+
+   package Linker is
+      for Default_Switches ("ada") use
+        ("-Wl,--defsym=__stack_size=16384", "-v", "-v");
+   end Linker;
+
+   package Ide is
+      for Gnat use "arm-eabi-gnat";
+      for Gnatlist use "arm-eabi-gnatls";
+      for Debugger_Command use "arm-eabi-gdb";
+      for Program_Host use "localhost:4242";
+      for Communication_Protocol use "remote";
+   end Ide;
+
+end Shared;

@@ -2,7 +2,7 @@ project STM32F429_Discovery extends "../../ARM/STMicro/STM32/stm32f42x.gpr" is
 
    for Object_Dir use "obj/";
    for Target use "arm-eabi";
-   for Source_Dirs use Project'Source_Dirs &
+   for Source_Dirs use
             ("src",
              "../../components/button",
              "../../components/sdram",
@@ -10,5 +10,5 @@ project STM32F429_Discovery extends "../../ARM/STMicro/STM32/stm32f42x.gpr" is
              "../../components/touch_panel",
              "../../components/touch_panel/stmpe811",
              "../../components/gyro/l3gd20");
-end STM32F429_Discovery;
 
+end STM32F429_Discovery;
