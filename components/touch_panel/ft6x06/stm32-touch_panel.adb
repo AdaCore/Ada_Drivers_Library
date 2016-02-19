@@ -366,6 +366,7 @@ package body STM32.Touch_Panel is
 
       --  ??? On the STM32F426, Y is returned reverted
       RY := STM32.LCD.LCD_Natural_Height - RY - 1;
+      RY := RY * 11 / 10;
 
       Ret.X := RX;
       Ret.Y := RY;
