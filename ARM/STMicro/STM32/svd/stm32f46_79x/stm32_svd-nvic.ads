@@ -22,9 +22,9 @@ package STM32_SVD.NVIC is
    --  Interrupt Controller Type Register
    type ICTR_Register is record
       --  Total number of interrupt lines in groups
-      INTLINESNUM   : ICTR_INTLINESNUM_Field := 16#0#;
+      INTLINESNUM   : ICTR_INTLINESNUM_Field;
       --  unspecified
-      Reserved_4_31 : STM32_SVD.UInt28 := 16#0#;
+      Reserved_4_31 : STM32_SVD.UInt28;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

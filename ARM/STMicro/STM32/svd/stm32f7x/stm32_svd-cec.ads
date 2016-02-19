@@ -125,9 +125,9 @@ package STM32_SVD.CEC is
    --  Rx Data Register
    type RXDR_Register is record
       --  CEC Rx Data Register
-      RXDR          : RXDR_RXDR_Field := 16#0#;
+      RXDR          : RXDR_RXDR_Field;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24 := 16#0#;
+      Reserved_8_31 : STM32_SVD.UInt24;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

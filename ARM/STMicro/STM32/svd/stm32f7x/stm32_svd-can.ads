@@ -928,15 +928,15 @@ package STM32_SVD.CAN is
    --  receive FIFO mailbox identifier register
    type RI0R_Register is record
       --  unspecified
-      Reserved_0_0 : STM32_SVD.Bit := 16#0#;
+      Reserved_0_0 : STM32_SVD.Bit;
       --  RTR
-      RTR          : RI0R_RTR_Field := 16#0#;
+      RTR          : RI0R_RTR_Field;
       --  IDE
-      IDE          : RI0R_IDE_Field := 16#0#;
+      IDE          : RI0R_IDE_Field;
       --  EXID
-      EXID         : RI0R_EXID_Field := 16#0#;
+      EXID         : RI0R_EXID_Field;
       --  STID
-      STID         : RI0R_STID_Field := 16#0#;
+      STID         : RI0R_STID_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -960,13 +960,13 @@ package STM32_SVD.CAN is
    --  mailbox data high register
    type RDT0R_Register is record
       --  DLC
-      DLC          : RDT0R_DLC_Field := 16#0#;
+      DLC          : RDT0R_DLC_Field;
       --  unspecified
-      Reserved_4_7 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_4_7 : STM32_SVD.UInt4;
       --  FMI
-      FMI          : RDT0R_FMI_Field := 16#0#;
+      FMI          : RDT0R_FMI_Field;
       --  TIME
-      TIME         : RDT0R_TIME_Field := 16#0#;
+      TIME         : RDT0R_TIME_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1054,15 +1054,15 @@ package STM32_SVD.CAN is
    --  mailbox data high register
    type RI1R_Register is record
       --  unspecified
-      Reserved_0_0 : STM32_SVD.Bit := 16#0#;
+      Reserved_0_0 : STM32_SVD.Bit;
       --  RTR
-      RTR          : RI1R_RTR_Field := 16#0#;
+      RTR          : RI1R_RTR_Field;
       --  IDE
-      IDE          : RI1R_IDE_Field := 16#0#;
+      IDE          : RI1R_IDE_Field;
       --  EXID
-      EXID         : RI1R_EXID_Field := 16#0#;
+      EXID         : RI1R_EXID_Field;
       --  STID
-      STID         : RI1R_STID_Field := 16#0#;
+      STID         : RI1R_STID_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1086,13 +1086,13 @@ package STM32_SVD.CAN is
    --  mailbox data high register
    type RDT1R_Register is record
       --  DLC
-      DLC          : RDT1R_DLC_Field := 16#0#;
+      DLC          : RDT1R_DLC_Field;
       --  unspecified
-      Reserved_4_7 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_4_7 : STM32_SVD.UInt4;
       --  FMI
-      FMI          : RDT1R_FMI_Field := 16#0#;
+      FMI          : RDT1R_FMI_Field;
       --  TIME
-      TIME         : RDT1R_TIME_Field := 16#0#;
+      TIME         : RDT1R_TIME_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

@@ -313,25 +313,25 @@ package STM32_SVD.I2C is
    --  Status register 2
    type SR2_Register is record
       --  Master/slave
-      MSL            : SR2_MSL_Field := 16#0#;
+      MSL            : SR2_MSL_Field;
       --  Bus busy
-      BUSY           : SR2_BUSY_Field := 16#0#;
+      BUSY           : SR2_BUSY_Field;
       --  Transmitter/receiver
-      TRA            : SR2_TRA_Field := 16#0#;
+      TRA            : SR2_TRA_Field;
       --  unspecified
-      Reserved_3_3   : STM32_SVD.Bit := 16#0#;
+      Reserved_3_3   : STM32_SVD.Bit;
       --  General call address (Slave mode)
-      GENCALL        : SR2_GENCALL_Field := 16#0#;
+      GENCALL        : SR2_GENCALL_Field;
       --  SMBus device default address (Slave mode)
-      SMBDEFAULT     : SR2_SMBDEFAULT_Field := 16#0#;
+      SMBDEFAULT     : SR2_SMBDEFAULT_Field;
       --  SMBus host header (Slave mode)
-      SMBHOST        : SR2_SMBHOST_Field := 16#0#;
+      SMBHOST        : SR2_SMBHOST_Field;
       --  Dual flag (Slave mode)
-      DUALF          : SR2_DUALF_Field := 16#0#;
+      DUALF          : SR2_DUALF_Field;
       --  acket error checking register
-      PEC            : SR2_PEC_Field := 16#0#;
+      PEC            : SR2_PEC_Field;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : STM32_SVD.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

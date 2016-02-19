@@ -84,17 +84,17 @@ package STM32_SVD.CRYP is
    --  status register
    type SR_Register is record
       --  Input FIFO empty
-      IFEM          : SR_IFEM_Field := 16#1#;
+      IFEM          : SR_IFEM_Field;
       --  Input FIFO not full
-      IFNF          : SR_IFNF_Field := 16#1#;
+      IFNF          : SR_IFNF_Field;
       --  Output FIFO not empty
-      OFNE          : SR_OFNE_Field := 16#0#;
+      OFNE          : SR_OFNE_Field;
       --  Output FIFO full
-      OFFU          : SR_OFFU_Field := 16#0#;
+      OFFU          : SR_OFFU_Field;
       --  Busy bit
-      BUSY          : SR_BUSY_Field := 16#0#;
+      BUSY          : SR_BUSY_Field;
       --  unspecified
-      Reserved_5_31 : STM32_SVD.UInt27 := 16#0#;
+      Reserved_5_31 : STM32_SVD.UInt27;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -168,11 +168,11 @@ package STM32_SVD.CRYP is
    --  raw interrupt status register
    type RISR_Register is record
       --  Input FIFO service raw interrupt status
-      INRIS         : RISR_INRIS_Field := 16#1#;
+      INRIS         : RISR_INRIS_Field;
       --  Output FIFO service raw interrupt status
-      OUTRIS        : RISR_OUTRIS_Field := 16#0#;
+      OUTRIS        : RISR_OUTRIS_Field;
       --  unspecified
-      Reserved_2_31 : STM32_SVD.UInt30 := 16#0#;
+      Reserved_2_31 : STM32_SVD.UInt30;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -193,11 +193,11 @@ package STM32_SVD.CRYP is
    --  masked interrupt status register
    type MISR_Register is record
       --  Input FIFO service masked interrupt status
-      INMIS         : MISR_INMIS_Field := 16#0#;
+      INMIS         : MISR_INMIS_Field;
       --  Output FIFO service masked interrupt status
-      OUTMIS        : MISR_OUTMIS_Field := 16#0#;
+      OUTMIS        : MISR_OUTMIS_Field;
       --  unspecified
-      Reserved_2_31 : STM32_SVD.UInt30 := 16#0#;
+      Reserved_2_31 : STM32_SVD.UInt30;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

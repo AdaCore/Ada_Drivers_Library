@@ -436,9 +436,9 @@ package STM32_SVD.ADC is
    --  injected data register x
    type JDR_Register is record
       --  Injected data
-      JDATA          : JDR1_JDATA_Field := 16#0#;
+      JDATA          : JDR1_JDATA_Field;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : STM32_SVD.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -457,9 +457,9 @@ package STM32_SVD.ADC is
    --  regular data register
    type DR_Register is record
       --  Regular data
-      DATA           : DR_DATA_Field := 16#0#;
+      DATA           : DR_DATA_Field;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : STM32_SVD.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -495,47 +495,47 @@ package STM32_SVD.ADC is
    --  ADC Common status register
    type CSR_Register is record
       --  Analog watchdog flag of ADC 1
-      AWD1           : CSR_AWD1_Field := 16#0#;
+      AWD1           : CSR_AWD1_Field;
       --  End of conversion of ADC 1
-      EOC1           : CSR_EOC1_Field := 16#0#;
+      EOC1           : CSR_EOC1_Field;
       --  Injected channel end of conversion of ADC 1
-      JEOC1          : CSR_JEOC1_Field := 16#0#;
+      JEOC1          : CSR_JEOC1_Field;
       --  Injected channel Start flag of ADC 1
-      JSTRT1         : CSR_JSTRT1_Field := 16#0#;
+      JSTRT1         : CSR_JSTRT1_Field;
       --  Regular channel Start flag of ADC 1
-      STRT1          : CSR_STRT1_Field := 16#0#;
+      STRT1          : CSR_STRT1_Field;
       --  Overrun flag of ADC 1
-      OVR1           : CSR_OVR1_Field := 16#0#;
+      OVR1           : CSR_OVR1_Field;
       --  unspecified
-      Reserved_6_7   : STM32_SVD.UInt2 := 16#0#;
+      Reserved_6_7   : STM32_SVD.UInt2;
       --  Analog watchdog flag of ADC 2
-      AWD2           : CSR_AWD2_Field := 16#0#;
+      AWD2           : CSR_AWD2_Field;
       --  End of conversion of ADC 2
-      EOC2           : CSR_EOC2_Field := 16#0#;
+      EOC2           : CSR_EOC2_Field;
       --  Injected channel end of conversion of ADC 2
-      JEOC2          : CSR_JEOC2_Field := 16#0#;
+      JEOC2          : CSR_JEOC2_Field;
       --  Injected channel Start flag of ADC 2
-      JSTRT2         : CSR_JSTRT2_Field := 16#0#;
+      JSTRT2         : CSR_JSTRT2_Field;
       --  Regular channel Start flag of ADC 2
-      STRT2          : CSR_STRT2_Field := 16#0#;
+      STRT2          : CSR_STRT2_Field;
       --  Overrun flag of ADC 2
-      OVR2           : CSR_OVR2_Field := 16#0#;
+      OVR2           : CSR_OVR2_Field;
       --  unspecified
-      Reserved_14_15 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_14_15 : STM32_SVD.UInt2;
       --  Analog watchdog flag of ADC 3
-      AWD3           : CSR_AWD3_Field := 16#0#;
+      AWD3           : CSR_AWD3_Field;
       --  End of conversion of ADC 3
-      EOC3           : CSR_EOC3_Field := 16#0#;
+      EOC3           : CSR_EOC3_Field;
       --  Injected channel end of conversion of ADC 3
-      JEOC3          : CSR_JEOC3_Field := 16#0#;
+      JEOC3          : CSR_JEOC3_Field;
       --  Injected channel Start flag of ADC 3
-      JSTRT3         : CSR_JSTRT3_Field := 16#0#;
+      JSTRT3         : CSR_JSTRT3_Field;
       --  Regular channel Start flag of ADC 3
-      STRT3          : CSR_STRT3_Field := 16#0#;
+      STRT3          : CSR_STRT3_Field;
       --  Overrun flag of ADC3
-      OVR3           : CSR_OVR3_Field := 16#0#;
+      OVR3           : CSR_OVR3_Field;
       --  unspecified
-      Reserved_22_31 : STM32_SVD.UInt10 := 16#0#;
+      Reserved_22_31 : STM32_SVD.UInt10;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

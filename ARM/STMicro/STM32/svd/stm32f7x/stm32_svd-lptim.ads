@@ -28,21 +28,21 @@ package STM32_SVD.LPTIM is
    --  Interrupt and Status Register
    type ISR_Register is record
       --  Compare match
-      CMPM          : ISR_CMPM_Field := 16#0#;
+      CMPM          : ISR_CMPM_Field;
       --  Autoreload match
-      ARRM          : ISR_ARRM_Field := 16#0#;
+      ARRM          : ISR_ARRM_Field;
       --  External trigger edge event
-      EXTTRIG       : ISR_EXTTRIG_Field := 16#0#;
+      EXTTRIG       : ISR_EXTTRIG_Field;
       --  Compare register update OK
-      CMPOK         : ISR_CMPOK_Field := 16#0#;
+      CMPOK         : ISR_CMPOK_Field;
       --  Autoreload register update OK
-      ARROK         : ISR_ARROK_Field := 16#0#;
+      ARROK         : ISR_ARROK_Field;
       --  Counter direction change down to up
-      UP            : ISR_UP_Field := 16#0#;
+      UP            : ISR_UP_Field;
       --  Counter direction change up to down
-      DOWN          : ISR_DOWN_Field := 16#0#;
+      DOWN          : ISR_DOWN_Field;
       --  unspecified
-      Reserved_7_31 : STM32_SVD.UInt25 := 16#0#;
+      Reserved_7_31 : STM32_SVD.UInt25;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -309,9 +309,9 @@ package STM32_SVD.LPTIM is
    --  Counter Register
    type CNT_Register is record
       --  Counter value
-      CNT            : CNT_CNT_Field := 16#0#;
+      CNT            : CNT_CNT_Field;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : STM32_SVD.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

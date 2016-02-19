@@ -656,13 +656,13 @@ package STM32_SVD.FSMC is
    --  SDRAM Status register
    type SDSR_Register is record
       --  Refresh error flag
-      RE            : SDSR_RE_Field := 16#0#;
+      RE            : SDSR_RE_Field;
       --  Status Mode for Bank 1
-      MODES         : SDSR_MODES_Field := (As_Array => False, Val => 16#0#);
+      MODES         : SDSR_MODES_Field;
       --  Busy status
-      BUSY          : SDSR_BUSY_Field := 16#0#;
+      BUSY          : SDSR_BUSY_Field;
       --  unspecified
-      Reserved_6_31 : STM32_SVD.UInt26 := 16#0#;
+      Reserved_6_31 : STM32_SVD.UInt26;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

@@ -88,13 +88,13 @@ package STM32_SVD.DCMI is
    --  status register
    type SR_Register is record
       --  HSYNC
-      HSYNC         : SR_HSYNC_Field := 16#0#;
+      HSYNC         : SR_HSYNC_Field;
       --  VSYNC
-      VSYNC         : SR_VSYNC_Field := 16#0#;
+      VSYNC         : SR_VSYNC_Field;
       --  FIFO not empty
-      FNE           : SR_FNE_Field := 16#0#;
+      FNE           : SR_FNE_Field;
       --  unspecified
-      Reserved_3_31 : STM32_SVD.UInt29 := 16#0#;
+      Reserved_3_31 : STM32_SVD.UInt29;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -119,17 +119,17 @@ package STM32_SVD.DCMI is
    --  raw interrupt status register
    type RIS_Register is record
       --  Capture complete raw interrupt status
-      FRAME_RIS     : RIS_FRAME_RIS_Field := 16#0#;
+      FRAME_RIS     : RIS_FRAME_RIS_Field;
       --  Overrun raw interrupt status
-      OVR_RIS       : RIS_OVR_RIS_Field := 16#0#;
+      OVR_RIS       : RIS_OVR_RIS_Field;
       --  Synchronization error raw interrupt status
-      ERR_RIS       : RIS_ERR_RIS_Field := 16#0#;
+      ERR_RIS       : RIS_ERR_RIS_Field;
       --  VSYNC raw interrupt status
-      VSYNC_RIS     : RIS_VSYNC_RIS_Field := 16#0#;
+      VSYNC_RIS     : RIS_VSYNC_RIS_Field;
       --  Line raw interrupt status
-      LINE_RIS      : RIS_LINE_RIS_Field := 16#0#;
+      LINE_RIS      : RIS_LINE_RIS_Field;
       --  unspecified
-      Reserved_5_31 : STM32_SVD.UInt27 := 16#0#;
+      Reserved_5_31 : STM32_SVD.UInt27;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -193,17 +193,17 @@ package STM32_SVD.DCMI is
    --  masked interrupt status register
    type MIS_Register is record
       --  Capture complete masked interrupt status
-      FRAME_MIS     : MIS_FRAME_MIS_Field := 16#0#;
+      FRAME_MIS     : MIS_FRAME_MIS_Field;
       --  Overrun masked interrupt status
-      OVR_MIS       : MIS_OVR_MIS_Field := 16#0#;
+      OVR_MIS       : MIS_OVR_MIS_Field;
       --  Synchronization error masked interrupt status
-      ERR_MIS       : MIS_ERR_MIS_Field := 16#0#;
+      ERR_MIS       : MIS_ERR_MIS_Field;
       --  VSYNC masked interrupt status
-      VSYNC_MIS     : MIS_VSYNC_MIS_Field := 16#0#;
+      VSYNC_MIS     : MIS_VSYNC_MIS_Field;
       --  Line masked interrupt status
-      LINE_MIS      : MIS_LINE_MIS_Field := 16#0#;
+      LINE_MIS      : MIS_LINE_MIS_Field;
       --  unspecified
-      Reserved_5_31 : STM32_SVD.UInt27 := 16#0#;
+      Reserved_5_31 : STM32_SVD.UInt27;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

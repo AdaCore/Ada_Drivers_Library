@@ -595,15 +595,15 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS Receive status debug read register (host mode)
    type OTG_HS_GRXSTSR_Host_Register is record
       --  Channel number
-      CHNUM          : OTG_HS_GRXSTSR_Host_CHNUM_Field := 16#0#;
+      CHNUM          : OTG_HS_GRXSTSR_Host_CHNUM_Field;
       --  Byte count
-      BCNT           : OTG_HS_GRXSTSR_Host_BCNT_Field := 16#0#;
+      BCNT           : OTG_HS_GRXSTSR_Host_BCNT_Field;
       --  Data PID
-      DPID           : OTG_HS_GRXSTSR_Host_DPID_Field := 16#0#;
+      DPID           : OTG_HS_GRXSTSR_Host_DPID_Field;
       --  Packet status
-      PKTSTS         : OTG_HS_GRXSTSR_Host_PKTSTS_Field := 16#0#;
+      PKTSTS         : OTG_HS_GRXSTSR_Host_PKTSTS_Field;
       --  unspecified
-      Reserved_21_31 : STM32_SVD.UInt11 := 16#0#;
+      Reserved_21_31 : STM32_SVD.UInt11;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -629,17 +629,17 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS Receive status debug read register (peripheral mode mode)
    type OTG_HS_GRXSTSR_Peripheral_Register is record
       --  Endpoint number
-      EPNUM          : OTG_HS_GRXSTSR_Peripheral_EPNUM_Field := 16#0#;
+      EPNUM          : OTG_HS_GRXSTSR_Peripheral_EPNUM_Field;
       --  Byte count
-      BCNT           : OTG_HS_GRXSTSR_Peripheral_BCNT_Field := 16#0#;
+      BCNT           : OTG_HS_GRXSTSR_Peripheral_BCNT_Field;
       --  Data PID
-      DPID           : OTG_HS_GRXSTSR_Peripheral_DPID_Field := 16#0#;
+      DPID           : OTG_HS_GRXSTSR_Peripheral_DPID_Field;
       --  Packet status
-      PKTSTS         : OTG_HS_GRXSTSR_Peripheral_PKTSTS_Field := 16#0#;
+      PKTSTS         : OTG_HS_GRXSTSR_Peripheral_PKTSTS_Field;
       --  Frame number
-      FRMNUM         : OTG_HS_GRXSTSR_Peripheral_FRMNUM_Field := 16#0#;
+      FRMNUM         : OTG_HS_GRXSTSR_Peripheral_FRMNUM_Field;
       --  unspecified
-      Reserved_25_31 : STM32_SVD.UInt7 := 16#0#;
+      Reserved_25_31 : STM32_SVD.UInt7;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -665,15 +665,15 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS status read and pop register (host mode)
    type OTG_HS_GRXSTSP_Host_Register is record
       --  Channel number
-      CHNUM          : OTG_HS_GRXSTSP_Host_CHNUM_Field := 16#0#;
+      CHNUM          : OTG_HS_GRXSTSP_Host_CHNUM_Field;
       --  Byte count
-      BCNT           : OTG_HS_GRXSTSP_Host_BCNT_Field := 16#0#;
+      BCNT           : OTG_HS_GRXSTSP_Host_BCNT_Field;
       --  Data PID
-      DPID           : OTG_HS_GRXSTSP_Host_DPID_Field := 16#0#;
+      DPID           : OTG_HS_GRXSTSP_Host_DPID_Field;
       --  Packet status
-      PKTSTS         : OTG_HS_GRXSTSP_Host_PKTSTS_Field := 16#0#;
+      PKTSTS         : OTG_HS_GRXSTSP_Host_PKTSTS_Field;
       --  unspecified
-      Reserved_21_31 : STM32_SVD.UInt11 := 16#0#;
+      Reserved_21_31 : STM32_SVD.UInt11;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -699,17 +699,17 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS status read and pop register (peripheral mode)
    type OTG_HS_GRXSTSP_Peripheral_Register is record
       --  Endpoint number
-      EPNUM          : OTG_HS_GRXSTSP_Peripheral_EPNUM_Field := 16#0#;
+      EPNUM          : OTG_HS_GRXSTSP_Peripheral_EPNUM_Field;
       --  Byte count
-      BCNT           : OTG_HS_GRXSTSP_Peripheral_BCNT_Field := 16#0#;
+      BCNT           : OTG_HS_GRXSTSP_Peripheral_BCNT_Field;
       --  Data PID
-      DPID           : OTG_HS_GRXSTSP_Peripheral_DPID_Field := 16#0#;
+      DPID           : OTG_HS_GRXSTSP_Peripheral_DPID_Field;
       --  Packet status
-      PKTSTS         : OTG_HS_GRXSTSP_Peripheral_PKTSTS_Field := 16#0#;
+      PKTSTS         : OTG_HS_GRXSTSP_Peripheral_PKTSTS_Field;
       --  Frame number
-      FRMNUM         : OTG_HS_GRXSTSP_Peripheral_FRMNUM_Field := 16#0#;
+      FRMNUM         : OTG_HS_GRXSTSP_Peripheral_FRMNUM_Field;
       --  unspecified
-      Reserved_25_31 : STM32_SVD.UInt7 := 16#0#;
+      Reserved_25_31 : STM32_SVD.UInt7;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -799,13 +799,13 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS nonperiodic transmit FIFO/queue status register
    type OTG_HS_GNPTXSTS_Register is record
       --  Nonperiodic TxFIFO space available
-      NPTXFSAV       : OTG_HS_GNPTXSTS_NPTXFSAV_Field := 16#200#;
+      NPTXFSAV       : OTG_HS_GNPTXSTS_NPTXFSAV_Field;
       --  Nonperiodic transmit request queue space available
-      NPTQXSAV       : OTG_HS_GNPTXSTS_NPTQXSAV_Field := 16#8#;
+      NPTQXSAV       : OTG_HS_GNPTXSTS_NPTQXSAV_Field;
       --  Top of the nonperiodic transmit request queue
-      NPTXQTOP       : OTG_HS_GNPTXSTS_NPTXQTOP_Field := 16#0#;
+      NPTXQTOP       : OTG_HS_GNPTXSTS_NPTXQTOP_Field;
       --  unspecified
-      Reserved_31_31 : STM32_SVD.Bit := 16#0#;
+      Reserved_31_31 : STM32_SVD.Bit;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -961,9 +961,9 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS host frame number/frame time remaining register
    type OTG_HS_HFNUM_Register is record
       --  Frame number
-      FRNUM : OTG_HS_HFNUM_FRNUM_Field := 16#3FFF#;
+      FRNUM : OTG_HS_HFNUM_FRNUM_Field;
       --  Frame time remaining
-      FTREM : OTG_HS_HFNUM_FTREM_Field := 16#0#;
+      FTREM : OTG_HS_HFNUM_FTREM_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1008,9 +1008,9 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS Host all channels interrupt register
    type OTG_HS_HAINT_Register is record
       --  Channel interrupts
-      HAINT          : OTG_HS_HAINT_HAINT_Field := 16#0#;
+      HAINT          : OTG_HS_HAINT_HAINT_Field;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : STM32_SVD.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1470,17 +1470,17 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS device status register
    type OTG_HS_DSTS_Register is record
       --  Suspend status
-      SUSPSTS        : OTG_HS_DSTS_SUSPSTS_Field := 16#0#;
+      SUSPSTS        : OTG_HS_DSTS_SUSPSTS_Field;
       --  Enumerated speed
-      ENUMSPD        : OTG_HS_DSTS_ENUMSPD_Field := 16#0#;
+      ENUMSPD        : OTG_HS_DSTS_ENUMSPD_Field;
       --  Erratic error
-      EERR           : OTG_HS_DSTS_EERR_Field := 16#0#;
+      EERR           : OTG_HS_DSTS_EERR_Field;
       --  unspecified
-      Reserved_4_7   : STM32_SVD.UInt4 := 16#1#;
+      Reserved_4_7   : STM32_SVD.UInt4;
       --  Frame number of the received SOF
-      FNSOF          : OTG_HS_DSTS_FNSOF_Field := 16#0#;
+      FNSOF          : OTG_HS_DSTS_FNSOF_Field;
       --  unspecified
-      Reserved_22_31 : STM32_SVD.UInt10 := 16#0#;
+      Reserved_22_31 : STM32_SVD.UInt10;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1613,9 +1613,9 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS device all endpoints interrupt register
    type OTG_HS_DAINT_Register is record
       --  IN endpoint interrupt bits
-      IEPINT : OTG_HS_DAINT_IEPINT_Field := 16#0#;
+      IEPINT : OTG_HS_DAINT_IEPINT_Field;
       --  OUT endpoint interrupt bits
-      OEPINT : OTG_HS_DAINT_OEPINT_Field := 16#0#;
+      OEPINT : OTG_HS_DAINT_OEPINT_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2130,9 +2130,9 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS device IN endpoint transmit FIFO status register
    type OTG_HS_DTXFSTS_Register is record
       --  IN endpoint TxFIFO space avail
-      INEPTFSAV      : OTG_HS_DTXFSTS0_INEPTFSAV_Field := 16#0#;
+      INEPTFSAV      : OTG_HS_DTXFSTS0_INEPTFSAV_Field;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : STM32_SVD.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

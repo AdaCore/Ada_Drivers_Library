@@ -90,19 +90,19 @@ package STM32_SVD.DMA2D is
    --  Interrupt Status Register
    type ISR_Register is record
       --  Transfer error interrupt flag
-      TEIF          : ISR_TEIF_Field := 16#0#;
+      TEIF          : ISR_TEIF_Field;
       --  Transfer complete interrupt flag
-      TCIF          : ISR_TCIF_Field := 16#0#;
+      TCIF          : ISR_TCIF_Field;
       --  Transfer watermark interrupt flag
-      TWIF          : ISR_TWIF_Field := 16#0#;
+      TWIF          : ISR_TWIF_Field;
       --  CLUT access error interrupt flag
-      CAEIF         : ISR_CAEIF_Field := 16#0#;
+      CAEIF         : ISR_CAEIF_Field;
       --  CLUT transfer complete interrupt flag
-      CTCIF         : ISR_CTCIF_Field := 16#0#;
+      CTCIF         : ISR_CTCIF_Field;
       --  Configuration error interrupt flag
-      CEIF          : ISR_CEIF_Field := 16#0#;
+      CEIF          : ISR_CEIF_Field;
       --  unspecified
-      Reserved_6_31 : STM32_SVD.UInt26 := 16#0#;
+      Reserved_6_31 : STM32_SVD.UInt26;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

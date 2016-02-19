@@ -542,9 +542,9 @@ package STM32_SVD.RTC is
    --  sub second register
    type SSR_Register is record
       --  Sub second value
-      SS             : SSR_SS_Field := 16#0#;
+      SS             : SSR_SS_Field;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : STM32_SVD.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -593,21 +593,21 @@ package STM32_SVD.RTC is
    --  time stamp time register
    type TSTR_Register is record
       --  Tamper 1 detection enable
-      TAMP1E         : TSTR_TAMP1E_Field := 16#0#;
+      TAMP1E         : TSTR_TAMP1E_Field;
       --  Active level for tamper 1
-      TAMP1TRG       : TSTR_TAMP1TRG_Field := 16#0#;
+      TAMP1TRG       : TSTR_TAMP1TRG_Field;
       --  Tamper interrupt enable
-      TAMPIE         : TSTR_TAMPIE_Field := 16#0#;
+      TAMPIE         : TSTR_TAMPIE_Field;
       --  unspecified
-      Reserved_3_15  : STM32_SVD.UInt13 := 16#0#;
+      Reserved_3_15  : STM32_SVD.UInt13;
       --  TAMPER1 mapping
-      TAMP1INSEL     : TSTR_TAMP1INSEL_Field := 16#0#;
+      TAMP1INSEL     : TSTR_TAMP1INSEL_Field;
       --  TIMESTAMP mapping
-      TSINSEL        : TSTR_TSINSEL_Field := 16#0#;
+      TSINSEL        : TSTR_TSINSEL_Field;
       --  AFO_ALARM output type
-      ALARMOUTTYPE   : TSTR_ALARMOUTTYPE_Field := 16#0#;
+      ALARMOUTTYPE   : TSTR_ALARMOUTTYPE_Field;
       --  unspecified
-      Reserved_19_31 : STM32_SVD.UInt13 := 16#0#;
+      Reserved_19_31 : STM32_SVD.UInt13;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -636,19 +636,19 @@ package STM32_SVD.RTC is
    --  time stamp date register
    type TSDR_Register is record
       --  Date units in BCD format
-      DU             : TSDR_DU_Field := 16#0#;
+      DU             : TSDR_DU_Field;
       --  Date tens in BCD format
-      DT             : TSDR_DT_Field := 16#0#;
+      DT             : TSDR_DT_Field;
       --  unspecified
-      Reserved_6_7   : STM32_SVD.UInt2 := 16#0#;
+      Reserved_6_7   : STM32_SVD.UInt2;
       --  Month units in BCD format
-      MU             : TSDR_MU_Field := 16#0#;
+      MU             : TSDR_MU_Field;
       --  Month tens in BCD format
-      MT             : TSDR_MT_Field := 16#0#;
+      MT             : TSDR_MT_Field;
       --  Week day units
-      WDU            : TSDR_WDU_Field := 16#0#;
+      WDU            : TSDR_WDU_Field;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : STM32_SVD.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -672,9 +672,9 @@ package STM32_SVD.RTC is
    --  timestamp sub second register
    type TSSSR_Register is record
       --  Sub second value
-      SS             : TSSSR_SS_Field := 16#0#;
+      SS             : TSSSR_SS_Field;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : STM32_SVD.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

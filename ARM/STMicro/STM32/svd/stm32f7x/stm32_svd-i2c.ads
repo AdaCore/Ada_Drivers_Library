@@ -474,9 +474,9 @@ package STM32_SVD.I2C is
    --  PEC register
    type PECR_Register is record
       --  Packet error checking register
-      PEC           : PECR_PEC_Field := 16#0#;
+      PEC           : PECR_PEC_Field;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24 := 16#0#;
+      Reserved_8_31 : STM32_SVD.UInt24;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -495,9 +495,9 @@ package STM32_SVD.I2C is
    --  Receive data register
    type RXDR_Register is record
       --  8-bit receive data
-      RXDATA        : RXDR_RXDATA_Field := 16#0#;
+      RXDATA        : RXDR_RXDATA_Field;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24 := 16#0#;
+      Reserved_8_31 : STM32_SVD.UInt24;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

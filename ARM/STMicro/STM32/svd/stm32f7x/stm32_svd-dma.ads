@@ -41,57 +41,57 @@ package STM32_SVD.DMA is
    --  low interrupt status register
    type LISR_Register is record
       --  Stream x FIFO error interrupt flag (x=3..0)
-      FEIF0          : LISR_FEIF0_Field := 16#0#;
+      FEIF0          : LISR_FEIF0_Field;
       --  unspecified
-      Reserved_1_1   : STM32_SVD.Bit := 16#0#;
+      Reserved_1_1   : STM32_SVD.Bit;
       --  Stream x direct mode error interrupt flag (x=3..0)
-      DMEIF0         : LISR_DMEIF0_Field := 16#0#;
+      DMEIF0         : LISR_DMEIF0_Field;
       --  Stream x transfer error interrupt flag (x=3..0)
-      TEIF0          : LISR_TEIF0_Field := 16#0#;
+      TEIF0          : LISR_TEIF0_Field;
       --  Stream x half transfer interrupt flag (x=3..0)
-      HTIF0          : LISR_HTIF0_Field := 16#0#;
+      HTIF0          : LISR_HTIF0_Field;
       --  Stream x transfer complete interrupt flag (x = 3..0)
-      TCIF0          : LISR_TCIF0_Field := 16#0#;
+      TCIF0          : LISR_TCIF0_Field;
       --  Stream x FIFO error interrupt flag (x=3..0)
-      FEIF1          : LISR_FEIF1_Field := 16#0#;
+      FEIF1          : LISR_FEIF1_Field;
       --  unspecified
-      Reserved_7_7   : STM32_SVD.Bit := 16#0#;
+      Reserved_7_7   : STM32_SVD.Bit;
       --  Stream x direct mode error interrupt flag (x=3..0)
-      DMEIF1         : LISR_DMEIF1_Field := 16#0#;
+      DMEIF1         : LISR_DMEIF1_Field;
       --  Stream x transfer error interrupt flag (x=3..0)
-      TEIF1          : LISR_TEIF1_Field := 16#0#;
+      TEIF1          : LISR_TEIF1_Field;
       --  Stream x half transfer interrupt flag (x=3..0)
-      HTIF1          : LISR_HTIF1_Field := 16#0#;
+      HTIF1          : LISR_HTIF1_Field;
       --  Stream x transfer complete interrupt flag (x = 3..0)
-      TCIF1          : LISR_TCIF1_Field := 16#0#;
+      TCIF1          : LISR_TCIF1_Field;
       --  unspecified
-      Reserved_12_15 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_12_15 : STM32_SVD.UInt4;
       --  Stream x FIFO error interrupt flag (x=3..0)
-      FEIF2          : LISR_FEIF2_Field := 16#0#;
+      FEIF2          : LISR_FEIF2_Field;
       --  unspecified
-      Reserved_17_17 : STM32_SVD.Bit := 16#0#;
+      Reserved_17_17 : STM32_SVD.Bit;
       --  Stream x direct mode error interrupt flag (x=3..0)
-      DMEIF2         : LISR_DMEIF2_Field := 16#0#;
+      DMEIF2         : LISR_DMEIF2_Field;
       --  Stream x transfer error interrupt flag (x=3..0)
-      TEIF2          : LISR_TEIF2_Field := 16#0#;
+      TEIF2          : LISR_TEIF2_Field;
       --  Stream x half transfer interrupt flag (x=3..0)
-      HTIF2          : LISR_HTIF2_Field := 16#0#;
+      HTIF2          : LISR_HTIF2_Field;
       --  Stream x transfer complete interrupt flag (x = 3..0)
-      TCIF2          : LISR_TCIF2_Field := 16#0#;
+      TCIF2          : LISR_TCIF2_Field;
       --  Stream x FIFO error interrupt flag (x=3..0)
-      FEIF3          : LISR_FEIF3_Field := 16#0#;
+      FEIF3          : LISR_FEIF3_Field;
       --  unspecified
-      Reserved_23_23 : STM32_SVD.Bit := 16#0#;
+      Reserved_23_23 : STM32_SVD.Bit;
       --  Stream x direct mode error interrupt flag (x=3..0)
-      DMEIF3         : LISR_DMEIF3_Field := 16#0#;
+      DMEIF3         : LISR_DMEIF3_Field;
       --  Stream x transfer error interrupt flag (x=3..0)
-      TEIF3          : LISR_TEIF3_Field := 16#0#;
+      TEIF3          : LISR_TEIF3_Field;
       --  Stream x half transfer interrupt flag (x=3..0)
-      HTIF3          : LISR_HTIF3_Field := 16#0#;
+      HTIF3          : LISR_HTIF3_Field;
       --  Stream x transfer complete interrupt flag (x = 3..0)
-      TCIF3          : LISR_TCIF3_Field := 16#0#;
+      TCIF3          : LISR_TCIF3_Field;
       --  unspecified
-      Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_28_31 : STM32_SVD.UInt4;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -153,57 +153,57 @@ package STM32_SVD.DMA is
    --  high interrupt status register
    type HISR_Register is record
       --  Stream x FIFO error interrupt flag (x=7..4)
-      FEIF4          : HISR_FEIF4_Field := 16#0#;
+      FEIF4          : HISR_FEIF4_Field;
       --  unspecified
-      Reserved_1_1   : STM32_SVD.Bit := 16#0#;
+      Reserved_1_1   : STM32_SVD.Bit;
       --  Stream x direct mode error interrupt flag (x=7..4)
-      DMEIF4         : HISR_DMEIF4_Field := 16#0#;
+      DMEIF4         : HISR_DMEIF4_Field;
       --  Stream x transfer error interrupt flag (x=7..4)
-      TEIF4          : HISR_TEIF4_Field := 16#0#;
+      TEIF4          : HISR_TEIF4_Field;
       --  Stream x half transfer interrupt flag (x=7..4)
-      HTIF4          : HISR_HTIF4_Field := 16#0#;
+      HTIF4          : HISR_HTIF4_Field;
       --  Stream x transfer complete interrupt flag (x=7..4)
-      TCIF4          : HISR_TCIF4_Field := 16#0#;
+      TCIF4          : HISR_TCIF4_Field;
       --  Stream x FIFO error interrupt flag (x=7..4)
-      FEIF5          : HISR_FEIF5_Field := 16#0#;
+      FEIF5          : HISR_FEIF5_Field;
       --  unspecified
-      Reserved_7_7   : STM32_SVD.Bit := 16#0#;
+      Reserved_7_7   : STM32_SVD.Bit;
       --  Stream x direct mode error interrupt flag (x=7..4)
-      DMEIF5         : HISR_DMEIF5_Field := 16#0#;
+      DMEIF5         : HISR_DMEIF5_Field;
       --  Stream x transfer error interrupt flag (x=7..4)
-      TEIF5          : HISR_TEIF5_Field := 16#0#;
+      TEIF5          : HISR_TEIF5_Field;
       --  Stream x half transfer interrupt flag (x=7..4)
-      HTIF5          : HISR_HTIF5_Field := 16#0#;
+      HTIF5          : HISR_HTIF5_Field;
       --  Stream x transfer complete interrupt flag (x=7..4)
-      TCIF5          : HISR_TCIF5_Field := 16#0#;
+      TCIF5          : HISR_TCIF5_Field;
       --  unspecified
-      Reserved_12_15 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_12_15 : STM32_SVD.UInt4;
       --  Stream x FIFO error interrupt flag (x=7..4)
-      FEIF6          : HISR_FEIF6_Field := 16#0#;
+      FEIF6          : HISR_FEIF6_Field;
       --  unspecified
-      Reserved_17_17 : STM32_SVD.Bit := 16#0#;
+      Reserved_17_17 : STM32_SVD.Bit;
       --  Stream x direct mode error interrupt flag (x=7..4)
-      DMEIF6         : HISR_DMEIF6_Field := 16#0#;
+      DMEIF6         : HISR_DMEIF6_Field;
       --  Stream x transfer error interrupt flag (x=7..4)
-      TEIF6          : HISR_TEIF6_Field := 16#0#;
+      TEIF6          : HISR_TEIF6_Field;
       --  Stream x half transfer interrupt flag (x=7..4)
-      HTIF6          : HISR_HTIF6_Field := 16#0#;
+      HTIF6          : HISR_HTIF6_Field;
       --  Stream x transfer complete interrupt flag (x=7..4)
-      TCIF6          : HISR_TCIF6_Field := 16#0#;
+      TCIF6          : HISR_TCIF6_Field;
       --  Stream x FIFO error interrupt flag (x=7..4)
-      FEIF7          : HISR_FEIF7_Field := 16#0#;
+      FEIF7          : HISR_FEIF7_Field;
       --  unspecified
-      Reserved_23_23 : STM32_SVD.Bit := 16#0#;
+      Reserved_23_23 : STM32_SVD.Bit;
       --  Stream x direct mode error interrupt flag (x=7..4)
-      DMEIF7         : HISR_DMEIF7_Field := 16#0#;
+      DMEIF7         : HISR_DMEIF7_Field;
       --  Stream x transfer error interrupt flag (x=7..4)
-      TEIF7          : HISR_TEIF7_Field := 16#0#;
+      TEIF7          : HISR_TEIF7_Field;
       --  Stream x half transfer interrupt flag (x=7..4)
-      HTIF7          : HISR_HTIF7_Field := 16#0#;
+      HTIF7          : HISR_HTIF7_Field;
       --  Stream x transfer complete interrupt flag (x=7..4)
-      TCIF7          : HISR_TCIF7_Field := 16#0#;
+      TCIF7          : HISR_TCIF7_Field;
       --  unspecified
-      Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_28_31 : STM32_SVD.UInt4;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

@@ -141,9 +141,9 @@ package STM32_SVD.SDMMC is
    --  command response register
    type RESPCMD_Register is record
       --  Response command index
-      RESPCMD       : RESPCMD_RESPCMD_Field := 16#0#;
+      RESPCMD       : RESPCMD_RESPCMD_Field;
       --  unspecified
-      Reserved_6_31 : STM32_SVD.UInt26 := 16#0#;
+      Reserved_6_31 : STM32_SVD.UInt26;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -237,9 +237,9 @@ package STM32_SVD.SDMMC is
    --  data counter register
    type DCOUNT_Register is record
       --  Data count value
-      DATACOUNT      : DCOUNT_DATACOUNT_Field := 16#0#;
+      DATACOUNT      : DCOUNT_DATACOUNT_Field;
       --  unspecified
-      Reserved_25_31 : STM32_SVD.UInt7 := 16#0#;
+      Reserved_25_31 : STM32_SVD.UInt7;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -281,56 +281,56 @@ package STM32_SVD.SDMMC is
    --  status register
    type STA_Register is record
       --  Command response received (CRC check failed)
-      CCRCFAIL       : STA_CCRCFAIL_Field := 16#0#;
+      CCRCFAIL       : STA_CCRCFAIL_Field;
       --  Data block sent/received (CRC check failed)
-      DCRCFAIL       : STA_DCRCFAIL_Field := 16#0#;
+      DCRCFAIL       : STA_DCRCFAIL_Field;
       --  Command response timeout
-      CTIMEOUT       : STA_CTIMEOUT_Field := 16#0#;
+      CTIMEOUT       : STA_CTIMEOUT_Field;
       --  Data timeout
-      DTIMEOUT       : STA_DTIMEOUT_Field := 16#0#;
+      DTIMEOUT       : STA_DTIMEOUT_Field;
       --  Transmit FIFO underrun error
-      TXUNDERR       : STA_TXUNDERR_Field := 16#0#;
+      TXUNDERR       : STA_TXUNDERR_Field;
       --  Received FIFO overrun error
-      RXOVERR        : STA_RXOVERR_Field := 16#0#;
+      RXOVERR        : STA_RXOVERR_Field;
       --  Command response received (CRC check passed)
-      CMDREND        : STA_CMDREND_Field := 16#0#;
+      CMDREND        : STA_CMDREND_Field;
       --  Command sent (no response required)
-      CMDSENT        : STA_CMDSENT_Field := 16#0#;
+      CMDSENT        : STA_CMDSENT_Field;
       --  Data end (data counter, SDIDCOUNT, is zero)
-      DATAEND        : STA_DATAEND_Field := 16#0#;
+      DATAEND        : STA_DATAEND_Field;
       --  Start bit not detected on all data signals in wide bus mode
-      STBITERR       : STA_STBITERR_Field := 16#0#;
+      STBITERR       : STA_STBITERR_Field;
       --  Data block sent/received (CRC check passed)
-      DBCKEND        : STA_DBCKEND_Field := 16#0#;
+      DBCKEND        : STA_DBCKEND_Field;
       --  Command transfer in progress
-      CMDACT         : STA_CMDACT_Field := 16#0#;
+      CMDACT         : STA_CMDACT_Field;
       --  Data transmit in progress
-      TXACT          : STA_TXACT_Field := 16#0#;
+      TXACT          : STA_TXACT_Field;
       --  Data receive in progress
-      RXACT          : STA_RXACT_Field := 16#0#;
+      RXACT          : STA_RXACT_Field;
       --  Transmit FIFO half empty: at least 8 words can be written into the
       --  FIFO
-      TXFIFOHE       : STA_TXFIFOHE_Field := 16#0#;
+      TXFIFOHE       : STA_TXFIFOHE_Field;
       --  Receive FIFO half full: there are at least 8 words in the FIFO
-      RXFIFOHF       : STA_RXFIFOHF_Field := 16#0#;
+      RXFIFOHF       : STA_RXFIFOHF_Field;
       --  Transmit FIFO full
-      TXFIFOF        : STA_TXFIFOF_Field := 16#0#;
+      TXFIFOF        : STA_TXFIFOF_Field;
       --  Receive FIFO full
-      RXFIFOF        : STA_RXFIFOF_Field := 16#0#;
+      RXFIFOF        : STA_RXFIFOF_Field;
       --  Transmit FIFO empty
-      TXFIFOE        : STA_TXFIFOE_Field := 16#0#;
+      TXFIFOE        : STA_TXFIFOE_Field;
       --  Receive FIFO empty
-      RXFIFOE        : STA_RXFIFOE_Field := 16#0#;
+      RXFIFOE        : STA_RXFIFOE_Field;
       --  Data available in transmit FIFO
-      TXDAVL         : STA_TXDAVL_Field := 16#0#;
+      TXDAVL         : STA_TXDAVL_Field;
       --  Data available in receive FIFO
-      RXDAVL         : STA_RXDAVL_Field := 16#0#;
+      RXDAVL         : STA_RXDAVL_Field;
       --  SDIO interrupt received
-      SDIOIT         : STA_SDIOIT_Field := 16#0#;
+      SDIOIT         : STA_SDIOIT_Field;
       --  CE-ATA command completion signal received for CMD61
-      CEATAEND       : STA_CEATAEND_Field := 16#0#;
+      CEATAEND       : STA_CEATAEND_Field;
       --  unspecified
-      Reserved_24_31 : STM32_SVD.Byte := 16#0#;
+      Reserved_24_31 : STM32_SVD.Byte;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -557,9 +557,9 @@ package STM32_SVD.SDMMC is
    --  FIFO counter register
    type FIFOCNT_Register is record
       --  Remaining number of words to be written to or read from the FIFO
-      FIFOCOUNT      : FIFOCNT_FIFOCOUNT_Field := 16#0#;
+      FIFOCOUNT      : FIFOCNT_FIFOCOUNT_Field;
       --  unspecified
-      Reserved_24_31 : STM32_SVD.Byte := 16#0#;
+      Reserved_24_31 : STM32_SVD.Byte;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

@@ -305,9 +305,9 @@ package STM32_SVD.DAC is
    --  channel1 data output register
    type DOR_Register is record
       --  DAC channel1 data output
-      DACC1DOR       : DOR1_DACC1DOR_Field := 16#0#;
+      DACC1DOR       : DOR1_DACC1DOR_Field;
       --  unspecified
-      Reserved_12_31 : STM32_SVD.UInt20 := 16#0#;
+      Reserved_12_31 : STM32_SVD.UInt20;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

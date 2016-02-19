@@ -537,53 +537,53 @@ package STM32_SVD.USART is
    --  Interrupt & status register
    type ISR_Register is record
       --  PE
-      PE             : ISR_PE_Field := 16#0#;
+      PE             : ISR_PE_Field;
       --  FE
-      FE             : ISR_FE_Field := 16#0#;
+      FE             : ISR_FE_Field;
       --  NF
-      NF             : ISR_NF_Field := 16#0#;
+      NF             : ISR_NF_Field;
       --  ORE
-      ORE            : ISR_ORE_Field := 16#0#;
+      ORE            : ISR_ORE_Field;
       --  IDLE
-      IDLE           : ISR_IDLE_Field := 16#0#;
+      IDLE           : ISR_IDLE_Field;
       --  RXNE
-      RXNE           : ISR_RXNE_Field := 16#0#;
+      RXNE           : ISR_RXNE_Field;
       --  TC
-      TC             : ISR_TC_Field := 16#1#;
+      TC             : ISR_TC_Field;
       --  TXE
-      TXE            : ISR_TXE_Field := 16#1#;
+      TXE            : ISR_TXE_Field;
       --  LBDF
-      LBDF           : ISR_LBDF_Field := 16#0#;
+      LBDF           : ISR_LBDF_Field;
       --  CTSIF
-      CTSIF          : ISR_CTSIF_Field := 16#0#;
+      CTSIF          : ISR_CTSIF_Field;
       --  CTS
-      CTS            : ISR_CTS_Field := 16#0#;
+      CTS            : ISR_CTS_Field;
       --  RTOF
-      RTOF           : ISR_RTOF_Field := 16#0#;
+      RTOF           : ISR_RTOF_Field;
       --  EOBF
-      EOBF           : ISR_EOBF_Field := 16#0#;
+      EOBF           : ISR_EOBF_Field;
       --  unspecified
-      Reserved_13_13 : STM32_SVD.Bit := 16#0#;
+      Reserved_13_13 : STM32_SVD.Bit;
       --  ABRE
-      ABRE           : ISR_ABRE_Field := 16#0#;
+      ABRE           : ISR_ABRE_Field;
       --  ABRF
-      ABRF           : ISR_ABRF_Field := 16#0#;
+      ABRF           : ISR_ABRF_Field;
       --  BUSY
-      BUSY           : ISR_BUSY_Field := 16#0#;
+      BUSY           : ISR_BUSY_Field;
       --  CMF
-      CMF            : ISR_CMF_Field := 16#0#;
+      CMF            : ISR_CMF_Field;
       --  SBKF
-      SBKF           : ISR_SBKF_Field := 16#0#;
+      SBKF           : ISR_SBKF_Field;
       --  RWU
-      RWU            : ISR_RWU_Field := 16#0#;
+      RWU            : ISR_RWU_Field;
       --  WUF
-      WUF            : ISR_WUF_Field := 16#0#;
+      WUF            : ISR_WUF_Field;
       --  TEACK
-      TEACK          : ISR_TEACK_Field := 16#0#;
+      TEACK          : ISR_TEACK_Field;
       --  REACK
-      REACK          : ISR_REACK_Field := 16#0#;
+      REACK          : ISR_REACK_Field;
       --  unspecified
-      Reserved_23_31 : STM32_SVD.UInt9 := 16#0#;
+      Reserved_23_31 : STM32_SVD.UInt9;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -704,9 +704,9 @@ package STM32_SVD.USART is
    --  Receive data register
    type RDR_Register is record
       --  Receive data value
-      RDR           : RDR_RDR_Field := 16#0#;
+      RDR           : RDR_RDR_Field;
       --  unspecified
-      Reserved_9_31 : STM32_SVD.UInt23 := 16#0#;
+      Reserved_9_31 : STM32_SVD.UInt23;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

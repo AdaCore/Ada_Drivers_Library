@@ -148,29 +148,29 @@ package STM32_SVD.SPDIF_RX is
    --  Status register
    type SR_Register is record
       --  Read data register not empty
-      RXNE           : SR_RXNE_Field := 16#0#;
+      RXNE           : SR_RXNE_Field;
       --  Control Buffer register is not empty
-      CSRNE          : SR_CSRNE_Field := 16#0#;
+      CSRNE          : SR_CSRNE_Field;
       --  Parity error
-      PERR           : SR_PERR_Field := 16#0#;
+      PERR           : SR_PERR_Field;
       --  Overrun error
-      OVR            : SR_OVR_Field := 16#0#;
+      OVR            : SR_OVR_Field;
       --  Synchronization Block Detected
-      SBD            : SR_SBD_Field := 16#0#;
+      SBD            : SR_SBD_Field;
       --  Synchronization Done
-      SYNCD          : SR_SYNCD_Field := 16#0#;
+      SYNCD          : SR_SYNCD_Field;
       --  Framing error
-      FERR           : SR_FERR_Field := 16#0#;
+      FERR           : SR_FERR_Field;
       --  Synchronization error
-      SERR           : SR_SERR_Field := 16#0#;
+      SERR           : SR_SERR_Field;
       --  Time-out error
-      TERR           : SR_TERR_Field := 16#0#;
+      TERR           : SR_TERR_Field;
       --  unspecified
-      Reserved_9_15  : STM32_SVD.UInt7 := 16#0#;
+      Reserved_9_15  : STM32_SVD.UInt7;
       --  Duration of 5 symbols counted with SPDIF_CLK
-      WIDTH5         : SR_WIDTH5_Field := 16#0#;
+      WIDTH5         : SR_WIDTH5_Field;
       --  unspecified
-      Reserved_31_31 : STM32_SVD.Bit := 16#0#;
+      Reserved_31_31 : STM32_SVD.Bit;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -240,19 +240,19 @@ package STM32_SVD.SPDIF_RX is
    --  Data input register
    type DR_Register is record
       --  Parity Error bit
-      DR             : DR_DR_Field := 16#0#;
+      DR             : DR_DR_Field;
       --  Parity Error bit
-      PE             : DR_PE_Field := 16#0#;
+      PE             : DR_PE_Field;
       --  Validity bit
-      V              : DR_V_Field := 16#0#;
+      V              : DR_V_Field;
       --  User bit
-      U              : DR_U_Field := 16#0#;
+      U              : DR_U_Field;
       --  Channel Status bit
-      C              : DR_C_Field := 16#0#;
+      C              : DR_C_Field;
       --  Preamble Type
-      PT             : DR_PT_Field := 16#0#;
+      PT             : DR_PT_Field;
       --  unspecified
-      Reserved_30_31 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_30_31 : STM32_SVD.UInt2;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -278,13 +278,13 @@ package STM32_SVD.SPDIF_RX is
    --  Channel Status register
    type CSR_Register is record
       --  User data information
-      USR            : CSR_USR_Field := 16#0#;
+      USR            : CSR_USR_Field;
       --  Channel A status information
-      CS             : CSR_CS_Field := 16#0#;
+      CS             : CSR_CS_Field;
       --  Start Of Block
-      SOB            : CSR_SOB_Field := 16#0#;
+      SOB            : CSR_SOB_Field;
       --  unspecified
-      Reserved_25_31 : STM32_SVD.UInt7 := 16#0#;
+      Reserved_25_31 : STM32_SVD.UInt7;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -306,13 +306,13 @@ package STM32_SVD.SPDIF_RX is
    --  Debug Information register
    type DIR_Register is record
       --  Threshold HIGH
-      THI            : DIR_THI_Field := 16#0#;
+      THI            : DIR_THI_Field;
       --  unspecified
-      Reserved_13_15 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_13_15 : STM32_SVD.UInt3;
       --  Threshold LOW
-      TLO            : DIR_TLO_Field := 16#0#;
+      TLO            : DIR_TLO_Field;
       --  unspecified
-      Reserved_29_31 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_29_31 : STM32_SVD.UInt3;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

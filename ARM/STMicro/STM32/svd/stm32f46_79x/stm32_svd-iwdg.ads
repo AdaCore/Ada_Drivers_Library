@@ -86,11 +86,11 @@ package STM32_SVD.IWDG is
    --  Status register
    type SR_Register is record
       --  Watchdog prescaler value update
-      PVU           : SR_PVU_Field := 16#0#;
+      PVU           : SR_PVU_Field;
       --  Watchdog counter reload value update
-      RVU           : SR_RVU_Field := 16#0#;
+      RVU           : SR_RVU_Field;
       --  unspecified
-      Reserved_2_31 : STM32_SVD.UInt30 := 16#0#;
+      Reserved_2_31 : STM32_SVD.UInt30;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

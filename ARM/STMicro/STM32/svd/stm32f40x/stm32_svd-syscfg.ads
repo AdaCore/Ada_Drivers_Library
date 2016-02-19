@@ -119,13 +119,13 @@ package STM32_SVD.SYSCFG is
    --  Compensation cell control register
    type CMPCR_Register is record
       --  Compensation cell power-down
-      CMP_PD        : CMPCR_CMP_PD_Field := 16#0#;
+      CMP_PD        : CMPCR_CMP_PD_Field;
       --  unspecified
-      Reserved_1_7  : STM32_SVD.UInt7 := 16#0#;
+      Reserved_1_7  : STM32_SVD.UInt7;
       --  READY
-      READY         : CMPCR_READY_Field := 16#0#;
+      READY         : CMPCR_READY_Field;
       --  unspecified
-      Reserved_9_31 : STM32_SVD.UInt23 := 16#0#;
+      Reserved_9_31 : STM32_SVD.UInt23;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

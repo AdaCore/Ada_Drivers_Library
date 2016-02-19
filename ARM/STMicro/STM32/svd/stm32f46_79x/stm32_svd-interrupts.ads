@@ -2,6 +2,7 @@
 --  see https://github.com/AdaCore/svd2ada
 
 with Ada.Interrupts;  use Ada.Interrupts;
+with STM32_SVD;
 
 --  Definition of the device's interrupts
 package STM32_SVD.Interrupts is
@@ -282,5 +283,8 @@ package STM32_SVD.Interrupts is
 
    --  QuadSPI global interrupt
    QUADSPI_Interrupt             : constant Interrupt_ID := 93;
+
+   --  DSI event interrupt
+   DSI_Interrupt                 : constant Interrupt_ID := 94;
 
 end STM32_SVD.Interrupts;

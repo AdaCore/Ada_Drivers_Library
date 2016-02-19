@@ -1125,11 +1125,11 @@ package STM32_SVD.DSIHOST is
    --  DSI Host Interrupt & Status Register 0
    type DSI_ISR0_Register is record
       --  Acknowledge Error 0
-      AE             : DSI_ISR0_AE_Field := (As_Array => False, Val => 16#0#);
+      AE             : DSI_ISR0_AE_Field;
       --  PHY Error 0
-      PE             : DSI_ISR0_PE_Field := (As_Array => False, Val => 16#0#);
+      PE             : DSI_ISR0_PE_Field;
       --  unspecified
-      Reserved_21_31 : STM32_SVD.UInt11 := 16#0#;
+      Reserved_21_31 : STM32_SVD.UInt11;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1161,33 +1161,33 @@ package STM32_SVD.DSIHOST is
    --  DSI Host Interrupt & Status Register 1
    type DSI_ISR1_Register is record
       --  Timeout High-Speed Transmission
-      TOHSTX         : DSI_ISR1_TOHSTX_Field := 16#0#;
+      TOHSTX         : DSI_ISR1_TOHSTX_Field;
       --  Timeout Low-Power Reception
-      TOLPRX         : DSI_ISR1_TOLPRX_Field := 16#0#;
+      TOLPRX         : DSI_ISR1_TOLPRX_Field;
       --  ECC Single-bit Error
-      ECCSE          : DSI_ISR1_ECCSE_Field := 16#0#;
+      ECCSE          : DSI_ISR1_ECCSE_Field;
       --  ECC Multi-bit Error
-      ECCME          : DSI_ISR1_ECCME_Field := 16#0#;
+      ECCME          : DSI_ISR1_ECCME_Field;
       --  CRC Error
-      CRCE           : DSI_ISR1_CRCE_Field := 16#0#;
+      CRCE           : DSI_ISR1_CRCE_Field;
       --  Packet Size Error
-      PSE            : DSI_ISR1_PSE_Field := 16#0#;
+      PSE            : DSI_ISR1_PSE_Field;
       --  EoTp Error
-      EOTPE          : DSI_ISR1_EOTPE_Field := 16#0#;
+      EOTPE          : DSI_ISR1_EOTPE_Field;
       --  LTDC Payload Write Error
-      LPWRE          : DSI_ISR1_LPWRE_Field := 16#0#;
+      LPWRE          : DSI_ISR1_LPWRE_Field;
       --  Generic Command Write Error
-      GCWRE          : DSI_ISR1_GCWRE_Field := 16#0#;
+      GCWRE          : DSI_ISR1_GCWRE_Field;
       --  Generic Payload Write Error
-      GPWRE          : DSI_ISR1_GPWRE_Field := 16#0#;
+      GPWRE          : DSI_ISR1_GPWRE_Field;
       --  Generic Payload Transmit Error
-      GPTXE          : DSI_ISR1_GPTXE_Field := 16#0#;
+      GPTXE          : DSI_ISR1_GPTXE_Field;
       --  Generic Payload Read Error
-      GPRDE          : DSI_ISR1_GPRDE_Field := 16#0#;
+      GPRDE          : DSI_ISR1_GPRDE_Field;
       --  Generic Payload Receive Error
-      GPRXE          : DSI_ISR1_GPRXE_Field := 16#0#;
+      GPRXE          : DSI_ISR1_GPRXE_Field;
       --  unspecified
-      Reserved_13_31 : STM32_SVD.UInt19 := 16#0#;
+      Reserved_13_31 : STM32_SVD.UInt19;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2038,27 +2038,27 @@ package STM32_SVD.DSIHOST is
    --  DSI Wrapper Interrupt & Status Register
    type DSI_WISR_Register is record
       --  Tearing Effect Interrupt Flag
-      TEIF           : DSI_WISR_TEIF_Field := 16#0#;
+      TEIF           : DSI_WISR_TEIF_Field;
       --  End of Refresh Interrupt Flag
-      ERIF           : DSI_WISR_ERIF_Field := 16#0#;
+      ERIF           : DSI_WISR_ERIF_Field;
       --  Busy Flag
-      BUSY           : DSI_WISR_BUSY_Field := 16#0#;
+      BUSY           : DSI_WISR_BUSY_Field;
       --  unspecified
-      Reserved_3_7   : STM32_SVD.UInt5 := 16#0#;
+      Reserved_3_7   : STM32_SVD.UInt5;
       --  PLL Lock Status
-      PLLLS          : DSI_WISR_PLLLS_Field := 16#0#;
+      PLLLS          : DSI_WISR_PLLLS_Field;
       --  PLL Lock Interrupt Flag
-      PLLLIF         : DSI_WISR_PLLLIF_Field := 16#0#;
+      PLLLIF         : DSI_WISR_PLLLIF_Field;
       --  PLL Unlock Interrupt Flag
-      PLLUIF         : DSI_WISR_PLLUIF_Field := 16#0#;
+      PLLUIF         : DSI_WISR_PLLUIF_Field;
       --  unspecified
-      Reserved_11_11 : STM32_SVD.Bit := 16#0#;
+      Reserved_11_11 : STM32_SVD.Bit;
       --  Regulator Ready Status
-      RRS            : DSI_WISR_RRS_Field := 16#0#;
+      RRS            : DSI_WISR_RRS_Field;
       --  Regulator Ready Interrupt Flag
-      RRIF           : DSI_WISR_RRIF_Field := 16#0#;
+      RRIF           : DSI_WISR_RRIF_Field;
       --  unspecified
-      Reserved_14_31 : STM32_SVD.UInt18 := 16#0#;
+      Reserved_14_31 : STM32_SVD.UInt18;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

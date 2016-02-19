@@ -150,23 +150,23 @@ package STM32_SVD.QUADSPI is
    --  status register
    type SR_Register is record
       --  Transfer error flag
-      TEF            : SR_TEF_Field := 16#0#;
+      TEF            : SR_TEF_Field;
       --  Transfer complete flag
-      TCF            : SR_TCF_Field := 16#0#;
+      TCF            : SR_TCF_Field;
       --  FIFO threshold flag
-      FTF            : SR_FTF_Field := 16#0#;
+      FTF            : SR_FTF_Field;
       --  Status match flag
-      SMF            : SR_SMF_Field := 16#0#;
+      SMF            : SR_SMF_Field;
       --  Timeout flag
-      TOF            : SR_TOF_Field := 16#0#;
+      TOF            : SR_TOF_Field;
       --  Busy
-      BUSY           : SR_BUSY_Field := 16#0#;
+      BUSY           : SR_BUSY_Field;
       --  unspecified
-      Reserved_6_7   : STM32_SVD.UInt2 := 16#0#;
+      Reserved_6_7   : STM32_SVD.UInt2;
       --  FIFO level
-      FLEVEL         : SR_FLEVEL_Field := 16#0#;
+      FLEVEL         : SR_FLEVEL_Field;
       --  unspecified
-      Reserved_15_31 : STM32_SVD.UInt17 := 16#0#;
+      Reserved_15_31 : STM32_SVD.UInt17;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

@@ -25,8 +25,13 @@ package STM32_SVD.PWR is
    subtype CR_PLS_Field is STM32_SVD.UInt3;
    subtype CR_DBP_Field is STM32_SVD.Bit;
    subtype CR_FPDS_Field is STM32_SVD.Bit;
+   subtype CR_LPLVDS_Field is STM32_SVD.Bit;
+   subtype CR_MRLVDS_Field is STM32_SVD.Bit;
    subtype CR_ADCDC1_Field is STM32_SVD.Bit;
    subtype CR_VOS_Field is STM32_SVD.UInt2;
+   subtype CR_ODEN_Field is STM32_SVD.Bit;
+   subtype CR_ODSWEN_Field is STM32_SVD.Bit;
+   subtype CR_UDEN_Field is STM32_SVD.UInt2;
 
    --  power control register
    type CR_Register is record
@@ -46,14 +51,24 @@ package STM32_SVD.PWR is
       DBP            : CR_DBP_Field := 16#0#;
       --  Flash power down in Stop mode
       FPDS           : CR_FPDS_Field := 16#0#;
+      --  Low-Power Regulator Low Voltage in deepsleep
+      LPLVDS         : CR_LPLVDS_Field := 16#0#;
+      --  Main regulator low voltage in deepsleep mode
+      MRLVDS         : CR_MRLVDS_Field := 16#0#;
       --  unspecified
-      Reserved_10_12 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_12_12 : STM32_SVD.Bit := 16#0#;
       --  ADCDC1
       ADCDC1         : CR_ADCDC1_Field := 16#0#;
       --  Regulator voltage scaling output selection
       VOS            : CR_VOS_Field := 16#3#;
+      --  Over-drive enable
+      ODEN           : CR_ODEN_Field := 16#0#;
+      --  Over-drive switching enabled
+      ODSWEN         : CR_ODSWEN_Field := 16#0#;
+      --  Under-drive enable in stop mode
+      UDEN           : CR_UDEN_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_20_31 : STM32_SVD.UInt12 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -67,10 +82,15 @@ package STM32_SVD.PWR is
       PLS            at 0 range 5 .. 7;
       DBP            at 0 range 8 .. 8;
       FPDS           at 0 range 9 .. 9;
-      Reserved_10_12 at 0 range 10 .. 12;
+      LPLVDS         at 0 range 10 .. 10;
+      MRLVDS         at 0 range 11 .. 11;
+      Reserved_12_12 at 0 range 12 .. 12;
       ADCDC1         at 0 range 13 .. 13;
       VOS            at 0 range 14 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
+      ODEN           at 0 range 16 .. 16;
+      ODSWEN         at 0 range 17 .. 17;
+      UDEN           at 0 range 18 .. 19;
+      Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
    ------------------
@@ -84,6 +104,9 @@ package STM32_SVD.PWR is
    subtype CSR_EWUP_Field is STM32_SVD.Bit;
    subtype CSR_BRE_Field is STM32_SVD.Bit;
    subtype CSR_VOSRDY_Field is STM32_SVD.Bit;
+   subtype CSR_ODRDY_Field is STM32_SVD.Bit;
+   subtype CSR_ODSWRDY_Field is STM32_SVD.Bit;
+   subtype CSR_UDRDY_Field is STM32_SVD.UInt2;
 
    --  power control/status register
    type CSR_Register is record
@@ -106,7 +129,15 @@ package STM32_SVD.PWR is
       --  Regulator voltage scaling output selection ready bit
       VOSRDY         : CSR_VOSRDY_Field := 16#0#;
       --  unspecified
-      Reserved_15_31 : STM32_SVD.UInt17 := 16#0#;
+      Reserved_15_15 : STM32_SVD.Bit := 16#0#;
+      --  Over-drive mode ready
+      ODRDY          : CSR_ODRDY_Field := 16#0#;
+      --  Over-drive mode switching ready
+      ODSWRDY        : CSR_ODSWRDY_Field := 16#0#;
+      --  Under-drive ready flag
+      UDRDY          : CSR_UDRDY_Field := 16#0#;
+      --  unspecified
+      Reserved_20_31 : STM32_SVD.UInt12 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -121,7 +152,11 @@ package STM32_SVD.PWR is
       BRE            at 0 range 9 .. 9;
       Reserved_10_13 at 0 range 10 .. 13;
       VOSRDY         at 0 range 14 .. 14;
-      Reserved_15_31 at 0 range 15 .. 31;
+      Reserved_15_15 at 0 range 15 .. 15;
+      ODRDY          at 0 range 16 .. 16;
+      ODSWRDY        at 0 range 17 .. 17;
+      UDRDY          at 0 range 18 .. 19;
+      Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
    -----------------

@@ -281,15 +281,15 @@ package STM32_SVD.LTDC is
    --  Interrupt Status Register
    type ISR_Register is record
       --  Line Interrupt flag
-      LIF           : ISR_LIF_Field := 16#0#;
+      LIF           : ISR_LIF_Field;
       --  FIFO Underrun Interrupt flag
-      FUIF          : ISR_FUIF_Field := 16#0#;
+      FUIF          : ISR_FUIF_Field;
       --  Transfer Error interrupt flag
-      TERRIF        : ISR_TERRIF_Field := 16#0#;
+      TERRIF        : ISR_TERRIF_Field;
       --  Register Reload Interrupt Flag
-      RRIF          : ISR_RRIF_Field := 16#0#;
+      RRIF          : ISR_RRIF_Field;
       --  unspecified
-      Reserved_4_31 : STM32_SVD.UInt28 := 16#0#;
+      Reserved_4_31 : STM32_SVD.UInt28;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -366,9 +366,9 @@ package STM32_SVD.LTDC is
    --  Current Position Status Register
    type CPSR_Register is record
       --  Current Y Position
-      CYPOS : CPSR_CYPOS_Field := 16#0#;
+      CYPOS : CPSR_CYPOS_Field;
       --  Current X Position
-      CXPOS : CPSR_CXPOS_Field := 16#0#;
+      CXPOS : CPSR_CXPOS_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -390,15 +390,15 @@ package STM32_SVD.LTDC is
    --  Current Display Status Register
    type CDSR_Register is record
       --  Vertical Data Enable display Status
-      VDES          : CDSR_VDES_Field := 16#1#;
+      VDES          : CDSR_VDES_Field;
       --  Horizontal Data Enable display Status
-      HDES          : CDSR_HDES_Field := 16#1#;
+      HDES          : CDSR_HDES_Field;
       --  Vertical Synchronization display Status
-      VSYNCS        : CDSR_VSYNCS_Field := 16#1#;
+      VSYNCS        : CDSR_VSYNCS_Field;
       --  Horizontal Synchronization display Status
-      HSYNCS        : CDSR_HSYNCS_Field := 16#1#;
+      HSYNCS        : CDSR_HSYNCS_Field;
       --  unspecified
-      Reserved_4_31 : STM32_SVD.UInt28 := 16#0#;
+      Reserved_4_31 : STM32_SVD.UInt28;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

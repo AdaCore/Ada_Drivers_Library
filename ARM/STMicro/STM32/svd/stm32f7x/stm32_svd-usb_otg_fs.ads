@@ -568,17 +568,17 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS Receive status debug read(Device mode)
    type OTG_FS_GRXSTSR_Device_Register is record
       --  Endpoint number
-      EPNUM          : OTG_FS_GRXSTSR_Device_EPNUM_Field := 16#0#;
+      EPNUM          : OTG_FS_GRXSTSR_Device_EPNUM_Field;
       --  Byte count
-      BCNT           : OTG_FS_GRXSTSR_Device_BCNT_Field := 16#0#;
+      BCNT           : OTG_FS_GRXSTSR_Device_BCNT_Field;
       --  Data PID
-      DPID           : OTG_FS_GRXSTSR_Device_DPID_Field := 16#0#;
+      DPID           : OTG_FS_GRXSTSR_Device_DPID_Field;
       --  Packet status
-      PKTSTS         : OTG_FS_GRXSTSR_Device_PKTSTS_Field := 16#0#;
+      PKTSTS         : OTG_FS_GRXSTSR_Device_PKTSTS_Field;
       --  Frame number
-      FRMNUM         : OTG_FS_GRXSTSR_Device_FRMNUM_Field := 16#0#;
+      FRMNUM         : OTG_FS_GRXSTSR_Device_FRMNUM_Field;
       --  unspecified
-      Reserved_25_31 : STM32_SVD.UInt7 := 16#0#;
+      Reserved_25_31 : STM32_SVD.UInt7;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -604,15 +604,15 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS Receive status debug read(Host mode)
    type OTG_FS_GRXSTSR_Host_Register is record
       --  Endpoint number
-      CHNUM          : OTG_FS_GRXSTSR_Host_CHNUM_Field := 16#0#;
+      CHNUM          : OTG_FS_GRXSTSR_Host_CHNUM_Field;
       --  Byte count
-      BCNT           : OTG_FS_GRXSTSR_Host_BCNT_Field := 16#0#;
+      BCNT           : OTG_FS_GRXSTSR_Host_BCNT_Field;
       --  Data PID
-      DPID           : OTG_FS_GRXSTSR_Host_DPID_Field := 16#0#;
+      DPID           : OTG_FS_GRXSTSR_Host_DPID_Field;
       --  Packet status
-      PKTSTS         : OTG_FS_GRXSTSR_Host_PKTSTS_Field := 16#0#;
+      PKTSTS         : OTG_FS_GRXSTSR_Host_PKTSTS_Field;
       --  unspecified
-      Reserved_21_31 : STM32_SVD.UInt11 := 16#0#;
+      Reserved_21_31 : STM32_SVD.UInt11;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -638,17 +638,17 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG status read and pop register (Device mode)
    type OTG_FS_GRXSTSP_Device_Register is record
       --  Endpoint number
-      EPNUM          : OTG_FS_GRXSTSP_Device_EPNUM_Field := 16#0#;
+      EPNUM          : OTG_FS_GRXSTSP_Device_EPNUM_Field;
       --  Byte count
-      BCNT           : OTG_FS_GRXSTSP_Device_BCNT_Field := 16#40#;
+      BCNT           : OTG_FS_GRXSTSP_Device_BCNT_Field;
       --  Data PID
-      DPID           : OTG_FS_GRXSTSP_Device_DPID_Field := 16#0#;
+      DPID           : OTG_FS_GRXSTSP_Device_DPID_Field;
       --  Packet status
-      PKTSTS         : OTG_FS_GRXSTSP_Device_PKTSTS_Field := 16#0#;
+      PKTSTS         : OTG_FS_GRXSTSP_Device_PKTSTS_Field;
       --  Frame number
-      FRMNUM         : OTG_FS_GRXSTSP_Device_FRMNUM_Field := 16#0#;
+      FRMNUM         : OTG_FS_GRXSTSP_Device_FRMNUM_Field;
       --  unspecified
-      Reserved_25_31 : STM32_SVD.UInt7 := 16#1#;
+      Reserved_25_31 : STM32_SVD.UInt7;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -674,15 +674,15 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG status read and pop register (Host mode)
    type OTG_FS_GRXSTSP_Host_Register is record
       --  Channel number
-      CHNUM          : OTG_FS_GRXSTSP_Host_CHNUM_Field := 16#0#;
+      CHNUM          : OTG_FS_GRXSTSP_Host_CHNUM_Field;
       --  Byte count
-      BCNT           : OTG_FS_GRXSTSP_Host_BCNT_Field := 16#40#;
+      BCNT           : OTG_FS_GRXSTSP_Host_BCNT_Field;
       --  Data PID
-      DPID           : OTG_FS_GRXSTSP_Host_DPID_Field := 16#0#;
+      DPID           : OTG_FS_GRXSTSP_Host_DPID_Field;
       --  Packet status
-      PKTSTS         : OTG_FS_GRXSTSP_Host_PKTSTS_Field := 16#0#;
+      PKTSTS         : OTG_FS_GRXSTSP_Host_PKTSTS_Field;
       --  unspecified
-      Reserved_21_31 : STM32_SVD.UInt11 := 16#10#;
+      Reserved_21_31 : STM32_SVD.UInt11;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -772,13 +772,13 @@ package STM32_SVD.USB_OTG_FS is
    --  (OTG_FS_GNPTXSTS)
    type OTG_FS_HNPTXSTS_Register is record
       --  Non-periodic TxFIFO space available
-      NPTXFSAV       : OTG_FS_HNPTXSTS_NPTXFSAV_Field := 16#200#;
+      NPTXFSAV       : OTG_FS_HNPTXSTS_NPTXFSAV_Field;
       --  Non-periodic transmit request queue space available
-      NPTQXSAV       : OTG_FS_HNPTXSTS_NPTQXSAV_Field := 16#8#;
+      NPTQXSAV       : OTG_FS_HNPTXSTS_NPTQXSAV_Field;
       --  Top of the non-periodic transmit request queue
-      NPTXQTOP       : OTG_FS_HNPTXSTS_NPTXQTOP_Field := 16#0#;
+      NPTXQTOP       : OTG_FS_HNPTXSTS_NPTXQTOP_Field;
       --  unspecified
-      Reserved_31_31 : STM32_SVD.Bit := 16#0#;
+      Reserved_31_31 : STM32_SVD.Bit;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1188,9 +1188,9 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS host frame number/frame time remaining register (OTG_FS_HFNUM)
    type OTG_FS_HFNUM_Register is record
       --  Frame number
-      FRNUM : OTG_FS_HFNUM_FRNUM_Field := 16#3FFF#;
+      FRNUM : OTG_FS_HFNUM_FRNUM_Field;
       --  Frame time remaining
-      FTREM : OTG_FS_HFNUM_FTREM_Field := 16#0#;
+      FTREM : OTG_FS_HFNUM_FTREM_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1236,9 +1236,9 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS Host all channels interrupt register
    type OTG_FS_HAINT_Register is record
       --  Channel interrupts
-      HAINT          : OTG_FS_HAINT_HAINT_Field := 16#0#;
+      HAINT          : OTG_FS_HAINT_HAINT_Field;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : STM32_SVD.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1651,17 +1651,17 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS device status register (OTG_FS_DSTS)
    type OTG_FS_DSTS_Register is record
       --  Suspend status
-      SUSPSTS        : OTG_FS_DSTS_SUSPSTS_Field := 16#0#;
+      SUSPSTS        : OTG_FS_DSTS_SUSPSTS_Field;
       --  Enumerated speed
-      ENUMSPD        : OTG_FS_DSTS_ENUMSPD_Field := 16#0#;
+      ENUMSPD        : OTG_FS_DSTS_ENUMSPD_Field;
       --  Erratic error
-      EERR           : OTG_FS_DSTS_EERR_Field := 16#0#;
+      EERR           : OTG_FS_DSTS_EERR_Field;
       --  unspecified
-      Reserved_4_7   : STM32_SVD.UInt4 := 16#1#;
+      Reserved_4_7   : STM32_SVD.UInt4;
       --  Frame number of the received SOF
-      FNSOF          : OTG_FS_DSTS_FNSOF_Field := 16#0#;
+      FNSOF          : OTG_FS_DSTS_FNSOF_Field;
       --  unspecified
-      Reserved_22_31 : STM32_SVD.UInt10 := 16#0#;
+      Reserved_22_31 : STM32_SVD.UInt10;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1767,9 +1767,9 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS device all endpoints interrupt register (OTG_FS_DAINT)
    type OTG_FS_DAINT_Register is record
       --  IN endpoint interrupt bits
-      IEPINT : OTG_FS_DAINT_IEPINT_Field := 16#0#;
+      IEPINT : OTG_FS_DAINT_IEPINT_Field;
       --  OUT endpoint interrupt bits
-      OEPINT : OTG_FS_DAINT_OEPINT_Field := 16#0#;
+      OEPINT : OTG_FS_DAINT_OEPINT_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2014,9 +2014,9 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS device IN endpoint transmit FIFO status register
    type OTG_FS_DTXFSTS_Register is record
       --  IN endpoint TxFIFO space available
-      INEPTFSAV      : OTG_FS_DTXFSTS0_INEPTFSAV_Field := 16#0#;
+      INEPTFSAV      : OTG_FS_DTXFSTS0_INEPTFSAV_Field;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : STM32_SVD.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

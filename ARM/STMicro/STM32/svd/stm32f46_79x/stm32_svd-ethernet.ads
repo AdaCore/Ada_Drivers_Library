@@ -369,19 +369,19 @@ package STM32_SVD.Ethernet is
    --  Ethernet MAC debug register
    type MACDBGR_Register is record
       --  CR
-      CR            : MACDBGR_CR_Field := 16#0#;
+      CR            : MACDBGR_CR_Field;
       --  CSR
-      CSR           : MACDBGR_CSR_Field := 16#0#;
+      CSR           : MACDBGR_CSR_Field;
       --  ROR
-      ROR           : MACDBGR_ROR_Field := 16#0#;
+      ROR           : MACDBGR_ROR_Field;
       --  MCF
-      MCF           : MACDBGR_MCF_Field := 16#0#;
+      MCF           : MACDBGR_MCF_Field;
       --  MCP
-      MCP           : MACDBGR_MCP_Field := 16#0#;
+      MCP           : MACDBGR_MCP_Field;
       --  MCFHP
-      MCFHP         : MACDBGR_MCFHP_Field := 16#0#;
+      MCFHP         : MACDBGR_MCFHP_Field;
       --  unspecified
-      Reserved_6_31 : STM32_SVD.UInt26 := 16#0#;
+      Reserved_6_31 : STM32_SVD.UInt26;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -702,17 +702,17 @@ package STM32_SVD.Ethernet is
    --  Ethernet MMC transmit interrupt register
    type MMCTIR_Register is record
       --  unspecified
-      Reserved_0_13  : STM32_SVD.UInt14 := 16#0#;
+      Reserved_0_13  : STM32_SVD.UInt14;
       --  no description available
-      TGFSCS         : MMCTIR_TGFSCS_Field := 16#0#;
+      TGFSCS         : MMCTIR_TGFSCS_Field;
       --  no description available
-      TGFMSCS        : MMCTIR_TGFMSCS_Field := 16#0#;
+      TGFMSCS        : MMCTIR_TGFMSCS_Field;
       --  unspecified
-      Reserved_16_20 : STM32_SVD.UInt5 := 16#0#;
+      Reserved_16_20 : STM32_SVD.UInt5;
       --  no description available
-      TGFS           : MMCTIR_TGFS_Field := 16#0#;
+      TGFS           : MMCTIR_TGFS_Field;
       --  unspecified
-      Reserved_22_31 : STM32_SVD.UInt10 := 16#0#;
+      Reserved_22_31 : STM32_SVD.UInt10;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -908,9 +908,9 @@ package STM32_SVD.Ethernet is
    --  Ethernet PTP time stamp low register
    type PTPTSLR_Register is record
       --  no description available
-      STSS  : PTPTSLR_STSS_Field := 16#0#;
+      STSS  : PTPTSLR_STSS_Field;
       --  no description available
-      STPNS : PTPTSLR_STPNS_Field := 16#0#;
+      STPNS : PTPTSLR_STPNS_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -952,11 +952,11 @@ package STM32_SVD.Ethernet is
    --  Ethernet PTP time stamp status register
    type PTPTSSR_Register is record
       --  no description available
-      TSSO          : PTPTSSR_TSSO_Field := 16#0#;
+      TSSO          : PTPTSSR_TSSO_Field;
       --  no description available
-      TSTTR         : PTPTSSR_TSTTR_Field := 16#0#;
+      TSTTR         : PTPTSSR_TSTTR_Field;
       --  unspecified
-      Reserved_2_31 : STM32_SVD.UInt30 := 16#0#;
+      Reserved_2_31 : STM32_SVD.UInt30;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -977,11 +977,11 @@ package STM32_SVD.Ethernet is
    --  Ethernet PTP PPS control register
    type PTPPPSCR_Register is record
       --  TSSO
-      TSSO          : PTPPPSCR_TSSO_Field := 16#0#;
+      TSSO          : PTPPPSCR_TSSO_Field;
       --  TSTTR
-      TSTTR         : PTPPPSCR_TSTTR_Field := 16#0#;
+      TSTTR         : PTPPPSCR_TSTTR_Field;
       --  unspecified
-      Reserved_2_31 : STM32_SVD.UInt30 := 16#0#;
+      Reserved_2_31 : STM32_SVD.UInt30;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

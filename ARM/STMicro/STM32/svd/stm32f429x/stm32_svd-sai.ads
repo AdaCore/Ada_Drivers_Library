@@ -613,25 +613,25 @@ package STM32_SVD.SAI is
    --  BStatus register
    type BSR_Register is record
       --  Overrun / underrun
-      OVRUDR         : BSR_OVRUDR_Field := 16#0#;
+      OVRUDR         : BSR_OVRUDR_Field;
       --  Mute detection
-      MUTEDET        : BSR_MUTEDET_Field := 16#0#;
+      MUTEDET        : BSR_MUTEDET_Field;
       --  Wrong clock configuration flag
-      WCKCFG         : BSR_WCKCFG_Field := 16#0#;
+      WCKCFG         : BSR_WCKCFG_Field;
       --  FIFO request
-      FREQ           : BSR_FREQ_Field := 16#0#;
+      FREQ           : BSR_FREQ_Field;
       --  Codec not ready
-      CNRDY          : BSR_CNRDY_Field := 16#0#;
+      CNRDY          : BSR_CNRDY_Field;
       --  Anticipated frame synchronization detection
-      AFSDET         : BSR_AFSDET_Field := 16#0#;
+      AFSDET         : BSR_AFSDET_Field;
       --  Late frame synchronization detection
-      LFSDET         : BSR_LFSDET_Field := 16#0#;
+      LFSDET         : BSR_LFSDET_Field;
       --  unspecified
-      Reserved_7_15  : STM32_SVD.UInt9 := 16#0#;
+      Reserved_7_15  : STM32_SVD.UInt9;
       --  FIFO level threshold
-      FLVL           : BSR_FLVL_Field := 16#0#;
+      FLVL           : BSR_FLVL_Field;
       --  unspecified
-      Reserved_19_31 : STM32_SVD.UInt13 := 16#0#;
+      Reserved_19_31 : STM32_SVD.UInt13;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
