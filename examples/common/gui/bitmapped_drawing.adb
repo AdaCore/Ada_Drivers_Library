@@ -29,29 +29,114 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
+with Ada.Unchecked_Conversion;
+with System.Storage_Elements; use System.Storage_Elements;
 
-with STM32.LCD;
+with STM32.LCD;               use STM32.LCD;
 
 package body Bitmapped_Drawing is
 
-   function Screen_Buffer return DMA2D_Buffer
+   -------------------
+   -- Screen_Buffer --
+   -------------------
+
+   function Screen_Buffer return Graphics_Buffer
    is
    begin
-      return (Addr       => STM32.LCD.Current_Frame_Buffer (STM32.LCD.Layer1),
-              Width      => STM32.LCD.Pixel_Width,
-              Height     => STM32.LCD.Pixel_Height,
-              Color_Mode => STM32.LCD.Get_Pixel_Fmt,
-              Swap_X_Y   => STM32.LCD.SwapXY);
+      return
+        (Addr       => STM32.LCD.Current_Frame_Buffer (STM32.LCD.Layer1),
+         Width      => STM32.LCD.Pixel_Width,
+         Height     => STM32.LCD.Pixel_Height,
+         Color_Mode => STM32.LCD.Get_Pixel_Fmt,
+         Swap_X_Y   => STM32.LCD.SwapXY);
    end Screen_Buffer;
+
+   ---------------
+   -- Put_Pixel --
+   ---------------
+
+   procedure Put_Pixel
+     (Buffer   : Graphics_Buffer;
+      Position : Point;
+      Hue      : Graphics_Color)
+   is
+   begin
+      DMA2D_Set_Pixel (Buffer, Position.X, Position.Y, Hue);
+   end Put_Pixel;
+
+   ---------------
+   -- Put_Pixel --
+   ---------------
+
+   procedure Put_Pixel
+     (Buffer   : Graphics_Buffer;
+      Position : Point;
+      Hue      : Unsigned_32)
+   is
+   begin
+      DMA2D_Set_Pixel (Buffer, Position.X, Position.Y, Hue);
+   end Put_Pixel;
+
+   ---------------
+   -- Get_Pixel --
+   ---------------
+
+   function Get_Pixel
+     (Buffer   : Graphics_Buffer;
+      Position : Point) return Graphics_Color
+   is
+   begin
+      return Word_To_DMA2D_Color (Buffer, Get_Pixel (Buffer, Position));
+   end Get_Pixel;
+
+   ---------------
+   -- Get_Pixel --
+   ---------------
+
+   function Get_Pixel
+     (Buffer   : Graphics_Buffer;
+      Position : Point) return Unsigned_32
+   is
+      Pix_Size : constant Natural := Bytes_Per_Pixel (Buffer.Color_Mode);
+      Offset   : constant Natural :=
+                   Pix_Size * (Position.X + Buffer.Width * Position.Y);
+      Pix_Addr : constant System.Address :=
+                   Buffer.Addr + Storage_Offset (Offset);
+
+   begin
+      DMA2D_Wait_Transfer;
+      case Pix_Size is
+         when 2 =>
+            declare
+               Val : Unsigned_16 with Address => Pix_Addr;
+            begin
+               return Unsigned_32 (Val);
+            end;
+         when 3 =>
+            declare
+               Val : Unsigned_24 with Address => Pix_Addr;
+            begin
+               return Unsigned_32 (Val);
+            end;
+         when 4 =>
+            declare
+               Val : Unsigned_32 with Address => Pix_Addr;
+            begin
+               return Val;
+            end;
+         when others =>
+            raise Constraint_Error with "Unexpected pixel size";
+      end case;
+   end Get_Pixel;
+
 
    ---------------
    -- Draw_Char --
    ---------------
 
    procedure Draw_Char
-     (Buffer     : DMA2D_Buffer;
-      Start      : Display_Point;
+     (Buffer     : Graphics_Buffer;
+      Start      : Point;
       Char       : Character;
       Font       : BMP_Font;
       Foreground : DMA2D_Color;
@@ -76,8 +161,8 @@ package body Bitmapped_Drawing is
    -----------------
 
    procedure Draw_String
-     (Buffer     : DMA2D_Buffer;
-      Start      : Display_Point;
+     (Buffer     : Graphics_Buffer;
+      Start      : Point;
       Msg        : String;
       Font       : BMP_Font;
       Foreground : DMA2D_Color;
@@ -104,10 +189,11 @@ package body Bitmapped_Drawing is
    ---------------
 
    procedure Draw_Line
-     (Buffer      : DMA2D_Buffer;
-      Start, Stop : Display_Point;
-      Hue         : DMA2D_Color;
-      Thickness   : Natural := 1)
+     (Buffer      : Graphics_Buffer;
+      Start, Stop : Point;
+      Hue         : Graphics_Color;
+      Thickness   : Natural := 1;
+      Fast        : Boolean := True)
    is
       DX     : constant Float := abs Float (Stop.X - Start.X);
       DY     : constant Float := abs Float (Stop.Y - Start.Y);
@@ -117,21 +203,28 @@ package body Bitmapped_Drawing is
       Step_X : Integer := 1;
       Step_Y : Integer := 1;
 
-      procedure Draw_Point (P : Display_Point) with Inline;
+      procedure Draw_Point (P : Point) with Inline;
 
       ----------------
       -- Draw_Point --
       ----------------
 
-      procedure Draw_Point (P : Display_Point) is
+      procedure Draw_Point (P : Point) is
       begin
          if Thickness /= 1 then
-            DMA2D_Fill_Rect
-              (Buffer, Hue,
-               P.X - (Thickness / 2),
-               P.Y - (Thickness / 2),
-               Thickness,
-               Thickness);
+            if not Fast then
+               Fill_Circle (Buffer,
+                            Center => P,
+                            Radius => Thickness / 2,
+                            Hue    => Hue);
+            else
+               DMA2D_Fill_Rect
+                 (Buffer, Hue,
+                  P.X - (Thickness / 2),
+                  P.Y - (Thickness / 2),
+                  Thickness,
+                  Thickness);
+            end if;
          else
             DMA2D_Set_Pixel (Buffer, P.X, P.Y, Hue);
          end if;
@@ -178,53 +271,259 @@ package body Bitmapped_Drawing is
    --------------------
 
    procedure Draw_Rectangle
-     (Buffer      : DMA2D_Buffer;
-      Start, Stop : Display_Point;
-      Hue         : DMA2D_Color;
-      Thickness   : Natural := 1)
+     (Buffer    : Graphics_Buffer;
+      Area      : Rect;
+      Hue       : Graphics_Color;
+      Thickness : Natural := 1)
    is
       X0, Y0, X1, Y1 : Natural;
    begin
-      X0 := Natural'Min (Start.X, Stop.X);
-      Y0 := Natural'Min (Start.Y, Stop.Y);
-      X1 := Natural'Max (Start.X, Stop.X);
-      Y1 := Natural'Max (Start.Y, Stop.Y);
+      X0 := Area.Position.X;
+      Y0 := Area.Position.Y;
+      X1 := Area.Position.X + Area.Width - 1;
+      Y1 := Area.Position.Y + Area.Height - 1;
       DMA2D_Fill_Rect
         (Buffer, Hue,
          X0 - Thickness / 2, Y0,
-         Thickness, Y1 - Y0);
+         Thickness,
+         Area.Height + Thickness / 2);
       DMA2D_Fill_Rect
         (Buffer, Hue,
          X1 - Thickness / 2, Y0,
-         Thickness, Y1 - Y0);
+         Thickness,
+         Area.Height + Thickness / 2);
       DMA2D_Fill_Rect
         (Buffer, Hue,
-         X0, Y0 - Thickness / 2,
-         X1 - X0, Thickness);
+         X0,
+         Y0 - Thickness / 2,
+         Area.Width + Thickness / 2,
+         Thickness);
       DMA2D_Fill_Rect
         (Buffer, Hue,
-         X0, Y1 - Thickness / 2,
-         X1 - X0, Thickness);
+         X0,
+         Y1 - Thickness / 2,
+         Area.Width + Thickness / 2,
+         Thickness);
    end Draw_Rectangle;
+
+   ----------------------------
+   -- Draw_Rounded_Rectangle --
+   ----------------------------
+
+   procedure Draw_Rounded_Rectangle
+     (Buffer    : Graphics_Buffer;
+      Area      : Rect;
+      Radius    : Natural;
+      Hue       : Graphics_Color;
+      Thickness : Natural := 1)
+   is
+      F     : Integer := 1 - Radius;
+      ddF_X : Integer := 0;
+      ddF_Y : Integer := (-2) * Radius;
+      X     : Integer := 0;
+      Y     : Integer := Radius;
+      Center_Top : constant Natural := Area.Position.Y + Radius;
+      Center_Bot : constant Natural := Area.Position.Y + Area.Height - 1 - Radius;
+      Center_Lft : constant Natural := Area.Position.X + Radius;
+      Center_Rgt : constant Natural := Area.Position.X + Area.Width - 1 - Radius;
+
+      procedure Draw_Point (X, Y : Natural) with Inline;
+
+      ----------------
+      -- Draw_Point --
+      ----------------
+
+      procedure Draw_Point (X, Y : Natural) is
+      begin
+         if Thickness /= 1 then
+            DMA2D_Fill_Rect
+              (Buffer, Hue,
+               X - (Thickness / 2),
+               Y - (Thickness / 2),
+               Thickness,
+               Thickness);
+         else
+            DMA2D_Set_Pixel (Buffer, X, Y, Hue);
+         end if;
+      end Draw_Point;
+
+   begin
+      if Radius = 0 then
+         Draw_Rectangle (Buffer, Area, Hue, Thickness);
+         return;
+      end if;
+
+      DMA2D_Fill_Rect
+        (Buffer, Hue,
+         Area.Position.X - Thickness / 2,
+         Area.Position.Y + Radius,
+         Thickness,
+         Area.Height - 2 * Radius);
+      DMA2D_Fill_Rect
+        (Buffer, Hue,
+         Area.Position.X + Area.Width - Thickness / 2 - 1,
+         Area.Position.Y + Radius,
+         Thickness,
+         Area.Height - 2 * Radius);
+      DMA2D_Fill_Rect
+        (Buffer, Hue,
+         Area.Position.X + Radius,
+         Area.Position.Y - Thickness / 2,
+         Area.Width - 2 * Radius,
+         Thickness);
+      DMA2D_Fill_Rect
+        (Buffer, Hue,
+         Area.Position.X + Radius,
+         Area.Position.Y + Area.Height - Thickness / 2 - 1,
+         Area.Width - 2 * Radius,
+         Thickness);
+
+      while X < Y loop
+         if F >= 0 then
+            Y := Y - 1;
+            ddF_Y := ddF_Y + 2;
+            F := F + ddF_Y;
+         end if;
+         X := X + 1;
+         ddF_X := ddF_X + 2;
+         F := F + ddF_X + 1;
+
+
+         Draw_Point (Center_Rgt + X, Center_Bot + Y);
+         Draw_Point (Center_Lft - X, Center_Bot + Y);
+         Draw_Point (Center_Rgt + X, Center_Top - Y);
+         Draw_Point (Center_Lft - X, Center_Top - Y);
+         Draw_Point (Center_Rgt + Y, Center_Bot + X);
+         Draw_Point (Center_Lft - Y, Center_Bot + X);
+         Draw_Point (Center_Rgt + Y, Center_Top - X);
+         Draw_Point (Center_Lft - Y, Center_Top - X);
+
+      end loop;
+   end Draw_Rounded_Rectangle;
+
+   ----------------------------
+   -- Fill_Rounded_Rectangle --
+   ----------------------------
+
+   procedure Fill_Rounded_Rectangle
+     (Buffer : Graphics_Buffer;
+      Area   : Rect;
+      Radius : Natural;
+      Hue    : Graphics_Color)
+   is
+      F     : Integer := 1 - Radius;
+      ddF_X : Integer := 0;
+      ddF_Y : Integer := (-2) * Radius;
+      X     : Integer := 0;
+      Y     : Integer := Radius;
+      Center_Top : constant Natural := Area.Position.Y + Radius;
+      Center_Bot : constant Natural := Area.Position.Y + Area.Height - 1 - Radius;
+      Center_Lft : constant Natural := Area.Position.X + Radius;
+
+   begin
+      if Radius = 0 then
+         Fill_Rectangle (Buffer, Area, Hue);
+         return;
+      end if;
+
+      DMA2D_Fill_Rect
+        (Buffer, Hue,
+         Area.Position.X, Center_Top,
+         Area.Width, Area.Height - 2 * Radius);
+
+      while X < Y loop
+         if F >= 0 then
+            Y := Y - 1;
+            ddF_Y := ddF_Y + 2;
+            F := F + ddF_Y;
+         end if;
+         X := X + 1;
+         ddF_X := ddF_X + 2;
+         F := F + ddF_X + 1;
+
+         DMA2D_Draw_Horizontal_Line
+           (Buffer, Hue,
+            Center_Lft - X, Center_Bot + Y,
+            Area.Width - 2 * Radius + 2 * X);
+         DMA2D_Draw_Horizontal_Line
+           (Buffer, Hue,
+            Center_Lft - X, Center_Top - Y,
+            Area.Width - 2 * Radius + 2 * X);
+         DMA2D_Draw_Horizontal_Line
+           (Buffer, Hue,
+            Center_Lft - Y, Center_Bot + X,
+            Area.Width - 2 * Radius + 2 * Y);
+         DMA2D_Draw_Horizontal_Line
+           (Buffer, Hue,
+            Center_Lft - Y, Center_Top - X,
+            Area.Width - 2 * Radius + 2 * Y);
+      end loop;
+   end Fill_Rounded_Rectangle;
 
    --------------------
    -- Fill_Rectangle --
    --------------------
 
    procedure Fill_Rectangle
-     (Buffer      : DMA2D_Buffer;
-      Start, Stop : Display_Point;
-      Hue         : DMA2D_Color)
+     (Buffer : Graphics_Buffer;
+      Area   : Rect;
+      Hue    : Graphics_Color)
    is
-      X0, Y0, X1, Y1 : Natural;
    begin
-      X0 := Natural'Min (Start.X, Stop.X);
-      Y0 := Natural'Min (Start.Y, Stop.Y);
-      X1 := Natural'Max (Start.X, Stop.X);
-      Y1 := Natural'Max (Start.Y, Stop.Y);
-      DMA2D_Fill_Rect (Buffer, Hue,
-                       X0, Y0, X1 - X0 + 1, Y1 - Y0 + 1);
+      DMA2D_Fill_Rect
+        (Buffer, Hue,
+         Area.Position.X, Area.Position.Y, Area.Width, Area.Height);
    end Fill_Rectangle;
+
+   --------------------
+   -- Copy_Rectangle --
+   --------------------
+
+   procedure Copy_Rectangle
+     (Src      : Graphics_Buffer;
+      Src_Area : Rect;
+      Dst      : Graphics_Buffer;
+      Dst_Pos  : Point)
+   is
+   begin
+      DMA2D_Copy_Rect
+        (Src_Buffer  => Src,
+         X_Src       => Src_Area.Position.X,
+         Y_Src       => Src_Area.Position.Y,
+         Dst_Buffer  => Dst,
+         X_Dst       => Dst_Pos.X,
+         Y_Dst       => Dst_Pos.Y,
+         Bg_Buffer   => Null_Buffer,
+         X_Bg        => 0,
+         Y_Bg        => 0,
+         Width       => Src_Area.Width,
+         Height      => Src_Area.Height);
+   end Copy_Rectangle;
+
+   --------------------------
+   -- Copy_Rectangle_Blend --
+   --------------------------
+
+   procedure Copy_Rectangle_Blend
+     (Src      : Graphics_Buffer;
+      Src_Area : Rect;
+      Dst      : Graphics_Buffer;
+      Dst_Pos  : Point)
+   is
+   begin
+      DMA2D_Copy_Rect
+        (Src_Buffer  => Src,
+         X_Src       => Src_Area.Position.X,
+         Y_Src       => Src_Area.Position.Y,
+         Dst_Buffer  => Dst,
+         X_Dst       => Dst_Pos.X,
+         Y_Dst       => Dst_Pos.Y,
+         Bg_Buffer   => Dst,
+         X_Bg        => Dst_Pos.X,
+         Y_Bg        => Dst_Pos.Y,
+         Width       => Src_Area.Width,
+         Height      => Src_Area.Height);
+   end Copy_Rectangle_Blend;
 
    --  http://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Cubic
    ------------------
@@ -232,13 +531,13 @@ package body Bitmapped_Drawing is
    ------------------
 
    procedure Cubic_Bezier
-     (Buffer         : DMA2D_Buffer;
-      P1, P2, P3, P4 : Display_Point;
-      Hue            : DMA2D_Color;
+     (Buffer         : Graphics_Buffer;
+      P1, P2, P3, P4 : Point;
+      Hue            : Graphics_Color;
       N              : Positive := 20;
       Thickness      : Natural := 1)
    is
-      Points : array (0 .. N) of Display_Point;
+      Points : array (0 .. N) of Point;
    begin
       for I in Points'Range loop
          declare
@@ -270,10 +569,10 @@ package body Bitmapped_Drawing is
    -----------------
 
    procedure Draw_Circle
-     (Buffer : DMA2D_Buffer;
-      Center : Display_Point;
+     (Buffer : Graphics_Buffer;
+      Center : Point;
       Radius : Natural;
-      Hue    : DMA2D_Color)
+      Hue    : Graphics_Color)
    is
       F     : Integer := 1 - Radius;
       ddF_X : Integer := 0;
@@ -310,10 +609,10 @@ package body Bitmapped_Drawing is
    -----------------
 
    procedure Fill_Circle
-     (Buffer : DMA2D_Buffer;
-      Center : Display_Point;
+     (Buffer : Graphics_Buffer;
+      Center : Point;
       Radius : Natural;
-      Hue    : DMA2D_Color)
+      Hue    : Graphics_Color)
    is
       procedure Draw_Horizontal_Line (X, Y : Integer; Width : Natural);
       procedure Draw_Vertical_Line (X, Y : Integer; Height : Natural);
@@ -326,11 +625,11 @@ package body Bitmapped_Drawing is
       is
          X1, W1 : Natural;
       begin
-         if Y < 0 or else Y >= STM32.LCD.Pixel_Height then
+         if Y < 0 or else Y >= Buffer.Height then
             return;
          end if;
 
-         if X + Width < 0 or else X >= STM32.LCD.Pixel_Width then
+         if X + Width < 0 or else X >= Buffer.Width then
             return;
          end if;
 
@@ -342,8 +641,8 @@ package body Bitmapped_Drawing is
             W1 := Width;
          end if;
 
-         if X1 + W1 >= STM32.LCD.Pixel_Width then
-            W1 := Stm32.LCD.Pixel_Width - X1 - 1;
+         if X1 + W1 >= Buffer.Width then
+            W1 := Buffer.Width - X1 - 1;
          end if;
 
          DMA2D_Fill_Rect (Buffer, Hue, X1, Y, W1, 1);
@@ -357,11 +656,11 @@ package body Bitmapped_Drawing is
       is
          Y1, H1 : Natural;
       begin
-         if X < 0 or else X >= STM32.LCD.Pixel_Width then
+         if X < 0 or else X >= Buffer.Width then
             return;
          end if;
 
-         if Y + Height < 0 or else Y >= STM32.LCD.Pixel_Height then
+         if Y + Height < 0 or else Y >= Buffer.Height then
             return;
          end if;
 
@@ -373,8 +672,8 @@ package body Bitmapped_Drawing is
             H1 := Height;
          end if;
 
-         if Y1 + H1 >= STM32.LCD.Pixel_Height then
-            H1 := Stm32.LCD.Pixel_Height - Y1 - 1;
+         if Y1 + H1 >= Buffer.Height then
+            H1 := Buffer.Height - Y1 - 1;
          end if;
 
          DMA2D_Fill_Rect (Buffer, Hue, X, Y1, 1, H1);

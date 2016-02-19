@@ -116,6 +116,7 @@ package body Double_Buffer is
          end if;
       end loop;
 
+      STM32.DMA2D.DMA2D_Wait_Transfer;
       Reload_Config (Immediate => not VSync);
    end Swap_Buffers;
 

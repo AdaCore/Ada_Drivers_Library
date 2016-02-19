@@ -56,29 +56,30 @@ with Bitmapped_Drawing;
 
 package LCD_Std_Out is
 
-   Black       : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Black;
-   Blue        : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Blue;
-   Light_Blue  : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Light_Blue;
-   Green       : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Green;
-   Cyan        : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Cyan;
-   Gray        : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Gray;
-   Magenta     : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Magenta;
-   Light_Green : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Light_Green;
-   Brown       : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Brown;
-   Red         : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Red;
-   Orange      : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Orange;
-   Yellow      : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.Yellow;
-   White       : Bitmapped_Drawing.Colors renames Bitmapped_Drawing.White;
+   Black       : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.Black;
+   Blue        : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.Blue;
+   Light_Blue  : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.Light_Blue;
+   Green       : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.Green;
+   Cyan        : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.Cyan;
+   Gray        : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.Gray;
+   Magenta     : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.Magenta;
+   Light_Green : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.Light_Green;
+   Brown       : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.Brown;
+   Red         : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.Red;
+   Orange      : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.Orange;
+   Yellow      : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.Yellow;
+   White       : Bitmapped_Drawing.Graphics_Color renames Bitmapped_Drawing.White;
 
-   Default_Text_Color       : constant Bitmapped_Drawing.Colors := White;
-   Default_Background_Color : constant Bitmapped_Drawing.Colors := Black;
+   Default_Text_Color       : constant Bitmapped_Drawing.Graphics_Color := White;
+   Default_Background_Color : constant Bitmapped_Drawing.Graphics_Color := Black;
    Default_Font             : constant BMP_Font := Font16x24;
 --     Default_Orientation      : constant LCD.Orientations := LCD.Portrait_2;
 
    --  Changes to these current values will appear on subsequent calls to the
    --  output routines.
-   Current_Text_Color       : Bitmapped_Drawing.Colors := Default_Text_Color;
-   Current_Background_Color : Bitmapped_Drawing.Colors :=
+   Current_Text_Color       : Bitmapped_Drawing.Graphics_Color :=
+                                Default_Text_Color;
+   Current_Background_Color : Bitmapped_Drawing.Graphics_Color :=
                                 Default_Background_Color;
 
    procedure Set_Font (To : in BMP_Font);
