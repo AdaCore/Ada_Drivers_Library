@@ -266,6 +266,11 @@ package STM32.DMA2D is
      return Word;
    --  Translates the DMA2D Color into native buffer color
 
+   function Word_To_DMA2D_Color
+     (Buffer : DMA2D_Buffer; Col : Word)
+     return DMA2D_Color;
+   --  Translates the native buffer color into DMA2D Color
+
    procedure DMA2D_Wait_Transfer;
    --  Makes sure the DMA2D transfers are done
 

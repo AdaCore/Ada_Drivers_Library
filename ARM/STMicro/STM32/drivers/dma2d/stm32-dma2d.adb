@@ -432,42 +432,48 @@ package body STM32.DMA2D is
       return To_OCOLR (Col, Buffer.Color_Mode);
    end DMA2D_Color_To_Word;
 
---     -----------------------
---     -- DMA2D_Draw_Circle --
---     -----------------------
---
---     procedure DMA2D_Fill_Circle
---       (Buffer    : DMA2D_Buffer;
---        Color     : DMA2D_Color;
---        X0        : Integer;
---        Y0        : Integer;
---        R         : Integer)
---     is
---        F     : Integer := 1 - R;
---        ddF_X : Integer := 1;
---        ddF_Y : Integer := -(2 * R);
---        X     : Integer := 0;
---        Y     : Integer := R;
---     begin
---        DMA2D_Draw_Vertical_Line (Buffer, Color, X0, Y0 - R, 2 * R);
---        DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - R, Y0, 2 * R);
---
---        while X < Y loop
---           if F >= 0 then
---              Y := Y - 1;
---              ddF_Y := ddF_Y + 2;
---              F := F + ddF_Y;
---           end if;
---           X := X + 1;
---           ddF_X := ddF_X + 2;
---           F := F + ddF_X;
---
---           DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - X, Y0 + Y, 2 * X);
---           DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - X, Y0 - Y, 2 * X);
---           DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - Y, Y0 + X, 2 * Y);
---           DMA2D_Draw_Horizontal_Line (Buffer, Color, X0 - Y, Y0 - X, 2 * Y);
---        end loop;
---     end DMA2D_Fill_Circle;
+   -------------------------
+   -- Word_To_DMA2D_Color --
+   -------------------------
+
+   function Word_To_DMA2D_Color
+     (Buffer : DMA2D_Buffer; Col : Word)
+      return DMA2D_Color
+   is
+      function From_Word is new Ada.Unchecked_Conversion
+        (Word, DMA2D_Color);
+      Ret : DMA2D_Color := (others => 255);
+
+   begin
+      case Buffer.Color_Mode is
+         when Pixel_Fmt_ARGB8888 | Pixel_Fmt_RGB888 =>
+            Ret := From_Word (Col);
+            if Buffer.Color_Mode = Pixel_Fmt_RGB888 then
+               Ret.Alpha := 255;
+            end if;
+
+         when Pixel_Fmt_RGB565   =>
+            Ret.Alpha := 255;
+            Ret.Red := Byte (Shift_Left (Shift_Right (Col and 2#11111_000000_00000#, 11), 3));
+            Ret.Green := Byte (Shift_Left (Shift_Right (Col and 2#00000_111111_00000#, 5), 2));
+            Ret.Blue := Byte (Shift_Left (Col and 2#00000_000000_11111#, 3));
+
+         when Pixel_Fmt_ARGB1555 =>
+            Ret.Alpha :=
+              (if (Col and 2#1_00000_00000_00000#) /= 0 then 255 else 0);
+            Ret.Red := Byte (Shift_Left (Shift_Right (Col and 2#11111_00000_00000#, 10), 3));
+            Ret.Green := Byte (Shift_Left (Shift_Right (Col and 2#00000_11111_00000#, 5), 3));
+            Ret.Blue := Byte (Shift_Left (Col and 2#00000_00000_11111#, 3));
+
+         when Pixel_Fmt_ARGB4444 =>
+            Ret.Alpha := Byte (Shift_Left (Shift_Right (Col and 2#1111_0000_0000_0000#, 12), 4));
+            Ret.Red := Byte (Shift_Left (Shift_Right (Col and 2#1111_0000_0000#, 8), 4));
+            Ret.Green := Byte (Shift_Left (Shift_Right (Col and 2#0000_1111_0000#, 4), 4));
+            Ret.Blue := Byte (Shift_Left (Col and 2#0000_0000_1111#, 4));
+      end case;
+
+      return Ret;
+   end Word_To_DMA2D_Color;
 
    ---------------------
    -- DMA2D_Set_Pixel --
