@@ -224,8 +224,8 @@ package STM32.I2C is
      with Post => not Enabled (Port, Source);
 
    function Enabled
-     (Port   : in out I2C_Port;
+     (Port   : I2C_Port;
       Source : I2C_Interrupt)
-     return Boolean;
+      return Boolean;
 
 end STM32.I2C;

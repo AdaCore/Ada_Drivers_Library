@@ -45,7 +45,8 @@ project Shared is
             for Default_Switches ("Ada") use ("-O0");
       end case;
       for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
-        ("-gnatwa", "-gnatQ", "-gnatw.X");
+                ("-gnatwa", "-gnatQ", "-gnatw.X",
+                 "-ffunction-sections", "-fdata-sections");
    end Compiler;
 
    package Builder is
@@ -54,7 +55,7 @@ project Shared is
 
    package Linker is
       for Default_Switches ("ada") use
-        ("-Wl,--defsym=__stack_size=16384", "-v", "-v");
+        ("-Wl,--defsym=__stack_size=16384", "-gc-section");
    end Linker;
 
    package Ide is

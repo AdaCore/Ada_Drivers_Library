@@ -389,7 +389,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out I2C_Port) is
+   procedure Enable_Clock (This : I2C_Port) is
    begin
       Enable_Clock (As_Port_Id (This));
    end Enable_Clock;
@@ -416,7 +416,7 @@ package body STM32.Device is
    -- Reset --
    -----------
 
-   procedure Reset (This : in out I2C_Port) is
+   procedure Reset (This : I2C_Port) is
    begin
       Reset (As_Port_Id (This));
    end Reset;
@@ -447,7 +447,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out SPI_Port) is
+   procedure Enable_Clock (This : SPI_Port) is
    begin
       if This'Address = SPI1_Base then
          RCC_Periph.APB2ENR.SPI1EN := 1;
@@ -470,7 +470,7 @@ package body STM32.Device is
    -- Reset --
    -----------
 
-   procedure Reset (This : in out SPI_Port) is
+   procedure Reset (This : SPI_Port) is
    begin
       if This'Address = SPI1_Base then
          RCC_Periph.APB2RSTR.SPI1RST := 1;

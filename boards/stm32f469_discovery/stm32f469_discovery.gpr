@@ -1,7 +1,10 @@
 project STM32F469_Discovery extends "../../ARM/STMicro/STM32/stm32f46_79x.gpr" is
 
-   for Object_Dir use "obj/";
-   for Target use "arm-eabi";
+   for Library_Name use "stm32f469disco";
+   for Library_Kind use "static";
+   for Library_Dir use "lib";
+   for Object_Dir use "obj";
+
    for Source_Dirs use
             ("src/",
              "../../components/button",

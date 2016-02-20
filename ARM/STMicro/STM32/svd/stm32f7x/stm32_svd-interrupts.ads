@@ -2,7 +2,6 @@
 --  see https://github.com/AdaCore/svd2ada
 
 with Ada.Interrupts;  use Ada.Interrupts;
-with STM32_SVD;
 
 --  Definition of the device's interrupts
 package STM32_SVD.Interrupts is

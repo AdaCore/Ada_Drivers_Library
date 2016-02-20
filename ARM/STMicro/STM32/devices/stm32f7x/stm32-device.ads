@@ -341,9 +341,9 @@ package STM32.Device is
 
    function As_Port_Id (Port : I2C_Port) return I2C_Port_Id with Inline;
    function As_Port (Id : I2C_Port_Id) return access I2C_Port with Inline;
-   procedure Enable_Clock (This : aliased in out I2C_Port);
+   procedure Enable_Clock (This : I2C_Port);
    procedure Enable_Clock (This : I2C_Port_Id);
-   procedure Reset (This : in out I2C_Port);
+   procedure Reset (This : I2C_Port);
    procedure Reset (This : I2C_Port_Id);
 
    SPI_1 : aliased SPI_Port with Import, Volatile, Address => SPI1_Base;
@@ -353,8 +353,8 @@ package STM32.Device is
    SPI_5 : aliased SPI_Port with Import, Volatile, Address => SPI5_Base;
    SPI_6 : aliased SPI_Port with Import, Volatile, Address => SPI6_Base;
 
-   procedure Enable_Clock (This : aliased in out SPI_Port);
-   procedure Reset (This : in out SPI_Port);
+   procedure Enable_Clock (This : SPI_Port);
+   procedure Reset (This : SPI_Port);
 
    Timer_1 : aliased Timer with Volatile, Address => TIM1_Base;
    pragma Import (Ada, Timer_1);

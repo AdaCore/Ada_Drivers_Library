@@ -98,7 +98,7 @@ package body STM32.I2C is
 --     procedure Clear_Flag
 --       (Port   : in out I2C_Port;
 --        Target : Clearable_I2C_Status_Flag);
-   procedure Clear_Address_Sent_Status (Port : in out I2C_Port);
+   procedure Clear_Address_Sent_Status (Port : I2C_Port);
 --     procedure Clear_Stop_Detection_Status (Port : in out I2C_Port);
 
    --  Higher level flag handling
@@ -377,7 +377,7 @@ package body STM32.I2C is
    -- Clear_Address_Sent_Status --
    -------------------------------
 
-   procedure Clear_Address_Sent_Status (Port : in out I2C_Port)
+   procedure Clear_Address_Sent_Status (Port : I2C_Port)
    is
       Unref  : Bit with Volatile, Unreferenced;
    begin
@@ -1292,7 +1292,7 @@ package body STM32.I2C is
    -------------
 
    function Enabled
-     (Port   : in out I2C_Port;
+     (Port   : I2C_Port;
       Source : I2C_Interrupt)
       return Boolean
    is

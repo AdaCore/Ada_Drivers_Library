@@ -395,7 +395,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out I2C_Port) is
+   procedure Enable_Clock (This : I2C_Port) is
    begin
       Enable_Clock (As_Port_Id (This));
    end Enable_Clock;
@@ -420,7 +420,7 @@ package body STM32.Device is
    -- Reset --
    -----------
 
-   procedure Reset (This : in out I2C_Port) is
+   procedure Reset (This : I2C_Port) is
    begin
       Reset (As_Port_Id (This));
    end Reset;
