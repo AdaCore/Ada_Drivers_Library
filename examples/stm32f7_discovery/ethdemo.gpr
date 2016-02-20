@@ -1,0 +1,8 @@
+with "../../boards/stm32f7_discovery/stm32f7_discovery.gpr";
+
+project Ethdemo extends "../ethdemo/eth_generic"  is
+
+   for Runtime ("Ada") use Eth_Generic.RTS & "-stm32f7disco";
+   for Object_Dir use "obj/ethdemo";
+
+end Ethdemo;
