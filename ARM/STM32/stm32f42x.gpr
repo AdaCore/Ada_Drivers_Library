@@ -1,4 +1,4 @@
-project STM32F42x extends "../../cortex_m/cortex_m.gpr" is
+project STM32F42x extends "../cortex_m/cortex_m4.gpr" is
 
    for Source_Dirs use Project'Source_Dirs &
      ("drivers",

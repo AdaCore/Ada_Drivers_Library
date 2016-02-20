@@ -1,0 +1,21 @@
+project Cortex_Shared is
+
+   for Source_Dirs use ();
+
+   type BUILD_TYPE is
+      ("Debug", "Production");
+   Build : BUILD_Type := external ("BUILD", "Debug");
+
+   package Compiler is
+      case Build is
+         when "Production" =>
+            for Default_Switches ("Ada") use ("-O3");
+         when "Debug" =>
+            for Default_Switches ("Ada") use ("-O0");
+      end case;
+      for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
+                ("-gnatwa", "-gnatQ", "-gnatw.X",
+                 "-ffunction-sections", "-fdata-sections");
+   end Compiler;
+
+end Cortex_Shared;
