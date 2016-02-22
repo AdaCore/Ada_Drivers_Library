@@ -1,4 +1,4 @@
-project STM32F7_Discovery extends "../../ARM/STM32/stm32f7x.gpr" is
+library project STM32F7_Discovery extends "../../ARM/STM32/stm32f7x.gpr" is
 
    for Library_Name use "stm32f7disco";
    for Library_Kind use "static";

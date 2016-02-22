@@ -1,6 +1,4 @@
-project Cortex_Shared is
-
-   for Source_Dirs use ();
+abstract project Cortex_Shared is
 
    type BUILD_TYPE is
       ("Debug", "Production");

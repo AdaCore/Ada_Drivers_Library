@@ -55,7 +55,7 @@ project Shared is
 
    package Linker is
       for Default_Switches ("ada") use
-        ("-Wl,--defsym=__stack_size=16384", "-gc-section");
+        ("-Wl,--defsym=__stack_size=32768", "-gc-section");
    end Linker;
 
    package Ide is

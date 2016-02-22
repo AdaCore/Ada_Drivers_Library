@@ -1,5 +1,7 @@
 project STM32F46_79x extends "../cortex_m/cortex_m4.gpr" is
 
+   for Library_Dir use "lib/stm32f46_79x";
+
   for Source_Dirs use Project'Source_Dirs &
      ("drivers",
       "svd/stm32f46_79x",

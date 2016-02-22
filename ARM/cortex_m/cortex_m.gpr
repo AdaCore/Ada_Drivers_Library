@@ -1,9 +1,12 @@
 with "./cortex_shared.gpr";
 
-project Cortex_M is
+library project Cortex_M is
 
    for Target use "arm-eabi";
    for Source_Dirs use ("generic");
+
+   for Library_Name use "cortexm";
+   for Library_Dir use "lib";
 
    package Compiler renames Cortex_Shared.Compiler;
 
