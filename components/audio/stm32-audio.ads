@@ -5,6 +5,8 @@ package STM32.Audio is
    type Audio_Buffer is array (Natural range <>) of Integer_16
      with Component_Size => 16, Alignment => 32;
 
+   type Audio_Volume is new Natural range 0 .. 100;
+
    type Audio_Frequency is
      (Audio_Freq_8kHz,
       Audio_Freq_11kHz,
@@ -34,7 +36,7 @@ package STM32.Audio is
 
 
    procedure Initialize_Audio_Out
-     (Volume    : Byte;
+     (Volume    : Audio_Volume;
       Frequency : Audio_Frequency);
 
    procedure Set_Half_Complete_Callback
@@ -59,7 +61,7 @@ package STM32.Audio is
    procedure Stop;
 
    procedure Set_Volume
-     (Volume : Byte);
+     (Volume : Audio_Volume);
 
    procedure Set_Frequency
      (Frequency : Audio_Frequency);

@@ -426,11 +426,13 @@ package STM32.Device is
    procedure Disable_PLLSAI;
    function PLLSAI_Ready return Boolean;
 
+   subtype DIVQ is Natural range 1 .. 32;
+
    procedure Configure_SAI_I2S_Clock
      (Periph     : SAI_Port;
       PLLI2SN    : UInt9;
       PLLI2SQ    : UInt4;
-      PLLI2SDIVQ : UInt5);
+      PLLI2SDIVQ : DIVQ);
 
 private
 

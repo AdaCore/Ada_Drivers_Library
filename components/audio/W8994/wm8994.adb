@@ -303,8 +303,9 @@ package body WM8994 is
    procedure Set_Volume (Volume : Byte)
    is
       --  Actual Volume in range 0 .. 16#3F#
-      Converted_Volume : constant Half_Word := 100;
---                             Half_Word (Shift_Right (Volume, 2));
+      Converted_Volume : constant Half_Word :=
+                           (if Volume > 100 then 63
+                            else Half_Word (Volume) * 63 / 100);
 
    begin
       if Volume = 0 then

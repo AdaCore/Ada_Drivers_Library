@@ -198,7 +198,7 @@ package body STM32.Audio is
           Increment_Memory_Address     => True,
           Peripheral_Data_Format       => HalfWords,
           Memory_Data_Format           => HalfWords,
-          Operation_Mode               => Normal_Mode, --  Circular_Mode,
+          Operation_Mode               => Circular_Mode,
           Priority                     => Priority_High,
           FIFO_Enabled                 => True,
           FIFO_Threshold               => FIFO_Threshold_Full_Configuration,
@@ -243,7 +243,7 @@ package body STM32.Audio is
          First_Bit_Offset => 0,
          Slot_Size        => Data_Size,
          Number_Of_Slots  => 4,
-         Enabled_Slots    => Slot_0 or Slot_1 or Slot_2 or Slot_3);
+         Enabled_Slots    => Slot_0 or Slot_2);
       STM32.SAI.Enable (SAI_Out, SAI_Out_Block);
    end Initialize_SAI_Out;
 
@@ -316,7 +316,7 @@ package body STM32.Audio is
    ----------------
 
    procedure Initialize_Audio_Out
-     (Volume    : Byte;
+     (Volume    : Audio_Volume;
       Frequency : Audio_Frequency)
    is
    begin
@@ -338,8 +338,8 @@ package body STM32.Audio is
       Driver.Reset;
       Driver.Init
         (Input     => Driver.No_Input,
-         Output    => Driver.Headphone,
-         Volume    => Volume,
+         Output    => Driver.Auto,
+         Volume    => Byte (Volume),
          Frequency =>
            Driver.Audio_Frequency'Enum_Val
              (Audio_Frequency'Enum_Rep (Frequency)));
@@ -432,6 +432,10 @@ package body STM32.Audio is
       null;
    end Change_Buffer;
 
+   -----------
+   -- Pause --
+   -----------
+
    procedure Pause is
    begin
       Driver.Pause;
@@ -450,18 +454,29 @@ package body STM32.Audio is
       null;
    end Stop;
 
+   ----------------
+   -- Set_Volume --
+   ----------------
+
    procedure Set_Volume
-     (Volume : Byte)
+     (Volume : Audio_Volume)
    is
    begin
-      null;
+      Driver.Set_Volume (Byte (Volume));
    end Set_Volume;
+
+   -------------------
+   -- Set_Frequency --
+   -------------------
 
    procedure Set_Frequency
      (Frequency : Audio_Frequency)
    is
    begin
-      null;
+      Set_Audio_Clock (Frequency);
+      STM32.SAI.Disable (SAI_Out, SAI_Out_Block);
+      Initialize_SAI_Out (Frequency);
+      STM32.SAI.Enable (SAI_Out, SAI_Out_Block);
    end Set_Frequency;
 
 end STM32.Audio;

@@ -771,7 +771,7 @@ package body STM32.Device is
      (Periph     : SAI_Port;
       PLLI2SN    : UInt9;
       PLLI2SQ    : UInt4;
-      PLLI2SDIVQ : UInt5)
+      PLLI2SDIVQ : DIVQ)
    is
       PLLI2SCFGR : PLLI2SCFGR_Register := RCC_Periph.PLLI2SCFGR;
    begin
@@ -793,7 +793,13 @@ package body STM32.Device is
       PLLI2SCFGR.PLLI2SQ := PLLI2SQ;
       RCC_Periph.PLLI2SCFGR := PLLI2SCFGR;
 
-      RCC_Periph.DKCFGR1.PLLI2SDIV := PLLI2SDIVQ;
+      RCC_Periph.DKCFGR1.PLLI2SDIV := UInt5 (PLLI2SDIVQ - 1);
+
+      RCC_Periph.CR.PLLI2SON := 1;
+
+      loop
+         exit when RCC_Periph.CR.PLLI2SRDY = 1;
+      end loop;
    end Configure_SAI_I2S_Clock;
 
 end STM32.Device;
