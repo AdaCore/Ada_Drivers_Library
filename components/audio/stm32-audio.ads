@@ -2,7 +2,8 @@
 
 package STM32.Audio is
 
-   type Audio_Buffer is array (Natural range <>) of Short;
+   type Audio_Buffer is array (Natural range <>) of Integer_16
+     with Component_Size => 16, Alignment => 32;
 
    type Audio_Frequency is
      (Audio_Freq_8kHz,
@@ -22,10 +23,28 @@ package STM32.Audio is
       Audio_Freq_48kHz => 48_000,
       Audio_Freq_96kHz => 96_000);
 
+   type DMA_Error is
+     (FIFO_Error,
+      Direct_Mode_Error,
+      Transfer_Error);
+
+   type DMA_Half_Complete_CB is access procedure;
+   type DMA_Transfer_Complete_CB is access procedure;
+   type DMA_Error_CB is access procedure (Err : DMA_Error);
+
 
    procedure Initialize_Audio_Out
      (Volume    : Byte;
       Frequency : Audio_Frequency);
+
+   procedure Set_Half_Complete_Callback
+     (Callback : DMA_Half_Complete_CB);
+
+   procedure Set_Transfer_Complete_Callback
+     (Callback : DMA_Transfer_Complete_CB);
+
+   procedure Set_Error_Callback
+     (Callback : DMA_Error_CB);
 
    procedure Play
      (Buffer : Audio_Buffer);

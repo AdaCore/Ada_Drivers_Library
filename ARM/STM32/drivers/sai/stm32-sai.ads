@@ -183,6 +183,8 @@ package STM32.SAI is
    --  Data_Size: The slot size is equivalent to the data size (specified in
    --    DS[3:0] in the SAI_xCR1 register).
 
+   type Slots_Number is range 1 .. 16;
+
    type SAI_Slots is new Short;
 
    Slot_0  : constant SAI_Slots := 2 ** 0;
@@ -206,15 +208,25 @@ package STM32.SAI is
      (Periph : SAI_Controller;
       Block  : SAI_Block);
 
+   function Enabled
+     (Periph : SAI_Controller;
+      Block  : SAI_Block) return Boolean
+     with Inline;
+
    procedure Enable
      (Periph : SAI_Controller;
       Block  : SAI_Block)
      with Inline;
 
---     procedure Configure_SAI_Clock
---       (Periph    : SAI_Controller;
---        Frequency : Audio_Frequency);
---     --  Configure the SAI clock for a given frequency target
+   procedure Disable
+     (Periph : SAI_Controller;
+      Block  : SAI_Block)
+     with Inline;
+
+   procedure Enable_DMA
+     (Periph : SAI_Controller;
+      Block  : SAI_Block)
+     with Inline;
 
    procedure Configure_Audio_Block
      (Periph          : SAI_Controller;
@@ -247,7 +259,7 @@ package STM32.SAI is
       Block            : SAI_Block;
       First_Bit_Offset : UInt5;
       Slot_Size        : SAI_Slot_Size;
-      Number_Of_Slots  : UInt4;
+      Number_Of_Slots  : Slots_Number;
       Enabled_Slots    : SAI_Slots);
 
 end STM32.SAI;

@@ -133,8 +133,8 @@ package body STM32.SAI is
 
       Start := Clock;
       while Block_Regs.CR1.SAIAEN /= 0 loop
-         if Start + To_Time_Span (Duration (1.0)) < Clock then
-            raise Constraint_Error with "Cannot reset the SAI2 peripheral";
+         if Start + Seconds(1) < Clock then
+            raise Constraint_Error with "Cannot reset the SAI peripheral";
          end if;
       end loop;
 
@@ -147,6 +147,19 @@ package body STM32.SAI is
       --  Flush the FIFO
       Block_Regs.CR2.FFLUS := 1;
    end Deinitialize;
+
+   -------------
+   -- Enabled --
+   -------------
+
+   function Enabled (Periph : SAI_Controller;
+                     Block  : SAI_Block) return Boolean
+   is
+      Block_Regs : constant Block_Registers_Access :=
+                     Get_Block (Periph, Block);
+   begin
+      return Block_Regs.CR1.SAIAEN = 1;
+   end Enabled;
 
    ------------
    -- Enable --
@@ -161,6 +174,34 @@ package body STM32.SAI is
    begin
       Block_Regs.CR1.SAIAEN := 1;
    end Enable;
+
+   -------------
+   -- Disable --
+   -------------
+
+   procedure Disable
+     (Periph : SAI_Controller;
+      Block  : SAI_Block)
+   is
+      Block_Regs : constant Block_Registers_Access :=
+                     Get_Block (Periph, Block);
+   begin
+      Block_Regs.CR1.SAIAEN := 0;
+   end Disable;
+
+   ----------------
+   -- Enable_DMA --
+   ----------------
+
+   procedure Enable_DMA
+     (Periph : SAI_Controller;
+      Block  : SAI_Block)
+   is
+      Block_Regs : constant Block_Registers_Access :=
+                     Get_Block (Periph, Block);
+   begin
+      Block_Regs.CR1.DMAEN := 1;
+   end Enable_DMA;
 
    ---------------------------
    -- Configure_Audio_Block --
@@ -219,9 +260,10 @@ package body STM32.SAI is
          NODIV    => Boolean'Enum_Rep (not MCD_Enabled),
          MCJDIV   => UInt4 (Mckdiv),
          others   => <>);
-      Block_Reg.CR2.FTH  := SAI_FIFO_Threshold'Enum_Rep (FIFO_Threshold);
-      Block_Reg.CR2.TRIS := SAI_Tristate_Management'Enum_Rep (Tristate_Mgt);
-      Block_Reg.CR2.COMP := SAI_Companding_Mode'Enum_Rep (Companding_Mode);
+      Block_Reg.CR2.FTH   := SAI_FIFO_Threshold'Enum_Rep (FIFO_Threshold);
+      Block_Reg.CR2.FFLUS := 0;
+      Block_Reg.CR2.TRIS  := SAI_Tristate_Management'Enum_Rep (Tristate_Mgt);
+      Block_Reg.CR2.COMP  := SAI_Companding_Mode'Enum_Rep (Companding_Mode);
    end Configure_Audio_Block;
 
    ---------------------------
@@ -240,8 +282,8 @@ package body STM32.SAI is
       Block_Reg : constant Block_Registers_Access := Get_Block (Periph, Block);
    begin
       Block_Reg.FRCR :=
-        (FRL   => Frame_Length,
-         FSALL => Frame_Active,
+        (FRL   => Frame_Length - 1,
+         FSALL => Frame_Active - 1,
          FSDEF => SAI_Frame_Synchronization'Enum_Rep (Frame_Sync),
          FSPOL => SAI_Frame_Sync_Polarity'Enum_Rep (FS_Polarity),
          FSOFF => SAI_Frame_Sync_Offset'Enum_Rep (FS_Offset),
@@ -257,7 +299,7 @@ package body STM32.SAI is
       Block            : SAI_Block;
       First_Bit_Offset : UInt5;
       Slot_Size        : SAI_Slot_Size;
-      Number_Of_Slots  : UInt4;
+      Number_Of_Slots  : Slots_Number;
       Enabled_Slots    : SAI_Slots)
    is
       Block_Reg : constant Block_Registers_Access := Get_Block (Periph, Block);
@@ -265,7 +307,7 @@ package body STM32.SAI is
       Block_Reg.SLOTR :=
         (FBOFF  => First_Bit_Offset,
          SLOTSZ => SAI_Slot_Size'Enum_Rep (Slot_Size),
-         NBSLOT => Number_Of_Slots,
+         NBSLOT => UInt4 (Number_Of_Slots - 1),
          SLOTEN => Short (Enabled_Slots),
          others => <>);
    end Configure_Block_Slot;

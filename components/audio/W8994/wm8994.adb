@@ -7,6 +7,7 @@ package body WM8994 is
 
    Output_Enabled          : Boolean := False;
    Input_Enabled           : Boolean := False;
+   pragma Unreferenced (Input_Enabled);
 
    ----------
    -- Init --
@@ -119,7 +120,7 @@ package body WM8994 is
          --  Headphone/Speaker Enable
 
          --  Enable Class W, Class W Envelope Tracking = AIF1 Timeslot 0
-         IO_Write (16#51#, 16#0005#);
+         IO_Write (16#51#, 16#0001#);
 
          --  Enable bias generator, Enable VMID, Enable HPOUT1 (Left) and
          --  Enable HPOUT1 (Right) input stages idem for Speaker
@@ -302,8 +303,8 @@ package body WM8994 is
    procedure Set_Volume (Volume : Byte)
    is
       --  Actual Volume in range 0 .. 16#3F#
-      Converted_Volume : constant Half_Word :=
-                           Half_Word (Shift_Right (Volume, 2));
+      Converted_Volume : constant Half_Word := 100;
+--                             Half_Word (Shift_Right (Volume, 2));
 
    begin
       if Volume = 0 then

@@ -804,14 +804,14 @@ package body STM32.DMA is
 
       case Config.Operation_Mode is
          when Normal_Mode =>
-            This_Stream.CR.CIRC := 0;
             This_Stream.CR.PFCTRL := 0;
+            This_Stream.CR.CIRC := 0;
          when Peripheral_Flow_Control_Mode =>
-            This_Stream.CR.CIRC := 0;
             This_Stream.CR.PFCTRL := 1;
+            This_Stream.CR.CIRC := 0;
          when Circular_Mode =>
-            This_Stream.CR.CIRC := 1;
             This_Stream.CR.PFCTRL := 0;
+            This_Stream.CR.CIRC := 1;
       end case;
 
       --  the memory burst and peripheral burst values are only used when
