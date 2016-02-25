@@ -93,7 +93,8 @@ package STM32F4.ADC is
    --  the same as the VBat channel, on others it is channel 16. Note only
    --  available with ADC_1
 
-   ADC_Supply_Voltage : constant := 3300;  -- millivolts
+   ADC_Supply_Voltage : constant := 3000;  -- millivolts
+   --  This is the ideal value, likely not the actual
 
    procedure Enable (This : in out Analog_To_Digital_Converter) with
      Post => Enabled (This);
@@ -114,9 +115,10 @@ package STM32F4.ADC is
    procedure Configure_Unit
      (This       : in out Analog_To_Digital_Converter;
       Resolution : ADC_Resolution;
-      Alignment  : Data_Alignment) with
-     Post => Current_Resolution (This) = Resolution and
-             Current_Alignment (This) = Alignment;
+      Alignment  : Data_Alignment) 
+    with
+      Post => Current_Resolution (This) = Resolution and
+              Current_Alignment (This) = Alignment;
 
    function Current_Resolution (This : Analog_To_Digital_Converter)
       return ADC_Resolution;
