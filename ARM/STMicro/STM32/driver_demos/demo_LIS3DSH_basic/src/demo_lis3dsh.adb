@@ -39,9 +39,12 @@
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
-with Ada.Real_Time;     use Ada.Real_Time;
-with STM32F4_Discovery; use STM32F4_Discovery;
-with STM32F4.LIS3DSH;   use STM32F4.LIS3DSH;
+with STM32F4_Discovery;   use STM32F4_Discovery;
+
+with Ada.Real_Time;   use Ada.Real_Time;
+with STM32F4.GPIO;    use STM32F4.GPIO;
+with STM32F4.LIS3DSH; use STM32F4.LIS3DSH;
+with STM32F4.RCC;
 
 use STM32F4;
 
@@ -67,6 +70,19 @@ begin
 
    --  short delay on power up
    delay until Clock + Milliseconds (10);
+
+   Initialize_Accelerometer
+     (Accelerometer,
+      Chip_Select                   => (GPIO_E'Access, Pin_3),
+      Enable_SPIx_Chip_Select_Clock => RCC.GPIOE_Clock_Enable'Access,
+      SPIx                          => SPI_1'Access,
+      SPIx_AF                       => GPIO_AF_SPI1,
+      Enable_SPIx_Clock             => RCC.SPI1_Clock_Enable'Access,
+      SPIx_GPIO_Port                => GPIO_A'Access,
+      SPIx_SCK_Pin                  => Pin_5,
+      SPIx_MISO_Pin                 => Pin_6,
+      SPIx_MOSI_Pin                 => Pin_7,
+      Enable_SPIx_GPIO_Clock        => RCC.GPIOA_Clock_Enable'Access);
 
    Configure_Accelerometer
      (Accelerometer,

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -44,10 +44,32 @@
 --  on later versions of the STM32F4 Discovery boards.
 
 with Interfaces;
+with Ada.Interrupts;       use Ada.Interrupts;
+with Ada.Interrupts.Names; use Ada.Interrupts.Names;
+with STM32F4.EXTI;
+
+with STM32F4;        use STM32F4;
+with STM32F4.GPIO;   use STM32F4.GPIO;
+with STM32F4.SPI;    use STM32F4.SPI;
 
 package STM32F4.LIS3DSH is
 
    type Three_Axis_Accelerometer is limited private;
+
+   procedure Initialize_Accelerometer
+     (This                          : out Three_Axis_Accelerometer;
+      Chip_Select                   : GPIO_Point;
+      Enable_SPIx_Chip_Select_Clock : access procedure;
+      SPIx                          : access SPI_Port;
+      SPIx_AF                       : GPIO_Alternate_Function;
+      Enable_SPIx_Clock             : access procedure;
+      SPIx_GPIO_Port                : access GPIO_Port;
+      SPIx_SCK_Pin                  : GPIO_Pin;
+      SPIx_MISO_Pin                 : GPIO_Pin;
+      SPIx_MOSI_Pin                 : GPIO_Pin;
+      Enable_SPIx_GPIO_Clock        : access procedure)
+   with
+      Post => Initialized (This);
 
    type Axis_Acceleration is new Interfaces.Integer_16;
 
@@ -56,7 +78,7 @@ package STM32F4.LIS3DSH is
    end record;
 
    procedure Get_Accelerations
-     (This : Three_Axis_Accelerometer;
+     (This : in out Three_Axis_Accelerometer;
       Axes : out Axes_Accelerations)
      with Pre => Configured (This);
 
@@ -72,7 +94,7 @@ package STM32F4.LIS3DSH is
    --  axis runs through the chip itself, orthogonal to the plane of the board,
    --  and will indicate 1G when the board is resting level.
 
-   function Device_Id (This : Three_Axis_Accelerometer) return Byte;
+   function Device_Id (This : in out Three_Axis_Accelerometer) return Byte;
 
    I_Am_LIS3DSH : constant := 16#3F#;
 
@@ -190,7 +212,7 @@ package STM32F4.LIS3DSH is
       DataRate : Data_Rate_Power_Mode_Selection)
      with Pre => Configured (This);
 
-   function Selected_Sensitivity (This : Three_Axis_Accelerometer) return Float
+   function Selected_Sensitivity (This : in out Three_Axis_Accelerometer) return Float
      with Pre => Configured (This);
    --  The value determined by the current setting of Full_Scale, as set by
    --  a prior call to Configure_Accelerometer.
@@ -203,7 +225,7 @@ package STM32F4.LIS3DSH is
    Sensitivity_0_24mg : constant := 0.24;  -- 0.24 mg/digit
    Sensitivity_0_73mg : constant := 0.73;  -- 0.73 mg/digit
 
-   procedure Reboot (This : Three_Axis_Accelerometer);
+   procedure Reboot (This : in out Three_Axis_Accelerometer);
 
    type State_Machine_Routed_Interrupt is
      (SM_INT1,
@@ -255,9 +277,33 @@ package STM32F4.LIS3DSH is
 
    procedure Configure_Click_Interrupt (This : in out Three_Axis_Accelerometer)
      with Pre => Configured (This);
+   -- NB: Configure_External_Interrupt must be called first
 
-   function Temperature (This : Three_Axis_Accelerometer) return Byte;
+   -- Declared here for convenience when calling Configure_External_Interrupt.
+   -- Note that the pin number and the IRQ number must match!
+   Device_Interrupt1_Pin : constant GPIO_Pin  := Pin_0;
+   Device_Interrupt2_Pin : constant GPIO_Pin  := Pin_1;
+   Device_Int1_EXTI_IRQn : constant Interrupt_Id := EXTI0_Interrupt;
+   Device_Int2_EXTI_IRQn : constant Interrupt_Id := EXTI1_Interrupt;
+
+   procedure Configure_External_Interrupt
+     (This              : in out Three_Axis_Accelerometer;
+      Device_Interrupt  : GPIO_Point;
+      IRQ               : Interrupt_Id;
+      Edge              : EXTI.External_Triggers;
+      Enable_GPIO_Clock : access procedure);
+   --  call example:
+   --     Configure_External_Interrupt
+   --       (Foo,
+   --        Device_Interrupt => (same-as-chip-select port, Device_Interrupt2_Pin),
+   --        IRQ               => Device_Int2_EXTI_IRQn,
+   --        Edge              => EXTI.Interrupt_Rising_Edge,
+   --        Enable_GPIO_Clock => enable-chip-select-port.all);
+
+   function Temperature (This : in out Three_Axis_Accelerometer) return Byte;
    --   Zero corresponds to approx. 25 degrees Celsius
+
+   function Initialized (This : Three_Axis_Accelerometer) return Boolean;
 
    function Configured (This : Three_Axis_Accelerometer) return Boolean;
 
@@ -265,21 +311,33 @@ private
 
    type Three_Axis_Accelerometer is record
       --  Ensures the device has been configured via some prior call to
-      --  Configure_Accelerometer. In addition, this flag also ensures that
-      --  the I/O facility has been initialized because Configure_Accelerometer
-      --  does that initialization too. Those routines that do NOT require
-      --  prior configuration explicitly initialize the I/O facility.
-      Device_Configured : Boolean := False;
+      --  Configure_Accelerometer
+      Device_Configured  : Boolean := False;
+      Device_Initialized : Boolean := False;
+
       --  The value determined by the current setting of Full_Scale, as set
       --  by a prior call to Configure_Accelerometer. Storing this value is
       --  an optimization over querying the chip, which is what the function
       --  Selected_Sensitivity actually does. This component should always
       --  provide the same value as that function.
       Sensitivity : Float;
+
+      Chip_Select : GPIO_Point;
+      SPIx        : access SPI_Port;
    end record;
 
    type Register_Address is new Byte;
    --  Prevent accidentally mixing addresses and data in I/O calls
+
+   procedure Write
+     (This      : in out Three_Axis_Accelerometer;
+      Value     : Byte;
+      WriteAddr : Register_Address);
+
+   procedure Read
+     (This     : in out Three_Axis_Accelerometer;
+      Value    : out Byte;
+      ReadAddr : Register_Address);
 
    ----------------------------------------------------------------------------
    --  OUT_T: Temperature Output Register

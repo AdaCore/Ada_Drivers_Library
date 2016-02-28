@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -42,7 +42,7 @@
 
 with Ada.Unchecked_Conversion;
 with System;
-with STM32F4.LIS3DSH.IO;
+with STM32F4.NVIC;
 
 package body STM32F4.LIS3DSH is
 
@@ -52,13 +52,6 @@ package body STM32F4.LIS3DSH is
    Data_Rate_Selection_Mask : constant Byte := 2#0111_0000#;
    --  bits 4..6 of CTRL4
 
-   ---------
-   -- AIO --
-   ---------
-
-   package AIO renames STM32F4.LIS3DSH.IO;
-   --  A convenient name for the accelerometer I/O package.
-
    ----------------
    -- Configured --
    ----------------
@@ -66,12 +59,19 @@ package body STM32F4.LIS3DSH is
    function Configured (This : Three_Axis_Accelerometer) return Boolean is
      (This.Device_Configured);
 
+   -----------------
+   -- Initialized --
+   -----------------
+
+   function Initialized (This : Three_Axis_Accelerometer) return Boolean is
+     (This.Device_Initialized);
+
    -----------------------
    -- Get_Accelerations --
    -----------------------
 
    procedure Get_Accelerations
-     (This : Three_Axis_Accelerometer;
+     (This : in out Three_Axis_Accelerometer;
       Axes : out Axes_Accelerations)
    is
 
@@ -89,12 +89,12 @@ package body STM32F4.LIS3DSH is
       --  sequence representing a signed Integer_16 quantity
 
    begin
-      AIO.Read (Buffer (0), OUT_X_L);
-      AIO.Read (Buffer (1), OUT_X_H);
-      AIO.Read (Buffer (2), OUT_Y_L);
-      AIO.Read (Buffer (3), OUT_Y_H);
-      AIO.Read (Buffer (4), OUT_Z_L);
-      AIO.Read (Buffer (5), OUT_Z_H);
+      Read (This, Buffer (0), OUT_X_L);
+      Read (This, Buffer (1), OUT_X_H);
+      Read (This, Buffer (2), OUT_Y_L);
+      Read (This, Buffer (3), OUT_Y_H);
+      Read (This, Buffer (4), OUT_Z_L);
+      Read (This, Buffer (5), OUT_Z_H);
 
       Get_X : declare
          Raw : Integer_16 renames As_Pointer (Buffer(0)'Address).all;
@@ -134,8 +134,6 @@ package body STM32F4.LIS3DSH is
       Temp  : Half_Word;
       Value : Byte;
    begin
-      AIO.Initialize;
-
       Temp := Output_DataRate'Enum_Rep or
               Axes_Enable'Enum_Rep     or
               SPI_Wire'Enum_Rep        or
@@ -144,10 +142,10 @@ package body STM32F4.LIS3DSH is
               Filter_BW'Enum_Rep;
 
       Value := Byte (Temp); -- the low byte of the half-word
-      AIO.Write (Value, CTRL_REG4);
+      Write (This, Value, CTRL_REG4);
 
       Value := Byte (Shift_Right (Temp, 8)); -- the high byte
-      AIO.Write (Value, CTRL_REG5);
+      Write (This, Value, CTRL_REG5);
 
       case Full_Scale is
          when Fullscale_2g =>
@@ -169,16 +167,10 @@ package body STM32F4.LIS3DSH is
    -- Device_Id --
    ---------------
 
-   function Device_Id (This : Three_Axis_Accelerometer) return Byte is
-      pragma Unreferenced (This);
+   function Device_Id (This : in out Three_Axis_Accelerometer) return Byte is
       Response : Byte;
    begin
-      AIO.Initialize;
-      -- In addition to the configuration routine, we also initialize here
-      -- because clients may call this function before doing any configuration
-      -- setup...
-
-      AIO.Read (Response, Who_Am_I);
+      Read (This, Response, Who_Am_I);
       return Response;
    end Device_Id;
 
@@ -186,19 +178,13 @@ package body STM32F4.LIS3DSH is
    -- Reboot --
    ------------
 
-   procedure Reboot (This : Three_Axis_Accelerometer) is
-      pragma Unreferenced (This);
+   procedure Reboot (This : in out Three_Axis_Accelerometer) is
       Value : Byte;
       Force_Reboot : constant Byte := 2#1000_0000#;
    begin
-      AIO.Initialize;
-      -- In addition to the configuration routine, we also initialize here
-      -- because clients may call this function before doing any configuration
-      -- setup...
-
-      AIO.Read (Value, CTRL_REG6);
+      Read (This, Value, CTRL_REG6);
       Value := Value or Force_Reboot;
-      AIO.Write (Value, CTRL_REG6);
+      Write (This, Value, CTRL_REG6);
    end Reboot;
 
    --------------------------
@@ -215,26 +201,25 @@ package body STM32F4.LIS3DSH is
       State_Machine2_Enable      : Boolean;
       State_Machine2_Interrupt   : State_Machine_Routed_Interrupt)
    is
-      pragma Unreferenced (This);
       CTRL : Byte;
    begin
       CTRL := Interrupt_Selection_Enable'Enum_Rep or
               Interrupt_Request'Enum_Rep          or
               Interrupt_Signal'Enum_Rep;
 
-      AIO.Write (CTRL, CTRL_REG3);
+      Write (This, CTRL, CTRL_REG3);
 
       --  configure State Machine 1
       CTRL := State_Machine1_Enable'Enum_Rep or
               State_Machine1_Interrupt'Enum_Rep;
 
-      AIO.Write (CTRL, CTRL_REG1);
+      Write (This, CTRL, CTRL_REG1);
 
       --  configure State Machine 2
       CTRL := State_Machine2_Enable'Enum_Rep or
               State_Machine2_Interrupt'Enum_Rep;
 
-      AIO.Write (CTRL, CTRL_REG2);
+      Write (This, CTRL, CTRL_REG2);
    end Configure_Interrupts;
 
    -------------------------------
@@ -243,7 +228,7 @@ package body STM32F4.LIS3DSH is
 
    procedure Configure_Click_Interrupt (This : in out Three_Axis_Accelerometer) is
    begin
-      AIO.Configure_Interrupt;
+      -- NB: Configure_External_Interrupt must be called first!
 
       Configure_Interrupts
         (This,
@@ -256,20 +241,20 @@ package body STM32F4.LIS3DSH is
          State_Machine2_Interrupt   => SM_Int1);
 
       --  configure state machines
-      AIO.Write (3, TIM2_1_L);
-      AIO.Write (16#C8#, TIM1_1_L);
-      AIO.Write (16#45#, THRS2_1);
-      AIO.Write (16#FC#, MASK1_A);
-      AIO.Write (16#A1#, SETT1);
-      AIO.Write (16#1#, PR1);
+      Write (This, 3, TIM2_1_L);
+      Write (This, 16#C8#, TIM1_1_L);
+      Write (This, 16#45#, THRS2_1);
+      Write (This, 16#FC#, MASK1_A);
+      Write (This, 16#A1#, SETT1);
+      Write (This, 16#1#, PR1);
 
-      AIO.Write (16#1#, SETT2);
+      Write (This, 16#1#, SETT2);
 
       --  configure State Machine 2 to detect single click
-      AIO.Write (16#1#, ST2_1);
-      AIO.Write (16#6#, ST2_2);
-      AIO.Write (16#28#, ST2_3);
-      AIO.Write (16#11#, ST2_4);
+      Write (This, 16#1#, ST2_1);
+      Write (This, 16#6#, ST2_2);
+      Write (This, 16#28#, ST2_3);
+      Write (This, 16#11#, ST2_4);
    end Configure_Click_Interrupt;
 
    -------------------
@@ -280,13 +265,12 @@ package body STM32F4.LIS3DSH is
      (This : in out Three_Axis_Accelerometer;
       Mode : Data_Rate_Power_Mode_Selection)
    is
-      pragma Unreferenced (This);
       Value : Byte;
    begin
-      AIO.Read (Value, CTRL_REG4);
+      Read (This, Value, CTRL_REG4);
       Value := Value and (not Data_Rate_Selection_Mask); -- clear bits
       Value := Value or Mode'Enum_Rep;
-      AIO.Write (Value, CTRL_REG4);
+      Write (This, Value, CTRL_REG4);
    end Set_Low_Power;
 
    -------------------
@@ -297,13 +281,12 @@ package body STM32F4.LIS3DSH is
      (This     : in out Three_Axis_Accelerometer;
       DataRate : Data_Rate_Power_Mode_Selection)
    is
-      pragma Unreferenced (This);
       Value : Byte;
    begin
-      AIO.Read (Value, CTRL_REG4);
+      Read (This, Value, CTRL_REG4);
       Value := Value and (not Data_Rate_Selection_Mask); -- clear bits
       Value := Value or DataRate'Enum_Rep;
-      AIO.Write (Value, CTRL_REG4);
+      Write (This, Value, CTRL_REG4);
    end Set_Data_Rate;
 
    --------------------
@@ -314,13 +297,12 @@ package body STM32F4.LIS3DSH is
      (This : in out Three_Axis_Accelerometer;
       Scale : Full_Scale_Selection)
    is
-      pragma Unreferenced (This);
       Value : Byte;
    begin
-      AIO.Read (Value, CTRL_REG5);
+      Read (This, Value, CTRL_REG5);
       Value := Value and (not Full_Scale_Selection_Mask); -- clear bits
       Value := Value or Scale'Enum_Rep;
-      AIO.Write (Value, CTRL_REG5);
+      Write (This, Value, CTRL_REG5);
    end Set_Full_Scale;
 
    -------------------
@@ -334,11 +316,10 @@ package body STM32F4.LIS3DSH is
    -- Selected_Sensitivity --
    --------------------------
 
-   function Selected_Sensitivity (This : Three_Axis_Accelerometer) return Float is
-      pragma Unreferenced (This);
+   function Selected_Sensitivity (This : in out Three_Axis_Accelerometer) return Float is
       CTRL5 : Byte;
    begin
-      AIO.Read (CTRL5, CTRL_REG5);
+      Read (This, CTRL5, CTRL_REG5);
       case As_Full_Scale (CTRL5 and Full_Scale_Selection_Mask) is
          when Fullscale_2g =>
             return Sensitivity_0_06mg;
@@ -357,17 +338,195 @@ package body STM32F4.LIS3DSH is
    -- Temperature --
    -----------------
 
-   function Temperature (This : Three_Axis_Accelerometer) return Byte is
-      pragma Unreferenced (This);
+   function Temperature (This : in out Three_Axis_Accelerometer) return Byte is
       Result : Byte;
    begin
-      AIO.Initialize;
-      -- In addition to the configuration routine, we also initialize here
-      -- because clients may call this function before doing any configuration
-      -- setup...
-
-      AIO.Read (Result, Out_T);
+      Read (This, Result, Out_T);
       return Result;
    end Temperature;
+
+   ReadWrite_Cmd_Bit : constant := 16#80#;
+
+   ----------------------
+   -- Chip_Select_High --
+   ----------------------
+
+   procedure Chip_Select_High (This : in out Three_Axis_Accelerometer) is
+   begin
+      GPIO.Set (This.Chip_Select);
+   end Chip_Select_High;
+
+   ---------------------
+   -- Chip_Select_Low --
+   ---------------------
+
+   procedure Chip_Select_Low (This : in out Three_Axis_Accelerometer) is
+   begin
+      GPIO.Clear (This.Chip_Select);
+   end Chip_Select_Low;
+
+   -------------------
+   -- Init_SPI_GPIO --
+   -------------------
+
+   procedure Init_SPI_GPIO
+     (Port : access GPIO_Port;
+      Pins : GPIO_Pins;
+      AF   : GPIO_Alternate_Function)
+   is
+      Config : GPIO_Port_Configuration;
+   begin
+      Config.Output_Type := Push_Pull;
+      Config.Resistors := Floating;
+      Config.Speed := Speed_50MHz;
+      Config.Mode := Mode_AF;
+
+      Configure_IO (Port.all, Pins, Config);
+      Configure_Alternate_Function (Port.all, Pins, AF);
+   end Init_SPI_GPIO;
+
+   --------------
+   -- Init_SPI --
+   --------------
+
+   procedure Init_SPI (SPIx : access SPI_Port) is
+      Config : SPI_Configuration;
+   begin
+      Config.Mode := Master;
+      Config.Baud_Rate_Prescaler := BRP_32;
+      Config.Clock_Polarity := Low;
+      Config.Clock_Phase := P1Edge;
+      Config.First_Bit := MSB;
+      Config.CRC_Poly := 7;
+      Config.Slave_Management := Software_Managed;  --  essential!!
+      Config.Direction := D2Lines_FullDuplex;
+      Config.Data_Size := Data_8;
+
+      Disable (SPIx.all);
+      Configure (SPIx.all, Config);
+      Enable (SPIx.all);
+   end Init_SPI;
+
+   ------------------------------
+   -- Init_LIS3DSH_Chip_Select --
+   ------------------------------
+
+   procedure Init_LIS3DSH_Chip_Select (Chip_Select : GPIO_Point) is
+      Config : GPIO_Port_Configuration;
+   begin
+      Config.Mode := Mode_Out;
+      Config.Output_Type := Push_Pull;
+      Config.Resistors := Pull_Up;
+      Config.Speed := Speed_25MHz;
+      Configure_IO (Chip_Select.Port.all, Chip_Select.Pin, Config);
+
+      --  Chip_Select_High;
+   end Init_LIS3DSH_Chip_Select;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize_Accelerometer
+     (This                          : out Three_Axis_Accelerometer;
+      Chip_Select                   : GPIO_Point;
+      Enable_SPIx_Chip_Select_Clock : access procedure;
+      SPIx                          : access SPI_Port;
+      SPIx_AF                       : GPIO_Alternate_Function;
+      Enable_SPIx_Clock             : access procedure;
+      SPIx_GPIO_Port                : access GPIO_Port;
+      SPIx_SCK_Pin                  : GPIO_Pin;
+      SPIx_MISO_Pin                 : GPIO_Pin;
+      SPIx_MOSI_Pin                 : GPIO_Pin;
+      Enable_SPIx_GPIO_Clock        : access procedure)
+   is
+   begin
+      if not This.Device_Initialized then
+         Enable_SPIx_Chip_Select_Clock.all;
+         Enable_SPIx_Clock.all;
+         Enable_SPIx_GPIO_Clock.all;
+
+         This.Chip_Select := Chip_Select;
+         This.SPIx := SPIx;
+
+         Init_SPI_GPIO
+           (SPIx_GPIO_Port,
+            SPIx_SCK_Pin & SPIx_MISO_Pin & SPIx_MOSI_Pin,
+            SPIx_AF);
+
+         Init_SPI (SPIx);
+         Init_LIS3DSH_Chip_Select (Chip_Select);
+
+         Chip_Select_High (This);
+
+         This.Device_Initialized := True;
+      end if;
+   end Initialize_Accelerometer;
+
+   -----------
+   -- Write --
+   -----------
+
+   procedure Write
+     (This      : in out Three_Axis_Accelerometer;
+      Value     : Byte;
+      WriteAddr : Register_Address)
+   is
+   begin
+      Chip_Select_Low (This);
+      SPI.Transmit (This.SPIx.all, Byte (WriteAddr));
+      SPI.Transmit (This.SPIx.all, Value);
+      Chip_Select_High (This);
+   end Write;
+
+   ----------
+   -- Read --
+   ----------
+
+   procedure Read
+     (This     : in out Three_Axis_Accelerometer;
+      Value    : out Byte;
+      ReadAddr : Register_Address)
+   is
+      Source : constant Register_Address := ReadAddr or ReadWrite_Cmd_Bit;
+   begin
+      Chip_Select_Low (This);
+      SPI.Transmit (This.SPIx.all, Byte (Source));
+      SPI.Receive (This.SPIx.all, Value);
+      Chip_Select_High (This);
+   end Read;
+
+   ----------------------------------
+   -- Configure_External_Interrupt --
+   ----------------------------------
+
+   procedure Configure_External_Interrupt
+     (This              : in out Three_Axis_Accelerometer;
+      Device_Interrupt  : GPIO_Point;
+      IRQ               : Interrupt_Id;
+      Edge              : EXTI.External_Triggers;
+      Enable_GPIO_Clock : access procedure)
+   is
+      pragma Unreferenced (This);
+      Config : GPIO_Port_Configuration;
+   begin
+      Enable_GPIO_Clock.all;
+
+      Config.Mode := Mode_In;
+      Config.Speed := Speed_50MHz;
+      Config.Resistors := Floating;
+
+      Configure_IO (Device_Interrupt.Port.all, Device_Interrupt.Pin, Config);
+
+      Configure_Trigger (Device_Interrupt.Port.all,
+                         Device_Interrupt.Pin,
+                         Edge);
+
+      STM32F4.NVIC.Set_Priority (IRQ,
+                                 Preempt_Priority => 16#F#,
+                                 Subpriority      => 0);
+
+      STM32F4.NVIC.Enable_Interrupt (IRQ);
+   end Configure_External_Interrupt;
 
 end STM32F4.LIS3DSH;
