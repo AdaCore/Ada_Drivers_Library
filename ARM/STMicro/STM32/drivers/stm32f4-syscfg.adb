@@ -73,11 +73,8 @@ package body STM32F4.SYSCFG is
       CR_Index := GPIO_Pin'Pos (Pin) / 4;
 
       --  Now we must find which EXTI_n value to use, of the four possible,
-      --  within the control register. We are depending on the GPIO_Port type
-      --  being an enumeration and that the enumeral order is alphabetical on
-      --  the Port letter, such that in effect GPIO_A'Pos = 0, GPIO_B'Pos = 1,
-      --  and so on.
-      EXTI_Index := GPIO_Port_Id'Pos (Port_Name) mod 4;  -- ie 0 .. 3
+      --  within the control register.
+      EXTI_Index := GPIO_Pin'Pos (Pin) mod 4;  -- ie 0 .. 3
 
       --  Finally we assign the port 'number' to the EXTI_n value within the
       --  control register. We depend upon the Port enumerals' underlying
