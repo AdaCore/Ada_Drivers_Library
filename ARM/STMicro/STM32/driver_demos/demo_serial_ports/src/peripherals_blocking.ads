@@ -29,10 +29,11 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32F4;                     use STM32F4;
-with STM32F4.GPIO;                use STM32F4.GPIO;
-with STM32F4_Discovery;           use STM32F4_Discovery;
-with STM32F4.Reset_Clock_Control; use STM32F4.Reset_Clock_Control;
+with STM32F4_Discovery;   use STM32F4_Discovery;
+
+with STM32F4;             use STM32F4;
+with STM32F4.GPIO;        use STM32F4.GPIO;
+with STM32F4.RCC;         use STM32F4.RCC;
 
 with Serial_IO.Blocking;  use Serial_IO.Blocking;
 
