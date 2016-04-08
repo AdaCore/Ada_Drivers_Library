@@ -159,8 +159,8 @@ package Bitmapped_Drawing is
       Start      : Point;
       Char       : Character;
       Font       : BMP_Font;
-      Foreground : Graphics_Color;
-      Background : Graphics_Color);
+      Foreground : Unsigned_32;
+      Background : Unsigned_32);
 
    procedure Draw_String
      (Buffer     : Graphics_Buffer;

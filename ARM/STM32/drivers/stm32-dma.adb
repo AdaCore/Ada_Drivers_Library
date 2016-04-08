@@ -52,11 +52,11 @@ package body STM32.DMA is
       --  number of data register
       NDTR : S0NDTR_Register;
       --  peripheral address register
-      PAR  : STM32_SVD.Word;
+      PAR  : Word;
       --  memory 0 address register
-      M0AR : STM32_SVD.Word;
+      M0AR : Word;
       --  memory 1 address register
-      M1AR : STM32_SVD.Word;
+      M1AR : Word;
       --  FIFO control register
       FCR  : S0FCR_Register;
    end record with Volatile;
@@ -126,7 +126,7 @@ package body STM32.DMA is
       Stream : DMA_Stream_Selector)
    is
    begin
-      Get_Stream (Unit, Stream).CR.EN := 1;
+      Get_Stream (Unit, Stream).CR.EN := True;
    end Enable;
 
    -------------
@@ -139,7 +139,7 @@ package body STM32.DMA is
       return Boolean
    is
    begin
-      return Get_Stream (Unit, Stream).CR.EN = 1;
+      return Get_Stream (Unit, Stream).CR.EN;
    end Enabled;
 
    -------------
@@ -151,7 +151,7 @@ package body STM32.DMA is
       Stream : DMA_Stream_Selector)
    is
    begin
-      Get_Stream (Unit, Stream).CR.EN := 0;
+      Get_Stream (Unit, Stream).CR.EN := False;
       -- the STMicro Reference Manual RM0090, Doc Id 018909 Rev 6, pg 319, step
       -- 1 says we must await the bit actually clearing, to confirm no ongoing
       -- operation remains active
@@ -172,15 +172,15 @@ package body STM32.DMA is
    begin
       case Source is
          when Direct_Mode_Error_Interrupt =>
-            This_Stream.CR.DMEIE := Boolean'Enum_Rep (Value);
+            This_Stream.CR.DMEIE := Value;
          when Transfer_Error_Interrupt =>
-            This_Stream.CR.TEIE := Boolean'Enum_Rep (Value);
+            This_Stream.CR.TEIE := Value;
          when Half_Transfer_Complete_Interrupt =>
-            This_Stream.CR.HTIE := Boolean'Enum_Rep (Value);
+            This_Stream.CR.HTIE := Value;
          when Transfer_Complete_Interrupt =>
-            This_Stream.CR.TCIE := Boolean'Enum_Rep (Value);
+            This_Stream.CR.TCIE := Value;
          when FIFO_Error_Interrupt =>
-            This_Stream.FCR.FEIE := Boolean'Enum_Rep (Value);
+            This_Stream.FCR.FEIE := Value;
       end case;
    end Set_Interrupt_Enabler;
 
@@ -228,15 +228,15 @@ package body STM32.DMA is
    begin
       case Source is
          when Direct_Mode_Error_Interrupt =>
-            Result := This_Stream.CR.DMEIE = 1;
+            Result := This_Stream.CR.DMEIE;
          when Transfer_Error_Interrupt =>
-            Result := This_Stream.CR.TEIE = 1;
+            Result := This_Stream.CR.TEIE;
          when Half_Transfer_Complete_Interrupt =>
-            Result := This_Stream.CR.HTIE = 1;
+            Result := This_Stream.CR.HTIE;
          when Transfer_Complete_Interrupt =>
-            Result := This_Stream.CR.TCIE = 1;
+            Result := This_Stream.CR.TCIE;
          when FIFO_Error_Interrupt =>
-            Result := This_Stream.FCR.FEIE = 1;
+            Result := This_Stream.FCR.FEIE;
       end case;
       return Result;
    end Interrupt_Enabled;
@@ -250,7 +250,7 @@ package body STM32.DMA is
       Stream      : DMA_Stream_Selector;
       Source      : Address;
       Destination : Address;
-      Data_Count  : Half_Word)
+      Data_Count  : Short)
    is
    begin
       Disable (Unit, Stream);  --  per the RM, eg section 10.5.6 for the NDTR
@@ -274,7 +274,7 @@ package body STM32.DMA is
       Stream             : DMA_Stream_Selector;
       Source             : Address;
       Destination        : Address;
-      Data_Count         : Half_Word;
+      Data_Count         : Short;
       Enabled_Interrupts : Interrupt_Selections := (others => True))
    is
    begin
@@ -305,7 +305,7 @@ package body STM32.DMA is
       Stream      : DMA_Stream_Selector;
       Source      : Address;
       Destination : Address;
-      Data_Count  : Half_Word)
+      Data_Count  : Short)
    is
       This_Stream : DMA_Stream renames Get_Stream (Unit, Stream);
       function W is new Ada.Unchecked_Conversion
@@ -338,7 +338,7 @@ package body STM32.DMA is
       Disable (Unit, Stream);
       Timeout := Clock + Max_Abort_Time;
       loop
-         exit when This_Stream.CR.EN = 0;
+         exit when not This_Stream.CR.EN;
          if Clock > Timeout then
             Result := DMA_Timeout_Error;
             return;
@@ -410,113 +410,113 @@ package body STM32.DMA is
          when Stream_0 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  Unit.LIFCR.CFEIF0 := 1;
+                  Unit.LIFCR.CFEIF0 := True;
                when Direct_Mode_Error_Indicated =>
-                  Unit.LIFCR.CDMEIF0 := 1;
+                  Unit.LIFCR.CDMEIF0 := True;
                when Transfer_Error_Indicated =>
-                  Unit.LIFCR.CTEIF0 := 1;
+                  Unit.LIFCR.CTEIF0 := True;
                when Half_Transfer_Complete_Indicated =>
-                  Unit.LIFCR.CHTIF0 := 1;
+                  Unit.LIFCR.CHTIF0 := True;
                when Transfer_Complete_Indicated =>
-                  Unit.LIFCR.CTCIF0 := 1;
+                  Unit.LIFCR.CTCIF0 := True;
             end case;
 
          when Stream_1 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  Unit.LIFCR.CFEIF1 := 1;
+                  Unit.LIFCR.CFEIF1 := True;
                when Direct_Mode_Error_Indicated =>
-                  Unit.LIFCR.CDMEIF1 := 1;
+                  Unit.LIFCR.CDMEIF1 := True;
                when Transfer_Error_Indicated =>
-                  Unit.LIFCR.CTEIF1 := 1;
+                  Unit.LIFCR.CTEIF1 := True;
                when Half_Transfer_Complete_Indicated =>
-                  Unit.LIFCR.CHTIF1 := 1;
+                  Unit.LIFCR.CHTIF1 := True;
                when Transfer_Complete_Indicated =>
-                  Unit.LIFCR.CTCIF1 := 1;
+                  Unit.LIFCR.CTCIF1 := True;
             end case;
 
          when Stream_2 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  Unit.LIFCR.CFEIF2 := 1;
+                  Unit.LIFCR.CFEIF2 := True;
                when Direct_Mode_Error_Indicated =>
-                  Unit.LIFCR.CDMEIF2 := 1;
+                  Unit.LIFCR.CDMEIF2 := True;
                when Transfer_Error_Indicated =>
-                  Unit.LIFCR.CTEIF2 := 1;
+                  Unit.LIFCR.CTEIF2 := True;
                when Half_Transfer_Complete_Indicated =>
-                  Unit.LIFCR.CHTIF2 := 1;
+                  Unit.LIFCR.CHTIF2 := True;
                when Transfer_Complete_Indicated =>
-                  Unit.LIFCR.CTCIF2 := 1;
+                  Unit.LIFCR.CTCIF2 := True;
             end case;
 
          when Stream_3 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  Unit.LIFCR.CFEIF3 := 1;
+                  Unit.LIFCR.CFEIF3 := True;
                when Direct_Mode_Error_Indicated =>
-                  Unit.LIFCR.CDMEIF3 := 1;
+                  Unit.LIFCR.CDMEIF3 := True;
                when Transfer_Error_Indicated =>
-                  Unit.LIFCR.CTEIF3 := 1;
+                  Unit.LIFCR.CTEIF3 := True;
                when Half_Transfer_Complete_Indicated =>
-                  Unit.LIFCR.CHTIF3 := 1;
+                  Unit.LIFCR.CHTIF3 := True;
                when Transfer_Complete_Indicated =>
-                  Unit.LIFCR.CTCIF3 := 1;
+                  Unit.LIFCR.CTCIF3 := True;
             end case;
 
          when Stream_4 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  Unit.HIFCR.CFEIF4 := 1;
+                  Unit.HIFCR.CFEIF4 := True;
                when Direct_Mode_Error_Indicated =>
-                  Unit.HIFCR.CDMEIF4 := 1;
+                  Unit.HIFCR.CDMEIF4 := True;
                when Transfer_Error_Indicated =>
-                  Unit.HIFCR.CTEIF4 := 1;
+                  Unit.HIFCR.CTEIF4 := True;
                when Half_Transfer_Complete_Indicated =>
-                  Unit.HIFCR.CHTIF4 := 1;
+                  Unit.HIFCR.CHTIF4 := True;
                when Transfer_Complete_Indicated =>
-                  Unit.HIFCR.CTCIF4 := 1;
+                  Unit.HIFCR.CTCIF4 := True;
             end case;
 
          when Stream_5 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  Unit.HIFCR.CFEIF5 := 1;
+                  Unit.HIFCR.CFEIF5 := True;
                when Direct_Mode_Error_Indicated =>
-                  Unit.HIFCR.CDMEIF5 := 1;
+                  Unit.HIFCR.CDMEIF5 := True;
                when Transfer_Error_Indicated =>
-                  Unit.HIFCR.CTEIF5 := 1;
+                  Unit.HIFCR.CTEIF5 := True;
                when Half_Transfer_Complete_Indicated =>
-                  Unit.HIFCR.CHTIF5 := 1;
+                  Unit.HIFCR.CHTIF5 := True;
                when Transfer_Complete_Indicated =>
-                  Unit.HIFCR.CTCIF5 := 1;
+                  Unit.HIFCR.CTCIF5 := True;
             end case;
 
          when Stream_6 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  Unit.HIFCR.CFEIF6 := 1;
+                  Unit.HIFCR.CFEIF6 := True;
                when Direct_Mode_Error_Indicated =>
-                  Unit.HIFCR.CDMEIF6 := 1;
+                  Unit.HIFCR.CDMEIF6 := True;
                when Transfer_Error_Indicated =>
-                  Unit.HIFCR.CTEIF6 := 1;
+                  Unit.HIFCR.CTEIF6 := True;
                when Half_Transfer_Complete_Indicated =>
-                  Unit.HIFCR.CHTIF6 := 1;
+                  Unit.HIFCR.CHTIF6 := True;
                when Transfer_Complete_Indicated =>
-                  Unit.HIFCR.CTCIF6 := 1;
+                  Unit.HIFCR.CTCIF6 := True;
             end case;
 
          when Stream_7 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  Unit.HIFCR.CFEIF7 := 1;
+                  Unit.HIFCR.CFEIF7 := True;
                when Direct_Mode_Error_Indicated =>
-                  Unit.HIFCR.CDMEIF7 := 1;
+                  Unit.HIFCR.CDMEIF7 := True;
                when Transfer_Error_Indicated =>
-                  Unit.HIFCR.CTEIF7 := 1;
+                  Unit.HIFCR.CTEIF7 := True;
                when Half_Transfer_Complete_Indicated =>
-                  Unit.HIFCR.CHTIF7 := 1;
+                  Unit.HIFCR.CHTIF7 := True;
                when Transfer_Complete_Indicated =>
-                  Unit.HIFCR.CTCIF7 := 1;
+                  Unit.HIFCR.CTCIF7 := True;
             end case;
       end case;
    end Clear_Status;
@@ -532,60 +532,60 @@ package body STM32.DMA is
    begin
       case Stream is
          when Stream_0 =>
-            Unit.LIFCR.CFEIF0 := 1;
-            Unit.LIFCR.CDMEIF0 := 1;
-            Unit.LIFCR.CTEIF0 := 1;
-            Unit.LIFCR.CHTIF0 := 1;
-            Unit.LIFCR.CTCIF0 := 1;
+            Unit.LIFCR.CFEIF0 := True;
+            Unit.LIFCR.CDMEIF0 := True;
+            Unit.LIFCR.CTEIF0 := True;
+            Unit.LIFCR.CHTIF0 := True;
+            Unit.LIFCR.CTCIF0 := True;
 
          when Stream_1 =>
-            Unit.LIFCR.CFEIF1 := 1;
-            Unit.LIFCR.CDMEIF1 := 1;
-            Unit.LIFCR.CTEIF1 := 1;
-            Unit.LIFCR.CHTIF1 := 1;
-            Unit.LIFCR.CTCIF1 := 1;
+            Unit.LIFCR.CFEIF1 := True;
+            Unit.LIFCR.CDMEIF1 := True;
+            Unit.LIFCR.CTEIF1 := True;
+            Unit.LIFCR.CHTIF1 := True;
+            Unit.LIFCR.CTCIF1 := True;
 
          when Stream_2 =>
-            Unit.LIFCR.CFEIF2 := 1;
-            Unit.LIFCR.CDMEIF2 := 1;
-            Unit.LIFCR.CTEIF2 := 1;
-            Unit.LIFCR.CHTIF2 := 1;
-            Unit.LIFCR.CTCIF2 := 1;
+            Unit.LIFCR.CFEIF2 := True;
+            Unit.LIFCR.CDMEIF2 := True;
+            Unit.LIFCR.CTEIF2 := True;
+            Unit.LIFCR.CHTIF2 := True;
+            Unit.LIFCR.CTCIF2 := True;
 
          when Stream_3 =>
-            Unit.LIFCR.CFEIF3 := 1;
-            Unit.LIFCR.CDMEIF3 := 1;
-            Unit.LIFCR.CTEIF3 := 1;
-            Unit.LIFCR.CHTIF3 := 1;
-            Unit.LIFCR.CTCIF3 := 1;
+            Unit.LIFCR.CFEIF3 := True;
+            Unit.LIFCR.CDMEIF3 := True;
+            Unit.LIFCR.CTEIF3 := True;
+            Unit.LIFCR.CHTIF3 := True;
+            Unit.LIFCR.CTCIF3 := True;
 
          when Stream_4 =>
-            Unit.HIFCR.CFEIF4 := 1;
-            Unit.HIFCR.CDMEIF4 := 1;
-            Unit.HIFCR.CTEIF4 := 1;
-            Unit.HIFCR.CHTIF4 := 1;
-            Unit.HIFCR.CTCIF4 := 1;
+            Unit.HIFCR.CFEIF4 := True;
+            Unit.HIFCR.CDMEIF4 := True;
+            Unit.HIFCR.CTEIF4 := True;
+            Unit.HIFCR.CHTIF4 := True;
+            Unit.HIFCR.CTCIF4 := True;
 
          when Stream_5 =>
-            Unit.HIFCR.CFEIF5 := 1;
-            Unit.HIFCR.CDMEIF5 := 1;
-            Unit.HIFCR.CTEIF5 := 1;
-            Unit.HIFCR.CHTIF5 := 1;
-            Unit.HIFCR.CTCIF5 := 1;
+            Unit.HIFCR.CFEIF5 := True;
+            Unit.HIFCR.CDMEIF5 := True;
+            Unit.HIFCR.CTEIF5 := True;
+            Unit.HIFCR.CHTIF5 := True;
+            Unit.HIFCR.CTCIF5 := True;
 
          when Stream_6 =>
-            Unit.HIFCR.CFEIF6 := 1;
-            Unit.HIFCR.CDMEIF6 := 1;
-            Unit.HIFCR.CTEIF6 := 1;
-            Unit.HIFCR.CHTIF6 := 1;
-            Unit.HIFCR.CTCIF6 := 1;
+            Unit.HIFCR.CFEIF6 := True;
+            Unit.HIFCR.CDMEIF6 := True;
+            Unit.HIFCR.CTEIF6 := True;
+            Unit.HIFCR.CHTIF6 := True;
+            Unit.HIFCR.CTCIF6 := True;
 
          when Stream_7 =>
-            Unit.HIFCR.CFEIF7 := 1;
-            Unit.HIFCR.CDMEIF7 := 1;
-            Unit.HIFCR.CTEIF7 := 1;
-            Unit.HIFCR.CHTIF7 := 1;
-            Unit.HIFCR.CTCIF7 := 1;
+            Unit.HIFCR.CFEIF7 := True;
+            Unit.HIFCR.CDMEIF7 := True;
+            Unit.HIFCR.CTEIF7 := True;
+            Unit.HIFCR.CHTIF7 := True;
+            Unit.HIFCR.CTCIF7 := True;
       end case;
    end Clear_All_Status;
 
@@ -604,113 +604,113 @@ package body STM32.DMA is
          when Stream_0 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  return Unit.LISR.FEIF0 = 1;
+                  return Unit.LISR.FEIF0;
                when Direct_Mode_Error_Indicated =>
-                  return Unit.LISR.DMEIF0 = 1;
+                  return Unit.LISR.DMEIF0;
                when Transfer_Error_Indicated =>
-                  return Unit.LISR.TEIF0 = 1;
+                  return Unit.LISR.TEIF0;
                when Half_Transfer_Complete_Indicated =>
-                  return Unit.LISR.HTIF0 = 1;
+                  return Unit.LISR.HTIF0;
                when Transfer_Complete_Indicated =>
-                  return Unit.LISR.TCIF0 = 1;
+                  return Unit.LISR.TCIF0;
             end case;
 
          when Stream_1 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  return Unit.LISR.FEIF1 = 1;
+                  return Unit.LISR.FEIF1;
                when Direct_Mode_Error_Indicated =>
-                  return Unit.LISR.DMEIF1 = 1;
+                  return Unit.LISR.DMEIF1;
                when Transfer_Error_Indicated =>
-                  return Unit.LISR.TEIF1 = 1;
+                  return Unit.LISR.TEIF1;
                when Half_Transfer_Complete_Indicated =>
-                  return Unit.LISR.HTIF1 = 1;
+                  return Unit.LISR.HTIF1;
                when Transfer_Complete_Indicated =>
-                  return Unit.LISR.TCIF1 = 1;
+                  return Unit.LISR.TCIF1;
             end case;
 
          when Stream_2 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  return Unit.LISR.FEIF2 = 1;
+                  return Unit.LISR.FEIF2;
                when Direct_Mode_Error_Indicated =>
-                  return Unit.LISR.DMEIF2 = 1;
+                  return Unit.LISR.DMEIF2;
                when Transfer_Error_Indicated =>
-                  return Unit.LISR.TEIF2 = 1;
+                  return Unit.LISR.TEIF2;
                when Half_Transfer_Complete_Indicated =>
-                  return Unit.LISR.HTIF2 = 1;
+                  return Unit.LISR.HTIF2;
                when Transfer_Complete_Indicated =>
-                  return Unit.LISR.TCIF2 = 1;
+                  return Unit.LISR.TCIF2;
             end case;
 
          when Stream_3 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  return Unit.LISR.FEIF3 = 1;
+                  return Unit.LISR.FEIF3;
                when Direct_Mode_Error_Indicated =>
-                  return Unit.LISR.DMEIF3 = 1;
+                  return Unit.LISR.DMEIF3;
                when Transfer_Error_Indicated =>
-                  return Unit.LISR.TEIF3 = 1;
+                  return Unit.LISR.TEIF3;
                when Half_Transfer_Complete_Indicated =>
-                  return Unit.LISR.HTIF3 = 1;
+                  return Unit.LISR.HTIF3;
                when Transfer_Complete_Indicated =>
-                  return Unit.LISR.TCIF3 = 1;
+                  return Unit.LISR.TCIF3;
             end case;
 
          when Stream_4 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  return Unit.HISR.FEIF4 = 1;
+                  return Unit.HISR.FEIF4;
                when Direct_Mode_Error_Indicated =>
-                  return Unit.HISR.DMEIF4 = 1;
+                  return Unit.HISR.DMEIF4;
                when Transfer_Error_Indicated =>
-                  return Unit.HISR.TEIF4 = 1;
+                  return Unit.HISR.TEIF4;
                when Half_Transfer_Complete_Indicated =>
-                  return Unit.HISR.HTIF4 = 1;
+                  return Unit.HISR.HTIF4;
                when Transfer_Complete_Indicated =>
-                  return Unit.HISR.TCIF4 = 1;
+                  return Unit.HISR.TCIF4;
             end case;
 
          when Stream_5 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  return Unit.HISR.FEIF5 = 1;
+                  return Unit.HISR.FEIF5;
                when Direct_Mode_Error_Indicated =>
-                  return Unit.HISR.DMEIF5 = 1;
+                  return Unit.HISR.DMEIF5;
                when Transfer_Error_Indicated =>
-                  return Unit.HISR.TEIF5 = 1;
+                  return Unit.HISR.TEIF5;
                when Half_Transfer_Complete_Indicated =>
-                  return Unit.HISR.HTIF5 = 1;
+                  return Unit.HISR.HTIF5;
                when Transfer_Complete_Indicated =>
-                  return Unit.HISR.TCIF5 = 1;
+                  return Unit.HISR.TCIF5;
             end case;
 
          when Stream_6 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  return Unit.HISR.FEIF6 = 1;
+                  return Unit.HISR.FEIF6;
                when Direct_Mode_Error_Indicated =>
-                  return Unit.HISR.DMEIF6 = 1;
+                  return Unit.HISR.DMEIF6;
                when Transfer_Error_Indicated =>
-                  return Unit.HISR.TEIF6 = 1;
+                  return Unit.HISR.TEIF6;
                when Half_Transfer_Complete_Indicated =>
-                  return Unit.HISR.HTIF6 = 1;
+                  return Unit.HISR.HTIF6;
                when Transfer_Complete_Indicated =>
-                  return Unit.HISR.TCIF6 = 1;
+                  return Unit.HISR.TCIF6;
             end case;
 
          when Stream_7 =>
             case Flag is
                when FIFO_Error_Indicated =>
-                  return Unit.HISR.FEIF7 = 1;
+                  return Unit.HISR.FEIF7;
                when Direct_Mode_Error_Indicated =>
-                  return Unit.HISR.DMEIF7 = 1;
+                  return Unit.HISR.DMEIF7;
                when Transfer_Error_Indicated =>
-                  return Unit.HISR.TEIF7 = 1;
+                  return Unit.HISR.TEIF7;
                when Half_Transfer_Complete_Indicated =>
-                  return Unit.HISR.HTIF7 = 1;
+                  return Unit.HISR.HTIF7;
                when Transfer_Complete_Indicated =>
-                  return Unit.HISR.TCIF7 = 1;
+                  return Unit.HISR.TCIF7;
             end case;
       end case;
    end Status;
@@ -722,7 +722,7 @@ package body STM32.DMA is
    procedure Set_Counter
      (Unit       : DMA_Controller;
       Stream     : DMA_Stream_Selector;
-      Data_Count : Half_Word)
+      Data_Count : Short)
    is
       This_Stream : DMA_Stream renames Get_Stream (Unit, Stream);
    begin
@@ -736,7 +736,7 @@ package body STM32.DMA is
    function Current_Counter
      (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector)
-      return Half_Word
+      return Short
    is
       This_Stream : DMA_Stream renames Get_Stream (Unit, Stream);
    begin
@@ -753,7 +753,7 @@ package body STM32.DMA is
       return Boolean
    is
    begin
-      return Get_Stream (Unit, Stream).CR.DBM = 1;
+      return Get_Stream (Unit, Stream).CR.DBM;
    end Double_Buffered;
 
    -------------------
@@ -766,7 +766,7 @@ package body STM32.DMA is
       return Boolean
    is
    begin
-      return Get_Stream (Unit, Stream).CR.CIRC = 1;
+      return Get_Stream (Unit, Stream).CR.CIRC;
    end Circular_Mode;
 
    ---------------
@@ -785,16 +785,14 @@ package body STM32.DMA is
       -- we must disable the stream before configuring it
       Disable (Unit, Stream);
 
-      This_Stream.CR.CT := Memory_Buffer_0'Enum_Rep;
+      This_Stream.CR.CT := False; --  Memory_Buffer_0'Enum_Rep;
 
       This_Stream.CR.CHSEL :=
         DMA_Channel_Selector'Enum_Rep (Config.Channel);
       This_Stream.CR.DIR :=
         DMA_Data_Transfer_Direction'Enum_Rep (Config.Direction);
-      This_Stream.CR.PINC :=
-        Boolean'Enum_Rep (Config.Increment_Peripheral_Address);
-      This_Stream.CR.MINC :=
-        Boolean'Enum_Rep (Config.Increment_Memory_Address);
+      This_Stream.CR.PINC := Config.Increment_Peripheral_Address;
+      This_Stream.CR.MINC := Config.Increment_Memory_Address;
       This_Stream.CR.PSIZE :=
         DMA_Data_Transfer_Widths'Enum_Rep (Config.Peripheral_Data_Format);
       This_Stream.CR.MSIZE :=
@@ -804,14 +802,14 @@ package body STM32.DMA is
 
       case Config.Operation_Mode is
          when Normal_Mode =>
-            This_Stream.CR.PFCTRL := 0;
-            This_Stream.CR.CIRC := 0;
+            This_Stream.CR.PFCTRL := False;
+            This_Stream.CR.CIRC   := False;
          when Peripheral_Flow_Control_Mode =>
-            This_Stream.CR.PFCTRL := 1;
-            This_Stream.CR.CIRC := 0;
+            This_Stream.CR.PFCTRL := True;
+            This_Stream.CR.CIRC   := False;
          when Circular_Mode =>
-            This_Stream.CR.PFCTRL := 0;
-            This_Stream.CR.CIRC := 1;
+            This_Stream.CR.PFCTRL := False;
+            This_Stream.CR.CIRC   := True;
       end case;
 
       --  the memory burst and peripheral burst values are only used when
@@ -826,7 +824,7 @@ package body STM32.DMA is
          This_Stream.CR.PBURST := Peripheral_Burst_Single'Enum_Rep;
       end if;
 
-      This_Stream.FCR.DMDIS := (if Config.FIFO_Enabled then 0 else 1);
+      This_Stream.FCR.DMDIS := not Config.FIFO_Enabled;
 
       if Config.FIFO_Enabled then
          This_Stream.FCR.FTH :=
@@ -907,9 +905,9 @@ package body STM32.DMA is
       return DMA_Mode
    is
    begin
-      if Get_Stream (Unit, Stream).CR.PFCTRL = 1 then
+      if Get_Stream (Unit, Stream).CR.PFCTRL then
          return Peripheral_Flow_Control_Mode;
-      elsif Get_Stream (Unit, Stream).CR.CIRC = 1 then
+      elsif Get_Stream (Unit, Stream).CR.CIRC then
          return Circular_Mode;
       end if;
       return Normal_Mode;
@@ -936,7 +934,10 @@ package body STM32.DMA is
       return Memory_Buffer_Target
    is
    begin
-      return Memory_Buffer_Target'Val (Get_Stream (Unit, Stream).CR.CT);
+      return (if Get_Stream (Unit, Stream).CR.CT
+              then Memory_Buffer_1
+              else Memory_Buffer_0);
+--        return Memory_Buffer_Target'Val (Get_Stream (Unit, Stream).CR.CT);
    end Current_Memory_Buffer;
 
    -----------------------
@@ -971,8 +972,8 @@ package body STM32.DMA is
       Buffer : Memory_Buffer_Target)
    is
    begin
-      Get_Stream (Unit, Stream).CR.CT :=
-        Memory_Buffer_Target'Enum_Rep (Buffer);
+      Get_Stream (Unit, Stream).CR.CT := Buffer = Memory_Buffer_1;
+--          Memory_Buffer_Target'Enum_Rep (Buffer);
    end Select_Current_Memory_Buffer;
 
    ------------------------------------
@@ -1001,7 +1002,7 @@ package body STM32.DMA is
       Stream : DMA_Stream_Selector)
    is
    begin
-      Get_Stream (Unit, Stream).CR.DBM := 1;
+      Get_Stream (Unit, Stream).CR.DBM := True;
    end Enable_Double_Buffered_Mode;
 
    ----------------------------------
@@ -1013,7 +1014,7 @@ package body STM32.DMA is
       Stream : DMA_Stream_Selector)
    is
    begin
-      Get_Stream (Unit, Stream).CR.DBM := 0;
+      Get_Stream (Unit, Stream).CR.DBM := False;
    end Disable_Double_Buffered_Mode;
 
    ----------------------

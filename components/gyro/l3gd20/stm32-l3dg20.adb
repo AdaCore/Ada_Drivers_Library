@@ -41,6 +41,7 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with System; use System;
 with Ada.Unchecked_Conversion;
 
 with STM32.EXTI;    use STM32.EXTI;
@@ -1024,9 +1025,9 @@ package body STM32.L3DG20 is
    -----------
 
    procedure Swap2 (Location : System.Address) is
-      X : Half_Word;
+      X : Short;
       for X'Address use Location;
-      function Bswap_16 (X : Half_Word) return Half_Word;
+      function Bswap_16 (X : Short) return Short;
       pragma Import (Intrinsic, Bswap_16, "__builtin_bswap16");
    begin
       X := Bswap_16 (X);

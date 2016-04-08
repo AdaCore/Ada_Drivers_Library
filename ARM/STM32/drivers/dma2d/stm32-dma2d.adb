@@ -101,8 +101,8 @@ package body STM32.DMA2D is
 
    procedure DMA2D_DeInit is
    begin
-      RCC_Periph.AHB1ENR.DMA2DEN := 1;
-      RCC_Periph.AHB1ENR.DMA2DEN := 0;
+      RCC_Periph.AHB1ENR.DMA2DEN := True;
+      RCC_Periph.AHB1ENR.DMA2DEN := False;
       DMA2D_Init_Transfer_Int := null;
       DMA2D_Wait_Transfer_Int := null;
    end DMA2D_DeInit;
@@ -122,9 +122,9 @@ package body STM32.DMA2D is
       DMA2D_Init_Transfer_Int := Init;
       DMA2D_Wait_Transfer_Int := Wait;
 
-      RCC_Periph.AHB1ENR.DMA2DEN := 1;
-      RCC_Periph.AHB1RSTR.DMA2RST := 1;
-      RCC_Periph.AHB1RSTR.DMA2RST := 0;
+      RCC_Periph.AHB1ENR.DMA2DEN := True;
+      RCC_Periph.AHB1RSTR.DMA2DRST := True;
+      RCC_Periph.AHB1RSTR.DMA2DRST := False;
    end DMA2D_Init;
 
    ----------------
@@ -331,10 +331,10 @@ package body STM32.DMA2D is
            DMA2D_COlor_mode'Enum_Rep (Bg_Buffer.Color_Mode);
          DMA2D_Periph.BGMAR         := To_Word (Bg_Buffer.Addr + Bg_Off);
          DMA2D_Periph.BGPFCCR.CS    := 0;
-         DMA2D_Periph.BGPFCCR.START := DMA2D_START'Enum_Rep (Not_Started);
+         DMA2D_Periph.BGPFCCR.START := False;
          DMA2D_Periph.BGOR          :=
            (LO => UInt14 (Bg_Buffer.Width - Width), others => <>);
-         DMA2D_Periph.BGPFCCR.CCM   := 0; -- ARGB888
+         DMA2D_Periph.BGPFCCR.CCM   := False; -- Disable CLUT color mode
       end if;
 
       --  DST CONFIGURATION
@@ -569,19 +569,19 @@ package body STM32.DMA2D is
       DMA2D_Periph.FGPFCCR.AM    := DMA2D_AM'Enum_Rep (NO_MODIF);
       DMA2D_Periph.FGPFCCR.ALPHA := 255;
       DMA2D_Periph.FGPFCCR.CS    := 0;
-      DMA2D_Periph.FGPFCCR.START := DMA2D_START'Enum_Rep (Not_Started);
+      DMA2D_Periph.FGPFCCR.START := False;
       DMA2D_Periph.FGOR          := (LO => 0, others => <>);
-      DMA2D_Periph.FGPFCCR.CCM   := Pixel_Fmt_ARGB8888'Enum_Rep;
+      DMA2D_Periph.FGPFCCR.CCM   := False; --  Disable CLUT color mode
 
       --  Setup the Background buffer to the destination buffer
       DMA2D_Periph.BGPFCCR.CM    :=
         DMA2D_COlor_mode'Enum_Rep (Buffer.Color_Mode);
       DMA2D_Periph.BGMAR         := To_Word (Buffer.Addr + Off);
       DMA2D_Periph.BGPFCCR.CS    := 0;
-      DMA2D_Periph.BGPFCCR.START := DMA2D_START'Enum_Rep (Not_Started);
+      DMA2D_Periph.BGPFCCR.START := False;
       DMA2D_Periph.BGOR          := (LO     => UInt14 (Buffer.Width - 1),
                                      others => <>);
-      DMA2D_Periph.BGPFCCR.CCM   := 0; -- ARGB888
+      DMA2D_Periph.BGPFCCR.CCM   := False; --  Disable CLUT color mode
 
       --  DST CONFIGURATION
       DMA2D_Periph.OPFCCR.CM  :=

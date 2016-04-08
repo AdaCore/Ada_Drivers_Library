@@ -1,13 +1,13 @@
---  Automatically generated from STM32F7x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F7x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.HASH is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,47 +17,39 @@ package STM32_SVD.HASH is
    -- CR_Register --
    -----------------
 
-   subtype CR_INIT_Field is STM32_SVD.Bit;
-   subtype CR_DMAE_Field is STM32_SVD.Bit;
-   subtype CR_DATATYPE_Field is STM32_SVD.UInt2;
-   subtype CR_MODE_Field is STM32_SVD.Bit;
-   subtype CR_ALGO0_Field is STM32_SVD.Bit;
-   subtype CR_NBW_Field is STM32_SVD.UInt4;
-   subtype CR_DINNE_Field is STM32_SVD.Bit;
-   subtype CR_MDMAT_Field is STM32_SVD.Bit;
-   subtype CR_LKEY_Field is STM32_SVD.Bit;
-   subtype CR_ALGO1_Field is STM32_SVD.Bit;
+   subtype CR_DATATYPE_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_NBW_Field is Interfaces.Bit_Types.UInt4;
 
    --  control register
    type CR_Register is record
       --  unspecified
-      Reserved_0_1   : STM32_SVD.UInt2 := 16#0#;
-      --  Initialize message digest calculation
-      INIT           : CR_INIT_Field := 16#0#;
+      Reserved_0_1   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      --  Write-only. Initialize message digest calculation
+      INIT           : Boolean := False;
       --  DMA enable
-      DMAE           : CR_DMAE_Field := 16#0#;
+      DMAE           : Boolean := False;
       --  Data type selection
       DATATYPE       : CR_DATATYPE_Field := 16#0#;
       --  Mode selection
-      MODE           : CR_MODE_Field := 16#0#;
+      MODE           : Boolean := False;
       --  Algorithm selection
-      ALGO0          : CR_ALGO0_Field := 16#0#;
-      --  Number of words already pushed
+      ALGO0          : Boolean := False;
+      --  Read-only. Number of words already pushed
       NBW            : CR_NBW_Field := 16#0#;
-      --  DIN not empty
-      DINNE          : CR_DINNE_Field := 16#0#;
+      --  Read-only. DIN not empty
+      DINNE          : Boolean := False;
       --  Multiple DMA Transfers
-      MDMAT          : CR_MDMAT_Field := 16#0#;
+      MDMAT          : Boolean := False;
       --  unspecified
-      Reserved_14_15 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_14_15 : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  Long key selection
-      LKEY           : CR_LKEY_Field := 16#0#;
+      LKEY           : Boolean := False;
       --  unspecified
-      Reserved_17_17 : STM32_SVD.Bit := 16#0#;
+      Reserved_17_17 : Interfaces.Bit_Types.Bit := 16#0#;
       --  ALGO
-      ALGO1          : CR_ALGO1_Field := 16#0#;
+      ALGO1          : Boolean := False;
       --  unspecified
-      Reserved_19_31 : STM32_SVD.UInt13 := 16#0#;
+      Reserved_19_31 : Interfaces.Bit_Types.UInt13 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -83,19 +75,18 @@ package STM32_SVD.HASH is
    -- STR_Register --
    ------------------
 
-   subtype STR_NBLW_Field is STM32_SVD.UInt5;
-   subtype STR_DCAL_Field is STM32_SVD.Bit;
+   subtype STR_NBLW_Field is Interfaces.Bit_Types.UInt5;
 
    --  start register
    type STR_Register is record
       --  Number of valid bits in the last word of the message
       NBLW          : STR_NBLW_Field := 16#0#;
       --  unspecified
-      Reserved_5_7  : STM32_SVD.UInt3 := 16#0#;
-      --  Digest calculation
-      DCAL          : STR_DCAL_Field := 16#0#;
+      Reserved_5_7  : Interfaces.Bit_Types.UInt3 := 16#0#;
+      --  Write-only. Digest calculation
+      DCAL          : Boolean := False;
       --  unspecified
-      Reserved_9_31 : STM32_SVD.UInt23 := 16#0#;
+      Reserved_9_31 : Interfaces.Bit_Types.UInt23 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -111,17 +102,14 @@ package STM32_SVD.HASH is
    -- IMR_Register --
    ------------------
 
-   subtype IMR_DINIE_Field is STM32_SVD.Bit;
-   subtype IMR_DCIE_Field is STM32_SVD.Bit;
-
    --  interrupt enable register
    type IMR_Register is record
       --  Data input interrupt enable
-      DINIE         : IMR_DINIE_Field := 16#0#;
+      DINIE         : Boolean := False;
       --  Digest calculation completion interrupt enable
-      DCIE          : IMR_DCIE_Field := 16#0#;
+      DCIE          : Boolean := False;
       --  unspecified
-      Reserved_2_31 : STM32_SVD.UInt30 := 16#0#;
+      Reserved_2_31 : Interfaces.Bit_Types.UInt30 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -136,23 +124,18 @@ package STM32_SVD.HASH is
    -- SR_Register --
    -----------------
 
-   subtype SR_DINIS_Field is STM32_SVD.Bit;
-   subtype SR_DCIS_Field is STM32_SVD.Bit;
-   subtype SR_DMAS_Field is STM32_SVD.Bit;
-   subtype SR_BUSY_Field is STM32_SVD.Bit;
-
    --  status register
    type SR_Register is record
       --  Data input interrupt status
-      DINIS         : SR_DINIS_Field := 16#1#;
+      DINIS         : Boolean := True;
       --  Digest calculation completion interrupt status
-      DCIS          : SR_DCIS_Field := 16#0#;
-      --  DMA Status
-      DMAS          : SR_DMAS_Field := 16#0#;
-      --  Busy bit
-      BUSY          : SR_BUSY_Field := 16#0#;
+      DCIS          : Boolean := False;
+      --  Read-only. DMA Status
+      DMAS          : Boolean := False;
+      --  Read-only. Busy bit
+      BUSY          : Boolean := False;
       --  unspecified
-      Reserved_4_31 : STM32_SVD.UInt28 := 16#0#;
+      Reserved_4_31 : Interfaces.Bit_Types.UInt28 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -174,147 +157,147 @@ package STM32_SVD.HASH is
       --  control register
       CR       : CR_Register;
       --  data input register
-      DIN      : STM32_SVD.Word;
+      DIN      : Interfaces.Bit_Types.Word;
       --  start register
       STR      : STR_Register;
       --  digest registers
-      HR0      : STM32_SVD.Word;
+      HR0      : Interfaces.Bit_Types.Word;
       --  digest registers
-      HR1      : STM32_SVD.Word;
+      HR1      : Interfaces.Bit_Types.Word;
       --  digest registers
-      HR2      : STM32_SVD.Word;
+      HR2      : Interfaces.Bit_Types.Word;
       --  digest registers
-      HR3      : STM32_SVD.Word;
+      HR3      : Interfaces.Bit_Types.Word;
       --  digest registers
-      HR4      : STM32_SVD.Word;
+      HR4      : Interfaces.Bit_Types.Word;
       --  interrupt enable register
       IMR      : IMR_Register;
       --  status register
       SR       : SR_Register;
       --  context swap registers
-      CSR0     : STM32_SVD.Word;
+      CSR0     : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR1     : STM32_SVD.Word;
+      CSR1     : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR2     : STM32_SVD.Word;
+      CSR2     : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR3     : STM32_SVD.Word;
+      CSR3     : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR4     : STM32_SVD.Word;
+      CSR4     : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR5     : STM32_SVD.Word;
+      CSR5     : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR6     : STM32_SVD.Word;
+      CSR6     : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR7     : STM32_SVD.Word;
+      CSR7     : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR8     : STM32_SVD.Word;
+      CSR8     : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR9     : STM32_SVD.Word;
+      CSR9     : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR10    : STM32_SVD.Word;
+      CSR10    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR11    : STM32_SVD.Word;
+      CSR11    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR12    : STM32_SVD.Word;
+      CSR12    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR13    : STM32_SVD.Word;
+      CSR13    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR14    : STM32_SVD.Word;
+      CSR14    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR15    : STM32_SVD.Word;
+      CSR15    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR16    : STM32_SVD.Word;
+      CSR16    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR17    : STM32_SVD.Word;
+      CSR17    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR18    : STM32_SVD.Word;
+      CSR18    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR19    : STM32_SVD.Word;
+      CSR19    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR20    : STM32_SVD.Word;
+      CSR20    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR21    : STM32_SVD.Word;
+      CSR21    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR22    : STM32_SVD.Word;
+      CSR22    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR23    : STM32_SVD.Word;
+      CSR23    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR24    : STM32_SVD.Word;
+      CSR24    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR25    : STM32_SVD.Word;
+      CSR25    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR26    : STM32_SVD.Word;
+      CSR26    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR27    : STM32_SVD.Word;
+      CSR27    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR28    : STM32_SVD.Word;
+      CSR28    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR29    : STM32_SVD.Word;
+      CSR29    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR30    : STM32_SVD.Word;
+      CSR30    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR31    : STM32_SVD.Word;
+      CSR31    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR32    : STM32_SVD.Word;
+      CSR32    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR33    : STM32_SVD.Word;
+      CSR33    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR34    : STM32_SVD.Word;
+      CSR34    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR35    : STM32_SVD.Word;
+      CSR35    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR36    : STM32_SVD.Word;
+      CSR36    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR37    : STM32_SVD.Word;
+      CSR37    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR38    : STM32_SVD.Word;
+      CSR38    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR39    : STM32_SVD.Word;
+      CSR39    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR40    : STM32_SVD.Word;
+      CSR40    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR41    : STM32_SVD.Word;
+      CSR41    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR42    : STM32_SVD.Word;
+      CSR42    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR43    : STM32_SVD.Word;
+      CSR43    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR44    : STM32_SVD.Word;
+      CSR44    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR45    : STM32_SVD.Word;
+      CSR45    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR46    : STM32_SVD.Word;
+      CSR46    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR47    : STM32_SVD.Word;
+      CSR47    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR48    : STM32_SVD.Word;
+      CSR48    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR49    : STM32_SVD.Word;
+      CSR49    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR50    : STM32_SVD.Word;
+      CSR50    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR51    : STM32_SVD.Word;
+      CSR51    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR52    : STM32_SVD.Word;
+      CSR52    : Interfaces.Bit_Types.Word;
       --  context swap registers
-      CSR53    : STM32_SVD.Word;
+      CSR53    : Interfaces.Bit_Types.Word;
       --  HASH digest register
-      HASH_HR0 : STM32_SVD.Word;
+      HASH_HR0 : Interfaces.Bit_Types.Word;
       --  read-only
-      HASH_HR1 : STM32_SVD.Word;
+      HASH_HR1 : Interfaces.Bit_Types.Word;
       --  read-only
-      HASH_HR2 : STM32_SVD.Word;
+      HASH_HR2 : Interfaces.Bit_Types.Word;
       --  read-only
-      HASH_HR3 : STM32_SVD.Word;
+      HASH_HR3 : Interfaces.Bit_Types.Word;
       --  read-only
-      HASH_HR4 : STM32_SVD.Word;
+      HASH_HR4 : Interfaces.Bit_Types.Word;
       --  read-only
-      HASH_HR5 : STM32_SVD.Word;
+      HASH_HR5 : Interfaces.Bit_Types.Word;
       --  read-only
-      HASH_HR6 : STM32_SVD.Word;
+      HASH_HR6 : Interfaces.Bit_Types.Word;
       --  read-only
-      HASH_HR7 : STM32_SVD.Word;
+      HASH_HR7 : Interfaces.Bit_Types.Word;
    end record
      with Volatile;
 
@@ -395,6 +378,6 @@ package STM32_SVD.HASH is
 
    --  Hash processor
    HASH_Periph : aliased HASH_Peripheral
-     with Import, Address => System'To_Address (16#50060400#);
+     with Import, Address => HASH_Base;
 
 end STM32_SVD.HASH;

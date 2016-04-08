@@ -78,7 +78,7 @@ package STM32.SPI is
       Slave_Management    : SPI_Slave_Management;
       Baud_Rate_Prescaler : SPI_Baud_Rate_Prescaler;
       First_Bit           : SPI_First_Bit;
-      CRC_Poly            : Half_Word;
+      CRC_Poly            : Short;
    end record;
 
    procedure Configure (Port : in out SPI_Port; Conf : SPI_Configuration);
@@ -89,9 +89,9 @@ package STM32.SPI is
 
    function Enabled (Port : SPI_Port) return Boolean;
 
-   procedure Send (Port : in out SPI_Port; Data : Half_Word);
+   procedure Send (Port : in out SPI_Port; Data : Short);
 
-   function Data (Port : SPI_Port) return Half_Word
+   function Data (Port : SPI_Port) return Short
      with Inline;
 
    procedure Send (Port : in out SPI_Port; Data : Byte);

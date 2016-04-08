@@ -76,7 +76,7 @@ package STM32.DSI is
 
    procedure DSI_Deinit;
 
-   subtype DSI_Virtual_Channel_ID is Bits_2;
+   subtype DSI_Virtual_Channel_ID is UInt2;
 
    type DSI_Color_Mode is
      (RGB565,
@@ -125,19 +125,19 @@ package STM32.DSI is
       Color_Coding                : DSI_Color_Mode;
       Loosely_Packed              : Boolean;
       Video_Mode                  : DSI_Video_Mode;
-      Packet_Size                 : Bits_15;
-      Number_Of_Chunks            : Bits_14;
-      Null_Packet_Size            : Bits_14;
+      Packet_Size                 : UInt15;
+      Number_Of_Chunks            : UInt14;
+      Null_Packet_Size            : UInt14;
       HSync_Polarity              : DSI_Polarity;
       VSync_Polarity              : DSI_Polarity;
       DataEn_Polarity             : DSI_Polarity;
-      HSync_Active_Duration       : Bits_13;
-      Horizontal_BackPorch        : Bits_13;
-      Horizontal_Line             : Bits_15;
-      VSync_Active_Duration       : Bits_10;
-      Vertical_BackPorch          : Bits_10;
-      Vertical_FrontPorch         : Bits_10;
-      Vertical_Active             : Bits_14;
+      HSync_Active_Duration       : UInt13;
+      Horizontal_BackPorch        : UInt13;
+      Horizontal_Line             : UInt15;
+      VSync_Active_Duration       : UInt10;
+      Vertical_BackPorch          : UInt10;
+      Vertical_FrontPorch         : UInt10;
+      Vertical_Active             : UInt14;
       LP_Command_Enabled          : Boolean;
       LP_Largest_Packet_Size      : Byte;
       LP_VACT_Largest_Packet_Size : Byte;

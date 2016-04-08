@@ -1,13 +1,13 @@
---  Automatically generated from STM32F40x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F40x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.DAC is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,31 +17,21 @@ package STM32_SVD.DAC is
    -- CR_Register --
    -----------------
 
-   subtype CR_EN1_Field is STM32_SVD.Bit;
-   subtype CR_BOFF1_Field is STM32_SVD.Bit;
-   subtype CR_TEN1_Field is STM32_SVD.Bit;
-   subtype CR_TSEL1_Field is STM32_SVD.UInt3;
-   subtype CR_WAVE1_Field is STM32_SVD.UInt2;
-   subtype CR_MAMP1_Field is STM32_SVD.UInt4;
-   subtype CR_DMAEN1_Field is STM32_SVD.Bit;
-   subtype CR_DMAUDRIE1_Field is STM32_SVD.Bit;
-   subtype CR_EN2_Field is STM32_SVD.Bit;
-   subtype CR_BOFF2_Field is STM32_SVD.Bit;
-   subtype CR_TEN2_Field is STM32_SVD.Bit;
-   subtype CR_TSEL2_Field is STM32_SVD.UInt3;
-   subtype CR_WAVE2_Field is STM32_SVD.UInt2;
-   subtype CR_MAMP2_Field is STM32_SVD.UInt4;
-   subtype CR_DMAEN2_Field is STM32_SVD.Bit;
-   subtype CR_DMAUDRIE2_Field is STM32_SVD.Bit;
+   subtype CR_TSEL1_Field is Interfaces.Bit_Types.UInt3;
+   subtype CR_WAVE1_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_MAMP1_Field is Interfaces.Bit_Types.UInt4;
+   subtype CR_TSEL2_Field is Interfaces.Bit_Types.UInt3;
+   subtype CR_WAVE2_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_MAMP2_Field is Interfaces.Bit_Types.UInt4;
 
    --  control register
    type CR_Register is record
       --  DAC channel1 enable
-      EN1            : CR_EN1_Field := 16#0#;
+      EN1            : Boolean := False;
       --  DAC channel1 output buffer disable
-      BOFF1          : CR_BOFF1_Field := 16#0#;
+      BOFF1          : Boolean := False;
       --  DAC channel1 trigger enable
-      TEN1           : CR_TEN1_Field := 16#0#;
+      TEN1           : Boolean := False;
       --  DAC channel1 trigger selection
       TSEL1          : CR_TSEL1_Field := 16#0#;
       --  DAC channel1 noise/triangle wave generation enable
@@ -49,17 +39,17 @@ package STM32_SVD.DAC is
       --  DAC channel1 mask/amplitude selector
       MAMP1          : CR_MAMP1_Field := 16#0#;
       --  DAC channel1 DMA enable
-      DMAEN1         : CR_DMAEN1_Field := 16#0#;
+      DMAEN1         : Boolean := False;
       --  DAC channel1 DMA Underrun Interrupt enable
-      DMAUDRIE1      : CR_DMAUDRIE1_Field := 16#0#;
+      DMAUDRIE1      : Boolean := False;
       --  unspecified
-      Reserved_14_15 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_14_15 : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  DAC channel2 enable
-      EN2            : CR_EN2_Field := 16#0#;
+      EN2            : Boolean := False;
       --  DAC channel2 output buffer disable
-      BOFF2          : CR_BOFF2_Field := 16#0#;
+      BOFF2          : Boolean := False;
       --  DAC channel2 trigger enable
-      TEN2           : CR_TEN2_Field := 16#0#;
+      TEN2           : Boolean := False;
       --  DAC channel2 trigger selection
       TSEL2          : CR_TSEL2_Field := 16#0#;
       --  DAC channel2 noise/triangle wave generation enable
@@ -67,11 +57,11 @@ package STM32_SVD.DAC is
       --  DAC channel2 mask/amplitude selector
       MAMP2          : CR_MAMP2_Field := 16#0#;
       --  DAC channel2 DMA enable
-      DMAEN2         : CR_DMAEN2_Field := 16#0#;
+      DMAEN2         : Boolean := False;
       --  DAC channel2 DMA underrun interrupt enable
-      DMAUDRIE2      : CR_DMAUDRIE2_Field := 16#0#;
+      DMAUDRIE2      : Boolean := False;
       --  unspecified
-      Reserved_30_31 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_30_31 : Interfaces.Bit_Types.UInt2 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -105,12 +95,8 @@ package STM32_SVD.DAC is
    -- SWTRIGR.SWTRIG --
    --------------------
 
-   --  SWTRIGR_SWTRIG array element
-   subtype SWTRIGR_SWTRIG_Element is STM32_SVD.Bit;
-
    --  SWTRIGR_SWTRIG array
-   type SWTRIGR_SWTRIG_Field_Array is array (0 .. 1)
-     of SWTRIGR_SWTRIG_Element
+   type SWTRIGR_SWTRIG_Field_Array is array (1 .. 2) of Boolean
      with Component_Size => 1, Size => 2;
 
    --  Type definition for SWTRIGR_SWTRIG
@@ -120,7 +106,7 @@ package STM32_SVD.DAC is
       case As_Array is
          when False =>
             --  SWTRIG as a value
-            Val : STM32_SVD.UInt2;
+            Val : Interfaces.Bit_Types.UInt2;
          when True =>
             --  SWTRIG as an array
             Arr : SWTRIGR_SWTRIG_Field_Array;
@@ -135,11 +121,11 @@ package STM32_SVD.DAC is
 
    --  software trigger register
    type SWTRIGR_Register is record
-      --  DAC channel1 software trigger
+      --  Write-only. DAC channel1 software trigger
       SWTRIG        : SWTRIGR_SWTRIG_Field :=
                        (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_2_31 : STM32_SVD.UInt30 := 16#0#;
+      Reserved_2_31 : Interfaces.Bit_Types.UInt30 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -153,14 +139,14 @@ package STM32_SVD.DAC is
    -- DHR12R_Register --
    ---------------------
 
-   subtype DHR12R1_DACC1DHR_Field is STM32_SVD.UInt12;
+   subtype DHR12R1_DACC1DHR_Field is Interfaces.Bit_Types.UInt12;
 
    --  channel1 12-bit right-aligned data holding register
    type DHR12R_Register is record
       --  DAC channel1 12-bit right-aligned data
       DACC1DHR       : DHR12R1_DACC1DHR_Field := 16#0#;
       --  unspecified
-      Reserved_12_31 : STM32_SVD.UInt20 := 16#0#;
+      Reserved_12_31 : Interfaces.Bit_Types.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -174,16 +160,16 @@ package STM32_SVD.DAC is
    -- DHR12L_Register --
    ---------------------
 
-   subtype DHR12L1_DACC1DHR_Field is STM32_SVD.UInt12;
+   subtype DHR12L1_DACC1DHR_Field is Interfaces.Bit_Types.UInt12;
 
    --  channel1 12-bit left aligned data holding register
    type DHR12L_Register is record
       --  unspecified
-      Reserved_0_3   : STM32_SVD.UInt4 := 16#0#;
+      Reserved_0_3   : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  DAC channel1 12-bit left-aligned data
       DACC1DHR       : DHR12L1_DACC1DHR_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -198,14 +184,14 @@ package STM32_SVD.DAC is
    -- DHR8R_Register --
    --------------------
 
-   subtype DHR8R1_DACC1DHR_Field is STM32_SVD.Byte;
+   subtype DHR8R1_DACC1DHR_Field is Interfaces.Bit_Types.Byte;
 
    --  channel1 8-bit right aligned data holding register
    type DHR8R_Register is record
       --  DAC channel1 8-bit right-aligned data
       DACC1DHR      : DHR8R1_DACC1DHR_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24 := 16#0#;
+      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -219,19 +205,19 @@ package STM32_SVD.DAC is
    -- DHR12RD_Register --
    ----------------------
 
-   subtype DHR12RD_DACC1DHR_Field is STM32_SVD.UInt12;
-   subtype DHR12RD_DACC2DHR_Field is STM32_SVD.UInt12;
+   subtype DHR12RD_DACC1DHR_Field is Interfaces.Bit_Types.UInt12;
+   subtype DHR12RD_DACC2DHR_Field is Interfaces.Bit_Types.UInt12;
 
    --  Dual DAC 12-bit right-aligned data holding register
    type DHR12RD_Register is record
       --  DAC channel1 12-bit right-aligned data
       DACC1DHR       : DHR12RD_DACC1DHR_Field := 16#0#;
       --  unspecified
-      Reserved_12_15 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_12_15 : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  DAC channel2 12-bit right-aligned data
       DACC2DHR       : DHR12RD_DACC2DHR_Field := 16#0#;
       --  unspecified
-      Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -247,17 +233,17 @@ package STM32_SVD.DAC is
    -- DHR12LD_Register --
    ----------------------
 
-   subtype DHR12LD_DACC1DHR_Field is STM32_SVD.UInt12;
-   subtype DHR12LD_DACC2DHR_Field is STM32_SVD.UInt12;
+   subtype DHR12LD_DACC1DHR_Field is Interfaces.Bit_Types.UInt12;
+   subtype DHR12LD_DACC2DHR_Field is Interfaces.Bit_Types.UInt12;
 
    --  DUAL DAC 12-bit left aligned data holding register
    type DHR12LD_Register is record
       --  unspecified
-      Reserved_0_3   : STM32_SVD.UInt4 := 16#0#;
+      Reserved_0_3   : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  DAC channel1 12-bit left-aligned data
       DACC1DHR       : DHR12LD_DACC1DHR_Field := 16#0#;
       --  unspecified
-      Reserved_16_19 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_16_19 : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  DAC channel2 12-bit left-aligned data
       DACC2DHR       : DHR12LD_DACC2DHR_Field := 16#0#;
    end record
@@ -275,8 +261,8 @@ package STM32_SVD.DAC is
    -- DHR8RD_Register --
    ---------------------
 
-   subtype DHR8RD_DACC1DHR_Field is STM32_SVD.Byte;
-   subtype DHR8RD_DACC2DHR_Field is STM32_SVD.Byte;
+   subtype DHR8RD_DACC1DHR_Field is Interfaces.Bit_Types.Byte;
+   subtype DHR8RD_DACC2DHR_Field is Interfaces.Bit_Types.Byte;
 
    --  DUAL DAC 8-bit right aligned data holding register
    type DHR8RD_Register is record
@@ -285,7 +271,7 @@ package STM32_SVD.DAC is
       --  DAC channel2 8-bit right-aligned data
       DACC2DHR       : DHR8RD_DACC2DHR_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -300,14 +286,14 @@ package STM32_SVD.DAC is
    -- DOR_Register --
    ------------------
 
-   subtype DOR1_DACC1DOR_Field is STM32_SVD.UInt12;
+   subtype DOR1_DACC1DOR_Field is Interfaces.Bit_Types.UInt12;
 
    --  channel1 data output register
    type DOR_Register is record
-      --  DAC channel1 data output
-      DACC1DOR       : DOR1_DACC1DOR_Field;
+      --  Read-only. DAC channel1 data output
+      DACC1DOR       : DOR1_DACC1DOR_Field := 16#0#;
       --  unspecified
-      Reserved_12_31 : STM32_SVD.UInt20;
+      Reserved_12_31 : Interfaces.Bit_Types.UInt20;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -321,21 +307,18 @@ package STM32_SVD.DAC is
    -- SR_Register --
    -----------------
 
-   subtype SR_DMAUDR1_Field is STM32_SVD.Bit;
-   subtype SR_DMAUDR2_Field is STM32_SVD.Bit;
-
    --  status register
    type SR_Register is record
       --  unspecified
-      Reserved_0_12  : STM32_SVD.UInt13 := 16#0#;
+      Reserved_0_12  : Interfaces.Bit_Types.UInt13 := 16#0#;
       --  DAC channel1 DMA underrun flag
-      DMAUDR1        : SR_DMAUDR1_Field := 16#0#;
+      DMAUDR1        : Boolean := False;
       --  unspecified
-      Reserved_14_28 : STM32_SVD.UInt15 := 16#0#;
+      Reserved_14_28 : Interfaces.Bit_Types.UInt15 := 16#0#;
       --  DAC channel2 DMA underrun flag
-      DMAUDR2        : SR_DMAUDR2_Field := 16#0#;
+      DMAUDR2        : Boolean := False;
       --  unspecified
-      Reserved_30_31 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_30_31 : Interfaces.Bit_Types.UInt2 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -404,6 +387,6 @@ package STM32_SVD.DAC is
 
    --  Digital-to-analog converter
    DAC_Periph : aliased DAC_Peripheral
-     with Import, Address => System'To_Address (16#40007400#);
+     with Import, Address => DAC_Base;
 
 end STM32_SVD.DAC;

@@ -1,13 +1,13 @@
---  Automatically generated from STM32F40x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F40x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.RNG is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,19 +17,16 @@ package STM32_SVD.RNG is
    -- CR_Register --
    -----------------
 
-   subtype CR_RNGEN_Field is STM32_SVD.Bit;
-   subtype CR_IE_Field is STM32_SVD.Bit;
-
    --  control register
    type CR_Register is record
       --  unspecified
-      Reserved_0_1  : STM32_SVD.UInt2 := 16#0#;
+      Reserved_0_1  : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  Random number generator enable
-      RNGEN         : CR_RNGEN_Field := 16#0#;
+      RNGEN         : Boolean := False;
       --  Interrupt enable
-      IE            : CR_IE_Field := 16#0#;
+      IE            : Boolean := False;
       --  unspecified
-      Reserved_4_31 : STM32_SVD.UInt28 := 16#0#;
+      Reserved_4_31 : Interfaces.Bit_Types.UInt28 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -45,28 +42,22 @@ package STM32_SVD.RNG is
    -- SR_Register --
    -----------------
 
-   subtype SR_DRDY_Field is STM32_SVD.Bit;
-   subtype SR_CECS_Field is STM32_SVD.Bit;
-   subtype SR_SECS_Field is STM32_SVD.Bit;
-   subtype SR_CEIS_Field is STM32_SVD.Bit;
-   subtype SR_SEIS_Field is STM32_SVD.Bit;
-
    --  status register
    type SR_Register is record
-      --  Data ready
-      DRDY          : SR_DRDY_Field := 16#0#;
-      --  Clock error current status
-      CECS          : SR_CECS_Field := 16#0#;
-      --  Seed error current status
-      SECS          : SR_SECS_Field := 16#0#;
+      --  Read-only. Data ready
+      DRDY          : Boolean := False;
+      --  Read-only. Clock error current status
+      CECS          : Boolean := False;
+      --  Read-only. Seed error current status
+      SECS          : Boolean := False;
       --  unspecified
-      Reserved_3_4  : STM32_SVD.UInt2 := 16#0#;
+      Reserved_3_4  : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  Clock error interrupt status
-      CEIS          : SR_CEIS_Field := 16#0#;
+      CEIS          : Boolean := False;
       --  Seed error interrupt status
-      SEIS          : SR_SEIS_Field := 16#0#;
+      SEIS          : Boolean := False;
       --  unspecified
-      Reserved_7_31 : STM32_SVD.UInt25 := 16#0#;
+      Reserved_7_31 : Interfaces.Bit_Types.UInt25 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -92,7 +83,7 @@ package STM32_SVD.RNG is
       --  status register
       SR : SR_Register;
       --  data register
-      DR : STM32_SVD.Word;
+      DR : Interfaces.Bit_Types.Word;
    end record
      with Volatile;
 
@@ -104,6 +95,6 @@ package STM32_SVD.RNG is
 
    --  Random number generator
    RNG_Periph : aliased RNG_Peripheral
-     with Import, Address => System'To_Address (16#50060800#);
+     with Import, Address => RNG_Base;
 
 end STM32_SVD.RNG;

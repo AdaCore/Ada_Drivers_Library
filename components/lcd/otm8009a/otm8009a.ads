@@ -1,4 +1,4 @@
-with STM32;     use STM32;
+with Interfaces.Bit_Types; use Interfaces.Bit_Types;
 
 generic
 

@@ -1,13 +1,13 @@
---  Automatically generated from STM32F46_79x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F46_79x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.NVIC is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,14 +17,14 @@ package STM32_SVD.NVIC is
    -- ICTR_Register --
    -------------------
 
-   subtype ICTR_INTLINESNUM_Field is STM32_SVD.UInt4;
+   subtype ICTR_INTLINESNUM_Field is Interfaces.Bit_Types.UInt4;
 
    --  Interrupt Controller Type Register
    type ICTR_Register is record
-      --  Total number of interrupt lines in groups
-      INTLINESNUM   : ICTR_INTLINESNUM_Field;
+      --  Read-only. Total number of interrupt lines in groups
+      INTLINESNUM   : ICTR_INTLINESNUM_Field := 16#0#;
       --  unspecified
-      Reserved_4_31 : STM32_SVD.UInt28;
+      Reserved_4_31 : Interfaces.Bit_Types.UInt28;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -39,7 +39,7 @@ package STM32_SVD.NVIC is
    ------------------
 
    --  IPR0_IPR_N array element
-   subtype IPR0_IPR_N_Element is STM32_SVD.Byte;
+   subtype IPR0_IPR_N_Element is Interfaces.Bit_Types.Byte;
 
    --  IPR0_IPR_N array
    type IPR0_IPR_N_Field_Array is array (0 .. 3) of IPR0_IPR_N_Element
@@ -52,7 +52,7 @@ package STM32_SVD.NVIC is
       case As_Array is
          when False =>
             --  IPR_N as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  IPR_N as an array
             Arr : IPR0_IPR_N_Field_Array;
@@ -70,14 +70,14 @@ package STM32_SVD.NVIC is
    -- STIR_Register --
    -------------------
 
-   subtype STIR_INTID_Field is STM32_SVD.UInt9;
+   subtype STIR_INTID_Field is Interfaces.Bit_Types.UInt9;
 
    --  Software Triggered Interrupt Register
    type STIR_Register is record
-      --  interrupt to be triggered
+      --  Write-only. interrupt to be triggered
       INTID         : STIR_INTID_Field := 16#0#;
       --  unspecified
-      Reserved_9_31 : STM32_SVD.UInt23 := 16#0#;
+      Reserved_9_31 : Interfaces.Bit_Types.UInt23 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -96,35 +96,35 @@ package STM32_SVD.NVIC is
       --  Interrupt Controller Type Register
       ICTR  : ICTR_Register;
       --  Interrupt Set-Enable Register
-      ISER0 : STM32_SVD.Word;
+      ISER0 : Interfaces.Bit_Types.Word;
       --  Interrupt Set-Enable Register
-      ISER1 : STM32_SVD.Word;
+      ISER1 : Interfaces.Bit_Types.Word;
       --  Interrupt Set-Enable Register
-      ISER2 : STM32_SVD.Word;
+      ISER2 : Interfaces.Bit_Types.Word;
       --  Interrupt Clear-Enable Register
-      ICER0 : STM32_SVD.Word;
+      ICER0 : Interfaces.Bit_Types.Word;
       --  Interrupt Clear-Enable Register
-      ICER1 : STM32_SVD.Word;
+      ICER1 : Interfaces.Bit_Types.Word;
       --  Interrupt Clear-Enable Register
-      ICER2 : STM32_SVD.Word;
+      ICER2 : Interfaces.Bit_Types.Word;
       --  Interrupt Set-Pending Register
-      ISPR0 : STM32_SVD.Word;
+      ISPR0 : Interfaces.Bit_Types.Word;
       --  Interrupt Set-Pending Register
-      ISPR1 : STM32_SVD.Word;
+      ISPR1 : Interfaces.Bit_Types.Word;
       --  Interrupt Set-Pending Register
-      ISPR2 : STM32_SVD.Word;
+      ISPR2 : Interfaces.Bit_Types.Word;
       --  Interrupt Clear-Pending Register
-      ICPR0 : STM32_SVD.Word;
+      ICPR0 : Interfaces.Bit_Types.Word;
       --  Interrupt Clear-Pending Register
-      ICPR1 : STM32_SVD.Word;
+      ICPR1 : Interfaces.Bit_Types.Word;
       --  Interrupt Clear-Pending Register
-      ICPR2 : STM32_SVD.Word;
+      ICPR2 : Interfaces.Bit_Types.Word;
       --  Interrupt Active Bit Register
-      IABR0 : STM32_SVD.Word;
+      IABR0 : Interfaces.Bit_Types.Word;
       --  Interrupt Active Bit Register
-      IABR1 : STM32_SVD.Word;
+      IABR1 : Interfaces.Bit_Types.Word;
       --  Interrupt Active Bit Register
-      IABR2 : STM32_SVD.Word;
+      IABR2 : Interfaces.Bit_Types.Word;
       --  Interrupt Priority Register
       IPR0  : IPR_Register;
       --  Interrupt Priority Register
@@ -215,6 +215,6 @@ package STM32_SVD.NVIC is
 
    --  Nested Vectored Interrupt Controller
    NVIC_Periph : aliased NVIC_Peripheral
-     with Import, Address => System'To_Address (16#E000E000#);
+     with Import, Address => NVIC_Base;
 
 end STM32_SVD.NVIC;

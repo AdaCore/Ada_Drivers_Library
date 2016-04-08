@@ -1,13 +1,13 @@
---  Automatically generated from STM32F40x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F40x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.SDIO is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,14 +17,14 @@ package STM32_SVD.SDIO is
    -- POWER_Register --
    --------------------
 
-   subtype POWER_PWRCTRL_Field is STM32_SVD.UInt2;
+   subtype POWER_PWRCTRL_Field is Interfaces.Bit_Types.UInt2;
 
    --  power control register
    type POWER_Register is record
       --  PWRCTRL
       PWRCTRL       : POWER_PWRCTRL_Field := 16#0#;
       --  unspecified
-      Reserved_2_31 : STM32_SVD.UInt30 := 16#0#;
+      Reserved_2_31 : Interfaces.Bit_Types.UInt30 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -38,32 +38,27 @@ package STM32_SVD.SDIO is
    -- CLKCR_Register --
    --------------------
 
-   subtype CLKCR_CLKDIV_Field is STM32_SVD.Byte;
-   subtype CLKCR_CLKEN_Field is STM32_SVD.Bit;
-   subtype CLKCR_PWRSAV_Field is STM32_SVD.Bit;
-   subtype CLKCR_BYPASS_Field is STM32_SVD.Bit;
-   subtype CLKCR_WIDBUS_Field is STM32_SVD.UInt2;
-   subtype CLKCR_NEGEDGE_Field is STM32_SVD.Bit;
-   subtype CLKCR_HWFC_EN_Field is STM32_SVD.Bit;
+   subtype CLKCR_CLKDIV_Field is Interfaces.Bit_Types.Byte;
+   subtype CLKCR_WIDBUS_Field is Interfaces.Bit_Types.UInt2;
 
    --  SDI clock control register
    type CLKCR_Register is record
       --  Clock divide factor
       CLKDIV         : CLKCR_CLKDIV_Field := 16#0#;
       --  Clock enable bit
-      CLKEN          : CLKCR_CLKEN_Field := 16#0#;
+      CLKEN          : Boolean := False;
       --  Power saving configuration bit
-      PWRSAV         : CLKCR_PWRSAV_Field := 16#0#;
+      PWRSAV         : Boolean := False;
       --  Clock divider bypass enable bit
-      BYPASS         : CLKCR_BYPASS_Field := 16#0#;
+      BYPASS         : Boolean := False;
       --  Wide bus mode enable bit
       WIDBUS         : CLKCR_WIDBUS_Field := 16#0#;
       --  SDIO_CK dephasing selection bit
-      NEGEDGE        : CLKCR_NEGEDGE_Field := 16#0#;
+      NEGEDGE        : Boolean := False;
       --  HW Flow Control enable
-      HWFC_EN        : CLKCR_HWFC_EN_Field := 16#0#;
+      HWFC_EN        : Boolean := False;
       --  unspecified
-      Reserved_15_31 : STM32_SVD.UInt17 := 16#0#;
+      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -83,15 +78,8 @@ package STM32_SVD.SDIO is
    -- CMD_Register --
    ------------------
 
-   subtype CMD_CMDINDEX_Field is STM32_SVD.UInt6;
-   subtype CMD_WAITRESP_Field is STM32_SVD.UInt2;
-   subtype CMD_WAITINT_Field is STM32_SVD.Bit;
-   subtype CMD_WAITPEND_Field is STM32_SVD.Bit;
-   subtype CMD_CPSMEN_Field is STM32_SVD.Bit;
-   subtype CMD_SDIOSuspend_Field is STM32_SVD.Bit;
-   subtype CMD_ENCMDcompl_Field is STM32_SVD.Bit;
-   subtype CMD_nIEN_Field is STM32_SVD.Bit;
-   subtype CMD_CE_ATACMD_Field is STM32_SVD.Bit;
+   subtype CMD_CMDINDEX_Field is Interfaces.Bit_Types.UInt6;
+   subtype CMD_WAITRESP_Field is Interfaces.Bit_Types.UInt2;
 
    --  command register
    type CMD_Register is record
@@ -100,21 +88,21 @@ package STM32_SVD.SDIO is
       --  Wait for response bits
       WAITRESP       : CMD_WAITRESP_Field := 16#0#;
       --  CPSM waits for interrupt request
-      WAITINT        : CMD_WAITINT_Field := 16#0#;
+      WAITINT        : Boolean := False;
       --  CPSM Waits for ends of data transfer (CmdPend internal signal).
-      WAITPEND       : CMD_WAITPEND_Field := 16#0#;
+      WAITPEND       : Boolean := False;
       --  Command path state machine (CPSM) Enable bit
-      CPSMEN         : CMD_CPSMEN_Field := 16#0#;
+      CPSMEN         : Boolean := False;
       --  SD I/O suspend command
-      SDIOSuspend    : CMD_SDIOSuspend_Field := 16#0#;
+      SDIOSuspend    : Boolean := False;
       --  Enable CMD completion
-      ENCMDcompl     : CMD_ENCMDcompl_Field := 16#0#;
+      ENCMDcompl     : Boolean := False;
       --  not Interrupt Enable
-      nIEN           : CMD_nIEN_Field := 16#0#;
+      nIEN           : Boolean := False;
       --  CE-ATA command
-      CE_ATACMD      : CMD_CE_ATACMD_Field := 16#0#;
+      CE_ATACMD      : Boolean := False;
       --  unspecified
-      Reserved_15_31 : STM32_SVD.UInt17 := 16#0#;
+      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -136,14 +124,14 @@ package STM32_SVD.SDIO is
    -- RESPCMD_Register --
    ----------------------
 
-   subtype RESPCMD_RESPCMD_Field is STM32_SVD.UInt6;
+   subtype RESPCMD_RESPCMD_Field is Interfaces.Bit_Types.UInt6;
 
    --  command response register
    type RESPCMD_Register is record
-      --  Response command index
-      RESPCMD       : RESPCMD_RESPCMD_Field;
+      --  Read-only. Response command index
+      RESPCMD       : RESPCMD_RESPCMD_Field := 16#0#;
       --  unspecified
-      Reserved_6_31 : STM32_SVD.UInt26;
+      Reserved_6_31 : Interfaces.Bit_Types.UInt26;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -157,14 +145,14 @@ package STM32_SVD.SDIO is
    -- DLEN_Register --
    -------------------
 
-   subtype DLEN_DATALENGTH_Field is STM32_SVD.UInt25;
+   subtype DLEN_DATALENGTH_Field is Interfaces.Bit_Types.UInt25;
 
    --  data length register
    type DLEN_Register is record
       --  Data length value
       DATALENGTH     : DLEN_DATALENGTH_Field := 16#0#;
       --  unspecified
-      Reserved_25_31 : STM32_SVD.UInt7 := 16#0#;
+      Reserved_25_31 : Interfaces.Bit_Types.UInt7 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -178,39 +166,31 @@ package STM32_SVD.SDIO is
    -- DCTRL_Register --
    --------------------
 
-   subtype DCTRL_DTEN_Field is STM32_SVD.Bit;
-   subtype DCTRL_DTDIR_Field is STM32_SVD.Bit;
-   subtype DCTRL_DTMODE_Field is STM32_SVD.Bit;
-   subtype DCTRL_DMAEN_Field is STM32_SVD.Bit;
-   subtype DCTRL_DBLOCKSIZE_Field is STM32_SVD.UInt4;
-   subtype DCTRL_RWSTART_Field is STM32_SVD.Bit;
-   subtype DCTRL_RWSTOP_Field is STM32_SVD.Bit;
-   subtype DCTRL_RWMOD_Field is STM32_SVD.Bit;
-   subtype DCTRL_SDIOEN_Field is STM32_SVD.Bit;
+   subtype DCTRL_DBLOCKSIZE_Field is Interfaces.Bit_Types.UInt4;
 
    --  data control register
    type DCTRL_Register is record
       --  DTEN
-      DTEN           : DCTRL_DTEN_Field := 16#0#;
+      DTEN           : Boolean := False;
       --  Data transfer direction selection
-      DTDIR          : DCTRL_DTDIR_Field := 16#0#;
+      DTDIR          : Boolean := False;
       --  Data transfer mode selection 1: Stream or SDIO multibyte data
       --  transfer.
-      DTMODE         : DCTRL_DTMODE_Field := 16#0#;
+      DTMODE         : Boolean := False;
       --  DMA enable bit
-      DMAEN          : DCTRL_DMAEN_Field := 16#0#;
+      DMAEN          : Boolean := False;
       --  Data block size
       DBLOCKSIZE     : DCTRL_DBLOCKSIZE_Field := 16#0#;
       --  Read wait start
-      RWSTART        : DCTRL_RWSTART_Field := 16#0#;
+      RWSTART        : Boolean := False;
       --  Read wait stop
-      RWSTOP         : DCTRL_RWSTOP_Field := 16#0#;
+      RWSTOP         : Boolean := False;
       --  Read wait mode
-      RWMOD          : DCTRL_RWMOD_Field := 16#0#;
+      RWMOD          : Boolean := False;
       --  SD I/O enable functions
-      SDIOEN         : DCTRL_SDIOEN_Field := 16#0#;
+      SDIOEN         : Boolean := False;
       --  unspecified
-      Reserved_12_31 : STM32_SVD.UInt20 := 16#0#;
+      Reserved_12_31 : Interfaces.Bit_Types.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -232,14 +212,14 @@ package STM32_SVD.SDIO is
    -- DCOUNT_Register --
    ---------------------
 
-   subtype DCOUNT_DATACOUNT_Field is STM32_SVD.UInt25;
+   subtype DCOUNT_DATACOUNT_Field is Interfaces.Bit_Types.UInt25;
 
    --  data counter register
    type DCOUNT_Register is record
-      --  Data count value
-      DATACOUNT      : DCOUNT_DATACOUNT_Field;
+      --  Read-only. Data count value
+      DATACOUNT      : DCOUNT_DATACOUNT_Field := 16#0#;
       --  unspecified
-      Reserved_25_31 : STM32_SVD.UInt7;
+      Reserved_25_31 : Interfaces.Bit_Types.UInt7;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -253,84 +233,61 @@ package STM32_SVD.SDIO is
    -- STA_Register --
    ------------------
 
-   subtype STA_CCRCFAIL_Field is STM32_SVD.Bit;
-   subtype STA_DCRCFAIL_Field is STM32_SVD.Bit;
-   subtype STA_CTIMEOUT_Field is STM32_SVD.Bit;
-   subtype STA_DTIMEOUT_Field is STM32_SVD.Bit;
-   subtype STA_TXUNDERR_Field is STM32_SVD.Bit;
-   subtype STA_RXOVERR_Field is STM32_SVD.Bit;
-   subtype STA_CMDREND_Field is STM32_SVD.Bit;
-   subtype STA_CMDSENT_Field is STM32_SVD.Bit;
-   subtype STA_DATAEND_Field is STM32_SVD.Bit;
-   subtype STA_STBITERR_Field is STM32_SVD.Bit;
-   subtype STA_DBCKEND_Field is STM32_SVD.Bit;
-   subtype STA_CMDACT_Field is STM32_SVD.Bit;
-   subtype STA_TXACT_Field is STM32_SVD.Bit;
-   subtype STA_RXACT_Field is STM32_SVD.Bit;
-   subtype STA_TXFIFOHE_Field is STM32_SVD.Bit;
-   subtype STA_RXFIFOHF_Field is STM32_SVD.Bit;
-   subtype STA_TXFIFOF_Field is STM32_SVD.Bit;
-   subtype STA_RXFIFOF_Field is STM32_SVD.Bit;
-   subtype STA_TXFIFOE_Field is STM32_SVD.Bit;
-   subtype STA_RXFIFOE_Field is STM32_SVD.Bit;
-   subtype STA_TXDAVL_Field is STM32_SVD.Bit;
-   subtype STA_RXDAVL_Field is STM32_SVD.Bit;
-   subtype STA_SDIOIT_Field is STM32_SVD.Bit;
-   subtype STA_CEATAEND_Field is STM32_SVD.Bit;
-
    --  status register
    type STA_Register is record
-      --  Command response received (CRC check failed)
-      CCRCFAIL       : STA_CCRCFAIL_Field;
-      --  Data block sent/received (CRC check failed)
-      DCRCFAIL       : STA_DCRCFAIL_Field;
-      --  Command response timeout
-      CTIMEOUT       : STA_CTIMEOUT_Field;
-      --  Data timeout
-      DTIMEOUT       : STA_DTIMEOUT_Field;
-      --  Transmit FIFO underrun error
-      TXUNDERR       : STA_TXUNDERR_Field;
-      --  Received FIFO overrun error
-      RXOVERR        : STA_RXOVERR_Field;
-      --  Command response received (CRC check passed)
-      CMDREND        : STA_CMDREND_Field;
-      --  Command sent (no response required)
-      CMDSENT        : STA_CMDSENT_Field;
-      --  Data end (data counter, SDIDCOUNT, is zero)
-      DATAEND        : STA_DATAEND_Field;
-      --  Start bit not detected on all data signals in wide bus mode
-      STBITERR       : STA_STBITERR_Field;
-      --  Data block sent/received (CRC check passed)
-      DBCKEND        : STA_DBCKEND_Field;
-      --  Command transfer in progress
-      CMDACT         : STA_CMDACT_Field;
-      --  Data transmit in progress
-      TXACT          : STA_TXACT_Field;
-      --  Data receive in progress
-      RXACT          : STA_RXACT_Field;
-      --  Transmit FIFO half empty: at least 8 words can be written into the
+      --  Read-only. Command response received (CRC check failed)
+      CCRCFAIL       : Boolean := False;
+      --  Read-only. Data block sent/received (CRC check failed)
+      DCRCFAIL       : Boolean := False;
+      --  Read-only. Command response timeout
+      CTIMEOUT       : Boolean := False;
+      --  Read-only. Data timeout
+      DTIMEOUT       : Boolean := False;
+      --  Read-only. Transmit FIFO underrun error
+      TXUNDERR       : Boolean := False;
+      --  Read-only. Received FIFO overrun error
+      RXOVERR        : Boolean := False;
+      --  Read-only. Command response received (CRC check passed)
+      CMDREND        : Boolean := False;
+      --  Read-only. Command sent (no response required)
+      CMDSENT        : Boolean := False;
+      --  Read-only. Data end (data counter, SDIDCOUNT, is zero)
+      DATAEND        : Boolean := False;
+      --  Read-only. Start bit not detected on all data signals in wide bus
+      --  mode
+      STBITERR       : Boolean := False;
+      --  Read-only. Data block sent/received (CRC check passed)
+      DBCKEND        : Boolean := False;
+      --  Read-only. Command transfer in progress
+      CMDACT         : Boolean := False;
+      --  Read-only. Data transmit in progress
+      TXACT          : Boolean := False;
+      --  Read-only. Data receive in progress
+      RXACT          : Boolean := False;
+      --  Read-only. Transmit FIFO half empty: at least 8 words can be written
+      --  into the FIFO
+      TXFIFOHE       : Boolean := False;
+      --  Read-only. Receive FIFO half full: there are at least 8 words in the
       --  FIFO
-      TXFIFOHE       : STA_TXFIFOHE_Field;
-      --  Receive FIFO half full: there are at least 8 words in the FIFO
-      RXFIFOHF       : STA_RXFIFOHF_Field;
-      --  Transmit FIFO full
-      TXFIFOF        : STA_TXFIFOF_Field;
-      --  Receive FIFO full
-      RXFIFOF        : STA_RXFIFOF_Field;
-      --  Transmit FIFO empty
-      TXFIFOE        : STA_TXFIFOE_Field;
-      --  Receive FIFO empty
-      RXFIFOE        : STA_RXFIFOE_Field;
-      --  Data available in transmit FIFO
-      TXDAVL         : STA_TXDAVL_Field;
-      --  Data available in receive FIFO
-      RXDAVL         : STA_RXDAVL_Field;
-      --  SDIO interrupt received
-      SDIOIT         : STA_SDIOIT_Field;
-      --  CE-ATA command completion signal received for CMD61
-      CEATAEND       : STA_CEATAEND_Field;
+      RXFIFOHF       : Boolean := False;
+      --  Read-only. Transmit FIFO full
+      TXFIFOF        : Boolean := False;
+      --  Read-only. Receive FIFO full
+      RXFIFOF        : Boolean := False;
+      --  Read-only. Transmit FIFO empty
+      TXFIFOE        : Boolean := False;
+      --  Read-only. Receive FIFO empty
+      RXFIFOE        : Boolean := False;
+      --  Read-only. Data available in transmit FIFO
+      TXDAVL         : Boolean := False;
+      --  Read-only. Data available in receive FIFO
+      RXDAVL         : Boolean := False;
+      --  Read-only. SDIO interrupt received
+      SDIOIT         : Boolean := False;
+      --  Read-only. CE-ATA command completion signal received for CMD61
+      CEATAEND       : Boolean := False;
       --  unspecified
-      Reserved_24_31 : STM32_SVD.Byte;
+      Reserved_24_31 : Interfaces.Bit_Types.Byte;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -367,52 +324,38 @@ package STM32_SVD.SDIO is
    -- ICR_Register --
    ------------------
 
-   subtype ICR_CCRCFAILC_Field is STM32_SVD.Bit;
-   subtype ICR_DCRCFAILC_Field is STM32_SVD.Bit;
-   subtype ICR_CTIMEOUTC_Field is STM32_SVD.Bit;
-   subtype ICR_DTIMEOUTC_Field is STM32_SVD.Bit;
-   subtype ICR_TXUNDERRC_Field is STM32_SVD.Bit;
-   subtype ICR_RXOVERRC_Field is STM32_SVD.Bit;
-   subtype ICR_CMDRENDC_Field is STM32_SVD.Bit;
-   subtype ICR_CMDSENTC_Field is STM32_SVD.Bit;
-   subtype ICR_DATAENDC_Field is STM32_SVD.Bit;
-   subtype ICR_STBITERRC_Field is STM32_SVD.Bit;
-   subtype ICR_DBCKENDC_Field is STM32_SVD.Bit;
-   subtype ICR_SDIOITC_Field is STM32_SVD.Bit;
-   subtype ICR_CEATAENDC_Field is STM32_SVD.Bit;
-
    --  interrupt clear register
    type ICR_Register is record
       --  CCRCFAIL flag clear bit
-      CCRCFAILC      : ICR_CCRCFAILC_Field := 16#0#;
+      CCRCFAILC      : Boolean := False;
       --  DCRCFAIL flag clear bit
-      DCRCFAILC      : ICR_DCRCFAILC_Field := 16#0#;
+      DCRCFAILC      : Boolean := False;
       --  CTIMEOUT flag clear bit
-      CTIMEOUTC      : ICR_CTIMEOUTC_Field := 16#0#;
+      CTIMEOUTC      : Boolean := False;
       --  DTIMEOUT flag clear bit
-      DTIMEOUTC      : ICR_DTIMEOUTC_Field := 16#0#;
+      DTIMEOUTC      : Boolean := False;
       --  TXUNDERR flag clear bit
-      TXUNDERRC      : ICR_TXUNDERRC_Field := 16#0#;
+      TXUNDERRC      : Boolean := False;
       --  RXOVERR flag clear bit
-      RXOVERRC       : ICR_RXOVERRC_Field := 16#0#;
+      RXOVERRC       : Boolean := False;
       --  CMDREND flag clear bit
-      CMDRENDC       : ICR_CMDRENDC_Field := 16#0#;
+      CMDRENDC       : Boolean := False;
       --  CMDSENT flag clear bit
-      CMDSENTC       : ICR_CMDSENTC_Field := 16#0#;
+      CMDSENTC       : Boolean := False;
       --  DATAEND flag clear bit
-      DATAENDC       : ICR_DATAENDC_Field := 16#0#;
+      DATAENDC       : Boolean := False;
       --  STBITERR flag clear bit
-      STBITERRC      : ICR_STBITERRC_Field := 16#0#;
+      STBITERRC      : Boolean := False;
       --  DBCKEND flag clear bit
-      DBCKENDC       : ICR_DBCKENDC_Field := 16#0#;
+      DBCKENDC       : Boolean := False;
       --  unspecified
-      Reserved_11_21 : STM32_SVD.UInt11 := 16#0#;
+      Reserved_11_21 : Interfaces.Bit_Types.UInt11 := 16#0#;
       --  SDIOIT flag clear bit
-      SDIOITC        : ICR_SDIOITC_Field := 16#0#;
+      SDIOITC        : Boolean := False;
       --  CEATAEND flag clear bit
-      CEATAENDC      : ICR_CEATAENDC_Field := 16#0#;
+      CEATAENDC      : Boolean := False;
       --  unspecified
-      Reserved_24_31 : STM32_SVD.Byte := 16#0#;
+      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -439,83 +382,58 @@ package STM32_SVD.SDIO is
    -- MASK_Register --
    -------------------
 
-   subtype MASK_CCRCFAILIE_Field is STM32_SVD.Bit;
-   subtype MASK_DCRCFAILIE_Field is STM32_SVD.Bit;
-   subtype MASK_CTIMEOUTIE_Field is STM32_SVD.Bit;
-   subtype MASK_DTIMEOUTIE_Field is STM32_SVD.Bit;
-   subtype MASK_TXUNDERRIE_Field is STM32_SVD.Bit;
-   subtype MASK_RXOVERRIE_Field is STM32_SVD.Bit;
-   subtype MASK_CMDRENDIE_Field is STM32_SVD.Bit;
-   subtype MASK_CMDSENTIE_Field is STM32_SVD.Bit;
-   subtype MASK_DATAENDIE_Field is STM32_SVD.Bit;
-   subtype MASK_STBITERRIE_Field is STM32_SVD.Bit;
-   subtype MASK_DBCKENDIE_Field is STM32_SVD.Bit;
-   subtype MASK_CMDACTIE_Field is STM32_SVD.Bit;
-   subtype MASK_TXACTIE_Field is STM32_SVD.Bit;
-   subtype MASK_RXACTIE_Field is STM32_SVD.Bit;
-   subtype MASK_TXFIFOHEIE_Field is STM32_SVD.Bit;
-   subtype MASK_RXFIFOHFIE_Field is STM32_SVD.Bit;
-   subtype MASK_TXFIFOFIE_Field is STM32_SVD.Bit;
-   subtype MASK_RXFIFOFIE_Field is STM32_SVD.Bit;
-   subtype MASK_TXFIFOEIE_Field is STM32_SVD.Bit;
-   subtype MASK_RXFIFOEIE_Field is STM32_SVD.Bit;
-   subtype MASK_TXDAVLIE_Field is STM32_SVD.Bit;
-   subtype MASK_RXDAVLIE_Field is STM32_SVD.Bit;
-   subtype MASK_SDIOITIE_Field is STM32_SVD.Bit;
-   subtype MASK_CEATAENDIE_Field is STM32_SVD.Bit;
-
    --  mask register
    type MASK_Register is record
       --  Command CRC fail interrupt enable
-      CCRCFAILIE     : MASK_CCRCFAILIE_Field := 16#0#;
+      CCRCFAILIE     : Boolean := False;
       --  Data CRC fail interrupt enable
-      DCRCFAILIE     : MASK_DCRCFAILIE_Field := 16#0#;
+      DCRCFAILIE     : Boolean := False;
       --  Command timeout interrupt enable
-      CTIMEOUTIE     : MASK_CTIMEOUTIE_Field := 16#0#;
+      CTIMEOUTIE     : Boolean := False;
       --  Data timeout interrupt enable
-      DTIMEOUTIE     : MASK_DTIMEOUTIE_Field := 16#0#;
+      DTIMEOUTIE     : Boolean := False;
       --  Tx FIFO underrun error interrupt enable
-      TXUNDERRIE     : MASK_TXUNDERRIE_Field := 16#0#;
+      TXUNDERRIE     : Boolean := False;
       --  Rx FIFO overrun error interrupt enable
-      RXOVERRIE      : MASK_RXOVERRIE_Field := 16#0#;
+      RXOVERRIE      : Boolean := False;
       --  Command response received interrupt enable
-      CMDRENDIE      : MASK_CMDRENDIE_Field := 16#0#;
+      CMDRENDIE      : Boolean := False;
       --  Command sent interrupt enable
-      CMDSENTIE      : MASK_CMDSENTIE_Field := 16#0#;
+      CMDSENTIE      : Boolean := False;
       --  Data end interrupt enable
-      DATAENDIE      : MASK_DATAENDIE_Field := 16#0#;
+      DATAENDIE      : Boolean := False;
       --  Start bit error interrupt enable
-      STBITERRIE     : MASK_STBITERRIE_Field := 16#0#;
+      STBITERRIE     : Boolean := False;
       --  Data block end interrupt enable
-      DBCKENDIE      : MASK_DBCKENDIE_Field := 16#0#;
+      DBCKENDIE      : Boolean := False;
       --  Command acting interrupt enable
-      CMDACTIE       : MASK_CMDACTIE_Field := 16#0#;
+      CMDACTIE       : Boolean := False;
       --  Data transmit acting interrupt enable
-      TXACTIE        : MASK_TXACTIE_Field := 16#0#;
+      TXACTIE        : Boolean := False;
       --  Data receive acting interrupt enable
-      RXACTIE        : MASK_RXACTIE_Field := 16#0#;
+      RXACTIE        : Boolean := False;
       --  Tx FIFO half empty interrupt enable
-      TXFIFOHEIE     : MASK_TXFIFOHEIE_Field := 16#0#;
+      TXFIFOHEIE     : Boolean := False;
       --  Rx FIFO half full interrupt enable
-      RXFIFOHFIE     : MASK_RXFIFOHFIE_Field := 16#0#;
+      RXFIFOHFIE     : Boolean := False;
       --  Tx FIFO full interrupt enable
-      TXFIFOFIE      : MASK_TXFIFOFIE_Field := 16#0#;
+      TXFIFOFIE      : Boolean := False;
       --  Rx FIFO full interrupt enable
-      RXFIFOFIE      : MASK_RXFIFOFIE_Field := 16#0#;
+      RXFIFOFIE      : Boolean := False;
       --  Tx FIFO empty interrupt enable
-      TXFIFOEIE      : MASK_TXFIFOEIE_Field := 16#0#;
+      TXFIFOEIE      : Boolean := False;
       --  Rx FIFO empty interrupt enable
-      RXFIFOEIE      : MASK_RXFIFOEIE_Field := 16#0#;
+      RXFIFOEIE      : Boolean := False;
       --  Data available in Tx FIFO interrupt enable
-      TXDAVLIE       : MASK_TXDAVLIE_Field := 16#0#;
+      TXDAVLIE       : Boolean := False;
       --  Data available in Rx FIFO interrupt enable
-      RXDAVLIE       : MASK_RXDAVLIE_Field := 16#0#;
+      RXDAVLIE       : Boolean := False;
       --  SDIO mode interrupt received interrupt enable
-      SDIOITIE       : MASK_SDIOITIE_Field := 16#0#;
+      SDIOITIE       : Boolean := False;
       --  CE-ATA command completion signal received interrupt enable
-      CEATAENDIE     : MASK_CEATAENDIE_Field := 16#0#;
+      CEATAENDIE     : Boolean := False;
       --  unspecified
-      Reserved_24_31 : STM32_SVD.Byte := 16#0#;
+      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -552,14 +470,15 @@ package STM32_SVD.SDIO is
    -- FIFOCNT_Register --
    ----------------------
 
-   subtype FIFOCNT_FIFOCOUNT_Field is STM32_SVD.UInt24;
+   subtype FIFOCNT_FIFOCOUNT_Field is Interfaces.Bit_Types.UInt24;
 
    --  FIFO counter register
    type FIFOCNT_Register is record
-      --  Remaining number of words to be written to or read from the FIFO.
-      FIFOCOUNT      : FIFOCNT_FIFOCOUNT_Field;
+      --  Read-only. Remaining number of words to be written to or read from
+      --  the FIFO.
+      FIFOCOUNT      : FIFOCNT_FIFOCOUNT_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : STM32_SVD.Byte;
+      Reserved_24_31 : Interfaces.Bit_Types.Byte;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -580,21 +499,21 @@ package STM32_SVD.SDIO is
       --  SDI clock control register
       CLKCR   : CLKCR_Register;
       --  argument register
-      ARG     : STM32_SVD.Word;
+      ARG     : Interfaces.Bit_Types.Word;
       --  command register
       CMD     : CMD_Register;
       --  command response register
       RESPCMD : RESPCMD_Register;
       --  response 1..4 register
-      RESP1   : STM32_SVD.Word;
+      RESP1   : Interfaces.Bit_Types.Word;
       --  response 1..4 register
-      RESP2   : STM32_SVD.Word;
+      RESP2   : Interfaces.Bit_Types.Word;
       --  response 1..4 register
-      RESP3   : STM32_SVD.Word;
+      RESP3   : Interfaces.Bit_Types.Word;
       --  response 1..4 register
-      RESP4   : STM32_SVD.Word;
+      RESP4   : Interfaces.Bit_Types.Word;
       --  data timer register
-      DTIMER  : STM32_SVD.Word;
+      DTIMER  : Interfaces.Bit_Types.Word;
       --  data length register
       DLEN    : DLEN_Register;
       --  data control register
@@ -610,7 +529,7 @@ package STM32_SVD.SDIO is
       --  FIFO counter register
       FIFOCNT : FIFOCNT_Register;
       --  data FIFO register
-      FIFO    : STM32_SVD.Word;
+      FIFO    : Interfaces.Bit_Types.Word;
    end record
      with Volatile;
 
@@ -637,6 +556,6 @@ package STM32_SVD.SDIO is
 
    --  Secure digital input/output interface
    SDIO_Periph : aliased SDIO_Peripheral
-     with Import, Address => System'To_Address (16#40012C00#);
+     with Import, Address => SDIO_Base;
 
 end STM32_SVD.SDIO;

@@ -1,13 +1,13 @@
---  Automatically generated from STM32F429x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F429x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.RCC is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,51 +17,41 @@ package STM32_SVD.RCC is
    -- CR_Register --
    -----------------
 
-   subtype CR_HSION_Field is STM32_SVD.Bit;
-   subtype CR_HSIRDY_Field is STM32_SVD.Bit;
-   subtype CR_HSITRIM_Field is STM32_SVD.UInt5;
-   subtype CR_HSICAL_Field is STM32_SVD.Byte;
-   subtype CR_HSEON_Field is STM32_SVD.Bit;
-   subtype CR_HSERDY_Field is STM32_SVD.Bit;
-   subtype CR_HSEBYP_Field is STM32_SVD.Bit;
-   subtype CR_CSSON_Field is STM32_SVD.Bit;
-   subtype CR_PLLON_Field is STM32_SVD.Bit;
-   subtype CR_PLLRDY_Field is STM32_SVD.Bit;
-   subtype CR_PLLI2SON_Field is STM32_SVD.Bit;
-   subtype CR_PLLI2SRDY_Field is STM32_SVD.Bit;
+   subtype CR_HSITRIM_Field is Interfaces.Bit_Types.UInt5;
+   subtype CR_HSICAL_Field is Interfaces.Bit_Types.Byte;
 
    --  clock control register
    type CR_Register is record
       --  Internal high-speed clock enable
-      HSION          : CR_HSION_Field := 16#1#;
-      --  Internal high-speed clock ready flag
-      HSIRDY         : CR_HSIRDY_Field := 16#1#;
+      HSION          : Boolean := True;
+      --  Read-only. Internal high-speed clock ready flag
+      HSIRDY         : Boolean := True;
       --  unspecified
-      Reserved_2_2   : STM32_SVD.Bit := 16#0#;
+      Reserved_2_2   : Interfaces.Bit_Types.Bit := 16#0#;
       --  Internal high-speed clock trimming
       HSITRIM        : CR_HSITRIM_Field := 16#10#;
-      --  Internal high-speed clock calibration
+      --  Read-only. Internal high-speed clock calibration
       HSICAL         : CR_HSICAL_Field := 16#0#;
       --  HSE clock enable
-      HSEON          : CR_HSEON_Field := 16#0#;
-      --  HSE clock ready flag
-      HSERDY         : CR_HSERDY_Field := 16#0#;
+      HSEON          : Boolean := False;
+      --  Read-only. HSE clock ready flag
+      HSERDY         : Boolean := False;
       --  HSE clock bypass
-      HSEBYP         : CR_HSEBYP_Field := 16#0#;
+      HSEBYP         : Boolean := False;
       --  Clock security system enable
-      CSSON          : CR_CSSON_Field := 16#0#;
+      CSSON          : Boolean := False;
       --  unspecified
-      Reserved_20_23 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_20_23 : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  Main PLL (PLL) enable
-      PLLON          : CR_PLLON_Field := 16#0#;
-      --  Main PLL (PLL) clock ready flag
-      PLLRDY         : CR_PLLRDY_Field := 16#0#;
+      PLLON          : Boolean := False;
+      --  Read-only. Main PLL (PLL) clock ready flag
+      PLLRDY         : Boolean := False;
       --  PLLI2S enable
-      PLLI2SON       : CR_PLLI2SON_Field := 16#0#;
-      --  PLLI2S clock ready flag
-      PLLI2SRDY      : CR_PLLI2SRDY_Field := 16#0#;
+      PLLI2SON       : Boolean := False;
+      --  Read-only. PLLI2S clock ready flag
+      PLLI2SRDY      : Boolean := False;
       --  unspecified
-      Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -88,11 +78,10 @@ package STM32_SVD.RCC is
    -- PLLCFGR_Register --
    ----------------------
 
-   subtype PLLCFGR_PLLM_Field is STM32_SVD.UInt6;
-   subtype PLLCFGR_PLLN_Field is STM32_SVD.UInt9;
-   subtype PLLCFGR_PLLP_Field is STM32_SVD.UInt2;
-   subtype PLLCFGR_PLLSRC_Field is STM32_SVD.Bit;
-   subtype PLLCFGR_PLLQ_Field is STM32_SVD.UInt4;
+   subtype PLLCFGR_PLLM_Field is Interfaces.Bit_Types.UInt6;
+   subtype PLLCFGR_PLLN_Field is Interfaces.Bit_Types.UInt9;
+   subtype PLLCFGR_PLLP_Field is Interfaces.Bit_Types.UInt2;
+   subtype PLLCFGR_PLLQ_Field is Interfaces.Bit_Types.UInt4;
 
    --  PLL configuration register
    type PLLCFGR_Register is record
@@ -102,20 +91,20 @@ package STM32_SVD.RCC is
       --  Main PLL (PLL) multiplication factor for VCO
       PLLN           : PLLCFGR_PLLN_Field := 16#C0#;
       --  unspecified
-      Reserved_15_15 : STM32_SVD.Bit := 16#0#;
+      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Main PLL (PLL) division factor for main system clock
       PLLP           : PLLCFGR_PLLP_Field := 16#0#;
       --  unspecified
-      Reserved_18_21 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_18_21 : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  Main PLL(PLL) and audio PLL (PLLI2S) entry clock source
-      PLLSRC         : PLLCFGR_PLLSRC_Field := 16#0#;
+      PLLSRC         : Boolean := False;
       --  unspecified
-      Reserved_23_23 : STM32_SVD.Bit := 16#0#;
+      Reserved_23_23 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Main PLL (PLL) division factor for USB OTG FS, SDIO and random number
       --  generator clocks
       PLLQ           : PLLCFGR_PLLQ_Field := 16#4#;
       --  unspecified
-      Reserved_28_31 : STM32_SVD.UInt4 := 16#2#;
+      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#2#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -136,19 +125,19 @@ package STM32_SVD.RCC is
    -- CFGR_Register --
    -------------------
 
-   subtype CFGR_SW_Field is STM32_SVD.UInt2;
-   subtype CFGR_SWS_Field is STM32_SVD.UInt2;
-   subtype CFGR_HPRE_Field is STM32_SVD.UInt4;
+   subtype CFGR_SW_Field is Interfaces.Bit_Types.UInt2;
+   subtype CFGR_SWS_Field is Interfaces.Bit_Types.UInt2;
+   subtype CFGR_HPRE_Field is Interfaces.Bit_Types.UInt4;
 
    ---------------
    -- CFGR.PPRE --
    ---------------
 
    --  CFGR_PPRE array element
-   subtype CFGR_PPRE_Element is STM32_SVD.UInt3;
+   subtype CFGR_PPRE_Element is Interfaces.Bit_Types.UInt3;
 
    --  CFGR_PPRE array
-   type CFGR_PPRE_Field_Array is array (0 .. 1) of CFGR_PPRE_Element
+   type CFGR_PPRE_Field_Array is array (1 .. 2) of CFGR_PPRE_Element
      with Component_Size => 3, Size => 6;
 
    --  Type definition for CFGR_PPRE
@@ -158,7 +147,7 @@ package STM32_SVD.RCC is
       case As_Array is
          when False =>
             --  PPRE as a value
-            Val : STM32_SVD.UInt6;
+            Val : Interfaces.Bit_Types.UInt6;
          when True =>
             --  PPRE as an array
             Arr : CFGR_PPRE_Field_Array;
@@ -171,23 +160,22 @@ package STM32_SVD.RCC is
       Arr at 0 range 0 .. 5;
    end record;
 
-   subtype CFGR_RTCPRE_Field is STM32_SVD.UInt5;
-   subtype CFGR_MCO1_Field is STM32_SVD.UInt2;
-   subtype CFGR_I2SSRC_Field is STM32_SVD.Bit;
-   subtype CFGR_MCO1PRE_Field is STM32_SVD.UInt3;
-   subtype CFGR_MCO2PRE_Field is STM32_SVD.UInt3;
-   subtype CFGR_MCO2_Field is STM32_SVD.UInt2;
+   subtype CFGR_RTCPRE_Field is Interfaces.Bit_Types.UInt5;
+   subtype CFGR_MCO1_Field is Interfaces.Bit_Types.UInt2;
+   subtype CFGR_MCO1PRE_Field is Interfaces.Bit_Types.UInt3;
+   subtype CFGR_MCO2PRE_Field is Interfaces.Bit_Types.UInt3;
+   subtype CFGR_MCO2_Field is Interfaces.Bit_Types.UInt2;
 
    --  clock configuration register
    type CFGR_Register is record
       --  System clock switch
       SW           : CFGR_SW_Field := 16#0#;
-      --  System clock switch status
+      --  Read-only. System clock switch status
       SWS          : CFGR_SWS_Field := 16#0#;
       --  AHB prescaler
       HPRE         : CFGR_HPRE_Field := 16#0#;
       --  unspecified
-      Reserved_8_9 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_8_9 : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  APB Low speed prescaler (APB1)
       PPRE         : CFGR_PPRE_Field := (As_Array => False, Val => 16#0#);
       --  HSE division factor for RTC clock
@@ -195,7 +183,7 @@ package STM32_SVD.RCC is
       --  Microcontroller clock output 1
       MCO1         : CFGR_MCO1_Field := 16#0#;
       --  I2S clock selection
-      I2SSRC       : CFGR_I2SSRC_Field := 16#0#;
+      I2SSRC       : Boolean := False;
       --  MCO1 prescaler
       MCO1PRE      : CFGR_MCO1PRE_Field := 16#0#;
       --  MCO2 prescaler
@@ -224,82 +212,58 @@ package STM32_SVD.RCC is
    -- CIR_Register --
    ------------------
 
-   subtype CIR_LSIRDYF_Field is STM32_SVD.Bit;
-   subtype CIR_LSERDYF_Field is STM32_SVD.Bit;
-   subtype CIR_HSIRDYF_Field is STM32_SVD.Bit;
-   subtype CIR_HSERDYF_Field is STM32_SVD.Bit;
-   subtype CIR_PLLRDYF_Field is STM32_SVD.Bit;
-   subtype CIR_PLLI2SRDYF_Field is STM32_SVD.Bit;
-   subtype CIR_PLLSAIRDYF_Field is STM32_SVD.Bit;
-   subtype CIR_CSSF_Field is STM32_SVD.Bit;
-   subtype CIR_LSIRDYIE_Field is STM32_SVD.Bit;
-   subtype CIR_LSERDYIE_Field is STM32_SVD.Bit;
-   subtype CIR_HSIRDYIE_Field is STM32_SVD.Bit;
-   subtype CIR_HSERDYIE_Field is STM32_SVD.Bit;
-   subtype CIR_PLLRDYIE_Field is STM32_SVD.Bit;
-   subtype CIR_PLLI2SRDYIE_Field is STM32_SVD.Bit;
-   subtype CIR_PLLSAIRDYIE_Field is STM32_SVD.Bit;
-   subtype CIR_LSIRDYC_Field is STM32_SVD.Bit;
-   subtype CIR_LSERDYC_Field is STM32_SVD.Bit;
-   subtype CIR_HSIRDYC_Field is STM32_SVD.Bit;
-   subtype CIR_HSERDYC_Field is STM32_SVD.Bit;
-   subtype CIR_PLLRDYC_Field is STM32_SVD.Bit;
-   subtype CIR_PLLI2SRDYC_Field is STM32_SVD.Bit;
-   subtype CIR_PLLSAIRDYC_Field is STM32_SVD.Bit;
-   subtype CIR_CSSC_Field is STM32_SVD.Bit;
-
    --  clock interrupt register
    type CIR_Register is record
-      --  LSI ready interrupt flag
-      LSIRDYF        : CIR_LSIRDYF_Field := 16#0#;
-      --  LSE ready interrupt flag
-      LSERDYF        : CIR_LSERDYF_Field := 16#0#;
-      --  HSI ready interrupt flag
-      HSIRDYF        : CIR_HSIRDYF_Field := 16#0#;
-      --  HSE ready interrupt flag
-      HSERDYF        : CIR_HSERDYF_Field := 16#0#;
-      --  Main PLL (PLL) ready interrupt flag
-      PLLRDYF        : CIR_PLLRDYF_Field := 16#0#;
-      --  PLLI2S ready interrupt flag
-      PLLI2SRDYF     : CIR_PLLI2SRDYF_Field := 16#0#;
-      --  PLLSAI ready interrupt flag
-      PLLSAIRDYF     : CIR_PLLSAIRDYF_Field := 16#0#;
-      --  Clock security system interrupt flag
-      CSSF           : CIR_CSSF_Field := 16#0#;
+      --  Read-only. LSI ready interrupt flag
+      LSIRDYF        : Boolean := False;
+      --  Read-only. LSE ready interrupt flag
+      LSERDYF        : Boolean := False;
+      --  Read-only. HSI ready interrupt flag
+      HSIRDYF        : Boolean := False;
+      --  Read-only. HSE ready interrupt flag
+      HSERDYF        : Boolean := False;
+      --  Read-only. Main PLL (PLL) ready interrupt flag
+      PLLRDYF        : Boolean := False;
+      --  Read-only. PLLI2S ready interrupt flag
+      PLLI2SRDYF     : Boolean := False;
+      --  Read-only. PLLSAI ready interrupt flag
+      PLLSAIRDYF     : Boolean := False;
+      --  Read-only. Clock security system interrupt flag
+      CSSF           : Boolean := False;
       --  LSI ready interrupt enable
-      LSIRDYIE       : CIR_LSIRDYIE_Field := 16#0#;
+      LSIRDYIE       : Boolean := False;
       --  LSE ready interrupt enable
-      LSERDYIE       : CIR_LSERDYIE_Field := 16#0#;
+      LSERDYIE       : Boolean := False;
       --  HSI ready interrupt enable
-      HSIRDYIE       : CIR_HSIRDYIE_Field := 16#0#;
+      HSIRDYIE       : Boolean := False;
       --  HSE ready interrupt enable
-      HSERDYIE       : CIR_HSERDYIE_Field := 16#0#;
+      HSERDYIE       : Boolean := False;
       --  Main PLL (PLL) ready interrupt enable
-      PLLRDYIE       : CIR_PLLRDYIE_Field := 16#0#;
+      PLLRDYIE       : Boolean := False;
       --  PLLI2S ready interrupt enable
-      PLLI2SRDYIE    : CIR_PLLI2SRDYIE_Field := 16#0#;
+      PLLI2SRDYIE    : Boolean := False;
       --  PLLSAI Ready Interrupt Enable
-      PLLSAIRDYIE    : CIR_PLLSAIRDYIE_Field := 16#0#;
+      PLLSAIRDYIE    : Boolean := False;
       --  unspecified
-      Reserved_15_15 : STM32_SVD.Bit := 16#0#;
-      --  LSI ready interrupt clear
-      LSIRDYC        : CIR_LSIRDYC_Field := 16#0#;
-      --  LSE ready interrupt clear
-      LSERDYC        : CIR_LSERDYC_Field := 16#0#;
-      --  HSI ready interrupt clear
-      HSIRDYC        : CIR_HSIRDYC_Field := 16#0#;
-      --  HSE ready interrupt clear
-      HSERDYC        : CIR_HSERDYC_Field := 16#0#;
-      --  Main PLL(PLL) ready interrupt clear
-      PLLRDYC        : CIR_PLLRDYC_Field := 16#0#;
-      --  PLLI2S ready interrupt clear
-      PLLI2SRDYC     : CIR_PLLI2SRDYC_Field := 16#0#;
-      --  PLLSAI Ready Interrupt Clear
-      PLLSAIRDYC     : CIR_PLLSAIRDYC_Field := 16#0#;
-      --  Clock security system interrupt clear
-      CSSC           : CIR_CSSC_Field := 16#0#;
+      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      --  Write-only. LSI ready interrupt clear
+      LSIRDYC        : Boolean := False;
+      --  Write-only. LSE ready interrupt clear
+      LSERDYC        : Boolean := False;
+      --  Write-only. HSI ready interrupt clear
+      HSIRDYC        : Boolean := False;
+      --  Write-only. HSE ready interrupt clear
+      HSERDYC        : Boolean := False;
+      --  Write-only. Main PLL(PLL) ready interrupt clear
+      PLLRDYC        : Boolean := False;
+      --  Write-only. PLLI2S ready interrupt clear
+      PLLI2SRDYC     : Boolean := False;
+      --  Write-only. PLLSAI Ready Interrupt Clear
+      PLLSAIRDYC     : Boolean := False;
+      --  Write-only. Clock security system interrupt clear
+      CSSC           : Boolean := False;
       --  unspecified
-      Reserved_24_31 : STM32_SVD.Byte := 16#0#;
+      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -336,70 +300,52 @@ package STM32_SVD.RCC is
    -- AHB1RSTR_Register --
    -----------------------
 
-   subtype AHB1RSTR_GPIOARST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_GPIOBRST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_GPIOCRST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_GPIODRST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_GPIOERST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_GPIOFRST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_GPIOGRST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_GPIOHRST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_GPIOIRST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_GPIOJRST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_GPIOKRST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_CRCRST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_DMA1RST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_DMA2RST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_DMA2DRST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_ETHMACRST_Field is STM32_SVD.Bit;
-   subtype AHB1RSTR_OTGHSRST_Field is STM32_SVD.Bit;
-
    --  AHB1 peripheral reset register
    type AHB1RSTR_Register is record
       --  IO port A reset
-      GPIOARST       : AHB1RSTR_GPIOARST_Field := 16#0#;
+      GPIOARST       : Boolean := False;
       --  IO port B reset
-      GPIOBRST       : AHB1RSTR_GPIOBRST_Field := 16#0#;
+      GPIOBRST       : Boolean := False;
       --  IO port C reset
-      GPIOCRST       : AHB1RSTR_GPIOCRST_Field := 16#0#;
+      GPIOCRST       : Boolean := False;
       --  IO port D reset
-      GPIODRST       : AHB1RSTR_GPIODRST_Field := 16#0#;
+      GPIODRST       : Boolean := False;
       --  IO port E reset
-      GPIOERST       : AHB1RSTR_GPIOERST_Field := 16#0#;
+      GPIOERST       : Boolean := False;
       --  IO port F reset
-      GPIOFRST       : AHB1RSTR_GPIOFRST_Field := 16#0#;
+      GPIOFRST       : Boolean := False;
       --  IO port G reset
-      GPIOGRST       : AHB1RSTR_GPIOGRST_Field := 16#0#;
+      GPIOGRST       : Boolean := False;
       --  IO port H reset
-      GPIOHRST       : AHB1RSTR_GPIOHRST_Field := 16#0#;
+      GPIOHRST       : Boolean := False;
       --  IO port I reset
-      GPIOIRST       : AHB1RSTR_GPIOIRST_Field := 16#0#;
+      GPIOIRST       : Boolean := False;
       --  IO port J reset
-      GPIOJRST       : AHB1RSTR_GPIOJRST_Field := 16#0#;
+      GPIOJRST       : Boolean := False;
       --  IO port K reset
-      GPIOKRST       : AHB1RSTR_GPIOKRST_Field := 16#0#;
+      GPIOKRST       : Boolean := False;
       --  unspecified
-      Reserved_11_11 : STM32_SVD.Bit := 16#0#;
+      Reserved_11_11 : Interfaces.Bit_Types.Bit := 16#0#;
       --  CRC reset
-      CRCRST         : AHB1RSTR_CRCRST_Field := 16#0#;
+      CRCRST         : Boolean := False;
       --  unspecified
-      Reserved_13_20 : STM32_SVD.Byte := 16#0#;
+      Reserved_13_20 : Interfaces.Bit_Types.Byte := 16#0#;
       --  DMA2 reset
-      DMA1RST        : AHB1RSTR_DMA1RST_Field := 16#0#;
+      DMA1RST        : Boolean := False;
       --  DMA2 reset
-      DMA2RST        : AHB1RSTR_DMA2RST_Field := 16#0#;
+      DMA2RST        : Boolean := False;
       --  DMA2D reset
-      DMA2DRST       : AHB1RSTR_DMA2DRST_Field := 16#0#;
+      DMA2DRST       : Boolean := False;
       --  unspecified
-      Reserved_24_24 : STM32_SVD.Bit := 16#0#;
+      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Ethernet MAC reset
-      ETHMACRST      : AHB1RSTR_ETHMACRST_Field := 16#0#;
+      ETHMACRST      : Boolean := False;
       --  unspecified
-      Reserved_26_28 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_26_28 : Interfaces.Bit_Types.UInt3 := 16#0#;
       --  USB OTG HS module reset
-      OTGHSRST       : AHB1RSTR_OTGHSRST_Field := 16#0#;
+      OTGHSRST       : Boolean := False;
       --  unspecified
-      Reserved_30_31 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_30_31 : Interfaces.Bit_Types.UInt2 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -433,22 +379,18 @@ package STM32_SVD.RCC is
    -- AHB2RSTR_Register --
    -----------------------
 
-   subtype AHB2RSTR_DCMIRST_Field is STM32_SVD.Bit;
-   subtype AHB2RSTR_RNGRST_Field is STM32_SVD.Bit;
-   subtype AHB2RSTR_OTGFSRST_Field is STM32_SVD.Bit;
-
    --  AHB2 peripheral reset register
    type AHB2RSTR_Register is record
       --  Camera interface reset
-      DCMIRST       : AHB2RSTR_DCMIRST_Field := 16#0#;
+      DCMIRST       : Boolean := False;
       --  unspecified
-      Reserved_1_5  : STM32_SVD.UInt5 := 16#0#;
+      Reserved_1_5  : Interfaces.Bit_Types.UInt5 := 16#0#;
       --  Random number generator module reset
-      RNGRST        : AHB2RSTR_RNGRST_Field := 16#0#;
+      RNGRST        : Boolean := False;
       --  USB OTG FS module reset
-      OTGFSRST      : AHB2RSTR_OTGFSRST_Field := 16#0#;
+      OTGFSRST      : Boolean := False;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24 := 16#0#;
+      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -465,14 +407,12 @@ package STM32_SVD.RCC is
    -- AHB3RSTR_Register --
    -----------------------
 
-   subtype AHB3RSTR_FMCRST_Field is STM32_SVD.Bit;
-
    --  AHB3 peripheral reset register
    type AHB3RSTR_Register is record
       --  Flexible memory controller module reset
-      FMCRST        : AHB3RSTR_FMCRST_Field := 16#0#;
+      FMCRST        : Boolean := False;
       --  unspecified
-      Reserved_1_31 : STM32_SVD.UInt31 := 16#0#;
+      Reserved_1_31 : Interfaces.Bit_Types.UInt31 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -486,94 +426,68 @@ package STM32_SVD.RCC is
    -- APB1RSTR_Register --
    -----------------------
 
-   subtype APB1RSTR_TIM2RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_TIM3RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_TIM4RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_TIM5RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_TIM6RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_TIM7RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_TIM12RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_TIM13RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_TIM14RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_WWDGRST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_SPI2RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_SPI3RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_UART2RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_UART3RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_UART4RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_UART5RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_I2C1RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_I2C2RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_I2C3RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_CAN1RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_CAN2RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_PWRRST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_DACRST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_UART7RST_Field is STM32_SVD.Bit;
-   subtype APB1RSTR_UART8RST_Field is STM32_SVD.Bit;
-
    --  APB1 peripheral reset register
    type APB1RSTR_Register is record
       --  TIM2 reset
-      TIM2RST        : APB1RSTR_TIM2RST_Field := 16#0#;
+      TIM2RST        : Boolean := False;
       --  TIM3 reset
-      TIM3RST        : APB1RSTR_TIM3RST_Field := 16#0#;
+      TIM3RST        : Boolean := False;
       --  TIM4 reset
-      TIM4RST        : APB1RSTR_TIM4RST_Field := 16#0#;
+      TIM4RST        : Boolean := False;
       --  TIM5 reset
-      TIM5RST        : APB1RSTR_TIM5RST_Field := 16#0#;
+      TIM5RST        : Boolean := False;
       --  TIM6 reset
-      TIM6RST        : APB1RSTR_TIM6RST_Field := 16#0#;
+      TIM6RST        : Boolean := False;
       --  TIM7 reset
-      TIM7RST        : APB1RSTR_TIM7RST_Field := 16#0#;
+      TIM7RST        : Boolean := False;
       --  TIM12 reset
-      TIM12RST       : APB1RSTR_TIM12RST_Field := 16#0#;
+      TIM12RST       : Boolean := False;
       --  TIM13 reset
-      TIM13RST       : APB1RSTR_TIM13RST_Field := 16#0#;
+      TIM13RST       : Boolean := False;
       --  TIM14 reset
-      TIM14RST       : APB1RSTR_TIM14RST_Field := 16#0#;
+      TIM14RST       : Boolean := False;
       --  unspecified
-      Reserved_9_10  : STM32_SVD.UInt2 := 16#0#;
+      Reserved_9_10  : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  Window watchdog reset
-      WWDGRST        : APB1RSTR_WWDGRST_Field := 16#0#;
+      WWDGRST        : Boolean := False;
       --  unspecified
-      Reserved_12_13 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_12_13 : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  SPI 2 reset
-      SPI2RST        : APB1RSTR_SPI2RST_Field := 16#0#;
+      SPI2RST        : Boolean := False;
       --  SPI 3 reset
-      SPI3RST        : APB1RSTR_SPI3RST_Field := 16#0#;
+      SPI3RST        : Boolean := False;
       --  unspecified
-      Reserved_16_16 : STM32_SVD.Bit := 16#0#;
+      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
       --  USART 2 reset
-      UART2RST       : APB1RSTR_UART2RST_Field := 16#0#;
+      UART2RST       : Boolean := False;
       --  USART 3 reset
-      UART3RST       : APB1RSTR_UART3RST_Field := 16#0#;
+      UART3RST       : Boolean := False;
       --  USART 4 reset
-      UART4RST       : APB1RSTR_UART4RST_Field := 16#0#;
+      UART4RST       : Boolean := False;
       --  USART 5 reset
-      UART5RST       : APB1RSTR_UART5RST_Field := 16#0#;
+      UART5RST       : Boolean := False;
       --  I2C 1 reset
-      I2C1RST        : APB1RSTR_I2C1RST_Field := 16#0#;
+      I2C1RST        : Boolean := False;
       --  I2C 2 reset
-      I2C2RST        : APB1RSTR_I2C2RST_Field := 16#0#;
+      I2C2RST        : Boolean := False;
       --  I2C3 reset
-      I2C3RST        : APB1RSTR_I2C3RST_Field := 16#0#;
+      I2C3RST        : Boolean := False;
       --  unspecified
-      Reserved_24_24 : STM32_SVD.Bit := 16#0#;
+      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
       --  CAN1 reset
-      CAN1RST        : APB1RSTR_CAN1RST_Field := 16#0#;
+      CAN1RST        : Boolean := False;
       --  CAN2 reset
-      CAN2RST        : APB1RSTR_CAN2RST_Field := 16#0#;
+      CAN2RST        : Boolean := False;
       --  unspecified
-      Reserved_27_27 : STM32_SVD.Bit := 16#0#;
+      Reserved_27_27 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Power interface reset
-      PWRRST         : APB1RSTR_PWRRST_Field := 16#0#;
+      PWRRST         : Boolean := False;
       --  DAC reset
-      DACRST         : APB1RSTR_DACRST_Field := 16#0#;
+      DACRST         : Boolean := False;
       --  UART7 reset
-      UART7RST       : APB1RSTR_UART7RST_Field := 16#0#;
+      UART7RST       : Boolean := False;
       --  UART8 reset
-      UART8RST       : APB1RSTR_UART8RST_Field := 16#0#;
+      UART8RST       : Boolean := False;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -615,71 +529,54 @@ package STM32_SVD.RCC is
    -- APB2RSTR_Register --
    -----------------------
 
-   subtype APB2RSTR_TIM1RST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_TIM8RST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_USART1RST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_USART6RST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_ADCRST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_SDIORST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_SPI1RST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_SPI4RST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_SYSCFGRST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_TIM9RST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_TIM10RST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_TIM11RST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_SPI5RST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_SPI6RST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_SAI1RST_Field is STM32_SVD.Bit;
-   subtype APB2RSTR_LTDCRST_Field is STM32_SVD.Bit;
-
    --  APB2 peripheral reset register
    type APB2RSTR_Register is record
       --  TIM1 reset
-      TIM1RST        : APB2RSTR_TIM1RST_Field := 16#0#;
+      TIM1RST        : Boolean := False;
       --  TIM8 reset
-      TIM8RST        : APB2RSTR_TIM8RST_Field := 16#0#;
+      TIM8RST        : Boolean := False;
       --  unspecified
-      Reserved_2_3   : STM32_SVD.UInt2 := 16#0#;
+      Reserved_2_3   : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  USART1 reset
-      USART1RST      : APB2RSTR_USART1RST_Field := 16#0#;
+      USART1RST      : Boolean := False;
       --  USART6 reset
-      USART6RST      : APB2RSTR_USART6RST_Field := 16#0#;
+      USART6RST      : Boolean := False;
       --  unspecified
-      Reserved_6_7   : STM32_SVD.UInt2 := 16#0#;
+      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  ADC interface reset (common to all ADCs)
-      ADCRST         : APB2RSTR_ADCRST_Field := 16#0#;
+      ADCRST         : Boolean := False;
       --  unspecified
-      Reserved_9_10  : STM32_SVD.UInt2 := 16#0#;
+      Reserved_9_10  : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  SDIO reset
-      SDIORST        : APB2RSTR_SDIORST_Field := 16#0#;
+      SDIORST        : Boolean := False;
       --  SPI 1 reset
-      SPI1RST        : APB2RSTR_SPI1RST_Field := 16#0#;
+      SPI1RST        : Boolean := False;
       --  SPI4 reset
-      SPI4RST        : APB2RSTR_SPI4RST_Field := 16#0#;
+      SPI4RST        : Boolean := False;
       --  System configuration controller reset
-      SYSCFGRST      : APB2RSTR_SYSCFGRST_Field := 16#0#;
+      SYSCFGRST      : Boolean := False;
       --  unspecified
-      Reserved_15_15 : STM32_SVD.Bit := 16#0#;
+      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
       --  TIM9 reset
-      TIM9RST        : APB2RSTR_TIM9RST_Field := 16#0#;
+      TIM9RST        : Boolean := False;
       --  TIM10 reset
-      TIM10RST       : APB2RSTR_TIM10RST_Field := 16#0#;
+      TIM10RST       : Boolean := False;
       --  TIM11 reset
-      TIM11RST       : APB2RSTR_TIM11RST_Field := 16#0#;
+      TIM11RST       : Boolean := False;
       --  unspecified
-      Reserved_19_19 : STM32_SVD.Bit := 16#0#;
+      Reserved_19_19 : Interfaces.Bit_Types.Bit := 16#0#;
       --  SPI5 reset
-      SPI5RST        : APB2RSTR_SPI5RST_Field := 16#0#;
+      SPI5RST        : Boolean := False;
       --  SPI6 reset
-      SPI6RST        : APB2RSTR_SPI6RST_Field := 16#0#;
+      SPI6RST        : Boolean := False;
       --  SAI1 reset
-      SAI1RST        : APB2RSTR_SAI1RST_Field := 16#0#;
+      SAI1RST        : Boolean := False;
       --  unspecified
-      Reserved_23_25 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_23_25 : Interfaces.Bit_Types.UInt3 := 16#0#;
       --  LTDC reset
-      LTDCRST        : APB2RSTR_LTDCRST_Field := 16#0#;
+      LTDCRST        : Boolean := False;
       --  unspecified
-      Reserved_27_31 : STM32_SVD.UInt5 := 16#0#;
+      Reserved_27_31 : Interfaces.Bit_Types.UInt5 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -714,88 +611,64 @@ package STM32_SVD.RCC is
    -- AHB1ENR_Register --
    ----------------------
 
-   subtype AHB1ENR_GPIOAEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_GPIOBEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_GPIOCEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_GPIODEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_GPIOEEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_GPIOFEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_GPIOGEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_GPIOHEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_GPIOIEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_GPIOJEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_GPIOKEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_CRCEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_BKPSRAMEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_CCMDATARAMEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_DMA1EN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_DMA2EN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_DMA2DEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_ETHMACEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_ETHMACTXEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_ETHMACRXEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_ETHMACPTPEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_OTGHSEN_Field is STM32_SVD.Bit;
-   subtype AHB1ENR_OTGHSULPIEN_Field is STM32_SVD.Bit;
-
    --  AHB1 peripheral clock register
    type AHB1ENR_Register is record
       --  IO port A clock enable
-      GPIOAEN        : AHB1ENR_GPIOAEN_Field := 16#0#;
+      GPIOAEN        : Boolean := False;
       --  IO port B clock enable
-      GPIOBEN        : AHB1ENR_GPIOBEN_Field := 16#0#;
+      GPIOBEN        : Boolean := False;
       --  IO port C clock enable
-      GPIOCEN        : AHB1ENR_GPIOCEN_Field := 16#0#;
+      GPIOCEN        : Boolean := False;
       --  IO port D clock enable
-      GPIODEN        : AHB1ENR_GPIODEN_Field := 16#0#;
+      GPIODEN        : Boolean := False;
       --  IO port E clock enable
-      GPIOEEN        : AHB1ENR_GPIOEEN_Field := 16#0#;
+      GPIOEEN        : Boolean := False;
       --  IO port F clock enable
-      GPIOFEN        : AHB1ENR_GPIOFEN_Field := 16#0#;
+      GPIOFEN        : Boolean := False;
       --  IO port G clock enable
-      GPIOGEN        : AHB1ENR_GPIOGEN_Field := 16#0#;
+      GPIOGEN        : Boolean := False;
       --  IO port H clock enable
-      GPIOHEN        : AHB1ENR_GPIOHEN_Field := 16#0#;
+      GPIOHEN        : Boolean := False;
       --  IO port I clock enable
-      GPIOIEN        : AHB1ENR_GPIOIEN_Field := 16#0#;
+      GPIOIEN        : Boolean := False;
       --  IO port J clock enable
-      GPIOJEN        : AHB1ENR_GPIOJEN_Field := 16#0#;
+      GPIOJEN        : Boolean := False;
       --  IO port K clock enable
-      GPIOKEN        : AHB1ENR_GPIOKEN_Field := 16#0#;
+      GPIOKEN        : Boolean := False;
       --  unspecified
-      Reserved_11_11 : STM32_SVD.Bit := 16#0#;
+      Reserved_11_11 : Interfaces.Bit_Types.Bit := 16#0#;
       --  CRC clock enable
-      CRCEN          : AHB1ENR_CRCEN_Field := 16#0#;
+      CRCEN          : Boolean := False;
       --  unspecified
-      Reserved_13_17 : STM32_SVD.UInt5 := 16#0#;
+      Reserved_13_17 : Interfaces.Bit_Types.UInt5 := 16#0#;
       --  Backup SRAM interface clock enable
-      BKPSRAMEN      : AHB1ENR_BKPSRAMEN_Field := 16#0#;
+      BKPSRAMEN      : Boolean := False;
       --  unspecified
-      Reserved_19_19 : STM32_SVD.Bit := 16#0#;
+      Reserved_19_19 : Interfaces.Bit_Types.Bit := 16#0#;
       --  CCM data RAM clock enable
-      CCMDATARAMEN   : AHB1ENR_CCMDATARAMEN_Field := 16#1#;
+      CCMDATARAMEN   : Boolean := True;
       --  DMA1 clock enable
-      DMA1EN         : AHB1ENR_DMA1EN_Field := 16#0#;
+      DMA1EN         : Boolean := False;
       --  DMA2 clock enable
-      DMA2EN         : AHB1ENR_DMA2EN_Field := 16#0#;
+      DMA2EN         : Boolean := False;
       --  DMA2D clock enable
-      DMA2DEN        : AHB1ENR_DMA2DEN_Field := 16#0#;
+      DMA2DEN        : Boolean := False;
       --  unspecified
-      Reserved_24_24 : STM32_SVD.Bit := 16#0#;
+      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Ethernet MAC clock enable
-      ETHMACEN       : AHB1ENR_ETHMACEN_Field := 16#0#;
+      ETHMACEN       : Boolean := False;
       --  Ethernet Transmission clock enable
-      ETHMACTXEN     : AHB1ENR_ETHMACTXEN_Field := 16#0#;
+      ETHMACTXEN     : Boolean := False;
       --  Ethernet Reception clock enable
-      ETHMACRXEN     : AHB1ENR_ETHMACRXEN_Field := 16#0#;
+      ETHMACRXEN     : Boolean := False;
       --  Ethernet PTP clock enable
-      ETHMACPTPEN    : AHB1ENR_ETHMACPTPEN_Field := 16#0#;
+      ETHMACPTPEN    : Boolean := False;
       --  USB OTG HS clock enable
-      OTGHSEN        : AHB1ENR_OTGHSEN_Field := 16#0#;
+      OTGHSEN        : Boolean := False;
       --  USB OTG HSULPI clock enable
-      OTGHSULPIEN    : AHB1ENR_OTGHSULPIEN_Field := 16#0#;
+      OTGHSULPIEN    : Boolean := False;
       --  unspecified
-      Reserved_31_31 : STM32_SVD.Bit := 16#0#;
+      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -835,22 +708,18 @@ package STM32_SVD.RCC is
    -- AHB2ENR_Register --
    ----------------------
 
-   subtype AHB2ENR_DCMIEN_Field is STM32_SVD.Bit;
-   subtype AHB2ENR_RNGEN_Field is STM32_SVD.Bit;
-   subtype AHB2ENR_OTGFSEN_Field is STM32_SVD.Bit;
-
    --  AHB2 peripheral clock enable register
    type AHB2ENR_Register is record
       --  Camera interface enable
-      DCMIEN        : AHB2ENR_DCMIEN_Field := 16#0#;
+      DCMIEN        : Boolean := False;
       --  unspecified
-      Reserved_1_5  : STM32_SVD.UInt5 := 16#0#;
+      Reserved_1_5  : Interfaces.Bit_Types.UInt5 := 16#0#;
       --  Random number generator clock enable
-      RNGEN         : AHB2ENR_RNGEN_Field := 16#0#;
+      RNGEN         : Boolean := False;
       --  USB OTG FS clock enable
-      OTGFSEN       : AHB2ENR_OTGFSEN_Field := 16#0#;
+      OTGFSEN       : Boolean := False;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24 := 16#0#;
+      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -867,14 +736,12 @@ package STM32_SVD.RCC is
    -- AHB3ENR_Register --
    ----------------------
 
-   subtype AHB3ENR_FMCEN_Field is STM32_SVD.Bit;
-
    --  AHB3 peripheral clock enable register
    type AHB3ENR_Register is record
       --  Flexible memory controller module clock enable
-      FMCEN         : AHB3ENR_FMCEN_Field := 16#0#;
+      FMCEN         : Boolean := False;
       --  unspecified
-      Reserved_1_31 : STM32_SVD.UInt31 := 16#0#;
+      Reserved_1_31 : Interfaces.Bit_Types.UInt31 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -888,94 +755,68 @@ package STM32_SVD.RCC is
    -- APB1ENR_Register --
    ----------------------
 
-   subtype APB1ENR_TIM2EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_TIM3EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_TIM4EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_TIM5EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_TIM6EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_TIM7EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_TIM12EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_TIM13EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_TIM14EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_WWDGEN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_SPI2EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_SPI3EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_USART2EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_USART3EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_UART4EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_UART5EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_I2C1EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_I2C2EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_I2C3EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_CAN1EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_CAN2EN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_PWREN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_DACEN_Field is STM32_SVD.Bit;
-   subtype APB1ENR_UART7ENR_Field is STM32_SVD.Bit;
-   subtype APB1ENR_UART8ENR_Field is STM32_SVD.Bit;
-
    --  APB1 peripheral clock enable register
    type APB1ENR_Register is record
       --  TIM2 clock enable
-      TIM2EN         : APB1ENR_TIM2EN_Field := 16#0#;
+      TIM2EN         : Boolean := False;
       --  TIM3 clock enable
-      TIM3EN         : APB1ENR_TIM3EN_Field := 16#0#;
+      TIM3EN         : Boolean := False;
       --  TIM4 clock enable
-      TIM4EN         : APB1ENR_TIM4EN_Field := 16#0#;
+      TIM4EN         : Boolean := False;
       --  TIM5 clock enable
-      TIM5EN         : APB1ENR_TIM5EN_Field := 16#0#;
+      TIM5EN         : Boolean := False;
       --  TIM6 clock enable
-      TIM6EN         : APB1ENR_TIM6EN_Field := 16#0#;
+      TIM6EN         : Boolean := False;
       --  TIM7 clock enable
-      TIM7EN         : APB1ENR_TIM7EN_Field := 16#0#;
+      TIM7EN         : Boolean := False;
       --  TIM12 clock enable
-      TIM12EN        : APB1ENR_TIM12EN_Field := 16#0#;
+      TIM12EN        : Boolean := False;
       --  TIM13 clock enable
-      TIM13EN        : APB1ENR_TIM13EN_Field := 16#0#;
+      TIM13EN        : Boolean := False;
       --  TIM14 clock enable
-      TIM14EN        : APB1ENR_TIM14EN_Field := 16#0#;
+      TIM14EN        : Boolean := False;
       --  unspecified
-      Reserved_9_10  : STM32_SVD.UInt2 := 16#0#;
+      Reserved_9_10  : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  Window watchdog clock enable
-      WWDGEN         : APB1ENR_WWDGEN_Field := 16#0#;
+      WWDGEN         : Boolean := False;
       --  unspecified
-      Reserved_12_13 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_12_13 : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  SPI2 clock enable
-      SPI2EN         : APB1ENR_SPI2EN_Field := 16#0#;
+      SPI2EN         : Boolean := False;
       --  SPI3 clock enable
-      SPI3EN         : APB1ENR_SPI3EN_Field := 16#0#;
+      SPI3EN         : Boolean := False;
       --  unspecified
-      Reserved_16_16 : STM32_SVD.Bit := 16#0#;
+      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
       --  USART 2 clock enable
-      USART2EN       : APB1ENR_USART2EN_Field := 16#0#;
+      USART2EN       : Boolean := False;
       --  USART3 clock enable
-      USART3EN       : APB1ENR_USART3EN_Field := 16#0#;
+      USART3EN       : Boolean := False;
       --  UART4 clock enable
-      UART4EN        : APB1ENR_UART4EN_Field := 16#0#;
+      UART4EN        : Boolean := False;
       --  UART5 clock enable
-      UART5EN        : APB1ENR_UART5EN_Field := 16#0#;
+      UART5EN        : Boolean := False;
       --  I2C1 clock enable
-      I2C1EN         : APB1ENR_I2C1EN_Field := 16#0#;
+      I2C1EN         : Boolean := False;
       --  I2C2 clock enable
-      I2C2EN         : APB1ENR_I2C2EN_Field := 16#0#;
+      I2C2EN         : Boolean := False;
       --  I2C3 clock enable
-      I2C3EN         : APB1ENR_I2C3EN_Field := 16#0#;
+      I2C3EN         : Boolean := False;
       --  unspecified
-      Reserved_24_24 : STM32_SVD.Bit := 16#0#;
+      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
       --  CAN 1 clock enable
-      CAN1EN         : APB1ENR_CAN1EN_Field := 16#0#;
+      CAN1EN         : Boolean := False;
       --  CAN 2 clock enable
-      CAN2EN         : APB1ENR_CAN2EN_Field := 16#0#;
+      CAN2EN         : Boolean := False;
       --  unspecified
-      Reserved_27_27 : STM32_SVD.Bit := 16#0#;
+      Reserved_27_27 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Power interface clock enable
-      PWREN          : APB1ENR_PWREN_Field := 16#0#;
+      PWREN          : Boolean := False;
       --  DAC interface clock enable
-      DACEN          : APB1ENR_DACEN_Field := 16#0#;
+      DACEN          : Boolean := False;
       --  UART7 clock enable
-      UART7ENR       : APB1ENR_UART7ENR_Field := 16#0#;
+      UART7ENR       : Boolean := False;
       --  UART8 clock enable
-      UART8ENR       : APB1ENR_UART8ENR_Field := 16#0#;
+      UART8ENR       : Boolean := False;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1017,75 +858,56 @@ package STM32_SVD.RCC is
    -- APB2ENR_Register --
    ----------------------
 
-   subtype APB2ENR_TIM1EN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_TIM8EN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_USART1EN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_USART6EN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_ADC1EN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_ADC2EN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_ADC3EN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_SDIOEN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_SPI1EN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_SPI4ENR_Field is STM32_SVD.Bit;
-   subtype APB2ENR_SYSCFGEN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_TIM9EN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_TIM10EN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_TIM11EN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_SPI5ENR_Field is STM32_SVD.Bit;
-   subtype APB2ENR_SPI6ENR_Field is STM32_SVD.Bit;
-   subtype APB2ENR_SAI1EN_Field is STM32_SVD.Bit;
-   subtype APB2ENR_LTDCEN_Field is STM32_SVD.Bit;
-
    --  APB2 peripheral clock enable register
    type APB2ENR_Register is record
       --  TIM1 clock enable
-      TIM1EN         : APB2ENR_TIM1EN_Field := 16#0#;
+      TIM1EN         : Boolean := False;
       --  TIM8 clock enable
-      TIM8EN         : APB2ENR_TIM8EN_Field := 16#0#;
+      TIM8EN         : Boolean := False;
       --  unspecified
-      Reserved_2_3   : STM32_SVD.UInt2 := 16#0#;
+      Reserved_2_3   : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  USART1 clock enable
-      USART1EN       : APB2ENR_USART1EN_Field := 16#0#;
+      USART1EN       : Boolean := False;
       --  USART6 clock enable
-      USART6EN       : APB2ENR_USART6EN_Field := 16#0#;
+      USART6EN       : Boolean := False;
       --  unspecified
-      Reserved_6_7   : STM32_SVD.UInt2 := 16#0#;
+      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  ADC1 clock enable
-      ADC1EN         : APB2ENR_ADC1EN_Field := 16#0#;
+      ADC1EN         : Boolean := False;
       --  ADC2 clock enable
-      ADC2EN         : APB2ENR_ADC2EN_Field := 16#0#;
+      ADC2EN         : Boolean := False;
       --  ADC3 clock enable
-      ADC3EN         : APB2ENR_ADC3EN_Field := 16#0#;
+      ADC3EN         : Boolean := False;
       --  SDIO clock enable
-      SDIOEN         : APB2ENR_SDIOEN_Field := 16#0#;
+      SDIOEN         : Boolean := False;
       --  SPI1 clock enable
-      SPI1EN         : APB2ENR_SPI1EN_Field := 16#0#;
+      SPI1EN         : Boolean := False;
       --  SPI4 clock enable
-      SPI4ENR        : APB2ENR_SPI4ENR_Field := 16#0#;
+      SPI4ENR        : Boolean := False;
       --  System configuration controller clock enable
-      SYSCFGEN       : APB2ENR_SYSCFGEN_Field := 16#0#;
+      SYSCFGEN       : Boolean := False;
       --  unspecified
-      Reserved_15_15 : STM32_SVD.Bit := 16#0#;
+      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
       --  TIM9 clock enable
-      TIM9EN         : APB2ENR_TIM9EN_Field := 16#0#;
+      TIM9EN         : Boolean := False;
       --  TIM10 clock enable
-      TIM10EN        : APB2ENR_TIM10EN_Field := 16#0#;
+      TIM10EN        : Boolean := False;
       --  TIM11 clock enable
-      TIM11EN        : APB2ENR_TIM11EN_Field := 16#0#;
+      TIM11EN        : Boolean := False;
       --  unspecified
-      Reserved_19_19 : STM32_SVD.Bit := 16#0#;
+      Reserved_19_19 : Interfaces.Bit_Types.Bit := 16#0#;
       --  SPI5 clock enable
-      SPI5ENR        : APB2ENR_SPI5ENR_Field := 16#0#;
+      SPI5ENR        : Boolean := False;
       --  SPI6 clock enable
-      SPI6ENR        : APB2ENR_SPI6ENR_Field := 16#0#;
+      SPI6ENR        : Boolean := False;
       --  SAI1 clock enable
-      SAI1EN         : APB2ENR_SAI1EN_Field := 16#0#;
+      SAI1EN         : Boolean := False;
       --  unspecified
-      Reserved_23_25 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_23_25 : Interfaces.Bit_Types.UInt3 := 16#0#;
       --  LTDC clock enable
-      LTDCEN         : APB2ENR_LTDCEN_Field := 16#0#;
+      LTDCEN         : Boolean := False;
       --  unspecified
-      Reserved_27_31 : STM32_SVD.UInt5 := 16#0#;
+      Reserved_27_31 : Interfaces.Bit_Types.UInt5 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1121,97 +943,70 @@ package STM32_SVD.RCC is
    -- AHB1LPENR_Register --
    ------------------------
 
-   subtype AHB1LPENR_GPIOALPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_GPIOBLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_GPIOCLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_GPIODLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_GPIOELPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_GPIOFLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_GPIOGLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_GPIOHLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_GPIOILPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_GPIOJLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_GPIOKLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_CRCLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_FLITFLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_SRAM1LPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_SRAM2LPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_BKPSRAMLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_SRAM3LPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_DMA1LPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_DMA2LPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_DMA2DLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_ETHMACLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_ETHMACTXLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_ETHMACRXLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_ETHMACPTPLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_OTGHSLPEN_Field is STM32_SVD.Bit;
-   subtype AHB1LPENR_OTGHSULPILPEN_Field is STM32_SVD.Bit;
-
    --  AHB1 peripheral clock enable in low power mode register
    type AHB1LPENR_Register is record
       --  IO port A clock enable during sleep mode
-      GPIOALPEN      : AHB1LPENR_GPIOALPEN_Field := 16#1#;
+      GPIOALPEN      : Boolean := True;
       --  IO port B clock enable during Sleep mode
-      GPIOBLPEN      : AHB1LPENR_GPIOBLPEN_Field := 16#1#;
+      GPIOBLPEN      : Boolean := True;
       --  IO port C clock enable during Sleep mode
-      GPIOCLPEN      : AHB1LPENR_GPIOCLPEN_Field := 16#1#;
+      GPIOCLPEN      : Boolean := True;
       --  IO port D clock enable during Sleep mode
-      GPIODLPEN      : AHB1LPENR_GPIODLPEN_Field := 16#1#;
+      GPIODLPEN      : Boolean := True;
       --  IO port E clock enable during Sleep mode
-      GPIOELPEN      : AHB1LPENR_GPIOELPEN_Field := 16#1#;
+      GPIOELPEN      : Boolean := True;
       --  IO port F clock enable during Sleep mode
-      GPIOFLPEN      : AHB1LPENR_GPIOFLPEN_Field := 16#1#;
+      GPIOFLPEN      : Boolean := True;
       --  IO port G clock enable during Sleep mode
-      GPIOGLPEN      : AHB1LPENR_GPIOGLPEN_Field := 16#1#;
+      GPIOGLPEN      : Boolean := True;
       --  IO port H clock enable during Sleep mode
-      GPIOHLPEN      : AHB1LPENR_GPIOHLPEN_Field := 16#1#;
+      GPIOHLPEN      : Boolean := True;
       --  IO port I clock enable during Sleep mode
-      GPIOILPEN      : AHB1LPENR_GPIOILPEN_Field := 16#1#;
+      GPIOILPEN      : Boolean := True;
       --  IO port J clock enable during Sleep mode
-      GPIOJLPEN      : AHB1LPENR_GPIOJLPEN_Field := 16#0#;
+      GPIOJLPEN      : Boolean := False;
       --  IO port K clock enable during Sleep mode
-      GPIOKLPEN      : AHB1LPENR_GPIOKLPEN_Field := 16#0#;
+      GPIOKLPEN      : Boolean := False;
       --  unspecified
-      Reserved_11_11 : STM32_SVD.Bit := 16#0#;
+      Reserved_11_11 : Interfaces.Bit_Types.Bit := 16#0#;
       --  CRC clock enable during Sleep mode
-      CRCLPEN        : AHB1LPENR_CRCLPEN_Field := 16#1#;
+      CRCLPEN        : Boolean := True;
       --  unspecified
-      Reserved_13_14 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_13_14 : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  Flash interface clock enable during Sleep mode
-      FLITFLPEN      : AHB1LPENR_FLITFLPEN_Field := 16#1#;
+      FLITFLPEN      : Boolean := True;
       --  SRAM 1interface clock enable during Sleep mode
-      SRAM1LPEN      : AHB1LPENR_SRAM1LPEN_Field := 16#1#;
+      SRAM1LPEN      : Boolean := True;
       --  SRAM 2 interface clock enable during Sleep mode
-      SRAM2LPEN      : AHB1LPENR_SRAM2LPEN_Field := 16#1#;
+      SRAM2LPEN      : Boolean := True;
       --  Backup SRAM interface clock enable during Sleep mode
-      BKPSRAMLPEN    : AHB1LPENR_BKPSRAMLPEN_Field := 16#1#;
+      BKPSRAMLPEN    : Boolean := True;
       --  SRAM 3 interface clock enable during Sleep mode
-      SRAM3LPEN      : AHB1LPENR_SRAM3LPEN_Field := 16#0#;
+      SRAM3LPEN      : Boolean := False;
       --  unspecified
-      Reserved_20_20 : STM32_SVD.Bit := 16#0#;
+      Reserved_20_20 : Interfaces.Bit_Types.Bit := 16#0#;
       --  DMA1 clock enable during Sleep mode
-      DMA1LPEN       : AHB1LPENR_DMA1LPEN_Field := 16#1#;
+      DMA1LPEN       : Boolean := True;
       --  DMA2 clock enable during Sleep mode
-      DMA2LPEN       : AHB1LPENR_DMA2LPEN_Field := 16#1#;
+      DMA2LPEN       : Boolean := True;
       --  DMA2D clock enable during Sleep mode
-      DMA2DLPEN      : AHB1LPENR_DMA2DLPEN_Field := 16#0#;
+      DMA2DLPEN      : Boolean := False;
       --  unspecified
-      Reserved_24_24 : STM32_SVD.Bit := 16#0#;
+      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Ethernet MAC clock enable during Sleep mode
-      ETHMACLPEN     : AHB1LPENR_ETHMACLPEN_Field := 16#1#;
+      ETHMACLPEN     : Boolean := True;
       --  Ethernet transmission clock enable during Sleep mode
-      ETHMACTXLPEN   : AHB1LPENR_ETHMACTXLPEN_Field := 16#1#;
+      ETHMACTXLPEN   : Boolean := True;
       --  Ethernet reception clock enable during Sleep mode
-      ETHMACRXLPEN   : AHB1LPENR_ETHMACRXLPEN_Field := 16#1#;
+      ETHMACRXLPEN   : Boolean := True;
       --  Ethernet PTP clock enable during Sleep mode
-      ETHMACPTPLPEN  : AHB1LPENR_ETHMACPTPLPEN_Field := 16#1#;
+      ETHMACPTPLPEN  : Boolean := True;
       --  USB OTG HS clock enable during Sleep mode
-      OTGHSLPEN      : AHB1LPENR_OTGHSLPEN_Field := 16#1#;
+      OTGHSLPEN      : Boolean := True;
       --  USB OTG HS ULPI clock enable during Sleep mode
-      OTGHSULPILPEN  : AHB1LPENR_OTGHSULPILPEN_Field := 16#1#;
+      OTGHSULPILPEN  : Boolean := True;
       --  unspecified
-      Reserved_31_31 : STM32_SVD.Bit := 16#0#;
+      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1254,22 +1049,18 @@ package STM32_SVD.RCC is
    -- AHB2LPENR_Register --
    ------------------------
 
-   subtype AHB2LPENR_DCMILPEN_Field is STM32_SVD.Bit;
-   subtype AHB2LPENR_RNGLPEN_Field is STM32_SVD.Bit;
-   subtype AHB2LPENR_OTGFSLPEN_Field is STM32_SVD.Bit;
-
    --  AHB2 peripheral clock enable in low power mode register
    type AHB2LPENR_Register is record
       --  Camera interface enable during Sleep mode
-      DCMILPEN      : AHB2LPENR_DCMILPEN_Field := 16#1#;
+      DCMILPEN      : Boolean := True;
       --  unspecified
-      Reserved_1_5  : STM32_SVD.UInt5 := 16#18#;
+      Reserved_1_5  : Interfaces.Bit_Types.UInt5 := 16#18#;
       --  Random number generator clock enable during Sleep mode
-      RNGLPEN       : AHB2LPENR_RNGLPEN_Field := 16#1#;
+      RNGLPEN       : Boolean := True;
       --  USB OTG FS clock enable during Sleep mode
-      OTGFSLPEN     : AHB2LPENR_OTGFSLPEN_Field := 16#1#;
+      OTGFSLPEN     : Boolean := True;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24 := 16#0#;
+      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1286,14 +1077,12 @@ package STM32_SVD.RCC is
    -- AHB3LPENR_Register --
    ------------------------
 
-   subtype AHB3LPENR_FMCLPEN_Field is STM32_SVD.Bit;
-
    --  AHB3 peripheral clock enable in low power mode register
    type AHB3LPENR_Register is record
       --  Flexible memory controller module clock enable during Sleep mode
-      FMCLPEN       : AHB3LPENR_FMCLPEN_Field := 16#1#;
+      FMCLPEN       : Boolean := True;
       --  unspecified
-      Reserved_1_31 : STM32_SVD.UInt31 := 16#0#;
+      Reserved_1_31 : Interfaces.Bit_Types.UInt31 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1307,94 +1096,68 @@ package STM32_SVD.RCC is
    -- APB1LPENR_Register --
    ------------------------
 
-   subtype APB1LPENR_TIM2LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_TIM3LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_TIM4LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_TIM5LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_TIM6LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_TIM7LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_TIM12LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_TIM13LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_TIM14LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_WWDGLPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_SPI2LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_SPI3LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_USART2LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_USART3LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_UART4LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_UART5LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_I2C1LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_I2C2LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_I2C3LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_CAN1LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_CAN2LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_PWRLPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_DACLPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_UART7LPEN_Field is STM32_SVD.Bit;
-   subtype APB1LPENR_UART8LPEN_Field is STM32_SVD.Bit;
-
    --  APB1 peripheral clock enable in low power mode register
    type APB1LPENR_Register is record
       --  TIM2 clock enable during Sleep mode
-      TIM2LPEN       : APB1LPENR_TIM2LPEN_Field := 16#1#;
+      TIM2LPEN       : Boolean := True;
       --  TIM3 clock enable during Sleep mode
-      TIM3LPEN       : APB1LPENR_TIM3LPEN_Field := 16#1#;
+      TIM3LPEN       : Boolean := True;
       --  TIM4 clock enable during Sleep mode
-      TIM4LPEN       : APB1LPENR_TIM4LPEN_Field := 16#1#;
+      TIM4LPEN       : Boolean := True;
       --  TIM5 clock enable during Sleep mode
-      TIM5LPEN       : APB1LPENR_TIM5LPEN_Field := 16#1#;
+      TIM5LPEN       : Boolean := True;
       --  TIM6 clock enable during Sleep mode
-      TIM6LPEN       : APB1LPENR_TIM6LPEN_Field := 16#1#;
+      TIM6LPEN       : Boolean := True;
       --  TIM7 clock enable during Sleep mode
-      TIM7LPEN       : APB1LPENR_TIM7LPEN_Field := 16#1#;
+      TIM7LPEN       : Boolean := True;
       --  TIM12 clock enable during Sleep mode
-      TIM12LPEN      : APB1LPENR_TIM12LPEN_Field := 16#1#;
+      TIM12LPEN      : Boolean := True;
       --  TIM13 clock enable during Sleep mode
-      TIM13LPEN      : APB1LPENR_TIM13LPEN_Field := 16#1#;
+      TIM13LPEN      : Boolean := True;
       --  TIM14 clock enable during Sleep mode
-      TIM14LPEN      : APB1LPENR_TIM14LPEN_Field := 16#1#;
+      TIM14LPEN      : Boolean := True;
       --  unspecified
-      Reserved_9_10  : STM32_SVD.UInt2 := 16#0#;
+      Reserved_9_10  : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  Window watchdog clock enable during Sleep mode
-      WWDGLPEN       : APB1LPENR_WWDGLPEN_Field := 16#1#;
+      WWDGLPEN       : Boolean := True;
       --  unspecified
-      Reserved_12_13 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_12_13 : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  SPI2 clock enable during Sleep mode
-      SPI2LPEN       : APB1LPENR_SPI2LPEN_Field := 16#1#;
+      SPI2LPEN       : Boolean := True;
       --  SPI3 clock enable during Sleep mode
-      SPI3LPEN       : APB1LPENR_SPI3LPEN_Field := 16#1#;
+      SPI3LPEN       : Boolean := True;
       --  unspecified
-      Reserved_16_16 : STM32_SVD.Bit := 16#0#;
+      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
       --  USART2 clock enable during Sleep mode
-      USART2LPEN     : APB1LPENR_USART2LPEN_Field := 16#1#;
+      USART2LPEN     : Boolean := True;
       --  USART3 clock enable during Sleep mode
-      USART3LPEN     : APB1LPENR_USART3LPEN_Field := 16#1#;
+      USART3LPEN     : Boolean := True;
       --  UART4 clock enable during Sleep mode
-      UART4LPEN      : APB1LPENR_UART4LPEN_Field := 16#1#;
+      UART4LPEN      : Boolean := True;
       --  UART5 clock enable during Sleep mode
-      UART5LPEN      : APB1LPENR_UART5LPEN_Field := 16#1#;
+      UART5LPEN      : Boolean := True;
       --  I2C1 clock enable during Sleep mode
-      I2C1LPEN       : APB1LPENR_I2C1LPEN_Field := 16#1#;
+      I2C1LPEN       : Boolean := True;
       --  I2C2 clock enable during Sleep mode
-      I2C2LPEN       : APB1LPENR_I2C2LPEN_Field := 16#1#;
+      I2C2LPEN       : Boolean := True;
       --  I2C3 clock enable during Sleep mode
-      I2C3LPEN       : APB1LPENR_I2C3LPEN_Field := 16#1#;
+      I2C3LPEN       : Boolean := True;
       --  unspecified
-      Reserved_24_24 : STM32_SVD.Bit := 16#0#;
+      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
       --  CAN 1 clock enable during Sleep mode
-      CAN1LPEN       : APB1LPENR_CAN1LPEN_Field := 16#1#;
+      CAN1LPEN       : Boolean := True;
       --  CAN 2 clock enable during Sleep mode
-      CAN2LPEN       : APB1LPENR_CAN2LPEN_Field := 16#1#;
+      CAN2LPEN       : Boolean := True;
       --  unspecified
-      Reserved_27_27 : STM32_SVD.Bit := 16#0#;
+      Reserved_27_27 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Power interface clock enable during Sleep mode
-      PWRLPEN        : APB1LPENR_PWRLPEN_Field := 16#1#;
+      PWRLPEN        : Boolean := True;
       --  DAC interface clock enable during Sleep mode
-      DACLPEN        : APB1LPENR_DACLPEN_Field := 16#1#;
+      DACLPEN        : Boolean := True;
       --  UART7 clock enable during Sleep mode
-      UART7LPEN      : APB1LPENR_UART7LPEN_Field := 16#0#;
+      UART7LPEN      : Boolean := False;
       --  UART8 clock enable during Sleep mode
-      UART8LPEN      : APB1LPENR_UART8LPEN_Field := 16#0#;
+      UART8LPEN      : Boolean := False;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1436,75 +1199,56 @@ package STM32_SVD.RCC is
    -- APB2LPENR_Register --
    ------------------------
 
-   subtype APB2LPENR_TIM1LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_TIM8LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_USART1LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_USART6LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_ADC1LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_ADC2LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_ADC3LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_SDIOLPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_SPI1LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_SPI4LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_SYSCFGLPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_TIM9LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_TIM10LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_TIM11LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_SPI5LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_SPI6LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_SAI1LPEN_Field is STM32_SVD.Bit;
-   subtype APB2LPENR_LTDCLPEN_Field is STM32_SVD.Bit;
-
    --  APB2 peripheral clock enabled in low power mode register
    type APB2LPENR_Register is record
       --  TIM1 clock enable during Sleep mode
-      TIM1LPEN       : APB2LPENR_TIM1LPEN_Field := 16#1#;
+      TIM1LPEN       : Boolean := True;
       --  TIM8 clock enable during Sleep mode
-      TIM8LPEN       : APB2LPENR_TIM8LPEN_Field := 16#1#;
+      TIM8LPEN       : Boolean := True;
       --  unspecified
-      Reserved_2_3   : STM32_SVD.UInt2 := 16#0#;
+      Reserved_2_3   : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  USART1 clock enable during Sleep mode
-      USART1LPEN     : APB2LPENR_USART1LPEN_Field := 16#1#;
+      USART1LPEN     : Boolean := True;
       --  USART6 clock enable during Sleep mode
-      USART6LPEN     : APB2LPENR_USART6LPEN_Field := 16#1#;
+      USART6LPEN     : Boolean := True;
       --  unspecified
-      Reserved_6_7   : STM32_SVD.UInt2 := 16#0#;
+      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  ADC1 clock enable during Sleep mode
-      ADC1LPEN       : APB2LPENR_ADC1LPEN_Field := 16#1#;
+      ADC1LPEN       : Boolean := True;
       --  ADC2 clock enable during Sleep mode
-      ADC2LPEN       : APB2LPENR_ADC2LPEN_Field := 16#1#;
+      ADC2LPEN       : Boolean := True;
       --  ADC 3 clock enable during Sleep mode
-      ADC3LPEN       : APB2LPENR_ADC3LPEN_Field := 16#1#;
+      ADC3LPEN       : Boolean := True;
       --  SDIO clock enable during Sleep mode
-      SDIOLPEN       : APB2LPENR_SDIOLPEN_Field := 16#1#;
+      SDIOLPEN       : Boolean := True;
       --  SPI 1 clock enable during Sleep mode
-      SPI1LPEN       : APB2LPENR_SPI1LPEN_Field := 16#1#;
+      SPI1LPEN       : Boolean := True;
       --  SPI 4 clock enable during Sleep mode
-      SPI4LPEN       : APB2LPENR_SPI4LPEN_Field := 16#0#;
+      SPI4LPEN       : Boolean := False;
       --  System configuration controller clock enable during Sleep mode
-      SYSCFGLPEN     : APB2LPENR_SYSCFGLPEN_Field := 16#1#;
+      SYSCFGLPEN     : Boolean := True;
       --  unspecified
-      Reserved_15_15 : STM32_SVD.Bit := 16#0#;
+      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
       --  TIM9 clock enable during sleep mode
-      TIM9LPEN       : APB2LPENR_TIM9LPEN_Field := 16#1#;
+      TIM9LPEN       : Boolean := True;
       --  TIM10 clock enable during Sleep mode
-      TIM10LPEN      : APB2LPENR_TIM10LPEN_Field := 16#1#;
+      TIM10LPEN      : Boolean := True;
       --  TIM11 clock enable during Sleep mode
-      TIM11LPEN      : APB2LPENR_TIM11LPEN_Field := 16#1#;
+      TIM11LPEN      : Boolean := True;
       --  unspecified
-      Reserved_19_19 : STM32_SVD.Bit := 16#0#;
+      Reserved_19_19 : Interfaces.Bit_Types.Bit := 16#0#;
       --  SPI 5 clock enable during Sleep mode
-      SPI5LPEN       : APB2LPENR_SPI5LPEN_Field := 16#0#;
+      SPI5LPEN       : Boolean := False;
       --  SPI 6 clock enable during Sleep mode
-      SPI6LPEN       : APB2LPENR_SPI6LPEN_Field := 16#0#;
+      SPI6LPEN       : Boolean := False;
       --  SAI1 clock enable
-      SAI1LPEN       : APB2LPENR_SAI1LPEN_Field := 16#0#;
+      SAI1LPEN       : Boolean := False;
       --  unspecified
-      Reserved_23_25 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_23_25 : Interfaces.Bit_Types.UInt3 := 16#0#;
       --  LTDC clock enable
-      LTDCLPEN       : APB2LPENR_LTDCLPEN_Field := 16#0#;
+      LTDCLPEN       : Boolean := False;
       --  unspecified
-      Reserved_27_31 : STM32_SVD.UInt5 := 16#0#;
+      Reserved_27_31 : Interfaces.Bit_Types.UInt5 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1540,19 +1284,12 @@ package STM32_SVD.RCC is
    -- BDCR_Register --
    -------------------
 
-   subtype BDCR_LSEON_Field is STM32_SVD.Bit;
-   subtype BDCR_LSERDY_Field is STM32_SVD.Bit;
-   subtype BDCR_LSEBYP_Field is STM32_SVD.Bit;
-
    -----------------
    -- BDCR.RTCSEL --
    -----------------
 
-   --  BDCR_RTCSEL array element
-   subtype BDCR_RTCSEL_Element is STM32_SVD.Bit;
-
    --  BDCR_RTCSEL array
-   type BDCR_RTCSEL_Field_Array is array (0 .. 1) of BDCR_RTCSEL_Element
+   type BDCR_RTCSEL_Field_Array is array (0 .. 1) of Boolean
      with Component_Size => 1, Size => 2;
 
    --  Type definition for BDCR_RTCSEL
@@ -1562,7 +1299,7 @@ package STM32_SVD.RCC is
       case As_Array is
          when False =>
             --  RTCSEL as a value
-            Val : STM32_SVD.UInt2;
+            Val : Interfaces.Bit_Types.UInt2;
          when True =>
             --  RTCSEL as an array
             Arr : BDCR_RTCSEL_Field_Array;
@@ -1575,29 +1312,26 @@ package STM32_SVD.RCC is
       Arr at 0 range 0 .. 1;
    end record;
 
-   subtype BDCR_RTCEN_Field is STM32_SVD.Bit;
-   subtype BDCR_BDRST_Field is STM32_SVD.Bit;
-
    --  Backup domain control register
    type BDCR_Register is record
       --  External low-speed oscillator enable
-      LSEON          : BDCR_LSEON_Field := 16#0#;
-      --  External low-speed oscillator ready
-      LSERDY         : BDCR_LSERDY_Field := 16#0#;
+      LSEON          : Boolean := False;
+      --  Read-only. External low-speed oscillator ready
+      LSERDY         : Boolean := False;
       --  External low-speed oscillator bypass
-      LSEBYP         : BDCR_LSEBYP_Field := 16#0#;
+      LSEBYP         : Boolean := False;
       --  unspecified
-      Reserved_3_7   : STM32_SVD.UInt5 := 16#0#;
+      Reserved_3_7   : Interfaces.Bit_Types.UInt5 := 16#0#;
       --  RTC clock source selection
       RTCSEL         : BDCR_RTCSEL_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_10_14 : STM32_SVD.UInt5 := 16#0#;
+      Reserved_10_14 : Interfaces.Bit_Types.UInt5 := 16#0#;
       --  RTC clock enable
-      RTCEN          : BDCR_RTCEN_Field := 16#0#;
+      RTCEN          : Boolean := False;
       --  Backup domain software reset
-      BDRST          : BDCR_BDRST_Field := 16#0#;
+      BDRST          : Boolean := False;
       --  unspecified
-      Reserved_17_31 : STM32_SVD.UInt15 := 16#0#;
+      Reserved_17_31 : Interfaces.Bit_Types.UInt15 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1618,41 +1352,30 @@ package STM32_SVD.RCC is
    -- CSR_Register --
    ------------------
 
-   subtype CSR_LSION_Field is STM32_SVD.Bit;
-   subtype CSR_LSIRDY_Field is STM32_SVD.Bit;
-   subtype CSR_RMVF_Field is STM32_SVD.Bit;
-   subtype CSR_BORRSTF_Field is STM32_SVD.Bit;
-   subtype CSR_PADRSTF_Field is STM32_SVD.Bit;
-   subtype CSR_PORRSTF_Field is STM32_SVD.Bit;
-   subtype CSR_SFTRSTF_Field is STM32_SVD.Bit;
-   subtype CSR_WDGRSTF_Field is STM32_SVD.Bit;
-   subtype CSR_WWDGRSTF_Field is STM32_SVD.Bit;
-   subtype CSR_LPWRRSTF_Field is STM32_SVD.Bit;
-
    --  clock control & status register
    type CSR_Register is record
       --  Internal low-speed oscillator enable
-      LSION         : CSR_LSION_Field := 16#0#;
-      --  Internal low-speed oscillator ready
-      LSIRDY        : CSR_LSIRDY_Field := 16#0#;
+      LSION         : Boolean := False;
+      --  Read-only. Internal low-speed oscillator ready
+      LSIRDY        : Boolean := False;
       --  unspecified
-      Reserved_2_23 : STM32_SVD.UInt22 := 16#0#;
+      Reserved_2_23 : Interfaces.Bit_Types.UInt22 := 16#0#;
       --  Remove reset flag
-      RMVF          : CSR_RMVF_Field := 16#0#;
+      RMVF          : Boolean := False;
       --  BOR reset flag
-      BORRSTF       : CSR_BORRSTF_Field := 16#1#;
+      BORRSTF       : Boolean := True;
       --  PIN reset flag
-      PADRSTF       : CSR_PADRSTF_Field := 16#1#;
+      PADRSTF       : Boolean := True;
       --  POR/PDR reset flag
-      PORRSTF       : CSR_PORRSTF_Field := 16#1#;
+      PORRSTF       : Boolean := True;
       --  Software reset flag
-      SFTRSTF       : CSR_SFTRSTF_Field := 16#0#;
+      SFTRSTF       : Boolean := False;
       --  Independent watchdog reset flag
-      WDGRSTF       : CSR_WDGRSTF_Field := 16#0#;
+      WDGRSTF       : Boolean := False;
       --  Window watchdog reset flag
-      WWDGRSTF      : CSR_WWDGRSTF_Field := 16#0#;
+      WWDGRSTF      : Boolean := False;
       --  Low-power reset flag
-      LPWRRSTF      : CSR_LPWRRSTF_Field := 16#0#;
+      LPWRRSTF      : Boolean := False;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1675,10 +1398,8 @@ package STM32_SVD.RCC is
    -- SSCGR_Register --
    --------------------
 
-   subtype SSCGR_MODPER_Field is STM32_SVD.UInt13;
-   subtype SSCGR_INCSTEP_Field is STM32_SVD.UInt15;
-   subtype SSCGR_SPREADSEL_Field is STM32_SVD.Bit;
-   subtype SSCGR_SSCGEN_Field is STM32_SVD.Bit;
+   subtype SSCGR_MODPER_Field is Interfaces.Bit_Types.UInt13;
+   subtype SSCGR_INCSTEP_Field is Interfaces.Bit_Types.UInt15;
 
    --  spread spectrum clock generation register
    type SSCGR_Register is record
@@ -1687,11 +1408,11 @@ package STM32_SVD.RCC is
       --  Incrementation step
       INCSTEP        : SSCGR_INCSTEP_Field := 16#0#;
       --  unspecified
-      Reserved_28_29 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_28_29 : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  Spread Select
-      SPREADSEL      : SSCGR_SPREADSEL_Field := 16#0#;
+      SPREADSEL      : Boolean := False;
       --  Spread spectrum modulation enable
-      SSCGEN         : SSCGR_SSCGEN_Field := 16#0#;
+      SSCGEN         : Boolean := False;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1708,24 +1429,24 @@ package STM32_SVD.RCC is
    -- PLLI2SCFGR_Register --
    -------------------------
 
-   subtype PLLI2SCFGR_PLLI2SN_Field is STM32_SVD.UInt9;
-   subtype PLLI2SCFGR_PLLI2SQ_Field is STM32_SVD.UInt4;
-   subtype PLLI2SCFGR_PLLI2SR_Field is STM32_SVD.UInt3;
+   subtype PLLI2SCFGR_PLLI2SN_Field is Interfaces.Bit_Types.UInt9;
+   subtype PLLI2SCFGR_PLLI2SQ_Field is Interfaces.Bit_Types.UInt4;
+   subtype PLLI2SCFGR_PLLI2SR_Field is Interfaces.Bit_Types.UInt3;
 
    --  PLLI2S configuration register
    type PLLI2SCFGR_Register is record
       --  unspecified
-      Reserved_0_5   : STM32_SVD.UInt6 := 16#0#;
+      Reserved_0_5   : Interfaces.Bit_Types.UInt6 := 16#0#;
       --  PLLI2S multiplication factor for VCO
       PLLI2SN        : PLLI2SCFGR_PLLI2SN_Field := 16#C0#;
       --  unspecified
-      Reserved_15_23 : STM32_SVD.UInt9 := 16#0#;
+      Reserved_15_23 : Interfaces.Bit_Types.UInt9 := 16#0#;
       --  PLLI2S division factor for SAI1 clock
       PLLI2SQ        : PLLI2SCFGR_PLLI2SQ_Field := 16#0#;
       --  PLLI2S division factor for I2S clocks
       PLLI2SR        : PLLI2SCFGR_PLLI2SR_Field := 16#2#;
       --  unspecified
-      Reserved_31_31 : STM32_SVD.Bit := 16#0#;
+      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1743,24 +1464,24 @@ package STM32_SVD.RCC is
    -- PLLSAICFGR_Register --
    -------------------------
 
-   subtype PLLSAICFGR_PLLSAIN_Field is STM32_SVD.UInt9;
-   subtype PLLSAICFGR_PLLSAIQ_Field is STM32_SVD.UInt4;
-   subtype PLLSAICFGR_PLLSAIR_Field is STM32_SVD.UInt3;
+   subtype PLLSAICFGR_PLLSAIN_Field is Interfaces.Bit_Types.UInt9;
+   subtype PLLSAICFGR_PLLSAIQ_Field is Interfaces.Bit_Types.UInt4;
+   subtype PLLSAICFGR_PLLSAIR_Field is Interfaces.Bit_Types.UInt3;
 
    --  PLLSAICFGR
    type PLLSAICFGR_Register is record
       --  unspecified
-      Reserved_0_5   : STM32_SVD.UInt6 := 16#0#;
+      Reserved_0_5   : Interfaces.Bit_Types.UInt6 := 16#0#;
       --  PLLSAIN
       PLLSAIN        : PLLSAICFGR_PLLSAIN_Field := 16#C0#;
       --  unspecified
-      Reserved_15_23 : STM32_SVD.UInt9 := 16#0#;
+      Reserved_15_23 : Interfaces.Bit_Types.UInt9 := 16#0#;
       --  PLLSAIN
       PLLSAIQ        : PLLSAICFGR_PLLSAIQ_Field := 16#4#;
       --  PLLSAIN
       PLLSAIR        : PLLSAICFGR_PLLSAIR_Field := 16#2#;
       --  unspecified
-      Reserved_31_31 : STM32_SVD.Bit := 16#0#;
+      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1778,35 +1499,34 @@ package STM32_SVD.RCC is
    -- DCKCFGR_Register --
    ----------------------
 
-   subtype DCKCFGR_PLLI2SDIVQ_Field is STM32_SVD.UInt5;
-   subtype DCKCFGR_PLLSAIDIVQ_Field is STM32_SVD.UInt5;
-   subtype DCKCFGR_PLLSAIDIVR_Field is STM32_SVD.UInt2;
-   subtype DCKCFGR_SAI1ASRC_Field is STM32_SVD.UInt2;
-   subtype DCKCFGR_SAI1BSRC_Field is STM32_SVD.UInt2;
-   subtype DCKCFGR_TIMPRE_Field is STM32_SVD.Bit;
+   subtype DCKCFGR_PLLI2SDIVQ_Field is Interfaces.Bit_Types.UInt5;
+   subtype DCKCFGR_PLLSAIDIVQ_Field is Interfaces.Bit_Types.UInt5;
+   subtype DCKCFGR_PLLSAIDIVR_Field is Interfaces.Bit_Types.UInt2;
+   subtype DCKCFGR_SAI1ASRC_Field is Interfaces.Bit_Types.UInt2;
+   subtype DCKCFGR_SAI1BSRC_Field is Interfaces.Bit_Types.UInt2;
 
    --  DCKCFGR
    type DCKCFGR_Register is record
       --  PLLI2SDIVQ
       PLLI2SDIVQ     : DCKCFGR_PLLI2SDIVQ_Field := 16#0#;
       --  unspecified
-      Reserved_5_7   : STM32_SVD.UInt3 := 16#0#;
+      Reserved_5_7   : Interfaces.Bit_Types.UInt3 := 16#0#;
       --  PLLSAIDIVQ
       PLLSAIDIVQ     : DCKCFGR_PLLSAIDIVQ_Field := 16#0#;
       --  unspecified
-      Reserved_13_15 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_13_15 : Interfaces.Bit_Types.UInt3 := 16#0#;
       --  PLLSAIDIVR
       PLLSAIDIVR     : DCKCFGR_PLLSAIDIVR_Field := 16#0#;
       --  unspecified
-      Reserved_18_19 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_18_19 : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  SAI1ASRC
       SAI1ASRC       : DCKCFGR_SAI1ASRC_Field := 16#0#;
       --  SAI1BSRC
       SAI1BSRC       : DCKCFGR_SAI1BSRC_Field := 16#0#;
       --  TIMPRE
-      TIMPRE         : DCKCFGR_TIMPRE_Field := 16#0#;
+      TIMPRE         : Boolean := False;
       --  unspecified
-      Reserved_25_31 : STM32_SVD.UInt7 := 16#0#;
+      Reserved_25_31 : Interfaces.Bit_Types.UInt7 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1913,6 +1633,6 @@ package STM32_SVD.RCC is
 
    --  Reset and clock control
    RCC_Periph : aliased RCC_Peripheral
-     with Import, Address => System'To_Address (16#40023800#);
+     with Import, Address => RCC_Base;
 
 end STM32_SVD.RCC;

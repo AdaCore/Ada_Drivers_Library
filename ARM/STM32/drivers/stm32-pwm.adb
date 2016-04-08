@@ -29,6 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with System;        use System;
+with STM32_SVD;     use STM32_SVD;
+
 with STM32.Device;  use STM32.Device;
 
 package body STM32.PWM is
@@ -63,13 +66,13 @@ package body STM32.PWM is
       Channel : Timer_Channel;
       Value   : Percentage)
    is
-      Pulse : Half_Word;
+      Pulse : Short;
    begin
       This.Outputs (Channel).Duty_Cycle := Value;
       if Value = 0 then
-         Set_Compare_Value (This.Output_Timer.all, Channel, Half_Word'(0));
+         Set_Compare_Value (This.Output_Timer.all, Channel, Short'(0));
       else
-         Pulse := Half_Word ((This.Timer_Period + 1) * Word (Value) / 100) - 1;
+         Pulse := Short ((This.Timer_Period + 1) * Word (Value) / 100) - 1;
          --  for a Value of 0, the computation of Pulse wraps around to
          --  65535, so we only compute it when not zero
          Set_Compare_Value (This.Output_Timer.all, Channel, Pulse);
@@ -85,14 +88,14 @@ package body STM32.PWM is
       Channel : Timer_Channel;
       Value   : Microseconds)
    is
-      Pulse         : Half_Word;
+      Pulse         : Short;
       Period        : constant Word := This.Timer_Period + 1;
       uS_Per_Period : constant Word := 1_000_000 / This.Frequency;
    begin
       if Value > uS_per_Period then
          raise Invalid_Request with "duty time too high";
       end if;
-      Pulse := Half_Word ((Period * Value) / uS_per_Period) - 1;
+      Pulse := Short ((Period * Value) / uS_per_Period) - 1;
       Set_Compare_Value (This.Output_Timer.all, Channel, Pulse);
    end Set_Duty_Time;
 
@@ -137,7 +140,7 @@ package body STM32.PWM is
 
       Configure
         (PWM_Timer.all,
-         Prescaler     => Half_Word (Prescalar),
+         Prescaler     => Short (Prescalar),
          Period        => This.Timer_Period,
          Clock_Divisor => Div1,
          Counter_Mode  => Up);
@@ -175,7 +178,7 @@ package body STM32.PWM is
          Pulse    => 0,
          Polarity => High);
 
-      Set_Compare_Value (This.Output_Timer.all, Channel, Half_Word (0));
+      Set_Compare_Value (This.Output_Timer.all, Channel, Short (0));
 
    end Attach_PWM_Channel;
 

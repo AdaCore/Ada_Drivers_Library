@@ -29,9 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
-
-with STM32.Touch_Panel;
+with HAL.Touch_Panel;
 
 with STM32;                 use STM32;
 with STM32.DMA2D.Polling;   use STM32.DMA2D;
@@ -56,7 +54,7 @@ package body Screen_Interface is
          STM32.LCD.Initialize;
          STM32.LCD.Set_Orientation (Portrait);
          STM32.DMA2D.Polling.Initialize;
-         STM32.Touch_Panel.Initialize;
+         HAL.Touch_Panel.Initialize;
          Double_Buffer.Initialize
            (Layer_Background => Layer_Single_Buffer,
             Layer_Foreground => Layer_Inactive);
@@ -84,8 +82,8 @@ package body Screen_Interface is
 
    function Current_Touch_State return Touch_State is
       TS    : Touch_State;
-      ST_TS : constant STM32.Touch_Panel.TP_State :=
-                STM32.Touch_Panel.Get_State;
+      ST_TS : constant HAL.Touch_Panel.TP_State :=
+                HAL.Touch_Panel.Get_State;
    begin
       TS.Touch_Detected := ST_TS'Length > 0;
 
@@ -106,7 +104,7 @@ package body Screen_Interface is
 
    procedure Set_Pixel (P : Point; Col : Color) is
    begin
-      STM32.DMA2D.DMA2D_Set_Pixel (Current_Buffer, P.X, P.Y, Word (Col));
+      STM32.DMA2D.DMA2D_Set_Pixel (Current_Buffer, P.X, P.Y, Unsigned_32 (Col));
    end Set_Pixel;
 
    ---------------
@@ -115,7 +113,7 @@ package body Screen_Interface is
 
    procedure Set_Pixel (X, Y : Natural; Col : Color) is
    begin
-      STM32.DMA2D.DMA2D_Set_Pixel (Current_Buffer, X, Y, Word (Col));
+      STM32.DMA2D.DMA2D_Set_Pixel (Current_Buffer, X, Y, Unsigned_32 (Col));
    end Set_Pixel;
 
    -----------------
@@ -127,7 +125,7 @@ package body Screen_Interface is
       --  ??? Use DMA2D to fill the buffer
       DMA2D_Fill
         (Buffer => Current_Buffer,
-         Color  => Word (Col));
+         Color  => Unsigned_32 (Col));
    end Fill_Screen;
 
    --------------

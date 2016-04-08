@@ -140,7 +140,7 @@ package STM32.LTDC is
      (Layer : LCD_Layer;
       X     : Natural;
       Y     : Natural;
-      Value : Half_Word)
+      Value : Short)
      with Pre =>
        Get_Pixel_Fmt /= Pixel_Fmt_ARGB8888 and then
        Get_Pixel_Fmt /= Pixel_Fmt_RGB888;
@@ -163,7 +163,7 @@ package STM32.LTDC is
      (Layer : LCD_Layer;
       X     : Natural;
       Y     : Natural)
-      return Half_Word
+      return Short
      with Pre =>
        Get_Pixel_Fmt /= Pixel_Fmt_ARGB8888 and then
        Get_Pixel_Fmt /= Pixel_Fmt_RGB888;

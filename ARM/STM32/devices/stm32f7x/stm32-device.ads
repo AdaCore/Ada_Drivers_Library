@@ -46,6 +46,8 @@ pragma Warnings (Off, "* is an internal GNAT unit");
 private with System.BB.Parameters;
 pragma Warnings (On, "* is an internal GNAT unit");
 
+with STM32_SVD;     use STM32_SVD;
+
 with STM32_SVD.DMA;
 with STM32_SVD.I2C;
 with STM32_SVD.SAI;
@@ -53,7 +55,7 @@ with STM32_SVD.SAI;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.ADC;     use STM32.ADC;
 --  with STM32.USARTs;  use STM32.USARTs;
---  with STM32.I2C;     use STM32.I2C;
+with STM32.I2C;     use STM32.I2C;
 with STM32.SPI;     use STM32.SPI;
 with STM32.Timers;  use STM32.Timers;
 with STM32.DAC;     use STM32.DAC;
@@ -282,9 +284,12 @@ package STM32.Device is
    PK14 : constant GPIO_Point := (GPIO_K'Access, 14);
    PK15 : constant GPIO_Point := (GPIO_K'Access, 15);
 
-   ADC_1 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC1_Base;
-   ADC_2 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC2_Base;
-   ADC_3 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC3_Base;
+   ADC_1 : aliased Analog_To_Digital_Converter
+     with Import, Volatile, Address => ADC1_Base;
+   ADC_2 : aliased Analog_To_Digital_Converter
+     with Import, Volatile, Address => ADC2_Base;
+   ADC_3 : aliased Analog_To_Digital_Converter
+     with Import, Volatile, Address => ADC3_Base;
 
    VBat               : constant ADC_Point := (ADC_1'Access, Channel => VBat_Channel);
    Temperature_Sensor : constant ADC_Point := VBat;
@@ -330,21 +335,14 @@ package STM32.Device is
    procedure Enable_Clock (This : aliased in out DMA_Controller);
    procedure Reset (This : aliased in out DMA_Controller);
 
-   subtype I2C_Port is STM32_SVD.I2C.I2C_Peripheral;
-
-   type I2C_Port_Id is (I2C_1, I2C_2, I2C_3, I2C_4);
-
-   I2C_Port_1 : I2C_Port renames STM32_SVD.I2C.I2C1_Periph;
-   I2C_Port_2 : I2C_Port renames STM32_SVD.I2C.I2C2_Periph;
-   I2C_Port_3 : I2C_Port renames STM32_SVD.I2C.I2C3_Periph;
-   I2C_Port_4 : I2C_Port renames STM32_SVD.I2C.I2C4_Periph;
-
-   function As_Port_Id (Port : I2C_Port) return I2C_Port_Id with Inline;
-   function As_Port (Id : I2C_Port_Id) return access I2C_Port with Inline;
-   procedure Enable_Clock (This : I2C_Port);
-   procedure Enable_Clock (This : I2C_Port_Id);
-   procedure Reset (This : I2C_Port);
-   procedure Reset (This : I2C_Port_Id);
+   I2C_1 : I2C_Port :=
+             As_I2C_Port (STM32_SVD.I2C.I2C1_Periph'Access);
+   I2C_2 : I2C_Port :=
+             As_I2C_Port (STM32_SVD.I2C.I2C2_Periph'Access);
+   I2C_3 : I2C_Port :=
+             As_I2C_Port (STM32_SVD.I2C.I2C3_Periph'Access);
+   I2C_4 : I2C_Port :=
+             As_I2C_Port (STM32_SVD.I2C.I2C4_Periph'Access);
 
    SPI_1 : aliased SPI_Port with Import, Volatile, Address => SPI1_Base;
    SPI_2 : aliased SPI_Port with Import, Volatile, Address => SPI2_Base;
@@ -411,15 +409,15 @@ package STM32.Device is
 
    function System_Clock_Frequencies return RCC_System_Clocks;
 
-   type PLLSAI_DivR is new STM32_SVD.UInt2;
+   type PLLSAI_DivR is new UInt2;
    PLLSAI_DIV2  : constant PLLSAI_DivR := 0;
    PLLSAI_DIV4  : constant PLLSAI_DivR := 1;
    PLLSAI_DIV8  : constant PLLSAI_DivR := 2;
    PLLSAI_DIV16 : constant PLLSAI_DivR := 3;
 
    procedure Set_PLLSAI_Factors
-     (LCD  : STM32_SVD.UInt3;
-      VCO  : STM32_SVD.UInt9;
+     (LCD  : UInt3;
+      VCO  : UInt9;
       DivR : PLLSAI_DivR);
 
    procedure Enable_PLLSAI;

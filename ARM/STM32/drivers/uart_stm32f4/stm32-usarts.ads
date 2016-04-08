@@ -66,13 +66,13 @@ package STM32.USARTs is
 
    function Enabled (This : USART) return Boolean with Inline;
 
-   procedure Receive (This : USART;  Data : out Bits_9)with Inline;
+   procedure Receive (This : USART;  Data : out UInt9)with Inline;
    --  reads Device.DR into Data
 
-   function Current_Input (This : USART) return Bits_9 with Inline;
+   function Current_Input (This : USART) return UInt9 with Inline;
    --  returns Device.DR
 
-   procedure Transmit (This : in out USART;  Data : Bits_9) with Inline;
+   procedure Transmit (This : in out USART;  Data : UInt9) with Inline;
 
    function Tx_Ready (This : USART) return Boolean with Inline;
 

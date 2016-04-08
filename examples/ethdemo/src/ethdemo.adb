@@ -24,12 +24,12 @@
 with Ada.Real_Time;
 with STM32.RNG.Interrupts;     use STM32.RNG.Interrupts;
 with Ada.Unchecked_Conversion;
-with Interfaces; use Interfaces;
-with STM32_SVD;
-with STM32.LCD; use STM32.LCD;
+with Interfaces;               use Interfaces;
+with Interfaces.Bit_Types;     use Interfaces.Bit_Types;
+with STM32.LCD;                use STM32.LCD;
 with STM32.DMA2D.Polling;
 with STM32.Eth;
-with Lcd_Std_Out; use Lcd_Std_Out;
+with Lcd_Std_Out;              use Lcd_Std_Out;
 
 procedure Ethdemo is
 
@@ -60,7 +60,7 @@ procedure Ethdemo is
       case Format is
          when Pixel_Fmt_ARGB1555 =>
             declare
-               Colors : constant array (Cell) of Stm32.Half_Word :=
+               Colors : constant array (Cell) of Short :=
                  (Alive => 16#ffff#, Dead => 16#801f#);
             begin
                for I in G'Range (1) loop
@@ -71,7 +71,7 @@ procedure Ethdemo is
             end;
          when Pixel_Fmt_ARGB8888 =>
             declare
-               Colors : constant array (Cell) of Stm32.Word :=
+               Colors : constant array (Cell) of Word :=
                  (Alive => 16#ffffffff#, Dead => 16#ff0000ff#);
             begin
                for I in G'Range (1) loop
@@ -82,7 +82,7 @@ procedure Ethdemo is
             end;
          when Pixel_Fmt_RGB888 =>
             declare
-               Colors : constant array (Cell) of STM32_SVD.Uint24 :=
+               Colors : constant array (Cell) of Uint24 :=
                  (Alive => 16#ffffff#, Dead => 16#ff0000#);
             begin
                for I in G'Range (1) loop

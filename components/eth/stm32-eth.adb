@@ -33,9 +33,9 @@ with STM32.Device;
 with STM32_SVD.RCC;
 with STM32_SVD.SYSCFG;
 with STM32_SVD.Ethernet; use STM32_SVD.Ethernet;
-with STM32_SVD.Interrupts;
 with STM32.SDRAM;
 with Ada.Real_Time;
+with Ada.Interrupts.Names;
 with Ada.Unchecked_Conversion;
 
 package body STM32.Eth is
@@ -51,10 +51,10 @@ package body STM32.Eth is
       Enable_Clock (GPIO_G);
 
       --  Enable SYSCFG clock
-      RCC_Periph.APB2ENR.SYSCFGEN := 1;
+      RCC_Periph.APB2ENR.SYSCFGEN := True;
 
       --  Select RMII (before enabling the clocks)
-      STM32_SVD.SYSCFG.SYSCFG_Periph.PMC.MII_RMII_SEL := 1;
+      STM32_SVD.SYSCFG.SYSCFG_Periph.PMC.MII_RMII_SEL := True;
 
       Configure_Alternate_Function (PA1,  GPIO_AF_ETH); -- RMII_REF_CLK
       Configure_Alternate_Function (PA2,  GPIO_AF_ETH); -- RMII_MDIO
@@ -78,18 +78,18 @@ package body STM32.Eth is
       Configure_IO (PG14, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
 
       --  Enable clocks
-      RCC_Periph.AHB1ENR.ETHMACEN := 1;
-      RCC_Periph.AHB1ENR.ETHMACTXEN := 1;
-      RCC_Periph.AHB1ENR.ETHMACRXEN := 1;
-      RCC_Periph.AHB1ENR.ETHMACPTPEN := 1;
+      RCC_Periph.AHB1ENR.ETHMACEN := True;
+      RCC_Periph.AHB1ENR.ETHMACTXEN := True;
+      RCC_Periph.AHB1ENR.ETHMACRXEN := True;
+      RCC_Periph.AHB1ENR.ETHMACPTPEN := True;
 
       --  Reset
-      RCC_Periph.AHB1RSTR.ETHMACRST := 1;
-      RCC_Periph.AHB1RSTR.ETHMACRST := 0;
+      RCC_Periph.AHB1RSTR.ETHMACRST := True;
+      RCC_Periph.AHB1RSTR.ETHMACRST := False;
 
       --  Software reset
-      Ethernet_DMA_Periph.DMABMR.SR := 1;
-      while Ethernet_DMA_Periph.DMABMR.SR /= 0 loop
+      Ethernet_DMA_Periph.DMABMR.SR := True;
+      while Ethernet_DMA_Periph.DMABMR.SR loop
          null;
       end loop;
    end Initialize_RMII;
@@ -109,10 +109,15 @@ package body STM32.Eth is
          when others => raise Constraint_Error;
       end case;
 
-      Ethernet_MAC_Periph.MACMIIAR := (PA => Pa, MR => Reg, CR => Cr, MW => 0, MB => 1,
-                                       others => <>);
+      Ethernet_MAC_Periph.MACMIIAR :=
+        (PA => Pa,
+         MR => Reg,
+         CR => Cr,
+         MW => False,
+         MB => True,
+         others => <>);
       loop
-         exit when Ethernet_MAC_Periph.MACMIIAR.MB = 0;
+         exit when not Ethernet_MAC_Periph.MACMIIAR.MB;
          delay until Clock + Milliseconds (1);
       end loop;
 
@@ -157,18 +162,49 @@ package body STM32.Eth is
    begin
       --  FIXME: check speed, full duplex
       Ethernet_MAC_Periph.MACCR :=
-        (CSTF => 1, WD => 0, JD => 0, IFG => 2#100#, CSD => 0, FES => 1, ROD => 1,
-         LM => 0, DM => 1, IPCO => 0, RD => 0, APCS => 1, BL => 2#10#, DC => 1,
-         TE => 0, RE => 0, others => <>);
+        (CSTF => True,
+         WD   => False,
+         JD   => False,
+         IFG  => 2#100#,
+         CSD  => False,
+         FES  => True,
+         ROD  => True,
+         LM   => False,
+         DM   => True,
+         IPCO => False,
+         RD   => False,
+         APCS => True,
+         BL   => 2#10#,
+         DC   => True,
+         TE   => False,
+         RE   => False,
+         others => <>);
       Ethernet_MAC_Periph.MACFFR :=
-        (RA => 1, others => <>);
+        (RA => True, others => <>);
       Ethernet_MAC_Periph.MACHTHR := 0;
       Ethernet_MAC_Periph.MACHTLR := 0;
-      Ethernet_MAC_Periph.MACFCR := (PT => 0, ZQPD => 0, PLT => 0, UPFD => 0,
-                                     RFCE => 1, TFCE => 1, FCB => 0, others => <>);
-      Ethernet_MAC_Periph.MACVLANTR := (VLANTC => 0, VLANTI => 0, others => <>);
-      Ethernet_MAC_Periph.MACPMTCSR := (WFFRPR => 0, GU => 0, WFR => 0, MPR => 0,
-                                        WFE => 0, MPE => 0, PD => 0, others => <>);
+      Ethernet_MAC_Periph.MACFCR :=
+        (PT   => 0,
+         ZQPD => False,
+         PLT  => 0,
+         UPFD => False,
+         RFCE => True,
+         TFCE => True,
+         FCB  => False,
+         others => <>);
+      Ethernet_MAC_Periph.MACVLANTR :=
+        (VLANTC => False,
+         VLANTI => 0,
+         others => <>);
+      Ethernet_MAC_Periph.MACPMTCSR :=
+        (WFFRPR => False,
+         GU     => False,
+         WFR    => False,
+         MPR    => False,
+         WFE    => False,
+         MPE    => False,
+         PD     => False,
+         others => <>);
 
       Desc_Addr := Stm32.SDRAM.Reserve (Amount => Rx_Desc_Array'Size / 8);
       Rx_Descs := To_Rx_Desc_Arr_Ptr (Desc_Addr);
@@ -181,9 +217,20 @@ package body STM32.Eth is
          Init_Rx_Desc (I);
       end loop;
 
-      Ethernet_DMA_Periph.DMABMR := (Sr => 0, Da => 0, Dsl => 0, Edfe => 0, Pbl => 4,
-                                     Rtpr => 0, Fb => 1, Rdp => 4, Usp => 1, fpm => 0,
-                                     Aab => 0, Mb => 0, others => <>);
+      Ethernet_DMA_Periph.DMABMR :=
+        (Sr   => False,
+         Da   => False,
+         Dsl  => 0,
+         Edfe => False,
+         Pbl  => 4,
+         Rtpr => 0,
+         Fb   => True,
+         Rdp  => 4,
+         Usp  => True,
+         Fpm  => False,
+         Aab  => False,
+         Mb   => False,
+         others => <>);
    end Init_Mac;
 
    protected Sync is
@@ -191,7 +238,7 @@ package body STM32.Eth is
       procedure Start_Rx;
 
       procedure Interrupt;
-      pragma Attach_Handler (Interrupt, STM32_SVD.Interrupts.ETH_Interrupt);
+      pragma Attach_Handler (Interrupt, Ada.Interrupts.Names.ETH_Interrupt);
    private
       Rx_Pkt : Boolean := False;
 
@@ -212,10 +259,10 @@ package body STM32.Eth is
          Rx_Descs (Last_Rx).Rdes0.Ls := 1;
 
          --  Assume the RxDMA is ok.
-         Ethernet_MAC_Periph.MACCR.RE := 1;
-         Ethernet_DMA_Periph.DMAIER.RIE := 1;
-         Ethernet_DMA_Periph.DMAIER.NISE := 1;
-         Ethernet_DMA_Periph.DMAOMR.SR := 1;
+         Ethernet_MAC_Periph.MACCR.RE := True;
+         Ethernet_DMA_Periph.DMAIER.RIE := True;
+         Ethernet_DMA_Periph.DMAIER.NISE := True;
+         Ethernet_DMA_Periph.DMAOMR.SR := True;
          Ethernet_DMA_Periph.DMARPDR := 1;
       end Start_Rx;
 
@@ -251,7 +298,7 @@ package body STM32.Eth is
 
       procedure Interrupt is
       begin
-         Ethernet_DMA_Periph.DMASR.RS := 1;
+         Ethernet_DMA_Periph.DMASR.RS := True;
          Rx_Pkt := True;
       end Interrupt;
    end Sync;

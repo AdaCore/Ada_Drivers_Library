@@ -36,9 +36,9 @@ package body STM32.IWDG is
 
    --  commands to the watchdog hardware
 
-   Reload_Counter : constant Half_Word := 16#AAAA#;
-   Enable_Access  : constant Half_Word := 16#5555#;
-   Start          : constant Half_Word := 16#CCCC#;
+   Reload_Counter : constant Short := 16#AAAA#;
+   Enable_Access  : constant Short := 16#5555#;
+   Start          : constant Short := 16#CCCC#;
 
    -------------------------
    -- Initialize_Watchdog --
@@ -50,9 +50,9 @@ package body STM32.IWDG is
    is
    begin
       --  Check if we're resuming from a watchdog reset
-      if RCC_Periph.CSR.WDGRSTF = 1 then
+      if RCC_Periph.CSR.WDGRSTF then
          --  Clear the reset flag
-         RCC_Periph.CSR.RMVF := 1;
+         RCC_Periph.CSR.RMVF := True;
       end if;
 
       IWDG_Periph.KR.KEY := Enable_Access;
@@ -76,7 +76,7 @@ package body STM32.IWDG is
 
    procedure Reset_Watchdog is
    begin
-      while IWDG_Periph.SR.RVU = 1 loop
+      while IWDG_Periph.SR.RVU loop
          null;  -- TODO: use a timeout instead of infinitely looping
       end loop;
       IWDG_Periph.KR.KEY := Reload_Counter;

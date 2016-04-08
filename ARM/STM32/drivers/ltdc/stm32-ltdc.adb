@@ -41,6 +41,7 @@
 
 with Ada.Unchecked_Conversion;
 with Ada.Real_Time;  use Ada.Real_Time;
+with System;         use System;
 
 with STM32_SVD.LTDC; use STM32_SVD.LTDC;
 with STM32_SVD.RCC;  use STM32_SVD.RCC;
@@ -168,7 +169,7 @@ package body STM32.LTDC is
       Reload_Config (True);
 
       --  enable Dither
-      LTDC_Periph.GCR.DEN := 1;
+      LTDC_Periph.GCR.DEN := True;
 
       Reload_Config (True);
 
@@ -356,7 +357,7 @@ package body STM32.LTDC is
      (Layer : LCD_Layer;
       X     : Natural;
       Y     : Natural;
-      Value : Half_Word)
+      Value : Short)
    is
       FB : FB16 with Import, Address => Frame_Buffer_Array (Layer);
       X0 : LCD_Width_Range;
@@ -425,7 +426,7 @@ package body STM32.LTDC is
      (Layer : LCD_Layer;
       X     : Natural;
       Y     : Natural)
-      return Half_Word
+      return Short
    is
       FB : FB16 with Import, Address => Frame_Buffer_Array (Layer);
       X0 : LCD_Width_Range;

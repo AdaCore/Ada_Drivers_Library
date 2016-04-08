@@ -32,7 +32,7 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
 with System;
 with Interfaces;            use Interfaces;
-
+with Interfaces.Bit_Types;  use Interfaces.Bit_Types;
 with STM32.Button;          use STM32.Button;
 with STM32.LCD;             use STM32.LCD;
 with STM32.DMA2D.Interrupt; use STM32.DMA2D;

@@ -1,6 +1,0 @@
-project Audio_Generic extends "../common/shared.gpr" is
-
-   for Main use ("demo.adb");
-   for Source_Dirs use ("src");
-
-end Audio_Generic;

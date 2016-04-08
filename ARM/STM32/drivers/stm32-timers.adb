@@ -47,7 +47,7 @@ package body STM32.Timers is
 
    procedure Configure
      (This      : in out Timer;
-      Prescaler : Half_Word;
+      Prescaler : Short;
       Period    : Word)
    is
    begin
@@ -61,7 +61,7 @@ package body STM32.Timers is
 
    procedure Configure
      (This          : in out Timer;
-      Prescaler     : Half_Word;
+      Prescaler     : Short;
       Period        : Word;
       Clock_Divisor : Timer_Clock_Divisor;
       Counter_Mode  : Timer_Counter_Alignment_Mode)
@@ -112,7 +112,7 @@ package body STM32.Timers is
 
    procedure Configure
      (This          : in out Timer;
-      Prescaler     : Half_Word;
+      Prescaler     : Short;
       Period        : Word;
       Clock_Divisor : Timer_Clock_Divisor;
       Counter_Mode  : Timer_Counter_Alignment_Mode;
@@ -210,7 +210,7 @@ package body STM32.Timers is
    -- Set_Counter --
    -----------------
 
-   procedure Set_Counter (This : in out Timer;  Value : Half_Word) is
+   procedure Set_Counter (This : in out Timer;  Value : Short) is
    begin
       This.Counter := Word (Value);
    end Set_Counter;
@@ -387,7 +387,7 @@ package body STM32.Timers is
 
    procedure Configure_Prescaler
      (This        : in out Timer;
-      Prescaler   : Half_Word;
+      Prescaler   : Short;
       Reload_Mode : Timer_Prescaler_Reload_Mode)
    is
    begin
@@ -439,7 +439,7 @@ package body STM32.Timers is
    -- Current_Prescaler --
    -----------------------
 
-   function Current_Prescaler (This : Timer) return Half_Word is
+   function Current_Prescaler (This : Timer) return Short is
    begin
       return This.Prescaler;
    end Current_Prescaler;
@@ -1122,7 +1122,7 @@ package body STM32.Timers is
    procedure Set_Compare_Value
      (This    : in out Timer;
       Channel : Timer_Channel;
-      Value   : Half_Word)
+      Value   : Short)
    is
    begin
       This.CCR1_4 (Channel) := Word (Value);
@@ -1154,10 +1154,10 @@ package body STM32.Timers is
    function Current_Capture_Value
      (This    : Timer;
       Channel : Timer_Channel)
-      return Half_Word
+      return Short
    is
    begin
-      return Half_Word (This.CCR1_4 (Channel));
+      return Short (This.CCR1_4 (Channel));
    end Current_Capture_Value;
 
    -------------------------------------
@@ -1399,8 +1399,8 @@ package body STM32.Timers is
       Automatic_Output_Enabled      : Boolean;
       Break_Polarity                : Timer_Break_Polarity;
       Break_Enabled                 : Boolean;
-      Off_State_Selection_Run_Mode  : Bits_1;
-      Off_State_Selection_Idle_Mode : Bits_1;
+      Off_State_Selection_Run_Mode  : Bit;
+      Off_State_Selection_Idle_Mode : Bit;
       Lock_Configuration            : Timer_Lock_Level;
       Deadtime_Generator            : Byte)
    is

@@ -156,7 +156,7 @@ package body STM32.SYSCFG is
 
    procedure Clear_External_Interrupt (Pin : GPIO_Pin_Index) is
    begin
-      EXTI_Periph.PR.PR.Arr (Pin) := 1; --  Set to 1 to clear
+      EXTI_Periph.PR.PR.Arr (Pin) := True; --  Set to 1 to clear
    end Clear_External_Interrupt;
 
 end STM32.SYSCFG;

@@ -1,0 +1,23 @@
+library project STM32F429_Discovery extends "../ARM/STM32/stm32f42x.gpr" is
+
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
+
+   for Runtime ("Ada") use RTS & "-stm32f429disco";
+
+   for Library_Name use "stm32f429disco";
+   for Library_Kind use "static";
+   for Library_Dir use "lib/stm32f429disco";
+   for Object_Dir use "obj/stm32f429disco";
+
+   for Source_Dirs use
+     ("stm32f429_discovery",
+      "../hal",
+      "../hal/touch_panel",
+      "../components/button",
+      "../components/sdram",
+      "../components/lcd/ili9341",
+      "../components/touch_panel/stmpe811",
+      "../components/gyro/l3gd20");
+
+end STM32F429_Discovery;

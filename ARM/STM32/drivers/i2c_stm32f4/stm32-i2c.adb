@@ -189,7 +189,7 @@ package body STM32.I2C is
       CCR        : CCR_Register;
       OAR1       : OAR1_Register;
       PCLK1      : constant Word := System_Clock_Frequencies.PCLK1;
-      Freq_Range : constant Half_Word := Half_Word (PCLK1 / 1_000_000);
+      Freq_Range : constant Short := Short (PCLK1 / 1_000_000);
 
    begin
       if Handle.State /= Reset then
@@ -212,18 +212,18 @@ package body STM32.I2C is
 
       --  Load CR2 and clear FREQ
       Handle.Periph.CR2 :=
-        (LAST    => 0,
-         DMAEN   => 0,
-         ITBUFEN => 0,
-         ITEVTEN => 0,
-         ITERREN => 0,
+        (LAST    => False,
+         DMAEN   => False,
+         ITBUFEN => False,
+         ITEVTEN => False,
+         ITERREN => False,
          FREQ    => UInt6 (Freq_Range),
          others  => <>);
 
       --  Set the port timing
       if Conf.Clock_Speed <= 100_000 then
         --  Mode selection to Standard Mode
-         CCR.F_S := 0;
+         CCR.F_S := False;
          CCR.CCR := UInt12 (PCLK1 / (Conf.Clock_Speed * 2));
 
          if CCR.CCR < 4 then
@@ -234,13 +234,13 @@ package body STM32.I2C is
 
       else
          --  Fast mode
-         CCR.F_S := 1;
+         CCR.F_S := True;
 
          if Conf.Duty_Cycle = DutyCycle_2 then
             CCR.CCR := UInt12 (Pclk1 / (Conf.Clock_Speed * 3));
          else
             CCR.CCR := UInt12 (Pclk1 / (Conf.Clock_Speed * 25));
-            CCR.DUTY := 1;
+            CCR.DUTY := True;
          end if;
 
          if CCR.CCR = 0 then
@@ -258,29 +258,28 @@ package body STM32.I2C is
       --  CR1 configuration
       case Conf.Mode is
          when I2C_Mode =>
-            CR1.SMBUS := 0;
-            CR1.SMBTYPE := 0;
+            CR1.SMBUS := False;
+            CR1.SMBTYPE := False;
          when SMBusDevice_Mode =>
-            CR1.SMBUS := 1;
-            CR1.SMBTYPE := 0;
+            CR1.SMBUS := True;
+            CR1.SMBTYPE := False;
          when SMBusHost_Mode =>
-            CR1.SMBUS := 1;
-            CR1.SMBTYPE := 1;
+            CR1.SMBUS := True;
+            CR1.SMBTYPE := True;
       end case;
-      CR1.ENGC      := (if Conf.General_Call_Enabled then 1 else 0);
-      CR1.NOSTRETCH := (if Conf.Clock_Stretching_Enabled then 0 else 1);
+      CR1.ENGC      := Conf.General_Call_Enabled;
+      CR1.NOSTRETCH := not Conf.Clock_Stretching_Enabled;
       Handle.Periph.CR1 := CR1;
 
       --  Address mode (slave mode) configuration
-      OAR1.ADDMODE := (if Conf.Addressing_Mode = Addressing_Mode_10bit
-                       then 1 else 0);
+      OAR1.ADDMODE := Conf.Addressing_Mode = Addressing_Mode_10bit;
       case Conf.Addressing_Mode is
          when Addressing_Mode_7bit =>
-            OAR1.ADD0  := 0;
+            OAR1.ADD0  := False;
             OAR1.ADD7  := UInt7 (Conf.Own_Address / 2);
             OAR1.ADD10 := 0;
          when Addressing_Mode_10bit =>
-            OAR1.Add0  := Bit (Conf.Own_Address and 2#1#);
+            OAR1.Add0  := (Conf.Own_Address and 2#1#) /= 0;
             OAR1.ADD7  := UInt7 ((Conf.Own_Address / 2) and 2#1111111#);
             OAR1.Add10 := UInt2 (Conf.Own_Address / 2 ** 8);
       end case;
@@ -301,47 +300,47 @@ package body STM32.I2C is
    begin
       case Flag is
          when Start_Bit =>
-            return Port.SR1.SB = 1;
+            return Port.SR1.SB;
          when Address_Sent =>
-            return Port.SR1.ADDR = 1;
+            return Port.SR1.ADDR;
          when Byte_Transfer_Finished =>
-            return Port.SR1.BTF = 1;
+            return Port.SR1.BTF;
          when Address_Sent_10bit =>
-            return Port.SR1.ADD10 = 1;
+            return Port.SR1.ADD10;
          when Stop_Detection =>
-            return Port.SR1.STOPF = 1;
+            return Port.SR1.STOPF;
          when Rx_Data_Register_Not_Empty =>
-            return Port.SR1.RxNE = 1;
+            return Port.SR1.RxNE;
          when Tx_Data_Register_Empty =>
-            return Port.SR1.TxE = 1;
+            return Port.SR1.TxE;
          when Bus_Error =>
-            return Port.SR1.BERR = 1;
+            return Port.SR1.BERR;
          when Arbitration_Lost =>
-            return Port.SR1.ARLO = 1;
+            return Port.SR1.ARLO;
          when Ack_Failure =>
-            return Port.SR1.AF = 1;
+            return Port.SR1.AF;
          when UnderOverrun =>
-            return Port.SR1.OVR = 1;
+            return Port.SR1.OVR;
          when Packet_Error =>
-            return Port.SR1.PECERR = 1;
+            return Port.SR1.PECERR;
          when Timeout =>
-            return Port.SR1.TIMEOUT = 1;
+            return Port.SR1.TIMEOUT;
          when SMB_Alert =>
-            return Port.SR1.SMBALERT = 1;
+            return Port.SR1.SMBALERT;
          when Master_Slave_Mode =>
-            return Port.SR2.MSL = 1;
+            return Port.SR2.MSL;
          when Busy =>
-            return Port.SR2.BUSY = 1;
+            return Port.SR2.BUSY;
          when Transmitter_Receiver_Mode =>
-            return Port.SR2.TRA = 1;
+            return Port.SR2.TRA;
          when General_Call =>
-            return Port.SR2.GENCALL = 1;
+            return Port.SR2.GENCALL;
          when SMB_Default =>
-            return Port.SR2.SMBDEFAULT = 1;
+            return Port.SR2.SMBDEFAULT;
          when SMB_Host =>
-            return Port.SR2.SMBHOST = 1;
+            return Port.SR2.SMBHOST;
          when Dual_Flag =>
-            return Port.SR2.DUALF = 1;
+            return Port.SR2.DUALF;
       end case;
    end Flag_Status;
 
@@ -379,7 +378,7 @@ package body STM32.I2C is
 
    procedure Clear_Address_Sent_Status (Port : I2C_Port)
    is
-      Unref  : Bit with Volatile, Unreferenced;
+      Unref  : Boolean with Volatile, Unreferenced;
    begin
       --  ADDR is cleared after reading both SR1 and SR2
       Unref := Port.SR1.ADDR;
@@ -394,7 +393,7 @@ package body STM32.I2C is
 --        Unref  : Bit with Volatile, Unreferenced;
 --     begin
 --        Unref := Port.SR1.STOPF;
---        Port.CR1.PE := 1;
+--        Port.CR1.PE := True;
 --     end Clear_Stop_Detection_Status;
 
    ---------------
@@ -435,12 +434,12 @@ package body STM32.I2C is
       Start : constant Time := Clock;
    begin
       while not Flag_Status (Handle.Periph.all, Flag) loop
-         if Handle.Periph.SR1.AF = 1 then
+         if Handle.Periph.SR1.AF then
             --  Generate STOP
-            Handle.Periph.CR1.STOP := 1;
+            Handle.Periph.CR1.STOP := True;
 
             --  Clear the AF flag
-            Handle.Periph.SR1.Af := 0;
+            Handle.Periph.SR1.Af := False;
             Handle.State := Ready;
             Status       := Err_Error;
 
@@ -469,7 +468,7 @@ package body STM32.I2C is
       Status  :    out I2C_Status)
    is
    begin
-      Handle.Periph.CR1.START := 1;
+      Handle.Periph.CR1.START := True;
 
       Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
 
@@ -514,8 +513,8 @@ package body STM32.I2C is
       Status  :    out I2C_Status)
    is
    begin
-      Handle.Periph.CR1.ACK := 1;
-      Handle.Periph.CR1.START := 1;
+      Handle.Periph.CR1.ACK := True;
+      Handle.Periph.CR1.START := True;
 
       Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
 
@@ -555,7 +554,7 @@ package body STM32.I2C is
             Clear_Address_Sent_Status (Handle.Periph.all);
 
             --  Generate a re-start
-            Handle.Periph.CR1.START := 1;
+            Handle.Periph.CR1.START := True;
 
             Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
 
@@ -584,7 +583,7 @@ package body STM32.I2C is
       Status        :    out I2C_Status)
    is
    begin
-      Handle.Periph.CR1.START := 1;
+      Handle.Periph.CR1.START := True;
 
       Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
 
@@ -638,8 +637,8 @@ package body STM32.I2C is
       Status        :    out I2C_Status)
    is
    begin
-      Handle.Periph.CR1.ACK := 1;
-      Handle.Periph.CR1.START := 1;
+      Handle.Periph.CR1.ACK := True;
+      Handle.Periph.CR1.START := True;
 
       Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
 
@@ -681,7 +680,7 @@ package body STM32.I2C is
       end case;
 
       --  We now need to reset and send the slave address in read mode
-      Handle.Periph.CR1.START := 1;
+      Handle.Periph.CR1.START := True;
 
       Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
 
@@ -732,7 +731,7 @@ package body STM32.I2C is
 
       Handle.State := Master_Busy_Tx;
 
-      Handle.Periph.CR1.POS := 0;
+      Handle.Periph.CR1.POS := False;
 
       Master_Request_Write (Handle, Addr, Timeout, Status);
 
@@ -769,7 +768,7 @@ package body STM32.I2C is
       end if;
 
       --  Generate STOP
-      Handle.Periph.CR1.STOP := 1;
+      Handle.Periph.CR1.STOP := True;
       Handle.State := Ready;
    end Master_Transmit;
 
@@ -810,7 +809,7 @@ package body STM32.I2C is
 
       Handle.State := Master_Busy_Rx;
 
-      Handle.Periph.CR1.POS := 0;
+      Handle.Periph.CR1.POS := False;
 
       Master_Request_Read (Handle, Addr, Timeout, Status);
 
@@ -819,18 +818,18 @@ package body STM32.I2C is
       end if;
 
       if Data'Length = 1 then
-         Handle.Periph.CR1.ACK := 0;
+         Handle.Periph.CR1.ACK := False;
          Clear_Address_Sent_Status (Handle.Periph.all);
-         Handle.Periph.CR1.STOP := 1;
+         Handle.Periph.CR1.STOP := True;
 
       elsif Data'Length = 2 then
-         Handle.Periph.CR1.ACK := 0;
-         Handle.Periph.CR1.POS := 1;
+         Handle.Periph.CR1.ACK := False;
+         Handle.Periph.CR1.POS := True;
          Clear_Address_Sent_Status (Handle.Periph.all);
 
       else
          --  Automatic acknowledge
-         Handle.Periph.CR1.ACK := 1;
+         Handle.Periph.CR1.ACK := True;
          Clear_Address_Sent_Status (Handle.Periph.all);
       end if;
 
@@ -853,7 +852,7 @@ package body STM32.I2C is
                return;
             end if;
 
-            Handle.Periph.CR1.STOP := 1;
+            Handle.Periph.CR1.STOP := True;
 
             --  read the data from DR
             Data (Idx) := Handle.Periph.DR.DR;
@@ -868,7 +867,7 @@ package body STM32.I2C is
                return;
             end if;
 
-            Handle.Periph.CR1.ACK := 0;
+            Handle.Periph.CR1.ACK := False;
 
             --  read the data from DR
             Data (Idx) := Handle.Periph.DR.DR;
@@ -879,7 +878,7 @@ package body STM32.I2C is
                return;
             end if;
 
-            Handle.Periph.CR1.STOP := 1;
+            Handle.Periph.CR1.STOP := True;
 
             --  read the data from DR
             Data (Idx) := Handle.Periph.DR.DR;
@@ -949,7 +948,7 @@ package body STM32.I2C is
       end if;
 
       Handle.State := Mem_Busy_Tx;
-      Handle.Periph.CR1.POS := 0;
+      Handle.Periph.CR1.POS := False;
 
       Mem_Request_Write
         (Handle, Addr, Mem_Addr, Mem_Addr_Size, Timeout, Status);
@@ -985,7 +984,7 @@ package body STM32.I2C is
       end if;
 
       --  Generate STOP
-      Handle.Periph.CR1.STOP := 1;
+      Handle.Periph.CR1.STOP := True;
       Handle.State := Ready;
    end Mem_Write;
 
@@ -1028,7 +1027,7 @@ package body STM32.I2C is
 
       Handle.State := Mem_Busy_Rx;
 
-      Handle.Periph.CR1.POS := 0;
+      Handle.Periph.CR1.POS := False;
 
       Mem_Request_Read
         (Handle, Addr, Mem_Addr, Mem_Addr_Size, Timeout, Status);
@@ -1038,18 +1037,18 @@ package body STM32.I2C is
       end if;
 
       if Data'Length = 1 then
-         Handle.Periph.CR1.ACK := 0;
+         Handle.Periph.CR1.ACK := False;
          Clear_Address_Sent_Status (Handle.Periph.all);
-         Handle.Periph.CR1.STOP := 1;
+         Handle.Periph.CR1.STOP := True;
 
       elsif Data'Length = 2 then
-         Handle.Periph.CR1.ACK := 0;
-         Handle.Periph.CR1.POS := 1;
+         Handle.Periph.CR1.ACK := False;
+         Handle.Periph.CR1.POS := True;
          Clear_Address_Sent_Status (Handle.Periph.all);
 
       else
          --  Automatic acknowledge
-         Handle.Periph.CR1.ACK := 1;
+         Handle.Periph.CR1.ACK := True;
          Clear_Address_Sent_Status (Handle.Periph.all);
       end if;
 
@@ -1072,7 +1071,7 @@ package body STM32.I2C is
                return;
             end if;
 
-            Handle.Periph.CR1.STOP := 1;
+            Handle.Periph.CR1.STOP := True;
 
             --  read the data from DR
             Data (Idx) := Handle.Periph.DR.DR;
@@ -1087,7 +1086,7 @@ package body STM32.I2C is
                return;
             end if;
 
-            Handle.Periph.CR1.ACK := 0;
+            Handle.Periph.CR1.ACK := False;
 
             --  read the data from DR
             Data (Idx) := Handle.Periph.DR.DR;
@@ -1098,7 +1097,7 @@ package body STM32.I2C is
                return;
             end if;
 
-            Handle.Periph.CR1.STOP := 1;
+            Handle.Periph.CR1.STOP := True;
 
             --  read the data from DR
             Data (Idx) := Handle.Periph.DR.DR;
@@ -1235,7 +1234,7 @@ package body STM32.I2C is
    is
       Periph : constant access I2C_Port := As_Port (Port);
    begin
-      Periph.CR1.PE := (if Enabled then 1 else 0);
+      Periph.CR1.PE := Enabled;
    end Set_State;
 
    ------------------
@@ -1246,7 +1245,7 @@ package body STM32.I2C is
    is
       Periph : constant access I2C_Port := As_Port (Port);
    begin
-      return Periph.CR1.PE = 1;
+      return Periph.CR1.PE;
    end Port_Enabled;
 
    ----------------------
@@ -1260,11 +1259,11 @@ package body STM32.I2C is
    begin
       case Source is
          when Error_Interrupt =>
-            Port.CR2.ITERREN := 1;
+            Port.CR2.ITERREN := True;
          when Event_Interrupt =>
-            Port.CR2.ITEVTEN := 1;
+            Port.CR2.ITEVTEN := True;
          when Buffer_Interrupt =>
-            Port.CR2.ITBUFEN := 1;
+            Port.CR2.ITBUFEN := True;
       end case;
    end Enable_Interrupt;
 
@@ -1279,11 +1278,11 @@ package body STM32.I2C is
    begin
       case Source is
          when Error_Interrupt =>
-            Port.CR2.ITERREN := 0;
+            Port.CR2.ITERREN := False;
          when Event_Interrupt =>
-            Port.CR2.ITEVTEN := 0;
+            Port.CR2.ITEVTEN := False;
          when Buffer_Interrupt =>
-            Port.CR2.ITBUFEN := 0;
+            Port.CR2.ITBUFEN := False;
       end case;
    end Disable_Interrupt;
 
@@ -1299,11 +1298,11 @@ package body STM32.I2C is
    begin
       case Source is
          when Error_Interrupt =>
-            return Port.CR2.ITERREN = 1;
+            return Port.CR2.ITERREN;
          when Event_Interrupt =>
-            return Port.CR2.ITEVTEN = 1;
+            return Port.CR2.ITEVTEN;
          when Buffer_Interrupt =>
-            return Port.CR2.ITBUFEN = 1;
+            return Port.CR2.ITBUFEN;
       end case;
    end Enabled;
 

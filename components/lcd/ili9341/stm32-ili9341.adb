@@ -55,8 +55,8 @@ package body STM32.ILI9341 is
 
    procedure Init_SPI;
 
-   function As_Half_Word is new Ada.Unchecked_Conversion
-     (Source => Colors, Target => Half_Word);
+   function As_Short is new Ada.Unchecked_Conversion
+     (Source => Colors, Target => Short);
 
    -------------------
    -- Current_Width --
@@ -170,8 +170,8 @@ package body STM32.ILI9341 is
    ---------------
 
    procedure Set_Pixel (X : Width; Y : Height; Color : Colors) is
-      Color_High_Byte : constant Byte := Byte (Shift_Right (As_Half_Word (Color), 8));
-      Color_Low_Byte  : constant Byte := Byte (As_Half_Word (Color) and 16#FF#);
+      Color_High_Byte : constant Byte := Byte (Shift_Right (As_Short (Color), 8));
+      Color_Low_Byte  : constant Byte := Byte (As_Short (Color) and 16#FF#);
    begin
       Set_Cursor_Position (X, Y, X, Y);
       Send_Command (ILI9341_GRAM);
@@ -184,8 +184,8 @@ package body STM32.ILI9341 is
    ----------
 
    procedure Fill (Color : Colors) is
-      Color_High_Byte : constant Byte := Byte (Shift_Right (As_Half_Word (Color), 8));
-      Color_Low_Byte  : constant Byte := Byte (As_Half_Word (Color) and 16#FF#);
+      Color_High_Byte : constant Byte := Byte (Shift_Right (As_Short (Color), 8));
+      Color_Low_Byte  : constant Byte := Byte (As_Short (Color) and 16#FF#);
    begin
       Set_Cursor_Position (X1 => 0,
                            Y1 => 0,
@@ -253,15 +253,15 @@ package body STM32.ILI9341 is
       X2 : Width;
       Y2 : Height)
    is
-      X1_High : constant Byte := Byte (Shift_Right (Half_Word (X1), 8));
-      X1_Low  : constant Byte := Byte (Half_Word (X1) and 16#FF#);
-      X2_High : constant Byte := Byte (Shift_Right (Half_Word (X2), 8));
-      X2_Low  : constant Byte := Byte (Half_Word (X2) and 16#FF#);
+      X1_High : constant Byte := Byte (Shift_Right (Short (X1), 8));
+      X1_Low  : constant Byte := Byte (Short (X1) and 16#FF#);
+      X2_High : constant Byte := Byte (Shift_Right (Short (X2), 8));
+      X2_Low  : constant Byte := Byte (Short (X2) and 16#FF#);
 
-      Y1_High : constant Byte := Byte (Shift_Right (Half_Word (Y1), 8));
-      Y1_Low  : constant Byte := Byte (Half_Word (Y1) and 16#FF#);
-      Y2_High : constant Byte := Byte (Shift_Right (Half_Word (Y2), 8));
-      Y2_Low  : constant Byte := Byte (Half_Word (Y2) and 16#FF#);
+      Y1_High : constant Byte := Byte (Shift_Right (Short (Y1), 8));
+      Y1_Low  : constant Byte := Byte (Short (Y1) and 16#FF#);
+      Y2_High : constant Byte := Byte (Shift_Right (Short (Y2), 8));
+      Y2_Low  : constant Byte := Byte (Short (Y2) and 16#FF#);
    begin
       Send_Command (ILI9341_COLUMN_ADDR);
       Send_Data (X1_High);

@@ -29,10 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with System;
 with Ada.Unchecked_Conversion;
 
 with STM32.LCD;
-private with STM32_SVD;
 
 package STM32.DMA2D is
 
@@ -277,6 +277,6 @@ package STM32.DMA2D is
 private
 
    function As_UInt3 is new Ada.Unchecked_Conversion
-     (DMA2D_Color_Mode, STM32_SVD.UInt3);
+     (DMA2D_Color_Mode, UInt3);
 
 end STM32.DMA2D;

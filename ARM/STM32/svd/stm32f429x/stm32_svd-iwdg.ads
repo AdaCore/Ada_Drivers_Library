@@ -1,13 +1,13 @@
---  Automatically generated from STM32F429x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F429x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.IWDG is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,14 +17,14 @@ package STM32_SVD.IWDG is
    -- KR_Register --
    -----------------
 
-   subtype KR_KEY_Field is STM32_SVD.Short;
+   subtype KR_KEY_Field is Interfaces.Bit_Types.Short;
 
    --  Key register
    type KR_Register is record
-      --  Key value (write only, read 0000h)
+      --  Write-only. Key value (write only, read 0000h)
       KEY            : KR_KEY_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -38,14 +38,14 @@ package STM32_SVD.IWDG is
    -- PR_Register --
    -----------------
 
-   subtype PR_PR_Field is STM32_SVD.UInt3;
+   subtype PR_PR_Field is Interfaces.Bit_Types.UInt3;
 
    --  Prescaler register
    type PR_Register is record
       --  Prescaler divider
       PR            : PR_PR_Field := 16#0#;
       --  unspecified
-      Reserved_3_31 : STM32_SVD.UInt29 := 16#0#;
+      Reserved_3_31 : Interfaces.Bit_Types.UInt29 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -59,14 +59,14 @@ package STM32_SVD.IWDG is
    -- RLR_Register --
    ------------------
 
-   subtype RLR_RL_Field is STM32_SVD.UInt12;
+   subtype RLR_RL_Field is Interfaces.Bit_Types.UInt12;
 
    --  Reload register
    type RLR_Register is record
       --  Watchdog counter reload value
       RL             : RLR_RL_Field := 16#FFF#;
       --  unspecified
-      Reserved_12_31 : STM32_SVD.UInt20 := 16#0#;
+      Reserved_12_31 : Interfaces.Bit_Types.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -80,17 +80,14 @@ package STM32_SVD.IWDG is
    -- SR_Register --
    -----------------
 
-   subtype SR_PVU_Field is STM32_SVD.Bit;
-   subtype SR_RVU_Field is STM32_SVD.Bit;
-
    --  Status register
    type SR_Register is record
-      --  Watchdog prescaler value update
-      PVU           : SR_PVU_Field;
-      --  Watchdog counter reload value update
-      RVU           : SR_RVU_Field;
+      --  Read-only. Watchdog prescaler value update
+      PVU           : Boolean := False;
+      --  Read-only. Watchdog counter reload value update
+      RVU           : Boolean := False;
       --  unspecified
-      Reserved_2_31 : STM32_SVD.UInt30;
+      Reserved_2_31 : Interfaces.Bit_Types.UInt30;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -127,6 +124,6 @@ package STM32_SVD.IWDG is
 
    --  Independent watchdog
    IWDG_Periph : aliased IWDG_Peripheral
-     with Import, Address => System'To_Address (16#40003000#);
+     with Import, Address => IWDG_Base;
 
 end STM32_SVD.IWDG;

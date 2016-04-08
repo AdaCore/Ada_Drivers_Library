@@ -1,13 +1,13 @@
---  Automatically generated from STM32F7x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F7x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.USART is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,32 +17,12 @@ package STM32_SVD.USART is
    -- CR1_Register --
    ------------------
 
-   subtype CR1_UE_Field is STM32_SVD.Bit;
-   subtype CR1_UESM_Field is STM32_SVD.Bit;
-   subtype CR1_RE_Field is STM32_SVD.Bit;
-   subtype CR1_TE_Field is STM32_SVD.Bit;
-   subtype CR1_IDLEIE_Field is STM32_SVD.Bit;
-   subtype CR1_RXNEIE_Field is STM32_SVD.Bit;
-   subtype CR1_TCIE_Field is STM32_SVD.Bit;
-   subtype CR1_TXEIE_Field is STM32_SVD.Bit;
-   subtype CR1_PEIE_Field is STM32_SVD.Bit;
-   subtype CR1_PS_Field is STM32_SVD.Bit;
-   subtype CR1_PCE_Field is STM32_SVD.Bit;
-   subtype CR1_WAKE_Field is STM32_SVD.Bit;
-   subtype CR1_M0_Field is STM32_SVD.Bit;
-   subtype CR1_MME_Field is STM32_SVD.Bit;
-   subtype CR1_CMIE_Field is STM32_SVD.Bit;
-   subtype CR1_OVER8_Field is STM32_SVD.Bit;
-
    --------------
    -- CR1.DEDT --
    --------------
 
-   --  CR1_DEDT array element
-   subtype CR1_DEDT_Element is STM32_SVD.Bit;
-
    --  CR1_DEDT array
-   type CR1_DEDT_Field_Array is array (0 .. 4) of CR1_DEDT_Element
+   type CR1_DEDT_Field_Array is array (0 .. 4) of Boolean
      with Component_Size => 1, Size => 5;
 
    --  Type definition for CR1_DEDT
@@ -52,7 +32,7 @@ package STM32_SVD.USART is
       case As_Array is
          when False =>
             --  DEDT as a value
-            Val : STM32_SVD.UInt5;
+            Val : Interfaces.Bit_Types.UInt5;
          when True =>
             --  DEDT as an array
             Arr : CR1_DEDT_Field_Array;
@@ -69,11 +49,8 @@ package STM32_SVD.USART is
    -- CR1.DEAT --
    --------------
 
-   --  CR1_DEAT array element
-   subtype CR1_DEAT_Element is STM32_SVD.Bit;
-
    --  CR1_DEAT array
-   type CR1_DEAT_Field_Array is array (0 .. 4) of CR1_DEAT_Element
+   type CR1_DEAT_Field_Array is array (0 .. 4) of Boolean
      with Component_Size => 1, Size => 5;
 
    --  Type definition for CR1_DEAT
@@ -83,7 +60,7 @@ package STM32_SVD.USART is
       case As_Array is
          when False =>
             --  DEAT as a value
-            Val : STM32_SVD.UInt5;
+            Val : Interfaces.Bit_Types.UInt5;
          when True =>
             --  DEAT as an array
             Arr : CR1_DEAT_Field_Array;
@@ -96,56 +73,52 @@ package STM32_SVD.USART is
       Arr at 0 range 0 .. 4;
    end record;
 
-   subtype CR1_RTOIE_Field is STM32_SVD.Bit;
-   subtype CR1_EOBIE_Field is STM32_SVD.Bit;
-   subtype CR1_M1_Field is STM32_SVD.Bit;
-
    --  Control register 1
    type CR1_Register is record
       --  USART enable
-      UE             : CR1_UE_Field := 16#0#;
+      UE             : Boolean := False;
       --  USART enable in Stop mode
-      UESM           : CR1_UESM_Field := 16#0#;
+      UESM           : Boolean := False;
       --  Receiver enable
-      RE             : CR1_RE_Field := 16#0#;
+      RE             : Boolean := False;
       --  Transmitter enable
-      TE             : CR1_TE_Field := 16#0#;
+      TE             : Boolean := False;
       --  IDLE interrupt enable
-      IDLEIE         : CR1_IDLEIE_Field := 16#0#;
+      IDLEIE         : Boolean := False;
       --  RXNE interrupt enable
-      RXNEIE         : CR1_RXNEIE_Field := 16#0#;
+      RXNEIE         : Boolean := False;
       --  Transmission complete interrupt enable
-      TCIE           : CR1_TCIE_Field := 16#0#;
+      TCIE           : Boolean := False;
       --  interrupt enable
-      TXEIE          : CR1_TXEIE_Field := 16#0#;
+      TXEIE          : Boolean := False;
       --  PE interrupt enable
-      PEIE           : CR1_PEIE_Field := 16#0#;
+      PEIE           : Boolean := False;
       --  Parity selection
-      PS             : CR1_PS_Field := 16#0#;
+      PS             : Boolean := False;
       --  Parity control enable
-      PCE            : CR1_PCE_Field := 16#0#;
+      PCE            : Boolean := False;
       --  Receiver wakeup method
-      WAKE           : CR1_WAKE_Field := 16#0#;
+      WAKE           : Boolean := False;
       --  Word length
-      M0             : CR1_M0_Field := 16#0#;
+      M0             : Boolean := False;
       --  Mute mode enable
-      MME            : CR1_MME_Field := 16#0#;
+      MME            : Boolean := False;
       --  Character match interrupt enable
-      CMIE           : CR1_CMIE_Field := 16#0#;
+      CMIE           : Boolean := False;
       --  Oversampling mode
-      OVER8          : CR1_OVER8_Field := 16#0#;
+      OVER8          : Boolean := False;
       --  DEDT0
       DEDT           : CR1_DEDT_Field := (As_Array => False, Val => 16#0#);
       --  DEAT0
       DEAT           : CR1_DEAT_Field := (As_Array => False, Val => 16#0#);
       --  Receiver timeout interrupt enable
-      RTOIE          : CR1_RTOIE_Field := 16#0#;
+      RTOIE          : Boolean := False;
       --  End of Block interrupt enable
-      EOBIE          : CR1_EOBIE_Field := 16#0#;
+      EOBIE          : Boolean := False;
       --  Word length
-      M1             : CR1_M1_Field := 16#0#;
+      M1             : Boolean := False;
       --  unspecified
-      Reserved_29_31 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_29_31 : Interfaces.Bit_Types.UInt3 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -179,31 +152,14 @@ package STM32_SVD.USART is
    -- CR2_Register --
    ------------------
 
-   subtype CR2_ADDM7_Field is STM32_SVD.Bit;
-   subtype CR2_LBDL_Field is STM32_SVD.Bit;
-   subtype CR2_LBDIE_Field is STM32_SVD.Bit;
-   subtype CR2_LBCL_Field is STM32_SVD.Bit;
-   subtype CR2_CPHA_Field is STM32_SVD.Bit;
-   subtype CR2_CPOL_Field is STM32_SVD.Bit;
-   subtype CR2_CLKEN_Field is STM32_SVD.Bit;
-   subtype CR2_STOP_Field is STM32_SVD.UInt2;
-   subtype CR2_LINEN_Field is STM32_SVD.Bit;
-   subtype CR2_SWAP_Field is STM32_SVD.Bit;
-   subtype CR2_RXINV_Field is STM32_SVD.Bit;
-   subtype CR2_TXINV_Field is STM32_SVD.Bit;
-   subtype CR2_TAINV_Field is STM32_SVD.Bit;
-   subtype CR2_MSBFIRST_Field is STM32_SVD.Bit;
-   subtype CR2_ABREN_Field is STM32_SVD.Bit;
+   subtype CR2_STOP_Field is Interfaces.Bit_Types.UInt2;
 
    ----------------
    -- CR2.ABRMOD --
    ----------------
 
-   --  CR2_ABRMOD array element
-   subtype CR2_ABRMOD_Element is STM32_SVD.Bit;
-
    --  CR2_ABRMOD array
-   type CR2_ABRMOD_Field_Array is array (0 .. 1) of CR2_ABRMOD_Element
+   type CR2_ABRMOD_Field_Array is array (0 .. 1) of Boolean
      with Component_Size => 1, Size => 2;
 
    --  Type definition for CR2_ABRMOD
@@ -213,7 +169,7 @@ package STM32_SVD.USART is
       case As_Array is
          when False =>
             --  ABRMOD as a value
-            Val : STM32_SVD.UInt2;
+            Val : Interfaces.Bit_Types.UInt2;
          when True =>
             --  ABRMOD as an array
             Arr : CR2_ABRMOD_Field_Array;
@@ -226,50 +182,49 @@ package STM32_SVD.USART is
       Arr at 0 range 0 .. 1;
    end record;
 
-   subtype CR2_RTOEN_Field is STM32_SVD.Bit;
-   subtype CR2_ADD0_3_Field is STM32_SVD.UInt4;
-   subtype CR2_ADD4_7_Field is STM32_SVD.UInt4;
+   subtype CR2_ADD0_3_Field is Interfaces.Bit_Types.UInt4;
+   subtype CR2_ADD4_7_Field is Interfaces.Bit_Types.UInt4;
 
    --  Control register 2
    type CR2_Register is record
       --  unspecified
-      Reserved_0_3 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_0_3 : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  7-bit Address Detection/4-bit Address Detection
-      ADDM7        : CR2_ADDM7_Field := 16#0#;
+      ADDM7        : Boolean := False;
       --  LIN break detection length
-      LBDL         : CR2_LBDL_Field := 16#0#;
+      LBDL         : Boolean := False;
       --  LIN break detection interrupt enable
-      LBDIE        : CR2_LBDIE_Field := 16#0#;
+      LBDIE        : Boolean := False;
       --  unspecified
-      Reserved_7_7 : STM32_SVD.Bit := 16#0#;
+      Reserved_7_7 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Last bit clock pulse
-      LBCL         : CR2_LBCL_Field := 16#0#;
+      LBCL         : Boolean := False;
       --  Clock phase
-      CPHA         : CR2_CPHA_Field := 16#0#;
+      CPHA         : Boolean := False;
       --  Clock polarity
-      CPOL         : CR2_CPOL_Field := 16#0#;
+      CPOL         : Boolean := False;
       --  Clock enable
-      CLKEN        : CR2_CLKEN_Field := 16#0#;
+      CLKEN        : Boolean := False;
       --  STOP bits
       STOP         : CR2_STOP_Field := 16#0#;
       --  LIN mode enable
-      LINEN        : CR2_LINEN_Field := 16#0#;
+      LINEN        : Boolean := False;
       --  Swap TX/RX pins
-      SWAP         : CR2_SWAP_Field := 16#0#;
+      SWAP         : Boolean := False;
       --  RX pin active level inversion
-      RXINV        : CR2_RXINV_Field := 16#0#;
+      RXINV        : Boolean := False;
       --  TX pin active level inversion
-      TXINV        : CR2_TXINV_Field := 16#0#;
+      TXINV        : Boolean := False;
       --  Binary data inversion
-      TAINV        : CR2_TAINV_Field := 16#0#;
+      TAINV        : Boolean := False;
       --  Most significant bit first
-      MSBFIRST     : CR2_MSBFIRST_Field := 16#0#;
+      MSBFIRST     : Boolean := False;
       --  Auto baud rate enable
-      ABREN        : CR2_ABREN_Field := 16#0#;
+      ABREN        : Boolean := False;
       --  ABRMOD0
       ABRMOD       : CR2_ABRMOD_Field := (As_Array => False, Val => 16#0#);
       --  Receiver timeout enable
-      RTOEN        : CR2_RTOEN_Field := 16#0#;
+      RTOEN        : Boolean := False;
       --  Address of the USART node
       ADD0_3       : CR2_ADD0_3_Field := 16#0#;
       --  Address of the USART node
@@ -306,70 +261,53 @@ package STM32_SVD.USART is
    -- CR3_Register --
    ------------------
 
-   subtype CR3_EIE_Field is STM32_SVD.Bit;
-   subtype CR3_IREN_Field is STM32_SVD.Bit;
-   subtype CR3_IRLP_Field is STM32_SVD.Bit;
-   subtype CR3_HDSEL_Field is STM32_SVD.Bit;
-   subtype CR3_NACK_Field is STM32_SVD.Bit;
-   subtype CR3_SCEN_Field is STM32_SVD.Bit;
-   subtype CR3_DMAR_Field is STM32_SVD.Bit;
-   subtype CR3_DMAT_Field is STM32_SVD.Bit;
-   subtype CR3_RTSE_Field is STM32_SVD.Bit;
-   subtype CR3_CTSE_Field is STM32_SVD.Bit;
-   subtype CR3_CTSIE_Field is STM32_SVD.Bit;
-   subtype CR3_ONEBIT_Field is STM32_SVD.Bit;
-   subtype CR3_OVRDIS_Field is STM32_SVD.Bit;
-   subtype CR3_DDRE_Field is STM32_SVD.Bit;
-   subtype CR3_DEM_Field is STM32_SVD.Bit;
-   subtype CR3_DEP_Field is STM32_SVD.Bit;
-   subtype CR3_SCARCNT_Field is STM32_SVD.UInt3;
-   subtype CR3_WUS_Field is STM32_SVD.UInt2;
-   subtype CR3_WUFIE_Field is STM32_SVD.Bit;
+   subtype CR3_SCARCNT_Field is Interfaces.Bit_Types.UInt3;
+   subtype CR3_WUS_Field is Interfaces.Bit_Types.UInt2;
 
    --  Control register 3
    type CR3_Register is record
       --  Error interrupt enable
-      EIE            : CR3_EIE_Field := 16#0#;
+      EIE            : Boolean := False;
       --  Ir mode enable
-      IREN           : CR3_IREN_Field := 16#0#;
+      IREN           : Boolean := False;
       --  Ir low-power
-      IRLP           : CR3_IRLP_Field := 16#0#;
+      IRLP           : Boolean := False;
       --  Half-duplex selection
-      HDSEL          : CR3_HDSEL_Field := 16#0#;
+      HDSEL          : Boolean := False;
       --  Smartcard NACK enable
-      NACK           : CR3_NACK_Field := 16#0#;
+      NACK           : Boolean := False;
       --  Smartcard mode enable
-      SCEN           : CR3_SCEN_Field := 16#0#;
+      SCEN           : Boolean := False;
       --  DMA enable receiver
-      DMAR           : CR3_DMAR_Field := 16#0#;
+      DMAR           : Boolean := False;
       --  DMA enable transmitter
-      DMAT           : CR3_DMAT_Field := 16#0#;
+      DMAT           : Boolean := False;
       --  RTS enable
-      RTSE           : CR3_RTSE_Field := 16#0#;
+      RTSE           : Boolean := False;
       --  CTS enable
-      CTSE           : CR3_CTSE_Field := 16#0#;
+      CTSE           : Boolean := False;
       --  CTS interrupt enable
-      CTSIE          : CR3_CTSIE_Field := 16#0#;
+      CTSIE          : Boolean := False;
       --  One sample bit method enable
-      ONEBIT         : CR3_ONEBIT_Field := 16#0#;
+      ONEBIT         : Boolean := False;
       --  Overrun Disable
-      OVRDIS         : CR3_OVRDIS_Field := 16#0#;
+      OVRDIS         : Boolean := False;
       --  DMA Disable on Reception Error
-      DDRE           : CR3_DDRE_Field := 16#0#;
+      DDRE           : Boolean := False;
       --  Driver enable mode
-      DEM            : CR3_DEM_Field := 16#0#;
+      DEM            : Boolean := False;
       --  Driver enable polarity selection
-      DEP            : CR3_DEP_Field := 16#0#;
+      DEP            : Boolean := False;
       --  unspecified
-      Reserved_16_16 : STM32_SVD.Bit := 16#0#;
+      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Smartcard auto-retry count
       SCARCNT        : CR3_SCARCNT_Field := 16#0#;
       --  Wakeup from Stop mode interrupt flag selection
       WUS            : CR3_WUS_Field := 16#0#;
       --  Wakeup from Stop mode interrupt enable
-      WUFIE          : CR3_WUFIE_Field := 16#0#;
+      WUFIE          : Boolean := False;
       --  unspecified
-      Reserved_23_31 : STM32_SVD.UInt9 := 16#0#;
+      Reserved_23_31 : Interfaces.Bit_Types.UInt9 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -402,8 +340,8 @@ package STM32_SVD.USART is
    -- BRR_Register --
    ------------------
 
-   subtype BRR_DIV_Fraction_Field is STM32_SVD.UInt4;
-   subtype BRR_DIV_Mantissa_Field is STM32_SVD.UInt12;
+   subtype BRR_DIV_Fraction_Field is Interfaces.Bit_Types.UInt4;
+   subtype BRR_DIV_Mantissa_Field is Interfaces.Bit_Types.UInt12;
 
    --  Baud rate register
    type BRR_Register is record
@@ -412,7 +350,7 @@ package STM32_SVD.USART is
       --  DIV_Mantissa
       DIV_Mantissa   : BRR_DIV_Mantissa_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -427,8 +365,8 @@ package STM32_SVD.USART is
    -- GTPR_Register --
    -------------------
 
-   subtype GTPR_PSC_Field is STM32_SVD.Byte;
-   subtype GTPR_GT_Field is STM32_SVD.Byte;
+   subtype GTPR_PSC_Field is Interfaces.Bit_Types.Byte;
+   subtype GTPR_GT_Field is Interfaces.Bit_Types.Byte;
 
    --  Guard time and prescaler register
    type GTPR_Register is record
@@ -437,7 +375,7 @@ package STM32_SVD.USART is
       --  Guard time value
       GT             : GTPR_GT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -452,8 +390,8 @@ package STM32_SVD.USART is
    -- RTOR_Register --
    -------------------
 
-   subtype RTOR_RTO_Field is STM32_SVD.UInt24;
-   subtype RTOR_BLEN_Field is STM32_SVD.Byte;
+   subtype RTOR_RTO_Field is Interfaces.Bit_Types.UInt24;
+   subtype RTOR_BLEN_Field is Interfaces.Bit_Types.Byte;
 
    --  Receiver timeout register
    type RTOR_Register is record
@@ -474,26 +412,20 @@ package STM32_SVD.USART is
    -- RQR_Register --
    ------------------
 
-   subtype RQR_ABRRQ_Field is STM32_SVD.Bit;
-   subtype RQR_SBKRQ_Field is STM32_SVD.Bit;
-   subtype RQR_MMRQ_Field is STM32_SVD.Bit;
-   subtype RQR_RXFRQ_Field is STM32_SVD.Bit;
-   subtype RQR_TXFRQ_Field is STM32_SVD.Bit;
-
    --  Request register
    type RQR_Register is record
-      --  Auto baud rate request
-      ABRRQ         : RQR_ABRRQ_Field := 16#0#;
-      --  Send break request
-      SBKRQ         : RQR_SBKRQ_Field := 16#0#;
-      --  Mute mode request
-      MMRQ          : RQR_MMRQ_Field := 16#0#;
-      --  Receive data flush request
-      RXFRQ         : RQR_RXFRQ_Field := 16#0#;
-      --  Transmit data flush request
-      TXFRQ         : RQR_TXFRQ_Field := 16#0#;
+      --  Write-only. Auto baud rate request
+      ABRRQ         : Boolean := False;
+      --  Write-only. Send break request
+      SBKRQ         : Boolean := False;
+      --  Write-only. Mute mode request
+      MMRQ          : Boolean := False;
+      --  Write-only. Receive data flush request
+      RXFRQ         : Boolean := False;
+      --  Write-only. Transmit data flush request
+      TXFRQ         : Boolean := False;
       --  unspecified
-      Reserved_5_31 : STM32_SVD.UInt27 := 16#0#;
+      Reserved_5_31 : Interfaces.Bit_Types.UInt27 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -511,79 +443,56 @@ package STM32_SVD.USART is
    -- ISR_Register --
    ------------------
 
-   subtype ISR_PE_Field is STM32_SVD.Bit;
-   subtype ISR_FE_Field is STM32_SVD.Bit;
-   subtype ISR_NF_Field is STM32_SVD.Bit;
-   subtype ISR_ORE_Field is STM32_SVD.Bit;
-   subtype ISR_IDLE_Field is STM32_SVD.Bit;
-   subtype ISR_RXNE_Field is STM32_SVD.Bit;
-   subtype ISR_TC_Field is STM32_SVD.Bit;
-   subtype ISR_TXE_Field is STM32_SVD.Bit;
-   subtype ISR_LBDF_Field is STM32_SVD.Bit;
-   subtype ISR_CTSIF_Field is STM32_SVD.Bit;
-   subtype ISR_CTS_Field is STM32_SVD.Bit;
-   subtype ISR_RTOF_Field is STM32_SVD.Bit;
-   subtype ISR_EOBF_Field is STM32_SVD.Bit;
-   subtype ISR_ABRE_Field is STM32_SVD.Bit;
-   subtype ISR_ABRF_Field is STM32_SVD.Bit;
-   subtype ISR_BUSY_Field is STM32_SVD.Bit;
-   subtype ISR_CMF_Field is STM32_SVD.Bit;
-   subtype ISR_SBKF_Field is STM32_SVD.Bit;
-   subtype ISR_RWU_Field is STM32_SVD.Bit;
-   subtype ISR_WUF_Field is STM32_SVD.Bit;
-   subtype ISR_TEACK_Field is STM32_SVD.Bit;
-   subtype ISR_REACK_Field is STM32_SVD.Bit;
-
    --  Interrupt & status register
    type ISR_Register is record
-      --  PE
-      PE             : ISR_PE_Field;
-      --  FE
-      FE             : ISR_FE_Field;
-      --  NF
-      NF             : ISR_NF_Field;
-      --  ORE
-      ORE            : ISR_ORE_Field;
-      --  IDLE
-      IDLE           : ISR_IDLE_Field;
-      --  RXNE
-      RXNE           : ISR_RXNE_Field;
-      --  TC
-      TC             : ISR_TC_Field;
-      --  TXE
-      TXE            : ISR_TXE_Field;
-      --  LBDF
-      LBDF           : ISR_LBDF_Field;
-      --  CTSIF
-      CTSIF          : ISR_CTSIF_Field;
-      --  CTS
-      CTS            : ISR_CTS_Field;
-      --  RTOF
-      RTOF           : ISR_RTOF_Field;
-      --  EOBF
-      EOBF           : ISR_EOBF_Field;
+      --  Read-only. PE
+      PE             : Boolean := False;
+      --  Read-only. FE
+      FE             : Boolean := False;
+      --  Read-only. NF
+      NF             : Boolean := False;
+      --  Read-only. ORE
+      ORE            : Boolean := False;
+      --  Read-only. IDLE
+      IDLE           : Boolean := False;
+      --  Read-only. RXNE
+      RXNE           : Boolean := False;
+      --  Read-only. TC
+      TC             : Boolean := True;
+      --  Read-only. TXE
+      TXE            : Boolean := True;
+      --  Read-only. LBDF
+      LBDF           : Boolean := False;
+      --  Read-only. CTSIF
+      CTSIF          : Boolean := False;
+      --  Read-only. CTS
+      CTS            : Boolean := False;
+      --  Read-only. RTOF
+      RTOF           : Boolean := False;
+      --  Read-only. EOBF
+      EOBF           : Boolean := False;
       --  unspecified
-      Reserved_13_13 : STM32_SVD.Bit;
-      --  ABRE
-      ABRE           : ISR_ABRE_Field;
-      --  ABRF
-      ABRF           : ISR_ABRF_Field;
-      --  BUSY
-      BUSY           : ISR_BUSY_Field;
-      --  CMF
-      CMF            : ISR_CMF_Field;
-      --  SBKF
-      SBKF           : ISR_SBKF_Field;
-      --  RWU
-      RWU            : ISR_RWU_Field;
-      --  WUF
-      WUF            : ISR_WUF_Field;
-      --  TEACK
-      TEACK          : ISR_TEACK_Field;
-      --  REACK
-      REACK          : ISR_REACK_Field;
+      Reserved_13_13 : Interfaces.Bit_Types.Bit;
+      --  Read-only. ABRE
+      ABRE           : Boolean := False;
+      --  Read-only. ABRF
+      ABRF           : Boolean := False;
+      --  Read-only. BUSY
+      BUSY           : Boolean := False;
+      --  Read-only. CMF
+      CMF            : Boolean := False;
+      --  Read-only. SBKF
+      SBKF           : Boolean := False;
+      --  Read-only. RWU
+      RWU            : Boolean := False;
+      --  Read-only. WUF
+      WUF            : Boolean := False;
+      --  Read-only. TEACK
+      TEACK          : Boolean := False;
+      --  Read-only. REACK
+      REACK          : Boolean := False;
       --  unspecified
-      Reserved_23_31 : STM32_SVD.UInt9;
+      Reserved_23_31 : Interfaces.Bit_Types.UInt9;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -619,57 +528,44 @@ package STM32_SVD.USART is
    -- ICR_Register --
    ------------------
 
-   subtype ICR_PECF_Field is STM32_SVD.Bit;
-   subtype ICR_FECF_Field is STM32_SVD.Bit;
-   subtype ICR_NCF_Field is STM32_SVD.Bit;
-   subtype ICR_ORECF_Field is STM32_SVD.Bit;
-   subtype ICR_IDLECF_Field is STM32_SVD.Bit;
-   subtype ICR_TCCF_Field is STM32_SVD.Bit;
-   subtype ICR_LBDCF_Field is STM32_SVD.Bit;
-   subtype ICR_CTSCF_Field is STM32_SVD.Bit;
-   subtype ICR_RTOCF_Field is STM32_SVD.Bit;
-   subtype ICR_EOBCF_Field is STM32_SVD.Bit;
-   subtype ICR_CMCF_Field is STM32_SVD.Bit;
-   subtype ICR_WUCF_Field is STM32_SVD.Bit;
-
    --  Interrupt flag clear register
    type ICR_Register is record
-      --  Parity error clear flag
-      PECF           : ICR_PECF_Field := 16#0#;
-      --  Framing error clear flag
-      FECF           : ICR_FECF_Field := 16#0#;
-      --  Noise detected clear flag
-      NCF            : ICR_NCF_Field := 16#0#;
-      --  Overrun error clear flag
-      ORECF          : ICR_ORECF_Field := 16#0#;
-      --  Idle line detected clear flag
-      IDLECF         : ICR_IDLECF_Field := 16#0#;
+      --  Write-only. Parity error clear flag
+      PECF           : Boolean := False;
+      --  Write-only. Framing error clear flag
+      FECF           : Boolean := False;
+      --  Write-only. Noise detected clear flag
+      NCF            : Boolean := False;
+      --  Write-only. Overrun error clear flag
+      ORECF          : Boolean := False;
+      --  Write-only. Idle line detected clear flag
+      IDLECF         : Boolean := False;
       --  unspecified
-      Reserved_5_5   : STM32_SVD.Bit := 16#0#;
-      --  Transmission complete clear flag
-      TCCF           : ICR_TCCF_Field := 16#0#;
+      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
+      --  Write-only. Transmission complete clear flag
+      TCCF           : Boolean := False;
       --  unspecified
-      Reserved_7_7   : STM32_SVD.Bit := 16#0#;
-      --  LIN break detection clear flag
-      LBDCF          : ICR_LBDCF_Field := 16#0#;
-      --  CTS clear flag
-      CTSCF          : ICR_CTSCF_Field := 16#0#;
+      Reserved_7_7   : Interfaces.Bit_Types.Bit := 16#0#;
+      --  Write-only. LIN break detection clear flag
+      LBDCF          : Boolean := False;
+      --  Write-only. CTS clear flag
+      CTSCF          : Boolean := False;
       --  unspecified
-      Reserved_10_10 : STM32_SVD.Bit := 16#0#;
-      --  Receiver timeout clear flag
-      RTOCF          : ICR_RTOCF_Field := 16#0#;
-      --  End of block clear flag
-      EOBCF          : ICR_EOBCF_Field := 16#0#;
+      Reserved_10_10 : Interfaces.Bit_Types.Bit := 16#0#;
+      --  Write-only. Receiver timeout clear flag
+      RTOCF          : Boolean := False;
+      --  Write-only. End of block clear flag
+      EOBCF          : Boolean := False;
       --  unspecified
-      Reserved_13_16 : STM32_SVD.UInt4 := 16#0#;
-      --  Character match clear flag
-      CMCF           : ICR_CMCF_Field := 16#0#;
+      Reserved_13_16 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      --  Write-only. Character match clear flag
+      CMCF           : Boolean := False;
       --  unspecified
-      Reserved_18_19 : STM32_SVD.UInt2 := 16#0#;
-      --  Wakeup from Stop mode clear flag
-      WUCF           : ICR_WUCF_Field := 16#0#;
+      Reserved_18_19 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      --  Write-only. Wakeup from Stop mode clear flag
+      WUCF           : Boolean := False;
       --  unspecified
-      Reserved_21_31 : STM32_SVD.UInt11 := 16#0#;
+      Reserved_21_31 : Interfaces.Bit_Types.UInt11 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -699,14 +595,14 @@ package STM32_SVD.USART is
    -- RDR_Register --
    ------------------
 
-   subtype RDR_RDR_Field is STM32_SVD.UInt9;
+   subtype RDR_RDR_Field is Interfaces.Bit_Types.UInt9;
 
    --  Receive data register
    type RDR_Register is record
-      --  Receive data value
-      RDR           : RDR_RDR_Field;
+      --  Read-only. Receive data value
+      RDR           : RDR_RDR_Field := 16#0#;
       --  unspecified
-      Reserved_9_31 : STM32_SVD.UInt23;
+      Reserved_9_31 : Interfaces.Bit_Types.UInt23;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -720,14 +616,14 @@ package STM32_SVD.USART is
    -- TDR_Register --
    ------------------
 
-   subtype TDR_TDR_Field is STM32_SVD.UInt9;
+   subtype TDR_TDR_Field is Interfaces.Bit_Types.UInt9;
 
    --  Transmit data register
    type TDR_Register is record
       --  Transmit data value
       TDR           : TDR_TDR_Field := 16#0#;
       --  unspecified
-      Reserved_9_31 : STM32_SVD.UInt23 := 16#0#;
+      Reserved_9_31 : Interfaces.Bit_Types.UInt23 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -784,34 +680,34 @@ package STM32_SVD.USART is
 
    --  Universal synchronous asynchronous receiver transmitter
    USART2_Periph : aliased USART_Peripheral
-     with Import, Address => System'To_Address (16#40004400#);
+     with Import, Address => USART2_Base;
 
    --  Universal synchronous asynchronous receiver transmitter
    USART3_Periph : aliased USART_Peripheral
-     with Import, Address => System'To_Address (16#40004800#);
+     with Import, Address => USART3_Base;
 
    --  Universal synchronous asynchronous receiver transmitter
    UART4_Periph : aliased USART_Peripheral
-     with Import, Address => System'To_Address (16#40004C00#);
+     with Import, Address => UART4_Base;
 
    --  Universal synchronous asynchronous receiver transmitter
    UART5_Periph : aliased USART_Peripheral
-     with Import, Address => System'To_Address (16#40005000#);
+     with Import, Address => UART5_Base;
 
    --  Universal synchronous asynchronous receiver transmitter
    UART7_Periph : aliased USART_Peripheral
-     with Import, Address => System'To_Address (16#40007800#);
+     with Import, Address => UART7_Base;
 
    --  Universal synchronous asynchronous receiver transmitter
    UART8_Periph : aliased USART_Peripheral
-     with Import, Address => System'To_Address (16#40007C00#);
+     with Import, Address => UART8_Base;
 
    --  Universal synchronous asynchronous receiver transmitter
    USART1_Periph : aliased USART_Peripheral
-     with Import, Address => System'To_Address (16#40011000#);
+     with Import, Address => USART1_Base;
 
    --  Universal synchronous asynchronous receiver transmitter
    USART6_Periph : aliased USART_Peripheral
-     with Import, Address => System'To_Address (16#40011400#);
+     with Import, Address => USART6_Base;
 
 end STM32_SVD.USART;

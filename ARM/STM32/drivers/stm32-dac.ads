@@ -42,6 +42,7 @@
 --  This file provides interfaces for the digital-to-analog converters on the
 --  STM32F4 (ARM Cortex M4F) microcontrollers from ST Microelectronics.
 
+with System;                use System;
 private with STM32_SVD.DAC;
 
 package STM32.DAC is
@@ -129,8 +130,8 @@ package STM32.DAC is
       Alignment       : Data_Alignment);
 
    type Dual_Channel_Output is record
-      Channel_1_Data : Half_Word;
-      Channel_2_Data : Half_Word;
+      Channel_1_Data : Short;
+      Channel_2_Data : Short;
    end record;
 
    function Converted_Dual_Output_Value (This : Digital_To_Analog_Converter)

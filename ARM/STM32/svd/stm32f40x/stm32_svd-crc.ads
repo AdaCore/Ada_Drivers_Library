@@ -1,13 +1,13 @@
---  Automatically generated from STM32F40x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F40x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.CRC is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,14 +17,14 @@ package STM32_SVD.CRC is
    -- IDR_Register --
    ------------------
 
-   subtype IDR_IDR_Field is STM32_SVD.Byte;
+   subtype IDR_IDR_Field is Interfaces.Bit_Types.Byte;
 
    --  Independent Data register
    type IDR_Register is record
       --  Independent Data register
       IDR           : IDR_IDR_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24 := 16#0#;
+      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -38,14 +38,12 @@ package STM32_SVD.CRC is
    -- CR_Register --
    -----------------
 
-   subtype CR_CR_Field is STM32_SVD.Bit;
-
    --  Control register
    type CR_Register is record
-      --  Control regidter
-      CR            : CR_CR_Field := 16#0#;
+      --  Write-only. Control regidter
+      CR            : Boolean := False;
       --  unspecified
-      Reserved_1_31 : STM32_SVD.UInt31 := 16#0#;
+      Reserved_1_31 : Interfaces.Bit_Types.UInt31 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -62,7 +60,7 @@ package STM32_SVD.CRC is
    --  Cryptographic processor
    type CRC_Peripheral is record
       --  Data register
-      DR  : STM32_SVD.Word;
+      DR  : Interfaces.Bit_Types.Word;
       --  Independent Data register
       IDR : IDR_Register;
       --  Control register
@@ -78,6 +76,6 @@ package STM32_SVD.CRC is
 
    --  Cryptographic processor
    CRC_Periph : aliased CRC_Peripheral
-     with Import, Address => System'To_Address (16#40023000#);
+     with Import, Address => CRC_Base;
 
 end STM32_SVD.CRC;

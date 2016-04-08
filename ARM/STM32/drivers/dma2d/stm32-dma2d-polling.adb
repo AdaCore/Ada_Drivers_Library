@@ -43,9 +43,9 @@ package body STM32.DMA2D.Polling is
    is
    begin
       Transferring := True;
-      DMA2D_Periph.IFCR.CTCIF := 1;
-      DMA2D_Periph.IFCR.CCTCIF := 1;
-      DMA2D_Periph.CR.START := DMA2D_START'Enum_Rep (Start);
+      DMA2D_Periph.IFCR.CTCIF := True;
+      DMA2D_Periph.IFCR.CCTCIF := True;
+      DMA2D_Periph.CR.START := True;
    end DMA2D_Init_Transfer;
 
    -------------------------
@@ -61,18 +61,18 @@ package body STM32.DMA2D.Polling is
 
       Transferring := False;
 
-      if DMA2D_Periph.ISR.CEIF = 1 then --  Conf error
+      if DMA2D_Periph.ISR.CEIF then --  Conf error
          raise Constraint_Error with "DMA2D Configuration error";
-      elsif DMA2D_Periph.ISR.TEIF = 1 then -- Transfer error
+      elsif DMA2D_Periph.ISR.TEIF then -- Transfer error
          raise Constraint_Error with "DMA2D Transfer error";
       else
-         while DMA2D_Periph.ISR.TCIF = 0 loop --  Transfer completed
-            if DMA2D_Periph.ISR.TEIF = 1 then
+         while not DMA2D_Periph.ISR.TCIF loop --  Transfer completed
+            if DMA2D_Periph.ISR.TEIF then
                raise Constraint_Error with "DMA2D Transfer error";
             end if;
          end loop;
 
-         DMA2D_Periph.IFCR.CTCIF := 1; --  Clear the TCIF flag
+         DMA2D_Periph.IFCR.CTCIF := True; --  Clear the TCIF flag
       end if;
    end DMA2D_Wait_Transfer;
 

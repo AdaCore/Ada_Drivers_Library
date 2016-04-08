@@ -1,9 +1,18 @@
-project STM32F42x extends "../cortex_m/cortex_m4.gpr" is
+with "../cortex_m/cortex_shared.gpr";
 
+project STM32F42x is
+
+   for Target use "arm-eabi";
+
+   for Library_Name use "stm32f429";
    for Library_Dir use "lib/stm32f42x";
+   for Object_Dir use "obj/stm32f42x";
 
    for Source_Dirs use Project'Source_Dirs &
-     ("drivers",
+     ("../cortex_m",
+      "../cortex_m/fpu",
+      "../cortex_m/nocache",
+      "drivers",
       "svd/stm32f429x",
       "devices/stm32f42x",
       "drivers/fmc",
@@ -11,5 +20,7 @@ project STM32F42x extends "../cortex_m/cortex_m4.gpr" is
       "drivers/i2c_stm32f4",
       "drivers/uart_stm32f4",
       "drivers/ltdc");
+
+   package Compiler renames Cortex_Shared.Compiler;
 
 end STM32F42x;

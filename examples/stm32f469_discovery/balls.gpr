@@ -1,4 +1,4 @@
-with "../../boards/stm32f469_discovery/stm32f469_discovery.gpr";
+with "../../boards/stm32f469_discovery.gpr";
 
 project Balls extends "../balls/balls_generic" is
 

@@ -51,15 +51,15 @@ package STM32.GPIO is
 
    type GPIO_Port is limited private;
 
-   function Current_Input (Port : GPIO_Port) return Half_Word with
+   function Current_Input (Port : GPIO_Port) return Short with
      Inline;
    --  Returns the value of the Port's input data register
 
-   function Current_Output (Port : GPIO_Port) return Half_Word with
+   function Current_Output (Port : GPIO_Port) return Short with
      Inline;
    --  Returns the value of the Port's output data register
 
-   procedure Write_Output (Port : in out GPIO_Port; Data : Half_Word) with
+   procedure Write_Output (Port : in out GPIO_Port; Data : Short) with
      Inline;
    --  Sets the value of the Port's output data register to Data.  All bits
    --  in the register are affected.
@@ -426,7 +426,7 @@ private
    --  configurations. It is bit 16 in the lock register (LCKR) of any
    --  given port, thus the first bit of the upper 16 bits of the word.
 
-   type GPIO_Alternate_Function is new Bits_4;
+   type GPIO_Alternate_Function is new UInt4;
 
    --  We cannot use an enumeration type because there are duplicate binary
    --  values

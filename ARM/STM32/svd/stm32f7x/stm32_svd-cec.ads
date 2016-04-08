@@ -1,13 +1,13 @@
---  Automatically generated from STM32F7x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F7x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.CEC is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,20 +17,16 @@ package STM32_SVD.CEC is
    -- CR_Register --
    -----------------
 
-   subtype CR_CECEN_Field is STM32_SVD.Bit;
-   subtype CR_TXSOM_Field is STM32_SVD.Bit;
-   subtype CR_TXEOM_Field is STM32_SVD.Bit;
-
    --  control register
    type CR_Register is record
       --  CEC Enable
-      CECEN         : CR_CECEN_Field := 16#0#;
+      CECEN         : Boolean := False;
       --  Tx start of message
-      TXSOM         : CR_TXSOM_Field := 16#0#;
+      TXSOM         : Boolean := False;
       --  Tx End Of Message
-      TXEOM         : CR_TXEOM_Field := 16#0#;
+      TXEOM         : Boolean := False;
       --  unspecified
-      Reserved_3_31 : STM32_SVD.UInt29 := 16#0#;
+      Reserved_3_31 : Interfaces.Bit_Types.UInt29 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -46,38 +42,31 @@ package STM32_SVD.CEC is
    -- CFGR_Register --
    -------------------
 
-   subtype CFGR_SFT_Field is STM32_SVD.UInt3;
-   subtype CFGR_RXTOL_Field is STM32_SVD.Bit;
-   subtype CFGR_BRESTP_Field is STM32_SVD.Bit;
-   subtype CFGR_BREGEN_Field is STM32_SVD.Bit;
-   subtype CFGR_LBPEGEN_Field is STM32_SVD.Bit;
-   subtype CFGR_BRDNOGEN_Field is STM32_SVD.Bit;
-   subtype CFGR_SFTOP_Field is STM32_SVD.Bit;
-   subtype CFGR_OAR_Field is STM32_SVD.UInt15;
-   subtype CFGR_LSTN_Field is STM32_SVD.Bit;
+   subtype CFGR_SFT_Field is Interfaces.Bit_Types.UInt3;
+   subtype CFGR_OAR_Field is Interfaces.Bit_Types.UInt15;
 
    --  configuration register
    type CFGR_Register is record
       --  Signal Free Time
       SFT           : CFGR_SFT_Field := 16#0#;
       --  Rx-Tolerance
-      RXTOL         : CFGR_RXTOL_Field := 16#0#;
+      RXTOL         : Boolean := False;
       --  Rx-stop on bit rising error
-      BRESTP        : CFGR_BRESTP_Field := 16#0#;
+      BRESTP        : Boolean := False;
       --  Generate error-bit on bit rising error
-      BREGEN        : CFGR_BREGEN_Field := 16#0#;
+      BREGEN        : Boolean := False;
       --  Generate Error-Bit on Long Bit Period Error
-      LBPEGEN       : CFGR_LBPEGEN_Field := 16#0#;
+      LBPEGEN       : Boolean := False;
       --  Avoid Error-Bit Generation in Broadcast
-      BRDNOGEN      : CFGR_BRDNOGEN_Field := 16#0#;
+      BRDNOGEN      : Boolean := False;
       --  SFT Option Bit
-      SFTOP         : CFGR_SFTOP_Field := 16#0#;
+      SFTOP         : Boolean := False;
       --  unspecified
-      Reserved_9_15 : STM32_SVD.UInt7 := 16#0#;
+      Reserved_9_15 : Interfaces.Bit_Types.UInt7 := 16#0#;
       --  Own addresses configuration
       OAR           : CFGR_OAR_Field := 16#0#;
       --  Listen mode
-      LSTN          : CFGR_LSTN_Field := 16#0#;
+      LSTN          : Boolean := False;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -99,14 +88,14 @@ package STM32_SVD.CEC is
    -- TXDR_Register --
    -------------------
 
-   subtype TXDR_TXD_Field is STM32_SVD.Byte;
+   subtype TXDR_TXD_Field is Interfaces.Bit_Types.Byte;
 
    --  Tx data register
    type TXDR_Register is record
-      --  Tx Data register
+      --  Write-only. Tx Data register
       TXD           : TXDR_TXD_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24 := 16#0#;
+      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -120,14 +109,14 @@ package STM32_SVD.CEC is
    -- RXDR_Register --
    -------------------
 
-   subtype RXDR_RXDR_Field is STM32_SVD.Byte;
+   subtype RXDR_RXDR_Field is Interfaces.Bit_Types.Byte;
 
    --  Rx Data Register
    type RXDR_Register is record
-      --  CEC Rx Data Register
-      RXDR          : RXDR_RXDR_Field;
+      --  Read-only. CEC Rx Data Register
+      RXDR          : RXDR_RXDR_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24;
+      Reserved_8_31 : Interfaces.Bit_Types.UInt24;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -141,50 +130,36 @@ package STM32_SVD.CEC is
    -- ISR_Register --
    ------------------
 
-   subtype ISR_RXBR_Field is STM32_SVD.Bit;
-   subtype ISR_RXEND_Field is STM32_SVD.Bit;
-   subtype ISR_RXOVR_Field is STM32_SVD.Bit;
-   subtype ISR_BRE_Field is STM32_SVD.Bit;
-   subtype ISR_SBPE_Field is STM32_SVD.Bit;
-   subtype ISR_LBPE_Field is STM32_SVD.Bit;
-   subtype ISR_RXACKE_Field is STM32_SVD.Bit;
-   subtype ISR_ARBLST_Field is STM32_SVD.Bit;
-   subtype ISR_TXBR_Field is STM32_SVD.Bit;
-   subtype ISR_TXEND_Field is STM32_SVD.Bit;
-   subtype ISR_TXUDR_Field is STM32_SVD.Bit;
-   subtype ISR_TXERR_Field is STM32_SVD.Bit;
-   subtype ISR_TXACKE_Field is STM32_SVD.Bit;
-
    --  Interrupt and Status Register
    type ISR_Register is record
       --  Rx-Byte Received
-      RXBR           : ISR_RXBR_Field := 16#0#;
+      RXBR           : Boolean := False;
       --  End Of Reception
-      RXEND          : ISR_RXEND_Field := 16#0#;
+      RXEND          : Boolean := False;
       --  Rx-Overrun
-      RXOVR          : ISR_RXOVR_Field := 16#0#;
+      RXOVR          : Boolean := False;
       --  Rx-Bit rising error
-      BRE            : ISR_BRE_Field := 16#0#;
+      BRE            : Boolean := False;
       --  Rx-Short Bit period error
-      SBPE           : ISR_SBPE_Field := 16#0#;
+      SBPE           : Boolean := False;
       --  Rx-Long Bit Period Error
-      LBPE           : ISR_LBPE_Field := 16#0#;
+      LBPE           : Boolean := False;
       --  Rx-Missing Acknowledge
-      RXACKE         : ISR_RXACKE_Field := 16#0#;
+      RXACKE         : Boolean := False;
       --  Arbitration Lost
-      ARBLST         : ISR_ARBLST_Field := 16#0#;
+      ARBLST         : Boolean := False;
       --  Tx-Byte Request
-      TXBR           : ISR_TXBR_Field := 16#0#;
+      TXBR           : Boolean := False;
       --  End of Transmission
-      TXEND          : ISR_TXEND_Field := 16#0#;
+      TXEND          : Boolean := False;
       --  Tx-Buffer Underrun
-      TXUDR          : ISR_TXUDR_Field := 16#0#;
+      TXUDR          : Boolean := False;
       --  Tx-Error
-      TXERR          : ISR_TXERR_Field := 16#0#;
+      TXERR          : Boolean := False;
       --  Tx-Missing acknowledge error
-      TXACKE         : ISR_TXACKE_Field := 16#0#;
+      TXACKE         : Boolean := False;
       --  unspecified
-      Reserved_13_31 : STM32_SVD.UInt19 := 16#0#;
+      Reserved_13_31 : Interfaces.Bit_Types.UInt19 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -210,50 +185,36 @@ package STM32_SVD.CEC is
    -- IER_Register --
    ------------------
 
-   subtype IER_RXBRIE_Field is STM32_SVD.Bit;
-   subtype IER_RXENDIE_Field is STM32_SVD.Bit;
-   subtype IER_RXOVRIE_Field is STM32_SVD.Bit;
-   subtype IER_BREIE_Field is STM32_SVD.Bit;
-   subtype IER_SBPEIE_Field is STM32_SVD.Bit;
-   subtype IER_LBPEIE_Field is STM32_SVD.Bit;
-   subtype IER_RXACKIE_Field is STM32_SVD.Bit;
-   subtype IER_ARBLSTIE_Field is STM32_SVD.Bit;
-   subtype IER_TXBRIE_Field is STM32_SVD.Bit;
-   subtype IER_TXENDIE_Field is STM32_SVD.Bit;
-   subtype IER_TXUDRIE_Field is STM32_SVD.Bit;
-   subtype IER_TXERRIE_Field is STM32_SVD.Bit;
-   subtype IER_TXACKIE_Field is STM32_SVD.Bit;
-
    --  interrupt enable register
    type IER_Register is record
       --  Rx-Byte Received Interrupt Enable
-      RXBRIE         : IER_RXBRIE_Field := 16#0#;
+      RXBRIE         : Boolean := False;
       --  End Of Reception Interrupt Enable
-      RXENDIE        : IER_RXENDIE_Field := 16#0#;
+      RXENDIE        : Boolean := False;
       --  Rx-Buffer Overrun Interrupt Enable
-      RXOVRIE        : IER_RXOVRIE_Field := 16#0#;
+      RXOVRIE        : Boolean := False;
       --  Bit Rising Error Interrupt Enable
-      BREIE          : IER_BREIE_Field := 16#0#;
+      BREIE          : Boolean := False;
       --  Short Bit Period Error Interrupt Enable
-      SBPEIE         : IER_SBPEIE_Field := 16#0#;
+      SBPEIE         : Boolean := False;
       --  Long Bit Period Error Interrupt Enable
-      LBPEIE         : IER_LBPEIE_Field := 16#0#;
+      LBPEIE         : Boolean := False;
       --  Rx-Missing Acknowledge Error Interrupt Enable
-      RXACKIE        : IER_RXACKIE_Field := 16#0#;
+      RXACKIE        : Boolean := False;
       --  Arbitration Lost Interrupt Enable
-      ARBLSTIE       : IER_ARBLSTIE_Field := 16#0#;
+      ARBLSTIE       : Boolean := False;
       --  Tx-Byte Request Interrupt Enable
-      TXBRIE         : IER_TXBRIE_Field := 16#0#;
+      TXBRIE         : Boolean := False;
       --  Tx-End of message interrupt enable
-      TXENDIE        : IER_TXENDIE_Field := 16#0#;
+      TXENDIE        : Boolean := False;
       --  Tx-Underrun interrupt enable
-      TXUDRIE        : IER_TXUDRIE_Field := 16#0#;
+      TXUDRIE        : Boolean := False;
       --  Tx-Error Interrupt Enable
-      TXERRIE        : IER_TXERRIE_Field := 16#0#;
+      TXERRIE        : Boolean := False;
       --  Tx-Missing Acknowledge Error Interrupt Enable
-      TXACKIE        : IER_TXACKIE_Field := 16#0#;
+      TXACKIE        : Boolean := False;
       --  unspecified
-      Reserved_13_31 : STM32_SVD.UInt19 := 16#0#;
+      Reserved_13_31 : Interfaces.Bit_Types.UInt19 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -307,6 +268,6 @@ package STM32_SVD.CEC is
 
    --  HDMI-CEC controller
    CEC_Periph : aliased CEC_Peripheral
-     with Import, Address => System'To_Address (16#40006C00#);
+     with Import, Address => CEC_Base;
 
 end STM32_SVD.CEC;

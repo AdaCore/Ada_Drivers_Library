@@ -50,7 +50,7 @@ package body STM32.RNG is
 
    procedure Enable_RNG_Clock is
    begin
-      RCC_Periph.AHB2ENR.RNGEN := 1;
+      RCC_Periph.AHB2ENR.RNGEN := True;
    end Enable_RNG_Clock;
 
    ----------------
@@ -59,7 +59,7 @@ package body STM32.RNG is
 
    procedure Enable_RNG is
    begin
-      RNG_Periph.CR.RNGEN := 1;
+      RNG_Periph.CR.RNGEN := True;
    end Enable_RNG;
 
    -----------------
@@ -68,7 +68,7 @@ package body STM32.RNG is
 
    procedure Disable_RNG is
    begin
-      RNG_Periph.CR.RNGEN := 0;
+      RNG_Periph.CR.RNGEN := False;
    end Disable_RNG;
 
    ---------------
@@ -78,8 +78,8 @@ package body STM32.RNG is
    procedure Reset_RNG
    is
    begin
-      RNG_Periph.CR.RNGEN := 0;
-      RNG_Periph.CR.RNGEN := 1;
+      RCC_Periph.AHB2RSTR.RNGRST := True;
+      RCC_Periph.AHB2RSTR.RNGRST := False;
    end Reset_RNG;
 
    -----------------
@@ -87,7 +87,7 @@ package body STM32.RNG is
    -----------------
 
    function RNG_Enabled return Boolean is
-      (RNG_Periph.CR.RNGEN = 1);
+      (RNG_Periph.CR.RNGEN);
 
    --------------------------
    -- Enable_RNG_Interrupt --
@@ -95,7 +95,7 @@ package body STM32.RNG is
 
    procedure Enable_RNG_Interrupt is
    begin
-      RNG_Periph.CR.IE := 1;
+      RNG_Periph.CR.IE := True;
    end Enable_RNG_Interrupt;
 
    ---------------------------
@@ -104,7 +104,7 @@ package body STM32.RNG is
 
    procedure Disable_RNG_Interrupt is
    begin
-      RNG_Periph.CR.IE := 0;
+      RNG_Periph.CR.IE := False;
    end Disable_RNG_Interrupt;
 
    ---------------------------
@@ -112,7 +112,7 @@ package body STM32.RNG is
    ---------------------------
 
    function RNG_Interrupt_Enabled return Boolean is
-      (RNG_Periph.CR.IE = 1);
+      (RNG_Periph.CR.IE);
 
    --------------
    -- RNG_Data --
@@ -126,21 +126,21 @@ package body STM32.RNG is
    --------------------
 
    function RNG_Data_Ready return Boolean
-     is (RNG_Periph.SR.DRDY = 1);
+     is (RNG_Periph.SR.DRDY);
 
    ---------------------------
    -- RNG_Seed_Error_Status --
    ---------------------------
 
    function RNG_Seed_Error_Status return Boolean is
-      (RNG_Periph.SR.SECS = 1);
+      (RNG_Periph.SR.SECS);
 
    ----------------------------
    -- RNG_Clock_Error_Status --
    ----------------------------
 
    function RNG_Clock_Error_Status return Boolean is
-      (RNG_Periph.SR.CECS = 1);
+      (RNG_Periph.SR.CECS);
 
    ---------------------------------
    -- Clear_RNG_Seed_Error_Status --
@@ -149,7 +149,7 @@ package body STM32.RNG is
    procedure Clear_RNG_Seed_Error_Status
    is
    begin
-      RNG_Periph.SR.SECS := 0;
+      RNG_Periph.SR.SECS := False;
    end Clear_RNG_Seed_Error_Status;
 
    ----------------------------------
@@ -159,7 +159,7 @@ package body STM32.RNG is
    procedure Clear_RNG_Clock_Error_Status
    is
    begin
-      RNG_Periph.SR.CECS := 0;
+      RNG_Periph.SR.CECS := False;
    end Clear_RNG_Clock_Error_Status;
 
 end STM32.RNG;

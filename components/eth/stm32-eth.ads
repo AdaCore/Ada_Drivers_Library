@@ -29,6 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with System; use System;
+
 package STM32.Eth is
    procedure Initialize_RMII;
    --  Initialize the driver using RMII configuration.

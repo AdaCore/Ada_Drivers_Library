@@ -12,21 +12,8 @@ package body STM32.SDRAM is
    Initialized : Boolean := False;
    G_Base_Addr : Word;
 
-   procedure My_Delay (Ms : Integer);
    procedure SDRAM_GPIOConfig;
    procedure SDRAM_InitSequence;
-
-   --------------
-   -- My_Delay --
-   --------------
-
-   procedure My_Delay (Ms : Integer) is
-      Next_Start : Time := Clock;
-      Period    : constant Time_Span := Milliseconds (Ms);
-   begin
-      Next_Start := Next_Start + Period;
-      delay until Next_Start;
-   end My_Delay;
 
    ----------------------
    -- SDRAM_GPIOConfig --
@@ -37,12 +24,12 @@ package body STM32.SDRAM is
    begin
       Enable_Clock (SDRAM_PINS);
 
-      Configure_Alternate_Function (SDRAM_Pins, GPIO_AF_FMC);
       Configure_IO (SDRAM_PINS,
-                    (Speed       => Speed_50MHz,
+                    (Speed       => Speed_100MHz,
                      Mode        => Mode_AF,
                      Output_Type => Push_Pull,
-                     Resistors   => Floating));
+                     Resistors   => Pull_Up));
+      Configure_Alternate_Function (SDRAM_Pins, GPIO_AF_FMC);
       Lock (SDRAM_PINS);
    end SDRAM_GPIOConfig;
 
@@ -62,11 +49,11 @@ package body STM32.SDRAM is
         ((Mode   => FMC_Command_Mode_CLK_Enabled,
           Target => SDRAM_Bank));
 
-      My_Delay (100);
-
       loop
          exit when not FMC_SDRAM_Busy;
       end loop;
+
+      delay until Clock + Milliseconds (1);
 
       FMC_SDRAM_Cmd
         ((Mode   => FMC_Command_Mode_PALL,
@@ -100,6 +87,10 @@ package body STM32.SDRAM is
             SDRAM_Mode_Burst_Sequential,
             CAS,
             SDRAM_Mode_Writeburst_Mode_Single)));
+
+      loop
+         exit when not FMC_SDRAM_Busy;
+      end loop;
 
       FMC_Set_Refresh_Count (SDRAM_Refresh_Cnt);
 
@@ -135,44 +126,51 @@ package body STM32.SDRAM is
       -- FMC_INIT --
       --------------
 
-      RCC_Periph.AHB3ENR.FMCEN := 1;
+      RCC_Periph.AHB3ENR.FMCEN := True;
+      RCC_Periph.AHB3RSTR.FMCRST := True;
+      RCC_Periph.AHB3RSTR.FMCRST := False;
 
       --  90 MHz of SD clock frequency (180MHz / 2)
       --  1 Clock cycle = 1 / 90MHz = 11.1ns
 
-      --  2 Clock cycles for Load to Active delay
-      Timing_Conf.LoadToActiveDelay    := 2;
+      Timing_Conf :=
+        (
+         --  2 Clock cycles for Load to Active delay
+         LoadToActiveDelay    => 2,
 
-      --  min = 70ns: 7 * 11.1
-      Timing_Conf.ExitSelfRefreshDelay := 7;
+         --  min = 70ns: 7 * 11.1
+         ExitSelfRefreshDelay => 7,
 
-      --  in range [42ns, 120k ns] => using 4 * 11.1 ns
-      Timing_Conf.SelfRefreshTime      := 4;
+         --  in range [42ns, 120k ns] => using 4 * 11.1 ns
+         SelfRefreshTime      => 4,
 
-      --  min = 70ns
-      Timing_Conf.RowCycleDelay        := 7;
+         --  min = 70ns
+         RowCycleDelay        => 7,
 
-      --  min = 20ns
-      Timing_Conf.WriteRecoveryTime    := 2;
-      Timing_Conf.RPDelay              := 2;
-      Timing_Conf.RCDDelay             := 2;
+         --  min = 20ns
+         WriteRecoveryTime    => 2,
+         RPDelay              => 2,
+         RCDDelay             => 2);
 
-      SDRAM_Conf.Bank               := SDRAM_Bank;
-      SDRAM_Conf.ColumnBitsNumber   := FMC_ColumnBits_Number_8b;
-      SDRAM_Conf.RowBitsNumber      := SDRAM_Row_Bits;
-      SDRAM_Conf.SDMemoryDataWidth  := SDRAM_Mem_Width;
-      SDRAM_Conf.InternalBankNumber := FMC_InternalBank_Number_4;
-      SDRAM_Conf.CASLatency         := SDRAM_CAS_Latency;
-      SDRAM_Conf.WriteProtection    := FMC_Write_Protection_Disable;
-      SDRAM_Conf.SDClockPeriod      := SDRAM_CLOCK_Period;
-      SDRAM_Conf.ReadBurst          := SDRAM_Read_Burst;
-      SDRAM_Conf.ReadPipeDelay      := SDRAM_Read_Pipe;
-      SDRAM_Conf.Timing_Conf        := Timing_Conf;
+      SDRAM_Conf :=
+        (Bank               => SDRAM_Bank,
+         ColumnBitsNumber   => FMC_ColumnBits_Number_8b,
+         RowBitsNumber      => SDRAM_Row_Bits,
+         SDMemoryDataWidth  => SDRAM_Mem_Width,
+         InternalBankNumber => FMC_InternalBank_Number_4,
+         CASLatency         => SDRAM_CAS_Latency,
+         WriteProtection    => FMC_Write_Protection_Disable,
+         SDClockPeriod      => SDRAM_CLOCK_Period,
+         ReadBurst          => SDRAM_Read_Burst,
+         ReadPipeDelay      => SDRAM_Read_Pipe,
+         Timing_Conf        => Timing_Conf);
 
       FMC_SDRAM_Init (SDRAM_Conf);
 
-      SDRAM_Conf.Bank := FMC_Bank1_SDRAM;
-      FMC_SDRAM_Init (SDRAM_Conf);
+      if SDRAM_Conf.Bank /= FMC_Bank1_SDRAM then
+         SDRAM_Conf.Bank := FMC_Bank1_SDRAM;
+         FMC_SDRAM_Init (SDRAM_Conf);
+      end if;
 
       SDRAM_InitSequence;
    end Initialize;
@@ -191,16 +189,19 @@ package body STM32.SDRAM is
    -- Reserve --
    -------------
 
-   function Reserve (Amount : Word) return System.Address
+   function Reserve
+     (Amount : Word;
+      Align  : Word := Standard'Maximum_Alignment) return System.Address
    is
       Ret          : constant System.Address :=
                        System'To_Address (G_Base_Addr);
       Rounded_Size : Word;
 
    begin
-      Rounded_Size := Amount + Standard'Maximum_Alignment;
+      Initialize;
+      Rounded_Size := Amount + Align;
       Rounded_Size :=
-        Rounded_Size - Rounded_Size rem Standard'Maximum_Alignment;
+        Rounded_Size - Rounded_Size rem Align;
 
       G_Base_Addr := G_Base_Addr + Rounded_Size;
 

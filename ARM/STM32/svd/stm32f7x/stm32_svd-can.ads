@@ -1,13 +1,13 @@
---  Automatically generated from STM32F7x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F7x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.CAN is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,43 +17,32 @@ package STM32_SVD.CAN is
    -- MCR_Register --
    ------------------
 
-   subtype MCR_INRQ_Field is STM32_SVD.Bit;
-   subtype MCR_SLEEP_Field is STM32_SVD.Bit;
-   subtype MCR_TXFP_Field is STM32_SVD.Bit;
-   subtype MCR_RFLM_Field is STM32_SVD.Bit;
-   subtype MCR_NART_Field is STM32_SVD.Bit;
-   subtype MCR_AWUM_Field is STM32_SVD.Bit;
-   subtype MCR_ABOM_Field is STM32_SVD.Bit;
-   subtype MCR_TTCM_Field is STM32_SVD.Bit;
-   subtype MCR_RESET_Field is STM32_SVD.Bit;
-   subtype MCR_DBF_Field is STM32_SVD.Bit;
-
    --  master control register
    type MCR_Register is record
       --  INRQ
-      INRQ           : MCR_INRQ_Field := 16#0#;
+      INRQ           : Boolean := False;
       --  SLEEP
-      SLEEP          : MCR_SLEEP_Field := 16#1#;
+      SLEEP          : Boolean := True;
       --  TXFP
-      TXFP           : MCR_TXFP_Field := 16#0#;
+      TXFP           : Boolean := False;
       --  RFLM
-      RFLM           : MCR_RFLM_Field := 16#0#;
+      RFLM           : Boolean := False;
       --  NART
-      NART           : MCR_NART_Field := 16#0#;
+      NART           : Boolean := False;
       --  AWUM
-      AWUM           : MCR_AWUM_Field := 16#0#;
+      AWUM           : Boolean := False;
       --  ABOM
-      ABOM           : MCR_ABOM_Field := 16#0#;
+      ABOM           : Boolean := False;
       --  TTCM
-      TTCM           : MCR_TTCM_Field := 16#0#;
+      TTCM           : Boolean := False;
       --  unspecified
-      Reserved_8_14  : STM32_SVD.UInt7 := 16#0#;
+      Reserved_8_14  : Interfaces.Bit_Types.UInt7 := 16#0#;
       --  RESET
-      RESET          : MCR_RESET_Field := 16#0#;
+      RESET          : Boolean := False;
       --  DBF
-      DBF            : MCR_DBF_Field := 16#1#;
+      DBF            : Boolean := True;
       --  unspecified
-      Reserved_17_31 : STM32_SVD.UInt15 := 16#0#;
+      Reserved_17_31 : Interfaces.Bit_Types.UInt15 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -77,40 +66,30 @@ package STM32_SVD.CAN is
    -- MSR_Register --
    ------------------
 
-   subtype MSR_INAK_Field is STM32_SVD.Bit;
-   subtype MSR_SLAK_Field is STM32_SVD.Bit;
-   subtype MSR_ERRI_Field is STM32_SVD.Bit;
-   subtype MSR_WKUI_Field is STM32_SVD.Bit;
-   subtype MSR_SLAKI_Field is STM32_SVD.Bit;
-   subtype MSR_TXM_Field is STM32_SVD.Bit;
-   subtype MSR_RXM_Field is STM32_SVD.Bit;
-   subtype MSR_SAMP_Field is STM32_SVD.Bit;
-   subtype MSR_RX_Field is STM32_SVD.Bit;
-
    --  master status register
    type MSR_Register is record
-      --  INAK
-      INAK           : MSR_INAK_Field := 16#0#;
-      --  SLAK
-      SLAK           : MSR_SLAK_Field := 16#1#;
+      --  Read-only. INAK
+      INAK           : Boolean := False;
+      --  Read-only. SLAK
+      SLAK           : Boolean := True;
       --  ERRI
-      ERRI           : MSR_ERRI_Field := 16#0#;
+      ERRI           : Boolean := False;
       --  WKUI
-      WKUI           : MSR_WKUI_Field := 16#0#;
+      WKUI           : Boolean := False;
       --  SLAKI
-      SLAKI          : MSR_SLAKI_Field := 16#0#;
+      SLAKI          : Boolean := False;
       --  unspecified
-      Reserved_5_7   : STM32_SVD.UInt3 := 16#0#;
-      --  TXM
-      TXM            : MSR_TXM_Field := 16#0#;
-      --  RXM
-      RXM            : MSR_RXM_Field := 16#0#;
-      --  SAMP
-      SAMP           : MSR_SAMP_Field := 16#1#;
-      --  RX
-      RX             : MSR_RX_Field := 16#1#;
+      Reserved_5_7   : Interfaces.Bit_Types.UInt3 := 16#0#;
+      --  Read-only. TXM
+      TXM            : Boolean := False;
+      --  Read-only. RXM
+      RXM            : Boolean := False;
+      --  Read-only. SAMP
+      SAMP           : Boolean := True;
+      --  Read-only. RX
+      RX             : Boolean := True;
       --  unspecified
-      Reserved_12_31 : STM32_SVD.UInt20 := 16#0#;
+      Reserved_12_31 : Interfaces.Bit_Types.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -133,32 +112,14 @@ package STM32_SVD.CAN is
    -- TSR_Register --
    ------------------
 
-   subtype TSR_RQCP0_Field is STM32_SVD.Bit;
-   subtype TSR_TXOK0_Field is STM32_SVD.Bit;
-   subtype TSR_ALST0_Field is STM32_SVD.Bit;
-   subtype TSR_TERR0_Field is STM32_SVD.Bit;
-   subtype TSR_ABRQ0_Field is STM32_SVD.Bit;
-   subtype TSR_RQCP1_Field is STM32_SVD.Bit;
-   subtype TSR_TXOK1_Field is STM32_SVD.Bit;
-   subtype TSR_ALST1_Field is STM32_SVD.Bit;
-   subtype TSR_TERR1_Field is STM32_SVD.Bit;
-   subtype TSR_ABRQ1_Field is STM32_SVD.Bit;
-   subtype TSR_RQCP2_Field is STM32_SVD.Bit;
-   subtype TSR_TXOK2_Field is STM32_SVD.Bit;
-   subtype TSR_ALST2_Field is STM32_SVD.Bit;
-   subtype TSR_TERR2_Field is STM32_SVD.Bit;
-   subtype TSR_ABRQ2_Field is STM32_SVD.Bit;
-   subtype TSR_CODE_Field is STM32_SVD.UInt2;
+   subtype TSR_CODE_Field is Interfaces.Bit_Types.UInt2;
 
    -------------
    -- TSR.TME --
    -------------
 
-   --  TSR_TME array element
-   subtype TSR_TME_Element is STM32_SVD.Bit;
-
    --  TSR_TME array
-   type TSR_TME_Field_Array is array (0 .. 2) of TSR_TME_Element
+   type TSR_TME_Field_Array is array (0 .. 2) of Boolean
      with Component_Size => 1, Size => 3;
 
    --  Type definition for TSR_TME
@@ -168,7 +129,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  TME as a value
-            Val : STM32_SVD.UInt3;
+            Val : Interfaces.Bit_Types.UInt3;
          when True =>
             --  TME as an array
             Arr : TSR_TME_Field_Array;
@@ -185,11 +146,8 @@ package STM32_SVD.CAN is
    -- TSR.LOW --
    -------------
 
-   --  TSR_LOW array element
-   subtype TSR_LOW_Element is STM32_SVD.Bit;
-
    --  TSR_LOW array
-   type TSR_LOW_Field_Array is array (0 .. 2) of TSR_LOW_Element
+   type TSR_LOW_Field_Array is array (0 .. 2) of Boolean
      with Component_Size => 1, Size => 3;
 
    --  Type definition for TSR_LOW
@@ -199,7 +157,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  LOW as a value
-            Val : STM32_SVD.UInt3;
+            Val : Interfaces.Bit_Types.UInt3;
          when True =>
             --  LOW as an array
             Arr : TSR_LOW_Field_Array;
@@ -215,46 +173,46 @@ package STM32_SVD.CAN is
    --  transmit status register
    type TSR_Register is record
       --  RQCP0
-      RQCP0          : TSR_RQCP0_Field := 16#0#;
+      RQCP0          : Boolean := False;
       --  TXOK0
-      TXOK0          : TSR_TXOK0_Field := 16#0#;
+      TXOK0          : Boolean := False;
       --  ALST0
-      ALST0          : TSR_ALST0_Field := 16#0#;
+      ALST0          : Boolean := False;
       --  TERR0
-      TERR0          : TSR_TERR0_Field := 16#0#;
+      TERR0          : Boolean := False;
       --  unspecified
-      Reserved_4_6   : STM32_SVD.UInt3 := 16#0#;
+      Reserved_4_6   : Interfaces.Bit_Types.UInt3 := 16#0#;
       --  ABRQ0
-      ABRQ0          : TSR_ABRQ0_Field := 16#0#;
+      ABRQ0          : Boolean := False;
       --  RQCP1
-      RQCP1          : TSR_RQCP1_Field := 16#0#;
+      RQCP1          : Boolean := False;
       --  TXOK1
-      TXOK1          : TSR_TXOK1_Field := 16#0#;
+      TXOK1          : Boolean := False;
       --  ALST1
-      ALST1          : TSR_ALST1_Field := 16#0#;
+      ALST1          : Boolean := False;
       --  TERR1
-      TERR1          : TSR_TERR1_Field := 16#0#;
+      TERR1          : Boolean := False;
       --  unspecified
-      Reserved_12_14 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_12_14 : Interfaces.Bit_Types.UInt3 := 16#0#;
       --  ABRQ1
-      ABRQ1          : TSR_ABRQ1_Field := 16#0#;
+      ABRQ1          : Boolean := False;
       --  RQCP2
-      RQCP2          : TSR_RQCP2_Field := 16#0#;
+      RQCP2          : Boolean := False;
       --  TXOK2
-      TXOK2          : TSR_TXOK2_Field := 16#0#;
+      TXOK2          : Boolean := False;
       --  ALST2
-      ALST2          : TSR_ALST2_Field := 16#0#;
+      ALST2          : Boolean := False;
       --  TERR2
-      TERR2          : TSR_TERR2_Field := 16#0#;
+      TERR2          : Boolean := False;
       --  unspecified
-      Reserved_20_22 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_20_22 : Interfaces.Bit_Types.UInt3 := 16#0#;
       --  ABRQ2
-      ABRQ2          : TSR_ABRQ2_Field := 16#0#;
-      --  CODE
+      ABRQ2          : Boolean := False;
+      --  Read-only. CODE
       CODE           : TSR_CODE_Field := 16#0#;
-      --  Lowest priority flag for mailbox 0
+      --  Read-only. Lowest priority flag for mailbox 0
       TME            : TSR_TME_Field := (As_Array => False, Val => 16#1#);
-      --  Lowest priority flag for mailbox 0
+      --  Read-only. Lowest priority flag for mailbox 0
       LOW            : TSR_LOW_Field := (As_Array => False, Val => 16#0#);
    end record
      with Volatile_Full_Access, Size => 32,
@@ -288,25 +246,22 @@ package STM32_SVD.CAN is
    -- RF0R_Register --
    -------------------
 
-   subtype RF0R_FMP0_Field is STM32_SVD.UInt2;
-   subtype RF0R_FULL0_Field is STM32_SVD.Bit;
-   subtype RF0R_FOVR0_Field is STM32_SVD.Bit;
-   subtype RF0R_RFOM0_Field is STM32_SVD.Bit;
+   subtype RF0R_FMP0_Field is Interfaces.Bit_Types.UInt2;
 
    --  receive FIFO 0 register
    type RF0R_Register is record
-      --  FMP0
+      --  Read-only. FMP0
       FMP0          : RF0R_FMP0_Field := 16#0#;
       --  unspecified
-      Reserved_2_2  : STM32_SVD.Bit := 16#0#;
+      Reserved_2_2  : Interfaces.Bit_Types.Bit := 16#0#;
       --  FULL0
-      FULL0         : RF0R_FULL0_Field := 16#0#;
+      FULL0         : Boolean := False;
       --  FOVR0
-      FOVR0         : RF0R_FOVR0_Field := 16#0#;
+      FOVR0         : Boolean := False;
       --  RFOM0
-      RFOM0         : RF0R_RFOM0_Field := 16#0#;
+      RFOM0         : Boolean := False;
       --  unspecified
-      Reserved_6_31 : STM32_SVD.UInt26 := 16#0#;
+      Reserved_6_31 : Interfaces.Bit_Types.UInt26 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -324,25 +279,22 @@ package STM32_SVD.CAN is
    -- RF1R_Register --
    -------------------
 
-   subtype RF1R_FMP1_Field is STM32_SVD.UInt2;
-   subtype RF1R_FULL1_Field is STM32_SVD.Bit;
-   subtype RF1R_FOVR1_Field is STM32_SVD.Bit;
-   subtype RF1R_RFOM1_Field is STM32_SVD.Bit;
+   subtype RF1R_FMP1_Field is Interfaces.Bit_Types.UInt2;
 
    --  receive FIFO 1 register
    type RF1R_Register is record
-      --  FMP1
+      --  Read-only. FMP1
       FMP1          : RF1R_FMP1_Field := 16#0#;
       --  unspecified
-      Reserved_2_2  : STM32_SVD.Bit := 16#0#;
+      Reserved_2_2  : Interfaces.Bit_Types.Bit := 16#0#;
       --  FULL1
-      FULL1         : RF1R_FULL1_Field := 16#0#;
+      FULL1         : Boolean := False;
       --  FOVR1
-      FOVR1         : RF1R_FOVR1_Field := 16#0#;
+      FOVR1         : Boolean := False;
       --  RFOM1
-      RFOM1         : RF1R_RFOM1_Field := 16#0#;
+      RFOM1         : Boolean := False;
       --  unspecified
-      Reserved_6_31 : STM32_SVD.UInt26 := 16#0#;
+      Reserved_6_31 : Interfaces.Bit_Types.UInt26 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -360,57 +312,42 @@ package STM32_SVD.CAN is
    -- IER_Register --
    ------------------
 
-   subtype IER_TMEIE_Field is STM32_SVD.Bit;
-   subtype IER_FMPIE0_Field is STM32_SVD.Bit;
-   subtype IER_FFIE0_Field is STM32_SVD.Bit;
-   subtype IER_FOVIE0_Field is STM32_SVD.Bit;
-   subtype IER_FMPIE1_Field is STM32_SVD.Bit;
-   subtype IER_FFIE1_Field is STM32_SVD.Bit;
-   subtype IER_FOVIE1_Field is STM32_SVD.Bit;
-   subtype IER_EWGIE_Field is STM32_SVD.Bit;
-   subtype IER_EPVIE_Field is STM32_SVD.Bit;
-   subtype IER_BOFIE_Field is STM32_SVD.Bit;
-   subtype IER_LECIE_Field is STM32_SVD.Bit;
-   subtype IER_ERRIE_Field is STM32_SVD.Bit;
-   subtype IER_WKUIE_Field is STM32_SVD.Bit;
-   subtype IER_SLKIE_Field is STM32_SVD.Bit;
-
    --  interrupt enable register
    type IER_Register is record
       --  TMEIE
-      TMEIE          : IER_TMEIE_Field := 16#0#;
+      TMEIE          : Boolean := False;
       --  FMPIE0
-      FMPIE0         : IER_FMPIE0_Field := 16#0#;
+      FMPIE0         : Boolean := False;
       --  FFIE0
-      FFIE0          : IER_FFIE0_Field := 16#0#;
+      FFIE0          : Boolean := False;
       --  FOVIE0
-      FOVIE0         : IER_FOVIE0_Field := 16#0#;
+      FOVIE0         : Boolean := False;
       --  FMPIE1
-      FMPIE1         : IER_FMPIE1_Field := 16#0#;
+      FMPIE1         : Boolean := False;
       --  FFIE1
-      FFIE1          : IER_FFIE1_Field := 16#0#;
+      FFIE1          : Boolean := False;
       --  FOVIE1
-      FOVIE1         : IER_FOVIE1_Field := 16#0#;
+      FOVIE1         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : STM32_SVD.Bit := 16#0#;
+      Reserved_7_7   : Interfaces.Bit_Types.Bit := 16#0#;
       --  EWGIE
-      EWGIE          : IER_EWGIE_Field := 16#0#;
+      EWGIE          : Boolean := False;
       --  EPVIE
-      EPVIE          : IER_EPVIE_Field := 16#0#;
+      EPVIE          : Boolean := False;
       --  BOFIE
-      BOFIE          : IER_BOFIE_Field := 16#0#;
+      BOFIE          : Boolean := False;
       --  LECIE
-      LECIE          : IER_LECIE_Field := 16#0#;
+      LECIE          : Boolean := False;
       --  unspecified
-      Reserved_12_14 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_12_14 : Interfaces.Bit_Types.UInt3 := 16#0#;
       --  ERRIE
-      ERRIE          : IER_ERRIE_Field := 16#0#;
+      ERRIE          : Boolean := False;
       --  WKUIE
-      WKUIE          : IER_WKUIE_Field := 16#0#;
+      WKUIE          : Boolean := False;
       --  SLKIE
-      SLKIE          : IER_SLKIE_Field := 16#0#;
+      SLKIE          : Boolean := False;
       --  unspecified
-      Reserved_18_31 : STM32_SVD.UInt14 := 16#0#;
+      Reserved_18_31 : Interfaces.Bit_Types.UInt14 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -439,30 +376,27 @@ package STM32_SVD.CAN is
    -- ESR_Register --
    ------------------
 
-   subtype ESR_EWGF_Field is STM32_SVD.Bit;
-   subtype ESR_EPVF_Field is STM32_SVD.Bit;
-   subtype ESR_BOFF_Field is STM32_SVD.Bit;
-   subtype ESR_LEC_Field is STM32_SVD.UInt3;
-   subtype ESR_TEC_Field is STM32_SVD.Byte;
-   subtype ESR_REC_Field is STM32_SVD.Byte;
+   subtype ESR_LEC_Field is Interfaces.Bit_Types.UInt3;
+   subtype ESR_TEC_Field is Interfaces.Bit_Types.Byte;
+   subtype ESR_REC_Field is Interfaces.Bit_Types.Byte;
 
    --  interrupt enable register
    type ESR_Register is record
-      --  EWGF
-      EWGF          : ESR_EWGF_Field := 16#0#;
-      --  EPVF
-      EPVF          : ESR_EPVF_Field := 16#0#;
-      --  BOFF
-      BOFF          : ESR_BOFF_Field := 16#0#;
+      --  Read-only. EWGF
+      EWGF          : Boolean := False;
+      --  Read-only. EPVF
+      EPVF          : Boolean := False;
+      --  Read-only. BOFF
+      BOFF          : Boolean := False;
       --  unspecified
-      Reserved_3_3  : STM32_SVD.Bit := 16#0#;
+      Reserved_3_3  : Interfaces.Bit_Types.Bit := 16#0#;
       --  LEC
       LEC           : ESR_LEC_Field := 16#0#;
       --  unspecified
-      Reserved_7_15 : STM32_SVD.UInt9 := 16#0#;
-      --  TEC
+      Reserved_7_15 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      --  Read-only. TEC
       TEC           : ESR_TEC_Field := 16#0#;
-      --  REC
+      --  Read-only. REC
       REC           : ESR_REC_Field := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
@@ -483,33 +417,31 @@ package STM32_SVD.CAN is
    -- BTR_Register --
    ------------------
 
-   subtype BTR_BRP_Field is STM32_SVD.UInt10;
-   subtype BTR_TS1_Field is STM32_SVD.UInt4;
-   subtype BTR_TS2_Field is STM32_SVD.UInt3;
-   subtype BTR_SJW_Field is STM32_SVD.UInt2;
-   subtype BTR_LBKM_Field is STM32_SVD.Bit;
-   subtype BTR_SILM_Field is STM32_SVD.Bit;
+   subtype BTR_BRP_Field is Interfaces.Bit_Types.UInt10;
+   subtype BTR_TS1_Field is Interfaces.Bit_Types.UInt4;
+   subtype BTR_TS2_Field is Interfaces.Bit_Types.UInt3;
+   subtype BTR_SJW_Field is Interfaces.Bit_Types.UInt2;
 
    --  bit timing register
    type BTR_Register is record
       --  BRP
       BRP            : BTR_BRP_Field := 16#0#;
       --  unspecified
-      Reserved_10_15 : STM32_SVD.UInt6 := 16#0#;
+      Reserved_10_15 : Interfaces.Bit_Types.UInt6 := 16#0#;
       --  TS1
       TS1            : BTR_TS1_Field := 16#0#;
       --  TS2
       TS2            : BTR_TS2_Field := 16#0#;
       --  unspecified
-      Reserved_23_23 : STM32_SVD.Bit := 16#0#;
+      Reserved_23_23 : Interfaces.Bit_Types.Bit := 16#0#;
       --  SJW
       SJW            : BTR_SJW_Field := 16#0#;
       --  unspecified
-      Reserved_26_29 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_26_29 : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  LBKM
-      LBKM           : BTR_LBKM_Field := 16#0#;
+      LBKM           : Boolean := False;
       --  SILM
-      SILM           : BTR_SILM_Field := 16#0#;
+      SILM           : Boolean := False;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -530,20 +462,17 @@ package STM32_SVD.CAN is
    -- TI0R_Register --
    -------------------
 
-   subtype TI0R_TXRQ_Field is STM32_SVD.Bit;
-   subtype TI0R_RTR_Field is STM32_SVD.Bit;
-   subtype TI0R_IDE_Field is STM32_SVD.Bit;
-   subtype TI0R_EXID_Field is STM32_SVD.UInt18;
-   subtype TI0R_STID_Field is STM32_SVD.UInt11;
+   subtype TI0R_EXID_Field is Interfaces.Bit_Types.UInt18;
+   subtype TI0R_STID_Field is Interfaces.Bit_Types.UInt11;
 
    --  TX mailbox identifier register
    type TI0R_Register is record
       --  TXRQ
-      TXRQ : TI0R_TXRQ_Field := 16#0#;
+      TXRQ : Boolean := False;
       --  RTR
-      RTR  : TI0R_RTR_Field := 16#0#;
+      RTR  : Boolean := False;
       --  IDE
-      IDE  : TI0R_IDE_Field := 16#0#;
+      IDE  : Boolean := False;
       --  EXID
       EXID : TI0R_EXID_Field := 16#0#;
       --  STID
@@ -564,20 +493,19 @@ package STM32_SVD.CAN is
    -- TDT0R_Register --
    --------------------
 
-   subtype TDT0R_DLC_Field is STM32_SVD.UInt4;
-   subtype TDT0R_TGT_Field is STM32_SVD.Bit;
-   subtype TDT0R_TIME_Field is STM32_SVD.Short;
+   subtype TDT0R_DLC_Field is Interfaces.Bit_Types.UInt4;
+   subtype TDT0R_TIME_Field is Interfaces.Bit_Types.Short;
 
    --  mailbox data length control and time stamp register
    type TDT0R_Register is record
       --  DLC
       DLC           : TDT0R_DLC_Field := 16#0#;
       --  unspecified
-      Reserved_4_7  : STM32_SVD.UInt4 := 16#0#;
+      Reserved_4_7  : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  TGT
-      TGT           : TDT0R_TGT_Field := 16#0#;
+      TGT           : Boolean := False;
       --  unspecified
-      Reserved_9_15 : STM32_SVD.UInt7 := 16#0#;
+      Reserved_9_15 : Interfaces.Bit_Types.UInt7 := 16#0#;
       --  TIME
       TIME          : TDT0R_TIME_Field := 16#0#;
    end record
@@ -597,7 +525,7 @@ package STM32_SVD.CAN is
    --------------------
 
    --  TDL0R_DATA array element
-   subtype TDL0R_DATA_Element is STM32_SVD.Byte;
+   subtype TDL0R_DATA_Element is Interfaces.Bit_Types.Byte;
 
    --  TDL0R_DATA array
    type TDL0R_DATA_Field_Array is array (0 .. 3) of TDL0R_DATA_Element
@@ -610,7 +538,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  DATA as an array
             Arr : TDL0R_DATA_Field_Array;
@@ -629,10 +557,10 @@ package STM32_SVD.CAN is
    --------------------
 
    --  TDH0R_DATA array element
-   subtype TDH0R_DATA_Element is STM32_SVD.Byte;
+   subtype TDH0R_DATA_Element is Interfaces.Bit_Types.Byte;
 
    --  TDH0R_DATA array
-   type TDH0R_DATA_Field_Array is array (0 .. 3) of TDH0R_DATA_Element
+   type TDH0R_DATA_Field_Array is array (4 .. 7) of TDH0R_DATA_Element
      with Component_Size => 8, Size => 32;
 
    --  mailbox data high register
@@ -642,7 +570,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  DATA as an array
             Arr : TDH0R_DATA_Field_Array;
@@ -660,20 +588,17 @@ package STM32_SVD.CAN is
    -- TI1R_Register --
    -------------------
 
-   subtype TI1R_TXRQ_Field is STM32_SVD.Bit;
-   subtype TI1R_RTR_Field is STM32_SVD.Bit;
-   subtype TI1R_IDE_Field is STM32_SVD.Bit;
-   subtype TI1R_EXID_Field is STM32_SVD.UInt18;
-   subtype TI1R_STID_Field is STM32_SVD.UInt11;
+   subtype TI1R_EXID_Field is Interfaces.Bit_Types.UInt18;
+   subtype TI1R_STID_Field is Interfaces.Bit_Types.UInt11;
 
    --  mailbox identifier register
    type TI1R_Register is record
       --  TXRQ
-      TXRQ : TI1R_TXRQ_Field := 16#0#;
+      TXRQ : Boolean := False;
       --  RTR
-      RTR  : TI1R_RTR_Field := 16#0#;
+      RTR  : Boolean := False;
       --  IDE
-      IDE  : TI1R_IDE_Field := 16#0#;
+      IDE  : Boolean := False;
       --  EXID
       EXID : TI1R_EXID_Field := 16#0#;
       --  STID
@@ -694,20 +619,19 @@ package STM32_SVD.CAN is
    -- TDT1R_Register --
    --------------------
 
-   subtype TDT1R_DLC_Field is STM32_SVD.UInt4;
-   subtype TDT1R_TGT_Field is STM32_SVD.Bit;
-   subtype TDT1R_TIME_Field is STM32_SVD.Short;
+   subtype TDT1R_DLC_Field is Interfaces.Bit_Types.UInt4;
+   subtype TDT1R_TIME_Field is Interfaces.Bit_Types.Short;
 
    --  mailbox data length control and time stamp register
    type TDT1R_Register is record
       --  DLC
       DLC           : TDT1R_DLC_Field := 16#0#;
       --  unspecified
-      Reserved_4_7  : STM32_SVD.UInt4 := 16#0#;
+      Reserved_4_7  : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  TGT
-      TGT           : TDT1R_TGT_Field := 16#0#;
+      TGT           : Boolean := False;
       --  unspecified
-      Reserved_9_15 : STM32_SVD.UInt7 := 16#0#;
+      Reserved_9_15 : Interfaces.Bit_Types.UInt7 := 16#0#;
       --  TIME
       TIME          : TDT1R_TIME_Field := 16#0#;
    end record
@@ -727,7 +651,7 @@ package STM32_SVD.CAN is
    --------------------
 
    --  TDL1R_DATA array element
-   subtype TDL1R_DATA_Element is STM32_SVD.Byte;
+   subtype TDL1R_DATA_Element is Interfaces.Bit_Types.Byte;
 
    --  TDL1R_DATA array
    type TDL1R_DATA_Field_Array is array (0 .. 3) of TDL1R_DATA_Element
@@ -740,7 +664,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  DATA as an array
             Arr : TDL1R_DATA_Field_Array;
@@ -759,10 +683,10 @@ package STM32_SVD.CAN is
    --------------------
 
    --  TDH1R_DATA array element
-   subtype TDH1R_DATA_Element is STM32_SVD.Byte;
+   subtype TDH1R_DATA_Element is Interfaces.Bit_Types.Byte;
 
    --  TDH1R_DATA array
-   type TDH1R_DATA_Field_Array is array (0 .. 3) of TDH1R_DATA_Element
+   type TDH1R_DATA_Field_Array is array (4 .. 7) of TDH1R_DATA_Element
      with Component_Size => 8, Size => 32;
 
    --  mailbox data high register
@@ -772,7 +696,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  DATA as an array
             Arr : TDH1R_DATA_Field_Array;
@@ -790,20 +714,17 @@ package STM32_SVD.CAN is
    -- TI2R_Register --
    -------------------
 
-   subtype TI2R_TXRQ_Field is STM32_SVD.Bit;
-   subtype TI2R_RTR_Field is STM32_SVD.Bit;
-   subtype TI2R_IDE_Field is STM32_SVD.Bit;
-   subtype TI2R_EXID_Field is STM32_SVD.UInt18;
-   subtype TI2R_STID_Field is STM32_SVD.UInt11;
+   subtype TI2R_EXID_Field is Interfaces.Bit_Types.UInt18;
+   subtype TI2R_STID_Field is Interfaces.Bit_Types.UInt11;
 
    --  mailbox identifier register
    type TI2R_Register is record
       --  TXRQ
-      TXRQ : TI2R_TXRQ_Field := 16#0#;
+      TXRQ : Boolean := False;
       --  RTR
-      RTR  : TI2R_RTR_Field := 16#0#;
+      RTR  : Boolean := False;
       --  IDE
-      IDE  : TI2R_IDE_Field := 16#0#;
+      IDE  : Boolean := False;
       --  EXID
       EXID : TI2R_EXID_Field := 16#0#;
       --  STID
@@ -824,20 +745,19 @@ package STM32_SVD.CAN is
    -- TDT2R_Register --
    --------------------
 
-   subtype TDT2R_DLC_Field is STM32_SVD.UInt4;
-   subtype TDT2R_TGT_Field is STM32_SVD.Bit;
-   subtype TDT2R_TIME_Field is STM32_SVD.Short;
+   subtype TDT2R_DLC_Field is Interfaces.Bit_Types.UInt4;
+   subtype TDT2R_TIME_Field is Interfaces.Bit_Types.Short;
 
    --  mailbox data length control and time stamp register
    type TDT2R_Register is record
       --  DLC
       DLC           : TDT2R_DLC_Field := 16#0#;
       --  unspecified
-      Reserved_4_7  : STM32_SVD.UInt4 := 16#0#;
+      Reserved_4_7  : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  TGT
-      TGT           : TDT2R_TGT_Field := 16#0#;
+      TGT           : Boolean := False;
       --  unspecified
-      Reserved_9_15 : STM32_SVD.UInt7 := 16#0#;
+      Reserved_9_15 : Interfaces.Bit_Types.UInt7 := 16#0#;
       --  TIME
       TIME          : TDT2R_TIME_Field := 16#0#;
    end record
@@ -857,7 +777,7 @@ package STM32_SVD.CAN is
    --------------------
 
    --  TDL2R_DATA array element
-   subtype TDL2R_DATA_Element is STM32_SVD.Byte;
+   subtype TDL2R_DATA_Element is Interfaces.Bit_Types.Byte;
 
    --  TDL2R_DATA array
    type TDL2R_DATA_Field_Array is array (0 .. 3) of TDL2R_DATA_Element
@@ -870,7 +790,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  DATA as an array
             Arr : TDL2R_DATA_Field_Array;
@@ -889,10 +809,10 @@ package STM32_SVD.CAN is
    --------------------
 
    --  TDH2R_DATA array element
-   subtype TDH2R_DATA_Element is STM32_SVD.Byte;
+   subtype TDH2R_DATA_Element is Interfaces.Bit_Types.Byte;
 
    --  TDH2R_DATA array
-   type TDH2R_DATA_Field_Array is array (0 .. 3) of TDH2R_DATA_Element
+   type TDH2R_DATA_Field_Array is array (4 .. 7) of TDH2R_DATA_Element
      with Component_Size => 8, Size => 32;
 
    --  mailbox data high register
@@ -902,7 +822,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  DATA as an array
             Arr : TDH2R_DATA_Field_Array;
@@ -920,23 +840,21 @@ package STM32_SVD.CAN is
    -- RI0R_Register --
    -------------------
 
-   subtype RI0R_RTR_Field is STM32_SVD.Bit;
-   subtype RI0R_IDE_Field is STM32_SVD.Bit;
-   subtype RI0R_EXID_Field is STM32_SVD.UInt18;
-   subtype RI0R_STID_Field is STM32_SVD.UInt11;
+   subtype RI0R_EXID_Field is Interfaces.Bit_Types.UInt18;
+   subtype RI0R_STID_Field is Interfaces.Bit_Types.UInt11;
 
    --  receive FIFO mailbox identifier register
    type RI0R_Register is record
       --  unspecified
-      Reserved_0_0 : STM32_SVD.Bit;
-      --  RTR
-      RTR          : RI0R_RTR_Field;
-      --  IDE
-      IDE          : RI0R_IDE_Field;
-      --  EXID
-      EXID         : RI0R_EXID_Field;
-      --  STID
-      STID         : RI0R_STID_Field;
+      Reserved_0_0 : Interfaces.Bit_Types.Bit;
+      --  Read-only. RTR
+      RTR          : Boolean := False;
+      --  Read-only. IDE
+      IDE          : Boolean := False;
+      --  Read-only. EXID
+      EXID         : RI0R_EXID_Field := 16#0#;
+      --  Read-only. STID
+      STID         : RI0R_STID_Field := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -953,20 +871,20 @@ package STM32_SVD.CAN is
    -- RDT0R_Register --
    --------------------
 
-   subtype RDT0R_DLC_Field is STM32_SVD.UInt4;
-   subtype RDT0R_FMI_Field is STM32_SVD.Byte;
-   subtype RDT0R_TIME_Field is STM32_SVD.Short;
+   subtype RDT0R_DLC_Field is Interfaces.Bit_Types.UInt4;
+   subtype RDT0R_FMI_Field is Interfaces.Bit_Types.Byte;
+   subtype RDT0R_TIME_Field is Interfaces.Bit_Types.Short;
 
    --  mailbox data high register
    type RDT0R_Register is record
-      --  DLC
-      DLC          : RDT0R_DLC_Field;
+      --  Read-only. DLC
+      DLC          : RDT0R_DLC_Field := 16#0#;
       --  unspecified
-      Reserved_4_7 : STM32_SVD.UInt4;
-      --  FMI
-      FMI          : RDT0R_FMI_Field;
-      --  TIME
-      TIME         : RDT0R_TIME_Field;
+      Reserved_4_7 : Interfaces.Bit_Types.UInt4;
+      --  Read-only. FMI
+      FMI          : RDT0R_FMI_Field := 16#0#;
+      --  Read-only. TIME
+      TIME         : RDT0R_TIME_Field := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -983,7 +901,7 @@ package STM32_SVD.CAN is
    --------------------
 
    --  RDL0R_DATA array element
-   subtype RDL0R_DATA_Element is STM32_SVD.Byte;
+   subtype RDL0R_DATA_Element is Interfaces.Bit_Types.Byte;
 
    --  RDL0R_DATA array
    type RDL0R_DATA_Field_Array is array (0 .. 3) of RDL0R_DATA_Element
@@ -996,7 +914,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  DATA as an array
             Arr : RDL0R_DATA_Field_Array;
@@ -1015,10 +933,10 @@ package STM32_SVD.CAN is
    --------------------
 
    --  RDH0R_DATA array element
-   subtype RDH0R_DATA_Element is STM32_SVD.Byte;
+   subtype RDH0R_DATA_Element is Interfaces.Bit_Types.Byte;
 
    --  RDH0R_DATA array
-   type RDH0R_DATA_Field_Array is array (0 .. 3) of RDH0R_DATA_Element
+   type RDH0R_DATA_Field_Array is array (4 .. 7) of RDH0R_DATA_Element
      with Component_Size => 8, Size => 32;
 
    --  receive FIFO mailbox data high register
@@ -1028,7 +946,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  DATA as an array
             Arr : RDH0R_DATA_Field_Array;
@@ -1046,23 +964,21 @@ package STM32_SVD.CAN is
    -- RI1R_Register --
    -------------------
 
-   subtype RI1R_RTR_Field is STM32_SVD.Bit;
-   subtype RI1R_IDE_Field is STM32_SVD.Bit;
-   subtype RI1R_EXID_Field is STM32_SVD.UInt18;
-   subtype RI1R_STID_Field is STM32_SVD.UInt11;
+   subtype RI1R_EXID_Field is Interfaces.Bit_Types.UInt18;
+   subtype RI1R_STID_Field is Interfaces.Bit_Types.UInt11;
 
    --  mailbox data high register
    type RI1R_Register is record
       --  unspecified
-      Reserved_0_0 : STM32_SVD.Bit;
-      --  RTR
-      RTR          : RI1R_RTR_Field;
-      --  IDE
-      IDE          : RI1R_IDE_Field;
-      --  EXID
-      EXID         : RI1R_EXID_Field;
-      --  STID
-      STID         : RI1R_STID_Field;
+      Reserved_0_0 : Interfaces.Bit_Types.Bit;
+      --  Read-only. RTR
+      RTR          : Boolean := False;
+      --  Read-only. IDE
+      IDE          : Boolean := False;
+      --  Read-only. EXID
+      EXID         : RI1R_EXID_Field := 16#0#;
+      --  Read-only. STID
+      STID         : RI1R_STID_Field := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1079,20 +995,20 @@ package STM32_SVD.CAN is
    -- RDT1R_Register --
    --------------------
 
-   subtype RDT1R_DLC_Field is STM32_SVD.UInt4;
-   subtype RDT1R_FMI_Field is STM32_SVD.Byte;
-   subtype RDT1R_TIME_Field is STM32_SVD.Short;
+   subtype RDT1R_DLC_Field is Interfaces.Bit_Types.UInt4;
+   subtype RDT1R_FMI_Field is Interfaces.Bit_Types.Byte;
+   subtype RDT1R_TIME_Field is Interfaces.Bit_Types.Short;
 
    --  mailbox data high register
    type RDT1R_Register is record
-      --  DLC
-      DLC          : RDT1R_DLC_Field;
+      --  Read-only. DLC
+      DLC          : RDT1R_DLC_Field := 16#0#;
       --  unspecified
-      Reserved_4_7 : STM32_SVD.UInt4;
-      --  FMI
-      FMI          : RDT1R_FMI_Field;
-      --  TIME
-      TIME         : RDT1R_TIME_Field;
+      Reserved_4_7 : Interfaces.Bit_Types.UInt4;
+      --  Read-only. FMI
+      FMI          : RDT1R_FMI_Field := 16#0#;
+      --  Read-only. TIME
+      TIME         : RDT1R_TIME_Field := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1109,7 +1025,7 @@ package STM32_SVD.CAN is
    --------------------
 
    --  RDL1R_DATA array element
-   subtype RDL1R_DATA_Element is STM32_SVD.Byte;
+   subtype RDL1R_DATA_Element is Interfaces.Bit_Types.Byte;
 
    --  RDL1R_DATA array
    type RDL1R_DATA_Field_Array is array (0 .. 3) of RDL1R_DATA_Element
@@ -1122,7 +1038,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  DATA as an array
             Arr : RDL1R_DATA_Field_Array;
@@ -1141,10 +1057,10 @@ package STM32_SVD.CAN is
    --------------------
 
    --  RDH1R_DATA array element
-   subtype RDH1R_DATA_Element is STM32_SVD.Byte;
+   subtype RDH1R_DATA_Element is Interfaces.Bit_Types.Byte;
 
    --  RDH1R_DATA array
-   type RDH1R_DATA_Field_Array is array (0 .. 3) of RDH1R_DATA_Element
+   type RDH1R_DATA_Field_Array is array (4 .. 7) of RDH1R_DATA_Element
      with Component_Size => 8, Size => 32;
 
    --  mailbox data high register
@@ -1154,7 +1070,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  DATA as an array
             Arr : RDH1R_DATA_Field_Array;
@@ -1172,19 +1088,18 @@ package STM32_SVD.CAN is
    -- FMR_Register --
    ------------------
 
-   subtype FMR_FINIT_Field is STM32_SVD.Bit;
-   subtype FMR_CAN2SB_Field is STM32_SVD.UInt6;
+   subtype FMR_CAN2SB_Field is Interfaces.Bit_Types.UInt6;
 
    --  filter master register
    type FMR_Register is record
       --  FINIT
-      FINIT          : FMR_FINIT_Field := 16#1#;
+      FINIT          : Boolean := True;
       --  unspecified
-      Reserved_1_7   : STM32_SVD.UInt7 := 16#0#;
+      Reserved_1_7   : Interfaces.Bit_Types.UInt7 := 16#0#;
       --  CAN2SB
       CAN2SB         : FMR_CAN2SB_Field := 16#E#;
       --  unspecified
-      Reserved_14_31 : STM32_SVD.UInt18 := 16#A870#;
+      Reserved_14_31 : Interfaces.Bit_Types.UInt18 := 16#A870#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1204,11 +1119,8 @@ package STM32_SVD.CAN is
    -- FM1R.FBM --
    --------------
 
-   --  FM1R_FBM array element
-   subtype FM1R_FBM_Element is STM32_SVD.Bit;
-
    --  FM1R_FBM array
-   type FM1R_FBM_Field_Array is array (0 .. 27) of FM1R_FBM_Element
+   type FM1R_FBM_Field_Array is array (0 .. 27) of Boolean
      with Component_Size => 1, Size => 28;
 
    --  Type definition for FM1R_FBM
@@ -1218,7 +1130,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FBM as a value
-            Val : STM32_SVD.UInt28;
+            Val : Interfaces.Bit_Types.UInt28;
          when True =>
             --  FBM as an array
             Arr : FM1R_FBM_Field_Array;
@@ -1236,7 +1148,7 @@ package STM32_SVD.CAN is
       --  Filter mode
       FBM            : FM1R_FBM_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1254,11 +1166,8 @@ package STM32_SVD.CAN is
    -- FS1R.FSC --
    --------------
 
-   --  FS1R_FSC array element
-   subtype FS1R_FSC_Element is STM32_SVD.Bit;
-
    --  FS1R_FSC array
-   type FS1R_FSC_Field_Array is array (0 .. 27) of FS1R_FSC_Element
+   type FS1R_FSC_Field_Array is array (0 .. 27) of Boolean
      with Component_Size => 1, Size => 28;
 
    --  Type definition for FS1R_FSC
@@ -1268,7 +1177,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FSC as a value
-            Val : STM32_SVD.UInt28;
+            Val : Interfaces.Bit_Types.UInt28;
          when True =>
             --  FSC as an array
             Arr : FS1R_FSC_Field_Array;
@@ -1286,7 +1195,7 @@ package STM32_SVD.CAN is
       --  Filter scale configuration
       FSC            : FS1R_FSC_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1304,11 +1213,8 @@ package STM32_SVD.CAN is
    -- FFA1R.FFA --
    ---------------
 
-   --  FFA1R_FFA array element
-   subtype FFA1R_FFA_Element is STM32_SVD.Bit;
-
    --  FFA1R_FFA array
-   type FFA1R_FFA_Field_Array is array (0 .. 27) of FFA1R_FFA_Element
+   type FFA1R_FFA_Field_Array is array (0 .. 27) of Boolean
      with Component_Size => 1, Size => 28;
 
    --  Type definition for FFA1R_FFA
@@ -1318,7 +1224,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FFA as a value
-            Val : STM32_SVD.UInt28;
+            Val : Interfaces.Bit_Types.UInt28;
          when True =>
             --  FFA as an array
             Arr : FFA1R_FFA_Field_Array;
@@ -1336,7 +1242,7 @@ package STM32_SVD.CAN is
       --  Filter FIFO assignment for filter 0
       FFA            : FFA1R_FFA_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1354,11 +1260,8 @@ package STM32_SVD.CAN is
    -- FA1R.FACT --
    ---------------
 
-   --  FA1R_FACT array element
-   subtype FA1R_FACT_Element is STM32_SVD.Bit;
-
    --  FA1R_FACT array
-   type FA1R_FACT_Field_Array is array (0 .. 27) of FA1R_FACT_Element
+   type FA1R_FACT_Field_Array is array (0 .. 27) of Boolean
      with Component_Size => 1, Size => 28;
 
    --  Type definition for FA1R_FACT
@@ -1368,7 +1271,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FACT as a value
-            Val : STM32_SVD.UInt28;
+            Val : Interfaces.Bit_Types.UInt28;
          when True =>
             --  FACT as an array
             Arr : FA1R_FACT_Field_Array;
@@ -1386,7 +1289,7 @@ package STM32_SVD.CAN is
       --  Filter active
       FACT           : FA1R_FACT_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1400,11 +1303,8 @@ package STM32_SVD.CAN is
    -- F0R_Register --
    ------------------
 
-   --  F0R1_FB array element
-   subtype F0R1_FB_Element is STM32_SVD.Bit;
-
    --  F0R1_FB array
-   type F0R1_FB_Field_Array is array (0 .. 31) of F0R1_FB_Element
+   type F0R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 0 register 1
@@ -1414,7 +1314,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F0R1_FB_Field_Array;
@@ -1432,11 +1332,8 @@ package STM32_SVD.CAN is
    -- F1R_Register --
    ------------------
 
-   --  F1R1_FB array element
-   subtype F1R1_FB_Element is STM32_SVD.Bit;
-
    --  F1R1_FB array
-   type F1R1_FB_Field_Array is array (0 .. 31) of F1R1_FB_Element
+   type F1R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 1 register 1
@@ -1446,7 +1343,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F1R1_FB_Field_Array;
@@ -1464,11 +1361,8 @@ package STM32_SVD.CAN is
    -- F2R_Register --
    ------------------
 
-   --  F2R1_FB array element
-   subtype F2R1_FB_Element is STM32_SVD.Bit;
-
    --  F2R1_FB array
-   type F2R1_FB_Field_Array is array (0 .. 31) of F2R1_FB_Element
+   type F2R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 2 register 1
@@ -1478,7 +1372,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F2R1_FB_Field_Array;
@@ -1496,11 +1390,8 @@ package STM32_SVD.CAN is
    -- F3R_Register --
    ------------------
 
-   --  F3R1_FB array element
-   subtype F3R1_FB_Element is STM32_SVD.Bit;
-
    --  F3R1_FB array
-   type F3R1_FB_Field_Array is array (0 .. 31) of F3R1_FB_Element
+   type F3R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 3 register 1
@@ -1510,7 +1401,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F3R1_FB_Field_Array;
@@ -1528,11 +1419,8 @@ package STM32_SVD.CAN is
    -- F4R_Register --
    ------------------
 
-   --  F4R1_FB array element
-   subtype F4R1_FB_Element is STM32_SVD.Bit;
-
    --  F4R1_FB array
-   type F4R1_FB_Field_Array is array (0 .. 31) of F4R1_FB_Element
+   type F4R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 4 register 1
@@ -1542,7 +1430,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F4R1_FB_Field_Array;
@@ -1560,11 +1448,8 @@ package STM32_SVD.CAN is
    -- F5R_Register --
    ------------------
 
-   --  F5R1_FB array element
-   subtype F5R1_FB_Element is STM32_SVD.Bit;
-
    --  F5R1_FB array
-   type F5R1_FB_Field_Array is array (0 .. 31) of F5R1_FB_Element
+   type F5R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 5 register 1
@@ -1574,7 +1459,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F5R1_FB_Field_Array;
@@ -1592,11 +1477,8 @@ package STM32_SVD.CAN is
    -- F6R_Register --
    ------------------
 
-   --  F6R1_FB array element
-   subtype F6R1_FB_Element is STM32_SVD.Bit;
-
    --  F6R1_FB array
-   type F6R1_FB_Field_Array is array (0 .. 31) of F6R1_FB_Element
+   type F6R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 6 register 1
@@ -1606,7 +1488,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F6R1_FB_Field_Array;
@@ -1624,11 +1506,8 @@ package STM32_SVD.CAN is
    -- F7R_Register --
    ------------------
 
-   --  F7R1_FB array element
-   subtype F7R1_FB_Element is STM32_SVD.Bit;
-
    --  F7R1_FB array
-   type F7R1_FB_Field_Array is array (0 .. 31) of F7R1_FB_Element
+   type F7R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 7 register 1
@@ -1638,7 +1517,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F7R1_FB_Field_Array;
@@ -1656,11 +1535,8 @@ package STM32_SVD.CAN is
    -- F8R_Register --
    ------------------
 
-   --  F8R1_FB array element
-   subtype F8R1_FB_Element is STM32_SVD.Bit;
-
    --  F8R1_FB array
-   type F8R1_FB_Field_Array is array (0 .. 31) of F8R1_FB_Element
+   type F8R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 8 register 1
@@ -1670,7 +1546,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F8R1_FB_Field_Array;
@@ -1688,11 +1564,8 @@ package STM32_SVD.CAN is
    -- F9R_Register --
    ------------------
 
-   --  F9R1_FB array element
-   subtype F9R1_FB_Element is STM32_SVD.Bit;
-
    --  F9R1_FB array
-   type F9R1_FB_Field_Array is array (0 .. 31) of F9R1_FB_Element
+   type F9R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 9 register 1
@@ -1702,7 +1575,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F9R1_FB_Field_Array;
@@ -1720,11 +1593,8 @@ package STM32_SVD.CAN is
    -- F10R_Register --
    -------------------
 
-   --  F10R1_FB array element
-   subtype F10R1_FB_Element is STM32_SVD.Bit;
-
    --  F10R1_FB array
-   type F10R1_FB_Field_Array is array (0 .. 31) of F10R1_FB_Element
+   type F10R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 10 register 1
@@ -1734,7 +1604,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F10R1_FB_Field_Array;
@@ -1752,11 +1622,8 @@ package STM32_SVD.CAN is
    -- F11R_Register --
    -------------------
 
-   --  F11R1_FB array element
-   subtype F11R1_FB_Element is STM32_SVD.Bit;
-
    --  F11R1_FB array
-   type F11R1_FB_Field_Array is array (0 .. 31) of F11R1_FB_Element
+   type F11R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 11 register 1
@@ -1766,7 +1633,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F11R1_FB_Field_Array;
@@ -1784,11 +1651,8 @@ package STM32_SVD.CAN is
    -- F12R_Register --
    -------------------
 
-   --  F12R1_FB array element
-   subtype F12R1_FB_Element is STM32_SVD.Bit;
-
    --  F12R1_FB array
-   type F12R1_FB_Field_Array is array (0 .. 31) of F12R1_FB_Element
+   type F12R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 4 register 1
@@ -1798,7 +1662,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F12R1_FB_Field_Array;
@@ -1816,11 +1680,8 @@ package STM32_SVD.CAN is
    -- F13R_Register --
    -------------------
 
-   --  F13R1_FB array element
-   subtype F13R1_FB_Element is STM32_SVD.Bit;
-
    --  F13R1_FB array
-   type F13R1_FB_Field_Array is array (0 .. 31) of F13R1_FB_Element
+   type F13R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 13 register 1
@@ -1830,7 +1691,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F13R1_FB_Field_Array;
@@ -1848,11 +1709,8 @@ package STM32_SVD.CAN is
    -- F14R_Register --
    -------------------
 
-   --  F14R1_FB array element
-   subtype F14R1_FB_Element is STM32_SVD.Bit;
-
    --  F14R1_FB array
-   type F14R1_FB_Field_Array is array (0 .. 31) of F14R1_FB_Element
+   type F14R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 14 register 1
@@ -1862,7 +1720,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F14R1_FB_Field_Array;
@@ -1880,11 +1738,8 @@ package STM32_SVD.CAN is
    -- F15R_Register --
    -------------------
 
-   --  F15R1_FB array element
-   subtype F15R1_FB_Element is STM32_SVD.Bit;
-
    --  F15R1_FB array
-   type F15R1_FB_Field_Array is array (0 .. 31) of F15R1_FB_Element
+   type F15R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 15 register 1
@@ -1894,7 +1749,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F15R1_FB_Field_Array;
@@ -1912,11 +1767,8 @@ package STM32_SVD.CAN is
    -- F16R_Register --
    -------------------
 
-   --  F16R1_FB array element
-   subtype F16R1_FB_Element is STM32_SVD.Bit;
-
    --  F16R1_FB array
-   type F16R1_FB_Field_Array is array (0 .. 31) of F16R1_FB_Element
+   type F16R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 16 register 1
@@ -1926,7 +1778,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F16R1_FB_Field_Array;
@@ -1944,11 +1796,8 @@ package STM32_SVD.CAN is
    -- F17R_Register --
    -------------------
 
-   --  F17R1_FB array element
-   subtype F17R1_FB_Element is STM32_SVD.Bit;
-
    --  F17R1_FB array
-   type F17R1_FB_Field_Array is array (0 .. 31) of F17R1_FB_Element
+   type F17R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 17 register 1
@@ -1958,7 +1807,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F17R1_FB_Field_Array;
@@ -1976,11 +1825,8 @@ package STM32_SVD.CAN is
    -- F18R_Register --
    -------------------
 
-   --  F18R1_FB array element
-   subtype F18R1_FB_Element is STM32_SVD.Bit;
-
    --  F18R1_FB array
-   type F18R1_FB_Field_Array is array (0 .. 31) of F18R1_FB_Element
+   type F18R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 18 register 1
@@ -1990,7 +1836,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F18R1_FB_Field_Array;
@@ -2008,11 +1854,8 @@ package STM32_SVD.CAN is
    -- F19R_Register --
    -------------------
 
-   --  F19R1_FB array element
-   subtype F19R1_FB_Element is STM32_SVD.Bit;
-
    --  F19R1_FB array
-   type F19R1_FB_Field_Array is array (0 .. 31) of F19R1_FB_Element
+   type F19R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 19 register 1
@@ -2022,7 +1865,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F19R1_FB_Field_Array;
@@ -2040,11 +1883,8 @@ package STM32_SVD.CAN is
    -- F20R_Register --
    -------------------
 
-   --  F20R1_FB array element
-   subtype F20R1_FB_Element is STM32_SVD.Bit;
-
    --  F20R1_FB array
-   type F20R1_FB_Field_Array is array (0 .. 31) of F20R1_FB_Element
+   type F20R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 20 register 1
@@ -2054,7 +1894,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F20R1_FB_Field_Array;
@@ -2072,11 +1912,8 @@ package STM32_SVD.CAN is
    -- F21R_Register --
    -------------------
 
-   --  F21R1_FB array element
-   subtype F21R1_FB_Element is STM32_SVD.Bit;
-
    --  F21R1_FB array
-   type F21R1_FB_Field_Array is array (0 .. 31) of F21R1_FB_Element
+   type F21R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 21 register 1
@@ -2086,7 +1923,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F21R1_FB_Field_Array;
@@ -2104,11 +1941,8 @@ package STM32_SVD.CAN is
    -- F22R_Register --
    -------------------
 
-   --  F22R1_FB array element
-   subtype F22R1_FB_Element is STM32_SVD.Bit;
-
    --  F22R1_FB array
-   type F22R1_FB_Field_Array is array (0 .. 31) of F22R1_FB_Element
+   type F22R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 22 register 1
@@ -2118,7 +1952,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F22R1_FB_Field_Array;
@@ -2136,11 +1970,8 @@ package STM32_SVD.CAN is
    -- F23R_Register --
    -------------------
 
-   --  F23R1_FB array element
-   subtype F23R1_FB_Element is STM32_SVD.Bit;
-
    --  F23R1_FB array
-   type F23R1_FB_Field_Array is array (0 .. 31) of F23R1_FB_Element
+   type F23R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 23 register 1
@@ -2150,7 +1981,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F23R1_FB_Field_Array;
@@ -2168,11 +1999,8 @@ package STM32_SVD.CAN is
    -- F24R_Register --
    -------------------
 
-   --  F24R1_FB array element
-   subtype F24R1_FB_Element is STM32_SVD.Bit;
-
    --  F24R1_FB array
-   type F24R1_FB_Field_Array is array (0 .. 31) of F24R1_FB_Element
+   type F24R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 24 register 1
@@ -2182,7 +2010,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F24R1_FB_Field_Array;
@@ -2200,11 +2028,8 @@ package STM32_SVD.CAN is
    -- F25R_Register --
    -------------------
 
-   --  F25R1_FB array element
-   subtype F25R1_FB_Element is STM32_SVD.Bit;
-
    --  F25R1_FB array
-   type F25R1_FB_Field_Array is array (0 .. 31) of F25R1_FB_Element
+   type F25R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 25 register 1
@@ -2214,7 +2039,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F25R1_FB_Field_Array;
@@ -2232,11 +2057,8 @@ package STM32_SVD.CAN is
    -- F26R_Register --
    -------------------
 
-   --  F26R1_FB array element
-   subtype F26R1_FB_Element is STM32_SVD.Bit;
-
    --  F26R1_FB array
-   type F26R1_FB_Field_Array is array (0 .. 31) of F26R1_FB_Element
+   type F26R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 26 register 1
@@ -2246,7 +2068,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F26R1_FB_Field_Array;
@@ -2264,11 +2086,8 @@ package STM32_SVD.CAN is
    -- F27R_Register --
    -------------------
 
-   --  F27R1_FB array element
-   subtype F27R1_FB_Element is STM32_SVD.Bit;
-
    --  F27R1_FB array
-   type F27R1_FB_Field_Array is array (0 .. 31) of F27R1_FB_Element
+   type F27R1_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 27 register 1
@@ -2278,7 +2097,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : STM32_SVD.Word;
+            Val : Interfaces.Bit_Types.Word;
          when True =>
             --  FB as an array
             Arr : F27R1_FB_Field_Array;
@@ -2573,10 +2392,10 @@ package STM32_SVD.CAN is
 
    --  Controller area network
    CAN1_Periph : aliased CAN_Peripheral
-     with Import, Address => System'To_Address (16#40006400#);
+     with Import, Address => CAN1_Base;
 
    --  Controller area network
    CAN2_Periph : aliased CAN_Peripheral
-     with Import, Address => System'To_Address (16#40006800#);
+     with Import, Address => CAN2_Base;
 
 end STM32_SVD.CAN;

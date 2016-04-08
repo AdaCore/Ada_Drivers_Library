@@ -56,13 +56,11 @@ package body STM32.EXTI is
    is
       Index : constant Natural := External_Line_Number'Pos (Line);
    begin
-      EXTI_Periph.IMR.MR.Arr (Index) := 1;
+      EXTI_Periph.IMR.MR.Arr (Index) := True;
       EXTI_Periph.RTSR.TR.Arr (Index) :=
-        (if Trigger in Interrupt_Rising_Edge  | Interrupt_Rising_Falling_Edge
-         then 1 else 0);
+        Trigger in Interrupt_Rising_Edge  | Interrupt_Rising_Falling_Edge;
       EXTI_Periph.FTSR.TR.Arr (Index) :=
-        (if Trigger in Interrupt_Falling_Edge | Interrupt_Rising_Falling_Edge
-         then 1 else 0);
+        Trigger in Interrupt_Falling_Edge | Interrupt_Rising_Falling_Edge;
    end Enable_External_Interrupt;
 
    --------------------------------
@@ -72,9 +70,9 @@ package body STM32.EXTI is
    procedure Disable_External_Interrupt (Line : External_Line_Number) is
       Index : constant Natural := External_Line_Number'Pos (Line);
    begin
-      EXTI_Periph.IMR.MR.Arr (Index)  := 0;
-      EXTI_Periph.RTSR.TR.Arr (Index) := 0;
-      EXTI_Periph.FTSR.TR.Arr (Index) := 0;
+      EXTI_Periph.IMR.MR.Arr (Index)  := False;
+      EXTI_Periph.RTSR.TR.Arr (Index) := False;
+      EXTI_Periph.FTSR.TR.Arr (Index) := False;
    end Disable_External_Interrupt;
 
    ---------------------------
@@ -87,13 +85,11 @@ package body STM32.EXTI is
    is
       Index : constant Natural := External_Line_Number'Pos (Line);
    begin
-      EXTI_Periph.EMR.MR.Arr (Index)  := 1;
+      EXTI_Periph.EMR.MR.Arr (Index)  := True;
       EXTI_Periph.RTSR.TR.Arr (Index) :=
-        (if Trigger in Interrupt_Rising_Edge  | Interrupt_Rising_Falling_Edge
-         then 1 else 0);
+        Trigger in Interrupt_Rising_Edge  | Interrupt_Rising_Falling_Edge;
       EXTI_Periph.FTSR.TR.Arr (Index) :=
-        (if Trigger in Interrupt_Falling_Edge | Interrupt_Rising_Falling_Edge
-         then 1 else 0);
+        Trigger in Interrupt_Falling_Edge | Interrupt_Rising_Falling_Edge;
    end Enable_External_Event;
 
    ----------------------------
@@ -103,9 +99,9 @@ package body STM32.EXTI is
    procedure Disable_External_Event (Line : External_Line_Number) is
       Index : constant Natural := External_Line_Number'Pos (Line);
    begin
-      EXTI_Periph.EMR.MR.Arr (Index)  := 0;
-      EXTI_Periph.RTSR.TR.Arr (Index) := 0;
-      EXTI_Periph.FTSR.TR.Arr (Index) := 0;
+      EXTI_Periph.EMR.MR.Arr (Index)  := False;
+      EXTI_Periph.RTSR.TR.Arr (Index) := False;
+      EXTI_Periph.FTSR.TR.Arr (Index) := False;
    end Disable_External_Event;
 
    ------------------
@@ -114,7 +110,7 @@ package body STM32.EXTI is
 
    procedure Generate_SWI (Line : External_Line_Number) is
    begin
-      EXTI_Periph.SWIER.SWIER.Arr (External_Line_Number'Pos (Line)) := 1;
+      EXTI_Periph.SWIER.SWIER.Arr (External_Line_Number'Pos (Line)) := True;
    end Generate_SWI;
 
    --------------------------------
@@ -123,10 +119,7 @@ package body STM32.EXTI is
 
    function External_Interrupt_Pending (Line : External_Line_Number)
      return Boolean
-   is
-   begin
-      return EXTI_Periph.PR.PR.Arr (External_Line_Number'Pos (Line)) = 1;
-   end External_Interrupt_Pending;
+   is (EXTI_Periph.PR.PR.Arr (External_Line_Number'Pos (Line)));
 
    ------------------------------
    -- Clear_External_Interrupt --
@@ -135,7 +128,7 @@ package body STM32.EXTI is
    procedure Clear_External_Interrupt (Line : External_Line_Number) is
    begin
       -- yes, one to clear
-      EXTI_Periph.PR.PR.Arr (External_Line_Number'Pos (Line)) := 1;
+      EXTI_Periph.PR.PR.Arr (External_Line_Number'Pos (Line)) := True;
    end Clear_External_Interrupt;
 
 

@@ -39,9 +39,10 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with STM32.Device;    use STM32.Device;
+with System;          use System;
+with STM32_SVD.USART; use STM32_SVD, STM32_SVD.USART;
 
-with STM32_SVD.USART; use STM32_SVD.USART;
+with STM32.Device;    use STM32.Device;
 
 package body STM32.USARTs is
 
@@ -65,7 +66,7 @@ package body STM32.USARTs is
 
    procedure Enable (This : in out USART) is
    begin
-      This.CR1.UE := 1;
+      This.CR1.UE := True;
    end Enable;
 
    -------------
@@ -74,7 +75,7 @@ package body STM32.USARTs is
 
    procedure Disable (This : in out USART) is
    begin
-      This.CR1.UE := 0;
+      This.CR1.UE := False;
    end Disable;
 
    -------------
@@ -82,7 +83,7 @@ package body STM32.USARTs is
    -------------
 
    function Enabled (This : USART) return Boolean is
-     (This.CR1.UE = 1);
+     (This.CR1.UE);
 
    -------------------
    -- Set_Stop_Bits --
@@ -103,7 +104,7 @@ package body STM32.USARTs is
       To : Word_Lengths)
    is
    begin
-      This.CR1.M := (if To = Word_Length_8 then 0 else 1);
+      This.CR1.M := To = Word_Length_9;
    end Set_Word_Length;
 
    ----------------
@@ -114,14 +115,14 @@ package body STM32.USARTs is
    begin
       case To is
          when No_Parity =>
-            This.CR1.PCE := 0;
-            This.CR1.PS  := 0;
+            This.CR1.PCE := False;
+            This.CR1.PS  := False;
          when Even_Parity =>
-            This.CR1.PCE := 1;
-            This.CR1.PS  := 0;
+            This.CR1.PCE := True;
+            This.CR1.PS  := False;
          when Odd_Parity =>
-            This.CR1.PCE := 1;
-            This.CR1.PS  := 1;
+            This.CR1.PCE := True;
+            This.CR1.PS  := True;
       end case;
    end Set_Parity;
 
@@ -146,8 +147,8 @@ package body STM32.USARTs is
 
    procedure Set_Mode (This : in out USART;  To : UART_Modes) is
    begin
-      This.CR1.RE := (if To = Tx_Mode then 0 else 1);
-      This.CR1.TE := (if To = Rx_Mode then 0 else 1);
+      This.CR1.RE := To /= Tx_Mode;
+      This.CR1.TE := To /= Rx_Mode;
    end Set_Mode;
 
    ----------------------
@@ -158,17 +159,17 @@ package body STM32.USARTs is
    begin
       case To is
          when No_Flow_Control =>
-            This.CR3.RTSE := 0;
-            This.CR3.CTSE := 0;
+            This.CR3.RTSE := False;
+            This.CR3.CTSE := False;
          when RTS_Flow_Control =>
-            This.CR3.RTSE := 1;
-            This.CR3.CTSE := 0;
+            This.CR3.RTSE := True;
+            This.CR3.CTSE := False;
          when CTS_Flow_Control =>
-            This.CR3.RTSE := 0;
-            This.CR3.CTSE := 1;
+            This.CR3.RTSE := False;
+            This.CR3.CTSE := True;
          when RTS_CTS_Flow_Control =>
-            This.CR3.RTSE := 1;
-            This.CR3.CTSE := 1;
+            This.CR3.RTSE := True;
+            This.CR3.CTSE := True;
       end case;
    end Set_Flow_Control;
 
@@ -176,7 +177,7 @@ package body STM32.USARTs is
    -- Put --
    ---------
 
-   procedure Transmit (This : in out USART;  Data : Bits_9) is
+   procedure Transmit (This : in out USART;  Data : UInt9) is
    begin
       This.DR.DR := Data;
    end Transmit;
@@ -185,7 +186,7 @@ package body STM32.USARTs is
    -- Get --
    ---------
 
-   procedure Receive (This : USART;  Data : out Bits_9) is
+   procedure Receive (This : USART;  Data : out UInt9) is
    begin
       Data := Current_Input (This);
    end Receive;
@@ -194,7 +195,7 @@ package body STM32.USARTs is
    -- Current_Input --
    -------------------
 
-   function Current_Input (This : USART) return Bits_9 is (This.DR.DR);
+   function Current_Input (This : USART) return UInt9 is (This.DR.DR);
 
    --------------
    -- Tx_Ready --
@@ -202,7 +203,7 @@ package body STM32.USARTs is
 
    function Tx_Ready (This : USART) return Boolean is
    begin
-      return This.SR.TXE = 1;
+      return This.SR.TXE;
    end Tx_Ready;
 
    --------------
@@ -211,7 +212,7 @@ package body STM32.USARTs is
 
    function Rx_Ready (This : USART) return Boolean is
    begin
-      return This.SR.RXNE = 1;
+      return This.SR.RXNE;
    end Rx_Ready;
 
    ------------
@@ -222,25 +223,25 @@ package body STM32.USARTs is
    begin
       case Flag is
          when Parity_Error_Indicated =>
-            return This.SR.PE = 1;
+            return This.SR.PE;
          when Framing_Error_Indicated =>
-            return This.SR.FE = 1;
+            return This.SR.FE;
          when USART_Noise_Error_Indicated =>
-            return This.SR.NF = 1;
+            return This.SR.NF;
          when Overrun_Error_Indicated =>
-            return This.SR.ORE = 1;
+            return This.SR.ORE;
          when Idle_Line_Detection_Indicated =>
-            return This.SR.IDLE = 1;
+            return This.SR.IDLE;
          when Read_Data_Register_Not_Empty =>
-            return This.SR.RXNE = 1;
+            return This.SR.RXNE;
          when Transmission_Complete_Indicated =>
-            return This.SR.TC = 1;
+            return This.SR.TC;
          when Transmit_Data_Register_Empty =>
-            return This.SR.TXE = 1;
+            return This.SR.TXE;
          when Line_Break_Detection_Indicated =>
-            return This.SR.LBD = 1;
+            return This.SR.LBD;
          when Clear_To_Send_Indicated =>
-            return This.SR.CTS = 1;
+            return This.SR.CTS;
       end case;
    end Status;
 
@@ -252,25 +253,25 @@ package body STM32.USARTs is
    begin
       case Flag is
          when Parity_Error_Indicated =>
-            This.SR.PE := 0;
+            This.SR.PE := False;
          when Framing_Error_Indicated =>
-            This.SR.FE := 0;
+            This.SR.FE := False;
          when USART_Noise_Error_Indicated =>
-            This.SR.NF := 0;
+            This.SR.NF := False;
          when Overrun_Error_Indicated =>
-            This.SR.ORE := 0;
+            This.SR.ORE := False;
          when Idle_Line_Detection_Indicated =>
-            This.SR.IDLE := 0;
+            This.SR.IDLE := False;
          when Read_Data_Register_Not_Empty =>
-            This.SR.RXNE := 0;
+            This.SR.RXNE := False;
          when Transmission_Complete_Indicated =>
-            This.SR.TC := 0;
+            This.SR.TC := False;
          when Transmit_Data_Register_Empty =>
-            This.SR.TXE := 0;
+            This.SR.TXE := False;
          when Line_Break_Detection_Indicated =>
-            This.SR.LBD := 0;
+            This.SR.LBD := False;
          when Clear_To_Send_Indicated =>
-            This.SR.CTS := 0;
+            This.SR.CTS := False;
       end case;
    end Clear_Status;
 
@@ -285,21 +286,21 @@ package body STM32.USARTs is
    begin
       case Source is
          when Parity_Error =>
-            This.CR1.PEIE := 1;
+            This.CR1.PEIE := True;
          when Transmit_Data_Register_Empty =>
-            This.CR1.TXEIE := 1;
+            This.CR1.TXEIE := True;
          when Transmission_Complete =>
-            This.CR1.TCIE := 1;
+            This.CR1.TCIE := True;
          when Received_Data_Not_Empty =>
-            This.CR1.RXNEIE := 1;
+            This.CR1.RXNEIE := True;
          when Idle_Line_Detection =>
-            This.CR1.IDLEIE := 1;
+            This.CR1.IDLEIE := True;
          when Line_Break_Detection =>
-            This.CR2.LBDIE := 1;
+            This.CR2.LBDIE := True;
          when Clear_To_Send =>
-            This.CR3.CTSIE := 1;
+            This.CR3.CTSIE := True;
          when Error =>
-            This.CR3.EIE := 1;
+            This.CR3.EIE := True;
       end case;
    end Enable_Interrupts;
 
@@ -314,21 +315,21 @@ package body STM32.USARTs is
    begin
       case Source is
          when Parity_Error =>
-            This.CR1.PEIE := 0;
+            This.CR1.PEIE := False;
          when Transmit_Data_Register_Empty =>
-            This.CR1.TXEIE := 0;
+            This.CR1.TXEIE := False;
          when Transmission_Complete =>
-            This.CR1.TCIE := 0;
+            This.CR1.TCIE := False;
          when Received_Data_Not_Empty =>
-            This.CR1.RXNEIE := 0;
+            This.CR1.RXNEIE := False;
          when Idle_Line_Detection =>
-            This.CR1.IDLEIE := 0;
+            This.CR1.IDLEIE := False;
          when Line_Break_Detection =>
-            This.CR2.LBDIE := 0;
+            This.CR2.LBDIE := False;
          when Clear_To_Send =>
-            This.CR3.CTSIE := 0;
+            This.CR3.CTSIE := False;
          when Error =>
-            This.CR3.EIE := 0;
+            This.CR3.EIE := False;
       end case;
    end Disable_Interrupts;
 
@@ -344,21 +345,21 @@ package body STM32.USARTs is
    begin
       case Source is
          when Parity_Error =>
-            return This.CR1.PEIE = 1;
+            return This.CR1.PEIE;
          when Transmit_Data_Register_Empty =>
-            return This.CR1.TXEIE = 1;
+            return This.CR1.TXEIE;
          when Transmission_Complete =>
-            return This.CR1.TCIE = 1;
+            return This.CR1.TCIE;
          when Received_Data_Not_Empty =>
-            return This.CR1.RXNEIE = 1;
+            return This.CR1.RXNEIE;
          when Idle_Line_Detection =>
-            return This.CR1.IDLEIE = 1;
+            return This.CR1.IDLEIE;
          when Line_Break_Detection =>
-            return This.CR2.LBDIE = 1;
+            return This.CR2.LBDIE;
          when Clear_To_Send =>
-            return This.CR3.CTSIE = 1;
+            return This.CR3.CTSIE;
          when Error =>
-            return This.CR3.EIE = 1;
+            return This.CR3.EIE;
       end case;
    end Interrupt_Enabled;
 
@@ -368,7 +369,7 @@ package body STM32.USARTs is
 
    procedure Enable_DMA_Transmit_Requests (This : in out USART) is
    begin
-      This.CR3.DMAT := 1;
+      This.CR3.DMAT := True;
    end Enable_DMA_Transmit_Requests;
 
    ---------------------------------
@@ -377,7 +378,7 @@ package body STM32.USARTs is
 
    procedure Enable_DMA_Receive_Requests (This : in out USART) is
    begin
-      This.CR3.DMAR := 1;
+      This.CR3.DMAR := True;
    end Enable_DMA_Receive_Requests;
 
    -----------------------------------
@@ -386,7 +387,7 @@ package body STM32.USARTs is
 
    procedure Disable_DMA_Transmit_Requests (This : in out USART) is
    begin
-      This.CR3.DMAT := 0;
+      This.CR3.DMAT := False;
    end Disable_DMA_Transmit_Requests;
 
    ----------------------------------
@@ -395,7 +396,7 @@ package body STM32.USARTs is
 
    procedure Disable_DMA_Receive_Requests (This : in out USART) is
    begin
-      This.CR3.DMAR := 1;
+      This.CR3.DMAR := True;
    end Disable_DMA_Receive_Requests;
 
    -----------------------------------
@@ -403,14 +404,14 @@ package body STM32.USARTs is
    -----------------------------------
 
    function DMA_Transmit_Requests_Enabled  (This : USART) return Boolean is
-      (This.CR3.DMAT = 1);
+      (This.CR3.DMAT);
 
    ----------------------------------
    -- DMA_Receive_Requests_Enabled --
    ----------------------------------
 
    function DMA_Receive_Requests_Enabled  (This : USART) return Boolean is
-      (This.CR3.DMAR = 1);
+      (This.CR3.DMAR);
 
    -----------------------------
    -- Resume_DMA_Transmission --

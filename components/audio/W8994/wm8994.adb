@@ -1,5 +1,4 @@
 with Ada.Real_Time; use Ada.Real_Time;
-with Interfaces;    use Interfaces;
 
 package body WM8994 is
 
@@ -16,10 +15,10 @@ package body WM8994 is
    procedure Init
      (Input     : Input_Device;
       Output    : Output_Device;
-      Volume    : Byte;
+      Volume    : Unsigned_8;
       Frequency : Audio_Frequency)
    is
-      Power_Mgnt_Reg_1 : Half_Word := 0;
+      Power_Mgnt_Reg_1 : Unsigned_16 := 0;
 
    begin
       --  WM8994 Errata work-arounds
@@ -224,7 +223,7 @@ package body WM8994 is
    -- Read_ID --
    -------------
 
-   function Read_ID return Half_Word is
+   function Read_ID return Unsigned_16 is
    begin
       return IO_Read (WM8994_CHIPID_ADDR);
    end Read_ID;
@@ -300,12 +299,12 @@ package body WM8994 is
    -- Set_Volume --
    ----------------
 
-   procedure Set_Volume (Volume : Byte)
+   procedure Set_Volume (Volume : Volume_Level)
    is
       --  Actual Volume in range 0 .. 16#3F#
-      Converted_Volume : constant Half_Word :=
+      Converted_Volume : constant Unsigned_16 :=
                            (if Volume > 100 then 63
-                            else Half_Word (Volume) * 63 / 100);
+                            else Unsigned_16 (Volume) * 63 / 100);
 
    begin
       if Volume = 0 then

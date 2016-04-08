@@ -129,7 +129,7 @@ package body STM32.LIS3DSH is
       Full_Scale      : Full_Scale_Selection;
       Filter_BW       : Anti_Aliasing_Filter_Bandwidth)
    is
-      Temp  : Half_Word;
+      Temp  : Short;
       Value : Byte;
    begin
       AIO.Initialize;

@@ -22,9 +22,9 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with System.Storage_Elements; use System.Storage_Elements;
-
-with STM32.LCD;               use STM32.LCD;
+with System.Storage_Elements;  use System.Storage_Elements;
+with Interfaces.Bit_Types;     use Interfaces.Bit_Types;
+with STM32.LCD;                use STM32.LCD;
 
 package body Bitmapped_Drawing is
 
@@ -65,8 +65,38 @@ package body Bitmapped_Drawing is
       Position : Point;
       Hue      : Unsigned_32)
    is
+      Pixel_Size : constant Natural :=
+                     Bytes_Per_Pixel (Buffer.Color_Mode);
+      Offset     : constant Storage_Offset :=
+                     Storage_Offset
+                       (Pixel_Size * (Position.Y * Buffer.Width + Position.X));
+      type UInt8_Access is access all Byte;
+      type UInt16_Access is access all Short;
+      type UInt32_Access is access all Word;
+
+      function As_UInt8 is new Ada.Unchecked_Conversion
+        (System.Address, UInt8_Access);
+      function As_UInt16 is new Ada.Unchecked_Conversion
+        (System.Address, UInt16_Access);
+      function As_UInt32 is new Ada.Unchecked_Conversion
+        (System.Address, UInt32_Access);
    begin
-      DMA2D_Set_Pixel (Buffer, Position.X, Position.Y, Hue);
+      case Pixel_Size is
+         when 2 =>
+            As_UInt16 (Buffer.Addr + Offset).all := Short (Hue);
+         when 3 =>
+            As_UInt8 (Buffer.Addr + Offset).all :=
+              Byte (Shift_Right (Hue and 16#FF0000#, 16));
+            As_UInt8 (Buffer.Addr + Offset + 1).all :=
+              Byte (Shift_Right (Hue and 16#FF00#, 8));
+            As_UInt8 (Buffer.Addr + Offset + 2).all :=
+              Byte (Hue and 16#FF#);
+         when 4 =>
+            As_UInt32 (Buffer.Addr + Offset).all := Hue;
+         when others =>
+            raise Constraint_Error with "Not supported pixel format";
+      end case;
+--        DMA2D_Set_Pixel (Buffer, Position.X, Position.Y, Hue);
    end Put_Pixel;
 
    ---------------
@@ -131,8 +161,8 @@ package body Bitmapped_Drawing is
       Start      : Point;
       Char       : Character;
       Font       : BMP_Font;
-      Foreground : DMA2D_Color;
-      Background : DMA2D_Color)
+      Foreground : Unsigned_32;
+      Background : Unsigned_32)
    is
    begin
       for H in 0 .. Char_Height (Font) - 1 loop
@@ -161,6 +191,8 @@ package body Bitmapped_Drawing is
       Background : DMA2D_Color)
    is
       Count : Natural := 0;
+      FG    : constant Unsigned_32 := DMA2D_Color_To_Word (Buffer, Foreground);
+      BG    : constant Unsigned_32 := DMA2D_Color_To_Word (Buffer, Background);
    begin
       for C of Msg loop
          exit when Start.X + Count * Char_Width (Font) > Buffer.Width;
@@ -169,8 +201,8 @@ package body Bitmapped_Drawing is
             (Start.X + Count * Char_Width (Font), Start.Y),
             C,
             Font,
-            Foreground,
-            Background);
+            FG,
+            BG);
          Count := Count + 1;
       end loop;
    end Draw_String;

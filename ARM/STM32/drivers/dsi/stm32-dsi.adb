@@ -1,3 +1,43 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                    Copyright (C) 2015, AdaCore                           --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of STMicroelectronics nor the names of its       --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+--                                                                          --
+--  This file is based on:                                                  --
+--                                                                          --
+--   @file    stm32f4xx_hal_dsi.c                                           --
+--   @author  MCD Application Team                                          --
+--   @version V1.4.2                                                        --
+--   @date    10-November-2015                                              --
+--                                                                          --
+--   COPYRIGHT(c) 2015 STMicroelectronics                                   --
+------------------------------------------------------------------------------
+
 with Ada.Real_Time;     use Ada.Real_Time;
 
 pragma Warnings (Off, "* is an internal GNAT unit");
@@ -12,7 +52,7 @@ with STM32.GPIO;        use STM32.GPIO;
 
 package body STM32.DSI is
 
-   DSI_Data_Type_Encoding : constant array (DSI_Pkt_Data_Type) of Bits_6 :=
+   DSI_Data_Type_Encoding : constant array (DSI_Pkt_Data_Type) of UInt6 :=
                               (DCS_Short_Pkt_Write_P0 => 16#05#,
                                DCS_Short_Pkt_Write_P1 => 16#15#,
                                Gen_Short_Pkt_Write_P0 => 16#03#,
@@ -70,17 +110,18 @@ package body STM32.DSI is
       Configure_Alternate_Function (DSIHOST_TE, GPIO_AF_DSI);
 
       --  Enable the regulator
-      DSIHOST_Periph.DSI_WRPCR.REGEN := 1;
+      DSIHOST_Periph.DSI_WRPCR.REGEN := True;
 
       Start := Clock;
-      while DSIHOST_Periph.DSI_WISR.RRS = 0 loop
+      --  Wait for the Regulator Ready Status
+      while not DSIHOST_Periph.DSI_WISR.RRS loop
          if Clock > (Start + Milliseconds (1000)) then
             raise Program_Error with "Timeout during DSI initialisation";
          end if;
       end loop;
 
       --  Enable the DSI clock
-      RCC_Periph.APB2ENR.DSIEN := 1;
+      RCC_Periph.APB2ENR.DSIEN := True;
 
       --  Make sure the DSI peripheral is OFF
       DSI_Stop;
@@ -94,11 +135,11 @@ package body STM32.DSI is
       DSIHOST_Periph.DSI_WRPCR.ODF  := DSI_PLL_ODF'Enum_Rep (PLL_OUT_Div);
 
       --  Enable the DSI PLL
-      DSIHOST_Periph.DSI_WRPCR.PLLEN := 1;
+      DSIHOST_Periph.DSI_WRPCR.PLLEN := True;
       --  Wait for the lock of the PLL
 
       Start := Clock;
-      while DSIHOST_Periph.DSI_WISR.PLLLS = 0 loop
+      while not DSIHOST_Periph.DSI_WISR.PLLLS loop
          if Clock > (Start + Milliseconds (1000)) then
             raise Program_Error with "Timeout during DSI PLL setup";
          end if;
@@ -109,13 +150,12 @@ package body STM32.DSI is
       ----------------------------
 
       --  Enable D-PHY clock and digital
-      DSIHOST_Periph.DSI_PCTLR.CKE := 1;
-      DSIHOST_Periph.DSI_PCTLR.DEN := 1;
+      DSIHOST_Periph.DSI_PCTLR.CKE := True;
+      DSIHOST_Periph.DSI_PCTLR.DEN := True;
 
       --  Clock lane configuration
-      DSIHOST_Periph.DSI_CLCR.DPCC := 1;
-      DSIHOST_Periph.DSI_CLCR.ACR  :=
-        Boolean'Enum_Rep (Auto_Clock_Lane_Control);
+      DSIHOST_Periph.DSI_CLCR.DPCC := True;
+      DSIHOST_Periph.DSI_CLCR.ACR  := Auto_Clock_Lane_Control;
 
       --  Configure the number of active data lanes
       DSIHOST_Periph.DSI_PCCONFR.NL :=
@@ -165,14 +205,14 @@ package body STM32.DSI is
       DSI_Stop;
 
       --  D-PHY clock and digital disable
-      DSIHOST_Periph.DSI_PCTLR.DEN := 0;
-      DSIHOST_Periph.DSI_PCTLR.CKE := 0;
+      DSIHOST_Periph.DSI_PCTLR.DEN := False;
+      DSIHOST_Periph.DSI_PCTLR.CKE := False;
 
       --  Turn off the DSI PLL
-      DSIHOST_Periph.DSI_WRPCR.PLLEN := 0;
+      DSIHOST_Periph.DSI_WRPCR.PLLEN := False;
 
       --  Disable the regulator
-      DSIHOST_Periph.DSI_WRPCR.REGEN := 0;
+      DSIHOST_Periph.DSI_WRPCR.REGEN := False;
    end DSI_Deinit;
 
    --------------------------
@@ -184,19 +224,19 @@ package body STM32.DSI is
       Color_Coding                : DSI_Color_Mode;
       Loosely_Packed              : Boolean;
       Video_Mode                  : DSI_Video_Mode;
-      Packet_Size                 : Bits_15;
-      Number_Of_Chunks            : Bits_14;
-      Null_Packet_Size            : Bits_14;
+      Packet_Size                 : UInt15;
+      Number_Of_Chunks            : UInt14;
+      Null_Packet_Size            : UInt14;
       HSync_Polarity              : DSI_Polarity;
       VSync_Polarity              : DSI_Polarity;
       DataEn_Polarity             : DSI_Polarity;
-      HSync_Active_Duration       : Bits_13;
-      Horizontal_BackPorch        : Bits_13;
-      Horizontal_Line             : Bits_15;
-      VSync_Active_Duration       : Bits_10;
-      Vertical_BackPorch          : Bits_10;
-      Vertical_FrontPorch         : Bits_10;
-      Vertical_Active             : Bits_14;
+      HSync_Active_Duration       : UInt13;
+      Horizontal_BackPorch        : UInt13;
+      Horizontal_Line             : UInt15;
+      VSync_Active_Duration       : UInt10;
+      Vertical_BackPorch          : UInt10;
+      Vertical_FrontPorch         : UInt10;
+      Vertical_Active             : UInt14;
       LP_Command_Enabled          : Boolean;
       LP_Largest_Packet_Size      : Byte;
       LP_VACT_Largest_Packet_Size : Byte;
@@ -210,8 +250,8 @@ package body STM32.DSI is
    is
    begin
       --  Select video mode by resetting CMDM and SDIM bits
-      DSIHOST_Periph.DSI_MCR.CMDM := 0;
-      DSIHOST_Periph.DSI_WCFGR.DSIM := 0;
+      DSIHOST_Periph.DSI_MCR.CMDM := False;
+      DSIHOST_Periph.DSI_WCFGR.DSIM := False;
 
       --  Configure the video mode transmission type
       DSIHOST_Periph.DSI_VMCR.VMT     := DSI_Video_Mode'Enum_Rep (Video_Mode);
@@ -229,9 +269,12 @@ package body STM32.DSI is
       DSIHOST_Periph.DSI_LVCIDR.VCID  := Virtual_Channel;
 
       --  Configure the polarity of control signals
-      DSIHOST_Periph.DSI_LPCR.HSP   := DSI_Polarity'Enum_Rep (HSync_Polarity);
-      DSIHOST_Periph.DSI_LPCR.VSP   := DSI_Polarity'Enum_Rep (VSync_Polarity);
-      DSIHOST_Periph.DSI_LPCR.DEP   := DSI_Polarity'Enum_Rep (DataEn_Polarity);
+      DSIHOST_Periph.DSI_LPCR.HSP   :=
+        DSI_Polarity'Enum_Rep (HSync_Polarity) = 1;
+      DSIHOST_Periph.DSI_LPCR.VSP   :=
+        DSI_Polarity'Enum_Rep (VSync_Polarity) = 1;
+      DSIHOST_Periph.DSI_LPCR.DEP   :=
+        DSI_Polarity'Enum_Rep (DataEn_Polarity) = 1;
 
       --  Select the color coding for the host
       DSIHOST_Periph.DSI_LCOLCR.COLC := DSI_Color_Mode'Enum_Rep (Color_Coding);
@@ -241,7 +284,7 @@ package body STM32.DSI is
 
       --  Enable/disable the loosely packed variant to 18-bit configuration
       if Color_Coding = RGB666 then
-         DSIHOST_Periph.DSI_LCOLCR.LPE := Boolean'Enum_Rep (Loosely_Packed);
+         DSIHOST_Periph.DSI_LCOLCR.LPE := Loosely_Packed;
       end if;
 
       --  Set the Horizontal Synchronization Active (HSA) in lane byte clock
@@ -262,26 +305,19 @@ package body STM32.DSI is
       DSIHOST_Periph.DSI_VVACR.VA   := Vertical_Active;
 
       --  Configure the command transmission mode
-      DSIHOST_Periph.DSI_VMCR.LPCE  := Boolean'Enum_Rep (LP_Command_Enabled);
+      DSIHOST_Periph.DSI_VMCR.LPCE  := LP_Command_Enabled;
 
       --  Low power configuration:
       DSIHOST_Periph.DSI_LPMCR.LPSIZE  := LP_Largest_Packet_Size;
       DSIHOST_Periph.DSI_LPMCR.VLPSIZE := LP_VACT_Largest_Packet_Size;
-      DSIHOST_Periph.DSI_VMCR.LPHFE    :=
-        Boolean'Enum_Rep (LP_H_Front_Porch_Enable);
-      DSIHOST_Periph.DSI_VMCR.LPHBPE   :=
-        Boolean'Enum_Rep (LP_H_Back_Porch_Enable);
-      DSIHOST_Periph.DSI_VMCR.LVAE     :=
-        Boolean'Enum_Rep (LP_V_Active_Enable);
-      DSIHOST_Periph.DSI_VMCR.LPVFPE   :=
-        Boolean'Enum_Rep (LP_V_Front_Porch_Enable);
-      DSIHOST_Periph.DSI_VMCR.LPVBPE   :=
-        Boolean'Enum_Rep (LP_V_Back_Porch_Enable);
-      DSIHOST_Periph.DSI_VMCR.LPVSAE   :=
-        Boolean'Enum_Rep (LP_V_Sync_Active_Enable);
+      DSIHOST_Periph.DSI_VMCR.LPHFE    := LP_H_Front_Porch_Enable;
+      DSIHOST_Periph.DSI_VMCR.LPHBPE   := LP_H_Back_Porch_Enable;
+      DSIHOST_Periph.DSI_VMCR.LVAE     := LP_V_Active_Enable;
+      DSIHOST_Periph.DSI_VMCR.LPVFPE   := LP_V_Front_Porch_Enable;
+      DSIHOST_Periph.DSI_VMCR.LPVBPE   := LP_V_Back_Porch_Enable;
+      DSIHOST_Periph.DSI_VMCR.LPVSAE   := LP_V_Sync_Active_Enable;
 
-      DSIHOST_Periph.DSI_VMCR.FBTAAE :=
-        Boolean'Enum_Rep (Frame_BTA_Ack_Enable);
+      DSIHOST_Periph.DSI_VMCR.FBTAAE := Frame_BTA_Ack_Enable;
    end DSI_Setup_Video_Mode;
 
    ------------------------------------
@@ -303,16 +339,19 @@ package body STM32.DSI is
    is
    begin
       --  Select the command mode by setting CMDM and DSIM bits
-      DSIHOST_Periph.DSI_MCR.CMDM := 1;
-      DSIHOST_Periph.DSI_WCFGR.DSIM := 1;
+      DSIHOST_Periph.DSI_MCR.CMDM := True;
+      DSIHOST_Periph.DSI_WCFGR.DSIM := True;
 
       --  Select the virtual channel for the LTDC interface traffic
       DSIHOST_Periph.DSI_LVCIDR.VCID := Virtual_Channel;
 
       --  Configure the polarity of control signals
-      DSIHOST_Periph.DSI_LPCR.HSP   := DSI_Polarity'Enum_Rep (HSync_Polarity);
-      DSIHOST_Periph.DSI_LPCR.VSP   := DSI_Polarity'Enum_Rep (VSync_Polarity);
-      DSIHOST_Periph.DSI_LPCR.DEP   := DSI_Polarity'Enum_Rep (DataEn_Polarity);
+      DSIHOST_Periph.DSI_LPCR.HSP   :=
+        DSI_Polarity'Enum_Rep (HSync_Polarity) = 1;
+      DSIHOST_Periph.DSI_LPCR.VSP   :=
+        DSI_Polarity'Enum_Rep (VSync_Polarity) = 1;
+      DSIHOST_Periph.DSI_LPCR.DEP   :=
+        DSI_Polarity'Enum_Rep (DataEn_Polarity) = 1;
 
       --  Select the color coding for the host
       DSIHOST_Periph.DSI_LCOLCR.COLC := DSI_Color_Mode'Enum_Rep (Color_Coding);
@@ -324,18 +363,14 @@ package body STM32.DSI is
       DSIHOST_Periph.DSI_LCCR.CMDSIZE := Command_Size;
 
       --  Configure the tearing effect source and polarity
-      DSIHOST_Periph.DSI_WCFGR.TESRC :=
-        DSI_Tearing_Effect_Source'Enum_Rep (Tearing_Effect_Source);
+      DSIHOST_Periph.DSI_WCFGR.TESRC := Tearing_Effect_Source = TE_External;
       DSIHOST_Periph.DSI_WCFGR.TEPOL :=
-        DSI_TE_Polarity'Enum_Rep (Tearing_Effect_Polarity);
-      DSIHOST_Periph.DSI_WCFGR.AR    :=
-        Boolean'Enum_Rep (Automatic_Refresh);
-      DSIHOST_Periph.DSI_WCFGR.VSPOL :=
-        DSI_EDGE'Enum_Rep (VSync_Edge);
+        DSI_TE_Polarity'Enum_Rep (Tearing_Effect_Polarity) = 1;
+      DSIHOST_Periph.DSI_WCFGR.AR    := Automatic_Refresh;
+      DSIHOST_Periph.DSI_WCFGR.VSPOL := DSI_EDGE'Enum_Rep (VSync_Edge) = 1;
 
       --  Tearing effect acknowledge request
-      DSIHOST_Periph.DSI_CMCR.TEARE :=
-        Boolean'Enum_Rep (TE_Acknowledge_Request);
+      DSIHOST_Periph.DSI_CMCR.TEARE := TE_Acknowledge_Request;
    end DSI_Setup_Adapted_Command_Mode;
 
    -----------------------
@@ -358,32 +393,19 @@ package body STM32.DSI is
       Acknowledge_Request      : Boolean := False)
    is
    begin
-      DSIHOST_Periph.DSI_CMCR.GSW0TX :=
-        Boolean'Enum_Rep (LP_Gen_Short_Write_No_P);
-      DSIHOST_Periph.DSI_CMCR.GSW1TX :=
-        Boolean'Enum_Rep (LP_Gen_Short_Write_One_P);
-      DSIHOST_Periph.DSI_CMCR.GSW2TX :=
-        Boolean'Enum_Rep (LP_Gen_Short_Write_Two_P);
-      DSIHOST_Periph.DSI_CMCR.GSR0TX :=
-        Boolean'Enum_Rep (LP_Gen_Short_Read_No_P);
-      DSIHOST_Periph.DSI_CMCR.GSR1TX :=
-        Boolean'Enum_Rep (LP_Gen_Short_Read_One_P);
-      DSIHOST_Periph.DSI_CMCR.GSR2TX :=
-        Boolean'Enum_Rep (LP_Gen_Short_Read_Two_P);
-      DSIHOST_Periph.DSI_CMCR.GLWTX :=
-        Boolean'Enum_Rep (LP_Gen_Long_Write);
-      DSIHOST_Periph.DSI_CMCR.DSW0TX :=
-        Boolean'Enum_Rep (LP_DCS_Short_Write_No_P);
-      DSIHOST_Periph.DSI_CMCR.DSW1TX :=
-        Boolean'Enum_Rep (LP_DCS_Short_Write_One_P);
-      DSIHOST_Periph.DSI_CMCR.DSR0TX :=
-        Boolean'Enum_Rep (LP_DCS_Short_Read_No_P);
-      DSIHOST_Periph.DSI_CMCR.DLWTX :=
-        Boolean'Enum_Rep (LP_DCS_Long_Write);
-      DSIHOST_Periph.DSI_CMCR.MRDPS :=
-        Boolean'Enum_Rep (LP_Max_Read_Packet);
-      DSIHOST_Periph.DSI_CMCR.ARE :=
-        Boolean'Enum_Rep (Acknowledge_Request);
+      DSIHOST_Periph.DSI_CMCR.GSW0TX := LP_Gen_Short_Write_No_P;
+      DSIHOST_Periph.DSI_CMCR.GSW1TX := LP_Gen_Short_Write_One_P;
+      DSIHOST_Periph.DSI_CMCR.GSW2TX := LP_Gen_Short_Write_Two_P;
+      DSIHOST_Periph.DSI_CMCR.GSR0TX := LP_Gen_Short_Read_No_P;
+      DSIHOST_Periph.DSI_CMCR.GSR1TX := LP_Gen_Short_Read_One_P;
+      DSIHOST_Periph.DSI_CMCR.GSR2TX := LP_Gen_Short_Read_Two_P;
+      DSIHOST_Periph.DSI_CMCR.GLWTX := LP_Gen_Long_Write;
+      DSIHOST_Periph.DSI_CMCR.DSW0TX := LP_DCS_Short_Write_No_P;
+      DSIHOST_Periph.DSI_CMCR.DSW1TX := LP_DCS_Short_Write_One_P;
+      DSIHOST_Periph.DSI_CMCR.DSR0TX := LP_DCS_Short_Read_No_P;
+      DSIHOST_Periph.DSI_CMCR.DLWTX := LP_DCS_Long_Write;
+      DSIHOST_Periph.DSI_CMCR.MRDPS := LP_Max_Read_Packet;
+      DSIHOST_Periph.DSI_CMCR.ARE := Acknowledge_Request;
 
    end DSI_Setup_Command;
 
@@ -398,15 +420,15 @@ package body STM32.DSI is
       DSIHOST_Periph.DSI_PCR := (others =>  <>);
       case Flow_Control is
          when Flow_Control_CRC_RX =>
-            DSIHOST_Periph.DSI_PCR.CRCRXE := 1;
+            DSIHOST_Periph.DSI_PCR.CRCRXE := True;
          when Flow_Control_ECC_RX =>
-            DSIHOST_Periph.DSI_PCR.ECCRXE := 1;
+            DSIHOST_Periph.DSI_PCR.ECCRXE := True;
          when Flow_Control_BTA =>
-            DSIHOST_Periph.DSI_PCR.BTAE := 1;
+            DSIHOST_Periph.DSI_PCR.BTAE := True;
          when Flow_Control_EOTP_RX =>
-            DSIHOST_Periph.DSI_PCR.ETRXE := 1;
+            DSIHOST_Periph.DSI_PCR.ETRXE := True;
          when Flow_Control_EOTP_TX =>
-            DSIHOST_Periph.DSI_PCR.ETTXE := 1;
+            DSIHOST_Periph.DSI_PCR.ETTXE := True;
       end case;
    end DSI_Setup_Flow_Control;
 
@@ -417,9 +439,9 @@ package body STM32.DSI is
    procedure DSI_Start is
    begin
       --  Enable the DSI Host
-      DSIHOST_Periph.DSI_CR.EN := 1;
+      DSIHOST_Periph.DSI_CR.EN := True;
       --  Enable the DSI wrapper
-      DSIHOST_Periph.DSI_WCR.DSIEN := 1;
+      DSIHOST_Periph.DSI_WCR.DSIEN := True;
    end DSI_Start;
 
    --------------
@@ -429,9 +451,9 @@ package body STM32.DSI is
    procedure DSI_Stop is
    begin
       --  Disable the DSI Host
-      DSIHOST_Periph.DSI_CR.EN := 0;
+      DSIHOST_Periph.DSI_CR.EN := False;
       --  Disable the DSI wrapper
-      DSIHOST_Periph.DSI_WCR.DSIEN := 0;
+      DSIHOST_Periph.DSI_WCR.DSIEN := False;
    end DSI_Stop;
 
    -----------------
@@ -441,7 +463,7 @@ package body STM32.DSI is
    procedure DSI_Refresh
    is
    begin
-      DSIHOST_Periph.DSI_WCR.LTDCEN := 1;
+      DSIHOST_Periph.DSI_WCR.LTDCEN := True;
    end DSI_Refresh;
    ---------------------
    -- DSI_Short_Write --
@@ -457,7 +479,7 @@ package body STM32.DSI is
    begin
       --  Wait for FIFO empty
       Start := Clock;
-      while DSIHOST_Periph.DSI_GPSR.CMDFE = 0 loop
+      while not DSIHOST_Periph.DSI_GPSR.CMDFE loop
          if Clock > Start + Milliseconds (1000) then
             raise Program_Error with
               "Timeout while waiting for DSI FIFO empty";
@@ -488,15 +510,15 @@ package body STM32.DSI is
    begin
       --  Wait for FIFO empty
       Start := Clock;
-      while DSIHOST_Periph.DSI_GPSR.CMDFE = 0 loop
+      while not DSIHOST_Periph.DSI_GPSR.CMDFE loop
          if Clock > Start + Milliseconds (1000) then
             raise Program_Error with
               "Timeout while waiting for DSI FIFO empty";
          end if;
       end loop;
 
-      Value.Arr (0) := Param1;
-      Off   := 1;
+      Value.Arr (Value.Arr'First) := Param1;
+      Off   := Value.Arr'First + 1;
 
       for Param of Parameters loop
          Value.Arr (Off) := Param;
@@ -504,11 +526,11 @@ package body STM32.DSI is
          if Off > Value.Arr'Last then
             DSIHOST_Periph.DSI_GPDR := Value;
             Value.Val := 0;
-            Off       := 0;
+            Off       := Value.Arr'First;
          end if;
       end loop;
 
-      if Off /= 0 then
+      if Off /= Value.Arr'First then
          DSIHOST_Periph.DSI_GPDR := Value;
       end if;
 

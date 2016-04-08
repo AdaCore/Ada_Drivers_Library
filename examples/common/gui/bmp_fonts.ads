@@ -39,7 +39,7 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with STM32;  use STM32;
+with Interfaces.Bit_Types; use Interfaces.Bit_Types;
 
 package BMP_Fonts is
 
@@ -49,12 +49,12 @@ package BMP_Fonts is
      (Font          : BMP_Font;
       C             : Character;
       Height_Offset : Natural)
-      return Half_Word with Inline;
+      return Short with Inline;
    --  Provides the numeric data values representing individual characters. For
    --  the given font and character within that font, returns the numeric value
    --  representing the bits at the Height_Offset within the representation.
 
-   function Mask (Font : BMP_Font; Width_Offset : Natural) return Half_Word
+   function Mask (Font : BMP_Font; Width_Offset : Natural) return Short
      with Inline;
    --  Provides the mask value used to test individual bits in the data
    --  values representing individual characters. For example, to see if bit W

@@ -32,6 +32,7 @@
 --  This file provides declarations for devices on the STM32F469x and
 --  STM32F479x MCUs manufactured by ST Microelectronics.
 
+with STM32_SVD;     use STM32_SVD;
 with STM32_SVD.I2C;
 with STM32_SVD.DMA;
 
@@ -261,9 +262,12 @@ package STM32.Device is
    PK14 : constant GPIO_Point := (GPIO_K'Access, 14);
    PK15 : constant GPIO_Point := (GPIO_K'Access, 15);
 
-   ADC_1 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC1_Base;
-   ADC_2 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC2_Base;
-   ADC_3 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC3_Base;
+   ADC_1 : aliased Analog_To_Digital_Converter
+     with Import, Volatile, Address => ADC1_Base;
+   ADC_2 : aliased Analog_To_Digital_Converter
+     with Import, Volatile, Address => ADC2_Base;
+   ADC_3 : aliased Analog_To_Digital_Converter
+     with Import, Volatile, Address => ADC3_Base;
 
    VBat               : constant ADC_Point := (ADC_1'Access, Channel => VBat_Channel);
    Temperature_Sensor : constant ADC_Point := VBat;
@@ -381,15 +385,15 @@ package STM32.Device is
 
    function System_Clock_Frequencies return RCC_System_Clocks;
 
-   type PLLSAI_DivR is new STM32_SVD.UInt2;
+   type PLLSAI_DivR is new UInt2;
    PLLSAI_DIV2  : constant PLLSAI_DivR := 0;
    PLLSAI_DIV4  : constant PLLSAI_DivR := 1;
    PLLSAI_DIV8  : constant PLLSAI_DivR := 2;
    PLLSAI_DIV16 : constant PLLSAI_DivR := 3;
 
    procedure Set_PLLSAI_Factors
-     (LCD  : STM32_SVD.UInt3;
-      VCO  : STM32_SVD.UInt9;
+     (LCD  : UInt3;
+      VCO  : UInt9;
       DivR : PLLSAI_DivR);
 
    procedure Enable_PLLSAI;

@@ -6,6 +6,8 @@ package STM32.SDRAM is
 
    function Base_Address return System.Address;
 
-   function Reserve (Amount : Word) return System.Address;
+   function Reserve
+     (Amount : Word;
+      Align  : Word := Standard'Maximum_Alignment) return System.Address;
 
 end STM32.SDRAM;

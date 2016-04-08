@@ -1,13 +1,13 @@
---  Automatically generated from STM32F429x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F429x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.I2C is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,57 +17,42 @@ package STM32_SVD.I2C is
    -- CR1_Register --
    ------------------
 
-   subtype CR1_PE_Field is STM32_SVD.Bit;
-   subtype CR1_SMBUS_Field is STM32_SVD.Bit;
-   subtype CR1_SMBTYPE_Field is STM32_SVD.Bit;
-   subtype CR1_ENARP_Field is STM32_SVD.Bit;
-   subtype CR1_ENPEC_Field is STM32_SVD.Bit;
-   subtype CR1_ENGC_Field is STM32_SVD.Bit;
-   subtype CR1_NOSTRETCH_Field is STM32_SVD.Bit;
-   subtype CR1_START_Field is STM32_SVD.Bit;
-   subtype CR1_STOP_Field is STM32_SVD.Bit;
-   subtype CR1_ACK_Field is STM32_SVD.Bit;
-   subtype CR1_POS_Field is STM32_SVD.Bit;
-   subtype CR1_PEC_Field is STM32_SVD.Bit;
-   subtype CR1_ALERT_Field is STM32_SVD.Bit;
-   subtype CR1_SWRST_Field is STM32_SVD.Bit;
-
    --  Control register 1
    type CR1_Register is record
       --  Peripheral enable
-      PE             : CR1_PE_Field := 16#0#;
+      PE             : Boolean := False;
       --  SMBus mode
-      SMBUS          : CR1_SMBUS_Field := 16#0#;
+      SMBUS          : Boolean := False;
       --  unspecified
-      Reserved_2_2   : STM32_SVD.Bit := 16#0#;
+      Reserved_2_2   : Interfaces.Bit_Types.Bit := 16#0#;
       --  SMBus type
-      SMBTYPE        : CR1_SMBTYPE_Field := 16#0#;
+      SMBTYPE        : Boolean := False;
       --  ARP enable
-      ENARP          : CR1_ENARP_Field := 16#0#;
+      ENARP          : Boolean := False;
       --  PEC enable
-      ENPEC          : CR1_ENPEC_Field := 16#0#;
+      ENPEC          : Boolean := False;
       --  General call enable
-      ENGC           : CR1_ENGC_Field := 16#0#;
+      ENGC           : Boolean := False;
       --  Clock stretching disable (Slave mode)
-      NOSTRETCH      : CR1_NOSTRETCH_Field := 16#0#;
+      NOSTRETCH      : Boolean := False;
       --  Start generation
-      START          : CR1_START_Field := 16#0#;
+      START          : Boolean := False;
       --  Stop generation
-      STOP           : CR1_STOP_Field := 16#0#;
+      STOP           : Boolean := False;
       --  Acknowledge enable
-      ACK            : CR1_ACK_Field := 16#0#;
+      ACK            : Boolean := False;
       --  Acknowledge/PEC Position (for data reception)
-      POS            : CR1_POS_Field := 16#0#;
+      POS            : Boolean := False;
       --  Packet error checking
-      PEC            : CR1_PEC_Field := 16#0#;
+      PEC            : Boolean := False;
       --  SMBus alert
-      ALERT          : CR1_ALERT_Field := 16#0#;
+      ALERT          : Boolean := False;
       --  unspecified
-      Reserved_14_14 : STM32_SVD.Bit := 16#0#;
+      Reserved_14_14 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Software reset
-      SWRST          : CR1_SWRST_Field := 16#0#;
+      SWRST          : Boolean := False;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -96,31 +81,26 @@ package STM32_SVD.I2C is
    -- CR2_Register --
    ------------------
 
-   subtype CR2_FREQ_Field is STM32_SVD.UInt6;
-   subtype CR2_ITERREN_Field is STM32_SVD.Bit;
-   subtype CR2_ITEVTEN_Field is STM32_SVD.Bit;
-   subtype CR2_ITBUFEN_Field is STM32_SVD.Bit;
-   subtype CR2_DMAEN_Field is STM32_SVD.Bit;
-   subtype CR2_LAST_Field is STM32_SVD.Bit;
+   subtype CR2_FREQ_Field is Interfaces.Bit_Types.UInt6;
 
    --  Control register 2
    type CR2_Register is record
       --  Peripheral clock frequency
       FREQ           : CR2_FREQ_Field := 16#0#;
       --  unspecified
-      Reserved_6_7   : STM32_SVD.UInt2 := 16#0#;
+      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  Error interrupt enable
-      ITERREN        : CR2_ITERREN_Field := 16#0#;
+      ITERREN        : Boolean := False;
       --  Event interrupt enable
-      ITEVTEN        : CR2_ITEVTEN_Field := 16#0#;
+      ITEVTEN        : Boolean := False;
       --  Buffer interrupt enable
-      ITBUFEN        : CR2_ITBUFEN_Field := 16#0#;
+      ITBUFEN        : Boolean := False;
       --  DMA requests enable
-      DMAEN          : CR2_DMAEN_Field := 16#0#;
+      DMAEN          : Boolean := False;
       --  DMA last transfer
-      LAST           : CR2_LAST_Field := 16#0#;
+      LAST           : Boolean := False;
       --  unspecified
-      Reserved_13_31 : STM32_SVD.UInt19 := 16#0#;
+      Reserved_13_31 : Interfaces.Bit_Types.UInt19 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -140,25 +120,23 @@ package STM32_SVD.I2C is
    -- OAR1_Register --
    -------------------
 
-   subtype OAR1_ADD0_Field is STM32_SVD.Bit;
-   subtype OAR1_ADD7_Field is STM32_SVD.UInt7;
-   subtype OAR1_ADD10_Field is STM32_SVD.UInt2;
-   subtype OAR1_ADDMODE_Field is STM32_SVD.Bit;
+   subtype OAR1_ADD7_Field is Interfaces.Bit_Types.UInt7;
+   subtype OAR1_ADD10_Field is Interfaces.Bit_Types.UInt2;
 
    --  Own address register 1
    type OAR1_Register is record
       --  Interface address
-      ADD0           : OAR1_ADD0_Field := 16#0#;
+      ADD0           : Boolean := False;
       --  Interface address
       ADD7           : OAR1_ADD7_Field := 16#0#;
       --  Interface address
       ADD10          : OAR1_ADD10_Field := 16#0#;
       --  unspecified
-      Reserved_10_14 : STM32_SVD.UInt5 := 16#0#;
+      Reserved_10_14 : Interfaces.Bit_Types.UInt5 := 16#0#;
       --  Addressing mode (slave mode)
-      ADDMODE        : OAR1_ADDMODE_Field := 16#0#;
+      ADDMODE        : Boolean := False;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -176,17 +154,16 @@ package STM32_SVD.I2C is
    -- OAR2_Register --
    -------------------
 
-   subtype OAR2_ENDUAL_Field is STM32_SVD.Bit;
-   subtype OAR2_ADD2_Field is STM32_SVD.UInt7;
+   subtype OAR2_ADD2_Field is Interfaces.Bit_Types.UInt7;
 
    --  Own address register 2
    type OAR2_Register is record
       --  Dual addressing mode enable
-      ENDUAL        : OAR2_ENDUAL_Field := 16#0#;
+      ENDUAL        : Boolean := False;
       --  Interface address
       ADD2          : OAR2_ADD2_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24 := 16#0#;
+      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -201,14 +178,14 @@ package STM32_SVD.I2C is
    -- DR_Register --
    -----------------
 
-   subtype DR_DR_Field is STM32_SVD.Byte;
+   subtype DR_DR_Field is Interfaces.Bit_Types.Byte;
 
    --  Data register
    type DR_Register is record
       --  8-bit data register
       DR            : DR_DR_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24 := 16#0#;
+      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -222,57 +199,42 @@ package STM32_SVD.I2C is
    -- SR1_Register --
    ------------------
 
-   subtype SR1_SB_Field is STM32_SVD.Bit;
-   subtype SR1_ADDR_Field is STM32_SVD.Bit;
-   subtype SR1_BTF_Field is STM32_SVD.Bit;
-   subtype SR1_ADD10_Field is STM32_SVD.Bit;
-   subtype SR1_STOPF_Field is STM32_SVD.Bit;
-   subtype SR1_RxNE_Field is STM32_SVD.Bit;
-   subtype SR1_TxE_Field is STM32_SVD.Bit;
-   subtype SR1_BERR_Field is STM32_SVD.Bit;
-   subtype SR1_ARLO_Field is STM32_SVD.Bit;
-   subtype SR1_AF_Field is STM32_SVD.Bit;
-   subtype SR1_OVR_Field is STM32_SVD.Bit;
-   subtype SR1_PECERR_Field is STM32_SVD.Bit;
-   subtype SR1_TIMEOUT_Field is STM32_SVD.Bit;
-   subtype SR1_SMBALERT_Field is STM32_SVD.Bit;
-
    --  Status register 1
    type SR1_Register is record
-      --  Start bit (Master mode)
-      SB             : SR1_SB_Field := 16#0#;
-      --  Address sent (master mode)/matched (slave mode)
-      ADDR           : SR1_ADDR_Field := 16#0#;
-      --  Byte transfer finished
-      BTF            : SR1_BTF_Field := 16#0#;
-      --  10-bit header sent (Master mode)
-      ADD10          : SR1_ADD10_Field := 16#0#;
-      --  Stop detection (slave mode)
-      STOPF          : SR1_STOPF_Field := 16#0#;
+      --  Read-only. Start bit (Master mode)
+      SB             : Boolean := False;
+      --  Read-only. Address sent (master mode)/matched (slave mode)
+      ADDR           : Boolean := False;
+      --  Read-only. Byte transfer finished
+      BTF            : Boolean := False;
+      --  Read-only. 10-bit header sent (Master mode)
+      ADD10          : Boolean := False;
+      --  Read-only. Stop detection (slave mode)
+      STOPF          : Boolean := False;
       --  unspecified
-      Reserved_5_5   : STM32_SVD.Bit := 16#0#;
-      --  Data register not empty (receivers)
-      RxNE           : SR1_RxNE_Field := 16#0#;
-      --  Data register empty (transmitters)
-      TxE            : SR1_TxE_Field := 16#0#;
+      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
+      --  Read-only. Data register not empty (receivers)
+      RxNE           : Boolean := False;
+      --  Read-only. Data register empty (transmitters)
+      TxE            : Boolean := False;
       --  Bus error
-      BERR           : SR1_BERR_Field := 16#0#;
+      BERR           : Boolean := False;
       --  Arbitration lost (master mode)
-      ARLO           : SR1_ARLO_Field := 16#0#;
+      ARLO           : Boolean := False;
       --  Acknowledge failure
-      AF             : SR1_AF_Field := 16#0#;
+      AF             : Boolean := False;
       --  Overrun/Underrun
-      OVR            : SR1_OVR_Field := 16#0#;
+      OVR            : Boolean := False;
       --  PEC Error in reception
-      PECERR         : SR1_PECERR_Field := 16#0#;
+      PECERR         : Boolean := False;
       --  unspecified
-      Reserved_13_13 : STM32_SVD.Bit := 16#0#;
+      Reserved_13_13 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Timeout or Tlow error
-      TIMEOUT        : SR1_TIMEOUT_Field := 16#0#;
+      TIMEOUT        : Boolean := False;
       --  SMBus alert
-      SMBALERT       : SR1_SMBALERT_Field := 16#0#;
+      SMBALERT       : Boolean := False;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -301,37 +263,30 @@ package STM32_SVD.I2C is
    -- SR2_Register --
    ------------------
 
-   subtype SR2_MSL_Field is STM32_SVD.Bit;
-   subtype SR2_BUSY_Field is STM32_SVD.Bit;
-   subtype SR2_TRA_Field is STM32_SVD.Bit;
-   subtype SR2_GENCALL_Field is STM32_SVD.Bit;
-   subtype SR2_SMBDEFAULT_Field is STM32_SVD.Bit;
-   subtype SR2_SMBHOST_Field is STM32_SVD.Bit;
-   subtype SR2_DUALF_Field is STM32_SVD.Bit;
-   subtype SR2_PEC_Field is STM32_SVD.Byte;
+   subtype SR2_PEC_Field is Interfaces.Bit_Types.Byte;
 
    --  Status register 2
    type SR2_Register is record
-      --  Master/slave
-      MSL            : SR2_MSL_Field;
-      --  Bus busy
-      BUSY           : SR2_BUSY_Field;
-      --  Transmitter/receiver
-      TRA            : SR2_TRA_Field;
+      --  Read-only. Master/slave
+      MSL            : Boolean := False;
+      --  Read-only. Bus busy
+      BUSY           : Boolean := False;
+      --  Read-only. Transmitter/receiver
+      TRA            : Boolean := False;
       --  unspecified
-      Reserved_3_3   : STM32_SVD.Bit;
-      --  General call address (Slave mode)
-      GENCALL        : SR2_GENCALL_Field;
-      --  SMBus device default address (Slave mode)
-      SMBDEFAULT     : SR2_SMBDEFAULT_Field;
-      --  SMBus host header (Slave mode)
-      SMBHOST        : SR2_SMBHOST_Field;
-      --  Dual flag (Slave mode)
-      DUALF          : SR2_DUALF_Field;
-      --  acket error checking register
-      PEC            : SR2_PEC_Field;
+      Reserved_3_3   : Interfaces.Bit_Types.Bit;
+      --  Read-only. General call address (Slave mode)
+      GENCALL        : Boolean := False;
+      --  Read-only. SMBus device default address (Slave mode)
+      SMBDEFAULT     : Boolean := False;
+      --  Read-only. SMBus host header (Slave mode)
+      SMBHOST        : Boolean := False;
+      --  Read-only. Dual flag (Slave mode)
+      DUALF          : Boolean := False;
+      --  Read-only. acket error checking register
+      PEC            : SR2_PEC_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short;
+      Reserved_16_31 : Interfaces.Bit_Types.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -353,22 +308,20 @@ package STM32_SVD.I2C is
    -- CCR_Register --
    ------------------
 
-   subtype CCR_CCR_Field is STM32_SVD.UInt12;
-   subtype CCR_DUTY_Field is STM32_SVD.Bit;
-   subtype CCR_F_S_Field is STM32_SVD.Bit;
+   subtype CCR_CCR_Field is Interfaces.Bit_Types.UInt12;
 
    --  Clock control register
    type CCR_Register is record
       --  Clock control register in Fast/Standard mode (Master mode)
       CCR            : CCR_CCR_Field := 16#0#;
       --  unspecified
-      Reserved_12_13 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_12_13 : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  Fast mode duty cycle
-      DUTY           : CCR_DUTY_Field := 16#0#;
+      DUTY           : Boolean := False;
       --  I2C master mode selection
-      F_S            : CCR_F_S_Field := 16#0#;
+      F_S            : Boolean := False;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -385,14 +338,14 @@ package STM32_SVD.I2C is
    -- TRISE_Register --
    --------------------
 
-   subtype TRISE_TRISE_Field is STM32_SVD.UInt6;
+   subtype TRISE_TRISE_Field is Interfaces.Bit_Types.UInt6;
 
    --  TRISE register
    type TRISE_Register is record
       --  Maximum rise time in Fast/Standard mode (Master mode)
       TRISE         : TRISE_TRISE_Field := 16#2#;
       --  unspecified
-      Reserved_6_31 : STM32_SVD.UInt26 := 16#0#;
+      Reserved_6_31 : Interfaces.Bit_Types.UInt26 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -443,14 +396,14 @@ package STM32_SVD.I2C is
 
    --  Inter-integrated circuit
    I2C1_Periph : aliased I2C_Peripheral
-     with Import, Address => System'To_Address (16#40005400#);
+     with Import, Address => I2C1_Base;
 
    --  Inter-integrated circuit
    I2C2_Periph : aliased I2C_Peripheral
-     with Import, Address => System'To_Address (16#40005800#);
+     with Import, Address => I2C2_Base;
 
    --  Inter-integrated circuit
    I2C3_Periph : aliased I2C_Peripheral
-     with Import, Address => System'To_Address (16#40005C00#);
+     with Import, Address => I2C3_Base;
 
 end STM32_SVD.I2C;

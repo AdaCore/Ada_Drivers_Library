@@ -1,0 +1,17 @@
+library project STM32F4_Discovery extends "../ARM/STM32/stm32f40x.gpr" is
+
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
+
+   for Runtime ("Ada") use RTS & "-stm32f4";
+
+   for Library_Name use "stm32f4disco";
+   for Library_Kind use "static";
+   for Library_Dir use "lib/stm32f4";
+   for Object_Dir use "obj/stm32f4";
+
+   for Source_Dirs use
+     ("stm32f4_discovery",
+      "../components/gyro/lis3dsh");
+
+end STM32F4_Discovery;

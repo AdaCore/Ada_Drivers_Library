@@ -81,6 +81,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
+with System;         use System;
 with Ada.Real_Time;  use Ada.Real_Time;
 
 with STM32.Device;
@@ -156,7 +157,7 @@ package STM32.DMA is
       Stream      : DMA_Stream_Selector;
       Source      : Address;
       Destination : Address;
-      Data_Count  : Half_Word)
+      Data_Count  : Short)
      with
        Pre =>
          not Enabled (Unit, Stream) and
@@ -195,7 +196,7 @@ package STM32.DMA is
       Stream      : DMA_Stream_Selector;
       Source      : Address;
       Destination : Address;
-      Data_Count  : Half_Word)
+      Data_Count  : Short)
      with
        Pre  =>
          Valid_Addresses (Source, Destination) and
@@ -223,7 +224,7 @@ package STM32.DMA is
       Stream             : DMA_Stream_Selector;
       Source             : Address;
       Destination        : Address;
-      Data_Count         : Half_Word;
+      Data_Count         : Short;
       Enabled_Interrupts : Interrupt_Selections := (others => True))
      with
        Pre =>
@@ -272,7 +273,7 @@ package STM32.DMA is
    procedure Set_Counter
      (Unit       : DMA_Controller;
       Stream     : DMA_Stream_Selector;
-      Data_Count : Half_Word)
+      Data_Count : Short)
      with
        Pre  => not Enabled (Unit, Stream),
        Post => Current_Counter (Unit, Stream) = Data_Count,
@@ -285,7 +286,7 @@ package STM32.DMA is
    function Current_Counter
      (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector)
-      return Half_Word
+      return Short
      with Inline;
    --  Returns the number of remaining data units to be transferred
 

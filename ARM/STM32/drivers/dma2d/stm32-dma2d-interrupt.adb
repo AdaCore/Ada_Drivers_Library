@@ -29,8 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with Ada.Interrupts.Names;
+
 with STM32_SVD.DMA2D;      use STM32_SVD.DMA2D;
-with STM32_SVD.Interrupts; use STM32_SVD.Interrupts;
 
 package body STM32.DMA2D.Interrupt is
 
@@ -41,7 +42,7 @@ package body STM32.DMA2D.Interrupt is
       procedure Start_Transfer;
 
       procedure Interrupt;
-      pragma Attach_Handler (Interrupt, STM32_SVD.Interrupts.DMA2D_Interrupt);
+      pragma Attach_Handler (Interrupt, Ada.Interrupts.Names.DMA2D_Interrupt);
 
    private
       Ready : Boolean := True;
@@ -72,11 +73,11 @@ package body STM32.DMA2D.Interrupt is
          Ready := False;
          Error := False;
 
-         DMA2D_Periph.CR.CEIE := 1;
-         DMA2D_Periph.CR.TCIE := 1;
-         DMA2D_Periph.CR.TEIE := 1;
+         DMA2D_Periph.CR.CEIE := True;
+         DMA2D_Periph.CR.TCIE := True;
+         DMA2D_Periph.CR.TEIE := True;
 
-         DMA2D_Periph.CR.START := DMA2D_START'Enum_Rep (Start);
+         DMA2D_Periph.CR.START := True;
       end Start_Transfer;
 
       ---------------
@@ -85,16 +86,16 @@ package body STM32.DMA2D.Interrupt is
 
       procedure Interrupt is
       begin
-         if DMA2D_Periph.ISR.CEIF = 1 or DMA2D_Periph.ISR.TEIF = 1 then
+         if DMA2D_Periph.ISR.CEIF or DMA2D_Periph.ISR.TEIF then
             --  Conf or transfer error
-            DMA2D_Periph.IFCR.CCEIF := 1;
-            DMA2D_Periph.IFCR.CTEIF := 1;
+            DMA2D_Periph.IFCR.CCEIF := True;
+            DMA2D_Periph.IFCR.CTEIF := True;
             Error := True;
             Ready := True;
 
-         elsif DMA2D_Periph.ISR.TCIF = 1 then
+         elsif DMA2D_Periph.ISR.TCIF then
             --  Transfer completed
-            DMA2D_Periph.IFCR.CTCIF := 1;
+            DMA2D_Periph.IFCR.CTCIF := True;
             Error := False;
             Ready := True;
 

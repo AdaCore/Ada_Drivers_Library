@@ -146,16 +146,20 @@ package body LCD_Std_Out is
    -- Draw_Char --
    ---------------
 
-   procedure Draw_Char (X, Y : Natural; Msg : Character) is
+   procedure Draw_Char (X, Y : Natural; Msg : Character)
+   is
+      Buff : constant Graphics_Buffer := Screen_Buffer;
    begin
       Check_Initialized;
       Bitmapped_Drawing.Draw_Char
-        (Screen_Buffer,
+        (Buff,
          Start      => (X, Y),
          Char       => Msg,
          Font       => Current_Font,
-         Foreground => Current_Text_Color,
-         Background => Current_Background_Color);
+         Foreground =>
+           STM32.DMA2D.DMA2D_Color_To_Word (Buff, Current_Text_Color),
+         Background =>
+           STM32.DMA2D.DMA2D_Color_To_Word (Buff, Current_Background_Color));
    end Draw_Char;
 
    ---------

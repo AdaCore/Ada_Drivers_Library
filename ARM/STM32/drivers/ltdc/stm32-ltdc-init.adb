@@ -1,4 +1,4 @@
-with STM32_SVD.Interrupts;
+with Ada.Interrupts.Names;
 
 separate (STM32.LTDC)
 package body Init is
@@ -12,8 +12,8 @@ package body Init is
       Inverted_Input_Pixel_Clock) with Size => 1;
    pragma Warnings (On, "* is not referenced");
 
-   function To_Bit is new Ada.Unchecked_Conversion (LCD_Polarity, Bit);
-   function To_Bit is new Ada.Unchecked_Conversion (LCD_PC_Polarity, Bit);
+   function To_Bool is new Ada.Unchecked_Conversion (LCD_Polarity, Boolean);
+   function To_Bool is new Ada.Unchecked_Conversion (LCD_PC_Polarity, Boolean);
 
    --  Extracted from STM32F429x.LTDC
    type Layer_Type is record
@@ -77,7 +77,7 @@ package body Init is
 
       procedure Interrupt;
       pragma Attach_Handler
-        (Interrupt, STM32_SVD.Interrupts.LCD_TFT_Interrupt);
+        (Interrupt, Ada.Interrupts.Names.LCD_TFT_Interrupt);
    private
       Not_Pending : Boolean := True;
       Buffers     : Pending_Buffers := (others => 0);
@@ -94,7 +94,7 @@ package body Init is
       is
       begin
          Not_Pending := False;
-         LTDC_Periph.IER.LIE := 1;
+         LTDC_Periph.IER.LIE := True;
          LTDC_Periph.LIPCR.LIPOS := 0;
          Buffers (Layer) := Buffer;
       end Set_Pending;
@@ -114,7 +114,7 @@ package body Init is
 
       procedure Apply_Immediate is
       begin
-         LTDC_Periph.IER.LIE := 0;
+         LTDC_Periph.IER.LIE := False;
 
          if Buffers (Layer1) /= 0 then
             LTDC_Periph.L1CFBAR := Buffers (Layer1);
@@ -126,13 +126,13 @@ package body Init is
             Buffers (Layer2) := 0;
          end if;
 
-         LTDC_Periph.SRCR.IMR := 1;
+         LTDC_Periph.SRCR.IMR := True;
          loop
-            exit when LTDC_Periph.SRCR.IMR = 0;
+            exit when not LTDC_Periph.SRCR.IMR;
          end loop;
 
          Not_Pending := True;
-         LTDC_Periph.IER.LIE := 1;
+         LTDC_Periph.IER.LIE := True;
       end Apply_Immediate;
 
       ---------------
@@ -142,8 +142,8 @@ package body Init is
       procedure Interrupt
       is
       begin
-         LTDC_Periph.IER.LIE := 0;
-         LTDC_Periph.ICR.CLIF  := 1;
+         LTDC_Periph.IER.LIE := False;
+         LTDC_Periph.ICR.CLIF  := True;
 
          Apply_Immediate;
       end Interrupt;
@@ -200,7 +200,6 @@ package body Init is
       State : Boolean)
    is
       L   : constant Layer_Access := Get_Layer (Layer);
-      Val : constant Bit := (if State then 1 else 0);
    begin
       if State and then Frame_Buffer_Array (Layer) = Null_Address then
          Frame_Buffer_Array (Layer) := STM32.SDRAM.Reserve
@@ -208,12 +207,11 @@ package body Init is
          Set_Layer_CFBA (Layer, Frame_Buffer_Array (Layer));
       end if;
 
-      if L.LCR.LEN /= Val then
-         L.LCR.LEN := Val;
+      if L.LCR.LEN /= State then
+         L.LCR.LEN := State;
          Reload_Config (Immediate => True);
       else
-
-         L.LCR.LEN := (if state then 1 else 0);
+         L.LCR.LEN := State;
       end if;
    end Set_Layer_State;
 
@@ -239,12 +237,12 @@ package body Init is
       DivR_Val : PLLSAI_DivR;
 
    begin
-      RCC_Periph.APB2ENR.LTDCEN := 1;
+      RCC_Periph.APB2ENR.LTDCEN := True;
 
-      LTDC_Periph.GCR.VSPOL := To_Bit (Polarity_Active_Low);
-      LTDC_Periph.GCR.HSPOL := To_Bit (Polarity_Active_Low);
-      LTDC_Periph.GCR.DEPOL := To_Bit (Polarity_Active_Low);
-      LTDC_Periph.GCR.PCPOL := To_Bit (Input_Pixel_Clock);
+      LTDC_Periph.GCR.VSPOL := To_Bool (Polarity_Active_Low);
+      LTDC_Periph.GCR.HSPOL := To_Bool (Polarity_Active_Low);
+      LTDC_Periph.GCR.DEPOL := To_Bool (Polarity_Active_Low);
+      LTDC_Periph.GCR.PCPOL := To_Bool (Input_Pixel_Clock);
 
       if DivR = 2 then
          DivR_Val := PLLSAI_DIV2;
@@ -296,7 +294,7 @@ package body Init is
 
       Reload_Config (True);
 
-      LTDC_Periph.GCR.LTDCEN := 1;
+      LTDC_Periph.GCR.LTDCEN := True;
    end LTDC_Init;
 
    -----------------

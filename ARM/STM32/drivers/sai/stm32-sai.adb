@@ -1,9 +1,58 @@
-with Ada.Real_Time; use Ada.Real_Time;
+------------------------------------------------------------------------------
+--                                                                          --
+--                    Copyright (C) 2016, AdaCore                           --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of STMicroelectronics nor the names of its       --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+--                                                                          --
+--  This file is based on:                                                  --
+--                                                                          --
+--   @file    stm32f7xx_hal_sai.c                                           --
+--   @author  MCD Application Team                                          --
+--   @version V1.0.2                                                        --
+--   @date    21-September-2015                                             --
+--   @brief   This file provides firmware functions to manage the following --
+--            functionalities of the Serial Audio Interface (SAI)           --
+--            peripheral:                                                   --
+--             + Initialization/de-initialization functions                 --
+--             + I/O operation functions                                    --
+--             + Peripheral Control functions                               --
+--             + Peripheral State functions                                 --
+--                                                                          --
+--   COPYRIGHT(c) 2015 STMicroelectronics                                   --
+------------------------------------------------------------------------------
 
-with STM32.Device;  use STM32.Device;
+with System; use System;
+with Ada.Real_Time;             use Ada.Real_Time;
 
-with STM32_SVD.SAI; use STM32_SVD.SAI;
-with STM32_SVD.RCC; use STM32_SVD.RCC;
+with STM32.Device;              use STM32.Device;
+
+with STM32_SVD;                 use STM32_SVD;
+with STM32_SVD.SAI;             use STM32_SVD.SAI;
+with STM32_SVD.RCC;             use STM32_SVD.RCC;
 
 package body STM32.SAI is
 
@@ -23,7 +72,7 @@ package body STM32.SAI is
       --  AClear flag register
       CLRFR : ACLRFR_Register;
       --  AData register
-      DR    : STM32_SVD.Word;
+      DR    : Word;
    end record with Volatile;
    for Block_Registers use record
       CR1   at 0 range 0 .. 31;
@@ -86,7 +135,7 @@ package body STM32.SAI is
            with "External PLL SAI source clock unsupported";
       end if;
 
-      if RCC_Periph.PLLCFGR.PLLSRC = 0 then
+      if not RCC_Periph.PLLCFGR.PLLSRC then
          --  PLLSAI SRC is HSI
          VCO_Input := HSI_VALUE / Word (RCC_Periph.PLLCFGR.PLLM);
       else
@@ -129,10 +178,10 @@ package body STM32.SAI is
       Start      : Time;
    begin
       --  Disable SAI
-      Block_Regs.CR1.SAIAEN := 0;
+      Block_Regs.CR1.SAIAEN := False;
 
       Start := Clock;
-      while Block_Regs.CR1.SAIAEN /= 0 loop
+      while Block_Regs.CR1.SAIAEN loop
          if Start + Seconds(1) < Clock then
             raise Constraint_Error with "Cannot reset the SAI peripheral";
          end if;
@@ -143,9 +192,9 @@ package body STM32.SAI is
       Block_Regs.CLRFR :=
         (Reserved_3_3 => 0,
          Reserved_7_31 => 0,
-         others        => 1);
+         others        => True);
       --  Flush the FIFO
-      Block_Regs.CR2.FFLUS := 1;
+      Block_Regs.CR2.FFLUS := True;
    end Deinitialize;
 
    -------------
@@ -158,7 +207,7 @@ package body STM32.SAI is
       Block_Regs : constant Block_Registers_Access :=
                      Get_Block (Periph, Block);
    begin
-      return Block_Regs.CR1.SAIAEN = 1;
+      return Block_Regs.CR1.SAIAEN;
    end Enabled;
 
    ------------
@@ -172,7 +221,7 @@ package body STM32.SAI is
       Block_Regs : constant Block_Registers_Access :=
                      Get_Block (Periph, Block);
    begin
-      Block_Regs.CR1.SAIAEN := 1;
+      Block_Regs.CR1.SAIAEN := True;
    end Enable;
 
    -------------
@@ -186,7 +235,7 @@ package body STM32.SAI is
       Block_Regs : constant Block_Registers_Access :=
                      Get_Block (Periph, Block);
    begin
-      Block_Regs.CR1.SAIAEN := 0;
+      Block_Regs.CR1.SAIAEN := False;
    end Disable;
 
    ----------------
@@ -200,7 +249,7 @@ package body STM32.SAI is
       Block_Regs : constant Block_Registers_Access :=
                      Get_Block (Periph, Block);
    begin
-      Block_Regs.CR1.DMAEN := 1;
+      Block_Regs.CR1.DMAEN := True;
    end Enable_DMA;
 
    ---------------------------
@@ -250,19 +299,19 @@ package body STM32.SAI is
         (MODE     => SAI_Audio_Mode'Enum_Rep (Mode),
          PRTCFG   => SAI_Protocol_Configuration'Enum_Rep (Protocol),
          DS       => SAI_Data_Size'Enum_Rep (Data_Size),
-         LSBFIRST => SAI_Endianness'Enum_Rep (Endianness),
-         CKSTR    => SAI_Clock_Strobing_Edge'Enum_Rep (Clock_Strobing),
+         LSBFIRST => Endianness = Data_LSB_First,
+         CKSTR    => Clock_Strobing = Clock_Strobing_Rising_Edge,
          SYNCEN   => SAI_Synchronization'Enum_Rep (Synchronization),
-         MONO     => SAI_Mono_Stereo_Mode'Enum_Rep (Stereo_Mode),
-         OutDri   => SAI_Output_Drive'Enum_Rep (Output_Drive),
-         SAIAEN   => 0,
-         DMAEN    => 0,
-         NODIV    => Boolean'Enum_Rep (not MCD_Enabled),
+         MONO     => Stereo_Mode = Mono,
+         OutDri   => Output_Drive = Drive_Immediate,
+         SAIAEN   => False,
+         DMAEN    => False,
+         NODIV    => not MCD_Enabled,
          MCJDIV   => UInt4 (Mckdiv),
          others   => <>);
       Block_Reg.CR2.FTH   := SAI_FIFO_Threshold'Enum_Rep (FIFO_Threshold);
-      Block_Reg.CR2.FFLUS := 0;
-      Block_Reg.CR2.TRIS  := SAI_Tristate_Management'Enum_Rep (Tristate_Mgt);
+      Block_Reg.CR2.FFLUS := False;
+      Block_Reg.CR2.TRIS  := Tristate_Mgt = SD_Line_Released;
       Block_Reg.CR2.COMP  := SAI_Companding_Mode'Enum_Rep (Companding_Mode);
    end Configure_Audio_Block;
 
@@ -284,9 +333,9 @@ package body STM32.SAI is
       Block_Reg.FRCR :=
         (FRL   => Frame_Length - 1,
          FSALL => Frame_Active - 1,
-         FSDEF => SAI_Frame_Synchronization'Enum_Rep (Frame_Sync),
-         FSPOL => SAI_Frame_Sync_Polarity'Enum_Rep (FS_Polarity),
-         FSOFF => SAI_Frame_Sync_Offset'Enum_Rep (FS_Offset),
+         FSDEF => Frame_Sync = FS_Frame_And_Channel_Identification,
+         FSPOL => FS_Polarity = FS_Active_High,
+         FSOFF => FS_Offset = Before_First_Bit,
          others => <>);
    end Configure_Block_Frame;
 

@@ -1,13 +1,13 @@
---  Automatically generated from STM32F7x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F7x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.LPTIM is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,32 +17,24 @@ package STM32_SVD.LPTIM is
    -- ISR_Register --
    ------------------
 
-   subtype ISR_CMPM_Field is STM32_SVD.Bit;
-   subtype ISR_ARRM_Field is STM32_SVD.Bit;
-   subtype ISR_EXTTRIG_Field is STM32_SVD.Bit;
-   subtype ISR_CMPOK_Field is STM32_SVD.Bit;
-   subtype ISR_ARROK_Field is STM32_SVD.Bit;
-   subtype ISR_UP_Field is STM32_SVD.Bit;
-   subtype ISR_DOWN_Field is STM32_SVD.Bit;
-
    --  Interrupt and Status Register
    type ISR_Register is record
-      --  Compare match
-      CMPM          : ISR_CMPM_Field;
-      --  Autoreload match
-      ARRM          : ISR_ARRM_Field;
-      --  External trigger edge event
-      EXTTRIG       : ISR_EXTTRIG_Field;
-      --  Compare register update OK
-      CMPOK         : ISR_CMPOK_Field;
-      --  Autoreload register update OK
-      ARROK         : ISR_ARROK_Field;
-      --  Counter direction change down to up
-      UP            : ISR_UP_Field;
-      --  Counter direction change up to down
-      DOWN          : ISR_DOWN_Field;
+      --  Read-only. Compare match
+      CMPM          : Boolean := False;
+      --  Read-only. Autoreload match
+      ARRM          : Boolean := False;
+      --  Read-only. External trigger edge event
+      EXTTRIG       : Boolean := False;
+      --  Read-only. Compare register update OK
+      CMPOK         : Boolean := False;
+      --  Read-only. Autoreload register update OK
+      ARROK         : Boolean := False;
+      --  Read-only. Counter direction change down to up
+      UP            : Boolean := False;
+      --  Read-only. Counter direction change up to down
+      DOWN          : Boolean := False;
       --  unspecified
-      Reserved_7_31 : STM32_SVD.UInt25;
+      Reserved_7_31 : Interfaces.Bit_Types.UInt25;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -62,32 +54,24 @@ package STM32_SVD.LPTIM is
    -- ICR_Register --
    ------------------
 
-   subtype ICR_CMPMCF_Field is STM32_SVD.Bit;
-   subtype ICR_ARRMCF_Field is STM32_SVD.Bit;
-   subtype ICR_EXTTRIGCF_Field is STM32_SVD.Bit;
-   subtype ICR_CMPOKCF_Field is STM32_SVD.Bit;
-   subtype ICR_ARROKCF_Field is STM32_SVD.Bit;
-   subtype ICR_UPCF_Field is STM32_SVD.Bit;
-   subtype ICR_DOWNCF_Field is STM32_SVD.Bit;
-
    --  Interrupt Clear Register
    type ICR_Register is record
-      --  compare match Clear Flag
-      CMPMCF        : ICR_CMPMCF_Field := 16#0#;
-      --  Autoreload match Clear Flag
-      ARRMCF        : ICR_ARRMCF_Field := 16#0#;
-      --  External trigger valid edge Clear Flag
-      EXTTRIGCF     : ICR_EXTTRIGCF_Field := 16#0#;
-      --  Compare register update OK Clear Flag
-      CMPOKCF       : ICR_CMPOKCF_Field := 16#0#;
-      --  Autoreload register update OK Clear Flag
-      ARROKCF       : ICR_ARROKCF_Field := 16#0#;
-      --  Direction change to UP Clear Flag
-      UPCF          : ICR_UPCF_Field := 16#0#;
-      --  Direction change to down Clear Flag
-      DOWNCF        : ICR_DOWNCF_Field := 16#0#;
+      --  Write-only. compare match Clear Flag
+      CMPMCF        : Boolean := False;
+      --  Write-only. Autoreload match Clear Flag
+      ARRMCF        : Boolean := False;
+      --  Write-only. External trigger valid edge Clear Flag
+      EXTTRIGCF     : Boolean := False;
+      --  Write-only. Compare register update OK Clear Flag
+      CMPOKCF       : Boolean := False;
+      --  Write-only. Autoreload register update OK Clear Flag
+      ARROKCF       : Boolean := False;
+      --  Write-only. Direction change to UP Clear Flag
+      UPCF          : Boolean := False;
+      --  Write-only. Direction change to down Clear Flag
+      DOWNCF        : Boolean := False;
       --  unspecified
-      Reserved_7_31 : STM32_SVD.UInt25 := 16#0#;
+      Reserved_7_31 : Interfaces.Bit_Types.UInt25 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -107,32 +91,24 @@ package STM32_SVD.LPTIM is
    -- IER_Register --
    ------------------
 
-   subtype IER_CMPMIE_Field is STM32_SVD.Bit;
-   subtype IER_ARRMIE_Field is STM32_SVD.Bit;
-   subtype IER_EXTTRIGIE_Field is STM32_SVD.Bit;
-   subtype IER_CMPOKIE_Field is STM32_SVD.Bit;
-   subtype IER_ARROKIE_Field is STM32_SVD.Bit;
-   subtype IER_UPIE_Field is STM32_SVD.Bit;
-   subtype IER_DOWNIE_Field is STM32_SVD.Bit;
-
    --  Interrupt Enable Register
    type IER_Register is record
       --  Compare match Interrupt Enable
-      CMPMIE        : IER_CMPMIE_Field := 16#0#;
+      CMPMIE        : Boolean := False;
       --  Autoreload match Interrupt Enable
-      ARRMIE        : IER_ARRMIE_Field := 16#0#;
+      ARRMIE        : Boolean := False;
       --  External trigger valid edge Interrupt Enable
-      EXTTRIGIE     : IER_EXTTRIGIE_Field := 16#0#;
+      EXTTRIGIE     : Boolean := False;
       --  Compare register update OK Interrupt Enable
-      CMPOKIE       : IER_CMPOKIE_Field := 16#0#;
+      CMPOKIE       : Boolean := False;
       --  Autoreload register update OK Interrupt Enable
-      ARROKIE       : IER_ARROKIE_Field := 16#0#;
+      ARROKIE       : Boolean := False;
       --  Direction change to UP Interrupt Enable
-      UPIE          : IER_UPIE_Field := 16#0#;
+      UPIE          : Boolean := False;
       --  Direction change to down Interrupt Enable
-      DOWNIE        : IER_DOWNIE_Field := 16#0#;
+      DOWNIE        : Boolean := False;
       --  unspecified
-      Reserved_7_31 : STM32_SVD.UInt25 := 16#0#;
+      Reserved_7_31 : Interfaces.Bit_Types.UInt25 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -152,58 +128,51 @@ package STM32_SVD.LPTIM is
    -- CFGR_Register --
    -------------------
 
-   subtype CFGR_CKSEL_Field is STM32_SVD.Bit;
-   subtype CFGR_CKPOL_Field is STM32_SVD.UInt2;
-   subtype CFGR_CKFLT_Field is STM32_SVD.UInt2;
-   subtype CFGR_TRGFLT_Field is STM32_SVD.UInt2;
-   subtype CFGR_PRESC_Field is STM32_SVD.UInt3;
-   subtype CFGR_TRIGSEL_Field is STM32_SVD.UInt3;
-   subtype CFGR_TRIGEN_Field is STM32_SVD.UInt2;
-   subtype CFGR_TIMOUT_Field is STM32_SVD.Bit;
-   subtype CFGR_WAVE_Field is STM32_SVD.Bit;
-   subtype CFGR_WAVPOL_Field is STM32_SVD.Bit;
-   subtype CFGR_PRELOAD_Field is STM32_SVD.Bit;
-   subtype CFGR_COUNTMODE_Field is STM32_SVD.Bit;
-   subtype CFGR_ENC_Field is STM32_SVD.Bit;
+   subtype CFGR_CKPOL_Field is Interfaces.Bit_Types.UInt2;
+   subtype CFGR_CKFLT_Field is Interfaces.Bit_Types.UInt2;
+   subtype CFGR_TRGFLT_Field is Interfaces.Bit_Types.UInt2;
+   subtype CFGR_PRESC_Field is Interfaces.Bit_Types.UInt3;
+   subtype CFGR_TRIGSEL_Field is Interfaces.Bit_Types.UInt3;
+   subtype CFGR_TRIGEN_Field is Interfaces.Bit_Types.UInt2;
 
    --  Configuration Register
    type CFGR_Register is record
       --  Clock selector
-      CKSEL          : CFGR_CKSEL_Field := 16#0#;
+      CKSEL          : Boolean := False;
       --  Clock Polarity
       CKPOL          : CFGR_CKPOL_Field := 16#0#;
       --  Configurable digital filter for external clock
       CKFLT          : CFGR_CKFLT_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : STM32_SVD.Bit := 16#0#;
+      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
       --  Configurable digital filter for trigger
       TRGFLT         : CFGR_TRGFLT_Field := 16#0#;
       --  unspecified
-      Reserved_8_8   : STM32_SVD.Bit := 16#0#;
+      Reserved_8_8   : Interfaces.Bit_Types.Bit := 16#0#;
       --  Clock prescaler
       PRESC          : CFGR_PRESC_Field := 16#0#;
       --  unspecified
-      Reserved_12_12 : STM32_SVD.Bit := 16#0#;
+      Reserved_12_12 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Trigger selector
       TRIGSEL        : CFGR_TRIGSEL_Field := 16#0#;
       --  unspecified
-      Reserved_16_16 : STM32_SVD.Bit := 16#0#;
+      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
       --  Trigger enable and polarity
       TRIGEN         : CFGR_TRIGEN_Field := 16#0#;
       --  Timeout enable
-      TIMOUT         : CFGR_TIMOUT_Field := 16#0#;
+      TIMOUT         : Boolean := False;
       --  Waveform shape
-      WAVE           : CFGR_WAVE_Field := 16#0#;
+      WAVE           : Boolean := False;
       --  Waveform shape polarity
-      WAVPOL         : CFGR_WAVPOL_Field := 16#0#;
+      WAVPOL         : Boolean := False;
       --  Registers update mode
-      PRELOAD        : CFGR_PRELOAD_Field := 16#0#;
+      PRELOAD        : Boolean := False;
       --  counter mode enabled
-      COUNTMODE      : CFGR_COUNTMODE_Field := 16#0#;
+      COUNTMODE      : Boolean := False;
       --  Encoder mode enable
-      ENC            : CFGR_ENC_Field := 16#0#;
+      ENC            : Boolean := False;
       --  unspecified
-      Reserved_25_31 : STM32_SVD.UInt7 := 16#0#;
+      Reserved_25_31 : Interfaces.Bit_Types.UInt7 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -233,20 +202,16 @@ package STM32_SVD.LPTIM is
    -- CR_Register --
    -----------------
 
-   subtype CR_ENABLE_Field is STM32_SVD.Bit;
-   subtype CR_SNGSTRT_Field is STM32_SVD.Bit;
-   subtype CR_CNTSTRT_Field is STM32_SVD.Bit;
-
    --  Control Register
    type CR_Register is record
       --  LPTIM Enable
-      ENABLE        : CR_ENABLE_Field := 16#0#;
+      ENABLE        : Boolean := False;
       --  LPTIM start in single mode
-      SNGSTRT       : CR_SNGSTRT_Field := 16#0#;
+      SNGSTRT       : Boolean := False;
       --  Timer start in continuous mode
-      CNTSTRT       : CR_CNTSTRT_Field := 16#0#;
+      CNTSTRT       : Boolean := False;
       --  unspecified
-      Reserved_3_31 : STM32_SVD.UInt29 := 16#0#;
+      Reserved_3_31 : Interfaces.Bit_Types.UInt29 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -262,14 +227,14 @@ package STM32_SVD.LPTIM is
    -- CMP_Register --
    ------------------
 
-   subtype CMP_CMP_Field is STM32_SVD.Short;
+   subtype CMP_CMP_Field is Interfaces.Bit_Types.Short;
 
    --  Compare Register
    type CMP_Register is record
       --  Compare value
       CMP            : CMP_CMP_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -283,14 +248,14 @@ package STM32_SVD.LPTIM is
    -- ARR_Register --
    ------------------
 
-   subtype ARR_ARR_Field is STM32_SVD.Short;
+   subtype ARR_ARR_Field is Interfaces.Bit_Types.Short;
 
    --  Autoreload Register
    type ARR_Register is record
       --  Auto reload value
       ARR            : ARR_ARR_Field := 16#1#;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short := 16#0#;
+      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -304,14 +269,14 @@ package STM32_SVD.LPTIM is
    -- CNT_Register --
    ------------------
 
-   subtype CNT_CNT_Field is STM32_SVD.Short;
+   subtype CNT_CNT_Field is Interfaces.Bit_Types.Short;
 
    --  Counter Register
    type CNT_Register is record
-      --  Counter value
-      CNT            : CNT_CNT_Field;
+      --  Read-only. Counter value
+      CNT            : CNT_CNT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : STM32_SVD.Short;
+      Reserved_16_31 : Interfaces.Bit_Types.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -359,6 +324,6 @@ package STM32_SVD.LPTIM is
 
    --  Low power timer
    LPTIM1_Periph : aliased LPTIM1_Peripheral
-     with Import, Address => System'To_Address (16#40002400#);
+     with Import, Address => LPTIM1_Base;
 
 end STM32_SVD.LPTIM;

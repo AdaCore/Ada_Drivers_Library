@@ -1,11 +1,11 @@
 --  Driver for the WM8994 CODEC
 
-with STM32; use STM32;
+with Interfaces; use Interfaces;
 
 generic
 
-   with procedure IO_Write (Reg : Half_Word; Value : Half_Word);
-   with function  IO_Read  (Reg : Half_Word) return Half_Word;
+   with procedure IO_Write (Reg : Unsigned_16; Value : Unsigned_16);
+   with function  IO_Read  (Reg : Unsigned_16) return Unsigned_16;
 
 package WM8994 is
 
@@ -56,17 +56,19 @@ package WM8994 is
    --  is set to default configuration (user should re-Initialize the codec in
    --  order to play again the audio stream).
 
+   subtype Volume_Level is Unsigned_8 range 0 .. 100;
+
    procedure Init (Input     : Input_Device;
                    Output    : Output_Device;
-                   Volume    : Byte;
+                   Volume    : Unsigned_8;
                    Frequency : Audio_Frequency);
 
-   function Read_ID return Half_Word;
+   function Read_ID return Unsigned_16;
    procedure Play;
    procedure Pause;
    procedure Resume;
    procedure Stop (Cmd : Stop_Mode);
-   procedure Set_Volume (Volume : Byte);
+   procedure Set_Volume (Volume : Volume_Level);
    procedure Set_Mute (Cmd : Mute);
    procedure Set_Output_Mode (Device : Output_Device);
    procedure Set_Frequency (Freq : Audio_Frequency);

@@ -56,16 +56,13 @@ package body STM32.FMC is
       SDCR :=
         (RPIPE  =>
            FMC_SDRAM_Read_Pipe_Delay'Enum_Rep (SDRAM_Conf.ReadPipeDelay),
-         RBURST =>
-           FMC_SDRAM_Burst_Read'Enum_Rep (SDRAM_Conf.ReadBurst),
+         RBURST => SDRAM_Conf.ReadBurst = FMC_Read_Burst_Single,
          SDCLK  =>
            FMC_SDRAM_Clock_Configuration'Enum_Rep (SDRAM_Conf.SDClockPeriod),
-         WP     =>
-           FMC_SDRAM_Write_Protection'Enum_Rep (SDRAM_Conf.WriteProtection),
+         WP     => SDRAM_Conf.WriteProtection = FMC_Write_Protection_Enable,
          CAS    =>
            FMC_SDRAM_CAS_Latency'Enum_Rep (SDRAM_Conf.CASLatency),
-         NB     =>
-           FMC_SDRAM_Internal_Banks_Number'Enum_Rep (SDRAM_Conf.InternalBankNumber),
+         NB     => SDRAM_Conf.InternalBankNumber = FMC_InternalBank_Number_4,
          MWID   =>
            FMC_SDRAM_Memory_Bus_Width'Enum_Rep (SDRAM_Conf.SDMemoryDataWidth),
          NR     =>
@@ -91,13 +88,12 @@ package body STM32.FMC is
             FMC_Periph.SDCR1 :=
               (RPIPE  =>
                   FMC_SDRAM_Read_Pipe_Delay'Enum_Rep (SDRAM_Conf.ReadPipeDelay),
-               RBURST =>
-                  FMC_SDRAM_Burst_Read'Enum_Rep (SDRAM_Conf.ReadBurst),
+               RBURST => SDRAM_Conf.ReadBurst = FMC_Read_Burst_Single,
                SDCLK  =>
                   FMC_SDRAM_Clock_Configuration'Enum_Rep (SDRAM_Conf.SDClockPeriod),
-               WP     => 0,
+               WP     => False,
                CAS    => 0,
-               NB     => 0,
+               NB     => False,
                MWID   => 0,
                NR     => 0,
                NC     => 0,
@@ -158,7 +154,7 @@ package body STM32.FMC is
    function FMC_SDRAM_Busy return Boolean
    is
    begin
-      return FMC_Periph.SDSR.BUSY = 1;
+      return FMC_Periph.SDSR.BUSY;
    end FMC_SDRAM_Busy;
 
    --------------------------
@@ -172,9 +168,9 @@ package body STM32.FMC is
    begin
       case Bank is
          when FMC_Bank1_SDRAM =>
-            Val := FMC_Periph.SDSR.MODES.Arr (0);
-         when FMC_Bank2_SDRAM =>
             Val := FMC_Periph.SDSR.MODES.Arr (1);
+         when FMC_Bank2_SDRAM =>
+            Val := FMC_Periph.SDSR.MODES.Arr (2);
       end case;
       return FMC_SDRAM_Status_Mode'Val (Val);
    end FMC_SDRAM_Get_Status;

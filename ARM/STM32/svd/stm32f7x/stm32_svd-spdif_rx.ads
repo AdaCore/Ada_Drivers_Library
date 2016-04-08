@@ -1,13 +1,13 @@
---  Automatically generated from STM32F7x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F7x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.SPDIF_RX is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,52 +17,43 @@ package STM32_SVD.SPDIF_RX is
    -- CR_Register --
    -----------------
 
-   subtype CR_SPDIFEN_Field is STM32_SVD.UInt2;
-   subtype CR_RXDMAEN_Field is STM32_SVD.Bit;
-   subtype CR_RXSTEO_Field is STM32_SVD.Bit;
-   subtype CR_DRFMT_Field is STM32_SVD.UInt2;
-   subtype CR_PMSK_Field is STM32_SVD.Bit;
-   subtype CR_VMSK_Field is STM32_SVD.Bit;
-   subtype CR_CUMSK_Field is STM32_SVD.Bit;
-   subtype CR_PTMSK_Field is STM32_SVD.Bit;
-   subtype CR_CBDMAEN_Field is STM32_SVD.Bit;
-   subtype CR_CHSEL_Field is STM32_SVD.Bit;
-   subtype CR_NBTR_Field is STM32_SVD.UInt2;
-   subtype CR_WFA_Field is STM32_SVD.Bit;
-   subtype CR_INSEL_Field is STM32_SVD.UInt3;
+   subtype CR_SPDIFEN_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_DRFMT_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_NBTR_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_INSEL_Field is Interfaces.Bit_Types.UInt3;
 
    --  Control register
    type CR_Register is record
       --  Peripheral Block Enable
       SPDIFEN        : CR_SPDIFEN_Field := 16#0#;
       --  Receiver DMA ENable for data flow
-      RXDMAEN        : CR_RXDMAEN_Field := 16#0#;
+      RXDMAEN        : Boolean := False;
       --  STerEO Mode
-      RXSTEO         : CR_RXSTEO_Field := 16#0#;
+      RXSTEO         : Boolean := False;
       --  RX Data format
       DRFMT          : CR_DRFMT_Field := 16#0#;
       --  Mask Parity error bit
-      PMSK           : CR_PMSK_Field := 16#0#;
+      PMSK           : Boolean := False;
       --  Mask of Validity bit
-      VMSK           : CR_VMSK_Field := 16#0#;
+      VMSK           : Boolean := False;
       --  Mask of channel status and user bits
-      CUMSK          : CR_CUMSK_Field := 16#0#;
+      CUMSK          : Boolean := False;
       --  Mask of Preamble Type bits
-      PTMSK          : CR_PTMSK_Field := 16#0#;
+      PTMSK          : Boolean := False;
       --  Control Buffer DMA ENable for control flow
-      CBDMAEN        : CR_CBDMAEN_Field := 16#0#;
+      CBDMAEN        : Boolean := False;
       --  Channel Selection
-      CHSEL          : CR_CHSEL_Field := 16#0#;
+      CHSEL          : Boolean := False;
       --  Maximum allowed re-tries during synchronization phase
       NBTR           : CR_NBTR_Field := 16#0#;
       --  Wait For Activity
-      WFA            : CR_WFA_Field := 16#0#;
+      WFA            : Boolean := False;
       --  unspecified
-      Reserved_15_15 : STM32_SVD.Bit := 16#0#;
+      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
       --  input selection
       INSEL          : CR_INSEL_Field := 16#0#;
       --  unspecified
-      Reserved_19_31 : STM32_SVD.UInt13 := 16#0#;
+      Reserved_19_31 : Interfaces.Bit_Types.UInt13 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -89,32 +80,24 @@ package STM32_SVD.SPDIF_RX is
    -- IMR_Register --
    ------------------
 
-   subtype IMR_RXNEIE_Field is STM32_SVD.Bit;
-   subtype IMR_CSRNEIE_Field is STM32_SVD.Bit;
-   subtype IMR_PERRIE_Field is STM32_SVD.Bit;
-   subtype IMR_OVRIE_Field is STM32_SVD.Bit;
-   subtype IMR_SBLKIE_Field is STM32_SVD.Bit;
-   subtype IMR_SYNCDIE_Field is STM32_SVD.Bit;
-   subtype IMR_IFEIE_Field is STM32_SVD.Bit;
-
    --  Interrupt mask register
    type IMR_Register is record
       --  RXNE interrupt enable
-      RXNEIE        : IMR_RXNEIE_Field := 16#0#;
+      RXNEIE        : Boolean := False;
       --  Control Buffer Ready Interrupt Enable
-      CSRNEIE       : IMR_CSRNEIE_Field := 16#0#;
+      CSRNEIE       : Boolean := False;
       --  Parity error interrupt enable
-      PERRIE        : IMR_PERRIE_Field := 16#0#;
+      PERRIE        : Boolean := False;
       --  Overrun error Interrupt Enable
-      OVRIE         : IMR_OVRIE_Field := 16#0#;
+      OVRIE         : Boolean := False;
       --  Synchronization Block Detected Interrupt Enable
-      SBLKIE        : IMR_SBLKIE_Field := 16#0#;
+      SBLKIE        : Boolean := False;
       --  Synchronization Done
-      SYNCDIE       : IMR_SYNCDIE_Field := 16#0#;
+      SYNCDIE       : Boolean := False;
       --  Serial Interface Error Interrupt Enable
-      IFEIE         : IMR_IFEIE_Field := 16#0#;
+      IFEIE         : Boolean := False;
       --  unspecified
-      Reserved_7_31 : STM32_SVD.UInt25 := 16#0#;
+      Reserved_7_31 : Interfaces.Bit_Types.UInt25 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -134,43 +117,34 @@ package STM32_SVD.SPDIF_RX is
    -- SR_Register --
    -----------------
 
-   subtype SR_RXNE_Field is STM32_SVD.Bit;
-   subtype SR_CSRNE_Field is STM32_SVD.Bit;
-   subtype SR_PERR_Field is STM32_SVD.Bit;
-   subtype SR_OVR_Field is STM32_SVD.Bit;
-   subtype SR_SBD_Field is STM32_SVD.Bit;
-   subtype SR_SYNCD_Field is STM32_SVD.Bit;
-   subtype SR_FERR_Field is STM32_SVD.Bit;
-   subtype SR_SERR_Field is STM32_SVD.Bit;
-   subtype SR_TERR_Field is STM32_SVD.Bit;
-   subtype SR_WIDTH5_Field is STM32_SVD.UInt15;
+   subtype SR_WIDTH5_Field is Interfaces.Bit_Types.UInt15;
 
    --  Status register
    type SR_Register is record
-      --  Read data register not empty
-      RXNE           : SR_RXNE_Field;
-      --  Control Buffer register is not empty
-      CSRNE          : SR_CSRNE_Field;
-      --  Parity error
-      PERR           : SR_PERR_Field;
-      --  Overrun error
-      OVR            : SR_OVR_Field;
-      --  Synchronization Block Detected
-      SBD            : SR_SBD_Field;
-      --  Synchronization Done
-      SYNCD          : SR_SYNCD_Field;
-      --  Framing error
-      FERR           : SR_FERR_Field;
-      --  Synchronization error
-      SERR           : SR_SERR_Field;
-      --  Time-out error
-      TERR           : SR_TERR_Field;
+      --  Read-only. Read data register not empty
+      RXNE           : Boolean := False;
+      --  Read-only. Control Buffer register is not empty
+      CSRNE          : Boolean := False;
+      --  Read-only. Parity error
+      PERR           : Boolean := False;
+      --  Read-only. Overrun error
+      OVR            : Boolean := False;
+      --  Read-only. Synchronization Block Detected
+      SBD            : Boolean := False;
+      --  Read-only. Synchronization Done
+      SYNCD          : Boolean := False;
+      --  Read-only. Framing error
+      FERR           : Boolean := False;
+      --  Read-only. Synchronization error
+      SERR           : Boolean := False;
+      --  Read-only. Time-out error
+      TERR           : Boolean := False;
       --  unspecified
-      Reserved_9_15  : STM32_SVD.UInt7;
-      --  Duration of 5 symbols counted with SPDIF_CLK
-      WIDTH5         : SR_WIDTH5_Field;
+      Reserved_9_15  : Interfaces.Bit_Types.UInt7;
+      --  Read-only. Duration of 5 symbols counted with SPDIF_CLK
+      WIDTH5         : SR_WIDTH5_Field := 16#0#;
       --  unspecified
-      Reserved_31_31 : STM32_SVD.Bit;
+      Reserved_31_31 : Interfaces.Bit_Types.Bit;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -194,25 +168,20 @@ package STM32_SVD.SPDIF_RX is
    -- IFCR_Register --
    -------------------
 
-   subtype IFCR_PERRCF_Field is STM32_SVD.Bit;
-   subtype IFCR_OVRCF_Field is STM32_SVD.Bit;
-   subtype IFCR_SBDCF_Field is STM32_SVD.Bit;
-   subtype IFCR_SYNCDCF_Field is STM32_SVD.Bit;
-
    --  Interrupt Flag Clear register
    type IFCR_Register is record
       --  unspecified
-      Reserved_0_1  : STM32_SVD.UInt2 := 16#0#;
-      --  Clears the Parity error flag
-      PERRCF        : IFCR_PERRCF_Field := 16#0#;
-      --  Clears the Overrun error flag
-      OVRCF         : IFCR_OVRCF_Field := 16#0#;
-      --  Clears the Synchronization Block Detected flag
-      SBDCF         : IFCR_SBDCF_Field := 16#0#;
-      --  Clears the Synchronization Done flag
-      SYNCDCF       : IFCR_SYNCDCF_Field := 16#0#;
+      Reserved_0_1  : Interfaces.Bit_Types.UInt2 := 16#0#;
+      --  Write-only. Clears the Parity error flag
+      PERRCF        : Boolean := False;
+      --  Write-only. Clears the Overrun error flag
+      OVRCF         : Boolean := False;
+      --  Write-only. Clears the Synchronization Block Detected flag
+      SBDCF         : Boolean := False;
+      --  Write-only. Clears the Synchronization Done flag
+      SYNCDCF       : Boolean := False;
       --  unspecified
-      Reserved_6_31 : STM32_SVD.UInt26 := 16#0#;
+      Reserved_6_31 : Interfaces.Bit_Types.UInt26 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -230,29 +199,25 @@ package STM32_SVD.SPDIF_RX is
    -- DR_Register --
    -----------------
 
-   subtype DR_DR_Field is STM32_SVD.UInt24;
-   subtype DR_PE_Field is STM32_SVD.Bit;
-   subtype DR_V_Field is STM32_SVD.Bit;
-   subtype DR_U_Field is STM32_SVD.Bit;
-   subtype DR_C_Field is STM32_SVD.Bit;
-   subtype DR_PT_Field is STM32_SVD.UInt2;
+   subtype DR_DR_Field is Interfaces.Bit_Types.UInt24;
+   subtype DR_PT_Field is Interfaces.Bit_Types.UInt2;
 
    --  Data input register
    type DR_Register is record
-      --  Parity Error bit
-      DR             : DR_DR_Field;
-      --  Parity Error bit
-      PE             : DR_PE_Field;
-      --  Validity bit
-      V              : DR_V_Field;
-      --  User bit
-      U              : DR_U_Field;
-      --  Channel Status bit
-      C              : DR_C_Field;
-      --  Preamble Type
-      PT             : DR_PT_Field;
+      --  Read-only. Parity Error bit
+      DR             : DR_DR_Field := 16#0#;
+      --  Read-only. Parity Error bit
+      PE             : Boolean := False;
+      --  Read-only. Validity bit
+      V              : Boolean := False;
+      --  Read-only. User bit
+      U              : Boolean := False;
+      --  Read-only. Channel Status bit
+      C              : Boolean := False;
+      --  Read-only. Preamble Type
+      PT             : DR_PT_Field := 16#0#;
       --  unspecified
-      Reserved_30_31 : STM32_SVD.UInt2;
+      Reserved_30_31 : Interfaces.Bit_Types.UInt2;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -271,20 +236,19 @@ package STM32_SVD.SPDIF_RX is
    -- CSR_Register --
    ------------------
 
-   subtype CSR_USR_Field is STM32_SVD.Short;
-   subtype CSR_CS_Field is STM32_SVD.Byte;
-   subtype CSR_SOB_Field is STM32_SVD.Bit;
+   subtype CSR_USR_Field is Interfaces.Bit_Types.Short;
+   subtype CSR_CS_Field is Interfaces.Bit_Types.Byte;
 
    --  Channel Status register
    type CSR_Register is record
-      --  User data information
-      USR            : CSR_USR_Field;
-      --  Channel A status information
-      CS             : CSR_CS_Field;
-      --  Start Of Block
-      SOB            : CSR_SOB_Field;
+      --  Read-only. User data information
+      USR            : CSR_USR_Field := 16#0#;
+      --  Read-only. Channel A status information
+      CS             : CSR_CS_Field := 16#0#;
+      --  Read-only. Start Of Block
+      SOB            : Boolean := False;
       --  unspecified
-      Reserved_25_31 : STM32_SVD.UInt7;
+      Reserved_25_31 : Interfaces.Bit_Types.UInt7;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -300,19 +264,19 @@ package STM32_SVD.SPDIF_RX is
    -- DIR_Register --
    ------------------
 
-   subtype DIR_THI_Field is STM32_SVD.UInt13;
-   subtype DIR_TLO_Field is STM32_SVD.UInt13;
+   subtype DIR_THI_Field is Interfaces.Bit_Types.UInt13;
+   subtype DIR_TLO_Field is Interfaces.Bit_Types.UInt13;
 
    --  Debug Information register
    type DIR_Register is record
-      --  Threshold HIGH
-      THI            : DIR_THI_Field;
+      --  Read-only. Threshold HIGH
+      THI            : DIR_THI_Field := 16#0#;
       --  unspecified
-      Reserved_13_15 : STM32_SVD.UInt3;
-      --  Threshold LOW
-      TLO            : DIR_TLO_Field;
+      Reserved_13_15 : Interfaces.Bit_Types.UInt3;
+      --  Read-only. Threshold LOW
+      TLO            : DIR_TLO_Field := 16#0#;
       --  unspecified
-      Reserved_29_31 : STM32_SVD.UInt3;
+      Reserved_29_31 : Interfaces.Bit_Types.UInt3;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -359,6 +323,6 @@ package STM32_SVD.SPDIF_RX is
 
    --  Receiver Interface
    SPDIF_RX_Periph : aliased SPDIF_RX_Peripheral
-     with Import, Address => System'To_Address (16#40004000#);
+     with Import, Address => SPDIF_RX_Base;
 
 end STM32_SVD.SPDIF_RX;

@@ -39,6 +39,8 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with STM32_SVD.ADC; use STM32_SVD.ADC;
+
 package body STM32.ADC is
 
    procedure Set_Sequence_Position
@@ -71,8 +73,8 @@ package body STM32.ADC is
 
    procedure Enable (This : in out Analog_To_Digital_Converter) is
    begin
-      if not This.CR2.ADC_Enabled then
-         This.CR2.ADC_Enabled := True;
+      if not This.CR2.ADON then
+         This.CR2.ADON := True;
          delay until Clock + ADC_Stabilization;
       end if;
    end Enable;
@@ -83,7 +85,7 @@ package body STM32.ADC is
 
    procedure Disable (This : in out Analog_To_Digital_Converter) is
    begin
-      This.CR2.ADC_Enabled := False;
+      This.CR2.ADON := False;
    end Disable;
 
    -------------
@@ -91,7 +93,7 @@ package body STM32.ADC is
    -------------
 
    function Enabled (This : Analog_To_Digital_Converter) return Boolean is
-     (This.CR2.ADC_Enabled);
+     (This.CR2.ADON);
 
    ----------------------
    -- Conversion_Value --
@@ -99,7 +101,7 @@ package body STM32.ADC is
 
    function Conversion_Value
      (This : Analog_To_Digital_Converter)
-      return Half_Word
+      return Short
    is
    begin
       return This.DR.Data;
@@ -122,18 +124,18 @@ package body STM32.ADC is
    function Injected_Conversion_Value
      (This : Analog_To_Digital_Converter;
       Rank : Injected_Channel_Rank)
-      return Half_Word
+      return Short
    is
    begin
       case Rank is
          when 1 =>
-            return This.JDR1.Data;
+            return This.JDR1.JDATA;
          when 2 =>
-            return This.JDR2.Data;
+            return This.JDR2.JDATA;
          when 3 =>
-            return This.JDR3.Data;
+            return This.JDR3.JDATA;
          when 4 =>
-            return This.JDR4.Data;
+            return This.JDR4.JDATA;
       end case;
    end Injected_Conversion_Value;
 
@@ -142,7 +144,7 @@ package body STM32.ADC is
    --------------------------------
 
    function Multimode_Conversion_Value return Word is
-     (Common.DR);
+     (C_ADC_Periph.CDR.Val);
 
    --------------------
    -- Configure_Unit --
@@ -154,8 +156,8 @@ package body STM32.ADC is
       Alignment  : Data_Alignment)
    is
    begin
-      This.CR1.Resolution := Resolution;
-      This.CR2.Alignment := Alignment;
+      This.CR1.RES := ADC_Resolution'Enum_Rep (Resolution);
+      This.CR2.ALIGN := Alignment = Right_Aligned;
    end Configure_Unit;
 
    ------------------------
@@ -165,7 +167,7 @@ package body STM32.ADC is
    function Current_Resolution
      (This : Analog_To_Digital_Converter)
       return ADC_Resolution
-   is (This.CR1.Resolution);
+   is (ADC_Resolution'Val (This.CR1.RES));
 
    -----------------------
    -- Current_Alignment --
@@ -174,7 +176,7 @@ package body STM32.ADC is
    function Current_Alignment
      (This : Analog_To_Digital_Converter)
       return Data_Alignment
-   is (This.CR2.Alignment);
+   is ((if This.CR2.ALIGN then Right_Aligned else Left_Aligned));
 
    ---------------------------------
    -- Configure_Common_Properties --
@@ -187,10 +189,11 @@ package body STM32.ADC is
       Sampling_Delay : Sampling_Delay_Selections)
    is
    begin
-      Common.CR.Multi_ADC_Mode     := Mode;
-      Common.CR.Sampling_Delay     := Sampling_Delay;
-      Common.CR.Multi_ADC_DMA_Mode := DMA_Mode;
-      Common.CR.ADC_Prescalar      := Prescalar;
+      C_ADC_Periph.CCR.MULT    := Multi_ADC_Mode_Selections'Enum_Rep (Mode);
+      C_ADC_Periph.CCR.DELAY_k :=
+        Sampling_Delay_Selections'Enum_Rep (Sampling_Delay);
+      C_ADC_Periph.CCR.DMA     := Multi_ADC_DMA_Modes'Enum_Rep (DMA_Mode);
+      C_ADC_Periph.CCR.ADCPRE  := ADC_Prescalars'Enum_Rep (Prescalar);
    end Configure_Common_Properties;
 
    -----------------------------------
@@ -204,20 +207,22 @@ package body STM32.ADC is
       Enable_EOC  : Boolean;
       Conversions : Regular_Channel_Conversions)
    is
-      Total_Regular_Conversions : Bits_4;
+      Total_Regular_Conversions : UInt5; --  UInt5 required as max value is 16
    begin
-      This.CR2.End_Of_Conversion_Enabled := Enable_EOC;
+      This.CR2.EOCS := Enable_EOC;
+      This.CR2.CONT := Continuous;
 
-      This.CR2.Continuous_Conversion_Enabled := Continuous;
+      This.CR1.SCAN := Conversions'Length > 0;
 
-      This.CR1.Scan_Mode_Enabled := Conversions'Length > 1;
+      this.CR2.EXTEN := External_Trigger'Enum_Rep (Trigger.Enabler);
 
-      This.CR2.External_Trigger_Enable := Trigger.Enabler;
       if Trigger.Enabler /= Trigger_Disabled then
-         This.CR2.External_Event_Select_Regular := Trigger.Event;
+         This.CR2.EXTSEL :=
+           External_Events_Regular_Group'Enum_Rep (Trigger.Event);
       end if;
 
       Total_Regular_Conversions := 0;
+
       for Rank in Conversions'Range loop
          declare
             Conversion : Regular_Channel_Conversion renames Conversions (Rank);
@@ -238,7 +243,8 @@ package body STM32.ADC is
             Total_Regular_Conversions := Total_Regular_Conversions + 1;
          end;
       end loop;
-      This.SQR1.Length := Total_Regular_Conversions - 1;  -- biased
+
+      This.SQR1.L := UInt4 (Total_Regular_Conversions - 1);  -- biased
    end Configure_Regular_Conversions;
 
    ------------------------------------
@@ -252,22 +258,25 @@ package body STM32.ADC is
       Enable_EOC    : Boolean;
       Conversions   : Injected_Channel_Conversions)
    is
-      Total_Injected_Conversions : Bits_2; -- at most four channels possible
+      Total_Injected_Conversions : UInt3; -- at most four channels possible
    begin
-      This.CR2.End_Of_Conversion_Enabled := Enable_EOC;
+      This.CR2.EOCS := Enable_EOC;
 
       --  Injected channels cannot be converted continuously. The only
       --  exception is when an injected channel is configured to be converted
       --  automatically after regular channels in continuous mode. See note in
       --  RM 13.3.5, pg 390, and "Auto-injection" section on pg 392.
-      This.CR1.Auto_Injected_Group_Conversion_Enabled := AutoInjection;
+      This.CR1.JAUTO := AutoInjection;
 
-      This.CR2.External_Trigger_Injected_Enable := Trigger.Enabler;
+      This.CR2.JEXTEN := External_Trigger'Enum_Rep (Trigger.Enabler);
+
       if Trigger.Enabler /= Trigger_Disabled then
-         This.CR2.External_Event_Select_Injected := Trigger.Event;
+         This.CR2.JEXTSEL :=
+           External_Events_Injected_Group'Enum_Rep (Trigger.Event);
       end if;
 
       Total_Injected_Conversions := 0;
+
       for Rank in Conversions'Range loop
          declare
             Conversion : Injected_Channel_Conversion renames Conversions (Rank);
@@ -288,7 +297,8 @@ package body STM32.ADC is
             Total_Injected_Conversions := Total_Injected_Conversions + 1;
          end;
       end loop;
-      This.JSQR.Length := Total_Injected_Conversions - 1;  -- biased
+
+      This.JSQR.JL := UInt2 (Total_Injected_Conversions - 1);  -- biased
    end Configure_Injected_Conversions;
 
    ----------------------------
@@ -297,7 +307,7 @@ package body STM32.ADC is
 
    procedure Enable_VBat_Connection is
    begin
-      Common.CR.VBat_Channel_Enabled := True;
+      C_ADC_Periph.CCR.VBATE := True;
    end Enable_VBat_Connection;
 
    ------------------
@@ -305,7 +315,7 @@ package body STM32.ADC is
    ------------------
 
    function VBat_Enabled return Boolean is
-      (Common.CR.VBat_Channel_Enabled);
+      (C_ADC_Periph.CCR.VBATE);
 
    ----------------------------------------------
    -- Enable_VRef_TemperatureSensor_Connection --
@@ -313,7 +323,7 @@ package body STM32.ADC is
 
    procedure Enable_VRef_TemperatureSensor_Connection is
    begin
-      Common.CR.TSVREF_Enabled := True;
+      C_ADC_Periph.CCR.TSVREFE := True;
       delay until Clock + Temperature_Sensor_Stabilization;
    end Enable_VRef_TemperatureSensor_Connection;
 
@@ -322,7 +332,7 @@ package body STM32.ADC is
    --------------------------------------
 
    function VRef_TemperatureSensor_Enabled return Boolean is
-      (Common.CR.TSVREF_Enabled);
+      (C_ADC_Periph.CCR.TSVREFE);
 
    ----------------------------------
    -- Regular_Conversions_Expected --
@@ -330,7 +340,7 @@ package body STM32.ADC is
 
    function Regular_Conversions_Expected (This : Analog_To_Digital_Converter)
      return Natural is
-     (Natural (This.SQR1.Length) + 1);
+     (Natural (This.SQR1.L) + 1);
 
    -----------------------------------
    -- Injected_Conversions_Expected --
@@ -338,21 +348,21 @@ package body STM32.ADC is
 
    function Injected_Conversions_Expected (This : Analog_To_Digital_Converter)
      return Natural is
-     (Natural (This.JSQR.Length) + 1);
+     (Natural (This.JSQR.JL) + 1);
 
    -----------------------
    -- Scan_Mode_Enabled --
    -----------------------
 
    function Scan_Mode_Enabled (This : Analog_To_Digital_Converter) return Boolean is
-     (This.CR1.Scan_Mode_Enabled);
+     (This.CR1.SCAN);
 
    ---------------------------
    -- EOC_Selection_Enabled --
    ---------------------------
 
    function EOC_Selection_Enabled (This : Analog_To_Digital_Converter) return Boolean is
-      (This.CR2.End_Of_Conversion_Enabled);
+      (This.CR2.EOCS);
 
    -------------------------------
    -- Configure_Regular_Channel --
@@ -392,16 +402,14 @@ package body STM32.ADC is
 
    procedure Start_Conversion (This : in out Analog_To_Digital_Converter) is
    begin
-      if Common.CR.Multi_ADC_Mode = Independent then
-         if This.CR2.External_Trigger_Enable = Trigger_Disabled then
-            This.CR2.Start_Conversion_Regular_Channels := True;
-         end if;
-      else
-         if (This'Address = ADC1_Base) and
-            (This.CR2.External_Trigger_Enable = Trigger_Disabled)
-         then
-            This.CR2.Start_Conversion_Regular_Channels := True;
-         end if;
+      if External_Trigger'Val (This.CR2.EXTEN) /= Trigger_Disabled then
+         return;
+      end if;
+
+      if Multi_ADC_Mode_Selections'Val (C_ADC_Periph.CCR.MULT) = Independent
+        or else This'Address = STM32_SVD.ADC1_Base
+      then
+         This.CR2.SWSTART := True;
       end if;
    end Start_Conversion;
 
@@ -412,7 +420,7 @@ package body STM32.ADC is
    function Conversion_Started (This : Analog_To_Digital_Converter)
       return Boolean
    is
-      (This.CR2.Start_Conversion_Regular_Channels);
+      (This.CR2.SWSTART);
 
    -------------------------------
    -- Start_Injected_Conversion --
@@ -422,7 +430,7 @@ package body STM32.ADC is
      (This : in out Analog_To_Digital_Converter)
    is
    begin
-      This.CR2.Start_Conversion_Injected_Channels := True;
+      This.CR2.JSWSTART := True;
    end Start_Injected_Conversion;
 
    ---------------------------------
@@ -432,7 +440,7 @@ package body STM32.ADC is
    function Injected_Conversion_Started (This : Analog_To_Digital_Converter)
      return Boolean
    is
-     (This.CR2.Start_Conversion_Injected_Channels);
+     (This.CR2.JSWSTART);
 
    ------------------------------
    -- Watchdog_Enable_Channels --
@@ -445,17 +453,17 @@ package body STM32.ADC is
       High : Watchdog_Threshold)
    is
    begin
-      This.HTR.Threshold := High;
-      This.LTR.Threshold := Low;
+      This.HTR.HT := High;
+      This.LTR.LT := Low;
       --  see RM 13.3.7, pg 391, table 66
       case Mode is
          when Watchdog_All_Regular_Channels =>
-            This.CR1.Watchdog_Regular_Channels_Enabled := True;
+            This.CR1.AWDEN := True;
          when Watchdog_All_Injected_Channels =>
-            This.CR1.Watchdog_Injected_Channels_Enabled := True;
+            This.CR1.JAWDEN := True;
          when Watchdog_All_Both_Kinds =>
-            This.CR1.Watchdog_Regular_Channels_Enabled := True;
-            This.CR1.Watchdog_Injected_Channels_Enabled := True;
+            This.CR1.AWDEN := True;
+            This.CR1.JAWDEN := True;
       end case;
    end Watchdog_Enable_Channels;
 
@@ -471,20 +479,22 @@ package body STM32.ADC is
       High    : Watchdog_Threshold)
    is
    begin
-      This.HTR.Threshold := High;
-      This.LTR.Threshold := Low;
+      This.HTR.HT := High;
+      This.LTR.LT := Low;
 
-      This.CR1.Watchdog_Selected_Channel := Channel;
+      --  Set then channel
+      This.CR1.AWDCH := Channel;
+      --  Enable single channel mode
+      This.CR1.AWDSGL := True;
 
-      This.CR1.Watchdog_Single_Channel_Enabled := True;
       case Mode is
          when Watchdog_Single_Regular_Channel =>
-            This.CR1.Watchdog_Regular_Channels_Enabled := True;
+            This.CR1.AWDEN := True;
          when Watchdog_Single_Injected_Channel =>
-            This.CR1.Watchdog_Injected_Channels_Enabled := True;
+            This.CR1.JAWDEN := True;
          when Watchdog_Single_Both_Kinds =>
-            This.CR1.Watchdog_Regular_Channels_Enabled := True;
-            This.CR1.Watchdog_Injected_Channels_Enabled := True;
+            This.CR1.AWDEN := True;
+            This.CR1.JAWDEN := True;
       end case;
    end Watchdog_Enable_Channel;
 
@@ -494,11 +504,12 @@ package body STM32.ADC is
 
    procedure Watchdog_Disable (This : in out Analog_To_Digital_Converter) is
    begin
-      This.CR1.Watchdog_Regular_Channels_Enabled := False;
-      This.CR1.Watchdog_Injected_Channels_Enabled := False;
-      This.CR1.Watchdog_Single_Channel_Enabled := False;
+      This.CR1.AWDEN := False;
+      This.CR1.JAWDEN := False;
+
       --  clearing the single-channel bit (AWGSDL) is not required to disable,
       --  per the RM table 66, section 13.3.7, pg 391, but seems cleanest
+      This.CR1.AWDSGL := False;
    end Watchdog_Disable;
 
    ----------------------
@@ -508,8 +519,7 @@ package body STM32.ADC is
    function Watchdog_Enabled (This : Analog_To_Digital_Converter)
      return Boolean
    is
-      (This.CR1.Watchdog_Regular_Channels_Enabled or
-       This.CR1.Watchdog_Injected_Channels_Enabled);
+      (This.CR1.AWDEN or This.CR1.JAWDEN);
    --  per the RM table 66, section 13.3.7, pg 391
 
    -------------------------------
@@ -523,13 +533,13 @@ package body STM32.ADC is
    is
    begin
       if Regular then
-         This.CR1.Discontinuous_Mode_Regular_Enabled := True;
-         This.CR1.Discontinuous_Mode_Injected_Enabled := False;
+         This.CR1.JDISCEN := False;
+         This.CR1.DISCEN := True;
       else -- Injected
-         This.CR1.Discontinuous_Mode_Regular_Enabled := False;
-         This.CR1.Discontinuous_Mode_Injected_Enabled := True;
+         This.CR1.DISCEN := False;
+         This.CR1.JDISCEN := True;
       end if;
-      This.CR1.Discontinuous_Mode_Channel_Count := Bits_3 (Count - 1);  -- biased
+      This.CR1.DISCNUM := UInt3 (Count - 1);  -- biased
    end Enable_Discontinuous_Mode;
 
    ----------------------------------------
@@ -540,7 +550,7 @@ package body STM32.ADC is
      (This : in out Analog_To_Digital_Converter)
    is
    begin
-      This.CR1.Discontinuous_Mode_Regular_Enabled := False;
+      This.CR1.DISCEN := False;
    end Disable_Discontinuous_Mode_Regular;
 
    -----------------------------------------
@@ -551,7 +561,7 @@ package body STM32.ADC is
      (This : in out Analog_To_Digital_Converter)
    is
    begin
-      This.CR1.Discontinuous_Mode_Injected_Enabled := False;
+      This.CR1.JDISCEN := False;
    end Disable_Discontinuous_Mode_Injected;
 
    ----------------------------------------
@@ -561,7 +571,7 @@ package body STM32.ADC is
    function Discontinuous_Mode_Regular_Enabled
      (This : Analog_To_Digital_Converter)
       return Boolean
-   is (This.CR1.Discontinuous_Mode_Regular_Enabled);
+   is (This.CR1.DISCEN);
 
    -----------------------------------------
    -- Discontinuous_Mode_Injected_Enabled --
@@ -570,7 +580,7 @@ package body STM32.ADC is
    function Discontinuous_Mode_Injected_Enabled
      (This : Analog_To_Digital_Converter)
       return Boolean
-   is (This.CR1.Discontinuous_Mode_Injected_Enabled);
+   is (This.CR1.JDISCEN);
 
    ---------------------------
    -- AutoInjection_Enabled --
@@ -579,7 +589,7 @@ package body STM32.ADC is
    function AutoInjection_Enabled
      (This : Analog_To_Digital_Converter)
       return Boolean
-   is (This.CR1.Auto_Injected_Group_Conversion_Enabled);
+   is (This.CR1.JAUTO);
 
    ----------------
    -- Enable_DMA --
@@ -587,7 +597,7 @@ package body STM32.ADC is
 
    procedure Enable_DMA (This : in out Analog_To_Digital_Converter) is
    begin
-      This.CR2.DMA_Enabled := True;
+      This.CR2.DMA := True;
    end Enable_DMA;
 
    -----------------
@@ -596,7 +606,7 @@ package body STM32.ADC is
 
    procedure Disable_DMA (This : in out Analog_To_Digital_Converter) is
    begin
-      This.CR2.DMA_Enabled := False;
+      This.CR2.DMA := False;
    end Disable_DMA;
 
    -----------------
@@ -604,7 +614,7 @@ package body STM32.ADC is
    -----------------
 
    function DMA_Enabled (This : Analog_To_Digital_Converter) return Boolean is
-     (This.CR2.DMA_Enabled);
+     (This.CR2.DMA);
 
    ------------------------------------
    -- Enable_DMA_After_Last_Transfer --
@@ -614,7 +624,7 @@ package body STM32.ADC is
      (This : in out Analog_To_Digital_Converter)
    is
    begin
-      This.CR2.DMA_Requests_After_Last_Xfer := True;
+      This.CR2.DDS := True;
    end Enable_DMA_After_Last_Transfer;
 
    -------------------------------------
@@ -625,7 +635,7 @@ package body STM32.ADC is
      (This : in out Analog_To_Digital_Converter)
    is
    begin
-      This.CR2.DMA_Requests_After_Last_Xfer := False;
+      This.CR2.DDS := False;
    end Disable_DMA_After_Last_Transfer;
 
    -------------------------------------
@@ -635,7 +645,7 @@ package body STM32.ADC is
    function DMA_Enabled_After_Last_Transfer
      (This : Analog_To_Digital_Converter)
       return Boolean
-   is (This.CR2.DMA_Requests_After_Last_Xfer);
+   is (This.CR2.DDS);
 
    ------------------------------------------
    -- Multi_Enable_DMA_After_Last_Transfer --
@@ -643,7 +653,7 @@ package body STM32.ADC is
 
    procedure Multi_Enable_DMA_After_Last_Transfer is
    begin
-      Common.CR.Multi_ADC_DMA_Enabled := True;
+      C_ADC_Periph.CCR.DMA := 1;
    end Multi_Enable_DMA_After_Last_Transfer;
 
    -------------------------------------------
@@ -652,7 +662,7 @@ package body STM32.ADC is
 
    procedure Multi_Disable_DMA_After_Last_Transfer is
    begin
-      Common.CR.Multi_ADC_DMA_Enabled := False;
+      C_ADC_Periph.CCR.DMA := 0;
    end Multi_Disable_DMA_After_Last_Transfer;
 
    -------------------------------------------
@@ -660,7 +670,7 @@ package body STM32.ADC is
    -------------------------------------------
 
    function Multi_DMA_Enabled_After_Last_Transfer return Boolean is
-     (Common.CR.Multi_ADC_DMA_Enabled);
+     (C_ADC_Periph.CCR.DMA = 1);
 
    ---------------------
    -- Poll_For_Status --
@@ -695,17 +705,17 @@ package body STM32.ADC is
    begin
       case Flag is
          when Overrun =>
-            return This.SR.Overrun;
+            return This.SR.OVR;
          when Regular_Channel_Conversion_Started =>
-            return This.SR.Regular_Channel_Conversion_Started;
+            return This.SR.STRT;
          when Injected_Channel_Conversion_Started =>
-            return This.SR.Injected_Channel_Conversion_Started;
+            return This.SR.JSTRT;
          when Injected_Channel_Conversion_Complete =>
-            return This.SR.Injected_Channel_Conversion_Complete;
+            return This.SR.JEOC;
          when Regular_Channel_Conversion_Complete =>
-            return This.SR.Regular_Channel_Conversion_Complete;
+            return This.SR.EOC;
          when Analog_Watchdog_Event_Occurred =>
-            return This.SR.Analog_Watchdog_Event_Occurred;
+            return This.SR.AWD;
       end case;
    end Status;
 
@@ -720,17 +730,17 @@ package body STM32.ADC is
    begin
       case Flag is
          when Overrun =>
-            This.SR.Overrun := False;
+            This.SR.OVR := False;
          when Regular_Channel_Conversion_Started =>
-            This.SR.Regular_Channel_Conversion_Started := False;
+            This.SR.STRT := False;
          when Injected_Channel_Conversion_Started =>
-            This.SR.Injected_Channel_Conversion_Started := False;
+            This.SR.JSTRT := False;
          when Injected_Channel_Conversion_Complete =>
-            This.SR.Injected_Channel_Conversion_Complete := False;
+            This.SR.JEOC := False;
          when Regular_Channel_Conversion_Complete =>
-            This.SR.Regular_Channel_Conversion_Complete := False;
+            This.SR.EOC := False;
          when Analog_Watchdog_Event_Occurred =>
-            This.SR.Analog_Watchdog_Event_Occurred := False;
+            This.SR.AWD := False;
       end case;
    end Clear_Status;
 
@@ -745,13 +755,13 @@ package body STM32.ADC is
    begin
       case Source is
          when Overrun =>
-            This.CR1.Overrun_Interrupt_Enable := True;
+            This.CR1.OVRIE := True;
          when Injected_Channel_Conversion_Complete =>
-            This.CR1.Injected_EOC_Interrupt_Enabled := True;
+            This.CR1.JEOCIE := True;
          when Regular_Channel_Conversion_Complete =>
-            This.CR1.EOC_Interrupt_Enabled := True;
+            This.CR1.EOCIE := True;
          when Analog_Watchdog_Event =>
-            This.CR1.Watchdog_Interrupt_Enabled := True;
+            This.CR1.AWDIE := True;
       end case;
    end Enable_Interrupts;
 
@@ -767,13 +777,13 @@ package body STM32.ADC is
    begin
       case Source is
          when Overrun =>
-            return This.CR1.Overrun_Interrupt_Enable;
+            return This.CR1.OVRIE;
          when Injected_Channel_Conversion_Complete =>
-            return This.CR1.Injected_EOC_Interrupt_Enabled;
+            return This.CR1.JEOCIE;
          when Regular_Channel_Conversion_Complete =>
-            return This.CR1.EOC_Interrupt_Enabled;
+            return This.CR1.EOCIE;
          when Analog_Watchdog_Event =>
-            return This.CR1.Watchdog_Interrupt_Enabled;
+            return This.CR1.AWDIE;
       end case;
    end Interrupt_Enabled;
 
@@ -788,13 +798,13 @@ package body STM32.ADC is
    begin
       case Source is
          when Overrun =>
-            This.CR1.Overrun_Interrupt_Enable := False;
+            This.CR1.OVRIE := False;
          when Injected_Channel_Conversion_Complete =>
-            This.CR1.Injected_EOC_Interrupt_Enabled := False;
+            This.CR1.JEOCIE := False;
          when Regular_Channel_Conversion_Complete =>
-            This.CR1.EOC_Interrupt_Enabled := False;
+            This.CR1.EOCIE := False;
          when Analog_Watchdog_Event =>
-            This.CR1.Watchdog_Interrupt_Enabled := False;
+            This.CR1.AWDIE := False;
       end case;
    end Disable_Interrupts;
 
@@ -809,13 +819,13 @@ package body STM32.ADC is
    begin
       case Source is
          when Overrun =>
-            This.SR.Overrun := False;
+            This.SR.OVR := False;
          when Injected_Channel_Conversion_Complete =>
-            This.SR.Injected_Channel_Conversion_Complete := False;
+            This.SR.JEOC := False;
          when Regular_Channel_Conversion_Complete =>
-            This.SR.Regular_Channel_Conversion_Complete := False;
+            This.SR.EOC := False;
          when Analog_Watchdog_Event =>
-            This.SR.Analog_Watchdog_Event_Occurred := False;
+            This.SR.AWD := False;
       end case;
    end Clear_Interrupt_Pending;
 
@@ -831,11 +841,11 @@ package body STM32.ADC is
    begin
       case Rank is
          when 1 .. 6 =>
-            This.SQR3.SQ (Rank) := Channel;
+            This.SQR3.SQ.Arr (Rank) := Channel;
          when 7 .. 12 =>
-            This.SQR2.SQ (Rank) := Channel;
+            This.SQR2.SQ.Arr (Rank) := Channel;
          when 13 .. 16 =>
-            This.SQR1.SQ (Rank) := Channel;
+            This.SQR1.SQ.Arr (Rank) := Channel;
       end case;
    end Set_Sequence_Position;
 
@@ -849,7 +859,7 @@ package body STM32.ADC is
       Rank    : Injected_Channel_Rank)
    is
    begin
-      This.JSQR.SQ (Rank) := Channel;
+      This.JSQR.JSQ.Arr (Rank) := Channel;
    end Set_Injected_Channel_Sequence_Position;
 
    -----------------------
@@ -863,9 +873,11 @@ package body STM32.ADC is
    is
    begin
       if Channel > 9 then
-         This.SMPR1.SMP (Channel) := Sample_Time;
+         This.SMPR1.SMP.Arr (Natural (Channel - 10)) :=
+           Channel_Sampling_Times'Enum_Rep (Sample_Time);
       else
-         This.SMPR2.SMP (Channel) := Sample_Time;
+         This.SMPR2.SMP.Arr (Natural (Channel)) :=
+           Channel_Sampling_Times'Enum_Rep (Sample_Time);
       end if;
    end Set_Sampling_Time;
 
@@ -880,10 +892,10 @@ package body STM32.ADC is
    is
    begin
       case Rank is
-         when 1 => This.JOFR1.JOffset := Offset;
-         when 2 => This.JOFR2.JOffset := Offset;
-         when 3 => This.JOFR3.JOffset := Offset;
-         when 4 => This.JOFR4.JOffset := Offset;
+         when 1 => This.JOFR1.JOFFSET1 := Offset;
+         when 2 => This.JOFR2.JOFFSET1 := Offset;
+         when 3 => This.JOFR3.JOFFSET1 := Offset;
+         when 4 => This.JOFR4.JOFFSET1 := Offset;
       end case;
    end Set_Injected_Channel_Offset;
 

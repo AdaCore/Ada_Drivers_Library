@@ -42,6 +42,7 @@
 --  This file provides declarations for devices on the STM32F40xxx MCUs
 --  manufactured by ST Microelectronics.  For example, an STM32F405.
 
+with STM32_SVD;     use STM32_SVD;
 with STM32_SVD.I2C;
 with STM32_SVD.DMA;
 
@@ -235,9 +236,12 @@ package STM32.Device is
    PI14 : constant GPIO_Point := (GPIO_I'Access, 14);
    PI15 : constant GPIO_Point := (GPIO_I'Access, 15);
 
-   ADC_1 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC1_Base;
-   ADC_2 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC2_Base;
-   ADC_3 : aliased Analog_To_Digital_Converter with Volatile, Address => ADC3_Base;
+   ADC_1 : aliased Analog_To_Digital_Converter
+     with Volatile, Import, Address => ADC1_Base;
+   ADC_2 : aliased Analog_To_Digital_Converter
+     with Volatile, Import, Address => ADC2_Base;
+   ADC_3 : aliased Analog_To_Digital_Converter
+     with Volatile, Import, Address => ADC3_Base;
 
    VBat : constant ADC_Point := (ADC_1'Access, Channel => VBat_Channel);
 
@@ -294,9 +298,9 @@ package STM32.Device is
 
    function As_Port_Id (Port : I2C_Port) return I2C_Port_Id with Inline;
    function As_Port (Id : I2C_Port_Id) return access I2C_Port with Inline;
-   procedure Enable_Clock (This : aliased in out I2C_Port);
+   procedure Enable_Clock (This : aliased I2C_Port);
    procedure Enable_Clock (This : I2C_Port_Id);
-   procedure Reset (This : in out I2C_Port);
+   procedure Reset (This : I2C_Port);
    procedure Reset (This : I2C_Port_Id);
 
    SPI_1 : aliased SPI_Port with Import, Volatile, Address => SPI1_Base;

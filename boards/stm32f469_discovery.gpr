@@ -1,0 +1,32 @@
+library project STM32F469_Discovery extends "../ARM/STM32/stm32f46_79x.gpr" is
+
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
+
+   for Runtime ("Ada") use RTS & "-stm32f469disco";
+
+   for Library_Name use "stm32f469disco";
+   for Library_Kind use "static";
+   for Library_Dir use "lib/stm32f469disco";
+   for Object_Dir use "obj/stm32f469disco";
+
+   for Source_Dirs use
+     ("stm32f469_discovery",
+      "../hal",
+      "../hal/touch_panel",
+      "../components/button",
+      "../components/sdram",
+      "../components/lcd/otm8009a",
+      "../components/touch_panel/ft6x06");
+
+   package Compiler is
+      for Default_Switches ("Ada") use
+        STM32F46_79x.Compiler'Default_Switches ("Ada");
+      --  ??? Below is mandatory in some situations where the LCD displays
+      --  shows lots of strange artifacts if the SDRAM driver is compiled with
+      --  higher optimisation level. Needs more investigation to determine
+      --  what is going on
+      for Switches ("stm32-sdram.adb") use ("-g", "-O0");
+   end Compiler;
+
+end STM32F469_Discovery;

@@ -1,13 +1,13 @@
---  Automatically generated from STM32F46_79x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F46_79x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.PWR is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,55 +17,44 @@ package STM32_SVD.PWR is
    -- CR_Register --
    -----------------
 
-   subtype CR_LPDS_Field is STM32_SVD.Bit;
-   subtype CR_PDDS_Field is STM32_SVD.Bit;
-   subtype CR_CWUF_Field is STM32_SVD.Bit;
-   subtype CR_CSBF_Field is STM32_SVD.Bit;
-   subtype CR_PVDE_Field is STM32_SVD.Bit;
-   subtype CR_PLS_Field is STM32_SVD.UInt3;
-   subtype CR_DBP_Field is STM32_SVD.Bit;
-   subtype CR_FPDS_Field is STM32_SVD.Bit;
-   subtype CR_LPLVDS_Field is STM32_SVD.Bit;
-   subtype CR_MRLVDS_Field is STM32_SVD.Bit;
-   subtype CR_VOS_Field is STM32_SVD.UInt2;
-   subtype CR_ODEN_Field is STM32_SVD.Bit;
-   subtype CR_ODSWEN_Field is STM32_SVD.Bit;
-   subtype CR_UDEN_Field is STM32_SVD.UInt2;
+   subtype CR_PLS_Field is Interfaces.Bit_Types.UInt3;
+   subtype CR_VOS_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_UDEN_Field is Interfaces.Bit_Types.UInt2;
 
    --  power control register
    type CR_Register is record
       --  Low-power deep sleep
-      LPDS           : CR_LPDS_Field := 16#0#;
+      LPDS           : Boolean := False;
       --  Power down deepsleep
-      PDDS           : CR_PDDS_Field := 16#0#;
+      PDDS           : Boolean := False;
       --  Clear wakeup flag
-      CWUF           : CR_CWUF_Field := 16#0#;
+      CWUF           : Boolean := False;
       --  Clear standby flag
-      CSBF           : CR_CSBF_Field := 16#0#;
+      CSBF           : Boolean := False;
       --  Power voltage detector enable
-      PVDE           : CR_PVDE_Field := 16#0#;
+      PVDE           : Boolean := False;
       --  PVD level selection
       PLS            : CR_PLS_Field := 16#0#;
       --  Disable backup domain write protection
-      DBP            : CR_DBP_Field := 16#0#;
+      DBP            : Boolean := False;
       --  Flash power down in Stop mode
-      FPDS           : CR_FPDS_Field := 16#0#;
+      FPDS           : Boolean := False;
       --  Low-Power Regulator Low Voltage in deepsleep
-      LPLVDS         : CR_LPLVDS_Field := 16#0#;
+      LPLVDS         : Boolean := False;
       --  Main regulator low voltage in deepsleep mode
-      MRLVDS         : CR_MRLVDS_Field := 16#0#;
+      MRLVDS         : Boolean := False;
       --  unspecified
-      Reserved_12_13 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_12_13 : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  Regulator voltage scaling output selection
       VOS            : CR_VOS_Field := 16#3#;
       --  Over-drive enable
-      ODEN           : CR_ODEN_Field := 16#0#;
+      ODEN           : Boolean := False;
       --  Over-drive switching enabled
-      ODSWEN         : CR_ODSWEN_Field := 16#0#;
+      ODSWEN         : Boolean := False;
       --  Under-drive enable in stop mode
       UDEN           : CR_UDEN_Field := 16#0#;
       --  unspecified
-      Reserved_20_31 : STM32_SVD.UInt12 := 16#0#;
+      Reserved_20_31 : Interfaces.Bit_Types.UInt12 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -93,47 +82,38 @@ package STM32_SVD.PWR is
    -- CSR_Register --
    ------------------
 
-   subtype CSR_WUF_Field is STM32_SVD.Bit;
-   subtype CSR_SBF_Field is STM32_SVD.Bit;
-   subtype CSR_PVDO_Field is STM32_SVD.Bit;
-   subtype CSR_BRR_Field is STM32_SVD.Bit;
-   subtype CSR_EWUP_Field is STM32_SVD.Bit;
-   subtype CSR_BRE_Field is STM32_SVD.Bit;
-   subtype CSR_VOSRDY_Field is STM32_SVD.Bit;
-   subtype CSR_ODRDY_Field is STM32_SVD.Bit;
-   subtype CSR_ODSWRDY_Field is STM32_SVD.Bit;
-   subtype CSR_UDRDY_Field is STM32_SVD.UInt2;
+   subtype CSR_UDRDY_Field is Interfaces.Bit_Types.UInt2;
 
    --  power control/status register
    type CSR_Register is record
-      --  Wakeup flag
-      WUF            : CSR_WUF_Field := 16#0#;
-      --  Standby flag
-      SBF            : CSR_SBF_Field := 16#0#;
-      --  PVD output
-      PVDO           : CSR_PVDO_Field := 16#0#;
-      --  Backup regulator ready
-      BRR            : CSR_BRR_Field := 16#0#;
+      --  Read-only. Wakeup flag
+      WUF            : Boolean := False;
+      --  Read-only. Standby flag
+      SBF            : Boolean := False;
+      --  Read-only. PVD output
+      PVDO           : Boolean := False;
+      --  Read-only. Backup regulator ready
+      BRR            : Boolean := False;
       --  unspecified
-      Reserved_4_7   : STM32_SVD.UInt4 := 16#0#;
+      Reserved_4_7   : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  Enable WKUP pin
-      EWUP           : CSR_EWUP_Field := 16#0#;
+      EWUP           : Boolean := False;
       --  Backup regulator enable
-      BRE            : CSR_BRE_Field := 16#0#;
+      BRE            : Boolean := False;
       --  unspecified
-      Reserved_10_13 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_10_13 : Interfaces.Bit_Types.UInt4 := 16#0#;
       --  Regulator voltage scaling output selection ready bit
-      VOSRDY         : CSR_VOSRDY_Field := 16#0#;
+      VOSRDY         : Boolean := False;
       --  unspecified
-      Reserved_15_15 : STM32_SVD.Bit := 16#0#;
-      --  Over-drive mode ready
-      ODRDY          : CSR_ODRDY_Field := 16#0#;
-      --  Over-drive mode switching ready
-      ODSWRDY        : CSR_ODSWRDY_Field := 16#0#;
+      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      --  Read-only. Over-drive mode ready
+      ODRDY          : Boolean := False;
+      --  Read-only. Over-drive mode switching ready
+      ODSWRDY        : Boolean := False;
       --  Under-drive ready flag
       UDRDY          : CSR_UDRDY_Field := 16#0#;
       --  unspecified
-      Reserved_20_31 : STM32_SVD.UInt12 := 16#0#;
+      Reserved_20_31 : Interfaces.Bit_Types.UInt12 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -175,6 +155,6 @@ package STM32_SVD.PWR is
 
    --  Power control
    PWR_Periph : aliased PWR_Peripheral
-     with Import, Address => System'To_Address (16#40007000#);
+     with Import, Address => PWR_Base;
 
 end STM32_SVD.PWR;

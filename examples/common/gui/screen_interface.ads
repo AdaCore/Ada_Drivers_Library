@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32;
+with Interfaces; use Interfaces;
 
 package Screen_Interface is
 
@@ -47,7 +47,7 @@ package Screen_Interface is
    function "+" (P1, P2 : Point) return Point is (P1.X + P2.X, P1.Y + P2.Y);
    function "-" (P1, P2 : Point) return Point is (P1.X - P2.X, P1.Y - P2.Y);
 
-   subtype Color is STM32.Half_Word;
+   subtype Color is Unsigned_16;
 
    Black      : Color := 2#1_00000_00000_00000#;
    White      : Color := 2#1_11111_11111_11111#;

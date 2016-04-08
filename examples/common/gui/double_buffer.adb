@@ -21,25 +21,13 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with System;    use System;
+with System;               use System;
+with Interfaces.Bit_Types; use Interfaces.Bit_Types;
 
-with STM32.LCD; use STM32.LCD, STM32;
-with STM32.SDRAM; use STM32.SDRAM;
+with STM32.LCD;            use STM32.LCD, STM32;
+with STM32.SDRAM;          use STM32.SDRAM;
 
 package body Double_Buffer is
-
---     type Layer_Activation_Type is
---       (Layer_Inactive,
---        Layer_Single_Buffer,
---        Layer_Double_Buffer);
---
---     Background : STM32.LCD.LCD_Layer renames STM32.LCD.Layer1;
---     Foreground : STM32.LCD.LCD_Layer renames STM32.LCD.Layer2;
---
---     type LCD_Configuration is record
---        Layer_Background     : Layer_Activation_Type := Layer_Single_Buffer;
---        Layer_Foreground     : Layer_Activation_Type := Layer_Inactive;
---     end record;
 
    type FB_Type is (FB1, FB2);
    Visible_FB : FB_Type := FB1;
@@ -73,7 +61,7 @@ package body Double_Buffer is
          when Layer_Double_Buffer =>
             STM32.LCD.Set_Layer_State (Layer1, Enabled);
             Frame_Buffers (Layer1, FB1) := STM32.LCD.Current_Frame_Buffer (Layer1);
-            Frame_Buffers (Layer1, FB2) := STM32.SDRAM.Reserve (FB_Size);
+            Frame_Buffers (Layer1, FB2) := STM32.SDRAM.Reserve (FB_Size, 32);
       end case;
 
       case Layer_Foreground is
@@ -85,7 +73,7 @@ package body Double_Buffer is
          when Layer_Double_Buffer =>
             STM32.LCD.Set_Layer_State (Layer2, Enabled);
             Frame_Buffers (Layer2, FB1) := STM32.LCD.Current_Frame_Buffer (Layer2);
-            Frame_Buffers (Layer2, FB2) := STM32.SDRAM.Reserve (FB_Size);
+            Frame_Buffers (Layer2, FB2) := STM32.SDRAM.Reserve (FB_Size, 32);
       end case;
    end Initialize;
 

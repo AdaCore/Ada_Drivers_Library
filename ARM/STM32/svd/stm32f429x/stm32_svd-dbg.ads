@@ -1,13 +1,13 @@
---  Automatically generated from STM32F429x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F429x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.DBG is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,17 +17,17 @@ package STM32_SVD.DBG is
    -- DBGMCU_IDCODE_Register --
    ----------------------------
 
-   subtype DBGMCU_IDCODE_DEV_ID_Field is STM32_SVD.UInt12;
-   subtype DBGMCU_IDCODE_REV_ID_Field is STM32_SVD.Short;
+   subtype DBGMCU_IDCODE_DEV_ID_Field is Interfaces.Bit_Types.UInt12;
+   subtype DBGMCU_IDCODE_REV_ID_Field is Interfaces.Bit_Types.Short;
 
    --  IDCODE
    type DBGMCU_IDCODE_Register is record
-      --  DEV_ID
-      DEV_ID         : DBGMCU_IDCODE_DEV_ID_Field;
+      --  Read-only. DEV_ID
+      DEV_ID         : DBGMCU_IDCODE_DEV_ID_Field := 16#411#;
       --  unspecified
-      Reserved_12_15 : STM32_SVD.UInt4;
-      --  REV_ID
-      REV_ID         : DBGMCU_IDCODE_REV_ID_Field;
+      Reserved_12_15 : Interfaces.Bit_Types.UInt4;
+      --  Read-only. REV_ID
+      REV_ID         : DBGMCU_IDCODE_REV_ID_Field := 16#1000#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -42,28 +42,24 @@ package STM32_SVD.DBG is
    -- DBGMCU_CR_Register --
    ------------------------
 
-   subtype DBGMCU_CR_DBG_SLEEP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_CR_DBG_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_CR_DBG_STANDBY_Field is STM32_SVD.Bit;
-   subtype DBGMCU_CR_TRACE_IOEN_Field is STM32_SVD.Bit;
-   subtype DBGMCU_CR_TRACE_MODE_Field is STM32_SVD.UInt2;
+   subtype DBGMCU_CR_TRACE_MODE_Field is Interfaces.Bit_Types.UInt2;
 
    --  Control Register
    type DBGMCU_CR_Register is record
       --  DBG_SLEEP
-      DBG_SLEEP     : DBGMCU_CR_DBG_SLEEP_Field := 16#0#;
+      DBG_SLEEP     : Boolean := False;
       --  DBG_STOP
-      DBG_STOP      : DBGMCU_CR_DBG_STOP_Field := 16#0#;
+      DBG_STOP      : Boolean := False;
       --  DBG_STANDBY
-      DBG_STANDBY   : DBGMCU_CR_DBG_STANDBY_Field := 16#0#;
+      DBG_STANDBY   : Boolean := False;
       --  unspecified
-      Reserved_3_4  : STM32_SVD.UInt2 := 16#0#;
+      Reserved_3_4  : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  TRACE_IOEN
-      TRACE_IOEN    : DBGMCU_CR_TRACE_IOEN_Field := 16#0#;
+      TRACE_IOEN    : Boolean := False;
       --  TRACE_MODE
       TRACE_MODE    : DBGMCU_CR_TRACE_MODE_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : STM32_SVD.UInt24 := 16#0#;
+      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -82,68 +78,48 @@ package STM32_SVD.DBG is
    -- DBGMCU_APB1_FZ_Register --
    -----------------------------
 
-   subtype DBGMCU_APB1_FZ_DBG_TIM2_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_TIM3_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_TIM4_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_TIM5_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_TIM6_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_TIM7_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_TIM12_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_TIM13_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_TIM14_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_WWDG_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_IWDEG_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_J2C1_SMBUS_TIMEOUT_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_J2C2_SMBUS_TIMEOUT_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_J2C3SMBUS_TIMEOUT_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_CAN1_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB1_FZ_DBG_CAN2_STOP_Field is STM32_SVD.Bit;
-
    --  Debug MCU APB1 Freeze registe
    type DBGMCU_APB1_FZ_Register is record
       --  DBG_TIM2_STOP
-      DBG_TIM2_STOP          : DBGMCU_APB1_FZ_DBG_TIM2_STOP_Field := 16#0#;
+      DBG_TIM2_STOP          : Boolean := False;
       --  DBG_TIM3 _STOP
-      DBG_TIM3_STOP          : DBGMCU_APB1_FZ_DBG_TIM3_STOP_Field := 16#0#;
+      DBG_TIM3_STOP          : Boolean := False;
       --  DBG_TIM4_STOP
-      DBG_TIM4_STOP          : DBGMCU_APB1_FZ_DBG_TIM4_STOP_Field := 16#0#;
+      DBG_TIM4_STOP          : Boolean := False;
       --  DBG_TIM5_STOP
-      DBG_TIM5_STOP          : DBGMCU_APB1_FZ_DBG_TIM5_STOP_Field := 16#0#;
+      DBG_TIM5_STOP          : Boolean := False;
       --  DBG_TIM6_STOP
-      DBG_TIM6_STOP          : DBGMCU_APB1_FZ_DBG_TIM6_STOP_Field := 16#0#;
+      DBG_TIM6_STOP          : Boolean := False;
       --  DBG_TIM7_STOP
-      DBG_TIM7_STOP          : DBGMCU_APB1_FZ_DBG_TIM7_STOP_Field := 16#0#;
+      DBG_TIM7_STOP          : Boolean := False;
       --  DBG_TIM12_STOP
-      DBG_TIM12_STOP         : DBGMCU_APB1_FZ_DBG_TIM12_STOP_Field := 16#0#;
+      DBG_TIM12_STOP         : Boolean := False;
       --  DBG_TIM13_STOP
-      DBG_TIM13_STOP         : DBGMCU_APB1_FZ_DBG_TIM13_STOP_Field := 16#0#;
+      DBG_TIM13_STOP         : Boolean := False;
       --  DBG_TIM14_STOP
-      DBG_TIM14_STOP         : DBGMCU_APB1_FZ_DBG_TIM14_STOP_Field := 16#0#;
+      DBG_TIM14_STOP         : Boolean := False;
       --  unspecified
-      Reserved_9_10          : STM32_SVD.UInt2 := 16#0#;
+      Reserved_9_10          : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  DBG_WWDG_STOP
-      DBG_WWDG_STOP          : DBGMCU_APB1_FZ_DBG_WWDG_STOP_Field := 16#0#;
+      DBG_WWDG_STOP          : Boolean := False;
       --  DBG_IWDEG_STOP
-      DBG_IWDEG_STOP         : DBGMCU_APB1_FZ_DBG_IWDEG_STOP_Field := 16#0#;
+      DBG_IWDEG_STOP         : Boolean := False;
       --  unspecified
-      Reserved_13_20         : STM32_SVD.Byte := 16#0#;
+      Reserved_13_20         : Interfaces.Bit_Types.Byte := 16#0#;
       --  DBG_J2C1_SMBUS_TIMEOUT
-      DBG_J2C1_SMBUS_TIMEOUT : DBGMCU_APB1_FZ_DBG_J2C1_SMBUS_TIMEOUT_Field :=
-                                16#0#;
+      DBG_J2C1_SMBUS_TIMEOUT : Boolean := False;
       --  DBG_J2C2_SMBUS_TIMEOUT
-      DBG_J2C2_SMBUS_TIMEOUT : DBGMCU_APB1_FZ_DBG_J2C2_SMBUS_TIMEOUT_Field :=
-                                16#0#;
+      DBG_J2C2_SMBUS_TIMEOUT : Boolean := False;
       --  DBG_J2C3SMBUS_TIMEOUT
-      DBG_J2C3SMBUS_TIMEOUT  : DBGMCU_APB1_FZ_DBG_J2C3SMBUS_TIMEOUT_Field :=
-                                16#0#;
+      DBG_J2C3SMBUS_TIMEOUT  : Boolean := False;
       --  unspecified
-      Reserved_24_24         : STM32_SVD.Bit := 16#0#;
+      Reserved_24_24         : Interfaces.Bit_Types.Bit := 16#0#;
       --  DBG_CAN1_STOP
-      DBG_CAN1_STOP          : DBGMCU_APB1_FZ_DBG_CAN1_STOP_Field := 16#0#;
+      DBG_CAN1_STOP          : Boolean := False;
       --  DBG_CAN2_STOP
-      DBG_CAN2_STOP          : DBGMCU_APB1_FZ_DBG_CAN2_STOP_Field := 16#0#;
+      DBG_CAN2_STOP          : Boolean := False;
       --  unspecified
-      Reserved_27_31         : STM32_SVD.UInt5 := 16#0#;
+      Reserved_27_31         : Interfaces.Bit_Types.UInt5 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -175,28 +151,22 @@ package STM32_SVD.DBG is
    -- DBGMCU_APB2_FZ_Register --
    -----------------------------
 
-   subtype DBGMCU_APB2_FZ_DBG_TIM1_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB2_FZ_DBG_TIM8_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB2_FZ_DBG_TIM9_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB2_FZ_DBG_TIM10_STOP_Field is STM32_SVD.Bit;
-   subtype DBGMCU_APB2_FZ_DBG_TIM11_STOP_Field is STM32_SVD.Bit;
-
    --  Debug MCU APB2 Freeze registe
    type DBGMCU_APB2_FZ_Register is record
       --  TIM1 counter stopped when core is halted
-      DBG_TIM1_STOP  : DBGMCU_APB2_FZ_DBG_TIM1_STOP_Field := 16#0#;
+      DBG_TIM1_STOP  : Boolean := False;
       --  TIM8 counter stopped when core is halted
-      DBG_TIM8_STOP  : DBGMCU_APB2_FZ_DBG_TIM8_STOP_Field := 16#0#;
+      DBG_TIM8_STOP  : Boolean := False;
       --  unspecified
-      Reserved_2_15  : STM32_SVD.UInt14 := 16#0#;
+      Reserved_2_15  : Interfaces.Bit_Types.UInt14 := 16#0#;
       --  TIM9 counter stopped when core is halted
-      DBG_TIM9_STOP  : DBGMCU_APB2_FZ_DBG_TIM9_STOP_Field := 16#0#;
+      DBG_TIM9_STOP  : Boolean := False;
       --  TIM10 counter stopped when core is halted
-      DBG_TIM10_STOP : DBGMCU_APB2_FZ_DBG_TIM10_STOP_Field := 16#0#;
+      DBG_TIM10_STOP : Boolean := False;
       --  TIM11 counter stopped when core is halted
-      DBG_TIM11_STOP : DBGMCU_APB2_FZ_DBG_TIM11_STOP_Field := 16#0#;
+      DBG_TIM11_STOP : Boolean := False;
       --  unspecified
-      Reserved_19_31 : STM32_SVD.UInt13 := 16#0#;
+      Reserved_19_31 : Interfaces.Bit_Types.UInt13 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -237,6 +207,6 @@ package STM32_SVD.DBG is
 
    --  Debug support
    DBG_Periph : aliased DBG_Peripheral
-     with Import, Address => System'To_Address (16#E0042000#);
+     with Import, Address => DBG_Base;
 
 end STM32_SVD.DBG;

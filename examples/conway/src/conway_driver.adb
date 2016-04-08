@@ -23,6 +23,7 @@
 
 with Ada.Unchecked_Conversion;
 with Interfaces;               use Interfaces;
+with Interfaces.Bit_Types;     use Interfaces.Bit_Types;
 with System;                   use System;
 
 with STM32.Button;             use STM32.Button;
@@ -32,9 +33,10 @@ with STM32.RNG.Interrupts;     use STM32.RNG.Interrupts;
 with STM32.SDRAM;
 
 with Double_Buffer;            use Double_Buffer;
+with Bitmapped_Drawing;        use Bitmapped_Drawing;
+with Cortex_M.Cache;
 
 package body Conway_Driver is
-   use STM32;
 
    type Width is mod LCD_Natural_Width;
    type Height is mod LCD_Natural_Height;
@@ -140,7 +142,7 @@ package body Conway_Driver is
    G, G2, Tmp : Grid_Access;
 
    Format : constant Pixel_Format := Pixel_Fmt_ARGB1555;
-   Colors : constant array (Cell_State) of Stm32.Word :=
+   Colors : constant array (Cell_State) of Word :=
               (case Format is
                   when Pixel_Fmt_ARGB1555 => (Alive => 16#ffff#, Dead => 16#801f#),
                   when Pixel_Fmt_ARGB4444 => (Alive => 16#ffff#, Dead => 16#f00f#),
@@ -324,20 +326,33 @@ package body Conway_Driver is
          State : Cell_State)
       is
          Neighbors : constant array (1 .. 8) of Coordinates :=
-                       ( (X - 1, Y - 1), (X, Y - 1), (X + 1, Y - 1),
-                         (X - 1, Y    ),             (X + 1, Y    ),
-                         (X - 1, Y + 1), (X, Y + 1), (X + 1, Y + 1) );
+                       ((X - 1, Y - 1), (X, Y - 1), (X + 1, Y - 1),
+                        (X - 1, Y),                 (X + 1, Y),
+                        (X - 1, Y + 1), (X, Y + 1), (X + 1, Y + 1));
+
+         procedure Modif_Neighbor_Cnt (Idx : Natural; Amount : Integer)
+           with Inline;
+
+         ----------------
+         -- Modif_Grid --
+         ----------------
+
+         procedure Modif_Neighbor_Cnt (Idx : Natural; Amount : Integer)
+         is
+            Val : Neighbor_Cnt renames
+                    G2 (Neighbors (Idx).Y) (Neighbors (Idx).X).Neighbor;
+         begin
+            Val := Neighbor_Cnt (Integer (Val) + Amount);
+         end Modif_Neighbor_Cnt;
 
       begin
          for Idx in Neighbors'Range loop
             --  Implement wraparound for coordinates that end up off
             --  our grid.
             if State = Alive then
-               G2 (Neighbors (Idx).Y) (Neighbors (Idx).X).Neighbor :=
-                 G2 (Neighbors (Idx).Y) (Neighbors (Idx).X).Neighbor + 1;
+               Modif_Neighbor_Cnt (Idx, 1);
             else
-               G2 (Neighbors (Idx).Y) (Neighbors (Idx).X).Neighbor :=
-                 G2 (Neighbors (Idx).Y) (Neighbors (Idx).X).Neighbor - 1;
+               Modif_Neighbor_Cnt (Idx, -1);
             end if;
          end loop;
       end Update_Neighbors;
@@ -379,8 +394,8 @@ package body Conway_Driver is
                      if G (Y) (X).Neighbor not in 2 .. 3 then
                         G2 (Y) (X).State := Dead;
                         Update_Neighbors (X, Y, Dead);
-                        DMA2D_Set_Pixel
-                          (Buffer, Natural (X), Natural (Y),
+                        Put_Pixel
+                          (Buffer, (Natural (X), Natural (Y)),
                            Colors (Dead));
                      end if;
 
@@ -388,14 +403,18 @@ package body Conway_Driver is
                      if G (Y) (X).Neighbor = 3 then
                         G2 (Y) (X).State := Alive;
                         Update_Neighbors (X, Y, Alive);
-                        DMA2D_Set_Pixel
-                          (Buffer, Natural (X), Natural (Y),
+                        Put_Pixel
+                          (Buffer, (Natural (X), Natural (Y)),
                            Colors (Alive));
                      end if;
                end case;
             end if;
          end loop;
       end loop;
+
+      Cortex_M.Cache.Clean_DCache
+        (Buffer.Addr,
+         Len => Buffer.Width * Buffer.Height * Bytes_Per_Pixel (Buffer.Color_Mode));
 
       --  Swap buffers
       Tmp := G;

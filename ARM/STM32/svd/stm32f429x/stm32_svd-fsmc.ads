@@ -1,13 +1,13 @@
---  Automatically generated from STM32F429x.svd2ada by SVD2Ada
---  see https://github.com/AdaCore/svd2ada
+--  This spec has been automatically generated from STM32F429x.svd
 
-pragma Restrictions (No_Elaboration_Code);
+pragma Ada_2012;
 
-with STM32_SVD;
+with Interfaces.Bit_Types;
 with System;
 
 package STM32_SVD.FSMC is
    pragma Preelaborate;
+   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,59 +17,47 @@ package STM32_SVD.FSMC is
    -- BCR1_Register --
    -------------------
 
-   subtype BCR1_MBKEN_Field is STM32_SVD.Bit;
-   subtype BCR1_MUXEN_Field is STM32_SVD.Bit;
-   subtype BCR1_MTYP_Field is STM32_SVD.UInt2;
-   subtype BCR1_MWID_Field is STM32_SVD.UInt2;
-   subtype BCR1_FACCEN_Field is STM32_SVD.Bit;
-   subtype BCR1_BURSTEN_Field is STM32_SVD.Bit;
-   subtype BCR1_WAITPOL_Field is STM32_SVD.Bit;
-   subtype BCR1_WAITCFG_Field is STM32_SVD.Bit;
-   subtype BCR1_WREN_Field is STM32_SVD.Bit;
-   subtype BCR1_WAITEN_Field is STM32_SVD.Bit;
-   subtype BCR1_EXTMOD_Field is STM32_SVD.Bit;
-   subtype BCR1_ASYNCWAIT_Field is STM32_SVD.Bit;
-   subtype BCR1_CBURSTRW_Field is STM32_SVD.Bit;
-   subtype BCR1_CCLKEN_Field is STM32_SVD.Bit;
+   subtype BCR1_MTYP_Field is Interfaces.Bit_Types.UInt2;
+   subtype BCR1_MWID_Field is Interfaces.Bit_Types.UInt2;
 
    --  SRAM/NOR-Flash chip-select control register 1
    type BCR1_Register is record
       --  MBKEN
-      MBKEN          : BCR1_MBKEN_Field := 16#0#;
+      MBKEN          : Boolean := False;
       --  MUXEN
-      MUXEN          : BCR1_MUXEN_Field := 16#0#;
+      MUXEN          : Boolean := False;
       --  MTYP
       MTYP           : BCR1_MTYP_Field := 16#0#;
       --  MWID
       MWID           : BCR1_MWID_Field := 16#1#;
       --  FACCEN
-      FACCEN         : BCR1_FACCEN_Field := 16#1#;
+      FACCEN         : Boolean := True;
       --  unspecified
-      Reserved_7_7   : STM32_SVD.Bit := 16#1#;
+      Reserved_7_7   : Interfaces.Bit_Types.Bit := 16#1#;
       --  BURSTEN
-      BURSTEN        : BCR1_BURSTEN_Field := 16#0#;
+      BURSTEN        : Boolean := False;
       --  WAITPOL
-      WAITPOL        : BCR1_WAITPOL_Field := 16#0#;
+      WAITPOL        : Boolean := False;
       --  unspecified
-      Reserved_10_10 : STM32_SVD.Bit := 16#0#;
+      Reserved_10_10 : Interfaces.Bit_Types.Bit := 16#0#;
       --  WAITCFG
-      WAITCFG        : BCR1_WAITCFG_Field := 16#0#;
+      WAITCFG        : Boolean := False;
       --  WREN
-      WREN           : BCR1_WREN_Field := 16#1#;
+      WREN           : Boolean := True;
       --  WAITEN
-      WAITEN         : BCR1_WAITEN_Field := 16#1#;
+      WAITEN         : Boolean := True;
       --  EXTMOD
-      EXTMOD         : BCR1_EXTMOD_Field := 16#0#;
+      EXTMOD         : Boolean := False;
       --  ASYNCWAIT
-      ASYNCWAIT      : BCR1_ASYNCWAIT_Field := 16#0#;
+      ASYNCWAIT      : Boolean := False;
       --  unspecified
-      Reserved_16_18 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_16_18 : Interfaces.Bit_Types.UInt3 := 16#0#;
       --  CBURSTRW
-      CBURSTRW       : BCR1_CBURSTRW_Field := 16#0#;
+      CBURSTRW       : Boolean := False;
       --  CCLKEN
-      CCLKEN         : BCR1_CCLKEN_Field := 16#0#;
+      CCLKEN         : Boolean := False;
       --  unspecified
-      Reserved_21_31 : STM32_SVD.UInt11 := 16#0#;
+      Reserved_21_31 : Interfaces.Bit_Types.UInt11 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -99,13 +87,13 @@ package STM32_SVD.FSMC is
    -- BTR_Register --
    ------------------
 
-   subtype BTR1_ADDSET_Field is STM32_SVD.UInt4;
-   subtype BTR1_ADDHLD_Field is STM32_SVD.UInt4;
-   subtype BTR1_DATAST_Field is STM32_SVD.Byte;
-   subtype BTR1_BUSTURN_Field is STM32_SVD.UInt4;
-   subtype BTR1_CLKDIV_Field is STM32_SVD.UInt4;
-   subtype BTR1_DATLAT_Field is STM32_SVD.UInt4;
-   subtype BTR1_ACCMOD_Field is STM32_SVD.UInt2;
+   subtype BTR1_ADDSET_Field is Interfaces.Bit_Types.UInt4;
+   subtype BTR1_ADDHLD_Field is Interfaces.Bit_Types.UInt4;
+   subtype BTR1_DATAST_Field is Interfaces.Bit_Types.Byte;
+   subtype BTR1_BUSTURN_Field is Interfaces.Bit_Types.UInt4;
+   subtype BTR1_CLKDIV_Field is Interfaces.Bit_Types.UInt4;
+   subtype BTR1_DATLAT_Field is Interfaces.Bit_Types.UInt4;
+   subtype BTR1_ACCMOD_Field is Interfaces.Bit_Types.UInt2;
 
    --  SRAM/NOR-Flash chip-select timing register 1
    type BTR_Register is record
@@ -124,7 +112,7 @@ package STM32_SVD.FSMC is
       --  ACCMOD
       ACCMOD         : BTR1_ACCMOD_Field := 16#3#;
       --  unspecified
-      Reserved_30_31 : STM32_SVD.UInt2 := 16#3#;
+      Reserved_30_31 : Interfaces.Bit_Types.UInt2 := 16#3#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -144,57 +132,45 @@ package STM32_SVD.FSMC is
    -- BCR_Register --
    ------------------
 
-   subtype BCR2_MBKEN_Field is STM32_SVD.Bit;
-   subtype BCR2_MUXEN_Field is STM32_SVD.Bit;
-   subtype BCR2_MTYP_Field is STM32_SVD.UInt2;
-   subtype BCR2_MWID_Field is STM32_SVD.UInt2;
-   subtype BCR2_FACCEN_Field is STM32_SVD.Bit;
-   subtype BCR2_BURSTEN_Field is STM32_SVD.Bit;
-   subtype BCR2_WAITPOL_Field is STM32_SVD.Bit;
-   subtype BCR2_WRAPMOD_Field is STM32_SVD.Bit;
-   subtype BCR2_WAITCFG_Field is STM32_SVD.Bit;
-   subtype BCR2_WREN_Field is STM32_SVD.Bit;
-   subtype BCR2_WAITEN_Field is STM32_SVD.Bit;
-   subtype BCR2_EXTMOD_Field is STM32_SVD.Bit;
-   subtype BCR2_ASYNCWAIT_Field is STM32_SVD.Bit;
-   subtype BCR2_CBURSTRW_Field is STM32_SVD.Bit;
+   subtype BCR2_MTYP_Field is Interfaces.Bit_Types.UInt2;
+   subtype BCR2_MWID_Field is Interfaces.Bit_Types.UInt2;
 
    --  SRAM/NOR-Flash chip-select control register 2
    type BCR_Register is record
       --  MBKEN
-      MBKEN          : BCR2_MBKEN_Field := 16#0#;
+      MBKEN          : Boolean := False;
       --  MUXEN
-      MUXEN          : BCR2_MUXEN_Field := 16#0#;
+      MUXEN          : Boolean := False;
       --  MTYP
       MTYP           : BCR2_MTYP_Field := 16#0#;
       --  MWID
       MWID           : BCR2_MWID_Field := 16#1#;
       --  FACCEN
-      FACCEN         : BCR2_FACCEN_Field := 16#1#;
+      FACCEN         : Boolean := True;
       --  unspecified
-      Reserved_7_7   : STM32_SVD.Bit := 16#1#;
+      Reserved_7_7   : Interfaces.Bit_Types.Bit := 16#1#;
       --  BURSTEN
-      BURSTEN        : BCR2_BURSTEN_Field := 16#0#;
+      BURSTEN        : Boolean := False;
       --  WAITPOL
-      WAITPOL        : BCR2_WAITPOL_Field := 16#0#;
+      WAITPOL        : Boolean := False;
       --  WRAPMOD
-      WRAPMOD        : BCR2_WRAPMOD_Field := 16#0#;
+      WRAPMOD        : Boolean := False;
       --  WAITCFG
-      WAITCFG        : BCR2_WAITCFG_Field := 16#0#;
+      WAITCFG        : Boolean := False;
       --  WREN
-      WREN           : BCR2_WREN_Field := 16#1#;
+      WREN           : Boolean := True;
       --  WAITEN
-      WAITEN         : BCR2_WAITEN_Field := 16#1#;
+      WAITEN         : Boolean := True;
       --  EXTMOD
-      EXTMOD         : BCR2_EXTMOD_Field := 16#0#;
+      EXTMOD         : Boolean := False;
       --  ASYNCWAIT
-      ASYNCWAIT      : BCR2_ASYNCWAIT_Field := 16#0#;
+      ASYNCWAIT      : Boolean := False;
       --  unspecified
-      Reserved_16_18 : STM32_SVD.UInt3 := 16#0#;
+      Reserved_16_18 : Interfaces.Bit_Types.UInt3 := 16#0#;
       --  CBURSTRW
-      CBURSTRW       : BCR2_CBURSTRW_Field := 16#0#;
+      CBURSTRW       : Boolean := False;
       --  unspecified
-      Reserved_20_31 : STM32_SVD.UInt12 := 16#0#;
+      Reserved_20_31 : Interfaces.Bit_Types.UInt12 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -223,31 +199,27 @@ package STM32_SVD.FSMC is
    -- PCR_Register --
    ------------------
 
-   subtype PCR2_PWAITEN_Field is STM32_SVD.Bit;
-   subtype PCR2_PBKEN_Field is STM32_SVD.Bit;
-   subtype PCR2_PTYP_Field is STM32_SVD.Bit;
-   subtype PCR2_PWID_Field is STM32_SVD.UInt2;
-   subtype PCR2_ECCEN_Field is STM32_SVD.Bit;
-   subtype PCR2_TCLR_Field is STM32_SVD.UInt4;
-   subtype PCR2_TAR_Field is STM32_SVD.UInt4;
-   subtype PCR2_ECCPS_Field is STM32_SVD.UInt3;
+   subtype PCR2_PWID_Field is Interfaces.Bit_Types.UInt2;
+   subtype PCR2_TCLR_Field is Interfaces.Bit_Types.UInt4;
+   subtype PCR2_TAR_Field is Interfaces.Bit_Types.UInt4;
+   subtype PCR2_ECCPS_Field is Interfaces.Bit_Types.UInt3;
 
    --  PC Card/NAND Flash control register 2
    type PCR_Register is record
       --  unspecified
-      Reserved_0_0   : STM32_SVD.Bit := 16#0#;
+      Reserved_0_0   : Interfaces.Bit_Types.Bit := 16#0#;
       --  PWAITEN
-      PWAITEN        : PCR2_PWAITEN_Field := 16#0#;
+      PWAITEN        : Boolean := False;
       --  PBKEN
-      PBKEN          : PCR2_PBKEN_Field := 16#0#;
+      PBKEN          : Boolean := False;
       --  PTYP
-      PTYP           : PCR2_PTYP_Field := 16#1#;
+      PTYP           : Boolean := True;
       --  PWID
       PWID           : PCR2_PWID_Field := 16#1#;
       --  ECCEN
-      ECCEN          : PCR2_ECCEN_Field := 16#0#;
+      ECCEN          : Boolean := False;
       --  unspecified
-      Reserved_7_8   : STM32_SVD.UInt2 := 16#0#;
+      Reserved_7_8   : Interfaces.Bit_Types.UInt2 := 16#0#;
       --  TCLR
       TCLR           : PCR2_TCLR_Field := 16#0#;
       --  TAR
@@ -255,7 +227,7 @@ package STM32_SVD.FSMC is
       --  ECCPS
       ECCPS          : PCR2_ECCPS_Field := 16#0#;
       --  unspecified
-      Reserved_20_31 : STM32_SVD.UInt12 := 16#0#;
+      Reserved_20_31 : Interfaces.Bit_Types.UInt12 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -278,32 +250,24 @@ package STM32_SVD.FSMC is
    -- SR_Register --
    -----------------
 
-   subtype SR2_IRS_Field is STM32_SVD.Bit;
-   subtype SR2_ILS_Field is STM32_SVD.Bit;
-   subtype SR2_IFS_Field is STM32_SVD.Bit;
-   subtype SR2_IREN_Field is STM32_SVD.Bit;
-   subtype SR2_ILEN_Field is STM32_SVD.Bit;
-   subtype SR2_IFEN_Field is STM32_SVD.Bit;
-   subtype SR2_FEMPT_Field is STM32_SVD.Bit;
-
    --  FIFO status and interrupt register 2
    type SR_Register is record
       --  IRS
-      IRS           : SR2_IRS_Field := 16#0#;
+      IRS           : Boolean := False;
       --  ILS
-      ILS           : SR2_ILS_Field := 16#0#;
+      ILS           : Boolean := False;
       --  IFS
-      IFS           : SR2_IFS_Field := 16#0#;
+      IFS           : Boolean := False;
       --  IREN
-      IREN          : SR2_IREN_Field := 16#0#;
+      IREN          : Boolean := False;
       --  ILEN
-      ILEN          : SR2_ILEN_Field := 16#0#;
+      ILEN          : Boolean := False;
       --  IFEN
-      IFEN          : SR2_IFEN_Field := 16#0#;
-      --  FEMPT
-      FEMPT         : SR2_FEMPT_Field := 16#1#;
+      IFEN          : Boolean := False;
+      --  Read-only. FEMPT
+      FEMPT         : Boolean := True;
       --  unspecified
-      Reserved_7_31 : STM32_SVD.UInt25 := 16#0#;
+      Reserved_7_31 : Interfaces.Bit_Types.UInt25 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -323,10 +287,10 @@ package STM32_SVD.FSMC is
    -- PMEM_Register --
    -------------------
 
-   subtype PMEM2_MEMSETx_Field is STM32_SVD.Byte;
-   subtype PMEM2_MEMWAITx_Field is STM32_SVD.Byte;
-   subtype PMEM2_MEMHOLDx_Field is STM32_SVD.Byte;
-   subtype PMEM2_MEMHIZx_Field is STM32_SVD.Byte;
+   subtype PMEM2_MEMSETx_Field is Interfaces.Bit_Types.Byte;
+   subtype PMEM2_MEMWAITx_Field is Interfaces.Bit_Types.Byte;
+   subtype PMEM2_MEMHOLDx_Field is Interfaces.Bit_Types.Byte;
+   subtype PMEM2_MEMHIZx_Field is Interfaces.Bit_Types.Byte;
 
    --  Common memory space timing register 2
    type PMEM_Register is record
@@ -353,10 +317,10 @@ package STM32_SVD.FSMC is
    -- PATT_Register --
    -------------------
 
-   subtype PATT2_ATTSETx_Field is STM32_SVD.Byte;
-   subtype PATT2_ATTWAITx_Field is STM32_SVD.Byte;
-   subtype PATT2_ATTHOLDx_Field is STM32_SVD.Byte;
-   subtype PATT2_ATTHIZx_Field is STM32_SVD.Byte;
+   subtype PATT2_ATTSETx_Field is Interfaces.Bit_Types.Byte;
+   subtype PATT2_ATTWAITx_Field is Interfaces.Bit_Types.Byte;
+   subtype PATT2_ATTHOLDx_Field is Interfaces.Bit_Types.Byte;
+   subtype PATT2_ATTHIZx_Field is Interfaces.Bit_Types.Byte;
 
    --  Attribute memory space timing register 2
    type PATT_Register is record
@@ -383,10 +347,10 @@ package STM32_SVD.FSMC is
    -- PIO4_Register --
    -------------------
 
-   subtype PIO4_IOSETx_Field is STM32_SVD.Byte;
-   subtype PIO4_IOWAITx_Field is STM32_SVD.Byte;
-   subtype PIO4_IOHOLDx_Field is STM32_SVD.Byte;
-   subtype PIO4_IOHIZx_Field is STM32_SVD.Byte;
+   subtype PIO4_IOSETx_Field is Interfaces.Bit_Types.Byte;
+   subtype PIO4_IOWAITx_Field is Interfaces.Bit_Types.Byte;
+   subtype PIO4_IOHOLDx_Field is Interfaces.Bit_Types.Byte;
+   subtype PIO4_IOHIZx_Field is Interfaces.Bit_Types.Byte;
 
    --  I/O space timing register 4
    type PIO4_Register is record
@@ -413,12 +377,12 @@ package STM32_SVD.FSMC is
    -- BWTR_Register --
    -------------------
 
-   subtype BWTR1_ADDSET_Field is STM32_SVD.UInt4;
-   subtype BWTR1_ADDHLD_Field is STM32_SVD.UInt4;
-   subtype BWTR1_DATAST_Field is STM32_SVD.Byte;
-   subtype BWTR1_CLKDIV_Field is STM32_SVD.UInt4;
-   subtype BWTR1_DATLAT_Field is STM32_SVD.UInt4;
-   subtype BWTR1_ACCMOD_Field is STM32_SVD.UInt2;
+   subtype BWTR1_ADDSET_Field is Interfaces.Bit_Types.UInt4;
+   subtype BWTR1_ADDHLD_Field is Interfaces.Bit_Types.UInt4;
+   subtype BWTR1_DATAST_Field is Interfaces.Bit_Types.Byte;
+   subtype BWTR1_CLKDIV_Field is Interfaces.Bit_Types.UInt4;
+   subtype BWTR1_DATLAT_Field is Interfaces.Bit_Types.UInt4;
+   subtype BWTR1_ACCMOD_Field is Interfaces.Bit_Types.UInt2;
 
    --  SRAM/NOR-Flash write timing registers 1
    type BWTR_Register is record
@@ -429,7 +393,7 @@ package STM32_SVD.FSMC is
       --  DATAST
       DATAST         : BWTR1_DATAST_Field := 16#FF#;
       --  unspecified
-      Reserved_16_19 : STM32_SVD.UInt4 := 16#F#;
+      Reserved_16_19 : Interfaces.Bit_Types.UInt4 := 16#F#;
       --  CLKDIV
       CLKDIV         : BWTR1_CLKDIV_Field := 16#F#;
       --  DATLAT
@@ -437,7 +401,7 @@ package STM32_SVD.FSMC is
       --  ACCMOD
       ACCMOD         : BWTR1_ACCMOD_Field := 16#0#;
       --  unspecified
-      Reserved_30_31 : STM32_SVD.UInt2 := 16#0#;
+      Reserved_30_31 : Interfaces.Bit_Types.UInt2 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -457,15 +421,12 @@ package STM32_SVD.FSMC is
    -- SDCR_Register --
    -------------------
 
-   subtype SDCR1_NC_Field is STM32_SVD.UInt2;
-   subtype SDCR1_NR_Field is STM32_SVD.UInt2;
-   subtype SDCR1_MWID_Field is STM32_SVD.UInt2;
-   subtype SDCR1_NB_Field is STM32_SVD.Bit;
-   subtype SDCR1_CAS_Field is STM32_SVD.UInt2;
-   subtype SDCR1_WP_Field is STM32_SVD.Bit;
-   subtype SDCR1_SDCLK_Field is STM32_SVD.UInt2;
-   subtype SDCR1_RBURST_Field is STM32_SVD.Bit;
-   subtype SDCR1_RPIPE_Field is STM32_SVD.UInt2;
+   subtype SDCR1_NC_Field is Interfaces.Bit_Types.UInt2;
+   subtype SDCR1_NR_Field is Interfaces.Bit_Types.UInt2;
+   subtype SDCR1_MWID_Field is Interfaces.Bit_Types.UInt2;
+   subtype SDCR1_CAS_Field is Interfaces.Bit_Types.UInt2;
+   subtype SDCR1_SDCLK_Field is Interfaces.Bit_Types.UInt2;
+   subtype SDCR1_RPIPE_Field is Interfaces.Bit_Types.UInt2;
 
    --  SDRAM Control Register 1
    type SDCR_Register is record
@@ -476,19 +437,19 @@ package STM32_SVD.FSMC is
       --  Memory data bus width
       MWID           : SDCR1_MWID_Field := 16#1#;
       --  Number of internal banks
-      NB             : SDCR1_NB_Field := 16#1#;
+      NB             : Boolean := True;
       --  CAS latency
       CAS            : SDCR1_CAS_Field := 16#1#;
       --  Write protection
-      WP             : SDCR1_WP_Field := 16#1#;
+      WP             : Boolean := True;
       --  SDRAM clock configuration
       SDCLK          : SDCR1_SDCLK_Field := 16#0#;
       --  Burst read
-      RBURST         : SDCR1_RBURST_Field := 16#0#;
+      RBURST         : Boolean := False;
       --  Read pipe
       RPIPE          : SDCR1_RPIPE_Field := 16#0#;
       --  unspecified
-      Reserved_15_31 : STM32_SVD.UInt17 := 16#0#;
+      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -510,13 +471,13 @@ package STM32_SVD.FSMC is
    -- SDTR_Register --
    -------------------
 
-   subtype SDTR1_TMRD_Field is STM32_SVD.UInt4;
-   subtype SDTR1_TXSR_Field is STM32_SVD.UInt4;
-   subtype SDTR1_TRAS_Field is STM32_SVD.UInt4;
-   subtype SDTR1_TRC_Field is STM32_SVD.UInt4;
-   subtype SDTR1_TWR_Field is STM32_SVD.UInt4;
-   subtype SDTR1_TRP_Field is STM32_SVD.UInt4;
-   subtype SDTR1_TRCD_Field is STM32_SVD.UInt4;
+   subtype SDTR1_TMRD_Field is Interfaces.Bit_Types.UInt4;
+   subtype SDTR1_TXSR_Field is Interfaces.Bit_Types.UInt4;
+   subtype SDTR1_TRAS_Field is Interfaces.Bit_Types.UInt4;
+   subtype SDTR1_TRC_Field is Interfaces.Bit_Types.UInt4;
+   subtype SDTR1_TWR_Field is Interfaces.Bit_Types.UInt4;
+   subtype SDTR1_TRP_Field is Interfaces.Bit_Types.UInt4;
+   subtype SDTR1_TRCD_Field is Interfaces.Bit_Types.UInt4;
 
    --  SDRAM Timing register 1
    type SDTR_Register is record
@@ -535,7 +496,7 @@ package STM32_SVD.FSMC is
       --  Row to column delay
       TRCD           : SDTR1_TRCD_Field := 16#F#;
       --  unspecified
-      Reserved_28_31 : STM32_SVD.UInt4 := 16#0#;
+      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -555,17 +516,14 @@ package STM32_SVD.FSMC is
    -- SDCMR_Register --
    --------------------
 
-   subtype SDCMR_MODE_Field is STM32_SVD.UInt3;
+   subtype SDCMR_MODE_Field is Interfaces.Bit_Types.UInt3;
 
    ---------------
    -- SDCMR.CTB --
    ---------------
 
-   --  SDCMR_CTB array element
-   subtype SDCMR_CTB_Element is STM32_SVD.Bit;
-
    --  SDCMR_CTB array
-   type SDCMR_CTB_Field_Array is array (0 .. 1) of SDCMR_CTB_Element
+   type SDCMR_CTB_Field_Array is array (1 .. 2) of Boolean
      with Component_Size => 1, Size => 2;
 
    --  Type definition for SDCMR_CTB
@@ -575,7 +533,7 @@ package STM32_SVD.FSMC is
       case As_Array is
          when False =>
             --  CTB as a value
-            Val : STM32_SVD.UInt2;
+            Val : Interfaces.Bit_Types.UInt2;
          when True =>
             --  CTB as an array
             Arr : SDCMR_CTB_Field_Array;
@@ -588,21 +546,21 @@ package STM32_SVD.FSMC is
       Arr at 0 range 0 .. 1;
    end record;
 
-   subtype SDCMR_NRFS_Field is STM32_SVD.UInt4;
-   subtype SDCMR_MRD_Field is STM32_SVD.UInt13;
+   subtype SDCMR_NRFS_Field is Interfaces.Bit_Types.UInt4;
+   subtype SDCMR_MRD_Field is Interfaces.Bit_Types.UInt13;
 
    --  SDRAM Command Mode register
    type SDCMR_Register is record
-      --  Command mode
+      --  Write-only. Command mode
       MODE           : SDCMR_MODE_Field := 16#0#;
-      --  Command target bank 2
+      --  Write-only. Command target bank 2
       CTB            : SDCMR_CTB_Field := (As_Array => False, Val => 16#0#);
       --  Number of Auto-refresh
       NRFS           : SDCMR_NRFS_Field := 16#0#;
       --  Mode Register definition
       MRD            : SDCMR_MRD_Field := 16#0#;
       --  unspecified
-      Reserved_22_31 : STM32_SVD.UInt10 := 16#0#;
+      Reserved_22_31 : Interfaces.Bit_Types.UInt10 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -619,20 +577,18 @@ package STM32_SVD.FSMC is
    -- SDRTR_Register --
    --------------------
 
-   subtype SDRTR_CRE_Field is STM32_SVD.Bit;
-   subtype SDRTR_COUNT_Field is STM32_SVD.UInt13;
-   subtype SDRTR_REIE_Field is STM32_SVD.Bit;
+   subtype SDRTR_COUNT_Field is Interfaces.Bit_Types.UInt13;
 
    --  SDRAM Refresh Timer register
    type SDRTR_Register is record
-      --  Clear Refresh error flag
-      CRE            : SDRTR_CRE_Field := 16#0#;
+      --  Write-only. Clear Refresh error flag
+      CRE            : Boolean := False;
       --  Refresh Timer Count
       COUNT          : SDRTR_COUNT_Field := 16#0#;
       --  RES Interrupt Enable
-      REIE           : SDRTR_REIE_Field := 16#0#;
+      REIE           : Boolean := False;
       --  unspecified
-      Reserved_15_31 : STM32_SVD.UInt17 := 16#0#;
+      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -648,17 +604,15 @@ package STM32_SVD.FSMC is
    -- SDSR_Register --
    -------------------
 
-   subtype SDSR_RE_Field is STM32_SVD.Bit;
-
    ----------------
    -- SDSR.MODES --
    ----------------
 
    --  SDSR_MODES array element
-   subtype SDSR_MODES_Element is STM32_SVD.UInt2;
+   subtype SDSR_MODES_Element is Interfaces.Bit_Types.UInt2;
 
    --  SDSR_MODES array
-   type SDSR_MODES_Field_Array is array (0 .. 1) of SDSR_MODES_Element
+   type SDSR_MODES_Field_Array is array (1 .. 2) of SDSR_MODES_Element
      with Component_Size => 2, Size => 4;
 
    --  Type definition for SDSR_MODES
@@ -668,7 +622,7 @@ package STM32_SVD.FSMC is
       case As_Array is
          when False =>
             --  MODES as a value
-            Val : STM32_SVD.UInt4;
+            Val : Interfaces.Bit_Types.UInt4;
          when True =>
             --  MODES as an array
             Arr : SDSR_MODES_Field_Array;
@@ -681,18 +635,16 @@ package STM32_SVD.FSMC is
       Arr at 0 range 0 .. 3;
    end record;
 
-   subtype SDSR_BUSY_Field is STM32_SVD.Bit;
-
    --  SDRAM Status register
    type SDSR_Register is record
-      --  Refresh error flag
-      RE            : SDSR_RE_Field;
-      --  Status Mode for Bank 1
-      MODES         : SDSR_MODES_Field;
-      --  Busy status
-      BUSY          : SDSR_BUSY_Field;
+      --  Read-only. Refresh error flag
+      RE            : Boolean := False;
+      --  Read-only. Status Mode for Bank 1
+      MODES         : SDSR_MODES_Field := (As_Array => False, Val => 16#0#);
+      --  Read-only. Busy status
+      BUSY          : Boolean := False;
       --  unspecified
-      Reserved_6_31 : STM32_SVD.UInt26;
+      Reserved_6_31 : Interfaces.Bit_Types.UInt26;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -735,7 +687,7 @@ package STM32_SVD.FSMC is
       --  Attribute memory space timing register 2
       PATT2 : PATT_Register;
       --  ECC result register 2
-      ECCR2 : STM32_SVD.Word;
+      ECCR2 : Interfaces.Bit_Types.Word;
       --  PC Card/NAND Flash control register 3
       PCR3  : PCR_Register;
       --  FIFO status and interrupt register 3
@@ -745,7 +697,7 @@ package STM32_SVD.FSMC is
       --  Attribute memory space timing register 3
       PATT3 : PATT_Register;
       --  ECC result register 3
-      ECCR3 : STM32_SVD.Word;
+      ECCR3 : Interfaces.Bit_Types.Word;
       --  PC Card/NAND Flash control register 4
       PCR4  : PCR_Register;
       --  FIFO status and interrupt register 4
@@ -820,6 +772,6 @@ package STM32_SVD.FSMC is
 
    --  Flexible memory controller
    FMC_Periph : aliased FMC_Peripheral
-     with Import, Address => System'To_Address (16#A0000000#);
+     with Import, Address => FMC_Base;
 
 end STM32_SVD.FSMC;

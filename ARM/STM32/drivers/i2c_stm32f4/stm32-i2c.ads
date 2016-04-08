@@ -79,7 +79,7 @@ package STM32.I2C is
       Duty_Cycle               : I2C_Duty_Cycle  := DutyCycle_2;
 
       Addressing_Mode          : I2C_Addressing_Mode;
-      Own_Address              : STM32_SVD.UInt10;
+      Own_Address              : UInt10;
 
       --  an I2C general call dispatches the same data to all connected
       --  devices.

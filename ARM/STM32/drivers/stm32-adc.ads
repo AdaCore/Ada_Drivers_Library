@@ -65,14 +65,17 @@
 --   14        PC4    PC4    PF4
 --   15        PC5    PC5    PF5
 
+with System;        use System;
 with Ada.Real_Time; use Ada.Real_Time;
+
+private with STM32_SVD.ADC;
 
 package STM32.ADC is
    pragma Elaborate_Body;
 
    type Analog_To_Digital_Converter is limited private;
 
-   type Analog_Input_Channel is mod 19; -- thus 0 .. 18, for 19 total channels
+   subtype Analog_Input_Channel is UInt5 range 0 .. 18;
 
    type ADC_Point is record
       ADC     : access Analog_To_Digital_Converter;
@@ -142,9 +145,9 @@ package STM32.ADC is
       Trigger_Falling_Edge,
       Trigger_Both_Edges);
 
-   type Regular_Channel_Rank is range 1 .. 16;
+   subtype Regular_Channel_Rank is Natural range 1 .. 16;
 
-   type Injected_Channel_Rank is range 1 .. 4;
+   subtype Injected_Channel_Rank is Natural range 1 .. 4;
 
    type External_Events_Regular_Group is
      (Timer1_CC1_Event,
@@ -264,7 +267,7 @@ package STM32.ADC is
    Software_Triggered_Injected : constant Injected_Channel_Conversion_Trigger
      := (Enabler => Trigger_Disabled);
 
-   type Injected_Data_Offset is new Bits_12;
+   subtype Injected_Data_Offset is UInt12;
 
    type Injected_Channel_Conversion is record
       Channel     : Analog_Input_Channel;
@@ -322,7 +325,7 @@ package STM32.ADC is
    --  part of starting.
 
    function Conversion_Value (This : Analog_To_Digital_Converter)
-      return Half_Word with Inline;
+      return Short with Inline;
    --  Returns the latest regular conversion result for the specified ADC unit
 
    function Data_Register_Address (This : Analog_To_Digital_Converter)
@@ -345,7 +348,7 @@ package STM32.ADC is
    function Injected_Conversion_Value
      (This : Analog_To_Digital_Converter;
       Rank : Injected_Channel_Rank)
-      return Half_Word
+      return Short
      with Inline;
    --  Returns the latest conversion result for the analog input channel at
    --  the injected sequence position given by Rank on the specified ADC unit.
@@ -424,7 +427,7 @@ package STM32.ADC is
 
    --  Analog Watchdog  -------------------------------------------------------
 
-   type Watchdog_Threshold is new Bits_12;
+   subtype Watchdog_Threshold is UInt12;
 
    type Analog_Watchdog_Modes is
      (Watchdog_All_Regular_Channels,
@@ -725,366 +728,20 @@ private
      Post => VRef_TemperatureSensor_Enabled;
    --  One bit controls both the VRef and the temperature internal connections
 
-   --  register definitions for ADC type  -------------------------------------
-
-   type Status_Register is record
-      Reserved_31_6                        : Bits_26;
-      Overrun                              : Boolean;
-      Regular_Channel_Conversion_Started   : Boolean;
-      Injected_Channel_Conversion_Started  : Boolean;
-      Injected_Channel_Conversion_Complete : Boolean;
-      Regular_Channel_Conversion_Complete  : Boolean;
-      Analog_Watchdog_Event_Occurred       : Boolean;
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Status_Register use record
-      Reserved_31_6                        at 0 range 6 .. 31;
-      Overrun                              at 0 range 5 .. 5;
-      Regular_Channel_Conversion_Started   at 0 range 4 .. 4;
-      Injected_Channel_Conversion_Started  at 0 range 3 .. 3;
-      Injected_Channel_Conversion_Complete at 0 range 2 .. 2;
-      Regular_Channel_Conversion_Complete  at 0 range 1 .. 1;
-      Analog_Watchdog_Event_Occurred       at 0 range 0 .. 0;
-   end record;
-
-   type Control_Register_1 is record
-      Reserved_31_27                         : Bits_5;
-      Overrun_Interrupt_Enable               : Boolean;
-      Resolution                             : ADC_Resolution;
-      Watchdog_Regular_Channels_Enabled      : Boolean;
-      Watchdog_Injected_Channels_Enabled     : Boolean;
-      Reserved_21_16                         : Bits_6;
-      Discontinuous_Mode_Channel_Count       : Bits_3;
-      Discontinuous_Mode_Injected_Enabled    : Boolean;
-      Discontinuous_Mode_Regular_Enabled     : Boolean;
-      Auto_Injected_Group_Conversion_Enabled : Boolean;
-      Watchdog_Single_Channel_Enabled        : Boolean;
-      Scan_Mode_Enabled                      : Boolean;
-      Injected_EOC_Interrupt_Enabled         : Boolean;
-      Watchdog_Interrupt_Enabled             : Boolean;
-      EOC_Interrupt_Enabled                  : Boolean;
-      Watchdog_Selected_Channel              : Analog_Input_Channel;
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Control_Register_1 use record
-      Reserved_31_27                         at 0 range 27 .. 31;
-      Overrun_Interrupt_Enable               at 0 range 26 .. 26;
-      Resolution                             at 0 range 24 .. 25;
-      Watchdog_Regular_Channels_Enabled      at 0 range 23 .. 23;
-      Watchdog_Injected_Channels_Enabled     at 0 range 22 .. 22;
-      Reserved_21_16                         at 0 range 16 .. 21;
-      Discontinuous_Mode_Channel_Count       at 0 range 13 .. 15;
-      Discontinuous_Mode_Injected_Enabled    at 0 range 12 .. 12;
-      Discontinuous_Mode_Regular_Enabled     at 0 range 11 .. 11;
-      Auto_Injected_Group_Conversion_Enabled at 0 range 10 .. 10;
-      Watchdog_Single_Channel_Enabled        at 0 range  9 .. 9;
-      Scan_Mode_Enabled                      at 0 range  8 .. 8;
-      Injected_EOC_Interrupt_Enabled         at 0 range  7 .. 7;
-      Watchdog_Interrupt_Enabled             at 0 range  6 .. 6;
-      EOC_Interrupt_Enabled                  at 0 range  5 .. 5;
-      Watchdog_Selected_Channel              at 0 range  0 .. 4;
-   end record;
-
-   type Control_Register_2 is record
-      Reserved_31                        : Bits_1;
-      Start_Conversion_Regular_Channels  : Boolean;
-      External_Trigger_Enable            : External_Trigger;
-      External_Event_Select_Regular      : External_Events_Regular_Group;
-      Reserved_23                        : Bits_1;
-      Start_Conversion_Injected_Channels : Boolean;
-      External_Trigger_Injected_Enable   : External_Trigger;
-      External_Event_Select_Injected     : External_Events_Injected_Group;
-      Reserved_15_12                     : Bits_4;
-      Alignment                          : Data_Alignment;
-      End_Of_Conversion_Enabled          : Boolean;
-      DMA_Requests_After_Last_Xfer       : Boolean;
-      DMA_Enabled                        : Boolean;
-      Reserved_7_2                       : Bits_6;
-      Continuous_Conversion_Enabled      : Boolean;
-      ADC_Enabled                        : Boolean;
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Control_Register_2 use record
-      Reserved_31                        at 0 range 31 .. 31;
-      Start_Conversion_Regular_Channels  at 0 range 30 .. 30;
-      External_Trigger_Enable            at 0 range 28 .. 29;
-      External_Event_Select_Regular      at 0 range 24 .. 27;
-      Reserved_23                        at 0 range 23 .. 23;
-      Start_Conversion_Injected_Channels at 0 range 22 .. 22;
-      External_Trigger_Injected_Enable   at 0 range 20 .. 21;
-      External_Event_Select_Injected     at 0 range 16 .. 19;
-      Reserved_15_12                     at 0 range 12 .. 15;
-      Alignment                          at 0 range 11 .. 11;
-      End_Of_Conversion_Enabled          at 0 range 10 .. 10;
-      DMA_Requests_After_Last_Xfer       at 0 range  9 .. 9;
-      DMA_Enabled                        at 0 range  8 .. 8;
-      Reserved_7_2                       at 0 range  2 .. 7;
-      Continuous_Conversion_Enabled      at 0 range  1 .. 1;
-      ADC_Enabled                        at 0 range  0 .. 0;
-   end record;
-
-   type Sample_Time_List is
-     array (Analog_Input_Channel range <>) of Channel_Sampling_Times
-     with Component_Size => 3;
-
-   type Sample_Time_Register_1 is record
-      Reserved_31_27 : Bits_5;
-      SMP            : Sample_Time_List (10 .. 18);
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Sample_Time_Register_1 use record
-      Reserved_31_27 at 0 range 27 .. 31;
-      SMP            at 0 range  0 .. 26;
-   end record;
-
-   type Sample_Time_Register_2 is record
-      Reserved_31_30 : Bits_2;
-      SMP            : Sample_Time_List (0 .. 9);
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Sample_Time_Register_2 use record
-      Reserved_31_30 at 0 range 30 .. 31;
-      SMP            at 0 range  0 .. 29;
-   end record;
-
-   type Injected_Channel_Data_Offset_Register is record
-      Reserved_31_12 : Bits_20;
-      JOffset        : Injected_Data_Offset;
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Injected_Channel_Data_Offset_Register use record
-      Reserved_31_12 at 0 range 12 .. 31;
-      JOffset        at 0 range  0 .. 11;
-   end record;
-
-   type Watchdog_Threshold_Register is record
-      Reserved_31_12 : Bits_20;
-      Threshold      : Watchdog_Threshold;
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Watchdog_Threshold_Register use record
-      Reserved_31_12 at 0 range 12 .. 31;
-      Threshold      at 0 range 0 .. 11;
-   end record;
-
-   type Regular_Channel_Group is
-     array (Regular_Channel_Rank range <>) of Analog_Input_Channel
-     with Component_Size => 5;
-
-   type Regular_Sequence_Register_1 is record
-      Reserved_31_24 : Byte;
-      Length         : Bits_4;  -- Regular_Channel_Rank but biased
-      SQ             : Regular_Channel_Group (13 .. 16);
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Regular_Sequence_Register_1 use record
-      Reserved_31_24 at 0 range 24 .. 31;
-      Length         at 0 range 20 .. 23;
-      SQ             at 0 range  0 .. 19;
-   end record;
-
-   type Regular_Sequence_Register_2 is record
-      Reserved_31_30 : Bits_2;
-      SQ             : Regular_Channel_Group (7 .. 12);
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Regular_Sequence_Register_2 use record
-      Reserved_31_30 at 0 range 30 .. 31;
-      SQ             at 0 range  0 .. 29;
-   end record;
-
-   type Regular_Sequence_Register_3 is record
-      Reserved_31_30 : Bits_2;
-      SQ             : Regular_Channel_Group (1 .. 6);
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Regular_Sequence_Register_3 use record
-      Reserved_31_30 at 0 range 30 .. 31;
-      SQ             at 0 range  0 .. 29;
-   end record;
-
-   type Injected_Channel_Group is
-     array (Injected_Channel_Rank) of Analog_Input_Channel
-     with Component_Size => 5;
-
-   type Injected_Sequence_Register is record
-      Reserved_31_22 : Bits_10;
-      Length         : Bits_2;  -- Injected_Channel_Rank but biased
-      SQ             : Injected_Channel_Group;
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Injected_Sequence_Register use record
-      Reserved_31_22 at 0 range 22 .. 31;
-      Length         at 0 range 20 .. 21;
-      SQ             at 0 range  0 .. 19;
-   end record;
-
-   type Data_Register is record
-      Reserved_31_16 : Half_Word;
-      Data           : Half_Word;
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Data_Register use record
-      Reserved_31_16 at 0 range 16 .. 31;
-      Data           at 0 range 0 .. 15;
-   end record;
-
-   type Analog_To_Digital_Converter is limited record
-      SR    : Status_Register;
-      CR1   : Control_Register_1;
-      CR2   : Control_Register_2;
-      SMPR1 : Sample_Time_Register_1;
-      SMPR2 : Sample_Time_Register_2;
-      JOFR1 : Injected_Channel_Data_Offset_Register;
-      JOFR2 : Injected_Channel_Data_Offset_Register;
-      JOFR3 : Injected_Channel_Data_Offset_Register;
-      JOFR4 : Injected_Channel_Data_Offset_Register;
-      HTR   : Watchdog_Threshold_Register;
-      LTR   : Watchdog_Threshold_Register;
-      SQR1  : Regular_Sequence_Register_1;
-      SQR2  : Regular_Sequence_Register_2;
-      SQR3  : Regular_Sequence_Register_3;
-      JSQR  : Injected_Sequence_Register;
-      JDR1  : Data_Register;
-      JDR2  : Data_Register;
-      JDR3  : Data_Register;
-      JDR4  : Data_Register;
-      DR    : Data_Register;
-   end record with
-     Volatile,
-     Size => 20 * 32;
-
-   for Analog_To_Digital_Converter use record
-      SR    at 16#00# range 0 .. 31;
-      CR1   at 16#04# range 0 .. 31;
-      CR2   at 16#08# range 0 .. 31;
-      SMPR1 at 16#0C# range 0 .. 31;
-      SMPR2 at 16#10# range 0 .. 31;
-      JOFR1 at 16#14# range 0 .. 31;
-      JOFR2 at 16#18# range 0 .. 31;
-      JOFR3 at 16#1C# range 0 .. 31;
-      JOFR4 at 16#20# range 0 .. 31;
-      HTR   at 16#24# range 0 .. 31;
-      LTR   at 16#28# range 0 .. 31;
-      SQR1  at 16#2C# range 0 .. 31;
-      SQR2  at 16#30# range 0 .. 31;
-      SQR3  at 16#34# range 0 .. 31;
-      JSQR  at 16#38# range 0 .. 31;
-      JDR1  at 16#3C# range 0 .. 31;
-      JDR2  at 16#40# range 0 .. 31;
-      JDR3  at 16#44# range 0 .. 31;
-      JDR4  at 16#48# range 0 .. 31;
-      DR    at 16#4C# range 0 .. 31;
-   end record;
-
-   ---------------------------- Common Registers ------------------------------
-
-   type Individual_Status_Register is record
-      Overrun                  : Boolean;
-      Regular_Channel_Started  : Boolean;
-      Injected_Channel_Started : Boolean;
-      Injected_Channel_EOC     : Boolean;
-      Regular_Channel_EOC      : Boolean;
-      Analog_Watchdog          : Boolean;
-   end record with
-     Size => 8;
-
-   for Individual_Status_Register use record
-      Overrun                  at 0 range 5 .. 5;
-      Regular_Channel_Started  at 0 range 4 .. 4;
-      Injected_Channel_Started at 0 range 3 .. 3;
-      Injected_Channel_EOC     at 0 range 2 .. 2;
-      Regular_Channel_EOC      at 0 range 1 .. 1;
-      Analog_Watchdog          at 0 range 0 .. 0;
-   end record;
-
-   type Common_Status_Register is
-     array (1 .. 3) of Individual_Status_Register with
-     Volatile_Components,
-     Component_Size => 8;
-
-   type Common_Control_Register is record
-      Reserved_31_24        : Byte;
-      TSVREF_Enabled        : Boolean;
-      Vbat_Channel_Enabled  : Boolean;
-      Reserved_21_18        : Bits_4;
-      ADC_Prescalar         : ADC_Prescalars;
-      Multi_ADC_DMA_Mode    : Multi_ADC_DMA_Modes;
-      Multi_ADC_DMA_Enabled : Boolean;
-      Reserved_12           : Bits_1;
-      Sampling_Delay        : Sampling_Delay_Selections;
-      Reserved_7_5          : Bits_3;
-      Multi_ADC_Mode        : Multi_ADC_Mode_Selections;
-   end record with
-     Volatile_Full_Access,
-     Size => 32;
-
-   for Common_Control_Register use record
-      Reserved_31_24        at 0 range 24 .. 31;
-      TSVREF_Enabled        at 0 range 23 .. 23;
-      Vbat_Channel_Enabled  at 0 range 22 .. 22;
-      Reserved_21_18        at 0 range 18 .. 21;
-      ADC_Prescalar         at 0 range 16 .. 17;
-      Multi_ADC_DMA_Mode    at 0 range 14 .. 15;
-      Multi_ADC_DMA_Enabled at 0 range 13 .. 13;
-      Reserved_12           at 0 range 12 .. 12;
-      Sampling_Delay        at 0 range  8 .. 11;
-      Reserved_7_5          at 0 range  5 .. 7;
-      Multi_ADC_Mode        at 0 range  0 .. 4;
-   end record;
-
-   type Common_Registers is record
-      SR : Common_Status_Register;
-      CR : Common_Control_Register;
-      DR : Word;
-   end record with
-     Size => 3 * 32;
-
-   for Common_Registers use record
-      SR at 0 range 0 .. 23;
-      CR at 4 range 0 .. 31;
-      DR at 8 range 0 .. 31;
-   end record;
-
-   Common : Common_Registers with
-     Volatile,
-     Address => C_ADC_Base;
+   type Analog_To_Digital_Converter is new STM32_SVD.ADC.ADC1_Peripheral;
 
    function VBat_Conversion
      (This    : Analog_To_Digital_Converter;
       Channel : Analog_Input_Channel)
       return Boolean
-   is (This'Address = ADC1_Base and Channel = VBat_Channel);
+   is (This'Address = STM32_SVD.ADC.ADC1_Periph'Address and
+         Channel = VBat_Channel);
 
    function VRef_TemperatureSensor_Conversion
      (This    : Analog_To_Digital_Converter;
       Channel : Analog_Input_Channel)
       return Boolean
-   is (This'Address = ADC1_Base and
+   is (This'Address = STM32_SVD.ADC.ADC1_Periph'Address and
          (Channel in VRef_Channel | TemperatureSensor_Channel));
 
 end STM32.ADC;

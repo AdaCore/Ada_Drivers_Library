@@ -31,7 +31,7 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
 with STM32.LCD;             use STM32.LCD;
 with STM32.DMA2D.Interrupt; use STM32.DMA2D;
-with STM32.Touch_Panel;     use STM32.Touch_Panel;
+with HAL.Touch_Panel;       use HAL.Touch_Panel;
 with STM32.Button;
 
 with Bitmapped_Drawing;     use Bitmapped_Drawing;
@@ -62,7 +62,7 @@ begin
    FG_Buffer := Double_Buffer.Get_Visible_Buffer (Background);
 
    --  Initialize touch panel
-   STM32.Touch_Panel.Initialize;
+   HAL.Touch_Panel.Initialize;
 
    --  Initialize button
    STM32.Button.Initialize;

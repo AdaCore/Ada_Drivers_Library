@@ -39,6 +39,7 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with System;              use System;
 with STM32_SVD.GPIO;      use STM32_SVD.GPIO;
 
 with STM32.RCC;
@@ -61,7 +62,7 @@ package body STM32.GPIO is
    -------------
 
    function Any_Set (Port : GPIO_Port;  Pins : GPIO_Pins) return Boolean is
-      These_Pins : Half_Word := 0;
+      These_Pins : Short := 0;
    begin
       for Pin of Pins loop
          These_Pins := These_Pins or Pin'Enum_Rep;
@@ -76,7 +77,7 @@ package body STM32.GPIO is
    function Any_Set (Pins : GPIO_Points) return Boolean is
    begin
       for Pin of Pins loop
-         if Pin.Port.IDR.IDR.Arr (Pin.Pin) /= 0 then
+         if Pin.Port.IDR.IDR.Arr (Pin.Pin) then
             return True;
          end if;
       end loop;
@@ -89,7 +90,7 @@ package body STM32.GPIO is
    ---------
 
    function Set (Port : GPIO_Port;  Pin : GPIO_Pin) return Boolean is
-      Pin_Mask : constant Half_Word := GPIO_Pin'Enum_Rep (Pin);
+      Pin_Mask : constant Short := GPIO_Pin'Enum_Rep (Pin);
    begin
       return (Port.IDR.IDR.Val and Pin_Mask) = Pin_Mask;
    end Set;
@@ -99,16 +100,14 @@ package body STM32.GPIO is
    ---------
 
    function Set (This : GPIO_Point) return Boolean is
-   begin
-      return This.Port.IDR.IDR.Arr (This.Pin) = 1;
-   end Set;
+     (This.Port.IDR.IDR.Arr (This.Pin));
 
    -------------
    -- All_Set --
    -------------
 
    function All_Set (Port : GPIO_Port;  Pins : GPIO_Pins) return Boolean is
-      These_Pins : Half_Word := 0;
+      These_Pins : Short := 0;
    begin
       for Pin of Pins loop
          These_Pins := These_Pins or Pin'Enum_Rep;
@@ -145,7 +144,7 @@ package body STM32.GPIO is
    ---------
 
    procedure Set (Port : in out GPIO_Port;  Pins : GPIO_Pins) is
-      These_Pins : Half_Word := 0;
+      These_Pins : Short := 0;
    begin
       for Pin of Pins loop
          These_Pins := These_Pins or Pin'Enum_Rep;
@@ -159,7 +158,7 @@ package body STM32.GPIO is
 
    procedure Set (This : GPIO_Point) is
    begin
-      This.Port.BSRR.BS.Arr (This.Pin) := 1;
+      This.Port.BSRR.BS.Arr (This.Pin) := True;
    end Set;
 
    ---------
@@ -187,7 +186,7 @@ package body STM32.GPIO is
    -----------
 
    procedure Clear (Port : in out GPIO_Port;  Pins : GPIO_Pins) is
-      These_Pins : Half_Word := 0;
+      These_Pins : Short := 0;
    begin
       for Pin of Pins loop
          These_Pins := These_Pins or Pin'Enum_Rep;
@@ -201,7 +200,7 @@ package body STM32.GPIO is
 
    procedure Clear (This : GPIO_Point) is
    begin
-      This.Port.BSRR.BR.Arr (this.Pin) := 1;
+      This.Port.BSRR.BR.Arr (this.Pin) := True;
    end Clear;
 
    -----------
@@ -237,7 +236,7 @@ package body STM32.GPIO is
    ------------
 
    procedure Toggle (Port : in out GPIO_Port;  Pins : GPIO_Pins) is
-      These_Pins : Half_Word := 0;
+      These_Pins : Short := 0;
    begin
       for Pin of Pins loop
          These_Pins := These_Pins or Pin'Enum_Rep;
@@ -251,8 +250,7 @@ package body STM32.GPIO is
 
    procedure Toggle (This : GPIO_Point) is
    begin
-      This.Port.ODR.ODR.Arr (This.Pin) :=
-        This.Port.ODR.ODR.Arr (This.Pin) xor 1;
+      This.Port.ODR.ODR.Arr (This.Pin) := not This.Port.ODR.ODR.Arr (This.Pin);
    end Toggle;
 
    ------------
@@ -280,9 +278,7 @@ package body STM32.GPIO is
    ------------
 
    function Locked (Pin : GPIO_Point) return Boolean is
-   begin
-      return Pin.Port.LCKR.LCK.Arr (Pin.Pin) = 1;
-   end Locked;
+     (Pin.Port.LCKR.LCK.Arr (Pin.Pin));
 
    ------------------
    -- Lock_The_Pin --
@@ -403,8 +399,7 @@ package body STM32.GPIO is
             Index : constant Integer := GPIO_Pin'Pos (Pin); -- 0 .. 15
          begin
             MODER.Arr (Index)   := Pin_IO_Modes'Enum_Rep (Config.Mode);
-            OTYPER.Arr (Index)  :=
-              Pin_Output_Types'Enum_Rep (Config.Output_Type);
+            OTYPER.Arr (Index)  := Config.Output_Type = Open_Drain;
             OSPEEDR.Arr (Index) := Pin_Output_Speeds'Enum_Rep (Config.Speed);
             PUPDR.Arr (Index)   :=
               Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
@@ -434,7 +429,7 @@ package body STM32.GPIO is
       Index : constant Integer := GPIO_Pin'Pos (Pin);
    begin
       MODER.Arr (Index)   := Pin_IO_Modes'Enum_Rep (Config.Mode);
-      OTYPER.Arr (Index)  := Pin_Output_Types'Enum_Rep (Config.Output_Type);
+      OTYPER.Arr (Index)  := Config.Output_Type = Open_Drain;
       OSPEEDR.Arr (Index) := Pin_Output_Speeds'Enum_Rep (Config.Speed);
       PUPDR.Arr (Index)  := Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
 
@@ -460,8 +455,7 @@ package body STM32.GPIO is
    begin
       MODER.Arr (Point.Pin)     :=
         Pin_IO_Modes'Enum_Rep (Config.Mode);
-      OTYPER.OT.Arr (Point.Pin)       :=
-        Pin_Output_Types'Enum_Rep (Config.Output_Type);
+      OTYPER.OT.Arr (Point.Pin) := Config.Output_Type = Open_Drain;
       OSPEEDR.Arr (Point.Pin) :=
         Pin_Output_Speeds'Enum_Rep (Config.Speed);
       PUPDR.Arr (Point.Pin)     :=
@@ -491,7 +485,7 @@ package body STM32.GPIO is
    -- Current_Input --
    -------------------
 
-   function Current_Input (Port : GPIO_Port) return Half_Word is
+   function Current_Input (Port : GPIO_Port) return Short is
    begin
       return Port.IDR.IDR.Val;
    end Current_Input;
@@ -500,7 +494,7 @@ package body STM32.GPIO is
    -- Current_Output --
    --------------------
 
-   function Current_Output (Port : GPIO_Port) return Half_Word is
+   function Current_Output (Port : GPIO_Port) return Short is
    begin
       return Port.ODR.ODR.Val;
    end Current_Output;
@@ -509,7 +503,7 @@ package body STM32.GPIO is
    -- Write_Output --
    ------------------
 
-   procedure Write_Output (Port : in out GPIO_Port; Data : Half_Word) is
+   procedure Write_Output (Port : in out GPIO_Port; Data : Short) is
    begin
       Port.ODR.ODR.Val := Data;
    end Write_Output;
@@ -528,7 +522,7 @@ package body STM32.GPIO is
       if Index < 8 then
          Port.AFRL.Arr (Index) := UInt4 (AF);
       else
-         Port.AFRH.Arr (Index - 8) := UInt4 (AF);
+         Port.AFRH.Arr (Index) := UInt4 (AF);
       end if;
    end Configure_Alternate_Function;
 
@@ -544,7 +538,7 @@ package body STM32.GPIO is
       if Point.Pin < 8 then
          Point.Port.AFRL.Arr (Point.Pin) := UInt4 (AF);
       else
-         Point.Port.AFRH.Arr (Point.Pin - 8) := UInt4 (AF);
+         Point.Port.AFRH.Arr (Point.Pin) := UInt4 (AF);
       end if;
    end Configure_Alternate_Function;
 
