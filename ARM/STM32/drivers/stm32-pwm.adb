@@ -147,6 +147,10 @@ package body STM32.PWM is
 
       Set_Autoreload_Preload (PWM_Timer.all, True);
 
+      if Advanced_Timer (This.Output_Timer.all) then
+         Enable_Main_Output (This.Output_Timer.all);
+      end if;
+
       Enable (PWM_Timer.all);
 
       for Channel in Timer_Channel loop
