@@ -47,10 +47,10 @@ package body STM32.PWM is
    --  Computes the minimum prescaler and thus the maximum resolution for the
    --  given timer, based on the system clocks and the requested frequency
 
-   function Has_HCLOCK_Frequency  (This : Timer) return Boolean;
+   function Has_APB2_Frequency  (This : Timer) return Boolean;
    -- timers 1, 8, 9, 10, 11
 
-   function Has_PCLOCK2_Frequency (This : Timer) return Boolean;
+   function Has_APB1_Frequency (This : Timer) return Boolean;
    -- timers 3, 4, 6, 7, 12, 13, 14
 
    procedure Configure_PWM_GPIO
@@ -219,7 +219,7 @@ package body STM32.PWM is
       Configuration.Mode        := Mode_AF;
       Configuration.Output_Type := Push_Pull;
       Configuration.Speed       := Speed_100MHz;
-      Configuration.Resistors   := Pull_Down;
+      Configuration.Resistors   := Floating;
 
       Configure_IO (Point  => Output,
                     Config => Configuration);
@@ -244,17 +244,18 @@ package body STM32.PWM is
       Hardware_Frequency : Word;
       Clocks             : constant RCC_System_Clocks := System_Clock_Frequencies;
    begin
-      if Has_32bit_Counter (This.all) then  --  timers 2 and 5
-         Hardware_Frequency := Clocks.PCLK2;
-         Max_Period := 16#FFFF_FFFF#;
-      elsif Has_HCLOCK_Frequency (This.all) then
-         Hardware_Frequency := Clocks.HCLK;
-         Max_Period := 16#FFFF#;
-      elsif Has_PCLOCK2_Frequency (This.all) then
-         Hardware_Frequency := Clocks.PCLK2;
-         Max_Period := 16#FFFF#;
+      if Has_APB1_Frequency (This.all) then
+         Hardware_Frequency := Clocks.TIMCLK1;
+      elsif Has_APB2_Frequency (This.all) then
+         Hardware_Frequency := Clocks.TIMCLK2;
       else
          raise Unknown_Timer;
+      end if;
+
+      if Has_32bit_Counter (This.all) then
+         Max_Period := 16#FFFF_FFFF#;
+      else
+         Max_Period := 16#FFFF#;
       end if;
 
       if Requested_Frequency > Hardware_Frequency then
@@ -265,34 +266,35 @@ package body STM32.PWM is
       loop
          Period := Hardware_Frequency / (Prescalar + 1);
          Period := Period / Requested_Frequency;
-         Prescalar := Prescalar + 1;
 
          exit when not
            ((Period > Max_Period) and
-            (Prescalar <= Max_Prescalar + 1));
+            (Prescalar <= Max_Prescalar));
+
+         Prescalar := Prescalar + 1;
       end loop;
 
-      if Prescalar > Max_Prescalar + 1 then
+      if Prescalar > Max_Prescalar then
          raise Invalid_Request with "Freq too low";
       end if;
    end Compute_Prescalar_and_Period;
 
-   --------------------------
-   -- Has_HCLOCK_Frequency --
-   --------------------------
+   ------------------------
+   -- Has_APB2_Frequency --
+   ------------------------
 
-   function Has_HCLOCK_Frequency (This : Timer) return Boolean is
+   function Has_APB2_Frequency (This : Timer) return Boolean is
      (This'Address = STM32_SVD.TIM1_Base or
       This'Address = STM32_SVD.TIM8_Base or
       This'Address = STM32_SVD.TIM9_Base or
       This'Address = STM32_SVD.TIM10_Base or
       This'Address = STM32_SVD.TIM11_Base);
 
-   ---------------------------
-   -- Has_PCLOCK2_Frequency --
-   ---------------------------
+   ------------------------
+   -- Has_APB1_Frequency --
+   ------------------------
 
-   function Has_PCLOCK2_Frequency (This : Timer) return Boolean is
+   function Has_APB1_Frequency (This : Timer) return Boolean is
      (This'Address = STM32_SVD.TIM3_Base or
       This'Address = STM32_SVD.TIM4_Base or
       This'Address = STM32_SVD.TIM6_Base or
