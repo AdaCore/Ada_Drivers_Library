@@ -1,11 +1,6 @@
 with STM32.LTDC;
 with STM32.LCDInit;
 
-pragma Compile_Time_Warning
-  (True,
-   "Warning: LCD support for the STM32F469-disco board" &
-     " is still work-in-progress");
-
 package STM32.LCD is new
   STM32.LTDC (LCD_Width            => STM32.LCDInit.LCD_WIDTH,
               LCD_Height           => STM32.LCDInit.LCD_HEIGHT,
