@@ -25,6 +25,7 @@ with System;               use System;
 with Interfaces.Bit_Types; use Interfaces.Bit_Types;
 
 with STM32.LCD;            use STM32.LCD, STM32;
+with STM32.DMA2D;          use STM32.DMA2D;
 with STM32.SDRAM;          use STM32.SDRAM;
 
 package body Double_Buffer is

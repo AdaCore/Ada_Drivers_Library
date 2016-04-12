@@ -63,14 +63,14 @@ package body Conway_Driver is
               RLE => Ptrn1_RLE'Access);
 
    Ptrn2_RLE : aliased constant String :=
-                 "4bo6bo4b$3bobob2obobo3b$3b2o2b2o2b2o3b$7b2o7b2$5b2o2b2o5b$5b2o2b2o5b$" &
-                 "6b4o6b$6bo2bo6b$5bo4bo5b$5bo4bo5b$5bob2obo5b$6bo2bo6b$6bo2bo6b2$o14bo$" &
-                 "2o4bo2bo4b2o$o5b4o5bo$b2o4b2o4b2ob$2bo10bo2b$obo10bobo$b5o4b5ob$3bo2b" &
-                 "4o2bo3b$2bo4b2o4bo2b$6bo2bo6b$7b2o7b$4b2ob2ob2o4b2$3bo8bo3b$2b3o6b3o2b" &
-                 "$2bo2bo4bo2bo2b$b2o10b2o!";
+                 "4o2b2o3b2ob2o3bo$2obo2b2ob3obobo2b2o$bob2o4bo5b2ob2o$bo4bo4bo4bob2o$o" &
+                 "5bobobo4bobo$b3obo2b5obobob2o$ob2o2b4obob2ob4o$2bo6b2obobobobo$b4o4bo" &
+                 "4b2obobo$b2o6b3o3b3o$bo3bo2bo6b5o$3o3bo2bo4bob3o$b2obobob2o4b4o$obo2b" &
+                 "2obo2bobob4o$2o4bobob2obo2bobo$b2o3bobob7o$o3bobo6b3o2b2o$2b2o2bo2bobo" &
+                 "b2obo2bo$3bobobobobo4b2o$2o2b2obobo2bo!";
    Ptrn2 : constant Pattern :=
-             (W   => 16,
-              H   => 32,
+             (W   => 20,
+              H   => 20,
               RLE => Ptrn2_RLE'Access);
 
    --  Name:   23334M
@@ -82,44 +82,53 @@ package body Conway_Driver is
               H   => 8,
               RLE => Ptrn3_RLE'Access);
 
+   --  Name:   Rabbits
+   --  Author: Andrew Trevorrow
+   Ptrn4_RLE : aliased constant String :=
+                 "o3b3o$3o2bob$bo!";
+   Ptrn4     : constant Pattern :=
+                 (W   => 7,
+                  H   => 3,
+                  RLE => Ptrn4_RLE'Access);
+
    --  Name:   7468M
    --  Author: Tomas Rokicki
-   Ptrn4_RLE : aliased constant String :=
+   Ptrn5_RLE : aliased constant String :=
                  "4bob$4b2o$2ob2ob$o!";
-   Ptrn4 : constant Pattern :=
+   Ptrn5 : constant Pattern :=
              (W   => 6,
               H   => 4,
-              RLE => Ptrn4_RLE'Access);
+              RLE => Ptrn5_RLE'Access);
 
    --  Name: Acorn
    --  Author Charles Coderman
-   Ptrn5_RLE : aliased constant String :=
+   Ptrn6_RLE : aliased constant String :=
                  "bo5b$3bo3b$2o2b3o!";
-   Ptrn5 : constant Pattern :=
+   Ptrn6 : constant Pattern :=
              (W   => 7,
               H   => 3,
-              RLE => Ptrn5_RLE'Access);
+              RLE => Ptrn6_RLE'Access);
 
    --  Name: Blom
    --  Author: Dean Hickerson
-   Ptrn6_RLE : aliased constant String :=
+   Ptrn7_RLE : aliased constant String :=
                  "o10bo$b4o6bo$2b2o7bo$10bob$8bobo!";
-   Ptrn6     : constant Pattern :=
+   Ptrn7     : constant Pattern :=
                    (W   => 12,
                     H   => 5,
-                    RLE => Ptrn6_RLE'Access);
+                    RLE => Ptrn7_RLE'Access);
 
    --  Name: Bunnies
    --  Author: Robert Wainwright and Andrew Trevorrow
-   Ptrn7_RLE : aliased constant String :=
+   Ptrn8_RLE : aliased constant String :=
                  "o5bob$2bo3bob$2bo2bobo$bobo!";
-   Ptrn7     : constant Pattern :=
+   Ptrn8     : constant Pattern :=
                    (W   => 8,
                     H   => 4,
-                    RLE => Ptrn7_RLE'Access);
+                    RLE => Ptrn8_RLE'Access);
 
    Patterns  : constant array (Positive range <>) of Pattern :=
-                 (Ptrn1, Ptrn2, Ptrn3, Ptrn4, Ptrn5, Ptrn6, Ptrn7);
+                 (Ptrn1, Ptrn2, Ptrn3, Ptrn4, Ptrn5, Ptrn6, Ptrn7, Ptrn8);
 
    type Cell_State is (Dead, Alive)
      with Size => 1;
@@ -141,7 +150,7 @@ package body Conway_Driver is
 
    G, G2, Tmp : Grid_Access;
 
-   Format : constant Pixel_Format := Pixel_Fmt_ARGB1555;
+   Format : constant Pixel_Format := Pixel_Fmt_RGB565;
    Colors : constant array (Cell_State) of Word :=
               (case Format is
                   when Pixel_Fmt_ARGB1555 => (Alive => 16#ffff#, Dead => 16#801f#),
@@ -376,15 +385,9 @@ package body Conway_Driver is
       --     live cell, as if by reproduction.
       --
 
+      --  Init the next generation from the current one: we'll only update
+      --  it, not recalculate from scratch
       G2.all := G.all;
-      DMA2D_Copy_Rect
-        (Double_Buffer.Get_Visible_Buffer (Background),
-         0, 0,
-         Buffer,
-         0, 0,
-         Null_Buffer,
-         0, 0,
-         Buffer.Width, Buffer.Height);
 
       for Y in Grid'Range loop
          for X in Line'Range loop
@@ -464,7 +467,18 @@ package body Conway_Driver is
 
          loop
             Buffer := Get_Hidden_Buffer (Background);
+            DMA2D_Copy_Rect
+              (Double_Buffer.Get_Visible_Buffer (Background),
+               0, 0,
+               Buffer,
+               0, 0,
+               Null_Buffer,
+               0, 0,
+               Buffer.Width, Buffer.Height,
+               Synchronous => True);
+
             Step;
+
             Swap_Buffers (True);
 
             exit when STM32.Button.Has_Been_Pressed;
