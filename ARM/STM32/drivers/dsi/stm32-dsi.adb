@@ -39,6 +39,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time;     use Ada.Real_Time;
+with Ada.Unchecked_Conversion;
 
 pragma Warnings (Off, "* is an internal GNAT unit");
 with System.BB.Parameters; use System.BB.Parameters;
@@ -46,9 +47,6 @@ pragma Warnings (On, "* is an internal GNAT unit");
 
 with STM32_SVD.DSIHOST; use STM32_SVD.DSIHOST;
 with STM32_SVD.RCC;     use STM32_SVD.RCC;
-
-with STM32.Board;       use STM32.Board;
-with STM32.GPIO;        use STM32.GPIO;
 
 package body STM32.DSI is
 
@@ -99,16 +97,6 @@ package body STM32.DSI is
    is
       Start : Time;
    begin
-      Enable_Clock (DSIHOST_TE);
-      Configure_IO
-        (DSIHOST_TE,
-         Config =>
-           (Mode        => Mode_AF,
-            Output_Type => Push_Pull,
-            Speed       => Speed_50MHz,
-            Resistors   => Floating));
-      Configure_Alternate_Function (DSIHOST_TE, GPIO_AF_DSI);
-
       --  Enable the regulator
       DSIHOST_Periph.DSI_WRPCR.REGEN := True;
 
@@ -130,8 +118,8 @@ package body STM32.DSI is
       -- Configure the DSI PLL --
       ---------------------------
 
-      DSIHOST_Periph.DSI_WRPCR.NDIV := PLL_N_Div;
       DSIHOST_Periph.DSI_WRPCR.IDF  := PLL_IN_Div;
+      DSIHOST_Periph.DSI_WRPCR.NDIV := PLL_N_Div;
       DSIHOST_Periph.DSI_WRPCR.ODF  := DSI_PLL_ODF'Enum_Rep (PLL_OUT_Div);
 
       --  Enable the DSI PLL
@@ -181,7 +169,7 @@ package body STM32.DSI is
                                 (1, DSI_PLL_ODF'Enum_Rep (PLL_OUT_Div));
          PLLN             : constant Word := Word (PLL_N_Div);
          Unit_Interval_x4 : constant Word :=
-                              (4_000 * IDF * ODF / (PLLN * HSE_MHz));
+                              ((4_000 * IDF * ODF) / (PLLN * HSE_MHz));
       begin
          DSIHOST_Periph.DSI_WPCR1.UIX4 := UInt6 (Unit_Interval_x4);
       end;
@@ -248,6 +236,8 @@ package body STM32.DSI is
       LP_V_Sync_Active_Enable     : Boolean;
       Frame_BTA_Ack_Enable        : Boolean)
    is
+      function To_Bool is new Ada.Unchecked_Conversion
+        (DSI_Polarity, Boolean);
    begin
       --  Select video mode by resetting CMDM and SDIM bits
       DSIHOST_Periph.DSI_MCR.CMDM := False;
@@ -269,18 +259,14 @@ package body STM32.DSI is
       DSIHOST_Periph.DSI_LVCIDR.VCID  := Virtual_Channel;
 
       --  Configure the polarity of control signals
-      DSIHOST_Periph.DSI_LPCR.HSP   :=
-        DSI_Polarity'Enum_Rep (HSync_Polarity) = 1;
-      DSIHOST_Periph.DSI_LPCR.VSP   :=
-        DSI_Polarity'Enum_Rep (VSync_Polarity) = 1;
-      DSIHOST_Periph.DSI_LPCR.DEP   :=
-        DSI_Polarity'Enum_Rep (DataEn_Polarity) = 1;
+      DSIHOST_Periph.DSI_LPCR.HSP   := To_Bool (HSync_Polarity);
+      DSIHOST_Periph.DSI_LPCR.VSP   := To_Bool (VSync_Polarity);
+      DSIHOST_Periph.DSI_LPCR.DEP   := To_Bool (DataEn_Polarity);
 
       --  Select the color coding for the host
       DSIHOST_Periph.DSI_LCOLCR.COLC := DSI_Color_Mode'Enum_Rep (Color_Coding);
       --  ... and for the wrapper
-      DSIHOST_Periph.DSI_WCFGR.COLMUX :=
-        DSI_Color_Mode'Enum_Rep (Color_Coding);
+      DSIHOST_Periph.DSI_WCFGR.COLMUX := DSI_Color_Mode'Enum_Rep (Color_Coding);
 
       --  Enable/disable the loosely packed variant to 18-bit configuration
       if Color_Coding = RGB666 then
