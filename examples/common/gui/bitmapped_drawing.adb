@@ -796,11 +796,13 @@ package body Bitmapped_Drawing is
       is
          X1, W1 : Natural;
       begin
-         if Y < 0 or else Y >= Buffer.Height then
+         if Width = 0 then
             return;
-         end if;
 
-         if X + Width < 0 or else X >= Buffer.Width then
+         elsif Y < 0 or else Y >= Buffer.Height then
+            return;
+
+         elsif X + Width < 0 or else X >= Buffer.Width then
             return;
          end if;
 
@@ -816,6 +818,10 @@ package body Bitmapped_Drawing is
             W1 := Buffer.Width - X1 - 1;
          end if;
 
+         if W1 = 0 then
+            return;
+         end if;
+
          DMA2D_Fill_Rect (Buffer, Hue, X1, Y, W1, 1);
       end Draw_Horizontal_Line;
 
@@ -827,11 +833,13 @@ package body Bitmapped_Drawing is
       is
          Y1, H1 : Natural;
       begin
-         if X < 0 or else X >= Buffer.Width then
+         if Height = 0 then
             return;
-         end if;
 
-         if Y + Height < 0 or else Y >= Buffer.Height then
+         elsif X < 0 or else X >= Buffer.Width then
+            return;
+
+         elsif Y + Height < 0 or else Y >= Buffer.Height then
             return;
          end if;
 
@@ -845,6 +853,10 @@ package body Bitmapped_Drawing is
 
          if Y1 + H1 >= Buffer.Height then
             H1 := Buffer.Height - Y1 - 1;
+         end if;
+
+         if H1 = 0 then
+            return;
          end if;
 
          DMA2D_Fill_Rect (Buffer, Hue, X, Y1, 1, H1);
