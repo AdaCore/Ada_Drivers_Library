@@ -308,7 +308,6 @@ package body OTM8009A is
       --  Note :
       --    defaut is 0 (lowest Brightness),
       --    0xFF is highest Brightness,
-      --    try 0x7F : intermediate value
       Write (S_Addr => CMD_WRDISBV, Data => (1 => 16#FF#));
 
       --  defaut is 0, try 0x2C - Brightness Control Block, Display Dimming
