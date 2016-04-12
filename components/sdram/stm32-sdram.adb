@@ -25,7 +25,7 @@ package body STM32.SDRAM is
       Enable_Clock (SDRAM_PINS);
 
       Configure_IO (SDRAM_PINS,
-                    (Speed       => Speed_100MHz,
+                    (Speed       => Speed_50MHz,
                      Mode        => Mode_AF,
                      Output_Type => Push_Pull,
                      Resistors   => Pull_Up));
