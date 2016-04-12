@@ -4,6 +4,9 @@ abstract project Cortex_Shared is
       ("Debug", "Production");
    Build : BUILD_Type := external ("BUILD", "Debug");
 
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
+
    package Compiler is
       case Build is
          when "Production" =>

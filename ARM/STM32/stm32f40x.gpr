@@ -3,10 +3,12 @@ with "../cortex_m/cortex_shared.gpr";
 library project STM32F40x is
 
    for Target use "arm-eabi";
+   for Runtime ("Ada") use Cortex_Shared.RTS & "-stm32f4";
 
    for Library_Name use "stm32f407";
-   for Library_Dir use "lib/stm32f40x";
-   for Object_Dir use "obj/stm32f40x";
+   for Library_Kind use "static";
+   for Library_Dir use "lib/stm32f40x/" & Cortex_Shared.RTS;
+   for Object_Dir use "obj/stm32f40x/" & Cortex_Shared.RTS;
 
    for Source_Dirs use Project'Source_Dirs &
      ("../cortex_m",

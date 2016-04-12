@@ -1,14 +1,15 @@
-library project STM32F429_Discovery extends "../ARM/STM32/stm32f42x.gpr" is
+with "../ARM/cortex_m/cortex_shared.gpr";
+with "../ARM/STM32/stm32f42x.gpr";
 
-   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
-   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
+library project STM32F429_Discovery is
 
-   for Runtime ("Ada") use RTS & "-stm32f429disco";
+   for Target use "arm-eabi";
+   for Runtime ("Ada") use STM32F42x'Runtime ("Ada");
 
    for Library_Name use "stm32f429disco";
    for Library_Kind use "static";
-   for Library_Dir use "lib/stm32f429disco";
-   for Object_Dir use "obj/stm32f429disco";
+   for Library_Dir use "lib/stm32f429disco/" & Cortex_Shared.RTS;
+   for Object_Dir use "obj/stm32f429disco/" & Cortex_Shared.RTS;
 
    for Source_Dirs use
      ("stm32f429_discovery",
@@ -19,5 +20,7 @@ library project STM32F429_Discovery extends "../ARM/STM32/stm32f42x.gpr" is
       "../components/lcd/ili9341",
       "../components/touch_panel/stmpe811",
       "../components/gyro/l3gd20");
+
+   package Compiler renames STM32F42x.Compiler;
 
 end STM32F429_Discovery;

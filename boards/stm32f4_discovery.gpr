@@ -1,17 +1,20 @@
-library project STM32F4_Discovery extends "../ARM/STM32/stm32f40x.gpr" is
+with "../ARM/cortex_m/cortex_shared.gpr";
+with "../ARM/STM32/stm32f40x.gpr";
 
-   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
-   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
+library project STM32F4_Discovery is
 
-   for Runtime ("Ada") use RTS & "-stm32f4";
+   for Target use "arm-eabi";
+   for Runtime ("Ada") use STM32F40x'Runtime ("Ada");
 
    for Library_Name use "stm32f4disco";
    for Library_Kind use "static";
-   for Library_Dir use "lib/stm32f4";
-   for Object_Dir use "obj/stm32f4";
+   for Library_Dir use "lib/stm32f4/" & Cortex_Shared.RTS;
+   for Object_Dir use "obj/stm32f4/" & Cortex_Shared.RTS;
 
    for Source_Dirs use
      ("stm32f4_discovery",
       "../components/gyro/lis3dsh");
+
+   package Compiler renames STM32F40x.Compiler;
 
 end STM32F4_Discovery;
