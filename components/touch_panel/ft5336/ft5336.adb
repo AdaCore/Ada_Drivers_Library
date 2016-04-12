@@ -237,7 +237,8 @@ package body FT5336 is
    function Check_Id return Boolean
    is
       Id     : Unsigned_8;
-      Status : I2C_Status;
+      Status : Boolean;
+
    begin
       for J in 1 .. 3 loop
          Id := IO_Read (FT5336_CHIP_ID_REG, Status);
@@ -246,7 +247,7 @@ package body FT5336 is
             return True;
          end if;
 
-         if Status = I2C_Error then
+         if not Status then
             return False;
          end if;
       end loop;
@@ -261,7 +262,7 @@ package body FT5336 is
    procedure TP_Set_Use_Interrupts (Enabled : Boolean)
    is
       Reg_Value : Unsigned_8 := 0;
-      Status    : I2C_Status with Unreferenced;
+      Status    : Boolean with Unreferenced;
    begin
       if Enabled then
          Reg_Value := FT5336_G_MODE_INTERRUPT_TRIGGER;
@@ -278,12 +279,12 @@ package body FT5336 is
 
    function Active_Touch_Points return Touch_Identifier
    is
-     Status   : I2C_Status;
+     Status   : Boolean;
      Nb_Touch : Unsigned_8 := 0;
    begin
       Nb_Touch := IO_Read (FT5336_TD_STAT_REG, Status);
 
-      if Status /= Ok then
+      if not Status then
          return 0;
       end if;
 
@@ -317,7 +318,7 @@ package body FT5336 is
       Ret    : Touch_Point;
       Regs   : FT5336_Pressure_Registers;
       Tmp    : Short_HL_Type;
-      Status : I2C_Status;
+      Status : Boolean;
 
    begin
       --  X/Y are swaped from the screen coordinates
@@ -326,13 +327,13 @@ package body FT5336 is
 
       Tmp.Low := IO_Read (Regs.XL_Reg, Status);
 
-      if Status /= Ok then
+      if not Status then
          return (0, 0, 0);
       end if;
 
       Tmp.High := IO_Read (Regs.XH_Reg, Status) and FT5336_TOUCH_POS_MSB_MASK;
 
-      if Status /= Ok then
+      if not Status then
          return (0, 0, 0);
       end if;
 
@@ -340,13 +341,13 @@ package body FT5336 is
 
       Tmp.Low := IO_Read (Regs.YL_Reg, Status);
 
-      if Status /= Ok then
+      if not Status then
          return (0, 0, 0);
       end if;
 
       Tmp.High := IO_Read (Regs.YH_Reg, Status) and FT5336_TOUCH_POS_MSB_MASK;
 
-      if Status /= Ok then
+      if not Status then
          return (0, 0, 0);
       end if;
 
@@ -354,7 +355,7 @@ package body FT5336 is
 
       Ret.Weight := IO_Read (Regs.Weight_Reg, Status);
 
-      if Status /= Ok then
+      if not Status then
          Ret.Weight := 0;
       end if;
 

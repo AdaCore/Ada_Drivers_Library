@@ -10,8 +10,6 @@ with STM32.DMA;            use STM32.DMA;
 with STM32.I2C;            use STM32.I2C;
 with STM32.SAI;            use STM32.SAI;
 
-with HAL.I2C;              use HAL.I2C;
-
 with WM8994;
 
 with Ada.Text_IO;

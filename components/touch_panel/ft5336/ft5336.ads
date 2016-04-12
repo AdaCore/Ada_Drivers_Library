@@ -1,19 +1,18 @@
 --  Generic driver for the FT5336 touch panel
 
 with Interfaces; use Interfaces;
-with HAL.I2C;    use HAL.I2C;
 
 generic
 
    with function IO_Read
      (Reg    : Unsigned_8;
-      Status : out I2C_Status) return Unsigned_8;
+      Status : out Boolean) return Unsigned_8;
    --  Reads a Touch Panel register value
 
    with procedure IO_Write
      (Reg    : Unsigned_8;
       Data   : Unsigned_8;
-      Status : out I2C_Status);
+      Status : out Boolean);
 
 package FT5336 is
 

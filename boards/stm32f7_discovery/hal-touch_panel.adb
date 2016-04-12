@@ -41,8 +41,6 @@ with STM32.Device;         use STM32.Device;
 with STM32.I2C;            use STM32.I2C;
 with STM32.LCD;            use STM32.LCD;
 
-with HAL.I2C;              use HAL.I2C;
-
 with FT5336;
 
 package body HAL.Touch_Panel is
@@ -50,11 +48,11 @@ package body HAL.Touch_Panel is
    --  I2C Slave address of touchscreen FocalTech FT5336
    TP_ADDR  : constant := 16#70#;
 
-   function TP_Read (Reg : Byte; Status : out I2C_Status) return Byte
+   function TP_Read (Reg : Byte; Status : out Boolean) return Byte
      with Inline;
    --  Reads a Touch Panel register value
 
-   procedure TP_Write (Reg : Byte; Data :  Byte; Status : out I2C_Status)
+   procedure TP_Write (Reg : Byte; Data :  Byte; Status : out Boolean)
      with Inline;
    --  Write a Touch Panel register value
 
@@ -65,9 +63,10 @@ package body HAL.Touch_Panel is
    -- TS_Read --
    -------------
 
-   function TP_Read (Reg : Byte; Status : out I2C_Status) return Byte
+   function TP_Read (Reg : Byte; Status : out Boolean) return Byte
    is
-      Ret : I2C_Data (1 .. 1);
+      Ret        : I2C_Data (1 .. 1);
+      Tmp_Status : I2C_Status;
    begin
       STM32.I2C.Mem_Read
         (TP_I2C,
@@ -75,8 +74,10 @@ package body HAL.Touch_Panel is
          Short (Reg),
          Memory_Size_8b,
          Ret,
-         Status,
+         Tmp_Status,
          1000);
+      Status := Tmp_Status = Ok;
+
       return Ret (1);
    end TP_Read;
 
@@ -84,8 +85,9 @@ package body HAL.Touch_Panel is
    -- TS_Read --
    -------------
 
-   procedure TP_Write (Reg : Byte; Data :  Byte; Status : out I2C_Status)
+   procedure TP_Write (Reg : Byte; Data :  Byte; Status : out Boolean)
    is
+      Tmp_Status : I2C_Status;
    begin
       STM32.I2C.Mem_Write
         (TP_I2C,
@@ -93,8 +95,9 @@ package body HAL.Touch_Panel is
          Short (Reg),
          Memory_Size_8b,
          (1 => Data),
-         Status,
+         Tmp_Status,
          1000);
+      Status := Tmp_Status = Ok;
    end TP_Write;
 
    ----------------
@@ -154,7 +157,7 @@ package body HAL.Touch_Panel is
 
       begin
          if Pt.X = 0 and then Pt.Y = 0 and then Pt.Weight = 0 then
-            Status := I2C_Busy;
+            Status := Err_Busy;
             return (0, 0, 0);
          end if;
 

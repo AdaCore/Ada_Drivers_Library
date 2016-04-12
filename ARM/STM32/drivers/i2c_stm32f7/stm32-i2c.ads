@@ -29,9 +29,15 @@
 --  from ST Microelectronics) Inter-Integrated Circuit (I2C) facility.
 
 with STM32_SVD.I2C;
-with HAL.I2C;       use HAL.I2C;
 
 package STM32.I2C is
+
+   type I2C_Status is
+     (Ok, Err_Timeout, Err_Error, Err_Busy);
+
+   type I2C_Memory_Address_Size is
+     (Memory_Size_8b,
+      Memory_Size_16b);
 
    type I2C_Direction is (Transmitter, Receiver);
 
@@ -53,12 +59,14 @@ package STM32.I2C is
       Clock_Stretching_Enabled : Boolean := True;
    end record;
 
---     type I2C_Data is array (Natural range <>) of Byte;
+   type I2C_Data is array (Natural range <>) of Byte;
+
+   subtype I2C_Address is Interfaces.Bit_Types.UInt10;
 
    I2C_Timeout : exception;
    I2C_Error   : exception;
 
-   type I2C_Port is new HAL.I2C.I2C_Controller with private;
+   type I2C_Port is private;
 
    function As_I2C_Port
      (Port : access STM32_SVD.I2C.I2C_Peripheral) return I2C_Port;
@@ -79,10 +87,8 @@ package STM32.I2C is
      with Pre  => not Is_Configured (Port),
           Post => Is_Configured (Port);
 
-   overriding
    function Is_Configured (Port : I2C_Port) return Boolean;
 
-   overriding
    procedure Master_Transmit
      (Port    : in out I2C_Port;
       Addr    : I2C_Address;
@@ -91,7 +97,6 @@ package STM32.I2C is
       Timeout : Natural := 1000)
      with Pre => Is_Configured (Port);
 
-   overriding
    procedure Master_Receive
      (Port    : in out I2C_Port;
       Addr    : I2C_Address;
@@ -100,7 +105,6 @@ package STM32.I2C is
       Timeout : Natural := 1000)
      with Pre => Is_Configured (Port);
 
-   overriding
    procedure Mem_Write
      (Port          : in out I2C_Port;
       Addr          : I2C_Address;
@@ -111,7 +115,6 @@ package STM32.I2C is
       Timeout       : Natural := 1000)
      with Pre => Is_Configured (Port);
 
-   overriding
    procedure Mem_Read
      (Port          : in out I2C_Port;
       Addr          : I2C_Address;
@@ -132,7 +135,7 @@ private
       Mem_Busy_Tx,
       Mem_Busy_Rx);
 
-   type I2C_Port is new HAL.I2C.I2C_Controller with record
+   type I2C_Port is record
       Periph : access STM32_SVD.I2C.I2C_Peripheral;
       Config : I2C_Configuration;
       State  : I2C_State := Reset;

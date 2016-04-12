@@ -259,7 +259,7 @@ package body STM32.I2C is
               and then Start + Milliseconds (Timeout) < Clock
             then
                Port.State := Ready;
-               Status       := HAL.I2C.I2C_Timeout;
+               Status       := Err_Timeout;
                return;
             end if;
          end loop;
@@ -272,7 +272,7 @@ package body STM32.I2C is
          Reset_Config (Port);
 
          Port.State := Ready;
-         Status       := HAL.I2C.I2C_Error;
+         Status       := Err_Error;
 
       else
          Status := Ok;
@@ -295,7 +295,7 @@ package body STM32.I2C is
 
          if Status /= Ok then
             Port.State := Ready;
-            Status       := HAL.I2C.I2C_Error;
+            Status       := Err_Error;
 
             return;
          end if;
@@ -305,7 +305,7 @@ package body STM32.I2C is
          then
             Reset_Config (Port);
             Port.State := Ready;
-            Status       := HAL.I2C.I2C_Timeout;
+            Status       := Err_Timeout;
 
             return;
          end if;
@@ -330,7 +330,7 @@ package body STM32.I2C is
            and then Start + Milliseconds (Timeout) < Clock
          then
             Reset_Config (Port);
-            Status       := HAL.I2C.I2C_Timeout;
+            Status       := Err_Timeout;
             Port.State := Ready;
 
             return;
@@ -356,7 +356,7 @@ package body STM32.I2C is
 
          if Status /= Ok then
             Port.State := Ready;
-            Status       := HAL.I2C.I2C_Error;
+            Status       := Err_Error;
 
             return;
          end if;
@@ -365,7 +365,7 @@ package body STM32.I2C is
            and then Start + Milliseconds (Timeout) < Clock
          then
             Reset_Config (Port);
-            Status       := HAL.I2C.I2C_Timeout;
+            Status       := Err_Timeout;
             Port.State := Ready;
 
             return;
@@ -394,17 +394,17 @@ package body STM32.I2C is
 
    begin
       if Port.Periph.ISR.BUSY then
-         Status := HAL.I2C.I2C_Busy;
+         Status := Err_Busy;
          return;
       end if;
 
       if Data'Length = 0 then
-         Status := HAL.I2C.I2C_Error;
+         Status := Err_Error;
          return;
       end if;
 
       if Port.State /= Ready then
-         Status := HAL.I2C.I2C_Busy;
+         Status := Err_Busy;
          return;
       end if;
 
@@ -480,19 +480,19 @@ package body STM32.I2C is
       Transmitted : Natural := 0;
    begin
       if Port.Periph.ISR.BUSY then
-         Status := HAL.I2C.I2C_Busy;
+         Status := Err_Busy;
          return;
       end if;
 
       if Port.State /= Ready then
-         Status := HAL.I2C.I2C_Busy;
+         Status := Err_Busy;
          return;
       end if;
 
       Port.State := Master_Busy_Rx;
 
       if Data'Length = 0 then
-         Status := HAL.I2C.I2C_Error;
+         Status := Err_Error;
          return;
       end if;
 
@@ -567,17 +567,17 @@ package body STM32.I2C is
 
    begin
       if Port.Periph.ISR.BUSY then
-         Status := HAL.I2C.I2C_Busy;
+         Status := Err_Busy;
          return;
       end if;
 
       if Data'Length = 0 then
-         Status := HAL.I2C.I2C_Error;
+         Status := Err_Error;
          return;
       end if;
 
       if Port.State /= Ready then
-         Status := HAL.I2C.I2C_Busy;
+         Status := Err_Busy;
          return;
       end if;
 
@@ -702,17 +702,17 @@ package body STM32.I2C is
       Transmitted : Natural := 0;
    begin
       if Port.Periph.ISR.BUSY then
-         Status := HAL.I2C.I2C_Busy;
+         Status := Err_Busy;
          return;
       end if;
 
       if Data'Length = 0 then
-         Status := HAL.I2C.I2C_Error;
+         Status := Err_Error;
          return;
       end if;
 
       if Port.State /= Ready then
-         Status := HAL.I2C.I2C_Busy;
+         Status := Err_Busy;
          return;
       end if;
 
