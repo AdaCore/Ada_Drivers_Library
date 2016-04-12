@@ -126,7 +126,7 @@ package body STM32F4.GPIO is
    -- Set --
    ---------
 
-   procedure Set (This : in out GPIO_Point) is
+   procedure Set (This : GPIO_Point) is
    begin
       This.Port.BSRR_Set := GPIO_Pin'Enum_Rep (This.Pin);
    end Set;
@@ -157,7 +157,7 @@ package body STM32F4.GPIO is
    -- Clear --
    -----------
 
-   procedure Clear (This : in out GPIO_Point) is
+   procedure Clear (This : GPIO_Point) is
    begin
       This.Port.BSRR_Reset := GPIO_Pin'Enum_Rep (This.Pin);
    end Clear;
@@ -196,7 +196,7 @@ package body STM32F4.GPIO is
    -- Toggle --
    ------------
 
-   procedure Toggle (This : in out GPIO_Point) is
+   procedure Toggle (This : GPIO_Point) is
    begin
       This.Port.ODR := This.Port.ODR xor GPIO_Pin'Enum_Rep (This.Pin);
    end Toggle;

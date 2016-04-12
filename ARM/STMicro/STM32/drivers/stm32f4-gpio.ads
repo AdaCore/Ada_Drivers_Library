@@ -127,7 +127,7 @@ package STM32F4.GPIO is
    --  For the given GPIO port, sets all of the output data register bits
    --  specified by Pins to one. Other pins are unaffected.
 
-   procedure Set (This : in out GPIO_Point) with Inline;
+   procedure Set (This : GPIO_Point) with Inline;
    --  For This.Port.all, sets the output data register bit specified by
    --  This.Pin to one. Other pins are unaffected.
 
@@ -140,7 +140,7 @@ package STM32F4.GPIO is
    --  For the given GPIO port, sets of all of the output data register bits
    --  specified by Pins to zero. Other pins are unaffected.
 
-   procedure Clear (This : in out GPIO_Point) with Inline;
+   procedure Clear (This : GPIO_Point) with Inline;
    --  For This.Port.all, sets the output data register bit specified by
    --  This.Pin to zero. Other pins are unaffected.
 
@@ -153,7 +153,7 @@ package STM32F4.GPIO is
    --  specified by Pins (ones become zeros and vice versa). Other pins are
    --  unaffected.
 
-   procedure Toggle (This : in out GPIO_Point) with Inline;
+   procedure Toggle (This : GPIO_Point) with Inline;
    --  For This.Port.all, negates the output data register bit specified by
    --  This.Pin (one becomes zero and vice versa). Other pins are unaffected.
 
