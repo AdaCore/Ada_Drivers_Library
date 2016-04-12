@@ -28,6 +28,19 @@ with STM32.LCD;                use STM32.LCD;
 
 package body Bitmapped_Drawing is
 
+   function To_DMA2D_Color_Mode is new Ada.Unchecked_Conversion
+     (STM32.LCD.Pixel_Format, STM32.DMA2D.DMA2D_Color_Mode);
+
+   --------------------
+   -- LCD_Color_Mode --
+   --------------------
+
+   function LCD_Color_Mode return STM32.DMA2D.DMA2D_Color_Mode
+   is
+   begin
+      return To_DMA2D_Color_Mode (STM32.LCD.Get_Pixel_Fmt);
+   end LCD_Color_Mode;
+
    -------------------
    -- Screen_Buffer --
    -------------------
@@ -39,7 +52,7 @@ package body Bitmapped_Drawing is
         (Addr       => STM32.LCD.Current_Frame_Buffer (STM32.LCD.Layer1),
          Width      => STM32.LCD.Pixel_Width,
          Height     => STM32.LCD.Pixel_Height,
-         Color_Mode => STM32.LCD.Get_Pixel_Fmt,
+         Color_Mode => To_DMA2D_Color_Mode (STM32.LCD.Get_Pixel_Fmt),
          Swap_X_Y   => STM32.LCD.SwapXY);
    end Screen_Buffer;
 

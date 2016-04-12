@@ -65,6 +65,9 @@ package Bitmapped_Drawing is
    function Screen_Buffer return Graphics_Buffer;
    --  Returns the LCD Frame buffer for Layer 1
 
+   function LCD_Color_Mode return STM32.DMA2D.DMA2D_Color_Mode
+     with Inline;
+
    procedure Put_Pixel
      (Buffer   : Graphics_Buffer;
       Position : Point;

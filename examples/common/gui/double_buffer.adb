@@ -22,6 +22,7 @@
 ------------------------------------------------------------------------------
 
 with System;               use System;
+with Ada.Unchecked_Conversion;
 with Interfaces.Bit_Types; use Interfaces.Bit_Types;
 
 with STM32.LCD;            use STM32.LCD, STM32;
@@ -35,6 +36,19 @@ package body Double_Buffer is
 
    Frame_Buffers : array (STM32.LCD.LCD_Layer, FB_Type) of System.Address :=
                      (others => (others => Null_Address));
+
+   function To_DMA2D_Color_Mode is new Ada.Unchecked_Conversion
+     (STM32.LCD.Pixel_Format, STM32.DMA2D.DMA2D_Color_Mode);
+
+   --------------------
+   -- LCD_Color_Mode --
+   --------------------
+
+   function LCD_Color_Mode return STM32.DMA2D.DMA2D_Color_Mode
+   is
+   begin
+      return To_DMA2D_Color_Mode (LCD.Get_Pixel_Fmt);
+   end LCD_Color_Mode;
 
    ----------------
    -- Initialize --
@@ -118,7 +132,7 @@ package body Double_Buffer is
       return (Addr       => Frame_Buffers (Layer, Visible_FB),
               Width      => Pixel_Width,
               Height     => Pixel_Height,
-              Color_Mode => Get_Pixel_Fmt,
+              Color_Mode => To_DMA2D_Color_Mode (Get_Pixel_Fmt),
               Swap_X_Y   => SwapXY);
 
    end Get_Visible_Buffer;
@@ -141,7 +155,7 @@ package body Double_Buffer is
       return (Addr       => Frame_Buffers (Layer, Hidden),
               Width      => Pixel_Width,
               Height     => Pixel_Height,
-              Color_Mode => Get_Pixel_Fmt,
+              Color_Mode => To_DMA2D_Color_Mode (Get_Pixel_Fmt),
               Swap_X_Y   => SwapXY);
 
    end Get_Hidden_Buffer;

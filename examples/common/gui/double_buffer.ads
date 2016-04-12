@@ -37,6 +37,8 @@ package Double_Buffer is
    Background : STM32.LCD.LCD_Layer renames STM32.LCD.Layer1;
    Foreground : STM32.LCD.LCD_Layer renames STM32.LCD.Layer2;
 
+   function LCD_Color_Mode return STM32.DMA2D.DMA2D_Color_Mode;
+
    procedure Initialize
      (Layer_Background : Layer_Activation_Type := Layer_Single_Buffer;
       Layer_Foreground : Layer_Activation_Type := Layer_Inactive);
