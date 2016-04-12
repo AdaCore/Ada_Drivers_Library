@@ -32,8 +32,6 @@
 with System.Storage_Elements; use System.Storage_Elements;
 --  with STM32.RCC;               use STM32.RCC;
 
-with STM32.LCD;               use STM32.LCD; --  for pixel format handling
-
 with STM32_SVD.DMA2D;         use STM32_SVD.DMA2D;
 with STM32_SVD.RCC;           use STM32_SVD.RCC;
 
@@ -64,20 +62,20 @@ package body STM32.DMA2D is
       A : Word;
    begin
       case CM is
-         when Pixel_Fmt_ARGB8888 | Pixel_Fmt_RGB888 =>
+         when ARGB8888 | RGB888 =>
             return To_Word (Col);
-         when Pixel_Fmt_RGB565   =>
+         when RGB565   =>
             R := Shift_Left (Word (Shift_Right (Col.Red, 3)), 11);
             G := Shift_Left (Word (Shift_Right (Col.Green, 2)), 5);
             B := Word (Shift_Right (Col.Blue, 3));
             return R or G or B;
-         when Pixel_Fmt_ARGB1555 =>
+         when ARGB1555 =>
             A := Shift_Left (Word (Shift_Right (Col.Alpha, 7)), 15);
             R := Shift_Left (Word (Shift_Right (Col.Red, 3)), 10);
             G := Shift_Left (Word (Shift_Right (Col.Green, 3)), 5);
             B := Word (Shift_Right (Col.Blue, 3));
             return A or R or G or B;
-         when Pixel_Fmt_ARGB4444 =>
+         when ARGB4444 =>
             A := Shift_Left (Word (Shift_Right (Col.Alpha, 4)), 12);
             R := Shift_Left (Word (Shift_Right (Col.Red, 4)), 8);
             G := Shift_Left (Word (Shift_Right (Col.Green, 4)), 4);
@@ -222,8 +220,7 @@ package body STM32.DMA2D is
             Offset : constant Word := Word (Y * Buffer.Width + X);
             Off    : constant Word :=
                        To_Word (Buffer.Addr) +
-                       (Offset * Word (STM32.LCD.Bytes_Per_Pixel
-                        (Buffer.Color_Mode)));
+                       (Offset * Word (Bytes_Per_Pixel (Buffer.Color_Mode)));
 
          begin
             DMA2D_Wait_Transfer_Int.all;
@@ -446,26 +443,26 @@ package body STM32.DMA2D is
 
    begin
       case Buffer.Color_Mode is
-         when Pixel_Fmt_ARGB8888 | Pixel_Fmt_RGB888 =>
+         when ARGB8888 | RGB888 =>
             Ret := From_Word (Col);
-            if Buffer.Color_Mode = Pixel_Fmt_RGB888 then
+            if Buffer.Color_Mode = RGB888 then
                Ret.Alpha := 255;
             end if;
 
-         when Pixel_Fmt_RGB565   =>
+         when RGB565   =>
             Ret.Alpha := 255;
             Ret.Red := Byte (Shift_Left (Shift_Right (Col and 2#11111_000000_00000#, 11), 3));
             Ret.Green := Byte (Shift_Left (Shift_Right (Col and 2#00000_111111_00000#, 5), 2));
             Ret.Blue := Byte (Shift_Left (Col and 2#00000_000000_11111#, 3));
 
-         when Pixel_Fmt_ARGB1555 =>
+         when ARGB1555 =>
             Ret.Alpha :=
               (if (Col and 2#1_00000_00000_00000#) /= 0 then 255 else 0);
             Ret.Red := Byte (Shift_Left (Shift_Right (Col and 2#11111_00000_00000#, 10), 3));
             Ret.Green := Byte (Shift_Left (Shift_Right (Col and 2#00000_11111_00000#, 5), 3));
             Ret.Blue := Byte (Shift_Left (Col and 2#00000_00000_11111#, 3));
 
-         when Pixel_Fmt_ARGB4444 =>
+         when ARGB4444 =>
             Ret.Alpha := Byte (Shift_Left (Shift_Right (Col and 2#1111_0000_0000_0000#, 12), 4));
             Ret.Red := Byte (Shift_Left (Shift_Right (Col and 2#1111_0000_0000#, 8), 4));
             Ret.Green := Byte (Shift_Left (Shift_Right (Col and 2#0000_1111_0000#, 4), 4));
@@ -564,7 +561,7 @@ package body STM32.DMA2D is
       DMA2D_Periph.CR.MODE := DMA2D_MODE'Enum_Rep (M2M_BLEND);
 
       --  SOURCE CONFIGURATION
-      DMA2D_Periph.FGPFCCR.CM    := Pixel_Fmt_ARGB8888'Enum_Rep;
+      DMA2D_Periph.FGPFCCR.CM    := ARGB8888'Enum_Rep;
       DMA2D_Periph.FGMAR         := To_Word (Color'Address);
       DMA2D_Periph.FGPFCCR.AM    := DMA2D_AM'Enum_Rep (NO_MODIF);
       DMA2D_Periph.FGPFCCR.ALPHA := 255;

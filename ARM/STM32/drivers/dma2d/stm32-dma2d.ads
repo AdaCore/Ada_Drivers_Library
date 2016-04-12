@@ -32,8 +32,6 @@
 with System;
 with Ada.Unchecked_Conversion;
 
-with STM32.LCD;
-
 package STM32.DMA2D is
 
    type DMA2D_Color is record
@@ -118,13 +116,19 @@ package STM32.DMA2D is
       Start);
 
    --  These bits defines the color format
-   subtype DMA2D_Color_Mode is STM32.LCD.Pixel_Format;
---       (ARGB8888,
---        RGB888,
---        RGB565,
---        ARGB1555,
---        ARGB4444);
---     for DMA2D_Color_Mode'Size use 3;
+   type DMA2D_Color_Mode is
+     (ARGB8888,
+      RGB888,
+      RGB565,
+      ARGB1555,
+      ARGB4444);
+   for DMA2D_Color_Mode'Size use 3;
+
+   function Bytes_Per_Pixel (CM : DMA2D_Color_Mode) return Positive
+   is (case CM is
+          when ARGB8888 => 4,
+          when RGB888 => 3,
+          when others => 2);
 
    --  Alpha mode
    --  00: No modification of the foreground image alpha channel value
