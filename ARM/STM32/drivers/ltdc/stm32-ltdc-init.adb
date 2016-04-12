@@ -1,3 +1,44 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                 Copyright (C) 2015-2016, AdaCore                         --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of STMicroelectronics nor the names of its       --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+--                                                                          --
+--  This file is based on:                                                  --
+--                                                                          --
+--   @file    stm32f429i_discovery_lcd.c                                    --
+--   @author  MCD Application Team                                          --
+--   @version V1.1.0                                                        --
+--   @date    19-June-2014                                                  --
+--   @brief   This file includes the LTDC driver to control LCD display.    --         --
+--                                                                          --
+--   COPYRIGHT(c) 2014 STMicroelectronics                                   --
+------------------------------------------------------------------------------
+
 with Ada.Interrupts.Names;
 
 separate (STM32.LTDC)
@@ -62,12 +103,14 @@ package body Init is
    G_Layer2_Reg : aliased Layer_Type
      with Import, Address => LTDC_Periph.L2CR'Address;
 
-   type Pending_Buffers is array (LCD_Layer) of Word;
-
    protected Sync is
       --  Sets the next buffer to setup
       procedure Set_Pending (Layer  : LCD_Layer;
                              Buffer : Word);
+
+      --  Apply pending buffers on Vertical Sync. Caller must call Wait
+      --  afterwards.
+      procedure Apply_On_VSync;
 
       --  Apply pending buffers without waiting for the interrupt
       procedure Apply_Immediate;
@@ -78,12 +121,17 @@ package body Init is
       procedure Interrupt;
       pragma Attach_Handler
         (Interrupt, Ada.Interrupts.Names.LCD_TFT_Interrupt);
+
    private
       Not_Pending : Boolean := True;
-      Buffers     : Pending_Buffers := (others => 0);
    end Sync;
 
+   ----------
+   -- Sync --
+   ----------
+
    protected body Sync is
+
       -----------------
       -- Set_Pending --
       -----------------
@@ -94,9 +142,12 @@ package body Init is
       is
       begin
          Not_Pending := False;
-         LTDC_Periph.IER.LIE := True;
-         LTDC_Periph.LIPCR.LIPOS := 0;
-         Buffers (Layer) := Buffer;
+
+         if Layer = Layer1 then
+            LTDC_Periph.L1CFBAR := Buffer;
+         else
+            LTDC_Periph.L2CFBAR := Buffer;
+         end if;
       end Set_Pending;
 
       ----------
@@ -108,31 +159,37 @@ package body Init is
          null;
       end Wait;
 
+      --------------------
+      -- Apply_On_VSync --
+      --------------------
+
+      procedure Apply_On_VSync is
+      begin
+         if not Not_Pending then
+            --  Disable Register refresh interrupt
+            LTDC_Periph.IER.RRIE := False;
+            --  Clear the flag
+            LTDC_Periph.ICR.CRRIF  := True;
+            --  Enable the interrupt
+            LTDC_Periph.IER.RRIE := True;
+            --  And tell the LTDC to apply the layer registers on refresh
+            LTDC_Periph.SRCR.VBR := True;
+         end if;
+      end Apply_On_VSync;
+
       ---------------------
       -- Apply_Immediate --
       ---------------------
 
       procedure Apply_Immediate is
       begin
-         LTDC_Periph.IER.LIE := False;
-
-         if Buffers (Layer1) /= 0 then
-            LTDC_Periph.L1CFBAR := Buffers (Layer1);
-            Buffers (Layer1) := 0;
-         end if;
-
-         if Buffers (Layer2) /= 0 then
-            LTDC_Periph.L2CFBAR := Buffers (Layer2);
-            Buffers (Layer2) := 0;
-         end if;
-
          LTDC_Periph.SRCR.IMR := True;
+
          loop
             exit when not LTDC_Periph.SRCR.IMR;
          end loop;
 
          Not_Pending := True;
-         LTDC_Periph.IER.LIE := True;
       end Apply_Immediate;
 
       ---------------
@@ -142,10 +199,12 @@ package body Init is
       procedure Interrupt
       is
       begin
-         LTDC_Periph.IER.LIE := False;
-         LTDC_Periph.ICR.CLIF  := True;
+         if LTDC_Periph.ISR.RRIF then
+            LTDC_Periph.IER.RRIE := False;
+            LTDC_Periph.ICR.CRRIF  := True;
 
-         Apply_Immediate;
+            Not_Pending := True;
+         end if;
       end Interrupt;
    end Sync;
 
@@ -169,12 +228,10 @@ package body Init is
    procedure Set_Layer_CFBA (Layer : LCD_Layer;
                              FBA   : Frame_Buffer_Access)
    is
---        L : constant Layer_Access := Get_Layer (Layer);
       function To_Word is new Ada.Unchecked_Conversion
         (Frame_Buffer_Access, Word);
    begin
       Sync.Set_Pending (Layer, To_Word (FBA));
---           L.LCFBAR := To_Word (FBA);
    end Set_Layer_CFBA;
 
    --------------------
@@ -224,6 +281,7 @@ package body Init is
       if Immediate then
          Sync.Apply_Immediate;
       else
+         Sync.Apply_On_VSync;
          Sync.Wait;
       end if;
    end Reload_Config;
@@ -242,7 +300,7 @@ package body Init is
       LTDC_Periph.GCR.VSPOL := To_Bool (Polarity_Active_Low);
       LTDC_Periph.GCR.HSPOL := To_Bool (Polarity_Active_Low);
       LTDC_Periph.GCR.DEPOL := To_Bool (Polarity_Active_Low);
-      LTDC_Periph.GCR.PCPOL := To_Bool (Input_Pixel_Clock);
+      LTDC_Periph.GCR.PCPOL := To_Bool (Inverted_Input_Pixel_Clock);
 
       if DivR = 2 then
          DivR_Val := PLLSAI_DIV2;
@@ -292,8 +350,6 @@ package body Init is
       --  Background color to black
       LTDC_Periph.BCCR.BC := 0;
 
-      Reload_Config (True);
-
       LTDC_Periph.GCR.LTDCEN := True;
    end LTDC_Init;
 
@@ -337,8 +393,6 @@ package body Init is
       L.LCFBLNR.CFBLNBR := UInt11 (LCD_Height);
 
       Set_Layer_CFBA (Layer, Frame_Buffer_Array (Layer));
-
-      Reload_Config (True);
    end Layer_Init;
 
 end Init;

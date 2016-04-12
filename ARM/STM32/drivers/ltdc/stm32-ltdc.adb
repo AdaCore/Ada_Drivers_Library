@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -114,7 +114,7 @@ package body STM32.LTDC is
    -------------------
 
    procedure Reload_Config
-     (Immediate : Boolean := True)
+     (Immediate : Boolean := False)
       renames Init.Reload_Config;
 
    ---------------------
@@ -163,10 +163,10 @@ package body STM32.LTDC is
          Init.BF1_Pixel_Alpha,
          Init.BF2_Pixel_Alpha);
 
+      Reload_Config (True);
+
       Init.Set_Layer_State (Layer1, True);
       Init.Set_Layer_State (Layer2, False);
-
-      Reload_Config (True);
 
       --  enable Dither
       LTDC_Periph.GCR.DEN := True;

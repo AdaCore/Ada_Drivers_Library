@@ -168,7 +168,7 @@ package STM32.LTDC is
        Get_Pixel_Fmt /= Pixel_Fmt_ARGB8888 and then
        Get_Pixel_Fmt /= Pixel_Fmt_RGB888;
 
-   procedure Reload_Config (Immediate : Boolean := True);
+   procedure Reload_Config (Immediate : Boolean := False);
 
 private
 
