@@ -259,8 +259,9 @@ package body Init is
       L   : constant Layer_Access := Get_Layer (Layer);
    begin
       if State and then Frame_Buffer_Array (Layer) = Null_Address then
-         Frame_Buffer_Array (Layer) := STM32.SDRAM.Reserve
-           (Word (LCD_Width * LCD_Height * Pixel_Size (Current_Pixel_Fmt)));
+         Frame_Buffer_Array (Layer) :=
+           Reserve_RAM
+             (Word (LCD_Width * LCD_Height * Pixel_Size (Current_Pixel_Fmt)));
          Set_Layer_CFBA (Layer, Frame_Buffer_Array (Layer));
       end if;
 

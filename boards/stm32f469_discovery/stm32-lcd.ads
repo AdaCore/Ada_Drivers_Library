@@ -1,5 +1,6 @@
 with STM32.LTDC;
 with STM32.LCDInit;
+with STM32.SDRAM;
 
 package STM32.LCD is new
   STM32.LTDC (LCD_Width            => STM32.LCDInit.LCD_WIDTH,
@@ -14,5 +15,6 @@ package STM32.LCD is new
               PLLSAI_R             => STM32.LCDInit.PLLSAIR,
               DivR                 => STM32.LCDInit.PLLSAI_DIVR,
               Pre_LTDC_Initialize  => STM32.LCDInit.Pre_LTDC_Initialize,
-              Post_LTDC_Initialize => STM32.LCDInit.Default_Postinit);
+              Post_LTDC_Initialize => STM32.LCDInit.Default_Postinit,
+              Reserve_RAM          => STM32.SDRAM.Reserve);
 

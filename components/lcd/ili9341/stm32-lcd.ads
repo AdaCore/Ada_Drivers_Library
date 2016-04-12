@@ -31,6 +31,7 @@
 
 with STM32.LTDC;
 with STM32.LCD_ILI9341;
+with STM32.SDRAM;
 
 --  This is the ILI9341 LCD display driver controlled via the LTDC peripheral.
 package STM32.LCD is new
@@ -46,4 +47,5 @@ package STM32.LCD is new
               PLLSAI_R             => 4,
               DivR                 => 8,
               Pre_LTDC_Initialize  => STM32.LCD_ILI9341.Initialize,
-              Post_LTDC_Initialize => STM32.LCD_ILI9341.Post_Init);
+              Post_LTDC_Initialize => STM32.LCD_ILI9341.Post_Init,
+              Reserve_RAM          => STM32.SDRAM.Reserve);

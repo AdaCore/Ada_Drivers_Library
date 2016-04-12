@@ -61,6 +61,9 @@ generic
 
    with procedure Pre_LTDC_Initialize;
    with procedure Post_LTDC_Initialize;
+   with function Reserve_RAM
+     (Amount : Word;
+      Align  : Word := Standard'Maximum_Alignment) return System.Address;
 
 package STM32.LTDC is
 

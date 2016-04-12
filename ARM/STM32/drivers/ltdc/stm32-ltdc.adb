@@ -46,8 +46,6 @@ with System;         use System;
 with STM32_SVD.LTDC; use STM32_SVD.LTDC;
 with STM32_SVD.RCC;  use STM32_SVD.RCC;
 
-with STM32.SDRAM;    use STM32.SDRAM;
-
 package body STM32.LTDC is
 
    Frame_Buffer_Array : array (LCD_Layer) of Frame_Buffer_Access;
@@ -148,11 +146,10 @@ package body STM32.LTDC is
       delay until Clock + Milliseconds (200);
 
       Init.LTDC_Init;
-      STM32.SDRAM.Initialize;
 
       Current_Pixel_Fmt := Pixel_Fmt;
 
-      Frame_Buffer_Array (Layer1) := STM32.SDRAM.Reserve (FB_Size);
+      Frame_Buffer_Array (Layer1) := Reserve_RAM (FB_Size);
 
       Init.Layer_Init
         (Layer1, Pixel_Fmt,
