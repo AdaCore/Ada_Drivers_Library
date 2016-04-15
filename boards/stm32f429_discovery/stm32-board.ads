@@ -47,7 +47,7 @@ with STM32.Device;  use STM32.Device;
 
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.SPI;     use STM32.SPI;
-with STM32.L3DG20;  use STM32.L3DG20;
+with L3DG20;        use L3DG20;
 with STM32.FMC;     use STM32.FMC;
 
 with Ada.Interrupts.Names;  use Ada.Interrupts;
@@ -67,22 +67,26 @@ package STM32.Board is
    LED4    : User_LED renames Red;
    LCH_LED : User_LED renames Red;
 
-   All_LEDs  : constant GPIO_Points := LED3 & LED4;
+   All_LEDs  : GPIO_Points := LED3 & LED4;
 
    procedure Initialize_LEDs;
    --  MUST be called prior to any use of the LEDs
 
-   procedure Turn_On (This : User_LED)
+   procedure Turn_On (This : in out User_LED)
      renames STM32.GPIO.Set;
-   procedure Turn_Off (This : User_LED)
+   procedure Turn_Off (This : in out User_LED)
      renames STM32.GPIO.Clear;
 
    procedure All_LEDs_Off with Inline;
    procedure All_LEDs_On  with Inline;
-   procedure Toggle_LEDs (These : GPIO_Points)
+   procedure Toggle_LEDs (These : in out GPIO_Points)
      renames STM32.GPIO.Toggle;
 
-   Gyro : Three_Axis_Gyroscope;
+   Gyro : L3DG20.Three_Axis_Gyroscope
+     (SPI      => SPI_5'Access,
+      CS_Pin   => PC1'Access,
+      Int1_Pin => PA1'Access,
+      Int2_Pin => PA2'Access);
 
    --  GPIO Pins for FMC
 

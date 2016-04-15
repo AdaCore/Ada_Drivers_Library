@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,23 +29,26 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.LTDC;
-with STM32.LCD_ILI9341;
-with STM32.SDRAM;
+package Touch_Panel is
 
---  This is the ILI9341 LCD display driver controlled via the LTDC peripheral.
-package STM32.LCD is new
-  STM32.LTDC (LCD_Width            => 240,
-              LCD_Height           => 320,
-              LCD_HSync            => 10,
-              LCD_HBP              => 20,
-              LCD_HFP              => 10,
-              LCD_VSYNC            => 2,
-              LCD_VBP              => 2,
-              LCD_VFP              => 4,
-              PLLSAI_N             => 192,
-              PLLSAI_R             => 4,
-              DivR                 => 8,
-              Pre_LTDC_Initialize  => STM32.LCD_ILI9341.Initialize,
-              Post_LTDC_Initialize => STM32.LCD_ILI9341.Post_Init,
-              Reserve_RAM          => STM32.SDRAM.Reserve);
+   type TP_Touch_State is record
+      X      : Natural;
+      Y      : Natural;
+      Weight : Natural;
+   end record;
+
+   type TP_State is array (Natural range <>) of TP_Touch_State;
+
+   function Initialize return Boolean;
+   --  Initializes the LCD touch panel
+
+   procedure Initialize;
+   --  Initializes the LCD touch panel
+
+   function Detect_Touch return Natural;
+   --  Detects the number of touches
+
+   function Get_State return TP_State;
+   --  The current state of the touch panel
+
+end Touch_Panel;

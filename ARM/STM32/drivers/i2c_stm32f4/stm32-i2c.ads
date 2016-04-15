@@ -42,15 +42,10 @@
 --  This file provides definitions for the STM32F4 (ARM Cortex M4F
 --  from ST Microelectronics) Inter-Integrated Circuit (I2C) facility.
 
-with STM32.Device; use STM32.Device;
+private with STM32_SVD.I2C;
+with HAL.I2C;
 
 package STM32.I2C is
-
-   type I2C_Status is
-     (Ok,
-      Err_Error,
-      Err_Timeout,
-      Busy);
 
    type I2C_Device_Mode is
      (I2C_Mode,
@@ -69,13 +64,9 @@ package STM32.I2C is
      (Addressing_Mode_7bit,
       Addressing_Mode_10bit);
 
-    type I2C_Memory_Address_Size is
-     (Memory_Size_8b,
-      Memory_Size_16b);
-
-  type I2C_Configuration is record
+   type I2C_Configuration is record
       Clock_Speed              : Word;
-      Mode                     : I2C_Device_Mode :=I2C_Mode;
+      Mode                     : I2C_Device_Mode := I2C_Mode;
       Duty_Cycle               : I2C_Duty_Cycle  := DutyCycle_2;
 
       Addressing_Mode          : I2C_Addressing_Mode;
@@ -90,45 +81,52 @@ package STM32.I2C is
       Clock_Stretching_Enabled : Boolean := True;
    end record;
 
-   type I2C_Data is array (Natural range <>) of Byte;
+   type Internal_I2C_Port is private;
+   type I2C_Port (Periph : not null access Internal_I2C_Port) is
+      limited new HAL.I2C.I2C_Port with private;
 
    procedure Configure
-     (Port        : I2C_Port_Id; Conf : I2C_Configuration)
-     with Post => Port_Enabled (Port);
+     (Handle : in out I2C_Port;
+      Conf : I2C_Configuration)
+     with Post => Port_Enabled (Handle);
 
-   procedure Set_State (Port : I2C_Port_Id; Enabled : Boolean);
-   function Port_Enabled (Port : I2C_Port_Id) return Boolean;
+   procedure Set_State (This : in out I2C_Port; Enabled : Boolean);
+   function Port_Enabled (This : I2C_Port) return Boolean;
 
+   overriding
    procedure Master_Transmit
-     (Port    : I2C_Port_Id;
+     (Handle  : in out I2C_Port;
       Addr    : UInt10;
-      Data    : I2C_Data;
-      Status  : out I2C_Status;
+      Data    : HAL.I2C.I2C_Data;
+      Status  : out HAL.I2C.I2C_Status;
       Timeout : Natural := 1000);
 
+   overriding
    procedure Master_Receive
-     (Port    : I2C_Port_Id;
+     (Handle  : in out I2C_Port;
       Addr    : UInt10;
-      Data    : out I2C_Data;
-      Status  : out I2C_Status;
+      Data    : out HAL.I2C.I2C_Data;
+      Status  : out HAL.I2C.I2C_Status;
       Timeout : Natural := 1000);
 
+   overriding
    procedure Mem_Write
-     (Port          : I2C_Port_Id;
+     (Handle        : in out I2C_Port;
       Addr          : UInt10;
       Mem_Addr      : Short;
-      Mem_Addr_Size : I2C_Memory_Address_Size;
-      Data          : I2C_Data;
-      Status        : out I2C_Status;
+      Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
+      Data          : HAL.I2C.I2C_Data;
+      Status        : out HAL.I2C.I2C_Status;
       Timeout       : Natural := 1000);
 
+   overriding
    procedure Mem_Read
-     (Port          : I2C_Port_Id;
+     (Handle        : in out I2C_Port;
       Addr          : UInt10;
       Mem_Addr      : Short;
-      Mem_Addr_Size : I2C_Memory_Address_Size;
-      Data          : out I2C_Data;
-      Status        : out I2C_Status;
+      Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
+      Data          : out HAL.I2C.I2C_Data;
+      Status        : out HAL.I2C.I2C_Status;
       Timeout       : Natural := 1000);
 
    type I2C_Interrupt is
@@ -137,18 +135,34 @@ package STM32.I2C is
       Buffer_Interrupt);
 
    procedure Enable_Interrupt
-     (Port   : in out I2C_Port;
+     (This   : in out I2C_Port;
       Source : I2C_Interrupt)
-     with Post => Enabled (Port, Source);
+     with Post => Enabled (This, Source);
 
    procedure Disable_Interrupt
-     (Port   : in out I2C_Port;
+     (This   : in out I2C_Port;
       Source : I2C_Interrupt)
-     with Post => not Enabled (Port, Source);
+     with Post => not Enabled (This, Source);
 
    function Enabled
-     (Port   : I2C_Port;
+     (This   : I2C_Port;
       Source : I2C_Interrupt)
       return Boolean;
+private
+   type I2C_State is
+     (Reset,
+      Ready,
+      Master_Busy_Tx,
+      Master_Busy_Rx,
+      Mem_Busy_Tx,
+      Mem_Busy_Rx);
+
+   type Internal_I2C_Port is new STM32_SVD.I2C.I2C_Peripheral;
+
+   type I2C_Port (Periph : not null access Internal_I2C_Port) is
+      limited new HAL.I2C.I2C_Port with record
+         Config   : I2C_Configuration;
+         State    : I2C_State := Reset;
+      end record;
 
 end STM32.I2C;

@@ -70,10 +70,10 @@ package body STM32.Button is
       is
       begin
          Clear_External_Interrupt
-           (Get_Interrupt_Line_Number (User_Button_Point));
+           (User_Button_Point.Get_Interrupt_Line_Number);
 
-         if (Button_High and then Set (User_Button_Point))
-           or else (not Button_High and then not Set (User_Button_Point))
+         if (Button_High and then User_Button_Point.set)
+           or else (not Button_High and then not User_Button_Point.set)
          then
             if Clock - Start_Time > Debounce_Time then
                Pressed := True;
@@ -118,17 +118,15 @@ package body STM32.Button is
       Initialized := True;
       Enable_Clock (User_Button_Point);
 
-      Configure_IO
-        (User_Button_Point,
-         (Mode        => Mode_In,
+      User_Button_Point.Configure_IO
+        ((Mode        => Mode_In,
           Output_Type => Open_Drain,
           Speed       => Speed_50MHz,
           Resistors   => (if Button_High then Pull_Down else Pull_Up)));
 
       --  We connect the button's pin the the External Interrupt Handler
-      Configure_Trigger
-        (User_Button_Point,
-         (if Button_High then Interrupt_Rising_Edge
+      User_Button_Point.Configure_Trigger
+        ((if Button_High then Interrupt_Rising_Edge
           else Interrupt_Falling_Edge));
    end Initialize;
 

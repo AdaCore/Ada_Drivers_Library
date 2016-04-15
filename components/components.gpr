@@ -1,0 +1,31 @@
+with "../hal/HAL.gpr";
+
+library project Components is
+   for Source_Dirs use
+     ("src/motion/**",
+      "src/screen/**",
+      "src/touch_panel/**");
+   --  The others component drivers are not HAL compliant yet
+
+   for Languages use ("Ada");
+   for Library_Name use "components";
+   for Library_Kind use "static";
+   for Library_Dir use "lib";
+   for Object_Dir use "obj";
+
+   type BUILD_TYPE is ("Debug", "Production");
+   Build : BUILD_Type := external ("BUILD", "Debug");
+
+   Build_Switches := ("-gnat12", "-gnatwa", "-gnatwe",
+                      "-gnatw.X", "-gnaty"); --  "-gnatyg", "-gnaty-d",
+   case Build is
+      when "Debug" =>
+         Build_Switches := Build_Switches & ("-g", "-O0");
+      when "Production" =>
+         Build_Switches := Build_Switches & ("-O3");
+   end case;
+
+   package Compiler is
+      for Default_Switches ("ada") use Build_Switches;
+   end Compiler;
+end Components;

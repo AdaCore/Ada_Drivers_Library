@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,78 +29,54 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This version of the LCH writes information about the unhandled exception
---  to the LCD. Note that it uses the package LCD_Std_Out, and that package
---  body's elaboration assignes GPIO ports and pins, as well as a SPI port,
---  to initialize the ILI9341 component.
+with Interfaces.Bit_Types; use Interfaces.Bit_Types;
+with HAL.I2C; use HAL.I2C;
+with HAL.Touch_Panel; use HAL.Touch_Panel;
 
---  Note this version is for use with the ravenscar-sfp runtime, in which full
---  exception semantics are not available.
+package STMPE811 is
 
-with STM32.Board;       use STM32.Board;
-with STM32.GPIO;        use STM32.GPIO;
+   type STMPE811_Device (Port               : I2C_Port_Ref;
+                         Addr               : UInt10;
+                         LCD_Natural_Width   : Natural;
+                         LCD_Natural_Height : Natural) is
+     new Touch_Panel_Device with private;
 
-with LCD_Std_Out;
-with BMP_Fonts;
+   function Initialize (This : in out STMPE811_Device) return Boolean;
+   --  Initializes the LCD touch panel
 
-with Ada.Real_Time;     use Ada.Real_Time;
-with Ada.Unchecked_Conversion;
+   procedure Initialize (This : in out STMPE811_Device);
+   --  Initializes the LCD touch panel
 
-package body Last_Chance_Handler is
+   function Detect_Touch (This : in out STMPE811_Device) return Natural;
+   --  Detects the number of touches
 
-   package LCD_Text renames LCD_Std_Out;
-   --  we use the LCD_Std_Out generic, rather than directly using the Drawing
-   --  package, because we want the text to wrap around the screen if necessary
+   function Get_State (This : in out STMPE811_Device) return TP_State;
+   --  The current state of the touch panel
 
-   ---------
-   -- Put --
-   ---------
+private
+   type STMPE811_Device (Port               : I2C_Port_Ref;
+                         Addr               : UInt10;
+                         LCD_Natural_Width   : Natural;
+                         LCD_Natural_Height : Natural) is
+     new Touch_Panel_Device with null record;
 
-   procedure Put (Ptr : System.Address) is
+   subtype TSC_Data is I2C_Data;
 
-      type C_String_Ptr is access String (1 .. Positive'Last) with
-        Storage_Size => 0, Size => Standard'Address_Size;
+   function Read_Data (This      : in out STMPE811_Device;
+                       Data_Addr : Byte;
+                       Length    : Natural) return TSC_Data;
+   function Read_Register (This     : STMPE811_Device;
+                           Reg_Addr : Byte) return Byte;
+   procedure Write_Register (This     : in out STMPE811_Device;
+                             Reg_Addr : Byte;
+                             Data     : Byte);
+   procedure IOE_Reset (This : in out STMPE811_Device);
+   procedure IOE_Function_Command (This : in out STMPE811_Device;
+                                   Func : Byte;
+                                   Enabled : Boolean);
+   procedure IOE_AF_Config (This      : in out STMPE811_Device;
+                            Pin       : Byte;
+                            Enabled   : Boolean);
+   function Get_IOE_ID (This : in out STMPE811_Device) return Short;
 
-      function As_C_String_Ptr is new Ada.Unchecked_Conversion
-        (System.Address, C_String_Ptr);
-
-      Msg_Str : constant C_String_Ptr := As_C_String_Ptr (Ptr);
-
-   begin
-      for J in Msg_Str'Range loop
-         exit when Msg_Str (J) = Character'Val (0);
-         LCD_Text.Put (Msg_Str (J));
-      end loop;
-   end Put;
-
-   -------------------------
-   -- Last_Chance_Handler --
-   -------------------------
-
-   procedure Last_Chance_Handler (Msg : System.Address; Line : Integer) is
-   begin
-      Initialize_LEDs;  -- in case no other use in the application
-      All_LEDs_Off;
-
-      LCD_Text.Set_Font (To => BMP_Fonts.Font12x12);
-
-      LCD_Text.Clear_Screen;
-
-      if Line /= 0 then
-         LCD_Text.Put ("Predefined exception at ");
-         Put (Msg);
-         LCD_Text.Put (" line");
-         LCD_Text.Put (Line'Img);
-      else
-         LCD_Text.Put ("User-defined exception, message: ");
-         Put (Msg);
-      end if;
-      LCD_Text.New_Line;
-
-      loop
-         LCH_LED.Toggle;
-         delay until Clock + Milliseconds (500);
-      end loop;
-   end Last_Chance_Handler;
-
-end Last_Chance_Handler;
+end STMPE811;

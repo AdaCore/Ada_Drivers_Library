@@ -18,21 +18,21 @@ package HAL.I2C is
    type I2C_Port_Ref is not null access all I2C_Port'Class;
 
    procedure Master_Transmit
-     (Port    : I2C_Port;
+     (Port    : in out I2C_Port;
       Addr    : UInt10;
       Data    : I2C_Data;
       Status  : out I2C_Status;
       Timeout : Natural := 1000) is abstract;
 
    procedure Master_Receive
-     (Port    : I2C_Port;
+     (Port    : in out I2C_Port;
       Addr    : UInt10;
       Data    : out I2C_Data;
       Status  : out I2C_Status;
       Timeout : Natural := 1000) is abstract;
 
    procedure Mem_Write
-     (Port          : I2C_Port;
+     (Port          : in out I2C_Port;
       Addr          : UInt10;
       Mem_Addr      : Short;
       Mem_Addr_Size : I2C_Memory_Address_Size;
@@ -41,7 +41,7 @@ package HAL.I2C is
       Timeout       : Natural := 1000) is abstract;
 
    procedure Mem_Read
-     (Port          : I2C_Port;
+     (Port          : in out I2C_Port;
       Addr          : UInt10;
       Mem_Addr      : Short;
       Mem_Addr_Size : I2C_Memory_Address_Size;

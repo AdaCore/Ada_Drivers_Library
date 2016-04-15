@@ -90,7 +90,7 @@ package body STM32.Board is
       Config.Mode := Mode_In;
       Config.Resistors := Floating;
 
-      Configure_IO (User_Button_Point, Config);
+      User_Button_Point.Configure_IO (Config);
    end Configure_User_Button_GPIO;
 
 end STM32.Board;

@@ -43,18 +43,20 @@
 --  from ST Microelectronics) Serial Peripheral Interface (SPI) facility.
 
 private with STM32_SVD.SPI;
+with HAL.SPI;
 
 package STM32.SPI is
 
-   type SPI_Port is limited private;
+   type Internal_SPI_Port is private;
+
+   type SPI_Port (Periph : not null access Internal_SPI_Port) is
+      limited new HAL.SPI.SPI_Port with private;
 
    type SPI_Data_Direction is
      (D2Lines_FullDuplex,
       D2Lines_RxOnly,
       D1Line_Rx,
       D1Line_Tx);
-
-   type SPI_Data_Size is (Data_16, Data_8);
 
    type SPI_Mode is (Master, Slave);
 
@@ -72,9 +74,9 @@ package STM32.SPI is
    type SPI_Configuration is record
       Direction           : SPI_Data_Direction;
       Mode                : SPI_Mode;
-      Data_Size           : SPI_Data_Size;
-      Clock_Polarity      : SPI_Clock_Polarity;
-      Clock_Phase         : SPI_Clock_Phase;
+      Data_Size           : HAL.SPI.SPI_Data_Size;
+      Clock_Polarity      : SPI_CLock_Polarity;
+      Clock_Phase         : SPI_CLock_Phase;
       Slave_Management    : SPI_Slave_Management;
       Baud_Rate_Prescaler : SPI_Baud_Rate_Prescaler;
       First_Bit           : SPI_First_Bit;
@@ -141,28 +143,50 @@ package STM32.SPI is
 
    function Current_Data_Direction (Port : SPI_Port) return SPI_Data_Direction;
 
-   --  The following I/O routines implement the higher level functionality for CRC and data direction, among others.
+   --  The following I/O routines implement the higher level functionality for
+   --  CRC and data direction, among others.
 
    type Byte_Buffer is array (Natural range <>) of Byte
      with Alignment => 2;
-   -- The alignment is set to 2 because we treat component pairs as half_word
-   -- values when sending/receiving in 16-bit mode.
+   --  The alignment is set to 2 because we treat component pairs as half_word
+   --  values when sending/receiving in 16-bit mode.
 
    --  Blocking
 
+   overriding
+   function Data_Size (Port : SPI_Port) return HAL.SPI.SPI_Data_Size;
+
+   overriding
    procedure Transmit
-     (Port     : in out SPI_Port;
-      Outgoing : Byte_Buffer;
-      Size     : Positive);
+     (Port   : in out SPI_Port;
+      Data   : HAL.SPI.SPI_Data_8b;
+      Status : out HAL.SPI.SPI_Status;
+      Timeout : Natural := 1000);
+
+   overriding
+   procedure Transmit
+     (Port   : in out SPI_Port;
+      Data   : HAL.SPI.SPI_Data_16b;
+      Status : out HAL.SPI.SPI_Status;
+      Timeout : Natural := 1000);
 
    procedure Transmit
      (Port     : in out SPI_Port;
       Outgoing : Byte);
 
+   overriding
    procedure Receive
-     (Port     : in out SPI_Port;
-      Incoming : out Byte_Buffer;
-      Size     : Positive);
+     (Port    : in out SPI_Port;
+      Data    : out HAL.SPI.SPI_Data_8b;
+      Status  : out HAL.SPI.SPI_Status;
+      Timeout : Natural := 1000);
+
+   overriding
+   procedure Receive
+     (Port    : in out SPI_Port;
+      Data    : out HAL.SPI.SPI_Data_16b;
+      Status  : out HAL.SPI.SPI_Status;
+      Timeout : Natural := 1000);
 
    procedure Receive
      (Port     : in out SPI_Port;
@@ -183,7 +207,10 @@ package STM32.SPI is
 
 private
 
-   type SPI_Port is new STM32_SVD.SPI.SPI_Peripheral;
+   type Internal_SPI_Port is new STM32_SVD.SPI.SPI_Peripheral;
+
+   type SPI_Port (Periph : not null access Internal_SPI_Port) is
+     limited new HAL.SPI.SPI_Port with null record;
 
    procedure Send_Receive_16bit_Mode
      (Port     : in out SPI_Port;
@@ -199,22 +226,18 @@ private
 
    procedure Send_16bit_Mode
      (Port     : in out SPI_Port;
-      Outgoing : Byte_Buffer;
-      Size     : Positive);
+      Outgoing : HAL.SPI.SPI_Data_16b);
 
    procedure Send_8bit_Mode
      (Port     : in out SPI_Port;
-      Outgoing : Byte_Buffer;
-      Size     : Positive);
+      Outgoing : HAL.SPI.SPI_Data_8b);
 
    procedure Receive_16bit_Mode
      (Port     : in out SPI_Port;
-      Incoming : out Byte_Buffer;
-      Count    : Positive);
+      Incoming : out HAL.SPI.SPI_Data_16b);
 
    procedure Receive_8bit_Mode
      (Port     : in out SPI_Port;
-      Incoming : out Byte_Buffer;
-      Count    : Positive);
+      Incoming : out HAL.SPI.SPI_Data_8b);
 
 end STM32.SPI;

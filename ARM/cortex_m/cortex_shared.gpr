@@ -15,7 +15,7 @@ abstract project Cortex_Shared is
             for Default_Switches ("Ada") use ("-O0");
       end case;
       for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
-                ("-gnatwa", "-gnatQ", "-gnatw.X",
+                ("-gnatwa", "-gnatQ", "-gnatw.X", "-gnatyO",
                  "-ffunction-sections", "-fdata-sections");
    end Compiler;
 

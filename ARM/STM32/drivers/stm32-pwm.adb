@@ -225,12 +225,11 @@ package body STM32.PWM is
       Configuration.Speed       := Speed_100MHz;
       Configuration.Resistors   := Floating;
 
-      Configure_IO (Point  => Output,
-                    Config => Configuration);
+      Output.Configure_IO (Configuration);
 
-      Configure_Alternate_Function (Output, AF => PWM_AF);
+      Output.Configure_Alternate_Function (PWM_AF);
 
-      Lock (Output);
+      Output.Lock;
    end Configure_PWM_GPIO;
 
    ----------------------------------

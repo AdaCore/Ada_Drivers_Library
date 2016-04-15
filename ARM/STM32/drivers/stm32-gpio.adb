@@ -48,7 +48,7 @@ with System.Machine_Code;
 
 package body STM32.GPIO is
 
-   procedure Lock_The_Pin (Port : in out GPIO_Port;  Pin : Short);
+   procedure Lock_The_Pin (Port : in out Internal_GPIO_Port;  Pin : Short);
    --  This is the routine that actually locks the pin for the port. It is an
    --  internal routine and has no preconditions. We use it to avoid redundant
    --  calls to the precondition that checks that the pin is not already
@@ -61,23 +61,10 @@ package body STM32.GPIO is
    -- Any_Set --
    -------------
 
-   function Any_Set (Port : GPIO_Port;  Pins : GPIO_Pins) return Boolean is
-      These_Pins : Short := 0;
-   begin
-      for Pin of Pins loop
-         These_Pins := These_Pins or Pin'Enum_Rep;
-      end loop;
-      return (Port.IDR.IDR.Val and These_Pins) /= 0;
-   end Any_Set;
-
-   -------------
-   -- Any_Set --
-   -------------
-
    function Any_Set (Pins : GPIO_Points) return Boolean is
    begin
       for Pin of Pins loop
-         if Pin.Port.IDR.IDR.Arr (Pin.Pin) then
+         if Pin.Set then
             return True;
          end if;
       end loop;
@@ -89,31 +76,9 @@ package body STM32.GPIO is
    -- Set --
    ---------
 
-   function Set (Port : GPIO_Port;  Pin : GPIO_Pin) return Boolean is
-      Pin_Mask : constant Short := GPIO_Pin'Enum_Rep (Pin);
-   begin
-      return (Port.IDR.IDR.Val and Pin_Mask) = Pin_Mask;
-   end Set;
-
-   ---------
-   -- Set --
-   ---------
-
+   overriding
    function Set (This : GPIO_Point) return Boolean is
-     (This.Port.IDR.IDR.Arr (This.Pin));
-
-   -------------
-   -- All_Set --
-   -------------
-
-   function All_Set (Port : GPIO_Port;  Pins : GPIO_Pins) return Boolean is
-      These_Pins : Short := 0;
-   begin
-      for Pin of Pins loop
-         These_Pins := These_Pins or Pin'Enum_Rep;
-      end loop;
-      return (Port.IDR.IDR.Val and These_Pins) = These_Pins;
-   end All_Set;
+     (This.Periph.IDR.IDR.Arr (This.Pin));
 
    -------------
    -- All_Set --
@@ -122,7 +87,7 @@ package body STM32.GPIO is
    function All_Set (Pins : GPIO_Points) return Boolean is
    begin
       for Pin of Pins loop
-         if not Set (Pin) then
+         if not Pin.Set then
             return False;
          end if;
       end loop;
@@ -134,41 +99,20 @@ package body STM32.GPIO is
    -- Set --
    ---------
 
-   procedure Set (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
+   overriding
+   procedure Set (This : in out GPIO_Point) is
    begin
-      Port.BSRR.BS.Val := Pin'Enum_Rep;
+      This.Periph.BSRR.BS.Arr (This.Pin) := True;
    end Set;
 
    ---------
    -- Set --
    ---------
 
-   procedure Set (Port : in out GPIO_Port;  Pins : GPIO_Pins) is
-      These_Pins : Short := 0;
+   procedure Set (Pins : in out GPIO_Points) is
    begin
       for Pin of Pins loop
-         These_Pins := These_Pins or Pin'Enum_Rep;
-      end loop;
-      Port.BSRR.BS.Val := These_Pins'Enum_Rep;
-   end Set;
-
-   ---------
-   -- Set --
-   ---------
-
-   procedure Set (This : GPIO_Point) is
-   begin
-      This.Port.BSRR.BS.Arr (This.Pin) := True;
-   end Set;
-
-   ---------
-   -- Set --
-   ---------
-
-   procedure Set (Pins : GPIO_Points) is
-   begin
-      for Pin of Pins loop
-         Set (Pin);
+         Pin.Set;
       end loop;
    end Set;
 
@@ -176,41 +120,20 @@ package body STM32.GPIO is
    -- Clear --
    -----------
 
-   procedure Clear (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
+   overriding
+   procedure Clear (This : in out GPIO_Point) is
    begin
-      Port.BSRR.BR.Val := Pin'Enum_Rep;
+      This.Periph.BSRR.BR.Arr (this.Pin) := True;
    end Clear;
 
    -----------
    -- Clear --
    -----------
 
-   procedure Clear (Port : in out GPIO_Port;  Pins : GPIO_Pins) is
-      These_Pins : Short := 0;
+   procedure Clear (Pins : in out GPIO_Points) is
    begin
       for Pin of Pins loop
-         These_Pins := These_Pins or Pin'Enum_Rep;
-      end loop;
-      Port.BSRR.BR.Val := These_Pins;
-   end Clear;
-
-   -----------
-   -- Clear --
-   -----------
-
-   procedure Clear (This : GPIO_Point) is
-   begin
-      This.Port.BSRR.BR.Arr (this.Pin) := True;
-   end Clear;
-
-   -----------
-   -- Clear --
-   -----------
-
-   procedure Clear (Pins : GPIO_Points) is
-   begin
-      for Pin of Pins loop
-         Clear (Pin);
+         Pin.Clear;
       end loop;
    end Clear;
 
@@ -218,73 +141,35 @@ package body STM32.GPIO is
    -- Toggle --
    ------------
 
-   procedure Toggle (Port : in out GPIO_Port;  Pin : GPIO_Pin) is
-      pragma Annotate (CodePeer,
-                       False_Positive,
-                       "subp always fails",
-                       "hardware-specific interaction for IDR and ODR");
+   overriding
+   procedure Toggle (This : in out GPIO_Point) is
    begin
-      Port.ODR.ODR.Val := Port.ODR.ODR.Val xor Pin'Enum_Rep;
-   end Toggle;
-   pragma Annotate (CodePeer,
-                    False_Positive,
-                    "postcondition",
-                    "hardware-specific semantics");
-
-   ------------
-   -- Toggle --
-   ------------
-
-   procedure Toggle (Port : in out GPIO_Port;  Pins : GPIO_Pins) is
-      These_Pins : Short := 0;
-   begin
-      for Pin of Pins loop
-         These_Pins := These_Pins or Pin'Enum_Rep;
-      end loop;
-      Port.ODR.ODR.Val := Port.ODR.ODR.Val xor These_Pins;
+      This.Periph.ODR.ODR.Arr (This.Pin) := not This.Periph.ODR.ODR.Arr (This.Pin);
    end Toggle;
 
    ------------
    -- Toggle --
    ------------
 
-   procedure Toggle (This : GPIO_Point) is
-   begin
-      This.Port.ODR.ODR.Arr (This.Pin) := not This.Port.ODR.ODR.Arr (This.Pin);
-   end Toggle;
-
-   ------------
-   -- Toggle --
-   ------------
-
-   procedure Toggle (Points : GPIO_Points) is
+   procedure Toggle (Points : in out GPIO_Points) is
    begin
       for Point of Points loop
-         Toggle (Point);
+         Point.Toggle;
       end loop;
    end Toggle;
-
-   ------------
-   -- Locked --
-   ------------
-
-   function Locked (Port : GPIO_Port;  Pin : GPIO_Pin) return Boolean is
-   begin
-      return (Port.LCKR.LCK.Val and Pin'Enum_Rep) /= 0;
-   end Locked;
 
    ------------
    -- Locked --
    ------------
 
    function Locked (Pin : GPIO_Point) return Boolean is
-     (Pin.Port.LCKR.LCK.Arr (Pin.Pin));
+     (Pin.Periph.LCKR.LCK.Arr (Pin.Pin));
 
    ------------------
    -- Lock_The_Pin --
    ------------------
 
-   procedure Lock_The_Pin (Port : in out GPIO_Port;  Pin : Short) is
+   procedure Lock_The_Pin (Port : in out Internal_GPIO_Port;  Pin : Short) is
       Temp : Word;
       pragma Volatile (Temp);
 
@@ -343,30 +228,9 @@ package body STM32.GPIO is
    -- Lock --
    ----------
 
-   procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin)
-   is
-   begin
-      Lock_The_Pin (Port, GPIO_Pin'Enum_Rep (Pin));
-   end Lock;
-
-   ----------
-   -- Lock --
-   ----------
-
-   procedure Lock (Port : in out GPIO_Port;  Pins : GPIO_Pins) is
-   begin
-      for Pin of Pins loop
-         Lock_The_Pin (Port, GPIO_Pin'Enum_Rep (Pin));
-      end loop;
-   end Lock;
-
-   ----------
-   -- Lock --
-   ----------
-
    procedure Lock (Point : GPIO_Point) is
    begin
-      Lock_The_Pin (Point.Port.all, Shift_Left (1, Point.Pin));
+      Lock_The_Pin (Point.Periph.all, Shift_Left (1, Point.Pin));
    end Lock;
 
    ----------
@@ -376,68 +240,9 @@ package body STM32.GPIO is
    procedure Lock (Points : GPIO_Points) is
    begin
       for Point of Points loop
-         Lock (Point);
+         Point.Lock;
       end loop;
    end Lock;
-
-   ------------------
-   -- Configure_IO --
-   ------------------
-
-   procedure Configure_IO
-     (Port   : in out GPIO_Port;
-      Pins   : GPIO_Pins;
-      Config : GPIO_Port_Configuration)
-   is
-      MODER   : MODER_Register   := Port.MODER;
-      OTYPER  : OTYPER_OT_Field  := Port.OTYPER.OT;
-      OSPEEDR : OSPEEDR_Register := Port.OSPEEDR;
-      PUPDR   : PUPDR_Register   := Port.PUPDR;
-   begin
-      for Pin of Pins loop
-         declare
-            Index : constant Integer := GPIO_Pin'Pos (Pin); -- 0 .. 15
-         begin
-            MODER.Arr (Index)   := Pin_IO_Modes'Enum_Rep (Config.Mode);
-            OTYPER.Arr (Index)  := Config.Output_Type = Open_Drain;
-            OSPEEDR.Arr (Index) := Pin_Output_Speeds'Enum_Rep (Config.Speed);
-            PUPDR.Arr (Index)   :=
-              Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
-         end;
-      end loop;
-
-      Port.MODER     := MODER;
-      Port.OTYPER.OT := OTYPER;
-      Port.OSPEEDR   := OSPEEDR;
-      Port.PUPDR     := PUPDR;
-   end Configure_IO;
-
-   ------------------
-   -- Configure_IO --
-   ------------------
-
-   procedure Configure_IO
-     (Port   : in out GPIO_Port;
-      Pin    : GPIO_Pin;
-      Config : GPIO_Port_Configuration)
-   is
-      MODER   : MODER_Register   := Port.MODER;
-      OTYPER  : OTYPER_OT_Field  := Port.OTYPER.OT;
-      OSPEEDR : OSPEEDR_Register := Port.OSPEEDR;
-      PUPDR   : PUPDR_Register   := Port.PUPDR;
-
-      Index : constant Integer := GPIO_Pin'Pos (Pin);
-   begin
-      MODER.Arr (Index)   := Pin_IO_Modes'Enum_Rep (Config.Mode);
-      OTYPER.Arr (Index)  := Config.Output_Type = Open_Drain;
-      OSPEEDR.Arr (Index) := Pin_Output_Speeds'Enum_Rep (Config.Speed);
-      PUPDR.Arr (Index)  := Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
-
-      Port.MODER     := MODER;
-      Port.OTYPER.OT := OTYPER;
-      Port.OSPEEDR   := OSPEEDR;
-      Port.PUPDR     := PUPDR;
-   end Configure_IO;
 
    ------------------
    -- Configure_IO --
@@ -447,10 +252,10 @@ package body STM32.GPIO is
      (Point  : GPIO_Point;
       Config : GPIO_Port_Configuration)
    is
-      MODER   : MODER_Register   := Point.Port.MODER;
-      OTYPER  : OTYPER_Register  := Point.Port.OTYPER;
-      OSPEEDR : OSPEEDR_Register := Point.Port.OSPEEDR;
-      PUPDR   : PUPDR_Register   := Point.Port.PUPDR;
+      MODER   : MODER_Register   := Point.Periph.MODER;
+      OTYPER  : OTYPER_Register  := Point.Periph.OTYPER;
+      OSPEEDR : OSPEEDR_Register := Point.Periph.OSPEEDR;
+      PUPDR   : PUPDR_Register   := Point.Periph.PUPDR;
 
    begin
       MODER.Arr (Point.Pin)     :=
@@ -461,10 +266,10 @@ package body STM32.GPIO is
       PUPDR.Arr (Point.Pin)     :=
         Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
 
-      Point.Port.MODER   := MODER;
-      Point.Port.OTYPER  := OTYPER;
-      Point.Port.OSPEEDR := OSPEEDR;
-      Point.Port.PUPDR   := PUPDR;
+      Point.Periph.MODER   := MODER;
+      Point.Periph.OTYPER  := OTYPER;
+      Point.Periph.OSPEEDR := OSPEEDR;
+      Point.Periph.PUPDR   := PUPDR;
    end Configure_IO;
 
    ------------------
@@ -477,54 +282,9 @@ package body STM32.GPIO is
    is
    begin
       for Point of Points loop
-         Configure_IO (Point, Config);
+         Point.Configure_IO (Config);
       end loop;
    end Configure_IO;
-
-   -------------------
-   -- Current_Input --
-   -------------------
-
-   function Current_Input (Port : GPIO_Port) return Short is
-   begin
-      return Port.IDR.IDR.Val;
-   end Current_Input;
-
-   --------------------
-   -- Current_Output --
-   --------------------
-
-   function Current_Output (Port : GPIO_Port) return Short is
-   begin
-      return Port.ODR.ODR.Val;
-   end Current_Output;
-
-   ------------------
-   -- Write_Output --
-   ------------------
-
-   procedure Write_Output (Port : in out GPIO_Port; Data : Short) is
-   begin
-      Port.ODR.ODR.Val := Data;
-   end Write_Output;
-
-   ----------------------------------
-   -- Configure_Alternate_Function --
-   ----------------------------------
-
-   procedure Configure_Alternate_Function
-     (Port : in out GPIO_Port;
-      Pin  : GPIO_Pin;
-      AF   : GPIO_Alternate_Function)
-   is
-      Index : constant Integer := GPIO_Pin'Pos (Pin);
-   begin
-      if Index < 8 then
-         Port.AFRL.Arr (Index) := UInt4 (AF);
-      else
-         Port.AFRH.Arr (Index) := UInt4 (AF);
-      end if;
-   end Configure_Alternate_Function;
 
    ----------------------------------
    -- Configure_Alternate_Function --
@@ -536,25 +296,10 @@ package body STM32.GPIO is
    is
    begin
       if Point.Pin < 8 then
-         Point.Port.AFRL.Arr (Point.Pin) := UInt4 (AF);
+         Point.Periph.AFRL.Arr (Point.Pin) := UInt4 (AF);
       else
-         Point.Port.AFRH.Arr (Point.Pin) := UInt4 (AF);
+         Point.Periph.AFRH.Arr (Point.Pin) := UInt4 (AF);
       end if;
-   end Configure_Alternate_Function;
-
-   ----------------------------------
-   -- Configure_Alternate_Function --
-   ----------------------------------
-
-   procedure Configure_Alternate_Function
-     (Port : in out GPIO_Port;
-      Pins : GPIO_Pins;
-      AF   : GPIO_Alternate_Function)
-   is
-   begin
-      for Pin of Pins loop
-         Configure_Alternate_Function (Port, Pin, AF);
-      end loop;
    end Configure_Alternate_Function;
 
    ----------------------------------
@@ -567,7 +312,7 @@ package body STM32.GPIO is
    is
    begin
       for Point of Points loop
-         Configure_Alternate_Function (Point, AF);
+         Point.Configure_Alternate_Function (AF);
       end loop;
    end Configure_Alternate_Function;
 
@@ -581,29 +326,6 @@ package body STM32.GPIO is
    begin
       return EXTI.External_Line_Number'Val (Point.Pin);
    end Get_Interrupt_Line_Number;
-
-   -----------------------
-   -- Configure_Trigger --
-   -----------------------
-
-   procedure Configure_Trigger
-     (Port    : in out GPIO_Port;
-      Pin     : GPIO_Pin;
-      Trigger : EXTI.External_Triggers)
-   is
-      use STM32.SYSCFG, STM32.RCC;
-      use STM32.EXTI;
-      Line : constant External_Line_Number := External_Line_Number'Val (GPIO_Pin'Pos (Pin));
-   begin
-      RCC.SYSCFG_Clock_Enable;
-      SYSCFG.Connect_External_Interrupt (Port, Pin);
-
-      if Trigger in Interrupt_Triggers then
-         Enable_External_Interrupt (Line, Trigger);
-      else
-         Enable_External_Event (Line, Trigger);
-      end if;
-   end Configure_Trigger;
 
    -----------------------
    -- Configure_Trigger --
@@ -637,22 +359,7 @@ package body STM32.GPIO is
    is
    begin
       for Point of Points loop
-         Configure_Trigger (Point, Trigger);
-      end loop;
-   end Configure_Trigger;
-
-   -----------------------
-   -- Configure_Trigger --
-   -----------------------
-
-   procedure Configure_Trigger
-     (Port    : in out GPIO_Port;
-      Pins    : GPIO_Pins;
-      Trigger : EXTI.External_Triggers)
-   is
-   begin
-      for Pin of Pins loop
-         Configure_Trigger (Port, Pin, Trigger);
+         Point.Configure_Trigger (Trigger);
       end loop;
    end Configure_Trigger;
 

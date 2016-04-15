@@ -46,23 +46,11 @@ pragma Restrictions (No_Elaboration_Code);
 
 private with STM32_SVD.GPIO;
 with STM32.EXTI;
+with HAL.GPIO;
 
 package STM32.GPIO is
 
-   type GPIO_Port is limited private;
-
-   function Current_Input (Port : GPIO_Port) return Short with
-     Inline;
-   --  Returns the value of the Port's input data register
-
-   function Current_Output (Port : GPIO_Port) return Short with
-     Inline;
-   --  Returns the value of the Port's output data register
-
-   procedure Write_Output (Port : in out GPIO_Port; Data : Short) with
-     Inline;
-   --  Sets the value of the Port's output data register to Data.  All bits
-   --  in the register are affected.
+   type Internal_GPIO_Port is limited private;
 
    type GPIO_Pin is
      (Pin_0, Pin_1, Pin_2,  Pin_3,  Pin_4,  Pin_5,  Pin_6,  Pin_7,
@@ -91,158 +79,15 @@ package STM32.GPIO is
 
    subtype GPIO_Pin_Index is Natural range 0 .. 15;
 
-   type GPIO_Point is record
-      Port : access GPIO_Port;
-      Pin  : GPIO_Pin_Index;
-   end record;
-
-   No_Point : constant GPIO_Point := (null, 0);
-
    type GPIO_Pins is array (Positive range <>) of GPIO_Pin;
    --  Note that, in addition to aggregates, the language-defined catenation
    --  operator "&" is available for types GPIO_Pin and GPIO_Pins, allowing one
    --  to construct GPIO_Pins values conveniently
 
-   type GPIO_Points is array (Positive range <>) of GPIO_Point;
 
    All_Pins : constant GPIO_Pins :=
                 (Pin_0, Pin_1, Pin_2, Pin_3, Pin_4, Pin_5, Pin_6, Pin_7,
                  Pin_8, Pin_9, Pin_10, Pin_11, Pin_12, Pin_13, Pin_14, Pin_15);
-
-   function Any_Set (Port : GPIO_Port;  Pins : GPIO_Pins) return Boolean with
-     Inline;
-   --  Returns True if any one of the bits specified by Pins is set (not zero)
-   --  in the Port input data register; returns False otherwise.
-
-   function Any_Set (Pins : GPIO_Points) return Boolean with
-     Inline;
-   --  Returns True if any one of the bits specified by Pins is set (not zero)
-   --  in the Port input data register; returns False otherwise.
-
-   function Set (Port : GPIO_Port;  Pins : GPIO_Pins) return Boolean
-     renames Any_Set;
-   --  Defined for readability when only one pin is specified in GPIO_Pins
-
-   function Set (Pins : GPIO_Points) return Boolean
-     renames Any_Set;
-   --  Defined for readability when only one pin is specified in GPIO_Pins
-
-   function Set (Port : GPIO_Port;  Pin : GPIO_Pin) return Boolean with
-     Inline;
-   --  Returns True if the bit specified by Pin is set (not zero) in the Port
-   --  input data register; returns False otherwise.
-
-   function Set (This : GPIO_Point) return Boolean with
-     Inline;
-   --  Returns True if the bit specified by This.Pin is set (not zero) in the
-   --  input data register of This.Port.all; returns False otherwise.
-
-   function All_Set (Port : GPIO_Port;  Pins : GPIO_Pins) return Boolean with
-     Inline;
-   --  Returns True iff all of the bits specified by Pins are set (not zero) in
-   --  the Port input data register; returns False otherwise.
-
-   function All_Set (Pins : GPIO_Points) return Boolean with
-     Inline;
-   --  Returns True iff all of the bits specified by Pins are set (not zero) in
-   --  the Port input data register; returns False otherwise.
-
-   procedure Set (Port : in out GPIO_Port;  Pin : GPIO_Pin) with
-     Inline,
-     Post => Set (Port, Pin);
-   --  For the given GPIO port, sets the output data register bit specified by
-   --  Pin to one. Other pins are unaffected.
-
-   procedure Set (This : GPIO_Point) with
-     Inline,
-     Post => Set (This);
-   --  For This.Port.all, sets the output data register bit specified by
-   --  This.Pin to one. Other pins are unaffected.
-
-   procedure Set (Port : in out GPIO_Port;  Pins : GPIO_Pins) with
-     Inline,
-     Post => All_Set (Port, Pins);
-   --  For the given GPIO port, sets all of the output data register bits
-   --  specified by Pins to one. Other pins are unaffected.
-
-   procedure Set (Pins : GPIO_Points) with
-     Inline,
-     Post => All_Set (Pins);
-   --  For the given GPIO port, sets all of the output data register bits
-   --  specified by Pins to one. Other pins are unaffected.
-
-   procedure Clear (Port : in out GPIO_Port;  Pin : GPIO_Pin) with
-     Inline,
-     Post => not Set (Port, Pin);
-   --  For the given GPIO port, sets the output data register bit specified by
-   --  Pin to zero. Other pins are unaffected.
-
-   procedure Clear (This : GPIO_Point)with
-     Inline,
-     Post => not Set (This);
-   --  For This.Port.all, sets the output data register bit specified by
-   --  This.Pin to zero. Other pins are unaffected.
-
-   procedure Clear (Port : in out GPIO_Port;  Pins : GPIO_Pins) with
-     Inline,
-     Post => not All_Set (Port, Pins);
-   --  For the given GPIO port, sets of all of the output data register bits
-   --  specified by Pins to zero. Other pins are unaffected.
-
-   procedure Clear (Pins : GPIO_Points) with
-     Inline,
-     Post => not All_Set (Pins);
-   --  For the given GPIO port, sets of all of the output data register bits
-   --  specified by Pins to zero. Other pins are unaffected.
-
-   procedure Toggle (Port : in out GPIO_Port;  Pin : GPIO_Pin) with
-     Inline,
-     Post => (if Set (Port, Pin)'Old then not Set (Port, Pin) else Set (Port, Pin));
-   --  For the given GPIO port, negates the output data register bit specified
-   --  by Pin (one becomes zero and vice versa). Other pins are unaffected.
-
-   procedure Toggle (Port : in out GPIO_Port;  Pins : GPIO_Pins) with Inline;
-   --  For the given GPIO port, negates all of the output data register bis
-   --  specified by Pins (ones become zeros and vice versa). Other pins are
-   --  unaffected.
-
-   procedure Toggle (This : GPIO_Point) with
-     Inline;
-   --  For This.Port.all, negates the output data register bit specified by
-   --  This.Pin (one becomes zero and vice versa). Other pins are unaffected.
-
-   procedure Toggle (Points : GPIO_Points) with Inline;
-   --  For the given GPIO ports, negates all of the output data register bis
-   --  specified by Pins (ones become zeros and vice versa). Other pins are
-   --  unaffected.
-
-   procedure Lock (Port : in out GPIO_Port;  Pin : GPIO_Pin) with
-     Pre  => not Locked (Port, Pin),
-     Post => Locked (Port, Pin);
-   --  For the given GPIO port, locks the current configuration of Pin until
-   --  the MCU is reset.
-
-   procedure Lock (Port : in out GPIO_Port;  Pins : GPIO_Pins) with
-     Pre  => (for all Pin of Pins => not Locked (Port, Pin)),
-     Post => (for all Pin of Pins => Locked (Port, Pin));
-   --  Locks the current configuration of the specified pins on the given port
-   --  until the MCU is reset.
-
-   procedure Lock (Point : GPIO_Point)with
-     Pre  => not Locked (Point),
-     Post => Locked (Point);
-   --  For the given GPIO port, locks the current configuration of Pin until
-   --  the MCU is reset.
-
-   procedure Lock (Points : GPIO_Points);
-   --  For the given GPIO port, locks the current configuration of Pin until
-   --  the MCU is reset.
-
-   function Locked (Port : GPIO_Port;  Pin : GPIO_Pin) return Boolean with
-     Inline;
-
-   function Locked (Pin : GPIO_Point) return Boolean
-     with Inline;
 
    type Pin_IO_Modes is (Mode_In, Mode_Out, Mode_AF, Mode_Analog)
      with Size => 2;
@@ -281,90 +126,7 @@ package STM32.GPIO is
       Resistors   : Internal_Pin_Resistors;
    end record;
 
-   procedure Configure_IO
-     (Port   : in out GPIO_Port;
-      Pin    : GPIO_Pin;
-      Config : GPIO_Port_Configuration);
-   --  For Pin on the specified Port, configures the
-   --  characteristics specified by Config
-
-   procedure Configure_IO
-     (Port   : in out GPIO_Port;
-      Pins   : GPIO_Pins;
-      Config : GPIO_Port_Configuration);
-   --  For each pin of Pins on the specified Port, configures the
-   --  characteristics specified by Config
-
-   procedure Configure_IO
-     (Point  : GPIO_Point;
-      Config : GPIO_Port_Configuration);
-   --  For Point.Pin on the Point.Port.all, configures the
-   --  characteristics specified by Config
-
-   procedure Configure_IO
-     (Points : GPIO_Points;
-      Config : GPIO_Port_Configuration);
-   --  For Point.Pin on the Point.Port.all, configures the
-   --  characteristics specified by Config
-
-   function Get_Interrupt_Line_Number
-     (Point : GPIO_Point) return EXTI.External_Line_Number;
-   --  Returns the external interrupt line number that corresponds to the
-   --  GPIO point.
-
-   procedure Configure_Trigger
-     (Port    : in out GPIO_Port;
-      Pin     : GPIO_Pin;
-      Trigger : EXTI.External_Triggers);
-   --  Connects the external line for Port and Pin, and enables the external
-   --  Trigger.  Enables the SYSCFG clock.
-
-   procedure Configure_Trigger
-     (Port    : in out GPIO_Port;
-      Pins    : GPIO_Pins;
-      Trigger : EXTI.External_Triggers);
-   --  For each pin of Pins on the specified Port, connects the external line
-   --  and enables the external Trigger.  Enables the SYSCFG clock.
-
-   procedure Configure_Trigger
-     (Point   : GPIO_Point;
-      Trigger : EXTI.External_Triggers);
-   --  For Point.Pin on Point.Port.all, connects the external line and enables
-   --  the external Trigger.  Enables the SYSCFG clock.
-
-   procedure Configure_Trigger
-     (Points  : GPIO_Points;
-      Trigger : EXTI.External_Triggers);
-   --  For Point.Pin on Point.Port.all, configures the
-   --  characteristics specified by Trigger
-
    type GPIO_Alternate_Function is private;
-
-   procedure Configure_Alternate_Function
-     (Port : in out GPIO_Port;
-      Pin  : GPIO_Pin;
-      AF   : GPIO_Alternate_Function);
-   --  For Pin on the specified Port, sets the alternate function
-   --  specified by AF
-
-   procedure Configure_Alternate_Function
-     (Port : in out GPIO_Port;
-      Pins : GPIO_Pins;
-      AF   : GPIO_Alternate_Function);
-   --  For each pin of Pins on the specified Port, sets the alternate function
-   --  specified by AF
-
-   procedure Configure_Alternate_Function
-     (Point : GPIO_Point;
-      AF    : GPIO_Alternate_Function);
-   --  For Point.Pin on Point.Port.all, sets the alternate function
-   --  specified by AF
-
-   procedure Configure_Alternate_Function
-     (Points : GPIO_Points;
-      AF     : GPIO_Alternate_Function);
-   --  For Point.Pin on Point.Port.all, sets the alternate function
-   --  specified by AF
 
    GPIO_AF_RTC_50Hz  : constant GPIO_Alternate_Function;
    GPIO_AF_MCO       : constant GPIO_Alternate_Function;
@@ -416,9 +178,130 @@ package STM32.GPIO is
    GPIO_AF_LTDC      : constant GPIO_Alternate_Function;
    GPIO_AF_EVENTOUT  : constant GPIO_Alternate_Function;
 
+   type GPIO_Point is new HAL.GPIO.GPIO_Point with record
+      Periph : access Internal_GPIO_Port;
+      --  Port should be a not null access, but this raises an exception
+      --  during elaboration.
+      Pin  : GPIO_Pin_Index;
+   end record;
+
+   overriding
+   function Set (This : GPIO_Point) return Boolean with
+     Inline;
+   --  Returns True if the bit specified by This.Pin is set (not zero) in the
+   --  input data register of This.Port.all; returns False otherwise.
+
+   overriding
+   procedure Set (This : in out GPIO_Point) with
+     Inline,
+     Post => Set (This);
+   --  For This.Port.all, sets the output data register bit specified by
+   --  This.Pin to one. Other pins are unaffected.
+
+   overriding
+   procedure Clear (This : in out GPIO_Point) with
+     Inline,
+     Post => not Set (This);
+   --  For This.Port.all, sets the output data register bit specified by
+   --  This.Pin to zero. Other pins are unaffected.
+
+
+   overriding
+   procedure Toggle (This : in out GPIO_Point) with
+     Inline;
+   --  For This.Port.all, negates the output data register bit specified by
+   --  This.Pin (one becomes zero and vice versa). Other pins are unaffected.
+
+   procedure Lock (Point : GPIO_Point) with
+     Pre  => not Locked (Point),
+     Post => Locked (Point);
+   --  For the given GPIO port, locks the current configuration of Pin until
+   --  the MCU is reset.
+
+   function Locked (Pin : GPIO_Point) return Boolean
+     with Inline;
+
+   procedure Configure_IO
+     (Point  : GPIO_Point;
+      Config : GPIO_Port_Configuration);
+   --  For Point.Pin on the Point.Port.all, configures the
+   --  characteristics specified by Config
+
+   function Get_Interrupt_Line_Number
+     (Point : GPIO_Point) return EXTI.External_Line_Number;
+   --  Returns the external interrupt line number that corresponds to the
+   --  GPIO point.
+
+   procedure Configure_Trigger
+     (Point   : GPIO_Point;
+      Trigger : EXTI.External_Triggers);
+   --  For Point.Pin on Point.Port.all, connects the external line and enables
+   --  the external Trigger.  Enables the SYSCFG clock.
+
+   procedure Configure_Alternate_Function
+     (Point : GPIO_Point;
+      AF    : GPIO_Alternate_Function);
+   --  For Point.Pin on Point.Port.all, sets the alternate function
+   --  specified by AF
+
+   type GPIO_Points is array (Positive range <>) of GPIO_Point;
+
+   function Any_Set (Pins : GPIO_Points) return Boolean with
+     Inline;
+   --  Returns True if any one of the bits specified by Pins is set (not zero)
+   --  in the Port input data register; returns False otherwise.
+
+   function Set (Pins : GPIO_Points) return Boolean
+     renames Any_Set;
+   --  Defined for readability when only one pin is specified in GPIO_Pins
+
+   function All_Set (Pins : GPIO_Points) return Boolean with
+     Inline;
+   --  Returns True iff all of the bits specified by Pins are set (not zero) in
+   --  the Port input data register; returns False otherwise.
+
+   procedure Set (Pins : in out GPIO_Points) with
+     Inline,
+     Post => All_Set (Pins);
+   --  For the given GPIO port, sets all of the output data register bits
+   --  specified by Pins to one. Other pins are unaffected.
+
+   procedure Clear (Pins : in out GPIO_Points) with
+     Inline,
+     Post => not All_Set (Pins);
+   --  For the given GPIO port, sets of all of the output data register bits
+   --  specified by Pins to zero. Other pins are unaffected.
+
+   procedure Toggle (Points : in out GPIO_Points) with Inline;
+   --  For the given GPIO ports, negates all of the output data register bis
+   --  specified by Pins (ones become zeros and vice versa). Other pins are
+   --  unaffected.
+
+   procedure Lock (Points : GPIO_Points);
+   --  For the given GPIO port, locks the current configuration of Pin until
+   --  the MCU is reset.
+
+   procedure Configure_IO
+     (Points : GPIO_Points;
+      Config : GPIO_Port_Configuration);
+   --  For Point.Pin on the Point.Port.all, configures the
+   --  characteristics specified by Config
+
+   procedure Configure_Trigger
+     (Points  : GPIO_Points;
+      Trigger : EXTI.External_Triggers);
+   --  For Point.Pin on Point.Port.all, configures the
+   --  characteristics specified by Trigger
+
+   procedure Configure_Alternate_Function
+     (Points : GPIO_Points;
+      AF     : GPIO_Alternate_Function);
+   --  For Point.Pin on Point.Port.all, sets the alternate function
+   --  specified by AF
+
 private
 
-   type GPIO_Port is new STM32_SVD.GPIO.GPIO_Peripheral;
+   type Internal_GPIO_Port is new STM32_SVD.GPIO.GPIO_Peripheral;
 
    LCCK : constant Word := 16#0001_0000#;
    --  As per the Reference Manual (RM0090; Doc ID 018909 Rev 6) pg 282,

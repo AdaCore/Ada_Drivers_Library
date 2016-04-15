@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Touch_Panel;
+with Touch_Panel;
 
 with STM32;                 use STM32;
 with STM32.DMA2D.Polling;   use STM32.DMA2D;
@@ -54,7 +54,7 @@ package body Screen_Interface is
          STM32.LCD.Initialize;
          STM32.LCD.Set_Orientation (Portrait);
          STM32.DMA2D.Polling.Initialize;
-         HAL.Touch_Panel.Initialize;
+         Touch_Panel.Initialize;
          Double_Buffer.Initialize
            (Layer_Background => Layer_Single_Buffer,
             Layer_Foreground => Layer_Inactive);
@@ -82,8 +82,8 @@ package body Screen_Interface is
 
    function Current_Touch_State return Touch_State is
       TS    : Touch_State;
-      ST_TS : constant HAL.Touch_Panel.TP_State :=
-                HAL.Touch_Panel.Get_State;
+      ST_TS : constant Touch_Panel.TP_State :=
+        Touch_Panel.Get_State;
    begin
       TS.Touch_Detected := ST_TS'Length > 0;
 

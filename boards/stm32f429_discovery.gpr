@@ -1,5 +1,6 @@
 with "../ARM/cortex_m/cortex_shared.gpr";
 with "../ARM/STM32/stm32f42x.gpr";
+with "../components/components.gpr";
 
 library project STM32F429_Discovery is
 
@@ -11,15 +12,7 @@ library project STM32F429_Discovery is
    for Library_Dir use "lib/stm32f429disco/" & Cortex_Shared.RTS;
    for Object_Dir use "obj/stm32f429disco/" & Cortex_Shared.RTS;
 
-   for Source_Dirs use
-     ("stm32f429_discovery",
-      "../hal",
-      "../hal/touch_panel",
-      "../components/button",
-      "../components/sdram",
-      "../components/lcd/ili9341",
-      "../components/touch_panel/stmpe811",
-      "../components/gyro/l3gd20");
+   for Source_Dirs use ("stm32f429_discovery");
 
    package Compiler renames STM32F42x.Compiler;
 

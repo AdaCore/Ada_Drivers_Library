@@ -20,7 +20,7 @@ package HAL.SPI is
    function Data_Size (Port : SPI_Port) return SPI_Data_Size is abstract;
 
    procedure Transmit
-     (Port    : SPI_Port;
+     (Port    : in out SPI_Port;
       Data    : SPI_Data_8b;
       Status  : out SPI_Status;
       Timeout : Natural := 1000) is abstract
@@ -28,7 +28,7 @@ package HAL.SPI is
        Pre'Class => Data_Size (Port) = Data_Size_8b;
 
    procedure Transmit
-     (Port    : SPI_Port;
+     (Port    : in out SPI_Port;
       Data    : SPI_Data_16b;
       Status  : out SPI_Status;
       Timeout : Natural := 1000) is abstract
@@ -36,7 +36,7 @@ package HAL.SPI is
        Pre'Class => Data_Size (Port) = Data_Size_16b;
 
    procedure Receive
-     (Port    : SPI_Port;
+     (Port    : in out SPI_Port;
       Data    : out SPI_Data_8b;
       Status  : out SPI_Status;
       Timeout : Natural := 1000) is abstract
@@ -44,7 +44,7 @@ package HAL.SPI is
        Pre'Class => Data_Size (Port) = Data_Size_8b;
 
    procedure Receive
-     (Port    : SPI_Port;
+     (Port    : in out SPI_Port;
       Data    : out SPI_Data_16b;
       Status  : out SPI_Status;
       Timeout : Natural := 1000) is abstract

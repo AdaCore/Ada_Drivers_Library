@@ -35,10 +35,19 @@ with STM32.Board;   use STM32.Board;
 with STM32.Device;  use STM32.Device;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.SPI;     use STM32.SPI;
+with ILI9341;       use ILI9341;
 
-package body STM32.LCD_ILI9341 is
+with HAL.SPI;
+
+package body LCD_ILI9341 is
 
    LCD_SPI : SPI_Port renames SPI_5;
+
+   ILI9341_Dev : ILI9341_Device
+     (Port        => LCD_SPI'Access,
+      Chip_Select => LCD_CSX'Access,
+      WRX         => LCD_WRX_DCX'Access,
+      Reset       => LCD_RESET'Access);
 
    --  LCD Registers
    LCD_SLEEP_OUT     : constant := 16#11#;  --  Sleep out register
@@ -80,67 +89,6 @@ package body STM32.LCD_ILI9341 is
       delay until Clock + Milliseconds (Ms);
    end My_Delay;
 
-   -----------------
-   -- Chip_Select --
-   -----------------
-
-   procedure Chip_Select (Enabled : Boolean) is
-   begin
-      if Enabled then
-         Clear (LCD_CSX);
-      else
-         Set (LCD_CSX);
-      end if;
-   end Chip_Select;
-
-   --------------
-   -- Wait_SPI --
-   --------------
-
-   procedure Wait_SPI is
-   begin
-      while Is_Busy (LCD_SPI) loop
-         null;
-      end loop;
-   end Wait_SPI;
-
-   ----------------------
-   -- LCD_WriteCommand --
-   ----------------------
-
-   procedure LCD_WriteCommand (Cmd : Short) is
-   begin
-      Wait_SPI;
-      Clear (LCD_WRX_DCX);
-
-      Chip_Select (true);
-
-      Send (LCD_SPI, Cmd);
-
-      Wait_SPI;
-
-      Chip_Select (false);
-   end LCD_WriteCommand;
-
-   -------------------
-   -- LCD_WriteData --
-   -------------------
-
-   procedure LCD_WriteData (Cmd : Short) is
-   begin
-      Wait_SPI;
-
-      Set (LCD_WRX_DCX);
-
-      Chip_Select (true);
-
-      Send (LCD_SPI, Cmd);
-
-      Wait_SPI;
-
-      Chip_Select (false);
-   end LCD_WriteData;
-
    ------------------
    -- LCD_SPI_Init --
    ------------------
@@ -149,8 +97,7 @@ package body STM32.LCD_ILI9341 is
    is
       Conf     : GPIO_Port_Configuration;
       SPI_Conf : SPI_Configuration;
-      SPI_Pins : constant GPIO_Points :=
-                   (SPI5_SCK, SPI5_MOSI, SPI5_MISO);
+      SPI_Pins : constant GPIO_Points := (SPI5_SCK, SPI5_MOSI, SPI5_MISO);
 
    begin
       Enable_Clock (SPI_Pins);
@@ -166,19 +113,19 @@ package body STM32.LCD_ILI9341 is
 
       Reset (LCD_SPI);
 
-      if not Enabled (LCD_SPI) then
+      if not LCD_SPI.Enabled then
          SPI_Conf :=
            (Direction           => D2Lines_FullDuplex,
             Mode                => Master,
-            Data_Size           => Data_8,
+            Data_Size           => HAL.SPI.Data_Size_8b,
             Clock_Polarity      => Low,
             Clock_Phase         => P1Edge,
             Slave_Management    => Software_Managed,
             Baud_Rate_Prescaler => BRP_32,
             First_Bit           => MSB,
             CRC_Poly            => 7);
-         Configure (LCD_SPI, SPI_Conf);
-         STM32.SPI.Enable (LCD_SPI);
+         LCD_SPI.Configure (SPI_Conf);
+         LCD_SPI.Enable;
       end if;
    end LCD_SPI_Init;
 
@@ -187,12 +134,14 @@ package body STM32.LCD_ILI9341 is
    -------------------
 
    procedure LCD_Pins_Init is
+      Points : constant GPIO_Points :=
+        GPIO_Points'(LCD_CSX, LCD_WRX_DCX);
    begin
-      Enable_CLock (GPIO_Points'(LCD_CSX, LCD_WRX_DCX));
+      Enable_CLock (Points);
       Enable_Clock (LCD_PINS);
 
       Configure_IO
-        (Points => (LCD_CSX, LCD_WRX_DCX),
+        (Points => Points,
          Config => (Speed       => Speed_50MHz,
                     Mode        => Mode_Out,
                     Output_Type => Push_Pull,
@@ -208,8 +157,6 @@ package body STM32.LCD_ILI9341 is
                     Output_Type => Push_Pull,
                     Resistors   => Floating));
 --        Lock (LCD_PINS);
-
-      Chip_Select (False);
    end LCD_Pins_Init;
 
    -----------------
@@ -218,122 +165,122 @@ package body STM32.LCD_ILI9341 is
 
    procedure LCD_For_LTDC_Init is
    begin
-      LCD_WriteCommand (16#CA#);
-      LCD_WriteData (16#C3#);
-      LCD_WriteData (16#08#);
-      LCD_WriteData (16#50#);
-      LCD_WriteCommand (LCD_POWERB);
-      LCD_WriteData (16#00#);
-      LCD_WriteData (16#C1#);
-      LCD_WriteData (16#30#);
-      LCD_WriteCommand (LCD_POWER_SEQ);
-      LCD_WriteData (16#64#);
-      LCD_WriteData (16#03#);
-      LCD_WriteData (16#12#);
-      LCD_WriteData (16#81#);
-      LCD_WriteCommand (LCD_DTCA);
-      LCD_WriteData (16#85#);
-      LCD_WriteData (16#00#);
-      LCD_WriteData (16#78#);
-      LCD_WriteCommand (LCD_POWERA);
-      LCD_WriteData (16#39#);
-      LCD_WriteData (16#2C#);
-      LCD_WriteData (16#00#);
-      LCD_WriteData (16#34#);
-      LCD_WriteData (16#02#);
-      LCD_WriteCommand (LCD_PRC);
-      LCD_WriteData (16#20#);
-      LCD_WriteCommand (LCD_DTCB);
-      LCD_WriteData (16#00#);
-      LCD_WriteData (16#00#);
-      LCD_WriteCommand (LCD_FRC);
-      LCD_WriteData (16#00#);
-      LCD_WriteData (16#1B#);
-      LCD_WriteCommand (LCD_DFC);
-      LCD_WriteData (16#0A#);
-      LCD_WriteData (16#A2#);
-      LCD_WriteCommand (LCD_POWER1);
-      LCD_WriteData (16#10#);
-      LCD_WriteCommand (LCD_POWER2);
-      LCD_WriteData (16#10#);
-      LCD_WriteCommand (LCD_VCOM1);
-      LCD_WriteData (16#45#);
-      LCD_WriteData (16#15#);
-      LCD_WriteCommand (LCD_VCOM2);
-      LCD_WriteData (16#90#);
-      LCD_WriteCommand (LCD_MAC);
-      LCD_WriteData (16#C8#);
-      LCD_WriteCommand (LCD_3GAMMA_EN);
-      LCD_WriteData (16#00#);
-      LCD_WriteCommand (LCD_RGB_INTERFACE);
-      LCD_WriteData (16#C2#);
-      LCD_WriteCommand (LCD_DFC);
-      LCD_WriteData (16#0A#);
-      LCD_WriteData (16#A7#);
-      LCD_WriteData (16#27#);
-      LCD_WriteData (16#04#);
+      ILI9341_Dev.Send_Command (16#CA#);
+      ILI9341_Dev.Send_Data (16#C3#);
+      ILI9341_Dev.Send_Data (16#08#);
+      ILI9341_Dev.Send_Data (16#50#);
+      ILI9341_Dev.Send_Command (LCD_POWERB);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Data (16#C1#);
+      ILI9341_Dev.Send_Data (16#30#);
+      ILI9341_Dev.Send_Command (LCD_POWER_SEQ);
+      ILI9341_Dev.Send_Data (16#64#);
+      ILI9341_Dev.Send_Data (16#03#);
+      ILI9341_Dev.Send_Data (16#12#);
+      ILI9341_Dev.Send_Data (16#81#);
+      ILI9341_Dev.Send_Command (LCD_DTCA);
+      ILI9341_Dev.Send_Data (16#85#);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Data (16#78#);
+      ILI9341_Dev.Send_Command (LCD_POWERA);
+      ILI9341_Dev.Send_Data (16#39#);
+      ILI9341_Dev.Send_Data (16#2C#);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Data (16#34#);
+      ILI9341_Dev.Send_Data (16#02#);
+      ILI9341_Dev.Send_Command (LCD_PRC);
+      ILI9341_Dev.Send_Data (16#20#);
+      ILI9341_Dev.Send_Command (LCD_DTCB);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Command (LCD_FRC);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Data (16#1B#);
+      ILI9341_Dev.Send_Command (LCD_DFC);
+      ILI9341_Dev.Send_Data (16#0A#);
+      ILI9341_Dev.Send_Data (16#A2#);
+      ILI9341_Dev.Send_Command (LCD_POWER1);
+      ILI9341_Dev.Send_Data (16#10#);
+      ILI9341_Dev.Send_Command (LCD_POWER2);
+      ILI9341_Dev.Send_Data (16#10#);
+      ILI9341_Dev.Send_Command (LCD_VCOM1);
+      ILI9341_Dev.Send_Data (16#45#);
+      ILI9341_Dev.Send_Data (16#15#);
+      ILI9341_Dev.Send_Command (LCD_VCOM2);
+      ILI9341_Dev.Send_Data (16#90#);
+      ILI9341_Dev.Send_Command (LCD_MAC);
+      ILI9341_Dev.Send_Data (16#C8#);
+      ILI9341_Dev.Send_Command (LCD_3GAMMA_EN);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Command (LCD_RGB_INTERFACE);
+      ILI9341_Dev.Send_Data (16#C2#);
+      ILI9341_Dev.Send_Command (LCD_DFC);
+      ILI9341_Dev.Send_Data (16#0A#);
+      ILI9341_Dev.Send_Data (16#A7#);
+      ILI9341_Dev.Send_Data (16#27#);
+      ILI9341_Dev.Send_Data (16#04#);
 
       --  colomn address set
-      LCD_WriteCommand (LCD_COLUMN_ADDR);
-      LCD_WriteData (16#00#);
-      LCD_WriteData (16#00#);
-      LCD_WriteData (16#00#);
-      LCD_WriteData (16#EF#);
+      ILI9341_Dev.Send_Command (LCD_COLUMN_ADDR);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Data (16#EF#);
       --  Page Address Set
-      LCD_WriteCommand (LCD_PAGE_ADDR);
-      LCD_WriteData (16#00#);
-      LCD_WriteData (16#00#);
-      LCD_WriteData (16#01#);
-      LCD_WriteData (16#3F#);
-      LCD_WriteCommand (LCD_INTERFACE);
-      LCD_WriteData (16#01#);
-      LCD_WriteData (16#00#);
-      LCD_WriteData (16#06#);
+      ILI9341_Dev.Send_Command (LCD_PAGE_ADDR);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Data (16#01#);
+      ILI9341_Dev.Send_Data (16#3F#);
+      ILI9341_Dev.Send_Command (LCD_INTERFACE);
+      ILI9341_Dev.Send_Data (16#01#);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Data (16#06#);
 
-      LCD_WriteCommand (LCD_GRAM);
+      ILI9341_Dev.Send_Command (LCD_GRAM);
       My_Delay (200);
 
-      LCD_WriteCommand (LCD_GAMMA);
-      LCD_WriteData (16#01#);
+      ILI9341_Dev.Send_Command (LCD_GAMMA);
+      ILI9341_Dev.Send_Data (16#01#);
 
-      LCD_WriteCommand (LCD_PGAMMA);
-      LCD_WriteData (16#0F#);
-      LCD_WriteData (16#29#);
-      LCD_WriteData (16#24#);
-      LCD_WriteData (16#0C#);
-      LCD_WriteData (16#0E#);
-      LCD_WriteData (16#09#);
-      LCD_WriteData (16#4E#);
-      LCD_WriteData (16#78#);
-      LCD_WriteData (16#3C#);
-      LCD_WriteData (16#09#);
-      LCD_WriteData (16#13#);
-      LCD_WriteData (16#05#);
-      LCD_WriteData (16#17#);
-      LCD_WriteData (16#11#);
-      LCD_WriteData (16#00#);
-      LCD_WriteCommand (LCD_NGAMMA);
-      LCD_WriteData (16#00#);
-      LCD_WriteData (16#16#);
-      LCD_WriteData (16#1B#);
-      LCD_WriteData (16#04#);
-      LCD_WriteData (16#11#);
-      LCD_WriteData (16#07#);
-      LCD_WriteData (16#31#);
-      LCD_WriteData (16#33#);
-      LCD_WriteData (16#42#);
-      LCD_WriteData (16#05#);
-      LCD_WriteData (16#0C#);
-      LCD_WriteData (16#0A#);
-      LCD_WriteData (16#28#);
-      LCD_WriteData (16#2F#);
-      LCD_WriteData (16#0F#);
+      ILI9341_Dev.Send_Command (LCD_PGAMMA);
+      ILI9341_Dev.Send_Data (16#0F#);
+      ILI9341_Dev.Send_Data (16#29#);
+      ILI9341_Dev.Send_Data (16#24#);
+      ILI9341_Dev.Send_Data (16#0C#);
+      ILI9341_Dev.Send_Data (16#0E#);
+      ILI9341_Dev.Send_Data (16#09#);
+      ILI9341_Dev.Send_Data (16#4E#);
+      ILI9341_Dev.Send_Data (16#78#);
+      ILI9341_Dev.Send_Data (16#3C#);
+      ILI9341_Dev.Send_Data (16#09#);
+      ILI9341_Dev.Send_Data (16#13#);
+      ILI9341_Dev.Send_Data (16#05#);
+      ILI9341_Dev.Send_Data (16#17#);
+      ILI9341_Dev.Send_Data (16#11#);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Command (LCD_NGAMMA);
+      ILI9341_Dev.Send_Data (16#00#);
+      ILI9341_Dev.Send_Data (16#16#);
+      ILI9341_Dev.Send_Data (16#1B#);
+      ILI9341_Dev.Send_Data (16#04#);
+      ILI9341_Dev.Send_Data (16#11#);
+      ILI9341_Dev.Send_Data (16#07#);
+      ILI9341_Dev.Send_Data (16#31#);
+      ILI9341_Dev.Send_Data (16#33#);
+      ILI9341_Dev.Send_Data (16#42#);
+      ILI9341_Dev.Send_Data (16#05#);
+      ILI9341_Dev.Send_Data (16#0C#);
+      ILI9341_Dev.Send_Data (16#0A#);
+      ILI9341_Dev.Send_Data (16#28#);
+      ILI9341_Dev.Send_Data (16#2F#);
+      ILI9341_Dev.Send_Data (16#0F#);
 
-      LCD_WriteCommand (LCD_SLEEP_OUT);
-      LCD_WriteCommand (LCD_DISPLAY_ON);
+      ILI9341_Dev.Send_Command (LCD_SLEEP_OUT);
+      ILI9341_Dev.Send_Command (LCD_DISPLAY_ON);
       My_Delay (200);
       --  GRAM start writing
-      LCD_WriteCommand (LCD_GRAM);
+      ILI9341_Dev.Send_Command (LCD_GRAM);
    end LCD_For_LTDC_Init;
 
    ----------------
@@ -344,9 +291,10 @@ package body STM32.LCD_ILI9341 is
    is
    begin
       LCD_Pins_Init;
-      Chip_Select (True);
       LCD_SPI_Init;
+
+      ILI9341_Dev.Initialize;
       LCD_For_LTDC_Init;
    end Initialize;
 
-end STM32.LCD_ILI9341;
+end LCD_ILI9341;

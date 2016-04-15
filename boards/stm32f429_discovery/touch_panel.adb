@@ -51,9 +51,11 @@ with STM32.GPIO;           use STM32.GPIO;
 
 with STM32.Device;         use STM32.Device;
 
-with STMPE811;             use STMPE811;
+with HAL.I2C;
 
-package body HAL.Touch_Panel is
+package body Touch_Panel is
+
+   use type HAL.I2C.I2C_Status;
 
    SCL      : GPIO_Point renames PA8;
    SCL_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C;
@@ -61,14 +63,82 @@ package body HAL.Touch_Panel is
    SDA      : GPIO_Point renames PC9;
    SDA_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C;
 
-   TP_I2C   : I2C_Port_Id renames I2C_3;
+   TP_I2C   : I2C_Port renames I2C_3;
 
    IOE_ADDR : constant Byte := 16#82#;
 
    pragma Warnings (Off, "constant * is not referenced");
+   --  Control Registers
+   IOE_REG_SYS_CTRL1    : constant Byte := 16#03#;
+   IOE_REG_SYS_CTRL2    : constant Byte := 16#04#;
+   IOE_REG_SPI_CFG      : constant Byte := 16#08#;
+
+   --  Touch Panel Registers
+   IOE_REG_TSC_CTRL     : constant Byte := 16#40#;
+   IOE_REG_TSC_CFG      : constant Byte := 16#41#;
+   IOE_REG_WDM_TR_X     : constant Byte := 16#42#;
+   IOE_REG_WDM_TR_Y     : constant Byte := 16#44#;
+   IOE_REG_WDM_BL_X     : constant Byte := 16#46#;
+   IOE_REG_WDM_BL_Y     : constant Byte := 16#48#;
+   IOE_REG_FIFO_TH      : constant Byte := 16#4A#;
+   IOE_REG_FIFO_STA     : constant Byte := 16#4B#;
+   IOE_REG_FIFO_SIZE    : constant Byte := 16#4C#;
+   IOE_REG_TSC_DATA_X   : constant Byte := 16#4D#;
+   IOE_REG_TSC_DATA_Y   : constant Byte := 16#4F#;
+   IOE_REG_TSC_DATA_Z   : constant Byte := 16#51#;
+   IOE_REG_TSC_DATA_XYZ : constant Byte := 16#52#;
+   IOE_REG_TSC_FRACT_Z  : constant Byte := 16#56#;
+   IOE_REG_TSC_DATA     : constant Byte := 16#57#;
+   IOE_REG_TSC_I_DRIVE  : constant Byte := 16#58#;
+   IOE_REG_TSC_SHIELD   : constant Byte := 16#59#;
+
+   --  IOE GPIO Registers
+   IOE_REG_GPIO_SET_PIN : constant Byte := 16#10#;
+   IOE_REG_GPIO_CLR_PIN : constant Byte := 16#11#;
+   IOE_REG_GPIO_MP_STA  : constant Byte := 16#12#;
+   IOE_REG_GPIO_DIR     : constant Byte := 16#13#;
+   IOE_REG_GPIO_ED      : constant Byte := 16#14#;
+   IOE_REG_GPIO_RE      : constant Byte := 16#15#;
+   IOE_REG_GPIO_FE      : constant Byte := 16#16#;
+   IOE_REG_GPIO_AF      : constant Byte := 16#17#;
+
+   --  IOE Functions
+   IOE_ADC_FCT          : constant Byte := 16#01#;
+   IOE_TSC_FCT          : constant Byte := 16#02#;
+   IOE_IO_FCT           : constant Byte := 16#04#;
+
+   --  ADC Registers
+   IOE_REG_ADC_INT_EN   : constant Byte := 16#0E#;
+   IOE_REG_ADC_INT_STA  : constant Byte := 16#0F#;
+   IOE_REG_ADC_CTRL1    : constant Byte := 16#20#;
+   IOE_REG_ADC_CTRL2    : constant Byte := 16#21#;
+   IOE_REG_ADC_CAPT     : constant Byte := 16#22#;
+   IOE_REG_ADC_DATA_CH0 : constant Byte := 16#30#;
+   IOE_REG_ADC_DATA_CH1 : constant Byte := 16#32#;
+   IOE_REG_ADC_DATA_CH2 : constant Byte := 16#34#;
+   IOE_REG_ADC_DATA_CH3 : constant Byte := 16#36#;
+   IOE_REG_ADC_DATA_CH4 : constant Byte := 16#38#;
+   IOE_REG_ADC_DATA_CH5 : constant Byte := 16#3A#;
+   IOE_REG_ADC_DATA_CH6 : constant Byte := 16#3B#;
+   IOE_REG_ADC_DATA_CH7 : constant Byte := 16#3C#;
+
+   --  Interrupt Control Registers
+   IOE_REG_INT_CTRL     : constant Byte := 16#09#;
+   IOE_REG_INT_EN       : constant Byte := 16#0A#;
+   IOE_REG_INT_STA      : constant Byte := 16#0B#;
+   IOE_REG_GPIO_INT_EN  : constant Byte := 16#0C#;
+   IOE_REG_GPIO_INT_STA : constant Byte := 16#0D#;
+
+   --  touch Panel Pins
+   TOUCH_YD             : constant Byte := 16#02#;
+   TOUCH_XD             : constant Byte := 16#04#;
+   TOUCH_YU             : constant Byte := 16#08#;
+   TOUCH_XU             : constant Byte := 16#10#;
+   TOUCH_IO_ALL         : constant Byte :=
+     TOUCH_YD or TOUCH_XD or TOUCH_YU or TOUCH_XU;
    pragma Warnings (On, "constant * is not referenced");
 
-   subtype TSC_Data is I2C_Data;
+   subtype TSC_Data is HAL.I2C.I2C_Data;
 
    ---------------
    -- Read_Data --
@@ -77,13 +147,16 @@ package body HAL.Touch_Panel is
    function Read_Data (Data_Addr : Byte; Length : Natural) return TSC_Data
    is
       Data   : TSC_Data (1 .. Length);
-      Status : I2C_Status;
+      Status : HAL.I2C.I2C_Status;
 
    begin
-      Mem_Read (TP_I2C, UInt10 (IOE_ADDR),
-                Short (Data_Addr), Memory_Size_8b, Data, Status);
+      TP_I2C.Mem_Read (UInt10 (IOE_ADDR),
+                       Short (Data_Addr),
+                       HAL.I2C.Memory_Size_8b,
+                       Data,
+                       Status);
 
-      if Status /= Ok then
+      if Status /= HAL.I2C.Ok then
          raise Program_Error with "Timeout while reading TC data";
       end if;
 
@@ -97,13 +170,16 @@ package body HAL.Touch_Panel is
    function Read_Register (Reg_Addr : Byte) return Byte
    is
       Data : TSC_Data (1 .. 1);
-      Status : I2C_Status;
+      Status : HAL.I2C.I2C_Status;
 
    begin
-      Mem_Read (TP_I2C, UInt10 (IOE_ADDR),
-                Short (Reg_Addr), Memory_Size_8b, Data, Status);
+      TP_I2C.Mem_Read (UInt10 (IOE_ADDR),
+                       Short (Reg_Addr),
+                       HAL.I2C.Memory_Size_8b,
+                       Data,
+                       Status);
 
-      if Status /= Ok then
+      if Status /= HAL.I2C.Ok then
          raise Program_Error with "Timeout while reading TC data";
       end if;
 
@@ -115,13 +191,16 @@ package body HAL.Touch_Panel is
    --------------------
 
    procedure Write_Register (Reg_Addr : Byte; Data : Byte) is
-      Status : I2C_Status;
+      Status : HAL.I2C.I2C_Status;
 
    begin
-      Mem_Write (TP_I2C, UInt10 (IOE_ADDR),
-                Short (Reg_Addr), Memory_Size_8b, (1 => Data), Status);
+      TP_I2C.Mem_Write (UInt10 (IOE_ADDR),
+                        Short (Reg_Addr),
+                        HAL.I2C.Memory_Size_8b,
+                        (1 => Data),
+                        Status);
 
-      if Status /= Ok then
+      if Status /= HAL.I2C.Ok then
          raise Program_Error with "Timeout while reading TC data";
       end if;
    end Write_Register;
@@ -141,8 +220,8 @@ package body HAL.Touch_Panel is
 
       Enable_Clock (TP_I2C);
 
-      Configure_Alternate_Function (SCL, SCL_AF);
-      Configure_Alternate_Function (SDA, SDA_AF);
+      SCL.Configure_Alternate_Function (SCL_AF);
+      SDA.Configure_Alternate_Function (SDA_AF);
 
       GPIO_Conf.Speed       := Speed_25MHz;
       GPIO_Conf.Mode        := Mode_AF;
@@ -150,8 +229,8 @@ package body HAL.Touch_Panel is
       GPIO_Conf.Resistors   := Floating;
       Configure_IO (GPIO_Points'(SCL, SDA), GPIO_Conf);
 
-      Lock (SCL);
-      Lock (SDA);
+      SCL.Lock;
+      SDA.Lock;
    end TP_Ctrl_Lines;
 
    -------------------
@@ -160,12 +239,11 @@ package body HAL.Touch_Panel is
 
    procedure TP_I2C_Config is
    begin
-      if not Port_Enabled (TP_I2C) then
+      if not TP_I2C.Port_Enabled then
          Reset (TP_I2C);
 
-         Configure
-           (TP_I2C,
-            (Mode                     => I2C_Mode,
+         TP_I2C.Configure
+           ((Mode                     => I2C_Mode,
              Duty_Cycle               => DutyCycle_2,
              Own_Address              => 16#00#,
              Addressing_Mode          => Addressing_Mode_7bit,
@@ -381,4 +459,4 @@ package body HAL.Touch_Panel is
       return (1 => State);
    end Get_State;
 
-end HAL.Touch_Panel;
+end Touch_Panel;

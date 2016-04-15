@@ -118,12 +118,11 @@ private
    Chip_Select : GPIO_Point renames PC2;
    WRX         : GPIO_Point renames PD13;
    Reset       : GPIO_Point renames PD11;
-   SPI_Chip    : access SPI_Port := SPI_5'Access;
-   SPI_GPIO    : access GPIO_Port := GPIO_F'Access;
+   SPI_Chip    : SPI_Port renames SPI_5;
 
    SPI_AF      : constant GPIO_Alternate_Function := GPIO_AF_SPI5;
-   SCK_Pin     : constant GPIO_Pin := Pin_7;
-   MISO_Pin    : constant GPIO_Pin := Pin_8;
-   MOSI_Pin    : constant GPIO_Pin := Pin_9;
+   SPI_SCK     : GPIO_Point renames PF7;
+   SPI_MISO    : GPIO_Point renames PF8;
+   SPI_MOSI    : GPIO_Point renames PF9;
 
 end LCD_Std_Out;

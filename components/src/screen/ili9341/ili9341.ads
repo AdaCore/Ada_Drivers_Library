@@ -49,10 +49,11 @@
 --  See the "a-Si TFT LCD Single Chip Driver" specification by ILITEK, file
 --  name "ILI9341_DS_V1.02" for details.
 
-with STM32.GPIO; use STM32.GPIO;
-with STM32.SPI;  use STM32.SPI;
+with Interfaces.Bit_Types; use Interfaces.Bit_Types;
+with HAL.SPI; use HAL.SPI;
+with HAL.GPIO; use HAL.GPIO;
 
-package STM32.ILI9341 is
+package ILI9341 is
 
    Device_Width  : constant := 240;
    Device_Height : constant := 320;
@@ -95,21 +96,25 @@ package STM32.ILI9341 is
       Yellow      => 16#FFE0#,
       White       => 16#FFFF#);
 
-   procedure Initialize
-     (Chip_Select             : GPIO_Point;
-      WRX                     : GPIO_Point;
-      Reset                   : GPIO_Point;
-      SPI_Chip                : access SPI_Port;
-      SPI_AF                  : GPIO_Alternate_Function;
-      SCK_Pin                 : GPIO_Point;
-      MISO_Pin                : GPIO_Point;
-      MOSI_Pin                : GPIO_Point);
+   type ILI9341_Device (Port        : not null access SPI_Port'Class;
+                        Chip_Select : GPIO_Point_Ref;
+                        WRX         : GPIO_Point_Ref;
+                        Reset       : GPIO_Point_Ref)
+   is tagged limited private;
+
+   procedure Initialize (This : in out ILI9341_Device);
    --  Initializes the device. Afterward, the device is also enabled so there
    --  is no immediate need to call Enable_Display.
 
-   procedure Set_Pixel (X : Width; Y : Height; Color : Colors) with Inline;
+   procedure Send_Command (This : in out ILI9341_Device; Cmd : Byte);
+   procedure Send_Data (This : in out ILI9341_Device; Data : Byte);
 
-   procedure Fill (Color : Colors);
+   procedure Set_Pixel (This  : in out ILI9341_Device;
+                        X     : Width;
+                        Y     : Height;
+                        Color : Colors) with Inline;
+
+   procedure Fill (This : in out ILI9341_Device; Color : Colors);
 
    --  Descriptions assume the USB power/debug connector at the top
    type Orientations is
@@ -118,44 +123,52 @@ package STM32.ILI9341 is
       Landscape_1,  -- origin at lower left, text going up
       Landscape_2); -- origin at upper right, text going down
 
-   procedure Set_Orientation (To : Orientations);
+   procedure Set_Orientation (This : in out ILI9341_Device;
+                              To   : Orientations);
 
-   procedure Enable_Display;
+   procedure Enable_Display (This : in out ILI9341_Device);
 
-   procedure Disable_Display;
+   procedure Disable_Display (This : in out ILI9341_Device);
 
    --  These values reflect the currently selected orientation
 
-   function Current_Width return Natural with Inline;
+   function Current_Width (This : ILI9341_Device) return Natural
+     with Inline;
 
-   function Current_Height return Natural with Inline;
+   function Current_Height (This : ILI9341_Device) return Natural
+     with Inline;
 
-   function Current_Orientation return Orientations;
+   function Current_Orientation (This : ILI9341_Device) return Orientations;
 
 private
 
-   Chip_Select : GPIO_Point;
-   WRX         : GPIO_Point;
-   Reset       : GPIO_Point;
-   SPI_Chip    : access SPI_Port;
+   type ILI9341_Device (Port        : not null access SPI_Port'Class;
+                        Chip_Select : GPIO_Point_Ref;
+                        WRX         : GPIO_Point_Ref;
+                        Reset       : GPIO_Point_Ref)
+   is tagged limited record
+      Selected_Orientation : Orientations;
 
-   Selected_Orientation : Orientations;
+      --  The following objects' upper bounds vary with the selected
+      --  orientation.
+      Selected_Width  : Natural;
+      Selected_Height : Natural;
 
-   --  The following objects' upper bounds vary with the selected orientation.
-   Selected_Width  : Natural;
-   Selected_Height : Natural;
-
-   Initialized : Boolean := False;
-
-   procedure Send_Data    (Data : Byte) with Inline;
-   procedure Send_Command (Cmd : Byte)  with Inline;
+      Initialized : Boolean := False;
+   end record;
 
    procedure Set_Cursor_Position
-     (X1 : Width;
-      Y1 : Height;
-      X2 : Width;
-      Y2 : Height)
+     (This : in out ILI9341_Device;
+      X1   : Width;
+      Y1   : Height;
+      X2   : Width;
+      Y2   : Height)
      with Inline;
+
+   procedure Chip_Select_High (This : in out ILI9341_Device) with Inline;
+   procedure Chip_Select_Low (This : in out ILI9341_Device) with Inline;
+
+   procedure Init_LCD (This : in out ILI9341_Device);
 
    ILI9341_RESET         : constant := 16#01#;
    ILI9341_SLEEP_OUT     : constant := 16#11#;
@@ -188,4 +201,4 @@ private
    ILI9341_INTERFACE     : constant := 16#F6#;
    ILI9341_PRC           : constant := 16#F7#;
 
-end STM32.ILI9341;
+end ILI9341;
