@@ -41,9 +41,7 @@ package FT6x06 is
 
    type FT6x06_Device (Port     : HAL.I2C.I2C_Port_Ref;
                        I2C_Addr : HAL.I2C.I2C_Address) is
-     tagged limited private;
-
-   subtype Touch_Identifier is Natural range 0 .. 10;
+     limited new HAL.Touch_Panel.Touch_Panel_Device with private;
 
    function Check_Id (This : in out FT6x06_Device) return Boolean;
    --  Check the device Id: returns true on a FT5336 touch panel, False is
@@ -54,20 +52,40 @@ package FT6x06 is
    --  Whether the touch panel uses interrupts of polling to process touch
    --  information
 
+   overriding
+   procedure Set_Bounds (This   : in out FT6x06_Device;
+                         Width  : Natural;
+                         Height : Natural);
+   --  Set screen bounds. Touch_State must should stay within screen bounds
+
+   overriding
    function Active_Touch_Points (This : in out FT6x06_Device)
-                                 return Touch_Identifier;
+                                 return HAL.Touch_Panel.Touch_Identifier;
    --  Retrieve the number of active touch points
 
+   overriding
    function Get_Touch_Point (This     : in out FT6x06_Device;
-                             Touch_Id : Touch_Identifier)
+                             Touch_Id : HAL.Touch_Panel.Touch_Identifier;
+                             SwapXY   : Boolean := False)
                              return HAL.Touch_Panel.TP_Touch_State;
    --  Retrieves the position and pressure information of the specified
    --  touch
+
+   overriding
+   function Get_All_Touch_Points
+     (This     : in out FT6x06_Device;
+      SwapXY   : Boolean := False)
+      return HAL.Touch_Panel.TP_State;
+   --  Retrieves the position and pressure information of every active touch
+   --  points
 private
 
    type FT6x06_Device (Port     : HAL.I2C.I2C_Port_Ref;
                        I2C_Addr : HAL.I2C.I2C_Address) is
-     tagged limited null record;
+      limited new HAL.Touch_Panel.Touch_Panel_Device with record
+         LCD_Natural_Width  : Natural := 240; -- Arbitrary
+         LCD_Natural_Height : Natural := 320; -- Arbitrary
+      end record;
 
    function I2C_Read (This   : in out FT6x06_Device;
                       Reg    : Byte;

@@ -33,7 +33,6 @@
 
 with Ada.Real_Time;        use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
-with Interfaces.Bit_Types; use Interfaces, Interfaces.Bit_Types;
 
 with STM32.Board;          use STM32.Board;
 with STM32.Device;         use STM32.Device;
@@ -60,12 +59,6 @@ package body Touch_Panel is
 
    procedure TP_I2C_Config;
    --  Initializes the I2C bus
-
-   function Get_Touch_State
-     (Touch_Id : Byte;
-      Status   : out Boolean) return TP_Touch_State;
-   --  Retrieves the position and pressure information of the specified
-   --  touch
 
    pragma Warnings (Off, "* is not referenced");
 
@@ -151,6 +144,8 @@ package body Touch_Panel is
       TP_I2C_Config;
 
       Driver.TP_Set_Use_Interrupts (False);
+      Driver.Set_Bounds (STM32.LCD.LCD_Natural_Width,
+                         STM32.LCD.LCD_Natural_Height);
 
       return Driver.Check_Id;
    end Initialize;
@@ -175,66 +170,13 @@ package body Touch_Panel is
       return Natural (Driver.Active_Touch_Points);
    end Detect_Touch;
 
-   ---------------------
-   -- Get_Touch_State --
-   ---------------------
-
-   function Get_Touch_State
-     (Touch_Id : Byte;
-      Status   : out Boolean) return TP_Touch_State
-   is
-      Pt  : TP_Touch_State :=
-        Driver.Get_Touch_Point (Touch_Identifier (Touch_Id));
-      Tmp : Natural;
-   begin
-      if Pt.X = 0 and then Pt.Y = 0 and then Pt.Weight = 0 then
-         Status := False;
-         return (0, 0, 0);
-      end if;
-
-      if STM32.LCD.SwapXY then
-         Tmp  := Pt.X;
-         Pt.X := STM32.LCD.Pixel_Width - Pt.Y - 1;
-         Pt.Y := Tmp;
-      end if;
-
-      Status := True;
-
-      Pt.X := Natural'Max (0, Pt.X);
-      Pt.Y := Natural'Max (0, Pt.Y);
-      Pt.X := Natural'Min (STM32.LCD.Pixel_Width - 1, Pt.X);
-      Pt.Y := Natural'Min (STM32.LCD.Pixel_Height - 1, Pt.Y);
-
-      --  ??? On the STM32F426, Y is returned reverted
-      Pt.Y := STM32.LCD.LCD_Natural_Height - Pt.Y - 1;
-      Pt.Y := Pt.Y * 11 / 10;
-
-      return Pt;
-   end Get_Touch_State;
-
    ---------------
    -- Get_State --
    ---------------
 
-   function Get_State return TP_State
-   is
-      Status  : Boolean;
-      N_Touch : constant Natural := Detect_Touch;
-      State   : TP_State (1 .. N_Touch);
-
+   function Get_State return TP_State is
    begin
-      if N_Touch = 0 then
-         return (1 .. 0 => <>);
-      end if;
-
-      for J in State'Range loop
-         State (J) := Get_Touch_State (Byte (J), Status);
-         if not Status then
-            return (1 .. 0 => <>);
-         end if;
-      end loop;
-
-      return State;
+      return Driver.Get_All_Touch_Points (STM32.LCD.SwapXY);
    end Get_State;
 
 end Touch_Panel;

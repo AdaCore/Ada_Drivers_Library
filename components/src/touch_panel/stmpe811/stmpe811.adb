@@ -46,10 +46,6 @@ with Interfaces; use Interfaces;
 
 package body STMPE811 is
 
-   SwapXY : constant Boolean := False;
-
-   IOE_ADDR : constant Byte := 16#82#;
-
    pragma Warnings (Off, "constant * is not referenced");
    --  Control Registers
    IOE_REG_SYS_CTRL1    : constant Byte := 16#03#;
@@ -133,7 +129,7 @@ package body STMPE811 is
       Status : I2C_Status;
 
    begin
-      This.Port.Mem_Read (UInt10 (IOE_ADDR),
+      This.Port.Mem_Read (This.I2C_Addr,
                           Short (Data_Addr),
                           Memory_Size_8b, Data,
                           Status);
@@ -156,7 +152,7 @@ package body STMPE811 is
       Status : I2C_Status;
 
    begin
-      This.Port.Mem_Read (UInt10 (IOE_ADDR),
+      This.Port.Mem_Read (This.I2C_Addr,
                           Short (Reg_Addr),
                           Memory_Size_8b,
                           Data,
@@ -179,7 +175,7 @@ package body STMPE811 is
       Status : I2C_Status;
 
    begin
-      This.Port.Mem_Write (UInt10 (IOE_ADDR),
+      This.Port.Mem_Write (This.I2C_Addr,
                            Short (Reg_Addr),
                            Memory_Size_8b,
                            (1 => Data),
@@ -310,11 +306,27 @@ package body STMPE811 is
       return True;
    end Initialize;
 
-   ------------------
-   -- Detect_Touch --
-   ------------------
+   ----------------
+   -- Set_Bounds --
+   ----------------
 
-   function Detect_Touch (This : in out STMPE811_Device) return Natural
+   overriding
+   procedure Set_Bounds (This   : in out STMPE811_Device;
+                         Width  : Natural;
+                         Height : Natural)
+   is
+   begin
+      This.LCD_Natural_Width := Width;
+      This.LCD_Natural_Height := Height;
+   end Set_Bounds;
+
+   -------------------------
+   -- Active_Touch_Points --
+   -------------------------
+
+   overriding
+   function Active_Touch_Points (This : in out STMPE811_Device)
+                                 return Touch_Identifier
    is
       Val : constant Byte := This.Read_Register (IOE_REG_TSC_CTRL) and 16#80#;
    begin
@@ -326,13 +338,17 @@ package body STMPE811 is
       else
          return 1;
       end if;
-   end Detect_Touch;
+   end Active_Touch_Points;
 
-   ---------------
-   -- Get_State --
-   ---------------
+   ---------------------
+   -- Get_Touch_Point --
+   ---------------------
 
-   function Get_State (This : in out STMPE811_Device) return TP_State
+   overriding
+   function Get_Touch_Point (This     : in out STMPE811_Device;
+                             Touch_Id : Touch_Identifier;
+                             SwapXY   : Boolean := False)
+                             return TP_Touch_State
    is
       State     : TP_Touch_State;
       Raw_X     : Word;
@@ -343,8 +359,8 @@ package body STMPE811 is
    begin
 
       --  Check Touch detected bit in CTRL register
-      if This.Detect_Touch = 0 then
-         return (1 .. 0 => <>);
+      if Touch_Id /= 1 or else This.Active_Touch_Points = 0 then
+         return (0, 0, 0);
       end if;
 
       declare
@@ -382,7 +398,7 @@ package body STMPE811 is
       --  sometimes it reports dummy points at X = LCD_Natural_Width.
       --  Let's filter this out
       if X = This.LCD_Natural_Width - 1 then
-         return (1 .. 0 => <>);
+         return (0, 0, 0);
       end if;
 
       if not SwapXY then
@@ -398,7 +414,32 @@ package body STMPE811 is
       This.Write_Register (IOE_REG_FIFO_STA, 16#01#);
       This.Write_Register (IOE_REG_FIFO_STA, 16#00#);
 
-      return (1 => State);
-   end Get_State;
+      return State;
+   end Get_Touch_Point;
+
+   --------------------------
+   -- Get_All_Touch_Points --
+   --------------------------
+
+   overriding
+   function Get_All_Touch_Points
+     (This     : in out STMPE811_Device;
+      SwapXY   : Boolean := False)
+      return HAL.Touch_Panel.TP_State
+   is
+      N_Touch : constant Natural := This.Active_Touch_Points;
+      State   : TP_State (1 .. N_Touch);
+
+   begin
+      if N_Touch = 0 then
+         return (1 .. 0 => <>);
+      end if;
+
+      for J in State'Range loop
+         State (J) :=  This.Get_Touch_Point (J, SwapXY);
+      end loop;
+
+      return State;
+   end Get_All_Touch_Points;
 
 end STMPE811;

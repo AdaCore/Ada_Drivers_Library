@@ -80,6 +80,20 @@ package body FT6x06 is
       This.I2C_Write (FT6206_GMODE_REG, Reg_Value, Status);
    end TP_Set_Use_Interrupts;
 
+   ----------------
+   -- Set_Bounds --
+   ----------------
+
+   overriding
+   procedure Set_Bounds (This   : in out FT6x06_Device;
+                         Width  : Natural;
+                         Height : Natural)
+   is
+   begin
+      This.LCD_Natural_Width := Width;
+      This.LCD_Natural_Height := Height;
+   end Set_Bounds;
+
    -------------------------
    -- Active_Touch_Points --
    -------------------------
@@ -114,7 +128,8 @@ package body FT6x06 is
    ---------------------
 
    function Get_Touch_Point (This     : in out FT6x06_Device;
-                             Touch_Id : Touch_Identifier)
+                             Touch_Id : Touch_Identifier;
+                             SwapXY   : Boolean := False)
                              return HAL.Touch_Panel.TP_Touch_State
    is
       type Short_HL_Type is record
@@ -181,8 +196,51 @@ package body FT6x06 is
          Ret.Weight := 50;
       end if;
 
+      if SwapXY then
+         declare
+            Swap : constant Natural := Ret.X;
+         begin
+            Ret.X := This.LCD_Natural_Width - Ret.Y - 1;
+            Ret.Y := Swap;
+         end;
+      end if;
+
+      Ret.X := Natural'Max (0, Ret.X);
+      Ret.Y := Natural'Max (0, Ret.Y);
+      Ret.X := Natural'Min (This.LCD_Natural_Width - 1, Ret.X);
+      Ret.Y := Natural'Min (This.LCD_Natural_Height - 1, Ret.Y);
+
+      --  ??? On the STM32F426, Y is returned reverted
+      Ret.Y := This.LCD_Natural_Height - Ret.Y - 1;
+      Ret.Y := Ret.Y * 11 / 10;
+
       return Ret;
    end Get_Touch_Point;
+
+   --------------------------
+   -- Get_All_Touch_Points --
+   --------------------------
+
+   overriding
+   function Get_All_Touch_Points
+     (This     : in out FT6x06_Device;
+      SwapXY   : Boolean := False)
+      return HAL.Touch_Panel.TP_State
+   is
+      N_Touch : constant Natural := This.Active_Touch_Points;
+      State   : TP_State (1 .. N_Touch);
+
+   begin
+      if N_Touch = 0 then
+         return (1 .. 0 => <>);
+      end if;
+
+      for J in State'Range loop
+         State (J) :=  This.Get_Touch_Point (J, SwapXY);
+      end loop;
+
+      return State;
+   end Get_All_Touch_Points;
 
    --------------
    -- I2C_Read --

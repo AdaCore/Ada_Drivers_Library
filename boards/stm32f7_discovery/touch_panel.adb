@@ -34,13 +34,11 @@
 with Ada.Real_Time;        use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 
-with Interfaces.Bit_Types; use Interfaces, Interfaces.Bit_Types;
 
 with STM32.Board;          use STM32.Board;
 with STM32.Device;         use STM32.Device;
 with STM32.LCD;            use STM32.LCD;
 with FT5336;               use FT5336;
-with HAL.I2C;              use HAL.I2C;
 with HAL.Touch_Panel;      use HAL.Touch_Panel;
 
 package body Touch_Panel is
@@ -65,6 +63,8 @@ package body Touch_Panel is
       Configure_I2C (TP_I2C);
 
       LL_Driver.TP_Set_Use_Interrupts (False);
+      LL_Driver.Set_Bounds (STM32.LCD.LCD_Natural_Width,
+                            STM32.LCD.LCD_Natural_Height);
 
       return LL_Driver.Check_Id;
    end Initialize;
@@ -92,56 +92,9 @@ package body Touch_Panel is
    -- Get_State --
    ---------------
 
-   function Get_State return TP_State
-   is
-      Status  : I2C_Status := Ok;
-
-      ---------------------
-      -- Get_Touch_State --
-      ---------------------
-
-      function Get_Touch_State (Num : Byte) return TP_Touch_State
-      is
-         Pt  : TP_Touch_State :=
-                 LL_Driver.Get_Touch_Point (Touch_Identifier (Num));
-         Tmp : Natural;
-
-      begin
-         if Pt.X = 0 and then Pt.Y = 0 and then Pt.Weight = 0 then
-            Status := Busy;
-            return (0, 0, 0);
-         end if;
-
-         if STM32.LCD.SwapXY then
-            Tmp  := Pt.X;
-            Pt.X := STM32.LCD.Pixel_Width - Pt.Y - 1;
-            Pt.Y := Tmp;
-         end if;
-
-         Status := Ok;
-
-         return
-           (X => Natural'Min (Natural'Max (0, Pt.X), Pixel_Width - 1),
-            Y => Natural'Min (Natural'Max (0, Pt.Y), Pixel_Height - 1),
-            Weight => Pt.Weight);
-      end Get_Touch_State;
-
-      N_Touch : constant Natural := Detect_Touch;
-      State   : TP_State (1 .. N_Touch);
-
+   function Get_State return TP_State is
    begin
-      if N_Touch = 0 then
-         return (1 .. 0 => <>);
-      end if;
-
-      for J in State'Range loop
-         State (J) := Get_Touch_State (Byte (J));
-         if Status /= Ok then
-            return (1 .. 0 => <>);
-         end if;
-      end loop;
-
-      return State;
+      return LL_Driver.Get_All_Touch_Points (STM32.LCD.SwapXY);
    end Get_State;
 
 end Touch_Panel;

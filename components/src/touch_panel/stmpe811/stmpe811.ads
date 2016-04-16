@@ -35,10 +35,8 @@ with HAL.Touch_Panel; use HAL.Touch_Panel;
 
 package STMPE811 is
 
-   type STMPE811_Device (Port               : I2C_Port_Ref;
-                         Addr               : UInt10;
-                         LCD_Natural_Width   : Natural;
-                         LCD_Natural_Height : Natural) is
+   type STMPE811_Device (Port     : I2C_Port_Ref;
+                         I2C_Addr : HAL.I2C.I2C_Address) is
      new Touch_Panel_Device with private;
 
    function Initialize (This : in out STMPE811_Device) return Boolean;
@@ -47,18 +45,38 @@ package STMPE811 is
    procedure Initialize (This : in out STMPE811_Device);
    --  Initializes the LCD touch panel
 
-   function Detect_Touch (This : in out STMPE811_Device) return Natural;
-   --  Detects the number of touches
+   overriding
+   procedure Set_Bounds (This   : in out STMPE811_Device;
+                         Width  : Natural;
+                         Height : Natural);
 
-   function Get_State (This : in out STMPE811_Device) return TP_State;
-   --  The current state of the touch panel
+   overriding
+   function Active_Touch_Points (This : in out STMPE811_Device)
+                                 return Touch_Identifier;
+   --  Retrieve the number of active touch points
 
+   overriding
+   function Get_Touch_Point (This     : in out STMPE811_Device;
+                             Touch_Id : Touch_Identifier;
+                             SwapXY   : Boolean := False)
+                             return HAL.Touch_Panel.TP_Touch_State;
+   --  Retrieves the position and pressure information of the specified
+   --  touch
+
+   overriding
+   function Get_All_Touch_Points
+     (This     : in out STMPE811_Device;
+      SwapXY   : Boolean := False)
+      return HAL.Touch_Panel.TP_State;
+   --  Retrieves the position and pressure information of every active touch
+   --  points
 private
-   type STMPE811_Device (Port               : I2C_Port_Ref;
-                         Addr               : UInt10;
-                         LCD_Natural_Width   : Natural;
-                         LCD_Natural_Height : Natural) is
-     new Touch_Panel_Device with null record;
+   type STMPE811_Device (Port     : I2C_Port_Ref;
+                         I2C_Addr : HAL.I2C.I2C_Address) is
+     new Touch_Panel_Device with record
+      LCD_Natural_Width  : Natural := 240; -- Arbitrary
+      LCD_Natural_Height : Natural := 320; -- Arbitrary
+   end record;
 
    subtype TSC_Data is I2C_Data;
 
