@@ -104,7 +104,10 @@ package body Screen_Interface is
 
    procedure Set_Pixel (P : Point; Col : Color) is
    begin
-      STM32.DMA2D.DMA2D_Set_Pixel (Current_Buffer, P.X, P.Y, Unsigned_32 (Col));
+      STM32.DMA2D.DMA2D_Set_Pixel (Current_Buffer,
+                                   P.X,
+                                   P.Y,
+                                   Unsigned_32 (Col));
    end Set_Pixel;
 
    ---------------

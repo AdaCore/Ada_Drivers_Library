@@ -68,7 +68,8 @@ package body STM32.FMC is
          NR     =>
            FMC_SDRAM_Row_Address_Bits'Enum_Rep (SDRAM_Conf.RowBitsNumber),
          NC     =>
-           FMC_SDRAM_Column_Address_Bits'Enum_Rep (SDRAM_Conf.ColumnBitsNumber),
+           FMC_SDRAM_Column_Address_Bits'Enum_Rep
+             (SDRAM_Conf.ColumnBitsNumber),
          others => <>);
 
       case SDRAM_Conf.Bank is
@@ -87,10 +88,12 @@ package body STM32.FMC is
          when FMC_Bank2_SDRAM =>
             FMC_Periph.SDCR1 :=
               (RPIPE  =>
-                  FMC_SDRAM_Read_Pipe_Delay'Enum_Rep (SDRAM_Conf.ReadPipeDelay),
+                  FMC_SDRAM_Read_Pipe_Delay'Enum_Rep
+                 (SDRAM_Conf.ReadPipeDelay),
                RBURST => SDRAM_Conf.ReadBurst = FMC_Read_Burst_Single,
                SDCLK  =>
-                  FMC_SDRAM_Clock_Configuration'Enum_Rep (SDRAM_Conf.SDClockPeriod),
+                  FMC_SDRAM_Clock_Configuration'Enum_Rep
+                 (SDRAM_Conf.SDClockPeriod),
                WP     => False,
                CAS    => 0,
                NB     => False,
@@ -104,7 +107,7 @@ package body STM32.FMC is
             --  register.
             FMC_Periph.SDTR1 :=
               (TRCD => 0,
-               TRP  => Uint4 (SDRAM_Conf.Timing_Conf.RPDelay - 1),
+               TRP  => UInt4 (SDRAM_Conf.Timing_Conf.RPDelay - 1),
                TWR  => 0,
                TRC  => UInt4 (SDRAM_Conf.Timing_Conf.RowCycleDelay - 1),
                TRAS => 0,

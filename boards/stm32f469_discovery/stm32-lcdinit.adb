@@ -30,10 +30,10 @@
 --                                                                          --
 --  This file is based on:                                                  --
 --                                                                          --
---   @file    stm32f469i_discovery_lcd.c                                          --
+--   @file    stm32f469i_discovery_lcd.c                                    --
 --   @author  MCD Application Team                                          --
 --   @version V1.0.2                                                        --
---   @date    13-January-2016                                              --
+--   @date    13-January-2016                                               --
 --                                                                          --
 --   COPYRIGHT(c) 2016 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
@@ -59,6 +59,7 @@ package body STM32.LCDInit is
 
    LCD_Display : OTM8009A.OTM8009A_Device (DSI_Host   => DSI_1'Access,
                                            Channel_Id => LCD_Channel);
+   procedure LCD_Reset;
 
    ---------------
    -- LCD_Reset --
@@ -121,7 +122,8 @@ package body STM32.LCDInit is
 
    procedure Post_LTDC_Initialize (Orientation : LCD_Orientation)
    is
-      LCD_Clock_kHz       : constant := 1_000 * PLLSAIN / PLLSAIR / PLLSAI_DIVR;
+      LCD_Clock_kHz       : constant :=
+        1_000 * PLLSAIN / PLLSAIR / PLLSAI_DIVR;
       Lane_Byte_Clock_kHz : constant := 500_000 / 8;
    begin
       --  Now setup the DSI
@@ -149,9 +151,13 @@ package body STM32.LCDInit is
          HSync_Polarity              => Active_High,
          VSync_Polarity              => Active_High,
          DataEn_Polarity             => Active_High,
-         HSync_Active_Duration       => UInt13 (Word (HSYNC * Lane_Byte_Clock_kHz) / LCD_Clock_kHz),
-         Horizontal_BackPorch        => UInt13 (Word (HBP * Lane_Byte_Clock_kHz) / LCD_Clock_kHz),
-         Horizontal_Line             => UInt15 (Word ((LCD_WIDTH + HSYNC + HBP + HFP) * Lane_Byte_Clock_kHz) / LCD_Clock_kHz),
+         HSync_Active_Duration       =>
+           UInt13 (Word (HSYNC * Lane_Byte_Clock_kHz) / LCD_Clock_kHz),
+         Horizontal_BackPorch        =>
+           UInt13 (Word (HBP * Lane_Byte_Clock_kHz) / LCD_Clock_kHz),
+         Horizontal_Line             =>
+           UInt15 (Word ((LCD_WIDTH + HSYNC + HBP + HFP) *
+                 Lane_Byte_Clock_kHz) / LCD_Clock_kHz),
          VSync_Active_Duration       => VSYNC,
          Vertical_BackPorch          => VBP,
          Vertical_FrontPorch         => VFP,

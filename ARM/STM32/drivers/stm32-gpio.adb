@@ -123,7 +123,7 @@ package body STM32.GPIO is
    overriding
    procedure Clear (This : in out GPIO_Point) is
    begin
-      This.Periph.BSRR.BR.Arr (this.Pin) := True;
+      This.Periph.BSRR.BR.Arr (This.Pin) := True;
    end Clear;
 
    -----------
@@ -144,7 +144,8 @@ package body STM32.GPIO is
    overriding
    procedure Toggle (This : in out GPIO_Point) is
    begin
-      This.Periph.ODR.ODR.Arr (This.Pin) := not This.Periph.ODR.ODR.Arr (This.Pin);
+      This.Periph.ODR.ODR.Arr (This.Pin) :=
+        not This.Periph.ODR.ODR.Arr (This.Pin);
    end Toggle;
 
    ------------
@@ -336,7 +337,8 @@ package body STM32.GPIO is
       Trigger : EXTI.External_Triggers)
    is
       use STM32.EXTI;
-      Line : constant External_Line_Number := External_Line_Number'Val (Point.Pin);
+      Line : constant External_Line_Number :=
+        External_Line_Number'Val (Point.Pin);
       use STM32.SYSCFG, STM32.RCC;
    begin
       SYSCFG_Clock_Enable;

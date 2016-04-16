@@ -69,6 +69,9 @@ package body Touch_Panel is
    Driver : STMPE811.STMPE811_Device (Port    => TP_I2C'Access,
                                       I2C_Addr => IOE_ADDR);
 
+   procedure TP_Ctrl_Lines;
+   procedure TP_I2C_Config;
+
    -------------------
    -- TP_Ctrl_Lines --
    -------------------
@@ -124,7 +127,7 @@ package body Touch_Panel is
    procedure Initialize is
    begin
       if not Initialize then
-         Raise Program_Error;
+         raise Program_Error;
       end if;
    end Initialize;
 

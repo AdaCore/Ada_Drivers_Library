@@ -50,35 +50,40 @@ package body LCD_ILI9341 is
       Reset       => LCD_RESET'Access);
 
    --  LCD Registers
-   LCD_SLEEP_OUT     : constant := 16#11#;  --  Sleep out register
-   LCD_GAMMA         : constant := 16#26#;  --  Gamma register
---     LCD_DISPLAY_OFF   : constant := 16#28#;  --  Display off register
-   LCD_DISPLAY_ON    : constant := 16#29#;  --  Display on register
-   LCD_COLUMN_ADDR   : constant := 16#2A#;  --  Colomn address register
-   LCD_PAGE_ADDR     : constant := 16#2B#;  --  Page address register
-   LCD_GRAM          : constant := 16#2C#;  --  GRAM register
-   LCD_MAC           : constant := 16#36#;  --  Memory Access Control register
---     LCD_PIXEL_FORMAT  : constant := 16#3A#;  --  Pixel Format register
---     LCD_WDB           : constant := 16#51#;  --  Write Brightness Display register
---     LCD_WCD           : constant := 16#53#;  --  Write Control Display register
+   LCD_SLEEP_OUT     : constant := 16#11#;  --  Sleep out
+   LCD_GAMMA         : constant := 16#26#;  --  Gamma
+--     LCD_DISPLAY_OFF   : constant := 16#28#;  --  Display off
+   LCD_DISPLAY_ON    : constant := 16#29#;  --  Display on
+   LCD_COLUMN_ADDR   : constant := 16#2A#;  --  Colomn address
+   LCD_PAGE_ADDR     : constant := 16#2B#;  --  Page address
+   LCD_GRAM          : constant := 16#2C#;  --  GRAM
+   LCD_MAC           : constant := 16#36#;  --  Memory Access Control
+--     LCD_PIXEL_FORMAT  : constant := 16#3A#;  --  Pixel Format
+--     LCD_WDB           : constant := 16#51#;  --  Write Brightness Display
+--     LCD_WCD           : constant := 16#53#;  --  Write Control Display
    LCD_RGB_INTERFACE : constant := 16#B0#;  --  RGB Interface Signal Control
-   LCD_FRC           : constant := 16#B1#;  --  Frame Rate Control register
---     LCD_BPC           : constant := 16#B5#;  --  Blanking Porch Control register
-   LCD_DFC           : constant := 16#B6#;  --  Display Function Control register
-   LCD_POWER1        : constant := 16#C0#;  --  Power Control 1 register
-   LCD_POWER2        : constant := 16#C1#;  --  Power Control 2 register
-   LCD_VCOM1         : constant := 16#C5#;  --  VCOM Control 1 register
-   LCD_VCOM2         : constant := 16#C7#;  --  VCOM Control 2 register
-   LCD_POWERA        : constant := 16#CB#;  --  Power control A register
-   LCD_POWERB        : constant := 16#CF#;  --  Power control B register
-   LCD_PGAMMA        : constant := 16#E0#;  --  Positive Gamma Correction register
-   LCD_NGAMMA        : constant := 16#E1#;  --  Negative Gamma Correction register
+   LCD_FRC           : constant := 16#B1#;  --  Frame Rate Control
+--     LCD_BPC           : constant := 16#B5#;  --  Blanking Porch Control
+   LCD_DFC           : constant := 16#B6#;  --  Display Function Control
+   LCD_POWER1        : constant := 16#C0#;  --  Power Control 1
+   LCD_POWER2        : constant := 16#C1#;  --  Power Control 2
+   LCD_VCOM1         : constant := 16#C5#;  --  VCOM Control 1
+   LCD_VCOM2         : constant := 16#C7#;  --  VCOM Control 2
+   LCD_POWERA        : constant := 16#CB#;  --  Power control A
+   LCD_POWERB        : constant := 16#CF#;  --  Power control B
+   LCD_PGAMMA        : constant := 16#E0#;  --  Positive Gamma Correction
+   LCD_NGAMMA        : constant := 16#E1#;  --  Negative Gamma Correction
    LCD_DTCA          : constant := 16#E8#;  --  Driver timing control A
    LCD_DTCB          : constant := 16#EA#;  --  Driver timing control B
-   LCD_POWER_SEQ     : constant := 16#ED#;  --  Power on sequence register
-   LCD_3GAMMA_EN     : constant := 16#F2#;  --  3 Gamma enable register
-   LCD_INTERFACE     : constant := 16#F6#;  --  Interface control register
-   LCD_PRC           : constant := 16#F7#;  --  Pump ratio control register
+   LCD_POWER_SEQ     : constant := 16#ED#;  --  Power on sequence
+   LCD_3GAMMA_EN     : constant := 16#F2#;  --  3 Gamma enable
+   LCD_INTERFACE     : constant := 16#F6#;  --  Interface control
+   LCD_PRC           : constant := 16#F7#;  --  Pump ratio control
+
+   procedure My_Delay (Ms : Integer);
+   procedure LCD_SPI_Init;
+   procedure LCD_Pins_Init;
+   procedure LCD_For_LTDC_Init;
 
    --------------
    -- My_Delay --
@@ -137,7 +142,7 @@ package body LCD_ILI9341 is
       Points : constant GPIO_Points :=
         GPIO_Points'(LCD_CSX, LCD_WRX_DCX);
    begin
-      Enable_CLock (Points);
+      Enable_Clock (Points);
       Enable_Clock (LCD_PINS);
 
       Configure_IO

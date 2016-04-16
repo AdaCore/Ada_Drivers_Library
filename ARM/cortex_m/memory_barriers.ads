@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This file provides utility functions for ARM Cortex microcontrollers 
+--  This file provides utility functions for ARM Cortex microcontrollers
 
 package Memory_Barriers is
 

@@ -355,7 +355,8 @@ package STM32.Timers is
      with
        Pre =>
          ((if Basic_Timer (This) then Source = Timer_DMA_Update) and
-         (if Source in Timer_DMA_COM | Timer_DMA_Trigger then Advanced_Timer (This)))
+            (if Source in Timer_DMA_COM | Timer_DMA_Trigger
+                     then Advanced_Timer (This)))
          or else DMA_Supported (This),
        Post =>
          DMA_Source_Enabled (This, Source);
@@ -366,7 +367,8 @@ package STM32.Timers is
      with
        Pre =>
          ((if Basic_Timer (This) then Source = Timer_DMA_Update) and
-         (if Source in Timer_DMA_COM | Timer_DMA_Trigger then Advanced_Timer (This)))
+            (if Source in Timer_DMA_COM | Timer_DMA_Trigger
+                     then Advanced_Timer (This)))
          or else DMA_Supported (This),
        Post =>
          not DMA_Source_Enabled (This, Source);
@@ -378,7 +380,8 @@ package STM32.Timers is
      with
        Pre =>
          ((if Basic_Timer (This) then Source = Timer_DMA_Update) and
-         (if Source in Timer_DMA_COM | Timer_DMA_Trigger then Advanced_Timer (This)))
+            (if Source in Timer_DMA_COM | Timer_DMA_Trigger
+                     then Advanced_Timer (This)))
          or else DMA_Supported (This);
 
    type Timer_DMA_Burst_Length is
@@ -701,7 +704,8 @@ package STM32.Timers is
    procedure Disable_Main_Output (This : in out Timer)
      with
        Pre  => Advanced_Timer (This),
-       Post => (if No_Outputs_Enabled (This) then not Main_Output_Enabled (This));
+       Post => (if No_Outputs_Enabled (This) then
+                  not Main_Output_Enabled (This));
 
    function Main_Output_Enabled (This : Timer) return Boolean;
 
@@ -800,11 +804,11 @@ package STM32.Timers is
 
    type Timer_Slave_Mode is
      (Disabled,
-      -- counter counts up/down on TI1 edge
+      --  counter counts up/down on TI1 edge
       Encoder_Mode_TI1,
-      -- counter counts up/down on TI2 edge
+      --  counter counts up/down on TI2 edge
       Encoder_Mode_TI2,
-      -- counter counts up/down on both TI1 & TI2 edges
+      --  counter counts up/down on both TI1 & TI2 edges
       Encoder_Mode_TI1_TI2,
       Reset,
       Gated,
@@ -1001,7 +1005,7 @@ package STM32.Timers is
       This'Address = STM32_SVD.TIM5_Base or
       This'Address = STM32_SVD.TIM8_Base);
 
-  --  Timers 1 .. 5, 8, 9, 12
+   --  Timers 1 .. 5, 8, 9, 12
    function Clock_Management_Supported (This : Timer) return Boolean is
      (This'Address = STM32_SVD.TIM1_Base or
       This'Address = STM32_SVD.TIM2_Base or
@@ -1026,7 +1030,10 @@ package STM32.Timers is
      renames Has_At_Least_3_CC_Channels;
 
    --  Not all timers have four channels available for capture/compare
-   function CC_Channel_Exists (This : Timer; Channel : Timer_Channel) return Boolean is
+   function CC_Channel_Exists (This    : Timer;
+                               Channel : Timer_Channel)
+                               return Boolean
+   is
      ((if Channel = Channel_1 then not Basic_Timer (This))            or
       (if Channel = Channel_2 then Has_At_Least_2_CC_Channels (This)) or
       (if Channel = Channel_3 then Has_At_Least_3_CC_Channels (This)) or
@@ -1473,7 +1480,8 @@ private
       CCMR1_2            : TIMx_CCMR_Pair;
       CCER               : TIMx_CCER;
       Reserved_CCER      : Short;
-      Counter            : Word with Atomic;  -- a full word for timers 2 and 5 only
+      Counter            : Word with Atomic;
+      --  a full word for timers 2 and 5 only
       Prescaler          : Short;
       Reserved_Prescaler : Short;
       ARR                : Word;

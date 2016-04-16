@@ -100,7 +100,8 @@ package body Cortex_M.Cache is
          Set := Shift_Right (Start_W, S_Shift) and S_Mask;
 
          loop
-            DCCSW := Shift_Left (Tmp_Ways, W_Shift) or Shift_Left (Set, S_Shift);
+            DCCSW :=
+              Shift_Left (Tmp_Ways, W_Shift) or Shift_Left (Set, S_Shift);
             exit when Tmp_Ways = 0;
             Tmp_Ways := Tmp_Ways - 1;
          end loop;

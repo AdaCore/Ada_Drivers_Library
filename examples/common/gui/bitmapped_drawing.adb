@@ -236,6 +236,10 @@ package body Bitmapped_Drawing is
    is
       procedure Internal_Draw_Line
         (X0, Y0, X1, Y1 : Natural;
+         Width          : Positive);
+
+      procedure Internal_Draw_Line
+        (X0, Y0, X1, Y1 : Natural;
          Width          : Positive)
       is
       begin
@@ -288,6 +292,10 @@ package body Bitmapped_Drawing is
                   DMA2D_Color_To_Word (Buffer, Foreground);
       Blk     : constant Unsigned_32 :=
                   DMA2D_Color_To_Word (Buffer, Black);
+
+      procedure Internal_Draw_Line
+        (X0, Y0, X1, Y1 : Natural;
+         Width          : Positive);
 
       procedure Internal_Draw_Line
         (X0, Y0, X1, Y1 : Natural;
@@ -506,10 +514,14 @@ package body Bitmapped_Drawing is
       ddF_Y : Integer := (-2) * Radius;
       X     : Integer := 0;
       Y     : Integer := Radius;
-      Center_Top : constant Natural := Area.Position.Y + Radius;
-      Center_Bot : constant Natural := Area.Position.Y + Area.Height - 1 - Radius;
-      Center_Lft : constant Natural := Area.Position.X + Radius;
-      Center_Rgt : constant Natural := Area.Position.X + Area.Width - 1 - Radius;
+      Center_Top : constant Natural :=
+        Area.Position.Y + Radius;
+      Center_Bot : constant Natural :=
+        Area.Position.Y + Area.Height - 1 - Radius;
+      Center_Lft : constant Natural :=
+        Area.Position.X + Radius;
+      Center_Rgt : constant Natural :=
+        Area.Position.X + Area.Width - 1 - Radius;
 
       procedure Draw_Point (X, Y : Natural) with Inline;
 
@@ -600,9 +612,12 @@ package body Bitmapped_Drawing is
       ddF_Y : Integer := (-2) * Radius;
       X     : Integer := 0;
       Y     : Integer := Radius;
-      Center_Top : constant Natural := Area.Position.Y + Radius;
-      Center_Bot : constant Natural := Area.Position.Y + Area.Height - 1 - Radius;
-      Center_Lft : constant Natural := Area.Position.X + Radius;
+      Center_Top : constant Natural :=
+        Area.Position.Y + Radius;
+      Center_Bot : constant Natural :=
+        Area.Position.Y + Area.Height - 1 - Radius;
+      Center_Lft : constant Natural :=
+        Area.Position.X + Radius;
 
    begin
       if Radius = 0 then

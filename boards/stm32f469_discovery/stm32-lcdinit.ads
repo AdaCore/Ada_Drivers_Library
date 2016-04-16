@@ -30,10 +30,10 @@
 --                                                                          --
 --  This file is based on:                                                  --
 --                                                                          --
---   @file    stm32f469i_discovery_lcd.c                                          --
+--   @file    stm32f469i_discovery_lcd.c                                    --
 --   @author  MCD Application Team                                          --
 --   @version V1.0.2                                                        --
---   @date    13-January-2016                                              --
+--   @date    13-January-2016                                               --
 --                                                                          --
 --   COPYRIGHT(c) 2016 STMicroelectronics                                   --
 ------------------------------------------------------------------------------

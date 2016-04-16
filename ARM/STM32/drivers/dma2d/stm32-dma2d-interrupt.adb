@@ -35,6 +35,9 @@ with STM32_SVD.DMA2D;      use STM32_SVD.DMA2D;
 
 package body STM32.DMA2D.Interrupt is
 
+   procedure DMA2D_Start;
+   procedure DMA2D_Wait;
+
    protected Sync is
 
       entry Wait;

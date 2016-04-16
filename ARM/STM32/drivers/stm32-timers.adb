@@ -82,7 +82,7 @@ package body STM32.Timers is
       Value : Timer_Counter_Alignment_Mode)
    is
    begin
-      This.CR1.Mode_and_Dir := Value;
+      This.CR1.Mode_And_Dir := Value;
    end Set_Counter_Mode;
 
    ------------------------
@@ -122,7 +122,7 @@ package body STM32.Timers is
       This.ARR := Period;
       This.Prescaler := Prescaler;
       This.CR1.Clock_Division := Clock_Divisor;
-      This.CR1.Mode_and_Dir := Counter_Mode;
+      This.CR1.Mode_And_Dir := Counter_Mode;
       This.RCR := Word (Repetitions);
       This.EGR := Immediate'Enum_Rep;
    end Configure;
@@ -681,7 +681,7 @@ package body STM32.Timers is
       Polarity : Timer_Output_Compare_Polarity)
    is
    begin
-      -- first disable the channel
+      --  first disable the channel
       This.CCER (Channel).CCxE := Disable;
 
       Set_Output_Compare_Mode (This, Channel, Mode);
@@ -712,7 +712,7 @@ package body STM32.Timers is
       Complementary_Idle_State : Timer_Capture_Compare_State)
    is
    begin
-      -- first disable the channel
+      --  first disable the channel
       This.CCER (Channel).CCxE := Disable;
 
       Set_Output_Compare_Mode (This, Channel, Mode);
@@ -724,13 +724,16 @@ package body STM32.Timers is
       case Channel is
          when Channel_1 =>
             This.CR2.Channel_1_Output_Idle_State := Idle_State;
-            This.CR2.Channel_1_Complementary_Output_Idle_State := Complementary_Idle_State;
+            This.CR2.Channel_1_Complementary_Output_Idle_State :=
+              Complementary_Idle_State;
          when Channel_2 =>
             This.CR2.Channel_2_Output_Idle_State := Idle_State;
-            This.CR2.Channel_2_Complementary_Output_Idle_State := Complementary_Idle_State;
+            This.CR2.Channel_2_Complementary_Output_Idle_State :=
+              Complementary_Idle_State;
          when Channel_3 =>
             This.CR2.Channel_3_Output_Idle_State := Idle_State;
-            This.CR2.Channel_3_Complementary_Output_Idle_State := Complementary_Idle_State;
+            This.CR2.Channel_3_Complementary_Output_Idle_State :=
+              Complementary_Idle_State;
          when Channel_4 =>
             This.CR2.Channel_4_Output_Idle_State := Idle_State;
       end case;
@@ -1217,7 +1220,7 @@ package body STM32.Timers is
       Descriptor_Index : Lower_Half_Index;
       Temp             : TIMx_CCMRx;
    begin
-     case Channel is
+      case Channel is
          when Channel_1 =>
             CCMR_Index := 1;
             Descriptor_Index := 1;
@@ -1250,7 +1253,7 @@ package body STM32.Timers is
       Descriptor_Index : Lower_Half_Index;
       Temp             : TIMx_CCMRx;
    begin
-     case Channel is
+      case Channel is
          when Channel_1 =>
             CCMR_Index := 1;
             Descriptor_Index := 1;
@@ -1283,7 +1286,7 @@ package body STM32.Timers is
    is
       Input     : Channel_Input_Descriptor;
    begin
-      -- first disable the channel
+      --  first disable the channel
       This.CCER (Channel).CCxE := Disable;
 
       Input := (ICxFilter => Filter, ICxPrescaler => Prescaler);
@@ -1341,14 +1344,22 @@ package body STM32.Timers is
          Configure_Channel_Input
            (This, Channel_1, Polarity, Selection, Prescaler, Filter);
 
-         Configure_Channel_Input
-           (This, Channel_2, Opposite_Polarity, Opposite_Selection, Prescaler, Filter);
+         Configure_Channel_Input (This,
+                                  Channel_2,
+                                  Opposite_Polarity,
+                                  Opposite_Selection,
+                                  Prescaler,
+                                  Filter);
       else
          Configure_Channel_Input
            (This, Channel_2, Polarity, Selection, Prescaler, Filter);
 
-         Configure_Channel_Input
-           (This, Channel_1, Opposite_Polarity, Opposite_Selection, Prescaler, Filter);
+         Configure_Channel_Input (This,
+                                  Channel_1,
+                                  Opposite_Polarity,
+                                  Opposite_Selection,
+                                  Prescaler,
+                                  Filter);
       end if;
 
       Enable_Channel (This, Channel);
@@ -1467,13 +1478,15 @@ package body STM32.Timers is
         (This,
          Channel     => Channel_1,
          Kind        => Direct_TI,
-         Description => Channel_Input_Descriptor'(ICxFilter => 0, ICxPrescaler => DIV1));
+         Description => Channel_Input_Descriptor'(ICxFilter => 0,
+                                                  ICxPrescaler => Div1));
 
       Write_Channel_Input_Description
         (This,
          Channel     => Channel_2,
          Kind        => Direct_TI,
-         Description => Channel_Input_Descriptor'(ICxFilter => 0, ICxPrescaler => DIV1));
+         Description => Channel_Input_Descriptor'(ICxFilter => 0,
+                                                  ICxPrescaler => Div1));
 
       case IC1_Polarity is
          when Rising =>

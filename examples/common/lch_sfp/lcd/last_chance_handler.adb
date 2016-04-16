@@ -52,6 +52,8 @@ package body Last_Chance_Handler is
    --  we use the LCD_Std_Out generic, rather than directly using the Drawing
    --  package, because we want the text to wrap around the screen if necessary
 
+   procedure Put (Ptr : System.Address);
+
    ---------
    -- Put --
    ---------

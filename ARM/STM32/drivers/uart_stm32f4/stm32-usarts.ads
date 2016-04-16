@@ -66,7 +66,7 @@ package STM32.USARTs is
 
    function Enabled (This : USART) return Boolean with Inline;
 
-   procedure Receive (This : USART;  Data : out UInt9)with Inline;
+   procedure Receive (This : USART;  Data : out UInt9) with Inline;
    --  reads Device.DR into Data
 
    function Current_Input (This : USART) return UInt9 with Inline;
@@ -211,9 +211,9 @@ package STM32.USARTs is
 private
 
    function APB_Clock (This : USART) return Word with Inline;
-   --  Returns either APB1 or APB2 clock rate, in Hertz, depending on the USART.
-   --  For the sake of not making this package board-specific, we assume that
-   --  we are given a valid USART object at a valid address, AND that the
+   --  Returns either APB1 or APB2 clock rate, in Hertz, depending on the
+   --  USART. For the sake of not making this package board-specific, we assume
+   --  that we are given a valid USART object at a valid address, AND that the
    --  USART devices really are configured such that only 1 and 6 are on APB2.
    --  Therefore, if a board has additional USARTs beyond USART6, eg USART8 on
    --  the F429I Discovery board, they better conform to that assumption.

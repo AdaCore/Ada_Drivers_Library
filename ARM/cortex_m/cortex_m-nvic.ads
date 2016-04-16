@@ -70,7 +70,7 @@ package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
    function Priority_Grouping return Word with Inline;
 
    procedure Set_Priority
-     (IRQn     : Interrupt_Id;
+     (IRQn     : Interrupt_ID;
       Priority : Word) with Inline;
 
    function Encoded_Priority
@@ -78,24 +78,24 @@ package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
       return Word with Inline;
 
    procedure Set_Priority
-     (IRQn             : Interrupt_Id;
+     (IRQn             : Interrupt_ID;
       Preempt_Priority : Word;
       Subpriority      : Word) with Inline;
    --  A convenience routine that first encodes (Priority_Grouping(),
    --  Preempt_Priority, and Subpriority), and then calls the other
    --  Set_Priority with the resulting encoding for the Priority argument.
 
-   procedure Enable_Interrupt (IRQn : Interrupt_Id) with Inline;
+   procedure Enable_Interrupt (IRQn : Interrupt_ID) with Inline;
 
-   procedure Disable_Interrupt (IRQn : Interrupt_Id) with Inline;
+   procedure Disable_Interrupt (IRQn : Interrupt_ID) with Inline;
 
-   function Active (IRQn : Interrupt_Id) return Boolean with Inline;
+   function Active (IRQn : Interrupt_ID) return Boolean with Inline;
 
-   function Pending (IRQn : Interrupt_Id) return Boolean with Inline;
+   function Pending (IRQn : Interrupt_ID) return Boolean with Inline;
 
-   procedure Set_Pending (IRQn : Interrupt_Id) with Inline;
+   procedure Set_Pending (IRQn : Interrupt_ID) with Inline;
 
-   procedure Clear_Pending (IRQn : Interrupt_Id) with Inline;
+   procedure Clear_Pending (IRQn : Interrupt_ID) with Inline;
 
    procedure Reset_System;
 
@@ -106,19 +106,26 @@ private
 
 
    type Nested_Vectored_Interrupt_Controller is record
-      ISER      : Words (0 .. 7);     -- Interrupt Set Enable Register
+      ISER      : Words (0 .. 7);
+      --  Interrupt Set Enable Register
       Reserved0 : Words (0 .. 23);
-      ICER      : Words (0 .. 7);     -- Interrupt Clear Enable Register
+      ICER      : Words (0 .. 7);
+      --  Interrupt Clear Enable Register
       Reserved1 : Words (0 .. 23);
-      ISPR      : Words (0 .. 7);     -- Interrupt Set Pending Register
+      ISPR      : Words (0 .. 7);
+      --  Interrupt Set Pending Register
       Reserved2 : Words (0 .. 23);
-      ICPR      : Words (0 .. 7);     -- Interrupt Clear Pending Register
+      ICPR      : Words (0 .. 7);
+      --  Interrupt Clear Pending Register
       Reserved3 : Words (0 .. 23);
-      IABR      : Words (0 .. 7);     -- Interrupt Active Bit Register
+      IABR      : Words (0 .. 7);
+      --  Interrupt Active Bit Register
       Reserved4 : Words (0 .. 55);
-      IP        : Bytes (0 .. 239);   -- Interrupt Priority Register
+      IP        : Bytes (0 .. 239);
+      --  Interrupt Priority Register
       Reserved5 : Words (0 .. 643);
-      STIR      : Word;               -- Software Trigger Interrupt Register (write-only)
+      STIR      : Word;
+      --  Software Trigger Interrupt Register (write-only)
    end record
      with Volatile;
 
@@ -140,27 +147,47 @@ private
 
 
    type System_Control_Block is record
-      CPUID     : Word;              -- CPUID Base Register   (read-only)
-      ICSR      : Word;              -- Interrupt Control and State Register
-      VTOR      : Word;              -- Vector Table Offset Register
-      AIRCR     : Word;              -- Application Interrupt and Reset Control Register
-      SCR       : Word;              -- System Control Register
-      CCR       : Word;              -- Configuration Control Register
-      SHP       : Bytes (0 .. 11);   -- System Handlers Priority Registers (4-7, 8-11, 12-15)
-      SHCSR     : Word;              -- System Handler Control and State Register
-      CFSR      : Word;              -- Configurable Fault Status Register
-      HFSR      : Word;              -- HardFault Status Register
-      DFSR      : Word;              -- Debug Fault Status Register
-      MMFAR     : Word;              -- MemManage Fault Address Register
-      BFAR      : Word;              -- BusFault Address Register
-      AFSR      : Word;              -- Auxiliary Fault Status Register
-      PFR       : Words (0 .. 1);    -- Processor Feature Register           (read-only)
-      DFR       : Word;              -- Debug Feature Register               (read-only)
-      ADR       : Word;              -- Auxiliary Feature Register           (read-only)
-      MMFR      : Words (0 .. 3);    -- Memory Model Feature Register        (read-only)
-      ISAR      : Words (0 .. 4);    -- Instruction Set Attributes Register  (read-only)
+      CPUID     : Word;
+      --  CPUID Base Register   (read-only)
+      ICSR      : Word;
+      --  Interrupt Control and State Register
+      VTOR      : Word;
+      --  Vector Table Offset Register
+      AIRCR     : Word;
+      --  Application Interrupt and Reset Control Register
+      SCR       : Word;
+      --  System Control Register
+      CCR       : Word;
+      --  Configuration Control Register
+      SHP       : Bytes (0 .. 11);
+      --  System Handlers Priority Registers (4-7, 8-11, 12-15)
+      SHCSR     : Word;
+      --  System Handler Control and State Register
+      CFSR      : Word;
+      --  Configurable Fault Status Register
+      HFSR      : Word;
+      --  HardFault Status Register
+      DFSR      : Word;
+      --  Debug Fault Status Register
+      MMFAR     : Word;
+      --  MemManage Fault Address Register
+      BFAR      : Word;
+      --  BusFault Address Register
+      AFSR      : Word;
+      --  Auxiliary Fault Status Register
+      PFR       : Words (0 .. 1);
+      --  Processor Feature Register           (read-only)
+      DFR       : Word;
+      --  Debug Feature Register               (read-only)
+      ADR       : Word;
+      --  Auxiliary Feature Register           (read-only)
+      MMFR      : Words (0 .. 3);
+      --  Memory Model Feature Register        (read-only)
+      ISAR      : Words (0 .. 4);
+      --  Instruction Set Attributes Register  (read-only)
       RESERVED0 : Words (0 .. 4);
-      CPACR     : Word;              -- Coprocessor Access Control Register
+      CPACR     : Word;
+      --  Coprocessor Access Control Register
    end record
      with Volatile;
 
@@ -189,9 +216,11 @@ private
    end record;
 
 
-   SCS_Base  : constant := 16#E000_E000#;         -- system control space base address
-   NVIC_Base : constant := SCS_BASE +  16#0100#;
-   SCB_Base  : constant := SCS_BASE +  16#0D00#;  -- System Control Block base address
+   SCS_Base  : constant := 16#E000_E000#;
+   --  system control space base address
+   NVIC_Base : constant := SCS_Base +  16#0100#;
+   SCB_Base  : constant := SCS_Base +  16#0D00#;
+   --  System Control Block base address
 
    SCB : System_Control_Block with
      Volatile,
@@ -205,15 +234,19 @@ private
 
 
    SCB_AIRCR_PRIGROUP_Pos  : constant := 8;
-   SCB_AIRCR_PRIGROUP_Mask : constant Word := Shift_Left (7, SCB_AIRCR_PRIGROUP_Pos);
+   SCB_AIRCR_PRIGROUP_Mask : constant Word :=
+     Shift_Left (7, SCB_AIRCR_PRIGROUP_Pos);
 
    SCB_AIRCR_VECTKEY_Pos   : constant := 16;
-   SCB_AIRCR_VECTKEY_Mask  : constant Word := Shift_Left (16#FFFF#, SCB_AIRCR_VECTKEY_Pos);
+   SCB_AIRCR_VECTKEY_Mask  : constant Word :=
+     Shift_Left (16#FFFF#, SCB_AIRCR_VECTKEY_Pos);
 
    SCB_AIRCR_SYSRESETREQ_Pos  : constant := 2;
-   SCB_AIRCR_SYSRESETREQ_Mask : constant Word := Shift_Left (1, SCB_AIRCR_SYSRESETREQ_Pos);
+   SCB_AIRCR_SYSRESETREQ_Mask : constant Word :=
+     Shift_Left (1, SCB_AIRCR_SYSRESETREQ_Pos);
 
-   NVIC_PRIO_BITS : constant := 4;  -- STM32F4XX uses 4 bits for the priority levels
+   NVIC_PRIO_BITS : constant := 4;
+   --  STM32F4XX uses 4 bits for the priority levels
 
 end Cortex_M.NVIC;
 

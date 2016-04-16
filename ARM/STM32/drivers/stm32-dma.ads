@@ -199,9 +199,12 @@ package STM32.DMA is
       Data_Count  : Short)
      with
        Pre  =>
-         Valid_Addresses (Source, Destination) and
-         Compatible_Alignments (Unit, Stream, Source, Destination) and
-         (for all Flag in DMA_Status_Flag => (not Status (Unit, Stream, Flag)));
+            Valid_Addresses (Source, Destination)
+         and
+            Compatible_Alignments (Unit, Stream, Source, Destination)
+         and
+            (for all Flag in DMA_Status_Flag =>
+             (not Status (Unit, Stream, Flag)));
    --  Convenience routine: disables the stream, calls Configure_Data_Flow,
    --  and then enables the stream to start the transfer. DMA interrupts are
    --  not enabled by this routine, but could be enabled prior to the call.
@@ -228,9 +231,12 @@ package STM32.DMA is
       Enabled_Interrupts : Interrupt_Selections := (others => True))
      with
        Pre =>
-         Valid_Addresses (Source, Destination) and
-         Compatible_Alignments (Unit, Stream, Source, Destination) and
-         (for all Flag in DMA_Status_Flag => (not Status (Unit, Stream, Flag)));
+             Valid_Addresses (Source, Destination)
+          and
+             Compatible_Alignments (Unit, Stream, Source, Destination)
+          and
+             (for all Flag in DMA_Status_Flag =>
+              (not Status (Unit, Stream, Flag)));
    --  Convenience routine: disables the stream, calls Configure_Data_Flow,
    --  enables the selected DMA interrupts (by default, all of them), and
    --  then enables the stream to start the transfer. All the selected DMA

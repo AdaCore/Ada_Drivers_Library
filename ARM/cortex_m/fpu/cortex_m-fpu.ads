@@ -61,38 +61,38 @@ package Cortex_M.FPU is
    type Bits_6  is mod 2**6 with Size => 6;
 
    type Status_Control_Register is record
-      -- negative condition flag
+      --  negative condition flag
       N         : Boolean;
-      -- zero condition flag
+      --  zero condition flag
       Z         : Boolean;
-      -- carry condition flag
+      --  carry condition flag
       C         : Boolean;
-      -- overflow condition flag
+      --  overflow condition flag
       V         : Boolean;
       Reserved1 : Bits_1;
-      -- Alternative Half-Precision format
+      --  Alternative Half-Precision format
       AHP       : Boolean;
-      -- Default NaN mode
+      --  Default NaN mode
       DN        : Boolean;
-      -- Flush-to-zero mode
+      --  Flush-to-zero mode
       FZ        : Boolean;
-      -- rounding mode
+      --  rounding mode
       RM        : Rounding_Mode;
       Reserved2 : Bits_6;
       Reserved3 : Byte;
-      -- flush to zero
+      --  flush to zero
       IDC       : Boolean;
       Reserved4 : Bits_2;
-      -- inexact result: the rounded (and returned) value is different from
-      -- the mathematically exact result of the operation
+      --  inexact result: the rounded (and returned) value is different from
+      --  the mathematically exact result of the operation
       IXC       : Boolean;
-      -- underflow, result is a denorm
+      --  underflow, result is a denorm
       UFC       : Boolean;
-      -- overflow, result depends on rounding mode
+      --  overflow, result depends on rounding mode
       OFC       : Boolean;
-      -- division by zero
+      --  division by zero
       DZC       : Boolean;
-      -- invalid operation, result is a NaN
+      --  invalid operation, result is a NaN
       IOC       : Boolean;
    end record
      with Atomic, Size => 32;

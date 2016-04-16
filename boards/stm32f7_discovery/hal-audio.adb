@@ -84,7 +84,8 @@ package body HAL.Audio is
                PLLI2SQ    => 2,    --  SAI Clk(First level) = 214.5 MHz
                PLLI2SDIVQ => 19);  --  I2S Clk = 215.4 / 19 = 11.289 MHz
 
-         when Audio_Freq_8kHz | Audio_Freq_16kHz | Audio_Freq_48kHz | Audio_Freq_96kHz =>
+         when Audio_Freq_8kHz  | Audio_Freq_16kHz |
+              Audio_Freq_48kHz | Audio_Freq_96kHz =>
             Configure_SAI_I2S_Clock
               (SAI_Out,
                PLLI2SN    => 344,  --  VCO Output = 344MHz

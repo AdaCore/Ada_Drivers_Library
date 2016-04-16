@@ -182,7 +182,7 @@ package body STM32.SAI is
 
       Start := Clock;
       while Block_Regs.CR1.SAIAEN loop
-         if Start + Seconds(1) < Clock then
+         if Start + Seconds (1) < Clock then
             raise Constraint_Error with "Cannot reset the SAI peripheral";
          end if;
       end loop;

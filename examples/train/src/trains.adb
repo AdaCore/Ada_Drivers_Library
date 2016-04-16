@@ -38,7 +38,8 @@ is
                 and then
              (for all Other_Track in Track_Id =>
                 (if Other_Track /= Track then
-                   Track_Signals (Other_Track) = Track_Signals'Old (Other_Track)));
+                       Track_Signals (Other_Track) =
+                     Track_Signals'Old (Other_Track)));
    --  Possibly update a signal for a track from Orange to Green if it's ok to
    --  do so.
 
@@ -111,7 +112,8 @@ is
 
             pragma Loop_Invariant
               (for all J in Track_Id =>
-                 ((if Track_Signals'Loop_Entry (J) = Red then Track_Signals (J) = Red)
+                 ((if Track_Signals'Loop_Entry (J) = Red then
+                       Track_Signals (J) = Red)
                      and then
                   (if Track_Signals'Loop_Entry (J) = Orange and then
                      (for some T in Train_Id range 1 .. Cur_Num_Trains =>
@@ -125,13 +127,17 @@ is
          pragma Assert
            (for all Train in Train_Id range 1 .. Cur_Num_Trains =>
               (for all Id in Prev_Id =>
-                 (if Get_Previous_Track (Trains (Train), Id) /= No_Track_Id then
+                   (if Get_Previous_Track (Trains (Train), Id) /= No_Track_Id
+                    then
                     Track_Signals (Get_Previous_Track (Trains (Train), Id)) in
                       Orange | Red)
                    and then
-                 (if Get_Other_Previous_Track (Trains (Train), Id) /= No_Track_Id then
-                    Track_Signals (Get_Other_Previous_Track (Trains (Train), Id)) in
-                      Orange | Red)));
+                 (if Get_Other_Previous_Track (Trains (Train), Id) /=
+                      No_Track_Id
+                  then
+                     Track_Signals
+                       (Get_Other_Previous_Track (Trains (Train), Id)) in
+                         Orange | Red)));
          pragma Assert (Previous_Tracks_On_Orange_Or_Red);
          pragma Assert (Safe_Signaling);
 
@@ -163,14 +169,19 @@ is
 
                   pragma Loop_Invariant
                     (for all K in Track_Ids'First .. Id =>
-                       (if Get_Other_Previous_Track (New_Position, K) /= No_Track_Id then
-                          Track_Signals (Get_Other_Previous_Track (New_Position, K)) in
-                            Orange | Red));
+                       (if Get_Other_Previous_Track (New_Position, K) /=
+                            No_Track_Id
+                        then
+                           Track_Signals
+                             (Get_Other_Previous_Track (New_Position, K)) in
+                                Orange | Red));
                   pragma Loop_Invariant
                     (for all J in Track_Id =>
-                       ((if Track_Signals'Loop_Entry (J) = Red then Track_Signals (J) = Red)
+                       ((if Track_Signals'Loop_Entry (J) = Red then
+                             Track_Signals (J) = Red)
                            and then
-                        (if Track_Signals'Loop_Entry (J) = Orange then Track_Signals (J) = Orange)));
+                          (if Track_Signals'Loop_Entry (J) = Orange then
+                                Track_Signals (J) = Orange)));
                end loop;
 
                pragma Assert (Occupied_Tracks_On_Red);

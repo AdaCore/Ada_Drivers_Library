@@ -117,7 +117,9 @@ package STM32.GPIO is
 
    type Internal_Pin_Resistors is (Floating, Pull_Up, Pull_Down)
      with Size => 2;
-   for Internal_Pin_Resistors use (Floating => 0, Pull_Up => 1, Pull_Down => 2);
+   for Internal_Pin_Resistors use (Floating  => 0,
+                                   Pull_Up   => 1,
+                                   Pull_Down => 2);
 
    type GPIO_Port_Configuration is record
       Mode        : Pin_IO_Modes;

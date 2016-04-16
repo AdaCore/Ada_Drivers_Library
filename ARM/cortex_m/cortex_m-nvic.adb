@@ -63,7 +63,8 @@ package body Cortex_M.NVIC is
       Key              : constant := 16#5FA#;
    begin
       Reg_Value := SCB.AIRCR;
-      Reg_Value := Reg_Value and (not (SCB_AIRCR_VECTKEY_Mask or SCB_AIRCR_PRIGROUP_Mask));
+      Reg_Value := Reg_Value and
+        (not (SCB_AIRCR_VECTKEY_Mask or SCB_AIRCR_PRIGROUP_Mask));
       Reg_Value := Reg_Value or
         Shift_Left (Key, SCB_AIRCR_VECTKEY_Pos) or
         Shift_Left (PriorityGroupTmp, 8);
@@ -75,13 +76,15 @@ package body Cortex_M.NVIC is
    ------------------
 
    procedure Set_Priority
-     (IRQn     : Interrupt_Id;
+     (IRQn     : Interrupt_ID;
       Priority : Word)
    is
       Index : constant Natural := Integer (IRQn);
-      Value : constant Word := Shift_Left (Priority, 8 - NVIC_PRIO_BITS) and 16#FF#;
+      Value : constant Word :=
+        Shift_Left (Priority, 8 - NVIC_PRIO_BITS) and 16#FF#;
    begin
-      --  IRQ numbers are never less than 0 in the current definition, hence the code is different from that in the CMSIS.
+      --  IRQ numbers are never less than 0 in the current definition, hence
+      --  the code is different from that in the CMSIS.
       NVIC.IP (Index) := Byte (Value);
    end Set_Priority;
 
@@ -119,7 +122,7 @@ package body Cortex_M.NVIC is
       Temp3 := Shift_Left (Temp2, Integer (SubPriorityBits));
 
       Temp4 := Shift_Left (1, Integer (SubPriorityBits)) - 1;
-      Temp5 := SubPriority and Temp4;
+      Temp5 := Subpriority and Temp4;
 
       return Temp3 or Temp5;
    end Encoded_Priority;
@@ -129,7 +132,7 @@ package body Cortex_M.NVIC is
    ------------------
 
    procedure Set_Priority
-     (IRQn             : Interrupt_Id;
+     (IRQn             : Interrupt_ID;
       Preempt_Priority : Word;
       Subpriority      : Word)
    is
@@ -144,9 +147,10 @@ package body Cortex_M.NVIC is
    -- Enable_Interrupt --
    ----------------------
 
-   procedure Enable_Interrupt (IRQn : Interrupt_Id) is
+   procedure Enable_Interrupt (IRQn : Interrupt_ID) is
       IRQn_As_Word : constant Word := Word (IRQn);
-      Index        : constant Natural := Integer (Shift_Right (IRQn_As_Word, 5));
+      Index        : constant Natural :=
+        Integer (Shift_Right (IRQn_As_Word, 5));
    begin
       NVIC.ISER (Index) := Shift_Left (IRQn_As_Word and 16#1F#, 1);
    end Enable_Interrupt;
@@ -155,11 +159,12 @@ package body Cortex_M.NVIC is
    -- Disable_Interrupt --
    -----------------------
 
-   procedure Disable_Interrupt (IRQn : Interrupt_Id) is
+   procedure Disable_Interrupt (IRQn : Interrupt_ID) is
       IRQn_As_Word : constant Word := Word (IRQn);
-      Index        : constant Natural := Integer (Shift_Right (IRQn_As_Word, 5));
+      Index        : constant Natural :=
+        Integer (Shift_Right (IRQn_As_Word, 5));
    begin
-      --  NVIC->ICER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+      --  NVIC->ICER[((uint32_t)(IRQn)>>5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
       NVIC.ICER (Index) := Shift_Left (1, Integer (IRQn_As_Word and 16#1F#));
    end Disable_Interrupt;
 
@@ -167,10 +172,12 @@ package body Cortex_M.NVIC is
    -- Active --
    ------------
 
-   function Active (IRQn : Interrupt_Id) return Boolean is
+   function Active (IRQn : Interrupt_ID) return Boolean is
       IRQn_As_Word : constant Word := Word (IRQn);
-      Index        : constant Natural := Integer (Shift_Right (IRQn_As_Word, 5));
-      Value        : constant Word := Shift_Left (1, Integer (IRQn_As_Word and 16#1F#));
+      Index        : constant Natural :=
+        Integer (Shift_Right (IRQn_As_Word, 5));
+      Value        : constant Word :=
+        Shift_Left (1, Integer (IRQn_As_Word and 16#1F#));
    begin
       return (NVIC.IABR (Index) and Value) /= 0;
    end Active;
@@ -179,10 +186,12 @@ package body Cortex_M.NVIC is
    -- Pending --
    -------------
 
-   function Pending (IRQn : Interrupt_Id) return Boolean is
+   function Pending (IRQn : Interrupt_ID) return Boolean is
       IRQn_As_Word : constant Word := Word (IRQn);
-      Index        : constant Natural := Integer (Shift_Right (IRQn_As_Word, 5));
-      Value        : constant Word := Shift_Left (1, Integer (IRQn_As_Word and 16#1F#));
+      Index        : constant Natural :=
+        Integer (Shift_Right (IRQn_As_Word, 5));
+      Value        : constant Word :=
+        Shift_Left (1, Integer (IRQn_As_Word and 16#1F#));
    begin
       return (NVIC.ISPR (Index) and Value) /= 0;
    end Pending;
@@ -191,9 +200,10 @@ package body Cortex_M.NVIC is
    -- Set_Pending --
    -----------------
 
-   procedure Set_Pending (IRQn : Interrupt_Id) is
+   procedure Set_Pending (IRQn : Interrupt_ID) is
       IRQn_As_Word : constant Word := Word (IRQn);
-      Index        : constant Natural := Integer (Shift_Right (IRQn_As_Word, 5));
+      Index        : constant Natural :=
+        Integer (Shift_Right (IRQn_As_Word, 5));
    begin
       NVIC.ISPR (Index) := Shift_Left (1, Integer (IRQn_As_Word and 16#1F#));
    end Set_Pending;
@@ -202,9 +212,10 @@ package body Cortex_M.NVIC is
    -- Clear_Pending --
    -------------------
 
-   procedure Clear_Pending (IRQn : Interrupt_Id) is
+   procedure Clear_Pending (IRQn : Interrupt_ID) is
       IRQn_As_Word : constant Word := Word (IRQn);
-      Index        : constant Natural := Integer (Shift_Right (IRQn_As_Word, 5));
+      Index        : constant Natural :=
+        Integer (Shift_Right (IRQn_As_Word, 5));
    begin
       NVIC.ICPR (Index) := Shift_Left (1, Integer (IRQn_As_Word and 16#1F#));
    end Clear_Pending;
@@ -217,8 +228,8 @@ package body Cortex_M.NVIC is
       Key : constant := 16#05FA#;  --  required for write to be accepted
       use Memory_Barriers;
    begin
-      -- Ensure all outstanding memory accesses including
-      -- buffered writes are completed
+      --  Ensure all outstanding memory accesses including
+      --  buffered writes are completed
       Data_Synchronization_Barrier;
 
       SCB.AIRCR := Shift_Left (Key, SCB_AIRCR_VECTKEY_Pos) or
@@ -226,7 +237,7 @@ package body Cortex_M.NVIC is
         (SCB.AIRCR and SCB_AIRCR_PRIGROUP_Mask)  or
         SCB_AIRCR_SYSRESETREQ_Mask;
 
-      -- TODO: why is all code from here onward in the CMSIS???
+      --  TODO: why is all code from here onward in the CMSIS???
 
       Data_Synchronization_Barrier;
 

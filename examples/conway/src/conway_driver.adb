@@ -48,26 +48,26 @@ package body Conway_Driver is
    end record;
 
    Ptrn1_RLE : aliased constant String :=
-                 "2bo14bo34bo5b$o2bo2b3o7bob4o15b2o11b2obo4b$o2bo12b3obobo9bo5bo7bo3bo7b" &
-                 "$bobo2bo21b3o2bobob3o5bobobo4bo3b$2b2o6bo4bo16b6o2bo2bo3bo3bo2bo3b$bob" &
-                 "o3b2o5bo3b2o6b2ob2o2bo2b2o2bobob2o2bo9b$2bo5bob2o2bo3b2o6b2o4bobobo2bo" &
-                 "2bobobo6b2o2bo$2bo4b3o2bo9b3o7b3obob2o5bo7b3obo$12b9o3bo8b2ob3o3b4o9bo" &
-                 "bo2$12b9o3bo8b2ob3o3b4o9bobo$2bo4b3o2bo9b3o7b3obob2o5bo7b3obo$2bo5bob" &
-                 "2o2bo3b2o6b2o4bobobo2bo2bobobo6b2o2bo$bobo3b2o5bo3b2o6b2ob2o2bo2b2o2bo" &
-                 "bob2o2bo9b$2b2o6bo4bo16b6o2bo2bo3bo3bo2bo3b$bobo2bo21b3o2bobob3o5bobob" &
-                 "o4bo3b$o2bo12b3obobo9bo5bo7bo3bo7b$o2bo2b3o7bob4o15b2o11b2obo4b$2bo14b" &
-                 "o34bo!";
+     "2bo14bo34bo5b$o2bo2b3o7bob4o15b2o11b2obo4b$o2bo12b3obobo9bo5bo7bo3bo7b" &
+     "$bobo2bo21b3o2bobob3o5bobobo4bo3b$2b2o6bo4bo16b6o2bo2bo3bo3bo2bo3b$bob" &
+     "o3b2o5bo3b2o6b2ob2o2bo2b2o2bobob2o2bo9b$2bo5bob2o2bo3b2o6b2o4bobobo2bo" &
+     "2bobobo6b2o2bo$2bo4b3o2bo9b3o7b3obob2o5bo7b3obo$12b9o3bo8b2ob3o3b4o9bo" &
+     "bo2$12b9o3bo8b2ob3o3b4o9bobo$2bo4b3o2bo9b3o7b3obob2o5bo7b3obo$2bo5bob" &
+     "2o2bo3b2o6b2o4bobobo2bo2bobobo6b2o2bo$bobo3b2o5bo3b2o6b2ob2o2bo2b2o2bo" &
+     "bob2o2bo9b$2b2o6bo4bo16b6o2bo2bo3bo3bo2bo3b$bobo2bo21b3o2bobob3o5bobob" &
+     "o4bo3b$o2bo12b3obobo9bo5bo7bo3bo7b$o2bo2b3o7bob4o15b2o11b2obo4b$2bo14b" &
+     "o34bo!";
    Ptrn1 : constant Pattern :=
              (W   => 58,
               H   => 19,
               RLE => Ptrn1_RLE'Access);
 
    Ptrn2_RLE : aliased constant String :=
-                 "4o2b2o3b2ob2o3bo$2obo2b2ob3obobo2b2o$bob2o4bo5b2ob2o$bo4bo4bo4bob2o$o" &
-                 "5bobobo4bobo$b3obo2b5obobob2o$ob2o2b4obob2ob4o$2bo6b2obobobobo$b4o4bo" &
-                 "4b2obobo$b2o6b3o3b3o$bo3bo2bo6b5o$3o3bo2bo4bob3o$b2obobob2o4b4o$obo2b" &
-                 "2obo2bobob4o$2o4bobob2obo2bobo$b2o3bobob7o$o3bobo6b3o2b2o$2b2o2bo2bobo" &
-                 "b2obo2bo$3bobobobobo4b2o$2o2b2obobo2bo!";
+     "4o2b2o3b2ob2o3bo$2obo2b2ob3obobo2b2o$bob2o4bo5b2ob2o$bo4bo4bo4bob2o$o" &
+     "5bobobo4bobo$b3obo2b5obobob2o$ob2o2b4obob2ob4o$2bo6b2obobobobo$b4o4bo" &
+     "4b2obobo$b2o6b3o3b3o$bo3bo2bo6b5o$3o3bo2bo4bob3o$b2obobob2o4b4o$obo2b" &
+     "2obo2bobob4o$2o4bobob2obo2bobo$b2o3bobob7o$o3bobo6b3o2b2o$2b2o2bo2bobo" &
+     "b2obo2bo$3bobobobobo4b2o$2o2b2obobo2bo!";
    Ptrn2 : constant Pattern :=
              (W   => 20,
               H   => 20,
@@ -152,12 +152,13 @@ package body Conway_Driver is
 
    Format : constant Pixel_Format := Pixel_Fmt_RGB565;
    Colors : constant array (Cell_State) of Word :=
-              (case Format is
-                  when Pixel_Fmt_ARGB1555 => (Alive => 16#ffff#, Dead => 16#801f#),
-                  when Pixel_Fmt_ARGB4444 => (Alive => 16#ffff#, Dead => 16#f00f#),
-                  when Pixel_Fmt_ARGB8888 => (Alive => 16#ffffffff#, Dead => 16#ff0000ff#),
-                  when Pixel_Fmt_RGB565   => (Alive => 16#ffff#, Dead => 16#001f#),
-                  when Pixel_Fmt_RGB888   => (Alive => 16#ffffff#, Dead => 16#0000ff#));
+     (case Format is
+         when Pixel_Fmt_ARGB1555 => (Alive => 16#ffff#, Dead => 16#801f#),
+         when Pixel_Fmt_ARGB4444 => (Alive => 16#ffff#, Dead => 16#f00f#),
+         when Pixel_Fmt_ARGB8888 => (Alive => 16#ffffffff#,
+                                     Dead => 16#ff0000ff#),
+         when Pixel_Fmt_RGB565   => (Alive => 16#ffff#, Dead => 16#001f#),
+         when Pixel_Fmt_RGB888   => (Alive => 16#ffffff#, Dead => 16#0000ff#));
 
    Buffer : DMA2D_Buffer;
 
@@ -207,9 +208,9 @@ package body Conway_Driver is
          end record;
 
          Neighbors : constant array (1 .. 8) of Coordinates :=
-           ( (X - 1, Y - 1), (X, Y - 1), (X + 1, Y - 1),
-             (X - 1, Y    ),             (X + 1, Y    ),
-             (X - 1, Y + 1), (X, Y + 1), (X + 1, Y + 1) );
+           ((X - 1, Y - 1), (X, Y - 1), (X + 1, Y - 1),
+            (X - 1, Y),                 (X + 1, Y),
+            (X - 1, Y + 1), (X, Y + 1), (X + 1, Y + 1));
          --  Enumerate all of the coordinates we're supposed to check.
 
          Count : Neighbor_Cnt := 0;
@@ -325,6 +326,11 @@ package body Conway_Driver is
          Y : Height;
       end record;
 
+      procedure Update_Neighbors
+        (X     : Width;
+         Y     : Height;
+         State : Cell_State);
+
       ----------------------
       -- Update_Neighbors --
       ----------------------
@@ -417,7 +423,8 @@ package body Conway_Driver is
 
       Cortex_M.Cache.Clean_DCache
         (Buffer.Addr,
-         Len => Buffer.Width * Buffer.Height * Bytes_Per_Pixel (Buffer.Color_Mode));
+         Len =>
+           Buffer.Width * Buffer.Height * Bytes_Per_Pixel (Buffer.Color_Mode));
 
       --  Swap buffers
       Tmp := G;

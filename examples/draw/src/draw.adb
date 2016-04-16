@@ -42,6 +42,8 @@ procedure Draw
 is
    FG_Buffer    : DMA2D_Buffer;
 
+   procedure Clear;
+
    -----------
    -- Clear --
    -----------

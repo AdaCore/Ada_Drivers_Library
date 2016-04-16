@@ -83,7 +83,8 @@ package body STM32.RNG.Interrupts is
       -------------------
 
       entry Get_Random_32 (Value : out Unsigned_32) when Data_Available is
-         Next : constant Integer := (Buffer.Tail + 1) mod Buffer.Content'Length;
+         Next : constant Integer :=
+           (Buffer.Tail + 1) mod Buffer.Content'Length;
       begin
          --  Remove an item from our ring buffer.
          Value := Buffer.Content (Next);
@@ -125,7 +126,8 @@ package body STM32.RNG.Interrupts is
 
             if Current /= Last then
                --  This number is good.
-               if (Buffer.Head + 1) mod Buffer.Content'Length = Buffer.Tail then
+               if (Buffer.Head + 1) mod Buffer.Content'Length = Buffer.Tail
+               then
                   --  But our buffer is full.  Turn off the RNG.
                   Disable_RNG;
                else

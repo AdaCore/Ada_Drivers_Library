@@ -72,19 +72,31 @@ package STM32.Device is
       GPIO_Port_K)
      with Size => 4;
 
-   function As_GPIO_Port_Id (Port : Internal_GPIO_Port) return GPIO_Port_Id with Inline;
+   function As_GPIO_Port_Id (Port : Internal_GPIO_Port) return GPIO_Port_Id
+     with Inline;
 
-   GPIO_A : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOA_Base;
-   GPIO_B : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOB_Base;
-   GPIO_C : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOC_Base;
-   GPIO_D : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOD_Base;
-   GPIO_E : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOE_Base;
-   GPIO_F : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOF_Base;
-   GPIO_G : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOG_Base;
-   GPIO_H : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOH_Base;
-   GPIO_I : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOI_Base;
-   GPIO_J : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOJ_Base;
-   GPIO_K : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOK_Base;
+   GPIO_A : aliased Internal_GPIO_Port
+     with Import, Volatile, Address => GPIOA_Base;
+   GPIO_B : aliased Internal_GPIO_Port
+     with Import, Volatile, Address => GPIOB_Base;
+   GPIO_C : aliased Internal_GPIO_Port
+     with Import, Volatile, Address => GPIOC_Base;
+   GPIO_D : aliased Internal_GPIO_Port
+     with Import, Volatile, Address => GPIOD_Base;
+   GPIO_E : aliased Internal_GPIO_Port
+     with Import, Volatile, Address => GPIOE_Base;
+   GPIO_F : aliased Internal_GPIO_Port
+     with Import, Volatile, Address => GPIOF_Base;
+   GPIO_G : aliased Internal_GPIO_Port
+     with Import, Volatile, Address => GPIOG_Base;
+   GPIO_H : aliased Internal_GPIO_Port
+     with Import, Volatile, Address => GPIOH_Base;
+   GPIO_I : aliased Internal_GPIO_Port
+     with Import, Volatile, Address => GPIOI_Base;
+   GPIO_J : aliased Internal_GPIO_Port
+     with Import, Volatile, Address => GPIOJ_Base;
+   GPIO_K : aliased Internal_GPIO_Port
+     with Import, Volatile, Address => GPIOK_Base;
 
    PA0  : aliased GPIO_Point := (GPIO_A'Access, 0);
    PA1  : aliased GPIO_Point := (GPIO_A'Access, 1);
@@ -270,7 +282,8 @@ package STM32.Device is
    ADC_3 : aliased Analog_To_Digital_Converter
      with Import, Volatile, Address => ADC3_Base;
 
-   VBat               : constant ADC_Point := (ADC_1'Access, Channel => VBat_Channel);
+   VBat               : constant ADC_Point :=
+     (ADC_1'Access, Channel => VBat_Channel);
    Temperature_Sensor : constant ADC_Point := VBat;
    --  see RM pg 410, section 13.10, also pg 389
 
@@ -422,7 +435,8 @@ package STM32.Device is
 private
 
    pragma Compile_Time_Error
-     (not (GPIO_Port_Id'First = GPIO_Port_A and GPIO_Port_Id'Last = GPIO_Port_K and
+     (not (GPIO_Port_Id'First = GPIO_Port_A and
+           GPIO_Port_Id'Last  = GPIO_Port_K and
            GPIO_Port_A'Enum_Rep = 0 and
            GPIO_Port_B'Enum_Rep = 1 and
            GPIO_Port_C'Enum_Rep = 2 and

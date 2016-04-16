@@ -58,23 +58,48 @@ package body Init is
 
    --  Extracted from STM32F429x.LTDC
    type Layer_Type is record
-      LCR        : L1CR_Register; --  Layerx Control Register
-      LWHPCR     : L1WHPCR_Register; --  Layerx Window Horizontal Position Configuration Register
-      LWVPCR     : L1WVPCR_Register; --  Layerx Window Vertical Position Configuration Register
-      LCKCR      : L1CKCR_Register; --  Layerx Color Keying Configuration Register
-      LPFCR      : L1PFCR_Register; --  Layerx Pixel Format Configuration Register
-      LCACR      : L1CACR_Register; --  Layerx Constant Alpha Configuration Register
-      LDCCR      : L1DCCR_Register; --  Layerx Default Color Configuration Register
-      LBFCR      : L1BFCR_Register; --  Layerx Blending Factors Configuration Register
+      LCR        : L1CR_Register;
+      --  Layerx Control Register
+
+      LWHPCR     : L1WHPCR_Register;
+      --  Layerx Window Horizontal Position Configuration Register
+
+      LWVPCR     : L1WVPCR_Register;
+      --  Layerx Window Vertical Position Configuration Register
+
+      LCKCR      : L1CKCR_Register;
+      --  Layerx Color Keying Configuration Register
+
+      LPFCR      : L1PFCR_Register;
+      --  Layerx Pixel Format Configuration Register
+
+      LCACR      : L1CACR_Register;
+      --  Layerx Constant Alpha Configuration Register
+
+      LDCCR      : L1DCCR_Register;
+      --  Layerx Default Color Configuration Register
+
+      LBFCR      : L1BFCR_Register;
+      --  Layerx Blending Factors Configuration Register
+
       Reserved_0 : Word;
       Reserved_1 : Word;
-      LCFBAR     : Word; --  Layerx Color Frame Buffer Address Register
-      LCFBLR     : L1CFBLR_Register; --  Layerx Color Frame Buffer Length Register
-      LCFBLNR    : L1CFBLNR_Register; --  Layerx ColorFrame Buffer Line Number Register
+
+      LCFBAR     : Word;
+      --  Layerx Color Frame Buffer Address Register
+
+      LCFBLR     : L1CFBLR_Register;
+      --  Layerx Color Frame Buffer Length Register
+
+      LCFBLNR    : L1CFBLNR_Register;
+      --  Layerx ColorFrame Buffer Line Number Register
+
       Reserved_2 : Word;
       Reserved_3 : Word;
       Reserved_4 : Word;
-      LCLUTWR    : L1CLUTWR_Register; --  Layerx CLUT Write Register
+
+      LCLUTWR    : L1CLUTWR_Register;
+      --  Layerx CLUT Write Register
    end record with Volatile;
 
    for Layer_Type use record
@@ -97,6 +122,8 @@ package body Init is
       LCLUTWR    at 64 range 0 .. 31;
    end record;
    type Layer_Access is access all Layer_Type;
+
+   function Get_Layer (Layer : LCD_Layer) return Layer_Access;
 
    G_Layer1_Reg : aliased Layer_Type
      with Import, Address => LTDC_Periph.L1CR'Address;
@@ -337,7 +364,7 @@ package body Init is
       --  Accumulated Active Width/Height
       LTDC_Periph.AWCR :=
         (AAW => AWCR_AAW_Field (LCD_HSync + LCD_HBP + LCD_Width - 1),
-         AAH => AWCR_AAH_FIeld (LCD_VSync + LCD_VBP + LCD_Height - 1),
+         AAH => AWCR_AAH_Field (LCD_VSync + LCD_VBP + LCD_Height - 1),
          others => <>);
 
       --  VTotal Width/Height

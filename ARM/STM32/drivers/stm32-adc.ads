@@ -288,7 +288,8 @@ package STM32.ADC is
        Pre =>
          Conversions'Length > 0 and
          (if AutoInjection then Trigger = Software_Triggered_Injected) and
-         (if AutoInjection then not Discontinuous_Mode_Injected_Enabled (This)),
+         (if AutoInjection then
+           not Discontinuous_Mode_Injected_Enabled (This)),
        Post =>
          Length_Is_Expected (This, Conversions) and
          (if Enable_EOC then EOC_Selection_Enabled (This)) and
@@ -336,7 +337,8 @@ package STM32.ADC is
    --  clients of this package should use the Conversion_Value functions!
    --  Seriously, don't use this function otherwise.
 
-   procedure Start_Injected_Conversion (This : in out Analog_To_Digital_Converter)
+   procedure Start_Injected_Conversion
+     (This : in out Analog_To_Digital_Converter)
      with Pre => Injected_Conversions_Expected (This) > 0;
    --  Note that the ADC hardware clears the corresponding bit immediately, as
    --  part of starting.

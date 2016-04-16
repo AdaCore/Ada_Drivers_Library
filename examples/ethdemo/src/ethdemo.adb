@@ -29,7 +29,7 @@ with Interfaces.Bit_Types;     use Interfaces.Bit_Types;
 with STM32.LCD;                use STM32.LCD;
 with STM32.DMA2D.Polling;
 with STM32.Eth;
-with Lcd_Std_Out;              use Lcd_Std_Out;
+with LCD_Std_Out;              use LCD_Std_Out;
 
 procedure Ethdemo is
 
@@ -50,6 +50,8 @@ procedure Ethdemo is
    pragma Unreferenced (Randomize_Grid);
    procedure Step;
    pragma Unreferenced (Step);
+
+   function Hex_Image (V : Unsigned_16) return String;
 
    ---------------
    -- Draw_Grid --
@@ -82,7 +84,7 @@ procedure Ethdemo is
             end;
          when Pixel_Fmt_RGB888 =>
             declare
-               Colors : constant array (Cell) of Uint24 :=
+               Colors : constant array (Cell) of UInt24 :=
                  (Alive => 16#ffffff#, Dead => 16#ff0000#);
             begin
                for I in G'Range (1) loop
@@ -131,8 +133,8 @@ procedure Ethdemo is
    procedure Step is
 
       function Count_Neighbors (I, J : Integer) return Natural
-        with Pre  => I in G'Range(1) and
-                     J in G'Range(2),
+        with Pre  => I in G'Range (1) and
+                     J in G'Range (2),
              Post => Count_Neighbors'Result in 0 .. 8;
 
       ---------------------
@@ -146,9 +148,9 @@ procedure Ethdemo is
          end record;
 
          Neighbors : array (1 .. 8) of Coordinates :=
-           ( (I - 1, J - 1), (I, J - 1), (I + 1, J - 1),
-             (I - 1, J    ),             (I + 1, J    ),
-             (I - 1, J + 1), (I, J + 1), (I + 1, J + 1) );
+           ((I - 1, J - 1), (I, J - 1), (I + 1, J - 1),
+            (I - 1, J),                 (I + 1, J),
+            (I - 1, J + 1), (I, J + 1), (I + 1, J + 1));
          --  Enumerate all of the coordinates we're supposed to check.
 
          Count : Natural := 0;
@@ -200,8 +202,8 @@ procedure Ethdemo is
 
       G2 := G;
 
-      for I in G'Range(1) loop
-         for J in G'Range(2) loop
+      for I in G'Range (1) loop
+         for J in G'Range (2) loop
 
             Neighbors := Count_Neighbors (I, J);
 
@@ -230,7 +232,7 @@ procedure Ethdemo is
    Hex : constant array (Natural range 0 .. 15) of Character :=
      "0123456789ABCDEF";
 
-   function Hex_Image (V : Unsigned_16) return String4
+   function Hex_Image (V : Unsigned_16) return String
    is
       Res : String4;
    begin
@@ -272,7 +274,7 @@ begin
 
    --  Wait until link is up.
    declare
-      use Stm32.Eth;
+      use STM32.Eth;
       use Ada.Real_Time;
       T : Time := Clock;
       P : constant Time_Span := Seconds (2);
@@ -291,15 +293,15 @@ begin
    Clear_Screen;
    Put_Line ("Starting");
 
-   Stm32.Eth.Init_Mac;
-   Stm32.Eth.Start_Rx;
+   STM32.Eth.Init_Mac;
+   STM32.Eth.Start_Rx;
 
    declare
       Pkt_Count : Unsigned_16;
    begin
       Pkt_Count := 0;
       loop
-         Stm32.Eth.Wait_Packet;
+         STM32.Eth.Wait_Packet;
          Pkt_Count := Pkt_Count + 1;
          Put (0, 0, Hex_Image (Pkt_Count));
       end loop;

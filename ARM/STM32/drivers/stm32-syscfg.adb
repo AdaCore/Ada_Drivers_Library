@@ -50,6 +50,9 @@ with STM32.EXTI;
 with STM32.Device;     use STM32.Device;
 
 package body STM32.SYSCFG is
+   procedure Connect_External_Interrupt
+     (Port : Internal_GPIO_Port;
+      Pin  : GPIO_Pin_Index);
 
    procedure Connect_External_Interrupt
      (Port : Internal_GPIO_Port;
@@ -103,7 +106,7 @@ package body STM32.SYSCFG is
       end case;
    end Connect_External_Interrupt;
 
-     --------------------------------
+   --------------------------------
    -- Connect_External_Interrupt --
    --------------------------------
 

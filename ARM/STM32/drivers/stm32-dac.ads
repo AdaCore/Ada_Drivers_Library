@@ -51,7 +51,7 @@ package STM32.DAC is
 
    type DAC_Channel is (Channel_1, Channel_2);
 
-   -- Note that Channel 1 is tied to GPIO pin PA4, and Channel 2 to PA5
+   --  Note that Channel 1 is tied to GPIO pin PA4, and Channel 2 to PA5
 
    procedure Enable
      (This    : in out Digital_To_Analog_Converter;
@@ -268,18 +268,19 @@ package STM32.DAC is
       Triangle_Wave);
 
    type Noise_Wave_Mask_Selection is
-     (LFSR_Unmask_Bit0,      --  Unmask LFSR bit0 for noise wave generation
-      LFSR_Unmask_Bits1_0,   --  Unmask LFSR bit[1:0] for noise wave generation
-      LFSR_Unmask_Bits2_0,   --  Unmask LFSR bit[2:0] for noise wave generation
-      LFSR_Unmask_Bits3_0,   --  Unmask LFSR bit[3:0] for noise wave generation
-      LFSR_Unmask_Bits4_0,   --  Unmask LFSR bit[4:0] for noise wave generation
-      LFSR_Unmask_Bits5_0,   --  Unmask LFSR bit[5:0] for noise wave generation
-      LFSR_Unmask_Bits6_0,   --  Unmask LFSR bit[6:0] for noise wave generation
-      LFSR_Unmask_Bits7_0,   --  Unmask LFSR bit[7:0] for noise wave generation
-      LFSR_Unmask_Bits8_0,   --  Unmask LFSR bit[8:0] for noise wave generation
-      LFSR_Unmask_Bits9_0,   --  Unmask LFSR bit[9:0] for noise wave generation
-      LFSR_Unmask_Bits10_0,  --  Unmask LFSR bit[10:0] for noise wave generation
-      LFSR_Unmask_Bits11_0); --  Unmask LFSR bit[11:0] for noise wave generation
+     (LFSR_Unmask_Bit0,
+      LFSR_Unmask_Bits1_0,
+      LFSR_Unmask_Bits2_0,
+      LFSR_Unmask_Bits3_0,
+      LFSR_Unmask_Bits4_0,
+      LFSR_Unmask_Bits5_0,
+      LFSR_Unmask_Bits6_0,
+      LFSR_Unmask_Bits7_0,
+      LFSR_Unmask_Bits8_0,
+      LFSR_Unmask_Bits9_0,
+      LFSR_Unmask_Bits10_0,
+      LFSR_Unmask_Bits11_0);
+   --  Unmask LFSR bits for noise wave generation
 
    type Triangle_Wave_Amplitude_Selection is
      (Triangle_Amplitude_1,     --  Select max triangle amplitude of 1
@@ -306,7 +307,8 @@ package STM32.DAC is
       end case;
    end record;
 
-   Wave_Generation_Disabled : constant Wave_Generation := (Kind => No_Wave_Generation);
+   Wave_Generation_Disabled : constant Wave_Generation :=
+     (Kind => No_Wave_Generation);
 
    procedure Select_Wave_Generation
      (This      : in out Digital_To_Analog_Converter;

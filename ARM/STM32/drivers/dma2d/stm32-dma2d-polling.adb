@@ -35,12 +35,14 @@ package body STM32.DMA2D.Polling is
 
    Transferring : Boolean := False;
 
+   procedure DMA2D_Init_Transfer;
+   procedure DMA2D_Wait_Transfer;
+
    ---------------------------
    -- DMA2D_InitAndTransfer --
    ---------------------------
 
-   procedure DMA2D_Init_Transfer
-   is
+   procedure DMA2D_Init_Transfer is
    begin
       Transferring := True;
       DMA2D_Periph.IFCR.CTCIF := True;
@@ -52,8 +54,7 @@ package body STM32.DMA2D.Polling is
    -- DMA2D_Wait_Transfer --
    -------------------------
 
-   procedure DMA2D_Wait_Transfer
-   is
+   procedure DMA2D_Wait_Transfer is
    begin
       if not Transferring then
          return;

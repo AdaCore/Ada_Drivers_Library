@@ -66,7 +66,8 @@ package body Railroad is
 
    Max_Bogies_Per_Train : constant := 13;
 
-   My_Trains : array (Trains.Train_Id) of Displayed_Train (Max_Bogies_Per_Train);
+   My_Trains : array (Trains.Train_Id) of
+     Displayed_Train (Max_Bogies_Per_Train);
 
    type Location_Point is record
       Coord : Point;
@@ -74,6 +75,12 @@ package body Railroad is
    end record;
 
    Trains_Locations : array (Trains.Location) of Location_Point;
+
+   procedure Create_Outer_Loop;
+   procedure Create_Inner_Loop;
+   procedure Create_Connection_Tracks;
+   function Can_Spawn_Train return Boolean;
+   procedure Convert_Railway_Map;
 
    -----------------------
    -- Create_Outer_Loop --
@@ -194,8 +201,8 @@ package body Railroad is
       --  Bottom Left Curve
       Build_Curve_Track (Curve_Tracks (3),
                          (WLast - Block_Size, HLast -  Block_Size / 2),
-                         (WLast - Block_Size/ 2, HLast - Block_Size / 2),
-                         (WLast - Block_Size/ 2, HLast - Block_Size / 2),
+                         (WLast - Block_Size / 2, HLast - Block_Size / 2),
+                         (WLast - Block_Size / 2, HLast - Block_Size / 2),
                          (WLast - Block_Size / 2, HLast -  Block_Size));
       Set_Sign_Position (Curve_Tracks (3), Left);
       Connect_Track (Straight_Tracks (Left_Line_Last),
@@ -385,7 +392,7 @@ package body Railroad is
 
       Build_Curve_Track (Connection_Tracks (2),
                    End_Coord (Straight_Tracks (Out_Loop_Track_Nbr + 1)),
-                   end_Coord (Straight_Tracks (Out_Loop_Track_Nbr + 2)),
+                   End_Coord (Straight_Tracks (Out_Loop_Track_Nbr + 2)),
                    Start_Coord (Straight_Tracks (5)),
                    Start_Coord (Straight_Tracks (6)));
       Connect_Track (Connection_Tracks (2), Straight_Tracks (6)'Access, null);
@@ -563,6 +570,11 @@ package body Railroad is
 
       --  Return Location coresponding to a Point.
       --  Create a new Locatio if needed.
+      function Get_Loc (P : Point) return Trains.Location;
+      procedure Add_Track (Track : in out Displayed_Track);
+      procedure Add_Previous_Track (Loc : Trains.Location;
+                                    Id  : Trains.Track_Id);
+
 
       -------------
       -- Get_Loc --
@@ -601,9 +613,8 @@ package body Railroad is
       -- Add_Previous_Track --
       ------------------------
 
-      procedure Add_Previous_Track
-        (Loc : Trains.Location;
-         Id  : Trains.Track_Id)
+      procedure Add_Previous_Track (Loc : Trains.Location;
+                                    Id  : Trains.Track_Id)
       is
       begin
          for Index in Trains.Prev_Id loop

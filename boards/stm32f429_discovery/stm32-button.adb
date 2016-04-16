@@ -72,8 +72,8 @@ package body STM32.Button is
          Clear_External_Interrupt
            (User_Button_Point.Get_Interrupt_Line_Number);
 
-         if (Button_High and then User_Button_Point.set)
-           or else (not Button_High and then not User_Button_Point.set)
+         if (Button_High and then User_Button_Point.Set)
+           or else (not Button_High and then not User_Button_Point.Set)
          then
             if Clock - Start_Time > Debounce_Time then
                Pressed := True;

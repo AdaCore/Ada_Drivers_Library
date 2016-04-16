@@ -104,7 +104,7 @@ package body STM32.ADC is
       return Short
    is
    begin
-      return This.DR.Data;
+      return This.DR.DATA;
    end Conversion_Value;
 
    ---------------------------
@@ -214,7 +214,7 @@ package body STM32.ADC is
 
       This.CR1.SCAN := Conversions'Length > 0;
 
-      this.CR2.EXTEN := External_Trigger'Enum_Rep (Trigger.Enabler);
+      This.CR2.EXTEN := External_Trigger'Enum_Rep (Trigger.Enabler);
 
       if Trigger.Enabler /= Trigger_Disabled then
          This.CR2.EXTSEL :=
@@ -236,7 +236,8 @@ package body STM32.ADC is
             --  hardware behavior.
             if VBat_Conversion (This, Conversion.Channel) then
                Enable_VBat_Connection;
-            elsif VRef_TemperatureSensor_Conversion (This, Conversion.Channel) then
+            elsif VRef_TemperatureSensor_Conversion (This, Conversion.Channel)
+            then
                Enable_VRef_TemperatureSensor_Connection;
             end if;
 
@@ -279,10 +280,15 @@ package body STM32.ADC is
 
       for Rank in Conversions'Range loop
          declare
-            Conversion : Injected_Channel_Conversion renames Conversions (Rank);
+            Conversion : Injected_Channel_Conversion renames
+              Conversions (Rank);
          begin
             Configure_Injected_Channel
-              (This, Conversion.Channel, Rank, Conversion.Sample_Time, Conversion.Offset);
+              (This,
+               Conversion.Channel,
+               Rank,
+               Conversion.Sample_Time,
+               Conversion.Offset);
 
             --  We check the VBat first because that channel is also used for
             --  the temperature sensor channel on some MCUs, in which case the
@@ -290,7 +296,8 @@ package body STM32.ADC is
             --  hardware behavior.
             if VBat_Conversion (This, Conversion.Channel) then
                Enable_VBat_Connection;
-            elsif VRef_TemperatureSensor_Conversion (This, Conversion.Channel) then
+            elsif VRef_TemperatureSensor_Conversion (This, Conversion.Channel)
+            then
                Enable_VRef_TemperatureSensor_Connection;
             end if;
 
@@ -354,15 +361,17 @@ package body STM32.ADC is
    -- Scan_Mode_Enabled --
    -----------------------
 
-   function Scan_Mode_Enabled (This : Analog_To_Digital_Converter) return Boolean is
-     (This.CR1.SCAN);
+   function Scan_Mode_Enabled (This : Analog_To_Digital_Converter)
+                               return Boolean
+     is (This.CR1.SCAN);
 
    ---------------------------
    -- EOC_Selection_Enabled --
    ---------------------------
 
-   function EOC_Selection_Enabled (This : Analog_To_Digital_Converter) return Boolean is
-      (This.CR2.EOCS);
+   function EOC_Selection_Enabled (This : Analog_To_Digital_Converter)
+                                   return Boolean
+     is (This.CR2.EOCS);
 
    -------------------------------
    -- Configure_Regular_Channel --

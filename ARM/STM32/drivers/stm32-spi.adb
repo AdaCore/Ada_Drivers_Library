@@ -360,7 +360,8 @@ package body STM32.SPI is
          Reset_CRC (Port);
       end if;
 
-      if Current_Data_Direction (Port) = D1Line_Tx  then  --  ??? right value to compare???
+      --  ??? right value to compare???
+      if Current_Data_Direction (Port) = D1Line_Tx  then
          Port.Periph.CR1.BIDIOE := True;
       end if;
 
@@ -382,8 +383,10 @@ package body STM32.SPI is
          null;
       end loop;
 
-      --  clear OVERUN flag in 2-Line communication mode because received byte is not read
-      if Current_Data_Direction (Port) in D2Lines_RxOnly | D2Lines_FullDuplex then  -- right comparison ???
+      --  Clear OVERUN flag in 2-Line communication mode because received byte
+      --  is not read.
+      if Current_Data_Direction (Port) in D2Lines_RxOnly | D2Lines_FullDuplex
+      then  -- right comparison ???
          Clear_Overrun (Port);
       end if;
       Status := HAL.SPI.Ok;
@@ -406,7 +409,8 @@ package body STM32.SPI is
          Reset_CRC (Port);
       end if;
 
-      if Current_Data_Direction (Port) = D1Line_Tx  then  --  ??? right value to compare???
+      --  ??? right value to compare???
+      if Current_Data_Direction (Port) = D1Line_Tx then
          Port.Periph.CR1.BIDIOE := True;
       end if;
 
@@ -428,8 +432,10 @@ package body STM32.SPI is
          null;
       end loop;
 
-      --  clear OVERUN flag in 2-Line communication mode because received byte is not read
-      if Current_Data_Direction (Port) in D2Lines_RxOnly | D2Lines_FullDuplex then  -- right comparison ???
+      --  Clear OVERUN flag in 2-Line communication mode because received byte
+      --  is not read.
+      if Current_Data_Direction (Port) in D2Lines_RxOnly | D2Lines_FullDuplex
+      then  -- right comparison ???
          Clear_Overrun (Port);
          Status := HAL.SPI.Err_Error;
       end if;
@@ -448,7 +454,8 @@ package body STM32.SPI is
          Reset_CRC (Port);
       end if;
 
-      if Current_Data_Direction (Port) = D1Line_Tx  then  --  ??? right value to compare???
+      --  ??? right value to compare???
+      if Current_Data_Direction (Port) = D1Line_Tx  then
          Port.Periph.CR1.BIDIOE := True;
       end if;
 
@@ -466,8 +473,10 @@ package body STM32.SPI is
          null;
       end loop;
 
-      --  clear OVERUN flag in 2-Line communication mode because received byte is not read
-      if Current_Data_Direction (Port) in D2Lines_RxOnly | D2Lines_FullDuplex then  -- right comparison ???
+      --  Clear OVERUN flag in 2-Line communication mode because received byte
+      --  is not read.
+      if Current_Data_Direction (Port) in D2Lines_RxOnly | D2Lines_FullDuplex
+      then  -- right comparison ???
          Clear_Overrun (Port);
       end if;
    end Transmit;
@@ -567,7 +576,7 @@ package body STM32.SPI is
          while Rx_Is_Empty (Port) loop
             null;
          end loop;
-         Read_CRC: declare
+         Read_CRC : declare
             Dummy : Short;
          begin
             Dummy := Port.Periph.DR.DR;
@@ -608,13 +617,13 @@ package body STM32.SPI is
          Send_Receive_8bit_Mode (Port, Outgoing, Incoming, Size);
       end if;
 
-      -- Read CRC to close CRC calculation process
+      --  Read CRC to close CRC calculation process
       if CRC_Enabled (Port) then
-         -- wait until data is received
+         --  wait until data is received
          while Rx_Is_Empty (Port) loop
             null;
          end loop;
-         Read_CRC: declare
+         Read_CRC : declare
             Dummy : Short;
          begin
             Dummy := Port.Periph.DR.DR;
@@ -654,25 +663,25 @@ package body STM32.SPI is
 
       Port.Periph.DR.DR := Short (Outgoing);
 
-      -- enable CRC transmission
+      --  enable CRC transmission
       if CRC_Enabled (Port) then
          Port.Periph.CR1.CRCNEXT := True;
       end if;
 
-      -- wait until data is received
+      --  wait until data is received
       while Rx_Is_Empty (Port) loop
          null;
       end loop;
 
       Incoming := Byte (Port.Periph.DR.DR);
 
-      -- Read CRC byte to close CRC calculation
+      --  Read CRC byte to close CRC calculation
       if CRC_Enabled (Port) then
-         -- wait until data is received
+         --  wait until data is received
          while Rx_Is_Empty (Port) loop
             null;
          end loop;
-         Read_CRC: declare
+         Read_CRC : declare
             Dummy : Short;
          begin
             Dummy := Port.Periph.DR.DR;
@@ -711,17 +720,18 @@ package body STM32.SPI is
 
       if Tx_Count = 0 then
 
-         -- enable CRC transmission
+         --  enable CRC transmission
          if CRC_Enabled (Port) then
             Port.Periph.CR1.CRCNEXT := True;
          end if;
 
-         -- wait until data is received
+         --  wait until data is received
          while Rx_Is_Empty (Port) loop
             null;
          end loop;
 
-         As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all := Port.Periph.DR.DR;
+         As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all :=
+           Port.Periph.DR.DR;
          Incoming_Index := Incoming_Index + 2;
 
          return;
@@ -733,32 +743,35 @@ package body STM32.SPI is
             null;
          end loop;
 
-         Port.Periph.DR.DR := As_Half_Word_Pointer (Outgoing (Outgoing_Index)'Address).all;
+         Port.Periph.DR.DR :=
+           As_Half_Word_Pointer (Outgoing (Outgoing_Index)'Address).all;
          Outgoing_Index := Outgoing_Index + 2;
          Tx_Count := Tx_Count - 1;
 
-         -- enable CRC transmission
+         --  enable CRC transmission
          if Tx_Count = 0 and CRC_Enabled (Port) then
             Port.Periph.CR1.CRCNEXT := True;
          end if;
 
-         -- wait until data is received
+         --  wait until data is received
          while Rx_Is_Empty (Port) loop
             null;
          end loop;
 
-         As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all := Port.Periph.DR.DR;
+         As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all :=
+           Port.Periph.DR.DR;
          Incoming_Index := Incoming_Index + 2;
       end loop;
 
       --  receive the last byte
       if Current_Mode (Port) = Slave then
-         -- wait until data is received
+         --  wait until data is received
          while Rx_Is_Empty (Port) loop
             null;
          end loop;
 
-         As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all := Port.Periph.DR.DR;
+         As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all :=
+           Port.Periph.DR.DR;
          Incoming_Index := Incoming_Index + 2;
       end if;
    end Send_Receive_16bit_Mode;
@@ -785,12 +798,12 @@ package body STM32.SPI is
 
       if Tx_Count = 0 then
 
-         -- enable CRC transmission
+         --  enable CRC transmission
          if CRC_Enabled (Port) then
             Port.Periph.CR1.CRCNEXT := True;
          end if;
 
-         -- wait until data is received
+         --  wait until data is received
          while Rx_Is_Empty (Port) loop
             null;
          end loop;
@@ -811,12 +824,12 @@ package body STM32.SPI is
          Outgoing_Index := Outgoing_Index + 1;
          Tx_Count := Tx_Count - 1;
 
-         -- enable CRC transmission
+         --  enable CRC transmission
          if Tx_Count = 0 and CRC_Enabled (Port) then
             Port.Periph.CR1.CRCNEXT := True;
          end if;
 
-         -- wait until data is received
+         --  wait until data is received
          while Rx_Is_Empty (Port) loop
             null;
          end loop;
@@ -826,7 +839,7 @@ package body STM32.SPI is
       end loop;
 
       if Current_Mode (Port) = Slave then
-         -- wait until data is received
+         --  wait until data is received
          while Rx_Is_Empty (Port) loop
             null;
          end loop;
@@ -848,7 +861,8 @@ package body STM32.SPI is
       Index    : Natural := Outgoing'First;
    begin
       if Current_Mode (Port) = Slave or else Tx_Count = 1 then
-         Port.Periph.DR.DR := As_Half_Word_Pointer (Outgoing (Index)'Address).all;
+         Port.Periph.DR.DR :=
+           As_Half_Word_Pointer (Outgoing (Index)'Address).all;
          Index := Index + 2;
          Tx_Count := Tx_Count - 1;
       end if;
@@ -859,7 +873,8 @@ package body STM32.SPI is
             null;
          end loop;
 
-         Port.Periph.DR.DR := As_Half_Word_Pointer (Outgoing (Index)'Address).all;
+         Port.Periph.DR.DR :=
+           As_Half_Word_Pointer (Outgoing (Index)'Address).all;
          Index := Index + 2;
          Tx_Count := Tx_Count - 1;
       end loop;

@@ -66,6 +66,11 @@ package body STM32.I2C is
       Timeout : Natural;
       Status  : out I2C_Status);
 
+   procedure Wait_Transfer_Complete_Reset_Flag
+     (Port    : in out I2C_Port;
+      Timeout : Natural;
+      Status  : out I2C_Status);
+
    procedure Wait_Stop_Flag
      (Port    : in out I2C_Port;
       Timeout : Natural;

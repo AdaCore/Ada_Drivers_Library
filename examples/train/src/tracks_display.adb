@@ -47,6 +47,12 @@ package body Tracks_Display is
    function As_Display_Point (Input : Screen_Interface.Point)
      return Bitmapped_Drawing.Point;
 
+   function Next_Track (Track : Track_Access) return Track_Access;
+
+   procedure Move_Bogie (Bog : in out Bogie);
+
+   procedure Draw_Sign (Track : Displayed_Track);
+
    --------------------------
    -- Build_Straight_Track --
    --------------------------
@@ -55,10 +61,10 @@ package body Tracks_Display is
      (Track : in out Displayed_Track;
       Start, Stop : Screen_Interface.Point)
    is
-      Diff_X : constant Float := (Float(Stop.X) - Float(Start.X))
+      Diff_X : constant Float := (Float (Stop.X) - Float (Start.X))
         / (Float (Track.Points'Length) - 1.0);
 
-      Diff_Y : constant Float := (Float(Stop.Y) - Float(Start.Y))
+      Diff_Y : constant Float := (Float (Stop.Y) - Float (Start.Y))
         / (Float (Track.Points'Length) - 1.0);
 
    begin
@@ -157,7 +163,8 @@ package body Tracks_Display is
 
          --  Connected track should share point coordinate
          if Track.Points (Track.Points'Last) /=
-           E1.all.Points (E1.all.Points'First) then
+           E1.all.Points (E1.all.Points'First)
+         then
             raise Program_Error;
          end if;
 
@@ -170,7 +177,8 @@ package body Tracks_Display is
 
          --  Connected track should share point coordinate
          if Track.Points (Track.Points'Last) /=
-           E2.all.Points (E2.all.Points'First) then
+           E2.all.Points (E2.all.Points'First)
+         then
             raise Program_Error;
          end if;
 
@@ -252,7 +260,9 @@ package body Tracks_Display is
          Train_Copy := Train;
 
          --  Each bogie takes the previous position of the bogie in front him
-         for Index in reverse Train_Copy.Bogies'First + 1 .. Train_Copy.Bogies'Last loop
+         for Index in
+           reverse Train_Copy.Bogies'First + 1 .. Train_Copy.Bogies'Last
+         loop
             Train_Copy.Bogies (Index) := Train_Copy.Bogies (Index - 1);
          end loop;
 
@@ -272,8 +282,10 @@ package body Tracks_Display is
             --  to avoid redrawing all tracks at each loop.
             Draw_Line
               (Screen_Buffer,
-               As_Display_Point (Location (Train.Bogies (Train.Bogies'Last))),
-               As_Display_Point (Location (Train.Bogies (Train.Bogies'Last - 1))),
+               As_Display_Point
+                 (Location (Train.Bogies (Train.Bogies'Last))),
+               As_Display_Point
+                 (Location (Train.Bogies (Train.Bogies'Last - 1))),
                Track_Color,
                Track_Thickness);
 
@@ -358,7 +370,7 @@ package body Tracks_Display is
       Target : constant Track_Access := Track.Exits (Track.Switch_State);
    begin
       if Track.Switchable then
-         For Cnt in Target.Points'First .. Target.Points'First + 10 loop
+         for Cnt in Target.Points'First .. Target.Points'First + 10 loop
             declare
                P1 : constant Screen_Interface.Point :=
                       Target.all.Points (Cnt);
@@ -467,7 +479,8 @@ package body Tracks_Display is
    -- First_Bogie_Track --
    -----------------------
 
-   function First_Bogie_Track (Train : Displayed_Train) return Trains.Track_Id is
+   function First_Bogie_Track (Train : Displayed_Train) return Trains.Track_Id
+   is
       First_Bogie : constant Bogie := Train.Bogies (Train.Bogies'First);
    begin
       return First_Bogie.Track.Id;
@@ -477,7 +490,8 @@ package body Tracks_Display is
    -- Last_Bogie_Track --
    ----------------------
 
-   function Last_Bogie_Track (Train : Displayed_Train) return Trains.Track_Id is
+   function Last_Bogie_Track (Train : Displayed_Train) return Trains.Track_Id
+   is
       Last_Bogie : constant Bogie := Train.Bogies (Train.Bogies'Last);
    begin
       return Last_Bogie.Track.Id;

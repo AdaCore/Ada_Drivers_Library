@@ -90,7 +90,8 @@ is
    function Entering_A_Track (Position : Train_Position) return Boolean is
       (Position.Track_Begin /= Position.Track_End and then
        (for some Id in Prev_Id =>
-          Position.Track_End = Previous_Tracks (Tracks (Position.Track_Begin).From) (Id)));
+             Position.Track_End =
+               Previous_Tracks (Tracks (Position.Track_Begin).From) (Id)));
 
    function Inside_A_Track (Position : Train_Position) return Boolean is
       (Position.Track_Begin = Position.Track_End);
@@ -102,10 +103,13 @@ is
       (for all Train in Train_Id range 1 .. Cur_Num_Trains =>
          (for all Other_Train in Train_Id range 1 .. Cur_Num_Trains =>
              (if Other_Train /= Train then
-                Trains (Train).Track_Begin /= Trains (Other_Train).Track_Begin and then
-                Trains (Train).Track_Begin /= Trains (Other_Train).Track_End and then
-                Trains (Train).Track_End   /= Trains (Other_Train).Track_Begin and then
-                Trains (Train).Track_End   /= Trains (Other_Train).Track_End)));
+                Trains (Train).Track_Begin /= Trains (Other_Train).Track_Begin
+              and then
+                Trains (Train).Track_Begin /= Trains (Other_Train).Track_End
+              and then
+                 Trains (Train).Track_End /= Trains (Other_Train).Track_Begin
+              and then
+                Trains (Train).Track_End /= Trains (Other_Train).Track_End)));
 
    --  at each instant, the behavior of the train depends on the value of the
    --  signal on the track it's in and on the track ahead
@@ -158,7 +162,8 @@ is
                Track_Signals (Get_Previous_Track (Trains (Train), Id)) in
                  Orange | Red)
               and then
-            (if Get_Other_Previous_Track (Trains (Train), Id) /= No_Track_Id then
+            (if Get_Other_Previous_Track (Trains (Train), Id) /= No_Track_Id
+             then
                Track_Signals (Get_Other_Previous_Track (Trains (Train), Id)) in
                  Orange | Red)));
 

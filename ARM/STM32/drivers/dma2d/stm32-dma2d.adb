@@ -42,6 +42,7 @@ package body STM32.DMA2D is
    function To_OCOLR
      (Col : DMA2D_Color; CM : DMA2D_Color_Mode)
       return Word;
+   function DMA2D_Initialized return Boolean;
 
    DMA2D_Wait_Transfer_Int : DMA2D_Sync_Procedure := null;
    DMA2D_Init_Transfer_Int : DMA2D_Sync_Procedure := null;
@@ -212,7 +213,7 @@ package body STM32.DMA2D is
                              Y,
                              Buffer.Width - X - Width,
                              Height,
-                             WIdth,
+                             Width,
                              Synchronous);
          end;
       else
@@ -307,7 +308,7 @@ package body STM32.DMA2D is
       else
          --  Requires color conversion
          --  ??? TODO
-         DMA2D_Periph.CR.Mode := DMA2D_Mode'Enum_Rep (M2M_PFC);
+         DMA2D_Periph.CR.MODE := DMA2D_MODE'Enum_Rep (M2M_PFC);
       end if;
 
       --  SOURCE CONFIGURATION
@@ -325,7 +326,7 @@ package body STM32.DMA2D is
 
       if Bg_Buffer /= Null_Buffer then
          DMA2D_Periph.BGPFCCR.CM    :=
-           DMA2D_COlor_mode'Enum_Rep (Bg_Buffer.Color_Mode);
+           DMA2D_Color_Mode'Enum_Rep (Bg_Buffer.Color_Mode);
          DMA2D_Periph.BGMAR         := To_Word (Bg_Buffer.Addr + Bg_Off);
          DMA2D_Periph.BGPFCCR.CS    := 0;
          DMA2D_Periph.BGPFCCR.START := False;
@@ -451,21 +452,37 @@ package body STM32.DMA2D is
 
          when RGB565   =>
             Ret.Alpha := 255;
-            Ret.Red := Byte (Shift_Left (Shift_Right (Col and 2#11111_000000_00000#, 11), 3));
-            Ret.Green := Byte (Shift_Left (Shift_Right (Col and 2#00000_111111_00000#, 5), 2));
-            Ret.Blue := Byte (Shift_Left (Col and 2#00000_000000_11111#, 3));
+            Ret.Red :=
+              Byte (Shift_Left
+                    (Shift_Right (Col and 2#11111_000000_00000#, 11), 3));
+            Ret.Green :=
+              Byte (Shift_Left
+                    (Shift_Right (Col and 2#00000_111111_00000#, 5), 2));
+            Ret.Blue :=
+              Byte (Shift_Left (Col and 2#00000_000000_11111#, 3));
 
          when ARGB1555 =>
             Ret.Alpha :=
               (if (Col and 2#1_00000_00000_00000#) /= 0 then 255 else 0);
-            Ret.Red := Byte (Shift_Left (Shift_Right (Col and 2#11111_00000_00000#, 10), 3));
-            Ret.Green := Byte (Shift_Left (Shift_Right (Col and 2#00000_11111_00000#, 5), 3));
-            Ret.Blue := Byte (Shift_Left (Col and 2#00000_00000_11111#, 3));
+            Ret.Red :=
+              Byte (Shift_Left
+                    (Shift_Right (Col and 2#11111_00000_00000#, 10), 3));
+            Ret.Green :=
+              Byte (Shift_Left
+                    (Shift_Right (Col and 2#00000_11111_00000#, 5), 3));
+            Ret.Blue :=
+              Byte (Shift_Left (Col and 2#00000_00000_11111#, 3));
 
          when ARGB4444 =>
-            Ret.Alpha := Byte (Shift_Left (Shift_Right (Col and 2#1111_0000_0000_0000#, 12), 4));
-            Ret.Red := Byte (Shift_Left (Shift_Right (Col and 2#1111_0000_0000#, 8), 4));
-            Ret.Green := Byte (Shift_Left (Shift_Right (Col and 2#0000_1111_0000#, 4), 4));
+            Ret.Alpha :=
+              Byte (Shift_Left
+                    (Shift_Right (Col and 2#1111_0000_0000_0000#, 12), 4));
+            Ret.Red :=
+              Byte (Shift_Left
+                    (Shift_Right (Col and 2#1111_0000_0000#, 8), 4));
+            Ret.Green :=
+              Byte (Shift_Left
+                    (Shift_Right (Col and 2#0000_1111_0000#, 4), 4));
             Ret.Blue := Byte (Shift_Left (Col and 2#0000_0000_1111#, 4));
       end case;
 
@@ -499,7 +516,8 @@ package body STM32.DMA2D is
    is
       function Conv is new Ada.Unchecked_Conversion (Word, OCOLR_Register);
       X0   : constant Integer := (if Buffer.Swap_X_Y then Y else X);
-      Y0   : constant Integer := (if Buffer.Swap_X_Y then Buffer.Width - 1 - X else Y);
+      Y0   : constant Integer :=
+               (if Buffer.Swap_X_Y then Buffer.Width - 1 - X else Y);
       W    : constant Natural :=
                (if Buffer.Swap_X_Y then Buffer.Height else Buffer.Width);
       Idx  : constant Integer := (Y0 * W) + X0;
@@ -540,7 +558,8 @@ package body STM32.DMA2D is
       Synchronous : Boolean := False)
    is
       X0   : constant Natural := (if Buffer.Swap_X_Y then Y else X);
-      Y0   : constant Natural := (if Buffer.Swap_X_Y then Buffer.Width - 1 - X else Y);
+      Y0   : constant Natural :=
+               (if Buffer.Swap_X_Y then Buffer.Width - 1 - X else Y);
       W    : constant Natural :=
                (if Buffer.Swap_X_Y then Buffer.Height else Buffer.Width);
       Idx  : constant Natural := (Y0 * W) + X0;
@@ -572,7 +591,7 @@ package body STM32.DMA2D is
 
       --  Setup the Background buffer to the destination buffer
       DMA2D_Periph.BGPFCCR.CM    :=
-        DMA2D_COlor_mode'Enum_Rep (Buffer.Color_Mode);
+        DMA2D_Color_Mode'Enum_Rep (Buffer.Color_Mode);
       DMA2D_Periph.BGMAR         := To_Word (Buffer.Addr + Off);
       DMA2D_Periph.BGPFCCR.CS    := 0;
       DMA2D_Periph.BGPFCCR.START := False;

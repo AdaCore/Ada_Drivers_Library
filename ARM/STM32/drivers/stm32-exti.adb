@@ -127,7 +127,7 @@ package body STM32.EXTI is
 
    procedure Clear_External_Interrupt (Line : External_Line_Number) is
    begin
-      -- yes, one to clear
+      --  yes, one to clear
       EXTI_Periph.PR.PR.Arr (External_Line_Number'Pos (Line)) := True;
    end Clear_External_Interrupt;
 

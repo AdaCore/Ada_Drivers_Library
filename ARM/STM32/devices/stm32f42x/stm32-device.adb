@@ -190,7 +190,7 @@ package body STM32.Device is
 
    function As_GPIO_Port_Id (Port : Internal_GPIO_Port) return GPIO_Port_Id is
    begin
-      -- TODO: rather ugly to have this board-specific range here
+      --  TODO: rather ugly to have this board-specific range here
       if Port'Address = GPIOA_Base then
          return GPIO_Port_A;
       elsif Port'Address = GPIOB_Base then
@@ -222,7 +222,8 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter) is
+   procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter)
+   is
    begin
       if This'Address = ADC1_Base then
          RCC_Periph.APB2ENR.ADC1EN := True;
@@ -249,7 +250,8 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter) is
+   procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter)
+   is
       pragma Unreferenced (This);
    begin
       RCC_Periph.APB1ENR.DACEN := True;

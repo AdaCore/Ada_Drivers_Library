@@ -42,7 +42,7 @@ package Tracks_Display is
    type Displayed_Entry_Sign is record
       Coord    : Point := (0, 0);
       Color    : Entry_Sign_Color := Green;
-      Disabled : Boolean := false;
+      Disabled : Boolean := False;
    end record;
 
    type Displayed_Track (Nb_Points : Positive) is record

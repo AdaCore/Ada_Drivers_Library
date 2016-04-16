@@ -72,11 +72,14 @@ package body Double_Buffer is
             STM32.LCD.Set_Layer_State (Layer1, Disabled);
          when Layer_Single_Buffer =>
             STM32.LCD.Set_Layer_State (Layer1, Enabled);
-            Frame_Buffers (Layer1, FB1) := STM32.LCD.Current_Frame_Buffer (Layer1);
+            Frame_Buffers (Layer1, FB1) :=
+              STM32.LCD.Current_Frame_Buffer (Layer1);
          when Layer_Double_Buffer =>
             STM32.LCD.Set_Layer_State (Layer1, Enabled);
-            Frame_Buffers (Layer1, FB1) := STM32.LCD.Current_Frame_Buffer (Layer1);
-            Frame_Buffers (Layer1, FB2) := STM32.SDRAM.Reserve (FB_Size, 32);
+            Frame_Buffers (Layer1, FB1) :=
+              STM32.LCD.Current_Frame_Buffer (Layer1);
+            Frame_Buffers (Layer1, FB2) :=
+              STM32.SDRAM.Reserve (FB_Size, 32);
       end case;
 
       case Layer_Foreground is
@@ -84,11 +87,14 @@ package body Double_Buffer is
             STM32.LCD.Set_Layer_State (Layer2, Disabled);
          when Layer_Single_Buffer =>
             STM32.LCD.Set_Layer_State (Layer2, Enabled);
-            Frame_Buffers (Layer2, FB1) := STM32.LCD.Current_Frame_Buffer (Layer2);
+            Frame_Buffers (Layer2, FB1) :=
+              STM32.LCD.Current_Frame_Buffer (Layer2);
          when Layer_Double_Buffer =>
             STM32.LCD.Set_Layer_State (Layer2, Enabled);
-            Frame_Buffers (Layer2, FB1) := STM32.LCD.Current_Frame_Buffer (Layer2);
-            Frame_Buffers (Layer2, FB2) := STM32.SDRAM.Reserve (FB_Size, 32);
+            Frame_Buffers (Layer2, FB1) :=
+              STM32.LCD.Current_Frame_Buffer (Layer2);
+            Frame_Buffers (Layer2, FB2) :=
+              STM32.SDRAM.Reserve (FB_Size, 32);
       end case;
    end Initialize;
 

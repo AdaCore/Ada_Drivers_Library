@@ -131,7 +131,9 @@ package STM32.PWM is
 
    Not_Attached : exception;
 
-   function Attached (This : PWM_Modulator;  Channel : Timer_Channel) return Boolean;
+   function Attached (This    : PWM_Modulator;
+                      Channel : Timer_Channel)
+                      return Boolean;
 
 private
 

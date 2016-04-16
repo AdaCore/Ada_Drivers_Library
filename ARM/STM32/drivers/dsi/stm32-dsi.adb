@@ -64,6 +64,13 @@ package body STM32.DSI is
                                Gen_Short_Pkg_Read_P1  => 16#14#,
                                Gen_Short_Pkg_Read_P2  => 16#24#);
 
+   procedure DSI_Config_Packet_Header
+     (This       : in out DSI_Host;
+      Channel_ID : DSI_Virtual_Channel_ID;
+      Data_Type  : DSI_Pkt_Data_Type;
+      Data0      : Byte;
+      Data1      : Byte);
+
    ------------------------------
    -- DSI_Config_Packet_Header --
    ------------------------------
@@ -78,7 +85,7 @@ package body STM32.DSI is
    begin
       This.Periph.DSI_GHCR :=
         (DT     => DSI_Data_Type_Encoding (Data_Type),
-         VCID   => Channel_Id,
+         VCID   => Channel_ID,
          WCLSB  => Data0,
          WCMSB  => Data1,
          others => <>);
@@ -358,7 +365,7 @@ package body STM32.DSI is
       This.Periph.DSI_WCFGR.TEPOL :=
         DSI_TE_Polarity'Enum_Rep (Tearing_Effect_Polarity) = 1;
       This.Periph.DSI_WCFGR.AR    := Automatic_Refresh;
-      This.Periph.DSI_WCFGR.VSPOL := DSI_EDGE'Enum_Rep (VSync_Edge) = 1;
+      This.Periph.DSI_WCFGR.VSPOL := DSI_Edge'Enum_Rep (VSync_Edge) = 1;
 
       --  Tearing effect acknowledge request
       This.Periph.DSI_CMCR.TEARE := TE_Acknowledge_Request;

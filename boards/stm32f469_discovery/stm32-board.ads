@@ -48,7 +48,7 @@ package STM32.Board is
 
    subtype User_LED is GPIO_Point;
 
-   LED1      : User_Led renames PG6;
+   LED1      : User_LED renames PG6;
    LED2      : User_LED renames PD4;
    LED3      : User_LED renames PD5;
    LED4      : User_LED renames PK3;
@@ -164,7 +164,7 @@ package STM32.Board is
    --  User button
 
    User_Button_Point     : GPIO_Point renames PA0;
-   User_Button_Interrupt : constant Interrupt_Id := Names.EXTI0_Interrupt;
+   User_Button_Interrupt : constant Interrupt_ID := Names.EXTI0_Interrupt;
 
    procedure Configure_User_Button_GPIO;
    --  Configures the GPIO port/pin for the blue user button. Sufficient

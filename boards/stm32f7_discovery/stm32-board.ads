@@ -115,7 +115,7 @@ package STM32.Board is
 
    procedure Initialize_I2C_GPIO (Port : in out I2C_Port)
      with
-       --  I2C_2 and I2C_4 are not accessible on this board
+   --  I2C_2 and I2C_4 are not accessible on this board
      Pre => As_Port_Id (Port) = I2C_Id_1
             or else
             As_Port_Id (Port) = I2C_Id_3;
@@ -173,7 +173,7 @@ package STM32.Board is
    --  User button
 
    User_Button_Point     : GPIO_Point renames PI11;
-   User_Button_Interrupt : constant Interrupt_Id := Names.EXTI15_10_Interrupt;
+   User_Button_Interrupt : constant Interrupt_ID := Names.EXTI15_10_Interrupt;
 
    procedure Configure_User_Button_GPIO;
    --  Configures the GPIO port/pin for the blue user button. Sufficient

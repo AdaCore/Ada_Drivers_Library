@@ -48,10 +48,10 @@ package body STM32.PWM is
    --  given timer, based on the system clocks and the requested frequency
 
    function Has_APB2_Frequency  (This : Timer) return Boolean;
-   -- timers 1, 8, 9, 10, 11
+   --  timers 1, 8, 9, 10, 11
 
    function Has_APB1_Frequency (This : Timer) return Boolean;
-   -- timers 3, 4, 6, 7, 12, 13, 14
+   --  timers 3, 4, 6, 7, 12, 13, 14
 
    procedure Configure_PWM_GPIO
      (Output : GPIO_Point;
@@ -92,10 +92,10 @@ package body STM32.PWM is
       Period        : constant Word := This.Timer_Period + 1;
       uS_Per_Period : constant Word := 1_000_000 / This.Frequency;
    begin
-      if Value > uS_per_Period then
+      if Value > uS_Per_Period then
          raise Invalid_Request with "duty time too high";
       end if;
-      Pulse := Short ((Period * Value) / uS_per_Period) - 1;
+      Pulse := Short ((Period * Value) / uS_Per_Period) - 1;
       Set_Compare_Value (This.Output_Timer.all, Channel, Pulse);
    end Set_Duty_Time;
 
@@ -170,7 +170,7 @@ package body STM32.PWM is
    begin
       This.Outputs (Channel).Attached := True;
 
-      Enable_CLock (Point);
+      Enable_Clock (Point);
 
       Configure_PWM_GPIO (Point, This.AF);
 
@@ -207,8 +207,10 @@ package body STM32.PWM is
    -- Attached --
    --------------
 
-   function Attached (This : PWM_Modulator;  Channel : Timer_Channel) return Boolean is
-     (This.Outputs (Channel).Attached);
+   function Attached (This : PWM_Modulator;
+                      Channel : Timer_Channel)
+                      return Boolean
+   is (This.Outputs (Channel).Attached);
 
    ------------------------
    -- Configure_PWM_GPIO --
@@ -236,7 +238,7 @@ package body STM32.PWM is
    -- Compute_Prescalar_and_Period --
    ----------------------------------
 
-   procedure Compute_Prescalar_And_Period
+   procedure Compute_Prescalar_and_Period
      (This                : access Timer;
       Requested_Frequency : Hertz;
       Prescalar           : out Word;
@@ -245,7 +247,8 @@ package body STM32.PWM is
       Max_Prescalar      : constant := 16#FFFF#;
       Max_Period         : Word;
       Hardware_Frequency : Word;
-      Clocks             : constant RCC_System_Clocks := System_Clock_Frequencies;
+      Clocks             : constant RCC_System_Clocks :=
+        System_Clock_Frequencies;
    begin
       if Has_APB1_Frequency (This.all) then
          Hardware_Frequency := Clocks.TIMCLK1;

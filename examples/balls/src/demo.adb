@@ -59,12 +59,27 @@ procedure Demo is
 
    type Vector is array (Coordinate) of Float;
 
+   function "+" (V1, V2 : Vector) return Vector;
+   function "-" (V1, V2 : Vector) return Vector;
+   function "*" (V1, V2 : Vector) return Float;
+   function "*" (V : Vector; Val : Float) return Vector;
+   function "/" (V : Vector; Val : Float) return Vector;
+   procedure Init_Balls;
+
+   ---------
+   -- "+" --
+   ---------
+
    function "+" (V1, V2 : Vector) return Vector
    is
    begin
       return (X => V1 (X) + V2 (X),
               Y => V1 (Y) + V2 (Y));
    end "+";
+
+   ---------
+   -- "-" --
+   ---------
 
    function "-" (V1, V2 : Vector) return Vector
    is
@@ -73,17 +88,29 @@ procedure Demo is
               Y => V1 (Y) - V2 (Y));
    end "-";
 
+   ---------
+   -- "*" --
+   ---------
+
    function "*" (V1, V2 : Vector) return Float
    is
    begin
       return V1 (X) * V2 (X) + V1 (Y) * V2 (Y);
    end "*";
 
+   ---------
+   -- "*" --
+   ---------
+
    function "*" (V : Vector; Val : Float) return Vector
    is
    begin
       return (V (X) * Val, V (Y) * Val);
    end "*";
+
+   ---------
+   -- "/" --
+   ---------
 
    function "/" (V : Vector; Val : Float) return Vector
    is
@@ -134,40 +161,40 @@ procedure Demo is
       S := Word (Col.Sat);
       H := Word (Col.Hue);
 
-      -- Hue in the range 0 .. 5
+      --  Hue in the range 0 .. 5
       Region := H / 43;
       --  Division reminder, multiplied by 6 to make it in range 0 .. 255
       FPart  := (H - (Region * 43)) * 6;
 
-      P := Shift_Right (V * (255 - S), 8);
-      Q := Shift_Right (V * (255 - Shift_Right (S * FPart, 8)), 8);
-      T := Shift_Right (V * (255 - Shift_Right (S * (255 - FPart), 8)), 8);
+      p := Shift_Right (V * (255 - S), 8);
+      q := Shift_Right (V * (255 - Shift_Right (S * FPart, 8)), 8);
+      t := Shift_Right (V * (255 - Shift_Right (S * (255 - FPart), 8)), 8);
 
       case Region is
          when 0 =>
             Ret.Red   := Byte (V);
-            Ret.Green := Byte (T);
-            Ret.Blue  := Byte (P);
+            Ret.Green := Byte (t);
+            Ret.Blue  := Byte (p);
          when 1 =>
-            Ret.Red   := Byte (Q);
+            Ret.Red   := Byte (q);
             Ret.Green := Byte (V);
-            Ret.Blue  := Byte (P);
+            Ret.Blue  := Byte (p);
          when 2 =>
-            Ret.Red   := Byte (P);
+            Ret.Red   := Byte (p);
             Ret.Green := Byte (V);
-            Ret.Blue  := Byte (T);
+            Ret.Blue  := Byte (t);
          when 3 =>
-            Ret.Red   := Byte (P);
-            Ret.Green := Byte (Q);
+            Ret.Red   := Byte (p);
+            Ret.Green := Byte (q);
             Ret.Blue  := Byte (V);
          when 4 =>
-            Ret.Red   := Byte (T);
-            Ret.Green := Byte (P);
+            Ret.Red   := Byte (t);
+            Ret.Green := Byte (p);
             Ret.Blue  := Byte (V);
          when others =>
             Ret.Red   := Byte (V);
-            Ret.Green := Byte (P);
-            Ret.Blue  := Byte (Q);
+            Ret.Green := Byte (p);
+            Ret.Blue  := Byte (q);
       end case;
 
       return Ret;
@@ -280,13 +307,17 @@ procedure Demo is
                Col   : constant Byte :=
                          Byte (RNG.Interrupts.Random mod 255);
                X_Raw : constant Word :=
-                         (RNG.Interrupts.Random mod Word (Pixel_Width - 2 * R)) + Word (R);
+                 (RNG.Interrupts.Random mod Word (Pixel_Width - 2 * R)) +
+                   Word (R);
                Y_Raw : constant Word :=
-                         (RNG.Interrupts.Random mod Word (Pixel_Height - 2 * R)) + Word (R);
+                 (RNG.Interrupts.Random mod Word (Pixel_Height - 2 * R)) +
+                   Word (R);
                Sp_X  : constant Integer :=
-                         Integer (RNG.Interrupts.Random mod Word (SP_Max * 2 + 1)) - SP_Max;
+                 Integer (RNG.Interrupts.Random mod Word (SP_Max * 2 + 1)) -
+                   SP_Max;
                Sp_Y  : constant Integer :=
-                         Integer (RNG.Interrupts.Random mod Word (SP_Max * 2 + 1)) - SP_Max;
+                 Integer (RNG.Interrupts.Random mod Word (SP_Max * 2 + 1)) -
+                   SP_Max;
                Redo  : Boolean := False;
 
             begin
@@ -378,6 +409,6 @@ begin
             To_RGB (O.Col));
       end loop;
 
-      Swap_Buffers (Vsync => True);
+      Swap_Buffers (VSync => True);
    end loop;
 end Demo;

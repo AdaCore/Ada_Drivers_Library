@@ -94,7 +94,7 @@ package STM32.DMA2D is
    --  hardware when the START bit is reset.
    type DMA2D_SUSPEND is
      (
-      -- Transfer not suspended
+      --  Transfer not suspended
       Not_Suspended,
 
       --  Transfer suspended

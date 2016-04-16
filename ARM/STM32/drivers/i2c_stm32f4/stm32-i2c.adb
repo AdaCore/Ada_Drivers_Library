@@ -71,17 +71,12 @@ package body STM32.I2C is
       SMB_Host,
       Dual_Flag);
 
---     subtype Clearable_I2C_Status_Flag is
---       I2C_Status_Flag range Bus_Error .. SMB_Alert;
-
    --  Low level flag handling
 
-   function Flag_Status (Port : I2C_Port; Flag : I2C_Status_Flag) return Boolean;
---     procedure Clear_Flag
---       (Port   : in out I2C_Port;
---        Target : Clearable_I2C_Status_Flag);
+   function Flag_Status (Port : I2C_Port;
+                         Flag : I2C_Status_Flag)
+                         return Boolean;
    procedure Clear_Address_Sent_Status (Port : I2C_Port);
---     procedure Clear_Stop_Detection_Status (Port : in out I2C_Port);
 
    --  Higher level flag handling
 
@@ -170,7 +165,7 @@ package body STM32.I2C is
 
       --  Set the port timing
       if Conf.Clock_Speed <= 100_000 then
-        --  Mode selection to Standard Mode
+         --  Mode selection to Standard Mode
          CCR.F_S := False;
          CCR.CCR := UInt12 (PCLK1 / (Conf.Clock_Speed * 2));
 
@@ -185,9 +180,9 @@ package body STM32.I2C is
          CCR.F_S := True;
 
          if Conf.Duty_Cycle = DutyCycle_2 then
-            CCR.CCR := UInt12 (Pclk1 / (Conf.Clock_Speed * 3));
+            CCR.CCR := UInt12 (PCLK1 / (Conf.Clock_Speed * 3));
          else
-            CCR.CCR := UInt12 (Pclk1 / (Conf.Clock_Speed * 25));
+            CCR.CCR := UInt12 (PCLK1 / (Conf.Clock_Speed * 25));
             CCR.DUTY := True;
          end if;
 
@@ -227,9 +222,9 @@ package body STM32.I2C is
             OAR1.ADD7  := UInt7 (Conf.Own_Address / 2);
             OAR1.ADD10 := 0;
          when Addressing_Mode_10bit =>
-            OAR1.Add0  := (Conf.Own_Address and 2#1#) /= 0;
+            OAR1.ADD0  := (Conf.Own_Address and 2#1#) /= 0;
             OAR1.ADD7  := UInt7 ((Conf.Own_Address / 2) and 2#1111111#);
-            OAR1.Add10 := UInt2 (Conf.Own_Address / 2 ** 8);
+            OAR1.ADD10 := UInt2 (Conf.Own_Address / 2 ** 8);
       end case;
 
       Handle.Periph.OAR1 := OAR1;
@@ -387,7 +382,7 @@ package body STM32.I2C is
             Handle.Periph.CR1.STOP := True;
 
             --  Clear the AF flag
-            Handle.Periph.SR1.Af := False;
+            Handle.Periph.SR1.AF := False;
             Handle.State := Ready;
             Status       := HAL.I2C.Err_Error;
 
@@ -439,7 +434,7 @@ package body STM32.I2C is
 
             Wait_Master_Flag (Handle, Address_Sent_10bit, Timeout, Status);
 
-            if Status /= HAL.I2C.OK then
+            if Status /= HAL.I2C.Ok then
                return;
             end if;
 
@@ -487,7 +482,7 @@ package body STM32.I2C is
 
             Wait_Master_Flag (Handle, Address_Sent_10bit, Timeout, Status);
 
-            if Status /= HAL.I2C.OK then
+            if Status /= HAL.I2C.Ok then
                return;
             end if;
 
@@ -495,7 +490,7 @@ package body STM32.I2C is
 
             Wait_Master_Flag (Handle, Address_Sent, Timeout, Status);
 
-            if Status /= HAL.I2C.OK then
+            if Status /= HAL.I2C.Ok then
                return;
             end if;
 
@@ -506,7 +501,7 @@ package body STM32.I2C is
 
             Wait_Flag (Handle, Start_Bit, False, Timeout, Status);
 
-            if Status /= HAL.I2C.OK then
+            if Status /= HAL.I2C.Ok then
                return;
             end if;
 
@@ -693,7 +688,7 @@ package body STM32.I2C is
       while Idx <= Data'Last loop
          Wait_Flag (Handle, Tx_Data_Register_Empty, False, Timeout, Status);
 
-         if Status /= HAL.I2C.OK then
+         if Status /= HAL.I2C.Ok then
             return;
          end if;
 
@@ -703,7 +698,7 @@ package body STM32.I2C is
          if Idx <= Data'Last then
             Wait_Flag (Handle, Byte_Transfer_Finished, True, Timeout, Status);
 
-            if Status = HAL.I2C.OK then
+            if Status = HAL.I2C.Ok then
                Handle.Periph.DR.DR := Data (Idx);
                Idx := Idx + 1;
             end if;
@@ -712,7 +707,7 @@ package body STM32.I2C is
 
       Wait_Flag (Handle, Tx_Data_Register_Empty, False, Timeout, Status);
 
-      if Status /= HAL.I2C.OK then
+      if Status /= HAL.I2C.Ok then
          return;
       end if;
 
@@ -939,7 +934,7 @@ package body STM32.I2C is
                     Timeout,
                     Status);
 
-         if Status /= HAL.I2C.OK then
+         if Status /= HAL.I2C.Ok then
             return;
          end if;
 
@@ -953,7 +948,7 @@ package body STM32.I2C is
                        Timeout,
                        Status);
 
-            if Status = HAL.I2C.OK then
+            if Status = HAL.I2C.Ok then
                Handle.Periph.DR.DR := Data (Idx);
                Idx := Idx + 1;
             end if;
@@ -966,7 +961,7 @@ package body STM32.I2C is
                  Timeout,
                  Status);
 
-      if Status /= HAL.I2C.OK then
+      if Status /= HAL.I2C.Ok then
          return;
       end if;
 

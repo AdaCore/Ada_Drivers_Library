@@ -98,6 +98,7 @@ package body FT6x06 is
    -- Active_Touch_Points --
    -------------------------
 
+   overriding
    function Active_Touch_Points (This : in out FT6x06_Device)
                                  return Touch_Identifier
    is
@@ -127,6 +128,7 @@ package body FT6x06 is
    -- Get_Touch_State --
    ---------------------
 
+   overriding
    function Get_Touch_Point (This     : in out FT6x06_Device;
                              Touch_Id : Touch_Identifier;
                              SwapXY   : Boolean := False)

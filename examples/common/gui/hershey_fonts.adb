@@ -23,6 +23,8 @@
 
 package body Hershey_Fonts is
 
+   function Get_Glyph (C : Character) return Glyph_Index;
+
    ---------------
    -- Get_Glyph --
    ---------------
@@ -116,6 +118,9 @@ package body Hershey_Fonts is
       Ret         : Hershey_Font;
       Fnt_Idx     : Natural;
       Fnt_Y_Min   : Integer_8 := Integer_8'Last;
+
+      function To_Byte (S : String) return Natural;
+
       -------------
       -- To_Byte --
       -------------

@@ -152,9 +152,9 @@ package body STM32.DMA is
    is
    begin
       Get_Stream (Unit, Stream).CR.EN := False;
-      -- the STMicro Reference Manual RM0090, Doc Id 018909 Rev 6, pg 319, step
-      -- 1 says we must await the bit actually clearing, to confirm no ongoing
-      -- operation remains active
+      --  the STMicro Reference Manual RM0090, Doc Id 018909 Rev 6, pg 319,
+      --  step 1 says we must await the bit actually clearing, to confirm no
+      --  ongoing operation remains active.
       loop
          exit when not Enabled (Unit, Stream);
       end loop;
@@ -269,7 +269,7 @@ package body STM32.DMA is
    -- Start_Transfer_with_Interrupts --
    ------------------------------------
 
-   procedure Start_Transfer_With_Interrupts
+   procedure Start_Transfer_with_Interrupts
      (Unit               : DMA_Controller;
       Stream             : DMA_Stream_Selector;
       Source             : Address;
@@ -364,9 +364,11 @@ package body STM32.DMA is
 
       Polling : loop
          if Expected_Level = Full_Transfer then
-            exit when Status (Unit, Stream, Transfer_Complete_Indicated);
+            exit Polling when
+              Status (Unit, Stream, Transfer_Complete_Indicated);
          else
-            exit when Status (Unit, Stream, Half_Transfer_Complete_Indicated);
+            exit Polling when
+              Status (Unit, Stream, Half_Transfer_Complete_Indicated);
          end if;
 
          if Status (Unit, Stream, Transfer_Error_Indicated) or
@@ -781,8 +783,8 @@ package body STM32.DMA is
       --  see HAL_DMA_Init in STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_dma.h
       This_Stream : DMA_Stream renames Get_Stream (Unit, Stream);
    begin
-      -- the STMicro Reference Manual RM0090, Doc Id 018909 Rev 6, pg 319 says
-      -- we must disable the stream before configuring it
+      --  the STMicro Reference Manual RM0090, Doc Id 018909 Rev 6, pg 319 says
+      --  we must disable the stream before configuring it
       Disable (Unit, Stream);
 
       This_Stream.CR.CT := False; --  Memory_Buffer_0'Enum_Rep;

@@ -49,7 +49,7 @@ package body STM32.Board is
 
    procedure All_LEDs_Off is
    begin
-      Clear (ALL_LEDs);
+      Clear (All_LEDs);
    end All_LEDs_Off;
 
    -----------------
@@ -58,7 +58,7 @@ package body STM32.Board is
 
    procedure All_LEDs_On is
    begin
-      Set (ALL_LEDs);
+      Set (All_LEDs);
    end All_LEDs_On;
 
    ---------------------
@@ -68,7 +68,7 @@ package body STM32.Board is
    procedure Initialize_LEDs is
       Conf : GPIO_Port_Configuration;
    begin
-      Enable_Clock (ALL_LEDs);
+      Enable_Clock (All_LEDs);
 
       Conf.Mode        := Mode_Out;
       Conf.Output_Type := Push_Pull;
