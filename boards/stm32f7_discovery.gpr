@@ -1,5 +1,6 @@
 with "../ARM/cortex_m/cortex_shared.gpr";
 with "../ARM/STM32/stm32f7x.gpr";
+with "../components/components.gpr";
 
 library project STM32F7_Discovery is
 
@@ -11,16 +12,7 @@ library project STM32F7_Discovery is
    for Library_Dir use "lib/stm32f7disco/" & Cortex_Shared.RTS;
    for Object_Dir use "obj/stm32f7disco/" & Cortex_Shared.RTS;
 
-   for Source_Dirs use
-     ("stm32f7_discovery/",
-      "../hal",
-      "../hal/touch_panel",
-      "../hal/audio",
-      "../components/button",
-      "../components/sdram",
-      "../components/touch_panel/ft5336",
-      "../components/eth",
-      "../components/audio/W8994");
+   for Source_Dirs use ("stm32f7_discovery/");
 
    package Compiler is
       for Default_Switches ("Ada") use

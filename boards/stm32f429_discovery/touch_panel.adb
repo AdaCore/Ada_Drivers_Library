@@ -51,6 +51,7 @@ with STM32.GPIO;           use STM32.GPIO;
 
 with STM32.Device;         use STM32.Device;
 
+with HAL.Touch_Panel;      use HAL.Touch_Panel;
 with HAL.I2C;
 
 package body Touch_Panel is

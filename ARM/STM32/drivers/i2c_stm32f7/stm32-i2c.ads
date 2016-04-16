@@ -28,16 +28,10 @@
 --  This file provides definitions for the STM32F7 (ARM Cortex M7F
 --  from ST Microelectronics) Inter-Integrated Circuit (I2C) facility.
 
-with STM32_SVD.I2C;
+private with STM32_SVD.I2C;
+with HAL.I2C;
 
 package STM32.I2C is
-
-   type I2C_Status is
-     (Ok, Err_Timeout, Err_Error, Err_Busy);
-
-   type I2C_Memory_Address_Size is
-     (Memory_Size_8b,
-      Memory_Size_16b);
 
    type I2C_Direction is (Transmitter, Receiver);
 
@@ -59,24 +53,15 @@ package STM32.I2C is
       Clock_Stretching_Enabled : Boolean := True;
    end record;
 
-   type I2C_Data is array (Natural range <>) of Byte;
-
    subtype I2C_Address is Interfaces.Bit_Types.UInt10;
 
    I2C_Timeout : exception;
    I2C_Error   : exception;
 
-   type I2C_Port is private;
+   type Internal_I2C_Port is private;
 
-   function As_I2C_Port
-     (Port : access STM32_SVD.I2C.I2C_Peripheral) return I2C_Port;
-   --  Returns an I2C_Port structure from the base I2C Peripheral
-
-   function Get_Peripheral
-     (Port : I2C_Port) return STM32_SVD.I2C.I2C_Peripheral;
-   --  Retrieve the I2C_Peripheral form the I2C_Port structure
-   --  This accessor is required by STM32.Device, but shouldn't be used for
-   --  general purpose I2C protocol usage.
+   type I2C_Port (Periph : not null access Internal_I2C_Port) is
+      new HAL.I2C.I2C_Port with private;
 
    function Port_Enabled (Port : I2C_Port) return Boolean
      with Inline;
@@ -89,39 +74,43 @@ package STM32.I2C is
 
    function Is_Configured (Port : I2C_Port) return Boolean;
 
+   overriding
    procedure Master_Transmit
      (Port    : in out I2C_Port;
-      Addr    : I2C_Address;
-      Data    : I2C_Data;
-      Status  : out I2C_Status;
+      Addr    : HAL.I2C.I2C_Address;
+      Data    : HAL.I2C.I2C_Data;
+      Status  : out HAL.I2C.I2C_Status;
       Timeout : Natural := 1000)
      with Pre => Is_Configured (Port);
 
+   overriding
    procedure Master_Receive
      (Port    : in out I2C_Port;
-      Addr    : I2C_Address;
-      Data    : out I2C_Data;
-      Status  : out I2C_Status;
+      Addr    : HAL.I2C.I2C_Address;
+      Data    : out HAL.I2C.I2C_Data;
+      Status  : out HAL.I2C.I2C_Status;
       Timeout : Natural := 1000)
      with Pre => Is_Configured (Port);
 
+   overriding
    procedure Mem_Write
      (Port          : in out I2C_Port;
-      Addr          : I2C_Address;
+      Addr          : HAL.I2C.I2C_Address;
       Mem_Addr      : Short;
-      Mem_Addr_Size : I2C_Memory_Address_Size;
-      Data          : I2C_Data;
-      Status        : out I2C_Status;
+      Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
+      Data          : HAL.I2C.I2C_Data;
+      Status        : out HAL.I2C.I2C_Status;
       Timeout       : Natural := 1000)
      with Pre => Is_Configured (Port);
 
+   overriding
    procedure Mem_Read
      (Port          : in out I2C_Port;
-      Addr          : I2C_Address;
+      Addr          : HAL.I2C.I2C_Address;
       Mem_Addr      : Short;
-      Mem_Addr_Size : I2C_Memory_Address_Size;
-      Data          : out I2C_Data;
-      Status        : out I2C_Status;
+      Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
+      Data          : out HAL.I2C.I2C_Data;
+      Status        : out HAL.I2C.I2C_Status;
       Timeout       : Natural := 1000)
      with Pre => Is_Configured (Port);
 
@@ -135,10 +124,12 @@ private
       Mem_Busy_Tx,
       Mem_Busy_Rx);
 
-   type I2C_Port is record
-      Periph : access STM32_SVD.I2C.I2C_Peripheral;
-      Config : I2C_Configuration;
-      State  : I2C_State := Reset;
-   end record;
+   type Internal_I2C_Port is new STM32_SVD.I2C.I2C_Peripheral;
+
+   type I2C_Port (Periph : not null access Internal_I2C_Port) is
+      new HAL.I2C.I2C_Port with record
+         Config   : I2C_Configuration;
+         State    : I2C_State := Reset;
+      end record;
 
 end STM32.I2C;

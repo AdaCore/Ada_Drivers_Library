@@ -38,67 +38,18 @@ with Interfaces.Bit_Types; use Interfaces, Interfaces.Bit_Types;
 
 with STM32.Board;          use STM32.Board;
 with STM32.Device;         use STM32.Device;
-with STM32.I2C;            use STM32.I2C;
 with STM32.LCD;            use STM32.LCD;
+with FT5336;               use FT5336;
+with HAL.I2C;              use HAL.I2C;
+with HAL.Touch_Panel;      use HAL.Touch_Panel;
 
-with FT5336;
-
-package body HAL.Touch_Panel is
+package body Touch_Panel is
 
    --  I2C Slave address of touchscreen FocalTech FT5336
    TP_ADDR  : constant := 16#70#;
 
-   function TP_Read (Reg : Byte; Status : out Boolean) return Byte
-     with Inline;
-   --  Reads a Touch Panel register value
-
-   procedure TP_Write (Reg : Byte; Data :  Byte; Status : out Boolean)
-     with Inline;
-   --  Write a Touch Panel register value
-
-   package LL_Driver is new FT5336 (TP_Read, TP_Write);
-   use LL_Driver;
-
-   -------------
-   -- TS_Read --
-   -------------
-
-   function TP_Read (Reg : Byte; Status : out Boolean) return Byte
-   is
-      Ret        : I2C_Data (1 .. 1);
-      Tmp_Status : I2C_Status;
-   begin
-      STM32.I2C.Mem_Read
-        (TP_I2C,
-         TP_ADDR,
-         Short (Reg),
-         Memory_Size_8b,
-         Ret,
-         Tmp_Status,
-         1000);
-      Status := Tmp_Status = Ok;
-
-      return Ret (1);
-   end TP_Read;
-
-   -------------
-   -- TS_Read --
-   -------------
-
-   procedure TP_Write (Reg : Byte; Data :  Byte; Status : out Boolean)
-   is
-      Tmp_Status : I2C_Status;
-   begin
-      STM32.I2C.Mem_Write
-        (TP_I2C,
-         TP_ADDR,
-         Short (Reg),
-         Memory_Size_8b,
-         (1 => Data),
-         Tmp_Status,
-         1000);
-      Status := Tmp_Status = Ok;
-   end TP_Write;
+   LL_Driver : FT5336.FT5336_Device (Port     => TP_I2C'Access,
+                                     I2C_Addr => TP_ADDR);
 
    ----------------
    -- Initialize --
@@ -113,9 +64,9 @@ package body HAL.Touch_Panel is
 
       Configure_I2C (TP_I2C);
 
-      TP_Set_Use_Interrupts (False);
+      LL_Driver.TP_Set_Use_Interrupts (False);
 
-      return Check_Id;
+      return LL_Driver.Check_Id;
    end Initialize;
 
    ----------------
@@ -151,28 +102,28 @@ package body HAL.Touch_Panel is
 
       function Get_Touch_State (Num : Byte) return TP_Touch_State
       is
-         Pt  : Touch_Point :=
+         Pt  : TP_Touch_State :=
                  LL_Driver.Get_Touch_Point (Touch_Identifier (Num));
-         Tmp : Unsigned_16;
+         Tmp : Natural;
 
       begin
          if Pt.X = 0 and then Pt.Y = 0 and then Pt.Weight = 0 then
-            Status := Err_Busy;
+            Status := Busy;
             return (0, 0, 0);
          end if;
 
          if STM32.LCD.SwapXY then
             Tmp  := Pt.X;
-            Pt.X := Unsigned_16 (STM32.LCD.Pixel_Width) - Pt.Y - 1;
+            Pt.X := STM32.LCD.Pixel_Width - Pt.Y - 1;
             Pt.Y := Tmp;
          end if;
 
          Status := Ok;
 
          return
-           (X => Natural'Min (Natural'Max (0, Natural (Pt.X)), Pixel_Width - 1),
-            Y => Natural'Min (Natural'Max (0, Natural (Pt.Y)), Pixel_Height - 1),
-            Weight => Natural (Pt.Weight));
+           (X => Natural'Min (Natural'Max (0, Pt.X), Pixel_Width - 1),
+            Y => Natural'Min (Natural'Max (0, Pt.Y), Pixel_Height - 1),
+            Weight => Pt.Weight);
       end Get_Touch_State;
 
       N_Touch : constant Natural := Detect_Touch;
@@ -193,4 +144,4 @@ package body HAL.Touch_Panel is
       return State;
    end Get_State;
 
-end HAL.Touch_Panel;
+end Touch_Panel;

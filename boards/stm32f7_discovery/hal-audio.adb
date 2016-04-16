@@ -10,9 +10,7 @@ with STM32.DMA;            use STM32.DMA;
 with STM32.I2C;            use STM32.I2C;
 with STM32.SAI;            use STM32.SAI;
 
-with WM8994;
-
-with Ada.Text_IO;
+with WM8994;               use WM8994;
 
 package body HAL.Audio is
 
@@ -20,10 +18,12 @@ package body HAL.Audio is
    procedure Initialize_Pins;
    procedure Initialize_SAI_Out (Freq : Audio_Frequency);
    procedure Initialize_Audio_I2C;
-   procedure I2C_Write (Reg : Short; Value : Short);
-   function I2C_Read (Reg : Short) return Short;
 
-   package Driver is new WM8994 (IO_Write => I2C_Write, IO_Read => I2C_Read);
+   --  Communication with the Audio chip
+   Audio_I2C_Addr  : constant I2C_Address := 16#34#;
+
+   Driver : WM8994_Device (Port     => Audio_I2C'Access,
+                           I2C_Addr => Audio_I2C_Addr);
 
    --  AUDIO OUT
    SAI_Out         : SAI_Controller renames SAI_2;
@@ -39,8 +39,6 @@ package body HAL.Audio is
 --     DMA_In_Sream    : DMA_Stream_Selector renames Stream_7;
 --     DMA_In_Channel  : DMA_Channel_Selector renames Channel_0;
 
-   --  Communication with the Audio chip
-   Audio_I2C_Addr  : constant I2C_Address := 16#34#;
 
    --------------------
    -- DMA_Out_Status --
@@ -189,59 +187,6 @@ package body HAL.Audio is
       Configure_I2C (Audio_I2C);
    end Initialize_Audio_I2C;
 
-   ---------------
-   -- I2C_Write --
-   ---------------
-
-   procedure I2C_Write (Reg : Short; Value : Short)
-   is
-      Status : I2C_Status with Unreferenced;
-      Data   : I2C_Data (1 .. 2);
-      Check  : Short;
-   begin
-      --  Device is MSB first
-      Data (1) := Byte (Shift_Right (Value and 16#FF00#, 8));
-      Data (2) := Byte (Value and 16#FF#);
-
-      STM32.I2C.Mem_Write
-        (Audio_I2C,
-         Addr          => Audio_I2C_Addr,
-         Mem_Addr      => Reg,
-         Mem_Addr_Size => Memory_Size_16b,
-         Data          => Data,
-         Status        => Status);
-
-      if Reg /= 0 then
-         Check := I2C_Read (Reg);
-         if Check /= Value then
-            Ada.Text_IO.Put_Line
-              ("Written " & Value'Img & " got " & Check'Img & " for reg " & Reg'Img);
-         end if;
-      end if;
-   end I2C_Write;
-
-   --------------
-   -- I2C_Read --
-   --------------
-
-   function I2C_Read (Reg : Short) return Short
-   is
-      Status : I2C_Status;
-      Data   : I2C_Data (1 .. 2);
-      Ret    : Short;
-   begin
-      STM32.I2C.Mem_Read
-        (Audio_I2C,
-         Addr          => Audio_I2C_Addr,
-         Mem_Addr      => Reg,
-         Mem_Addr_Size => Memory_Size_16b,
-         Data          => Data,
-         Status        => Status);
-      Ret := Shift_Left (Short (Data (1)), 8) or Short (Data (2));
-
-      return Ret;
-   end I2C_Read;
-
    ----------------
    -- Initialize --
    ----------------
@@ -262,17 +207,17 @@ package body HAL.Audio is
       --  Initialize the I2C Port to send commands to the driver
       Initialize_Audio_I2C;
 
-      if Driver.Read_ID /= Driver.WM8994_ID then
+      if Driver.Read_ID /= WM8994.WM8994_ID then
          raise Constraint_Error with "Invalid ID received from the Audio Code";
       end if;
 
       Driver.Reset;
       Driver.Init
-        (Input     => Driver.No_Input,
-         Output    => Driver.Auto,
+        (Input     => WM8994.No_Input,
+         Output    => WM8994.Auto,
          Volume    => Byte (Volume),
          Frequency =>
-           Driver.Audio_Frequency'Enum_Val
+           WM8994.Audio_Frequency'Enum_Val
              (Audio_Frequency'Enum_Rep (Frequency)));
    end Initialize_Audio_Out;
 

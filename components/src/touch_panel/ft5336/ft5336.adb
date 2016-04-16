@@ -1,4 +1,7 @@
 with Ada.Unchecked_Conversion;
+with Interfaces;      use Interfaces;
+with HAL.I2C;         use HAL.I2C;
+with HAL.Touch_Panel; use HAL.Touch_Panel;
 
 package body FT5336 is
 
@@ -230,18 +233,62 @@ package body FT5336 is
 
    pragma Warnings (On, "* is not referenced");
 
+   --------------
+   -- I2C_Read --
+   --------------
+
+   function I2C_Read (This   : in out FT5336_Device;
+                      Reg    : Byte;
+                      Status : out Boolean)
+                      return Byte
+   is
+      Ret        : I2C_Data (1 .. 1);
+      Tmp_Status : I2C_Status;
+   begin
+      This.Port.Mem_Read
+        (This.I2C_Addr,
+         Short (Reg),
+         Memory_Size_8b,
+         Ret,
+         Tmp_Status,
+         1000);
+      Status := Tmp_Status = Ok;
+
+      return Ret (1);
+   end I2C_Read;
+
+   ---------------
+   -- I2C_Write --
+   ---------------
+
+   procedure I2C_Write (This   : in out FT5336_Device;
+                        Reg    : Byte;
+                        Data   : Byte;
+                        Status : out Boolean)
+   is
+      Tmp_Status : I2C_Status;
+   begin
+      This.Port.Mem_Write
+        (This.I2C_Addr,
+         Short (Reg),
+         Memory_Size_8b,
+         (1 => Data),
+         Tmp_Status,
+         1000);
+      Status := Tmp_Status = Ok;
+   end I2C_Write;
    -------------
    -- Read_Id --
    -------------
 
-   function Check_Id return Boolean
+   function Check_Id (This : in out FT5336_Device) return Boolean
    is
       Id     : Unsigned_8;
       Status : Boolean;
 
    begin
       for J in 1 .. 3 loop
-         Id := IO_Read (FT5336_CHIP_ID_REG, Status);
+         Id := This.I2C_Read (FT5336_CHIP_ID_REG, Status);
 
          if Id = FT5336_ID_VALUE then
             return True;
@@ -259,7 +306,8 @@ package body FT5336 is
    -- TP_Set_Use_Interrupts --
    ---------------------------
 
-   procedure TP_Set_Use_Interrupts (Enabled : Boolean)
+   procedure TP_Set_Use_Interrupts (This    : in out FT5336_Device;
+                                    Enabled : Boolean)
    is
       Reg_Value : Unsigned_8 := 0;
       Status    : Boolean with Unreferenced;
@@ -270,19 +318,20 @@ package body FT5336 is
          Reg_Value := FT5336_G_MODE_INTERRUPT_POLLING;
       end if;
 
-      IO_Write (FT5336_GMODE_REG, Reg_Value, Status);
+      This.I2C_Write (FT5336_GMODE_REG, Reg_Value, Status);
    end TP_Set_Use_Interrupts;
 
    -------------------------
    -- Active_Touch_Points --
    -------------------------
 
-   function Active_Touch_Points return Touch_Identifier
+   function Active_Touch_Points (This : in out FT5336_Device)
+                                 return Touch_Identifier
    is
-     Status   : Boolean;
-     Nb_Touch : Unsigned_8 := 0;
+      Status   : Boolean;
+      Nb_Touch : Unsigned_8 := 0;
    begin
-      Nb_Touch := IO_Read (FT5336_TD_STAT_REG, Status);
+      Nb_Touch := This.I2C_Read (FT5336_TD_STAT_REG, Status);
 
       if not Status then
          return 0;
@@ -302,7 +351,9 @@ package body FT5336 is
    -- Get_Touch_Point --
    ---------------------
 
-   function Get_Touch_Point (Touch_Id : Touch_Identifier) return Touch_Point
+   function Get_Touch_Point (This     : in out FT5336_Device;
+                             Touch_Id : Touch_Identifier)
+                             return TP_Touch_State
    is
       type Short_HL_Type is record
          High, Low : Unsigned_8;
@@ -315,7 +366,7 @@ package body FT5336 is
       function To_Short is
         new Ada.Unchecked_Conversion (Short_HL_Type, Unsigned_16);
 
-      Ret    : Touch_Point;
+      Ret    : TP_Touch_State;
       Regs   : FT5336_Pressure_Registers;
       Tmp    : Short_HL_Type;
       Status : Boolean;
@@ -325,35 +376,37 @@ package body FT5336 is
 
       Regs := FT5336_Px_Regs (Unsigned_8 (Touch_Id));
 
-      Tmp.Low := IO_Read (Regs.XL_Reg, Status);
+      Tmp.Low := This.I2C_Read (Regs.XL_Reg, Status);
 
       if not Status then
          return (0, 0, 0);
       end if;
 
-      Tmp.High := IO_Read (Regs.XH_Reg, Status) and FT5336_TOUCH_POS_MSB_MASK;
+      Tmp.High := This.I2C_Read (Regs.XH_Reg, Status) and
+        FT5336_TOUCH_POS_MSB_MASK;
 
       if not Status then
          return (0, 0, 0);
       end if;
 
-      Ret.Y := To_Short (Tmp);
+      Ret.Y := Natural (To_Short (Tmp));
 
-      Tmp.Low := IO_Read (Regs.YL_Reg, Status);
-
-      if not Status then
-         return (0, 0, 0);
-      end if;
-
-      Tmp.High := IO_Read (Regs.YH_Reg, Status) and FT5336_TOUCH_POS_MSB_MASK;
+      Tmp.Low := This.I2C_Read (Regs.YL_Reg, Status);
 
       if not Status then
          return (0, 0, 0);
       end if;
 
-      Ret.X := To_Short (Tmp);
+      Tmp.High := This.I2C_Read (Regs.YH_Reg, Status) and
+        FT5336_TOUCH_POS_MSB_MASK;
 
-      Ret.Weight := IO_Read (Regs.Weight_Reg, Status);
+      if not Status then
+         return (0, 0, 0);
+      end if;
+
+      Ret.X := Natural (To_Short (Tmp));
+
+      Ret.Weight := Natural (This.I2C_Read (Regs.Weight_Reg, Status));
 
       if not Status then
          Ret.Weight := 0;

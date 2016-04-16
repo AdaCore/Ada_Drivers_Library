@@ -49,20 +49,20 @@ package STM32.Board is
 
    Green : User_LED renames PI1;
 
-   All_LEDs  : constant GPIO_Points := (1 => Green);
-   LCH_LED   : constant User_LED := Green;
+   All_LEDs  : GPIO_Points := (1 => Green);
+   LCH_LED   : User_LED renames Green;
 
    procedure Initialize_LEDs;
    --  MUST be called prior to any use of the LEDs
 
-   procedure Turn_On (This : User_LED)
+   procedure Turn_On (This : in out User_LED)
      renames STM32.GPIO.Set;
-   procedure Turn_Off (This : User_LED)
+   procedure Turn_Off (This : in out User_LED)
      renames STM32.GPIO.Clear;
 
    procedure All_LEDs_Off with Inline;
    procedure All_LEDs_On  with Inline;
-   procedure Toggle_LEDs (These : GPIO_Points)
+   procedure Toggle_LEDs (These : in out GPIO_Points)
      renames STM32.GPIO.Toggle;
 
    --  GPIO Pins for FMC
@@ -113,7 +113,13 @@ package STM32.Board is
    -- I2C --
    ---------
 
-   procedure Initialize_I2C_GPIO (Port : in out I2C_Port);
+   procedure Initialize_I2C_GPIO (Port : in out I2C_Port)
+     with
+       --  I2C_2 and I2C_4 are not accessible on this board
+     Pre => As_Port_Id (Port) = I2C_Id_1
+            or else
+            As_Port_Id (Port) = I2C_Id_3;
+
    procedure Configure_I2C (Port : in out I2C_Port);
 
    ------------------------

@@ -32,6 +32,8 @@ with STM32_SVD.RCC; use STM32_SVD.RCC;
 
 with STM32.RCC;
 
+with HAL.I2C; use HAL.I2C;
+
 package body STM32.I2C is
 
    type I2C_Transfer_Mode is
@@ -57,7 +59,7 @@ package body STM32.I2C is
    procedure Check_Nack
      (Port    : in out I2C_Port;
       Timeout : Natural;
-      Status  : out I2C_Status);
+      Status  : out HAL.I2C.I2C_Status);
 
    procedure Wait_Tx_Interrupt_Status
      (Port    : in out I2C_Port;
@@ -68,30 +70,6 @@ package body STM32.I2C is
      (Port    : in out I2C_Port;
       Timeout : Natural;
       Status  : out I2C_Status);
-
-   -----------------
-   -- As_I2C_Port --
-   -----------------
-
-   function As_I2C_Port
-     (Port : access STM32_SVD.I2C.I2C_Peripheral) return I2C_Port
-   is
-   begin
-      return (Periph => Port,
-              State  => Reset,
-              others => <>);
-   end As_I2C_Port;
-
-   --------------------
-   -- Get_Peripheral --
-   --------------------
-
-   function Get_Peripheral
-     (Port : I2C_Port) return STM32_SVD.I2C.I2C_Peripheral
-   is
-   begin
-      return Port.Periph.all;
-   end Get_Peripheral;
 
    ------------------
    -- Port_Enabled --
@@ -118,8 +96,8 @@ package body STM32.I2C is
 
       Port.Config := Configuration;
 
-      STM32.RCC.Enable_Clock (Port.Periph.all);
-      STM32.RCC.Reset (Port.Periph.all);
+      STM32.RCC.Enable_Clock (STM32_SVD.I2C.I2C_Peripheral (Port.Periph.all));
+      STM32.RCC.Reset (STM32_SVD.I2C.I2C_Peripheral (Port.Periph.all));
 
       --  Disable the I2C port
       Port.Periph.CR1.PE := False;
@@ -378,10 +356,11 @@ package body STM32.I2C is
       Status := Ok;
    end Wait_Stop_Flag;
 
-      ---------------------
-      -- Master_Transmit --
-      ---------------------
+   ---------------------
+   -- Master_Transmit --
+   ---------------------
 
+   overriding
    procedure Master_Transmit
      (Port    : in out I2C_Port;
       Addr    : I2C_Address;
@@ -394,7 +373,7 @@ package body STM32.I2C is
 
    begin
       if Port.Periph.ISR.BUSY then
-         Status := Err_Busy;
+         Status := Busy;
          return;
       end if;
 
@@ -404,7 +383,7 @@ package body STM32.I2C is
       end if;
 
       if Port.State /= Ready then
-         Status := Err_Busy;
+         Status := Busy;
          return;
       end if;
 
@@ -469,6 +448,7 @@ package body STM32.I2C is
    -- Master_Receive --
    --------------------
 
+   overriding
    procedure Master_Receive
      (Port    : in out I2C_Port;
       Addr    : I2C_Address;
@@ -480,12 +460,12 @@ package body STM32.I2C is
       Transmitted : Natural := 0;
    begin
       if Port.Periph.ISR.BUSY then
-         Status := Err_Busy;
+         Status := Busy;
          return;
       end if;
 
       if Port.State /= Ready then
-         Status := Err_Busy;
+         Status := Busy;
          return;
       end if;
 
@@ -553,6 +533,7 @@ package body STM32.I2C is
    -- Mem_Write --
    ---------------
 
+   overriding
    procedure Mem_Write
      (Port          : in out I2C_Port;
       Addr          : I2C_Address;
@@ -567,7 +548,7 @@ package body STM32.I2C is
 
    begin
       if Port.Periph.ISR.BUSY then
-         Status := Err_Busy;
+         Status := Busy;
          return;
       end if;
 
@@ -577,7 +558,7 @@ package body STM32.I2C is
       end if;
 
       if Port.State /= Ready then
-         Status := Err_Busy;
+         Status := Busy;
          return;
       end if;
 
@@ -689,6 +670,7 @@ package body STM32.I2C is
    -- Mem_Read --
    --------------
 
+   overriding
    procedure Mem_Read
      (Port          : in out I2C_Port;
       Addr          : I2C_Address;
@@ -702,7 +684,7 @@ package body STM32.I2C is
       Transmitted : Natural := 0;
    begin
       if Port.Periph.ISR.BUSY then
-         Status := Err_Busy;
+         Status := Busy;
          return;
       end if;
 
@@ -712,7 +694,7 @@ package body STM32.I2C is
       end if;
 
       if Port.State /= Ready then
-         Status := Err_Busy;
+         Status := Busy;
          return;
       end if;
 

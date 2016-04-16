@@ -1,11 +1,8 @@
 --  Driver for the WM8994 CODEC
 
 with Interfaces; use Interfaces;
-
-generic
-
-   with procedure IO_Write (Reg : Unsigned_16; Value : Unsigned_16);
-   with function  IO_Read  (Reg : Unsigned_16) return Unsigned_16;
+with Interfaces.Bit_Types; use Interfaces.Bit_Types;
+with HAL.I2C;
 
 package WM8994 is
 
@@ -58,20 +55,37 @@ package WM8994 is
 
    subtype Volume_Level is Unsigned_8 range 0 .. 100;
 
-   procedure Init (Input     : Input_Device;
+   type WM8994_Device (Port     : HAL.I2C.I2C_Port_Ref;
+                       I2C_Addr : UInt10) is tagged limited private;
+
+   procedure Init (This      : in out WM8994_Device;
+                   Input     : Input_Device;
                    Output    : Output_Device;
                    Volume    : Unsigned_8;
                    Frequency : Audio_Frequency);
 
-   function Read_ID return Unsigned_16;
-   procedure Play;
-   procedure Pause;
-   procedure Resume;
-   procedure Stop (Cmd : Stop_Mode);
-   procedure Set_Volume (Volume : Volume_Level);
-   procedure Set_Mute (Cmd : Mute);
-   procedure Set_Output_Mode (Device : Output_Device);
-   procedure Set_Frequency (Freq : Audio_Frequency);
-   procedure Reset;
+   function Read_ID (This : in out WM8994_Device) return Unsigned_16;
+   procedure Play (This : in out WM8994_Device);
+   procedure Pause (This : in out WM8994_Device);
+   procedure Resume (This : in out WM8994_Device);
+   procedure Stop (This : in out WM8994_Device; Cmd : Stop_Mode);
+   procedure Set_Volume (This : in out WM8994_Device; Volume : Volume_Level);
+   procedure Set_Mute (This : in out WM8994_Device; Cmd : Mute);
+   procedure Set_Output_Mode (This : in out WM8994_Device;
+                              Device : Output_Device);
+   procedure Set_Frequency (This : in out WM8994_Device;
+                            Freq : Audio_Frequency);
+   procedure Reset (This : in out WM8994_Device);
+
+private
+   type WM8994_Device (Port     : HAL.I2C.I2C_Port_Ref;
+                       I2C_Addr : UInt10) is tagged limited null record;
+
+   procedure I2C_Write (This   : in out WM8994_Device;
+                        Reg   : Short;
+                        Value : Short);
+   function I2C_Read (This : in out WM8994_Device;
+                      Reg : Short)
+                      return Short;
 
 end WM8994;

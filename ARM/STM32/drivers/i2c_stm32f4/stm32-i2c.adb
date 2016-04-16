@@ -100,19 +100,19 @@ package body STM32.I2C is
 
    procedure Master_Request_Write
      (Handle  : in out I2C_Port;
-      Addr    :        UInt10;
+      Addr    :        HAL.I2C.I2C_Address;
       Timeout :        Natural;
       Status  :    out HAL.I2C.I2C_Status);
 
    procedure Master_Request_Read
      (Handle  : in out I2C_Port;
-      Addr    :        UInt10;
+      Addr    :        HAL.I2C.I2C_Address;
       Timeout :        Natural;
       Status  :    out HAL.I2C.I2C_Status);
 
    procedure Mem_Request_Write
      (Handle        : in out I2C_Port;
-      Addr          :        UInt10;
+      Addr          :        HAL.I2C.I2C_Address;
       Mem_Addr      :        Short;
       Mem_Addr_Size :        HAL.I2C.I2C_Memory_Address_Size;
       Timeout       :        Natural;
@@ -120,7 +120,7 @@ package body STM32.I2C is
 
    procedure Mem_Request_Read
      (Handle        : in out I2C_Port;
-      Addr          :        UInt10;
+      Addr          :        HAL.I2C.I2C_Address;
       Mem_Addr      :        Short;
       Mem_Addr_Size :        HAL.I2C.I2C_Memory_Address_Size;
       Timeout       :        Natural;
@@ -411,7 +411,7 @@ package body STM32.I2C is
 
    procedure Master_Request_Write
      (Handle  : in out I2C_Port;
-      Addr    :        UInt10;
+      Addr    :        HAL.I2C.I2C_Address;
       Timeout :        Natural;
       Status  :    out HAL.I2C.I2C_Status)
    is
@@ -456,7 +456,7 @@ package body STM32.I2C is
 
    procedure Master_Request_Read
      (Handle  : in out I2C_Port;
-      Addr    :        UInt10;
+      Addr    :        HAL.I2C.I2C_Address;
       Timeout :        Natural;
       Status  :    out HAL.I2C.I2C_Status)
    is
@@ -524,7 +524,7 @@ package body STM32.I2C is
 
    procedure Mem_Request_Write
      (Handle        : in out I2C_Port;
-      Addr          :        UInt10;
+      Addr          :        HAL.I2C.I2C_Address;
       Mem_Addr      :        Short;
       Mem_Addr_Size :        HAL.I2C.I2C_Memory_Address_Size;
       Timeout       :        Natural;
@@ -578,7 +578,7 @@ package body STM32.I2C is
 
    procedure Mem_Request_Read
      (Handle        : in out I2C_Port;
-      Addr          :        UInt10;
+      Addr          :        HAL.I2C.I2C_Address;
       Mem_Addr      :        Short;
       Mem_Addr_Size :        HAL.I2C.I2C_Memory_Address_Size;
       Timeout       :        Natural;
@@ -649,7 +649,7 @@ package body STM32.I2C is
    overriding
    procedure Master_Transmit
      (Handle  : in out I2C_Port;
-      Addr    : UInt10;
+      Addr    : HAL.I2C.I2C_Address;
       Data    : HAL.I2C.I2C_Data;
       Status  : out HAL.I2C.I2C_Status;
       Timeout : Natural := 1000)
@@ -728,7 +728,7 @@ package body STM32.I2C is
    overriding
    procedure Master_Receive
      (Handle  : in out I2C_Port;
-      Addr    : UInt10;
+      Addr    : HAL.I2C.I2C_Address;
       Data    : out HAL.I2C.I2C_Data;
       Status  : out HAL.I2C.I2C_Status;
       Timeout : Natural := 1000)
@@ -891,7 +891,7 @@ package body STM32.I2C is
    overriding
    procedure Mem_Write
      (Handle        : in out I2C_Port;
-      Addr          : UInt10;
+      Addr          : HAL.I2C.I2C_Address;
       Mem_Addr      : Short;
       Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
       Data          : HAL.I2C.I2C_Data;
@@ -982,7 +982,7 @@ package body STM32.I2C is
    overriding
    procedure Mem_Read
      (Handle        : in out I2C_Port;
-      Addr          : UInt10;
+      Addr          : HAL.I2C.I2C_Address;
       Mem_Addr      : Short;
       Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
       Data          : out HAL.I2C.I2C_Data;

@@ -31,13 +31,6 @@
 
 package body STM32.Board is
 
-    --  I2C_2 and I2C_4 are not accessible on this board
-   I2C_Pins : constant array (1 .. 4) of GPIO_Points (1 .. 2) :=
-                (1 => (PB8, PB9),
-                 2 => (No_Point, No_Point),
-                 3 => (PH7, PH8),
-                 4 => (No_Point, No_Point));
-
    ------------------
    -- All_LEDs_Off --
    ------------------
@@ -79,15 +72,14 @@ package body STM32.Board is
 
    procedure Initialize_I2C_GPIO (Port : in out I2C_Port)
    is
+      Id : constant I2C_Port_Id := As_Port_Id (Port);
       Points     : constant GPIO_Points (1 .. 2) :=
-                     (if Port = I2C_1 then I2C_Pins (1)
-                      elsif Port = I2C_2 then I2C_Pins (2)
-                      elsif Port = I2C_3 then I2C_Pins (3)
-                      elsif Port = I2C_4 then I2C_Pins (4)
-                      else  (No_Point, No_Point));
+                     (if Id = I2C_Id_1 then (PB8, PB9)
+                      elsif Id = I2C_Id_3 then (PH7, PH8)
+                      else  (PA0, PA0));
 
    begin
-      if Points (Points'First) = No_Point then
+      if Id = I2C_Id_2 or else Id = I2C_Id_4 then
          raise Unknown_Device with
            "This I2C_Port cannot be used on this board";
       end if;

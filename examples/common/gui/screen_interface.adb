@@ -35,7 +35,7 @@ with STM32;                 use STM32;
 with STM32.DMA2D.Polling;   use STM32.DMA2D;
 with STM32.LCD;             use STM32.LCD;
 with Double_Buffer;         use Double_Buffer;
-
+with HAL.Touch_Panel;
 package body Screen_Interface is
 
    Initialized : Boolean := False;
@@ -82,7 +82,7 @@ package body Screen_Interface is
 
    function Current_Touch_State return Touch_State is
       TS    : Touch_State;
-      ST_TS : constant Touch_Panel.TP_State :=
+      ST_TS : constant HAL.Touch_Panel.TP_State :=
         Touch_Panel.Get_State;
    begin
       TS.Touch_Detected := ST_TS'Length > 0;
