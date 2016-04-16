@@ -40,6 +40,7 @@ with STM32.FMC;     use STM32.FMC;
 with Ada.Interrupts.Names;  use Ada.Interrupts;
 
 use STM32;  -- for base addresses
+with STM32.I2C; use STM32.I2C;
 
 package STM32.Board is
 
@@ -59,19 +60,19 @@ package STM32.Board is
 
    LCH_LED   : User_LED renames Red;
 
-   All_LEDs  : constant GPIO_Points := LED1 & LED2 & LED3 & LED4;
+   All_LEDs  : GPIO_Points := LED1 & LED2 & LED3 & LED4;
 
    procedure Initialize_LEDs;
    --  MUST be called prior to any use of the LEDs
 
-   procedure Turn_On (This : User_LED)
+   procedure Turn_On (This : in out User_LED)
      renames STM32.GPIO.Clear;
-   procedure Turn_Off (This : User_LED)
+   procedure Turn_Off (This : in out User_LED)
      renames STM32.GPIO.Set;
 
    procedure All_LEDs_Off with Inline;
    procedure All_LEDs_On  with Inline;
-   procedure Toggle_LEDs (These : GPIO_Points)
+   procedure Toggle_LEDs (These : in out GPIO_Points)
      renames STM32.GPIO.Toggle;
 
 --     Gyro : Three_Axis_Gyroscope;
@@ -149,7 +150,7 @@ package STM32.Board is
    -- Touch Panel --
    -----------------
 
-   TP_I2C   : I2C_Port_Id renames I2C_1;
+   TP_I2C   : I2C_Port renames I2C_1;
 
    I2C1_SCL : GPIO_Point renames PB8;
    I2C1_SDA : GPIO_Point renames PB9;

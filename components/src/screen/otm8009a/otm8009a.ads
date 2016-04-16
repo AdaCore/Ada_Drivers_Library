@@ -1,10 +1,6 @@
+with Interfaces;           use Interfaces;
 with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-
-generic
-
-   type DSI_Data is array (Positive range <>) of Byte;
-
-   with procedure DSI_IO_WriteCmd (Data : DSI_Data);
+with HAL.DSI;
 
 package OTM8009A is
 
@@ -58,8 +54,31 @@ package OTM8009A is
 
    type LCD_Orientation is (Portrait, Landscape);
 
+   type OTM8009A_Device (DSI_Host   : HAL.DSI.DSI_Port_Ref;
+                         Channel_ID : HAL.DSI.DSI_Virtual_Channel_ID) is
+     tagged limited private;
+
    procedure Initialize
-     (Color_Mode  : OTM8009A_Color_Mode;
+     (This        : in out OTM8009A_Device;
+      Color_Mode  : OTM8009A_Color_Mode;
       Orientation : LCD_Orientation);
+
+private
+   type OTM8009A_Device (DSI_Host   : HAL.DSI.DSI_Port_Ref;
+                         Channel_ID : HAL.DSI.DSI_Virtual_Channel_ID) is
+     tagged limited record
+      Current_Shift : Byte := 0;
+   end record;
+
+   procedure DSI_IO_WriteCmd (This : in out OTM8009A_Device;
+                              Data : HAL.DSI.DSI_Data);
+
+   procedure Write (This    : in out OTM8009A_Device;
+                    Address : Unsigned_16;
+                    Data    : HAL.DSI.DSI_Data);
+
+   procedure Write (This   : in out OTM8009A_Device;
+                    S_Addr : Byte;
+                    Data   : HAL.DSI.DSI_Data);
 
 end OTM8009A;

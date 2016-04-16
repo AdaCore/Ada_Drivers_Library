@@ -82,7 +82,7 @@ package body FT5336 is
       Misc_Reg   : Unsigned_8;
    end record;
 
-   FT5336_Px_Regs                : constant array (Unsigned_8 range <>)
+   FT5336_Px_Regs                : constant array (Positive range <>)
                                       of FT5336_Pressure_Registers  :=
                                      (1  => (XH_Reg     => 16#03#,
                                              XL_Reg     => 16#04#,
@@ -339,7 +339,7 @@ package body FT5336 is
 
       Nb_Touch := Nb_Touch and FT5336_TD_STAT_MASK;
 
-      if Nb_Touch > FT5336_Px_Regs'Last then
+      if Natural (Nb_Touch) > FT5336_Px_Regs'Last then
          --  Overflow: set to 0
          Nb_Touch := 0;
       end if;
@@ -374,7 +374,11 @@ package body FT5336 is
    begin
       --  X/Y are swaped from the screen coordinates
 
-      Regs := FT5336_Px_Regs (Unsigned_8 (Touch_Id));
+      if Touch_Id not in FT5336_Px_Regs'Range then
+         return (0, 0, 0);
+      end if;
+
+      Regs := FT5336_Px_Regs (Touch_Id);
 
       Tmp.Low := This.I2C_Read (Regs.XL_Reg, Status);
 

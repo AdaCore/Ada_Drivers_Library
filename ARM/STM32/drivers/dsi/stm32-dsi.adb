@@ -45,6 +45,7 @@ pragma Warnings (Off, "* is an internal GNAT unit");
 with System.BB.Parameters; use System.BB.Parameters;
 pragma Warnings (On, "* is an internal GNAT unit");
 
+with HAL.DSI;           use HAL.DSI;
 with STM32_SVD.DSIHOST; use STM32_SVD.DSIHOST;
 with STM32_SVD.RCC;     use STM32_SVD.RCC;
 
@@ -68,13 +69,14 @@ package body STM32.DSI is
    ------------------------------
 
    procedure DSI_Config_Packet_Header
-     (Channel_ID : DSI_Virtual_Channel_ID;
+     (This       : in out DSI_Host;
+      Channel_ID : DSI_Virtual_Channel_ID;
       Data_Type  : DSI_Pkt_Data_Type;
       Data0      : Byte;
       Data1      : Byte)
    is
    begin
-      DSIHOST_Periph.DSI_GHCR :=
+      This.Periph.DSI_GHCR :=
         (DT     => DSI_Data_Type_Encoding (Data_Type),
          VCID   => Channel_Id,
          WCLSB  => Data0,
@@ -87,7 +89,8 @@ package body STM32.DSI is
    --------------------
 
    procedure DSI_Initialize
-     (PLL_N_Div                : DSI_PLLN_Div;
+     (This                     : in out DSI_Host;
+      PLL_N_Div                : DSI_PLLN_Div;
       PLL_IN_Div               : DSI_PLL_IDF;
       PLL_OUT_Div              : DSI_PLL_ODF;
       Auto_Clock_Lane_Control  : Boolean;
@@ -98,11 +101,11 @@ package body STM32.DSI is
       Start : Time;
    begin
       --  Enable the regulator
-      DSIHOST_Periph.DSI_WRPCR.REGEN := True;
+      This.Periph.DSI_WRPCR.REGEN := True;
 
       Start := Clock;
       --  Wait for the Regulator Ready Status
-      while not DSIHOST_Periph.DSI_WISR.RRS loop
+      while not This.Periph.DSI_WISR.RRS loop
          if Clock > (Start + Milliseconds (1000)) then
             raise Program_Error with "Timeout during DSI initialisation";
          end if;
@@ -112,22 +115,22 @@ package body STM32.DSI is
       RCC_Periph.APB2ENR.DSIEN := True;
 
       --  Make sure the DSI peripheral is OFF
-      DSI_Stop;
+      This.DSI_Stop;
 
       ---------------------------
       -- Configure the DSI PLL --
       ---------------------------
 
-      DSIHOST_Periph.DSI_WRPCR.IDF  := PLL_IN_Div;
-      DSIHOST_Periph.DSI_WRPCR.NDIV := PLL_N_Div;
-      DSIHOST_Periph.DSI_WRPCR.ODF  := DSI_PLL_ODF'Enum_Rep (PLL_OUT_Div);
+      This.Periph.DSI_WRPCR.IDF  := PLL_IN_Div;
+      This.Periph.DSI_WRPCR.NDIV := PLL_N_Div;
+      This.Periph.DSI_WRPCR.ODF  := DSI_PLL_ODF'Enum_Rep (PLL_OUT_Div);
 
       --  Enable the DSI PLL
-      DSIHOST_Periph.DSI_WRPCR.PLLEN := True;
+      This.Periph.DSI_WRPCR.PLLEN := True;
       --  Wait for the lock of the PLL
 
       Start := Clock;
-      while not DSIHOST_Periph.DSI_WISR.PLLLS loop
+      while not This.Periph.DSI_WISR.PLLLS loop
          if Clock > (Start + Milliseconds (1000)) then
             raise Program_Error with "Timeout during DSI PLL setup";
          end if;
@@ -138,22 +141,22 @@ package body STM32.DSI is
       ----------------------------
 
       --  Enable D-PHY clock and digital
-      DSIHOST_Periph.DSI_PCTLR.CKE := True;
-      DSIHOST_Periph.DSI_PCTLR.DEN := True;
+      This.Periph.DSI_PCTLR.CKE := True;
+      This.Periph.DSI_PCTLR.DEN := True;
 
       --  Clock lane configuration
-      DSIHOST_Periph.DSI_CLCR.DPCC := True;
-      DSIHOST_Periph.DSI_CLCR.ACR  := Auto_Clock_Lane_Control;
+      This.Periph.DSI_CLCR.DPCC := True;
+      This.Periph.DSI_CLCR.ACR  := Auto_Clock_Lane_Control;
 
       --  Configure the number of active data lanes
-      DSIHOST_Periph.DSI_PCCONFR.NL :=
+      This.Periph.DSI_PCCONFR.NL :=
         DSI_Number_Of_Lanes'Enum_Rep (Number_Of_Lanes);
 
       ----------------------------------
       -- Set the DSI Clock parameters --
       ----------------------------------
 
-      DSIHOST_Periph.DSIHSOT_CCR.TXECKDIV := TX_Escape_Clock_Division;
+      This.Periph.DSIHSOT_CCR.TXECKDIV := TX_Escape_Clock_Division;
 
       --  Calculate the bit period in high-speed mode in unit of 0.25 ns.
       --  The equation is UIX4 = IntegerPart ((1000/F_PHY_Mhz) * 4)
@@ -171,7 +174,7 @@ package body STM32.DSI is
          Unit_Interval_x4 : constant Word :=
                               ((4_000 * IDF * ODF) / (PLLN * HSE_MHz));
       begin
-         DSIHOST_Periph.DSI_WPCR1.UIX4 := UInt6 (Unit_Interval_x4);
+         This.Periph.DSI_WPCR1.UIX4 := UInt6 (Unit_Interval_x4);
       end;
 
       ----------------------
@@ -179,28 +182,28 @@ package body STM32.DSI is
       ----------------------
 
       --  Disable error interrupts
-      DSIHOST_Periph.DSI_IER0 := (others => <>);
-      DSIHOST_Periph.DSI_IER1 := (others => <>);
+      This.Periph.DSI_IER0 := (others => <>);
+      This.Periph.DSI_IER1 := (others => <>);
    end DSI_Initialize;
 
    ----------------
    -- DSI_Deinit --
    ----------------
 
-   procedure DSI_Deinit is
+   procedure DSI_Deinit (This : in out DSI_Host) is
    begin
       --  Disable the DSI wrapper and host
-      DSI_Stop;
+      This.DSI_Stop;
 
       --  D-PHY clock and digital disable
-      DSIHOST_Periph.DSI_PCTLR.DEN := False;
-      DSIHOST_Periph.DSI_PCTLR.CKE := False;
+      This.Periph.DSI_PCTLR.DEN := False;
+      This.Periph.DSI_PCTLR.CKE := False;
 
       --  Turn off the DSI PLL
-      DSIHOST_Periph.DSI_WRPCR.PLLEN := False;
+      This.Periph.DSI_WRPCR.PLLEN := False;
 
       --  Disable the regulator
-      DSIHOST_Periph.DSI_WRPCR.REGEN := False;
+      This.Periph.DSI_WRPCR.REGEN := False;
    end DSI_Deinit;
 
    --------------------------
@@ -208,7 +211,8 @@ package body STM32.DSI is
    --------------------------
 
    procedure DSI_Setup_Video_Mode
-     (Virtual_Channel             : DSI_Virtual_Channel_ID;
+     (This                        : in out DSI_Host;
+      Virtual_Channel             : DSI_Virtual_Channel_ID;
       Color_Coding                : DSI_Color_Mode;
       Loosely_Packed              : Boolean;
       Video_Mode                  : DSI_Video_Mode;
@@ -240,70 +244,70 @@ package body STM32.DSI is
         (DSI_Polarity, Boolean);
    begin
       --  Select video mode by resetting CMDM and SDIM bits
-      DSIHOST_Periph.DSI_MCR.CMDM := False;
-      DSIHOST_Periph.DSI_WCFGR.DSIM := False;
+      This.Periph.DSI_MCR.CMDM := False;
+      This.Periph.DSI_WCFGR.DSIM := False;
 
       --  Configure the video mode transmission type
-      DSIHOST_Periph.DSI_VMCR.VMT     := DSI_Video_Mode'Enum_Rep (Video_Mode);
+      This.Periph.DSI_VMCR.VMT     := DSI_Video_Mode'Enum_Rep (Video_Mode);
 
       --  Configure the video packet size
-      DSIHOST_Periph.DSI_VPCR.VPSIZE  := Packet_Size;
+      This.Periph.DSI_VPCR.VPSIZE  := Packet_Size;
 
       --  Set the chunks number to be transmitted through the DSI link
-      DSIHOST_Periph.DSI_VCCR.NUMC    := Number_Of_Chunks;
+      This.Periph.DSI_VCCR.NUMC    := Number_Of_Chunks;
 
       --  Set the size of the null packet
-      DSIHOST_Periph.DSI_VNPCR.NPSIZE := Null_Packet_Size;
+      This.Periph.DSI_VNPCR.NPSIZE := Null_Packet_Size;
 
       --  Select the virtual channel for the LTDC interface traffic
-      DSIHOST_Periph.DSI_LVCIDR.VCID  := Virtual_Channel;
+      This.Periph.DSI_LVCIDR.VCID  := Virtual_Channel;
 
       --  Configure the polarity of control signals
-      DSIHOST_Periph.DSI_LPCR.HSP   := To_Bool (HSync_Polarity);
-      DSIHOST_Periph.DSI_LPCR.VSP   := To_Bool (VSync_Polarity);
-      DSIHOST_Periph.DSI_LPCR.DEP   := To_Bool (DataEn_Polarity);
+      This.Periph.DSI_LPCR.HSP   := To_Bool (HSync_Polarity);
+      This.Periph.DSI_LPCR.VSP   := To_Bool (VSync_Polarity);
+      This.Periph.DSI_LPCR.DEP   := To_Bool (DataEn_Polarity);
 
       --  Select the color coding for the host
-      DSIHOST_Periph.DSI_LCOLCR.COLC := DSI_Color_Mode'Enum_Rep (Color_Coding);
+      This.Periph.DSI_LCOLCR.COLC := DSI_Color_Mode'Enum_Rep (Color_Coding);
       --  ... and for the wrapper
-      DSIHOST_Periph.DSI_WCFGR.COLMUX := DSI_Color_Mode'Enum_Rep (Color_Coding);
+      This.Periph.DSI_WCFGR.COLMUX := DSI_Color_Mode'Enum_Rep (Color_Coding);
 
       --  Enable/disable the loosely packed variant to 18-bit configuration
       if Color_Coding = RGB666 then
-         DSIHOST_Periph.DSI_LCOLCR.LPE := Loosely_Packed;
+         This.Periph.DSI_LCOLCR.LPE := Loosely_Packed;
       end if;
 
       --  Set the Horizontal Synchronization Active (HSA) in lane byte clock
       --  cycles
-      DSIHOST_Periph.DSI_VHSACR.HSA := HSync_Active_Duration;
+      This.Periph.DSI_VHSACR.HSA := HSync_Active_Duration;
       --  Set the Horizontal Back Porch
-      DSIHOST_Periph.DSI_VHBPCR.HBP := Horizontal_BackPorch;
+      This.Periph.DSI_VHBPCR.HBP := Horizontal_BackPorch;
       --  Total line time (HSA+HBP+HACT+HFP
-      DSIHOST_Periph.DSI_VLCR.HLINE := Horizontal_Line;
+      This.Periph.DSI_VLCR.HLINE := Horizontal_Line;
 
       --  Set the Vertical Synchronization Active
-      DSIHOST_Periph.DSI_VVSACR.VSA := VSync_Active_Duration;
+      This.Periph.DSI_VVSACR.VSA := VSync_Active_Duration;
       --  VBP
-      DSIHOST_Periph.DSI_VVBPCR.VBP := Vertical_BackPorch;
+      This.Periph.DSI_VVBPCR.VBP := Vertical_BackPorch;
       --  VFP
-      DSIHOST_Periph.DSI_VVFPCR.VFP := Vertical_FrontPorch;
+      This.Periph.DSI_VVFPCR.VFP := Vertical_FrontPorch;
       --  Vertical Active Period
-      DSIHOST_Periph.DSI_VVACR.VA   := Vertical_Active;
+      This.Periph.DSI_VVACR.VA   := Vertical_Active;
 
       --  Configure the command transmission mode
-      DSIHOST_Periph.DSI_VMCR.LPCE  := LP_Command_Enabled;
+      This.Periph.DSI_VMCR.LPCE  := LP_Command_Enabled;
 
       --  Low power configuration:
-      DSIHOST_Periph.DSI_LPMCR.LPSIZE  := LP_Largest_Packet_Size;
-      DSIHOST_Periph.DSI_LPMCR.VLPSIZE := LP_VACT_Largest_Packet_Size;
-      DSIHOST_Periph.DSI_VMCR.LPHFE    := LP_H_Front_Porch_Enable;
-      DSIHOST_Periph.DSI_VMCR.LPHBPE   := LP_H_Back_Porch_Enable;
-      DSIHOST_Periph.DSI_VMCR.LVAE     := LP_V_Active_Enable;
-      DSIHOST_Periph.DSI_VMCR.LPVFPE   := LP_V_Front_Porch_Enable;
-      DSIHOST_Periph.DSI_VMCR.LPVBPE   := LP_V_Back_Porch_Enable;
-      DSIHOST_Periph.DSI_VMCR.LPVSAE   := LP_V_Sync_Active_Enable;
+      This.Periph.DSI_LPMCR.LPSIZE  := LP_Largest_Packet_Size;
+      This.Periph.DSI_LPMCR.VLPSIZE := LP_VACT_Largest_Packet_Size;
+      This.Periph.DSI_VMCR.LPHFE    := LP_H_Front_Porch_Enable;
+      This.Periph.DSI_VMCR.LPHBPE   := LP_H_Back_Porch_Enable;
+      This.Periph.DSI_VMCR.LVAE     := LP_V_Active_Enable;
+      This.Periph.DSI_VMCR.LPVFPE   := LP_V_Front_Porch_Enable;
+      This.Periph.DSI_VMCR.LPVBPE   := LP_V_Back_Porch_Enable;
+      This.Periph.DSI_VMCR.LPVSAE   := LP_V_Sync_Active_Enable;
 
-      DSIHOST_Periph.DSI_VMCR.FBTAAE := Frame_BTA_Ack_Enable;
+      This.Periph.DSI_VMCR.FBTAAE := Frame_BTA_Ack_Enable;
    end DSI_Setup_Video_Mode;
 
    ------------------------------------
@@ -311,7 +315,8 @@ package body STM32.DSI is
    ------------------------------------
 
    procedure DSI_Setup_Adapted_Command_Mode
-     (Virtual_Channel             : DSI_Virtual_Channel_ID;
+     (This                        : in out DSI_Host;
+      Virtual_Channel             : DSI_Virtual_Channel_ID;
       Color_Coding                : DSI_Color_Mode;
       Command_Size                : Short;
       Tearing_Effect_Source       : DSI_Tearing_Effect_Source;
@@ -325,38 +330,38 @@ package body STM32.DSI is
    is
    begin
       --  Select the command mode by setting CMDM and DSIM bits
-      DSIHOST_Periph.DSI_MCR.CMDM := True;
-      DSIHOST_Periph.DSI_WCFGR.DSIM := True;
+      This.Periph.DSI_MCR.CMDM := True;
+      This.Periph.DSI_WCFGR.DSIM := True;
 
       --  Select the virtual channel for the LTDC interface traffic
-      DSIHOST_Periph.DSI_LVCIDR.VCID := Virtual_Channel;
+      This.Periph.DSI_LVCIDR.VCID := Virtual_Channel;
 
       --  Configure the polarity of control signals
-      DSIHOST_Periph.DSI_LPCR.HSP   :=
+      This.Periph.DSI_LPCR.HSP   :=
         DSI_Polarity'Enum_Rep (HSync_Polarity) = 1;
-      DSIHOST_Periph.DSI_LPCR.VSP   :=
+      This.Periph.DSI_LPCR.VSP   :=
         DSI_Polarity'Enum_Rep (VSync_Polarity) = 1;
-      DSIHOST_Periph.DSI_LPCR.DEP   :=
+      This.Periph.DSI_LPCR.DEP   :=
         DSI_Polarity'Enum_Rep (DataEn_Polarity) = 1;
 
       --  Select the color coding for the host
-      DSIHOST_Periph.DSI_LCOLCR.COLC := DSI_Color_Mode'Enum_Rep (Color_Coding);
+      This.Periph.DSI_LCOLCR.COLC := DSI_Color_Mode'Enum_Rep (Color_Coding);
       --  ... and for the wrapper
-      DSIHOST_Periph.DSI_WCFGR.COLMUX :=
+      This.Periph.DSI_WCFGR.COLMUX :=
         DSI_Color_Mode'Enum_Rep (Color_Coding);
 
       --  Configure the maximum allowed size for write memory command
-      DSIHOST_Periph.DSI_LCCR.CMDSIZE := Command_Size;
+      This.Periph.DSI_LCCR.CMDSIZE := Command_Size;
 
       --  Configure the tearing effect source and polarity
-      DSIHOST_Periph.DSI_WCFGR.TESRC := Tearing_Effect_Source = TE_External;
-      DSIHOST_Periph.DSI_WCFGR.TEPOL :=
+      This.Periph.DSI_WCFGR.TESRC := Tearing_Effect_Source = TE_External;
+      This.Periph.DSI_WCFGR.TEPOL :=
         DSI_TE_Polarity'Enum_Rep (Tearing_Effect_Polarity) = 1;
-      DSIHOST_Periph.DSI_WCFGR.AR    := Automatic_Refresh;
-      DSIHOST_Periph.DSI_WCFGR.VSPOL := DSI_EDGE'Enum_Rep (VSync_Edge) = 1;
+      This.Periph.DSI_WCFGR.AR    := Automatic_Refresh;
+      This.Periph.DSI_WCFGR.VSPOL := DSI_EDGE'Enum_Rep (VSync_Edge) = 1;
 
       --  Tearing effect acknowledge request
-      DSIHOST_Periph.DSI_CMCR.TEARE := TE_Acknowledge_Request;
+      This.Periph.DSI_CMCR.TEARE := TE_Acknowledge_Request;
    end DSI_Setup_Adapted_Command_Mode;
 
    -----------------------
@@ -364,7 +369,8 @@ package body STM32.DSI is
    -----------------------
 
    procedure DSI_Setup_Command
-     (LP_Gen_Short_Write_No_P  : Boolean := True;
+     (This                     : in out DSI_Host;
+      LP_Gen_Short_Write_No_P  : Boolean := True;
       LP_Gen_Short_Write_One_P : Boolean := True;
       LP_Gen_Short_Write_Two_P : Boolean := True;
       LP_Gen_Short_Read_No_P   : Boolean := True;
@@ -379,19 +385,19 @@ package body STM32.DSI is
       Acknowledge_Request      : Boolean := False)
    is
    begin
-      DSIHOST_Periph.DSI_CMCR.GSW0TX := LP_Gen_Short_Write_No_P;
-      DSIHOST_Periph.DSI_CMCR.GSW1TX := LP_Gen_Short_Write_One_P;
-      DSIHOST_Periph.DSI_CMCR.GSW2TX := LP_Gen_Short_Write_Two_P;
-      DSIHOST_Periph.DSI_CMCR.GSR0TX := LP_Gen_Short_Read_No_P;
-      DSIHOST_Periph.DSI_CMCR.GSR1TX := LP_Gen_Short_Read_One_P;
-      DSIHOST_Periph.DSI_CMCR.GSR2TX := LP_Gen_Short_Read_Two_P;
-      DSIHOST_Periph.DSI_CMCR.GLWTX := LP_Gen_Long_Write;
-      DSIHOST_Periph.DSI_CMCR.DSW0TX := LP_DCS_Short_Write_No_P;
-      DSIHOST_Periph.DSI_CMCR.DSW1TX := LP_DCS_Short_Write_One_P;
-      DSIHOST_Periph.DSI_CMCR.DSR0TX := LP_DCS_Short_Read_No_P;
-      DSIHOST_Periph.DSI_CMCR.DLWTX := LP_DCS_Long_Write;
-      DSIHOST_Periph.DSI_CMCR.MRDPS := LP_Max_Read_Packet;
-      DSIHOST_Periph.DSI_CMCR.ARE := Acknowledge_Request;
+      This.Periph.DSI_CMCR.GSW0TX := LP_Gen_Short_Write_No_P;
+      This.Periph.DSI_CMCR.GSW1TX := LP_Gen_Short_Write_One_P;
+      This.Periph.DSI_CMCR.GSW2TX := LP_Gen_Short_Write_Two_P;
+      This.Periph.DSI_CMCR.GSR0TX := LP_Gen_Short_Read_No_P;
+      This.Periph.DSI_CMCR.GSR1TX := LP_Gen_Short_Read_One_P;
+      This.Periph.DSI_CMCR.GSR2TX := LP_Gen_Short_Read_Two_P;
+      This.Periph.DSI_CMCR.GLWTX := LP_Gen_Long_Write;
+      This.Periph.DSI_CMCR.DSW0TX := LP_DCS_Short_Write_No_P;
+      This.Periph.DSI_CMCR.DSW1TX := LP_DCS_Short_Write_One_P;
+      This.Periph.DSI_CMCR.DSR0TX := LP_DCS_Short_Read_No_P;
+      This.Periph.DSI_CMCR.DLWTX := LP_DCS_Long_Write;
+      This.Periph.DSI_CMCR.MRDPS := LP_Max_Read_Packet;
+      This.Periph.DSI_CMCR.ARE := Acknowledge_Request;
 
    end DSI_Setup_Command;
 
@@ -400,21 +406,22 @@ package body STM32.DSI is
    ----------------------------
 
    procedure DSI_Setup_Flow_Control
-     (Flow_Control : DSI_Flow_Control)
+     (This        : in out DSI_Host;
+      Flow_Control : DSI_Flow_Control)
    is
    begin
-      DSIHOST_Periph.DSI_PCR := (others =>  <>);
+      This.Periph.DSI_PCR := (others =>  <>);
       case Flow_Control is
          when Flow_Control_CRC_RX =>
-            DSIHOST_Periph.DSI_PCR.CRCRXE := True;
+            This.Periph.DSI_PCR.CRCRXE := True;
          when Flow_Control_ECC_RX =>
-            DSIHOST_Periph.DSI_PCR.ECCRXE := True;
+            This.Periph.DSI_PCR.ECCRXE := True;
          when Flow_Control_BTA =>
-            DSIHOST_Periph.DSI_PCR.BTAE := True;
+            This.Periph.DSI_PCR.BTAE := True;
          when Flow_Control_EOTP_RX =>
-            DSIHOST_Periph.DSI_PCR.ETRXE := True;
+            This.Periph.DSI_PCR.ETRXE := True;
          when Flow_Control_EOTP_TX =>
-            DSIHOST_Periph.DSI_PCR.ETTXE := True;
+            This.Periph.DSI_PCR.ETTXE := True;
       end case;
    end DSI_Setup_Flow_Control;
 
@@ -422,41 +429,43 @@ package body STM32.DSI is
    -- DSI_Start --
    ---------------
 
-   procedure DSI_Start is
+   procedure DSI_Start (This : in out DSI_Host) is
    begin
       --  Enable the DSI Host
-      DSIHOST_Periph.DSI_CR.EN := True;
+      This.Periph.DSI_CR.EN := True;
       --  Enable the DSI wrapper
-      DSIHOST_Periph.DSI_WCR.DSIEN := True;
+      This.Periph.DSI_WCR.DSIEN := True;
    end DSI_Start;
 
    --------------
    -- DSI_Stop --
    --------------
 
-   procedure DSI_Stop is
+   procedure DSI_Stop (This : in out DSI_Host) is
    begin
       --  Disable the DSI Host
-      DSIHOST_Periph.DSI_CR.EN := False;
+      This.Periph.DSI_CR.EN := False;
       --  Disable the DSI wrapper
-      DSIHOST_Periph.DSI_WCR.DSIEN := False;
+      This.Periph.DSI_WCR.DSIEN := False;
    end DSI_Stop;
 
    -----------------
    -- DSI_Refresh --
    -----------------
 
-   procedure DSI_Refresh
-   is
+   procedure DSI_Refresh (This : in out DSI_Host) is
    begin
-      DSIHOST_Periph.DSI_WCR.LTDCEN := True;
+      This.Periph.DSI_WCR.LTDCEN := True;
    end DSI_Refresh;
+
    ---------------------
    -- DSI_Short_Write --
    ---------------------
 
+   overriding
    procedure DSI_Short_Write
-     (Channel_ID : DSI_Virtual_Channel_ID;
+     (This       : in out DSI_Host;
+      Channel_ID : DSI_Virtual_Channel_ID;
       Mode       : DSI_Short_Write_Packet_Data_Type;
       Param1     : Byte;
       Param2     : Byte)
@@ -465,7 +474,7 @@ package body STM32.DSI is
    begin
       --  Wait for FIFO empty
       Start := Clock;
-      while not DSIHOST_Periph.DSI_GPSR.CMDFE loop
+      while not This.Periph.DSI_GPSR.CMDFE loop
          if Clock > Start + Milliseconds (1000) then
             raise Program_Error with
               "Timeout while waiting for DSI FIFO empty";
@@ -474,15 +483,17 @@ package body STM32.DSI is
 
       --  Configure the packet to send a short DCS command with 0 or 1
       --  parameter
-      DSI_Config_Packet_Header (Channel_ID, Mode, Param1, Param2);
+      This.DSI_Config_Packet_Header (Channel_ID, Mode, Param1, Param2);
    end DSI_Short_Write;
 
    --------------------
    -- DSI_Long_Write --
    --------------------
 
+   overriding
    procedure DSI_Long_Write
-     (Channel_Id : DSI_Virtual_Channel_ID;
+     (This       : in out DSI_Host;
+      Channel_Id : DSI_Virtual_Channel_ID;
       Mode       : DSI_Long_Write_Packet_Data_Type;
       Param1     : Byte;
       Parameters : DSI_Data)
@@ -496,7 +507,7 @@ package body STM32.DSI is
    begin
       --  Wait for FIFO empty
       Start := Clock;
-      while not DSIHOST_Periph.DSI_GPSR.CMDFE loop
+      while not This.Periph.DSI_GPSR.CMDFE loop
          if Clock > Start + Milliseconds (1000) then
             raise Program_Error with
               "Timeout while waiting for DSI FIFO empty";
@@ -510,19 +521,19 @@ package body STM32.DSI is
          Value.Arr (Off) := Param;
          Off := Off + 1;
          if Off > Value.Arr'Last then
-            DSIHOST_Periph.DSI_GPDR := Value;
+            This.Periph.DSI_GPDR := Value;
             Value.Val := 0;
             Off       := Value.Arr'First;
          end if;
       end loop;
 
       if Off /= Value.Arr'First then
-         DSIHOST_Periph.DSI_GPDR := Value;
+         This.Periph.DSI_GPDR := Value;
       end if;
 
       Val1 := Word (Parameters'Length + 1) and 16#FF#;
       Val2 := Shift_Right (Word (Parameters'Length + 1) and 16#FF00#, 8);
-      DSI_Config_Packet_Header
+      This.DSI_Config_Packet_Header
         (Channel_Id, Mode, Byte (Val1), Byte (Val2));
    end DSI_Long_Write;
 

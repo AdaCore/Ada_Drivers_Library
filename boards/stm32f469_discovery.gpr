@@ -1,5 +1,6 @@
 with "../ARM/cortex_m/cortex_shared.gpr";
 with "../ARM/STM32/stm32f46_79x.gpr";
+with "../components/components.gpr";
 
 library project STM32F469_Discovery is
 
@@ -11,14 +12,13 @@ library project STM32F469_Discovery is
    for Library_Dir use "lib/stm32f469disco/" & Cortex_Shared.RTS;
    for Object_Dir use "obj/stm32f469disco/" & Cortex_Shared.RTS;
 
-   for Source_Dirs use
-     ("stm32f469_discovery",
-      "../hal",
-      "../hal/touch_panel",
-      "../components/button",
-      "../components/sdram",
-      "../components/lcd/otm8009a",
-      "../components/touch_panel/ft6x06");
+   for Source_Dirs use ("stm32f469_discovery");
+--        "../hal",
+--        "../hal/touch_panel",
+--        "../components/button",
+--        "../components/sdram",
+--        "../components/lcd/otm8009a",
+--        "../components/touch_panel/ft6x06");
 
    package Compiler renames STM32F46_79x.Compiler;
 

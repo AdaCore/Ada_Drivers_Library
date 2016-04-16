@@ -32,10 +32,52 @@
 --  Driver package for the FT6x06 touch screen panel
 --  Based on the ft6x06 driver from MCD Application Team
 
+with Interfaces.Bit_Types; use Interfaces.Bit_Types;
 with Interfaces; use Interfaces;
+with HAL.I2C;
+with HAL.Touch_Panel;
 
 package FT6x06 is
 
+   type FT6x06_Device (Port     : HAL.I2C.I2C_Port_Ref;
+                       I2C_Addr : HAL.I2C.I2C_Address) is
+     tagged limited private;
+
+   subtype Touch_Identifier is Natural range 0 .. 10;
+
+   function Check_Id (This : in out FT6x06_Device) return Boolean;
+   --  Check the device Id: returns true on a FT5336 touch panel, False is
+   --  none is found.
+
+   procedure TP_Set_Use_Interrupts (This : in out FT6x06_Device;
+                                    Enabled : Boolean);
+   --  Whether the touch panel uses interrupts of polling to process touch
+   --  information
+
+   function Active_Touch_Points (This : in out FT6x06_Device)
+                                 return Touch_Identifier;
+   --  Retrieve the number of active touch points
+
+   function Get_Touch_Point (This     : in out FT6x06_Device;
+                             Touch_Id : Touch_Identifier)
+                             return HAL.Touch_Panel.TP_Touch_State;
+   --  Retrieves the position and pressure information of the specified
+   --  touch
+private
+
+   type FT6x06_Device (Port     : HAL.I2C.I2C_Port_Ref;
+                       I2C_Addr : HAL.I2C.I2C_Address) is
+     tagged limited null record;
+
+   function I2C_Read (This   : in out FT6x06_Device;
+                      Reg    : Byte;
+                      Status : out Boolean)
+                      return Byte;
+
+   procedure I2C_Write (This   : in out FT6x06_Device;
+                        Reg    : Byte;
+                        Data   : Byte;
+                        Status : out Boolean);
    ------------------------------------------------------------
    -- Definitions for FT6206 I2C register addresses on 8 bit --
    ------------------------------------------------------------
@@ -105,7 +147,7 @@ package FT6x06 is
       Misc_Reg   : Unsigned_8;
    end record;
 
-   FT6206_Px_Regs                : constant array (Unsigned_8 range <>)
+   FT6206_Px_Regs                : constant array (Positive range <>)
                                       of FT6206_Pressure_Registers  :=
                                      (1  => (XH_Reg     => 16#03#,
                                              XL_Reg     => 16#04#,

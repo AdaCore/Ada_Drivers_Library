@@ -38,9 +38,11 @@
 --   COPYRIGHT(c) 2015 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with STM32.Device; use STM32.Device;
+with STM32_SVD.DSIHOST;
+with HAL.DSI;
 
 package STM32.DSI is
+   package SVD_DSI renames STM32_SVD.DSIHOST;
 
    type DSI_Number_Of_Lanes is
      (One_Data_Lane,
@@ -64,19 +66,6 @@ package STM32.DSI is
       PLL_OUT_DIV4,
       PLL_OUT_DIV8)
      with Size => 2;
-
-   procedure DSI_Initialize
-     (PLL_N_Div                : DSI_PLLN_Div;
-      PLL_IN_Div               : DSI_PLL_IDF;
-      PLL_OUT_Div              : DSI_PLL_ODF;
-      Auto_Clock_Lane_Control  : Boolean;
-      TX_Escape_Clock_Division : Byte;
-      --  The TX_ESC clock division. 0 or 1 stops the clock.
-      Number_Of_Lanes          : DSI_Number_Of_Lanes);
-
-   procedure DSI_Deinit;
-
-   subtype DSI_Virtual_Channel_ID is UInt2;
 
    type DSI_Color_Mode is
      (RGB565,
@@ -120,8 +109,25 @@ package STM32.DSI is
       Flow_Control_EOTP_RX,
       Flow_Control_EOTP_TX);
 
+   type DSI_Host (Periph : not null access SVD_DSI.DSIHOST_Peripheral) is
+     limited new HAL.DSI.DSI_Port with private;
+
+
+   procedure DSI_Initialize
+     (This                     : in out DSI_Host;
+      PLL_N_Div                : DSI_PLLN_Div;
+      PLL_IN_Div               : DSI_PLL_IDF;
+      PLL_OUT_Div              : DSI_PLL_ODF;
+      Auto_Clock_Lane_Control  : Boolean;
+      TX_Escape_Clock_Division : Byte;
+      --  The TX_ESC clock division. 0 or 1 stops the clock.
+      Number_Of_Lanes          : DSI_Number_Of_Lanes);
+
+   procedure DSI_Deinit (This : in out DSI_Host);
+
    procedure DSI_Setup_Video_Mode
-     (Virtual_Channel             : DSI_Virtual_Channel_ID;
+     (This                        : in out DSI_Host;
+      Virtual_Channel             : HAL.DSI.DSI_Virtual_Channel_ID;
       Color_Coding                : DSI_Color_Mode;
       Loosely_Packed              : Boolean;
       Video_Mode                  : DSI_Video_Mode;
@@ -150,7 +156,8 @@ package STM32.DSI is
       Frame_BTA_Ack_Enable        : Boolean);
 
    procedure DSI_Setup_Adapted_Command_Mode
-     (Virtual_Channel             : DSI_Virtual_Channel_ID;
+     (This                        : in out DSI_Host;
+      Virtual_Channel             : HAL.DSI.DSI_Virtual_Channel_ID;
       Color_Coding                : DSI_Color_Mode;
       Command_Size                : Short;
       Tearing_Effect_Source       : DSI_Tearing_Effect_Source;
@@ -163,7 +170,8 @@ package STM32.DSI is
       TE_Acknowledge_Request      : Boolean);
 
    procedure DSI_Setup_Command
-     (LP_Gen_Short_Write_No_P  : Boolean := True;
+     (This                     : in out DSI_Host;
+      LP_Gen_Short_Write_No_P  : Boolean := True;
       LP_Gen_Short_Write_One_P : Boolean := True;
       LP_Gen_Short_Write_Two_P : Boolean := True;
       LP_Gen_Short_Read_No_P   : Boolean := True;
@@ -178,43 +186,30 @@ package STM32.DSI is
       Acknowledge_Request      : Boolean := False);
 
    procedure DSI_Setup_Flow_Control
-     (Flow_Control : DSI_Flow_Control);
+     (This         : in out DSI_Host;
+      Flow_Control : DSI_Flow_Control);
 
-   procedure DSI_Start;
-   procedure DSI_Stop;
-   procedure DSI_Refresh;
+   procedure DSI_Start (This : in out DSI_Host);
+   procedure DSI_Stop (This : in out DSI_Host);
+   procedure DSI_Refresh (This : in out DSI_Host);
 
-   type DSI_Data is array (Positive range <>) of Byte;
-
-   type DSI_Pkt_Data_Type is
-     (DCS_Short_Pkt_Write_P0, --  DCS Short write, no parameter
-      DCS_Short_Pkt_Write_P1, --  DCS Short write, one parameter
-      Gen_Short_Pkt_Write_P0, --  Generic Short write, no parameter
-      Gen_Short_Pkt_Write_P1, --  Generic Short write, one parameter
-      Gen_Short_Pkt_Write_P2, --  Generic Short write, two parameters
-      DCS_Long_Pkt_Write,     --  DCS Long write
-      Gen_Long_Pkt_Write,     --  Generic Long write
-      DCS_Short_Pkt_Read,     --  DCS Short read
-      Gen_Short_Pkg_Read_P0,  --  Gen read, no parameter
-      Gen_Short_Pkg_Read_P1,  --  Gen read, one parameter
-      Gen_Short_Pkg_Read_P2); --  Gen read, two parameter
-
-   subtype DSI_Short_Write_Packet_Data_Type is DSI_Pkt_Data_Type range
-     DCS_Short_Pkt_Write_P0 .. Gen_Short_Pkt_Write_P2;
-
-   subtype DSI_Long_Write_Packet_Data_Type is DSI_Pkt_Data_Type range
-     DCS_Long_Pkt_Write .. Gen_Long_Pkt_Write;
-
+   overriding
    procedure DSI_Short_Write
-     (Channel_ID : DSI_Virtual_Channel_ID;
-      Mode       : DSI_Short_Write_Packet_Data_Type;
+     (This       : in out DSI_Host;
+      Channel_ID : HAL.DSI.DSI_Virtual_Channel_ID;
+      Mode       : HAL.DSI.DSI_Short_Write_Packet_Data_Type;
       Param1     : Byte;
       Param2     : Byte);
 
+   overriding
    procedure DSI_Long_Write
-     (Channel_Id : DSI_Virtual_Channel_ID;
-      Mode       : DSI_Long_Write_Packet_Data_Type;
+     (This       : in out DSI_Host;
+      Channel_Id : HAL.DSI.DSI_Virtual_Channel_ID;
+      Mode       : HAL.DSI.DSI_Long_Write_Packet_Data_Type;
       Param1     : Byte;
-      Parameters : DSI_Data);
+      Parameters : HAL.DSI.DSI_Data);
+private
+   type DSI_Host (Periph : not null access SVD_DSI.DSIHOST_Peripheral) is
+     limited new HAL.DSI.DSI_Port with null record;
 
 end STM32.DSI;

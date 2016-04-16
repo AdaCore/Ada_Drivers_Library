@@ -26,8 +26,10 @@ package FT5336 is
    --  Retrieve the number of active touch points
 
    function Get_Touch_Point (This     : in out FT5336_Device;
-                             Touch_Id : Touch_Identifier) return
-     HAL.Touch_Panel.TP_Touch_State;
+                             Touch_Id : Touch_Identifier)
+                             return HAL.Touch_Panel.TP_Touch_State;
+   --  Retrieves the position and pressure information of the specified
+   --  touch
 
 private
 

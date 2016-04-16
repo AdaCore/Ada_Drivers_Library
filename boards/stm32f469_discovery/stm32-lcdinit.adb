@@ -49,45 +49,16 @@ with STM32.DSI;            use STM32.DSI;
 with STM32_SVD.DSIHOST;    use STM32_SVD.DSIHOST;
 with STM32_SVD.RCC;        use STM32_SVD.RCC;
 with STM32_SVD.LTDC;       use STM32_SVD.LTDC;
-
+with HAL.DSI;
 with OTM8009A;
 
 package body STM32.LCDInit is
 
-   LCD_Channel : constant DSI_Virtual_Channel_ID := 0;
+   LCD_Channel : constant HAL.DSI.DSI_Virtual_Channel_ID := 0;
    --  Only one display on this board, constant to 0
 
-   procedure DSI_IO_WriteCmd (Data : DSI_Data);
-
-   package LCD_Display is new OTM8009A
-     (DSI_Data, DSI_IO_WriteCmd);
-
-   ---------------------
-   -- DSI_IO_WriteCmd --
-   ---------------------
-
-   procedure DSI_IO_WriteCmd (Data : DSI_Data)
-   is
-   begin
-      if Data'Length = 0 then
-         return;
-      elsif Data'Length = 1 then
-         DSI_Short_Write (LCD_Channel,
-                          Mode   => DCS_Short_Pkt_Write_P0,
-                          Param1 => Data (1),
-                          Param2 => 16#00#);
-      elsif Data'Length = 2 then
-         DSI_Short_Write (LCD_Channel,
-                          Mode   => DCS_Short_Pkt_Write_P1,
-                          Param1 => Data (1),
-                          Param2 => Data (2));
-      else
-         DSI_Long_Write (LCD_Channel,
-                         Mode       => DCS_Long_Pkt_Write,
-                         Param1     => Data (Data'First),
-                         Parameters => Data (Data'First + 1 .. Data'Last));
-      end if;
-   end DSI_IO_WriteCmd;
+   LCD_Display : OTM8009A.OTM8009A_Device (DSI_Host   => DSI_1'Access,
+                                           Channel_Id => LCD_Channel);
 
    ---------------
    -- LCD_Reset --
@@ -155,11 +126,11 @@ package body STM32.LCDInit is
    begin
       --  Now setup the DSI
 
-      STM32.DSI.DSI_Deinit;
+      DSI_1.DSI_Deinit;
 
       --  HSE input: 25MHz / IN_Div * N_Div => 1000 MHz = VCO
       --  VCO / ODF => 500 MHz
-      STM32.DSI.DSI_Initialize
+      DSI_1.DSI_Initialize
         (Auto_Clock_Lane_Control  => True,
          TX_Escape_Clock_Division => 3, -- 62500 / 4 = 15625 kHz < 20kHz (max)
          Number_Of_Lanes          => Two_Data_Lanes,
@@ -167,7 +138,7 @@ package body STM32.LCDInit is
          PLL_IN_Div               => PLL_IN_DIV2,
          PLL_OUT_Div              => PLL_OUT_DIV1);
 
-      STM32.DSI.DSI_Setup_Video_Mode
+      DSI_1.DSI_Setup_Video_Mode
         (Virtual_Channel             => LCD_Channel,
          Color_Coding                => DSI_LCD_Color_Mode,
          Loosely_Packed              => False,
@@ -197,17 +168,17 @@ package body STM32.LCDInit is
          Frame_BTA_Ack_Enable        => True);
 
       --  Enable the DSI Host and Wrapper
-      STM32.DSI.DSI_Start;
+      DSI_1.DSI_Start;
 
       --  LCD panel init
       pragma Warnings (Off, "condition is always *");
       LCD_Display.Initialize
         ((if DSI_LCD_Color_Mode = RGB565
-          then LCD_Display.RGB565
-          else LCD_Display.RGB888),
+          then OTM8009A.RGB565
+          else OTM8009A.RGB888),
          (if Orientation = Landscape
-          then LCD_Display.Landscape
-          else LCD_Display.Portrait));
+          then OTM8009A.Landscape
+          else OTM8009A.Portrait));
       pragma Warnings (On, "condition is always *");
    end Post_LTDC_Initialize;
 
