@@ -2,26 +2,28 @@ with "../ARM/cortex_m/cortex_shared.gpr";
 with "../ARM/STM32/stm32f7x.gpr";
 with "../components/components.gpr";
 
-library project STM32F7_Discovery is
+library project STM32F7_Discovery extends "../config.gpr" is
 
    for Target use "arm-eabi";
    for Runtime ("Ada") use STM32F7x'Runtime ("Ada");
 
    for Library_Name use "stm32f7disco";
    for Library_Kind use "static";
-   for Library_Dir use "lib/stm32f7disco/" & Cortex_Shared.RTS;
-   for Object_Dir use "obj/stm32f7disco/" & Cortex_Shared.RTS;
+   for Library_Dir use "lib/stm32f7disco/" & Config.RTS;
+   for Object_Dir use "obj/stm32f7disco/" & Config.RTS;
 
    for Source_Dirs use ("stm32f7_discovery/");
 
    package Compiler is
       for Default_Switches ("Ada") use
-        STM32F7x.Compiler'Default_Switches ("Ada");
+        Config.Compiler'Default_Switches ("Ada");
       --  ??? Below is mandatory in some situations where the LCD displays
       --  shows lots of strange artifacts if the SDRAM driver is compiled with
       --  higher optimisation level. Needs more investigation to determine
       --  what is going on
       for Switches ("stm32-sdram.adb") use ("-g", "-O0");
    end Compiler;
+
+   package Builder renames Config.Builder;
 
 end STM32F7_Discovery;

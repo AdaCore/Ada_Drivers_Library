@@ -1,22 +1,3 @@
-abstract project Cortex_Shared is
-
-   type BUILD_TYPE is
-      ("Debug", "Production");
-   Build : BUILD_Type := external ("BUILD", "Debug");
-
-   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
-   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
-
-   package Compiler is
-      case Build is
-         when "Production" =>
-            for Default_Switches ("Ada") use ("-O3");
-         when "Debug" =>
-            for Default_Switches ("Ada") use ("-O0");
-      end case;
-      for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
-                ("-gnatwa", "-gnatQ", "-gnatw.X", "-gnatyO",
-                 "-ffunction-sections", "-fdata-sections");
-   end Compiler;
-
+abstract project Cortex_Shared extends "../../config.gpr" is
+   for Source_Dirs use ();
 end Cortex_Shared;

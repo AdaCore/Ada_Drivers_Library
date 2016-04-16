@@ -1,7 +1,8 @@
 with "../ARM/cortex_m/cortex_shared.gpr";
 with "../ARM/STM32/stm32f40x.gpr";
+with "../components/components.gpr";
 
-library project STM32F4_Discovery is
+library project STM32F4_Discovery extends "../config.gpr" is
 
    for Target use "arm-eabi";
    for Runtime ("Ada") use STM32F40x'Runtime ("Ada");
@@ -11,10 +12,11 @@ library project STM32F4_Discovery is
    for Library_Dir use "lib/stm32f4/" & Cortex_Shared.RTS;
    for Object_Dir use "obj/stm32f4/" & Cortex_Shared.RTS;
 
-   for Source_Dirs use
-     ("stm32f4_discovery",
-      "../components/gyro/lis3dsh");
+   for Source_Dirs use ("stm32f4_discovery");
 
    package Compiler renames STM32F40x.Compiler;
+
+   package Compiler renames Config.Compiler;
+   package Builder renames Config.Builder;
 
 end STM32F4_Discovery;

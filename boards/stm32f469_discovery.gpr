@@ -2,24 +2,19 @@ with "../ARM/cortex_m/cortex_shared.gpr";
 with "../ARM/STM32/stm32f46_79x.gpr";
 with "../components/components.gpr";
 
-library project STM32F469_Discovery is
+library project STM32F469_Discovery extends "../config.gpr" is
 
    for Target use "arm-eabi";
    for Runtime ("Ada") use STM32F46_79x'Runtime ("Ada");
 
    for Library_Name use "stm32f469disco";
    for Library_Kind use "static";
-   for Library_Dir use "lib/stm32f469disco/" & Cortex_Shared.RTS;
-   for Object_Dir use "obj/stm32f469disco/" & Cortex_Shared.RTS;
+   for Library_Dir use "lib/stm32f469disco/" & Config.RTS;
+   for Object_Dir use "obj/stm32f469disco/" & Config.RTS;
 
    for Source_Dirs use ("stm32f469_discovery");
---        "../hal",
---        "../hal/touch_panel",
---        "../components/button",
---        "../components/sdram",
---        "../components/lcd/otm8009a",
---        "../components/touch_panel/ft6x06");
 
-   package Compiler renames STM32F46_79x.Compiler;
+   package Compiler renames Config.Compiler;
+   package Builder renames Config.Builder;
 
 end STM32F469_Discovery;

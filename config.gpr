@@ -1,0 +1,37 @@
+--  This abstract project defines common scenario variables and switches used
+--  all over the library.
+abstract project Config is
+
+   for Languages use ("Ada");
+   for Source_Dirs use ();
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
+
+   type LOADER_Type is
+      ("RAM", "ROM");
+   LOADER : LOADER_Type := external ("LOADER", "ROM");
+
+   type BUILD_TYPE is
+      ("Debug", "Production");
+   Build : BUILD_Type := external ("BUILD", "Debug");
+
+   package Compiler is
+      case Build is
+         when "Production" =>
+            for Default_Switches ("Ada") use ("-O3", "-gnatp");
+         when "Debug" =>
+            for Default_Switches ("Ada") use ("-O0", "-fcallgraph-info=su");
+      end case;
+      for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
+        ("-gnatwa", "-gnatQ", "-gnatw.X", "-gnaty", "-gnatyO",
+         "-ffunction-sections", "-fdata-sections");
+   end Compiler;
+
+   package Builder is
+      case Build is
+         when "Production" =>
+         when "Debug" =>
+            for Default_Switches ("Ada") use ("-g");
+      end case;
+   end Builder;
+end Config;

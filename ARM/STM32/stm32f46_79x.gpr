@@ -1,15 +1,15 @@
 with "../cortex_m/cortex_shared.gpr";
 with "../../hal/HAL.gpr";
 
-project STM32F46_79x is
+project STM32F46_79x extends "../../config.gpr" is
 
    for Target use "arm-eabi";
-   for Runtime ("Ada") use Cortex_Shared.RTS & "-stm32f469disco";
+   for Runtime ("Ada") use Config.RTS & "-stm32f469disco";
 
    for Library_Name use "stm32f469";
    for Library_Kind use "static";
-   for Library_Dir use "lib/stm32f46_79x/" & Cortex_Shared.RTS;
-   for Object_Dir use "obj/stm32f46_79x/" & Cortex_Shared.RTS;
+   for Library_Dir use "lib/stm32f46_79x/" & Config.RTS;
+   for Object_Dir use "obj/stm32f46_79x/" & Config.RTS;
 
   for Source_Dirs use Project'Source_Dirs &
      ("../cortex_m",
@@ -25,6 +25,7 @@ project STM32F46_79x is
       "drivers/dsi",
       "drivers/ltdc");
 
-   package Compiler renames Cortex_Shared.Compiler;
+   package Compiler renames Config.Compiler;
+   package Builder renames Config.Builder;
 
 end STM32F46_79x;

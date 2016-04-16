@@ -1,15 +1,4 @@
-project Shared is
-
-   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
-   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
-
-   type LOADER_Type is
-      ("RAM", "ROM");
-   LOADER : LOADER_Type := external ("LOADER", "ROM");
-
-   type BUILD_TYPE is
-      ("Debug", "Production");
-   Build : BUILD_Type := external ("BUILD", "Debug");
+project Shared extends "../../config.gpr" is
 
    type LCH_Type is ("led", "lcd");
    LCH : LCH_Type := external ("LCH", "lcd");
@@ -18,7 +7,7 @@ project Shared is
    for Target use "arm-eabi";
    for Source_Dirs use ("gui");
 
-   case RTS is
+   case Config.RTS is
       when "ravenscar-sfp" =>
          for Source_Dirs use Project'Source_Dirs & ("lch_sfp");
          case LCH is
@@ -36,25 +25,6 @@ project Shared is
                for Source_Dirs use Project'Source_Dirs & ("lch_full/lcd");
          end case;
    end case;
-
-   package Compiler is
-      case Build is
-         when "Production" =>
-            for Default_Switches ("Ada") use ("-O3", "-gnatp");
-         when "Debug" =>
-            for Default_Switches ("Ada") use ("-O0", "-fcallgraph-info=su");
-      end case;
-      for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
-        ("-gnatwa.X", "-gnatQ", "-ffunction-sections", "-fdata-sections");
-   end Compiler;
-
-   package Builder is
-      case Build is
-         when "Production" =>
-         when "Debug" =>
-            for Default_Switches ("Ada") use ("-g");
-      end case;
-   end Builder;
 
    package Linker is
       for Default_Switches ("ada") use
