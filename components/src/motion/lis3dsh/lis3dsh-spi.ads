@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -40,58 +40,33 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
---  This private package provides an I/O abstraction layer for the LIS3DSH
+--  This private package provides an I/O  implementation for the LIS3DSH
 --  accelerometer chip.
 
---  NB: The package uses specific SPI and GPIO ports. See the private part of
---  the package declaration, below, for those used.
+with HAL.SPI;
+with HAL.GPIO;
 
-with Ada.Interrupts.Names;  use Ada.Interrupts.Names;
+package LIS3DSH.SPI is
 
-with STM32;        use STM32;
-with STM32.GPIO;   use STM32.GPIO;
-with STM32.SPI;    use STM32.SPI;
-with STM32.Device; use STM32.Device;
+   type Three_Axis_Accelerometer_SPI (Port        : HAL.SPI.SPI_Port_Ref;
+                                      Chip_Select : HAL.GPIO.GPIO_Point_Ref)
+   is new Three_Axis_Accelerometer with private;
 
-private package STM32.LIS3DSH.IO is
+   overriding
+   procedure IO_Write
+     (This      : in out Three_Axis_Accelerometer_SPI;
+      Value     : Byte;
+      WriteAddr : Register_Address);
 
-   procedure Initialize
-     with Post => Initialized;
-   --  Initializes the I/O hardware required to communicate with the
-   --  accelerometer chip. No effect after first call.
-
-   procedure Write
-     (Value     : Byte;
-      WriteAddr : Register_Address)
-     with Pre => Initialized;
-
-   procedure Read
-     (Value    : out Byte;
-      ReadAddr : Register_Address)
-     with Pre => Initialized;
-
-   procedure Configure_Interrupt;
-
-   function Initialized return Boolean;
+   overriding
+   procedure IO_Read
+     (This     : Three_Axis_Accelerometer_SPI;
+      Value    : out Byte;
+      ReadAddr : Register_Address);
 
 private
+   type Three_Axis_Accelerometer_SPI (Port        : HAL.SPI.SPI_Port_Ref;
+                                      Chip_Select : HAL.GPIO.GPIO_Point_Ref)
+   is new Three_Axis_Accelerometer with null record;
 
-   IO_Initialized : Boolean := False;
-
-   Chip_Select_Pin       : GPIO_Point renames PE3;
-   Device_Interrupt1_Pin : GPIO_Point renames PE0;
-   Device_Interrupt2_Pin : GPIO_Point renames PE1;
-
-   SPIx    : SPI_Port renames SPI_1;
-   SPIx_AF : GPIO_Alternate_Function renames GPIO_AF_SPI1;
-
-   SPIx_SCK_Pin   : GPIO_Point renames PA5;
-   SPIx_MISO_Pin  : GPIO_Point renames PA6;
-   SPIx_MOSI_Pin  : GPIO_Point renames PA7;
-
-   use Ada.Interrupts;
-
-   Device_Int1_EXTI_IRQn : Interrupt_Id renames EXTI0_Interrupt;
-   Device_Int2_EXTI_IRQn : Interrupt_Id renames EXTI1_Interrupt;
-
-end STM32.LIS3DSH.IO;
+end LIS3DSH.SPI;

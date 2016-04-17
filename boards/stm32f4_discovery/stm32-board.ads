@@ -47,9 +47,10 @@ with STM32.Device;  use STM32.Device;
 
 with STM32.GPIO;    use STM32.GPIO;
 
-with STM32.LIS3DSH;   use STM32.LIS3DSH;
+with LIS3DSH.SPI;   use LIS3DSH.SPI;
 
 with Ada.Interrupts.Names; use Ada.Interrupts;
+with STM32.SPI; use STM32.SPI;
 
 package STM32.Board is
    pragma Elaborate_Body;
@@ -66,23 +67,37 @@ package STM32.Board is
    LED5 : User_LED renames Red;
    LED6 : User_LED renames Blue;
 
-   All_LEDs : constant GPIO_Points := LED3 & LED4 & LED5 & LED6;
+   All_LEDs : GPIO_Points := LED3 & LED4 & LED5 & LED6;
    LCH_LED  : GPIO_Point renames Red;
 
    procedure Initialize_LEDs;
    --  MUST be called prior to any use of the LEDs
 
-   procedure Turn_On (This : User_LED)
+   procedure Turn_On (This : in out User_LED)
      renames STM32.GPIO.Set;
-   procedure Turn_Off (This : User_LED)
+   procedure Turn_Off (This : in out User_LED)
      renames STM32.GPIO.Clear;
 
    procedure All_LEDs_Off with Inline;
    procedure All_LEDs_On  with Inline;
-   procedure Toggle_LEDs (These : GPIO_Points)
+   procedure Toggle_LEDs (These : in out GPIO_Points)
      renames STM32.GPIO.Toggle;
 
-   Accelerometer : Three_Axis_Accelerometer;
+
+   Acc_SPI    : SPI_Port renames SPI_1;
+   Acc_SPI_AF : GPIO_Alternate_Function renames GPIO_AF_SPI1;
+
+   Acc_Chip_Select_Pin : GPIO_Point renames PE3;
+   Acc_SPI_SCK_Pin     : GPIO_Point renames PA5;
+   Acc_SPI_MISO_Pin    : GPIO_Point renames PA6;
+   Acc_SPI_MOSI_Pin    : GPIO_Point renames PA7;
+
+
+   Accelerometer : Three_Axis_Accelerometer_SPI
+     (Port        => Acc_SPI'Access,
+      Chip_Select => Acc_Chip_Select_Pin'Access);
+
+   procedure Initialize_Accelerometer;
 
    --  GPIO Pins for FMC
    FMC_A : constant GPIO_Points :=
@@ -121,7 +136,7 @@ package STM32.Board is
    --  User button
 
    User_Button_Point     : GPIO_Point renames PA0;
-   User_Button_Interrupt : constant Interrupt_Id := Names.EXTI0_Interrupt;
+   User_Button_Interrupt : constant Interrupt_ID := Names.EXTI0_Interrupt;
 
    procedure Configure_User_Button_GPIO;
    --  Configures the GPIO port/pin for the blue user button. Sufficient

@@ -72,7 +72,7 @@ package body STM32.RCC is
    procedure AHB1_Force_Reset
    is
    begin
-      RCC_Periph.AHB1RSTR := To_AHB1RSTR_T(16#FFFF_FFFF#);
+      RCC_Periph.AHB1RSTR := To_AHB1RSTR_T (16#FFFF_FFFF#);
    end AHB1_Force_Reset;
 
    procedure AHB1_Release_Reset is

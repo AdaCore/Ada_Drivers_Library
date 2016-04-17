@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -42,9 +42,9 @@
 
 with Ada.Unchecked_Conversion;
 with System;
-with STM32.LIS3DSH.IO;
+with Interfaces; use Interfaces;
 
-package body STM32.LIS3DSH is
+package body LIS3DSH is
 
    Full_Scale_Selection_Mask : constant Byte := 2#0011_1000#;
    --  bits 3..5 of CTRL5
@@ -52,12 +52,48 @@ package body STM32.LIS3DSH is
    Data_Rate_Selection_Mask : constant Byte := 2#0111_0000#;
    --  bits 4..6 of CTRL4
 
-   ---------
-   -- AIO --
-   ---------
+   procedure Loc_IO_Write
+     (This      : in out Three_Axis_Accelerometer;
+      Value     : Byte;
+      WriteAddr : Register_Address)
+     with Inline_Always;
 
-   package AIO renames STM32.LIS3DSH.IO;
-   --  A convenient name for the accelerometer I/O package.
+   procedure Loc_IO_Read
+     (This     : Three_Axis_Accelerometer;
+      Value    : out Byte;
+      ReadAddr : Register_Address)
+     with Inline_Always;
+
+   ------------------
+   -- Loc_IO_Write --
+   ------------------
+
+   procedure Loc_IO_Write
+     (This      : in out Three_Axis_Accelerometer;
+      Value     : Byte;
+      WriteAddr : Register_Address)
+   is
+
+   begin
+      IO_Write (Three_Axis_Accelerometer'Class (This),
+                Value,
+                WriteAddr);
+   end Loc_IO_Write;
+
+   -----------------
+   -- Loc_IO_Read --
+   -----------------
+
+   procedure Loc_IO_Read
+     (This     : Three_Axis_Accelerometer;
+      Value    : out Byte;
+      ReadAddr : Register_Address)
+      is
+   begin
+      IO_Read (Three_Axis_Accelerometer'Class (This),
+               Value,
+               ReadAddr);
+   end Loc_IO_Read;
 
    ----------------
    -- Configured --
@@ -87,29 +123,29 @@ package body STM32.LIS3DSH is
       --  sequence representing a signed Integer_16 quantity
 
    begin
-      AIO.Read (Buffer (0), OUT_X_L);
-      AIO.Read (Buffer (1), OUT_X_H);
-      AIO.Read (Buffer (2), OUT_Y_L);
-      AIO.Read (Buffer (3), OUT_Y_H);
-      AIO.Read (Buffer (4), OUT_Z_L);
-      AIO.Read (Buffer (5), OUT_Z_H);
+      This.Loc_IO_Read (Buffer (0), OUT_X_L);
+      This.Loc_IO_Read (Buffer (1), OUT_X_H);
+      This.Loc_IO_Read (Buffer (2), OUT_Y_L);
+      This.Loc_IO_Read (Buffer (3), OUT_Y_H);
+      This.Loc_IO_Read (Buffer (4), OUT_Z_L);
+      This.Loc_IO_Read (Buffer (5), OUT_Z_H);
 
       Get_X : declare
-         Raw : Integer_16 renames As_Pointer (Buffer(0)'Address).all;
+         Raw : Integer_16 renames As_Pointer (Buffer (0)'Address).all;
       begin
          Scaled := Float (Raw) * This.Sensitivity;
          Axes.X := Axis_Acceleration (Scaled);
       end Get_X;
 
       Get_Y : declare
-         Raw : Integer_16 renames As_Pointer (Buffer(2)'Address).all;
+         Raw : Integer_16 renames As_Pointer (Buffer (2)'Address).all;
       begin
          Scaled := Float (Raw) * This.Sensitivity;
          Axes.Y := Axis_Acceleration (Scaled);
       end Get_Y;
 
       Get_Z : declare
-         Raw : Integer_16 renames As_Pointer (Buffer(4)'Address).all;
+         Raw : Integer_16 renames As_Pointer (Buffer (4)'Address).all;
       begin
          Scaled := Float (Raw) * This.Sensitivity;
          Axes.Z := Axis_Acceleration (Scaled);
@@ -121,7 +157,7 @@ package body STM32.LIS3DSH is
    -----------------------------
 
    procedure Configure_Accelerometer
-     (This            : out Three_Axis_Accelerometer;
+     (This            : in out Three_Axis_Accelerometer;
       Output_DataRate : Data_Rate_Power_Mode_Selection;
       Axes_Enable     : Direction_XYZ_Selection;
       SPI_Wire        : SPI_Serial_Interface_Mode_Selection;
@@ -132,8 +168,6 @@ package body STM32.LIS3DSH is
       Temp  : Short;
       Value : Byte;
    begin
-      AIO.Initialize;
-
       Temp := Output_DataRate'Enum_Rep or
               Axes_Enable'Enum_Rep     or
               SPI_Wire'Enum_Rep        or
@@ -142,10 +176,10 @@ package body STM32.LIS3DSH is
               Filter_BW'Enum_Rep;
 
       Value := Byte (Temp); -- the low byte of the half-word
-      AIO.Write (Value, CTRL_REG4);
+      This.Loc_IO_Write (Value, CTRL_REG4);
 
       Value := Byte (Shift_Right (Temp, 8)); -- the high byte
-      AIO.Write (Value, CTRL_REG5);
+      This.Loc_IO_Write (Value, CTRL_REG5);
 
       case Full_Scale is
          when Fullscale_2g =>
@@ -168,15 +202,9 @@ package body STM32.LIS3DSH is
    ---------------
 
    function Device_Id (This : Three_Axis_Accelerometer) return Byte is
-      pragma Unreferenced (This);
       Response : Byte;
    begin
-      AIO.Initialize;
-      -- In addition to the configuration routine, we also initialize here
-      -- because clients may call this function before doing any configuration
-      -- setup...
-
-      AIO.Read (Response, Who_Am_I);
+      This.Loc_IO_Read (Response, WHO_AM_I);
       return Response;
    end Device_Id;
 
@@ -184,19 +212,13 @@ package body STM32.LIS3DSH is
    -- Reboot --
    ------------
 
-   procedure Reboot (This : Three_Axis_Accelerometer) is
-      pragma Unreferenced (This);
+   procedure Reboot (This : in out Three_Axis_Accelerometer) is
       Value : Byte;
       Force_Reboot : constant Byte := 2#1000_0000#;
    begin
-      AIO.Initialize;
-      -- In addition to the configuration routine, we also initialize here
-      -- because clients may call this function before doing any configuration
-      -- setup...
-
-      AIO.Read (Value, CTRL_REG6);
+      This.Loc_IO_Read (Value, CTRL_REG6);
       Value := Value or Force_Reboot;
-      AIO.Write (Value, CTRL_REG6);
+      This.Loc_IO_Write (Value, CTRL_REG6);
    end Reboot;
 
    --------------------------
@@ -213,35 +235,35 @@ package body STM32.LIS3DSH is
       State_Machine2_Enable      : Boolean;
       State_Machine2_Interrupt   : State_Machine_Routed_Interrupt)
    is
-      pragma Unreferenced (This);
       CTRL : Byte;
    begin
       CTRL := Interrupt_Selection_Enable'Enum_Rep or
               Interrupt_Request'Enum_Rep          or
               Interrupt_Signal'Enum_Rep;
 
-      AIO.Write (CTRL, CTRL_REG3);
+      This.Loc_IO_Write (CTRL, CTRL_REG3);
 
       --  configure State Machine 1
       CTRL := State_Machine1_Enable'Enum_Rep or
               State_Machine1_Interrupt'Enum_Rep;
 
-      AIO.Write (CTRL, CTRL_REG1);
+      This.Loc_IO_Write (CTRL, CTRL_REG1);
 
       --  configure State Machine 2
       CTRL := State_Machine2_Enable'Enum_Rep or
               State_Machine2_Interrupt'Enum_Rep;
 
-      AIO.Write (CTRL, CTRL_REG2);
+      This.Loc_IO_Write (CTRL, CTRL_REG2);
    end Configure_Interrupts;
 
    -------------------------------
    -- Configure_Click_Interrupt --
    -------------------------------
 
-   procedure Configure_Click_Interrupt (This : in out Three_Axis_Accelerometer) is
+   procedure Configure_Click_Interrupt
+     (This : in out Three_Axis_Accelerometer)
+   is
    begin
-      AIO.Configure_Interrupt;
 
       Configure_Interrupts
         (This,
@@ -249,25 +271,25 @@ package body STM32.LIS3DSH is
          Interrupt_Selection_Enable => Interrupt_2_Enable,
          Interrupt_Signal           => Interrupt_Signal_High,
          State_Machine1_Enable      => False,
-         State_Machine1_Interrupt   => SM_Int1, -- Ignored
+         State_Machine1_Interrupt   => SM_INT1, -- Ignored
          State_Machine2_Enable      => True,
-         State_Machine2_Interrupt   => SM_Int1);
+         State_Machine2_Interrupt   => SM_INT1);
 
       --  configure state machines
-      AIO.Write (3, TIM2_1_L);
-      AIO.Write (16#C8#, TIM1_1_L);
-      AIO.Write (16#45#, THRS2_1);
-      AIO.Write (16#FC#, MASK1_A);
-      AIO.Write (16#A1#, SETT1);
-      AIO.Write (16#1#, PR1);
+      This.Loc_IO_Write (3, TIM2_1_L);
+      This.Loc_IO_Write (16#C8#, TIM1_1_L);
+      This.Loc_IO_Write (16#45#, THRS2_1);
+      This.Loc_IO_Write (16#FC#, MASK1_A);
+      This.Loc_IO_Write (16#A1#, SETT1);
+      This.Loc_IO_Write (16#1#, PR1);
 
-      AIO.Write (16#1#, SETT2);
+      This.Loc_IO_Write (16#1#, SETT2);
 
       --  configure State Machine 2 to detect single click
-      AIO.Write (16#1#, ST2_1);
-      AIO.Write (16#6#, ST2_2);
-      AIO.Write (16#28#, ST2_3);
-      AIO.Write (16#11#, ST2_4);
+      This.Loc_IO_Write (16#1#, ST2_1);
+      This.Loc_IO_Write (16#6#, ST2_2);
+      This.Loc_IO_Write (16#28#, ST2_3);
+      This.Loc_IO_Write (16#11#, ST2_4);
    end Configure_Click_Interrupt;
 
    -------------------
@@ -278,13 +300,12 @@ package body STM32.LIS3DSH is
      (This : in out Three_Axis_Accelerometer;
       Mode : Data_Rate_Power_Mode_Selection)
    is
-      pragma Unreferenced (This);
       Value : Byte;
    begin
-      AIO.Read (Value, CTRL_REG4);
+      This.Loc_IO_Read (Value, CTRL_REG4);
       Value := Value and (not Data_Rate_Selection_Mask); -- clear bits
       Value := Value or Mode'Enum_Rep;
-      AIO.Write (Value, CTRL_REG4);
+      This.Loc_IO_Write (Value, CTRL_REG4);
    end Set_Low_Power;
 
    -------------------
@@ -295,13 +316,12 @@ package body STM32.LIS3DSH is
      (This     : in out Three_Axis_Accelerometer;
       DataRate : Data_Rate_Power_Mode_Selection)
    is
-      pragma Unreferenced (This);
       Value : Byte;
    begin
-      AIO.Read (Value, CTRL_REG4);
+      This.Loc_IO_Read (Value, CTRL_REG4);
       Value := Value and (not Data_Rate_Selection_Mask); -- clear bits
       Value := Value or DataRate'Enum_Rep;
-      AIO.Write (Value, CTRL_REG4);
+      This.Loc_IO_Write (Value, CTRL_REG4);
    end Set_Data_Rate;
 
    --------------------
@@ -312,13 +332,12 @@ package body STM32.LIS3DSH is
      (This : in out Three_Axis_Accelerometer;
       Scale : Full_Scale_Selection)
    is
-      pragma Unreferenced (This);
       Value : Byte;
    begin
-      AIO.Read (Value, CTRL_REG5);
+      This.Loc_IO_Read (Value, CTRL_REG5);
       Value := Value and (not Full_Scale_Selection_Mask); -- clear bits
       Value := Value or Scale'Enum_Rep;
-      AIO.Write (Value, CTRL_REG5);
+      This.Loc_IO_Write (Value, CTRL_REG5);
    end Set_Full_Scale;
 
    -------------------
@@ -332,11 +351,12 @@ package body STM32.LIS3DSH is
    -- Selected_Sensitivity --
    --------------------------
 
-   function Selected_Sensitivity (This : Three_Axis_Accelerometer) return Float is
-      pragma Unreferenced (This);
+   function Selected_Sensitivity (This : Three_Axis_Accelerometer)
+                                  return Float
+   is
       CTRL5 : Byte;
    begin
-      AIO.Read (CTRL5, CTRL_REG5);
+      This.Loc_IO_Read (CTRL5, CTRL_REG5);
       case As_Full_Scale (CTRL5 and Full_Scale_Selection_Mask) is
          when Fullscale_2g =>
             return Sensitivity_0_06mg;
@@ -356,16 +376,11 @@ package body STM32.LIS3DSH is
    -----------------
 
    function Temperature (This : Three_Axis_Accelerometer) return Byte is
-      pragma Unreferenced (This);
       Result : Byte;
    begin
-      AIO.Initialize;
-      -- In addition to the configuration routine, we also initialize here
-      -- because clients may call this function before doing any configuration
-      -- setup...
 
-      AIO.Read (Result, Out_T);
+      This.Loc_IO_Read (Result, Out_T);
       return Result;
    end Temperature;
 
-end STM32.LIS3DSH;
+end LIS3DSH;

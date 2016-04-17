@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                          --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -44,10 +44,15 @@
 --  on later versions of the STM32F4 Discovery boards.
 
 with Interfaces;
+with Interfaces.Bit_Types; use Interfaces.Bit_Types;
 
-package STM32.LIS3DSH is
+package LIS3DSH is
 
-   type Three_Axis_Accelerometer is limited private;
+   type Three_Axis_Accelerometer is abstract tagged limited private;
+
+   --  This device can be connected through I2C or SPI. This package implements
+   --  an abstract driver with abstact IO subprograms, child packages will
+   --  provide I2C or SPI specific implementation.
 
    type Axis_Acceleration is new Interfaces.Integer_16;
 
@@ -166,7 +171,7 @@ package STM32.LIS3DSH is
       Serial_Interface_3Wire => 16#01#);
 
    procedure Configure_Accelerometer
-     (This            : out Three_Axis_Accelerometer;
+     (This            : in out Three_Axis_Accelerometer;
       Output_DataRate : Data_Rate_Power_Mode_Selection;
       Axes_Enable     : Direction_XYZ_Selection;
       SPI_Wire        : SPI_Serial_Interface_Mode_Selection;
@@ -203,7 +208,7 @@ package STM32.LIS3DSH is
    Sensitivity_0_24mg : constant := 0.24;  -- 0.24 mg/digit
    Sensitivity_0_73mg : constant := 0.73;  -- 0.73 mg/digit
 
-   procedure Reboot (This : Three_Axis_Accelerometer);
+   procedure Reboot (This : in out Three_Axis_Accelerometer);
 
    type State_Machine_Routed_Interrupt is
      (SM_INT1,
@@ -228,11 +233,11 @@ package STM32.LIS3DSH is
 
    for Interrupt_Selection_Enablers use -- values in bits 3..4 of CTRL3
      (Interrupt_1_Enable   => 2#1000_1000#,
-      -- also enables Data Ready Enable bit in bit 7
+      --  Also enables Data Ready Enable bit in bit 7
       Interrupt_2_Enable   => 2#0001_0000#,
       Interrupt_1_2_Enable => 2#1001_1000#);
-      -- also enables Data Ready Enable bit in bit 7
-   -- NB lis3dsh.h uses different values???
+      --  Also enables Data Ready Enable bit in bit 7
+      --  NB lis3dsh.h uses different values???
 
    type Interrupt_Signal_Active_Selection is
      (Interrupt_Signal_Low,
@@ -261,9 +266,25 @@ package STM32.LIS3DSH is
 
    function Configured (This : Three_Axis_Accelerometer) return Boolean;
 
+   type Register_Address is new Byte;
+   --  Prevent accidentally mixing addresses and data in I/O calls
+
+   -----------------------------
+   -- IO abstract subprograms --
+   -----------------------------
+
+   procedure IO_Write
+     (This      : in out Three_Axis_Accelerometer;
+      Value     : Byte;
+      WriteAddr : Register_Address) is abstract;
+
+   procedure IO_Read
+     (This     : Three_Axis_Accelerometer;
+      Value    : out Byte;
+      ReadAddr : Register_Address) is abstract;
 private
 
-   type Three_Axis_Accelerometer is record
+   type Three_Axis_Accelerometer is abstract tagged limited record
       --  Ensures the device has been configured via some prior call to
       --  Configure_Accelerometer. In addition, this flag also ensures that
       --  the I/O facility has been initialized because Configure_Accelerometer
@@ -277,9 +298,6 @@ private
       --  provide the same value as that function.
       Sensitivity : Float;
    end record;
-
-   type Register_Address is new Byte;
-   --  Prevent accidentally mixing addresses and data in I/O calls
 
    ----------------------------------------------------------------------------
    --  OUT_T: Temperature Output Register
@@ -480,7 +498,8 @@ private
    --              1  |  0   |  0   |  1   | 1600 Hz
    --  *
    --  3 BDU: Block data update
-   --         0: Output register not updated until High and Low reading (Default)
+   --         0: Output register not updated until High and Low reading
+   --                                                                 (Default)
    --         1: Continuous update
    --  2 ZEN:
    --         0: Z-axis disable (Default)
@@ -602,7 +621,8 @@ private
    --  CTRL_REG6 : Control Register 6
    --  Read Write register
    --  Default value: 0x00
-   --  7 BOOT: Force reboot, cleared as soon as the reboot is finished. Active High.
+   --  7 BOOT: Force reboot, cleared as soon as the reboot is finished. Active
+   --          High.
    --  6 FIFO_EN: FIFO Enable
    --             0: disable (Default)
    --             1: enable
@@ -715,15 +735,22 @@ private
    --        FMODE2 | FMODE1 | FMODE0 | Mode description
    --        --------------------------------------------------
    --          0    |    0   |    0   | Bypass mode. FIFO turned off. (Default)
-   --          0    |    0   |    1   | FIFO mode. Stop collecting data when FIFO is full.
-   --          0    |    1   |    0   | Stream mode. If the FIFO is full, the new sample overwrites the older one (circular buffer).
-   --          0    |    1   |    1   | Stream mode until trigger is de-asserted, then FIFO mode.
-   --          1    |    0   |    0   | Bypass mode until trigger is de-asserted, then Stream mode.
+   --          0    |    0   |    1   | FIFO mode. Stop collecting data
+   --                                              when FIFO is full.
+   --          0    |    1   |    0   | Stream mode. If the FIFO is full, the
+   --                                   new sample overwrites the older one
+   --                                   (circular buffer).
+   --          0    |    1   |    1   | Stream mode until trigger is
+   --                                   de-asserted, then FIFO mode.
+   --          1    |    0   |    0   | Bypass mode until trigger is
+   --                                   de-asserted, then Stream mode.
    --          1    |    0   |    1   | Not to use.
    --          1    |    1   |    0   | Not to use.
-   --          1    |    1   |    1   | Bypass mode until trigger is de-asserted, then FIFO mode.
+   --          1    |    1   |    1   | Bypass mode until trigger is
+   --                                   de-asserted, then FIFO mode.
    --  *
-   --  4:0 WTMP4-WTMP0: FIFO Watermark pointer. It is the FIFO depth when the Watermark is enabled
+   --  4:0 WTMP4-WTMP0: FIFO Watermark pointer. It is the FIFO depth when the
+   --                   Watermark is enabled
    ----------------------------------------------------------------------------
    FIFO_CTRL : constant Register_Address := 16#2E#;
 
@@ -1143,7 +1170,8 @@ private
    --           1: peak detection enabled
    --  6 THR3_SA:
    --             0: no action (Default)
-   --             1: threshold 3 limit value for axis and sign mask reset (MASK2_B)
+   --             1: threshold 3 limit value for axis and sign mask reset
+   --                (MASK2_B)
    --  5 ABS:
    --         0: unsigned thresholds (Default)
    --         1: signed thresholds
@@ -1151,18 +1179,21 @@ private
    --          0: raw data
    --          1: diff data for State Machine 2
    --  3 D_CS:
-   --          0: DIFF2 enabled (difference between current data and previous data)
-   --          1: constant shift enabled (difference between current data and constant values)
+   --          0: DIFF2 enabled (difference between current data and previous
+   --                            data)
+   --          1: constant shift enabled (difference between current data and
+   --                                     constant values)
    --  2 THR3_MA:
    --             0: no action (Default)
    --             1: threshold 3 enabled for axis and sign mask reset (MASK2_A)
    --  1 R_TAM: Next condition validation flag
-   --           0: mask frozen on the axis that triggers the condition (Default)
+   --           0: mask frozen on the axis that triggers the condition
+   --              (Default)
    --           1: standard mask always evaluated
    --  0 SITR:
    --          0: no actions (Default)
-   --          1: STOP and CONT commands generate an interrupt and perform output
-   --             actions as OUTC command.
+   --          1: STOP and CONT commands generate an interrupt and perform
+   --             output actions as OUTC command.
    ----------------------------------------------------------------------------
    SETT2 : constant Register_Address := 16#7B#;
 
@@ -1222,4 +1253,8 @@ private
    ----------------------------------------------------------------------------
    OUTS2 : constant Register_Address := 16#7F#;
 
-end STM32.LIS3DSH;
+   --  During SPI communication, the most significant bit of the register
+   --  address specifies if the operation is read or write.
+   SPI_Read_Flag  : constant Register_Address := 16#80#;
+   SPI_Write_Flag : constant Register_Address := 16#00#;
+end LIS3DSH;

@@ -14,8 +14,6 @@ library project STM32F4_Discovery extends "../config.gpr" is
 
    for Source_Dirs use ("stm32f4_discovery");
 
-   package Compiler renames STM32F40x.Compiler;
-
    package Compiler renames Config.Compiler;
    package Builder renames Config.Builder;
 

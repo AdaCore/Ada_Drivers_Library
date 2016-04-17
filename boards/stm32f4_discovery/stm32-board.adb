@@ -41,6 +41,9 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with HAL.SPI;
+with LIS3DSH; use LIS3DSH;
+
 package body STM32.Board is
 
    ------------------
@@ -92,5 +95,82 @@ package body STM32.Board is
 
       Configure_IO (User_Button_Point, Config);
    end Configure_User_Button_GPIO;
+
+   ------------------------------
+   -- Initialize_Accelerometer --
+   ------------------------------
+
+   procedure Initialize_Accelerometer is
+      procedure Init_SPI;
+      procedure Init_GPIO;
+
+      --------------
+      -- Init_SPI --
+      --------------
+
+      procedure Init_SPI is
+         Config : SPI_Configuration;
+      begin
+         Enable_Clock (Acc_SPI);
+
+         Config.Mode := Master;
+         Config.Baud_Rate_Prescaler := BRP_32;
+         Config.Clock_Polarity := Low;
+         Config.Clock_Phase := P1Edge;
+         Config.First_Bit := MSB;
+         Config.CRC_Poly := 7;
+         Config.Slave_Management := Software_Managed;  --  essential!!
+         Config.Direction := D2Lines_FullDuplex;
+         Config.Data_Size := HAL.SPI.Data_Size_8b;
+
+         Disable (Acc_SPI);
+         Configure (Acc_SPI, Config);
+         Enable (Acc_SPI);
+      end Init_SPI;
+
+
+      ---------------
+      -- Init_GPIO --
+      ---------------
+
+      procedure Init_GPIO is
+         Config : GPIO_Port_Configuration;
+         SPI_Points : constant GPIO_Points := Acc_SPI_MOSI_Pin &
+           Acc_SPI_MISO_Pin & Acc_SPI_SCK_Pin;
+      begin
+         Enable_Clock (SPI_Points);
+
+         Config.Output_Type := Push_Pull;
+         Config.Resistors   := Floating;
+         Config.Speed       := Speed_50MHz;
+         Config.Mode        := Mode_AF;
+
+         Configure_IO (SPI_Points, Config);
+         Configure_Alternate_Function (SPI_Points, Acc_SPI_AF);
+
+         Enable_Clock (Acc_Chip_Select_Pin);
+
+         Config.Mode        := Mode_Out;
+         Config.Output_Type := Push_Pull;
+         Config.Resistors   := Pull_Up;
+         Config.Speed       := Speed_25MHz;
+
+         Acc_Chip_Select_Pin.Configure_IO (Config);
+         Acc_Chip_Select_Pin.Set;
+
+      end Init_GPIO;
+
+   begin
+      Init_GPIO;
+      Init_SPI;
+      Accelerometer.Configure_Accelerometer
+        (Output_DataRate => Data_Rate_100Hz,
+         Axes_Enable     => XYZ_Enabled,
+         SPI_Wire        => Serial_Interface_4Wire,
+         Self_Test       => Self_Test_Normal,
+         Full_Scale      => Fullscale_2g,
+         Filter_BW       => Filter_800Hz);
+   end Initialize_Accelerometer;
+
 
 end STM32.Board;

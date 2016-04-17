@@ -54,7 +54,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out GPIO_Port) is
+   procedure Enable_Clock (This : aliased in out Internal_GPIO_Port) is
    begin
       if This'Address = GPIOA_Base then
          RCC_Periph.AHB1ENR.GPIOAEN := True;
@@ -86,7 +86,7 @@ package body STM32.Device is
    procedure Enable_Clock (Point : GPIO_Point)
    is
    begin
-      Enable_Clock (Point.Port.all);
+      Enable_Clock (Point.Periph.all);
    end Enable_Clock;
 
    ------------------
@@ -97,7 +97,7 @@ package body STM32.Device is
    is
    begin
       for Point of Points loop
-         Enable_Clock (Point.Port.all);
+         Enable_Clock (Point.Periph.all);
       end loop;
    end Enable_Clock;
 
@@ -105,7 +105,7 @@ package body STM32.Device is
    -- Reset --
    -----------
 
-   procedure Reset (This : aliased in out GPIO_Port) is
+   procedure Reset (This : aliased in out Internal_GPIO_Port) is
    begin
       if This'Address = GPIOA_Base then
          RCC_Periph.AHB1RSTR.GPIOARST := True;
@@ -145,7 +145,7 @@ package body STM32.Device is
 
    procedure Reset (Point : GPIO_Point) is
    begin
-      Reset (Point.Port.all);
+      Reset (Point.Periph.all);
    end Reset;
 
    -----------
@@ -159,7 +159,7 @@ package body STM32.Device is
       for J in Points'Range loop
          Do_Reset := True;
          for K in Points'First .. J - 1 loop
-            if Points (K).Port = Points (J).Port then
+            if Points (K).Periph = Points (J).Periph then
                Do_Reset := False;
 
                exit;
@@ -167,7 +167,7 @@ package body STM32.Device is
          end loop;
 
          if Do_Reset then
-            Reset (Points (J).Port.all);
+            Reset (Points (J).Periph.all);
          end if;
       end loop;
    end Reset;
@@ -176,9 +176,9 @@ package body STM32.Device is
    -- As_GPIO_Port_Id --
    ---------------------
 
-   function As_GPIO_Port_Id (Port : GPIO_Port) return GPIO_Port_Id is
+   function As_GPIO_Port_Id (Port : Internal_GPIO_Port) return GPIO_Port_Id is
    begin
-      -- TODO: rather ugly to have this board-specific range here
+      --  TODO: rather ugly to have this board-specific range here
       if Port'Address = GPIOA_Base then
          return GPIO_Port_A;
       elsif Port'Address = GPIOB_Base then
@@ -206,7 +206,8 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter) is
+   procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter)
+   is
    begin
       if This'Address = ADC1_Base then
          RCC_Periph.APB2ENR.ADC1EN := True;
@@ -233,7 +234,8 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter) is
+   procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter)
+   is
       pragma Unreferenced (This);
    begin
       RCC_Periph.APB1ENR.DACEN := True;
@@ -330,32 +332,16 @@ package body STM32.Device is
 
    function As_Port_Id (Port : I2C_Port) return I2C_Port_Id is
    begin
-      if Port'Address = I2C1_Base then
-         return I2C_1;
-      elsif Port'Address = I2C2_Base then
-         return I2C_2;
-      elsif Port'Address = I2C3_Base then
-         return I2C_3;
+      if Port.Periph.all'Address = I2C1_Base then
+         return I2C_Id_1;
+      elsif Port.Periph.all'Address = I2C2_Base then
+         return I2C_Id_2;
+      elsif Port.Periph.all'Address = I2C3_Base then
+         return I2C_Id_3;
       else
          raise Unknown_Device;
       end if;
    end As_Port_Id;
-
-   -------------
-   -- As_Port --
-   -------------
-
-   function As_Port (Id : I2C_Port_Id) return access I2C_Port is
-   begin
-      case Id is
-         when I2C_1 =>
-            return I2C_Port_1'Access;
-         when I2C_2 =>
-            return I2C_Port_2'Access;
-         when I2C_3 =>
-            return I2C_Port_3'Access;
-      end case;
-   end As_Port;
 
    ------------------
    -- Enable_Clock --
@@ -373,11 +359,11 @@ package body STM32.Device is
    procedure Enable_Clock (This : I2C_Port_Id) is
    begin
       case This is
-         when I2C_1 =>
+         when I2C_Id_1 =>
             RCC_Periph.APB1ENR.I2C1EN := True;
-         when I2C_2 =>
+         when I2C_Id_2 =>
             RCC_Periph.APB1ENR.I2C2EN := True;
-         when I2C_3 =>
+         when I2C_Id_3 =>
             RCC_Periph.APB1ENR.I2C3EN := True;
       end case;
    end Enable_Clock;
@@ -398,13 +384,13 @@ package body STM32.Device is
    procedure Reset (This : I2C_Port_Id) is
    begin
       case This is
-         when I2C_1 =>
+         when I2C_Id_1 =>
             RCC_Periph.APB1RSTR.I2C1RST := True;
             RCC_Periph.APB1RSTR.I2C1RST := False;
-         when I2C_2 =>
+         when I2C_Id_2 =>
             RCC_Periph.APB1RSTR.I2C2RST := True;
             RCC_Periph.APB1RSTR.I2C2RST := False;
-         when I2C_3 =>
+         when I2C_Id_3 =>
             RCC_Periph.APB1RSTR.I2C3RST := True;
             RCC_Periph.APB1RSTR.I2C3RST := False;
       end case;
@@ -414,13 +400,13 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out SPI_Port) is
+   procedure Enable_Clock (This : SPI_Port) is
    begin
-      if This'Address = SPI1_Base then
+      if This.Periph.all'Address = SPI1_Base then
          RCC_Periph.APB2ENR.SPI1EN := True;
-      elsif This'Address = SPI2_Base then
+      elsif This.Periph.all'Address = SPI2_Base then
          RCC_Periph.APB1ENR.SPI2EN := True;
-      elsif This'Address = SPI3_Base then
+      elsif This.Periph.all'Address = SPI3_Base then
          RCC_Periph.APB1ENR.SPI3EN := True;
       else
          raise Unknown_Device;
