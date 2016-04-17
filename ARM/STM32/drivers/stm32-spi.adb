@@ -439,6 +439,7 @@ package body STM32.SPI is
          Clear_Overrun (Port);
          Status := HAL.SPI.Err_Error;
       end if;
+      Status := HAL.SPI.Ok;
    end Transmit;
 
    --------------
@@ -592,7 +593,6 @@ package body STM32.SPI is
       if CRC_Enabled (Port) and CRC_Error_Indicated (Port) then
          Reset_CRC (Port);
       end if;
-      Status := HAL.SPI.Ok;
    end Receive;
 
    ----------------------
@@ -640,7 +640,6 @@ package body STM32.SPI is
       if CRC_Enabled (Port) and CRC_Error_Indicated (Port) then
          Reset_CRC (Port);
       end if;
-      Status := HAL.SPI.Ok;
    end Transmit_Receive;
 
    ----------------------
@@ -699,7 +698,6 @@ package body STM32.SPI is
       if CRC_Enabled (Port) and CRC_Error_Indicated (Port) then
          Reset_CRC (Port);
       end if;
-      Status := HAL.SPI.Ok;
    end Transmit_Receive;
 
    -----------------------------
