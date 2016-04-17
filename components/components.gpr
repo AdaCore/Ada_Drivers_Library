@@ -5,7 +5,8 @@ library project Components extends "../config.gpr" is
      ("src/motion/**",
       "src/screen/**",
       "src/touch_panel/**",
-      "src/audio/**");
+      "src/audio/**",
+      "src/camera/**");
    --  The others component drivers are not HAL compliant yet
 
    for Languages use ("Ada");
