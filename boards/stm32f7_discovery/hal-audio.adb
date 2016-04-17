@@ -1,5 +1,3 @@
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-
 with STM32_SVD.RCC;        use STM32_SVD.RCC;
 with STM32_SVD.SAI;        use STM32_SVD.SAI;
 
