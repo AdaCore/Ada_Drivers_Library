@@ -512,6 +512,7 @@ package body STM32.SPI is
          Reset_CRC (Port);
          Status := HAL.SPI.Err_Error;
       end if;
+      Status := HAL.SPI.Ok;
    end Receive;
 
    -------------
@@ -545,6 +546,7 @@ package body STM32.SPI is
          Reset_CRC (Port);
          Status := HAL.SPI.Err_Error;
       end if;
+      Status := HAL.SPI.Ok;
    end Receive;
 
    -------------
@@ -590,6 +592,7 @@ package body STM32.SPI is
       if CRC_Enabled (Port) and CRC_Error_Indicated (Port) then
          Reset_CRC (Port);
       end if;
+      Status := HAL.SPI.Ok;
    end Receive;
 
    ----------------------
@@ -637,6 +640,7 @@ package body STM32.SPI is
       if CRC_Enabled (Port) and CRC_Error_Indicated (Port) then
          Reset_CRC (Port);
       end if;
+      Status := HAL.SPI.Ok;
    end Transmit_Receive;
 
    ----------------------
@@ -695,6 +699,7 @@ package body STM32.SPI is
       if CRC_Enabled (Port) and CRC_Error_Indicated (Port) then
          Reset_CRC (Port);
       end if;
+      Status := HAL.SPI.Ok;
    end Transmit_Receive;
 
    -----------------------------
@@ -931,7 +936,7 @@ package body STM32.SPI is
          if Generate_Clock then
             Port.Periph.DR.DR := 0;
          end if;
-         while not Tx_Is_Empty (Port) loop
+         while Rx_Is_Empty (Port) loop
             null;
          end loop;
          K := Port.Periph.DR.DR;
@@ -952,7 +957,7 @@ package body STM32.SPI is
          if Generate_Clock then
             Port.Periph.DR.DR := 0;
          end if;
-         while not Tx_Is_Empty (Port) loop
+         while Rx_Is_Empty (Port) loop
             null;
          end loop;
          K := Byte (Port.Periph.DR.DR);
