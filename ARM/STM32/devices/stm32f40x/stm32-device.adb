@@ -594,4 +594,23 @@ package body STM32.Device is
       return Result;
    end System_Clock_Frequencies;
 
+   -----------------------
+   -- Enable_DCMI_Clock --
+   -----------------------
+
+   procedure Enable_DCMI_Clock is
+   begin
+      RCC_Periph.AHB2ENR.DCMIEN := True;
+   end Enable_DCMI_Clock;
+
+   ----------------
+   -- Reset_DCMI --
+   ----------------
+
+   procedure Reset_DCMI is
+   begin
+      RCC_Periph.AHB2RSTR.DCMIRST := True;
+      RCC_Periph.AHB2RSTR.DCMIRST := False;
+   end Reset_DCMI;
+
 end STM32.Device;

@@ -383,6 +383,9 @@ package STM32.Device is
 
    function System_Clock_Frequencies return RCC_System_Clocks;
 
+   procedure Enable_DCMI_Clock;
+   procedure Reset_DCMI;
+
 private
 
    pragma Compile_Time_Error

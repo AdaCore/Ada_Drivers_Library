@@ -466,6 +466,9 @@ package STM32.Device is
       PLLI2SQ    : UInt4;
       PLLI2SDIVQ : DIVQ);
 
+   procedure Enable_DCMI_Clock;
+   procedure Reset_DCMI;
+
 private
 
    HSE_VALUE : constant Word := System.BB.Parameters.HSE_Clock;

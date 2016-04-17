@@ -441,6 +441,9 @@ package STM32.Device is
    procedure Disable_PLLSAI;
    function PLLSAI_Ready return Boolean;
 
+   procedure Enable_DCMI_Clock;
+   procedure Reset_DCMI;
+
 private
 
    pragma Compile_Time_Error
