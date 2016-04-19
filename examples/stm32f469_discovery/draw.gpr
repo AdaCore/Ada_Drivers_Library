@@ -5,4 +5,7 @@ project Draw extends "../draw/draw_generic" is
    for Runtime ("Ada") use Config.RTS & "-stm32f469disco";
    for Object_Dir use "obj/draw";
 
+   package Linker is
+      for Default_Switches ("Ada") use ("-Wl,--print-memory-usage");
+   end Linker;
 end Draw;

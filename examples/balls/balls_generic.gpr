@@ -3,4 +3,8 @@ project Balls_Generic extends "../common/shared.gpr" is
    for Main use ("demo.adb");
    for Source_Dirs use ("src");
 
+   package Linker is
+      for Default_Switches ("Ada") use ("-Wl,--print-memory-usage");
+   end Linker;
+
 end Balls_Generic;
