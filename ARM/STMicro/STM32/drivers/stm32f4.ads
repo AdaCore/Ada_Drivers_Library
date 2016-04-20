@@ -74,9 +74,9 @@ package STM32F4 is
    type Bits_29 is mod 2**29 with Size => 29;
    type Bits_30 is mod 2**30 with Size => 30;
 
-   type Bits_32x1 is array (0 .. 31) of Bits_1 with Size => 32;
-   type Bits_16x2 is array (0 .. 15) of Bits_2 with Size => 32;
-   type Bits_8x4  is array (0 ..  7) of Bits_4 with Size => 32;
+   type Bits_32x1 is array (0 .. 31) of Bits_1 with Component_Size => 1, Size => 32;
+   type Bits_16x2 is array (0 .. 15) of Bits_2 with Component_Size => 2, Size => 32;
+   type Bits_8x4  is array (0 ..  7) of Bits_4 with Component_Size => 4, Size => 32;
 
    --  Define address bases for the various system components
 
