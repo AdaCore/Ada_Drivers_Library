@@ -42,8 +42,6 @@
 --  This file provides definitions for the GPIO ports on the STM32F4 (ARM
 --  Cortex M4F) microcontrollers from ST Microelectronics.
 
-pragma Restrictions (No_Elaboration_Code);
-
 private with STM32_SVD.GPIO;
 with STM32.EXTI;
 with HAL.GPIO;
