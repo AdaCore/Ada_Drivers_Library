@@ -29,20 +29,47 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Touch_Panel;
+--  Based on ft5336.h from MCD Application Team
 
-package Touch_Panel is
+with Ada.Real_Time;        use Ada.Real_Time;
+with Ada.Unchecked_Conversion;
 
-   function Initialize return Boolean;
-   --  Initializes the LCD touch panel
 
-   procedure Initialize;
-   --  Initializes the LCD touch panel
+with STM32.Board;          use STM32.Board;
+with STM32.Device;         use STM32.Device;
+with FT5336;               use FT5336;
 
-   function Detect_Touch return Natural;
-   --  Detects the number of touches
+package body Touch_Panel_FT5336 is
 
-   function Get_State return HAL.Touch_Panel.TP_State;
-   --  The current state of the touch panel
+   ----------------
+   -- Initialize --
+   ----------------
 
-end Touch_Panel;
+   overriding function Initialize (This : in out Touch_Panel) return Boolean is
+   begin
+      Initialize_I2C_GPIO (TP_I2C);
+
+      --  Wait at least 200ms after power up before accessing the TP registers
+      delay until Clock + Milliseconds (200);
+
+      Configure_I2C (TP_I2C);
+
+      This.TP_Set_Use_Interrupts (False);
+      This.Set_Bounds (LCD_Natural_Width,
+                       LCD_Natural_Height);
+
+      return This.Check_Id;
+   end Initialize;
+
+   -----------------
+   -- Swap_Points --
+   -----------------
+
+   overriding function Swap_Points (This : Touch_Panel) return Boolean
+   is
+      pragma Unreferenced (This);
+   begin
+      return Display.Is_Swapped;
+   end Swap_Points;
+
+end Touch_Panel_FT5336;

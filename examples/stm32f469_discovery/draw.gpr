@@ -1,3 +1,4 @@
+with "../../config.gpr";
 with "../../boards/stm32f469_discovery.gpr";
 
 project Draw extends "../draw/draw_generic" is

@@ -1,3 +1,4 @@
+with "../../config.gpr";
 with "../../boards/stm32f7_discovery.gpr";
 
 project Train extends "../train/train_generic" is

@@ -1,6 +1,8 @@
 with "../hal/HAL.gpr";
+with "../config.gpr";
 
-library project Components extends "../config.gpr" is
+library project Components is
+
    for Source_Dirs use
      ("src/motion/**",
       "src/screen/**",
@@ -17,4 +19,5 @@ library project Components extends "../config.gpr" is
 
    package Compiler renames Config.Compiler;
    package Builder renames Config.Builder;
+
 end Components;

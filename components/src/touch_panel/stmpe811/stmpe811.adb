@@ -253,9 +253,9 @@ package body STMPE811 is
    -- Initialize --
    ----------------
 
-   procedure Initialize (This : in out STMPE811_Device) is
+   overriding procedure Initialize (This : in out STMPE811_Device) is
    begin
-      if not Initialize (This) then
+      if not Initialize (Touch_Panel_Device'Class (This)) then
          raise Program_Error;
       end if;
    end Initialize;
@@ -264,6 +264,7 @@ package body STMPE811 is
    -- Initialize --
    ----------------
 
+   overriding
    function Initialize (This : in out STMPE811_Device) return Boolean
    is
    begin
@@ -346,8 +347,7 @@ package body STMPE811 is
 
    overriding
    function Get_Touch_Point (This     : in out STMPE811_Device;
-                             Touch_Id : Touch_Identifier;
-                             SwapXY   : Boolean := False)
+                             Touch_Id : Touch_Identifier)
                              return TP_Touch_State
    is
       State     : TP_Touch_State;
@@ -401,7 +401,7 @@ package body STMPE811 is
          return (0, 0, 0);
       end if;
 
-      if not SwapXY then
+      if not Touch_Panel_Device'Class (This).Swap_Points then
          State.X := X;
          State.Y := Y;
       else
@@ -423,8 +423,7 @@ package body STMPE811 is
 
    overriding
    function Get_All_Touch_Points
-     (This     : in out STMPE811_Device;
-      SwapXY   : Boolean := False)
+     (This     : in out STMPE811_Device)
       return HAL.Touch_Panel.TP_State
    is
       N_Touch : constant Natural := This.Active_Touch_Points;
@@ -436,7 +435,7 @@ package body STMPE811 is
       end if;
 
       for J in State'Range loop
-         State (J) :=  This.Get_Touch_Point (J, SwapXY);
+         State (J) :=  This.Get_Touch_Point (J);
       end loop;
 
       return State;

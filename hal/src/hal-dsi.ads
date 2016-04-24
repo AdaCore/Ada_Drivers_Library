@@ -1,7 +1,5 @@
 --  Display Serial Interface
 
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-
 package HAL.DSI is
 
    subtype DSI_Virtual_Channel_ID is UInt2;

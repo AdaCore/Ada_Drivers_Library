@@ -41,7 +41,7 @@ package FT6x06 is
 
    type FT6x06_Device (Port     : HAL.I2C.I2C_Port_Ref;
                        I2C_Addr : HAL.I2C.I2C_Address) is
-     limited new HAL.Touch_Panel.Touch_Panel_Device with private;
+     abstract limited new HAL.Touch_Panel.Touch_Panel_Device with private;
 
    function Check_Id (This : in out FT6x06_Device) return Boolean;
    --  Check the device Id: returns true on a FT5336 touch panel, False is
@@ -51,6 +51,10 @@ package FT6x06 is
                                     Enabled : Boolean);
    --  Whether the touch panel uses interrupts of polling to process touch
    --  information
+
+   overriding
+   procedure Initialize (This : in out FT6x06_Device);
+   --  Initializes the LCD touch panel
 
    overriding
    procedure Set_Bounds (This   : in out FT6x06_Device;
@@ -65,16 +69,14 @@ package FT6x06 is
 
    overriding
    function Get_Touch_Point (This     : in out FT6x06_Device;
-                             Touch_Id : HAL.Touch_Panel.Touch_Identifier;
-                             SwapXY   : Boolean := False)
+                             Touch_Id : HAL.Touch_Panel.Touch_Identifier)
                              return HAL.Touch_Panel.TP_Touch_State;
    --  Retrieves the position and pressure information of the specified
    --  touch
 
    overriding
    function Get_All_Touch_Points
-     (This     : in out FT6x06_Device;
-      SwapXY   : Boolean := False)
+     (This : in out FT6x06_Device)
       return HAL.Touch_Panel.TP_State;
    --  Retrieves the position and pressure information of every active touch
    --  points
@@ -82,7 +84,7 @@ private
 
    type FT6x06_Device (Port     : HAL.I2C.I2C_Port_Ref;
                        I2C_Addr : HAL.I2C.I2C_Address) is
-      limited new HAL.Touch_Panel.Touch_Panel_Device with record
+      abstract limited new HAL.Touch_Panel.Touch_Panel_Device with record
          LCD_Natural_Width  : Natural := 240; -- Arbitrary
          LCD_Natural_Height : Natural := 320; -- Arbitrary
       end record;

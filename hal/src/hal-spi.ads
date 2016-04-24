@@ -1,5 +1,3 @@
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-
 package HAL.SPI is
    type SPI_Status is
      (Ok,

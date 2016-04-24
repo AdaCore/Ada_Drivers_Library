@@ -21,15 +21,15 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with STM32.Board;      use STM32.Board;
+with HAL.Bitmap;       use HAL.Bitmap;
+
 with Tracks_Display;   use Tracks_Display;
-with Screen_Interface; use Screen_Interface;
-with Bitmapped_Drawing;      --          use Drawing;
+with Bitmapped_Drawing;
 with Trains;           use Trains;
 with BMP_Fonts;        use BMP_Fonts;
 
 package body Railroad is
-
-   package Drawing renames Bitmapped_Drawing;
 
    Block_Size : constant := 40; --  Pixels
 
@@ -476,87 +476,101 @@ package body Railroad is
    -- Draw_Layout --
    -----------------
 
-   procedure Draw_Layout (Init : Boolean := False) is
+   procedure Draw_Layout
+     (Buffer : HAL.Bitmap.Bitmap_Buffer'Class;
+      Init   : Boolean := False)
+   is
    begin
       if Init then
          --  Tracks
          for Track of Straight_Tracks loop
-            Draw_Track (Track);
+            Draw_Track (Buffer, Track);
          end loop;
 
          for Track of Spawn_Tracks loop
-            Draw_Track (Track);
+            Draw_Track (Buffer, Track);
          end loop;
 
          for Track of Curve_Tracks loop
-            Draw_Track (Track);
+            Draw_Track (Buffer, Track);
          end loop;
 
          for Track of Connection_Tracks loop
-            Draw_Track (Track);
+            Draw_Track (Buffer, Track);
          end loop;
-      end if;
 
-      --  Switches
-      for Track of Switch_Tracks loop
-         if Track /= null then
-            Draw_Switch (Track.all);
-         end if;
-      end loop;
+         --  Draw touch areas
+         Buffer.Draw_Rect
+           (Color  => HAL.Bitmap.White,
+            X      => Sw1_X'First,
+            Y      => Sw1_Y'First,
+            Width  => Sw1_X'Last - Sw1_X'First + 1,
+            Height => Sw1_Y'Last - Sw1_Y'First + 1);
+         Buffer.Draw_Rect
+           (Color  => HAL.Bitmap.White,
+            X      => Sw2_X'First,
+            Y      => Sw2_Y'First,
+            Width  => Sw2_X'Last - Sw2_X'First + 1,
+            Height => Sw2_Y'Last - Sw2_Y'First + 1);
+         Buffer.Draw_Rect
+           (Color  => HAL.Bitmap.White,
+            X      => Sw3_X'First,
+            Y      => Sw3_Y'First,
+            Width  => Sw3_X'Last - Sw3_X'First + 1,
+            Height => Sw3_Y'Last - Sw3_Y'First + 1);
 
-      --  Trains
-      for Index in Trains.Train_Id'First .. Trains.Cur_Num_Trains - 1 loop
-         Draw_Train (My_Trains (Index));
-      end loop;
-
-      --  Draw touch areas
-      Drawing.Draw_Rectangle
-        (Drawing.Screen_Buffer,
-         (Position => (Sw1_X'First, Sw1_Y'First),
-          Width    => Sw1_X'Last - Sw1_X'First + 1,
-          Height   => Sw1_Y'Last - Sw1_Y'First + 1),
-         Drawing.White);
-      Drawing.Draw_Rectangle
-        (Drawing.Screen_Buffer,
-         (Position => (Sw2_X'First, Sw2_Y'First),
-          Width    => Sw2_X'Last - Sw2_X'First + 1,
-          Height   => Sw2_Y'Last - Sw2_Y'First + 1),
-         Drawing.White);
-      Drawing.Draw_Rectangle
-        (Drawing.Screen_Buffer,
-         (Position => (Sw3_X'First, Sw3_Y'First),
-          Width    => Sw3_X'Last - Sw3_X'First + 1,
-          Height   => Sw3_Y'Last - Sw3_Y'First + 1),
-         Drawing.White);
-
-      if Can_Spawn_Train then
-         Drawing.Draw_Rectangle
-           (Drawing.Screen_Buffer,
-            (Position => (Spawn_X'First, Spawn_Y'First),
-             Width    => Spawn_X'Last - Spawn_X'First + 1,
-             Height   => Spawn_Y'Last - Spawn_Y'First + 1),
-            Drawing.White);
-         Drawing.Draw_String
-           (Drawing.Screen_Buffer,
-            Start      => (Spawn_X'First + 5, Spawn_Y'First + 5),
-            Msg        => "Touch here to",
-            Font       => Font8x8,
-            Foreground => Drawing.White,
-            Background => Drawing.Black);
-         Drawing.Draw_String
-           (Drawing.Screen_Buffer,
-            Start      => (Spawn_X'First + 5, Spawn_Y'First + 22),
-            Msg        => "spawn a train",
-            Font       => Font8x8,
-            Foreground => Drawing.White,
-            Background => Drawing.Black);
       else
-         Drawing.Fill_Rectangle
-           (Drawing.Screen_Buffer,
-            (Position => (Spawn_X'First, Spawn_Y'First),
-             Width    => Spawn_X'Last - Spawn_X'First + 1,
-             Height   => Spawn_Y'Last - Spawn_Y'First + 1),
-            Drawing.Black);
+         --  Tracks
+         for Track of Straight_Tracks loop
+            Draw_Sign (Buffer, Track);
+         end loop;
+
+         for Track of Spawn_Tracks loop
+            Draw_Sign (Buffer, Track);
+         end loop;
+
+         for Track of Curve_Tracks loop
+            Draw_Sign (Buffer, Track);
+         end loop;
+
+         for Track of Connection_Tracks loop
+            Draw_Sign (Buffer, Track);
+         end loop;
+
+         --  Switches
+         for Track of Switch_Tracks loop
+            if Track /= null then
+               Draw_Switch (Buffer, Track.all);
+            end if;
+         end loop;
+
+         --  Trains
+         for Index in Trains.Train_Id'First .. Trains.Cur_Num_Trains - 1 loop
+            Draw_Train (Buffer, My_Trains (Index));
+         end loop;
+
+         if Can_Spawn_Train then
+            Buffer.Draw_Rect
+              (Color  => HAL.Bitmap.White,
+               X      => Spawn_X'First,
+               Y      => Spawn_Y'First,
+               Width  => Spawn_X'Last - Spawn_X'First + 1,
+               Height => Spawn_Y'Last - Spawn_Y'First + 1);
+            Bitmapped_Drawing.Draw_String
+              (Buffer,
+               Start      => (Spawn_X'First + 5, Spawn_Y'First + 5),
+               Msg        => "Touch here to",
+               Font       => Font8x8,
+               Foreground => HAL.Bitmap.White,
+               Background => HAL.Bitmap.Transparent);
+            Bitmapped_Drawing.Draw_String
+              (Buffer,
+               Start      => (Spawn_X'First + 5, Spawn_Y'First + 22),
+               Msg        => "spawn a train",
+               Font       => Font8x8,
+               Foreground => HAL.Bitmap.White,
+               Background => HAL.Bitmap.Transparent);
+         end if;
       end if;
    end Draw_Layout;
 
@@ -655,28 +669,29 @@ package body Railroad is
       Create_Inner_Loop;
       Create_Connection_Tracks;
       Convert_Railway_Map;
-      Draw_Layout (True);
+      Draw_Layout (Display.Get_Hidden_Buffer (1), True);
+      Display.Update_Layer (1);
    end Initialize;
 
    ----------------------
    -- Respond_To_Touch --
    ----------------------
 
-   procedure Respond_To_Touch (P : Point) is
+   procedure Respond_To_Touch (X, Y : Natural) is
    begin
-      if P.X in Spawn_X and then P.Y in Spawn_Y then
+      if X in Spawn_X and then Y in Spawn_Y then
          Spawn_Train;
       end if;
 
-      if P.X in Sw1_X and then P.Y in Sw1_Y then
+      if X in Sw1_X and then Y in Sw1_Y then
          Change_Switch (Switch_Tracks (1).all);
       end if;
 
-      if P.X in Sw2_X and then P.Y in Sw2_Y then
+      if X in Sw2_X and then Y in Sw2_Y then
          Change_Switch (Switch_Tracks (2).all);
       end if;
 
-      if P.X in Sw3_X and then P.Y in Sw3_Y then
+      if X in Sw3_X and then Y in Sw3_Y then
          Change_Switch (Switch_Tracks (3).all);
       end if;
    end Respond_To_Touch;

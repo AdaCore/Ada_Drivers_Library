@@ -29,26 +29,29 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package HAL.Touch_Panel is
+with HAL.Touch_Panel;
 
-   type TP_Touch_State is record
-      X      : Natural;
-      Y      : Natural;
-      Weight : Natural;
-   end record;
+private with STMPE811;
+private with STM32.Device;
+private with STM32.I2C;
 
-   type TP_State is array (Natural range <>) of TP_Touch_State;
+package Touch_Panel_STMPE811 is
 
-   function Initialize return Boolean;
-   --  Initializes the LCD touch panel
+   type Touch_Panel is limited new HAL.Touch_Panel.Touch_Panel_Device
+   with private;
 
-   procedure Initialize;
-   --  Initializes the LCD touch panel
+private
 
-   function Detect_Touch return Natural;
-   --  Detects the number of touches
+   TP_I2C   : STM32.I2C.I2C_Port renames STM32.Device.I2C_3;
 
-   function Get_State return TP_State;
-   --  The current state of the touch panel
+   type Touch_Panel is limited new STMPE811.STMPE811_Device
+     (Port     => TP_I2C'Access,
+      I2C_Addr => 16#82#) with null record;
 
-end HAL.Touch_Panel;
+   overriding function Initialize
+     (This : in out Touch_Panel) return Boolean;
+
+   overriding
+   function Swap_Points (This : Touch_Panel) return Boolean;
+
+end Touch_Panel_STMPE811;

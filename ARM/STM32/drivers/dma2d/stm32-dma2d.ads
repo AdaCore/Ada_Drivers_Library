@@ -121,14 +121,25 @@ package STM32.DMA2D is
       RGB888,
       RGB565,
       ARGB1555,
-      ARGB4444);
-   for DMA2D_Color_Mode'Size use 3;
+      ARGB4444,
+      L8,
+      AL44,
+      AL88,
+      L4,
+      A8,
+      A4) with Size => 4;
 
-   function Bytes_Per_Pixel (CM : DMA2D_Color_Mode) return Positive
-   is (case CM is
-          when ARGB8888 => 4,
-          when RGB888 => 3,
-          when others => 2);
+   subtype DMA2D_Dst_Color_Mode is DMA2D_Color_Mode range ARGB8888 .. ARGB4444;
+
+   subtype Foreground_Color_Mode is DMA2D_Color_Mode;
+   subtype Background_Color_Mode is DMA2D_Color_Mode;
+   subtype Output_Color_Mode is DMA2D_Color_Mode range ARGB8888 .. ARGB4444;
+
+--     function Bytes_Per_Pixel (CM : DMA2D_Color_Mode) return Positive
+--     is (case CM is
+--            when ARGB8888 => 4,
+--            when RGB888 => 3,
+--            when others => 2);
 
    --  Alpha mode
    --  00: No modification of the foreground image alpha channel value
@@ -155,56 +166,35 @@ package STM32.DMA2D is
       Width      : Natural;
       Height     : Natural;
       Color_Mode : DMA2D_Color_Mode;
-      Swap_X_Y   : Boolean;
    end record;
 
    Null_Buffer : constant DMA2D_Buffer :=
                    (Addr       => System'To_Address (0),
                     Width      => 0,
                     Height     => 0,
-                    Color_Mode => DMA2D_Color_Mode'First,
-                    Swap_X_Y   => False);
-
-   procedure DMA2D_Fill
-     (Buffer      : DMA2D_Buffer;
-      Color       : DMA2D_Color;
-      Synchronous : Boolean := False);
-   --  Fill the specified buffer with 'Color'
+                    Color_Mode => DMA2D_Color_Mode'First);
 
    procedure DMA2D_Fill
      (Buffer      : DMA2D_Buffer;
       Color       : Word;
-      Synchronous : Boolean := False);
+      Synchronous : Boolean := False)
+     with Pre => Buffer.Color_Mode in Output_Color_Mode;
    --  Same as above, using the destination buffer native color representation
 
    procedure DMA2D_Set_Pixel
      (Buffer      : DMA2D_Buffer;
       X, Y        : Integer;
-      Color       : DMA2D_Color;
-      Synchronous : Boolean := False);
-
-   procedure DMA2D_Set_Pixel
-     (Buffer      : DMA2D_Buffer;
-      X, Y        : Integer;
       Color       : Word;
-      Synchronous : Boolean := False);
+      Synchronous : Boolean := False)
+     with Pre => Buffer.Color_Mode in Output_Color_Mode;
    --  Same as above, using the destination buffer native color representation
 
    procedure DMA2D_Set_Pixel_Blend
      (Buffer      : DMA2D_Buffer;
       X, Y        : Integer;
       Color       : DMA2D_Color;
-      Synchronous : Boolean := False);
-
-   procedure DMA2D_Fill_Rect
-     (Buffer      : DMA2D_Buffer;
-      Color       : DMA2D_Color;
-      X           : Integer;
-      Y           : Integer;
-      Width       : Integer;
-      Height      : Integer;
-      Synchronous : Boolean := False);
-   --  Fill the specified area of the buffer with 'Color'
+      Synchronous : Boolean := False)
+     with Pre => Buffer.Color_Mode in Output_Color_Mode;
 
    procedure DMA2D_Fill_Rect
      (Buffer      : DMA2D_Buffer;
@@ -213,16 +203,18 @@ package STM32.DMA2D is
       Y           : Integer;
       Width       : Integer;
       Height      : Integer;
-      Synchronous : Boolean := False);
+      Synchronous : Boolean := False)
+     with Pre => Buffer.Color_Mode in Output_Color_Mode;
    --  Same as above, using the destination buffer native color representation
 
    procedure DMA2D_Draw_Rect
      (Buffer    : DMA2D_Buffer;
-      Color     : DMA2D_Color;
+      Color     : Word;
       X         : Integer;
       Y         : Integer;
       Width     : Integer;
-      Height    : Integer);
+      Height    : Integer)
+     with Pre => Buffer.Color_Mode in Output_Color_Mode;
    --  Fill the specified area of the buffer with 'Color'
 
    procedure DMA2D_Copy_Rect
@@ -237,7 +229,8 @@ package STM32.DMA2D is
       Y_Bg       : Natural;
       Width      : Natural;
       Height     : Natural;
-      Synchronous  : Boolean := False);
+      Synchronous  : Boolean := False)
+     with Pre => Dst_Buffer.Color_Mode in Output_Color_Mode;
    --  Copy a rectangular area from Src to Dst
    --  If Blend is set, then the rectangle will be merged with the destination
    --  area, taking into account the opacity of the source. Else, it is simply
@@ -249,31 +242,23 @@ package STM32.DMA2D is
 
    procedure DMA2D_Draw_Vertical_Line
      (Buffer    : DMA2D_Buffer;
-      Color     : DMA2D_Color;
+      Color     : Word;
       X         : Integer;
       Y         : Integer;
       Height    : Integer;
-      Synchronous : Boolean := False);
+      Synchronous : Boolean := False)
+     with Pre => Buffer.Color_Mode in Output_Color_Mode;
    --  Draws a vertical line
 
    procedure DMA2D_Draw_Horizontal_Line
      (Buffer    : DMA2D_Buffer;
-      Color     : DMA2D_Color;
+      Color     : Word;
       X         : Integer;
       Y         : Integer;
       Width     : Integer;
-      Synchronous : Boolean := False);
+      Synchronous : Boolean := False)
+     with Pre => Buffer.Color_Mode in Output_Color_Mode;
    --  Draws a vertical line
-
-   function DMA2D_Color_To_Word
-     (Buffer : DMA2D_Buffer; Col : DMA2D_Color)
-     return Word;
-   --  Translates the DMA2D Color into native buffer color
-
-   function Word_To_DMA2D_Color
-     (Buffer : DMA2D_Buffer; Col : Word)
-     return DMA2D_Color;
-   --  Translates the native buffer color into DMA2D Color
 
    procedure DMA2D_Wait_Transfer;
    --  Makes sure the DMA2D transfers are done
@@ -281,6 +266,9 @@ package STM32.DMA2D is
 private
 
    function As_UInt3 is new Ada.Unchecked_Conversion
-     (DMA2D_Color_Mode, UInt3);
+     (DMA2D_Dst_Color_Mode, UInt3);
+   function As_UInt4 is new Ada.Unchecked_Conversion
+     (DMA2D_Color_Mode, UInt4);
+
 
 end STM32.DMA2D;

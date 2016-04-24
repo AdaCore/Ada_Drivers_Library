@@ -1,3 +1,0 @@
-abstract project Cortex_Shared extends "../../config.gpr" is
-   for Source_Dirs use ();
-end Cortex_Shared;

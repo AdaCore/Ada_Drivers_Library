@@ -6,12 +6,15 @@ package HAL.Touch_Panel is
       Weight : Natural;
    end record;
 
-   type TP_State is array (Natural range <>) of TP_Touch_State;
-
    subtype Touch_Identifier is Natural range 0 .. 10;
+   type TP_State is array (Touch_Identifier range <>) of TP_Touch_State;
 
    type Touch_Panel_Device is limited interface;
-   type Touch_Panel_Device_Ref is not null access all Touch_Panel_Device'Class;
+
+   function Initialize (This : in out Touch_Panel_Device) return Boolean
+     is abstract;
+
+   procedure Initialize (This : in out Touch_Panel_Device) is abstract;
 
    procedure Set_Bounds (This   : in out Touch_Panel_Device;
                          Width  : Natural;
@@ -23,17 +26,17 @@ package HAL.Touch_Panel is
    --  Retrieve the number of active touch points
 
    function Get_Touch_Point (This     : in out Touch_Panel_Device;
-                             Touch_Id : Touch_Identifier;
-                             SwapXY   : Boolean := False)
+                             Touch_Id : Touch_Identifier)
                              return TP_Touch_State is abstract;
    --  Retrieves the position and pressure information of the specified
    --  touch
 
    function Get_All_Touch_Points
-     (This     : in out Touch_Panel_Device;
-      SwapXY   : Boolean := False)
+     (This     : in out Touch_Panel_Device)
       return TP_State is abstract;
    --  Retrieves the position and pressure information of every active touch
    --  points
+
+   function Swap_Points (This : Touch_Panel_Device) return Boolean is abstract;
 
 end HAL.Touch_Panel;

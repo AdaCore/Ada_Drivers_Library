@@ -29,19 +29,15 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 --  an exception is propagated. We need it in the executable, therefore it
 --  must be somewhere in the closure of the context clauses.
 
-with STM32.LCD;             use STM32.LCD;
-with STM32.DMA2D.Interrupt; use STM32.DMA2D;
+with STM32.Board;           use STM32.Board;
+with HAL.Bitmap;            use HAL.Bitmap;
 with HAL.Touch_Panel;       use HAL.Touch_Panel;
-with Touch_Panel;           use Touch_Panel;
 with STM32.Button;
 
 with Bitmapped_Drawing;     use Bitmapped_Drawing;
-with Double_Buffer;         use Double_Buffer;
 
 procedure Draw
 is
-   FG_Buffer    : DMA2D_Buffer;
-
    procedure Clear;
 
    -----------
@@ -50,19 +46,13 @@ is
 
    procedure Clear is
    begin
-      DMA2D_Fill (FG_Buffer, Color => (Alpha => 255, others => 64));
+      Display.Get_Hidden_Buffer (1).Fill ((Alpha => 255, others => 64));
    end Clear;
-
-   Red : constant DMA2D_Color := (Alpha => 255,
-                                  Red   => 255, Green => 0, Blue => 0);
 
 begin
    --  Initialize LCD
-   STM32.LCD.Initialize (Pixel_Fmt_RGB888);
-   STM32.DMA2D.Interrupt.Initialize;
-   Double_Buffer.Initialize (Layer_Background => Layer_Single_Buffer,
-                             Layer_Foreground => Layer_Inactive);
-   FG_Buffer := Double_Buffer.Get_Visible_Buffer (Background);
+   Display.Initialize;
+   Display.Initialize_Layer (1, RGB_888);
 
    --  Initialize touch panel
    Touch_Panel.Initialize;
@@ -80,14 +70,14 @@ begin
          Clear;
       else
          declare
-            State : constant TP_State := Get_State;
+            State : constant TP_State := Touch_Panel.Get_All_Touch_Points;
          begin
             for Touch of State loop
                --  Workaround some strange readings from the STM32F429 TP
-               if Touch.X < FG_Buffer.Width - 1 then
-                  Fill_Circle
-                    (FG_Buffer, (Touch.X, Touch.Y), Touch.Weight / 4, Red);
-               end if;
+               Fill_Circle
+                 (Display.Get_Hidden_Buffer (1),
+                  (Touch.X, Touch.Y), Touch.Weight / 4, HAL.Bitmap.Red);
+               Display.Update_Layer (1, Copy_Back => True);
             end loop;
          end;
       end if;

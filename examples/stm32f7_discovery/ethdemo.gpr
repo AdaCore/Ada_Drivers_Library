@@ -1,3 +1,4 @@
+with "../../config.gpr";
 with "../../boards/stm32f7_discovery.gpr";
 
 project Ethdemo extends "../ethdemo/eth_generic"  is

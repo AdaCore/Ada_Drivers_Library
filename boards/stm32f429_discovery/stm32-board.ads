@@ -50,6 +50,9 @@ with STM32.SPI;     use STM32.SPI;
 with L3DG20;        use L3DG20;
 with STM32.FMC;     use STM32.FMC;
 
+with Framebuffer_ILI9341;
+with Touch_Panel_STMPE811;
+
 with Ada.Interrupts.Names;  use Ada.Interrupts;
 
 use STM32;  -- for base addresses
@@ -153,11 +156,6 @@ package STM32.Board is
    --  See the STM32F429I-Discovery board schematics for the actual pin
    --  assignments
 
-   --  Chip select and Data/Command select fot the LCD screen
-   LCD_CSX      : GPIO_Point renames PC2;
-   LCD_WRX_DCX  : GPIO_Point renames PD13;
-   LCD_RESET    : GPIO_Point renames PD12;
-
    --  RGB connection
    LCD_VSYNC    : GPIO_Point renames PA4;
    LCD_HSYNC    : GPIO_Point renames PC6;
@@ -175,6 +173,11 @@ package STM32.Board is
    LCD_PINS     : constant GPIO_Points :=
                      LCD_RGB_AF14 & LCD_RGB_AF9 &
                      LCD_VSYNC & LCD_HSYNC & LCD_ENABLE & LCD_CLK;
+
+   LCD_Natural_Width  : constant := 240;
+   LCD_Natural_Height : constant := 320;
+   Display            : Framebuffer_ILI9341.Frame_Buffer;
+   Touch_Panel        : Touch_Panel_STMPE811.Touch_Panel;
 
    --  User button
 

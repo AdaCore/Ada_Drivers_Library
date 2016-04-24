@@ -353,7 +353,7 @@ package body STM32.I2C is
       Start : constant Time := Clock;
    begin
       while Flag_Status (Handle, Flag) = F_State loop
-         if To_Duration (Clock - Start) > Duration (Timeout) then
+         if Clock - Start > Milliseconds (Timeout) then
             Handle.State := Ready;
             Status       := HAL.I2C.Err_Timeout;
 

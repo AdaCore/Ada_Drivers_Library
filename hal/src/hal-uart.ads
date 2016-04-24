@@ -1,5 +1,3 @@
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-
 package HAL.UART is
    type UART_Status is
      (Ok,

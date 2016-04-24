@@ -1,3 +1,4 @@
+with "../../config.gpr";
 with "../../boards/stm32f7_discovery.gpr";
 
 project Conway extends "../conway/conway_generic" is

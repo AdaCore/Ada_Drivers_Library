@@ -34,4 +34,5 @@ abstract project Config is
             for Default_Switches ("Ada") use ("-g");
       end case;
    end Builder;
+
 end Config;

@@ -44,31 +44,7 @@ with System;
 
 with STM32.Device; use STM32.Device;
 
-generic
-   LCD_Width  : Positive;
-   LCD_Height : Positive;
-
-   LCD_HSync  : Natural;
-   LCD_HBP    : Natural;
-   LCD_HFP    : Natural;
-   LCD_VSync  : Natural;
-   LCD_VBP    : Natural;
-   LCD_VFP    : Natural;
-
-   PLLSAI_N   : UInt9; --  192 in general
-   PLLSAI_R   : UInt3;
-   DivR       : Natural;
-
-   with procedure Pre_LTDC_Initialize;
-   with procedure Post_LTDC_Initialize;
-   with function Reserve_RAM
-     (Amount : Word;
-      Align  : Word := Standard'Maximum_Alignment) return System.Address;
-
 package STM32.LTDC is
-
-   LCD_Natural_Width  : constant Natural := LCD_Width;
-   LCD_Natural_Height : constant Natural := LCD_Height;
 
    type LCD_Layer is (Layer1, Layer2);
 
@@ -78,98 +54,58 @@ package STM32.LTDC is
       Pixel_Fmt_RGB888,
       Pixel_Fmt_RGB565,
       Pixel_Fmt_ARGB1555,
-      Pixel_Fmt_ARGB4444)
+      Pixel_Fmt_ARGB4444,
+      Pixel_Fmt_L8, --  8bit luminance
+      Pixel_Fmt_AL44, --  4-bit Alpha, 4-bit Luniunance
+      Pixel_Fmt_AL88) --  8-bit Alpha, 8-bit Luniunance
      with Size => 3;
 
-   function Get_Pixel_Fmt  return Pixel_Format;
    function Bytes_Per_Pixel (Fmt : Pixel_Format) return Natural
      with Inline;
 
    subtype Frame_Buffer_Access is System.Address;
 
-   type Layer_State is (Enabled, Disabled);
+   type Blending_Factor is
+     (BF_Constant_Alpha,
+      BF_Pixel_Alpha_X_Constant_Alpha);
 
-   procedure Initialize (Pixel_Fmt : Pixel_Format := Pixel_Fmt_ARGB1555);
+   procedure Initialize (Width         : Positive;
+                         Height        : Positive;
+                         H_Sync        : Natural;
+                         H_Back_Porch  : Natural;
+                         H_Front_Porch : Natural;
+                         V_Sync        : Natural;
+                         V_Back_Porch  : Natural;
+                         V_Front_Porch : Natural;
+                         PLLSAI_N      : UInt9;
+                         PLLSAI_R      : UInt3;
+                         DivR          : Natural);
 
    function Initialized return Boolean;
+   procedure Start;
+   procedure Stop;
 
    procedure Set_Background (R, G, B : Byte);
 
-   procedure Set_Layer_State
-     (Layer : LCD_Layer;
-      State : Layer_State);
+   procedure Layer_Init
+     (Layer          : LCD_Layer;
+      Config         : Pixel_Format;
+      Buffer         : System.Address;
+      X, Y           : Natural;
+      W, H           : Positive;
+      Constant_Alpha : Byte := 255;
+      BF             : Blending_Factor := BF_Pixel_Alpha_X_Constant_Alpha);
 
-   function Current_Frame_Buffer
-     (Layer : LCD_Layer)
-      return Frame_Buffer_Access;
+   procedure Set_Layer_State
+     (Layer   : LCD_Layer;
+      Enabled : Boolean);
 
    procedure Set_Frame_Buffer
      (Layer : LCD_Layer; Addr : Frame_Buffer_Access);
 
-   type Orientation_Mode is
-     (Portrait,
-      Landscape);
-
-   procedure Set_Orientation (Orientation : Orientation_Mode);
-   --  The hardware does not support such translation natively.
-   --  Setting an orientation that is different from the standard one
-   --  will affect the behavior of Set_Pixel and the various subprograms of
-   --  DMA2D.
-
-   function Get_Orientation return Orientation_Mode;
-   function SwapXY return Boolean;
-
-   function Pixel_Width return Natural;
-   --  Current Width of the display. This depends on the current orientation.
-
-   function Pixel_Height return Natural;
-   --  Current Height of the display. This depends on the current orientation.
-
-   procedure Set_Pixel
-     (Layer : LCD_Layer;
-      X     : Natural;
-      Y     : Natural;
-      Value : Word)
-     with Pre => Get_Pixel_Fmt = Pixel_Fmt_ARGB8888;
-
-   procedure Set_Pixel
-     (Layer : LCD_Layer;
-      X     : Natural;
-      Y     : Natural;
-      Value : UInt24)
-     with Pre => Get_Pixel_Fmt = Pixel_Fmt_RGB888;
-
-   procedure Set_Pixel
-     (Layer : LCD_Layer;
-      X     : Natural;
-      Y     : Natural;
-      Value : Short)
-     with Pre =>
-       Get_Pixel_Fmt /= Pixel_Fmt_ARGB8888 and then
-       Get_Pixel_Fmt /= Pixel_Fmt_RGB888;
-
-   function Pixel_Value
-     (Layer : LCD_Layer;
-      X     : Natural;
-      Y     : Natural)
-      return Word
-     with Pre => Get_Pixel_Fmt = Pixel_Fmt_ARGB8888;
-
-   function Pixel_Value
-     (Layer : LCD_Layer;
-      X     : Natural;
-      Y     : Natural)
-      return UInt24
-     with Pre => Get_Pixel_Fmt = Pixel_Fmt_RGB888;
-
-   function Pixel_Value
-     (Layer : LCD_Layer;
-      X     : Natural;
-      Y     : Natural)
-      return Short
-     with Pre =>
-       Get_Pixel_Fmt /= Pixel_Fmt_ARGB8888 and then
-       Get_Pixel_Fmt /= Pixel_Fmt_RGB888;
+   function Get_Frame_Buffer
+     (Layer : LCD_Layer)
+      return Frame_Buffer_Access;
 
    procedure Reload_Config (Immediate : Boolean := False);
 
@@ -179,6 +115,8 @@ private
    is (case Fmt is
           when Pixel_Fmt_ARGB8888 => 4,
           when Pixel_Fmt_RGB888 => 3,
-          when others => 2);
+          when Pixel_Fmt_RGB565 | Pixel_Fmt_ARGB1555 | Pixel_Fmt_ARGB4444 => 2,
+          when Pixel_Fmt_L8 | Pixel_Fmt_AL44 => 1,
+          when Pixel_Fmt_AL88 => 2);
 
 end STM32.LTDC;

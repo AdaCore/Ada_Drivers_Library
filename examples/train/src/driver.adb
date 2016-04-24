@@ -22,6 +22,11 @@
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time;    use Ada.Real_Time;
+
+with STM32.Board;           use STM32.Board;
+with HAL.Framebuffer;       use HAL.Framebuffer;
+with HAL.Bitmap;            use HAL.Bitmap;
+
 with Screen_Interface;
 with Railroad;
 
@@ -43,6 +48,9 @@ package body Driver is
    begin
       delay until Next_Start;
 
+      Display.Initialize (Portrait, Interrupt);
+      Display.Initialize_Layer (1, RGB_565);
+      Display.Initialize_Layer (2, ARGB_1555);
       Screen_Interface.Initialize;
       Railroad.Initialize;
 
@@ -54,13 +62,15 @@ package body Driver is
 
          if Current.Touch_Detected /= Previous.Touch_Detected then
             if Current.Touch_Detected then
-               Railroad.Respond_To_Touch ((Current.X, Current.Y));
+               Railroad.Respond_To_Touch (Current.X, Current.Y);
             end if;
             Previous := Current;
          end if;
 
          Railroad.Step_Simulation;
-         Railroad.Draw_Layout;
+         Display.Get_Hidden_Buffer (2).Fill (0);
+         Railroad.Draw_Layout (Display.Get_Hidden_Buffer (2));
+         Display.Update_Layer (2);
 
          Next_Start := Next_Start + Period;
          delay until Next_Start;

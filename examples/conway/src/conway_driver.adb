@@ -27,19 +27,22 @@ with Interfaces.Bit_Types;     use Interfaces.Bit_Types;
 with System;                   use System;
 
 with STM32.Button;             use STM32.Button;
-with STM32.LCD;                use STM32.LCD;
-with STM32.DMA2D.Polling;      use STM32.DMA2D;
+with STM32.Board;              use STM32.Board;
 with STM32.RNG.Interrupts;     use STM32.RNG.Interrupts;
 with STM32.SDRAM;
 
-with Double_Buffer;            use Double_Buffer;
-with Bitmapped_Drawing;        use Bitmapped_Drawing;
-with Cortex_M.Cache;
+with HAL.Bitmap;               use HAL.Bitmap;
+with HAL.Framebuffer;          use HAL.Framebuffer;
 
 package body Conway_Driver is
 
-   type Width is mod LCD_Natural_Width;
-   type Height is mod LCD_Natural_Height;
+   LCD_W : constant := (if LCD_Natural_Width > LCD_Natural_Height
+                        then LCD_Natural_Width else LCD_Natural_Height);
+   LCD_H : constant := (if LCD_Natural_Width > LCD_Natural_Height
+                        then LCD_Natural_Height else LCD_Natural_Width);
+
+   type Width is mod LCD_W;
+   type Height is mod LCD_H;
 
    type Pattern is record
       W   : Natural;
@@ -150,17 +153,17 @@ package body Conway_Driver is
 
    G, G2, Tmp : Grid_Access;
 
-   Format : constant Pixel_Format := Pixel_Fmt_RGB565;
+   Format : constant HAL.Framebuffer.FB_Color_Mode := RGB_565;
    Colors : constant array (Cell_State) of Word :=
      (case Format is
-         when Pixel_Fmt_ARGB1555 => (Alive => 16#ffff#, Dead => 16#801f#),
-         when Pixel_Fmt_ARGB4444 => (Alive => 16#ffff#, Dead => 16#f00f#),
-         when Pixel_Fmt_ARGB8888 => (Alive => 16#ffffffff#,
-                                     Dead => 16#ff0000ff#),
-         when Pixel_Fmt_RGB565   => (Alive => 16#ffff#, Dead => 16#001f#),
-         when Pixel_Fmt_RGB888   => (Alive => 16#ffffff#, Dead => 16#0000ff#));
-
-   Buffer : DMA2D_Buffer;
+         when ARGB_1555 => (Alive => 16#ffff#, Dead => 16#801f#),
+         when ARGB_4444 => (Alive => 16#ffff#, Dead => 16#f00f#),
+         when ARGB_8888 => (Alive => 16#ffffffff#, Dead => 16#ff0000ff#),
+         when RGB_565   => (Alive => 16#ffff#, Dead => 16#001f#),
+         when RGB_888   => (Alive => 16#ffffff#, Dead => 16#0000ff#),
+         when L_8       => (Alive => 16#00#, Dead => 16#FF#),
+         when AL_44     => (Alive => 16#F0#, Dead => 16#FF#),
+         when AL_88     => (Alive => 16#FF00#, Dead => 16#FFFF#));
 
    procedure Draw_Grid;
    function Init_Grid (Ptrn : Pattern) return Boolean;
@@ -170,12 +173,15 @@ package body Conway_Driver is
    -- Draw_Grid --
    ---------------
 
-   procedure Draw_Grid is
+   procedure Draw_Grid
+   is
+      Buffer : constant Bitmap_Buffer'Class :=
+                 Display.Get_Hidden_Buffer (1);
    begin
       for Y in Grid'Range loop
          for X in Line'Range loop
-            DMA2D_Set_Pixel
-              (Buffer, Natural (X), Natural (Y),
+            Buffer.Set_Pixel
+              (Natural (X), Natural (Y),
                Colors (G (Y) (X).State));
          end loop;
       end loop;
@@ -373,6 +379,9 @@ package body Conway_Driver is
       end Update_Neighbors;
 
       function As_Byte is new Ada.Unchecked_Conversion (Cell, Byte);
+
+      Buffer : constant Bitmap_Buffer'Class :=
+                 Display.Get_Hidden_Buffer (1);
    begin
       --
       --  For every cell in the Grid, we'll determine whether or not the
@@ -403,8 +412,8 @@ package body Conway_Driver is
                      if G (Y) (X).Neighbor not in 2 .. 3 then
                         G2 (Y) (X).State := Dead;
                         Update_Neighbors (X, Y, Dead);
-                        Put_Pixel
-                          (Buffer, (Natural (X), Natural (Y)),
+                        Buffer.Set_Pixel
+                          (Natural (X), Natural (Y),
                            Colors (Dead));
                      end if;
 
@@ -412,8 +421,8 @@ package body Conway_Driver is
                      if G (Y) (X).Neighbor = 3 then
                         G2 (Y) (X).State := Alive;
                         Update_Neighbors (X, Y, Alive);
-                        Put_Pixel
-                          (Buffer, (Natural (X), Natural (Y)),
+                        Buffer.Set_Pixel
+                          (Natural (X), Natural (Y),
                            Colors (Alive));
                      end if;
                end case;
@@ -421,10 +430,7 @@ package body Conway_Driver is
          end loop;
       end loop;
 
-      Cortex_M.Cache.Clean_DCache
-        (Buffer.Addr,
-         Len =>
-           Buffer.Width * Buffer.Height * Bytes_Per_Pixel (Buffer.Color_Mode));
+      Display.Update_Layer (1, Copy_Back => True);
 
       --  Swap buffers
       Tmp := G;
@@ -442,23 +448,14 @@ package body Conway_Driver is
       Res  : Boolean;
    begin
       Initialize_RNG;
-      STM32.LCD.Initialize (Format);
---        STM32.LCD.Set_Orientation (Portrait);
-      STM32.DMA2D.Polling.Initialize;
-      Double_Buffer.Initialize
-        (Layer_Background => Double_Buffer.Layer_Double_Buffer,
-         Layer_Foreground => Double_Buffer.Layer_Inactive);
-      STM32.SDRAM.Initialize;
+      Display.Initialize (Orientation => Landscape);
+      Display.Initialize_Layer (1, Format);
       STM32.Button.Initialize;
-
-      DMA2D_Fill (Double_Buffer.Get_Visible_Buffer (Background), Color => 0);
-      DMA2D_Fill (Double_Buffer.Get_Hidden_Buffer (Background), Color => 0);
 
       G  := To_Grid (STM32.SDRAM.Reserve (Grid'Size / 8));
       G2 := To_Grid (STM32.SDRAM.Reserve (Grid'Size / 8));
 
       loop
-         Buffer := Get_Hidden_Buffer (Background);
          loop
             Res := Init_Grid (Patterns (Ptrn));
 
@@ -470,23 +467,8 @@ package body Conway_Driver is
             exit when Res;
          end loop;
 
-         Swap_Buffers;
-
          loop
-            Buffer := Get_Hidden_Buffer (Background);
-            DMA2D_Copy_Rect
-              (Double_Buffer.Get_Visible_Buffer (Background),
-               0, 0,
-               Buffer,
-               0, 0,
-               Null_Buffer,
-               0, 0,
-               Buffer.Width, Buffer.Height,
-               Synchronous => True);
-
             Step;
-
-            Swap_Buffers (True);
 
             exit when STM32.Button.Has_Been_Pressed;
          end loop;

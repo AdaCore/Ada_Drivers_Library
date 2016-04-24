@@ -41,7 +41,7 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with STM32.LCD;
+with STM32.Board;
 with STM32.I2C;            use STM32.I2C;
 with STM32.GPIO;           use STM32.GPIO;
 
@@ -52,7 +52,7 @@ with HAL.I2C;
 
 with STMPE811;             use STMPE811;
 
-package body Touch_Panel is
+package body Touch_Panel_STMPE811 is
 
    use type HAL.I2C.I2C_Status;
 
@@ -61,13 +61,6 @@ package body Touch_Panel is
 
    SDA      : GPIO_Point renames PC9;
    SDA_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C;
-
-   TP_I2C   : I2C_Port renames I2C_3;
-
-   IOE_ADDR : constant := 16#82#;
-
-   Driver : STMPE811.STMPE811_Device (Port    => TP_I2C'Access,
-                                      I2C_Addr => IOE_ADDR);
 
    procedure TP_Ctrl_Lines;
    procedure TP_I2C_Config;
@@ -80,10 +73,6 @@ package body Touch_Panel is
       GPIO_Conf : GPIO_Port_Configuration;
    begin
       Enable_Clock (GPIO_Points'(SDA, SCL));
-
-      Enable_Clock (TP_I2C);
-
-      Reset (TP_I2C);
 
       Enable_Clock (TP_I2C);
 
@@ -124,47 +113,29 @@ package body Touch_Panel is
    -- Initialize --
    ----------------
 
-   procedure Initialize is
-   begin
-      if not Initialize then
-         raise Program_Error;
-      end if;
-   end Initialize;
-
-   ----------------
-   -- Initialize --
-   ----------------
-
-   function Initialize return Boolean is
+   overriding function Initialize
+     (This : in out Touch_Panel) return Boolean
+   is
       Status : Boolean;
    begin
       TP_Ctrl_Lines;
       TP_I2C_Config;
 
-      Status := Driver.Initialize;
-      Driver.Set_Bounds (STM32.LCD.LCD_Natural_Width,
-                         STM32.LCD.LCD_Natural_Height);
+      Status := STMPE811_Device (This).Initialize;
+      This.Set_Bounds (STM32.Board.LCD_Natural_Width,
+                       STM32.Board.LCD_Natural_Height);
       return Status;
    end Initialize;
 
-   ------------------
-   -- Detect_Touch --
-   ------------------
+   -----------------
+   -- Swap_Points --
+   -----------------
 
-   function Detect_Touch return Natural
+   overriding function Swap_Points (This : Touch_Panel) return Boolean
    is
+      pragma Unreferenced (This);
    begin
-      return Driver.Active_Touch_Points;
-   end Detect_Touch;
+      return STM32.Board.Display.Is_Swapped;
+   end Swap_Points;
 
-   ---------------
-   -- Get_State --
-   ---------------
-
-   function Get_State return TP_State
-   is
-   begin
-      return Driver.Get_All_Touch_Points (STM32.LCD.SwapXY);
-   end Get_State;
-
-end Touch_Panel;
+end Touch_Panel_STMPE811;

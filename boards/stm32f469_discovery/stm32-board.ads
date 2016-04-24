@@ -40,7 +40,10 @@ with STM32.FMC;     use STM32.FMC;
 with Ada.Interrupts.Names;  use Ada.Interrupts;
 
 use STM32;  -- for base addresses
-with STM32.I2C; use STM32.I2C;
+--  with STM32.I2C; use STM32.I2C;
+
+with Framebuffer_OTM8009A;
+with Touch_Panel_FT6x06;
 
 package STM32.Board is
 
@@ -138,19 +141,18 @@ package STM32.Board is
 --     MEMS_INT2    : GPIO_Point renames PA2;
 --     LCD_SPI      : SPI_Port   renames SPI_5;
 
-   ------------------------
-   --  GPIO Pins for LCD --
-   ------------------------
+   --------------------------------
+   -- Screen/Touch panel devices --
+   --------------------------------
 
-   LCD_XRES    : GPIO_Point renames PH7;
-   LCD_BL_CTRL : GPIO_Point renames PA3;
-   DSIHOST_TE  : GPIO_Point renames PJ2;
+   LCD_Natural_Width  : constant := Framebuffer_OTM8009A.LCD_Natural_Width;
+   LCD_Natural_Height : constant := Framebuffer_OTM8009A.LCD_Natural_Height;
+   Display            : Framebuffer_OTM8009A.Frame_Buffer;
+   Touch_Panel        : Touch_Panel_FT6x06.Touch_Panel;
 
    -----------------
    -- Touch Panel --
    -----------------
-
-   TP_I2C   : I2C_Port renames I2C_1;
 
    I2C1_SCL : GPIO_Point renames PB8;
    I2C1_SDA : GPIO_Point renames PB9;

@@ -27,34 +27,20 @@
 with Interfaces;    use Interfaces;
 with BMP_Fonts;     use BMP_Fonts;
 with Hershey_Fonts; use Hershey_Fonts;
-with STM32.DMA2D;   use STM32.DMA2D;
+with HAL.Bitmap;    use HAL.Bitmap;
 
 package Bitmapped_Drawing is
-
-   subtype Graphics_Color is DMA2D_Color;
-   subtype Graphics_Buffer is DMA2D_Buffer;
-
-   Black       : constant Graphics_Color := (255, 0, 0, 0);
-   Blue        : constant Graphics_Color := (255, 0, 0, 255);
-   Light_Blue  : constant Graphics_Color := (255, 173, 216, 230);
-   Brown       : constant Graphics_Color := (255, 165, 42, 42);
-   Cyan        : constant Graphics_Color := (255, 0, 255, 255);
-   Gray        : constant Graphics_Color := (255, 190, 190, 190);
-   Light_Gray  : constant Graphics_Color := (255, 211, 211, 211);
-   Green       : constant Graphics_Color := (255, 0, 255, 0);
-   Light_Green : constant Graphics_Color := (255, 144, 238, 144);
-   Magenta     : constant Graphics_Color := (255, 255, 0, 255);
-   Red         : constant Graphics_Color := (255, 255, 0, 0);
-   Orange      : constant Graphics_Color := (255, 255, 69, 0);
-   Violet      : constant Graphics_Color := (255, 238, 130, 238);
-   Yellow      : constant Graphics_Color := (255, 255, 255, 0);
-   White       : constant Graphics_Color := (255, 255, 255, 255);
-   Transparent : constant Graphics_Color := (0, 0, 0, 0);
 
    type Point is record
       X : Natural;
       Y : Natural;
    end record;
+
+   function "+" (P1, P2 : Point) return Point
+     is ((P1.X + P2.X, P1.Y + P2.Y));
+
+   function "-" (P1, P2 : Point) return Point
+     is ((P1.X - P2.X, P1.Y - P2.Y));
 
    type Rect is record
       Position : Point;
@@ -62,34 +48,16 @@ package Bitmapped_Drawing is
       Height   : Natural;
    end record;
 
-   function Screen_Buffer return Graphics_Buffer;
-   --  Returns the LCD Frame buffer for Layer 1
-
-   function LCD_Color_Mode return STM32.DMA2D.DMA2D_Color_Mode
-     with Inline;
-
-   procedure Put_Pixel
-     (Buffer   : Graphics_Buffer;
-      Position : Point;
-      Hue      : Graphics_Color);
-
-   procedure Put_Pixel
-     (Buffer   : Graphics_Buffer;
-      Position : Point;
-      Hue      : Unsigned_32);
-
-   function Get_Pixel
-     (Buffer   : Graphics_Buffer;
-      Position : Point) return Graphics_Color;
-
-   function Get_Pixel
-     (Buffer   : Graphics_Buffer;
-      Position : Point) return Unsigned_32;
-
    procedure Draw_Line
-     (Buffer      : Graphics_Buffer;
+     (Buffer      : Bitmap_Buffer'Class;
       Start, Stop : Point;
-      Hue         : Graphics_Color;
+      Hue         : Unsigned_32;
+      Thickness   : Natural := 1;
+      Fast        : Boolean := True);
+   procedure Draw_Line
+     (Buffer      : Bitmap_Buffer'Class;
+      Start, Stop : Point;
+      Hue         : Bitmap_Color;
       Thickness   : Natural := 1;
       Fast        : Boolean := True);
    --  If fast is set, then the line thickness uses squares to draw, while
@@ -97,68 +65,58 @@ package Bitmapped_Drawing is
    --  draw but providing nicer line cap.
 
    procedure Draw_Rectangle
-     (Buffer    : Graphics_Buffer;
+     (Buffer    : Bitmap_Buffer'Class;
       Area      : Rect;
-      Hue       : Graphics_Color;
+      Hue       : Bitmap_Color;
       Thickness : Natural := 1);
 
    procedure Draw_Rounded_Rectangle
-     (Buffer    : Graphics_Buffer;
+     (Buffer    : Bitmap_Buffer'Class;
       Area      : Rect;
       Radius    : Natural;
-      Hue       : Graphics_Color;
+      Hue       : Bitmap_Color;
       Thickness : Natural := 1);
 
-   procedure Fill
-     (Buffer      : Graphics_Buffer;
-      Hue         : Graphics_Color;
-      Synchronous : Boolean := False)
-      renames STM32.DMA2D.DMA2D_Fill;
-
-   procedure Fill_Rectangle
-     (Buffer : Graphics_Buffer;
-      Area   : Rect;
-      Hue    : Graphics_Color);
-
    procedure Fill_Rounded_Rectangle
-     (Buffer : Graphics_Buffer;
-      Area   : Rect;
+     (Buffer : Bitmap_Buffer'Class;
+      X      : Natural;
+      Y      : Natural;
+      Width  : Positive;
+      Height : Positive;
       Radius : Natural;
-      Hue    : Graphics_Color);
-
-   procedure Copy_Rectangle
-     (Src      : Graphics_Buffer;
-      Src_Area : Rect;
-      Dst      : Graphics_Buffer;
-      Dst_Pos  : Point);
-
-   procedure Copy_Rectangle_Blend
-     (Src      : Graphics_Buffer;
-      Src_Area : Rect;
-      Dst      : Graphics_Buffer;
-      Dst_Pos  : Point);
+      Hue    : Bitmap_Color);
 
    procedure Cubic_Bezier
-     (Buffer         : Graphics_Buffer;
+     (Buffer         : Bitmap_Buffer'Class;
       P1, P2, P3, P4 : Point;
-      Hue            : Graphics_Color;
+      Hue            : Bitmap_Color;
       N              : Positive := 20;
       Thickness      : Natural := 1);
 
    procedure Draw_Circle
-     (Buffer : Graphics_Buffer;
+     (Buffer : Bitmap_Buffer'Class;
       Center : Point;
       Radius : Natural;
-      Hue    : Graphics_Color);
+      Hue    : Unsigned_32);
+   procedure Draw_Circle
+     (Buffer : Bitmap_Buffer'Class;
+      Center : Point;
+      Radius : Natural;
+      Hue    : Bitmap_Color);
 
    procedure Fill_Circle
-     (Buffer : Graphics_Buffer;
+     (Buffer : Bitmap_Buffer'Class;
       Center : Point;
       Radius : Natural;
-      Hue    : Graphics_Color);
+      Hue    : Unsigned_32);
+   procedure Fill_Circle
+     (Buffer : Bitmap_Buffer'Class;
+      Center : Point;
+      Radius : Natural;
+      Hue    : Bitmap_Color);
 
    procedure Draw_Char
-     (Buffer     : Graphics_Buffer;
+     (Buffer     : Bitmap_Buffer'Class;
       Start      : Point;
       Char       : Character;
       Font       : BMP_Font;
@@ -166,31 +124,31 @@ package Bitmapped_Drawing is
       Background : Unsigned_32);
 
    procedure Draw_String
-     (Buffer     : Graphics_Buffer;
+     (Buffer     : Bitmap_Buffer'Class;
       Start      : Point;
       Msg        : String;
       Font       : BMP_Font;
-      Foreground : Graphics_Color;
-      Background : Graphics_Color);
+      Foreground : Bitmap_Color;
+      Background : Bitmap_Color);
 
    procedure Draw_String
-     (Buffer     : Graphics_Buffer;
+     (Buffer     : Bitmap_Buffer'Class;
       Start      : Point;
       Msg        : String;
       Font       : Hershey_Font;
       Height     : Natural;
       Bold       : Boolean;
-      Foreground : DMA2D_Color;
+      Foreground : Bitmap_Color;
       Fast       : Boolean := True);
 
    procedure Draw_String
-     (Buffer     : Graphics_Buffer;
+     (Buffer     : Bitmap_Buffer'Class;
       Area       : Rect;
       Msg        : String;
       Font       : Hershey_Font;
       Bold       : Boolean;
       Outline    : Boolean;
-      Foreground : Graphics_Color;
+      Foreground : Bitmap_Color;
       Fast       : Boolean := True);
 
 end Bitmapped_Drawing;

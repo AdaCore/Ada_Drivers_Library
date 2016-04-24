@@ -34,12 +34,12 @@ with System;
 with Interfaces;            use Interfaces;
 with Interfaces.Bit_Types;  use Interfaces.Bit_Types;
 with STM32.Button;          use STM32.Button;
-with STM32.LCD;             use STM32.LCD;
-with STM32.DMA2D.Interrupt; use STM32.DMA2D;
+with STM32.Board;           use STM32.Board;
 with STM32.RNG.Interrupts;  use STM32.RNG.Interrupts;
 
+with HAL.Bitmap;            use HAL.Bitmap;
+
 with Bitmapped_Drawing;     use Bitmapped_Drawing;
-with Double_Buffer;         use Double_Buffer;
 
 procedure Demo is
    use STM32;
@@ -52,7 +52,7 @@ procedure Demo is
       Val : Byte;
    end record;
 
-   function To_RGB (Col : HSV_Color) return DMA2D_Color;
+   function To_RGB (Col : HSV_Color) return Bitmap_Color;
    --  Translates a Hue/Saturation/Value color into RGB
 
    type Coordinate is (X, Y);
@@ -134,18 +134,17 @@ procedure Demo is
 
    Objects      : array (1 .. 15) of Moving_Object;
 
-   FG_Buffer    : DMA2D_Buffer;
    White_Background : Boolean := False;
 
    ------------
    -- To_RGB --
    ------------
 
-   function To_RGB (Col : HSV_Color) return DMA2D_Color
+   function To_RGB (Col : HSV_Color) return Bitmap_Color
    is
       V, S, H : Word;
       Region, FPart, p, q, t : Word;
-      Ret     : DMA2D_Color;
+      Ret     : Bitmap_Color;
    begin
       Ret.Alpha := 255;
 
@@ -290,7 +289,7 @@ procedure Demo is
    procedure Init_Balls
    is
       Size   : constant Integer :=
-                 Natural'Min (Pixel_Width, Pixel_Height);
+                 Natural'Min (LCD_Natural_Width, LCD_Natural_Height);
       R_Min  : constant Natural :=
                  Size / 24;
       R_Var  : constant Word :=
@@ -307,11 +306,13 @@ procedure Demo is
                Col   : constant Byte :=
                          Byte (RNG.Interrupts.Random mod 255);
                X_Raw : constant Word :=
-                 (RNG.Interrupts.Random mod Word (Pixel_Width - 2 * R)) +
-                   Word (R);
+                         (RNG.Interrupts.Random mod
+                                    Word (LCD_Natural_Width - 2 * R)) +
+                         Word (R);
                Y_Raw : constant Word :=
-                 (RNG.Interrupts.Random mod Word (Pixel_Height - 2 * R)) +
-                   Word (R);
+                         (RNG.Interrupts.Random mod
+                                    Word (LCD_Natural_Height - 2 * R)) +
+                         Word (R);
                Sp_X  : constant Integer :=
                  Integer (RNG.Interrupts.Random mod Word (SP_Max * 2 + 1)) -
                    SP_Max;
@@ -346,10 +347,8 @@ procedure Demo is
    end Init_Balls;
 
 begin
-   STM32.LCD.Initialize (Pixel_Fmt_ARGB1555);
-   STM32.DMA2D.Interrupt.Initialize;
-   Double_Buffer.Initialize (Layer_Background => Layer_Double_Buffer,
-                             Layer_Foreground => Layer_Inactive);
+   Display.Initialize;
+   Display.Initialize_Layer (1, ARGB_1555);
    STM32.RNG.Interrupts.Initialize_RNG;
    STM32.Button.Initialize;
 
@@ -360,11 +359,8 @@ begin
          White_Background := not White_Background;
       end if;
 
-      FG_Buffer := Double_Buffer.Get_Hidden_Buffer (Background);
-
-      STM32.DMA2D.DMA2D_Fill
-        (FG_Buffer,
-         (if White_Background then DMA2D.White else DMA2D.Black));
+      Display.Get_Hidden_Buffer (1).Fill
+        ((if White_Background then White else Black));
 
       for M of Objects loop
          if M.N_Hue /= M.Col.Hue then
@@ -377,7 +373,7 @@ begin
 
          if (O.Speed (X) < 0.0 and then I (O.Center (X)) <= O.R)
            or else (O.Speed (X) > 0.0
-                    and then I (O.Center (X)) + O.R >= Pixel_Width - 1)
+                    and then I (O.Center (X)) + O.R >= LCD_Natural_Width - 1)
          then
             O.Speed (X) := -O.Speed (X);
             O.Center (X) := O.Center (X) + O.Speed (X);
@@ -385,7 +381,7 @@ begin
 
          if (O.Speed (Y) < 0.0 and then I (O.Center (Y)) <= O.R)
            or else (O.Speed (Y) > 0.0
-                    and then I (O.Center (Y)) + O.R >= Pixel_Height - 1)
+                    and then I (O.Center (Y)) + O.R >= LCD_Natural_Height - 1)
          then
             O.Speed (Y) := -O.Speed (Y);
             O.Center (Y) := O.Center (Y) + O.Speed (Y);
@@ -402,13 +398,13 @@ begin
 
       for O of Objects loop
          Fill_Circle
-           (FG_Buffer,
+           (Display.Get_Hidden_Buffer (1),
             (X => I (O.Center (X)),
              Y => I (O.Center (Y))),
             O.R,
             To_RGB (O.Col));
       end loop;
 
-      Swap_Buffers (VSync => True);
+      Display.Update_Layer (1);
    end loop;
 end Demo;

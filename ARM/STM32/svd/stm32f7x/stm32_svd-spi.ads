@@ -39,7 +39,7 @@ package STM32_SVD.SPI is
       SSM            : Boolean := False;
       --  Receive only
       RXONLY         : Boolean := False;
-      --  Data frame format
+      --  CRC length
       DFF            : Boolean := False;
       --  CRC transfer next
       CRCNEXT        : Boolean := False;
@@ -77,83 +77,210 @@ package STM32_SVD.SPI is
    -- CR2_Register --
    ------------------
 
+   --  Data size
+   type DS_Field is
+     (
+      --  Reset value for the field
+      Ds_Field_Reset,
+      Size_4Bit,
+      Size_5Bit,
+      Size_6Bit,
+      Size_7Bit,
+      Size_8Bit,
+      Size_9Bit,
+      Size_10Bit,
+      Size_11Bit,
+      Size_12Bit,
+      Size_13Bit,
+      Size_14Bit,
+      Size_15Bit,
+      Size_16Bit)
+     with Size => 4;
+   for DS_Field use
+     (Ds_Field_Reset => 0,
+      Size_4Bit => 3,
+      Size_5Bit => 4,
+      Size_6Bit => 5,
+      Size_7Bit => 6,
+      Size_8Bit => 7,
+      Size_9Bit => 8,
+      Size_10Bit => 9,
+      Size_11Bit => 10,
+      Size_12Bit => 11,
+      Size_13Bit => 12,
+      Size_14Bit => 13,
+      Size_15Bit => 14,
+      Size_16Bit => 15);
+
+   --  FIFO reception threshold
+   type FRXTH_Field is
+     (
+      --  RXNE event is generated if the FIFO level is greater than or equal to
+      --  1/2 (16-bit).
+      Half,
+      --  RXNE event is generated if the FIFO level is greater than or equal to
+      --  1/4 (8-bit).
+      Quarter)
+     with Size => 1;
+   for FRXTH_Field use
+     (Half => 0,
+      Quarter => 1);
+
+   --  Last DMA transfer for reception
+   type LDMA_RX_Field is
+     (
+      --  Number of data to transfer is even.
+      Even,
+      --  Number of data is odd.
+      Odd)
+     with Size => 1;
+   for LDMA_RX_Field use
+     (Even => 0,
+      Odd => 1);
+
+   --  Last DMA transfer for transmission
+   type LDMA_TX_Field is
+     (
+      --  Number of data to transfer is even.
+      Even,
+      --  Number of data is odd.
+      Odd)
+     with Size => 1;
+   for LDMA_TX_Field use
+     (Even => 0,
+      Odd => 1);
+
    --  control register 2
    type CR2_Register is record
       --  Rx buffer DMA enable
-      RXDMAEN       : Boolean := False;
+      RXDMAEN        : Boolean := False;
       --  Tx buffer DMA enable
-      TXDMAEN       : Boolean := False;
+      TXDMAEN        : Boolean := False;
       --  SS output enable
-      SSOE          : Boolean := False;
-      --  unspecified
-      Reserved_3_3  : Interfaces.Bit_Types.Bit := 16#0#;
+      SSOE           : Boolean := False;
+      --  NSS pulse management
+      NSSP           : Boolean := False;
       --  Frame format
-      FRF           : Boolean := False;
+      FRF            : Boolean := False;
       --  Error interrupt enable
-      ERRIE         : Boolean := False;
+      ERRIE          : Boolean := False;
       --  RX buffer not empty interrupt enable
-      RXNEIE        : Boolean := False;
+      RXNEIE         : Boolean := False;
       --  Tx buffer empty interrupt enable
-      TXEIE         : Boolean := False;
+      TXEIE          : Boolean := False;
+      --  Data size
+      DS             : DS_Field := Ds_Field_Reset;
+      --  FIFO reception threshold
+      FRXTH          : FRXTH_Field := Half;
+      --  Last DMA transfer for reception
+      LDMA_RX        : LDMA_RX_Field := Even;
+      --  Last DMA transfer for transmission
+      LDMA_TX        : LDMA_TX_Field := Even;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
+      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for CR2_Register use record
-      RXDMAEN       at 0 range 0 .. 0;
-      TXDMAEN       at 0 range 1 .. 1;
-      SSOE          at 0 range 2 .. 2;
-      Reserved_3_3  at 0 range 3 .. 3;
-      FRF           at 0 range 4 .. 4;
-      ERRIE         at 0 range 5 .. 5;
-      RXNEIE        at 0 range 6 .. 6;
-      TXEIE         at 0 range 7 .. 7;
-      Reserved_8_31 at 0 range 8 .. 31;
+      RXDMAEN        at 0 range 0 .. 0;
+      TXDMAEN        at 0 range 1 .. 1;
+      SSOE           at 0 range 2 .. 2;
+      NSSP           at 0 range 3 .. 3;
+      FRF            at 0 range 4 .. 4;
+      ERRIE          at 0 range 5 .. 5;
+      RXNEIE         at 0 range 6 .. 6;
+      TXEIE          at 0 range 7 .. 7;
+      DS             at 0 range 8 .. 11;
+      FRXTH          at 0 range 12 .. 12;
+      LDMA_RX        at 0 range 13 .. 13;
+      LDMA_TX        at 0 range 14 .. 14;
+      Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
    -----------------
    -- SR_Register --
    -----------------
 
+   --  FIFO reception level
+   type FRLVL_Field is
+     (
+      --  FIFO is empty.
+      Fifo_Empty,
+      --  1/4 FIFO.
+      Fifo_Quarter,
+      --  1/2 FIFO.
+      Fifo_Half,
+      --  FIFO full.
+      Fifo_Full)
+     with Size => 2;
+   for FRLVL_Field use
+     (Fifo_Empty => 0,
+      Fifo_Quarter => 1,
+      Fifo_Half => 2,
+      Fifo_Full => 3);
+
+   --  FIFO transmission level
+   type FTLVL_Field is
+     (
+      --  FIFO is empty.
+      Fifo_Empty,
+      --  1/4 FIFO.
+      Fifo_Quarter,
+      --  1/2 FIFO.
+      Fifo_Half,
+      --  FIFO full.
+      Fifo_Full)
+     with Size => 2;
+   for FTLVL_Field use
+     (Fifo_Empty => 0,
+      Fifo_Quarter => 1,
+      Fifo_Half => 2,
+      Fifo_Full => 3);
+
    --  status register
    type SR_Register is record
       --  Read-only. Receive buffer not empty
-      RXNE          : Boolean := False;
+      RXNE           : Boolean := False;
       --  Read-only. Transmit buffer empty
-      TXE           : Boolean := True;
+      TXE            : Boolean := True;
       --  Read-only. Channel side
-      CHSIDE        : Boolean := False;
+      CHSIDE         : Boolean := False;
       --  Read-only. Underrun flag
-      UDR           : Boolean := False;
+      UDR            : Boolean := False;
       --  CRC error flag
-      CRCERR        : Boolean := False;
+      CRCERR         : Boolean := False;
       --  Read-only. Mode fault
-      MODF          : Boolean := False;
+      MODF           : Boolean := False;
       --  Read-only. Overrun flag
-      OVR           : Boolean := False;
+      OVR            : Boolean := False;
       --  Read-only. Busy flag
-      BSY           : Boolean := False;
+      BSY            : Boolean := False;
       --  Read-only. TI frame format error
-      TIFRFE        : Boolean := False;
+      TIFRFE         : Boolean := False;
+      --  Read-only. FIFO reception level
+      FRLVL          : FRLVL_Field := Fifo_Empty;
+      --  Read-only. FIFO transmission level
+      FTLVL          : FTLVL_Field := Fifo_Empty;
       --  unspecified
-      Reserved_9_31 : Interfaces.Bit_Types.UInt23 := 16#0#;
+      Reserved_13_31 : Interfaces.Bit_Types.UInt19 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for SR_Register use record
-      RXNE          at 0 range 0 .. 0;
-      TXE           at 0 range 1 .. 1;
-      CHSIDE        at 0 range 2 .. 2;
-      UDR           at 0 range 3 .. 3;
-      CRCERR        at 0 range 4 .. 4;
-      MODF          at 0 range 5 .. 5;
-      OVR           at 0 range 6 .. 6;
-      BSY           at 0 range 7 .. 7;
-      TIFRFE        at 0 range 8 .. 8;
-      Reserved_9_31 at 0 range 9 .. 31;
+      RXNE           at 0 range 0 .. 0;
+      TXE            at 0 range 1 .. 1;
+      CHSIDE         at 0 range 2 .. 2;
+      UDR            at 0 range 3 .. 3;
+      CRCERR         at 0 range 4 .. 4;
+      MODF           at 0 range 5 .. 5;
+      OVR            at 0 range 6 .. 6;
+      BSY            at 0 range 7 .. 7;
+      TIFRFE         at 0 range 8 .. 8;
+      FRLVL          at 0 range 9 .. 10;
+      FTLVL          at 0 range 11 .. 12;
+      Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
    -----------------
@@ -268,8 +395,10 @@ package STM32_SVD.SPI is
       I2SE           : Boolean := False;
       --  I2S mode selection
       I2SMOD         : Boolean := False;
+      --  Asynchronous start enable
+      ASTRTEN        : Boolean := False;
       --  unspecified
-      Reserved_12_31 : Interfaces.Bit_Types.UInt20 := 16#0#;
+      Reserved_13_31 : Interfaces.Bit_Types.UInt19 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -284,7 +413,8 @@ package STM32_SVD.SPI is
       I2SCFG         at 0 range 8 .. 9;
       I2SE           at 0 range 10 .. 10;
       I2SMOD         at 0 range 11 .. 11;
-      Reserved_12_31 at 0 range 12 .. 31;
+      ASTRTEN        at 0 range 12 .. 12;
+      Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
    --------------------

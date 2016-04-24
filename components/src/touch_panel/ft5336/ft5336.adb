@@ -1,7 +1,6 @@
 with Ada.Unchecked_Conversion;
 with Interfaces;      use Interfaces;
 with HAL.I2C;         use HAL.I2C;
-with HAL.Touch_Panel; use HAL.Touch_Panel;
 
 package body FT5336 is
 
@@ -322,6 +321,17 @@ package body FT5336 is
    end TP_Set_Use_Interrupts;
 
    ----------------
+   -- Initialize --
+   ----------------
+
+   overriding procedure Initialize (This : in out FT5336_Device) is
+   begin
+      if not Initialize (Touch_Panel_Device'Class (This)) then
+         raise Program_Error;
+      end if;
+   end Initialize;
+
+   ----------------
    -- Set_Bounds --
    ----------------
 
@@ -368,8 +378,7 @@ package body FT5336 is
 
    overriding
    function Get_Touch_Point (This     : in out FT5336_Device;
-                             Touch_Id : Touch_Identifier;
-                             SwapXY   : Boolean := False)
+                             Touch_Id : Touch_Identifier)
                              return TP_Touch_State
    is
       type Short_HL_Type is record
@@ -433,7 +442,7 @@ package body FT5336 is
          Ret.Weight := 0;
       end if;
 
-      if SwapXY then
+      if Touch_Panel_Device'Class (This).Swap_Points then
          declare
             Swap : constant Natural := Ret.X;
          begin
@@ -455,9 +464,7 @@ package body FT5336 is
 
    overriding
    function Get_All_Touch_Points
-     (This     : in out FT5336_Device;
-      SwapXY   : Boolean := False)
-      return HAL.Touch_Panel.TP_State
+     (This : in out FT5336_Device) return HAL.Touch_Panel.TP_State
    is
       N_Touch : constant Natural := This.Active_Touch_Points;
       State   : TP_State (1 .. N_Touch);
@@ -468,7 +475,7 @@ package body FT5336 is
       end if;
 
       for J in State'Range loop
-         State (J) :=  This.Get_Touch_Point (J, SwapXY);
+         State (J) :=  This.Get_Touch_Point (J);
       end loop;
 
       return State;

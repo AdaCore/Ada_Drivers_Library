@@ -38,44 +38,17 @@ with STM32.Board;          use STM32.Board;
 with STM32.Device;         use STM32.Device;
 with STM32.I2C;            use STM32.I2C;
 with STM32.GPIO;           use STM32.GPIO;
-with STM32.LCD;            use STM32.LCD;
 with HAL.Touch_Panel;      use HAL.Touch_Panel;
 
 with FT6x06;               use FT6x06;
 
-package body Touch_Panel is
-
-   --  I2C Slave address of touchscreen FocalTech FT5336
-   TP_ADDR  : constant := 16#54#;
-
-   Driver : FT6x06.FT6x06_Device (Port     => TP_I2C'Access,
-                                  I2C_Addr => TP_ADDR);
-
-   procedure My_Delay (Ms : Integer);
-   --  Wait the specified number of milliseconds
+package body Touch_Panel_FT6x06 is
 
    procedure TP_Init_Pins;
    --  Initializes the Touch Panel GPIO pins
 
    procedure TP_I2C_Config;
    --  Initializes the I2C bus
-
-   pragma Warnings (Off, "* is not referenced");
-
-
-   pragma Warnings (On, "* is not referenced");
-
-   --------------
-   -- My_Delay --
-   --------------
-
-   procedure My_Delay (Ms : Integer) is
-      Next_Start : Time := Clock;
-      Period    : constant Time_Span := Milliseconds (Ms);
-   begin
-      Next_Start := Next_Start + Period;
-      delay until Next_Start;
-   end My_Delay;
 
    ---------------
    -- Init_Pins --
@@ -118,7 +91,7 @@ package body Touch_Panel is
       Enable_Clock (TP_I2C);
 
       --  Wait at least 200ms after power up before accessing the TP registers
-      My_Delay (200);
+      delay until Clock + Milliseconds (200);
 
       if not TP_I2C.Port_Enabled then
          Reset (TP_I2C);
@@ -138,45 +111,27 @@ package body Touch_Panel is
    -- Initialize --
    ----------------
 
-   function Initialize return Boolean is
+   overriding function Initialize (This : in out Touch_Panel) return Boolean is
    begin
       TP_Init_Pins;
       TP_I2C_Config;
 
-      Driver.TP_Set_Use_Interrupts (False);
-      Driver.Set_Bounds (STM32.LCD.LCD_Natural_Width,
-                         STM32.LCD.LCD_Natural_Height);
+      This.TP_Set_Use_Interrupts (False);
+      This.Set_Bounds (LCD_Natural_Width,
+                       LCD_Natural_Height);
 
-      return Driver.Check_Id;
+      return This.Check_Id;
    end Initialize;
 
-   ----------------
-   -- Initialize --
-   ----------------
+   -----------------
+   -- Swap_Points --
+   -----------------
 
-   procedure Initialize is
-      Ret : Boolean with Unreferenced;
-   begin
-      Ret := Initialize;
-   end Initialize;
-
-   ------------------
-   -- Detect_Touch --
-   ------------------
-
-   function Detect_Touch return Natural
+   overriding function Swap_Points (This : Touch_Panel) return Boolean
    is
+      pragma Unreferenced (This);
    begin
-      return Natural (Driver.Active_Touch_Points);
-   end Detect_Touch;
+      return Display.Is_Swapped;
+   end Swap_Points;
 
-   ---------------
-   -- Get_State --
-   ---------------
-
-   function Get_State return TP_State is
-   begin
-      return Driver.Get_All_Touch_Points (STM32.LCD.SwapXY);
-   end Get_State;
-
-end Touch_Panel;
+end Touch_Panel_FT6x06;

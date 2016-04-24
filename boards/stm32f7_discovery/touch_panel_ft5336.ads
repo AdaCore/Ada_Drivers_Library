@@ -31,18 +31,26 @@
 
 with HAL.Touch_Panel;
 
-package Touch_Panel is
+private with FT5336;
+private with STM32.Device;
+private with STM32.I2C;
 
-   function Initialize return Boolean;
-   --  Initializes the LCD touch panel
+package Touch_Panel_FT5336 is
 
-   procedure Initialize;
-   --  Initializes the LCD touch panel
+   type Touch_Panel is limited new HAL.Touch_Panel.Touch_Panel_Device
+   with private;
 
-   function Detect_Touch return Natural;
-   --  Detects the number of touches
+private
 
-   function Get_State return HAL.Touch_Panel.TP_State;
-   --  The current state of the touch panel
+   TP_I2C   : STM32.I2C.I2C_Port renames STM32.Device.I2C_3;
 
-end Touch_Panel;
+   type Touch_Panel is limited new FT5336.FT5336_Device
+     (Port     => TP_I2C'Access,
+      I2C_Addr => 16#70#) with null record;
+
+   overriding function Initialize
+     (This : in out Touch_Panel) return Boolean;
+
+   overriding function Swap_Points (This : Touch_Panel) return Boolean;
+
+end Touch_Panel_FT5336;

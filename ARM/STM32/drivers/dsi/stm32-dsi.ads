@@ -192,6 +192,8 @@ package STM32.DSI is
    procedure DSI_Start (This : in out DSI_Host);
    procedure DSI_Stop (This : in out DSI_Host);
    procedure DSI_Refresh (This : in out DSI_Host);
+   procedure DSI_Wrapper_Disable (This : in out DSI_Host);
+   procedure DSI_Wrapper_Enable (This : in out DSI_Host);
 
    overriding
    procedure DSI_Short_Write

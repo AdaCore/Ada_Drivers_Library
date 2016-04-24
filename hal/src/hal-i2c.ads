@@ -1,5 +1,3 @@
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-
 package HAL.I2C is
 
    type I2C_Status is

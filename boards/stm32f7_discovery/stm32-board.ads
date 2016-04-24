@@ -32,15 +32,18 @@
 --  This file provides declarations for devices on the STM32F7 Discovery kits
 --  manufactured by ST Microelectronics.
 
+with Ada.Interrupts.Names;  use Ada.Interrupts;
+
 with STM32.Device;  use STM32.Device;
 
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.FMC;     use STM32.FMC;
 with STM32.I2C;     use STM32.I2C;
 
-with Ada.Interrupts.Names;  use Ada.Interrupts;
-
 use STM32;  -- for base addresses
+
+with Touch_Panel_FT5336;
+with Framebuffer_RK043FN48H;
 
 package STM32.Board is
    pragma Elaborate_Body;
@@ -122,32 +125,15 @@ package STM32.Board is
 
    procedure Configure_I2C (Port : in out I2C_Port);
 
-   ------------------------
-   --  GPIO Pins for LCD --
-   ------------------------
+   --------------------------------
+   -- Screen/Touch panel devices --
+   --------------------------------
 
-   LCD_BL_CTRL   : GPIO_Point renames PK3;
-   LCD_ENABLE    : GPIO_Point renames PI12;
+   LCD_Natural_Width  : constant := Framebuffer_RK043FN48H.LCD_Natural_Width;
+   LCD_Natural_Height : constant := Framebuffer_RK043FN48H.LCD_Natural_Height;
 
-   LCD_HSYNC     : GPIO_Point renames PI10;
-   LCD_VSYNC     : GPIO_Point renames PI9;
-   LCD_CLK       : GPIO_Point renames PI14;
-   LCD_DE        : GPIO_Point renames PK7;
-   LCD_INT       : GPIO_Point renames PI13;
-
-   NC1           : GPIO_Point renames PI8;
-
-   LCD_CTRL_PINS : constant GPIO_Points :=
-                     (LCD_VSYNC, LCD_HSYNC, LCD_INT,
-                      LCD_CLK, LCD_DE, NC1);
-   LCD_RGB_AF14  : constant GPIO_Points :=
-                     (PI15, PJ0, PJ1, PJ2, PJ3, PJ4, PJ5, PJ6, --  Red
-                      PJ7, PJ8, PJ9, PJ10, PJ11, PK0, PK1, PK2, --  Green
-                      PE4, PJ13, PJ14, PJ15, PK4, PK5, PK6); --  Blue
-   LCD_RGB_AF9   : constant GPIO_Points :=
-                     (1 => PG12); -- B4
-
-   TP_I2C   : I2C_Port renames I2C_3;
+   Display     : Framebuffer_RK043FN48H.Frame_Buffer;
+   Touch_Panel : Touch_Panel_FT5336.Touch_Panel;
 
    -----------
    -- Audio --

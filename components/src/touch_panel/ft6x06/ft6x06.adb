@@ -81,6 +81,17 @@ package body FT6x06 is
    end TP_Set_Use_Interrupts;
 
    ----------------
+   -- Initialize --
+   ----------------
+
+   overriding procedure Initialize (This : in out FT6x06_Device) is
+   begin
+      if not Initialize (Touch_Panel_Device'Class (This)) then
+         raise Program_Error;
+      end if;
+   end Initialize;
+
+   ----------------
    -- Set_Bounds --
    ----------------
 
@@ -130,8 +141,7 @@ package body FT6x06 is
 
    overriding
    function Get_Touch_Point (This     : in out FT6x06_Device;
-                             Touch_Id : Touch_Identifier;
-                             SwapXY   : Boolean := False)
+                             Touch_Id : Touch_Identifier)
                              return HAL.Touch_Panel.TP_Touch_State
    is
       type Short_HL_Type is record
@@ -198,7 +208,7 @@ package body FT6x06 is
          Ret.Weight := 50;
       end if;
 
-      if SwapXY then
+      if Touch_Panel_Device'Class (This).Swap_Points then
          declare
             Swap : constant Natural := Ret.X;
          begin
@@ -225,8 +235,7 @@ package body FT6x06 is
 
    overriding
    function Get_All_Touch_Points
-     (This     : in out FT6x06_Device;
-      SwapXY   : Boolean := False)
+     (This : in out FT6x06_Device)
       return HAL.Touch_Panel.TP_State
    is
       N_Touch : constant Natural := This.Active_Touch_Points;
@@ -238,7 +247,7 @@ package body FT6x06 is
       end if;
 
       for J in State'Range loop
-         State (J) :=  This.Get_Touch_Point (J, SwapXY);
+         State (J) :=  This.Get_Touch_Point (J);
       end loop;
 
       return State;

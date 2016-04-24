@@ -39,8 +39,9 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with Ada.Interrupts.Names;
 with Ada.Unchecked_Conversion;
-with Ada.Real_Time;  use Ada.Real_Time;
+
 with System;         use System;
 
 with STM32_SVD.LTDC; use STM32_SVD.LTDC;
@@ -48,64 +49,170 @@ with STM32_SVD.RCC;  use STM32_SVD.RCC;
 
 package body STM32.LTDC is
 
-   Frame_Buffer_Array : array (LCD_Layer) of Frame_Buffer_Access;
-   Current_Pixel_Fmt  : Pixel_Format := Pixel_Fmt_ARGB1555;
-   Swap_X_Y           : Boolean := False;
+   pragma Warnings (Off, "* is not referenced");
+   type LCD_Polarity is
+     (Polarity_Active_Low,
+      Polarity_Active_High) with Size => 1;
+   type LCD_PC_Polarity is
+     (Input_Pixel_Clock,
+      Inverted_Input_Pixel_Clock) with Size => 1;
+   pragma Warnings (On, "* is not referenced");
 
-   subtype LCD_Height_Range is Natural range 0 .. LCD_Height - 1;
-   subtype LCD_Width_Range is Natural range 0 .. LCD_Width - 1;
+   function To_Bool is new Ada.Unchecked_Conversion (LCD_Polarity, Boolean);
+   function To_Bool is new Ada.Unchecked_Conversion (LCD_PC_Polarity, Boolean);
 
-   type FB32 is array (LCD_Height_Range, LCD_Width_Range) of Word
-     with Component_Size => 32, Volatile;
-   type FB24 is array (LCD_Height_Range, 0 .. LCD_Width * 3 - 1) of Byte
-     with Component_Size => 8, Volatile;
-   type FB16 is array (LCD_Height_Range, LCD_Width_Range) of Short
-     with Component_Size => 16, Volatile;
+   --  Extracted from STM32F429x.LTDC
+   type Layer_Type is record
+      LCR        : L1CR_Register;
+      --  Layerx Control Register
 
-   function Pixel_Size (Fmt : Pixel_Format) return Positive;
+      LWHPCR     : L1WHPCR_Register;
+      --  Layerx Window Horizontal Position Configuration Register
 
-   procedure Convert
-     (X, Y : Natural;
-      Ok   : out Boolean;
-      X0   : out LCD_Width_Range;
-      Y0   : out LCD_Height_Range);
+      LWVPCR     : L1WVPCR_Register;
+      --  Layerx Window Vertical Position Configuration Register
+
+      LCKCR      : L1CKCR_Register;
+      --  Layerx Color Keying Configuration Register
+
+      LPFCR      : L1PFCR_Register;
+      --  Layerx Pixel Format Configuration Register
+
+      LCACR      : L1CACR_Register;
+      --  Layerx Constant Alpha Configuration Register
+
+      LDCCR      : L1DCCR_Register;
+      --  Layerx Default Color Configuration Register
+
+      LBFCR      : L1BFCR_Register;
+      --  Layerx Blending Factors Configuration Register
+
+      Reserved_0 : Word;
+      Reserved_1 : Word;
+
+      LCFBAR     : Word;
+      --  Layerx Color Frame Buffer Address Register
+
+      LCFBLR     : L1CFBLR_Register;
+      --  Layerx Color Frame Buffer Length Register
+
+      LCFBLNR    : L1CFBLNR_Register;
+      --  Layerx ColorFrame Buffer Line Number Register
+
+      Reserved_2 : Word;
+      Reserved_3 : Word;
+      Reserved_4 : Word;
+
+      LCLUTWR    : L1CLUTWR_Register;
+      --  Layerx CLUT Write Register
+   end record with Volatile;
+
+   for Layer_Type use record
+      LCR        at  0 range 0 .. 31;
+      LWHPCR     at  4 range 0 .. 31;
+      LWVPCR     at  8 range 0 .. 31;
+      LCKCR      at 12 range 0 .. 31;
+      LPFCR      at 16 range 0 .. 31;
+      LCACR      at 20 range 0 .. 31;
+      LDCCR      at 24 range 0 .. 31;
+      LBFCR      at 28 range 0 .. 31;
+      Reserved_0 at 32 range 0 .. 31;
+      Reserved_1 at 36 range 0 .. 31;
+      LCFBAR     at 40 range 0 .. 31;
+      LCFBLR     at 44 range 0 .. 31;
+      LCFBLNR    at 48 range 0 .. 31;
+      Reserved_2 at 52 range 0 .. 31;
+      Reserved_3 at 56 range 0 .. 31;
+      Reserved_4 at 60 range 0 .. 31;
+      LCLUTWR    at 64 range 0 .. 31;
+   end record;
+   type Layer_Access is access all Layer_Type;
+
+   BF1_Constant_Alpha : constant := 2#100#;
+   BF2_Constant_Alpha : constant := 2#101#;
+   BF1_Pixel_Alpha    : constant := 2#110#;
+   BF2_Pixel_Alpha    : constant := 2#111#;
+
+   G_Layer1_Reg : aliased Layer_Type
+     with Import, Address => LTDC_Periph.L1CR'Address;
+   G_Layer2_Reg : aliased Layer_Type
+     with Import, Address => LTDC_Periph.L2CR'Address;
+
+   function Get_Layer (Layer : LCD_Layer) return Layer_Access;
+   --  Retrieve the layer's registers
+
+   protected Sync is
+      --  Apply pending buffers on Vertical Sync. Caller must call Wait
+      --  afterwards.
+      procedure Apply_On_VSync;
+
+      --  Wait for an interrupt.
+      entry Wait;
+
+      procedure Interrupt;
+      pragma Attach_Handler
+        (Interrupt, Ada.Interrupts.Names.LCD_TFT_Interrupt);
+
+   private
+      Not_Pending : Boolean := True;
+   end Sync;
 
    ----------
-   -- Init --
+   -- Sync --
    ----------
 
-   package Init is
---        BF1_Constant_Alpha : constant := 2#100#;
---        BF2_Constant_Alpha : constant := 2#101#;
-      BF1_Pixel_Alpha    : constant := 2#110#;
-      BF2_Pixel_Alpha    : constant := 2#111#;
+   protected body Sync is
 
-      procedure Reload_Config (Immediate : Boolean);
+      ----------
+      -- Wait --
+      ----------
 
-      procedure Set_Layer_CFBA
-        (Layer : LCD_Layer;
-         FBA   : Frame_Buffer_Access);
-      --  Sets the frame buffer of the specified layer
+      entry Wait when Not_Pending is
+      begin
+         null;
+      end Wait;
 
-      function Get_Layer_CFBA
-        (Layer : LCD_Layer) return Frame_Buffer_Access;
-      --  Gets the frame buffer of the specified layer
+      --------------------
+      -- Apply_On_VSync --
+      --------------------
 
-      procedure LTDC_Init;
+      procedure Apply_On_VSync is
+      begin
+         Not_Pending := False;
+         --  Enable the Register Refresh interrupt
+         LTDC_Periph.IER.RRIE := True;
+         --  And tell the LTDC to apply the layer registers on refresh
+         LTDC_Periph.SRCR.VBR := True;
+      end Apply_On_VSync;
 
-      procedure Layer_Init
-        (Layer    : LCD_Layer;
-         Config   : Pixel_Format;
-         BF1, BF2 : UInt3);
+      ---------------
+      -- Interrupt --
+      ---------------
 
-      procedure Set_Layer_State
-        (Layer : LCD_Layer;
-         State : Boolean);
-      --  Enables/Disables the specified layer
+      procedure Interrupt
+      is
+      begin
+         if LTDC_Periph.ISR.RRIF then
+            LTDC_Periph.IER.RRIE := False;
+            LTDC_Periph.ICR.CRRIF  := True;
 
-   end Init;
+            Not_Pending := True;
+         end if;
+      end Interrupt;
+   end Sync;
 
-   package body Init is separate;
+   ---------------
+   -- Get_Layer --
+   ---------------
+
+   function Get_Layer (Layer : LCD_Layer) return Layer_Access is
+   begin
+      if Layer = Layer1 then
+         return G_Layer1_Reg'Access;
+      else
+         return G_Layer2_Reg'Access;
+      end if;
+   end Get_Layer;
 
    -------------------
    -- Reload_Config --
@@ -113,65 +220,143 @@ package body STM32.LTDC is
 
    procedure Reload_Config
      (Immediate : Boolean := False)
-      renames Init.Reload_Config;
+   is
+   begin
+      if Immediate then
+         LTDC_Periph.SRCR.IMR := True;
+
+         loop
+            exit when not LTDC_Periph.SRCR.IMR;
+         end loop;
+      else
+         Sync.Apply_On_VSync;
+         Sync.Wait;
+      end if;
+   end Reload_Config;
 
    ---------------------
    -- Set_Layer_State --
    ---------------------
 
    procedure Set_Layer_State
-     (Layer : LCD_Layer;
-      State : Layer_State)
+     (Layer   : LCD_Layer;
+      Enabled : Boolean)
    is
+      L   : constant Layer_Access := Get_Layer (Layer);
    begin
-      Init.Set_Layer_State (Layer, State = Enabled);
+      if L.LCR.LEN /= Enabled then
+         L.LCR.LEN := Enabled;
+         Reload_Config (Immediate => True);
+      end if;
    end Set_Layer_State;
 
    ----------------
    -- Initialize --
    ----------------
 
-   procedure Initialize (Pixel_Fmt : Pixel_Format := Pixel_Fmt_ARGB1555)
+   procedure Initialize
+     (Width         : Positive;
+      Height        : Positive;
+      H_Sync        : Natural;
+      H_Back_Porch  : Natural;
+      H_Front_Porch : Natural;
+      V_Sync        : Natural;
+      V_Back_Porch  : Natural;
+      V_Front_Porch : Natural;
+      PLLSAI_N      : UInt9;
+      PLLSAI_R      : UInt3;
+      DivR          : Natural)
    is
-      FB_Size : constant Word :=
-                  Word
-                    (LCD_Width * LCD_Height * Pixel_Size (Pixel_Fmt));
+      DivR_Val : PLLSAI_DivR;
+
    begin
       if Initialized then
          return;
       end if;
 
-      Pre_LTDC_Initialize;
+      RCC_Periph.APB2ENR.LTDCEN := True;
 
-      delay until Clock + Milliseconds (200);
+      LTDC_Periph.GCR.VSPOL := To_Bool (Polarity_Active_Low);
+      LTDC_Periph.GCR.HSPOL := To_Bool (Polarity_Active_Low);
+      LTDC_Periph.GCR.DEPOL := To_Bool (Polarity_Active_Low);
+      LTDC_Periph.GCR.PCPOL := To_Bool (Inverted_Input_Pixel_Clock);
 
-      Init.LTDC_Init;
+      if DivR = 2 then
+         DivR_Val := PLLSAI_DIV2;
+      elsif DivR = 4 then
+         DivR_Val := PLLSAI_DIV4;
+      elsif DivR = 8 then
+         DivR_Val := PLLSAI_DIV8;
+      elsif DivR = 16 then
+         DivR_Val := PLLSAI_DIV16;
+      else
+         raise Constraint_Error with "Invalid DivR value: 2, 4, 8, 16 allowed";
+      end if;
 
-      Current_Pixel_Fmt := Pixel_Fmt;
+      Disable_PLLSAI;
+      Set_PLLSAI_Factors
+        (LCD  => PLLSAI_R,
+         VCO  => PLLSAI_N,
+         DivR => DivR_Val);
+      Enable_PLLSAI;
 
-      Frame_Buffer_Array (Layer1) := Reserve_RAM (FB_Size);
+      --  Synchronization size
+      LTDC_Periph.SSCR :=
+        (HSW => SSCR_HSW_Field (H_Sync - 1),
+         VSH => SSCR_VSH_Field (V_Sync - 1),
+         others => <>);
 
-      Init.Layer_Init
-        (Layer1, Pixel_Fmt,
-         Init.BF1_Pixel_Alpha,
-         Init.BF2_Pixel_Alpha);
-      Init.Layer_Init
-        (Layer2, Pixel_Fmt,
-         Init.BF1_Pixel_Alpha,
-         Init.BF2_Pixel_Alpha);
+      --  Accumulated Back Porch
+      LTDC_Periph.BPCR :=
+        (AHBP => BPCR_AHBP_Field (H_Sync + H_Back_Porch - 1),
+         AVBP => BPCR_AVBP_Field (V_Sync + V_Back_Porch - 1),
+         others => <>);
 
-      Reload_Config (True);
+      --  Accumulated Active Width/Height
+      LTDC_Periph.AWCR :=
+        (AAW => AWCR_AAW_Field (H_Sync + H_Back_Porch + Width - 1),
+         AAH => AWCR_AAH_Field (V_Sync + V_Back_Porch + Height - 1),
+         others => <>);
 
-      Init.Set_Layer_State (Layer1, True);
-      Init.Set_Layer_State (Layer2, False);
+      --  VTotal Width/Height
+      LTDC_Periph.TWCR :=
+        (TOTALW =>
+           TWCR_TOTALW_Field
+             (H_Sync + H_Back_Porch + Width + H_Front_Porch - 1),
+         TOTALH =>
+           TWCR_TOTALH_Field
+             (V_Sync + V_Back_Porch + Height + V_Front_Porch - 1),
+         others => <>);
+
+      --  Background color to black
+      LTDC_Periph.BCCR.BC := 0;
+
+      LTDC_Periph.GCR.LTDCEN := True;
+
+      Set_Layer_State (Layer1, False);
+      Set_Layer_State (Layer2, False);
 
       --  enable Dither
       LTDC_Periph.GCR.DEN := True;
-
-      Reload_Config (True);
-
-      Post_LTDC_Initialize;
    end Initialize;
+
+   -----------
+   -- Start --
+   -----------
+
+   procedure Start is
+   begin
+      LTDC_Periph.GCR.LTDCEN := True;
+   end Start;
+
+   ----------
+   -- Stop --
+   ----------
+
+   procedure Stop is
+   begin
+      LTDC_Periph.GCR.LTDCEN := False;
+   end Stop;
 
    -----------------
    -- Initialized --
@@ -179,34 +364,63 @@ package body STM32.LTDC is
 
    function Initialized return Boolean is
    begin
-      return Frame_Buffer_Array (Layer1) /= Null_Address;
+      return LTDC_Periph.GCR.LTDCEN;
    end Initialized;
 
    ----------------
-   -- Pixel_Size --
+   -- Layer_Init --
    ----------------
 
-   function Pixel_Size (Fmt : Pixel_Format) return Positive is
-     (case Fmt is
-         when Pixel_Fmt_ARGB8888 => 4,
-         when Pixel_Fmt_RGB888   => 3,
-         when Pixel_Fmt_RGB565 | Pixel_Fmt_ARGB1555 | Pixel_Fmt_ARGB4444 => 2);
+   procedure Layer_Init
+     (Layer          : LCD_Layer;
+      Config         : Pixel_Format;
+      Buffer         : System.Address;
+      X, Y           : Natural;
+      W, H           : Positive;
+      Constant_Alpha : Byte := 255;
+      BF             : Blending_Factor := BF_Pixel_Alpha_X_Constant_Alpha)
+   is
+      L        : constant Layer_Access := Get_Layer (Layer);
+      CFBL     : L1CFBLR_Register := L.LCFBLR;
+   begin
+      --  Horizontal start and stop = sync + Back Porch
+      L.LWHPCR :=
+        (WHSTPOS => L1WHPCR_WHSTPOS_Field (LTDC_Periph.BPCR.AHBP) + 1 +
+             L1WHPCR_WHSTPOS_Field (X),
+         WHSPPOS => L1WHPCR_WHSPPOS_Field (LTDC_Periph.BPCR.AHBP) +
+             L1WHPCR_WHSPPOS_Field (X + W),
+         others  => <>);
 
-   -------------------
-   -- Get_Pixel_Fmt --
-   -------------------
+      --  Vertical start and stop
+      L.LWVPCR :=
+        (WVSTPOS => LTDC_Periph.BPCR.AVBP + 1 + UInt11 (Y),
+         WVSPPOS => LTDC_Periph.BPCR.AVBP + UInt11 (Y + H),
+         others  => <>);
 
-   function Get_Pixel_Fmt return Pixel_Format is
-      (Current_Pixel_Fmt);
+      L.LPFCR.PF := Pixel_Format'Enum_Rep (Config);
 
-   --------------------------
-   -- Current_Frame_Buffer --
-   --------------------------
+      L.LCACR.CONSTA := Constant_Alpha;
 
-   function Current_Frame_Buffer
-     (Layer : LCD_Layer)
-      return Frame_Buffer_Access
-     renames Init.Get_Layer_CFBA;
+      L.LDCCR := (others => 0);
+
+      case BF is
+         when BF_Constant_Alpha =>
+            L.LBFCR.BF1 := BF1_Constant_Alpha;
+            L.LBFCR.BF2 := BF2_Constant_Alpha;
+         when BF_Pixel_Alpha_X_Constant_Alpha =>
+            L.LBFCR.BF1 := BF1_Pixel_Alpha;
+            L.LBFCR.BF2 := BF2_Pixel_Alpha;
+      end case;
+
+      CFBL.CFBLL := UInt13 (W * Bytes_Per_Pixel (Config)) + 3;
+      CFBL.CFBP := UInt13 (W * Bytes_Per_Pixel (Config));
+      L.LCFBLR := CFBL;
+
+      L.LCFBLNR.CFBLNBR := UInt11 (H);
+
+      Set_Frame_Buffer (Layer, Buffer);
+      Set_Layer_State (Layer, True);
+   end Layer_Init;
 
    ----------------------
    -- Set_Frame_Buffer --
@@ -214,53 +428,31 @@ package body STM32.LTDC is
 
    procedure Set_Frame_Buffer
      (Layer : LCD_Layer; Addr : Frame_Buffer_Access)
-      renames Init.Set_Layer_CFBA;
-
-   ---------------------
-   -- Set_Orientation --
-   ---------------------
-
-   procedure Set_Orientation (Orientation : Orientation_Mode)
    is
+      function To_Word is new Ada.Unchecked_Conversion
+        (Frame_Buffer_Access, Word);
    begin
-      case Orientation is
-         when Portrait =>
-            Swap_X_Y := LCD_Width > LCD_Height;
-         when Landscape =>
-            Swap_X_Y := LCD_Height > LCD_Width;
-      end case;
-   end Set_Orientation;
+      if Layer = Layer1 then
+         LTDC_Periph.L1CFBAR := To_Word (Addr);
+      else
+         LTDC_Periph.L2CFBAR := To_Word (Addr);
+      end if;
+   end Set_Frame_Buffer;
 
-   ---------------------
-   -- Get_Orientation --
-   ---------------------
+   ----------------------
+   -- Get_Frame_Buffer --
+   ----------------------
 
-   function Get_Orientation return Orientation_Mode
+   function Get_Frame_Buffer
+     (Layer : LCD_Layer)
+      return Frame_Buffer_Access
    is
+      L : constant Layer_Access := Get_Layer (Layer);
+      function To_FBA is new Ada.Unchecked_Conversion
+        (Word, Frame_Buffer_Access);
    begin
-      return (if Pixel_Width > Pixel_Height then Landscape else Portrait);
-   end Get_Orientation;
-
-   ------------
-   -- SwapXY --
-   ------------
-
-   function SwapXY return Boolean
-   is (Swap_X_Y);
-
-   -----------------
-   -- Pixel_Width --
-   -----------------
-
-   function Pixel_Width return Natural
-   is (if Swap_X_Y then LCD_Height else LCD_Width);
-
-   ------------------
-   -- Pixel_Height --
-   ------------------
-
-   function Pixel_Height return Natural
-   is (if Swap_X_Y then LCD_Width else LCD_Height);
+      return To_FBA (L.LCFBAR);
+   end Get_Frame_Buffer;
 
    --------------------
    -- Set_Background --
@@ -273,169 +465,5 @@ package body STM32.LTDC is
       LTDC_Periph.BCCR.BC :=
         UInt24 (RShift) or UInt24 (GShift) or UInt24 (B);
    end Set_Background;
-
-   -------------
-   -- Convert --
-   -------------
-
-   procedure Convert
-     (X, Y : Natural;
-      Ok   : out Boolean;
-      X0   : out LCD_Width_Range;
-      Y0   : out LCD_Height_Range)
-   is
-   begin
-      if Y >= Pixel_Height or else X >= Pixel_Width then
-         Ok := False;
-      else
-         Ok := True;
-         if not Swap_X_Y then
-            Y0 := Y;
-            X0 := X;
-         else
-            Y0 := LCD_Height - 1 - X;
-            X0 := Y;
-         end if;
-      end if;
-   end Convert;
-
-   ---------------
-   -- Set_Pixel --
-   ---------------
-
-   procedure Set_Pixel
-     (Layer : LCD_Layer;
-      X     : Natural;
-      Y     : Natural;
-      Value : Word)
-   is
-      FB : FB32 with Import, Address => Frame_Buffer_Array (Layer);
-      X0 : LCD_Width_Range;
-      Y0 : LCD_Height_Range;
-      Ok : Boolean;
-   begin
-      Convert (X, Y, Ok, X0, Y0);
-      if Ok then
-         FB (Y0, X0) := Value;
-      end if;
-   end Set_Pixel;
-
-   ---------------
-   -- Set_Pixel --
-   ---------------
-
-   procedure Set_Pixel
-     (Layer : LCD_Layer;
-      X     : Natural;
-      Y     : Natural;
-      Value : UInt24)
-   is
-      FB : FB24 with Import, Address => Frame_Buffer_Array (Layer);
-      X0 : LCD_Width_Range;
-      Y0 : LCD_Height_Range;
-      Ok : Boolean;
-   begin
-      Convert (X, Y, Ok, X0, Y0);
-      if Ok then
-         --  Red:
-         FB (Y0, (X0 * 3) + 2) := Byte (Value and 16#FF#);
-         --  Green:
-         FB (Y0, (X0 * 3) + 1) := Byte ((Value and 16#FF00#) / (2 ** 8));
-         --  Blue:
-         FB (Y0, (X0 * 3) + 0) := Byte ((Value and 16#FF0000#) / (2 ** 16));
-      end if;
-   end Set_Pixel;
-
-   ---------------
-   -- Set_Pixel --
-   ---------------
-
-   procedure Set_Pixel
-     (Layer : LCD_Layer;
-      X     : Natural;
-      Y     : Natural;
-      Value : Short)
-   is
-      FB : FB16 with Import, Address => Frame_Buffer_Array (Layer);
-      X0 : LCD_Width_Range;
-      Y0 : LCD_Height_Range;
-      Ok : Boolean;
-   begin
-      Convert (X, Y, Ok, X0, Y0);
-      if Ok then
-         FB (Y0, X0) := Value;
-      end if;
-   end Set_Pixel;
-
-   -----------------
-   -- Pixel_Value --
-   -----------------
-
-   function Pixel_Value
-     (Layer : LCD_Layer;
-      X     : Natural;
-      Y     : Natural)
-      return Word
-   is
-      FB : FB32 with Import, Address => Frame_Buffer_Array (Layer);
-      X0 : LCD_Width_Range;
-      Y0 : LCD_Height_Range;
-      Ok : Boolean;
-   begin
-      Convert (X, Y, Ok, X0, Y0);
-      if Ok then
-         return FB (Y0, X0);
-      else
-         return 0;
-      end if;
-   end Pixel_Value;
-
-   -----------------
-   -- Pixel_Value --
-   -----------------
-
-   function Pixel_Value
-     (Layer : LCD_Layer;
-      X     : Natural;
-      Y     : Natural)
-      return UInt24
-   is
-      FB : FB24 with Import, Address => Frame_Buffer_Array (Layer);
-      X0 : LCD_Width_Range;
-      Y0 : LCD_Height_Range;
-      Ok : Boolean;
-   begin
-      Convert (X, Y, Ok, X0, Y0);
-      if Ok then
-         return UInt24 (FB (Y0, X0 * 3 + 2)) or
-           UInt24 (FB (Y0, X0 * 3 + 1)) * 2 ** 8 or
-           UInt24 (FB (Y0, X0 * 3 + 0)) * 2 ** 16;
-      else
-         return 0;
-      end if;
-   end Pixel_Value;
-
-   -----------------
-   -- Pixel_Value --
-   -----------------
-
-   function Pixel_Value
-     (Layer : LCD_Layer;
-      X     : Natural;
-      Y     : Natural)
-      return Short
-   is
-      FB : FB16 with Import, Address => Frame_Buffer_Array (Layer);
-      X0 : LCD_Width_Range;
-      Y0 : LCD_Height_Range;
-      Ok : Boolean;
-   begin
-      Convert (X, Y, Ok, X0, Y0);
-      if Ok then
-         return FB (Y0, X0);
-      else
-         return 0;
-      end if;
-   end Pixel_Value;
 
 end STM32.LTDC;

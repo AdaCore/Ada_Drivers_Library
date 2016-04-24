@@ -2,13 +2,13 @@
 
 with Interfaces.Bit_Types; use Interfaces.Bit_Types;
 with HAL.I2C;
-with HAL.Touch_Panel;
+with HAL.Touch_Panel;      use HAL.Touch_Panel;
 
 package FT5336 is
 
    type FT5336_Device (Port     : HAL.I2C.I2C_Port_Ref;
                        I2C_Addr : HAL.I2C.I2C_Address) is
-     limited new HAL.Touch_Panel.Touch_Panel_Device with private;
+     abstract limited new Touch_Panel_Device with private;
 
    function Check_Id (This : in out FT5336_Device) return Boolean;
    --  Checks the ID of the touch panel controller, returns false if not found
@@ -18,6 +18,10 @@ package FT5336 is
                                     Enabled : Boolean);
    --  Whether the data is retrieved upon interrupt or by polling by the
    --  software.
+
+   overriding
+   procedure Initialize (This : in out FT5336_Device);
+   --  Initializes the LCD touch panel
 
    overriding
    procedure Set_Bounds (This   : in out FT5336_Device;
@@ -32,16 +36,14 @@ package FT5336 is
 
    overriding
    function Get_Touch_Point (This     : in out FT5336_Device;
-                             Touch_Id : HAL.Touch_Panel.Touch_Identifier;
-                             SwapXY   : Boolean := False)
+                             Touch_Id : HAL.Touch_Panel.Touch_Identifier)
                              return HAL.Touch_Panel.TP_Touch_State;
    --  Retrieves the position and pressure information of the specified
    --  touch
 
    overriding
    function Get_All_Touch_Points
-     (This     : in out FT5336_Device;
-      SwapXY   : Boolean := False)
+     (This     : in out FT5336_Device)
       return HAL.Touch_Panel.TP_State;
    --  Retrieves the position and pressure information of every active touch
    --  points
@@ -50,7 +52,7 @@ private
 
    type FT5336_Device (Port     : HAL.I2C.I2C_Port_Ref;
                        I2C_Addr : HAL.I2C.I2C_Address) is
-      limited new HAL.Touch_Panel.Touch_Panel_Device with record
+      abstract limited new HAL.Touch_Panel.Touch_Panel_Device with record
          LCD_Natural_Width  : Natural := 240; -- Arbitrary
          LCD_Natural_Height : Natural := 320; -- Arbitrary
       end record;

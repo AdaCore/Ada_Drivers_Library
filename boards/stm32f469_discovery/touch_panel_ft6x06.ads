@@ -31,18 +31,26 @@
 
 with HAL.Touch_Panel;
 
-package Touch_Panel is
+private with FT6x06;
+private with STM32.Device;
+private with STM32.I2C;
 
-   function Initialize return Boolean;
-   --  Initializes the LCD touch panel
+package Touch_Panel_FT6x06 is
 
-   procedure Initialize;
-   --  Initializes the LCD touch panel
+   type Touch_Panel is limited new HAL.Touch_Panel.Touch_Panel_Device
+   with private;
 
-   function Detect_Touch return Natural;
-   --  Detects the number of touches
+   overriding function Initialize
+     (This : in out Touch_Panel) return Boolean;
 
-   function Get_State return HAL.Touch_Panel.TP_State;
-   --  The current state of the touch panel
+private
 
-end Touch_Panel;
+   TP_I2C   : STM32.I2C.I2C_Port renames STM32.Device.I2C_1;
+
+   type Touch_Panel is limited new FT6x06.FT6x06_Device
+     (Port     => TP_I2C'Access,
+      I2C_Addr => 16#54#) with null record;
+
+   overriding function Swap_Points (This : Touch_Panel) return Boolean;
+
+end Touch_Panel_FT6x06;

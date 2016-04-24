@@ -1,4 +1,4 @@
-project Draw_Generic extends "../common/shared.gpr" is
+project Draw_Generic extends "../common/common.gpr" is
 
    for Main use ("draw.adb");
    for Source_Dirs use ("src");

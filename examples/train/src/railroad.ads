@@ -21,7 +21,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Screen_Interface;
+with HAL.Bitmap;
 
 package Railroad is
 
@@ -31,8 +31,9 @@ package Railroad is
 
    procedure Step_Simulation;
 
-   procedure Draw_Layout (Init : Boolean := False);
+   procedure Draw_Layout (Buffer : HAL.Bitmap.Bitmap_Buffer'Class;
+                          Init   : Boolean := False);
 
-   procedure Respond_To_Touch (P : Screen_Interface.Point);
+   procedure Respond_To_Touch (X, Y : Natural);
 
 end Railroad;

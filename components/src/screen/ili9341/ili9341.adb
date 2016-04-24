@@ -41,9 +41,11 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with Ada.Real_Time;  use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
-with Interfaces; use Interfaces;
+with Ada.Real_Time; use Ada.Real_Time;
+with Interfaces;    use Interfaces;
+
+with ILI9341_Regs;  use ILI9341_Regs;
 
 package body ILI9341 is
 
@@ -75,7 +77,8 @@ package body ILI9341 is
    -- Initialize --
    ----------------
 
-   procedure Initialize (This : in out ILI9341_Device) is
+   procedure Initialize (This : in out ILI9341_Device;
+                         Mode : ILI9341_Mode) is
    begin
       if This.Initialized then
          return;
@@ -83,7 +86,7 @@ package body ILI9341 is
 
       This.Chip_Select_High;
 
-      This.Init_LCD;
+      This.Init_LCD (Mode);
 
       This.Selected_Width := Device_Width;
       This.Selected_Height := Device_Height;
@@ -267,110 +270,131 @@ package body ILI9341 is
    -- Init_LCD --
    --------------
 
-   procedure Init_LCD (This : in out ILI9341_Device) is
+   procedure Init_LCD (This : in out ILI9341_Device;
+                       Mode : ILI9341_Mode) is
    begin
       This.Reset.Set;
       This.Send_Command (ILI9341_RESET);
       delay until Clock + Milliseconds (5);
 
---        This.Send_Command (ILI9341_POWERA);
---        This.Send_Data (16#39#);
---        This.Send_Data (16#2C#);
---        This.Send_Data (16#00#);
---        This.Send_Data (16#34#);
---        This.Send_Data (16#02#);
---        This.Send_Command (ILI9341_POWERB);
---        This.Send_Data (16#00#);
---        This.Send_Data (16#C1#);
---        This.Send_Data (16#30#);
---        This.Send_Command (ILI9341_DTCA);
---        This.Send_Data (16#85#);
---        This.Send_Data (16#00#);
---        This.Send_Data (16#78#);
---        This.Send_Command (ILI9341_DTCB);
---        This.Send_Data (16#00#);
---        This.Send_Data (16#00#);
---        This.Send_Command (ILI9341_POWER_SEQ);
---        This.Send_Data (16#64#);
---        This.Send_Data (16#03#);
---        This.Send_Data (16#12#);
---        This.Send_Data (16#81#);
---        This.Send_Command (ILI9341_PRC);
---        This.Send_Data (16#20#);
---        This.Send_Command (ILI9341_POWER1);
---        This.Send_Data (16#23#);
---        This.Send_Command (ILI9341_POWER2);
---        This.Send_Data (16#10#);
---        This.Send_Command (ILI9341_VCOM1);
---        This.Send_Data (16#3E#);
---        This.Send_Data (16#28#);
---        This.Send_Command (ILI9341_VCOM2);
---        This.Send_Data (16#86#);
---        This.Send_Command (ILI9341_MAC);
---        This.Send_Data (16#48#);
---        This.Send_Command (ILI9341_PIXEL_FORMAT);
---        This.Send_Data (16#55#);
---        This.Send_Command (ILI9341_FRC);
---        This.Send_Data (16#00#);
---        This.Send_Data (16#18#);
---        This.Send_Command (ILI9341_DFC);
---        This.Send_Data (16#08#);
---        This.Send_Data (16#82#);
---        This.Send_Data (16#27#);
---        This.Send_Command (ILI9341_3GAMMA_EN);
---        This.Send_Data (16#00#);
---        This.Send_Command (ILI9341_COLUMN_ADDR);
---        This.Send_Data (16#00#);
---        This.Send_Data (16#00#);
---        This.Send_Data (16#00#);
---        This.Send_Data (16#EF#);
---        This.Send_Command (ILI9341_PAGE_ADDR);
---        This.Send_Data (16#00#);
---        This.Send_Data (16#00#);
---        This.Send_Data (16#01#);
---        This.Send_Data (16#3F#);
---        This.Send_Command (ILI9341_GAMMA);
---        This.Send_Data (16#01#);
---        This.Send_Command (ILI9341_PGAMMA);
---        This.Send_Data (16#0F#);
---        This.Send_Data (16#31#);
---        This.Send_Data (16#2B#);
---        This.Send_Data (16#0C#);
---        This.Send_Data (16#0E#);
---        This.Send_Data (16#08#);
---        This.Send_Data (16#4E#);
---        This.Send_Data (16#F1#);
---        This.Send_Data (16#37#);
---        This.Send_Data (16#07#);
---        This.Send_Data (16#10#);
---        This.Send_Data (16#03#);
---        This.Send_Data (16#0E#);
---        This.Send_Data (16#09#);
---        This.Send_Data (16#00#);
---        This.Send_Command (ILI9341_NGAMMA);
---        This.Send_Data (16#00#);
---        This.Send_Data (16#0E#);
---        This.Send_Data (16#14#);
---        This.Send_Data (16#03#);
---        This.Send_Data (16#11#);
---        This.Send_Data (16#07#);
---        This.Send_Data (16#31#);
---        This.Send_Data (16#C1#);
---        This.Send_Data (16#48#);
---        This.Send_Data (16#08#);
---        This.Send_Data (16#0F#);
---        This.Send_Data (16#0C#);
---        This.Send_Data (16#31#);
---        This.Send_Data (16#36#);
---        This.Send_Data (16#0F#);
---        This.Send_Command (ILI9341_SLEEP_OUT);
---
---        delay until Clock + Milliseconds (20);
---        --  document ILI9341_DS_V1.02, section 11.2, pg 205 says we need
---        --  either 120ms or 5ms, depending on the mode, but seems incorrect.
---
---        This.Send_Command (ILI9341_DISPLAY_ON);
---        This.Send_Command (ILI9341_GRAM);
+      This.Send_Command (ILI9341_POWERA);
+      This.Send_Data (16#39#);
+      This.Send_Data (16#2C#);
+      This.Send_Data (16#00#);
+      This.Send_Data (16#34#);
+      This.Send_Data (16#02#);
+      This.Send_Command (ILI9341_POWERB);
+      This.Send_Data (16#00#);
+      This.Send_Data (16#C1#);
+      This.Send_Data (16#30#);
+      This.Send_Command (ILI9341_DTCA);
+      This.Send_Data (16#85#);
+      This.Send_Data (16#00#);
+      This.Send_Data (16#78#);
+      This.Send_Command (ILI9341_DTCB);
+      This.Send_Data (16#00#);
+      This.Send_Data (16#00#);
+      This.Send_Command (ILI9341_POWER_SEQ);
+      This.Send_Data (16#64#);
+      This.Send_Data (16#03#);
+      This.Send_Data (16#12#);
+      This.Send_Data (16#81#);
+      This.Send_Command (ILI9341_PRC);
+      This.Send_Data (16#20#);
+      This.Send_Command (ILI9341_POWER1);
+      This.Send_Data (16#23#);
+      This.Send_Command (ILI9341_POWER2);
+      This.Send_Data (16#10#);
+      This.Send_Command (ILI9341_VCOM1);
+      This.Send_Data (16#3E#);
+      This.Send_Data (16#28#);
+      This.Send_Command (ILI9341_VCOM2);
+      This.Send_Data (16#86#);
+      This.Send_Command (ILI9341_MAC);
+      This.Send_Data (16#C8#);
+      This.Send_Command (ILI9341_FRC);
+      This.Send_Data (16#00#);
+      This.Send_Data (16#18#);
+      case Mode is
+         when RGB_Mode =>
+            This.Send_Command (ILI9341_RGB_INTERFACE);
+            This.Send_Data (16#C2#);
+            This.Send_Command (ILI9341_INTERFACE);
+            This.Send_Data (16#01#);
+            This.Send_Data (16#00#);
+            This.Send_Data (16#06#);
+            This.Send_Command (ILI9341_DFC);
+            This.Send_Data (16#0A#);
+            This.Send_Data (16#A7#);
+            This.Send_Data (16#27#);
+            This.Send_Data (16#04#);
+         when SPI_Mode =>
+            This.Send_Command (ILI9341_PIXEL_FORMAT);
+            This.Send_Data (16#55#);
+            This.Send_Command (ILI9341_DFC);
+            This.Send_Data (16#08#);
+            This.Send_Data (16#82#);
+            This.Send_Data (16#27#);
+      end case;
+      This.Send_Command (ILI9341_3GAMMA_EN);
+      This.Send_Data (16#00#);
+      This.Send_Command (ILI9341_COLUMN_ADDR);
+      This.Send_Data (16#00#);
+      This.Send_Data (16#00#);
+      This.Send_Data (16#00#);
+      This.Send_Data (16#EF#);
+      This.Send_Command (ILI9341_PAGE_ADDR);
+      This.Send_Data (16#00#);
+      This.Send_Data (16#00#);
+      This.Send_Data (16#01#);
+      This.Send_Data (16#3F#);
+      This.Send_Command (ILI9341_GAMMA);
+      This.Send_Data (16#01#);
+      This.Send_Command (ILI9341_PGAMMA);
+      This.Send_Data (16#0F#);
+      This.Send_Data (16#31#);
+      This.Send_Data (16#2B#);
+      This.Send_Data (16#0C#);
+      This.Send_Data (16#0E#);
+      This.Send_Data (16#08#);
+      This.Send_Data (16#4E#);
+      This.Send_Data (16#F1#);
+      This.Send_Data (16#37#);
+      This.Send_Data (16#07#);
+      This.Send_Data (16#10#);
+      This.Send_Data (16#03#);
+      This.Send_Data (16#0E#);
+      This.Send_Data (16#09#);
+      This.Send_Data (16#00#);
+      This.Send_Command (ILI9341_NGAMMA);
+      This.Send_Data (16#00#);
+      This.Send_Data (16#0E#);
+      This.Send_Data (16#14#);
+      This.Send_Data (16#03#);
+      This.Send_Data (16#11#);
+      This.Send_Data (16#07#);
+      This.Send_Data (16#31#);
+      This.Send_Data (16#C1#);
+      This.Send_Data (16#48#);
+      This.Send_Data (16#08#);
+      This.Send_Data (16#0F#);
+      This.Send_Data (16#0C#);
+      This.Send_Data (16#31#);
+      This.Send_Data (16#36#);
+      This.Send_Data (16#0F#);
+      This.Send_Command (ILI9341_SLEEP_OUT);
+
+      case Mode is
+         when RGB_Mode =>
+            delay until Clock + Milliseconds (150);
+         when SPI_Mode =>
+            delay until Clock + Milliseconds (20);
+      end case;
+      --  document ILI9341_DS_V1.02, section 11.2, pg 205 says we need
+      --  either 120ms or 5ms, depending on the mode, but seems incorrect.
+
+      This.Send_Command (ILI9341_DISPLAY_ON);
+      This.Send_Command (ILI9341_GRAM);
    end Init_LCD;
 
 end ILI9341;

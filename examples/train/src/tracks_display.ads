@@ -21,10 +21,19 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Screen_Interface; use Screen_Interface;
+with HAL.Bitmap;
 with Trains;
 
 package Tracks_Display is
+
+   type Point is record
+      X, Y : Natural;
+   end record;
+
+   function "+" (P1, P2 : Point) return Point
+     is ((X => P1.X + P2.X, Y => P1.Y + P2.Y));
+   function "-" (P1, P2 : Point) return Point
+     is ((X => P1.X - P2.X, Y => P1.Y - P2.Y));
 
    type Track_Points is array (Positive range <>) of Point;
 
@@ -91,17 +100,24 @@ package Tracks_Display is
 
    procedure Update_Sign (Track : in out Displayed_Track);
 
-   procedure Change_Switch (Track : in out Displayed_Track);
+   procedure Change_Switch (Track  : in out Displayed_Track);
 
-   procedure Draw_Track (Track : Displayed_Track);
+   procedure Draw_Track (Buffer : HAL.Bitmap.Bitmap_Buffer'Class;
+                         Track  : Displayed_Track);
 
-   procedure Draw_Switch (Track : Displayed_Track);
+   procedure Draw_Sign (Buffer : HAL.Bitmap.Bitmap_Buffer'Class;
+                        Track  : Displayed_Track);
 
-   procedure Init_Train (Train : in out Displayed_Train; Track : Track_Access);
+   procedure Draw_Switch (Buffer : HAL.Bitmap.Bitmap_Buffer'Class;
+                          Track  : Displayed_Track);
+
+   procedure Init_Train (Train  : in out Displayed_Train;
+                         Track  : Track_Access);
 
    procedure Move_Train (Train : in out Displayed_Train);
 
-   procedure Draw_Train (Train : Displayed_Train);
+   procedure Draw_Train (Buffer : HAL.Bitmap.Bitmap_Buffer'Class;
+                         Train  : Displayed_Train);
 
    function Location (This : Bogie) return Point;
 

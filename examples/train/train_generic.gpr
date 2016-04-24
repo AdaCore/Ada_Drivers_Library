@@ -1,4 +1,4 @@
-project Train_Generic extends "../common/shared.gpr" is
+project Train_Generic extends "../common/common.gpr" is
 
    for Main use ("train_demo.adb");
    for Source_Dirs use ("src");

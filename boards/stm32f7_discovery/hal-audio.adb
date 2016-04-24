@@ -13,7 +13,7 @@ with WM8994;               use WM8994;
 package body HAL.Audio is
 
    procedure Set_Audio_Clock (Freq : Audio_Frequency);
-   procedure Initialize_Pins;
+   procedure Initialize_Audio_Out_Pins;
    procedure Initialize_SAI_Out (Freq : Audio_Frequency);
    procedure Initialize_Audio_I2C;
 
@@ -92,11 +92,11 @@ package body HAL.Audio is
       end case;
    end Set_Audio_Clock;
 
-   ---------------------
-   -- Initialize_Pins --
-   ---------------------
+   -------------------------------
+   -- Initialize_Audio_Out_Pins --
+   -------------------------------
 
-   procedure Initialize_Pins
+   procedure Initialize_Audio_Out_Pins
    is
       SAI_Pins : constant GPIO_Points :=
                    (SAI2_MCLK_A, SAI2_FS_A, SAI2_SD_A, SAI2_SCK_A);
@@ -133,7 +133,7 @@ package body HAL.Audio is
           Memory_Burst_Size            => Memory_Burst_Single,
           Peripheral_Burst_Size        => Peripheral_Burst_Single));
       Clear_All_Status (DMA_Out, DMA_Out_Stream);
-   end Initialize_Pins;
+   end Initialize_Audio_Out_Pins;
 
    ------------------------
    -- Initialize_SAI_Out --
@@ -200,7 +200,7 @@ package body HAL.Audio is
       Set_Audio_Clock (Frequency);
 
       --  Initialize the SAI
-      Initialize_Pins;
+      Initialize_Audio_Out_Pins;
       Initialize_SAI_Out (Frequency);
 
       --  Initialize the I2C Port to send commands to the driver
@@ -268,11 +268,19 @@ package body HAL.Audio is
       STM32.DMA.Disable (DMA_Out, DMA_Out_Stream);
    end Pause;
 
+   ------------
+   -- Resume --
+   ------------
+
    procedure Resume
    is
    begin
       null;
    end Resume;
+
+   ----------
+   -- Stop --
+   ----------
 
    procedure Stop
    is

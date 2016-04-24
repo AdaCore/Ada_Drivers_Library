@@ -335,21 +335,25 @@ package body STM32.DSI is
       Automatic_Refresh           : Boolean;
       TE_Acknowledge_Request      : Boolean)
    is
+      function To_Bool is new Ada.Unchecked_Conversion
+        (DSI_Polarity, Boolean);
+      function To_Bool is new Ada.Unchecked_Conversion
+        (DSI_TE_Polarity, Boolean);
+      function To_Bool is new Ada.Unchecked_Conversion
+        (DSI_Edge, Boolean);
    begin
       --  Select the command mode by setting CMDM and DSIM bits
       This.Periph.DSI_MCR.CMDM := True;
+      This.Periph.DSI_WCFGR.DSIM := False;
       This.Periph.DSI_WCFGR.DSIM := True;
 
       --  Select the virtual channel for the LTDC interface traffic
       This.Periph.DSI_LVCIDR.VCID := Virtual_Channel;
 
       --  Configure the polarity of control signals
-      This.Periph.DSI_LPCR.HSP   :=
-        DSI_Polarity'Enum_Rep (HSync_Polarity) = 1;
-      This.Periph.DSI_LPCR.VSP   :=
-        DSI_Polarity'Enum_Rep (VSync_Polarity) = 1;
-      This.Periph.DSI_LPCR.DEP   :=
-        DSI_Polarity'Enum_Rep (DataEn_Polarity) = 1;
+      This.Periph.DSI_LPCR.HSP   := To_Bool (HSync_Polarity);
+      This.Periph.DSI_LPCR.VSP   := To_Bool (VSync_Polarity);
+      This.Periph.DSI_LPCR.DEP   := To_Bool (DataEn_Polarity);
 
       --  Select the color coding for the host
       This.Periph.DSI_LCOLCR.COLC := DSI_Color_Mode'Enum_Rep (Color_Coding);
@@ -362,13 +366,18 @@ package body STM32.DSI is
 
       --  Configure the tearing effect source and polarity
       This.Periph.DSI_WCFGR.TESRC := Tearing_Effect_Source = TE_External;
-      This.Periph.DSI_WCFGR.TEPOL :=
-        DSI_TE_Polarity'Enum_Rep (Tearing_Effect_Polarity) = 1;
+      This.Periph.DSI_WCFGR.TEPOL := To_Bool (Tearing_Effect_Polarity);
       This.Periph.DSI_WCFGR.AR    := Automatic_Refresh;
-      This.Periph.DSI_WCFGR.VSPOL := DSI_Edge'Enum_Rep (VSync_Edge) = 1;
+      This.Periph.DSI_WCFGR.VSPOL := To_Bool (VSync_Edge);
 
       --  Tearing effect acknowledge request
       This.Periph.DSI_CMCR.TEARE := TE_Acknowledge_Request;
+
+      --  Enable the TE interrupt
+      This.Periph.DSI_WIER.TEIE := True;
+
+      --  Enable the End-of-refresh interrupt
+      This.Periph.DSI_WIER.ERIE := True;
    end DSI_Setup_Adapted_Command_Mode;
 
    -----------------------
@@ -405,7 +414,6 @@ package body STM32.DSI is
       This.Periph.DSI_CMCR.DLWTX := LP_DCS_Long_Write;
       This.Periph.DSI_CMCR.MRDPS := LP_Max_Read_Packet;
       This.Periph.DSI_CMCR.ARE := Acknowledge_Request;
-
    end DSI_Setup_Command;
 
    ----------------------------
@@ -441,7 +449,7 @@ package body STM32.DSI is
       --  Enable the DSI Host
       This.Periph.DSI_CR.EN := True;
       --  Enable the DSI wrapper
-      This.Periph.DSI_WCR.DSIEN := True;
+      This.DSI_Wrapper_Enable;
    end DSI_Start;
 
    --------------
@@ -455,6 +463,24 @@ package body STM32.DSI is
       --  Disable the DSI wrapper
       This.Periph.DSI_WCR.DSIEN := False;
    end DSI_Stop;
+
+   ------------------------
+   -- DSI_Wrapper_Enable --
+   ------------------------
+
+   procedure DSI_Wrapper_Enable (This : in out DSI_Host) is
+   begin
+      This.Periph.DSI_WCR.DSIEN := True;
+   end DSI_Wrapper_Enable;
+
+   -------------------------
+   -- DSI_Wrapper_Disable --
+   -------------------------
+
+   procedure DSI_Wrapper_Disable (This : in out DSI_Host) is
+   begin
+      This.Periph.DSI_WCR.DSIEN := False;
+   end DSI_Wrapper_Disable;
 
    -----------------
    -- DSI_Refresh --

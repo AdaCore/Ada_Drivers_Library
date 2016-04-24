@@ -1,4 +1,10 @@
-project Shared extends "../../config.gpr" is
+with "../../config.gpr";
+
+project Common  is
+
+   type LOADER_Type is
+      ("RAM", "ROM");
+   LOADER : LOADER_Type := external ("LOADER", "ROM");
 
    type LCH_Type is ("led", "lcd");
    LCH : LCH_Type := external ("LCH", "lcd");
@@ -26,6 +32,9 @@ project Shared extends "../../config.gpr" is
          end case;
    end case;
 
+   package Compiler renames Config.Compiler;
+   package Builder renames Config.Builder;
+
    package Linker is
       for Default_Switches ("ada") use
         ("-Wl,--defsym=__stack_size=32768", "-gc-section");
@@ -39,4 +48,4 @@ project Shared extends "../../config.gpr" is
       for Communication_Protocol use "remote";
    end Ide;
 
-end Shared;
+end Common;
