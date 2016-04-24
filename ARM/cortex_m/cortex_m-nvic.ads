@@ -44,7 +44,7 @@
 
 with System;
 with Interfaces;           use Interfaces;
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
+with HAL;                  use HAL;
 with Ada.Interrupts;       use Ada.Interrupts;
 
 package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller

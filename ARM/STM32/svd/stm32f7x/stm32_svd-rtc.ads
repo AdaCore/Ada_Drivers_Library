@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F7x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.RTC is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,12 +17,12 @@ package STM32_SVD.RTC is
    -- TR_Register --
    -----------------
 
-   subtype TR_SU_Field is Interfaces.Bit_Types.UInt4;
-   subtype TR_ST_Field is Interfaces.Bit_Types.UInt3;
-   subtype TR_MNU_Field is Interfaces.Bit_Types.UInt4;
-   subtype TR_MNT_Field is Interfaces.Bit_Types.UInt3;
-   subtype TR_HU_Field is Interfaces.Bit_Types.UInt4;
-   subtype TR_HT_Field is Interfaces.Bit_Types.UInt2;
+   subtype TR_SU_Field is HAL.UInt4;
+   subtype TR_ST_Field is HAL.UInt3;
+   subtype TR_MNU_Field is HAL.UInt4;
+   subtype TR_MNT_Field is HAL.UInt3;
+   subtype TR_HU_Field is HAL.UInt4;
+   subtype TR_HT_Field is HAL.UInt2;
 
    --  time register
    type TR_Register is record
@@ -31,13 +31,13 @@ package STM32_SVD.RTC is
       --  Second tens in BCD format
       ST             : TR_ST_Field := 16#0#;
       --  unspecified
-      Reserved_7_7   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Minute units in BCD format
       MNU            : TR_MNU_Field := 16#0#;
       --  Minute tens in BCD format
       MNT            : TR_MNT_Field := 16#0#;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Hour units in BCD format
       HU             : TR_HU_Field := 16#0#;
       --  Hour tens in BCD format
@@ -45,7 +45,7 @@ package STM32_SVD.RTC is
       --  AM/PM notation
       PM             : Boolean := False;
       --  unspecified
-      Reserved_23_31 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_23_31 : HAL.UInt9 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -67,12 +67,12 @@ package STM32_SVD.RTC is
    -- DR_Register --
    -----------------
 
-   subtype DR_DU_Field is Interfaces.Bit_Types.UInt4;
-   subtype DR_DT_Field is Interfaces.Bit_Types.UInt2;
-   subtype DR_MU_Field is Interfaces.Bit_Types.UInt4;
-   subtype DR_WDU_Field is Interfaces.Bit_Types.UInt3;
-   subtype DR_YU_Field is Interfaces.Bit_Types.UInt4;
-   subtype DR_YT_Field is Interfaces.Bit_Types.UInt4;
+   subtype DR_DU_Field is HAL.UInt4;
+   subtype DR_DT_Field is HAL.UInt2;
+   subtype DR_MU_Field is HAL.UInt4;
+   subtype DR_WDU_Field is HAL.UInt3;
+   subtype DR_YU_Field is HAL.UInt4;
+   subtype DR_YT_Field is HAL.UInt4;
 
    --  date register
    type DR_Register is record
@@ -81,7 +81,7 @@ package STM32_SVD.RTC is
       --  Date tens in BCD format
       DT             : DR_DT_Field := 16#0#;
       --  unspecified
-      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_6_7   : HAL.UInt2 := 16#0#;
       --  Month units in BCD format
       MU             : DR_MU_Field := 16#1#;
       --  Month tens in BCD format
@@ -93,7 +93,7 @@ package STM32_SVD.RTC is
       --  Year tens in BCD format
       YT             : DR_YT_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_24_31 : HAL.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -114,8 +114,8 @@ package STM32_SVD.RTC is
    -- CR_Register --
    -----------------
 
-   subtype CR_WCKSEL_Field is Interfaces.Bit_Types.UInt3;
-   subtype CR_OSEL_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_WCKSEL_Field is HAL.UInt3;
+   subtype CR_OSEL_Field is HAL.UInt2;
 
    --  control register
    type CR_Register is record
@@ -130,7 +130,7 @@ package STM32_SVD.RTC is
       --  Hour format
       FMT            : Boolean := False;
       --  unspecified
-      Reserved_7_7   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Alarm A enable
       ALRAE          : Boolean := False;
       --  Alarm B enable
@@ -164,7 +164,7 @@ package STM32_SVD.RTC is
       --  timestamp on internal event enable
       ITSE           : Boolean := False;
       --  unspecified
-      Reserved_25_31 : Interfaces.Bit_Types.UInt7 := 16#0#;
+      Reserved_25_31 : HAL.UInt7 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -236,7 +236,7 @@ package STM32_SVD.RTC is
       --  Read-only. Recalibration pending Flag
       RECALPF        : Boolean := False;
       --  unspecified
-      Reserved_17_31 : Interfaces.Bit_Types.UInt15 := 16#0#;
+      Reserved_17_31 : HAL.UInt15 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -266,19 +266,19 @@ package STM32_SVD.RTC is
    -- PRER_Register --
    -------------------
 
-   subtype PRER_PREDIV_S_Field is Interfaces.Bit_Types.UInt15;
-   subtype PRER_PREDIV_A_Field is Interfaces.Bit_Types.UInt7;
+   subtype PRER_PREDIV_S_Field is HAL.UInt15;
+   subtype PRER_PREDIV_A_Field is HAL.UInt7;
 
    --  prescaler register
    type PRER_Register is record
       --  Synchronous prescaler factor
       PREDIV_S       : PRER_PREDIV_S_Field := 16#FF#;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Asynchronous prescaler factor
       PREDIV_A       : PRER_PREDIV_A_Field := 16#7F#;
       --  unspecified
-      Reserved_23_31 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_23_31 : HAL.UInt9 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -294,14 +294,14 @@ package STM32_SVD.RTC is
    -- WUTR_Register --
    -------------------
 
-   subtype WUTR_WUT_Field is Interfaces.Bit_Types.Short;
+   subtype WUTR_WUT_Field is HAL.Short;
 
    --  wakeup timer register
    type WUTR_Register is record
       --  Wakeup auto-reload value bits
       WUT            : WUTR_WUT_Field := 16#FFFF#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -315,14 +315,14 @@ package STM32_SVD.RTC is
    -- ALRMAR_Register --
    ---------------------
 
-   subtype ALRMAR_SU_Field is Interfaces.Bit_Types.UInt4;
-   subtype ALRMAR_ST_Field is Interfaces.Bit_Types.UInt3;
-   subtype ALRMAR_MNU_Field is Interfaces.Bit_Types.UInt4;
-   subtype ALRMAR_MNT_Field is Interfaces.Bit_Types.UInt3;
-   subtype ALRMAR_HU_Field is Interfaces.Bit_Types.UInt4;
-   subtype ALRMAR_HT_Field is Interfaces.Bit_Types.UInt2;
-   subtype ALRMAR_DU_Field is Interfaces.Bit_Types.UInt4;
-   subtype ALRMAR_DT_Field is Interfaces.Bit_Types.UInt2;
+   subtype ALRMAR_SU_Field is HAL.UInt4;
+   subtype ALRMAR_ST_Field is HAL.UInt3;
+   subtype ALRMAR_MNU_Field is HAL.UInt4;
+   subtype ALRMAR_MNT_Field is HAL.UInt3;
+   subtype ALRMAR_HU_Field is HAL.UInt4;
+   subtype ALRMAR_HT_Field is HAL.UInt2;
+   subtype ALRMAR_DU_Field is HAL.UInt4;
+   subtype ALRMAR_DT_Field is HAL.UInt2;
 
    --  alarm A register
    type ALRMAR_Register is record
@@ -379,14 +379,14 @@ package STM32_SVD.RTC is
    -- ALRMBR_Register --
    ---------------------
 
-   subtype ALRMBR_SU_Field is Interfaces.Bit_Types.UInt4;
-   subtype ALRMBR_ST_Field is Interfaces.Bit_Types.UInt3;
-   subtype ALRMBR_MNU_Field is Interfaces.Bit_Types.UInt4;
-   subtype ALRMBR_MNT_Field is Interfaces.Bit_Types.UInt3;
-   subtype ALRMBR_HU_Field is Interfaces.Bit_Types.UInt4;
-   subtype ALRMBR_HT_Field is Interfaces.Bit_Types.UInt2;
-   subtype ALRMBR_DU_Field is Interfaces.Bit_Types.UInt4;
-   subtype ALRMBR_DT_Field is Interfaces.Bit_Types.UInt2;
+   subtype ALRMBR_SU_Field is HAL.UInt4;
+   subtype ALRMBR_ST_Field is HAL.UInt3;
+   subtype ALRMBR_MNU_Field is HAL.UInt4;
+   subtype ALRMBR_MNT_Field is HAL.UInt3;
+   subtype ALRMBR_HU_Field is HAL.UInt4;
+   subtype ALRMBR_HT_Field is HAL.UInt2;
+   subtype ALRMBR_DU_Field is HAL.UInt4;
+   subtype ALRMBR_DT_Field is HAL.UInt2;
 
    --  alarm B register
    type ALRMBR_Register is record
@@ -443,14 +443,14 @@ package STM32_SVD.RTC is
    -- WPR_Register --
    ------------------
 
-   subtype WPR_KEY_Field is Interfaces.Bit_Types.Byte;
+   subtype WPR_KEY_Field is HAL.Byte;
 
    --  write protection register
    type WPR_Register is record
       --  Write-only. Write protection key
       KEY           : WPR_KEY_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -464,14 +464,14 @@ package STM32_SVD.RTC is
    -- SSR_Register --
    ------------------
 
-   subtype SSR_SS_Field is Interfaces.Bit_Types.Short;
+   subtype SSR_SS_Field is HAL.Short;
 
    --  sub second register
    type SSR_Register is record
       --  Read-only. Sub second value
       SS             : SSR_SS_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short;
+      Reserved_16_31 : HAL.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -485,14 +485,14 @@ package STM32_SVD.RTC is
    -- SHIFTR_Register --
    ---------------------
 
-   subtype SHIFTR_SUBFS_Field is Interfaces.Bit_Types.UInt15;
+   subtype SHIFTR_SUBFS_Field is HAL.UInt15;
 
    --  shift control register
    type SHIFTR_Register is record
       --  Write-only. Subtract a fraction of a second
       SUBFS          : SHIFTR_SUBFS_Field := 16#0#;
       --  unspecified
-      Reserved_15_30 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_15_30 : HAL.Short := 16#0#;
       --  Write-only. Add one second
       ADD1S          : Boolean := False;
    end record
@@ -509,12 +509,12 @@ package STM32_SVD.RTC is
    -- TSTR_Register --
    -------------------
 
-   subtype TSTR_SU_Field is Interfaces.Bit_Types.UInt4;
-   subtype TSTR_ST_Field is Interfaces.Bit_Types.UInt3;
-   subtype TSTR_MNU_Field is Interfaces.Bit_Types.UInt4;
-   subtype TSTR_MNT_Field is Interfaces.Bit_Types.UInt3;
-   subtype TSTR_HU_Field is Interfaces.Bit_Types.UInt4;
-   subtype TSTR_HT_Field is Interfaces.Bit_Types.UInt2;
+   subtype TSTR_SU_Field is HAL.UInt4;
+   subtype TSTR_ST_Field is HAL.UInt3;
+   subtype TSTR_MNU_Field is HAL.UInt4;
+   subtype TSTR_MNT_Field is HAL.UInt3;
+   subtype TSTR_HU_Field is HAL.UInt4;
+   subtype TSTR_HT_Field is HAL.UInt2;
 
    --  time stamp time register
    type TSTR_Register is record
@@ -523,13 +523,13 @@ package STM32_SVD.RTC is
       --  Read-only. Second tens in BCD format
       ST             : TSTR_ST_Field := 16#0#;
       --  unspecified
-      Reserved_7_7   : Interfaces.Bit_Types.Bit;
+      Reserved_7_7   : HAL.Bit;
       --  Read-only. Minute units in BCD format
       MNU            : TSTR_MNU_Field := 16#0#;
       --  Read-only. Minute tens in BCD format
       MNT            : TSTR_MNT_Field := 16#0#;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit;
+      Reserved_15_15 : HAL.Bit;
       --  Read-only. Hour units in BCD format
       HU             : TSTR_HU_Field := 16#0#;
       --  Read-only. Hour tens in BCD format
@@ -537,7 +537,7 @@ package STM32_SVD.RTC is
       --  Read-only. AM/PM notation
       PM             : Boolean := False;
       --  unspecified
-      Reserved_23_31 : Interfaces.Bit_Types.UInt9;
+      Reserved_23_31 : HAL.UInt9;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -559,10 +559,10 @@ package STM32_SVD.RTC is
    -- TSDR_Register --
    -------------------
 
-   subtype TSDR_DU_Field is Interfaces.Bit_Types.UInt4;
-   subtype TSDR_DT_Field is Interfaces.Bit_Types.UInt2;
-   subtype TSDR_MU_Field is Interfaces.Bit_Types.UInt4;
-   subtype TSDR_WDU_Field is Interfaces.Bit_Types.UInt3;
+   subtype TSDR_DU_Field is HAL.UInt4;
+   subtype TSDR_DT_Field is HAL.UInt2;
+   subtype TSDR_MU_Field is HAL.UInt4;
+   subtype TSDR_WDU_Field is HAL.UInt3;
 
    --  time stamp date register
    type TSDR_Register is record
@@ -571,7 +571,7 @@ package STM32_SVD.RTC is
       --  Read-only. Date tens in BCD format
       DT             : TSDR_DT_Field := 16#0#;
       --  unspecified
-      Reserved_6_7   : Interfaces.Bit_Types.UInt2;
+      Reserved_6_7   : HAL.UInt2;
       --  Read-only. Month units in BCD format
       MU             : TSDR_MU_Field := 16#0#;
       --  Read-only. Month tens in BCD format
@@ -579,7 +579,7 @@ package STM32_SVD.RTC is
       --  Read-only. Week day units
       WDU            : TSDR_WDU_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short;
+      Reserved_16_31 : HAL.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -598,14 +598,14 @@ package STM32_SVD.RTC is
    -- TSSSR_Register --
    --------------------
 
-   subtype TSSSR_SS_Field is Interfaces.Bit_Types.Short;
+   subtype TSSSR_SS_Field is HAL.Short;
 
    --  timestamp sub second register
    type TSSSR_Register is record
       --  Read-only. Sub second value
       SS             : TSSSR_SS_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short;
+      Reserved_16_31 : HAL.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -619,7 +619,7 @@ package STM32_SVD.RTC is
    -- CALR_Register --
    -------------------
 
-   subtype CALR_CALM_Field is Interfaces.Bit_Types.UInt9;
+   subtype CALR_CALM_Field is HAL.UInt9;
 
    ---------------
    -- CALR.CALW --
@@ -636,7 +636,7 @@ package STM32_SVD.RTC is
       case As_Array is
          when False =>
             --  CALW as a value
-            Val : Interfaces.Bit_Types.UInt2;
+            Val : HAL.UInt2;
          when True =>
             --  CALW as an array
             Arr : CALR_CALW_Field_Array;
@@ -654,13 +654,13 @@ package STM32_SVD.RTC is
       --  Calibration minus
       CALM           : CALR_CALM_Field := 16#0#;
       --  unspecified
-      Reserved_9_12  : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_9_12  : HAL.UInt4 := 16#0#;
       --  Use a 16-second calibration cycle period
       CALW           : CALR_CALW_Field := (As_Array => False, Val => 16#0#);
       --  Increase frequency of RTC by 488.5 ppm
       CALP           : Boolean := False;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -677,9 +677,9 @@ package STM32_SVD.RTC is
    -- TAMPCR_Register --
    ---------------------
 
-   subtype TAMPCR_TAMPFREQ_Field is Interfaces.Bit_Types.UInt3;
-   subtype TAMPCR_TAMPFLT_Field is Interfaces.Bit_Types.UInt2;
-   subtype TAMPCR_TAMPPRCH_Field is Interfaces.Bit_Types.UInt2;
+   subtype TAMPCR_TAMPFREQ_Field is HAL.UInt3;
+   subtype TAMPCR_TAMPFLT_Field is HAL.UInt2;
+   subtype TAMPCR_TAMPPRCH_Field is HAL.UInt2;
 
    --  tamper configuration register
    type TAMPCR_Register is record
@@ -726,7 +726,7 @@ package STM32_SVD.RTC is
       --  Tamper 3 mask flag
       TAMP3MF        : Boolean := False;
       --  unspecified
-      Reserved_25_31 : Interfaces.Bit_Types.UInt7 := 16#0#;
+      Reserved_25_31 : HAL.UInt7 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -760,19 +760,19 @@ package STM32_SVD.RTC is
    -- ALRMASSR_Register --
    -----------------------
 
-   subtype ALRMASSR_SS_Field is Interfaces.Bit_Types.UInt15;
-   subtype ALRMASSR_MASKSS_Field is Interfaces.Bit_Types.UInt4;
+   subtype ALRMASSR_SS_Field is HAL.UInt15;
+   subtype ALRMASSR_MASKSS_Field is HAL.UInt4;
 
    --  alarm A sub second register
    type ALRMASSR_Register is record
       --  Sub seconds value
       SS             : ALRMASSR_SS_Field := 16#0#;
       --  unspecified
-      Reserved_15_23 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_15_23 : HAL.UInt9 := 16#0#;
       --  Mask the most-significant bits starting at this bit
       MASKSS         : ALRMASSR_MASKSS_Field := 16#0#;
       --  unspecified
-      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_28_31 : HAL.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -788,19 +788,19 @@ package STM32_SVD.RTC is
    -- ALRMBSSR_Register --
    -----------------------
 
-   subtype ALRMBSSR_SS_Field is Interfaces.Bit_Types.UInt15;
-   subtype ALRMBSSR_MASKSS_Field is Interfaces.Bit_Types.UInt4;
+   subtype ALRMBSSR_SS_Field is HAL.UInt15;
+   subtype ALRMBSSR_MASKSS_Field is HAL.UInt4;
 
    --  alarm B sub second register
    type ALRMBSSR_Register is record
       --  Sub seconds value
       SS             : ALRMBSSR_SS_Field := 16#0#;
       --  unspecified
-      Reserved_15_23 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_15_23 : HAL.UInt9 := 16#0#;
       --  Mask the most-significant bits starting at this bit
       MASKSS         : ALRMBSSR_MASKSS_Field := 16#0#;
       --  unspecified
-      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_28_31 : HAL.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -823,7 +823,7 @@ package STM32_SVD.RTC is
       --  RTC_OUT remap
       RTC_OUT_RMP    : Boolean := False;
       --  unspecified
-      Reserved_2_31  : Interfaces.Bit_Types.UInt30 := 16#0#;
+      Reserved_2_31  : HAL.UInt30 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -879,69 +879,69 @@ package STM32_SVD.RTC is
       --  option register
       OR_k     : OR_Register;
       --  backup register
-      BKP0R    : Interfaces.Bit_Types.Word;
+      BKP0R    : HAL.Word;
       --  backup register
-      BKP1R    : Interfaces.Bit_Types.Word;
+      BKP1R    : HAL.Word;
       --  backup register
-      BKP2R    : Interfaces.Bit_Types.Word;
+      BKP2R    : HAL.Word;
       --  backup register
-      BKP3R    : Interfaces.Bit_Types.Word;
+      BKP3R    : HAL.Word;
       --  backup register
-      BKP4R    : Interfaces.Bit_Types.Word;
+      BKP4R    : HAL.Word;
       --  backup register
-      BKP5R    : Interfaces.Bit_Types.Word;
+      BKP5R    : HAL.Word;
       --  backup register
-      BKP6R    : Interfaces.Bit_Types.Word;
+      BKP6R    : HAL.Word;
       --  backup register
-      BKP7R    : Interfaces.Bit_Types.Word;
+      BKP7R    : HAL.Word;
       --  backup register
-      BKP8R    : Interfaces.Bit_Types.Word;
+      BKP8R    : HAL.Word;
       --  backup register
-      BKP9R    : Interfaces.Bit_Types.Word;
+      BKP9R    : HAL.Word;
       --  backup register
-      BKP10R   : Interfaces.Bit_Types.Word;
+      BKP10R   : HAL.Word;
       --  backup register
-      BKP11R   : Interfaces.Bit_Types.Word;
+      BKP11R   : HAL.Word;
       --  backup register
-      BKP12R   : Interfaces.Bit_Types.Word;
+      BKP12R   : HAL.Word;
       --  backup register
-      BKP13R   : Interfaces.Bit_Types.Word;
+      BKP13R   : HAL.Word;
       --  backup register
-      BKP14R   : Interfaces.Bit_Types.Word;
+      BKP14R   : HAL.Word;
       --  backup register
-      BKP15R   : Interfaces.Bit_Types.Word;
+      BKP15R   : HAL.Word;
       --  backup register
-      BKP16R   : Interfaces.Bit_Types.Word;
+      BKP16R   : HAL.Word;
       --  backup register
-      BKP17R   : Interfaces.Bit_Types.Word;
+      BKP17R   : HAL.Word;
       --  backup register
-      BKP18R   : Interfaces.Bit_Types.Word;
+      BKP18R   : HAL.Word;
       --  backup register
-      BKP19R   : Interfaces.Bit_Types.Word;
+      BKP19R   : HAL.Word;
       --  backup register
-      BKP20R   : Interfaces.Bit_Types.Word;
+      BKP20R   : HAL.Word;
       --  backup register
-      BKP21R   : Interfaces.Bit_Types.Word;
+      BKP21R   : HAL.Word;
       --  backup register
-      BKP22R   : Interfaces.Bit_Types.Word;
+      BKP22R   : HAL.Word;
       --  backup register
-      BKP23R   : Interfaces.Bit_Types.Word;
+      BKP23R   : HAL.Word;
       --  backup register
-      BKP24R   : Interfaces.Bit_Types.Word;
+      BKP24R   : HAL.Word;
       --  backup register
-      BKP25R   : Interfaces.Bit_Types.Word;
+      BKP25R   : HAL.Word;
       --  backup register
-      BKP26R   : Interfaces.Bit_Types.Word;
+      BKP26R   : HAL.Word;
       --  backup register
-      BKP27R   : Interfaces.Bit_Types.Word;
+      BKP27R   : HAL.Word;
       --  backup register
-      BKP28R   : Interfaces.Bit_Types.Word;
+      BKP28R   : HAL.Word;
       --  backup register
-      BKP29R   : Interfaces.Bit_Types.Word;
+      BKP29R   : HAL.Word;
       --  backup register
-      BKP30R   : Interfaces.Bit_Types.Word;
+      BKP30R   : HAL.Word;
       --  backup register
-      BKP31R   : Interfaces.Bit_Types.Word;
+      BKP31R   : HAL.Word;
    end record
      with Volatile;
 

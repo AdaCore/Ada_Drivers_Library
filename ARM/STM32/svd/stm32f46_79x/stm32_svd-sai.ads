@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F46_79x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.SAI is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,14 +17,14 @@ package STM32_SVD.SAI is
    -- GCR_Register --
    ------------------
 
-   subtype GCR_SYNCOUT_Field is Interfaces.Bit_Types.UInt2;
+   subtype GCR_SYNCOUT_Field is HAL.UInt2;
 
    --  Global configuration register
    type GCR_Register is record
       --  Synchronization outputs
       SYNCOUT       : GCR_SYNCOUT_Field := 16#0#;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30 := 16#0#;
+      Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -38,11 +38,11 @@ package STM32_SVD.SAI is
    -- ACR1_Register --
    -------------------
 
-   subtype ACR1_MODE_Field is Interfaces.Bit_Types.UInt2;
-   subtype ACR1_PRTCFG_Field is Interfaces.Bit_Types.UInt2;
-   subtype ACR1_DS_Field is Interfaces.Bit_Types.UInt3;
-   subtype ACR1_SYNCEN_Field is Interfaces.Bit_Types.UInt2;
-   subtype ACR1_MCJDIV_Field is Interfaces.Bit_Types.UInt4;
+   subtype ACR1_MODE_Field is HAL.UInt2;
+   subtype ACR1_PRTCFG_Field is HAL.UInt2;
+   subtype ACR1_DS_Field is HAL.UInt3;
+   subtype ACR1_SYNCEN_Field is HAL.UInt2;
+   subtype ACR1_MCJDIV_Field is HAL.UInt4;
 
    --  AConfiguration register 1
    type ACR1_Register is record
@@ -51,7 +51,7 @@ package STM32_SVD.SAI is
       --  Protocol configuration
       PRTCFG         : ACR1_PRTCFG_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  Data size
       DS             : ACR1_DS_Field := 16#2#;
       --  Least significant bit first
@@ -65,19 +65,19 @@ package STM32_SVD.SAI is
       --  Output drive
       OutDri         : Boolean := False;
       --  unspecified
-      Reserved_14_15 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_14_15 : HAL.UInt2 := 16#0#;
       --  Audio block A enable
       SAIAEN         : Boolean := False;
       --  DMA enable
       DMAEN          : Boolean := False;
       --  unspecified
-      Reserved_18_18 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_18_18 : HAL.Bit := 16#0#;
       --  No divider
       NODIV          : Boolean := False;
       --  Master clock divider
       MCJDIV         : ACR1_MCJDIV_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_24_31 : HAL.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -105,9 +105,9 @@ package STM32_SVD.SAI is
    -- ACR2_Register --
    -------------------
 
-   subtype ACR2_FTH_Field is Interfaces.Bit_Types.UInt3;
-   subtype ACR2_MUTECN_Field is Interfaces.Bit_Types.UInt6;
-   subtype ACR2_COMP_Field is Interfaces.Bit_Types.UInt2;
+   subtype ACR2_FTH_Field is HAL.UInt3;
+   subtype ACR2_MUTECN_Field is HAL.UInt6;
+   subtype ACR2_COMP_Field is HAL.UInt2;
 
    --  AConfiguration register 2
    type ACR2_Register is record
@@ -128,7 +128,7 @@ package STM32_SVD.SAI is
       --  Companding mode
       COMP           : ACR2_COMP_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -149,8 +149,8 @@ package STM32_SVD.SAI is
    -- AFRCR_Register --
    --------------------
 
-   subtype AFRCR_FRL_Field is Interfaces.Bit_Types.Byte;
-   subtype AFRCR_FSALL_Field is Interfaces.Bit_Types.UInt7;
+   subtype AFRCR_FRL_Field is HAL.Byte;
+   subtype AFRCR_FSALL_Field is HAL.UInt7;
 
    --  AFRCR
    type AFRCR_Register is record
@@ -159,7 +159,7 @@ package STM32_SVD.SAI is
       --  Frame synchronization active level length
       FSALL          : AFRCR_FSALL_Field := 16#0#;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Frame synchronization definition
       FSDEF          : Boolean := False;
       --  Frame synchronization polarity
@@ -167,7 +167,7 @@ package STM32_SVD.SAI is
       --  Frame synchronization offset
       FSOFF          : Boolean := False;
       --  unspecified
-      Reserved_19_31 : Interfaces.Bit_Types.UInt13 := 16#0#;
+      Reserved_19_31 : HAL.UInt13 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -186,23 +186,23 @@ package STM32_SVD.SAI is
    -- ASLOTR_Register --
    ---------------------
 
-   subtype ASLOTR_FBOFF_Field is Interfaces.Bit_Types.UInt5;
-   subtype ASLOTR_SLOTSZ_Field is Interfaces.Bit_Types.UInt2;
-   subtype ASLOTR_NBSLOT_Field is Interfaces.Bit_Types.UInt4;
-   subtype ASLOTR_SLOTEN_Field is Interfaces.Bit_Types.Short;
+   subtype ASLOTR_FBOFF_Field is HAL.UInt5;
+   subtype ASLOTR_SLOTSZ_Field is HAL.UInt2;
+   subtype ASLOTR_NBSLOT_Field is HAL.UInt4;
+   subtype ASLOTR_SLOTEN_Field is HAL.Short;
 
    --  ASlot register
    type ASLOTR_Register is record
       --  First bit offset
       FBOFF          : ASLOTR_FBOFF_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  Slot size
       SLOTSZ         : ASLOTR_SLOTSZ_Field := 16#0#;
       --  Number of slots in an audio frame
       NBSLOT         : ASLOTR_NBSLOT_Field := 16#0#;
       --  unspecified
-      Reserved_12_15 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_12_15 : HAL.UInt4 := 16#0#;
       --  Slot enable
       SLOTEN         : ASLOTR_SLOTEN_Field := 16#0#;
    end record
@@ -239,7 +239,7 @@ package STM32_SVD.SAI is
       --  Late frame synchronization detection interrupt enable
       LFSDET        : Boolean := False;
       --  unspecified
-      Reserved_7_31 : Interfaces.Bit_Types.UInt25 := 16#0#;
+      Reserved_7_31 : HAL.UInt25 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -259,7 +259,7 @@ package STM32_SVD.SAI is
    -- ASR_Register --
    ------------------
 
-   subtype ASR_FLVL_Field is Interfaces.Bit_Types.UInt3;
+   subtype ASR_FLVL_Field is HAL.UInt3;
 
    --  AStatus register
    type ASR_Register is record
@@ -278,11 +278,11 @@ package STM32_SVD.SAI is
       --  Late frame synchronization detection
       LFSDET         : Boolean := False;
       --  unspecified
-      Reserved_7_15  : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_7_15  : HAL.UInt9 := 16#0#;
       --  FIFO level threshold
       FLVL           : ASR_FLVL_Field := 16#0#;
       --  unspecified
-      Reserved_19_31 : Interfaces.Bit_Types.UInt13 := 16#0#;
+      Reserved_19_31 : HAL.UInt13 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -313,7 +313,7 @@ package STM32_SVD.SAI is
       --  Clear wrong clock configuration flag
       WCKCFG        : Boolean := False;
       --  unspecified
-      Reserved_3_3  : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_3_3  : HAL.Bit := 16#0#;
       --  Clear codec not ready flag
       CNRDY         : Boolean := False;
       --  Clear anticipated frame synchronization detection flag.
@@ -321,7 +321,7 @@ package STM32_SVD.SAI is
       --  Clear late frame synchronization detection flag
       LFSDET        : Boolean := False;
       --  unspecified
-      Reserved_7_31 : Interfaces.Bit_Types.UInt25 := 16#0#;
+      Reserved_7_31 : HAL.UInt25 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -341,11 +341,11 @@ package STM32_SVD.SAI is
    -- BCR1_Register --
    -------------------
 
-   subtype BCR1_MODE_Field is Interfaces.Bit_Types.UInt2;
-   subtype BCR1_PRTCFG_Field is Interfaces.Bit_Types.UInt2;
-   subtype BCR1_DS_Field is Interfaces.Bit_Types.UInt3;
-   subtype BCR1_SYNCEN_Field is Interfaces.Bit_Types.UInt2;
-   subtype BCR1_MCJDIV_Field is Interfaces.Bit_Types.UInt4;
+   subtype BCR1_MODE_Field is HAL.UInt2;
+   subtype BCR1_PRTCFG_Field is HAL.UInt2;
+   subtype BCR1_DS_Field is HAL.UInt3;
+   subtype BCR1_SYNCEN_Field is HAL.UInt2;
+   subtype BCR1_MCJDIV_Field is HAL.UInt4;
 
    --  BConfiguration register 1
    type BCR1_Register is record
@@ -354,7 +354,7 @@ package STM32_SVD.SAI is
       --  Protocol configuration
       PRTCFG         : BCR1_PRTCFG_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  Data size
       DS             : BCR1_DS_Field := 16#2#;
       --  Least significant bit first
@@ -368,19 +368,19 @@ package STM32_SVD.SAI is
       --  Output drive
       OutDri         : Boolean := False;
       --  unspecified
-      Reserved_14_15 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_14_15 : HAL.UInt2 := 16#0#;
       --  Audio block B enable
       SAIBEN         : Boolean := False;
       --  DMA enable
       DMAEN          : Boolean := False;
       --  unspecified
-      Reserved_18_18 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_18_18 : HAL.Bit := 16#0#;
       --  No divider
       NODIV          : Boolean := False;
       --  Master clock divider
       MCJDIV         : BCR1_MCJDIV_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_24_31 : HAL.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -408,9 +408,9 @@ package STM32_SVD.SAI is
    -- BCR2_Register --
    -------------------
 
-   subtype BCR2_FTH_Field is Interfaces.Bit_Types.UInt3;
-   subtype BCR2_MUTECN_Field is Interfaces.Bit_Types.UInt6;
-   subtype BCR2_COMP_Field is Interfaces.Bit_Types.UInt2;
+   subtype BCR2_FTH_Field is HAL.UInt3;
+   subtype BCR2_MUTECN_Field is HAL.UInt6;
+   subtype BCR2_COMP_Field is HAL.UInt2;
 
    --  BConfiguration register 2
    type BCR2_Register is record
@@ -431,7 +431,7 @@ package STM32_SVD.SAI is
       --  Companding mode
       COMP           : BCR2_COMP_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -452,8 +452,8 @@ package STM32_SVD.SAI is
    -- BFRCR_Register --
    --------------------
 
-   subtype BFRCR_FRL_Field is Interfaces.Bit_Types.Byte;
-   subtype BFRCR_FSALL_Field is Interfaces.Bit_Types.UInt7;
+   subtype BFRCR_FRL_Field is HAL.Byte;
+   subtype BFRCR_FSALL_Field is HAL.UInt7;
 
    --  BFRCR
    type BFRCR_Register is record
@@ -462,7 +462,7 @@ package STM32_SVD.SAI is
       --  Frame synchronization active level length
       FSALL          : BFRCR_FSALL_Field := 16#0#;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Frame synchronization definition
       FSDEF          : Boolean := False;
       --  Frame synchronization polarity
@@ -470,7 +470,7 @@ package STM32_SVD.SAI is
       --  Frame synchronization offset
       FSOFF          : Boolean := False;
       --  unspecified
-      Reserved_19_31 : Interfaces.Bit_Types.UInt13 := 16#0#;
+      Reserved_19_31 : HAL.UInt13 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -489,23 +489,23 @@ package STM32_SVD.SAI is
    -- BSLOTR_Register --
    ---------------------
 
-   subtype BSLOTR_FBOFF_Field is Interfaces.Bit_Types.UInt5;
-   subtype BSLOTR_SLOTSZ_Field is Interfaces.Bit_Types.UInt2;
-   subtype BSLOTR_NBSLOT_Field is Interfaces.Bit_Types.UInt4;
-   subtype BSLOTR_SLOTEN_Field is Interfaces.Bit_Types.Short;
+   subtype BSLOTR_FBOFF_Field is HAL.UInt5;
+   subtype BSLOTR_SLOTSZ_Field is HAL.UInt2;
+   subtype BSLOTR_NBSLOT_Field is HAL.UInt4;
+   subtype BSLOTR_SLOTEN_Field is HAL.Short;
 
    --  BSlot register
    type BSLOTR_Register is record
       --  First bit offset
       FBOFF          : BSLOTR_FBOFF_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  Slot size
       SLOTSZ         : BSLOTR_SLOTSZ_Field := 16#0#;
       --  Number of slots in an audio frame
       NBSLOT         : BSLOTR_NBSLOT_Field := 16#0#;
       --  unspecified
-      Reserved_12_15 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_12_15 : HAL.UInt4 := 16#0#;
       --  Slot enable
       SLOTEN         : BSLOTR_SLOTEN_Field := 16#0#;
    end record
@@ -542,7 +542,7 @@ package STM32_SVD.SAI is
       --  Late frame synchronization detection interrupt enable
       LFSDETIE      : Boolean := False;
       --  unspecified
-      Reserved_7_31 : Interfaces.Bit_Types.UInt25 := 16#0#;
+      Reserved_7_31 : HAL.UInt25 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -562,7 +562,7 @@ package STM32_SVD.SAI is
    -- BSR_Register --
    ------------------
 
-   subtype BSR_FLVL_Field is Interfaces.Bit_Types.UInt3;
+   subtype BSR_FLVL_Field is HAL.UInt3;
 
    --  BStatus register
    type BSR_Register is record
@@ -581,11 +581,11 @@ package STM32_SVD.SAI is
       --  Read-only. Late frame synchronization detection
       LFSDET         : Boolean := False;
       --  unspecified
-      Reserved_7_15  : Interfaces.Bit_Types.UInt9;
+      Reserved_7_15  : HAL.UInt9;
       --  Read-only. FIFO level threshold
       FLVL           : BSR_FLVL_Field := 16#0#;
       --  unspecified
-      Reserved_19_31 : Interfaces.Bit_Types.UInt13;
+      Reserved_19_31 : HAL.UInt13;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -616,7 +616,7 @@ package STM32_SVD.SAI is
       --  Write-only. Clear wrong clock configuration flag
       WCKCFG        : Boolean := False;
       --  unspecified
-      Reserved_3_3  : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_3_3  : HAL.Bit := 16#0#;
       --  Write-only. Clear codec not ready flag
       CNRDY         : Boolean := False;
       --  Write-only. Clear anticipated frame synchronization detection flag
@@ -624,7 +624,7 @@ package STM32_SVD.SAI is
       --  Write-only. Clear late frame synchronization detection flag
       LFSDET        : Boolean := False;
       --  unspecified
-      Reserved_7_31 : Interfaces.Bit_Types.UInt25 := 16#0#;
+      Reserved_7_31 : HAL.UInt25 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -663,7 +663,7 @@ package STM32_SVD.SAI is
       --  AClear flag register
       ACLRFR : ACLRFR_Register;
       --  AData register
-      ADR    : Interfaces.Bit_Types.Word;
+      ADR    : HAL.Word;
       --  BConfiguration register 1
       BCR1   : BCR1_Register;
       --  BConfiguration register 2
@@ -679,7 +679,7 @@ package STM32_SVD.SAI is
       --  BClear flag register
       BCLRFR : BCLRFR_Register;
       --  BData register
-      BDR    : Interfaces.Bit_Types.Word;
+      BDR    : HAL.Word;
    end record
      with Volatile;
 

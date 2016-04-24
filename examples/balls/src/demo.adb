@@ -32,11 +32,11 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
 with System;
 with Interfaces;            use Interfaces;
-with Interfaces.Bit_Types;  use Interfaces.Bit_Types;
 with STM32.Button;          use STM32.Button;
 with STM32.Board;           use STM32.Board;
 with STM32.RNG.Interrupts;  use STM32.RNG.Interrupts;
 
+with HAL;                   use HAL;
 with HAL.Bitmap;            use HAL.Bitmap;
 
 with Bitmapped_Drawing;     use Bitmapped_Drawing;

@@ -25,7 +25,7 @@ with Ada.Real_Time;
 with STM32.RNG.Interrupts;     use STM32.RNG.Interrupts;
 with Ada.Unchecked_Conversion;
 with Interfaces;               use Interfaces;
-with Interfaces.Bit_Types;     use Interfaces.Bit_Types;
+with HAL;                      use HAL;
 with STM32.LCD;                use STM32.LCD;
 with STM32.DMA2D.Polling;
 with STM32.Eth;

@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F7x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.USART is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -32,7 +32,7 @@ package STM32_SVD.USART is
       case As_Array is
          when False =>
             --  DEDT as a value
-            Val : Interfaces.Bit_Types.UInt5;
+            Val : HAL.UInt5;
          when True =>
             --  DEDT as an array
             Arr : CR1_DEDT_Field_Array;
@@ -60,7 +60,7 @@ package STM32_SVD.USART is
       case As_Array is
          when False =>
             --  DEAT as a value
-            Val : Interfaces.Bit_Types.UInt5;
+            Val : HAL.UInt5;
          when True =>
             --  DEAT as an array
             Arr : CR1_DEAT_Field_Array;
@@ -118,7 +118,7 @@ package STM32_SVD.USART is
       --  Word length
       M1             : Boolean := False;
       --  unspecified
-      Reserved_29_31 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_29_31 : HAL.UInt3 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -152,7 +152,7 @@ package STM32_SVD.USART is
    -- CR2_Register --
    ------------------
 
-   subtype CR2_STOP_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR2_STOP_Field is HAL.UInt2;
 
    ----------------
    -- CR2.ABRMOD --
@@ -169,7 +169,7 @@ package STM32_SVD.USART is
       case As_Array is
          when False =>
             --  ABRMOD as a value
-            Val : Interfaces.Bit_Types.UInt2;
+            Val : HAL.UInt2;
          when True =>
             --  ABRMOD as an array
             Arr : CR2_ABRMOD_Field_Array;
@@ -182,13 +182,13 @@ package STM32_SVD.USART is
       Arr at 0 range 0 .. 1;
    end record;
 
-   subtype CR2_ADD0_3_Field is Interfaces.Bit_Types.UInt4;
-   subtype CR2_ADD4_7_Field is Interfaces.Bit_Types.UInt4;
+   subtype CR2_ADD0_3_Field is HAL.UInt4;
+   subtype CR2_ADD4_7_Field is HAL.UInt4;
 
    --  Control register 2
    type CR2_Register is record
       --  unspecified
-      Reserved_0_3 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_0_3 : HAL.UInt4 := 16#0#;
       --  7-bit Address Detection/4-bit Address Detection
       ADDM7        : Boolean := False;
       --  LIN break detection length
@@ -196,7 +196,7 @@ package STM32_SVD.USART is
       --  LIN break detection interrupt enable
       LBDIE        : Boolean := False;
       --  unspecified
-      Reserved_7_7 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_7_7 : HAL.Bit := 16#0#;
       --  Last bit clock pulse
       LBCL         : Boolean := False;
       --  Clock phase
@@ -261,8 +261,8 @@ package STM32_SVD.USART is
    -- CR3_Register --
    ------------------
 
-   subtype CR3_SCARCNT_Field is Interfaces.Bit_Types.UInt3;
-   subtype CR3_WUS_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR3_SCARCNT_Field is HAL.UInt3;
+   subtype CR3_WUS_Field is HAL.UInt2;
 
    --  Control register 3
    type CR3_Register is record
@@ -299,7 +299,7 @@ package STM32_SVD.USART is
       --  Driver enable polarity selection
       DEP            : Boolean := False;
       --  unspecified
-      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  Smartcard auto-retry count
       SCARCNT        : CR3_SCARCNT_Field := 16#0#;
       --  Wakeup from Stop mode interrupt flag selection
@@ -307,7 +307,7 @@ package STM32_SVD.USART is
       --  Wakeup from Stop mode interrupt enable
       WUFIE          : Boolean := False;
       --  unspecified
-      Reserved_23_31 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_23_31 : HAL.UInt9 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -340,8 +340,8 @@ package STM32_SVD.USART is
    -- BRR_Register --
    ------------------
 
-   subtype BRR_DIV_Fraction_Field is Interfaces.Bit_Types.UInt4;
-   subtype BRR_DIV_Mantissa_Field is Interfaces.Bit_Types.UInt12;
+   subtype BRR_DIV_Fraction_Field is HAL.UInt4;
+   subtype BRR_DIV_Mantissa_Field is HAL.UInt12;
 
    --  Baud rate register
    type BRR_Register is record
@@ -350,7 +350,7 @@ package STM32_SVD.USART is
       --  DIV_Mantissa
       DIV_Mantissa   : BRR_DIV_Mantissa_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -365,8 +365,8 @@ package STM32_SVD.USART is
    -- GTPR_Register --
    -------------------
 
-   subtype GTPR_PSC_Field is Interfaces.Bit_Types.Byte;
-   subtype GTPR_GT_Field is Interfaces.Bit_Types.Byte;
+   subtype GTPR_PSC_Field is HAL.Byte;
+   subtype GTPR_GT_Field is HAL.Byte;
 
    --  Guard time and prescaler register
    type GTPR_Register is record
@@ -375,7 +375,7 @@ package STM32_SVD.USART is
       --  Guard time value
       GT             : GTPR_GT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -390,8 +390,8 @@ package STM32_SVD.USART is
    -- RTOR_Register --
    -------------------
 
-   subtype RTOR_RTO_Field is Interfaces.Bit_Types.UInt24;
-   subtype RTOR_BLEN_Field is Interfaces.Bit_Types.Byte;
+   subtype RTOR_RTO_Field is HAL.UInt24;
+   subtype RTOR_BLEN_Field is HAL.Byte;
 
    --  Receiver timeout register
    type RTOR_Register is record
@@ -425,7 +425,7 @@ package STM32_SVD.USART is
       --  Write-only. Transmit data flush request
       TXFRQ         : Boolean := False;
       --  unspecified
-      Reserved_5_31 : Interfaces.Bit_Types.UInt27 := 16#0#;
+      Reserved_5_31 : HAL.UInt27 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -472,7 +472,7 @@ package STM32_SVD.USART is
       --  Read-only. EOBF
       EOBF           : Boolean := False;
       --  unspecified
-      Reserved_13_13 : Interfaces.Bit_Types.Bit;
+      Reserved_13_13 : HAL.Bit;
       --  Read-only. ABRE
       ABRE           : Boolean := False;
       --  Read-only. ABRF
@@ -492,7 +492,7 @@ package STM32_SVD.USART is
       --  Read-only. REACK
       REACK          : Boolean := False;
       --  unspecified
-      Reserved_23_31 : Interfaces.Bit_Types.UInt9;
+      Reserved_23_31 : HAL.UInt9;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -541,31 +541,31 @@ package STM32_SVD.USART is
       --  Write-only. Idle line detected clear flag
       IDLECF         : Boolean := False;
       --  unspecified
-      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  Write-only. Transmission complete clear flag
       TCCF           : Boolean := False;
       --  unspecified
-      Reserved_7_7   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Write-only. LIN break detection clear flag
       LBDCF          : Boolean := False;
       --  Write-only. CTS clear flag
       CTSCF          : Boolean := False;
       --  unspecified
-      Reserved_10_10 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_10_10 : HAL.Bit := 16#0#;
       --  Write-only. Receiver timeout clear flag
       RTOCF          : Boolean := False;
       --  Write-only. End of block clear flag
       EOBCF          : Boolean := False;
       --  unspecified
-      Reserved_13_16 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_13_16 : HAL.UInt4 := 16#0#;
       --  Write-only. Character match clear flag
       CMCF           : Boolean := False;
       --  unspecified
-      Reserved_18_19 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_18_19 : HAL.UInt2 := 16#0#;
       --  Write-only. Wakeup from Stop mode clear flag
       WUCF           : Boolean := False;
       --  unspecified
-      Reserved_21_31 : Interfaces.Bit_Types.UInt11 := 16#0#;
+      Reserved_21_31 : HAL.UInt11 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -595,14 +595,14 @@ package STM32_SVD.USART is
    -- RDR_Register --
    ------------------
 
-   subtype RDR_RDR_Field is Interfaces.Bit_Types.UInt9;
+   subtype RDR_RDR_Field is HAL.UInt9;
 
    --  Receive data register
    type RDR_Register is record
       --  Read-only. Receive data value
       RDR           : RDR_RDR_Field := 16#0#;
       --  unspecified
-      Reserved_9_31 : Interfaces.Bit_Types.UInt23;
+      Reserved_9_31 : HAL.UInt23;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -616,14 +616,14 @@ package STM32_SVD.USART is
    -- TDR_Register --
    ------------------
 
-   subtype TDR_TDR_Field is Interfaces.Bit_Types.UInt9;
+   subtype TDR_TDR_Field is HAL.UInt9;
 
    --  Transmit data register
    type TDR_Register is record
       --  Transmit data value
       TDR           : TDR_TDR_Field := 16#0#;
       --  unspecified
-      Reserved_9_31 : Interfaces.Bit_Types.UInt23 := 16#0#;
+      Reserved_9_31 : HAL.UInt23 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

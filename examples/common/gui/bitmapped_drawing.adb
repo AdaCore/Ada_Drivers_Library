@@ -21,7 +21,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces.Bit_Types;     use Interfaces.Bit_Types;
+with HAL; use HAL;
 
 package body Bitmapped_Drawing is
 

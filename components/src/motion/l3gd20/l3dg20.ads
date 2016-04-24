@@ -47,9 +47,9 @@
 --  gyroscope" DocID022116 Rev 2, dated February 2013, file number DM00036465
 
 with Interfaces; use Interfaces;
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-with HAL.SPI; use HAL.SPI;
-with HAL.GPIO; use HAL.GPIO;
+with HAL;        use HAL;
+with HAL.SPI;    use HAL.SPI;
+with HAL.GPIO;   use HAL.GPIO;
 
 package L3DG20 is
 

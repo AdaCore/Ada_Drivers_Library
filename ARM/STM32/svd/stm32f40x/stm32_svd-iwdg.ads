@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F40x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.IWDG is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,14 +17,14 @@ package STM32_SVD.IWDG is
    -- KR_Register --
    -----------------
 
-   subtype KR_KEY_Field is Interfaces.Bit_Types.Short;
+   subtype KR_KEY_Field is HAL.Short;
 
    --  Key register
    type KR_Register is record
       --  Write-only. Key value (write only, read 0000h)
       KEY            : KR_KEY_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -38,14 +38,14 @@ package STM32_SVD.IWDG is
    -- PR_Register --
    -----------------
 
-   subtype PR_PR_Field is Interfaces.Bit_Types.UInt3;
+   subtype PR_PR_Field is HAL.UInt3;
 
    --  Prescaler register
    type PR_Register is record
       --  Prescaler divider
       PR            : PR_PR_Field := 16#0#;
       --  unspecified
-      Reserved_3_31 : Interfaces.Bit_Types.UInt29 := 16#0#;
+      Reserved_3_31 : HAL.UInt29 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -59,14 +59,14 @@ package STM32_SVD.IWDG is
    -- RLR_Register --
    ------------------
 
-   subtype RLR_RL_Field is Interfaces.Bit_Types.UInt12;
+   subtype RLR_RL_Field is HAL.UInt12;
 
    --  Reload register
    type RLR_Register is record
       --  Watchdog counter reload value
       RL             : RLR_RL_Field := 16#FFF#;
       --  unspecified
-      Reserved_12_31 : Interfaces.Bit_Types.UInt20 := 16#0#;
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -87,7 +87,7 @@ package STM32_SVD.IWDG is
       --  Read-only. Watchdog counter reload value update
       RVU           : Boolean := False;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30;
+      Reserved_2_31 : HAL.UInt30;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

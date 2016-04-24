@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F429x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.DMA2D is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,7 +17,7 @@ package STM32_SVD.DMA2D is
    -- CR_Register --
    -----------------
 
-   subtype CR_MODE_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_MODE_Field is HAL.UInt2;
 
    --  control register
    type CR_Register is record
@@ -28,7 +28,7 @@ package STM32_SVD.DMA2D is
       --  Abort
       ABORT_k        : Boolean := False;
       --  unspecified
-      Reserved_3_7   : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_3_7   : HAL.UInt5 := 16#0#;
       --  Transfer error interrupt enable
       TEIE           : Boolean := False;
       --  Transfer complete interrupt enable
@@ -42,11 +42,11 @@ package STM32_SVD.DMA2D is
       --  Configuration Error Interrupt Enable
       CEIE           : Boolean := False;
       --  unspecified
-      Reserved_14_15 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_14_15 : HAL.UInt2 := 16#0#;
       --  DMA2D mode
       MODE           : CR_MODE_Field := 16#0#;
       --  unspecified
-      Reserved_18_31 : Interfaces.Bit_Types.UInt14 := 16#0#;
+      Reserved_18_31 : HAL.UInt14 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -86,7 +86,7 @@ package STM32_SVD.DMA2D is
       --  Read-only. Configuration error interrupt flag
       CEIF          : Boolean := False;
       --  unspecified
-      Reserved_6_31 : Interfaces.Bit_Types.UInt26;
+      Reserved_6_31 : HAL.UInt26;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -120,7 +120,7 @@ package STM32_SVD.DMA2D is
       --  Clear configuration error interrupt flag
       CCEIF         : Boolean := False;
       --  unspecified
-      Reserved_6_31 : Interfaces.Bit_Types.UInt26 := 16#0#;
+      Reserved_6_31 : HAL.UInt26 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -139,14 +139,14 @@ package STM32_SVD.DMA2D is
    -- FGOR_Register --
    -------------------
 
-   subtype FGOR_LO_Field is Interfaces.Bit_Types.UInt14;
+   subtype FGOR_LO_Field is HAL.UInt14;
 
    --  foreground offset register
    type FGOR_Register is record
       --  Line offset
       LO             : FGOR_LO_Field := 16#0#;
       --  unspecified
-      Reserved_14_31 : Interfaces.Bit_Types.UInt18 := 16#0#;
+      Reserved_14_31 : HAL.UInt18 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -160,14 +160,14 @@ package STM32_SVD.DMA2D is
    -- BGOR_Register --
    -------------------
 
-   subtype BGOR_LO_Field is Interfaces.Bit_Types.UInt14;
+   subtype BGOR_LO_Field is HAL.UInt14;
 
    --  background offset register
    type BGOR_Register is record
       --  Line offset
       LO             : BGOR_LO_Field := 16#0#;
       --  unspecified
-      Reserved_14_31 : Interfaces.Bit_Types.UInt18 := 16#0#;
+      Reserved_14_31 : HAL.UInt18 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -181,10 +181,10 @@ package STM32_SVD.DMA2D is
    -- FGPFCCR_Register --
    ----------------------
 
-   subtype FGPFCCR_CM_Field is Interfaces.Bit_Types.UInt4;
-   subtype FGPFCCR_CS_Field is Interfaces.Bit_Types.Byte;
-   subtype FGPFCCR_AM_Field is Interfaces.Bit_Types.UInt2;
-   subtype FGPFCCR_ALPHA_Field is Interfaces.Bit_Types.Byte;
+   subtype FGPFCCR_CM_Field is HAL.UInt4;
+   subtype FGPFCCR_CS_Field is HAL.Byte;
+   subtype FGPFCCR_AM_Field is HAL.UInt2;
+   subtype FGPFCCR_ALPHA_Field is HAL.Byte;
 
    --  foreground PFC control register
    type FGPFCCR_Register is record
@@ -195,13 +195,13 @@ package STM32_SVD.DMA2D is
       --  Start
       START          : Boolean := False;
       --  unspecified
-      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_6_7   : HAL.UInt2 := 16#0#;
       --  CLUT size
       CS             : FGPFCCR_CS_Field := 16#0#;
       --  Alpha mode
       AM             : FGPFCCR_AM_Field := 16#0#;
       --  unspecified
-      Reserved_18_23 : Interfaces.Bit_Types.UInt6 := 16#0#;
+      Reserved_18_23 : HAL.UInt6 := 16#0#;
       --  Alpha value
       ALPHA          : FGPFCCR_ALPHA_Field := 16#0#;
    end record
@@ -223,9 +223,9 @@ package STM32_SVD.DMA2D is
    -- FGCOLR_Register --
    ---------------------
 
-   subtype FGCOLR_BLUE_Field is Interfaces.Bit_Types.Byte;
-   subtype FGCOLR_GREEN_Field is Interfaces.Bit_Types.Byte;
-   subtype FGCOLR_RED_Field is Interfaces.Bit_Types.Byte;
+   subtype FGCOLR_BLUE_Field is HAL.Byte;
+   subtype FGCOLR_GREEN_Field is HAL.Byte;
+   subtype FGCOLR_RED_Field is HAL.Byte;
 
    --  foreground color register
    type FGCOLR_Register is record
@@ -236,7 +236,7 @@ package STM32_SVD.DMA2D is
       --  Red Value
       RED            : FGCOLR_RED_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_24_31 : HAL.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -252,10 +252,10 @@ package STM32_SVD.DMA2D is
    -- BGPFCCR_Register --
    ----------------------
 
-   subtype BGPFCCR_CM_Field is Interfaces.Bit_Types.UInt4;
-   subtype BGPFCCR_CS_Field is Interfaces.Bit_Types.Byte;
-   subtype BGPFCCR_AM_Field is Interfaces.Bit_Types.UInt2;
-   subtype BGPFCCR_ALPHA_Field is Interfaces.Bit_Types.Byte;
+   subtype BGPFCCR_CM_Field is HAL.UInt4;
+   subtype BGPFCCR_CS_Field is HAL.Byte;
+   subtype BGPFCCR_AM_Field is HAL.UInt2;
+   subtype BGPFCCR_ALPHA_Field is HAL.Byte;
 
    --  background PFC control register
    type BGPFCCR_Register is record
@@ -266,13 +266,13 @@ package STM32_SVD.DMA2D is
       --  Start
       START          : Boolean := False;
       --  unspecified
-      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_6_7   : HAL.UInt2 := 16#0#;
       --  CLUT size
       CS             : BGPFCCR_CS_Field := 16#0#;
       --  Alpha mode
       AM             : BGPFCCR_AM_Field := 16#0#;
       --  unspecified
-      Reserved_18_23 : Interfaces.Bit_Types.UInt6 := 16#0#;
+      Reserved_18_23 : HAL.UInt6 := 16#0#;
       --  Alpha value
       ALPHA          : BGPFCCR_ALPHA_Field := 16#0#;
    end record
@@ -294,9 +294,9 @@ package STM32_SVD.DMA2D is
    -- BGCOLR_Register --
    ---------------------
 
-   subtype BGCOLR_BLUE_Field is Interfaces.Bit_Types.Byte;
-   subtype BGCOLR_GREEN_Field is Interfaces.Bit_Types.Byte;
-   subtype BGCOLR_RED_Field is Interfaces.Bit_Types.Byte;
+   subtype BGCOLR_BLUE_Field is HAL.Byte;
+   subtype BGCOLR_GREEN_Field is HAL.Byte;
+   subtype BGCOLR_RED_Field is HAL.Byte;
 
    --  background color register
    type BGCOLR_Register is record
@@ -307,7 +307,7 @@ package STM32_SVD.DMA2D is
       --  Red Value
       RED            : BGCOLR_RED_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_24_31 : HAL.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -323,14 +323,14 @@ package STM32_SVD.DMA2D is
    -- OPFCCR_Register --
    ---------------------
 
-   subtype OPFCCR_CM_Field is Interfaces.Bit_Types.UInt3;
+   subtype OPFCCR_CM_Field is HAL.UInt3;
 
    --  output PFC control register
    type OPFCCR_Register is record
       --  Color mode
       CM            : OPFCCR_CM_Field := 16#0#;
       --  unspecified
-      Reserved_3_31 : Interfaces.Bit_Types.UInt29 := 16#0#;
+      Reserved_3_31 : HAL.UInt29 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -344,10 +344,10 @@ package STM32_SVD.DMA2D is
    -- OCOLR_Register --
    --------------------
 
-   subtype OCOLR_BLUE_Field is Interfaces.Bit_Types.Byte;
-   subtype OCOLR_GREEN_Field is Interfaces.Bit_Types.Byte;
-   subtype OCOLR_RED_Field is Interfaces.Bit_Types.Byte;
-   subtype OCOLR_APLHA_Field is Interfaces.Bit_Types.Byte;
+   subtype OCOLR_BLUE_Field is HAL.Byte;
+   subtype OCOLR_GREEN_Field is HAL.Byte;
+   subtype OCOLR_RED_Field is HAL.Byte;
+   subtype OCOLR_APLHA_Field is HAL.Byte;
 
    --  output color register
    type OCOLR_Register is record
@@ -374,14 +374,14 @@ package STM32_SVD.DMA2D is
    -- OOR_Register --
    ------------------
 
-   subtype OOR_LO_Field is Interfaces.Bit_Types.UInt14;
+   subtype OOR_LO_Field is HAL.UInt14;
 
    --  output offset register
    type OOR_Register is record
       --  Line Offset
       LO             : OOR_LO_Field := 16#0#;
       --  unspecified
-      Reserved_14_31 : Interfaces.Bit_Types.UInt18 := 16#0#;
+      Reserved_14_31 : HAL.UInt18 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -395,8 +395,8 @@ package STM32_SVD.DMA2D is
    -- NLR_Register --
    ------------------
 
-   subtype NLR_NL_Field is Interfaces.Bit_Types.Short;
-   subtype NLR_PL_Field is Interfaces.Bit_Types.UInt14;
+   subtype NLR_NL_Field is HAL.Short;
+   subtype NLR_PL_Field is HAL.UInt14;
 
    --  number of line register
    type NLR_Register is record
@@ -405,7 +405,7 @@ package STM32_SVD.DMA2D is
       --  Pixel per lines
       PL             : NLR_PL_Field := 16#0#;
       --  unspecified
-      Reserved_30_31 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_30_31 : HAL.UInt2 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -420,14 +420,14 @@ package STM32_SVD.DMA2D is
    -- LWR_Register --
    ------------------
 
-   subtype LWR_LW_Field is Interfaces.Bit_Types.Short;
+   subtype LWR_LW_Field is HAL.Short;
 
    --  line watermark register
    type LWR_Register is record
       --  Line watermark
       LW             : LWR_LW_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -441,18 +441,18 @@ package STM32_SVD.DMA2D is
    -- AMTCR_Register --
    --------------------
 
-   subtype AMTCR_DT_Field is Interfaces.Bit_Types.Byte;
+   subtype AMTCR_DT_Field is HAL.Byte;
 
    --  AHB master timer configuration register
    type AMTCR_Register is record
       --  Enable
       EN             : Boolean := False;
       --  unspecified
-      Reserved_1_7   : Interfaces.Bit_Types.UInt7 := 16#0#;
+      Reserved_1_7   : HAL.UInt7 := 16#0#;
       --  Dead Time
       DT             : AMTCR_DT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -468,10 +468,10 @@ package STM32_SVD.DMA2D is
    -- FGCLUT_Register --
    ---------------------
 
-   subtype FGCLUT_BLUE_Field is Interfaces.Bit_Types.Byte;
-   subtype FGCLUT_GREEN_Field is Interfaces.Bit_Types.Byte;
-   subtype FGCLUT_RED_Field is Interfaces.Bit_Types.Byte;
-   subtype FGCLUT_APLHA_Field is Interfaces.Bit_Types.Byte;
+   subtype FGCLUT_BLUE_Field is HAL.Byte;
+   subtype FGCLUT_GREEN_Field is HAL.Byte;
+   subtype FGCLUT_RED_Field is HAL.Byte;
+   subtype FGCLUT_APLHA_Field is HAL.Byte;
 
    --  FGCLUT
    type FGCLUT_Register is record
@@ -498,10 +498,10 @@ package STM32_SVD.DMA2D is
    -- BGCLUT_Register --
    ---------------------
 
-   subtype BGCLUT_BLUE_Field is Interfaces.Bit_Types.Byte;
-   subtype BGCLUT_GREEN_Field is Interfaces.Bit_Types.Byte;
-   subtype BGCLUT_RED_Field is Interfaces.Bit_Types.Byte;
-   subtype BGCLUT_APLHA_Field is Interfaces.Bit_Types.Byte;
+   subtype BGCLUT_BLUE_Field is HAL.Byte;
+   subtype BGCLUT_GREEN_Field is HAL.Byte;
+   subtype BGCLUT_RED_Field is HAL.Byte;
+   subtype BGCLUT_APLHA_Field is HAL.Byte;
 
    --  BGCLUT
    type BGCLUT_Register is record
@@ -537,11 +537,11 @@ package STM32_SVD.DMA2D is
       --  interrupt flag clear register
       IFCR    : IFCR_Register;
       --  foreground memory address register
-      FGMAR   : Interfaces.Bit_Types.Word;
+      FGMAR   : HAL.Word;
       --  foreground offset register
       FGOR    : FGOR_Register;
       --  background memory address register
-      BGMAR   : Interfaces.Bit_Types.Word;
+      BGMAR   : HAL.Word;
       --  background offset register
       BGOR    : BGOR_Register;
       --  foreground PFC control register
@@ -553,15 +553,15 @@ package STM32_SVD.DMA2D is
       --  background color register
       BGCOLR  : BGCOLR_Register;
       --  foreground CLUT memory address register
-      FGCMAR  : Interfaces.Bit_Types.Word;
+      FGCMAR  : HAL.Word;
       --  background CLUT memory address register
-      BGCMAR  : Interfaces.Bit_Types.Word;
+      BGCMAR  : HAL.Word;
       --  output PFC control register
       OPFCCR  : OPFCCR_Register;
       --  output color register
       OCOLR   : OCOLR_Register;
       --  output memory address register
-      OMAR    : Interfaces.Bit_Types.Word;
+      OMAR    : HAL.Word;
       --  output offset register
       OOR     : OOR_Register;
       --  number of line register

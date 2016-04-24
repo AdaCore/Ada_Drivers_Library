@@ -401,7 +401,7 @@ package STM32.Device is
    procedure Enable_Clock (This : in out Timer);
    procedure Reset (This : in out Timer);
 
-   DSI : aliased DSI_Host (STM32_SVD.DSIHOST.DSIHOST_Periph'Access);
+   DSIHOST : aliased DSI_Host (STM32_SVD.DSIHOST.DSIHOST_Periph'Access);
 
    -----------------------------
    -- Reset and Clock Control --

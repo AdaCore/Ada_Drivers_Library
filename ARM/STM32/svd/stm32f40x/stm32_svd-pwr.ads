@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F40x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.PWR is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,7 +17,7 @@ package STM32_SVD.PWR is
    -- CR_Register --
    -----------------
 
-   subtype CR_PLS_Field is Interfaces.Bit_Types.UInt3;
+   subtype CR_PLS_Field is HAL.UInt3;
 
    --  power control register
    type CR_Register is record
@@ -38,11 +38,11 @@ package STM32_SVD.PWR is
       --  Flash power down in Stop mode
       FPDS           : Boolean := False;
       --  unspecified
-      Reserved_10_13 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_10_13 : HAL.UInt4 := 16#0#;
       --  Regulator voltage scaling mode
       VOS            : Boolean := False;
       --  unspecified
-      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
+      Reserved_15_31 : HAL.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -76,17 +76,17 @@ package STM32_SVD.PWR is
       --  Read-only. Backup regulator ready
       BRR            : Boolean := False;
       --  unspecified
-      Reserved_4_7   : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_4_7   : HAL.UInt4 := 16#0#;
       --  Enable WKUP pin
       EWUP           : Boolean := False;
       --  Backup regulator enable
       BRE            : Boolean := False;
       --  unspecified
-      Reserved_10_13 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_10_13 : HAL.UInt4 := 16#0#;
       --  Regulator voltage scaling output selection ready bit
       VOSRDY         : Boolean := False;
       --  unspecified
-      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
+      Reserved_15_31 : HAL.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

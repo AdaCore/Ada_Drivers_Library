@@ -1,4 +1,4 @@
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
+with HAL; use HAL;
 
 package Bit_Fields is
    type Bit_Field is array (Natural range <>) of Bit

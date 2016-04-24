@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F7x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.DBG is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,15 +17,15 @@ package STM32_SVD.DBG is
    -- DBGMCU_IDCODE_Register --
    ----------------------------
 
-   subtype DBGMCU_IDCODE_DEV_ID_Field is Interfaces.Bit_Types.UInt12;
-   subtype DBGMCU_IDCODE_REV_ID_Field is Interfaces.Bit_Types.Short;
+   subtype DBGMCU_IDCODE_DEV_ID_Field is HAL.UInt12;
+   subtype DBGMCU_IDCODE_REV_ID_Field is HAL.Short;
 
    --  IDCODE
    type DBGMCU_IDCODE_Register is record
       --  Read-only. DEV_ID
       DEV_ID         : DBGMCU_IDCODE_DEV_ID_Field := 16#411#;
       --  unspecified
-      Reserved_12_15 : Interfaces.Bit_Types.UInt4;
+      Reserved_12_15 : HAL.UInt4;
       --  Read-only. REV_ID
       REV_ID         : DBGMCU_IDCODE_REV_ID_Field := 16#1000#;
    end record
@@ -42,7 +42,7 @@ package STM32_SVD.DBG is
    -- DBGMCU_CR_Register --
    ------------------------
 
-   subtype DBGMCU_CR_TRACE_MODE_Field is Interfaces.Bit_Types.UInt2;
+   subtype DBGMCU_CR_TRACE_MODE_Field is HAL.UInt2;
 
    --  Control Register
    type DBGMCU_CR_Register is record
@@ -53,13 +53,13 @@ package STM32_SVD.DBG is
       --  DBG_STANDBY
       DBG_STANDBY   : Boolean := False;
       --  unspecified
-      Reserved_3_4  : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_3_4  : HAL.UInt2 := 16#0#;
       --  TRACE_IOEN
       TRACE_IOEN    : Boolean := False;
       --  TRACE_MODE
       TRACE_MODE    : DBGMCU_CR_TRACE_MODE_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -99,13 +99,13 @@ package STM32_SVD.DBG is
       --  DBG_TIM14_STOP
       DBG_TIM14_STOP         : Boolean := False;
       --  unspecified
-      Reserved_9_10          : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_9_10          : HAL.UInt2 := 16#0#;
       --  DBG_WWDG_STOP
       DBG_WWDG_STOP          : Boolean := False;
       --  DBG_IWDEG_STOP
       DBG_IWDEG_STOP         : Boolean := False;
       --  unspecified
-      Reserved_13_20         : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_13_20         : HAL.Byte := 16#0#;
       --  DBG_J2C1_SMBUS_TIMEOUT
       DBG_J2C1_SMBUS_TIMEOUT : Boolean := False;
       --  DBG_J2C2_SMBUS_TIMEOUT
@@ -113,13 +113,13 @@ package STM32_SVD.DBG is
       --  DBG_J2C3SMBUS_TIMEOUT
       DBG_J2C3SMBUS_TIMEOUT  : Boolean := False;
       --  unspecified
-      Reserved_24_24         : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_24_24         : HAL.Bit := 16#0#;
       --  DBG_CAN1_STOP
       DBG_CAN1_STOP          : Boolean := False;
       --  DBG_CAN2_STOP
       DBG_CAN2_STOP          : Boolean := False;
       --  unspecified
-      Reserved_27_31         : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_27_31         : HAL.UInt5 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -158,7 +158,7 @@ package STM32_SVD.DBG is
       --  TIM8 counter stopped when core is halted
       DBG_TIM8_STOP  : Boolean := False;
       --  unspecified
-      Reserved_2_15  : Interfaces.Bit_Types.UInt14 := 16#0#;
+      Reserved_2_15  : HAL.UInt14 := 16#0#;
       --  TIM9 counter stopped when core is halted
       DBG_TIM9_STOP  : Boolean := False;
       --  TIM10 counter stopped when core is halted
@@ -166,7 +166,7 @@ package STM32_SVD.DBG is
       --  TIM11 counter stopped when core is halted
       DBG_TIM11_STOP : Boolean := False;
       --  unspecified
-      Reserved_19_31 : Interfaces.Bit_Types.UInt13 := 16#0#;
+      Reserved_19_31 : HAL.UInt13 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

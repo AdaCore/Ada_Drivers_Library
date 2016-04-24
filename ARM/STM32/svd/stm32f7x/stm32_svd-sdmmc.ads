@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F7x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.SDMMC is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,14 +17,14 @@ package STM32_SVD.SDMMC is
    -- POWER_Register --
    --------------------
 
-   subtype POWER_PWRCTRL_Field is Interfaces.Bit_Types.UInt2;
+   subtype POWER_PWRCTRL_Field is HAL.UInt2;
 
    --  power control register
    type POWER_Register is record
       --  PWRCTRL
       PWRCTRL       : POWER_PWRCTRL_Field := 16#0#;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30 := 16#0#;
+      Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -38,8 +38,8 @@ package STM32_SVD.SDMMC is
    -- CLKCR_Register --
    --------------------
 
-   subtype CLKCR_CLKDIV_Field is Interfaces.Bit_Types.Byte;
-   subtype CLKCR_WIDBUS_Field is Interfaces.Bit_Types.UInt2;
+   subtype CLKCR_CLKDIV_Field is HAL.Byte;
+   subtype CLKCR_WIDBUS_Field is HAL.UInt2;
 
    --  SDI clock control register
    type CLKCR_Register is record
@@ -58,7 +58,7 @@ package STM32_SVD.SDMMC is
       --  HW Flow Control enable
       HWFC_EN        : Boolean := False;
       --  unspecified
-      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
+      Reserved_15_31 : HAL.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -78,8 +78,8 @@ package STM32_SVD.SDMMC is
    -- CMD_Register --
    ------------------
 
-   subtype CMD_CMDINDEX_Field is Interfaces.Bit_Types.UInt6;
-   subtype CMD_WAITRESP_Field is Interfaces.Bit_Types.UInt2;
+   subtype CMD_CMDINDEX_Field is HAL.UInt6;
+   subtype CMD_WAITRESP_Field is HAL.UInt2;
 
    --  command register
    type CMD_Register is record
@@ -102,7 +102,7 @@ package STM32_SVD.SDMMC is
       --  CE-ATA command
       CE_ATACMD      : Boolean := False;
       --  unspecified
-      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
+      Reserved_15_31 : HAL.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -124,14 +124,14 @@ package STM32_SVD.SDMMC is
    -- RESPCMD_Register --
    ----------------------
 
-   subtype RESPCMD_RESPCMD_Field is Interfaces.Bit_Types.UInt6;
+   subtype RESPCMD_RESPCMD_Field is HAL.UInt6;
 
    --  command response register
    type RESPCMD_Register is record
       --  Read-only. Response command index
       RESPCMD       : RESPCMD_RESPCMD_Field := 16#0#;
       --  unspecified
-      Reserved_6_31 : Interfaces.Bit_Types.UInt26;
+      Reserved_6_31 : HAL.UInt26;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -145,14 +145,14 @@ package STM32_SVD.SDMMC is
    -- DLEN_Register --
    -------------------
 
-   subtype DLEN_DATALENGTH_Field is Interfaces.Bit_Types.UInt25;
+   subtype DLEN_DATALENGTH_Field is HAL.UInt25;
 
    --  data length register
    type DLEN_Register is record
       --  Data length value
       DATALENGTH     : DLEN_DATALENGTH_Field := 16#0#;
       --  unspecified
-      Reserved_25_31 : Interfaces.Bit_Types.UInt7 := 16#0#;
+      Reserved_25_31 : HAL.UInt7 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -166,7 +166,7 @@ package STM32_SVD.SDMMC is
    -- DCTRL_Register --
    --------------------
 
-   subtype DCTRL_DBLOCKSIZE_Field is Interfaces.Bit_Types.UInt4;
+   subtype DCTRL_DBLOCKSIZE_Field is HAL.UInt4;
 
    --  data control register
    type DCTRL_Register is record
@@ -190,7 +190,7 @@ package STM32_SVD.SDMMC is
       --  SD I/O enable functions
       SDIOEN         : Boolean := False;
       --  unspecified
-      Reserved_12_31 : Interfaces.Bit_Types.UInt20 := 16#0#;
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -212,14 +212,14 @@ package STM32_SVD.SDMMC is
    -- DCOUNT_Register --
    ---------------------
 
-   subtype DCOUNT_DATACOUNT_Field is Interfaces.Bit_Types.UInt25;
+   subtype DCOUNT_DATACOUNT_Field is HAL.UInt25;
 
    --  data counter register
    type DCOUNT_Register is record
       --  Read-only. Data count value
       DATACOUNT      : DCOUNT_DATACOUNT_Field := 16#0#;
       --  unspecified
-      Reserved_25_31 : Interfaces.Bit_Types.UInt7;
+      Reserved_25_31 : HAL.UInt7;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -287,7 +287,7 @@ package STM32_SVD.SDMMC is
       --  Read-only. CE-ATA command completion signal received for CMD61
       CEATAEND       : Boolean := False;
       --  unspecified
-      Reserved_24_31 : Interfaces.Bit_Types.Byte;
+      Reserved_24_31 : HAL.Byte;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -349,13 +349,13 @@ package STM32_SVD.SDMMC is
       --  DBCKEND flag clear bit
       DBCKENDC       : Boolean := False;
       --  unspecified
-      Reserved_11_21 : Interfaces.Bit_Types.UInt11 := 16#0#;
+      Reserved_11_21 : HAL.UInt11 := 16#0#;
       --  SDIOIT flag clear bit
       SDIOITC        : Boolean := False;
       --  CEATAEND flag clear bit
       CEATAENDC      : Boolean := False;
       --  unspecified
-      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_24_31 : HAL.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -433,7 +433,7 @@ package STM32_SVD.SDMMC is
       --  CE-ATA command completion signal received interrupt enable
       CEATAENDIE     : Boolean := False;
       --  unspecified
-      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_24_31 : HAL.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -470,7 +470,7 @@ package STM32_SVD.SDMMC is
    -- FIFOCNT_Register --
    ----------------------
 
-   subtype FIFOCNT_FIFOCOUNT_Field is Interfaces.Bit_Types.UInt24;
+   subtype FIFOCNT_FIFOCOUNT_Field is HAL.UInt24;
 
    --  FIFO counter register
    type FIFOCNT_Register is record
@@ -478,7 +478,7 @@ package STM32_SVD.SDMMC is
       --  the FIFO
       FIFOCOUNT      : FIFOCNT_FIFOCOUNT_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : Interfaces.Bit_Types.Byte;
+      Reserved_24_31 : HAL.Byte;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -499,21 +499,21 @@ package STM32_SVD.SDMMC is
       --  SDI clock control register
       CLKCR   : CLKCR_Register;
       --  argument register
-      ARG     : Interfaces.Bit_Types.Word;
+      ARG     : HAL.Word;
       --  command register
       CMD     : CMD_Register;
       --  command response register
       RESPCMD : RESPCMD_Register;
       --  response 1..4 register
-      RESP1   : Interfaces.Bit_Types.Word;
+      RESP1   : HAL.Word;
       --  response 1..4 register
-      RESP2   : Interfaces.Bit_Types.Word;
+      RESP2   : HAL.Word;
       --  response 1..4 register
-      RESP3   : Interfaces.Bit_Types.Word;
+      RESP3   : HAL.Word;
       --  response 1..4 register
-      RESP4   : Interfaces.Bit_Types.Word;
+      RESP4   : HAL.Word;
       --  data timer register
-      DTIMER  : Interfaces.Bit_Types.Word;
+      DTIMER  : HAL.Word;
       --  data length register
       DLEN    : DLEN_Register;
       --  data control register
@@ -529,7 +529,7 @@ package STM32_SVD.SDMMC is
       --  FIFO counter register
       FIFOCNT : FIFOCNT_Register;
       --  data FIFO register
-      FIFO    : Interfaces.Bit_Types.Word;
+      FIFO    : HAL.Word;
    end record
      with Volatile;
 

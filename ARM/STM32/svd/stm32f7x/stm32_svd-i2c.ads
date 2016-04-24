@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F7x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.I2C is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,7 +17,7 @@ package STM32_SVD.I2C is
    -- CR1_Register --
    ------------------
 
-   subtype CR1_DNF_Field is Interfaces.Bit_Types.UInt4;
+   subtype CR1_DNF_Field is HAL.UInt4;
 
    --  Control register 1
    type CR1_Register is record
@@ -42,7 +42,7 @@ package STM32_SVD.I2C is
       --  Analog noise filter OFF
       ANFOFF         : Boolean := False;
       --  unspecified
-      Reserved_13_13 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_13_13 : HAL.Bit := 16#0#;
       --  DMA transmission requests enable
       TXDMAEN        : Boolean := False;
       --  DMA reception requests enable
@@ -64,7 +64,7 @@ package STM32_SVD.I2C is
       --  PEC enable
       PECEN          : Boolean := False;
       --  unspecified
-      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_24_31 : HAL.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -98,8 +98,8 @@ package STM32_SVD.I2C is
    -- CR2_Register --
    ------------------
 
-   subtype CR2_SADD_Field is Interfaces.Bit_Types.UInt10;
-   subtype CR2_NBYTES_Field is Interfaces.Bit_Types.Byte;
+   subtype CR2_SADD_Field is HAL.UInt10;
+   subtype CR2_NBYTES_Field is HAL.Byte;
 
    --  Control register 2
    type CR2_Register is record
@@ -126,7 +126,7 @@ package STM32_SVD.I2C is
       --  Packet error checking byte
       PECBYTE        : Boolean := False;
       --  unspecified
-      Reserved_27_31 : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_27_31 : HAL.UInt5 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -150,7 +150,7 @@ package STM32_SVD.I2C is
    -- OAR1_Register --
    -------------------
 
-   subtype OAR1_OA1_Field is Interfaces.Bit_Types.UInt10;
+   subtype OAR1_OA1_Field is HAL.UInt10;
 
    --  Own address register 1
    type OAR1_Register is record
@@ -159,11 +159,11 @@ package STM32_SVD.I2C is
       --  Own Address 1 10-bit mode
       OA1MODE        : Boolean := False;
       --  unspecified
-      Reserved_11_14 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_11_14 : HAL.UInt4 := 16#0#;
       --  Own Address 1 enable
       OA1EN          : Boolean := False;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -180,23 +180,23 @@ package STM32_SVD.I2C is
    -- OAR2_Register --
    -------------------
 
-   subtype OAR2_OA2_Field is Interfaces.Bit_Types.UInt7;
-   subtype OAR2_OA2MSK_Field is Interfaces.Bit_Types.UInt3;
+   subtype OAR2_OA2_Field is HAL.UInt7;
+   subtype OAR2_OA2MSK_Field is HAL.UInt3;
 
    --  Own address register 2
    type OAR2_Register is record
       --  unspecified
-      Reserved_0_0   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  Interface address
       OA2            : OAR2_OA2_Field := 16#0#;
       --  Own Address 2 masks
       OA2MSK         : OAR2_OA2MSK_Field := 16#0#;
       --  unspecified
-      Reserved_11_14 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_11_14 : HAL.UInt4 := 16#0#;
       --  Own Address 2 enable
       OA2EN          : Boolean := False;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -214,11 +214,11 @@ package STM32_SVD.I2C is
    -- TIMINGR_Register --
    ----------------------
 
-   subtype TIMINGR_SCLL_Field is Interfaces.Bit_Types.Byte;
-   subtype TIMINGR_SCLH_Field is Interfaces.Bit_Types.Byte;
-   subtype TIMINGR_SDADEL_Field is Interfaces.Bit_Types.UInt4;
-   subtype TIMINGR_SCLDEL_Field is Interfaces.Bit_Types.UInt4;
-   subtype TIMINGR_PRESC_Field is Interfaces.Bit_Types.UInt4;
+   subtype TIMINGR_SCLL_Field is HAL.Byte;
+   subtype TIMINGR_SCLH_Field is HAL.Byte;
+   subtype TIMINGR_SDADEL_Field is HAL.UInt4;
+   subtype TIMINGR_SCLDEL_Field is HAL.UInt4;
+   subtype TIMINGR_PRESC_Field is HAL.UInt4;
 
    --  Timing register
    type TIMINGR_Register is record
@@ -231,7 +231,7 @@ package STM32_SVD.I2C is
       --  Data setup time
       SCLDEL         : TIMINGR_SCLDEL_Field := 16#0#;
       --  unspecified
-      Reserved_24_27 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_24_27 : HAL.UInt4 := 16#0#;
       --  Timing prescaler
       PRESC          : TIMINGR_PRESC_Field := 16#0#;
    end record
@@ -251,8 +251,8 @@ package STM32_SVD.I2C is
    -- TIMEOUTR_Register --
    -----------------------
 
-   subtype TIMEOUTR_TIMEOUTA_Field is Interfaces.Bit_Types.UInt12;
-   subtype TIMEOUTR_TIMEOUTB_Field is Interfaces.Bit_Types.UInt12;
+   subtype TIMEOUTR_TIMEOUTA_Field is HAL.UInt12;
+   subtype TIMEOUTR_TIMEOUTB_Field is HAL.UInt12;
 
    --  Status register 1
    type TIMEOUTR_Register is record
@@ -261,13 +261,13 @@ package STM32_SVD.I2C is
       --  Idle clock timeout detection
       TIDLE          : Boolean := False;
       --  unspecified
-      Reserved_13_14 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_13_14 : HAL.UInt2 := 16#0#;
       --  Clock timeout enable
       TIMOUTEN       : Boolean := False;
       --  Bus timeout B
       TIMEOUTB       : TIMEOUTR_TIMEOUTB_Field := 16#0#;
       --  unspecified
-      Reserved_28_30 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_28_30 : HAL.UInt3 := 16#0#;
       --  Extended clock timeout enable
       TEXTEN         : Boolean := False;
    end record
@@ -288,7 +288,7 @@ package STM32_SVD.I2C is
    -- ISR_Register --
    ------------------
 
-   subtype ISR_ADDCODE_Field is Interfaces.Bit_Types.UInt7;
+   subtype ISR_ADDCODE_Field is HAL.UInt7;
 
    --  Interrupt and Status register
    type ISR_Register is record
@@ -321,7 +321,7 @@ package STM32_SVD.I2C is
       --  Read-only. SMBus alert
       ALERT          : Boolean := False;
       --  unspecified
-      Reserved_14_14 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_14_14 : HAL.Bit := 16#0#;
       --  Read-only. Bus busy
       BUSY           : Boolean := False;
       --  Read-only. Transfer direction (Slave mode)
@@ -329,7 +329,7 @@ package STM32_SVD.I2C is
       --  Read-only. Address match code (Slave mode)
       ADDCODE        : ISR_ADDCODE_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_24_31 : HAL.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -363,7 +363,7 @@ package STM32_SVD.I2C is
    --  Interrupt clear register
    type ICR_Register is record
       --  unspecified
-      Reserved_0_2   : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_0_2   : HAL.UInt3 := 16#0#;
       --  Write-only. Address Matched flag clear
       ADDRCF         : Boolean := False;
       --  Write-only. Not Acknowledge flag clear
@@ -371,7 +371,7 @@ package STM32_SVD.I2C is
       --  Write-only. Stop detection flag clear
       STOPCF         : Boolean := False;
       --  unspecified
-      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_6_7   : HAL.UInt2 := 16#0#;
       --  Write-only. Bus error flag clear
       BERRCF         : Boolean := False;
       --  Write-only. Arbitration lost flag clear
@@ -385,7 +385,7 @@ package STM32_SVD.I2C is
       --  Write-only. Alert flag clear
       ALERTCF        : Boolean := False;
       --  unspecified
-      Reserved_14_31 : Interfaces.Bit_Types.UInt18 := 16#0#;
+      Reserved_14_31 : HAL.UInt18 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -409,14 +409,14 @@ package STM32_SVD.I2C is
    -- PECR_Register --
    -------------------
 
-   subtype PECR_PEC_Field is Interfaces.Bit_Types.Byte;
+   subtype PECR_PEC_Field is HAL.Byte;
 
    --  PEC register
    type PECR_Register is record
       --  Read-only. Packet error checking register
       PEC           : PECR_PEC_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24;
+      Reserved_8_31 : HAL.UInt24;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -430,14 +430,14 @@ package STM32_SVD.I2C is
    -- RXDR_Register --
    -------------------
 
-   subtype RXDR_RXDATA_Field is Interfaces.Bit_Types.Byte;
+   subtype RXDR_RXDATA_Field is HAL.Byte;
 
    --  Receive data register
    type RXDR_Register is record
       --  Read-only. 8-bit receive data
       RXDATA        : RXDR_RXDATA_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24;
+      Reserved_8_31 : HAL.UInt24;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -451,14 +451,14 @@ package STM32_SVD.I2C is
    -- TXDR_Register --
    -------------------
 
-   subtype TXDR_TXDATA_Field is Interfaces.Bit_Types.Byte;
+   subtype TXDR_TXDATA_Field is HAL.Byte;
 
    --  Transmit data register
    type TXDR_Register is record
       --  8-bit transmit data
       TXDATA        : TXDR_TXDATA_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

@@ -39,7 +39,7 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
+with HAL; use HAL;
 
 package BMP_Fonts is
 

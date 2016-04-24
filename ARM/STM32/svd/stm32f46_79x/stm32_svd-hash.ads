@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F46_79x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.HASH is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,13 +17,13 @@ package STM32_SVD.HASH is
    -- CR_Register --
    -----------------
 
-   subtype CR_DATATYPE_Field is Interfaces.Bit_Types.UInt2;
-   subtype CR_NBW_Field is Interfaces.Bit_Types.UInt4;
+   subtype CR_DATATYPE_Field is HAL.UInt2;
+   subtype CR_NBW_Field is HAL.UInt4;
 
    --  control register
    type CR_Register is record
       --  unspecified
-      Reserved_0_1   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_0_1   : HAL.UInt2 := 16#0#;
       --  Write-only. Initialize message digest calculation
       INIT           : Boolean := False;
       --  DMA enable
@@ -41,15 +41,15 @@ package STM32_SVD.HASH is
       --  Multiple DMA Transfers
       MDMAT          : Boolean := False;
       --  unspecified
-      Reserved_14_15 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_14_15 : HAL.UInt2 := 16#0#;
       --  Long key selection
       LKEY           : Boolean := False;
       --  unspecified
-      Reserved_17_17 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_17_17 : HAL.Bit := 16#0#;
       --  ALGO
       ALGO1          : Boolean := False;
       --  unspecified
-      Reserved_19_31 : Interfaces.Bit_Types.UInt13 := 16#0#;
+      Reserved_19_31 : HAL.UInt13 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -75,18 +75,18 @@ package STM32_SVD.HASH is
    -- STR_Register --
    ------------------
 
-   subtype STR_NBLW_Field is Interfaces.Bit_Types.UInt5;
+   subtype STR_NBLW_Field is HAL.UInt5;
 
    --  start register
    type STR_Register is record
       --  Number of valid bits in the last word of the message
       NBLW          : STR_NBLW_Field := 16#0#;
       --  unspecified
-      Reserved_5_7  : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_5_7  : HAL.UInt3 := 16#0#;
       --  Write-only. Digest calculation
       DCAL          : Boolean := False;
       --  unspecified
-      Reserved_9_31 : Interfaces.Bit_Types.UInt23 := 16#0#;
+      Reserved_9_31 : HAL.UInt23 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -109,7 +109,7 @@ package STM32_SVD.HASH is
       --  Digest calculation completion interrupt enable
       DCIE          : Boolean := False;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30 := 16#0#;
+      Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -135,7 +135,7 @@ package STM32_SVD.HASH is
       --  Read-only. Busy bit
       BUSY          : Boolean := False;
       --  unspecified
-      Reserved_4_31 : Interfaces.Bit_Types.UInt28 := 16#0#;
+      Reserved_4_31 : HAL.UInt28 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -157,147 +157,147 @@ package STM32_SVD.HASH is
       --  control register
       CR       : CR_Register;
       --  data input register
-      DIN      : Interfaces.Bit_Types.Word;
+      DIN      : HAL.Word;
       --  start register
       STR      : STR_Register;
       --  digest registers
-      HR0      : Interfaces.Bit_Types.Word;
+      HR0      : HAL.Word;
       --  digest registers
-      HR1      : Interfaces.Bit_Types.Word;
+      HR1      : HAL.Word;
       --  digest registers
-      HR2      : Interfaces.Bit_Types.Word;
+      HR2      : HAL.Word;
       --  digest registers
-      HR3      : Interfaces.Bit_Types.Word;
+      HR3      : HAL.Word;
       --  digest registers
-      HR4      : Interfaces.Bit_Types.Word;
+      HR4      : HAL.Word;
       --  interrupt enable register
       IMR      : IMR_Register;
       --  status register
       SR       : SR_Register;
       --  context swap registers
-      CSR0     : Interfaces.Bit_Types.Word;
+      CSR0     : HAL.Word;
       --  context swap registers
-      CSR1     : Interfaces.Bit_Types.Word;
+      CSR1     : HAL.Word;
       --  context swap registers
-      CSR2     : Interfaces.Bit_Types.Word;
+      CSR2     : HAL.Word;
       --  context swap registers
-      CSR3     : Interfaces.Bit_Types.Word;
+      CSR3     : HAL.Word;
       --  context swap registers
-      CSR4     : Interfaces.Bit_Types.Word;
+      CSR4     : HAL.Word;
       --  context swap registers
-      CSR5     : Interfaces.Bit_Types.Word;
+      CSR5     : HAL.Word;
       --  context swap registers
-      CSR6     : Interfaces.Bit_Types.Word;
+      CSR6     : HAL.Word;
       --  context swap registers
-      CSR7     : Interfaces.Bit_Types.Word;
+      CSR7     : HAL.Word;
       --  context swap registers
-      CSR8     : Interfaces.Bit_Types.Word;
+      CSR8     : HAL.Word;
       --  context swap registers
-      CSR9     : Interfaces.Bit_Types.Word;
+      CSR9     : HAL.Word;
       --  context swap registers
-      CSR10    : Interfaces.Bit_Types.Word;
+      CSR10    : HAL.Word;
       --  context swap registers
-      CSR11    : Interfaces.Bit_Types.Word;
+      CSR11    : HAL.Word;
       --  context swap registers
-      CSR12    : Interfaces.Bit_Types.Word;
+      CSR12    : HAL.Word;
       --  context swap registers
-      CSR13    : Interfaces.Bit_Types.Word;
+      CSR13    : HAL.Word;
       --  context swap registers
-      CSR14    : Interfaces.Bit_Types.Word;
+      CSR14    : HAL.Word;
       --  context swap registers
-      CSR15    : Interfaces.Bit_Types.Word;
+      CSR15    : HAL.Word;
       --  context swap registers
-      CSR16    : Interfaces.Bit_Types.Word;
+      CSR16    : HAL.Word;
       --  context swap registers
-      CSR17    : Interfaces.Bit_Types.Word;
+      CSR17    : HAL.Word;
       --  context swap registers
-      CSR18    : Interfaces.Bit_Types.Word;
+      CSR18    : HAL.Word;
       --  context swap registers
-      CSR19    : Interfaces.Bit_Types.Word;
+      CSR19    : HAL.Word;
       --  context swap registers
-      CSR20    : Interfaces.Bit_Types.Word;
+      CSR20    : HAL.Word;
       --  context swap registers
-      CSR21    : Interfaces.Bit_Types.Word;
+      CSR21    : HAL.Word;
       --  context swap registers
-      CSR22    : Interfaces.Bit_Types.Word;
+      CSR22    : HAL.Word;
       --  context swap registers
-      CSR23    : Interfaces.Bit_Types.Word;
+      CSR23    : HAL.Word;
       --  context swap registers
-      CSR24    : Interfaces.Bit_Types.Word;
+      CSR24    : HAL.Word;
       --  context swap registers
-      CSR25    : Interfaces.Bit_Types.Word;
+      CSR25    : HAL.Word;
       --  context swap registers
-      CSR26    : Interfaces.Bit_Types.Word;
+      CSR26    : HAL.Word;
       --  context swap registers
-      CSR27    : Interfaces.Bit_Types.Word;
+      CSR27    : HAL.Word;
       --  context swap registers
-      CSR28    : Interfaces.Bit_Types.Word;
+      CSR28    : HAL.Word;
       --  context swap registers
-      CSR29    : Interfaces.Bit_Types.Word;
+      CSR29    : HAL.Word;
       --  context swap registers
-      CSR30    : Interfaces.Bit_Types.Word;
+      CSR30    : HAL.Word;
       --  context swap registers
-      CSR31    : Interfaces.Bit_Types.Word;
+      CSR31    : HAL.Word;
       --  context swap registers
-      CSR32    : Interfaces.Bit_Types.Word;
+      CSR32    : HAL.Word;
       --  context swap registers
-      CSR33    : Interfaces.Bit_Types.Word;
+      CSR33    : HAL.Word;
       --  context swap registers
-      CSR34    : Interfaces.Bit_Types.Word;
+      CSR34    : HAL.Word;
       --  context swap registers
-      CSR35    : Interfaces.Bit_Types.Word;
+      CSR35    : HAL.Word;
       --  context swap registers
-      CSR36    : Interfaces.Bit_Types.Word;
+      CSR36    : HAL.Word;
       --  context swap registers
-      CSR37    : Interfaces.Bit_Types.Word;
+      CSR37    : HAL.Word;
       --  context swap registers
-      CSR38    : Interfaces.Bit_Types.Word;
+      CSR38    : HAL.Word;
       --  context swap registers
-      CSR39    : Interfaces.Bit_Types.Word;
+      CSR39    : HAL.Word;
       --  context swap registers
-      CSR40    : Interfaces.Bit_Types.Word;
+      CSR40    : HAL.Word;
       --  context swap registers
-      CSR41    : Interfaces.Bit_Types.Word;
+      CSR41    : HAL.Word;
       --  context swap registers
-      CSR42    : Interfaces.Bit_Types.Word;
+      CSR42    : HAL.Word;
       --  context swap registers
-      CSR43    : Interfaces.Bit_Types.Word;
+      CSR43    : HAL.Word;
       --  context swap registers
-      CSR44    : Interfaces.Bit_Types.Word;
+      CSR44    : HAL.Word;
       --  context swap registers
-      CSR45    : Interfaces.Bit_Types.Word;
+      CSR45    : HAL.Word;
       --  context swap registers
-      CSR46    : Interfaces.Bit_Types.Word;
+      CSR46    : HAL.Word;
       --  context swap registers
-      CSR47    : Interfaces.Bit_Types.Word;
+      CSR47    : HAL.Word;
       --  context swap registers
-      CSR48    : Interfaces.Bit_Types.Word;
+      CSR48    : HAL.Word;
       --  context swap registers
-      CSR49    : Interfaces.Bit_Types.Word;
+      CSR49    : HAL.Word;
       --  context swap registers
-      CSR50    : Interfaces.Bit_Types.Word;
+      CSR50    : HAL.Word;
       --  context swap registers
-      CSR51    : Interfaces.Bit_Types.Word;
+      CSR51    : HAL.Word;
       --  context swap registers
-      CSR52    : Interfaces.Bit_Types.Word;
+      CSR52    : HAL.Word;
       --  context swap registers
-      CSR53    : Interfaces.Bit_Types.Word;
+      CSR53    : HAL.Word;
       --  HASH digest register
-      HASH_HR0 : Interfaces.Bit_Types.Word;
+      HASH_HR0 : HAL.Word;
       --  read-only
-      HASH_HR1 : Interfaces.Bit_Types.Word;
+      HASH_HR1 : HAL.Word;
       --  read-only
-      HASH_HR2 : Interfaces.Bit_Types.Word;
+      HASH_HR2 : HAL.Word;
       --  read-only
-      HASH_HR3 : Interfaces.Bit_Types.Word;
+      HASH_HR3 : HAL.Word;
       --  read-only
-      HASH_HR4 : Interfaces.Bit_Types.Word;
+      HASH_HR4 : HAL.Word;
       --  read-only
-      HASH_HR5 : Interfaces.Bit_Types.Word;
+      HASH_HR5 : HAL.Word;
       --  read-only
-      HASH_HR6 : Interfaces.Bit_Types.Word;
+      HASH_HR6 : HAL.Word;
       --  read-only
-      HASH_HR7 : Interfaces.Bit_Types.Word;
+      HASH_HR7 : HAL.Word;
    end record
      with Volatile;
 

@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F46_79x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.FLASH is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,14 +17,14 @@ package STM32_SVD.FLASH is
    -- ACR_Register --
    ------------------
 
-   subtype ACR_LATENCY_Field is Interfaces.Bit_Types.UInt3;
+   subtype ACR_LATENCY_Field is HAL.UInt3;
 
    --  Flash access control register
    type ACR_Register is record
       --  Latency
       LATENCY        : ACR_LATENCY_Field := 16#0#;
       --  unspecified
-      Reserved_3_7   : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_3_7   : HAL.UInt5 := 16#0#;
       --  Prefetch enable
       PRFTEN         : Boolean := False;
       --  Instruction cache enable
@@ -36,7 +36,7 @@ package STM32_SVD.FLASH is
       --  Data cache reset
       DCRST          : Boolean := False;
       --  unspecified
-      Reserved_13_31 : Interfaces.Bit_Types.UInt19 := 16#0#;
+      Reserved_13_31 : HAL.UInt19 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -63,7 +63,7 @@ package STM32_SVD.FLASH is
       --  Operation error
       OPERR          : Boolean := False;
       --  unspecified
-      Reserved_2_3   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_2_3   : HAL.UInt2 := 16#0#;
       --  Write protection error
       WRPERR         : Boolean := False;
       --  Programming alignment error
@@ -75,11 +75,11 @@ package STM32_SVD.FLASH is
       --  Proprietary readout protection (PCROP) error
       RDERR          : Boolean := False;
       --  unspecified
-      Reserved_9_15  : Interfaces.Bit_Types.UInt7 := 16#0#;
+      Reserved_9_15  : HAL.UInt7 := 16#0#;
       --  Read-only. Busy
       BSY            : Boolean := False;
       --  unspecified
-      Reserved_17_31 : Interfaces.Bit_Types.UInt15 := 16#0#;
+      Reserved_17_31 : HAL.UInt15 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -102,8 +102,8 @@ package STM32_SVD.FLASH is
    -- CR_Register --
    -----------------
 
-   subtype CR_SNB_Field is Interfaces.Bit_Types.UInt5;
-   subtype CR_PSIZE_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_SNB_Field is HAL.UInt5;
+   subtype CR_PSIZE_Field is HAL.UInt2;
 
    --  Control register
    type CR_Register is record
@@ -118,19 +118,19 @@ package STM32_SVD.FLASH is
       --  Program size
       PSIZE          : CR_PSIZE_Field := 16#0#;
       --  unspecified
-      Reserved_10_14 : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_10_14 : HAL.UInt5 := 16#0#;
       --  Mass Erase of sectors 12 to 23
       MER1           : Boolean := False;
       --  Start
       STRT           : Boolean := False;
       --  unspecified
-      Reserved_17_23 : Interfaces.Bit_Types.UInt7 := 16#0#;
+      Reserved_17_23 : HAL.UInt7 := 16#0#;
       --  End of operation interrupt enable
       EOPIE          : Boolean := False;
       --  Error interrupt enable
       ERRIE          : Boolean := False;
       --  unspecified
-      Reserved_26_30 : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_26_30 : HAL.UInt5 := 16#0#;
       --  Lock
       LOCK           : Boolean := True;
    end record
@@ -157,9 +157,9 @@ package STM32_SVD.FLASH is
    -- OPTCR_Register --
    --------------------
 
-   subtype OPTCR_BOR_LEV_Field is Interfaces.Bit_Types.UInt2;
-   subtype OPTCR_RDP_Field is Interfaces.Bit_Types.Byte;
-   subtype OPTCR_nWRP_Field is Interfaces.Bit_Types.UInt12;
+   subtype OPTCR_BOR_LEV_Field is HAL.UInt2;
+   subtype OPTCR_RDP_Field is HAL.Byte;
+   subtype OPTCR_nWRP_Field is HAL.UInt12;
 
    --  Flash option control register
    type OPTCR_Register is record
@@ -182,7 +182,7 @@ package STM32_SVD.FLASH is
       --  Not write protect
       nWRP           : OPTCR_nWRP_Field := 16#FFF#;
       --  unspecified
-      Reserved_28_29 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_28_29 : HAL.UInt2 := 16#0#;
       --  Dual-bank on 1 Mbyte Flash memory devices
       DB1M           : Boolean := False;
       --  Selection of protection mode for nWPRi bits
@@ -210,16 +210,16 @@ package STM32_SVD.FLASH is
    -- OPTCR1_Register --
    ---------------------
 
-   subtype OPTCR1_nWRP_Field is Interfaces.Bit_Types.UInt12;
+   subtype OPTCR1_nWRP_Field is HAL.UInt12;
 
    --  Flash option control register 1
    type OPTCR1_Register is record
       --  unspecified
-      Reserved_0_15  : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_0_15  : HAL.Short := 16#0#;
       --  Not write protect
       nWRP           : OPTCR1_nWRP_Field := 16#FFF#;
       --  unspecified
-      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_28_31 : HAL.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -239,9 +239,9 @@ package STM32_SVD.FLASH is
       --  Flash access control register
       ACR     : ACR_Register;
       --  Flash key register
-      KEYR    : Interfaces.Bit_Types.Word;
+      KEYR    : HAL.Word;
       --  Flash option key register
-      OPTKEYR : Interfaces.Bit_Types.Word;
+      OPTKEYR : HAL.Word;
       --  Status register
       SR      : SR_Register;
       --  Control register

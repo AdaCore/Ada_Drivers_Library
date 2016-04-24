@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F46_79x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.CRYP is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,15 +17,15 @@ package STM32_SVD.CRYP is
    -- CR_Register --
    -----------------
 
-   subtype CR_ALGOMODE0_Field is Interfaces.Bit_Types.UInt3;
-   subtype CR_DATATYPE_Field is Interfaces.Bit_Types.UInt2;
-   subtype CR_KEYSIZE_Field is Interfaces.Bit_Types.UInt2;
-   subtype CR_GCM_CCMPH_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_ALGOMODE0_Field is HAL.UInt3;
+   subtype CR_DATATYPE_Field is HAL.UInt2;
+   subtype CR_KEYSIZE_Field is HAL.UInt2;
+   subtype CR_GCM_CCMPH_Field is HAL.UInt2;
 
    --  control register
    type CR_Register is record
       --  unspecified
-      Reserved_0_1   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_0_1   : HAL.UInt2 := 16#0#;
       --  Algorithm direction
       ALGODIR        : Boolean := False;
       --  Algorithm mode
@@ -35,7 +35,7 @@ package STM32_SVD.CRYP is
       --  Key size selection (AES mode only)
       KEYSIZE        : CR_KEYSIZE_Field := 16#0#;
       --  unspecified
-      Reserved_10_13 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_10_13 : HAL.UInt4 := 16#0#;
       --  Write-only. FIFO flush
       FFLUSH         : Boolean := False;
       --  Cryptographic processor enable
@@ -43,11 +43,11 @@ package STM32_SVD.CRYP is
       --  GCM_CCMPH
       GCM_CCMPH      : CR_GCM_CCMPH_Field := 16#0#;
       --  unspecified
-      Reserved_18_18 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_18_18 : HAL.Bit := 16#0#;
       --  ALGOMODE
       ALGOMODE3      : Boolean := False;
       --  unspecified
-      Reserved_20_31 : Interfaces.Bit_Types.UInt12 := 16#0#;
+      Reserved_20_31 : HAL.UInt12 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -84,7 +84,7 @@ package STM32_SVD.CRYP is
       --  Read-only. Busy bit
       BUSY          : Boolean := False;
       --  unspecified
-      Reserved_5_31 : Interfaces.Bit_Types.UInt27;
+      Reserved_5_31 : HAL.UInt27;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -109,7 +109,7 @@ package STM32_SVD.CRYP is
       --  DMA output enable
       DOEN          : Boolean := False;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30 := 16#0#;
+      Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -131,7 +131,7 @@ package STM32_SVD.CRYP is
       --  Output FIFO service interrupt mask
       OUTIM         : Boolean := False;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30 := 16#0#;
+      Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -153,7 +153,7 @@ package STM32_SVD.CRYP is
       --  Read-only. Output FIFO service raw interrupt status
       OUTRIS        : Boolean := False;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30;
+      Reserved_2_31 : HAL.UInt30;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -175,7 +175,7 @@ package STM32_SVD.CRYP is
       --  Read-only. Output FIFO service masked interrupt status
       OUTMIS        : Boolean := False;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30;
+      Reserved_2_31 : HAL.UInt30;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -201,7 +201,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  b as an array
             Arr : K0LR_b_Field_Array;
@@ -230,7 +230,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  b as an array
             Arr : K0RR_b_Field_Array;
@@ -259,7 +259,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  b as an array
             Arr : K1LR_b_Field_Array;
@@ -288,7 +288,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  b as an array
             Arr : K1RR_b_Field_Array;
@@ -317,7 +317,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  b as an array
             Arr : K2LR_b_Field_Array;
@@ -346,7 +346,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  b as an array
             Arr : K2RR_b_Field_Array;
@@ -375,7 +375,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  b as an array
             Arr : K3LR_b_Field_Array;
@@ -404,7 +404,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  b as an array
             Arr : K3RR_b_Field_Array;
@@ -433,7 +433,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  IV as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  IV as an array
             Arr : IV0LR_IV_Field_Array;
@@ -462,7 +462,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  IV as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  IV as an array
             Arr : IV0RR_IV_Field_Array;
@@ -491,7 +491,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  IV as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  IV as an array
             Arr : IV1LR_IV_Field_Array;
@@ -520,7 +520,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  IV as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  IV as an array
             Arr : IV1RR_IV_Field_Array;
@@ -545,9 +545,9 @@ package STM32_SVD.CRYP is
       --  status register
       SR         : SR_Register;
       --  data input register
-      DIN        : Interfaces.Bit_Types.Word;
+      DIN        : HAL.Word;
       --  data output register
-      DOUT       : Interfaces.Bit_Types.Word;
+      DOUT       : HAL.Word;
       --  DMA control register
       DMACR      : DMACR_Register;
       --  interrupt mask set/clear register
@@ -581,37 +581,37 @@ package STM32_SVD.CRYP is
       --  initialization vector registers
       IV1RR      : IV1RR_Register;
       --  context swap register
-      CSGCMCCM0R : Interfaces.Bit_Types.Word;
+      CSGCMCCM0R : HAL.Word;
       --  context swap register
-      CSGCMCCM1R : Interfaces.Bit_Types.Word;
+      CSGCMCCM1R : HAL.Word;
       --  context swap register
-      CSGCMCCM2R : Interfaces.Bit_Types.Word;
+      CSGCMCCM2R : HAL.Word;
       --  context swap register
-      CSGCMCCM3R : Interfaces.Bit_Types.Word;
+      CSGCMCCM3R : HAL.Word;
       --  context swap register
-      CSGCMCCM4R : Interfaces.Bit_Types.Word;
+      CSGCMCCM4R : HAL.Word;
       --  context swap register
-      CSGCMCCM5R : Interfaces.Bit_Types.Word;
+      CSGCMCCM5R : HAL.Word;
       --  context swap register
-      CSGCMCCM6R : Interfaces.Bit_Types.Word;
+      CSGCMCCM6R : HAL.Word;
       --  context swap register
-      CSGCMCCM7R : Interfaces.Bit_Types.Word;
+      CSGCMCCM7R : HAL.Word;
       --  context swap register
-      CSGCM0R    : Interfaces.Bit_Types.Word;
+      CSGCM0R    : HAL.Word;
       --  context swap register
-      CSGCM1R    : Interfaces.Bit_Types.Word;
+      CSGCM1R    : HAL.Word;
       --  context swap register
-      CSGCM2R    : Interfaces.Bit_Types.Word;
+      CSGCM2R    : HAL.Word;
       --  context swap register
-      CSGCM3R    : Interfaces.Bit_Types.Word;
+      CSGCM3R    : HAL.Word;
       --  context swap register
-      CSGCM4R    : Interfaces.Bit_Types.Word;
+      CSGCM4R    : HAL.Word;
       --  context swap register
-      CSGCM5R    : Interfaces.Bit_Types.Word;
+      CSGCM5R    : HAL.Word;
       --  context swap register
-      CSGCM6R    : Interfaces.Bit_Types.Word;
+      CSGCM6R    : HAL.Word;
       --  context swap register
-      CSGCM7R    : Interfaces.Bit_Types.Word;
+      CSGCM7R    : HAL.Word;
    end record
      with Volatile;
 

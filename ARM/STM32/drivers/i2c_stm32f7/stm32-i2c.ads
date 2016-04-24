@@ -53,7 +53,7 @@ package STM32.I2C is
       Clock_Stretching_Enabled : Boolean := True;
    end record;
 
-   subtype I2C_Address is Interfaces.Bit_Types.UInt10;
+   subtype I2C_Address is UInt10;
 
    I2C_Timeout : exception;
    I2C_Error   : exception;

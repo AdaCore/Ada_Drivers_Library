@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F7x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.USB_OTG_HS is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -24,7 +24,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Session request
       SRQ            : Boolean := False;
       --  unspecified
-      Reserved_2_7   : Interfaces.Bit_Types.UInt6 := 16#0#;
+      Reserved_2_7   : HAL.UInt6 := 16#0#;
       --  Read-only. Host negotiation success
       HNGSCS         : Boolean := False;
       --  HNP request
@@ -36,7 +36,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Embedded host enable
       EHEN           : Boolean := False;
       --  unspecified
-      Reserved_13_15 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_13_15 : HAL.UInt3 := 16#0#;
       --  Read-only. Connector ID status
       CIDSTS         : Boolean := False;
       --  Read-only. Long/short debounce time
@@ -46,7 +46,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Read-only. B-session valid
       BSVLD          : Boolean := False;
       --  unspecified
-      Reserved_20_31 : Interfaces.Bit_Types.UInt12 := 16#0#;
+      Reserved_20_31 : HAL.UInt12 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -75,17 +75,17 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS interrupt register
    type OTG_HS_GOTGINT_Register is record
       --  unspecified
-      Reserved_0_1   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_0_1   : HAL.UInt2 := 16#0#;
       --  Session end detected
       SEDET          : Boolean := False;
       --  unspecified
-      Reserved_3_7   : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_3_7   : HAL.UInt5 := 16#0#;
       --  Session request success status change
       SRSSCHG        : Boolean := False;
       --  Host negotiation success status change
       HNSSCHG        : Boolean := False;
       --  unspecified
-      Reserved_10_16 : Interfaces.Bit_Types.UInt7 := 16#0#;
+      Reserved_10_16 : HAL.UInt7 := 16#0#;
       --  Host negotiation detected
       HNGDET         : Boolean := False;
       --  A-device timeout change
@@ -95,7 +95,7 @@ package STM32_SVD.USB_OTG_HS is
       --  ID input pin changed
       IDCHNG         : Boolean := False;
       --  unspecified
-      Reserved_21_31 : Interfaces.Bit_Types.UInt11 := 16#0#;
+      Reserved_21_31 : HAL.UInt11 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -118,7 +118,7 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_GAHBCFG_Register --
    -----------------------------
 
-   subtype OTG_HS_GAHBCFG_HBSTLEN_Field is Interfaces.Bit_Types.UInt4;
+   subtype OTG_HS_GAHBCFG_HBSTLEN_Field is HAL.UInt4;
 
    --  OTG_HS AHB configuration register
    type OTG_HS_GAHBCFG_Register is record
@@ -129,13 +129,13 @@ package STM32_SVD.USB_OTG_HS is
       --  DMA enable
       DMAEN         : Boolean := False;
       --  unspecified
-      Reserved_6_6  : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_6_6  : HAL.Bit := 16#0#;
       --  TxFIFO empty level
       TXFELVL       : Boolean := False;
       --  Periodic TxFIFO empty level
       PTXFELVL      : Boolean := False;
       --  unspecified
-      Reserved_9_31 : Interfaces.Bit_Types.UInt23 := 16#0#;
+      Reserved_9_31 : HAL.UInt23 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -154,20 +154,20 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_GUSBCFG_Register --
    -----------------------------
 
-   subtype OTG_HS_GUSBCFG_TOCAL_Field is Interfaces.Bit_Types.UInt3;
-   subtype OTG_HS_GUSBCFG_TRDT_Field is Interfaces.Bit_Types.UInt4;
+   subtype OTG_HS_GUSBCFG_TOCAL_Field is HAL.UInt3;
+   subtype OTG_HS_GUSBCFG_TRDT_Field is HAL.UInt4;
 
    --  OTG_HS USB configuration register
    type OTG_HS_GUSBCFG_Register is record
       --  FS timeout calibration
       TOCAL          : OTG_HS_GUSBCFG_TOCAL_Field := 16#0#;
       --  unspecified
-      Reserved_3_5   : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_3_5   : HAL.UInt3 := 16#0#;
       --  Write-only. USB 2.0 high-speed ULPI PHY or USB 1.1 full-speed serial
       --  transceiver select
       PHYSEL         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  SRP-capable
       SRPCAP         : Boolean := False;
       --  HNP-capable
@@ -175,11 +175,11 @@ package STM32_SVD.USB_OTG_HS is
       --  USB turnaround time
       TRDT           : OTG_HS_GUSBCFG_TRDT_Field := 16#2#;
       --  unspecified
-      Reserved_14_14 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_14_14 : HAL.Bit := 16#0#;
       --  PHY Low-power clock select
       PHYLPCS        : Boolean := False;
       --  unspecified
-      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  ULPI FS/LS select
       ULPIFSLS       : Boolean := False;
       --  ULPI Auto-resume
@@ -199,13 +199,13 @@ package STM32_SVD.USB_OTG_HS is
       --  ULPI interface protect disable
       ULPIIPD        : Boolean := False;
       --  unspecified
-      Reserved_26_28 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_26_28 : HAL.UInt3 := 16#0#;
       --  Forced host mode
       FHMOD          : Boolean := False;
       --  Forced peripheral mode
       FDMOD          : Boolean := False;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -240,7 +240,7 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_GRSTCTL_Register --
    -----------------------------
 
-   subtype OTG_HS_GRSTCTL_TXFNUM_Field is Interfaces.Bit_Types.UInt5;
+   subtype OTG_HS_GRSTCTL_TXFNUM_Field is HAL.UInt5;
 
    --  OTG_HS reset register
    type OTG_HS_GRSTCTL_Register is record
@@ -251,7 +251,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Host frame counter reset
       FCRST          : Boolean := False;
       --  unspecified
-      Reserved_3_3   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_3_3   : HAL.Bit := 16#0#;
       --  RxFIFO flush
       RXFFLSH        : Boolean := False;
       --  TxFIFO flush
@@ -259,7 +259,7 @@ package STM32_SVD.USB_OTG_HS is
       --  TxFIFO number
       TXFNUM         : OTG_HS_GRSTCTL_TXFNUM_Field := 16#0#;
       --  unspecified
-      Reserved_11_29 : Interfaces.Bit_Types.UInt19 := 16#40000#;
+      Reserved_11_29 : HAL.UInt19 := 16#40000#;
       --  Read-only. DMA request signal enabled for USB OTG HS
       DMAREQ         : Boolean := False;
       --  Read-only. AHB master idle
@@ -304,7 +304,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Read-only. Global OUT NAK effective
       BOUTNAKEFF        : Boolean := False;
       --  unspecified
-      Reserved_8_9      : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_8_9      : HAL.UInt2 := 16#0#;
       --  Early suspend
       ESUSP             : Boolean := False;
       --  USB suspend
@@ -318,7 +318,7 @@ package STM32_SVD.USB_OTG_HS is
       --  End of periodic frame interrupt
       EOPF              : Boolean := False;
       --  unspecified
-      Reserved_16_17    : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_16_17    : HAL.UInt2 := 16#0#;
       --  Read-only. IN endpoint interrupt
       IEPINT            : Boolean := False;
       --  Read-only. OUT endpoint interrupt
@@ -330,7 +330,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Data fetch suspended
       DATAFSUSP         : Boolean := False;
       --  unspecified
-      Reserved_23_23    : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_23_23    : HAL.Bit := 16#0#;
       --  Read-only. Host port interrupt
       HPRTINT           : Boolean := False;
       --  Read-only. Host channels interrupt
@@ -338,7 +338,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Read-only. Periodic TxFIFO empty
       PTXFE             : Boolean := True;
       --  unspecified
-      Reserved_27_27    : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_27_27    : HAL.Bit := 16#0#;
       --  Connector ID status change
       CIDSCHG           : Boolean := False;
       --  Disconnect detected interrupt
@@ -391,7 +391,7 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS interrupt mask register
    type OTG_HS_GINTMSK_Register is record
       --  unspecified
-      Reserved_0_0    : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_0_0    : HAL.Bit := 16#0#;
       --  Mode mismatch interrupt mask
       MMISM           : Boolean := False;
       --  OTG interrupt mask
@@ -407,7 +407,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Global OUT NAK effective mask
       GONAKEFFM       : Boolean := False;
       --  unspecified
-      Reserved_8_9    : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_8_9    : HAL.UInt2 := 16#0#;
       --  Early suspend mask
       ESUSPM          : Boolean := False;
       --  USB suspend mask
@@ -421,7 +421,7 @@ package STM32_SVD.USB_OTG_HS is
       --  End of periodic frame interrupt mask
       EOPFM           : Boolean := False;
       --  unspecified
-      Reserved_16_17  : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_16_17  : HAL.UInt2 := 16#0#;
       --  IN endpoints interrupt mask
       IEPINT          : Boolean := False;
       --  OUT endpoints interrupt mask
@@ -491,10 +491,10 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_GRXSTSR_Host_Register --
    ----------------------------------
 
-   subtype OTG_HS_GRXSTSR_Host_CHNUM_Field is Interfaces.Bit_Types.UInt4;
-   subtype OTG_HS_GRXSTSR_Host_BCNT_Field is Interfaces.Bit_Types.UInt11;
-   subtype OTG_HS_GRXSTSR_Host_DPID_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_GRXSTSR_Host_PKTSTS_Field is Interfaces.Bit_Types.UInt4;
+   subtype OTG_HS_GRXSTSR_Host_CHNUM_Field is HAL.UInt4;
+   subtype OTG_HS_GRXSTSR_Host_BCNT_Field is HAL.UInt11;
+   subtype OTG_HS_GRXSTSR_Host_DPID_Field is HAL.UInt2;
+   subtype OTG_HS_GRXSTSR_Host_PKTSTS_Field is HAL.UInt4;
 
    --  OTG_HS Receive status debug read register (host mode)
    type OTG_HS_GRXSTSR_Host_Register is record
@@ -507,7 +507,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Read-only. Packet status
       PKTSTS         : OTG_HS_GRXSTSR_Host_PKTSTS_Field := 16#0#;
       --  unspecified
-      Reserved_21_31 : Interfaces.Bit_Types.UInt11;
+      Reserved_21_31 : HAL.UInt11;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -524,11 +524,11 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_GRXSTSR_Device_Register --
    ------------------------------------
 
-   subtype OTG_HS_GRXSTSR_Device_EPNUM_Field is Interfaces.Bit_Types.UInt4;
-   subtype OTG_HS_GRXSTSR_Device_BCNT_Field is Interfaces.Bit_Types.UInt11;
-   subtype OTG_HS_GRXSTSR_Device_DPID_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_GRXSTSR_Device_PKTSTS_Field is Interfaces.Bit_Types.UInt4;
-   subtype OTG_HS_GRXSTSR_Device_FRMNUM_Field is Interfaces.Bit_Types.UInt4;
+   subtype OTG_HS_GRXSTSR_Device_EPNUM_Field is HAL.UInt4;
+   subtype OTG_HS_GRXSTSR_Device_BCNT_Field is HAL.UInt11;
+   subtype OTG_HS_GRXSTSR_Device_DPID_Field is HAL.UInt2;
+   subtype OTG_HS_GRXSTSR_Device_PKTSTS_Field is HAL.UInt4;
+   subtype OTG_HS_GRXSTSR_Device_FRMNUM_Field is HAL.UInt4;
 
    --  OTG_HS Receive status debug read register (peripheral mode mode)
    type OTG_HS_GRXSTSR_Device_Register is record
@@ -543,7 +543,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Read-only. Frame number
       FRMNUM         : OTG_HS_GRXSTSR_Device_FRMNUM_Field := 16#0#;
       --  unspecified
-      Reserved_25_31 : Interfaces.Bit_Types.UInt7;
+      Reserved_25_31 : HAL.UInt7;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -561,10 +561,10 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_GRXSTSP_Host_Register --
    ----------------------------------
 
-   subtype OTG_HS_GRXSTSP_Host_CHNUM_Field is Interfaces.Bit_Types.UInt4;
-   subtype OTG_HS_GRXSTSP_Host_BCNT_Field is Interfaces.Bit_Types.UInt11;
-   subtype OTG_HS_GRXSTSP_Host_DPID_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_GRXSTSP_Host_PKTSTS_Field is Interfaces.Bit_Types.UInt4;
+   subtype OTG_HS_GRXSTSP_Host_CHNUM_Field is HAL.UInt4;
+   subtype OTG_HS_GRXSTSP_Host_BCNT_Field is HAL.UInt11;
+   subtype OTG_HS_GRXSTSP_Host_DPID_Field is HAL.UInt2;
+   subtype OTG_HS_GRXSTSP_Host_PKTSTS_Field is HAL.UInt4;
 
    --  OTG_HS status read and pop register (host mode)
    type OTG_HS_GRXSTSP_Host_Register is record
@@ -577,7 +577,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Read-only. Packet status
       PKTSTS         : OTG_HS_GRXSTSP_Host_PKTSTS_Field := 16#0#;
       --  unspecified
-      Reserved_21_31 : Interfaces.Bit_Types.UInt11;
+      Reserved_21_31 : HAL.UInt11;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -594,11 +594,11 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_GRXSTSP_Device_Register --
    ------------------------------------
 
-   subtype OTG_HS_GRXSTSP_Device_EPNUM_Field is Interfaces.Bit_Types.UInt4;
-   subtype OTG_HS_GRXSTSP_Device_BCNT_Field is Interfaces.Bit_Types.UInt11;
-   subtype OTG_HS_GRXSTSP_Device_DPID_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_GRXSTSP_Device_PKTSTS_Field is Interfaces.Bit_Types.UInt4;
-   subtype OTG_HS_GRXSTSP_Device_FRMNUM_Field is Interfaces.Bit_Types.UInt4;
+   subtype OTG_HS_GRXSTSP_Device_EPNUM_Field is HAL.UInt4;
+   subtype OTG_HS_GRXSTSP_Device_BCNT_Field is HAL.UInt11;
+   subtype OTG_HS_GRXSTSP_Device_DPID_Field is HAL.UInt2;
+   subtype OTG_HS_GRXSTSP_Device_PKTSTS_Field is HAL.UInt4;
+   subtype OTG_HS_GRXSTSP_Device_FRMNUM_Field is HAL.UInt4;
 
    --  OTG_HS status read and pop register (peripheral mode)
    type OTG_HS_GRXSTSP_Device_Register is record
@@ -613,7 +613,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Read-only. Frame number
       FRMNUM         : OTG_HS_GRXSTSP_Device_FRMNUM_Field := 16#0#;
       --  unspecified
-      Reserved_25_31 : Interfaces.Bit_Types.UInt7;
+      Reserved_25_31 : HAL.UInt7;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -631,14 +631,14 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_GRXFSIZ_Register --
    -----------------------------
 
-   subtype OTG_HS_GRXFSIZ_RXFD_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_GRXFSIZ_RXFD_Field is HAL.Short;
 
    --  OTG_HS Receive FIFO size register
    type OTG_HS_GRXFSIZ_Register is record
       --  RxFIFO depth
       RXFD           : OTG_HS_GRXFSIZ_RXFD_Field := 16#200#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -652,8 +652,8 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_HNPTXFSIZ_Host_Register --
    ------------------------------------
 
-   subtype OTG_HS_HNPTXFSIZ_Host_NPTXFSA_Field is Interfaces.Bit_Types.Short;
-   subtype OTG_HS_HNPTXFSIZ_Host_NPTXFD_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_HNPTXFSIZ_Host_NPTXFSA_Field is HAL.Short;
+   subtype OTG_HS_HNPTXFSIZ_Host_NPTXFD_Field is HAL.Short;
 
    --  OTG_HS nonperiodic transmit FIFO size register (host mode)
    type OTG_HS_HNPTXFSIZ_Host_Register is record
@@ -674,8 +674,8 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DIEPTXF0_Device_Register --
    -------------------------------------
 
-   subtype OTG_HS_DIEPTXF0_Device_TX0FSA_Field is Interfaces.Bit_Types.Short;
-   subtype OTG_HS_DIEPTXF0_Device_TX0FD_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_DIEPTXF0_Device_TX0FSA_Field is HAL.Short;
+   subtype OTG_HS_DIEPTXF0_Device_TX0FD_Field is HAL.Short;
 
    --  Endpoint 0 transmit FIFO size (peripheral mode)
    type OTG_HS_DIEPTXF0_Device_Register is record
@@ -696,9 +696,9 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_GNPTXSTS_Register --
    ------------------------------
 
-   subtype OTG_HS_GNPTXSTS_NPTXFSAV_Field is Interfaces.Bit_Types.Short;
-   subtype OTG_HS_GNPTXSTS_NPTQXSAV_Field is Interfaces.Bit_Types.Byte;
-   subtype OTG_HS_GNPTXSTS_NPTXQTOP_Field is Interfaces.Bit_Types.UInt7;
+   subtype OTG_HS_GNPTXSTS_NPTXFSAV_Field is HAL.Short;
+   subtype OTG_HS_GNPTXSTS_NPTQXSAV_Field is HAL.Byte;
+   subtype OTG_HS_GNPTXSTS_NPTXQTOP_Field is HAL.UInt7;
 
    --  OTG_HS nonperiodic transmit FIFO/queue status register
    type OTG_HS_GNPTXSTS_Register is record
@@ -709,7 +709,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Read-only. Top of the nonperiodic transmit request queue
       NPTXQTOP       : OTG_HS_GNPTXSTS_NPTXQTOP_Field := 16#0#;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit;
+      Reserved_31_31 : HAL.Bit;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -736,7 +736,7 @@ package STM32_SVD.USB_OTG_HS is
       --  DM pull-up detection status
       PS2DET         : Boolean := False;
       --  unspecified
-      Reserved_4_15  : Interfaces.Bit_Types.UInt12 := 16#0#;
+      Reserved_4_15  : HAL.UInt12 := 16#0#;
       --  Power down
       PWRDWN         : Boolean := False;
       --  Battery charging detector (BCD) enable
@@ -750,7 +750,7 @@ package STM32_SVD.USB_OTG_HS is
       --  USB VBUS detection enable
       VBDEN          : Boolean := False;
       --  unspecified
-      Reserved_22_31 : Interfaces.Bit_Types.UInt10 := 16#0#;
+      Reserved_22_31 : HAL.UInt10 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -774,12 +774,12 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_GLPMCFG_Register --
    -----------------------------
 
-   subtype OTG_HS_GLPMCFG_BESL_Field is Interfaces.Bit_Types.UInt4;
-   subtype OTG_HS_GLPMCFG_BESLTHRS_Field is Interfaces.Bit_Types.UInt4;
-   subtype OTG_HS_GLPMCFG_LPMRST_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_GLPMCFG_LPMCHIDX_Field is Interfaces.Bit_Types.UInt4;
-   subtype OTG_HS_GLPMCFG_LPMRCNT_Field is Interfaces.Bit_Types.UInt3;
-   subtype OTG_HS_GLPMCFG_LPMRCNTSTS_Field is Interfaces.Bit_Types.UInt3;
+   subtype OTG_HS_GLPMCFG_BESL_Field is HAL.UInt4;
+   subtype OTG_HS_GLPMCFG_BESLTHRS_Field is HAL.UInt4;
+   subtype OTG_HS_GLPMCFG_LPMRST_Field is HAL.UInt2;
+   subtype OTG_HS_GLPMCFG_LPMCHIDX_Field is HAL.UInt4;
+   subtype OTG_HS_GLPMCFG_LPMRCNT_Field is HAL.UInt3;
+   subtype OTG_HS_GLPMCFG_LPMRCNTSTS_Field is HAL.UInt3;
 
    --  OTG core LPM configuration register
    type OTG_HS_GLPMCFG_Register is record
@@ -814,7 +814,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Enable best effort service latency
       ENBESL         : Boolean := False;
       --  unspecified
-      Reserved_29_31 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_29_31 : HAL.UInt3 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -842,8 +842,8 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_HPTXFSIZ_Register --
    ------------------------------
 
-   subtype OTG_HS_HPTXFSIZ_PTXSA_Field is Interfaces.Bit_Types.Short;
-   subtype OTG_HS_HPTXFSIZ_PTXFD_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_HPTXFSIZ_PTXSA_Field is HAL.Short;
+   subtype OTG_HS_HPTXFSIZ_PTXFD_Field is HAL.Short;
 
    --  OTG_HS Host periodic transmit FIFO size register
    type OTG_HS_HPTXFSIZ_Register is record
@@ -864,8 +864,8 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DIEPTXF_Register --
    -----------------------------
 
-   subtype OTG_HS_DIEPTXF1_INEPTXSA_Field is Interfaces.Bit_Types.Short;
-   subtype OTG_HS_DIEPTXF1_INEPTXFD_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_DIEPTXF1_INEPTXSA_Field is HAL.Short;
+   subtype OTG_HS_DIEPTXF1_INEPTXFD_Field is HAL.Short;
 
    --  OTG_HS device IN endpoint transmit FIFO size register
    type OTG_HS_DIEPTXF_Register is record
@@ -886,7 +886,7 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_HCFG_Register --
    --------------------------
 
-   subtype OTG_HS_HCFG_FSLSPCS_Field is Interfaces.Bit_Types.UInt2;
+   subtype OTG_HS_HCFG_FSLSPCS_Field is HAL.UInt2;
 
    --  OTG_HS host configuration register
    type OTG_HS_HCFG_Register is record
@@ -895,7 +895,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Read-only. FS- and LS-only support
       FSLSS         : Boolean := False;
       --  unspecified
-      Reserved_3_31 : Interfaces.Bit_Types.UInt29 := 16#0#;
+      Reserved_3_31 : HAL.UInt29 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -910,14 +910,14 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_HFIR_Register --
    --------------------------
 
-   subtype OTG_HS_HFIR_FRIVL_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_HFIR_FRIVL_Field is HAL.Short;
 
    --  OTG_HS Host frame interval register
    type OTG_HS_HFIR_Register is record
       --  Frame interval
       FRIVL          : OTG_HS_HFIR_FRIVL_Field := 16#EA60#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -931,8 +931,8 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_HFNUM_Register --
    ---------------------------
 
-   subtype OTG_HS_HFNUM_FRNUM_Field is Interfaces.Bit_Types.Short;
-   subtype OTG_HS_HFNUM_FTREM_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_HFNUM_FRNUM_Field is HAL.Short;
+   subtype OTG_HS_HFNUM_FTREM_Field is HAL.Short;
 
    --  OTG_HS host frame number/frame time remaining register
    type OTG_HS_HFNUM_Register is record
@@ -953,9 +953,9 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_HPTXSTS_Register --
    -----------------------------
 
-   subtype OTG_HS_HPTXSTS_PTXFSAVL_Field is Interfaces.Bit_Types.Short;
-   subtype OTG_HS_HPTXSTS_PTXQSAV_Field is Interfaces.Bit_Types.Byte;
-   subtype OTG_HS_HPTXSTS_PTXQTOP_Field is Interfaces.Bit_Types.Byte;
+   subtype OTG_HS_HPTXSTS_PTXFSAVL_Field is HAL.Short;
+   subtype OTG_HS_HPTXSTS_PTXQSAV_Field is HAL.Byte;
+   subtype OTG_HS_HPTXSTS_PTXQTOP_Field is HAL.Byte;
 
    --  OTG_HS_Host periodic transmit FIFO/queue status register
    type OTG_HS_HPTXSTS_Register is record
@@ -979,14 +979,14 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_HAINT_Register --
    ---------------------------
 
-   subtype OTG_HS_HAINT_HAINT_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_HAINT_HAINT_Field is HAL.Short;
 
    --  OTG_HS Host all channels interrupt register
    type OTG_HS_HAINT_Register is record
       --  Read-only. Channel interrupts
       HAINT          : OTG_HS_HAINT_HAINT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short;
+      Reserved_16_31 : HAL.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1000,14 +1000,14 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_HAINTMSK_Register --
    ------------------------------
 
-   subtype OTG_HS_HAINTMSK_HAINTM_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_HAINTMSK_HAINTM_Field is HAL.Short;
 
    --  OTG_HS host all channels interrupt mask register
    type OTG_HS_HAINTMSK_Register is record
       --  Channel interrupt mask
       HAINTM         : OTG_HS_HAINTMSK_HAINTM_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1021,9 +1021,9 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_HPRT_Register --
    --------------------------
 
-   subtype OTG_HS_HPRT_PLSTS_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_HPRT_PTCTL_Field is Interfaces.Bit_Types.UInt4;
-   subtype OTG_HS_HPRT_PSPD_Field is Interfaces.Bit_Types.UInt2;
+   subtype OTG_HS_HPRT_PLSTS_Field is HAL.UInt2;
+   subtype OTG_HS_HPRT_PTCTL_Field is HAL.UInt4;
+   subtype OTG_HS_HPRT_PSPD_Field is HAL.UInt2;
 
    --  OTG_HS host port control and status register
    type OTG_HS_HPRT_Register is record
@@ -1046,7 +1046,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Port reset
       PRST           : Boolean := False;
       --  unspecified
-      Reserved_9_9   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_9_9   : HAL.Bit := 16#0#;
       --  Read-only. Port line status
       PLSTS          : OTG_HS_HPRT_PLSTS_Field := 16#0#;
       --  Port power
@@ -1056,7 +1056,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Read-only. Port speed
       PSPD           : OTG_HS_HPRT_PSPD_Field := 16#0#;
       --  unspecified
-      Reserved_19_31 : Interfaces.Bit_Types.UInt13 := 16#0#;
+      Reserved_19_31 : HAL.UInt13 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1083,11 +1083,11 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_HCCHAR_Register --
    ----------------------------
 
-   subtype OTG_HS_HCCHAR0_MPSIZ_Field is Interfaces.Bit_Types.UInt11;
-   subtype OTG_HS_HCCHAR0_EPNUM_Field is Interfaces.Bit_Types.UInt4;
-   subtype OTG_HS_HCCHAR0_EPTYP_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_HCCHAR0_MC_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_HCCHAR0_DAD_Field is Interfaces.Bit_Types.UInt7;
+   subtype OTG_HS_HCCHAR0_MPSIZ_Field is HAL.UInt11;
+   subtype OTG_HS_HCCHAR0_EPNUM_Field is HAL.UInt4;
+   subtype OTG_HS_HCCHAR0_EPTYP_Field is HAL.UInt2;
+   subtype OTG_HS_HCCHAR0_MC_Field is HAL.UInt2;
+   subtype OTG_HS_HCCHAR0_DAD_Field is HAL.UInt7;
 
    --  OTG_HS host channel-0 characteristics register
    type OTG_HS_HCCHAR_Register is record
@@ -1098,7 +1098,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Endpoint direction
       EPDIR          : Boolean := False;
       --  unspecified
-      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  Low-speed device
       LSDEV          : Boolean := False;
       --  Endpoint type
@@ -1135,9 +1135,9 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_HCSPLT_Register --
    ----------------------------
 
-   subtype OTG_HS_HCSPLT0_PRTADDR_Field is Interfaces.Bit_Types.UInt7;
-   subtype OTG_HS_HCSPLT0_HUBADDR_Field is Interfaces.Bit_Types.UInt7;
-   subtype OTG_HS_HCSPLT0_XACTPOS_Field is Interfaces.Bit_Types.UInt2;
+   subtype OTG_HS_HCSPLT0_PRTADDR_Field is HAL.UInt7;
+   subtype OTG_HS_HCSPLT0_HUBADDR_Field is HAL.UInt7;
+   subtype OTG_HS_HCSPLT0_XACTPOS_Field is HAL.UInt2;
 
    --  OTG_HS host channel-0 split control register
    type OTG_HS_HCSPLT_Register is record
@@ -1150,7 +1150,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Do complete split
       COMPLSPLT      : Boolean := False;
       --  unspecified
-      Reserved_17_30 : Interfaces.Bit_Types.UInt14 := 16#0#;
+      Reserved_17_30 : HAL.UInt14 := 16#0#;
       --  Split enable
       SPLITEN        : Boolean := False;
    end record
@@ -1195,7 +1195,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Data toggle error
       DTERR          : Boolean := False;
       --  unspecified
-      Reserved_11_31 : Interfaces.Bit_Types.UInt21 := 16#0#;
+      Reserved_11_31 : HAL.UInt21 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1244,7 +1244,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Data toggle error mask
       DTERRM         : Boolean := False;
       --  unspecified
-      Reserved_11_31 : Interfaces.Bit_Types.UInt21 := 16#0#;
+      Reserved_11_31 : HAL.UInt21 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1268,9 +1268,9 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_HCTSIZ_Register --
    ----------------------------
 
-   subtype OTG_HS_HCTSIZ0_XFRSIZ_Field is Interfaces.Bit_Types.UInt19;
-   subtype OTG_HS_HCTSIZ0_PKTCNT_Field is Interfaces.Bit_Types.UInt10;
-   subtype OTG_HS_HCTSIZ0_DPID_Field is Interfaces.Bit_Types.UInt2;
+   subtype OTG_HS_HCTSIZ0_XFRSIZ_Field is HAL.UInt19;
+   subtype OTG_HS_HCTSIZ0_PKTCNT_Field is HAL.UInt10;
+   subtype OTG_HS_HCTSIZ0_DPID_Field is HAL.UInt2;
 
    --  OTG_HS host channel-11 transfer size register
    type OTG_HS_HCTSIZ_Register is record
@@ -1281,7 +1281,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Data PID
       DPID           : OTG_HS_HCTSIZ0_DPID_Field := 16#0#;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1297,10 +1297,10 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DCFG_Register --
    --------------------------
 
-   subtype OTG_HS_DCFG_DSPD_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_DCFG_DAD_Field is Interfaces.Bit_Types.UInt7;
-   subtype OTG_HS_DCFG_PFIVL_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_DCFG_PERSCHIVL_Field is Interfaces.Bit_Types.UInt2;
+   subtype OTG_HS_DCFG_DSPD_Field is HAL.UInt2;
+   subtype OTG_HS_DCFG_DAD_Field is HAL.UInt7;
+   subtype OTG_HS_DCFG_PFIVL_Field is HAL.UInt2;
+   subtype OTG_HS_DCFG_PERSCHIVL_Field is HAL.UInt2;
 
    --  OTG_HS device configuration register
    type OTG_HS_DCFG_Register is record
@@ -1309,17 +1309,17 @@ package STM32_SVD.USB_OTG_HS is
       --  Nonzero-length status OUT handshake
       NZLSOHSK       : Boolean := False;
       --  unspecified
-      Reserved_3_3   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_3_3   : HAL.Bit := 16#0#;
       --  Device address
       DAD            : OTG_HS_DCFG_DAD_Field := 16#0#;
       --  Periodic (micro)frame interval
       PFIVL          : OTG_HS_DCFG_PFIVL_Field := 16#0#;
       --  unspecified
-      Reserved_13_23 : Interfaces.Bit_Types.UInt11 := 16#100#;
+      Reserved_13_23 : HAL.UInt11 := 16#100#;
       --  Periodic scheduling interval
       PERSCHIVL      : OTG_HS_DCFG_PERSCHIVL_Field := 16#2#;
       --  unspecified
-      Reserved_26_31 : Interfaces.Bit_Types.UInt6 := 16#0#;
+      Reserved_26_31 : HAL.UInt6 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1339,7 +1339,7 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DCTL_Register --
    --------------------------
 
-   subtype OTG_HS_DCTL_TCTL_Field is Interfaces.Bit_Types.UInt3;
+   subtype OTG_HS_DCTL_TCTL_Field is HAL.UInt3;
 
    --  OTG_HS device control register
    type OTG_HS_DCTL_Register is record
@@ -1364,7 +1364,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Power-on programming done
       POPRGDNE       : Boolean := False;
       --  unspecified
-      Reserved_12_31 : Interfaces.Bit_Types.UInt20 := 16#0#;
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1387,8 +1387,8 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DSTS_Register --
    --------------------------
 
-   subtype OTG_HS_DSTS_ENUMSPD_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_DSTS_FNSOF_Field is Interfaces.Bit_Types.UInt14;
+   subtype OTG_HS_DSTS_ENUMSPD_Field is HAL.UInt2;
+   subtype OTG_HS_DSTS_FNSOF_Field is HAL.UInt14;
 
    --  OTG_HS device status register
    type OTG_HS_DSTS_Register is record
@@ -1399,11 +1399,11 @@ package STM32_SVD.USB_OTG_HS is
       --  Read-only. Erratic error
       EERR           : Boolean := False;
       --  unspecified
-      Reserved_4_7   : Interfaces.Bit_Types.UInt4;
+      Reserved_4_7   : HAL.UInt4;
       --  Read-only. Frame number of the received SOF
       FNSOF          : OTG_HS_DSTS_FNSOF_Field := 16#0#;
       --  unspecified
-      Reserved_22_31 : Interfaces.Bit_Types.UInt10;
+      Reserved_22_31 : HAL.UInt10;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1428,7 +1428,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Endpoint disabled interrupt mask
       EPDM           : Boolean := False;
       --  unspecified
-      Reserved_2_2   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  Timeout condition mask (nonisochronous endpoints)
       TOM            : Boolean := False;
       --  IN token received when TxFIFO empty mask
@@ -1438,13 +1438,13 @@ package STM32_SVD.USB_OTG_HS is
       --  IN endpoint NAK effective mask
       INEPNEM        : Boolean := False;
       --  unspecified
-      Reserved_7_7   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  FIFO underrun mask
       TXFURM         : Boolean := False;
       --  BNA interrupt mask
       BIM            : Boolean := False;
       --  unspecified
-      Reserved_10_31 : Interfaces.Bit_Types.UInt22 := 16#0#;
+      Reserved_10_31 : HAL.UInt22 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1474,23 +1474,23 @@ package STM32_SVD.USB_OTG_HS is
       --  Endpoint disabled interrupt mask
       EPDM           : Boolean := False;
       --  unspecified
-      Reserved_2_2   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  SETUP phase done mask
       STUPM          : Boolean := False;
       --  OUT token received when endpoint disabled mask
       OTEPDM         : Boolean := False;
       --  unspecified
-      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  Back-to-back SETUP packets received mask
       B2BSTUP        : Boolean := False;
       --  unspecified
-      Reserved_7_7   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  OUT packet error mask
       OPEM           : Boolean := False;
       --  BNA interrupt mask
       BOIM           : Boolean := False;
       --  unspecified
-      Reserved_10_31 : Interfaces.Bit_Types.UInt22 := 16#0#;
+      Reserved_10_31 : HAL.UInt22 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1513,8 +1513,8 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DAINT_Register --
    ---------------------------
 
-   subtype OTG_HS_DAINT_IEPINT_Field is Interfaces.Bit_Types.Short;
-   subtype OTG_HS_DAINT_OEPINT_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_DAINT_IEPINT_Field is HAL.Short;
+   subtype OTG_HS_DAINT_OEPINT_Field is HAL.Short;
 
    --  OTG_HS device all endpoints interrupt register
    type OTG_HS_DAINT_Register is record
@@ -1535,8 +1535,8 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DAINTMSK_Register --
    ------------------------------
 
-   subtype OTG_HS_DAINTMSK_IEPM_Field is Interfaces.Bit_Types.Short;
-   subtype OTG_HS_DAINTMSK_OEPM_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_DAINTMSK_IEPM_Field is HAL.Short;
+   subtype OTG_HS_DAINTMSK_OEPM_Field is HAL.Short;
 
    --  OTG_HS all endpoints interrupt mask register
    type OTG_HS_DAINTMSK_Register is record
@@ -1557,14 +1557,14 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DVBUSDIS_Register --
    ------------------------------
 
-   subtype OTG_HS_DVBUSDIS_VBUSDT_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_DVBUSDIS_VBUSDT_Field is HAL.Short;
 
    --  OTG_HS device VBUS discharge time register
    type OTG_HS_DVBUSDIS_Register is record
       --  Device VBUS discharge time
       VBUSDT         : OTG_HS_DVBUSDIS_VBUSDT_Field := 16#17D7#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1578,14 +1578,14 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DVBUSPULSE_Register --
    --------------------------------
 
-   subtype OTG_HS_DVBUSPULSE_DVBUSP_Field is Interfaces.Bit_Types.UInt12;
+   subtype OTG_HS_DVBUSPULSE_DVBUSP_Field is HAL.UInt12;
 
    --  OTG_HS device VBUS pulsing time register
    type OTG_HS_DVBUSPULSE_Register is record
       --  Device VBUS pulsing time
       DVBUSP         : OTG_HS_DVBUSPULSE_DVBUSP_Field := 16#5B8#;
       --  unspecified
-      Reserved_12_31 : Interfaces.Bit_Types.UInt20 := 16#0#;
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1599,8 +1599,8 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DTHRCTL_Register --
    -----------------------------
 
-   subtype OTG_HS_DTHRCTL_TXTHRLEN_Field is Interfaces.Bit_Types.UInt9;
-   subtype OTG_HS_DTHRCTL_RXTHRLEN_Field is Interfaces.Bit_Types.UInt9;
+   subtype OTG_HS_DTHRCTL_TXTHRLEN_Field is HAL.UInt9;
+   subtype OTG_HS_DTHRCTL_RXTHRLEN_Field is HAL.UInt9;
 
    --  OTG_HS Device threshold control register
    type OTG_HS_DTHRCTL_Register is record
@@ -1611,17 +1611,17 @@ package STM32_SVD.USB_OTG_HS is
       --  Transmit threshold length
       TXTHRLEN       : OTG_HS_DTHRCTL_TXTHRLEN_Field := 16#0#;
       --  unspecified
-      Reserved_11_15 : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_11_15 : HAL.UInt5 := 16#0#;
       --  Receive threshold enable
       RXTHREN        : Boolean := False;
       --  Receive threshold length
       RXTHRLEN       : OTG_HS_DTHRCTL_RXTHRLEN_Field := 16#0#;
       --  unspecified
-      Reserved_26_26 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_26_26 : HAL.Bit := 16#0#;
       --  Arbiter parking enable
       ARPEN          : Boolean := False;
       --  unspecified
-      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_28_31 : HAL.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1642,14 +1642,14 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DIEPEMPMSK_Register --
    --------------------------------
 
-   subtype OTG_HS_DIEPEMPMSK_INEPTXFEM_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_DIEPEMPMSK_INEPTXFEM_Field is HAL.Short;
 
    --  OTG_HS device IN endpoint FIFO empty interrupt mask register
    type OTG_HS_DIEPEMPMSK_Register is record
       --  IN EP Tx FIFO empty interrupt mask bits
       INEPTXFEM      : OTG_HS_DIEPEMPMSK_INEPTXFEM_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1666,15 +1666,15 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS device each endpoint interrupt register
    type OTG_HS_DEACHINT_Register is record
       --  unspecified
-      Reserved_0_0   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  IN endpoint 1interrupt bit
       IEP1INT        : Boolean := False;
       --  unspecified
-      Reserved_2_16  : Interfaces.Bit_Types.UInt15 := 16#0#;
+      Reserved_2_16  : HAL.UInt15 := 16#0#;
       --  OUT endpoint 1 interrupt bit
       OEP1INT        : Boolean := False;
       --  unspecified
-      Reserved_18_31 : Interfaces.Bit_Types.UInt14 := 16#0#;
+      Reserved_18_31 : HAL.UInt14 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1694,15 +1694,15 @@ package STM32_SVD.USB_OTG_HS is
    --  OTG_HS device each endpoint interrupt register mask
    type OTG_HS_DEACHINTMSK_Register is record
       --  unspecified
-      Reserved_0_0   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  IN Endpoint 1 interrupt mask bit
       IEP1INTM       : Boolean := False;
       --  unspecified
-      Reserved_2_16  : Interfaces.Bit_Types.UInt15 := 16#0#;
+      Reserved_2_16  : HAL.UInt15 := 16#0#;
       --  OUT Endpoint 1 interrupt mask bit
       OEP1INTM       : Boolean := False;
       --  unspecified
-      Reserved_18_31 : Interfaces.Bit_Types.UInt14 := 16#0#;
+      Reserved_18_31 : HAL.UInt14 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1719,16 +1719,16 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DIEPCTL_Register --
    -----------------------------
 
-   subtype OTG_HS_DIEPCTL0_MPSIZ_Field is Interfaces.Bit_Types.UInt11;
-   subtype OTG_HS_DIEPCTL0_EPTYP_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_DIEPCTL0_TXFNUM_Field is Interfaces.Bit_Types.UInt4;
+   subtype OTG_HS_DIEPCTL0_MPSIZ_Field is HAL.UInt11;
+   subtype OTG_HS_DIEPCTL0_EPTYP_Field is HAL.UInt2;
+   subtype OTG_HS_DIEPCTL0_TXFNUM_Field is HAL.UInt4;
 
    --  OTG device endpoint-0 control register
    type OTG_HS_DIEPCTL_Register is record
       --  Maximum packet size
       MPSIZ          : OTG_HS_DIEPCTL0_MPSIZ_Field := 16#0#;
       --  unspecified
-      Reserved_11_14 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_11_14 : HAL.UInt4 := 16#0#;
       --  USB active endpoint
       USBAEP         : Boolean := False;
       --  Read-only. Even/odd frame
@@ -1738,7 +1738,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Endpoint type
       EPTYP          : OTG_HS_DIEPCTL0_EPTYP_Field := 16#0#;
       --  unspecified
-      Reserved_20_20 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_20_20 : HAL.Bit := 16#0#;
       --  STALL handshake
       Stall          : Boolean := False;
       --  TxFIFO number
@@ -1788,13 +1788,13 @@ package STM32_SVD.USB_OTG_HS is
       --  Endpoint disabled interrupt
       EPDISD         : Boolean := False;
       --  unspecified
-      Reserved_2_2   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  Timeout condition
       TOC            : Boolean := False;
       --  IN token received when TxFIFO is empty
       ITTXFE         : Boolean := False;
       --  unspecified
-      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  IN endpoint NAK effective
       INEPNE         : Boolean := False;
       --  Read-only. Transmit FIFO empty
@@ -1804,7 +1804,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Buffer not available interrupt
       BNA            : Boolean := False;
       --  unspecified
-      Reserved_10_10 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_10_10 : HAL.Bit := 16#0#;
       --  Packet dropped status
       PKTDRPSTS      : Boolean := False;
       --  Babble error interrupt
@@ -1812,7 +1812,7 @@ package STM32_SVD.USB_OTG_HS is
       --  NAK interrupt
       NAK            : Boolean := False;
       --  unspecified
-      Reserved_14_31 : Interfaces.Bit_Types.UInt18 := 16#0#;
+      Reserved_14_31 : HAL.UInt18 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1839,19 +1839,19 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DIEPTSIZ0_Register --
    -------------------------------
 
-   subtype OTG_HS_DIEPTSIZ0_XFRSIZ_Field is Interfaces.Bit_Types.UInt7;
-   subtype OTG_HS_DIEPTSIZ0_PKTCNT_Field is Interfaces.Bit_Types.UInt2;
+   subtype OTG_HS_DIEPTSIZ0_XFRSIZ_Field is HAL.UInt7;
+   subtype OTG_HS_DIEPTSIZ0_PKTCNT_Field is HAL.UInt2;
 
    --  OTG_HS device IN endpoint 0 transfer size register
    type OTG_HS_DIEPTSIZ0_Register is record
       --  Transfer size
       XFRSIZ         : OTG_HS_DIEPTSIZ0_XFRSIZ_Field := 16#0#;
       --  unspecified
-      Reserved_7_18  : Interfaces.Bit_Types.UInt12 := 16#0#;
+      Reserved_7_18  : HAL.UInt12 := 16#0#;
       --  Packet count
       PKTCNT         : OTG_HS_DIEPTSIZ0_PKTCNT_Field := 16#0#;
       --  unspecified
-      Reserved_21_31 : Interfaces.Bit_Types.UInt11 := 16#0#;
+      Reserved_21_31 : HAL.UInt11 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1867,14 +1867,14 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DTXFSTS_Register --
    -----------------------------
 
-   subtype OTG_HS_DTXFSTS0_INEPTFSAV_Field is Interfaces.Bit_Types.Short;
+   subtype OTG_HS_DTXFSTS0_INEPTFSAV_Field is HAL.Short;
 
    --  OTG_HS device IN endpoint transmit FIFO status register
    type OTG_HS_DTXFSTS_Register is record
       --  Read-only. IN endpoint TxFIFO space avail
       INEPTFSAV      : OTG_HS_DTXFSTS0_INEPTFSAV_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short;
+      Reserved_16_31 : HAL.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1888,9 +1888,9 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DIEPTSIZ_Register --
    ------------------------------
 
-   subtype OTG_HS_DIEPTSIZ1_XFRSIZ_Field is Interfaces.Bit_Types.UInt19;
-   subtype OTG_HS_DIEPTSIZ1_PKTCNT_Field is Interfaces.Bit_Types.UInt10;
-   subtype OTG_HS_DIEPTSIZ1_MCNT_Field is Interfaces.Bit_Types.UInt2;
+   subtype OTG_HS_DIEPTSIZ1_XFRSIZ_Field is HAL.UInt19;
+   subtype OTG_HS_DIEPTSIZ1_PKTCNT_Field is HAL.UInt10;
+   subtype OTG_HS_DIEPTSIZ1_MCNT_Field is HAL.UInt2;
 
    --  OTG_HS device endpoint transfer size register
    type OTG_HS_DIEPTSIZ_Register is record
@@ -1901,7 +1901,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Multi count
       MCNT           : OTG_HS_DIEPTSIZ1_MCNT_Field := 16#0#;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1917,19 +1917,19 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DOEPCTL0_Register --
    ------------------------------
 
-   subtype OTG_HS_DOEPCTL0_MPSIZ_Field is Interfaces.Bit_Types.UInt2;
-   subtype OTG_HS_DOEPCTL0_EPTYP_Field is Interfaces.Bit_Types.UInt2;
+   subtype OTG_HS_DOEPCTL0_MPSIZ_Field is HAL.UInt2;
+   subtype OTG_HS_DOEPCTL0_EPTYP_Field is HAL.UInt2;
 
    --  OTG_HS device control OUT endpoint 0 control register
    type OTG_HS_DOEPCTL0_Register is record
       --  Read-only. Maximum packet size
       MPSIZ          : OTG_HS_DOEPCTL0_MPSIZ_Field := 16#0#;
       --  unspecified
-      Reserved_2_14  : Interfaces.Bit_Types.UInt13 := 16#0#;
+      Reserved_2_14  : HAL.UInt13 := 16#0#;
       --  Read-only. USB active endpoint
       USBAEP         : Boolean := True;
       --  unspecified
-      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  Read-only. NAK status
       NAKSTS         : Boolean := False;
       --  Read-only. Endpoint type
@@ -1939,13 +1939,13 @@ package STM32_SVD.USB_OTG_HS is
       --  STALL handshake
       Stall          : Boolean := False;
       --  unspecified
-      Reserved_22_25 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_22_25 : HAL.UInt4 := 16#0#;
       --  Write-only. Clear NAK
       CNAK           : Boolean := False;
       --  Write-only. Set NAK
       SNAK           : Boolean := False;
       --  unspecified
-      Reserved_28_29 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_28_29 : HAL.UInt2 := 16#0#;
       --  Read-only. Endpoint disable
       EPDIS          : Boolean := False;
       --  Write-only. Endpoint enable
@@ -1982,21 +1982,21 @@ package STM32_SVD.USB_OTG_HS is
       --  Endpoint disabled interrupt
       EPDISD         : Boolean := False;
       --  unspecified
-      Reserved_2_2   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  SETUP phase done
       STUP           : Boolean := False;
       --  OUT token received when endpoint disabled
       OTEPDIS        : Boolean := False;
       --  unspecified
-      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  Back-to-back SETUP packets received
       B2BSTUP        : Boolean := False;
       --  unspecified
-      Reserved_7_13  : Interfaces.Bit_Types.UInt7 := 16#1#;
+      Reserved_7_13  : HAL.UInt7 := 16#1#;
       --  NYET interrupt
       NYET           : Boolean := False;
       --  unspecified
-      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
+      Reserved_15_31 : HAL.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2018,23 +2018,23 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DOEPTSIZ0_Register --
    -------------------------------
 
-   subtype OTG_HS_DOEPTSIZ0_XFRSIZ_Field is Interfaces.Bit_Types.UInt7;
-   subtype OTG_HS_DOEPTSIZ0_STUPCNT_Field is Interfaces.Bit_Types.UInt2;
+   subtype OTG_HS_DOEPTSIZ0_XFRSIZ_Field is HAL.UInt7;
+   subtype OTG_HS_DOEPTSIZ0_STUPCNT_Field is HAL.UInt2;
 
    --  OTG_HS device endpoint-0 transfer size register
    type OTG_HS_DOEPTSIZ0_Register is record
       --  Transfer size
       XFRSIZ         : OTG_HS_DOEPTSIZ0_XFRSIZ_Field := 16#0#;
       --  unspecified
-      Reserved_7_18  : Interfaces.Bit_Types.UInt12 := 16#0#;
+      Reserved_7_18  : HAL.UInt12 := 16#0#;
       --  Packet count
       PKTCNT         : Boolean := False;
       --  unspecified
-      Reserved_20_28 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_20_28 : HAL.UInt9 := 16#0#;
       --  SETUP packet count
       STUPCNT        : OTG_HS_DOEPTSIZ0_STUPCNT_Field := 16#0#;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2052,15 +2052,15 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DOEPCTL_Register --
    -----------------------------
 
-   subtype OTG_HS_DOEPCTL1_MPSIZ_Field is Interfaces.Bit_Types.UInt11;
-   subtype OTG_HS_DOEPCTL1_EPTYP_Field is Interfaces.Bit_Types.UInt2;
+   subtype OTG_HS_DOEPCTL1_MPSIZ_Field is HAL.UInt11;
+   subtype OTG_HS_DOEPCTL1_EPTYP_Field is HAL.UInt2;
 
    --  OTG device endpoint-1 control register
    type OTG_HS_DOEPCTL_Register is record
       --  Maximum packet size
       MPSIZ          : OTG_HS_DOEPCTL1_MPSIZ_Field := 16#0#;
       --  unspecified
-      Reserved_11_14 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_11_14 : HAL.UInt4 := 16#0#;
       --  USB active endpoint
       USBAEP         : Boolean := False;
       --  Read-only. Even odd frame/Endpoint data PID
@@ -2074,7 +2074,7 @@ package STM32_SVD.USB_OTG_HS is
       --  STALL handshake
       Stall          : Boolean := False;
       --  unspecified
-      Reserved_22_25 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_22_25 : HAL.UInt4 := 16#0#;
       --  Write-only. Clear NAK
       CNAK           : Boolean := False;
       --  Write-only. Set NAK
@@ -2113,9 +2113,9 @@ package STM32_SVD.USB_OTG_HS is
    -- OTG_HS_DOEPTSIZ_Register --
    ------------------------------
 
-   subtype OTG_HS_DOEPTSIZ1_XFRSIZ_Field is Interfaces.Bit_Types.UInt19;
-   subtype OTG_HS_DOEPTSIZ1_PKTCNT_Field is Interfaces.Bit_Types.UInt10;
-   subtype OTG_HS_DOEPTSIZ1_RXDPID_STUPCNT_Field is Interfaces.Bit_Types.UInt2;
+   subtype OTG_HS_DOEPTSIZ1_XFRSIZ_Field is HAL.UInt19;
+   subtype OTG_HS_DOEPTSIZ1_PKTCNT_Field is HAL.UInt10;
+   subtype OTG_HS_DOEPTSIZ1_RXDPID_STUPCNT_Field is HAL.UInt2;
 
    --  OTG_HS device endpoint-1 transfer size register
    type OTG_HS_DOEPTSIZ_Register is record
@@ -2126,7 +2126,7 @@ package STM32_SVD.USB_OTG_HS is
       --  Received data PID/SETUP packet count
       RXDPID_STUPCNT : OTG_HS_DOEPTSIZ1_RXDPID_STUPCNT_Field := 16#0#;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2149,11 +2149,11 @@ package STM32_SVD.USB_OTG_HS is
       --  Gate HCLK
       GATEHCLK      : Boolean := False;
       --  unspecified
-      Reserved_2_3  : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_2_3  : HAL.UInt2 := 16#0#;
       --  PHY suspended
       PHYSUSP       : Boolean := False;
       --  unspecified
-      Reserved_5_31 : Interfaces.Bit_Types.UInt27 := 16#0#;
+      Reserved_5_31 : HAL.UInt27 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2200,7 +2200,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS general core configuration register
       OTG_HS_GCCFG           : OTG_HS_GCCFG_Register;
       --  OTG_HS core ID register
-      OTG_HS_CID             : Interfaces.Bit_Types.Word;
+      OTG_HS_CID             : HAL.Word;
       --  OTG core LPM configuration register
       OTG_HS_GLPMCFG         : OTG_HS_GLPMCFG_Register;
       --  OTG_HS Host periodic transmit FIFO size register
@@ -2299,7 +2299,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-11 transfer size register
       OTG_HS_HCTSIZ0    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-0 DMA address register
-      OTG_HS_HCDMA0     : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA0     : HAL.Word;
       --  OTG_HS host channel-1 characteristics register
       OTG_HS_HCCHAR1    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-1 split control register
@@ -2311,7 +2311,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-1 transfer size register
       OTG_HS_HCTSIZ1    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-1 DMA address register
-      OTG_HS_HCDMA1     : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA1     : HAL.Word;
       --  OTG_HS host channel-2 characteristics register
       OTG_HS_HCCHAR2    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-2 split control register
@@ -2323,7 +2323,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-2 transfer size register
       OTG_HS_HCTSIZ2    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-2 DMA address register
-      OTG_HS_HCDMA2     : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA2     : HAL.Word;
       --  OTG_HS host channel-3 characteristics register
       OTG_HS_HCCHAR3    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-3 split control register
@@ -2335,7 +2335,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-3 transfer size register
       OTG_HS_HCTSIZ3    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-3 DMA address register
-      OTG_HS_HCDMA3     : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA3     : HAL.Word;
       --  OTG_HS host channel-4 characteristics register
       OTG_HS_HCCHAR4    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-4 split control register
@@ -2347,7 +2347,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-4 transfer size register
       OTG_HS_HCTSIZ4    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-4 DMA address register
-      OTG_HS_HCDMA4     : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA4     : HAL.Word;
       --  OTG_HS host channel-5 characteristics register
       OTG_HS_HCCHAR5    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-5 split control register
@@ -2359,7 +2359,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-5 transfer size register
       OTG_HS_HCTSIZ5    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-5 DMA address register
-      OTG_HS_HCDMA5     : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA5     : HAL.Word;
       --  OTG_HS host channel-6 characteristics register
       OTG_HS_HCCHAR6    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-6 split control register
@@ -2371,7 +2371,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-6 transfer size register
       OTG_HS_HCTSIZ6    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-6 DMA address register
-      OTG_HS_HCDMA6     : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA6     : HAL.Word;
       --  OTG_HS host channel-7 characteristics register
       OTG_HS_HCCHAR7    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-7 split control register
@@ -2383,7 +2383,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-7 transfer size register
       OTG_HS_HCTSIZ7    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-7 DMA address register
-      OTG_HS_HCDMA7     : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA7     : HAL.Word;
       --  OTG_HS host channel-8 characteristics register
       OTG_HS_HCCHAR8    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-8 split control register
@@ -2395,7 +2395,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-8 transfer size register
       OTG_HS_HCTSIZ8    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-8 DMA address register
-      OTG_HS_HCDMA8     : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA8     : HAL.Word;
       --  OTG_HS host channel-9 characteristics register
       OTG_HS_HCCHAR9    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-9 split control register
@@ -2407,7 +2407,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-9 transfer size register
       OTG_HS_HCTSIZ9    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-9 DMA address register
-      OTG_HS_HCDMA9     : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA9     : HAL.Word;
       --  OTG_HS host channel-10 characteristics register
       OTG_HS_HCCHAR10   : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-10 split control register
@@ -2419,7 +2419,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-10 transfer size register
       OTG_HS_HCTSIZ10   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-10 DMA address register
-      OTG_HS_HCDMA10    : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA10    : HAL.Word;
       --  OTG_HS host channel-11 characteristics register
       OTG_HS_HCCHAR11   : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-11 split control register
@@ -2431,7 +2431,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-11 transfer size register
       OTG_HS_HCTSIZ11   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-11 DMA address register
-      OTG_HS_HCDMA11    : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA11    : HAL.Word;
       --  OTG_HS host channel-12 characteristics register
       OTG_HS_HCCHAR12   : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-12 split control register
@@ -2443,7 +2443,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-12 transfer size register
       OTG_HS_HCTSIZ12   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-12 DMA address register
-      OTG_HS_HCDMA12    : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA12    : HAL.Word;
       --  OTG_HS host channel-13 characteristics register
       OTG_HS_HCCHAR13   : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-13 split control register
@@ -2455,7 +2455,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-13 transfer size register
       OTG_HS_HCTSIZ13   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-13 DMA address register
-      OTG_HS_HCDMA13    : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA13    : HAL.Word;
       --  OTG_HS host channel-14 characteristics register
       OTG_HS_HCCHAR14   : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-14 split control register
@@ -2467,7 +2467,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-14 transfer size register
       OTG_HS_HCTSIZ14   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-14 DMA address register
-      OTG_HS_HCDMA14    : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA14    : HAL.Word;
       --  OTG_HS host channel-15 characteristics register
       OTG_HS_HCCHAR15   : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-15 split control register
@@ -2479,7 +2479,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-15 transfer size register
       OTG_HS_HCTSIZ15   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-15 DMA address register
-      OTG_HS_HCDMA15    : Interfaces.Bit_Types.Word;
+      OTG_HS_HCDMA15    : HAL.Word;
    end record
      with Volatile;
 
@@ -2628,7 +2628,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS device IN endpoint 0 transfer size register
       OTG_HS_DIEPTSIZ0   : OTG_HS_DIEPTSIZ0_Register;
       --  OTG_HS device endpoint-1 DMA address register
-      OTG_HS_DIEPDMA1    : Interfaces.Bit_Types.Word;
+      OTG_HS_DIEPDMA1    : HAL.Word;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS0    : OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-1 control register
@@ -2638,7 +2638,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS device endpoint transfer size register
       OTG_HS_DIEPTSIZ1   : OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device endpoint-2 DMA address register
-      OTG_HS_DIEPDMA2    : Interfaces.Bit_Types.Word;
+      OTG_HS_DIEPDMA2    : HAL.Word;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS1    : OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-2 control register
@@ -2648,7 +2648,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS device endpoint transfer size register
       OTG_HS_DIEPTSIZ2   : OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device endpoint-3 DMA address register
-      OTG_HS_DIEPDMA3    : Interfaces.Bit_Types.Word;
+      OTG_HS_DIEPDMA3    : HAL.Word;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS2    : OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-3 control register
@@ -2658,7 +2658,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS device endpoint transfer size register
       OTG_HS_DIEPTSIZ3   : OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device endpoint-4 DMA address register
-      OTG_HS_DIEPDMA4    : Interfaces.Bit_Types.Word;
+      OTG_HS_DIEPDMA4    : HAL.Word;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS3    : OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-4 control register
@@ -2668,7 +2668,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS device endpoint transfer size register
       OTG_HS_DIEPTSIZ4   : OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device endpoint-5 DMA address register
-      OTG_HS_DIEPDMA5    : Interfaces.Bit_Types.Word;
+      OTG_HS_DIEPDMA5    : HAL.Word;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS4    : OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-5 control register

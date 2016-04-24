@@ -32,8 +32,8 @@
 --  Driver package for the FT6x06 touch screen panel
 --  Based on the ft6x06 driver from MCD Application Team
 
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
 with Interfaces; use Interfaces;
+with HAL;        use HAL;
 with HAL.I2C;
 with HAL.Touch_Panel;
 

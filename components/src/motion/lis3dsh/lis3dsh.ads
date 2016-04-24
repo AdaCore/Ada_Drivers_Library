@@ -44,7 +44,7 @@
 --  on later versions of the STM32F4 Discovery boards.
 
 with Interfaces;
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
+with HAL; use HAL;
 
 package LIS3DSH is
 

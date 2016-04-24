@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F40x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.NVIC is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,14 +17,14 @@ package STM32_SVD.NVIC is
    -- ICTR_Register --
    -------------------
 
-   subtype ICTR_INTLINESNUM_Field is Interfaces.Bit_Types.UInt4;
+   subtype ICTR_INTLINESNUM_Field is HAL.UInt4;
 
    --  Interrupt Controller Type Register
    type ICTR_Register is record
       --  Read-only. Total number of interrupt lines in groups
       INTLINESNUM   : ICTR_INTLINESNUM_Field := 16#0#;
       --  unspecified
-      Reserved_4_31 : Interfaces.Bit_Types.UInt28;
+      Reserved_4_31 : HAL.UInt28;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -39,7 +39,7 @@ package STM32_SVD.NVIC is
    ------------------
 
    --  IPR0_IPR_N array element
-   subtype IPR0_IPR_N_Element is Interfaces.Bit_Types.Byte;
+   subtype IPR0_IPR_N_Element is HAL.Byte;
 
    --  IPR0_IPR_N array
    type IPR0_IPR_N_Field_Array is array (0 .. 3) of IPR0_IPR_N_Element
@@ -52,7 +52,7 @@ package STM32_SVD.NVIC is
       case As_Array is
          when False =>
             --  IPR_N as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  IPR_N as an array
             Arr : IPR0_IPR_N_Field_Array;
@@ -70,14 +70,14 @@ package STM32_SVD.NVIC is
    -- STIR_Register --
    -------------------
 
-   subtype STIR_INTID_Field is Interfaces.Bit_Types.UInt9;
+   subtype STIR_INTID_Field is HAL.UInt9;
 
    --  Software Triggered Interrupt Register
    type STIR_Register is record
       --  Write-only. interrupt to be triggered
       INTID         : STIR_INTID_Field := 16#0#;
       --  unspecified
-      Reserved_9_31 : Interfaces.Bit_Types.UInt23 := 16#0#;
+      Reserved_9_31 : HAL.UInt23 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -96,35 +96,35 @@ package STM32_SVD.NVIC is
       --  Interrupt Controller Type Register
       ICTR  : ICTR_Register;
       --  Interrupt Set-Enable Register
-      ISER0 : Interfaces.Bit_Types.Word;
+      ISER0 : HAL.Word;
       --  Interrupt Set-Enable Register
-      ISER1 : Interfaces.Bit_Types.Word;
+      ISER1 : HAL.Word;
       --  Interrupt Set-Enable Register
-      ISER2 : Interfaces.Bit_Types.Word;
+      ISER2 : HAL.Word;
       --  Interrupt Clear-Enable Register
-      ICER0 : Interfaces.Bit_Types.Word;
+      ICER0 : HAL.Word;
       --  Interrupt Clear-Enable Register
-      ICER1 : Interfaces.Bit_Types.Word;
+      ICER1 : HAL.Word;
       --  Interrupt Clear-Enable Register
-      ICER2 : Interfaces.Bit_Types.Word;
+      ICER2 : HAL.Word;
       --  Interrupt Set-Pending Register
-      ISPR0 : Interfaces.Bit_Types.Word;
+      ISPR0 : HAL.Word;
       --  Interrupt Set-Pending Register
-      ISPR1 : Interfaces.Bit_Types.Word;
+      ISPR1 : HAL.Word;
       --  Interrupt Set-Pending Register
-      ISPR2 : Interfaces.Bit_Types.Word;
+      ISPR2 : HAL.Word;
       --  Interrupt Clear-Pending Register
-      ICPR0 : Interfaces.Bit_Types.Word;
+      ICPR0 : HAL.Word;
       --  Interrupt Clear-Pending Register
-      ICPR1 : Interfaces.Bit_Types.Word;
+      ICPR1 : HAL.Word;
       --  Interrupt Clear-Pending Register
-      ICPR2 : Interfaces.Bit_Types.Word;
+      ICPR2 : HAL.Word;
       --  Interrupt Active Bit Register
-      IABR0 : Interfaces.Bit_Types.Word;
+      IABR0 : HAL.Word;
       --  Interrupt Active Bit Register
-      IABR1 : Interfaces.Bit_Types.Word;
+      IABR1 : HAL.Word;
       --  Interrupt Active Bit Register
-      IABR2 : Interfaces.Bit_Types.Word;
+      IABR2 : HAL.Word;
       --  Interrupt Priority Register
       IPR0  : IPR_Register;
       --  Interrupt Priority Register

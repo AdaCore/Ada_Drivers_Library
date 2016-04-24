@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F40x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.GPIO is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -18,7 +18,7 @@ package STM32_SVD.GPIO is
    --------------------
 
    --  MODER array element
-   subtype MODER_Element is Interfaces.Bit_Types.UInt2;
+   subtype MODER_Element is HAL.UInt2;
 
    --  MODER array
    type MODER_Field_Array is array (0 .. 15) of MODER_Element
@@ -31,7 +31,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  MODER as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  MODER as an array
             Arr : MODER_Field_Array;
@@ -64,7 +64,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  OT as a value
-            Val : Interfaces.Bit_Types.Short;
+            Val : HAL.Short;
          when True =>
             --  OT as an array
             Arr : OTYPER_OT_Field_Array;
@@ -82,7 +82,7 @@ package STM32_SVD.GPIO is
       --  Port x configuration bits (y = 0..15)
       OT             : OTYPER_OT_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -97,7 +97,7 @@ package STM32_SVD.GPIO is
    ----------------------
 
    --  OSPEEDR array element
-   subtype OSPEEDR_Element is Interfaces.Bit_Types.UInt2;
+   subtype OSPEEDR_Element is HAL.UInt2;
 
    --  OSPEEDR array
    type OSPEEDR_Field_Array is array (0 .. 15) of OSPEEDR_Element
@@ -110,7 +110,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  OSPEEDR as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  OSPEEDR as an array
             Arr : OSPEEDR_Field_Array;
@@ -129,7 +129,7 @@ package STM32_SVD.GPIO is
    --------------------
 
    --  PUPDR array element
-   subtype PUPDR_Element is Interfaces.Bit_Types.UInt2;
+   subtype PUPDR_Element is HAL.UInt2;
 
    --  PUPDR array
    type PUPDR_Field_Array is array (0 .. 15) of PUPDR_Element
@@ -142,7 +142,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  PUPDR as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  PUPDR as an array
             Arr : PUPDR_Field_Array;
@@ -175,7 +175,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  IDR as a value
-            Val : Interfaces.Bit_Types.Short;
+            Val : HAL.Short;
          when True =>
             --  IDR as an array
             Arr : IDR_Field_Array;
@@ -193,7 +193,7 @@ package STM32_SVD.GPIO is
       --  Read-only. Port input data (y = 0..15)
       IDR            : IDR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short;
+      Reserved_16_31 : HAL.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -222,7 +222,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  ODR as a value
-            Val : Interfaces.Bit_Types.Short;
+            Val : HAL.Short;
          when True =>
             --  ODR as an array
             Arr : ODR_Field_Array;
@@ -240,7 +240,7 @@ package STM32_SVD.GPIO is
       --  Port output data (y = 0..15)
       ODR            : ODR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -269,7 +269,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  BS as a value
-            Val : Interfaces.Bit_Types.Short;
+            Val : HAL.Short;
          when True =>
             --  BS as an array
             Arr : BSRR_BS_Field_Array;
@@ -297,7 +297,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  BR as a value
-            Val : Interfaces.Bit_Types.Short;
+            Val : HAL.Short;
          when True =>
             --  BR as an array
             Arr : BSRR_BR_Field_Array;
@@ -344,7 +344,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  LCK as a value
-            Val : Interfaces.Bit_Types.Short;
+            Val : HAL.Short;
          when True =>
             --  LCK as an array
             Arr : LCKR_LCK_Field_Array;
@@ -364,7 +364,7 @@ package STM32_SVD.GPIO is
       --  Port x lock bit y (y= 0..15)
       LCKK           : Boolean := False;
       --  unspecified
-      Reserved_17_31 : Interfaces.Bit_Types.UInt15 := 16#0#;
+      Reserved_17_31 : HAL.UInt15 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -380,7 +380,7 @@ package STM32_SVD.GPIO is
    -------------------
 
    --  AFRL array element
-   subtype AFRL_Element is Interfaces.Bit_Types.UInt4;
+   subtype AFRL_Element is HAL.UInt4;
 
    --  AFRL array
    type AFRL_Field_Array is array (0 .. 7) of AFRL_Element
@@ -393,7 +393,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  AFRL as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  AFRL as an array
             Arr : AFRL_Field_Array;
@@ -412,7 +412,7 @@ package STM32_SVD.GPIO is
    -------------------
 
    --  AFRH array element
-   subtype AFRH_Element is Interfaces.Bit_Types.UInt4;
+   subtype AFRH_Element is HAL.UInt4;
 
    --  AFRH array
    type AFRH_Field_Array is array (8 .. 15) of AFRH_Element
@@ -425,7 +425,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  AFRH as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  AFRH as an array
             Arr : AFRH_Field_Array;

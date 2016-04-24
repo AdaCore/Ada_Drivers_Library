@@ -1,7 +1,7 @@
 --  Driver for the WM8994 CODEC
 
 with Interfaces; use Interfaces;
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
+with HAL;        use HAL;
 with HAL.I2C;
 
 package WM8994 is

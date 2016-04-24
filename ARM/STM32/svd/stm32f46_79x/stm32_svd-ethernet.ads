@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F46_79x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.Ethernet is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,13 +17,13 @@ package STM32_SVD.Ethernet is
    -- MACCR_Register --
    --------------------
 
-   subtype MACCR_BL_Field is Interfaces.Bit_Types.UInt2;
-   subtype MACCR_IFG_Field is Interfaces.Bit_Types.UInt3;
+   subtype MACCR_BL_Field is HAL.UInt2;
+   subtype MACCR_IFG_Field is HAL.UInt3;
 
    --  Ethernet MAC configuration register
    type MACCR_Register is record
       --  unspecified
-      Reserved_0_1   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_0_1   : HAL.UInt2 := 16#0#;
       --  RE
       RE             : Boolean := False;
       --  TE
@@ -35,7 +35,7 @@ package STM32_SVD.Ethernet is
       --  APCS
       APCS           : Boolean := False;
       --  unspecified
-      Reserved_8_8   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_8_8   : HAL.Bit := 16#0#;
       --  RD
       RD             : Boolean := False;
       --  IPCO
@@ -49,23 +49,23 @@ package STM32_SVD.Ethernet is
       --  FES
       FES            : Boolean := False;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#1#;
+      Reserved_15_15 : HAL.Bit := 16#1#;
       --  CSD
       CSD            : Boolean := False;
       --  IFG
       IFG            : MACCR_IFG_Field := 16#0#;
       --  unspecified
-      Reserved_20_21 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_20_21 : HAL.UInt2 := 16#0#;
       --  JD
       JD             : Boolean := False;
       --  WD
       WD             : Boolean := False;
       --  unspecified
-      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  CSTF
       CSTF           : Boolean := False;
       --  unspecified
-      Reserved_26_31 : Interfaces.Bit_Types.UInt6 := 16#0#;
+      Reserved_26_31 : HAL.UInt6 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -122,7 +122,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       HPF            : Boolean := False;
       --  unspecified
-      Reserved_10_30 : Interfaces.Bit_Types.UInt21 := 16#0#;
+      Reserved_10_30 : HAL.UInt21 := 16#0#;
       --  no description available
       RA             : Boolean := False;
    end record
@@ -148,9 +148,9 @@ package STM32_SVD.Ethernet is
    -- MACMIIAR_Register --
    -----------------------
 
-   subtype MACMIIAR_CR_Field is Interfaces.Bit_Types.UInt3;
-   subtype MACMIIAR_MR_Field is Interfaces.Bit_Types.UInt5;
-   subtype MACMIIAR_PA_Field is Interfaces.Bit_Types.UInt5;
+   subtype MACMIIAR_CR_Field is HAL.UInt3;
+   subtype MACMIIAR_MR_Field is HAL.UInt5;
+   subtype MACMIIAR_PA_Field is HAL.UInt5;
 
    --  Ethernet MAC MII address register
    type MACMIIAR_Register is record
@@ -161,13 +161,13 @@ package STM32_SVD.Ethernet is
       --  no description available
       CR             : MACMIIAR_CR_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  no description available
       MR             : MACMIIAR_MR_Field := 16#0#;
       --  no description available
       PA             : MACMIIAR_PA_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -186,14 +186,14 @@ package STM32_SVD.Ethernet is
    -- MACMIIDR_Register --
    -----------------------
 
-   subtype MACMIIDR_TD_Field is Interfaces.Bit_Types.Short;
+   subtype MACMIIDR_TD_Field is HAL.Short;
 
    --  Ethernet MAC MII data register
    type MACMIIDR_Register is record
       --  no description available
       TD             : MACMIIDR_TD_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -207,8 +207,8 @@ package STM32_SVD.Ethernet is
    -- MACFCR_Register --
    ---------------------
 
-   subtype MACFCR_PLT_Field is Interfaces.Bit_Types.UInt2;
-   subtype MACFCR_PT_Field is Interfaces.Bit_Types.Short;
+   subtype MACFCR_PLT_Field is HAL.UInt2;
+   subtype MACFCR_PT_Field is HAL.Short;
 
    --  Ethernet MAC flow control register
    type MACFCR_Register is record
@@ -223,11 +223,11 @@ package STM32_SVD.Ethernet is
       --  no description available
       PLT           : MACFCR_PLT_Field := 16#0#;
       --  unspecified
-      Reserved_6_6  : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_6_6  : HAL.Bit := 16#0#;
       --  no description available
       ZQPD          : Boolean := False;
       --  unspecified
-      Reserved_8_15 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_8_15 : HAL.Byte := 16#0#;
       --  no description available
       PT            : MACFCR_PT_Field := 16#0#;
    end record
@@ -250,7 +250,7 @@ package STM32_SVD.Ethernet is
    -- MACVLANTR_Register --
    ------------------------
 
-   subtype MACVLANTR_VLANTI_Field is Interfaces.Bit_Types.Short;
+   subtype MACVLANTR_VLANTI_Field is HAL.Short;
 
    --  Ethernet MAC VLAN tag register
    type MACVLANTR_Register is record
@@ -259,7 +259,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       VLANTC         : Boolean := False;
       --  unspecified
-      Reserved_17_31 : Interfaces.Bit_Types.UInt15 := 16#0#;
+      Reserved_17_31 : HAL.UInt15 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -283,17 +283,17 @@ package STM32_SVD.Ethernet is
       --  no description available
       WFE            : Boolean := False;
       --  unspecified
-      Reserved_3_4   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_3_4   : HAL.UInt2 := 16#0#;
       --  no description available
       MPR            : Boolean := False;
       --  no description available
       WFR            : Boolean := False;
       --  unspecified
-      Reserved_7_8   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_7_8   : HAL.UInt2 := 16#0#;
       --  no description available
       GU             : Boolean := False;
       --  unspecified
-      Reserved_10_30 : Interfaces.Bit_Types.UInt21 := 16#0#;
+      Reserved_10_30 : HAL.UInt21 := 16#0#;
       --  no description available
       WFFRPR         : Boolean := False;
    end record
@@ -332,7 +332,7 @@ package STM32_SVD.Ethernet is
       --  Read-only. MCFHP
       MCFHP         : Boolean := False;
       --  unspecified
-      Reserved_6_31 : Interfaces.Bit_Types.UInt26;
+      Reserved_6_31 : HAL.UInt26;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -354,7 +354,7 @@ package STM32_SVD.Ethernet is
    --  Ethernet MAC interrupt status register
    type MACSR_Register is record
       --  unspecified
-      Reserved_0_2   : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_0_2   : HAL.UInt3 := 16#0#;
       --  Read-only. no description available
       PMTS           : Boolean := False;
       --  Read-only. no description available
@@ -364,11 +364,11 @@ package STM32_SVD.Ethernet is
       --  Read-only. no description available
       MMCTS          : Boolean := False;
       --  unspecified
-      Reserved_7_8   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_7_8   : HAL.UInt2 := 16#0#;
       --  no description available
       TSTS           : Boolean := False;
       --  unspecified
-      Reserved_10_31 : Interfaces.Bit_Types.UInt22 := 16#0#;
+      Reserved_10_31 : HAL.UInt22 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -391,15 +391,15 @@ package STM32_SVD.Ethernet is
    --  Ethernet MAC interrupt mask register
    type MACIMR_Register is record
       --  unspecified
-      Reserved_0_2   : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_0_2   : HAL.UInt3 := 16#0#;
       --  no description available
       PMTIM          : Boolean := False;
       --  unspecified
-      Reserved_4_8   : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_4_8   : HAL.UInt5 := 16#0#;
       --  no description available
       TSTIM          : Boolean := False;
       --  unspecified
-      Reserved_10_31 : Interfaces.Bit_Types.UInt22 := 16#0#;
+      Reserved_10_31 : HAL.UInt22 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -416,14 +416,14 @@ package STM32_SVD.Ethernet is
    -- MACA0HR_Register --
    ----------------------
 
-   subtype MACA0HR_MACA0H_Field is Interfaces.Bit_Types.Short;
+   subtype MACA0HR_MACA0H_Field is HAL.Short;
 
    --  Ethernet MAC address 0 high register
    type MACA0HR_Register is record
       --  MAC address0 high
       MACA0H         : MACA0HR_MACA0H_Field := 16#FFFF#;
       --  unspecified
-      Reserved_16_30 : Interfaces.Bit_Types.UInt15 := 16#10#;
+      Reserved_16_30 : HAL.UInt15 := 16#10#;
       --  Read-only. Always 1
       MO             : Boolean := False;
    end record
@@ -440,15 +440,15 @@ package STM32_SVD.Ethernet is
    -- MACA1HR_Register --
    ----------------------
 
-   subtype MACA1HR_MACA1H_Field is Interfaces.Bit_Types.Short;
-   subtype MACA1HR_MBC_Field is Interfaces.Bit_Types.UInt6;
+   subtype MACA1HR_MACA1H_Field is HAL.Short;
+   subtype MACA1HR_MBC_Field is HAL.UInt6;
 
    --  Ethernet MAC address 1 high register
    type MACA1HR_Register is record
       --  no description available
       MACA1H         : MACA1HR_MACA1H_Field := 16#FFFF#;
       --  unspecified
-      Reserved_16_23 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_16_23 : HAL.Byte := 16#0#;
       --  no description available
       MBC            : MACA1HR_MBC_Field := 16#0#;
       --  no description available
@@ -471,15 +471,15 @@ package STM32_SVD.Ethernet is
    -- MACA2HR_Register --
    ----------------------
 
-   subtype MACA2HR_MAC2AH_Field is Interfaces.Bit_Types.Short;
-   subtype MACA2HR_MBC_Field is Interfaces.Bit_Types.UInt6;
+   subtype MACA2HR_MAC2AH_Field is HAL.Short;
+   subtype MACA2HR_MBC_Field is HAL.UInt6;
 
    --  Ethernet MAC address 2 high register
    type MACA2HR_Register is record
       --  no description available
       MAC2AH         : MACA2HR_MAC2AH_Field := 16#FFFF#;
       --  unspecified
-      Reserved_16_23 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_16_23 : HAL.Byte := 16#0#;
       --  no description available
       MBC            : MACA2HR_MBC_Field := 16#0#;
       --  no description available
@@ -502,14 +502,14 @@ package STM32_SVD.Ethernet is
    -- MACA2LR_Register --
    ----------------------
 
-   subtype MACA2LR_MACA2L_Field is Interfaces.Bit_Types.UInt31;
+   subtype MACA2LR_MACA2L_Field is HAL.UInt31;
 
    --  Ethernet MAC address 2 low register
    type MACA2LR_Register is record
       --  no description available
       MACA2L         : MACA2LR_MACA2L_Field := 16#7FFFFFFF#;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#1#;
+      Reserved_31_31 : HAL.Bit := 16#1#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -523,15 +523,15 @@ package STM32_SVD.Ethernet is
    -- MACA3HR_Register --
    ----------------------
 
-   subtype MACA3HR_MACA3H_Field is Interfaces.Bit_Types.Short;
-   subtype MACA3HR_MBC_Field is Interfaces.Bit_Types.UInt6;
+   subtype MACA3HR_MACA3H_Field is HAL.Short;
+   subtype MACA3HR_MBC_Field is HAL.UInt6;
 
    --  Ethernet MAC address 3 high register
    type MACA3HR_Register is record
       --  no description available
       MACA3H         : MACA3HR_MACA3H_Field := 16#FFFF#;
       --  unspecified
-      Reserved_16_23 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_16_23 : HAL.Byte := 16#0#;
       --  no description available
       MBC            : MACA3HR_MBC_Field := 16#0#;
       --  no description available
@@ -569,7 +569,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       MCFHP         : Boolean := False;
       --  unspecified
-      Reserved_6_31 : Interfaces.Bit_Types.UInt26 := 16#0#;
+      Reserved_6_31 : HAL.UInt26 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -591,17 +591,17 @@ package STM32_SVD.Ethernet is
    --  Ethernet MMC receive interrupt register
    type MMCRIR_Register is record
       --  unspecified
-      Reserved_0_4   : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_0_4   : HAL.UInt5 := 16#0#;
       --  no description available
       RFCES          : Boolean := False;
       --  no description available
       RFAES          : Boolean := False;
       --  unspecified
-      Reserved_7_16  : Interfaces.Bit_Types.UInt10 := 16#0#;
+      Reserved_7_16  : HAL.UInt10 := 16#0#;
       --  no description available
       RGUFS          : Boolean := False;
       --  unspecified
-      Reserved_18_31 : Interfaces.Bit_Types.UInt14 := 16#0#;
+      Reserved_18_31 : HAL.UInt14 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -622,17 +622,17 @@ package STM32_SVD.Ethernet is
    --  Ethernet MMC transmit interrupt register
    type MMCTIR_Register is record
       --  unspecified
-      Reserved_0_13  : Interfaces.Bit_Types.UInt14;
+      Reserved_0_13  : HAL.UInt14;
       --  Read-only. no description available
       TGFSCS         : Boolean := False;
       --  Read-only. no description available
       TGFMSCS        : Boolean := False;
       --  unspecified
-      Reserved_16_20 : Interfaces.Bit_Types.UInt5;
+      Reserved_16_20 : HAL.UInt5;
       --  Read-only. no description available
       TGFS           : Boolean := False;
       --  unspecified
-      Reserved_22_31 : Interfaces.Bit_Types.UInt10;
+      Reserved_22_31 : HAL.UInt10;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -653,17 +653,17 @@ package STM32_SVD.Ethernet is
    --  Ethernet MMC receive interrupt mask register
    type MMCRIMR_Register is record
       --  unspecified
-      Reserved_0_4   : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_0_4   : HAL.UInt5 := 16#0#;
       --  no description available
       RFCEM          : Boolean := False;
       --  no description available
       RFAEM          : Boolean := False;
       --  unspecified
-      Reserved_7_16  : Interfaces.Bit_Types.UInt10 := 16#0#;
+      Reserved_7_16  : HAL.UInt10 := 16#0#;
       --  no description available
       RGUFM          : Boolean := False;
       --  unspecified
-      Reserved_18_31 : Interfaces.Bit_Types.UInt14 := 16#0#;
+      Reserved_18_31 : HAL.UInt14 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -684,7 +684,7 @@ package STM32_SVD.Ethernet is
    --  Ethernet MMC transmit interrupt mask register
    type MMCTIMR_Register is record
       --  unspecified
-      Reserved_0_13  : Interfaces.Bit_Types.UInt14 := 16#0#;
+      Reserved_0_13  : HAL.UInt14 := 16#0#;
       --  no description available
       TGFSCM         : Boolean := False;
       --  no description available
@@ -692,7 +692,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       TGFM           : Boolean := False;
       --  unspecified
-      Reserved_17_31 : Interfaces.Bit_Types.UInt15 := 16#0#;
+      Reserved_17_31 : HAL.UInt15 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -709,7 +709,7 @@ package STM32_SVD.Ethernet is
    -- PTPTSCR_Register --
    ----------------------
 
-   subtype PTPTSCR_TSCNT_Field is Interfaces.Bit_Types.UInt2;
+   subtype PTPTSCR_TSCNT_Field is HAL.UInt2;
 
    --  Ethernet PTP time stamp control register
    type PTPTSCR_Register is record
@@ -726,7 +726,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       TTSARU         : Boolean := False;
       --  unspecified
-      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_6_7   : HAL.UInt2 := 16#0#;
       --  no description available
       TSSARFE        : Boolean := False;
       --  no description available
@@ -748,7 +748,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       TSPFFMAE       : Boolean := False;
       --  unspecified
-      Reserved_19_31 : Interfaces.Bit_Types.UInt13 := 16#0#;
+      Reserved_19_31 : HAL.UInt13 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -778,14 +778,14 @@ package STM32_SVD.Ethernet is
    -- PTPSSIR_Register --
    ----------------------
 
-   subtype PTPSSIR_STSSI_Field is Interfaces.Bit_Types.Byte;
+   subtype PTPSSIR_STSSI_Field is HAL.Byte;
 
    --  Ethernet PTP subsecond increment register
    type PTPSSIR_Register is record
       --  no description available
       STSSI         : PTPSSIR_STSSI_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -799,7 +799,7 @@ package STM32_SVD.Ethernet is
    -- PTPTSLR_Register --
    ----------------------
 
-   subtype PTPTSLR_STSS_Field is Interfaces.Bit_Types.UInt31;
+   subtype PTPTSLR_STSS_Field is HAL.UInt31;
 
    --  Ethernet PTP time stamp low register
    type PTPTSLR_Register is record
@@ -820,7 +820,7 @@ package STM32_SVD.Ethernet is
    -- PTPTSLUR_Register --
    -----------------------
 
-   subtype PTPTSLUR_TSUSS_Field is Interfaces.Bit_Types.UInt31;
+   subtype PTPTSLUR_TSUSS_Field is HAL.UInt31;
 
    --  Ethernet PTP time stamp low update register
    type PTPTSLUR_Register is record
@@ -848,7 +848,7 @@ package STM32_SVD.Ethernet is
       --  Read-only. no description available
       TSTTR         : Boolean := False;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30;
+      Reserved_2_31 : HAL.UInt30;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -870,7 +870,7 @@ package STM32_SVD.Ethernet is
       --  Read-only. TSTTR
       TSTTR         : Boolean := False;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30;
+      Reserved_2_31 : HAL.UInt30;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -885,10 +885,10 @@ package STM32_SVD.Ethernet is
    -- DMABMR_Register --
    ---------------------
 
-   subtype DMABMR_DSL_Field is Interfaces.Bit_Types.UInt5;
-   subtype DMABMR_PBL_Field is Interfaces.Bit_Types.UInt6;
-   subtype DMABMR_RTPR_Field is Interfaces.Bit_Types.UInt2;
-   subtype DMABMR_RDP_Field is Interfaces.Bit_Types.UInt6;
+   subtype DMABMR_DSL_Field is HAL.UInt5;
+   subtype DMABMR_PBL_Field is HAL.UInt6;
+   subtype DMABMR_RTPR_Field is HAL.UInt2;
+   subtype DMABMR_RDP_Field is HAL.UInt6;
 
    --  Ethernet DMA bus mode register
    type DMABMR_Register is record
@@ -917,7 +917,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       MB             : Boolean := False;
       --  unspecified
-      Reserved_27_31 : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_27_31 : HAL.UInt5 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -942,9 +942,9 @@ package STM32_SVD.Ethernet is
    -- DMASR_Register --
    --------------------
 
-   subtype DMASR_RPS_Field is Interfaces.Bit_Types.UInt3;
-   subtype DMASR_TPS_Field is Interfaces.Bit_Types.UInt3;
-   subtype DMASR_EBS_Field is Interfaces.Bit_Types.UInt3;
+   subtype DMASR_RPS_Field is HAL.UInt3;
+   subtype DMASR_TPS_Field is HAL.UInt3;
+   subtype DMASR_EBS_Field is HAL.UInt3;
 
    --  Ethernet DMA status register
    type DMASR_Register is record
@@ -971,7 +971,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       ETS            : Boolean := False;
       --  unspecified
-      Reserved_11_12 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_11_12 : HAL.UInt2 := 16#0#;
       --  no description available
       FBES           : Boolean := False;
       --  no description available
@@ -987,7 +987,7 @@ package STM32_SVD.Ethernet is
       --  Read-only. no description available
       EBS            : DMASR_EBS_Field := 16#0#;
       --  unspecified
-      Reserved_26_26 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_26_26 : HAL.Bit := 16#0#;
       --  Read-only. no description available
       MMCS           : Boolean := False;
       --  Read-only. no description available
@@ -995,7 +995,7 @@ package STM32_SVD.Ethernet is
       --  Read-only. no description available
       TSTS           : Boolean := False;
       --  unspecified
-      Reserved_30_31 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_30_31 : HAL.UInt2 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1031,13 +1031,13 @@ package STM32_SVD.Ethernet is
    -- DMAOMR_Register --
    ---------------------
 
-   subtype DMAOMR_RTC_Field is Interfaces.Bit_Types.UInt2;
-   subtype DMAOMR_TTC_Field is Interfaces.Bit_Types.UInt3;
+   subtype DMAOMR_RTC_Field is HAL.UInt2;
+   subtype DMAOMR_TTC_Field is HAL.UInt3;
 
    --  Ethernet DMA operation mode register
    type DMAOMR_Register is record
       --  unspecified
-      Reserved_0_0   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  SR
       SR             : Boolean := False;
       --  OSF
@@ -1045,25 +1045,25 @@ package STM32_SVD.Ethernet is
       --  RTC
       RTC            : DMAOMR_RTC_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  FUGF
       FUGF           : Boolean := False;
       --  FEF
       FEF            : Boolean := False;
       --  unspecified
-      Reserved_8_12  : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_8_12  : HAL.UInt5 := 16#0#;
       --  ST
       ST             : Boolean := False;
       --  TTC
       TTC            : DMAOMR_TTC_Field := 16#0#;
       --  unspecified
-      Reserved_17_19 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_17_19 : HAL.UInt3 := 16#0#;
       --  FTF
       FTF            : Boolean := False;
       --  TSF
       TSF            : Boolean := False;
       --  unspecified
-      Reserved_22_23 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_22_23 : HAL.UInt2 := 16#0#;
       --  DFRF
       DFRF           : Boolean := False;
       --  RSF
@@ -1071,7 +1071,7 @@ package STM32_SVD.Ethernet is
       --  DTCEFD
       DTCEFD         : Boolean := False;
       --  unspecified
-      Reserved_27_31 : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_27_31 : HAL.UInt5 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1126,7 +1126,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       ETIE           : Boolean := False;
       --  unspecified
-      Reserved_11_12 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_11_12 : HAL.UInt2 := 16#0#;
       --  no description available
       FBEIE          : Boolean := False;
       --  no description available
@@ -1136,7 +1136,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       NISE           : Boolean := False;
       --  unspecified
-      Reserved_17_31 : Interfaces.Bit_Types.UInt15 := 16#0#;
+      Reserved_17_31 : HAL.UInt15 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1165,8 +1165,8 @@ package STM32_SVD.Ethernet is
    -- DMAMFBOCR_Register --
    ------------------------
 
-   subtype DMAMFBOCR_MFC_Field is Interfaces.Bit_Types.Short;
-   subtype DMAMFBOCR_MFA_Field is Interfaces.Bit_Types.UInt11;
+   subtype DMAMFBOCR_MFC_Field is HAL.Short;
+   subtype DMAMFBOCR_MFA_Field is HAL.UInt11;
 
    --  Ethernet DMA missed frame and buffer overflow counter register
    type DMAMFBOCR_Register is record
@@ -1179,7 +1179,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       OFOC           : Boolean := False;
       --  unspecified
-      Reserved_29_31 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_29_31 : HAL.UInt3 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1196,14 +1196,14 @@ package STM32_SVD.Ethernet is
    -- DMARSWTR_Register --
    -----------------------
 
-   subtype DMARSWTR_RSWTC_Field is Interfaces.Bit_Types.Byte;
+   subtype DMARSWTR_RSWTC_Field is HAL.Byte;
 
    --  Ethernet DMA receive status watchdog timer register
    type DMARSWTR_Register is record
       --  RSWTC
       RSWTC         : DMARSWTR_RSWTC_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1224,9 +1224,9 @@ package STM32_SVD.Ethernet is
       --  Ethernet MAC frame filter register
       MACFFR    : MACFFR_Register;
       --  Ethernet MAC hash table high register
-      MACHTHR   : Interfaces.Bit_Types.Word;
+      MACHTHR   : HAL.Word;
       --  Ethernet MAC hash table low register
-      MACHTLR   : Interfaces.Bit_Types.Word;
+      MACHTLR   : HAL.Word;
       --  Ethernet MAC MII address register
       MACMIIAR  : MACMIIAR_Register;
       --  Ethernet MAC MII data register
@@ -1246,11 +1246,11 @@ package STM32_SVD.Ethernet is
       --  Ethernet MAC address 0 high register
       MACA0HR   : MACA0HR_Register;
       --  Ethernet MAC address 0 low register
-      MACA0LR   : Interfaces.Bit_Types.Word;
+      MACA0LR   : HAL.Word;
       --  Ethernet MAC address 1 high register
       MACA1HR   : MACA1HR_Register;
       --  Ethernet MAC address1 low register
-      MACA1LR   : Interfaces.Bit_Types.Word;
+      MACA1LR   : HAL.Word;
       --  Ethernet MAC address 2 high register
       MACA2HR   : MACA2HR_Register;
       --  Ethernet MAC address 2 low register
@@ -1258,7 +1258,7 @@ package STM32_SVD.Ethernet is
       --  Ethernet MAC address 3 high register
       MACA3HR   : MACA3HR_Register;
       --  Ethernet MAC address 3 low register
-      MACA3LR   : Interfaces.Bit_Types.Word;
+      MACA3LR   : HAL.Word;
    end record
      with Volatile;
 
@@ -1302,18 +1302,18 @@ package STM32_SVD.Ethernet is
       --  Ethernet MMC transmit interrupt mask register
       MMCTIMR     : MMCTIMR_Register;
       --  Ethernet MMC transmitted good frames after a single collision counter
-      MMCTGFSCCR  : Interfaces.Bit_Types.Word;
+      MMCTGFSCCR  : HAL.Word;
       --  Ethernet MMC transmitted good frames after more than a single
       --  collision
-      MMCTGFMSCCR : Interfaces.Bit_Types.Word;
+      MMCTGFMSCCR : HAL.Word;
       --  Ethernet MMC transmitted good frames counter register
-      MMCTGFCR    : Interfaces.Bit_Types.Word;
+      MMCTGFCR    : HAL.Word;
       --  Ethernet MMC received frames with CRC error counter register
-      MMCRFCECR   : Interfaces.Bit_Types.Word;
+      MMCRFCECR   : HAL.Word;
       --  Ethernet MMC received frames with alignment error counter register
-      MMCRFAECR   : Interfaces.Bit_Types.Word;
+      MMCRFAECR   : HAL.Word;
       --  MMC received good unicast frames counter register
-      MMCRGUFCR   : Interfaces.Bit_Types.Word;
+      MMCRGUFCR   : HAL.Word;
    end record
      with Volatile;
 
@@ -1342,19 +1342,19 @@ package STM32_SVD.Ethernet is
       --  Ethernet PTP subsecond increment register
       PTPSSIR  : PTPSSIR_Register;
       --  Ethernet PTP time stamp high register
-      PTPTSHR  : Interfaces.Bit_Types.Word;
+      PTPTSHR  : HAL.Word;
       --  Ethernet PTP time stamp low register
       PTPTSLR  : PTPTSLR_Register;
       --  Ethernet PTP time stamp high update register
-      PTPTSHUR : Interfaces.Bit_Types.Word;
+      PTPTSHUR : HAL.Word;
       --  Ethernet PTP time stamp low update register
       PTPTSLUR : PTPTSLUR_Register;
       --  Ethernet PTP time stamp addend register
-      PTPTSAR  : Interfaces.Bit_Types.Word;
+      PTPTSAR  : HAL.Word;
       --  Ethernet PTP target time high register
-      PTPTTHR  : Interfaces.Bit_Types.Word;
+      PTPTTHR  : HAL.Word;
       --  Ethernet PTP target time low register
-      PTPTTLR  : Interfaces.Bit_Types.Word;
+      PTPTTLR  : HAL.Word;
       --  Ethernet PTP time stamp status register
       PTPTSSR  : PTPTSSR_Register;
       --  Ethernet PTP PPS control register
@@ -1385,13 +1385,13 @@ package STM32_SVD.Ethernet is
       --  Ethernet DMA bus mode register
       DMABMR    : DMABMR_Register;
       --  Ethernet DMA transmit poll demand register
-      DMATPDR   : Interfaces.Bit_Types.Word;
+      DMATPDR   : HAL.Word;
       --  EHERNET DMA receive poll demand register
-      DMARPDR   : Interfaces.Bit_Types.Word;
+      DMARPDR   : HAL.Word;
       --  Ethernet DMA receive descriptor list address register
-      DMARDLAR  : Interfaces.Bit_Types.Word;
+      DMARDLAR  : HAL.Word;
       --  Ethernet DMA transmit descriptor list address register
-      DMATDLAR  : Interfaces.Bit_Types.Word;
+      DMATDLAR  : HAL.Word;
       --  Ethernet DMA status register
       DMASR     : DMASR_Register;
       --  Ethernet DMA operation mode register
@@ -1403,13 +1403,13 @@ package STM32_SVD.Ethernet is
       --  Ethernet DMA receive status watchdog timer register
       DMARSWTR  : DMARSWTR_Register;
       --  Ethernet DMA current host transmit descriptor register
-      DMACHTDR  : Interfaces.Bit_Types.Word;
+      DMACHTDR  : HAL.Word;
       --  Ethernet DMA current host receive descriptor register
-      DMACHRDR  : Interfaces.Bit_Types.Word;
+      DMACHRDR  : HAL.Word;
       --  Ethernet DMA current host transmit buffer address register
-      DMACHTBAR : Interfaces.Bit_Types.Word;
+      DMACHTBAR : HAL.Word;
       --  Ethernet DMA current host receive buffer address register
-      DMACHRBAR : Interfaces.Bit_Types.Word;
+      DMACHRBAR : HAL.Word;
    end record
      with Volatile;
 

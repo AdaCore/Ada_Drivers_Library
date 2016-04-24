@@ -1,5 +1,5 @@
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-with HAL.I2C;              use HAL.I2C;
+with HAL;     use HAL;
+with HAL.I2C; use HAL.I2C;
 
 package OV2640 is
 

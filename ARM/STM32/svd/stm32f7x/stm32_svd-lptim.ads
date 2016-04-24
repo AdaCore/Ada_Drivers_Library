@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F7x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.LPTIM is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -34,7 +34,7 @@ package STM32_SVD.LPTIM is
       --  Read-only. Counter direction change up to down
       DOWN          : Boolean := False;
       --  unspecified
-      Reserved_7_31 : Interfaces.Bit_Types.UInt25;
+      Reserved_7_31 : HAL.UInt25;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -71,7 +71,7 @@ package STM32_SVD.LPTIM is
       --  Write-only. Direction change to down Clear Flag
       DOWNCF        : Boolean := False;
       --  unspecified
-      Reserved_7_31 : Interfaces.Bit_Types.UInt25 := 16#0#;
+      Reserved_7_31 : HAL.UInt25 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -108,7 +108,7 @@ package STM32_SVD.LPTIM is
       --  Direction change to down Interrupt Enable
       DOWNIE        : Boolean := False;
       --  unspecified
-      Reserved_7_31 : Interfaces.Bit_Types.UInt25 := 16#0#;
+      Reserved_7_31 : HAL.UInt25 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -128,12 +128,12 @@ package STM32_SVD.LPTIM is
    -- CFGR_Register --
    -------------------
 
-   subtype CFGR_CKPOL_Field is Interfaces.Bit_Types.UInt2;
-   subtype CFGR_CKFLT_Field is Interfaces.Bit_Types.UInt2;
-   subtype CFGR_TRGFLT_Field is Interfaces.Bit_Types.UInt2;
-   subtype CFGR_PRESC_Field is Interfaces.Bit_Types.UInt3;
-   subtype CFGR_TRIGSEL_Field is Interfaces.Bit_Types.UInt3;
-   subtype CFGR_TRIGEN_Field is Interfaces.Bit_Types.UInt2;
+   subtype CFGR_CKPOL_Field is HAL.UInt2;
+   subtype CFGR_CKFLT_Field is HAL.UInt2;
+   subtype CFGR_TRGFLT_Field is HAL.UInt2;
+   subtype CFGR_PRESC_Field is HAL.UInt3;
+   subtype CFGR_TRIGSEL_Field is HAL.UInt3;
+   subtype CFGR_TRIGEN_Field is HAL.UInt2;
 
    --  Configuration Register
    type CFGR_Register is record
@@ -144,19 +144,19 @@ package STM32_SVD.LPTIM is
       --  Configurable digital filter for external clock
       CKFLT          : CFGR_CKFLT_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  Configurable digital filter for trigger
       TRGFLT         : CFGR_TRGFLT_Field := 16#0#;
       --  unspecified
-      Reserved_8_8   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_8_8   : HAL.Bit := 16#0#;
       --  Clock prescaler
       PRESC          : CFGR_PRESC_Field := 16#0#;
       --  unspecified
-      Reserved_12_12 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_12_12 : HAL.Bit := 16#0#;
       --  Trigger selector
       TRIGSEL        : CFGR_TRIGSEL_Field := 16#0#;
       --  unspecified
-      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  Trigger enable and polarity
       TRIGEN         : CFGR_TRIGEN_Field := 16#0#;
       --  Timeout enable
@@ -172,7 +172,7 @@ package STM32_SVD.LPTIM is
       --  Encoder mode enable
       ENC            : Boolean := False;
       --  unspecified
-      Reserved_25_31 : Interfaces.Bit_Types.UInt7 := 16#0#;
+      Reserved_25_31 : HAL.UInt7 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -211,7 +211,7 @@ package STM32_SVD.LPTIM is
       --  Timer start in continuous mode
       CNTSTRT       : Boolean := False;
       --  unspecified
-      Reserved_3_31 : Interfaces.Bit_Types.UInt29 := 16#0#;
+      Reserved_3_31 : HAL.UInt29 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -227,14 +227,14 @@ package STM32_SVD.LPTIM is
    -- CMP_Register --
    ------------------
 
-   subtype CMP_CMP_Field is Interfaces.Bit_Types.Short;
+   subtype CMP_CMP_Field is HAL.Short;
 
    --  Compare Register
    type CMP_Register is record
       --  Compare value
       CMP            : CMP_CMP_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -248,14 +248,14 @@ package STM32_SVD.LPTIM is
    -- ARR_Register --
    ------------------
 
-   subtype ARR_ARR_Field is Interfaces.Bit_Types.Short;
+   subtype ARR_ARR_Field is HAL.Short;
 
    --  Autoreload Register
    type ARR_Register is record
       --  Auto reload value
       ARR            : ARR_ARR_Field := 16#1#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -269,14 +269,14 @@ package STM32_SVD.LPTIM is
    -- CNT_Register --
    ------------------
 
-   subtype CNT_CNT_Field is Interfaces.Bit_Types.Short;
+   subtype CNT_CNT_Field is HAL.Short;
 
    --  Counter Register
    type CNT_Register is record
       --  Read-only. Counter value
       CNT            : CNT_CNT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short;
+      Reserved_16_31 : HAL.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

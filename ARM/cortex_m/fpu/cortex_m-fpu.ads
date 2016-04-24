@@ -44,7 +44,7 @@
 --  May 2014 DocID022708 Rev 4, file "DM00046982.pdf"
 --  especially section 4.6.4
 
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
+with HAL; use HAL;
 
 package Cortex_M.FPU is
 

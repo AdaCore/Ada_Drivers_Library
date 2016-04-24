@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F7x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.CEC is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -26,7 +26,7 @@ package STM32_SVD.CEC is
       --  Tx End Of Message
       TXEOM         : Boolean := False;
       --  unspecified
-      Reserved_3_31 : Interfaces.Bit_Types.UInt29 := 16#0#;
+      Reserved_3_31 : HAL.UInt29 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -42,8 +42,8 @@ package STM32_SVD.CEC is
    -- CFGR_Register --
    -------------------
 
-   subtype CFGR_SFT_Field is Interfaces.Bit_Types.UInt3;
-   subtype CFGR_OAR_Field is Interfaces.Bit_Types.UInt15;
+   subtype CFGR_SFT_Field is HAL.UInt3;
+   subtype CFGR_OAR_Field is HAL.UInt15;
 
    --  configuration register
    type CFGR_Register is record
@@ -62,7 +62,7 @@ package STM32_SVD.CEC is
       --  SFT Option Bit
       SFTOP         : Boolean := False;
       --  unspecified
-      Reserved_9_15 : Interfaces.Bit_Types.UInt7 := 16#0#;
+      Reserved_9_15 : HAL.UInt7 := 16#0#;
       --  Own addresses configuration
       OAR           : CFGR_OAR_Field := 16#0#;
       --  Listen mode
@@ -88,14 +88,14 @@ package STM32_SVD.CEC is
    -- TXDR_Register --
    -------------------
 
-   subtype TXDR_TXD_Field is Interfaces.Bit_Types.Byte;
+   subtype TXDR_TXD_Field is HAL.Byte;
 
    --  Tx data register
    type TXDR_Register is record
       --  Write-only. Tx Data register
       TXD           : TXDR_TXD_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -109,14 +109,14 @@ package STM32_SVD.CEC is
    -- RXDR_Register --
    -------------------
 
-   subtype RXDR_RXDR_Field is Interfaces.Bit_Types.Byte;
+   subtype RXDR_RXDR_Field is HAL.Byte;
 
    --  Rx Data Register
    type RXDR_Register is record
       --  Read-only. CEC Rx Data Register
       RXDR          : RXDR_RXDR_Field := 16#0#;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24;
+      Reserved_8_31 : HAL.UInt24;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -159,7 +159,7 @@ package STM32_SVD.CEC is
       --  Tx-Missing acknowledge error
       TXACKE         : Boolean := False;
       --  unspecified
-      Reserved_13_31 : Interfaces.Bit_Types.UInt19 := 16#0#;
+      Reserved_13_31 : HAL.UInt19 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -214,7 +214,7 @@ package STM32_SVD.CEC is
       --  Tx-Missing Acknowledge Error Interrupt Enable
       TXACKIE        : Boolean := False;
       --  unspecified
-      Reserved_13_31 : Interfaces.Bit_Types.UInt19 := 16#0#;
+      Reserved_13_31 : HAL.UInt19 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

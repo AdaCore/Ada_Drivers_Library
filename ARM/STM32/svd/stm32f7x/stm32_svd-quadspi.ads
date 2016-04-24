@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F7x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.QUADSPI is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,8 +17,8 @@ package STM32_SVD.QUADSPI is
    -- CR_Register --
    -----------------
 
-   subtype CR_FTHRES_Field is Interfaces.Bit_Types.UInt5;
-   subtype CR_PRESCALER_Field is Interfaces.Bit_Types.Byte;
+   subtype CR_FTHRES_Field is HAL.UInt5;
+   subtype CR_PRESCALER_Field is HAL.Byte;
 
    --  control register
    type CR_Register is record
@@ -33,7 +33,7 @@ package STM32_SVD.QUADSPI is
       --  Sample shift
       SSHIFT         : Boolean := False;
       --  unspecified
-      Reserved_5_5   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  Dual-flash mode
       DFM            : Boolean := False;
       --  FLASH memory selection
@@ -41,7 +41,7 @@ package STM32_SVD.QUADSPI is
       --  IFO threshold level
       FTHRES         : CR_FTHRES_Field := 16#0#;
       --  unspecified
-      Reserved_13_15 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_13_15 : HAL.UInt3 := 16#0#;
       --  Transfer error interrupt enable
       TEIE           : Boolean := False;
       --  Transfer complete interrupt enable
@@ -53,7 +53,7 @@ package STM32_SVD.QUADSPI is
       --  TimeOut interrupt enable
       TOIE           : Boolean := False;
       --  unspecified
-      Reserved_21_21 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_21_21 : HAL.Bit := 16#0#;
       --  Automatic poll mode stop
       APMS           : Boolean := False;
       --  Polling match mode
@@ -90,23 +90,23 @@ package STM32_SVD.QUADSPI is
    -- DCR_Register --
    ------------------
 
-   subtype DCR_CSHT_Field is Interfaces.Bit_Types.UInt3;
-   subtype DCR_FSIZE_Field is Interfaces.Bit_Types.UInt5;
+   subtype DCR_CSHT_Field is HAL.UInt3;
+   subtype DCR_FSIZE_Field is HAL.UInt5;
 
    --  device configuration register
    type DCR_Register is record
       --  Mode 0 / mode 3
       CKMODE         : Boolean := False;
       --  unspecified
-      Reserved_1_7   : Interfaces.Bit_Types.UInt7 := 16#0#;
+      Reserved_1_7   : HAL.UInt7 := 16#0#;
       --  Chip select high time
       CSHT           : DCR_CSHT_Field := 16#0#;
       --  unspecified
-      Reserved_11_15 : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_11_15 : HAL.UInt5 := 16#0#;
       --  FLASH memory size
       FSIZE          : DCR_FSIZE_Field := 16#0#;
       --  unspecified
-      Reserved_21_31 : Interfaces.Bit_Types.UInt11 := 16#0#;
+      Reserved_21_31 : HAL.UInt11 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -124,7 +124,7 @@ package STM32_SVD.QUADSPI is
    -- SR_Register --
    -----------------
 
-   subtype SR_FLEVEL_Field is Interfaces.Bit_Types.UInt7;
+   subtype SR_FLEVEL_Field is HAL.UInt7;
 
    --  status register
    type SR_Register is record
@@ -141,11 +141,11 @@ package STM32_SVD.QUADSPI is
       --  Read-only. Busy
       BUSY           : Boolean := False;
       --  unspecified
-      Reserved_6_7   : Interfaces.Bit_Types.UInt2;
+      Reserved_6_7   : HAL.UInt2;
       --  Read-only. FIFO level
       FLEVEL         : SR_FLEVEL_Field := 16#0#;
       --  unspecified
-      Reserved_15_31 : Interfaces.Bit_Types.UInt17;
+      Reserved_15_31 : HAL.UInt17;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -173,13 +173,13 @@ package STM32_SVD.QUADSPI is
       --  Clear transfer complete flag
       CTCF          : Boolean := False;
       --  unspecified
-      Reserved_2_2  : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_2_2  : HAL.Bit := 16#0#;
       --  Clear status match flag
       CSMF          : Boolean := False;
       --  Clear timeout flag
       CTOF          : Boolean := False;
       --  unspecified
-      Reserved_5_31 : Interfaces.Bit_Types.UInt27 := 16#0#;
+      Reserved_5_31 : HAL.UInt27 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -197,15 +197,15 @@ package STM32_SVD.QUADSPI is
    -- CCR_Register --
    ------------------
 
-   subtype CCR_INSTRUCTION_Field is Interfaces.Bit_Types.Byte;
-   subtype CCR_IMODE_Field is Interfaces.Bit_Types.UInt2;
-   subtype CCR_ADMODE_Field is Interfaces.Bit_Types.UInt2;
-   subtype CCR_ADSIZE_Field is Interfaces.Bit_Types.UInt2;
-   subtype CCR_ABMODE_Field is Interfaces.Bit_Types.UInt2;
-   subtype CCR_ABSIZE_Field is Interfaces.Bit_Types.UInt2;
-   subtype CCR_DCYC_Field is Interfaces.Bit_Types.UInt5;
-   subtype CCR_DMODE_Field is Interfaces.Bit_Types.UInt2;
-   subtype CCR_FMODE_Field is Interfaces.Bit_Types.UInt2;
+   subtype CCR_INSTRUCTION_Field is HAL.Byte;
+   subtype CCR_IMODE_Field is HAL.UInt2;
+   subtype CCR_ADMODE_Field is HAL.UInt2;
+   subtype CCR_ADSIZE_Field is HAL.UInt2;
+   subtype CCR_ABMODE_Field is HAL.UInt2;
+   subtype CCR_ABSIZE_Field is HAL.UInt2;
+   subtype CCR_DCYC_Field is HAL.UInt5;
+   subtype CCR_DMODE_Field is HAL.UInt2;
+   subtype CCR_FMODE_Field is HAL.UInt2;
 
    --  communication configuration register
    type CCR_Register is record
@@ -224,7 +224,7 @@ package STM32_SVD.QUADSPI is
       --  Number of dummy cycles
       DCYC           : CCR_DCYC_Field := 16#0#;
       --  unspecified
-      Reserved_23_23 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_23_23 : HAL.Bit := 16#0#;
       --  Data mode
       DMODE          : CCR_DMODE_Field := 16#0#;
       --  Functional mode
@@ -232,7 +232,7 @@ package STM32_SVD.QUADSPI is
       --  Send instruction only once mode
       SIOO           : Boolean := False;
       --  unspecified
-      Reserved_29_29 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_29_29 : HAL.Bit := 16#0#;
       --  DDR hold half cycle
       DHHC           : Boolean := False;
       --  Double data rate mode
@@ -262,14 +262,14 @@ package STM32_SVD.QUADSPI is
    -- PIR_Register --
    ------------------
 
-   subtype PIR_INTERVAL_Field is Interfaces.Bit_Types.Short;
+   subtype PIR_INTERVAL_Field is HAL.Short;
 
    --  polling interval register
    type PIR_Register is record
       --  Polling interval
       INTERVAL       : PIR_INTERVAL_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -283,14 +283,14 @@ package STM32_SVD.QUADSPI is
    -- LPTR_Register --
    -------------------
 
-   subtype LPTR_TIMEOUT_Field is Interfaces.Bit_Types.Short;
+   subtype LPTR_TIMEOUT_Field is HAL.Short;
 
    --  low-power timeout register
    type LPTR_Register is record
       --  Timeout period
       TIMEOUT        : LPTR_TIMEOUT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -315,19 +315,19 @@ package STM32_SVD.QUADSPI is
       --  flag clear register
       FCR   : FCR_Register;
       --  data length register
-      DLR   : Interfaces.Bit_Types.Word;
+      DLR   : HAL.Word;
       --  communication configuration register
       CCR   : CCR_Register;
       --  address register
-      AR    : Interfaces.Bit_Types.Word;
+      AR    : HAL.Word;
       --  ABR
-      ABR   : Interfaces.Bit_Types.Word;
+      ABR   : HAL.Word;
       --  data register
-      DR    : Interfaces.Bit_Types.Word;
+      DR    : HAL.Word;
       --  polling status mask register
-      PSMKR : Interfaces.Bit_Types.Word;
+      PSMKR : HAL.Word;
       --  polling status match register
-      PSMAR : Interfaces.Bit_Types.Word;
+      PSMAR : HAL.Word;
       --  polling interval register
       PIR   : PIR_Register;
       --  low-power timeout register

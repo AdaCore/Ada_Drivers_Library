@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F7x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.PWR is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,9 +17,9 @@ package STM32_SVD.PWR is
    -- CR1_Register --
    ------------------
 
-   subtype CR1_PLS_Field is Interfaces.Bit_Types.UInt3;
-   subtype CR1_VOS_Field is Interfaces.Bit_Types.UInt2;
-   subtype CR1_UDEN_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR1_PLS_Field is HAL.UInt3;
+   subtype CR1_VOS_Field is HAL.UInt2;
+   subtype CR1_UDEN_Field is HAL.UInt2;
 
    --  power control register
    type CR1_Register is record
@@ -28,7 +28,7 @@ package STM32_SVD.PWR is
       --  Power down deepsleep
       PDDS           : Boolean := False;
       --  unspecified
-      Reserved_2_2   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  Clear standby flag
       CSBF           : Boolean := False;
       --  Power voltage detector enable
@@ -44,7 +44,7 @@ package STM32_SVD.PWR is
       --  Main regulator in deepsleep under-drive mode
       MRUDS          : Boolean := False;
       --  unspecified
-      Reserved_12_12 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_12_12 : HAL.Bit := 16#0#;
       --  ADCDC1
       ADCDC1         : Boolean := False;
       --  Regulator voltage scaling output selection
@@ -56,7 +56,7 @@ package STM32_SVD.PWR is
       --  Under-drive enable in stop mode
       UDEN           : CR1_UDEN_Field := 16#0#;
       --  unspecified
-      Reserved_20_31 : Interfaces.Bit_Types.UInt12 := 16#0#;
+      Reserved_20_31 : HAL.UInt12 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -85,7 +85,7 @@ package STM32_SVD.PWR is
    -- CSR1_Register --
    -------------------
 
-   subtype CSR1_UDRDY_Field is Interfaces.Bit_Types.UInt2;
+   subtype CSR1_UDRDY_Field is HAL.UInt2;
 
    --  power control/status register
    type CSR1_Register is record
@@ -98,15 +98,15 @@ package STM32_SVD.PWR is
       --  Read-only. Backup regulator ready
       BRR            : Boolean := False;
       --  unspecified
-      Reserved_4_8   : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_4_8   : HAL.UInt5 := 16#0#;
       --  Backup regulator enable
       BRE            : Boolean := False;
       --  unspecified
-      Reserved_10_13 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_10_13 : HAL.UInt4 := 16#0#;
       --  Regulator voltage scaling output selection ready bit
       VOSRDY         : Boolean := False;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Over-drive mode ready
       ODRDY          : Boolean := False;
       --  Over-drive mode switching ready
@@ -114,7 +114,7 @@ package STM32_SVD.PWR is
       --  Under-drive ready flag
       UDRDY          : CSR1_UDRDY_Field := 16#0#;
       --  unspecified
-      Reserved_20_31 : Interfaces.Bit_Types.UInt12 := 16#0#;
+      Reserved_20_31 : HAL.UInt12 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -154,7 +154,7 @@ package STM32_SVD.PWR is
       case As_Array is
          when False =>
             --  CWUPF as a value
-            Val : Interfaces.Bit_Types.UInt6;
+            Val : HAL.UInt6;
          when True =>
             --  CWUPF as an array
             Arr : CR2_CWUPF_Field_Array;
@@ -182,7 +182,7 @@ package STM32_SVD.PWR is
       case As_Array is
          when False =>
             --  WUPP as a value
-            Val : Interfaces.Bit_Types.UInt6;
+            Val : HAL.UInt6;
          when True =>
             --  WUPP as an array
             Arr : CR2_WUPP_Field_Array;
@@ -200,11 +200,11 @@ package STM32_SVD.PWR is
       --  Read-only. Clear Wakeup Pin flag for PA0
       CWUPF          : CR2_CWUPF_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_6_7   : HAL.UInt2 := 16#0#;
       --  Wakeup pin polarity bit for PA0
       WUPP           : CR2_WUPP_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_14_31 : Interfaces.Bit_Types.UInt18 := 16#0#;
+      Reserved_14_31 : HAL.UInt18 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -235,7 +235,7 @@ package STM32_SVD.PWR is
       case As_Array is
          when False =>
             --  WUPF as a value
-            Val : Interfaces.Bit_Types.UInt6;
+            Val : HAL.UInt6;
          when True =>
             --  WUPF as an array
             Arr : CSR2_WUPF_Field_Array;
@@ -263,7 +263,7 @@ package STM32_SVD.PWR is
       case As_Array is
          when False =>
             --  EWUP as a value
-            Val : Interfaces.Bit_Types.UInt6;
+            Val : HAL.UInt6;
          when True =>
             --  EWUP as an array
             Arr : CSR2_EWUP_Field_Array;
@@ -281,11 +281,11 @@ package STM32_SVD.PWR is
       --  Read-only. Wakeup Pin flag for PA0
       WUPF           : CSR2_WUPF_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_6_7   : HAL.UInt2 := 16#0#;
       --  Enable Wakeup pin for PA0
       EWUP           : CSR2_EWUP_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_14_31 : Interfaces.Bit_Types.UInt18 := 16#0#;
+      Reserved_14_31 : HAL.UInt18 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

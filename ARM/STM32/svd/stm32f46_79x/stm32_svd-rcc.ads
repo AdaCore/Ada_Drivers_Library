@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F46_79x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.RCC is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,8 +17,8 @@ package STM32_SVD.RCC is
    -- CR_Register --
    -----------------
 
-   subtype CR_HSITRIM_Field is Interfaces.Bit_Types.UInt5;
-   subtype CR_HSICAL_Field is Interfaces.Bit_Types.Byte;
+   subtype CR_HSITRIM_Field is HAL.UInt5;
+   subtype CR_HSICAL_Field is HAL.Byte;
 
    --  clock control register
    type CR_Register is record
@@ -27,7 +27,7 @@ package STM32_SVD.RCC is
       --  Read-only. Internal high-speed clock ready flag
       HSIRDY         : Boolean := True;
       --  unspecified
-      Reserved_2_2   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  Internal high-speed clock trimming
       HSITRIM        : CR_HSITRIM_Field := 16#10#;
       --  Read-only. Internal high-speed clock calibration
@@ -41,7 +41,7 @@ package STM32_SVD.RCC is
       --  Clock security system enable
       CSSON          : Boolean := False;
       --  unspecified
-      Reserved_20_23 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_20_23 : HAL.UInt4 := 16#0#;
       --  Main PLL (PLL) enable
       PLLON          : Boolean := False;
       --  Read-only. Main PLL (PLL) clock ready flag
@@ -55,7 +55,7 @@ package STM32_SVD.RCC is
       --  Read-only. PLLSAI clock ready flag
       PLLSAIRDY      : Boolean := False;
       --  unspecified
-      Reserved_30_31 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_30_31 : HAL.UInt2 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -84,11 +84,11 @@ package STM32_SVD.RCC is
    -- PLLCFGR_Register --
    ----------------------
 
-   subtype PLLCFGR_PLLM_Field is Interfaces.Bit_Types.UInt6;
-   subtype PLLCFGR_PLLN_Field is Interfaces.Bit_Types.UInt9;
-   subtype PLLCFGR_PLLP_Field is Interfaces.Bit_Types.UInt2;
-   subtype PLLCFGR_PLLQ_Field is Interfaces.Bit_Types.UInt4;
-   subtype PLLCFGR_PLLR_Field is Interfaces.Bit_Types.UInt3;
+   subtype PLLCFGR_PLLM_Field is HAL.UInt6;
+   subtype PLLCFGR_PLLN_Field is HAL.UInt9;
+   subtype PLLCFGR_PLLP_Field is HAL.UInt2;
+   subtype PLLCFGR_PLLQ_Field is HAL.UInt4;
+   subtype PLLCFGR_PLLR_Field is HAL.UInt3;
 
    --  PLL configuration register
    type PLLCFGR_Register is record
@@ -98,22 +98,22 @@ package STM32_SVD.RCC is
       --  Main PLL (PLL) multiplication factor for VCO
       PLLN           : PLLCFGR_PLLN_Field := 16#C0#;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Main PLL (PLL) division factor for main system clock
       PLLP           : PLLCFGR_PLLP_Field := 16#0#;
       --  unspecified
-      Reserved_18_21 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_18_21 : HAL.UInt4 := 16#0#;
       --  Main PLL(PLL) and audio PLL (PLLI2S) entry clock source
       PLLSRC         : Boolean := False;
       --  unspecified
-      Reserved_23_23 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_23_23 : HAL.Bit := 16#0#;
       --  Main PLL (PLL) division factor for USB OTG FS, SDIO and random number
       --  generator clocks
       PLLQ           : PLLCFGR_PLLQ_Field := 16#4#;
       --  Main PLL division factor for DSI clock
       PLLR           : PLLCFGR_PLLR_Field := 16#2#;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -135,16 +135,16 @@ package STM32_SVD.RCC is
    -- CFGR_Register --
    -------------------
 
-   subtype CFGR_SW_Field is Interfaces.Bit_Types.UInt2;
-   subtype CFGR_SWS_Field is Interfaces.Bit_Types.UInt2;
-   subtype CFGR_HPRE_Field is Interfaces.Bit_Types.UInt4;
+   subtype CFGR_SW_Field is HAL.UInt2;
+   subtype CFGR_SWS_Field is HAL.UInt2;
+   subtype CFGR_HPRE_Field is HAL.UInt4;
 
    ---------------
    -- CFGR.PPRE --
    ---------------
 
    --  CFGR_PPRE array element
-   subtype CFGR_PPRE_Element is Interfaces.Bit_Types.UInt3;
+   subtype CFGR_PPRE_Element is HAL.UInt3;
 
    --  CFGR_PPRE array
    type CFGR_PPRE_Field_Array is array (1 .. 2) of CFGR_PPRE_Element
@@ -157,7 +157,7 @@ package STM32_SVD.RCC is
       case As_Array is
          when False =>
             --  PPRE as a value
-            Val : Interfaces.Bit_Types.UInt6;
+            Val : HAL.UInt6;
          when True =>
             --  PPRE as an array
             Arr : CFGR_PPRE_Field_Array;
@@ -170,11 +170,11 @@ package STM32_SVD.RCC is
       Arr at 0 range 0 .. 5;
    end record;
 
-   subtype CFGR_RTCPRE_Field is Interfaces.Bit_Types.UInt5;
-   subtype CFGR_MCO1_Field is Interfaces.Bit_Types.UInt2;
-   subtype CFGR_MCO1PRE_Field is Interfaces.Bit_Types.UInt3;
-   subtype CFGR_MCO2PRE_Field is Interfaces.Bit_Types.UInt3;
-   subtype CFGR_MCO2_Field is Interfaces.Bit_Types.UInt2;
+   subtype CFGR_RTCPRE_Field is HAL.UInt5;
+   subtype CFGR_MCO1_Field is HAL.UInt2;
+   subtype CFGR_MCO1PRE_Field is HAL.UInt3;
+   subtype CFGR_MCO2PRE_Field is HAL.UInt3;
+   subtype CFGR_MCO2_Field is HAL.UInt2;
 
    --  clock configuration register
    type CFGR_Register is record
@@ -185,7 +185,7 @@ package STM32_SVD.RCC is
       --  AHB prescaler
       HPRE         : CFGR_HPRE_Field := 16#0#;
       --  unspecified
-      Reserved_8_9 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_8_9 : HAL.UInt2 := 16#0#;
       --  APB Low speed prescaler (APB1)
       PPRE         : CFGR_PPRE_Field := (As_Array => False, Val => 16#0#);
       --  HSE division factor for RTC clock
@@ -255,7 +255,7 @@ package STM32_SVD.RCC is
       --  PLLSAI Ready Interrupt Enable
       PLLSAIRDYIE    : Boolean := False;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Write-only. LSI ready interrupt clear
       LSIRDYC        : Boolean := False;
       --  Write-only. LSE ready interrupt clear
@@ -273,7 +273,7 @@ package STM32_SVD.RCC is
       --  Write-only. Clock security system interrupt clear
       CSSC           : Boolean := False;
       --  unspecified
-      Reserved_24_31 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_24_31 : HAL.Byte := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -335,11 +335,11 @@ package STM32_SVD.RCC is
       --  IO port K reset
       GPIOKRST       : Boolean := False;
       --  unspecified
-      Reserved_11_11 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_11_11 : HAL.Bit := 16#0#;
       --  CRC reset
       CRCRST         : Boolean := False;
       --  unspecified
-      Reserved_13_20 : Interfaces.Bit_Types.Byte := 16#0#;
+      Reserved_13_20 : HAL.Byte := 16#0#;
       --  DMA2 reset
       DMA1RST        : Boolean := False;
       --  DMA2 reset
@@ -347,15 +347,15 @@ package STM32_SVD.RCC is
       --  DMA2D reset
       DMA2DRST       : Boolean := False;
       --  unspecified
-      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  Ethernet MAC reset
       ETHMACRST      : Boolean := False;
       --  unspecified
-      Reserved_26_28 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_26_28 : HAL.UInt3 := 16#0#;
       --  USB OTG HS module reset
       OTGHSRST       : Boolean := False;
       --  unspecified
-      Reserved_30_31 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_30_31 : HAL.UInt2 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -394,7 +394,7 @@ package STM32_SVD.RCC is
       --  Camera interface reset
       DCMIRST       : Boolean := False;
       --  unspecified
-      Reserved_1_3  : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_1_3  : HAL.UInt3 := 16#0#;
       --  Cryptographic module reset
       CRYPRST       : Boolean := False;
       --  Hash module reset
@@ -404,7 +404,7 @@ package STM32_SVD.RCC is
       --  USB OTG FS module reset
       OTGFSRST      : Boolean := False;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -430,7 +430,7 @@ package STM32_SVD.RCC is
       --  QUADSPI memory controller reset
       QSPIRST       : Boolean := False;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30 := 16#0#;
+      Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -466,17 +466,17 @@ package STM32_SVD.RCC is
       --  TIM14 reset
       TIM14RST       : Boolean := False;
       --  unspecified
-      Reserved_9_10  : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_9_10  : HAL.UInt2 := 16#0#;
       --  Window watchdog reset
       WWDGRST        : Boolean := False;
       --  unspecified
-      Reserved_12_13 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_12_13 : HAL.UInt2 := 16#0#;
       --  SPI 2 reset
       SPI2RST        : Boolean := False;
       --  SPI 3 reset
       SPI3RST        : Boolean := False;
       --  unspecified
-      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  USART 2 reset
       UART2RST       : Boolean := False;
       --  USART 3 reset
@@ -492,13 +492,13 @@ package STM32_SVD.RCC is
       --  I2C3 reset
       I2C3RST        : Boolean := False;
       --  unspecified
-      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  CAN1 reset
       CAN1RST        : Boolean := False;
       --  CAN2 reset
       CAN2RST        : Boolean := False;
       --  unspecified
-      Reserved_27_27 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_27_27 : HAL.Bit := 16#0#;
       --  Power interface reset
       PWRRST         : Boolean := False;
       --  DAC reset
@@ -555,17 +555,17 @@ package STM32_SVD.RCC is
       --  TIM8 reset
       TIM8RST        : Boolean := False;
       --  unspecified
-      Reserved_2_3   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_2_3   : HAL.UInt2 := 16#0#;
       --  USART1 reset
       USART1RST      : Boolean := False;
       --  USART6 reset
       USART6RST      : Boolean := False;
       --  unspecified
-      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_6_7   : HAL.UInt2 := 16#0#;
       --  ADC interface reset (common to all ADCs)
       ADCRST         : Boolean := False;
       --  unspecified
-      Reserved_9_10  : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_9_10  : HAL.UInt2 := 16#0#;
       --  SDIO reset
       SDIORST        : Boolean := False;
       --  SPI 1 reset
@@ -575,7 +575,7 @@ package STM32_SVD.RCC is
       --  System configuration controller reset
       SYSCFGRST      : Boolean := False;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  TIM9 reset
       TIM9RST        : Boolean := False;
       --  TIM10 reset
@@ -583,7 +583,7 @@ package STM32_SVD.RCC is
       --  TIM11 reset
       TIM11RST       : Boolean := False;
       --  unspecified
-      Reserved_19_19 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_19_19 : HAL.Bit := 16#0#;
       --  SPI5 reset
       SPI5RST        : Boolean := False;
       --  SPI6 reset
@@ -591,13 +591,13 @@ package STM32_SVD.RCC is
       --  SAI1 reset
       SAI1RST        : Boolean := False;
       --  unspecified
-      Reserved_23_25 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_23_25 : HAL.UInt3 := 16#0#;
       --  LTDC reset
       LTDCRST        : Boolean := False;
       --  DSI host reset
       DSIRST         : Boolean := False;
       --  unspecified
-      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_28_31 : HAL.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -658,15 +658,15 @@ package STM32_SVD.RCC is
       --  IO port K clock enable
       GPIOKEN        : Boolean := False;
       --  unspecified
-      Reserved_11_11 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_11_11 : HAL.Bit := 16#0#;
       --  CRC clock enable
       CRCEN          : Boolean := False;
       --  unspecified
-      Reserved_13_17 : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_13_17 : HAL.UInt5 := 16#0#;
       --  Backup SRAM interface clock enable
       BKPSRAMEN      : Boolean := False;
       --  unspecified
-      Reserved_19_19 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_19_19 : HAL.Bit := 16#0#;
       --  CCM data RAM clock enable
       CCMDATARAMEN   : Boolean := True;
       --  DMA1 clock enable
@@ -676,7 +676,7 @@ package STM32_SVD.RCC is
       --  DMA2D clock enable
       DMA2DEN        : Boolean := False;
       --  unspecified
-      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  Ethernet MAC clock enable
       ETHMACEN       : Boolean := False;
       --  Ethernet Transmission clock enable
@@ -690,7 +690,7 @@ package STM32_SVD.RCC is
       --  USB OTG HSULPI clock enable
       OTGHSULPIEN    : Boolean := False;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -735,7 +735,7 @@ package STM32_SVD.RCC is
       --  Camera interface enable
       DCMIEN        : Boolean := False;
       --  unspecified
-      Reserved_1_3  : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_1_3  : HAL.UInt3 := 16#0#;
       --  Cryptographic modules clock enable
       CRYPEN        : Boolean := False;
       --  Hash modules clock enable
@@ -745,7 +745,7 @@ package STM32_SVD.RCC is
       --  USB OTG FS clock enable
       OTGFSEN       : Boolean := False;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -771,7 +771,7 @@ package STM32_SVD.RCC is
       --  QUADSPI memory controller module clock enable
       QSPIEN        : Boolean := False;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30 := 16#0#;
+      Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -807,17 +807,17 @@ package STM32_SVD.RCC is
       --  TIM14 clock enable
       TIM14EN        : Boolean := False;
       --  unspecified
-      Reserved_9_10  : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_9_10  : HAL.UInt2 := 16#0#;
       --  Window watchdog clock enable
       WWDGEN         : Boolean := False;
       --  unspecified
-      Reserved_12_13 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_12_13 : HAL.UInt2 := 16#0#;
       --  SPI2 clock enable
       SPI2EN         : Boolean := False;
       --  SPI3 clock enable
       SPI3EN         : Boolean := False;
       --  unspecified
-      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  USART 2 clock enable
       USART2EN       : Boolean := False;
       --  USART3 clock enable
@@ -833,13 +833,13 @@ package STM32_SVD.RCC is
       --  I2C3 clock enable
       I2C3EN         : Boolean := False;
       --  unspecified
-      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  CAN 1 clock enable
       CAN1EN         : Boolean := False;
       --  CAN 2 clock enable
       CAN2EN         : Boolean := False;
       --  unspecified
-      Reserved_27_27 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_27_27 : HAL.Bit := 16#0#;
       --  Power interface clock enable
       PWREN          : Boolean := False;
       --  DAC interface clock enable
@@ -896,13 +896,13 @@ package STM32_SVD.RCC is
       --  TIM8 clock enable
       TIM8EN         : Boolean := False;
       --  unspecified
-      Reserved_2_3   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_2_3   : HAL.UInt2 := 16#0#;
       --  USART1 clock enable
       USART1EN       : Boolean := False;
       --  USART6 clock enable
       USART6EN       : Boolean := False;
       --  unspecified
-      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_6_7   : HAL.UInt2 := 16#0#;
       --  ADC1 clock enable
       ADC1EN         : Boolean := False;
       --  ADC2 clock enable
@@ -918,7 +918,7 @@ package STM32_SVD.RCC is
       --  System configuration controller clock enable
       SYSCFGEN       : Boolean := False;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  TIM9 clock enable
       TIM9EN         : Boolean := False;
       --  TIM10 clock enable
@@ -926,7 +926,7 @@ package STM32_SVD.RCC is
       --  TIM11 clock enable
       TIM11EN        : Boolean := False;
       --  unspecified
-      Reserved_19_19 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_19_19 : HAL.Bit := 16#0#;
       --  SPI5 clock enable
       SPI5ENR        : Boolean := False;
       --  SPI6 clock enable
@@ -934,13 +934,13 @@ package STM32_SVD.RCC is
       --  SAI1 clock enable
       SAI1EN         : Boolean := False;
       --  unspecified
-      Reserved_23_25 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_23_25 : HAL.UInt3 := 16#0#;
       --  LTDC clock enable
       LTDCEN         : Boolean := False;
       --  DSI clocks enable
       DSIEN          : Boolean := False;
       --  unspecified
-      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_28_31 : HAL.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1002,11 +1002,11 @@ package STM32_SVD.RCC is
       --  IO port K clock enable during Sleep mode
       GPIOKLPEN      : Boolean := False;
       --  unspecified
-      Reserved_11_11 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_11_11 : HAL.Bit := 16#0#;
       --  CRC clock enable during Sleep mode
       CRCLPEN        : Boolean := True;
       --  unspecified
-      Reserved_13_14 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_13_14 : HAL.UInt2 := 16#0#;
       --  Flash interface clock enable during Sleep mode
       FLITFLPEN      : Boolean := True;
       --  SRAM 1interface clock enable during Sleep mode
@@ -1018,7 +1018,7 @@ package STM32_SVD.RCC is
       --  SRAM 3 interface clock enable during Sleep mode
       SRAM3LPEN      : Boolean := False;
       --  unspecified
-      Reserved_20_20 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_20_20 : HAL.Bit := 16#0#;
       --  DMA1 clock enable during Sleep mode
       DMA1LPEN       : Boolean := True;
       --  DMA2 clock enable during Sleep mode
@@ -1026,7 +1026,7 @@ package STM32_SVD.RCC is
       --  DMA2D clock enable during Sleep mode
       DMA2DLPEN      : Boolean := False;
       --  unspecified
-      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  Ethernet MAC clock enable during Sleep mode
       ETHMACLPEN     : Boolean := True;
       --  Ethernet transmission clock enable during Sleep mode
@@ -1040,7 +1040,7 @@ package STM32_SVD.RCC is
       --  USB OTG HS ULPI clock enable during Sleep mode
       OTGHSULPILPEN  : Boolean := True;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1088,7 +1088,7 @@ package STM32_SVD.RCC is
       --  Camera interface enable during Sleep mode
       DCMILPEN      : Boolean := True;
       --  unspecified
-      Reserved_1_3  : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_1_3  : HAL.UInt3 := 16#0#;
       --  Cryptography modules clock enable during Sleep mode
       CRYPLPEN      : Boolean := True;
       --  Hash modules clock enable during Sleep mode
@@ -1098,7 +1098,7 @@ package STM32_SVD.RCC is
       --  USB OTG FS clock enable during Sleep mode
       OTGFSLPEN     : Boolean := True;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1124,7 +1124,7 @@ package STM32_SVD.RCC is
       --  QUADSPI memory controller module clock enable during Sleep mode
       QSPILPEN      : Boolean := False;
       --  unspecified
-      Reserved_2_31 : Interfaces.Bit_Types.UInt30 := 16#0#;
+      Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1160,17 +1160,17 @@ package STM32_SVD.RCC is
       --  TIM14 clock enable during Sleep mode
       TIM14LPEN      : Boolean := True;
       --  unspecified
-      Reserved_9_10  : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_9_10  : HAL.UInt2 := 16#0#;
       --  Window watchdog clock enable during Sleep mode
       WWDGLPEN       : Boolean := True;
       --  unspecified
-      Reserved_12_13 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_12_13 : HAL.UInt2 := 16#0#;
       --  SPI2 clock enable during Sleep mode
       SPI2LPEN       : Boolean := True;
       --  SPI3 clock enable during Sleep mode
       SPI3LPEN       : Boolean := True;
       --  unspecified
-      Reserved_16_16 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  USART2 clock enable during Sleep mode
       USART2LPEN     : Boolean := True;
       --  USART3 clock enable during Sleep mode
@@ -1186,13 +1186,13 @@ package STM32_SVD.RCC is
       --  I2C3 clock enable during Sleep mode
       I2C3LPEN       : Boolean := True;
       --  unspecified
-      Reserved_24_24 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  CAN 1 clock enable during Sleep mode
       CAN1LPEN       : Boolean := True;
       --  CAN 2 clock enable during Sleep mode
       CAN2LPEN       : Boolean := True;
       --  unspecified
-      Reserved_27_27 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_27_27 : HAL.Bit := 16#0#;
       --  Power interface clock enable during Sleep mode
       PWRLPEN        : Boolean := True;
       --  DAC interface clock enable during Sleep mode
@@ -1249,13 +1249,13 @@ package STM32_SVD.RCC is
       --  TIM8 clock enable during Sleep mode
       TIM8LPEN       : Boolean := True;
       --  unspecified
-      Reserved_2_3   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_2_3   : HAL.UInt2 := 16#0#;
       --  USART1 clock enable during Sleep mode
       USART1LPEN     : Boolean := True;
       --  USART6 clock enable during Sleep mode
       USART6LPEN     : Boolean := True;
       --  unspecified
-      Reserved_6_7   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_6_7   : HAL.UInt2 := 16#0#;
       --  ADC1 clock enable during Sleep mode
       ADC1LPEN       : Boolean := True;
       --  ADC2 clock enable during Sleep mode
@@ -1271,7 +1271,7 @@ package STM32_SVD.RCC is
       --  System configuration controller clock enable during Sleep mode
       SYSCFGLPEN     : Boolean := True;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  TIM9 clock enable during sleep mode
       TIM9LPEN       : Boolean := True;
       --  TIM10 clock enable during Sleep mode
@@ -1279,7 +1279,7 @@ package STM32_SVD.RCC is
       --  TIM11 clock enable during Sleep mode
       TIM11LPEN      : Boolean := True;
       --  unspecified
-      Reserved_19_19 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_19_19 : HAL.Bit := 16#0#;
       --  SPI 5 clock enable during Sleep mode
       SPI5LPEN       : Boolean := False;
       --  SPI 6 clock enable during Sleep mode
@@ -1287,13 +1287,13 @@ package STM32_SVD.RCC is
       --  SAI1 clock enable
       SAI1LPEN       : Boolean := False;
       --  unspecified
-      Reserved_23_25 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_23_25 : HAL.UInt3 := 16#0#;
       --  LTDC clock enable
       LTDCLPEN       : Boolean := False;
       --  DSI clocks enable during Sleep mode
       DSILPEN        : Boolean := False;
       --  unspecified
-      Reserved_28_31 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_28_31 : HAL.UInt4 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1345,7 +1345,7 @@ package STM32_SVD.RCC is
       case As_Array is
          when False =>
             --  RTCSEL as a value
-            Val : Interfaces.Bit_Types.UInt2;
+            Val : HAL.UInt2;
          when True =>
             --  RTCSEL as an array
             Arr : BDCR_RTCSEL_Field_Array;
@@ -1369,17 +1369,17 @@ package STM32_SVD.RCC is
       --  External low-speed oscillator mode
       LSEMOD         : Boolean := False;
       --  unspecified
-      Reserved_4_7   : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_4_7   : HAL.UInt4 := 16#0#;
       --  RTC clock source selection
       RTCSEL         : BDCR_RTCSEL_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_10_14 : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_10_14 : HAL.UInt5 := 16#0#;
       --  RTC clock enable
       RTCEN          : Boolean := False;
       --  Backup domain software reset
       BDRST          : Boolean := False;
       --  unspecified
-      Reserved_17_31 : Interfaces.Bit_Types.UInt15 := 16#0#;
+      Reserved_17_31 : HAL.UInt15 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1408,7 +1408,7 @@ package STM32_SVD.RCC is
       --  Read-only. Internal low-speed oscillator ready
       LSIRDY        : Boolean := False;
       --  unspecified
-      Reserved_2_23 : Interfaces.Bit_Types.UInt22 := 16#0#;
+      Reserved_2_23 : HAL.UInt22 := 16#0#;
       --  Remove reset flag
       RMVF          : Boolean := False;
       --  BOR reset flag
@@ -1447,8 +1447,8 @@ package STM32_SVD.RCC is
    -- SSCGR_Register --
    --------------------
 
-   subtype SSCGR_MODPER_Field is Interfaces.Bit_Types.UInt13;
-   subtype SSCGR_INCSTEP_Field is Interfaces.Bit_Types.UInt15;
+   subtype SSCGR_MODPER_Field is HAL.UInt13;
+   subtype SSCGR_INCSTEP_Field is HAL.UInt15;
 
    --  spread spectrum clock generation register
    type SSCGR_Register is record
@@ -1457,7 +1457,7 @@ package STM32_SVD.RCC is
       --  Incrementation step
       INCSTEP        : SSCGR_INCSTEP_Field := 16#0#;
       --  unspecified
-      Reserved_28_29 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_28_29 : HAL.UInt2 := 16#0#;
       --  Spread Select
       SPREADSEL      : Boolean := False;
       --  Spread spectrum modulation enable
@@ -1478,24 +1478,24 @@ package STM32_SVD.RCC is
    -- PLLI2SCFGR_Register --
    -------------------------
 
-   subtype PLLI2SCFGR_PLLI2SN_Field is Interfaces.Bit_Types.UInt9;
-   subtype PLLI2SCFGR_PLLI2SQ_Field is Interfaces.Bit_Types.UInt4;
-   subtype PLLI2SCFGR_PLLI2SR_Field is Interfaces.Bit_Types.UInt3;
+   subtype PLLI2SCFGR_PLLI2SN_Field is HAL.UInt9;
+   subtype PLLI2SCFGR_PLLI2SQ_Field is HAL.UInt4;
+   subtype PLLI2SCFGR_PLLI2SR_Field is HAL.UInt3;
 
    --  PLLI2S configuration register
    type PLLI2SCFGR_Register is record
       --  unspecified
-      Reserved_0_5   : Interfaces.Bit_Types.UInt6 := 16#0#;
+      Reserved_0_5   : HAL.UInt6 := 16#0#;
       --  PLLI2S multiplication factor for VCO
       PLLI2SN        : PLLI2SCFGR_PLLI2SN_Field := 16#C0#;
       --  unspecified
-      Reserved_15_23 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_15_23 : HAL.UInt9 := 16#0#;
       --  PLLI2S division factor for SAI1 clock
       PLLI2SQ        : PLLI2SCFGR_PLLI2SQ_Field := 16#0#;
       --  PLLI2S division factor for I2S clocks
       PLLI2SR        : PLLI2SCFGR_PLLI2SR_Field := 16#2#;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1513,29 +1513,29 @@ package STM32_SVD.RCC is
    -- PLLSAICFGR_Register --
    -------------------------
 
-   subtype PLLSAICFGR_PLLSAIN_Field is Interfaces.Bit_Types.UInt9;
-   subtype PLLSAICFGR_PLLSAIP_Field is Interfaces.Bit_Types.UInt2;
-   subtype PLLSAICFGR_PLLSAIQ_Field is Interfaces.Bit_Types.UInt4;
-   subtype PLLSAICFGR_PLLSAIR_Field is Interfaces.Bit_Types.UInt3;
+   subtype PLLSAICFGR_PLLSAIN_Field is HAL.UInt9;
+   subtype PLLSAICFGR_PLLSAIP_Field is HAL.UInt2;
+   subtype PLLSAICFGR_PLLSAIQ_Field is HAL.UInt4;
+   subtype PLLSAICFGR_PLLSAIR_Field is HAL.UInt3;
 
    --  PLL configuration register
    type PLLSAICFGR_Register is record
       --  unspecified
-      Reserved_0_5   : Interfaces.Bit_Types.UInt6 := 16#0#;
+      Reserved_0_5   : HAL.UInt6 := 16#0#;
       --  PLLSAI division factor for VCO
       PLLSAIN        : PLLSAICFGR_PLLSAIN_Field := 16#C0#;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  PLLSAI division factor for 48 MHz clock
       PLLSAIP        : PLLSAICFGR_PLLSAIP_Field := 16#0#;
       --  unspecified
-      Reserved_18_23 : Interfaces.Bit_Types.UInt6 := 16#0#;
+      Reserved_18_23 : HAL.UInt6 := 16#0#;
       --  PLLSAI division factor for SAI1 clock
       PLLSAIQ        : PLLSAICFGR_PLLSAIQ_Field := 16#4#;
       --  PLLSAI division factor for LCD clock
       PLLSAIR        : PLLSAICFGR_PLLSAIR_Field := 16#2#;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1555,26 +1555,26 @@ package STM32_SVD.RCC is
    -- DCKCFGR_Register --
    ----------------------
 
-   subtype DCKCFGR_PLLIS2DIVQ_Field is Interfaces.Bit_Types.UInt5;
-   subtype DCKCFGR_PLLSAIDIVQ_Field is Interfaces.Bit_Types.UInt5;
-   subtype DCKCFGR_PLLSAIDIVR_Field is Interfaces.Bit_Types.UInt2;
-   subtype DCKCFGR_SAI1ASRC_Field is Interfaces.Bit_Types.UInt2;
-   subtype DCKCFGR_SAI1BSRC_Field is Interfaces.Bit_Types.UInt2;
+   subtype DCKCFGR_PLLIS2DIVQ_Field is HAL.UInt5;
+   subtype DCKCFGR_PLLSAIDIVQ_Field is HAL.UInt5;
+   subtype DCKCFGR_PLLSAIDIVR_Field is HAL.UInt2;
+   subtype DCKCFGR_SAI1ASRC_Field is HAL.UInt2;
+   subtype DCKCFGR_SAI1BSRC_Field is HAL.UInt2;
 
    --  Dedicated Clock Configuration Register
    type DCKCFGR_Register is record
       --  PLLI2S division factor for SAIs clock
       PLLIS2DIVQ     : DCKCFGR_PLLIS2DIVQ_Field := 16#0#;
       --  unspecified
-      Reserved_5_7   : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_5_7   : HAL.UInt3 := 16#0#;
       --  PLLSAI division factor for SAIs clock
       PLLSAIDIVQ     : DCKCFGR_PLLSAIDIVQ_Field := 16#0#;
       --  unspecified
-      Reserved_13_15 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_13_15 : HAL.UInt3 := 16#0#;
       --  PLLSAIDIVR
       PLLSAIDIVR     : DCKCFGR_PLLSAIDIVR_Field := 16#0#;
       --  unspecified
-      Reserved_18_19 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_18_19 : HAL.UInt2 := 16#0#;
       --  SAI1 clock source selection
       SAI1ASRC       : DCKCFGR_SAI1ASRC_Field := 16#0#;
       --  SAI1-B clock source selection
@@ -1582,7 +1582,7 @@ package STM32_SVD.RCC is
       --  Timers clocks prescalers selection
       TIMPRE         : Boolean := False;
       --  unspecified
-      Reserved_25_26 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_25_26 : HAL.UInt2 := 16#0#;
       --  48 MHz clock source selection
       MSEL           : Boolean := False;
       --  SDIO clock source selection
@@ -1590,7 +1590,7 @@ package STM32_SVD.RCC is
       --  DSI clock source selection
       DSISEL         : Boolean := False;
       --  unspecified
-      Reserved_30_31 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_30_31 : HAL.UInt2 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

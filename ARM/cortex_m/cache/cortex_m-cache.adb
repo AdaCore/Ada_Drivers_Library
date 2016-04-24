@@ -33,7 +33,8 @@ with System.Machine_Code;
 with System.Storage_Elements;
 with Ada.Unchecked_Conversion;
 
-with Interfaces.Bit_Types; use Interfaces, Interfaces.Bit_Types;
+with Interfaces; use Interfaces;
+with HAL;        use HAL;
 
 package body Cortex_M.Cache is
 

@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F7x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.SPDIF_RX is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,10 +17,10 @@ package STM32_SVD.SPDIF_RX is
    -- CR_Register --
    -----------------
 
-   subtype CR_SPDIFEN_Field is Interfaces.Bit_Types.UInt2;
-   subtype CR_DRFMT_Field is Interfaces.Bit_Types.UInt2;
-   subtype CR_NBTR_Field is Interfaces.Bit_Types.UInt2;
-   subtype CR_INSEL_Field is Interfaces.Bit_Types.UInt3;
+   subtype CR_SPDIFEN_Field is HAL.UInt2;
+   subtype CR_DRFMT_Field is HAL.UInt2;
+   subtype CR_NBTR_Field is HAL.UInt2;
+   subtype CR_INSEL_Field is HAL.UInt3;
 
    --  Control register
    type CR_Register is record
@@ -49,11 +49,11 @@ package STM32_SVD.SPDIF_RX is
       --  Wait For Activity
       WFA            : Boolean := False;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  input selection
       INSEL          : CR_INSEL_Field := 16#0#;
       --  unspecified
-      Reserved_19_31 : Interfaces.Bit_Types.UInt13 := 16#0#;
+      Reserved_19_31 : HAL.UInt13 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -97,7 +97,7 @@ package STM32_SVD.SPDIF_RX is
       --  Serial Interface Error Interrupt Enable
       IFEIE         : Boolean := False;
       --  unspecified
-      Reserved_7_31 : Interfaces.Bit_Types.UInt25 := 16#0#;
+      Reserved_7_31 : HAL.UInt25 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -117,7 +117,7 @@ package STM32_SVD.SPDIF_RX is
    -- SR_Register --
    -----------------
 
-   subtype SR_WIDTH5_Field is Interfaces.Bit_Types.UInt15;
+   subtype SR_WIDTH5_Field is HAL.UInt15;
 
    --  Status register
    type SR_Register is record
@@ -140,11 +140,11 @@ package STM32_SVD.SPDIF_RX is
       --  Read-only. Time-out error
       TERR           : Boolean := False;
       --  unspecified
-      Reserved_9_15  : Interfaces.Bit_Types.UInt7;
+      Reserved_9_15  : HAL.UInt7;
       --  Read-only. Duration of 5 symbols counted with SPDIF_CLK
       WIDTH5         : SR_WIDTH5_Field := 16#0#;
       --  unspecified
-      Reserved_31_31 : Interfaces.Bit_Types.Bit;
+      Reserved_31_31 : HAL.Bit;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -171,7 +171,7 @@ package STM32_SVD.SPDIF_RX is
    --  Interrupt Flag Clear register
    type IFCR_Register is record
       --  unspecified
-      Reserved_0_1  : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_0_1  : HAL.UInt2 := 16#0#;
       --  Write-only. Clears the Parity error flag
       PERRCF        : Boolean := False;
       --  Write-only. Clears the Overrun error flag
@@ -181,7 +181,7 @@ package STM32_SVD.SPDIF_RX is
       --  Write-only. Clears the Synchronization Done flag
       SYNCDCF       : Boolean := False;
       --  unspecified
-      Reserved_6_31 : Interfaces.Bit_Types.UInt26 := 16#0#;
+      Reserved_6_31 : HAL.UInt26 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -199,8 +199,8 @@ package STM32_SVD.SPDIF_RX is
    -- DR_Register --
    -----------------
 
-   subtype DR_DR_Field is Interfaces.Bit_Types.UInt24;
-   subtype DR_PT_Field is Interfaces.Bit_Types.UInt2;
+   subtype DR_DR_Field is HAL.UInt24;
+   subtype DR_PT_Field is HAL.UInt2;
 
    --  Data input register
    type DR_Register is record
@@ -217,7 +217,7 @@ package STM32_SVD.SPDIF_RX is
       --  Read-only. Preamble Type
       PT             : DR_PT_Field := 16#0#;
       --  unspecified
-      Reserved_30_31 : Interfaces.Bit_Types.UInt2;
+      Reserved_30_31 : HAL.UInt2;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -236,8 +236,8 @@ package STM32_SVD.SPDIF_RX is
    -- CSR_Register --
    ------------------
 
-   subtype CSR_USR_Field is Interfaces.Bit_Types.Short;
-   subtype CSR_CS_Field is Interfaces.Bit_Types.Byte;
+   subtype CSR_USR_Field is HAL.Short;
+   subtype CSR_CS_Field is HAL.Byte;
 
    --  Channel Status register
    type CSR_Register is record
@@ -248,7 +248,7 @@ package STM32_SVD.SPDIF_RX is
       --  Read-only. Start Of Block
       SOB            : Boolean := False;
       --  unspecified
-      Reserved_25_31 : Interfaces.Bit_Types.UInt7;
+      Reserved_25_31 : HAL.UInt7;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -264,19 +264,19 @@ package STM32_SVD.SPDIF_RX is
    -- DIR_Register --
    ------------------
 
-   subtype DIR_THI_Field is Interfaces.Bit_Types.UInt13;
-   subtype DIR_TLO_Field is Interfaces.Bit_Types.UInt13;
+   subtype DIR_THI_Field is HAL.UInt13;
+   subtype DIR_TLO_Field is HAL.UInt13;
 
    --  Debug Information register
    type DIR_Register is record
       --  Read-only. Threshold HIGH
       THI            : DIR_THI_Field := 16#0#;
       --  unspecified
-      Reserved_13_15 : Interfaces.Bit_Types.UInt3;
+      Reserved_13_15 : HAL.UInt3;
       --  Read-only. Threshold LOW
       TLO            : DIR_TLO_Field := 16#0#;
       --  unspecified
-      Reserved_29_31 : Interfaces.Bit_Types.UInt3;
+      Reserved_29_31 : HAL.UInt3;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

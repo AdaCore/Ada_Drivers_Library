@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F40x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.DCMI is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,8 +17,8 @@ package STM32_SVD.DCMI is
    -- CR_Register --
    -----------------
 
-   subtype CR_FCRC_Field is Interfaces.Bit_Types.UInt2;
-   subtype CR_EDM_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_FCRC_Field is HAL.UInt2;
+   subtype CR_EDM_Field is HAL.UInt2;
 
    --  control register 1
    type CR_Register is record
@@ -43,11 +43,11 @@ package STM32_SVD.DCMI is
       --  Extended data mode
       EDM            : CR_EDM_Field := 16#0#;
       --  unspecified
-      Reserved_12_13 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_12_13 : HAL.UInt2 := 16#0#;
       --  DCMI enable
       ENABLE         : Boolean := False;
       --  unspecified
-      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
+      Reserved_15_31 : HAL.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -81,7 +81,7 @@ package STM32_SVD.DCMI is
       --  Read-only. FIFO not empty
       FNE           : Boolean := False;
       --  unspecified
-      Reserved_3_31 : Interfaces.Bit_Types.UInt29;
+      Reserved_3_31 : HAL.UInt29;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -110,7 +110,7 @@ package STM32_SVD.DCMI is
       --  Read-only. Line raw interrupt status
       LINE_RIS      : Boolean := False;
       --  unspecified
-      Reserved_5_31 : Interfaces.Bit_Types.UInt27;
+      Reserved_5_31 : HAL.UInt27;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -141,7 +141,7 @@ package STM32_SVD.DCMI is
       --  Line interrupt enable
       LINE_IE       : Boolean := False;
       --  unspecified
-      Reserved_5_31 : Interfaces.Bit_Types.UInt27 := 16#0#;
+      Reserved_5_31 : HAL.UInt27 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -172,7 +172,7 @@ package STM32_SVD.DCMI is
       --  Read-only. Line masked interrupt status
       LINE_MIS      : Boolean := False;
       --  unspecified
-      Reserved_5_31 : Interfaces.Bit_Types.UInt27;
+      Reserved_5_31 : HAL.UInt27;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -203,7 +203,7 @@ package STM32_SVD.DCMI is
       --  Write-only. line interrupt status clear
       LINE_ISC      : Boolean := False;
       --  unspecified
-      Reserved_5_31 : Interfaces.Bit_Types.UInt27 := 16#0#;
+      Reserved_5_31 : HAL.UInt27 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -221,10 +221,10 @@ package STM32_SVD.DCMI is
    -- ESCR_Register --
    -------------------
 
-   subtype ESCR_FSC_Field is Interfaces.Bit_Types.Byte;
-   subtype ESCR_LSC_Field is Interfaces.Bit_Types.Byte;
-   subtype ESCR_LEC_Field is Interfaces.Bit_Types.Byte;
-   subtype ESCR_FEC_Field is Interfaces.Bit_Types.Byte;
+   subtype ESCR_FSC_Field is HAL.Byte;
+   subtype ESCR_LSC_Field is HAL.Byte;
+   subtype ESCR_LEC_Field is HAL.Byte;
+   subtype ESCR_FEC_Field is HAL.Byte;
 
    --  embedded synchronization code register
    type ESCR_Register is record
@@ -251,10 +251,10 @@ package STM32_SVD.DCMI is
    -- ESUR_Register --
    -------------------
 
-   subtype ESUR_FSU_Field is Interfaces.Bit_Types.Byte;
-   subtype ESUR_LSU_Field is Interfaces.Bit_Types.Byte;
-   subtype ESUR_LEU_Field is Interfaces.Bit_Types.Byte;
-   subtype ESUR_FEU_Field is Interfaces.Bit_Types.Byte;
+   subtype ESUR_FSU_Field is HAL.Byte;
+   subtype ESUR_LSU_Field is HAL.Byte;
+   subtype ESUR_LEU_Field is HAL.Byte;
+   subtype ESUR_FEU_Field is HAL.Byte;
 
    --  embedded synchronization unmask register
    type ESUR_Register is record
@@ -281,19 +281,19 @@ package STM32_SVD.DCMI is
    -- CWSTRT_Register --
    ---------------------
 
-   subtype CWSTRT_HOFFCNT_Field is Interfaces.Bit_Types.UInt14;
-   subtype CWSTRT_VST_Field is Interfaces.Bit_Types.UInt13;
+   subtype CWSTRT_HOFFCNT_Field is HAL.UInt14;
+   subtype CWSTRT_VST_Field is HAL.UInt13;
 
    --  crop window start
    type CWSTRT_Register is record
       --  Horizontal offset count
       HOFFCNT        : CWSTRT_HOFFCNT_Field := 16#0#;
       --  unspecified
-      Reserved_14_15 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_14_15 : HAL.UInt2 := 16#0#;
       --  Vertical start line count
       VST            : CWSTRT_VST_Field := 16#0#;
       --  unspecified
-      Reserved_29_31 : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_29_31 : HAL.UInt3 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -309,19 +309,19 @@ package STM32_SVD.DCMI is
    -- CWSIZE_Register --
    ---------------------
 
-   subtype CWSIZE_CAPCNT_Field is Interfaces.Bit_Types.UInt14;
-   subtype CWSIZE_VLINE_Field is Interfaces.Bit_Types.UInt14;
+   subtype CWSIZE_CAPCNT_Field is HAL.UInt14;
+   subtype CWSIZE_VLINE_Field is HAL.UInt14;
 
    --  crop window size
    type CWSIZE_Register is record
       --  Capture count
       CAPCNT         : CWSIZE_CAPCNT_Field := 16#0#;
       --  unspecified
-      Reserved_14_15 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_14_15 : HAL.UInt2 := 16#0#;
       --  Vertical line count
       VLINE          : CWSIZE_VLINE_Field := 16#0#;
       --  unspecified
-      Reserved_30_31 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_30_31 : HAL.UInt2 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -338,7 +338,7 @@ package STM32_SVD.DCMI is
    -----------------
 
    --  DR_Byte array element
-   subtype DR_Byte_Element is Interfaces.Bit_Types.Byte;
+   subtype DR_Byte_Element is HAL.Byte;
 
    --  DR_Byte array
    type DR_Byte_Field_Array is array (0 .. 3) of DR_Byte_Element
@@ -351,7 +351,7 @@ package STM32_SVD.DCMI is
       case As_Array is
          when False =>
             --  Byte as a value
-            Val : Interfaces.Bit_Types.Word;
+            Val : HAL.Word;
          when True =>
             --  Byte as an array
             Arr : DR_Byte_Field_Array;

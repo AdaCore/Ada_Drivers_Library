@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F46_79x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.PWR is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,9 +17,9 @@ package STM32_SVD.PWR is
    -- CR_Register --
    -----------------
 
-   subtype CR_PLS_Field is Interfaces.Bit_Types.UInt3;
-   subtype CR_VOS_Field is Interfaces.Bit_Types.UInt2;
-   subtype CR_UDEN_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR_PLS_Field is HAL.UInt3;
+   subtype CR_VOS_Field is HAL.UInt2;
+   subtype CR_UDEN_Field is HAL.UInt2;
 
    --  power control register
    type CR_Register is record
@@ -44,7 +44,7 @@ package STM32_SVD.PWR is
       --  Main regulator low voltage in deepsleep mode
       MRLVDS         : Boolean := False;
       --  unspecified
-      Reserved_12_13 : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_12_13 : HAL.UInt2 := 16#0#;
       --  Regulator voltage scaling output selection
       VOS            : CR_VOS_Field := 16#3#;
       --  Over-drive enable
@@ -54,7 +54,7 @@ package STM32_SVD.PWR is
       --  Under-drive enable in stop mode
       UDEN           : CR_UDEN_Field := 16#0#;
       --  unspecified
-      Reserved_20_31 : Interfaces.Bit_Types.UInt12 := 16#0#;
+      Reserved_20_31 : HAL.UInt12 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -82,7 +82,7 @@ package STM32_SVD.PWR is
    -- CSR_Register --
    ------------------
 
-   subtype CSR_UDRDY_Field is Interfaces.Bit_Types.UInt2;
+   subtype CSR_UDRDY_Field is HAL.UInt2;
 
    --  power control/status register
    type CSR_Register is record
@@ -95,17 +95,17 @@ package STM32_SVD.PWR is
       --  Read-only. Backup regulator ready
       BRR            : Boolean := False;
       --  unspecified
-      Reserved_4_7   : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_4_7   : HAL.UInt4 := 16#0#;
       --  Enable WKUP pin
       EWUP           : Boolean := False;
       --  Backup regulator enable
       BRE            : Boolean := False;
       --  unspecified
-      Reserved_10_13 : Interfaces.Bit_Types.UInt4 := 16#0#;
+      Reserved_10_13 : HAL.UInt4 := 16#0#;
       --  Regulator voltage scaling output selection ready bit
       VOSRDY         : Boolean := False;
       --  unspecified
-      Reserved_15_15 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Read-only. Over-drive mode ready
       ODRDY          : Boolean := False;
       --  Read-only. Over-drive mode switching ready
@@ -113,7 +113,7 @@ package STM32_SVD.PWR is
       --  Under-drive ready flag
       UDRDY          : CSR_UDRDY_Field := 16#0#;
       --  unspecified
-      Reserved_20_31 : Interfaces.Bit_Types.UInt12 := 16#0#;
+      Reserved_20_31 : HAL.UInt12 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

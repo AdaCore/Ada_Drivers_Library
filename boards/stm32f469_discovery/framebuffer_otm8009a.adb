@@ -73,7 +73,7 @@ package body Framebuffer_OTM8009A is
       begin
          Refreshed := False;
          --  Enable the end of refresh interrupt
-         DSI.DSI_Refresh;
+         DSIHOST.DSI_Refresh;
       end Do_Refresh;
 
       -----------------------------
@@ -219,9 +219,9 @@ package body Framebuffer_OTM8009A is
    is
       pragma Unreferenced (Display);
    begin
-      DSI.DSI_Wrapper_Disable;
+      DSIHOST.DSI_Wrapper_Disable;
       STM32.LTDC.Set_Background (R, G, B);
-      DSI.DSI_Wrapper_Enable;
+      DSIHOST.DSI_Wrapper_Enable;
    end Set_Background;
 
    ----------------
@@ -281,11 +281,11 @@ package body Framebuffer_OTM8009A is
 
       --  Now setup the DSI
 
-      DSI.DSI_Deinit;
+      DSIHOST.DSI_Deinit;
 
       --  HSE input: 25MHz / IN_Div * N_Div => 1000 MHz = VCO
       --  VCO / ODF => 500 MHz
-      DSI.DSI_Initialize
+      DSIHOST.DSI_Initialize
         (Auto_Clock_Lane_Control  => True,
          TX_Escape_Clock_Division => 4, -- 62500 / 4 = 15625 kHz < 20kHz (max)
          Number_Of_Lanes          => Two_Data_Lanes,
@@ -293,7 +293,7 @@ package body Framebuffer_OTM8009A is
          PLL_IN_Div               => PLL_IN_DIV2,
          PLL_OUT_Div              => PLL_OUT_DIV1);
 
-      DSI.DSI_Setup_Adapted_Command_Mode
+      DSIHOST.DSI_Setup_Adapted_Command_Mode
         (Virtual_Channel         => LCD_Channel,
          Color_Coding            => STM32.DSI.RGB888,
          Command_Size            => Short (Display.Get_Width),
@@ -306,7 +306,7 @@ package body Framebuffer_OTM8009A is
          Automatic_Refresh       => False,
          TE_Acknowledge_Request  => True);
 
-      DSI.DSI_Setup_Command
+      DSIHOST.DSI_Setup_Command
         (LP_Gen_Short_Write_No_P  => True,
          LP_Gen_Short_Write_One_P => True,
          LP_Gen_Short_Write_Two_P => True,
@@ -322,14 +322,14 @@ package body Framebuffer_OTM8009A is
          Acknowledge_Request      => False);
 
       --  Enable the DSI Host and Wrapper
-      DSI.DSI_Start;
+      DSIHOST.DSI_Start;
 
       --  LCD panel init
       Display.Device.Initialize
         (OTM8009A.RGB888,
          (if Display.Swapped then OTM8009A.Portrait else OTM8009A.Landscape));
 
-      DSI.DSI_Setup_Command
+      DSIHOST.DSI_Setup_Command
         (LP_Gen_Short_Write_No_P  => False,
          LP_Gen_Short_Write_One_P => False,
          LP_Gen_Short_Write_Two_P => False,
@@ -344,9 +344,9 @@ package body Framebuffer_OTM8009A is
          LP_Max_Read_Packet       => False,
          Acknowledge_Request      => False);
 
-      DSI.DSI_Setup_Flow_Control (Flow_Control_BTA);
+      DSIHOST.DSI_Setup_Flow_Control (Flow_Control_BTA);
 
-      DSI.DSI_Refresh;
+      DSIHOST.DSI_Refresh;
    end Initialize;
 
    -----------------
@@ -407,7 +407,7 @@ package body Framebuffer_OTM8009A is
          Swapped    => False);
       Display.Buffers (LCD_Layer).Fill (0);
 
-      DSI.DSI_Wrapper_Disable;
+      DSIHOST.DSI_Wrapper_Disable;
 
       STM32.LTDC.Layer_Init
         (Layer          => LCD_Layer,
@@ -421,7 +421,7 @@ package body Framebuffer_OTM8009A is
          BF             => STM32.LTDC.BF_Pixel_Alpha_X_Constant_Alpha);
       STM32.LTDC.Reload_Config (True);
 
-      DSI.DSI_Wrapper_Enable;
+      DSIHOST.DSI_Wrapper_Enable;
 
       Display.Update_Layers;
    end Initialize_Layer;

@@ -49,8 +49,8 @@
 --  See the "a-Si TFT LCD Single Chip Driver" specification by ILITEK, file
 --  name "ILI9341_DS_V1.02" for details.
 
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-with HAL.SPI; use HAL.SPI;
+with HAL;      use HAL;
+with HAL.SPI;  use HAL.SPI;
 with HAL.GPIO; use HAL.GPIO;
 
 package ILI9341 is

@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F46_79x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.USART is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -40,7 +40,7 @@ package STM32_SVD.USART is
       --  CTS flag
       CTS            : Boolean := False;
       --  unspecified
-      Reserved_10_31 : Interfaces.Bit_Types.UInt22 := 16#3000#;
+      Reserved_10_31 : HAL.UInt22 := 16#3000#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -63,14 +63,14 @@ package STM32_SVD.USART is
    -- DR_Register --
    -----------------
 
-   subtype DR_DR_Field is Interfaces.Bit_Types.UInt9;
+   subtype DR_DR_Field is HAL.UInt9;
 
    --  Data register
    type DR_Register is record
       --  Data value
       DR            : DR_DR_Field := 16#0#;
       --  unspecified
-      Reserved_9_31 : Interfaces.Bit_Types.UInt23 := 16#0#;
+      Reserved_9_31 : HAL.UInt23 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -84,8 +84,8 @@ package STM32_SVD.USART is
    -- BRR_Register --
    ------------------
 
-   subtype BRR_DIV_Fraction_Field is Interfaces.Bit_Types.UInt4;
-   subtype BRR_DIV_Mantissa_Field is Interfaces.Bit_Types.UInt12;
+   subtype BRR_DIV_Fraction_Field is HAL.UInt4;
+   subtype BRR_DIV_Mantissa_Field is HAL.UInt12;
 
    --  Baud rate register
    type BRR_Register is record
@@ -94,7 +94,7 @@ package STM32_SVD.USART is
       --  mantissa of USARTDIV
       DIV_Mantissa   : BRR_DIV_Mantissa_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -140,11 +140,11 @@ package STM32_SVD.USART is
       --  USART enable
       UE             : Boolean := False;
       --  unspecified
-      Reserved_14_14 : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_14_14 : HAL.Bit := 16#0#;
       --  Oversampling mode
       OVER8          : Boolean := False;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -173,21 +173,21 @@ package STM32_SVD.USART is
    -- CR2_Register --
    ------------------
 
-   subtype CR2_ADD_Field is Interfaces.Bit_Types.UInt4;
-   subtype CR2_STOP_Field is Interfaces.Bit_Types.UInt2;
+   subtype CR2_ADD_Field is HAL.UInt4;
+   subtype CR2_STOP_Field is HAL.UInt2;
 
    --  Control register 2
    type CR2_Register is record
       --  Address of the USART node
       ADD            : CR2_ADD_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  lin break detection length
       LBDL           : Boolean := False;
       --  LIN break detection interrupt enable
       LBDIE          : Boolean := False;
       --  unspecified
-      Reserved_7_7   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Last bit clock pulse
       LBCL           : Boolean := False;
       --  Clock phase
@@ -201,7 +201,7 @@ package STM32_SVD.USART is
       --  LIN mode enable
       LINEN          : Boolean := False;
       --  unspecified
-      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
+      Reserved_15_31 : HAL.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -252,7 +252,7 @@ package STM32_SVD.USART is
       --  One sample bit method enable
       ONEBIT         : Boolean := False;
       --  unspecified
-      Reserved_12_31 : Interfaces.Bit_Types.UInt20 := 16#0#;
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -277,8 +277,8 @@ package STM32_SVD.USART is
    -- GTPR_Register --
    -------------------
 
-   subtype GTPR_PSC_Field is Interfaces.Bit_Types.Byte;
-   subtype GTPR_GT_Field is Interfaces.Bit_Types.Byte;
+   subtype GTPR_PSC_Field is HAL.Byte;
+   subtype GTPR_GT_Field is HAL.Byte;
 
    --  Guard time and prescaler register
    type GTPR_Register is record
@@ -287,7 +287,7 @@ package STM32_SVD.USART is
       --  Guard time value
       GT             : GTPR_GT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -323,7 +323,7 @@ package STM32_SVD.USART is
       --  LIN break detection flag
       LBD           : Boolean := False;
       --  unspecified
-      Reserved_9_31 : Interfaces.Bit_Types.UInt23 := 16#6000#;
+      Reserved_9_31 : HAL.UInt23 := 16#6000#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -350,19 +350,19 @@ package STM32_SVD.USART is
       --  Address of the USART node
       ADD            : CR2_ADD_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  lin break detection length
       LBDL           : Boolean := False;
       --  LIN break detection interrupt enable
       LBDIE          : Boolean := False;
       --  unspecified
-      Reserved_7_11  : Interfaces.Bit_Types.UInt5 := 16#0#;
+      Reserved_7_11  : HAL.UInt5 := 16#0#;
       --  STOP bits
       STOP           : CR2_STOP_Field := 16#0#;
       --  LIN mode enable
       LINEN          : Boolean := False;
       --  unspecified
-      Reserved_15_31 : Interfaces.Bit_Types.UInt17 := 16#0#;
+      Reserved_15_31 : HAL.UInt17 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -393,17 +393,17 @@ package STM32_SVD.USART is
       --  Half-duplex selection
       HDSEL          : Boolean := False;
       --  unspecified
-      Reserved_4_5   : Interfaces.Bit_Types.UInt2 := 16#0#;
+      Reserved_4_5   : HAL.UInt2 := 16#0#;
       --  DMA enable receiver
       DMAR           : Boolean := False;
       --  DMA enable transmitter
       DMAT           : Boolean := False;
       --  unspecified
-      Reserved_8_10  : Interfaces.Bit_Types.UInt3 := 16#0#;
+      Reserved_8_10  : HAL.UInt3 := 16#0#;
       --  One sample bit method enable
       ONEBIT         : Boolean := False;
       --  unspecified
-      Reserved_12_31 : Interfaces.Bit_Types.UInt20 := 16#0#;
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

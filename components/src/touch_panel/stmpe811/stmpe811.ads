@@ -29,8 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-with HAL.I2C; use HAL.I2C;
+with HAL;             use HAL;
+with HAL.I2C;         use HAL.I2C;
 with HAL.Touch_Panel; use HAL.Touch_Panel;
 
 package STMPE811 is

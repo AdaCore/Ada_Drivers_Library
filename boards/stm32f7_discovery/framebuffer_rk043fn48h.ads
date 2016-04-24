@@ -1,5 +1,4 @@
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-
+with HAL;             use HAL;
 with HAL.Framebuffer; use HAL.Framebuffer;
 with HAL.Bitmap;
 

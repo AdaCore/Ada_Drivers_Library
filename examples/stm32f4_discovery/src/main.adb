@@ -1,5 +1,5 @@
-with Ada.Real_Time;        use Ada.Real_Time;
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
+with Ada.Real_Time; use Ada.Real_Time;
+with HAL;           use HAL;
 with STM32.Board;
 with LIS3DSH;
 

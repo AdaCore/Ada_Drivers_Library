@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F40x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.SPI is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -17,7 +17,7 @@ package STM32_SVD.SPI is
    -- CR1_Register --
    ------------------
 
-   subtype CR1_BR_Field is Interfaces.Bit_Types.UInt3;
+   subtype CR1_BR_Field is HAL.UInt3;
 
    --  control register 1
    type CR1_Register is record
@@ -50,7 +50,7 @@ package STM32_SVD.SPI is
       --  Bidirectional data mode enable
       BIDIMODE       : Boolean := False;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -86,7 +86,7 @@ package STM32_SVD.SPI is
       --  SS output enable
       SSOE          : Boolean := False;
       --  unspecified
-      Reserved_3_3  : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_3_3  : HAL.Bit := 16#0#;
       --  Frame format
       FRF           : Boolean := False;
       --  Error interrupt enable
@@ -96,7 +96,7 @@ package STM32_SVD.SPI is
       --  Tx buffer empty interrupt enable
       TXEIE         : Boolean := False;
       --  unspecified
-      Reserved_8_31 : Interfaces.Bit_Types.UInt24 := 16#0#;
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -138,7 +138,7 @@ package STM32_SVD.SPI is
       --  Read-only. TI frame format error
       TIFRFE        : Boolean := False;
       --  unspecified
-      Reserved_9_31 : Interfaces.Bit_Types.UInt23 := 16#0#;
+      Reserved_9_31 : HAL.UInt23 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -160,14 +160,14 @@ package STM32_SVD.SPI is
    -- DR_Register --
    -----------------
 
-   subtype DR_DR_Field is Interfaces.Bit_Types.Short;
+   subtype DR_DR_Field is HAL.Short;
 
    --  data register
    type DR_Register is record
       --  Data register
       DR             : DR_DR_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -181,14 +181,14 @@ package STM32_SVD.SPI is
    -- CRCPR_Register --
    --------------------
 
-   subtype CRCPR_CRCPOLY_Field is Interfaces.Bit_Types.Short;
+   subtype CRCPR_CRCPOLY_Field is HAL.Short;
 
    --  CRC polynomial register
    type CRCPR_Register is record
       --  CRC polynomial register
       CRCPOLY        : CRCPR_CRCPOLY_Field := 16#7#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short := 16#0#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -202,14 +202,14 @@ package STM32_SVD.SPI is
    -- RXCRCR_Register --
    ---------------------
 
-   subtype RXCRCR_RxCRC_Field is Interfaces.Bit_Types.Short;
+   subtype RXCRCR_RxCRC_Field is HAL.Short;
 
    --  RX CRC register
    type RXCRCR_Register is record
       --  Read-only. Rx CRC register
       RxCRC          : RXCRCR_RxCRC_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short;
+      Reserved_16_31 : HAL.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -223,14 +223,14 @@ package STM32_SVD.SPI is
    -- TXCRCR_Register --
    ---------------------
 
-   subtype TXCRCR_TxCRC_Field is Interfaces.Bit_Types.Short;
+   subtype TXCRCR_TxCRC_Field is HAL.Short;
 
    --  TX CRC register
    type TXCRCR_Register is record
       --  Read-only. Tx CRC register
       TxCRC          : TXCRCR_TxCRC_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : Interfaces.Bit_Types.Short;
+      Reserved_16_31 : HAL.Short;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -244,9 +244,9 @@ package STM32_SVD.SPI is
    -- I2SCFGR_Register --
    ----------------------
 
-   subtype I2SCFGR_DATLEN_Field is Interfaces.Bit_Types.UInt2;
-   subtype I2SCFGR_I2SSTD_Field is Interfaces.Bit_Types.UInt2;
-   subtype I2SCFGR_I2SCFG_Field is Interfaces.Bit_Types.UInt2;
+   subtype I2SCFGR_DATLEN_Field is HAL.UInt2;
+   subtype I2SCFGR_I2SSTD_Field is HAL.UInt2;
+   subtype I2SCFGR_I2SCFG_Field is HAL.UInt2;
 
    --  I2S configuration register
    type I2SCFGR_Register is record
@@ -259,7 +259,7 @@ package STM32_SVD.SPI is
       --  I2S standard selection
       I2SSTD         : I2SCFGR_I2SSTD_Field := 16#0#;
       --  unspecified
-      Reserved_6_6   : Interfaces.Bit_Types.Bit := 16#0#;
+      Reserved_6_6   : HAL.Bit := 16#0#;
       --  PCM frame synchronization
       PCMSYNC        : Boolean := False;
       --  I2S configuration mode
@@ -269,7 +269,7 @@ package STM32_SVD.SPI is
       --  I2S mode selection
       I2SMOD         : Boolean := False;
       --  unspecified
-      Reserved_12_31 : Interfaces.Bit_Types.UInt20 := 16#0#;
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -291,7 +291,7 @@ package STM32_SVD.SPI is
    -- I2SPR_Register --
    --------------------
 
-   subtype I2SPR_I2SDIV_Field is Interfaces.Bit_Types.Byte;
+   subtype I2SPR_I2SDIV_Field is HAL.Byte;
 
    --  I2S prescaler register
    type I2SPR_Register is record
@@ -302,7 +302,7 @@ package STM32_SVD.SPI is
       --  Master clock output enable
       MCKOE          : Boolean := False;
       --  unspecified
-      Reserved_10_31 : Interfaces.Bit_Types.UInt22 := 16#0#;
+      Reserved_10_31 : HAL.UInt22 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

@@ -23,7 +23,7 @@
 
 with Ada.Unchecked_Conversion;
 with Interfaces;               use Interfaces;
-with Interfaces.Bit_Types;     use Interfaces.Bit_Types;
+with HAL;                      use HAL;
 with System;                   use System;
 
 with STM32.Button;             use STM32.Button;

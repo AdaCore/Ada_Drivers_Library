@@ -1,8 +1,8 @@
 --  Generic driver for the FT5336 touch panel
 
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
+with HAL;             use HAL;
 with HAL.I2C;
-with HAL.Touch_Panel;      use HAL.Touch_Panel;
+with HAL.Touch_Panel; use HAL.Touch_Panel;
 
 package FT5336 is
 

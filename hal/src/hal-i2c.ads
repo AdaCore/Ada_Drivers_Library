@@ -12,7 +12,7 @@ package HAL.I2C is
      (Memory_Size_8b,
       Memory_Size_16b);
 
-   subtype I2C_Address is Interfaces.Bit_Types.UInt10;
+   subtype I2C_Address is UInt10;
 
    type I2C_Port is limited interface;
    type I2C_Port_Ref is not null access all I2C_Port'Class;

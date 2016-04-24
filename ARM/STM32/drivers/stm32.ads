@@ -33,11 +33,10 @@
 
 pragma Warnings (Off);
 with Interfaces;               use Interfaces;
-with Interfaces.Bit_Types;     use Interfaces.Bit_Types;
+with HAL;     use HAL;
 pragma Warnings (On);
 
 package STM32 is
-   pragma No_Elaboration_Code_All;
    pragma Pure;
 
 end STM32;

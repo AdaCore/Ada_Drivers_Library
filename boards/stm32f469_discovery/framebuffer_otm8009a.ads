@@ -1,5 +1,4 @@
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-
+with HAL;             use HAL;
 with HAL.Framebuffer; use HAL.Framebuffer;
 with HAL.Bitmap;
 
@@ -98,7 +97,7 @@ private
    type Frame_Buffer is limited new HAL.Framebuffer.Frame_Buffer_Display with
       record
          Device  : OTM8009A.OTM8009A_Device
-                    (DSI_Host   => STM32.Device.DSI'Access,
+                    (DSI_Host   => STM32.Device.DSIHOST'Access,
                      Channel_Id => LCD_Channel);
          Swapped : Boolean;
          Buffers : FB_Array := (others => STM32.DMA2D_Bitmap.Null_Buffer);

@@ -1,13 +1,13 @@
 --  This spec has been automatically generated from STM32F40x.svd
 
+pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
 
-with Interfaces.Bit_Types;
+with HAL;
 with System;
 
 package STM32_SVD.EXTI is
    pragma Preelaborate;
-   pragma No_Elaboration_Code_All;
 
    ---------------
    -- Registers --
@@ -32,7 +32,7 @@ package STM32_SVD.EXTI is
       case As_Array is
          when False =>
             --  MR as a value
-            Val : Interfaces.Bit_Types.UInt23;
+            Val : HAL.UInt23;
          when True =>
             --  MR as an array
             Arr : IMR_MR_Field_Array;
@@ -50,7 +50,7 @@ package STM32_SVD.EXTI is
       --  Interrupt Mask on line 0
       MR             : IMR_MR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_23_31 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_23_31 : HAL.UInt9 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -79,7 +79,7 @@ package STM32_SVD.EXTI is
       case As_Array is
          when False =>
             --  MR as a value
-            Val : Interfaces.Bit_Types.UInt23;
+            Val : HAL.UInt23;
          when True =>
             --  MR as an array
             Arr : EMR_MR_Field_Array;
@@ -97,7 +97,7 @@ package STM32_SVD.EXTI is
       --  Event Mask on line 0
       MR             : EMR_MR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_23_31 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_23_31 : HAL.UInt9 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -126,7 +126,7 @@ package STM32_SVD.EXTI is
       case As_Array is
          when False =>
             --  TR as a value
-            Val : Interfaces.Bit_Types.UInt23;
+            Val : HAL.UInt23;
          when True =>
             --  TR as an array
             Arr : RTSR_TR_Field_Array;
@@ -144,7 +144,7 @@ package STM32_SVD.EXTI is
       --  Rising trigger event configuration of line 0
       TR             : RTSR_TR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_23_31 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_23_31 : HAL.UInt9 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -173,7 +173,7 @@ package STM32_SVD.EXTI is
       case As_Array is
          when False =>
             --  TR as a value
-            Val : Interfaces.Bit_Types.UInt23;
+            Val : HAL.UInt23;
          when True =>
             --  TR as an array
             Arr : FTSR_TR_Field_Array;
@@ -191,7 +191,7 @@ package STM32_SVD.EXTI is
       --  Falling trigger event configuration of line 0
       TR             : FTSR_TR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_23_31 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_23_31 : HAL.UInt9 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -220,7 +220,7 @@ package STM32_SVD.EXTI is
       case As_Array is
          when False =>
             --  SWIER as a value
-            Val : Interfaces.Bit_Types.UInt23;
+            Val : HAL.UInt23;
          when True =>
             --  SWIER as an array
             Arr : SWIER_Field_Array;
@@ -238,7 +238,7 @@ package STM32_SVD.EXTI is
       --  Software Interrupt on line 0
       SWIER          : SWIER_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_23_31 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_23_31 : HAL.UInt9 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -267,7 +267,7 @@ package STM32_SVD.EXTI is
       case As_Array is
          when False =>
             --  PR as a value
-            Val : Interfaces.Bit_Types.UInt23;
+            Val : HAL.UInt23;
          when True =>
             --  PR as an array
             Arr : PR_Field_Array;
@@ -285,7 +285,7 @@ package STM32_SVD.EXTI is
       --  Pending bit 0
       PR             : PR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_23_31 : Interfaces.Bit_Types.UInt9 := 16#0#;
+      Reserved_23_31 : HAL.UInt9 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

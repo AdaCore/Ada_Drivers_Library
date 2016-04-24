@@ -1,5 +1,4 @@
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
-with HAL;
+with HAL;      use HAL;
 with HAL.SPI;
 with HAL.GPIO;
 

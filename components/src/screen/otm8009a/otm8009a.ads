@@ -1,5 +1,5 @@
-with Interfaces;           use Interfaces;
-with Interfaces.Bit_Types; use Interfaces.Bit_Types;
+with Interfaces; use Interfaces;
+with HAL;        use HAL;
 with HAL.DSI;
 
 package OTM8009A is
