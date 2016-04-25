@@ -177,4 +177,3 @@ private
                        Mode : ILI9341_Mode);
 
 end ILI9341;
-

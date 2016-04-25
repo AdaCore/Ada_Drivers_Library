@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -109,6 +109,8 @@ procedure Demo_ADC_Temperature_Polling is
 
 begin
    Initialize_LEDs;
+   Initialize_LCD_Hardware;
+   STM32F4.ILI9341.Set_Orientation (To => STM32F4.ILI9341.Portrait_2);
 
    Enable_Clock (Temperature_Sensor.ADC.all);
 
@@ -123,7 +125,7 @@ begin
    Configure_Unit
      (Temperature_Sensor.ADC.all,
       Resolution => ADC_Resolution_12_Bits,
-      Alignment  => Left_Aligned);
+      Alignment  => Right_Aligned);
 
    Configure_Regular_Conversions
      (Temperature_Sensor.ADC.all,

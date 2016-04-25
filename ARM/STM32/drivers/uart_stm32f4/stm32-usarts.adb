@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -132,14 +132,35 @@ package body STM32.USARTs is
 
    procedure Set_Baud_Rate (This : in out USART; To : Baud_Rates) is
       Clock        : constant Word := APB_Clock (This);
-      Int_Divider  : constant Word := (25 * Clock) / (4 * To);
+      Over_By_8    : constant Boolean := This.CR1.OVER8;
+      Int_Scale    : constant Word := (if Over_By_8 then 2 else 4);
+      Int_Divider  : constant Word := (25 * Clock) / (Int_Scale * To);
       Frac_Divider : constant Word := Int_Divider rem 100;
    begin
-      This.BRR.DIV_Fraction :=
-        BRR_DIV_Fraction_Field (((Frac_Divider * 16) + 50) / 100 mod 16);
+      --  the integer part of the divi
+      if Over_By_8 then
+         This.BRR.DIV_Fraction :=
+           BRR_DIV_Fraction_Field (((Frac_Divider * 8) + 50) / 100 mod 8);
+      else
+         This.BRR.DIV_Fraction :=
+           BRR_DIV_Fraction_Field (((Frac_Divider * 16) + 50) / 100 mod 16);
+      end if;
+
       This.BRR.DIV_Mantissa :=
         BRR_DIV_Mantissa_Field (Int_Divider / 100);
    end Set_Baud_Rate;
+
+   ---------------------------
+   -- Set_Oversampling_Mode --
+   ---------------------------
+
+   procedure Set_Oversampling_Mode
+     (This : in out USART;
+      To   : Oversampling_Modes)
+   is
+   begin
+      This.CR1.OVER8 := To = Oversampling_By_8;
+   end Set_Oversampling_Mode;
 
    --------------
    -- Set_Mode --

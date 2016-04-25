@@ -234,7 +234,7 @@ is
       New_Position : Train_Position;
       Result       : out Move_Result)
    with
-     Global => (Input  => Cur_Num_Trains,
+     Global => (Input  => (Cur_Num_Trains, Previous_Tracks, Tracks),
                 In_Out => (Trains, Track_Signals)),
      Pre  => Train in 1 .. Cur_Num_Trains and then
              Valid_Move (Trains (Train), New_Position) and then

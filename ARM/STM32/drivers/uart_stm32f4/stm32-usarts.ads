@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -95,6 +95,13 @@ package STM32.USARTs is
    subtype Baud_Rates is Word;
 
    procedure Set_Baud_Rate (This : in out USART;  To : Baud_Rates);
+
+   type Oversampling_Modes is (Oversampling_By_8, Oversampling_By_16);
+   --  oversampling by 16 is the default
+
+   procedure Set_Oversampling_Mode
+     (This : in out USART;
+      To   : Oversampling_Modes);
 
    type UART_Modes is (Rx_Mode, Tx_Mode, Tx_Rx_Mode);
 
@@ -217,6 +224,7 @@ private
    --  USART devices really are configured such that only 1 and 6 are on APB2.
    --  Therefore, if a board has additional USARTs beyond USART6, eg USART8 on
    --  the F429I Discovery board, they better conform to that assumption.
+   --  See Note # 2 in each of Tables 139-141 of the RM on pages 970 - 972.
 
    type USART is new STM32_SVD.USART.USART2_Peripheral;
 

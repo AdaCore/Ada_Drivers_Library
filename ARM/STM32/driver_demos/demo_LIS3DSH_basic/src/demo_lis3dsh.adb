@@ -69,6 +69,19 @@ begin
    --  short delay on power up
    delay until Clock + Milliseconds (10);
 
+   Initialize_Accelerometer
+     (Accelerometer,
+      Chip_Select                   => (GPIO_E'Access, Pin_3),
+      Enable_SPIx_Chip_Select_Clock => RCC.GPIOE_Clock_Enable'Access,
+      SPIx                          => SPI_1'Access,
+      SPIx_AF                       => GPIO_AF_SPI1,
+      Enable_SPIx_Clock             => RCC.SPI1_Clock_Enable'Access,
+      SPIx_GPIO_Port                => GPIO_A'Access,
+      SPIx_SCK_Pin                  => Pin_5,
+      SPIx_MISO_Pin                 => Pin_6,
+      SPIx_MOSI_Pin                 => Pin_7,
+      Enable_SPIx_GPIO_Clock        => RCC.GPIOA_Clock_Enable'Access);
+
    Configure_Accelerometer
      (Accelerometer,
       Output_DataRate => Data_Rate_100Hz,

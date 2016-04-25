@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -97,7 +97,8 @@ package STM32.ADC is
    --  the same as the VBat channel, on others it is channel 16. Note only
    --  available with ADC_1
 
-   ADC_Supply_Voltage : constant := 3300;  -- millivolts
+   ADC_Supply_Voltage : constant := 3000;  -- millivolts
+   --  This is the ideal value, likely not the actual
 
    procedure Enable (This : in out Analog_To_Digital_Converter) with
      Post => Enabled (This);
@@ -113,14 +114,15 @@ package STM32.ADC is
       ADC_Resolution_8_Bits,   -- 11 ADC Clock cycles
       ADC_Resolution_6_Bits);  --  9 ADC Clock cycles
 
-   type Data_Alignment is (Left_Aligned, Right_Aligned);
+   type Data_Alignment is (Right_Aligned, Left_Aligned);
 
    procedure Configure_Unit
      (This       : in out Analog_To_Digital_Converter;
       Resolution : ADC_Resolution;
-      Alignment  : Data_Alignment) with
-     Post => Current_Resolution (This) = Resolution and
-             Current_Alignment (This) = Alignment;
+      Alignment  : Data_Alignment)
+    with
+      Post => Current_Resolution (This) = Resolution and
+              Current_Alignment (This) = Alignment;
 
    function Current_Resolution (This : Analog_To_Digital_Converter)
       return ADC_Resolution;

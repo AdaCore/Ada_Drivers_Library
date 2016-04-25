@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -50,9 +50,6 @@ with BMP_Fonts;
 
 procedure Demo_ADC_VBat_Polling is
 
-   All_Regular_Conversions : constant Regular_Channel_Conversions :=
-      (1 => (Channel => VBat.Channel, Sample_Time => Sample_15_Cycles));
-
    Counts  : Word;
    Voltage : Word;  -- in millivolts
 
@@ -85,6 +82,8 @@ procedure Demo_ADC_VBat_Polling is
 
 begin
    Initialize_LEDs;
+   Initialize_LCD_Hardware;
+   STM32F4.ILI9341.Set_Orientation (To => STM32F4.ILI9341.Portrait_2);
 
    Enable_Clock (VBat.ADC.all);
 
@@ -99,14 +98,14 @@ begin
    Configure_Unit
      (VBat.ADC.all,
       Resolution => ADC_Resolution_12_Bits,
-      Alignment  => Left_Aligned);
+      Alignment  => Right_Aligned);
 
    Configure_Regular_Conversions
      (VBat.ADC.all,
       Continuous  => False,
       Trigger     => Software_Triggered,
       Enable_EOC  => True,
-      Conversions => All_Regular_Conversions);
+      Conversions => (1 => (VBat.Channel, Sample_Time => Sample_112_Cycles)));
 
    Enable (VBat.ADC.all);
 
