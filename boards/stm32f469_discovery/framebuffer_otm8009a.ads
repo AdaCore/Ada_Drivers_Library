@@ -31,6 +31,14 @@ package Framebuffer_OTM8009A is
    overriding function Initialized
      (Display : Frame_Buffer) return Boolean;
 
+   overriding procedure Set_Orientation
+     (Display     : in out Frame_Buffer;
+      Orientation : HAL.Framebuffer.Display_Orientation);
+
+   overriding procedure Set_Mode
+     (Display : in out Frame_Buffer;
+      Mode    : HAL.Framebuffer.Wait_Mode);
+
    overriding function Get_Width
      (Display : Frame_Buffer) return Positive;
 

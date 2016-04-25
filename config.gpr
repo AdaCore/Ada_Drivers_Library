@@ -7,10 +7,6 @@ abstract project Config is
    type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
    RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-sfp");
 
-   type LOADER_Type is
-      ("RAM", "ROM");
-   LOADER : LOADER_Type := external ("LOADER", "ROM");
-
    type BUILD_TYPE is
       ("Debug", "Production");
    Build : BUILD_Type := external ("BUILD", "Debug");

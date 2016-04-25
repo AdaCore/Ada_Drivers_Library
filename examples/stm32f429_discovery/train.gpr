@@ -1,9 +1,0 @@
-with "../../config.gpr";
-with "../../boards/stm32f429_discovery.gpr";
-
-project Train extends "../train/train_generic" is
-
-   for Runtime ("Ada") use Config.RTS & "-stm32f429disco";
-   for Object_Dir use "obj/train";
-
-end Train;

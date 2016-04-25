@@ -15,6 +15,7 @@ library project STM32F429_Discovery is
    for Source_Dirs use ("stm32f429_discovery",
                         "stm32_common",
                         "stm32_common/sdram",
+                        "stm32_common/ltdc",
                         "stm32_common/dma2d");
 
    package Compiler renames Config.Compiler;

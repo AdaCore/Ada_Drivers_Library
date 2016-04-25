@@ -7,7 +7,9 @@ project Common  is
    LOADER : LOADER_Type := external ("LOADER", "ROM");
 
    type LCH_Type is ("led", "lcd");
-   LCH : LCH_Type := external ("LCH", "lcd");
+   LCH : LCH_Type := external ("LCH", "led");
+
+   RTS : Config.RTS_Profile_Type := Config.RTS;
 
    for Languages use ("Ada");
    for Target use "arm-eabi";
@@ -37,7 +39,8 @@ project Common  is
 
    package Linker is
       for Default_Switches ("ada") use
-        ("-Wl,--defsym=__stack_size=32768", "-gc-section");
+        ("-Wl,--defsym=__stack_size=32768", "-gc-section",
+         "-Wl,--print-memory-usage");
    end Linker;
 
    package Ide is

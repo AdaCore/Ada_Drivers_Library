@@ -21,11 +21,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.DMA2D.Polling; use STM32.DMA2D;
+with STM32.Board; use STM32.Board;
+with Bitmapped_Drawing;
 
 package body LCD_Std_Out is
-
-   use Bitmapped_Drawing;
 
    --  We don't make the current font visible to clients because changing it
    --  requires recomputation of the screen layout (eg the char height) and
@@ -36,11 +35,11 @@ package body LCD_Std_Out is
    Char_Width  : Natural := BMP_Fonts.Char_Width (Current_Font);
    Char_Height : Natural := BMP_Fonts.Char_Height (Current_Font);
 
-   Max_Width   : Natural := STM32.LCD.Pixel_Width - Char_Width;
+   Max_Width   : Natural := LCD_Natural_Width - Char_Width;
    --  The last place on the current "line" on the LCD where a char of the
    --  current font size can be printed
 
-   Max_Height : Natural := STM32.LCD.Pixel_Height - Char_Height;
+   Max_Height : Natural := LCD_Natural_Height - Char_Height;
    --  The last "line" on the LCD where a char of this current font size can be
    --  printed
 
@@ -77,9 +76,16 @@ package body LCD_Std_Out is
 
       Initialized := True;
 
-      STM32.LCD.Initialize (STM32.LCD.Pixel_Fmt_ARGB1555);
-      STM32.DMA2D.Polling.Initialize;
-      Clear_Screen;
+      if Display.Initialized then
+         --  Ensure we use polling here: LCD_Std_Out may be called from the
+         --  Last chance handler, and we don't want unexpected tasks or
+         --  protected objects calling an entry not meant for that
+         Display.Set_Mode (HAL.Framebuffer.Polling);
+      else
+         Display.Initialize (Mode => HAL.Framebuffer.Polling);
+         Display.Initialize_Layer (1, HAL.Bitmap.RGB_565);
+         Clear_Screen;
+      end if;
    end Check_Initialized;
 
    ---------------------------------
@@ -90,8 +96,8 @@ package body LCD_Std_Out is
    begin
       Char_Width  := BMP_Fonts.Char_Width (Font);
       Char_Height := BMP_Fonts.Char_Height (Font);
-      Max_Width   := STM32.LCD.Pixel_Width - Char_Width - 1;
-      Max_Height  := STM32.LCD.Pixel_Height - Char_Height - 1;
+      Max_Width   := Display.Get_Width - Char_Width - 1;
+      Max_Height  := Display.Get_Height - Char_Height - 1;
    end Recompute_Screen_Dimensions;
 
    --------------
@@ -108,9 +114,9 @@ package body LCD_Std_Out is
    -- Set_Orientation --
    ---------------------
 
-   procedure Set_Orientation (To : in STM32.LCD.Orientation_Mode) is
+   procedure Set_Orientation (To : in HAL.Framebuffer.Display_Orientation) is
    begin
-      STM32.LCD.Set_Orientation (To);
+      Display.Set_Orientation (To);
       Recompute_Screen_Dimensions (Current_Font);
       Clear_Screen;
    end Set_Orientation;
@@ -119,12 +125,14 @@ package body LCD_Std_Out is
    -- Clear_Screen --
    ------------------
 
-   procedure Clear_Screen is
+   procedure Clear_Screen
+   is
    begin
       Check_Initialized;
-      DMA2D_Fill (Screen_Buffer, Current_Background_Color);
+      Display.Get_Hidden_Buffer (1).Fill (Current_Background_Color);
       Current_Y := 0;
       Char_Count := 0;
+      Display.Update_Layer (1);
    end Clear_Screen;
 
    ---------
@@ -148,18 +156,19 @@ package body LCD_Std_Out is
 
    procedure Draw_Char (X, Y : Natural; Msg : Character)
    is
-      Buff : constant Graphics_Buffer := Screen_Buffer;
    begin
       Check_Initialized;
       Bitmapped_Drawing.Draw_Char
-        (Buff,
+        (Display.Get_Hidden_Buffer (1),
          Start      => (X, Y),
          Char       => Msg,
          Font       => Current_Font,
          Foreground =>
-           STM32.DMA2D.DMA2D_Color_To_Word (Buff, Current_Text_Color),
+           HAL.Bitmap.Bitmap_Color_To_Word (Display.Get_Color_Mode (1),
+                                            Current_Text_Color),
          Background =>
-           STM32.DMA2D.DMA2D_Color_To_Word (Buff, Current_Background_Color));
+           HAL.Bitmap.Bitmap_Color_To_Word (Display.Get_Color_Mode (1),
+                                            Current_Background_Color));
    end Draw_Char;
 
    ---------
@@ -181,8 +190,10 @@ package body LCD_Std_Out is
       else
          X := Char_Count * Char_Width;
       end if;
+
       Draw_Char (X, Current_Y, Msg);
       Char_Count := Char_Count + 1;
+      Display.Update_Layer (1);
    end Put;
 
    --------------
@@ -213,7 +224,11 @@ package body LCD_Std_Out is
    -- Put --
    ---------
 
-   procedure Put (X, Y : Natural; Msg : Character) renames Draw_Char;
+   procedure Put (X, Y : Natural; Msg : Character) is
+   begin
+      Draw_Char (X, Y, Msg);
+      Display.Update_Layer (1);
+   end Put;
 
    ---------
    -- Put --
@@ -228,6 +243,8 @@ package body LCD_Std_Out is
          Draw_Char (Next_X, Y, C);
          Count := Count + 1;
       end loop;
+
+      Display.Update_Layer (1);
    end Put;
 
 end LCD_Std_Out;

@@ -1,9 +1,0 @@
-with "../../config.gpr";
-with "../../boards/stm32f469_discovery.gpr";
-
-project Conway extends "../conway/conway_generic" is
-
-   for Runtime ("Ada") use Config.RTS & "-stm32f469disco";
-   for Object_Dir use "obj/conway";
-
-end Conway;

@@ -38,21 +38,11 @@ package body STM32.DMA2D is
 
    function To_Word is new Ada.Unchecked_Conversion (System.Address, Word);
 
-   function DMA2D_Initialized return Boolean;
    function Offset (Buffer : DMA2D_Buffer;
                     X, Y   : Integer) return Word with Inline_Always;
 
    DMA2D_Wait_Transfer_Int : DMA2D_Sync_Procedure := null;
    DMA2D_Init_Transfer_Int : DMA2D_Sync_Procedure := null;
-
-   -----------------------
-   -- DMA2D_Initialized --
-   -----------------------
-
-   function DMA2D_Initialized return Boolean is
-   begin
-      return DMA2D_Init_Transfer_Int /= null;
-   end DMA2D_Initialized;
 
    ------------------
    -- DMA2D_DeInit --
@@ -60,7 +50,6 @@ package body STM32.DMA2D is
 
    procedure DMA2D_DeInit is
    begin
-      RCC_Periph.AHB1ENR.DMA2DEN := True;
       RCC_Periph.AHB1ENR.DMA2DEN := False;
       DMA2D_Init_Transfer_Int := null;
       DMA2D_Wait_Transfer_Int := null;
@@ -75,9 +64,12 @@ package body STM32.DMA2D is
       Wait : DMA2D_Sync_Procedure)
    is
    begin
-      if DMA2D_Initialized then
+      if DMA2D_Init_Transfer_Int = Init then
          return;
       end if;
+
+      DMA2D_DeInit;
+
       DMA2D_Init_Transfer_Int := Init;
       DMA2D_Wait_Transfer_Int := Wait;
 

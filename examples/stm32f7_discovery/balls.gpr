@@ -1,9 +1,0 @@
-with "../../config.gpr";
-with "../../boards/stm32f7_discovery.gpr";
-
-project Balls extends "../balls/balls_generic" is
-
-   for Runtime ("Ada") use Config.RTS & "-stm32f7disco";
-   for Object_Dir use "obj/balls";
-
-end Balls;

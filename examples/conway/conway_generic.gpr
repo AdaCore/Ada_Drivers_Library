@@ -1,9 +1,0 @@
-project Conway_Generic extends "../common/common.gpr" is
-
-   for Main use ("conway_demo.adb");
-   for Source_Dirs use ("src");
-
-   package Linker is
-      for Default_Switches ("Ada") use ("-Wl,--print-memory-usage");
-   end Linker;
-end Conway_Generic;
