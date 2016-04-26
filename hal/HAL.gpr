@@ -1,0 +1,15 @@
+with "../../config.gpr";
+
+library project HAL is
+
+   for Source_Dirs use ("src");
+   for Languages use ("Ada");
+   for Library_Name use "HAL";
+   for Library_Kind use "static";
+   for Library_Dir use "lib";
+   for Object_Dir use "obj";
+
+   package Compiler renames Config.Compiler;
+   package Builder renames Config.Builder;
+
+end HAL;

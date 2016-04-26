@@ -1,0 +1,6 @@
+project Eth_Generic extends "../common/common.gpr" is
+
+   for Main use ("ethdemo.adb");
+   for Source_Dirs use ("src");
+
+end Eth_Generic;

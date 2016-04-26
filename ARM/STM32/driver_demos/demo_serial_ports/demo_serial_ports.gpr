@@ -1,0 +1,50 @@
+with "../../stm32";
+
+project Demo_Serial_Ports is
+
+   type Build_Modes is ("debug", "production");
+   Build_Mode : Build_Modes := external ("Build", "debug");
+   type Driver_Kinds is ("interrupts", "blocking");
+   Driver_Kind : Driver_Kinds := external ("Driver_Kind", "interrupts");
+
+   for Languages use ("Ada");
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+
+   for Target use STM32'Target;
+   for Runtime ("Ada") use STM32'Runtime ("Ada");
+
+   case Driver_Kind is
+      when "interrupts" => for Main use ("demo_serial_port_nonblocking.adb");
+      when "blocking"   => for Main use ("demo_serial_port_blocking.adb");
+   end case;
+
+   package Compiler is
+      case Build_Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use
+              ("-g",
+               "-gnatwa",
+               "-gnata",   -- enable pre/postcondition checks
+               "-gnatQ",
+               "-gnatw.X");
+         when "production" =>
+            for Default_Switches ("ada") use
+              ("-O1",
+               "-gnatw.X");
+      end case;
+   end Compiler;
+
+   package Builder is
+      for Global_Configuration_Pragmas use "gnat.adc";
+      case Build_Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use ("-g");
+         when "production" =>
+            for Default_Switches ("ada") use ();
+      end case;
+   end Builder;
+
+   package Ide renames STM32.Ide;
+
+end Demo_Serial_Ports;
