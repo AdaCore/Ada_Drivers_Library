@@ -1,22 +1,16 @@
 with "../config.gpr";
 
-aggregate project STM32F7Disco_Examples is
+aggregate project STM32F407disco_Examples is
 
    type LOADER_Type is
       ("RAM", "ROM");
    LOADER : LOADER_Type := external ("LOADER", "ROM");
 
    for Project_Files use
-     ("balls/balls_stm32f7disco.gpr",
-      "conway/conway_stm32f7disco.gpr",
-      "draw/draw_stm32f7disco.gpr",
-      "ethdemo/ethdemo_stm32f7disco.gpr",
-      "train/train_stm32f7disco.gpr");
+     ("accelerometer/accelerometer.gpr");
 
-   for Runtime ("Ada") use Config.RTS & "-stm32f7disco";
+   for Runtime ("Ada") use Config.RTS & "-stm32f4";
    for Target use "arm-eabi";
-
-   package Builder renames Config.Builder;
 
    package Ide is
       for Gnat use "arm-eabi-gnat";
@@ -26,4 +20,4 @@ aggregate project STM32F7Disco_Examples is
       for Communication_Protocol use "remote";
    end Ide;
 
-end STM32F7Disco_Examples;
+end STM32F407Disco_Examples;

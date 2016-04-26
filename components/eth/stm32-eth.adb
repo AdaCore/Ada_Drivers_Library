@@ -46,7 +46,7 @@ package body STM32.Eth is
    begin
       --  Enable GPIO clocks
 
-      Enable_Clock (Gpio_A);
+      Enable_Clock (GPIO_A);
       Enable_Clock (GPIO_C);
       Enable_Clock (GPIO_G);
 
@@ -94,13 +94,13 @@ package body STM32.Eth is
       end loop;
    end Initialize_RMII;
 
-   procedure Read_MMI (Reg : Uint5; Val : out Unsigned_16)
+   procedure Read_MMI (Reg : UInt5; Val : out Unsigned_16)
    is
       use Ada.Real_Time;
-      Pa : constant Uint5 := 0;
-      Cr : Uint3;
+      Pa : constant UInt5 := 0;
+      Cr : UInt3;
    begin
-      case Stm32.Device.System_Clock_Frequencies.HCLK is
+      case STM32.Device.System_Clock_Frequencies.HCLK is
          when 20e6 .. 35e6 - 1   => Cr := 2#010#;
          when 35e6 .. 60e6 - 1   => Cr := 2#011#;
          when 60e6 .. 100e6 - 1  => Cr := 2#000#;
@@ -206,11 +206,11 @@ package body STM32.Eth is
          PD     => False,
          others => <>);
 
-      Desc_Addr := Stm32.SDRAM.Reserve (Amount => Rx_Desc_Array'Size / 8);
+      Desc_Addr := STM32.SDRAM.Reserve (Amount => Rx_Desc_Array'Size / 8);
       Rx_Descs := To_Rx_Desc_Arr_Ptr (Desc_Addr);
       Ethernet_DMA_Periph.DMARDLAR := W (Desc_Addr);
 
-      Desc_Addr := Stm32.SDRAM.Reserve (Amount => Rx_Buffer_Array'Size / 8);
+      Desc_Addr := STM32.SDRAM.Reserve (Amount => Rx_Buffer_Array'Size / 8);
       Rx_Buffs := To_Rx_Buffer_Arr_Ptr (Desc_Addr);
 
       for I in Rx_Desc_Range loop
@@ -218,18 +218,18 @@ package body STM32.Eth is
       end loop;
 
       Ethernet_DMA_Periph.DMABMR :=
-        (Sr   => False,
-         Da   => False,
-         Dsl  => 0,
-         Edfe => False,
-         Pbl  => 4,
-         Rtpr => 0,
-         Fb   => True,
-         Rdp  => 4,
-         Usp  => True,
-         Fpm  => False,
-         Aab  => False,
-         Mb   => False,
+        (SR   => False,
+         DA   => False,
+         DSL  => 0,
+         EDFE => False,
+         PBL  => 4,
+         RTPR => 0,
+         FB   => True,
+         RDP  => 4,
+         USP  => True,
+         FPM  => False,
+         AAB  => False,
+         MB   => False,
          others => <>);
    end Init_Mac;
 

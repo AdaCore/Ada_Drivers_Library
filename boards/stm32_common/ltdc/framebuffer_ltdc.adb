@@ -242,15 +242,20 @@ package body Framebuffer_LTDC is
 
    begin
       if Display.Swapped then
-         X0 := Y;
-         W  := Height;
+         if Height = Positive'Last then
+            W := Display.Width;
+         else
+            W := Height;
+         end if;
+
          if Width = Positive'Last then
-            Y0 := 0;
             H  := Display.Height;
          else
-            Y0 := Display.Height - X - Width;
             H  := Width;
          end if;
+
+         X0 := Y;
+         Y0 := Display.Height - X - H;
       end if;
 
       if X0 >= Display.Width then

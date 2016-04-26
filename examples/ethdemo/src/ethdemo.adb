@@ -22,25 +22,11 @@
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time;
-with STM32.Board;              use STM32.Board;
-with STM32.RNG.Interrupts;     use STM32.RNG.Interrupts;
-with Ada.Unchecked_Conversion;
 with Interfaces;               use Interfaces;
-with HAL;                      use HAL;
-with HAL.Bitmap;               use HAL.Bitmap;
 with STM32.Eth;
 with LCD_Std_Out;              use LCD_Std_Out;
 
 procedure Ethdemo is
-
-   Format : constant Bitmap_Color_Mode := RGB_888;
-
-   type Cell is (Alive, Dead)
-     with Size => 1;
-
-   type Grid is
-     array (Integer range <>, Integer range <>) of Cell
-     with Pack;
 
    function Hex_Image (V : Unsigned_16) return String;
 
@@ -61,8 +47,6 @@ procedure Ethdemo is
 
 
 begin
-
-   Initialize_RNG;
 
    Set_Font (Default_Font);
    Clear_Screen;
