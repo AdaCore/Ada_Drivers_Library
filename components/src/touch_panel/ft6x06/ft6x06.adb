@@ -81,28 +81,19 @@ package body FT6x06 is
    end TP_Set_Use_Interrupts;
 
    ----------------
-   -- Initialize --
-   ----------------
-
-   overriding procedure Initialize (This : in out FT6x06_Device) is
-   begin
-      if not Initialize (Touch_Panel_Device'Class (This)) then
-         raise Program_Error;
-      end if;
-   end Initialize;
-
-   ----------------
    -- Set_Bounds --
    ----------------
 
-   overriding
-   procedure Set_Bounds (This   : in out FT6x06_Device;
-                         Width  : Natural;
-                         Height : Natural)
+   overriding procedure Set_Bounds
+     (This   : in out FT6x06_Device;
+      Width  : Natural;
+      Height : Natural;
+      Swap   : HAL.Touch_Panel.Swap_State)
    is
    begin
       This.LCD_Natural_Width := Width;
       This.LCD_Natural_Height := Height;
+      This.Swap := Swap;
    end Set_Bounds;
 
    -------------------------
@@ -208,23 +199,28 @@ package body FT6x06 is
          Ret.Weight := 50;
       end if;
 
-      if Touch_Panel_Device'Class (This).Swap_Points then
-         declare
-            Swap : constant Natural := Ret.X;
-         begin
-            Ret.X := This.LCD_Natural_Width - Ret.Y - 1;
-            Ret.Y := Swap;
-         end;
-      end if;
+      --  ??? On the STM32F469, Y is slightly smaller than expected
+      Ret.Y := Ret.Y * 11 / 10;
 
       Ret.X := Natural'Max (0, Ret.X);
       Ret.Y := Natural'Max (0, Ret.Y);
       Ret.X := Natural'Min (This.LCD_Natural_Width - 1, Ret.X);
       Ret.Y := Natural'Min (This.LCD_Natural_Height - 1, Ret.Y);
 
-      --  ??? On the STM32F426, Y is returned reverted
-      Ret.Y := This.LCD_Natural_Height - Ret.Y - 1;
-      Ret.Y := Ret.Y * 11 / 10;
+      if (This.Swap and Invert_X) /= 0 then
+         Ret.X := This.LCD_Natural_Width - Ret.X - 1;
+      end if;
+      if (This.Swap and Invert_Y) /= 0 then
+         Ret.Y := This.LCD_Natural_Height - Ret.Y - 1;
+      end if;
+      if (This.Swap and Swap_XY) /= 0 then
+         declare
+            Tmp_X : constant Integer := Ret.X;
+         begin
+            Ret.X := Ret.Y;
+            Ret.Y := Tmp_X;
+         end;
+      end if;
 
       return Ret;
    end Get_Touch_Point;
@@ -297,4 +293,5 @@ package body FT6x06 is
          1000);
       Status := Tmp_Status = Ok;
    end I2C_Write;
+
 end FT6x06;

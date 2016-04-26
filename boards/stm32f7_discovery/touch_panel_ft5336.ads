@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 with HAL.Touch_Panel;
+with HAL.Framebuffer;
 
 private with FT5336;
 private with STM32.Device;
@@ -40,6 +41,20 @@ package Touch_Panel_FT5336 is
    type Touch_Panel is limited new HAL.Touch_Panel.Touch_Panel_Device
    with private;
 
+   function Initialize
+     (This : in out Touch_Panel;
+      Orientation : HAL.Framebuffer.Display_Orientation :=
+        HAL.Framebuffer.Default) return Boolean;
+
+   procedure Initialize
+     (This : in out Touch_Panel;
+      Orientation : HAL.Framebuffer.Display_Orientation :=
+        HAL.Framebuffer.Default);
+
+   procedure Set_Orientation
+     (This        : in out Touch_Panel;
+      Orientation : HAL.Framebuffer.Display_Orientation);
+
 private
 
    TP_I2C   : STM32.I2C.I2C_Port renames STM32.Device.I2C_3;
@@ -47,10 +62,5 @@ private
    type Touch_Panel is limited new FT5336.FT5336_Device
      (Port     => TP_I2C'Access,
       I2C_Addr => 16#70#) with null record;
-
-   overriding function Initialize
-     (This : in out Touch_Panel) return Boolean;
-
-   overriding function Swap_Points (This : Touch_Panel) return Boolean;
 
 end Touch_Panel_FT5336;

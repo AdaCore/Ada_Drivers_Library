@@ -321,28 +321,19 @@ package body FT5336 is
    end TP_Set_Use_Interrupts;
 
    ----------------
-   -- Initialize --
-   ----------------
-
-   overriding procedure Initialize (This : in out FT5336_Device) is
-   begin
-      if not Initialize (Touch_Panel_Device'Class (This)) then
-         raise Program_Error;
-      end if;
-   end Initialize;
-
-   ----------------
    -- Set_Bounds --
    ----------------
 
    overriding
    procedure Set_Bounds (This   : in out FT5336_Device;
                          Width  : Natural;
-                         Height : Natural)
+                         Height : Natural;
+                         Swap   : HAL.Touch_Panel.Swap_State)
    is
    begin
       This.LCD_Natural_Width := Width;
       This.LCD_Natural_Height := Height;
+      This.Swap := Swap;
    end Set_Bounds;
 
    -------------------------
@@ -442,19 +433,26 @@ package body FT5336 is
          Ret.Weight := 0;
       end if;
 
-      if Touch_Panel_Device'Class (This).Swap_Points then
-         declare
-            Swap : constant Natural := Ret.X;
-         begin
-            Ret.X := This.LCD_Natural_Width - Ret.Y - 1;
-            Ret.Y := Swap;
-         end;
-      end if;
-
       Ret.X :=
         Natural'Min (Natural'Max (0, Ret.X), This.LCD_Natural_Width - 1);
       Ret.Y :=
         Natural'Min (Natural'Max (0, Ret.Y), This.LCD_Natural_Height - 1);
+
+      if (This.Swap and Invert_X) /= 0 then
+         Ret.X := This.LCD_Natural_Width - Ret.X - 1;
+      end if;
+      if (This.Swap and Invert_Y) /= 0 then
+         Ret.Y := This.LCD_Natural_Height - Ret.Y - 1;
+      end if;
+      if (This.Swap and Swap_XY) /= 0 then
+         declare
+            Tmp_X : constant Integer := Ret.X;
+         begin
+            Ret.X := Ret.Y;
+            Ret.Y := Tmp_X;
+         end;
+      end if;
+
       return Ret;
    end Get_Touch_Point;
 

@@ -41,7 +41,7 @@ package FT6x06 is
 
    type FT6x06_Device (Port     : HAL.I2C.I2C_Port_Ref;
                        I2C_Addr : HAL.I2C.I2C_Address) is
-     abstract limited new HAL.Touch_Panel.Touch_Panel_Device with private;
+     limited new HAL.Touch_Panel.Touch_Panel_Device with private;
 
    function Check_Id (This : in out FT6x06_Device) return Boolean;
    --  Check the device Id: returns true on a FT5336 touch panel, False is
@@ -53,13 +53,10 @@ package FT6x06 is
    --  information
 
    overriding
-   procedure Initialize (This : in out FT6x06_Device);
-   --  Initializes the LCD touch panel
-
-   overriding
    procedure Set_Bounds (This   : in out FT6x06_Device;
                          Width  : Natural;
-                         Height : Natural);
+                         Height : Natural;
+                         Swap   : HAL.Touch_Panel.Swap_State);
    --  Set screen bounds. Touch_State must should stay within screen bounds
 
    overriding
@@ -84,10 +81,11 @@ private
 
    type FT6x06_Device (Port     : HAL.I2C.I2C_Port_Ref;
                        I2C_Addr : HAL.I2C.I2C_Address) is
-      abstract limited new HAL.Touch_Panel.Touch_Panel_Device with record
-         LCD_Natural_Width  : Natural := 240; -- Arbitrary
-         LCD_Natural_Height : Natural := 320; -- Arbitrary
-      end record;
+     limited new HAL.Touch_Panel.Touch_Panel_Device with record
+      LCD_Natural_Width  : Natural := 0;
+      LCD_Natural_Height : Natural := 0;
+      Swap               : HAL.Touch_Panel.Swap_State := 0;
+   end record;
 
    function I2C_Read (This   : in out FT6x06_Device;
                       Reg    : Byte;

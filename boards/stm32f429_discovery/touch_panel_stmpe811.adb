@@ -113,8 +113,10 @@ package body Touch_Panel_STMPE811 is
    -- Initialize --
    ----------------
 
-   overriding function Initialize
-     (This : in out Touch_Panel) return Boolean
+   function Initialize
+     (This : in out Touch_Panel;
+      Orientation : HAL.Framebuffer.Display_Orientation :=
+        HAL.Framebuffer.Default) return Boolean
    is
       Status : Boolean;
    begin
@@ -122,20 +124,43 @@ package body Touch_Panel_STMPE811 is
       TP_I2C_Config;
 
       Status := STMPE811_Device (This).Initialize;
-      This.Set_Bounds (STM32.Board.LCD_Natural_Width,
-                       STM32.Board.LCD_Natural_Height);
+      This.Set_Orientation (Orientation);
+
       return Status;
    end Initialize;
 
-   -----------------
-   -- Swap_Points --
-   -----------------
+   ----------------
+   -- Initialize --
+   ----------------
 
-   overriding function Swap_Points (This : Touch_Panel) return Boolean
-   is
-      pragma Unreferenced (This);
+   procedure Initialize (This : in out Touch_Panel;
+      Orientation : HAL.Framebuffer.Display_Orientation :=
+                           HAL.Framebuffer.Default) is
    begin
-      return STM32.Board.Display.Is_Swapped;
-   end Swap_Points;
+      if not This.Initialize (Orientation) then
+         raise Constraint_Error with "Cannot initialize the touch panel";
+      end if;
+   end Initialize;
+
+   ---------------------
+   -- Set_Orientation --
+   ---------------------
+
+   procedure Set_Orientation
+     (This        : in out Touch_Panel;
+      Orientation : HAL.Framebuffer.Display_Orientation)
+   is
+   begin
+      case Orientation is
+         when HAL.Framebuffer.Default | HAL.Framebuffer.Portrait =>
+            This.Set_Bounds (STM32.Board.LCD_Natural_Width,
+                             STM32.Board.LCD_Natural_Height,
+                             0);
+         when HAL.Framebuffer.Landscape =>
+            This.Set_Bounds (STM32.Board.LCD_Natural_Width,
+                             STM32.Board.LCD_Natural_Height,
+                             Swap_XY or Invert_Y);
+      end case;
+   end Set_Orientation;
 
 end Touch_Panel_STMPE811;

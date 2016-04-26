@@ -253,18 +253,6 @@ package body STMPE811 is
    -- Initialize --
    ----------------
 
-   overriding procedure Initialize (This : in out STMPE811_Device) is
-   begin
-      if not Initialize (Touch_Panel_Device'Class (This)) then
-         raise Program_Error;
-      end if;
-   end Initialize;
-
-   ----------------
-   -- Initialize --
-   ----------------
-
-   overriding
    function Initialize (This : in out STMPE811_Device) return Boolean
    is
    begin
@@ -314,11 +302,13 @@ package body STMPE811 is
    overriding
    procedure Set_Bounds (This   : in out STMPE811_Device;
                          Width  : Natural;
-                         Height : Natural)
+                         Height : Natural;
+                         Swap   : HAL.Touch_Panel.Swap_State)
    is
    begin
       This.LCD_Natural_Width := Width;
       This.LCD_Natural_Height := Height;
+      This.Swap := Swap;
    end Set_Bounds;
 
    -------------------------
@@ -356,6 +346,8 @@ package body STMPE811 is
       Raw_Z     : Word;
       X         : Integer;
       Y         : Integer;
+      Tmp       : Integer;
+
    begin
 
       --  Check Touch detected bit in CTRL register
@@ -401,13 +393,20 @@ package body STMPE811 is
          return (0, 0, 0);
       end if;
 
-      if not Touch_Panel_Device'Class (This).Swap_Points then
-         State.X := X;
-         State.Y := Y;
-      else
-         State.X := This.LCD_Natural_Height - Y - 1;
-         State.Y := X;
+      if (This.Swap and Invert_X) /= 0 then
+         X := This.LCD_Natural_Width - X - 1;
       end if;
+      if (This.Swap and Invert_Y) /= 0 then
+         Y := This.LCD_Natural_Height - Y - 1;
+      end if;
+      if (This.Swap and Swap_XY) /= 0 then
+         Tmp := X;
+         X := Y;
+         Y := Tmp;
+      end if;
+
+      State.X := X;
+      State.Y := Y;
 
       State.Weight := Integer'Max (Integer (Raw_Z), 8);
 

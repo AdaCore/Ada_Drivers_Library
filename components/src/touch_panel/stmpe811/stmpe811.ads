@@ -37,20 +37,16 @@ package STMPE811 is
 
    type STMPE811_Device (Port     : I2C_Port_Ref;
                          I2C_Addr : HAL.I2C.I2C_Address) is
-     abstract limited new Touch_Panel_Device with private;
+     limited new Touch_Panel_Device with private;
 
-   overriding
    function Initialize (This : in out STMPE811_Device) return Boolean;
-   --  Initializes the LCD touch panel
-
-   overriding
-   procedure Initialize (This : in out STMPE811_Device);
    --  Initializes the LCD touch panel
 
    overriding
    procedure Set_Bounds (This   : in out STMPE811_Device;
                          Width  : Natural;
-                         Height : Natural);
+                         Height : Natural;
+                         Swap   : HAL.Touch_Panel.Swap_State);
 
    overriding
    function Active_Touch_Points (This : in out STMPE811_Device)
@@ -75,9 +71,10 @@ private
 
    type STMPE811_Device (Port     : I2C_Port_Ref;
                          I2C_Addr : HAL.I2C.I2C_Address) is
-     abstract limited new Touch_Panel_Device with record
-      LCD_Natural_Width  : Natural := 240; -- Arbitrary
-      LCD_Natural_Height : Natural := 320; -- Arbitrary
+     limited new Touch_Panel_Device with record
+      LCD_Natural_Width  : Natural := 0;
+      LCD_Natural_Height : Natural := 0;
+      Swap               : Swap_State := 0;
    end record;
 
    subtype TSC_Data is I2C_Data;

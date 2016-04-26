@@ -8,7 +8,7 @@ package FT5336 is
 
    type FT5336_Device (Port     : HAL.I2C.I2C_Port_Ref;
                        I2C_Addr : HAL.I2C.I2C_Address) is
-     abstract limited new Touch_Panel_Device with private;
+     limited new Touch_Panel_Device with private;
 
    function Check_Id (This : in out FT5336_Device) return Boolean;
    --  Checks the ID of the touch panel controller, returns false if not found
@@ -20,13 +20,10 @@ package FT5336 is
    --  software.
 
    overriding
-   procedure Initialize (This : in out FT5336_Device);
-   --  Initializes the LCD touch panel
-
-   overriding
    procedure Set_Bounds (This   : in out FT5336_Device;
                          Width  : Natural;
-                         Height : Natural);
+                         Height : Natural;
+                         Swap   : HAL.Touch_Panel.Swap_State);
    --  Set screen bounds. Touch_State must should stay within screen bounds
 
    overriding
@@ -52,10 +49,11 @@ private
 
    type FT5336_Device (Port     : HAL.I2C.I2C_Port_Ref;
                        I2C_Addr : HAL.I2C.I2C_Address) is
-      abstract limited new HAL.Touch_Panel.Touch_Panel_Device with record
-         LCD_Natural_Width  : Natural := 240; -- Arbitrary
-         LCD_Natural_Height : Natural := 320; -- Arbitrary
-      end record;
+     limited new HAL.Touch_Panel.Touch_Panel_Device with record
+      LCD_Natural_Width  : Natural := 0;
+      LCD_Natural_Height : Natural := 0;
+      Swap               : Swap_State := 0;
+   end record;
 
    function I2C_Read (This   : in out FT5336_Device;
                       Reg    : Byte;
