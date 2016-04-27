@@ -14,9 +14,10 @@ abstract project Config is
    package Compiler is
       case Build is
          when "Production" =>
-            for Default_Switches ("Ada") use ("-O3", "-gnatp");
+            for Default_Switches ("Ada") use ("-O2", "-gnatp");
          when "Debug" =>
-            for Default_Switches ("Ada") use ("-O0", "-fcallgraph-info=su");
+            for Default_Switches ("Ada") use
+              ("-g", "-O0", "-fcallgraph-info=su");
       end case;
       for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
         ("-gnatwa", "-gnatQ", "-gnatw.X", "-gnaty", "-gnatyO",
