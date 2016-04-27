@@ -38,20 +38,18 @@ package body Framebuffer_OTM8009A is
       entry Wait;
       procedure Do_Refresh;
 
-      procedure Interrupt;
-      pragma Attach_Handler (Interrupt, Ada.Interrupts.Names.DSI_Interrupt);
-
    private
       procedure End_Of_Refresh_Callback;
       procedure Tearing_Effect_Callback;
+      procedure Interrupt
+        with Attach_Handler => Ada.Interrupts.Names.DSI_Interrupt;
 
       Refreshed   : Boolean := True;
 --        Active_Area : Area := Left_Area;
    end Sync;
 
    procedure LCD_Reset;
-   procedure Initialize_Device
-     (Display     : in out Frame_Buffer);
+   procedure Initialize_Device (Display : in out Frame_Buffer);
 
    ----------
    -- Sync --
@@ -230,8 +228,7 @@ package body Framebuffer_OTM8009A is
    -- Initialize_Device --
    -----------------------
 
-   procedure Initialize_Device
-     (Display     : in out Frame_Buffer)
+   procedure Initialize_Device (Display : in out Frame_Buffer)
    is
    begin
 
@@ -275,6 +272,19 @@ package body Framebuffer_OTM8009A is
          LP_Max_Read_Packet       => True,
          Acknowledge_Request      => False);
 
+      STM32.LTDC.Initialize
+        (Width         => Display.Get_Width,
+         Height        => Display.Get_Height,
+         H_Sync        => 2,
+         H_Back_Porch  => 1,
+         H_Front_Porch => 1,
+         V_Sync        => 2,
+         V_Back_Porch  => 1,
+         V_Front_Porch => 1,
+         PLLSAI_N      => PLLSAIN,
+         PLLSAI_R      => PLLSAIR,
+         DivR          => PLLSAI_DIVR);
+
       --  Enable the DSI Host and Wrapper
       DSIHOST.DSI_Start;
 
@@ -301,7 +311,7 @@ package body Framebuffer_OTM8009A is
       DSIHOST.DSI_Setup_Flow_Control (Flow_Control_BTA);
 
       DSIHOST.DSI_Refresh;
-   end  Initialize_Device;
+   end Initialize_Device;
 
    ----------------
    -- Initialize --
@@ -335,21 +345,7 @@ package body Framebuffer_OTM8009A is
          Display.Swapped := True;
       end if;
 
-      STM32.LTDC.Initialize
-        (Width         => Display.Get_Width,
-         Height        => Display.Get_Height,
-         H_Sync        => 2,
-         H_Back_Porch  => 1,
-         H_Front_Porch => 1,
-         V_Sync        => 2,
-         V_Back_Porch  => 1,
-         V_Front_Porch => 1,
-         PLLSAI_N      => PLLSAIN,
-         PLLSAI_R      => PLLSAIR,
-         DivR          => PLLSAI_DIVR);
-      STM32.LTDC.Set_Layer_State (STM32.LTDC.Layer1, True);
-      STM32.LTDC.Set_Layer_State (STM32.LTDC.Layer2, True);
-      STM32.LTDC.Reload_Config (True);
+      Display.Initialize_Device;
 
       case Mode is
          when Polling =>
@@ -357,9 +353,6 @@ package body Framebuffer_OTM8009A is
          when Interrupt =>
             STM32.DMA2D.Interrupt.Initialize;
       end case;
-
-      --  Now setup the DSI
-      Initialize_Device (Display);
    end Initialize;
 
    -----------------
