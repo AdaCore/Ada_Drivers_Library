@@ -41,7 +41,7 @@ with HAL.Bitmap;            use HAL.Bitmap;
 
 with Bitmapped_Drawing;     use Bitmapped_Drawing;
 
-procedure Demo is
+procedure Balls_Demo is
    use STM32;
 
    pragma Priority (System.Priority'First);
@@ -407,4 +407,5 @@ begin
 
       Display.Update_Layer (1);
    end loop;
-end Demo;
+
+end Balls_Demo;
