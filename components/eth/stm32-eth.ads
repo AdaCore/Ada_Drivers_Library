@@ -35,7 +35,7 @@ package STM32.Eth is
    procedure Initialize_RMII;
    --  Initialize the driver using RMII configuration.
 
-   procedure Read_MMI (Reg : Uint5; Val : out Unsigned_16);
+   procedure Read_MMI (Reg : UInt5; Val : out Unsigned_16);
    --  Read an MMI register.
 
    procedure Init_Mac;
@@ -54,10 +54,10 @@ package STM32.Eth is
       Dp         : Bit;
       Ttse       : Bit;
       Reserved_1 : Bit;
-      Cic        : Uint2;
+      Cic        : UInt2;
       Ter        : Bit;
       Tch        : Bit;
-      Reserved_2 : Uint2;
+      Reserved_2 : UInt2;
       Ttss       : Bit;
       Ihe        : Bit;
       Es         : Bit;
@@ -69,7 +69,7 @@ package STM32.Eth is
       Lco        : Bit;
       Ec         : Bit;
       Vf         : Bit;
-      Cc         : Uint4;
+      Cc         : UInt4;
       Ed         : Bit;
       Uf         : Bit;
       Db         : Bit;
@@ -106,10 +106,10 @@ package STM32.Eth is
    end record;
 
    type TDES1_Type is record
-      Tbs1           : Uint13;
-      Reserved_13_15 : Uint3;
-      Tbs2           : Uint13;
-      Reserved_29_31 : Uint3;
+      Tbs1           : UInt13;
+      Reserved_13_15 : UInt3;
+      Tbs2           : UInt13;
+      Reserved_29_31 : UInt3;
    end record;
 
    for TDES1_Type use record
@@ -120,8 +120,8 @@ package STM32.Eth is
    end record;
 
    type Tx_Desc_Type is record
-      Tdes0 : Tdes0_Type;
-      Tdes1 : Tdes1_Type;
+      Tdes0 : TDES0_Type;
+      Tdes1 : TDES1_Type;
       Tdes2 : Address;
       Tdes3 : Address;
    end record;
@@ -150,7 +150,7 @@ package STM32.Eth is
       Saf     : Bit;
       De      : Bit;
       Es      : Bit;
-      Fl      : Uint14;
+      Fl      : UInt14;
       Afm     : Bit;
       Own     : Bit;
    end record;
@@ -178,12 +178,12 @@ package STM32.Eth is
    end record;
 
    type Rdes1_Type is record
-      Rbs            : Uint13;
+      Rbs            : UInt13;
       Reserved_13    : Bit;
       Rch            : Bit;
       Rer            : Bit;
-      Rbs2           : Uint13;
-      Reserved_29_30 : Uint2;
+      Rbs2           : UInt13;
+      Reserved_29_30 : UInt2;
       Dic            : Bit;
    end record;
 

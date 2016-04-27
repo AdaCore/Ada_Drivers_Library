@@ -39,7 +39,26 @@ with Ada.Interrupts.Names;
 with Ada.Unchecked_Conversion;
 
 package body STM32.Eth is
-   procedure Initialize_RMII is
+
+   type Rx_Desc_Range is mod 16;
+   type Rx_Desc_Array is array (Rx_Desc_Range) of Rx_Desc_Type;
+   type Rx_Desc_Arr_Ptr is access Rx_Desc_Array;
+
+   type Rx_Buffer is array (Natural range 0 .. 1023) of Unsigned_8;
+   type Rx_Buffer_Array is array (Rx_Desc_Range) of Rx_Buffer;
+   type Rx_Buffer_Arr_Ptr is access Rx_Buffer_Array;
+
+   Rx_Descs : Rx_Desc_Arr_Ptr;
+   Rx_Buffs : Rx_Buffer_Arr_Ptr;
+
+   procedure Init_Rx_Desc (I : Rx_Desc_Range);
+
+   ---------------------
+   -- Initialize_RMII --
+   ---------------------
+
+   procedure Initialize_RMII
+   is
       use STM32.GPIO;
       use STM32.Device;
       use STM32_SVD.RCC;
@@ -94,6 +113,10 @@ package body STM32.Eth is
       end loop;
    end Initialize_RMII;
 
+   --------------
+   -- Read_MMI --
+   --------------
+
    procedure Read_MMI (Reg : UInt5; Val : out Unsigned_16)
    is
       use Ada.Real_Time;
@@ -124,16 +147,9 @@ package body STM32.Eth is
       Val := Ethernet_MAC_Periph.MACMIIDR.TD;
    end Read_MMI;
 
-   type Rx_Desc_Range is mod 16;
-   type Rx_Desc_Array is array (Rx_Desc_Range) of Rx_Desc_Type;
-   type Rx_Desc_Arr_Ptr is access Rx_Desc_Array;
-
-   type Rx_Buffer is array (Natural range 0 .. 1023) of Unsigned_8;
-   type Rx_Buffer_Array is array (Rx_Desc_Range) of Rx_Buffer;
-   type Rx_Buffer_Arr_Ptr is access Rx_Buffer_Array;
-
-   Rx_Descs : Rx_Desc_Arr_Ptr;
-   Rx_Buffs : Rx_Buffer_Arr_Ptr;
+   ------------------
+   -- Init_Rx_Desc --
+   ------------------
 
    procedure Init_Rx_Desc (I : Rx_Desc_Range)
    is
