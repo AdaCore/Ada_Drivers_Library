@@ -47,12 +47,16 @@ is
    procedure Clear is
    begin
       Display.Get_Hidden_Buffer (1).Fill ((Alpha => 255, others => 64));
+      Display.Update_Layer (1, Copy_Back => True);
    end Clear;
+
+   Last_X : Integer := -1;
+   Last_Y : Integer := -1;
 
 begin
    --  Initialize LCD
    Display.Initialize;
-   Display.Initialize_Layer (1, RGB_888);
+   Display.Initialize_Layer (1, ARGB_8888);
 
    --  Initialize touch panel
    Touch_Panel.Initialize;
@@ -68,18 +72,48 @@ begin
    loop
       if STM32.Button.Has_Been_Pressed then
          Clear;
-      else
-         declare
-            State : constant TP_State := Touch_Panel.Get_All_Touch_Points;
-         begin
-            for Touch of State loop
-               --  Workaround some strange readings from the STM32F429 TP
-               Fill_Circle
-                 (Display.Get_Hidden_Buffer (1),
-                  (Touch.X, Touch.Y), Touch.Weight / 4, HAL.Bitmap.Red);
-               Display.Update_Layer (1, Copy_Back => True);
-            end loop;
-         end;
       end if;
+
+      declare
+         State : constant TP_State := Touch_Panel.Get_All_Touch_Points;
+      begin
+         if State'Length = 0 then
+            Last_X := -1;
+            Last_Y := -1;
+
+         elsif State'Length = 1 then
+            --  Lines can be drawn between two consecutive points only when
+            --  one touch point is active: the order of the touch data is not
+            --  necessarily preserved by the hardware.
+            if Last_X > 0 then
+               Draw_Line
+                 (Display.Get_Hidden_Buffer (1),
+                  Start     => (Last_X, Last_Y),
+                  Stop      => (State (State'First).X, State (State'First).Y),
+                  Hue       => HAL.Bitmap.Green,
+                  Thickness => State (State'First).Weight / 2,
+                  Fast      => False);
+            end if;
+
+            Last_X := State (State'First).X;
+            Last_Y := State (State'First).Y;
+
+         else
+            Last_X := -1;
+            Last_Y := -1;
+         end if;
+
+         for Id in State'Range loop
+            Fill_Circle
+              (Display.Get_Hidden_Buffer (1),
+               Center => (State (Id).X, State (Id).Y),
+               Radius => State (Id).Weight / 4,
+               Hue    => HAL.Bitmap.Green);
+         end loop;
+
+         if State'Length > 0 then
+            Display.Update_Layer (1, Copy_Back => True);
+         end if;
+      end;
    end loop;
 end Draw;
