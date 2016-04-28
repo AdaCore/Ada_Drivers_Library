@@ -389,7 +389,7 @@ package body STM32.I2C is
             return;
          end if;
 
-         if To_Duration (Clock - Start) > Duration (Timeout) then
+         if Clock - Start > Milliseconds (Timeout) then
             Handle.State := Ready;
             Status       := HAL.I2C.Err_Timeout;
 
