@@ -1,0 +1,27 @@
+with "../../hal/HAL.gpr";
+with "../../config.gpr";
+
+library project STM32F40x is
+
+   for Target use "arm-eabi";
+   for Runtime ("Ada") use Config.RTS & "-stm32f4";
+
+   for Library_Name use "stm32f407";
+   for Library_Kind use "static";
+   for Library_Dir use "lib/stm32f40x/" & Config.RTS;
+   for Object_Dir use "obj/stm32f40x/" & Config.RTS;
+
+   for Source_Dirs use Project'Source_Dirs &
+     ("../cortex_m",
+      "../cortex_m/fpu",
+      "../cortex_m/nocache",
+      "drivers",
+      "svd/stm32f40x",
+      "devices/stm32f40x",
+      "drivers/i2c_stm32f4",
+      "drivers/uart_stm32f4");
+
+   package Compiler renames Config.Compiler;
+   package Builder renames Config.Builder;
+
+end STM32F40x;

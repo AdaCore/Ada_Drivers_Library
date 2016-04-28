@@ -1,0 +1,23 @@
+with "../config.gpr";
+
+aggregate project STM32F407disco_Examples is
+
+   type LOADER_Type is
+      ("RAM", "ROM");
+   LOADER : LOADER_Type := external ("LOADER", "ROM");
+
+   for Project_Files use
+     ("accelerometer/accelerometer.gpr");
+
+   for Runtime ("Ada") use Config.RTS & "-stm32f4";
+   for Target use "arm-eabi";
+
+   package Ide is
+      for Gnat use "arm-eabi-gnat";
+      for Gnatlist use "arm-eabi-gnatls";
+      for Debugger_Command use "arm-eabi-gdb";
+      for Program_Host use "localhost:4242";
+      for Communication_Protocol use "remote";
+   end Ide;
+
+end STM32F407Disco_Examples;

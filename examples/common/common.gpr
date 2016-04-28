@@ -1,0 +1,54 @@
+with "../../config.gpr";
+
+project Common  is
+
+   type LOADER_Type is
+      ("RAM", "ROM");
+   LOADER : LOADER_Type := external ("LOADER", "ROM");
+
+   type LCH_Type is ("led", "lcd");
+   LCH : LCH_Type := external ("LCH", "led");
+
+   RTS : Config.RTS_Profile_Type := Config.RTS;
+
+   for Languages use ("Ada");
+   for Target use "arm-eabi";
+   for Source_Dirs use ("gui");
+
+   case Config.RTS is
+      when "ravenscar-sfp" =>
+         for Source_Dirs use Project'Source_Dirs & ("lch_sfp");
+         case LCH is
+            when "led" =>
+               for Source_Dirs use Project'Source_Dirs & ("lch_sfp/led");
+            when "lcd" =>
+               for Source_Dirs use Project'Source_Dirs & ("lch_sfp/lcd");
+         end case;
+      when "ravenscar-full" =>
+         for Source_Dirs use Project'Source_Dirs & ("lch_full");
+         case LCH is
+            when "led" =>
+               for Source_Dirs use Project'Source_Dirs & ("lch_full/led");
+            when "lcd" =>
+               for Source_Dirs use Project'Source_Dirs & ("lch_full/lcd");
+         end case;
+   end case;
+
+   package Compiler renames Config.Compiler;
+   package Builder renames Config.Builder;
+
+   package Linker is
+      for Default_Switches ("ada") use
+        ("-Wl,--defsym=__stack_size=32768", "-gc-section",
+         "-Wl,--print-memory-usage");
+   end Linker;
+
+   package Ide is
+      for Gnat use "arm-eabi-gnat";
+      for Gnatlist use "arm-eabi-gnatls";
+      for Debugger_Command use "arm-eabi-gdb";
+      for Program_Host use "localhost:4242";
+      for Communication_Protocol use "remote";
+   end Ide;
+
+end Common;

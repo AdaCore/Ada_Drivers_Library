@@ -1,1 +1,0 @@
-pragma Partition_Elaboration_Policy (Sequential);
