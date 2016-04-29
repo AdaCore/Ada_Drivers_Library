@@ -388,6 +388,7 @@ package body Framebuffer_LTDC is
 
          STM32.DMA2D_Bitmap.Copy_Rect
            (Visible, 0, 0, Hidden, 0, 0, Visible.Width, Visible.Height);
+         STM32.DMA2D.DMA2D_Wait_Transfer;
       end if;
    end Update_Layer;
 
@@ -406,6 +407,45 @@ package body Framebuffer_LTDC is
       end loop;
 
       STM32.LTDC.Reload_Config (Immediate => False);
+   end Update_Layers;
+
+   -------------------
+   -- Update_Layers --
+   -------------------
+
+   procedure Update_Layers
+     (Display     : in out Frame_Buffer;
+      Copy_Layer1 : Boolean;
+      Copy_Layer2 : Boolean)
+   is
+      use type STM32.LTDC.LCD_Layer;
+      Visible, Hidden : STM32.DMA2D_Bitmap.DMA2D_Bitmap_Buffer;
+   begin
+      for J in 1 .. 2 loop
+         if Display.Initialized (J) then
+            Internal_Update_Layer (Display, J);
+         end if;
+      end loop;
+
+      STM32.LTDC.Reload_Config (Immediate => False);
+
+      for LCD_Layer in STM32.LTDC.LCD_Layer'Range loop
+         if (LCD_Layer = STM32.LTDC.Layer1 and then Copy_Layer1)
+           or else (LCD_Layer = STM32.LTDC.Layer2 and then Copy_Layer2)
+         then
+            if Display.Current (LCD_Layer) = 1 then
+               Visible := Display.Buffers (LCD_Layer, 1);
+               Hidden  := Display.Buffers (LCD_Layer, 2);
+            else
+               Visible := Display.Buffers (LCD_Layer, 2);
+               Hidden  := Display.Buffers (LCD_Layer, 1);
+            end if;
+
+            STM32.DMA2D_Bitmap.Copy_Rect
+              (Visible, 0, 0, Hidden, 0, 0, Visible.Width, Visible.Height);
+            STM32.DMA2D.DMA2D_Wait_Transfer;
+         end if;
+      end loop;
    end Update_Layers;
 
    --------------------

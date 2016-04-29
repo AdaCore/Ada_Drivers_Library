@@ -99,6 +99,14 @@ package Framebuffer_LTDC is
    --  Updates all initialized layers at once with their respective hidden
    --  buffer
 
+   procedure Update_Layers
+     (Display     : in out Frame_Buffer;
+      Copy_Layer1 : Boolean;
+      Copy_Layer2 : Boolean)
+     with Pre => Initialized (Display);
+   --  Updates all initialized layers at once with their respective hidden
+   --  buffer
+
    overriding function Get_Color_Mode
      (Display : Frame_Buffer;
       Layer   : Positive) return HAL.Framebuffer.FB_Color_Mode
