@@ -6,11 +6,14 @@ with HAL.Framebuffer;
 with HAL.Bitmap;
 with HAL.Touch_Panel;
 
+with Bitmapped_Drawing;
+with BMP_Fonts;
+
 with Fractals; use Fractals;
 
 procedure Fractals_Demo
 is
-   Max_Depth : constant Positive := 512;
+   Max_Depth : constant Positive := 2048;
    Colors    : array (0 .. Max_Depth) of HAL.Bitmap.Bitmap_Color;
 
    Current_Screen : Screen;
@@ -58,28 +61,13 @@ is
    begin
       Colors := (others => (255, 0, 0, 0));
 
-      for J in 0 .. 31 loop
-         Colors (J).Red := Fill (255, Float (J) / 32.0);
+      for J in 0 .. 63 loop
+         Colors (J).Red := Fill (255, Float (J) / 64.0);
       end loop;
 
-      for J in 32 .. Colors'Last loop
+      for J in 64 .. 2047 loop
          Colors (J).Red := 255;
-      end loop;
-
-      for J in 0 .. 127 loop
-         Colors (32 + J).Green := Fill (255, Float (J) / 128.0);
-      end loop;
-
-      for J in 128 + 32 .. Colors'Last loop
-         Colors (J).Green := 255;
-      end loop;
-
-      for J in 0 .. 383 loop
-         Colors (128 + J) :=
-           (Alpha => 255,
-            Red   => 255 - Fill (255, Float (J) / 384.0),
-            Green => 255,
-            Blue  => 0);
+         Colors (J).Green := Fill (255, Float (J - 64) / (2048.0 - 64.0));
       end loop;
 
       Colors (Max_Depth) := HAL.Bitmap.Black;
@@ -195,10 +183,15 @@ is
          W := W + Box.X0;
          Box.X0 := 0;
       end if;
-
       if Box.Y0 < 0 then
          H := H + Box.Y0;
          Box.Y0 := 0;
+      end if;
+      if Box.X0 + W > Display.Get_Width then
+         W := Display.Get_Width - Box.X0;
+      end if;
+      if Box.Y0 + H >= Display.Get_Height then
+         H := Display.Get_Height - Box.Y0;
       end if;
 
       Buff.Fill_Rect (Color  => (Alpha => 73, others => 255),
@@ -215,7 +208,9 @@ is
       Display.Update_Layer (2);
    end Draw_Zoom;
 
-   Zoom_Box : Zoom_Box_Record;
+   Zoom_Box   : Zoom_Box_Record;
+   First_Pass : Boolean;
+   Do_Paint   : Boolean;
 
 begin
    Display.Initialize (HAL.Framebuffer.Landscape);
@@ -231,68 +226,169 @@ begin
       Same_Fractal_Loop :
       loop
          Display.Get_Hidden_Buffer (1).Fill (0);
+         Display.Update_Layer (1, True);
          Display.Get_Hidden_Buffer (2).Fill (0);
-         Display.Update_Layers;
+         Display.Get_Hidden_Buffer (2).Wait_Transfer;
+         Bitmapped_Drawing.Draw_String
+           (Display.Get_Hidden_Buffer (2),
+            Start      => (X => Display.Get_Width / 2 - 112,
+                           Y => Display.Get_Height / 2 - 12),
+            Msg        => "Calculating...",
+            Font       => BMP_Fonts.Font16x24,
+            Foreground => (128, 255, 255, 255),
+            Background => HAL.Bitmap.Transparent);
+         Display.Update_Layer (2, True);
 
-         for Y in 0 .. Display.Get_Height - 1 loop
+         First_Pass := True;
+         for J in reverse 0 .. 3 loop
             declare
-               Buff : constant HAL.Bitmap.Bitmap_Buffer'Class :=
-                        Display.Get_Hidden_Buffer (1);
+               Size : constant Natural := 2 ** J;
             begin
-               for X in 0 .. Display.Get_Width - 1 loop
+               for Y in 0 .. Display.Get_Height / Size - 1 loop
                   declare
-                     Iter : constant Natural :=
-                              The_Fractals (Current).Compute (To_Coord (X, Y),
-                                                              Max_Depth);
+                     use HAL;
+                     use type HAL.Word;
+                     Buff : constant HAL.Bitmap.Bitmap_Buffer'Class :=
+                              Display.Get_Hidden_Buffer (1);
+                     Col  : Word;
                   begin
-                     Buff.Set_Pixel (X, Y, Colors (Iter));
+                     for X in 0 .. Display.Get_Width / Size - 1 loop
+                        if First_Pass then
+                           Do_Paint := True;
+                        else
+                           Do_Paint := False;
+
+                           if X mod 2 = 0 and then Y mod 2 = 0 then
+                              --  Already calculated in the previous pass
+                              Do_Paint := False;
+
+                           elsif X = 0
+                             or else Y = 0
+                             or else (X + 1) * Size >= Display.Get_Width
+                             or else (Y + 1) * Size >= Display.Get_Height
+                           then
+                              --  Always draw borders
+                              Do_Paint := True;
+
+                           else
+                              Col := Buff.Get_Pixel (X * Size, Y * Size);
+                              Do_Paint := False;
+
+                              if Buff.Get_Pixel ((X - 1) * Size, (Y - 1) * Size) /= Col
+                                or else Buff.Get_Pixel ((X + 1) * Size, (Y + 1) * Size) /= Col
+                                or else Buff.Get_Pixel ((X + 1) * Size, (Y - 1) * Size) /= Col
+                                or else Buff.Get_Pixel ((X - 1) * Size, (Y + 1) * Size) /= Col
+                                or else Buff.Get_Pixel (X * Size, (Y - 1) * Size) /= Col
+                                or else Buff.Get_Pixel ((X - 1) * Size, Y * Size) /= Col
+                                or else Buff.Get_Pixel (X * Size, (Y + 1) * Size) /= Col
+                                or else Buff.Get_Pixel ((X + 1) * Size, Y * Size) /= Col
+                              then
+                                 Do_Paint := True;
+                              end if;
+                           end if;
+                        end if;
+
+                        if Do_Paint then
+                           declare
+                              Iter : constant Natural :=
+                                       The_Fractals (Current).Compute
+                                         (To_Coord (X * Size, Y * Size),
+                                          Max_Depth);
+                           begin
+                              if Size > 1 then
+                                 Buff.Fill_Rect (Colors (Iter),
+                                                 X * Size,
+                                                 Y * Size,
+                                                 Size,
+                                                 Size);
+                              else
+                                 Buff.Set_Pixel (X, Y, Colors (Iter));
+                              end if;
+                           end;
+                        end if;
+                     end loop;
                   end;
+
+                  Display.Update_Layer (1, True);
+
+                  if STM32.Button.Has_Been_Pressed then
+                     exit Same_Fractal_Loop;
+                  end if;
                end loop;
-               Display.Update_Layer (1, True);
+
+               First_Pass := False;
             end;
          end loop;
 
+         Display.Get_Hidden_Buffer (2).Fill (0);
+         Display.Update_Layer (2);
+
+--           for Y in 0 .. Display.Get_Height - 1 loop
+--              declare
+--                 Buff : constant HAL.Bitmap.Bitmap_Buffer'Class :=
+--                          Display.Get_Hidden_Buffer (1);
+--              begin
+--                 for X in 0 .. Display.Get_Width - 1 loop
+--                    declare
+--                       Iter : constant Natural :=
+--                                The_Fractals (Current).Compute (To_Coord (X, Y),
+--                                                                Max_Depth);
+--                    begin
+--                       Buff.Set_Pixel (X, Y, Colors (Iter));
+--                    end;
+--                 end loop;
+--
+--                 Display.Update_Layer (1, True);
+--
+--                 if STM32.Button.Has_Been_Pressed then
+--                    exit Same_Fractal_Loop;
+--                 end if;
+--              end;
+--           end loop;
+
          Zoom_Loop :
          loop
-            if Touch_Panel.Active_Touch_Points = 0 then
-               if Zoom_Box.X0 > 0 and then Zoom_Box.X1 > 0 then
-                  Zoom (Zoom_Box);
-                  Zoom_Box.X0 := -1;
-                  exit Zoom_Loop;
-               end if;
-            else
-               declare
-                  State : constant HAL.Touch_Panel.TP_Touch_State :=
-                            Touch_Panel.Get_Touch_Point (1);
-               begin
-                  if Zoom_Box.X0 = -1 then
-                     Zoom_Box.X0 := State.X;
-                     Zoom_Box.Y0 := State.Y;
-                     Zoom_Box.X1   := -1;
-                  else
-                     if abs (State.X - Zoom_Box.X0) > 10
-                       and then abs (State.Y - Zoom_Box.Y0) > 10
-                     then
-                        Zoom_Box.X1 := State.X;
-                        Zoom_Box.Y1 := State.Y;
-                        Draw_Zoom (Zoom_Box);
-                     else
-                        Zoom_Box.X1 := -1;
-                     end if;
+            declare
+               use type HAL.Touch_Panel.TP_Touch_State;
+               State : constant HAL.Touch_Panel.TP_Touch_State :=
+                         Touch_Panel.Get_Touch_Point (1);
+            begin
+               if State = HAL.Touch_Panel.Null_Touch_State then
+                  if Zoom_Box.X1 /= -1 then
+                     Zoom (Zoom_Box);
+                     Zoom_Box.X0 := -1;
+                     Zoom_Box.X1 := -1;
+                     exit Zoom_Loop;
                   end if;
-               end;
-            end if;
+
+               elsif Zoom_Box.X0 = -1 then
+                  Zoom_Box.X0 := State.X;
+                  Zoom_Box.Y0 := State.Y;
+                  Zoom_Box.X1   := -1;
+
+               elsif abs (State.X - Zoom_Box.X0) > 10
+                 and then abs (State.Y - Zoom_Box.Y0) > 10
+               then
+                  Zoom_Box.X1 := State.X;
+                  Zoom_Box.Y1 := State.Y;
+                  Draw_Zoom (Zoom_Box);
+               else
+                  Zoom_Box.X1 := -1;
+               end if;
+            end;
 
             if STM32.Button.Has_Been_Pressed then
-               Current := Current + 1;
-               if Current > The_Fractals'Last then
-                  Current := The_Fractals'First;
-               end if;
-
                exit Same_Fractal_Loop;
             end if;
          end loop Zoom_Loop;
       end loop Same_Fractal_Loop;
+
+      --  Move on to the next fractal
+      Current := Current + 1;
+
+      if Current > The_Fractals'Last then
+         Current := The_Fractals'First;
+      end if;
    end loop Main_Loop;
 
 end Fractals_Demo;
