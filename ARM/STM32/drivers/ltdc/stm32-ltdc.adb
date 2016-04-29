@@ -274,13 +274,6 @@ package body STM32.LTDC is
          return;
       end if;
 
-      RCC_Periph.APB2ENR.LTDCEN := True;
-
-      LTDC_Periph.GCR.VSPOL := To_Bool (Polarity_Active_Low);
-      LTDC_Periph.GCR.HSPOL := To_Bool (Polarity_Active_Low);
-      LTDC_Periph.GCR.DEPOL := To_Bool (Polarity_Active_Low);
-      LTDC_Periph.GCR.PCPOL := To_Bool (Inverted_Input_Pixel_Clock);
-
       if DivR = 2 then
          DivR_Val := PLLSAI_DIV2;
       elsif DivR = 4 then
@@ -294,6 +287,14 @@ package body STM32.LTDC is
       end if;
 
       Disable_PLLSAI;
+
+      RCC_Periph.APB2ENR.LTDCEN := True;
+
+      LTDC_Periph.GCR.VSPOL := To_Bool (Polarity_Active_Low);
+      LTDC_Periph.GCR.HSPOL := To_Bool (Polarity_Active_Low);
+      LTDC_Periph.GCR.DEPOL := To_Bool (Polarity_Active_Low);
+      LTDC_Periph.GCR.PCPOL := To_Bool (Inverted_Input_Pixel_Clock);
+
       Set_PLLSAI_Factors
         (LCD  => PLLSAI_R,
          VCO  => PLLSAI_N,
@@ -332,12 +333,6 @@ package body STM32.LTDC is
       LTDC_Periph.BCCR.BC := 0;
 
       LTDC_Periph.GCR.LTDCEN := True;
-
-      Set_Layer_State (Layer1, False);
-      Set_Layer_State (Layer2, False);
-
-      --  enable Dither
-      LTDC_Periph.GCR.DEN := True;
    end Initialize;
 
    -----------
@@ -419,7 +414,9 @@ package body STM32.LTDC is
       L.LCFBLNR.CFBLNBR := UInt11 (H);
 
       Set_Frame_Buffer (Layer, Buffer);
-      Set_Layer_State (Layer, True);
+
+      L.LCR.LEN := True;
+      Reload_Config (True);
    end Layer_Init;
 
    ----------------------
