@@ -391,7 +391,9 @@ package body FT5336 is
    begin
       --  X/Y are swaped from the screen coordinates
 
-      if Touch_Id not in FT5336_Px_Regs'Range then
+      if Touch_Id not in FT5336_Px_Regs'Range
+        or else Touch_Id > This.Active_Touch_Points
+      then
          return (0, 0, 0);
       end if;
 

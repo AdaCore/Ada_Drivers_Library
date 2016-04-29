@@ -155,6 +155,10 @@ package body FT6x06 is
          return (0, 0, 0);
       end if;
 
+      if Touch_Id > This.Active_Touch_Points then
+         return (0, 0, 0);
+      end if;
+
       --  X/Y are swaped from the screen coordinates
 
       Regs := FT6206_Px_Regs (Touch_Id);
@@ -198,9 +202,6 @@ package body FT6x06 is
       if Ret.Weight = 0 then
          Ret.Weight := 50;
       end if;
-
-      --  ??? On the STM32F469, Y is slightly smaller than expected
-      Ret.Y := Ret.Y * 11 / 10;
 
       Ret.X := Natural'Max (0, Ret.X);
       Ret.Y := Natural'Max (0, Ret.Y);

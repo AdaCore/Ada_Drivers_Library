@@ -6,6 +6,8 @@ package HAL.Touch_Panel is
       Weight : Natural;
    end record;
 
+   Null_Touch_State : constant TP_Touch_State := (0, 0, 0);
+
    type Swap_State is new UInt3;
 
    Invert_X : constant Swap_State;
