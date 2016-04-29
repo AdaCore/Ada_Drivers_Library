@@ -23,11 +23,11 @@ package STM32_SVD.DBG is
    --  IDCODE
    type DBGMCU_IDCODE_Register is record
       --  Read-only. DEV_ID
-      DEV_ID         : DBGMCU_IDCODE_DEV_ID_Field := 16#411#;
+      DEV_ID         : DBGMCU_IDCODE_DEV_ID_Field;
       --  unspecified
       Reserved_12_15 : HAL.UInt4;
       --  Read-only. REV_ID
-      REV_ID         : DBGMCU_IDCODE_REV_ID_Field := 16#1000#;
+      REV_ID         : DBGMCU_IDCODE_REV_ID_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

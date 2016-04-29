@@ -83,9 +83,9 @@ package STM32_SVD.IWDG is
    --  Status register
    type SR_Register is record
       --  Read-only. Watchdog prescaler value update
-      PVU           : Boolean := False;
+      PVU           : Boolean;
       --  Read-only. Watchdog counter reload value update
-      RVU           : Boolean := False;
+      RVU           : Boolean;
       --  unspecified
       Reserved_2_31 : HAL.UInt30;
    end record

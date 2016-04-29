@@ -445,15 +445,15 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS Receive status debug read(Device mode)
    type FS_GRXSTSR_Device_Register is record
       --  Read-only. Endpoint number
-      EPNUM          : FS_GRXSTSR_Device_EPNUM_Field := 16#0#;
+      EPNUM          : FS_GRXSTSR_Device_EPNUM_Field;
       --  Read-only. Byte count
-      BCNT           : FS_GRXSTSR_Device_BCNT_Field := 16#0#;
+      BCNT           : FS_GRXSTSR_Device_BCNT_Field;
       --  Read-only. Data PID
-      DPID           : FS_GRXSTSR_Device_DPID_Field := 16#0#;
+      DPID           : FS_GRXSTSR_Device_DPID_Field;
       --  Read-only. Packet status
-      PKTSTS         : FS_GRXSTSR_Device_PKTSTS_Field := 16#0#;
+      PKTSTS         : FS_GRXSTSR_Device_PKTSTS_Field;
       --  Read-only. Frame number
-      FRMNUM         : FS_GRXSTSR_Device_FRMNUM_Field := 16#0#;
+      FRMNUM         : FS_GRXSTSR_Device_FRMNUM_Field;
       --  unspecified
       Reserved_25_31 : HAL.UInt7;
    end record
@@ -482,15 +482,15 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS Receive status debug read(Hostmode)
    type FS_GRXSTSR_Host_Register is record
       --  Read-only. Endpoint number
-      EPNUM          : FS_GRXSTSR_Host_EPNUM_Field := 16#0#;
+      EPNUM          : FS_GRXSTSR_Host_EPNUM_Field;
       --  Read-only. Byte count
-      BCNT           : FS_GRXSTSR_Host_BCNT_Field := 16#0#;
+      BCNT           : FS_GRXSTSR_Host_BCNT_Field;
       --  Read-only. Data PID
-      DPID           : FS_GRXSTSR_Host_DPID_Field := 16#0#;
+      DPID           : FS_GRXSTSR_Host_DPID_Field;
       --  Read-only. Packet status
-      PKTSTS         : FS_GRXSTSR_Host_PKTSTS_Field := 16#0#;
+      PKTSTS         : FS_GRXSTSR_Host_PKTSTS_Field;
       --  Read-only. Frame number
-      FRMNUM         : FS_GRXSTSR_Host_FRMNUM_Field := 16#0#;
+      FRMNUM         : FS_GRXSTSR_Host_FRMNUM_Field;
       --  unspecified
       Reserved_25_31 : HAL.UInt7;
    end record
@@ -583,11 +583,11 @@ package STM32_SVD.USB_OTG_FS is
    --  (OTG_FS_GNPTXSTS)
    type FS_GNPTXSTS_Register is record
       --  Read-only. Non-periodic TxFIFO space available
-      NPTXFSAV       : FS_GNPTXSTS_NPTXFSAV_Field := 16#200#;
+      NPTXFSAV       : FS_GNPTXSTS_NPTXFSAV_Field;
       --  Read-only. Non-periodic transmit request queue space available
-      NPTQXSAV       : FS_GNPTXSTS_NPTQXSAV_Field := 16#8#;
+      NPTQXSAV       : FS_GNPTXSTS_NPTQXSAV_Field;
       --  Read-only. Top of the non-periodic transmit request queue
-      NPTXQTOP       : FS_GNPTXSTS_NPTXQTOP_Field := 16#0#;
+      NPTXQTOP       : FS_GNPTXSTS_NPTXQTOP_Field;
       --  unspecified
       Reserved_31_31 : HAL.Bit;
    end record
@@ -734,9 +734,9 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS host frame number/frame time remaining register (OTG_FS_HFNUM)
    type FS_HFNUM_Register is record
       --  Read-only. Frame number
-      FRNUM : FS_HFNUM_FRNUM_Field := 16#3FFF#;
+      FRNUM : FS_HFNUM_FRNUM_Field;
       --  Read-only. Frame time remaining
-      FTREM : FS_HFNUM_FTREM_Field := 16#0#;
+      FTREM : FS_HFNUM_FTREM_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -782,7 +782,7 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS Host all channels interrupt register
    type HAINT_Register is record
       --  Read-only. Channel interrupts
-      HAINT          : HAINT_HAINT_Field := 16#0#;
+      HAINT          : HAINT_HAINT_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record
@@ -1149,15 +1149,15 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS device status register (OTG_FS_DSTS)
    type FS_DSTS_Register is record
       --  Read-only. Suspend status
-      SUSPSTS        : Boolean := False;
+      SUSPSTS        : Boolean;
       --  Read-only. Enumerated speed
-      ENUMSPD        : FS_DSTS_ENUMSPD_Field := 16#0#;
+      ENUMSPD        : FS_DSTS_ENUMSPD_Field;
       --  Read-only. Erratic error
-      EERR           : Boolean := False;
+      EERR           : Boolean;
       --  unspecified
       Reserved_4_7   : HAL.UInt4;
       --  Read-only. Frame number of the received SOF
-      FNSOF          : FS_DSTS_FNSOF_Field := 16#0#;
+      FNSOF          : FS_DSTS_FNSOF_Field;
       --  unspecified
       Reserved_22_31 : HAL.UInt10;
    end record
@@ -1253,9 +1253,9 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS device all endpoints interrupt register (OTG_FS_DAINT)
    type FS_DAINT_Register is record
       --  Read-only. IN endpoint interrupt bits
-      IEPINT : FS_DAINT_IEPINT_Field := 16#0#;
+      IEPINT : FS_DAINT_IEPINT_Field;
       --  Read-only. OUT endpoint interrupt bits
-      OEPINT : FS_DAINT_OEPINT_Field := 16#0#;
+      OEPINT : FS_DAINT_OEPINT_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1486,7 +1486,7 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS device IN endpoint transmit FIFO status register
    type DTXFSTS_Register is record
       --  Read-only. IN endpoint TxFIFO space available
-      INEPTFSAV      : DTXFSTS0_INEPTFSAV_Field := 16#0#;
+      INEPTFSAV      : DTXFSTS0_INEPTFSAV_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record

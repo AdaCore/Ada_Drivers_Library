@@ -129,21 +129,21 @@ package STM32_SVD.QUADSPI is
    --  status register
    type SR_Register is record
       --  Read-only. Transfer error flag
-      TEF            : Boolean := False;
+      TEF            : Boolean;
       --  Read-only. Transfer complete flag
-      TCF            : Boolean := False;
+      TCF            : Boolean;
       --  Read-only. FIFO threshold flag
-      FTF            : Boolean := False;
+      FTF            : Boolean;
       --  Read-only. Status match flag
-      SMF            : Boolean := False;
+      SMF            : Boolean;
       --  Read-only. Timeout flag
-      TOF            : Boolean := False;
+      TOF            : Boolean;
       --  Read-only. Busy
-      BUSY           : Boolean := False;
+      BUSY           : Boolean;
       --  unspecified
       Reserved_6_7   : HAL.UInt2;
       --  Read-only. FIFO level
-      FLEVEL         : SR_FLEVEL_Field := 16#0#;
+      FLEVEL         : SR_FLEVEL_Field;
       --  unspecified
       Reserved_15_31 : HAL.UInt17;
    end record

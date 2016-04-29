@@ -638,11 +638,11 @@ package STM32_SVD.FSMC is
    --  SDRAM Status register
    type SDSR_Register is record
       --  Read-only. Refresh error flag
-      RE            : Boolean := False;
+      RE            : Boolean;
       --  Read-only. Status Mode for Bank 1
-      MODES         : SDSR_MODES_Field := (As_Array => False, Val => 16#0#);
+      MODES         : SDSR_MODES_Field;
       --  Read-only. Busy status
-      BUSY          : Boolean := False;
+      BUSY          : Boolean;
       --  unspecified
       Reserved_6_31 : HAL.UInt26;
    end record

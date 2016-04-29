@@ -191,7 +191,7 @@ package STM32_SVD.GPIO is
    --  GPIO port input data register
    type IDR_Register is record
       --  Read-only. Port input data (y = 0..15)
-      IDR            : IDR_Field := (As_Array => False, Val => 16#0#);
+      IDR            : IDR_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record

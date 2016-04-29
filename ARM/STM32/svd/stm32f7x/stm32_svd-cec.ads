@@ -114,7 +114,7 @@ package STM32_SVD.CEC is
    --  Rx Data Register
    type RXDR_Register is record
       --  Read-only. CEC Rx Data Register
-      RXDR          : RXDR_RXDR_Field := 16#0#;
+      RXDR          : RXDR_RXDR_Field;
       --  unspecified
       Reserved_8_31 : HAL.UInt24;
    end record

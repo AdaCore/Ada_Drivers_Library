@@ -207,7 +207,7 @@ package STM32_SVD.SPI is
    --  RX CRC register
    type RXCRCR_Register is record
       --  Read-only. Rx CRC register
-      RxCRC          : RXCRCR_RxCRC_Field := 16#0#;
+      RxCRC          : RXCRCR_RxCRC_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record
@@ -228,7 +228,7 @@ package STM32_SVD.SPI is
    --  TX CRC register
    type TXCRCR_Register is record
       --  Read-only. Tx CRC register
-      TxCRC          : TXCRCR_TxCRC_Field := 16#0#;
+      TxCRC          : TXCRCR_TxCRC_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record

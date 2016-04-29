@@ -129,7 +129,7 @@ package STM32_SVD.SDIO is
    --  command response register
    type RESPCMD_Register is record
       --  Read-only. Response command index
-      RESPCMD       : RESPCMD_RESPCMD_Field := 16#0#;
+      RESPCMD       : RESPCMD_RESPCMD_Field;
       --  unspecified
       Reserved_6_31 : HAL.UInt26;
    end record
@@ -217,7 +217,7 @@ package STM32_SVD.SDIO is
    --  data counter register
    type DCOUNT_Register is record
       --  Read-only. Data count value
-      DATACOUNT      : DCOUNT_DATACOUNT_Field := 16#0#;
+      DATACOUNT      : DCOUNT_DATACOUNT_Field;
       --  unspecified
       Reserved_25_31 : HAL.UInt7;
    end record
@@ -236,56 +236,56 @@ package STM32_SVD.SDIO is
    --  status register
    type STA_Register is record
       --  Read-only. Command response received (CRC check failed)
-      CCRCFAIL       : Boolean := False;
+      CCRCFAIL       : Boolean;
       --  Read-only. Data block sent/received (CRC check failed)
-      DCRCFAIL       : Boolean := False;
+      DCRCFAIL       : Boolean;
       --  Read-only. Command response timeout
-      CTIMEOUT       : Boolean := False;
+      CTIMEOUT       : Boolean;
       --  Read-only. Data timeout
-      DTIMEOUT       : Boolean := False;
+      DTIMEOUT       : Boolean;
       --  Read-only. Transmit FIFO underrun error
-      TXUNDERR       : Boolean := False;
+      TXUNDERR       : Boolean;
       --  Read-only. Received FIFO overrun error
-      RXOVERR        : Boolean := False;
+      RXOVERR        : Boolean;
       --  Read-only. Command response received (CRC check passed)
-      CMDREND        : Boolean := False;
+      CMDREND        : Boolean;
       --  Read-only. Command sent (no response required)
-      CMDSENT        : Boolean := False;
+      CMDSENT        : Boolean;
       --  Read-only. Data end (data counter, SDIDCOUNT, is zero)
-      DATAEND        : Boolean := False;
+      DATAEND        : Boolean;
       --  Read-only. Start bit not detected on all data signals in wide bus
       --  mode
-      STBITERR       : Boolean := False;
+      STBITERR       : Boolean;
       --  Read-only. Data block sent/received (CRC check passed)
-      DBCKEND        : Boolean := False;
+      DBCKEND        : Boolean;
       --  Read-only. Command transfer in progress
-      CMDACT         : Boolean := False;
+      CMDACT         : Boolean;
       --  Read-only. Data transmit in progress
-      TXACT          : Boolean := False;
+      TXACT          : Boolean;
       --  Read-only. Data receive in progress
-      RXACT          : Boolean := False;
+      RXACT          : Boolean;
       --  Read-only. Transmit FIFO half empty: at least 8 words can be written
       --  into the FIFO
-      TXFIFOHE       : Boolean := False;
+      TXFIFOHE       : Boolean;
       --  Read-only. Receive FIFO half full: there are at least 8 words in the
       --  FIFO
-      RXFIFOHF       : Boolean := False;
+      RXFIFOHF       : Boolean;
       --  Read-only. Transmit FIFO full
-      TXFIFOF        : Boolean := False;
+      TXFIFOF        : Boolean;
       --  Read-only. Receive FIFO full
-      RXFIFOF        : Boolean := False;
+      RXFIFOF        : Boolean;
       --  Read-only. Transmit FIFO empty
-      TXFIFOE        : Boolean := False;
+      TXFIFOE        : Boolean;
       --  Read-only. Receive FIFO empty
-      RXFIFOE        : Boolean := False;
+      RXFIFOE        : Boolean;
       --  Read-only. Data available in transmit FIFO
-      TXDAVL         : Boolean := False;
+      TXDAVL         : Boolean;
       --  Read-only. Data available in receive FIFO
-      RXDAVL         : Boolean := False;
+      RXDAVL         : Boolean;
       --  Read-only. SDIO interrupt received
-      SDIOIT         : Boolean := False;
+      SDIOIT         : Boolean;
       --  Read-only. CE-ATA command completion signal received for CMD61
-      CEATAEND       : Boolean := False;
+      CEATAEND       : Boolean;
       --  unspecified
       Reserved_24_31 : HAL.Byte;
    end record
@@ -476,7 +476,7 @@ package STM32_SVD.SDIO is
    type FIFOCNT_Register is record
       --  Read-only. Remaining number of words to be written to or read from
       --  the FIFO.
-      FIFOCOUNT      : FIFOCNT_FIFOCOUNT_Field := 16#0#;
+      FIFOCOUNT      : FIFOCNT_FIFOCOUNT_Field;
       --  unspecified
       Reserved_24_31 : HAL.Byte;
    end record

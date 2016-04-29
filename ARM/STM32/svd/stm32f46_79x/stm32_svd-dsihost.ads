@@ -1049,9 +1049,9 @@ package STM32_SVD.DSIHOST is
    --  DSI Host Interrupt & Status Register 0
    type DSI_ISR0_Register is record
       --  Read-only. Acknowledge Error 0
-      AE             : DSI_ISR0_AE_Field := (As_Array => False, Val => 16#0#);
+      AE             : DSI_ISR0_AE_Field;
       --  Read-only. PHY Error 0
-      PE             : DSI_ISR0_PE_Field := (As_Array => False, Val => 16#0#);
+      PE             : DSI_ISR0_PE_Field;
       --  unspecified
       Reserved_21_31 : HAL.UInt11;
    end record
@@ -1071,31 +1071,31 @@ package STM32_SVD.DSIHOST is
    --  DSI Host Interrupt & Status Register 1
    type DSI_ISR1_Register is record
       --  Read-only. Timeout High-Speed Transmission
-      TOHSTX         : Boolean := False;
+      TOHSTX         : Boolean;
       --  Read-only. Timeout Low-Power Reception
-      TOLPRX         : Boolean := False;
+      TOLPRX         : Boolean;
       --  Read-only. ECC Single-bit Error
-      ECCSE          : Boolean := False;
+      ECCSE          : Boolean;
       --  Read-only. ECC Multi-bit Error
-      ECCME          : Boolean := False;
+      ECCME          : Boolean;
       --  Read-only. CRC Error
-      CRCE           : Boolean := False;
+      CRCE           : Boolean;
       --  Read-only. Packet Size Error
-      PSE            : Boolean := False;
+      PSE            : Boolean;
       --  Read-only. EoTp Error
-      EOTPE          : Boolean := False;
+      EOTPE          : Boolean;
       --  Read-only. LTDC Payload Write Error
-      LPWRE          : Boolean := False;
+      LPWRE          : Boolean;
       --  Read-only. Generic Command Write Error
-      GCWRE          : Boolean := False;
+      GCWRE          : Boolean;
       --  Read-only. Generic Payload Write Error
-      GPWRE          : Boolean := False;
+      GPWRE          : Boolean;
       --  Read-only. Generic Payload Transmit Error
-      GPTXE          : Boolean := False;
+      GPTXE          : Boolean;
       --  Read-only. Generic Payload Read Error
-      GPRDE          : Boolean := False;
+      GPRDE          : Boolean;
       --  Read-only. Generic Payload Receive Error
-      GPRXE          : Boolean := False;
+      GPRXE          : Boolean;
       --  unspecified
       Reserved_13_31 : HAL.UInt19;
    end record
@@ -1855,25 +1855,25 @@ package STM32_SVD.DSIHOST is
    --  DSI Wrapper Interrupt & Status Register
    type DSI_WISR_Register is record
       --  Read-only. Tearing Effect Interrupt Flag
-      TEIF           : Boolean := False;
+      TEIF           : Boolean;
       --  Read-only. End of Refresh Interrupt Flag
-      ERIF           : Boolean := False;
+      ERIF           : Boolean;
       --  Read-only. Busy Flag
-      BUSY           : Boolean := False;
+      BUSY           : Boolean;
       --  unspecified
       Reserved_3_7   : HAL.UInt5;
       --  Read-only. PLL Lock Status
-      PLLLS          : Boolean := False;
+      PLLLS          : Boolean;
       --  Read-only. PLL Lock Interrupt Flag
-      PLLLIF         : Boolean := False;
+      PLLLIF         : Boolean;
       --  Read-only. PLL Unlock Interrupt Flag
-      PLLUIF         : Boolean := False;
+      PLLUIF         : Boolean;
       --  unspecified
       Reserved_11_11 : HAL.Bit;
       --  Read-only. Regulator Ready Status
-      RRS            : Boolean := False;
+      RRS            : Boolean;
       --  Read-only. Regulator Ready Interrupt Flag
-      RRIF           : Boolean := False;
+      RRIF           : Boolean;
       --  unspecified
       Reserved_14_31 : HAL.UInt18;
    end record

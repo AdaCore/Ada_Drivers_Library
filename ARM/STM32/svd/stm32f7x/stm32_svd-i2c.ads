@@ -414,7 +414,7 @@ package STM32_SVD.I2C is
    --  PEC register
    type PECR_Register is record
       --  Read-only. Packet error checking register
-      PEC           : PECR_PEC_Field := 16#0#;
+      PEC           : PECR_PEC_Field;
       --  unspecified
       Reserved_8_31 : HAL.UInt24;
    end record
@@ -435,7 +435,7 @@ package STM32_SVD.I2C is
    --  Receive data register
    type RXDR_Register is record
       --  Read-only. 8-bit receive data
-      RXDATA        : RXDR_RXDATA_Field := 16#0#;
+      RXDATA        : RXDR_RXDATA_Field;
       --  unspecified
       Reserved_8_31 : HAL.UInt24;
    end record

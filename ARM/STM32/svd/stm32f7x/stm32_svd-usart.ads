@@ -446,51 +446,51 @@ package STM32_SVD.USART is
    --  Interrupt & status register
    type ISR_Register is record
       --  Read-only. PE
-      PE             : Boolean := False;
+      PE             : Boolean;
       --  Read-only. FE
-      FE             : Boolean := False;
+      FE             : Boolean;
       --  Read-only. NF
-      NF             : Boolean := False;
+      NF             : Boolean;
       --  Read-only. ORE
-      ORE            : Boolean := False;
+      ORE            : Boolean;
       --  Read-only. IDLE
-      IDLE           : Boolean := False;
+      IDLE           : Boolean;
       --  Read-only. RXNE
-      RXNE           : Boolean := False;
+      RXNE           : Boolean;
       --  Read-only. TC
-      TC             : Boolean := True;
+      TC             : Boolean;
       --  Read-only. TXE
-      TXE            : Boolean := True;
+      TXE            : Boolean;
       --  Read-only. LBDF
-      LBDF           : Boolean := False;
+      LBDF           : Boolean;
       --  Read-only. CTSIF
-      CTSIF          : Boolean := False;
+      CTSIF          : Boolean;
       --  Read-only. CTS
-      CTS            : Boolean := False;
+      CTS            : Boolean;
       --  Read-only. RTOF
-      RTOF           : Boolean := False;
+      RTOF           : Boolean;
       --  Read-only. EOBF
-      EOBF           : Boolean := False;
+      EOBF           : Boolean;
       --  unspecified
       Reserved_13_13 : HAL.Bit;
       --  Read-only. ABRE
-      ABRE           : Boolean := False;
+      ABRE           : Boolean;
       --  Read-only. ABRF
-      ABRF           : Boolean := False;
+      ABRF           : Boolean;
       --  Read-only. BUSY
-      BUSY           : Boolean := False;
+      BUSY           : Boolean;
       --  Read-only. CMF
-      CMF            : Boolean := False;
+      CMF            : Boolean;
       --  Read-only. SBKF
-      SBKF           : Boolean := False;
+      SBKF           : Boolean;
       --  Read-only. RWU
-      RWU            : Boolean := False;
+      RWU            : Boolean;
       --  Read-only. WUF
-      WUF            : Boolean := False;
+      WUF            : Boolean;
       --  Read-only. TEACK
-      TEACK          : Boolean := False;
+      TEACK          : Boolean;
       --  Read-only. REACK
-      REACK          : Boolean := False;
+      REACK          : Boolean;
       --  unspecified
       Reserved_23_31 : HAL.UInt9;
    end record
@@ -600,7 +600,7 @@ package STM32_SVD.USART is
    --  Receive data register
    type RDR_Register is record
       --  Read-only. Receive data value
-      RDR           : RDR_RDR_Field := 16#0#;
+      RDR           : RDR_RDR_Field;
       --  unspecified
       Reserved_9_31 : HAL.UInt23;
    end record

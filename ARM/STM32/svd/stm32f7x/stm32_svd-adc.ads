@@ -510,7 +510,7 @@ package STM32_SVD.ADC is
    --  injected data register x
    type JDR_Register is record
       --  Read-only. Injected data
-      JDATA          : JDR1_JDATA_Field := 16#0#;
+      JDATA          : JDR1_JDATA_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record
@@ -531,7 +531,7 @@ package STM32_SVD.ADC is
    --  regular data register
    type DR_Register is record
       --  Read-only. Regular data
-      DATA           : DR_DATA_Field := 16#0#;
+      DATA           : DR_DATA_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record
@@ -550,45 +550,45 @@ package STM32_SVD.ADC is
    --  ADC Common status register
    type CSR_Register is record
       --  Read-only. Analog watchdog flag of ADC 1
-      AWD1           : Boolean := False;
+      AWD1           : Boolean;
       --  Read-only. End of conversion of ADC 1
-      EOC1           : Boolean := False;
+      EOC1           : Boolean;
       --  Read-only. Injected channel end of conversion of ADC 1
-      JEOC1          : Boolean := False;
+      JEOC1          : Boolean;
       --  Read-only. Injected channel Start flag of ADC 1
-      JSTRT1         : Boolean := False;
+      JSTRT1         : Boolean;
       --  Read-only. Regular channel Start flag of ADC 1
-      STRT1          : Boolean := False;
+      STRT1          : Boolean;
       --  Read-only. Overrun flag of ADC 1
-      OVR1           : Boolean := False;
+      OVR1           : Boolean;
       --  unspecified
       Reserved_6_7   : HAL.UInt2;
       --  Read-only. Analog watchdog flag of ADC 2
-      AWD2           : Boolean := False;
+      AWD2           : Boolean;
       --  Read-only. End of conversion of ADC 2
-      EOC2           : Boolean := False;
+      EOC2           : Boolean;
       --  Read-only. Injected channel end of conversion of ADC 2
-      JEOC2          : Boolean := False;
+      JEOC2          : Boolean;
       --  Read-only. Injected channel Start flag of ADC 2
-      JSTRT2         : Boolean := False;
+      JSTRT2         : Boolean;
       --  Read-only. Regular channel Start flag of ADC 2
-      STRT2          : Boolean := False;
+      STRT2          : Boolean;
       --  Read-only. Overrun flag of ADC 2
-      OVR2           : Boolean := False;
+      OVR2           : Boolean;
       --  unspecified
       Reserved_14_15 : HAL.UInt2;
       --  Read-only. Analog watchdog flag of ADC 3
-      AWD3           : Boolean := False;
+      AWD3           : Boolean;
       --  Read-only. End of conversion of ADC 3
-      EOC3           : Boolean := False;
+      EOC3           : Boolean;
       --  Read-only. Injected channel end of conversion of ADC 3
-      JEOC3          : Boolean := False;
+      JEOC3          : Boolean;
       --  Read-only. Injected channel Start flag of ADC 3
-      JSTRT3         : Boolean := False;
+      JSTRT3         : Boolean;
       --  Read-only. Regular channel Start flag of ADC 3
-      STRT3          : Boolean := False;
+      STRT3          : Boolean;
       --  Read-only. Overrun flag of ADC3
-      OVR3           : Boolean := False;
+      OVR3           : Boolean;
       --  unspecified
       Reserved_22_31 : HAL.UInt10;
    end record

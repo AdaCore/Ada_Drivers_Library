@@ -20,19 +20,19 @@ package STM32_SVD.LPTIM is
    --  Interrupt and Status Register
    type ISR_Register is record
       --  Read-only. Compare match
-      CMPM          : Boolean := False;
+      CMPM          : Boolean;
       --  Read-only. Autoreload match
-      ARRM          : Boolean := False;
+      ARRM          : Boolean;
       --  Read-only. External trigger edge event
-      EXTTRIG       : Boolean := False;
+      EXTTRIG       : Boolean;
       --  Read-only. Compare register update OK
-      CMPOK         : Boolean := False;
+      CMPOK         : Boolean;
       --  Read-only. Autoreload register update OK
-      ARROK         : Boolean := False;
+      ARROK         : Boolean;
       --  Read-only. Counter direction change down to up
-      UP            : Boolean := False;
+      UP            : Boolean;
       --  Read-only. Counter direction change up to down
-      DOWN          : Boolean := False;
+      DOWN          : Boolean;
       --  unspecified
       Reserved_7_31 : HAL.UInt25;
    end record
@@ -274,7 +274,7 @@ package STM32_SVD.LPTIM is
    --  Counter Register
    type CNT_Register is record
       --  Read-only. Counter value
-      CNT            : CNT_CNT_Field := 16#0#;
+      CNT            : CNT_CNT_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record

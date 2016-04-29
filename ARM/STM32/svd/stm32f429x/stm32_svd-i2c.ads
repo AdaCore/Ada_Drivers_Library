@@ -268,23 +268,23 @@ package STM32_SVD.I2C is
    --  Status register 2
    type SR2_Register is record
       --  Read-only. Master/slave
-      MSL            : Boolean := False;
+      MSL            : Boolean;
       --  Read-only. Bus busy
-      BUSY           : Boolean := False;
+      BUSY           : Boolean;
       --  Read-only. Transmitter/receiver
-      TRA            : Boolean := False;
+      TRA            : Boolean;
       --  unspecified
       Reserved_3_3   : HAL.Bit;
       --  Read-only. General call address (Slave mode)
-      GENCALL        : Boolean := False;
+      GENCALL        : Boolean;
       --  Read-only. SMBus device default address (Slave mode)
-      SMBDEFAULT     : Boolean := False;
+      SMBDEFAULT     : Boolean;
       --  Read-only. SMBus host header (Slave mode)
-      SMBHOST        : Boolean := False;
+      SMBHOST        : Boolean;
       --  Read-only. Dual flag (Slave mode)
-      DUALF          : Boolean := False;
+      DUALF          : Boolean;
       --  Read-only. acket error checking register
-      PEC            : SR2_PEC_Field := 16#0#;
+      PEC            : SR2_PEC_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record

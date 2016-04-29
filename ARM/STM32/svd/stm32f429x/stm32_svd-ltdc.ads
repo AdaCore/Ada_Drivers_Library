@@ -262,13 +262,13 @@ package STM32_SVD.LTDC is
    --  Interrupt Status Register
    type ISR_Register is record
       --  Read-only. Line Interrupt flag
-      LIF           : Boolean := False;
+      LIF           : Boolean;
       --  Read-only. FIFO Underrun Interrupt flag
-      FUIF          : Boolean := False;
+      FUIF          : Boolean;
       --  Read-only. Transfer Error interrupt flag
-      TERRIF        : Boolean := False;
+      TERRIF        : Boolean;
       --  Read-only. Register Reload Interrupt Flag
-      RRIF          : Boolean := False;
+      RRIF          : Boolean;
       --  unspecified
       Reserved_4_31 : HAL.UInt28;
    end record
@@ -342,9 +342,9 @@ package STM32_SVD.LTDC is
    --  Current Position Status Register
    type CPSR_Register is record
       --  Read-only. Current Y Position
-      CYPOS : CPSR_CYPOS_Field := 16#0#;
+      CYPOS : CPSR_CYPOS_Field;
       --  Read-only. Current X Position
-      CXPOS : CPSR_CXPOS_Field := 16#0#;
+      CXPOS : CPSR_CXPOS_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -361,13 +361,13 @@ package STM32_SVD.LTDC is
    --  Current Display Status Register
    type CDSR_Register is record
       --  Read-only. Vertical Data Enable display Status
-      VDES          : Boolean := True;
+      VDES          : Boolean;
       --  Read-only. Horizontal Data Enable display Status
-      HDES          : Boolean := True;
+      HDES          : Boolean;
       --  Read-only. Vertical Synchronization display Status
-      VSYNCS        : Boolean := True;
+      VSYNCS        : Boolean;
       --  Read-only. Horizontal Synchronization display Status
-      HSYNCS        : Boolean := True;
+      HSYNCS        : Boolean;
       --  unspecified
       Reserved_4_31 : HAL.UInt28;
    end record

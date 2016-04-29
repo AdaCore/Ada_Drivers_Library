@@ -320,17 +320,17 @@ package STM32_SVD.Ethernet is
    --  Ethernet MAC debug register
    type MACDBGR_Register is record
       --  Read-only. CR
-      CR            : Boolean := False;
+      CR            : Boolean;
       --  Read-only. CSR
-      CSR           : Boolean := False;
+      CSR           : Boolean;
       --  Read-only. ROR
-      ROR           : Boolean := False;
+      ROR           : Boolean;
       --  Read-only. MCF
-      MCF           : Boolean := False;
+      MCF           : Boolean;
       --  Read-only. MCP
-      MCP           : Boolean := False;
+      MCP           : Boolean;
       --  Read-only. MCFHP
-      MCFHP         : Boolean := False;
+      MCFHP         : Boolean;
       --  unspecified
       Reserved_6_31 : HAL.UInt26;
    end record
@@ -624,13 +624,13 @@ package STM32_SVD.Ethernet is
       --  unspecified
       Reserved_0_13  : HAL.UInt14;
       --  Read-only. no description available
-      TGFSCS         : Boolean := False;
+      TGFSCS         : Boolean;
       --  Read-only. no description available
-      TGFMSCS        : Boolean := False;
+      TGFMSCS        : Boolean;
       --  unspecified
       Reserved_16_20 : HAL.UInt5;
       --  Read-only. no description available
-      TGFS           : Boolean := False;
+      TGFS           : Boolean;
       --  unspecified
       Reserved_22_31 : HAL.UInt10;
    end record
@@ -804,9 +804,9 @@ package STM32_SVD.Ethernet is
    --  Ethernet PTP time stamp low register
    type PTPTSLR_Register is record
       --  Read-only. no description available
-      STSS  : PTPTSLR_STSS_Field := 16#0#;
+      STSS  : PTPTSLR_STSS_Field;
       --  Read-only. no description available
-      STPNS : Boolean := False;
+      STPNS : Boolean;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -844,9 +844,9 @@ package STM32_SVD.Ethernet is
    --  Ethernet PTP time stamp status register
    type PTPTSSR_Register is record
       --  Read-only. no description available
-      TSSO          : Boolean := False;
+      TSSO          : Boolean;
       --  Read-only. no description available
-      TSTTR         : Boolean := False;
+      TSTTR         : Boolean;
       --  unspecified
       Reserved_2_31 : HAL.UInt30;
    end record
@@ -866,9 +866,9 @@ package STM32_SVD.Ethernet is
    --  Ethernet PTP PPS control register
    type PTPPPSCR_Register is record
       --  Read-only. TSSO
-      TSSO          : Boolean := False;
+      TSSO          : Boolean;
       --  Read-only. TSTTR
-      TSTTR         : Boolean := False;
+      TSTTR         : Boolean;
       --  unspecified
       Reserved_2_31 : HAL.UInt30;
    end record

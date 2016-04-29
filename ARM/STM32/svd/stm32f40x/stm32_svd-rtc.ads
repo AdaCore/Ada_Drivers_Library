@@ -493,7 +493,7 @@ package STM32_SVD.RTC is
    --  sub second register
    type SSR_Register is record
       --  Read-only. Sub second value
-      SS             : SSR_SS_Field := 16#0#;
+      SS             : SSR_SS_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record
@@ -536,19 +536,19 @@ package STM32_SVD.RTC is
    --  time stamp time register
    type TSTR_Register is record
       --  Read-only. Tamper 1 detection enable
-      TAMP1E         : Boolean := False;
+      TAMP1E         : Boolean;
       --  Read-only. Active level for tamper 1
-      TAMP1TRG       : Boolean := False;
+      TAMP1TRG       : Boolean;
       --  Read-only. Tamper interrupt enable
-      TAMPIE         : Boolean := False;
+      TAMPIE         : Boolean;
       --  unspecified
       Reserved_3_15  : HAL.UInt13;
       --  Read-only. TAMPER1 mapping
-      TAMP1INSEL     : Boolean := False;
+      TAMP1INSEL     : Boolean;
       --  Read-only. TIMESTAMP mapping
-      TSINSEL        : Boolean := False;
+      TSINSEL        : Boolean;
       --  Read-only. AFO_ALARM output type
-      ALARMOUTTYPE   : Boolean := False;
+      ALARMOUTTYPE   : Boolean;
       --  unspecified
       Reserved_19_31 : HAL.UInt13;
    end record
@@ -578,17 +578,17 @@ package STM32_SVD.RTC is
    --  time stamp date register
    type TSDR_Register is record
       --  Read-only. Date units in BCD format
-      DU             : TSDR_DU_Field := 16#0#;
+      DU             : TSDR_DU_Field;
       --  Read-only. Date tens in BCD format
-      DT             : TSDR_DT_Field := 16#0#;
+      DT             : TSDR_DT_Field;
       --  unspecified
       Reserved_6_7   : HAL.UInt2;
       --  Read-only. Month units in BCD format
-      MU             : TSDR_MU_Field := 16#0#;
+      MU             : TSDR_MU_Field;
       --  Read-only. Month tens in BCD format
-      MT             : Boolean := False;
+      MT             : Boolean;
       --  Read-only. Week day units
-      WDU            : TSDR_WDU_Field := 16#0#;
+      WDU            : TSDR_WDU_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record
@@ -614,7 +614,7 @@ package STM32_SVD.RTC is
    --  timestamp sub second register
    type TSSSR_Register is record
       --  Read-only. Sub second value
-      SS             : TSSSR_SS_Field := 16#0#;
+      SS             : TSSSR_SS_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record

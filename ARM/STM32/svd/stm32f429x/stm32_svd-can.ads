@@ -848,13 +848,13 @@ package STM32_SVD.CAN is
       --  unspecified
       Reserved_0_0 : HAL.Bit;
       --  Read-only. RTR
-      RTR          : Boolean := False;
+      RTR          : Boolean;
       --  Read-only. IDE
-      IDE          : Boolean := False;
+      IDE          : Boolean;
       --  Read-only. EXID
-      EXID         : RI0R_EXID_Field := 16#0#;
+      EXID         : RI0R_EXID_Field;
       --  Read-only. STID
-      STID         : RI0R_STID_Field := 16#0#;
+      STID         : RI0R_STID_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -878,13 +878,13 @@ package STM32_SVD.CAN is
    --  mailbox data high register
    type RDT0R_Register is record
       --  Read-only. DLC
-      DLC          : RDT0R_DLC_Field := 16#0#;
+      DLC          : RDT0R_DLC_Field;
       --  unspecified
       Reserved_4_7 : HAL.UInt4;
       --  Read-only. FMI
-      FMI          : RDT0R_FMI_Field := 16#0#;
+      FMI          : RDT0R_FMI_Field;
       --  Read-only. TIME
-      TIME         : RDT0R_TIME_Field := 16#0#;
+      TIME         : RDT0R_TIME_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -972,13 +972,13 @@ package STM32_SVD.CAN is
       --  unspecified
       Reserved_0_0 : HAL.Bit;
       --  Read-only. RTR
-      RTR          : Boolean := False;
+      RTR          : Boolean;
       --  Read-only. IDE
-      IDE          : Boolean := False;
+      IDE          : Boolean;
       --  Read-only. EXID
-      EXID         : RI1R_EXID_Field := 16#0#;
+      EXID         : RI1R_EXID_Field;
       --  Read-only. STID
-      STID         : RI1R_STID_Field := 16#0#;
+      STID         : RI1R_STID_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1002,13 +1002,13 @@ package STM32_SVD.CAN is
    --  mailbox data high register
    type RDT1R_Register is record
       --  Read-only. DLC
-      DLC          : RDT1R_DLC_Field := 16#0#;
+      DLC          : RDT1R_DLC_Field;
       --  unspecified
       Reserved_4_7 : HAL.UInt4;
       --  Read-only. FMI
-      FMI          : RDT1R_FMI_Field := 16#0#;
+      FMI          : RDT1R_FMI_Field;
       --  Read-only. TIME
-      TIME         : RDT1R_TIME_Field := 16#0#;
+      TIME         : RDT1R_TIME_Field;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

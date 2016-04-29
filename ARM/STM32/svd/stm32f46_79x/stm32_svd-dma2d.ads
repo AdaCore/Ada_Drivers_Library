@@ -74,17 +74,17 @@ package STM32_SVD.DMA2D is
    --  Interrupt Status Register
    type ISR_Register is record
       --  Read-only. Transfer error interrupt flag
-      TEIF          : Boolean := False;
+      TEIF          : Boolean;
       --  Read-only. Transfer complete interrupt flag
-      TCIF          : Boolean := False;
+      TCIF          : Boolean;
       --  Read-only. Transfer watermark interrupt flag
-      TWIF          : Boolean := False;
+      TWIF          : Boolean;
       --  Read-only. CLUT access error interrupt flag
-      CAEIF         : Boolean := False;
+      CAEIF         : Boolean;
       --  Read-only. CLUT transfer complete interrupt flag
-      CTCIF         : Boolean := False;
+      CTCIF         : Boolean;
       --  Read-only. Configuration error interrupt flag
-      CEIF          : Boolean := False;
+      CEIF          : Boolean;
       --  unspecified
       Reserved_6_31 : HAL.UInt26;
    end record

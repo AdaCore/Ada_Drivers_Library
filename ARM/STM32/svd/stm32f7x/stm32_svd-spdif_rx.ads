@@ -122,27 +122,27 @@ package STM32_SVD.SPDIF_RX is
    --  Status register
    type SR_Register is record
       --  Read-only. Read data register not empty
-      RXNE           : Boolean := False;
+      RXNE           : Boolean;
       --  Read-only. Control Buffer register is not empty
-      CSRNE          : Boolean := False;
+      CSRNE          : Boolean;
       --  Read-only. Parity error
-      PERR           : Boolean := False;
+      PERR           : Boolean;
       --  Read-only. Overrun error
-      OVR            : Boolean := False;
+      OVR            : Boolean;
       --  Read-only. Synchronization Block Detected
-      SBD            : Boolean := False;
+      SBD            : Boolean;
       --  Read-only. Synchronization Done
-      SYNCD          : Boolean := False;
+      SYNCD          : Boolean;
       --  Read-only. Framing error
-      FERR           : Boolean := False;
+      FERR           : Boolean;
       --  Read-only. Synchronization error
-      SERR           : Boolean := False;
+      SERR           : Boolean;
       --  Read-only. Time-out error
-      TERR           : Boolean := False;
+      TERR           : Boolean;
       --  unspecified
       Reserved_9_15  : HAL.UInt7;
       --  Read-only. Duration of 5 symbols counted with SPDIF_CLK
-      WIDTH5         : SR_WIDTH5_Field := 16#0#;
+      WIDTH5         : SR_WIDTH5_Field;
       --  unspecified
       Reserved_31_31 : HAL.Bit;
    end record
@@ -205,17 +205,17 @@ package STM32_SVD.SPDIF_RX is
    --  Data input register
    type DR_Register is record
       --  Read-only. Parity Error bit
-      DR             : DR_DR_Field := 16#0#;
+      DR             : DR_DR_Field;
       --  Read-only. Parity Error bit
-      PE             : Boolean := False;
+      PE             : Boolean;
       --  Read-only. Validity bit
-      V              : Boolean := False;
+      V              : Boolean;
       --  Read-only. User bit
-      U              : Boolean := False;
+      U              : Boolean;
       --  Read-only. Channel Status bit
-      C              : Boolean := False;
+      C              : Boolean;
       --  Read-only. Preamble Type
-      PT             : DR_PT_Field := 16#0#;
+      PT             : DR_PT_Field;
       --  unspecified
       Reserved_30_31 : HAL.UInt2;
    end record
@@ -242,11 +242,11 @@ package STM32_SVD.SPDIF_RX is
    --  Channel Status register
    type CSR_Register is record
       --  Read-only. User data information
-      USR            : CSR_USR_Field := 16#0#;
+      USR            : CSR_USR_Field;
       --  Read-only. Channel A status information
-      CS             : CSR_CS_Field := 16#0#;
+      CS             : CSR_CS_Field;
       --  Read-only. Start Of Block
-      SOB            : Boolean := False;
+      SOB            : Boolean;
       --  unspecified
       Reserved_25_31 : HAL.UInt7;
    end record
@@ -270,11 +270,11 @@ package STM32_SVD.SPDIF_RX is
    --  Debug Information register
    type DIR_Register is record
       --  Read-only. Threshold HIGH
-      THI            : DIR_THI_Field := 16#0#;
+      THI            : DIR_THI_Field;
       --  unspecified
       Reserved_13_15 : HAL.UInt3;
       --  Read-only. Threshold LOW
-      TLO            : DIR_TLO_Field := 16#0#;
+      TLO            : DIR_TLO_Field;
       --  unspecified
       Reserved_29_31 : HAL.UInt3;
    end record

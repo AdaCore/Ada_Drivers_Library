@@ -75,11 +75,11 @@ package STM32_SVD.DCMI is
    --  status register
    type SR_Register is record
       --  Read-only. HSYNC
-      HSYNC         : Boolean := False;
+      HSYNC         : Boolean;
       --  Read-only. VSYNC
-      VSYNC         : Boolean := False;
+      VSYNC         : Boolean;
       --  Read-only. FIFO not empty
-      FNE           : Boolean := False;
+      FNE           : Boolean;
       --  unspecified
       Reserved_3_31 : HAL.UInt29;
    end record
@@ -100,15 +100,15 @@ package STM32_SVD.DCMI is
    --  raw interrupt status register
    type RIS_Register is record
       --  Read-only. Capture complete raw interrupt status
-      FRAME_RIS     : Boolean := False;
+      FRAME_RIS     : Boolean;
       --  Read-only. Overrun raw interrupt status
-      OVR_RIS       : Boolean := False;
+      OVR_RIS       : Boolean;
       --  Read-only. Synchronization error raw interrupt status
-      ERR_RIS       : Boolean := False;
+      ERR_RIS       : Boolean;
       --  Read-only. VSYNC raw interrupt status
-      VSYNC_RIS     : Boolean := False;
+      VSYNC_RIS     : Boolean;
       --  Read-only. Line raw interrupt status
-      LINE_RIS      : Boolean := False;
+      LINE_RIS      : Boolean;
       --  unspecified
       Reserved_5_31 : HAL.UInt27;
    end record
@@ -162,15 +162,15 @@ package STM32_SVD.DCMI is
    --  masked interrupt status register
    type MIS_Register is record
       --  Read-only. Capture complete masked interrupt status
-      FRAME_MIS     : Boolean := False;
+      FRAME_MIS     : Boolean;
       --  Read-only. Overrun masked interrupt status
-      OVR_MIS       : Boolean := False;
+      OVR_MIS       : Boolean;
       --  Read-only. Synchronization error masked interrupt status
-      ERR_MIS       : Boolean := False;
+      ERR_MIS       : Boolean;
       --  Read-only. VSYNC masked interrupt status
-      VSYNC_MIS     : Boolean := False;
+      VSYNC_MIS     : Boolean;
       --  Read-only. Line masked interrupt status
-      LINE_MIS      : Boolean := False;
+      LINE_MIS      : Boolean;
       --  unspecified
       Reserved_5_31 : HAL.UInt27;
    end record

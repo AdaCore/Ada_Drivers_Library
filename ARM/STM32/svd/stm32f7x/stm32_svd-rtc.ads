@@ -469,7 +469,7 @@ package STM32_SVD.RTC is
    --  sub second register
    type SSR_Register is record
       --  Read-only. Sub second value
-      SS             : SSR_SS_Field := 16#0#;
+      SS             : SSR_SS_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record
@@ -519,23 +519,23 @@ package STM32_SVD.RTC is
    --  time stamp time register
    type TSTR_Register is record
       --  Read-only. Second units in BCD format
-      SU             : TSTR_SU_Field := 16#0#;
+      SU             : TSTR_SU_Field;
       --  Read-only. Second tens in BCD format
-      ST             : TSTR_ST_Field := 16#0#;
+      ST             : TSTR_ST_Field;
       --  unspecified
       Reserved_7_7   : HAL.Bit;
       --  Read-only. Minute units in BCD format
-      MNU            : TSTR_MNU_Field := 16#0#;
+      MNU            : TSTR_MNU_Field;
       --  Read-only. Minute tens in BCD format
-      MNT            : TSTR_MNT_Field := 16#0#;
+      MNT            : TSTR_MNT_Field;
       --  unspecified
       Reserved_15_15 : HAL.Bit;
       --  Read-only. Hour units in BCD format
-      HU             : TSTR_HU_Field := 16#0#;
+      HU             : TSTR_HU_Field;
       --  Read-only. Hour tens in BCD format
-      HT             : TSTR_HT_Field := 16#0#;
+      HT             : TSTR_HT_Field;
       --  Read-only. AM/PM notation
-      PM             : Boolean := False;
+      PM             : Boolean;
       --  unspecified
       Reserved_23_31 : HAL.UInt9;
    end record
@@ -567,17 +567,17 @@ package STM32_SVD.RTC is
    --  time stamp date register
    type TSDR_Register is record
       --  Read-only. Date units in BCD format
-      DU             : TSDR_DU_Field := 16#0#;
+      DU             : TSDR_DU_Field;
       --  Read-only. Date tens in BCD format
-      DT             : TSDR_DT_Field := 16#0#;
+      DT             : TSDR_DT_Field;
       --  unspecified
       Reserved_6_7   : HAL.UInt2;
       --  Read-only. Month units in BCD format
-      MU             : TSDR_MU_Field := 16#0#;
+      MU             : TSDR_MU_Field;
       --  Read-only. Month tens in BCD format
-      MT             : Boolean := False;
+      MT             : Boolean;
       --  Read-only. Week day units
-      WDU            : TSDR_WDU_Field := 16#0#;
+      WDU            : TSDR_WDU_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record
@@ -603,7 +603,7 @@ package STM32_SVD.RTC is
    --  timestamp sub second register
    type TSSSR_Register is record
       --  Read-only. Sub second value
-      SS             : TSSSR_SS_Field := 16#0#;
+      SS             : TSSSR_SS_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record

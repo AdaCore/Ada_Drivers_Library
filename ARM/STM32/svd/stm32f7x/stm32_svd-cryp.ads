@@ -74,15 +74,15 @@ package STM32_SVD.CRYP is
    --  status register
    type SR_Register is record
       --  Read-only. Input FIFO empty
-      IFEM          : Boolean := True;
+      IFEM          : Boolean;
       --  Read-only. Input FIFO not full
-      IFNF          : Boolean := True;
+      IFNF          : Boolean;
       --  Read-only. Output FIFO not empty
-      OFNE          : Boolean := False;
+      OFNE          : Boolean;
       --  Read-only. Output FIFO full
-      OFFU          : Boolean := False;
+      OFFU          : Boolean;
       --  Read-only. Busy bit
-      BUSY          : Boolean := False;
+      BUSY          : Boolean;
       --  unspecified
       Reserved_5_31 : HAL.UInt27;
    end record
@@ -149,9 +149,9 @@ package STM32_SVD.CRYP is
    --  raw interrupt status register
    type RISR_Register is record
       --  Read-only. Input FIFO service raw interrupt status
-      INRIS         : Boolean := True;
+      INRIS         : Boolean;
       --  Read-only. Output FIFO service raw interrupt status
-      OUTRIS        : Boolean := False;
+      OUTRIS        : Boolean;
       --  unspecified
       Reserved_2_31 : HAL.UInt30;
    end record
@@ -171,9 +171,9 @@ package STM32_SVD.CRYP is
    --  masked interrupt status register
    type MISR_Register is record
       --  Read-only. Input FIFO service masked interrupt status
-      INMIS         : Boolean := False;
+      INMIS         : Boolean;
       --  Read-only. Output FIFO service masked interrupt status
-      OUTMIS        : Boolean := False;
+      OUTMIS        : Boolean;
       --  unspecified
       Reserved_2_31 : HAL.UInt30;
    end record

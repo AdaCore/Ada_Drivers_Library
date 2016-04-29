@@ -114,11 +114,11 @@ package STM32_SVD.SYSCFG is
    --  Compensation cell control register
    type CMPCR_Register is record
       --  Read-only. Compensation cell power-down
-      CMP_PD        : Boolean := False;
+      CMP_PD        : Boolean;
       --  unspecified
       Reserved_1_7  : HAL.UInt7;
       --  Read-only. READY
-      READY         : Boolean := False;
+      READY         : Boolean;
       --  unspecified
       Reserved_9_31 : HAL.UInt23;
    end record

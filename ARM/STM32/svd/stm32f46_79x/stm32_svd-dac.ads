@@ -291,7 +291,7 @@ package STM32_SVD.DAC is
    --  channel1 data output register
    type DOR_Register is record
       --  Read-only. DAC channel1 data output
-      DACC1DOR       : DOR1_DACC1DOR_Field := 16#0#;
+      DACC1DOR       : DOR1_DACC1DOR_Field;
       --  unspecified
       Reserved_12_31 : HAL.UInt20;
    end record

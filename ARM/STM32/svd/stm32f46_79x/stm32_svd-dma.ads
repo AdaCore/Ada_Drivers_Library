@@ -20,55 +20,55 @@ package STM32_SVD.DMA is
    --  low interrupt status register
    type LISR_Register is record
       --  Read-only. Stream x FIFO error interrupt flag (x=3..0)
-      FEIF0          : Boolean := False;
+      FEIF0          : Boolean;
       --  unspecified
       Reserved_1_1   : HAL.Bit;
       --  Read-only. Stream x direct mode error interrupt flag (x=3..0)
-      DMEIF0         : Boolean := False;
+      DMEIF0         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=3..0)
-      TEIF0          : Boolean := False;
+      TEIF0          : Boolean;
       --  Read-only. Stream x half transfer interrupt flag (x=3..0)
-      HTIF0          : Boolean := False;
+      HTIF0          : Boolean;
       --  Read-only. Stream x transfer complete interrupt flag (x = 3..0)
-      TCIF0          : Boolean := False;
+      TCIF0          : Boolean;
       --  Read-only. Stream x FIFO error interrupt flag (x=3..0)
-      FEIF1          : Boolean := False;
+      FEIF1          : Boolean;
       --  unspecified
       Reserved_7_7   : HAL.Bit;
       --  Read-only. Stream x direct mode error interrupt flag (x=3..0)
-      DMEIF1         : Boolean := False;
+      DMEIF1         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=3..0)
-      TEIF1          : Boolean := False;
+      TEIF1          : Boolean;
       --  Read-only. Stream x half transfer interrupt flag (x=3..0)
-      HTIF1          : Boolean := False;
+      HTIF1          : Boolean;
       --  Read-only. Stream x transfer complete interrupt flag (x = 3..0)
-      TCIF1          : Boolean := False;
+      TCIF1          : Boolean;
       --  unspecified
       Reserved_12_15 : HAL.UInt4;
       --  Read-only. Stream x FIFO error interrupt flag (x=3..0)
-      FEIF2          : Boolean := False;
+      FEIF2          : Boolean;
       --  unspecified
       Reserved_17_17 : HAL.Bit;
       --  Read-only. Stream x direct mode error interrupt flag (x=3..0)
-      DMEIF2         : Boolean := False;
+      DMEIF2         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=3..0)
-      TEIF2          : Boolean := False;
+      TEIF2          : Boolean;
       --  Read-only. Stream x half transfer interrupt flag (x=3..0)
-      HTIF2          : Boolean := False;
+      HTIF2          : Boolean;
       --  Read-only. Stream x transfer complete interrupt flag (x = 3..0)
-      TCIF2          : Boolean := False;
+      TCIF2          : Boolean;
       --  Read-only. Stream x FIFO error interrupt flag (x=3..0)
-      FEIF3          : Boolean := False;
+      FEIF3          : Boolean;
       --  unspecified
       Reserved_23_23 : HAL.Bit;
       --  Read-only. Stream x direct mode error interrupt flag (x=3..0)
-      DMEIF3         : Boolean := False;
+      DMEIF3         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=3..0)
-      TEIF3          : Boolean := False;
+      TEIF3          : Boolean;
       --  Read-only. Stream x half transfer interrupt flag (x=3..0)
-      HTIF3          : Boolean := False;
+      HTIF3          : Boolean;
       --  Read-only. Stream x transfer complete interrupt flag (x = 3..0)
-      TCIF3          : Boolean := False;
+      TCIF3          : Boolean;
       --  unspecified
       Reserved_28_31 : HAL.UInt4;
    end record
@@ -111,55 +111,55 @@ package STM32_SVD.DMA is
    --  high interrupt status register
    type HISR_Register is record
       --  Read-only. Stream x FIFO error interrupt flag (x=7..4)
-      FEIF4          : Boolean := False;
+      FEIF4          : Boolean;
       --  unspecified
       Reserved_1_1   : HAL.Bit;
       --  Read-only. Stream x direct mode error interrupt flag (x=7..4)
-      DMEIF4         : Boolean := False;
+      DMEIF4         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=7..4)
-      TEIF4          : Boolean := False;
+      TEIF4          : Boolean;
       --  Read-only. Stream x half transfer interrupt flag (x=7..4)
-      HTIF4          : Boolean := False;
+      HTIF4          : Boolean;
       --  Read-only. Stream x transfer complete interrupt flag (x=7..4)
-      TCIF4          : Boolean := False;
+      TCIF4          : Boolean;
       --  Read-only. Stream x FIFO error interrupt flag (x=7..4)
-      FEIF5          : Boolean := False;
+      FEIF5          : Boolean;
       --  unspecified
       Reserved_7_7   : HAL.Bit;
       --  Read-only. Stream x direct mode error interrupt flag (x=7..4)
-      DMEIF5         : Boolean := False;
+      DMEIF5         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=7..4)
-      TEIF5          : Boolean := False;
+      TEIF5          : Boolean;
       --  Read-only. Stream x half transfer interrupt flag (x=7..4)
-      HTIF5          : Boolean := False;
+      HTIF5          : Boolean;
       --  Read-only. Stream x transfer complete interrupt flag (x=7..4)
-      TCIF5          : Boolean := False;
+      TCIF5          : Boolean;
       --  unspecified
       Reserved_12_15 : HAL.UInt4;
       --  Read-only. Stream x FIFO error interrupt flag (x=7..4)
-      FEIF6          : Boolean := False;
+      FEIF6          : Boolean;
       --  unspecified
       Reserved_17_17 : HAL.Bit;
       --  Read-only. Stream x direct mode error interrupt flag (x=7..4)
-      DMEIF6         : Boolean := False;
+      DMEIF6         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=7..4)
-      TEIF6          : Boolean := False;
+      TEIF6          : Boolean;
       --  Read-only. Stream x half transfer interrupt flag (x=7..4)
-      HTIF6          : Boolean := False;
+      HTIF6          : Boolean;
       --  Read-only. Stream x transfer complete interrupt flag (x=7..4)
-      TCIF6          : Boolean := False;
+      TCIF6          : Boolean;
       --  Read-only. Stream x FIFO error interrupt flag (x=7..4)
-      FEIF7          : Boolean := False;
+      FEIF7          : Boolean;
       --  unspecified
       Reserved_23_23 : HAL.Bit;
       --  Read-only. Stream x direct mode error interrupt flag (x=7..4)
-      DMEIF7         : Boolean := False;
+      DMEIF7         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=7..4)
-      TEIF7          : Boolean := False;
+      TEIF7          : Boolean;
       --  Read-only. Stream x half transfer interrupt flag (x=7..4)
-      HTIF7          : Boolean := False;
+      HTIF7          : Boolean;
       --  Read-only. Stream x transfer complete interrupt flag (x=7..4)
-      TCIF7          : Boolean := False;
+      TCIF7          : Boolean;
       --  unspecified
       Reserved_28_31 : HAL.UInt4;
    end record

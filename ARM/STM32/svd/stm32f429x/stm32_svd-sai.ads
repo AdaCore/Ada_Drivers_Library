@@ -546,23 +546,23 @@ package STM32_SVD.SAI is
    --  BStatus register
    type BSR_Register is record
       --  Read-only. Overrun / underrun
-      OVRUDR         : Boolean := False;
+      OVRUDR         : Boolean;
       --  Read-only. Mute detection
-      MUTEDET        : Boolean := False;
+      MUTEDET        : Boolean;
       --  Read-only. Wrong clock configuration flag
-      WCKCFG         : Boolean := False;
+      WCKCFG         : Boolean;
       --  Read-only. FIFO request
-      FREQ           : Boolean := False;
+      FREQ           : Boolean;
       --  Read-only. Codec not ready
-      CNRDY          : Boolean := False;
+      CNRDY          : Boolean;
       --  Read-only. Anticipated frame synchronization detection
-      AFSDET         : Boolean := False;
+      AFSDET         : Boolean;
       --  Read-only. Late frame synchronization detection
-      LFSDET         : Boolean := False;
+      LFSDET         : Boolean;
       --  unspecified
       Reserved_7_15  : HAL.UInt9;
       --  Read-only. FIFO level threshold
-      FLVL           : BSR_FLVL_Field := 16#0#;
+      FLVL           : BSR_FLVL_Field;
       --  unspecified
       Reserved_19_31 : HAL.UInt13;
    end record
