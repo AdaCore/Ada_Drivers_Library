@@ -1,60 +1,12 @@
+with System.Storage_Elements; use System.Storage_Elements;
+with Interfaces;              use Interfaces;
+
 package body HAL.Bitmap is
 
    procedure Handle_Swap
      (Buffer : Bitmap_Buffer'Class;
       X      : in out Natural;
       Y      : in out Natural);
-
-   procedure Set_Pixel_32
-     (Buffer  : Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
-      Value   : Word) with Inline;
-   procedure Set_Pixel_24
-     (Buffer  : Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
-      Value   : Word) with Inline;
-   procedure Set_Pixel_16
-     (Buffer  : Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
-      Value   : Word) with Inline;
-   procedure Set_Pixel_8
-     (Buffer  : Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
-      Value   : Word) with Inline;
-   procedure Set_Pixel_4
-     (Buffer  : Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
-      Value   : Word) with Inline;
-   function Get_Pixel_32
-     (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
-      return Word with Inline;
-   function Get_Pixel_24
-     (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
-      return Word with Inline;
-   function Get_Pixel_16
-     (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
-      return Word with Inline;
-   function Get_Pixel_8
-     (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
-      return Word with Inline;
-   function Get_Pixel_4
-     (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
-      return Word with Inline;
 
    -----------------
    -- Handle_Swap --
@@ -86,7 +38,6 @@ package body HAL.Bitmap is
       Y       : Natural;
       Value   : Bitmap_Color)
    is
-      use Interfaces;
       Col : constant Word :=
               Bitmap_Color_To_Word (Buffer.Color_Mode, Value);
    begin
@@ -103,173 +54,86 @@ package body HAL.Bitmap is
       Y      : Natural;
       Value  : Word)
    is
-      use type Word;
+      X0 : Natural := X;
+      Y0 : Natural := Y;
+      Offset : Natural;
+
    begin
+      if Buffer.Swapped then
+         Handle_Swap (Buffer, X0, Y0);
+         Offset := X0 + Y0 * Buffer.Height;
+
+      else
+         Offset := X + Y * Buffer.Width;
+      end if;
+
       case Buffer.Color_Mode is
          when ARGB_8888 =>
-            Set_Pixel_32
-              (Buffer, X, Y, Value);
+            declare
+               Pixel : aliased Word
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset * 4);
+            begin
+               Pixel := Value;
+            end;
 
          when RGB_888 =>
-            Set_Pixel_24
-              (Buffer, X, Y, Value and 16#FF_FF_FF#);
+            declare
+               Pixel_B : aliased Byte
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset * 3);
+               Pixel_G : aliased Byte
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset * 3 + 1);
+               Pixel_R : aliased Byte
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset * 3 + 2);
+               R       : constant Byte :=
+                           Byte (Shift_Right (Value and 16#FF0000#, 16));
+               G       : constant Byte :=
+                           Byte (Shift_Right (Value and 16#FF00#, 8));
+               B       : constant Byte := Byte (Value and 16#FF#);
+            begin
+               Pixel_B := B;
+               Pixel_G := G;
+               Pixel_R := R;
+            end;
 
          when ARGB_1555 | ARGB_4444 | RGB_565 | AL_88 =>
-            Set_Pixel_16
-              (Buffer, X, Y, Value and 16#FF_FF#);
+            declare
+               Pixel : aliased Short
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset * 2);
+            begin
+               Pixel := Short (Value and 16#FF_FF#);
+            end;
 
          when L_8 | AL_44 | A_8 =>
-            Set_Pixel_8
-              (Buffer, X, Y, Value and 16#FF#);
+            declare
+               Pixel : aliased Byte
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset);
+            begin
+               Pixel := Byte (Value and 16#FF#);
+            end;
 
          when L_4 | A_4 =>
-            Set_Pixel_4
-              (Buffer, X, Y, Value and 16#F#);
+            declare
+               Pixel : aliased Byte
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset / 2);
+            begin
+               if Offset mod 2 = 0 then
+                  Pixel :=
+                    (Pixel and 16#0F#) or
+                    Shift_Left (Byte (Value and 16#0F#), 4);
+               else
+                  Pixel := (Pixel and 16#F0#) or Byte (Value and 16#0F#);
+               end if;
+            end;
+
       end case;
    end Set_Pixel;
-
-   ---------------
-   -- Set_Pixel --
-   ---------------
-
-   procedure Set_Pixel_32
-     (Buffer  : Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
-      Value   : Word)
-   is
-      W : constant Positive := (if Buffer.Swapped then Buffer.Height
-                                else Buffer.Width);
-      H : constant Positive := (if Buffer.Swapped then Buffer.Width
-                                else Buffer.Height);
-
-      type FB_Buffer is array (0 .. H - 1, 0 .. W - 1) of Word
-        with Component_Size => 32, Volatile;
-      Buff : aliased FB_Buffer with Import, Address => Buffer.Addr;
-
-      X0 : Natural := X;
-      Y0 : Natural := Y;
-
-   begin
-      Handle_Swap (Buffer, X0, Y0);
-      Buff (Y0, X0) := Value;
-   end Set_Pixel_32;
-
-   ---------------
-   -- Set_Pixel --
-   ---------------
-
-   procedure Set_Pixel_24
-     (Buffer  : Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
-      Value   : Word)
-   is
-      use Interfaces;
-      W : constant Positive := (if Buffer.Swapped then Buffer.Height
-                                else Buffer.Width);
-      H : constant Positive := (if Buffer.Swapped then Buffer.Width
-                                else Buffer.Height);
-
-      type FB_Buffer is array (0 .. H - 1, 0 .. W * 3 - 1) of Byte
-        with Component_Size => 8, Volatile;
-      Buff : aliased FB_Buffer with Import, Address => Buffer.Addr;
-
-      X0 : Natural := X;
-      Y0 : Natural := Y;
-      R  : constant Byte :=
-             Byte (Shift_Right (Value and 16#FF0000#, 16));
-      G  : constant Byte :=
-             Byte (Shift_Right (Value and 16#FF00#, 8));
-      B  : constant Byte := Byte (Value and 16#FF#);
-
-   begin
-      Handle_Swap (Buffer, X0, Y0);
-      Buff (Y0, X0 * 3) := R;
-      Buff (Y0, X0 * 3 + 1) := G;
-      Buff (Y0, X0 * 3 + 2) := B;
-   end Set_Pixel_24;
-
-   ---------------
-   -- Set_Pixel --
-   ---------------
-
-   procedure Set_Pixel_16
-     (Buffer  : Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
-      Value   : Word)
-   is
-      W : constant Positive := (if Buffer.Swapped then Buffer.Height
-                                else Buffer.Width);
-      H : constant Positive := (if Buffer.Swapped then Buffer.Width
-                                else Buffer.Height);
-
-      type FB_Buffer is array (0 .. H - 1, 0 .. W - 1) of Short
-        with Component_Size => 16, Volatile;
-      Buff : aliased FB_Buffer with Import, Address => Buffer.Addr;
-
-      X0 : Natural := X;
-      Y0 : Natural := Y;
-
-   begin
-      Handle_Swap (Buffer, X0, Y0);
-      Buff (Y0, X0) := Short (Value);
-   end Set_Pixel_16;
-
-   ---------------
-   -- Set_Pixel --
-   ---------------
-
-   procedure Set_Pixel_8
-     (Buffer  : Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
-      Value   : Word)
-   is
-      W : constant Positive := (if Buffer.Swapped then Buffer.Height
-                                else Buffer.Width);
-      H : constant Positive := (if Buffer.Swapped then Buffer.Width
-                                else Buffer.Height);
-
-      type FB_Buffer is array (0 .. H - 1, 0 .. W - 1) of Byte
-        with Component_Size => 8, Volatile;
-      Buff : aliased FB_Buffer with Import, Address => Buffer.Addr;
-
-      X0 : Natural := X;
-      Y0 : Natural := Y;
-
-   begin
-      Handle_Swap (Buffer, X0, Y0);
-      Buff (Y0, X0) := Byte (Value);
-   end Set_Pixel_8;
-
-   ---------------
-   -- Set_Pixel --
-   ---------------
-
-   procedure Set_Pixel_4
-     (Buffer  : Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
-      Value   : Word)
-   is
-      W : constant Positive := (if Buffer.Swapped then Buffer.Height
-                                else Buffer.Width);
-      H : constant Positive := (if Buffer.Swapped then Buffer.Width
-                                else Buffer.Height);
-
-      type FB_Buffer is array (0 .. H - 1, 0 .. W - 1) of UInt4
-        with Component_Size => 4, Volatile;
-      Buff : aliased FB_Buffer with Import, Address => Buffer.Addr;
-
-      X0 : Natural := X;
-      Y0 : Natural := Y;
-
-   begin
-      Handle_Swap (Buffer, X0, Y0);
-      Buff (Y0, X0) := UInt4 (Value);
-   end Set_Pixel_4;
 
    ---------------------
    -- Set_Pixel_Blend --
@@ -281,7 +145,6 @@ package body HAL.Bitmap is
       Y      : Natural;
       Value  : Bitmap_Color)
    is
-      use Interfaces;
       Col : Bitmap_Color;
       FgA, FgR, FgG, FgB : Float;
       BgA, BgR, BgG, BgB : Float;
@@ -344,163 +207,77 @@ package body HAL.Bitmap is
       Y      : Natural)
       return Word
    is
-   begin
-      case Buffer.Color_Mode is
-         when ARGB_8888 =>
-            return Get_Pixel_32 (Buffer, X, Y);
-
-         when RGB_888 =>
-            return Get_Pixel_24 (Buffer, X, Y);
-
-         when ARGB_1555 | ARGB_4444 | RGB_565 | AL_88 =>
-            return Get_Pixel_16 (Buffer, X, Y);
-
-         when L_8 | AL_44 | A_8 =>
-            return Get_Pixel_8 (Buffer, X, Y);
-
-         when L_4 | A_4 =>
-            return Get_Pixel_4 (Buffer, X, Y);
-      end case;
-   end Get_Pixel;
-
-   ---------------
-   -- Get_Pixel --
-   ---------------
-
-   function Get_Pixel_32
-     (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
-      return Word
-   is
-      W : constant Positive := (if Buffer.Swapped then Buffer.Height
-                                else Buffer.Width);
-      H : constant Positive := (if Buffer.Swapped then Buffer.Width
-                                else Buffer.Height);
-
-      type FB_Buffer is array (0 .. H - 1, 0 .. W - 1) of Word
-        with Component_Size => 32, Volatile;
-      Buff : aliased FB_Buffer with Import, Address => Buffer.Addr;
-
       X0 : Natural := X;
       Y0 : Natural := Y;
+      Offset : Natural;
 
    begin
-      Handle_Swap (Buffer, X0, Y0);
-      return Buff (Y0, X0);
-   end Get_Pixel_32;
+      if Buffer.Swapped then
+         Handle_Swap (Buffer, X0, Y0);
+         Offset := X0 + Y0 * Buffer.Height;
 
-   ---------------
-   -- Get_Pixel --
-   ---------------
+      else
+         Offset := X + Y * Buffer.Width;
+      end if;
 
-   function Get_Pixel_24
-     (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
-      return Word
-   is
-      use Interfaces;
-      W : constant Positive := (if Buffer.Swapped then Buffer.Height
-                                else Buffer.Width);
-      H : constant Positive := (if Buffer.Swapped then Buffer.Width
-                                else Buffer.Height);
+      case Buffer.Color_Mode is
+         when ARGB_8888 =>
+            declare
+               Pixel : aliased Word
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset * 4);
+            begin
+               return Pixel;
+            end;
 
-      type FB_Buffer is array (0 .. H - 1, 0 .. 3 * W - 1) of Byte
-        with Component_Size => 8, Volatile;
+         when RGB_888 =>
+            declare
+               Pixel_B : aliased Byte
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset * 3);
+               Pixel_G : aliased Byte
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset * 3 + 1);
+               Pixel_R : aliased Byte
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset * 3 + 2);
+            begin
+               return Shift_Left (Word (Pixel_R), 16)
+                 or Shift_Left (Word (Pixel_G), 8) or Word (Pixel_B);
+            end;
 
-      Buff    : aliased FB_Buffer with Import, Address => Buffer.Addr;
-      R, G, B : Word;
-      X0      : Natural := X;
-      Y0      : Natural := Y;
+         when ARGB_1555 | ARGB_4444 | RGB_565 | AL_88 =>
+            declare
+               Pixel : aliased Short
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset * 2);
+            begin
+               return Word (Pixel);
+            end;
 
-   begin
-      Handle_Swap (Buffer, X0, Y0);
+         when L_8 | AL_44 | A_8 =>
+            declare
+               Pixel : aliased Byte
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset);
+            begin
+               return Word (Pixel);
+            end;
 
-      R := Word (Buff (Y0, X0 * 3));
-      G := Word (Buff (Y0, X0 * 3 + 1));
-      B := Word (Buff (Y0, X0 * 3 + 2));
-
-      return Shift_Left (R, 16) + Shift_Left (G, 8) + B;
-   end Get_Pixel_24;
-
-   ---------------
-   -- Get_Pixel --
-   ---------------
-
-   function Get_Pixel_16
-     (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
-      return Word
-   is
-      W : constant Positive := (if Buffer.Swapped then Buffer.Height
-                                else Buffer.Width);
-      H : constant Positive := (if Buffer.Swapped then Buffer.Width
-                                else Buffer.Height);
-
-      type FB_Buffer is array (0 .. H - 1, 0 .. W - 1) of Short
-        with Component_Size => 16, Volatile;
-      Buff : aliased FB_Buffer with Import, Address => Buffer.Addr;
-      X0   : Natural := X;
-      Y0   : Natural := Y;
-
-   begin
-      Handle_Swap (Buffer, X0, Y0);
-      return Word (Buff (Y0, X0));
-   end Get_Pixel_16;
-
-   ---------------
-   -- Get_Pixel --
-   ---------------
-
-   function Get_Pixel_8
-     (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
-      return Word
-   is
-      W : constant Positive := (if Buffer.Swapped then Buffer.Height
-                                else Buffer.Width);
-      H : constant Positive := (if Buffer.Swapped then Buffer.Width
-                                else Buffer.Height);
-
-      type FB_Buffer is array (0 .. H - 1, 0 .. W - 1) of Byte
-        with Component_Size => 8, Volatile;
-      Buff : aliased FB_Buffer with Import, Address => Buffer.Addr;
-      X0   : Natural := X;
-      Y0   : Natural := Y;
-
-   begin
-      Handle_Swap (Buffer, X0, Y0);
-      return Word (Buff (Y0, X0));
-   end Get_Pixel_8;
-
-   ---------------
-   -- Get_Pixel --
-   ---------------
-
-   function Get_Pixel_4
-     (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
-      return Word
-   is
-      W : constant Positive := (if Buffer.Swapped then Buffer.Height
-                                else Buffer.Width);
-      H : constant Positive := (if Buffer.Swapped then Buffer.Width
-                                else Buffer.Height);
-
-      type FB_Buffer is array (0 .. H - 1, 0 .. W - 1) of UInt4
-        with Component_Size => 4, Volatile;
-      Buff : aliased FB_Buffer with Import, Address => Buffer.Addr;
-      X0   : Natural := X;
-      Y0   : Natural := Y;
-
-   begin
-      Handle_Swap (Buffer, X0, Y0);
-      return Word (Buff (Y0, X0));
-   end Get_Pixel_4;
+         when L_4 | A_4 =>
+            declare
+               Pixel : aliased Byte
+                 with Import,
+                      Address => Buffer.Addr + Storage_Offset (Offset / 2);
+            begin
+               if Offset mod 2 = 0 then
+                  return Word (Shift_Right (Pixel and 16#F0#, 4));
+               else
+                  return Word (Pixel and 16#0F#);
+               end if;
+            end;
+      end case;
+   end Get_Pixel;
 
    ----------
    -- Fill --
@@ -769,7 +546,6 @@ package body HAL.Bitmap is
      (Mode : Bitmap_Color_Mode; Col : Bitmap_Color)
       return Word
    is
-      use Interfaces;
       Ret : Word := 0;
 
       procedure Add_Byte
@@ -869,7 +645,6 @@ package body HAL.Bitmap is
      (Mode : Bitmap_Color_Mode; Col : Word)
       return Bitmap_Color
    is
-      use Interfaces;
 
       function Get_Byte
         (Pos : Natural; Size : Positive) return Byte with Inline;
