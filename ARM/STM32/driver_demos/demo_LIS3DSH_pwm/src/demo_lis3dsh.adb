@@ -53,7 +53,7 @@ with Interfaces;        use Interfaces;
 with Ada.Real_Time;     use Ada.Real_Time;
 
 with STM32.Board;       use STM32.Board;
-with STM32.LIS3DSH;     use STM32.LIS3DSH;  -- on the F4 Disco board
+with LIS3DSH;           use LIS3DSH;  -- on the F4 Disco board
 
 with STM32.GPIO;        use STM32.GPIO;
 with STM32.Timers;      use STM32.Timers;
@@ -101,7 +101,8 @@ procedure Demo_LIS3DSH is
       else
          Bracketed_Value := Axis_Acceleration'Max (Acceleration, -Max_1g);
       end if;
-      Result := Percentage ((Float (abs (Bracketed_Value)) / Float (Max_1g)) * 100.0);
+      Result := Percentage
+        ((Float (abs (Bracketed_Value)) / Float (Max_1g)) * 100.0);
       return Result;
    end Brightness;
 
@@ -115,7 +116,7 @@ procedure Demo_LIS3DSH is
       Low_Threshold  : constant Axis_Acceleration := -30;  -- arbitrary
       Off            : constant Percentage := 0;
    begin
-      Get_Accelerations (Accelerometer, Axes);
+      Accelerometer.Get_Accelerations (Axes);
 
       if Axes.X < Low_Threshold then
          Set_Duty_Cycle (PWM_Output, Channel_1, Brightness (Axes.X));
@@ -143,44 +144,45 @@ procedure Demo_LIS3DSH is
    end Drive_LEDs;
 
 begin
-   Configure_Accelerometer
-     (Accelerometer,
-      Output_DataRate => Data_Rate_100Hz,
+   Initialize_Accelerometer;
+
+   Accelerometer.Configure
+     (Output_DataRate => Data_Rate_100Hz,
       Axes_Enable     => XYZ_Enabled,
       SPI_Wire        => Serial_Interface_4Wire,
       Self_Test       => Self_Test_Normal,
       Full_Scale      => Fullscale_2g,
       Filter_BW       => Filter_800Hz);
 
-   if Device_Id (Accelerometer) /= I_Am_LIS3DSH then
+   if Accelerometer.Device_Id /= I_Am_LIS3DSH then
       raise Program_Error with "invalid accelerometer";
    end if;
 
    Initialise_PWM_Modulator
      (PWM_Output,
-      Requested_Frequency    => PWM_Frequency,
-      PWM_Timer              => PWM_Output_Timer'Access,
-      PWM_AF                 => PWM_Output_AF);
+      Requested_Frequency => PWM_Frequency,
+      PWM_Timer           => PWM_Output_Timer'Access,
+      PWM_AF              => PWM_Output_AF);
 
    Attach_PWM_Channel
      (PWM_Output,
-      Channel                => Channel_1,
-      Point                  => Channel_1_Point);
+      Channel => Channel_1,
+      Point   => Channel_1_Point);
 
    Attach_PWM_Channel
      (PWM_Output,
-      Channel                => Channel_2,
-      Point                  => Channel_2_Point);
+      Channel => Channel_2,
+      Point   => Channel_2_Point);
 
    Attach_PWM_Channel
      (PWM_Output,
-      Channel                => Channel_3,
-      Point                  => Channel_3_Point);
+      Channel => Channel_3,
+      Point   => Channel_3_Point);
 
    Attach_PWM_Channel
      (PWM_Output,
-      Channel                => Channel_4,
-      Point                  => Channel_4_Point);
+      Channel => Channel_4,
+      Point   => Channel_4_Point);
 
    loop
       Drive_LEDs;
@@ -188,4 +190,4 @@ begin
       Next_Release := Next_Release + Period;
       delay until Next_Release;
    end loop;
- end Demo_LIS3DSH;
+end Demo_LIS3DSH;

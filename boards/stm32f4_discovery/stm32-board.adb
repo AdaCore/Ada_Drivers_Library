@@ -157,19 +157,11 @@ package body STM32.Board is
 
          Acc_Chip_Select_Pin.Configure_IO (Config);
          Acc_Chip_Select_Pin.Set;
-
       end Init_GPIO;
 
    begin
       Init_GPIO;
       Init_SPI;
-      Accelerometer.Configure_Accelerometer
-        (Output_DataRate => Data_Rate_100Hz,
-         Axes_Enable     => XYZ_Enabled,
-         SPI_Wire        => Serial_Interface_4Wire,
-         Self_Test       => Self_Test_Normal,
-         Full_Scale      => Fullscale_2g,
-         Filter_BW       => Filter_800Hz);
    end Initialize_Accelerometer;
 
 

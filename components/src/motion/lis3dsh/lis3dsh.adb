@@ -152,11 +152,11 @@ package body LIS3DSH is
       end Get_Z;
    end Get_Accelerations;
 
-   -----------------------------
-   -- Configure_Accelerometer --
-   -----------------------------
+   ---------------
+   -- Configure --
+   ---------------
 
-   procedure Configure_Accelerometer
+   procedure Configure
      (This            : in out Three_Axis_Accelerometer;
       Output_DataRate : Data_Rate_Power_Mode_Selection;
       Axes_Enable     : Direction_XYZ_Selection;
@@ -195,7 +195,7 @@ package body LIS3DSH is
       end case;
 
       This.Device_Configured := True;
-   end Configure_Accelerometer;
+   end Configure;
 
    ---------------
    -- Device_Id --

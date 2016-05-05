@@ -33,7 +33,6 @@ with STM32.Board;     use STM32.Board;
 with STM32.Device;    use STM32.Device;
 with STM32.GPIO;      use STM32.GPIO;
 with STM32.Timers;    use STM32.Timers;
-with STM32.RCC;       use STM32.RCC;
 with STM32.PWM;       use STM32.PWM;
 
 package Demo_PWM_Settings is
@@ -46,7 +45,7 @@ package Demo_PWM_Settings is
 
    PWM_Frequency : constant := 10_000.0;  -- arbitrary
 
-   --  On Tmer 4 the channels are connected as follows:
+   --  On Timer 4 the channels are connected as follows:
    --
    --  Channel_1 is connected to the green LED.
    --  Channel_2 is connected to the orange LED.

@@ -170,7 +170,7 @@ package LIS3DSH is
      (Serial_Interface_4Wire => 16#00#,
       Serial_Interface_3Wire => 16#01#);
 
-   procedure Configure_Accelerometer
+   procedure Configure
      (This            : in out Three_Axis_Accelerometer;
       Output_DataRate : Data_Rate_Power_Mode_Selection;
       Axes_Enable     : Direction_XYZ_Selection;

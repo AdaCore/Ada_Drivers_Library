@@ -50,7 +50,7 @@ procedure Demo is
 
    Output_Timer : Timer renames Timer_4;
 
-   Output_Channel : constant Timer_Channel := Channel_2;
+   Output_Channel : constant Timer_Channel := Channel_1;
    --  The LED driven by this example is determined by the channel selected.
    --  That is so because each channel of Timer_4 is connected to a specific
    --  LED in the alternate function configuration on this board. We will
@@ -64,7 +64,7 @@ procedure Demo is
    --  Channel_4 is connected to the blue LED.
 
    Output_Point : constant GPIO_Point := Green;
-   --  This must match the GPIO port/pin for the selected Output_Channel value.
+   --  This must match the GPIO port/pin for the selected Output_Channel value!
 
    --  The SFP run-time library for these boards is intended for certified
    --  environments and so does not contain the full set of facilities defined
@@ -81,17 +81,18 @@ procedure Demo is
 
    --  In this demonstration we roll our own approximation to the sine function
    --  so that it doesn't matter which runtime library is used.
+   function Sine (Input : Long_Float) return Long_Float;
 
-      function Sine (Input : Long_Float) return Long_Float is
-         Pi : constant Long_Float := 3.14159_26535_89793_23846;
-         X  : constant Long_Float := Long_Float'Remainder(Input, Pi * 2.0);
-         B  : constant Long_Float := 4.0 / Pi;
-         C  : constant Long_Float := (-4.0) / (Pi * Pi);
-         Y  : constant Long_Float := B * X + C * X * abs (X);
-         P  : constant Long_Float := 0.225;
-      begin
-         return P * (Y * abs (Y) - Y) + Y;
-      end Sine;
+   function Sine (Input : Long_Float) return Long_Float is
+      Pi : constant Long_Float := 3.14159_26535_89793_23846;
+      X  : constant Long_Float := Long_Float'Remainder (Input, Pi * 2.0);
+      B  : constant Long_Float := 4.0 / Pi;
+      C  : constant Long_Float := (-4.0) / (Pi * Pi);
+      Y  : constant Long_Float := B * X + C * X * abs (X);
+      P  : constant Long_Float := 0.225;
+   begin
+      return P * (Y * abs (Y) - Y) + Y;
+   end Sine;
 
    --  We use the sine function to drive the power applied to the LED, thereby
    --  making the LED increase and decrease in brightness. We attach the timer
@@ -100,12 +101,11 @@ procedure Demo is
    --  that value, thus the waxing/waning effect.
 
 begin
-
    Initialise_PWM_Modulator
      (Output,
-      Requested_Frequency    => 30_000.0, -- arbitrary
-      PWM_Timer              => Output_Timer'Access,
-      PWM_AF                 => GPIO_AF_TIM4);
+      Requested_Frequency => 30_000.0, -- arbitrary
+      PWM_Timer           => Output_Timer'Access,
+      PWM_AF              => GPIO_AF_TIM4);
 
    Attach_PWM_Channel
      (Output,
