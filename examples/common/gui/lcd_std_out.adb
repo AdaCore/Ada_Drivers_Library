@@ -63,6 +63,12 @@ package body LCD_Std_Out is
    --  Ensures that the LCD display is initialized and DMA2D
    --  is up and running
 
+   procedure Internal_Put (Msg : String);
+   --  Puts a new String in the frame buffer
+
+   procedure Internal_Put (Msg : Character);
+   --  Puts a new character in the frame buffer.
+
    ------------------------
    -- Assert_Initialized --
    ------------------------
@@ -94,6 +100,7 @@ package body LCD_Std_Out is
 
    procedure Recompute_Screen_Dimensions (Font : BMP_Font) is
    begin
+      Check_Initialized;
       Char_Width  := BMP_Fonts.Char_Width (Font);
       Char_Height := BMP_Fonts.Char_Height (Font);
       Max_Width   := Display.Get_Width - Char_Width - 1;
@@ -132,8 +139,23 @@ package body LCD_Std_Out is
       Display.Get_Hidden_Buffer (1).Fill (Current_Background_Color);
       Current_Y := 0;
       Char_Count := 0;
-      Display.Update_Layer (1);
+      Display.Update_Layer (1, True);
    end Clear_Screen;
+
+   ------------------
+   -- Internal_Put --
+   ------------------
+
+   procedure Internal_Put (Msg : String) is
+   begin
+      for C of Msg loop
+         if C = ASCII.LF then
+            New_Line;
+         else
+            Internal_Put (C);
+         end if;
+      end loop;
+   end Internal_Put;
 
    ---------
    -- Put --
@@ -141,13 +163,8 @@ package body LCD_Std_Out is
 
    procedure Put (Msg : String) is
    begin
-      for C of Msg loop
-         if C = ASCII.LF then
-            New_Line;
-         else
-            Put (C);
-         end if;
-      end loop;
+      Internal_Put (Msg);
+      Display.Update_Layer (1, True);
    end Put;
 
    ---------------
@@ -175,7 +192,7 @@ package body LCD_Std_Out is
    -- Put --
    ---------
 
-   procedure Put (Msg : Character) is
+   procedure Internal_Put (Msg : Character) is
       X : Natural;
    begin
       if Char_Count * Char_Width > Max_Width then
@@ -193,7 +210,16 @@ package body LCD_Std_Out is
 
       Draw_Char (X, Current_Y, Msg);
       Char_Count := Char_Count + 1;
-      Display.Update_Layer (1);
+   end Internal_Put;
+
+   ---------
+   -- Put --
+   ---------
+
+   procedure Put (Msg : Character) is
+   begin
+      Internal_Put (Msg);
+      Display.Update_Layer (1, True);
    end Put;
 
    --------------
@@ -227,7 +253,7 @@ package body LCD_Std_Out is
    procedure Put (X, Y : Natural; Msg : Character) is
    begin
       Draw_Char (X, Y, Msg);
-      Display.Update_Layer (1);
+      Display.Update_Layer (1, True);
    end Put;
 
    ---------
@@ -244,7 +270,7 @@ package body LCD_Std_Out is
          Count := Count + 1;
       end loop;
 
-      Display.Update_Layer (1);
+      Display.Update_Layer (1, True);
    end Put;
 
 end LCD_Std_Out;

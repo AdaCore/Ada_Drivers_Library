@@ -66,8 +66,10 @@ package STM32.Board is
    Green : User_LED renames PG13;
    Red   : User_LED renames PG14;
 
-   LED3    : User_LED renames Green;
-   LED4    : User_LED renames Red;
+   LED1    : User_LED renames Red;
+   LED2    : User_LED renames Green;
+   LED3    : User_LED renames Red;
+   LED4    : User_LED renames Green;
    LCH_LED : User_LED renames Red;
 
    All_LEDs  : GPIO_Points := LED3 & LED4;

@@ -22,11 +22,6 @@ package HAL.Framebuffer is
       Mode    : FB_Color_Mode) return Boolean
       is abstract;
 
-   procedure Initialize
-     (Display     : in out Frame_Buffer_Display;
-      Orientation : Display_Orientation := Default;
-      Mode        : Wait_Mode := Interrupt) is abstract;
-
    procedure Set_Orientation
      (Display     : in out Frame_Buffer_Display;
       Orientation : Display_Orientation) is abstract;

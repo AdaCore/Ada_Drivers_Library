@@ -51,7 +51,7 @@ package body Driver is
       Display.Initialize (Portrait, Interrupt);
       Display.Initialize_Layer (1, RGB_565);
       Display.Initialize_Layer (2, ARGB_1555);
-      Screen_Interface.Initialize;
+      Touch_Panel.Initialize (Portrait);
       Railroad.Initialize;
 
       Current  := Screen_Interface.Current_Touch_State;

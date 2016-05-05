@@ -21,8 +21,8 @@ is
    type Zoom_Box_Record is record
       X0 : Integer := -1;
       Y0 : Integer := -1;
-      X1   : Integer := -1;
-      Y1   : Integer := -1;
+      X1 : Integer := -1;
+      Y1 : Integer := -1;
    end record;
 
    type Fractal_Array is array (Positive range <>) of Fractal_Ref;
@@ -214,9 +214,10 @@ is
 
 begin
    Display.Initialize (HAL.Framebuffer.Landscape);
-   Display.Initialize_Layer (1, HAL.Bitmap.RGB_565);
+   Display.Initialize_Layer (1, HAL.Bitmap.RGB_888);
    Display.Initialize_Layer (2, HAL.Bitmap.ARGB_4444);
    Touch_Panel.Initialize (HAL.Framebuffer.Landscape);
+   Initialize_LEDs;
 
    Initialize_Color_Map;
 
@@ -241,6 +242,20 @@ begin
 
          First_Pass := True;
          for J in reverse 0 .. 3 loop
+            case J is
+               when 0 =>
+                  Turn_Off (STM32.Board.LED2);
+                  Turn_On (STM32.Board.LED1);
+               when 1 =>
+                  Turn_Off (STM32.Board.LED3);
+                  Turn_On (STM32.Board.LED2);
+               when 2 =>
+                  Turn_Off (STM32.Board.LED4);
+                  Turn_On (STM32.Board.LED3);
+               when 3 =>
+                  Turn_On (STM32.Board.LED4);
+            end case;
+
             declare
                Size : constant Natural := 2 ** J;
             begin
@@ -274,14 +289,22 @@ begin
                               Col := Buff.Get_Pixel (X * Size, Y * Size);
                               Do_Paint := False;
 
-                              if Buff.Get_Pixel ((X - 1) * Size, (Y - 1) * Size) /= Col
-                                or else Buff.Get_Pixel ((X + 1) * Size, (Y + 1) * Size) /= Col
-                                or else Buff.Get_Pixel ((X + 1) * Size, (Y - 1) * Size) /= Col
-                                or else Buff.Get_Pixel ((X - 1) * Size, (Y + 1) * Size) /= Col
-                                or else Buff.Get_Pixel (X * Size, (Y - 1) * Size) /= Col
-                                or else Buff.Get_Pixel ((X - 1) * Size, Y * Size) /= Col
-                                or else Buff.Get_Pixel (X * Size, (Y + 1) * Size) /= Col
-                                or else Buff.Get_Pixel ((X + 1) * Size, Y * Size) /= Col
+                              if Buff.Get_Pixel ((X - 1) * Size,
+                                                 (Y - 1) * Size) /= Col
+                                or else Buff.Get_Pixel ((X + 1) * Size,
+                                                        (Y + 1) * Size) /= Col
+                                or else Buff.Get_Pixel ((X + 1) * Size,
+                                                        (Y - 1) * Size) /= Col
+                                or else Buff.Get_Pixel ((X - 1) * Size,
+                                                        (Y + 1) * Size) /= Col
+                                or else Buff.Get_Pixel (X * Size,
+                                                        (Y - 1) * Size) /= Col
+                                or else Buff.Get_Pixel ((X - 1) * Size,
+                                                        Y * Size) /= Col
+                                or else Buff.Get_Pixel (X * Size,
+                                                        (Y + 1) * Size) /= Col
+                                or else Buff.Get_Pixel ((X + 1) * Size,
+                                                        Y * Size) /= Col
                               then
                                  Do_Paint := True;
                               end if;
@@ -320,31 +343,9 @@ begin
             end;
          end loop;
 
+         Turn_Off (STM32.Board.LED1);
          Display.Get_Hidden_Buffer (2).Fill (0);
          Display.Update_Layer (2);
-
---           for Y in 0 .. Display.Get_Height - 1 loop
---              declare
---                 Buff : constant HAL.Bitmap.Bitmap_Buffer'Class :=
---                          Display.Get_Hidden_Buffer (1);
---              begin
---                 for X in 0 .. Display.Get_Width - 1 loop
---                    declare
---                       Iter : constant Natural :=
---                                The_Fractals (Current).Compute (To_Coord (X, Y),
---                                                                Max_Depth);
---                    begin
---                       Buff.Set_Pixel (X, Y, Colors (Iter));
---                    end;
---                 end loop;
---
---                 Display.Update_Layer (1, True);
---
---                 if STM32.Button.Has_Been_Pressed then
---                    exit Same_Fractal_Loop;
---                 end if;
---              end;
---           end loop;
 
          Zoom_Loop :
          loop

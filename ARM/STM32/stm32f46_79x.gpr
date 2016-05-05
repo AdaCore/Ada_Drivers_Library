@@ -8,8 +8,8 @@ library project STM32F46_79x is
 
    for Library_Name use "stm32f469";
    for Library_Kind use "static";
-   for Library_Dir use "lib/stm32f46_79x/" & Config.RTS;
-   for Object_Dir use "obj/stm32f46_79x/" & Config.RTS;
+   for Library_Dir use "lib/stm32f46_79x/" & Config.RTS & "/" & Config.Build;
+   for Object_Dir use "obj/stm32f46_79x/" & Config.RTS & "/" & Config.Build;
 
   for Source_Dirs use Project'Source_Dirs &
      ("../cortex_m",

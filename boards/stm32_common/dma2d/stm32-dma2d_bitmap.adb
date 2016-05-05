@@ -31,6 +31,21 @@ package body STM32.DMA2D_Bitmap is
               Color_Mode => To_DMA2D_CM (Buffer.Color_Mode));
    end To_DMA2D_Buffer;
 
+   ---------------
+   -- Set_Pixel --
+   ---------------
+
+   overriding procedure Set_Pixel
+     (Buffer : DMA2D_Bitmap_Buffer;
+      X      : Natural;
+      Y      : Natural;
+      Value  : Word)
+   is
+   begin
+      DMA2D_Wait_Transfer;
+      HAL.Bitmap.Bitmap_Buffer (Buffer).Set_Pixel (X, Y, Value);
+   end Set_Pixel;
+
    ---------------------
    -- Set_Pixel_Blend --
    ---------------------
@@ -61,6 +76,20 @@ package body STM32.DMA2D_Bitmap is
          HAL.Bitmap.Bitmap_Buffer (Buffer).Set_Pixel_Blend (X, Y, Value);
       end if;
    end Set_Pixel_Blend;
+
+   ---------------
+   -- Get_Pixel --
+   ---------------
+
+   overriding function Get_Pixel
+     (Buffer : DMA2D_Bitmap_Buffer;
+      X      : Natural;
+      Y      : Natural) return Word
+   is
+   begin
+      DMA2D_Wait_Transfer;
+      return HAL.Bitmap.Bitmap_Buffer (Buffer).Get_Pixel (X, Y);
+   end Get_Pixel;
 
    ----------
    -- Fill --
@@ -182,7 +211,9 @@ package body STM32.DMA2D_Bitmap is
    is
    begin
       DMA2D_Wait_Transfer;
-      Clean_DCache (Buffer.Addr, Len => Buffer.Buffer_Size);
+      Cortex_M.Cache.Clean_DCache
+        (Start => Buffer.Addr,
+         Len   => Buffer.Buffer_Size);
    end Wait_Transfer;
 
 end STM32.DMA2D_Bitmap;

@@ -8,11 +8,22 @@ package STM32.DMA2D_Bitmap is
 
    type DMA2D_Bitmap_Buffer is new HAL.Bitmap.Bitmap_Buffer with null record;
 
+   overriding procedure Set_Pixel
+     (Buffer : DMA2D_Bitmap_Buffer;
+      X      : Natural;
+      Y      : Natural;
+      Value  : Word);
+
    overriding procedure Set_Pixel_Blend
      (Buffer : DMA2D_Bitmap_Buffer;
       X      : Natural;
       Y      : Natural;
       Value  : HAL.Bitmap.Bitmap_Color);
+
+   overriding function Get_Pixel
+     (Buffer : DMA2D_Bitmap_Buffer;
+      X      : Natural;
+      Y      : Natural) return Word;
 
    overriding procedure Fill
      (Buffer : DMA2D_Bitmap_Buffer;

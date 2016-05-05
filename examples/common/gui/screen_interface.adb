@@ -34,21 +34,6 @@ with HAL.Touch_Panel;
 
 package body Screen_Interface is
 
-   Initialized : Boolean := False;
-
-   ----------------
-   -- Initialize --
-   ----------------
-
-   procedure Initialize is
-   begin
-      if not Initialized then
-         Initialized := True;
-
-         Touch_Panel.Initialize;
-      end if;
-   end Initialize;
-
    -------------------------
    -- Current_Touch_State --
    -------------------------

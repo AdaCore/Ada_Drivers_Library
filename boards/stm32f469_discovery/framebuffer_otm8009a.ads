@@ -23,7 +23,7 @@ package Framebuffer_OTM8009A is
      (Display : Frame_Buffer;
       Mode    : HAL.Framebuffer.FB_Color_Mode) return Boolean;
 
-   overriding procedure Initialize
+   procedure Initialize
      (Display     : in out Frame_Buffer;
       Orientation : HAL.Framebuffer.Display_Orientation := Default;
       Mode        : HAL.Framebuffer.Wait_Mode := Interrupt);

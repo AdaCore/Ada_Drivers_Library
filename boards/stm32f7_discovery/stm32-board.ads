@@ -52,6 +52,11 @@ package STM32.Board is
 
    Green : User_LED renames PI1;
 
+   LED1  : User_LED renames Green;
+   LED2  : User_LED renames Green;
+   LED3  : User_LED renames Green;
+   LED4  : User_LED renames Green;
+
    All_LEDs  : GPIO_Points := (1 => Green);
    LCH_LED   : User_LED renames Green;
 
