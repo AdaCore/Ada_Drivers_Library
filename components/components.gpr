@@ -14,8 +14,8 @@ library project Components is
    for Languages use ("Ada");
    for Library_Name use "components";
    for Library_Kind use "static";
-   for Library_Dir use "lib";
-   for Object_Dir use "obj";
+   for Library_Dir use "lib/" & Config.Build;
+   for Object_Dir use "obj/" & Config.Build;
 
    package Compiler renames Config.Compiler;
    package Builder renames Config.Builder;

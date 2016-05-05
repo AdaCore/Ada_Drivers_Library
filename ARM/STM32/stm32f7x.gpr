@@ -8,8 +8,8 @@ library project STM32F7x is
 
    for Library_Name use "stm32f7";
    for Library_Kind use "static";
-   for Library_Dir use "lib/stm32f7x/" & Config.RTS;
-   for Object_Dir use "obj/stm32f7x/" & Config.RTS;
+   for Library_Dir use "lib/stm32f7x/" & Config.RTS & "/" & Config.Build;
+   for Object_Dir use "obj/stm32f7x/" & Config.RTS & "/" & Config.Build;
 
    for Source_Dirs use
      ("../cortex_m",

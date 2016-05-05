@@ -6,8 +6,8 @@ library project HAL is
    for Languages use ("Ada");
    for Library_Name use "HAL";
    for Library_Kind use "static";
-   for Library_Dir use "lib";
-   for Object_Dir use "obj";
+   for Library_Dir use "lib/" & Config.BUILD;
+   for Object_Dir use "obj/" & Config.BUILD;
 
    package Compiler renames Config.Compiler;
    package Builder renames Config.Builder;
