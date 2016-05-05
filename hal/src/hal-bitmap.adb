@@ -41,7 +41,7 @@ package body HAL.Bitmap is
       Col : constant Word :=
               Bitmap_Color_To_Word (Buffer.Color_Mode, Value);
    begin
-      Set_Pixel (Buffer, X, Y, Col);
+      Set_Pixel (Bitmap_Buffer'Class (Buffer), X, Y, Col);
    end Set_Pixel;
 
    ---------------

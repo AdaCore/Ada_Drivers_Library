@@ -9,7 +9,7 @@ package Framebuffer_RK043FN48H is
 
    type Frame_Buffer is limited new Framebuffer_LTDC.Frame_Buffer with private;
 
-   overriding procedure Initialize
+   procedure Initialize
      (Display     : in out Frame_Buffer;
       Orientation : HAL.Framebuffer.Display_Orientation := Default;
       Mode        : HAL.Framebuffer.Wait_Mode := Interrupt);

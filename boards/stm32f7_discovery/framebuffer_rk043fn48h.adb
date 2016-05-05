@@ -62,7 +62,7 @@ package body Framebuffer_RK043FN48H is
    -- Initialize --
    ----------------
 
-   overriding procedure Initialize
+   procedure Initialize
      (Display     : in out Frame_Buffer;
       Orientation : HAL.Framebuffer.Display_Orientation := Default;
       Mode        : HAL.Framebuffer.Wait_Mode := Interrupt)
