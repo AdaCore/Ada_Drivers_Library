@@ -1,4 +1,4 @@
-with "../../config.gpr";
+with "../config.gpr";
 
 library project HAL is
 
