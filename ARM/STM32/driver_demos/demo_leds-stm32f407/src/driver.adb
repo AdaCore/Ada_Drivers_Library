@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -37,7 +37,7 @@ package body Driver is
 
    type Index is mod 4;
 
-   Pattern : constant array (Index) of User_LED := (Orange, Red, Blue, Green);
+   Pattern : array (Index) of User_LED := (Orange, Red, Blue, Green);
    --  The LEDs are not physically laid out "consecutively" in such a way that
    --  we can simply go in enumeral order to get circular rotation. Thus we
    --  define this mapping, using a consecutive index to get the physical LED
