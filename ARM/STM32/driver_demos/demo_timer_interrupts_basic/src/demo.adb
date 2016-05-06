@@ -29,9 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Basic demo for timer interrupts. On each interrupt the blue LED will blink
---  on the F4 Discovery. We could use the F429 Discovery board with a different
---  LED.
+--  Basic demo for timer interrupts. On each interrupt the green LED will blink
+--  on the Discovery board. Interrupts occur at one second intervals so the LED
+--  will be on for a second, off for a second, and so on, indefinitely.
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 

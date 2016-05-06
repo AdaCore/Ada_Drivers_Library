@@ -1,42 +1,17 @@
-with "../../stm32";
+with "../../../../config.gpr";
+with "../../../../boards/stm32f4_discovery.gpr";
 
-project demo_basic_timer_interrupts is
-
-   type Build_Modes is ("debug", "production");
-   Build_Mode : Build_Modes := external ("Build", "debug");
+project demo_basic_timer_interrupts extends "../../../../examples/common/common.gpr" is
 
    for Languages use ("Ada");
    for Main use ("demo.adb");
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
 
-   for Target use STM32'Target;
-   for Runtime ("Ada") use STM32'Runtime ("Ada");
-
-   package Compiler is
-      case Build_Mode is
-         when "debug" =>
-            for Default_Switches ("ada") use ("-g", "-gnatwa", "-gnata", "-gnatQ", "-gnatw.X"); -- disable warnings about exceptions and LCH
-
-         when "production" =>
-            for Default_Switches ("ada") use ("-O2", "-gnatw.X");
-            for Switches ("last_chance_handler.adb") use ("-gnatw.X", "-g");
-      end case;
-   end Compiler;
-
+   for Runtime ("Ada") use Config.RTS & "-stm32f4";
+ 
    package Builder is
       for Global_Configuration_Pragmas use "gnat.adc";
-
-      case Build_Mode is
-
-         when "debug" =>
-            for Default_Switches ("ada") use ("-g");
-
-         when "production" =>
-            for Default_Switches ("ada") use ();
-      end case;
    end Builder;
-
-   package Ide renames STM32.Ide;
 
 end demo_basic_timer_interrupts;
