@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -183,6 +183,10 @@ begin
      (PWM_Output,
       Channel => Channel_4,
       Point   => Channel_4_Point);
+
+   for C in Timer_Channel loop
+      Enable_PWM_Channel (PWM_Output, C);
+   end loop;
 
    loop
       Drive_LEDs;
