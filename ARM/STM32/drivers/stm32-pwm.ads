@@ -49,6 +49,8 @@
 --        (GPIO_D'Access, Pin_13),  -- must match selected channel
 --        RCC.GPIOD_Clock_Enable'Access);
 --
+--     Enable_PWM_Channel (Output, Channel_2);
+--
 --     Set_Duty_Cycle (Output, Channel_2, Value);
 
 with STM32.GPIO;   use STM32.GPIO;
@@ -75,6 +77,7 @@ package STM32.PWM is
       Channel                : Timer_Channel;
       Point                  : GPIO_Point)
      with Post => Attached (This, Channel) and
+                  not Enabled (This, Channel) and
                   Current_Duty_Cycle (This, Channel) = 0;
    --  Initializes the channel on the timer associated with This, and the
    --  corresponding GPIO port/pin pair, for PWM output. May be called multiple
@@ -84,11 +87,18 @@ package STM32.PWM is
 
    procedure Enable_PWM_Channel
      (This    : in out PWM_Modulator;
-      Channel : Timer_Channel);
+      Channel : Timer_Channel)
+     with Post => Enabled (This, Channel);
+
+   function Enabled
+     (This    : PWM_Modulator;
+      Channel : Timer_Channel)
+      return Boolean;
 
    procedure Disable_PWM_Channel
      (This    : in out PWM_Modulator;
-      Channel : Timer_Channel);
+      Channel : Timer_Channel)
+     with Post => not Enabled (This, Channel);
 
    subtype Percentage is Integer range 0 .. 100;
 
@@ -96,9 +106,11 @@ package STM32.PWM is
      (This    : in out PWM_Modulator;
       Channel : Timer_Channel;
       Value   : Percentage)
-     with Inline,
-          Pre  => Attached (This, Channel) or else raise Not_Attached,
-          Post => Current_Duty_Cycle (This, Channel) = Value;
+     with
+       Inline,
+       Pre  => (Attached (This, Channel) or else raise Not_Attached) and
+               Enabled (This, Channel),
+       Post => Current_Duty_Cycle (This, Channel) = Value;
    --  Sets the pulse width such that the requested percentage is achieved.
 
    function Current_Duty_Cycle
@@ -113,8 +125,10 @@ package STM32.PWM is
      (This    : in out PWM_Modulator;
       Channel : Timer_Channel;
       Value   : Microseconds)
-     with Inline,
-          Pre => Attached (This, Channel) or else raise Not_Attached;
+     with
+       Inline,
+       Pre => (Attached (This, Channel) or else raise Not_Attached) and
+              Enabled (This, Channel);
    --  Set the pulse width such that the requested number of microseconds is
    --  achieved. Raises Invalid_Request if the requested time is greater than
    --  the period previously configured via Initialise_PWM_Modulator.
@@ -131,9 +145,10 @@ package STM32.PWM is
 
    Not_Attached : exception;
 
-   function Attached (This    : PWM_Modulator;
-                      Channel : Timer_Channel)
-                      return Boolean;
+   function Attached
+     (This    : PWM_Modulator;
+      Channel : Timer_Channel)
+      return Boolean;
 
 private
 

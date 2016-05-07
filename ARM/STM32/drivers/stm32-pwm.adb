@@ -184,7 +184,12 @@ package body STM32.PWM is
 
       Set_Compare_Value (This.Output_Timer.all, Channel, Short (0));
 
+      Disable_Channel (This.Output_Timer.all, Channel);
    end Attach_PWM_Channel;
+
+   ------------------------
+   -- Enable_PWM_Channel --
+   ------------------------
 
    procedure Enable_PWM_Channel
      (This    : in out PWM_Modulator;
@@ -194,6 +199,23 @@ package body STM32.PWM is
       Enable_Channel (This.Output_Timer.all, Channel);
    end Enable_PWM_Channel;
 
+   -------------
+   -- Enabled --
+   -------------
+
+   function Enabled
+     (This    : PWM_Modulator;
+      Channel : Timer_Channel)
+      return Boolean
+   is
+   begin
+      return Channel_Enabled (This.Output_Timer.all, Channel);
+   end Enabled;
+
+   -------------------------
+   -- Disable_PWM_Channel --
+   -------------------------
+
    procedure Disable_PWM_Channel
      (This    : in out PWM_Modulator;
       Channel : Timer_Channel)
@@ -202,15 +224,16 @@ package body STM32.PWM is
       Disable_Channel (This.Output_Timer.all, Channel);
    end Disable_PWM_Channel;
 
-
    --------------
    -- Attached --
    --------------
 
-   function Attached (This : PWM_Modulator;
-                      Channel : Timer_Channel)
-                      return Boolean
-   is (This.Outputs (Channel).Attached);
+   function Attached
+     (This : PWM_Modulator;
+      Channel : Timer_Channel)
+      return Boolean
+   is
+     (This.Outputs (Channel).Attached);
 
    ------------------------
    -- Configure_PWM_GPIO --
