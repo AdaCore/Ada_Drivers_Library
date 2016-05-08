@@ -29,17 +29,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  A simple example that blinks all the LEDs simultaneously, w/o tasking. It
---  does not use the "board" packages and so works directly with the platform
---  package STM32F40xx and the GPIO driver to control the LEDs.
+--  A simple example that blinks all the LEDs simultaneously, w/o tasking.
+--  It does not use the various convenience functions defined elsewhere, but
+--  instead works directly with the GPIO driver to configure and control the
+--  LEDs.
 
---  Note that this is set up for an STM32F4_Discovery board because it uses
---  four LEDs, but it would be trivial to change it to another board. The
---  F4_Disco board is based on an STM32F405 MCU so we use the STM32F40xxx
---  package to get the GPIO port GPIO_D for the LEDs.
---
---  Note that using the STM32F4_Discovery package would make this even easier
---  but that is not what this program demonstrates.
+--  Note that this code is independent of the specific MCU device and board
+--  in use because we use names and constants that are common across all of
+--  them. For example, "All_LEDs" refers to different GPIO pins on different
+--  boards, and indeed defines a different number of LEDs on different boards.
+--  The gpr file determines which board is actually used.
 
 with STM32.Device;  use STM32.Device;
 with STM32.Board;   use STM32.Board;
@@ -54,7 +53,11 @@ procedure Demo_GPIO is
    Period : constant Time_Span := Milliseconds (250);
    Next   : Time := Clock;
 
-   Enabled : Boolean := False;
+   procedure Initialize_LEDs;
+   --  Configures the GPIO pins and port connected to the LEDs on the board
+   --  in use so that we can drive them via GPIO commands. Note that the board
+   --  package provides a procedure to do this directly, for convenience, but
+   --  we do not use it here for the sake of illustration.
 
    procedure Initialize_LEDs is
       Configuration : GPIO_Port_Configuration;
@@ -65,19 +68,15 @@ procedure Demo_GPIO is
       Configuration.Output_Type := Push_Pull;
       Configuration.Speed       := Speed_100MHz;
       Configuration.Resistors   := Floating;
-      Configure_IO (All_LEDs, Config => Configuration);
+      Configure_IO (All_LEDs, Configuration);
    end Initialize_LEDs;
 
 begin
    Initialize_LEDs;
 
    loop
-      if Enabled then
-         Set (All_LEDs);
-      else
-         Clear (All_LEDs);
-      end if;
-      Enabled := not Enabled;
+      Toggle (All_LEDs);
+
       Next := Next + Period;
       delay until Next;
    end loop;
