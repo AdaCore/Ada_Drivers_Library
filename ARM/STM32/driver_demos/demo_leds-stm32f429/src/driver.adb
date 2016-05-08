@@ -37,7 +37,7 @@ package body Driver is
 
    type Index is mod 2;
 
-   Pattern : constant array (Index) of User_LED := (Red, Green);
+   Pattern : array (Index) of User_LED := (Red, Green);
 
    task body Controller is
       Period1    : constant Time_Span := Milliseconds (75);  -- arbitrary

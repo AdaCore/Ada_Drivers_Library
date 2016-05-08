@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -30,41 +30,52 @@
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time; use Ada.Real_Time;
-with STM32.Board;   use STM32.Board;
-with STM32.GPIO;    use STM32.GPIO;
 with STM32.SYSCFG;  use STM32.SYSCFG;
+with STM32.GPIO;    use STM32.GPIO;
+with STM32.Board;   use STM32.Board;
+with STM32.EXTI;    use STM32.EXTI;
 
 package body Button is
 
-   ------------
-   -- Button --
-   ------------
+   procedure Initialize;
 
-   protected Button is
+   -----------------
+   -- User_Button --
+   -----------------
+
+   protected User_Button is
       pragma Interrupt_Priority;
 
       function Current_Direction return Directions;
 
    private
+
       procedure Interrupt_Handler;
       pragma Attach_Handler (Interrupt_Handler, User_Button_Interrupt);
 
       Direction : Directions := Clockwise;  -- arbitrary
       Last_Time : Time := Clock;
-   end Button;
+
+   end User_Button;
 
    Debounce_Time : constant Time_Span := Milliseconds (500);
 
-   ------------
-   -- Button --
-   ------------
+   -----------------
+   -- User_Button --
+   -----------------
 
-   protected body Button is
+   protected body User_Button is
+
+      -----------------------
+      -- Current_Direction --
+      -----------------------
 
       function Current_Direction return Directions is
-      begin
-         return Direction;
-      end Current_Direction;
+         (Direction);
+
+      -----------------------
+      -- Interrupt_Handler --
+      -----------------------
 
       procedure Interrupt_Handler is
          Now : constant Time := Clock;
@@ -78,11 +89,12 @@ package body Button is
             else
                Direction := Counterclockwise;
             end if;
+
             Last_Time := Now;
          end if;
       end Interrupt_Handler;
 
-   end Button;
+   end User_Button;
 
    -----------------------
    -- Current_Direction --
@@ -90,7 +102,7 @@ package body Button is
 
    function Current_Direction return Directions is
    begin
-      return Button.Current_Direction;
+      return User_Button.Current_Direction;
    end Current_Direction;
 
    ----------------
