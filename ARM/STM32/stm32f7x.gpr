@@ -22,7 +22,8 @@ library project STM32F7x is
       "drivers/fmc",
       "drivers/dma2d",
       "drivers/ltdc",
-      "drivers/sai");
+      "drivers/sai",
+      "drivers/sdmmc");
 
    package Compiler renames Config.Compiler;
    package Builder renames Config.Builder;
