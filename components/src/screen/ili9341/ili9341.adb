@@ -77,8 +77,10 @@ package body ILI9341 is
    -- Initialize --
    ----------------
 
-   procedure Initialize (This : in out ILI9341_Device;
-                         Mode : ILI9341_Mode) is
+   procedure Initialize
+     (This : in out ILI9341_Device;
+      Mode : ILI9341_Mode)
+   is
    begin
       if This.Initialized then
          return;
@@ -99,10 +101,12 @@ package body ILI9341 is
    -- Set_Pixel --
    ---------------
 
-   procedure Set_Pixel (This  : in out ILI9341_Device;
-                        X     : Width;
-                        Y     : Height;
-                        Color : Colors) is
+   procedure Set_Pixel
+     (This  : in out ILI9341_Device;
+      X     : Width;
+      Y     : Height;
+      Color : Colors)
+   is
       Color_High_Byte : constant Byte :=
         Byte (Shift_Right (As_Short (Color), 8));
       Color_Low_Byte  : constant Byte :=

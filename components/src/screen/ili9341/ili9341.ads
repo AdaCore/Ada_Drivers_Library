@@ -42,10 +42,6 @@
 --  STM32F429 Discovery boards, among others. Support does not include the
 --  TFT hardware.
 
---  The package is an abstract data machine, i.e., it contains state info
---  representing the current configuration of the device. This state info
---  can be queried by the functions provided.
-
 --  See the "a-Si TFT LCD Single Chip Driver" specification by ILITEK, file
 --  name "ILI9341_DS_V1.02" for details.
 
@@ -54,6 +50,27 @@ with HAL.SPI;  use HAL.SPI;
 with HAL.GPIO; use HAL.GPIO;
 
 package ILI9341 is
+
+   type ILI9341_Device
+     (Port        : not null access SPI_Port'Class;
+      Chip_Select : GPIO_Point_Ref;
+      WRX         : GPIO_Point_Ref;
+      Reset       : GPIO_Point_Ref)
+   is tagged limited private;
+
+   type ILI9341_Mode is
+     (RGB_Mode,
+      SPI_Mode);
+
+   procedure Initialize
+     (This : in out ILI9341_Device;
+      Mode : ILI9341_Mode);
+   --  Initializes the device. Afterward, the device is also enabled so there
+   --  is no immediate need to call Enable_Display.
+
+   procedure Send_Command (This : in out ILI9341_Device; Cmd : Byte);
+
+   procedure Send_Data (This : in out ILI9341_Device; Data : Byte);
 
    Device_Width  : constant := 240;
    Device_Height : constant := 320;
@@ -96,28 +113,11 @@ package ILI9341 is
       Yellow      => 16#FFE0#,
       White       => 16#FFFF#);
 
-   type ILI9341_Mode is
-     (RGB_Mode,
-      SPI_Mode);
-
-   type ILI9341_Device (Port        : not null access SPI_Port'Class;
-                        Chip_Select : GPIO_Point_Ref;
-                        WRX         : GPIO_Point_Ref;
-                        Reset       : GPIO_Point_Ref)
-   is tagged limited private;
-
-   procedure Initialize (This : in out ILI9341_Device;
-                         Mode : ILI9341_Mode);
-   --  Initializes the device. Afterward, the device is also enabled so there
-   --  is no immediate need to call Enable_Display.
-
-   procedure Send_Command (This : in out ILI9341_Device; Cmd : Byte);
-   procedure Send_Data (This : in out ILI9341_Device; Data : Byte);
-
-   procedure Set_Pixel (This  : in out ILI9341_Device;
-                        X     : Width;
-                        Y     : Height;
-                        Color : Colors) with Inline;
+   procedure Set_Pixel
+     (This  : in out ILI9341_Device;
+      X     : Width;
+      Y     : Height;
+      Color : Colors) with Inline;
 
    procedure Fill (This : in out ILI9341_Device; Color : Colors);
 
@@ -128,8 +128,9 @@ package ILI9341 is
       Landscape_1,  -- origin at lower left, text going up
       Landscape_2); -- origin at upper right, text going down
 
-   procedure Set_Orientation (This : in out ILI9341_Device;
-                              To   : Orientations);
+   procedure Set_Orientation
+     (This : in out ILI9341_Device;
+      To   : Orientations);
 
    procedure Enable_Display (This : in out ILI9341_Device);
 
@@ -147,10 +148,11 @@ package ILI9341 is
 
 private
 
-   type ILI9341_Device (Port        : not null access SPI_Port'Class;
-                        Chip_Select : GPIO_Point_Ref;
-                        WRX         : GPIO_Point_Ref;
-                        Reset       : GPIO_Point_Ref)
+   type ILI9341_Device
+     (Port        : not null access SPI_Port'Class;
+      Chip_Select : GPIO_Point_Ref;
+      WRX         : GPIO_Point_Ref;
+      Reset       : GPIO_Point_Ref)
    is tagged limited record
       Selected_Orientation : Orientations;
 
@@ -171,7 +173,7 @@ private
      with Inline;
 
    procedure Chip_Select_High (This : in out ILI9341_Device) with Inline;
-   procedure Chip_Select_Low (This : in out ILI9341_Device) with Inline;
+   procedure Chip_Select_Low  (This : in out ILI9341_Device) with Inline;
 
    procedure Init_LCD (This : in out ILI9341_Device;
                        Mode : ILI9341_Mode);
