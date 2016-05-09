@@ -29,11 +29,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This file declares the main procedure for a timer demonstration using four
---  channels generating interrupts at different rates. Four LEDs are driven at
---  these different rates, without a periodic software task required. We use
---  the F4_Disco board for the sake of the four LEDs but another board could
---  be used, with different LED configurations.
+--  This program demonstrates using one timer to generate several periodic
+--  interrupts, each with a different period.  Each interrupt is tied to a
+--  separate LED such that the LED blinks at the corresponding rate.
+
+--  This file declares the main procedure for the demonstration.
+
+--  We use the STM F4 Discovery board for the sake of the four LEDs but another board could be
+--  used, with different LED configurations. Using a board with fewer LEDs is
+--  possible but less interesting. In that case, change the number of channels
+--  driven (and interrupts generated) to match the number of LEDs available.
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 
@@ -41,9 +46,9 @@ with STM32.Board;              use STM32.Board;
 with STM32.Device;             use STM32.Device;
 with STM32.Timers;             use STM32.Timers;
 with STM32F4_Timer_Interrupts; use STM32F4_Timer_Interrupts;
+with HAL;                      use HAL;
 
 procedure Demo is
-   use STM32;
 begin
    Initialize_LEDs;
 
@@ -56,7 +61,7 @@ begin
    Configure
      (Timer_3,
       Prescaler     => Prescaler,
-      Period        => Word (Half_Word'Last),  -- all the way up
+      Period        => Word (Short'Last),  -- all the way up
       Clock_Divisor => Div1,
       Counter_Mode  => Up);
 

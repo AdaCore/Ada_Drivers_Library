@@ -1,44 +1,23 @@
-with "../../stm32";
+--  This demo is intended for the F4 Discovery board because it uses all four
+--  LEDs. Using four LEDs is not a functional necessity but driving only one or
+--  two LEDs would not be that interesting. If you use a different target with
+--  fewer LEDs, change the number of interrupts generated to match only the
+--  number of LEDs available.
 
-project demo_timer_interrupts_multichannel is
+with "../../../../config.gpr";
+with "../../../../boards/stm32f4_discovery.gpr";
 
-   type Build_Modes is ("debug", "production");
-   Build_Mode : Build_Modes := external ("Build", "debug");
+project demo_timer_interrupts_multichannel extends "../../../../examples/common/common.gpr" is
 
    for Languages use ("Ada");
    for Main use ("demo.adb");
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
 
-   for Target use STM32'Target;
-   for Runtime ("Ada") use STM32'Runtime ("Ada");
-
-   package Compiler is
-
-      case Build_Mode is
-
-         when "debug" =>
-            for Default_Switches ("ada") use ("-g", "-gnatwa", "-gnata", "-gnatQ", "-gnatw.X"); -- disable warnings about exceptions and LCH
-
-         when "production" =>
-            for Default_Switches ("ada") use ("-O2", "-gnatw.X");
-            for Switches ("last_chance_handler.adb") use ("-gnatw.X", "-g");
-      end case;
-   end Compiler;
+   for Runtime ("Ada") use Config.RTS & "-stm32f4";
 
    package Builder is
       for Global_Configuration_Pragmas use "gnat.adc";
-
-      case Build_Mode is
-
-         when "debug" =>
-            for Default_Switches ("ada") use ("-g");
-
-         when "production" =>
-            for Default_Switches ("ada") use ();
-      end case;
    end Builder;
-
-   package Ide renames STM32.Ide;
 
 end demo_timer_interrupts_multichannel;

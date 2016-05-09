@@ -29,6 +29,13 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  This demo uses four channels of a single timer to make four LEDs blink
+--  at four different rates, without requiring periodic tasks to drive them.
+--  Because it uses four LEDs it runs on the STM32F4_Discovery board. Using
+--  a board with fewer LEDs is possible but less interesting. In that case,
+--  change the number of channels driven (and interrupts generated) to match
+--  the number of LEDs available.
+
 --  The file declares the interrupt handler and the timer values for the
 --  demonstration.
 
@@ -38,15 +45,9 @@ with Interfaces;           use Interfaces;
 with STM32;                use STM32;
 with STM32.Device;         use STM32.Device;
 with STM32.Timers;         use STM32.Timers;
+with HAL;                  use HAL;
 
 package STM32F4_Timer_Interrupts is
-
-   --  This demo uses four channels of a timer to make four LEDs blink at four
-   --  different rates, without requiring periodic tasks to drive them. Because
-   --  it uses four LEDs it uses the STM32F4_Discovery board (as seen in
-   --  the package body) but fewer LEDs could be used, e.g. the two on the
-   --  STM32F429_Discovery board (alhough that would be less interesting
-   --  since there would only be two rates involved).
 
    --  These values are set so that we get the four LEDs blinking at the
    --  desired rates indicated below. The specific LEDs (colors) associated
@@ -56,12 +57,12 @@ package STM32F4_Timer_Interrupts is
 
    SystemCoreClock : constant Word := System_Clock_Frequencies.SYSCLK;
 
-   Prescaler : constant Half_Word := Half_Word (((SystemCoreClock / 2) / 6000) - 1);
+   Prescaler : constant Short := Short (((SystemCoreClock / 2) / 6000) - 1);
 
-   Channel_1_Period : constant := 6000 - 1;                          -- 1 second
-   Channel_2_Period : constant := ((Channel_1_Period + 1) / 2) - 1;  -- 1/2 second
-   Channel_3_Period : constant := ((Channel_2_Period + 1) / 2) - 1;  -- 1/4 second
-   Channel_4_Period : constant := ((Channel_3_Period + 1) / 2) - 1;  -- 1/8 second
+   Channel_1_Period : constant := 6000 - 1;                          -- 1 sec
+   Channel_2_Period : constant := ((Channel_1_Period + 1) / 2) - 1;  -- 1/2 sec
+   Channel_3_Period : constant := ((Channel_2_Period + 1) / 2) - 1;  -- 1/4 sec
+   Channel_4_Period : constant := ((Channel_3_Period + 1) / 2) - 1;  -- 1/8 sec
 
    --  A convenience array for the sake of using a loop to configure the timer
    --  channels

@@ -45,12 +45,12 @@ package body STM32F4_Timer_Interrupts is
       -----------------
 
       procedure IRQ_Handler is
-         Current : Half_Word;
+         Current : Short;
       begin
          if Status (Timer_3, Timer_CC1_Indicated) then
             Clear_Pending_Interrupt (Timer_3, Timer_CC1_Interrupt);
 
-            Toggle (Green);
+            Toggle (Blue);
 
             Current := Current_Capture_Value (Timer_3, Channel_1);
             Set_Compare_Value (Timer_3, Channel_1, Current + Channel_1_Period);
@@ -68,7 +68,7 @@ package body STM32F4_Timer_Interrupts is
          if Status (Timer_3, Timer_CC3_Indicated) then
             Clear_Pending_Interrupt (Timer_3, Timer_CC3_Interrupt);
 
-            Toggle (Red);
+            Toggle (Orange);
 
             Current := Current_Capture_Value (Timer_3, Channel_3);
             Set_Compare_Value (Timer_3, Channel_3, Current + Channel_3_Period);
