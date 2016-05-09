@@ -10,8 +10,4 @@ project Demo_Leds extends "../../../../examples/common/common.gpr" is
   for Source_Dirs use ("src");
   for Object_Dir use "obj";
 
-  package Linker is
-     for Default_Switches ("Ada") use ("-Wl,--print-memory-usage");
-  end Linker;
-
 end Demo_Leds;
