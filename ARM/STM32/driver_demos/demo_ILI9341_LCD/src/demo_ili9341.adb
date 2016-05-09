@@ -30,56 +30,106 @@
 ------------------------------------------------------------------------------
 
 --  This program demonstrates some basic functionality of the ILI9341 LCD
---  component driver, combined with the Bitmapped_Drawing generic package.
+--  component driver. Note that much higher level facilities are available.
+--  This program simply demonstrates the basic setup requirements for the
+--  device itself.
 
-with STM32.GPIO;         use STM32.GPIO;
-
-with Bitmapped_Drawing;
-with STM32.ILI9341;
-with BMP_Fonts;          use BMP_Fonts;
-
-with STM32.Device;       use STM32.Device;
+with ILI9341;      use ILI9341;
+with STM32.Device; use STM32.Device;
+with STM32.SPI;    use STM32.SPI;
+with HAL.SPI;
+with STM32.GPIO;   use STM32.GPIO;
 
 procedure Demo_ILI9341 is
 
-   package LCD renames STM32.ILI9341; use LCD;
+   LCD_SPI     : SPI_Port renames SPI_5;
+   LCD_CSX     : STM32.GPIO.GPIO_Point renames PC2;
+   LCD_WRX_DCX : STM32.GPIO.GPIO_Point renames PD13;
+   LCD_RESET   : STM32.GPIO.GPIO_Point renames PD12;
 
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => LCD.Colors,
-      Set_Pixel => LCD.Set_Pixel);
+   SPI5_SCK    : GPIO_Point renames PF7;
+   SPI5_MISO   : GPIO_Point renames PF8;
+   SPI5_MOSI   : GPIO_Point renames PF9;
 
-   use LCD_Drawing;
+   LCD : ILI9341_Device
+     (STM32.Device.SPI_5'Access,
+      Chip_Select => LCD_CSX'Access,
+      WRX         => LCD_WRX_DCX'Access,
+      Reset       => LCD_RESET'Access);
+
+   procedure Init_SPI;
+   procedure Init_LCD_GPIO_Pins;
+
+   --------------
+   -- Init_SPI --
+   --------------
+
+   procedure Init_SPI is
+      Conf     : GPIO_Port_Configuration;
+      SPI_Conf : SPI_Configuration;
+      SPI_Pins : constant GPIO_Points := (SPI5_SCK, SPI5_MOSI, SPI5_MISO);
+
+   begin
+      Enable_Clock (SPI_Pins);
+      Enable_Clock (LCD_SPI);
+
+      Conf.Speed       := Speed_100MHz;
+      Conf.Mode        := Mode_AF;
+      Conf.Output_Type := Push_Pull;
+      Conf.Resistors   := Floating;
+
+      Configure_Alternate_Function (SPI_Pins, GPIO_AF_SPI5);
+      Configure_IO (SPI_Pins, Conf);
+
+      Reset (LCD_SPI);
+
+      SPI_Conf :=
+        (Direction           => D2Lines_FullDuplex,
+         Mode                => Master,
+         Data_Size           => HAL.SPI.Data_Size_8b,
+         Clock_Polarity      => Low,
+         Clock_Phase         => P1Edge,
+         Slave_Management    => Software_Managed,
+         Baud_Rate_Prescaler => BRP_32,
+         First_Bit           => MSB,
+         CRC_Poly            => 7);
+
+      Configure (LCD_SPI, SPI_Conf);
+
+      STM32.SPI.Enable (LCD_SPI);
+   end Init_SPI;
+
+   ------------------------
+   -- Init_LCD_GPIO_Pins --
+   ------------------------
+
+   procedure Init_LCD_GPIO_Pins is
+   begin
+      Enable_Clock (GPIO_Points'(LCD_CSX, LCD_WRX_DCX));
+
+      Configure_IO
+        (Points => (LCD_CSX, LCD_WRX_DCX, LCD_RESET),
+         Config => (Speed       => Speed_50MHz,
+                    Mode        => Mode_Out,
+                    Output_Type => Push_Pull,
+                    Resistors   => Floating));
+   end Init_LCD_GPIO_Pins;
 
 begin
-   LCD.Initialize
-     (Chip_Select             => PC2,
-      WRX                     => PD13,
-      Reset                   => PD12,
-      SPI_Chip                => SPI_5'Access,
-      SPI_AF                  => GPIO_AF_SPI5,
-      SCK_Pin                 => PF7,
-      MISO_Pin                => PF8,
-      MOSI_Pin                => PF9);
+   Init_LCD_GPIO_Pins;
+   Set (LCD_CSX);  -- deselect the chip
+   Init_SPI;
 
-   LCD.Set_Orientation (To => LCD.Portrait_2);
-   LCD.Fill (Color => LCD.Orange);
+   Initialize (LCD, Mode => ILI9341.SPI_Mode);
 
-   declare
-      Chars : constant String := "abcdefghijkl";
-   begin
-      Draw_String
-        (Start      => (0, 0),
-         Msg        => Chars,
-         Font       => Font16x24,
-         Foreground => Black,
-         Background => Orange);
-   end;
+   Set_Orientation (LCD, To => Portrait_2);
 
-   Draw_Circle
-     (Center => (40, 220),
-      Radius => 20,
-      Hue    => Blue,
-      Fill   => True);
+   Fill (LCD, Color => White);
+
+   --  draw an arbitrary line
+   for K in 1 .. 200 loop
+      Set_Pixel (LCD, X => 10, Y => K, Color => Black);
+   end loop;
 
    loop
       null;
