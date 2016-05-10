@@ -32,6 +32,9 @@
 --  This program demonstrates reading the VBat (battery voltage) value from
 --  an ADC unit, using DMA.
 
+--  The programs displays the battery voltage value so it assumes a display of
+--  some sort (i.e., LCD_Std_Out).
+
 --  Note that you will likely need to reset the board manually after loading.
 
 with Ada.Real_Time; use Ada.Real_Time;
@@ -39,16 +42,15 @@ with Interfaces;    use Interfaces;
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
-with STM32.Board;   use STM32.Board;
-with STM32.Device;  use STM32.Device;
-with STM32;         use STM32;
-with STM32.ADC;     use STM32.ADC;
-with STM32.DMA;     use STM32.DMA;
-with STM32.GPIO;    use STM32.GPIO;
+with STM32.Board;  use STM32.Board;
+with STM32.Device; use STM32.Device;
 
-with STM32.ILI9341;
-with Bitmapped_Drawing;
-with BMP_Fonts;
+with HAL;         use HAL;
+with STM32.ADC;   use STM32.ADC;
+with STM32.DMA;   use STM32.DMA;
+with STM32.GPIO;  use STM32.GPIO;
+
+with LCD_Std_Out;
 
 procedure Demo_ADC_VBat_DMA is
 
@@ -56,16 +58,13 @@ procedure Demo_ADC_VBat_DMA is
 
    Stream : constant DMA_Stream_Selector := Stream_0;
 
-   Counts  : Half_Word;
+   Counts  : Short;
    Voltage : Word;  -- in millivolts
 
-   -----------------
-   -- LCD_Drawing --
-   -----------------
+   procedure Print (X, Y : Natural; Value : Word; Suffix : String := "");
 
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => STM32.ILI9341.Colors,
-      Set_Pixel => STM32.ILI9341.Set_Pixel);
+   procedure Initialize_DMA;
+   procedure Initialize_ADC;
 
    -----------
    -- Print --
@@ -73,14 +72,8 @@ procedure Demo_ADC_VBat_DMA is
 
    procedure Print (X, Y : Natural; Value : Word; Suffix : String := "") is
       Value_Image : constant String := Value'Img;
-      use LCD_Drawing, BMP_Fonts, STM32.ILI9341;
    begin
-      Draw_String
-        ((X, Y),
-         Msg        => Value_Image (2 .. Value_Image'Last) & Suffix & "   ",
-         Font       => Font16x24,  -- arbitrary
-         Foreground => White,      -- arbitrary
-         Background => Black);     -- arbitrary
+      LCD_Std_Out.Put (X, Y, Value_Image (2 .. Value_Image'Last) & Suffix & "   ");
    end Print;
 
    --------------------
@@ -148,8 +141,6 @@ procedure Demo_ADC_VBat_DMA is
 
 begin
    Initialize_LEDs;
-   Initialize_LCD_Hardware;
-   STM32F4.ILI9341.Set_Orientation (To => STM32F4.ILI9341.Portrait_2);
 
    Initialize_DMA;
 
