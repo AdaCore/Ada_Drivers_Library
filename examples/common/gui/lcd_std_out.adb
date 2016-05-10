@@ -69,12 +69,11 @@ package body LCD_Std_Out is
    procedure Internal_Put (Msg : Character);
    --  Puts a new character in the frame buffer.
 
-   ------------------------
-   -- Assert_Initialized --
-   ------------------------
+   -----------------------
+   -- Check_Initialized --
+   -----------------------
 
-   procedure Check_Initialized
-   is
+   procedure Check_Initialized is
    begin
       if Initialized then
          return;
@@ -132,8 +131,7 @@ package body LCD_Std_Out is
    -- Clear_Screen --
    ------------------
 
-   procedure Clear_Screen
-   is
+   procedure Clear_Screen is
    begin
       Check_Initialized;
       Display.Get_Hidden_Buffer (1).Fill (Current_Background_Color);
@@ -171,8 +169,7 @@ package body LCD_Std_Out is
    -- Draw_Char --
    ---------------
 
-   procedure Draw_Char (X, Y : Natural; Msg : Character)
-   is
+   procedure Draw_Char (X, Y : Natural; Msg : Character) is
    begin
       Check_Initialized;
       Bitmapped_Drawing.Draw_Char

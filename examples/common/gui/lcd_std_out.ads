@@ -27,60 +27,43 @@
 with STM32.GPIO; use STM32.GPIO;
 with STM32.SPI;  use STM32.SPI;
 
-with STM32.Device;       use STM32.Device;
-with BMP_Fonts;          use BMP_Fonts;
+with STM32.Device;  use STM32.Device;
+with BMP_Fonts;     use BMP_Fonts;
 
 with HAL.Bitmap;
 with HAL.Framebuffer;
 
 package LCD_Std_Out is
 
-   Black       : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.Black;
-   Blue        : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.Blue;
-   Light_Blue  : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.Light_Blue;
-   Green       : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.Green;
-   Cyan        : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.Cyan;
-   Gray        : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.Gray;
-   Magenta     : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.Magenta;
-   Light_Green : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.Light_Green;
-   Brown       : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.Brown;
-   Red         : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.Red;
-   Orange      : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.Orange;
-   Yellow      : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.Yellow;
-   White       : HAL.Bitmap.Bitmap_Color renames
-                   HAL.Bitmap.White;
+   Black       : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.Black;
+   Blue        : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.Blue;
+   Light_Blue  : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.Light_Blue;
+   Green       : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.Green;
+   Cyan        : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.Cyan;
+   Gray        : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.Gray;
+   Magenta     : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.Magenta;
+   Light_Green : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.Light_Green;
+   Brown       : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.Brown;
+   Red         : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.Red;
+   Orange      : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.Orange;
+   Yellow      : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.Yellow;
+   White       : HAL.Bitmap.Bitmap_Color renames HAL.Bitmap.White;
 
-   Default_Text_Color       : constant HAL.Bitmap.Bitmap_Color :=
-     White;
-   Default_Background_Color : constant HAL.Bitmap.Bitmap_Color :=
-     Black;
+   Default_Text_Color       : constant HAL.Bitmap.Bitmap_Color := White;
+   Default_Background_Color : constant HAL.Bitmap.Bitmap_Color := Black;
    Default_Font             : constant BMP_Font := Font16x24;
 --     Default_Orientation      : constant LCD.Orientations := LCD.Portrait_2;
 
    --  Changes to these current values will appear on subsequent calls to the
    --  output routines.
-   Current_Text_Color       : HAL.Bitmap.Bitmap_Color :=
-                                Default_Text_Color;
-   Current_Background_Color : HAL.Bitmap.Bitmap_Color :=
-                                Default_Background_Color;
+   Current_Text_Color       : HAL.Bitmap.Bitmap_Color := Default_Text_Color;
+   Current_Background_Color : HAL.Bitmap.Bitmap_Color := Default_Background_Color;
 
-   procedure Set_Font (To : in BMP_Font);
+   procedure Set_Font (To : BMP_Font);
    --  Changes the current font setting so that subsequent output is in the
    --  specified font.
 
-   procedure Set_Orientation (To : in HAL.Framebuffer.Display_Orientation);
+   procedure Set_Orientation (To : HAL.Framebuffer.Display_Orientation);
    --  Configures the screen orientation and fills the screen with the current
    --  background color. All previously displayed content is lost.
 
