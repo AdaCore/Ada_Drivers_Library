@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -31,6 +31,8 @@
 
 package body Motor is
 
+   procedure Initialize;
+
    -----------------------
    -- Current_Direction --
    -----------------------
@@ -60,8 +62,8 @@ package body Motor is
    procedure Initialize is
       Configuration : GPIO_Port_Configuration;
    begin
-      Enable_Clock (Encoder_Tach0_Port);
-      Enable_Clock (Encoder_Tach1_Port);
+      Enable_Clock (Encoder_Tach0);
+      Enable_Clock (Encoder_Tach1);
 
       Enable_Clock (Encoder_Timer);
 
@@ -70,11 +72,11 @@ package body Motor is
       Configuration.Resistors := Pull_Up;
       Configuration.Speed := Speed_100MHz;
 
-      Configure_IO (Encoder_Tach0_Port, Encoder_Tach0_Pin, Configuration);
-      Configure_Alternate_Function (Encoder_Tach0_Port, Encoder_Tach0_Pin, Encoder_AF);
+      Configure_IO (Encoder_Tach0, Configuration);
+      Configure_Alternate_Function (Encoder_Tach0, Encoder_AF);
 
-      Configure_IO (Encoder_Tach1_Port, Encoder_Tach1_Pin, Configuration);
-      Configure_Alternate_Function (Encoder_Tach1_Port, Encoder_Tach1_Pin, Encoder_AF);
+      Configure_IO (Encoder_Tach1, Configuration);
+      Configure_Alternate_Function (Encoder_Tach1, Encoder_AF);
 
       Configure_Encoder_Interface
         (Encoder_Timer,
@@ -85,7 +87,7 @@ package body Motor is
       Configure
         (Encoder_Timer,
          Prescaler     => 0,
-         Period        => Word (Half_Word'Last),
+         Period        => Word (Short'Last),
          Clock_Divisor => Div1,
          Counter_Mode  => Up);
 
@@ -108,7 +110,7 @@ package body Motor is
       Enable_Channel (Encoder_Timer, Channel_1);
       Enable_Channel (Encoder_Timer, Channel_2);
 
-      Set_Counter (Encoder_Timer, Half_Word'(0));
+      Set_Counter (Encoder_Timer, Short'(0));
 
       Enable (Encoder_Timer);
    end Initialize;

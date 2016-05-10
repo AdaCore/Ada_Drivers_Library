@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,7 +29,15 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Emulate a quadrature encoder's outputs
+--  This package provides a software emulation for a hardware quadrature
+--  encoder, as if attached to a motor. It is a state machine in effect, in
+--  that clients can start and stop it, and control the emulated direction
+--  produced on the two output signals. It uses a timer to produce the two
+--  emilated signals.
+
+--  The output signals are produced on two timer output channels connected to
+--  the two GPIO pins indicated below. These pins are expected to be connected
+--  by jumper wires to two other GPIO pins used by the "decoder" software.
 
 --       -------------
 --      |             |CH1:PC6
@@ -53,7 +61,7 @@ with Interfaces;    use Interfaces;
 with STM32.Device;  use STM32.Device;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.Timers;  use STM32.Timers;
-with STM32;         use STM32;
+with HAL;           use HAL;
 
 package Encoder_Emulator is
    pragma Elaborate_Body;
@@ -69,13 +77,11 @@ package Encoder_Emulator is
 
 private
 
-   Emulator_Port  : GPIO_Port renames GPIO_C;
-
-   Emulator_Pins  : constant GPIO_Pins := Pin_6 & Pin_7;
+   Emulator_Points : GPIO_Points := PC6 & PC7;
 
    Emulator_Timer : Timer renames Timer_3;
 
-   Emulator_AF    : constant GPIO_Alternate_Function := GPIO_AF_TIM3;
+   Emulator_AF : constant GPIO_Alternate_Function := GPIO_AF_TIM3;
 
    Emulator_Period : constant Word := ((System_Clock_Frequencies.SYSCLK / 4) / 10000) - 1;
 

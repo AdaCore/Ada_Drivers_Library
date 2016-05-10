@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,10 +29,23 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  This package acts as if it is a motor containing a quadrature encoder. As
+--  such, one can query the current wheel rotation direction, which is based
+--  on the internal encoder inputs.
+
+--  It is this package that contains and manages the timer that is in quad
+--  encoder mode, taking the two signals as inputs and providing the counts
+--  and direction information. In effect is is decoding the hardware signals
+--  produced by the encoder hardware, but they are not known as "decoders" in
+--  the industry.
+
+--  The set up and use of the timer in this "encoder mode" is the purpose of
+--  the demonstration.
+
 with STM32.GPIO;         use STM32.GPIO;
 with STM32.Timers;       use STM32.Timers;
 with STM32.Device;       use STM32.Device;
-with STM32;              use STM32;
+with HAL;                use HAL;
 
 package Motor is
    pragma Elaborate_Body;
@@ -45,11 +58,8 @@ package Motor is
 
 private
 
-   Encoder_Tach0_Port : GPIO_Port renames GPIO_A;
-   Encoder_Tach1_Port : GPIO_Port renames GPIO_E;
-
-   Encoder_Tach0_Pin : constant GPIO_Pin := Pin_8;  -- on Port A
-   Encoder_Tach1_Pin : constant GPIO_Pin := Pin_11; -- on Port E
+   Encoder_Tach0 : constant GPIO_Point := PA8;
+   Encoder_Tach1 : constant GPIO_Point := PE11;
 
    Encoder_Timer : Timer renames Timer_1;
 

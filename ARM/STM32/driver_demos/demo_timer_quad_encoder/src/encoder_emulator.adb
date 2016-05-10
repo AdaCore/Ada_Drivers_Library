@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -30,6 +30,8 @@
 ------------------------------------------------------------------------------
 
 package body Encoder_Emulator is
+
+   procedure Initialize;
 
    -----------
    -- Start --
@@ -104,7 +106,7 @@ package body Encoder_Emulator is
    procedure Initialize is
       Configuration : GPIO_Port_Configuration;
    begin
-      Enable_Clock (Emulator_Port);
+      Enable_Clock (Emulator_Points);
 
       Enable_Clock (Emulator_Timer);
 
@@ -113,8 +115,8 @@ package body Encoder_Emulator is
       Configuration.Resistors := Pull_Up;
       Configuration.Speed := Speed_100MHz;
 
-      Configure_IO (Emulator_Port, Emulator_Pins, Configuration);
-      Configure_Alternate_Function (Emulator_Port, Emulator_Pins, Emulator_AF);
+      Configure_IO (Emulator_Points, Configuration);
+      Configure_Alternate_Function (Emulator_Points, Emulator_AF);
 
       Configure
         (Emulator_Timer,
