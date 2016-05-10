@@ -92,7 +92,7 @@ begin
       Data_Count  => Data'Length); -- Integer is same size as Word
 
    IRQ_Handler.Await_Event (Event_Kind);
-   -- NB: the TC interrupt is now disabled if we are not in Circular mode
+   --  NB: the TC interrupt is now disabled if we are not in Circular mode
 
    if Event_Kind in Direct_Mode_Error_Interrupt | FIFO_Error_Interrupt | Transfer_Error_Interrupt then
       --  signal the problem and loop forever

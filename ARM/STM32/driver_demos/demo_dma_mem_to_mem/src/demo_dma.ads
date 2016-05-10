@@ -37,13 +37,13 @@ with STM32.DMA;              use STM32.DMA;
 package Demo_DMA is
 
    Controller : DMA_Controller renames DMA_2;
-   -- DMA_2 is required for memory-to-memory transfers, per the ST Micro
-   -- reference manual RM0090, pg 308
+   --  DMA_2 is required for memory-to-memory transfers, per the ST Micro
+   --  reference manual RM0090, pg 308
 
    Stream : constant DMA_Stream_Selector := Stream_0;
 
-   IRQ_Id : constant Ada.Interrupts.Interrupt_Id := DMA2_Stream0_Interrupt;
-   -- must match that of the selected controller and stream number!!!!
+   IRQ_Id : constant Ada.Interrupts.Interrupt_ID := DMA2_Stream0_Interrupt;
+   --  must match that of the selected controller and stream number!!!!
 
    IRQ_Handler : STM32F4_DMA_Interrupts.Handler (Controller'Access, Stream, IRQ_Id);
 

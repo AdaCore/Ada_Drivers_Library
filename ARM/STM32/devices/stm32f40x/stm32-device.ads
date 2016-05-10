@@ -43,8 +43,8 @@
 --  manufactured by ST Microelectronics.  For example, an STM32F405.
 
 with STM32_SVD;     use STM32_SVD;
-with STM32_SVD.DMA;
 
+with STM32.DMA;     use STM32.DMA;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.ADC;     use STM32.ADC;
 with STM32.USARTs;  use STM32.USARTs;
@@ -293,10 +293,8 @@ package STM32.Device is
 
    procedure Reset (This : aliased in out USART);
 
-   subtype DMA_Controller is STM32_SVD.DMA.DMA_Peripheral;
-
-   DMA_1 : DMA_Controller renames STM32_SVD.DMA.DMA1_Periph;
-   DMA_2 : DMA_Controller renames STM32_SVD.DMA.DMA2_Periph;
+   DMA_1 : aliased DMA_Controller with Volatile, Address => DMA1_Base;
+   DMA_2 : aliased DMA_Controller with Volatile, Address => DMA2_Base;
 
    procedure Enable_Clock (This : aliased in out DMA_Controller);
 

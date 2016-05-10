@@ -84,11 +84,11 @@ pragma Restrictions (No_Elaboration_Code);
 with System;         use System;
 with Ada.Real_Time;  use Ada.Real_Time;
 
-with STM32.Device;
+private with STM32_SVD.DMA;
 
 package STM32.DMA is
 
-   subtype DMA_Controller is STM32.Device.DMA_Controller;
+   type DMA_Controller is limited private;
 
    --  Do not change the order of the enumerals in the types in this package.
    --  The underlying canonical representation values are required.
@@ -623,5 +623,9 @@ package STM32.DMA is
    --  Memory_Data_Format (M_Data_Size) values for the given stream. We use an
    --  expression function because the semantics are meant to be part of the
    --  spec of the package, visible as a precondition.
+
+private
+
+   type DMA_Controller is new STM32_SVD.DMA.DMA_Peripheral;
 
 end STM32.DMA;
