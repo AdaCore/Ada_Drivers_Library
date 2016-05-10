@@ -39,18 +39,13 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 with STM32.Board;  use STM32.Board;
 with STM32.Device; use STM32.Device;
 
-with STM32;        use STM32;
+with HAL;          use HAL;
 with STM32.ADC;    use STM32.ADC;
 with STM32.GPIO;   use STM32.GPIO;
 
-with STM32.ILI9341;
-with Bitmapped_Drawing;
-with BMP_Fonts;
+with LCD_Std_Out;
 
 procedure Demo_ADC_VRef_Polling is
-
-   All_Regular_Conversions : constant Regular_Channel_Conversions :=
-     (1 => (Channel => VRef_Channel, Sample_Time => Sample_144_Cycles));
 
    Raw     : Word;
    VRefInt : Word;
@@ -58,13 +53,7 @@ procedure Demo_ADC_VRef_Polling is
    Successful : Boolean;
    Timed_Out  : exception;
 
-   -----------------
-   -- LCD_Drawing --
-   -----------------
-
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => STM32.ILI9341.Colors,
-      Set_Pixel => STM32.ILI9341.Set_Pixel);
+   procedure Print (X, Y : Natural; Value : Word; Suffix : String := "");
 
    -----------
    -- Print --
@@ -72,20 +61,12 @@ procedure Demo_ADC_VRef_Polling is
 
    procedure Print (X, Y : Natural; Value : Word; Suffix : String := "") is
       Value_Image : constant String := Value'Img;
-      use LCD_Drawing, BMP_Fonts, STM32.ILI9341;
    begin
-      Draw_String
-        ((X, Y),
-         Msg        => Value_Image (2 .. Value_Image'Last) & Suffix & "   ",
-         Font       => Font16x24,  -- arbitrary
-         Foreground => White,      -- arbitrary
-         Background => Black);     -- arbitrary
+      LCD_Std_Out.Put (X, Y, Value_Image (2 .. Value_Image'Last) & Suffix & "   ");
    end Print;
 
 begin
    Initialize_LEDs;
-   Initialize_LCD_Hardware;
-   STM32F4.ILI9341.Set_Orientation (To => STM32F4.ILI9341.Portrait_2);
 
    Enable_Clock (ADC_1);
 
@@ -107,7 +88,7 @@ begin
       Continuous  => False,
       Trigger     => Software_Triggered,
       Enable_EOC  => True,
-      Conversions => All_Regular_Conversions);
+      Conversions => (1 => (Channel => VRef_Channel, Sample_Time => Sample_144_Cycles)));
 
    Enable (ADC_1);
 

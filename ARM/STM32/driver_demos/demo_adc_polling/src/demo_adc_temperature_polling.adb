@@ -36,16 +36,14 @@
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
-with STM32.Board; use STM32.Board;
+with STM32.Board;  use STM32.Board;
 with STM32.Device; use STM32.Device;
 
-with STM32;       use STM32;
+with HAL;         use HAL;
 with STM32.ADC;   use STM32.ADC;
-with STM32.GPIO;   use STM32.GPIO;
+with STM32.GPIO;  use STM32.GPIO;
 
-with STM32.ILI9341;
-with Bitmapped_Drawing;
-with BMP_Fonts;
+with LCD_Std_Out;
 
 procedure Demo_ADC_Temperature_Polling is
 
@@ -54,8 +52,8 @@ procedure Demo_ADC_Temperature_Polling is
             Sample_Time => Sample_144_Cycles));  -- needs 10 micros minimum
 
    V_Sense : Float;
-   -- the "sensed voltage", ie the counts returned by the ADC conversion, after
-   -- converting to float
+   --  the "sensed voltage", ie the counts returned by the ADC conversion,
+   --  after converting to float
 
    Temperature : Float;
    --  the computed temperature
@@ -83,13 +81,7 @@ procedure Demo_ADC_Temperature_Polling is
    Successful : Boolean;
    Timed_Out  : exception;
 
-   -----------------
-   -- LCD_Drawing --
-   -----------------
-
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => STM32.ILI9341.Colors,
-      Set_Pixel => STM32.ILI9341.Set_Pixel);
+   procedure Print (X, Y : Natural; Value : Word; Suffix : String := "");
 
    -----------
    -- Print --
@@ -97,20 +89,12 @@ procedure Demo_ADC_Temperature_Polling is
 
    procedure Print (X, Y : Natural; Value : Word; Suffix : String := "") is
       Value_Image : constant String := Value'Img;
-      use LCD_Drawing, BMP_Fonts, STM32.ILI9341;
    begin
-      Draw_String
-        ((X, Y),
-         Msg        => Value_Image (2 .. Value_Image'Last) & Suffix & "   ",
-         Font       => Font16x24,  -- arbitrary
-         Foreground => White,      -- arbitrary
-         Background => Black);     -- arbitrary
+      LCD_Std_Out.Put (X, Y, Value_Image (2 .. Value_Image'Last) & Suffix & "   ");
    end Print;
 
 begin
    Initialize_LEDs;
-   Initialize_LCD_Hardware;
-   STM32F4.ILI9341.Set_Orientation (To => STM32F4.ILI9341.Portrait_2);
 
    Enable_Clock (Temperature_Sensor.ADC.all);
 
@@ -148,7 +132,7 @@ begin
 
       Print (0, 0, Word (V_Sense));
 
-      Temperature := ((V_Sense - V_at_25_degrees) / Avg_Slope) + 25.0;
+      Temperature := ((V_Sense - V_At_25_Degrees) / Avg_Slope) + 25.0;
       --  see the RM, section 13.10, pg 411
 
       Print (0, 24, Word (Temperature), " degrees C");
