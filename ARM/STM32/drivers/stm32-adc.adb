@@ -850,7 +850,7 @@ package body STM32.ADC is
    begin
       case Rank is
          when 1 .. 6 =>
-            This.SQR3.SQ.Arr (Rank + 6) := Channel;
+            This.SQR3.SQ.Arr (Rank) := Channel;
          when 7 .. 12 =>
             This.SQR2.SQ.Arr (Rank) := Channel;
          when 13 .. 16 =>
