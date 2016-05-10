@@ -902,9 +902,9 @@ package body STM32.ADC is
    begin
       case Rank is
          when 1 => This.JOFR1.JOFFSET1 := Offset;
-         when 2 => This.JOFR2.JOFFSET1 := Offset;
-         when 3 => This.JOFR3.JOFFSET1 := Offset;
-         when 4 => This.JOFR4.JOFFSET1 := Offset;
+         when 2 => This.JOFR2.JOFFSET2 := Offset;
+         when 3 => This.JOFR3.JOFFSET3 := Offset;
+         when 4 => This.JOFR4.JOFFSET4 := Offset;
       end case;
    end Set_Injected_Channel_Offset;
 

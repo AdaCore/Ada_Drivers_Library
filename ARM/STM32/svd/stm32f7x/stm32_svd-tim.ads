@@ -643,14 +643,14 @@ package STM32_SVD.TIM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   ------------------
-   -- CCR_Register --
-   ------------------
+   -------------------
+   -- CCR1_Register --
+   -------------------
 
    subtype CCR1_CCR1_Field is HAL.Short;
 
    --  capture/compare register 1
-   type CCR_Register is record
+   type CCR1_Register is record
       --  Capture/Compare 1 value
       CCR1           : CCR1_CCR1_Field := 16#0#;
       --  unspecified
@@ -659,8 +659,71 @@ package STM32_SVD.TIM is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for CCR_Register use record
+   for CCR1_Register use record
       CCR1           at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   -------------------
+   -- CCR2_Register --
+   -------------------
+
+   subtype CCR2_CCR2_Field is HAL.Short;
+
+   --  capture/compare register 2
+   type CCR2_Register is record
+      --  Capture/Compare 2 value
+      CCR2           : CCR2_CCR2_Field := 16#0#;
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for CCR2_Register use record
+      CCR2           at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   -------------------
+   -- CCR3_Register --
+   -------------------
+
+   subtype CCR3_CCR3_Field is HAL.Short;
+
+   --  capture/compare register 3
+   type CCR3_Register is record
+      --  Capture/Compare value
+      CCR3           : CCR3_CCR3_Field := 16#0#;
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for CCR3_Register use record
+      CCR3           at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   -------------------
+   -- CCR4_Register --
+   -------------------
+
+   subtype CCR4_CCR4_Field is HAL.Short;
+
+   --  capture/compare register 4
+   type CCR4_Register is record
+      --  Capture/Compare value
+      CCR4           : CCR4_CCR4_Field := 16#0#;
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for CCR4_Register use record
+      CCR4           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
@@ -1069,6 +1132,52 @@ package STM32_SVD.TIM is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   ---------------------------
+   -- CCMR2_Output_Register --
+   ---------------------------
+
+   --  capture/compare mode register 2 (output mode)
+   type CCMR2_Output_Register_1 is record
+      --  CC3S
+      CC3S           : CCMR2_Output_CC3S_Field := 16#0#;
+      --  OC3FE
+      OC3FE          : Boolean := False;
+      --  OC3PE
+      OC3PE          : Boolean := False;
+      --  OC3M
+      OC3M           : CCMR2_Output_OC3M_Field := 16#0#;
+      --  OC3CE
+      OC3CE          : Boolean := False;
+      --  CC4S
+      CC4S           : CCMR2_Output_CC4S_Field := 16#0#;
+      --  OC4FE
+      OC4FE          : Boolean := False;
+      --  OC4PE
+      OC4PE          : Boolean := False;
+      --  OC4M
+      OC4M           : CCMR2_Output_OC4M_Field := 16#0#;
+      --  O24CE
+      O24CE          : Boolean := False;
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for CCMR2_Output_Register_1 use record
+      CC3S           at 0 range 0 .. 1;
+      OC3FE          at 0 range 2 .. 2;
+      OC3PE          at 0 range 3 .. 3;
+      OC3M           at 0 range 4 .. 6;
+      OC3CE          at 0 range 7 .. 7;
+      CC4S           at 0 range 8 .. 9;
+      OC4FE          at 0 range 10 .. 10;
+      OC4PE          at 0 range 11 .. 11;
+      OC4M           at 0 range 12 .. 14;
+      O24CE          at 0 range 15 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
    -------------------
    -- CCER_Register --
    -------------------
@@ -1177,15 +1286,15 @@ package STM32_SVD.TIM is
       ARR_H at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- CCR_Register --
-   ------------------
+   -------------------
+   -- CCR1_Register --
+   -------------------
 
    subtype CCR1_CCR1_L_Field is HAL.Short;
    subtype CCR1_CCR1_H_Field is HAL.Short;
 
    --  capture/compare register 1
-   type CCR_Register_1 is record
+   type CCR1_Register_1 is record
       --  Low Capture/Compare 1 value
       CCR1_L : CCR1_CCR1_L_Field := 16#0#;
       --  High Capture/Compare 1 value
@@ -1194,9 +1303,75 @@ package STM32_SVD.TIM is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for CCR_Register_1 use record
+   for CCR1_Register_1 use record
       CCR1_L at 0 range 0 .. 15;
       CCR1_H at 0 range 16 .. 31;
+   end record;
+
+   -------------------
+   -- CCR2_Register --
+   -------------------
+
+   subtype CCR2_CCR2_L_Field is HAL.Short;
+   subtype CCR2_CCR2_H_Field is HAL.Short;
+
+   --  capture/compare register 2
+   type CCR2_Register_1 is record
+      --  Low Capture/Compare 2 value
+      CCR2_L : CCR2_CCR2_L_Field := 16#0#;
+      --  High Capture/Compare 2 value
+      CCR2_H : CCR2_CCR2_H_Field := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for CCR2_Register_1 use record
+      CCR2_L at 0 range 0 .. 15;
+      CCR2_H at 0 range 16 .. 31;
+   end record;
+
+   -------------------
+   -- CCR3_Register --
+   -------------------
+
+   subtype CCR3_CCR3_L_Field is HAL.Short;
+   subtype CCR3_CCR3_H_Field is HAL.Short;
+
+   --  capture/compare register 3
+   type CCR3_Register_1 is record
+      --  Low Capture/Compare value
+      CCR3_L : CCR3_CCR3_L_Field := 16#0#;
+      --  High Capture/Compare value
+      CCR3_H : CCR3_CCR3_H_Field := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for CCR3_Register_1 use record
+      CCR3_L at 0 range 0 .. 15;
+      CCR3_H at 0 range 16 .. 31;
+   end record;
+
+   -------------------
+   -- CCR4_Register --
+   -------------------
+
+   subtype CCR4_CCR4_L_Field is HAL.Short;
+   subtype CCR4_CCR4_H_Field is HAL.Short;
+
+   --  capture/compare register 4
+   type CCR4_Register_1 is record
+      --  Low Capture/Compare value
+      CCR4_L : CCR4_CCR4_L_Field := 16#0#;
+      --  High Capture/Compare value
+      CCR4_H : CCR4_CCR4_H_Field := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for CCR4_Register_1 use record
+      CCR4_L at 0 range 0 .. 15;
+      CCR4_H at 0 range 16 .. 31;
    end record;
 
    ------------------
@@ -1596,6 +1771,49 @@ package STM32_SVD.TIM is
    end record;
 
    -------------------
+   -- SMCR_Register --
+   -------------------
+
+   --  slave mode control register
+   type SMCR_Register_2 is record
+      --  Slave mode selection
+      SMS            : SMCR_SMS_Field := 16#0#;
+      --  unspecified
+      Reserved_3_3   : HAL.Bit := 16#0#;
+      --  Trigger selection
+      TS             : SMCR_TS_Field := 16#0#;
+      --  Master/slave mode
+      MSM            : Boolean := False;
+      --  External trigger filter
+      ETF            : SMCR_ETF_Field := 16#0#;
+      --  External trigger prescaler
+      ETPS           : SMCR_ETPS_Field := 16#0#;
+      --  External clock enable
+      ECE            : Boolean := False;
+      --  External trigger polarity
+      ETP            : Boolean := False;
+      --  Slave mode selection
+      SMS3           : Boolean := False;
+      --  unspecified
+      Reserved_17_31 : HAL.UInt15 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for SMCR_Register_2 use record
+      SMS            at 0 range 0 .. 2;
+      Reserved_3_3   at 0 range 3 .. 3;
+      TS             at 0 range 4 .. 6;
+      MSM            at 0 range 7 .. 7;
+      ETF            at 0 range 8 .. 11;
+      ETPS           at 0 range 12 .. 13;
+      ECE            at 0 range 14 .. 14;
+      ETP            at 0 range 15 .. 15;
+      SMS3           at 0 range 16 .. 16;
+      Reserved_17_31 at 0 range 17 .. 31;
+   end record;
+
+   -------------------
    -- DIER_Register --
    -------------------
 
@@ -1911,6 +2129,23 @@ package STM32_SVD.TIM is
       Input  at 0 range 0 .. 31;
    end record;
 
+   type CCMR2_Aliased_Register_1
+     (Disc : CCMR2_Discriminent := Output)
+   is record
+      case Disc is
+         when Output =>
+            Output : CCMR2_Output_Register_1;
+         when Input =>
+            Input : CCMR2_Input_Register;
+      end case;
+   end record
+     with Unchecked_Union;
+
+   for CCMR2_Aliased_Register_1 use record
+      Output at 0 range 0 .. 31;
+      Input  at 0 range 0 .. 31;
+   end record;
+
    type CCMR1_Aliased_Register_1
      (Disc : CCMR1_Discriminent := Output)
    is record
@@ -1966,7 +2201,7 @@ package STM32_SVD.TIM is
       --  capture/compare mode register 1 (output mode)
       CCMR1 : CCMR1_Aliased_Register;
       --  capture/compare mode register 2 (output mode)
-      CCMR2 : CCMR2_Aliased_Register;
+      CCMR2 : CCMR2_Aliased_Register_1;
       --  capture/compare enable register
       CCER  : CCER_Register_1;
       --  counter
@@ -1976,13 +2211,13 @@ package STM32_SVD.TIM is
       --  auto-reload register
       ARR   : ARR_Register_1;
       --  capture/compare register 1
-      CCR1  : CCR_Register_1;
+      CCR1  : CCR1_Register_1;
       --  capture/compare register 2
-      CCR2  : CCR_Register_1;
+      CCR2  : CCR2_Register_1;
       --  capture/compare register 3
-      CCR3  : CCR_Register_1;
+      CCR3  : CCR3_Register_1;
       --  capture/compare register 4
-      CCR4  : CCR_Register_1;
+      CCR4  : CCR4_Register_1;
       --  DMA control register
       DCR   : DCR_Register;
       --  DMA address for full transfer
@@ -2038,7 +2273,7 @@ package STM32_SVD.TIM is
       --  capture/compare mode register 1 (output mode)
       CCMR1 : CCMR1_Aliased_Register;
       --  capture/compare mode register 2 (output mode)
-      CCMR2 : CCMR2_Aliased_Register;
+      CCMR2 : CCMR2_Aliased_Register_1;
       --  capture/compare enable register
       CCER  : CCER_Register_1;
       --  counter
@@ -2048,13 +2283,13 @@ package STM32_SVD.TIM is
       --  auto-reload register
       ARR   : ARR_Register_1;
       --  capture/compare register 1
-      CCR1  : CCR_Register_1;
+      CCR1  : CCR1_Register_1;
       --  capture/compare register 2
-      CCR2  : CCR_Register_1;
+      CCR2  : CCR2_Register_1;
       --  capture/compare register 3
-      CCR3  : CCR_Register_1;
+      CCR3  : CCR3_Register_1;
       --  capture/compare register 4
-      CCR4  : CCR_Register_1;
+      CCR4  : CCR4_Register_1;
       --  DMA control register
       DCR   : DCR_Register;
       --  DMA address for full transfer
@@ -2110,7 +2345,7 @@ package STM32_SVD.TIM is
       --  capture/compare mode register 1 (output mode)
       CCMR1 : CCMR1_Aliased_Register;
       --  capture/compare mode register 2 (output mode)
-      CCMR2 : CCMR2_Aliased_Register;
+      CCMR2 : CCMR2_Aliased_Register_1;
       --  capture/compare enable register
       CCER  : CCER_Register_1;
       --  counter
@@ -2120,13 +2355,13 @@ package STM32_SVD.TIM is
       --  auto-reload register
       ARR   : ARR_Register_1;
       --  capture/compare register 1
-      CCR1  : CCR_Register_1;
+      CCR1  : CCR1_Register_1;
       --  capture/compare register 2
-      CCR2  : CCR_Register_1;
+      CCR2  : CCR2_Register_1;
       --  capture/compare register 3
-      CCR3  : CCR_Register_1;
+      CCR3  : CCR3_Register_1;
       --  capture/compare register 4
-      CCR4  : CCR_Register_1;
+      CCR4  : CCR4_Register_1;
       --  DMA control register
       DCR   : DCR_Register;
       --  DMA address for full transfer
@@ -2226,9 +2461,9 @@ package STM32_SVD.TIM is
       --  auto-reload register
       ARR   : ARR_Register;
       --  capture/compare register 1
-      CCR1  : CCR_Register;
+      CCR1  : CCR1_Register;
       --  capture/compare register 2
-      CCR2  : CCR_Register;
+      CCR2  : CCR2_Register;
    end record
      with Volatile;
 
@@ -2260,7 +2495,7 @@ package STM32_SVD.TIM is
       --  control register 1
       CR1   : CR1_Register_2;
       --  slave mode control register
-      SMCR  : SMCR_Register;
+      SMCR  : SMCR_Register_2;
       --  DMA/Interrupt enable register
       DIER  : DIER_Register_3;
       --  status register
@@ -2278,7 +2513,7 @@ package STM32_SVD.TIM is
       --  auto-reload register
       ARR   : ARR_Register;
       --  capture/compare register 1
-      CCR1  : CCR_Register;
+      CCR1  : CCR1_Register;
       --  option register
       OR_k  : OR_Register;
    end record
@@ -2344,13 +2579,13 @@ package STM32_SVD.TIM is
       --  repetition counter register
       RCR          : RCR_Register;
       --  capture/compare register 1
-      CCR1         : CCR_Register;
+      CCR1         : CCR1_Register;
       --  capture/compare register 2
-      CCR2         : CCR_Register;
+      CCR2         : CCR2_Register;
       --  capture/compare register 3
-      CCR3         : CCR_Register;
+      CCR3         : CCR3_Register;
       --  capture/compare register 4
-      CCR4         : CCR_Register;
+      CCR4         : CCR4_Register;
       --  break and dead-time register
       BDTR         : BDTR_Register;
       --  DMA control register

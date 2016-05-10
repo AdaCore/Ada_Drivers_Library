@@ -1817,16 +1817,16 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -----------------------------
-   -- OTG_FS_DIEPCTL_Register --
-   -----------------------------
+   ------------------------------
+   -- OTG_FS_DIEPCTL1_Register --
+   ------------------------------
 
    subtype OTG_FS_DIEPCTL1_MPSIZ_Field is HAL.UInt11;
    subtype OTG_FS_DIEPCTL1_EPTYP_Field is HAL.UInt2;
    subtype OTG_FS_DIEPCTL1_TXFNUM_Field is HAL.UInt4;
 
    --  OTG device endpoint-1 control register
-   type OTG_FS_DIEPCTL_Register is record
+   type OTG_FS_DIEPCTL1_Register is record
       --  MPSIZ
       MPSIZ          : OTG_FS_DIEPCTL1_MPSIZ_Field := 16#0#;
       --  unspecified
@@ -1861,7 +1861,7 @@ package STM32_SVD.USB_OTG_FS is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for OTG_FS_DIEPCTL_Register use record
+   for OTG_FS_DIEPCTL1_Register use record
       MPSIZ          at 0 range 0 .. 10;
       Reserved_11_14 at 0 range 11 .. 14;
       USBAEP         at 0 range 15 .. 15;
@@ -1906,6 +1906,68 @@ package STM32_SVD.USB_OTG_FS is
       PKTCNT         at 0 range 19 .. 28;
       MCNT           at 0 range 29 .. 30;
       Reserved_31_31 at 0 range 31 .. 31;
+   end record;
+
+   -----------------------------
+   -- OTG_FS_DIEPCTL_Register --
+   -----------------------------
+
+   subtype OTG_FS_DIEPCTL2_MPSIZ_Field is HAL.UInt11;
+   subtype OTG_FS_DIEPCTL2_EPTYP_Field is HAL.UInt2;
+   subtype OTG_FS_DIEPCTL2_TXFNUM_Field is HAL.UInt4;
+
+   --  OTG device endpoint-2 control register
+   type OTG_FS_DIEPCTL_Register is record
+      --  MPSIZ
+      MPSIZ          : OTG_FS_DIEPCTL2_MPSIZ_Field := 16#0#;
+      --  unspecified
+      Reserved_11_14 : HAL.UInt4 := 16#0#;
+      --  USBAEP
+      USBAEP         : Boolean := False;
+      --  Read-only. EONUM/DPID
+      EONUM_DPID     : Boolean := False;
+      --  Read-only. NAKSTS
+      NAKSTS         : Boolean := False;
+      --  EPTYP
+      EPTYP          : OTG_FS_DIEPCTL2_EPTYP_Field := 16#0#;
+      --  unspecified
+      Reserved_20_20 : HAL.Bit := 16#0#;
+      --  Stall
+      Stall          : Boolean := False;
+      --  TXFNUM
+      TXFNUM         : OTG_FS_DIEPCTL2_TXFNUM_Field := 16#0#;
+      --  Write-only. CNAK
+      CNAK           : Boolean := False;
+      --  Write-only. SNAK
+      SNAK           : Boolean := False;
+      --  Write-only. SD0PID/SEVNFRM
+      SD0PID_SEVNFRM : Boolean := False;
+      --  Write-only. SODDFRM
+      SODDFRM        : Boolean := False;
+      --  EPDIS
+      EPDIS          : Boolean := False;
+      --  EPENA
+      EPENA          : Boolean := False;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for OTG_FS_DIEPCTL_Register use record
+      MPSIZ          at 0 range 0 .. 10;
+      Reserved_11_14 at 0 range 11 .. 14;
+      USBAEP         at 0 range 15 .. 15;
+      EONUM_DPID     at 0 range 16 .. 16;
+      NAKSTS         at 0 range 17 .. 17;
+      EPTYP          at 0 range 18 .. 19;
+      Reserved_20_20 at 0 range 20 .. 20;
+      Stall          at 0 range 21 .. 21;
+      TXFNUM         at 0 range 22 .. 25;
+      CNAK           at 0 range 26 .. 26;
+      SNAK           at 0 range 27 .. 27;
+      SD0PID_SEVNFRM at 0 range 28 .. 28;
+      SODDFRM        at 0 range 29 .. 29;
+      EPDIS          at 0 range 30 .. 30;
+      EPENA          at 0 range 31 .. 31;
    end record;
 
    ------------------------------
@@ -2481,7 +2543,7 @@ package STM32_SVD.USB_OTG_FS is
       --  OTG_FS device IN endpoint transmit FIFO status register
       OTG_FS_DTXFSTS0   : OTG_FS_DTXFSTS_Register;
       --  OTG device endpoint-1 control register
-      OTG_FS_DIEPCTL1   : OTG_FS_DIEPCTL_Register;
+      OTG_FS_DIEPCTL1   : OTG_FS_DIEPCTL1_Register;
       --  device endpoint-1 interrupt register
       OTG_FS_DIEPINT1   : OTG_FS_DIEPINT_Register;
       --  device endpoint-1 transfer size register

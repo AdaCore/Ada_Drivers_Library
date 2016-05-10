@@ -58,50 +58,26 @@ package body STM32.SYSCFG is
      (Port : Internal_GPIO_Port;
       Pin  : GPIO_Pin_Index)
    is
-      CR_Index   : Integer range 0 .. 3;
-      EXTI_Index : Integer range EXTICR1_EXTI_Field_Array'Range;
       Port_Name  : constant GPIO_Port_Id := As_GPIO_Port_Id (Port);
    begin
-      --  First we find the control register, of the four possible, that
-      --  contains the EXTI_n value for pin 'n' specified by the Pin parameter.
-      --  In effect, this is what we are doing for the EXTICR index:
-      --    case GPIO_Pin'Pos (Pin) is
-      --       when  0 .. 3  => CR_Index := 0;
-      --       when  4 .. 7  => CR_Index := 1;
-      --       when  8 .. 11 => CR_Index := 2;
-      --       when 12 .. 15 => CR_Index := 3;
-      --    end case;
-      --  Note that that means we are dependent upon the order of the Pin
-      --  declarations because we require GPIO_Pin'Pos(Pin_n) to be 'n', ie
-      --  Pin_0 should be at position 0, Pin_1 at position 1, and so forth.
-      CR_Index := Pin / 4;
-
-      --  Now we must find which EXTI_n value to use, of the four possible,
-      --  within the control register. It is set to the actual line to activate
-      --  among the 4 accessible by the EXTICR:
-      --  EXTICR1: EXTI0 .. EXTI3
-      --  EXTICR2: EXTI4 .. EXTI7
-      --  EXTICR3: EXTI8 .. EXTI11
-      --  EXTICR4: EXTI12 .. EXTI15
-      EXTI_Index := Pin mod 4;  -- ie 0 .. 3
 
       --  Finally we assign the port 'number' to the EXTI_n value within the
       --  control register. We depend upon the Port enumerals' underlying
       --  numeric representation values matching what the hardware expects,
       --  that is, the values 0 .. n-1, which we get automatically unless
       --  overridden.
-      case CR_Index is
-         when 0 =>
-            SYSCFG_Periph.EXTICR1.EXTI.Arr (EXTI_Index) :=
+      case Pin is
+         when 0 .. 3 =>
+            SYSCFG_Periph.EXTICR1.EXTI.Arr (Pin) :=
               GPIO_Port_Id'Enum_Rep (Port_Name);
-         when 1 =>
-            SYSCFG_Periph.EXTICR2.EXTI.Arr (EXTI_Index) :=
+         when 4 .. 7 =>
+            SYSCFG_Periph.EXTICR2.EXTI.Arr (Pin) :=
               GPIO_Port_Id'Enum_Rep (Port_Name);
-         when 2 =>
-            SYSCFG_Periph.EXTICR3.EXTI.Arr (EXTI_Index) :=
+         when 8 .. 11 =>
+            SYSCFG_Periph.EXTICR3.EXTI.Arr (Pin) :=
               GPIO_Port_Id'Enum_Rep (Port_Name);
-         when 3 =>
-            SYSCFG_Periph.EXTICR4.EXTI.Arr (EXTI_Index) :=
+         when 12 .. 15 =>
+            SYSCFG_Periph.EXTICR4.EXTI.Arr (Pin) :=
               GPIO_Port_Id'Enum_Rep (Port_Name);
       end case;
    end Connect_External_Interrupt;

@@ -56,9 +56,9 @@ package STM32_SVD.SYSCFG is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   ---------------------
-   -- EXTICR_Register --
-   ---------------------
+   ----------------------
+   -- EXTICR1_Register --
+   ----------------------
 
    ------------------
    -- EXTICR1.EXTI --
@@ -92,7 +92,7 @@ package STM32_SVD.SYSCFG is
    end record;
 
    --  external interrupt configuration register 1
-   type EXTICR_Register is record
+   type EXTICR1_Register is record
       --  EXTI x configuration (x = 0 to 3)
       EXTI           : EXTICR1_EXTI_Field :=
                         (As_Array => False, Val => 16#0#);
@@ -102,7 +102,160 @@ package STM32_SVD.SYSCFG is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for EXTICR_Register use record
+   for EXTICR1_Register use record
+      EXTI           at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   ----------------------
+   -- EXTICR2_Register --
+   ----------------------
+
+   ------------------
+   -- EXTICR2.EXTI --
+   ------------------
+
+   --  EXTICR2_EXTI array element
+   subtype EXTICR2_EXTI_Element is HAL.UInt4;
+
+   --  EXTICR2_EXTI array
+   type EXTICR2_EXTI_Field_Array is array (4 .. 7) of EXTICR2_EXTI_Element
+     with Component_Size => 4, Size => 16;
+
+   --  Type definition for EXTICR2_EXTI
+   type EXTICR2_EXTI_Field
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  EXTI as a value
+            Val : HAL.Short;
+         when True =>
+            --  EXTI as an array
+            Arr : EXTICR2_EXTI_Field_Array;
+      end case;
+   end record
+     with Unchecked_Union, Size => 16;
+
+   for EXTICR2_EXTI_Field use record
+      Val at 0 range 0 .. 15;
+      Arr at 0 range 0 .. 15;
+   end record;
+
+   --  external interrupt configuration register 2
+   type EXTICR2_Register is record
+      --  EXTI x configuration (x = 4 to 7)
+      EXTI           : EXTICR2_EXTI_Field :=
+                        (As_Array => False, Val => 16#0#);
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for EXTICR2_Register use record
+      EXTI           at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   ----------------------
+   -- EXTICR3_Register --
+   ----------------------
+
+   ------------------
+   -- EXTICR3.EXTI --
+   ------------------
+
+   --  EXTICR3_EXTI array element
+   subtype EXTICR3_EXTI_Element is HAL.UInt4;
+
+   --  EXTICR3_EXTI array
+   type EXTICR3_EXTI_Field_Array is array (8 .. 11) of EXTICR3_EXTI_Element
+     with Component_Size => 4, Size => 16;
+
+   --  Type definition for EXTICR3_EXTI
+   type EXTICR3_EXTI_Field
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  EXTI as a value
+            Val : HAL.Short;
+         when True =>
+            --  EXTI as an array
+            Arr : EXTICR3_EXTI_Field_Array;
+      end case;
+   end record
+     with Unchecked_Union, Size => 16;
+
+   for EXTICR3_EXTI_Field use record
+      Val at 0 range 0 .. 15;
+      Arr at 0 range 0 .. 15;
+   end record;
+
+   --  external interrupt configuration register 3
+   type EXTICR3_Register is record
+      --  EXTI x configuration (x = 8 to 11)
+      EXTI           : EXTICR3_EXTI_Field :=
+                        (As_Array => False, Val => 16#0#);
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for EXTICR3_Register use record
+      EXTI           at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   ----------------------
+   -- EXTICR4_Register --
+   ----------------------
+
+   ------------------
+   -- EXTICR4.EXTI --
+   ------------------
+
+   --  EXTICR4_EXTI array element
+   subtype EXTICR4_EXTI_Element is HAL.UInt4;
+
+   --  EXTICR4_EXTI array
+   type EXTICR4_EXTI_Field_Array is array (12 .. 15) of EXTICR4_EXTI_Element
+     with Component_Size => 4, Size => 16;
+
+   --  Type definition for EXTICR4_EXTI
+   type EXTICR4_EXTI_Field
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  EXTI as a value
+            Val : HAL.Short;
+         when True =>
+            --  EXTI as an array
+            Arr : EXTICR4_EXTI_Field_Array;
+      end case;
+   end record
+     with Unchecked_Union, Size => 16;
+
+   for EXTICR4_EXTI_Field use record
+      Val at 0 range 0 .. 15;
+      Arr at 0 range 0 .. 15;
+   end record;
+
+   --  external interrupt configuration register 4
+   type EXTICR4_Register is record
+      --  EXTI x configuration (x = 12 to 15)
+      EXTI           : EXTICR4_EXTI_Field :=
+                        (As_Array => False, Val => 16#0#);
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for EXTICR4_Register use record
       EXTI           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
@@ -143,13 +296,13 @@ package STM32_SVD.SYSCFG is
       --  peripheral mode configuration register
       PMC     : PMC_Register;
       --  external interrupt configuration register 1
-      EXTICR1 : EXTICR_Register;
+      EXTICR1 : EXTICR1_Register;
       --  external interrupt configuration register 2
-      EXTICR2 : EXTICR_Register;
+      EXTICR2 : EXTICR2_Register;
       --  external interrupt configuration register 3
-      EXTICR3 : EXTICR_Register;
+      EXTICR3 : EXTICR3_Register;
       --  external interrupt configuration register 4
-      EXTICR4 : EXTICR_Register;
+      EXTICR4 : EXTICR4_Register;
       --  Compensation cell control register
       CMPCR   : CMPCR_Register;
    end record

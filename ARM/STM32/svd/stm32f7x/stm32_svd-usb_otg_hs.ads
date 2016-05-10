@@ -1293,6 +1293,55 @@ package STM32_SVD.USB_OTG_HS is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
+   --------------------------------
+   -- OTG_HS_HCINTMSK15_Register --
+   --------------------------------
+
+   --  OTG_HS host channel-15 interrupt mask register
+   type OTG_HS_HCINTMSK15_Register is record
+      --  Transfer completed mask
+      XFRCM          : Boolean := False;
+      --  Channel halted mask
+      CHHM           : Boolean := False;
+      --  AHB error
+      AHBERR         : Boolean := False;
+      --  STALL response received interrupt mask
+      STALL          : Boolean := False;
+      --  NAK response received interrupt mask
+      NAKM           : Boolean := False;
+      --  ACK response received/transmitted interrupt mask
+      ACKM           : Boolean := False;
+      --  Response received interrupt
+      NYET           : Boolean := False;
+      --  Transaction error
+      TXERRM         : Boolean := False;
+      --  Babble error
+      BBERRM         : Boolean := False;
+      --  Frame overrun mask
+      FRMORM         : Boolean := False;
+      --  Data toggle error mask
+      DTERRM         : Boolean := False;
+      --  unspecified
+      Reserved_11_31 : HAL.UInt21 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for OTG_HS_HCINTMSK15_Register use record
+      XFRCM          at 0 range 0 .. 0;
+      CHHM           at 0 range 1 .. 1;
+      AHBERR         at 0 range 2 .. 2;
+      STALL          at 0 range 3 .. 3;
+      NAKM           at 0 range 4 .. 4;
+      ACKM           at 0 range 5 .. 5;
+      NYET           at 0 range 6 .. 6;
+      TXERRM         at 0 range 7 .. 7;
+      BBERRM         at 0 range 8 .. 8;
+      FRMORM         at 0 range 9 .. 9;
+      DTERRM         at 0 range 10 .. 10;
+      Reserved_11_31 at 0 range 11 .. 31;
+   end record;
+
    --------------------------
    -- OTG_HS_DCFG_Register --
    --------------------------
@@ -2475,7 +2524,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-15 interrupt register
       OTG_HS_HCINT15    : OTG_HS_HCINT_Register;
       --  OTG_HS host channel-15 interrupt mask register
-      OTG_HS_HCINTMSK15 : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK15 : OTG_HS_HCINTMSK15_Register;
       --  OTG_HS host channel-15 transfer size register
       OTG_HS_HCTSIZ15   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-15 DMA address register

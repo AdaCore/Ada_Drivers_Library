@@ -714,14 +714,14 @@ package STM32_SVD.DSIHOST is
       HSTX_TOCNT at 0 range 16 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_TCCR_Register --
-   -----------------------
+   ------------------------
+   -- DSI_TCCR2_Register --
+   ------------------------
 
    subtype DSI_TCCR2_HSRD_TOCNT_Field is HAL.Short;
 
    --  DSI Host Timeout Counter Configuration Register2
-   type DSI_TCCR_Register is record
+   type DSI_TCCR2_Register is record
       --  High-Speed Read Timeout Counter
       HSRD_TOCNT     : DSI_TCCR2_HSRD_TOCNT_Field := 16#0#;
       --  unspecified
@@ -730,8 +730,29 @@ package STM32_SVD.DSIHOST is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for DSI_TCCR_Register use record
+   for DSI_TCCR2_Register use record
       HSRD_TOCNT     at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   ------------------------
+   -- DSI_TCCR3_Register --
+   ------------------------
+
+   subtype DSI_TCCR3_LPRD_TOCNT_Field is HAL.Short;
+
+   --  DSI Host Timeout Counter Configuration Register3
+   type DSI_TCCR3_Register is record
+      --  Low-Power Read Timeout Counter
+      LPRD_TOCNT     : DSI_TCCR3_LPRD_TOCNT_Field := 16#0#;
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DSI_TCCR3_Register use record
+      LPRD_TOCNT     at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
@@ -760,6 +781,48 @@ package STM32_SVD.DSIHOST is
       Reserved_16_23 at 0 range 16 .. 23;
       PM             at 0 range 24 .. 24;
       Reserved_25_31 at 0 range 25 .. 31;
+   end record;
+
+   ------------------------
+   -- DSI_TCCR5_Register --
+   ------------------------
+
+   subtype DSI_TCCR5_LSWR_TOCNT_Field is HAL.Short;
+
+   --  DSI Host Timeout Counter Configuration Register5
+   type DSI_TCCR5_Register is record
+      --  Low-Power Write Timeout Counter
+      LSWR_TOCNT     : DSI_TCCR5_LSWR_TOCNT_Field := 16#0#;
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DSI_TCCR5_Register use record
+      LSWR_TOCNT     at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   ------------------------
+   -- DSI_TCCR6_Register --
+   ------------------------
+
+   subtype DSI_TCCR6_BTA_TOCNT_Field is HAL.Short;
+
+   --  DSI Host Timeout Counter Configuration Register6
+   type DSI_TCCR6_Register is record
+      --  Bus-Turn-Around Timeout Counter
+      BTA_TOCNT      : DSI_TCCR6_BTA_TOCNT_Field := 16#0#;
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DSI_TCCR6_Register use record
+      BTA_TOCNT      at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
    -----------------------
@@ -2136,9 +2199,9 @@ package STM32_SVD.DSIHOST is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_WPCR_Register --
-   -----------------------
+   ------------------------
+   -- DSI_WPCR3_Register --
+   ------------------------
 
    subtype DSI_WPCR3_TCLKPREP_Field is HAL.Byte;
    subtype DSI_WPCR3_TCLKZEO_Field is HAL.Byte;
@@ -2146,7 +2209,7 @@ package STM32_SVD.DSIHOST is
    subtype DSI_WPCR3_THSTRAIL_Field is HAL.Byte;
 
    --  DSI Wrapper PHY Configuration Register 3
-   type DSI_WPCR_Register is record
+   type DSI_WPCR3_Register is record
       --  tCLK-PREPARE
       TCLKPREP : DSI_WPCR3_TCLKPREP_Field := 16#0#;
       --  tCLK-ZERO
@@ -2159,11 +2222,41 @@ package STM32_SVD.DSIHOST is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for DSI_WPCR_Register use record
+   for DSI_WPCR3_Register use record
       TCLKPREP at 0 range 0 .. 7;
       TCLKZEO  at 0 range 8 .. 15;
       THSPREP  at 0 range 16 .. 23;
       THSTRAIL at 0 range 24 .. 31;
+   end record;
+
+   ------------------------
+   -- DSI_WPCR4_Register --
+   ------------------------
+
+   subtype DSI_WPCR4_THSZERO_Field is HAL.Byte;
+   subtype DSI_WPCR4_TLPXD_Field is HAL.Byte;
+   subtype DSI_WPCR4_THSEXIT_Field is HAL.Byte;
+   subtype DSI_WPCR4_TLPXC_Field is HAL.Byte;
+
+   --  DSI_WPCR4
+   type DSI_WPCR4_Register is record
+      --  tHS-ZERO
+      THSZERO : DSI_WPCR4_THSZERO_Field := 16#2A#;
+      --  tLPX for Data lanes
+      TLPXD   : DSI_WPCR4_TLPXD_Field := 16#30#;
+      --  tHSEXIT
+      THSEXIT : DSI_WPCR4_THSEXIT_Field := 16#33#;
+      --  tLPXC for Clock lane
+      TLPXC   : DSI_WPCR4_TLPXC_Field := 16#31#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DSI_WPCR4_Register use record
+      THSZERO at 0 range 0 .. 7;
+      TLPXD   at 0 range 8 .. 15;
+      THSEXIT at 0 range 16 .. 23;
+      TLPXC   at 0 range 24 .. 31;
    end record;
 
    ------------------------
@@ -2295,15 +2388,15 @@ package STM32_SVD.DSIHOST is
       --  DSI Host Timeout Counter Configuration Register1
       DSI_TCCR1   : DSI_TCCR1_Register;
       --  DSI Host Timeout Counter Configuration Register2
-      DSI_TCCR2   : DSI_TCCR_Register;
+      DSI_TCCR2   : DSI_TCCR2_Register;
       --  DSI Host Timeout Counter Configuration Register3
-      DSI_TCCR3   : DSI_TCCR_Register;
+      DSI_TCCR3   : DSI_TCCR3_Register;
       --  DSI Host Timeout Counter Configuration Register4
       DSI_TCCR4   : DSI_TCCR4_Register;
       --  DSI Host Timeout Counter Configuration Register5
-      DSI_TCCR5   : DSI_TCCR_Register;
+      DSI_TCCR5   : DSI_TCCR5_Register;
       --  DSI Host Timeout Counter Configuration Register6
-      DSI_TCCR6   : DSI_TCCR_Register;
+      DSI_TCCR6   : DSI_TCCR6_Register;
       --  DSI Host Clock Lane Configuration Register
       DSI_CLCR    : DSI_CLCR_Register;
       --  DSI Host Clock Lane Timer Configuration Register
@@ -2377,9 +2470,9 @@ package STM32_SVD.DSIHOST is
       --  DSI Wrapper PHY Configuration Register 2
       DSI_WPCR2   : DSI_WPCR2_Register;
       --  DSI Wrapper PHY Configuration Register 3
-      DSI_WPCR3   : DSI_WPCR_Register;
+      DSI_WPCR3   : DSI_WPCR3_Register;
       --  DSI_WPCR4
-      DSI_WPCR4   : DSI_WPCR_Register;
+      DSI_WPCR4   : DSI_WPCR4_Register;
       --  DSI Wrapper PHY Configuration Register 5
       DSI_WPCR5   : DSI_WPCR5_Register;
       --  DSI Wrapper Regulator and PLL Control Register

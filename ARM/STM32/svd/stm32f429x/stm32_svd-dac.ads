@@ -135,14 +135,14 @@ package STM32_SVD.DAC is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   ---------------------
-   -- DHR12R_Register --
-   ---------------------
+   ----------------------
+   -- DHR12R1_Register --
+   ----------------------
 
    subtype DHR12R1_DACC1DHR_Field is HAL.UInt12;
 
    --  channel1 12-bit right-aligned data holding register
-   type DHR12R_Register is record
+   type DHR12R1_Register is record
       --  DAC channel1 12-bit right-aligned data
       DACC1DHR       : DHR12R1_DACC1DHR_Field := 16#0#;
       --  unspecified
@@ -151,19 +151,19 @@ package STM32_SVD.DAC is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for DHR12R_Register use record
+   for DHR12R1_Register use record
       DACC1DHR       at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   ---------------------
-   -- DHR12L_Register --
-   ---------------------
+   ----------------------
+   -- DHR12L1_Register --
+   ----------------------
 
    subtype DHR12L1_DACC1DHR_Field is HAL.UInt12;
 
    --  channel1 12-bit left aligned data holding register
-   type DHR12L_Register is record
+   type DHR12L1_Register is record
       --  unspecified
       Reserved_0_3   : HAL.UInt4 := 16#0#;
       --  DAC channel1 12-bit left-aligned data
@@ -174,20 +174,20 @@ package STM32_SVD.DAC is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for DHR12L_Register use record
+   for DHR12L1_Register use record
       Reserved_0_3   at 0 range 0 .. 3;
       DACC1DHR       at 0 range 4 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   --------------------
-   -- DHR8R_Register --
-   --------------------
+   ---------------------
+   -- DHR8R1_Register --
+   ---------------------
 
    subtype DHR8R1_DACC1DHR_Field is HAL.Byte;
 
    --  channel1 8-bit right aligned data holding register
-   type DHR8R_Register is record
+   type DHR8R1_Register is record
       --  DAC channel1 8-bit right-aligned data
       DACC1DHR      : DHR8R1_DACC1DHR_Field := 16#0#;
       --  unspecified
@@ -196,8 +196,74 @@ package STM32_SVD.DAC is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for DHR8R_Register use record
+   for DHR8R1_Register use record
       DACC1DHR      at 0 range 0 .. 7;
+      Reserved_8_31 at 0 range 8 .. 31;
+   end record;
+
+   ----------------------
+   -- DHR12R2_Register --
+   ----------------------
+
+   subtype DHR12R2_DACC2DHR_Field is HAL.UInt12;
+
+   --  channel2 12-bit right aligned data holding register
+   type DHR12R2_Register is record
+      --  DAC channel2 12-bit right-aligned data
+      DACC2DHR       : DHR12R2_DACC2DHR_Field := 16#0#;
+      --  unspecified
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DHR12R2_Register use record
+      DACC2DHR       at 0 range 0 .. 11;
+      Reserved_12_31 at 0 range 12 .. 31;
+   end record;
+
+   ----------------------
+   -- DHR12L2_Register --
+   ----------------------
+
+   subtype DHR12L2_DACC2DHR_Field is HAL.UInt12;
+
+   --  channel2 12-bit left aligned data holding register
+   type DHR12L2_Register is record
+      --  unspecified
+      Reserved_0_3   : HAL.UInt4 := 16#0#;
+      --  DAC channel2 12-bit left-aligned data
+      DACC2DHR       : DHR12L2_DACC2DHR_Field := 16#0#;
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DHR12L2_Register use record
+      Reserved_0_3   at 0 range 0 .. 3;
+      DACC2DHR       at 0 range 4 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   ---------------------
+   -- DHR8R2_Register --
+   ---------------------
+
+   subtype DHR8R2_DACC2DHR_Field is HAL.Byte;
+
+   --  channel2 8-bit right-aligned data holding register
+   type DHR8R2_Register is record
+      --  DAC channel2 8-bit right-aligned data
+      DACC2DHR      : DHR8R2_DACC2DHR_Field := 16#0#;
+      --  unspecified
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DHR8R2_Register use record
+      DACC2DHR      at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
@@ -282,14 +348,14 @@ package STM32_SVD.DAC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- DOR_Register --
-   ------------------
+   -------------------
+   -- DOR1_Register --
+   -------------------
 
    subtype DOR1_DACC1DOR_Field is HAL.UInt12;
 
    --  channel1 data output register
-   type DOR_Register is record
+   type DOR1_Register is record
       --  Read-only. DAC channel1 data output
       DACC1DOR       : DOR1_DACC1DOR_Field;
       --  unspecified
@@ -298,8 +364,29 @@ package STM32_SVD.DAC is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for DOR_Register use record
+   for DOR1_Register use record
       DACC1DOR       at 0 range 0 .. 11;
+      Reserved_12_31 at 0 range 12 .. 31;
+   end record;
+
+   -------------------
+   -- DOR2_Register --
+   -------------------
+
+   subtype DOR2_DACC2DOR_Field is HAL.UInt12;
+
+   --  channel2 data output register
+   type DOR2_Register is record
+      --  Read-only. DAC channel2 data output
+      DACC2DOR       : DOR2_DACC2DOR_Field;
+      --  unspecified
+      Reserved_12_31 : HAL.UInt20;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DOR2_Register use record
+      DACC2DOR       at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
@@ -342,17 +429,17 @@ package STM32_SVD.DAC is
       --  software trigger register
       SWTRIGR : SWTRIGR_Register;
       --  channel1 12-bit right-aligned data holding register
-      DHR12R1 : DHR12R_Register;
+      DHR12R1 : DHR12R1_Register;
       --  channel1 12-bit left aligned data holding register
-      DHR12L1 : DHR12L_Register;
+      DHR12L1 : DHR12L1_Register;
       --  channel1 8-bit right aligned data holding register
-      DHR8R1  : DHR8R_Register;
+      DHR8R1  : DHR8R1_Register;
       --  channel2 12-bit right aligned data holding register
-      DHR12R2 : DHR12R_Register;
+      DHR12R2 : DHR12R2_Register;
       --  channel2 12-bit left aligned data holding register
-      DHR12L2 : DHR12L_Register;
+      DHR12L2 : DHR12L2_Register;
       --  channel2 8-bit right-aligned data holding register
-      DHR8R2  : DHR8R_Register;
+      DHR8R2  : DHR8R2_Register;
       --  Dual DAC 12-bit right-aligned data holding register
       DHR12RD : DHR12RD_Register;
       --  DUAL DAC 12-bit left aligned data holding register
@@ -360,9 +447,9 @@ package STM32_SVD.DAC is
       --  DUAL DAC 8-bit right aligned data holding register
       DHR8RD  : DHR8RD_Register;
       --  channel1 data output register
-      DOR1    : DOR_Register;
+      DOR1    : DOR1_Register;
       --  channel2 data output register
-      DOR2    : DOR_Register;
+      DOR2    : DOR2_Register;
       --  status register
       SR      : SR_Register;
    end record

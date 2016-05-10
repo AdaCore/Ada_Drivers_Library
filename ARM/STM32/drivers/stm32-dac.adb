@@ -130,14 +130,14 @@ package body STM32.DAC is
                when DAC_Resolution_12_Bits =>
                   case Alignment is
                      when Left_Aligned =>
-                        This.DHR12L2.DACC1DHR :=
+                        This.DHR12L2.DACC2DHR :=
                           UInt12 (Value and Max_12bit_Resolution);
                      when Right_Aligned =>
-                        This.DHR12R2.DACC1DHR :=
+                        This.DHR12R2.DACC2DHR :=
                           UInt12 (Value and Max_12bit_Resolution);
                   end case;
                when DAC_Resolution_8_Bits =>
-                  This.DHR8R2.DACC1DHR := Byte (Value and Max_8bit_Resolution);
+                  This.DHR8R2.DACC2DHR := Byte (Value and Max_8bit_Resolution);
             end case;
 
       end case;
@@ -174,7 +174,7 @@ package body STM32.DAC is
          when Channel_1 =>
             return Word (This.DOR1.DACC1DOR);
          when Channel_2 =>
-            return Word (This.DOR2.DACC1DOR);
+            return Word (This.DOR2.DACC2DOR);
       end case;
    end Converted_Output_Value;
 
@@ -222,7 +222,7 @@ package body STM32.DAC is
       Result : Dual_Channel_Output;
    begin
       Result.Channel_1_Data := Short (This.DOR1.DACC1DOR);
-      Result.Channel_2_Data := Short (This.DOR2.DACC1DOR);
+      Result.Channel_2_Data := Short (This.DOR2.DACC2DOR);
       return Result;
    end Converted_Dual_Output_Value;
 
