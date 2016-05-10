@@ -45,6 +45,7 @@ private
       procedure Action (Event : in out Timing_Event);
    end Control;
 
+--  move these to PO? and make an ADT like the LEDs on the Crazyflie?
    Interval  : Time_Span;
    Next_Beat : Time;
    Pulse     : Timing_Event;
