@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This file provides an interrupt handler for ADC interrupts, using an 
---  STM32F429 Discovery board (see the package body).
+--  This file provides an interrupt handler for ADC interrupts.
 
 with Ada.Interrupts.Names;
 with Ada.Synchronous_Task_Control;  use Ada.Synchronous_Task_Control;
-
-with STM32.ADC; use STM32.ADC;
 
 package ADC_Interrupt_Handling is
 
