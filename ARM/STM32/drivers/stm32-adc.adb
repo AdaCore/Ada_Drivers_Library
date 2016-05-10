@@ -157,7 +157,7 @@ package body STM32.ADC is
    is
    begin
       This.CR1.RES := ADC_Resolution'Enum_Rep (Resolution);
-      This.CR2.ALIGN := Alignment = Right_Aligned;
+      This.CR2.ALIGN := Alignment = Left_Aligned;
    end Configure_Unit;
 
    ------------------------
@@ -176,7 +176,7 @@ package body STM32.ADC is
    function Current_Alignment
      (This : Analog_To_Digital_Converter)
       return Data_Alignment
-   is ((if This.CR2.ALIGN then Right_Aligned else Left_Aligned));
+   is ((if This.CR2.ALIGN then Left_Aligned else Right_Aligned));
 
    ---------------------------------
    -- Configure_Common_Properties --
@@ -850,7 +850,7 @@ package body STM32.ADC is
    begin
       case Rank is
          when 1 .. 6 =>
-            This.SQR3.SQ.Arr (Rank) := Channel;
+            This.SQR3.SQ.Arr (Rank + 6) := Channel;
          when 7 .. 12 =>
             This.SQR2.SQ.Arr (Rank) := Channel;
          when 13 .. 16 =>
@@ -882,7 +882,7 @@ package body STM32.ADC is
    is
    begin
       if Channel > 9 then
-         This.SMPR1.SMP.Arr (Natural (Channel - 10)) :=
+         This.SMPR1.SMP.Arr (Natural (Channel)) :=
            Channel_Sampling_Times'Enum_Rep (Sample_Time);
       else
          This.SMPR2.SMP.Arr (Natural (Channel)) :=
