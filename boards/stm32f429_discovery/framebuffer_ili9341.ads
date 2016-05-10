@@ -18,7 +18,7 @@ package Framebuffer_ILI9341 is
 
 private
 
-   --  Chip select and Data/Command select fot the LCD screen
+   --  Chip select and Data/Command select for the LCD screen
    LCD_CSX      : STM32.GPIO.GPIO_Point renames STM32.Device.PC2;
    LCD_WRX_DCX  : STM32.GPIO.GPIO_Point renames STM32.Device.PD13;
    LCD_RESET    : STM32.GPIO.GPIO_Point renames STM32.Device.PD12;
