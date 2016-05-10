@@ -44,7 +44,7 @@ with HAL;          use HAL;
 with STM32.ADC;    use STM32.ADC;
 with STM32.GPIO;   use STM32.GPIO;
 
-with LCD_Std_Out; use LCD_Std_Out;
+with LCD_Std_Out;
 
 procedure Demo_ADC_VBat_Polling is
 
@@ -63,7 +63,7 @@ procedure Demo_ADC_VBat_Polling is
    procedure Print (X, Y : Natural; Value : Word; Suffix : String := "") is
       Value_Image : constant String := Value'Img;
    begin
-      Put (X, Y, Value_Image (2 .. Value_Image'Last) & Suffix & "   ");
+      LCD_Std_Out.Put (X, Y, Value_Image (2 .. Value_Image'Last) & Suffix & "   ");
    end Print;
 
 begin
@@ -110,6 +110,6 @@ begin
 
       Print (0, 24, Voltage, "mv");
 
-      Toggle (STM32.Board.Green);
+      Toggle (Green);
    end loop;
 end Demo_ADC_VBat_Polling;
