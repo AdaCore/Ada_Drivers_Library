@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,31 +29,19 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Basic demonstration of on-board RNG hardware.
+--  Basic demonstration of on-board RNG hardware. The function Random is called
+--  iteratively, indefinitely, and the results are displayed. Some display
+--  hardware is therefore assumed but the demo is otherwise independent of
+--  specific boards.
 
 --  Note that you may need to cycle power on the board.
 
-with STM32.ILI9341;
-with Bitmapped_Drawing;
-with LCD_Std_Out;
+with LCD_Std_Out;  use LCD_Std_Out;
 
 with STM32.RNG.Interrupts;  use STM32.RNG.Interrupts;
 
 procedure Demo_RNG is
-
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => STM32.ILI9341.Colors,
-      Set_Pixel => STM32.ILI9341.Set_Pixel);
-
-   package LCD_Text is new LCD_Std_Out (LCD_Drawing);
-   --  we use the LCD_Std_Out generic, rather than directly using the Drawing
-   --  package, because we want the effect of a New_Line
-
-   use LCD_Text;
-
 begin
-   Initialize_LCD_Hardware;
-   LCD_Text.Initialize;
    Initialize_RNG;
    loop
       Put_Line (Random'Img & "  ");
