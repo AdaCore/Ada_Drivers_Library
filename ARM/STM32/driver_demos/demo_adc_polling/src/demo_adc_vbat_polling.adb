@@ -69,8 +69,6 @@ procedure Demo_ADC_VBat_Polling is
 begin
    Initialize_LEDs;
 
-   Put_Line ("Starting");
-
    Enable_Clock (VBat.ADC.all);
 
    Reset_All_ADC_Units;
