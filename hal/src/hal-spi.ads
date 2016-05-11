@@ -1,4 +1,5 @@
 package HAL.SPI is
+
    type SPI_Status is
      (Ok,
       Err_Error,
@@ -10,9 +11,11 @@ package HAL.SPI is
       Data_Size_16b);
 
    type SPI_Data_8b is array (Natural range <>) of Byte;
+
    type SPI_Data_16b is array (Natural range <>) of Short;
 
    type SPI_Port is limited interface;
+
    type SPI_Port_Ref is not null access all SPI_Port'Class;
 
    function Data_Size (Port : SPI_Port) return SPI_Data_Size is abstract;
