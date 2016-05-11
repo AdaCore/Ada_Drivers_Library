@@ -1,9 +1,9 @@
 with "../../../../config.gpr";
 with "../../../../boards/stm32f429_discovery.gpr";
 
-project Demo_L3DG20_FIFO_Watermark extends "../../../../examples/common/common.gpr" is
+project Demo_L3GD20_FIFO_Int extends "../../../../examples/common/common.gpr" is
 
-  for Main use ("demo_l3dg20.adb");
+  for Main use ("demo_l3gd20.adb");
 
   for Runtime ("Ada") use Config.RTS & "-stm32f429disco";
   for Target use "arm-eabi";
@@ -15,4 +15,4 @@ project Demo_L3DG20_FIFO_Watermark extends "../../../../examples/common/common.g
     for Global_Configuration_Pragmas use "gnat.adc";
   end Builder;
 
-end Demo_L3DG20_FIFO_Watermark;
+end Demo_L3GD20_FIFO_Int;

@@ -68,7 +68,7 @@ with LCD_Std_Out;
 
 with L3GD20;  use L3GD20;
 
-procedure Demo_L3DG20 is
+procedure Demo_L3GD20 is
 
    Axes   : L3GD20.Angle_Rates;
    Stable : L3GD20.Angle_Rates;  -- the values when the board is motionless
@@ -281,4 +281,4 @@ begin
       Print (Final_Column, Line2_Final, Scaled_Y'Img & "  ");
       Print (Final_Column, Line3_Final, Scaled_Z'Img & "  ");
    end loop;
-end Demo_L3DG20;
+end Demo_L3GD20;
