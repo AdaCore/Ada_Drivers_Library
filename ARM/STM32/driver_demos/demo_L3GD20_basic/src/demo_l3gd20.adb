@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This program demonstrates the on-board gyro provided by the L3DG20 chip
+--  This program demonstrates the on-board gyro provided by the L3GD20 chip
 --  on the STM32F429 Discovery boards. The pitch, roll, and yaw values are
 --  continuously displayed on the LCD, as are the adjusted raw values. Move
 --  the board to see them change. The values will be positive or negative,
@@ -46,13 +46,13 @@ with STM32.Device; use STM32.Device;
 with STM32.Board;  use STM32.Board;
 with LCD_Std_Out;  use LCD_Std_Out;
 
-with L3DG20;       use L3DG20;
+with L3GD20;       use L3GD20;
 with Output_Utils; use Output_Utils;
 
 procedure Demo_L3GD20 is
 
-   Axes   : L3DG20.Angle_Rates;
-   Stable : L3DG20.Angle_Rates;  -- the values when the board is motionless
+   Axes   : L3GD20.Angle_Rates;
+   Stable : L3GD20.Angle_Rates;  -- the values when the board is motionless
 
    Sensitivity : Float;
 

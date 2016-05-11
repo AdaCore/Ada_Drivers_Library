@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with L3DG20;    use L3DG20;
+with L3GD20;    use L3GD20;
 with BMP_Fonts; use BMP_Fonts;
 
 package Output_Utils is

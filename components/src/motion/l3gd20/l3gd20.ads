@@ -40,10 +40,10 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
---  This file provides a driver for the L3DG20 gyroscope from ST
+--  This file provides a driver for the L3GD20 gyroscope from ST
 --  Microelectronics.
 
---  See datasheet "L3DG20 MEMS motion sensor: three-axis digital output
+--  See datasheet "L3GD20 MEMS motion sensor: three-axis digital output
 --  gyroscope" DocID022116 Rev 2, dated February 2013, file number DM00036465
 
 pragma Restrictions (No_Streams);
@@ -53,7 +53,7 @@ with HAL;        use HAL;
 with HAL.SPI;    use HAL.SPI;
 with HAL.GPIO;   use HAL.GPIO;
 
-package L3DG20 is
+package L3GD20 is
    pragma Elaborate_Body;
 
    type Three_Axis_Gyroscope is tagged limited private;
@@ -586,4 +586,4 @@ private
    INT1_TSH_ZL   : constant Register := 16#37#; --  Interrupt 1 Threshold Z
    INT1_Duration : constant Register := 16#38#; --  Interrupt 1 Duration
 
-end L3DG20;
+end L3GD20;

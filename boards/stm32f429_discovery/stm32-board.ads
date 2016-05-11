@@ -49,7 +49,7 @@ with STM32.GPIO;    use STM32.GPIO;
 with STM32.SPI;     use STM32.SPI;
 with STM32.FMC;     use STM32.FMC;
 
-with L3DG20;
+with L3GD20;
 with Framebuffer_ILI9341;
 with Touch_Panel_STMPE811;
 
@@ -208,7 +208,7 @@ package STM32.Board is
    --  commanded. The gyro package does not references these, only clients'
    --  interrupt handlers do.
 
-   Gyro : L3DG20.Three_Axis_Gyroscope;
+   Gyro : L3GD20.Three_Axis_Gyroscope;
 
    procedure Initialize_Gyro_IO;
    --  This is a board-specific routine. It initializes and configures the

@@ -137,7 +137,7 @@ package body STM32.Board is
         (Port        => Gyro_SPI'Access,
          Chip_Select => NCS_MEMS_SPI'Access);
 
-      if Gyro.Device_Id /= L3DG20.I_Am_L3GD20 then
+      if Gyro.Device_Id /= L3GD20.I_Am_L3GD20 then
          raise Program_Error with "No L3GD20 found";
       end if;
    end Initialize_Gyro_IO;
