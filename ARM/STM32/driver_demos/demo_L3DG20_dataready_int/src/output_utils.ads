@@ -29,23 +29,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Bitmapped_Drawing;
-with BMP_Fonts;           use BMP_Fonts;
-with STM32.LCD;           use STM32.LCD;
-with STM32.DMA2D.Polling; use STM32.DMA2D;
-
-with STM32.L3DG20;        use STM32.L3DG20;
+with L3GD20;    use L3GD20;
+with BMP_Fonts; use BMP_Fonts;
 
 package Output_Utils is
 
-   package LCD_Drawing renames Bitmapped_Drawing;
-
    procedure Print_Static_Content (Stable : Angle_Rates);
 
-   procedure Print (Location : LCD_Drawing.Display_Point;  Msg : String);
+   procedure Print (X, Y : Natural;  Msg : String);
 
-   procedure Initialize_Display;
-   --  call this first
+   --  these constants are used for displaying values on the LCD
 
    Selected_Font : constant BMP_Font := Font12x12;
    Line_Height   : constant Positive := Char_Height (Selected_Font) + 4;

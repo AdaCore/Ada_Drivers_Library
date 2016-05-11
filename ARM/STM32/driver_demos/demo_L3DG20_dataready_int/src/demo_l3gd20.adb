@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This program demonstrates the on-board gyro provided by the L3DG20 chip
+--  This program demonstrates the on-board gyro provided by the L3GD20 chip
 --  on the STM32F429 Discovery boards. The pitch, roll, and yaw values are
 --  continuously displayed on the LCD, as are the adjusted raw values. Move
 --  the board to see them change. The values will be positive or negative,
@@ -46,22 +46,22 @@ with Gyro_Interrupts;
 with Output_Utils; use Output_Utils;
 
 with Ada.Synchronous_Task_Control; use Ada.Synchronous_Task_Control;
-with Interfaces;                   use Interfaces;
 
 with STM32.Device;  use STM32.Device;
 with STM32.Board;   use STM32.Board;
 
-with STM32.L3DG20;  use STM32.L3DG20;
+with LCD_Std_Out;
 
-with STM32;         use STM32;
-with STM32.GPIO;    use STM32.GPIO;
-with STM32.SYSCFG;  use STM32.SYSCFG;
-with STM32.EXTI;    use STM32.EXTI;
+with L3GD20;  use L3GD20;
 
-procedure Demo_L3DG20 is
+with STM32;      use STM32;
+with STM32.GPIO; use STM32.GPIO;
+with STM32.EXTI; use STM32.EXTI;
 
-   Axes   : L3DG20.Angle_Rates;
-   Stable : L3DG20.Angle_Rates;  -- the values when the board is motionless
+procedure Demo_L3GD20 is
+
+   Axes   : L3GD20.Angle_Rates;
+   Stable : L3GD20.Angle_Rates;  -- the values when the board is motionless
 
    Sensitivity : Float;
 
@@ -105,24 +105,15 @@ procedure Demo_L3DG20 is
 
    procedure Configure_Gyro is
    begin
-      -- For the page numbers shown below, the required values are specified in
-      -- the STM32F429 Discovery kit User Manual (UM1670) on those pages.
-      Initialize_Gyro_Hardware
-        (Gyro,
-         L3GD20_SPI  => SPI_5'Access,
-         SPI_GPIO_AF => GPIO_AF_SPI5,
-         SCK_Pin     => SPI5_SCK,       -- required, pg 23
-         MISO_Pin    => SPI5_MISO,      -- required, pg 23
-         MOSI_Pin    => SPI5_MOSI,      -- required, pg 23
-         CS_Pin      => NCS_MEMS_SPI,
-         Int1_Pin    => MEMS_INT1,
-         Int2_Pin    => MEMS_INT2);
+      --  Init the on-board gyro SPI and GPIO. This is board-specific, not
+      --  every board has a gyro. The F429 Discovery does, for example, but
+      --  the F4 Discovery does not.
+      STM32.Board.Initialize_Gyro_IO;
 
-      Reset (Gyro);
+      Gyro.Reset;
 
-      Configure
-        (Gyro,
-         Power_Mode       => L3GD20_Mode_Active,
+      Gyro.Configure
+        (Power_Mode       => L3GD20_Mode_Active,
          Output_Data_Rate => L3GD20_Output_Data_Rate_95Hz,
          Axes_Enable      => L3GD20_Axes_Enable,
          Bandwidth        => L3GD20_Bandwidth_1,
@@ -130,12 +121,7 @@ procedure Demo_L3DG20 is
          Endianness       => L3GD20_Little_Endian,
          Full_Scale       => L3GD20_Fullscale_250);
 
-      Enable_Low_Pass_Filter (Gyro);
-
-      --  We cannot check it before configuring the device above.
-      if L3DG20.Device_Id (Gyro) /= L3DG20.I_Am_L3GD20 then
-         raise Program_Error with "No L3DG20 found";
-      end if;
+      Gyro.Enable_Low_Pass_Filter;
    end Configure_Gyro;
 
    ------------------------------
@@ -145,7 +131,7 @@ procedure Demo_L3DG20 is
    procedure Configure_Gyro_Interrupt is
       Config : GPIO_Port_Configuration;
       --  This is the required port/pin configuration on STM32F429 Disco
-      --  boards for interrupt 2 on the L3DG30 gyro. See the F429 Disco
+      --  boards for interrupt 2 on the L3GD20 gyro. See the F429 Disco
       --  User Manual, Table 6, pg 19.
    begin
       Enable_Clock (MEMS_INT2);
@@ -156,7 +142,7 @@ procedure Demo_L3DG20 is
 
       Configure_Trigger (MEMS_INT2, Interrupt_Rising_Edge);
 
-      Enable_Data_Ready_Interrupt (Gyro);  --  L3DG30 gyro interrupt 2
+      Gyro.Enable_Data_Ready_Interrupt;  --  L3GD20 gyro interrupt 2
    end Configure_Gyro_Interrupt;
 
    ----------------------
@@ -184,7 +170,7 @@ procedure Demo_L3DG20 is
    end Get_Gyro_Offsets;
 
 begin
-   Initialize_Display;
+   LCD_Std_Out.Set_Font (Output_Utils.Selected_Font);
 
    Configure_Gyro;
 
@@ -192,7 +178,7 @@ begin
 
    Sensitivity := Full_Scale_Sensitivity (Gyro);
 
-   Print ((0,0), "Calibrating");
+   Print (0, 0, "Calibrating");
 
    Get_Gyro_Offsets (Stable, Sample_Count => 100);  -- arbitrary count
 
@@ -207,9 +193,9 @@ begin
       Axes.Z := Axes.Z - Stable.Z;
 
       --  print the values after the stable offset is removed
-      Print ((Col_Adjusted, Line1_Adjusted), Axes.X'Img & "   ");
-      Print ((Col_Adjusted, Line2_Adjusted), Axes.Y'Img & "   ");
-      Print ((Col_Adjusted, Line3_Adjusted), Axes.Z'Img & "   ");
+      Print (Col_Adjusted, Line1_Adjusted, Axes.X'Img & "   ");
+      Print (Col_Adjusted, Line2_Adjusted, Axes.Y'Img & "   ");
+      Print (Col_Adjusted, Line3_Adjusted, Axes.Z'Img & "   ");
 
       --  scale the adjusted values
       Scaled_X := Float (Axes.X) * Sensitivity;
@@ -217,8 +203,8 @@ begin
       Scaled_Z := Float (Axes.Z) * Sensitivity;
 
       --  print the final values
-      Print ((Final_Column, Line1_Final), Scaled_X'Img & "  ");
-      Print ((Final_Column, Line2_Final), Scaled_Y'Img & "  ");
-      Print ((Final_Column, Line3_Final), Scaled_Z'Img & "  ");
+      Print (Final_Column, Line1_Final, Scaled_X'Img & "  ");
+      Print (Final_Column, Line2_Final, Scaled_Y'Img & "  ");
+      Print (Final_Column, Line3_Final, Scaled_Z'Img & "  ");
    end loop;
-end Demo_L3DG20;
+end Demo_L3GD20;
