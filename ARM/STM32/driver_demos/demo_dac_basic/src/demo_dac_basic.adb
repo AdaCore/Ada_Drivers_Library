@@ -32,31 +32,30 @@
 --  This program demonstrates basic DAC use, using explicit calls to control
 --  the output value and conversion starting/stopping.
 
---  The user increments the percentage of the DAC output (VRef+) voltage
---  using the blue User button on the STM32F429 Discovery board. The current
---  percentage is displayed on the LCD. When incremented, the new percentage
---  is converted into an absolute value based on the selected resolution. For
---  example, a digital value of 2048 represents 50% in 12-bit resolution.
+--  The user increments the percentage of the DAC output (VRef+) voltage using
+--  the blue User button on the board (e.g., a STM32F429 Discovery board).
+--  The current percentage is displayed on the LCD. When incremented, the
+--  new percentage is converted into an absolute value based on the selected
+--  resolution. For example, a digital value of 2048 represents 50% in 12-bit
+--  resolution.
 
 --  Attach a voltmeter to PA4 (or PA5 if channel 2 is used) to see the voltage
---  changes.
+--  change as a result of pushing the blue button.
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 
-with Interfaces;   use Interfaces;
-
+with HAL;          use HAL;
 with STM32.Board;  use STM32.Board;
 with STM32.Device; use STM32.Device;
 
-with STM32;        use STM32;
 with STM32.DAC;    use STM32.DAC;
 with STM32.GPIO;   use STM32.GPIO;
 
-with Bitmapped_Drawing;
-with BMP_Fonts;
-with STM32.ILI9341;
+with LCD_Std_Out;  use LCD_Std_Out;
 
 procedure Demo_DAC_Basic is
+
+   use type Word;
 
    Output_Channel : constant DAC_Channel := Channel_1;  -- arbitrary
 
@@ -67,28 +66,11 @@ procedure Demo_DAC_Basic is
    --  should first be configured to analog mode. See the note in the RM, page
    --  431.
 
-   -----------------
-   -- LCD_Drawing --
-   -----------------
+   procedure Print (Value : Word);
+   --  Prints the image of the arg at a fixed location
 
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => STM32.ILI9341.Colors,
-      Set_Pixel => STM32.ILI9341.Set_Pixel);
-
-   ---------
-   -- Put --
-   ---------
-
-   procedure Put (X, Y : Natural; Msg : String) is
-      use LCD_Drawing, BMP_Fonts, STM32.ILI9341;
-   begin
-      Draw_String
-        ((X, Y),
-         Msg,
-         Font       => Font16x24,
-         Foreground => White,
-         Background => Black);
-   end Put;
+   procedure Await_Button;
+   --  Wait for the user to press and then release the blue user button
 
    -----------
    -- Print --
@@ -97,7 +79,7 @@ procedure Demo_DAC_Basic is
    procedure Print (Value : Word) is
       Value_Image : constant String := Value'Img;
    begin
-      Put (170, 52, Value_Image (2 .. Value_Image'Last) & "   ");
+      LCD_Std_Out.Put (170, 52, Value_Image (2 .. Value_Image'Last) & "   ");
    end Print;
 
    ------------------
@@ -107,11 +89,11 @@ procedure Demo_DAC_Basic is
    procedure Await_Button is
    begin
       Await_Pressed : loop
-         exit when Set (User_Button_Point);
+         exit Await_Pressed when Set (User_Button_Point);
       end loop Await_Pressed;
 
       Await_Released : loop
-         exit when not Set (User_Button_Point);
+         exit Await_Released when not Set (User_Button_Point);
       end loop Await_Released;
    end Await_Button;
 
@@ -125,16 +107,18 @@ procedure Demo_DAC_Basic is
                                        else DAC_Channel_2_IO);
       Config : GPIO_Port_Configuration;
    begin
-      Enable_Clock (Output.Port.all);
+      Enable_Clock (Output);
       Config.Mode := Mode_Analog;
       Config.Resistors := Floating;
       Configure_IO (Output, Config);
    end Configure_DAC_GPIO;
 
-
 begin
    Initialize_LEDs;
    All_LEDs_Off;
+
+   LCD_Std_Out.Clear_Screen;
+
    Configure_User_Button_GPIO;
 
    Configure_DAC_GPIO (Output_Channel);
@@ -154,7 +138,7 @@ begin
       Percent : Word;
 
       Resolution : constant DAC_Resolution := DAC_Resolution_12_Bits;
-      -- Arbitrary, change as desired.  All else will automatically adjust.
+      --  Arbitrary, change as desired.  Counts will automatically adjust.
 
       Max_Counts : constant Word := (if Resolution = DAC_Resolution_12_Bits
                                      then Max_12bit_Resolution

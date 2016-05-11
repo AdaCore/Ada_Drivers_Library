@@ -45,24 +45,20 @@
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 
-with Interfaces;   use Interfaces;
-
-with STM32.Device; use STM32.Device;
+with HAL;          use HAL;
 with STM32.Board;  use STM32.Board;
-
-with STM32;        use STM32;
+with STM32.Device; use STM32.Device;
+with STM32.GPIO;   use STM32.GPIO;
 with STM32.DAC;    use STM32.DAC;
 with STM32.DMA;    use STM32.DMA;
-with STM32.GPIO;   use STM32.GPIO;
 with STM32.Timers; use STM32.Timers;
+with LCD_Std_Out;  use LCD_Std_Out;
 
 with System;
 
-with Bitmapped_Drawing;
-with BMP_Fonts;
-with STM32.ILI9341;
-
 procedure Demo_DAC_DMA is
+
+   use type Word;
 
    ---------------------------------  DMA  ------------------------------------
 
@@ -107,28 +103,19 @@ procedure Demo_DAC_DMA is
    --  resolution). For example, at 12-bit resolution, to get half of the VRef+
    --  output voltage would require Counts to be 2048.
 
-   -----------------
-   -- LCD_Drawing --
-   -----------------
+   procedure Print (Value : Word);
+   --  Prints the image of the arg at a fixed location
 
-   package LCD_Drawing is new Bitmapped_Drawing
-     (Color     => STM32.ILI9341.Colors,
-      Set_Pixel => STM32.ILI9341.Set_Pixel);
+   procedure Await_Button;
+   --  Wait for the user to press and then release the blue user button
 
-   ---------
-   -- Put --
-   ---------
+   procedure Configure_DAC_GPIO (Output_Channel : DAC_Channel);
 
-   procedure Put (X, Y : Natural; Msg : String) is
-      use LCD_Drawing, BMP_Fonts, STM32.ILI9341;
-   begin
-      Draw_String
-        ((X, Y),
-         Msg,
-         Font       => Font16x24,
-         Foreground => White,
-         Background => Black);
-   end Put;
+   procedure Initialize_DMA;
+
+   procedure Initialize_Timer;
+
+   procedure Initialize_DAC;
 
    -----------
    -- Print --
@@ -147,11 +134,11 @@ procedure Demo_DAC_DMA is
    procedure Await_Button is
    begin
       Await_Pressed : loop
-         exit when Set (User_Button_Point);
+         exit Await_Pressed when Set (User_Button_Point);
       end loop Await_Pressed;
 
       Await_Released : loop
-         exit when not Set (User_Button_Point);
+         exit Await_Released when not Set (User_Button_Point);
       end loop Await_Released;
    end Await_Button;
 
@@ -166,7 +153,7 @@ procedure Demo_DAC_DMA is
                                        then DAC_Channel_1_IO
                                        else DAC_Channel_2_IO);
    begin
-      Enable_Clock (Output.Port.all);
+      Enable_Clock (Output);
       Config.Mode := Mode_Analog;
       Config.Resistors := Floating;
       Configure_IO (Output, Config);
@@ -239,6 +226,7 @@ begin  -- main subprogram
    Initialize_LEDs;
    All_LEDs_Off;
    Configure_User_Button_GPIO;
+   LCD_Std_Out.Clear_Screen;
 
    Initialize_Timer;
    Initialize_DMA;
