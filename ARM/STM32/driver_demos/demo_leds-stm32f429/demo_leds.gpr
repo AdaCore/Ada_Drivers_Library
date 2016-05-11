@@ -3,7 +3,7 @@ with "../../../../boards/stm32f429_discovery.gpr";
 
 project Demo_Leds extends "../../../../examples/common/common.gpr" is
 
-  for Runtime ("Ada") use Config.RTS & "-stm32f429";
+  for Runtime ("Ada") use Config.RTS & "-stm32f429disco";
   for Target use "arm-eabi";
   for Main use ("demo.adb");
   for Languages use ("Ada");
