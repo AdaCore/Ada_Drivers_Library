@@ -328,8 +328,8 @@ package STM32.Device is
 
    procedure Reset (This : aliased in out USART);
 
-   DMA_1 : aliased DMA_Controller with Volatile, Address => DMA1_Base;
-   DMA_2 : aliased DMA_Controller with Volatile, Address => DMA2_Base;
+   DMA_1 : aliased DMA_Controller with Import, Volatile, Address => DMA1_Base;
+   DMA_2 : aliased DMA_Controller with Import, Volatile, Address => DMA2_Base;
 
    procedure Enable_Clock (This : aliased in out DMA_Controller);
    procedure Reset (This : aliased in out DMA_Controller);
