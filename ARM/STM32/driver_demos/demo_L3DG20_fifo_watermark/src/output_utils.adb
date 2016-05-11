@@ -29,23 +29,15 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with LCD_Std_Out;
+
 package body Output_Utils is
 
    -----------
    -- Print --
    -----------
 
-   procedure Print (Location : LCD_Drawing.Display_Point;  Msg : String) is
-      --  a convenience routine for writing to the LCD
-   begin
-      LCD_Drawing.Draw_String
-        (LCD_Drawing.Screen_Buffer,
-         Location,
-         Msg,
-         Selected_Font,
-         Foreground => LCD_Drawing.White,  -- arbitrary
-         Background => LCD_Drawing.Black); -- arbitrary
-   end Print;
+   procedure Print (X, Y : Natural;  Msg : String) renames LCD_Std_Out.Put;
 
    --------------------------
    -- Print_Static_Content --
@@ -54,33 +46,19 @@ package body Output_Utils is
    procedure Print_Static_Content (Stable : Angle_Rates) is
    begin
       --  print the constant offsets computed when the device is motionless
-      Print ((0, Line1_Stable), "Stable X:" & Stable.X'Img);
-      Print ((0, Line2_Stable), "Stable Y:" & Stable.Y'Img);
-      Print ((0, Line3_Stable), "Stable Z:" & Stable.Z'Img);
+      Print (0, Line1_Stable, "Stable X:" & Stable.X'Img);
+      Print (0, Line2_Stable, "Stable Y:" & Stable.Y'Img);
+      Print (0, Line3_Stable, "Stable Z:" & Stable.Z'Img);
 
-     --  print the static labels for the values after the offset is removed
-      Print ((0, Line1_Adjusted), "Adjusted X:");
-      Print ((0, Line2_Adjusted), "Adjusted Y:");
-      Print ((0, Line3_Adjusted), "Adjusted Z:");
+      --  print the static labels for the values after the offset is removed
+      Print (0, Line1_Adjusted, "Adjusted X:");
+      Print (0, Line2_Adjusted, "Adjusted Y:");
+      Print (0, Line3_Adjusted, "Adjusted Z:");
 
       --  print the static labels for the final values
-      Print ((0, Line1_Final), "X:");
-      Print ((0, Line2_Final), "Y:");
-      Print ((0, Line3_Final), "Z:");
+      Print (0, Line1_Final, "X:");
+      Print (0, Line2_Final, "Y:");
+      Print (0, Line3_Final, "Z:");
    end Print_Static_Content;
-
-   ------------------------
-   -- Initialize_Display --
-   ------------------------
-
-   procedure Initialize_Display is
-   begin
-      STM32.LCD.Initialize (STM32.LCD.Pixel_Fmt_ARGB1555);
-      STM32.DMA2D.Polling.Initialize;
-
-      STM32.LCD.Set_Orientation (STM32.LCD.Portrait);
-
-      STM32.DMA2D.DMA2D_Fill (LCD_Drawing.Screen_Buffer, 0);
-   end Initialize_Display;
 
 end Output_Utils;
