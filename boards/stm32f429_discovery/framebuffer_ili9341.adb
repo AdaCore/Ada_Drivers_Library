@@ -63,16 +63,15 @@ package body Framebuffer_ILI9341 is
 
    procedure LCD_Pins_Init is
    begin
-      Enable_Clock (GPIO_Points'(LCD_CSX, LCD_WRX_DCX));
+      Enable_Clock (GPIO_Points'(LCD_RESET, LCD_CSX, LCD_WRX_DCX));
       Enable_Clock (LCD_PINS);
 
       Configure_IO
-        (Points => (LCD_CSX, LCD_WRX_DCX),
+        (Points => (LCD_RESET, LCD_CSX, LCD_WRX_DCX),
          Config => (Speed       => Speed_50MHz,
                     Mode        => Mode_Out,
                     Output_Type => Push_Pull,
                     Resistors   => Floating));
-      Lock (Points => (LCD_CSX, LCD_WRX_DCX));
 
       Configure_Alternate_Function (LCD_PINS, GPIO_AF_LTDC);
       Configure_Alternate_Function (LCD_RGB_AF9, GPIO_AF_LTDC_2);
@@ -82,7 +81,6 @@ package body Framebuffer_ILI9341 is
                     Mode        => Mode_AF,
                     Output_Type => Push_Pull,
                     Resistors   => Floating));
-      Lock (LCD_PINS);
 
       --  Set LCD_CSX: Chip Unselect
       Set (LCD_CSX);

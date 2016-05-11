@@ -16,7 +16,7 @@ package HAL.I2C is
 
    type I2C_Port is limited interface;
 
-   type I2C_Port_Ref is not null access all I2C_Port'Class;
+   type I2C_Port_Ref is access all I2C_Port'Class;
 
    procedure Master_Transmit
      (Port    : in out I2C_Port;

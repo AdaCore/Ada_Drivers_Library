@@ -1,4 +1,5 @@
 package HAL.UART is
+
    type UART_Status is
      (Ok,
       Err_Error,
@@ -10,10 +11,12 @@ package HAL.UART is
       Data_Size_9b);
 
    type UART_Data_8b is array (Natural range <>) of Byte;
+
    type UART_Data_9b is array (Natural range <>) of UInt9;
 
    type UART_Port is limited interface;
-   type UART_Port_Ref is not null access all UART_Port'Class;
+
+   type UART_Port_Ref is access all UART_Port'Class;
 
    function Data_Size (Port : UART_Port) return UART_Data_Size is abstract;
 

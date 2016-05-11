@@ -47,19 +47,21 @@ with STM32.Device;  use STM32.Device;
 
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.SPI;     use STM32.SPI;
-with L3DG20;        use L3DG20;
 with STM32.FMC;     use STM32.FMC;
 
+with L3DG20;
 with Framebuffer_ILI9341;
 with Touch_Panel_STMPE811;
 
 with Ada.Interrupts.Names;  use Ada.Interrupts;
 
-use STM32;  -- for base addresses
-
 package STM32.Board is
 
    pragma Elaborate_Body;
+
+   ----------
+   -- LEDs --
+   ----------
 
    subtype User_LED is GPIO_Point;
 
@@ -75,25 +77,20 @@ package STM32.Board is
    All_LEDs  : GPIO_Points := LED3 & LED4;
 
    procedure Initialize_LEDs;
-   --  MUST be called prior to any use of the LEDs
+   --  MUST be called prior to any use of the LEDs unless initialization is
+   --  done by the app elsewhere.
 
-   procedure Turn_On (This : in out User_LED)
-     renames STM32.GPIO.Set;
-   procedure Turn_Off (This : in out User_LED)
-     renames STM32.GPIO.Clear;
+   procedure Turn_On  (This : in out User_LED) renames STM32.GPIO.Set;
+   procedure Turn_Off (This : in out User_LED) renames STM32.GPIO.Clear;
 
    procedure All_LEDs_Off with Inline;
    procedure All_LEDs_On  with Inline;
-   procedure Toggle_LEDs (These : in out GPIO_Points)
-     renames STM32.GPIO.Toggle;
 
-   Gyro : L3DG20.Three_Axis_Gyroscope
-     (SPI      => SPI_5'Access,
-      CS_Pin   => PC1'Access,
-      Int1_Pin => PA1'Access,
-      Int2_Pin => PA2'Access);
+   procedure Toggle_LEDs (These : in out GPIO_Points) renames STM32.GPIO.Toggle;
 
-   --  GPIO Pins for FMC
+   ---------
+   -- FMC --
+   ---------
 
    FMC_D : constant GPIO_Points :=
              (PD14, PD15, PD0, PD1, PE7, PE8, PE9, PE10,
@@ -143,26 +140,29 @@ package STM32.Board is
    -- SPI5 Pins --
    ---------------
 
+   --  Required for the gyro and LCD so defined here
+
    SPI5_SCK     : GPIO_Point renames PF7;
    SPI5_MISO    : GPIO_Point renames PF8;
    SPI5_MOSI    : GPIO_Point renames PF9;
    NCS_MEMS_SPI : GPIO_Point renames PC1;
    MEMS_INT1    : GPIO_Point renames PA1;
    MEMS_INT2    : GPIO_Point renames PA2;
-   LCD_SPI      : SPI_Port   renames SPI_5;
 
-   ------------------------
-   --  GPIO Pins for LCD --
-   ------------------------
+   -------------------------
+   -- LCD and Touch Panel --
+   -------------------------
+
+   LCD_SPI : SPI_Port renames SPI_5;
 
    --  See the STM32F429I-Discovery board schematics for the actual pin
    --  assignments
 
    --  RGB connection
-   LCD_VSYNC    : GPIO_Point renames PA4;
-   LCD_HSYNC    : GPIO_Point renames PC6;
-   LCD_ENABLE   : GPIO_Point renames PF10;
-   LCD_CLK      : GPIO_Point renames PG7;
+   LCD_VSYNC  : GPIO_Point renames PA4;
+   LCD_HSYNC  : GPIO_Point renames PC6;
+   LCD_ENABLE : GPIO_Point renames PF10;
+   LCD_CLK    : GPIO_Point renames PG7;
 
    --  See the STM32F427xx/STM32F429xx datasheet for the aleternate function
    --  mapping.
@@ -178,10 +178,13 @@ package STM32.Board is
 
    LCD_Natural_Width  : constant := 240;
    LCD_Natural_Height : constant := 320;
-   Display            : Framebuffer_ILI9341.Frame_Buffer;
-   Touch_Panel        : Touch_Panel_STMPE811.Touch_Panel;
 
-   --  User button
+   Display     : Framebuffer_ILI9341.Frame_Buffer;
+   Touch_Panel : Touch_Panel_STMPE811.Touch_Panel;
+
+   -----------------
+   -- User button --
+   -----------------
 
    User_Button_Point     : GPIO_Point renames PA0;
    User_Button_Interrupt : constant Interrupt_ID := Names.EXTI0_Interrupt;
@@ -190,5 +193,27 @@ package STM32.Board is
    --  Configures the GPIO port/pin for the blue user button. Sufficient
    --  for polling the button, and necessary for having the button generate
    --  interrupts.
+
+   ----------
+   -- Gyro --
+   ----------
+
+   Gyro_SPI : SPI_Port renames LCD_SPI;
+   --  The gyro and LCD use the same port and pins. See the STM32F429 Discovery
+   --  kit User Manual (UM1670) pages 21 and 23.
+
+   Gyro_Interrupt_1_Pin : GPIO_Point renames MEMS_INT1;
+   Gyro_Interrupt_2_Pin : GPIO_Point renames MEMS_INT2;
+   --  Theese are the GPIO pins on which the gyro generates interrupts if so
+   --  commanded. The gyro package does not references these, only clients'
+   --  interrupt handlers do.
+
+   Gyro : L3DG20.Three_Axis_Gyroscope;
+
+   procedure Initialize_Gyro_IO;
+   --  This is a board-specific routine. It initializes and configures the
+   --  GPIO, SPI, etc. for the on-board L3GD20 gyro as required for the F429
+   --  Disco board. See the STM32F429 Discovery kit User Manual (UM1670) for
+   --  specifics.
 
 end STM32.Board;

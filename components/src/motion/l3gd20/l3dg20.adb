@@ -136,35 +136,44 @@ package body L3DG20 is
    --  sequence representing a signed integer quantity.
 
    procedure Swap2 (Location : System.Address) with Inline;
-   --  swaps the two bytes at Location and Location+1
+   --  Swaps the two bytes at Location and Location+1
 
-   procedure Chip_Select (This : Three_Axis_Gyroscope; Enabled : Boolean);
+   procedure SPI_Mode (This : Three_Axis_Gyroscope; Enabled : Boolean);
+   --  Enable or disable SPI mode communication with the device. This is named
+   --  "chip select" in other demos/examples.
 
-   ------------------------------
-   -- Initialize_Gyro_Hardware --
-   ------------------------------
+   ----------------
+   -- Initialize --
+   ----------------
 
-   procedure Initialize_Gyro (This : in out Three_Axis_Gyroscope)   is
+   procedure Initialize
+     (This        : in out Three_Axis_Gyroscope;
+      Port        : SPI_Port_Ref;
+      Chip_Select : GPIO_Point_Ref)
+   is
    begin
-      Chip_Select (This, Enabled => False);
-   end Initialize_Gyro;
+      This.Port := Port;
+      This.CS := Chip_Select;
+
+      SPI_Mode (This, Enabled => False);
+   end Initialize;
 
    -----------------
-   -- Chip_Select --
+   -- SPI_Mode --
    -----------------
 
-   procedure Chip_Select (This : Three_Axis_Gyroscope; Enabled : Boolean) is
+   procedure SPI_Mode (This : Three_Axis_Gyroscope; Enabled : Boolean) is
       --  When the pin is low (cleared), the device is in SPI mode.
       --  When the pin is high (set), the device is in I2C mode.
       --  We want SPI mode communication, so Enabled, when True,
       --  means we must drive the pin low.
    begin
       if Enabled then
-         This.CS_Pin.Clear;
+         This.CS.Clear;
       else
-         This.CS_Pin.Set;
+         This.CS.Set;
       end if;
-   end Chip_Select;
+   end SPI_Mode;
 
    -----------
    -- Write --
@@ -174,19 +183,19 @@ package body L3DG20 is
    is
       Status : SPI_Status;
    begin
-      Chip_Select (This, Enabled => True);
+      SPI_Mode (This, Enabled => True);
 
-      This.SPI.Transmit (SPI_Data_8b'(1 => Byte (Addr)), Status);
+      This.Port.Transmit (SPI_Data_8b'(1 => Byte (Addr)), Status);
       if Status /= Ok then
          raise Program_Error;
       end if;
 
-      This.SPI.Transmit (SPI_Data_8b'(1 => Data), Status);
+      This.Port.Transmit (SPI_Data_8b'(1 => Data), Status);
       if Status /= Ok then
          raise Program_Error;
       end if;
 
-      Chip_Select (This, Enabled => False);
+      SPI_Mode (This, Enabled => False);
    end Write;
 
    ----------
@@ -201,21 +210,21 @@ package body L3DG20 is
       Status : SPI_Status;
       Tmp_Data : SPI_Data_8b (1 .. 1);
    begin
-      Chip_Select (This, Enabled => True);
+      SPI_Mode (This, Enabled => True);
 
-      This.SPI.Transmit (SPI_Data_8b'(1 => Byte (Addr) or ReadWrite_CMD),
+      This.Port.Transmit (SPI_Data_8b'(1 => Byte (Addr) or ReadWrite_CMD),
                          Status);
       if Status /= Ok then
          raise Program_Error;
       end if;
 
-      This.SPI.Receive (Tmp_Data, Status);
+      This.Port.Receive (Tmp_Data, Status);
       if Status /= Ok then
          raise Program_Error;
       end if;
       Data := Tmp_Data (Tmp_Data'First);
 
-      Chip_Select (This, Enabled => False);
+      SPI_Mode (This, Enabled => False);
    end Read;
 
    ----------------
@@ -232,9 +241,9 @@ package body L3DG20 is
       Status : SPI_Status;
       Tmp_Data : SPI_Data_8b (1 .. 1);
    begin
-      Chip_Select (This, Enabled => True);
+      SPI_Mode (This, Enabled => True);
 
-      This.SPI.Transmit
+      This.Port.Transmit
         (SPI_Data_8b'(1 => Byte (Addr) or ReadWrite_CMD or MultiByte_CMD),
          Status);
 
@@ -243,7 +252,7 @@ package body L3DG20 is
       end if;
 
       for K in 1 .. Count loop
-         This.SPI.Receive (Tmp_Data, Status);
+         This.Port.Receive (Tmp_Data, Status);
          if Status /= Ok then
             raise Program_Error;
          end if;
@@ -251,7 +260,7 @@ package body L3DG20 is
          Index := Index + 1;
       end loop;
 
-      Chip_Select (This, Enabled => False);
+      SPI_Mode (This, Enabled => False);
    end Read_Bytes;
 
    ---------------
@@ -379,8 +388,7 @@ package body L3DG20 is
    -- Set_Reference --
    -------------------
 
-   procedure Set_Reference (This : in out Three_Axis_Gyroscope; Value : Byte)
-   is
+   procedure Set_Reference (This : in out Three_Axis_Gyroscope; Value : Byte) is
    begin
       Write (This, Reference, Value);
    end Set_Reference;
@@ -389,8 +397,7 @@ package body L3DG20 is
    -- Data_Status --
    -----------------
 
-   function Data_Status (This : Three_Axis_Gyroscope) return Gyro_Data_Status
-   is
+   function Data_Status (This : Three_Axis_Gyroscope) return Gyro_Data_Status is
       Result : Byte;
       function As_Gyro_Data_Status is
         new Ada.Unchecked_Conversion (Source => Byte,
@@ -439,8 +446,7 @@ package body L3DG20 is
    -- Full_Scale_Sensitivity --
    ----------------------------
 
-   function Full_Scale_Sensitivity (This : Three_Axis_Gyroscope) return Float
-   is
+   function Full_Scale_Sensitivity (This : Three_Axis_Gyroscope) return Float is
       Ctrl4  : Byte;
       Result : Float;
       Fullscale_Selection : Byte;
@@ -480,6 +486,13 @@ package body L3DG20 is
       Read (This, CTRL_REG4, Ctrl4);
 
       Read_Bytes (This, OUT_X_L, Received, Bytes_To_Read);
+      --  The above has the effect of separate reads, as follows:
+      --    Read (This, OUT_X_L, Received (1));
+      --    Read (This, OUT_X_H, Received (2));
+      --    Read (This, OUT_Y_L, Received (3));
+      --    Read (This, OUT_Y_H, Received (4));
+      --    Read (This, OUT_Z_L, Received (5));
+      --    Read (This, OUT_Z_H, Received (6));
 
       if (Ctrl4 and Endian_Selection_Mask) = L3GD20_Big_Endian'Enum_Rep then
          Swap2 (Received (1)'Address);
@@ -582,10 +595,7 @@ package body L3DG20 is
    -- Interrupt1_Status --
    -----------------------
 
-   function Interrupt1_Source
-     (This : Three_Axis_Gyroscope)
-      return Interrupt1_Sources
-   is
+   function Interrupt1_Source (This : Three_Axis_Gyroscope) return Interrupt1_Sources is
       Result : Byte;
       function As_Interrupt_Source is new Ada.Unchecked_Conversion
         (Source => Byte, Target => Interrupt1_Sources);
@@ -766,8 +776,7 @@ package body L3DG20 is
    -- Current_FIFO_Depth --
    ------------------------
 
-   function Current_FIFO_Depth (This : Three_Axis_Gyroscope) return FIFO_Level
-   is
+   function Current_FIFO_Depth (This : Three_Axis_Gyroscope) return FIFO_Level is
       Result : Byte;
    begin
       Read (This, FIFO_SRC, Result);
@@ -779,8 +788,7 @@ package body L3DG20 is
    -- FIFO_Below_Watermark --
    --------------------------
 
-   function FIFO_Below_Watermark (This : Three_Axis_Gyroscope) return Boolean
-   is
+   function FIFO_Below_Watermark (This : Three_Axis_Gyroscope) return Boolean is
       Result : Byte;
    begin
       Read (This, FIFO_SRC, Result);
@@ -816,8 +824,7 @@ package body L3DG20 is
    -- Enable_Data_Ready_Interrupt --
    ---------------------------------
 
-   procedure Enable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope)
-   is
+   procedure Enable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope) is
       Ctrl3 : Byte;
    begin
       Read (This, CTRL_REG3, Ctrl3);
@@ -829,8 +836,7 @@ package body L3DG20 is
    -- Disable_Data_Ready_Interrupt --
    ----------------------------------
 
-   procedure Disable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope)
-   is
+   procedure Disable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope) is
       Ctrl3 : Byte;
    begin
       Read (This, CTRL_REG3, Ctrl3);
@@ -842,9 +848,7 @@ package body L3DG20 is
    -- Enable_FIFO_Watermark_Interrupt --
    -------------------------------------
 
-   procedure Enable_FIFO_Watermark_Interrupt
-     (This : in out Three_Axis_Gyroscope)
-   is
+   procedure Enable_FIFO_Watermark_Interrupt (This : in out Three_Axis_Gyroscope) is
       Ctrl3 : Byte;
    begin
       Read (This, CTRL_REG3, Ctrl3);

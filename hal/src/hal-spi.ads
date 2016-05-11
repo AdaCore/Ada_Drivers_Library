@@ -16,7 +16,7 @@ package HAL.SPI is
 
    type SPI_Port is limited interface;
 
-   type SPI_Port_Ref is not null access all SPI_Port'Class;
+   type SPI_Port_Ref is access all SPI_Port'Class;
 
    function Data_Size (Port : SPI_Port) return SPI_Data_Size is abstract;
 

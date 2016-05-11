@@ -46,22 +46,26 @@
 --  See datasheet "L3DG20 MEMS motion sensor: three-axis digital output
 --  gyroscope" DocID022116 Rev 2, dated February 2013, file number DM00036465
 
+pragma Restrictions (No_Streams);
+
 with Interfaces; use Interfaces;
 with HAL;        use HAL;
 with HAL.SPI;    use HAL.SPI;
 with HAL.GPIO;   use HAL.GPIO;
 
 package L3DG20 is
+   pragma Elaborate_Body;
 
-   type Three_Axis_Gyroscope
-     (SPI      : SPI_Port_Ref;
-      CS_Pin   : GPIO_Point_Ref;
-      Int1_Pin : GPIO_Point_Ref;
-      Int2_Pin : GPIO_Point_Ref) is limited private;
+   type Three_Axis_Gyroscope is tagged limited private;
 
-   --  Define the hardware for the gyro to use. MUST be called first. Note that
-   --  procedure Configure must be called as well, at some point after this.
-   procedure Initialize_Gyro (This : in out Three_Axis_Gyroscope);
+   procedure Initialize
+     (This        : in out Three_Axis_Gyroscope;
+      Port        : SPI_Port_Ref;
+      Chip_Select : GPIO_Point_Ref);
+   --  Does device-specific initialization. Must be called prior to use.
+   --
+   --  NB: does NOT init/configure SPI and GPIO IO, which must be done
+   --  (elsewhere) prior to calling this routine.
 
    type Power_Mode_Selection is
      (L3GD20_Mode_Powerdown,
@@ -86,14 +90,12 @@ package L3DG20 is
       L3GD20_Output_Data_Rate_760Hz => 16#C0#);
 
    --  See App Note 4505, pg 8, Table 3.
-   function Data_Rate_Hertz
-     (Selection : Output_Data_Rate_Selection)
-      return Float
-   is (case Selection is
-          when L3GD20_Output_Data_Rate_95Hz  =>  95.0,
-          when L3GD20_Output_Data_Rate_190Hz => 190.0,
-          when L3GD20_Output_Data_Rate_380Hz => 380.0,
-          when L3GD20_Output_Data_Rate_760Hz => 760.0);
+   function Data_Rate_Hertz (Selection : Output_Data_Rate_Selection) return Float is
+     (case Selection is
+         when L3GD20_Output_Data_Rate_95Hz  =>  95.0,
+         when L3GD20_Output_Data_Rate_190Hz => 190.0,
+         when L3GD20_Output_Data_Rate_380Hz => 380.0,
+         when L3GD20_Output_Data_Rate_760Hz => 760.0);
 
    type Axes_Selection is
      (L3GD20_Axes_Disable,
@@ -361,19 +363,21 @@ package L3DG20 is
    procedure Disable_Int2_Interrupts (This : in out Three_Axis_Gyroscope);
 
    procedure Enable_Data_Ready_Interrupt  (This : in out Three_Axis_Gyroscope);
+
    procedure Disable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope);
 
    procedure Enable_FIFO_Watermark_Interrupt
      (This : in out Three_Axis_Gyroscope);
+
    procedure Disable_FIFO_Watermark_Interrupt
      (This : in out Three_Axis_Gyroscope);
 
-   procedure Enable_FIFO_Overrun_Interrupt
-     (This : in out Three_Axis_Gyroscope);
-   procedure Disable_FIFO_Overrun_Interrupt
-     (This : in out Three_Axis_Gyroscope);
+   procedure Enable_FIFO_Overrun_Interrupt (This : in out Three_Axis_Gyroscope);
+
+   procedure Disable_FIFO_Overrun_Interrupt (This : in out Three_Axis_Gyroscope);
 
    procedure Enable_FIFO_Empty_Interrupt  (This : in out Three_Axis_Gyroscope);
+
    procedure Disable_FIFO_Empty_Interrupt (This : in out Three_Axis_Gyroscope);
 
    --  Interrupt 1 facilities
@@ -503,8 +507,7 @@ package L3DG20 is
       X_Low_Interrupt   at 0 range 0 .. 0;
    end record;
 
-   function Interrupt1_Source (This : Three_Axis_Gyroscope)
-                               return Interrupt1_Sources;
+   function Interrupt1_Source (This : Three_Axis_Gyroscope) return Interrupt1_Sources;
 
    --  Miscellaneous functionality
 
@@ -526,11 +529,10 @@ package L3DG20 is
 
 private
 
-   type Three_Axis_Gyroscope
-     (SPI      : SPI_Port_Ref;
-      CS_Pin   : GPIO_Point_Ref;
-      Int1_Pin : GPIO_Point_Ref;
-      Int2_Pin : GPIO_Point_Ref) is null record;
+   type Three_Axis_Gyroscope is tagged limited record
+      Port : SPI_Port_Ref;
+      CS   : GPIO_Point_Ref;
+   end record;
 
    type Register is new Byte;
 

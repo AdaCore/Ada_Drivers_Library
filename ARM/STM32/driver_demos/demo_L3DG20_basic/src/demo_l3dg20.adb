@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -41,16 +41,12 @@
 --  NB: You may need to reset the board after downloading.
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
-with Interfaces;   use Interfaces;
 
 with STM32.Device; use STM32.Device;
 with STM32.Board;  use STM32.Board;
+with LCD_Std_Out;  use LCD_Std_Out;
 
-with STM32.L3DG20; use STM32.L3DG20;
-
-with STM32;               use STM32;
-with STM32.GPIO;          use STM32.GPIO;
-
+with L3DG20;       use L3DG20;
 with Output_Utils; use Output_Utils;
 
 procedure Demo_L3DG20 is
@@ -88,24 +84,15 @@ procedure Demo_L3DG20 is
 
    procedure Configure_Gyro is
    begin
-      -- For the page numbers shown below, the required values are specified in
-      -- the STM32F429 Discovery kit User Manual (UM1670) on those pages.
-      Initialize_Gyro_Hardware
-        (Gyro,
-         L3GD20_SPI  => SPI_5'Access,
-         SPI_GPIO_AF => GPIO_AF_SPI5,
-         SCK_Pin     => SPI5_SCK,       -- required, pg 23
-         MISO_Pin    => SPI5_MISO,      -- required, pg 23
-         MOSI_Pin    => SPI5_MOSI,      -- required, pg 23
-         CS_Pin      => NCS_MEMS_SPI,
-         Int1_Pin    => MEMS_INT1,
-         Int2_Pin    => MEMS_INT2);
+      --  Init the on-board gyro SPI and GPIO. This is board-specific, not
+      --  every board has a gyro. The F429 Discovery does, for example, but
+      --  the F4 Discovery does not.
+      STM32.Board.Initialize_Gyro_IO;
 
-      Reset (Gyro);
+      Gyro.Reset;
 
-      Configure
-        (Gyro,
-         Power_Mode       => L3GD20_Mode_Active,
+      Gyro.Configure
+        (Power_Mode       => L3GD20_Mode_Active,
          Output_Data_Rate => L3GD20_Output_Data_Rate_95Hz,
          Axes_Enable      => L3GD20_Axes_Enable,
          Bandwidth        => L3GD20_Bandwidth_1,
@@ -114,11 +101,6 @@ procedure Demo_L3DG20 is
          Full_Scale       => L3GD20_Fullscale_250);
 
       Enable_Low_Pass_Filter (Gyro);
-
-      --  We cannot check it before configuring the device above.
-      if L3DG20.Device_Id (Gyro) /= L3DG20.I_Am_L3GD20 then
-         raise Program_Error with "No L3DG20 found";
-      end if;
    end Configure_Gyro;
 
    ----------------------
@@ -135,7 +117,7 @@ procedure Demo_L3DG20 is
       Total_Z : Long_Integer := 0;
    begin
       for K in 1 .. Sample_Count loop
-         Get_Raw_Angle_Rates (Gyro, Sample);
+         Gyro.Get_Raw_Angle_Rates (Sample);
          Total_X := Total_X + Long_Integer (Sample.X);
          Total_Y := Total_Y + Long_Integer (Sample.Y);
          Total_Z := Total_Z + Long_Integer (Sample.Z);
@@ -164,13 +146,13 @@ procedure Demo_L3DG20 is
    end Await_Data_Ready;
 
 begin
-   Initialize_Display;
+   LCD_Std_Out.Set_Font (Output_Utils.Selected_Font);
 
    Configure_Gyro;
 
-   Sensitivity := Full_Scale_Sensitivity (Gyro);
+   Sensitivity := Gyro.Full_Scale_Sensitivity;
 
-   Print ((0, 0), "Calibrating");
+   Print (0, 0, "Calibrating");
 
    Get_Gyro_Offsets (Stable, Sample_Count => 100);  -- arbitrary count
 
@@ -179,7 +161,12 @@ begin
    loop
       Await_Data_Ready (Gyro);
 
-      Get_Raw_Angle_Rates (Gyro, Axes);
+      Gyro.Get_Raw_Angle_Rates (Axes);
+
+      --  print the raw values
+      Print (Col_Raw, Line1_Raw, Axes.X'Img & "   ");
+      Print (Col_Raw, Line2_Raw, Axes.Y'Img & "   ");
+      Print (Col_Raw, Line3_Raw, Axes.Z'Img & "   ");
 
       --  remove the computed stable offsets from the raw values
       Axes.X := Axes.X - Stable.X;
@@ -187,18 +174,18 @@ begin
       Axes.Z := Axes.Z - Stable.Z;
 
       --  print the values after the stable offset is removed
-      Print ((Col_Adjusted, Line1_Adjusted), Axes.X'Img & "   ");
-      Print ((Col_Adjusted, Line2_Adjusted), Axes.Y'Img & "   ");
-      Print ((Col_Adjusted, Line3_Adjusted), Axes.Z'Img & "   ");
+      Print (Col_Adjusted, Line1_Adjusted, Axes.X'Img & "   ");
+      Print (Col_Adjusted, Line2_Adjusted, Axes.Y'Img & "   ");
+      Print (Col_Adjusted, Line3_Adjusted, Axes.Z'Img & "   ");
 
       --  scale the adjusted values
       Scaled_X := Float (Axes.X) * Sensitivity;
       Scaled_Y := Float (Axes.Y) * Sensitivity;
       Scaled_Z := Float (Axes.Z) * Sensitivity;
 
-      --  print the final values
-      Print ((Final_Column, Line1_Final), Scaled_X'Img & "  ");
-      Print ((Final_Column, Line2_Final), Scaled_Y'Img & "  ");
-      Print ((Final_Column, Line3_Final), Scaled_Z'Img & "  ");
+      --  print the final scaled values
+      Print (Final_Column, Line1_Final, Scaled_X'Img & "  ");
+      Print (Final_Column, Line2_Final, Scaled_Y'Img & "  ");
+      Print (Final_Column, Line3_Final, Scaled_Z'Img & "  ");
    end loop;
 end Demo_L3DG20;
