@@ -11,6 +11,7 @@ package HAL.Framebuffer is
    type Wait_Mode is (Polling, Interrupt);
 
    type Frame_Buffer_Display is limited interface;
+
    type Frame_Buffer_Display_Access is access all Frame_Buffer_Display'Class;
 
    function Get_Max_Layers

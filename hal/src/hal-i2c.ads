@@ -15,6 +15,7 @@ package HAL.I2C is
    subtype I2C_Address is UInt10;
 
    type I2C_Port is limited interface;
+
    type I2C_Port_Ref is not null access all I2C_Port'Class;
 
    procedure Master_Transmit
@@ -48,4 +49,5 @@ package HAL.I2C is
       Data          : out I2C_Data;
       Status        : out I2C_Status;
       Timeout       : Natural := 1000) is abstract;
+
 end HAL.I2C;

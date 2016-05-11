@@ -69,4 +69,5 @@ package HAL is
    type Byte_Array is array (Natural range <>) of Byte;
    type Short_Array is array (Natural range <>) of Short;
    type Word_Array is array (Natural range <>) of Word;
+
 end HAL;
