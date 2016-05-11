@@ -1,7 +1,7 @@
 with "../../../../config.gpr";
 with "../../../../boards/stm32f429_discovery.gpr";
 
-project Demo_L3DG20_Dataready_Int extends "../../../../examples/common/common.gpr" is
+project Demo_L3GD20_Dataready_Int extends "../../../../examples/common/common.gpr" is
 
   for Main use ("demo_l3gd20.adb");
 
@@ -15,4 +15,4 @@ project Demo_L3DG20_Dataready_Int extends "../../../../examples/common/common.gp
     for Global_Configuration_Pragmas use "gnat.adc";
   end Builder;
 
-end Demo_L3DG20_Dataready_Int;
+end Demo_L3GD20_Dataready_Int;
