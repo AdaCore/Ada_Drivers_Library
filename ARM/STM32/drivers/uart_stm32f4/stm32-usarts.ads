@@ -54,15 +54,13 @@ package STM32.USARTs is
 
    type USART is limited private;
 
-   procedure Enable (This : in out USART)
-     with
-       Post => Enabled (This),
-       Inline;
+   procedure Enable (This : in out USART) with
+     Post => Enabled (This),
+     Inline;
 
-   procedure Disable (This : in out USART)
-     with
-       Post => not Enabled (This),
-       Inline;
+   procedure Disable (This : in out USART) with
+     Post => not Enabled (This),
+     Inline;
 
    function Enabled (This : USART) return Boolean with Inline;
 
@@ -78,8 +76,8 @@ package STM32.USARTs is
 
    function Rx_Ready (This : USART) return Boolean with Inline;
 
-   type Stop_Bits is (Stopbits_1, Stopbits_2)
-     with Size => 2;
+   type Stop_Bits is (Stopbits_1, Stopbits_2) with Size => 2;
+
    for Stop_Bits use (Stopbits_1 => 0, Stopbits_2 => 2#10#);
 
    procedure Set_Stop_Bits (This : in out USART;  To : Stop_Bits);
@@ -112,6 +110,7 @@ package STM32.USARTs is
       RTS_Flow_Control,
       CTS_Flow_Control,
       RTS_CTS_Flow_Control);
+
    procedure Set_Flow_Control (This : in out USART;  To : Flow_Control);
 
    type USART_Interrupt is
@@ -162,53 +161,46 @@ package STM32.USARTs is
    procedure Clear_Status (This : in out USART; Flag : USART_Status_Flag)
      with Inline;
 
-   procedure Enable_DMA_Transmit_Requests (This : in out USART)
-     with
-       Inline,
-       Post => DMA_Transmit_Requests_Enabled (This);
+   procedure Enable_DMA_Transmit_Requests (This : in out USART) with
+     Inline,
+     Post => DMA_Transmit_Requests_Enabled (This);
 
-   procedure Disable_DMA_Transmit_Requests (This : in out USART)
-     with
-       Inline,
-       Post => not DMA_Transmit_Requests_Enabled (This);
+   procedure Disable_DMA_Transmit_Requests (This : in out USART) with
+     Inline,
+     Post => not DMA_Transmit_Requests_Enabled (This);
 
-   function DMA_Transmit_Requests_Enabled  (This : USART) return Boolean
-     with Inline;
+   function DMA_Transmit_Requests_Enabled  (This : USART) return Boolean with
+     Inline;
 
+   procedure Enable_DMA_Receive_Requests (This : in out USART) with
+     Inline,
+     Post => DMA_Receive_Requests_Enabled (This);
 
-   procedure Enable_DMA_Receive_Requests (This : in out USART)
-     with
-       Inline,
-       Post => DMA_Receive_Requests_Enabled (This);
+   procedure Disable_DMA_Receive_Requests (This : in out USART) with
+     Inline,
+     Post => not DMA_Receive_Requests_Enabled (This);
 
-   procedure Disable_DMA_Receive_Requests (This : in out USART)
-     with
-       Inline,
-       Post => not DMA_Receive_Requests_Enabled (This);
-
-   function DMA_Receive_Requests_Enabled  (This : USART) return Boolean
-     with Inline;
+   function DMA_Receive_Requests_Enabled  (This : USART) return Boolean with
+     Inline;
 
    procedure Pause_DMA_Transmission (This : in out USART)
      renames Disable_DMA_Transmit_Requests;
 
-   procedure Resume_DMA_Transmission (This : in out USART)
-     with
-       Inline,
-       Post => DMA_Transmit_Requests_Enabled (This) and
-               Enabled (This);
+   procedure Resume_DMA_Transmission (This : in out USART) with
+     Inline,
+     Post => DMA_Transmit_Requests_Enabled (This) and
+             Enabled (This);
 
    procedure Pause_DMA_Reception (This : in out USART)
      renames Disable_DMA_Receive_Requests;
 
-   procedure Resume_DMA_Reception (This : in out USART)
-     with
-       Inline,
-       Post => DMA_Receive_Requests_Enabled (This) and
-               Enabled (This);
+   procedure Resume_DMA_Reception (This : in out USART) with
+     Inline,
+     Post => DMA_Receive_Requests_Enabled (This) and
+             Enabled (This);
 
-   function Data_Register_Address (This : USART) return System.Address
-     with Inline;
+   function Data_Register_Address (This : USART) return System.Address with
+     Inline;
    --  Returns the address of the USART Data Register. This is exported
    --  STRICTLY for the sake of clients driving a USART via DMA. All other
    --  clients of this package should use the procedural interfaces Transmit
