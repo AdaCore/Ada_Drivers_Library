@@ -39,8 +39,9 @@ with STM32.Device;  use STM32.Device;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.FMC;     use STM32.FMC;
 with STM32.I2C;     use STM32.I2C;
+with STM32.DMA;     use STM32.DMA;
 
-use STM32;  -- for base addresses
+use STM32;
 
 with Touch_Panel_FT5336;
 with Framebuffer_RK043FN48H;

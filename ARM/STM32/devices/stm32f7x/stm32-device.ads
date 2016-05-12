@@ -48,7 +48,6 @@ pragma Warnings (On, "* is an internal GNAT unit");
 
 with STM32_SVD;     use STM32_SVD;
 
-with STM32_SVD.DMA;
 with STM32_SVD.SAI;
 
 with STM32.GPIO;    use STM32.GPIO;
@@ -58,6 +57,7 @@ with STM32.I2C;     use STM32.I2C;
 with STM32.SPI;     use STM32.SPI;
 with STM32.Timers;  use STM32.Timers;
 with STM32.DAC;     use STM32.DAC;
+with STM32.DMA;     use STM32.DMA;
 
 package STM32.Device is
    pragma Elaborate_Body;
@@ -339,10 +339,8 @@ package STM32.Device is
 --
 --     procedure Reset (This : aliased in out USART);
 
-   subtype DMA_Controller is STM32_SVD.DMA.DMA_Peripheral;
-
-   DMA_1 : DMA_Controller renames STM32_SVD.DMA.DMA1_Periph;
-   DMA_2 : DMA_Controller renames STM32_SVD.DMA.DMA2_Periph;
+   DMA_1 : aliased DMA_Controller with Import, Volatile, Address => DMA1_Base;
+   DMA_2 : aliased DMA_Controller with Import, Volatile, Address => DMA2_Base;
 
    procedure Enable_Clock (This : aliased in out DMA_Controller);
    procedure Reset (This : aliased in out DMA_Controller);
