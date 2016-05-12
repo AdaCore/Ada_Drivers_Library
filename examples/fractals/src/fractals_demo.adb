@@ -217,7 +217,6 @@ begin
    Display.Initialize_Layer (1, HAL.Bitmap.RGB_888);
    Display.Initialize_Layer (2, HAL.Bitmap.ARGB_4444);
    Touch_Panel.Initialize (HAL.Framebuffer.Landscape);
-   Initialize_LEDs;
 
    Initialize_Color_Map;
 
@@ -242,20 +241,6 @@ begin
 
          First_Pass := True;
          for J in reverse 0 .. 3 loop
-            case J is
-               when 0 =>
-                  Turn_Off (STM32.Board.LED2);
-                  Turn_On (STM32.Board.LED1);
-               when 1 =>
-                  Turn_Off (STM32.Board.LED3);
-                  Turn_On (STM32.Board.LED2);
-               when 2 =>
-                  Turn_Off (STM32.Board.LED4);
-                  Turn_On (STM32.Board.LED3);
-               when 3 =>
-                  Turn_On (STM32.Board.LED4);
-            end case;
-
             declare
                Size : constant Natural := 2 ** J;
             begin
@@ -343,7 +328,6 @@ begin
             end;
          end loop;
 
-         Turn_Off (STM32.Board.LED1);
          Display.Get_Hidden_Buffer (2).Fill (0);
          Display.Update_Layer (2);
 

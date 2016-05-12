@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -62,12 +62,7 @@ package STM32.Board is
    Red    : User_LED renames PD14;
    Blue   : User_LED renames PD15;
 
-   LED3 : User_LED renames Orange;
-   LED4 : User_LED renames Green;
-   LED5 : User_LED renames Red;
-   LED6 : User_LED renames Blue;
-
-   All_LEDs : GPIO_Points := LED3 & LED4 & LED5 & LED6;
+   All_LEDs : GPIO_Points := Green & Orange & Red & Blue;
    LCH_LED  : GPIO_Point renames Red;
 
    procedure Initialize_LEDs;

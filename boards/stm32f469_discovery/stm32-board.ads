@@ -51,11 +51,6 @@ package STM32.Board is
 
    subtype User_LED is GPIO_Point;
 
-   LED1      : User_LED renames PG6;
-   LED2      : User_LED renames PD4;
-   LED3      : User_LED renames PD5;
-   LED4      : User_LED renames PK3;
-
    Green     : User_LED renames LED1;
    Orange    : User_LED renames LED2;
    Red       : User_LED renames LED3;
@@ -63,7 +58,7 @@ package STM32.Board is
 
    LCH_LED   : User_LED renames Red;
 
-   All_LEDs  : GPIO_Points := LED1 & LED2 & LED3 & LED4;
+   All_LEDs  : GPIO_Points := Green & Orange & Red & Blue;
 
    procedure Initialize_LEDs;
    --  MUST be called prior to any use of the LEDs
