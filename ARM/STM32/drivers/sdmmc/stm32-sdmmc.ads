@@ -295,4 +295,6 @@ private
      (Controller : SDMMC_Controller) return Supported_SD_Memory_Cards
    is (Controller.Card_Type);
 
+   type Data_Direction is (Read, Write);
+
 end STM32.SDMMC;

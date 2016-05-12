@@ -50,7 +50,6 @@ package body STM32.SDMMC is
    SD_24TO31BITS               : constant := 16#FF00_0000#;
 
    type SD_SCR is array (1 .. 2) of Word;
-   type Data_Direction is (Read, Write);
 
    procedure Clear_Static_Flags (Controller : in out SDMMC_Controller);
 
