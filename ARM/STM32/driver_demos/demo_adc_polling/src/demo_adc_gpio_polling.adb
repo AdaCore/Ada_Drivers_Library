@@ -29,9 +29,21 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This program demonstrates reading the analog voltage value on a GPIO pin
---  with an ADC unit, using polling. Connect the pin to an appropriate external
---  circuit to see the value change. The sensed value is written to the LCD.
+--  This program demonstrates reading the analog voltage value on a GPIO
+--  pin with an ADC unit, using polling. The pin is continously polled in an
+--  infinite loop, displaying the current sample on each iteration. Connect the
+--  pin to an appropriate external input voltage to drive the displayed value.
+--  Absent an input, the sensed (and displayed) value will be meaningless. The
+--  green LED will toggle on each iteration, as an additional indication of
+--  execution.
+--
+--  NB: The input voltage must not exceed the maximum allowed for the board's
+--  circuitry!  A value between zero and three volts (inclusive) is safe.
+--
+--  The displayed value is the raw sample quantity in the range 0 .. 4095,
+--  representing an input voltage of 0.0 to 3.0 volts. Thus, for an
+--  incoming voltage of 1.5 volts, the sample would be approximately half of
+--  4095, i.e., 2048.
 
 --  Note that you will likely need to reset the board manually after loading.
 
@@ -45,6 +57,8 @@ with STM32.ADC;    use STM32.ADC;
 with STM32.GPIO;   use STM32.GPIO;
 
 with LCD_Std_Out;
+
+with Ada.Real_Time;  use Ada.Real_Time;
 
 procedure Demo_ADC_GPIO_Polling is
 
@@ -75,7 +89,7 @@ procedure Demo_ADC_GPIO_Polling is
    procedure Print (X, Y : Natural; Value : String) is
       Trailing_Blanks : constant String := "   ";  -- to clear the rest of line
    begin
-      LCD_Std_Out.Put (X, Y, Value & Trailing_Blanks);
+      LCD_Std_Out.Put (X, Y, Value & " / 4095" & Trailing_Blanks);
    end Print;
 
    ----------------------------
@@ -129,5 +143,7 @@ begin
       Print (0, 0, Raw'Img);
 
       Toggle (Green);
+
+      delay until Clock + Milliseconds (200); -- slow it down to ease reading
    end loop;
 end Demo_ADC_GPIO_Polling;
