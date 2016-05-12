@@ -81,32 +81,20 @@ package STM32.Device is
       GPIO_Port_K)
      with Size => 4;
 
-   function As_GPIO_Port_Id (Port : Internal_GPIO_Port)
-                             return GPIO_Port_Id
+   function As_GPIO_Port_Id (Port : Internal_GPIO_Port) return GPIO_Port_Id
      with Inline;
 
-   GPIO_A : aliased Internal_GPIO_Port
-     with Import, Volatile, Address => GPIOA_Base;
-   GPIO_B : aliased Internal_GPIO_Port
-     with Import, Volatile, Address => GPIOB_Base;
-   GPIO_C : aliased Internal_GPIO_Port
-     with Import, Volatile, Address => GPIOC_Base;
-   GPIO_D : aliased Internal_GPIO_Port
-     with Import, Volatile, Address => GPIOD_Base;
-   GPIO_E : aliased Internal_GPIO_Port
-     with Import, Volatile, Address => GPIOE_Base;
-   GPIO_F : aliased Internal_GPIO_Port
-     with Import, Volatile, Address => GPIOF_Base;
-   GPIO_G : aliased Internal_GPIO_Port
-     with Import, Volatile, Address => GPIOG_Base;
-   GPIO_H : aliased Internal_GPIO_Port
-     with Import, Volatile, Address => GPIOH_Base;
-   GPIO_I : aliased Internal_GPIO_Port
-     with Import, Volatile, Address => GPIOI_Base;
-   GPIO_J : aliased Internal_GPIO_Port
-     with Import, Volatile, Address => GPIOJ_Base;
-   GPIO_K : aliased Internal_GPIO_Port
-     with Import, Volatile, Address => GPIOK_Base;
+   GPIO_A : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOA_Base;
+   GPIO_B : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOB_Base;
+   GPIO_C : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOC_Base;
+   GPIO_D : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOD_Base;
+   GPIO_E : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOE_Base;
+   GPIO_F : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOF_Base;
+   GPIO_G : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOG_Base;
+   GPIO_H : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOH_Base;
+   GPIO_I : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOI_Base;
+   GPIO_J : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOJ_Base;
+   GPIO_K : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOK_Base;
 
    PA0  : aliased GPIO_Point := (GPIO_A'Access, 0);
    PA1  : aliased GPIO_Point := (GPIO_A'Access, 1);
@@ -285,12 +273,9 @@ package STM32.Device is
    PK14 : aliased GPIO_Point := (GPIO_K'Access, 14);
    PK15 : aliased GPIO_Point := (GPIO_K'Access, 15);
 
-   ADC_1 : aliased Analog_To_Digital_Converter
-     with Import, Volatile, Address => ADC1_Base;
-   ADC_2 : aliased Analog_To_Digital_Converter
-     with Import, Volatile, Address => ADC2_Base;
-   ADC_3 : aliased Analog_To_Digital_Converter
-     with Import, Volatile, Address => ADC3_Base;
+   ADC_1 : aliased Analog_To_Digital_Converter with Import, Volatile, Address => ADC1_Base;
+   ADC_2 : aliased Analog_To_Digital_Converter with Import, Volatile, Address => ADC2_Base;
+   ADC_3 : aliased Analog_To_Digital_Converter with Import, Volatile, Address => ADC3_Base;
 
    VBat               : constant ADC_Point := (ADC_1'Access, Channel => VBat_Channel);
    Temperature_Sensor : constant ADC_Point := VBat;
@@ -305,8 +290,7 @@ package STM32.Device is
 
    procedure Reset_All_ADC_Units;
 
-   DAC_1 : aliased Digital_To_Analog_Converter
-     with Import, Volatile, Address => DAC_Base;
+   DAC_1 : aliased Digital_To_Analog_Converter with Import, Volatile, Address => DAC_Base;
 
    DAC_Channel_1_IO : GPIO_Point renames PA4;
    DAC_Channel_2_IO : GPIO_Point renames PA5;
@@ -334,12 +318,9 @@ package STM32.Device is
    procedure Enable_Clock (This : aliased in out DMA_Controller);
    procedure Reset (This : aliased in out DMA_Controller);
 
-   Internal_I2C_Port_1 : aliased Internal_I2C_Port
-     with Import, Volatile, Address => I2C1_Base;
-   Internal_I2C_Port_2 : aliased Internal_I2C_Port
-     with Import, Volatile, Address => I2C2_Base;
-   Internal_I2C_Port_3 : aliased Internal_I2C_Port
-     with Import, Volatile, Address => I2C3_Base;
+   Internal_I2C_Port_1 : aliased Internal_I2C_Port with Import, Volatile, Address => I2C1_Base;
+   Internal_I2C_Port_2 : aliased Internal_I2C_Port with Import, Volatile, Address => I2C2_Base;
+   Internal_I2C_Port_3 : aliased Internal_I2C_Port with Import, Volatile, Address => I2C3_Base;
 
    type I2C_Port_Id is (I2C_Id_1, I2C_Id_2, I2C_Id_3);
 
@@ -348,23 +329,19 @@ package STM32.Device is
    I2C_3 : aliased I2C_Port (Internal_I2C_Port_3'Access);
 
    function As_Port_Id (Port : I2C_Port) return I2C_Port_Id with Inline;
+
    procedure Enable_Clock (This : I2C_Port);
    procedure Enable_Clock (This : I2C_Port_Id);
+
    procedure Reset (This : I2C_Port);
    procedure Reset (This : I2C_Port_Id);
 
-   Internal_SPI_1 : aliased Internal_SPI_Port
-     with Import, Volatile, Address => SPI1_Base;
-   Internal_SPI_2 : aliased Internal_SPI_Port
-     with Import, Volatile, Address => SPI2_Base;
-   Internal_SPI_3 : aliased Internal_SPI_Port
-     with Import, Volatile, Address => SPI3_Base;
-   Internal_SPI_4 : aliased Internal_SPI_Port
-     with Import, Volatile, Address => SPI4_Base;
-   Internal_SPI_5 : aliased Internal_SPI_Port
-     with Import, Volatile, Address => SPI5_Base;
-   Internal_SPI_6 : aliased Internal_SPI_Port
-     with Import, Volatile, Address => SPI6_Base;
+   Internal_SPI_1 : aliased Internal_SPI_Port with Import, Volatile, Address => SPI1_Base;
+   Internal_SPI_2 : aliased Internal_SPI_Port with Import, Volatile, Address => SPI2_Base;
+   Internal_SPI_3 : aliased Internal_SPI_Port with Import, Volatile, Address => SPI3_Base;
+   Internal_SPI_4 : aliased Internal_SPI_Port with Import, Volatile, Address => SPI4_Base;
+   Internal_SPI_5 : aliased Internal_SPI_Port with Import, Volatile, Address => SPI5_Base;
+   Internal_SPI_6 : aliased Internal_SPI_Port with Import, Volatile, Address => SPI6_Base;
 
    SPI_1 : aliased SPI_Port (Internal_SPI_1'Access);
    SPI_2 : aliased SPI_Port (Internal_SPI_2'Access);
@@ -376,36 +353,23 @@ package STM32.Device is
    procedure Enable_Clock (This : SPI_Port);
    procedure Reset (This : SPI_Port);
 
-   Timer_1 : aliased Timer with Volatile, Address => TIM1_Base;
-   pragma Import (Ada, Timer_1);
-   Timer_2 : aliased Timer with Volatile, Address => TIM2_Base;
-   pragma Import (Ada, Timer_2);
-   Timer_3 : aliased Timer with Volatile, Address => TIM3_Base;
-   pragma Import (Ada, Timer_3);
-   Timer_4 : aliased Timer with Volatile, Address => TIM4_Base;
-   pragma Import (Ada, Timer_4);
-   Timer_5 : aliased Timer with Volatile, Address => TIM5_Base;
-   pragma Import (Ada, Timer_5);
-   Timer_6 : aliased Timer with Volatile, Address => TIM6_Base;
-   pragma Import (Ada, Timer_6);
-   Timer_7 : aliased Timer with Volatile, Address => TIM7_Base;
-   pragma Import (Ada, Timer_7);
-   Timer_8 : aliased Timer with Volatile, Address => TIM8_Base;
-   pragma Import (Ada, Timer_8);
-   Timer_9 : aliased Timer with Volatile, Address => TIM9_Base;
-   pragma Import (Ada, Timer_9);
-   Timer_10 : aliased Timer with Volatile, Address => TIM10_Base;
-   pragma Import (Ada, Timer_10);
-   Timer_11 : aliased Timer with Volatile, Address => TIM11_Base;
-   pragma Import (Ada, Timer_11);
-   Timer_12 : aliased Timer with Volatile, Address => TIM12_Base;
-   pragma Import (Ada, Timer_12);
-   Timer_13 : aliased Timer with Volatile, Address => TIM13_Base;
-   pragma Import (Ada, Timer_13);
-   Timer_14 : aliased Timer with Volatile, Address => TIM14_Base;
-   pragma Import (Ada, Timer_14);
+   Timer_1  : aliased Timer with Import, Volatile, Address => TIM1_Base;
+   Timer_2  : aliased Timer with Import, Volatile, Address => TIM2_Base;
+   Timer_3  : aliased Timer with Import, Volatile, Address => TIM3_Base;
+   Timer_4  : aliased Timer with Import, Volatile, Address => TIM4_Base;
+   Timer_5  : aliased Timer with Import, Volatile, Address => TIM5_Base;
+   Timer_6  : aliased Timer with Import, Volatile, Address => TIM6_Base;
+   Timer_7  : aliased Timer with Import, Volatile, Address => TIM7_Base;
+   Timer_8  : aliased Timer with Import, Volatile, Address => TIM8_Base;
+   Timer_9  : aliased Timer with Import, Volatile, Address => TIM9_Base;
+   Timer_10 : aliased Timer with Import, Volatile, Address => TIM10_Base;
+   Timer_11 : aliased Timer with Import, Volatile, Address => TIM11_Base;
+   Timer_12 : aliased Timer with Import, Volatile, Address => TIM12_Base;
+   Timer_13 : aliased Timer with Import, Volatile, Address => TIM13_Base;
+   Timer_14 : aliased Timer with Import, Volatile, Address => TIM14_Base;
 
    procedure Enable_Clock (This : in out Timer);
+
    procedure Reset (This : in out Timer);
 
    -----------------------------
@@ -424,6 +388,7 @@ package STM32.Device is
    function System_Clock_Frequencies return RCC_System_Clocks;
 
    type PLLSAI_DivR is new UInt2;
+
    PLLSAI_DIV2  : constant PLLSAI_DivR := 0;
    PLLSAI_DIV4  : constant PLLSAI_DivR := 1;
    PLLSAI_DIV8  : constant PLLSAI_DivR := 2;
@@ -435,10 +400,13 @@ package STM32.Device is
       DivR : PLLSAI_DivR);
 
    procedure Enable_PLLSAI;
+
    procedure Disable_PLLSAI;
+
    function PLLSAI_Ready return Boolean;
 
    procedure Enable_DCMI_Clock;
+
    procedure Reset_DCMI;
 
 private
