@@ -2,7 +2,7 @@
 
 with Interfaces; use Interfaces;
 with HAL;        use HAL;
-with HAL.I2C;
+with HAL.I2C;    use HAL.I2C;
 
 package WM8994 is
 
@@ -17,7 +17,7 @@ package WM8994 is
       Microphone,
       Input_Line);
 
-   WM8994_ID               : constant := 16#8994#;
+   WM8994_ID : constant := 16#8994#;
 
    type Audio_Frequency is
      (Audio_Freq_8kHz,
@@ -55,8 +55,10 @@ package WM8994 is
 
    subtype Volume_Level is Unsigned_8 range 0 .. 100;
 
-   type WM8994_Device (Port     : HAL.I2C.I2C_Port_Ref;
-                       I2C_Addr : UInt10) is tagged limited private;
+   type WM8994_Device
+     (Port     : not null I2C_Port_Ref;
+      I2C_Addr : UInt10)
+   is tagged limited private;
 
    procedure Init (This      : in out WM8994_Device;
                    Input     : Input_Device;
@@ -78,7 +80,7 @@ package WM8994 is
    procedure Reset (This : in out WM8994_Device);
 
 private
-   type WM8994_Device (Port     : HAL.I2C.I2C_Port_Ref;
+   type WM8994_Device (Port     : not null I2C_Port_Ref;
                        I2C_Addr : UInt10) is tagged limited null record;
 
    procedure I2C_Write (This   : in out WM8994_Device;

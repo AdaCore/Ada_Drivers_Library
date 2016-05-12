@@ -33,7 +33,6 @@
 --  Based on the ft6x06 driver from MCD Application Team
 
 with Ada.Unchecked_Conversion;
-with HAL.I2C;         use HAL.I2C;
 with HAL.Touch_Panel; use HAL.Touch_Panel;
 
 package body FT6x06 is

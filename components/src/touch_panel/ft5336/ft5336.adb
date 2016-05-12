@@ -1,6 +1,5 @@
 with Ada.Unchecked_Conversion;
-with Interfaces;      use Interfaces;
-with HAL.I2C;         use HAL.I2C;
+with Interfaces;  use Interfaces;
 
 package body FT5336 is
 

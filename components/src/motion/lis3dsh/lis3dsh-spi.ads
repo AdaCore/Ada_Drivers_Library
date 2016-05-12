@@ -40,16 +40,17 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
---  This private package provides an I/O  implementation for the LIS3DSH
---  accelerometer chip.
+--  This package provides a SPI-based I/O implementation for the LIS3DSH
+--  accelerometer.
 
-with HAL.SPI;
-with HAL.GPIO;
+with HAL.SPI;   use HAL.SPI;
+with HAL.GPIO;  use HAL.GPIO;
 
 package LIS3DSH.SPI is
 
-   type Three_Axis_Accelerometer_SPI (Port        : HAL.SPI.SPI_Port_Ref;
-                                      Chip_Select : HAL.GPIO.GPIO_Point_Ref)
+   type Three_Axis_Accelerometer_SPI
+     (Port        : not null SPI_Port_Ref;
+      Chip_Select : not null GPIO_Point_Ref)
    is new Three_Axis_Accelerometer with private;
 
    overriding
@@ -65,8 +66,10 @@ package LIS3DSH.SPI is
       ReadAddr : Register_Address);
 
 private
-   type Three_Axis_Accelerometer_SPI (Port        : HAL.SPI.SPI_Port_Ref;
-                                      Chip_Select : HAL.GPIO.GPIO_Point_Ref)
+
+   type Three_Axis_Accelerometer_SPI
+     (Port        : not null SPI_Port_Ref;
+      Chip_Select : not null GPIO_Point_Ref)
    is new Three_Axis_Accelerometer with null record;
 
 end LIS3DSH.SPI;

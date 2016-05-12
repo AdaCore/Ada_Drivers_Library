@@ -6,6 +6,7 @@ package OV2640 is
    OV2640_PID : constant := 16#26#;
 
    type Pixel_Format is (Pix_RGB565, Pix_YUV422, Pix_JPEG);
+
    type Frame_Size is (QQCIF, QQVGA, QQVGA2, QCIF, HQVGA, QVGA, CIF, VGA,
                        SVGA, SXGA, UXGA);
 
@@ -29,7 +30,7 @@ package OV2640 is
       (1600,  1200)  --  /* UXGA  */
      );
 
-   type OV2640_Cam (I2C  : I2C_Port_Ref) is private;
+   type OV2640_Cam (I2C : not null I2C_Port_Ref) is private;
 
    procedure Initialize (This : in out OV2640_Cam;
                          Addr : I2C_Address);
@@ -46,13 +47,14 @@ package OV2640 is
    function Get_PID (This : OV2640_Cam) return Byte;
 
 private
-   type OV2640_Cam (I2C  : I2C_Port_Ref) is record
+
+   type OV2640_Cam (I2C  : not null I2C_Port_Ref) is record
       Addr : UInt10;
    end record;
 
    REG_BANK_SELECT : constant := 16#FF#;
-   SELECT_SENSOR : constant := 1;
-   SELECT_DSP    : constant := 0;
+   SELECT_SENSOR   : constant := 1;
+   SELECT_DSP      : constant := 0;
 
    --  Sensor registers --
    REG_SENSOR_GAIN       : constant := 16#00#;

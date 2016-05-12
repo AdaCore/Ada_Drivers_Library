@@ -2,7 +2,6 @@ with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 with System;
 with Interfaces;  use Interfaces;
-with HAL.SPI;     use HAL.SPI;
 
 package body ST7735R is
 

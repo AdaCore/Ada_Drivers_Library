@@ -1,14 +1,15 @@
 with HAL;      use HAL;
-with HAL.SPI;
-with HAL.GPIO;
+with HAL.SPI;  use HAL.SPI;
+with HAL.GPIO; use HAL.GPIO;
 
 package ST7735R is
 
-   type ST7735R_Device (Port : HAL.SPI.SPI_Port_Ref;
-                        CS   : HAL.GPIO.GPIO_Point_Ref;
-                        RS   : HAL.GPIO.GPIO_Point_Ref;
-                        RST  : HAL.GPIO.GPIO_Point_Ref)
-      is tagged limited private;
+   type ST7735R_Device
+     (Port : not null SPI_Port_Ref;
+      CS   : not null GPIO_Point_Ref;
+      RS   : not null GPIO_Point_Ref;
+      RST  : not null GPIO_Point_Ref)
+   is tagged limited private;
 
    procedure Initialize (LCD : in out ST7735R_Device);
 
@@ -53,11 +54,13 @@ package ST7735R is
       RTN         : UInt4;
       Front_Porch : UInt6;
       Back_Porch  : UInt6);
+
    procedure Set_Frame_Rate_Idle
      (LCD         : ST7735R_Device;
       RTN         : UInt4;
       Front_Porch : UInt6;
       Back_Porch  : UInt6);
+
    procedure Set_Frame_Rate_Partial_Full
      (LCD              : ST7735R_Device;
       RTN_Part         : UInt4;
@@ -89,9 +92,11 @@ package ST7735R is
    procedure Set_Power_Control_3
      (LCD : ST7735R_Device;
       P1, P2 : Byte);
+
    procedure Set_Power_Control_4
      (LCD : ST7735R_Device;
       P1, P2 : Byte);
+
    procedure Set_Power_Control_5
      (LCD : ST7735R_Device;
       P1, P2 : Byte);
@@ -117,24 +122,30 @@ private
    for RGB_BGR_Order use
      (RGB_Order => 0,
       BGR_Order => 1);
+
    for Vertical_Refresh_Order use
      (Vertical_Refresh_Top_Bottom => 0,
       Vertical_Refresh_Botton_Top => 1);
+
    for Horizontal_Refresh_Order use
      (Horizontal_Refresh_Left_Right => 0,
       Horizontal_Refresh_Right_Left => 1);
+
    for Row_Address_Order use
      (Row_Address_Top_Bottom => 0,
       Row_Address_Bottom_Top => 1);
+
    for Column_Address_Order use
      (Column_Address_Left_Right => 0,
       Column_Address_Right_Left => 1);
 
-   type ST7735R_Device (Port : HAL.SPI.SPI_Port_Ref;
-                        CS   : HAL.GPIO.GPIO_Point_Ref;
-                        RS   : HAL.GPIO.GPIO_Point_Ref;
-                        RST  : HAL.GPIO.GPIO_Point_Ref) is
-     tagged limited record
+   type ST7735R_Device
+     (Port : not null SPI_Port_Ref;
+      CS   : not null GPIO_Point_Ref;
+      RS   : not null GPIO_Point_Ref;
+      RST  : not null GPIO_Point_Ref)
+   is tagged limited record
       Initialized : Boolean := True;
    end record;
+
 end ST7735R;

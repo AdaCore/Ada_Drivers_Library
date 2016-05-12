@@ -1,6 +1,5 @@
 with Ada.Real_Time; use Ada.Real_Time;
 
-with HAL.I2C; use HAL.I2C;
 with Ada.Text_IO;
 
 package body WM8994 is

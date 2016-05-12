@@ -34,13 +34,13 @@
 
 with Interfaces; use Interfaces;
 with HAL;        use HAL;
-with HAL.I2C;
+with HAL.I2C;    use HAL.I2C;
 with HAL.Touch_Panel;
 
 package FT6x06 is
 
-   type FT6x06_Device (Port     : HAL.I2C.I2C_Port_Ref;
-                       I2C_Addr : HAL.I2C.I2C_Address) is
+   type FT6x06_Device (Port     : not null I2C_Port_Ref;
+                       I2C_Addr : I2C_Address) is
      limited new HAL.Touch_Panel.Touch_Panel_Device with private;
 
    function Check_Id (This : in out FT6x06_Device) return Boolean;
@@ -79,8 +79,8 @@ package FT6x06 is
    --  points
 private
 
-   type FT6x06_Device (Port     : HAL.I2C.I2C_Port_Ref;
-                       I2C_Addr : HAL.I2C.I2C_Address) is
+   type FT6x06_Device (Port     : not null I2C_Port_Ref;
+                       I2C_Addr : I2C_Address) is
      limited new HAL.Touch_Panel.Touch_Panel_Device with record
       LCD_Natural_Width  : Natural := 0;
       LCD_Natural_Height : Natural := 0;

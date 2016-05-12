@@ -1,5 +1,4 @@
 with Ada.Real_Time; use Ada.Real_Time;
-with HAL.DSI;       use HAL.DSI;
 
 package body OTM8009A is
 

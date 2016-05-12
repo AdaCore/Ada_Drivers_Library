@@ -43,8 +43,6 @@
 --  This private package provides an I/O  implementation for the LIS3DSH
 --  accelerometer chip.
 
-with HAL.SPI; use HAL.SPI;
-
 package body LIS3DSH.SPI is
 
    --------------

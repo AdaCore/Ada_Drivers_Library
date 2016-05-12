@@ -1,11 +1,11 @@
 with Interfaces; use Interfaces;
 with HAL;        use HAL;
-with HAL.DSI;
+with HAL.DSI;    use HAL.DSI;
 
 package OTM8009A is
 
---  List of OTM8009A commands
---  Detailed in OTM8009A data Sheet
+   --  List of OTM8009A commands
+   --  Detailed in OTM8009A data Sheet
    CMD_NOP       : constant := 16#00#;
    CMD_SWRESET   : constant := 16#01#;
    CMD_RDDMADCTL : constant := 16#0B#; --  Read memory display access ctrl
@@ -54,9 +54,10 @@ package OTM8009A is
 
    type LCD_Orientation is (Portrait, Landscape);
 
-   type OTM8009A_Device (DSI_Host   : HAL.DSI.DSI_Port_Ref;
-                         Channel_ID : HAL.DSI.DSI_Virtual_Channel_ID) is
-     tagged limited private;
+   type OTM8009A_Device
+     (DSI_Host   : not null DSI_Port_Ref;
+      Channel_ID : DSI_Virtual_Channel_ID)
+   is tagged limited private;
 
    procedure Initialize
      (This        : in out OTM8009A_Device;
@@ -64,9 +65,11 @@ package OTM8009A is
       Orientation : LCD_Orientation);
 
 private
-   type OTM8009A_Device (DSI_Host   : HAL.DSI.DSI_Port_Ref;
-                         Channel_ID : HAL.DSI.DSI_Virtual_Channel_ID) is
-     tagged limited record
+
+   type OTM8009A_Device
+     (DSI_Host   : not null DSI_Port_Ref;
+      Channel_ID : DSI_Virtual_Channel_ID)
+   is tagged limited record
       Current_Shift : Byte := 0;
    end record;
 

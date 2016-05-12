@@ -26,7 +26,8 @@ package HAL.DSI is
      DCS_Long_Pkt_Write .. Gen_Long_Pkt_Write;
 
    type DSI_Port is limited interface;
-   type DSI_Port_Ref is not null access all DSI_Port'Class;
+
+   type DSI_Port_Ref is access all DSI_Port'Class;
 
    procedure DSI_Short_Write
      (Port       : in out DSI_Port;

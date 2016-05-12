@@ -15,9 +15,11 @@ package HAL.Touch_Panel is
    Swap_XY  : constant Swap_State;
 
    subtype Touch_Identifier is Natural range 0 .. 10;
+
    type TP_State is array (Touch_Identifier range <>) of TP_Touch_State;
 
    type Touch_Panel_Device is limited interface;
+
    type Touch_Panel_Ref is access all Touch_Panel_Device'Class;
 
    procedure Set_Bounds (This   : in out Touch_Panel_Device;
