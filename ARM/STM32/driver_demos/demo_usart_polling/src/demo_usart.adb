@@ -31,7 +31,8 @@
 
 --  The file declares the main procedure for the demonstration.
 
-with STM32;         use STM32;
+with HAL;           use HAL;
+with HAL.UART;      use HAL.UART;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.USARTs;  use STM32.USARTs;
 
@@ -39,34 +40,36 @@ with STM32.Device;  use STM32.Device;
 
 procedure Demo_USART is
 
-   TX_Pin : constant GPIO_Pin := Pin_7;
-   RX_Pin : constant GPIO_Pin := Pin_6;
+   TX_Pin : constant GPIO_Point := PB7;
+   RX_Pin : constant GPIO_Point := PB6;
 
-   -----------------------------
-   -- Initialize_STMicro_UART --
-   -----------------------------
+   procedure Initialize_UART_GPIO;
 
-   procedure Initialize_STMicro_UART is
+   procedure Initialize;
+
+   procedure Await_Send_Ready (This : USART) with Inline;
+
+   procedure Put_Blocking (This : in out USART;  Data : Short);
+
+   --------------------------
+   -- Initialize_UART_GPIO --
+   --------------------------
+
+   procedure Initialize_UART_GPIO is
       Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (USART_1);
-      Enable_Clock (GPIO_B);
+      Enable_Clock (RX_Pin & TX_Pin);
 
       Configuration.Mode := Mode_AF;
       Configuration.Speed := Speed_50MHz;
       Configuration.Output_Type := Push_Pull;
       Configuration.Resistors := Pull_Up;
 
-      Configure_IO
-        (Port   => GPIO_B,
-         Pins   => Rx_Pin & Tx_Pin,
-         Config => Configuration);
+      Configure_IO (RX_Pin & TX_Pin, Configuration);
 
-      Configure_Alternate_Function
-        (Port => GPIO_B,
-         Pins => Rx_Pin & Tx_Pin,
-         AF   => GPIO_AF_USART1);
-   end Initialize_STMicro_UART;
+      Configure_Alternate_Function (RX_Pin & TX_Pin, AF => GPIO_AF_USART1);
+   end Initialize_UART_GPIO;
 
    ----------------
    -- Initialize --
@@ -74,7 +77,7 @@ procedure Demo_USART is
 
    procedure Initialize is
    begin
-      Initialize_STMicro_UART;
+      Initialize_UART_GPIO;
 
       Disable (USART_1);
 
@@ -103,10 +106,10 @@ procedure Demo_USART is
    -- Put_Blocking --
    ------------------
 
-   procedure Put_Blocking (This : in out USART;  Data : Half_Word) is
+   procedure Put_Blocking (This : in out USART;  Data : Short) is
    begin
       Await_Send_Ready (This);
-      Transmit (This, Bits_9 (Data));
+      Transmit (This, UInt9 (Data));
    end Put_Blocking;
 
 begin
