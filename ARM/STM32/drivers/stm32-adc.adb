@@ -850,11 +850,11 @@ package body STM32.ADC is
    begin
       case Rank is
          when 1 .. 6 =>
-            This.SQR3.SQ.Arr (Rank) := Channel;
+            This.SQR3.SQ.Arr (Integer (Rank)) := Channel;
          when 7 .. 12 =>
-            This.SQR2.SQ.Arr (Rank) := Channel;
+            This.SQR2.SQ.Arr (Integer (Rank)) := Channel;
          when 13 .. 16 =>
-            This.SQR1.SQ.Arr (Rank) := Channel;
+            This.SQR1.SQ.Arr (Integer (Rank)) := Channel;
       end case;
    end Set_Sequence_Position;
 
@@ -868,7 +868,7 @@ package body STM32.ADC is
       Rank    : Injected_Channel_Rank)
    is
    begin
-      This.JSQR.JSQ.Arr (Rank) := Channel;
+      This.JSQR.JSQ.Arr (Integer (Rank)) := Channel;
    end Set_Injected_Channel_Sequence_Position;
 
    -----------------------

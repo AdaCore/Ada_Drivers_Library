@@ -91,7 +91,7 @@ package STM32.ADC is
    --  Note only available with ADC_1
 
    subtype TemperatureSensor_Channel is Analog_Input_Channel;
-   --  ??? The below predicate does not compile with GNAT GPL 2015.
+   --  TODO: ??? The below predicate does not compile with GNAT GPL 2015.
    --  with Static_Predicate => TemperatureSensor_Channel in 16 | VBat_Channel;
    --  See RM pg 389 section 13.3.3. On some MCUs the temperature channel is
    --  the same as the VBat channel, on others it is channel 16. Note only
@@ -147,9 +147,9 @@ package STM32.ADC is
       Trigger_Falling_Edge,
       Trigger_Both_Edges);
 
-   subtype Regular_Channel_Rank is Natural range 1 .. 16;
+   type Regular_Channel_Rank is new Natural range 1 .. 16;
 
-   subtype Injected_Channel_Rank is Natural range 1 .. 4;
+   type Injected_Channel_Rank is new Natural range 1 .. 4;
 
    type External_Events_Regular_Group is
      (Timer1_CC1_Event,
