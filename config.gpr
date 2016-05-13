@@ -17,7 +17,7 @@ abstract project Config is
             for Default_Switches ("Ada") use ("-O3", "-gnatp", "-gnatn");
          when "Debug" =>
             for Default_Switches ("Ada") use
-              ("-g", "-O1", "-gnata", "-fcallgraph-info=su");
+              ("-g", "-O0", "-gnata", "-fcallgraph-info=su");
       end case;
       for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
         ("-gnatwa", "-gnatQ", "-gnatw.X", "-gnaty", "-gnatyO", "-gnatyM120",
