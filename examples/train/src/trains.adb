@@ -49,7 +49,7 @@ is
 
    procedure Update_Track_Signal (Track : Track_Id) is
    begin
-      for Train in Train_Id range 1 .. Cur_Num_Trains - 1 loop
+      for Train in Train_Id range 1 .. Cur_Num_Trains loop
          if Is_Previous_Track (Trains (Train), Track) then
             return;
          end if;

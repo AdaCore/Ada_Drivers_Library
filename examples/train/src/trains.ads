@@ -75,15 +75,17 @@ is
 
    Max_Num_Trains : constant := 20;
 
-   type Train_Id is new Positive range 1 .. Max_Num_Trains;
+   type Trains_Count is new Natural range 0 .. Max_Num_Trains;
+
+   subtype Train_Id is Trains_Count range 1 .. Max_Num_Trains;
+
+   Cur_Num_Trains : Trains_Count := 0;
 
    type Train_Position is record
       Track_Begin : Track_Id;
       Pos_Begin   : Natural;
       Track_End   : Track_Id;
    end record;
-
-   Cur_Num_Trains : Train_Id := Train_Id'First;
 
    Trains : array (Train_Id) of Train_Position;
 

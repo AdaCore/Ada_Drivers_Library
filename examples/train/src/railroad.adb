@@ -435,12 +435,12 @@ package body Railroad is
    procedure Spawn_Train is
    begin
       if Can_Spawn_Train then
+         Trains.Cur_Num_Trains := Trains.Cur_Num_Trains + 1;
          Init_Train (My_Trains (Cur_Num_Trains), Spawn_Tracks (1)'Access);
          My_Trains (Cur_Num_Trains).Speed := 2;
          Trains.Trains (Cur_Num_Trains) :=
            (Spawn_Tracks (1).Id, 1, Spawn_Tracks (1).Id);
 
-         Trains.Cur_Num_Trains := Trains.Cur_Num_Trains + 1;
          Trains.Track_Signals (Spawn_Tracks (1).Id) := Trains.Red;
       end if;
    end Spawn_Train;
@@ -451,7 +451,7 @@ package body Railroad is
 
    procedure Step_Simulation is
    begin
-      for Index in Trains.Train_Id'First .. Trains.Cur_Num_Trains - 1 loop
+      for Index in Trains.Train_Id'First .. Trains.Cur_Num_Trains loop
          Move_Train (My_Trains (Index));
       end loop;
 
@@ -545,7 +545,7 @@ package body Railroad is
          end loop;
 
          --  Trains
-         for Index in Trains.Train_Id'First .. Trains.Cur_Num_Trains - 1 loop
+         for Index in Trains.Train_Id'First .. Trains.Cur_Num_Trains loop
             Draw_Train (Buffer, My_Trains (Index));
          end loop;
 
