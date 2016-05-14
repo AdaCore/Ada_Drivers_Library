@@ -1,0 +1,17 @@
+with "../../../../config.gpr";
+with "../../../../boards/stm32f7_discovery.gpr";
+
+project Demo_GPIO_F7 extends "../../../../examples/common/common.gpr" is
+
+  for Runtime ("Ada") use Config.RTS & "-stm32f7disco";
+  for Target use "arm-eabi";
+  for Main use ("demo_gpio.adb");
+  for Languages use ("Ada");
+  for Source_Dirs use ("src");
+  for Object_Dir use "obj/" & Config.Build;
+
+  package Builder is
+    for Global_Configuration_Pragmas use "gnat.adc";
+  end Builder;
+
+end Demo_GPIO_F7;

@@ -1,9 +1,9 @@
 with "../../../../config.gpr";
-with "../../../../boards/stm32f4_discovery.gpr";
+with "../../../../boards/stm32f469_discovery.gpr";
 
-project Demo_GPIO extends "../../../../examples/common/common.gpr" is
+project Demo_GPIO_F469 extends "../../../../examples/common/common.gpr" is
 
-  for Runtime ("Ada") use Config.RTS & "-stm32f4";
+  for Runtime ("Ada") use Config.RTS & "-stm32f469disco";
   for Target use "arm-eabi";
   for Main use ("demo_gpio.adb");
   for Languages use ("Ada");
@@ -14,4 +14,4 @@ project Demo_GPIO extends "../../../../examples/common/common.gpr" is
     for Global_Configuration_Pragmas use "gnat.adc";
   end Builder;
 
-end Demo_GPIO;
+end Demo_GPIO_F469;
