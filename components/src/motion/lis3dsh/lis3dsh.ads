@@ -282,6 +282,7 @@ package LIS3DSH is
      (This     : Three_Axis_Accelerometer;
       Value    : out Byte;
       ReadAddr : Register_Address) is abstract;
+
 private
 
    type Three_Axis_Accelerometer is abstract tagged limited record
@@ -291,6 +292,7 @@ private
       --  does that initialization too. Those routines that do NOT require
       --  prior configuration explicitly initialize the I/O facility.
       Device_Configured : Boolean := False;
+
       --  The value determined by the current setting of Full_Scale, as set
       --  by a prior call to Configure_Accelerometer. Storing this value is
       --  an optimization over querying the chip, which is what the function
