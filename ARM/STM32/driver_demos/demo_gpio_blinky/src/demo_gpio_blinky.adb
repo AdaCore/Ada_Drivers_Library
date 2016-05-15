@@ -40,6 +40,11 @@
 --  boards, and indeed defines a different number of LEDs on different boards.
 --  The gpr file determines which board is actually used.
 
+with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
+--  The "last chance handler" is the user-defined routine that is called when
+--  an exception is propagated. We need it in the executable, therefore it
+--  must be somewhere in the closure of the context clauses.
+
 with STM32.Device;  use STM32.Device;
 with STM32.Board;   use STM32.Board;
 
