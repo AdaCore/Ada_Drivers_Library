@@ -46,7 +46,7 @@ with STM32.Board;   use STM32.Board;
 with STM32.GPIO;    use STM32.GPIO;
 with Ada.Real_Time; use Ada.Real_Time;
 
-procedure Demo_GPIO is
+procedure Demo_GPIO_Blinky is
 
    use STM32;
 
@@ -80,4 +80,4 @@ begin
       Next := Next + Period;
       delay until Next;
    end loop;
-end Demo_GPIO;
+end Demo_GPIO_Blinky;
