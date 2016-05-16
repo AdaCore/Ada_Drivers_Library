@@ -46,7 +46,7 @@ with LIS3DSH;       use LIS3DSH;
 
 use STM32;
 
-procedure Demo_LIS3DSH is
+procedure Demo_LIS3DSH_Tilt is
 
    Axes : Axes_Accelerations;
 
@@ -112,4 +112,4 @@ begin
          Turn_Off (Blue);
       end if;
    end loop;
-end Demo_LIS3DSH;
+end Demo_LIS3DSH_Tilt;
