@@ -63,7 +63,7 @@ use STM32;
 
 with Demo_PWM_Settings; use Demo_PWM_Settings;
 
-procedure Demo_LIS3DSH is
+procedure Demo_LIS3DSH_PWM is
 
    Next_Release : Time := Clock;
    Period       : constant Time_Span := Milliseconds (100);  -- arbitrary
@@ -194,4 +194,4 @@ begin
       Next_Release := Next_Release + Period;
       delay until Next_Release;
    end loop;
-end Demo_LIS3DSH;
+end Demo_LIS3DSH_PWM;
