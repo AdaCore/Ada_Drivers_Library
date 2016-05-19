@@ -39,9 +39,9 @@ package body Serial_IO.Nonblocking is
 
    procedure Initialize (This : in out Serial_Port) is
       Configuration : GPIO_Port_Configuration;
+      Device_Pins   : constant GPIO_Points := This.Device.Rx_Pin & This.Device.Tx_Pin;
    begin
-      --  Must enable the port's clock *prior* to configuring the pins!
-      Enable_Clock (This.Device.Rx_Pin & This.Device.Tx_Pin);
+      Enable_Clock (Device_Pins);
       Enable_Clock (This.Device.Transceiver.all);
 
       Configuration.Mode        := Mode_AF;
@@ -49,13 +49,9 @@ package body Serial_IO.Nonblocking is
       Configuration.Output_Type := Push_Pull;
       Configuration.Resistors   := Pull_Up;
 
-      Configure_IO
-        (Points => This.Device.Rx_Pin & This.Device.Tx_Pin,
-         Config => Configuration);
+      Configure_IO (Device_Pins, Configuration);
 
-      Configure_Alternate_Function
-        (Points => This.Device.Rx_Pin & This.Device.Tx_Pin,
-         AF     => This.Device.Transceiver_AF);
+      Configure_Alternate_Function (Device_Pins, This.Device.Transceiver_AF);
 
       This.Initialized := True;
    end Initialize;
@@ -194,7 +190,7 @@ package body Serial_IO.Nonblocking is
          --  if Word_Lenth = 9 then
          --    -- handle the extra byte required for the 9th bit
          --  else  -- 8 data bits so no extra byte involved
-         Transmit (Port.Device.Transceiver.all, Character'Pos (Content_At (Outgoing_Msg.all, Next_Out)));
+         Transmit (Port.Device.Transceiver.all, Character'Pos (Outgoing_Msg.Content (Next_Out)));
          Next_Out := Next_Out + 1;
          --  end if;
          Awaiting_Transfer := Awaiting_Transfer - 1;

@@ -36,11 +36,6 @@ package Serial_IO is
 
    type Message (Physical_Size : Positive) is limited private;
 
-   --  TODO: consider
-   --   type Message (Buffer : access String) is limited private;
-   --  so that the user's string is used directly, both by the DMA code and the user.
-   --  ?????
-
    function Content (This : Message) return String with Inline;
 
    function Length (This : Message) return Natural with Inline;
@@ -64,23 +59,24 @@ package Serial_IO is
      Inline;
 
    procedure Set (This : in out Message;  To : Character) with
-     --  we don't need to verify Physical_Length >= 1 since the subtype is Positive
      Post => Length (This) = 1 and Content_At (This, 1) = To,
      Inline;
 
    procedure Set_Terminator (This : in out Message;  To : Character) with
      Post => Terminator (This) = To,
      Inline;
+   --  Specify the character that signals the end of an incoming message
+   --  from the sender's point of view, ie the "logical" end of a message,
+   --  as opposed to the physical capacity.
 
    function Terminator (This : Message) return Character with Inline;
 
-
    procedure Await_Transmission_Complete (This : in out Message) with Inline;
-   --  used for non-blocking I/O
+   --  Used for non-blocking output, to wait until the last char has been sent.
 
    procedure Await_Reception_Complete (This : in out Message) with Inline;
-   --  used for non-blocking I/O
-
+   --  Used for non-blocking input, to wait until the last char has been
+   --  received.
 
    type Error_Conditions is private;
 
@@ -90,28 +86,28 @@ package Serial_IO is
    Frame_Error_Detected   : constant Error_Conditions;
    Overrun_Error_Detected : constant Error_Conditions;
 
-
-   procedure Note_Error (This : in out Message; Condition : Error_Conditions) with Inline;
+   procedure Note_Error (This : in out Message; Condition : Error_Conditions)
+     with Inline;
 
    function Errors_Detected (This : Message) return Error_Conditions with Inline;
 
    procedure Clear_Errors (This : in out Message) with Inline;
 
-   function Has_Error (This : Message; Condition : Error_Conditions) return Boolean with Inline;
+   function Has_Error (This : Message; Condition : Error_Conditions)
+      return Boolean with Inline;
 
 private
 
    type Error_Conditions is mod 256;
 
-   type Message (Physical_Size : Positive) is limited
-      record
-         Content               : String (1 .. Physical_Size);
-         Length                : Natural := 0;
-         Reception_Complete    : Suspension_Object;
-         Transmission_Complete : Suspension_Object;
-         Terminator            : Character := ASCII.NUL;
-         Error_Status          : Error_Conditions := No_Error_Detected;
-      end record;
+   type Message (Physical_Size : Positive) is limited record
+      Content               : String (1 .. Physical_Size);
+      Length                : Natural := 0;
+      Reception_Complete    : Suspension_Object;
+      Transmission_Complete : Suspension_Object;
+      Terminator            : Character := ASCII.NUL;
+      Error_Status          : Error_Conditions := No_Error_Detected;
+   end record;
 
    No_Error_Detected      : constant Error_Conditions := 2#0000_0000#;
    Parity_Error_Detected  : constant Error_Conditions := 2#0000_0001#;

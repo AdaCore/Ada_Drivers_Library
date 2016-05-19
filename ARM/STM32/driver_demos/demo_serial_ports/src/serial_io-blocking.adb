@@ -40,8 +40,9 @@ package body Serial_IO.Blocking is
 
    procedure Initialize (This : out Serial_Port) is
       Configuration : GPIO_Port_Configuration;
+      Device_Pins   : constant GPIO_Points := This.Device.Rx_Pin & This.Device.Tx_Pin;
    begin
-      Enable_Clock (This.Device.Rx_Pin & This.Device.Tx_Pin);
+      Enable_Clock (Device_Pins);
       Enable_Clock (This.Device.Transceiver.all);
 
       Configuration.Mode        := Mode_AF;
@@ -49,13 +50,10 @@ package body Serial_IO.Blocking is
       Configuration.Output_Type := Push_Pull;
       Configuration.Resistors   := Pull_Up;
 
-      Configure_IO
-        (This.Device.Rx_Pin & This.Device.Tx_Pin,
-         Configuration);
+      Configure_IO (Device_Pins, Configuration);
 
-      Configure_Alternate_Function
-        (This.Device.Rx_Pin & This.Device.Tx_Pin,
-         This.Device.Transceiver_AF);
+      Configure_Alternate_Function (Device_Pins, This.Device.Transceiver_AF);
+
       This.Initialized := True;
    end Initialize;
 
