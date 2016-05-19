@@ -48,6 +48,7 @@ procedure Demo_Serial_Port_Nonblocking is
       Set (Outgoing, To => This);
       Put (COM, Outgoing'Unchecked_Access);
       Await_Transmission_Complete (Outgoing);
+      --  We must await xmit completion because Put does not wait
    end Send;
 
 begin
@@ -61,6 +62,7 @@ begin
    loop
       Get (COM, Incoming'Unchecked_Access);
       Await_Reception_Complete (Incoming);
+      --  We must await reception completion because Get does not wait
 
       Send ("Received : " & Content (Incoming));
    end loop;
