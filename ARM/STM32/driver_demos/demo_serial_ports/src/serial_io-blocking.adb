@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 with STM32.Device;  use STM32.Device;
-with HAL; use HAL;
+with HAL;           use HAL;
 
 package body Serial_IO.Blocking is
 
@@ -41,11 +41,7 @@ package body Serial_IO.Blocking is
    procedure Initialize (This : out Serial_Port) is
       Configuration : GPIO_Port_Configuration;
    begin
-      --  Must enable the port's clock *prior* to configuring the pins!
---        This.Device.Enable_Port_Clock.all;
       Enable_Clock (This.Device.Rx_Pin & This.Device.Tx_Pin);
-
---        This.Device.Enable_USART_Clock.all;
       Enable_Clock (This.Device.Transceiver.all);
 
       Configuration.Mode        := Mode_AF;
