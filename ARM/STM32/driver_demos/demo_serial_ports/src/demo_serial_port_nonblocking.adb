@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                    Copyright (C) 2015-2016, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -38,31 +38,31 @@ with Serial_IO;                  use Serial_IO;
 
 procedure Demo_Serial_Port_Nonblocking is
 
-   Outgoing : aliased Message (Physical_Size => 1024);  -- arbitrary size
+   Incoming : aliased Message (Physical_Size => 1024);  -- arbitrary size
 
-   procedure Interact is
-      Incoming : aliased Message (Physical_Size => 1024);  -- arbitrary size
+   procedure Send (This : String);
+
+   procedure Send (This : String) is
+      Outgoing : aliased Message (Physical_Size => 1024);  -- arbitrary size
    begin
-      Set_Terminator (Incoming, To => ASCII.CR);
-      loop
-         Get (COM, Incoming'Unchecked_Access);
-         Await_Reception_Complete (Incoming);
-
-         Set (Outgoing, To => "Received : " & Content (Incoming));
-         Put (COM, Outgoing'Unchecked_Access);
-         Await_Transmission_Complete (Outgoing);
-      end loop;
-   end Interact;
+      Set (Outgoing, To => This);
+      Put (COM, Outgoing'Unchecked_Access);
+      Await_Transmission_Complete (Outgoing);
+   end Send;
 
 begin
    Initialize (COM);
 
    Configure (COM, Baud_Rate => 115_200);
 
-   Set (Outgoing, To => "Enter text, terminated by CR.");
-   Put (COM, Outgoing'Unchecked_Access);
-   Await_Transmission_Complete (Outgoing);
+   Send ("Enter text, terminated by CR.");
 
-   Interact;
+   Set_Terminator (Incoming, To => ASCII.CR);
+   loop
+      Get (COM, Incoming'Unchecked_Access);
+      Await_Reception_Complete (Incoming);
+
+      Send ("Received : " & Content (Incoming));
+   end loop;
 end Demo_Serial_Port_Nonblocking;
 

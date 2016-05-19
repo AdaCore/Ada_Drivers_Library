@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                    Copyright (C) 2015-2016, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -45,7 +45,7 @@ package Serial_IO.Nonblocking is
    end record;
 
    type Serial_Port
-     (IRQ    : Interrupt_Id;
+     (IRQ    : Interrupt_ID;
       Device : not null access Peripheral_Descriptor)
    is limited private;
 
@@ -85,7 +85,7 @@ package Serial_IO.Nonblocking is
 
 private
 
-   protected type Controller (IRQ : Interrupt_Id;  Port : access Serial_Port) is
+   protected type Controller (IRQ : Interrupt_ID;  Port : access Serial_Port) is
 
       pragma Interrupt_Priority;
 
@@ -117,7 +117,7 @@ private
 
 
    type Serial_Port
-     (IRQ    : Interrupt_Id;
+     (IRQ    : Interrupt_ID;
       Device : not null access Peripheral_Descriptor)
    is limited record
       Initialized : Boolean := False;

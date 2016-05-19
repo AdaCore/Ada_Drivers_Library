@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                    Copyright (C) 2015-2016, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -31,7 +31,6 @@
 
 with Ada.Interrupts;        use Ada.Interrupts;
 with Ada.Interrupts.Names;  use Ada.Interrupts.Names;
-with STM32.RCC;             use STM32.RCC;
 with STM32.GPIO;            use STM32.GPIO;
 with Serial_IO.Nonblocking; use Serial_IO.Nonblocking;
 
@@ -45,7 +44,7 @@ package Peripherals_Nonblocking is
                  Tx_Pin             => PB6,
                  Rx_Pin             => PB7);
 
-   Transceiver_Interrupt : constant Interrupt_Id := USART1_Interrupt;
+   Transceiver_Interrupt : constant Interrupt_ID := USART1_Interrupt;
 
    COM : Serial_Port (Transceiver_Interrupt, Hardware'Access);
 

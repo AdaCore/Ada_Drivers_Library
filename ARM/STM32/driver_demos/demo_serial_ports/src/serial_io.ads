@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                    Copyright (C) 2015-2016, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -36,10 +36,10 @@ package Serial_IO is
 
    type Message (Physical_Size : Positive) is limited private;
 
-   -- TODO: consider
+   --  TODO: consider
    --   type Message (Buffer : access String) is limited private;
-   -- so that the user's string is used directly, both by the DMA code and the user.
-   -- ?????
+   --  so that the user's string is used directly, both by the DMA code and the user.
+   --  ?????
 
    function Content (This : Message) return String with Inline;
 
@@ -109,7 +109,7 @@ private
          Length                : Natural := 0;
          Reception_Complete    : Suspension_Object;
          Transmission_Complete : Suspension_Object;
-         Terminator            : Character := ASCII.Nul;
+         Terminator            : Character := ASCII.NUL;
          Error_Status          : Error_Conditions := No_Error_Detected;
       end record;
 
