@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -39,14 +39,12 @@ with STM32.Device;         use STM32.Device;
 
 package Peripherals is
 
-   IO_Port : GPIO_Port renames GPIO_A;
-
    Transceiver : USART renames USART_2;
 
    Transceiver_AF : constant GPIO_Alternate_Function := GPIO_AF_USART2;
 
-   TX_Pin : constant GPIO_Pin := Pin_2;
-   RX_Pin : constant GPIO_Pin := Pin_3;
+   TX_Pin : constant GPIO_Point := PA2;
+   RX_Pin : constant GPIO_Point := PA3;
 
    Controller : DMA_Controller renames DMA_1;
 
@@ -60,7 +58,7 @@ package Peripherals is
    --  four and stream six that connect DMA1 to the transmitter of USART2, so
    --  we specify those values above.
 
-   DMA_Tx_IRQ : constant Ada.Interrupts.Interrupt_Id := DMA1_Stream6_Interrupt;
-   -- must match that of the selected controller and stream number!!!!
+   DMA_Tx_IRQ : constant Ada.Interrupts.Interrupt_ID := DMA1_Stream6_Interrupt;
+   --  must match that of the selected controller and stream number!!!!
 
 end Peripherals;

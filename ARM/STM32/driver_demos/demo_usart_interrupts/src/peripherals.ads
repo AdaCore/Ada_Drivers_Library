@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -40,12 +40,10 @@ package Peripherals is
 
    Transceiver : USART renames USART_1;
 
-   TX_Pin : constant GPIO_Pin := Pin_7;
-   RX_Pin : constant GPIO_Pin := Pin_6;
+   TX_Pin : constant GPIO_Point := PB7;
+   RX_Pin : constant GPIO_Point := PB6;
 
-   IO_Port : GPIO_Port renames GPIO_B;
-
-   Transceiver_Interrupt_Id : constant Interrupt_Id := USART1_Interrupt;
+   Transceiver_Interrupt_Id : constant Interrupt_ID := USART1_Interrupt;
 
    Transceiver_AF : constant GPIO_Alternate_Function := GPIO_AF_USART1;
 

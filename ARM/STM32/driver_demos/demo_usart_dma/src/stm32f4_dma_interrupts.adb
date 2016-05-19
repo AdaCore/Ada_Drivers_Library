@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -32,6 +32,8 @@
 with STM32.USARTs;  use STM32.USARTs;
 
 package body STM32F4_DMA_Interrupts is
+
+   procedure Finalize_DMA_Transmission (Transceiver : in out USART);
 
    -------------------------------
    -- Finalize_DMA_Transmission --
@@ -120,15 +122,15 @@ package body STM32F4_DMA_Interrupts is
          --  Transfer Complete Interrupt management
          if Status (Controller, Tx_Stream, Transfer_Complete_Indicated) then
             if Interrupt_Enabled (Controller, Tx_Stream, Transfer_Complete_Interrupt) then
-                if Double_Buffered (Controller, Tx_Stream) then
-                   Clear_Status (Controller, Tx_Stream, Transfer_Complete_Indicated);
-                   --  TODO: handle the difference between M0 and M1 callbacks
-                else
-                   if not Circular_Mode (Controller, Tx_Stream) then
-                      Disable_Interrupt (Controller, Tx_Stream, Transfer_Complete_Interrupt);
-                   end if;
+               if Double_Buffered (Controller, Tx_Stream) then
                   Clear_Status (Controller, Tx_Stream, Transfer_Complete_Indicated);
-                end if;
+                  --  TODO: handle the difference between M0 and M1 callbacks
+               else
+                  if not Circular_Mode (Controller, Tx_Stream) then
+                     Disable_Interrupt (Controller, Tx_Stream, Transfer_Complete_Interrupt);
+                  end if;
+                  Clear_Status (Controller, Tx_Stream, Transfer_Complete_Indicated);
+               end if;
                Finalize_DMA_Transmission (Transceiver);
                Event_Kind := Transfer_Complete_Interrupt;
                Event_Occurred := True;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -33,7 +33,7 @@ with Ada.Interrupts;                use Ada.Interrupts;
 with Ada.Synchronous_Task_Control;  use Ada.Synchronous_Task_Control;
 with STM32.USARTs;                  use STM32.USARTs;
 
-use STM32;
+with HAL; use HAL;
 
 package Serial_Port is
 
@@ -43,7 +43,7 @@ package Serial_Port is
          Logical_Size          : Natural := 0;
          Reception_Complete    : Suspension_Object;
          Transmission_Complete : Suspension_Object;
-         Terminator            : Character := ASCII.Nul;  -- ASCII.EOM ?
+         Terminator            : Character := ASCII.NUL;  -- ASCII.EOM ?
       end record;
 
    procedure Set (This : in out Message;  To : String) with
@@ -64,7 +64,7 @@ package Serial_Port is
    DMA_Error_Detected     : constant Error_Conditions := 2#0001_0000#;
 
 
-   protected type Controller (Device : access USART;  IRQ : Interrupt_Id) is
+   protected type Controller (Device : access USART;  IRQ : Interrupt_ID) is
 
       pragma Interrupt_Priority;
 

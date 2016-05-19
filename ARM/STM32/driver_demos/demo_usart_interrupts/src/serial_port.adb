@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -87,7 +87,7 @@ package body Serial_Port is
             Errors := Errors or Frame_Error_Detected;
          end if;
 
-         -- check for noise error
+         --  check for noise error
          if Status (Device.all, USART_Noise_Error_Indicated) and
            Interrupt_Enabled (Device.all, Error)
          then
@@ -95,7 +95,7 @@ package body Serial_Port is
             Errors := Errors or Noise_Error_Detected;
          end if;
 
-         -- check for overrun error
+         --  check for overrun error
          if Status (Device.all, Overrun_Error_Indicated) and
            Interrupt_Enabled (Device.all, Error)
          then
@@ -110,12 +110,12 @@ package body Serial_Port is
 
       procedure Handle_Transmission is
       begin
-         -- if Word_Lenth = 9 then
+         --  if Word_Lenth = 9 then
          --    -- handle the extra byte required for the 9th bit
-         -- else  -- 8 data bits so no extra byte involved
+         --  else  -- 8 data bits so no extra byte involved
          Transmit (Device.all, Character'Pos (Outgoing_Msg.Content (Next_Out)));
          Next_Out := Next_Out + 1;
-         -- end if;
+         --  end if;
          Awaiting_Transfer := Awaiting_Transfer - 1;
          if Awaiting_Transfer = 0 then
             Disable_Interrupts (Device.all, Source => Transmit_Data_Register_Empty);

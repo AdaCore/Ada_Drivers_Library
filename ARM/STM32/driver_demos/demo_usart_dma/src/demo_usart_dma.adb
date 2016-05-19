@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -63,28 +63,37 @@ procedure Demo_USART_DMA is
 
    Event_Kind : DMA_Interrupt;
 
+   procedure Initialize_GPIO_Port_Pins;
+
+   procedure Initialize_USART;
+
+   procedure Initialize_DMA;
+
+   procedure Blink_LEDs;
+
+   -------------------------------
+   -- Initialize_GPIO_Port_Pins --
+   -------------------------------
 
    procedure Initialize_GPIO_Port_Pins is
       Configuration : GPIO_Port_Configuration;
    begin
-      Enable_Clock (IO_Port);
+      Enable_Clock (RX_Pin & TX_Pin);
 
       Configuration.Mode := Mode_AF;
       Configuration.Speed := Speed_50MHz;
       Configuration.Output_Type := Push_Pull;
       Configuration.Resistors := Pull_Up;
 
-      Configure_IO
-        (Port   => IO_Port,
-         Pins   => Rx_Pin & Tx_Pin,
-         Config => Configuration);
+      Configure_IO (RX_Pin & TX_Pin,  Config => Configuration);
 
-      Configure_Alternate_Function
-        (Port => IO_Port,
-         Pins => Rx_Pin & Tx_Pin,
-         AF   => Transceiver_AF);
+      Configure_Alternate_Function (RX_Pin & TX_Pin,  AF => Transceiver_AF);
    end Initialize_GPIO_Port_Pins;
 
+
+   ----------------------
+   -- Initialize_USART --
+   ----------------------
 
    procedure Initialize_USART is
    begin
@@ -100,6 +109,10 @@ procedure Demo_USART_DMA is
       Set_Flow_Control (Transceiver, No_Flow_Control);
    end Initialize_USART;
 
+
+   --------------------
+   -- Initialize_DMA --
+   --------------------
 
    procedure Initialize_DMA is
       Configuration : DMA_Stream_Configuration;
@@ -124,6 +137,10 @@ procedure Demo_USART_DMA is
    end Initialize_DMA;
 
 
+   ----------------
+   -- Blink_LEDs --
+   ----------------
+
    procedure Blink_LEDs is
    begin
       for K in 1 .. 3 loop
@@ -145,7 +162,7 @@ begin
 
    Enable (Transceiver);
 
-   Start_Transfer_With_Interrupts
+   Start_Transfer_with_Interrupts
      (Controller,
       Tx_Stream,
       Source      => Source_Block'Address,
@@ -153,7 +170,7 @@ begin
       Data_Count  => Bytes_To_Transfer);
    --  also enables the stream
 
--- TODO: clear the flags esp the overrun flag   ???
+--  TODO: clear the flags esp the overrun flag   ???
 
    Enable_DMA_Transmit_Requests (Transceiver);
 

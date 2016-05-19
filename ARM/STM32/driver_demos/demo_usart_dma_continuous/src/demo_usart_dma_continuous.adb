@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -57,6 +57,14 @@ procedure Demo_USART_DMA_Continuous is
 
    Source_Block  : constant Data := "abcdefghijklmnopqrstuvwxyz";
 
+   procedure Initialize_GPIO_Port_Pins;
+
+   procedure Initialize_USART;
+
+   procedure Initialize_DMA;
+
+   procedure Blink_LEDs;
+
    -------------------------------
    -- Initialize_GPIO_Port_Pins --
    -------------------------------
@@ -64,22 +72,16 @@ procedure Demo_USART_DMA_Continuous is
    procedure Initialize_GPIO_Port_Pins is
       Configuration : GPIO_Port_Configuration;
    begin
-      Enable_Clock (IO_Port);
+      Enable_Clock (RX_Pin & TX_Pin);
 
       Configuration.Mode := Mode_AF;
       Configuration.Speed := Speed_50MHz;
       Configuration.Output_Type := Push_Pull;
       Configuration.Resistors := Pull_Up;
 
-      Configure_IO
-        (Port   => IO_Port,
-         Pins   => Rx_Pin & Tx_Pin,
-         Config => Configuration);
+      Configure_IO (RX_Pin & TX_Pin,  Config => Configuration);
 
-      Configure_Alternate_Function
-        (Port => IO_Port,
-         Pins => Rx_Pin & Tx_Pin,
-         AF   => Transceiver_AF);
+      Configure_Alternate_Function (RX_Pin & TX_Pin,  AF => Transceiver_AF);
    end Initialize_GPIO_Port_Pins;
 
    ----------------------

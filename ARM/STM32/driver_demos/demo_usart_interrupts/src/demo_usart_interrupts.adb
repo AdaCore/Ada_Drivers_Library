@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -47,9 +47,15 @@ with Serial_Port;                  use Serial_Port;
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
-procedure Demo_USART is
+procedure Demo_USART_Interrupts is
 
    Outgoing : aliased Message (Physical_Size => 1024);  -- arbitrary size
+
+   procedure Initialize_STMicro_UART;
+
+   procedure Initialize;
+
+   procedure Interact;
 
    -----------------------------
    -- Initialize_STMicro_UART --
@@ -59,22 +65,16 @@ procedure Demo_USART is
       Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (Transceiver);
-      Enable_Clock (IO_Port);
+      Enable_Clock (RX_Pin & TX_Pin);
 
       Configuration.Mode := Mode_AF;
       Configuration.Speed := Speed_50MHz;
       Configuration.Output_Type := Push_Pull;
       Configuration.Resistors := Pull_Up;
 
-      Configure_IO
-        (Port => IO_Port,
-         Pins => Rx_Pin & Tx_Pin,
-         Config => Configuration);
+      Configure_IO (RX_Pin & TX_Pin, Config => Configuration);
 
-      Configure_Alternate_Function
-        (Port => IO_Port,
-         Pins => Rx_Pin & Tx_Pin,
-         AF   => Transceiver_AF);
+      Configure_Alternate_Function (RX_Pin & TX_Pin,  AF => Transceiver_AF);
    end Initialize_STMicro_UART;
 
    ----------------
@@ -123,6 +123,6 @@ begin
    Suspend_Until_True (Outgoing.Transmission_Complete);
 
    Interact;
-end Demo_USART;
+end Demo_USART_Interrupts;
 
 
