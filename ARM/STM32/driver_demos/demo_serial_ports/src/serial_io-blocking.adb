@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,6 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with STM32.Device;  use STM32.Device;
+with HAL; use HAL;
+
 package body Serial_IO.Blocking is
 
    ----------------
@@ -39,9 +42,11 @@ package body Serial_IO.Blocking is
       Configuration : GPIO_Port_Configuration;
    begin
       --  Must enable the port's clock *prior* to configuring the pins!
-      This.Device.Enable_Port_Clock.all;
+--        This.Device.Enable_Port_Clock.all;
+      Enable_Clock (This.Device.Rx_Pin & This.Device.Tx_Pin);
 
-      This.Device.Enable_USART_Clock.all;
+--        This.Device.Enable_USART_Clock.all;
+      Enable_Clock (This.Device.Transceiver.all);
 
       Configuration.Mode        := Mode_AF;
       Configuration.Speed       := Speed_50MHz;
@@ -49,14 +54,12 @@ package body Serial_IO.Blocking is
       Configuration.Resistors   := Pull_Up;
 
       Configure_IO
-        (Port => This.Device.Port.all,
-         Pins => This.Device.Rx_Pin & This.Device.Tx_Pin,
-         Config => Configuration);
+        (This.Device.Rx_Pin & This.Device.Tx_Pin,
+         Configuration);
 
       Configure_Alternate_Function
-        (Port => This.Device.Port.all,
-         Pins => This.Device.Rx_Pin & This.Device.Tx_Pin,
-         AF   => This.Device.Transceiver_AF);
+        (This.Device.Rx_Pin & This.Device.Tx_Pin,
+         This.Device.Transceiver_AF);
       This.Initialized := True;
    end Initialize;
 
@@ -118,7 +121,7 @@ package body Serial_IO.Blocking is
    ---------
 
    procedure Get (This : in out Serial_Port;  Value : out Character) is
-      Raw : Half_Word;
+      Raw : UInt9;
    begin
       Await_Data_Available (This.Device.Transceiver.all);
       Receive (This.Device.Transceiver.all, Raw);
@@ -135,14 +138,14 @@ package body Serial_IO.Blocking is
       Last       : out Natural;
       Terminator : Character)
    is
-      Raw           : Half_Word;
+      Raw           : UInt9;
       Received_Char : Character;
    begin
-      Receiving: for Index in Value'Range loop
+      Receiving : for Index in Value'Range loop
          Await_Data_Available (This.Device.Transceiver.all);
          Receive (This.Device.Transceiver.all, Raw);
          Received_Char := Character'Val (Raw);
-         exit when Received_Char = Terminator;
+         exit Receiving when Received_Char = Terminator;
          Value (Index) := Received_Char;
          Last := Index;
       end loop Receiving;
