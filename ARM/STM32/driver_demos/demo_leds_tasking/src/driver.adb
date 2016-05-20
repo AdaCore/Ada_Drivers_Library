@@ -29,93 +29,58 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Real_Time; use Ada.Real_Time;
-with STM32.SYSCFG;  use STM32.SYSCFG;
-with STM32.GPIO;    use STM32.GPIO;
 with STM32.Board;   use STM32.Board;
-with STM32.EXTI;    use STM32.EXTI;
+with Button;        use Button;
+with Ada.Real_Time; use Ada.Real_Time;
 
-package body Button is
+package body Driver is
 
-   procedure Initialize;
+   type Index is mod 4;
 
-   -----------------
-   -- User_Button --
-   -----------------
+   Pattern : array (Index) of User_LED := (Orange, Red, Blue, Green);
+   --  The LEDs are not physically laid out "consecutively" in such a way that
+   --  we can simply go in enumeral order to get circular rotation. Thus we
+   --  define this mapping, using a consecutive index to get the physical LED
+   --  blinking order desired.
 
-   protected User_Button is
-      pragma Interrupt_Priority;
+   task body Controller is
+      Period       : Time_Span;
+      Next_Release : Time := Clock;
+      Next_LED     : Index := 0;
+   begin
+      Initialize_LEDs;
+      All_LEDs_Off;
 
-      function Current_Direction return Directions;
+      loop
+         --  blink in a circle, individually
+         Period := Milliseconds (75);  -- arbitrary
+         for K in 1 .. 40 loop   -- arbitrary
+            Turn_Off (Pattern (Next_LED));
 
-   private
-
-      procedure Interrupt_Handler;
-      pragma Attach_Handler (Interrupt_Handler, User_Button_Interrupt);
-
-      Direction : Directions := Clockwise;  -- arbitrary
-      Last_Time : Time := Clock;
-
-   end User_Button;
-
-   Debounce_Time : constant Time_Span := Milliseconds (500);
-
-   -----------------
-   -- User_Button --
-   -----------------
-
-   protected body User_Button is
-
-      -----------------------
-      -- Current_Direction --
-      -----------------------
-
-      function Current_Direction return Directions is
-         (Direction);
-
-      -----------------------
-      -- Interrupt_Handler --
-      -----------------------
-
-      procedure Interrupt_Handler is
-         Now : constant Time := Clock;
-      begin
-         Clear_External_Interrupt (User_Button_Point.Pin);
-
-         --  Debouncing
-         if Now - Last_Time >= Debounce_Time then
-            if Direction = Counterclockwise then
-               Direction := Clockwise;
+            if Button.Current_Direction = Counterclockwise then
+               Next_LED := Next_LED - 1;
             else
-               Direction := Counterclockwise;
+               Next_LED := Next_LED + 1;
             end if;
 
-            Last_Time := Now;
-         end if;
-      end Interrupt_Handler;
+            Turn_On (Pattern (Next_LED));
 
-   end User_Button;
+            Next_Release := Next_Release + Period;
+            delay until Next_Release;
+         end loop;
 
-   -----------------------
-   -- Current_Direction --
-   -----------------------
+         --  flash all, together
+         Period := Milliseconds (50);  -- arbitrary
+         for K in 1 .. 5 loop   -- arbitrary
+            All_LEDs_On;
+            Next_Release := Next_Release + Period;
+            delay until Next_Release;
 
-   function Current_Direction return Directions is
-   begin
-      return User_Button.Current_Direction;
-   end Current_Direction;
+            All_LEDs_Off;
+            Next_Release := Next_Release + Period;
+            delay until Next_Release;
+         end loop;
+      end loop;
+   end Controller;
 
-   ----------------
-   -- Initialize --
-   ----------------
-
-   procedure Initialize is
-   begin
-      Configure_User_Button_GPIO;
-      Connect_External_Interrupt (User_Button_Point);
-      Configure_Trigger (User_Button_Point, Interrupt_Rising_Edge);
-   end Initialize;
-
-begin
-   Initialize;
-end Button;
+end Driver;
