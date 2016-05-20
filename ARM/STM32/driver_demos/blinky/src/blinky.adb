@@ -51,12 +51,13 @@ with STM32.Board;   use STM32.Board;
 with STM32.GPIO;    use STM32.GPIO;
 with Ada.Real_Time; use Ada.Real_Time;
 
-procedure Demo_GPIO_Blinky is
+procedure Blinky is
 
    use STM32;
 
-   Period : constant Time_Span := Milliseconds (250);
-   Next   : Time := Clock;
+   Period : constant Time_Span := Milliseconds (200);
+
+   Next_Release : Time := Clock;
 
    procedure Initialize_LEDs;
    --  Configures the GPIO pins and port connected to the LEDs on the board
@@ -82,7 +83,7 @@ begin
    loop
       Toggle (All_LEDs);
 
-      Next := Next + Period;
-      delay until Next;
+      Next_Release := Next_Release + Period;
+      delay until Next_Release;
    end loop;
-end Demo_GPIO_Blinky;
+end Blinky;
