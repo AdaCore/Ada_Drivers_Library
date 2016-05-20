@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -53,17 +53,16 @@ with Ada.Real_Time; use Ada.Real_Time;
 
 procedure Blinky is
 
-   use STM32;
-
-   Period : constant Time_Span := Milliseconds (200);
+   Period : constant Time_Span := Milliseconds (200);  -- arbitrary
 
    Next_Release : Time := Clock;
 
    procedure Initialize_LEDs;
-   --  Configures the GPIO pins and port connected to the LEDs on the board
-   --  in use so that we can drive them via GPIO commands. Note that the board
-   --  package provides a procedure to do this directly, for convenience, but
-   --  we do not use it here for the sake of illustration.
+   --  Enables the clock and configures the GPIO pins and port connected to the
+   --  LEDs on the target board so that we can drive them via GPIO commands.
+   --  Note that the STM32.Board package provides a procedure (with the same
+   --  name) to do this directly, for convenience, but we do not use it here
+   --  for the sake of illustration.
 
    procedure Initialize_LEDs is
       Configuration : GPIO_Port_Configuration;

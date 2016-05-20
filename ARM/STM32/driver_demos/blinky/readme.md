@@ -4,10 +4,14 @@ packages to initialize the LEDs, but instead directly invokes the GPIO
 package to configure them, for the sake of illustration.
 
 Note that this code is independent of the specific MCU device and board
-in use because it uses names that are common across all of them. In
-particular, the name "All_LEDs" refers to different GPIO pins on different
-boards, and indeed defines a different number of LEDs on different boards.
-Not all boards have user-controllable LEDs, of course, but those that do, 
+in use because it refers to the LED(s) with a name that is common across
+all boards that have user-controlled LEDs available. Specifically, the
+name "All_LEDs" refers to different LEDs (GPIO pins) on different boards,
+and indeed defines a different number of LEDs on different boards. Some
+boards have four, some two, some only one (the F7 Disco board, for example).
+Not all boards have user-controllable LEDs, of course, but those that do,
 have the name "All_LEDs" defined to indicate all of them.
 
-The gpr file determines which board is actually used.
+The gpr file determines which board is actually used. Invoke the builder
+and/or GPS with the one that corresponds to the board you have available,
+or modify one to match your specific hardware.
