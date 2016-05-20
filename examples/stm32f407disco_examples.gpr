@@ -7,7 +7,8 @@ aggregate project STM32F407disco_Examples is
    LOADER : LOADER_Type := external ("LOADER", "ROM");
 
    for Project_Files use
-     ("accelerometer/accelerometer.gpr");
+     ("accelerometer/accelerometer.gpr",
+      "hello_world_blinky/blinky_f4disco.gpr");
 
    for Runtime ("Ada") use Config.RTS & "-stm32f4";
    for Target use "arm-eabi";

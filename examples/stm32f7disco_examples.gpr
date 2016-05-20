@@ -11,7 +11,8 @@ aggregate project STM32F7Disco_Examples is
       "conway/conway_stm32f7disco.gpr",
       "draw/draw_stm32f7disco.gpr",
       "ethdemo/ethdemo_stm32f7disco.gpr",
-      "train/train_stm32f7disco.gpr");
+      "train/train_stm32f7disco.gpr",
+      "hello_world_blinky/blinky_f7disco.gpr");
 
    for Runtime ("Ada") use Config.RTS & "-stm32f7disco";
    for Target use "arm-eabi";

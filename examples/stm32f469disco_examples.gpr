@@ -10,7 +10,8 @@ aggregate project STM32F469Disco_Examples is
      ("balls/balls_stm32f469disco.gpr",
       "conway/conway_stm32f469disco.gpr",
       "draw/draw_stm32f469disco.gpr",
-      "train/train_stm32f469disco.gpr");
+      "train/train_stm32f469disco.gpr",
+      "hello_world_blinky/blinky_f469disco.gpr");
 
    for Runtime ("Ada") use Config.RTS & "-stm32f469disco";
    for Target use "arm-eabi";
