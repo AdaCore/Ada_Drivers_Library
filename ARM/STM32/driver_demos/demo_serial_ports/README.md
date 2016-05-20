@@ -1,3 +1,20 @@
+This project defines two demonstrations, each sending and receiving "messages"
+via a "serial port" on the target board. Messages contain character strings of
+varying lengths, up to a maximum physical length set by each message object.
+In addition, messages may have a "terminator" character specified, acting as an
+EOM marker. If the terminator character for a given message is received, no further
+incoming characters are put into the message. The terminator is not included in
+such messages. The default terminator character is the Nul character.
+
+Characters are sent and received over a serial line presumably connected to a
+host computer (see below for connection hardware). 
+
+One demo uses interrupts and is non-blocking, meaning that callers to Put and Get
+will return to the caller (potentially) before the message is sent or received
+completely. The other demo uses polling and is blocking, meaning that calls to
+the two routines do no return to callers until the message is sent or received 
+completely.
+
 You need a way to connect the GPIO pins on the target board to a serial port on
 your host computer.
 
