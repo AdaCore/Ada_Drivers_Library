@@ -217,6 +217,7 @@ begin
    Display.Initialize_Layer (1, HAL.Bitmap.RGB_888);
    Display.Initialize_Layer (2, HAL.Bitmap.ARGB_4444);
    Touch_Panel.Initialize (HAL.Framebuffer.Landscape);
+   STM32.Button.Initialize;
 
    Initialize_Color_Map;
 
