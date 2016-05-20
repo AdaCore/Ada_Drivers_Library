@@ -61,6 +61,15 @@ package Serial_IO.Streaming is
      with
        Pre => Initialized (This);
 
+   procedure Set_Read_Timeout
+     (This : in out Serial_Port;
+      Wait : Time_Span := Time_Span_Last);
+   --  Stream attributes that call Read (below) can either wait indefinitely or
+   --  can be set to return any current values received after a given interval.
+   --  If the default value of Time_Span_Last is taken on a call, the effect is
+   --  essentially to wait forever, i.e., blocking. That is also the effect if
+   --  this routine is never called.
+
    overriding
    procedure Read
      (This   : in out Serial_Port;
@@ -77,7 +86,8 @@ private
    type Serial_Port (Device : access Peripheral_Descriptor) is
      new Ada.Streams.Root_Stream_Type with
      record
-        Initialized : Boolean := False;
+         Initialized : Boolean := False;
+         Timeout     : Time_Span := Time_Span_Last;
      end record;
 
    procedure Await_Send_Ready (This : USART) with Inline;

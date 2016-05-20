@@ -1,0 +1,18 @@
+-- This project builds the host application that works with the "streams" 
+-- version of the serial ports. Specifically, it runs on the host and 
+-- communicates with the Demo_Serial_Port_Streaming program running on a 
+-- target board. 
+
+--  It is to be built with a native compiler.
+
+project Build_Host_App is
+
+   for Languages use ("Ada");
+
+   for Main use ("host");
+
+   for Object_Dir use "obj";
+
+   for Exec_Dir use ".";
+
+end Build_Host_App;

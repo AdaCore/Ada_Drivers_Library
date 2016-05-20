@@ -99,6 +99,18 @@ package body Serial_IO.Streaming is
       end loop;
    end Await_Send_Ready;
 
+   ----------------------
+   -- Set_Read_Timeout --
+   ----------------------
+
+   procedure Set_Read_Timeout
+     (This : in out Serial_Port;
+      Wait : Time_Span := Time_Span_Last)
+   is
+   begin
+      This.Timeout := Wait;
+   end Set_Read_Timeout;
+
    --------------------------
    -- Await_Data_Available --
    --------------------------
@@ -130,8 +142,8 @@ package body Serial_IO.Streaming is
    is
    begin
       if First = Stream_Element_Offset'First and then Count = 0 then
-         raise Constraint_Error with
-           "last index out of range (no element transferred)";
+         --  we need to return First - 1, but cannot
+         raise Constraint_Error;  --  per RM
       else
          return First + Stream_Element_Offset (Count) - 1;
       end if;
@@ -148,12 +160,11 @@ package body Serial_IO.Streaming is
       Last   : out Ada.Streams.Stream_Element_Offset)
    is
       Raw       : UInt9;
-      Timeout   : constant Time_Span := Time_Span_Last; -- Milliseconds (50);  --  arbitrary (???)
       Timed_Out : Boolean;
       Count     : Long_Integer := 0;
    begin
       Receiving : for K in Buffer'Range loop
-         Await_Data_Available (This.Device.Transceiver.all, Timeout, Timed_Out);
+         Await_Data_Available (This.Device.Transceiver.all, This.Timeout, Timed_Out);
          exit Receiving when Timed_Out;
          Receive (This.Device.Transceiver.all, Raw);
          Buffer (K) := Stream_Element (Raw);
