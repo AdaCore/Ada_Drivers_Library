@@ -42,10 +42,11 @@ package body STM32.Button is
    Debounce_Time : constant Time_Span := Milliseconds (250);
    Initialized   : Boolean := False;
 
-   protected Button_Prot is
+   protected User_Button is
       pragma Interrupt_Priority;
 
       function Get_State return Boolean;
+
       procedure Clear_State;
 
    private
@@ -54,20 +55,19 @@ package body STM32.Button is
 
       Pressed    : Boolean := False;
       Start_Time : Time    := Clock;
-   end Button_Prot;
+   end User_Button;
 
    -----------------
-   -- Button_Prot --
+   -- User_Button --
    -----------------
 
-   protected body Button_Prot
-   is
+   protected body User_Button is
+
       ---------------
       -- Interrupt --
       ---------------
 
-      procedure Interrupt
-      is
+      procedure Interrupt is
       begin
          Clear_External_Interrupt
            (User_Button_Point.Get_Interrupt_Line_Number);
@@ -102,14 +102,13 @@ package body STM32.Button is
          end if;
       end Clear_State;
 
-   end Button_Prot;
+   end User_Button;
 
    ----------------
    -- Initialize --
    ----------------
 
-   procedure Initialize
-   is
+   procedure Initialize is
    begin
       if Initialized then
          return;
@@ -124,7 +123,7 @@ package body STM32.Button is
           Speed       => Speed_50MHz,
           Resistors   => (if Button_High then Pull_Down else Pull_Up)));
 
-      --  We connect the button's pin the the External Interrupt Handler
+      --  We connect the button's pin to the External Interrupt Handler
       User_Button_Point.Configure_Trigger
         ((if Button_High then Interrupt_Rising_Edge
           else Interrupt_Falling_Edge));
@@ -142,8 +141,8 @@ package body STM32.Button is
          Initialize;
       end if;
 
-      State := Button_Prot.Get_State;
-      Button_Prot.Clear_State;
+      State := User_Button.Get_State;
+      User_Button.Clear_State;
 
       return State;
    end Has_Been_Pressed;
