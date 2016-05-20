@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 with STM32.Board;   use STM32.Board;
-with Button;        use Button;
+with STM32.Button;  use STM32.Button;
 with Ada.Real_Time; use Ada.Real_Time;
 
 package body Driver is
@@ -47,9 +47,11 @@ package body Driver is
       Period       : Time_Span;
       Next_Release : Time := Clock;
       Next_LED     : Index := 0;
+      Clockwise    : Boolean := True;
    begin
       Initialize_LEDs;
       All_LEDs_Off;
+      STM32.Button.Initialize;
 
       loop
          --  blink in a circle, individually
@@ -57,10 +59,14 @@ package body Driver is
          for K in 1 .. 40 loop   -- arbitrary
             Turn_Off (Pattern (Next_LED));
 
-            if Button.Current_Direction = Counterclockwise then
-               Next_LED := Next_LED - 1;
-            else
+            if STM32.Button.Has_Been_Pressed then
+               Clockwise := not Clockwise;
+            end if;
+
+            if Clockwise then
                Next_LED := Next_LED + 1;
+            else
+               Next_LED := Next_LED - 1;
             end if;
 
             Turn_On (Pattern (Next_LED));
