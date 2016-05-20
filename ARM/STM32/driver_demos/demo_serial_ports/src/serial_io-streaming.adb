@@ -67,27 +67,6 @@ package body Serial_IO.Streaming is
       Serial_IO.Configure (This.Device, Baud_Rate, Parity, Data_Bits, End_Bits, Control);
    end Configure;
 
---     ---------
---     -- Get --
---     ---------
---
---     procedure Get (This : in out Serial_Port;  Msg : not null access Message) is
---        Received_Char : Character;
---        Raw           : UInt9;
---        Timeout       : constant Time_Span := Milliseconds (50);  -- arbitrary (???)
---        Timed_Out     : Boolean;
---     begin
---        Msg.Clear;
---        Receiving : for K in 1 .. Msg.Physical_Size loop
---           Await_Data_Available (This.Device.Transceiver.all, Timeout, Timed_Out);
---           exit Receiving when Timed_Out;
---           Receive (This.Device.Transceiver.all, Raw);
---           Received_Char := Character'Val (Raw);
---           exit Receiving when Received_Char = Msg.Terminator;
---           Msg.Append (Received_Char);
---        end loop Receiving;
---     end Get;
-
    ----------------------
    -- Await_Send_Ready --
    ----------------------
