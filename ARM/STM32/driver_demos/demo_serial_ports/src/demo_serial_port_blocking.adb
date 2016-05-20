@@ -32,19 +32,25 @@
 --  A demonstration of a higher-level USART interface, using blocking I/O.
 --  The file declares the main procedure for the demonstration.
 
+with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
+--  The "last chance handler" is the user-defined routine that is called when
+--  an exception is propagated. We need it in the executable, therefore it
+--  must be somewhere in the closure of the context clauses.
+
 with Peripherals_Blocking;  use Peripherals_Blocking;
 with Serial_IO.Blocking;    use Serial_IO.Blocking;
+with Message_Buffers;       use Message_Buffers;
 
 use Serial_IO;
 
 procedure Demo_Serial_Port_Blocking is
 
    Incoming : aliased Message (Physical_Size => 1024);  -- arbitrary size
+   Outgoing : aliased Message (Physical_Size => 1024);  -- arbitrary size
 
    procedure Send (This : String);
 
    procedure Send (This : String) is
-      Outgoing : aliased Message (Physical_Size => 1024);  -- arbitrary size
    begin
       Set (Outgoing, To => This);
       Blocking.Put (COM, Outgoing'Unchecked_Access);

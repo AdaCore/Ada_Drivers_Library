@@ -141,9 +141,9 @@ package body Serial_IO.Nonblocking is
          then
             Clear_Status (Port.Device.Transceiver.all, Parity_Error_Indicated);
             if Is_Xmit_IRQ then
-               Note_Error (Outgoing_Msg.all, Parity_Error_Detected);
+               Outgoing_Msg.Note_Error (Parity_Error_Detected);
             else
-               Note_Error (Incoming_Msg.all, Parity_Error_Detected);
+               Incoming_Msg.Note_Error (Parity_Error_Detected);
             end if;
          end if;
 
@@ -152,9 +152,9 @@ package body Serial_IO.Nonblocking is
          then
             Clear_Status (Port.Device.Transceiver.all, Framing_Error_Indicated);
             if Is_Xmit_IRQ then
-               Note_Error (Outgoing_Msg.all, Frame_Error_Detected);
+               Outgoing_Msg.Note_Error (Frame_Error_Detected);
             else
-               Note_Error (Incoming_Msg.all, Frame_Error_Detected);
+               Incoming_Msg.Note_Error (Frame_Error_Detected);
             end if;
          end if;
 
@@ -163,9 +163,9 @@ package body Serial_IO.Nonblocking is
          then
             Clear_Status (Port.Device.Transceiver.all, USART_Noise_Error_Indicated);
             if Is_Xmit_IRQ then
-               Note_Error (Outgoing_Msg.all, Noise_Error_Detected);
+               Outgoing_Msg.Note_Error (Noise_Error_Detected);
             else
-               Note_Error (Incoming_Msg.all, Noise_Error_Detected);
+               Incoming_Msg.Note_Error (Noise_Error_Detected);
             end if;
          end if;
 
@@ -174,9 +174,9 @@ package body Serial_IO.Nonblocking is
          then
             Clear_Status (Port.Device.Transceiver.all, Overrun_Error_Indicated);
             if Is_Xmit_IRQ then
-               Note_Error (Outgoing_Msg.all, Overrun_Error_Detected);
+               Outgoing_Msg.Note_Error (Overrun_Error_Detected);
             else
-               Note_Error (Incoming_Msg.all, Overrun_Error_Detected);
+               Incoming_Msg.Note_Error (Overrun_Error_Detected);
             end if;
          end if;
       end Detect_Errors;
@@ -190,13 +190,15 @@ package body Serial_IO.Nonblocking is
          --  if Word_Lenth = 9 then
          --    -- handle the extra byte required for the 9th bit
          --  else  -- 8 data bits so no extra byte involved
-         Transmit (Port.Device.Transceiver.all, Character'Pos (Outgoing_Msg.Content (Next_Out)));
+         Transmit
+           (Port.Device.Transceiver.all,
+            Character'Pos (Outgoing_Msg.Content_At (Next_Out)));
          Next_Out := Next_Out + 1;
          --  end if;
          Awaiting_Transfer := Awaiting_Transfer - 1;
          if Awaiting_Transfer = 0 then
             Disable_Interrupts (Port.Device.Transceiver.all, Source => Transmission_Complete);
-            Set_True (Outgoing_Msg.Transmission_Complete);
+            Outgoing_Msg.Signal_Transmission_Complete;
             Outgoing_Msg := null;
          end if;
       end Handle_Transmission;
@@ -209,18 +211,18 @@ package body Serial_IO.Nonblocking is
          Received_Char : constant Character := Character'Val (Current_Input (Port.Device.Transceiver.all));
       begin
          if Received_Char /= Terminator (Incoming_Msg.all) then
-            Incoming_Msg.Content (Next_In) := Received_Char;
-            Next_In := Next_In + 1;
+            Incoming_Msg.Append (Received_Char);
          end if;
 
-         if Received_Char = Terminator (Incoming_Msg.all) or Next_In > Incoming_Msg.Physical_Size then
+         if Received_Char = Incoming_Msg.Terminator or
+            Incoming_Msg.Length = Incoming_Msg.Physical_Size
+         then
             --  reception complete
-            Incoming_Msg.Length := Next_In - 1;
             loop
                exit when not Status (Port.Device.Transceiver.all, Read_Data_Register_Not_Empty);
             end loop;
             Disable_Interrupts (Port.Device.Transceiver.all, Source => Received_Data_Not_Empty);
-            Set_True (Incoming_Msg.Reception_Complete);
+            Incoming_Msg.Signal_Reception_Complete;
             Incoming_Msg := null;
          end if;
       end Handle_Reception;
@@ -257,7 +259,7 @@ package body Serial_IO.Nonblocking is
       procedure Start_Sending (Msg : not null access Message) is
       begin
          Outgoing_Msg := Msg;
-         Awaiting_Transfer := Length (Msg.all);
+         Awaiting_Transfer := Msg.Length;
          Next_Out := 1;
 
          Enable_Interrupts (Port.Device.Transceiver.all, Parity_Error);
@@ -272,7 +274,7 @@ package body Serial_IO.Nonblocking is
       procedure Start_Receiving (Msg : not null access Message) is
       begin
          Incoming_Msg := Msg;
-         Next_In := 1;
+         Incoming_Msg.Clear;
 
          Enable_Interrupts (Port.Device.Transceiver.all, Parity_Error);
          Enable_Interrupts (Port.Device.Transceiver.all, Error);

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                       Copyright (C) 2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package body Serial_IO is
+package body Message_Buffers is
 
    -------------
    -- Content --
@@ -133,6 +133,24 @@ package body Serial_IO is
       Suspend_Until_True (This.Reception_Complete);
    end Await_Reception_Complete;
 
+   ----------------------------------
+   -- Signal_Transmission_Complete --
+   ----------------------------------
+
+   procedure Signal_Transmission_Complete (This : in out Message) is
+   begin
+      Set_True (This.Transmission_Complete);
+   end Signal_Transmission_Complete;
+
+   -------------------------------
+   -- Signal_Reception_Complete --
+   -------------------------------
+
+   procedure Signal_Reception_Complete (This : in out Message) is
+   begin
+      Set_True (This.Reception_Complete);
+   end Signal_Reception_Complete;
+
    ----------------
    -- Note_Error --
    ----------------
@@ -169,4 +187,4 @@ package body Serial_IO is
       return (This.Error_Status and Condition) /= 0;
    end Has_Error;
 
-end Serial_IO;
+end Message_Buffers;

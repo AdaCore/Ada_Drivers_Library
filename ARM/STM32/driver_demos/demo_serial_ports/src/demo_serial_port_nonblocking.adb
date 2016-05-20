@@ -32,9 +32,14 @@
 --  A demonstration of a higher-level USART interface, using non-blocking I/O.
 --  The file declares the main procedure for the demonstration.
 
+with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
+--  The "last chance handler" is the user-defined routine that is called when
+--  an exception is propagated. We need it in the executable, therefore it
+--  must be somewhere in the closure of the context clauses.
+
 with Peripherals_Nonblocking;    use Peripherals_Nonblocking;
 with Serial_IO.Nonblocking;      use Serial_IO.Nonblocking;
-with Serial_IO;                  use Serial_IO;
+with Message_Buffers;            use Message_Buffers;
 
 procedure Demo_Serial_Port_Nonblocking is
 

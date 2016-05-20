@@ -61,7 +61,8 @@ package body Serial_IO.Blocking is
    -- Initialized --
    -----------------
 
-   function Initialized (This : Serial_Port) return Boolean is (This.Initialized);
+   function Initialized (This : Serial_Port) return Boolean is
+     (This.Initialized);
 
    ---------------
    -- Configure --
@@ -79,7 +80,7 @@ package body Serial_IO.Blocking is
       Disable (This.Device.Transceiver.all);
 
       Set_Baud_Rate    (This.Device.Transceiver.all, Baud_Rate);
-      Set_Mode         (This.Device.Transceiver.all, Tx_Rx_Mode);  -- hardcoded ??
+      Set_Mode         (This.Device.Transceiver.all, Tx_Rx_Mode);
       Set_Stop_Bits    (This.Device.Transceiver.all, End_Bits);
       Set_Word_Length  (This.Device.Transceiver.all, Data_Bits);
       Set_Parity       (This.Device.Transceiver.all, Parity);
@@ -92,21 +93,13 @@ package body Serial_IO.Blocking is
    -- Put --
    ---------
 
-   procedure Put (This : in out Serial_Port;  Value : Character) is
+   procedure Put (This : in out Serial_Port;  Msg : not null access Message) is
    begin
-      Await_Send_Ready (This.Device.Transceiver.all);
-      Transmit (This.Device.Transceiver.all, Character'Pos (Value));
-   end Put;
-
-   ---------
-   -- Put --
-   ---------
-
-   procedure Put (This : in out Serial_Port;  Value : String) is
-   begin
-      for Next_Char of Value loop
+      for Next in 1 .. Msg.Length loop
          Await_Send_Ready (This.Device.Transceiver.all);
-         Transmit (This.Device.Transceiver.all, Character'Pos (Next_Char));
+         Transmit
+           (This.Device.Transceiver.all,
+            Character'Pos (Msg.Content_At (Next)));
       end loop;
    end Put;
 
@@ -114,53 +107,18 @@ package body Serial_IO.Blocking is
    -- Get --
    ---------
 
-   procedure Get (This : in out Serial_Port;  Value : out Character) is
-      Raw : UInt9;
-   begin
-      Await_Data_Available (This.Device.Transceiver.all);
-      Receive (This.Device.Transceiver.all, Raw);
-      Value := Character'Val (Raw);
-   end Get;
-
-   ---------
-   -- Get --
-   ---------
-
-   procedure Get
-     (This       : in out Serial_Port;
-      Value      : out String;
-      Last       : out Natural;
-      Terminator : Character)
-   is
-      Raw           : UInt9;
+   procedure Get (This : in out Serial_Port;  Msg : not null access Message) is
       Received_Char : Character;
+      Raw           : UInt9;
    begin
-      Receiving : for Index in Value'Range loop
+      Msg.Clear;
+      Receiving : for K in 1 .. Msg.Physical_Size loop
          Await_Data_Available (This.Device.Transceiver.all);
          Receive (This.Device.Transceiver.all, Raw);
          Received_Char := Character'Val (Raw);
-         exit Receiving when Received_Char = Terminator;
-         Value (Index) := Received_Char;
-         Last := Index;
+         exit Receiving when Received_Char = Msg.Terminator;
+         Msg.Append (Received_Char);
       end loop Receiving;
-   end Get;
-
-   ---------
-   -- Put --
-   ---------
-
-   procedure Put (This : in out Serial_Port;  Msg : not null access Message) is
-   begin
-      Put (This, Content (Msg.all));
-   end Put;
-
-   ---------
-   -- Get --
-   ---------
-
-   procedure Get (This : in out Serial_Port;  Msg : not null access Message) is
-   begin
-      Get (This, Msg.Content, Msg.Length, Msg.Terminator);
    end Get;
 
    ----------------------

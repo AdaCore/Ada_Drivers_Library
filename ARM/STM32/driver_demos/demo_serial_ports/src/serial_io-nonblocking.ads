@@ -29,10 +29,25 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32;          use STM32;
-with STM32.GPIO;     use STM32.GPIO;
-with STM32.USARTs;   use STM32.USARTs;
-with Ada.Interrupts; use Ada.Interrupts;
+--  This package defines an abstract data type for a "serial port" providing
+--  non-blocking input (Get) and output (Put) procedures. The procedures are
+--  considered non-blocking because they return to the caller (potentially)
+--  before the entire message is received or sent.
+--
+--  The serial port abstraction is a wrapper around a USART peripheral,
+--  described by a value of type Peripheral_Descriptor.
+--
+--  Interrupts are used to send and receive characters.
+--
+--  NB: clients must not send or receive messages until any prior sending or
+--  receiving is completed. See the two functions Sending and Receiving and
+--  the preconditions on Put and Get.
+
+with STM32;           use STM32;
+with STM32.GPIO;      use STM32.GPIO;
+with STM32.USARTs;    use STM32.USARTs;
+with Message_Buffers; use Message_Buffers;
+with Ada.Interrupts;  use Ada.Interrupts;
 
 package Serial_IO.Nonblocking is
    pragma Elaborate_Body;
@@ -47,7 +62,7 @@ package Serial_IO.Nonblocking is
    type Serial_Port
      (IRQ    : Interrupt_ID;
       Device : not null access Peripheral_Descriptor)
-   is limited private;
+   is tagged limited private;
 
    procedure Initialize (This : in out Serial_Port)
      with
@@ -80,11 +95,16 @@ package Serial_IO.Nonblocking is
      Inline;
 
    function Sending (This : in out Serial_Port) return Boolean;
+   --  Returns whether This is currently sending a message.
 
    function Receiving (This : in out Serial_Port) return Boolean;
+   --  Returns whether This is currently receiving a message.
 
 private
 
+   --  The protected type defining the interrupt handling for sending and
+   --  receiving characters via the USART attached to the serial port. Each
+   --  serial port type a component of this protected type.
    protected type Controller (IRQ : Interrupt_ID;  Port : access Serial_Port) is
 
       pragma Interrupt_Priority;
@@ -103,15 +123,13 @@ private
       Next_Out          : Positive;
       Awaiting_Transfer : Natural;
       Outgoing_Msg      : access Message;
-      Next_In           : Positive;
       Incoming_Msg      : access Message;
 
       procedure Handle_Transmission with Inline;
       procedure Handle_Reception with Inline;
       procedure Detect_Errors (Is_Xmit_IRQ : Boolean) with Inline;
 
-      procedure IRQ_Handler;
-      pragma Attach_Handler (IRQ_Handler, IRQ);
+      procedure IRQ_Handler with Attach_Handler => IRQ;
 
    end Controller;
 
@@ -119,7 +137,7 @@ private
    type Serial_Port
      (IRQ    : Interrupt_ID;
       Device : not null access Peripheral_Descriptor)
-   is limited record
+   is tagged limited record
       Initialized : Boolean := False;
       Control     : Controller (IRQ, Serial_Port'Access);
    end record;
