@@ -38,21 +38,8 @@ package body Serial_IO.Nonblocking is
    ----------------
 
    procedure Initialize (This : in out Serial_Port) is
-      Configuration : GPIO_Port_Configuration;
-      Device_Pins   : constant GPIO_Points := This.Device.Rx_Pin & This.Device.Tx_Pin;
    begin
-      Enable_Clock (Device_Pins);
-      Enable_Clock (This.Device.Transceiver.all);
-
-      Configuration.Mode        := Mode_AF;
-      Configuration.Speed       := Speed_50MHz;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Resistors   := Pull_Up;
-
-      Configure_IO (Device_Pins, Configuration);
-
-      Configure_Alternate_Function (Device_Pins, This.Device.Transceiver_AF);
-
+      Serial_IO.Initialize_Peripheral (This.Device);
       This.Initialized := True;
    end Initialize;
 
@@ -76,16 +63,7 @@ package body Serial_IO.Nonblocking is
       Control   : Flow_Control := No_Flow_Control)
    is
    begin
-      Disable (This.Device.Transceiver.all);
-
-      Set_Baud_Rate    (This.Device.Transceiver.all, Baud_Rate);
-      Set_Mode         (This.Device.Transceiver.all, Tx_Rx_Mode);
-      Set_Stop_Bits    (This.Device.Transceiver.all, End_Bits);
-      Set_Word_Length  (This.Device.Transceiver.all, Data_Bits);
-      Set_Parity       (This.Device.Transceiver.all, Parity);
-      Set_Flow_Control (This.Device.Transceiver.all, Control);
-
-      Enable (This.Device.Transceiver.all);
+      Serial_IO.Configure (This.Device, Baud_Rate, Parity, Data_Bits, End_Bits, Control);
    end Configure;
 
    ---------

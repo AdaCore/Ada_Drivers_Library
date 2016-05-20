@@ -43,30 +43,19 @@
 --  receiving is completed. See the two functions Sending and Receiving and
 --  the preconditions on Put and Get.
 
-with STM32;           use STM32;
-with STM32.GPIO;      use STM32.GPIO;
-with STM32.USARTs;    use STM32.USARTs;
 with Message_Buffers; use Message_Buffers;
 with Ada.Interrupts;  use Ada.Interrupts;
 
 package Serial_IO.Nonblocking is
    pragma Elaborate_Body;
 
-   type Peripheral_Descriptor is record
-      Transceiver        : not null access USART;
-      Transceiver_AF     : GPIO_Alternate_Function;
-      Tx_Pin             : GPIO_Point;
-      Rx_Pin             : GPIO_Point;
-   end record;
-
    type Serial_Port
      (IRQ    : Interrupt_ID;
       Device : not null access Peripheral_Descriptor)
    is tagged limited private;
 
-   procedure Initialize (This : in out Serial_Port)
-     with
-       Post => Initialized (This);
+   procedure Initialize (This : in out Serial_Port) with
+     Post => Initialized (This);
 
    function Initialized (This : Serial_Port) return Boolean with Inline;
 

@@ -29,96 +29,22 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.Device;  use STM32.Device;
-with HAL;           use HAL;
+with STM32.GPIO;   use STM32.GPIO;
+with STM32.Device; use STM32.Device;
 
-package body Serial_IO.Blocking is
+with Serial_IO.Streaming;  use Serial_IO.Streaming;
 
-   ----------------
-   -- Initialize --
-   ----------------
+use Serial_IO;
 
-   procedure Initialize (This : out Serial_Port) is
-   begin
-      Serial_IO.Initialize_Peripheral (This.Device);
-      This.Initialized := True;
-   end Initialize;
+package Peripherals_Streaming is
 
-   -----------------
-   -- Initialized --
-   -----------------
+   --  the specific port, pins, and USART selections are arbitrary.
+   Peripheral : aliased Serial_IO.Peripheral_Descriptor :=
+                  (Transceiver    => USART_1'Access,
+                   Transceiver_AF => GPIO_AF_USART1,
+                   Tx_Pin         => PB6,
+                   Rx_Pin         => PB7);
 
-   function Initialized (This : Serial_Port) return Boolean is
-     (This.Initialized);
+   COM : aliased Streaming.Serial_Port (Peripheral'Access);
 
-   ---------------
-   -- Configure --
-   ---------------
-
-   procedure Configure
-     (This      : in out Serial_Port;
-      Baud_Rate : Baud_Rates;
-      Parity    : Parities     := No_Parity;
-      Data_Bits : Word_Lengths := Word_Length_8;
-      End_Bits  : Stop_Bits    := Stopbits_1;
-      Control   : Flow_Control := No_Flow_Control)
-   is
-   begin
-      Serial_IO.Configure (This.Device, Baud_Rate, Parity, Data_Bits, End_Bits, Control);
-   end Configure;
-
-   ---------
-   -- Put --
-   ---------
-
-   procedure Put (This : in out Serial_Port;  Msg : not null access Message) is
-   begin
-      for Next in 1 .. Msg.Length loop
-         Await_Send_Ready (This.Device.Transceiver.all);
-         Transmit
-           (This.Device.Transceiver.all,
-            Character'Pos (Msg.Content_At (Next)));
-      end loop;
-   end Put;
-
-   ---------
-   -- Get --
-   ---------
-
-   procedure Get (This : in out Serial_Port;  Msg : not null access Message) is
-      Received_Char : Character;
-      Raw           : UInt9;
-   begin
-      Msg.Clear;
-      Receiving : for K in 1 .. Msg.Physical_Size loop
-         Await_Data_Available (This.Device.Transceiver.all);
-         Receive (This.Device.Transceiver.all, Raw);
-         Received_Char := Character'Val (Raw);
-         exit Receiving when Received_Char = Msg.Terminator;
-         Msg.Append (Received_Char);
-      end loop Receiving;
-   end Get;
-
-   ----------------------
-   -- Await_Send_Ready --
-   ----------------------
-
-   procedure Await_Send_Ready (This : USART) is
-   begin
-      loop
-         exit when Tx_Ready (This);
-      end loop;
-   end Await_Send_Ready;
-
-   --------------------------
-   -- Await_Data_Available --
-   --------------------------
-
-   procedure Await_Data_Available (This : USART) is
-   begin
-      loop
-         exit when Rx_Ready (This);
-      end loop;
-   end Await_Data_Available;
-
-end Serial_IO.Blocking;
+end Peripherals_Streaming;

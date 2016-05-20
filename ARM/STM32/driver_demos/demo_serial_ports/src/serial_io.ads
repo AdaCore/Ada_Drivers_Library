@@ -29,7 +29,27 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with STM32.GPIO;    use STM32.GPIO;
+with STM32.USARTs;  use STM32.USARTs;
+
 package Serial_IO is
+
+   type Peripheral_Descriptor is record
+      Transceiver    : not null access USART;
+      Transceiver_AF : GPIO_Alternate_Function;
+      Tx_Pin         : GPIO_Point;
+      Rx_Pin         : GPIO_Point;
+   end record;
+
+   procedure Initialize_Peripheral (Device : access Peripheral_Descriptor);
+
+   procedure Configure
+     (Device    : access Peripheral_Descriptor;
+      Baud_Rate : Baud_Rates;
+      Parity    : Parities     := No_Parity;
+      Data_Bits : Word_Lengths := Word_Length_8;
+      End_Bits  : Stop_Bits    := Stopbits_1;
+      Control   : Flow_Control := No_Flow_Control);
 
    type Error_Conditions is mod 256;
 

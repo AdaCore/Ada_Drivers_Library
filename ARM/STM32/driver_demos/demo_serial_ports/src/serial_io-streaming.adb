@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                     Copyright (C) 2016, AdaCore                          --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -32,7 +32,7 @@
 with STM32.Device;  use STM32.Device;
 with HAL;           use HAL;
 
-package body Serial_IO.Blocking is
+package body Serial_IO.Streaming is
 
    ----------------
    -- Initialize --
@@ -67,37 +67,26 @@ package body Serial_IO.Blocking is
       Serial_IO.Configure (This.Device, Baud_Rate, Parity, Data_Bits, End_Bits, Control);
    end Configure;
 
-   ---------
-   -- Put --
-   ---------
-
-   procedure Put (This : in out Serial_Port;  Msg : not null access Message) is
-   begin
-      for Next in 1 .. Msg.Length loop
-         Await_Send_Ready (This.Device.Transceiver.all);
-         Transmit
-           (This.Device.Transceiver.all,
-            Character'Pos (Msg.Content_At (Next)));
-      end loop;
-   end Put;
-
-   ---------
-   -- Get --
-   ---------
-
-   procedure Get (This : in out Serial_Port;  Msg : not null access Message) is
-      Received_Char : Character;
-      Raw           : UInt9;
-   begin
-      Msg.Clear;
-      Receiving : for K in 1 .. Msg.Physical_Size loop
-         Await_Data_Available (This.Device.Transceiver.all);
-         Receive (This.Device.Transceiver.all, Raw);
-         Received_Char := Character'Val (Raw);
-         exit Receiving when Received_Char = Msg.Terminator;
-         Msg.Append (Received_Char);
-      end loop Receiving;
-   end Get;
+--     ---------
+--     -- Get --
+--     ---------
+--
+--     procedure Get (This : in out Serial_Port;  Msg : not null access Message) is
+--        Received_Char : Character;
+--        Raw           : UInt9;
+--        Timeout       : constant Time_Span := Milliseconds (50);  -- arbitrary (???)
+--        Timed_Out     : Boolean;
+--     begin
+--        Msg.Clear;
+--        Receiving : for K in 1 .. Msg.Physical_Size loop
+--           Await_Data_Available (This.Device.Transceiver.all, Timeout, Timed_Out);
+--           exit Receiving when Timed_Out;
+--           Receive (This.Device.Transceiver.all, Raw);
+--           Received_Char := Character'Val (Raw);
+--           exit Receiving when Received_Char = Msg.Terminator;
+--           Msg.Append (Received_Char);
+--        end loop Receiving;
+--     end Get;
 
    ----------------------
    -- Await_Send_Ready --
@@ -114,11 +103,79 @@ package body Serial_IO.Blocking is
    -- Await_Data_Available --
    --------------------------
 
-   procedure Await_Data_Available (This : USART) is
+   procedure Await_Data_Available
+     (This      : USART;
+      Timeout   : Time_Span := Time_Span_Last;
+      Timed_Out : out Boolean)
+   is
+      Deadline : constant Time := Clock + Timeout;
    begin
-      loop
-         exit when Rx_Ready (This);
+      Timed_Out := True;
+      while Clock < Deadline loop
+         if Rx_Ready (This) then
+            Timed_Out := False;
+            exit;
+         end if;
       end loop;
    end Await_Data_Available;
 
-end Serial_IO.Blocking;
+   ----------------
+   -- Last_Index --
+   ----------------
+
+   function Last_Index
+     (First : Stream_Element_Offset;
+      Count : Long_Integer)
+      return Stream_Element_Offset
+   is
+   begin
+      if First = Stream_Element_Offset'First and then Count = 0 then
+         raise Constraint_Error with
+           "last index out of range (no element transferred)";
+      else
+         return First + Stream_Element_Offset (Count) - 1;
+      end if;
+   end Last_Index;
+
+   ----------
+   -- Read --
+   ----------
+
+   overriding
+   procedure Read
+     (This   : in out Serial_Port;
+      Buffer : out Ada.Streams.Stream_Element_Array;
+      Last   : out Ada.Streams.Stream_Element_Offset)
+   is
+      Raw       : UInt9;
+      Timeout   : constant Time_Span := Time_Span_Last; -- Milliseconds (50);  --  arbitrary (???)
+      Timed_Out : Boolean;
+      Count     : Long_Integer := 0;
+   begin
+      Receiving : for K in Buffer'Range loop
+         Await_Data_Available (This.Device.Transceiver.all, Timeout, Timed_Out);
+         exit Receiving when Timed_Out;
+         Receive (This.Device.Transceiver.all, Raw);
+         Buffer (K) := Stream_Element (Raw);
+         Count := Count + 1;
+      end loop Receiving;
+      Last := Last_Index (Buffer'First, Count);
+   end Read;
+
+   -----------
+   -- Write --
+   -----------
+
+   overriding
+   procedure Write
+     (This   : in out Serial_Port;
+      Buffer : Ada.Streams.Stream_Element_Array)
+   is
+   begin
+      for Next of Buffer loop
+         Await_Send_Ready (This.Device.Transceiver.all);
+         Transmit (This.Device.Transceiver.all, Stream_Element'Pos (Next));
+      end loop;
+   end Write;
+
+end Serial_IO.Streaming;

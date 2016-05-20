@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                     Copyright (C) 2016, AdaCore                          --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,31 +29,27 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.Device;  use STM32.Device;
-with HAL;           use HAL;
+--  A demonstration of a higher-level USART interface using streams. In
+--  particular, the serial port is presented as a stream type, so these ports
+--  can be used with stream attributes to send values or arbitrary types, not
+--  just characters or Strings.
 
-package body Serial_IO.Blocking is
+--  Polling is used within the procedures to determine when characters are sent
+--  and received.
 
-   ----------------
-   -- Initialize --
-   ----------------
+with Ada.Streams;
+with Ada.Real_Time; use Ada.Real_Time;
 
-   procedure Initialize (This : out Serial_Port) is
-   begin
-      Serial_IO.Initialize_Peripheral (This.Device);
-      This.Initialized := True;
-   end Initialize;
+package Serial_IO.Streaming is
+   pragma Elaborate_Body;
 
-   -----------------
-   -- Initialized --
-   -----------------
+   type Serial_Port (Device : not null access Peripheral_Descriptor) is
+     new Ada.Streams.Root_Stream_Type with private;
 
-   function Initialized (This : Serial_Port) return Boolean is
-     (This.Initialized);
+   procedure Initialize (This : out Serial_Port)
+     with Post => Initialized (This);
 
-   ---------------
-   -- Configure --
-   ---------------
+   function Initialized (This : Serial_Port) return Boolean with Inline;
 
    procedure Configure
      (This      : in out Serial_Port;
@@ -62,63 +58,42 @@ package body Serial_IO.Blocking is
       Data_Bits : Word_Lengths := Word_Length_8;
       End_Bits  : Stop_Bits    := Stopbits_1;
       Control   : Flow_Control := No_Flow_Control)
-   is
-   begin
-      Serial_IO.Configure (This.Device, Baud_Rate, Parity, Data_Bits, End_Bits, Control);
-   end Configure;
+     with
+       Pre => Initialized (This);
 
-   ---------
-   -- Put --
-   ---------
+   overriding
+   procedure Read
+     (This   : in out Serial_Port;
+      Buffer : out Ada.Streams.Stream_Element_Array;
+      Last   : out Ada.Streams.Stream_Element_Offset);
 
-   procedure Put (This : in out Serial_Port;  Msg : not null access Message) is
-   begin
-      for Next in 1 .. Msg.Length loop
-         Await_Send_Ready (This.Device.Transceiver.all);
-         Transmit
-           (This.Device.Transceiver.all,
-            Character'Pos (Msg.Content_At (Next)));
-      end loop;
-   end Put;
+   overriding
+   procedure Write
+     (This   : in out Serial_Port;
+      Buffer : Ada.Streams.Stream_Element_Array);
 
-   ---------
-   -- Get --
-   ---------
+private
 
-   procedure Get (This : in out Serial_Port;  Msg : not null access Message) is
-      Received_Char : Character;
-      Raw           : UInt9;
-   begin
-      Msg.Clear;
-      Receiving : for K in 1 .. Msg.Physical_Size loop
-         Await_Data_Available (This.Device.Transceiver.all);
-         Receive (This.Device.Transceiver.all, Raw);
-         Received_Char := Character'Val (Raw);
-         exit Receiving when Received_Char = Msg.Terminator;
-         Msg.Append (Received_Char);
-      end loop Receiving;
-   end Get;
+   type Serial_Port (Device : access Peripheral_Descriptor) is
+     new Ada.Streams.Root_Stream_Type with
+     record
+        Initialized : Boolean := False;
+     end record;
 
-   ----------------------
-   -- Await_Send_Ready --
-   ----------------------
+   procedure Await_Send_Ready (This : USART) with Inline;
 
-   procedure Await_Send_Ready (This : USART) is
-   begin
-      loop
-         exit when Tx_Ready (This);
-      end loop;
-   end Await_Send_Ready;
+   procedure Await_Data_Available
+     (This      : USART;
+      Timeout   : Time_Span := Time_Span_Last;
+      Timed_Out : out Boolean)
+     with Inline;
 
-   --------------------------
-   -- Await_Data_Available --
-   --------------------------
+   use Ada.Streams;
 
-   procedure Await_Data_Available (This : USART) is
-   begin
-      loop
-         exit when Rx_Ready (This);
-      end loop;
-   end Await_Data_Available;
+   function Last_Index
+     (First : Stream_Element_Offset;
+      Count : Long_Integer)
+      return Stream_Element_Offset
+   with Inline;
 
-end Serial_IO.Blocking;
+end Serial_IO.Streaming;
