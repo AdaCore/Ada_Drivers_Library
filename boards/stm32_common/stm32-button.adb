@@ -38,9 +38,17 @@ with STM32.EXTI;    use STM32.EXTI;
 
 package body STM32.Button is
 
-   Button_High   : constant Boolean := True;
+   Button_High : Boolean := True;
+
    Debounce_Time : constant Time_Span := Milliseconds (250);
-   Initialized   : Boolean := False;
+
+   EXTI_Line : constant External_Line_Number := User_Button_Point.Get_Interrupt_Line_Number;
+
+   Initialization_Complete : Boolean := False;
+
+   -----------------
+   -- User_Button --
+   -----------------
 
    protected User_Button is
       pragma Interrupt_Priority;
@@ -69,8 +77,7 @@ package body STM32.Button is
 
       procedure Interrupt is
       begin
-         Clear_External_Interrupt
-           (User_Button_Point.Get_Interrupt_Line_Number);
+         Clear_External_Interrupt (EXTI_Line);
 
          if (Button_High and then User_Button_Point.Set)
            or else (not Button_High and then not User_Button_Point.Set)
@@ -108,25 +115,23 @@ package body STM32.Button is
    -- Initialize --
    ----------------
 
-   procedure Initialize is
+   procedure Initialize (Use_Rising_Edge : Boolean := True) is
    begin
-      if Initialized then
-         return;
-      end if;
-
-      Initialized := True;
       Enable_Clock (User_Button_Point);
 
       User_Button_Point.Configure_IO
         ((Mode        => Mode_In,
           Output_Type => Open_Drain,
           Speed       => Speed_50MHz,
-          Resistors   => (if Button_High then Pull_Down else Pull_Up)));
+          Resistors   => (if Use_Rising_Edge then Pull_Down else Pull_Up)));
 
-      --  We connect the button's pin to the External Interrupt Handler
+      --  Connect the button's pin to the External Interrupt Handler
       User_Button_Point.Configure_Trigger
-        ((if Button_High then Interrupt_Rising_Edge
+        ((if Use_Rising_Edge then Interrupt_Rising_Edge
           else Interrupt_Falling_Edge));
+
+      Button_High := Use_Rising_Edge;
+      Initialization_Complete := True;
    end Initialize;
 
    ----------------------
@@ -137,14 +142,16 @@ package body STM32.Button is
    is
       State : Boolean;
    begin
-      if not Initialized then
-         Initialize;
-      end if;
-
       State := User_Button.Get_State;
       User_Button.Clear_State;
 
       return State;
    end Has_Been_Pressed;
+
+   -----------------
+   -- Initialized --
+   -----------------
+
+   function Initialized return Boolean is (Initialization_Complete);
 
 end STM32.Button;
