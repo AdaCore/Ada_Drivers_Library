@@ -44,7 +44,7 @@ package body Driver is
    --  blinking order desired.
 
    task body Controller is
-      Period       : Time_Span;
+      Period       : constant Time_Span := Milliseconds (75);  -- arbitrary
       Next_Release : Time := Clock;
       Next_LED     : Index := 0;
       Clockwise    : Boolean := True;
@@ -54,9 +54,6 @@ package body Driver is
       STM32.Button.Initialize;
 
       loop
-         --  blink in a circle, individually
-         Period := Milliseconds (75);  -- arbitrary
-         for K in 1 .. 40 loop   -- arbitrary
             Turn_Off (Pattern (Next_LED));
 
             if STM32.Button.Has_Been_Pressed then
@@ -73,19 +70,6 @@ package body Driver is
 
             Next_Release := Next_Release + Period;
             delay until Next_Release;
-         end loop;
-
-         --  flash all, together
-         Period := Milliseconds (50);  -- arbitrary
-         for K in 1 .. 5 loop   -- arbitrary
-            All_LEDs_On;
-            Next_Release := Next_Release + Period;
-            delay until Next_Release;
-
-            All_LEDs_Off;
-            Next_Release := Next_Release + Period;
-            delay until Next_Release;
-         end loop;
       end loop;
    end Controller;
 

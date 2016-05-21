@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 --  The file declares the main procedure for the demonstration. The LEDs
---  will blink "in a circle" on the board. The blue user button generates
+--  will blink in a sequence on the board. The blue user button generates
 --  an interrupt that changes the direction.
 
 with Driver;               pragma Unreferenced (Driver);
@@ -46,10 +46,10 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
 with System;
 
-procedure Demo is
+procedure Hello_World is
    pragma Priority (System.Priority'First);
 begin
    loop
       null;
    end loop;
-end Demo;
+end Hello_World;
