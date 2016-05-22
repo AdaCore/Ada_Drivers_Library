@@ -13,7 +13,8 @@ aggregate project STM32F7Disco_Examples is
       "ethdemo/ethdemo_stm32f7disco.gpr",
       "train/train_stm32f7disco.gpr",
       "hello_world_blinky/blinky_f7disco.gpr",
-      "fractals/fractals_stm32f7disco.gpr");
+      "fractals/fractals_stm32f7disco.gpr",
+      "wolf/wolf_stm32f7disco.gpr");
 
    case Config.RTS is
       when "ravenscar-full" =>

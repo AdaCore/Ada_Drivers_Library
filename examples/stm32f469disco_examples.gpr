@@ -12,7 +12,8 @@ aggregate project STM32F469Disco_Examples is
       "draw/draw_stm32f469disco.gpr",
       "train/train_stm32f469disco.gpr",
       "hello_world_blinky/blinky_f469disco.gpr",
-      "fractals/fractals_stm32f469disco.gpr");
+      "fractals/fractals_stm32f469disco.gpr",
+      "wolf/wolf_stm32f469disco.gpr");
 
    case Config.RTS is
       when "ravenscar-full" =>
