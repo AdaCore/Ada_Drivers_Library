@@ -521,7 +521,7 @@ package body STM32.SDMMC is
 
       --  1ms: required power up waiting time before starting the SD
       --  initialization sequence
-      delay until Clock + Milliseconds (5);
+      delay until Clock + Milliseconds (1);
 
       Controller.Periph.CLKCR.CLKEN := True;
 
@@ -1191,6 +1191,8 @@ package body STM32.SDMMC is
       if Ret /= OK then
          return Ret;
       end if;
+
+      delay until Clock +  Milliseconds (50);
 
       Ret := Initialize_Cards (Controller);
 

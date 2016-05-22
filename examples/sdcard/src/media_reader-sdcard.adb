@@ -1,5 +1,3 @@
-with Ada.IO_Exceptions;
-
 with STM32.SDMMC;     use STM32.SDMMC;
 with STM32.GPIO;      use STM32.GPIO;
 with STM32.Device;    use STM32.Device;
@@ -111,7 +109,7 @@ package body Media_Reader.SDCard is
       end if;
 
       if not Controller.Has_Info then
-         raise Ada.IO_Exceptions.Device_Error;
+         raise Device_Error;
       end if;
 
       return Controller.Info;
@@ -136,9 +134,9 @@ package body Media_Reader.SDCard is
    ----------------
 
    overriding function Read_Block
-     (Controller : in out SDCard_Controller;
-      Sector     : Unsigned_32;
-      Data       : out Block) return Boolean
+     (Controller   : in out SDCard_Controller;
+      Block_Number : Unsigned_32;
+      Data         : out Block) return Boolean
    is
       Ret : SD_Error;
    begin
@@ -146,7 +144,8 @@ package body Media_Reader.SDCard is
 
       Ret := Read_Blocks
         (Controller.Device,
-         Unsigned_64 (Sector) * Unsigned_64 (Controller.Info.Card_Block_Size),
+         Unsigned_64 (Block_Number) *
+             Unsigned_64 (Controller.Info.Card_Block_Size),
          Data => SD_Data (Data));
 
       return Ret = OK;

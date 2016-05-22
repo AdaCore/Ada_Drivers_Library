@@ -11,10 +11,20 @@ aggregate project STM32F429Disco_Examples is
       "conway/conway_stm32f429disco.gpr",
       "draw/draw_stm32f429disco.gpr",
       "train/train_stm32f429disco.gpr",
-      "hello_world_blinky/blinky_f429disco.gpr");
+      "hello_world_blinky/blinky_f429disco.gpr",
+      "fractals/fractals_stm32f429disco.gpr");
+
+   case Config.RTS is
+      when "ravenscar-full" =>
+         for Project_Files use Project'Project_Files &
+           ("2048/demo_2048_stm32f429disco.gpr");
+      when others =>
+   end case;
 
    for Runtime ("Ada") use Config.RTS & "-stm32f429disco";
    for Target use "arm-eabi";
+
+   package Builder renames Config.Builder;
 
    package Ide is
       for Gnat use "arm-eabi-gnat";

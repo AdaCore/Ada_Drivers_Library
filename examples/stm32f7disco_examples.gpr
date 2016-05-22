@@ -12,7 +12,15 @@ aggregate project STM32F7Disco_Examples is
       "draw/draw_stm32f7disco.gpr",
       "ethdemo/ethdemo_stm32f7disco.gpr",
       "train/train_stm32f7disco.gpr",
-      "hello_world_blinky/blinky_f7disco.gpr");
+      "hello_world_blinky/blinky_f7disco.gpr",
+      "fractals/fractals_stm32f7disco.gpr");
+
+   case Config.RTS is
+      when "ravenscar-full" =>
+         for Project_Files use Project'Project_Files &
+           ("2048/demo_2048_stm32f7disco.gpr");
+      when others =>
+   end case;
 
    for Runtime ("Ada") use Config.RTS & "-stm32f7disco";
    for Target use "arm-eabi";

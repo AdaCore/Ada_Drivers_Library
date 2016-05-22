@@ -78,7 +78,6 @@ begin
             end if;
          end loop;
 
-         LCD_Std_Out.Put_Line ("Card type:    " & SD_Card_Info.Card_Type'Img);
          LCD_Std_Out.Put_Line ("Name:         " &
                                  SD_Card_Info.SD_CID.Product_Name);
          LCD_Std_Out.Put_Line
@@ -120,10 +119,9 @@ begin
          if not Error_State then
             for P in Partitions'Range loop
                if Partitions (P).Available then
-                  LCD_Std_Out.Put_Line
+                  LCD_Std_Out.Put
                     ("Partition" & P'Img &
-                     (if Partitions (P).Active then " (Active)" else "") &
-                       " @LBA:" & Partitions (P).LBA_Base'Img);
+                     (if Partitions (P).Active then " (Active): " else ": "));
 
                   declare
                      Volume : constant FAT_Volume_Access :=
@@ -133,41 +131,26 @@ begin
                                    Status);
                   begin
                      if Status /= OK then
+                        LCD_Std_Out.New_Line;
                         LCD_Std_Out.Put_Line
                           ("!!! Error reading the FAT partition");
                         Error_State := True;
 
                      else
                         LCD_Std_Out.Put_Line
-                          ("  Volume:           " &
-                             Volume.Volume_Label & " (" &
+                          (Volume.Volume_Label & " (" &
                              Volume.File_System_Type & ")");
-                        LCD_Std_Out.Put_Line
-                          ("  Number of blocks:" &
-                             Volume.Total_Number_Of_Blocks'Img);
-                        LCD_Std_Out.Put_Line
-                          ("  Block size:      " &
-                             Volume.Block_Size_In_Bytes'Img);
-                        LCD_Std_Out.Put_Line
-                          ("  Blocks/Clusters: " &
-                             Volume.Number_Of_Blocks_Per_Cluster'Img);
-                        LCD_Std_Out.Put_Line
-                          ("  Total blocks:    " &
-                             Unsigned_32'Image
-                             (Volume.Total_Number_Of_Blocks /
-                                Unsigned_32
-                                (Volume.Number_Of_Blocks_Per_Cluster)));
-                        LCD_Std_Out.Put_Line
-                          ("  FAT Table size:  " &
-                             Volume.FAT_Table_Size_In_Blocks'Img & " blocks");
 
-                        if Volume.Version = FAT32 then
-                           LCD_Std_Out.Put_Line
-                             ("  Free Blocks:     " &
-                                Last_Known_Free_Data_Clusters_Number
-                                (FAT32_Volume (Volume.all))'Img);
-                        end if;
+                        declare
+                           D : constant Directory_Handle :=
+                                 Open_Root_Directory (Volume);
+                           pragma Unreferenced (D);
+                        begin
+                           null;
+                        end;
                      end if;
+
+                     Close (Volume);
                   end;
                end if;
             end loop;

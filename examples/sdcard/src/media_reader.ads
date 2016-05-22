@@ -11,8 +11,8 @@ package Media_Reader is
      (Controller : in out Media_Controller) return Unsigned_32 is abstract;
 
    function Read_Block
-     (Controller : in out Media_Controller;
-      Sector     : Unsigned_32;
-      Data       : out Block) return Boolean is abstract;
+     (Controller   : in out Media_Controller;
+      Block_Number : Unsigned_32;
+      Data         : out Block) return Boolean is abstract;
 
 end Media_Reader;

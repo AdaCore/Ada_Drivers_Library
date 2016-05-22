@@ -4,6 +4,8 @@ package Media_Reader.SDCard is
 
    type SDCard_Controller is limited new Media_Controller with private;
 
+   Device_Error : exception;
+
    procedure Initialize
      (Controller : in out SDCard_Controller);
 
@@ -20,9 +22,9 @@ package Media_Reader.SDCard is
       return Unsigned_32;
 
    overriding function Read_Block
-     (Controller : in out SDCard_Controller;
-      Sector     : Unsigned_32;
-      Data       : out Block) return Boolean;
+     (Controller   : in out SDCard_Controller;
+      Block_Number : Unsigned_32;
+      Data         : out Block) return Boolean;
 
 private
 

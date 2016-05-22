@@ -1,0 +1,15 @@
+with "../../boards/stm32f7_discovery.gpr";
+
+project Demo_2048_STM32F7Disco extends "../common/common.gpr" is
+
+   --  Requires ravenscar-full
+   type RTS_Profile_Type is ("ravenscar-full");
+   RTS   : RTS_Profile_Type := external ("RTS", "ravenscar-full");
+
+   for Runtime ("Ada") use "ravenscar-full-stm32f7disco";
+   for Object_Dir use "obj/stm32f7disco";
+
+   for Main use ("demo_2048.adb");
+   for Source_Dirs use ("src", "src/ltdc");
+
+end Demo_2048_STM32F7Disco;

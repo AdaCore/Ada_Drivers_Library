@@ -11,7 +11,15 @@ aggregate project STM32F469Disco_Examples is
       "conway/conway_stm32f469disco.gpr",
       "draw/draw_stm32f469disco.gpr",
       "train/train_stm32f469disco.gpr",
-      "hello_world_blinky/blinky_f469disco.gpr");
+      "hello_world_blinky/blinky_f469disco.gpr",
+      "fractals/fractals_stm32f469disco.gpr");
+
+   case Config.RTS is
+      when "ravenscar-full" =>
+         for Project_Files use Project'Project_Files &
+           ("2048/demo_2048_stm32f469disco.gpr");
+      when others =>
+   end case;
 
    for Runtime ("Ada") use Config.RTS & "-stm32f469disco";
    for Target use "arm-eabi";
