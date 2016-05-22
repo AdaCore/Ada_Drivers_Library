@@ -21,6 +21,13 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  This code is based on the solver by nneonneo in github:
+--  https://github.com/nneonneo/2048-ai
+--  No specific license is described there, so I assumed some MIT-like license
+--  to apply. If not, please contact us immediately.
+--  Adapted to Ada and restricted targets, but the core of the algo and the
+--  constants are directly taken from there.
+
 with Interfaces;                        use Interfaces;
 with Ada.Containers.Hashed_Maps;
 with Ada.Unchecked_Conversion;
