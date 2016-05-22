@@ -2219,14 +2219,16 @@ package STM32_SVD.USB_OTG_HS is
    -- Peripherals --
    -----------------
 
-   type OTG_HS_Mode is
+   type OTG_HS_GLOBAL_Disc is
      (
       Host,
-      Device);
+      Device,
+      Hnptxfsiz_Host,
+      Dieptxf0_Device);
 
    --  USB on the go high speed
    type OTG_HS_GLOBAL_Peripheral
-     (Mode : OTG_HS_Mode := Host)
+     (Discriminent : OTG_HS_GLOBAL_Disc := Host)
    is record
       --  OTG_HS control and status register
       OTG_HS_GOTGCTL         : OTG_HS_GOTGCTL_Register;
@@ -2268,20 +2270,22 @@ package STM32_SVD.USB_OTG_HS is
       OTG_HS_DIEPTXF6        : OTG_HS_DIEPTXF_Register;
       --  OTG_HS device IN endpoint transmit FIFO size register
       OTG_HS_DIEPTXF7        : OTG_HS_DIEPTXF_Register;
-      case Mode is
+      case Discriminent is
          when Host =>
             --  OTG_HS Receive status debug read register (host mode)
             OTG_HS_GRXSTSR_Host : OTG_HS_GRXSTSR_Host_Register;
             --  OTG_HS status read and pop register (host mode)
             OTG_HS_GRXSTSP_Host : OTG_HS_GRXSTSP_Host_Register;
-            --  OTG_HS nonperiodic transmit FIFO size register (host mode)
-            OTG_HS_HNPTXFSIZ_Host : OTG_HS_HNPTXFSIZ_Host_Register;
          when Device =>
             --  OTG_HS Receive status debug read register (peripheral mode
             --  mode)
             OTG_HS_GRXSTSR_Device : OTG_HS_GRXSTSR_Device_Register;
             --  OTG_HS status read and pop register (peripheral mode)
             OTG_HS_GRXSTSP_Device : OTG_HS_GRXSTSP_Device_Register;
+         when Hnptxfsiz_Host =>
+            --  OTG_HS nonperiodic transmit FIFO size register (host mode)
+            OTG_HS_HNPTXFSIZ_Host : OTG_HS_HNPTXFSIZ_Host_Register;
+         when Dieptxf0_Device =>
             --  Endpoint 0 transmit FIFO size (peripheral mode)
             OTG_HS_DIEPTXF0_Device : OTG_HS_DIEPTXF0_Device_Register;
       end case;
@@ -2311,9 +2315,9 @@ package STM32_SVD.USB_OTG_HS is
       OTG_HS_DIEPTXF7        at 300 range 0 .. 31;
       OTG_HS_GRXSTSR_Host    at 28 range 0 .. 31;
       OTG_HS_GRXSTSP_Host    at 32 range 0 .. 31;
-      OTG_HS_HNPTXFSIZ_Host  at 40 range 0 .. 31;
       OTG_HS_GRXSTSR_Device  at 28 range 0 .. 31;
       OTG_HS_GRXSTSP_Device  at 32 range 0 .. 31;
+      OTG_HS_HNPTXFSIZ_Host  at 40 range 0 .. 31;
       OTG_HS_DIEPTXF0_Device at 40 range 0 .. 31;
    end record;
 

@@ -1902,14 +1902,14 @@ package STM32_SVD.USB_OTG_FS is
    -- Peripherals --
    -----------------
 
-   type OTG_FS_Mode is
+   type OTG_FS_GLOBAL_Disc is
      (
-      Host,
-      Device);
+      Device,
+      Host);
 
    --  USB on the go full speed
    type OTG_FS_GLOBAL_Peripheral
-     (Mode : OTG_FS_Mode := Host)
+     (Discriminent : OTG_FS_GLOBAL_Disc := Device)
    is record
       --  OTG_FS control and status register (OTG_FS_GOTGCTL)
       FS_GOTGCTL          : FS_GOTGCTL_Register;
@@ -1951,17 +1951,17 @@ package STM32_SVD.USB_OTG_FS is
       --  OTG_FS device IN endpoint transmit FIFO size register
       --  (OTG_FS_DIEPTXF5)
       FS_DIEPTXF5         : HAL.Word;
-      case Mode is
-         when Host =>
-            --  OTG_FS Receive status debug read(Hostmode)
-            FS_GRXSTSR_Host : FS_GRXSTSR_Host_Register;
-            --  OTG_FS non-periodic transmit FIFO size register (Host mode)
-            FS_GNPTXFSIZ_Host : FS_GNPTXFSIZ_Host_Register;
+      case Discriminent is
          when Device =>
             --  OTG_FS Receive status debug read(Device mode)
             FS_GRXSTSR_Device : FS_GRXSTSR_Device_Register;
             --  OTG_FS non-periodic transmit FIFO size register (Device mode)
             FS_GNPTXFSIZ_Device : FS_GNPTXFSIZ_Device_Register;
+         when Host =>
+            --  OTG_FS Receive status debug read(Hostmode)
+            FS_GRXSTSR_Host : FS_GRXSTSR_Host_Register;
+            --  OTG_FS non-periodic transmit FIFO size register (Host mode)
+            FS_GNPTXFSIZ_Host : FS_GNPTXFSIZ_Host_Register;
       end case;
    end record
      with Unchecked_Union, Volatile;
@@ -1984,10 +1984,10 @@ package STM32_SVD.USB_OTG_FS is
       FS_DIEPTXF3         at 268 range 0 .. 31;
       FS_DIEPTXF4         at 272 range 0 .. 31;
       FS_DIEPTXF5         at 276 range 0 .. 31;
-      FS_GRXSTSR_Host     at 28 range 0 .. 31;
-      FS_GNPTXFSIZ_Host   at 40 range 0 .. 31;
       FS_GRXSTSR_Device   at 28 range 0 .. 31;
       FS_GNPTXFSIZ_Device at 40 range 0 .. 31;
+      FS_GRXSTSR_Host     at 28 range 0 .. 31;
+      FS_GNPTXFSIZ_Host   at 40 range 0 .. 31;
    end record;
 
    --  USB on the go full speed

@@ -1901,234 +1901,173 @@ package STM32_SVD.TIM is
       Reserved_1_31 at 0 range 1 .. 31;
    end record;
 
-   type CCMR1_Discriminent is
-     (
-      Output,
-      Input);
-
-   type CCMR1_Aliased_Register
-     (Disc : CCMR1_Discriminent := Output)
-   is record
-      case Disc is
-         when Output =>
-            Output : CCMR1_Output_Register;
-         when Input =>
-            Input : CCMR1_Input_Register;
-      end case;
-   end record
-     with Unchecked_Union;
-
-   for CCMR1_Aliased_Register use record
-      Output at 0 range 0 .. 31;
-      Input  at 0 range 0 .. 31;
-   end record;
-
-   type CCMR2_Discriminent is
-     (
-      Output,
-      Input);
-
-   type CCMR2_Aliased_Register
-     (Disc : CCMR2_Discriminent := Output)
-   is record
-      case Disc is
-         when Output =>
-            Output : CCMR2_Output_Register;
-         when Input =>
-            Input : CCMR2_Input_Register;
-      end case;
-   end record
-     with Unchecked_Union;
-
-   for CCMR2_Aliased_Register use record
-      Output at 0 range 0 .. 31;
-      Input  at 0 range 0 .. 31;
-   end record;
-
-   type CCMR2_Aliased_Register_1
-     (Disc : CCMR2_Discriminent := Output)
-   is record
-      case Disc is
-         when Output =>
-            Output : CCMR2_Output_Register_1;
-         when Input =>
-            Input : CCMR2_Input_Register;
-      end case;
-   end record
-     with Unchecked_Union;
-
-   for CCMR2_Aliased_Register_1 use record
-      Output at 0 range 0 .. 31;
-      Input  at 0 range 0 .. 31;
-   end record;
-
-   type CCMR1_Aliased_Register_1
-     (Disc : CCMR1_Discriminent := Output)
-   is record
-      case Disc is
-         when Output =>
-            Output : CCMR1_Output_Register_1;
-         when Input =>
-            Input : CCMR1_Input_Register_1;
-      end case;
-   end record
-     with Unchecked_Union;
-
-   for CCMR1_Aliased_Register_1 use record
-      Output at 0 range 0 .. 31;
-      Input  at 0 range 0 .. 31;
-   end record;
-
-   type CCMR1_Aliased_Register_2
-     (Disc : CCMR1_Discriminent := Output)
-   is record
-      case Disc is
-         when Output =>
-            Output : CCMR1_Output_Register_2;
-         when Input =>
-            Input : CCMR1_Input_Register_2;
-      end case;
-   end record
-     with Unchecked_Union;
-
-   for CCMR1_Aliased_Register_2 use record
-      Output at 0 range 0 .. 31;
-      Input  at 0 range 0 .. 31;
-   end record;
-
    -----------------
    -- Peripherals --
    -----------------
 
+   type TIM2_Disc is
+     (
+      Output,
+      Input);
+
    --  General purpose timers
-   type TIM2_Peripheral is record
+   type TIM2_Peripheral
+     (Discriminent : TIM2_Disc := Output)
+   is record
       --  control register 1
-      CR1   : CR1_Register;
+      CR1          : CR1_Register;
       --  control register 2
-      CR2   : CR2_Register_1;
+      CR2          : CR2_Register_1;
       --  slave mode control register
-      SMCR  : SMCR_Register;
+      SMCR         : SMCR_Register;
       --  DMA/Interrupt enable register
-      DIER  : DIER_Register_1;
+      DIER         : DIER_Register_1;
       --  status register
-      SR    : SR_Register_1;
+      SR           : SR_Register_1;
       --  event generation register
-      EGR   : EGR_Register_1;
-      --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register;
-      --  capture/compare mode register 2 (output mode)
-      CCMR2 : CCMR2_Aliased_Register_1;
+      EGR          : EGR_Register_1;
       --  capture/compare enable register
-      CCER  : CCER_Register_1;
+      CCER         : CCER_Register_1;
       --  counter
-      CNT   : CNT_Register_1;
+      CNT          : CNT_Register_1;
       --  prescaler
-      PSC   : PSC_Register;
+      PSC          : PSC_Register;
       --  auto-reload register
-      ARR   : ARR_Register_1;
+      ARR          : ARR_Register_1;
       --  capture/compare register 1
-      CCR1  : CCR1_Register_1;
+      CCR1         : CCR1_Register_1;
       --  capture/compare register 2
-      CCR2  : CCR2_Register_1;
+      CCR2         : CCR2_Register_1;
       --  capture/compare register 3
-      CCR3  : CCR3_Register_1;
+      CCR3         : CCR3_Register_1;
       --  capture/compare register 4
-      CCR4  : CCR4_Register_1;
+      CCR4         : CCR4_Register_1;
       --  DMA control register
-      DCR   : DCR_Register;
+      DCR          : DCR_Register;
       --  DMA address for full transfer
-      DMAR  : DMAR_Register;
+      DMAR         : DMAR_Register;
       --  TIM5 option register
-      OR_k  : OR_Register;
+      OR_k         : OR_Register;
+      case Discriminent is
+         when Output =>
+            --  capture/compare mode register 1 (output mode)
+            CCMR1_Output : CCMR1_Output_Register;
+            --  capture/compare mode register 2 (output mode)
+            CCMR2_Output : CCMR2_Output_Register_1;
+         when Input =>
+            --  capture/compare mode register 1 (input mode)
+            CCMR1_Input : CCMR1_Input_Register;
+            --  capture/compare mode register 2 (input mode)
+            CCMR2_Input : CCMR2_Input_Register;
+      end case;
    end record
-     with Volatile;
+     with Unchecked_Union, Volatile;
 
    for TIM2_Peripheral use record
-      CR1   at 0 range 0 .. 31;
-      CR2   at 4 range 0 .. 31;
-      SMCR  at 8 range 0 .. 31;
-      DIER  at 12 range 0 .. 31;
-      SR    at 16 range 0 .. 31;
-      EGR   at 20 range 0 .. 31;
-      CCMR1 at 24 range 0 .. 31;
-      CCMR2 at 28 range 0 .. 31;
-      CCER  at 32 range 0 .. 31;
-      CNT   at 36 range 0 .. 31;
-      PSC   at 40 range 0 .. 31;
-      ARR   at 44 range 0 .. 31;
-      CCR1  at 52 range 0 .. 31;
-      CCR2  at 56 range 0 .. 31;
-      CCR3  at 60 range 0 .. 31;
-      CCR4  at 64 range 0 .. 31;
-      DCR   at 72 range 0 .. 31;
-      DMAR  at 76 range 0 .. 31;
-      OR_k  at 80 range 0 .. 31;
+      CR1          at 0 range 0 .. 31;
+      CR2          at 4 range 0 .. 31;
+      SMCR         at 8 range 0 .. 31;
+      DIER         at 12 range 0 .. 31;
+      SR           at 16 range 0 .. 31;
+      EGR          at 20 range 0 .. 31;
+      CCER         at 32 range 0 .. 31;
+      CNT          at 36 range 0 .. 31;
+      PSC          at 40 range 0 .. 31;
+      ARR          at 44 range 0 .. 31;
+      CCR1         at 52 range 0 .. 31;
+      CCR2         at 56 range 0 .. 31;
+      CCR3         at 60 range 0 .. 31;
+      CCR4         at 64 range 0 .. 31;
+      DCR          at 72 range 0 .. 31;
+      DMAR         at 76 range 0 .. 31;
+      OR_k         at 80 range 0 .. 31;
+      CCMR1_Output at 24 range 0 .. 31;
+      CCMR2_Output at 28 range 0 .. 31;
+      CCMR1_Input  at 24 range 0 .. 31;
+      CCMR2_Input  at 28 range 0 .. 31;
    end record;
 
    --  General purpose timers
    TIM2_Periph : aliased TIM2_Peripheral
      with Import, Address => TIM2_Base;
 
+   type TIM3_Disc is
+     (
+      Output,
+      Input);
+
    --  General purpose timers
-   type TIM3_Peripheral is record
+   type TIM3_Peripheral
+     (Discriminent : TIM3_Disc := Output)
+   is record
       --  control register 1
-      CR1   : CR1_Register;
+      CR1          : CR1_Register;
       --  control register 2
-      CR2   : CR2_Register_1;
+      CR2          : CR2_Register_1;
       --  slave mode control register
-      SMCR  : SMCR_Register;
+      SMCR         : SMCR_Register;
       --  DMA/Interrupt enable register
-      DIER  : DIER_Register_1;
+      DIER         : DIER_Register_1;
       --  status register
-      SR    : SR_Register_1;
+      SR           : SR_Register_1;
       --  event generation register
-      EGR   : EGR_Register_1;
-      --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register;
-      --  capture/compare mode register 2 (output mode)
-      CCMR2 : CCMR2_Aliased_Register_1;
+      EGR          : EGR_Register_1;
       --  capture/compare enable register
-      CCER  : CCER_Register_1;
+      CCER         : CCER_Register_1;
       --  counter
-      CNT   : CNT_Register_1;
+      CNT          : CNT_Register_1;
       --  prescaler
-      PSC   : PSC_Register;
+      PSC          : PSC_Register;
       --  auto-reload register
-      ARR   : ARR_Register_1;
+      ARR          : ARR_Register_1;
       --  capture/compare register 1
-      CCR1  : CCR1_Register_1;
+      CCR1         : CCR1_Register_1;
       --  capture/compare register 2
-      CCR2  : CCR2_Register_1;
+      CCR2         : CCR2_Register_1;
       --  capture/compare register 3
-      CCR3  : CCR3_Register_1;
+      CCR3         : CCR3_Register_1;
       --  capture/compare register 4
-      CCR4  : CCR4_Register_1;
+      CCR4         : CCR4_Register_1;
       --  DMA control register
-      DCR   : DCR_Register;
+      DCR          : DCR_Register;
       --  DMA address for full transfer
-      DMAR  : DMAR_Register;
+      DMAR         : DMAR_Register;
+      case Discriminent is
+         when Output =>
+            --  capture/compare mode register 1 (output mode)
+            CCMR1_Output : CCMR1_Output_Register;
+            --  capture/compare mode register 2 (output mode)
+            CCMR2_Output : CCMR2_Output_Register_1;
+         when Input =>
+            --  capture/compare mode register 1 (input mode)
+            CCMR1_Input : CCMR1_Input_Register;
+            --  capture/compare mode register 2 (input mode)
+            CCMR2_Input : CCMR2_Input_Register;
+      end case;
    end record
-     with Volatile;
+     with Unchecked_Union, Volatile;
 
    for TIM3_Peripheral use record
-      CR1   at 0 range 0 .. 31;
-      CR2   at 4 range 0 .. 31;
-      SMCR  at 8 range 0 .. 31;
-      DIER  at 12 range 0 .. 31;
-      SR    at 16 range 0 .. 31;
-      EGR   at 20 range 0 .. 31;
-      CCMR1 at 24 range 0 .. 31;
-      CCMR2 at 28 range 0 .. 31;
-      CCER  at 32 range 0 .. 31;
-      CNT   at 36 range 0 .. 31;
-      PSC   at 40 range 0 .. 31;
-      ARR   at 44 range 0 .. 31;
-      CCR1  at 52 range 0 .. 31;
-      CCR2  at 56 range 0 .. 31;
-      CCR3  at 60 range 0 .. 31;
-      CCR4  at 64 range 0 .. 31;
-      DCR   at 72 range 0 .. 31;
-      DMAR  at 76 range 0 .. 31;
+      CR1          at 0 range 0 .. 31;
+      CR2          at 4 range 0 .. 31;
+      SMCR         at 8 range 0 .. 31;
+      DIER         at 12 range 0 .. 31;
+      SR           at 16 range 0 .. 31;
+      EGR          at 20 range 0 .. 31;
+      CCER         at 32 range 0 .. 31;
+      CNT          at 36 range 0 .. 31;
+      PSC          at 40 range 0 .. 31;
+      ARR          at 44 range 0 .. 31;
+      CCR1         at 52 range 0 .. 31;
+      CCR2         at 56 range 0 .. 31;
+      CCR3         at 60 range 0 .. 31;
+      CCR4         at 64 range 0 .. 31;
+      DCR          at 72 range 0 .. 31;
+      DMAR         at 76 range 0 .. 31;
+      CCMR1_Output at 24 range 0 .. 31;
+      CCMR2_Output at 28 range 0 .. 31;
+      CCMR1_Input  at 24 range 0 .. 31;
+      CCMR2_Input  at 28 range 0 .. 31;
    end record;
 
    --  General purpose timers
@@ -2139,69 +2078,86 @@ package STM32_SVD.TIM is
    TIM4_Periph : aliased TIM3_Peripheral
      with Import, Address => TIM4_Base;
 
+   type TIM5_Disc is
+     (
+      Output,
+      Input);
+
    --  General-purpose-timers
-   type TIM5_Peripheral is record
+   type TIM5_Peripheral
+     (Discriminent : TIM5_Disc := Output)
+   is record
       --  control register 1
-      CR1   : CR1_Register;
+      CR1          : CR1_Register;
       --  control register 2
-      CR2   : CR2_Register_1;
+      CR2          : CR2_Register_1;
       --  slave mode control register
-      SMCR  : SMCR_Register;
+      SMCR         : SMCR_Register;
       --  DMA/Interrupt enable register
-      DIER  : DIER_Register_1;
+      DIER         : DIER_Register_1;
       --  status register
-      SR    : SR_Register_1;
+      SR           : SR_Register_1;
       --  event generation register
-      EGR   : EGR_Register_1;
-      --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register;
-      --  capture/compare mode register 2 (output mode)
-      CCMR2 : CCMR2_Aliased_Register_1;
+      EGR          : EGR_Register_1;
       --  capture/compare enable register
-      CCER  : CCER_Register_1;
+      CCER         : CCER_Register_1;
       --  counter
-      CNT   : CNT_Register_1;
+      CNT          : CNT_Register_1;
       --  prescaler
-      PSC   : PSC_Register;
+      PSC          : PSC_Register;
       --  auto-reload register
-      ARR   : ARR_Register_1;
+      ARR          : ARR_Register_1;
       --  capture/compare register 1
-      CCR1  : CCR1_Register_1;
+      CCR1         : CCR1_Register_1;
       --  capture/compare register 2
-      CCR2  : CCR2_Register_1;
+      CCR2         : CCR2_Register_1;
       --  capture/compare register 3
-      CCR3  : CCR3_Register_1;
+      CCR3         : CCR3_Register_1;
       --  capture/compare register 4
-      CCR4  : CCR4_Register_1;
+      CCR4         : CCR4_Register_1;
       --  DMA control register
-      DCR   : DCR_Register;
+      DCR          : DCR_Register;
       --  DMA address for full transfer
-      DMAR  : DMAR_Register;
+      DMAR         : DMAR_Register;
       --  TIM5 option register
-      OR_k  : OR_Register_1;
+      OR_k         : OR_Register_1;
+      case Discriminent is
+         when Output =>
+            --  capture/compare mode register 1 (output mode)
+            CCMR1_Output : CCMR1_Output_Register;
+            --  capture/compare mode register 2 (output mode)
+            CCMR2_Output : CCMR2_Output_Register_1;
+         when Input =>
+            --  capture/compare mode register 1 (input mode)
+            CCMR1_Input : CCMR1_Input_Register;
+            --  capture/compare mode register 2 (input mode)
+            CCMR2_Input : CCMR2_Input_Register;
+      end case;
    end record
-     with Volatile;
+     with Unchecked_Union, Volatile;
 
    for TIM5_Peripheral use record
-      CR1   at 0 range 0 .. 31;
-      CR2   at 4 range 0 .. 31;
-      SMCR  at 8 range 0 .. 31;
-      DIER  at 12 range 0 .. 31;
-      SR    at 16 range 0 .. 31;
-      EGR   at 20 range 0 .. 31;
-      CCMR1 at 24 range 0 .. 31;
-      CCMR2 at 28 range 0 .. 31;
-      CCER  at 32 range 0 .. 31;
-      CNT   at 36 range 0 .. 31;
-      PSC   at 40 range 0 .. 31;
-      ARR   at 44 range 0 .. 31;
-      CCR1  at 52 range 0 .. 31;
-      CCR2  at 56 range 0 .. 31;
-      CCR3  at 60 range 0 .. 31;
-      CCR4  at 64 range 0 .. 31;
-      DCR   at 72 range 0 .. 31;
-      DMAR  at 76 range 0 .. 31;
-      OR_k  at 80 range 0 .. 31;
+      CR1          at 0 range 0 .. 31;
+      CR2          at 4 range 0 .. 31;
+      SMCR         at 8 range 0 .. 31;
+      DIER         at 12 range 0 .. 31;
+      SR           at 16 range 0 .. 31;
+      EGR          at 20 range 0 .. 31;
+      CCER         at 32 range 0 .. 31;
+      CNT          at 36 range 0 .. 31;
+      PSC          at 40 range 0 .. 31;
+      ARR          at 44 range 0 .. 31;
+      CCR1         at 52 range 0 .. 31;
+      CCR2         at 56 range 0 .. 31;
+      CCR3         at 60 range 0 .. 31;
+      CCR4         at 64 range 0 .. 31;
+      DCR          at 72 range 0 .. 31;
+      DMAR         at 76 range 0 .. 31;
+      OR_k         at 80 range 0 .. 31;
+      CCMR1_Output at 24 range 0 .. 31;
+      CCMR2_Output at 28 range 0 .. 31;
+      CCMR1_Input  at 24 range 0 .. 31;
+      CCMR2_Input  at 28 range 0 .. 31;
    end record;
 
    --  General-purpose-timers
@@ -2248,48 +2204,62 @@ package STM32_SVD.TIM is
    TIM7_Periph : aliased TIM6_Peripheral
      with Import, Address => TIM7_Base;
 
+   type TIM12_Disc is
+     (
+      Output,
+      Input);
+
    --  General purpose timers
-   type TIM12_Peripheral is record
+   type TIM12_Peripheral
+     (Discriminent : TIM12_Disc := Output)
+   is record
       --  control register 1
-      CR1   : CR1_Register_1;
+      CR1          : CR1_Register_1;
       --  slave mode control register
-      SMCR  : SMCR_Register_1;
+      SMCR         : SMCR_Register_1;
       --  DMA/Interrupt enable register
-      DIER  : DIER_Register_2;
+      DIER         : DIER_Register_2;
       --  status register
-      SR    : SR_Register_2;
+      SR           : SR_Register_2;
       --  event generation register
-      EGR   : EGR_Register_2;
-      --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register_1;
+      EGR          : EGR_Register_2;
       --  capture/compare enable register
-      CCER  : CCER_Register_2;
+      CCER         : CCER_Register_2;
       --  counter
-      CNT   : CNT_Register;
+      CNT          : CNT_Register;
       --  prescaler
-      PSC   : PSC_Register;
+      PSC          : PSC_Register;
       --  auto-reload register
-      ARR   : ARR_Register;
+      ARR          : ARR_Register;
       --  capture/compare register 1
-      CCR1  : CCR1_Register;
+      CCR1         : CCR1_Register;
       --  capture/compare register 2
-      CCR2  : CCR2_Register;
+      CCR2         : CCR2_Register;
+      case Discriminent is
+         when Output =>
+            --  capture/compare mode register 1 (output mode)
+            CCMR1_Output : CCMR1_Output_Register_1;
+         when Input =>
+            --  capture/compare mode register 1 (input mode)
+            CCMR1_Input : CCMR1_Input_Register_1;
+      end case;
    end record
-     with Volatile;
+     with Unchecked_Union, Volatile;
 
    for TIM12_Peripheral use record
-      CR1   at 0 range 0 .. 31;
-      SMCR  at 8 range 0 .. 31;
-      DIER  at 12 range 0 .. 31;
-      SR    at 16 range 0 .. 31;
-      EGR   at 20 range 0 .. 31;
-      CCMR1 at 24 range 0 .. 31;
-      CCER  at 32 range 0 .. 31;
-      CNT   at 36 range 0 .. 31;
-      PSC   at 40 range 0 .. 31;
-      ARR   at 44 range 0 .. 31;
-      CCR1  at 52 range 0 .. 31;
-      CCR2  at 56 range 0 .. 31;
+      CR1          at 0 range 0 .. 31;
+      SMCR         at 8 range 0 .. 31;
+      DIER         at 12 range 0 .. 31;
+      SR           at 16 range 0 .. 31;
+      EGR          at 20 range 0 .. 31;
+      CCER         at 32 range 0 .. 31;
+      CNT          at 36 range 0 .. 31;
+      PSC          at 40 range 0 .. 31;
+      ARR          at 44 range 0 .. 31;
+      CCR1         at 52 range 0 .. 31;
+      CCR2         at 56 range 0 .. 31;
+      CCMR1_Output at 24 range 0 .. 31;
+      CCMR1_Input  at 24 range 0 .. 31;
    end record;
 
    --  General purpose timers
@@ -2300,42 +2270,56 @@ package STM32_SVD.TIM is
    TIM9_Periph : aliased TIM12_Peripheral
      with Import, Address => TIM9_Base;
 
+   type TIM13_Disc is
+     (
+      Output,
+      Input);
+
    --  General-purpose-timers
-   type TIM13_Peripheral is record
+   type TIM13_Peripheral
+     (Discriminent : TIM13_Disc := Output)
+   is record
       --  control register 1
-      CR1   : CR1_Register_2;
+      CR1          : CR1_Register_2;
       --  DMA/Interrupt enable register
-      DIER  : DIER_Register_3;
+      DIER         : DIER_Register_3;
       --  status register
-      SR    : SR_Register_3;
+      SR           : SR_Register_3;
       --  event generation register
-      EGR   : EGR_Register_3;
-      --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register_2;
+      EGR          : EGR_Register_3;
       --  capture/compare enable register
-      CCER  : CCER_Register_3;
+      CCER         : CCER_Register_3;
       --  counter
-      CNT   : CNT_Register;
+      CNT          : CNT_Register;
       --  prescaler
-      PSC   : PSC_Register;
+      PSC          : PSC_Register;
       --  auto-reload register
-      ARR   : ARR_Register;
+      ARR          : ARR_Register;
       --  capture/compare register 1
-      CCR1  : CCR1_Register;
+      CCR1         : CCR1_Register;
+      case Discriminent is
+         when Output =>
+            --  capture/compare mode register 1 (output mode)
+            CCMR1_Output : CCMR1_Output_Register_2;
+         when Input =>
+            --  capture/compare mode register 1 (input mode)
+            CCMR1_Input : CCMR1_Input_Register_2;
+      end case;
    end record
-     with Volatile;
+     with Unchecked_Union, Volatile;
 
    for TIM13_Peripheral use record
-      CR1   at 0 range 0 .. 31;
-      DIER  at 12 range 0 .. 31;
-      SR    at 16 range 0 .. 31;
-      EGR   at 20 range 0 .. 31;
-      CCMR1 at 24 range 0 .. 31;
-      CCER  at 32 range 0 .. 31;
-      CNT   at 36 range 0 .. 31;
-      PSC   at 40 range 0 .. 31;
-      ARR   at 44 range 0 .. 31;
-      CCR1  at 52 range 0 .. 31;
+      CR1          at 0 range 0 .. 31;
+      DIER         at 12 range 0 .. 31;
+      SR           at 16 range 0 .. 31;
+      EGR          at 20 range 0 .. 31;
+      CCER         at 32 range 0 .. 31;
+      CNT          at 36 range 0 .. 31;
+      PSC          at 40 range 0 .. 31;
+      ARR          at 44 range 0 .. 31;
+      CCR1         at 52 range 0 .. 31;
+      CCMR1_Output at 24 range 0 .. 31;
+      CCMR1_Input  at 24 range 0 .. 31;
    end record;
 
    --  General-purpose-timers
@@ -2350,72 +2334,89 @@ package STM32_SVD.TIM is
    TIM10_Periph : aliased TIM13_Peripheral
      with Import, Address => TIM10_Base;
 
+   type TIM1_Disc is
+     (
+      Output,
+      Input);
+
    --  Advanced-timers
-   type TIM1_Peripheral is record
+   type TIM1_Peripheral
+     (Discriminent : TIM1_Disc := Output)
+   is record
       --  control register 1
-      CR1   : CR1_Register;
+      CR1          : CR1_Register;
       --  control register 2
-      CR2   : CR2_Register;
+      CR2          : CR2_Register;
       --  slave mode control register
-      SMCR  : SMCR_Register;
+      SMCR         : SMCR_Register;
       --  DMA/Interrupt enable register
-      DIER  : DIER_Register;
+      DIER         : DIER_Register;
       --  status register
-      SR    : SR_Register;
+      SR           : SR_Register;
       --  event generation register
-      EGR   : EGR_Register;
-      --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register;
-      --  capture/compare mode register 2 (output mode)
-      CCMR2 : CCMR2_Aliased_Register;
+      EGR          : EGR_Register;
       --  capture/compare enable register
-      CCER  : CCER_Register;
+      CCER         : CCER_Register;
       --  counter
-      CNT   : CNT_Register;
+      CNT          : CNT_Register;
       --  prescaler
-      PSC   : PSC_Register;
+      PSC          : PSC_Register;
       --  auto-reload register
-      ARR   : ARR_Register;
+      ARR          : ARR_Register;
       --  repetition counter register
-      RCR   : RCR_Register;
+      RCR          : RCR_Register;
       --  capture/compare register 1
-      CCR1  : CCR1_Register;
+      CCR1         : CCR1_Register;
       --  capture/compare register 2
-      CCR2  : CCR2_Register;
+      CCR2         : CCR2_Register;
       --  capture/compare register 3
-      CCR3  : CCR3_Register;
+      CCR3         : CCR3_Register;
       --  capture/compare register 4
-      CCR4  : CCR4_Register;
+      CCR4         : CCR4_Register;
       --  break and dead-time register
-      BDTR  : BDTR_Register;
+      BDTR         : BDTR_Register;
       --  DMA control register
-      DCR   : DCR_Register;
+      DCR          : DCR_Register;
       --  DMA address for full transfer
-      DMAR  : DMAR_Register;
+      DMAR         : DMAR_Register;
+      case Discriminent is
+         when Output =>
+            --  capture/compare mode register 1 (output mode)
+            CCMR1_Output : CCMR1_Output_Register;
+            --  capture/compare mode register 2 (output mode)
+            CCMR2_Output : CCMR2_Output_Register;
+         when Input =>
+            --  capture/compare mode register 1 (input mode)
+            CCMR1_Input : CCMR1_Input_Register;
+            --  capture/compare mode register 2 (input mode)
+            CCMR2_Input : CCMR2_Input_Register;
+      end case;
    end record
-     with Volatile;
+     with Unchecked_Union, Volatile;
 
    for TIM1_Peripheral use record
-      CR1   at 0 range 0 .. 31;
-      CR2   at 4 range 0 .. 31;
-      SMCR  at 8 range 0 .. 31;
-      DIER  at 12 range 0 .. 31;
-      SR    at 16 range 0 .. 31;
-      EGR   at 20 range 0 .. 31;
-      CCMR1 at 24 range 0 .. 31;
-      CCMR2 at 28 range 0 .. 31;
-      CCER  at 32 range 0 .. 31;
-      CNT   at 36 range 0 .. 31;
-      PSC   at 40 range 0 .. 31;
-      ARR   at 44 range 0 .. 31;
-      RCR   at 48 range 0 .. 31;
-      CCR1  at 52 range 0 .. 31;
-      CCR2  at 56 range 0 .. 31;
-      CCR3  at 60 range 0 .. 31;
-      CCR4  at 64 range 0 .. 31;
-      BDTR  at 68 range 0 .. 31;
-      DCR   at 72 range 0 .. 31;
-      DMAR  at 76 range 0 .. 31;
+      CR1          at 0 range 0 .. 31;
+      CR2          at 4 range 0 .. 31;
+      SMCR         at 8 range 0 .. 31;
+      DIER         at 12 range 0 .. 31;
+      SR           at 16 range 0 .. 31;
+      EGR          at 20 range 0 .. 31;
+      CCER         at 32 range 0 .. 31;
+      CNT          at 36 range 0 .. 31;
+      PSC          at 40 range 0 .. 31;
+      ARR          at 44 range 0 .. 31;
+      RCR          at 48 range 0 .. 31;
+      CCR1         at 52 range 0 .. 31;
+      CCR2         at 56 range 0 .. 31;
+      CCR3         at 60 range 0 .. 31;
+      CCR4         at 64 range 0 .. 31;
+      BDTR         at 68 range 0 .. 31;
+      DCR          at 72 range 0 .. 31;
+      DMAR         at 76 range 0 .. 31;
+      CCMR1_Output at 24 range 0 .. 31;
+      CCMR2_Output at 28 range 0 .. 31;
+      CCMR1_Input  at 24 range 0 .. 31;
+      CCMR2_Input  at 28 range 0 .. 31;
    end record;
 
    --  Advanced-timers
@@ -2426,45 +2427,59 @@ package STM32_SVD.TIM is
    TIM8_Periph : aliased TIM1_Peripheral
      with Import, Address => TIM8_Base;
 
+   type TIM11_Disc is
+     (
+      Output,
+      Input);
+
    --  General-purpose-timers
-   type TIM11_Peripheral is record
+   type TIM11_Peripheral
+     (Discriminent : TIM11_Disc := Output)
+   is record
       --  control register 1
-      CR1   : CR1_Register_2;
+      CR1          : CR1_Register_2;
       --  DMA/Interrupt enable register
-      DIER  : DIER_Register_3;
+      DIER         : DIER_Register_3;
       --  status register
-      SR    : SR_Register_3;
+      SR           : SR_Register_3;
       --  event generation register
-      EGR   : EGR_Register_3;
-      --  capture/compare mode register 1 (output mode)
-      CCMR1 : CCMR1_Aliased_Register_2;
+      EGR          : EGR_Register_3;
       --  capture/compare enable register
-      CCER  : CCER_Register_3;
+      CCER         : CCER_Register_3;
       --  counter
-      CNT   : CNT_Register;
+      CNT          : CNT_Register;
       --  prescaler
-      PSC   : PSC_Register;
+      PSC          : PSC_Register;
       --  auto-reload register
-      ARR   : ARR_Register;
+      ARR          : ARR_Register;
       --  capture/compare register 1
-      CCR1  : CCR1_Register;
+      CCR1         : CCR1_Register;
       --  option register
-      OR_k  : OR_Register_2;
+      OR_k         : OR_Register_2;
+      case Discriminent is
+         when Output =>
+            --  capture/compare mode register 1 (output mode)
+            CCMR1_Output : CCMR1_Output_Register_2;
+         when Input =>
+            --  capture/compare mode register 1 (input mode)
+            CCMR1_Input : CCMR1_Input_Register_2;
+      end case;
    end record
-     with Volatile;
+     with Unchecked_Union, Volatile;
 
    for TIM11_Peripheral use record
-      CR1   at 0 range 0 .. 31;
-      DIER  at 12 range 0 .. 31;
-      SR    at 16 range 0 .. 31;
-      EGR   at 20 range 0 .. 31;
-      CCMR1 at 24 range 0 .. 31;
-      CCER  at 32 range 0 .. 31;
-      CNT   at 36 range 0 .. 31;
-      PSC   at 40 range 0 .. 31;
-      ARR   at 44 range 0 .. 31;
-      CCR1  at 52 range 0 .. 31;
-      OR_k  at 80 range 0 .. 31;
+      CR1          at 0 range 0 .. 31;
+      DIER         at 12 range 0 .. 31;
+      SR           at 16 range 0 .. 31;
+      EGR          at 20 range 0 .. 31;
+      CCER         at 32 range 0 .. 31;
+      CNT          at 36 range 0 .. 31;
+      PSC          at 40 range 0 .. 31;
+      ARR          at 44 range 0 .. 31;
+      CCR1         at 52 range 0 .. 31;
+      OR_k         at 80 range 0 .. 31;
+      CCMR1_Output at 24 range 0 .. 31;
+      CCMR1_Input  at 24 range 0 .. 31;
    end record;
 
    --  General-purpose-timers

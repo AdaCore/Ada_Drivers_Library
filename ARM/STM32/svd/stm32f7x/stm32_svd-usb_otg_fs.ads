@@ -2221,14 +2221,16 @@ package STM32_SVD.USB_OTG_FS is
    -- Peripherals --
    -----------------
 
-   type OTG_FS_Mode is
+   type OTG_FS_GLOBAL_Disc is
      (
+      Device,
       Host,
-      Device);
+      Dieptxf0_Device,
+      Hnptxfsiz_Host);
 
    --  USB on the go full speed
    type OTG_FS_GLOBAL_Peripheral
-     (Mode : OTG_FS_Mode := Host)
+     (Discriminent : OTG_FS_GLOBAL_Disc := Device)
    is record
       --  OTG_FS control and status register (OTG_FS_GOTGCTL)
       OTG_FS_GOTGCTL         : OTG_FS_GOTGCTL_Register;
@@ -2278,21 +2280,23 @@ package STM32_SVD.USB_OTG_FS is
       --  OTG_FS device IN endpoint transmit FIFO size register
       --  (OTG_FS_DIEPTXF5)
       OTG_FS_DIEPTXF5        : OTG_FS_DIEPTXF_Register;
-      case Mode is
-         when Host =>
-            --  OTG_FS Receive status debug read(Host mode)
-            OTG_FS_GRXSTSR_Host : OTG_FS_GRXSTSR_Host_Register;
-            --  OTG status read and pop register (Host mode)
-            OTG_FS_GRXSTSP_Host : OTG_FS_GRXSTSP_Host_Register;
-            --  OTG_FS Host non-periodic transmit FIFO size register
-            OTG_FS_HNPTXFSIZ_Host : OTG_FS_HNPTXFSIZ_Host_Register;
+      case Discriminent is
          when Device =>
             --  OTG_FS Receive status debug read(Device mode)
             OTG_FS_GRXSTSR_Device : OTG_FS_GRXSTSR_Device_Register;
             --  OTG status read and pop register (Device mode)
             OTG_FS_GRXSTSP_Device : OTG_FS_GRXSTSP_Device_Register;
+         when Host =>
+            --  OTG_FS Receive status debug read(Host mode)
+            OTG_FS_GRXSTSR_Host : OTG_FS_GRXSTSR_Host_Register;
+            --  OTG status read and pop register (Host mode)
+            OTG_FS_GRXSTSP_Host : OTG_FS_GRXSTSP_Host_Register;
+         when Dieptxf0_Device =>
             --  OTG_FS Endpoint 0 Transmit FIFO size
             OTG_FS_DIEPTXF0_Device : OTG_FS_DIEPTXF0_Device_Register;
+         when Hnptxfsiz_Host =>
+            --  OTG_FS Host non-periodic transmit FIFO size register
+            OTG_FS_HNPTXFSIZ_Host : OTG_FS_HNPTXFSIZ_Host_Register;
       end case;
    end record
      with Unchecked_Union, Volatile;
@@ -2319,12 +2323,12 @@ package STM32_SVD.USB_OTG_FS is
       OTG_FS_DIEPTXF3        at 268 range 0 .. 31;
       OTG_FS_DIEPTXF4        at 272 range 0 .. 31;
       OTG_FS_DIEPTXF5        at 276 range 0 .. 31;
-      OTG_FS_GRXSTSR_Host    at 28 range 0 .. 31;
-      OTG_FS_GRXSTSP_Host    at 32 range 0 .. 31;
-      OTG_FS_HNPTXFSIZ_Host  at 40 range 0 .. 31;
       OTG_FS_GRXSTSR_Device  at 28 range 0 .. 31;
       OTG_FS_GRXSTSP_Device  at 32 range 0 .. 31;
+      OTG_FS_GRXSTSR_Host    at 28 range 0 .. 31;
+      OTG_FS_GRXSTSP_Host    at 32 range 0 .. 31;
       OTG_FS_DIEPTXF0_Device at 40 range 0 .. 31;
+      OTG_FS_HNPTXFSIZ_Host  at 40 range 0 .. 31;
    end record;
 
    --  USB on the go full speed
