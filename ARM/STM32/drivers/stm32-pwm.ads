@@ -108,8 +108,7 @@ package STM32.PWM is
       Value   : Percentage)
      with
        Inline,
-       Pre  => (Attached (This, Channel) or else raise Not_Attached) and
-               Enabled (This, Channel),
+       Pre  => (Attached (This, Channel) or else raise Not_Attached),
        Post => Current_Duty_Cycle (This, Channel) = Value;
    --  Sets the pulse width such that the requested percentage is achieved.
 
@@ -127,8 +126,7 @@ package STM32.PWM is
       Value   : Microseconds)
      with
        Inline,
-       Pre => (Attached (This, Channel) or else raise Not_Attached) and
-              Enabled (This, Channel);
+       Pre => (Attached (This, Channel) or else raise Not_Attached);
    --  Set the pulse width such that the requested number of microseconds is
    --  achieved. Raises Invalid_Request if the requested time is greater than
    --  the period previously configured via Initialise_PWM_Modulator.
