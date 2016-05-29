@@ -1,7 +1,7 @@
 with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 with System;
-with Interfaces;  use Interfaces;
+with Interfaces; use Interfaces;
 
 package body ST7735R is
 
@@ -210,6 +210,7 @@ package body ST7735R is
    -- Initialized --
    -----------------
 
+   overriding
    function Initialized (LCD : ST7735R_Device) return Boolean is
      (LCD.Initialized);
 
@@ -497,6 +498,10 @@ package body ST7735R is
       Set_Row_Address (LCD, Y_Start, Y_End);
    end Set_Address;
 
+   ---------------
+   -- Set_Pixel --
+   ---------------
+
    procedure Set_Pixel (LCD   : ST7735R_Device;
                         X, Y  : Short;
                         Color : Short)
@@ -530,5 +535,202 @@ package body ST7735R is
       Write_Command (LCD, 16#2C#);
       Write_Data (LCD, Data);
    end Write_Raw_Pixels;
+
+   --------------------
+   -- Get_Max_Layers --
+   --------------------
+
+   overriding
+   function Get_Max_Layers
+     (Display : ST7735R_Device) return Positive is (1);
+
+   ------------------
+   -- Is_Supported --
+   ------------------
+
+   overriding
+   function Is_Supported
+     (Display : ST7735R_Device;
+      Mode    : FB_Color_Mode) return Boolean is
+     (Mode = HAL.Bitmap.RGB_565);
+
+   ---------------------
+   -- Set_Orientation --
+   ---------------------
+
+   overriding
+   procedure Set_Orientation
+     (Display     : in out ST7735R_Device;
+      Orientation : Display_Orientation)
+   is
+   begin
+      null;
+   end Set_Orientation;
+
+   --------------
+   -- Set_Mode --
+   --------------
+
+   overriding
+   procedure Set_Mode
+     (Display : in out ST7735R_Device;
+      Mode    : Wait_Mode)
+   is
+   begin
+      null;
+   end Set_Mode;
+
+   ---------------
+   -- Get_Width --
+   ---------------
+
+   overriding
+   function Get_Width
+     (Display : ST7735R_Device) return Positive is (Screen_Width);
+
+   ----------------
+   -- Get_Height --
+   ----------------
+
+   overriding
+   function Get_Height
+     (Display : ST7735R_Device) return Positive is (Screen_Height);
+
+   ----------------
+   -- Is_Swapped --
+   ----------------
+
+   overriding
+   function Is_Swapped
+     (Display : ST7735R_Device) return Boolean is (False);
+
+   --------------------
+   -- Set_Background --
+   --------------------
+
+   overriding
+   procedure Set_Background
+     (Display : ST7735R_Device; R, G, B : Byte)
+   is
+   begin
+      --  Does it make sense when there's no alpha channel...
+      raise Program_Error;
+   end Set_Background;
+
+   ----------------------
+   -- Initialize_Layer --
+   ----------------------
+
+   overriding
+   procedure Initialize_Layer
+     (Display : in out ST7735R_Device;
+      Layer   : Positive;
+      Mode    : FB_Color_Mode;
+      X       : Natural := 0;
+      Y       : Natural := 0;
+      Width   : Positive := Positive'Last;
+      Height  : Positive := Positive'Last)
+   is
+      pragma Unreferenced (X, Y, Width, Height);
+   begin
+      if Layer /= 1 or else Mode /= RGB_565 then
+         raise Program_Error;
+      end if;
+
+      Display.Layer.Width := Screen_Width;
+      Display.Layer.Height := Screen_Height;
+      Display.Layer.Addr := Display.Layer_Data'Address;
+      Display.Layer_Initialized := True;
+   end Initialize_Layer;
+
+   -----------------
+   -- Initialized --
+   -----------------
+
+   overriding
+   function Initialized
+     (Display : ST7735R_Device;
+      Layer   : Positive) return Boolean
+   is
+   begin
+      return Layer = 1 and then Display.Layer_Initialized;
+   end Initialized;
+
+   ------------------
+   -- Update_Layer --
+   ------------------
+
+   overriding
+   procedure Update_Layer
+     (Display   : in out ST7735R_Device;
+      Layer     : Positive;
+      Copy_Back : Boolean := False)
+   is
+      pragma Unreferenced (Copy_Back);
+   begin
+      if Layer /= 1 then
+         raise Program_Error;
+      end if;
+      Set_Address (Display,
+                   X_Start => 0,
+                   X_End   => 127,
+                   Y_Start => 0,
+                   Y_End   => 159);
+      Display.Write_Raw_Pixels (Display.Layer_Data);
+   end Update_Layer;
+
+
+   -------------------
+   -- Update_Layers --
+   -------------------
+
+   overriding
+   procedure Update_Layers
+     (Display : in out ST7735R_Device)
+   is
+   begin
+      Display.Update_Layer (1);
+   end  Update_Layers;
+
+   --------------------
+   -- Get_Color_Mode --
+   --------------------
+
+   overriding
+   function Get_Color_Mode
+     (Display : ST7735R_Device;
+      Layer   : Positive) return FB_Color_Mode
+   is
+   begin
+      if Layer /= 1 then
+         raise Program_Error;
+      end if;
+      return Display.Layer.Color_Mode;
+   end Get_Color_Mode;
+
+   -----------------------
+   -- Get_Hidden_Buffer --
+   -----------------------
+
+   overriding
+   function Get_Hidden_Buffer
+     (Display : ST7735R_Device;
+      Layer   : Positive) return HAL.Bitmap.Bitmap_Buffer'Class
+   is
+   begin
+      if Layer /= 1 then
+         raise Program_Error;
+      end if;
+      return Display.Layer;
+   end Get_Hidden_Buffer;
+
+   --------------------
+   -- Get_Pixel_Size --
+   --------------------
+
+   overriding
+   function Get_Pixel_Size
+     (Display : ST7735R_Device;
+      Layer   : Positive) return Positive is (16);
 
 end ST7735R;

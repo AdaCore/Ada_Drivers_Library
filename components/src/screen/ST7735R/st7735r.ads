@@ -1,6 +1,8 @@
-with HAL;      use HAL;
-with HAL.SPI;  use HAL.SPI;
-with HAL.GPIO; use HAL.GPIO;
+with HAL;             use HAL;
+with HAL.SPI;         use HAL.SPI;
+with HAL.GPIO;        use HAL.GPIO;
+with HAL.Framebuffer; use HAL.Framebuffer;
+with HAL.Bitmap;      use HAL.Bitmap;
 
 package ST7735R is
 
@@ -9,10 +11,11 @@ package ST7735R is
       CS   : not null GPIO_Point_Ref;
       RS   : not null GPIO_Point_Ref;
       RST  : not null GPIO_Point_Ref)
-   is tagged limited private;
+   is limited new HAL.Framebuffer.Frame_Buffer_Display with private;
 
    procedure Initialize (LCD : in out ST7735R_Device);
 
+   overriding
    function Initialized (LCD : ST7735R_Device) return Boolean;
 
    procedure Turn_On (LCD : ST7735R_Device);
@@ -117,7 +120,98 @@ package ST7735R is
    procedure Write_Raw_Pixels (LCD  : ST7735R_Device;
                                Data : HAL.Short_Array);
 
+   overriding
+   function Get_Max_Layers
+     (Display : ST7735R_Device) return Positive;
+
+   overriding
+   function Is_Supported
+     (Display : ST7735R_Device;
+      Mode    : FB_Color_Mode) return Boolean;
+
+   overriding
+   procedure Set_Orientation
+     (Display     : in out ST7735R_Device;
+      Orientation : Display_Orientation);
+
+   overriding
+   procedure Set_Mode
+     (Display : in out ST7735R_Device;
+      Mode    : Wait_Mode);
+
+   overriding
+   function Get_Width
+     (Display : ST7735R_Device) return Positive;
+
+   overriding
+   function Get_Height
+     (Display : ST7735R_Device) return Positive;
+
+   overriding
+   function Is_Swapped
+     (Display : ST7735R_Device) return Boolean;
+   --  Whether X/Y coordinates are considered Swapped by the drawing primitives
+   --  This simulates Landscape/Portrait orientation on displays not supporting
+   --  hardware orientation change
+
+   overriding
+   procedure Set_Background
+     (Display : ST7735R_Device; R, G, B : Byte);
+
+   overriding
+   procedure Initialize_Layer
+     (Display : in out ST7735R_Device;
+      Layer   : Positive;
+      Mode    : FB_Color_Mode;
+      X       : Natural := 0;
+      Y       : Natural := 0;
+      Width   : Positive := Positive'Last;
+      Height  : Positive := Positive'Last);
+   --  All layers are double buffered, so an explicit call to Update_Layer
+   --  needs to be performed to actually display the current buffer attached
+   --  to the layer.
+   --  Alloc is called to create the actual buffer.
+
+   overriding
+   function Initialized
+     (Display : ST7735R_Device;
+      Layer   : Positive) return Boolean;
+
+   overriding
+   procedure Update_Layer
+     (Display   : in out ST7735R_Device;
+      Layer     : Positive;
+      Copy_Back : Boolean := False);
+   --  Updates the layer so that the hidden buffer is displayed.
+
+   overriding
+   procedure Update_Layers
+     (Display : in out ST7735R_Device);
+   --  Updates all initialized layers at once with their respective hidden
+   --  buffer
+
+   overriding
+   function Get_Color_Mode
+     (Display : ST7735R_Device;
+      Layer   : Positive) return FB_Color_Mode;
+   --  Retrieves the current color mode for the layer.
+
+   overriding
+   function Get_Hidden_Buffer
+     (Display : ST7735R_Device;
+      Layer   : Positive) return HAL.Bitmap.Bitmap_Buffer'Class;
+   --  Retrieves the current hidden buffer for the layer.
+
+   overriding
+   function Get_Pixel_Size
+     (Display : ST7735R_Device;
+      Layer   : Positive) return Positive;
+   --  Retrieves the current hidden buffer for the layer.
+
 private
+
+   Screen_Width  : constant := 128;
+   Screen_Height : constant := 160;
 
    for RGB_BGR_Order use
      (RGB_Order => 0,
@@ -139,13 +233,18 @@ private
      (Column_Address_Left_Right => 0,
       Column_Address_Right_Left => 1);
 
+   subtype Pixel_Data is Short_Array (0 .. (Screen_Width * Screen_Height) - 1);
+
    type ST7735R_Device
      (Port : not null SPI_Port_Ref;
       CS   : not null GPIO_Point_Ref;
       RS   : not null GPIO_Point_Ref;
       RST  : not null GPIO_Point_Ref)
-   is tagged limited record
+   is limited new HAL.Framebuffer.Frame_Buffer_Display with record
       Initialized : Boolean := True;
+      Layer : aliased Bitmap_Buffer;
+      Layer_Data : Pixel_Data;
+      Layer_Initialized : Boolean := False;
    end record;
 
 end ST7735R;
