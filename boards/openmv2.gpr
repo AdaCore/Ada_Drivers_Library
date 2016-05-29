@@ -1,0 +1,24 @@
+with "../config.gpr";
+with "../ARM/STM32/stm32f42x.gpr";
+with "../components/components";
+
+library project OpenMV2 is
+
+   for Library_Name use "openmv2";
+   for Library_Kind use "static";
+   for Library_Dir use "lib/openmv2/" & Config.RTS;
+   for Object_Dir use "obj/openmv2/" & Config.RTS;
+
+   for Target use "arm-eabi";
+   --  OpenMV2 runtime is derived from smt32f429-disco with
+   --     Clock_Frequency : constant := 180_000_000;
+   --  and
+   --     function HSE_Clock return STM32F4.RCC.HSECLK_Range is (12_000_000)
+   for Runtime ("Ada") use Config.RTS & "-openmv2";
+
+   for Source_Dirs use("OpenMV2");
+
+   package Compiler renames Config.Compiler;
+   package Builder renames Config.Builder;
+
+end OpenMV2;

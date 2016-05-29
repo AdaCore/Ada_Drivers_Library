@@ -1,0 +1,23 @@
+with "../../config.gpr";
+with "../../boards/openmv2.gpr";
+
+project OpenMV2_Example is
+
+   --  OpenMV2 runtime is derived from smt32f429-disco with
+   --     Clock_Frequency : constant := 180_000_000;
+   --  and
+   --     function HSE_Clock return STM32F4.RCC.HSECLK_Range is (12_000_000)
+   for Runtime ("Ada") use Config.RTS & "-openmv2";
+
+   for Target use "arm-eabi";
+   for Source_Dirs use ("src");
+
+   for Languages use ("Ada");
+   for Object_Dir use "obj\";
+   for Main use ("main.adb");
+
+   package Compiler renames Config.Compiler;
+   package Builder renames Config.Builder;
+
+ end OpenMV2_Example;
+
