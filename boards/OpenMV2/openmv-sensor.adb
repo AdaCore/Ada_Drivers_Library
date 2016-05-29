@@ -1,10 +1,12 @@
 with STM32.DCMI;
-with STM32.DMA; use STM32.DMA;
+with STM32.DMA;     use STM32.DMA;
 with Ada.Real_Time; use Ada.Real_Time;
-with STM32.PWM; use STM32.PWM;
-with OV2640; use OV2640;
-with Interfaces; use Interfaces;
-with HAL.I2C; use HAL.I2C;
+with STM32.PWM;     use STM32.PWM;
+with OV2640;        use OV2640;
+with Interfaces;    use Interfaces;
+with HAL.I2C;       use HAL.I2C;
+with HAL.Bitmap;    use HAL.Bitmap;
+with HAL;           use HAL;
 
 package body OpenMV.Sensor is
 
@@ -252,13 +254,17 @@ package body OpenMV.Sensor is
    -- Snapshot --
    --------------
 
-   procedure Snapshot is
+   procedure Snapshot (BM : HAL.Bitmap.Bitmap_Buffer'Class) is
       Status : DMA_Error_Code;
    begin
+      if BM.Width /= Image_Width or else BM.Height /= Image_Height then
+         raise Program_Error;
+      end if;
+
       if not Compatible_Alignments (Sensor_DMA,
                                     Sensor_DMA_Stream,
                                     DCMI.Data_Register_Address,
-                                    FB.Data.all'Address)
+                                    BM.Addr)
       then
          raise Program_Error;
       end if;
@@ -266,14 +272,12 @@ package body OpenMV.Sensor is
       Start_Transfer (Unit        => Sensor_DMA,
                       Stream      => Sensor_DMA_Stream,
                       Source      => DCMI.Data_Register_Address,
-                      Destination => FB.Data.all'Address,
-                      Data_Count  => FB.Data.all'Length / 2);
+                      Destination => BM.Addr,
+                      Data_Count  =>
+                        Interfaces.Unsigned_16 ((BM.Width * BM.Height) / 2));
 
       DCMI.Start_Capture (DCMI.Snapshot);
 
---        while DCMI.Capture_In_Progess loop
---           null;
---        end loop;
       Poll_For_Completion (Sensor_DMA,
                            Sensor_DMA_Stream,
                            Full_Transfer,
@@ -285,6 +289,5 @@ package body OpenMV.Sensor is
          raise Program_Error;
       end if;
    end Snapshot;
-
 
 end OpenMV.Sensor;
