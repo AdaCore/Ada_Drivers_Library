@@ -5,7 +5,6 @@ use STM32;  -- for base addresses
 with STM32.SPI;
 with STM32.Timers; use STM32.Timers;
 with STM32.DMA;
-with HAL; use HAL;
 with STM32.I2C; use STM32.I2C;
 
 package OpenMV is
@@ -43,20 +42,6 @@ package OpenMV is
    Shield_PWM2  : GPIO_Point renames PD13;
 
 private
-
-   subtype Pixel_Data is Short_Array (0 .. (Image_Width * Image_Height) - 1);
-
-   type Pixel_Data_Access is not null access all Pixel_Data;
-
-   type Frame_Buffer_Internal is record
-      Data : Pixel_Data_Access;
-   end record;
-
-   type Frame_Buffer is not null access all Frame_Buffer_Internal;
-
-   Pix_Data : aliased Pixel_Data
-     with Size => 16 * (Image_Width * Image_Height);
-   FB       : aliased Frame_Buffer_Internal := (Data => Pix_Data'Access);
 
    --------------
    -- LED Pins --
