@@ -97,8 +97,23 @@ package body OpenMV.LCD_Shield is
                    Y_End   => 159);
       Turn_On (LCD_Driver);
 
+      LCD_Driver.Initialize_Layer (Layer  => 1,
+                                   Mode   => HAL.Bitmap.RGB_565,
+                                   X      => 0,
+                                   Y      => 0,
+                                   Width  => Image_Width,
+                                   Height => Image_Height);
       Is_Initialized := True;
    end Initialize;
+
+   ----------------
+   -- Get_Bitmap --
+   ----------------
+
+   function Get_Bitmap return HAL.Bitmap.Bitmap_Buffer'Class is
+   begin
+      return LCD_Driver.Get_Hidden_Buffer (1);
+   end Get_Bitmap;
 
    -------------
    -- Display --
@@ -106,12 +121,7 @@ package body OpenMV.LCD_Shield is
 
    procedure Display is
    begin
-      Set_Address (LCD_Driver,
-                   X_Start => 0,
-                   X_End   => 127,
-                   Y_Start => 0,
-                   Y_End   => 159);
-      Write_Raw_Pixels (LCD_Driver, FB.Data.all);
+      LCD_Driver.Update_Layer (1);
    end Display;
 
 end OpenMV.LCD_Shield;
