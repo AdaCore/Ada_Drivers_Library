@@ -8,6 +8,12 @@ package body Last_Chance_Handler is
 
    procedure Last_Chance_Handler (Msg : System.Address; Line : Integer) is
       pragma Unreferenced (Msg, Line);
+      procedure Busy_loop;
+
+      ---------------
+      -- Busy_loop --
+      ---------------
+
       procedure Busy_loop is
       begin
          for Cnt in 1 .. 10_000_000 loop

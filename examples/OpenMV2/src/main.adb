@@ -11,9 +11,10 @@ begin
    OpenMV.Set_RGB_LED (OpenMV.Off);
    OpenMV.LCD_Shield.Initialize;
    OpenMV.Sensor.Initialize;
+
    loop
       --  Take a snapshot...
-      OpenMV.Sensor.Snapshot;
+      OpenMV.Sensor.Snapshot (OpenMV.LCD_Shield.Get_Bitmap);
 
       --  ...and display it.
       OpenMV.LCD_Shield.Display;
