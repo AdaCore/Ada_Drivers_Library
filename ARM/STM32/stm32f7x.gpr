@@ -25,7 +25,21 @@ library project STM32F7x is
       "drivers/sai",
       "drivers/sdmmc");
 
-   package Compiler renames Config.Compiler;
+   package Compiler is
+      for Default_Switches ("Ada") use
+        Config.Compiler'Default_Switches ("Ada");
+
+      case Config.Build is
+         when "Debug" =>
+            --  SDMMC is using polling to read from the sd card, and at -O0
+            --  there's an issue where we don't read fast enough and so the
+            --  FIFO fills up and raises an error.
+            for Switches ("stm32-sdmmc.adb") use
+              Config.Compiler'Default_Switches ("Ada") & "-O1";
+         when others =>
+      end case;
+   end Compiler;
+
    package Builder renames Config.Builder;
 
 end STM32F7x;
