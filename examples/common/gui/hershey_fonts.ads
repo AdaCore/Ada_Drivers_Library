@@ -34,6 +34,8 @@ package Hershey_Fonts is
    type Glyph_Index is private;
 
    function Read (Fnt : Font_Desc) return Hershey_Font;
+   procedure Read (Fnt : Font_Desc;
+                   Ret : out Hershey_Font);
 
    function Strlen (S      : String;
                     Fnt    : Hershey_Font;

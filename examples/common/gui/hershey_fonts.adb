@@ -114,8 +114,20 @@ package body Hershey_Fonts is
 
    function Read (Fnt : Font_Desc) return Hershey_Font
    is
+      Ret : Hershey_Font;
+   begin
+      Read (Fnt, Ret);
+      return Ret;
+   end Read;
+
+   ----------
+   -- Read --
+   ----------
+
+   procedure Read (Fnt : Font_Desc;
+                   Ret : out Hershey_Font)
+   is
       Glyph_Idx   : Natural := 0;
-      Ret         : Hershey_Font;
       Fnt_Idx     : Natural;
       Fnt_Y_Min   : Integer_8 := Integer_8'Last;
 
@@ -222,8 +234,6 @@ package body Hershey_Fonts is
             Ret.Font_Height := Unsigned_8'Max (Ret.Font_Height, G.Height);
          end;
       end loop;
-
-      return Ret;
    end Read;
 
 end Hershey_Fonts;
