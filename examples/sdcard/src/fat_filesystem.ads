@@ -3,104 +3,112 @@ with Media_Reader; use Media_Reader;
 
 package FAT_Filesystem is
 
-   MAX_VOLUMES : constant := 1;
+   MAX_VOLUMES           : constant := 1;
    --  Maximum number of mounted volumes
 
-   Max_Handles_Reached : exception;
+   Max_Handles_Reached   : exception;
 
    type Status_Code is
-     (OK, Media_Error, FAT_Error);
+     (OK,
+      Disk_Error, --  A hardware error occurred in the low level disk I/O
+      Internal_Error,
+      Drive_Not_Ready,
+      No_Such_File,
+      No_Such_Path,
+      Invalid_Name,
+      Access_Denied,
+      Already_Exists,
+      Invalid_Object_Entry,
+      Write_Protected,
+      Invalid_Drive,
+      Not_Enabled, --  The volume has no work area
+      No_Filesystem, --  The volume is not a FAT volume
+      Locked,
+      Too_Many_Open_Files, --  Number of opened files > Max
+      Invalid_Parameter);
 
-   type FAT_Volume is tagged limited private;
-   type FAT_Volume_Access is access all FAT_Volume'Class;
+   type FAT_Filesystem is tagged limited private;
+   type FAT_Filesystem_Access is access all FAT_Filesystem'Class;
 
-   Null_FAT_Volume : constant FAT_Volume_Access;
+   Null_FAT_Volume : constant FAT_Filesystem_Access;
 
    function Open
      (Controller : Media_Controller_Access;
       LBA        : Unsigned_32;
-      Status     : out Status_Code) return FAT_Volume_Access;
+      Status     : out Status_Code) return FAT_Filesystem_Access;
 
-   procedure Close (Volume : FAT_Volume_Access);
+   procedure Close (FS : FAT_Filesystem_Access);
 
    type FAT_Version is
      (FAT16,
-      FAT32,
-      EXFAT);
+      FAT32);
 
-   function Version (Descr : FAT_Volume) return FAT_Version;
+   function Version (FS : FAT_Filesystem) return FAT_Version;
    --  The FAT version of the volume
 
-   function OEM_Name (Descr : FAT_Volume) return String;
+   function OEM_Name (FS : FAT_Filesystem) return String;
    --  The OEM Name of the Volume. Different from the Volume Label.
 
    function Block_Size_In_Bytes
-     (Descr : FAT_Volume) return Unsigned_32;
+     (FS : FAT_Filesystem) return Unsigned_32;
    function Number_Of_Blocks_Per_Cluster
-     (Descr : FAT_Volume) return Unsigned_8;
+     (FS : FAT_Filesystem) return Unsigned_8;
    function Reserved_Blocks
-     (Descr : FAT_Volume) return Unsigned_16;
+     (FS : FAT_Filesystem) return Unsigned_16;
    function Number_Of_FATs
-     (Descr : FAT_Volume) return Unsigned_8;
+     (FS : FAT_Filesystem) return Unsigned_8;
    function Total_Number_Of_Blocks
-     (Descr : FAT_Volume) return Unsigned_32;
+     (FS : FAT_Filesystem) return Unsigned_32;
    function Removable_Drive
-     (Descr : FAT_Volume) return Boolean;
+     (FS : FAT_Filesystem) return Boolean;
    function FAT_Table_Size_In_Blocks
-     (Descr : FAT_Volume) return Unsigned_32;
+     (FS : FAT_Filesystem) return Unsigned_32;
    function Number_Of_Hidden_Blocks
-     (Descr : FAT_Volume) return Unsigned_32;
+     (FS : FAT_Filesystem) return Unsigned_32;
    function Drive_Number
-     (Descr : FAT_Volume) return Unsigned_8;
+     (FS : FAT_Filesystem) return Unsigned_8;
 
    function Is_Volume
-     (Descr : FAT_Volume) return Boolean;
+     (FS : FAT_Filesystem) return Boolean;
    function Volume_ID
-     (Descr : FAT_Volume) return Unsigned_32;
+     (FS : FAT_Filesystem) return Unsigned_32;
    function Volume_Label
-     (Descr : FAT_Volume) return String;
+     (FS : FAT_Filesystem) return String;
    function File_System_Type
-     (Descr : FAT_Volume) return String;
+     (FS : FAT_Filesystem) return String;
    function Root_Dir_Cluster
-     (Descr : FAT_Volume) return Unsigned_32;
+     (FS : FAT_Filesystem) return Unsigned_32;
 
    --------------------
    -- FAT16 specific --
    --------------------
 
    function Number_Of_Entries_In_Root_Dir
-     (Descr : FAT_Volume) return Unsigned_16
-     with Pre => Descr.Version = FAT16;
+     (FS : FAT_Filesystem) return Unsigned_16
+     with Pre => FS.Version = FAT16;
 
    --------------------
    -- FAT32 specific --
    --------------------
 
    function Flags_For_FAT_Mirroring
-     (Descr : FAT_Volume) return Unsigned_16
-     with Pre => Descr.Version = FAT32;
+     (FS : FAT_Filesystem) return Unsigned_16
+     with Pre => FS.Version = FAT32;
    function FS_Version_Number
-     (Descr : FAT_Volume) return Unsigned_16
-     with Pre => Descr.Version = FAT32;
+     (FS : FAT_Filesystem) return Unsigned_16
+     with Pre => FS.Version = FAT32;
    function FSInfo_Block_Number
-     (Descr : FAT_Volume) return Unsigned_16
-     with Pre => Descr.Version = FAT32;
+     (FS : FAT_Filesystem) return Unsigned_16
+     with Pre => FS.Version = FAT32;
    function Boot_Block_Backup_Block_Number
-     (Descr : FAT_Volume) return Unsigned_16
-     with Pre => Descr.Version = FAT32;
+     (FS : FAT_Filesystem) return Unsigned_16
+     with Pre => FS.Version = FAT32;
    function Last_Known_Free_Data_Clusters_Number
-     (Descr : FAT_Volume) return Unsigned_32
-     with Pre => Descr.Version = FAT32;
+     (FS : FAT_Filesystem) return Unsigned_32
+     with Pre => FS.Version = FAT32;
    function Most_Recently_Allocated_Cluster
-     (Descr : FAT_Volume) return Unsigned_32
-     with Pre => Descr.Version = FAT32;
-
-   type Directory_Handle is private;
-
-   function Open_Root_Directory
-     (Volume : FAT_Volume_Access) return Directory_Handle;
-
---     procedure Close (Handle : Directory_Handle);
+     (FS : FAT_Filesystem) return Unsigned_32
+     with Pre => FS.Version = FAT32;
 
 private
 
@@ -120,7 +128,7 @@ private
       Number_Of_Blocks_Fat32  : Unsigned_32;
 
       case Version is
-         when FAT32 | EXFAT =>
+         when FAT32 =>
             Table_Size_Fat32        : Unsigned_32;
             Fat_Mirroring_Flags     : Unsigned_16;
             FS_Version_Number       : Unsigned_16;
@@ -191,221 +199,152 @@ private
       Last_Allocated_Cluster at 8 range 0 .. 31;
    end record;
 
-   type FAT_Volume is tagged limited record
+   type FAT_Filesystem is tagged limited record
       Mounted         : Boolean := False;
       Disk_Parameters : FAT_Disk_Parameter;
       LBA             : Unsigned_32;
       Controller      : Media_Controller_Access;
-      Data_Area       : Unsigned_32;
       FSInfo          : FAT_FS_Info;
+      Data_Area       : Unsigned_32;
+      FAT_Addr        : Unsigned_32;
+      Num_Clusters    : Unsigned_32;
+      Window_Block    : Unsigned_32 := 16#FFFF_FFFF#;
+      Window          : Block (0 .. 511);
    end record;
+
+   function Ensure_Block
+     (FS    : in out FAT_Filesystem;
+      Block : Unsigned_32) return Status_Code;
+
+   function Cluster_To_Block
+     (FS      : FAT_Filesystem;
+      Cluster : Unsigned_32) return Unsigned_32
+   is (FS.Data_Area +
+       (Cluster - 2) * Unsigned_32 (FS.Number_Of_Blocks_Per_Cluster));
+
+   function Get_FAT
+     (FS      : in out FAT_Filesystem;
+      Cluster : Unsigned_32) return Unsigned_32;
 
    function Version
-     (Descr : FAT_Volume) return FAT_Version
-   is (if Descr.Disk_Parameters.Root_Dir_Entries_Fat16 /= 0
+     (FS : FAT_Filesystem) return FAT_Version
+   is (if FS.Disk_Parameters.Root_Dir_Entries_Fat16 /= 0
        then FAT16 else FAT32);
 
-   function OEM_Name (Descr : FAT_Volume) return String
-   is (Descr.Disk_Parameters.OEM_Name);
+   function OEM_Name (FS : FAT_Filesystem) return String
+   is (FS.Disk_Parameters.OEM_Name);
 
    function Block_Size_In_Bytes
-     (Descr : FAT_Volume) return Unsigned_32
-   is (Unsigned_32 (Descr.Disk_Parameters.Block_Size_In_Bytes));
+     (FS : FAT_Filesystem) return Unsigned_32
+   is (Unsigned_32 (FS.Disk_Parameters.Block_Size_In_Bytes));
 
    function Number_Of_Blocks_Per_Cluster
-     (Descr : FAT_Volume) return Unsigned_8
-   is (Descr.Disk_Parameters.Blocks_Per_Cluster);
+     (FS : FAT_Filesystem) return Unsigned_8
+   is (FS.Disk_Parameters.Blocks_Per_Cluster);
 
    function Reserved_Blocks
-     (Descr : FAT_Volume) return Unsigned_16
-   is (Descr.Disk_Parameters.Reserved_Blocks);
+     (FS : FAT_Filesystem) return Unsigned_16
+   is (FS.Disk_Parameters.Reserved_Blocks);
 
    function Number_Of_FATs
-     (Descr : FAT_Volume) return Unsigned_8
-   is (Descr.Disk_Parameters.Number_Of_FATs);
+     (FS : FAT_Filesystem) return Unsigned_8
+   is (FS.Disk_Parameters.Number_Of_FATs);
 
    function Total_Number_Of_Blocks
-     (Descr : FAT_Volume) return Unsigned_32
-   is (case Descr.Version is
+     (FS : FAT_Filesystem) return Unsigned_32
+   is (case FS.Version is
           when FAT16 =>
-             Unsigned_32 (Descr.Disk_Parameters.Number_Of_Blocks_Fat16),
-          when FAT32 | EXFAT => Descr.Disk_Parameters.Number_Of_Blocks_Fat32);
+             Unsigned_32 (FS.Disk_Parameters.Number_Of_Blocks_Fat16),
+          when FAT32 => FS.Disk_Parameters.Number_Of_Blocks_Fat32);
 
    function Removable_Drive
-     (Descr : FAT_Volume) return Boolean
-   is (Descr.Disk_Parameters.Removable_Drive);
+     (FS : FAT_Filesystem) return Boolean
+   is (FS.Disk_Parameters.Removable_Drive);
 
    function FAT_Table_Size_In_Blocks
-     (Descr : FAT_Volume) return Unsigned_32
-   is (case Descr.Version is
-          when FAT16 =>
-             Unsigned_32 (Descr.Disk_Parameters.Table_Size_Fat16),
-          when FAT32 | EXFAT => Descr.Disk_Parameters.Table_Size_Fat32);
+     (FS : FAT_Filesystem) return Unsigned_32
+   is (case FS.Version is
+          when FAT16 => Unsigned_32 (FS.Disk_Parameters.Table_Size_Fat16),
+          when FAT32 => FS.Disk_Parameters.Table_Size_Fat32);
 
    function Number_Of_Hidden_Blocks
-     (Descr : FAT_Volume) return Unsigned_32
-   is (Descr.Disk_Parameters.Hidden_Blocks);
+     (FS : FAT_Filesystem) return Unsigned_32
+   is (FS.Disk_Parameters.Hidden_Blocks);
 
    function Drive_Number
-     (Descr : FAT_Volume) return Unsigned_8
-   is (case Descr.Version is
-          when FAT16 => Descr.Disk_Parameters.Drive_Number_Fat16,
-          when FAT32 | EXFAT => Descr.Disk_Parameters.Drive_Number_Fat32);
+     (FS : FAT_Filesystem) return Unsigned_8
+   is (case FS.Version is
+          when FAT16 => FS.Disk_Parameters.Drive_Number_Fat16,
+          when FAT32 => FS.Disk_Parameters.Drive_Number_Fat32);
 
    function Is_Volume
-     (Descr : FAT_Volume) return Boolean
-   is (case Descr.Version is
-          when FAT16 => Descr.Disk_Parameters.Boot_Signature_Fat16 = 16#29#,
-          when FAT32 | EXFAT =>
-             Descr.Disk_Parameters.Boot_Signature_Fat32 = 16#29#);
+     (FS : FAT_Filesystem) return Boolean
+   is (case FS.Version is
+          when FAT16 => FS.Disk_Parameters.Boot_Signature_Fat16 = 16#29#,
+          when FAT32 => FS.Disk_Parameters.Boot_Signature_Fat32 = 16#29#);
 
    function Volume_ID
-     (Descr : FAT_Volume) return Unsigned_32
-   is (if not Is_Volume (Descr)
+     (FS : FAT_Filesystem) return Unsigned_32
+   is (if not Is_Volume (FS)
        then 0
        else
-         (case Descr.Version is
-             when FAT16 => Descr.Disk_Parameters.Volume_Id_Fat16,
-             when FAT32 | EXFAT => Descr.Disk_Parameters.Volume_Id_Fat32));
+         (case FS.Version is
+             when FAT16 => FS.Disk_Parameters.Volume_Id_Fat16,
+             when FAT32 => FS.Disk_Parameters.Volume_Id_Fat32));
 
    function Volume_Label
-     (Descr : FAT_Volume) return String
-   is (if not Is_Volume (Descr)
+     (FS : FAT_Filesystem) return String
+   is (if not Is_Volume (FS)
        then "UNKNOWN"
        else
-         (case Descr.Version is
-             when FAT16 => Trim (Descr.Disk_Parameters.Volume_Label_Fat16),
-             when FAT32 | EXFAT =>
-                Trim (Descr.Disk_Parameters.Volume_Label_Fat32)));
+         (case FS.Version is
+             when FAT16 => Trim (FS.Disk_Parameters.Volume_Label_Fat16),
+             when FAT32 => Trim (FS.Disk_Parameters.Volume_Label_Fat32)));
 
    function File_System_Type
-     (Descr : FAT_Volume) return String
-   is (if not Is_Volume (Descr)
+     (FS : FAT_Filesystem) return String
+   is (if not Is_Volume (FS)
        then "FAT16"
        else
-         (case Descr.Version is
-             when FAT16 => Trim (Descr.Disk_Parameters.FS_Type_Fat16),
-             when FAT32 | EXFAT =>
-                Trim (Descr.Disk_Parameters.FS_Type_Fat32)));
+         (case FS.Version is
+             when FAT16 => Trim (FS.Disk_Parameters.FS_Type_Fat16),
+             when FAT32 => Trim (FS.Disk_Parameters.FS_Type_Fat32)));
 
    function Number_Of_Entries_In_Root_Dir
-     (Descr : FAT_Volume) return Unsigned_16
-   is (Descr.Disk_Parameters.Root_Dir_Entries_Fat16);
+     (FS : FAT_Filesystem) return Unsigned_16
+   is (FS.Disk_Parameters.Root_Dir_Entries_Fat16);
 
    function Flags_For_FAT_Mirroring
-     (Descr : FAT_Volume) return Unsigned_16
-   is (Descr.Disk_Parameters.Fat_Mirroring_Flags);
+     (FS : FAT_Filesystem) return Unsigned_16
+   is (FS.Disk_Parameters.Fat_Mirroring_Flags);
 
    function FS_Version_Number
-     (Descr : FAT_Volume) return Unsigned_16
-   is (Descr.Disk_Parameters.FS_Version_Number);
+     (FS : FAT_Filesystem) return Unsigned_16
+   is (FS.Disk_Parameters.FS_Version_Number);
 
    function Root_Dir_Cluster
-     (Descr : FAT_Volume) return Unsigned_32
-   is (case Descr.Version is
-          when FAT16 => Unsigned_32 (Descr.Number_Of_FATs) *
-                          Descr.FAT_Table_Size_In_Blocks + 1,
-          when FAT32 | EXFAT => Descr.Disk_Parameters.Root_Directory_Cluster);
+     (FS : FAT_Filesystem) return Unsigned_32
+   is (case FS.Version is
+          when FAT16 => Unsigned_32 (FS.Number_Of_FATs) *
+                          FS.FAT_Table_Size_In_Blocks + 1,
+          when FAT32 => FS.Disk_Parameters.Root_Directory_Cluster);
 
    function FSInfo_Block_Number
-     (Descr : FAT_Volume) return Unsigned_16
-   is (Descr.Disk_Parameters.FSInfo_Block_Number);
+     (FS : FAT_Filesystem) return Unsigned_16
+   is (FS.Disk_Parameters.FSInfo_Block_Number);
 
    function Boot_Block_Backup_Block_Number
-     (Descr : FAT_Volume) return Unsigned_16
-   is (Descr.Disk_Parameters.Boot_Block_Backup_Block);
+     (FS : FAT_Filesystem) return Unsigned_16
+   is (FS.Disk_Parameters.Boot_Block_Backup_Block);
 
    function Last_Known_Free_Data_Clusters_Number
-     (Descr : FAT_Volume) return Unsigned_32
-   is (Descr.FSInfo.Free_Clusters);
+     (FS : FAT_Filesystem) return Unsigned_32
+   is (FS.FSInfo.Free_Clusters);
 
    function Most_Recently_Allocated_Cluster
-     (Descr : FAT_Volume) return Unsigned_32
-   is (Descr.FSInfo.Last_Allocated_Cluster);
+     (FS : FAT_Filesystem) return Unsigned_32
+   is (FS.FSInfo.Last_Allocated_Cluster);
 
-   Null_FAT_Volume : constant FAT_Volume_Access := null;
-
-   type FAT_Directory_Entry_Attribute is record
-      Read_Only : Boolean;
-      Hidden    : Boolean;
-      System_File : Boolean;
-      Volume_Label : Boolean;
-      Subdirectory : Boolean;
-      Archive      : Boolean;
-   end record with Size => 8, Pack;
-
-   type FAT_Directory_Entry is record
-      Filename   : String (1 .. 8);
-      Extension  : String (1 .. 3);
-      Attributes : FAT_Directory_Entry_Attribute;
-      Reserved   : String (1 .. 10);
-      Time       : Unsigned_16;
-      Date       : Unsigned_16;
-      Cluster    : Unsigned_16;
-      Size       : Unsigned_32;
-   end record with Size => 32 * 8;
-
-   for FAT_Directory_Entry use record
-      Filename   at 16#00# range 0 .. 63;
-      Extension  at 16#08# range 0 .. 23;
-      Attributes at 16#0B# range 0 .. 7;
-      Reserved   at 16#0C# range 0 .. 79;
-      Time       at 16#16# range 0 .. 15;
-      Date       at 16#18# range 0 .. 15;
-      Cluster    at 16#1A# range 0 .. 15;
-      Size       at 16#1C# range 0 .. 31;
-   end record;
-
-   VFAT_Directory_Entry_Attribute : constant FAT_Directory_Entry_Attribute :=
-                                      (Subdirectory => False,
-                                       Archive      => False,
-                                       others       => True);
-   --  Attrite value 16#F0# defined at offset 16#0B# and identifying a VFAT
-   --  entry rather than a regular directory entry
-
-   type VFAT_Sequence_Number is mod 2 ** 5
-     with Size => 5;
-
-   type VFAT_Sequence is record
-      Sequence : VFAT_Sequence_Number;
-      Stop_Bit : Boolean;
-   end record with Size => 8, Pack;
-
-   type VFAT_Directory_Entry is record
-      VFAT_Attr : VFAT_Sequence;
-      Name_1    : Wide_String (1 .. 5);
-      Attribute : FAT_Directory_Entry_Attribute;
-      E_Type    : Unsigned_8;
-      Checksum  : Unsigned_8;
-      Name_2    : Wide_String (1 .. 6);
-      Cluster   : Unsigned_16;
-      Name_3    : Wide_String (1 .. 2);
-   end record with Pack, Size => 32 * 8;
-
-   type FS_Object_Id is tagged record
-      FS : FAT_Volume_Access;
-      Id : Unsigned_32;
-
-   type Directory_Entry is record
-      Volume    : FAT_Volume_Access;
-      --  Owner file system object
-
-      Attribute : FAT_Directory_Entry_Attribute;
-      --  The object attribute
-
-      Cluster   : Unsigned_16;
-      --  Object start cluster (0: root directory on FAT16)
-
-      Size      : Unsigned_32;
-      --  Object size
-
-
-   end record;
-
---     type Directory_Handle (Num_Entries : Unsigned_16) is record
-   type Directory_Handle is record
-      Block  : Unsigned_32;
-      Volume : FAT_Volume_Access;
-   end record;
+   Null_FAT_Volume : constant FAT_Filesystem_Access := null;
 
 end FAT_Filesystem;

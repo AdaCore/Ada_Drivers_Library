@@ -1,12 +1,13 @@
 with Ada.Unchecked_Conversion;
-with Interfaces;      use Interfaces;
-with STM32.SDMMC;     use STM32.SDMMC;
+with Interfaces;                 use Interfaces;
+with STM32.SDMMC;                use STM32.SDMMC;
 
 with BMP_Fonts;
-with LCD_Std_Out;         use LCD_Std_Out;
+with LCD_Std_Out;                use LCD_Std_Out;
 
-with FAT_Filesystem;      use FAT_Filesystem;
-with Media_Reader.SDCard; use Media_Reader.SDCard;
+with FAT_Filesystem;             use FAT_Filesystem;
+with FAT_Filesystem.Directories; use FAT_Filesystem.Directories;
+with Media_Reader.SDCard;        use Media_Reader.SDCard;
 
 procedure SDCard_Demo
 is
@@ -124,7 +125,7 @@ begin
                      (if Partitions (P).Active then " (Active): " else ": "));
 
                   declare
-                     Volume : constant FAT_Volume_Access :=
+                     Volume : constant FAT_Filesystem_Access :=
                                 Open
                                   (SD_Controller'Unchecked_Access,
                                    Partitions (P).LBA_Base,
@@ -142,11 +143,19 @@ begin
                              Volume.File_System_Type & ")");
 
                         declare
-                           D : constant Directory_Handle :=
-                                 Open_Root_Directory (Volume);
-                           pragma Unreferenced (D);
+                           D : Directory_Handle;
+                           E : Directory_Entry;
                         begin
-                           null;
+                           if Open_Root_Directory (Volume, D) /= OK then
+                              LCD_Std_Out.Put_Line
+                                ("!!! Error reading the root dir");
+                           else
+                              while Read (D, E) = OK loop
+                                 LCD_Std_Out.Put_Line (Name (E));
+                              end loop;
+                           end if;
+
+                           Close (D);
                         end;
                      end if;
 
