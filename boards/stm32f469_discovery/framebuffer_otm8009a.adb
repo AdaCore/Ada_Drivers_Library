@@ -16,23 +16,10 @@ with STM32_SVD.LTDC;       use STM32_SVD.LTDC;
 package body Framebuffer_OTM8009A is
 
    LCD_XRES    : GPIO_Point renames PH7;
---     LCD_BL_CTRL : GPIO_Point renames PA3;
---     DSIHOST_TE  : GPIO_Point renames PJ2;
 
    PLLSAIN     : constant := 417;
    PLLSAIR     : constant := 5;
    PLLSAI_DIVR : constant := 2;
-
---     PColLeft    : constant HAL.DSI.DSI_Data :=
---                     (16#00#, 16#00#, 16#01#, 16#8F#); --    0 -> 399
---     pColRight   : constant HAL.DSI.DSI_Data :=
---                     (16#01#, 16#90#, 16#03#, 16#1F#); --  400 -> 799
---     pPage       : constant HAL.DSI.DSI_Data :=
---                     (16#00#, 16#00#, 16#01#, 16#DF#); --    0 -> 479
---     pScanCol    : constant HAL.DSI.DSI_Data :=
---                     (16#02#, 16#15#);                 -- Scan @ 533
-
---     type Area is (Left_Area, Right_Area);
 
    protected Sync is
       entry Wait;
@@ -46,7 +33,6 @@ package body Framebuffer_OTM8009A is
              Unreferenced;
 
       Refreshed   : Boolean := True;
---        Active_Area : Area := Left_Area;
    end Sync;
 
    procedure LCD_Reset;
