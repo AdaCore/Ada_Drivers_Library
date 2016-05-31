@@ -46,6 +46,14 @@ package OV2640 is
 
    function Get_PID (This : OV2640_Cam) return Byte;
 
+   procedure Enable_Auto_Gain_Control (This   : OV2640_Cam;
+                                       Enable : Boolean := True);
+   procedure Enable_Auto_White_Balance (This   : OV2640_Cam;
+                                        Enable : Boolean := True);
+   procedure Enable_Auto_Exposure_Control (This   : OV2640_Cam;
+                                           Enable : Boolean := True);
+   procedure Enable_Auto_Band_Filter (This   : OV2640_Cam;
+                                      Enable : Boolean := True);
 private
 
    type OV2640_Cam (I2C  : not null I2C_Port_Ref) is record

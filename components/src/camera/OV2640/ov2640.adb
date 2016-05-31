@@ -460,4 +460,84 @@ package body OV2640 is
       return Read (This, REG_SENSOR_PID);
    end Get_PID;
 
+   ------------------------------
+   -- Enable_Auto_Gain_Control --
+   ------------------------------
+
+   procedure Enable_Auto_Gain_Control (This   : OV2640_Cam;
+                                       Enable : Boolean := True)
+   is
+      COM8 : Byte;
+   begin
+      Select_Sensor_Bank (This);
+      COM8 := Read (This, REG_SENSOR_COM8);
+
+      if Enable then
+         COM8 := COM8 or 2#0000_0100#;
+      else
+         COM8 := COM8 and 2#1111_1011#;
+      end if;
+      Write (This, REG_SENSOR_COM8, COM8);
+   end Enable_Auto_Gain_Control;
+
+   -------------------------------
+   -- Enable_Auto_White_Balance --
+   -------------------------------
+
+   procedure Enable_Auto_White_Balance (This   : OV2640_Cam;
+                                        Enable : Boolean := True)
+   is
+      CTRL1 : Byte;
+   begin
+      Select_DSP_Bank (This);
+      CTRL1 := Read (This, REG_DSP_CTRL1);
+
+      if Enable then
+         CTRL1 := CTRL1 or 2#0000_1000#;
+      else
+         CTRL1 := CTRL1 and 2#1111_0111#;
+      end if;
+      Write (This, REG_DSP_CTRL1, CTRL1);
+   end Enable_Auto_White_Balance;
+
+   ----------------------------------
+   -- Enable_Auto_Exposure_Control --
+   ----------------------------------
+
+   procedure Enable_Auto_Exposure_Control (This   : OV2640_Cam;
+                                           Enable : Boolean := True)
+   is
+      CTRL0 : Byte;
+   begin
+      Select_DSP_Bank (This);
+      CTRL0 := Read (This, REG_DSP_CTRL0);
+
+      if Enable then
+         CTRL0 := CTRL0 or 2#1000_0000#;
+      else
+         CTRL0 := CTRL0 and 2#0111_1111#;
+      end if;
+      Write (This, REG_DSP_CTRL0, CTRL0);
+   end Enable_Auto_Exposure_Control;
+
+   -----------------------------
+   -- Enable_Auto_Band_Filter --
+   -----------------------------
+
+   procedure Enable_Auto_Band_Filter (This   : OV2640_Cam;
+                                      Enable : Boolean := True)
+   is
+      COM8 : Byte;
+   begin
+      Select_Sensor_Bank (This);
+      COM8 := Read (This, REG_SENSOR_COM8);
+
+      if Enable then
+         COM8 := COM8 or 2#0010_0000#;
+      else
+         COM8 := COM8 and 2#1101_1111#;
+      end if;
+      Write (This, REG_SENSOR_COM8, COM8);
+   end Enable_Auto_Band_Filter;
+
 end OV2640;
