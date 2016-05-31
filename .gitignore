@@ -4,4 +4,7 @@
 *.xml
 *.cgpr
 *.bexch
+*.lexch
+*.a
+*.ci
 *~
