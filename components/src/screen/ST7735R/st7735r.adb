@@ -640,6 +640,7 @@ package body ST7735R is
       Display.Layer.Width := Screen_Width;
       Display.Layer.Height := Screen_Height;
       Display.Layer.Addr := Display.Layer_Data'Address;
+      Display.Layer.Color_Mode := Mode;
       Display.Layer_Initialized := True;
    end Initialize_Layer;
 
@@ -673,9 +674,9 @@ package body ST7735R is
       end if;
       Set_Address (Display,
                    X_Start => 0,
-                   X_End   => 127,
+                   X_End   => Unsigned_16 (Display.Layer.Width - 1),
                    Y_Start => 0,
-                   Y_End   => 159);
+                   Y_End   => Unsigned_16 (Display.Layer.Height - 1));
       Display.Write_Raw_Pixels (Display.Layer_Data);
    end Update_Layer;
 
