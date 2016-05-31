@@ -4,9 +4,10 @@ with "../../boards/openmv2.gpr";
 project OpenMV2_Example is
 
    --  OpenMV2 runtime is derived from smt32f429-disco with
-   --     Clock_Frequency : constant := 180_000_000;
-   --  and
-   --     function HSE_Clock return STM32F4.RCC.HSECLK_Range is (12_000_000)
+   --
+   --  HSE_Clock_Frequency : constant := 12_000_000;
+   --
+   --  in bsp/s-bbopa.ads
    for Runtime ("Ada") use Config.RTS & "-openmv2";
 
    for Target use "arm-eabi";

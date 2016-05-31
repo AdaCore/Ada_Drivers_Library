@@ -22,9 +22,13 @@ package OpenMV is
    --  MUST be called prior to any use of the LEDs
 
    procedure Set_RGB_LED (C : LED_Color);
+   --  Set color of the RGB LED on the board
 
    procedure Turn_On_IR;
+   --  Turn on infrared LEDs on the board
+
    procedure Turn_Off_IR;
+   --  Turn off infrared LEDs on the board
 
    procedure Initialize_Shield_SPI;
    --  Initialize the SPI port available for shields (SPI2)
@@ -120,12 +124,6 @@ private
    SENSOR_CLK_TIM  : Timer renames Timer_1;
    SENSOR_CLK_CHAN :  constant Timer_Channel := Channel_1;
    SENSOR_CLK_FREQ : constant := 12_000_000;
---     SENSOR_CLK_IO   : GPIO_Point renames PD12;
---     SENSOR_CLK_AF   : GPIO_Alternate_Function renames GPIO_AF_TIM4;
---     SENSOR_CLK_TIM  : Timer renames Timer_4;
---     SENSOR_CLK_CHAN :  constant Timer_Channel := Channel_1;
---     SENSOR_CLK_FREQ : constant := 12_000_000;
-
 
    ------------------
    -- USB OTG Pins --
