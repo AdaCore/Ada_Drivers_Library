@@ -83,6 +83,11 @@ package body STM32.DMA is
       Value       : Boolean);
    --  An internal routine, used to enable and disable the specified interrupt
 
+   function "-" is new Ada.Unchecked_Conversion
+     (Memory_Buffer_Target, Boolean);
+   function "-" is new Ada.Unchecked_Conversion
+     (Boolean, Memory_Buffer_Target);
+
    ----------------
    -- Get_Stream --
    ----------------
@@ -316,8 +321,8 @@ package body STM32.DMA is
       This_Stream.NDTR.NDT := Data_Count;
 
       if This_Stream.CR.DIR = Memory_To_Peripheral'Enum_Rep then
-         This_Stream.PAR  := W (Destination);
          This_Stream.M0AR := W (Source);
+         This_Stream.PAR  := W (Destination);
       else
          This_Stream.PAR  := W (Source);
          This_Stream.M0AR := W (Destination);
@@ -789,7 +794,8 @@ package body STM32.DMA is
       --  we must disable the stream before configuring it
       Disable (Unit, Stream);
 
-      This_Stream.CR.CT := False; --  Memory_Buffer_0'Enum_Rep;
+      This_Stream.CR.CT  := -Memory_Buffer_0;
+      This_Stream.CR.DBM := False;
 
       This_Stream.CR.CHSEL :=
         DMA_Channel_Selector'Enum_Rep (Config.Channel);
@@ -806,14 +812,14 @@ package body STM32.DMA is
 
       case Config.Operation_Mode is
          when Normal_Mode =>
-            This_Stream.CR.PFCTRL := False;
-            This_Stream.CR.CIRC   := False;
+            This_Stream.CR.PFCTRL := False; --  DMA is the flow controller
+            This_Stream.CR.CIRC   := False; --  Disable circular mode
          when Peripheral_Flow_Control_Mode =>
-            This_Stream.CR.PFCTRL := True;
-            This_Stream.CR.CIRC   := False;
+            This_Stream.CR.PFCTRL := True;  --  Peripheral is the flow ctrl.
+            This_Stream.CR.CIRC   := False; --  Disable circular mode
          when Circular_Mode =>
-            This_Stream.CR.PFCTRL := False;
-            This_Stream.CR.CIRC   := True;
+            This_Stream.CR.PFCTRL := False; --  DMA is the flow controller
+            This_Stream.CR.CIRC   := True;  --  Enable circular mode
       end case;
 
       --  the memory burst and peripheral burst values are only used when
@@ -939,10 +945,7 @@ package body STM32.DMA is
       return Memory_Buffer_Target
    is
    begin
-      return (if Get_Stream (Unit, Stream).CR.CT
-              then Memory_Buffer_1
-              else Memory_Buffer_0);
---        return Memory_Buffer_Target'Val (Get_Stream (Unit, Stream).CR.CT);
+      return -Get_Stream (Unit, Stream).CR.CT;
    end Current_Memory_Buffer;
 
    -----------------------
@@ -977,8 +980,7 @@ package body STM32.DMA is
       Buffer : Memory_Buffer_Target)
    is
    begin
-      Get_Stream (Unit, Stream).CR.CT := Buffer = Memory_Buffer_1;
---          Memory_Buffer_Target'Enum_Rep (Buffer);
+      Get_Stream (Unit, Stream).CR.CT := -Buffer;
    end Select_Current_Memory_Buffer;
 
    ------------------------------------
