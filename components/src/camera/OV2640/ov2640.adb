@@ -311,9 +311,9 @@ package body OV2640 is
       Write (This, REG_DSP_RESET, 2#0000_0100#); --  DVP
       case Pix is
          when Pix_RGB565 =>
-            Write (This, REG_DSP_IMAGE_MODE, 2#0000_1000#);
+            Write (This, REG_DSP_IMAGE_MODE, 2#0000_1001#);
          when Pix_YUV422 =>
-            Write (This, REG_DSP_IMAGE_MODE, 2#0000_0000#);
+            Write (This, REG_DSP_IMAGE_MODE, 2#0000_0001#);
          when Pix_JPEG =>
             Write (This, REG_DSP_IMAGE_MODE, 2#0001_1000#);
             Write (This, REG_DSP_QS, 16#0C#);
