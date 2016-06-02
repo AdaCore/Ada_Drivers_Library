@@ -826,7 +826,8 @@ package body STM32.DMA is
          This_Stream.CR.PBURST := Peripheral_Burst_Single'Enum_Rep;
       end if;
 
-      This_Stream.FCR.DMDIS := not Config.FIFO_Enabled;
+      --  DMDIS: disable the direct mode (set to True) when FIFO is enabled
+      This_Stream.FCR.DMDIS := Config.FIFO_Enabled;
 
       if Config.FIFO_Enabled then
          This_Stream.FCR.FTH :=
