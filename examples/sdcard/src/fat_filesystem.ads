@@ -226,6 +226,13 @@ private
      (FS      : in out FAT_Filesystem;
       Cluster : Unsigned_32) return Unsigned_32;
 
+   function EOC
+     (FS : FAT_Filesystem;
+      Cluster : Unsigned_32) return Boolean
+   is (case FS.Version is
+          when FAT16 => (Cluster and 16#FFF8#) = 16#FFF8#,
+          when FAT32 => (Cluster and 16#0FFF_FFF8#) = 16#0FFF_FFF8#);
+
    function Version
      (FS : FAT_Filesystem) return FAT_Version
    is (if FS.Disk_Parameters.Root_Dir_Entries_Fat16 /= 0

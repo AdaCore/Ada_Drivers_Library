@@ -51,8 +51,6 @@ package body STM32.SDMMC is
 
    type SD_SCR is array (1 .. 2) of Word;
 
-   procedure Clear_Static_Flags (Controller : in out SDMMC_Controller);
-
    procedure Send_Command
      (Controller         : in out SDMMC_Controller;
       Command_Index      : SDMMC_Command;
@@ -63,7 +61,6 @@ package body STM32.SDMMC is
 
    procedure Configure_Data
      (Controller         : in out SDMMC_Controller;
-      Data_Timeout       : Word; --  Data timeout period in card bus clk period
       Data_Length        : UInt25;
       Data_Block_Size    : DBLOCKSIZE_Field;
       Transfer_Direction : Data_Direction;
@@ -118,9 +115,6 @@ package body STM32.SDMMC is
      (Controller : in out SDMMC_Controller;
       SCR        :    out SD_SCR) return SD_Error;
 
-   function Stop_Transfer
-     (Controller : in out SDMMC_Controller) return SD_Error;
-
    function Disable_Wide_Bus
      (Controller : in out SDMMC_Controller) return SD_Error;
 
@@ -151,6 +145,83 @@ package body STM32.SDMMC is
          others    => <>);
    end Clear_Static_Flags;
 
+   ----------------
+   -- Clear_Flag --
+   ----------------
+
+   procedure Clear_Flag
+     (Controller : in out SDMMC_Controller;
+      Flag       : SDMMC_Clearable_Flags)
+   is
+   begin
+      case Flag is
+         when Data_End =>
+            Controller.Periph.ICR.DATAENDC  := True;
+         when Data_CRC_Fail =>
+            Controller.Periph.ICR.DCRCFAILC := True;
+         when Data_Timeout =>
+            Controller.Periph.ICR.DTIMEOUTC := True;
+         when RX_Overrun =>
+            Controller.Periph.ICR.RXOVERRC  := True;
+         when TX_Underrun =>
+            Controller.Periph.ICR.TXUNDERRC := True;
+      end case;
+   end Clear_Flag;
+
+   ----------------------
+   -- Enable_Interrupt --
+   ----------------------
+
+   procedure Enable_Interrupt
+     (Controller : in out SDMMC_Controller;
+      Interrupt  : SDMMC_Interrupts)
+   is
+   begin
+      case Interrupt is
+         when Data_End_Interrupt =>
+            Controller.Periph.MASK.DATAENDIE   := True;
+         when Data_CRC_Fail_Interrupt =>
+            Controller.Periph.MASK.DCRCFAILIE  := True;
+         when Data_Timeout_Interrupt =>
+            Controller.Periph.MASK.DTIMEOUTIE  := True;
+         when TX_FIFO_Empty_Interrupt =>
+            Controller.Periph.MASK.TXFIFOEIE   := True;
+         when RX_FIFO_Full_Interrupt =>
+            Controller.Periph.MASK.RXFIFOFIE   := True;
+         when TX_Underrun_Interrupt =>
+            Controller.Periph.MASK.TXUNDERRIE  := True;
+         when RX_Overrun_Interrupt =>
+            Controller.Periph.MASK.RXOVERRIE   := True;
+      end case;
+   end Enable_Interrupt;
+
+   -----------------------
+   -- Disable_Interrupt --
+   -----------------------
+
+   procedure Disable_Interrupt
+     (Controller : in out SDMMC_Controller;
+      Interrupt  : SDMMC_Interrupts)
+   is
+   begin
+      case Interrupt is
+         when Data_End_Interrupt =>
+            Controller.Periph.MASK.DATAENDIE   := False;
+         when Data_CRC_Fail_Interrupt =>
+            Controller.Periph.MASK.DCRCFAILIE  := False;
+         when Data_Timeout_Interrupt =>
+            Controller.Periph.MASK.DTIMEOUTIE  := False;
+         when TX_FIFO_Empty_Interrupt =>
+            Controller.Periph.MASK.TXFIFOEIE   := False;
+         when RX_FIFO_Full_Interrupt =>
+            Controller.Periph.MASK.RXFIFOFIE   := False;
+         when TX_Underrun_Interrupt =>
+            Controller.Periph.MASK.TXUNDERRIE  := False;
+         when RX_Overrun_Interrupt =>
+            Controller.Periph.MASK.RXOVERRIE   := False;
+      end case;
+   end Disable_Interrupt;
+
    ------------------
    -- Send_Command --
    ------------------
@@ -179,7 +250,6 @@ package body STM32.SDMMC is
 
    procedure Configure_Data
      (Controller         : in out SDMMC_Controller;
-      Data_Timeout       : Word; --  Data timeout period in card bus clk period
       Data_Length        : UInt25;
       Data_Block_Size    : DBLOCKSIZE_Field;
       Transfer_Direction : Data_Direction;
@@ -187,15 +257,13 @@ package body STM32.SDMMC is
       DPSM               : Boolean)
    is
    begin
-      Controller.Periph.DTIMER := Data_Timeout;
-      Controller.Periph.DLEN.DATALENGTH := Data_Length;
-      Controller.Periph.DCTRL :=
-        (DTEN       => DPSM,
-         DTDIR      => (if Transfer_Direction = Read then Card_To_Controller
-                        else Controller_To_Card),
-         DTMODE     => Transfer_Mode,
-         DBLOCKSIZE => Data_Block_Size,
-         others     => <>);
+      Controller.Periph.DLEN.DATALENGTH  := Data_Length;
+      Controller.Periph.DCTRL.DTDIR      :=
+        (if Transfer_Direction = Read then Card_To_Controller
+         else Controller_To_Card);
+      Controller.Periph.DCTRL.DTMODE     := Transfer_Mode;
+      Controller.Periph.DCTRL.DBLOCKSIZE := Data_Block_Size;
+      Controller.Periph.DCTRL.DTEN       := DPSM;
    end Configure_Data;
 
    ---------------
@@ -966,7 +1034,6 @@ package body STM32.SDMMC is
 
       Configure_Data
         (Controller,
-         Data_Timeout       => SD_DATATIMEOUT,
          Data_Length        => 8,
          Data_Block_Size    => Block_8B,
          Transfer_Direction => Read,
@@ -1186,6 +1253,8 @@ package body STM32.SDMMC is
          HWFC_EN        => False,
          others         => <>);
 
+      Controller.Periph.DTIMER := SD_DATATIMEOUT;
+
       Ret := Power_On (Controller);
 
       if Ret /= OK then
@@ -1215,6 +1284,8 @@ package body STM32.SDMMC is
       if Ret /= OK then
          return Ret;
       end if;
+
+      Ret := Configure_Wide_Bus_Mode (Controller, Wide_Bus_4B);
 
       return Ret;
    end Initialize;
@@ -1297,7 +1368,6 @@ package body STM32.SDMMC is
 
       Configure_Data
         (Controller,
-         Data_Timeout       => SD_DATATIMEOUT,
          Data_Length        => Data'Length,
          Data_Block_Size    => Block_512B,
          Transfer_Direction => Read,
@@ -1387,5 +1457,112 @@ package body STM32.SDMMC is
 
       return Err;
    end Read_Blocks;
+
+   ---------------------
+   -- Read_Blocks_DMA --
+   ---------------------
+
+   function Read_Blocks_DMA
+     (Controller : in out SDMMC_Controller;
+      Addr       : Unsigned_64;
+      DMA        : STM32.DMA.DMA_Controller;
+      Stream     : STM32.DMA.DMA_Stream_Selector;
+      Data       : out SD_Data) return SD_Error
+   is
+      Read_Address : constant Unsigned_64 :=
+                       (if Controller.Card_Type = High_Capacity_SD_Card
+                        then Addr / 512 else Addr);
+      Err          : SD_Error;
+      N_Blocks     : constant Positive := Data'Length / 512;
+      Command      : SDMMC_Command;
+      use STM32.DMA;
+
+   begin
+      Controller.Periph.DCTRL := (others => <>);
+
+      loop
+         exit when not Controller.Periph.DCTRL.DTEN;
+      end loop;
+
+      Enable_Interrupt (Controller, Data_CRC_Fail_Interrupt);
+      Enable_Interrupt (Controller, Data_Timeout_Interrupt);
+      Enable_Interrupt (Controller, Data_End_Interrupt);
+      Enable_Interrupt (Controller, RX_Overrun_Interrupt);
+
+      Controller.Periph.DCTRL.DMAEN := True;
+
+      STM32.DMA.Start_Transfer_with_Interrupts
+        (Unit               => DMA,
+         Stream             => Stream,
+         Source             => Controller.Periph.FIFO'Address,
+         Destination        => Data (Data'First)'Address,
+         Data_Count         => Data'Length / 4,
+         Enabled_Interrupts => (Transfer_Error_Interrupt    => True,
+                                FIFO_Error_Interrupt        => True,
+                                Transfer_Complete_Interrupt => True,
+                                others                      => False));
+
+      Send_Command
+        (Controller,
+         Command_Index      => Set_Blocklen,
+         Argument           => 512,
+         Response           => Short_Response,
+         CPSM               => True,
+         Wait_For_Interrupt => False);
+      Err := Response_R1_Error (Controller, Set_Blocklen);
+
+      if Err /= OK then
+         return Err;
+      end if;
+
+      Configure_Data
+        (Controller,
+         Data_Length        => UInt25 (N_Blocks) * 512,
+         Data_Block_Size    => Block_512B,
+         Transfer_Direction => Read,
+         Transfer_Mode      => Block,
+         DPSM               => True);
+
+      if N_Blocks > 1 then
+         Command := Read_Multi_Block;
+      else
+         Command := Read_Single_Block;
+      end if;
+
+      Send_Command
+        (Controller,
+         Command_Index      => Command,
+         Argument           => Word (Read_Address),
+         Response           => Short_Response,
+         CPSM               => True,
+         Wait_For_Interrupt => False);
+      Err := Response_R1_Error (Controller, Command);
+
+      return Err;
+   end Read_Blocks_DMA;
+
+   -------------------------
+   -- Get_Transfer_Status --
+   -------------------------
+
+   function Get_Transfer_Status
+     (Controller : in out SDMMC_Controller) return SD_Error
+   is
+   begin
+      if Controller.Periph.STA.DTIMEOUT then
+         Controller.Periph.ICR.DTIMEOUTC := True;
+         return Timeout_Error;
+
+      elsif Controller.Periph.STA.DCRCFAIL then
+         Controller.Periph.ICR.DCRCFAILC := True;
+         return CRC_Check_Fail;
+
+      elsif Controller.Periph.STA.RXOVERR then
+         Controller.Periph.ICR.RXOVERRC := True;
+         return Rx_Overrun;
+      end if;
+
+      return OK;
+   end Get_Transfer_Status;
 
 end STM32.SDMMC;

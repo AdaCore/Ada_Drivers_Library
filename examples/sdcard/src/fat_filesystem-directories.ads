@@ -6,14 +6,29 @@ package FAT_Filesystem.Directories is
      (FS  : FAT_Filesystem_Access;
       Dir : out Directory_Handle) return Status_Code;
 
-   procedure Close (Dir : in out Directory_Handle);
-
    type Directory_Entry is private;
+
+   function Open
+     (E   : Directory_Entry;
+      Dir : out Directory_Handle) return Status_Code
+   with Pre => Is_Subdirectory (E);
+
+   procedure Close (Dir : in out Directory_Handle);
 
    function Read (Dir : in out Directory_Handle;
                   DEntry : out Directory_Entry) return Status_Code;
 
    function Name (E : Directory_Entry) return String;
+
+   function Is_Read_Only (E : Directory_Entry) return Boolean;
+
+   function Is_Hidden (E : Directory_Entry) return Boolean;
+
+   function Is_System_File (E : Directory_Entry) return Boolean;
+
+   function Is_Subdirectory (E : Directory_Entry) return Boolean;
+
+   function Is_Archive (E : Directory_Entry) return Boolean;
 
 private
 
@@ -96,10 +111,29 @@ private
    end record;
 
    type Directory_Entry is record
-      L_Name       : String (1 .. 128);
-      L_Name_First : Natural := 129;
-      S_Name       : String (1 .. 12);
-      S_Name_Last  : Natural := 0;
+      FS            : FAT_Filesystem_Access;
+      L_Name        : String (1 .. 128);
+      L_Name_First  : Natural := 129;
+      S_Name        : String (1 .. 12);
+      S_Name_Last   : Natural := 0;
+      Attributes    : FAT_Directory_Entry_Attribute;
+      Start_Cluster : Unsigned_32;
+      Size          : Unsigned_32;
    end record;
+
+   function Is_Read_Only (E : Directory_Entry) return Boolean
+   is (E.Attributes.Read_Only);
+
+   function Is_Hidden (E : Directory_Entry) return Boolean
+   is (E.Attributes.Hidden);
+
+   function Is_System_File (E : Directory_Entry) return Boolean
+   is (E.Attributes.System_File);
+
+   function Is_Subdirectory (E : Directory_Entry) return Boolean
+   is (E.Attributes.Subdirectory);
+
+   function Is_Archive (E : Directory_Entry) return Boolean
+   is (E.Attributes.Archive);
 
 end FAT_Filesystem.Directories;

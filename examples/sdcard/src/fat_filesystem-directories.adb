@@ -30,6 +30,24 @@ package body FAT_Filesystem.Directories is
       return OK;
    end Open_Root_Directory;
 
+   ----------
+   -- Open --
+   ----------
+
+   function Open
+     (E   : Directory_Entry;
+      Dir : out Directory_Handle) return Status_Code
+   is
+   begin
+      Dir.Start_Cluster := E.Start_Cluster;
+      Dir.Current_Block := E.FS.Cluster_To_Block (E.Start_Cluster);
+      Dir.FS := E.FS;
+      Dir.Current_Cluster := Dir.Start_Cluster;
+      Dir.Current_Index   := 0;
+
+      return OK;
+   end Open;
+
    -----------
    -- Close --
    -----------
@@ -134,11 +152,8 @@ package body FAT_Filesystem.Directories is
             then
                Dir.Current_Cluster := Dir.FS.Get_FAT (Dir.Current_Cluster);
 
-               if Dir.Current_Cluster = 1 or else
-                 (Dir.FS.Version = FAT32 and then
-                  Dir.Current_Cluster = 16#0FFF_FFFF#) or else
-                 (Dir.FS.Version = FAT16 and then
-                  Dir.Current_Cluster = 16#FFFF#)
+               if Dir.Current_Cluster = 1
+                 or else Dir.FS.EOC (Dir.Current_Cluster)
                then
                   return Internal_Error;
                end if;
@@ -212,13 +227,28 @@ package body FAT_Filesystem.Directories is
             end if;
 
             declare
+               Base   : String renames Trim (D_Entry.Filename);
+               Ext    : String renames Trim (D_Entry.Extension);
                S_Name : constant String :=
-                          Trim (D_Entry.Filename) & "." &
-                          Trim (D_Entry.Extension);
+                          Base &
+                          (if Ext'Length > 0
+                           then "." & Trim (D_Entry.Extension)
+                           else "");
             begin
                DEntry.S_Name (1 .. S_Name'Length) := S_Name;
                DEntry.S_Name_Last := S_Name'Length;
             end;
+
+            DEntry.Attributes    := D_Entry.Attributes;
+            DEntry.Start_Cluster := Unsigned_32 (D_Entry.Cluster_L);
+            DEntry.Size          := D_Entry.Size;
+            DEntry.FS            := Dir.FS;
+
+            if Dir.FS.Version = FAT32 then
+               DEntry.Start_Cluster :=
+                 DEntry.Start_Cluster or
+                 Shift_Left (Unsigned_32 (D_Entry.Cluster_H), 16);
+            end if;
 
             if not Matches then
                DEntry.L_Name_First := DEntry.L_Name'Last + 1;

@@ -4,7 +4,10 @@
 --
 --  SDCard driver. Controls the SDMMC peripheral.
 
+with System;
 with STM32_SVD.SDMMC;
+
+with STM32.DMA;
 
 package STM32.SDMMC is
 
@@ -20,7 +23,7 @@ package STM32.SDMMC is
       Timeout_Error,
       Unsupported_Card,
       Rx_Overrun,
-      Tx_Overrun,
+      Tx_Underrun,
       Request_Not_Applicable,
       CRC_Check_Fail,
       Illegal_Cmd,
@@ -178,6 +181,59 @@ package STM32.SDMMC is
       Data       : out SD_Data) return SD_Error
      with Pre => Data'Length mod 512 = 0;
 
+   function Read_Blocks_DMA
+     (Controller : in out SDMMC_Controller;
+      Addr       : Unsigned_64;
+      DMA        : STM32.DMA.DMA_Controller;
+      Stream     : STM32.DMA.DMA_Stream_Selector;
+      Data       : out SD_Data) return SD_Error;
+
+   function Stop_Transfer
+     (Controller : in out SDMMC_Controller) return SD_Error;
+
+   function Get_FIFO_Address
+     (Controller : SDMMC_Controller) return System.Address;
+
+   function Get_Transfer_Status
+     (Controller : in out SDMMC_Controller) return SD_Error;
+
+   type SDMMC_Flags is
+     (Data_End,
+      Data_CRC_Fail,
+      Data_Timeout,
+      RX_Overrun,
+      TX_Underrun,
+      RX_Active);
+
+   subtype SDMMC_Clearable_Flags is SDMMC_Flags range Data_End .. TX_Underrun;
+
+   function Get_Flag
+     (Controller : SDMMC_Controller;
+      Flag       : SDMMC_Flags) return Boolean;
+
+   procedure Clear_Flag
+     (Controller : in out SDMMC_Controller;
+      Flag       : SDMMC_Clearable_Flags);
+
+   procedure Clear_Static_Flags (Controller : in out SDMMC_Controller);
+
+   type SDMMC_Interrupts is
+     (Data_End_Interrupt,
+      Data_CRC_Fail_Interrupt,
+      Data_Timeout_Interrupt,
+      TX_FIFO_Empty_Interrupt,
+      RX_FIFO_Full_Interrupt,
+      TX_Underrun_Interrupt,
+      RX_Overrun_Interrupt);
+
+   procedure Enable_Interrupt
+     (Controller : in out SDMMC_Controller;
+      Interrupt  : SDMMC_Interrupts);
+
+   procedure Disable_Interrupt
+     (Controller : in out SDMMC_Controller;
+      Interrupt  : SDMMC_Interrupts);
+
 private
 
    type SDMMC_Command is new Byte;
@@ -296,5 +352,20 @@ private
    is (Controller.Card_Type);
 
    type Data_Direction is (Read, Write);
+
+   function Get_FIFO_Address
+     (Controller : SDMMC_Controller) return System.Address
+   is (Controller.Periph.FIFO'Address);
+
+   function Get_Flag
+     (Controller : SDMMC_Controller;
+      Flag       : SDMMC_Flags) return Boolean
+   is (case Flag is
+          when Data_End      => Controller.Periph.STA.DATAEND,
+          when Data_CRC_Fail => Controller.Periph.STA.DCRCFAIL,
+          when Data_Timeout  => Controller.Periph.STA.DTIMEOUT,
+          when RX_Overrun    => Controller.Periph.STA.RXOVERR,
+          when TX_Underrun   => Controller.Periph.STA.TXUNDERR,
+          when RX_Active     => Controller.Periph.STA.RXACT);
 
 end STM32.SDMMC;
