@@ -175,8 +175,8 @@ package body ST7735R is
       Start_Transaction (LCD);
       Set_Data_Mode (LCD);
       for Elt of Data loop
-         B1 := Byte (Elt and 16#FF#);
-         B2 := Byte (Interfaces.Shift_Right (Elt, 8));
+         B1 := Byte (Interfaces.Shift_Right (Elt, 8));
+         B2 := Byte (Elt and 16#FF#);
          LCD.Port.Transmit (SPI_Data_8b'(B1, B2),
                             Status);
          if Status /= Ok then
