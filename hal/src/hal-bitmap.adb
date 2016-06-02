@@ -59,6 +59,12 @@ package body HAL.Bitmap is
       Offset : Natural;
 
    begin
+      if X >= Buffer.Width
+        or else Y >= Buffer.Height
+      then
+         return;
+      end if;
+
       if Buffer.Swapped then
          Handle_Swap (Buffer, X0, Y0);
          Offset := X0 + Y0 * Buffer.Height;
