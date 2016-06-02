@@ -377,7 +377,7 @@ package body Raycaster is
 
          --  Flush the data cache to actual memory before activating the DMA
          Cortex_M.Cache.Clean_DCache
-           (Tmp (0)'Address, Tmp (Height - 1)'Address);
+           (Tmp (0)'Address, Tmp'Size / 8);
 
          Prev_Scale := Scale;
          Prev_X := X;

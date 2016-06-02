@@ -36,9 +36,31 @@ with System;
 
 package Cortex_M.Cache is
 
-   procedure Clean_DCache (Start, Stop : System.Address);
+   procedure Clean_DCache
+     (Start : System.Address;
+      Len   : Natural)
+     with Inline_Always;
+   --  This ensures that the data cache region do not contain any "dirty"
+   --  data, which is data that has been modified by the CPU but has not been
+   --  synchronized yet with the main memory.
+   --  This make sure that any peripheral accessing the region will see
+   --  the updated data.
 
-   procedure Clean_DCache (Start : System.Address;
-                           Len   : Natural);
+   procedure Invalidate_DCache
+     (Start : System.Address;
+      Len   : Natural)
+     with Inline_Always;
+   --  Invalidates the Data Cache for the specified region.
+   --  Note that if the cache is dirty (e.g. contains updated data that has
+   --  not been synchronized with the main memory), then such data will be
+   --  lost.
+   --  Calling this subprogram ensures that the main memory will be read
+   --  instead of values from the cache.
+
+   procedure Clean_Invalidate_DCache
+     (Start : System.Address;
+      Len   : Natural)
+     with Inline_Always;
+   --  Performs both clean and invalidate operations.
 
 end Cortex_M.Cache;

@@ -29,29 +29,20 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  This is the version used when no Data-Cache exist on the MCU
+
 package body Cortex_M.Cache is
 
-   ------------------
-   -- Clean_DCache --
-   ------------------
+   procedure Clean_DCache
+     (Start : System.Address;
+      Len   : Natural) is null;
 
-   procedure Clean_DCache (Start, Stop : System.Address)
-   is
-      pragma Unreferenced (Start, Stop);
-   begin
-      null;
-   end Clean_DCache;
+   procedure Invalidate_DCache
+     (Start : System.Address;
+      Len   : Natural) is null;
 
-   ------------------
-   -- Clean_DCache --
-   ------------------
-
-   procedure Clean_DCache (Start : System.Address;
-                           Len   : Natural)
-   is
-      pragma Unreferenced (Start, Len);
-   begin
-      null;
-   end Clean_DCache;
+   procedure Clean_Invalidate_DCache
+     (Start : System.Address;
+      Len   : Natural) is null;
 
 end Cortex_M.Cache;

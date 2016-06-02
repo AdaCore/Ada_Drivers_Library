@@ -211,7 +211,7 @@ package body STM32.DMA2D_Bitmap is
    is
    begin
       DMA2D_Wait_Transfer;
-      Cortex_M.Cache.Clean_DCache
+      Cortex_M.Cache.Clean_Invalidate_DCache
         (Start => Buffer.Addr,
          Len   => Buffer.Buffer_Size);
    end Wait_Transfer;
