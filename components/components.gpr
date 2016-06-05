@@ -8,7 +8,8 @@ library project Components is
       "src/screen/**",
       "src/touch_panel/**",
       "src/audio/**",
-      "src/camera/**");
+      "src/camera/**",
+      "src/io_expander/**");
    --  The others component drivers are not HAL compliant yet
 
    for Languages use ("Ada");
