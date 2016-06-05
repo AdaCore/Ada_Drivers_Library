@@ -1,33 +1,15 @@
-with Ada.Interrupts;
-with Ada.Interrupts.Names;
+with Ada.Real_Time;           use Ada.Real_Time;
 
-with STM32.Device;         use STM32.Device;
-with STM32.DMA;            use STM32.DMA;
-with STM32.GPIO;           use STM32.GPIO;
-with STM32.SDMMC;          use STM32.SDMMC;
+with STM32.Device;            use STM32.Device;
+with STM32.DMA;               use STM32.DMA;
+with STM32.GPIO;              use STM32.GPIO;
+with STM32.SDMMC;             use STM32.SDMMC;
 with Cortex_M.Cache;
 
-with STM32_SVD.RCC;
-with STM32_SVD.SDMMC;
+with Device_SD_Configuration; use Device_SD_Configuration;
 
 package body Media_Reader.SDCard is
 
-   SD_Pins       : constant STM32.GPIO.GPIO_Points :=
-                     (PC8, PC9, PC10, PC11, PC12, PD2);
-   SD_Detect_Pin : constant STM32.GPIO.GPIO_Point :=
-                     PC13;
-
-   SD_DMA            : DMA_Controller renames DMA_2;
-   SD_DMA_Rx_Channel : constant DMA_Channel_Selector :=
-                         Channel_4;
-   SD_DMA_Rx_Stream  : constant DMA_Stream_Selector :=
-                         Stream_3;
-   Rx_IRQ            : Ada.Interrupts.Interrupt_ID renames
-                         Ada.Interrupts.Names.DMA2_Stream3_Interrupt;
---     SD_DMA_Tx_Channel : constant DMA_Channel_Selector :=
---                           Channel_4;
---     SD_DMA_Tx_Stream  : constant DMA_Stream_Selector :=
---                           Stream_6;
 --     Tx_IRQ            : constant Interrupt_ID :=
 --                           Ada.Interrupts.Names.DMA2_Stream6_Interrupt;
 
@@ -39,9 +21,10 @@ package body Media_Reader.SDCard is
    ------------
 
    protected DMA_Interrupt_Handler is
-      pragma Interrupt_Priority;
+      pragma Interrupt_Priority (255);
 
       procedure Set_Transfer_State;
+      --  Informes the DMA Int handler that a transfer is about to start
 
       procedure Clear_Transfer_State;
 
@@ -61,6 +44,7 @@ package body Media_Reader.SDCard is
    ------------------
 
    protected SDMMC_Interrupt_Handler is
+      pragma Interrupt_Priority (250);
 
       procedure Set_Transfer_State (Controller : SDCard_Controller);
       procedure Clear_Transfer_State;
@@ -68,7 +52,7 @@ package body Media_Reader.SDCard is
 
    private
       procedure Interrupt
-        with Attach_Handler => Ada.Interrupts.Names.SDMMC1_Interrupt,
+        with Attach_Handler => Device_SD_Configuration.SD_Interrupt,
              Unreferenced;
       Finished  : Boolean := True;
       SD_Status : SD_Error;
@@ -84,9 +68,8 @@ package body Media_Reader.SDCard is
    is
    begin
       --  Enable the SDIO clock
-      STM32_SVD.RCC.RCC_Periph.APB2ENR.SDMMC1EN := True;
-      STM32_SVD.RCC.RCC_Periph.APB2RSTR.SDMMC1RST := True;
-      STM32_SVD.RCC.RCC_Periph.APB2RSTR.SDMMC1RST := False;
+      Enable_Clock_Device;
+      Reset_Device;
 
       --  Enable the DMA2 clock
       Enable_Clock (SD_DMA);
@@ -112,7 +95,7 @@ package body Media_Reader.SDCard is
           Resistors   => Pull_Up));
 
       Controller.Device :=
-        STM32.SDMMC.As_Controller (STM32_SVD.SDMMC.SDMMC1_Periph'Access);
+        STM32.SDMMC.As_Controller (SD_Device'Access);
 
       Disable (SD_DMA, SD_DMA_Rx_Stream);
       Configure
@@ -132,23 +115,23 @@ package body Media_Reader.SDCard is
           Peripheral_Burst_Size        => Peripheral_Burst_Inc4));
       Clear_All_Status (SD_DMA, SD_DMA_Rx_Stream);
 
---        Disable (SD_DMA, SD_DMA_Tx_Stream);
---        Configure
---          (SD_DMA,
---           SD_DMA_Tx_Stream,
---           (Channel                      => SD_DMA_Tx_Channel,
---            Direction                    => Memory_To_Peripheral,
---            Increment_Peripheral_Address => False,
---            Increment_Memory_Address     => True,
---            Peripheral_Data_Format       => Words,
---            Memory_Data_Format           => Words,
---            Operation_Mode               => Peripheral_Flow_Control_Mode,
---            Priority                     => Priority_Very_High,
---            FIFO_Enabled                 => True,
---            FIFO_Threshold               => FIFO_Threshold_Full_Configuration,
---            Memory_Burst_Size            => Memory_Burst_Inc4,
---            Peripheral_Burst_Size        => Peripheral_Burst_Inc4));
---        Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
+      Disable (SD_DMA, SD_DMA_Tx_Stream);
+      Configure
+        (SD_DMA,
+         SD_DMA_Tx_Stream,
+         (Channel                      => SD_DMA_Tx_Channel,
+          Direction                    => Memory_To_Peripheral,
+          Increment_Peripheral_Address => False,
+          Increment_Memory_Address     => True,
+          Peripheral_Data_Format       => Words,
+          Memory_Data_Format           => Words,
+          Operation_Mode               => Peripheral_Flow_Control_Mode,
+          Priority                     => Priority_Very_High,
+          FIFO_Enabled                 => True,
+          FIFO_Threshold               => FIFO_Threshold_Full_Configuration,
+          Memory_Burst_Size            => Memory_Burst_Inc4,
+          Peripheral_Burst_Size        => Peripheral_Burst_Inc4));
+      Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
    end Initialize;
 
    ------------------
@@ -158,15 +141,22 @@ package body Media_Reader.SDCard is
    function Card_Present
      (Controller : in out SDCard_Controller) return Boolean
    is
-      pragma Unreferenced (Controller);
    begin
       if STM32.GPIO.Set (SD_Detect_Pin) then
          --  No card
-         Controller.Has_Info := False;
-         return False;
+         Controller.Has_Info      := False;
+         Controller.Card_Detected := False;
       else
-         return True;
+         --  Card detected. Just wait a bit to unbounce the signal from the
+         --  detect pin
+         if not Controller.Card_Detected then
+            delay until Clock + Milliseconds (50);
+         end if;
+
+         Controller.Card_Detected := not STM32.GPIO.Set (SD_Detect_Pin);
       end if;
+
+      return Controller.Card_Detected;
    end Card_Present;
 
    ------------------------------
@@ -273,13 +263,12 @@ package body Media_Reader.SDCard is
 
       procedure Interrupt is
       begin
-         Finished := True;
-
          if Status (SD_DMA, SD_DMA_Rx_Stream, FIFO_Error_Indicated) then
             Disable_Interrupt (SD_DMA, SD_DMA_Rx_Stream, FIFO_Error_Interrupt);
             Clear_Status (SD_DMA, SD_DMA_Rx_Stream, FIFO_Error_Indicated);
 
             DMA_Status := DMA_FIFO_Error;
+            Finished := True;
          end if;
 
          if Status (SD_DMA, SD_DMA_Rx_Stream, Transfer_Error_Indicated) then
@@ -288,6 +277,7 @@ package body Media_Reader.SDCard is
             Clear_Status (SD_DMA, SD_DMA_Rx_Stream, Transfer_Error_Indicated);
 
             DMA_Status := DMA_Transfer_Error;
+            Finished := True;
          end if;
 
          if Status (SD_DMA, SD_DMA_Rx_Stream, Transfer_Complete_Indicated) then
@@ -297,6 +287,13 @@ package body Media_Reader.SDCard is
               (SD_DMA, SD_DMA_Rx_Stream, Transfer_Complete_Indicated);
 
             DMA_Status := DMA_No_Error;
+            Finished := True;
+         end if;
+
+         if Finished then
+            for Int in STM32.DMA.DMA_Interrupt loop
+               Disable_Interrupt (SD_DMA, SD_DMA_Rx_Stream, Int);
+            end loop;
          end if;
       end Interrupt;
 
@@ -410,16 +407,12 @@ package body Media_Reader.SDCard is
          return False;
       end if;
 
-      DMA_Interrupt_Handler.Wait_Transfer (DMA_Err);
       SDMMC_Interrupt_Handler.Wait_Transfer (Ret);
+      DMA_Interrupt_Handler.Wait_Transfer (DMA_Err);
 
       loop
          exit when not Get_Flag (Controller.Device, RX_Active);
       end loop;
-
---        if Data'Length > 512 then
---           Ret := Stop_Transfer (Controller.Device);
---        end if;
 
       Clear_All_Status (SD_DMA, SD_DMA_Rx_Stream);
       Disable (SD_DMA, SD_DMA_Rx_Stream);

@@ -29,9 +29,10 @@ package Media_Reader.SDCard is
 private
 
    type SDCard_Controller is limited new Media_Controller with record
-      Device   : STM32.SDMMC.SDMMC_Controller;
-      Info     : STM32.SDMMC.Card_Information;
-      Has_Info : Boolean := False;
+      Device        : STM32.SDMMC.SDMMC_Controller;
+      Info          : STM32.SDMMC.Card_Information;
+      Has_Info      : Boolean := False;
+      Card_Detected : Boolean := False;
    end record;
 
 end Media_Reader.SDCard;

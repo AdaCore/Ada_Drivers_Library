@@ -25,17 +25,26 @@ package FAT_Filesystem is
       No_Filesystem, --  The volume is not a FAT volume
       Locked,
       Too_Many_Open_Files, --  Number of opened files > Max
-      Invalid_Parameter);
+      Invalid_Parameter,
+      No_MBR_Found,
+      No_Partition_Found);
 
-   type FAT_Filesystem is tagged limited private;
-   type FAT_Filesystem_Access is access all FAT_Filesystem'Class;
+   type FAT_Filesystem is limited private;
+   type FAT_Filesystem_Access is access all FAT_Filesystem;
 
    Null_FAT_Volume : constant FAT_Filesystem_Access;
 
    function Open
      (Controller : Media_Controller_Access;
+      Status     : out Status_Code) return FAT_Filesystem_Access;
+   --  Search the media for a valid FAT partition and opens it.
+   --  If the media contains several partitions, the first one is used
+
+   function Open
+     (Controller : Media_Controller_Access;
       LBA        : Unsigned_32;
       Status     : out Status_Code) return FAT_Filesystem_Access;
+   --  Opens a FAT partition at the given LBA
 
    procedure Close (FS : FAT_Filesystem_Access);
 
@@ -85,7 +94,7 @@ package FAT_Filesystem is
 
    function Number_Of_Entries_In_Root_Dir
      (FS : FAT_Filesystem) return Unsigned_16
-     with Pre => FS.Version = FAT16;
+     with Pre => Version (FS) = FAT16;
 
    --------------------
    -- FAT32 specific --
@@ -93,22 +102,22 @@ package FAT_Filesystem is
 
    function Flags_For_FAT_Mirroring
      (FS : FAT_Filesystem) return Unsigned_16
-     with Pre => FS.Version = FAT32;
+     with Pre => Version (FS) = FAT32;
    function FS_Version_Number
      (FS : FAT_Filesystem) return Unsigned_16
-     with Pre => FS.Version = FAT32;
+     with Pre => Version (FS) = FAT32;
    function FSInfo_Block_Number
      (FS : FAT_Filesystem) return Unsigned_16
-     with Pre => FS.Version = FAT32;
+     with Pre => Version (FS) = FAT32;
    function Boot_Block_Backup_Block_Number
      (FS : FAT_Filesystem) return Unsigned_16
-     with Pre => FS.Version = FAT32;
+     with Pre => Version (FS) = FAT32;
    function Last_Known_Free_Data_Clusters_Number
      (FS : FAT_Filesystem) return Unsigned_32
-     with Pre => FS.Version = FAT32;
+     with Pre => Version (FS) = FAT32;
    function Most_Recently_Allocated_Cluster
      (FS : FAT_Filesystem) return Unsigned_32
-     with Pre => FS.Version = FAT32;
+     with Pre => Version (FS) = FAT32;
 
 private
 
@@ -229,7 +238,7 @@ private
    function EOC
      (FS : FAT_Filesystem;
       Cluster : Unsigned_32) return Boolean
-   is (case FS.Version is
+   is (case Version (FS) is
           when FAT16 => (Cluster and 16#FFF8#) = 16#FFF8#,
           when FAT32 => (Cluster and 16#0FFF_FFF8#) = 16#0FFF_FFF8#);
 
@@ -259,7 +268,7 @@ private
 
    function Total_Number_Of_Blocks
      (FS : FAT_Filesystem) return Unsigned_32
-   is (case FS.Version is
+   is (case Version (FS) is
           when FAT16 =>
              Unsigned_32 (FS.Disk_Parameters.Number_Of_Blocks_Fat16),
           when FAT32 => FS.Disk_Parameters.Number_Of_Blocks_Fat32);
@@ -270,7 +279,7 @@ private
 
    function FAT_Table_Size_In_Blocks
      (FS : FAT_Filesystem) return Unsigned_32
-   is (case FS.Version is
+   is (case Version (FS) is
           when FAT16 => Unsigned_32 (FS.Disk_Parameters.Table_Size_Fat16),
           when FAT32 => FS.Disk_Parameters.Table_Size_Fat32);
 
@@ -280,13 +289,13 @@ private
 
    function Drive_Number
      (FS : FAT_Filesystem) return Unsigned_8
-   is (case FS.Version is
+   is (case Version (FS) is
           when FAT16 => FS.Disk_Parameters.Drive_Number_Fat16,
           when FAT32 => FS.Disk_Parameters.Drive_Number_Fat32);
 
    function Is_Volume
      (FS : FAT_Filesystem) return Boolean
-   is (case FS.Version is
+   is (case Version (FS) is
           when FAT16 => FS.Disk_Parameters.Boot_Signature_Fat16 = 16#29#,
           when FAT32 => FS.Disk_Parameters.Boot_Signature_Fat32 = 16#29#);
 
@@ -295,7 +304,7 @@ private
    is (if not Is_Volume (FS)
        then 0
        else
-         (case FS.Version is
+         (case Version (FS) is
              when FAT16 => FS.Disk_Parameters.Volume_Id_Fat16,
              when FAT32 => FS.Disk_Parameters.Volume_Id_Fat32));
 
@@ -304,7 +313,7 @@ private
    is (if not Is_Volume (FS)
        then "UNKNOWN"
        else
-         (case FS.Version is
+         (case Version (FS) is
              when FAT16 => Trim (FS.Disk_Parameters.Volume_Label_Fat16),
              when FAT32 => Trim (FS.Disk_Parameters.Volume_Label_Fat32)));
 
@@ -313,7 +322,7 @@ private
    is (if not Is_Volume (FS)
        then "FAT16"
        else
-         (case FS.Version is
+         (case Version (FS) is
              when FAT16 => Trim (FS.Disk_Parameters.FS_Type_Fat16),
              when FAT32 => Trim (FS.Disk_Parameters.FS_Type_Fat32)));
 
@@ -331,7 +340,7 @@ private
 
    function Root_Dir_Cluster
      (FS : FAT_Filesystem) return Unsigned_32
-   is (case FS.Version is
+   is (case Version (FS) is
           when FAT16 => Unsigned_32 (FS.Number_Of_FATs) *
                           FS.FAT_Table_Size_In_Blocks + 1,
           when FAT32 => FS.Disk_Parameters.Root_Directory_Cluster);

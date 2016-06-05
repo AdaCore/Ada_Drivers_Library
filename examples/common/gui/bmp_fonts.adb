@@ -4272,8 +4272,11 @@ package body BMP_Fonts is
       C             : Character;
       Height_Offset : Natural) return Short
    is
-      Char_Index : constant Natural :=
-        (Character'Pos (C) - 32) * Char_Height (Font);
+      Char_Num   : constant Natural := Character'Pos (C);
+      Char_Index : constant Natural := Char_Height (Font) *
+                     (if Char_Num >= 32
+                      then Char_Num - 32
+                      else Character'Pos ('?') - 32);
    begin
       case Font is
          when Font8x8 =>

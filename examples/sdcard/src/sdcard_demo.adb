@@ -1,3 +1,4 @@
+with Ada.Exceptions;
 with Ada.Unchecked_Conversion;
 with Interfaces;                 use Interfaces;
 
@@ -29,32 +30,13 @@ is
    Capacity      : Unsigned_64;
    Error_State   : Boolean := False;
 
-   --  Partitions reading from the MBR
-
-   subtype Word_Data is Media_Reader.Block (0 .. 3);
-   function To_Word is new Ada.Unchecked_Conversion (Word_Data, Unsigned_32);
-   use type Media_Reader.Block;
-
-   type Partition is record
-      Active     : Boolean;
-      LBA_Base   : Unsigned_32;
-      Num_Blocks : Unsigned_32;
-      FS_Type    : Unsigned_8;
-   end record;
-
    FS             : FAT_Filesystem_Access;
 
-   P_Data         : Media_Reader.Block (0 .. 15);
-   P_Idx          : Unsigned_16;
-   Part           : Partition;
-
    Status         : FAT_Filesystem.Status_Code;
---     FAT            : FAT_Disk_Parameter;
---     FSInfo         : FAT_FS_Info;
 
    Y              : Natural := 0;
-   D              : Directory_Handle;
-   E              : Directory_Entry;
+   Dir            : Directory_Handle;
+   Ent            : Directory_Entry;
 
 begin
    SD_Controller.Initialize;
@@ -69,7 +51,7 @@ begin
             (0, 0),
             "No SD-Card detected",
             BMP_Fonts.Font12x12,
-            Red,
+            HAL.Bitmap.Red,
             Transparent);
          Display.Update_Layer (1);
 
@@ -98,6 +80,7 @@ begin
                   BMP_Fonts.Font12x12,
                   White,
                   Transparent);
+               Display.Update_Layer (1, True);
                Y := Y + 13;
 
                exit;
@@ -110,103 +93,65 @@ begin
             end if;
          end loop;
 
-         declare
-            MBR_Data : Media_Reader.Block (0 .. 511);
-         begin
-            if not SD_Controller.Read_Block (0, MBR_Data) then
-               Draw_String
-                 (Display.Get_Hidden_Buffer (1),
-                  (0, Y),
-                  "Cannot open the MBR block",
-                  BMP_Fonts.Font12x12,
-                  Red,
-                  Transparent);
-               Y := Y + 13;
-               Error_State := True;
+         FS := Open (SD_Controller'Unchecked_Access, Status);
 
-            elsif MBR_Data (510 .. 511) /= (16#55#, 16#AA#) then
-               --  MBR magic boot number not found
+         if Status /= OK then
+            Error_State := True;
+
+            if Status = No_MBR_Found then
                Draw_String
                  (Display.Get_Hidden_Buffer (1),
                   (0, Y),
                   "Not an MBR partition system",
                   BMP_Fonts.Font12x12,
-                  Red,
+                  HAL.Bitmap.Red,
                   Transparent);
+               Display.Update_Layer (1, True);
                Y := Y + 13;
-               Error_State := True;
 
-            else
-               --  Now check the partition entries: 4 partitions for the MBR
-               for P in 1 .. 4 loop
-                  --  Partitions are defined as an array of 16 bytes from
-                  --  base MBR + 446 (16#1BE#)
-                  P_Idx  := 446 + Unsigned_16 (P - 1) * 16;
-                  P_Data := MBR_Data (P_Idx .. P_Idx + 15);
-
-                  Part.Num_Blocks := To_Word (P_Data (12 .. 15));
-                  if Part.Num_Blocks > 0 then
-                     --  Bit 7 of the first byte tells if the partition is a
-                     --  boot partition
-                     Part.Active     := P_Data (0) = 16#80#;
-                     Part.LBA_Base   := To_Word (P_Data (8 .. 11));
-                     Part.FS_Type    := P_Data (4);
-
-                     exit;
-                  elsif P = 4 then
-                     Draw_String
-                       (Display.Get_Hidden_Buffer (1),
-                        (0, Y),
-                        "No valid partition found",
-                        BMP_Fonts.Font12x12,
-                        Red,
-                        Transparent);
-                     Y := Y + 13;
-                     Error_State := True;
-                  end if;
-
-               end loop;
-            end if;
-         end;
-
-         if not Error_State then
-            FS := Open (SD_Controller'Unchecked_Access,
-                        Part.LBA_Base,
-                        Status);
-
-            if Status /= OK then
+            elsif Status = No_Partition_Found then
                Draw_String
                  (Display.Get_Hidden_Buffer (1),
                   (0, Y),
-                  "!!! Error reading the FAT partition",
+                  "No valid partition found",
                   BMP_Fonts.Font12x12,
-                  Red,
+                  HAL.Bitmap.Red,
                   Transparent);
+               Display.Update_Layer (1, True);
                Y := Y + 13;
-               Error_State := True;
 
             else
                Draw_String
                  (Display.Get_Hidden_Buffer (1),
                   (0, Y),
-                  FS.Volume_Label & " (" & FS.File_System_Type & "):",
+                  "Error reading the card: " & Status'Img,
                   BMP_Fonts.Font12x12,
-                  White,
+                  HAL.Bitmap.Red,
                   Transparent);
-               Y := Y + 25;
-
+               Display.Update_Layer (1, True);
+               Y := Y + 13;
             end if;
          end if;
 
          if not Error_State then
-            if Open_Root_Directory (FS, D) /= OK then
+            Draw_String
+              (Display.Get_Hidden_Buffer (1),
+               (0, Y),
+               Volume_Label (FS.all) & " (" & File_System_Type (FS.all) & "):",
+               BMP_Fonts.Font12x12,
+               White,
+               Transparent);
+            Y := Y + 25;
+
+            if Open_Root_Directory (FS, Dir) /= OK then
                Draw_String
                  (Display.Get_Hidden_Buffer (1),
                   (0, Y),
                   "!!! Error reading the root directory",
                   BMP_Fonts.Font12x12,
-                  Red,
+                  HAL.Bitmap.Red,
                   Transparent);
+               Display.Update_Layer (1, True);
                Close (FS);
                Y := Y + 13;
                Error_State := True;
@@ -214,18 +159,18 @@ begin
          end if;
 
          if not Error_State then
-            while Read (D, E) = OK loop
+            while Read (Dir, Ent) = OK loop
                Draw_String
                  (Display.Get_Hidden_Buffer (1),
                   (0, Y),
-                  Name (E) & (if Is_Subdirectory (E) then "/" else ""),
+                  Name (Ent) & (if Is_Subdirectory (Ent) then "/" else ""),
                   BMP_Fonts.Font12x12,
-                  (if Is_Hidden (E) then Gray else White),
+                  (if Is_Hidden (Ent) then Gray else White),
                   Transparent);
                Y := Y + 16;
             end loop;
 
-            Close (D);
+            Close (Dir);
             Close (FS);
          end if;
 
@@ -238,4 +183,28 @@ begin
          end loop;
       end if;
    end loop;
+
+exception
+   when E : others =>
+      Display.Get_Hidden_Buffer (1).Fill (White);
+      Draw_String
+        (Display.Get_Hidden_Buffer (1),
+         (0, 0),
+         Ada.Exceptions.Exception_Information (E),
+         BMP_Fonts.Font12x12,
+         Black,
+         White);
+      Draw_String
+        (Display.Get_Hidden_Buffer (1),
+         (0, 14),
+         Ada.Exceptions.Exception_Message (E),
+         BMP_Fonts.Font12x12,
+         Black,
+         White);
+      Display.Update_Layer (1);
+
+      loop
+         null;
+      end loop;
+
 end SDCard_Demo;
