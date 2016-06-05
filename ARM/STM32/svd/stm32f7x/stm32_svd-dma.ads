@@ -562,8 +562,8 @@ package STM32_SVD.DMA is
       DBM            : Boolean := False;
       --  Current target (only in double buffer mode)
       CT             : Boolean := False;
-      --  ACK
-      ACK            : Boolean := False;
+      --  unspecified
+      Reserved_20_20 : HAL.Bit := 16#0#;
       --  Peripheral burst transfer configuration
       PBURST         : S1CR_PBURST_Field := 16#0#;
       --  Memory burst transfer configuration
@@ -593,7 +593,7 @@ package STM32_SVD.DMA is
       PL             at 0 range 16 .. 17;
       DBM            at 0 range 18 .. 18;
       CT             at 0 range 19 .. 19;
-      ACK            at 0 range 20 .. 20;
+      Reserved_20_20 at 0 range 20 .. 20;
       PBURST         at 0 range 21 .. 22;
       MBURST         at 0 range 23 .. 24;
       CHSEL          at 0 range 25 .. 27;
