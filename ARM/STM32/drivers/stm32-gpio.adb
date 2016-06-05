@@ -241,7 +241,9 @@ package body STM32.GPIO is
    procedure Lock (Points : GPIO_Points) is
    begin
       for Point of Points loop
-         Point.Lock;
+         if not Locked (Point) then
+            Point.Lock;
+         end if;
       end loop;
    end Lock;
 
