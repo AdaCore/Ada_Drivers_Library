@@ -23,7 +23,8 @@ library project STM32F7x is
       "drivers/dma2d",
       "drivers/ltdc",
       "drivers/sai",
-      "drivers/sdmmc");
+      "drivers/sd",
+      "drivers/sd/sdmmc");
 
    package Compiler is
       for Default_Switches ("Ada") use

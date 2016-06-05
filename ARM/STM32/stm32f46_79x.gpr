@@ -18,12 +18,14 @@ library project STM32F46_79x is
       "drivers",
       "svd/stm32f46_79x",
       "devices/stm32f46_79x",
-      "drivers/fmc",
       "drivers/dma2d",
-      "drivers/i2c_stm32f4",
-      "drivers/uart_stm32f4",
       "drivers/dsi",
-      "drivers/ltdc");
+      "drivers/fmc",
+      "drivers/i2c_stm32f4",
+      "drivers/ltdc",
+      "drivers/sd",
+      "drivers/sd/sdio",
+      "drivers/uart_stm32f4");
 
    package Compiler renames Config.Compiler;
    package Builder renames Config.Builder;

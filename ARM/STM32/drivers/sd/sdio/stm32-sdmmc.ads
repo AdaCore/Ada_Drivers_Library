@@ -5,7 +5,7 @@
 --  SDCard driver. Controls the SDMMC peripheral.
 
 with System;
-with STM32_SVD.SDMMC;
+with STM32_SVD.SDIO; use STM32_SVD.SDIO;
 
 with STM32.DMA;
 
@@ -14,7 +14,7 @@ package STM32.SDMMC is
    type SDMMC_Controller is private;
 
    function As_Controller
-     (Periph : access STM32_SVD.SDMMC.SDMMC1_Peripheral)
+     (Periph : access STM32_SVD.SDIO.SDIO_Peripheral)
       return SDMMC_Controller;
 
    type SD_Error is
@@ -234,6 +234,16 @@ package STM32.SDMMC is
      (Controller : in out SDMMC_Controller;
       Interrupt  : SDMMC_Interrupts);
 
+   type SDMMC_Operation is
+     (No_Operation,
+      Read_Single_Block_Operation,
+      Read_Multiple_Blocks_Operation,
+      Write_Single_Block_Operation,
+      Write_Multiple_Blocks_Operation);
+
+   function Last_Operation
+     (Controller : SDMMC_Controller) return SDMMC_Operation;
+
 private
 
    type SDMMC_Command is new Byte;
@@ -331,16 +341,17 @@ private
    type Card_Data_Table is array (0 .. 3) of Word;
 
    type SDMMC_Controller is record
-      Periph    : access STM32_SVD.SDMMC.SDMMC1_Peripheral;
+      Periph    : access STM32_SVD.SDIO.SDIO_Peripheral;
       CID       : Card_Data_Table;
       CSD       : Card_Data_Table;
       Card_Type : Supported_SD_Memory_Cards :=
                     STD_Capacity_SD_Card_V1_1;
       RCA       : Word;
+      Operation : SDMMC_Operation := No_Operation;
    end record;
 
    function As_Controller
-     (Periph : access STM32_SVD.SDMMC.SDMMC1_Peripheral)
+     (Periph : access STM32_SVD.SDIO.SDIO_Peripheral)
       return SDMMC_Controller
    is (Periph, CID => (others => 0), CSD => (others => 0), others => <>);
 
@@ -367,5 +378,9 @@ private
           when RX_Overrun    => Controller.Periph.STA.RXOVERR,
           when TX_Underrun   => Controller.Periph.STA.TXUNDERR,
           when RX_Active     => Controller.Periph.STA.RXACT);
+
+   function Last_Operation
+     (Controller : SDMMC_Controller) return SDMMC_Operation
+   is (Controller.Operation);
 
 end STM32.SDMMC;
