@@ -1,12 +1,23 @@
 with Interfaces;   use Interfaces;
 with Media_Reader; use Media_Reader;
 
+limited with FAT_Filesystem.Directories;
+
 package FAT_Filesystem is
 
-   MAX_VOLUMES           : constant := 1;
+   Max_Handles_Reached : exception;
+
+   MAX_VOLUMES         : constant := 1;
    --  Maximum number of mounted volumes
 
-   Max_Handles_Reached   : exception;
+   MAX_FILENAME_LENGTH : constant := 255;
+   --  Maximum size of a file or directory name
+
+   MAX_PATH_LENGTH     : constant := 1024;
+   --  Maximum size of a path name length
+
+   CACHE_SIZE          : constant := 16;
+   --  Disk cache size in blocks
 
    type Status_Code is
      (OK,
@@ -15,6 +26,7 @@ package FAT_Filesystem is
       Drive_Not_Ready,
       No_Such_File,
       No_Such_Path,
+      Not_Mounted, --  The mount point is invalid
       Invalid_Name,
       Access_Denied,
       Already_Exists,
@@ -29,24 +41,108 @@ package FAT_Filesystem is
       No_MBR_Found,
       No_Partition_Found);
 
+   -----------------------
+   -- PATH MANIPULATION --
+   -----------------------
+
+   type FAT_Name is private;
+
+   function "-" (Name : FAT_Name) return String;
+
+   function "-" (Name : String) return FAT_Name
+     with Pre => Name'Length < MAX_FILENAME_LENGTH;
+
+   overriding function "=" (Name1, Name2 : FAT_Name) return Boolean;
+
+   type FAT_Path is private;
+
+   Empty_Path : constant FAT_Path;
+
+   function "-" (Path : FAT_Path) return String;
+
+   function "-" (Path : String) return FAT_Path
+     with Pre => Path'Length < MAX_PATH_LENGTH;
+
+   procedure Append
+     (Path : in out FAT_Path;
+      Name : FAT_Name);
+
+   procedure Append
+     (Path     : in out FAT_Path;
+      Sub_Path : FAT_Path);
+
+   function "&" (Path : FAT_Path; Name : FAT_Name) return FAT_Path;
+
+   function "&" (Path : FAT_Path; Sub_Path : FAT_Path) return FAT_Path;
+
+   function Is_Root (Path : FAT_Path) return Boolean with Inline_Always;
+
+   procedure To_Parent (Path : in out FAT_Path);
+   function Parent (Path : FAT_Path) return FAT_Path;
+
+   procedure Normalize (Path : in out FAT_Path);
+
+   function Mount_Point (Path : FAT_Path) return FAT_Name;
+   function FS_Path (Path : FAT_Path) return FAT_Path;
+
+   ------------------------
+   -- DIRECTORY HANDLING --
+   ------------------------
+
+   function Change_Dir (Dir_Name : FAT_Path) return Boolean;
+
+   function Current_Directory return FAT_Path;
+
+   type Directory_Handle is private;
+
+   function Open
+     (Path   : FAT_Path;
+      Handle : out Directory_Handle) return Status_Code;
+   function Read (Dir    : in out Directory_Handle;
+                  DEntry : out Directories.Directory_Entry)
+                  return Status_Code;
+   procedure Reset (Dir : in out Directory_Handle);
+   procedure Close (Dir : in out Directory_Handle);
+
+--     function Is_Directory (Path : FAT_Path) return Boolean;
+--     function Is_File (Path : FAT_Path) return Boolean;
+--     function Is_File_Or_Directory (Path : FAT_Path) return Boolean;
+
+   --------------------
+   -- FAT FILESYSTEM --
+   --------------------
+
    type FAT_Filesystem is limited private;
    type FAT_Filesystem_Access is access all FAT_Filesystem;
 
    Null_FAT_Volume : constant FAT_Filesystem_Access;
 
    function Open
-     (Controller : Media_Controller_Access;
-      Status     : out Status_Code) return FAT_Filesystem_Access;
+     (Controller  : Media_Controller_Access;
+      Mount_Point : FAT_Name;
+      Status      : out Status_Code) return FAT_Filesystem_Access;
    --  Search the media for a valid FAT partition and opens it.
    --  If the media contains several partitions, the first one is used
 
    function Open
-     (Controller : Media_Controller_Access;
-      LBA        : Unsigned_32;
-      Status     : out Status_Code) return FAT_Filesystem_Access;
+     (Controller  : Media_Controller_Access;
+      LBA         : Unsigned_32;
+      Mount_Point : FAT_Name;
+      Status      : out Status_Code) return FAT_Filesystem_Access;
    --  Opens a FAT partition at the given LBA
 
+   function Get_Mount_Point
+     (Mount_Point : FAT_Name;
+      FS          : out FAT_Filesystem_Access) return Status_Code;
+
+   function Get_Mount_Point
+     (FS : not null FAT_Filesystem_Access) return FAT_Name;
+
    procedure Close (FS : FAT_Filesystem_Access);
+
+   -----------------------
+   -- FAT FS PROPERTIES --
+   -----------------------
 
    type FAT_Version is
      (FAT16,
@@ -120,6 +216,20 @@ package FAT_Filesystem is
      with Pre => Version (FS) = FAT32;
 
 private
+
+   type FAT_Name is record
+      Name : String (1 .. MAX_FILENAME_LENGTH);
+      Len  : Natural := 0;
+   end record;
+
+   type FAT_Path is record
+      Name : String (1 .. MAX_PATH_LENGTH);
+      Len  : Natural := 0;
+   end record;
+
+   Empty_Path : constant FAT_Path :=
+                  (Name => (others => ' '),
+                   Len  => 0);
 
    type FAT_Disk_Parameter (Version : FAT_Version := FAT16) is record
       OEM_Name                : String (1 .. 8);
@@ -210,6 +320,7 @@ private
 
    type FAT_Filesystem is tagged limited record
       Mounted         : Boolean := False;
+      Mount_Point     : FAT_Name;
       Disk_Parameters : FAT_Disk_Parameter;
       LBA             : Unsigned_32;
       Controller      : Media_Controller_Access;
@@ -218,7 +329,7 @@ private
       FAT_Addr        : Unsigned_32;
       Num_Clusters    : Unsigned_32;
       Window_Block    : Unsigned_32 := 16#FFFF_FFFF#;
-      Window          : Block (0 .. 511);
+      Window          : Block (0 .. 512 * CACHE_SIZE - 1);
    end record;
 
    function Ensure_Block
@@ -241,6 +352,10 @@ private
    is (case Version (FS) is
           when FAT16 => (Cluster and 16#FFF8#) = 16#FFF8#,
           when FAT32 => (Cluster and 16#0FFF_FFF8#) = 16#0FFF_FFF8#);
+
+   function Get_Mount_Point
+     (FS : not null FAT_Filesystem_Access) return FAT_Name
+   is (FS.Mount_Point);
 
    function Version
      (FS : FAT_Filesystem) return FAT_Version
@@ -362,5 +477,22 @@ private
    is (FS.FSInfo.Last_Allocated_Cluster);
 
    Null_FAT_Volume : constant FAT_Filesystem_Access := null;
+
+   type Handle_Kind is
+     (Handle_Mount_Point,
+      Handle_FAT);
+
+   type Directory_Handle (Kind : Handle_Kind := Handle_FAT) is record
+      case Kind is
+         when Handle_Mount_Point =>
+            Current_Volume_Index : Integer := 0;
+         when Handle_FAT =>
+            FS                   : FAT_Filesystem_Access;
+            Current_Index        : Unsigned_16;
+            Start_Cluster        : Unsigned_32;
+            Current_Cluster      : Unsigned_32;
+            Current_Block        : Unsigned_32;
+      end case;
+   end record;
 
 end FAT_Filesystem;

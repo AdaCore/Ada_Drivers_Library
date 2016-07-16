@@ -35,8 +35,8 @@ is
    Status         : FAT_Filesystem.Status_Code;
 
    Y              : Natural := 0;
-   Dir            : Directory_Handle;
-   Ent            : Directory_Entry;
+   Dir, Sub       : Directory_Handle;
+   E1, E2         : Directory_Entry;
 
 begin
    SD_Controller.Initialize;
@@ -93,7 +93,7 @@ begin
             end if;
          end loop;
 
-         FS := Open (SD_Controller'Unchecked_Access, Status);
+         FS := Open (SD_Controller'Unchecked_Access, -"sdcard", Status);
 
          if Status /= OK then
             Error_State := True;
@@ -143,7 +143,7 @@ begin
                Transparent);
             Y := Y + 25;
 
-            if Open_Root_Directory (FS, Dir) /= OK then
+            if Open (-"/", Dir) /= OK then
                Draw_String
                  (Display.Get_Hidden_Buffer (1),
                   (0, Y),
@@ -159,15 +159,46 @@ begin
          end if;
 
          if not Error_State then
-            while Read (Dir, Ent) = OK loop
+            while Read (Dir, E1) = OK loop
                Draw_String
                  (Display.Get_Hidden_Buffer (1),
                   (0, Y),
-                  Name (Ent) & (if Is_Subdirectory (Ent) then "/" else ""),
+                  "/" & (-Name (E1)) & (if Is_Subdirectory (E1) then "/" else ""),
                   BMP_Fonts.Font12x12,
-                  (if Is_Hidden (Ent) then Gray else White),
+                  (if Is_Hidden (E1) then Gray else White),
                   Transparent);
                Y := Y + 16;
+
+               if Is_Subdirectory (E1) then
+                  if not Change_Dir (Current_Directory & Name (E1))
+                    or else Open (Current_Directory, Sub) /= OK
+                  then
+                     Error_State := True;
+
+                     Draw_String
+                       (Display.Get_Hidden_Buffer (1),
+                        (0, Y),
+                        "!!! Error reading " & (-Name (E1)),
+                        BMP_Fonts.Font12x12,
+                        HAL.Bitmap.Red,
+                        Transparent);
+                  end if;
+
+                  if not Error_State then
+                     while Read (Sub, E2) = OK loop
+                        Draw_String
+                          (Display.Get_Hidden_Buffer (1),
+                           (0, Y),
+                           "/" & (-Name (E1)) & "/" & (-Name (E2)) & (if Is_Subdirectory (E2) then "/" else ""),
+                           BMP_Fonts.Font12x12,
+                           (if Is_Hidden (E2) then Gray else White),
+                           Transparent);
+                        Y := Y + 16;
+                     end loop;
+                  end if;
+
+                  Close (Sub);
+               end if;
             end loop;
 
             Close (Dir);

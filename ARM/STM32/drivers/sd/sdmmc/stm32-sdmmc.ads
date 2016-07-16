@@ -234,6 +234,9 @@ package STM32.SDMMC is
      (Controller : in out SDMMC_Controller;
       Interrupt  : SDMMC_Interrupts);
 
+   procedure Disable_Data
+     (Controller : in out SDMMC_Controller);
+
    type SDMMC_Operation is
      (No_Operation,
       Read_Single_Block_Operation,

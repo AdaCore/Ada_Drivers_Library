@@ -2,6 +2,98 @@ with Ada.Unchecked_Conversion;
 
 package body FAT_Filesystem.Directories is
 
+   ----------
+   -- Find --
+   ----------
+
+   function Find
+     (FS     : FAT_Filesystem_Access;
+      Path   : FAT_Path;
+      DEntry : out Directory_Entry) return Status_Code
+   is
+      Status  : Status_Code;
+      Full    : FAT_Path;
+      Idx     : Natural := 2;
+      Token   : FAT_Name;
+      Current : Directory_Handle;
+
+   begin
+      Full := Path;
+      Normalize (Full);
+      Idx := 2;
+
+      Status := Open_Root_Directory (FS, Current);
+
+      if Status /= OK then
+         return Status;
+      end if;
+
+      DEntry := Root_Entry (FS);
+
+      while Idx <= Full.Len loop
+         Token.Len := 0;
+
+         for J in Idx .. Full.Len loop
+            if Full.Name (J) = '/' then
+               Idx := J + 1;
+               exit;
+            end if;
+
+            Token.Len := Token.Len + 1;
+            Token.Name (Token.Len) := Full.Name (J);
+         end loop;
+
+         Dir_Loop :
+         loop
+            Status := Read (Current, DEntry);
+
+            if Status /= OK then
+               Close (Current);
+
+               return No_Such_File;
+            end if;
+
+            if Name (DEntry) = Token
+              or else Short_Name (DEntry) = Token
+            then
+               Close (Current);
+
+               if Idx < Full.Len then
+                  --  Intermediate entry: needs to be a directory
+                  if not Is_Subdirectory (DEntry) then
+                     return No_Such_Path;
+                  end if;
+
+                  Status := Open_Dir (DEntry, Current);
+
+                  if Status /= OK then
+                     return Status;
+                  end if;
+               end if;
+
+               exit Dir_Loop;
+            end if;
+         end loop Dir_Loop;
+      end loop;
+
+      return OK;
+   end Find;
+
+   ----------------
+   -- Root_Entry --
+   ----------------
+
+   function Root_Entry (FS : FAT_Filesystem_Access) return Directory_Entry
+   is
+   begin
+      return (FS         => FS,
+              Attributes => (Subdirectory => True,
+                             others       => False),
+              Is_Root    => True,
+              L_Name     => Get_Mount_Point (FS),
+              others     => <>);
+   end Root_Entry;
+
    -------------------------
    -- Open_Root_Directory --
    -------------------------
@@ -34,25 +126,40 @@ package body FAT_Filesystem.Directories is
    -- Open --
    ----------
 
-   function Open
+   function Open_Dir
      (E   : Directory_Entry;
       Dir : out Directory_Handle) return Status_Code
    is
    begin
-      Dir.Start_Cluster := E.Start_Cluster;
-      Dir.Current_Block := E.FS.Cluster_To_Block (E.Start_Cluster);
-      Dir.FS := E.FS;
+      if E.Is_Root then
+         return Open_Root_Directory (E.FS, Dir);
+      else
+         Dir.Start_Cluster := E.Start_Cluster;
+         Dir.FS := E.FS;
+
+         Reset (Dir);
+
+         return OK;
+      end if;
+   end Open_Dir;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset_Dir (Dir : in out Directory_Handle)
+   is
+   begin
+      Dir.Current_Block   := Cluster_To_Block (Dir.FS.all, Dir.Start_Cluster);
       Dir.Current_Cluster := Dir.Start_Cluster;
       Dir.Current_Index   := 0;
-
-      return OK;
-   end Open;
+   end Reset_Dir;
 
    -----------
    -- Close --
    -----------
 
-   procedure Close (Dir : in out Directory_Handle)
+   procedure Close_Dir (Dir : in out Directory_Handle)
    is
    begin
       Dir.FS              := null;
@@ -60,14 +167,15 @@ package body FAT_Filesystem.Directories is
       Dir.Start_Cluster   := 0;
       Dir.Current_Cluster := 0;
       Dir.Current_Block   := 0;
-   end Close;
+   end Close_Dir;
 
    ----------
    -- Read --
    ----------
 
-   function Read (Dir    : in out Directory_Handle;
-                  DEntry : out Directory_Entry) return Status_Code
+   function Read_Dir
+     (Dir    : in out Directory_Handle;
+      DEntry : out Directory_Entry) return Status_Code
    is
       procedure Prepend
         (Name : Wide_String;
@@ -112,12 +220,14 @@ package body FAT_Filesystem.Directories is
       function To_VFAT_Entry is new Ada.Unchecked_Conversion
         (FAT_Directory_Entry, VFAT_Directory_Entry);
 
-      C           : Unsigned_8;
-      Last_Seq    : VFAT_Sequence_Number := 0;
-      CRC         : Unsigned_8 := 0;
-      Matches     : Boolean;
-      Current_CRC : Unsigned_8;
-      Block_Off   : Unsigned_16;
+      C            : Unsigned_8;
+      Last_Seq     : VFAT_Sequence_Number := 0;
+      CRC          : Unsigned_8 := 0;
+      Matches      : Boolean;
+      Current_CRC  : Unsigned_8;
+      Block_Off    : Unsigned_16;
+      L_Name       : String (1 .. MAX_FILENAME_LENGTH);
+      L_Name_First : Natural;
 
    begin
       if Dir.Start_Cluster = 0
@@ -134,18 +244,19 @@ package body FAT_Filesystem.Directories is
          return Ret;
       end if;
 
-      DEntry.L_Name_First := DEntry.L_Name'Last + 1;
+      L_Name_First := L_Name'Last + 1;
 
       loop
          Block_Off :=
            Unsigned_16
              (Unsigned_32 (Dir.Current_Index) * 32
-              mod Dir.FS.Block_Size_In_Bytes);
+              mod (Dir.FS.Block_Size_In_Bytes * CACHE_SIZE));
 
-         if Dir.Current_Index > 0
-           and then Block_Off = 0
-         then
-            Dir.Current_Block := Dir.Current_Block + 1;
+         if Block_Off = 0 then
+            if Dir.Current_Index > 0 then
+               Dir.Current_Block := Dir.Current_Block + CACHE_SIZE;
+            end if;
+
             if Dir.Current_Block -
               Dir.FS.Cluster_To_Block (Dir.Current_Cluster) =
               Unsigned_32 (Dir.FS.Number_Of_Blocks_Per_Cluster)
@@ -185,21 +296,21 @@ package body FAT_Filesystem.Directories is
             V_Entry := To_VFAT_Entry (D_Entry);
 
             if V_Entry.VFAT_Attr.Stop_Bit then
-               DEntry.L_Name_First := DEntry.L_Name'Last + 1;
+               L_Name_First := L_Name'Last + 1;
                Last_Seq := 0;
 
             else
                if Last_Seq = 0
                  or else Last_Seq - 1 /= V_Entry.VFAT_Attr.Sequence
                then
-                  DEntry.L_Name_First := DEntry.L_Name'Last + 1;
+                  L_Name_First := L_Name'Last + 1;
                end if;
 
                Last_Seq := V_Entry.VFAT_Attr.Sequence;
 
-               Prepend (V_Entry.Name_3, DEntry.L_Name, DEntry.L_Name_First);
-               Prepend (V_Entry.Name_2, DEntry.L_Name, DEntry.L_Name_First);
-               Prepend (V_Entry.Name_1, DEntry.L_Name, DEntry.L_Name_First);
+               Prepend (V_Entry.Name_3, L_Name, L_Name_First);
+               Prepend (V_Entry.Name_2, L_Name, L_Name_First);
+               Prepend (V_Entry.Name_1, L_Name, L_Name_First);
 
                if V_Entry.VFAT_Attr.Sequence = 1 then
                   CRC := V_Entry.Checksum;
@@ -209,7 +320,7 @@ package body FAT_Filesystem.Directories is
          elsif not D_Entry.Attributes.Volume_Label --  Ignore Volumes
            and then Character'Pos (D_Entry.Filename (1)) /= 16#E5# --  Ignore deleted files
          then
-            if DEntry.L_Name_First not in DEntry.L_Name'Range then
+            if L_Name_First not in L_Name'Range then
                Matches := False;
             else
                Current_CRC := 0;
@@ -250,27 +361,38 @@ package body FAT_Filesystem.Directories is
                  Shift_Left (Unsigned_32 (D_Entry.Cluster_H), 16);
             end if;
 
-            if not Matches then
-               DEntry.L_Name_First := DEntry.L_Name'Last + 1;
+            if Matches then
+               DEntry.L_Name := -L_Name (L_Name_First .. L_Name'Last);
+            else
+               DEntry.L_Name.Len := 0;
             end if;
 
             return OK;
          end if;
       end loop;
-   end Read;
+   end Read_Dir;
 
    ----------
    -- Name --
    ----------
 
-   function Name (E : Directory_Entry) return String
+   function Name (E : Directory_Entry) return FAT_Name
    is
    begin
-      if E.L_Name_First in E.L_Name'Range then
-         return E.L_Name (E.L_Name_First .. E.L_Name'Last);
+      if E.L_Name.Len > 0 then
+         return E.L_Name;
       else
-         return E.S_Name (E.S_Name'First .. E.S_Name_Last);
+         return Short_Name (E);
       end if;
    end Name;
+
+   ----------------
+   -- Short_Name --
+   ----------------
+
+   function Short_Name (E : Directory_Entry) return FAT_Name is
+   begin
+      return -E.S_Name (E.S_Name'First .. E.S_Name_Last);
+   end Short_Name;
 
 end FAT_Filesystem.Directories;

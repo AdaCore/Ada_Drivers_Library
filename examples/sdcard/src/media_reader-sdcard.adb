@@ -31,9 +31,8 @@ package body Media_Reader.SDCard is
       entry Wait_Transfer (Status : out DMA_Error_Code);
 
    private
-
-      procedure Interrupt
-        with Attach_Handler => Rx_IRQ, Unreferenced;
+      procedure Interrupt;
+      pragma Attach_Handler (Interrupt, Rx_IRQ);
 
       Finished   : Boolean := True;
       DMA_Status : DMA_Error_Code;
@@ -51,9 +50,9 @@ package body Media_Reader.SDCard is
       entry Wait_Transfer (Status : out SD_Error);
 
    private
-      procedure Interrupt
-        with Attach_Handler => Device_SD_Configuration.SD_Interrupt,
-             Unreferenced;
+      procedure Interrupt;
+      pragma Attach_Handler (Interrupt, Device_SD_Configuration.SD_Interrupt);
+
       Finished  : Boolean := True;
       SD_Status : SD_Error;
       Device    : SDMMC_Controller;
@@ -383,7 +382,8 @@ package body Media_Reader.SDCard is
       Block_Number : Unsigned_32;
       Data         : out Block) return Boolean
    is
-      Ret     : SD_Error;
+      Ret     : Boolean;
+      SD_Err  : SD_Error;
       DMA_Err : DMA_Error_Code;
    begin
       Ensure_Card_Informations (Controller);
@@ -391,7 +391,7 @@ package body Media_Reader.SDCard is
       DMA_Interrupt_Handler.Set_Transfer_State;
       SDMMC_Interrupt_Handler.Set_Transfer_State (Controller);
 
-      Ret := Read_Blocks_DMA
+      SD_Err := Read_Blocks_DMA
         (Controller.Device,
          Unsigned_64 (Block_Number) *
              Unsigned_64 (Controller.Info.Card_Block_Size),
@@ -399,7 +399,7 @@ package body Media_Reader.SDCard is
          SD_DMA_Rx_Stream,
          SD_Data (Data));
 
-      if Ret /= OK then
+      if SD_Err /= OK then
          DMA_Interrupt_Handler.Clear_Transfer_State;
          SDMMC_Interrupt_Handler.Clear_Transfer_State;
          Abort_Transfer (SD_DMA, SD_DMA_Rx_Stream, DMA_Err);
@@ -407,22 +407,32 @@ package body Media_Reader.SDCard is
          return False;
       end if;
 
-      SDMMC_Interrupt_Handler.Wait_Transfer (Ret);
+      SDMMC_Interrupt_Handler.Wait_Transfer (SD_Err);
       DMA_Interrupt_Handler.Wait_Transfer (DMA_Err);
 
       loop
          exit when not Get_Flag (Controller.Device, RX_Active);
       end loop;
 
+      Ret := SD_Err = OK and then DMA_Err = DMA_No_Error;
+
+      if Last_Operation (Controller.Device) =
+        Read_Multiple_Blocks_Operation
+      then
+         SD_Err := Stop_Transfer (Controller.Device);
+         Ret := Ret and then SD_Err = OK;
+      end if;
+
       Clear_All_Status (SD_DMA, SD_DMA_Rx_Stream);
       Disable (SD_DMA, SD_DMA_Rx_Stream);
+      Disable_Data (Controller.Device);
+      Clear_Static_Flags (Controller.Device);
 
       Cortex_M.Cache.Invalidate_DCache
         (Start => Data (Data'First)'Address,
          Len   => Data'Length);
 
-      return Ret = OK
-        and then DMA_Err = DMA_No_Error;
+      return Ret;
    end Read_Block;
 
 end Media_Reader.SDCard;

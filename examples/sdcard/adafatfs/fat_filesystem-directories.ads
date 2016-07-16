@@ -1,24 +1,33 @@
 package FAT_Filesystem.Directories is
 
-   type Directory_Handle is private;
+   type Directory_Entry is private;
+
+   function Find
+     (FS     : FAT_Filesystem_Access;
+      Path   : FAT_Path;
+      DEntry : out Directory_Entry) return Status_Code;
+
+   function Root_Entry (FS : FAT_Filesystem_Access) return Directory_Entry;
 
    function Open_Root_Directory
      (FS  : FAT_Filesystem_Access;
       Dir : out Directory_Handle) return Status_Code;
 
-   type Directory_Entry is private;
-
-   function Open
+   function Open_Dir
      (E   : Directory_Entry;
       Dir : out Directory_Handle) return Status_Code
    with Pre => Is_Subdirectory (E);
 
-   procedure Close (Dir : in out Directory_Handle);
+   procedure Reset_Dir (Dir : in out Directory_Handle);
 
-   function Read (Dir : in out Directory_Handle;
-                  DEntry : out Directory_Entry) return Status_Code;
+   procedure Close_Dir (Dir : in out Directory_Handle);
 
-   function Name (E : Directory_Entry) return String;
+   function Read_Dir (Dir    : in out Directory_Handle;
+                      DEntry : out Directory_Entry) return Status_Code;
+
+   function Name (E : Directory_Entry) return FAT_Name;
+
+   function Short_Name (E : Directory_Entry) return FAT_Name;
 
    function Is_Read_Only (E : Directory_Entry) return Boolean;
 
@@ -34,9 +43,9 @@ private
 
 
    type FAT_Directory_Entry_Attribute is record
-      Read_Only : Boolean;
-      Hidden    : Boolean;
-      System_File : Boolean;
+      Read_Only    : Boolean;
+      Hidden       : Boolean;
+      System_File  : Boolean;
       Volume_Label : Boolean;
       Subdirectory : Boolean;
       Archive      : Boolean;
@@ -92,33 +101,15 @@ private
       Name_3    : Wide_String (1 .. 2);
    end record with Pack, Size => 32 * 8;
 
---     type File_Object_Structure is record
---        FS              : FAT_Filesystem_Access;
---        Flags           : Unsigned_8;
---        Err             : Unsigned_8;
---        File_Ptr        : Unsigned_32 := 0;
---        File_Size       : Unsigned_32;
---        Start_Cluster   : Unsigned_32;
---        Current_Cluster : Unsigned_32;
---     end record;
-
-   type Directory_Handle is record
-      FS              : FAT_Filesystem_Access;
-      Current_Index   : Unsigned_16;
-      Start_Cluster   : Unsigned_32;
-      Current_Cluster : Unsigned_32;
-      Current_Block   : Unsigned_32;
-   end record;
-
    type Directory_Entry is record
       FS            : FAT_Filesystem_Access;
-      L_Name        : String (1 .. 128);
-      L_Name_First  : Natural := 129;
+      L_Name        : FAT_Name;
       S_Name        : String (1 .. 12);
       S_Name_Last   : Natural := 0;
       Attributes    : FAT_Directory_Entry_Attribute;
       Start_Cluster : Unsigned_32;
       Size          : Unsigned_32;
+      Is_Root       : Boolean := False;
    end record;
 
    function Is_Read_Only (E : Directory_Entry) return Boolean

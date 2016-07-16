@@ -1,5 +1,6 @@
 with Ada.Unchecked_Conversion;
 with Ada.Real_Time;   use Ada.Real_Time;
+with System.Machine_Code;
 
 package body STM32.SDMMC is
 
@@ -119,6 +120,21 @@ package body STM32.SDMMC is
 
    function Enable_Wide_Bus
      (Controller : in out SDMMC_Controller) return SD_Error;
+
+   procedure DCTRL_Write_Delay with Inline_Always;
+   --  The DCFGR register cannot be written 2 times in a row: we need to
+   --  wait 3 48MHz periods + 2 90MHz periods. So instead of inserting a 1ms
+   --  delay statement (which would be overkill), we just issue a few
+   --  nop instructions to let the CPU wait this period.
+
+   procedure DCTRL_Write_Delay
+   is
+      use System.Machine_Code;
+   begin
+      for J in 1 .. 30 loop
+         Asm ("nop", Volatile => True);
+      end loop;
+   end DCTRL_Write_Delay;
 
    ------------------------
    -- Clear_Static_Flags --
@@ -256,12 +272,15 @@ package body STM32.SDMMC is
       DPSM               : Boolean;
       DMA_Enabled        : Boolean)
    is
-      Tmp : DCTRL_Register := Controller.Periph.DCTRL;
+      Tmp : DCTRL_Register;
    begin
       Controller.Periph.DLEN.DATALENGTH  := Data_Length;
+
       --  DCTRL cannot be written during 3 SDMMCCLK (48MHz) clock periods
       --  Minimum wait time is 1 Milliseconds, so let's do that
-      delay until Clock + Milliseconds (1);
+      DCTRL_Write_Delay;
+
+      Tmp := Controller.Periph.DCTRL;
       Tmp.DTDIR      :=
         (if Transfer_Direction = Read then Card_To_Controller
          else Controller_To_Card);
@@ -271,6 +290,17 @@ package body STM32.SDMMC is
       Tmp.DMAEN      := DMA_Enabled;
       Controller.Periph.DCTRL := Tmp;
    end Configure_Data;
+
+   ------------------
+   -- Disable_Data --
+   ------------------
+
+   procedure Disable_Data
+     (Controller : in out SDMMC_Controller)
+   is
+   begin
+      Controller.Periph.DCTRL := (others => <>);
+   end Disable_Data;
 
    ---------------
    -- Read_FIFO --
@@ -590,13 +620,12 @@ package body STM32.SDMMC is
       Response      : Word;
    begin
       Controller.Periph.CLKCR.CLKEN := False;
-      delay until Clock + Milliseconds (1);
 
       Controller.Periph.POWER.PWRCTRL := Power_On;
 
-      --  1ms: required power up waiting time before starting the SD
+      --  power up waiting time before starting the SD
       --  initialization sequence
-      delay until Clock + Milliseconds (1);
+      DCTRL_Write_Delay;
 
       Controller.Periph.CLKCR.CLKEN := True;
 
@@ -1252,6 +1281,10 @@ package body STM32.SDMMC is
          return Ret;
       end if;
 
+      --  Make sure the POWER register is writable by waiting a bit after
+      --  the Power_Off command
+      DCTRL_Write_Delay;
+
       --  Use the Default SDMMC peripheral configuration for SD card init
       Controller.Periph.CLKCR :=
         (CLKDIV         => 16#76#, --  400 kHz max
@@ -1268,7 +1301,6 @@ package body STM32.SDMMC is
          --  HW Flow Control enable
          HWFC_EN        => False,
          others         => <>);
-      delay until Clock + Milliseconds (1);
 
       Controller.Periph.DTIMER := SD_DATATIMEOUT;
 
@@ -1291,9 +1323,11 @@ package body STM32.SDMMC is
       end if;
 
       --  Now use the card to nominal speed : 25MHz
+      --  Make sure CLKCR is writable by waiting a bit for the previous write
+      --  to propagate if needed
+      DCTRL_Write_Delay;
       Controller.Periph.CLKCR.CLKDIV := 0;
       Clear_Static_Flags (Controller);
-      delay until Clock + Milliseconds (1);
 
       Ret := Read_Card_Info (Controller, Info);
 
@@ -1361,6 +1395,7 @@ package body STM32.SDMMC is
       Dead     : Word with Unreferenced;
 
    begin
+      DCTRL_Write_Delay;
       Controller.Periph.DCTRL := (others => <>);
 
       if Controller.Card_Type = High_Capacity_SD_Card then
@@ -1497,28 +1532,18 @@ package body STM32.SDMMC is
       use STM32.DMA;
 
    begin
+      --  After a data write, data cannot be written to this register
+      --  for three SDMMCCLK (@ 48 MHz) clock periods plus two PCLK2 clock
+      --  periods (@ ~90MHz).
+      --  So here we make sure the DCTRL is writable
+      DCTRL_Write_Delay;
       Controller.Periph.DCTRL := (DTEN   => False,
                                   others => <>);
-      --  Wait 1ms: After a data write, data cannot be written to this register
-      --  for three SDMMCCLK (48 MHz) clock periods plus two PCLK2 clock
-      --  periods.
-      delay until Clock + Milliseconds (1);
 
       Enable_Interrupt (Controller, Data_CRC_Fail_Interrupt);
       Enable_Interrupt (Controller, Data_Timeout_Interrupt);
       Enable_Interrupt (Controller, Data_End_Interrupt);
       Enable_Interrupt (Controller, RX_Overrun_Interrupt);
-
-      STM32.DMA.Start_Transfer_with_Interrupts
-        (Unit               => DMA,
-         Stream             => Stream,
-         Source             => Controller.Periph.FIFO'Address,
-         Destination        => Data (Data'First)'Address,
-         Data_Count         => Data'Length / 4,
-         Enabled_Interrupts => (Transfer_Error_Interrupt    => True,
-                                FIFO_Error_Interrupt        => True,
-                                Transfer_Complete_Interrupt => True,
-                                others                      => False));
 
       Send_Command
         (Controller,
@@ -1541,6 +1566,17 @@ package body STM32.SDMMC is
          Transfer_Mode      => Block,
          DPSM               => True,
          DMA_Enabled        => True);
+
+      STM32.DMA.Start_Transfer_with_Interrupts
+        (Unit               => DMA,
+         Stream             => Stream,
+         Source             => Controller.Periph.FIFO'Address,
+         Destination        => Data (Data'First)'Address,
+         Data_Count         => Data'Length / 4,
+         Enabled_Interrupts => (Transfer_Error_Interrupt    => True,
+                                FIFO_Error_Interrupt        => True,
+                                Transfer_Complete_Interrupt => True,
+                                others                      => False));
 
       if N_Blocks > 1 then
          Command := Read_Multi_Block;

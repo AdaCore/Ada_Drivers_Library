@@ -244,6 +244,10 @@ package STM32.SDMMC is
    function Last_Operation
      (Controller : SDMMC_Controller) return SDMMC_Operation;
 
+   procedure Disable_Data
+     (Controller : in out SDMMC_Controller);
+   --  Sets DCFGR.DTEN to False to stop the data transfer mode.
+
 private
 
    type SDMMC_Command is new Byte;
