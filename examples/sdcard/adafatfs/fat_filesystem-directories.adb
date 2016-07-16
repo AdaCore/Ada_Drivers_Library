@@ -12,14 +12,11 @@ package body FAT_Filesystem.Directories is
       DEntry : out Directory_Entry) return Status_Code
    is
       Status  : Status_Code;
-      Full    : FAT_Path;
       Idx     : Natural := 2;
       Token   : FAT_Name;
       Current : Directory_Handle;
 
    begin
-      Full := Path;
-      Normalize (Full);
       Idx := 2;
 
       Status := Open_Root_Directory (FS, Current);
@@ -30,18 +27,19 @@ package body FAT_Filesystem.Directories is
 
       DEntry := Root_Entry (FS);
 
-      while Idx <= Full.Len loop
+      while Idx <= Path.Len loop
          Token.Len := 0;
 
-         for J in Idx .. Full.Len loop
-            if Full.Name (J) = '/' then
-               Idx := J + 1;
+         for J in Idx .. Path.Len loop
+            if Path.Name (J) = '/' then
                exit;
             end if;
 
             Token.Len := Token.Len + 1;
-            Token.Name (Token.Len) := Full.Name (J);
+            Token.Name (Token.Len) := Path.Name (J);
          end loop;
+
+         Idx := Idx + Token.Len + 2;
 
          Dir_Loop :
          loop
@@ -58,7 +56,7 @@ package body FAT_Filesystem.Directories is
             then
                Close (Current);
 
-               if Idx < Full.Len then
+               if Idx < Path.Len then
                   --  Intermediate entry: needs to be a directory
                   if not Is_Subdirectory (DEntry) then
                      return No_Such_Path;
@@ -69,6 +67,8 @@ package body FAT_Filesystem.Directories is
                   if Status /= OK then
                      return Status;
                   end if;
+               else
+                  DEntry.Is_Root := False;
                end if;
 
                exit Dir_Loop;

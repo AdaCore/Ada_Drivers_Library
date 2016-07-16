@@ -53,6 +53,17 @@ package body FAT_Filesystem is
    end "=";
 
    ---------
+   -- "=" --
+   ---------
+
+   overriding function "=" (Name1, Name2 : FAT_Path) return Boolean
+   is
+   begin
+      return Name1.Len = Name2.Len
+        and then Name1.Name (1 .. Name1.Len) = Name2.Name (1 .. Name2.Len);
+   end "=";
+
+   ---------
    -- "-" --
    ---------
 
@@ -201,7 +212,8 @@ package body FAT_Filesystem is
    -- Normalize --
    ---------------
 
-   procedure Normalize (Path : in out FAT_Path)
+   procedure Normalize (Path       : in out FAT_Path;
+                        Ensure_Dir : Boolean := False)
    is
       Idx      : Natural := 1;
       Prev     : Natural;
@@ -297,6 +309,13 @@ package body FAT_Filesystem is
 
          end if;
       end loop;
+
+      if Ensure_Dir and then
+        (Path.Len = 0 or else Path.Name (Path.Len) /= '/')
+      then
+         Path.Len := Path.Len + 1;
+         Path.Name (Path.Len) := '/';
+      end if;
    end Normalize;
 
    -----------------
@@ -638,17 +657,22 @@ package body FAT_Filesystem is
    function Change_Dir
      (Dir_Name : FAT_Path) return Boolean
    is
-      Full : FAT_Path := Dir_Name;
-      H    : Directory_Handle;
    begin
-      Normalize (Full);
-
-      if Open (Full, H) /= OK then
-         return False;
+      if Dir_Name.Len = 0 then
+         return True;
       end if;
 
-      Close (H);
-      Current_Path := Full;
+      if Dir_Name = Current_Path then
+         return True;
+      end if;
+
+      if Dir_Name.Name (1) = '/' then
+         Current_Path := Dir_Name;
+      else
+         Append (Current_Path, Dir_Name);
+      end if;
+
+      Normalize (Current_Path, Ensure_Dir => True);
 
       return True;
    end Change_Dir;
@@ -657,7 +681,29 @@ package body FAT_Filesystem is
    -- Change_Dir --
    ----------------
 
+   function Change_Dir (Dir_Name : FAT_Name) return Boolean
+   is
+      Full : constant FAT_Path := Current_Path & Dir_Name;
+   begin
+      return Change_Dir (Full);
+   end Change_Dir;
+
+   ----------------
+   -- Change_Dir --
+   ----------------
+
    procedure Change_Dir (Dir_Name : FAT_Path)
+   is
+      Dead : Boolean with Unreferenced;
+   begin
+      Dead := Change_Dir (Dir_Name);
+   end Change_Dir;
+
+   ----------------
+   -- Change_Dir --
+   ----------------
+
+   procedure Change_Dir (Dir_Name : FAT_Name)
    is
       Dead : Boolean with Unreferenced;
    begin

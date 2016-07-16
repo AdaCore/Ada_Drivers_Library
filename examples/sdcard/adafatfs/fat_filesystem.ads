@@ -63,6 +63,8 @@ package FAT_Filesystem is
    function "-" (Path : String) return FAT_Path
      with Pre => Path'Length < MAX_PATH_LENGTH;
 
+   overriding function "=" (Name1, Name2 : FAT_Path) return Boolean;
+
    procedure Append
      (Path : in out FAT_Path;
       Name : FAT_Name);
@@ -80,7 +82,8 @@ package FAT_Filesystem is
    procedure To_Parent (Path : in out FAT_Path);
    function Parent (Path : FAT_Path) return FAT_Path;
 
-   procedure Normalize (Path : in out FAT_Path);
+   procedure Normalize (Path       : in out FAT_Path;
+                        Ensure_Dir : Boolean := False);
 
    function Mount_Point (Path : FAT_Path) return FAT_Name;
    function FS_Path (Path : FAT_Path) return FAT_Path;
@@ -90,7 +93,9 @@ package FAT_Filesystem is
    ------------------------
 
    function Change_Dir (Dir_Name : FAT_Path) return Boolean;
+   function Change_Dir (Dir_Name : FAT_Name) return Boolean;
    procedure Change_Dir (Dir_Name : FAT_Path);
+   procedure Change_Dir (Dir_Name : FAT_Name);
 
    function Current_Directory return FAT_Path;
 

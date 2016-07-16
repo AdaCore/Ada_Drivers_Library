@@ -1,4 +1,3 @@
-with Ada.Exceptions;
 with Ada.Unchecked_Conversion;
 with Interfaces;                 use Interfaces;
 
@@ -35,9 +34,56 @@ is
    Status        : FAT_Filesystem.Status_Code;
 
    Y             : Natural := 0;
-   Dir, Sub      : Directory_Handle;
-   E1, E2        : Directory_Entry;
-   Path          : FAT_Path;
+
+   procedure Display_Current_Dir;
+
+   -------------------------
+   -- Display_Current_Dir --
+   -------------------------
+
+   procedure Display_Current_Dir
+   is
+      Dir : Directory_Handle;
+      E   : Directory_Entry;
+   begin
+      if Open (Current_Directory, Dir) /= OK then
+         Draw_String
+           (Display.Get_Hidden_Buffer (1),
+            (0, Y),
+            "!!! Error reading the directory " & (-Current_Directory),
+            BMP_Fonts.Font12x12,
+            HAL.Bitmap.Red,
+            Transparent);
+         Display.Update_Layer (1, True);
+         Close (FS);
+         Y := Y + 13;
+         Error_State := True;
+      end if;
+
+      while not Error_State and then Read (Dir, E) = OK loop
+         if not Is_Hidden (E) then
+            Draw_String
+              (Display.Get_Hidden_Buffer (1),
+               (0, Y),
+               -Current_Directory & (-Name (E)),
+               BMP_Fonts.Font12x12,
+               (if Is_Subdirectory (E) then Grey else White),
+               Transparent);
+            Y := Y + 16;
+
+            if Is_Subdirectory (E)
+              and then -Name (E) /= "."
+              and then -Name (E) /= ".."
+            then
+               Change_Dir (Name (E));
+               Display_Current_Dir;
+               Change_Dir (FAT_Name'(-".."));
+            end if;
+         end if;
+      end loop;
+
+      Close (Dir);
+   end Display_Current_Dir;
 
 begin
    SD_Controller.Initialize;
@@ -132,11 +178,8 @@ begin
                Display.Update_Layer (1, True);
                Y := Y + 13;
             end if;
-         end if;
 
-         Path := -"/";
-
-         if not Error_State then
+         else
             Draw_String
               (Display.Get_Hidden_Buffer (1),
                (0, Y),
@@ -146,69 +189,8 @@ begin
                Transparent);
             Y := Y + 25;
 
-            if Open (Path, Dir) /= OK then
-               Draw_String
-                 (Display.Get_Hidden_Buffer (1),
-                  (0, Y),
-                  "!!! Error reading the root directory",
-                  BMP_Fonts.Font12x12,
-                  HAL.Bitmap.Red,
-                  Transparent);
-               Display.Update_Layer (1, True);
-               Close (FS);
-               Y := Y + 13;
-               Error_State := True;
-            end if;
-         end if;
-
-         if not Error_State then
-            while Read (Dir, E1) = OK loop
-               Draw_String
-                 (Display.Get_Hidden_Buffer (1),
-                  (0, Y),
-                  "/" & (-Name (E1)) & (if Is_Subdirectory (E1) then "/" else ""),
-                  BMP_Fonts.Font12x12,
-                  (if Is_Hidden (E1) then Gray else White),
-                  Transparent);
-               Y := Y + 16;
-
-               if Is_Subdirectory (E1) then
-                  Append (Path, Name (E1));
-
-                  if not Change_Dir (Path)
-                    or else Open (Current_Directory, Sub) /= OK
-                  then
-                     Error_State := True;
-
-                     Draw_String
-                       (Display.Get_Hidden_Buffer (1),
-                        (0, Y),
-                        "!!! Error reading " & (-Name (E1)),
-                        BMP_Fonts.Font12x12,
-                        HAL.Bitmap.Red,
-                        Transparent);
-                  end if;
-
-                  if not Error_State then
-                     while Read (Sub, E2) = OK loop
-                        Draw_String
-                          (Display.Get_Hidden_Buffer (1),
-                           (0, Y),
-                           "/" & (-Name (E1)) & "/" & (-Name (E2)) & (if Is_Subdirectory (E2) then "/" else ""),
-                           BMP_Fonts.Font12x12,
-                           (if Is_Hidden (E2) then Gray else White),
-                           Transparent);
-                        Y := Y + 16;
-                     end loop;
-                  end if;
-
-                  Close (Sub);
-                  To_Parent (Path);
-                  Change_Dir (Path);
-               end if;
-            end loop;
-
-            Close (Dir);
+            Change_Dir (FAT_Path'(-"/"));
+            Display_Current_Dir;
             Close (FS);
          end if;
 
@@ -221,28 +203,4 @@ begin
          end loop;
       end if;
    end loop;
-
-exception
-   when E : others =>
-      Display.Get_Hidden_Buffer (1).Fill (White);
-      Draw_String
-        (Display.Get_Hidden_Buffer (1),
-         (0, 0),
-         Ada.Exceptions.Exception_Information (E),
-         BMP_Fonts.Font12x12,
-         Black,
-         White);
-      Draw_String
-        (Display.Get_Hidden_Buffer (1),
-         (0, 14),
-         Ada.Exceptions.Exception_Message (E),
-         BMP_Fonts.Font12x12,
-         Black,
-         White);
-      Display.Update_Layer (1);
-
-      loop
-         null;
-      end loop;
-
 end SDCard_Demo;
