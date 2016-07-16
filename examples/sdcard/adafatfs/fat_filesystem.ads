@@ -90,6 +90,7 @@ package FAT_Filesystem is
    ------------------------
 
    function Change_Dir (Dir_Name : FAT_Path) return Boolean;
+   procedure Change_Dir (Dir_Name : FAT_Path);
 
    function Current_Directory return FAT_Path;
 

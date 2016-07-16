@@ -30,13 +30,14 @@ is
    Capacity      : Unsigned_64;
    Error_State   : Boolean := False;
 
-   FS             : FAT_Filesystem_Access;
+   FS            : FAT_Filesystem_Access;
 
-   Status         : FAT_Filesystem.Status_Code;
+   Status        : FAT_Filesystem.Status_Code;
 
-   Y              : Natural := 0;
-   Dir, Sub       : Directory_Handle;
-   E1, E2         : Directory_Entry;
+   Y             : Natural := 0;
+   Dir, Sub      : Directory_Handle;
+   E1, E2        : Directory_Entry;
+   Path          : FAT_Path;
 
 begin
    SD_Controller.Initialize;
@@ -133,6 +134,8 @@ begin
             end if;
          end if;
 
+         Path := -"/";
+
          if not Error_State then
             Draw_String
               (Display.Get_Hidden_Buffer (1),
@@ -143,7 +146,7 @@ begin
                Transparent);
             Y := Y + 25;
 
-            if Open (-"/", Dir) /= OK then
+            if Open (Path, Dir) /= OK then
                Draw_String
                  (Display.Get_Hidden_Buffer (1),
                   (0, Y),
@@ -170,7 +173,9 @@ begin
                Y := Y + 16;
 
                if Is_Subdirectory (E1) then
-                  if not Change_Dir (Current_Directory & Name (E1))
+                  Append (Path, Name (E1));
+
+                  if not Change_Dir (Path)
                     or else Open (Current_Directory, Sub) /= OK
                   then
                      Error_State := True;
@@ -198,6 +203,8 @@ begin
                   end if;
 
                   Close (Sub);
+                  To_Parent (Path);
+                  Change_Dir (Path);
                end if;
             end loop;
 

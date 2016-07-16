@@ -204,8 +204,8 @@ package body FAT_Filesystem is
    procedure Normalize (Path : in out FAT_Path)
    is
       Idx      : Natural := 1;
+      Prev     : Natural;
       Token    : FAT_Name;
-      Ret      : FAT_Path;
 
    begin
       if Path.Len = 0 then
@@ -216,12 +216,12 @@ package body FAT_Filesystem is
          Path := Current_Path & Path;
       end if;
 
-      --  Preserve initial '/' if any
+      --  Preserve initial '/'
       if Path.Name (1) = '/' then
-         Ret.Name (1) := '/';
-         Ret.Len := 1;
          Idx := 2;
       end if;
+
+      --  Below: Idx always points to the first character of a path element.
 
       while Idx <= Path.Len loop
          Token.Len := 0;
@@ -232,33 +232,71 @@ package body FAT_Filesystem is
             Token.Name (Token.Len) := Path.Name (J);
          end loop;
 
-         Idx := Idx + Token.Len + 1;
-
          if -Token = "." then
             --  Skip
-            null;
+            Path.Name (Idx .. Path.Len - 2) :=
+              Path.Name (Idx + 2 .. Path.Len);
 
-         elsif -Token = ".." then
-            if not Is_Root (Ret) then
-               To_Parent (Ret);
+            if Idx + 2 > Path.Len then
+               --  Path ends with just a '.'
+               Path.Len := Path.Len - 1;
             else
-               Append (Ret, Token);
+               --  Nominal case: we remove the './'
+               Path.Len := Path.Len - 2;
             end if;
 
-         elsif Token.Len /= 0 then
-            Append (Ret, Token);
+         elsif -Token = ".." then
+            if Idx = 1 or else
+              (Idx = 2 and then Path.Name (1) = '/')
+            then
+               --  We have "/../foo/bar", invalid but we keep as-is
+               Idx := Idx + 3;
+            else
+               Prev := 0;
+
+               --  Find the parent directory separator
+               for J in reverse 1 .. Idx - 2 loop
+                  if Path.Name (J) = '/' then
+                     Prev := J + 1;
+                     exit;
+                  else
+                     Prev := J;
+                  end if;
+               end loop;
+
+               --  No such separator, we have either '../foo/bar' or '..'
+               if Prev = 0 then
+                  if Idx + 1 >= Path.Len then
+                     --  General case: there's something after ..
+                     Path.Name (1 .. Path.Len - Idx - 1) :=
+                       Path.Name (Idx + 1 .. Path.Len);
+                     Path.Len := Path.Len - Idx;
+                     Idx := 1;
+                  else
+                     --  For completeness, handle the case where the path is
+                     --  just '..'
+                     Path.Len := 0;
+
+                     return;
+                  end if;
+               else
+                  Path.Name (Prev .. Path.Len + Prev - Idx - 3) :=
+                    Path.Name (Idx + 3 .. Path.Len);
+                  Path.Len := Path.Len + Prev - Idx - 3;
+                  Idx := Prev;
+               end if;
+            end if;
+
+         elsif Token.Len = 0 then
+            --  We have two consecutive slashes
+            Path.Name (Idx .. Path.Len - 1) := Path.Name (Idx + 1 .. Path.Len);
+            Path.Len := Path.Len - 1;
+
+         else
+            Idx := Idx + Token.Len + 1;
+
          end if;
       end loop;
-
-      --  Preserve the trailing '/' if any
-      if Path.Name (Path.Len) = '/'
-        and then Ret.Name (Ret.Len) /= '/'
-      then
-         Ret.Len := Ret.Len + 1;
-         Ret.Name (Ret.Len) := '/';
-      end if;
-
-      Path := Ret;
    end Normalize;
 
    -----------------
@@ -613,6 +651,17 @@ package body FAT_Filesystem is
       Current_Path := Full;
 
       return True;
+   end Change_Dir;
+
+   ----------------
+   -- Change_Dir --
+   ----------------
+
+   procedure Change_Dir (Dir_Name : FAT_Path)
+   is
+      Dead : Boolean with Unreferenced;
+   begin
+      Dead := Change_Dir (Dir_Name);
    end Change_Dir;
 
    -----------------------
