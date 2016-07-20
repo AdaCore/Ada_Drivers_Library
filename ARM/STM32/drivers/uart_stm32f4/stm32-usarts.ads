@@ -48,11 +48,15 @@
 pragma Restrictions (No_Elaboration_Code);
 
 with System;
+with HAL.UART; use HAL.UART;
 private with STM32_SVD.USART;
 
 package STM32.USARTs is
 
-   type USART is limited private;
+   type Internal_USART is limited private;
+
+   type USART (Periph : not null access Internal_USART) is
+     limited new HAL.UART.UART_Port with private;
 
    procedure Enable (This : in out USART) with
      Post => Enabled (This),
@@ -207,6 +211,49 @@ package STM32.USARTs is
    --  and Receive instead of directly accessing the Data Register!
    --  Seriously, don't use this function otherwise.
 
+   -----------------------------
+   -- HAL.UART implementation --
+   -----------------------------
+
+   overriding
+   function Data_Size (This : USART) return HAL.UART.UART_Data_Size;
+
+   overriding
+   procedure Transmit
+     (Port    : in out USART;
+      Data    : UART_Data_8b;
+      Status  : out UART_Status;
+      Timeout : Natural := 1000)
+     with
+       Pre'Class => Data_Size (Port) = Data_Size_8b;
+
+   overriding
+   procedure Transmit
+     (Port    : in out USART;
+      Data    : UART_Data_9b;
+      Status  : out UART_Status;
+      Timeout : Natural := 1000)
+     with
+       Pre'Class => Data_Size (Port) = Data_Size_9b;
+
+   overriding
+   procedure Receive
+     (Port    : in out USART;
+      Data    : out UART_Data_8b;
+      Status  : out UART_Status;
+      Timeout : Natural := 1000)
+     with
+       Pre'Class => Data_Size (Port) = Data_Size_8b;
+
+   overriding
+   procedure Receive
+     (Port    : in out USART;
+      Data    : out UART_Data_9b;
+      Status  : out UART_Status;
+      Timeout : Natural := 1000)
+     with
+       Pre'Class => Data_Size (Port) = Data_Size_9b;
+
 private
 
    function APB_Clock (This : USART) return Word with Inline;
@@ -218,6 +265,8 @@ private
    --  the F429I Discovery board, they better conform to that assumption.
    --  See Note # 2 in each of Tables 139-141 of the RM on pages 970 - 972.
 
-   type USART is new STM32_SVD.USART.USART2_Peripheral;
+   type Internal_USART is new STM32_SVD.USART.USART2_Peripheral;
+   type USART (Periph : not null access Internal_USART) is
+     limited new HAL.UART.UART_Port with null record;
 
 end STM32.USARTs;

@@ -53,7 +53,10 @@ package body STM32.USARTs is
    function APB_Clock (This : USART) return Word is
       Clocks : constant RCC_System_Clocks := System_Clock_Frequencies;
    begin
-      if This'Address = USART1_Base or This'Address = USART6_Base then
+      if This.Periph.all'Address = USART1_Base
+        or
+         This.Periph.all'Address = USART6_Base
+      then
          return Clocks.PCLK2;
       else
          return Clocks.PCLK1;
@@ -66,7 +69,7 @@ package body STM32.USARTs is
 
    procedure Enable (This : in out USART) is
    begin
-      This.CR1.UE := True;
+      This.Periph.CR1.UE := True;
    end Enable;
 
    -------------
@@ -75,7 +78,7 @@ package body STM32.USARTs is
 
    procedure Disable (This : in out USART) is
    begin
-      This.CR1.UE := False;
+      This.Periph.CR1.UE := False;
    end Disable;
 
    -------------
@@ -83,7 +86,7 @@ package body STM32.USARTs is
    -------------
 
    function Enabled (This : USART) return Boolean is
-     (This.CR1.UE);
+     (This.Periph.CR1.UE);
 
    -------------------
    -- Set_Stop_Bits --
@@ -92,7 +95,7 @@ package body STM32.USARTs is
    procedure Set_Stop_Bits (This : in out USART; To : Stop_Bits)
    is
    begin
-      This.CR2.STOP := Stop_Bits'Enum_Rep (To);
+      This.Periph.CR2.STOP := Stop_Bits'Enum_Rep (To);
    end Set_Stop_Bits;
 
    ---------------------
@@ -104,7 +107,7 @@ package body STM32.USARTs is
       To : Word_Lengths)
    is
    begin
-      This.CR1.M := To = Word_Length_9;
+      This.Periph.CR1.M := To = Word_Length_9;
    end Set_Word_Length;
 
    ----------------
@@ -115,14 +118,14 @@ package body STM32.USARTs is
    begin
       case To is
          when No_Parity =>
-            This.CR1.PCE := False;
-            This.CR1.PS  := False;
+            This.Periph.CR1.PCE := False;
+            This.Periph.CR1.PS  := False;
          when Even_Parity =>
-            This.CR1.PCE := True;
-            This.CR1.PS  := False;
+            This.Periph.CR1.PCE := True;
+            This.Periph.CR1.PS  := False;
          when Odd_Parity =>
-            This.CR1.PCE := True;
-            This.CR1.PS  := True;
+            This.Periph.CR1.PCE := True;
+            This.Periph.CR1.PS  := True;
       end case;
    end Set_Parity;
 
@@ -132,21 +135,21 @@ package body STM32.USARTs is
 
    procedure Set_Baud_Rate (This : in out USART; To : Baud_Rates) is
       Clock        : constant Word := APB_Clock (This);
-      Over_By_8    : constant Boolean := This.CR1.OVER8;
+      Over_By_8    : constant Boolean := This.Periph.CR1.OVER8;
       Int_Scale    : constant Word := (if Over_By_8 then 2 else 4);
       Int_Divider  : constant Word := (25 * Clock) / (Int_Scale * To);
       Frac_Divider : constant Word := Int_Divider rem 100;
    begin
       --  the integer part of the divi
       if Over_By_8 then
-         This.BRR.DIV_Fraction :=
+         This.Periph.BRR.DIV_Fraction :=
            BRR_DIV_Fraction_Field (((Frac_Divider * 8) + 50) / 100 mod 8);
       else
-         This.BRR.DIV_Fraction :=
+         This.Periph.BRR.DIV_Fraction :=
            BRR_DIV_Fraction_Field (((Frac_Divider * 16) + 50) / 100 mod 16);
       end if;
 
-      This.BRR.DIV_Mantissa :=
+      This.Periph.BRR.DIV_Mantissa :=
         BRR_DIV_Mantissa_Field (Int_Divider / 100);
    end Set_Baud_Rate;
 
@@ -159,7 +162,7 @@ package body STM32.USARTs is
       To   : Oversampling_Modes)
    is
    begin
-      This.CR1.OVER8 := To = Oversampling_By_8;
+      This.Periph.CR1.OVER8 := To = Oversampling_By_8;
    end Set_Oversampling_Mode;
 
    --------------
@@ -168,8 +171,8 @@ package body STM32.USARTs is
 
    procedure Set_Mode (This : in out USART;  To : UART_Modes) is
    begin
-      This.CR1.RE := To /= Tx_Mode;
-      This.CR1.TE := To /= Rx_Mode;
+      This.Periph.CR1.RE := To /= Tx_Mode;
+      This.Periph.CR1.TE := To /= Rx_Mode;
    end Set_Mode;
 
    ----------------------
@@ -180,17 +183,17 @@ package body STM32.USARTs is
    begin
       case To is
          when No_Flow_Control =>
-            This.CR3.RTSE := False;
-            This.CR3.CTSE := False;
+            This.Periph.CR3.RTSE := False;
+            This.Periph.CR3.CTSE := False;
          when RTS_Flow_Control =>
-            This.CR3.RTSE := True;
-            This.CR3.CTSE := False;
+            This.Periph.CR3.RTSE := True;
+            This.Periph.CR3.CTSE := False;
          when CTS_Flow_Control =>
-            This.CR3.RTSE := False;
-            This.CR3.CTSE := True;
+            This.Periph.CR3.RTSE := False;
+            This.Periph.CR3.CTSE := True;
          when RTS_CTS_Flow_Control =>
-            This.CR3.RTSE := True;
-            This.CR3.CTSE := True;
+            This.Periph.CR3.RTSE := True;
+            This.Periph.CR3.CTSE := True;
       end case;
    end Set_Flow_Control;
 
@@ -200,7 +203,7 @@ package body STM32.USARTs is
 
    procedure Transmit (This : in out USART;  Data : UInt9) is
    begin
-      This.DR.DR := Data;
+      This.Periph.DR.DR := Data;
    end Transmit;
 
    ---------
@@ -216,7 +219,7 @@ package body STM32.USARTs is
    -- Current_Input --
    -------------------
 
-   function Current_Input (This : USART) return UInt9 is (This.DR.DR);
+   function Current_Input (This : USART) return UInt9 is (This.Periph.DR.DR);
 
    --------------
    -- Tx_Ready --
@@ -224,7 +227,7 @@ package body STM32.USARTs is
 
    function Tx_Ready (This : USART) return Boolean is
    begin
-      return This.SR.TXE;
+      return This.Periph.SR.TXE;
    end Tx_Ready;
 
    --------------
@@ -233,7 +236,7 @@ package body STM32.USARTs is
 
    function Rx_Ready (This : USART) return Boolean is
    begin
-      return This.SR.RXNE;
+      return This.Periph.SR.RXNE;
    end Rx_Ready;
 
    ------------
@@ -244,25 +247,25 @@ package body STM32.USARTs is
    begin
       case Flag is
          when Parity_Error_Indicated =>
-            return This.SR.PE;
+            return This.Periph.SR.PE;
          when Framing_Error_Indicated =>
-            return This.SR.FE;
+            return This.Periph.SR.FE;
          when USART_Noise_Error_Indicated =>
-            return This.SR.NF;
+            return This.Periph.SR.NF;
          when Overrun_Error_Indicated =>
-            return This.SR.ORE;
+            return This.Periph.SR.ORE;
          when Idle_Line_Detection_Indicated =>
-            return This.SR.IDLE;
+            return This.Periph.SR.IDLE;
          when Read_Data_Register_Not_Empty =>
-            return This.SR.RXNE;
+            return This.Periph.SR.RXNE;
          when Transmission_Complete_Indicated =>
-            return This.SR.TC;
+            return This.Periph.SR.TC;
          when Transmit_Data_Register_Empty =>
-            return This.SR.TXE;
+            return This.Periph.SR.TXE;
          when Line_Break_Detection_Indicated =>
-            return This.SR.LBD;
+            return This.Periph.SR.LBD;
          when Clear_To_Send_Indicated =>
-            return This.SR.CTS;
+            return This.Periph.SR.CTS;
       end case;
    end Status;
 
@@ -274,25 +277,25 @@ package body STM32.USARTs is
    begin
       case Flag is
          when Parity_Error_Indicated =>
-            This.SR.PE := False;
+            This.Periph.SR.PE := False;
          when Framing_Error_Indicated =>
-            This.SR.FE := False;
+            This.Periph.SR.FE := False;
          when USART_Noise_Error_Indicated =>
-            This.SR.NF := False;
+            This.Periph.SR.NF := False;
          when Overrun_Error_Indicated =>
-            This.SR.ORE := False;
+            This.Periph.SR.ORE := False;
          when Idle_Line_Detection_Indicated =>
-            This.SR.IDLE := False;
+            This.Periph.SR.IDLE := False;
          when Read_Data_Register_Not_Empty =>
-            This.SR.RXNE := False;
+            This.Periph.SR.RXNE := False;
          when Transmission_Complete_Indicated =>
-            This.SR.TC := False;
+            This.Periph.SR.TC := False;
          when Transmit_Data_Register_Empty =>
-            This.SR.TXE := False;
+            This.Periph.SR.TXE := False;
          when Line_Break_Detection_Indicated =>
-            This.SR.LBD := False;
+            This.Periph.SR.LBD := False;
          when Clear_To_Send_Indicated =>
-            This.SR.CTS := False;
+            This.Periph.SR.CTS := False;
       end case;
    end Clear_Status;
 
@@ -307,21 +310,21 @@ package body STM32.USARTs is
    begin
       case Source is
          when Parity_Error =>
-            This.CR1.PEIE := True;
+            This.Periph.CR1.PEIE := True;
          when Transmit_Data_Register_Empty =>
-            This.CR1.TXEIE := True;
+            This.Periph.CR1.TXEIE := True;
          when Transmission_Complete =>
-            This.CR1.TCIE := True;
+            This.Periph.CR1.TCIE := True;
          when Received_Data_Not_Empty =>
-            This.CR1.RXNEIE := True;
+            This.Periph.CR1.RXNEIE := True;
          when Idle_Line_Detection =>
-            This.CR1.IDLEIE := True;
+            This.Periph.CR1.IDLEIE := True;
          when Line_Break_Detection =>
-            This.CR2.LBDIE := True;
+            This.Periph.CR2.LBDIE := True;
          when Clear_To_Send =>
-            This.CR3.CTSIE := True;
+            This.Periph.CR3.CTSIE := True;
          when Error =>
-            This.CR3.EIE := True;
+            This.Periph.CR3.EIE := True;
       end case;
    end Enable_Interrupts;
 
@@ -336,21 +339,21 @@ package body STM32.USARTs is
    begin
       case Source is
          when Parity_Error =>
-            This.CR1.PEIE := False;
+            This.Periph.CR1.PEIE := False;
          when Transmit_Data_Register_Empty =>
-            This.CR1.TXEIE := False;
+            This.Periph.CR1.TXEIE := False;
          when Transmission_Complete =>
-            This.CR1.TCIE := False;
+            This.Periph.CR1.TCIE := False;
          when Received_Data_Not_Empty =>
-            This.CR1.RXNEIE := False;
+            This.Periph.CR1.RXNEIE := False;
          when Idle_Line_Detection =>
-            This.CR1.IDLEIE := False;
+            This.Periph.CR1.IDLEIE := False;
          when Line_Break_Detection =>
-            This.CR2.LBDIE := False;
+            This.Periph.CR2.LBDIE := False;
          when Clear_To_Send =>
-            This.CR3.CTSIE := False;
+            This.Periph.CR3.CTSIE := False;
          when Error =>
-            This.CR3.EIE := False;
+            This.Periph.CR3.EIE := False;
       end case;
    end Disable_Interrupts;
 
@@ -366,21 +369,21 @@ package body STM32.USARTs is
    begin
       case Source is
          when Parity_Error =>
-            return This.CR1.PEIE;
+            return This.Periph.CR1.PEIE;
          when Transmit_Data_Register_Empty =>
-            return This.CR1.TXEIE;
+            return This.Periph.CR1.TXEIE;
          when Transmission_Complete =>
-            return This.CR1.TCIE;
+            return This.Periph.CR1.TCIE;
          when Received_Data_Not_Empty =>
-            return This.CR1.RXNEIE;
+            return This.Periph.CR1.RXNEIE;
          when Idle_Line_Detection =>
-            return This.CR1.IDLEIE;
+            return This.Periph.CR1.IDLEIE;
          when Line_Break_Detection =>
-            return This.CR2.LBDIE;
+            return This.Periph.CR2.LBDIE;
          when Clear_To_Send =>
-            return This.CR3.CTSIE;
+            return This.Periph.CR3.CTSIE;
          when Error =>
-            return This.CR3.EIE;
+            return This.Periph.CR3.EIE;
       end case;
    end Interrupt_Enabled;
 
@@ -390,7 +393,7 @@ package body STM32.USARTs is
 
    procedure Enable_DMA_Transmit_Requests (This : in out USART) is
    begin
-      This.CR3.DMAT := True;
+      This.Periph.CR3.DMAT := True;
    end Enable_DMA_Transmit_Requests;
 
    ---------------------------------
@@ -399,7 +402,7 @@ package body STM32.USARTs is
 
    procedure Enable_DMA_Receive_Requests (This : in out USART) is
    begin
-      This.CR3.DMAR := True;
+      This.Periph.CR3.DMAR := True;
    end Enable_DMA_Receive_Requests;
 
    -----------------------------------
@@ -408,7 +411,7 @@ package body STM32.USARTs is
 
    procedure Disable_DMA_Transmit_Requests (This : in out USART) is
    begin
-      This.CR3.DMAT := False;
+      This.Periph.CR3.DMAT := False;
    end Disable_DMA_Transmit_Requests;
 
    ----------------------------------
@@ -417,7 +420,7 @@ package body STM32.USARTs is
 
    procedure Disable_DMA_Receive_Requests (This : in out USART) is
    begin
-      This.CR3.DMAR := True;
+      This.Periph.CR3.DMAR := True;
    end Disable_DMA_Receive_Requests;
 
    -----------------------------------
@@ -425,14 +428,14 @@ package body STM32.USARTs is
    -----------------------------------
 
    function DMA_Transmit_Requests_Enabled  (This : USART) return Boolean is
-      (This.CR3.DMAT);
+      (This.Periph.CR3.DMAT);
 
    ----------------------------------
    -- DMA_Receive_Requests_Enabled --
    ----------------------------------
 
    function DMA_Receive_Requests_Enabled  (This : USART) return Boolean is
-      (This.CR3.DMAR);
+      (This.Periph.CR3.DMAR);
 
    -----------------------------
    -- Resume_DMA_Transmission --
@@ -463,6 +466,113 @@ package body STM32.USARTs is
    ---------------------------
 
    function Data_Register_Address (This : USART) return System.Address is
-         (This.DR'Address);
+         (This.Periph.DR'Address);
+
+   ---------------
+   -- Data_Size --
+   ---------------
+
+   overriding
+   function Data_Size (This : USART) return HAL.UART.UART_Data_Size
+   is
+   begin
+      if This.Periph.CR1.M then
+         return Data_Size_9b;
+      else
+         return Data_Size_8b;
+      end if;
+   end Data_Size;
+
+   --------------
+   -- Transmit --
+   --------------
+
+   overriding
+   procedure Transmit
+     (Port    : in out USART;
+      Data    : UART_Data_8b;
+      Status  : out UART_Status;
+      Timeout : Natural := 1000)
+   is
+      pragma Unreferenced (Status, Timeout);
+   begin
+      for Elt of Data loop
+         loop
+            exit when Port.Tx_Ready;
+         end loop;
+
+         Port.Transmit (UInt9 (Elt));
+      end loop;
+      Status := Ok;
+   end Transmit;
+
+   --------------
+   -- Transmit --
+   --------------
+
+   overriding
+   procedure Transmit
+     (Port    : in out USART;
+      Data    : UART_Data_9b;
+      Status  : out UART_Status;
+      Timeout : Natural := 1000)
+   is
+      pragma Unreferenced (Status, Timeout);
+   begin
+      for Elt of Data loop
+         loop
+            exit when Port.Tx_Ready;
+         end loop;
+
+         Port.Transmit (Elt);
+      end loop;
+      Status := Ok;
+   end Transmit;
+
+   -------------
+   -- Receive --
+   -------------
+
+   overriding
+   procedure Receive
+     (Port    : in out USART;
+      Data    : out UART_Data_8b;
+      Status  : out UART_Status;
+      Timeout : Natural := 1000)
+   is
+      pragma Unreferenced (Status, Timeout);
+   begin
+      for Elt of Data loop
+         loop
+            exit when Port.Rx_Ready;
+         end loop;
+
+         Port.Receive (UInt9 (Elt));
+      end loop;
+      Status := Ok;
+   end Receive;
+
+   -------------
+   -- Receive --
+   -------------
+
+   overriding
+   procedure Receive
+     (Port    : in out USART;
+      Data    : out UART_Data_9b;
+      Status  : out UART_Status;
+      Timeout : Natural := 1000)
+   is
+      pragma Unreferenced (Status, Timeout);
+   begin
+      for Elt of Data loop
+         loop
+            exit when Port.Rx_Ready;
+         end loop;
+
+         Port.Receive (Elt);
+      end loop;
+      Status := Ok;
+   end Receive;
 
 end STM32.USARTs;

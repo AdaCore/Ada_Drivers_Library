@@ -258,13 +258,13 @@ package body STM32.Device is
 
    procedure Enable_Clock (This : aliased in out USART) is
    begin
-      if This'Address = USART1_Base then
+      if This.Periph.all'Address = USART1_Base then
          RCC_Periph.APB2ENR.USART1EN := True;
-      elsif This'Address = USART2_Base then
+      elsif This.Periph.all'Address = USART2_Base then
          RCC_Periph.APB1ENR.USART2EN := True;
-      elsif This'Address = USART3_Base then
+      elsif This.Periph.all'Address = USART3_Base then
          RCC_Periph.APB1ENR.USART3EN := True;
-      elsif This'Address = USART6_Base then
+      elsif This.Periph.all'Address = USART6_Base then
          RCC_Periph.APB2ENR.USART6EN := True;
       else
          raise Unknown_Device;
@@ -277,16 +277,16 @@ package body STM32.Device is
 
    procedure Reset (This : aliased in out USART) is
    begin
-      if This'Address = USART1_Base then
+      if This.Periph.all'Address = USART1_Base then
          RCC_Periph.APB2RSTR.USART1RST := True;
          RCC_Periph.APB2RSTR.USART1RST := False;
-      elsif This'Address = USART2_Base then
+      elsif This.Periph.all'Address = USART2_Base then
          RCC_Periph.APB1RSTR.UART2RST := True;
          RCC_Periph.APB1RSTR.UART2RST := False;
-      elsif This'Address = USART3_Base then
+      elsif This.Periph.all'Address = USART3_Base then
          RCC_Periph.APB1RSTR.UART3RST := True;
          RCC_Periph.APB1RSTR.UART3RST := False;
-      elsif This'Address = USART6_Base then
+      elsif This.Periph.all'Address = USART6_Base then
          RCC_Periph.APB2RSTR.USART6RST := True;
          RCC_Periph.APB2RSTR.USART6RST := False;
       else
