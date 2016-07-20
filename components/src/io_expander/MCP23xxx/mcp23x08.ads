@@ -25,6 +25,14 @@ package MCP23x08 is
    procedure Toggle (This  : in out MCP23x08_Device;
                      Pin   : MCP23x08_Pin);
 
+
+   type ALl_IO_Array is array (MCP23x08_Pin) of Boolean
+     with Pack, Size => 8;
+
+   function Get_All_IO (This : in out MCP23x08_Device) return ALl_IO_Array;
+
+   procedure Set_All_IO (This : in out MCP23x08_Device; IOs : ALl_IO_Array);
+
    function Get_GPIO_Point (This : in out MCP23x08_Device;
                             Pin  : MCP23x08_Pin)
                             return not null HAL.GPIO.GPIO_Point_Ref;

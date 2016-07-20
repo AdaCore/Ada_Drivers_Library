@@ -1,7 +1,14 @@
 with Interfaces; use Interfaces;
+with Ada.Unchecked_Conversion;
 
 package body MCP23x08 is
 
+   function To_Byte is
+      new Ada.Unchecked_Conversion (Source => ALl_IO_Array,
+                                    Target => Byte);
+   function To_All_IO_Array is
+      new Ada.Unchecked_Conversion (Source => Byte,
+                                    Target => ALl_IO_Array);
    procedure Loc_IO_Write
      (This      : in out MCP23x08_Device;
       WriteAddr : Register_Address;
@@ -163,6 +170,26 @@ package body MCP23x08 is
          This.Set (Pin);
       end if;
    end Toggle;
+
+   ----------------
+   -- Get_All_IO --
+   ----------------
+
+   function Get_All_IO (This : in out MCP23x08_Device) return ALl_IO_Array is
+      Val : Byte;
+   begin
+      Loc_IO_Read (This, LOGIC_LEVLEL_REG, Val);
+      return To_All_IO_Array (Val);
+   end Get_All_IO;
+
+   ----------------
+   -- Set_All_IO --
+   ----------------
+
+   procedure Set_All_IO (This : in out MCP23x08_Device; IOs : ALl_IO_Array) is
+   begin
+      Loc_IO_Write (This, LOGIC_LEVLEL_REG, To_Byte (IOs));
+   end Set_All_IO;
 
    --------------------
    -- Get_GPIO_Point --
