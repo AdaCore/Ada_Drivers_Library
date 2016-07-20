@@ -1052,7 +1052,7 @@ package body STM32.I2C is
          elsif Idx + 1 = Data'Last then
             --  Two bytes to read
             Handle.Periph.CR1.ACK := False;
-            
+
             Wait_Flag (Handle, Byte_Transfer_Finished, False, Timeout, Status);
             if Status /= HAL.I2C.Ok then
                return;
