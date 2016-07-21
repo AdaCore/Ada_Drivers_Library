@@ -3,15 +3,7 @@ with "../config.gpr";
 
 library project Components is
 
-   for Source_Dirs use
-     ("src/motion/**",
-      "src/screen/**",
-      "src/touch_panel/**",
-      "src/audio/**",
-      "src/camera/**",
-      "src/io_expander/**",
-      "src/printer/**");
-   --  The others component drivers are not HAL compliant yet
+   for Source_Dirs use ("src/**");
 
    for Languages use ("Ada");
    for Library_Name use "components";
