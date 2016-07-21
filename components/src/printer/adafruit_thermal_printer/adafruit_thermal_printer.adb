@@ -99,7 +99,7 @@ package body AdaFruit_Thermal_Printer is
 
    procedure Set_Bold (This : in out TP_Device; Bold : Boolean) is
    begin
-      Write (This, ASCII.ESC & ' ' & To_Char (if Bold then 1 else 0));
+      Write (This, ASCII.ESC & 'E' & To_Char (if Bold then 1 else 0));
    end Set_Bold;
 
    ----------------------
@@ -130,7 +130,7 @@ package body AdaFruit_Thermal_Printer is
 
    procedure Set_Reversed (This : in out TP_Device; Reversed : Boolean) is
    begin
-      Write (This, ASCII.ESC & 'B' & To_Char (if Reversed then 1 else 0));
+      Write (This, ASCII.GS & 'B' & To_Char (if Reversed then 1 else 0));
    end Set_Reversed;
 
    --------------------------
@@ -160,6 +160,14 @@ package body AdaFruit_Thermal_Printer is
       Write (This, ASCII.ESC & '@');
    end Reset;
 
+   -----------
+   -- Print --
+   -----------
+
+   procedure Print (This : in out TP_Device; Text : String) is
+   begin
+      Write (This, Text);
+   end Print;
 
    ----------------
    -- Get_Status --

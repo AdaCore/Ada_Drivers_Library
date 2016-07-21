@@ -6,6 +6,9 @@ package AdaFruit_Thermal_Printer is
    type TP_Device (Port : not null HAL.UART.UART_Port_Ref) is
      tagged private;
 
+   --  The baud rate for this printers is usually 19_200 but some printers
+   --  use 9_600.
+
    --  Sets the line spacing to n dots. The default value is 32
    procedure Set_Line_Spacing (This : in out TP_Device; Spacing : Byte);
    type Text_Align is (Right, Center, Left);
@@ -24,6 +27,8 @@ package AdaFruit_Thermal_Printer is
    procedure Set_Character_Set (This : in out TP_Device; Set : Character_Set);
 
    procedure Reset (This : in out TP_Device); --  ESC @
+
+   procedure Print (This : in out TP_Device; Text : String);
 
    type Printer_Status is record
       Paper       : Boolean;
