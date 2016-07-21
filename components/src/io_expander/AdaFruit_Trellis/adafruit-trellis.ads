@@ -1,7 +1,7 @@
 with HT16K33; use HT16K33;
 with HAL;     use HAL;
 
-package AdaFruit_Trellis is
+package AdaFruit.Trellis is
 
    type Trellis_Device is new HT16K33_Device with private;
 
@@ -20,4 +20,4 @@ package AdaFruit_Trellis is
 
 private
    type Trellis_Device is new HT16K33_Device with null record;
-end AdaFruit_Trellis;
+end AdaFruit.Trellis;

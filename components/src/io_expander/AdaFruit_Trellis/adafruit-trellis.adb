@@ -1,4 +1,4 @@
-package body AdaFruit_Trellis is
+package body AdaFruit.Trellis is
 
    type LED_Address is record
       Row : HT16K33.LED_Row_Addr;
@@ -48,4 +48,4 @@ package body AdaFruit_Trellis is
    begin
       return This.Get_Key (Key_Mapping (X, Y).Row, Key_Mapping (X, Y).Column);
    end Key;
-end AdaFruit_Trellis;
+end AdaFruit.Trellis;

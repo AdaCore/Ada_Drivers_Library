@@ -2,7 +2,7 @@ with Ada.Unchecked_Conversion;
 with HAL.UART; use HAL.UART;
 with Interfaces; use Interfaces;
 
-package body AdaFruit_Thermal_Printer is
+package body AdaFruit.Thermal_Printer is
 
    function To_Char is new Ada.Unchecked_Conversion (Source => Byte,
                                                      Target => Character);
@@ -222,4 +222,4 @@ package body AdaFruit_Thermal_Printer is
       Write (This, ASCII.DC2 & 'T');
    end Print_Test_Page;
 
-end AdaFruit_Thermal_Printer;
+end AdaFruit.Thermal_Printer;

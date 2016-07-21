@@ -1,7 +1,7 @@
 with HAL.UART;
 with HAL; use HAL;
 
-package AdaFruit_Thermal_Printer is
+package AdaFruit.Thermal_Printer is
 
    type TP_Device (Port : not null HAL.UART.UART_Port_Ref) is
      tagged private;
@@ -55,4 +55,4 @@ private
    type TP_Device (Port : not null HAL.UART.UART_Port_Ref) is
      tagged null record;
 
-end AdaFruit_Thermal_Printer;
+end AdaFruit.Thermal_Printer;
