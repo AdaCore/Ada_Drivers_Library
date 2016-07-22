@@ -169,6 +169,7 @@ package STM32.GPIO is
    GPIO_AF_OTG_HS    : constant GPIO_Alternate_Function;
    GPIO_AF_SAI2      : constant GPIO_Alternate_Function;
    GPIO_AF_ETH       : constant GPIO_Alternate_Function;
+   GPIO_AF11_I2C4    : constant GPIO_Alternate_Function;
    GPIO_AF_FSMC      : constant GPIO_Alternate_Function;
    GPIO_AF_OTG_HS_FS : constant GPIO_Alternate_Function;
    GPIO_AF_SDIO      : constant GPIO_Alternate_Function;
@@ -350,6 +351,7 @@ private
    GPIO_AF_OTG_HS    : constant GPIO_Alternate_Function := 10;
    GPIO_AF_SAI2      : constant GPIO_Alternate_Function := 10;
    GPIO_AF_ETH       : constant GPIO_Alternate_Function := 11;
+   GPIO_AF11_I2C4    : constant GPIO_Alternate_Function := 11;
    GPIO_AF_FSMC      : constant GPIO_Alternate_Function := 12;
    GPIO_AF_OTG_HS_FS : constant GPIO_Alternate_Function := 12;
    GPIO_AF_SDIO      : constant GPIO_Alternate_Function := 12;

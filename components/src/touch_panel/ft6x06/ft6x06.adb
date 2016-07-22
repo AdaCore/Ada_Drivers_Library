@@ -64,8 +64,9 @@ package body FT6x06 is
    -- TP_Set_Use_Interrupts --
    ---------------------------
 
-   procedure TP_Set_Use_Interrupts (This : in out FT6x06_Device;
-                                    Enabled : Boolean)
+   procedure TP_Set_Use_Interrupts
+     (This    : in out FT6x06_Device;
+      Enabled : Boolean)
    is
       Reg_Value : Byte := 0;
       Status    : Boolean with Unreferenced;

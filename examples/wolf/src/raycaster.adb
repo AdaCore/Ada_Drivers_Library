@@ -27,7 +27,7 @@ with Ada.Text_IO;
 
 with Interfaces;                        use Interfaces;
 
-with Cortex_M.Cache;                    use Cortex_M.Cache;
+with Cortex_M.Cache;
 
 with STM32.Button;
 with STM32.DMA2D_Bitmap;                use STM32.DMA2D_Bitmap;

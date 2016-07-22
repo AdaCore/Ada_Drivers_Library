@@ -8,3 +8,4 @@ svd:
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/STM32F429x.svd --boolean -o stm32f429x -p STM32_SVD --base-types-package HAL
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/STM32F46_79x.svd --boolean -o stm32f46_79x -p STM32_SVD --base-types-package HAL
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/STM32F7x.svd --boolean -o stm32f7x -p STM32_SVD --base-types-package HAL
+	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/STM32F7x9.svd --boolean -o stm32f7x9 -p STM32_SVD --base-types-package HAL
