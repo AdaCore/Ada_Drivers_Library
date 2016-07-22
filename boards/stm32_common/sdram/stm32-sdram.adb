@@ -1,6 +1,6 @@
 with Ada.Real_Time;   use Ada.Real_Time;
 pragma Warnings (Off, "* is an internal GNAT unit*");
-with System.BB.Board_Parameters;
+with System.BB.Parameters;
 pragma Warnings (On, "* is an internal GNAT unit*");
 
 with STM32.Board;     use STM32.Board;
@@ -111,7 +111,7 @@ package body STM32.SDRAM is
       Timing_Conf     : FMC_SDRAM_TimingInit_Config;
       SDRAM_Conf      : FMC_SDRAM_Init_Config;
       SDCLK           : constant :=
-                          System.BB.Board_Parameters.Main_Clock_Frequency / 2;
+                          System.BB.Parameters.Clock_Frequency / 2;
       SDPeriod_In_ns  : constant :=
                           1_000_000_000 / SDCLK;
       Refresh_Delay   : Unsigned_32;
