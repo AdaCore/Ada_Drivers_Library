@@ -9,7 +9,7 @@ with STM32.GPIO;           use STM32.GPIO;
 with STM32.DSI;            use STM32.DSI;
 with STM32.SDRAM;          use STM32.SDRAM;
 
-with STM32_SVD.DSIHOST;    use STM32_SVD.DSIHOST;
+with STM32_SVD.DSI;        use STM32_SVD.DSI;
 with STM32_SVD.RCC;        use STM32_SVD.RCC;
 with STM32_SVD.LTDC;       use STM32_SVD.LTDC;
 
@@ -90,13 +90,13 @@ package body Framebuffer_OTM8009A is
       procedure Interrupt
       is
       begin
-         if DSIHOST_Periph.DSI_WISR.ERIF then
-            DSIHOST_Periph.DSI_WIFCR.CERIF := True;
+         if DSI_Periph.DSI_WISR.ERIF then
+            DSI_Periph.DSI_WIFCR.CERIF := True;
             End_Of_Refresh_Callback;
          end if;
 
-         if DSIHOST_Periph.DSI_WISR.TEIF then
-            DSIHOST_Periph.DSI_WIFCR.CTEIF := True;
+         if DSI_Periph.DSI_WISR.TEIF then
+            DSI_Periph.DSI_WIFCR.CTEIF := True;
             Tearing_Effect_Callback;
          end if;
       end Interrupt;

@@ -46,7 +46,7 @@ with System.BB.Parameters; use System.BB.Parameters;
 pragma Warnings (On, "* is an internal GNAT unit");
 
 with HAL.DSI;           use HAL.DSI;
-with STM32_SVD.DSIHOST; use STM32_SVD.DSIHOST;
+with STM32_SVD.DSI;     use STM32_SVD.DSI;
 with STM32_SVD.RCC;     use STM32_SVD.RCC;
 
 package body STM32.DSI is
@@ -156,14 +156,14 @@ package body STM32.DSI is
       This.Periph.DSI_CLCR.ACR  := Auto_Clock_Lane_Control;
 
       --  Configure the number of active data lanes
-      This.Periph.DSI_PCCONFR.NL :=
+      This.Periph.DSI_PCONFR.NL :=
         DSI_Number_Of_Lanes'Enum_Rep (Number_Of_Lanes);
 
       ----------------------------------
       -- Set the DSI Clock parameters --
       ----------------------------------
 
-      This.Periph.DSIHSOT_CCR.TXECKDIV := TX_Escape_Clock_Division;
+      This.Periph.DSI_CCR.TXECKDIV := TX_Escape_Clock_Division;
 
       --  Calculate the bit period in high-speed mode in unit of 0.25 ns.
       --  The equation is UIX4 = IntegerPart ((1000/F_PHY_Mhz) * 4)
@@ -219,18 +219,18 @@ package body STM32.DSI is
 
    procedure DSI_Setup_Video_Mode
      (This                        : in out DSI_Host;
-      Virtual_Channel             : DSI_Virtual_Channel_ID;
+      Virtual_Channel             : HAL.DSI.DSI_Virtual_Channel_ID;
       Color_Coding                : DSI_Color_Mode;
       Loosely_Packed              : Boolean;
       Video_Mode                  : DSI_Video_Mode;
-      Packet_Size                 : UInt15;
-      Number_Of_Chunks            : UInt14;
-      Null_Packet_Size            : UInt14;
+      Packet_Size                 : UInt14;
+      Number_Of_Chunks            : UInt13;
+      Null_Packet_Size            : UInt13;
       HSync_Polarity              : DSI_Polarity;
       VSync_Polarity              : DSI_Polarity;
       DataEn_Polarity             : DSI_Polarity;
-      HSync_Active_Duration       : UInt13;
-      Horizontal_BackPorch        : UInt13;
+      HSync_Active_Duration       : UInt12;
+      Horizontal_BackPorch        : UInt12;
       Horizontal_Line             : UInt15;
       VSync_Active_Duration       : UInt10;
       Vertical_BackPorch          : UInt10;
@@ -309,7 +309,7 @@ package body STM32.DSI is
       This.Periph.DSI_LPMCR.VLPSIZE := LP_VACT_Largest_Packet_Size;
       This.Periph.DSI_VMCR.LPHFE    := LP_H_Front_Porch_Enable;
       This.Periph.DSI_VMCR.LPHBPE   := LP_H_Back_Porch_Enable;
-      This.Periph.DSI_VMCR.LVAE     := LP_V_Active_Enable;
+      This.Periph.DSI_VMCR.LPVAE    := LP_V_Active_Enable;
       This.Periph.DSI_VMCR.LPVFPE   := LP_V_Front_Porch_Enable;
       This.Periph.DSI_VMCR.LPVBPE   := LP_V_Back_Porch_Enable;
       This.Periph.DSI_VMCR.LPVSAE   := LP_V_Sync_Active_Enable;

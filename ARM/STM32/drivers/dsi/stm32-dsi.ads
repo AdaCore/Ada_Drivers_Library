@@ -38,11 +38,11 @@
 --   COPYRIGHT(c) 2015 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with STM32_SVD.DSIHOST;
+with STM32_SVD.DSI;
 with HAL.DSI;
 
 package STM32.DSI is
-   package SVD_DSI renames STM32_SVD.DSIHOST;
+   package SVD_DSI renames STM32_SVD.DSI;
 
    type DSI_Number_Of_Lanes is
      (One_Data_Lane,
@@ -109,7 +109,7 @@ package STM32.DSI is
       Flow_Control_EOTP_RX,
       Flow_Control_EOTP_TX);
 
-   type DSI_Host (Periph : not null access SVD_DSI.DSIHOST_Peripheral) is
+   type DSI_Host (Periph : not null access SVD_DSI.DSI_Peripheral) is
      limited new HAL.DSI.DSI_Port with private;
 
 
@@ -131,14 +131,14 @@ package STM32.DSI is
       Color_Coding                : DSI_Color_Mode;
       Loosely_Packed              : Boolean;
       Video_Mode                  : DSI_Video_Mode;
-      Packet_Size                 : UInt15;
-      Number_Of_Chunks            : UInt14;
-      Null_Packet_Size            : UInt14;
+      Packet_Size                 : UInt14;
+      Number_Of_Chunks            : UInt13;
+      Null_Packet_Size            : UInt13;
       HSync_Polarity              : DSI_Polarity;
       VSync_Polarity              : DSI_Polarity;
       DataEn_Polarity             : DSI_Polarity;
-      HSync_Active_Duration       : UInt13;
-      Horizontal_BackPorch        : UInt13;
+      HSync_Active_Duration       : UInt12;
+      Horizontal_BackPorch        : UInt12;
       Horizontal_Line             : UInt15;
       VSync_Active_Duration       : UInt10;
       Vertical_BackPorch          : UInt10;
@@ -211,7 +211,7 @@ package STM32.DSI is
       Param1     : Byte;
       Parameters : HAL.DSI.DSI_Data);
 private
-   type DSI_Host (Periph : not null access SVD_DSI.DSIHOST_Peripheral) is
+   type DSI_Host (Periph : not null access SVD_DSI.DSI_Peripheral) is
      limited new HAL.DSI.DSI_Port with null record;
 
 end STM32.DSI;

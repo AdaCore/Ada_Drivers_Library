@@ -145,7 +145,7 @@ package STM32_SVD is
      System'To_Address (16#40006C00#);
    SPDIF_RX_Base : constant System.Address :=
      System'To_Address (16#40004000#);
-   SDMMC1_Base : constant System.Address :=
+   SDMMC_Base : constant System.Address :=
      System'To_Address (16#40012C00#);
    LPTIM1_Base : constant System.Address :=
      System'To_Address (16#40002400#);

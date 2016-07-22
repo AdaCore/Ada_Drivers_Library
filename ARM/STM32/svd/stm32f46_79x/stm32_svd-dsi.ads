@@ -6,7 +6,7 @@ pragma Ada_2012;
 with HAL;
 with System;
 
-package STM32_SVD.DSIHOST is
+package STM32_SVD.DSI is
    pragma Preelaborate;
 
    ---------------
@@ -32,26 +32,26 @@ package STM32_SVD.DSIHOST is
       Reserved_1_31 at 0 range 1 .. 31;
    end record;
 
-   --------------------------
-   -- DSIHSOT_CCR_Register --
-   --------------------------
+   ----------------------
+   -- DSI_CCR_Register --
+   ----------------------
 
-   subtype DSIHSOT_CCR_TXECKDIV_Field is HAL.Byte;
-   subtype DSIHSOT_CCR_TOCKDIV_Field is HAL.Byte;
+   subtype DSI_CCR_TXECKDIV_Field is HAL.Byte;
+   subtype DSI_CCR_TOCKDIV_Field is HAL.Byte;
 
    --  DSI HOST Clock Control Register
-   type DSIHSOT_CCR_Register is record
-      --  TXECKDIV
-      TXECKDIV       : DSIHSOT_CCR_TXECKDIV_Field := 16#2A#;
-      --  TOCKDIV
-      TOCKDIV        : DSIHSOT_CCR_TOCKDIV_Field := 16#30#;
+   type DSI_CCR_Register is record
+      --  TX Escape Clock Division
+      TXECKDIV       : DSI_CCR_TXECKDIV_Field := 16#0#;
+      --  Timeout Clock Division
+      TOCKDIV        : DSI_CCR_TOCKDIV_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#3133#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for DSIHSOT_CCR_Register use record
+   for DSI_CCR_Register use record
       TXECKDIV       at 0 range 0 .. 7;
       TOCKDIV        at 0 range 8 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
@@ -248,7 +248,7 @@ package STM32_SVD.DSIHOST is
       --  Low-power Vertical Front-porch Enable
       LPVFPE         : Boolean := False;
       --  Low-Power Vertical Active Enable
-      LVAE           : Boolean := False;
+      LPVAE          : Boolean := False;
       --  Low-Power Horizontal Back-Porch Enable
       LPHBPE         : Boolean := False;
       --  Low-Power Horizontal Front-Porch Enable
@@ -279,7 +279,7 @@ package STM32_SVD.DSIHOST is
       LPVSAE         at 0 range 8 .. 8;
       LPVBPE         at 0 range 9 .. 9;
       LPVFPE         at 0 range 10 .. 10;
-      LVAE           at 0 range 11 .. 11;
+      LPVAE          at 0 range 11 .. 11;
       LPHBPE         at 0 range 12 .. 12;
       LPHFE          at 0 range 13 .. 13;
       FBTAAE         at 0 range 14 .. 14;
@@ -296,105 +296,105 @@ package STM32_SVD.DSIHOST is
    -- DSI_VPCR_Register --
    -----------------------
 
-   subtype DSI_VPCR_VPSIZE_Field is HAL.UInt15;
+   subtype DSI_VPCR_VPSIZE_Field is HAL.UInt14;
 
    --  DSI Host Video Packet Configuration Register
    type DSI_VPCR_Register is record
       --  Video Packet Size
       VPSIZE         : DSI_VPCR_VPSIZE_Field := 16#0#;
       --  unspecified
-      Reserved_15_31 : HAL.UInt17 := 16#0#;
+      Reserved_14_31 : HAL.UInt18 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DSI_VPCR_Register use record
-      VPSIZE         at 0 range 0 .. 14;
-      Reserved_15_31 at 0 range 15 .. 31;
+      VPSIZE         at 0 range 0 .. 13;
+      Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
    -----------------------
    -- DSI_VCCR_Register --
    -----------------------
 
-   subtype DSI_VCCR_NUMC_Field is HAL.UInt14;
+   subtype DSI_VCCR_NUMC_Field is HAL.UInt13;
 
    --  DSI Host Video Chunks Configuration Register
    type DSI_VCCR_Register is record
       --  Number of Chunks
       NUMC           : DSI_VCCR_NUMC_Field := 16#0#;
       --  unspecified
-      Reserved_14_31 : HAL.UInt18 := 16#0#;
+      Reserved_13_31 : HAL.UInt19 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DSI_VCCR_Register use record
-      NUMC           at 0 range 0 .. 13;
-      Reserved_14_31 at 0 range 14 .. 31;
+      NUMC           at 0 range 0 .. 12;
+      Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
    ------------------------
    -- DSI_VNPCR_Register --
    ------------------------
 
-   subtype DSI_VNPCR_NPSIZE_Field is HAL.UInt14;
+   subtype DSI_VNPCR_NPSIZE_Field is HAL.UInt13;
 
    --  DSI Host Video Null Packet Configuration Register
    type DSI_VNPCR_Register is record
       --  Null Packet Size
       NPSIZE         : DSI_VNPCR_NPSIZE_Field := 16#0#;
       --  unspecified
-      Reserved_14_31 : HAL.UInt18 := 16#0#;
+      Reserved_13_31 : HAL.UInt19 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DSI_VNPCR_Register use record
-      NPSIZE         at 0 range 0 .. 13;
-      Reserved_14_31 at 0 range 14 .. 31;
+      NPSIZE         at 0 range 0 .. 12;
+      Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
    -------------------------
    -- DSI_VHSACR_Register --
    -------------------------
 
-   subtype DSI_VHSACR_HSA_Field is HAL.UInt13;
+   subtype DSI_VHSACR_HSA_Field is HAL.UInt12;
 
    --  DSI Host Video HSA Configuration Register
    type DSI_VHSACR_Register is record
       --  Horizontal Synchronism Active duration
       HSA            : DSI_VHSACR_HSA_Field := 16#0#;
       --  unspecified
-      Reserved_13_31 : HAL.UInt19 := 16#0#;
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DSI_VHSACR_Register use record
-      HSA            at 0 range 0 .. 12;
-      Reserved_13_31 at 0 range 13 .. 31;
+      HSA            at 0 range 0 .. 11;
+      Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
    -------------------------
    -- DSI_VHBPCR_Register --
    -------------------------
 
-   subtype DSI_VHBPCR_HBP_Field is HAL.UInt13;
+   subtype DSI_VHBPCR_HBP_Field is HAL.UInt12;
 
    --  DSI Host Video HBP Configuration Register
    type DSI_VHBPCR_Register is record
       --  Horizontal Back-Porch duration
       HBP            : DSI_VHBPCR_HBP_Field := 16#0#;
       --  unspecified
-      Reserved_13_31 : HAL.UInt19 := 16#0#;
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DSI_VHBPCR_Register use record
-      HBP            at 0 range 0 .. 12;
-      Reserved_13_31 at 0 range 13 .. 31;
+      HBP            at 0 range 0 .. 11;
+      Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
    -----------------------
@@ -661,22 +661,22 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host Generic Packet Status Register
    type DSI_GPSR_Register is record
-      --  Tearing Effect Acknowledge Request Enable
-      CMDFE         : Boolean := False;
-      --  Acknowledge Request Enable
-      CMDFF         : Boolean := False;
-      --  PWRFE
-      PWRFE         : Boolean := False;
-      --  PWRFF
-      PWRFF         : Boolean := False;
-      --  PRDFE
-      PRDFE         : Boolean := False;
-      --  PRDFF
-      PRDFF         : Boolean := False;
-      --  RCB
-      RCB           : Boolean := False;
+      --  Read-only. Command FIFO Empty
+      CMDFE         : Boolean;
+      --  Read-only. Command FIFO Full
+      CMDFF         : Boolean;
+      --  Read-only. Payload Write FIFO Empty
+      PWRFE         : Boolean;
+      --  Read-only. Payload Write FIFO Full
+      PWRFF         : Boolean;
+      --  Read-only. Payload Read FIFO Empty
+      PRDFE         : Boolean;
+      --  Read-only. Payload Read FIFO Full
+      PRDFF         : Boolean;
+      --  Read-only. Read Command Busy
+      RCB           : Boolean;
       --  unspecified
-      Reserved_7_31 : HAL.UInt25 := 16#0#;
+      Reserved_7_31 : HAL.UInt25;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -693,37 +693,58 @@ package STM32_SVD.DSIHOST is
    end record;
 
    ------------------------
+   -- DSI_TCCR0_Register --
+   ------------------------
+
+   subtype DSI_TCCR0_LPRX_TOCNT_Field is HAL.Short;
+   subtype DSI_TCCR0_HSTX_TOCNT_Field is HAL.Short;
+
+   --  DSI Host Timeout Counter Configuration Register 0
+   type DSI_TCCR0_Register is record
+      --  Low-power Reception Timeout Counter
+      LPRX_TOCNT : DSI_TCCR0_LPRX_TOCNT_Field := 16#0#;
+      --  High-Speed Transmission Timeout Counter
+      HSTX_TOCNT : DSI_TCCR0_HSTX_TOCNT_Field := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DSI_TCCR0_Register use record
+      LPRX_TOCNT at 0 range 0 .. 15;
+      HSTX_TOCNT at 0 range 16 .. 31;
+   end record;
+
+   ------------------------
    -- DSI_TCCR1_Register --
    ------------------------
 
-   subtype DSI_TCCR1_LPRX_TOCNT_Field is HAL.Short;
-   subtype DSI_TCCR1_HSTX_TOCNT_Field is HAL.Short;
+   subtype DSI_TCCR1_HSRD_TOCNT_Field is HAL.Short;
 
-   --  DSI Host Timeout Counter Configuration Register1
+   --  DSI Host Timeout Counter Configuration Register 1
    type DSI_TCCR1_Register is record
-      --  Low-power Reception Timeout Counter
-      LPRX_TOCNT : DSI_TCCR1_LPRX_TOCNT_Field := 16#0#;
-      --  High-Speed Transmission Timeout Counter
-      HSTX_TOCNT : DSI_TCCR1_HSTX_TOCNT_Field := 16#0#;
+      --  High-Speed Read Timeout Counter
+      HSRD_TOCNT     : DSI_TCCR1_HSRD_TOCNT_Field := 16#0#;
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DSI_TCCR1_Register use record
-      LPRX_TOCNT at 0 range 0 .. 15;
-      HSTX_TOCNT at 0 range 16 .. 31;
+      HSRD_TOCNT     at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
    ------------------------
    -- DSI_TCCR2_Register --
    ------------------------
 
-   subtype DSI_TCCR2_HSRD_TOCNT_Field is HAL.Short;
+   subtype DSI_TCCR2_LPRD_TOCNT_Field is HAL.Short;
 
-   --  DSI Host Timeout Counter Configuration Register2
+   --  DSI Host Timeout Counter Configuration Register 2
    type DSI_TCCR2_Register is record
-      --  High-Speed Read Timeout Counter
-      HSRD_TOCNT     : DSI_TCCR2_HSRD_TOCNT_Field := 16#0#;
+      --  Low-Power Read Timeout Counter
+      LPRD_TOCNT     : DSI_TCCR2_LPRD_TOCNT_Field := 16#0#;
       --  unspecified
       Reserved_16_31 : HAL.Short := 16#0#;
    end record
@@ -731,7 +752,7 @@ package STM32_SVD.DSIHOST is
           Bit_Order => System.Low_Order_First;
 
    for DSI_TCCR2_Register use record
-      HSRD_TOCNT     at 0 range 0 .. 15;
+      LPRD_TOCNT     at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
@@ -739,33 +760,12 @@ package STM32_SVD.DSIHOST is
    -- DSI_TCCR3_Register --
    ------------------------
 
-   subtype DSI_TCCR3_LPRD_TOCNT_Field is HAL.Short;
+   subtype DSI_TCCR3_HSWR_TOCNT_Field is HAL.Short;
 
-   --  DSI Host Timeout Counter Configuration Register3
+   --  DSI Host Timeout Counter Configuration Register 3
    type DSI_TCCR3_Register is record
-      --  Low-Power Read Timeout Counter
-      LPRD_TOCNT     : DSI_TCCR3_LPRD_TOCNT_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DSI_TCCR3_Register use record
-      LPRD_TOCNT     at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   ------------------------
-   -- DSI_TCCR4_Register --
-   ------------------------
-
-   subtype DSI_TCCR4_HSWR_TOCNT_Field is HAL.Short;
-
-   --  DSI Host Timeout Counter Configuration Register4
-   type DSI_TCCR4_Register is record
       --  High-Speed Write Timeout Counter
-      HSWR_TOCNT     : DSI_TCCR4_HSWR_TOCNT_Field := 16#0#;
+      HSWR_TOCNT     : DSI_TCCR3_HSWR_TOCNT_Field := 16#0#;
       --  unspecified
       Reserved_16_23 : HAL.Byte := 16#0#;
       --  Presp Mode
@@ -776,7 +776,7 @@ package STM32_SVD.DSIHOST is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for DSI_TCCR4_Register use record
+   for DSI_TCCR3_Register use record
       HSWR_TOCNT     at 0 range 0 .. 15;
       Reserved_16_23 at 0 range 16 .. 23;
       PM             at 0 range 24 .. 24;
@@ -784,15 +784,36 @@ package STM32_SVD.DSIHOST is
    end record;
 
    ------------------------
+   -- DSI_TCCR4_Register --
+   ------------------------
+
+   subtype DSI_TCCR4_LSWR_TOCNT_Field is HAL.Short;
+
+   --  DSI Host Timeout Counter Configuration Register 4
+   type DSI_TCCR4_Register is record
+      --  Low-Power Write Timeout Counter
+      LSWR_TOCNT     : DSI_TCCR4_LSWR_TOCNT_Field := 16#0#;
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DSI_TCCR4_Register use record
+      LSWR_TOCNT     at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   ------------------------
    -- DSI_TCCR5_Register --
    ------------------------
 
-   subtype DSI_TCCR5_LSWR_TOCNT_Field is HAL.Short;
+   subtype DSI_TCCR5_BTA_TOCNT_Field is HAL.Short;
 
-   --  DSI Host Timeout Counter Configuration Register5
+   --  DSI Host Timeout Counter Configuration Register 5
    type DSI_TCCR5_Register is record
-      --  Low-Power Write Timeout Counter
-      LSWR_TOCNT     : DSI_TCCR5_LSWR_TOCNT_Field := 16#0#;
+      --  Bus-Turn-Around Timeout Counter
+      BTA_TOCNT      : DSI_TCCR5_BTA_TOCNT_Field := 16#0#;
       --  unspecified
       Reserved_16_31 : HAL.Short := 16#0#;
    end record
@@ -800,27 +821,6 @@ package STM32_SVD.DSIHOST is
           Bit_Order => System.Low_Order_First;
 
    for DSI_TCCR5_Register use record
-      LSWR_TOCNT     at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   ------------------------
-   -- DSI_TCCR6_Register --
-   ------------------------
-
-   subtype DSI_TCCR6_BTA_TOCNT_Field is HAL.Short;
-
-   --  DSI Host Timeout Counter Configuration Register6
-   type DSI_TCCR6_Register is record
-      --  Bus-Turn-Around Timeout Counter
-      BTA_TOCNT      : DSI_TCCR6_BTA_TOCNT_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DSI_TCCR6_Register use record
       BTA_TOCNT      at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
@@ -929,28 +929,28 @@ package STM32_SVD.DSIHOST is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   --------------------------
-   -- DSI_PCCONFR_Register --
-   --------------------------
+   -------------------------
+   -- DSI_PCONFR_Register --
+   -------------------------
 
-   subtype DSI_PCCONFR_NL_Field is HAL.UInt2;
-   subtype DSI_PCCONFR_SW_TIME_Field is HAL.Byte;
+   subtype DSI_PCONFR_NL_Field is HAL.UInt2;
+   subtype DSI_PCONFR_SW_TIME_Field is HAL.Byte;
 
    --  DSI Host PHY Configuration Register
-   type DSI_PCCONFR_Register is record
+   type DSI_PCONFR_Register is record
       --  NL
-      NL             : DSI_PCCONFR_NL_Field := 16#2#;
+      NL             : DSI_PCONFR_NL_Field := 16#1#;
       --  unspecified
-      Reserved_2_7   : HAL.UInt6 := 16#A#;
+      Reserved_2_7   : HAL.UInt6 := 16#0#;
       --  SW_TIME
-      SW_TIME        : DSI_PCCONFR_SW_TIME_Field := 16#30#;
+      SW_TIME        : DSI_PCONFR_SW_TIME_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#3133#;
+      Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for DSI_PCCONFR_Register use record
+   for DSI_PCONFR_Register use record
       NL             at 0 range 0 .. 1;
       Reserved_2_7   at 0 range 2 .. 7;
       SW_TIME        at 0 range 8 .. 15;
@@ -1013,25 +1013,25 @@ package STM32_SVD.DSIHOST is
    --  DSI Host PHY Status Register
    type DSI_PSR_Register is record
       --  unspecified
-      Reserved_0_0  : HAL.Bit := 16#0#;
-      --  PHY Direction
-      PD            : Boolean := False;
-      --  PHY Stop State Clock lane
-      PSSC          : Boolean := False;
-      --  ULPS Active Not Clock lane
-      UANC          : Boolean := True;
-      --  PHY Stop State lane 0
-      PSS0          : Boolean := False;
-      --  ULPS Active Not lane 1
-      UAN0          : Boolean := True;
-      --  RX ULPS Escape lane 0
-      RUE0          : Boolean := False;
-      --  PHY Stop State lane 1
-      PSS1          : Boolean := False;
-      --  ULPS Active Not lane 1
-      UAN1          : Boolean := True;
+      Reserved_0_0  : HAL.Bit;
+      --  Read-only. PHY Direction
+      PD            : Boolean;
+      --  Read-only. PHY Stop State Clock lane
+      PSSC          : Boolean;
+      --  Read-only. ULPS Active Not Clock lane
+      UANC          : Boolean;
+      --  Read-only. PHY Stop State lane 0
+      PSS0          : Boolean;
+      --  Read-only. ULPS Active Not lane 1
+      UAN0          : Boolean;
+      --  Read-only. RX ULPS Escape lane 0
+      RUE0          : Boolean;
+      --  Read-only. PHY Stop State lane 1
+      PSS1          : Boolean;
+      --  Read-only. ULPS Active Not lane 1
+      UAN1          : Boolean;
       --  unspecified
-      Reserved_9_31 : HAL.UInt23 := 16#A#;
+      Reserved_9_31 : HAL.UInt23;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1378,10 +1378,10 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host Force Interrupt Register 0
    type DSI_FIR0_Register is record
-      --  Force Acknowledge Error 0
+      --  Write-only. Force Acknowledge Error 0
       FAE            : DSI_FIR0_FAE_Field :=
                         (As_Array => False, Val => 16#0#);
-      --  Force PHY Error 0
+      --  Write-only. Force PHY Error 0
       FPE            : DSI_FIR0_FPE_Field :=
                         (As_Array => False, Val => 16#0#);
       --  unspecified
@@ -1402,31 +1402,31 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host Force Interrupt Register 1
    type DSI_FIR1_Register is record
-      --  Force Timeout High-Speed Transmission
+      --  Write-only. Force Timeout High-Speed Transmission
       FTOHSTX        : Boolean := False;
-      --  Force Timeout Low-Power Reception
+      --  Write-only. Force Timeout Low-Power Reception
       FTOLPRX        : Boolean := False;
-      --  Force ECC Single-bit Error
+      --  Write-only. Force ECC Single-bit Error
       FECCSE         : Boolean := False;
-      --  Force ECC Multi-bit Error
+      --  Write-only. Force ECC Multi-bit Error
       FECCME         : Boolean := False;
-      --  Force CRC Error
+      --  Write-only. Force CRC Error
       FCRCE          : Boolean := False;
-      --  Force Packet Size Error
+      --  Write-only. Force Packet Size Error
       FPSE           : Boolean := False;
-      --  Force EoTp Error
+      --  Write-only. Force EoTp Error
       FEOTPE         : Boolean := False;
-      --  Force LTDC Payload Write Error
+      --  Write-only. Force LTDC Payload Write Error
       FLPWRE         : Boolean := False;
-      --  Force Generic Command Write Error
+      --  Write-only. Force Generic Command Write Error
       FGCWRE         : Boolean := False;
-      --  Force Generic Payload Write Error
+      --  Write-only. Force Generic Payload Write Error
       FGPWRE         : Boolean := False;
-      --  Force Generic Payload Transmit Error
+      --  Write-only. Force Generic Payload Transmit Error
       FGPTXE         : Boolean := False;
-      --  Force Generic Payload Read Error
+      --  Write-only. Force Generic Payload Read Error
       FGPRDE         : Boolean := False;
-      --  Force Generic Payload Receive Error
+      --  Write-only. Force Generic Payload Receive Error
       FGPRXE         : Boolean := False;
       --  unspecified
       Reserved_13_31 : HAL.UInt19 := 16#0#;
@@ -1484,10 +1484,10 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host LTDC Current VCID Register
    type DSI_LCVCIDR_Register is record
-      --  Virtual Channel ID
-      VCID          : DSI_LCVCIDR_VCID_Field := 16#0#;
+      --  Read-only. Virtual Channel ID
+      VCID          : DSI_LCVCIDR_VCID_Field;
       --  unspecified
-      Reserved_2_31 : HAL.UInt30 := 16#0#;
+      Reserved_2_31 : HAL.UInt30;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1505,14 +1505,14 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host LTDC Current Color Coding Register
    type DSI_LCCCR_Register is record
-      --  Color Coding
-      COLC          : DSI_LCCCR_COLC_Field := 16#0#;
+      --  Read-only. Color Coding
+      COLC          : DSI_LCCCR_COLC_Field;
       --  unspecified
-      Reserved_4_7  : HAL.UInt4 := 16#0#;
-      --  Loosely Packed Enable
-      LPE           : Boolean := False;
+      Reserved_4_7  : HAL.UInt4;
+      --  Read-only. Loosely Packed Enable
+      LPE           : Boolean;
       --  unspecified
-      Reserved_9_31 : HAL.UInt23 := 16#0#;
+      Reserved_9_31 : HAL.UInt23;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1533,14 +1533,14 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host Low-power Mode Current Configuration Register
    type DSI_LPMCCR_Register is record
-      --  VACT Largest Packet Size
-      VLPSIZE        : DSI_LPMCCR_VLPSIZE_Field := 16#0#;
+      --  Read-only. VACT Largest Packet Size
+      VLPSIZE        : DSI_LPMCCR_VLPSIZE_Field;
       --  unspecified
-      Reserved_8_15  : HAL.Byte := 16#0#;
-      --  Largest Packet Size
-      LPSIZE         : DSI_LPMCCR_LPSIZE_Field := 16#0#;
+      Reserved_8_15  : HAL.Byte;
+      --  Read-only. Largest Packet Size
+      LPSIZE         : DSI_LPMCCR_LPSIZE_Field;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.Byte;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1560,149 +1560,146 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host Video mode Current Configuration Register
    type DSI_VMCCR_Register is record
-      --  Video mode Type
-      VMT            : DSI_VMCCR_VMT_Field := 16#0#;
+      --  Read-only. Video mode Type
+      VMT            : DSI_VMCCR_VMT_Field;
+      --  Read-only. Low-Power Vertical Sync time Enable
+      LPVSAE         : Boolean;
+      --  Read-only. Low-power Vertical Back-Porch Enable
+      LPVBPE         : Boolean;
+      --  Read-only. Low-power Vertical Front-Porch Enable
+      LPVFPE         : Boolean;
+      --  Read-only. Low-Power Vertical Active Enable
+      LPVAE          : Boolean;
+      --  Read-only. Low-power Horizontal Back-Porch Enable
+      LPHBPE         : Boolean;
+      --  Read-only. Low-Power Horizontal Front-Porch Enable
+      LPHFE          : Boolean;
+      --  Read-only. Frame BTA Acknowledge Enable
+      FBTAAE         : Boolean;
+      --  Read-only. Low-Power Command Enable
+      LPCE           : Boolean;
       --  unspecified
-      Reserved_2_7   : HAL.UInt6 := 16#0#;
-      --  Low-Power Vertical Sync time Enable
-      LPVSAE         : Boolean := False;
-      --  Low-power Vertical Back-Porch Enable
-      LPVBPE         : Boolean := False;
-      --  Low-power Vertical Front-Porch Enable
-      LPVFPE         : Boolean := False;
-      --  Low-Power Vertical Active Enable
-      LVAE           : Boolean := False;
-      --  Low-power Horizontal Back-Porch Enable
-      LPHBPE         : Boolean := False;
-      --  Low-Power Horizontal Front-Porch Enable
-      LPHFE          : Boolean := False;
-      --  Frame BTA Acknowledge Enable
-      FBTAAE         : Boolean := False;
-      --  Low-Power Command Enable
-      LPCE           : Boolean := False;
-      --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_10_31 : HAL.UInt22;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DSI_VMCCR_Register use record
       VMT            at 0 range 0 .. 1;
-      Reserved_2_7   at 0 range 2 .. 7;
-      LPVSAE         at 0 range 8 .. 8;
-      LPVBPE         at 0 range 9 .. 9;
-      LPVFPE         at 0 range 10 .. 10;
-      LVAE           at 0 range 11 .. 11;
-      LPHBPE         at 0 range 12 .. 12;
-      LPHFE          at 0 range 13 .. 13;
-      FBTAAE         at 0 range 14 .. 14;
-      LPCE           at 0 range 15 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
+      LPVSAE         at 0 range 2 .. 2;
+      LPVBPE         at 0 range 3 .. 3;
+      LPVFPE         at 0 range 4 .. 4;
+      LPVAE          at 0 range 5 .. 5;
+      LPHBPE         at 0 range 6 .. 6;
+      LPHFE          at 0 range 7 .. 7;
+      FBTAAE         at 0 range 8 .. 8;
+      LPCE           at 0 range 9 .. 9;
+      Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
    ------------------------
    -- DSI_VPCCR_Register --
    ------------------------
 
-   subtype DSI_VPCCR_VPSIZE_Field is HAL.UInt15;
+   subtype DSI_VPCCR_VPSIZE_Field is HAL.UInt14;
 
    --  DSI Host Video Packet Current Configuration Register
    type DSI_VPCCR_Register is record
-      --  Video Packet Size
-      VPSIZE         : DSI_VPCCR_VPSIZE_Field := 16#0#;
+      --  Read-only. Video Packet Size
+      VPSIZE         : DSI_VPCCR_VPSIZE_Field;
       --  unspecified
-      Reserved_15_31 : HAL.UInt17 := 16#0#;
+      Reserved_14_31 : HAL.UInt18;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DSI_VPCCR_Register use record
-      VPSIZE         at 0 range 0 .. 14;
-      Reserved_15_31 at 0 range 15 .. 31;
+      VPSIZE         at 0 range 0 .. 13;
+      Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
    ------------------------
    -- DSI_VCCCR_Register --
    ------------------------
 
-   subtype DSI_VCCCR_NUMC_Field is HAL.UInt14;
+   subtype DSI_VCCCR_NUMC_Field is HAL.UInt13;
 
    --  DSI Host Video Chunks Current Configuration Register
    type DSI_VCCCR_Register is record
-      --  Number of Chunks
-      NUMC           : DSI_VCCCR_NUMC_Field := 16#0#;
+      --  Read-only. Number of Chunks
+      NUMC           : DSI_VCCCR_NUMC_Field;
       --  unspecified
-      Reserved_14_31 : HAL.UInt18 := 16#0#;
+      Reserved_13_31 : HAL.UInt19;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DSI_VCCCR_Register use record
-      NUMC           at 0 range 0 .. 13;
-      Reserved_14_31 at 0 range 14 .. 31;
+      NUMC           at 0 range 0 .. 12;
+      Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
    -------------------------
    -- DSI_VNPCCR_Register --
    -------------------------
 
-   subtype DSI_VNPCCR_NPSIZE_Field is HAL.UInt14;
+   subtype DSI_VNPCCR_NPSIZE_Field is HAL.UInt13;
 
    --  DSI Host Video Null Packet Current Configuration Register
    type DSI_VNPCCR_Register is record
-      --  Null Packet Size
-      NPSIZE         : DSI_VNPCCR_NPSIZE_Field := 16#0#;
+      --  Read-only. Null Packet Size
+      NPSIZE         : DSI_VNPCCR_NPSIZE_Field;
       --  unspecified
-      Reserved_14_31 : HAL.UInt18 := 16#0#;
+      Reserved_13_31 : HAL.UInt19;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DSI_VNPCCR_Register use record
-      NPSIZE         at 0 range 0 .. 13;
-      Reserved_14_31 at 0 range 14 .. 31;
+      NPSIZE         at 0 range 0 .. 12;
+      Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
    --------------------------
    -- DSI_VHSACCR_Register --
    --------------------------
 
-   subtype DSI_VHSACCR_HSA_Field is HAL.UInt13;
+   subtype DSI_VHSACCR_HSA_Field is HAL.UInt12;
 
    --  DSI Host Video HSA Current Configuration Register
    type DSI_VHSACCR_Register is record
-      --  Horizontal Synchronism Active duration
-      HSA            : DSI_VHSACCR_HSA_Field := 16#0#;
+      --  Read-only. Horizontal Synchronism Active duration
+      HSA            : DSI_VHSACCR_HSA_Field;
       --  unspecified
-      Reserved_13_31 : HAL.UInt19 := 16#0#;
+      Reserved_12_31 : HAL.UInt20;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DSI_VHSACCR_Register use record
-      HSA            at 0 range 0 .. 12;
-      Reserved_13_31 at 0 range 13 .. 31;
+      HSA            at 0 range 0 .. 11;
+      Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
    --------------------------
    -- DSI_VHBPCCR_Register --
    --------------------------
 
-   subtype DSI_VHBPCCR_HBP_Field is HAL.UInt13;
+   subtype DSI_VHBPCCR_HBP_Field is HAL.UInt12;
 
    --  DSI Host Video HBP Current Configuration Register
    type DSI_VHBPCCR_Register is record
-      --  Horizontal Back-Porch duration
-      HBP            : DSI_VHBPCCR_HBP_Field := 16#0#;
+      --  Read-only. Horizontal Back-Porch duration
+      HBP            : DSI_VHBPCCR_HBP_Field;
       --  unspecified
-      Reserved_13_31 : HAL.UInt19 := 16#0#;
+      Reserved_12_31 : HAL.UInt20;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DSI_VHBPCCR_Register use record
-      HBP            at 0 range 0 .. 12;
-      Reserved_13_31 at 0 range 13 .. 31;
+      HBP            at 0 range 0 .. 11;
+      Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
    ------------------------
@@ -1713,10 +1710,10 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host Video Line Current Configuration Register
    type DSI_VLCCR_Register is record
-      --  Horizontal Line duration
-      HLINE          : DSI_VLCCR_HLINE_Field := 16#0#;
+      --  Read-only. Horizontal Line duration
+      HLINE          : DSI_VLCCR_HLINE_Field;
       --  unspecified
-      Reserved_15_31 : HAL.UInt17 := 16#0#;
+      Reserved_15_31 : HAL.UInt17;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1734,10 +1731,10 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host Video VSA Current Configuration Register
    type DSI_VVSACCR_Register is record
-      --  Vertical Synchronism Active duration
-      VSA            : DSI_VVSACCR_VSA_Field := 16#0#;
+      --  Read-only. Vertical Synchronism Active duration
+      VSA            : DSI_VVSACCR_VSA_Field;
       --  unspecified
-      Reserved_10_31 : HAL.UInt22 := 16#0#;
+      Reserved_10_31 : HAL.UInt22;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1755,10 +1752,10 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host Video VBP Current Configuration Register
    type DSI_VVBPCCR_Register is record
-      --  Vertical Back-Porch duration
-      VBP            : DSI_VVBPCCR_VBP_Field := 16#0#;
+      --  Read-only. Vertical Back-Porch duration
+      VBP            : DSI_VVBPCCR_VBP_Field;
       --  unspecified
-      Reserved_10_31 : HAL.UInt22 := 16#0#;
+      Reserved_10_31 : HAL.UInt22;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1776,10 +1773,10 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host Video VFP Current Configuration Register
    type DSI_VVFPCCR_Register is record
-      --  Vertical Front-Porch duration
-      VFP            : DSI_VVFPCCR_VFP_Field := 16#0#;
+      --  Read-only. Vertical Front-Porch duration
+      VFP            : DSI_VVFPCCR_VFP_Field;
       --  unspecified
-      Reserved_10_31 : HAL.UInt22 := 16#0#;
+      Reserved_10_31 : HAL.UInt22;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1797,10 +1794,10 @@ package STM32_SVD.DSIHOST is
 
    --  DSI Host Video VA Current Configuration Register
    type DSI_VVACCR_Register is record
-      --  Vertical Active duration
-      VA             : DSI_VVACCR_VA_Field := 16#0#;
+      --  Read-only. Vertical Active duration
+      VA             : DSI_VVACCR_VA_Field;
       --  unspecified
-      Reserved_14_31 : HAL.UInt18 := 16#0#;
+      Reserved_14_31 : HAL.UInt18;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2332,13 +2329,13 @@ package STM32_SVD.DSIHOST is
    -----------------
 
    --  DSI Host
-   type DSIHOST_Peripheral is record
+   type DSI_Peripheral is record
       --  DSI Host Version Register
       DSI_VR      : HAL.Word;
       --  DSI Host Control Register
       DSI_CR      : DSI_CR_Register;
       --  DSI HOST Clock Control Register
-      DSIHSOT_CCR : DSIHSOT_CCR_Register;
+      DSI_CCR     : DSI_CCR_Register;
       --  DSI Host LTDC VCID Register
       DSI_LVCIDR  : DSI_LVCIDR_Register;
       --  DSI Host LTDC Color Coding Register
@@ -2385,18 +2382,18 @@ package STM32_SVD.DSIHOST is
       DSI_GPDR    : DSI_GPDR_Register;
       --  DSI Host Generic Packet Status Register
       DSI_GPSR    : DSI_GPSR_Register;
-      --  DSI Host Timeout Counter Configuration Register1
+      --  DSI Host Timeout Counter Configuration Register 0
+      DSI_TCCR0   : DSI_TCCR0_Register;
+      --  DSI Host Timeout Counter Configuration Register 1
       DSI_TCCR1   : DSI_TCCR1_Register;
-      --  DSI Host Timeout Counter Configuration Register2
+      --  DSI Host Timeout Counter Configuration Register 2
       DSI_TCCR2   : DSI_TCCR2_Register;
-      --  DSI Host Timeout Counter Configuration Register3
+      --  DSI Host Timeout Counter Configuration Register 3
       DSI_TCCR3   : DSI_TCCR3_Register;
-      --  DSI Host Timeout Counter Configuration Register4
+      --  DSI Host Timeout Counter Configuration Register 4
       DSI_TCCR4   : DSI_TCCR4_Register;
-      --  DSI Host Timeout Counter Configuration Register5
+      --  DSI Host Timeout Counter Configuration Register 5
       DSI_TCCR5   : DSI_TCCR5_Register;
-      --  DSI Host Timeout Counter Configuration Register6
-      DSI_TCCR6   : DSI_TCCR6_Register;
       --  DSI Host Clock Lane Configuration Register
       DSI_CLCR    : DSI_CLCR_Register;
       --  DSI Host Clock Lane Timer Configuration Register
@@ -2406,7 +2403,7 @@ package STM32_SVD.DSIHOST is
       --  DSI Host PHY Control Register
       DSI_PCTLR   : DSI_PCTLR_Register;
       --  DSI Host PHY Configuration Register
-      DSI_PCCONFR : DSI_PCCONFR_Register;
+      DSI_PCONFR  : DSI_PCONFR_Register;
       --  DSI Host PHY ULPS Control Register
       DSI_PUCR    : DSI_PUCR_Register;
       --  DSI Host PHY TX Triggers Configuration Register
@@ -2480,10 +2477,10 @@ package STM32_SVD.DSIHOST is
    end record
      with Volatile;
 
-   for DSIHOST_Peripheral use record
+   for DSI_Peripheral use record
       DSI_VR      at 0 range 0 .. 31;
       DSI_CR      at 4 range 0 .. 31;
-      DSIHSOT_CCR at 8 range 0 .. 31;
+      DSI_CCR     at 8 range 0 .. 31;
       DSI_LVCIDR  at 12 range 0 .. 31;
       DSI_LCOLCR  at 16 range 0 .. 31;
       DSI_LPCR    at 20 range 0 .. 31;
@@ -2507,17 +2504,17 @@ package STM32_SVD.DSIHOST is
       DSI_GHCR    at 108 range 0 .. 31;
       DSI_GPDR    at 112 range 0 .. 31;
       DSI_GPSR    at 116 range 0 .. 31;
-      DSI_TCCR1   at 120 range 0 .. 31;
-      DSI_TCCR2   at 124 range 0 .. 31;
-      DSI_TCCR3   at 128 range 0 .. 31;
-      DSI_TCCR4   at 132 range 0 .. 31;
-      DSI_TCCR5   at 136 range 0 .. 31;
-      DSI_TCCR6   at 140 range 0 .. 31;
+      DSI_TCCR0   at 120 range 0 .. 31;
+      DSI_TCCR1   at 124 range 0 .. 31;
+      DSI_TCCR2   at 128 range 0 .. 31;
+      DSI_TCCR3   at 132 range 0 .. 31;
+      DSI_TCCR4   at 136 range 0 .. 31;
+      DSI_TCCR5   at 140 range 0 .. 31;
       DSI_CLCR    at 148 range 0 .. 31;
       DSI_CLTCR   at 152 range 0 .. 31;
       DSI_DLTCR   at 156 range 0 .. 31;
       DSI_PCTLR   at 160 range 0 .. 31;
-      DSI_PCCONFR at 164 range 0 .. 31;
+      DSI_PCONFR  at 164 range 0 .. 31;
       DSI_PUCR    at 168 range 0 .. 31;
       DSI_PTTCR   at 172 range 0 .. 31;
       DSI_PSR     at 176 range 0 .. 31;
@@ -2556,7 +2553,7 @@ package STM32_SVD.DSIHOST is
    end record;
 
    --  DSI Host
-   DSIHOST_Periph : aliased DSIHOST_Peripheral
-     with Import, Address => DSIHOST_Base;
+   DSI_Periph : aliased DSI_Peripheral
+     with Import, Address => DSI_Base;
 
-end STM32_SVD.DSIHOST;
+end STM32_SVD.DSI;

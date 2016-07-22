@@ -14,7 +14,7 @@ package STM32.SDMMC is
    type SDMMC_Controller is private;
 
    function As_Controller
-     (Periph : access STM32_SVD.SDMMC.SDMMC1_Peripheral)
+     (Periph : access STM32_SVD.SDMMC.SDMMC_Peripheral)
       return SDMMC_Controller;
 
    type SD_Error is
@@ -344,7 +344,7 @@ private
    type Card_Data_Table is array (0 .. 3) of Word;
 
    type SDMMC_Controller is record
-      Periph    : access STM32_SVD.SDMMC.SDMMC1_Peripheral;
+      Periph    : access STM32_SVD.SDMMC.SDMMC_Peripheral;
       CID       : Card_Data_Table;
       CSD       : Card_Data_Table;
       Card_Type : Supported_SD_Memory_Cards :=
@@ -354,7 +354,7 @@ private
    end record;
 
    function As_Controller
-     (Periph : access STM32_SVD.SDMMC.SDMMC1_Peripheral)
+     (Periph : access STM32_SVD.SDMMC.SDMMC_Peripheral)
       return SDMMC_Controller
    is (Periph, CID => (others => 0), CSD => (others => 0), others => <>);
 

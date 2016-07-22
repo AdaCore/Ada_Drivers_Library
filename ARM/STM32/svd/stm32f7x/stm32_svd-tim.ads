@@ -1490,25 +1490,31 @@ package STM32_SVD.TIM is
    --  slave mode control register
    type SMCR_Register_1 is record
       --  Slave mode selection
-      SMS           : SMCR_SMS_Field := 16#0#;
+      SMS            : SMCR_SMS_Field := 16#0#;
       --  unspecified
-      Reserved_3_3  : HAL.Bit := 16#0#;
+      Reserved_3_3   : HAL.Bit := 16#0#;
       --  Trigger selection
-      TS            : SMCR_TS_Field := 16#0#;
+      TS             : SMCR_TS_Field := 16#0#;
       --  Master/Slave mode
-      MSM           : Boolean := False;
+      MSM            : Boolean := False;
       --  unspecified
-      Reserved_8_31 : HAL.UInt24 := 16#0#;
+      Reserved_8_15  : HAL.Byte := 16#0#;
+      --  Slave mode selection
+      SMS_3          : Boolean := False;
+      --  unspecified
+      Reserved_17_31 : HAL.UInt15 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for SMCR_Register_1 use record
-      SMS           at 0 range 0 .. 2;
-      Reserved_3_3  at 0 range 3 .. 3;
-      TS            at 0 range 4 .. 6;
-      MSM           at 0 range 7 .. 7;
-      Reserved_8_31 at 0 range 8 .. 31;
+      SMS            at 0 range 0 .. 2;
+      Reserved_3_3   at 0 range 3 .. 3;
+      TS             at 0 range 4 .. 6;
+      MSM            at 0 range 7 .. 7;
+      Reserved_8_15  at 0 range 8 .. 15;
+      SMS_3          at 0 range 16 .. 16;
+      Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
    -------------------
@@ -1768,49 +1774,6 @@ package STM32_SVD.TIM is
       ARPE           at 0 range 7 .. 7;
       CKD            at 0 range 8 .. 9;
       Reserved_10_31 at 0 range 10 .. 31;
-   end record;
-
-   -------------------
-   -- SMCR_Register --
-   -------------------
-
-   --  slave mode control register
-   type SMCR_Register_2 is record
-      --  Slave mode selection
-      SMS            : SMCR_SMS_Field := 16#0#;
-      --  unspecified
-      Reserved_3_3   : HAL.Bit := 16#0#;
-      --  Trigger selection
-      TS             : SMCR_TS_Field := 16#0#;
-      --  Master/slave mode
-      MSM            : Boolean := False;
-      --  External trigger filter
-      ETF            : SMCR_ETF_Field := 16#0#;
-      --  External trigger prescaler
-      ETPS           : SMCR_ETPS_Field := 16#0#;
-      --  External clock enable
-      ECE            : Boolean := False;
-      --  External trigger polarity
-      ETP            : Boolean := False;
-      --  Slave mode selection
-      SMS3           : Boolean := False;
-      --  unspecified
-      Reserved_17_31 : HAL.UInt15 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for SMCR_Register_2 use record
-      SMS            at 0 range 0 .. 2;
-      Reserved_3_3   at 0 range 3 .. 3;
-      TS             at 0 range 4 .. 6;
-      MSM            at 0 range 7 .. 7;
-      ETF            at 0 range 8 .. 11;
-      ETPS           at 0 range 12 .. 13;
-      ECE            at 0 range 14 .. 14;
-      ETP            at 0 range 15 .. 15;
-      SMS3           at 0 range 16 .. 16;
-      Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
    -------------------
@@ -2472,7 +2435,7 @@ package STM32_SVD.TIM is
       --  control register 1
       CR1          : CR1_Register_2;
       --  slave mode control register
-      SMCR         : SMCR_Register_2;
+      SMCR         : SMCR_Register;
       --  DMA/Interrupt enable register
       DIER         : DIER_Register_3;
       --  status register

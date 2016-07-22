@@ -39,7 +39,7 @@ package STM32_SVD.SPI is
       SSM            : Boolean := False;
       --  Receive only
       RXONLY         : Boolean := False;
-      --  CRC length
+      --  Data frame format
       DFF            : Boolean := False;
       --  CRC transfer next
       CRCNEXT        : Boolean := False;
@@ -80,8 +80,6 @@ package STM32_SVD.SPI is
    --  Data size
    type DS_Field is
      (
-      --  Reset value for the field
-      Ds_Field_Reset,
       Size_4Bit,
       Size_5Bit,
       Size_6Bit,
@@ -97,8 +95,7 @@ package STM32_SVD.SPI is
       Size_16Bit)
      with Size => 4;
    for DS_Field use
-     (Ds_Field_Reset => 0,
-      Size_4Bit => 3,
+     (Size_4Bit => 3,
       Size_5Bit => 4,
       Size_6Bit => 5,
       Size_7Bit => 6,
@@ -169,13 +166,13 @@ package STM32_SVD.SPI is
       --  Tx buffer empty interrupt enable
       TXEIE          : Boolean := False;
       --  Data size
-      DS             : DS_Field := Ds_Field_Reset;
+      DS             : DS_Field := STM32_SVD.SPI.Size_8Bit;
       --  FIFO reception threshold
-      FRXTH          : FRXTH_Field := Half;
+      FRXTH          : FRXTH_Field := STM32_SVD.SPI.Half;
       --  Last DMA transfer for reception
-      LDMA_RX        : LDMA_RX_Field := Even;
+      LDMA_RX        : LDMA_RX_Field := STM32_SVD.SPI.Even;
       --  Last DMA transfer for transmission
-      LDMA_TX        : LDMA_TX_Field := Even;
+      LDMA_TX        : LDMA_TX_Field := STM32_SVD.SPI.Even;
       --  unspecified
       Reserved_15_31 : HAL.UInt17 := 16#0#;
    end record
@@ -259,9 +256,9 @@ package STM32_SVD.SPI is
       --  Read-only. TI frame format error
       TIFRFE         : Boolean := False;
       --  Read-only. FIFO reception level
-      FRLVL          : FRLVL_Field := Fifo_Empty;
+      FRLVL          : FRLVL_Field := STM32_SVD.SPI.Fifo_Empty;
       --  Read-only. FIFO transmission level
-      FTLVL          : FTLVL_Field := Fifo_Empty;
+      FTLVL          : FTLVL_Field := STM32_SVD.SPI.Fifo_Empty;
       --  unspecified
       Reserved_13_31 : HAL.UInt19 := 16#0#;
    end record

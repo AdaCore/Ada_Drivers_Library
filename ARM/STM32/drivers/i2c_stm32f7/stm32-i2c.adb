@@ -117,6 +117,8 @@ package body STM32.I2C is
          others => <>);
 
       --  I2C Own Address Register configuration
+      Port.Periph.OAR1.OA1EN := False;
+
       if Configuration.Own_Address /= 0 then
          Port.Periph.OAR1 :=
            (OA1     => Configuration.Own_Address,
@@ -128,11 +130,10 @@ package body STM32.I2C is
       --  CR2 configuration
       --  Enable AUTOEND by default, set NACK (should be disabled only in
       --  slave mode
-      Port.Periph.CR2 :=
-        (AUTOEND => True,
-         NACK    => True,
-         ADD10   => Configuration.Addressing_Mode = Addressing_Mode_10bit,
-         others  => <>);
+      Port.Periph.CR2.ADD10 :=
+        Configuration.Addressing_Mode = Addressing_Mode_10bit;
+      Port.Periph.CR2.AUTOEND := True;
+      Port.Periph.CR2.NACK := True;
 
       --  OAR2 configuration
       --  ??? Add support for dual addressing
@@ -141,7 +142,7 @@ package body STM32.I2C is
       --  CR1 configuration
       Port.Periph.CR1 :=
         (GCEN      => Configuration.General_Call_Enabled,
-         NOSTRETCH => Configuration.Clock_Stretching_Enabled,
+         NOSTRETCH => False,
          others    => <>);
 
       Port.State := Ready;
@@ -550,12 +551,16 @@ package body STM32.I2C is
    is
       Size_Temp   : Natural := 0;
       Transmitted : Natural := 0;
+      Start       : Time;
 
    begin
-      if Port.Periph.ISR.BUSY then
-         Status := Busy;
-         return;
-      end if;
+      Start := Clock;
+      while Port.Periph.ISR.BUSY loop
+         if Clock - Start > Milliseconds (Timeout) then
+            Status := Busy;
+            return;
+         end if;
+      end loop;
 
       if Data'Length = 0 then
          Status := Err_Error;
@@ -687,11 +692,17 @@ package body STM32.I2C is
    is
       Size_Temp   : Natural := 0;
       Transmitted : Natural := 0;
+      Start       : Time;
+
    begin
-      if Port.Periph.ISR.BUSY then
-         Status := Busy;
-         return;
-      end if;
+      Start := Clock;
+
+      while Port.Periph.ISR.BUSY loop
+         if Clock - Start > Milliseconds (Timeout) then
+            Status := Busy;
+            return;
+         end if;
+      end loop;
 
       if Data'Length = 0 then
          Status := Err_Error;

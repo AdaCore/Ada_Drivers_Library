@@ -33,7 +33,7 @@
 --  STM32F479x MCUs manufactured by ST Microelectronics.
 
 with STM32_SVD;         use STM32_SVD;
-with STM32_SVD.DSIHOST;
+with STM32_SVD.DSI;
 
 with STM32.GPIO;        use STM32.GPIO;
 with STM32.ADC;         use STM32.ADC;
@@ -404,7 +404,7 @@ package STM32.Device is
    procedure Enable_Clock (This : in out Timer);
    procedure Reset (This : in out Timer);
 
-   DSIHOST : aliased DSI_Host (STM32_SVD.DSIHOST.DSIHOST_Periph'Access);
+   DSIHOST : aliased DSI_Host (STM32_SVD.DSI.DSI_Periph'Access);
 
    -----------------------------
    -- Reset and Clock Control --

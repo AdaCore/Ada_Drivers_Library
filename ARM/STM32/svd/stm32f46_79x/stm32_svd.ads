@@ -183,7 +183,7 @@ package STM32_SVD is
      System'To_Address (16#40005800#);
    I2C1_Base : constant System.Address :=
      System'To_Address (16#40005400#);
-   DSIHOST_Base : constant System.Address :=
+   DSI_Base : constant System.Address :=
      System'To_Address (16#40016C00#);
    QUADSPI_Base : constant System.Address :=
      System'To_Address (16#A0001000#);

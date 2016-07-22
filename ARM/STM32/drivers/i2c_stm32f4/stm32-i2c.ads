@@ -148,6 +148,7 @@ package STM32.I2C is
      (This   : I2C_Port;
       Source : I2C_Interrupt)
       return Boolean;
+
 private
    type I2C_State is
      (Reset,

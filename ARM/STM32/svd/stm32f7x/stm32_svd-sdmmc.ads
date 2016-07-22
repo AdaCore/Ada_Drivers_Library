@@ -32,7 +32,7 @@ package STM32_SVD.SDMMC is
    --  power control register
    type POWER_Register is record
       --  PWRCTRL
-      PWRCTRL       : PWRCTRL_Field := Power_Off;
+      PWRCTRL       : PWRCTRL_Field := STM32_SVD.SDMMC.Power_Off;
       --  unspecified
       Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
@@ -89,9 +89,9 @@ package STM32_SVD.SDMMC is
       --  Clock divider bypass enable bit
       BYPASS         : Boolean := False;
       --  Wide bus mode enable bit
-      WIDBUS         : WIDBUS_Field := Bus_Wide_1B;
+      WIDBUS         : WIDBUS_Field := STM32_SVD.SDMMC.Bus_Wide_1B;
       --  SDIO_CK dephasing selection bit
-      NEGEDGE        : NEGEDGE_Field := Edge_Rising;
+      NEGEDGE        : NEGEDGE_Field := STM32_SVD.SDMMC.Edge_Rising;
       --  HW Flow Control enable
       HWFC_EN        : Boolean := False;
       --  unspecified
@@ -137,7 +137,7 @@ package STM32_SVD.SDMMC is
       --  Command index
       CMDINDEX       : CMD_CMDINDEX_Field := 16#0#;
       --  Wait for response bits
-      WAITRESP       : WAITRESP_Field := No_Response;
+      WAITRESP       : WAITRESP_Field := STM32_SVD.SDMMC.No_Response;
       --  CPSM waits for interrupt request
       WAITINT        : Boolean := False;
       --  CPSM Waits for ends of data transfer (CmdPend internal signal)
@@ -288,14 +288,14 @@ package STM32_SVD.SDMMC is
       --  DTEN
       DTEN           : Boolean := False;
       --  Data transfer direction selection
-      DTDIR          : DTDIR_Field := Controller_To_Card;
+      DTDIR          : DTDIR_Field := STM32_SVD.SDMMC.Controller_To_Card;
       --  Data transfer mode selection 1: Stream or SDIO multibyte data
       --  transfer
-      DTMODE         : DTMODE_Field := Block;
+      DTMODE         : DTMODE_Field := STM32_SVD.SDMMC.Block;
       --  DMA enable bit
       DMAEN          : Boolean := False;
       --  Data block size
-      DBLOCKSIZE     : DBLOCKSIZE_Field := Block_1B;
+      DBLOCKSIZE     : DBLOCKSIZE_Field := STM32_SVD.SDMMC.Block_1B;
       --  Read wait start
       RWSTART        : Boolean := False;
       --  Read wait stop
@@ -608,7 +608,7 @@ package STM32_SVD.SDMMC is
    -----------------
 
    --  Secure digital input/output interface
-   type SDMMC1_Peripheral is record
+   type SDMMC_Peripheral is record
       --  power control register
       POWER   : POWER_Register;
       --  SDI clock control register
@@ -648,7 +648,7 @@ package STM32_SVD.SDMMC is
    end record
      with Volatile;
 
-   for SDMMC1_Peripheral use record
+   for SDMMC_Peripheral use record
       POWER   at 0 range 0 .. 31;
       CLKCR   at 4 range 0 .. 31;
       ARG     at 8 range 0 .. 31;
@@ -670,7 +670,7 @@ package STM32_SVD.SDMMC is
    end record;
 
    --  Secure digital input/output interface
-   SDMMC1_Periph : aliased SDMMC1_Peripheral
-     with Import, Address => SDMMC1_Base;
+   SDMMC_Periph : aliased SDMMC_Peripheral
+     with Import, Address => SDMMC_Base;
 
 end STM32_SVD.SDMMC;
