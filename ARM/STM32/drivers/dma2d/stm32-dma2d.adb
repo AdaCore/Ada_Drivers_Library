@@ -41,8 +41,8 @@ package body STM32.DMA2D is
    function Offset (Buffer : DMA2D_Buffer;
                     X, Y   : Integer) return Word with Inline_Always;
 
-   DMA2D_Wait_Transfer_Int : DMA2D_Sync_Procedure := null;
    DMA2D_Init_Transfer_Int : DMA2D_Sync_Procedure := null;
+   DMA2D_Wait_Transfer_Int : DMA2D_Sync_Procedure := null;
 
    ------------------
    -- DMA2D_DeInit --
@@ -124,6 +124,7 @@ package body STM32.DMA2D is
                                  others => <>);
 
       DMA2D_Init_Transfer_Int.all;
+
       if Synchronous then
          DMA2D_Wait_Transfer_Int.all;
       end if;
@@ -180,7 +181,7 @@ package body STM32.DMA2D is
       DMA2D_Draw_Horizontal_Line (Buffer, Color, X, Y, Width);
       DMA2D_Draw_Horizontal_Line (Buffer, Color, X, Y + Height - 1, Width);
       DMA2D_Draw_Vertical_Line (Buffer, Color, X, Y, Height);
-      DMA2D_Draw_Vertical_Line (Buffer, Color, X + Width - 1, Y, Height);
+      DMA2D_Draw_Vertical_Line (Buffer, Color, X + Width - 1, Y, Height, True);
    end DMA2D_Draw_Rect;
 
    ---------------------

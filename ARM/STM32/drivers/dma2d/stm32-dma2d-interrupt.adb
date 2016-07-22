@@ -39,6 +39,7 @@ package body STM32.DMA2D.Interrupt is
    procedure DMA2D_Wait;
 
    protected Sync is
+      pragma Interrupt_Priority;
 
       entry Wait;
 
@@ -76,6 +77,9 @@ package body STM32.DMA2D.Interrupt is
          Ready := False;
          Error := False;
 
+         DMA2D_Periph.IFCR.CCEIF := True;
+         DMA2D_Periph.IFCR.CTCIF := True;
+         DMA2D_Periph.IFCR.CTEIF := True;
          DMA2D_Periph.CR.CEIE := True;
          DMA2D_Periph.CR.TCIE := True;
          DMA2D_Periph.CR.TEIE := True;
@@ -106,6 +110,10 @@ package body STM32.DMA2D.Interrupt is
             --  Unexpected interrupt.
             pragma Assert (False);
          end if;
+
+         DMA2D_Periph.CR.CEIE := False;
+         DMA2D_Periph.CR.TCIE := False;
+         DMA2D_Periph.CR.TEIE := False;
       end Interrupt;
    end Sync;
 

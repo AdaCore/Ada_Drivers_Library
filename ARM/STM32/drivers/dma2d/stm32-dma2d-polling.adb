@@ -42,7 +42,8 @@ package body STM32.DMA2D.Polling is
    -- DMA2D_InitAndTransfer --
    ---------------------------
 
-   procedure DMA2D_Init_Transfer is
+   procedure DMA2D_Init_Transfer
+   is
    begin
       Transferring := True;
       DMA2D_Periph.IFCR.CTCIF := True;
