@@ -171,17 +171,17 @@ is
 begin
    STM32.SDRAM.Initialize;
    STM32.Button.Initialize;
-   Display.Initialize (HAL.Framebuffer.Landscape);
+   Display.Initialize (HAL.Framebuffer.Landscape, HAL.Framebuffer.Polling);
    Display.Initialize_Layer
      (Layer  => 1,
       Mode   => HAL.Bitmap.RGB_565);
    Display.Initialize_Layer
      (Layer  => 2,
-      Mode   => HAL.Bitmap.AL_44,
+      Mode   => HAL.Bitmap.ARGB_1555,
       X      => 0,
       Y      => 10,
-      Width  => 8 * 12,
-      Height => 12);
+      Width  => 16 * 12,
+      Height => 28);
 
    Display.Get_Hidden_Buffer (1).Fill (0);
    Display.Get_Hidden_Buffer (2).Fill (0);

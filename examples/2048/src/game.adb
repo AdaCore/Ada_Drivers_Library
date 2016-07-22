@@ -24,6 +24,8 @@
 with Interfaces;           use Interfaces;
 with Interfaces.Bit_Types; use Interfaces.Bit_Types;
 
+with Cortex_M.Cache;       use Cortex_M.Cache;
+
 with STM32.RNG;
 with STM32.Board;          use STM32.Board;
 with STM32.SDRAM;          use STM32.SDRAM;
@@ -226,6 +228,7 @@ package body Game is
       for I in Colors'Range loop
          Draw_Cell_Background
            (0, I * Cell_Size, Colors (I), Cells_Buffer, True);
+         Invalidate_DCache (Cells_Buffer.Addr, Cells_Buffer.Buffer_Size);
 
          Num := 2 ** (I + 1);
          declare
@@ -253,6 +256,7 @@ package body Game is
                Outline    => True,
                Foreground => Fg,
                Fast       => False);
+            Clean_DCache (Cells_Buffer.Addr, Cells_Buffer.Buffer_Size);
          end;
       end loop;
    end Init_Cells_Buffer;
@@ -266,14 +270,15 @@ package body Game is
       Dst : Bitmap_Buffer'Class) is
    begin
       Copy_Rect
-        (Src_Buffer => Src,
-         X_Src      => 0,
-         Y_Src      => 0,
-         Dst_Buffer => Dst,
-         X_Dst      => 0,
-         Y_Dst      => Dst.Height - Background_Buffer.Height,
-         Width      => Src.Width,
-         Height     => Src.Height);
+        (Src_Buffer  => Src,
+         X_Src       => 0,
+         Y_Src       => 0,
+         Dst_Buffer  => Dst,
+         X_Dst       => 0,
+         Y_Dst       => Dst.Height - Background_Buffer.Height,
+         Width       => Src.Width,
+         Height      => Src.Height,
+         Synchronous => False);
    end Draw_Grid_To_Grid;
 
    ---------------------
@@ -306,14 +311,15 @@ package body Game is
    is
    begin
       Copy_Rect_Blend
-        (Src_Buffer => Cells_Buffer,
-         X_Src      => 0,
-         Y_Src      => (Value - 1) * Cell_Size,
-         Dst_Buffer => Dst,
-         X_Dst      => Coord.X,
-         Y_Dst      => Coord.Y,
-         Width      => Cell_Size,
-         Height     => Cell_Size);
+        (Src_Buffer  => Cells_Buffer,
+         X_Src       => 0,
+         Y_Src       => (Value - 1) * Cell_Size,
+         Dst_Buffer  => Dst,
+         X_Dst       => Coord.X,
+         Y_Dst       => Coord.Y,
+         Width       => Cell_Size,
+         Height      => Cell_Size,
+         Synchronous => False);
    end Draw_Cell;
 
    ----------
@@ -337,6 +343,8 @@ package body Game is
             end if;
          end loop;
       end loop;
+
+      Invalidate_DCache (Dst.Addr, Dst.Buffer_Size);
    end Draw;
 
    -----------

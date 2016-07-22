@@ -62,35 +62,45 @@ package body Raycaster is
               then LCD_Natural_Height
               else LCD_Natural_Width);
 
+   Texture_Size : constant := Textures.Texture'Length (1);
+
    --  1 pixel = 1/10 degree
    FOV_Vect : array (0 .. LCD_W - 1) of Degree;
    pragma Linker_Section (FOV_Vect, ".ccmdata");
 
    type Column_Type is array (0 .. LCD_H - 1) of Unsigned_16
      with Component_Size => 16, Alignment => 32;
-   Tmp      : Column_Type;
 
-   Tmp_Buf   : DMA2D_Bitmap_Buffer;
+   Tmp_1       : aliased Column_Type;
+   Tmp_2       : aliased Column_Type;
+   Tmp         : access Column_Type;
+   Tmp_Buf     : DMA2D_Bitmap_Buffer;
+
+   Prev_X      : Natural := 0;
+   pragma Linker_Section (Prev_X, ".ccmdata");
+   Prev_Scale  : Natural := 0;
+   pragma Linker_Section (Prev_Scale, ".ccmdata");
+   Prev_Tile   : Cell := Empty;
+   pragma Linker_Section (Prev_Tile, ".ccmdata");
 
    function To_Unit_Vector (Angle : Degree) return Vector with Inline_Always;
    function Sin (Angle : Degree) return Float with Inline_Always;
    function Tan (Angle : Degree) return Float with Inline_Always;
    function Arctan (F : Float) return Degree with Inline_Always;
 
-   procedure Draw_Column
-     (Buf  : HAL.Bitmap.Bitmap_Buffer'Class;
-      Col  : Natural)
+   procedure Draw_Column (Col  : Natural)
      with Inline_Always;
 
    procedure Distance
      (Pos      : Position;
       Vert_Hit : out Boolean;
       Offset   : out Float;
-      Distance : out Float;
+      Dist     : out Float;
       Tile     : out Cell)
      with Inline_Always;
 
-   function Darken (Col : Unsigned_16) return Unsigned_16 with Inline;
+   function Darken (Col : Unsigned_16) return Unsigned_16 is
+     (Shift_Right (Col and 2#11110_111110_11110#, 1)) with Inline_Always;
 
    --------------------
    -- To_Unit_Vector --
@@ -153,6 +163,7 @@ package body Raycaster is
       X0 := Tan (-FOV / 2);
       Xn := -X0;
 
+      --  FOV vector
       for Col in FOV_Vect'Range loop
          --  Calculate the X on the virtual screen
          --  Left to right is decreasing angles
@@ -162,11 +173,12 @@ package body Raycaster is
       end loop;
 
       Tmp_Buf :=
-        (Addr       => Tmp (0)'Address,
+        (Addr       => Tmp_1 (0)'Address,
          Width      => 1,
          Height     => LCD_H,
          Color_Mode => Display.Get_Color_Mode (1),
          Swapped    => Display.Is_Swapped);
+      Tmp := Tmp_1'Access;
    end Initialize_Tables;
 
    --------------
@@ -274,44 +286,18 @@ package body Raycaster is
       --  Multiply by Cos (Pos.Angle - Current.Angle) to fix the fisheye
       --  effect: we wnat a vertical projection on the virtual screen, that is
       --  perpendicular to the current player's angle
-      Distance := Cos_Table (Pos.Angle - Current.Angle) * Distance;
+      Dist := Cos_Table (Pos.Angle - Current.Angle) * Dist;
    end Distance;
-
-   Prev_Color : Unsigned_16 := 0;
-   pragma Linker_Section (Prev_Color, ".ccmdata");
-   Prev_Res   : Unsigned_16 := 0;
-   pragma Linker_Section (Prev_Res, ".ccmdata");
-
-   ------------
-   -- Darken --
-   ------------
-
-   function Darken (Col : Unsigned_16) return Unsigned_16
-   is
-   begin
-      if Col /= Prev_Color then
-         Prev_Res := Shift_Right (Col and 2#11110_111110_11110#, 1);
-         Prev_Color := Col;
-      end if;
-
-      return Prev_Res;
-   end Darken;
-
-   Prev_X      : Natural := 0;
-   pragma Linker_Section (Prev_X, ".ccmdata");
-   Prev_Scale  : Natural := 0;
-   pragma Linker_Section (Prev_Scale, ".ccmdata");
-   Prev_Tile   : Cell := Empty;
-   pragma Linker_Section (Prev_Tile, ".ccmdata");
 
    -----------------
    -- Draw_Column --
    -----------------
 
    procedure Draw_Column
-     (Buf  : HAL.Bitmap.Bitmap_Buffer'Class;
-      Col  : Natural)
+     (Col  : Natural)
    is
+      Buf      : constant HAL.Bitmap.Bitmap_Buffer'Class :=
+                   Display.Get_Hidden_Buffer (1);
       Col_Pos  : Position := Current;
       Off      : Float;
       Dist     : Float;
@@ -370,20 +356,38 @@ package body Raycaster is
         or else Prev_X /= X
         or else Prev_Tile /= Tile
       then
-         for Row in 0 .. Height - 1 loop
-            Y := (Row + dY) * Bmp'Length (1) / Scale;
-            Tmp (Row) := (if Side then Darken (Bmp (Y, X)) else Bmp (Y, X));
-         end loop;
+         --  While the Tmp buffer is being transfered, do not attempt to write
+         --  to it. We use a double buffer system here to prevent such modif
+         --  while transfering
+         if Tmp = Tmp_1'Access then
+            Tmp := Tmp_2'Access;
+         else
+            Tmp := Tmp_1'Access;
+         end if;
 
-         --  Flush the data cache to actual memory before activating the DMA
-         Cortex_M.Cache.Clean_DCache
-           (Tmp (0)'Address, Tmp'Size / 8);
+         Tmp_Buf.Addr := Tmp.all'Address;
+
+         if Side then
+            for Row in 0 .. Height - 1 loop
+               Y := (Row + dY) * Texture_Size / Scale;
+               Tmp (Row) := Darken (Bmp (Y, X));
+            end loop;
+         else
+            for Row in 0 .. Height - 1 loop
+               Y := (Row + dY) * Texture_Size / Scale;
+               Tmp (Row) := Bmp (Y, X);
+            end loop;
+         end if;
+
+         Cortex_M.Cache.Clean_DCache (Tmp (0)'Address, Height * 2);
 
          Prev_Scale := Scale;
          Prev_X := X;
          Prev_Tile := Tile;
       end if;
 
+      --  Start next column as soon as possible, so don't wait for the DMA
+      --  transfer to terminate (Synchronous is False).
       Copy_Rect
         (Src_Buffer  => Tmp_Buf,
          X_Src       => 0,
@@ -391,11 +395,9 @@ package body Raycaster is
          Dst_Buffer  => Buf,
          X_Dst       => Col,
          Y_Dst       => (LCD_H - Height) / 2,
-         Bg_Buffer   => Null_Buffer,
-         X_Bg        => 0,
-         Y_Bg        => 0,
          Width       => 1,
-         Height      => Height);
+         Height      => Height,
+         Synchronous => False);
    end Draw_Column;
 
    ----------
@@ -409,6 +411,8 @@ package body Raycaster is
    is
       Buf : constant HAL.Bitmap.Bitmap_Buffer'Class :=
               Display.Get_Hidden_Buffer (1);
+      FG  : constant HAL.Bitmap.Bitmap_Buffer'Class :=
+              Display.Get_Hidden_Buffer (2);
    begin
       Buf.Fill_Rect
         (Color  => (255, others => 45),
@@ -424,21 +428,24 @@ package body Raycaster is
          Height => LCD_H / 2);
 
       for X in FOV_Vect'Range loop
-         Draw_Column (Buf, X);
+         Draw_Column (X);
       end loop;
 
       FPS := FPS + 1;
+
       if Clock - Last > Milliseconds (500) then
-         Last := Clock;
          Ada.Text_IO.Put_Line (Natural'Image (FPS * 2) & " fps");
+         FG.Fill (Transparent);
+         Cortex_M.Cache.Invalidate_DCache (FG.Addr, FG.Buffer_Size);
          Bitmapped_Drawing.Draw_String
-           (Buffer     => Display.Get_Hidden_Buffer (2),
+           (Buffer     => FG,
             Start      => (0, 0),
             Msg        => Natural'Image (FPS * 2) & " fps",
             Font       => BMP_Fonts.Font12x12,
             Foreground => HAL.Bitmap.White,
             Background => HAL.Bitmap.Transparent);
          FPS := 0;
+         Last := Clock;
          Display.Update_Layers;
       else
          Display.Update_Layer (1);

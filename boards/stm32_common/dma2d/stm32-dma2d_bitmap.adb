@@ -101,7 +101,7 @@ package body STM32.DMA2D_Bitmap is
    is
    begin
       if To_DMA2D_CM (Buffer.Color_Mode) in DMA2D_Dst_Color_Mode then
-         DMA2D_Fill (To_DMA2D_Buffer (Buffer), Color);
+         DMA2D_Fill (To_DMA2D_Buffer (Buffer), Color, True);
       else
          HAL.Bitmap.Bitmap_Buffer (Buffer).Fill (Color);
       end if;
@@ -150,17 +150,18 @@ package body STM32.DMA2D_Bitmap is
    ---------------
 
    overriding procedure Copy_Rect
-     (Src_Buffer : HAL.Bitmap.Bitmap_Buffer'Class;
-      X_Src      : Natural;
-      Y_Src      : Natural;
-      Dst_Buffer : DMA2D_Bitmap_Buffer;
-      X_Dst      : Natural;
-      Y_Dst      : Natural;
-      Bg_Buffer  : HAL.Bitmap.Bitmap_Buffer'Class;
-      X_Bg       : Natural;
-      Y_Bg       : Natural;
-      Width      : Natural;
-      Height     : Natural)
+     (Src_Buffer  : HAL.Bitmap.Bitmap_Buffer'Class;
+      X_Src       : Natural;
+      Y_Src       : Natural;
+      Dst_Buffer  : DMA2D_Bitmap_Buffer;
+      X_Dst       : Natural;
+      Y_Dst       : Natural;
+      Bg_Buffer   : HAL.Bitmap.Bitmap_Buffer'Class;
+      X_Bg        : Natural;
+      Y_Bg        : Natural;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean)
    is
       use type System.Address;
       DMA_Buf_Src : constant DMA2D_Buffer := To_DMA2D_Buffer (Src_Buffer);
@@ -196,11 +197,14 @@ package body STM32.DMA2D_Bitmap is
          Y0_Bg := Bg_Buffer.Width - X_Bg - Width;
       end if;
 
+      Cortex_M.Cache.Clean_DCache (Src_Buffer.Addr, Src_Buffer.Buffer_Size);
+
       DMA2D_Copy_Rect
         (DMA_Buf_Src, X0_Src, Y0_Src,
          DMA_Buf_Dst, X0_Dst, Y0_Dst,
          DMA_Buf_Bg, X0_Bg, Y0_Bg,
-         W, H);
+         W, H,
+         Synchronous => Synchronous);
    end Copy_Rect;
 
    -------------------

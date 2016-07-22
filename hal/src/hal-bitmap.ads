@@ -134,37 +134,40 @@ package HAL.Bitmap is
    --  Same as above, using the destination buffer native color representation
 
    procedure Copy_Rect
-     (Src_Buffer : Bitmap_Buffer'Class;
-      X_Src      : Natural;
-      Y_Src      : Natural;
-      Dst_Buffer : Bitmap_Buffer;
-      X_Dst      : Natural;
-      Y_Dst      : Natural;
-      Bg_Buffer  : Bitmap_Buffer'Class;
-      X_Bg       : Natural;
-      Y_Bg       : Natural;
-      Width      : Natural;
-      Height     : Natural);
+     (Src_Buffer  : Bitmap_Buffer'Class;
+      X_Src       : Natural;
+      Y_Src       : Natural;
+      Dst_Buffer  : Bitmap_Buffer;
+      X_Dst       : Natural;
+      Y_Dst       : Natural;
+      Bg_Buffer   : Bitmap_Buffer'Class;
+      X_Bg        : Natural;
+      Y_Bg        : Natural;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean);
 
    procedure Copy_Rect
-     (Src_Buffer : Bitmap_Buffer'Class;
-      X_Src      : Natural;
-      Y_Src      : Natural;
-      Dst_Buffer : Bitmap_Buffer;
-      X_Dst      : Natural;
-      Y_Dst      : Natural;
-      Width      : Natural;
-      Height     : Natural);
+     (Src_Buffer  : Bitmap_Buffer'Class;
+      X_Src       : Natural;
+      Y_Src       : Natural;
+      Dst_Buffer  : Bitmap_Buffer;
+      X_Dst       : Natural;
+      Y_Dst       : Natural;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean);
 
    procedure Copy_Rect_Blend
-     (Src_Buffer : Bitmap_Buffer;
-      X_Src      : Natural;
-      Y_Src      : Natural;
-      Dst_Buffer : Bitmap_Buffer'Class;
-      X_Dst      : Natural;
-      Y_Dst      : Natural;
-      Width      : Natural;
-      Height     : Natural);
+     (Src_Buffer  : Bitmap_Buffer;
+      X_Src       : Natural;
+      Y_Src       : Natural;
+      Dst_Buffer  : Bitmap_Buffer'Class;
+      X_Dst       : Natural;
+      Y_Dst       : Natural;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean);
 
    procedure Draw_Vertical_Line
      (Buffer : Bitmap_Buffer;

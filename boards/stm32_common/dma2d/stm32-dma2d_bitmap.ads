@@ -38,17 +38,18 @@ package STM32.DMA2D_Bitmap is
       Height : Integer);
 
    overriding procedure Copy_Rect
-     (Src_Buffer : HAL.Bitmap.Bitmap_Buffer'Class;
-      X_Src      : Natural;
-      Y_Src      : Natural;
-      Dst_Buffer : DMA2D_Bitmap_Buffer;
-      X_Dst      : Natural;
-      Y_Dst      : Natural;
-      Bg_Buffer  : HAL.Bitmap.Bitmap_Buffer'Class;
-      X_Bg       : Natural;
-      Y_Bg       : Natural;
-      Width      : Natural;
-      Height     : Natural)
+     (Src_Buffer  : HAL.Bitmap.Bitmap_Buffer'Class;
+      X_Src       : Natural;
+      Y_Src       : Natural;
+      Dst_Buffer  : DMA2D_Bitmap_Buffer;
+      X_Dst       : Natural;
+      Y_Dst       : Natural;
+      Bg_Buffer   : HAL.Bitmap.Bitmap_Buffer'Class;
+      X_Bg        : Natural;
+      Y_Bg        : Natural;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean)
      with Pre =>
        Dst_Buffer.Color_Mode in HAL.Bitmap.ARGB_8888 .. HAL.Bitmap.ARGB_4444;
 

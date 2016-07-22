@@ -568,7 +568,8 @@ package body Status is
             AreaH.Position.X,
             AreaH.Position.Y,
             Area.Width,
-            Area.Height);
+            Area.Height,
+            False);
       end if;
    end Set_Score;
 
