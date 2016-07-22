@@ -96,23 +96,24 @@ package STM32.Board is
                      FMC_NBL0 & FMC_NBL1;
 
    --  SDRAM CONFIGURATION Parameters
-   SDRAM_Base         : constant := 16#C0000000#;
-   SDRAM_Size         : constant := 16#800000#;
-   SDRAM_Bank         : constant STM32.FMC.FMC_SDRAM_Cmd_Target_Bank :=
-                          STM32.FMC.FMC_Bank1_SDRAM;
-   SDRAM_Mem_Width    : constant STM32.FMC.FMC_SDRAM_Memory_Bus_Width :=
-                          STM32.FMC.FMC_SDMemory_Width_16b;
-   SDRAM_Row_Bits     : constant STM32.FMC.FMC_SDRAM_Row_Address_Bits :=
-                          STM32.FMC.FMC_RowBits_Number_12b;
-   SDRAM_CAS_Latency  : constant STM32.FMC.FMC_SDRAM_CAS_Latency :=
-                          STM32.FMC.FMC_CAS_Latency_2;
-   SDRAM_CLOCK_Period : constant STM32.FMC.FMC_SDRAM_Clock_Configuration :=
-                          STM32.FMC.FMC_SDClock_Period_2;
-   SDRAM_Read_Burst   : constant STM32.FMC.FMC_SDRAM_Burst_Read :=
-                          STM32.FMC.FMC_Read_Burst_Disable;
-   SDRAM_Read_Pipe    : constant STM32.FMC.FMC_SDRAM_Read_Pipe_Delay :=
-                          STM32.FMC.FMC_ReadPipe_Delay_0;
-   SDRAM_Refresh_Cnt  : constant := 1539;
+   SDRAM_Base            : constant := 16#C0000000#;
+   SDRAM_Size            : constant := 16#800000#;
+   SDRAM_Bank            : constant STM32.FMC.FMC_SDRAM_Cmd_Target_Bank :=
+                             STM32.FMC.FMC_Bank1_SDRAM;
+   SDRAM_Mem_Width       : constant STM32.FMC.FMC_SDRAM_Memory_Bus_Width :=
+                             STM32.FMC.FMC_SDMemory_Width_16b;
+   SDRAM_Row_Bits        : constant STM32.FMC.FMC_SDRAM_Row_Address_Bits :=
+                             STM32.FMC.FMC_RowBits_Number_12b;
+   SDRAM_CAS_Latency     : constant STM32.FMC.FMC_SDRAM_CAS_Latency :=
+                             STM32.FMC.FMC_CAS_Latency_2;
+   SDRAM_CLOCK_Period    : constant STM32.FMC.FMC_SDRAM_Clock_Configuration :=
+                             STM32.FMC.FMC_SDClock_Period_2;
+   SDRAM_Read_Burst      : constant STM32.FMC.FMC_SDRAM_Burst_Read :=
+                             STM32.FMC.FMC_Read_Burst_Disable;
+   SDRAM_Read_Pipe       : constant STM32.FMC.FMC_SDRAM_Read_Pipe_Delay :=
+                             STM32.FMC.FMC_ReadPipe_Delay_0;
+   SDRAM_Refresh_Cnt     : constant := 1539;
+   SDRAM_Min_Delay_In_ns : constant := 60;
 
    ---------
    -- I2C --

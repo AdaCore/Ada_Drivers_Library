@@ -1,4 +1,7 @@
 with Ada.Real_Time;   use Ada.Real_Time;
+pragma Warnings (Off, "* is an internal GNAT unit*");
+with System.BB.Board_Parameters;
+pragma Warnings (On, "* is an internal GNAT unit*");
 
 with STM32.Board;     use STM32.Board;
 with STM32.Device;    use STM32.Device;
@@ -105,8 +108,14 @@ package body STM32.SDRAM is
 
    procedure Initialize
    is
-      Timing_Conf : FMC_SDRAM_TimingInit_Config;
-      SDRAM_Conf  : FMC_SDRAM_Init_Config;
+      Timing_Conf     : FMC_SDRAM_TimingInit_Config;
+      SDRAM_Conf      : FMC_SDRAM_Init_Config;
+      SDCLK           : constant :=
+                          System.BB.Board_Parameters.Main_Clock_Frequency / 2;
+      SDPeriod_In_ns  : constant :=
+                          1_000_000_000 / SDCLK;
+      Refresh_Delay   : Unsigned_32;
+
    begin
       if Initialized then
          return;
@@ -130,22 +139,25 @@ package body STM32.SDRAM is
       RCC_Periph.AHB3RSTR.FMCRST := True;
       RCC_Periph.AHB3RSTR.FMCRST := False;
 
-      --  90 MHz of SD clock frequency (180MHz / 2)
-      --  1 Clock cycle = 1 / 90MHz = 11.1ns
+      --  100 MHz of SD clock frequency (200MHz / 2)
+      --  1 Clock cycle = 1 / 100MHz = 10ns
+
+      Refresh_Delay :=
+        (SDRAM_Min_Delay_In_ns - SDPeriod_In_ns + 1) / SDPeriod_In_ns;
 
       Timing_Conf :=
         (
          --  2 Clock cycles for Load to Active delay
          LoadToActiveDelay    => 2,
 
-         --  min = 70ns: 7 * 11.1
-         ExitSelfRefreshDelay => 7,
+         --  min = 60ns: 6 * 10.0
+         ExitSelfRefreshDelay => FMC_SDRAM_Timing (Refresh_Delay),
 
          --  in range [42ns, 120k ns] => using 4 * 11.1 ns
          SelfRefreshTime      => 4,
 
-         --  min = 70ns
-         RowCycleDelay        => 7,
+         --  min = 60ns
+         RowCycleDelay        => FMC_SDRAM_Timing (Refresh_Delay),
 
          --  min = 20ns
          WriteRecoveryTime    => 2,
