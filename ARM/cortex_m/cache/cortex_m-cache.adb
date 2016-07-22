@@ -37,96 +37,135 @@ with HAL;                      use HAL;
 
 package body Cortex_M.Cache is
 
-   Data_Cache_Line_Size : constant := 32; --  Fixed to 8 words
-
    SCS_Base : constant := 16#E000_E000#; --  System Control Space base addr.
    SCB_Base : constant := SCS_Base + 16#0D00#; --  System Control Block
 
-   --  D-Cache invalidate by MVA to PoC
-   DCIMVAC  : Word
-     with Volatile, Address => System'To_Address (SCB_Base + 16#25C#);
+   type CCSIDR_Register is record
+      Line_Size     : UInt3;
+      Associativity : UInt10;
+      Num_Sets      : UInt15;
+      WA            : Boolean;
+      RA            : Boolean;
+      WB            : Boolean;
+      WT            : Boolean;
+   end record with Volatile, Size => 32;
+
+   for CCSIDR_Register use record
+      Line_Size     at 0 range  0 ..  2;
+      Associativity at 0 range  3 .. 12;
+      Num_Sets      at 0 range 13 .. 27;
+      WA            at 0 range 28 .. 28;
+      RA            at 0 range 29 .. 29;
+      WB            at 0 range 30 .. 30;
+      WT            at 0 range 31 .. 31;
+   end record;
+
+   CCSIDR               : CCSIDR_Register
+     with Volatile, Address => System'To_Address (SCB_Base + 16#080#);
+
+   Data_Cache_Line_Size : constant Word := Word (CCSIDR.Line_Size) * 32;
 
    --  D-Cache clean by MVA to PoC
-   DCCMVAC  : Word
-     with Volatile, Address => System'To_Address (SCB_Base + 16#268#);
+   DCCMVAC  : constant System.Address :=
+                System'To_Address (SCB_Base + 16#268#);
+
+   --  D-Cache invalidate by MVA to PoC
+   DCIMVAC  : constant System.Address :=
+                System'To_Address (SCB_Base + 16#25C#);
 
    --  D-Cache clean and invalidate by MVA to PoC
-   DCCIMVAC : Word
-     with Volatile, Address => System'To_Address (SCB_Base + 16#270#);
+   DCCIMVAC : constant System.Address :=
+                System'To_Address (SCB_Base + 16#270#);
 
-   function To_U32 is new Ada.Unchecked_Conversion
-     (System.Address, Unsigned_32);
+   procedure DSB with Inline_Always;
+   --  Data Stored Barrier
+
+   procedure ISB with Inline_Always;
+   --  Instruction Stored Barrier
+
+   generic
+      Reg_Address : System.Address;
+   procedure Cache_Maintenance
+     (Start : System.Address;
+      Len   : Natural) with Inline_Always;
+
+   ---------
+   -- DSB --
+   ---------
+
+   procedure DSB is
+   begin
+      Asm ("dsb", Volatile => True);
+   end DSB;
+
+   ---------
+   -- ISB --
+   ---------
+
+   procedure ISB is
+   begin
+      Asm ("isb", Volatile => True);
+   end ISB;
+
+   -----------------------
+   -- Cache_Maintenance --
+   -----------------------
+
+   procedure Cache_Maintenance
+     (Start : System.Address;
+      Len   : Natural)
+   is
+      function To_U32 is new Ada.Unchecked_Conversion
+        (System.Address, Unsigned_32);
+
+      Op_Size   : Integer_32 := Integer_32 (Len);
+      Op_Addr   : Unsigned_32 := To_U32 (Start);
+      Reg       : Word with Volatile, Address => Reg_Address;
+
+   begin
+      DSB;
+
+      while Op_Size > 0 loop
+         Reg     := Op_Addr;
+         Op_Addr := Op_Addr + Data_Cache_Line_Size;
+         Op_Size := Op_Size - Integer_32 (Data_Cache_Line_Size);
+      end loop;
+
+      DSB;
+      ISB;
+   end Cache_Maintenance;
 
    ------------------
    -- Clean_DCache --
    ------------------
 
+   procedure Int_Clean_DCache is new Cache_Maintenance (DCCMVAC);
+
    procedure Clean_DCache
      (Start : System.Address;
       Len   : Natural)
-   is
-      Op_Size   : Integer_32 := Integer_32 (Len);
-      Op_Addr   : Unsigned_32 := To_U32 (Start);
-
-   begin
-      Asm ("dsb", Volatile => True);
-
-      while Op_Size > 0 loop
-         DCCMVAC := Op_Addr;
-         Op_Addr := Op_Addr + Data_Cache_Line_Size;
-         Op_Size := Op_Size - Data_Cache_Line_Size;
-      end loop;
-
-      Asm ("dsb", Volatile => True);
-      Asm ("isb", Volatile => True);
-   end Clean_DCache;
+      renames Int_Clean_DCache;
 
    -----------------------
    -- Invalidate_DCache --
    -----------------------
 
+   procedure Int_Invalidate_DCache is new Cache_Maintenance (DCIMVAC);
+
    procedure Invalidate_DCache
      (Start : System.Address;
       Len   : Natural)
-   is
-      Op_Size   : Integer_32 := Integer_32 (Len);
-      Op_Addr   : Unsigned_32 := To_U32 (Start);
-
-   begin
-      Asm ("dsb", Volatile => True);
-
-      while Op_Size > 0 loop
-         DCIMVAC := Op_Addr;
-         Op_Addr := Op_Addr + Data_Cache_Line_Size;
-         Op_Size := Op_Size - Data_Cache_Line_Size;
-      end loop;
-
-      Asm ("dsb", Volatile => True);
-      Asm ("isb", Volatile => True);
-   end Invalidate_DCache;
+      renames Int_Invalidate_DCache;
 
    -----------------------------
    -- Clean_Invalidate_DCache --
    -----------------------------
 
+   procedure Int_Clean_Invalidate_DCache is new Cache_Maintenance (DCCIMVAC);
+
    procedure Clean_Invalidate_DCache
      (Start : System.Address;
       Len   : Natural)
-   is
-      Op_Size   : Integer_32 := Integer_32 (Len);
-      Op_Addr   : Unsigned_32 := To_U32 (Start);
-
-   begin
-      Asm ("dsb", Volatile => True);
-
-      while Op_Size > 0 loop
-         DCCIMVAC := Op_Addr;
-         Op_Addr := Op_Addr + Data_Cache_Line_Size;
-         Op_Size := Op_Size - Data_Cache_Line_Size;
-      end loop;
-
-      Asm ("dsb", Volatile => True);
-      Asm ("isb", Volatile => True);
-   end Clean_Invalidate_DCache;
+      renames Int_Clean_Invalidate_DCache;
 
 end Cortex_M.Cache;
