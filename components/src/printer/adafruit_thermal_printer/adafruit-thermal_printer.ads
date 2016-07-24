@@ -1,9 +1,11 @@
-with HAL.UART;
 with HAL; use HAL;
+with HAL.UART;
+with HAL.Time;
 
 package AdaFruit.Thermal_Printer is
 
-   type TP_Device (Port : not null HAL.UART.UART_Port_Ref) is
+   type TP_Device (Port : not null HAL.UART.UART_Port_Ref;
+                   Time : not null HAL.Time.Delays_Ref) is
      tagged private;
 
    --  The baud rate for this printers is usually 19_200 but some printers
@@ -35,7 +37,16 @@ package AdaFruit.Thermal_Printer is
 
    procedure Feed (This : in out TP_Device; Rows : Byte);
 
-   procedure Reset (This : in out TP_Device); --  ESC @
+   type Thermal_Printer_Bitmap is array (Natural range <>,
+                                         Natural range <>) of Boolean
+     with Pack;
+
+   procedure Print_Bitmap (This : in out TP_Device;
+                           BM   : Thermal_Printer_Bitmap)
+     with Pre => BM'Length (1) = 384;
+
+   procedure Wake (This : in out TP_Device);
+   procedure Reset (This : in out TP_Device);
 
    procedure Print (This : in out TP_Device; Text : String);
 
@@ -61,7 +72,8 @@ package AdaFruit.Thermal_Printer is
    procedure Print_Test_Page (This : in out TP_Device);
 
 private
-   type TP_Device (Port : not null HAL.UART.UART_Port_Ref) is
+   type TP_Device (Port : not null HAL.UART.UART_Port_Ref;
+                   Time : not null HAL.Time.Delays_Ref) is
      tagged null record;
 
 end AdaFruit.Thermal_Printer;

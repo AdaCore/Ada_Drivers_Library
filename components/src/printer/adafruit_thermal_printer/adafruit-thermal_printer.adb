@@ -31,7 +31,7 @@ package body AdaFruit.Thermal_Printer is
          --  No error handling...
          raise Program_Error;
       end if;
-      --  delay until Clock + Milliseconds ((11 * 1000000 / 19_2000) + Cmd'Length);
+      --  This.Time.Delay_Microseconds ((11 * 1000000 / 19_2000) + Cmd'Length);
    end Write;
 
    ----------
@@ -160,13 +160,69 @@ package body AdaFruit.Thermal_Printer is
       Write (This, ASCII.ESC & 'd' & To_Char (Rows));
    end Feed;
 
+   ------------------
+   -- Print_Bitmap --
+   ------------------
+
+   procedure Print_Bitmap (This : in out TP_Device;
+                           BM   : Thermal_Printer_Bitmap)
+   is
+      Nbr_Of_Rows    : constant Natural := BM'Length (2);
+      Nbr_Of_Columns : constant Natural := BM'Length (1);
+      Str : String (1 .. Nbr_Of_Columns / 8);
+   begin
+
+      Write (This, ASCII.DC2 & 'v' &
+               To_Char (Byte (Nbr_Of_Rows rem 256)) &
+               To_Char (Byte (Nbr_Of_Rows / 256)));
+
+      for Row in 0 .. Nbr_Of_Rows - 1 loop
+         for Colum in 0 .. (Nbr_Of_Columns / 8) - 1 loop
+            declare
+               BM_Index  : constant Natural := BM'First (1) + Colum * 8;
+               Str_Index : constant Natural := Str'First + Colum;
+               B : Byte := 0;
+            begin
+               for X in 0 .. 7 loop
+                  B := B or (if BM (BM_Index + X,
+                                    BM'First (2) + Row)
+                             then 2**X else 0);
+               end loop;
+               Str (Str_Index) := To_Char (B);
+            end;
+         end loop;
+         Write (This, Str);
+
+         --  delay until Clock + Microseconds (10000 * Str'Length);
+         This.Time.Delay_Microseconds (800 * Str'Length);
+      end loop;
+   end Print_Bitmap;
+
+   ----------
+   -- Wake --
+   ----------
+
+   procedure Wake (This : in out TP_Device) is
+   begin
+      Write (This, ASCII.ESC & '@');
+   end Wake;
+
    -----------
    -- Reset --
    -----------
 
    procedure Reset (This : in out TP_Device) is
    begin
-      Write (This, ASCII.ESC & '@');
+      Write (This, "" & To_Char (16#FF#));
+      This.Time.Delay_Milliseconds (50);
+
+      Write (This, ASCII.ESC & '8' & ASCII.NUL & ASCII.NUL);
+
+      for X in 1 .. 10 loop
+         This.Time.Delay_Microseconds (10_000);
+         Write (This, "" & ASCII.NUL);
+      end loop;
+
    end Reset;
 
    -----------
