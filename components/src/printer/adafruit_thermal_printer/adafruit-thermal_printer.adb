@@ -151,6 +151,15 @@ package body AdaFruit.Thermal_Printer is
       Write (This, ASCII.ESC & 't' & To_Char (Character_Set'Pos (Set)));
    end Set_Character_Set;
 
+   ----------
+   -- Feed --
+   ----------
+
+   procedure Feed (This : in out TP_Device; Rows : Byte) is
+   begin
+      Write (This, ASCII.ESC & 'd' & To_Char (Rows));
+   end Feed;
+
    -----------
    -- Reset --
    -----------

@@ -11,13 +11,20 @@ package AdaFruit.Thermal_Printer is
 
    --  Sets the line spacing to n dots. The default value is 32
    procedure Set_Line_Spacing (This : in out TP_Device; Spacing : Byte);
+
    type Text_Align is (Right, Center, Left);
    procedure Set_Align (This : in out TP_Device; Align : Text_Align);
+
    procedure Set_Font_Enlarge (This : in out TP_Device; Height, Width : Boolean);
+
    procedure Set_Bold (This : in out TP_Device; Bold : Boolean);
+
    procedure Set_Double_Width (This : in out TP_Device; Double : Boolean);
+
    procedure Set_UpDown (This : in out TP_Device; UpDown : Boolean);
+
    procedure Set_Reversed (This : in out TP_Device; Reversed : Boolean);
+
    subtype Underline_Height is Byte range 0 .. 2;
    procedure Set_Underline_Height (This : in out TP_Device; Height : Underline_Height);
 
@@ -25,6 +32,8 @@ package AdaFruit.Thermal_Printer is
                           Spain1, Japan, Norway, Denmark2, Spain2,
                           Latin_Americam, Korea);
    procedure Set_Character_Set (This : in out TP_Device; Set : Character_Set);
+
+   procedure Feed (This : in out TP_Device; Rows : Byte);
 
    procedure Reset (This : in out TP_Device); --  ESC @
 
