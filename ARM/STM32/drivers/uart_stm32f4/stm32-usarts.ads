@@ -45,8 +45,6 @@
 --  Note that there are board implementation assumptions represented by the
 --  private function APB_Clock.
 
-pragma Restrictions (No_Elaboration_Code);
-
 with System;
 with HAL.UART; use HAL.UART;
 private with STM32_SVD.USART;
