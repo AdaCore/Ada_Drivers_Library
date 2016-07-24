@@ -106,4 +106,42 @@ package body OpenMV is
       STM32.SPI.Enable (Shield_SPI);
    end Initialize_Shield_SPI;
 
+   -----------------------------
+   -- Initialize_Shield_USART --
+   -----------------------------
+
+   procedure Initialize_Shield_USART (Baud : STM32.USARTs.Baud_Rates) is
+      Configuration : GPIO_Port_Configuration;
+   begin
+      Enable_Clock (Shield_USART);
+      Enable_Clock (Shield_USART_Points);
+
+      Configuration.Mode := Mode_AF;
+      Configuration.Speed := Speed_50MHz;
+      Configuration.Output_Type := Push_Pull;
+      Configuration.Resistors := Pull_Up;
+
+      Configure_IO (Shield_USART_Points, Configuration);
+
+      Configure_Alternate_Function (Shield_USART_Points, Shield_USART_AF);
+
+      Disable (Shield_USART);
+
+      Set_Baud_Rate    (Shield_USART, Baud);
+      Set_Mode         (Shield_USART, Tx_Rx_Mode);
+      Set_Stop_Bits    (Shield_USART, Stopbits_1);
+      Set_Word_Length  (Shield_USART, Word_Length_8);
+      Set_Parity       (Shield_USART, No_Parity);
+      Set_Flow_Control (Shield_USART, No_Flow_Control);
+
+      Enable (Shield_USART);
+   end Initialize_Shield_USART;
+
+   ----------------------
+   -- Get_Shield_USART --
+   ----------------------
+
+   function Get_Shield_USART return not null HAL.UART.UART_Port_Ref is
+      (USART_3'Access);
+
 end OpenMV;

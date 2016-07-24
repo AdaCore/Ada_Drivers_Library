@@ -6,6 +6,9 @@ with STM32.SPI;
 with STM32.Timers; use STM32.Timers;
 with STM32.DMA;
 with STM32.I2C; use STM32.I2C;
+with STM32.USARTs; use STM32.USARTs;
+
+with HAL.UART;
 
 package OpenMV is
    pragma Elaborate_Body;
@@ -32,6 +35,12 @@ package OpenMV is
 
    procedure Initialize_Shield_SPI;
    --  Initialize the SPI port available for shields (SPI2)
+
+   procedure Initialize_Shield_USART (Baud : STM32.USARTs.Baud_Rates);
+   --  Initialize the USART port available for shields (USART3)
+
+   function Get_Shield_USART return not null HAL.UART.UART_Port_Ref;
+   --  Get the USART port available for shields (USART3)
 
    Shield_MOSI  : GPIO_Point renames PB15;
    Shield_MISO  : GPIO_Point renames PB14;
@@ -71,6 +80,19 @@ private
      (Shield_MISO,
       Shield_MOSI,
       Shield_SCK);
+
+   ------------
+   -- USART3 --
+   ------------
+
+   USART_3_TX : GPIO_Point renames PB10;
+   USART_3_RX : GPIO_Point renames PB11;
+
+   Shield_USART : USART renames USART_3;
+   Shield_USART_Points : constant STM32.GPIO.GPIO_Points :=
+     (USART_3_TX,
+      USART_3_RX);
+   Shield_USART_AF : constant GPIO_Alternate_Function := GPIO_AF_USART3;
 
    ---------------
    -- I2C1 Pins --
