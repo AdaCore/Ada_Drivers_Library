@@ -53,11 +53,13 @@ package STM32.Board is
 
    Red      : User_LED renames PJ13;
    Green    : User_LED renames PJ5;
+   Green2   : User_LED renames PA12;
    LED1     : User_LED renames Red;
    LED2     : User_LED renames Green;
+   LED3     : User_LED renames Green2;
    LCH_LED  : User_LED renames Red;
 
-   All_LEDs : GPIO_Points := (Red, Green);
+   All_LEDs : GPIO_Points := (Red, Green, Green2);
 
    procedure Initialize_LEDs;
    --  MUST be called prior to any use of the LEDs
@@ -165,19 +167,17 @@ package STM32.Board is
    -----------
 
    --  Audio out
-   SAI2_MCLK_A : GPIO_Point renames PI4;
-   SAI2_SCK_A  : GPIO_Point renames PI5;
-   SAI2_SD_A   : GPIO_Point renames PI6;
-   SAI2_FS_A   : GPIO_Point renames PI7;
+   SAI1_MCLK_A : GPIO_Point renames PG7;
+   SAI1_SCK_A  : GPIO_Point renames PE5;
+   SAI1_SD_A   : GPIO_Point renames PE6;
+   SAI1_FS_A   : GPIO_Point renames PE4;
 
    --  Audio in
-   SAI2_SD_B   : GPIO_Point renames PG10;
+   SAI1_SD_B   : GPIO_Point renames PE3;
 
    --  Audio interrupts
-   TP_PH15     : GPIO_Point renames PH15;
-
    Audio_I2C   : I2C_Port renames I2C_4;
-   Audio_INT   : GPIO_Point renames PD6;
+   Audio_INT   : GPIO_Point renames PB10;
 
    Audio_DMA   : DMA_Controller renames DMA_2;
 
