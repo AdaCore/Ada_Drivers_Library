@@ -2,7 +2,7 @@ with "../../boards/stm32f769_discovery.gpr";
 
 project Wolf_STM32F769Disco extends "../common/common.gpr" is
 
-   for Runtime ("Ada") use Common.RTS & "-stm32f769disco";
+   for Runtime ("Ada") use STM32F769_Discovery'Runtime("Ada");
    for Object_Dir use "obj/stm32f769disco";
 
    for Main use ("wolf_demo.adb");
