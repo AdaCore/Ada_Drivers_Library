@@ -1,6 +1,6 @@
 with "../../config.gpr";
 
-project Common  is
+project Common is
 
    type LOADER_Type is
       ("RAM", "ROM");
@@ -8,8 +8,6 @@ project Common  is
 
    type LCH_Type is ("led", "lcd");
    LCH : LCH_Type := external ("LCH", "led");
-
-   RTS : Config.RTS_Profile_Type := Config.RTS;
 
    for Languages use ("Ada");
    for Target use "arm-eabi";
@@ -50,6 +48,7 @@ project Common  is
       for Debugger_Command use "arm-eabi-gdb";
       for Program_Host use "localhost:4242";
       for Communication_Protocol use "remote";
+      for Connection_Tool use "st-util";
    end Ide;
 
 end Common;

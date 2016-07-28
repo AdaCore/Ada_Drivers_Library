@@ -2,7 +2,7 @@ with "../../boards/stm32f429_discovery.gpr";
 
 project Fractals_STM32F429Disco extends "../common/common.gpr" is
 
-   for Runtime ("Ada") use Common.RTS & "-stm32f429disco";
+   for Runtime ("Ada") use STM32F429_Discovery'Runtime("Ada");
    for Object_Dir use "obj/stm32f429disco";
 
    for Main use ("fractals_demo.adb");

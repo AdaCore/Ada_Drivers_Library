@@ -3,7 +3,7 @@ with "../../boards/stm32f429_discovery.gpr";
 
 project Blinky_F429Disco extends "../common/common.gpr" is
 
-  for Runtime ("Ada") use Config.RTS & "-stm32f429disco";
+  for Runtime ("Ada") use STM32F429_Discovery'Runtime("Ada");
   for Target use "arm-eabi";
   for Main use ("blinky.adb");
   for Languages use ("Ada");

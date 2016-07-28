@@ -2,7 +2,7 @@ with "../../boards/stm32f469_discovery.gpr";
 
 project Balls_STM32F469Disco extends "../common/common.gpr" is
 
-   for Runtime ("Ada") use Common.RTS & "-stm32f469disco";
+   for Runtime ("Ada") use STM32F469_Discovery'Runtime("Ada");
    for Object_Dir use "obj/stm32f469disco";
 
    for Main use ("balls_demo.adb");
