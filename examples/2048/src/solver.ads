@@ -27,10 +27,6 @@ package Solver is
 
    Solver_Enabled : Boolean := False;
 
-   subtype Valid_Depth is Natural range 2 .. 5;
-   Maximum_Depth  : Valid_Depth := 4;
-
-
    type Move_Type is (Up, Down, Left, Right, None);
    subtype Valid_Move_Type is Move_Type range Up .. Right;
 

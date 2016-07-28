@@ -35,7 +35,6 @@ package body Status is
    Score_Area  : Rect := Null_Rect;
    High_Area   : Rect := Null_Rect;
    Btn_Area    : Rect := Null_Rect;
-   Slider_Area : Rect := Null_Rect;
    Margin      : Natural := 5;
 
    FG          : constant Bitmap_Color := (255, others => 80);
@@ -98,13 +97,7 @@ package body Status is
               (Position => (Margin,
                             High_Area.Position.Y + High_Area.Height +
                               (G_Area.Height - High_Area.Position.Y -
-                                 High_Area.Height - 70) / 2),
-               Width    => G_Area.Width - 2 * Margin,
-               Height   => 60);
-            Slider_Area :=
-              (Position => (Margin,
-                            Btn_Area.Position.Y + Btn_Area.Height +
-                              3 * Margin),
+                                 High_Area.Height - 20) / 2),
                Width    => G_Area.Width - 2 * Margin,
                Height   => 60);
          else
@@ -128,15 +121,9 @@ package body Status is
               (Position => (Margin,
                             High_Area.Position.Y + High_Area.Height +
                               (G_Area.Height - High_Area.Position.Y -
-                                 High_Area.Height - 70) / 2),
+                                 High_Area.Height - 40) / 2),
                Width    => G_Area.Width - 2 * Margin,
                Height   => 36);
-            Slider_Area :=
-              (Position => (Margin,
-                            Btn_Area.Position.Y + Btn_Area.Height +
-                              3 * Margin),
-               Width    => G_Area.Width - 2 * Margin,
-               Height   => 35);
          end if;
       else
          --  STM32F429
@@ -155,10 +142,10 @@ package body Status is
                          Score_Area.Position.Y),
             Width    => G_Area.Width / 2 - Margin,
             Height   => 40);
-         Slider_Area :=
-           (Position => (Margin,
+         Btn_Area :=
+           (Position => (Margin + 50,
                          Score_Area.Position.Y + Score_Area.Height + Margin),
-            Width    => G_Area.Width - 2 * Margin,
+            Width    => G_Area.Width - 2 * Margin - 100,
             Height   => 29);
       end if;
 
@@ -220,22 +207,6 @@ package body Status is
          Outline    => False,
          Foreground => Static_FG,
          Fast       => False);
-
-      if Slider_Area /= Null_Rect and then Margin > 3 then
-         Draw_String
-           (Buffer,
-            Area       => ((G_Area.Position.X + Slider_Area.Position.X,
-                            G_Area.Position.Y + Slider_Area.Position.Y -
-                              2 * Margin),
-                           Slider_Area.Width,
-                           2 * Margin),
-            Msg        => "Solver maximal depth:",
-            Font       => Game.Times,
-            Bold       => False,
-            Outline    => False,
-            Foreground => (255, 160, 160, 160),
-            Fast       => False);
-      end if;
    end Init_Area;
 
    -----------------
@@ -385,86 +356,6 @@ package body Status is
       Draw_Button
         (Display.Get_Hidden_Buffer (2), Btn_Area, "Auto Play", State, True);
    end Set_Autoplay;
-
-   ------------------------
-   -- Set_Autoplay_Depth --
-   ------------------------
-
-   procedure Set_Autoplay_Depth
-     (Depth : Natural)
-   is
-   begin
-      if Slider_Area = Null_Rect then
-         return;
-      end if;
-
-      declare
-         Limits : constant array (2 .. 6) of Natural :=
-                    (2 => Slider_Area.Position.X,
-                     3 => Slider_Area.Position.X + Slider_Area.Width / 4,
-                     4 => Slider_Area.Position.X + Slider_Area.Width / 2,
-                     5 => Slider_Area.Position.X + Slider_Area.Width * 3 / 4,
-                     6 => Slider_Area.Position.X + Slider_Area.Width);
-         Area   : Rect;
-      begin
-         Area.Position.Y := Slider_Area.Position.Y;
-         Area.Height     := Slider_Area.Height;
-
-         for J in 2 .. 5 loop
-            Area.Width := Limits (J + 1) - Limits (J);
-            if J /= 5 then
-               Area.Width := Area.Width + 1;
-            end if;
-
-            Area.Position.X := Limits (J);
-            Draw_Button (Display.Get_Hidden_Buffer (2), Area,
-                         (case J is
-                             when 2 => "2",
-                             when 3 => "3",
-                             when 4 => "4",
-                             when 5 => "5"),
-                         J = Depth, False);
-         end loop;
-      end;
-   end Set_Autoplay_Depth;
-
-   ---------------------------------
-   -- Get_Autoplay_Depth_Btn_Area --
-   ---------------------------------
-
-   function Get_Autoplay_Depth_Btn_Area return Rect
-   is
-      Ret : Rect := Slider_Area;
-   begin
-      Ret.Position := Ret.Position + G_Area.Position;
-      --  Increase the clickable area for ease of use
-      Ret.Position.Y := Ret.Position.Y - 2 * Margin;
-      Ret.Height := Ret.Height + 2 * Margin;
-      return Ret;
-   end Get_Autoplay_Depth_Btn_Area;
-
-   ------------------------
-   -- Get_Autoplay_Depth --
-   ------------------------
-
-   function Get_Autoplay_Depth (X, Y : Natural) return Natural
-   is
-      pragma Unreferenced (Y);
-      Delimiters : constant array (2 .. 6) of Natural :=
-                     (2 => 0,
-                      3 => Slider_Area.Width / 4,
-                      4 => Slider_Area.Width / 2,
-                      5 => Slider_Area.Width * 3 / 4,
-                      6 => Slider_Area.Width);
-   begin
-      for J in 2 .. 4 loop
-         if X <= Delimiters (J + 1) then
-            return J;
-         end if;
-      end loop;
-
-      return 5;
-   end Get_Autoplay_Depth;
 
    --------------
    -- Progress --

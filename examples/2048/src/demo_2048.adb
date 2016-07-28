@@ -33,8 +33,11 @@ with Ada.Text_IO;
 
 with STM32.Board;           use STM32.Board;
 with STM32.Button;          use STM32;
+with STM32.SDRAM;           use STM32.SDRAM;
 
 with HAL.Bitmap;            use HAL.Bitmap;
+with HAL.Framebuffer;
+
 with Bitmapped_Drawing;     use Bitmapped_Drawing;
 with Framebuffer_Helper;    use Framebuffer_Helper;
 
@@ -49,11 +52,9 @@ procedure Demo_2048 is
    Period           : constant Time_Span := Milliseconds (10);
    Do_Slide         : Boolean := False;
    Do_Toggle_Solver : Boolean := False;
-   Do_Update_Depth  : Boolean := False;
    Slide_Vect       : TP.Touch_Vector;
 
    procedure On_Autoplay_Clicked (X, Y : Natural);
-   procedure On_Autoplay_Depth_Clicked (X, Y : Natural);
    procedure On_Slide (Vect : TP.Touch_Vector);
 
    -------------------------
@@ -67,18 +68,6 @@ procedure Demo_2048 is
       Solver.Solver_Enabled := not Solver.Solver_Enabled;
       Do_Toggle_Solver := True;
    end On_Autoplay_Clicked;
-
-   -------------------------------
-   -- On_Autoplay_Depth_Clicked --
-   -------------------------------
-
-   procedure On_Autoplay_Depth_Clicked (X, Y : Natural)
-   is
-      Depth : constant Natural := Status.Get_Autoplay_Depth (X, Y);
-   begin
-      Solver.Maximum_Depth := Depth;
-      Do_Update_Depth := True;
-   end On_Autoplay_Depth_Clicked;
 
    --------------
    -- On_Slide --
@@ -97,7 +86,8 @@ procedure Demo_2048 is
 begin
    Ada.Text_IO.Put_Line ("Ready");
    Initialize_LEDs;
-   Display.Initialize;
+   STM32.SDRAM.Initialize;
+   Display.Initialize (Mode => HAL.Framebuffer.Polling);
    Display.Initialize_Layer (1, ARGB_1555);
    Display.Initialize_Layer (2, ARGB_1555,
                              Status_Layer_Area.Position.X,
@@ -124,11 +114,6 @@ begin
         (Status.Get_Autoplay_Btn_Area,
          On_Autoplay_Clicked'Unrestricted_Access);
    end if;
-
-   Status.Set_Autoplay_Depth (Solver.Maximum_Depth);
-   TP.Add_Button_Area
-     (Status.Get_Autoplay_Depth_Btn_Area,
-      On_Autoplay_Depth_Clicked'Unrestricted_Access);
 
    Update_All_Layers;
 
@@ -168,12 +153,6 @@ begin
          end if;
 
          Do_Toggle_Solver := False;
-      end if;
-
-      if Do_Update_Depth then
-         Status.Set_Autoplay_Depth (Solver.Maximum_Depth);
-         Display.Update_Layer (2, True);
-         Do_Update_Depth := False;
       end if;
 
       if Solver.Solver_Enabled then

@@ -37,6 +37,8 @@ with Game;
 with Grid;
 with Status;
 
+with STM32.Board;
+
 package body Solver is
 
    type Cell_T is mod 2 ** 4 with Size => 4;
@@ -44,11 +46,30 @@ package body Solver is
    type Row_T is array (1 .. 4) of Cell_T with Pack, Size => 16;
    type Board_T is array (1 .. 4) of Row_T with Pack, Size => 64;
 
+   type Board_32 is record
+      Row_12 : Unsigned_32;
+      Row_34 : Unsigned_32;
+   end record with Size => 64;
+
+   for Board_32 use record
+      Row_12 at 0 range 0 .. 31;
+      Row_34 at 4 range 0 .. 31;
+   end record;
+
    function Hash (Board : Board_T) return Ada.Containers.Hash_Type;
-   function To_DWord is new Ada.Unchecked_Conversion
+
+   function To_UInt16 is new Ada.Unchecked_Conversion
+     (Row_T, Unsigned_16);
+   function To_Row is new Ada.Unchecked_Conversion
+     (Unsigned_16, Row_T);
+   function To_UInt64 is new Ada.Unchecked_Conversion
      (Board_T, Unsigned_64);
    function To_Board is new Ada.Unchecked_Conversion
      (Unsigned_64, Board_T);
+   function To_Board32 is new Ada.Unchecked_Conversion
+     (Board_T, Board_32);
+   function To_Board is new Ada.Unchecked_Conversion
+     (Board_32, Board_T);
 
    G_Progress    : array (0 .. 2) of Natural := (others => 0);
 
@@ -58,10 +79,13 @@ package body Solver is
 
    type Score_Table is array (Unsigned_16) of Float with Pack;
 
-   type Translation_Table is array (Unsigned_16) of Unsigned_16 with Pack;
+   type Row_Translation_Table is array (Unsigned_16) of Unsigned_16 with Pack;
+   type Col_Translation_Table is array (Unsigned_16) of Unsigned_64 with Pack;
 
-   Row_Left_Table   : access Translation_Table;
-   Row_Right_Table  : access Translation_Table;
+   Row_Left_Table   : access Row_Translation_Table;
+   Row_Right_Table  : access Row_Translation_Table;
+   Col_Up_Table     : access Col_Translation_Table;
+   Col_Down_Table   : access Col_Translation_Table;
    Heur_Score_Table : access Score_Table;
 
    --  Heuristic scoring settings
@@ -74,16 +98,57 @@ package body Solver is
    SCORE_EMPTY_WEIGHT        : constant Float := 270.0;
 
    procedure Update_Progress;
-   function Reverse_Row (Row : Row_T) return Row_T;
-   function Move_Up (Board : Board_T) return Board_T;
-   function Move_Down (Board : Board_T) return Board_T;
-   function Move_Left (Board : Board_T) return Board_T;
-   function Move_Right (Board : Board_T) return Board_T;
+   function Reverse_Row (Row : Row_T) return Row_T with Inline_Always;
+   function Move_Up (Board : Board_T) return Board_T with Inline_Always;
+   function Move_Down (Board : Board_T) return Board_T with Inline_Always;
+   function Move_Left (Board : Board_T) return Board_T with Inline_Always;
+   function Move_Right (Board : Board_T) return Board_T with Inline_Always;
    function Execute_Move
-     (Direction : Valid_Move_Type; Board : Board_T) return Board_T;
-   function Score_Helper
-     (Board : Board_T;
-      Table : access Score_Table) return Float;
+     (Direction : Valid_Move_Type; Board : Board_T)
+      return Board_T with Inline_Always;
+
+   -----------------------
+   -- UTILITY FUNCTIONS --
+   -----------------------
+
+   function Transpose (Board : Board_T) return Board_T with Inline_Always;
+
+   function Count_Empty (Board : Board_T) return Natural
+     with Inline_Always;
+
+   function Count_Distinct_Tiles (Board : Board_T) return Natural;
+
+   type Trans_Table_Entry_T is record
+      Depth     : Natural;
+      Heuristic : Float;
+   end record;
+
+   package Trans_Table_Maps is new Ada.Containers.Hashed_Maps
+     (Board_T, Trans_Table_Entry_T,
+      Hash            => Hash,
+      Equivalent_Keys => "=");
+
+   type Eval_State is record
+      Trans_Table  : Trans_Table_Maps.Map;
+      Max_Depth    : Natural := 0;
+      Cur_Depth    : Natural := 0;
+      Cache_Hits   : Natural := 0;
+      Moves_Evaled : Unsigned_64 := 0;
+      Depth_Limit  : Natural := 0;
+   end record;
+
+   --  Statistics and controls
+   --  cprob: cumulative probability
+   --  don't recurse into a node with a cprob less than this threshold
+   CPROB_THRESH_BASE : constant Float := 0.0001;
+
+   CACHE_DEPTH_LIMIT : constant Natural := 15;
+
+   function Score_Heur_Board (Board : Board_T) return Float with Inline_Always;
+   function Score_Move_Node
+     (State : in out Eval_State; Board : Board_T; CProb : Float) return Float;
+   function Score_Tilechoose_Node
+     (State : in out Eval_State; Board : Board_T; CProb : Float) return Float;
 
    ---------------------
    -- Update_Progress --
@@ -99,16 +164,6 @@ package body Solver is
       Status.Progress (Pct);
    end Update_Progress;
 
-   -----------------------
-   -- UTILITY FUNCTIONS --
-   -----------------------
-
-   function Transpose (Board : Board_T) return Board_T
-     with Inline;
-
-   function Count_Empty (Board : Board_T) return Natural
-     with Inline;
-
    ----------
    -- Hash --
    ----------
@@ -116,25 +171,11 @@ package body Solver is
    function Hash (Board : Board_T) return Ada.Containers.Hash_Type
    is
       use Ada.Containers;
-      UInt : constant Unsigned_64 := To_DWord (Board);
+      UInt : constant Unsigned_64 := To_UInt64 (Board);
    begin
       return Hash_Type (Shift_Right (UInt, 32)) xor
         Hash_Type (UInt and 16#FFFF_FFFF#);
    end Hash;
-
-   --------------
-   -- To_Int16 --
-   --------------
-
-   function To_Int16 is new Ada.Unchecked_Conversion
-     (Row_T, Unsigned_16);
-
-   ------------
-   -- To_Row --
-   ------------
-
-   function To_Row is new Ada.Unchecked_Conversion
-     (Unsigned_16, Row_T);
 
    -----------------
    -- Reverse_Row --
@@ -144,9 +185,9 @@ package body Solver is
    is
    begin
       return To_Row
-        (Shift_Left (Unsigned_16 (Row (1)), 12) +
-         Shift_Left (Unsigned_16 (Row (2)), 8) +
-         Shift_Left (Unsigned_16 (Row (3)), 4) +
+        (Shift_Left (Unsigned_16 (Row (1)), 12) or
+         Shift_Left (Unsigned_16 (Row (2)), 8) or
+         Shift_Left (Unsigned_16 (Row (3)), 4) or
          Unsigned_16 (Row (4)));
    end Reverse_Row;
 
@@ -156,22 +197,40 @@ package body Solver is
 
    function Transpose (Board : Board_T) return Board_T
    is
-      Dw            : constant Unsigned_64 := To_DWord (Board);
-      A1, A2, A3, A : Unsigned_64;
-      B1, B2, B3    : Unsigned_64;
+      B32           : constant Board_32 := To_Board32 (Board);
+      A1, A2, A3, A : Board_32;
+      B             : Board_32;
+
    begin
       --  0123      048c
       --  4567  ==> 159d
       --  89ab      26ae
       --  cdef      37bf
-      A1 := Dw and 16#F0F0_0F0F_F0F0_0F0F#;
-      A2 := Dw and 16#0000_F0F0_0000_F0F0#;
-      A3 := Dw and 16#0F0F_0000_0F0F_0000#;
-      A := A1 or Shift_Left (A2, 12) or Shift_Right (A3, 12);
-      B1 := A and 16#FF00_FF00_00FF_00FF#;
-      B2 := A and 16#00FF_00FF_0000_0000#;
-      B3 := A and 16#0000_0000_FF00_FF00#;
-      return To_Board (B1 or Shift_Right (B2, 24) or Shift_Left (B3, 24));
+
+      --  if Board is ((0, 1, 2, 3), (4, 5, 6, 7), (8, 9, a, b), (c, d, e, f))
+      --  the underlying representation will be:
+      --  Row_12 => 0x76543210
+      --  Row_34 => 0xfedcba98
+      A1 := (Row_12 => B32.Row_12 and 16#F0F0_0F0F#,            --  0_2__5_7
+             Row_34 => B32.Row_34 and 16#F0F0_0F0F#);           --  8_a__d_f
+      A2 := (Row_12 =>
+               Shift_Right (B32.Row_12 and 16#0F0F_0000#, 12),  --  _4_6____
+             Row_34 =>
+               Shift_Right (B32.Row_34 and 16#0F0F_0000#, 12)); --  _c_e____
+      A3 := (Row_12 =>
+               Shift_Left (B32.Row_12 and 16#0000_F0F0#, 12),   --  ____1_3_
+             Row_34 =>
+               Shift_Left (B32.Row_34 and 16#0000_F0F0#, 12));  --  ____9_b_
+      A  := (Row_12 => A1.Row_12 or A2.Row_12 or A3.Row_12,     --  04261537
+             Row_34 => A1.Row_34 or A2.Row_34 or A3.Row_34);    --  8cae9dbf
+
+      --  And now assemble the final value
+      B.Row_12 := (A.Row_12 and 16#00FF_00FF#) or
+        Shift_Left (A.Row_34 and 16#00FF_00FF#, 8); --  048c159d
+      B.Row_34 := (A.Row_34 and 16#FF00_FF00#) or
+        Shift_Right (A.Row_12 and 16#FF00_FF00#, 8);  --  26ae37bf
+
+      return To_Board (B);
    end Transpose;
 
    -----------------
@@ -180,7 +239,7 @@ package body Solver is
 
    function Count_Empty (Board : Board_T) return Natural
    is
-      Dw : Unsigned_64 := To_DWord (Board);
+      Dw : Unsigned_64 := To_UInt64 (Board);
    begin
       Dw := Dw or (Shift_Right (Dw, 2) and 16#3333_3333_3333_3333#);
       Dw := Dw or Shift_Right (Dw, 1);
@@ -197,15 +256,48 @@ package body Solver is
       return Natural (Dw and 16#F#);
    end Count_Empty;
 
+   --------------------------
+   -- Count_Distinct_Tiles --
+   --------------------------
+
+   function Count_Distinct_Tiles (Board : Board_T) return Natural
+   is
+      Bitset : Unsigned_16 := 0;
+      Count  : Natural := 0;
+   begin
+      for Row of Board loop
+         for Cell of Row loop
+            Bitset := Bitset or Shift_Left (Unsigned_16'(1), Natural (Cell));
+         end loop;
+      end loop;
+
+      Bitset := Shift_Right (Bitset, 1);
+
+      while Bitset > 0 loop
+         Bitset := Bitset and (Bitset - 1);
+         Count := Count + 1;
+      end loop;
+
+      return Count;
+   end Count_Distinct_Tiles;
+
    -----------------
    -- Init_Solver --
    -----------------
 
    procedure Init_Solver
    is
+      function Unpack_Col (Row : Unsigned_16) return Unsigned_64 is
+        (16#000F_000F_000F_000F# and
+           (Unsigned_64 (Row)
+            or Shift_Left (Unsigned_64 (Row), 12)
+            or Shift_Left (Unsigned_64 (Row), 24)
+            or Shift_Left (Unsigned_64 (Row), 36)));
    begin
-      Row_Left_Table   := new Translation_Table;
-      Row_Right_Table  := new Translation_Table;
+      Row_Left_Table   := new Row_Translation_Table;
+      Row_Right_Table  := new Row_Translation_Table;
+      Col_Up_Table     := new Col_Translation_Table;
+      Col_Down_Table   := new Col_Translation_Table;
       Heur_Score_Table := new Score_Table;
 
       --  Precalculation of various results for every variations of a given
@@ -216,7 +308,7 @@ package body Solver is
          declare
             Line               : Row_T := To_Row (Row);
             Rev_Row            : constant Unsigned_16 :=
-                                   To_Int16 (Reverse_Row (Line));
+                                   To_UInt16 (Reverse_Row (Line));
             Rank               : Cell_T;
             Sum                : Float;
             Empty              : Natural;
@@ -306,17 +398,20 @@ package body Solver is
                         Line (Idx1) := Line (Idx1) + 1;
                      end if;
                      Line (Idx2) := 0;
+                     Idx1 := Idx1 + 1;
                   else
                      Idx1 := Idx1 + 1;
                   end if;
                end loop;
             end;
 
-            Result := To_Int16 (Line);
-            Rev_Result := To_Int16 (Reverse_Row (Line));
+            Result     := To_UInt16 (Line);
+            Rev_Result := To_UInt16 (Reverse_Row (Line));
 
             Row_Left_Table (Row)      := Result;
             Row_Right_Table (Rev_Row) := Rev_Result;
+            Col_Up_Table (Row)        := Unpack_Col (Result);
+            Col_Down_Table (Rev_Row)  := Unpack_Col (Rev_Result);
          end;
       end loop;
 
@@ -329,14 +424,14 @@ package body Solver is
 
    function Move_Up (Board : Board_T) return Board_T
    is
-      T : constant Board_T := Transpose (Board);
-      Ret : Board_T;
-   begin
-      for R in Board'Range loop
-         Ret (R) := To_Row (Row_Left_Table (To_Int16 (T (R))));
-      end loop;
+      T   : constant Board_T := Transpose (Board);
 
-      return Transpose (Ret);
+   begin
+      return To_Board
+        (Col_Up_Table (To_UInt16 (T (1)))
+         or Shift_Left (Col_Up_Table (To_UInt16 (T (2))), 4)
+         or Shift_Left (Col_Up_Table (To_UInt16 (T (3))), 8)
+         or Shift_Left (Col_Up_Table (To_UInt16 (T (4))), 12));
    end Move_Up;
 
    ---------------
@@ -345,14 +440,15 @@ package body Solver is
 
    function Move_Down (Board : Board_T) return Board_T
    is
-      T : constant Board_T := Transpose (Board);
-      Ret : Board_T;
+      T   : constant Board_T := Transpose (Board);
+      Ret : Unsigned_64 := To_UInt64 (Board);
    begin
-      for R in Board'Range loop
-         Ret (R) := To_Row (Row_Right_Table (To_Int16 (T (R))));
-      end loop;
+      Ret := Col_Down_Table (To_UInt16 (T (1)))
+        or Shift_Left (Col_Down_Table (To_UInt16 (T (2))), 4)
+        or Shift_Left (Col_Down_Table (To_UInt16 (T (3))), 8)
+        or Shift_Left (Col_Down_Table (To_UInt16 (T (4))), 12);
 
-      return Transpose (Ret);
+      return To_Board (Ret);
    end Move_Down;
 
    ---------------
@@ -361,13 +457,15 @@ package body Solver is
 
    function Move_Left (Board : Board_T) return Board_T
    is
-      Ret : Board_T;
+      Ret : Board_32;
    begin
-      for R in Board'Range loop
-         Ret (R) := To_Row (Row_Left_Table (To_Int16 (Board (R))));
-      end loop;
+      Ret :=
+        (Row_12 => Unsigned_32 (Row_Left_Table (To_UInt16 (Board (1))))
+           or Shift_Left (Unsigned_32 (Row_Left_Table (To_UInt16 (Board (2)))), 16),
+         Row_34 => Unsigned_32 (Row_Left_Table (To_UInt16 (Board (3))))
+           or Shift_Left (Unsigned_32 (Row_Left_Table (To_UInt16 (Board (4)))), 16));
 
-      return Ret;
+      return To_Board (Ret);
    end Move_Left;
 
    ----------------
@@ -376,13 +474,15 @@ package body Solver is
 
    function Move_Right (Board : Board_T) return Board_T
    is
-      Ret : Board_T;
+      Ret : Board_32;
    begin
-      for R in Board'Range loop
-         Ret (R) := To_Row (Row_Right_Table (To_Int16 (Board (R))));
-      end loop;
+      Ret :=
+        (Unsigned_32 (Row_Right_Table (To_UInt16 (Board (1))))
+         or Shift_Left (Unsigned_32 (Row_Right_Table (To_UInt16 (Board (2)))), 16),
+         Unsigned_32 (Row_Right_Table (To_UInt16 (Board (3))))
+         or Shift_Left (Unsigned_32 (Row_Right_Table (To_UInt16 (Board (4)))), 16));
 
-      return Ret;
+      return To_Board (Ret);
    end Move_Right;
 
    ------------------
@@ -409,61 +509,22 @@ package body Solver is
    -- Cache definition to speed up calculation --
    ----------------------------------------------
 
-   type Trans_Table_Entry_T is record
-      Depth     : Natural;
-      Heuristic : Float;
-   end record;
-
-   package Trans_Table_Maps is new Ada.Containers.Hashed_Maps
-     (Board_T, Trans_Table_Entry_T,
-      Hash            => Hash,
-      Equivalent_Keys => "=");
-
-   type Eval_State is record
-      Trans_Table  : Trans_Table_Maps.Map;
-      Max_Depth    : Natural := 0;
-      Cur_Depth    : Natural := 0;
-      Cache_Hits   : Natural := 0;
-      Moves_Evaled : Unsigned_64 := 0;
-      Depth_Limit  : Natural := 0;
-   end record;
-
-   --  Statistics and controls
-   --  cprob: cumulative probability
-   --  don't recurse into a node with a cprob less than this threshold
-   CPROB_THRESH_BASE : constant Float := 0.0001;
-   CACHE_DEPTH_LIMIT : constant Natural := 15;
-
-   function Score_Heur_Board (Board : Board_T) return Float;
-   function Score_Move_Node
-     (State : in out Eval_State; Board : Board_T; CProb : Float) return Float;
-   function Score_Tilechoose_Node
-     (State : in out Eval_State; Board : Board_T; CProb : Float) return Float;
-
-   ------------------
-   -- Score_Helper --
-   ------------------
-
-   function Score_Helper
-     (Board : Board_T;
-      Table : access Score_Table) return Float
-   is
-   begin
-      return Table (To_Int16 (Board (1))) +
-        Table (To_Int16 (Board (2))) +
-        Table (To_Int16 (Board (3))) +
-        Table (To_Int16 (Board (4)));
-   end Score_Helper;
-
    ----------------------
    -- Score_Heur_Board --
    ----------------------
 
    function Score_Heur_Board (Board : Board_T) return Float
    is
+      T : constant Board_T := Transpose (Board);
    begin
-      return Score_Helper (Board, Heur_Score_Table) +
-        Score_Helper (Transpose (Board), Heur_Score_Table);
+      return Heur_Score_Table (To_UInt16 (Board (1))) +
+        Heur_Score_Table (To_UInt16 (Board (2))) +
+        Heur_Score_Table (To_UInt16 (Board (3))) +
+        Heur_Score_Table (To_UInt16 (Board (4))) +
+        Heur_Score_Table (To_UInt16 (T (1))) +
+        Heur_Score_Table (To_UInt16 (T (2))) +
+        Heur_Score_Table (To_UInt16 (T (3))) +
+        Heur_Score_Table (To_UInt16 (T (4)));
    end Score_Heur_Board;
 
    ---------------------------
@@ -519,12 +580,12 @@ package body Solver is
                Update_Progress;
                G_Progress (2) := G_Progress (2) + 1;
             end if;
-            if Board (Col) (Row) = 0 then
-               Tmp (Col) (Row) := 1;
+            if Board (Row) (Col) = 0 then
+               Tmp (Row) (Col) := 1;
                Res := Res + Score_Move_Node (State, Tmp, N_CProb * 0.9) * 0.9;
-               Tmp (Col) (Row) := 2;
+               Tmp (Row) (Col) := 2;
                Res := Res + Score_Move_Node (State, Tmp, N_CProb * 0.1) * 0.1;
-               Tmp (Col) (Row) := 0;
+               Tmp (Row) (Col) := 0;
             end if;
          end loop;
 
@@ -586,8 +647,6 @@ package body Solver is
       return Best;
    end Score_Move_Node;
 
-   G_Best_Previous : Float := 2.0E6;
-
    ---------------
    -- Next_Move --
    ---------------
@@ -615,21 +674,9 @@ package body Solver is
 
       --  Start malloc fast mode: preallocate 4MB buffer, and do not free
       --  until next call.
-      Malloc.Start_Fast_Malloc (5 * 1024 * 1024);
+      Malloc.Start_Fast_Malloc (STM32.Board.SDRAM_Size - 4 * 1024 * 1024);
 
-      --  Start with a low value: 2, then up 1 at each high score starting 4096
-      --  Speed up at first, thinking a bit more when tere's too many tiles
-      Res := G_Best_Previous;
-      if Res > 1.5E6 or else Maximum_Depth = 2 then
-         State.Depth_Limit := 2;
-      elsif Res > 1.3E6 or else Maximum_Depth = 3 then
-         State.Depth_Limit := 3;
-      elsif Res > 1.1E6 or else Maximum_Depth = 4 then
-         State.Depth_Limit := 4;
-      else
-         State.Depth_Limit := 5;
-         --  We don't have enough room to go deeper on this board.
-      end if;
+      State.Depth_Limit := Integer'Max (2, Count_Distinct_Tiles (Board) / 2 - 1);
 
       G_Progress := (others => 0);
 
@@ -637,6 +684,7 @@ package body Solver is
          exit when not Solver_Enabled;
 
          N_Board := Execute_Move (Move, Board);
+
          if N_Board /= Board then
             Res := Score_Tilechoose_Node (State, N_Board, 1.0) + 0.000001;
          else
@@ -648,7 +696,6 @@ package body Solver is
          if Res > Best then
             Best := Res;
             Ret  := Move;
-            G_Best_Previous := Best;
          end if;
       end loop;
 

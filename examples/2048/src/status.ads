@@ -39,11 +39,6 @@ package Status is
    procedure Set_Autoplay
      (State : Boolean);
 
-   procedure Set_Autoplay_Depth
-     (Depth : Natural);
-
    function Get_Autoplay_Btn_Area return Rect;
-   function Get_Autoplay_Depth_Btn_Area return Rect;
-   function Get_Autoplay_Depth (X, Y : Natural) return Natural;
 
 end Status;
