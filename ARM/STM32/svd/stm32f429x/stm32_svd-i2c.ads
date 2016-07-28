@@ -355,6 +355,31 @@ package STM32_SVD.I2C is
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
 
+   -------------------
+   -- FLTR_Register --
+   -------------------
+
+   subtype FLTR_DNF_Field is HAL.UInt4;
+
+   --  FLTR register
+   type FLTR_Register is record
+      --  Digital Noise Filter. 0 to disable, or filtering capability up to N *
+      --  TPCLK1
+      DNF           : FLTR_DNF_Field := 16#0#;
+      --  Analog noise filter OFF
+      ANOFF         : Boolean := False;
+      --  unspecified
+      Reserved_5_31 : HAL.UInt27 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for FLTR_Register use record
+      DNF           at 0 range 0 .. 3;
+      ANOFF         at 0 range 4 .. 4;
+      Reserved_5_31 at 0 range 5 .. 31;
+   end record;
+
    -----------------
    -- Peripherals --
    -----------------
@@ -379,6 +404,8 @@ package STM32_SVD.I2C is
       CCR   : CCR_Register;
       --  TRISE register
       TRISE : TRISE_Register;
+      --  FLTR register
+      FLTR  : FLTR_Register;
    end record
      with Volatile;
 
@@ -392,6 +419,7 @@ package STM32_SVD.I2C is
       SR2   at 24 range 0 .. 31;
       CCR   at 28 range 0 .. 31;
       TRISE at 32 range 0 .. 31;
+      FLTR  at 36 range 0 .. 31;
    end record;
 
    --  Inter-integrated circuit
