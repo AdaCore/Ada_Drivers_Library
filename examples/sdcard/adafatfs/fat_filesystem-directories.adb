@@ -39,7 +39,7 @@ package body FAT_Filesystem.Directories is
             Token.Name (Token.Len) := Path.Name (J);
          end loop;
 
-         Idx := Idx + Token.Len + 2;
+         Idx := Idx + Token.Len + 1;
 
          Dir_Loop :
          loop
@@ -67,8 +67,6 @@ package body FAT_Filesystem.Directories is
                   if Status /= OK then
                      return Status;
                   end if;
-               else
-                  DEntry.Is_Root := False;
                end if;
 
                exit Dir_Loop;
@@ -249,7 +247,9 @@ package body FAT_Filesystem.Directories is
       loop
          Block_Off :=
            Unsigned_16
-             (Unsigned_32 (Dir.Current_Index) * 32
+             ((Dir.FS.Block_Size_In_Bytes *
+              (Dir.FS.Window_Block - Dir.Current_Block) +
+                Unsigned_32 (Dir.Current_Index) * 32)
               mod (Dir.FS.Block_Size_In_Bytes * CACHE_SIZE));
 
          if Block_Off = 0 then
@@ -354,6 +354,7 @@ package body FAT_Filesystem.Directories is
             DEntry.Start_Cluster := Unsigned_32 (D_Entry.Cluster_L);
             DEntry.Size          := D_Entry.Size;
             DEntry.FS            := Dir.FS;
+            DEntry.Is_Root       := False;
 
             if Dir.FS.Version = FAT32 then
                DEntry.Start_Cluster :=

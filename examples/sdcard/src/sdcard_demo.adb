@@ -67,7 +67,7 @@ is
                (0, Y),
                -Current_Directory & (-Name (E)),
                BMP_Fonts.Font12x12,
-               (if Is_Subdirectory (E) then Grey else White),
+               (if Is_Subdirectory (E) then Grey else Black),
                Transparent);
             Y := Y + 16;
 
@@ -88,11 +88,12 @@ is
 begin
    SD_Controller.Initialize;
    Display.Initialize (Landscape, Interrupt);
-   Display.Initialize_Layer (1, RGB_565);
+   Display.Initialize_Layer (1, ARGB_1555);
+   Display.Set_Background (255, 255, 255);
 
    loop
       if not SD_Controller.Card_Present then
-         Display.Get_Hidden_Buffer (1).Fill (Black);
+         Display.Get_Hidden_Buffer (1).Fill (Transparent);
          Draw_String
            (Display.Get_Hidden_Buffer (1),
             (0, 0),
@@ -109,7 +110,7 @@ begin
          end loop;
 
       else
-         Display.Get_Hidden_Buffer (1).Fill (Black);
+         Display.Get_Hidden_Buffer (1).Fill (Transparent);
          Y := 0;
          Error_State := False;
 
@@ -125,7 +126,7 @@ begin
                   (0, Y),
                   "SDcard size:" & Capacity'Img & " " & Unit & "B",
                   BMP_Fonts.Font12x12,
-                  White,
+                  Dark_Red,
                   Transparent);
                Display.Update_Layer (1, True);
                Y := Y + 13;
@@ -185,7 +186,7 @@ begin
                (0, Y),
                Volume_Label (FS.all) & " (" & File_System_Type (FS.all) & "):",
                BMP_Fonts.Font12x12,
-               White,
+               Dark_Red,
                Transparent);
             Y := Y + 25;
 
