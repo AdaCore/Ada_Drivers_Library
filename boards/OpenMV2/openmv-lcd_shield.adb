@@ -115,6 +115,38 @@ package body OpenMV.LCD_Shield is
       return LCD_Driver.Get_Hidden_Buffer (1);
    end Get_Bitmap;
 
+   ----------------------
+   -- Rotate_Screen_90 --
+   ----------------------
+
+   procedure Rotate_Screen_90 is
+   begin
+      Set_Memory_Data_Access
+        (LCD                 => LCD_Driver,
+         Color_Order         => RGB_Order,
+         Vertical            => Vertical_Refresh_Top_Bottom,
+         Horizontal          => Horizontal_Refresh_Left_Right,
+         Row_Addr_Order      => Row_Address_Top_Bottom,
+         Column_Addr_Order   => Column_Address_Left_Right,
+         Row_Column_Exchange => False);
+   end Rotate_Screen_90;
+
+   ---------------------
+   -- Rotate_Screen_0 --
+   ---------------------
+
+   procedure Rotate_Screen_0 is
+   begin
+      Set_Memory_Data_Access
+        (LCD                 => LCD_Driver,
+         Color_Order         => RGB_Order,
+         Vertical            => Vertical_Refresh_Top_Bottom,
+         Horizontal          => Horizontal_Refresh_Left_Right,
+         Row_Addr_Order      => Row_Address_Bottom_Top,
+         Column_Addr_Order   => Column_Address_Right_Left,
+         Row_Column_Exchange => False);
+   end Rotate_Screen_0;
+
    -------------
    -- Display --
    -------------

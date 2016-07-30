@@ -9,5 +9,11 @@ package OpenMV.LCD_Shield is
 
    function Get_Bitmap return HAL.Bitmap.Bitmap_Buffer'Class;
 
-   procedure Display;
+   procedure Rotate_Screen_90
+     with Pre => Initialized;
+   procedure Rotate_Screen_0
+     with Pre => Initialized;
+   procedure Display
+     with Pre => Initialized;
+
 end OpenMV.LCD_Shield;
