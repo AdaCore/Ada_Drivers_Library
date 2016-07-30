@@ -194,7 +194,7 @@ package body AdaFruit.Thermal_Printer is
          Write (This, Str);
 
          --  delay until Clock + Microseconds (10000 * Str'Length);
-         This.Time.Delay_Microseconds (800 * Str'Length);
+         This.Time.Delay_Microseconds (600 * Str'Length);
       end loop;
    end Print_Bitmap;
 
