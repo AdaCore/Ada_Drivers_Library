@@ -82,13 +82,13 @@ private
    function Set (Point : MCP23_GPIO_Point) return Boolean;
 
    overriding
-   procedure Set (Point : in out MCP23_GPIO_Point);
+   procedure Set (Point : MCP23_GPIO_Point);
 
    overriding
-   procedure Clear (Point : in out MCP23_GPIO_Point);
+   procedure Clear (Point : MCP23_GPIO_Point);
 
    overriding
-   procedure Toggle (Point : in out MCP23_GPIO_Point);
+   procedure Toggle (Point : MCP23_GPIO_Point);
 
    IO_DIRECTION_REG     : constant Register_Address := 16#00#;
    INPUT_POLARITY_REG   : constant Register_Address := 16#01#;

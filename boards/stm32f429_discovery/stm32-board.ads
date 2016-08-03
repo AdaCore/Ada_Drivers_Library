@@ -76,13 +76,13 @@ package STM32.Board is
    --  MUST be called prior to any use of the LEDs unless initialization is
    --  done by the app elsewhere.
 
-   procedure Turn_On  (This : in out User_LED) renames STM32.GPIO.Set;
-   procedure Turn_Off (This : in out User_LED) renames STM32.GPIO.Clear;
+   procedure Turn_On  (This : User_LED) renames STM32.GPIO.Set;
+   procedure Turn_Off (This : User_LED) renames STM32.GPIO.Clear;
 
    procedure All_LEDs_Off with Inline;
    procedure All_LEDs_On  with Inline;
 
-   procedure Toggle_LEDs (These : in out GPIO_Points) renames STM32.GPIO.Toggle;
+   procedure Toggle_LEDs (These : GPIO_Points) renames STM32.GPIO.Toggle;
 
    ---------
    -- FMC --
