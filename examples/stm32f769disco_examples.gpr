@@ -7,7 +7,7 @@ aggregate project STM32F769Disco_Examples is
    LOADER : LOADER_Type := external ("LOADER", "ROM");
 
    for Target use "arm-eabi";
-   for Runtime ("Ada") use Config.RTS_Dir & Config.RTS & "-stm32f769disco";
+   for Runtime ("Ada") use Config.RTS & "-stm32f769disco";
 
    for Project_Files use
      ("balls/balls_stm32f769disco.gpr",

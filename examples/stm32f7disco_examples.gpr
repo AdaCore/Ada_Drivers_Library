@@ -34,6 +34,7 @@ aggregate project STM32F7Disco_Examples is
       for Debugger_Command use "arm-eabi-gdb";
       for Program_Host use "localhost:4242";
       for Communication_Protocol use "remote";
+      for Connection_Tool use "st-util";
    end Ide;
 
 end STM32F7Disco_Examples;
