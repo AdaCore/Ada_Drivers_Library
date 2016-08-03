@@ -189,7 +189,7 @@ package body Raycaster is
      (Pos      : Position;
       Vert_Hit : out Boolean;
       Offset   : out Float;
-      Distance : out Float;
+      Dist     : out Float;
       Tile     : out Cell)
    is
       f_Dist_X, f_Dist_Y : Float;
@@ -254,7 +254,7 @@ package body Raycaster is
       Tile := Map (Map_Y, Map_X);
 
       if Vert_Hit then
-         Distance := dist_X;
+         Dist := dist_X;
          --  Calculate the offset  (in X Coordinate) of the hit relative
          --  to the current tile (used for finding the proper column for the
          --  texture).
@@ -270,7 +270,7 @@ package body Raycaster is
             end if;
          end if;
       else
-         Distance := dist_Y;
+         Dist := dist_Y;
          --  Similar to above, but where we use the sinus: so
          --  -cos (Pos.Angle - Pi / 2), e.g. 900 in tenth of degrees
          Offset := Pos.X + Cos_Table (Pos.Angle) * dist_Y;
@@ -314,7 +314,7 @@ package body Raycaster is
         (Pos      => Col_Pos,
          Vert_Hit => Side,
          Offset   => Off,
-         Distance => Dist,
+         Dist     => Dist,
          Tile     => Tile);
 
       case Tile is

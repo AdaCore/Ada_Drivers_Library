@@ -33,7 +33,7 @@ package body Tracks_Display is
          Orange => HAL.Bitmap.Orange,
          Red    => HAL.Bitmap.Red);
 
-   Track_Color      : constant Bitmap_Color := HAL.Bitmap.Light_Gray;
+   Track_Color      : constant Bitmap_Color := HAL.Bitmap.Light_Grey;
    Track_Thickness  : constant := 4;
    Train_Thickness  : constant := 2;
    Switch_Color     : constant Bitmap_Color := HAL.Bitmap.Violet;
