@@ -184,7 +184,7 @@ package body STM32.PWM is
 
       Set_Compare_Value (This.Output_Timer.all, Channel, Short (0));
 
-      Disable_Channel (This.Output_Timer.all, Channel);
+      Enable_Channel (This.Output_Timer.all, Channel);
    end Attach_PWM_Channel;
 
    ------------------------
@@ -271,7 +271,9 @@ package body STM32.PWM is
       Max_Period         : Word;
       Hardware_Frequency : Word;
       Clocks             : constant RCC_System_Clocks :=
-        System_Clock_Frequencies;
+                             System_Clock_Frequencies;
+      CK_CNT             : Word;
+
    begin
       if Has_APB1_Frequency (This.all) then
          Hardware_Frequency := Clocks.TIMCLK1;
@@ -293,8 +295,10 @@ package body STM32.PWM is
 
       Prescalar := 0;
       loop
-         Period := Hardware_Frequency / (Prescalar + 1);
-         Period := Period / Requested_Frequency;
+         --  Compute the Counter's clock
+         CK_CNT := Hardware_Frequency / (Prescalar + 1);
+         --  Determine the CK_CNT periods to achieve the requested frequency
+         Period := CK_CNT / Requested_Frequency;
 
          exit when not
            ((Period > Max_Period) and
@@ -324,8 +328,10 @@ package body STM32.PWM is
    ------------------------
 
    function Has_APB1_Frequency (This : Timer) return Boolean is
-     (This'Address = STM32_SVD.TIM3_Base or
+     (This'Address = STM32_SVD.TIM2_Base or
+      This'Address = STM32_SVD.TIM3_Base or
       This'Address = STM32_SVD.TIM4_Base or
+      This'Address = STM32_SVD.TIM5_Base or
       This'Address = STM32_SVD.TIM6_Base or
       This'Address = STM32_SVD.TIM7_Base or
       This'Address = STM32_SVD.TIM12_Base or
