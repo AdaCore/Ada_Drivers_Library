@@ -66,11 +66,7 @@ package STM32.Device is
    procedure Reset (Points : GPIO_Points)
      with Inline;
 
-   type GPIO_Port_Id is
-     (GPIO_Port_A, GPIO_Port_B, GPIO_Port_C, GPIO_Port_D, GPIO_Port_E,
-      GPIO_Port_F, GPIO_Port_G, GPIO_Port_H, GPIO_Port_I, GPIO_Port_J,
-      GPIO_Port_K)
-     with Size => 4;
+   subtype GPIO_Port_Id is UInt4;
 
    function As_GPIO_Port_Id (Port : Internal_GPIO_Port) return GPIO_Port_Id
      with Inline;
@@ -437,24 +433,5 @@ package STM32.Device is
 
    procedure Enable_DCMI_Clock;
    procedure Reset_DCMI;
-
-private
-
-   pragma Compile_Time_Error
-     (not (GPIO_Port_Id'First = GPIO_Port_A and
-           GPIO_Port_Id'Last  = GPIO_Port_K and
-           GPIO_Port_A'Enum_Rep = 0 and
-           GPIO_Port_B'Enum_Rep = 1 and
-           GPIO_Port_C'Enum_Rep = 2 and
-           GPIO_Port_D'Enum_Rep = 3 and
-           GPIO_Port_E'Enum_Rep = 4 and
-           GPIO_Port_F'Enum_Rep = 5 and
-           GPIO_Port_G'Enum_Rep = 6 and
-           GPIO_Port_H'Enum_Rep = 7 and
-           GPIO_Port_I'Enum_Rep = 8 and
-           GPIO_Port_J'Enum_Rep = 9 and
-           GPIO_Port_K'Enum_Rep = 10),
-      "Invalid representation for type GPIO_Port_Id");
-   --  Confirming, but depended upon so we check it.
 
 end STM32.Device;

@@ -191,27 +191,27 @@ package body STM32.Device is
    begin
       --  TODO: rather ugly to have this board-specific range here
       if Port'Address = GPIOA_Base then
-         return GPIO_Port_A;
+         return 0;
       elsif Port'Address = GPIOB_Base then
-         return GPIO_Port_B;
+         return 1;
       elsif Port'Address = GPIOC_Base then
-         return GPIO_Port_C;
+         return 2;
       elsif Port'Address = GPIOD_Base then
-         return GPIO_Port_D;
+         return 3;
       elsif Port'Address = GPIOE_Base then
-         return GPIO_Port_E;
+         return 4;
       elsif Port'Address = GPIOF_Base then
-         return GPIO_Port_F;
+         return 5;
       elsif Port'Address = GPIOG_Base then
-         return GPIO_Port_G;
+         return 6;
       elsif Port'Address = GPIOH_Base then
-         return GPIO_Port_H;
+         return 7;
       elsif Port'Address = GPIOI_Base then
-         return GPIO_Port_I;
+         return 8;
       elsif Port'Address = GPIOJ_Base then
-         return GPIO_Port_J;
+         return 9;
       elsif Port'Address = GPIOK_Base then
-         return GPIO_Port_K;
+         return 10;
       else
          raise Program_Error;
       end if;

@@ -50,6 +50,7 @@ with STM32.EXTI;
 with STM32.Device;     use STM32.Device;
 
 package body STM32.SYSCFG is
+
    procedure Connect_External_Interrupt
      (Port : Internal_GPIO_Port;
       Pin  : GPIO_Pin_Index);
@@ -58,7 +59,7 @@ package body STM32.SYSCFG is
      (Port : Internal_GPIO_Port;
       Pin  : GPIO_Pin_Index)
    is
-      Port_Name  : constant GPIO_Port_Id := As_GPIO_Port_Id (Port);
+      Port_Id  : constant GPIO_Port_Id := As_GPIO_Port_Id (Port);
    begin
 
       --  Finally we assign the port 'number' to the EXTI_n value within the
@@ -68,17 +69,13 @@ package body STM32.SYSCFG is
       --  overridden.
       case Pin is
          when 0 .. 3 =>
-            SYSCFG_Periph.EXTICR1.EXTI.Arr (Pin) :=
-              GPIO_Port_Id'Enum_Rep (Port_Name);
+            SYSCFG_Periph.EXTICR1.EXTI.Arr (Pin) := Port_Id;
          when 4 .. 7 =>
-            SYSCFG_Periph.EXTICR2.EXTI.Arr (Pin) :=
-              GPIO_Port_Id'Enum_Rep (Port_Name);
+            SYSCFG_Periph.EXTICR2.EXTI.Arr (Pin) := Port_Id;
          when 8 .. 11 =>
-            SYSCFG_Periph.EXTICR3.EXTI.Arr (Pin) :=
-              GPIO_Port_Id'Enum_Rep (Port_Name);
+            SYSCFG_Periph.EXTICR3.EXTI.Arr (Pin) := Port_Id;
          when 12 .. 15 =>
-            SYSCFG_Periph.EXTICR4.EXTI.Arr (Pin) :=
-              GPIO_Port_Id'Enum_Rep (Port_Name);
+            SYSCFG_Periph.EXTICR4.EXTI.Arr (Pin) := Port_Id;
       end case;
    end Connect_External_Interrupt;
 
