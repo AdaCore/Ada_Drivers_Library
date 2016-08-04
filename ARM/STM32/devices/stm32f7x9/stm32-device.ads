@@ -88,11 +88,6 @@ package STM32.Device is
    procedure Reset (Points : GPIO_Points)
      with Inline;
 
-   subtype GPIO_Port_Id is UInt4;
-
-   function As_GPIO_Port_Id (Port : GPIO_Port) return GPIO_Port_Id
-     with Inline;
-
    GPIO_A : aliased GPIO_Port
      with Import, Volatile, Address => GPIOA_Base;
    GPIO_B : aliased GPIO_Port
@@ -115,6 +110,9 @@ package STM32.Device is
      with Import, Volatile, Address => GPIOJ_Base;
    GPIO_K : aliased GPIO_Port
      with Import, Volatile, Address => GPIOK_Base;
+
+   function GPIO_Port_Representation (Port : GPIO_Port) return UInt4
+     with Inline;
 
    PA0  : aliased GPIO_Point := (GPIO_A'Access, 0);
    PA1  : aliased GPIO_Point := (GPIO_A'Access, 1);

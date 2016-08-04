@@ -59,7 +59,7 @@ package body STM32.SYSCFG is
      (Port : GPIO_Port;
       Pin  : GPIO_Pin_Index)
    is
-      Port_Id  : constant GPIO_Port_Id := As_GPIO_Port_Id (Port);
+      Port_Id  : constant UInt4 := GPIO_Port_Representation (Port);
    begin
 
       --  Finally we assign the port 'number' to the EXTI_n value within the

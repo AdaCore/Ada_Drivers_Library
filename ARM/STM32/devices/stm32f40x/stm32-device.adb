@@ -172,11 +172,11 @@ package body STM32.Device is
       end loop;
    end Reset;
 
-   ---------------------
-   -- As_GPIO_Port_Id --
-   ---------------------
+   ------------------------------
+   -- GPIO_Port_Representation --
+   ------------------------------
 
-   function As_GPIO_Port_Id (Port : GPIO_Port) return GPIO_Port_Id is
+   function GPIO_Port_Representation (Port : GPIO_Port) return UInt4 is
    begin
       --  TODO: rather ugly to have this board-specific range here
       if Port'Address = GPIOA_Base then
@@ -200,7 +200,7 @@ package body STM32.Device is
       else
          raise Program_Error;
       end if;
-   end As_GPIO_Port_Id;
+   end GPIO_Port_Representation;
 
    ------------------
    -- Enable_Clock --
