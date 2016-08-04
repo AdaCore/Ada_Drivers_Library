@@ -674,9 +674,12 @@ package body Solver is
 
       --  Start malloc fast mode: preallocate 4MB buffer, and do not free
       --  until next call.
-      Malloc.Start_Fast_Malloc (STM32.Board.SDRAM_Size - 4 * 1024 * 1024);
+      Malloc.Start_Fast_Malloc
+        (STM32.Board.SDRAM_Size - Malloc.Allocated - 128 -
+           Standard'Maximum_Alignment);
 
-      State.Depth_Limit := Integer'Max (2, Count_Distinct_Tiles (Board) / 2 - 1);
+      State.Depth_Limit :=
+        Integer'Max (2, Count_Distinct_Tiles (Board) / 2 - 1);
 
       G_Progress := (others => 0);
 
