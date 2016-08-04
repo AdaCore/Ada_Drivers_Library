@@ -497,14 +497,22 @@ package body Framebuffer_OTM8009A is
    overriding procedure Update_Layers
      (Display : in out Frame_Buffer)
    is
+      use STM32.DMA2D_Bitmap;
    begin
       STM32.DMA2D.DMA2D_Wait_Transfer;
-      Cortex_M.Cache.Clean_DCache
-        (Start => Display.Buffers (STM32.LTDC.Layer1).Addr,
-         Len   => Display.Buffers (STM32.LTDC.Layer1).Buffer_Size);
-      Cortex_M.Cache.Clean_DCache
-        (Start => Display.Buffers (STM32.LTDC.Layer2).Addr,
-         Len   => Display.Buffers (STM32.LTDC.Layer2).Buffer_Size);
+
+      if Display.Buffers (STM32.LTDC.Layer1) /= Null_Buffer then
+         Cortex_M.Cache.Clean_DCache
+           (Start => Display.Buffers (STM32.LTDC.Layer1).Addr,
+            Len   => Display.Buffers (STM32.LTDC.Layer1).Buffer_Size);
+      end if;
+
+      if Display.Buffers (STM32.LTDC.Layer2) /= Null_Buffer then
+         Cortex_M.Cache.Clean_DCache
+           (Start => Display.Buffers (STM32.LTDC.Layer2).Addr,
+            Len   => Display.Buffers (STM32.LTDC.Layer2).Buffer_Size);
+      end if;
+
       Sync.Do_Refresh;
       Sync.Wait;
    end Update_Layers;
