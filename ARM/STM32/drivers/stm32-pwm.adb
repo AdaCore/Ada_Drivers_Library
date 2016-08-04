@@ -184,7 +184,7 @@ package body STM32.PWM is
 
       Set_Compare_Value (This.Output_Timer.all, Channel, Short (0));
 
-      Enable_Channel (This.Output_Timer.all, Channel);
+      Disable_Channel (This.Output_Timer.all, Channel);
    end Attach_PWM_Channel;
 
    ------------------------
