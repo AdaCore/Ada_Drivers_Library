@@ -52,11 +52,11 @@ with STM32.Device;     use STM32.Device;
 package body STM32.SYSCFG is
 
    procedure Connect_External_Interrupt
-     (Port : Internal_GPIO_Port;
+     (Port : GPIO_Port;
       Pin  : GPIO_Pin_Index);
 
    procedure Connect_External_Interrupt
-     (Port : Internal_GPIO_Port;
+     (Port : GPIO_Port;
       Pin  : GPIO_Pin_Index)
    is
       Port_Id  : constant GPIO_Port_Id := As_GPIO_Port_Id (Port);
@@ -84,7 +84,7 @@ package body STM32.SYSCFG is
    --------------------------------
 
    procedure Connect_External_Interrupt
-     (Port : Internal_GPIO_Port;
+     (Port : GPIO_Port;
       Pin  : GPIO_Pin)
    is
    begin
@@ -107,7 +107,7 @@ package body STM32.SYSCFG is
    --------------------------------
 
    procedure Connect_External_Interrupt
-     (Port : Internal_GPIO_Port;
+     (Port : GPIO_Port;
       Pins : GPIO_Pins)
    is
    begin

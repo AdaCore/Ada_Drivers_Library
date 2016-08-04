@@ -48,7 +48,7 @@ with HAL.GPIO;
 
 package STM32.GPIO is
 
-   type Internal_GPIO_Port is limited private;
+   type GPIO_Port is limited private;
 
    type GPIO_Pin is
      (Pin_0, Pin_1, Pin_2,  Pin_3,  Pin_4,  Pin_5,  Pin_6,  Pin_7,
@@ -180,10 +180,10 @@ package STM32.GPIO is
    GPIO_AF_EVENTOUT  : constant GPIO_Alternate_Function;
 
    type GPIO_Point is new HAL.GPIO.GPIO_Point with record
-      Periph : access Internal_GPIO_Port;
+      Periph : access GPIO_Port;
       --  Port should be a not null access, but this raises an exception
       --  during elaboration.
-      Pin  : GPIO_Pin_Index;
+      Pin    : GPIO_Pin_Index;
    end record;
 
    overriding
@@ -297,7 +297,7 @@ package STM32.GPIO is
 
 private
 
-   type Internal_GPIO_Port is new STM32_SVD.GPIO.GPIO_Peripheral;
+   type GPIO_Port is new STM32_SVD.GPIO.GPIO_Peripheral;
 
    LCCK : constant Word := 16#0001_0000#;
    --  As per the Reference Manual (RM0090; Doc ID 018909 Rev 6) pg 282,

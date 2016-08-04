@@ -60,7 +60,7 @@ package STM32.Device is
    --  Raised by the routines below for a device passed as an actual parameter
    --  when that device is not present on the given hardware instance.
 
-   procedure Enable_Clock (This : aliased in out Internal_GPIO_Port)
+   procedure Enable_Clock (This : aliased in out GPIO_Port)
      with Inline;
    procedure Enable_Clock (Point : GPIO_Point)
      with Inline;
@@ -68,7 +68,7 @@ package STM32.Device is
      with Inline;
 
 
-   procedure Reset (This : aliased in out Internal_GPIO_Port)
+   procedure Reset (This : aliased in out GPIO_Port)
      with Inline;
    procedure Reset (Point : GPIO_Point)
      with Inline;
@@ -77,20 +77,20 @@ package STM32.Device is
 
    subtype GPIO_Port_Id is UInt4;
 
-   function As_GPIO_Port_Id (Port : Internal_GPIO_Port) return GPIO_Port_Id
+   function As_GPIO_Port_Id (Port : GPIO_Port) return GPIO_Port_Id
      with Inline;
 
-   GPIO_A : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOA_Base;
-   GPIO_B : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOB_Base;
-   GPIO_C : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOC_Base;
-   GPIO_D : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOD_Base;
-   GPIO_E : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOE_Base;
-   GPIO_F : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOF_Base;
-   GPIO_G : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOG_Base;
-   GPIO_H : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOH_Base;
-   GPIO_I : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOI_Base;
-   GPIO_J : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOJ_Base;
-   GPIO_K : aliased Internal_GPIO_Port with Import, Volatile, Address => GPIOK_Base;
+   GPIO_A : aliased GPIO_Port with Import, Volatile, Address => GPIOA_Base;
+   GPIO_B : aliased GPIO_Port with Import, Volatile, Address => GPIOB_Base;
+   GPIO_C : aliased GPIO_Port with Import, Volatile, Address => GPIOC_Base;
+   GPIO_D : aliased GPIO_Port with Import, Volatile, Address => GPIOD_Base;
+   GPIO_E : aliased GPIO_Port with Import, Volatile, Address => GPIOE_Base;
+   GPIO_F : aliased GPIO_Port with Import, Volatile, Address => GPIOF_Base;
+   GPIO_G : aliased GPIO_Port with Import, Volatile, Address => GPIOG_Base;
+   GPIO_H : aliased GPIO_Port with Import, Volatile, Address => GPIOH_Base;
+   GPIO_I : aliased GPIO_Port with Import, Volatile, Address => GPIOI_Base;
+   GPIO_J : aliased GPIO_Port with Import, Volatile, Address => GPIOJ_Base;
+   GPIO_K : aliased GPIO_Port with Import, Volatile, Address => GPIOK_Base;
 
    PA0  : aliased GPIO_Point := (GPIO_A'Access, 0);
    PA1  : aliased GPIO_Point := (GPIO_A'Access, 1);

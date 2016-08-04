@@ -48,7 +48,7 @@ with System.Machine_Code;
 
 package body STM32.GPIO is
 
-   procedure Lock_The_Pin (Port : in out Internal_GPIO_Port;  Pin : Short);
+   procedure Lock_The_Pin (Port : in out GPIO_Port;  Pin : Short);
    --  This is the routine that actually locks the pin for the port. It is an
    --  internal routine and has no preconditions. We use it to avoid redundant
    --  calls to the precondition that checks that the pin is not already
@@ -170,7 +170,7 @@ package body STM32.GPIO is
    -- Lock_The_Pin --
    ------------------
 
-   procedure Lock_The_Pin (Port : in out Internal_GPIO_Port;  Pin : Short) is
+   procedure Lock_The_Pin (Port : in out GPIO_Port;  Pin : Short) is
       Temp : Word;
       pragma Volatile (Temp);
 

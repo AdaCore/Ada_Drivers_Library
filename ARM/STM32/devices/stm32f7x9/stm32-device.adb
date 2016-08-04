@@ -47,7 +47,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out Internal_GPIO_Port) is
+   procedure Enable_Clock (This : aliased in out GPIO_Port) is
    begin
       if This'Address = GPIOA_Base then
          RCC_Periph.AHB1ENR.GPIOAEN := True;
@@ -102,7 +102,7 @@ package body STM32.Device is
    -- Reset --
    -----------
 
-   procedure Reset (This : aliased in out Internal_GPIO_Port) is
+   procedure Reset (This : aliased in out GPIO_Port) is
    begin
       if This'Address = GPIOA_Base then
          RCC_Periph.AHB1RSTR.GPIOARST := True;
@@ -179,7 +179,7 @@ package body STM32.Device is
    -- As_GPIO_Port_Id --
    ---------------------
 
-   function As_GPIO_Port_Id (Port : Internal_GPIO_Port) return GPIO_Port_Id is
+   function As_GPIO_Port_Id (Port : GPIO_Port) return GPIO_Port_Id is
    begin
       if Port'Address = GPIOA_Base then
          return 0;

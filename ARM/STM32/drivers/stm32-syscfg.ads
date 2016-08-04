@@ -47,13 +47,13 @@ with STM32.GPIO;  use STM32.GPIO;
 package STM32.SYSCFG is
 
    procedure Connect_External_Interrupt
-     (Port : Internal_GPIO_Port;  Pin  : GPIO_Pin) with Inline;
+     (Port : GPIO_Port;  Pin  : GPIO_Pin) with Inline;
 
    procedure Connect_External_Interrupt
      (Point  : GPIO_Point) with Inline;
 
    procedure Connect_External_Interrupt
-     (Port : Internal_GPIO_Port;  Pins : GPIO_Pins) with Inline;
+     (Port : GPIO_Port;  Pins : GPIO_Pins) with Inline;
 
    procedure Clear_External_Interrupt (Pin : GPIO_Pin) with Inline;
 
