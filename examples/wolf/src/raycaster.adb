@@ -73,7 +73,7 @@ package body Raycaster is
 
    Tmp_1       : aliased Column_Type;
    Tmp_2       : aliased Column_Type;
-   Tmp         : access Column_Type;
+   Tmp         : access Column_Type := Tmp_2'Access;
    Tmp_Buf     : DMA2D_Bitmap_Buffer;
 
    Prev_X      : Natural := 0;
@@ -173,12 +173,11 @@ package body Raycaster is
       end loop;
 
       Tmp_Buf :=
-        (Addr       => Tmp_1 (0)'Address,
+        (Addr       => Tmp.all'Address,
          Width      => 1,
          Height     => LCD_H,
          Color_Mode => Display.Get_Color_Mode (1),
          Swapped    => Display.Is_Swapped);
-      Tmp := Tmp_1'Access;
    end Initialize_Tables;
 
    --------------
@@ -263,20 +262,25 @@ package body Raycaster is
          Offset := Pos.Y - Cos_Table (Pos.Angle - 900) * dist_X;
          --  Offset from the tile's coordinates:
          Offset := Offset - Float'Floor (Offset);
+
          if Step_X < 0 then
             Offset := 1.0 - Offset;
+
             if Offset = 1.0 then
                Offset := 0.0;
             end if;
          end if;
+
       else
          Dist := dist_Y;
          --  Similar to above, but where we use the sinus: so
          --  -cos (Pos.Angle - Pi / 2), e.g. 900 in tenth of degrees
          Offset := Pos.X + Cos_Table (Pos.Angle) * dist_Y;
          Offset := Offset - Float'Floor (Offset);
+
          if Step_Y > 0 then
             Offset := 1.0 - Offset;
+
             if Offset = 1.0 then
                Offset := 0.0;
             end if;
