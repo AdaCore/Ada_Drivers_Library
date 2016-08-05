@@ -1,5 +1,5 @@
 with "../config.gpr";
-with "../ARM/STM32/stm32f42x.gpr";
+with "../ARM/STM32/stm32f427x.gpr";
 with "../components/components";
 
 library project OpenMV2 is
