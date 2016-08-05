@@ -1,7 +1,6 @@
 with STM32.DCMI;
 with STM32.DMA;     use STM32.DMA;
 with Ada.Real_Time; use Ada.Real_Time;
-with STM32.PWM;     use STM32.PWM;
 with OV2640;        use OV2640;
 with Interfaces;    use Interfaces;
 with HAL.I2C;       use HAL.I2C;
@@ -63,20 +62,18 @@ package body OpenMV.Sensor is
 
       procedure Initialize_Clock is
       begin
-         Initialise_PWM_Modulator
-           (This                => CLK_PWM_Mod,
-            Requested_Frequency => Float (SENSOR_CLK_FREQ),
-            PWM_Timer           => SENSOR_CLK_TIM'Access,
-            PWM_AF              => SENSOR_CLK_AF);
+         Initialise_PWM_Timer (SENSOR_CLK_TIM,
+                               Float (SENSOR_CLK_FREQ));
 
-         Attach_PWM_Channel (This    => CLK_PWM_Mod,
-                             Channel => SENSOR_CLK_CHAN,
-                             Point   => SENSOR_CLK_IO);
+         Attach_PWM_Channel (This      => SENSOR_CLK_TIM'Access,
+                             Modulator => CLK_PWM_Mod,
+                             Channel   => SENSOR_CLK_CHAN,
+                             Point     => SENSOR_CLK_IO,
+                             PWM_AF    => SENSOR_CLK_AF);
 
          Set_Duty_Cycle (This    => CLK_PWM_Mod,
-                         Channel => SENSOR_CLK_CHAN,
                          Value   => 50);
-         Enable_PWM_Channel (CLK_PWM_Mod, SENSOR_CLK_CHAN);
+         Enable_PWM (CLK_PWM_Mod);
       end Initialize_Clock;
 
       -----------------------
@@ -155,7 +152,7 @@ package body OpenMV.Sensor is
            GPIO_Points'(DCMI_D0, DCMI_D1, DCMI_D2, DCMI_D3, DCMI_D4,
                         DCMI_D5, DCMI_D6, DCMI_D7, DCMI_VSYNC, DCMI_HSYNC,
                         DCMI_PCLK);
-         DCMI_Out_Points : GPIO_Points :=
+         DCMI_Out_Points : constant GPIO_Points :=
            GPIO_Points'(DCMI_PWDN, DCMI_RST, FS_IN);
       begin
          Enable_Clock (GPIO_Points'(Sensor_I2C_SCL, Sensor_I2C_SDA));

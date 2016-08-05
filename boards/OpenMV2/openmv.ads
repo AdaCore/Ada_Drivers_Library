@@ -7,6 +7,7 @@ with STM32.Timers; use STM32.Timers;
 with STM32.DMA;
 with STM32.I2C; use STM32.I2C;
 with STM32.USARTs; use STM32.USARTs;
+with STM32.PWM; use STM32.PWM;
 
 with HAL.UART;
 
@@ -143,8 +144,8 @@ private
 
    SENSOR_CLK_IO   : GPIO_Point renames PA8;
    SENSOR_CLK_AF   : GPIO_Alternate_Function renames GPIO_AF_TIM1;
-   SENSOR_CLK_TIM  : Timer renames Timer_1;
-   SENSOR_CLK_CHAN :  constant Timer_Channel := Channel_1;
+   SENSOR_CLK_TIM  : aliased PWM_Timer (Timer_1'Access);
+   SENSOR_CLK_CHAN : constant Timer_Channel := Channel_1;
    SENSOR_CLK_FREQ : constant := 12_000_000;
 
    ------------------
