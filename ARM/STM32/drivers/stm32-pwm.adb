@@ -62,20 +62,25 @@ package body STM32.PWM is
    --------------------
 
    procedure Set_Duty_Cycle
-     (This    : in out PWM_Modulator;
-      Channel : Timer_Channel;
-      Value   : Percentage)
+     (This  : in out PWM_Modulator;
+      Value : Percentage)
    is
       Pulse : Short;
    begin
-      This.Outputs (Channel).Duty_Cycle := Value;
+      This.Timer.Outputs (This.Channel).Duty_Cycle := Value;
+
       if Value = 0 then
-         Set_Compare_Value (This.Output_Timer.all, Channel, Short'(0));
+         Set_Compare_Value (This.Timer.Output_Timer.all,
+                            This.Channel,
+                            Short'(0));
       else
-         Pulse := Short ((This.Timer_Period + 1) * Word (Value) / 100) - 1;
+         Pulse :=
+           Short ((This.Timer.Timer_Period + 1) * Word (Value) / 100) - 1;
          --  for a Value of 0, the computation of Pulse wraps around to
          --  65535, so we only compute it when not zero
-         Set_Compare_Value (This.Output_Timer.all, Channel, Pulse);
+         Set_Compare_Value (This.Timer.Output_Timer.all,
+                            This.Channel,
+                            Pulse);
       end if;
    end Set_Duty_Cycle;
 
@@ -84,19 +89,19 @@ package body STM32.PWM is
    -------------------
 
    procedure Set_Duty_Time
-     (This    : in out PWM_Modulator;
-      Channel : Timer_Channel;
-      Value   : Microseconds)
+     (This  : in out PWM_Modulator;
+      Value : Microseconds)
    is
       Pulse         : Short;
-      Period        : constant Word := This.Timer_Period + 1;
-      uS_Per_Period : constant Word := 1_000_000 / This.Frequency;
+      Period        : constant Word := This.Timer.Timer_Period + 1;
+      uS_Per_Period : constant Word := 1_000_000 / This.Timer.Frequency;
    begin
       if Value > uS_Per_Period then
          raise Invalid_Request with "duty time too high";
       end if;
+
       Pulse := Short ((Period * Value) / uS_Per_Period) - 1;
-      Set_Compare_Value (This.Output_Timer.all, Channel, Pulse);
+      Set_Compare_Value (This.Timer.Output_Timer.all, This.Channel, Pulse);
    end Set_Duty_Time;
 
    ------------------------
@@ -104,75 +109,72 @@ package body STM32.PWM is
    ------------------------
 
    function Current_Duty_Cycle
-     (This    : PWM_Modulator;
-      Channel : Timer_Channel)
-      return Percentage
+     (This : PWM_Modulator) return Percentage
    is
    begin
-      return This.Outputs (Channel).Duty_Cycle;
+      return This.Timer.Outputs (This.Channel).Duty_Cycle;
    end Current_Duty_Cycle;
 
-   ------------------------------
-   -- Initialise_PWM_Modulator --
-   ------------------------------
+   --------------------------
+   -- Initialise_PWM_Timer --
+   --------------------------
 
-   procedure Initialise_PWM_Modulator
-     (This                   : in out PWM_Modulator;
-      Requested_Frequency    : Float;
-      PWM_Timer              : not null access Timer;
-      PWM_AF                 : GPIO_Alternate_Function)
+   procedure Initialise_PWM_Timer
+     (This                : in out PWM_Timer;
+      Requested_Frequency : Float)
    is
       Prescalar : Word;
    begin
-      This.Output_Timer := PWM_Timer;
-      This.AF := PWM_AF;
-
-      Enable_Clock (PWM_Timer.all);
+      Enable_Clock (This.Output_Timer.all);
 
       Compute_Prescalar_and_Period
-        (PWM_Timer,
+        (This.Output_Timer,
          Requested_Frequency => Word (Requested_Frequency),
          Prescalar           => Prescalar,
          Period              => This.Timer_Period);
 
       This.Timer_Period := This.Timer_Period - 1;
-      This.Frequency := Word (Requested_Frequency);
+      This.Frequency    := Word (Requested_Frequency);
 
       Configure
-        (PWM_Timer.all,
+        (This.Output_Timer.all,
          Prescaler     => Short (Prescalar),
          Period        => This.Timer_Period,
          Clock_Divisor => Div1,
          Counter_Mode  => Up);
 
-      Set_Autoreload_Preload (PWM_Timer.all, True);
+      Set_Autoreload_Preload (This.Output_Timer.all, True);
 
       if Advanced_Timer (This.Output_Timer.all) then
          Enable_Main_Output (This.Output_Timer.all);
       end if;
 
-      Enable (PWM_Timer.all);
+      Enable (This.Output_Timer.all);
 
       for Channel in Timer_Channel loop
          This.Outputs (Channel).Attached := False;
       end loop;
-   end Initialise_PWM_Modulator;
+   end Initialise_PWM_Timer;
 
    ------------------------
    -- Attach_PWM_Channel --
    ------------------------
 
    procedure Attach_PWM_Channel
-     (This    : in out PWM_Modulator;
-      Channel : Timer_Channel;
-      Point   : GPIO_Point)
+     (This      : access PWM_Timer;
+      Modulator : in out PWM_Modulator;
+      Channel   : Timer_Channel;
+      Point     : GPIO_Point;
+      PWM_AF    : GPIO_Alternate_Function)
    is
    begin
       This.Outputs (Channel).Attached := True;
+      Modulator.Timer   := This;
+      Modulator.Channel := Channel;
 
       Enable_Clock (Point);
 
-      Configure_PWM_GPIO (Point, This.AF);
+      Configure_PWM_GPIO (Point, PWM_AF);
 
       Configure_Channel_Output
         (This.Output_Timer.all,
@@ -187,53 +189,49 @@ package body STM32.PWM is
       Disable_Channel (This.Output_Timer.all, Channel);
    end Attach_PWM_Channel;
 
-   ------------------------
-   -- Enable_PWM_Channel --
-   ------------------------
+   ----------------
+   -- Enable_PWM --
+   ----------------
 
-   procedure Enable_PWM_Channel
-     (This    : in out PWM_Modulator;
-      Channel : Timer_Channel)
+   procedure Enable_PWM
+     (This    : in out PWM_Modulator)
    is
    begin
-      Enable_Channel (This.Output_Timer.all, Channel);
-   end Enable_PWM_Channel;
+      Enable_Channel (This.Timer.Output_Timer.all, This.Channel);
+   end Enable_PWM;
 
    -------------
    -- Enabled --
    -------------
 
    function Enabled
-     (This    : PWM_Modulator;
-      Channel : Timer_Channel)
+     (This : PWM_Modulator)
       return Boolean
    is
    begin
-      return Channel_Enabled (This.Output_Timer.all, Channel);
+      return Channel_Enabled (This.Timer.Output_Timer.all, This.Channel);
    end Enabled;
 
    -------------------------
    -- Disable_PWM_Channel --
    -------------------------
 
-   procedure Disable_PWM_Channel
-     (This    : in out PWM_Modulator;
-      Channel : Timer_Channel)
+   procedure Disable_PWM
+     (This : in out PWM_Modulator)
    is
    begin
-      Disable_Channel (This.Output_Timer.all, Channel);
-   end Disable_PWM_Channel;
+      Disable_Channel (This.Timer.Output_Timer.all, This.Channel);
+   end Disable_PWM;
 
    --------------
    -- Attached --
    --------------
 
    function Attached
-     (This : PWM_Modulator;
-      Channel : Timer_Channel)
+     (This : PWM_Modulator)
       return Boolean
    is
-     (This.Outputs (Channel).Attached);
+     (This.Timer /= null and then This.Timer.Outputs (This.Channel).Attached);
 
    ------------------------
    -- Configure_PWM_GPIO --
