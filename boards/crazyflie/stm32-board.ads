@@ -46,6 +46,9 @@
 with STM32.Device;  use STM32.Device;
 
 with STM32.GPIO;    use STM32.GPIO;
+with STM32.I2C;     use STM32.I2C;
+
+with MPU9250;       use MPU9250;
 
 package STM32.Board is
    pragma Elaborate_Body;
@@ -77,5 +80,26 @@ package STM32.Board is
      renames STM32.GPIO.Toggle;
    procedure Toggle_LEDs (These : GPIO_Points)
      renames STM32.GPIO.Toggle;
+
+   ---------
+   -- I2C --
+   ---------
+
+   procedure Initialize_I2C_GPIO (Port : in out I2C_Port)
+     with
+     --  I2C_2 is not accessible on this board
+     Pre => As_Port_Id (Port) = I2C_Id_1
+            or else As_Port_Id (Port) = I2C_Id_3;
+
+   procedure Configure_I2C (Port : in out I2C_Port);
+
+   MPU_I2C_Port : I2C_Port renames I2C_3;
+   EXT_I2C_Port : I2C_Port renames I2C_1;
+
+   ---------
+   -- MPU --
+   ---------
+
+   MPU_Device   : MPU9250.MPU9250_Device (MPU_I2C_Port'Access, High);
 
 end STM32.Board;

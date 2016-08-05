@@ -109,4 +109,54 @@ package body STM32.Board is
       All_LEDs_Off;
    end Initialize_LEDs;
 
+   -------------------------
+   -- Initialize_I2C_GPIO --
+   -------------------------
+
+   procedure Initialize_I2C_GPIO (Port : in out I2C_Port)
+   is
+      Id     : constant I2C_Port_Id := As_Port_Id (Port);
+      Points : constant GPIO_Points (1 .. 2) :=
+                 (if Id = I2C_Id_1 then (PB6, PB7)
+                  else (PA8, PC9));
+
+   begin
+      if Id = I2C_Id_2 then
+         raise Unknown_Device with
+           "This I2C_Port cannot be used on this board";
+      end if;
+
+      Enable_Clock (Points);
+      Enable_Clock (Port);
+      Reset (Port);
+
+      Configure_Alternate_Function (Points, GPIO_AF_I2C);
+      Configure_IO (Points,
+                    (Speed       => Speed_25MHz,
+                     Mode        => Mode_AF,
+                     Output_Type => Open_Drain,
+                     Resistors   => Floating));
+      Lock (Points);
+   end Initialize_I2C_GPIO;
+
+   -------------------
+   -- TP_I2C_Config --
+   -------------------
+
+   procedure Configure_I2C (Port : in out I2C_Port)
+   is
+   begin
+      if not STM32.I2C.Port_Enabled (Port) then
+         Configure
+           (Handle => Port,
+            Conf   =>
+              (Clock_Speed     => 400_000,
+               Mode            => I2C_Mode,
+               Duty_Cycle      => DutyCycle_16_9,
+               Addressing_Mode => Addressing_Mode_7bit,
+               Own_Address     => 0,
+               others          => <>));
+      end if;
+   end Configure_I2C;
+
 end STM32.Board;

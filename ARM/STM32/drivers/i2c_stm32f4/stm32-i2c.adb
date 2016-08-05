@@ -142,8 +142,6 @@ package body STM32.I2C is
 
       Handle.Config := Conf;
 
---        Enable_Clock (Handle.Periph.all);
-
       --  Disable the I2C port
       if Freq_Range < 2 or else Freq_Range > 45 then
          raise Program_Error with
@@ -189,8 +187,6 @@ package body STM32.I2C is
          if CCR.CCR = 0 then
             CCR.CCR := 1;
          end if;
-
-         CCR.CCR := CCR.CCR or 16#80#;
 
          Handle.Periph.TRISE.TRISE :=
            UInt6 ((Word (Freq_Range) * 300) / 1000 + 1);
