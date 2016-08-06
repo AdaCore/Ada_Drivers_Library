@@ -71,6 +71,20 @@ package body STM32.Board is
       end if;
    end Turn_Off;
 
+   -----------
+   -- Is_On --
+   -----------
+
+   function Is_On (This : User_LED) return Boolean
+   is
+   begin
+      if This = LED_Blue_L then
+         return Set (This);
+      else
+         return not Set (This);
+      end if;
+   end Is_On;
+
    ------------------
    -- All_LEDs_Off --
    ------------------

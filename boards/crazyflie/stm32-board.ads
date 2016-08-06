@@ -73,6 +73,8 @@ package STM32.Board is
 
    procedure Turn_On (This : User_LED);
    procedure Turn_Off (This : User_LED);
+   function Is_On (This : User_LED) return Boolean;
+
 
    procedure All_LEDs_Off with Inline;
    procedure All_LEDs_On  with Inline;
