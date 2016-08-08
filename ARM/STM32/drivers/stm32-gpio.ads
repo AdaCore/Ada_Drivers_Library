@@ -193,19 +193,19 @@ package STM32.GPIO is
    --  input data register of This.Port.all; returns False otherwise.
 
    overriding
-   procedure Set (This : GPIO_Point) with
+   procedure Set (This : in out GPIO_Point) with
      Inline;
    --  For This.Port.all, sets the output data register bit specified by
    --  This.Pin to one. Other pins are unaffected.
 
    overriding
-   procedure Clear (This : GPIO_Point) with
+   procedure Clear (This : in out GPIO_Point) with
      Inline;
    --  For This.Port.all, sets the output data register bit specified by
    --  This.Pin to zero. Other pins are unaffected.
 
    overriding
-   procedure Toggle (This : GPIO_Point) with
+   procedure Toggle (This : in out GPIO_Point) with
      Inline;
    --  For This.Port.all, negates the output data register bit specified by
    --  This.Pin (one becomes zero and vice versa). Other pins are unaffected.
@@ -258,17 +258,17 @@ package STM32.GPIO is
    --  Returns True iff all of the bits specified by Pins are set (not zero) in
    --  the Port input data register; returns False otherwise.
 
-   procedure Set (Pins : GPIO_Points) with
+   procedure Set (Pins : in out GPIO_Points) with
      Inline;
    --  For the given GPIO port, sets all of the output data register bits
    --  specified by Pins to one. Other pins are unaffected.
 
-   procedure Clear (Pins : GPIO_Points) with
+   procedure Clear (Pins : in out GPIO_Points) with
      Inline;
    --  For the given GPIO port, sets of all of the output data register bits
    --  specified by Pins to zero. Other pins are unaffected.
 
-   procedure Toggle (Points : GPIO_Points) with Inline;
+   procedure Toggle (Points : in out GPIO_Points) with Inline;
    --  For the given GPIO ports, negates all of the output data register bis
    --  specified by Pins (ones become zeros and vice versa). Other pins are
    --  unaffected.

@@ -100,7 +100,7 @@ package body STM32.GPIO is
    ---------
 
    overriding
-   procedure Set (This : GPIO_Point) is
+   procedure Set (This : in out GPIO_Point) is
    begin
       This.Periph.BSRR.BS.Arr (This.Pin) := True;
    end Set;
@@ -109,7 +109,7 @@ package body STM32.GPIO is
    -- Set --
    ---------
 
-   procedure Set (Pins : GPIO_Points) is
+   procedure Set (Pins : in out GPIO_Points) is
    begin
       for Pin of Pins loop
          Pin.Set;
@@ -121,7 +121,7 @@ package body STM32.GPIO is
    -----------
 
    overriding
-   procedure Clear (This : GPIO_Point) is
+   procedure Clear (This : in out GPIO_Point) is
    begin
       This.Periph.BSRR.BR.Arr (This.Pin) := True;
    end Clear;
@@ -130,7 +130,7 @@ package body STM32.GPIO is
    -- Clear --
    -----------
 
-   procedure Clear (Pins : GPIO_Points) is
+   procedure Clear (Pins : in out GPIO_Points) is
    begin
       for Pin of Pins loop
          Pin.Clear;
@@ -142,7 +142,7 @@ package body STM32.GPIO is
    ------------
 
    overriding
-   procedure Toggle (This : GPIO_Point) is
+   procedure Toggle (This : in out GPIO_Point) is
    begin
       This.Periph.ODR.ODR.Arr (This.Pin) :=
         not This.Periph.ODR.ODR.Arr (This.Pin);
@@ -152,7 +152,7 @@ package body STM32.GPIO is
    -- Toggle --
    ------------
 
-   procedure Toggle (Points : GPIO_Points) is
+   procedure Toggle (Points : in out GPIO_Points) is
    begin
       for Point of Points loop
          Point.Toggle;
