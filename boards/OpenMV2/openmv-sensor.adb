@@ -152,7 +152,7 @@ package body OpenMV.Sensor is
            GPIO_Points'(DCMI_D0, DCMI_D1, DCMI_D2, DCMI_D3, DCMI_D4,
                         DCMI_D5, DCMI_D6, DCMI_D7, DCMI_VSYNC, DCMI_HSYNC,
                         DCMI_PCLK);
-         DCMI_Out_Points : constant GPIO_Points :=
+         DCMI_Out_Points : GPIO_Points :=
            GPIO_Points'(DCMI_PWDN, DCMI_RST, FS_IN);
       begin
          Enable_Clock (GPIO_Points'(Sensor_I2C_SCL, Sensor_I2C_SDA));
