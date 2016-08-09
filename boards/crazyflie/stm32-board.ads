@@ -49,6 +49,7 @@ with STM32.GPIO;    use STM32.GPIO;
 with STM32.I2C;     use STM32.I2C;
 
 with MPU9250;       use MPU9250;
+with AK8963;        use AK8963;
 
 package STM32.Board is
    pragma Elaborate_Body;
@@ -103,5 +104,6 @@ package STM32.Board is
    ---------
 
    MPU_Device   : MPU9250.MPU9250_Device (MPU_I2C_Port'Access, High);
+   MAG_Device   : AK8963_Device (MPU_I2C_Port'Access, Add_00);
 
 end STM32.Board;
