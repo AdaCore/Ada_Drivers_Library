@@ -1,4 +1,3 @@
-with Ada.Exceptions;
 with Ada.Unchecked_Conversion;
 with Interfaces;                 use Interfaces;
 
@@ -183,28 +182,5 @@ begin
          end loop;
       end if;
    end loop;
-
-exception
-   when E : others =>
-      Display.Get_Hidden_Buffer (1).Fill (White);
-      Draw_String
-        (Display.Get_Hidden_Buffer (1),
-         (0, 0),
-         Ada.Exceptions.Exception_Information (E),
-         BMP_Fonts.Font12x12,
-         Black,
-         White);
-      Draw_String
-        (Display.Get_Hidden_Buffer (1),
-         (0, 14),
-         Ada.Exceptions.Exception_Message (E),
-         BMP_Fonts.Font12x12,
-         Black,
-         White);
-      Display.Update_Layer (1);
-
-      loop
-         null;
-      end loop;
 
 end SDCard_Demo;
