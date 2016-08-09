@@ -299,6 +299,8 @@ package STM32.Device is
    Internal_UART_4  : aliased Internal_USART with Import, Volatile, Address => UART4_Base;
    Internal_UART_5  : aliased Internal_USART with Import, Volatile, Address => UART5_Base;
    Internal_USART_6 : aliased Internal_USART with Import, Volatile, Address => USART6_Base;
+   Internal_UART_7  : aliased Internal_USART with Import, Volatile, Address => UART7_Base;
+   Internal_UART_8  : aliased Internal_USART with Import, Volatile, Address => UART8_Base;
 
    USART_1 : aliased USART (Internal_USART_1'Access);
    USART_2 : aliased USART (Internal_USART_2'Access);
@@ -306,6 +308,8 @@ package STM32.Device is
    UART_4  : aliased USART (Internal_UART_4'Access);
    UART_5  : aliased USART (Internal_UART_5'Access);
    USART_6 : aliased USART (Internal_USART_6'Access);
+   UART_7  : aliased USART (Internal_UART_7'Access);
+   UART_8  : aliased USART (Internal_UART_8'Access);
 
    procedure Enable_Clock (This : aliased in out USART);
 
