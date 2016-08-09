@@ -15,4 +15,9 @@ package Media_Reader is
       Block_Number : Unsigned_32;
       Data         : out Block) return Boolean is abstract;
 
+   function Write_Block
+     (Controller   : in out Media_Controller;
+      Block_Number : Unsigned_32;
+      Data         : Block) return Boolean is abstract;
+
 end Media_Reader;

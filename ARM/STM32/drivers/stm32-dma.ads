@@ -86,7 +86,7 @@ with Ada.Real_Time;  use Ada.Real_Time;
 
 private with STM32_SVD.DMA;
 
-package STM32.DMA is
+package STM32.DMA with SPARK_Mode => Off is
 
    type DMA_Controller is limited private;
 
@@ -130,7 +130,7 @@ package STM32.DMA is
        Post =>
          not Enabled (Unit, Stream)                               and
          Operating_Mode (Unit, Stream) = Normal_Mode              and
-         Current_Counter (Unit, Stream) = 0                       and
+         Current_NDT (Unit, Stream) = 0                           and
          Selected_Channel (Unit, Stream) = Channel_0              and
          Transfer_Direction (Unit, Stream) = Peripheral_To_Memory and
          not Double_Buffered (Unit, Stream)                       and
@@ -276,25 +276,33 @@ package STM32.DMA is
       Timeout        : Time_Span;
       Result         : out DMA_Error_Code);
 
-   procedure Set_Counter
+   procedure Set_NDT
      (Unit       : DMA_Controller;
       Stream     : DMA_Stream_Selector;
       Data_Count : Short)
      with
        Pre  => not Enabled (Unit, Stream),
-       Post => Current_Counter (Unit, Stream) = Data_Count,
+       Post => Current_NDT (Unit, Stream) = Data_Count,
        Inline;
    --  Sets the number of data items to be transferred on the stream.
    --  The Data_Count parameter specifies the number of data items to be
    --  transferred (from 0 to 65535) on the next transfer. The value is
    --  as described for procedure Configure_Data_Flow.
 
-   function Current_Counter
+   function Items_Transferred
+     (Unit   : DMA_Controller;
+      Stream : DMA_Stream_Selector)
+      return Short;
+   --  returns the number of items transfetred
+
+   function Current_NDT
      (Unit   : DMA_Controller;
       Stream : DMA_Stream_Selector)
       return Short
      with Inline;
-   --  Returns the number of remaining data units to be transferred
+   --  Returns the value of the NDT register. Should not be used directly,
+   --  as the meaning changes depending on transfer mode. rather use
+   --  Items_Transferred()
 
    function Circular_Mode
      (Unit   : DMA_Controller;
