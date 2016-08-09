@@ -28,14 +28,21 @@ package body Media_Reader.SDCard is
 
       procedure Clear_Transfer_State;
 
+      function Buffer_Error return Boolean;
+
       entry Wait_Transfer (Status : out DMA_Error_Code);
 
    private
-      procedure Interrupt;
-      pragma Attach_Handler (Interrupt, Rx_IRQ);
+
+      procedure Interrupt_RX
+        with Attach_Handler => Rx_IRQ, Unreferenced;
+
+      procedure Interrupt_TX
+        with Attach_Handler => Tx_IRQ, Unreferenced;
 
       Finished   : Boolean := True;
-      DMA_Status : DMA_Error_Code;
+      DMA_Status : DMA_Error_Code := DMA_No_Error;
+      Had_Buffer_Error : Boolean := False;
    end DMA_Interrupt_Handler;
 
    ------------------
@@ -225,6 +232,8 @@ package body Media_Reader.SDCard is
    protected body DMA_Interrupt_Handler
    is
 
+      function Buffer_Error return Boolean is (Had_Buffer_Error);
+
       -------------------
       -- Wait_Transfer --
       -------------------
@@ -243,6 +252,7 @@ package body Media_Reader.SDCard is
       begin
          Finished := False;
          DMA_Status := DMA_No_Error;
+         Had_Buffer_Error := False;
       end Set_Transfer_State;
 
       --------------------------
@@ -260,24 +270,8 @@ package body Media_Reader.SDCard is
       -- Interrupt --
       ---------------
 
-      procedure Interrupt is
+      procedure Interrupt_RX is
       begin
-         if Status (SD_DMA, SD_DMA_Rx_Stream, FIFO_Error_Indicated) then
-            Disable_Interrupt (SD_DMA, SD_DMA_Rx_Stream, FIFO_Error_Interrupt);
-            Clear_Status (SD_DMA, SD_DMA_Rx_Stream, FIFO_Error_Indicated);
-
-            DMA_Status := DMA_FIFO_Error;
-            Finished := True;
-         end if;
-
-         if Status (SD_DMA, SD_DMA_Rx_Stream, Transfer_Error_Indicated) then
-            Disable_Interrupt
-              (SD_DMA, SD_DMA_Rx_Stream, Transfer_Error_Interrupt);
-            Clear_Status (SD_DMA, SD_DMA_Rx_Stream, Transfer_Error_Indicated);
-
-            DMA_Status := DMA_Transfer_Error;
-            Finished := True;
-         end if;
 
          if Status (SD_DMA, SD_DMA_Rx_Stream, Transfer_Complete_Indicated) then
             Disable_Interrupt
@@ -289,12 +283,70 @@ package body Media_Reader.SDCard is
             Finished := True;
          end if;
 
+         if Status (SD_DMA, SD_DMA_Rx_Stream, FIFO_Error_Indicated) then
+            Disable_Interrupt (SD_DMA, SD_DMA_Rx_Stream, FIFO_Error_Interrupt);
+            Clear_Status (SD_DMA, SD_DMA_Rx_Stream, FIFO_Error_Indicated);
+
+            --  see Interrupt_TX
+            Had_Buffer_Error := True;
+         end if;
+
+         if Status (SD_DMA, SD_DMA_Rx_Stream, Transfer_Error_Indicated) then
+            Disable_Interrupt
+              (SD_DMA, SD_DMA_Rx_Stream, Transfer_Error_Interrupt);
+            Clear_Status (SD_DMA, SD_DMA_Rx_Stream, Transfer_Error_Indicated);
+
+            DMA_Status := DMA_Transfer_Error;
+            Finished := True;
+         end if;
+
          if Finished then
             for Int in STM32.DMA.DMA_Interrupt loop
                Disable_Interrupt (SD_DMA, SD_DMA_Rx_Stream, Int);
             end loop;
          end if;
-      end Interrupt;
+      end Interrupt_RX;
+
+      procedure Interrupt_TX is
+      begin
+
+         if Status (SD_DMA, SD_DMA_Tx_Stream, Transfer_Complete_Indicated) then
+            Disable_Interrupt
+              (SD_DMA, SD_DMA_Tx_Stream, Transfer_Complete_Interrupt);
+            Clear_Status
+              (SD_DMA, SD_DMA_Tx_Stream, Transfer_Complete_Indicated);
+
+            DMA_Status := DMA_No_Error;
+            Finished := True;
+         end if;
+
+         if Status (SD_DMA, SD_DMA_Tx_Stream, FIFO_Error_Indicated) then
+            --  this signal can be ignored when transfer is completed
+            --  however, it comes before Transfer_Complete_Indicated and
+            --  We cannot use the value of the NDT register either, because
+            --  it's a race condition (the register lacks behind).
+            --  As a result, we have to ignore it.
+            Disable_Interrupt (SD_DMA, SD_DMA_Tx_Stream, FIFO_Error_Interrupt);
+            Clear_Status (SD_DMA, SD_DMA_Tx_Stream, FIFO_Error_Indicated);
+            Had_Buffer_Error := True;
+
+         end if;
+
+         if Status (SD_DMA, SD_DMA_Tx_Stream, Transfer_Error_Indicated) then
+            Disable_Interrupt
+              (SD_DMA, SD_DMA_Tx_Stream, Transfer_Error_Interrupt);
+            Clear_Status (SD_DMA, SD_DMA_Tx_Stream, Transfer_Error_Indicated);
+
+            DMA_Status := DMA_Transfer_Error;
+            Finished := True;
+         end if;
+
+         if Finished then
+            for Int in STM32.DMA.DMA_Interrupt loop
+               Disable_Interrupt (SD_DMA, SD_DMA_Tx_Stream, Int);
+            end loop;
+         end if;
+      end Interrupt_TX;
 
    end DMA_Interrupt_Handler;
 
@@ -372,6 +424,66 @@ package body Media_Reader.SDCard is
       end Interrupt;
 
    end SDMMC_Interrupt_Handler;
+
+   overriding function Write_Block
+     (Controller   : in out SDCard_Controller;
+      Block_Number : Unsigned_32;
+      Data         : Block) return Boolean
+   is
+      Ret     : SD_Error;
+      DMA_Err : DMA_Error_Code;
+   begin
+      Ensure_Card_Informations (Controller);
+
+
+         --  Flush the data cache
+         Cortex_M.Cache.Invalidate_DCache
+           (Start => Data (Data'First)'Address,
+            Len   => Data'Length);
+
+         DMA_Interrupt_Handler.Set_Transfer_State;
+         SDMMC_Interrupt_Handler.Set_Transfer_State (Controller);
+
+         Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
+         Ret := Write_Blocks_DMA
+           (Controller.Device,
+            Unsigned_64 (Block_Number) *
+                Unsigned_64 (Controller.Info.Card_Block_Size),
+            SD_DMA,
+            SD_DMA_Tx_Stream,
+            SD_Data (Data));
+         --  this always leaves the last 12 byte standing. Why?
+         --  also...NDTR is not what it should be.
+
+         if Ret /= OK then
+            DMA_Interrupt_Handler.Clear_Transfer_State;
+            SDMMC_Interrupt_Handler.Clear_Transfer_State;
+            Abort_Transfer (SD_DMA, SD_DMA_Tx_Stream, DMA_Err);
+
+            return False;
+         end if;
+
+         DMA_Interrupt_Handler.Wait_Transfer (DMA_Err); -- this unblocks
+         SDMMC_Interrupt_Handler.Wait_Transfer (Ret); -- TX underrun!
+
+         --  this seems slow. Do we have to wait?
+         loop
+            --  FIXME: some people claim, that this goes wrong with multiblock, see
+            --  http://blog.frankvh.com/2011/09/04/stm32f2xx-sdio-sd-card-interface/
+            exit when not Get_Flag (Controller.Device, TX_Active);
+         end loop;
+
+         Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
+         Disable (SD_DMA, SD_DMA_Tx_Stream);
+
+         declare
+         data_incomplete : constant Boolean := DMA_Interrupt_Handler.Buffer_Error and then
+              Items_Transferred (SD_DMA, SD_DMA_Tx_Stream) /= Data'Length / 4;
+         begin
+            return Ret = OK and then DMA_Err = DMA_No_Error and then not data_incomplete;
+         end;
+
+   end Write_Block;
 
    ----------------
    -- Read_Block --
