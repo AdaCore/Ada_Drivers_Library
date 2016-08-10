@@ -29,8 +29,8 @@ package Device_SD_Configuration is
 
    SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
                          Ada.Interrupts.Names.SDMMC1_Interrupt;
-   SD_Device         : STM32_SVD.SDMMC.SDMMC1_Peripheral renames
-                         STM32_SVD.SDMMC.SDMMC1_Periph;
+   SD_Device         : STM32_SVD.SDMMC.SDMMC_Peripheral renames
+                         STM32_SVD.SDMMC.SDMMC_Periph;
 
    procedure Enable_Clock_Device;
    procedure Reset_Device;
