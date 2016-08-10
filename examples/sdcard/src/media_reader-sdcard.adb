@@ -34,11 +34,11 @@ package body Media_Reader.SDCard is
 
    private
 
-      procedure Interrupt_RX
-        with Attach_Handler => Rx_IRQ, Unreferenced;
+      procedure Interrupt_RX;
+      pragma Attach_Handler (Interrupt_RX, Rx_IRQ);
 
-      procedure Interrupt_TX
-        with Attach_Handler => Tx_IRQ, Unreferenced;
+      procedure Interrupt_TX;
+      pragma Attach_Handler (Interrupt_TX, Tx_IRQ);
 
       Finished   : Boolean := True;
       DMA_Status : DMA_Error_Code := DMA_No_Error;
@@ -307,6 +307,10 @@ package body Media_Reader.SDCard is
          end if;
       end Interrupt_RX;
 
+      ------------------
+      -- Interrupt_TX --
+      ------------------
+
       procedure Interrupt_TX is
       begin
 
@@ -425,6 +429,10 @@ package body Media_Reader.SDCard is
 
    end SDMMC_Interrupt_Handler;
 
+   -----------------
+   -- Write_Block --
+   -----------------
+
    overriding function Write_Block
      (Controller   : in out SDCard_Controller;
       Block_Number : Unsigned_32;
@@ -435,54 +443,56 @@ package body Media_Reader.SDCard is
    begin
       Ensure_Card_Informations (Controller);
 
+      --  Flush the data cache
+      Cortex_M.Cache.Invalidate_DCache
+        (Start => Data (Data'First)'Address,
+         Len   => Data'Length);
 
-         --  Flush the data cache
-         Cortex_M.Cache.Invalidate_DCache
-           (Start => Data (Data'First)'Address,
-            Len   => Data'Length);
+      DMA_Interrupt_Handler.Set_Transfer_State;
+      SDMMC_Interrupt_Handler.Set_Transfer_State (Controller);
 
-         DMA_Interrupt_Handler.Set_Transfer_State;
-         SDMMC_Interrupt_Handler.Set_Transfer_State (Controller);
+      Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
+      Ret := Write_Blocks_DMA
+        (Controller.Device,
+         Unsigned_64 (Block_Number) *
+             Unsigned_64 (Controller.Info.Card_Block_Size),
+         SD_DMA,
+         SD_DMA_Tx_Stream,
+         SD_Data (Data));
+      --  this always leaves the last 12 byte standing. Why?
+      --  also...NDTR is not what it should be.
 
-         Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
-         Ret := Write_Blocks_DMA
-           (Controller.Device,
-            Unsigned_64 (Block_Number) *
-                Unsigned_64 (Controller.Info.Card_Block_Size),
-            SD_DMA,
-            SD_DMA_Tx_Stream,
-            SD_Data (Data));
-         --  this always leaves the last 12 byte standing. Why?
-         --  also...NDTR is not what it should be.
+      if Ret /= OK then
+         DMA_Interrupt_Handler.Clear_Transfer_State;
+         SDMMC_Interrupt_Handler.Clear_Transfer_State;
+         Abort_Transfer (SD_DMA, SD_DMA_Tx_Stream, DMA_Err);
 
-         if Ret /= OK then
-            DMA_Interrupt_Handler.Clear_Transfer_State;
-            SDMMC_Interrupt_Handler.Clear_Transfer_State;
-            Abort_Transfer (SD_DMA, SD_DMA_Tx_Stream, DMA_Err);
+         return False;
+      end if;
 
-            return False;
-         end if;
+      DMA_Interrupt_Handler.Wait_Transfer (DMA_Err); -- this unblocks
+      SDMMC_Interrupt_Handler.Wait_Transfer (Ret); -- TX underrun!
 
-         DMA_Interrupt_Handler.Wait_Transfer (DMA_Err); -- this unblocks
-         SDMMC_Interrupt_Handler.Wait_Transfer (Ret); -- TX underrun!
+      --  this seems slow. Do we have to wait?
+      loop
+         --  FIXME: some people claim, that this goes wrong with multiblock, see
+         --  http://blog.frankvh.com/2011/09/04/stm32f2xx-sdio-sd-card-interface/
+         exit when not Get_Flag (Controller.Device, TX_Active);
+      end loop;
 
-         --  this seems slow. Do we have to wait?
-         loop
-            --  FIXME: some people claim, that this goes wrong with multiblock, see
-            --  http://blog.frankvh.com/2011/09/04/stm32f2xx-sdio-sd-card-interface/
-            exit when not Get_Flag (Controller.Device, TX_Active);
-         end loop;
+      Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
+      Disable (SD_DMA, SD_DMA_Tx_Stream);
 
-         Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
-         Disable (SD_DMA, SD_DMA_Tx_Stream);
-
-         declare
-         data_incomplete : constant Boolean := DMA_Interrupt_Handler.Buffer_Error and then
-              Items_Transferred (SD_DMA, SD_DMA_Tx_Stream) /= Data'Length / 4;
-         begin
-            return Ret = OK and then DMA_Err = DMA_No_Error and then not data_incomplete;
-         end;
-
+      declare
+         Data_Incomplete : constant Boolean :=
+                             DMA_Interrupt_Handler.Buffer_Error and then
+                                 Items_Transferred (SD_DMA, SD_DMA_Tx_Stream)
+                                 /= Data'Length / 4;
+      begin
+         return Ret = OK
+           and then DMA_Err = DMA_No_Error
+           and then not Data_Incomplete;
+      end;
    end Write_Block;
 
    ----------------
