@@ -15,6 +15,7 @@ library project STM32F7x9 is
      ("../cortex_m",
       "../cortex_m/fpu",
       "../cortex_m/cache",
+      "../cortex_m/svd",
       "drivers",
       "svd/stm32f7x9",
       "devices/stm32f7x9",

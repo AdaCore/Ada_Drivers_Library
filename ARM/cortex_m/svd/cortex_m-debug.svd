@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  Copyright (C) 2016 AdaCore
+ -->
+
+<device schemaVersion="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_0.xsd" >
+  <name>ARM Cortex-M</name>                                          <!-- name of part or part series -->
+  <version>1.0</version>                                          <!-- version of this description -->
+  <description>ARM 32-bit Cortex-M Microcontroller</description>
+  <addressUnitBits>8</addressUnitBits>                            <!-- byte addressable memory -->
+  <width>32</width>                                               <!-- bus width is 32 bits -->
+  <!-- default settings implicitly inherited by subsequent sections -->
+  <size>32</size>                                                 <!-- this is the default size (number of bits) of all peripherals
+                                                                       and register that do not define "size" themselves -->
+  <access>read-write</access>                                     <!-- default access permission for all subsequent registers -->
+  <resetValue>0x00000000</resetValue>                             <!-- by default all bits of the registers are initialized to 0 on reset -->
+  <resetMask>0xFFFFFFFF</resetMask>                               <!-- by default all 32Bits of the registers are used -->
+
+  <peripherals>
+    <!-- Timer 0 -->
+    <peripheral>
+      <name>Debug</name>
+      <version>1.0</version>
+      <baseAddress>0xE000ED00</baseAddress>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x100</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+        <!-- DFSR: Debug Fault Status Register -->
+        <register>
+          <name>DFSR</name>
+          <description>Debug Fault Status Register</description>
+          <addressOffset>0x30</addressOffset>
+          <size>32</size>
+          <access>read-write</access>
+
+          <fields>
+            <field>
+              <name>HALTED</name>
+              <bitRange>[0:0]</bitRange>
+            </field>
+            <field>
+              <name>BKPT</name>
+              <description>BKPT instruction executed or breakpoint match in
+              FPB.</description>
+              <bitRange>[1:1]</bitRange>
+            </field>
+            <field>
+              <name>DWTTRAP</name>
+              <description>Data Watchpoint and Trace trap. Indicates that the
+              core halted due to at least one DWT trap event.</description>
+              <bitRange>[2:2]</bitRange>
+            </field>
+            <field>
+              <name>VCATCH</name>
+              <description>Vector catch triggered. Corresponding FSR will
+              contain the primary cause of the exception.</description>
+              <bitRange>[3:3]</bitRange>
+            </field>
+            <field>
+              <name>EXTERNAL</name>
+              <description>An asynchronous exception generated due to the
+              assertion of EDBGRQ. </description>
+              <bitRange>[4:4]</bitRange>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DHCSR: Debug Halting Control and Status Register -->
+        <cluster>
+          <name>DHCSR</name>
+          <description>Debug Halting Control and Status Register</description>
+          <addressOffset>0xF0</addressOffset>
+          <size>32</size>
+          <register>
+            <name>Read</name>
+            <addressOffset>0xF0</addressOffset>
+            <size>32</size>
+            <access>read-only</access>
+            <fields>
+              <field>
+                <name>C_DEBUGGEN</name>
+                <bitRange>[0:0]</bitRange>
+              </field>
+              <field>
+                <name>C_HALT</name>
+                <bitRange>[1:1]</bitRange>
+              </field>
+              <field>
+                <name>C_STEP</name>
+                <bitRange>[2:2]</bitRange>
+              </field>
+              <field>
+                <name>C_MASKINTS</name>
+                <bitRange>[3:3]</bitRange>
+              </field>
+              <field>
+                <name>C_SNAPSTALL</name>
+                <bitRange>[5:5]</bitRange>
+              </field>
+              <field>
+                <name>S_REGRDY</name>
+                <bitRange>[16:16]</bitRange>
+                <access>read-only</access>
+              </field>
+              <field>
+                <name>S_HALT</name>
+                <bitRange>[17:17]</bitRange>
+                <access>read-only</access>
+              </field>
+              <field>
+                <name>S_SLEEP</name>
+                <bitRange>[18:18]</bitRange>
+                <access>read-only</access>
+              </field>
+              <field>
+                <name>S_LOCKUP</name>
+                <bitRange>[19:19]</bitRange>
+                <access>read-only</access>
+              </field>
+              <field>
+                <name>S_RETIRE_ST</name>
+                <bitRange>[24:24]</bitRange>
+                <access>read-only</access>
+              </field>
+              <field>
+                <name>S_RESET_ST</name>
+              <bitRange>[25:25]</bitRange>
+              <access>read-only</access>
+              </field>
+            </fields>
+          </register>
+          <register>
+            <name>Write</name>
+            <addressOffset>0xF0</addressOffset>
+            <size>32</size>
+            <access>write-only</access>
+            <alternateCluster>DHCSR_Read</alternateCluster>
+            <fields>
+              <field>
+                <name>C_DEBUGGEN</name>
+                <bitRange>[0:0]</bitRange>
+              </field>
+              <field>
+                <name>C_HALT</name>
+                <bitRange>[1:1]</bitRange>
+              </field>
+              <field>
+                <name>C_STEP</name>
+                <bitRange>[2:2]</bitRange>
+              </field>
+              <field>
+                <name>C_MASKINTS</name>
+                <bitRange>[3:3]</bitRange>
+              </field>
+              <field>
+                <name>C_SNAPSTALL</name>
+                <bitRange>[5:5]</bitRange>
+              </field>
+              <field>
+                <name>S_RESET_ST</name>
+                <description>Debug Key. The value 0xA05F must be written to
+                enable write accesses to bits [15:0], otherwise the write
+                access will be ignored. Read behavior of bits [31:16] is as
+                listed below.</description>
+                <bitRange>[31:16]</bitRange>
+              </field>
+            </fields>
+          </register>
+        </cluster>
+
+        <!-- DCRSR: Debug Core Register Selector Register -->
+        <register>
+          <name>DCRSR</name>
+          <description>Debug Core Register Selector Register: The DCRSR
+          write-only register generates a handshake to the core to transfer the
+          selected register to/from the DCRDR. The DHCSR S_REGRDY bit is
+          cleared when the DCRSR is written, and remains clear until the core
+          transaction completes. This register is only accessible from Debug
+          state.</description>
+          <addressOffset>0xF4</addressOffset>
+          <size>32</size>
+          <access>write-only</access>
+
+          <fields>
+            <field>
+              <name>HALTED</name>
+              <bitRange>[4:0]</bitRange>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Register_0</name>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_1</name>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_2</name>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_3</name>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_4</name>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_5</name>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_6</name>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_7</name>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_8</name>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_9</name>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_10</name>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_11</name>
+                  <value>11</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_12</name>
+                  <value>12</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Current_SP</name>
+                  <value>13</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Link_Rregister</name>
+                  <value>14</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Debug_Return_Address</name>
+                  <value>15</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>xPSR</name>
+                  <value>16</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>MSP</name>
+                  <value>17</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>PSP</name>
+                  <value>18</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CONTROL_FAULTMASK_BASEPRI_PRIMASK</name>
+                  <value>19</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>REGWnR</name>
+              <description></description>
+              <bitRange>[16:16]</bitRange>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Write</name>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Read</name>
+                  <value>0</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DCRDR: Debug Core Register Data Register -->
+        <register>
+          <name>DCRDR</name>
+          <description>Debug Core Register Data Register</description>
+          <addressOffset>0xF8</addressOffset>
+          <size>32</size>
+          <access>read-write</access>
+        </register>
+
+        <!-- DEMCR: Debug Exception and Monitor Control Register -->
+        <register>
+          <name>DEMCR</name>
+          <description>Debug Exception and Monitor Control Register</description>
+          <addressOffset>0xFC</addressOffset>
+          <size>32</size>
+          <access>read-write</access>
+
+          <fields>
+            <field>
+              <name>VC_CORERESET</name>
+              <bitRange>[0:0]</bitRange>
+            </field>
+            <field>
+              <name>VC_MMERR</name>
+              <bitRange>[4:4]</bitRange>
+            </field>
+            <field>
+              <name>VC_NOCPERR</name>
+              <bitRange>[5:5]</bitRange>
+            </field>
+            <field>
+              <name>VC_CHKERR</name>
+              <bitRange>[6:6]</bitRange>
+            </field>
+            <field>
+              <name>VC_STATERR</name>
+              <bitRange>[7:7]</bitRange>
+            </field>
+            <field>
+              <name>VC_BUSERR</name>
+              <bitRange>[8:8]</bitRange>
+            </field>
+            <field>
+              <name>VC_INTERR</name>
+              <bitRange>[9:9]</bitRange>
+            </field>
+            <field>
+              <name>VC_HARDERR</name>
+              <bitRange>[10:10]</bitRange>
+            </field>
+            <field>
+              <name>MON_EN</name>
+              <bitRange>[16:16]</bitRange>
+            </field>
+            <field>
+              <name>MON_PEND</name>
+              <bitRange>[17:17]</bitRange>
+            </field>
+            <field>
+              <name>MON_STEP</name>
+              <bitRange>[18:18]</bitRange>
+            </field>
+            <field>
+              <name>MON_REQ</name>
+              <bitRange>[19:19]</bitRange>
+            </field>
+            <field>
+              <name>TRCENA</name>
+              <bitRange>[24:24]</bitRange>
+            </field>
+          </fields>
+        </register>
+
+      </registers>
+    </peripheral>
+  </peripherals>
+</device>

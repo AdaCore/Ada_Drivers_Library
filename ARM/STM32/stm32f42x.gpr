@@ -15,6 +15,7 @@ library project STM32F42x is
      ("../cortex_m",
       "../cortex_m/fpu",
       "../cortex_m/nocache",
+      "../cortex_m/svd",
       "drivers",
       "svd/stm32f429x",
       "devices/stm32f42x",
