@@ -41,9 +41,9 @@ package Cortex_M_SVD.Debug is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   -------------------------
-   -- Cluster's Registers --
-   -------------------------
+   -------------------------------
+   -- DHCSR cluster's Registers --
+   -------------------------------
 
    type ReadDHCSR_Register is record
       --  Read-only.
@@ -98,7 +98,7 @@ package Cortex_M_SVD.Debug is
       Reserved_26_31 at 0 range 26 .. 31;
    end record;
 
-   subtype Write_S_RESET_ST_Field is HAL.Short;
+   subtype WriteDHCSR_S_RESET_ST_Field is HAL.Short;
 
    type WriteDHCSR_Register is record
       --  Write-only.
@@ -118,7 +118,7 @@ package Cortex_M_SVD.Debug is
       --  Write-only. Debug Key. The value 0xA05F must be written to enable
       --  write accesses to bits [15:0], otherwise the write access will be
       --  ignored. Read behavior of bits [31:16] is as listed below.
-      S_RESET_ST    : Write_S_RESET_ST_Field := 16#0#;
+      S_RESET_ST    : WriteDHCSR_S_RESET_ST_Field := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

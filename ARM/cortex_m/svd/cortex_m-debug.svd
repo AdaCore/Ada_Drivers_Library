@@ -5,7 +5,7 @@
  -->
 
 <device schemaVersion="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_0.xsd" >
-  <name>ARM Cortex-M</name>                                          <!-- name of part or part series -->
+  <name>ARM_Cortex_M</name>                                       <!-- name of part or part series -->
   <version>1.0</version>                                          <!-- version of this description -->
   <description>ARM 32-bit Cortex-M Microcontroller</description>
   <addressUnitBits>8</addressUnitBits>                            <!-- byte addressable memory -->
@@ -82,7 +82,7 @@
           <size>32</size>
           <register>
             <name>Read</name>
-            <addressOffset>0xF0</addressOffset>
+            <addressOffset>0x00</addressOffset>
             <size>32</size>
             <access>read-only</access>
             <fields>
@@ -140,7 +140,7 @@
           </register>
           <register>
             <name>Write</name>
-            <addressOffset>0xF0</addressOffset>
+            <addressOffset>0x00</addressOffset>
             <size>32</size>
             <access>write-only</access>
             <alternateCluster>DHCSR_Read</alternateCluster>
