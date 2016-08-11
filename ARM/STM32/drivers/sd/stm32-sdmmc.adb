@@ -1311,6 +1311,8 @@ package body STM32.SDMMC is
          return Ret;
       end if;
 
+      delay until Clock +  Milliseconds (50);
+
       Ret := Initialize_Cards (Controller);
 
       if Ret /= OK then

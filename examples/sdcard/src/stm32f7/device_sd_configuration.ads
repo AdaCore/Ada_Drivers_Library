@@ -28,7 +28,7 @@ package Device_SD_Configuration is
                          Ada.Interrupts.Names.DMA2_Stream6_Interrupt;
 
    SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
-                         Ada.Interrupts.Names.SDMMC1_Interrupt;
+                         Ada.Interrupts.Names.SDIO_Interrupt;
    SD_Device         : STM32_SVD.SDMMC.SDMMC_Peripheral renames
                          STM32_SVD.SDMMC.SDMMC_Periph;
 

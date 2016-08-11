@@ -1,10 +1,11 @@
+with "../../embedded-runtimes/ravenscar-stm32f407disco/ravenscar_build";
 with "../../hal/HAL.gpr";
 with "../../config.gpr";
 
 library project STM32F40x is
 
    for Target use "arm-eabi";
-   for Runtime ("Ada") use Config.RTS & "-stm32f4";
+   for Runtime ("Ada") use Ravenscar_Build'Runtime ("Ada");
 
    for Library_Name use "stm32f407";
    for Library_Kind use "static";

@@ -3,7 +3,7 @@ with "../../boards/stm32f4_discovery.gpr";
 
 project Accelerometer extends "../common/common.gpr" is
 
-  for Runtime ("Ada") use Config.RTS & "-stm32f4";
+  for Runtime ("Ada") use STM32F4_Discovery'Runtime ("Ada");
   for Target use "arm-eabi";
   for Main use ("main.adb");
   for Languages use ("Ada");

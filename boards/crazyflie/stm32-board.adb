@@ -47,7 +47,7 @@ package body STM32.Board is
    -- Turn_On --
    -------------
 
-   procedure Turn_On (This : User_LED)
+   procedure Turn_On (This : in out User_LED)
    is
    begin
       if This = LED_Blue_L then
@@ -61,7 +61,7 @@ package body STM32.Board is
    -- Turn_Off --
    --------------
 
-   procedure Turn_Off (This : User_LED)
+   procedure Turn_Off (This : in out User_LED)
    is
    begin
       if This = LED_Blue_L then

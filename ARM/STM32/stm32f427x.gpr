@@ -2,12 +2,14 @@
 --  copy of the stm32f42x that doesn't include the "drivers/ltdc" source
 --  directory.
 
+with "../../embedded-runtimes/ravenscar-openmv2/ravenscar_build";
 with "../../config.gpr";
 with "../../hal/HAL.gpr";
 
 library project STM32F427x is
 
    for Target use "arm-eabi";
+   for Runtime ("Ada") use Ravenscar_Build'Runtime ("Ada");
 
    for Library_Name use "stm32f427x";
    for Library_Kind use "static";

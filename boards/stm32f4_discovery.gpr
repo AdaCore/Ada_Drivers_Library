@@ -9,8 +9,8 @@ library project STM32F4_Discovery is
 
    for Library_Name use "stm32f4disco";
    for Library_Kind use "static";
-   for Library_Dir use "lib/stm32f4/" & Config.RTS;
-   for Object_Dir use "obj/stm32f4/" & Config.RTS;
+   for Library_Dir use "lib/stm32f4/" & Config.RTS & "/" & Config.Build;
+   for Object_Dir use "obj/stm32f4/" & Config.RTS & "/" & Config.Build;
 
    for Source_Dirs use ("stm32f4_discovery",
                         "stm32_common");

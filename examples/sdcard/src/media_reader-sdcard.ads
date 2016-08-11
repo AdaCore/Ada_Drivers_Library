@@ -31,7 +31,6 @@ package Media_Reader.SDCard is
       Block_Number : Unsigned_32;
       Data         : Block) return Boolean;
 
-
 private
 
    type SDCard_Controller is limited new Media_Controller with record
