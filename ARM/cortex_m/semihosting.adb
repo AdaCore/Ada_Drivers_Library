@@ -32,39 +32,233 @@
 with Cortex_M.Debug;
 with System.Machine_Code; use System.Machine_Code;
 with HAL; use HAL;
+with Ada.Unchecked_Conversion;
 
 package body Semihosting is
 
-   procedure Write_C (C : Character);
-   procedure Write_0 (Str : String);
+   type SH_u32_Array is array (Integer range <>) of SH_Word
+     with Pack, Convention => C;
+
+   function To_SH_u32 is new Ada.Unchecked_Conversion
+     (Source => System.Address, Target => SH_Word);
+   function To_SH_u32 is new Ada.Unchecked_Conversion
+     (Source => Integer, Target => SH_Word);
+
+   subtype Syscall is SH_Word;
+
+   SYS_OPEN     : constant Syscall := 16#01#;
+   SYS_CLOSE    : constant Syscall := 16#02#;
+   SYS_WRITEC   : constant Syscall := 16#03#;
+   SYS_WRITE0   : constant Syscall := 16#04#;
+   SYS_WRITE    : constant Syscall := 16#05#;
+   SYS_READ     : constant Syscall := 16#06#;
+   --  SYS_READC    : constant Syscall := 16#07#;
+   --  SYS_ISERROR  : constant Syscall := 16#08#;
+   --  SYS_ISTTY    : constant Syscall := 16#09#;
+   SYS_SEEK     : constant Syscall := 16#0A#;
+   --  SYS_FLEN     : constant Syscall := 16#0C#;
+   --  SYS_TMPNAM   : constant Syscall := 16#0D#;
+   SYS_REMOVE   : constant Syscall := 16#0E#;
+   --  SYS_RENAME   : constant Syscall := 16#0E#;
+   --  SYS_CLOCK    : constant Syscall := 16#10#;
+   --  SYS_TIME     : constant Syscall := 16#11#;
+   SYS_ERRNO    : constant Syscall := 16#13#;
+   --  SYS_GET_CMD  : constant Syscall := 16#15#;
+   --  SYS_HEAPINFO : constant Syscall := 16#16#;
+   --  SYS_ELAPSED  : constant Syscall := 16#30#;
+   --  SYS_TICKFREQ : constant Syscall := 16#31#;
+
+   function Semihosting_Enabled return Boolean is
+     (Cortex_M.Debug.Halting_Debug_Enabled);
+   function Generic_SH_Call (R0, R1 : SH_Word) return SH_Word;
+   function Generic_SH_Call (R0 : SH_Word; R1 : System.Address) return SH_Word;
+
+   ---------------------
+   -- Generic_SH_Call --
+   ---------------------
+
+   function Generic_SH_Call (R0, R1 : SH_Word) return SH_Word is
+      Ret : SH_Word;
+   begin
+      Asm ("mov r0, %1" & ASCII.LF & ASCII.HT &
+           "mov r1, %2" & ASCII.LF & ASCII.HT &
+           "bkpt #0xAB" & ASCII.LF & ASCII.HT &
+           "mov %0, r0",
+           Outputs  => (SH_Word'Asm_Output ("=r", Ret)),
+           Inputs   => (SH_Word'Asm_Input ("r", R0),
+                        SH_Word'Asm_Input ("r", R1)),
+           Volatile => True,
+           Clobber => ("r1, r0"));
+      return Ret;
+   end Generic_SH_Call;
+
+   ---------------------
+   -- Generic_SH_Call --
+   ---------------------
+
+   function Generic_SH_Call (R0 : SH_Word; R1 : System.Address) return SH_Word is
+   begin
+      return Generic_SH_Call (R0, To_SH_u32 (R1));
+   end Generic_SH_Call;
+
+   -----------
+   -- Close --
+   -----------
+
+   function Close (File_Handle : SH_Word) return SH_Word is
+      Block : SH_u32_Array (0 .. 0);
+   begin
+      if not Semihosting_Enabled then
+         --  No debugger attached
+         return SH_Word'Last;
+      end if;
+
+      Block (0) := File_Handle;
+      return Generic_SH_Call (SYS_CLOSE, Block'Address);
+   end Close;
 
    ----------
-   -- Send --
+   -- Open --
    ----------
+
+   function Open (Filename : String; Mode : Flag) return SH_Word is
+      Block : SH_u32_Array (0 .. 2);
+      C_Name : String (1 .. Filename'Length + 1);
+   begin
+      if not Semihosting_Enabled then
+         --  No debugger attached
+         return SH_Word'Last;
+      end if;
+
+      C_Name (1 .. Filename'Length) := Filename;
+      C_Name (C_Name'Last)          := ASCII.NUL;
+
+      Block (0) := To_SH_u32 (C_Name'Address);
+      Block (1) := Mode;
+      Block (2) := Filename'Length;
+
+      return Generic_SH_Call (SYS_OPEN, Block'Address);
+   end Open;
+
+   ----------
+   -- Read --
+   ----------
+
+   function Read (File_Handle     : SH_Word;
+                  Buffer_Address  : System.Address;
+                  Buffer_Size     : SH_Word) return SH_Word
+   is
+      Block  : SH_u32_Array (0 .. 2);
+   begin
+      if not Semihosting_Enabled then
+         --  No debugger attached
+         return Buffer_Size;
+      end if;
+
+      Block (0) := File_Handle;
+      Block (1) := To_SH_u32 (Buffer_Address);
+      Block (2) := Buffer_Size;
+
+      return Generic_SH_Call (SYS_READ, Block'Address);
+   end Read;
+
+   -----------
+   -- Write --
+   -----------
+
+   function Write (File_Handle     : SH_Word;
+                   Buffer_Address  : System.Address;
+                   Buffer_Size     : SH_Word) return SH_Word
+   is
+      Block  : SH_u32_Array (0 .. 3);
+   begin
+      if not Semihosting_Enabled then
+         --  No debugger attached
+         return Buffer_Size;
+      end if;
+
+      Block (0) := File_Handle;
+      Block (1) := To_SH_u32 (Buffer_Address);
+      Block (2) := Buffer_Size;
+
+      return Generic_SH_Call (SYS_WRITE, Block'Address);
+   end Write;
+
+   ------------
+   -- Remove --
+   ------------
+
+   function Remove (Filename : String) return SH_Word is
+      Block  : SH_u32_Array (0 .. 1);
+      C_Name : String (1 .. Filename'Length + 1);
+   begin
+      if not Semihosting_Enabled then
+         --  No debugger attached
+         return SH_Word'Last;
+      end if;
+
+      C_Name (1 .. Filename'Length) := Filename;
+      C_Name (C_Name'Last)          := ASCII.NUL;
+
+      Block (0) := To_SH_u32 (C_Name'Address);
+      Block (1) := To_SH_u32 (Filename'Length);
+
+      return Generic_SH_Call (SYS_REMOVE, Block'Address);
+   end Remove;
+
+   ----------
+   -- Seek --
+   ----------
+
+   function Seek (File_Handle       : SH_Word;
+                  Absolute_Position : SH_Word) return SH_Word
+   is
+      Block  : SH_u32_Array (0 .. 1);
+   begin
+      if not Semihosting_Enabled then
+         --  No debugger attached
+         return SH_Word'Last;
+      end if;
+
+      Block (0) := File_Handle;
+      Block (1) := Absolute_Position;
+
+      return Generic_SH_Call (SYS_SEEK, Block'Address);
+   end Seek;
+
+   -----------
+   -- Errno --
+   -----------
+
+   function Errno return SH_Word is
+   begin
+      return Generic_SH_Call (SYS_ERRNO, 0);
+   end Errno;
+
+   -------------
+   -- Write_C --
+   -------------
 
    procedure Write_C (C : Character) is
+      Ret : SH_Word with Unreferenced;
    begin
-      if not Cortex_M.Debug.Halting_Debug_Enabled then
+      if not Semihosting_Enabled then
          --  No debugger attached
          return;
       end if;
 
-      Asm ("mov r0, #0x03" & ASCII.LF & ASCII.HT &
-           "mov r1, %0" & ASCII.LF & ASCII.HT &
-           "bkpt #0xAB",
-           Inputs   => (System.Address'Asm_Input ("r", C'Address)),
-           Volatile => True,
-           Clobber => ("r1, r0"));
+      Ret := Generic_SH_Call (SYS_WRITEC, C'Address);
    end Write_C;
 
-   ----------
-   -- Send --
-   ----------
+   -------------
+   -- Write_0 --
+   -------------
 
    procedure Write_0 (Str : String) is
       Data : Byte_Array (Str'First .. Str'Last + 1);
+      Ret  : SH_Word with Unreferenced;
    begin
-      if not Cortex_M.Debug.Halting_Debug_Enabled then
+      if not Semihosting_Enabled then
          --  No debugger attached
          return;
       end if;
@@ -76,31 +270,8 @@ package body Semihosting is
       --  Add trailing zero
       Data (Str'Last + 1) := 0;
 
-      Asm ("mov r0, #0x04" & ASCII.LF & ASCII.HT &
-           "mov r1, %0" & ASCII.LF & ASCII.HT &
-           "bkpt #0xAB",
-           Inputs   => (System.Address'Asm_Input ("r", Data'Address)),
-           Volatile => True,
-           Clobber => ("r1, r0"));
+      Ret := Generic_SH_Call (SYS_WRITE0, Data'Address);
    end Write_0;
-
-   ---------
-   -- Log --
-   ---------
-
-   procedure Log (C : Character) is
-   begin
-      Write_C (C);
-   end Log;
-
-   ---------
-   -- Log --
-   ---------
-
-   procedure Log (Str : String) is
-   begin
-      Write_0 (Str);
-   end Log;
 
    --------------
    -- Log_Line --
@@ -120,5 +291,6 @@ package body Semihosting is
    begin
       Write_C (ASCII.LF);
    end Log_New_Line;
+
 
 end Semihosting;
