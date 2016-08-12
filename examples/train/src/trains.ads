@@ -238,7 +238,7 @@ is
    with
      Global => (Input  => (Cur_Num_Trains, Previous_Tracks, Tracks),
                 In_Out => (Trains, Track_Signals)),
-     Pre  => Train in 1 .. Cur_Num_Trains and then
+     Pre  => Train <= Cur_Num_Trains and then
              Valid_Move (Trains (Train), New_Position) and then
              One_Train_At_Most_Per_Track and then
              Safe_Signaling,
