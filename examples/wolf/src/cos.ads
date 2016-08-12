@@ -1,5 +1,7 @@
 package Cos is
+
    type Degree is mod 3600;
+
    Cos_Table : constant array (Degree) of Float :=
                  (1.00000E+00,
                   9.99998E-01,
@@ -3600,6 +3602,7 @@ package Cos is
                   9.99976E-01,
                   9.99986E-01,
                   9.99994E-01,
-                  9.99998E-01);
+                  9.99998E-01)
+   with Linker_Section => ".ccmdata";
 
 end Cos;

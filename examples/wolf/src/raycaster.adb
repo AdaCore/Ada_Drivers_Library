@@ -68,6 +68,8 @@ package body Raycaster is
    FOV_Vect : array (0 .. LCD_W - 1) of Degree;
    pragma Linker_Section (FOV_Vect, ".ccmdata");
 
+   Sin_Table : array (Cos_Table'Range) of Float;
+
    type Column_Type is array (0 .. LCD_H - 1) of Unsigned_16
      with Component_Size => 16, Alignment => 32;
 
@@ -109,7 +111,7 @@ package body Raycaster is
    function To_Unit_Vector (Angle : Degree) return Vector is
    begin
       return (Cos_Table (Angle),
-              -Sin (Angle)); --  -sin (angle)
+              -Sin_Table (Angle)); --  -sin (angle)
    end To_Unit_Vector;
 
    ---------
@@ -119,7 +121,7 @@ package body Raycaster is
    function Sin (Angle : Degree) return Float
    is
    begin
-      return Cos_Table (Angle - 900);
+      return Cos_Table (Angle + 2700);
    end Sin;
 
    ---------
@@ -172,6 +174,10 @@ package body Raycaster is
          FOV_Vect (Col) := Arctan (X);
       end loop;
 
+      for Angle in Sin_Table'Range loop
+         Sin_Table (Angle) := Sin (Angle);
+      end loop;
+
       Tmp_Buf :=
         (Addr       => Tmp.all'Address,
          Width      => 1,
@@ -208,7 +214,7 @@ package body Raycaster is
       Map_X := Natural (Float'Floor (Pos.X));
       Map_Y := Natural (Float'Floor (Pos.Y));
 
-      --  Distance along the ray between to consecutive X coordinates
+      --  Distance along the ray between two consecutive X coordinates
       d_Dist_X := abs (1.0 / Ray_Vect.X);
       --  Same for Y
       d_Dist_Y := abs (1.0 / Ray_Vect.Y);
@@ -259,7 +265,7 @@ package body Raycaster is
          --  texture).
          --  First, we calculate the distance of the point where the ray hit
          --  the wall form (0,0): Sin (Angle) * dist + Initial Y position
-         Offset := Pos.Y - Cos_Table (Pos.Angle - 900) * dist_X;
+         Offset := Pos.Y - Sin_Table (Pos.Angle) * dist_X;
          --  Offset from the tile's coordinates:
          Offset := Offset - Float'Floor (Offset);
 
