@@ -80,8 +80,8 @@ is
    procedure Init_Screen (F : Fractal_Ref)
    is
       Res   : constant Screen := F.Default_Screen;
-      LCD_W : constant Float := Float (Display.Get_Width);
-      LCD_H : constant Float := Float (Display.Get_Height);
+      LCD_W : constant Base_Float := Base_Float (Display.Get_Width);
+      LCD_H : constant Base_Float := Base_Float (Display.Get_Height);
    begin
       Current_Screen := F.Default_Screen;
 
@@ -107,9 +107,9 @@ is
    begin
       return
         (X => Current_Screen.X0 +
-           Current_Screen.Width / Float (Display.Get_Width) * Float (X),
+           Current_Screen.Width / Base_Float (Display.Get_Width) * Base_Float (X),
          Y => Current_Screen.Y0 +
-           Current_Screen.Height / Float (Display.Get_Height) * Float (Y));
+           Current_Screen.Height / Base_Float (Display.Get_Height) * Base_Float (Y));
    end To_Coord;
 
    ---------------
@@ -153,13 +153,13 @@ is
       H   : constant Integer := Box.Y1 - Box.Y0 + 1;
    begin
       Current_Screen.X0     := Current_Screen.X0 +
-        Current_Screen.Width / Float (Display.Get_Width) * Float (Box.X0);
+        Current_Screen.Width / Base_Float (Display.Get_Width) * Base_Float (Box.X0);
       Current_Screen.Y0     := Current_Screen.Y0 +
-        Current_Screen.Height / Float (Display.Get_Height) * Float (Box.Y0);
+        Current_Screen.Height / Base_Float (Display.Get_Height) * Base_Float (Box.Y0);
       Current_Screen.Width  :=
-        Current_Screen.Width / Float (Display.Get_Width) * Float (W);
+        Current_Screen.Width / Base_Float (Display.Get_Width) * Base_Float (W);
       Current_Screen.Height :=
-        Current_Screen.Height / Float (Display.Get_Height) * Float (H);
+        Current_Screen.Height / Base_Float (Display.Get_Height) * Base_Float (H);
    end Zoom;
 
    ---------------
@@ -213,7 +213,7 @@ is
    Do_Paint   : Boolean;
 
 begin
-   Display.Initialize (HAL.Framebuffer.Landscape);
+   Display.Initialize (HAL.Framebuffer.Landscape, HAL.Framebuffer.Polling);
    Display.Initialize_Layer (1, HAL.Bitmap.RGB_888);
    Display.Initialize_Layer (2, HAL.Bitmap.ARGB_4444);
    Touch_Panel.Initialize (HAL.Framebuffer.Landscape);

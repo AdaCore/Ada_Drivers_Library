@@ -4,7 +4,7 @@ package body Fractals is
    is ((C.X ** 2 - C.Y ** 2, 2.0 * C.X * C.Y))
    with Inline_Always;
 
-   function Square (C : Coordinate) return Float
+   function Square (C : Coordinate) return Base_Float
    is (C.X ** 2 + C.Y ** 2)
    with Inline_Always;
 

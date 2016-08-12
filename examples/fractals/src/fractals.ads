@@ -1,12 +1,14 @@
 package Fractals is
 
+   subtype Base_Float is Float;
+
    type Coordinate is record
-      X : Float;
-      Y : Float;
+      X : Base_Float;
+      Y : Base_Float;
    end record;
 
    type Screen is record
-      X0, Y0, Width, Height : Float;
+      X0, Y0, Width, Height : Base_Float;
    end record;
 
    type Fractal is abstract tagged null record;
