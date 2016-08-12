@@ -1,0 +1,20 @@
+--  Version of the projects configuration for STM32F407-Discovery board.
+
+--  Include the run-time project files to have them compiled
+with "../../embedded-runtimes/ravenscar-stm32f407disco/ravenscar_build";
+with "../../embedded-runtimes/ravenscar-stm32f407disco/runtime_build";
+
+abstract project Config extends "../common_config" is
+
+   RTS   := Runtime_Build.RTS;
+   Build := Common_Config.Build;
+
+   Object_Subdir := "stm32f407disco/" & RTS & "/" & Build;
+
+   --  Need that for abstract projects
+   for Source_Dirs use ();
+
+   package Compiler renames Common_Config.Compiler;
+   package Builder renames Common_Config.Builder;
+
+end Config;

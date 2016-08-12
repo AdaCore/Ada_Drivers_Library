@@ -1,5 +1,5 @@
-with "../../config.gpr";
-with "../../boards/openmv2.gpr";
+with "../../boards/openmv2";
+with "../../boards/openmv2/config";
 
 project OpenMV2_Example is
 

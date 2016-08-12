@@ -1,10 +1,13 @@
-with "../../config.gpr";
+with "../../boards/common_config";
 
 project Common is
 
    type LOADER_Type is
       ("RAM", "ROM");
    LOADER : LOADER_Type := external ("LOADER", "ROM");
+
+   type RTS_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS : RTS_Type := External ("RTS", "ravenscar-sfp");
 
    type LCH_Type is ("led", "lcd");
    LCH : LCH_Type := external ("LCH", "led");
@@ -13,7 +16,7 @@ project Common is
    for Target use "arm-eabi";
    for Source_Dirs use ("gui");
 
-   case Config.RTS is
+   case RTS is
       when "ravenscar-sfp" =>
          for Source_Dirs use Project'Source_Dirs & ("lch_sfp");
          case LCH is
@@ -32,8 +35,8 @@ project Common is
          end case;
    end case;
 
-   package Compiler renames Config.Compiler;
-   package Builder renames Config.Builder;
+   package Compiler renames Common_Config.Compiler;
+   package Builder renames Common_Config.Builder;
 
    package Linker is
       for Default_Switches ("Ada") use

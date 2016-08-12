@@ -1,16 +1,12 @@
-with "../../embedded-runtimes/ravenscar-stm32f769disco/ravenscar_build";
-with "../../config";
+with "config";
 with "../../hal/HAL";
 
 library project STM32F7x9 is
 
-   for Target use "arm-eabi";
-   for Runtime ("Ada") use Ravenscar_Build'Runtime ("Ada");
-
    for Library_Name use "stm32f7x9";
    for Library_Kind use "static";
-   for Library_Dir use "lib/stm32f7x9/" & Config.RTS & "/" & Config.Build;
-   for Object_Dir use "obj/stm32f7x9/" & Config.RTS & "/" & Config.Build;
+   for Library_Dir use "lib/" & Config.Object_Subdir;
+   for Object_Dir use "obj/" & Config.Object_Subdir;
 
    for Source_Dirs use
      ("../cortex_m",
@@ -29,21 +25,7 @@ library project STM32F7x9 is
       "drivers/sd",
       "drivers/sd/sdmmc");
 
-   package Compiler is
-      for Default_Switches ("Ada") use
-        Config.Compiler'Default_Switches ("Ada");
-
-      case Config.Build is
-         when "Debug" =>
-            --  SDMMC is using polling to read from the sd card, and at -O0
-            --  there's an issue where we don't read fast enough and so the
-            --  FIFO fills up and raises an error.
-            for Switches ("stm32-sdmmc.adb") use
-              Config.Compiler'Default_Switches ("Ada") & "-O1";
-         when others =>
-      end case;
-   end Compiler;
-
+   package Compiler renames Config.Compiler;
    package Builder renames Config.Builder;
 
 end STM32F7x9;
