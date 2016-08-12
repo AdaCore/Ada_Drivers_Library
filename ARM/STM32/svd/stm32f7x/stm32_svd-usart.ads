@@ -13,14 +13,6 @@ package STM32_SVD.USART is
    -- Registers --
    ---------------
 
-   ------------------
-   -- CR1_Register --
-   ------------------
-
-   --------------
-   -- CR1.DEDT --
-   --------------
-
    --  CR1_DEDT array
    type CR1_DEDT_Field_Array is array (0 .. 4) of Boolean
      with Component_Size => 1, Size => 5;
@@ -44,10 +36,6 @@ package STM32_SVD.USART is
       Val at 0 range 0 .. 4;
       Arr at 0 range 0 .. 4;
    end record;
-
-   --------------
-   -- CR1.DEAT --
-   --------------
 
    --  CR1_DEAT array
    type CR1_DEAT_Field_Array is array (0 .. 4) of Boolean
@@ -148,15 +136,7 @@ package STM32_SVD.USART is
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
-   ------------------
-   -- CR2_Register --
-   ------------------
-
    subtype CR2_STOP_Field is HAL.UInt2;
-
-   ----------------
-   -- CR2.ABRMOD --
-   ----------------
 
    --  CR2_ABRMOD array
    type CR2_ABRMOD_Field_Array is array (0 .. 1) of Boolean
@@ -257,10 +237,6 @@ package STM32_SVD.USART is
       ADD4_7       at 0 range 28 .. 31;
    end record;
 
-   ------------------
-   -- CR3_Register --
-   ------------------
-
    subtype CR3_SCARCNT_Field is HAL.UInt3;
    subtype CR3_WUS_Field is HAL.UInt2;
 
@@ -336,10 +312,6 @@ package STM32_SVD.USART is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   ------------------
-   -- BRR_Register --
-   ------------------
-
    subtype BRR_DIV_Fraction_Field is HAL.UInt4;
    subtype BRR_DIV_Mantissa_Field is HAL.UInt12;
 
@@ -360,10 +332,6 @@ package STM32_SVD.USART is
       DIV_Mantissa   at 0 range 4 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -------------------
-   -- GTPR_Register --
-   -------------------
 
    subtype GTPR_PSC_Field is HAL.Byte;
    subtype GTPR_GT_Field is HAL.Byte;
@@ -386,10 +354,6 @@ package STM32_SVD.USART is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -------------------
-   -- RTOR_Register --
-   -------------------
-
    subtype RTOR_RTO_Field is HAL.UInt24;
    subtype RTOR_BLEN_Field is HAL.Byte;
 
@@ -407,10 +371,6 @@ package STM32_SVD.USART is
       RTO  at 0 range 0 .. 23;
       BLEN at 0 range 24 .. 31;
    end record;
-
-   ------------------
-   -- RQR_Register --
-   ------------------
 
    --  Request register
    type RQR_Register is record
@@ -438,10 +398,6 @@ package STM32_SVD.USART is
       TXFRQ         at 0 range 4 .. 4;
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
-
-   ------------------
-   -- ISR_Register --
-   ------------------
 
    --  Interrupt & status register
    type ISR_Register is record
@@ -524,10 +480,6 @@ package STM32_SVD.USART is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   ------------------
-   -- ICR_Register --
-   ------------------
-
    --  Interrupt flag clear register
    type ICR_Register is record
       --  Write-only. Parity error clear flag
@@ -591,10 +543,6 @@ package STM32_SVD.USART is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
-   ------------------
-   -- RDR_Register --
-   ------------------
-
    subtype RDR_RDR_Field is HAL.UInt9;
 
    --  Receive data register
@@ -611,10 +559,6 @@ package STM32_SVD.USART is
       RDR           at 0 range 0 .. 8;
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
-
-   ------------------
-   -- TDR_Register --
-   ------------------
 
    subtype TDR_TDR_Field is HAL.UInt9;
 
@@ -679,14 +623,6 @@ package STM32_SVD.USART is
    end record;
 
    --  Universal synchronous asynchronous receiver transmitter
-   USART2_Periph : aliased USART_Peripheral
-     with Import, Address => USART2_Base;
-
-   --  Universal synchronous asynchronous receiver transmitter
-   USART3_Periph : aliased USART_Peripheral
-     with Import, Address => USART3_Base;
-
-   --  Universal synchronous asynchronous receiver transmitter
    UART4_Periph : aliased USART_Peripheral
      with Import, Address => UART4_Base;
 
@@ -705,6 +641,14 @@ package STM32_SVD.USART is
    --  Universal synchronous asynchronous receiver transmitter
    USART1_Periph : aliased USART_Peripheral
      with Import, Address => USART1_Base;
+
+   --  Universal synchronous asynchronous receiver transmitter
+   USART2_Periph : aliased USART_Peripheral
+     with Import, Address => USART2_Base;
+
+   --  Universal synchronous asynchronous receiver transmitter
+   USART3_Periph : aliased USART_Peripheral
+     with Import, Address => USART3_Base;
 
    --  Universal synchronous asynchronous receiver transmitter
    USART6_Periph : aliased USART_Peripheral

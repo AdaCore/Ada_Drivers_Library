@@ -13,10 +13,6 @@ package STM32_SVD.LTDC is
    -- Registers --
    ---------------
 
-   -------------------
-   -- SSCR_Register --
-   -------------------
-
    subtype SSCR_VSH_Field is HAL.UInt11;
    subtype SSCR_HSW_Field is HAL.UInt12;
 
@@ -40,10 +36,6 @@ package STM32_SVD.LTDC is
       HSW            at 0 range 16 .. 27;
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
-
-   -------------------
-   -- BPCR_Register --
-   -------------------
 
    subtype BPCR_AVBP_Field is HAL.UInt11;
    subtype BPCR_AHBP_Field is HAL.UInt12;
@@ -69,10 +61,6 @@ package STM32_SVD.LTDC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   -------------------
-   -- AWCR_Register --
-   -------------------
-
    subtype AWCR_AAH_Field is HAL.UInt11;
    subtype AWCR_AAW_Field is HAL.UInt12;
 
@@ -97,10 +85,6 @@ package STM32_SVD.LTDC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   -------------------
-   -- TWCR_Register --
-   -------------------
-
    subtype TWCR_TOTALH_Field is HAL.UInt11;
    subtype TWCR_TOTALW_Field is HAL.UInt12;
 
@@ -124,10 +108,6 @@ package STM32_SVD.LTDC is
       TOTALW         at 0 range 16 .. 27;
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
-
-   ------------------
-   -- GCR_Register --
-   ------------------
 
    subtype GCR_DBW_Field is HAL.UInt3;
    subtype GCR_DGW_Field is HAL.UInt3;
@@ -184,10 +164,6 @@ package STM32_SVD.LTDC is
       HSPOL          at 0 range 31 .. 31;
    end record;
 
-   -------------------
-   -- SRCR_Register --
-   -------------------
-
    --  Shadow Reload Configuration Register
    type SRCR_Register is record
       --  Immediate Reload
@@ -206,10 +182,6 @@ package STM32_SVD.LTDC is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   -------------------
-   -- BCCR_Register --
-   -------------------
-
    subtype BCCR_BC_Field is HAL.UInt24;
 
    --  Background Color Configuration Register
@@ -226,10 +198,6 @@ package STM32_SVD.LTDC is
       BC             at 0 range 0 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   ------------------
-   -- IER_Register --
-   ------------------
 
    --  Interrupt Enable Register
    type IER_Register is record
@@ -255,10 +223,6 @@ package STM32_SVD.LTDC is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
-   ------------------
-   -- ISR_Register --
-   ------------------
-
    --  Interrupt Status Register
    type ISR_Register is record
       --  Read-only. Line Interrupt flag
@@ -282,10 +246,6 @@ package STM32_SVD.LTDC is
       RRIF          at 0 range 3 .. 3;
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
-
-   ------------------
-   -- ICR_Register --
-   ------------------
 
    --  Interrupt Clear Register
    type ICR_Register is record
@@ -311,10 +271,6 @@ package STM32_SVD.LTDC is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
-   --------------------
-   -- LIPCR_Register --
-   --------------------
-
    subtype LIPCR_LIPOS_Field is HAL.UInt11;
 
    --  Line Interrupt Position Configuration Register
@@ -331,10 +287,6 @@ package STM32_SVD.LTDC is
       LIPOS          at 0 range 0 .. 10;
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
-
-   -------------------
-   -- CPSR_Register --
-   -------------------
 
    subtype CPSR_CYPOS_Field is HAL.Short;
    subtype CPSR_CXPOS_Field is HAL.Short;
@@ -353,10 +305,6 @@ package STM32_SVD.LTDC is
       CYPOS at 0 range 0 .. 15;
       CXPOS at 0 range 16 .. 31;
    end record;
-
-   -------------------
-   -- CDSR_Register --
-   -------------------
 
    --  Current Display Status Register
    type CDSR_Register is record
@@ -382,10 +330,6 @@ package STM32_SVD.LTDC is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
-   -------------------
-   -- L1CR_Register --
-   -------------------
-
    --  Layerx Control Register
    type L1CR_Register is record
       --  Layer Enable
@@ -409,10 +353,6 @@ package STM32_SVD.LTDC is
       CLUTEN        at 0 range 4 .. 4;
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
-
-   ----------------------
-   -- L1WHPCR_Register --
-   ----------------------
 
    subtype L1WHPCR_WHSTPOS_Field is HAL.UInt12;
    subtype L1WHPCR_WHSPPOS_Field is HAL.UInt12;
@@ -438,10 +378,6 @@ package STM32_SVD.LTDC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ----------------------
-   -- L1WVPCR_Register --
-   ----------------------
-
    subtype L1WVPCR_WVSTPOS_Field is HAL.UInt11;
    subtype L1WVPCR_WVSPPOS_Field is HAL.UInt11;
 
@@ -465,10 +401,6 @@ package STM32_SVD.LTDC is
       WVSPPOS        at 0 range 16 .. 26;
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
-
-   ---------------------
-   -- L1CKCR_Register --
-   ---------------------
 
    subtype L1CKCR_CKBLUE_Field is HAL.Byte;
    subtype L1CKCR_CKGREEN_Field is HAL.Byte;
@@ -495,10 +427,6 @@ package STM32_SVD.LTDC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   ---------------------
-   -- L1PFCR_Register --
-   ---------------------
-
    subtype L1PFCR_PF_Field is HAL.UInt3;
 
    --  Layerx Pixel Format Configuration Register
@@ -516,10 +444,6 @@ package STM32_SVD.LTDC is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   ---------------------
-   -- L1CACR_Register --
-   ---------------------
-
    subtype L1CACR_CONSTA_Field is HAL.Byte;
 
    --  Layerx Constant Alpha Configuration Register
@@ -536,10 +460,6 @@ package STM32_SVD.LTDC is
       CONSTA        at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   ---------------------
-   -- L1DCCR_Register --
-   ---------------------
 
    subtype L1DCCR_DCBLUE_Field is HAL.Byte;
    subtype L1DCCR_DCGREEN_Field is HAL.Byte;
@@ -567,10 +487,6 @@ package STM32_SVD.LTDC is
       DCALPHA at 0 range 24 .. 31;
    end record;
 
-   ---------------------
-   -- L1BFCR_Register --
-   ---------------------
-
    subtype L1BFCR_BF2_Field is HAL.UInt3;
    subtype L1BFCR_BF1_Field is HAL.UInt3;
 
@@ -594,10 +510,6 @@ package STM32_SVD.LTDC is
       BF1            at 0 range 8 .. 10;
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
-
-   ----------------------
-   -- L1CFBLR_Register --
-   ----------------------
 
    subtype L1CFBLR_CFBLL_Field is HAL.UInt13;
    subtype L1CFBLR_CFBP_Field is HAL.UInt13;
@@ -623,10 +535,6 @@ package STM32_SVD.LTDC is
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
-   -----------------------
-   -- L1CFBLNR_Register --
-   -----------------------
-
    subtype L1CFBLNR_CFBLNBR_Field is HAL.UInt11;
 
    --  Layerx ColorFrame Buffer Line Number Register
@@ -643,10 +551,6 @@ package STM32_SVD.LTDC is
       CFBLNBR        at 0 range 0 .. 10;
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
-
-   -----------------------
-   -- L1CLUTWR_Register --
-   -----------------------
 
    subtype L1CLUTWR_BLUE_Field is HAL.Byte;
    subtype L1CLUTWR_GREEN_Field is HAL.Byte;
@@ -674,10 +578,6 @@ package STM32_SVD.LTDC is
       CLUTADD at 0 range 24 .. 31;
    end record;
 
-   -------------------
-   -- L2CR_Register --
-   -------------------
-
    --  Layerx Control Register
    type L2CR_Register is record
       --  Layer Enable
@@ -701,10 +601,6 @@ package STM32_SVD.LTDC is
       CLUTEN        at 0 range 4 .. 4;
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
-
-   ----------------------
-   -- L2WHPCR_Register --
-   ----------------------
 
    subtype L2WHPCR_WHSTPOS_Field is HAL.UInt12;
    subtype L2WHPCR_WHSPPOS_Field is HAL.UInt12;
@@ -730,10 +626,6 @@ package STM32_SVD.LTDC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ----------------------
-   -- L2WVPCR_Register --
-   ----------------------
-
    subtype L2WVPCR_WVSTPOS_Field is HAL.UInt11;
    subtype L2WVPCR_WVSPPOS_Field is HAL.UInt11;
 
@@ -757,10 +649,6 @@ package STM32_SVD.LTDC is
       WVSPPOS        at 0 range 16 .. 26;
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
-
-   ---------------------
-   -- L2CKCR_Register --
-   ---------------------
 
    subtype L2CKCR_CKBLUE_Field is HAL.Byte;
    subtype L2CKCR_CKGREEN_Field is HAL.UInt7;
@@ -787,10 +675,6 @@ package STM32_SVD.LTDC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   ---------------------
-   -- L2PFCR_Register --
-   ---------------------
-
    subtype L2PFCR_PF_Field is HAL.UInt3;
 
    --  Layerx Pixel Format Configuration Register
@@ -808,10 +692,6 @@ package STM32_SVD.LTDC is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   ---------------------
-   -- L2CACR_Register --
-   ---------------------
-
    subtype L2CACR_CONSTA_Field is HAL.Byte;
 
    --  Layerx Constant Alpha Configuration Register
@@ -828,10 +708,6 @@ package STM32_SVD.LTDC is
       CONSTA        at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   ---------------------
-   -- L2DCCR_Register --
-   ---------------------
 
    subtype L2DCCR_DCBLUE_Field is HAL.Byte;
    subtype L2DCCR_DCGREEN_Field is HAL.Byte;
@@ -859,10 +735,6 @@ package STM32_SVD.LTDC is
       DCALPHA at 0 range 24 .. 31;
    end record;
 
-   ---------------------
-   -- L2BFCR_Register --
-   ---------------------
-
    subtype L2BFCR_BF2_Field is HAL.UInt3;
    subtype L2BFCR_BF1_Field is HAL.UInt3;
 
@@ -886,10 +758,6 @@ package STM32_SVD.LTDC is
       BF1            at 0 range 8 .. 10;
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
-
-   ----------------------
-   -- L2CFBLR_Register --
-   ----------------------
 
    subtype L2CFBLR_CFBLL_Field is HAL.UInt13;
    subtype L2CFBLR_CFBP_Field is HAL.UInt13;
@@ -915,10 +783,6 @@ package STM32_SVD.LTDC is
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
-   -----------------------
-   -- L2CFBLNR_Register --
-   -----------------------
-
    subtype L2CFBLNR_CFBLNBR_Field is HAL.UInt11;
 
    --  Layerx ColorFrame Buffer Line Number Register
@@ -935,10 +799,6 @@ package STM32_SVD.LTDC is
       CFBLNBR        at 0 range 0 .. 10;
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
-
-   -----------------------
-   -- L2CLUTWR_Register --
-   -----------------------
 
    subtype L2CLUTWR_BLUE_Field is HAL.Byte;
    subtype L2CLUTWR_GREEN_Field is HAL.Byte;

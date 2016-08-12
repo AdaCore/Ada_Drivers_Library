@@ -13,14 +13,6 @@ package STM32_SVD.EXTI is
    -- Registers --
    ---------------
 
-   ------------------
-   -- IMR_Register --
-   ------------------
-
-   ------------
-   -- IMR.MR --
-   ------------
-
    --  IMR_MR array
    type IMR_MR_Field_Array is array (0 .. 22) of Boolean
      with Component_Size => 1, Size => 23;
@@ -59,14 +51,6 @@ package STM32_SVD.EXTI is
       MR             at 0 range 0 .. 22;
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
-
-   ------------------
-   -- EMR_Register --
-   ------------------
-
-   ------------
-   -- EMR.MR --
-   ------------
 
    --  EMR_MR array
    type EMR_MR_Field_Array is array (0 .. 22) of Boolean
@@ -107,14 +91,6 @@ package STM32_SVD.EXTI is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   -------------------
-   -- RTSR_Register --
-   -------------------
-
-   -------------
-   -- RTSR.TR --
-   -------------
-
    --  RTSR_TR array
    type RTSR_TR_Field_Array is array (0 .. 22) of Boolean
      with Component_Size => 1, Size => 23;
@@ -153,14 +129,6 @@ package STM32_SVD.EXTI is
       TR             at 0 range 0 .. 22;
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
-
-   -------------------
-   -- FTSR_Register --
-   -------------------
-
-   -------------
-   -- FTSR.TR --
-   -------------
 
    --  FTSR_TR array
    type FTSR_TR_Field_Array is array (0 .. 22) of Boolean
@@ -201,14 +169,6 @@ package STM32_SVD.EXTI is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   --------------------
-   -- SWIER_Register --
-   --------------------
-
-   -----------------
-   -- SWIER.SWIER --
-   -----------------
-
    --  SWIER array
    type SWIER_Field_Array is array (0 .. 22) of Boolean
      with Component_Size => 1, Size => 23;
@@ -247,14 +207,6 @@ package STM32_SVD.EXTI is
       SWIER          at 0 range 0 .. 22;
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
-
-   -----------------
-   -- PR_Register --
-   -----------------
-
-   -----------
-   -- PR.PR --
-   -----------
 
    --  PR array
    type PR_Field_Array is array (0 .. 22) of Boolean

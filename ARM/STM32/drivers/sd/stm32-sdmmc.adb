@@ -55,16 +55,16 @@ package body STM32.SDMMC is
      (Controller         : in out SDMMC_Controller;
       Command_Index      : SDMMC_Command;
       Argument           : Word;
-      Response           : WAITRESP_Field;
+      Response           : CMD_WAITRESP_Field;
       CPSM               : Boolean;
       Wait_For_Interrupt : Boolean);
 
    procedure Configure_Data
      (Controller         : in out SDMMC_Controller;
       Data_Length        : UInt25;
-      Data_Block_Size    : DBLOCKSIZE_Field;
+      Data_Block_Size    : DCTRL_DBLOCKSIZE_Field;
       Transfer_Direction : Data_Direction;
-      Transfer_Mode      : DTMODE_Field;
+      Transfer_Mode      : DCTRL_DTMODE_Field;
       DPSM               : Boolean;
       DMA_Enabled        : Boolean);
 
@@ -246,7 +246,7 @@ package body STM32.SDMMC is
      (Controller         : in out SDMMC_Controller;
       Command_Index      : SDMMC_Command;
       Argument           : Word;
-      Response           : WAITRESP_Field;
+      Response           : CMD_WAITRESP_Field;
       CPSM               : Boolean;
       Wait_For_Interrupt : Boolean)
    is
@@ -267,9 +267,9 @@ package body STM32.SDMMC is
    procedure Configure_Data
      (Controller         : in out SDMMC_Controller;
       Data_Length        : UInt25;
-      Data_Block_Size    : DBLOCKSIZE_Field;
+      Data_Block_Size    : DCTRL_DBLOCKSIZE_Field;
       Transfer_Direction : Data_Direction;
-      Transfer_Mode      : DTMODE_Field;
+      Transfer_Mode      : DCTRL_DTMODE_Field;
       DPSM               : Boolean;
       DMA_Enabled        : Boolean)
    is
@@ -1352,7 +1352,7 @@ package body STM32.SDMMC is
       Wide_Mode  : Wide_Bus_Mode) return SD_Error
    is
       function To_WIDBUS_Field is new Ada.Unchecked_Conversion
-        (Wide_Bus_Mode, WIDBUS_Field);
+        (Wide_Bus_Mode, CLKCR_WIDBUS_Field);
       Err : SD_Error;
    begin
       if Controller.Card_Type = STD_Capacity_SD_Card_V1_1

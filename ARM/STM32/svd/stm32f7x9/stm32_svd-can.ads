@@ -13,10 +13,6 @@ package STM32_SVD.CAN is
    -- Registers --
    ---------------
 
-   ------------------
-   -- MCR_Register --
-   ------------------
-
    --  master control register
    type MCR_Register is record
       --  INRQ
@@ -62,10 +58,6 @@ package STM32_SVD.CAN is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
-   ------------------
-   -- MSR_Register --
-   ------------------
-
    --  master status register
    type MSR_Register is record
       --  Read-only. INAK
@@ -108,15 +100,7 @@ package STM32_SVD.CAN is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   ------------------
-   -- TSR_Register --
-   ------------------
-
    subtype TSR_CODE_Field is HAL.UInt2;
-
-   -------------
-   -- TSR.TME --
-   -------------
 
    --  TSR_TME array
    type TSR_TME_Field_Array is array (0 .. 2) of Boolean
@@ -141,10 +125,6 @@ package STM32_SVD.CAN is
       Val at 0 range 0 .. 2;
       Arr at 0 range 0 .. 2;
    end record;
-
-   -------------
-   -- TSR.LOW --
-   -------------
 
    --  TSR_LOW array
    type TSR_LOW_Field_Array is array (0 .. 2) of Boolean
@@ -242,10 +222,6 @@ package STM32_SVD.CAN is
       LOW            at 0 range 29 .. 31;
    end record;
 
-   -------------------
-   -- RF0R_Register --
-   -------------------
-
    subtype RF0R_FMP0_Field is HAL.UInt2;
 
    --  receive FIFO 0 register
@@ -275,10 +251,6 @@ package STM32_SVD.CAN is
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
 
-   -------------------
-   -- RF1R_Register --
-   -------------------
-
    subtype RF1R_FMP1_Field is HAL.UInt2;
 
    --  receive FIFO 1 register
@@ -307,10 +279,6 @@ package STM32_SVD.CAN is
       RFOM1         at 0 range 5 .. 5;
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
-
-   ------------------
-   -- IER_Register --
-   ------------------
 
    --  interrupt enable register
    type IER_Register is record
@@ -372,10 +340,6 @@ package STM32_SVD.CAN is
       Reserved_18_31 at 0 range 18 .. 31;
    end record;
 
-   ------------------
-   -- ESR_Register --
-   ------------------
-
    subtype ESR_LEC_Field is HAL.UInt3;
    subtype ESR_TEC_Field is HAL.Byte;
    subtype ESR_REC_Field is HAL.Byte;
@@ -412,10 +376,6 @@ package STM32_SVD.CAN is
       TEC           at 0 range 16 .. 23;
       REC           at 0 range 24 .. 31;
    end record;
-
-   ------------------
-   -- BTR_Register --
-   ------------------
 
    subtype BTR_BRP_Field is HAL.UInt10;
    subtype BTR_TS1_Field is HAL.UInt4;
@@ -458,10 +418,6 @@ package STM32_SVD.CAN is
       SILM           at 0 range 31 .. 31;
    end record;
 
-   -------------------
-   -- TI0R_Register --
-   -------------------
-
    subtype TI0R_EXID_Field is HAL.UInt18;
    subtype TI0R_STID_Field is HAL.UInt11;
 
@@ -489,10 +445,6 @@ package STM32_SVD.CAN is
       STID at 0 range 21 .. 31;
    end record;
 
-   --------------------
-   -- TDT0R_Register --
-   --------------------
-
    subtype TDT0R_DLC_Field is HAL.UInt4;
    subtype TDT0R_TIME_Field is HAL.Short;
 
@@ -519,10 +471,6 @@ package STM32_SVD.CAN is
       Reserved_9_15 at 0 range 9 .. 15;
       TIME          at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- TDL0R_Register --
-   --------------------
 
    --  TDL0R_DATA array element
    subtype TDL0R_DATA_Element is HAL.Byte;
@@ -552,10 +500,6 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   --------------------
-   -- TDH0R_Register --
-   --------------------
-
    --  TDH0R_DATA array element
    subtype TDH0R_DATA_Element is HAL.Byte;
 
@@ -584,10 +528,6 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- TI1R_Register --
-   -------------------
-
    subtype TI1R_EXID_Field is HAL.UInt18;
    subtype TI1R_STID_Field is HAL.UInt11;
 
@@ -615,10 +555,6 @@ package STM32_SVD.CAN is
       STID at 0 range 21 .. 31;
    end record;
 
-   --------------------
-   -- TDT1R_Register --
-   --------------------
-
    subtype TDT1R_DLC_Field is HAL.UInt4;
    subtype TDT1R_TIME_Field is HAL.Short;
 
@@ -645,10 +581,6 @@ package STM32_SVD.CAN is
       Reserved_9_15 at 0 range 9 .. 15;
       TIME          at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- TDL1R_Register --
-   --------------------
 
    --  TDL1R_DATA array element
    subtype TDL1R_DATA_Element is HAL.Byte;
@@ -678,10 +610,6 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   --------------------
-   -- TDH1R_Register --
-   --------------------
-
    --  TDH1R_DATA array element
    subtype TDH1R_DATA_Element is HAL.Byte;
 
@@ -710,10 +638,6 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- TI2R_Register --
-   -------------------
-
    subtype TI2R_EXID_Field is HAL.UInt18;
    subtype TI2R_STID_Field is HAL.UInt11;
 
@@ -741,10 +665,6 @@ package STM32_SVD.CAN is
       STID at 0 range 21 .. 31;
    end record;
 
-   --------------------
-   -- TDT2R_Register --
-   --------------------
-
    subtype TDT2R_DLC_Field is HAL.UInt4;
    subtype TDT2R_TIME_Field is HAL.Short;
 
@@ -771,10 +691,6 @@ package STM32_SVD.CAN is
       Reserved_9_15 at 0 range 9 .. 15;
       TIME          at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- TDL2R_Register --
-   --------------------
 
    --  TDL2R_DATA array element
    subtype TDL2R_DATA_Element is HAL.Byte;
@@ -804,10 +720,6 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   --------------------
-   -- TDH2R_Register --
-   --------------------
-
    --  TDH2R_DATA array element
    subtype TDH2R_DATA_Element is HAL.Byte;
 
@@ -836,10 +748,6 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- RI0R_Register --
-   -------------------
-
    subtype RI0R_EXID_Field is HAL.UInt18;
    subtype RI0R_STID_Field is HAL.UInt11;
 
@@ -867,10 +775,6 @@ package STM32_SVD.CAN is
       STID         at 0 range 21 .. 31;
    end record;
 
-   --------------------
-   -- RDT0R_Register --
-   --------------------
-
    subtype RDT0R_DLC_Field is HAL.UInt4;
    subtype RDT0R_FMI_Field is HAL.Byte;
    subtype RDT0R_TIME_Field is HAL.Short;
@@ -895,10 +799,6 @@ package STM32_SVD.CAN is
       FMI          at 0 range 8 .. 15;
       TIME         at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- RDL0R_Register --
-   --------------------
 
    --  RDL0R_DATA array element
    subtype RDL0R_DATA_Element is HAL.Byte;
@@ -928,10 +828,6 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   --------------------
-   -- RDH0R_Register --
-   --------------------
-
    --  RDH0R_DATA array element
    subtype RDH0R_DATA_Element is HAL.Byte;
 
@@ -960,10 +856,6 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- RI1R_Register --
-   -------------------
-
    subtype RI1R_EXID_Field is HAL.UInt18;
    subtype RI1R_STID_Field is HAL.UInt11;
 
@@ -991,10 +883,6 @@ package STM32_SVD.CAN is
       STID         at 0 range 21 .. 31;
    end record;
 
-   --------------------
-   -- RDT1R_Register --
-   --------------------
-
    subtype RDT1R_DLC_Field is HAL.UInt4;
    subtype RDT1R_FMI_Field is HAL.Byte;
    subtype RDT1R_TIME_Field is HAL.Short;
@@ -1019,10 +907,6 @@ package STM32_SVD.CAN is
       FMI          at 0 range 8 .. 15;
       TIME         at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- RDL1R_Register --
-   --------------------
 
    --  RDL1R_DATA array element
    subtype RDL1R_DATA_Element is HAL.Byte;
@@ -1052,10 +936,6 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   --------------------
-   -- RDH1R_Register --
-   --------------------
-
    --  RDH1R_DATA array element
    subtype RDH1R_DATA_Element is HAL.Byte;
 
@@ -1084,10 +964,6 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------
-   -- FMR_Register --
-   ------------------
-
    subtype FMR_CAN2SB_Field is HAL.UInt6;
 
    --  filter master register
@@ -1110,14 +986,6 @@ package STM32_SVD.CAN is
       CAN2SB         at 0 range 8 .. 13;
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
-
-   -------------------
-   -- FM1R_Register --
-   -------------------
-
-   --------------
-   -- FM1R.FBM --
-   --------------
 
    --  FM1R_FBM array
    type FM1R_FBM_Field_Array is array (0 .. 27) of Boolean
@@ -1158,14 +1026,6 @@ package STM32_SVD.CAN is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   -------------------
-   -- FS1R_Register --
-   -------------------
-
-   --------------
-   -- FS1R.FSC --
-   --------------
-
    --  FS1R_FSC array
    type FS1R_FSC_Field_Array is array (0 .. 27) of Boolean
      with Component_Size => 1, Size => 28;
@@ -1204,14 +1064,6 @@ package STM32_SVD.CAN is
       FSC            at 0 range 0 .. 27;
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
-
-   --------------------
-   -- FFA1R_Register --
-   --------------------
-
-   ---------------
-   -- FFA1R.FFA --
-   ---------------
 
    --  FFA1R_FFA array
    type FFA1R_FFA_Field_Array is array (0 .. 27) of Boolean
@@ -1252,14 +1104,6 @@ package STM32_SVD.CAN is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   -------------------
-   -- FA1R_Register --
-   -------------------
-
-   ---------------
-   -- FA1R.FACT --
-   ---------------
-
    --  FA1R_FACT array
    type FA1R_FACT_Field_Array is array (0 .. 27) of Boolean
      with Component_Size => 1, Size => 28;
@@ -1299,12 +1143,8 @@ package STM32_SVD.CAN is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ------------------
-   -- F0R_Register --
-   ------------------
-
-   --  F0R1_FB array
-   type F0R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F0R_FB array
+   type F0R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 0 register 1
@@ -1317,7 +1157,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F0R1_FB_Field_Array;
+            Arr : F0R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1328,12 +1168,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------
-   -- F1R_Register --
-   ------------------
-
-   --  F1R1_FB array
-   type F1R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F1R_FB array
+   type F1R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 1 register 1
@@ -1346,7 +1182,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F1R1_FB_Field_Array;
+            Arr : F1R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1357,12 +1193,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------
-   -- F2R_Register --
-   ------------------
-
-   --  F2R1_FB array
-   type F2R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F2R_FB array
+   type F2R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 2 register 1
@@ -1375,7 +1207,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F2R1_FB_Field_Array;
+            Arr : F2R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1386,12 +1218,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------
-   -- F3R_Register --
-   ------------------
-
-   --  F3R1_FB array
-   type F3R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F3R_FB array
+   type F3R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 3 register 1
@@ -1404,7 +1232,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F3R1_FB_Field_Array;
+            Arr : F3R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1415,12 +1243,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------
-   -- F4R_Register --
-   ------------------
-
-   --  F4R1_FB array
-   type F4R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F4R_FB array
+   type F4R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 4 register 1
@@ -1433,7 +1257,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F4R1_FB_Field_Array;
+            Arr : F4R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1444,12 +1268,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------
-   -- F5R_Register --
-   ------------------
-
-   --  F5R1_FB array
-   type F5R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F5R_FB array
+   type F5R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 5 register 1
@@ -1462,7 +1282,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F5R1_FB_Field_Array;
+            Arr : F5R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1473,12 +1293,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------
-   -- F6R_Register --
-   ------------------
-
-   --  F6R1_FB array
-   type F6R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F6R_FB array
+   type F6R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 6 register 1
@@ -1491,7 +1307,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F6R1_FB_Field_Array;
+            Arr : F6R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1502,12 +1318,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------
-   -- F7R_Register --
-   ------------------
-
-   --  F7R1_FB array
-   type F7R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F7R_FB array
+   type F7R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 7 register 1
@@ -1520,7 +1332,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F7R1_FB_Field_Array;
+            Arr : F7R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1531,12 +1343,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------
-   -- F8R_Register --
-   ------------------
-
-   --  F8R1_FB array
-   type F8R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F8R_FB array
+   type F8R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 8 register 1
@@ -1549,7 +1357,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F8R1_FB_Field_Array;
+            Arr : F8R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1560,12 +1368,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------
-   -- F9R_Register --
-   ------------------
-
-   --  F9R1_FB array
-   type F9R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F9R_FB array
+   type F9R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 9 register 1
@@ -1578,7 +1382,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F9R1_FB_Field_Array;
+            Arr : F9R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1589,12 +1393,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F10R_Register --
-   -------------------
-
-   --  F10R1_FB array
-   type F10R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F10R_FB array
+   type F10R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 10 register 1
@@ -1607,7 +1407,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F10R1_FB_Field_Array;
+            Arr : F10R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1618,12 +1418,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F11R_Register --
-   -------------------
-
-   --  F11R1_FB array
-   type F11R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F11R_FB array
+   type F11R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 11 register 1
@@ -1636,7 +1432,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F11R1_FB_Field_Array;
+            Arr : F11R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1647,12 +1443,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F12R_Register --
-   -------------------
-
-   --  F12R1_FB array
-   type F12R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F12R_FB array
+   type F12R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 4 register 1
@@ -1665,7 +1457,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F12R1_FB_Field_Array;
+            Arr : F12R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1676,12 +1468,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F13R_Register --
-   -------------------
-
-   --  F13R1_FB array
-   type F13R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F13R_FB array
+   type F13R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 13 register 1
@@ -1694,7 +1482,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F13R1_FB_Field_Array;
+            Arr : F13R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1705,12 +1493,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F14R_Register --
-   -------------------
-
-   --  F14R1_FB array
-   type F14R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F14R_FB array
+   type F14R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 14 register 1
@@ -1723,7 +1507,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F14R1_FB_Field_Array;
+            Arr : F14R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1734,12 +1518,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F15R_Register --
-   -------------------
-
-   --  F15R1_FB array
-   type F15R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F15R_FB array
+   type F15R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 15 register 1
@@ -1752,7 +1532,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F15R1_FB_Field_Array;
+            Arr : F15R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1763,12 +1543,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F16R_Register --
-   -------------------
-
-   --  F16R1_FB array
-   type F16R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F16R_FB array
+   type F16R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 16 register 1
@@ -1781,7 +1557,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F16R1_FB_Field_Array;
+            Arr : F16R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1792,12 +1568,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F17R_Register --
-   -------------------
-
-   --  F17R1_FB array
-   type F17R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F17R_FB array
+   type F17R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 17 register 1
@@ -1810,7 +1582,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F17R1_FB_Field_Array;
+            Arr : F17R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1821,12 +1593,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F18R_Register --
-   -------------------
-
-   --  F18R1_FB array
-   type F18R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F18R_FB array
+   type F18R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 18 register 1
@@ -1839,7 +1607,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F18R1_FB_Field_Array;
+            Arr : F18R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1850,12 +1618,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F19R_Register --
-   -------------------
-
-   --  F19R1_FB array
-   type F19R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F19R_FB array
+   type F19R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 19 register 1
@@ -1868,7 +1632,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F19R1_FB_Field_Array;
+            Arr : F19R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1879,12 +1643,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F20R_Register --
-   -------------------
-
-   --  F20R1_FB array
-   type F20R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F20R_FB array
+   type F20R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 20 register 1
@@ -1897,7 +1657,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F20R1_FB_Field_Array;
+            Arr : F20R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1908,12 +1668,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F21R_Register --
-   -------------------
-
-   --  F21R1_FB array
-   type F21R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F21R_FB array
+   type F21R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 21 register 1
@@ -1926,7 +1682,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F21R1_FB_Field_Array;
+            Arr : F21R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1937,12 +1693,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F22R_Register --
-   -------------------
-
-   --  F22R1_FB array
-   type F22R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F22R_FB array
+   type F22R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 22 register 1
@@ -1955,7 +1707,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F22R1_FB_Field_Array;
+            Arr : F22R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1966,12 +1718,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F23R_Register --
-   -------------------
-
-   --  F23R1_FB array
-   type F23R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F23R_FB array
+   type F23R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 23 register 1
@@ -1984,7 +1732,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F23R1_FB_Field_Array;
+            Arr : F23R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -1995,12 +1743,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F24R_Register --
-   -------------------
-
-   --  F24R1_FB array
-   type F24R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F24R_FB array
+   type F24R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 24 register 1
@@ -2013,7 +1757,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F24R1_FB_Field_Array;
+            Arr : F24R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -2024,12 +1768,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F25R_Register --
-   -------------------
-
-   --  F25R1_FB array
-   type F25R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F25R_FB array
+   type F25R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 25 register 1
@@ -2042,7 +1782,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F25R1_FB_Field_Array;
+            Arr : F25R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -2053,12 +1793,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F26R_Register --
-   -------------------
-
-   --  F26R1_FB array
-   type F26R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F26R_FB array
+   type F26R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 26 register 1
@@ -2071,7 +1807,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F26R1_FB_Field_Array;
+            Arr : F26R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -2082,12 +1818,8 @@ package STM32_SVD.CAN is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- F27R_Register --
-   -------------------
-
-   --  F27R1_FB array
-   type F27R1_FB_Field_Array is array (0 .. 31) of Boolean
+   --  F27R_FB array
+   type F27R_FB_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
 
    --  Filter bank 27 register 1
@@ -2100,7 +1832,7 @@ package STM32_SVD.CAN is
             Val : HAL.Word;
          when True =>
             --  FB as an array
-            Arr : F27R1_FB_Field_Array;
+            Arr : F27R_FB_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -2391,15 +2123,15 @@ package STM32_SVD.CAN is
    end record;
 
    --  Controller area network
-   CAN3_Periph : aliased CAN_Peripheral
-     with Import, Address => CAN3_Base;
-
-   --  Controller area network
    CAN1_Periph : aliased CAN_Peripheral
      with Import, Address => CAN1_Base;
 
    --  Controller area network
    CAN2_Periph : aliased CAN_Peripheral
      with Import, Address => CAN2_Base;
+
+   --  Controller area network
+   CAN3_Periph : aliased CAN_Peripheral
+     with Import, Address => CAN3_Base;
 
 end STM32_SVD.CAN;

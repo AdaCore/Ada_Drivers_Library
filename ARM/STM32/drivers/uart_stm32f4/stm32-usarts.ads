@@ -263,7 +263,7 @@ private
    --  the F429I Discovery board, they better conform to that assumption.
    --  See Note # 2 in each of Tables 139-141 of the RM on pages 970 - 972.
 
-   type Internal_USART is new STM32_SVD.USART.USART2_Peripheral;
+   type Internal_USART is new STM32_SVD.USART.USART1_Peripheral;
 
    type USART (Periph : not null access Internal_USART) is
      limited new HAL.UART.UART_Port with null record;

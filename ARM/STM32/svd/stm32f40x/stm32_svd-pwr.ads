@@ -13,10 +13,6 @@ package STM32_SVD.PWR is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    subtype CR_PLS_Field is HAL.UInt3;
 
    --  power control register
@@ -60,10 +56,6 @@ package STM32_SVD.PWR is
       VOS            at 0 range 14 .. 14;
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
-
-   ------------------
-   -- CSR_Register --
-   ------------------
 
    --  power control/status register
    type CSR_Register is record

@@ -13,9 +13,731 @@ package STM32_SVD.USB_OTG_FS is
    -- Registers --
    ---------------
 
-   -------------------------
-   -- FS_GOTGCTL_Register --
-   -------------------------
+   subtype FS_DCFG_DSPD_Field is HAL.UInt2;
+   subtype FS_DCFG_DAD_Field is HAL.UInt7;
+   subtype FS_DCFG_PFIVL_Field is HAL.UInt2;
+
+   --  OTG_FS device configuration register (OTG_FS_DCFG)
+   type FS_DCFG_Register is record
+      --  Device speed
+      DSPD           : FS_DCFG_DSPD_Field := 16#0#;
+      --  Non-zero-length status OUT handshake
+      NZLSOHSK       : Boolean := False;
+      --  unspecified
+      Reserved_3_3   : HAL.Bit := 16#0#;
+      --  Device address
+      DAD            : FS_DCFG_DAD_Field := 16#0#;
+      --  Periodic frame interval
+      PFIVL          : FS_DCFG_PFIVL_Field := 16#0#;
+      --  unspecified
+      Reserved_13_31 : HAL.UInt19 := 16#1100#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for FS_DCFG_Register use record
+      DSPD           at 0 range 0 .. 1;
+      NZLSOHSK       at 0 range 2 .. 2;
+      Reserved_3_3   at 0 range 3 .. 3;
+      DAD            at 0 range 4 .. 10;
+      PFIVL          at 0 range 11 .. 12;
+      Reserved_13_31 at 0 range 13 .. 31;
+   end record;
+
+   subtype FS_DCTL_TCTL_Field is HAL.UInt3;
+
+   --  OTG_FS device control register (OTG_FS_DCTL)
+   type FS_DCTL_Register is record
+      --  Remote wakeup signaling
+      RWUSIG         : Boolean := False;
+      --  Soft disconnect
+      SDIS           : Boolean := False;
+      --  Read-only. Global IN NAK status
+      GINSTS         : Boolean := False;
+      --  Read-only. Global OUT NAK status
+      GONSTS         : Boolean := False;
+      --  Test control
+      TCTL           : FS_DCTL_TCTL_Field := 16#0#;
+      --  Set global IN NAK
+      SGINAK         : Boolean := False;
+      --  Clear global IN NAK
+      CGINAK         : Boolean := False;
+      --  Set global OUT NAK
+      SGONAK         : Boolean := False;
+      --  Clear global OUT NAK
+      CGONAK         : Boolean := False;
+      --  Power-on programming done
+      POPRGDNE       : Boolean := False;
+      --  unspecified
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for FS_DCTL_Register use record
+      RWUSIG         at 0 range 0 .. 0;
+      SDIS           at 0 range 1 .. 1;
+      GINSTS         at 0 range 2 .. 2;
+      GONSTS         at 0 range 3 .. 3;
+      TCTL           at 0 range 4 .. 6;
+      SGINAK         at 0 range 7 .. 7;
+      CGINAK         at 0 range 8 .. 8;
+      SGONAK         at 0 range 9 .. 9;
+      CGONAK         at 0 range 10 .. 10;
+      POPRGDNE       at 0 range 11 .. 11;
+      Reserved_12_31 at 0 range 12 .. 31;
+   end record;
+
+   subtype FS_DSTS_ENUMSPD_Field is HAL.UInt2;
+   subtype FS_DSTS_FNSOF_Field is HAL.UInt14;
+
+   --  OTG_FS device status register (OTG_FS_DSTS)
+   type FS_DSTS_Register is record
+      --  Read-only. Suspend status
+      SUSPSTS        : Boolean;
+      --  Read-only. Enumerated speed
+      ENUMSPD        : FS_DSTS_ENUMSPD_Field;
+      --  Read-only. Erratic error
+      EERR           : Boolean;
+      --  unspecified
+      Reserved_4_7   : HAL.UInt4;
+      --  Read-only. Frame number of the received SOF
+      FNSOF          : FS_DSTS_FNSOF_Field;
+      --  unspecified
+      Reserved_22_31 : HAL.UInt10;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for FS_DSTS_Register use record
+      SUSPSTS        at 0 range 0 .. 0;
+      ENUMSPD        at 0 range 1 .. 2;
+      EERR           at 0 range 3 .. 3;
+      Reserved_4_7   at 0 range 4 .. 7;
+      FNSOF          at 0 range 8 .. 21;
+      Reserved_22_31 at 0 range 22 .. 31;
+   end record;
+
+   --  OTG_FS device IN endpoint common interrupt mask register
+   --  (OTG_FS_DIEPMSK)
+   type FS_DIEPMSK_Register is record
+      --  Transfer completed interrupt mask
+      XFRCM         : Boolean := False;
+      --  Endpoint disabled interrupt mask
+      EPDM          : Boolean := False;
+      --  unspecified
+      Reserved_2_2  : HAL.Bit := 16#0#;
+      --  Timeout condition mask (Non-isochronous endpoints)
+      TOM           : Boolean := False;
+      --  IN token received when TxFIFO empty mask
+      ITTXFEMSK     : Boolean := False;
+      --  IN token received with EP mismatch mask
+      INEPNMM       : Boolean := False;
+      --  IN endpoint NAK effective mask
+      INEPNEM       : Boolean := False;
+      --  unspecified
+      Reserved_7_31 : HAL.UInt25 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for FS_DIEPMSK_Register use record
+      XFRCM         at 0 range 0 .. 0;
+      EPDM          at 0 range 1 .. 1;
+      Reserved_2_2  at 0 range 2 .. 2;
+      TOM           at 0 range 3 .. 3;
+      ITTXFEMSK     at 0 range 4 .. 4;
+      INEPNMM       at 0 range 5 .. 5;
+      INEPNEM       at 0 range 6 .. 6;
+      Reserved_7_31 at 0 range 7 .. 31;
+   end record;
+
+   --  OTG_FS device OUT endpoint common interrupt mask register
+   --  (OTG_FS_DOEPMSK)
+   type FS_DOEPMSK_Register is record
+      --  Transfer completed interrupt mask
+      XFRCM         : Boolean := False;
+      --  Endpoint disabled interrupt mask
+      EPDM          : Boolean := False;
+      --  unspecified
+      Reserved_2_2  : HAL.Bit := 16#0#;
+      --  SETUP phase done mask
+      STUPM         : Boolean := False;
+      --  OUT token received when endpoint disabled mask
+      OTEPDM        : Boolean := False;
+      --  unspecified
+      Reserved_5_31 : HAL.UInt27 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for FS_DOEPMSK_Register use record
+      XFRCM         at 0 range 0 .. 0;
+      EPDM          at 0 range 1 .. 1;
+      Reserved_2_2  at 0 range 2 .. 2;
+      STUPM         at 0 range 3 .. 3;
+      OTEPDM        at 0 range 4 .. 4;
+      Reserved_5_31 at 0 range 5 .. 31;
+   end record;
+
+   subtype FS_DAINT_IEPINT_Field is HAL.Short;
+   subtype FS_DAINT_OEPINT_Field is HAL.Short;
+
+   --  OTG_FS device all endpoints interrupt register (OTG_FS_DAINT)
+   type FS_DAINT_Register is record
+      --  Read-only. IN endpoint interrupt bits
+      IEPINT : FS_DAINT_IEPINT_Field;
+      --  Read-only. OUT endpoint interrupt bits
+      OEPINT : FS_DAINT_OEPINT_Field;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for FS_DAINT_Register use record
+      IEPINT at 0 range 0 .. 15;
+      OEPINT at 0 range 16 .. 31;
+   end record;
+
+   subtype FS_DAINTMSK_IEPM_Field is HAL.Short;
+   subtype FS_DAINTMSK_OEPINT_Field is HAL.Short;
+
+   --  OTG_FS all endpoints interrupt mask register (OTG_FS_DAINTMSK)
+   type FS_DAINTMSK_Register is record
+      --  IN EP interrupt mask bits
+      IEPM   : FS_DAINTMSK_IEPM_Field := 16#0#;
+      --  OUT endpoint interrupt bits
+      OEPINT : FS_DAINTMSK_OEPINT_Field := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for FS_DAINTMSK_Register use record
+      IEPM   at 0 range 0 .. 15;
+      OEPINT at 0 range 16 .. 31;
+   end record;
+
+   subtype DVBUSDIS_VBUSDT_Field is HAL.Short;
+
+   --  OTG_FS device VBUS discharge time register
+   type DVBUSDIS_Register is record
+      --  Device VBUS discharge time
+      VBUSDT         : DVBUSDIS_VBUSDT_Field := 16#17D7#;
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DVBUSDIS_Register use record
+      VBUSDT         at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   subtype DVBUSPULSE_DVBUSP_Field is HAL.UInt12;
+
+   --  OTG_FS device VBUS pulsing time register
+   type DVBUSPULSE_Register is record
+      --  Device VBUS pulsing time
+      DVBUSP         : DVBUSPULSE_DVBUSP_Field := 16#5B8#;
+      --  unspecified
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DVBUSPULSE_Register use record
+      DVBUSP         at 0 range 0 .. 11;
+      Reserved_12_31 at 0 range 12 .. 31;
+   end record;
+
+   subtype DIEPEMPMSK_INEPTXFEM_Field is HAL.Short;
+
+   --  OTG_FS device IN endpoint FIFO empty interrupt mask register
+   type DIEPEMPMSK_Register is record
+      --  IN EP Tx FIFO empty interrupt mask bits
+      INEPTXFEM      : DIEPEMPMSK_INEPTXFEM_Field := 16#0#;
+      --  unspecified
+      Reserved_16_31 : HAL.Short := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DIEPEMPMSK_Register use record
+      INEPTXFEM      at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   subtype FS_DIEPCTL0_MPSIZ_Field is HAL.UInt2;
+   subtype FS_DIEPCTL0_EPTYP_Field is HAL.UInt2;
+   subtype FS_DIEPCTL0_TXFNUM_Field is HAL.UInt4;
+
+   --  OTG_FS device control IN endpoint 0 control register (OTG_FS_DIEPCTL0)
+   type FS_DIEPCTL0_Register is record
+      --  Maximum packet size
+      MPSIZ          : FS_DIEPCTL0_MPSIZ_Field := 16#0#;
+      --  unspecified
+      Reserved_2_14  : HAL.UInt13 := 16#0#;
+      --  Read-only. USB active endpoint
+      USBAEP         : Boolean := False;
+      --  unspecified
+      Reserved_16_16 : HAL.Bit := 16#0#;
+      --  Read-only. NAK status
+      NAKSTS         : Boolean := False;
+      --  Read-only. Endpoint type
+      EPTYP          : FS_DIEPCTL0_EPTYP_Field := 16#0#;
+      --  unspecified
+      Reserved_20_20 : HAL.Bit := 16#0#;
+      --  STALL handshake
+      STALL          : Boolean := False;
+      --  TxFIFO number
+      TXFNUM         : FS_DIEPCTL0_TXFNUM_Field := 16#0#;
+      --  Write-only. Clear NAK
+      CNAK           : Boolean := False;
+      --  Write-only. Set NAK
+      SNAK           : Boolean := False;
+      --  unspecified
+      Reserved_28_29 : HAL.UInt2 := 16#0#;
+      --  Read-only. Endpoint disable
+      EPDIS          : Boolean := False;
+      --  Read-only. Endpoint enable
+      EPENA          : Boolean := False;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for FS_DIEPCTL0_Register use record
+      MPSIZ          at 0 range 0 .. 1;
+      Reserved_2_14  at 0 range 2 .. 14;
+      USBAEP         at 0 range 15 .. 15;
+      Reserved_16_16 at 0 range 16 .. 16;
+      NAKSTS         at 0 range 17 .. 17;
+      EPTYP          at 0 range 18 .. 19;
+      Reserved_20_20 at 0 range 20 .. 20;
+      STALL          at 0 range 21 .. 21;
+      TXFNUM         at 0 range 22 .. 25;
+      CNAK           at 0 range 26 .. 26;
+      SNAK           at 0 range 27 .. 27;
+      Reserved_28_29 at 0 range 28 .. 29;
+      EPDIS          at 0 range 30 .. 30;
+      EPENA          at 0 range 31 .. 31;
+   end record;
+
+   --  device endpoint-x interrupt register
+   type DIEPINT_Register is record
+      --  XFRC
+      XFRC          : Boolean := False;
+      --  EPDISD
+      EPDISD        : Boolean := False;
+      --  unspecified
+      Reserved_2_2  : HAL.Bit := 16#0#;
+      --  TOC
+      TOC           : Boolean := False;
+      --  ITTXFE
+      ITTXFE        : Boolean := False;
+      --  unspecified
+      Reserved_5_5  : HAL.Bit := 16#0#;
+      --  INEPNE
+      INEPNE        : Boolean := False;
+      --  Read-only. TXFE
+      TXFE          : Boolean := True;
+      --  unspecified
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DIEPINT_Register use record
+      XFRC          at 0 range 0 .. 0;
+      EPDISD        at 0 range 1 .. 1;
+      Reserved_2_2  at 0 range 2 .. 2;
+      TOC           at 0 range 3 .. 3;
+      ITTXFE        at 0 range 4 .. 4;
+      Reserved_5_5  at 0 range 5 .. 5;
+      INEPNE        at 0 range 6 .. 6;
+      TXFE          at 0 range 7 .. 7;
+      Reserved_8_31 at 0 range 8 .. 31;
+   end record;
+
+   subtype DIEPTSIZ0_XFRSIZ_Field is HAL.UInt7;
+   subtype DIEPTSIZ0_PKTCNT_Field is HAL.UInt2;
+
+   --  device endpoint-0 transfer size register
+   type DIEPTSIZ0_Register is record
+      --  Transfer size
+      XFRSIZ         : DIEPTSIZ0_XFRSIZ_Field := 16#0#;
+      --  unspecified
+      Reserved_7_18  : HAL.UInt12 := 16#0#;
+      --  Packet count
+      PKTCNT         : DIEPTSIZ0_PKTCNT_Field := 16#0#;
+      --  unspecified
+      Reserved_21_31 : HAL.UInt11 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DIEPTSIZ0_Register use record
+      XFRSIZ         at 0 range 0 .. 6;
+      Reserved_7_18  at 0 range 7 .. 18;
+      PKTCNT         at 0 range 19 .. 20;
+      Reserved_21_31 at 0 range 21 .. 31;
+   end record;
+
+   subtype DTXFSTS_INEPTFSAV_Field is HAL.Short;
+
+   --  OTG_FS device IN endpoint transmit FIFO status register
+   type DTXFSTS_Register is record
+      --  Read-only. IN endpoint TxFIFO space available
+      INEPTFSAV      : DTXFSTS_INEPTFSAV_Field;
+      --  unspecified
+      Reserved_16_31 : HAL.Short;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DTXFSTS_Register use record
+      INEPTFSAV      at 0 range 0 .. 15;
+      Reserved_16_31 at 0 range 16 .. 31;
+   end record;
+
+   subtype DIEPCTL1_MPSIZ_Field is HAL.UInt11;
+   subtype DIEPCTL1_EPTYP_Field is HAL.UInt2;
+   subtype DIEPCTL1_TXFNUM_Field is HAL.UInt4;
+
+   --  OTG device endpoint-1 control register
+   type DIEPCTL1_Register is record
+      --  MPSIZ
+      MPSIZ          : DIEPCTL1_MPSIZ_Field := 16#0#;
+      --  unspecified
+      Reserved_11_14 : HAL.UInt4 := 16#0#;
+      --  USBAEP
+      USBAEP         : Boolean := False;
+      --  Read-only. EONUM/DPID
+      EONUM_DPID     : Boolean := False;
+      --  Read-only. NAKSTS
+      NAKSTS         : Boolean := False;
+      --  EPTYP
+      EPTYP          : DIEPCTL1_EPTYP_Field := 16#0#;
+      --  unspecified
+      Reserved_20_20 : HAL.Bit := 16#0#;
+      --  Stall
+      Stall          : Boolean := False;
+      --  TXFNUM
+      TXFNUM         : DIEPCTL1_TXFNUM_Field := 16#0#;
+      --  Write-only. CNAK
+      CNAK           : Boolean := False;
+      --  Write-only. SNAK
+      SNAK           : Boolean := False;
+      --  Write-only. SD0PID/SEVNFRM
+      SD0PID_SEVNFRM : Boolean := False;
+      --  Write-only. SODDFRM/SD1PID
+      SODDFRM_SD1PID : Boolean := False;
+      --  EPDIS
+      EPDIS          : Boolean := False;
+      --  EPENA
+      EPENA          : Boolean := False;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DIEPCTL1_Register use record
+      MPSIZ          at 0 range 0 .. 10;
+      Reserved_11_14 at 0 range 11 .. 14;
+      USBAEP         at 0 range 15 .. 15;
+      EONUM_DPID     at 0 range 16 .. 16;
+      NAKSTS         at 0 range 17 .. 17;
+      EPTYP          at 0 range 18 .. 19;
+      Reserved_20_20 at 0 range 20 .. 20;
+      Stall          at 0 range 21 .. 21;
+      TXFNUM         at 0 range 22 .. 25;
+      CNAK           at 0 range 26 .. 26;
+      SNAK           at 0 range 27 .. 27;
+      SD0PID_SEVNFRM at 0 range 28 .. 28;
+      SODDFRM_SD1PID at 0 range 29 .. 29;
+      EPDIS          at 0 range 30 .. 30;
+      EPENA          at 0 range 31 .. 31;
+   end record;
+
+   subtype DIEPTSIZ_XFRSIZ_Field is HAL.UInt19;
+   subtype DIEPTSIZ_PKTCNT_Field is HAL.UInt10;
+   subtype DIEPTSIZ_MCNT_Field is HAL.UInt2;
+
+   --  device endpoint-1 transfer size register
+   type DIEPTSIZ_Register is record
+      --  Transfer size
+      XFRSIZ         : DIEPTSIZ_XFRSIZ_Field := 16#0#;
+      --  Packet count
+      PKTCNT         : DIEPTSIZ_PKTCNT_Field := 16#0#;
+      --  Multi count
+      MCNT           : DIEPTSIZ_MCNT_Field := 16#0#;
+      --  unspecified
+      Reserved_31_31 : HAL.Bit := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DIEPTSIZ_Register use record
+      XFRSIZ         at 0 range 0 .. 18;
+      PKTCNT         at 0 range 19 .. 28;
+      MCNT           at 0 range 29 .. 30;
+      Reserved_31_31 at 0 range 31 .. 31;
+   end record;
+
+   subtype DIEPCTL_MPSIZ_Field is HAL.UInt11;
+   subtype DIEPCTL_EPTYP_Field is HAL.UInt2;
+   subtype DIEPCTL_TXFNUM_Field is HAL.UInt4;
+
+   --  OTG device endpoint-2 control register
+   type DIEPCTL_Register is record
+      --  MPSIZ
+      MPSIZ          : DIEPCTL_MPSIZ_Field := 16#0#;
+      --  unspecified
+      Reserved_11_14 : HAL.UInt4 := 16#0#;
+      --  USBAEP
+      USBAEP         : Boolean := False;
+      --  Read-only. EONUM/DPID
+      EONUM_DPID     : Boolean := False;
+      --  Read-only. NAKSTS
+      NAKSTS         : Boolean := False;
+      --  EPTYP
+      EPTYP          : DIEPCTL_EPTYP_Field := 16#0#;
+      --  unspecified
+      Reserved_20_20 : HAL.Bit := 16#0#;
+      --  Stall
+      Stall          : Boolean := False;
+      --  TXFNUM
+      TXFNUM         : DIEPCTL_TXFNUM_Field := 16#0#;
+      --  Write-only. CNAK
+      CNAK           : Boolean := False;
+      --  Write-only. SNAK
+      SNAK           : Boolean := False;
+      --  Write-only. SD0PID/SEVNFRM
+      SD0PID_SEVNFRM : Boolean := False;
+      --  Write-only. SODDFRM
+      SODDFRM        : Boolean := False;
+      --  EPDIS
+      EPDIS          : Boolean := False;
+      --  EPENA
+      EPENA          : Boolean := False;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DIEPCTL_Register use record
+      MPSIZ          at 0 range 0 .. 10;
+      Reserved_11_14 at 0 range 11 .. 14;
+      USBAEP         at 0 range 15 .. 15;
+      EONUM_DPID     at 0 range 16 .. 16;
+      NAKSTS         at 0 range 17 .. 17;
+      EPTYP          at 0 range 18 .. 19;
+      Reserved_20_20 at 0 range 20 .. 20;
+      Stall          at 0 range 21 .. 21;
+      TXFNUM         at 0 range 22 .. 25;
+      CNAK           at 0 range 26 .. 26;
+      SNAK           at 0 range 27 .. 27;
+      SD0PID_SEVNFRM at 0 range 28 .. 28;
+      SODDFRM        at 0 range 29 .. 29;
+      EPDIS          at 0 range 30 .. 30;
+      EPENA          at 0 range 31 .. 31;
+   end record;
+
+   subtype DOEPCTL0_MPSIZ_Field is HAL.UInt2;
+   subtype DOEPCTL0_EPTYP_Field is HAL.UInt2;
+
+   --  device endpoint-0 control register
+   type DOEPCTL0_Register is record
+      --  Read-only. MPSIZ
+      MPSIZ          : DOEPCTL0_MPSIZ_Field := 16#0#;
+      --  unspecified
+      Reserved_2_14  : HAL.UInt13 := 16#0#;
+      --  Read-only. USBAEP
+      USBAEP         : Boolean := True;
+      --  unspecified
+      Reserved_16_16 : HAL.Bit := 16#0#;
+      --  Read-only. NAKSTS
+      NAKSTS         : Boolean := False;
+      --  Read-only. EPTYP
+      EPTYP          : DOEPCTL0_EPTYP_Field := 16#0#;
+      --  SNPM
+      SNPM           : Boolean := False;
+      --  Stall
+      Stall          : Boolean := False;
+      --  unspecified
+      Reserved_22_25 : HAL.UInt4 := 16#0#;
+      --  Write-only. CNAK
+      CNAK           : Boolean := False;
+      --  Write-only. SNAK
+      SNAK           : Boolean := False;
+      --  unspecified
+      Reserved_28_29 : HAL.UInt2 := 16#0#;
+      --  Read-only. EPDIS
+      EPDIS          : Boolean := False;
+      --  Write-only. EPENA
+      EPENA          : Boolean := False;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DOEPCTL0_Register use record
+      MPSIZ          at 0 range 0 .. 1;
+      Reserved_2_14  at 0 range 2 .. 14;
+      USBAEP         at 0 range 15 .. 15;
+      Reserved_16_16 at 0 range 16 .. 16;
+      NAKSTS         at 0 range 17 .. 17;
+      EPTYP          at 0 range 18 .. 19;
+      SNPM           at 0 range 20 .. 20;
+      Stall          at 0 range 21 .. 21;
+      Reserved_22_25 at 0 range 22 .. 25;
+      CNAK           at 0 range 26 .. 26;
+      SNAK           at 0 range 27 .. 27;
+      Reserved_28_29 at 0 range 28 .. 29;
+      EPDIS          at 0 range 30 .. 30;
+      EPENA          at 0 range 31 .. 31;
+   end record;
+
+   --  device endpoint-0 interrupt register
+   type DOEPINT_Register is record
+      --  XFRC
+      XFRC          : Boolean := False;
+      --  EPDISD
+      EPDISD        : Boolean := False;
+      --  unspecified
+      Reserved_2_2  : HAL.Bit := 16#0#;
+      --  STUP
+      STUP          : Boolean := False;
+      --  OTEPDIS
+      OTEPDIS       : Boolean := False;
+      --  unspecified
+      Reserved_5_5  : HAL.Bit := 16#0#;
+      --  B2BSTUP
+      B2BSTUP       : Boolean := False;
+      --  unspecified
+      Reserved_7_31 : HAL.UInt25 := 16#1#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DOEPINT_Register use record
+      XFRC          at 0 range 0 .. 0;
+      EPDISD        at 0 range 1 .. 1;
+      Reserved_2_2  at 0 range 2 .. 2;
+      STUP          at 0 range 3 .. 3;
+      OTEPDIS       at 0 range 4 .. 4;
+      Reserved_5_5  at 0 range 5 .. 5;
+      B2BSTUP       at 0 range 6 .. 6;
+      Reserved_7_31 at 0 range 7 .. 31;
+   end record;
+
+   subtype DOEPTSIZ0_XFRSIZ_Field is HAL.UInt7;
+   subtype DOEPTSIZ0_STUPCNT_Field is HAL.UInt2;
+
+   --  device OUT endpoint-0 transfer size register
+   type DOEPTSIZ0_Register is record
+      --  Transfer size
+      XFRSIZ         : DOEPTSIZ0_XFRSIZ_Field := 16#0#;
+      --  unspecified
+      Reserved_7_18  : HAL.UInt12 := 16#0#;
+      --  Packet count
+      PKTCNT         : Boolean := False;
+      --  unspecified
+      Reserved_20_28 : HAL.UInt9 := 16#0#;
+      --  SETUP packet count
+      STUPCNT        : DOEPTSIZ0_STUPCNT_Field := 16#0#;
+      --  unspecified
+      Reserved_31_31 : HAL.Bit := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DOEPTSIZ0_Register use record
+      XFRSIZ         at 0 range 0 .. 6;
+      Reserved_7_18  at 0 range 7 .. 18;
+      PKTCNT         at 0 range 19 .. 19;
+      Reserved_20_28 at 0 range 20 .. 28;
+      STUPCNT        at 0 range 29 .. 30;
+      Reserved_31_31 at 0 range 31 .. 31;
+   end record;
+
+   subtype DOEPCTL_MPSIZ_Field is HAL.UInt11;
+   subtype DOEPCTL_EPTYP_Field is HAL.UInt2;
+
+   --  device endpoint-1 control register
+   type DOEPCTL_Register is record
+      --  MPSIZ
+      MPSIZ          : DOEPCTL_MPSIZ_Field := 16#0#;
+      --  unspecified
+      Reserved_11_14 : HAL.UInt4 := 16#0#;
+      --  USBAEP
+      USBAEP         : Boolean := False;
+      --  Read-only. EONUM/DPID
+      EONUM_DPID     : Boolean := False;
+      --  Read-only. NAKSTS
+      NAKSTS         : Boolean := False;
+      --  EPTYP
+      EPTYP          : DOEPCTL_EPTYP_Field := 16#0#;
+      --  SNPM
+      SNPM           : Boolean := False;
+      --  Stall
+      Stall          : Boolean := False;
+      --  unspecified
+      Reserved_22_25 : HAL.UInt4 := 16#0#;
+      --  Write-only. CNAK
+      CNAK           : Boolean := False;
+      --  Write-only. SNAK
+      SNAK           : Boolean := False;
+      --  Write-only. SD0PID/SEVNFRM
+      SD0PID_SEVNFRM : Boolean := False;
+      --  Write-only. SODDFRM
+      SODDFRM        : Boolean := False;
+      --  EPDIS
+      EPDIS          : Boolean := False;
+      --  EPENA
+      EPENA          : Boolean := False;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DOEPCTL_Register use record
+      MPSIZ          at 0 range 0 .. 10;
+      Reserved_11_14 at 0 range 11 .. 14;
+      USBAEP         at 0 range 15 .. 15;
+      EONUM_DPID     at 0 range 16 .. 16;
+      NAKSTS         at 0 range 17 .. 17;
+      EPTYP          at 0 range 18 .. 19;
+      SNPM           at 0 range 20 .. 20;
+      Stall          at 0 range 21 .. 21;
+      Reserved_22_25 at 0 range 22 .. 25;
+      CNAK           at 0 range 26 .. 26;
+      SNAK           at 0 range 27 .. 27;
+      SD0PID_SEVNFRM at 0 range 28 .. 28;
+      SODDFRM        at 0 range 29 .. 29;
+      EPDIS          at 0 range 30 .. 30;
+      EPENA          at 0 range 31 .. 31;
+   end record;
+
+   subtype DOEPTSIZ_XFRSIZ_Field is HAL.UInt19;
+   subtype DOEPTSIZ_PKTCNT_Field is HAL.UInt10;
+   subtype DOEPTSIZ_RXDPID_STUPCNT_Field is HAL.UInt2;
+
+   --  device OUT endpoint-1 transfer size register
+   type DOEPTSIZ_Register is record
+      --  Transfer size
+      XFRSIZ         : DOEPTSIZ_XFRSIZ_Field := 16#0#;
+      --  Packet count
+      PKTCNT         : DOEPTSIZ_PKTCNT_Field := 16#0#;
+      --  Received data PID/SETUP packet count
+      RXDPID_STUPCNT : DOEPTSIZ_RXDPID_STUPCNT_Field := 16#0#;
+      --  unspecified
+      Reserved_31_31 : HAL.Bit := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DOEPTSIZ_Register use record
+      XFRSIZ         at 0 range 0 .. 18;
+      PKTCNT         at 0 range 19 .. 28;
+      RXDPID_STUPCNT at 0 range 29 .. 30;
+      Reserved_31_31 at 0 range 31 .. 31;
+   end record;
 
    --  OTG_FS control and status register (OTG_FS_GOTGCTL)
    type FS_GOTGCTL_Register is record
@@ -65,10 +787,6 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
-   -------------------------
-   -- FS_GOTGINT_Register --
-   -------------------------
-
    --  OTG_FS interrupt register (OTG_FS_GOTGINT)
    type FS_GOTGINT_Register is record
       --  unspecified
@@ -108,10 +826,6 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
-   -------------------------
-   -- FS_GAHBCFG_Register --
-   -------------------------
-
    --  OTG_FS AHB configuration register (OTG_FS_GAHBCFG)
    type FS_GAHBCFG_Register is record
       --  Global interrupt mask
@@ -135,10 +849,6 @@ package STM32_SVD.USB_OTG_FS is
       PTXFELVL      at 0 range 8 .. 8;
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
-
-   -------------------------
-   -- FS_GUSBCFG_Register --
-   -------------------------
 
    subtype FS_GUSBCFG_TOCAL_Field is HAL.UInt3;
    subtype FS_GUSBCFG_TRDT_Field is HAL.UInt4;
@@ -185,10 +895,6 @@ package STM32_SVD.USB_OTG_FS is
       CTXPKT         at 0 range 31 .. 31;
    end record;
 
-   -------------------------
-   -- FS_GRSTCTL_Register --
-   -------------------------
-
    subtype FS_GRSTCTL_TXFNUM_Field is HAL.UInt5;
 
    --  OTG_FS reset register (OTG_FS_GRSTCTL)
@@ -226,10 +932,6 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_11_30 at 0 range 11 .. 30;
       AHBIDL         at 0 range 31 .. 31;
    end record;
-
-   -------------------------
-   -- FS_GINTSTS_Register --
-   -------------------------
 
    --  OTG_FS core interrupt register (OTG_FS_GINTSTS)
    type FS_GINTSTS_Register is record
@@ -327,10 +1029,6 @@ package STM32_SVD.USB_OTG_FS is
       SRQINT             at 0 range 30 .. 30;
       WKUPINT            at 0 range 31 .. 31;
    end record;
-
-   -------------------------
-   -- FS_GINTMSK_Register --
-   -------------------------
 
    --  OTG_FS interrupt mask register (OTG_FS_GINTMSK)
    type FS_GINTMSK_Register is record
@@ -432,10 +1130,6 @@ package STM32_SVD.USB_OTG_FS is
       WUIM             at 0 range 31 .. 31;
    end record;
 
-   --------------------------------
-   -- FS_GRXSTSR_Device_Register --
-   --------------------------------
-
    subtype FS_GRXSTSR_Device_EPNUM_Field is HAL.UInt4;
    subtype FS_GRXSTSR_Device_BCNT_Field is HAL.UInt11;
    subtype FS_GRXSTSR_Device_DPID_Field is HAL.UInt2;
@@ -468,10 +1162,6 @@ package STM32_SVD.USB_OTG_FS is
       FRMNUM         at 0 range 21 .. 24;
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
-
-   ------------------------------
-   -- FS_GRXSTSR_Host_Register --
-   ------------------------------
 
    subtype FS_GRXSTSR_Host_EPNUM_Field is HAL.UInt4;
    subtype FS_GRXSTSR_Host_BCNT_Field is HAL.UInt11;
@@ -506,10 +1196,6 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   -------------------------
-   -- FS_GRXFSIZ_Register --
-   -------------------------
-
    subtype FS_GRXFSIZ_RXFD_Field is HAL.Short;
 
    --  OTG_FS Receive FIFO size register (OTG_FS_GRXFSIZ)
@@ -526,10 +1212,6 @@ package STM32_SVD.USB_OTG_FS is
       RXFD           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------------------
-   -- FS_GNPTXFSIZ_Device_Register --
-   ----------------------------------
 
    subtype FS_GNPTXFSIZ_Device_TX0FSA_Field is HAL.Short;
    subtype FS_GNPTXFSIZ_Device_TX0FD_Field is HAL.Short;
@@ -549,10 +1231,6 @@ package STM32_SVD.USB_OTG_FS is
       TX0FD  at 0 range 16 .. 31;
    end record;
 
-   --------------------------------
-   -- FS_GNPTXFSIZ_Host_Register --
-   --------------------------------
-
    subtype FS_GNPTXFSIZ_Host_NPTXFSA_Field is HAL.Short;
    subtype FS_GNPTXFSIZ_Host_NPTXFD_Field is HAL.Short;
 
@@ -570,10 +1248,6 @@ package STM32_SVD.USB_OTG_FS is
       NPTXFSA at 0 range 0 .. 15;
       NPTXFD  at 0 range 16 .. 31;
    end record;
-
-   --------------------------
-   -- FS_GNPTXSTS_Register --
-   --------------------------
 
    subtype FS_GNPTXSTS_NPTXFSAV_Field is HAL.Short;
    subtype FS_GNPTXSTS_NPTQXSAV_Field is HAL.Byte;
@@ -600,10 +1274,6 @@ package STM32_SVD.USB_OTG_FS is
       NPTXQTOP       at 0 range 24 .. 30;
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
-
-   -----------------------
-   -- FS_GCCFG_Register --
-   -----------------------
 
    --  OTG_FS general core configuration register (OTG_FS_GCCFG)
    type FS_GCCFG_Register is record
@@ -635,10 +1305,6 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
-   --------------------------
-   -- FS_HPTXFSIZ_Register --
-   --------------------------
-
    subtype FS_HPTXFSIZ_PTXSA_Field is HAL.Short;
    subtype FS_HPTXFSIZ_PTXFSIZ_Field is HAL.Short;
 
@@ -657,19 +1323,15 @@ package STM32_SVD.USB_OTG_FS is
       PTXFSIZ at 0 range 16 .. 31;
    end record;
 
-   -------------------------
-   -- FS_DIEPTXF_Register --
-   -------------------------
-
-   subtype FS_DIEPTXF1_INEPTXSA_Field is HAL.Short;
-   subtype FS_DIEPTXF1_INEPTXFD_Field is HAL.Short;
+   subtype FS_DIEPTXF_INEPTXSA_Field is HAL.Short;
+   subtype FS_DIEPTXF_INEPTXFD_Field is HAL.Short;
 
    --  OTG_FS device IN endpoint transmit FIFO size register (OTG_FS_DIEPTXF1)
    type FS_DIEPTXF_Register is record
       --  IN endpoint FIFO2 transmit RAM start address
-      INEPTXSA : FS_DIEPTXF1_INEPTXSA_Field := 16#400#;
+      INEPTXSA : FS_DIEPTXF_INEPTXSA_Field := 16#400#;
       --  IN endpoint TxFIFO depth
-      INEPTXFD : FS_DIEPTXF1_INEPTXFD_Field := 16#200#;
+      INEPTXFD : FS_DIEPTXF_INEPTXFD_Field := 16#200#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -678,10 +1340,6 @@ package STM32_SVD.USB_OTG_FS is
       INEPTXSA at 0 range 0 .. 15;
       INEPTXFD at 0 range 16 .. 31;
    end record;
-
-   ----------------------
-   -- FS_HCFG_Register --
-   ----------------------
 
    subtype FS_HCFG_FSLSPCS_Field is HAL.UInt2;
 
@@ -703,10 +1361,6 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   -------------------
-   -- HFIR_Register --
-   -------------------
-
    subtype HFIR_FRIVL_Field is HAL.Short;
 
    --  OTG_FS Host frame interval register
@@ -723,10 +1377,6 @@ package STM32_SVD.USB_OTG_FS is
       FRIVL          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -----------------------
-   -- FS_HFNUM_Register --
-   -----------------------
 
    subtype FS_HFNUM_FRNUM_Field is HAL.Short;
    subtype FS_HFNUM_FTREM_Field is HAL.Short;
@@ -745,10 +1395,6 @@ package STM32_SVD.USB_OTG_FS is
       FRNUM at 0 range 0 .. 15;
       FTREM at 0 range 16 .. 31;
    end record;
-
-   -------------------------
-   -- FS_HPTXSTS_Register --
-   -------------------------
 
    subtype FS_HPTXSTS_PTXFSAVL_Field is HAL.Short;
    subtype FS_HPTXSTS_PTXQSAV_Field is HAL.Byte;
@@ -773,10 +1419,6 @@ package STM32_SVD.USB_OTG_FS is
       PTXQTOP  at 0 range 24 .. 31;
    end record;
 
-   --------------------
-   -- HAINT_Register --
-   --------------------
-
    subtype HAINT_HAINT_Field is HAL.Short;
 
    --  OTG_FS Host all channels interrupt register
@@ -794,10 +1436,6 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -----------------------
-   -- HAINTMSK_Register --
-   -----------------------
-
    subtype HAINTMSK_HAINTM_Field is HAL.Short;
 
    --  OTG_FS host all channels interrupt mask register
@@ -814,10 +1452,6 @@ package STM32_SVD.USB_OTG_FS is
       HAINTM         at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------
-   -- FS_HPRT_Register --
-   ----------------------
 
    subtype FS_HPRT_PLSTS_Field is HAL.UInt2;
    subtype FS_HPRT_PTCTL_Field is HAL.UInt4;
@@ -877,22 +1511,18 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
-   ------------------------
-   -- FS_HCCHAR_Register --
-   ------------------------
-
-   subtype FS_HCCHAR0_MPSIZ_Field is HAL.UInt11;
-   subtype FS_HCCHAR0_EPNUM_Field is HAL.UInt4;
-   subtype FS_HCCHAR0_EPTYP_Field is HAL.UInt2;
-   subtype FS_HCCHAR0_MCNT_Field is HAL.UInt2;
-   subtype FS_HCCHAR0_DAD_Field is HAL.UInt7;
+   subtype FS_HCCHAR_MPSIZ_Field is HAL.UInt11;
+   subtype FS_HCCHAR_EPNUM_Field is HAL.UInt4;
+   subtype FS_HCCHAR_EPTYP_Field is HAL.UInt2;
+   subtype FS_HCCHAR_MCNT_Field is HAL.UInt2;
+   subtype FS_HCCHAR_DAD_Field is HAL.UInt7;
 
    --  OTG_FS host channel-0 characteristics register (OTG_FS_HCCHAR0)
    type FS_HCCHAR_Register is record
       --  Maximum packet size
-      MPSIZ          : FS_HCCHAR0_MPSIZ_Field := 16#0#;
+      MPSIZ          : FS_HCCHAR_MPSIZ_Field := 16#0#;
       --  Endpoint number
-      EPNUM          : FS_HCCHAR0_EPNUM_Field := 16#0#;
+      EPNUM          : FS_HCCHAR_EPNUM_Field := 16#0#;
       --  Endpoint direction
       EPDIR          : Boolean := False;
       --  unspecified
@@ -900,11 +1530,11 @@ package STM32_SVD.USB_OTG_FS is
       --  Low-speed device
       LSDEV          : Boolean := False;
       --  Endpoint type
-      EPTYP          : FS_HCCHAR0_EPTYP_Field := 16#0#;
+      EPTYP          : FS_HCCHAR_EPTYP_Field := 16#0#;
       --  Multicount
-      MCNT           : FS_HCCHAR0_MCNT_Field := 16#0#;
+      MCNT           : FS_HCCHAR_MCNT_Field := 16#0#;
       --  Device address
-      DAD            : FS_HCCHAR0_DAD_Field := 16#0#;
+      DAD            : FS_HCCHAR_DAD_Field := 16#0#;
       --  Odd frame
       ODDFRM         : Boolean := False;
       --  Channel disable
@@ -928,10 +1558,6 @@ package STM32_SVD.USB_OTG_FS is
       CHDIS          at 0 range 30 .. 30;
       CHENA          at 0 range 31 .. 31;
    end record;
-
-   -----------------------
-   -- FS_HCINT_Register --
-   -----------------------
 
    --  OTG_FS host channel-0 interrupt register (OTG_FS_HCINT0)
    type FS_HCINT_Register is record
@@ -978,10 +1604,6 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
-   --------------------------
-   -- FS_HCINTMSK_Register --
-   --------------------------
-
    --  OTG_FS host channel-0 mask register (OTG_FS_HCINTMSK0)
    type FS_HCINTMSK_Register is record
       --  Transfer completed mask
@@ -1027,22 +1649,18 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
-   ------------------------
-   -- FS_HCTSIZ_Register --
-   ------------------------
-
-   subtype FS_HCTSIZ0_XFRSIZ_Field is HAL.UInt19;
-   subtype FS_HCTSIZ0_PKTCNT_Field is HAL.UInt10;
-   subtype FS_HCTSIZ0_DPID_Field is HAL.UInt2;
+   subtype FS_HCTSIZ_XFRSIZ_Field is HAL.UInt19;
+   subtype FS_HCTSIZ_PKTCNT_Field is HAL.UInt10;
+   subtype FS_HCTSIZ_DPID_Field is HAL.UInt2;
 
    --  OTG_FS host channel-0 transfer size register
    type FS_HCTSIZ_Register is record
       --  Transfer size
-      XFRSIZ         : FS_HCTSIZ0_XFRSIZ_Field := 16#0#;
+      XFRSIZ         : FS_HCTSIZ_XFRSIZ_Field := 16#0#;
       --  Packet count
-      PKTCNT         : FS_HCTSIZ0_PKTCNT_Field := 16#0#;
+      PKTCNT         : FS_HCTSIZ_PKTCNT_Field := 16#0#;
       --  Data PID
-      DPID           : FS_HCTSIZ0_DPID_Field := 16#0#;
+      DPID           : FS_HCTSIZ_DPID_Field := 16#0#;
       --  unspecified
       Reserved_31_31 : HAL.Bit := 16#0#;
    end record
@@ -1055,824 +1673,6 @@ package STM32_SVD.USB_OTG_FS is
       DPID           at 0 range 29 .. 30;
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
-
-   ----------------------
-   -- FS_DCFG_Register --
-   ----------------------
-
-   subtype FS_DCFG_DSPD_Field is HAL.UInt2;
-   subtype FS_DCFG_DAD_Field is HAL.UInt7;
-   subtype FS_DCFG_PFIVL_Field is HAL.UInt2;
-
-   --  OTG_FS device configuration register (OTG_FS_DCFG)
-   type FS_DCFG_Register is record
-      --  Device speed
-      DSPD           : FS_DCFG_DSPD_Field := 16#0#;
-      --  Non-zero-length status OUT handshake
-      NZLSOHSK       : Boolean := False;
-      --  unspecified
-      Reserved_3_3   : HAL.Bit := 16#0#;
-      --  Device address
-      DAD            : FS_DCFG_DAD_Field := 16#0#;
-      --  Periodic frame interval
-      PFIVL          : FS_DCFG_PFIVL_Field := 16#0#;
-      --  unspecified
-      Reserved_13_31 : HAL.UInt19 := 16#1100#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for FS_DCFG_Register use record
-      DSPD           at 0 range 0 .. 1;
-      NZLSOHSK       at 0 range 2 .. 2;
-      Reserved_3_3   at 0 range 3 .. 3;
-      DAD            at 0 range 4 .. 10;
-      PFIVL          at 0 range 11 .. 12;
-      Reserved_13_31 at 0 range 13 .. 31;
-   end record;
-
-   ----------------------
-   -- FS_DCTL_Register --
-   ----------------------
-
-   subtype FS_DCTL_TCTL_Field is HAL.UInt3;
-
-   --  OTG_FS device control register (OTG_FS_DCTL)
-   type FS_DCTL_Register is record
-      --  Remote wakeup signaling
-      RWUSIG         : Boolean := False;
-      --  Soft disconnect
-      SDIS           : Boolean := False;
-      --  Read-only. Global IN NAK status
-      GINSTS         : Boolean := False;
-      --  Read-only. Global OUT NAK status
-      GONSTS         : Boolean := False;
-      --  Test control
-      TCTL           : FS_DCTL_TCTL_Field := 16#0#;
-      --  Set global IN NAK
-      SGINAK         : Boolean := False;
-      --  Clear global IN NAK
-      CGINAK         : Boolean := False;
-      --  Set global OUT NAK
-      SGONAK         : Boolean := False;
-      --  Clear global OUT NAK
-      CGONAK         : Boolean := False;
-      --  Power-on programming done
-      POPRGDNE       : Boolean := False;
-      --  unspecified
-      Reserved_12_31 : HAL.UInt20 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for FS_DCTL_Register use record
-      RWUSIG         at 0 range 0 .. 0;
-      SDIS           at 0 range 1 .. 1;
-      GINSTS         at 0 range 2 .. 2;
-      GONSTS         at 0 range 3 .. 3;
-      TCTL           at 0 range 4 .. 6;
-      SGINAK         at 0 range 7 .. 7;
-      CGINAK         at 0 range 8 .. 8;
-      SGONAK         at 0 range 9 .. 9;
-      CGONAK         at 0 range 10 .. 10;
-      POPRGDNE       at 0 range 11 .. 11;
-      Reserved_12_31 at 0 range 12 .. 31;
-   end record;
-
-   ----------------------
-   -- FS_DSTS_Register --
-   ----------------------
-
-   subtype FS_DSTS_ENUMSPD_Field is HAL.UInt2;
-   subtype FS_DSTS_FNSOF_Field is HAL.UInt14;
-
-   --  OTG_FS device status register (OTG_FS_DSTS)
-   type FS_DSTS_Register is record
-      --  Read-only. Suspend status
-      SUSPSTS        : Boolean;
-      --  Read-only. Enumerated speed
-      ENUMSPD        : FS_DSTS_ENUMSPD_Field;
-      --  Read-only. Erratic error
-      EERR           : Boolean;
-      --  unspecified
-      Reserved_4_7   : HAL.UInt4;
-      --  Read-only. Frame number of the received SOF
-      FNSOF          : FS_DSTS_FNSOF_Field;
-      --  unspecified
-      Reserved_22_31 : HAL.UInt10;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for FS_DSTS_Register use record
-      SUSPSTS        at 0 range 0 .. 0;
-      ENUMSPD        at 0 range 1 .. 2;
-      EERR           at 0 range 3 .. 3;
-      Reserved_4_7   at 0 range 4 .. 7;
-      FNSOF          at 0 range 8 .. 21;
-      Reserved_22_31 at 0 range 22 .. 31;
-   end record;
-
-   -------------------------
-   -- FS_DIEPMSK_Register --
-   -------------------------
-
-   --  OTG_FS device IN endpoint common interrupt mask register
-   --  (OTG_FS_DIEPMSK)
-   type FS_DIEPMSK_Register is record
-      --  Transfer completed interrupt mask
-      XFRCM         : Boolean := False;
-      --  Endpoint disabled interrupt mask
-      EPDM          : Boolean := False;
-      --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
-      --  Timeout condition mask (Non-isochronous endpoints)
-      TOM           : Boolean := False;
-      --  IN token received when TxFIFO empty mask
-      ITTXFEMSK     : Boolean := False;
-      --  IN token received with EP mismatch mask
-      INEPNMM       : Boolean := False;
-      --  IN endpoint NAK effective mask
-      INEPNEM       : Boolean := False;
-      --  unspecified
-      Reserved_7_31 : HAL.UInt25 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for FS_DIEPMSK_Register use record
-      XFRCM         at 0 range 0 .. 0;
-      EPDM          at 0 range 1 .. 1;
-      Reserved_2_2  at 0 range 2 .. 2;
-      TOM           at 0 range 3 .. 3;
-      ITTXFEMSK     at 0 range 4 .. 4;
-      INEPNMM       at 0 range 5 .. 5;
-      INEPNEM       at 0 range 6 .. 6;
-      Reserved_7_31 at 0 range 7 .. 31;
-   end record;
-
-   -------------------------
-   -- FS_DOEPMSK_Register --
-   -------------------------
-
-   --  OTG_FS device OUT endpoint common interrupt mask register
-   --  (OTG_FS_DOEPMSK)
-   type FS_DOEPMSK_Register is record
-      --  Transfer completed interrupt mask
-      XFRCM         : Boolean := False;
-      --  Endpoint disabled interrupt mask
-      EPDM          : Boolean := False;
-      --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
-      --  SETUP phase done mask
-      STUPM         : Boolean := False;
-      --  OUT token received when endpoint disabled mask
-      OTEPDM        : Boolean := False;
-      --  unspecified
-      Reserved_5_31 : HAL.UInt27 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for FS_DOEPMSK_Register use record
-      XFRCM         at 0 range 0 .. 0;
-      EPDM          at 0 range 1 .. 1;
-      Reserved_2_2  at 0 range 2 .. 2;
-      STUPM         at 0 range 3 .. 3;
-      OTEPDM        at 0 range 4 .. 4;
-      Reserved_5_31 at 0 range 5 .. 31;
-   end record;
-
-   -----------------------
-   -- FS_DAINT_Register --
-   -----------------------
-
-   subtype FS_DAINT_IEPINT_Field is HAL.Short;
-   subtype FS_DAINT_OEPINT_Field is HAL.Short;
-
-   --  OTG_FS device all endpoints interrupt register (OTG_FS_DAINT)
-   type FS_DAINT_Register is record
-      --  Read-only. IN endpoint interrupt bits
-      IEPINT : FS_DAINT_IEPINT_Field;
-      --  Read-only. OUT endpoint interrupt bits
-      OEPINT : FS_DAINT_OEPINT_Field;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for FS_DAINT_Register use record
-      IEPINT at 0 range 0 .. 15;
-      OEPINT at 0 range 16 .. 31;
-   end record;
-
-   --------------------------
-   -- FS_DAINTMSK_Register --
-   --------------------------
-
-   subtype FS_DAINTMSK_IEPM_Field is HAL.Short;
-   subtype FS_DAINTMSK_OEPINT_Field is HAL.Short;
-
-   --  OTG_FS all endpoints interrupt mask register (OTG_FS_DAINTMSK)
-   type FS_DAINTMSK_Register is record
-      --  IN EP interrupt mask bits
-      IEPM   : FS_DAINTMSK_IEPM_Field := 16#0#;
-      --  OUT endpoint interrupt bits
-      OEPINT : FS_DAINTMSK_OEPINT_Field := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for FS_DAINTMSK_Register use record
-      IEPM   at 0 range 0 .. 15;
-      OEPINT at 0 range 16 .. 31;
-   end record;
-
-   -----------------------
-   -- DVBUSDIS_Register --
-   -----------------------
-
-   subtype DVBUSDIS_VBUSDT_Field is HAL.Short;
-
-   --  OTG_FS device VBUS discharge time register
-   type DVBUSDIS_Register is record
-      --  Device VBUS discharge time
-      VBUSDT         : DVBUSDIS_VBUSDT_Field := 16#17D7#;
-      --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DVBUSDIS_Register use record
-      VBUSDT         at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   -------------------------
-   -- DVBUSPULSE_Register --
-   -------------------------
-
-   subtype DVBUSPULSE_DVBUSP_Field is HAL.UInt12;
-
-   --  OTG_FS device VBUS pulsing time register
-   type DVBUSPULSE_Register is record
-      --  Device VBUS pulsing time
-      DVBUSP         : DVBUSPULSE_DVBUSP_Field := 16#5B8#;
-      --  unspecified
-      Reserved_12_31 : HAL.UInt20 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DVBUSPULSE_Register use record
-      DVBUSP         at 0 range 0 .. 11;
-      Reserved_12_31 at 0 range 12 .. 31;
-   end record;
-
-   -------------------------
-   -- DIEPEMPMSK_Register --
-   -------------------------
-
-   subtype DIEPEMPMSK_INEPTXFEM_Field is HAL.Short;
-
-   --  OTG_FS device IN endpoint FIFO empty interrupt mask register
-   type DIEPEMPMSK_Register is record
-      --  IN EP Tx FIFO empty interrupt mask bits
-      INEPTXFEM      : DIEPEMPMSK_INEPTXFEM_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DIEPEMPMSK_Register use record
-      INEPTXFEM      at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   --------------------------
-   -- FS_DIEPCTL0_Register --
-   --------------------------
-
-   subtype FS_DIEPCTL0_MPSIZ_Field is HAL.UInt2;
-   subtype FS_DIEPCTL0_EPTYP_Field is HAL.UInt2;
-   subtype FS_DIEPCTL0_TXFNUM_Field is HAL.UInt4;
-
-   --  OTG_FS device control IN endpoint 0 control register (OTG_FS_DIEPCTL0)
-   type FS_DIEPCTL0_Register is record
-      --  Maximum packet size
-      MPSIZ          : FS_DIEPCTL0_MPSIZ_Field := 16#0#;
-      --  unspecified
-      Reserved_2_14  : HAL.UInt13 := 16#0#;
-      --  Read-only. USB active endpoint
-      USBAEP         : Boolean := False;
-      --  unspecified
-      Reserved_16_16 : HAL.Bit := 16#0#;
-      --  Read-only. NAK status
-      NAKSTS         : Boolean := False;
-      --  Read-only. Endpoint type
-      EPTYP          : FS_DIEPCTL0_EPTYP_Field := 16#0#;
-      --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
-      --  STALL handshake
-      STALL          : Boolean := False;
-      --  TxFIFO number
-      TXFNUM         : FS_DIEPCTL0_TXFNUM_Field := 16#0#;
-      --  Write-only. Clear NAK
-      CNAK           : Boolean := False;
-      --  Write-only. Set NAK
-      SNAK           : Boolean := False;
-      --  unspecified
-      Reserved_28_29 : HAL.UInt2 := 16#0#;
-      --  Read-only. Endpoint disable
-      EPDIS          : Boolean := False;
-      --  Read-only. Endpoint enable
-      EPENA          : Boolean := False;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for FS_DIEPCTL0_Register use record
-      MPSIZ          at 0 range 0 .. 1;
-      Reserved_2_14  at 0 range 2 .. 14;
-      USBAEP         at 0 range 15 .. 15;
-      Reserved_16_16 at 0 range 16 .. 16;
-      NAKSTS         at 0 range 17 .. 17;
-      EPTYP          at 0 range 18 .. 19;
-      Reserved_20_20 at 0 range 20 .. 20;
-      STALL          at 0 range 21 .. 21;
-      TXFNUM         at 0 range 22 .. 25;
-      CNAK           at 0 range 26 .. 26;
-      SNAK           at 0 range 27 .. 27;
-      Reserved_28_29 at 0 range 28 .. 29;
-      EPDIS          at 0 range 30 .. 30;
-      EPENA          at 0 range 31 .. 31;
-   end record;
-
-   ----------------------
-   -- DIEPINT_Register --
-   ----------------------
-
-   --  device endpoint-x interrupt register
-   type DIEPINT_Register is record
-      --  XFRC
-      XFRC          : Boolean := False;
-      --  EPDISD
-      EPDISD        : Boolean := False;
-      --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
-      --  TOC
-      TOC           : Boolean := False;
-      --  ITTXFE
-      ITTXFE        : Boolean := False;
-      --  unspecified
-      Reserved_5_5  : HAL.Bit := 16#0#;
-      --  INEPNE
-      INEPNE        : Boolean := False;
-      --  Read-only. TXFE
-      TXFE          : Boolean := True;
-      --  unspecified
-      Reserved_8_31 : HAL.UInt24 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DIEPINT_Register use record
-      XFRC          at 0 range 0 .. 0;
-      EPDISD        at 0 range 1 .. 1;
-      Reserved_2_2  at 0 range 2 .. 2;
-      TOC           at 0 range 3 .. 3;
-      ITTXFE        at 0 range 4 .. 4;
-      Reserved_5_5  at 0 range 5 .. 5;
-      INEPNE        at 0 range 6 .. 6;
-      TXFE          at 0 range 7 .. 7;
-      Reserved_8_31 at 0 range 8 .. 31;
-   end record;
-
-   ------------------------
-   -- DIEPTSIZ0_Register --
-   ------------------------
-
-   subtype DIEPTSIZ0_XFRSIZ_Field is HAL.UInt7;
-   subtype DIEPTSIZ0_PKTCNT_Field is HAL.UInt2;
-
-   --  device endpoint-0 transfer size register
-   type DIEPTSIZ0_Register is record
-      --  Transfer size
-      XFRSIZ         : DIEPTSIZ0_XFRSIZ_Field := 16#0#;
-      --  unspecified
-      Reserved_7_18  : HAL.UInt12 := 16#0#;
-      --  Packet count
-      PKTCNT         : DIEPTSIZ0_PKTCNT_Field := 16#0#;
-      --  unspecified
-      Reserved_21_31 : HAL.UInt11 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DIEPTSIZ0_Register use record
-      XFRSIZ         at 0 range 0 .. 6;
-      Reserved_7_18  at 0 range 7 .. 18;
-      PKTCNT         at 0 range 19 .. 20;
-      Reserved_21_31 at 0 range 21 .. 31;
-   end record;
-
-   ----------------------
-   -- DTXFSTS_Register --
-   ----------------------
-
-   subtype DTXFSTS0_INEPTFSAV_Field is HAL.Short;
-
-   --  OTG_FS device IN endpoint transmit FIFO status register
-   type DTXFSTS_Register is record
-      --  Read-only. IN endpoint TxFIFO space available
-      INEPTFSAV      : DTXFSTS0_INEPTFSAV_Field;
-      --  unspecified
-      Reserved_16_31 : HAL.Short;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DTXFSTS_Register use record
-      INEPTFSAV      at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   -----------------------
-   -- DIEPCTL1_Register --
-   -----------------------
-
-   subtype DIEPCTL1_MPSIZ_Field is HAL.UInt11;
-   subtype DIEPCTL1_EPTYP_Field is HAL.UInt2;
-   subtype DIEPCTL1_TXFNUM_Field is HAL.UInt4;
-
-   --  OTG device endpoint-1 control register
-   type DIEPCTL1_Register is record
-      --  MPSIZ
-      MPSIZ          : DIEPCTL1_MPSIZ_Field := 16#0#;
-      --  unspecified
-      Reserved_11_14 : HAL.UInt4 := 16#0#;
-      --  USBAEP
-      USBAEP         : Boolean := False;
-      --  Read-only. EONUM/DPID
-      EONUM_DPID     : Boolean := False;
-      --  Read-only. NAKSTS
-      NAKSTS         : Boolean := False;
-      --  EPTYP
-      EPTYP          : DIEPCTL1_EPTYP_Field := 16#0#;
-      --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
-      --  Stall
-      Stall          : Boolean := False;
-      --  TXFNUM
-      TXFNUM         : DIEPCTL1_TXFNUM_Field := 16#0#;
-      --  Write-only. CNAK
-      CNAK           : Boolean := False;
-      --  Write-only. SNAK
-      SNAK           : Boolean := False;
-      --  Write-only. SD0PID/SEVNFRM
-      SD0PID_SEVNFRM : Boolean := False;
-      --  Write-only. SODDFRM/SD1PID
-      SODDFRM_SD1PID : Boolean := False;
-      --  EPDIS
-      EPDIS          : Boolean := False;
-      --  EPENA
-      EPENA          : Boolean := False;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DIEPCTL1_Register use record
-      MPSIZ          at 0 range 0 .. 10;
-      Reserved_11_14 at 0 range 11 .. 14;
-      USBAEP         at 0 range 15 .. 15;
-      EONUM_DPID     at 0 range 16 .. 16;
-      NAKSTS         at 0 range 17 .. 17;
-      EPTYP          at 0 range 18 .. 19;
-      Reserved_20_20 at 0 range 20 .. 20;
-      Stall          at 0 range 21 .. 21;
-      TXFNUM         at 0 range 22 .. 25;
-      CNAK           at 0 range 26 .. 26;
-      SNAK           at 0 range 27 .. 27;
-      SD0PID_SEVNFRM at 0 range 28 .. 28;
-      SODDFRM_SD1PID at 0 range 29 .. 29;
-      EPDIS          at 0 range 30 .. 30;
-      EPENA          at 0 range 31 .. 31;
-   end record;
-
-   -----------------------
-   -- DIEPTSIZ_Register --
-   -----------------------
-
-   subtype DIEPTSIZ1_XFRSIZ_Field is HAL.UInt19;
-   subtype DIEPTSIZ1_PKTCNT_Field is HAL.UInt10;
-   subtype DIEPTSIZ1_MCNT_Field is HAL.UInt2;
-
-   --  device endpoint-1 transfer size register
-   type DIEPTSIZ_Register is record
-      --  Transfer size
-      XFRSIZ         : DIEPTSIZ1_XFRSIZ_Field := 16#0#;
-      --  Packet count
-      PKTCNT         : DIEPTSIZ1_PKTCNT_Field := 16#0#;
-      --  Multi count
-      MCNT           : DIEPTSIZ1_MCNT_Field := 16#0#;
-      --  unspecified
-      Reserved_31_31 : HAL.Bit := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DIEPTSIZ_Register use record
-      XFRSIZ         at 0 range 0 .. 18;
-      PKTCNT         at 0 range 19 .. 28;
-      MCNT           at 0 range 29 .. 30;
-      Reserved_31_31 at 0 range 31 .. 31;
-   end record;
-
-   ----------------------
-   -- DIEPCTL_Register --
-   ----------------------
-
-   subtype DIEPCTL2_MPSIZ_Field is HAL.UInt11;
-   subtype DIEPCTL2_EPTYP_Field is HAL.UInt2;
-   subtype DIEPCTL2_TXFNUM_Field is HAL.UInt4;
-
-   --  OTG device endpoint-2 control register
-   type DIEPCTL_Register is record
-      --  MPSIZ
-      MPSIZ          : DIEPCTL2_MPSIZ_Field := 16#0#;
-      --  unspecified
-      Reserved_11_14 : HAL.UInt4 := 16#0#;
-      --  USBAEP
-      USBAEP         : Boolean := False;
-      --  Read-only. EONUM/DPID
-      EONUM_DPID     : Boolean := False;
-      --  Read-only. NAKSTS
-      NAKSTS         : Boolean := False;
-      --  EPTYP
-      EPTYP          : DIEPCTL2_EPTYP_Field := 16#0#;
-      --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
-      --  Stall
-      Stall          : Boolean := False;
-      --  TXFNUM
-      TXFNUM         : DIEPCTL2_TXFNUM_Field := 16#0#;
-      --  Write-only. CNAK
-      CNAK           : Boolean := False;
-      --  Write-only. SNAK
-      SNAK           : Boolean := False;
-      --  Write-only. SD0PID/SEVNFRM
-      SD0PID_SEVNFRM : Boolean := False;
-      --  Write-only. SODDFRM
-      SODDFRM        : Boolean := False;
-      --  EPDIS
-      EPDIS          : Boolean := False;
-      --  EPENA
-      EPENA          : Boolean := False;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DIEPCTL_Register use record
-      MPSIZ          at 0 range 0 .. 10;
-      Reserved_11_14 at 0 range 11 .. 14;
-      USBAEP         at 0 range 15 .. 15;
-      EONUM_DPID     at 0 range 16 .. 16;
-      NAKSTS         at 0 range 17 .. 17;
-      EPTYP          at 0 range 18 .. 19;
-      Reserved_20_20 at 0 range 20 .. 20;
-      Stall          at 0 range 21 .. 21;
-      TXFNUM         at 0 range 22 .. 25;
-      CNAK           at 0 range 26 .. 26;
-      SNAK           at 0 range 27 .. 27;
-      SD0PID_SEVNFRM at 0 range 28 .. 28;
-      SODDFRM        at 0 range 29 .. 29;
-      EPDIS          at 0 range 30 .. 30;
-      EPENA          at 0 range 31 .. 31;
-   end record;
-
-   -----------------------
-   -- DOEPCTL0_Register --
-   -----------------------
-
-   subtype DOEPCTL0_MPSIZ_Field is HAL.UInt2;
-   subtype DOEPCTL0_EPTYP_Field is HAL.UInt2;
-
-   --  device endpoint-0 control register
-   type DOEPCTL0_Register is record
-      --  Read-only. MPSIZ
-      MPSIZ          : DOEPCTL0_MPSIZ_Field := 16#0#;
-      --  unspecified
-      Reserved_2_14  : HAL.UInt13 := 16#0#;
-      --  Read-only. USBAEP
-      USBAEP         : Boolean := True;
-      --  unspecified
-      Reserved_16_16 : HAL.Bit := 16#0#;
-      --  Read-only. NAKSTS
-      NAKSTS         : Boolean := False;
-      --  Read-only. EPTYP
-      EPTYP          : DOEPCTL0_EPTYP_Field := 16#0#;
-      --  SNPM
-      SNPM           : Boolean := False;
-      --  Stall
-      Stall          : Boolean := False;
-      --  unspecified
-      Reserved_22_25 : HAL.UInt4 := 16#0#;
-      --  Write-only. CNAK
-      CNAK           : Boolean := False;
-      --  Write-only. SNAK
-      SNAK           : Boolean := False;
-      --  unspecified
-      Reserved_28_29 : HAL.UInt2 := 16#0#;
-      --  Read-only. EPDIS
-      EPDIS          : Boolean := False;
-      --  Write-only. EPENA
-      EPENA          : Boolean := False;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DOEPCTL0_Register use record
-      MPSIZ          at 0 range 0 .. 1;
-      Reserved_2_14  at 0 range 2 .. 14;
-      USBAEP         at 0 range 15 .. 15;
-      Reserved_16_16 at 0 range 16 .. 16;
-      NAKSTS         at 0 range 17 .. 17;
-      EPTYP          at 0 range 18 .. 19;
-      SNPM           at 0 range 20 .. 20;
-      Stall          at 0 range 21 .. 21;
-      Reserved_22_25 at 0 range 22 .. 25;
-      CNAK           at 0 range 26 .. 26;
-      SNAK           at 0 range 27 .. 27;
-      Reserved_28_29 at 0 range 28 .. 29;
-      EPDIS          at 0 range 30 .. 30;
-      EPENA          at 0 range 31 .. 31;
-   end record;
-
-   ----------------------
-   -- DOEPINT_Register --
-   ----------------------
-
-   --  device endpoint-0 interrupt register
-   type DOEPINT_Register is record
-      --  XFRC
-      XFRC          : Boolean := False;
-      --  EPDISD
-      EPDISD        : Boolean := False;
-      --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
-      --  STUP
-      STUP          : Boolean := False;
-      --  OTEPDIS
-      OTEPDIS       : Boolean := False;
-      --  unspecified
-      Reserved_5_5  : HAL.Bit := 16#0#;
-      --  B2BSTUP
-      B2BSTUP       : Boolean := False;
-      --  unspecified
-      Reserved_7_31 : HAL.UInt25 := 16#1#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DOEPINT_Register use record
-      XFRC          at 0 range 0 .. 0;
-      EPDISD        at 0 range 1 .. 1;
-      Reserved_2_2  at 0 range 2 .. 2;
-      STUP          at 0 range 3 .. 3;
-      OTEPDIS       at 0 range 4 .. 4;
-      Reserved_5_5  at 0 range 5 .. 5;
-      B2BSTUP       at 0 range 6 .. 6;
-      Reserved_7_31 at 0 range 7 .. 31;
-   end record;
-
-   ------------------------
-   -- DOEPTSIZ0_Register --
-   ------------------------
-
-   subtype DOEPTSIZ0_XFRSIZ_Field is HAL.UInt7;
-   subtype DOEPTSIZ0_STUPCNT_Field is HAL.UInt2;
-
-   --  device OUT endpoint-0 transfer size register
-   type DOEPTSIZ0_Register is record
-      --  Transfer size
-      XFRSIZ         : DOEPTSIZ0_XFRSIZ_Field := 16#0#;
-      --  unspecified
-      Reserved_7_18  : HAL.UInt12 := 16#0#;
-      --  Packet count
-      PKTCNT         : Boolean := False;
-      --  unspecified
-      Reserved_20_28 : HAL.UInt9 := 16#0#;
-      --  SETUP packet count
-      STUPCNT        : DOEPTSIZ0_STUPCNT_Field := 16#0#;
-      --  unspecified
-      Reserved_31_31 : HAL.Bit := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DOEPTSIZ0_Register use record
-      XFRSIZ         at 0 range 0 .. 6;
-      Reserved_7_18  at 0 range 7 .. 18;
-      PKTCNT         at 0 range 19 .. 19;
-      Reserved_20_28 at 0 range 20 .. 28;
-      STUPCNT        at 0 range 29 .. 30;
-      Reserved_31_31 at 0 range 31 .. 31;
-   end record;
-
-   ----------------------
-   -- DOEPCTL_Register --
-   ----------------------
-
-   subtype DOEPCTL1_MPSIZ_Field is HAL.UInt11;
-   subtype DOEPCTL1_EPTYP_Field is HAL.UInt2;
-
-   --  device endpoint-1 control register
-   type DOEPCTL_Register is record
-      --  MPSIZ
-      MPSIZ          : DOEPCTL1_MPSIZ_Field := 16#0#;
-      --  unspecified
-      Reserved_11_14 : HAL.UInt4 := 16#0#;
-      --  USBAEP
-      USBAEP         : Boolean := False;
-      --  Read-only. EONUM/DPID
-      EONUM_DPID     : Boolean := False;
-      --  Read-only. NAKSTS
-      NAKSTS         : Boolean := False;
-      --  EPTYP
-      EPTYP          : DOEPCTL1_EPTYP_Field := 16#0#;
-      --  SNPM
-      SNPM           : Boolean := False;
-      --  Stall
-      Stall          : Boolean := False;
-      --  unspecified
-      Reserved_22_25 : HAL.UInt4 := 16#0#;
-      --  Write-only. CNAK
-      CNAK           : Boolean := False;
-      --  Write-only. SNAK
-      SNAK           : Boolean := False;
-      --  Write-only. SD0PID/SEVNFRM
-      SD0PID_SEVNFRM : Boolean := False;
-      --  Write-only. SODDFRM
-      SODDFRM        : Boolean := False;
-      --  EPDIS
-      EPDIS          : Boolean := False;
-      --  EPENA
-      EPENA          : Boolean := False;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DOEPCTL_Register use record
-      MPSIZ          at 0 range 0 .. 10;
-      Reserved_11_14 at 0 range 11 .. 14;
-      USBAEP         at 0 range 15 .. 15;
-      EONUM_DPID     at 0 range 16 .. 16;
-      NAKSTS         at 0 range 17 .. 17;
-      EPTYP          at 0 range 18 .. 19;
-      SNPM           at 0 range 20 .. 20;
-      Stall          at 0 range 21 .. 21;
-      Reserved_22_25 at 0 range 22 .. 25;
-      CNAK           at 0 range 26 .. 26;
-      SNAK           at 0 range 27 .. 27;
-      SD0PID_SEVNFRM at 0 range 28 .. 28;
-      SODDFRM        at 0 range 29 .. 29;
-      EPDIS          at 0 range 30 .. 30;
-      EPENA          at 0 range 31 .. 31;
-   end record;
-
-   -----------------------
-   -- DOEPTSIZ_Register --
-   -----------------------
-
-   subtype DOEPTSIZ1_XFRSIZ_Field is HAL.UInt19;
-   subtype DOEPTSIZ1_PKTCNT_Field is HAL.UInt10;
-   subtype DOEPTSIZ1_RXDPID_STUPCNT_Field is HAL.UInt2;
-
-   --  device OUT endpoint-1 transfer size register
-   type DOEPTSIZ_Register is record
-      --  Transfer size
-      XFRSIZ         : DOEPTSIZ1_XFRSIZ_Field := 16#0#;
-      --  Packet count
-      PKTCNT         : DOEPTSIZ1_PKTCNT_Field := 16#0#;
-      --  Received data PID/SETUP packet count
-      RXDPID_STUPCNT : DOEPTSIZ1_RXDPID_STUPCNT_Field := 16#0#;
-      --  unspecified
-      Reserved_31_31 : HAL.Bit := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DOEPTSIZ_Register use record
-      XFRSIZ         at 0 range 0 .. 18;
-      PKTCNT         at 0 range 19 .. 28;
-      RXDPID_STUPCNT at 0 range 29 .. 30;
-      Reserved_31_31 at 0 range 31 .. 31;
-   end record;
-
-   -------------------------
-   -- FS_PCGCCTL_Register --
-   -------------------------
 
    --  OTG_FS power and clock gating control register (OTG_FS_PCGCCTL)
    type FS_PCGCCTL_Register is record
@@ -1901,6 +1701,135 @@ package STM32_SVD.USB_OTG_FS is
    -----------------
    -- Peripherals --
    -----------------
+
+   --  USB on the go full speed
+   type OTG_FS_DEVICE_Peripheral is record
+      --  OTG_FS device configuration register (OTG_FS_DCFG)
+      FS_DCFG     : FS_DCFG_Register;
+      --  OTG_FS device control register (OTG_FS_DCTL)
+      FS_DCTL     : FS_DCTL_Register;
+      --  OTG_FS device status register (OTG_FS_DSTS)
+      FS_DSTS     : FS_DSTS_Register;
+      --  OTG_FS device IN endpoint common interrupt mask register
+      --  (OTG_FS_DIEPMSK)
+      FS_DIEPMSK  : FS_DIEPMSK_Register;
+      --  OTG_FS device OUT endpoint common interrupt mask register
+      --  (OTG_FS_DOEPMSK)
+      FS_DOEPMSK  : FS_DOEPMSK_Register;
+      --  OTG_FS device all endpoints interrupt register (OTG_FS_DAINT)
+      FS_DAINT    : FS_DAINT_Register;
+      --  OTG_FS all endpoints interrupt mask register (OTG_FS_DAINTMSK)
+      FS_DAINTMSK : FS_DAINTMSK_Register;
+      --  OTG_FS device VBUS discharge time register
+      DVBUSDIS    : DVBUSDIS_Register;
+      --  OTG_FS device VBUS pulsing time register
+      DVBUSPULSE  : DVBUSPULSE_Register;
+      --  OTG_FS device IN endpoint FIFO empty interrupt mask register
+      DIEPEMPMSK  : DIEPEMPMSK_Register;
+      --  OTG_FS device control IN endpoint 0 control register
+      --  (OTG_FS_DIEPCTL0)
+      FS_DIEPCTL0 : FS_DIEPCTL0_Register;
+      --  device endpoint-x interrupt register
+      DIEPINT0    : DIEPINT_Register;
+      --  device endpoint-0 transfer size register
+      DIEPTSIZ0   : DIEPTSIZ0_Register;
+      --  OTG_FS device IN endpoint transmit FIFO status register
+      DTXFSTS0    : DTXFSTS_Register;
+      --  OTG device endpoint-1 control register
+      DIEPCTL1    : DIEPCTL1_Register;
+      --  device endpoint-1 interrupt register
+      DIEPINT1    : DIEPINT_Register;
+      --  device endpoint-1 transfer size register
+      DIEPTSIZ1   : DIEPTSIZ_Register;
+      --  OTG_FS device IN endpoint transmit FIFO status register
+      DTXFSTS1    : DTXFSTS_Register;
+      --  OTG device endpoint-2 control register
+      DIEPCTL2    : DIEPCTL_Register;
+      --  device endpoint-2 interrupt register
+      DIEPINT2    : DIEPINT_Register;
+      --  device endpoint-2 transfer size register
+      DIEPTSIZ2   : DIEPTSIZ_Register;
+      --  OTG_FS device IN endpoint transmit FIFO status register
+      DTXFSTS2    : DTXFSTS_Register;
+      --  OTG device endpoint-3 control register
+      DIEPCTL3    : DIEPCTL_Register;
+      --  device endpoint-3 interrupt register
+      DIEPINT3    : DIEPINT_Register;
+      --  device endpoint-3 transfer size register
+      DIEPTSIZ3   : DIEPTSIZ_Register;
+      --  OTG_FS device IN endpoint transmit FIFO status register
+      DTXFSTS3    : DTXFSTS_Register;
+      --  device endpoint-0 control register
+      DOEPCTL0    : DOEPCTL0_Register;
+      --  device endpoint-0 interrupt register
+      DOEPINT0    : DOEPINT_Register;
+      --  device OUT endpoint-0 transfer size register
+      DOEPTSIZ0   : DOEPTSIZ0_Register;
+      --  device endpoint-1 control register
+      DOEPCTL1    : DOEPCTL_Register;
+      --  device endpoint-1 interrupt register
+      DOEPINT1    : DOEPINT_Register;
+      --  device OUT endpoint-1 transfer size register
+      DOEPTSIZ1   : DOEPTSIZ_Register;
+      --  device endpoint-2 control register
+      DOEPCTL2    : DOEPCTL_Register;
+      --  device endpoint-2 interrupt register
+      DOEPINT2    : DOEPINT_Register;
+      --  device OUT endpoint-2 transfer size register
+      DOEPTSIZ2   : DOEPTSIZ_Register;
+      --  device endpoint-3 control register
+      DOEPCTL3    : DOEPCTL_Register;
+      --  device endpoint-3 interrupt register
+      DOEPINT3    : DOEPINT_Register;
+      --  device OUT endpoint-3 transfer size register
+      DOEPTSIZ3   : DOEPTSIZ_Register;
+   end record
+     with Volatile;
+
+   for OTG_FS_DEVICE_Peripheral use record
+      FS_DCFG     at 0 range 0 .. 31;
+      FS_DCTL     at 4 range 0 .. 31;
+      FS_DSTS     at 8 range 0 .. 31;
+      FS_DIEPMSK  at 16 range 0 .. 31;
+      FS_DOEPMSK  at 20 range 0 .. 31;
+      FS_DAINT    at 24 range 0 .. 31;
+      FS_DAINTMSK at 28 range 0 .. 31;
+      DVBUSDIS    at 40 range 0 .. 31;
+      DVBUSPULSE  at 44 range 0 .. 31;
+      DIEPEMPMSK  at 52 range 0 .. 31;
+      FS_DIEPCTL0 at 256 range 0 .. 31;
+      DIEPINT0    at 264 range 0 .. 31;
+      DIEPTSIZ0   at 272 range 0 .. 31;
+      DTXFSTS0    at 280 range 0 .. 31;
+      DIEPCTL1    at 288 range 0 .. 31;
+      DIEPINT1    at 296 range 0 .. 31;
+      DIEPTSIZ1   at 304 range 0 .. 31;
+      DTXFSTS1    at 312 range 0 .. 31;
+      DIEPCTL2    at 320 range 0 .. 31;
+      DIEPINT2    at 328 range 0 .. 31;
+      DIEPTSIZ2   at 336 range 0 .. 31;
+      DTXFSTS2    at 344 range 0 .. 31;
+      DIEPCTL3    at 352 range 0 .. 31;
+      DIEPINT3    at 360 range 0 .. 31;
+      DIEPTSIZ3   at 368 range 0 .. 31;
+      DTXFSTS3    at 376 range 0 .. 31;
+      DOEPCTL0    at 768 range 0 .. 31;
+      DOEPINT0    at 776 range 0 .. 31;
+      DOEPTSIZ0   at 784 range 0 .. 31;
+      DOEPCTL1    at 800 range 0 .. 31;
+      DOEPINT1    at 808 range 0 .. 31;
+      DOEPTSIZ1   at 816 range 0 .. 31;
+      DOEPCTL2    at 832 range 0 .. 31;
+      DOEPINT2    at 840 range 0 .. 31;
+      DOEPTSIZ2   at 848 range 0 .. 31;
+      DOEPCTL3    at 864 range 0 .. 31;
+      DOEPINT3    at 872 range 0 .. 31;
+      DOEPTSIZ3   at 880 range 0 .. 31;
+   end record;
+
+   --  USB on the go full speed
+   OTG_FS_DEVICE_Periph : aliased OTG_FS_DEVICE_Peripheral
+     with Import, Address => OTG_FS_DEVICE_Base;
 
    type OTG_FS_GLOBAL_Disc is
      (
@@ -2123,135 +2052,6 @@ package STM32_SVD.USB_OTG_FS is
    --  USB on the go full speed
    OTG_FS_HOST_Periph : aliased OTG_FS_HOST_Peripheral
      with Import, Address => OTG_FS_HOST_Base;
-
-   --  USB on the go full speed
-   type OTG_FS_DEVICE_Peripheral is record
-      --  OTG_FS device configuration register (OTG_FS_DCFG)
-      FS_DCFG     : FS_DCFG_Register;
-      --  OTG_FS device control register (OTG_FS_DCTL)
-      FS_DCTL     : FS_DCTL_Register;
-      --  OTG_FS device status register (OTG_FS_DSTS)
-      FS_DSTS     : FS_DSTS_Register;
-      --  OTG_FS device IN endpoint common interrupt mask register
-      --  (OTG_FS_DIEPMSK)
-      FS_DIEPMSK  : FS_DIEPMSK_Register;
-      --  OTG_FS device OUT endpoint common interrupt mask register
-      --  (OTG_FS_DOEPMSK)
-      FS_DOEPMSK  : FS_DOEPMSK_Register;
-      --  OTG_FS device all endpoints interrupt register (OTG_FS_DAINT)
-      FS_DAINT    : FS_DAINT_Register;
-      --  OTG_FS all endpoints interrupt mask register (OTG_FS_DAINTMSK)
-      FS_DAINTMSK : FS_DAINTMSK_Register;
-      --  OTG_FS device VBUS discharge time register
-      DVBUSDIS    : DVBUSDIS_Register;
-      --  OTG_FS device VBUS pulsing time register
-      DVBUSPULSE  : DVBUSPULSE_Register;
-      --  OTG_FS device IN endpoint FIFO empty interrupt mask register
-      DIEPEMPMSK  : DIEPEMPMSK_Register;
-      --  OTG_FS device control IN endpoint 0 control register
-      --  (OTG_FS_DIEPCTL0)
-      FS_DIEPCTL0 : FS_DIEPCTL0_Register;
-      --  device endpoint-x interrupt register
-      DIEPINT0    : DIEPINT_Register;
-      --  device endpoint-0 transfer size register
-      DIEPTSIZ0   : DIEPTSIZ0_Register;
-      --  OTG_FS device IN endpoint transmit FIFO status register
-      DTXFSTS0    : DTXFSTS_Register;
-      --  OTG device endpoint-1 control register
-      DIEPCTL1    : DIEPCTL1_Register;
-      --  device endpoint-1 interrupt register
-      DIEPINT1    : DIEPINT_Register;
-      --  device endpoint-1 transfer size register
-      DIEPTSIZ1   : DIEPTSIZ_Register;
-      --  OTG_FS device IN endpoint transmit FIFO status register
-      DTXFSTS1    : DTXFSTS_Register;
-      --  OTG device endpoint-2 control register
-      DIEPCTL2    : DIEPCTL_Register;
-      --  device endpoint-2 interrupt register
-      DIEPINT2    : DIEPINT_Register;
-      --  device endpoint-2 transfer size register
-      DIEPTSIZ2   : DIEPTSIZ_Register;
-      --  OTG_FS device IN endpoint transmit FIFO status register
-      DTXFSTS2    : DTXFSTS_Register;
-      --  OTG device endpoint-3 control register
-      DIEPCTL3    : DIEPCTL_Register;
-      --  device endpoint-3 interrupt register
-      DIEPINT3    : DIEPINT_Register;
-      --  device endpoint-3 transfer size register
-      DIEPTSIZ3   : DIEPTSIZ_Register;
-      --  OTG_FS device IN endpoint transmit FIFO status register
-      DTXFSTS3    : DTXFSTS_Register;
-      --  device endpoint-0 control register
-      DOEPCTL0    : DOEPCTL0_Register;
-      --  device endpoint-0 interrupt register
-      DOEPINT0    : DOEPINT_Register;
-      --  device OUT endpoint-0 transfer size register
-      DOEPTSIZ0   : DOEPTSIZ0_Register;
-      --  device endpoint-1 control register
-      DOEPCTL1    : DOEPCTL_Register;
-      --  device endpoint-1 interrupt register
-      DOEPINT1    : DOEPINT_Register;
-      --  device OUT endpoint-1 transfer size register
-      DOEPTSIZ1   : DOEPTSIZ_Register;
-      --  device endpoint-2 control register
-      DOEPCTL2    : DOEPCTL_Register;
-      --  device endpoint-2 interrupt register
-      DOEPINT2    : DOEPINT_Register;
-      --  device OUT endpoint-2 transfer size register
-      DOEPTSIZ2   : DOEPTSIZ_Register;
-      --  device endpoint-3 control register
-      DOEPCTL3    : DOEPCTL_Register;
-      --  device endpoint-3 interrupt register
-      DOEPINT3    : DOEPINT_Register;
-      --  device OUT endpoint-3 transfer size register
-      DOEPTSIZ3   : DOEPTSIZ_Register;
-   end record
-     with Volatile;
-
-   for OTG_FS_DEVICE_Peripheral use record
-      FS_DCFG     at 0 range 0 .. 31;
-      FS_DCTL     at 4 range 0 .. 31;
-      FS_DSTS     at 8 range 0 .. 31;
-      FS_DIEPMSK  at 16 range 0 .. 31;
-      FS_DOEPMSK  at 20 range 0 .. 31;
-      FS_DAINT    at 24 range 0 .. 31;
-      FS_DAINTMSK at 28 range 0 .. 31;
-      DVBUSDIS    at 40 range 0 .. 31;
-      DVBUSPULSE  at 44 range 0 .. 31;
-      DIEPEMPMSK  at 52 range 0 .. 31;
-      FS_DIEPCTL0 at 256 range 0 .. 31;
-      DIEPINT0    at 264 range 0 .. 31;
-      DIEPTSIZ0   at 272 range 0 .. 31;
-      DTXFSTS0    at 280 range 0 .. 31;
-      DIEPCTL1    at 288 range 0 .. 31;
-      DIEPINT1    at 296 range 0 .. 31;
-      DIEPTSIZ1   at 304 range 0 .. 31;
-      DTXFSTS1    at 312 range 0 .. 31;
-      DIEPCTL2    at 320 range 0 .. 31;
-      DIEPINT2    at 328 range 0 .. 31;
-      DIEPTSIZ2   at 336 range 0 .. 31;
-      DTXFSTS2    at 344 range 0 .. 31;
-      DIEPCTL3    at 352 range 0 .. 31;
-      DIEPINT3    at 360 range 0 .. 31;
-      DIEPTSIZ3   at 368 range 0 .. 31;
-      DTXFSTS3    at 376 range 0 .. 31;
-      DOEPCTL0    at 768 range 0 .. 31;
-      DOEPINT0    at 776 range 0 .. 31;
-      DOEPTSIZ0   at 784 range 0 .. 31;
-      DOEPCTL1    at 800 range 0 .. 31;
-      DOEPINT1    at 808 range 0 .. 31;
-      DOEPTSIZ1   at 816 range 0 .. 31;
-      DOEPCTL2    at 832 range 0 .. 31;
-      DOEPINT2    at 840 range 0 .. 31;
-      DOEPTSIZ2   at 848 range 0 .. 31;
-      DOEPCTL3    at 864 range 0 .. 31;
-      DOEPINT3    at 872 range 0 .. 31;
-      DOEPTSIZ3   at 880 range 0 .. 31;
-   end record;
-
-   --  USB on the go full speed
-   OTG_FS_DEVICE_Periph : aliased OTG_FS_DEVICE_Peripheral
-     with Import, Address => OTG_FS_DEVICE_Base;
 
    --  USB on the go full speed
    type OTG_FS_PWRCLK_Peripheral is record

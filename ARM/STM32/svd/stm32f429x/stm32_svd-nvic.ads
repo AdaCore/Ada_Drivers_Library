@@ -13,10 +13,6 @@ package STM32_SVD.NVIC is
    -- Registers --
    ---------------
 
-   -------------------
-   -- ICTR_Register --
-   -------------------
-
    subtype ICTR_INTLINESNUM_Field is HAL.UInt4;
 
    --  Interrupt Controller Type Register
@@ -34,15 +30,11 @@ package STM32_SVD.NVIC is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
-   ------------------
-   -- IPR_Register --
-   ------------------
+   --  IPR_IPR_N array element
+   subtype IPR_IPR_N_Element is HAL.Byte;
 
-   --  IPR0_IPR_N array element
-   subtype IPR0_IPR_N_Element is HAL.Byte;
-
-   --  IPR0_IPR_N array
-   type IPR0_IPR_N_Field_Array is array (0 .. 3) of IPR0_IPR_N_Element
+   --  IPR_IPR_N array
+   type IPR_IPR_N_Field_Array is array (0 .. 3) of IPR_IPR_N_Element
      with Component_Size => 8, Size => 32;
 
    --  Interrupt Priority Register
@@ -55,7 +47,7 @@ package STM32_SVD.NVIC is
             Val : HAL.Word;
          when True =>
             --  IPR_N as an array
-            Arr : IPR0_IPR_N_Field_Array;
+            Arr : IPR_IPR_N_Field_Array;
       end case;
    end record
      with Unchecked_Union, Size => 32, Volatile_Full_Access,
@@ -65,10 +57,6 @@ package STM32_SVD.NVIC is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   -------------------
-   -- STIR_Register --
-   -------------------
 
    subtype STIR_INTID_Field is HAL.UInt9;
 

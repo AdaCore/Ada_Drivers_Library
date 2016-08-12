@@ -13,10 +13,6 @@ package STM32_SVD.I2C is
    -- Registers --
    ---------------
 
-   ------------------
-   -- CR1_Register --
-   ------------------
-
    subtype CR1_DNF_Field is HAL.UInt4;
 
    --  Control register 1
@@ -94,10 +90,6 @@ package STM32_SVD.I2C is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   ------------------
-   -- CR2_Register --
-   ------------------
-
    subtype CR2_SADD_Field is HAL.UInt10;
    subtype CR2_NBYTES_Field is HAL.Byte;
 
@@ -146,10 +138,6 @@ package STM32_SVD.I2C is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
-   -------------------
-   -- OAR1_Register --
-   -------------------
-
    subtype OAR1_OA1_Field is HAL.UInt10;
 
    --  Own address register 1
@@ -175,10 +163,6 @@ package STM32_SVD.I2C is
       OA1EN          at 0 range 15 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -------------------
-   -- OAR2_Register --
-   -------------------
 
    subtype OAR2_OA2_Field is HAL.UInt7;
    subtype OAR2_OA2MSK_Field is HAL.UInt3;
@@ -209,10 +193,6 @@ package STM32_SVD.I2C is
       OA2EN          at 0 range 15 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------
-   -- TIMINGR_Register --
-   ----------------------
 
    subtype TIMINGR_SCLL_Field is HAL.Byte;
    subtype TIMINGR_SCLH_Field is HAL.Byte;
@@ -247,10 +227,6 @@ package STM32_SVD.I2C is
       PRESC          at 0 range 28 .. 31;
    end record;
 
-   -----------------------
-   -- TIMEOUTR_Register --
-   -----------------------
-
    subtype TIMEOUTR_TIMEOUTA_Field is HAL.UInt12;
    subtype TIMEOUTR_TIMEOUTB_Field is HAL.UInt12;
 
@@ -283,10 +259,6 @@ package STM32_SVD.I2C is
       Reserved_28_30 at 0 range 28 .. 30;
       TEXTEN         at 0 range 31 .. 31;
    end record;
-
-   ------------------
-   -- ISR_Register --
-   ------------------
 
    subtype ISR_ADDCODE_Field is HAL.UInt7;
 
@@ -356,10 +328,6 @@ package STM32_SVD.I2C is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   ------------------
-   -- ICR_Register --
-   ------------------
-
    --  Interrupt clear register
    type ICR_Register is record
       --  unspecified
@@ -405,10 +373,6 @@ package STM32_SVD.I2C is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   -------------------
-   -- PECR_Register --
-   -------------------
-
    subtype PECR_PEC_Field is HAL.Byte;
 
    --  PEC register
@@ -426,10 +390,6 @@ package STM32_SVD.I2C is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   -------------------
-   -- RXDR_Register --
-   -------------------
-
    subtype RXDR_RXDATA_Field is HAL.Byte;
 
    --  Receive data register
@@ -446,10 +406,6 @@ package STM32_SVD.I2C is
       RXDATA        at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -------------------
-   -- TXDR_Register --
-   -------------------
 
    subtype TXDR_TXDATA_Field is HAL.Byte;
 

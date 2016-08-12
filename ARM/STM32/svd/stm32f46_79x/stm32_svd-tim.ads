@@ -13,10 +13,6 @@ package STM32_SVD.TIM is
    -- Registers --
    ---------------
 
-   ------------------
-   -- CR1_Register --
-   ------------------
-
    subtype CR1_CMS_Field is HAL.UInt2;
    subtype CR1_CKD_Field is HAL.UInt2;
 
@@ -55,10 +51,6 @@ package STM32_SVD.TIM is
       CKD            at 0 range 8 .. 9;
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
-
-   ------------------
-   -- CR2_Register --
-   ------------------
 
    subtype CR2_MMS_Field is HAL.UInt3;
 
@@ -113,10 +105,6 @@ package STM32_SVD.TIM is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   -------------------
-   -- SMCR_Register --
-   -------------------
-
    subtype SMCR_SMS_Field is HAL.UInt3;
    subtype SMCR_TS_Field is HAL.UInt3;
    subtype SMCR_ETF_Field is HAL.UInt4;
@@ -157,10 +145,6 @@ package STM32_SVD.TIM is
       ETP            at 0 range 15 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -------------------
-   -- DIER_Register --
-   -------------------
 
    --  DMA/Interrupt enable register
    type DIER_Register is record
@@ -219,10 +203,6 @@ package STM32_SVD.TIM is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   -----------------
-   -- SR_Register --
-   -----------------
-
    --  status register
    type SR_Register is record
       --  Update interrupt flag
@@ -274,10 +254,6 @@ package STM32_SVD.TIM is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   ------------------
-   -- EGR_Register --
-   ------------------
-
    --  event generation register
    type EGR_Register is record
       --  Write-only. Update generation
@@ -313,10 +289,6 @@ package STM32_SVD.TIM is
       BG            at 0 range 7 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   ---------------------------
-   -- CCMR1_Output_Register --
-   ---------------------------
 
    subtype CCMR1_Output_CC1S_Field is HAL.UInt2;
    subtype CCMR1_Output_OC1M_Field is HAL.UInt3;
@@ -365,10 +337,6 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   --------------------------
-   -- CCMR1_Input_Register --
-   --------------------------
-
    subtype CCMR1_Input_CC1S_Field is HAL.UInt2;
    subtype CCMR1_Input_ICPCS_Field is HAL.UInt2;
    subtype CCMR1_Input_IC1F_Field is HAL.UInt4;
@@ -405,10 +373,6 @@ package STM32_SVD.TIM is
       IC2F           at 0 range 12 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- CCMR2_Output_Register --
-   ---------------------------
 
    subtype CCMR2_Output_CC3S_Field is HAL.UInt2;
    subtype CCMR2_Output_OC3M_Field is HAL.UInt3;
@@ -457,10 +421,6 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   --------------------------
-   -- CCMR2_Input_Register --
-   --------------------------
-
    subtype CCMR2_Input_CC3S_Field is HAL.UInt2;
    subtype CCMR2_Input_IC3PSC_Field is HAL.UInt2;
    subtype CCMR2_Input_IC3F_Field is HAL.UInt4;
@@ -497,10 +457,6 @@ package STM32_SVD.TIM is
       IC4F           at 0 range 12 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -------------------
-   -- CCER_Register --
-   -------------------
 
    --  capture/compare enable register
    type CCER_Register is record
@@ -556,10 +512,6 @@ package STM32_SVD.TIM is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   ------------------
-   -- CNT_Register --
-   ------------------
-
    subtype CNT_CNT_Field is HAL.Short;
 
    --  counter
@@ -576,10 +528,6 @@ package STM32_SVD.TIM is
       CNT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ------------------
-   -- PSC_Register --
-   ------------------
 
    subtype PSC_PSC_Field is HAL.Short;
 
@@ -598,10 +546,6 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- ARR_Register --
-   ------------------
-
    subtype ARR_ARR_Field is HAL.Short;
 
    --  auto-reload register
@@ -618,10 +562,6 @@ package STM32_SVD.TIM is
       ARR            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ------------------
-   -- RCR_Register --
-   ------------------
 
    subtype RCR_REP_Field is HAL.Byte;
 
@@ -640,10 +580,6 @@ package STM32_SVD.TIM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   -------------------
-   -- CCR1_Register --
-   -------------------
-
    subtype CCR1_CCR1_Field is HAL.Short;
 
    --  capture/compare register 1
@@ -660,10 +596,6 @@ package STM32_SVD.TIM is
       CCR1           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -------------------
-   -- CCR2_Register --
-   -------------------
 
    subtype CCR2_CCR2_Field is HAL.Short;
 
@@ -682,10 +614,6 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -------------------
-   -- CCR3_Register --
-   -------------------
-
    subtype CCR3_CCR3_Field is HAL.Short;
 
    --  capture/compare register 3
@@ -703,10 +631,6 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -------------------
-   -- CCR4_Register --
-   -------------------
-
    subtype CCR4_CCR4_Field is HAL.Short;
 
    --  capture/compare register 4
@@ -723,10 +647,6 @@ package STM32_SVD.TIM is
       CCR4           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -------------------
-   -- BDTR_Register --
-   -------------------
 
    subtype BDTR_DTG_Field is HAL.Byte;
    subtype BDTR_LOCK_Field is HAL.UInt2;
@@ -767,10 +687,6 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- DCR_Register --
-   ------------------
-
    subtype DCR_DBA_Field is HAL.UInt5;
    subtype DCR_DBL_Field is HAL.UInt5;
 
@@ -795,10 +711,6 @@ package STM32_SVD.TIM is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   -------------------
-   -- DMAR_Register --
-   -------------------
-
    subtype DMAR_DMAB_Field is HAL.Short;
 
    --  DMA address for full transfer
@@ -815,10 +727,6 @@ package STM32_SVD.TIM is
       DMAB           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ------------------
-   -- CR2_Register --
-   ------------------
 
    --  control register 2
    type CR2_Register_1 is record
@@ -843,10 +751,6 @@ package STM32_SVD.TIM is
       TI1S          at 0 range 7 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -------------------
-   -- DIER_Register --
-   -------------------
 
    --  DMA/Interrupt enable register
    type DIER_Register_1 is record
@@ -905,10 +809,6 @@ package STM32_SVD.TIM is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   -----------------
-   -- SR_Register --
-   -----------------
-
    --  status register
    type SR_Register_1 is record
       --  Update interrupt flag
@@ -957,10 +857,6 @@ package STM32_SVD.TIM is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   ------------------
-   -- EGR_Register --
-   ------------------
-
    --  event generation register
    type EGR_Register_1 is record
       --  Write-only. Update generation
@@ -993,10 +889,6 @@ package STM32_SVD.TIM is
       TG            at 0 range 6 .. 6;
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
-
-   ---------------------------
-   -- CCMR2_Output_Register --
-   ---------------------------
 
    --  capture/compare mode register 2 (output mode)
    type CCMR2_Output_Register_1 is record
@@ -1039,10 +931,6 @@ package STM32_SVD.TIM is
       O24CE          at 0 range 15 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -------------------
-   -- CCER_Register --
-   -------------------
 
    --  capture/compare enable register
    type CCER_Register_1 is record
@@ -1104,10 +992,6 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- CNT_Register --
-   ------------------
-
    subtype CNT_CNT_L_Field is HAL.Short;
    subtype CNT_CNT_H_Field is HAL.Short;
 
@@ -1125,10 +1009,6 @@ package STM32_SVD.TIM is
       CNT_L at 0 range 0 .. 15;
       CNT_H at 0 range 16 .. 31;
    end record;
-
-   ------------------
-   -- ARR_Register --
-   ------------------
 
    subtype ARR_ARR_L_Field is HAL.Short;
    subtype ARR_ARR_H_Field is HAL.Short;
@@ -1148,10 +1028,6 @@ package STM32_SVD.TIM is
       ARR_H at 0 range 16 .. 31;
    end record;
 
-   -------------------
-   -- CCR1_Register --
-   -------------------
-
    subtype CCR1_CCR1_L_Field is HAL.Short;
    subtype CCR1_CCR1_H_Field is HAL.Short;
 
@@ -1169,10 +1045,6 @@ package STM32_SVD.TIM is
       CCR1_L at 0 range 0 .. 15;
       CCR1_H at 0 range 16 .. 31;
    end record;
-
-   -------------------
-   -- CCR2_Register --
-   -------------------
 
    subtype CCR2_CCR2_L_Field is HAL.Short;
    subtype CCR2_CCR2_H_Field is HAL.Short;
@@ -1192,10 +1064,6 @@ package STM32_SVD.TIM is
       CCR2_H at 0 range 16 .. 31;
    end record;
 
-   -------------------
-   -- CCR3_Register --
-   -------------------
-
    subtype CCR3_CCR3_L_Field is HAL.Short;
    subtype CCR3_CCR3_H_Field is HAL.Short;
 
@@ -1214,10 +1082,6 @@ package STM32_SVD.TIM is
       CCR3_H at 0 range 16 .. 31;
    end record;
 
-   -------------------
-   -- CCR4_Register --
-   -------------------
-
    subtype CCR4_CCR4_L_Field is HAL.Short;
    subtype CCR4_CCR4_H_Field is HAL.Short;
 
@@ -1235,10 +1099,6 @@ package STM32_SVD.TIM is
       CCR4_L at 0 range 0 .. 15;
       CCR4_H at 0 range 16 .. 31;
    end record;
-
-   -----------------
-   -- OR_Register --
-   -----------------
 
    subtype OR_ITR1_RMP_Field is HAL.UInt2;
 
@@ -1260,10 +1120,6 @@ package STM32_SVD.TIM is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   -----------------
-   -- OR_Register --
-   -----------------
-
    subtype OR_IT4_RMP_Field is HAL.UInt2;
 
    --  TIM5 option register
@@ -1284,12 +1140,107 @@ package STM32_SVD.TIM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   ------------------
-   -- CR1_Register --
-   ------------------
-
    --  control register 1
    type CR1_Register_1 is record
+      --  Counter enable
+      CEN           : Boolean := False;
+      --  Update disable
+      UDIS          : Boolean := False;
+      --  Update request source
+      URS           : Boolean := False;
+      --  One-pulse mode
+      OPM           : Boolean := False;
+      --  unspecified
+      Reserved_4_6  : HAL.UInt3 := 16#0#;
+      --  Auto-reload preload enable
+      ARPE          : Boolean := False;
+      --  unspecified
+      Reserved_8_31 : HAL.UInt24 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for CR1_Register_1 use record
+      CEN           at 0 range 0 .. 0;
+      UDIS          at 0 range 1 .. 1;
+      URS           at 0 range 2 .. 2;
+      OPM           at 0 range 3 .. 3;
+      Reserved_4_6  at 0 range 4 .. 6;
+      ARPE          at 0 range 7 .. 7;
+      Reserved_8_31 at 0 range 8 .. 31;
+   end record;
+
+   --  control register 2
+   type CR2_Register_2 is record
+      --  unspecified
+      Reserved_0_3  : HAL.UInt4 := 16#0#;
+      --  Master mode selection
+      MMS           : CR2_MMS_Field := 16#0#;
+      --  unspecified
+      Reserved_7_31 : HAL.UInt25 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for CR2_Register_2 use record
+      Reserved_0_3  at 0 range 0 .. 3;
+      MMS           at 0 range 4 .. 6;
+      Reserved_7_31 at 0 range 7 .. 31;
+   end record;
+
+   --  DMA/Interrupt enable register
+   type DIER_Register_2 is record
+      --  Update interrupt enable
+      UIE           : Boolean := False;
+      --  unspecified
+      Reserved_1_7  : HAL.UInt7 := 16#0#;
+      --  Update DMA request enable
+      UDE           : Boolean := False;
+      --  unspecified
+      Reserved_9_31 : HAL.UInt23 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for DIER_Register_2 use record
+      UIE           at 0 range 0 .. 0;
+      Reserved_1_7  at 0 range 1 .. 7;
+      UDE           at 0 range 8 .. 8;
+      Reserved_9_31 at 0 range 9 .. 31;
+   end record;
+
+   --  status register
+   type SR_Register_2 is record
+      --  Update interrupt flag
+      UIF           : Boolean := False;
+      --  unspecified
+      Reserved_1_31 : HAL.UInt31 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for SR_Register_2 use record
+      UIF           at 0 range 0 .. 0;
+      Reserved_1_31 at 0 range 1 .. 31;
+   end record;
+
+   --  event generation register
+   type EGR_Register_2 is record
+      --  Write-only. Update generation
+      UG            : Boolean := False;
+      --  unspecified
+      Reserved_1_31 : HAL.UInt31 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for EGR_Register_2 use record
+      UG            at 0 range 0 .. 0;
+      Reserved_1_31 at 0 range 1 .. 31;
+   end record;
+
+   --  control register 1
+   type CR1_Register_2 is record
       --  Counter enable
       CEN            : Boolean := False;
       --  Update disable
@@ -1310,7 +1261,7 @@ package STM32_SVD.TIM is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for CR1_Register_1 use record
+   for CR1_Register_2 use record
       CEN            at 0 range 0 .. 0;
       UDIS           at 0 range 1 .. 1;
       URS            at 0 range 2 .. 2;
@@ -1320,10 +1271,6 @@ package STM32_SVD.TIM is
       CKD            at 0 range 8 .. 9;
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
-
-   -------------------
-   -- SMCR_Register --
-   -------------------
 
    --  slave mode control register
    type SMCR_Register_1 is record
@@ -1349,12 +1296,8 @@ package STM32_SVD.TIM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   -------------------
-   -- DIER_Register --
-   -------------------
-
    --  DMA/Interrupt enable register
-   type DIER_Register_2 is record
+   type DIER_Register_3 is record
       --  Update interrupt enable
       UIE           : Boolean := False;
       --  Capture/Compare 1 interrupt enable
@@ -1371,7 +1314,7 @@ package STM32_SVD.TIM is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for DIER_Register_2 use record
+   for DIER_Register_3 use record
       UIE           at 0 range 0 .. 0;
       CC1IE         at 0 range 1 .. 1;
       CC2IE         at 0 range 2 .. 2;
@@ -1380,12 +1323,8 @@ package STM32_SVD.TIM is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
-   -----------------
-   -- SR_Register --
-   -----------------
-
    --  status register
-   type SR_Register_2 is record
+   type SR_Register_3 is record
       --  Update interrupt flag
       UIF            : Boolean := False;
       --  Capture/compare 1 interrupt flag
@@ -1408,7 +1347,7 @@ package STM32_SVD.TIM is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for SR_Register_2 use record
+   for SR_Register_3 use record
       UIF            at 0 range 0 .. 0;
       CC1IF          at 0 range 1 .. 1;
       CC2IF          at 0 range 2 .. 2;
@@ -1420,12 +1359,8 @@ package STM32_SVD.TIM is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
-   ------------------
-   -- EGR_Register --
-   ------------------
-
    --  event generation register
-   type EGR_Register_2 is record
+   type EGR_Register_3 is record
       --  Write-only. Update generation
       UG            : Boolean := False;
       --  Write-only. Capture/compare 1 generation
@@ -1442,7 +1377,7 @@ package STM32_SVD.TIM is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for EGR_Register_2 use record
+   for EGR_Register_3 use record
       UG            at 0 range 0 .. 0;
       CC1G          at 0 range 1 .. 1;
       CC2G          at 0 range 2 .. 2;
@@ -1450,10 +1385,6 @@ package STM32_SVD.TIM is
       TG            at 0 range 6 .. 6;
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
-
-   ---------------------------
-   -- CCMR1_Output_Register --
-   ---------------------------
 
    --  capture/compare mode register 1 (output mode)
    type CCMR1_Output_Register_1 is record
@@ -1494,10 +1425,6 @@ package STM32_SVD.TIM is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   --------------------------
-   -- CCMR1_Input_Register --
-   --------------------------
-
    subtype CCMR1_Input_IC1F_Field_1 is HAL.UInt3;
    subtype CCMR1_Input_IC2F_Field_1 is HAL.UInt3;
 
@@ -1533,10 +1460,6 @@ package STM32_SVD.TIM is
       IC2F           at 0 range 12 .. 14;
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
-
-   -------------------
-   -- CCER_Register --
-   -------------------
 
    --  capture/compare enable register
    type CCER_Register_2 is record
@@ -1574,12 +1497,8 @@ package STM32_SVD.TIM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   ------------------
-   -- CR1_Register --
-   ------------------
-
    --  control register 1
-   type CR1_Register_2 is record
+   type CR1_Register_3 is record
       --  Counter enable
       CEN            : Boolean := False;
       --  Update disable
@@ -1598,7 +1517,7 @@ package STM32_SVD.TIM is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for CR1_Register_2 use record
+   for CR1_Register_3 use record
       CEN            at 0 range 0 .. 0;
       UDIS           at 0 range 1 .. 1;
       URS            at 0 range 2 .. 2;
@@ -1608,12 +1527,8 @@ package STM32_SVD.TIM is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
-   -------------------
-   -- DIER_Register --
-   -------------------
-
    --  DMA/Interrupt enable register
-   type DIER_Register_3 is record
+   type DIER_Register_4 is record
       --  Update interrupt enable
       UIE           : Boolean := False;
       --  Capture/Compare 1 interrupt enable
@@ -1624,18 +1539,14 @@ package STM32_SVD.TIM is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for DIER_Register_3 use record
+   for DIER_Register_4 use record
       UIE           at 0 range 0 .. 0;
       CC1IE         at 0 range 1 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   -----------------
-   -- SR_Register --
-   -----------------
-
    --  status register
-   type SR_Register_3 is record
+   type SR_Register_4 is record
       --  Update interrupt flag
       UIF            : Boolean := False;
       --  Capture/compare 1 interrupt flag
@@ -1650,7 +1561,7 @@ package STM32_SVD.TIM is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for SR_Register_3 use record
+   for SR_Register_4 use record
       UIF            at 0 range 0 .. 0;
       CC1IF          at 0 range 1 .. 1;
       Reserved_2_8   at 0 range 2 .. 8;
@@ -1658,12 +1569,8 @@ package STM32_SVD.TIM is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
-   ------------------
-   -- EGR_Register --
-   ------------------
-
    --  event generation register
-   type EGR_Register_3 is record
+   type EGR_Register_4 is record
       --  Write-only. Update generation
       UG            : Boolean := False;
       --  Write-only. Capture/compare 1 generation
@@ -1674,15 +1581,11 @@ package STM32_SVD.TIM is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for EGR_Register_3 use record
+   for EGR_Register_4 use record
       UG            at 0 range 0 .. 0;
       CC1G          at 0 range 1 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   ---------------------------
-   -- CCMR1_Output_Register --
-   ---------------------------
 
    --  capture/compare mode register 1 (output mode)
    type CCMR1_Output_Register_2 is record
@@ -1708,10 +1611,6 @@ package STM32_SVD.TIM is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
-   --------------------------
-   -- CCMR1_Input_Register --
-   --------------------------
-
    --  capture/compare mode register 1 (input mode)
    type CCMR1_Input_Register_2 is record
       --  Capture/Compare 1 selection
@@ -1732,10 +1631,6 @@ package STM32_SVD.TIM is
       IC1F          at 0 range 4 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -------------------
-   -- CCER_Register --
-   -------------------
 
    --  capture/compare enable register
    type CCER_Register_3 is record
@@ -1761,10 +1656,6 @@ package STM32_SVD.TIM is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
-   -----------------
-   -- OR_Register --
-   -----------------
-
    subtype OR_RMP_Field is HAL.UInt2;
 
    --  option register
@@ -1782,128 +1673,102 @@ package STM32_SVD.TIM is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   ------------------
-   -- CR1_Register --
-   ------------------
-
-   --  control register 1
-   type CR1_Register_3 is record
-      --  Counter enable
-      CEN           : Boolean := False;
-      --  Update disable
-      UDIS          : Boolean := False;
-      --  Update request source
-      URS           : Boolean := False;
-      --  One-pulse mode
-      OPM           : Boolean := False;
-      --  unspecified
-      Reserved_4_6  : HAL.UInt3 := 16#0#;
-      --  Auto-reload preload enable
-      ARPE          : Boolean := False;
-      --  unspecified
-      Reserved_8_31 : HAL.UInt24 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for CR1_Register_3 use record
-      CEN           at 0 range 0 .. 0;
-      UDIS          at 0 range 1 .. 1;
-      URS           at 0 range 2 .. 2;
-      OPM           at 0 range 3 .. 3;
-      Reserved_4_6  at 0 range 4 .. 6;
-      ARPE          at 0 range 7 .. 7;
-      Reserved_8_31 at 0 range 8 .. 31;
-   end record;
-
-   ------------------
-   -- CR2_Register --
-   ------------------
-
-   --  control register 2
-   type CR2_Register_2 is record
-      --  unspecified
-      Reserved_0_3  : HAL.UInt4 := 16#0#;
-      --  Master mode selection
-      MMS           : CR2_MMS_Field := 16#0#;
-      --  unspecified
-      Reserved_7_31 : HAL.UInt25 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for CR2_Register_2 use record
-      Reserved_0_3  at 0 range 0 .. 3;
-      MMS           at 0 range 4 .. 6;
-      Reserved_7_31 at 0 range 7 .. 31;
-   end record;
-
-   -------------------
-   -- DIER_Register --
-   -------------------
-
-   --  DMA/Interrupt enable register
-   type DIER_Register_4 is record
-      --  Update interrupt enable
-      UIE           : Boolean := False;
-      --  unspecified
-      Reserved_1_7  : HAL.UInt7 := 16#0#;
-      --  Update DMA request enable
-      UDE           : Boolean := False;
-      --  unspecified
-      Reserved_9_31 : HAL.UInt23 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for DIER_Register_4 use record
-      UIE           at 0 range 0 .. 0;
-      Reserved_1_7  at 0 range 1 .. 7;
-      UDE           at 0 range 8 .. 8;
-      Reserved_9_31 at 0 range 9 .. 31;
-   end record;
-
-   -----------------
-   -- SR_Register --
-   -----------------
-
-   --  status register
-   type SR_Register_4 is record
-      --  Update interrupt flag
-      UIF           : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for SR_Register_4 use record
-      UIF           at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   ------------------
-   -- EGR_Register --
-   ------------------
-
-   --  event generation register
-   type EGR_Register_4 is record
-      --  Write-only. Update generation
-      UG            : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EGR_Register_4 use record
-      UG            at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
    -----------------
    -- Peripherals --
    -----------------
+
+   type TIM1_Disc is
+     (
+      Output,
+      Input);
+
+   --  Advanced-timers
+   type TIM1_Peripheral
+     (Discriminent : TIM1_Disc := Output)
+   is record
+      --  control register 1
+      CR1          : CR1_Register;
+      --  control register 2
+      CR2          : CR2_Register;
+      --  slave mode control register
+      SMCR         : SMCR_Register;
+      --  DMA/Interrupt enable register
+      DIER         : DIER_Register;
+      --  status register
+      SR           : SR_Register;
+      --  event generation register
+      EGR          : EGR_Register;
+      --  capture/compare enable register
+      CCER         : CCER_Register;
+      --  counter
+      CNT          : CNT_Register;
+      --  prescaler
+      PSC          : PSC_Register;
+      --  auto-reload register
+      ARR          : ARR_Register;
+      --  repetition counter register
+      RCR          : RCR_Register;
+      --  capture/compare register 1
+      CCR1         : CCR1_Register;
+      --  capture/compare register 2
+      CCR2         : CCR2_Register;
+      --  capture/compare register 3
+      CCR3         : CCR3_Register;
+      --  capture/compare register 4
+      CCR4         : CCR4_Register;
+      --  break and dead-time register
+      BDTR         : BDTR_Register;
+      --  DMA control register
+      DCR          : DCR_Register;
+      --  DMA address for full transfer
+      DMAR         : DMAR_Register;
+      case Discriminent is
+         when Output =>
+            --  capture/compare mode register 1 (output mode)
+            CCMR1_Output : CCMR1_Output_Register;
+            --  capture/compare mode register 2 (output mode)
+            CCMR2_Output : CCMR2_Output_Register;
+         when Input =>
+            --  capture/compare mode register 1 (input mode)
+            CCMR1_Input : CCMR1_Input_Register;
+            --  capture/compare mode register 2 (input mode)
+            CCMR2_Input : CCMR2_Input_Register;
+      end case;
+   end record
+     with Unchecked_Union, Volatile;
+
+   for TIM1_Peripheral use record
+      CR1          at 0 range 0 .. 31;
+      CR2          at 4 range 0 .. 31;
+      SMCR         at 8 range 0 .. 31;
+      DIER         at 12 range 0 .. 31;
+      SR           at 16 range 0 .. 31;
+      EGR          at 20 range 0 .. 31;
+      CCER         at 32 range 0 .. 31;
+      CNT          at 36 range 0 .. 31;
+      PSC          at 40 range 0 .. 31;
+      ARR          at 44 range 0 .. 31;
+      RCR          at 48 range 0 .. 31;
+      CCR1         at 52 range 0 .. 31;
+      CCR2         at 56 range 0 .. 31;
+      CCR3         at 60 range 0 .. 31;
+      CCR4         at 64 range 0 .. 31;
+      BDTR         at 68 range 0 .. 31;
+      DCR          at 72 range 0 .. 31;
+      DMAR         at 76 range 0 .. 31;
+      CCMR1_Output at 24 range 0 .. 31;
+      CCMR2_Output at 28 range 0 .. 31;
+      CCMR1_Input  at 24 range 0 .. 31;
+      CCMR2_Input  at 28 range 0 .. 31;
+   end record;
+
+   --  Advanced-timers
+   TIM1_Periph : aliased TIM1_Peripheral
+     with Import, Address => TIM1_Base;
+
+   --  Advanced-timers
+   TIM8_Periph : aliased TIM1_Peripheral
+     with Import, Address => TIM8_Base;
 
    type TIM2_Disc is
      (
@@ -2167,15 +2032,15 @@ package STM32_SVD.TIM is
    --  Basic timers
    type TIM6_Peripheral is record
       --  control register 1
-      CR1  : CR1_Register_3;
+      CR1  : CR1_Register_1;
       --  control register 2
       CR2  : CR2_Register_2;
       --  DMA/Interrupt enable register
-      DIER : DIER_Register_4;
+      DIER : DIER_Register_2;
       --  status register
-      SR   : SR_Register_4;
+      SR   : SR_Register_2;
       --  event generation register
-      EGR  : EGR_Register_4;
+      EGR  : EGR_Register_2;
       --  counter
       CNT  : CNT_Register;
       --  prescaler
@@ -2204,25 +2069,25 @@ package STM32_SVD.TIM is
    TIM7_Periph : aliased TIM6_Peripheral
      with Import, Address => TIM7_Base;
 
-   type TIM12_Disc is
+   type TIM9_Disc is
      (
       Output,
       Input);
 
    --  General purpose timers
-   type TIM12_Peripheral
-     (Discriminent : TIM12_Disc := Output)
+   type TIM9_Peripheral
+     (Discriminent : TIM9_Disc := Output)
    is record
       --  control register 1
-      CR1          : CR1_Register_1;
+      CR1          : CR1_Register_2;
       --  slave mode control register
       SMCR         : SMCR_Register_1;
       --  DMA/Interrupt enable register
-      DIER         : DIER_Register_2;
+      DIER         : DIER_Register_3;
       --  status register
-      SR           : SR_Register_2;
+      SR           : SR_Register_3;
       --  event generation register
-      EGR          : EGR_Register_2;
+      EGR          : EGR_Register_3;
       --  capture/compare enable register
       CCER         : CCER_Register_2;
       --  counter
@@ -2246,7 +2111,7 @@ package STM32_SVD.TIM is
    end record
      with Unchecked_Union, Volatile;
 
-   for TIM12_Peripheral use record
+   for TIM9_Peripheral use record
       CR1          at 0 range 0 .. 31;
       SMCR         at 8 range 0 .. 31;
       DIER         at 12 range 0 .. 31;
@@ -2263,30 +2128,30 @@ package STM32_SVD.TIM is
    end record;
 
    --  General purpose timers
-   TIM12_Periph : aliased TIM12_Peripheral
-     with Import, Address => TIM12_Base;
-
-   --  General purpose timers
-   TIM9_Periph : aliased TIM12_Peripheral
+   TIM9_Periph : aliased TIM9_Peripheral
      with Import, Address => TIM9_Base;
 
-   type TIM13_Disc is
+   --  General purpose timers
+   TIM12_Periph : aliased TIM9_Peripheral
+     with Import, Address => TIM12_Base;
+
+   type TIM10_Disc is
      (
       Output,
       Input);
 
    --  General-purpose-timers
-   type TIM13_Peripheral
-     (Discriminent : TIM13_Disc := Output)
+   type TIM10_Peripheral
+     (Discriminent : TIM10_Disc := Output)
    is record
       --  control register 1
-      CR1          : CR1_Register_2;
+      CR1          : CR1_Register_3;
       --  DMA/Interrupt enable register
-      DIER         : DIER_Register_3;
+      DIER         : DIER_Register_4;
       --  status register
-      SR           : SR_Register_3;
+      SR           : SR_Register_4;
       --  event generation register
-      EGR          : EGR_Register_3;
+      EGR          : EGR_Register_4;
       --  capture/compare enable register
       CCER         : CCER_Register_3;
       --  counter
@@ -2308,7 +2173,7 @@ package STM32_SVD.TIM is
    end record
      with Unchecked_Union, Volatile;
 
-   for TIM13_Peripheral use record
+   for TIM10_Peripheral use record
       CR1          at 0 range 0 .. 31;
       DIER         at 12 range 0 .. 31;
       SR           at 16 range 0 .. 31;
@@ -2323,109 +2188,16 @@ package STM32_SVD.TIM is
    end record;
 
    --  General-purpose-timers
-   TIM13_Periph : aliased TIM13_Peripheral
+   TIM10_Periph : aliased TIM10_Peripheral
+     with Import, Address => TIM10_Base;
+
+   --  General-purpose-timers
+   TIM13_Periph : aliased TIM10_Peripheral
      with Import, Address => TIM13_Base;
 
    --  General-purpose-timers
-   TIM14_Periph : aliased TIM13_Peripheral
+   TIM14_Periph : aliased TIM10_Peripheral
      with Import, Address => TIM14_Base;
-
-   --  General-purpose-timers
-   TIM10_Periph : aliased TIM13_Peripheral
-     with Import, Address => TIM10_Base;
-
-   type TIM1_Disc is
-     (
-      Output,
-      Input);
-
-   --  Advanced-timers
-   type TIM1_Peripheral
-     (Discriminent : TIM1_Disc := Output)
-   is record
-      --  control register 1
-      CR1          : CR1_Register;
-      --  control register 2
-      CR2          : CR2_Register;
-      --  slave mode control register
-      SMCR         : SMCR_Register;
-      --  DMA/Interrupt enable register
-      DIER         : DIER_Register;
-      --  status register
-      SR           : SR_Register;
-      --  event generation register
-      EGR          : EGR_Register;
-      --  capture/compare enable register
-      CCER         : CCER_Register;
-      --  counter
-      CNT          : CNT_Register;
-      --  prescaler
-      PSC          : PSC_Register;
-      --  auto-reload register
-      ARR          : ARR_Register;
-      --  repetition counter register
-      RCR          : RCR_Register;
-      --  capture/compare register 1
-      CCR1         : CCR1_Register;
-      --  capture/compare register 2
-      CCR2         : CCR2_Register;
-      --  capture/compare register 3
-      CCR3         : CCR3_Register;
-      --  capture/compare register 4
-      CCR4         : CCR4_Register;
-      --  break and dead-time register
-      BDTR         : BDTR_Register;
-      --  DMA control register
-      DCR          : DCR_Register;
-      --  DMA address for full transfer
-      DMAR         : DMAR_Register;
-      case Discriminent is
-         when Output =>
-            --  capture/compare mode register 1 (output mode)
-            CCMR1_Output : CCMR1_Output_Register;
-            --  capture/compare mode register 2 (output mode)
-            CCMR2_Output : CCMR2_Output_Register;
-         when Input =>
-            --  capture/compare mode register 1 (input mode)
-            CCMR1_Input : CCMR1_Input_Register;
-            --  capture/compare mode register 2 (input mode)
-            CCMR2_Input : CCMR2_Input_Register;
-      end case;
-   end record
-     with Unchecked_Union, Volatile;
-
-   for TIM1_Peripheral use record
-      CR1          at 0 range 0 .. 31;
-      CR2          at 4 range 0 .. 31;
-      SMCR         at 8 range 0 .. 31;
-      DIER         at 12 range 0 .. 31;
-      SR           at 16 range 0 .. 31;
-      EGR          at 20 range 0 .. 31;
-      CCER         at 32 range 0 .. 31;
-      CNT          at 36 range 0 .. 31;
-      PSC          at 40 range 0 .. 31;
-      ARR          at 44 range 0 .. 31;
-      RCR          at 48 range 0 .. 31;
-      CCR1         at 52 range 0 .. 31;
-      CCR2         at 56 range 0 .. 31;
-      CCR3         at 60 range 0 .. 31;
-      CCR4         at 64 range 0 .. 31;
-      BDTR         at 68 range 0 .. 31;
-      DCR          at 72 range 0 .. 31;
-      DMAR         at 76 range 0 .. 31;
-      CCMR1_Output at 24 range 0 .. 31;
-      CCMR2_Output at 28 range 0 .. 31;
-      CCMR1_Input  at 24 range 0 .. 31;
-      CCMR2_Input  at 28 range 0 .. 31;
-   end record;
-
-   --  Advanced-timers
-   TIM1_Periph : aliased TIM1_Peripheral
-     with Import, Address => TIM1_Base;
-
-   --  Advanced-timers
-   TIM8_Periph : aliased TIM1_Peripheral
-     with Import, Address => TIM8_Base;
 
    type TIM11_Disc is
      (
@@ -2437,13 +2209,13 @@ package STM32_SVD.TIM is
      (Discriminent : TIM11_Disc := Output)
    is record
       --  control register 1
-      CR1          : CR1_Register_2;
+      CR1          : CR1_Register_3;
       --  DMA/Interrupt enable register
-      DIER         : DIER_Register_3;
+      DIER         : DIER_Register_4;
       --  status register
-      SR           : SR_Register_3;
+      SR           : SR_Register_4;
       --  event generation register
-      EGR          : EGR_Register_3;
+      EGR          : EGR_Register_4;
       --  capture/compare enable register
       CCER         : CCER_Register_3;
       --  counter

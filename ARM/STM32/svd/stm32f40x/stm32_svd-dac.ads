@@ -13,10 +13,6 @@ package STM32_SVD.DAC is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    subtype CR_TSEL1_Field is HAL.UInt3;
    subtype CR_WAVE1_Field is HAL.UInt2;
    subtype CR_MAMP1_Field is HAL.UInt4;
@@ -87,14 +83,6 @@ package STM32_SVD.DAC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   ----------------------
-   -- SWTRIGR_Register --
-   ----------------------
-
-   --------------------
-   -- SWTRIGR.SWTRIG --
-   --------------------
-
    --  SWTRIGR_SWTRIG array
    type SWTRIGR_SWTRIG_Field_Array is array (1 .. 2) of Boolean
      with Component_Size => 1, Size => 2;
@@ -135,10 +123,6 @@ package STM32_SVD.DAC is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   ----------------------
-   -- DHR12R1_Register --
-   ----------------------
-
    subtype DHR12R1_DACC1DHR_Field is HAL.UInt12;
 
    --  channel1 12-bit right-aligned data holding register
@@ -155,10 +139,6 @@ package STM32_SVD.DAC is
       DACC1DHR       at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
-
-   ----------------------
-   -- DHR12L1_Register --
-   ----------------------
 
    subtype DHR12L1_DACC1DHR_Field is HAL.UInt12;
 
@@ -180,10 +160,6 @@ package STM32_SVD.DAC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------
-   -- DHR8R1_Register --
-   ---------------------
-
    subtype DHR8R1_DACC1DHR_Field is HAL.Byte;
 
    --  channel1 8-bit right aligned data holding register
@@ -201,10 +177,6 @@ package STM32_SVD.DAC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   ----------------------
-   -- DHR12R2_Register --
-   ----------------------
-
    subtype DHR12R2_DACC2DHR_Field is HAL.UInt12;
 
    --  channel2 12-bit right aligned data holding register
@@ -221,10 +193,6 @@ package STM32_SVD.DAC is
       DACC2DHR       at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
-
-   ----------------------
-   -- DHR12L2_Register --
-   ----------------------
 
    subtype DHR12L2_DACC2DHR_Field is HAL.UInt12;
 
@@ -246,10 +214,6 @@ package STM32_SVD.DAC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------
-   -- DHR8R2_Register --
-   ---------------------
-
    subtype DHR8R2_DACC2DHR_Field is HAL.Byte;
 
    --  channel2 8-bit right-aligned data holding register
@@ -266,10 +230,6 @@ package STM32_SVD.DAC is
       DACC2DHR      at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   ----------------------
-   -- DHR12RD_Register --
-   ----------------------
 
    subtype DHR12RD_DACC1DHR_Field is HAL.UInt12;
    subtype DHR12RD_DACC2DHR_Field is HAL.UInt12;
@@ -295,10 +255,6 @@ package STM32_SVD.DAC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ----------------------
-   -- DHR12LD_Register --
-   ----------------------
-
    subtype DHR12LD_DACC1DHR_Field is HAL.UInt12;
    subtype DHR12LD_DACC2DHR_Field is HAL.UInt12;
 
@@ -323,10 +279,6 @@ package STM32_SVD.DAC is
       DACC2DHR       at 0 range 20 .. 31;
    end record;
 
-   ---------------------
-   -- DHR8RD_Register --
-   ---------------------
-
    subtype DHR8RD_DACC1DHR_Field is HAL.Byte;
    subtype DHR8RD_DACC2DHR_Field is HAL.Byte;
 
@@ -348,10 +300,6 @@ package STM32_SVD.DAC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -------------------
-   -- DOR1_Register --
-   -------------------
-
    subtype DOR1_DACC1DOR_Field is HAL.UInt12;
 
    --  channel1 data output register
@@ -369,10 +317,6 @@ package STM32_SVD.DAC is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   -------------------
-   -- DOR2_Register --
-   -------------------
-
    subtype DOR2_DACC2DOR_Field is HAL.UInt12;
 
    --  channel2 data output register
@@ -389,10 +333,6 @@ package STM32_SVD.DAC is
       DACC2DOR       at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
-
-   -----------------
-   -- SR_Register --
-   -----------------
 
    --  status register
    type SR_Register is record

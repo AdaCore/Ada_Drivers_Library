@@ -13,10 +13,6 @@ package STM32_SVD.IWDG is
    -- Registers --
    ---------------
 
-   -----------------
-   -- KR_Register --
-   -----------------
-
    subtype KR_KEY_Field is HAL.Short;
 
    --  Key register
@@ -33,10 +29,6 @@ package STM32_SVD.IWDG is
       KEY            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -----------------
-   -- PR_Register --
-   -----------------
 
    subtype PR_PR_Field is HAL.UInt3;
 
@@ -55,10 +47,6 @@ package STM32_SVD.IWDG is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   ------------------
-   -- RLR_Register --
-   ------------------
-
    subtype RLR_RL_Field is HAL.UInt12;
 
    --  Reload register
@@ -75,10 +63,6 @@ package STM32_SVD.IWDG is
       RL             at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
-
-   -----------------
-   -- SR_Register --
-   -----------------
 
    --  Status register
    type SR_Register is record
@@ -97,10 +81,6 @@ package STM32_SVD.IWDG is
       RVU           at 0 range 1 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   -------------------
-   -- WINR_Register --
-   -------------------
 
    subtype WINR_WIN_Field is HAL.UInt12;
 

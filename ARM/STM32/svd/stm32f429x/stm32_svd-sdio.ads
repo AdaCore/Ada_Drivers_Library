@@ -13,10 +13,6 @@ package STM32_SVD.SDIO is
    -- Registers --
    ---------------
 
-   --------------------
-   -- POWER_Register --
-   --------------------
-
    subtype POWER_PWRCTRL_Field is HAL.UInt2;
 
    --  power control register
@@ -33,10 +29,6 @@ package STM32_SVD.SDIO is
       PWRCTRL       at 0 range 0 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   --------------------
-   -- CLKCR_Register --
-   --------------------
 
    subtype CLKCR_CLKDIV_Field is HAL.Byte;
    subtype CLKCR_WIDBUS_Field is HAL.UInt2;
@@ -73,10 +65,6 @@ package STM32_SVD.SDIO is
       HWFC_EN        at 0 range 14 .. 14;
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
-
-   ------------------
-   -- CMD_Register --
-   ------------------
 
    subtype CMD_CMDINDEX_Field is HAL.UInt6;
    subtype CMD_WAITRESP_Field is HAL.UInt2;
@@ -120,10 +108,6 @@ package STM32_SVD.SDIO is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   ----------------------
-   -- RESPCMD_Register --
-   ----------------------
-
    subtype RESPCMD_RESPCMD_Field is HAL.UInt6;
 
    --  command response register
@@ -141,10 +125,6 @@ package STM32_SVD.SDIO is
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
 
-   -------------------
-   -- DLEN_Register --
-   -------------------
-
    subtype DLEN_DATALENGTH_Field is HAL.UInt25;
 
    --  data length register
@@ -161,10 +141,6 @@ package STM32_SVD.SDIO is
       DATALENGTH     at 0 range 0 .. 24;
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
-
-   --------------------
-   -- DCTRL_Register --
-   --------------------
 
    subtype DCTRL_DBLOCKSIZE_Field is HAL.UInt4;
 
@@ -208,10 +184,6 @@ package STM32_SVD.SDIO is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   ---------------------
-   -- DCOUNT_Register --
-   ---------------------
-
    subtype DCOUNT_DATACOUNT_Field is HAL.UInt25;
 
    --  data counter register
@@ -228,10 +200,6 @@ package STM32_SVD.SDIO is
       DATACOUNT      at 0 range 0 .. 24;
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
-
-   ------------------
-   -- STA_Register --
-   ------------------
 
    --  status register
    type STA_Register is record
@@ -320,10 +288,6 @@ package STM32_SVD.SDIO is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   ------------------
-   -- ICR_Register --
-   ------------------
-
    --  interrupt clear register
    type ICR_Register is record
       --  CCRCFAIL flag clear bit
@@ -377,10 +341,6 @@ package STM32_SVD.SDIO is
       CEATAENDC      at 0 range 23 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   -------------------
-   -- MASK_Register --
-   -------------------
 
    --  mask register
    type MASK_Register is record
@@ -465,10 +425,6 @@ package STM32_SVD.SDIO is
       CEATAENDIE     at 0 range 23 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   ----------------------
-   -- FIFOCNT_Register --
-   ----------------------
 
    subtype FIFOCNT_FIFOCOUNT_Field is HAL.UInt24;
 

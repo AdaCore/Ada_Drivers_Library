@@ -13,10 +13,6 @@ package STM32_SVD.PWR is
    -- Registers --
    ---------------
 
-   ------------------
-   -- CR1_Register --
-   ------------------
-
    subtype CR1_PLS_Field is HAL.UInt3;
    subtype CR1_VOS_Field is HAL.UInt2;
    subtype CR1_UDEN_Field is HAL.UInt2;
@@ -81,10 +77,6 @@ package STM32_SVD.PWR is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
-   -------------------
-   -- CSR1_Register --
-   -------------------
-
    subtype CSR1_UDRDY_Field is HAL.UInt2;
 
    --  power control/status register
@@ -135,14 +127,6 @@ package STM32_SVD.PWR is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
-   ------------------
-   -- CR2_Register --
-   ------------------
-
-   ---------------
-   -- CR2.CWUPF --
-   ---------------
-
    --  CR2_CWUPF array
    type CR2_CWUPF_Field_Array is array (1 .. 6) of Boolean
      with Component_Size => 1, Size => 6;
@@ -166,10 +150,6 @@ package STM32_SVD.PWR is
       Val at 0 range 0 .. 5;
       Arr at 0 range 0 .. 5;
    end record;
-
-   --------------
-   -- CR2.WUPP --
-   --------------
 
    --  CR2_WUPP array
    type CR2_WUPP_Field_Array is array (1 .. 6) of Boolean
@@ -216,14 +196,6 @@ package STM32_SVD.PWR is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   -------------------
-   -- CSR2_Register --
-   -------------------
-
-   ---------------
-   -- CSR2.WUPF --
-   ---------------
-
    --  CSR2_WUPF array
    type CSR2_WUPF_Field_Array is array (1 .. 6) of Boolean
      with Component_Size => 1, Size => 6;
@@ -247,10 +219,6 @@ package STM32_SVD.PWR is
       Val at 0 range 0 .. 5;
       Arr at 0 range 0 .. 5;
    end record;
-
-   ---------------
-   -- CSR2.EWUP --
-   ---------------
 
    --  CSR2_EWUP array
    type CSR2_EWUP_Field_Array is array (1 .. 6) of Boolean

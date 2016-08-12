@@ -13,55 +13,44 @@ package STM32_SVD.USART is
    -- Registers --
    ---------------
 
-   -----------------
-   -- SR_Register --
-   -----------------
-
    --  Status register
    type SR_Register is record
       --  Read-only. Parity error
-      PE             : Boolean := False;
+      PE            : Boolean := False;
       --  Read-only. Framing error
-      FE             : Boolean := False;
+      FE            : Boolean := False;
       --  Read-only. Noise detected flag
-      NF             : Boolean := False;
+      NF            : Boolean := False;
       --  Read-only. Overrun error
-      ORE            : Boolean := False;
+      ORE           : Boolean := False;
       --  Read-only. IDLE line detected
-      IDLE           : Boolean := False;
+      IDLE          : Boolean := False;
       --  Read data register not empty
-      RXNE           : Boolean := False;
+      RXNE          : Boolean := False;
       --  Transmission complete
-      TC             : Boolean := False;
+      TC            : Boolean := False;
       --  Read-only. Transmit data register empty
-      TXE            : Boolean := False;
+      TXE           : Boolean := False;
       --  LIN break detection flag
-      LBD            : Boolean := False;
-      --  CTS flag
-      CTS            : Boolean := False;
+      LBD           : Boolean := False;
       --  unspecified
-      Reserved_10_31 : HAL.UInt22 := 16#3000#;
+      Reserved_9_31 : HAL.UInt23 := 16#6000#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for SR_Register use record
-      PE             at 0 range 0 .. 0;
-      FE             at 0 range 1 .. 1;
-      NF             at 0 range 2 .. 2;
-      ORE            at 0 range 3 .. 3;
-      IDLE           at 0 range 4 .. 4;
-      RXNE           at 0 range 5 .. 5;
-      TC             at 0 range 6 .. 6;
-      TXE            at 0 range 7 .. 7;
-      LBD            at 0 range 8 .. 8;
-      CTS            at 0 range 9 .. 9;
-      Reserved_10_31 at 0 range 10 .. 31;
+      PE            at 0 range 0 .. 0;
+      FE            at 0 range 1 .. 1;
+      NF            at 0 range 2 .. 2;
+      ORE           at 0 range 3 .. 3;
+      IDLE          at 0 range 4 .. 4;
+      RXNE          at 0 range 5 .. 5;
+      TC            at 0 range 6 .. 6;
+      TXE           at 0 range 7 .. 7;
+      LBD           at 0 range 8 .. 8;
+      Reserved_9_31 at 0 range 9 .. 31;
    end record;
-
-   -----------------
-   -- DR_Register --
-   -----------------
 
    subtype DR_DR_Field is HAL.UInt9;
 
@@ -79,10 +68,6 @@ package STM32_SVD.USART is
       DR            at 0 range 0 .. 8;
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
-
-   ------------------
-   -- BRR_Register --
-   ------------------
 
    subtype BRR_DIV_Fraction_Field is HAL.UInt4;
    subtype BRR_DIV_Mantissa_Field is HAL.UInt12;
@@ -104,10 +89,6 @@ package STM32_SVD.USART is
       DIV_Mantissa   at 0 range 4 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ------------------
-   -- CR1_Register --
-   ------------------
 
    --  Control register 1
    type CR1_Register is record
@@ -169,15 +150,125 @@ package STM32_SVD.USART is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- CR2_Register --
-   ------------------
-
    subtype CR2_ADD_Field is HAL.UInt4;
    subtype CR2_STOP_Field is HAL.UInt2;
 
    --  Control register 2
    type CR2_Register is record
+      --  Address of the USART node
+      ADD            : CR2_ADD_Field := 16#0#;
+      --  unspecified
+      Reserved_4_4   : HAL.Bit := 16#0#;
+      --  lin break detection length
+      LBDL           : Boolean := False;
+      --  LIN break detection interrupt enable
+      LBDIE          : Boolean := False;
+      --  unspecified
+      Reserved_7_11  : HAL.UInt5 := 16#0#;
+      --  STOP bits
+      STOP           : CR2_STOP_Field := 16#0#;
+      --  LIN mode enable
+      LINEN          : Boolean := False;
+      --  unspecified
+      Reserved_15_31 : HAL.UInt17 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for CR2_Register use record
+      ADD            at 0 range 0 .. 3;
+      Reserved_4_4   at 0 range 4 .. 4;
+      LBDL           at 0 range 5 .. 5;
+      LBDIE          at 0 range 6 .. 6;
+      Reserved_7_11  at 0 range 7 .. 11;
+      STOP           at 0 range 12 .. 13;
+      LINEN          at 0 range 14 .. 14;
+      Reserved_15_31 at 0 range 15 .. 31;
+   end record;
+
+   --  Control register 3
+   type CR3_Register is record
+      --  Error interrupt enable
+      EIE            : Boolean := False;
+      --  IrDA mode enable
+      IREN           : Boolean := False;
+      --  IrDA low-power
+      IRLP           : Boolean := False;
+      --  Half-duplex selection
+      HDSEL          : Boolean := False;
+      --  unspecified
+      Reserved_4_5   : HAL.UInt2 := 16#0#;
+      --  DMA enable receiver
+      DMAR           : Boolean := False;
+      --  DMA enable transmitter
+      DMAT           : Boolean := False;
+      --  unspecified
+      Reserved_8_10  : HAL.UInt3 := 16#0#;
+      --  One sample bit method enable
+      ONEBIT         : Boolean := False;
+      --  unspecified
+      Reserved_12_31 : HAL.UInt20 := 16#0#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for CR3_Register use record
+      EIE            at 0 range 0 .. 0;
+      IREN           at 0 range 1 .. 1;
+      IRLP           at 0 range 2 .. 2;
+      HDSEL          at 0 range 3 .. 3;
+      Reserved_4_5   at 0 range 4 .. 5;
+      DMAR           at 0 range 6 .. 6;
+      DMAT           at 0 range 7 .. 7;
+      Reserved_8_10  at 0 range 8 .. 10;
+      ONEBIT         at 0 range 11 .. 11;
+      Reserved_12_31 at 0 range 12 .. 31;
+   end record;
+
+   --  Status register
+   type SR_Register_1 is record
+      --  Read-only. Parity error
+      PE             : Boolean := False;
+      --  Read-only. Framing error
+      FE             : Boolean := False;
+      --  Read-only. Noise detected flag
+      NF             : Boolean := False;
+      --  Read-only. Overrun error
+      ORE            : Boolean := False;
+      --  Read-only. IDLE line detected
+      IDLE           : Boolean := False;
+      --  Read data register not empty
+      RXNE           : Boolean := False;
+      --  Transmission complete
+      TC             : Boolean := False;
+      --  Read-only. Transmit data register empty
+      TXE            : Boolean := False;
+      --  LIN break detection flag
+      LBD            : Boolean := False;
+      --  CTS flag
+      CTS            : Boolean := False;
+      --  unspecified
+      Reserved_10_31 : HAL.UInt22 := 16#3000#;
+   end record
+     with Volatile_Full_Access, Size => 32,
+          Bit_Order => System.Low_Order_First;
+
+   for SR_Register_1 use record
+      PE             at 0 range 0 .. 0;
+      FE             at 0 range 1 .. 1;
+      NF             at 0 range 2 .. 2;
+      ORE            at 0 range 3 .. 3;
+      IDLE           at 0 range 4 .. 4;
+      RXNE           at 0 range 5 .. 5;
+      TC             at 0 range 6 .. 6;
+      TXE            at 0 range 7 .. 7;
+      LBD            at 0 range 8 .. 8;
+      CTS            at 0 range 9 .. 9;
+      Reserved_10_31 at 0 range 10 .. 31;
+   end record;
+
+   --  Control register 2
+   type CR2_Register_1 is record
       --  Address of the USART node
       ADD            : CR2_ADD_Field := 16#0#;
       --  unspecified
@@ -206,7 +297,7 @@ package STM32_SVD.USART is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for CR2_Register use record
+   for CR2_Register_1 use record
       ADD            at 0 range 0 .. 3;
       Reserved_4_4   at 0 range 4 .. 4;
       LBDL           at 0 range 5 .. 5;
@@ -221,12 +312,8 @@ package STM32_SVD.USART is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   ------------------
-   -- CR3_Register --
-   ------------------
-
    --  Control register 3
-   type CR3_Register is record
+   type CR3_Register_1 is record
       --  Error interrupt enable
       EIE            : Boolean := False;
       --  IrDA mode enable
@@ -257,7 +344,7 @@ package STM32_SVD.USART is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for CR3_Register use record
+   for CR3_Register_1 use record
       EIE            at 0 range 0 .. 0;
       IREN           at 0 range 1 .. 1;
       IRLP           at 0 range 2 .. 2;
@@ -272,10 +359,6 @@ package STM32_SVD.USART is
       ONEBIT         at 0 range 11 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
-
-   -------------------
-   -- GTPR_Register --
-   -------------------
 
    subtype GTPR_PSC_Field is HAL.Byte;
    subtype GTPR_GT_Field is HAL.Byte;
@@ -299,189 +382,13 @@ package STM32_SVD.USART is
    end record;
 
    -----------------
-   -- SR_Register --
-   -----------------
-
-   --  Status register
-   type SR_Register_1 is record
-      --  Read-only. Parity error
-      PE            : Boolean := False;
-      --  Read-only. Framing error
-      FE            : Boolean := False;
-      --  Read-only. Noise detected flag
-      NF            : Boolean := False;
-      --  Read-only. Overrun error
-      ORE           : Boolean := False;
-      --  Read-only. IDLE line detected
-      IDLE          : Boolean := False;
-      --  Read data register not empty
-      RXNE          : Boolean := False;
-      --  Transmission complete
-      TC            : Boolean := False;
-      --  Read-only. Transmit data register empty
-      TXE           : Boolean := False;
-      --  LIN break detection flag
-      LBD           : Boolean := False;
-      --  unspecified
-      Reserved_9_31 : HAL.UInt23 := 16#6000#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for SR_Register_1 use record
-      PE            at 0 range 0 .. 0;
-      FE            at 0 range 1 .. 1;
-      NF            at 0 range 2 .. 2;
-      ORE           at 0 range 3 .. 3;
-      IDLE          at 0 range 4 .. 4;
-      RXNE          at 0 range 5 .. 5;
-      TC            at 0 range 6 .. 6;
-      TXE           at 0 range 7 .. 7;
-      LBD           at 0 range 8 .. 8;
-      Reserved_9_31 at 0 range 9 .. 31;
-   end record;
-
-   ------------------
-   -- CR2_Register --
-   ------------------
-
-   --  Control register 2
-   type CR2_Register_1 is record
-      --  Address of the USART node
-      ADD            : CR2_ADD_Field := 16#0#;
-      --  unspecified
-      Reserved_4_4   : HAL.Bit := 16#0#;
-      --  lin break detection length
-      LBDL           : Boolean := False;
-      --  LIN break detection interrupt enable
-      LBDIE          : Boolean := False;
-      --  unspecified
-      Reserved_7_11  : HAL.UInt5 := 16#0#;
-      --  STOP bits
-      STOP           : CR2_STOP_Field := 16#0#;
-      --  LIN mode enable
-      LINEN          : Boolean := False;
-      --  unspecified
-      Reserved_15_31 : HAL.UInt17 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for CR2_Register_1 use record
-      ADD            at 0 range 0 .. 3;
-      Reserved_4_4   at 0 range 4 .. 4;
-      LBDL           at 0 range 5 .. 5;
-      LBDIE          at 0 range 6 .. 6;
-      Reserved_7_11  at 0 range 7 .. 11;
-      STOP           at 0 range 12 .. 13;
-      LINEN          at 0 range 14 .. 14;
-      Reserved_15_31 at 0 range 15 .. 31;
-   end record;
-
-   ------------------
-   -- CR3_Register --
-   ------------------
-
-   --  Control register 3
-   type CR3_Register_1 is record
-      --  Error interrupt enable
-      EIE            : Boolean := False;
-      --  IrDA mode enable
-      IREN           : Boolean := False;
-      --  IrDA low-power
-      IRLP           : Boolean := False;
-      --  Half-duplex selection
-      HDSEL          : Boolean := False;
-      --  unspecified
-      Reserved_4_5   : HAL.UInt2 := 16#0#;
-      --  DMA enable receiver
-      DMAR           : Boolean := False;
-      --  DMA enable transmitter
-      DMAT           : Boolean := False;
-      --  unspecified
-      Reserved_8_10  : HAL.UInt3 := 16#0#;
-      --  One sample bit method enable
-      ONEBIT         : Boolean := False;
-      --  unspecified
-      Reserved_12_31 : HAL.UInt20 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for CR3_Register_1 use record
-      EIE            at 0 range 0 .. 0;
-      IREN           at 0 range 1 .. 1;
-      IRLP           at 0 range 2 .. 2;
-      HDSEL          at 0 range 3 .. 3;
-      Reserved_4_5   at 0 range 4 .. 5;
-      DMAR           at 0 range 6 .. 6;
-      DMAT           at 0 range 7 .. 7;
-      Reserved_8_10  at 0 range 8 .. 10;
-      ONEBIT         at 0 range 11 .. 11;
-      Reserved_12_31 at 0 range 12 .. 31;
-   end record;
-
-   -----------------
    -- Peripherals --
    -----------------
 
    --  Universal synchronous asynchronous receiver transmitter
-   type USART2_Peripheral is record
-      --  Status register
-      SR   : SR_Register;
-      --  Data register
-      DR   : DR_Register;
-      --  Baud rate register
-      BRR  : BRR_Register;
-      --  Control register 1
-      CR1  : CR1_Register;
-      --  Control register 2
-      CR2  : CR2_Register;
-      --  Control register 3
-      CR3  : CR3_Register;
-      --  Guard time and prescaler register
-      GTPR : GTPR_Register;
-   end record
-     with Volatile;
-
-   for USART2_Peripheral use record
-      SR   at 0 range 0 .. 31;
-      DR   at 4 range 0 .. 31;
-      BRR  at 8 range 0 .. 31;
-      CR1  at 12 range 0 .. 31;
-      CR2  at 16 range 0 .. 31;
-      CR3  at 20 range 0 .. 31;
-      GTPR at 24 range 0 .. 31;
-   end record;
-
-   --  Universal synchronous asynchronous receiver transmitter
-   USART2_Periph : aliased USART2_Peripheral
-     with Import, Address => USART2_Base;
-
-   --  Universal synchronous asynchronous receiver transmitter
-   USART3_Periph : aliased USART2_Peripheral
-     with Import, Address => USART3_Base;
-
-   --  Universal synchronous asynchronous receiver transmitter
-   UART7_Periph : aliased USART2_Peripheral
-     with Import, Address => UART7_Base;
-
-   --  Universal synchronous asynchronous receiver transmitter
-   UART8_Periph : aliased USART2_Peripheral
-     with Import, Address => UART8_Base;
-
-   --  Universal synchronous asynchronous receiver transmitter
-   USART1_Periph : aliased USART2_Peripheral
-     with Import, Address => USART1_Base;
-
-   --  Universal synchronous asynchronous receiver transmitter
-   USART6_Periph : aliased USART2_Peripheral
-     with Import, Address => USART6_Base;
-
-   --  Universal synchronous asynchronous receiver transmitter
    type UART4_Peripheral is record
       --  Status register
-      SR  : SR_Register_1;
+      SR  : SR_Register;
       --  Data register
       DR  : DR_Register;
       --  Baud rate register
@@ -489,9 +396,9 @@ package STM32_SVD.USART is
       --  Control register 1
       CR1 : CR1_Register;
       --  Control register 2
-      CR2 : CR2_Register_1;
+      CR2 : CR2_Register;
       --  Control register 3
-      CR3 : CR3_Register_1;
+      CR3 : CR3_Register;
    end record
      with Volatile;
 
@@ -511,5 +418,58 @@ package STM32_SVD.USART is
    --  Universal synchronous asynchronous receiver transmitter
    UART5_Periph : aliased UART4_Peripheral
      with Import, Address => UART5_Base;
+
+   --  Universal synchronous asynchronous receiver transmitter
+   UART7_Periph : aliased UART4_Peripheral
+     with Import, Address => UART7_Base;
+
+   --  Universal synchronous asynchronous receiver transmitter
+   UART8_Periph : aliased UART4_Peripheral
+     with Import, Address => UART8_Base;
+
+   --  Universal synchronous asynchronous receiver transmitter
+   type USART1_Peripheral is record
+      --  Status register
+      SR   : SR_Register_1;
+      --  Data register
+      DR   : DR_Register;
+      --  Baud rate register
+      BRR  : BRR_Register;
+      --  Control register 1
+      CR1  : CR1_Register;
+      --  Control register 2
+      CR2  : CR2_Register_1;
+      --  Control register 3
+      CR3  : CR3_Register_1;
+      --  Guard time and prescaler register
+      GTPR : GTPR_Register;
+   end record
+     with Volatile;
+
+   for USART1_Peripheral use record
+      SR   at 0 range 0 .. 31;
+      DR   at 4 range 0 .. 31;
+      BRR  at 8 range 0 .. 31;
+      CR1  at 12 range 0 .. 31;
+      CR2  at 16 range 0 .. 31;
+      CR3  at 20 range 0 .. 31;
+      GTPR at 24 range 0 .. 31;
+   end record;
+
+   --  Universal synchronous asynchronous receiver transmitter
+   USART1_Periph : aliased USART1_Peripheral
+     with Import, Address => USART1_Base;
+
+   --  Universal synchronous asynchronous receiver transmitter
+   USART2_Periph : aliased USART1_Peripheral
+     with Import, Address => USART2_Base;
+
+   --  Universal synchronous asynchronous receiver transmitter
+   USART3_Periph : aliased USART1_Peripheral
+     with Import, Address => USART3_Base;
+
+   --  Universal synchronous asynchronous receiver transmitter
+   USART6_Periph : aliased USART1_Peripheral
+     with Import, Address => USART6_Base;
 
 end STM32_SVD.USART;

@@ -13,10 +13,6 @@ package STM32_SVD.QUADSPI is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    subtype CR_FTHRES_Field is HAL.UInt5;
    subtype CR_PRESCALER_Field is HAL.Byte;
 
@@ -86,10 +82,6 @@ package STM32_SVD.QUADSPI is
       PRESCALER      at 0 range 24 .. 31;
    end record;
 
-   ------------------
-   -- DCR_Register --
-   ------------------
-
    subtype DCR_CSHT_Field is HAL.UInt3;
    subtype DCR_FSIZE_Field is HAL.UInt5;
 
@@ -119,10 +111,6 @@ package STM32_SVD.QUADSPI is
       FSIZE          at 0 range 16 .. 20;
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
-
-   -----------------
-   -- SR_Register --
-   -----------------
 
    subtype SR_FLEVEL_Field is HAL.UInt7;
 
@@ -162,10 +150,6 @@ package STM32_SVD.QUADSPI is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   ------------------
-   -- FCR_Register --
-   ------------------
-
    --  flag clear register
    type FCR_Register is record
       --  Clear transfer error flag
@@ -192,10 +176,6 @@ package STM32_SVD.QUADSPI is
       CTOF          at 0 range 4 .. 4;
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
-
-   ------------------
-   -- CCR_Register --
-   ------------------
 
    subtype CCR_INSTRUCTION_Field is HAL.Byte;
    subtype CCR_IMODE_Field is HAL.UInt2;
@@ -258,10 +238,6 @@ package STM32_SVD.QUADSPI is
       DDRM           at 0 range 31 .. 31;
    end record;
 
-   ------------------
-   -- PIR_Register --
-   ------------------
-
    subtype PIR_INTERVAL_Field is HAL.Short;
 
    --  polling interval register
@@ -278,10 +254,6 @@ package STM32_SVD.QUADSPI is
       INTERVAL       at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -------------------
-   -- LPTR_Register --
-   -------------------
 
    subtype LPTR_TIMEOUT_Field is HAL.Short;
 

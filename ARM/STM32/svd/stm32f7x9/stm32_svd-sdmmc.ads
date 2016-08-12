@@ -13,26 +13,22 @@ package STM32_SVD.SDMMC is
    -- Registers --
    ---------------
 
-   --------------------
-   -- POWER_Register --
-   --------------------
-
    --  PWRCTRL
-   type PWRCTRL_Field is
+   type POWER_PWRCTRL_Field is
      (
       --  The clock to card is stopped.
       Power_Off,
       --  The card is clocked.
       Power_On)
      with Size => 2;
-   for PWRCTRL_Field use
+   for POWER_PWRCTRL_Field use
      (Power_Off => 0,
       Power_On => 3);
 
    --  power control register
    type POWER_Register is record
       --  PWRCTRL
-      PWRCTRL       : PWRCTRL_Field := STM32_SVD.SDMMC.Power_Off;
+      PWRCTRL       : POWER_PWRCTRL_Field := STM32_SVD.SDMMC.Power_Off;
       --  unspecified
       Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
@@ -44,14 +40,10 @@ package STM32_SVD.SDMMC is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   --------------------
-   -- CLKCR_Register --
-   --------------------
-
    subtype CLKCR_CLKDIV_Field is HAL.Byte;
 
    --  Wide bus mode enable bit
-   type WIDBUS_Field is
+   type CLKCR_WIDBUS_Field is
      (
       --  Default bus mode: SDMMC_D0 is used.
       Bus_Wide_1B,
@@ -60,13 +52,13 @@ package STM32_SVD.SDMMC is
       --  8-wide bus mode: SDMMC_D[7:0] used.
       Bus_Wide_8B)
      with Size => 2;
-   for WIDBUS_Field use
+   for CLKCR_WIDBUS_Field use
      (Bus_Wide_1B => 0,
       Bus_Wide_4B => 1,
       Bus_Wide_8B => 2);
 
    --  SDIO_CK dephasing selection bit
-   type NEGEDGE_Field is
+   type CLKCR_NEGEDGE_Field is
      (
       --  Cmd and Data changed on the SDMMCCLK falling edge succeeding the
       --  rising edge of SDMMC_CK.
@@ -74,7 +66,7 @@ package STM32_SVD.SDMMC is
       --  Cmd and Data changed on the SDMMC_CK falling edge.
       Edge_Falling)
      with Size => 1;
-   for NEGEDGE_Field use
+   for CLKCR_NEGEDGE_Field use
      (Edge_Rising => 0,
       Edge_Falling => 1);
 
@@ -89,9 +81,9 @@ package STM32_SVD.SDMMC is
       --  Clock divider bypass enable bit
       BYPASS         : Boolean := False;
       --  Wide bus mode enable bit
-      WIDBUS         : WIDBUS_Field := STM32_SVD.SDMMC.Bus_Wide_1B;
+      WIDBUS         : CLKCR_WIDBUS_Field := STM32_SVD.SDMMC.Bus_Wide_1B;
       --  SDIO_CK dephasing selection bit
-      NEGEDGE        : NEGEDGE_Field := STM32_SVD.SDMMC.Edge_Rising;
+      NEGEDGE        : CLKCR_NEGEDGE_Field := STM32_SVD.SDMMC.Edge_Rising;
       --  HW Flow Control enable
       HWFC_EN        : Boolean := False;
       --  unspecified
@@ -111,14 +103,10 @@ package STM32_SVD.SDMMC is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   ------------------
-   -- CMD_Register --
-   ------------------
-
    subtype CMD_CMDINDEX_Field is HAL.UInt6;
 
    --  Wait for response bits
-   type WAITRESP_Field is
+   type CMD_WAITRESP_Field is
      (
       --  No response, expect CMDSENT flag.
       No_Response,
@@ -127,7 +115,7 @@ package STM32_SVD.SDMMC is
       --  Long response, expect CMDREND or CCRCFAIL flag.
       Long_Response)
      with Size => 2;
-   for WAITRESP_Field use
+   for CMD_WAITRESP_Field use
      (No_Response => 0,
       Short_Response => 1,
       Long_Response => 3);
@@ -137,7 +125,7 @@ package STM32_SVD.SDMMC is
       --  Command index
       CMDINDEX       : CMD_CMDINDEX_Field := 16#0#;
       --  Wait for response bits
-      WAITRESP       : WAITRESP_Field := STM32_SVD.SDMMC.No_Response;
+      WAITRESP       : CMD_WAITRESP_Field := STM32_SVD.SDMMC.No_Response;
       --  CPSM waits for interrupt request
       WAITINT        : Boolean := False;
       --  CPSM Waits for ends of data transfer (CmdPend internal signal)
@@ -162,10 +150,6 @@ package STM32_SVD.SDMMC is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   ----------------------
-   -- RESPCMD_Register --
-   ----------------------
-
    subtype RESPCMD_RESPCMD_Field is HAL.UInt6;
 
    --  command response register
@@ -182,10 +166,6 @@ package STM32_SVD.SDMMC is
       RESPCMD       at 0 range 0 .. 5;
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
-
-   -------------------
-   -- DLEN_Register --
-   -------------------
 
    subtype DLEN_DATALENGTH_Field is HAL.UInt25;
 
@@ -204,36 +184,32 @@ package STM32_SVD.SDMMC is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   --------------------
-   -- DCTRL_Register --
-   --------------------
-
    --  Data transfer direction selection
-   type DTDIR_Field is
+   type DCTRL_DTDIR_Field is
      (
       --  Data is sent to the card
       Controller_To_Card,
       --  Data is read from the card
       Card_To_Controller)
      with Size => 1;
-   for DTDIR_Field use
+   for DCTRL_DTDIR_Field use
      (Controller_To_Card => 0,
       Card_To_Controller => 1);
 
    --  Data transfer mode selection 1: Stream or SDIO multibyte data transfer
-   type DTMODE_Field is
+   type DCTRL_DTMODE_Field is
      (
       --  Block data transfer
       Block,
       --  Stream or SDIO multibyte data transfer
       Stream)
      with Size => 1;
-   for DTMODE_Field use
+   for DCTRL_DTMODE_Field use
      (Block => 0,
       Stream => 1);
 
    --  Data block size
-   type DBLOCKSIZE_Field is
+   type DCTRL_DBLOCKSIZE_Field is
      (
       --  Block length = 2**0 = 1 byte
       Block_1B,
@@ -266,7 +242,7 @@ package STM32_SVD.SDMMC is
       --  Block length = 2**14 = 16384 byte
       Block_16384B)
      with Size => 4;
-   for DBLOCKSIZE_Field use
+   for DCTRL_DBLOCKSIZE_Field use
      (Block_1B => 0,
       Block_2B => 1,
       Block_4B => 2,
@@ -288,14 +264,15 @@ package STM32_SVD.SDMMC is
       --  DTEN
       DTEN           : Boolean := False;
       --  Data transfer direction selection
-      DTDIR          : DTDIR_Field := STM32_SVD.SDMMC.Controller_To_Card;
+      DTDIR          : DCTRL_DTDIR_Field :=
+                        STM32_SVD.SDMMC.Controller_To_Card;
       --  Data transfer mode selection 1: Stream or SDIO multibyte data
       --  transfer
-      DTMODE         : DTMODE_Field := STM32_SVD.SDMMC.Block;
+      DTMODE         : DCTRL_DTMODE_Field := STM32_SVD.SDMMC.Block;
       --  DMA enable bit
       DMAEN          : Boolean := False;
       --  Data block size
-      DBLOCKSIZE     : DBLOCKSIZE_Field := STM32_SVD.SDMMC.Block_1B;
+      DBLOCKSIZE     : DCTRL_DBLOCKSIZE_Field := STM32_SVD.SDMMC.Block_1B;
       --  Read wait start
       RWSTART        : Boolean := False;
       --  Read wait stop
@@ -323,10 +300,6 @@ package STM32_SVD.SDMMC is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   ---------------------
-   -- DCOUNT_Register --
-   ---------------------
-
    subtype DCOUNT_DATACOUNT_Field is HAL.UInt25;
 
    --  data counter register
@@ -343,10 +316,6 @@ package STM32_SVD.SDMMC is
       DATACOUNT      at 0 range 0 .. 24;
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
-
-   ------------------
-   -- STA_Register --
-   ------------------
 
    --  status register
    type STA_Register is record
@@ -435,10 +404,6 @@ package STM32_SVD.SDMMC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   ------------------
-   -- ICR_Register --
-   ------------------
-
    --  interrupt clear register
    type ICR_Register is record
       --  CCRCFAIL flag clear bit
@@ -492,10 +457,6 @@ package STM32_SVD.SDMMC is
       CEATAENDC      at 0 range 23 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   -------------------
-   -- MASK_Register --
-   -------------------
 
    --  mask register
    type MASK_Register is record
@@ -580,10 +541,6 @@ package STM32_SVD.SDMMC is
       CEATAENDIE     at 0 range 23 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   ----------------------
-   -- FIFOCNT_Register --
-   ----------------------
 
    subtype FIFOCNT_FIFOCOUNT_Field is HAL.UInt24;
 
@@ -670,11 +627,11 @@ package STM32_SVD.SDMMC is
    end record;
 
    --  Secure digital input/output interface
-   SDMMC2_Periph : aliased SDMMC_Peripheral
-     with Import, Address => SDMMC2_Base;
-
-   --  Secure digital input/output interface
    SDMMC1_Periph : aliased SDMMC_Peripheral
      with Import, Address => SDMMC1_Base;
+
+   --  Secure digital input/output interface
+   SDMMC2_Periph : aliased SDMMC_Peripheral
+     with Import, Address => SDMMC2_Base;
 
 end STM32_SVD.SDMMC;

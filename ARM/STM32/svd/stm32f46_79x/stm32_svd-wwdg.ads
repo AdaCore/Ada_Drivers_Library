@@ -13,10 +13,6 @@ package STM32_SVD.WWDG is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    subtype CR_T_Field is HAL.UInt7;
 
    --  Control register
@@ -37,15 +33,7 @@ package STM32_SVD.WWDG is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   ------------------
-   -- CFR_Register --
-   ------------------
-
    subtype CFR_W_Field is HAL.UInt7;
-
-   ---------------
-   -- CFR.WDGTB --
-   ---------------
 
    --  CFR_WDGTB array
    type CFR_WDGTB_Field_Array is array (0 .. 1) of Boolean
@@ -91,10 +79,6 @@ package STM32_SVD.WWDG is
       EWI            at 0 range 9 .. 9;
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
-
-   -----------------
-   -- SR_Register --
-   -----------------
 
    --  Status register
    type SR_Register is record

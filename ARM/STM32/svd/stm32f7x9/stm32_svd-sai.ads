@@ -13,10 +13,6 @@ package STM32_SVD.SAI is
    -- Registers --
    ---------------
 
-   ------------------
-   -- GCR_Register --
-   ------------------
-
    subtype GCR_SYNCIN_Field is HAL.UInt2;
    subtype GCR_SYNCOUT_Field is HAL.UInt2;
 
@@ -40,10 +36,6 @@ package STM32_SVD.SAI is
       SYNCOUT       at 0 range 4 .. 5;
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
-
-   -------------------
-   -- ACR1_Register --
-   -------------------
 
    subtype ACR1_MODE_Field is HAL.UInt2;
    subtype ACR1_PRTCFG_Field is HAL.UInt2;
@@ -108,10 +100,6 @@ package STM32_SVD.SAI is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   -------------------
-   -- ACR2_Register --
-   -------------------
-
    subtype ACR2_FTH_Field is HAL.UInt3;
    subtype ACR2_MUTECN_Field is HAL.UInt6;
    subtype ACR2_COMP_Field is HAL.UInt2;
@@ -152,10 +140,6 @@ package STM32_SVD.SAI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   --------------------
-   -- AFRCR_Register --
-   --------------------
-
    subtype AFRCR_FRL_Field is HAL.Byte;
    subtype AFRCR_FSALL_Field is HAL.UInt7;
 
@@ -189,10 +173,6 @@ package STM32_SVD.SAI is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
-   ---------------------
-   -- ASLOTR_Register --
-   ---------------------
-
    subtype ASLOTR_FBOFF_Field is HAL.UInt5;
    subtype ASLOTR_SLOTSZ_Field is HAL.UInt2;
    subtype ASLOTR_NBSLOT_Field is HAL.UInt4;
@@ -224,10 +204,6 @@ package STM32_SVD.SAI is
       Reserved_12_15 at 0 range 12 .. 15;
       SLOTEN         at 0 range 16 .. 31;
    end record;
-
-   ------------------
-   -- AIM_Register --
-   ------------------
 
    --  AInterrupt mask register2
    type AIM_Register is record
@@ -261,10 +237,6 @@ package STM32_SVD.SAI is
       LFSDET        at 0 range 6 .. 6;
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
-
-   ------------------
-   -- ASR_Register --
-   ------------------
 
    subtype ASR_FLVL_Field is HAL.UInt3;
 
@@ -307,10 +279,6 @@ package STM32_SVD.SAI is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
-   ---------------------
-   -- ACLRFR_Register --
-   ---------------------
-
    --  AClear flag register
    type ACLRFR_Register is record
       --  Clear overrun / underrun
@@ -343,10 +311,6 @@ package STM32_SVD.SAI is
       LFSDET        at 0 range 6 .. 6;
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
-
-   -------------------
-   -- BCR1_Register --
-   -------------------
 
    subtype BCR1_MODE_Field is HAL.UInt2;
    subtype BCR1_PRTCFG_Field is HAL.UInt2;
@@ -411,10 +375,6 @@ package STM32_SVD.SAI is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   -------------------
-   -- BCR2_Register --
-   -------------------
-
    subtype BCR2_FTH_Field is HAL.UInt3;
    subtype BCR2_MUTECN_Field is HAL.UInt6;
    subtype BCR2_COMP_Field is HAL.UInt2;
@@ -455,10 +415,6 @@ package STM32_SVD.SAI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   --------------------
-   -- BFRCR_Register --
-   --------------------
-
    subtype BFRCR_FRL_Field is HAL.Byte;
    subtype BFRCR_FSALL_Field is HAL.UInt7;
 
@@ -492,10 +448,6 @@ package STM32_SVD.SAI is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
-   ---------------------
-   -- BSLOTR_Register --
-   ---------------------
-
    subtype BSLOTR_FBOFF_Field is HAL.UInt5;
    subtype BSLOTR_SLOTSZ_Field is HAL.UInt2;
    subtype BSLOTR_NBSLOT_Field is HAL.UInt4;
@@ -527,10 +479,6 @@ package STM32_SVD.SAI is
       Reserved_12_15 at 0 range 12 .. 15;
       SLOTEN         at 0 range 16 .. 31;
    end record;
-
-   ------------------
-   -- BIM_Register --
-   ------------------
 
    --  BInterrupt mask register2
    type BIM_Register is record
@@ -564,10 +512,6 @@ package STM32_SVD.SAI is
       LFSDETIE      at 0 range 6 .. 6;
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
-
-   ------------------
-   -- BSR_Register --
-   ------------------
 
    subtype BSR_FLVL_Field is HAL.UInt3;
 
@@ -609,10 +553,6 @@ package STM32_SVD.SAI is
       FLVL           at 0 range 16 .. 18;
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
-
-   ---------------------
-   -- BCLRFR_Register --
-   ---------------------
 
    --  BClear flag register
    type BCLRFR_Register is record

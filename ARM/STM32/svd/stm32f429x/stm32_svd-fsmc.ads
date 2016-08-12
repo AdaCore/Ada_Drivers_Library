@@ -13,10 +13,6 @@ package STM32_SVD.FSMC is
    -- Registers --
    ---------------
 
-   -------------------
-   -- BCR1_Register --
-   -------------------
-
    subtype BCR1_MTYP_Field is HAL.UInt2;
    subtype BCR1_MWID_Field is HAL.UInt2;
 
@@ -83,34 +79,30 @@ package STM32_SVD.FSMC is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
-   ------------------
-   -- BTR_Register --
-   ------------------
-
-   subtype BTR1_ADDSET_Field is HAL.UInt4;
-   subtype BTR1_ADDHLD_Field is HAL.UInt4;
-   subtype BTR1_DATAST_Field is HAL.Byte;
-   subtype BTR1_BUSTURN_Field is HAL.UInt4;
-   subtype BTR1_CLKDIV_Field is HAL.UInt4;
-   subtype BTR1_DATLAT_Field is HAL.UInt4;
-   subtype BTR1_ACCMOD_Field is HAL.UInt2;
+   subtype BTR_ADDSET_Field is HAL.UInt4;
+   subtype BTR_ADDHLD_Field is HAL.UInt4;
+   subtype BTR_DATAST_Field is HAL.Byte;
+   subtype BTR_BUSTURN_Field is HAL.UInt4;
+   subtype BTR_CLKDIV_Field is HAL.UInt4;
+   subtype BTR_DATLAT_Field is HAL.UInt4;
+   subtype BTR_ACCMOD_Field is HAL.UInt2;
 
    --  SRAM/NOR-Flash chip-select timing register 1
    type BTR_Register is record
       --  ADDSET
-      ADDSET         : BTR1_ADDSET_Field := 16#F#;
+      ADDSET         : BTR_ADDSET_Field := 16#F#;
       --  ADDHLD
-      ADDHLD         : BTR1_ADDHLD_Field := 16#F#;
+      ADDHLD         : BTR_ADDHLD_Field := 16#F#;
       --  DATAST
-      DATAST         : BTR1_DATAST_Field := 16#FF#;
+      DATAST         : BTR_DATAST_Field := 16#FF#;
       --  BUSTURN
-      BUSTURN        : BTR1_BUSTURN_Field := 16#F#;
+      BUSTURN        : BTR_BUSTURN_Field := 16#F#;
       --  CLKDIV
-      CLKDIV         : BTR1_CLKDIV_Field := 16#F#;
+      CLKDIV         : BTR_CLKDIV_Field := 16#F#;
       --  DATLAT
-      DATLAT         : BTR1_DATLAT_Field := 16#F#;
+      DATLAT         : BTR_DATLAT_Field := 16#F#;
       --  ACCMOD
-      ACCMOD         : BTR1_ACCMOD_Field := 16#3#;
+      ACCMOD         : BTR_ACCMOD_Field := 16#3#;
       --  unspecified
       Reserved_30_31 : HAL.UInt2 := 16#3#;
    end record
@@ -128,12 +120,8 @@ package STM32_SVD.FSMC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   ------------------
-   -- BCR_Register --
-   ------------------
-
-   subtype BCR2_MTYP_Field is HAL.UInt2;
-   subtype BCR2_MWID_Field is HAL.UInt2;
+   subtype BCR_MTYP_Field is HAL.UInt2;
+   subtype BCR_MWID_Field is HAL.UInt2;
 
    --  SRAM/NOR-Flash chip-select control register 2
    type BCR_Register is record
@@ -142,9 +130,9 @@ package STM32_SVD.FSMC is
       --  MUXEN
       MUXEN          : Boolean := False;
       --  MTYP
-      MTYP           : BCR2_MTYP_Field := 16#0#;
+      MTYP           : BCR_MTYP_Field := 16#0#;
       --  MWID
-      MWID           : BCR2_MWID_Field := 16#1#;
+      MWID           : BCR_MWID_Field := 16#1#;
       --  FACCEN
       FACCEN         : Boolean := True;
       --  unspecified
@@ -195,14 +183,10 @@ package STM32_SVD.FSMC is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
-   ------------------
-   -- PCR_Register --
-   ------------------
-
-   subtype PCR2_PWID_Field is HAL.UInt2;
-   subtype PCR2_TCLR_Field is HAL.UInt4;
-   subtype PCR2_TAR_Field is HAL.UInt4;
-   subtype PCR2_ECCPS_Field is HAL.UInt3;
+   subtype PCR_PWID_Field is HAL.UInt2;
+   subtype PCR_TCLR_Field is HAL.UInt4;
+   subtype PCR_TAR_Field is HAL.UInt4;
+   subtype PCR_ECCPS_Field is HAL.UInt3;
 
    --  PC Card/NAND Flash control register 2
    type PCR_Register is record
@@ -215,17 +199,17 @@ package STM32_SVD.FSMC is
       --  PTYP
       PTYP           : Boolean := True;
       --  PWID
-      PWID           : PCR2_PWID_Field := 16#1#;
+      PWID           : PCR_PWID_Field := 16#1#;
       --  ECCEN
       ECCEN          : Boolean := False;
       --  unspecified
       Reserved_7_8   : HAL.UInt2 := 16#0#;
       --  TCLR
-      TCLR           : PCR2_TCLR_Field := 16#0#;
+      TCLR           : PCR_TCLR_Field := 16#0#;
       --  TAR
-      TAR            : PCR2_TAR_Field := 16#0#;
+      TAR            : PCR_TAR_Field := 16#0#;
       --  ECCPS
-      ECCPS          : PCR2_ECCPS_Field := 16#0#;
+      ECCPS          : PCR_ECCPS_Field := 16#0#;
       --  unspecified
       Reserved_20_31 : HAL.UInt12 := 16#0#;
    end record
@@ -245,10 +229,6 @@ package STM32_SVD.FSMC is
       ECCPS          at 0 range 17 .. 19;
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
-
-   -----------------
-   -- SR_Register --
-   -----------------
 
    --  FIFO status and interrupt register 2
    type SR_Register is record
@@ -283,25 +263,21 @@ package STM32_SVD.FSMC is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
-   -------------------
-   -- PMEM_Register --
-   -------------------
-
-   subtype PMEM2_MEMSETx_Field is HAL.Byte;
-   subtype PMEM2_MEMWAITx_Field is HAL.Byte;
-   subtype PMEM2_MEMHOLDx_Field is HAL.Byte;
-   subtype PMEM2_MEMHIZx_Field is HAL.Byte;
+   subtype PMEM_MEMSETx_Field is HAL.Byte;
+   subtype PMEM_MEMWAITx_Field is HAL.Byte;
+   subtype PMEM_MEMHOLDx_Field is HAL.Byte;
+   subtype PMEM_MEMHIZx_Field is HAL.Byte;
 
    --  Common memory space timing register 2
    type PMEM_Register is record
       --  MEMSETx
-      MEMSETx  : PMEM2_MEMSETx_Field := 16#FC#;
+      MEMSETx  : PMEM_MEMSETx_Field := 16#FC#;
       --  MEMWAITx
-      MEMWAITx : PMEM2_MEMWAITx_Field := 16#FC#;
+      MEMWAITx : PMEM_MEMWAITx_Field := 16#FC#;
       --  MEMHOLDx
-      MEMHOLDx : PMEM2_MEMHOLDx_Field := 16#FC#;
+      MEMHOLDx : PMEM_MEMHOLDx_Field := 16#FC#;
       --  MEMHIZx
-      MEMHIZx  : PMEM2_MEMHIZx_Field := 16#FC#;
+      MEMHIZx  : PMEM_MEMHIZx_Field := 16#FC#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -313,25 +289,21 @@ package STM32_SVD.FSMC is
       MEMHIZx  at 0 range 24 .. 31;
    end record;
 
-   -------------------
-   -- PATT_Register --
-   -------------------
-
-   subtype PATT2_ATTSETx_Field is HAL.Byte;
-   subtype PATT2_ATTWAITx_Field is HAL.Byte;
-   subtype PATT2_ATTHOLDx_Field is HAL.Byte;
-   subtype PATT2_ATTHIZx_Field is HAL.Byte;
+   subtype PATT_ATTSETx_Field is HAL.Byte;
+   subtype PATT_ATTWAITx_Field is HAL.Byte;
+   subtype PATT_ATTHOLDx_Field is HAL.Byte;
+   subtype PATT_ATTHIZx_Field is HAL.Byte;
 
    --  Attribute memory space timing register 2
    type PATT_Register is record
       --  ATTSETx
-      ATTSETx  : PATT2_ATTSETx_Field := 16#FC#;
+      ATTSETx  : PATT_ATTSETx_Field := 16#FC#;
       --  ATTWAITx
-      ATTWAITx : PATT2_ATTWAITx_Field := 16#FC#;
+      ATTWAITx : PATT_ATTWAITx_Field := 16#FC#;
       --  ATTHOLDx
-      ATTHOLDx : PATT2_ATTHOLDx_Field := 16#FC#;
+      ATTHOLDx : PATT_ATTHOLDx_Field := 16#FC#;
       --  ATTHIZx
-      ATTHIZx  : PATT2_ATTHIZx_Field := 16#FC#;
+      ATTHIZx  : PATT_ATTHIZx_Field := 16#FC#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -342,10 +314,6 @@ package STM32_SVD.FSMC is
       ATTHOLDx at 0 range 16 .. 23;
       ATTHIZx  at 0 range 24 .. 31;
    end record;
-
-   -------------------
-   -- PIO4_Register --
-   -------------------
 
    subtype PIO4_IOSETx_Field is HAL.Byte;
    subtype PIO4_IOWAITx_Field is HAL.Byte;
@@ -373,33 +341,29 @@ package STM32_SVD.FSMC is
       IOHIZx  at 0 range 24 .. 31;
    end record;
 
-   -------------------
-   -- BWTR_Register --
-   -------------------
-
-   subtype BWTR1_ADDSET_Field is HAL.UInt4;
-   subtype BWTR1_ADDHLD_Field is HAL.UInt4;
-   subtype BWTR1_DATAST_Field is HAL.Byte;
-   subtype BWTR1_CLKDIV_Field is HAL.UInt4;
-   subtype BWTR1_DATLAT_Field is HAL.UInt4;
-   subtype BWTR1_ACCMOD_Field is HAL.UInt2;
+   subtype BWTR_ADDSET_Field is HAL.UInt4;
+   subtype BWTR_ADDHLD_Field is HAL.UInt4;
+   subtype BWTR_DATAST_Field is HAL.Byte;
+   subtype BWTR_CLKDIV_Field is HAL.UInt4;
+   subtype BWTR_DATLAT_Field is HAL.UInt4;
+   subtype BWTR_ACCMOD_Field is HAL.UInt2;
 
    --  SRAM/NOR-Flash write timing registers 1
    type BWTR_Register is record
       --  ADDSET
-      ADDSET         : BWTR1_ADDSET_Field := 16#F#;
+      ADDSET         : BWTR_ADDSET_Field := 16#F#;
       --  ADDHLD
-      ADDHLD         : BWTR1_ADDHLD_Field := 16#F#;
+      ADDHLD         : BWTR_ADDHLD_Field := 16#F#;
       --  DATAST
-      DATAST         : BWTR1_DATAST_Field := 16#FF#;
+      DATAST         : BWTR_DATAST_Field := 16#FF#;
       --  unspecified
       Reserved_16_19 : HAL.UInt4 := 16#F#;
       --  CLKDIV
-      CLKDIV         : BWTR1_CLKDIV_Field := 16#F#;
+      CLKDIV         : BWTR_CLKDIV_Field := 16#F#;
       --  DATLAT
-      DATLAT         : BWTR1_DATLAT_Field := 16#F#;
+      DATLAT         : BWTR_DATLAT_Field := 16#F#;
       --  ACCMOD
-      ACCMOD         : BWTR1_ACCMOD_Field := 16#0#;
+      ACCMOD         : BWTR_ACCMOD_Field := 16#0#;
       --  unspecified
       Reserved_30_31 : HAL.UInt2 := 16#0#;
    end record
@@ -417,37 +381,33 @@ package STM32_SVD.FSMC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   -------------------
-   -- SDCR_Register --
-   -------------------
-
-   subtype SDCR1_NC_Field is HAL.UInt2;
-   subtype SDCR1_NR_Field is HAL.UInt2;
-   subtype SDCR1_MWID_Field is HAL.UInt2;
-   subtype SDCR1_CAS_Field is HAL.UInt2;
-   subtype SDCR1_SDCLK_Field is HAL.UInt2;
-   subtype SDCR1_RPIPE_Field is HAL.UInt2;
+   subtype SDCR_NC_Field is HAL.UInt2;
+   subtype SDCR_NR_Field is HAL.UInt2;
+   subtype SDCR_MWID_Field is HAL.UInt2;
+   subtype SDCR_CAS_Field is HAL.UInt2;
+   subtype SDCR_SDCLK_Field is HAL.UInt2;
+   subtype SDCR_RPIPE_Field is HAL.UInt2;
 
    --  SDRAM Control Register 1
    type SDCR_Register is record
       --  Number of column address bits
-      NC             : SDCR1_NC_Field := 16#0#;
+      NC             : SDCR_NC_Field := 16#0#;
       --  Number of row address bits
-      NR             : SDCR1_NR_Field := 16#0#;
+      NR             : SDCR_NR_Field := 16#0#;
       --  Memory data bus width
-      MWID           : SDCR1_MWID_Field := 16#1#;
+      MWID           : SDCR_MWID_Field := 16#1#;
       --  Number of internal banks
       NB             : Boolean := True;
       --  CAS latency
-      CAS            : SDCR1_CAS_Field := 16#1#;
+      CAS            : SDCR_CAS_Field := 16#1#;
       --  Write protection
       WP             : Boolean := True;
       --  SDRAM clock configuration
-      SDCLK          : SDCR1_SDCLK_Field := 16#0#;
+      SDCLK          : SDCR_SDCLK_Field := 16#0#;
       --  Burst read
       RBURST         : Boolean := False;
       --  Read pipe
-      RPIPE          : SDCR1_RPIPE_Field := 16#0#;
+      RPIPE          : SDCR_RPIPE_Field := 16#0#;
       --  unspecified
       Reserved_15_31 : HAL.UInt17 := 16#0#;
    end record
@@ -467,34 +427,30 @@ package STM32_SVD.FSMC is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   -------------------
-   -- SDTR_Register --
-   -------------------
-
-   subtype SDTR1_TMRD_Field is HAL.UInt4;
-   subtype SDTR1_TXSR_Field is HAL.UInt4;
-   subtype SDTR1_TRAS_Field is HAL.UInt4;
-   subtype SDTR1_TRC_Field is HAL.UInt4;
-   subtype SDTR1_TWR_Field is HAL.UInt4;
-   subtype SDTR1_TRP_Field is HAL.UInt4;
-   subtype SDTR1_TRCD_Field is HAL.UInt4;
+   subtype SDTR_TMRD_Field is HAL.UInt4;
+   subtype SDTR_TXSR_Field is HAL.UInt4;
+   subtype SDTR_TRAS_Field is HAL.UInt4;
+   subtype SDTR_TRC_Field is HAL.UInt4;
+   subtype SDTR_TWR_Field is HAL.UInt4;
+   subtype SDTR_TRP_Field is HAL.UInt4;
+   subtype SDTR_TRCD_Field is HAL.UInt4;
 
    --  SDRAM Timing register 1
    type SDTR_Register is record
       --  Load Mode Register to Active
-      TMRD           : SDTR1_TMRD_Field := 16#F#;
+      TMRD           : SDTR_TMRD_Field := 16#F#;
       --  Exit self-refresh delay
-      TXSR           : SDTR1_TXSR_Field := 16#F#;
+      TXSR           : SDTR_TXSR_Field := 16#F#;
       --  Self refresh time
-      TRAS           : SDTR1_TRAS_Field := 16#F#;
+      TRAS           : SDTR_TRAS_Field := 16#F#;
       --  Row cycle delay
-      TRC            : SDTR1_TRC_Field := 16#F#;
+      TRC            : SDTR_TRC_Field := 16#F#;
       --  Recovery delay
-      TWR            : SDTR1_TWR_Field := 16#F#;
+      TWR            : SDTR_TWR_Field := 16#F#;
       --  Row precharge delay
-      TRP            : SDTR1_TRP_Field := 16#F#;
+      TRP            : SDTR_TRP_Field := 16#F#;
       --  Row to column delay
-      TRCD           : SDTR1_TRCD_Field := 16#F#;
+      TRCD           : SDTR_TRCD_Field := 16#F#;
       --  unspecified
       Reserved_28_31 : HAL.UInt4 := 16#0#;
    end record
@@ -512,15 +468,7 @@ package STM32_SVD.FSMC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   --------------------
-   -- SDCMR_Register --
-   --------------------
-
    subtype SDCMR_MODE_Field is HAL.UInt3;
-
-   ---------------
-   -- SDCMR.CTB --
-   ---------------
 
    --  SDCMR_CTB array
    type SDCMR_CTB_Field_Array is array (1 .. 2) of Boolean
@@ -573,10 +521,6 @@ package STM32_SVD.FSMC is
       Reserved_22_31 at 0 range 22 .. 31;
    end record;
 
-   --------------------
-   -- SDRTR_Register --
-   --------------------
-
    subtype SDRTR_COUNT_Field is HAL.UInt13;
 
    --  SDRAM Refresh Timer register
@@ -599,14 +543,6 @@ package STM32_SVD.FSMC is
       REIE           at 0 range 14 .. 14;
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
-
-   -------------------
-   -- SDSR_Register --
-   -------------------
-
-   ----------------
-   -- SDSR.MODES --
-   ----------------
 
    --  SDSR_MODES array element
    subtype SDSR_MODES_Element is HAL.UInt2;

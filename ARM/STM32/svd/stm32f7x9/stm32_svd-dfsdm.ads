@@ -13,10 +13,6 @@ package STM32_SVD.DFSDM is
    -- Registers --
    ---------------
 
-   -----------------------------
-   -- DFSDM_CHCFG0R1_Register --
-   -----------------------------
-
    subtype DFSDM_CHCFG0R1_SITP_Field is HAL.UInt2;
    subtype DFSDM_CHCFG0R1_SPICKSEL_Field is HAL.UInt2;
    subtype DFSDM_CHCFG0R1_DATMPX_Field is HAL.UInt2;
@@ -73,10 +69,6 @@ package STM32_SVD.DFSDM is
       CKOUTSRC       at 0 range 30 .. 30;
       DFSDMEN        at 0 range 31 .. 31;
    end record;
-
-   -----------------------------
-   -- DFSDM_CHCFG1R1_Register --
-   -----------------------------
 
    subtype DFSDM_CHCFG1R1_SITP_Field is HAL.UInt2;
    subtype DFSDM_CHCFG1R1_SPICKSEL_Field is HAL.UInt2;
@@ -135,10 +127,6 @@ package STM32_SVD.DFSDM is
       DFSDMEN        at 0 range 31 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHCFG2R1_Register --
-   -----------------------------
-
    subtype DFSDM_CHCFG2R1_SITP_Field is HAL.UInt2;
    subtype DFSDM_CHCFG2R1_SPICKSEL_Field is HAL.UInt2;
    subtype DFSDM_CHCFG2R1_DATMPX_Field is HAL.UInt2;
@@ -195,10 +183,6 @@ package STM32_SVD.DFSDM is
       CKOUTSRC       at 0 range 30 .. 30;
       DFSDMEN        at 0 range 31 .. 31;
    end record;
-
-   -----------------------------
-   -- DFSDM_CHCFG3R1_Register --
-   -----------------------------
 
    subtype DFSDM_CHCFG3R1_SITP_Field is HAL.UInt2;
    subtype DFSDM_CHCFG3R1_SPICKSEL_Field is HAL.UInt2;
@@ -257,10 +241,6 @@ package STM32_SVD.DFSDM is
       DFSDMEN        at 0 range 31 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHCFG4R1_Register --
-   -----------------------------
-
    subtype DFSDM_CHCFG4R1_SITP_Field is HAL.UInt2;
    subtype DFSDM_CHCFG4R1_SPICKSEL_Field is HAL.UInt2;
    subtype DFSDM_CHCFG4R1_DATMPX_Field is HAL.UInt2;
@@ -317,10 +297,6 @@ package STM32_SVD.DFSDM is
       CKOUTSRC       at 0 range 30 .. 30;
       DFSDMEN        at 0 range 31 .. 31;
    end record;
-
-   -----------------------------
-   -- DFSDM_CHCFG5R1_Register --
-   -----------------------------
 
    subtype DFSDM_CHCFG5R1_SITP_Field is HAL.UInt2;
    subtype DFSDM_CHCFG5R1_SPICKSEL_Field is HAL.UInt2;
@@ -379,10 +355,6 @@ package STM32_SVD.DFSDM is
       DFSDMEN        at 0 range 31 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHCFG6R1_Register --
-   -----------------------------
-
    subtype DFSDM_CHCFG6R1_SITP_Field is HAL.UInt2;
    subtype DFSDM_CHCFG6R1_SPICKSEL_Field is HAL.UInt2;
    subtype DFSDM_CHCFG6R1_DATMPX_Field is HAL.UInt2;
@@ -439,10 +411,6 @@ package STM32_SVD.DFSDM is
       CKOUTSRC       at 0 range 30 .. 30;
       DFSDMEN        at 0 range 31 .. 31;
    end record;
-
-   -----------------------------
-   -- DFSDM_CHCFG7R1_Register --
-   -----------------------------
 
    subtype DFSDM_CHCFG7R1_SITP_Field is HAL.UInt2;
    subtype DFSDM_CHCFG7R1_SPICKSEL_Field is HAL.UInt2;
@@ -501,10 +469,6 @@ package STM32_SVD.DFSDM is
       DFSDMEN        at 0 range 31 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHCFG0R2_Register --
-   -----------------------------
-
    subtype DFSDM_CHCFG0R2_DTRBS_Field is HAL.UInt5;
    subtype DFSDM_CHCFG0R2_OFFSET_Field is HAL.UInt24;
 
@@ -525,10 +489,6 @@ package STM32_SVD.DFSDM is
       DTRBS        at 0 range 3 .. 7;
       OFFSET       at 0 range 8 .. 31;
    end record;
-
-   -----------------------------
-   -- DFSDM_CHCFG1R2_Register --
-   -----------------------------
 
    subtype DFSDM_CHCFG1R2_DTRBS_Field is HAL.UInt5;
    subtype DFSDM_CHCFG1R2_OFFSET_Field is HAL.UInt24;
@@ -551,10 +511,6 @@ package STM32_SVD.DFSDM is
       OFFSET       at 0 range 8 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHCFG2R2_Register --
-   -----------------------------
-
    subtype DFSDM_CHCFG2R2_DTRBS_Field is HAL.UInt5;
    subtype DFSDM_CHCFG2R2_OFFSET_Field is HAL.UInt24;
 
@@ -575,10 +531,6 @@ package STM32_SVD.DFSDM is
       DTRBS        at 0 range 3 .. 7;
       OFFSET       at 0 range 8 .. 31;
    end record;
-
-   -----------------------------
-   -- DFSDM_CHCFG3R2_Register --
-   -----------------------------
 
    subtype DFSDM_CHCFG3R2_DTRBS_Field is HAL.UInt5;
    subtype DFSDM_CHCFG3R2_OFFSET_Field is HAL.UInt24;
@@ -601,10 +553,6 @@ package STM32_SVD.DFSDM is
       OFFSET       at 0 range 8 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHCFG4R2_Register --
-   -----------------------------
-
    subtype DFSDM_CHCFG4R2_DTRBS_Field is HAL.UInt5;
    subtype DFSDM_CHCFG4R2_OFFSET_Field is HAL.UInt24;
 
@@ -625,10 +573,6 @@ package STM32_SVD.DFSDM is
       DTRBS        at 0 range 3 .. 7;
       OFFSET       at 0 range 8 .. 31;
    end record;
-
-   -----------------------------
-   -- DFSDM_CHCFG5R2_Register --
-   -----------------------------
 
    subtype DFSDM_CHCFG5R2_DTRBS_Field is HAL.UInt5;
    subtype DFSDM_CHCFG5R2_OFFSET_Field is HAL.UInt24;
@@ -651,10 +595,6 @@ package STM32_SVD.DFSDM is
       OFFSET       at 0 range 8 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHCFG6R2_Register --
-   -----------------------------
-
    subtype DFSDM_CHCFG6R2_DTRBS_Field is HAL.UInt5;
    subtype DFSDM_CHCFG6R2_OFFSET_Field is HAL.UInt24;
 
@@ -676,10 +616,6 @@ package STM32_SVD.DFSDM is
       OFFSET       at 0 range 8 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHCFG7R2_Register --
-   -----------------------------
-
    subtype DFSDM_CHCFG7R2_DTRBS_Field is HAL.UInt5;
    subtype DFSDM_CHCFG7R2_OFFSET_Field is HAL.UInt24;
 
@@ -700,10 +636,6 @@ package STM32_SVD.DFSDM is
       DTRBS        at 0 range 3 .. 7;
       OFFSET       at 0 range 8 .. 31;
    end record;
-
-   ----------------------------
-   -- DFSDM_AWSCD0R_Register --
-   ----------------------------
 
    subtype DFSDM_AWSCD0R_SCDT_Field is HAL.Byte;
    subtype DFSDM_AWSCD0R_BKSCD_Field is HAL.UInt4;
@@ -741,10 +673,6 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   ----------------------------
-   -- DFSDM_AWSCD1R_Register --
-   ----------------------------
-
    subtype DFSDM_AWSCD1R_SCDT_Field is HAL.Byte;
    subtype DFSDM_AWSCD1R_BKSCD_Field is HAL.UInt4;
    subtype DFSDM_AWSCD1R_AWFOSR_Field is HAL.UInt5;
@@ -780,10 +708,6 @@ package STM32_SVD.DFSDM is
       AWFORD         at 0 range 22 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   ----------------------------
-   -- DFSDM_AWSCD2R_Register --
-   ----------------------------
 
    subtype DFSDM_AWSCD2R_SCDT_Field is HAL.Byte;
    subtype DFSDM_AWSCD2R_BKSCD_Field is HAL.UInt4;
@@ -821,10 +745,6 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   ----------------------------
-   -- DFSDM_AWSCD3R_Register --
-   ----------------------------
-
    subtype DFSDM_AWSCD3R_SCDT_Field is HAL.Byte;
    subtype DFSDM_AWSCD3R_BKSCD_Field is HAL.UInt4;
    subtype DFSDM_AWSCD3R_AWFOSR_Field is HAL.UInt5;
@@ -860,10 +780,6 @@ package STM32_SVD.DFSDM is
       AWFORD         at 0 range 22 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   ----------------------------
-   -- DFSDM_AWSCD4R_Register --
-   ----------------------------
 
    subtype DFSDM_AWSCD4R_SCDT_Field is HAL.Byte;
    subtype DFSDM_AWSCD4R_BKSCD_Field is HAL.UInt4;
@@ -901,10 +817,6 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   ----------------------------
-   -- DFSDM_AWSCD5R_Register --
-   ----------------------------
-
    subtype DFSDM_AWSCD5R_SCDT_Field is HAL.Byte;
    subtype DFSDM_AWSCD5R_BKSCD_Field is HAL.UInt4;
    subtype DFSDM_AWSCD5R_AWFOSR_Field is HAL.UInt5;
@@ -940,10 +852,6 @@ package STM32_SVD.DFSDM is
       AWFORD         at 0 range 22 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   ----------------------------
-   -- DFSDM_AWSCD6R_Register --
-   ----------------------------
 
    subtype DFSDM_AWSCD6R_SCDT_Field is HAL.Byte;
    subtype DFSDM_AWSCD6R_BKSCD_Field is HAL.UInt4;
@@ -981,10 +889,6 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   ----------------------------
-   -- DFSDM_AWSCD7R_Register --
-   ----------------------------
-
    subtype DFSDM_AWSCD7R_SCDT_Field is HAL.Byte;
    subtype DFSDM_AWSCD7R_BKSCD_Field is HAL.UInt4;
    subtype DFSDM_AWSCD7R_AWFOSR_Field is HAL.UInt5;
@@ -1021,10 +925,6 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHWDAT0R_Register --
-   -----------------------------
-
    subtype DFSDM_CHWDAT0R_WDATA_Field is HAL.Short;
 
    --  DFSDM channel watchdog filter data register
@@ -1041,10 +941,6 @@ package STM32_SVD.DFSDM is
       WDATA          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -----------------------------
-   -- DFSDM_CHWDAT1R_Register --
-   -----------------------------
 
    subtype DFSDM_CHWDAT1R_WDATA_Field is HAL.Short;
 
@@ -1063,10 +959,6 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHWDAT2R_Register --
-   -----------------------------
-
    subtype DFSDM_CHWDAT2R_WDATA_Field is HAL.Short;
 
    --  DFSDM channel watchdog filter data register
@@ -1083,10 +975,6 @@ package STM32_SVD.DFSDM is
       WDATA          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -----------------------------
-   -- DFSDM_CHWDAT3R_Register --
-   -----------------------------
 
    subtype DFSDM_CHWDAT3R_WDATA_Field is HAL.Short;
 
@@ -1105,10 +993,6 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHWDAT4R_Register --
-   -----------------------------
-
    subtype DFSDM_CHWDAT4R_WDATA_Field is HAL.Short;
 
    --  DFSDM channel watchdog filter data register
@@ -1125,10 +1009,6 @@ package STM32_SVD.DFSDM is
       WDATA          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -----------------------------
-   -- DFSDM_CHWDAT5R_Register --
-   -----------------------------
 
    subtype DFSDM_CHWDAT5R_WDATA_Field is HAL.Short;
 
@@ -1147,10 +1027,6 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHWDAT6R_Register --
-   -----------------------------
-
    subtype DFSDM_CHWDAT6R_WDATA_Field is HAL.Short;
 
    --  DFSDM channel watchdog filter data register
@@ -1168,10 +1044,6 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM_CHWDAT7R_Register --
-   -----------------------------
-
    subtype DFSDM_CHWDAT7R_WDATA_Field is HAL.Short;
 
    --  DFSDM channel watchdog filter data register
@@ -1188,10 +1060,6 @@ package STM32_SVD.DFSDM is
       WDATA          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ------------------------------
-   -- DFSDM_CHDATIN0R_Register --
-   ------------------------------
 
    --  DFSDM_CHDATIN0R_INDAT array element
    subtype DFSDM_CHDATIN0R_INDAT_Element is HAL.Short;
@@ -1222,10 +1090,6 @@ package STM32_SVD.DFSDM is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------------------
-   -- DFSDM_CHDATIN1R_Register --
-   ------------------------------
-
    --  DFSDM_CHDATIN1R_INDAT array element
    subtype DFSDM_CHDATIN1R_INDAT_Element is HAL.Short;
 
@@ -1254,10 +1118,6 @@ package STM32_SVD.DFSDM is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   ------------------------------
-   -- DFSDM_CHDATIN2R_Register --
-   ------------------------------
 
    --  DFSDM_CHDATIN2R_INDAT array element
    subtype DFSDM_CHDATIN2R_INDAT_Element is HAL.Short;
@@ -1288,10 +1148,6 @@ package STM32_SVD.DFSDM is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------------------
-   -- DFSDM_CHDATIN3R_Register --
-   ------------------------------
-
    --  DFSDM_CHDATIN3R_INDAT array element
    subtype DFSDM_CHDATIN3R_INDAT_Element is HAL.Short;
 
@@ -1320,10 +1176,6 @@ package STM32_SVD.DFSDM is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   ------------------------------
-   -- DFSDM_CHDATIN4R_Register --
-   ------------------------------
 
    --  DFSDM_CHDATIN4R_INDAT array element
    subtype DFSDM_CHDATIN4R_INDAT_Element is HAL.Short;
@@ -1354,10 +1206,6 @@ package STM32_SVD.DFSDM is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------------------
-   -- DFSDM_CHDATIN5R_Register --
-   ------------------------------
-
    --  DFSDM_CHDATIN5R_INDAT array element
    subtype DFSDM_CHDATIN5R_INDAT_Element is HAL.Short;
 
@@ -1386,10 +1234,6 @@ package STM32_SVD.DFSDM is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   ------------------------------
-   -- DFSDM_CHDATIN6R_Register --
-   ------------------------------
 
    --  DFSDM_CHDATIN6R_INDAT array element
    subtype DFSDM_CHDATIN6R_INDAT_Element is HAL.Short;
@@ -1420,10 +1264,6 @@ package STM32_SVD.DFSDM is
       Arr at 0 range 0 .. 31;
    end record;
 
-   ------------------------------
-   -- DFSDM_CHDATIN7R_Register --
-   ------------------------------
-
    --  DFSDM_CHDATIN7R_INDAT array element
    subtype DFSDM_CHDATIN7R_INDAT_Element is HAL.Short;
 
@@ -1452,10 +1292,6 @@ package STM32_SVD.DFSDM is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   -------------------------
-   -- DFSDM0_CR1_Register --
-   -------------------------
 
    subtype DFSDM0_CR1_JEXTSEL_Field is HAL.UInt5;
    subtype DFSDM0_CR1_JEXTEN_Field is HAL.UInt2;
@@ -1534,10 +1370,6 @@ package STM32_SVD.DFSDM is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
-   -------------------------
-   -- DFSDM1_CR1_Register --
-   -------------------------
-
    subtype DFSDM1_CR1_JEXTSEL_Field is HAL.UInt5;
    subtype DFSDM1_CR1_JEXTEN_Field is HAL.UInt2;
    subtype DFSDM1_CR1_RCH_Field is HAL.UInt3;
@@ -1614,10 +1446,6 @@ package STM32_SVD.DFSDM is
       AWFSEL         at 0 range 30 .. 30;
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
-
-   -------------------------
-   -- DFSDM2_CR1_Register --
-   -------------------------
 
    subtype DFSDM2_CR1_JEXTSEL_Field is HAL.UInt5;
    subtype DFSDM2_CR1_JEXTEN_Field is HAL.UInt2;
@@ -1696,10 +1524,6 @@ package STM32_SVD.DFSDM is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
-   -------------------------
-   -- DFSDM3_CR1_Register --
-   -------------------------
-
    subtype DFSDM3_CR1_JEXTSEL_Field is HAL.UInt5;
    subtype DFSDM3_CR1_JEXTEN_Field is HAL.UInt2;
    subtype DFSDM3_CR1_RCH_Field is HAL.UInt3;
@@ -1777,10 +1601,6 @@ package STM32_SVD.DFSDM is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
-   -------------------------
-   -- DFSDM0_CR2_Register --
-   -------------------------
-
    subtype DFSDM0_CR2_EXCH_Field is HAL.Byte;
    subtype DFSDM0_CR2_AWDCH_Field is HAL.Byte;
 
@@ -1825,10 +1645,6 @@ package STM32_SVD.DFSDM is
       AWDCH          at 0 range 16 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   -------------------------
-   -- DFSDM1_CR2_Register --
-   -------------------------
 
    subtype DFSDM1_CR2_EXCH_Field is HAL.Byte;
    subtype DFSDM1_CR2_AWDCH_Field is HAL.Byte;
@@ -1875,10 +1691,6 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   -------------------------
-   -- DFSDM2_CR2_Register --
-   -------------------------
-
    subtype DFSDM2_CR2_EXCH_Field is HAL.Byte;
    subtype DFSDM2_CR2_AWDCH_Field is HAL.Byte;
 
@@ -1923,10 +1735,6 @@ package STM32_SVD.DFSDM is
       AWDCH          at 0 range 16 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   -------------------------
-   -- DFSDM3_CR2_Register --
-   -------------------------
 
    subtype DFSDM3_CR2_EXCH_Field is HAL.Byte;
    subtype DFSDM3_CR2_AWDCH_Field is HAL.Byte;
@@ -1973,10 +1781,6 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   -------------------------
-   -- DFSDM0_ISR_Register --
-   -------------------------
-
    subtype DFSDM0_ISR_CKABF_Field is HAL.Byte;
    subtype DFSDM0_ISR_SCDF_Field is HAL.Byte;
 
@@ -2021,10 +1825,6 @@ package STM32_SVD.DFSDM is
       CKABF          at 0 range 16 .. 23;
       SCDF           at 0 range 24 .. 31;
    end record;
-
-   -------------------------
-   -- DFSDM1_ISR_Register --
-   -------------------------
 
    subtype DFSDM1_ISR_CKABF_Field is HAL.Byte;
    subtype DFSDM1_ISR_SCDF_Field is HAL.Byte;
@@ -2071,10 +1871,6 @@ package STM32_SVD.DFSDM is
       SCDF           at 0 range 24 .. 31;
    end record;
 
-   -------------------------
-   -- DFSDM2_ISR_Register --
-   -------------------------
-
    subtype DFSDM2_ISR_CKABF_Field is HAL.Byte;
    subtype DFSDM2_ISR_SCDF_Field is HAL.Byte;
 
@@ -2119,10 +1915,6 @@ package STM32_SVD.DFSDM is
       CKABF          at 0 range 16 .. 23;
       SCDF           at 0 range 24 .. 31;
    end record;
-
-   -------------------------
-   -- DFSDM3_ISR_Register --
-   -------------------------
 
    subtype DFSDM3_ISR_CKABF_Field is HAL.Byte;
    subtype DFSDM3_ISR_SCDF_Field is HAL.Byte;
@@ -2169,10 +1961,6 @@ package STM32_SVD.DFSDM is
       SCDF           at 0 range 24 .. 31;
    end record;
 
-   -------------------------
-   -- DFSDM0_ICR_Register --
-   -------------------------
-
    subtype DFSDM0_ICR_CLRCKABF_Field is HAL.Byte;
    subtype DFSDM0_ICR_CLRSCDF_Field is HAL.Byte;
 
@@ -2202,10 +1990,6 @@ package STM32_SVD.DFSDM is
       CLRCKABF      at 0 range 16 .. 23;
       CLRSCDF       at 0 range 24 .. 31;
    end record;
-
-   -------------------------
-   -- DFSDM1_ICR_Register --
-   -------------------------
 
    subtype DFSDM1_ICR_CLRCKABF_Field is HAL.Byte;
    subtype DFSDM1_ICR_CLRSCDF_Field is HAL.Byte;
@@ -2237,10 +2021,6 @@ package STM32_SVD.DFSDM is
       CLRSCDF       at 0 range 24 .. 31;
    end record;
 
-   -------------------------
-   -- DFSDM2_ICR_Register --
-   -------------------------
-
    subtype DFSDM2_ICR_CLRCKABF_Field is HAL.Byte;
    subtype DFSDM2_ICR_CLRSCDF_Field is HAL.Byte;
 
@@ -2270,10 +2050,6 @@ package STM32_SVD.DFSDM is
       CLRCKABF      at 0 range 16 .. 23;
       CLRSCDF       at 0 range 24 .. 31;
    end record;
-
-   -------------------------
-   -- DFSDM3_ICR_Register --
-   -------------------------
 
    subtype DFSDM3_ICR_CLRCKABF_Field is HAL.Byte;
    subtype DFSDM3_ICR_CLRSCDF_Field is HAL.Byte;
@@ -2305,10 +2081,6 @@ package STM32_SVD.DFSDM is
       CLRSCDF       at 0 range 24 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM0_JCHGR_Register --
-   ---------------------------
-
    subtype DFSDM0_JCHGR_JCHG_Field is HAL.Byte;
 
    --  DFSDM injected channel group selection register
@@ -2325,10 +2097,6 @@ package STM32_SVD.DFSDM is
       JCHG          at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   ---------------------------
-   -- DFSDM1_JCHGR_Register --
-   ---------------------------
 
    subtype DFSDM1_JCHGR_JCHG_Field is HAL.Byte;
 
@@ -2347,10 +2115,6 @@ package STM32_SVD.DFSDM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM2_JCHGR_Register --
-   ---------------------------
-
    subtype DFSDM2_JCHGR_JCHG_Field is HAL.Byte;
 
    --  DFSDM injected channel group selection register
@@ -2368,10 +2132,6 @@ package STM32_SVD.DFSDM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM3_JCHGR_Register --
-   ---------------------------
-
    subtype DFSDM3_JCHGR_JCHG_Field is HAL.Byte;
 
    --  DFSDM injected channel group selection register
@@ -2388,10 +2148,6 @@ package STM32_SVD.DFSDM is
       JCHG          at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -------------------------
-   -- DFSDM0_FCR_Register --
-   -------------------------
 
    subtype DFSDM0_FCR_IOSR_Field is HAL.Byte;
    subtype DFSDM0_FCR_FOSR_Field is HAL.UInt10;
@@ -2421,10 +2177,6 @@ package STM32_SVD.DFSDM is
       FORD           at 0 range 29 .. 31;
    end record;
 
-   -------------------------
-   -- DFSDM1_FCR_Register --
-   -------------------------
-
    subtype DFSDM1_FCR_IOSR_Field is HAL.Byte;
    subtype DFSDM1_FCR_FOSR_Field is HAL.UInt10;
    subtype DFSDM1_FCR_FORD_Field is HAL.UInt3;
@@ -2452,10 +2204,6 @@ package STM32_SVD.DFSDM is
       Reserved_26_28 at 0 range 26 .. 28;
       FORD           at 0 range 29 .. 31;
    end record;
-
-   -------------------------
-   -- DFSDM2_FCR_Register --
-   -------------------------
 
    subtype DFSDM2_FCR_IOSR_Field is HAL.Byte;
    subtype DFSDM2_FCR_FOSR_Field is HAL.UInt10;
@@ -2485,10 +2233,6 @@ package STM32_SVD.DFSDM is
       FORD           at 0 range 29 .. 31;
    end record;
 
-   -------------------------
-   -- DFSDM3_FCR_Register --
-   -------------------------
-
    subtype DFSDM3_FCR_IOSR_Field is HAL.Byte;
    subtype DFSDM3_FCR_FOSR_Field is HAL.UInt10;
    subtype DFSDM3_FCR_FORD_Field is HAL.UInt3;
@@ -2517,10 +2261,6 @@ package STM32_SVD.DFSDM is
       FORD           at 0 range 29 .. 31;
    end record;
 
-   ----------------------------
-   -- DFSDM0_JDATAR_Register --
-   ----------------------------
-
    subtype DFSDM0_JDATAR_JDATACH_Field is HAL.UInt3;
    subtype DFSDM0_JDATAR_JDATA_Field is HAL.UInt24;
 
@@ -2541,10 +2281,6 @@ package STM32_SVD.DFSDM is
       Reserved_3_7 at 0 range 3 .. 7;
       JDATA        at 0 range 8 .. 31;
    end record;
-
-   ----------------------------
-   -- DFSDM1_JDATAR_Register --
-   ----------------------------
 
    subtype DFSDM1_JDATAR_JDATACH_Field is HAL.UInt3;
    subtype DFSDM1_JDATAR_JDATA_Field is HAL.UInt24;
@@ -2567,10 +2303,6 @@ package STM32_SVD.DFSDM is
       JDATA        at 0 range 8 .. 31;
    end record;
 
-   ----------------------------
-   -- DFSDM2_JDATAR_Register --
-   ----------------------------
-
    subtype DFSDM2_JDATAR_JDATACH_Field is HAL.UInt3;
    subtype DFSDM2_JDATAR_JDATA_Field is HAL.UInt24;
 
@@ -2592,10 +2324,6 @@ package STM32_SVD.DFSDM is
       JDATA        at 0 range 8 .. 31;
    end record;
 
-   ----------------------------
-   -- DFSDM3_JDATAR_Register --
-   ----------------------------
-
    subtype DFSDM3_JDATAR_JDATACH_Field is HAL.UInt3;
    subtype DFSDM3_JDATAR_JDATA_Field is HAL.UInt24;
 
@@ -2616,10 +2344,6 @@ package STM32_SVD.DFSDM is
       Reserved_3_7 at 0 range 3 .. 7;
       JDATA        at 0 range 8 .. 31;
    end record;
-
-   ----------------------------
-   -- DFSDM0_RDATAR_Register --
-   ----------------------------
 
    subtype DFSDM0_RDATAR_RDATACH_Field is HAL.UInt3;
    subtype DFSDM0_RDATAR_RDATA_Field is HAL.UInt24;
@@ -2648,10 +2372,6 @@ package STM32_SVD.DFSDM is
       RDATA        at 0 range 8 .. 31;
    end record;
 
-   ----------------------------
-   -- DFSDM1_RDATAR_Register --
-   ----------------------------
-
    subtype DFSDM1_RDATAR_RDATACH_Field is HAL.UInt3;
    subtype DFSDM1_RDATAR_RDATA_Field is HAL.UInt24;
 
@@ -2678,10 +2398,6 @@ package STM32_SVD.DFSDM is
       Reserved_5_7 at 0 range 5 .. 7;
       RDATA        at 0 range 8 .. 31;
    end record;
-
-   ----------------------------
-   -- DFSDM2_RDATAR_Register --
-   ----------------------------
 
    subtype DFSDM2_RDATAR_RDATACH_Field is HAL.UInt3;
    subtype DFSDM2_RDATAR_RDATA_Field is HAL.UInt24;
@@ -2710,10 +2426,6 @@ package STM32_SVD.DFSDM is
       RDATA        at 0 range 8 .. 31;
    end record;
 
-   ----------------------------
-   -- DFSDM3_RDATAR_Register --
-   ----------------------------
-
    subtype DFSDM3_RDATAR_RDATACH_Field is HAL.UInt3;
    subtype DFSDM3_RDATAR_RDATA_Field is HAL.UInt24;
 
@@ -2741,10 +2453,6 @@ package STM32_SVD.DFSDM is
       RDATA        at 0 range 8 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM0_AWHTR_Register --
-   ---------------------------
-
    subtype DFSDM0_AWHTR_BKAWH_Field is HAL.UInt4;
    subtype DFSDM0_AWHTR_AWHT_Field is HAL.UInt24;
 
@@ -2765,10 +2473,6 @@ package STM32_SVD.DFSDM is
       Reserved_4_7 at 0 range 4 .. 7;
       AWHT         at 0 range 8 .. 31;
    end record;
-
-   ---------------------------
-   -- DFSDM1_AWHTR_Register --
-   ---------------------------
 
    subtype DFSDM1_AWHTR_BKAWH_Field is HAL.UInt4;
    subtype DFSDM1_AWHTR_AWHT_Field is HAL.UInt24;
@@ -2791,10 +2495,6 @@ package STM32_SVD.DFSDM is
       AWHT         at 0 range 8 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM2_AWHTR_Register --
-   ---------------------------
-
    subtype DFSDM2_AWHTR_BKAWH_Field is HAL.UInt4;
    subtype DFSDM2_AWHTR_AWHT_Field is HAL.UInt24;
 
@@ -2815,10 +2515,6 @@ package STM32_SVD.DFSDM is
       Reserved_4_7 at 0 range 4 .. 7;
       AWHT         at 0 range 8 .. 31;
    end record;
-
-   ---------------------------
-   -- DFSDM3_AWHTR_Register --
-   ---------------------------
 
    subtype DFSDM3_AWHTR_BKAWH_Field is HAL.UInt4;
    subtype DFSDM3_AWHTR_AWHT_Field is HAL.UInt24;
@@ -2841,10 +2537,6 @@ package STM32_SVD.DFSDM is
       AWHT         at 0 range 8 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM0_AWLTR_Register --
-   ---------------------------
-
    subtype DFSDM0_AWLTR_BKAWL_Field is HAL.UInt4;
    subtype DFSDM0_AWLTR_AWLT_Field is HAL.UInt24;
 
@@ -2865,10 +2557,6 @@ package STM32_SVD.DFSDM is
       Reserved_4_7 at 0 range 4 .. 7;
       AWLT         at 0 range 8 .. 31;
    end record;
-
-   ---------------------------
-   -- DFSDM1_AWLTR_Register --
-   ---------------------------
 
    subtype DFSDM1_AWLTR_BKAWL_Field is HAL.UInt4;
    subtype DFSDM1_AWLTR_AWLT_Field is HAL.UInt24;
@@ -2891,10 +2579,6 @@ package STM32_SVD.DFSDM is
       AWLT         at 0 range 8 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM2_AWLTR_Register --
-   ---------------------------
-
    subtype DFSDM2_AWLTR_BKAWL_Field is HAL.UInt4;
    subtype DFSDM2_AWLTR_AWLT_Field is HAL.UInt24;
 
@@ -2915,10 +2599,6 @@ package STM32_SVD.DFSDM is
       Reserved_4_7 at 0 range 4 .. 7;
       AWLT         at 0 range 8 .. 31;
    end record;
-
-   ---------------------------
-   -- DFSDM3_AWLTR_Register --
-   ---------------------------
 
    subtype DFSDM3_AWLTR_BKAWL_Field is HAL.UInt4;
    subtype DFSDM3_AWLTR_AWLT_Field is HAL.UInt24;
@@ -2941,10 +2621,6 @@ package STM32_SVD.DFSDM is
       AWLT         at 0 range 8 .. 31;
    end record;
 
-   --------------------------
-   -- DFSDM0_AWSR_Register --
-   --------------------------
-
    subtype DFSDM0_AWSR_AWLTF_Field is HAL.Byte;
    subtype DFSDM0_AWSR_AWHTF_Field is HAL.Byte;
 
@@ -2965,10 +2641,6 @@ package STM32_SVD.DFSDM is
       AWHTF          at 0 range 8 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------------
-   -- DFSDM1_AWSR_Register --
-   --------------------------
 
    subtype DFSDM1_AWSR_AWLTF_Field is HAL.Byte;
    subtype DFSDM1_AWSR_AWHTF_Field is HAL.Byte;
@@ -2991,10 +2663,6 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   --------------------------
-   -- DFSDM2_AWSR_Register --
-   --------------------------
-
    subtype DFSDM2_AWSR_AWLTF_Field is HAL.Byte;
    subtype DFSDM2_AWSR_AWHTF_Field is HAL.Byte;
 
@@ -3015,10 +2683,6 @@ package STM32_SVD.DFSDM is
       AWHTF          at 0 range 8 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------------
-   -- DFSDM3_AWSR_Register --
-   --------------------------
 
    subtype DFSDM3_AWSR_AWLTF_Field is HAL.Byte;
    subtype DFSDM3_AWSR_AWHTF_Field is HAL.Byte;
@@ -3041,10 +2705,6 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM0_AWCFR_Register --
-   ---------------------------
-
    subtype DFSDM0_AWCFR_CLRAWLTF_Field is HAL.Byte;
    subtype DFSDM0_AWCFR_CLRAWHTF_Field is HAL.Byte;
 
@@ -3065,10 +2725,6 @@ package STM32_SVD.DFSDM is
       CLRAWHTF       at 0 range 8 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- DFSDM1_AWCFR_Register --
-   ---------------------------
 
    subtype DFSDM1_AWCFR_CLRAWLTF_Field is HAL.Byte;
    subtype DFSDM1_AWCFR_CLRAWHTF_Field is HAL.Byte;
@@ -3091,10 +2747,6 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM2_AWCFR_Register --
-   ---------------------------
-
    subtype DFSDM2_AWCFR_CLRAWLTF_Field is HAL.Byte;
    subtype DFSDM2_AWCFR_CLRAWHTF_Field is HAL.Byte;
 
@@ -3115,10 +2767,6 @@ package STM32_SVD.DFSDM is
       CLRAWHTF       at 0 range 8 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- DFSDM3_AWCFR_Register --
-   ---------------------------
 
    subtype DFSDM3_AWCFR_CLRAWLTF_Field is HAL.Byte;
    subtype DFSDM3_AWCFR_CLRAWHTF_Field is HAL.Byte;
@@ -3141,10 +2789,6 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM0_EXMAX_Register --
-   ---------------------------
-
    subtype DFSDM0_EXMAX_EXMAXCH_Field is HAL.UInt3;
    subtype DFSDM0_EXMAX_EXMAX_Field is HAL.UInt24;
 
@@ -3165,10 +2809,6 @@ package STM32_SVD.DFSDM is
       Reserved_3_7 at 0 range 3 .. 7;
       EXMAX        at 0 range 8 .. 31;
    end record;
-
-   ---------------------------
-   -- DFSDM1_EXMAX_Register --
-   ---------------------------
 
    subtype DFSDM1_EXMAX_EXMAXCH_Field is HAL.UInt3;
    subtype DFSDM1_EXMAX_EXMAX_Field is HAL.UInt24;
@@ -3191,10 +2831,6 @@ package STM32_SVD.DFSDM is
       EXMAX        at 0 range 8 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM2_EXMAX_Register --
-   ---------------------------
-
    subtype DFSDM2_EXMAX_EXMAXCH_Field is HAL.UInt3;
    subtype DFSDM2_EXMAX_EXMAX_Field is HAL.UInt24;
 
@@ -3215,10 +2851,6 @@ package STM32_SVD.DFSDM is
       Reserved_3_7 at 0 range 3 .. 7;
       EXMAX        at 0 range 8 .. 31;
    end record;
-
-   ---------------------------
-   -- DFSDM3_EXMAX_Register --
-   ---------------------------
 
    subtype DFSDM3_EXMAX_EXMAXCH_Field is HAL.UInt3;
    subtype DFSDM3_EXMAX_EXMAX_Field is HAL.UInt24;
@@ -3241,10 +2873,6 @@ package STM32_SVD.DFSDM is
       EXMAX        at 0 range 8 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM0_EXMIN_Register --
-   ---------------------------
-
    subtype DFSDM0_EXMIN_EXMINCH_Field is HAL.UInt3;
    subtype DFSDM0_EXMIN_EXMIN_Field is HAL.UInt24;
 
@@ -3265,10 +2893,6 @@ package STM32_SVD.DFSDM is
       Reserved_3_7 at 0 range 3 .. 7;
       EXMIN        at 0 range 8 .. 31;
    end record;
-
-   ---------------------------
-   -- DFSDM1_EXMIN_Register --
-   ---------------------------
 
    subtype DFSDM1_EXMIN_EXMINCH_Field is HAL.UInt3;
    subtype DFSDM1_EXMIN_EXMIN_Field is HAL.UInt24;
@@ -3291,10 +2915,6 @@ package STM32_SVD.DFSDM is
       EXMIN        at 0 range 8 .. 31;
    end record;
 
-   ---------------------------
-   -- DFSDM2_EXMIN_Register --
-   ---------------------------
-
    subtype DFSDM2_EXMIN_EXMINCH_Field is HAL.UInt3;
    subtype DFSDM2_EXMIN_EXMIN_Field is HAL.UInt24;
 
@@ -3315,10 +2935,6 @@ package STM32_SVD.DFSDM is
       Reserved_3_7 at 0 range 3 .. 7;
       EXMIN        at 0 range 8 .. 31;
    end record;
-
-   ---------------------------
-   -- DFSDM3_EXMIN_Register --
-   ---------------------------
 
    subtype DFSDM3_EXMIN_EXMINCH_Field is HAL.UInt3;
    subtype DFSDM3_EXMIN_EXMIN_Field is HAL.UInt24;
@@ -3341,10 +2957,6 @@ package STM32_SVD.DFSDM is
       EXMIN        at 0 range 8 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM0_CNVTIMR_Register --
-   -----------------------------
-
    subtype DFSDM0_CNVTIMR_CNVCNT_Field is HAL.UInt28;
 
    --  DFSDM conversion timer register
@@ -3361,10 +2973,6 @@ package STM32_SVD.DFSDM is
       Reserved_0_3 at 0 range 0 .. 3;
       CNVCNT       at 0 range 4 .. 31;
    end record;
-
-   -----------------------------
-   -- DFSDM1_CNVTIMR_Register --
-   -----------------------------
 
    subtype DFSDM1_CNVTIMR_CNVCNT_Field is HAL.UInt28;
 
@@ -3383,10 +2991,6 @@ package STM32_SVD.DFSDM is
       CNVCNT       at 0 range 4 .. 31;
    end record;
 
-   -----------------------------
-   -- DFSDM2_CNVTIMR_Register --
-   -----------------------------
-
    subtype DFSDM2_CNVTIMR_CNVCNT_Field is HAL.UInt28;
 
    --  DFSDM conversion timer register
@@ -3403,10 +3007,6 @@ package STM32_SVD.DFSDM is
       Reserved_0_3 at 0 range 0 .. 3;
       CNVCNT       at 0 range 4 .. 31;
    end record;
-
-   -----------------------------
-   -- DFSDM3_CNVTIMR_Register --
-   -----------------------------
 
    subtype DFSDM3_CNVTIMR_CNVCNT_Field is HAL.UInt28;
 

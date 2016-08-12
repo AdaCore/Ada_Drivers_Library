@@ -13,10 +13,6 @@ package STM32_SVD.GPIO is
    -- Registers --
    ---------------
 
-   --------------------
-   -- MODER_Register --
-   --------------------
-
    --  MODER array element
    subtype MODER_Element is HAL.UInt2;
 
@@ -44,14 +40,6 @@ package STM32_SVD.GPIO is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   ---------------------
-   -- OTYPER_Register --
-   ---------------------
-
-   ---------------
-   -- OTYPER.OT --
-   ---------------
 
    --  OTYPER_OT array
    type OTYPER_OT_Field_Array is array (0 .. 15) of Boolean
@@ -92,10 +80,6 @@ package STM32_SVD.GPIO is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------
-   -- OSPEEDR_Register --
-   ----------------------
-
    --  OSPEEDR array element
    subtype OSPEEDR_Element is HAL.UInt2;
 
@@ -124,10 +108,6 @@ package STM32_SVD.GPIO is
       Arr at 0 range 0 .. 31;
    end record;
 
-   --------------------
-   -- PUPDR_Register --
-   --------------------
-
    --  PUPDR array element
    subtype PUPDR_Element is HAL.UInt2;
 
@@ -155,14 +135,6 @@ package STM32_SVD.GPIO is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   ------------------
-   -- IDR_Register --
-   ------------------
-
-   -------------
-   -- IDR.IDR --
-   -------------
 
    --  IDR array
    type IDR_Field_Array is array (0 .. 15) of Boolean
@@ -203,14 +175,6 @@ package STM32_SVD.GPIO is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- ODR_Register --
-   ------------------
-
-   -------------
-   -- ODR.ODR --
-   -------------
-
    --  ODR array
    type ODR_Field_Array is array (0 .. 15) of Boolean
      with Component_Size => 1, Size => 16;
@@ -250,14 +214,6 @@ package STM32_SVD.GPIO is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -------------------
-   -- BSRR_Register --
-   -------------------
-
-   -------------
-   -- BSRR.BS --
-   -------------
-
    --  BSRR_BS array
    type BSRR_BS_Field_Array is array (0 .. 15) of Boolean
      with Component_Size => 1, Size => 16;
@@ -281,10 +237,6 @@ package STM32_SVD.GPIO is
       Val at 0 range 0 .. 15;
       Arr at 0 range 0 .. 15;
    end record;
-
-   -------------
-   -- BSRR.BR --
-   -------------
 
    --  BSRR_BR array
    type BSRR_BR_Field_Array is array (0 .. 15) of Boolean
@@ -324,14 +276,6 @@ package STM32_SVD.GPIO is
       BS at 0 range 0 .. 15;
       BR at 0 range 16 .. 31;
    end record;
-
-   -------------------
-   -- LCKR_Register --
-   -------------------
-
-   --------------
-   -- LCKR.LCK --
-   --------------
 
    --  LCKR_LCK array
    type LCKR_LCK_Field_Array is array (0 .. 15) of Boolean
@@ -375,10 +319,6 @@ package STM32_SVD.GPIO is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
-   -------------------
-   -- AFRL_Register --
-   -------------------
-
    --  AFRL array element
    subtype AFRL_Element is HAL.UInt4;
 
@@ -406,10 +346,6 @@ package STM32_SVD.GPIO is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   -------------------
-   -- AFRH_Register --
-   -------------------
 
    --  AFRH array element
    subtype AFRH_Element is HAL.UInt4;

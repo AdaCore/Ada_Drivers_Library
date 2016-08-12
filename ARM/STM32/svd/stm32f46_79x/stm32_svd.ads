@@ -87,10 +87,6 @@ package STM32_SVD is
      System'To_Address (16#40004400#);
    USART3_Base : constant System.Address :=
      System'To_Address (16#40004800#);
-   UART7_Base : constant System.Address :=
-     System'To_Address (16#40007800#);
-   UART8_Base : constant System.Address :=
-     System'To_Address (16#40007C00#);
    DAC_Base : constant System.Address :=
      System'To_Address (16#40007400#);
    PWR_Base : constant System.Address :=
@@ -105,6 +101,10 @@ package STM32_SVD is
      System'To_Address (16#40004C00#);
    UART5_Base : constant System.Address :=
      System'To_Address (16#40005000#);
+   UART7_Base : constant System.Address :=
+     System'To_Address (16#40007800#);
+   UART8_Base : constant System.Address :=
+     System'To_Address (16#40007C00#);
    C_ADC_Base : constant System.Address :=
      System'To_Address (16#40012300#);
    TIM1_Base : constant System.Address :=

@@ -13,10 +13,6 @@ package STM32_SVD.RNG is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    --  control register
    type CR_Register is record
       --  unspecified
@@ -37,10 +33,6 @@ package STM32_SVD.RNG is
       IE            at 0 range 3 .. 3;
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
-
-   -----------------
-   -- SR_Register --
-   -----------------
 
    --  status register
    type SR_Register is record

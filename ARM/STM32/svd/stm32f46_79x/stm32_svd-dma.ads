@@ -13,10 +13,6 @@ package STM32_SVD.DMA is
    -- Registers --
    ---------------
 
-   -------------------
-   -- LISR_Register --
-   -------------------
-
    --  low interrupt status register
    type LISR_Register is record
       --  Read-only. Stream x FIFO error interrupt flag (x=3..0)
@@ -103,10 +99,6 @@ package STM32_SVD.DMA is
       TCIF3          at 0 range 27 .. 27;
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
-
-   -------------------
-   -- HISR_Register --
-   -------------------
 
    --  high interrupt status register
    type HISR_Register is record
@@ -195,10 +187,6 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   --------------------
-   -- LIFCR_Register --
-   --------------------
-
    --  low interrupt flag clear register
    type LIFCR_Register is record
       --  Stream x clear FIFO error interrupt flag (x = 3..0)
@@ -285,10 +273,6 @@ package STM32_SVD.DMA is
       CTCIF3         at 0 range 27 .. 27;
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
-
-   --------------------
-   -- HIFCR_Register --
-   --------------------
 
    --  high interrupt flag clear register
    type HIFCR_Register is record
@@ -377,10 +361,6 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   -------------------
-   -- S0CR_Register --
-   -------------------
-
    subtype S0CR_DIR_Field is HAL.UInt2;
    subtype S0CR_PSIZE_Field is HAL.UInt2;
    subtype S0CR_MSIZE_Field is HAL.UInt2;
@@ -461,10 +441,6 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ---------------------
-   -- S0NDTR_Register --
-   ---------------------
-
    subtype S0NDTR_NDT_Field is HAL.Short;
 
    --  stream x number of data register
@@ -481,10 +457,6 @@ package STM32_SVD.DMA is
       NDT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- S0FCR_Register --
-   --------------------
 
    subtype S0FCR_FTH_Field is HAL.UInt2;
    subtype S0FCR_FS_Field is HAL.UInt3;
@@ -515,10 +487,6 @@ package STM32_SVD.DMA is
       FEIE          at 0 range 7 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -------------------
-   -- S1CR_Register --
-   -------------------
 
    subtype S1CR_DIR_Field is HAL.UInt2;
    subtype S1CR_PSIZE_Field is HAL.UInt2;
@@ -600,10 +568,6 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ---------------------
-   -- S1NDTR_Register --
-   ---------------------
-
    subtype S1NDTR_NDT_Field is HAL.Short;
 
    --  stream x number of data register
@@ -620,10 +584,6 @@ package STM32_SVD.DMA is
       NDT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- S1FCR_Register --
-   --------------------
 
    subtype S1FCR_FTH_Field is HAL.UInt2;
    subtype S1FCR_FS_Field is HAL.UInt3;
@@ -654,10 +614,6 @@ package STM32_SVD.DMA is
       FEIE          at 0 range 7 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -------------------
-   -- S2CR_Register --
-   -------------------
 
    subtype S2CR_DIR_Field is HAL.UInt2;
    subtype S2CR_PSIZE_Field is HAL.UInt2;
@@ -739,10 +695,6 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ---------------------
-   -- S2NDTR_Register --
-   ---------------------
-
    subtype S2NDTR_NDT_Field is HAL.Short;
 
    --  stream x number of data register
@@ -759,10 +711,6 @@ package STM32_SVD.DMA is
       NDT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- S2FCR_Register --
-   --------------------
 
    subtype S2FCR_FTH_Field is HAL.UInt2;
    subtype S2FCR_FS_Field is HAL.UInt3;
@@ -793,10 +741,6 @@ package STM32_SVD.DMA is
       FEIE          at 0 range 7 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -------------------
-   -- S3CR_Register --
-   -------------------
 
    subtype S3CR_DIR_Field is HAL.UInt2;
    subtype S3CR_PSIZE_Field is HAL.UInt2;
@@ -878,10 +822,6 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ---------------------
-   -- S3NDTR_Register --
-   ---------------------
-
    subtype S3NDTR_NDT_Field is HAL.Short;
 
    --  stream x number of data register
@@ -898,10 +838,6 @@ package STM32_SVD.DMA is
       NDT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- S3FCR_Register --
-   --------------------
 
    subtype S3FCR_FTH_Field is HAL.UInt2;
    subtype S3FCR_FS_Field is HAL.UInt3;
@@ -932,10 +868,6 @@ package STM32_SVD.DMA is
       FEIE          at 0 range 7 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -------------------
-   -- S4CR_Register --
-   -------------------
 
    subtype S4CR_DIR_Field is HAL.UInt2;
    subtype S4CR_PSIZE_Field is HAL.UInt2;
@@ -1017,10 +949,6 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ---------------------
-   -- S4NDTR_Register --
-   ---------------------
-
    subtype S4NDTR_NDT_Field is HAL.Short;
 
    --  stream x number of data register
@@ -1037,10 +965,6 @@ package STM32_SVD.DMA is
       NDT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- S4FCR_Register --
-   --------------------
 
    subtype S4FCR_FTH_Field is HAL.UInt2;
    subtype S4FCR_FS_Field is HAL.UInt3;
@@ -1071,10 +995,6 @@ package STM32_SVD.DMA is
       FEIE          at 0 range 7 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -------------------
-   -- S5CR_Register --
-   -------------------
 
    subtype S5CR_DIR_Field is HAL.UInt2;
    subtype S5CR_PSIZE_Field is HAL.UInt2;
@@ -1156,10 +1076,6 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ---------------------
-   -- S5NDTR_Register --
-   ---------------------
-
    subtype S5NDTR_NDT_Field is HAL.Short;
 
    --  stream x number of data register
@@ -1176,10 +1092,6 @@ package STM32_SVD.DMA is
       NDT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- S5FCR_Register --
-   --------------------
 
    subtype S5FCR_FTH_Field is HAL.UInt2;
    subtype S5FCR_FS_Field is HAL.UInt3;
@@ -1210,10 +1122,6 @@ package STM32_SVD.DMA is
       FEIE          at 0 range 7 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -------------------
-   -- S6CR_Register --
-   -------------------
 
    subtype S6CR_DIR_Field is HAL.UInt2;
    subtype S6CR_PSIZE_Field is HAL.UInt2;
@@ -1295,10 +1203,6 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ---------------------
-   -- S6NDTR_Register --
-   ---------------------
-
    subtype S6NDTR_NDT_Field is HAL.Short;
 
    --  stream x number of data register
@@ -1315,10 +1219,6 @@ package STM32_SVD.DMA is
       NDT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- S6FCR_Register --
-   --------------------
 
    subtype S6FCR_FTH_Field is HAL.UInt2;
    subtype S6FCR_FS_Field is HAL.UInt3;
@@ -1349,10 +1249,6 @@ package STM32_SVD.DMA is
       FEIE          at 0 range 7 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -------------------
-   -- S7CR_Register --
-   -------------------
 
    subtype S7CR_DIR_Field is HAL.UInt2;
    subtype S7CR_PSIZE_Field is HAL.UInt2;
@@ -1434,10 +1330,6 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ---------------------
-   -- S7NDTR_Register --
-   ---------------------
-
    subtype S7NDTR_NDT_Field is HAL.Short;
 
    --  stream x number of data register
@@ -1454,10 +1346,6 @@ package STM32_SVD.DMA is
       NDT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- S7FCR_Register --
-   --------------------
 
    subtype S7FCR_FTH_Field is HAL.UInt2;
    subtype S7FCR_FS_Field is HAL.UInt3;

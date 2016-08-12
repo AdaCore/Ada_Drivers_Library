@@ -13,10 +13,6 @@ package STM32_SVD.FLASH is
    -- Registers --
    ---------------
 
-   ------------------
-   -- ACR_Register --
-   ------------------
-
    subtype ACR_LATENCY_Field is HAL.UInt3;
 
    --  Flash access control register
@@ -51,10 +47,6 @@ package STM32_SVD.FLASH is
       DCRST          at 0 range 12 .. 12;
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
-
-   -----------------
-   -- SR_Register --
-   -----------------
 
    --  Status register
    type SR_Register is record
@@ -94,10 +86,6 @@ package STM32_SVD.FLASH is
       BSY            at 0 range 16 .. 16;
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
-
-   -----------------
-   -- CR_Register --
-   -----------------
 
    subtype CR_SNB_Field is HAL.UInt4;
    subtype CR_PSIZE_Field is HAL.UInt2;
@@ -149,10 +137,6 @@ package STM32_SVD.FLASH is
       Reserved_26_30 at 0 range 26 .. 30;
       LOCK           at 0 range 31 .. 31;
    end record;
-
-   --------------------
-   -- OPTCR_Register --
-   --------------------
 
    subtype OPTCR_BOR_LEV_Field is HAL.UInt2;
    subtype OPTCR_RDP_Field is HAL.Byte;

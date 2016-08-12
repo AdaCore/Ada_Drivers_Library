@@ -13,10 +13,6 @@ package STM32_SVD.MDIOS is
    -- Registers --
    ---------------
 
-   -----------------------
-   -- MDIOS_CR_Register --
-   -----------------------
-
    subtype MDIOS_CR_PORT_ADDRESS_Field is HAL.UInt5;
 
    --  MDIOS configuration register
@@ -52,10 +48,6 @@ package STM32_SVD.MDIOS is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   -----------------------
-   -- MDIOS_SR_Register --
-   -----------------------
-
    --  MDIOS status register
    type MDIOS_SR_Register is record
       --  Read-only. Preamble error flag
@@ -76,10 +68,6 @@ package STM32_SVD.MDIOS is
       TERF          at 0 range 2 .. 2;
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
-
-   --------------------------
-   -- MDIOS_CLRFR_Register --
-   --------------------------
 
    --  MDIOS clear flag register
    type MDIOS_CLRFR_Register is record
@@ -102,10 +90,6 @@ package STM32_SVD.MDIOS is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   --------------------------
-   -- MDIOS_DINR0_Register --
-   --------------------------
-
    subtype MDIOS_DINR0_DIN0_Field is HAL.Short;
 
    --  MDIOS input data register 0
@@ -122,10 +106,6 @@ package STM32_SVD.MDIOS is
       DIN0           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------------
-   -- MDIOS_DINR1_Register --
-   --------------------------
 
    subtype MDIOS_DINR1_DIN1_Field is HAL.Short;
 
@@ -144,10 +124,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   --------------------------
-   -- MDIOS_DINR2_Register --
-   --------------------------
-
    subtype MDIOS_DINR2_DIN2_Field is HAL.Short;
 
    --  MDIOS input data register 2
@@ -164,10 +140,6 @@ package STM32_SVD.MDIOS is
       DIN2           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------------
-   -- MDIOS_DINR3_Register --
-   --------------------------
 
    subtype MDIOS_DINR3_DIN3_Field is HAL.Short;
 
@@ -186,10 +158,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   --------------------------
-   -- MDIOS_DINR4_Register --
-   --------------------------
-
    subtype MDIOS_DINR4_DIN4_Field is HAL.Short;
 
    --  MDIOS input data register 4
@@ -206,10 +174,6 @@ package STM32_SVD.MDIOS is
       DIN4           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------------
-   -- MDIOS_DINR5_Register --
-   --------------------------
 
    subtype MDIOS_DINR5_DIN5_Field is HAL.Short;
 
@@ -228,10 +192,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   --------------------------
-   -- MDIOS_DINR6_Register --
-   --------------------------
-
    subtype MDIOS_DINR6_DIN6_Field is HAL.Short;
 
    --  MDIOS input data register 6
@@ -248,10 +208,6 @@ package STM32_SVD.MDIOS is
       DIN6           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------------
-   -- MDIOS_DINR7_Register --
-   --------------------------
 
    subtype MDIOS_DINR7_DIN7_Field is HAL.Short;
 
@@ -270,10 +226,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   --------------------------
-   -- MDIOS_DINR8_Register --
-   --------------------------
-
    subtype MDIOS_DINR8_DIN8_Field is HAL.Short;
 
    --  MDIOS input data register 8
@@ -290,10 +242,6 @@ package STM32_SVD.MDIOS is
       DIN8           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------------
-   -- MDIOS_DINR9_Register --
-   --------------------------
 
    subtype MDIOS_DINR9_DIN9_Field is HAL.Short;
 
@@ -312,10 +260,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DINR10_Register --
-   ---------------------------
-
    subtype MDIOS_DINR10_DIN10_Field is HAL.Short;
 
    --  MDIOS input data register 10
@@ -332,10 +276,6 @@ package STM32_SVD.MDIOS is
       DIN10          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DINR11_Register --
-   ---------------------------
 
    subtype MDIOS_DINR11_DIN11_Field is HAL.Short;
 
@@ -354,10 +294,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DINR12_Register --
-   ---------------------------
-
    subtype MDIOS_DINR12_DIN12_Field is HAL.Short;
 
    --  MDIOS input data register 12
@@ -374,10 +310,6 @@ package STM32_SVD.MDIOS is
       DIN12          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DINR13_Register --
-   ---------------------------
 
    subtype MDIOS_DINR13_DIN13_Field is HAL.Short;
 
@@ -396,10 +328,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DINR14_Register --
-   ---------------------------
-
    subtype MDIOS_DINR14_DIN14_Field is HAL.Short;
 
    --  MDIOS input data register 14
@@ -416,10 +344,6 @@ package STM32_SVD.MDIOS is
       DIN14          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DINR15_Register --
-   ---------------------------
 
    subtype MDIOS_DINR15_DIN15_Field is HAL.Short;
 
@@ -438,10 +362,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DINR16_Register --
-   ---------------------------
-
    subtype MDIOS_DINR16_DIN16_Field is HAL.Short;
 
    --  MDIOS input data register 16
@@ -458,10 +378,6 @@ package STM32_SVD.MDIOS is
       DIN16          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DINR17_Register --
-   ---------------------------
 
    subtype MDIOS_DINR17_DIN17_Field is HAL.Short;
 
@@ -480,10 +396,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DINR18_Register --
-   ---------------------------
-
    subtype MDIOS_DINR18_DIN18_Field is HAL.Short;
 
    --  MDIOS input data register 18
@@ -500,10 +412,6 @@ package STM32_SVD.MDIOS is
       DIN18          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DINR19_Register --
-   ---------------------------
 
    subtype MDIOS_DINR19_DIN19_Field is HAL.Short;
 
@@ -522,10 +430,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DINR20_Register --
-   ---------------------------
-
    subtype MDIOS_DINR20_DIN20_Field is HAL.Short;
 
    --  MDIOS input data register 20
@@ -542,10 +446,6 @@ package STM32_SVD.MDIOS is
       DIN20          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DINR21_Register --
-   ---------------------------
 
    subtype MDIOS_DINR21_DIN21_Field is HAL.Short;
 
@@ -564,10 +464,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DINR22_Register --
-   ---------------------------
-
    subtype MDIOS_DINR22_DIN22_Field is HAL.Short;
 
    --  MDIOS input data register 22
@@ -584,10 +480,6 @@ package STM32_SVD.MDIOS is
       DIN22          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DINR23_Register --
-   ---------------------------
 
    subtype MDIOS_DINR23_DIN23_Field is HAL.Short;
 
@@ -606,10 +498,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DINR24_Register --
-   ---------------------------
-
    subtype MDIOS_DINR24_DIN24_Field is HAL.Short;
 
    --  MDIOS input data register 24
@@ -626,10 +514,6 @@ package STM32_SVD.MDIOS is
       DIN24          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DINR25_Register --
-   ---------------------------
 
    subtype MDIOS_DINR25_DIN25_Field is HAL.Short;
 
@@ -648,10 +532,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DINR26_Register --
-   ---------------------------
-
    subtype MDIOS_DINR26_DIN26_Field is HAL.Short;
 
    --  MDIOS input data register 26
@@ -668,10 +548,6 @@ package STM32_SVD.MDIOS is
       DIN26          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DINR27_Register --
-   ---------------------------
 
    subtype MDIOS_DINR27_DIN27_Field is HAL.Short;
 
@@ -690,10 +566,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DINR28_Register --
-   ---------------------------
-
    subtype MDIOS_DINR28_DIN28_Field is HAL.Short;
 
    --  MDIOS input data register 28
@@ -710,10 +582,6 @@ package STM32_SVD.MDIOS is
       DIN28          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DINR29_Register --
-   ---------------------------
 
    subtype MDIOS_DINR29_DIN29_Field is HAL.Short;
 
@@ -732,10 +600,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DINR30_Register --
-   ---------------------------
-
    subtype MDIOS_DINR30_DIN30_Field is HAL.Short;
 
    --  MDIOS input data register 30
@@ -752,10 +616,6 @@ package STM32_SVD.MDIOS is
       DIN30          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DINR31_Register --
-   ---------------------------
 
    subtype MDIOS_DINR31_DIN31_Field is HAL.Short;
 
@@ -774,10 +634,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DOUTR0_Register --
-   ---------------------------
-
    subtype MDIOS_DOUTR0_DOUT0_Field is HAL.Short;
 
    --  MDIOS output data register 0
@@ -794,10 +650,6 @@ package STM32_SVD.MDIOS is
       DOUT0          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DOUTR1_Register --
-   ---------------------------
 
    subtype MDIOS_DOUTR1_DOUT1_Field is HAL.Short;
 
@@ -816,10 +668,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DOUTR2_Register --
-   ---------------------------
-
    subtype MDIOS_DOUTR2_DOUT2_Field is HAL.Short;
 
    --  MDIOS output data register 2
@@ -836,10 +684,6 @@ package STM32_SVD.MDIOS is
       DOUT2          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DOUTR3_Register --
-   ---------------------------
 
    subtype MDIOS_DOUTR3_DOUT3_Field is HAL.Short;
 
@@ -858,10 +702,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DOUTR4_Register --
-   ---------------------------
-
    subtype MDIOS_DOUTR4_DOUT4_Field is HAL.Short;
 
    --  MDIOS output data register 4
@@ -878,10 +718,6 @@ package STM32_SVD.MDIOS is
       DOUT4          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DOUTR5_Register --
-   ---------------------------
 
    subtype MDIOS_DOUTR5_DOUT5_Field is HAL.Short;
 
@@ -900,10 +736,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DOUTR6_Register --
-   ---------------------------
-
    subtype MDIOS_DOUTR6_DOUT6_Field is HAL.Short;
 
    --  MDIOS output data register 6
@@ -920,10 +752,6 @@ package STM32_SVD.MDIOS is
       DOUT6          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DOUTR7_Register --
-   ---------------------------
 
    subtype MDIOS_DOUTR7_DOUT7_Field is HAL.Short;
 
@@ -942,10 +770,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------------
-   -- MDIOS_DOUTR8_Register --
-   ---------------------------
-
    subtype MDIOS_DOUTR8_DOUT8_Field is HAL.Short;
 
    --  MDIOS output data register 8
@@ -962,10 +786,6 @@ package STM32_SVD.MDIOS is
       DOUT8          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------------
-   -- MDIOS_DOUTR9_Register --
-   ---------------------------
 
    subtype MDIOS_DOUTR9_DOUT9_Field is HAL.Short;
 
@@ -984,10 +804,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------------
-   -- MDIOS_DOUTR10_Register --
-   ----------------------------
-
    subtype MDIOS_DOUTR10_DOUT10_Field is HAL.Short;
 
    --  MDIOS output data register 10
@@ -1004,10 +820,6 @@ package STM32_SVD.MDIOS is
       DOUT10         at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------------
-   -- MDIOS_DOUTR11_Register --
-   ----------------------------
 
    subtype MDIOS_DOUTR11_DOUT11_Field is HAL.Short;
 
@@ -1026,10 +838,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------------
-   -- MDIOS_DOUTR12_Register --
-   ----------------------------
-
    subtype MDIOS_DOUTR12_DOUT12_Field is HAL.Short;
 
    --  MDIOS output data register 12
@@ -1046,10 +854,6 @@ package STM32_SVD.MDIOS is
       DOUT12         at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------------
-   -- MDIOS_DOUTR13_Register --
-   ----------------------------
 
    subtype MDIOS_DOUTR13_DOUT13_Field is HAL.Short;
 
@@ -1068,10 +872,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------------
-   -- MDIOS_DOUTR14_Register --
-   ----------------------------
-
    subtype MDIOS_DOUTR14_DOUT14_Field is HAL.Short;
 
    --  MDIOS output data register 14
@@ -1088,10 +888,6 @@ package STM32_SVD.MDIOS is
       DOUT14         at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------------
-   -- MDIOS_DOUTR15_Register --
-   ----------------------------
 
    subtype MDIOS_DOUTR15_DOUT15_Field is HAL.Short;
 
@@ -1110,10 +906,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------------
-   -- MDIOS_DOUTR16_Register --
-   ----------------------------
-
    subtype MDIOS_DOUTR16_DOUT16_Field is HAL.Short;
 
    --  MDIOS output data register 16
@@ -1130,10 +922,6 @@ package STM32_SVD.MDIOS is
       DOUT16         at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------------
-   -- MDIOS_DOUTR17_Register --
-   ----------------------------
 
    subtype MDIOS_DOUTR17_DOUT17_Field is HAL.Short;
 
@@ -1152,10 +940,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------------
-   -- MDIOS_DOUTR18_Register --
-   ----------------------------
-
    subtype MDIOS_DOUTR18_DOUT18_Field is HAL.Short;
 
    --  MDIOS output data register 18
@@ -1172,10 +956,6 @@ package STM32_SVD.MDIOS is
       DOUT18         at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------------
-   -- MDIOS_DOUTR19_Register --
-   ----------------------------
 
    subtype MDIOS_DOUTR19_DOUT19_Field is HAL.Short;
 
@@ -1194,10 +974,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------------
-   -- MDIOS_DOUTR20_Register --
-   ----------------------------
-
    subtype MDIOS_DOUTR20_DOUT20_Field is HAL.Short;
 
    --  MDIOS output data register 20
@@ -1214,10 +990,6 @@ package STM32_SVD.MDIOS is
       DOUT20         at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------------
-   -- MDIOS_DOUTR21_Register --
-   ----------------------------
 
    subtype MDIOS_DOUTR21_DOUT21_Field is HAL.Short;
 
@@ -1236,10 +1008,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------------
-   -- MDIOS_DOUTR22_Register --
-   ----------------------------
-
    subtype MDIOS_DOUTR22_DOUT22_Field is HAL.Short;
 
    --  MDIOS output data register 22
@@ -1256,10 +1024,6 @@ package STM32_SVD.MDIOS is
       DOUT22         at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------------
-   -- MDIOS_DOUTR23_Register --
-   ----------------------------
 
    subtype MDIOS_DOUTR23_DOUT23_Field is HAL.Short;
 
@@ -1278,10 +1042,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------------
-   -- MDIOS_DOUTR24_Register --
-   ----------------------------
-
    subtype MDIOS_DOUTR24_DOUT24_Field is HAL.Short;
 
    --  MDIOS output data register 24
@@ -1298,10 +1058,6 @@ package STM32_SVD.MDIOS is
       DOUT24         at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------------
-   -- MDIOS_DOUTR25_Register --
-   ----------------------------
 
    subtype MDIOS_DOUTR25_DOUT25_Field is HAL.Short;
 
@@ -1320,10 +1076,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------------
-   -- MDIOS_DOUTR26_Register --
-   ----------------------------
-
    subtype MDIOS_DOUTR26_DOUT26_Field is HAL.Short;
 
    --  MDIOS output data register 26
@@ -1340,10 +1092,6 @@ package STM32_SVD.MDIOS is
       DOUT26         at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------------
-   -- MDIOS_DOUTR27_Register --
-   ----------------------------
 
    subtype MDIOS_DOUTR27_DOUT27_Field is HAL.Short;
 
@@ -1362,10 +1110,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------------
-   -- MDIOS_DOUTR28_Register --
-   ----------------------------
-
    subtype MDIOS_DOUTR28_DOUT28_Field is HAL.Short;
 
    --  MDIOS output data register 28
@@ -1382,10 +1126,6 @@ package STM32_SVD.MDIOS is
       DOUT28         at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------------
-   -- MDIOS_DOUTR29_Register --
-   ----------------------------
 
    subtype MDIOS_DOUTR29_DOUT29_Field is HAL.Short;
 
@@ -1404,10 +1144,6 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------------
-   -- MDIOS_DOUTR30_Register --
-   ----------------------------
-
    subtype MDIOS_DOUTR30_DOUT30_Field is HAL.Short;
 
    --  MDIOS output data register 30
@@ -1424,10 +1160,6 @@ package STM32_SVD.MDIOS is
       DOUT30         at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------------
-   -- MDIOS_DOUTR31_Register --
-   ----------------------------
 
    subtype MDIOS_DOUTR31_DOUT31_Field is HAL.Short;
 

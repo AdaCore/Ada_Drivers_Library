@@ -13,10 +13,6 @@ package STM32_SVD.CRC is
    -- Registers --
    ---------------
 
-   ------------------
-   -- IDR_Register --
-   ------------------
-
    subtype IDR_IDR_Field is HAL.Byte;
 
    --  Independent Data register
@@ -33,10 +29,6 @@ package STM32_SVD.CRC is
       IDR           at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -----------------
-   -- CR_Register --
-   -----------------
 
    --  Control register
    type CR_Register is record

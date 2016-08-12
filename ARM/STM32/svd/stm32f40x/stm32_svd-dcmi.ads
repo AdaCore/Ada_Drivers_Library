@@ -13,10 +13,6 @@ package STM32_SVD.DCMI is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    subtype CR_FCRC_Field is HAL.UInt2;
    subtype CR_EDM_Field is HAL.UInt2;
 
@@ -68,10 +64,6 @@ package STM32_SVD.DCMI is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   -----------------
-   -- SR_Register --
-   -----------------
-
    --  status register
    type SR_Register is record
       --  Read-only. HSYNC
@@ -92,10 +84,6 @@ package STM32_SVD.DCMI is
       FNE           at 0 range 2 .. 2;
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
-
-   ------------------
-   -- RIS_Register --
-   ------------------
 
    --  raw interrupt status register
    type RIS_Register is record
@@ -124,10 +112,6 @@ package STM32_SVD.DCMI is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   ------------------
-   -- IER_Register --
-   ------------------
-
    --  interrupt enable register
    type IER_Register is record
       --  Capture complete interrupt enable
@@ -154,10 +138,6 @@ package STM32_SVD.DCMI is
       LINE_IE       at 0 range 4 .. 4;
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
-
-   ------------------
-   -- MIS_Register --
-   ------------------
 
    --  masked interrupt status register
    type MIS_Register is record
@@ -186,10 +166,6 @@ package STM32_SVD.DCMI is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   ------------------
-   -- ICR_Register --
-   ------------------
-
    --  interrupt clear register
    type ICR_Register is record
       --  Write-only. Capture complete interrupt status clear
@@ -217,10 +193,6 @@ package STM32_SVD.DCMI is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   -------------------
-   -- ESCR_Register --
-   -------------------
-
    subtype ESCR_FSC_Field is HAL.Byte;
    subtype ESCR_LSC_Field is HAL.Byte;
    subtype ESCR_LEC_Field is HAL.Byte;
@@ -246,10 +218,6 @@ package STM32_SVD.DCMI is
       LEC at 0 range 16 .. 23;
       FEC at 0 range 24 .. 31;
    end record;
-
-   -------------------
-   -- ESUR_Register --
-   -------------------
 
    subtype ESUR_FSU_Field is HAL.Byte;
    subtype ESUR_LSU_Field is HAL.Byte;
@@ -277,10 +245,6 @@ package STM32_SVD.DCMI is
       FEU at 0 range 24 .. 31;
    end record;
 
-   ---------------------
-   -- CWSTRT_Register --
-   ---------------------
-
    subtype CWSTRT_HOFFCNT_Field is HAL.UInt14;
    subtype CWSTRT_VST_Field is HAL.UInt13;
 
@@ -305,10 +269,6 @@ package STM32_SVD.DCMI is
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
-   ---------------------
-   -- CWSIZE_Register --
-   ---------------------
-
    subtype CWSIZE_CAPCNT_Field is HAL.UInt14;
    subtype CWSIZE_VLINE_Field is HAL.UInt14;
 
@@ -332,10 +292,6 @@ package STM32_SVD.DCMI is
       VLINE          at 0 range 16 .. 29;
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
-
-   -----------------
-   -- DR_Register --
-   -----------------
 
    --  DR_Byte array element
    subtype DR_Byte_Element is HAL.Byte;

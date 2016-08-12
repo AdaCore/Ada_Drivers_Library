@@ -13,10 +13,6 @@ package STM32_SVD.PWR is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    subtype CR_PLS_Field is HAL.UInt3;
    subtype CR_VOS_Field is HAL.UInt2;
    subtype CR_UDEN_Field is HAL.UInt2;
@@ -77,10 +73,6 @@ package STM32_SVD.PWR is
       UDEN           at 0 range 18 .. 19;
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
-
-   ------------------
-   -- CSR_Register --
-   ------------------
 
    subtype CSR_UDRDY_Field is HAL.UInt2;
 

@@ -13,10 +13,6 @@ package STM32_SVD.DMA2D is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    subtype CR_MODE_Field is HAL.UInt2;
 
    --  control register
@@ -67,10 +63,6 @@ package STM32_SVD.DMA2D is
       Reserved_18_31 at 0 range 18 .. 31;
    end record;
 
-   ------------------
-   -- ISR_Register --
-   ------------------
-
    --  Interrupt Status Register
    type ISR_Register is record
       --  Read-only. Transfer error interrupt flag
@@ -100,10 +92,6 @@ package STM32_SVD.DMA2D is
       CEIF          at 0 range 5 .. 5;
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
-
-   -------------------
-   -- IFCR_Register --
-   -------------------
 
    --  interrupt flag clear register
    type IFCR_Register is record
@@ -135,10 +123,6 @@ package STM32_SVD.DMA2D is
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
 
-   -------------------
-   -- FGOR_Register --
-   -------------------
-
    subtype FGOR_LO_Field is HAL.UInt14;
 
    --  foreground offset register
@@ -156,10 +140,6 @@ package STM32_SVD.DMA2D is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   -------------------
-   -- BGOR_Register --
-   -------------------
-
    subtype BGOR_LO_Field is HAL.UInt14;
 
    --  background offset register
@@ -176,10 +156,6 @@ package STM32_SVD.DMA2D is
       LO             at 0 range 0 .. 13;
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
-
-   ----------------------
-   -- FGPFCCR_Register --
-   ----------------------
 
    subtype FGPFCCR_CM_Field is HAL.UInt4;
    subtype FGPFCCR_CS_Field is HAL.Byte;
@@ -219,10 +195,6 @@ package STM32_SVD.DMA2D is
       ALPHA          at 0 range 24 .. 31;
    end record;
 
-   ---------------------
-   -- FGCOLR_Register --
-   ---------------------
-
    subtype FGCOLR_BLUE_Field is HAL.Byte;
    subtype FGCOLR_GREEN_Field is HAL.Byte;
    subtype FGCOLR_RED_Field is HAL.Byte;
@@ -247,10 +219,6 @@ package STM32_SVD.DMA2D is
       RED            at 0 range 16 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   ----------------------
-   -- BGPFCCR_Register --
-   ----------------------
 
    subtype BGPFCCR_CM_Field is HAL.UInt4;
    subtype BGPFCCR_CS_Field is HAL.Byte;
@@ -290,10 +258,6 @@ package STM32_SVD.DMA2D is
       ALPHA          at 0 range 24 .. 31;
    end record;
 
-   ---------------------
-   -- BGCOLR_Register --
-   ---------------------
-
    subtype BGCOLR_BLUE_Field is HAL.Byte;
    subtype BGCOLR_GREEN_Field is HAL.Byte;
    subtype BGCOLR_RED_Field is HAL.Byte;
@@ -319,10 +283,6 @@ package STM32_SVD.DMA2D is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   ---------------------
-   -- OPFCCR_Register --
-   ---------------------
-
    subtype OPFCCR_CM_Field is HAL.UInt3;
 
    --  output PFC control register
@@ -339,10 +299,6 @@ package STM32_SVD.DMA2D is
       CM            at 0 range 0 .. 2;
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
-
-   --------------------
-   -- OCOLR_Register --
-   --------------------
 
    subtype OCOLR_BLUE_Field is HAL.Byte;
    subtype OCOLR_GREEN_Field is HAL.Byte;
@@ -370,10 +326,6 @@ package STM32_SVD.DMA2D is
       APLHA at 0 range 24 .. 31;
    end record;
 
-   ------------------
-   -- OOR_Register --
-   ------------------
-
    subtype OOR_LO_Field is HAL.UInt14;
 
    --  output offset register
@@ -390,10 +342,6 @@ package STM32_SVD.DMA2D is
       LO             at 0 range 0 .. 13;
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
-
-   ------------------
-   -- NLR_Register --
-   ------------------
 
    subtype NLR_NL_Field is HAL.Short;
    subtype NLR_PL_Field is HAL.UInt14;
@@ -416,10 +364,6 @@ package STM32_SVD.DMA2D is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   ------------------
-   -- LWR_Register --
-   ------------------
-
    subtype LWR_LW_Field is HAL.Short;
 
    --  line watermark register
@@ -436,10 +380,6 @@ package STM32_SVD.DMA2D is
       LW             at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- AMTCR_Register --
-   --------------------
 
    subtype AMTCR_DT_Field is HAL.Byte;
 
@@ -463,10 +403,6 @@ package STM32_SVD.DMA2D is
       DT             at 0 range 8 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------
-   -- FGCLUT_Register --
-   ---------------------
 
    subtype FGCLUT_BLUE_Field is HAL.Byte;
    subtype FGCLUT_GREEN_Field is HAL.Byte;
@@ -493,10 +429,6 @@ package STM32_SVD.DMA2D is
       RED   at 0 range 16 .. 23;
       APLHA at 0 range 24 .. 31;
    end record;
-
-   ---------------------
-   -- BGCLUT_Register --
-   ---------------------
 
    subtype BGCLUT_BLUE_Field is HAL.Byte;
    subtype BGCLUT_GREEN_Field is HAL.Byte;

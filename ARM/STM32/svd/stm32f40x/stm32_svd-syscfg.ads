@@ -13,10 +13,6 @@ package STM32_SVD.SYSCFG is
    -- Registers --
    ---------------
 
-   --------------------
-   -- MEMRM_Register --
-   --------------------
-
    subtype MEMRM_MEM_MODE_Field is HAL.UInt2;
 
    --  memory remap register
@@ -33,10 +29,6 @@ package STM32_SVD.SYSCFG is
       MEM_MODE      at 0 range 0 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   ------------------
-   -- PMC_Register --
-   ------------------
 
    --  peripheral mode configuration register
    type PMC_Register is record
@@ -55,14 +47,6 @@ package STM32_SVD.SYSCFG is
       MII_RMII_SEL   at 0 range 23 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   ----------------------
-   -- EXTICR1_Register --
-   ----------------------
-
-   ------------------
-   -- EXTICR1.EXTI --
-   ------------------
 
    --  EXTICR1_EXTI array element
    subtype EXTICR1_EXTI_Element is HAL.UInt4;
@@ -107,14 +91,6 @@ package STM32_SVD.SYSCFG is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------
-   -- EXTICR2_Register --
-   ----------------------
-
-   ------------------
-   -- EXTICR2.EXTI --
-   ------------------
-
    --  EXTICR2_EXTI array element
    subtype EXTICR2_EXTI_Element is HAL.UInt4;
 
@@ -157,14 +133,6 @@ package STM32_SVD.SYSCFG is
       EXTI           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------
-   -- EXTICR3_Register --
-   ----------------------
-
-   ------------------
-   -- EXTICR3.EXTI --
-   ------------------
 
    --  EXTICR3_EXTI array element
    subtype EXTICR3_EXTI_Element is HAL.UInt4;
@@ -209,14 +177,6 @@ package STM32_SVD.SYSCFG is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ----------------------
-   -- EXTICR4_Register --
-   ----------------------
-
-   ------------------
-   -- EXTICR4.EXTI --
-   ------------------
-
    --  EXTICR4_EXTI array element
    subtype EXTICR4_EXTI_Element is HAL.UInt4;
 
@@ -259,10 +219,6 @@ package STM32_SVD.SYSCFG is
       EXTI           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- CMPCR_Register --
-   --------------------
 
    --  Compensation cell control register
    type CMPCR_Register is record

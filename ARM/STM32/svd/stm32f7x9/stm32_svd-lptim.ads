@@ -13,10 +13,6 @@ package STM32_SVD.LPTIM is
    -- Registers --
    ---------------
 
-   ------------------
-   -- ISR_Register --
-   ------------------
-
    --  Interrupt and Status Register
    type ISR_Register is record
       --  Read-only. Compare match
@@ -49,10 +45,6 @@ package STM32_SVD.LPTIM is
       DOWN          at 0 range 6 .. 6;
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
-
-   ------------------
-   -- ICR_Register --
-   ------------------
 
    --  Interrupt Clear Register
    type ICR_Register is record
@@ -87,10 +79,6 @@ package STM32_SVD.LPTIM is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
-   ------------------
-   -- IER_Register --
-   ------------------
-
    --  Interrupt Enable Register
    type IER_Register is record
       --  Compare match Interrupt Enable
@@ -123,10 +111,6 @@ package STM32_SVD.LPTIM is
       DOWNIE        at 0 range 6 .. 6;
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
-
-   -------------------
-   -- CFGR_Register --
-   -------------------
 
    subtype CFGR_CKPOL_Field is HAL.UInt2;
    subtype CFGR_CKFLT_Field is HAL.UInt2;
@@ -198,10 +182,6 @@ package STM32_SVD.LPTIM is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    --  Control Register
    type CR_Register is record
       --  LPTIM Enable
@@ -223,10 +203,6 @@ package STM32_SVD.LPTIM is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   ------------------
-   -- CMP_Register --
-   ------------------
-
    subtype CMP_CMP_Field is HAL.Short;
 
    --  Compare Register
@@ -244,10 +220,6 @@ package STM32_SVD.LPTIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- ARR_Register --
-   ------------------
-
    subtype ARR_ARR_Field is HAL.Short;
 
    --  Autoreload Register
@@ -264,10 +236,6 @@ package STM32_SVD.LPTIM is
       ARR            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ------------------
-   -- CNT_Register --
-   ------------------
 
    subtype CNT_CNT_Field is HAL.Short;
 

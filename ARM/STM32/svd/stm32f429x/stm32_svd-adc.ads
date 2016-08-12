@@ -13,10 +13,6 @@ package STM32_SVD.ADC is
    -- Registers --
    ---------------
 
-   -----------------
-   -- SR_Register --
-   -----------------
-
    --  status register
    type SR_Register is record
       --  Analog watchdog flag
@@ -46,10 +42,6 @@ package STM32_SVD.ADC is
       OVR           at 0 range 5 .. 5;
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
-
-   ------------------
-   -- CR1_Register --
-   ------------------
 
    subtype CR1_AWDCH_Field is HAL.UInt5;
    subtype CR1_DISCNUM_Field is HAL.UInt3;
@@ -111,10 +103,6 @@ package STM32_SVD.ADC is
       OVRIE          at 0 range 26 .. 26;
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
-
-   ------------------
-   -- CR2_Register --
-   ------------------
 
    subtype CR2_JEXTSEL_Field is HAL.UInt4;
    subtype CR2_JEXTEN_Field is HAL.UInt2;
@@ -178,14 +166,6 @@ package STM32_SVD.ADC is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
-   --------------------
-   -- SMPR1_Register --
-   --------------------
-
-   ---------------
-   -- SMPR1.SMP --
-   ---------------
-
    --  SMPR1_SMP array element
    subtype SMPR1_SMP_Element is HAL.UInt3;
 
@@ -227,14 +207,6 @@ package STM32_SVD.ADC is
       SMP            at 0 range 0 .. 26;
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
-
-   --------------------
-   -- SMPR2_Register --
-   --------------------
-
-   ---------------
-   -- SMPR2.SMP --
-   ---------------
 
    --  SMPR2_SMP array element
    subtype SMPR2_SMP_Element is HAL.UInt3;
@@ -278,10 +250,6 @@ package STM32_SVD.ADC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   --------------------
-   -- JOFR1_Register --
-   --------------------
-
    subtype JOFR1_JOFFSET1_Field is HAL.UInt12;
 
    --  injected channel data offset register x
@@ -298,10 +266,6 @@ package STM32_SVD.ADC is
       JOFFSET1       at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
-
-   --------------------
-   -- JOFR2_Register --
-   --------------------
 
    subtype JOFR2_JOFFSET2_Field is HAL.UInt12;
 
@@ -320,10 +284,6 @@ package STM32_SVD.ADC is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   --------------------
-   -- JOFR3_Register --
-   --------------------
-
    subtype JOFR3_JOFFSET3_Field is HAL.UInt12;
 
    --  injected channel data offset register x
@@ -340,10 +300,6 @@ package STM32_SVD.ADC is
       JOFFSET3       at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
-
-   --------------------
-   -- JOFR4_Register --
-   --------------------
 
    subtype JOFR4_JOFFSET4_Field is HAL.UInt12;
 
@@ -362,10 +318,6 @@ package STM32_SVD.ADC is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   ------------------
-   -- HTR_Register --
-   ------------------
-
    subtype HTR_HT_Field is HAL.UInt12;
 
    --  watchdog higher threshold register
@@ -383,10 +335,6 @@ package STM32_SVD.ADC is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   ------------------
-   -- LTR_Register --
-   ------------------
-
    subtype LTR_LT_Field is HAL.UInt12;
 
    --  watchdog lower threshold register
@@ -403,14 +351,6 @@ package STM32_SVD.ADC is
       LT             at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
-
-   -------------------
-   -- SQR1_Register --
-   -------------------
-
-   -------------
-   -- SQR1.SQ --
-   -------------
 
    --  SQR1_SQ array element
    subtype SQR1_SQ_Element is HAL.UInt5;
@@ -459,14 +399,6 @@ package STM32_SVD.ADC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   -------------------
-   -- SQR2_Register --
-   -------------------
-
-   -------------
-   -- SQR2.SQ --
-   -------------
-
    --  SQR2_SQ array element
    subtype SQR2_SQ_Element is HAL.UInt5;
 
@@ -509,14 +441,6 @@ package STM32_SVD.ADC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   -------------------
-   -- SQR3_Register --
-   -------------------
-
-   -------------
-   -- SQR3.SQ --
-   -------------
-
    --  SQR3_SQ array element
    subtype SQR3_SQ_Element is HAL.UInt5;
 
@@ -558,14 +482,6 @@ package STM32_SVD.ADC is
       SQ             at 0 range 0 .. 29;
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
-
-   -------------------
-   -- JSQR_Register --
-   -------------------
-
-   --------------
-   -- JSQR.JSQ --
-   --------------
 
    --  JSQR_JSQ array element
    subtype JSQR_JSQ_Element is HAL.UInt5;
@@ -614,16 +530,12 @@ package STM32_SVD.ADC is
       Reserved_22_31 at 0 range 22 .. 31;
    end record;
 
-   ------------------
-   -- JDR_Register --
-   ------------------
-
-   subtype JDR1_JDATA_Field is HAL.Short;
+   subtype JDR_JDATA_Field is HAL.Short;
 
    --  injected data register x
    type JDR_Register is record
       --  Read-only. Injected data
-      JDATA          : JDR1_JDATA_Field;
+      JDATA          : JDR_JDATA_Field;
       --  unspecified
       Reserved_16_31 : HAL.Short;
    end record
@@ -634,10 +546,6 @@ package STM32_SVD.ADC is
       JDATA          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -----------------
-   -- DR_Register --
-   -----------------
 
    subtype DR_DATA_Field is HAL.Short;
 
@@ -655,10 +563,6 @@ package STM32_SVD.ADC is
       DATA           at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ------------------
-   -- CSR_Register --
-   ------------------
 
    --  ADC Common status register
    type CSR_Register is record
@@ -732,10 +636,6 @@ package STM32_SVD.ADC is
       Reserved_22_31 at 0 range 22 .. 31;
    end record;
 
-   ------------------
-   -- CCR_Register --
-   ------------------
-
    subtype CCR_MULT_Field is HAL.UInt5;
    subtype CCR_DELAY_Field is HAL.UInt4;
    subtype CCR_DMA_Field is HAL.UInt2;
@@ -782,10 +682,6 @@ package STM32_SVD.ADC is
       TSVREFE        at 0 range 23 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   ------------------
-   -- CDR_Register --
-   ------------------
 
    --  CDR_DATA array element
    subtype CDR_DATA_Element is HAL.Short;

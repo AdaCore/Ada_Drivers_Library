@@ -133,7 +133,8 @@ package body STM32.USARTs is
    -- Set_Baud_Rate --
    -------------------
 
-   procedure Set_Baud_Rate (This : in out USART; To : Baud_Rates) is
+   procedure Set_Baud_Rate (This : in out USART; To : Baud_Rates)
+   is
       Clock        : constant Word := APB_Clock (This);
       Over_By_8    : constant Boolean := This.Periph.CR1.OVER8;
       Int_Scale    : constant Word := (if Over_By_8 then 2 else 4);

@@ -13,10 +13,6 @@ package STM32_SVD.I2C is
    -- Registers --
    ---------------
 
-   ------------------
-   -- CR1_Register --
-   ------------------
-
    --  Control register 1
    type CR1_Register is record
       --  Peripheral enable
@@ -77,10 +73,6 @@ package STM32_SVD.I2C is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- CR2_Register --
-   ------------------
-
    subtype CR2_FREQ_Field is HAL.UInt6;
 
    --  Control register 2
@@ -116,10 +108,6 @@ package STM32_SVD.I2C is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   -------------------
-   -- OAR1_Register --
-   -------------------
-
    subtype OAR1_ADD7_Field is HAL.UInt7;
    subtype OAR1_ADD10_Field is HAL.UInt2;
 
@@ -150,10 +138,6 @@ package STM32_SVD.I2C is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -------------------
-   -- OAR2_Register --
-   -------------------
-
    subtype OAR2_ADD2_Field is HAL.UInt7;
 
    --  Own address register 2
@@ -174,10 +158,6 @@ package STM32_SVD.I2C is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   -----------------
-   -- DR_Register --
-   -----------------
-
    subtype DR_DR_Field is HAL.Byte;
 
    --  Data register
@@ -194,10 +174,6 @@ package STM32_SVD.I2C is
       DR            at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   ------------------
-   -- SR1_Register --
-   ------------------
 
    --  Status register 1
    type SR1_Register is record
@@ -259,10 +235,6 @@ package STM32_SVD.I2C is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- SR2_Register --
-   ------------------
-
    subtype SR2_PEC_Field is HAL.Byte;
 
    --  Status register 2
@@ -304,10 +276,6 @@ package STM32_SVD.I2C is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- CCR_Register --
-   ------------------
-
    subtype CCR_CCR_Field is HAL.UInt12;
 
    --  Clock control register
@@ -334,10 +302,6 @@ package STM32_SVD.I2C is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   --------------------
-   -- TRISE_Register --
-   --------------------
-
    subtype TRISE_TRISE_Field is HAL.UInt6;
 
    --  TRISE register
@@ -354,10 +318,6 @@ package STM32_SVD.I2C is
       TRISE         at 0 range 0 .. 5;
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
-
-   -------------------
-   -- FLTR_Register --
-   -------------------
 
    subtype FLTR_DNF_Field is HAL.UInt4;
 

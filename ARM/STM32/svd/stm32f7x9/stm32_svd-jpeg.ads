@@ -13,10 +13,6 @@ package STM32_SVD.JPEG is
    -- Registers --
    ---------------
 
-   --------------------------
-   -- JPEG_CONFR0_Register --
-   --------------------------
-
    --  JPEG codec configuration register 0
    type JPEG_CONFR0_Register is record
       --  Write-only. Start
@@ -31,10 +27,6 @@ package STM32_SVD.JPEG is
       START         at 0 range 0 .. 0;
       Reserved_1_31 at 0 range 1 .. 31;
    end record;
-
-   --------------------------
-   -- JPEG_CONFR1_Register --
-   --------------------------
 
    subtype JPEG_CONFR1_NF_Field is HAL.UInt2;
    subtype JPEG_CONFR1_COLORSPACE_Field is HAL.UInt2;
@@ -74,10 +66,6 @@ package STM32_SVD.JPEG is
       YSIZE         at 0 range 16 .. 31;
    end record;
 
-   --------------------------
-   -- JPEG_CONFR2_Register --
-   --------------------------
-
    subtype JPEG_CONFR2_NMCU_Field is HAL.UInt26;
 
    --  JPEG codec configuration register 2
@@ -94,10 +82,6 @@ package STM32_SVD.JPEG is
       NMCU           at 0 range 0 .. 25;
       Reserved_26_31 at 0 range 26 .. 31;
    end record;
-
-   --------------------------
-   -- JPEG_CONFR3_Register --
-   --------------------------
 
    subtype JPEG_CONFR3_XSIZE_Field is HAL.Short;
 
@@ -116,14 +100,10 @@ package STM32_SVD.JPEG is
       XSIZE         at 0 range 16 .. 31;
    end record;
 
-   -------------------------
-   -- JPEG_CONFR_Register --
-   -------------------------
-
-   subtype JPEG_CONFR4_QT_Field is HAL.UInt2;
-   subtype JPEG_CONFR4_NB_Field is HAL.UInt4;
-   subtype JPEG_CONFR4_VSF_Field is HAL.UInt4;
-   subtype JPEG_CONFR4_HSF_Field is HAL.UInt4;
+   subtype JPEG_CONFR_QT_Field is HAL.UInt2;
+   subtype JPEG_CONFR_NB_Field is HAL.UInt4;
+   subtype JPEG_CONFR_VSF_Field is HAL.UInt4;
+   subtype JPEG_CONFR_HSF_Field is HAL.UInt4;
 
    --  JPEG codec configuration register 4
    type JPEG_CONFR_Register is record
@@ -132,13 +112,13 @@ package STM32_SVD.JPEG is
       --  Huffman AC
       HA             : Boolean := False;
       --  Quantization Table
-      QT             : JPEG_CONFR4_QT_Field := 16#0#;
+      QT             : JPEG_CONFR_QT_Field := 16#0#;
       --  Number of Block
-      NB             : JPEG_CONFR4_NB_Field := 16#0#;
+      NB             : JPEG_CONFR_NB_Field := 16#0#;
       --  Vertical Sampling Factor
-      VSF            : JPEG_CONFR4_VSF_Field := 16#0#;
+      VSF            : JPEG_CONFR_VSF_Field := 16#0#;
       --  Horizontal Sampling Factor
-      HSF            : JPEG_CONFR4_HSF_Field := 16#0#;
+      HSF            : JPEG_CONFR_HSF_Field := 16#0#;
       --  unspecified
       Reserved_16_31 : HAL.Short := 16#0#;
    end record
@@ -154,10 +134,6 @@ package STM32_SVD.JPEG is
       HSF            at 0 range 12 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------
-   -- JPEG_CR_Register --
-   ----------------------
 
    --  JPEG control register
    type JPEG_CR_Register is record
@@ -207,10 +183,6 @@ package STM32_SVD.JPEG is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   ----------------------
-   -- JPEG_SR_Register --
-   ----------------------
-
    --  JPEG status register
    type JPEG_SR_Register is record
       --  unspecified
@@ -246,10 +218,6 @@ package STM32_SVD.JPEG is
       COF           at 0 range 7 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -----------------------
-   -- JPEG_CFR_Register --
-   -----------------------
 
    --  JPEG clear flag register
    type JPEG_CFR_Register is record

@@ -13,10 +13,6 @@ package STM32_SVD.RTC is
    -- Registers --
    ---------------
 
-   -----------------
-   -- TR_Register --
-   -----------------
-
    subtype TR_SU_Field is HAL.UInt4;
    subtype TR_ST_Field is HAL.UInt3;
    subtype TR_MNU_Field is HAL.UInt4;
@@ -63,10 +59,6 @@ package STM32_SVD.RTC is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   -----------------
-   -- DR_Register --
-   -----------------
-
    subtype DR_DU_Field is HAL.UInt4;
    subtype DR_DT_Field is HAL.UInt2;
    subtype DR_MU_Field is HAL.UInt4;
@@ -109,10 +101,6 @@ package STM32_SVD.RTC is
       YT             at 0 range 20 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   -----------------
-   -- CR_Register --
-   -----------------
 
    subtype CR_WCKSEL_Field is HAL.UInt3;
    subtype CR_OSEL_Field is HAL.UInt2;
@@ -195,10 +183,6 @@ package STM32_SVD.RTC is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   ------------------
-   -- ISR_Register --
-   ------------------
-
    --  initialization and status register
    type ISR_Register is record
       --  Read-only. Alarm A write flag
@@ -262,10 +246,6 @@ package STM32_SVD.RTC is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
-   -------------------
-   -- PRER_Register --
-   -------------------
-
    subtype PRER_PREDIV_S_Field is HAL.UInt15;
    subtype PRER_PREDIV_A_Field is HAL.UInt7;
 
@@ -290,10 +270,6 @@ package STM32_SVD.RTC is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   -------------------
-   -- WUTR_Register --
-   -------------------
-
    subtype WUTR_WUT_Field is HAL.Short;
 
    --  wakeup timer register
@@ -310,10 +286,6 @@ package STM32_SVD.RTC is
       WUT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------
-   -- ALRMAR_Register --
-   ---------------------
 
    subtype ALRMAR_SU_Field is HAL.UInt4;
    subtype ALRMAR_ST_Field is HAL.UInt3;
@@ -375,10 +347,6 @@ package STM32_SVD.RTC is
       MSK4  at 0 range 31 .. 31;
    end record;
 
-   ---------------------
-   -- ALRMBR_Register --
-   ---------------------
-
    subtype ALRMBR_SU_Field is HAL.UInt4;
    subtype ALRMBR_ST_Field is HAL.UInt3;
    subtype ALRMBR_MNU_Field is HAL.UInt4;
@@ -439,10 +407,6 @@ package STM32_SVD.RTC is
       MSK4  at 0 range 31 .. 31;
    end record;
 
-   ------------------
-   -- WPR_Register --
-   ------------------
-
    subtype WPR_KEY_Field is HAL.Byte;
 
    --  write protection register
@@ -460,10 +424,6 @@ package STM32_SVD.RTC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   ------------------
-   -- SSR_Register --
-   ------------------
-
    subtype SSR_SS_Field is HAL.Short;
 
    --  sub second register
@@ -480,10 +440,6 @@ package STM32_SVD.RTC is
       SS             at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------
-   -- SHIFTR_Register --
-   ---------------------
 
    subtype SHIFTR_SUBFS_Field is HAL.UInt15;
 
@@ -504,10 +460,6 @@ package STM32_SVD.RTC is
       Reserved_15_30 at 0 range 15 .. 30;
       ADD1S          at 0 range 31 .. 31;
    end record;
-
-   -------------------
-   -- TSTR_Register --
-   -------------------
 
    subtype TSTR_SU_Field is HAL.UInt4;
    subtype TSTR_ST_Field is HAL.UInt3;
@@ -555,10 +507,6 @@ package STM32_SVD.RTC is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   -------------------
-   -- TSDR_Register --
-   -------------------
-
    subtype TSDR_DU_Field is HAL.UInt4;
    subtype TSDR_DT_Field is HAL.UInt2;
    subtype TSDR_MU_Field is HAL.UInt4;
@@ -594,10 +542,6 @@ package STM32_SVD.RTC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   --------------------
-   -- TSSSR_Register --
-   --------------------
-
    subtype TSSSR_SS_Field is HAL.Short;
 
    --  timestamp sub second register
@@ -615,15 +559,7 @@ package STM32_SVD.RTC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -------------------
-   -- CALR_Register --
-   -------------------
-
    subtype CALR_CALM_Field is HAL.UInt9;
-
-   ---------------
-   -- CALR.CALW --
-   ---------------
 
    --  CALR_CALW array
    type CALR_CALW_Field_Array is array (8 .. 9) of Boolean
@@ -672,10 +608,6 @@ package STM32_SVD.RTC is
       CALP           at 0 range 15 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ---------------------
-   -- TAMPCR_Register --
-   ---------------------
 
    subtype TAMPCR_TAMPFREQ_Field is HAL.UInt3;
    subtype TAMPCR_TAMPFLT_Field is HAL.UInt2;
@@ -756,10 +688,6 @@ package STM32_SVD.RTC is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   -----------------------
-   -- ALRMASSR_Register --
-   -----------------------
-
    subtype ALRMASSR_SS_Field is HAL.UInt15;
    subtype ALRMASSR_MASKSS_Field is HAL.UInt4;
 
@@ -784,10 +712,6 @@ package STM32_SVD.RTC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   -----------------------
-   -- ALRMBSSR_Register --
-   -----------------------
-
    subtype ALRMBSSR_SS_Field is HAL.UInt15;
    subtype ALRMBSSR_MASKSS_Field is HAL.UInt4;
 
@@ -811,10 +735,6 @@ package STM32_SVD.RTC is
       MASKSS         at 0 range 24 .. 27;
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
-
-   -----------------
-   -- OR_Register --
-   -----------------
 
    --  option register
    type OR_Register is record

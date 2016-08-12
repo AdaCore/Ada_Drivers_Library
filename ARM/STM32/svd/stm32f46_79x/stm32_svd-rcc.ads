@@ -13,10 +13,6 @@ package STM32_SVD.RCC is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    subtype CR_HSITRIM_Field is HAL.UInt5;
    subtype CR_HSICAL_Field is HAL.Byte;
 
@@ -80,10 +76,6 @@ package STM32_SVD.RCC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   ----------------------
-   -- PLLCFGR_Register --
-   ----------------------
-
    subtype PLLCFGR_PLLM_Field is HAL.UInt6;
    subtype PLLCFGR_PLLN_Field is HAL.UInt9;
    subtype PLLCFGR_PLLP_Field is HAL.UInt2;
@@ -131,18 +123,9 @@ package STM32_SVD.RCC is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
-   -------------------
-   -- CFGR_Register --
-   -------------------
-
    subtype CFGR_SW_Field is HAL.UInt2;
    subtype CFGR_SWS_Field is HAL.UInt2;
    subtype CFGR_HPRE_Field is HAL.UInt4;
-
-   ---------------
-   -- CFGR.PPRE --
-   ---------------
-
    --  CFGR_PPRE array element
    subtype CFGR_PPRE_Element is HAL.UInt3;
 
@@ -217,10 +200,6 @@ package STM32_SVD.RCC is
       MCO2PRE      at 0 range 27 .. 29;
       MCO2         at 0 range 30 .. 31;
    end record;
-
-   ------------------
-   -- CIR_Register --
-   ------------------
 
    --  clock interrupt register
    type CIR_Register is record
@@ -306,10 +285,6 @@ package STM32_SVD.RCC is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   -----------------------
-   -- AHB1RSTR_Register --
-   -----------------------
-
    --  AHB1 peripheral reset register
    type AHB1RSTR_Register is record
       --  IO port A reset
@@ -385,10 +360,6 @@ package STM32_SVD.RCC is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   -----------------------
-   -- AHB2RSTR_Register --
-   -----------------------
-
    --  AHB2 peripheral reset register
    type AHB2RSTR_Register is record
       --  Camera interface reset
@@ -419,10 +390,6 @@ package STM32_SVD.RCC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   -----------------------
-   -- AHB3RSTR_Register --
-   -----------------------
-
    --  AHB3 peripheral reset register
    type AHB3RSTR_Register is record
       --  Flexible memory controller module reset
@@ -440,10 +407,6 @@ package STM32_SVD.RCC is
       QSPIRST       at 0 range 1 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   -----------------------
-   -- APB1RSTR_Register --
-   -----------------------
 
    --  APB1 peripheral reset register
    type APB1RSTR_Register is record
@@ -544,10 +507,6 @@ package STM32_SVD.RCC is
       UART8RST       at 0 range 31 .. 31;
    end record;
 
-   -----------------------
-   -- APB2RSTR_Register --
-   -----------------------
-
    --  APB2 peripheral reset register
    type APB2RSTR_Register is record
       --  TIM1 reset
@@ -628,10 +587,6 @@ package STM32_SVD.RCC is
       DSIRST         at 0 range 27 .. 27;
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
-
-   ----------------------
-   -- AHB1ENR_Register --
-   ----------------------
 
    --  AHB1 peripheral clock register
    type AHB1ENR_Register is record
@@ -726,10 +681,6 @@ package STM32_SVD.RCC is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
-   ----------------------
-   -- AHB2ENR_Register --
-   ----------------------
-
    --  AHB2 peripheral clock enable register
    type AHB2ENR_Register is record
       --  Camera interface enable
@@ -760,10 +711,6 @@ package STM32_SVD.RCC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   ----------------------
-   -- AHB3ENR_Register --
-   ----------------------
-
    --  AHB3 peripheral clock enable register
    type AHB3ENR_Register is record
       --  Flexible memory controller module clock enable
@@ -781,10 +728,6 @@ package STM32_SVD.RCC is
       QSPIEN        at 0 range 1 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   ----------------------
-   -- APB1ENR_Register --
-   ----------------------
 
    --  APB1 peripheral clock enable register
    type APB1ENR_Register is record
@@ -885,10 +828,6 @@ package STM32_SVD.RCC is
       UART8ENR       at 0 range 31 .. 31;
    end record;
 
-   ----------------------
-   -- APB2ENR_Register --
-   ----------------------
-
    --  APB2 peripheral clock enable register
    type APB2ENR_Register is record
       --  TIM1 clock enable
@@ -972,10 +911,6 @@ package STM32_SVD.RCC is
       DSIEN          at 0 range 27 .. 27;
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
-
-   ------------------------
-   -- AHB1LPENR_Register --
-   ------------------------
 
    --  AHB1 peripheral clock enable in low power mode register
    type AHB1LPENR_Register is record
@@ -1079,10 +1014,6 @@ package STM32_SVD.RCC is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
-   ------------------------
-   -- AHB2LPENR_Register --
-   ------------------------
-
    --  AHB2 peripheral clock enable in low power mode register
    type AHB2LPENR_Register is record
       --  Camera interface enable during Sleep mode
@@ -1113,10 +1044,6 @@ package STM32_SVD.RCC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   ------------------------
-   -- AHB3LPENR_Register --
-   ------------------------
-
    --  AHB3 peripheral clock enable in low power mode register
    type AHB3LPENR_Register is record
       --  Flexible memory controller module clock enable during Sleep mode
@@ -1134,10 +1061,6 @@ package STM32_SVD.RCC is
       QSPILPEN      at 0 range 1 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   ------------------------
-   -- APB1LPENR_Register --
-   ------------------------
 
    --  APB1 peripheral clock enable in low power mode register
    type APB1LPENR_Register is record
@@ -1238,10 +1161,6 @@ package STM32_SVD.RCC is
       UART8LPEN      at 0 range 31 .. 31;
    end record;
 
-   ------------------------
-   -- APB2LPENR_Register --
-   ------------------------
-
    --  APB2 peripheral clock enabled in low power mode register
    type APB2LPENR_Register is record
       --  TIM1 clock enable during Sleep mode
@@ -1326,14 +1245,6 @@ package STM32_SVD.RCC is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   -------------------
-   -- BDCR_Register --
-   -------------------
-
-   -----------------
-   -- BDCR.RTCSEL --
-   -----------------
-
    --  BDCR_RTCSEL array
    type BDCR_RTCSEL_Field_Array is array (0 .. 1) of Boolean
      with Component_Size => 1, Size => 2;
@@ -1397,10 +1308,6 @@ package STM32_SVD.RCC is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
-   ------------------
-   -- CSR_Register --
-   ------------------
-
    --  clock control & status register
    type CSR_Register is record
       --  Internal low-speed oscillator enable
@@ -1443,10 +1350,6 @@ package STM32_SVD.RCC is
       LPWRRSTF      at 0 range 31 .. 31;
    end record;
 
-   --------------------
-   -- SSCGR_Register --
-   --------------------
-
    subtype SSCGR_MODPER_Field is HAL.UInt13;
    subtype SSCGR_INCSTEP_Field is HAL.UInt15;
 
@@ -1473,10 +1376,6 @@ package STM32_SVD.RCC is
       SPREADSEL      at 0 range 30 .. 30;
       SSCGEN         at 0 range 31 .. 31;
    end record;
-
-   -------------------------
-   -- PLLI2SCFGR_Register --
-   -------------------------
 
    subtype PLLI2SCFGR_PLLI2SN_Field is HAL.UInt9;
    subtype PLLI2SCFGR_PLLI2SQ_Field is HAL.UInt4;
@@ -1508,10 +1407,6 @@ package STM32_SVD.RCC is
       PLLI2SR        at 0 range 28 .. 30;
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
-
-   -------------------------
-   -- PLLSAICFGR_Register --
-   -------------------------
 
    subtype PLLSAICFGR_PLLSAIN_Field is HAL.UInt9;
    subtype PLLSAICFGR_PLLSAIP_Field is HAL.UInt2;
@@ -1550,10 +1445,6 @@ package STM32_SVD.RCC is
       PLLSAIR        at 0 range 28 .. 30;
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
-
-   ----------------------
-   -- DCKCFGR_Register --
-   ----------------------
 
    subtype DCKCFGR_PLLIS2DIVQ_Field is HAL.UInt5;
    subtype DCKCFGR_PLLSAIDIVQ_Field is HAL.UInt5;

@@ -13,10 +13,6 @@ package STM32_SVD.CEC is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    --  control register
    type CR_Register is record
       --  CEC Enable
@@ -37,10 +33,6 @@ package STM32_SVD.CEC is
       TXEOM         at 0 range 2 .. 2;
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
-
-   -------------------
-   -- CFGR_Register --
-   -------------------
 
    subtype CFGR_SFT_Field is HAL.UInt3;
    subtype CFGR_OAR_Field is HAL.UInt15;
@@ -84,10 +76,6 @@ package STM32_SVD.CEC is
       LSTN          at 0 range 31 .. 31;
    end record;
 
-   -------------------
-   -- TXDR_Register --
-   -------------------
-
    subtype TXDR_TXD_Field is HAL.Byte;
 
    --  Tx data register
@@ -105,10 +93,6 @@ package STM32_SVD.CEC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   -------------------
-   -- RXDR_Register --
-   -------------------
-
    subtype RXDR_RXDR_Field is HAL.Byte;
 
    --  Rx Data Register
@@ -125,10 +109,6 @@ package STM32_SVD.CEC is
       RXDR          at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   ------------------
-   -- ISR_Register --
-   ------------------
 
    --  Interrupt and Status Register
    type ISR_Register is record
@@ -180,10 +160,6 @@ package STM32_SVD.CEC is
       TXACKE         at 0 range 12 .. 12;
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
-
-   ------------------
-   -- IER_Register --
-   ------------------
 
    --  interrupt enable register
    type IER_Register is record

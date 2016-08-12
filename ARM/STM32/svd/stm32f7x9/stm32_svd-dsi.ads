@@ -13,10 +13,6 @@ package STM32_SVD.DSI is
    -- Registers --
    ---------------
 
-   ---------------------
-   -- DSI_CR_Register --
-   ---------------------
-
    --  DSI Host Control Register
    type DSI_CR_Register is record
       --  Enable
@@ -31,10 +27,6 @@ package STM32_SVD.DSI is
       EN            at 0 range 0 .. 0;
       Reserved_1_31 at 0 range 1 .. 31;
    end record;
-
-   ----------------------
-   -- DSI_CCR_Register --
-   ----------------------
 
    subtype DSI_CCR_TXECKDIV_Field is HAL.Byte;
    subtype DSI_CCR_TOCKDIV_Field is HAL.Byte;
@@ -57,10 +49,6 @@ package STM32_SVD.DSI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -------------------------
-   -- DSI_LVCIDR_Register --
-   -------------------------
-
    subtype DSI_LVCIDR_VCID_Field is HAL.UInt2;
 
    --  DSI Host LTDC VCID Register
@@ -77,10 +65,6 @@ package STM32_SVD.DSI is
       VCID          at 0 range 0 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   -------------------------
-   -- DSI_LCOLCR_Register --
-   -------------------------
 
    subtype DSI_LCOLCR_COLC_Field is HAL.UInt4;
 
@@ -105,10 +89,6 @@ package STM32_SVD.DSI is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_LPCR_Register --
-   -----------------------
-
    --  DSI Host LTDC Polarity Configuration Register
    type DSI_LPCR_Register is record
       --  Data Enable Polarity
@@ -129,10 +109,6 @@ package STM32_SVD.DSI is
       HSP           at 0 range 2 .. 2;
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_LPMCR_Register --
-   ------------------------
 
    subtype DSI_LPMCR_VLPSIZE_Field is HAL.Byte;
    subtype DSI_LPMCR_LPSIZE_Field is HAL.Byte;
@@ -157,10 +133,6 @@ package STM32_SVD.DSI is
       LPSIZE         at 0 range 16 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   ----------------------
-   -- DSI_PCR_Register --
-   ----------------------
 
    --  DSI Host Protocol Configuration Register
    type DSI_PCR_Register is record
@@ -189,10 +161,6 @@ package STM32_SVD.DSI is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   -------------------------
-   -- DSI_GVCIDR_Register --
-   -------------------------
-
    subtype DSI_GVCIDR_VCID_Field is HAL.UInt2;
 
    --  DSI Host Generic VCID Register
@@ -210,10 +178,6 @@ package STM32_SVD.DSI is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   ----------------------
-   -- DSI_MCR_Register --
-   ----------------------
-
    --  DSI Host mode Configuration Register
    type DSI_MCR_Register is record
       --  Command mode
@@ -228,10 +192,6 @@ package STM32_SVD.DSI is
       CMDM          at 0 range 0 .. 0;
       Reserved_1_31 at 0 range 1 .. 31;
    end record;
-
-   -----------------------
-   -- DSI_VMCR_Register --
-   -----------------------
 
    subtype DSI_VMCR_VMT_Field is HAL.UInt2;
 
@@ -292,10 +252,6 @@ package STM32_SVD.DSI is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_VPCR_Register --
-   -----------------------
-
    subtype DSI_VPCR_VPSIZE_Field is HAL.UInt14;
 
    --  DSI Host Video Packet Configuration Register
@@ -312,10 +268,6 @@ package STM32_SVD.DSI is
       VPSIZE         at 0 range 0 .. 13;
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
-
-   -----------------------
-   -- DSI_VCCR_Register --
-   -----------------------
 
    subtype DSI_VCCR_NUMC_Field is HAL.UInt13;
 
@@ -334,10 +286,6 @@ package STM32_SVD.DSI is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_VNPCR_Register --
-   ------------------------
-
    subtype DSI_VNPCR_NPSIZE_Field is HAL.UInt13;
 
    --  DSI Host Video Null Packet Configuration Register
@@ -354,10 +302,6 @@ package STM32_SVD.DSI is
       NPSIZE         at 0 range 0 .. 12;
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
-
-   -------------------------
-   -- DSI_VHSACR_Register --
-   -------------------------
 
    subtype DSI_VHSACR_HSA_Field is HAL.UInt12;
 
@@ -376,10 +320,6 @@ package STM32_SVD.DSI is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   -------------------------
-   -- DSI_VHBPCR_Register --
-   -------------------------
-
    subtype DSI_VHBPCR_HBP_Field is HAL.UInt12;
 
    --  DSI Host Video HBP Configuration Register
@@ -396,10 +336,6 @@ package STM32_SVD.DSI is
       HBP            at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
-
-   -----------------------
-   -- DSI_VLCR_Register --
-   -----------------------
 
    subtype DSI_VLCR_HLINE_Field is HAL.UInt15;
 
@@ -418,10 +354,6 @@ package STM32_SVD.DSI is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   -------------------------
-   -- DSI_VVSACR_Register --
-   -------------------------
-
    subtype DSI_VVSACR_VSA_Field is HAL.UInt10;
 
    --  DSI Host Video VSA Configuration Register
@@ -438,10 +370,6 @@ package STM32_SVD.DSI is
       VSA            at 0 range 0 .. 9;
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
-
-   -------------------------
-   -- DSI_VVBPCR_Register --
-   -------------------------
 
    subtype DSI_VVBPCR_VBP_Field is HAL.UInt10;
 
@@ -460,10 +388,6 @@ package STM32_SVD.DSI is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
-   -------------------------
-   -- DSI_VVFPCR_Register --
-   -------------------------
-
    subtype DSI_VVFPCR_VFP_Field is HAL.UInt10;
 
    --  DSI Host Video VFP Configuration Register
@@ -480,10 +404,6 @@ package STM32_SVD.DSI is
       VFP            at 0 range 0 .. 9;
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_VVACR_Register --
-   ------------------------
 
    subtype DSI_VVACR_VA_Field is HAL.UInt14;
 
@@ -502,10 +422,6 @@ package STM32_SVD.DSI is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_LCCR_Register --
-   -----------------------
-
    subtype DSI_LCCR_CMDSIZE_Field is HAL.Short;
 
    --  DSI Host LTDC Command Configuration Register
@@ -522,10 +438,6 @@ package STM32_SVD.DSI is
       CMDSIZE        at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   -----------------------
-   -- DSI_CMCR_Register --
-   -----------------------
 
    --  DSI Host Command mode Configuration Register
    type DSI_CMCR_Register is record
@@ -590,10 +502,6 @@ package STM32_SVD.DSI is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_GHCR_Register --
-   -----------------------
-
    subtype DSI_GHCR_DT_Field is HAL.UInt6;
    subtype DSI_GHCR_VCID_Field is HAL.UInt2;
    subtype DSI_GHCR_WCLSB_Field is HAL.Byte;
@@ -623,10 +531,6 @@ package STM32_SVD.DSI is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_GPDR_Register --
-   -----------------------
-
    --  DSI_GPDR_DATA array element
    subtype DSI_GPDR_DATA_Element is HAL.Byte;
 
@@ -654,10 +558,6 @@ package STM32_SVD.DSI is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   -----------------------
-   -- DSI_GPSR_Register --
-   -----------------------
 
    --  DSI Host Generic Packet Status Register
    type DSI_GPSR_Register is record
@@ -692,10 +592,6 @@ package STM32_SVD.DSI is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_TCCR0_Register --
-   ------------------------
-
    subtype DSI_TCCR0_LPRX_TOCNT_Field is HAL.Short;
    subtype DSI_TCCR0_HSTX_TOCNT_Field is HAL.Short;
 
@@ -714,10 +610,6 @@ package STM32_SVD.DSI is
       HSTX_TOCNT at 0 range 16 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_TCCR1_Register --
-   ------------------------
-
    subtype DSI_TCCR1_HSRD_TOCNT_Field is HAL.Short;
 
    --  DSI Host Timeout Counter Configuration Register 1
@@ -735,10 +627,6 @@ package STM32_SVD.DSI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_TCCR2_Register --
-   ------------------------
-
    subtype DSI_TCCR2_LPRD_TOCNT_Field is HAL.Short;
 
    --  DSI Host Timeout Counter Configuration Register 2
@@ -755,10 +643,6 @@ package STM32_SVD.DSI is
       LPRD_TOCNT     at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_TCCR3_Register --
-   ------------------------
 
    subtype DSI_TCCR3_HSWR_TOCNT_Field is HAL.Short;
 
@@ -783,10 +667,6 @@ package STM32_SVD.DSI is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_TCCR4_Register --
-   ------------------------
-
    subtype DSI_TCCR4_LSWR_TOCNT_Field is HAL.Short;
 
    --  DSI Host Timeout Counter Configuration Register 4
@@ -803,10 +683,6 @@ package STM32_SVD.DSI is
       LSWR_TOCNT     at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_TCCR5_Register --
-   ------------------------
 
    subtype DSI_TCCR5_BTA_TOCNT_Field is HAL.Short;
 
@@ -825,10 +701,6 @@ package STM32_SVD.DSI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_CLCR_Register --
-   -----------------------
-
    --  DSI Host Clock Lane Configuration Register
    type DSI_CLCR_Register is record
       --  D-PHY Clock Control
@@ -846,10 +718,6 @@ package STM32_SVD.DSI is
       ACR           at 0 range 1 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_CLTCR_Register --
-   ------------------------
 
    subtype DSI_CLTCR_LP2HS_TIME_Field is HAL.UInt10;
    subtype DSI_CLTCR_HS2LP_TIME_Field is HAL.UInt10;
@@ -874,10 +742,6 @@ package STM32_SVD.DSI is
       HS2LP_TIME     at 0 range 16 .. 25;
       Reserved_26_31 at 0 range 26 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_DLTCR_Register --
-   ------------------------
 
    subtype DSI_DLTCR_MRD_TIME_Field is HAL.UInt15;
    subtype DSI_DLTCR_LP2HS_TIME_Field is HAL.Byte;
@@ -904,10 +768,6 @@ package STM32_SVD.DSI is
       HS2LP_TIME     at 0 range 24 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_PCTLR_Register --
-   ------------------------
-
    --  DSI Host PHY Control Register
    type DSI_PCTLR_Register is record
       --  unspecified
@@ -928,10 +788,6 @@ package STM32_SVD.DSI is
       CKE           at 0 range 2 .. 2;
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
-
-   -------------------------
-   -- DSI_PCONFR_Register --
-   -------------------------
 
    subtype DSI_PCONFR_NL_Field is HAL.UInt2;
    subtype DSI_PCONFR_SW_TIME_Field is HAL.Byte;
@@ -957,10 +813,6 @@ package STM32_SVD.DSI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_PUCR_Register --
-   -----------------------
-
    --  DSI Host PHY ULPS Control Register
    type DSI_PUCR_Register is record
       --  ULPS Request on Clock Lane
@@ -985,10 +837,6 @@ package STM32_SVD.DSI is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_PTTCR_Register --
-   ------------------------
-
    subtype DSI_PTTCR_TX_TRIG_Field is HAL.UInt4;
 
    --  DSI Host PHY TX Triggers Configuration Register
@@ -1005,10 +853,6 @@ package STM32_SVD.DSI is
       TX_TRIG       at 0 range 0 .. 3;
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
-
-   ----------------------
-   -- DSI_PSR_Register --
-   ----------------------
 
    --  DSI Host PHY Status Register
    type DSI_PSR_Register is record
@@ -1049,14 +893,6 @@ package STM32_SVD.DSI is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_ISR0_Register --
-   -----------------------
-
-   -----------------
-   -- DSI_ISR0.AE --
-   -----------------
-
    --  DSI_ISR0_AE array
    type DSI_ISR0_AE_Field_Array is array (0 .. 15) of Boolean
      with Component_Size => 1, Size => 16;
@@ -1080,10 +916,6 @@ package STM32_SVD.DSI is
       Val at 0 range 0 .. 15;
       Arr at 0 range 0 .. 15;
    end record;
-
-   -----------------
-   -- DSI_ISR0.PE --
-   -----------------
 
    --  DSI_ISR0_PE array
    type DSI_ISR0_PE_Field_Array is array (0 .. 4) of Boolean
@@ -1126,10 +958,6 @@ package STM32_SVD.DSI is
       PE             at 0 range 16 .. 20;
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
-
-   -----------------------
-   -- DSI_ISR1_Register --
-   -----------------------
 
    --  DSI Host Interrupt & Status Register 1
    type DSI_ISR1_Register is record
@@ -1181,10 +1009,6 @@ package STM32_SVD.DSI is
       GPRXE          at 0 range 12 .. 12;
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
-
-   -----------------------
-   -- DSI_IER0_Register --
-   -----------------------
 
    --  DSI Host Interrupt Enable Register 0
    type DSI_IER0_Register is record
@@ -1261,10 +1085,6 @@ package STM32_SVD.DSI is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_IER1_Register --
-   -----------------------
-
    --  DSI Host Interrupt Enable Register 1
    type DSI_IER1_Register is record
       --  Timeout High-Speed Transmission Interrupt Enable
@@ -1316,14 +1136,6 @@ package STM32_SVD.DSI is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_FIR0_Register --
-   -----------------------
-
-   ------------------
-   -- DSI_FIR0.FAE --
-   ------------------
-
    --  DSI_FIR0_FAE array
    type DSI_FIR0_FAE_Field_Array is array (0 .. 15) of Boolean
      with Component_Size => 1, Size => 16;
@@ -1347,10 +1159,6 @@ package STM32_SVD.DSI is
       Val at 0 range 0 .. 15;
       Arr at 0 range 0 .. 15;
    end record;
-
-   ------------------
-   -- DSI_FIR0.FPE --
-   ------------------
 
    --  DSI_FIR0_FPE array
    type DSI_FIR0_FPE_Field_Array is array (0 .. 4) of Boolean
@@ -1395,10 +1203,6 @@ package STM32_SVD.DSI is
       FPE            at 0 range 16 .. 20;
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
-
-   -----------------------
-   -- DSI_FIR1_Register --
-   -----------------------
 
    --  DSI Host Force Interrupt Register 1
    type DSI_FIR1_Register is record
@@ -1451,10 +1255,6 @@ package STM32_SVD.DSI is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   -----------------------
-   -- DSI_VSCR_Register --
-   -----------------------
-
    --  DSI Host Video Shadow Control Register
    type DSI_VSCR_Register is record
       --  Enable
@@ -1476,10 +1276,6 @@ package STM32_SVD.DSI is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
-   --------------------------
-   -- DSI_LCVCIDR_Register --
-   --------------------------
-
    subtype DSI_LCVCIDR_VCID_Field is HAL.UInt2;
 
    --  DSI Host LTDC Current VCID Register
@@ -1496,10 +1292,6 @@ package STM32_SVD.DSI is
       VCID          at 0 range 0 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_LCCCR_Register --
-   ------------------------
 
    subtype DSI_LCCCR_COLC_Field is HAL.UInt4;
 
@@ -1524,10 +1316,6 @@ package STM32_SVD.DSI is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
-   -------------------------
-   -- DSI_LPMCCR_Register --
-   -------------------------
-
    subtype DSI_LPMCCR_VLPSIZE_Field is HAL.Byte;
    subtype DSI_LPMCCR_LPSIZE_Field is HAL.Byte;
 
@@ -1551,10 +1339,6 @@ package STM32_SVD.DSI is
       LPSIZE         at 0 range 16 .. 23;
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_VMCCR_Register --
-   ------------------------
 
    subtype DSI_VMCCR_VMT_Field is HAL.UInt2;
 
@@ -1597,10 +1381,6 @@ package STM32_SVD.DSI is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_VPCCR_Register --
-   ------------------------
-
    subtype DSI_VPCCR_VPSIZE_Field is HAL.UInt14;
 
    --  DSI Host Video Packet Current Configuration Register
@@ -1617,10 +1397,6 @@ package STM32_SVD.DSI is
       VPSIZE         at 0 range 0 .. 13;
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_VCCCR_Register --
-   ------------------------
 
    subtype DSI_VCCCR_NUMC_Field is HAL.UInt13;
 
@@ -1639,10 +1415,6 @@ package STM32_SVD.DSI is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   -------------------------
-   -- DSI_VNPCCR_Register --
-   -------------------------
-
    subtype DSI_VNPCCR_NPSIZE_Field is HAL.UInt13;
 
    --  DSI Host Video Null Packet Current Configuration Register
@@ -1659,10 +1431,6 @@ package STM32_SVD.DSI is
       NPSIZE         at 0 range 0 .. 12;
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
-
-   --------------------------
-   -- DSI_VHSACCR_Register --
-   --------------------------
 
    subtype DSI_VHSACCR_HSA_Field is HAL.UInt12;
 
@@ -1681,10 +1449,6 @@ package STM32_SVD.DSI is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   --------------------------
-   -- DSI_VHBPCCR_Register --
-   --------------------------
-
    subtype DSI_VHBPCCR_HBP_Field is HAL.UInt12;
 
    --  DSI Host Video HBP Current Configuration Register
@@ -1701,10 +1465,6 @@ package STM32_SVD.DSI is
       HBP            at 0 range 0 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_VLCCR_Register --
-   ------------------------
 
    subtype DSI_VLCCR_HLINE_Field is HAL.UInt15;
 
@@ -1723,10 +1483,6 @@ package STM32_SVD.DSI is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   --------------------------
-   -- DSI_VVSACCR_Register --
-   --------------------------
-
    subtype DSI_VVSACCR_VSA_Field is HAL.UInt10;
 
    --  DSI Host Video VSA Current Configuration Register
@@ -1743,10 +1499,6 @@ package STM32_SVD.DSI is
       VSA            at 0 range 0 .. 9;
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
-
-   --------------------------
-   -- DSI_VVBPCCR_Register --
-   --------------------------
 
    subtype DSI_VVBPCCR_VBP_Field is HAL.UInt10;
 
@@ -1765,10 +1517,6 @@ package STM32_SVD.DSI is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
-   --------------------------
-   -- DSI_VVFPCCR_Register --
-   --------------------------
-
    subtype DSI_VVFPCCR_VFP_Field is HAL.UInt10;
 
    --  DSI Host Video VFP Current Configuration Register
@@ -1786,10 +1534,6 @@ package STM32_SVD.DSI is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
-   -------------------------
-   -- DSI_VVACCR_Register --
-   -------------------------
-
    subtype DSI_VVACCR_VA_Field is HAL.UInt14;
 
    --  DSI Host Video VA Current Configuration Register
@@ -1806,10 +1550,6 @@ package STM32_SVD.DSI is
       VA             at 0 range 0 .. 13;
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_WCFGR_Register --
-   ------------------------
 
    subtype DSI_WCFGR_COLMUX_Field is HAL.UInt3;
 
@@ -1843,10 +1583,6 @@ package STM32_SVD.DSI is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   ----------------------
-   -- DSI_WCR_Register --
-   ----------------------
-
    --  DSI Wrapper Control Register
    type DSI_WCR_Register is record
       --  Color Mode
@@ -1870,10 +1606,6 @@ package STM32_SVD.DSI is
       DSIEN         at 0 range 3 .. 3;
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
-
-   -----------------------
-   -- DSI_WIER_Register --
-   -----------------------
 
    --  DSI Wrapper Interrupt Enable Register
    type DSI_WIER_Register is record
@@ -1907,10 +1639,6 @@ package STM32_SVD.DSI is
       RRIE           at 0 range 13 .. 13;
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
-
-   -----------------------
-   -- DSI_WISR_Register --
-   -----------------------
 
    --  DSI Wrapper Interrupt & Status Register
    type DSI_WISR_Register is record
@@ -1954,10 +1682,6 @@ package STM32_SVD.DSI is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_WIFCR_Register --
-   ------------------------
-
    --  DSI Wrapper Interrupt Flag Clear Register
    type DSI_WIFCR_Register is record
       --  Clear Tearing Effect Interrupt Flag
@@ -1991,15 +1715,7 @@ package STM32_SVD.DSI is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_WPCR1_Register --
-   ------------------------
-
    subtype DSI_WPCR1_UIX4_Field is HAL.UInt6;
-
-   --------------------
-   -- DSI_WPCR1.SWDL --
-   --------------------
 
    --  DSI_WPCR1_SWDL array
    type DSI_WPCR1_SWDL_Field_Array is array (0 .. 1) of Boolean
@@ -2024,10 +1740,6 @@ package STM32_SVD.DSI is
       Val at 0 range 0 .. 1;
       Arr at 0 range 0 .. 1;
    end record;
-
-   ---------------------
-   -- DSI_WPCR1.HSIDL --
-   ---------------------
 
    --  DSI_WPCR1_HSIDL array
    type DSI_WPCR1_HSIDL_Field_Array is array (0 .. 1) of Boolean
@@ -2130,10 +1842,6 @@ package STM32_SVD.DSI is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_WPCR2_Register --
-   ------------------------
-
    subtype DSI_WPCR2_HSTXDCL_Field is HAL.UInt2;
    subtype DSI_WPCR2_HSTXDLL_Field is HAL.UInt2;
    subtype DSI_WPCR2_LPSRCL_Field is HAL.UInt2;
@@ -2196,10 +1904,6 @@ package STM32_SVD.DSI is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_WPCR3_Register --
-   ------------------------
-
    subtype DSI_WPCR3_TCLKPREP_Field is HAL.Byte;
    subtype DSI_WPCR3_TCLKZEO_Field is HAL.Byte;
    subtype DSI_WPCR3_THSPREP_Field is HAL.Byte;
@@ -2225,10 +1929,6 @@ package STM32_SVD.DSI is
       THSPREP  at 0 range 16 .. 23;
       THSTRAIL at 0 range 24 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_WPCR4_Register --
-   ------------------------
 
    subtype DSI_WPCR4_THSZERO_Field is HAL.Byte;
    subtype DSI_WPCR4_TLPXD_Field is HAL.Byte;
@@ -2256,10 +1956,6 @@ package STM32_SVD.DSI is
       TLPXC   at 0 range 24 .. 31;
    end record;
 
-   ------------------------
-   -- DSI_WPCR5_Register --
-   ------------------------
-
    subtype DSI_WPCR5_THSZERO_Field is HAL.Byte;
 
    --  DSI Wrapper PHY Configuration Register 5
@@ -2276,10 +1972,6 @@ package STM32_SVD.DSI is
       THSZERO       at 0 range 0 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   ------------------------
-   -- DSI_WRPCR_Register --
-   ------------------------
 
    subtype DSI_WRPCR_NDIV_Field is HAL.UInt7;
    subtype DSI_WRPCR_IDF_Field is HAL.UInt4;

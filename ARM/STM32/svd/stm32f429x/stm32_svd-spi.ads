@@ -13,10 +13,6 @@ package STM32_SVD.SPI is
    -- Registers --
    ---------------
 
-   ------------------
-   -- CR1_Register --
-   ------------------
-
    subtype CR1_BR_Field is HAL.UInt3;
 
    --  control register 1
@@ -73,10 +69,6 @@ package STM32_SVD.SPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- CR2_Register --
-   ------------------
-
    --  control register 2
    type CR2_Register is record
       --  Rx buffer DMA enable
@@ -112,10 +104,6 @@ package STM32_SVD.SPI is
       TXEIE         at 0 range 7 .. 7;
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
-
-   -----------------
-   -- SR_Register --
-   -----------------
 
    --  status register
    type SR_Register is record
@@ -156,10 +144,6 @@ package STM32_SVD.SPI is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
-   -----------------
-   -- DR_Register --
-   -----------------
-
    subtype DR_DR_Field is HAL.Short;
 
    --  data register
@@ -176,10 +160,6 @@ package STM32_SVD.SPI is
       DR             at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- CRCPR_Register --
-   --------------------
 
    subtype CRCPR_CRCPOLY_Field is HAL.Short;
 
@@ -198,10 +178,6 @@ package STM32_SVD.SPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------
-   -- RXCRCR_Register --
-   ---------------------
-
    subtype RXCRCR_RxCRC_Field is HAL.Short;
 
    --  RX CRC register
@@ -219,10 +195,6 @@ package STM32_SVD.SPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------
-   -- TXCRCR_Register --
-   ---------------------
-
    subtype TXCRCR_TxCRC_Field is HAL.Short;
 
    --  TX CRC register
@@ -239,10 +211,6 @@ package STM32_SVD.SPI is
       TxCRC          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------
-   -- I2SCFGR_Register --
-   ----------------------
 
    subtype I2SCFGR_DATLEN_Field is HAL.UInt2;
    subtype I2SCFGR_I2SSTD_Field is HAL.UInt2;
@@ -286,10 +254,6 @@ package STM32_SVD.SPI is
       I2SMOD         at 0 range 11 .. 11;
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
-
-   --------------------
-   -- I2SPR_Register --
-   --------------------
 
    subtype I2SPR_I2SDIV_Field is HAL.Byte;
 
@@ -358,20 +322,20 @@ package STM32_SVD.SPI is
      with Import, Address => I2S2ext_Base;
 
    --  Serial peripheral interface
-   SPI2_Periph : aliased SPI_Peripheral
-     with Import, Address => SPI2_Base;
-
-   --  Serial peripheral interface
-   SPI3_Periph : aliased SPI_Peripheral
-     with Import, Address => SPI3_Base;
-
-   --  Serial peripheral interface
    I2S3ext_Periph : aliased SPI_Peripheral
      with Import, Address => I2S3ext_Base;
 
    --  Serial peripheral interface
    SPI1_Periph : aliased SPI_Peripheral
      with Import, Address => SPI1_Base;
+
+   --  Serial peripheral interface
+   SPI2_Periph : aliased SPI_Peripheral
+     with Import, Address => SPI2_Base;
+
+   --  Serial peripheral interface
+   SPI3_Periph : aliased SPI_Peripheral
+     with Import, Address => SPI3_Base;
 
    --  Serial peripheral interface
    SPI4_Periph : aliased SPI_Peripheral

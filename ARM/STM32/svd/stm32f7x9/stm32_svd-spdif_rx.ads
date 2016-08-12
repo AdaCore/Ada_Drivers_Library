@@ -13,10 +13,6 @@ package STM32_SVD.SPDIF_RX is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    subtype CR_SPDIFEN_Field is HAL.UInt2;
    subtype CR_DRFMT_Field is HAL.UInt2;
    subtype CR_NBTR_Field is HAL.UInt2;
@@ -76,10 +72,6 @@ package STM32_SVD.SPDIF_RX is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
-   ------------------
-   -- IMR_Register --
-   ------------------
-
    --  Interrupt mask register
    type IMR_Register is record
       --  RXNE interrupt enable
@@ -112,10 +104,6 @@ package STM32_SVD.SPDIF_RX is
       IFEIE         at 0 range 6 .. 6;
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
-
-   -----------------
-   -- SR_Register --
-   -----------------
 
    subtype SR_WIDTH5_Field is HAL.UInt15;
 
@@ -164,10 +152,6 @@ package STM32_SVD.SPDIF_RX is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
-   -------------------
-   -- IFCR_Register --
-   -------------------
-
    --  Interrupt Flag Clear register
    type IFCR_Register is record
       --  unspecified
@@ -194,10 +178,6 @@ package STM32_SVD.SPDIF_RX is
       SYNCDCF       at 0 range 5 .. 5;
       Reserved_6_31 at 0 range 6 .. 31;
    end record;
-
-   -----------------
-   -- DR_Register --
-   -----------------
 
    subtype DR_DR_Field is HAL.UInt24;
    subtype DR_PT_Field is HAL.UInt2;
@@ -232,10 +212,6 @@ package STM32_SVD.SPDIF_RX is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   ------------------
-   -- CSR_Register --
-   ------------------
-
    subtype CSR_USR_Field is HAL.Short;
    subtype CSR_CS_Field is HAL.Byte;
 
@@ -259,10 +235,6 @@ package STM32_SVD.SPDIF_RX is
       SOB            at 0 range 24 .. 24;
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
-
-   ------------------
-   -- DIR_Register --
-   ------------------
 
    subtype DIR_THI_Field is HAL.UInt13;
    subtype DIR_TLO_Field is HAL.UInt13;

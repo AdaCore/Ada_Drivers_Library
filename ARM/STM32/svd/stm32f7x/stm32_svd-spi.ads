@@ -13,10 +13,6 @@ package STM32_SVD.SPI is
    -- Registers --
    ---------------
 
-   ------------------
-   -- CR1_Register --
-   ------------------
-
    subtype CR1_BR_Field is HAL.UInt3;
 
    --  control register 1
@@ -73,12 +69,8 @@ package STM32_SVD.SPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ------------------
-   -- CR2_Register --
-   ------------------
-
    --  Data size
-   type DS_Field is
+   type CR2_DS_Field is
      (
       Size_4Bit,
       Size_5Bit,
@@ -94,7 +86,7 @@ package STM32_SVD.SPI is
       Size_15Bit,
       Size_16Bit)
      with Size => 4;
-   for DS_Field use
+   for CR2_DS_Field use
      (Size_4Bit => 3,
       Size_5Bit => 4,
       Size_6Bit => 5,
@@ -110,7 +102,7 @@ package STM32_SVD.SPI is
       Size_16Bit => 15);
 
    --  FIFO reception threshold
-   type FRXTH_Field is
+   type CR2_FRXTH_Field is
      (
       --  RXNE event is generated if the FIFO level is greater than or equal to
       --  1/2 (16-bit).
@@ -119,31 +111,31 @@ package STM32_SVD.SPI is
       --  1/4 (8-bit).
       Quarter)
      with Size => 1;
-   for FRXTH_Field use
+   for CR2_FRXTH_Field use
      (Half => 0,
       Quarter => 1);
 
    --  Last DMA transfer for reception
-   type LDMA_RX_Field is
+   type CR2_LDMA_RX_Field is
      (
       --  Number of data to transfer is even.
       Even,
       --  Number of data is odd.
       Odd)
      with Size => 1;
-   for LDMA_RX_Field use
+   for CR2_LDMA_RX_Field use
      (Even => 0,
       Odd => 1);
 
    --  Last DMA transfer for transmission
-   type LDMA_TX_Field is
+   type CR2_LDMA_TX_Field is
      (
       --  Number of data to transfer is even.
       Even,
       --  Number of data is odd.
       Odd)
      with Size => 1;
-   for LDMA_TX_Field use
+   for CR2_LDMA_TX_Field use
      (Even => 0,
       Odd => 1);
 
@@ -166,13 +158,13 @@ package STM32_SVD.SPI is
       --  Tx buffer empty interrupt enable
       TXEIE          : Boolean := False;
       --  Data size
-      DS             : DS_Field := STM32_SVD.SPI.Size_8Bit;
+      DS             : CR2_DS_Field := STM32_SVD.SPI.Size_8Bit;
       --  FIFO reception threshold
-      FRXTH          : FRXTH_Field := STM32_SVD.SPI.Half;
+      FRXTH          : CR2_FRXTH_Field := STM32_SVD.SPI.Half;
       --  Last DMA transfer for reception
-      LDMA_RX        : LDMA_RX_Field := STM32_SVD.SPI.Even;
+      LDMA_RX        : CR2_LDMA_RX_Field := STM32_SVD.SPI.Even;
       --  Last DMA transfer for transmission
-      LDMA_TX        : LDMA_TX_Field := STM32_SVD.SPI.Even;
+      LDMA_TX        : CR2_LDMA_TX_Field := STM32_SVD.SPI.Even;
       --  unspecified
       Reserved_15_31 : HAL.UInt17 := 16#0#;
    end record
@@ -195,12 +187,8 @@ package STM32_SVD.SPI is
       Reserved_15_31 at 0 range 15 .. 31;
    end record;
 
-   -----------------
-   -- SR_Register --
-   -----------------
-
    --  FIFO reception level
-   type FRLVL_Field is
+   type SR_FRLVL_Field is
      (
       --  FIFO is empty.
       Fifo_Empty,
@@ -211,14 +199,14 @@ package STM32_SVD.SPI is
       --  FIFO full.
       Fifo_Full)
      with Size => 2;
-   for FRLVL_Field use
+   for SR_FRLVL_Field use
      (Fifo_Empty => 0,
       Fifo_Quarter => 1,
       Fifo_Half => 2,
       Fifo_Full => 3);
 
    --  FIFO transmission level
-   type FTLVL_Field is
+   type SR_FTLVL_Field is
      (
       --  FIFO is empty.
       Fifo_Empty,
@@ -229,7 +217,7 @@ package STM32_SVD.SPI is
       --  FIFO full.
       Fifo_Full)
      with Size => 2;
-   for FTLVL_Field use
+   for SR_FTLVL_Field use
      (Fifo_Empty => 0,
       Fifo_Quarter => 1,
       Fifo_Half => 2,
@@ -256,9 +244,9 @@ package STM32_SVD.SPI is
       --  Read-only. TI frame format error
       TIFRFE         : Boolean := False;
       --  Read-only. FIFO reception level
-      FRLVL          : FRLVL_Field := STM32_SVD.SPI.Fifo_Empty;
+      FRLVL          : SR_FRLVL_Field := STM32_SVD.SPI.Fifo_Empty;
       --  Read-only. FIFO transmission level
-      FTLVL          : FTLVL_Field := STM32_SVD.SPI.Fifo_Empty;
+      FTLVL          : SR_FTLVL_Field := STM32_SVD.SPI.Fifo_Empty;
       --  unspecified
       Reserved_13_31 : HAL.UInt19 := 16#0#;
    end record
@@ -280,10 +268,6 @@ package STM32_SVD.SPI is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   -----------------
-   -- DR_Register --
-   -----------------
-
    subtype DR_DR_Field is HAL.Short;
 
    --  data register
@@ -300,10 +284,6 @@ package STM32_SVD.SPI is
       DR             at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   --------------------
-   -- CRCPR_Register --
-   --------------------
 
    subtype CRCPR_CRCPOLY_Field is HAL.Short;
 
@@ -322,10 +302,6 @@ package STM32_SVD.SPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------
-   -- RXCRCR_Register --
-   ---------------------
-
    subtype RXCRCR_RxCRC_Field is HAL.Short;
 
    --  RX CRC register
@@ -343,10 +319,6 @@ package STM32_SVD.SPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   ---------------------
-   -- TXCRCR_Register --
-   ---------------------
-
    subtype TXCRCR_TxCRC_Field is HAL.Short;
 
    --  TX CRC register
@@ -363,10 +335,6 @@ package STM32_SVD.SPI is
       TxCRC          at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
-
-   ----------------------
-   -- I2SCFGR_Register --
-   ----------------------
 
    subtype I2SCFGR_DATLEN_Field is HAL.UInt2;
    subtype I2SCFGR_I2SSTD_Field is HAL.UInt2;
@@ -413,10 +381,6 @@ package STM32_SVD.SPI is
       ASTRTEN        at 0 range 12 .. 12;
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
-
-   --------------------
-   -- I2SPR_Register --
-   --------------------
 
    subtype I2SPR_I2SDIV_Field is HAL.Byte;
 
@@ -481,16 +445,16 @@ package STM32_SVD.SPI is
    end record;
 
    --  Serial peripheral interface
+   SPI1_Periph : aliased SPI_Peripheral
+     with Import, Address => SPI1_Base;
+
+   --  Serial peripheral interface
    SPI2_Periph : aliased SPI_Peripheral
      with Import, Address => SPI2_Base;
 
    --  Serial peripheral interface
    SPI3_Periph : aliased SPI_Peripheral
      with Import, Address => SPI3_Base;
-
-   --  Serial peripheral interface
-   SPI1_Periph : aliased SPI_Peripheral
-     with Import, Address => SPI1_Base;
 
    --  Serial peripheral interface
    SPI4_Periph : aliased SPI_Peripheral

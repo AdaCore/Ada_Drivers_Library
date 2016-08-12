@@ -13,10 +13,6 @@ package STM32_SVD.HASH is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    subtype CR_DATATYPE_Field is HAL.UInt2;
    subtype CR_NBW_Field is HAL.UInt4;
 
@@ -71,10 +67,6 @@ package STM32_SVD.HASH is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
-   ------------------
-   -- STR_Register --
-   ------------------
-
    subtype STR_NBLW_Field is HAL.UInt5;
 
    --  start register
@@ -98,10 +90,6 @@ package STM32_SVD.HASH is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
-   ------------------
-   -- IMR_Register --
-   ------------------
-
    --  interrupt enable register
    type IMR_Register is record
       --  Data input interrupt enable
@@ -119,10 +107,6 @@ package STM32_SVD.HASH is
       DCIE          at 0 range 1 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   -----------------
-   -- SR_Register --
-   -----------------
 
    --  status register
    type SR_Register is record

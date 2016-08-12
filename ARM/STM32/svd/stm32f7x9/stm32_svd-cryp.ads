@@ -13,10 +13,6 @@ package STM32_SVD.CRYP is
    -- Registers --
    ---------------
 
-   -----------------
-   -- CR_Register --
-   -----------------
-
    subtype CR_ALGOMODE0_Field is HAL.UInt3;
    subtype CR_DATATYPE_Field is HAL.UInt2;
    subtype CR_KEYSIZE_Field is HAL.UInt2;
@@ -67,10 +63,6 @@ package STM32_SVD.CRYP is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
-   -----------------
-   -- SR_Register --
-   -----------------
-
    --  status register
    type SR_Register is record
       --  Read-only. Input FIFO empty
@@ -98,10 +90,6 @@ package STM32_SVD.CRYP is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   --------------------
-   -- DMACR_Register --
-   --------------------
-
    --  DMA control register
    type DMACR_Register is record
       --  DMA input enable
@@ -119,10 +107,6 @@ package STM32_SVD.CRYP is
       DOEN          at 0 range 1 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   --------------------
-   -- IMSCR_Register --
-   --------------------
 
    --  interrupt mask set/clear register
    type IMSCR_Register is record
@@ -142,10 +126,6 @@ package STM32_SVD.CRYP is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   -------------------
-   -- RISR_Register --
-   -------------------
-
    --  raw interrupt status register
    type RISR_Register is record
       --  Read-only. Input FIFO service raw interrupt status
@@ -164,10 +144,6 @@ package STM32_SVD.CRYP is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   -------------------
-   -- MISR_Register --
-   -------------------
-
    --  masked interrupt status register
    type MISR_Register is record
       --  Read-only. Input FIFO service masked interrupt status
@@ -185,10 +161,6 @@ package STM32_SVD.CRYP is
       OUTMIS        at 0 range 1 .. 1;
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
-
-   -------------------
-   -- K0LR_Register --
-   -------------------
 
    --  K0LR_b array
    type K0LR_b_Field_Array is array (224 .. 255) of Boolean
@@ -215,10 +187,6 @@ package STM32_SVD.CRYP is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- K0RR_Register --
-   -------------------
-
    --  K0RR_b array
    type K0RR_b_Field_Array is array (192 .. 223) of Boolean
      with Component_Size => 1, Size => 32;
@@ -243,10 +211,6 @@ package STM32_SVD.CRYP is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   -------------------
-   -- K1LR_Register --
-   -------------------
 
    --  K1LR_b array
    type K1LR_b_Field_Array is array (160 .. 191) of Boolean
@@ -273,10 +237,6 @@ package STM32_SVD.CRYP is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- K1RR_Register --
-   -------------------
-
    --  K1RR_b array
    type K1RR_b_Field_Array is array (128 .. 159) of Boolean
      with Component_Size => 1, Size => 32;
@@ -301,10 +261,6 @@ package STM32_SVD.CRYP is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   -------------------
-   -- K2LR_Register --
-   -------------------
 
    --  K2LR_b array
    type K2LR_b_Field_Array is array (96 .. 127) of Boolean
@@ -331,10 +287,6 @@ package STM32_SVD.CRYP is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- K2RR_Register --
-   -------------------
-
    --  K2RR_b array
    type K2RR_b_Field_Array is array (64 .. 95) of Boolean
      with Component_Size => 1, Size => 32;
@@ -359,10 +311,6 @@ package STM32_SVD.CRYP is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   -------------------
-   -- K3LR_Register --
-   -------------------
 
    --  K3LR_b array
    type K3LR_b_Field_Array is array (32 .. 63) of Boolean
@@ -389,10 +337,6 @@ package STM32_SVD.CRYP is
       Arr at 0 range 0 .. 31;
    end record;
 
-   -------------------
-   -- K3RR_Register --
-   -------------------
-
    --  K3RR_b array
    type K3RR_b_Field_Array is array (0 .. 31) of Boolean
      with Component_Size => 1, Size => 32;
@@ -417,10 +361,6 @@ package STM32_SVD.CRYP is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   --------------------
-   -- IV0LR_Register --
-   --------------------
 
    --  IV0LR_IV array
    type IV0LR_IV_Field_Array is array (0 .. 31) of Boolean
@@ -447,10 +387,6 @@ package STM32_SVD.CRYP is
       Arr at 0 range 0 .. 31;
    end record;
 
-   --------------------
-   -- IV0RR_Register --
-   --------------------
-
    --  IV0RR_IV array
    type IV0RR_IV_Field_Array is array (32 .. 63) of Boolean
      with Component_Size => 1, Size => 32;
@@ -476,10 +412,6 @@ package STM32_SVD.CRYP is
       Arr at 0 range 0 .. 31;
    end record;
 
-   --------------------
-   -- IV1LR_Register --
-   --------------------
-
    --  IV1LR_IV array
    type IV1LR_IV_Field_Array is array (64 .. 95) of Boolean
      with Component_Size => 1, Size => 32;
@@ -504,10 +436,6 @@ package STM32_SVD.CRYP is
       Val at 0 range 0 .. 31;
       Arr at 0 range 0 .. 31;
    end record;
-
-   --------------------
-   -- IV1RR_Register --
-   --------------------
 
    --  IV1RR_IV array
    type IV1RR_IV_Field_Array is array (96 .. 127) of Boolean
