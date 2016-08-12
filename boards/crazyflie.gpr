@@ -1,20 +1,29 @@
-with "../config.gpr";
-with "../ARM/STM32/stm32f40x.gpr";
-with "../components/components.gpr";
+aggregate library project Crazyflie is
 
-library project Crazyflie is
+   Build := external ("BUILD", "Debug");
 
+   type RTS_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS : RTS_Type := External ("RTS", "ravenscar-sfp");
+
+   RTS_Base := Project'Project_Dir &
+               "../embedded-runtimes/ravenscar-stm32f407disco";
    for Target use "arm-eabi";
-   for Runtime ("Ada") use STM32F40x'Runtime ("Ada");
 
+   case RTS is
+      when "ravenscar-sfp" =>
+         for Runtime ("Ada") use RTS_Base & "/sfp";
+      when "ravenscar-full" =>
+         for Runtime ("Ada") use RTS_Base & "/full";
+   end case;
+
+   for Project_Path use ("OpenMV2");
+
+   for Project_Files use ("../hal/hal.gpr",
+                          "../components/components.gpr",
+                          "../ARM/STM32/stm32f40x.gpr",
+                          "Crazyflie/board.gpr");
+
+   for Library_Dir use "lib/crazyflie/" & RTS & "/" & Build;
    for Library_Name use "crazyflie";
-   for Library_Kind use "static";
-   for Library_Dir use "lib/crazyflie/" & Config.RTS;
-   for Object_Dir use "obj/crazyflie/" & Config.RTS;
-
-   for Source_Dirs use ("crazyflie");
-
-   package Compiler renames Config.Compiler;
-   package Builder renames Config.Builder;
 
 end Crazyflie;

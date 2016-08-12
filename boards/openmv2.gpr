@@ -1,24 +1,29 @@
-with "../config.gpr";
-with "../ARM/STM32/stm32f427x.gpr";
-with "../components/components";
+aggregate library project OpenMV2 is
 
-library project OpenMV2 is
+   Build := external ("BUILD", "Debug");
 
-   for Library_Name use "openmv2";
-   for Library_Kind use "static";
-   for Library_Dir use "lib/openmv2/" & Config.RTS;
-   for Object_Dir use "obj/openmv2/" & Config.RTS;
+   type RTS_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS : RTS_Type := External ("RTS", "ravenscar-sfp");
 
+   RTS_Base := Project'Project_Dir &
+               "../embedded-runtimes/ravenscar-openmv2";
    for Target use "arm-eabi";
-   --  OpenMV2 runtime is derived from smt32f429-disco with
-   --     Clock_Frequency : constant := 180_000_000;
-   --  and
-   --     function HSE_Clock return STM32F4.RCC.HSECLK_Range is (12_000_000)
-   for Runtime ("Ada") use Config.RTS & "-openmv2";
 
-   for Source_Dirs use("OpenMV2");
+   case RTS is
+      when "ravenscar-sfp" =>
+         for Runtime ("Ada") use RTS_Base & "/sfp";
+      when "ravenscar-full" =>
+         for Runtime ("Ada") use RTS_Base & "/full";
+   end case;
 
-   package Compiler renames Config.Compiler;
-   package Builder renames Config.Builder;
+   for Project_Path use ("OpenMV2");
+
+   for Project_Files use ("../hal/hal.gpr",
+                          "../components/components.gpr",
+                          "../ARM/STM32/stm32f427x.gpr",
+                          "OpenMV2/board.gpr");
+
+   for Library_Dir use "lib/openmv2/" & RTS & "/" & Build;
+   for Library_Name use "openmv2";
 
 end OpenMV2;

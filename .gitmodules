@@ -1,0 +1,3 @@
+[submodule "embedded-runtimes"]
+	path = embedded-runtimes
+	url = git@github.com:AdaCore/embedded-runtimes.git

@@ -1,15 +1,12 @@
-with "../../hal/HAL.gpr";
-with "../../config.gpr";
+with "config";
+with "../../hal/HAL";
 
 library project STM32F40x is
 
-   for Target use "arm-eabi";
-   for Runtime ("Ada") use Config.RTS & "-stm32f4";
-
    for Library_Name use "stm32f407";
    for Library_Kind use "static";
-   for Library_Dir use "lib/stm32f40x/" & Config.RTS & "/" & Config.BUILD;
-   for Object_Dir use "obj/stm32f40x/" & Config.RTS & "/" & Config.BUILD;
+   for Library_Dir use "lib/" & Config.Object_Subdir;
+   for Object_Dir use "obj/" & Config.Object_Subdir;
 
    for Source_Dirs use Project'Source_Dirs &
      ("../cortex_m",

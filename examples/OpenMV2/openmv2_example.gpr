@@ -1,5 +1,5 @@
-with "../../config.gpr";
-with "../../boards/openmv2.gpr";
+with "../../boards/openmv2";
+with "../../boards/openmv2/config";
 
 project OpenMV2_Example is
 
@@ -8,7 +8,7 @@ project OpenMV2_Example is
    --  HSE_Clock_Frequency : constant := 12_000_000;
    --
    --  in bsp/s-bbopa.ads
-   for Runtime ("Ada") use Config.RTS & "-openmv2";
+   for Runtime ("Ada") use OpenMV2'Runtime ("Ada");
 
    for Target use "arm-eabi";
    for Source_Dirs use ("src");
@@ -21,4 +21,3 @@ project OpenMV2_Example is
    package Builder renames Config.Builder;
 
  end OpenMV2_Example;
-

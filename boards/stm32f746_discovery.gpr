@@ -1,0 +1,30 @@
+aggregate library project STM32F746_Discovery is
+
+   Build := external ("BUILD", "Debug");
+
+   type RTS_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS : RTS_Type := External ("RTS", "ravenscar-sfp");
+
+   RTS_Base := Project'Project_Dir &
+               "../embedded-runtimes/ravenscar-stm32f746disco";
+   for Target use "arm-eabi";
+
+   case RTS is
+      when "ravenscar-sfp" =>
+         for Runtime ("Ada") use RTS_Base & "/sfp";
+      when "ravenscar-full" =>
+         for Runtime ("Ada") use RTS_Base & "/full";
+   end case;
+
+   for Project_Path use ("stm32f746_discovery");
+
+   for Project_Files use ("../hal/hal.gpr",
+                          "../components/components.gpr",
+                          "../ARM/STM32/stm32f7x.gpr",
+                          "stm32f746_discovery/board.gpr");
+
+   for Library_Dir use
+     "lib/stm32f746disco/" & RTS & "/" & Build;
+   for Library_Name use "stm32f746disco";
+
+end STM32F746_Discovery;
