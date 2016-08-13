@@ -47,6 +47,9 @@ with STM32.Device;  use STM32.Device;
 
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.I2C;     use STM32.I2C;
+with STM32.SPI;     use STM32.SPI;
+with STM32.Timers;  use STM32.Timers;
+with STM32.USARTs;  use STM32.USARTs;
 
 with MPU9250;       use MPU9250;
 with AK8963;        use AK8963;
@@ -85,6 +88,25 @@ package STM32.Board is
      renames STM32.GPIO.Toggle;
 
    ---------
+   -- PWM --
+   ---------
+
+   MOTOR_123_Timer : Timer renames Timer_2;
+   MOTOR_4_Timer   : Timer renames Timer_4;
+   MOTOR_1         : GPIO_Point renames PA1;
+   MOTOR_1_AF      : GPIO_Alternate_Function renames GPIO_AF_TIM2;
+   MOTOR_1_Channel : Timer_Channel renames Channel_2;
+   MOTOR_2         : GPIO_Point renames PB11;
+   MOTOR_2_AF      : GPIO_Alternate_Function renames GPIO_AF_TIM2;
+   MOTOR_2_Channel : Timer_Channel renames Channel_4;
+   MOTOR_3         : GPIO_Point renames PA15;
+   MOTOR_3_AF      : GPIO_Alternate_Function renames GPIO_AF_TIM2;
+   MOTOR_3_Channel : Timer_Channel renames Channel_1;
+   MOTOR_4         : GPIO_Point renames PB9;
+   MOTOR_4_AF      : GPIO_Alternate_Function renames GPIO_AF_TIM4;
+   MOTOR_4_Channel : Timer_Channel renames Channel_4;
+
+   ---------
    -- I2C --
    ---------
 
@@ -96,14 +118,68 @@ package STM32.Board is
 
    procedure Configure_I2C (Port : in out I2C_Port);
 
-   MPU_I2C_Port : I2C_Port renames I2C_3;
-   EXT_I2C_Port : I2C_Port renames I2C_1;
+   I2C_MPU_Port : I2C_Port renames I2C_3;
+   I2C_MPU_SCL  : GPIO_Point renames PA8;
+   I2C_MPU_SDA  : GPIO_Point renames PC9;
+
+   I2C_EXT_Port : I2C_Port renames I2C_1;
+   I2C_EXT_SCL  : GPIO_Point renames PB6;
+   I2C_EXT_SDA  : GPIO_Point renames PB7;
+
+   ---------
+   -- SPI --
+   ---------
+
+   EXT_SPI  : SPI_Port renames SPI_1;
+   EXT_SCK  : GPIO_Point renames PA5;
+   EXT_MISO : GPIO_Point renames PA6;
+   EXT_MOSI : GPIO_Point renames PA7;
+   EXT_CS0  : GPIO_Point renames PC12;
+   EXT_CS1  : GPIO_Point renames PB4;
+   EXT_CS2  : GPIO_Point renames PB5;
+   EXT_CS3  : GPIO_Point renames PB8;
+
+   ---------
+   -- USB --
+   ---------
+
+   USB_ID : GPIO_Point renames PA10;
+   USB_DM : GPIO_Point renames PA11;
+   USB_DP : GPIO_Point renames PA12;
+
+   --------------------------
+   -- External connections --
+   --------------------------
+
+   EXT_USART1    : USART renames USART_3;
+   EXT_USART1_AF : GPIO_Alternate_Function renames GPIO_AF_USART3;
+   EXT_USART1_TX : GPIO_Point renames PC10;
+   EXT_USART1_RX : GPIO_Point renames PC11;
+   EXT_USART2    : USART renames USART_2;
+   EXT_USART2_AF : GPIO_Alternate_Function renames GPIO_AF_USART2;
+   EXT_USART2_TX : GPIO_Point renames PA2;
+   EXT_USART2_RX : GPIO_Point renames PA3;
+
+   -----------
+   -- Radio --
+   -----------
+
+   NRF_USART     : USART renames USART_6;
+   NRF_USART_AF  : GPIO_Alternate_Function renames GPIO_AF_USART6;
+   NRF_RX        : GPIO_Point renames PC6;
+   NRF_TX        : GPIO_Point renames PC7;
+   NRF_SWCLK     : GPIO_Point renames PB13;
+   NRF_SWIO      : GPIO_Point renames PB15;
+   NRF_FLOW_CTRL : GPIO_Point renames PA4;
 
    ---------
    -- MPU --
    ---------
 
-   MPU_Device   : MPU9250.MPU9250_Device (MPU_I2C_Port'Access, High);
-   MAG_Device   : AK8963_Device (MPU_I2C_Port'Access, Add_00);
+   MPU_Device   : MPU9250.MPU9250_Device (I2C_MPU_Port'Access, High);
+   MPU_INT      : GPIO_Point renames PC13;
+   MPU_FSYNC    : GPIO_Point renames PC14;
+
+   MAG_Device   : AK8963_Device (I2C_MPU_Port'Access, Add_00);
 
 end STM32.Board;
