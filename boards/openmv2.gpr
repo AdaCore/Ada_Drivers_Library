@@ -18,10 +18,7 @@ aggregate library project OpenMV2 is
 
    for Project_Path use ("OpenMV2");
 
-   for Project_Files use ("../hal/HAL.gpr",
-                          "../components/components.gpr",
-                          "../ARM/STM32/stm32f427x.gpr",
-                          "OpenMV2/board.gpr");
+   for Project_Files use ("OpenMV2/board.gpr");
 
    for Library_Dir use "lib/openmv2/" & RTS & "/" & Build;
    for Library_Name use "openmv2";

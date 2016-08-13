@@ -18,10 +18,7 @@ aggregate library project STM32F429_Discovery is
 
    for Project_Path use ("stm32f429_discovery");
 
-   for Project_Files use ("../hal/HAL.gpr",
-                          "../components/components.gpr",
-                          "../ARM/STM32/stm32f42x.gpr",
-                          "stm32f429_discovery/board.gpr");
+   for Project_Files use ("stm32f429_discovery/board.gpr");
 
    for Library_Dir use "lib/stm32f429disco/" & RTS & "/" & Build;
    for Library_Name use "stm32f429disco";
