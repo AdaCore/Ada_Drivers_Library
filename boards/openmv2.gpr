@@ -18,7 +18,7 @@ aggregate library project OpenMV2 is
 
    for Project_Path use ("OpenMV2");
 
-   for Project_Files use ("../hal/hal.gpr",
+   for Project_Files use ("../hal/HAL.gpr",
                           "../components/components.gpr",
                           "../ARM/STM32/stm32f427x.gpr",
                           "OpenMV2/board.gpr");
