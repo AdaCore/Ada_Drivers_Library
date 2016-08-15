@@ -11,15 +11,16 @@ with STM32.Board;                use STM32.Board;
 
 with BMP_Fonts;
 
-with FAT_Filesystem;             use FAT_Filesystem;
-with FAT_Filesystem.Directories; use FAT_Filesystem.Directories;
-with Media_Reader.SDCard;        use Media_Reader.SDCard;
+with FAT_Filesystem;                   use FAT_Filesystem;
+with FAT_Filesystem.Directories;       use FAT_Filesystem.Directories;
+with FAT_Filesystem.Directories.Files; use FAT_Filesystem.Directories.Files;
+with Media_Reader.SDCard;              use Media_Reader.SDCard;
 
 -----------------
 -- SDCard_Demo --
 -----------------
 
-procedure SDCard_Demo
+procedure SDCard_Demo with SPARK_Mode => Off
 is
    SD_Controller : aliased SDCard_Controller;
    SD_Card_Info  : Card_Information;
@@ -162,7 +163,7 @@ begin
                Draw_String
                  (Display.Get_Hidden_Buffer (1),
                   (0, Y),
-                  Name (Ent) & (if Is_Subdirectory (Ent) then "/" else ""),
+                  Get_Name (Ent) & (if Is_Subdirectory (Ent) then "/" else ""),
                   BMP_Fonts.Font12x12,
                   (if Is_Hidden (Ent) then Gray else White),
                   Transparent);
@@ -170,6 +171,28 @@ begin
             end loop;
 
             Close (Dir);
+            Close (FS);
+         end if;
+
+         --  demo: create a file with some text in the root directory
+         if not Error_State and then Open_Root_Directory (FS, Dir) = OK then
+            declare
+               fh   : File_Handle;
+               n_wr : Integer;
+               ret  : Status_Code;
+            begin
+               if File_Create (Parent => Dir,
+                               newname => "test.txt",
+                               Overwrite => True,
+                               File => fh) = OK
+               then
+                  n_wr := File_Write (File => fh,
+                                      Data => To_File_Data ("adafatfs was here!"),
+                                      Status => ret);
+                  pragma Unreferenced (n_wr);
+                  File_Close (fh);
+               end if;
+            end;
             Close (FS);
          end if;
 
