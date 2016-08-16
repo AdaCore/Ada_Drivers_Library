@@ -266,7 +266,7 @@ package body OpenMV.Sensor is
          raise Program_Error;
       end if;
 
-      Start_Transfer (Unit        => Sensor_DMA,
+      Start_Transfer (This        => Sensor_DMA,
                       Stream      => Sensor_DMA_Stream,
                       Source      => DCMI.Data_Register_Address,
                       Destination => BM.Addr,

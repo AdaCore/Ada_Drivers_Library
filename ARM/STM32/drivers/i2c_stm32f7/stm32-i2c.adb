@@ -80,10 +80,10 @@ package body STM32.I2C is
    -- Port_Enabled --
    ------------------
 
-   function Port_Enabled (Port : I2C_Port) return Boolean
+   function Port_Enabled (This : I2C_Port) return Boolean
    is
    begin
-      return Port.Periph.CR1.PE;
+      return This.Periph.CR1.PE;
    end Port_Enabled;
 
    ---------------
@@ -91,24 +91,24 @@ package body STM32.I2C is
    ---------------
 
    procedure Configure
-     (Port          : in out I2C_Port;
+     (This          : in out I2C_Port;
       Configuration : I2C_Configuration)
    is
    begin
-      if Port.State /= Reset then
+      if This.State /= Reset then
          return;
       end if;
 
-      Port.Config := Configuration;
+      This.Config := Configuration;
 
-      STM32.RCC.Enable_Clock (STM32_SVD.I2C.I2C_Peripheral (Port.Periph.all));
-      STM32.RCC.Reset (STM32_SVD.I2C.I2C_Peripheral (Port.Periph.all));
+      STM32.RCC.Enable_Clock (STM32_SVD.I2C.I2C_Peripheral (This.Periph.all));
+      STM32.RCC.Reset (STM32_SVD.I2C.I2C_Peripheral (This.Periph.all));
 
       --  Disable the I2C port
-      Port.Periph.CR1.PE := False;
+      This.Periph.CR1.PE := False;
 
       --  Reset the timing register to 100_000 Hz
-      Port.Periph.TIMINGR :=
+      This.Periph.TIMINGR :=
         (SCLL   => 50,
          SCLH   => 39,
          SDADEL => 1,
@@ -117,10 +117,10 @@ package body STM32.I2C is
          others => <>);
 
       --  I2C Own Address Register configuration
-      Port.Periph.OAR1.OA1EN := False;
+      This.Periph.OAR1.OA1EN := False;
 
       if Configuration.Own_Address /= 0 then
-         Port.Periph.OAR1 :=
+         This.Periph.OAR1 :=
            (OA1     => Configuration.Own_Address,
             OA1EN   => True,
             OA1MODE => Configuration.Addressing_Mode = Addressing_Mode_10bit,
@@ -130,24 +130,24 @@ package body STM32.I2C is
       --  CR2 configuration
       --  Enable AUTOEND by default, set NACK (should be disabled only in
       --  slave mode
-      Port.Periph.CR2.ADD10 :=
+      This.Periph.CR2.ADD10 :=
         Configuration.Addressing_Mode = Addressing_Mode_10bit;
-      Port.Periph.CR2.AUTOEND := True;
-      Port.Periph.CR2.NACK := True;
+      This.Periph.CR2.AUTOEND := True;
+      This.Periph.CR2.NACK := True;
 
       --  OAR2 configuration
       --  ??? Add support for dual addressing
-      Port.Periph.OAR2 := (others => <>);
+      This.Periph.OAR2 := (others => <>);
 
       --  CR1 configuration
-      Port.Periph.CR1 :=
+      This.Periph.CR1 :=
         (GCEN      => Configuration.General_Call_Enabled,
          NOSTRETCH => False,
          others    => <>);
 
-      Port.State := Ready;
+      This.State := Ready;
       --  Enable the port
-      Port.Periph.CR1.PE := True;
+      This.Periph.CR1.PE := True;
    end Configure;
 
    -------------------
@@ -368,7 +368,7 @@ package body STM32.I2C is
 
    overriding
    procedure Master_Transmit
-     (Port    : in out I2C_Port;
+     (This    : in out I2C_Port;
       Addr    : I2C_Address;
       Data    : I2C_Data;
       Status  : out I2C_Status;
@@ -378,7 +378,7 @@ package body STM32.I2C is
       Transmitted : Natural := 0;
 
    begin
-      if Port.Periph.ISR.BUSY then
+      if This.Periph.ISR.BUSY then
          Status := Busy;
          return;
       end if;
@@ -388,65 +388,65 @@ package body STM32.I2C is
          return;
       end if;
 
-      if Port.State /= Ready then
+      if This.State /= Ready then
          Status := Busy;
          return;
       end if;
 
-      Port.State := Master_Busy_Tx;
+      This.State := Master_Busy_Tx;
 
       --  Initiate the transfer
       if Data'Length > 255 then
          Config_Transfer
-           (Port, Addr, 255, Reload_Mode, Generate_Start_Write);
+           (This, Addr, 255, Reload_Mode, Generate_Start_Write);
          Size_Temp := 255;
       else
          Config_Transfer
-           (Port, Addr, Data'Length, Autoend_Mode, Generate_Start_Write);
+           (This, Addr, Data'Length, Autoend_Mode, Generate_Start_Write);
          Size_Temp := Data'Length;
       end if;
 
       --  Transfer the data
       while Transmitted <= Data'Length loop
-         Wait_Tx_Interrupt_Status (Port, Timeout, Status);
+         Wait_Tx_Interrupt_Status (This, Timeout, Status);
 
          if Status /= Ok then
             return;
          end if;
 
-         Port.Periph.TXDR.TXDATA := Data (Data'First + Transmitted);
+         This.Periph.TXDR.TXDATA := Data (Data'First + Transmitted);
          Transmitted := Transmitted + 1;
 
          if Transmitted = Size_Temp
            and then Transmitted < Data'Length
          then
             --  Wait for the Transfer complete reload flag
-            Wait_Transfer_Complete_Reset_Flag (Port, Timeout, Status);
+            Wait_Transfer_Complete_Reset_Flag (This, Timeout, Status);
             if Status /= Ok then
                return;
             end if;
 
             if Data'Length - Transmitted > 255 then
                Config_Transfer
-                 (Port, Addr, 255, Reload_Mode, No_Start_Stop);
+                 (This, Addr, 255, Reload_Mode, No_Start_Stop);
                Size_Temp := 255;
             else
                Config_Transfer
-                 (Port, Addr, Byte (Data'Length - Transmitted), Autoend_Mode,
+                 (This, Addr, Byte (Data'Length - Transmitted), Autoend_Mode,
                   No_Start_Stop);
                Size_Temp := Data'Length - Transmitted;
             end if;
          end if;
       end loop;
 
-      Wait_Stop_Flag (Port, Timeout, Status);
+      Wait_Stop_Flag (This, Timeout, Status);
       if Status /= Ok then
          return;
       end if;
 
       --  Reset CR2
-      Reset_Config (Port);
-      Port.State := Ready;
+      Reset_Config (This);
+      This.State := Ready;
       Status       := Ok;
    end Master_Transmit;
 
@@ -456,7 +456,7 @@ package body STM32.I2C is
 
    overriding
    procedure Master_Receive
-     (Port    : in out I2C_Port;
+     (This    : in out I2C_Port;
       Addr    : I2C_Address;
       Data    : out I2C_Data;
       Status  : out I2C_Status;
@@ -465,17 +465,17 @@ package body STM32.I2C is
       Size_Temp   : Natural := 0;
       Transmitted : Natural := 0;
    begin
-      if Port.Periph.ISR.BUSY then
+      if This.Periph.ISR.BUSY then
          Status := Busy;
          return;
       end if;
 
-      if Port.State /= Ready then
+      if This.State /= Ready then
          Status := Busy;
          return;
       end if;
 
-      Port.State := Master_Busy_Rx;
+      This.State := Master_Busy_Rx;
 
       if Data'Length = 0 then
          Status := Err_Error;
@@ -485,21 +485,21 @@ package body STM32.I2C is
       --  Initiate the transfer
       if Data'Length > 255 then
          Config_Transfer
-           (Port, Addr, 255, Reload_Mode, Generate_Start_Read);
+           (This, Addr, 255, Reload_Mode, Generate_Start_Read);
          Size_Temp := 255;
       else
          Config_Transfer
-           (Port, Addr, Data'Length, Autoend_Mode, Generate_Start_Read);
+           (This, Addr, Data'Length, Autoend_Mode, Generate_Start_Read);
          Size_Temp := Data'Length;
       end if;
 
       --  Transfer the data
       while Transmitted < Data'Length loop
-         while not Port.Periph.ISR.RXNE loop
+         while not This.Periph.ISR.RXNE loop
             null;
          end loop;
 
-         Data (Data'First + Transmitted) := Port.Periph.RXDR.RXDATA;
+         Data (Data'First + Transmitted) := This.Periph.RXDR.RXDATA;
          Transmitted := Transmitted + 1;
          Size_Temp   := Size_Temp - 1;
 
@@ -507,31 +507,31 @@ package body STM32.I2C is
            and then Transmitted < Data'Length
          then
             --  Wait for the Transfer complete reload flag
-            while Port.Periph.ISR.TCR loop
+            while This.Periph.ISR.TCR loop
                null;
             end loop;
 
             if Data'Length - Transmitted > 255 then
                Config_Transfer
-                 (Port, Addr, 255, Reload_Mode, No_Start_Stop);
+                 (This, Addr, 255, Reload_Mode, No_Start_Stop);
                Size_Temp := 255;
             else
                Config_Transfer
-                 (Port, Addr, Byte (Data'Length - Transmitted), Autoend_Mode,
+                 (This, Addr, Byte (Data'Length - Transmitted), Autoend_Mode,
                   No_Start_Stop);
                Size_Temp := Data'Length - Transmitted;
             end if;
          end if;
       end loop;
 
-      Wait_Stop_Flag (Port, Timeout, Status);
+      Wait_Stop_Flag (This, Timeout, Status);
       if Status /= Ok then
          return;
       end if;
 
       --  Reset CR2
-      Reset_Config (Port);
-      Port.State := Ready;
+      Reset_Config (This);
+      This.State := Ready;
       Status       := Ok;
    end Master_Receive;
 
@@ -541,7 +541,7 @@ package body STM32.I2C is
 
    overriding
    procedure Mem_Write
-     (Port          : in out I2C_Port;
+     (This          : in out I2C_Port;
       Addr          : I2C_Address;
       Mem_Addr      : Short;
       Mem_Addr_Size : I2C_Memory_Address_Size;
@@ -555,7 +555,7 @@ package body STM32.I2C is
 
    begin
       Start := Clock;
-      while Port.Periph.ISR.BUSY loop
+      while This.Periph.ISR.BUSY loop
          if Clock - Start > Milliseconds (Timeout) then
             Status := Busy;
             return;
@@ -567,16 +567,16 @@ package body STM32.I2C is
          return;
       end if;
 
-      if Port.State /= Ready then
+      if This.State /= Ready then
          Status := Busy;
          return;
       end if;
 
-      Port.State := Mem_Busy_Tx;
+      This.State := Mem_Busy_Tx;
 
       --  Configure the memory transfer
       Config_Transfer
-        (Port,
+        (This,
          Addr,
          (case Mem_Addr_Size is
              when Memory_Size_8b  => 1,
@@ -584,35 +584,35 @@ package body STM32.I2C is
          Reload_Mode,
          Generate_Start_Write);
 
-      Wait_Tx_Interrupt_Status (Port, Timeout, Status);
+      Wait_Tx_Interrupt_Status (This, Timeout, Status);
 
       if Status /= Ok then
-         Port.State := Ready;
+         This.State := Ready;
 
          return;
       end if;
 
       case Mem_Addr_Size is
          when Memory_Size_8b =>
-            Port.Periph.TXDR.TXDATA := Byte (Mem_Addr);
+            This.Periph.TXDR.TXDATA := Byte (Mem_Addr);
 
          when Memory_Size_16b =>
             declare
                MSB : constant Byte := Byte (Shift_Right (Mem_Addr, 8));
                LSB : constant Byte := Byte (Mem_Addr and 16#FF#);
             begin
-               Port.Periph.TXDR.TXDATA := MSB;
+               This.Periph.TXDR.TXDATA := MSB;
 
-               Wait_Tx_Interrupt_Status (Port, Timeout, Status);
+               Wait_Tx_Interrupt_Status (This, Timeout, Status);
                if Status /= Ok then
                   return;
                end if;
 
-               Port.Periph.TXDR.TXDATA := LSB;
+               This.Periph.TXDR.TXDATA := LSB;
             end;
       end case;
 
-      Wait_Transfer_Complete_Reset_Flag (Port, Timeout, Status);
+      Wait_Transfer_Complete_Reset_Flag (This, Timeout, Status);
 
       if Status /= Ok then
          return;
@@ -621,30 +621,30 @@ package body STM32.I2C is
       --  Initiate the transfer
       if Data'Length > 255 then
          Config_Transfer
-           (Port, Addr, 255, Reload_Mode, No_Start_Stop);
+           (This, Addr, 255, Reload_Mode, No_Start_Stop);
          Size_Temp := 255;
       else
          Config_Transfer
-           (Port, Addr, Data'Length, Autoend_Mode, No_Start_Stop);
+           (This, Addr, Data'Length, Autoend_Mode, No_Start_Stop);
          Size_Temp := Data'Length;
       end if;
 
       --  Transfer the data
       while Transmitted < Data'Length loop
-         Wait_Tx_Interrupt_Status (Port, Timeout, Status);
+         Wait_Tx_Interrupt_Status (This, Timeout, Status);
 
          if Status /= Ok then
             return;
          end if;
 
-         Port.Periph.TXDR.TXDATA := Data (Data'First + Transmitted);
+         This.Periph.TXDR.TXDATA := Data (Data'First + Transmitted);
          Transmitted := Transmitted + 1;
 
          if Transmitted = Size_Temp
            and then Transmitted < Data'Length
          then
             --  Wait for the Transfer complete reload flag
-            Wait_Transfer_Complete_Reset_Flag (Port, Timeout, Status);
+            Wait_Transfer_Complete_Reset_Flag (This, Timeout, Status);
 
             if Status /= Ok then
                return;
@@ -652,11 +652,11 @@ package body STM32.I2C is
 
             if Data'Length - Transmitted > 255 then
                Config_Transfer
-                 (Port, Addr, 255, Reload_Mode, No_Start_Stop);
+                 (This, Addr, 255, Reload_Mode, No_Start_Stop);
                Size_Temp := 255;
             else
                Config_Transfer
-                 (Port, Addr,
+                 (This, Addr,
                   Byte (Data'Length - Transmitted),
                   Autoend_Mode,
                   No_Start_Stop);
@@ -665,14 +665,14 @@ package body STM32.I2C is
          end if;
       end loop;
 
-      Wait_Stop_Flag (Port, Timeout, Status);
+      Wait_Stop_Flag (This, Timeout, Status);
       if Status /= Ok then
          return;
       end if;
 
       --  Reset CR2
-      Reset_Config (Port);
-      Port.State := Ready;
+      Reset_Config (This);
+      This.State := Ready;
       Status       := Ok;
    end Mem_Write;
 
@@ -682,7 +682,7 @@ package body STM32.I2C is
 
    overriding
    procedure Mem_Read
-     (Port          : in out I2C_Port;
+     (This          : in out I2C_Port;
       Addr          : I2C_Address;
       Mem_Addr      : Short;
       Mem_Addr_Size : I2C_Memory_Address_Size;
@@ -697,7 +697,7 @@ package body STM32.I2C is
    begin
       Start := Clock;
 
-      while Port.Periph.ISR.BUSY loop
+      while This.Periph.ISR.BUSY loop
          if Clock - Start > Milliseconds (Timeout) then
             Status := Busy;
             return;
@@ -709,16 +709,16 @@ package body STM32.I2C is
          return;
       end if;
 
-      if Port.State /= Ready then
+      if This.State /= Ready then
          Status := Busy;
          return;
       end if;
 
-      Port.State := Mem_Busy_Rx;
+      This.State := Mem_Busy_Rx;
 
       --  Configure the memory transfer
       Config_Transfer
-        (Port,
+        (This,
          Addr,
          (case Mem_Addr_Size is
              when Memory_Size_8b  => 1,
@@ -726,7 +726,7 @@ package body STM32.I2C is
          Softend_Mode,
          Generate_Start_Write);
 
-      Wait_Tx_Interrupt_Status (Port, Timeout, Status);
+      Wait_Tx_Interrupt_Status (This, Timeout, Status);
 
       if Status /= Ok then
          return;
@@ -734,48 +734,48 @@ package body STM32.I2C is
 
       case Mem_Addr_Size is
          when Memory_Size_8b =>
-            Port.Periph.TXDR.TXDATA := Byte (Mem_Addr);
+            This.Periph.TXDR.TXDATA := Byte (Mem_Addr);
 
          when Memory_Size_16b =>
             declare
                MSB : constant Byte := Byte (Shift_Right (Mem_Addr, 8));
                LSB : constant Byte := Byte (Mem_Addr and 16#FF#);
             begin
-               Port.Periph.TXDR.TXDATA := MSB;
+               This.Periph.TXDR.TXDATA := MSB;
 
-               Wait_Tx_Interrupt_Status (Port, Timeout, Status);
+               Wait_Tx_Interrupt_Status (This, Timeout, Status);
 
                if Status /= Ok then
                   return;
                end if;
 
-               Port.Periph.TXDR.TXDATA := LSB;
+               This.Periph.TXDR.TXDATA := LSB;
             end;
       end case;
 
       --  Wait for transfer complete
-      while not Port.Periph.ISR.TC loop
+      while not This.Periph.ISR.TC loop
          null;
       end loop;
 
       --  Initiate the transfer
       if Data'Length > 255 then
          Config_Transfer
-           (Port, Addr, 255, Reload_Mode, Generate_Start_Read);
+           (This, Addr, 255, Reload_Mode, Generate_Start_Read);
          Size_Temp := 255;
       else
          Config_Transfer
-           (Port, Addr, Data'Length, Autoend_Mode, Generate_Start_Read);
+           (This, Addr, Data'Length, Autoend_Mode, Generate_Start_Read);
          Size_Temp := Data'Length;
       end if;
 
       --  Transfer the data
       while Transmitted < Data'Length loop
-         while not Port.Periph.ISR.RXNE loop
+         while not This.Periph.ISR.RXNE loop
             null;
          end loop;
 
-         Data (Data'First + Transmitted) := Port.Periph.RXDR.RXDATA;
+         Data (Data'First + Transmitted) := This.Periph.RXDR.RXDATA;
          Transmitted := Transmitted + 1;
          Size_Temp   := Size_Temp - 1;
 
@@ -783,17 +783,17 @@ package body STM32.I2C is
            and then Transmitted < Data'Length
          then
             --  Wait for the Transfer complete reload flag
-            while not Port.Periph.ISR.TCR loop
+            while not This.Periph.ISR.TCR loop
                null;
             end loop;
 
             if Data'Length - Transmitted > 255 then
                Config_Transfer
-                 (Port, Addr, 255, Reload_Mode, No_Start_Stop);
+                 (This, Addr, 255, Reload_Mode, No_Start_Stop);
                Size_Temp := 255;
             else
                Config_Transfer
-                 (Port, Addr,
+                 (This, Addr,
                   Byte (Data'Length - Transmitted),
                   Autoend_Mode,
                   No_Start_Stop);
@@ -802,14 +802,14 @@ package body STM32.I2C is
          end if;
       end loop;
 
-      Wait_Stop_Flag (Port, Timeout, Status);
+      Wait_Stop_Flag (This, Timeout, Status);
       if Status /= Ok then
          return;
       end if;
 
       --  Reset CR2
-      Reset_Config (Port);
-      Port.State := Ready;
+      Reset_Config (This);
+      This.State := Ready;
       Status       := Ok;
    end Mem_Read;
 

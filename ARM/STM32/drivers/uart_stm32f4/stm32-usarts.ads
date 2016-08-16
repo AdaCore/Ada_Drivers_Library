@@ -218,39 +218,39 @@ package STM32.USARTs is
 
    overriding
    procedure Transmit
-     (Port    : in out USART;
+     (This    : in out USART;
       Data    : UART_Data_8b;
       Status  : out UART_Status;
       Timeout : Natural := 1000)
      with
-       Pre'Class => Data_Size (Port) = Data_Size_8b;
+       Pre'Class => Data_Size (This) = Data_Size_8b;
 
    overriding
    procedure Transmit
-     (Port    : in out USART;
+     (This    : in out USART;
       Data    : UART_Data_9b;
       Status  : out UART_Status;
       Timeout : Natural := 1000)
      with
-       Pre'Class => Data_Size (Port) = Data_Size_9b;
+       Pre'Class => Data_Size (This) = Data_Size_9b;
 
    overriding
    procedure Receive
-     (Port    : in out USART;
+     (This    : in out USART;
       Data    : out UART_Data_8b;
       Status  : out UART_Status;
       Timeout : Natural := 1000)
      with
-       Pre'Class => Data_Size (Port) = Data_Size_8b;
+       Pre'Class => Data_Size (This) = Data_Size_8b;
 
    overriding
    procedure Receive
-     (Port    : in out USART;
+     (This    : in out USART;
       Data    : out UART_Data_9b;
       Status  : out UART_Status;
       Timeout : Natural := 1000)
      with
-       Pre'Class => Data_Size (Port) = Data_Size_9b;
+       Pre'Class => Data_Size (This) = Data_Size_9b;
 
 private
 

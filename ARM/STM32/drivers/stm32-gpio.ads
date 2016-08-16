@@ -212,35 +212,35 @@ package STM32.GPIO is
    --  For This.Port.all, negates the output data register bit specified by
    --  This.Pin (one becomes zero and vice versa). Other pins are unaffected.
 
-   procedure Lock (Point : GPIO_Point) with
-     Pre  => not Locked (Point),
-     Post => Locked (Point);
+   procedure Lock (This : GPIO_Point) with
+     Pre  => not Locked (This),
+     Post => Locked (This);
    --  For the given GPIO port, locks the current configuration of Pin until
    --  the MCU is reset.
 
-   function Locked (Pin : GPIO_Point) return Boolean
+   function Locked (This : GPIO_Point) return Boolean
      with Inline;
 
    procedure Configure_IO
-     (Point  : GPIO_Point;
+     (This   : GPIO_Point;
       Config : GPIO_Port_Configuration);
    --  For Point.Pin on the Point.Port.all, configures the
    --  characteristics specified by Config
 
    function Get_Interrupt_Line_Number
-     (Point : GPIO_Point) return EXTI.External_Line_Number;
+     (This : GPIO_Point) return EXTI.External_Line_Number;
    --  Returns the external interrupt line number that corresponds to the
    --  GPIO point.
 
    procedure Configure_Trigger
-     (Point   : GPIO_Point;
+     (This    : GPIO_Point;
       Trigger : EXTI.External_Triggers);
    --  For Point.Pin on Point.Port.all, connects the external line and enables
    --  the external Trigger.  Enables the SYSCFG clock.
 
    procedure Configure_Alternate_Function
-     (Point : GPIO_Point;
-      AF    : GPIO_Alternate_Function);
+     (This : GPIO_Point;
+      AF   : GPIO_Alternate_Function);
    --  For Point.Pin on Point.Port.all, sets the alternate function
    --  specified by AF
 

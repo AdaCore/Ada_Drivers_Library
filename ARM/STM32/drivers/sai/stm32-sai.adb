@@ -170,11 +170,11 @@ package body STM32.SAI is
    ------------------
 
    procedure Deinitialize
-     (Periph : SAI_Controller;
+     (This : SAI_Controller;
       Block  : SAI_Block)
    is
       Block_Regs : constant Block_Registers_Access :=
-                     Get_Block (Periph, Block);
+                     Get_Block (This, Block);
       Start      : Time;
    begin
       --  Disable SAI
@@ -201,11 +201,11 @@ package body STM32.SAI is
    -- Enabled --
    -------------
 
-   function Enabled (Periph : SAI_Controller;
+   function Enabled (This : SAI_Controller;
                      Block  : SAI_Block) return Boolean
    is
       Block_Regs : constant Block_Registers_Access :=
-                     Get_Block (Periph, Block);
+                     Get_Block (This, Block);
    begin
       return Block_Regs.CR1.SAIAEN;
    end Enabled;
@@ -215,11 +215,11 @@ package body STM32.SAI is
    ------------
 
    procedure Enable
-     (Periph : SAI_Controller;
+     (This : SAI_Controller;
       Block  : SAI_Block)
    is
       Block_Regs : constant Block_Registers_Access :=
-                     Get_Block (Periph, Block);
+                     Get_Block (This, Block);
    begin
       Block_Regs.CR1.SAIAEN := True;
    end Enable;
@@ -229,11 +229,11 @@ package body STM32.SAI is
    -------------
 
    procedure Disable
-     (Periph : SAI_Controller;
+     (This : SAI_Controller;
       Block  : SAI_Block)
    is
       Block_Regs : constant Block_Registers_Access :=
-                     Get_Block (Periph, Block);
+                     Get_Block (This, Block);
    begin
       Block_Regs.CR1.SAIAEN := False;
    end Disable;
@@ -243,11 +243,11 @@ package body STM32.SAI is
    ----------------
 
    procedure Enable_DMA
-     (Periph : SAI_Controller;
+     (This : SAI_Controller;
       Block  : SAI_Block)
    is
       Block_Regs : constant Block_Registers_Access :=
-                     Get_Block (Periph, Block);
+                     Get_Block (This, Block);
    begin
       Block_Regs.CR1.DMAEN := True;
    end Enable_DMA;
@@ -257,7 +257,7 @@ package body STM32.SAI is
    ---------------------------
 
    procedure Configure_Audio_Block
-     (Periph          : SAI_Controller;
+     (This          : SAI_Controller;
       Block           : SAI_Block;
       Frequency       : Audio_Frequency;
       Stereo_Mode     : SAI_Mono_Stereo_Mode;
@@ -273,18 +273,18 @@ package body STM32.SAI is
       Tristate_Mgt    : SAI_Tristate_Management := SD_Line_Driven;
       Companding_Mode : SAI_Companding_Mode := No_Companding)
    is
-      Block_Reg : constant Block_Registers_Access := Get_Block (Periph, Block);
+      Block_Reg : constant Block_Registers_Access := Get_Block (This, Block);
       Freq      : Word;
       Tmp_Clock : Word;
       Mckdiv    : Word;
    begin
-      Deinitialize (Periph, Block);
+      Deinitialize (This, Block);
 
       --  Configure Master Clock using the following formula :
       --  MCLK_x = SAI_CK_x / (MCKDIV[3:0] * 2) with MCLK_x = 256 * FS
       --  FS = SAI_CK_x / (MCKDIV[3:0] * 2) * 256
       --  MCKDIV[3:0] = SAI_CK_x / FS * 512
-      Freq := Get_Input_Clock (Periph);
+      Freq := Get_Input_Clock (This);
 
       --  Calculate *10 to keep some precision
       Tmp_Clock := Freq * 10 / (Frequency * 512);
@@ -320,7 +320,7 @@ package body STM32.SAI is
    ---------------------------
 
    procedure Configure_Block_Frame
-     (Periph       : SAI_Controller;
+     (This       : SAI_Controller;
       Block        : SAI_Block;
       Frame_Length : Byte;
       Frame_Active : UInt7;
@@ -328,7 +328,7 @@ package body STM32.SAI is
       FS_Polarity  : SAI_Frame_Sync_Polarity;
       FS_Offset    : SAI_Frame_Sync_Offset)
    is
-      Block_Reg : constant Block_Registers_Access := Get_Block (Periph, Block);
+      Block_Reg : constant Block_Registers_Access := Get_Block (This, Block);
    begin
       Block_Reg.FRCR :=
         (FRL   => Frame_Length - 1,
@@ -344,14 +344,14 @@ package body STM32.SAI is
    --------------------------
 
    procedure Configure_Block_Slot
-     (Periph           : SAI_Controller;
+     (This           : SAI_Controller;
       Block            : SAI_Block;
       First_Bit_Offset : UInt5;
       Slot_Size        : SAI_Slot_Size;
       Number_Of_Slots  : Slots_Number;
       Enabled_Slots    : SAI_Slots)
    is
-      Block_Reg : constant Block_Registers_Access := Get_Block (Periph, Block);
+      Block_Reg : constant Block_Registers_Access := Get_Block (This, Block);
    begin
       Block_Reg.SLOTR :=
         (FBOFF  => First_Bit_Offset,

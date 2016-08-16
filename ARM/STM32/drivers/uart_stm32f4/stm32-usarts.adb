@@ -490,7 +490,7 @@ package body STM32.USARTs is
 
    overriding
    procedure Transmit
-     (Port    : in out USART;
+     (This    : in out USART;
       Data    : UART_Data_8b;
       Status  : out UART_Status;
       Timeout : Natural := 1000)
@@ -499,10 +499,10 @@ package body STM32.USARTs is
    begin
       for Elt of Data loop
          loop
-            exit when Port.Tx_Ready;
+            exit when This.Tx_Ready;
          end loop;
 
-         Port.Transmit (UInt9 (Elt));
+         This.Transmit (UInt9 (Elt));
       end loop;
       Status := Ok;
    end Transmit;
@@ -513,7 +513,7 @@ package body STM32.USARTs is
 
    overriding
    procedure Transmit
-     (Port    : in out USART;
+     (This    : in out USART;
       Data    : UART_Data_9b;
       Status  : out UART_Status;
       Timeout : Natural := 1000)
@@ -522,10 +522,10 @@ package body STM32.USARTs is
    begin
       for Elt of Data loop
          loop
-            exit when Port.Tx_Ready;
+            exit when This.Tx_Ready;
          end loop;
 
-         Port.Transmit (Elt);
+         This.Transmit (Elt);
       end loop;
       Status := Ok;
    end Transmit;
@@ -536,7 +536,7 @@ package body STM32.USARTs is
 
    overriding
    procedure Receive
-     (Port    : in out USART;
+     (This    : in out USART;
       Data    : out UART_Data_8b;
       Status  : out UART_Status;
       Timeout : Natural := 1000)
@@ -545,10 +545,10 @@ package body STM32.USARTs is
    begin
       for Elt of Data loop
          loop
-            exit when Port.Rx_Ready;
+            exit when This.Rx_Ready;
          end loop;
 
-         Port.Receive (UInt9 (Elt));
+         This.Receive (UInt9 (Elt));
       end loop;
       Status := Ok;
    end Receive;
@@ -559,7 +559,7 @@ package body STM32.USARTs is
 
    overriding
    procedure Receive
-     (Port    : in out USART;
+     (This    : in out USART;
       Data    : out UART_Data_9b;
       Status  : out UART_Status;
       Timeout : Natural := 1000)
@@ -568,10 +568,10 @@ package body STM32.USARTs is
    begin
       for Elt of Data loop
          loop
-            exit when Port.Rx_Ready;
+            exit when This.Rx_Ready;
          end loop;
 
-         Port.Receive (Elt);
+         This.Receive (Elt);
       end loop;
       Status := Ok;
    end Receive;

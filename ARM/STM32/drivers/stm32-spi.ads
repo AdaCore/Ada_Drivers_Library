@@ -83,65 +83,65 @@ package STM32.SPI is
       CRC_Poly            : Short;
    end record;
 
-   procedure Configure (Port : in out SPI_Port; Conf : SPI_Configuration);
+   procedure Configure (This : in out SPI_Port; Conf : SPI_Configuration);
 
-   procedure Enable (Port : in out SPI_Port);
+   procedure Enable (This : in out SPI_Port);
 
-   procedure Disable (Port : in out SPI_Port);
+   procedure Disable (This : in out SPI_Port);
 
-   function Enabled (Port : SPI_Port) return Boolean;
+   function Enabled (This : SPI_Port) return Boolean;
 
-   procedure Send (Port : in out SPI_Port; Data : Short);
+   procedure Send (This : in out SPI_Port; Data : Short);
 
-   function Data (Port : SPI_Port) return Short
+   function Data (This : SPI_Port) return Short
      with Inline;
 
-   procedure Send (Port : in out SPI_Port; Data : Byte);
+   procedure Send (This : in out SPI_Port; Data : Byte);
 
-   function Data (Port : SPI_Port) return Byte
+   function Data (This : SPI_Port) return Byte
      with Inline;
 
-   function Is_Busy (Port : SPI_Port) return Boolean
+   function Is_Busy (This : SPI_Port) return Boolean
      with Inline;
 
-   function Rx_Is_Empty (Port : SPI_Port) return Boolean
+   function Rx_Is_Empty (This : SPI_Port) return Boolean
      with Inline;
 
-   function Tx_Is_Empty (Port : SPI_Port) return Boolean
+   function Tx_Is_Empty (This : SPI_Port) return Boolean
      with Inline;
 
-   function Busy (Port : SPI_Port) return Boolean
+   function Busy (This : SPI_Port) return Boolean
      with Inline;
 
-   function Channel_Side_Indicated (Port : SPI_Port) return Boolean
+   function Channel_Side_Indicated (This : SPI_Port) return Boolean
      with Inline;
 
-   function Underrun_Indicated (Port : SPI_Port) return Boolean
+   function Underrun_Indicated (This : SPI_Port) return Boolean
      with Inline;
 
-   function CRC_Error_Indicated (Port : SPI_Port) return Boolean
+   function CRC_Error_Indicated (This : SPI_Port) return Boolean
      with Inline;
 
-   function Mode_Fault_Indicated (Port : SPI_Port) return Boolean
+   function Mode_Fault_Indicated (This : SPI_Port) return Boolean
      with Inline;
 
-   function Overrun_Indicated (Port : SPI_Port) return Boolean
+   function Overrun_Indicated (This : SPI_Port) return Boolean
      with Inline;
 
-   function Frame_Fmt_Error_Indicated (Port : SPI_Port) return Boolean
+   function Frame_Fmt_Error_Indicated (This : SPI_Port) return Boolean
      with Inline;
 
-   procedure Clear_Overrun (Port : SPI_Port);
+   procedure Clear_Overrun (This : SPI_Port);
 
-   procedure Reset_CRC (Port : in out SPI_Port);
+   procedure Reset_CRC (This : in out SPI_Port);
 
-   function CRC_Enabled (Port : SPI_Port) return Boolean;
+   function CRC_Enabled (This : SPI_Port) return Boolean;
 
-   function Is_Data_Frame_16bit (Port : SPI_Port) return Boolean;
+   function Is_Data_Frame_16bit (This : SPI_Port) return Boolean;
 
-   function Current_Mode (Port : SPI_Port) return SPI_Mode;
+   function Current_Mode (This : SPI_Port) return SPI_Mode;
 
-   function Current_Data_Direction (Port : SPI_Port) return SPI_Data_Direction;
+   function Current_Data_Direction (This : SPI_Port) return SPI_Data_Direction;
 
    --  The following I/O routines implement the higher level functionality for
    --  CRC and data direction, among others.
@@ -154,52 +154,52 @@ package STM32.SPI is
    --  Blocking
 
    overriding
-   function Data_Size (Port : SPI_Port) return HAL.SPI.SPI_Data_Size;
+   function Data_Size (This : SPI_Port) return HAL.SPI.SPI_Data_Size;
 
    overriding
    procedure Transmit
-     (Port   : in out SPI_Port;
+     (This   : in out SPI_Port;
       Data   : HAL.SPI.SPI_Data_8b;
       Status : out HAL.SPI.SPI_Status;
       Timeout : Natural := 1000);
 
    overriding
    procedure Transmit
-     (Port   : in out SPI_Port;
+     (This   : in out SPI_Port;
       Data   : HAL.SPI.SPI_Data_16b;
       Status : out HAL.SPI.SPI_Status;
       Timeout : Natural := 1000);
 
    procedure Transmit
-     (Port     : in out SPI_Port;
+     (This     : in out SPI_Port;
       Outgoing : Byte);
 
    overriding
    procedure Receive
-     (Port    : in out SPI_Port;
+     (This    : in out SPI_Port;
       Data    : out HAL.SPI.SPI_Data_8b;
       Status  : out HAL.SPI.SPI_Status;
       Timeout : Natural := 1000);
 
    overriding
    procedure Receive
-     (Port    : in out SPI_Port;
+     (This    : in out SPI_Port;
       Data    : out HAL.SPI.SPI_Data_16b;
       Status  : out HAL.SPI.SPI_Status;
       Timeout : Natural := 1000);
 
    procedure Receive
-     (Port     : in out SPI_Port;
+     (This     : in out SPI_Port;
       Incoming : out Byte);
 
    procedure Transmit_Receive
-     (Port      : in out SPI_Port;
+     (This      : in out SPI_Port;
       Outgoing  : Byte_Buffer;
       Incoming  : out Byte_Buffer;
       Size      : Positive);
 
    procedure Transmit_Receive
-     (Port      : in out SPI_Port;
+     (This      : in out SPI_Port;
       Outgoing  : Byte;
       Incoming  : out Byte);
 
@@ -213,31 +213,31 @@ private
      limited new HAL.SPI.SPI_Port with null record;
 
    procedure Send_Receive_16bit_Mode
-     (Port     : in out SPI_Port;
+     (This     : in out SPI_Port;
       Outgoing : Byte_Buffer;
       Incoming : out Byte_Buffer;
       Size     : Positive);
 
    procedure Send_Receive_8bit_Mode
-     (Port     : in out SPI_Port;
+     (This     : in out SPI_Port;
       Outgoing : Byte_Buffer;
       Incoming : out Byte_Buffer;
       Size     : Positive);
 
    procedure Send_16bit_Mode
-     (Port     : in out SPI_Port;
+     (This     : in out SPI_Port;
       Outgoing : HAL.SPI.SPI_Data_16b);
 
    procedure Send_8bit_Mode
-     (Port     : in out SPI_Port;
+     (This     : in out SPI_Port;
       Outgoing : HAL.SPI.SPI_Data_8b);
 
    procedure Receive_16bit_Mode
-     (Port     : in out SPI_Port;
+     (This     : in out SPI_Port;
       Incoming : out HAL.SPI.SPI_Data_16b);
 
    procedure Receive_8bit_Mode
-     (Port     : in out SPI_Port;
+     (This     : in out SPI_Port;
       Incoming : out HAL.SPI.SPI_Data_8b);
 
 end STM32.SPI;

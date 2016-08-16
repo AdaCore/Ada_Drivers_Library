@@ -257,31 +257,31 @@ package STM32.SAI is
    Slot_15 : constant SAI_Slots := 2 ** 15;
 
    procedure Deinitialize
-     (Periph : SAI_Controller;
-      Block  : SAI_Block);
+     (This  : SAI_Controller;
+      Block : SAI_Block);
 
    function Enabled
-     (Periph : SAI_Controller;
-      Block  : SAI_Block) return Boolean
+     (This  : SAI_Controller;
+      Block : SAI_Block) return Boolean
      with Inline;
 
    procedure Enable
-     (Periph : SAI_Controller;
-      Block  : SAI_Block)
+     (This  : SAI_Controller;
+      Block : SAI_Block)
      with Inline;
 
    procedure Disable
-     (Periph : SAI_Controller;
-      Block  : SAI_Block)
+     (This  : SAI_Controller;
+      Block : SAI_Block)
      with Inline;
 
    procedure Enable_DMA
-     (Periph : SAI_Controller;
-      Block  : SAI_Block)
+     (This  : SAI_Controller;
+      Block : SAI_Block)
      with Inline;
 
    procedure Configure_Audio_Block
-     (Periph          : SAI_Controller;
+     (This            : SAI_Controller;
       Block           : SAI_Block;
       Frequency       : Audio_Frequency;
       Stereo_Mode     : SAI_Mono_Stereo_Mode;
@@ -298,7 +298,7 @@ package STM32.SAI is
       Companding_Mode : SAI_Companding_Mode := No_Companding);
 
    procedure Configure_Block_Frame
-     (Periph          : SAI_Controller;
+     (This            : SAI_Controller;
       Block           : SAI_Block;
       Frame_Length    : Byte;
       Frame_Active    : UInt7;
@@ -307,7 +307,7 @@ package STM32.SAI is
       FS_Offset       : SAI_Frame_Sync_Offset);
 
    procedure Configure_Block_Slot
-     (Periph           : SAI_Controller;
+     (This             : SAI_Controller;
       Block            : SAI_Block;
       First_Bit_Offset : UInt5;
       Slot_Size        : SAI_Slot_Size;
