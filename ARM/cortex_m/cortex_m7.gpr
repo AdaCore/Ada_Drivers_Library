@@ -1,0 +1,15 @@
+with "config";
+with "../../hal/HAL";
+
+library project Cortex_M7 is
+
+   for Source_Dirs use ("src", "src/svd", "src/fpu", "src/cache");
+
+   for Library_Name use "cortex-m7";
+   for Library_Dir use "lib/cortex-m7/" & Config.Object_Subdir;
+   for Object_Dir use "obj/cortex-m7/" & Config.Object_Subdir;
+
+   package Compiler renames Config.Compiler;
+   package Builder  renames Config.Builder;
+
+end Cortex_M7;
