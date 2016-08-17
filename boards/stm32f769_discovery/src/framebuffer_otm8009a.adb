@@ -31,7 +31,7 @@ package body Framebuffer_OTM8009A is
       procedure End_Of_Refresh_Callback;
       procedure Tearing_Effect_Callback;
       procedure Interrupt
-        with Attach_Handler => Ada.Interrupts.Names.DSIHOST_Interrupt,
+        with Attach_Handler => Ada.Interrupts.Names.DSI_Interrupt,
              Unreferenced;
 
       Refreshed   : Boolean := True;

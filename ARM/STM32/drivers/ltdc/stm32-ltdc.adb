@@ -151,7 +151,7 @@ package body STM32.LTDC is
 
       procedure Interrupt;
       pragma Attach_Handler
-        (Interrupt, Ada.Interrupts.Names.LCD_TFT_Interrupt);
+        (Interrupt, Ada.Interrupts.Names.LTDC_Interrupt);
 
    private
       Not_Pending : Boolean := True;

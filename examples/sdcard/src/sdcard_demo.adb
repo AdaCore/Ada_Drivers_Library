@@ -61,7 +61,10 @@ is
       end if;
 
       while not Error_State and then Read (Dir, E) = OK loop
-         if not Is_Hidden (E) then
+         if not Is_Hidden (E)
+           and then -Name (E) /= "."
+           and then -Name (E) /= ".."
+         then
             Draw_String
               (Display.Get_Hidden_Buffer (1),
                (0, Y),
