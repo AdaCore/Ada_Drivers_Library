@@ -78,6 +78,8 @@ package STM32.Device is
      with Inline;
    procedure Enable_Clock (Points : GPIO_Points)
      with Inline;
+   procedure Enable_Clock (Points : GPIO_AF_Points)
+     with Inline;
 
    procedure Reset (This : aliased in out GPIO_Port)
      with Inline;
