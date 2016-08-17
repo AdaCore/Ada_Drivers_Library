@@ -361,16 +361,20 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype S0CR_DIR_Field is HAL.UInt2;
-   subtype S0CR_PSIZE_Field is HAL.UInt2;
-   subtype S0CR_MSIZE_Field is HAL.UInt2;
-   subtype S0CR_PL_Field is HAL.UInt2;
-   subtype S0CR_PBURST_Field is HAL.UInt2;
-   subtype S0CR_MBURST_Field is HAL.UInt2;
-   subtype S0CR_CHSEL_Field is HAL.UInt3;
+   --------------------------------
+   -- Stream cluster's Registers --
+   --------------------------------
+
+   subtype SxCR_Stream_DIR_Field is HAL.UInt2;
+   subtype SxCR_Stream_PSIZE_Field is HAL.UInt2;
+   subtype SxCR_Stream_MSIZE_Field is HAL.UInt2;
+   subtype SxCR_Stream_PL_Field is HAL.UInt2;
+   subtype SxCR_Stream_PBURST_Field is HAL.UInt2;
+   subtype SxCR_Stream_MBURST_Field is HAL.UInt2;
+   subtype SxCR_Stream_CHSEL_Field is HAL.UInt4;
 
    --  stream x configuration register
-   type S0CR_Register is record
+   type SxCR_Stream_Register is record
       --  Stream enable / flag stream ready when read low
       EN             : Boolean := False;
       --  Direct mode error interrupt enable
@@ -384,7 +388,7 @@ package STM32_SVD.DMA is
       --  Peripheral flow controller
       PFCTRL         : Boolean := False;
       --  Data transfer direction
-      DIR            : S0CR_DIR_Field := 16#0#;
+      DIR            : SxCR_Stream_DIR_Field := 16#0#;
       --  Circular mode
       CIRC           : Boolean := False;
       --  Peripheral increment mode
@@ -392,13 +396,13 @@ package STM32_SVD.DMA is
       --  Memory increment mode
       MINC           : Boolean := False;
       --  Peripheral data size
-      PSIZE          : S0CR_PSIZE_Field := 16#0#;
+      PSIZE          : SxCR_Stream_PSIZE_Field := 16#0#;
       --  Memory data size
-      MSIZE          : S0CR_MSIZE_Field := 16#0#;
+      MSIZE          : SxCR_Stream_MSIZE_Field := 16#0#;
       --  Peripheral increment offset size
       PINCOS         : Boolean := False;
       --  Priority level
-      PL             : S0CR_PL_Field := 16#0#;
+      PL             : SxCR_Stream_PL_Field := 16#0#;
       --  Double buffer mode
       DBM            : Boolean := False;
       --  Current target (only in double buffer mode)
@@ -406,18 +410,18 @@ package STM32_SVD.DMA is
       --  unspecified
       Reserved_20_20 : HAL.Bit := 16#0#;
       --  Peripheral burst transfer configuration
-      PBURST         : S0CR_PBURST_Field := 16#0#;
+      PBURST         : SxCR_Stream_PBURST_Field := 16#0#;
       --  Memory burst transfer configuration
-      MBURST         : S0CR_MBURST_Field := 16#0#;
+      MBURST         : SxCR_Stream_MBURST_Field := 16#0#;
       --  Channel selection
-      CHSEL          : S0CR_CHSEL_Field := 16#0#;
+      CHSEL          : SxCR_Stream_CHSEL_Field := 16#0#;
       --  unspecified
-      Reserved_28_31 : HAL.UInt4 := 16#0#;
+      Reserved_29_31 : HAL.UInt3 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for S0CR_Register use record
+   for SxCR_Stream_Register use record
       EN             at 0 range 0 .. 0;
       DMEIE          at 0 range 1 .. 1;
       TEIE           at 0 range 2 .. 2;
@@ -437,38 +441,38 @@ package STM32_SVD.DMA is
       Reserved_20_20 at 0 range 20 .. 20;
       PBURST         at 0 range 21 .. 22;
       MBURST         at 0 range 23 .. 24;
-      CHSEL          at 0 range 25 .. 27;
-      Reserved_28_31 at 0 range 28 .. 31;
+      CHSEL          at 0 range 25 .. 28;
+      Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
-   subtype S0NDTR_NDT_Field is HAL.Short;
+   subtype SxNDTR_Stream_NDT_Field is HAL.Short;
 
    --  stream x number of data register
-   type S0NDTR_Register is record
+   type SxNDTR_Stream_Register is record
       --  Number of data items to transfer
-      NDT            : S0NDTR_NDT_Field := 16#0#;
+      NDT            : SxNDTR_Stream_NDT_Field := 16#0#;
       --  unspecified
       Reserved_16_31 : HAL.Short := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for S0NDTR_Register use record
+   for SxNDTR_Stream_Register use record
       NDT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype S0FCR_FTH_Field is HAL.UInt2;
-   subtype S0FCR_FS_Field is HAL.UInt3;
+   subtype SxFCR_Stream_FTH_Field is HAL.UInt2;
+   subtype SxFCR_Stream_FS_Field is HAL.UInt3;
 
    --  stream x FIFO control register
-   type S0FCR_Register is record
+   type SxFCR_Stream_Register is record
       --  FIFO threshold selection
-      FTH           : S0FCR_FTH_Field := 16#1#;
+      FTH           : SxFCR_Stream_FTH_Field := 16#1#;
       --  Direct mode disable
       DMDIS         : Boolean := False;
       --  Read-only. FIFO status
-      FS            : S0FCR_FS_Field := 16#4#;
+      FS            : SxFCR_Stream_FS_Field := 16#4#;
       --  unspecified
       Reserved_6_6  : HAL.Bit := 16#0#;
       --  FIFO error interrupt enable
@@ -479,7 +483,7 @@ package STM32_SVD.DMA is
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for S0FCR_Register use record
+   for SxFCR_Stream_Register use record
       FTH           at 0 range 0 .. 1;
       DMDIS         at 0 range 2 .. 2;
       FS            at 0 range 3 .. 5;
@@ -488,894 +492,38 @@ package STM32_SVD.DMA is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype S1CR_DIR_Field is HAL.UInt2;
-   subtype S1CR_PSIZE_Field is HAL.UInt2;
-   subtype S1CR_MSIZE_Field is HAL.UInt2;
-   subtype S1CR_PL_Field is HAL.UInt2;
-   subtype S1CR_PBURST_Field is HAL.UInt2;
-   subtype S1CR_MBURST_Field is HAL.UInt2;
-   subtype S1CR_CHSEL_Field is HAL.UInt3;
-
-   --  stream x configuration register
-   type S1CR_Register is record
-      --  Stream enable / flag stream ready when read low
-      EN             : Boolean := False;
-      --  Direct mode error interrupt enable
-      DMEIE          : Boolean := False;
-      --  Transfer error interrupt enable
-      TEIE           : Boolean := False;
-      --  Half transfer interrupt enable
-      HTIE           : Boolean := False;
-      --  Transfer complete interrupt enable
-      TCIE           : Boolean := False;
-      --  Peripheral flow controller
-      PFCTRL         : Boolean := False;
-      --  Data transfer direction
-      DIR            : S1CR_DIR_Field := 16#0#;
-      --  Circular mode
-      CIRC           : Boolean := False;
-      --  Peripheral increment mode
-      PINC           : Boolean := False;
-      --  Memory increment mode
-      MINC           : Boolean := False;
-      --  Peripheral data size
-      PSIZE          : S1CR_PSIZE_Field := 16#0#;
-      --  Memory data size
-      MSIZE          : S1CR_MSIZE_Field := 16#0#;
-      --  Peripheral increment offset size
-      PINCOS         : Boolean := False;
-      --  Priority level
-      PL             : S1CR_PL_Field := 16#0#;
-      --  Double buffer mode
-      DBM            : Boolean := False;
-      --  Current target (only in double buffer mode)
-      CT             : Boolean := False;
-      --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
-      --  Peripheral burst transfer configuration
-      PBURST         : S1CR_PBURST_Field := 16#0#;
-      --  Memory burst transfer configuration
-      MBURST         : S1CR_MBURST_Field := 16#0#;
-      --  Channel selection
-      CHSEL          : S1CR_CHSEL_Field := 16#0#;
-      --  unspecified
-      Reserved_28_31 : HAL.UInt4 := 16#0#;
+   --  Stream registers
+   type Stream_Cluster is record
+      --  stream x configuration register
+      SxCR   : SxCR_Stream_Register;
+      --  stream x number of data register
+      SxNDTR : SxNDTR_Stream_Register;
+      --  stream x peripheral address register
+      SxPAR  : HAL.Word;
+      --  stream x memory 0 address register
+      SxM0AR : HAL.Word;
+      --  stream x memory 1 address register
+      SxM1AR : HAL.Word;
+      --  stream x FIFO control register
+      SxFCR  : SxFCR_Stream_Register;
    end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
+     with Volatile, Size => 192;
 
-   for S1CR_Register use record
-      EN             at 0 range 0 .. 0;
-      DMEIE          at 0 range 1 .. 1;
-      TEIE           at 0 range 2 .. 2;
-      HTIE           at 0 range 3 .. 3;
-      TCIE           at 0 range 4 .. 4;
-      PFCTRL         at 0 range 5 .. 5;
-      DIR            at 0 range 6 .. 7;
-      CIRC           at 0 range 8 .. 8;
-      PINC           at 0 range 9 .. 9;
-      MINC           at 0 range 10 .. 10;
-      PSIZE          at 0 range 11 .. 12;
-      MSIZE          at 0 range 13 .. 14;
-      PINCOS         at 0 range 15 .. 15;
-      PL             at 0 range 16 .. 17;
-      DBM            at 0 range 18 .. 18;
-      CT             at 0 range 19 .. 19;
-      Reserved_20_20 at 0 range 20 .. 20;
-      PBURST         at 0 range 21 .. 22;
-      MBURST         at 0 range 23 .. 24;
-      CHSEL          at 0 range 25 .. 27;
-      Reserved_28_31 at 0 range 28 .. 31;
+   for Stream_Cluster use record
+      SxCR   at 0 range 0 .. 31;
+      SxNDTR at 4 range 0 .. 31;
+      SxPAR  at 8 range 0 .. 31;
+      SxM0AR at 12 range 0 .. 31;
+      SxM1AR at 16 range 0 .. 31;
+      SxFCR  at 20 range 0 .. 31;
    end record;
 
-   subtype S1NDTR_NDT_Field is HAL.Short;
+   --  Stream registers
+   type Stream_Clusters is array (0 .. 7) of Stream_Cluster;
 
-   --  stream x number of data register
-   type S1NDTR_Register is record
-      --  Number of data items to transfer
-      NDT            : S1NDTR_NDT_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S1NDTR_Register use record
-      NDT            at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype S1FCR_FTH_Field is HAL.UInt2;
-   subtype S1FCR_FS_Field is HAL.UInt3;
-
-   --  stream x FIFO control register
-   type S1FCR_Register is record
-      --  FIFO threshold selection
-      FTH           : S1FCR_FTH_Field := 16#1#;
-      --  Direct mode disable
-      DMDIS         : Boolean := False;
-      --  Read-only. FIFO status
-      FS            : S1FCR_FS_Field := 16#4#;
-      --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
-      --  FIFO error interrupt enable
-      FEIE          : Boolean := False;
-      --  unspecified
-      Reserved_8_31 : HAL.UInt24 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S1FCR_Register use record
-      FTH           at 0 range 0 .. 1;
-      DMDIS         at 0 range 2 .. 2;
-      FS            at 0 range 3 .. 5;
-      Reserved_6_6  at 0 range 6 .. 6;
-      FEIE          at 0 range 7 .. 7;
-      Reserved_8_31 at 0 range 8 .. 31;
-   end record;
-
-   subtype S2CR_DIR_Field is HAL.UInt2;
-   subtype S2CR_PSIZE_Field is HAL.UInt2;
-   subtype S2CR_MSIZE_Field is HAL.UInt2;
-   subtype S2CR_PL_Field is HAL.UInt2;
-   subtype S2CR_PBURST_Field is HAL.UInt2;
-   subtype S2CR_MBURST_Field is HAL.UInt2;
-   subtype S2CR_CHSEL_Field is HAL.UInt3;
-
-   --  stream x configuration register
-   type S2CR_Register is record
-      --  Stream enable / flag stream ready when read low
-      EN             : Boolean := False;
-      --  Direct mode error interrupt enable
-      DMEIE          : Boolean := False;
-      --  Transfer error interrupt enable
-      TEIE           : Boolean := False;
-      --  Half transfer interrupt enable
-      HTIE           : Boolean := False;
-      --  Transfer complete interrupt enable
-      TCIE           : Boolean := False;
-      --  Peripheral flow controller
-      PFCTRL         : Boolean := False;
-      --  Data transfer direction
-      DIR            : S2CR_DIR_Field := 16#0#;
-      --  Circular mode
-      CIRC           : Boolean := False;
-      --  Peripheral increment mode
-      PINC           : Boolean := False;
-      --  Memory increment mode
-      MINC           : Boolean := False;
-      --  Peripheral data size
-      PSIZE          : S2CR_PSIZE_Field := 16#0#;
-      --  Memory data size
-      MSIZE          : S2CR_MSIZE_Field := 16#0#;
-      --  Peripheral increment offset size
-      PINCOS         : Boolean := False;
-      --  Priority level
-      PL             : S2CR_PL_Field := 16#0#;
-      --  Double buffer mode
-      DBM            : Boolean := False;
-      --  Current target (only in double buffer mode)
-      CT             : Boolean := False;
-      --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
-      --  Peripheral burst transfer configuration
-      PBURST         : S2CR_PBURST_Field := 16#0#;
-      --  Memory burst transfer configuration
-      MBURST         : S2CR_MBURST_Field := 16#0#;
-      --  Channel selection
-      CHSEL          : S2CR_CHSEL_Field := 16#0#;
-      --  unspecified
-      Reserved_28_31 : HAL.UInt4 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S2CR_Register use record
-      EN             at 0 range 0 .. 0;
-      DMEIE          at 0 range 1 .. 1;
-      TEIE           at 0 range 2 .. 2;
-      HTIE           at 0 range 3 .. 3;
-      TCIE           at 0 range 4 .. 4;
-      PFCTRL         at 0 range 5 .. 5;
-      DIR            at 0 range 6 .. 7;
-      CIRC           at 0 range 8 .. 8;
-      PINC           at 0 range 9 .. 9;
-      MINC           at 0 range 10 .. 10;
-      PSIZE          at 0 range 11 .. 12;
-      MSIZE          at 0 range 13 .. 14;
-      PINCOS         at 0 range 15 .. 15;
-      PL             at 0 range 16 .. 17;
-      DBM            at 0 range 18 .. 18;
-      CT             at 0 range 19 .. 19;
-      Reserved_20_20 at 0 range 20 .. 20;
-      PBURST         at 0 range 21 .. 22;
-      MBURST         at 0 range 23 .. 24;
-      CHSEL          at 0 range 25 .. 27;
-      Reserved_28_31 at 0 range 28 .. 31;
-   end record;
-
-   subtype S2NDTR_NDT_Field is HAL.Short;
-
-   --  stream x number of data register
-   type S2NDTR_Register is record
-      --  Number of data items to transfer
-      NDT            : S2NDTR_NDT_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S2NDTR_Register use record
-      NDT            at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype S2FCR_FTH_Field is HAL.UInt2;
-   subtype S2FCR_FS_Field is HAL.UInt3;
-
-   --  stream x FIFO control register
-   type S2FCR_Register is record
-      --  FIFO threshold selection
-      FTH           : S2FCR_FTH_Field := 16#1#;
-      --  Direct mode disable
-      DMDIS         : Boolean := False;
-      --  Read-only. FIFO status
-      FS            : S2FCR_FS_Field := 16#4#;
-      --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
-      --  FIFO error interrupt enable
-      FEIE          : Boolean := False;
-      --  unspecified
-      Reserved_8_31 : HAL.UInt24 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S2FCR_Register use record
-      FTH           at 0 range 0 .. 1;
-      DMDIS         at 0 range 2 .. 2;
-      FS            at 0 range 3 .. 5;
-      Reserved_6_6  at 0 range 6 .. 6;
-      FEIE          at 0 range 7 .. 7;
-      Reserved_8_31 at 0 range 8 .. 31;
-   end record;
-
-   subtype S3CR_DIR_Field is HAL.UInt2;
-   subtype S3CR_PSIZE_Field is HAL.UInt2;
-   subtype S3CR_MSIZE_Field is HAL.UInt2;
-   subtype S3CR_PL_Field is HAL.UInt2;
-   subtype S3CR_PBURST_Field is HAL.UInt2;
-   subtype S3CR_MBURST_Field is HAL.UInt2;
-   subtype S3CR_CHSEL_Field is HAL.UInt3;
-
-   --  stream x configuration register
-   type S3CR_Register is record
-      --  Stream enable / flag stream ready when read low
-      EN             : Boolean := False;
-      --  Direct mode error interrupt enable
-      DMEIE          : Boolean := False;
-      --  Transfer error interrupt enable
-      TEIE           : Boolean := False;
-      --  Half transfer interrupt enable
-      HTIE           : Boolean := False;
-      --  Transfer complete interrupt enable
-      TCIE           : Boolean := False;
-      --  Peripheral flow controller
-      PFCTRL         : Boolean := False;
-      --  Data transfer direction
-      DIR            : S3CR_DIR_Field := 16#0#;
-      --  Circular mode
-      CIRC           : Boolean := False;
-      --  Peripheral increment mode
-      PINC           : Boolean := False;
-      --  Memory increment mode
-      MINC           : Boolean := False;
-      --  Peripheral data size
-      PSIZE          : S3CR_PSIZE_Field := 16#0#;
-      --  Memory data size
-      MSIZE          : S3CR_MSIZE_Field := 16#0#;
-      --  Peripheral increment offset size
-      PINCOS         : Boolean := False;
-      --  Priority level
-      PL             : S3CR_PL_Field := 16#0#;
-      --  Double buffer mode
-      DBM            : Boolean := False;
-      --  Current target (only in double buffer mode)
-      CT             : Boolean := False;
-      --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
-      --  Peripheral burst transfer configuration
-      PBURST         : S3CR_PBURST_Field := 16#0#;
-      --  Memory burst transfer configuration
-      MBURST         : S3CR_MBURST_Field := 16#0#;
-      --  Channel selection
-      CHSEL          : S3CR_CHSEL_Field := 16#0#;
-      --  unspecified
-      Reserved_28_31 : HAL.UInt4 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S3CR_Register use record
-      EN             at 0 range 0 .. 0;
-      DMEIE          at 0 range 1 .. 1;
-      TEIE           at 0 range 2 .. 2;
-      HTIE           at 0 range 3 .. 3;
-      TCIE           at 0 range 4 .. 4;
-      PFCTRL         at 0 range 5 .. 5;
-      DIR            at 0 range 6 .. 7;
-      CIRC           at 0 range 8 .. 8;
-      PINC           at 0 range 9 .. 9;
-      MINC           at 0 range 10 .. 10;
-      PSIZE          at 0 range 11 .. 12;
-      MSIZE          at 0 range 13 .. 14;
-      PINCOS         at 0 range 15 .. 15;
-      PL             at 0 range 16 .. 17;
-      DBM            at 0 range 18 .. 18;
-      CT             at 0 range 19 .. 19;
-      Reserved_20_20 at 0 range 20 .. 20;
-      PBURST         at 0 range 21 .. 22;
-      MBURST         at 0 range 23 .. 24;
-      CHSEL          at 0 range 25 .. 27;
-      Reserved_28_31 at 0 range 28 .. 31;
-   end record;
-
-   subtype S3NDTR_NDT_Field is HAL.Short;
-
-   --  stream x number of data register
-   type S3NDTR_Register is record
-      --  Number of data items to transfer
-      NDT            : S3NDTR_NDT_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S3NDTR_Register use record
-      NDT            at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype S3FCR_FTH_Field is HAL.UInt2;
-   subtype S3FCR_FS_Field is HAL.UInt3;
-
-   --  stream x FIFO control register
-   type S3FCR_Register is record
-      --  FIFO threshold selection
-      FTH           : S3FCR_FTH_Field := 16#1#;
-      --  Direct mode disable
-      DMDIS         : Boolean := False;
-      --  Read-only. FIFO status
-      FS            : S3FCR_FS_Field := 16#4#;
-      --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
-      --  FIFO error interrupt enable
-      FEIE          : Boolean := False;
-      --  unspecified
-      Reserved_8_31 : HAL.UInt24 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S3FCR_Register use record
-      FTH           at 0 range 0 .. 1;
-      DMDIS         at 0 range 2 .. 2;
-      FS            at 0 range 3 .. 5;
-      Reserved_6_6  at 0 range 6 .. 6;
-      FEIE          at 0 range 7 .. 7;
-      Reserved_8_31 at 0 range 8 .. 31;
-   end record;
-
-   subtype S4CR_DIR_Field is HAL.UInt2;
-   subtype S4CR_PSIZE_Field is HAL.UInt2;
-   subtype S4CR_MSIZE_Field is HAL.UInt2;
-   subtype S4CR_PL_Field is HAL.UInt2;
-   subtype S4CR_PBURST_Field is HAL.UInt2;
-   subtype S4CR_MBURST_Field is HAL.UInt2;
-   subtype S4CR_CHSEL_Field is HAL.UInt3;
-
-   --  stream x configuration register
-   type S4CR_Register is record
-      --  Stream enable / flag stream ready when read low
-      EN             : Boolean := False;
-      --  Direct mode error interrupt enable
-      DMEIE          : Boolean := False;
-      --  Transfer error interrupt enable
-      TEIE           : Boolean := False;
-      --  Half transfer interrupt enable
-      HTIE           : Boolean := False;
-      --  Transfer complete interrupt enable
-      TCIE           : Boolean := False;
-      --  Peripheral flow controller
-      PFCTRL         : Boolean := False;
-      --  Data transfer direction
-      DIR            : S4CR_DIR_Field := 16#0#;
-      --  Circular mode
-      CIRC           : Boolean := False;
-      --  Peripheral increment mode
-      PINC           : Boolean := False;
-      --  Memory increment mode
-      MINC           : Boolean := False;
-      --  Peripheral data size
-      PSIZE          : S4CR_PSIZE_Field := 16#0#;
-      --  Memory data size
-      MSIZE          : S4CR_MSIZE_Field := 16#0#;
-      --  Peripheral increment offset size
-      PINCOS         : Boolean := False;
-      --  Priority level
-      PL             : S4CR_PL_Field := 16#0#;
-      --  Double buffer mode
-      DBM            : Boolean := False;
-      --  Current target (only in double buffer mode)
-      CT             : Boolean := False;
-      --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
-      --  Peripheral burst transfer configuration
-      PBURST         : S4CR_PBURST_Field := 16#0#;
-      --  Memory burst transfer configuration
-      MBURST         : S4CR_MBURST_Field := 16#0#;
-      --  Channel selection
-      CHSEL          : S4CR_CHSEL_Field := 16#0#;
-      --  unspecified
-      Reserved_28_31 : HAL.UInt4 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S4CR_Register use record
-      EN             at 0 range 0 .. 0;
-      DMEIE          at 0 range 1 .. 1;
-      TEIE           at 0 range 2 .. 2;
-      HTIE           at 0 range 3 .. 3;
-      TCIE           at 0 range 4 .. 4;
-      PFCTRL         at 0 range 5 .. 5;
-      DIR            at 0 range 6 .. 7;
-      CIRC           at 0 range 8 .. 8;
-      PINC           at 0 range 9 .. 9;
-      MINC           at 0 range 10 .. 10;
-      PSIZE          at 0 range 11 .. 12;
-      MSIZE          at 0 range 13 .. 14;
-      PINCOS         at 0 range 15 .. 15;
-      PL             at 0 range 16 .. 17;
-      DBM            at 0 range 18 .. 18;
-      CT             at 0 range 19 .. 19;
-      Reserved_20_20 at 0 range 20 .. 20;
-      PBURST         at 0 range 21 .. 22;
-      MBURST         at 0 range 23 .. 24;
-      CHSEL          at 0 range 25 .. 27;
-      Reserved_28_31 at 0 range 28 .. 31;
-   end record;
-
-   subtype S4NDTR_NDT_Field is HAL.Short;
-
-   --  stream x number of data register
-   type S4NDTR_Register is record
-      --  Number of data items to transfer
-      NDT            : S4NDTR_NDT_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S4NDTR_Register use record
-      NDT            at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype S4FCR_FTH_Field is HAL.UInt2;
-   subtype S4FCR_FS_Field is HAL.UInt3;
-
-   --  stream x FIFO control register
-   type S4FCR_Register is record
-      --  FIFO threshold selection
-      FTH           : S4FCR_FTH_Field := 16#1#;
-      --  Direct mode disable
-      DMDIS         : Boolean := False;
-      --  Read-only. FIFO status
-      FS            : S4FCR_FS_Field := 16#4#;
-      --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
-      --  FIFO error interrupt enable
-      FEIE          : Boolean := False;
-      --  unspecified
-      Reserved_8_31 : HAL.UInt24 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S4FCR_Register use record
-      FTH           at 0 range 0 .. 1;
-      DMDIS         at 0 range 2 .. 2;
-      FS            at 0 range 3 .. 5;
-      Reserved_6_6  at 0 range 6 .. 6;
-      FEIE          at 0 range 7 .. 7;
-      Reserved_8_31 at 0 range 8 .. 31;
-   end record;
-
-   subtype S5CR_DIR_Field is HAL.UInt2;
-   subtype S5CR_PSIZE_Field is HAL.UInt2;
-   subtype S5CR_MSIZE_Field is HAL.UInt2;
-   subtype S5CR_PL_Field is HAL.UInt2;
-   subtype S5CR_PBURST_Field is HAL.UInt2;
-   subtype S5CR_MBURST_Field is HAL.UInt2;
-   subtype S5CR_CHSEL_Field is HAL.UInt3;
-
-   --  stream x configuration register
-   type S5CR_Register is record
-      --  Stream enable / flag stream ready when read low
-      EN             : Boolean := False;
-      --  Direct mode error interrupt enable
-      DMEIE          : Boolean := False;
-      --  Transfer error interrupt enable
-      TEIE           : Boolean := False;
-      --  Half transfer interrupt enable
-      HTIE           : Boolean := False;
-      --  Transfer complete interrupt enable
-      TCIE           : Boolean := False;
-      --  Peripheral flow controller
-      PFCTRL         : Boolean := False;
-      --  Data transfer direction
-      DIR            : S5CR_DIR_Field := 16#0#;
-      --  Circular mode
-      CIRC           : Boolean := False;
-      --  Peripheral increment mode
-      PINC           : Boolean := False;
-      --  Memory increment mode
-      MINC           : Boolean := False;
-      --  Peripheral data size
-      PSIZE          : S5CR_PSIZE_Field := 16#0#;
-      --  Memory data size
-      MSIZE          : S5CR_MSIZE_Field := 16#0#;
-      --  Peripheral increment offset size
-      PINCOS         : Boolean := False;
-      --  Priority level
-      PL             : S5CR_PL_Field := 16#0#;
-      --  Double buffer mode
-      DBM            : Boolean := False;
-      --  Current target (only in double buffer mode)
-      CT             : Boolean := False;
-      --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
-      --  Peripheral burst transfer configuration
-      PBURST         : S5CR_PBURST_Field := 16#0#;
-      --  Memory burst transfer configuration
-      MBURST         : S5CR_MBURST_Field := 16#0#;
-      --  Channel selection
-      CHSEL          : S5CR_CHSEL_Field := 16#0#;
-      --  unspecified
-      Reserved_28_31 : HAL.UInt4 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S5CR_Register use record
-      EN             at 0 range 0 .. 0;
-      DMEIE          at 0 range 1 .. 1;
-      TEIE           at 0 range 2 .. 2;
-      HTIE           at 0 range 3 .. 3;
-      TCIE           at 0 range 4 .. 4;
-      PFCTRL         at 0 range 5 .. 5;
-      DIR            at 0 range 6 .. 7;
-      CIRC           at 0 range 8 .. 8;
-      PINC           at 0 range 9 .. 9;
-      MINC           at 0 range 10 .. 10;
-      PSIZE          at 0 range 11 .. 12;
-      MSIZE          at 0 range 13 .. 14;
-      PINCOS         at 0 range 15 .. 15;
-      PL             at 0 range 16 .. 17;
-      DBM            at 0 range 18 .. 18;
-      CT             at 0 range 19 .. 19;
-      Reserved_20_20 at 0 range 20 .. 20;
-      PBURST         at 0 range 21 .. 22;
-      MBURST         at 0 range 23 .. 24;
-      CHSEL          at 0 range 25 .. 27;
-      Reserved_28_31 at 0 range 28 .. 31;
-   end record;
-
-   subtype S5NDTR_NDT_Field is HAL.Short;
-
-   --  stream x number of data register
-   type S5NDTR_Register is record
-      --  Number of data items to transfer
-      NDT            : S5NDTR_NDT_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S5NDTR_Register use record
-      NDT            at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype S5FCR_FTH_Field is HAL.UInt2;
-   subtype S5FCR_FS_Field is HAL.UInt3;
-
-   --  stream x FIFO control register
-   type S5FCR_Register is record
-      --  FIFO threshold selection
-      FTH           : S5FCR_FTH_Field := 16#1#;
-      --  Direct mode disable
-      DMDIS         : Boolean := False;
-      --  Read-only. FIFO status
-      FS            : S5FCR_FS_Field := 16#4#;
-      --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
-      --  FIFO error interrupt enable
-      FEIE          : Boolean := False;
-      --  unspecified
-      Reserved_8_31 : HAL.UInt24 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S5FCR_Register use record
-      FTH           at 0 range 0 .. 1;
-      DMDIS         at 0 range 2 .. 2;
-      FS            at 0 range 3 .. 5;
-      Reserved_6_6  at 0 range 6 .. 6;
-      FEIE          at 0 range 7 .. 7;
-      Reserved_8_31 at 0 range 8 .. 31;
-   end record;
-
-   subtype S6CR_DIR_Field is HAL.UInt2;
-   subtype S6CR_PSIZE_Field is HAL.UInt2;
-   subtype S6CR_MSIZE_Field is HAL.UInt2;
-   subtype S6CR_PL_Field is HAL.UInt2;
-   subtype S6CR_PBURST_Field is HAL.UInt2;
-   subtype S6CR_MBURST_Field is HAL.UInt2;
-   subtype S6CR_CHSEL_Field is HAL.UInt3;
-
-   --  stream x configuration register
-   type S6CR_Register is record
-      --  Stream enable / flag stream ready when read low
-      EN             : Boolean := False;
-      --  Direct mode error interrupt enable
-      DMEIE          : Boolean := False;
-      --  Transfer error interrupt enable
-      TEIE           : Boolean := False;
-      --  Half transfer interrupt enable
-      HTIE           : Boolean := False;
-      --  Transfer complete interrupt enable
-      TCIE           : Boolean := False;
-      --  Peripheral flow controller
-      PFCTRL         : Boolean := False;
-      --  Data transfer direction
-      DIR            : S6CR_DIR_Field := 16#0#;
-      --  Circular mode
-      CIRC           : Boolean := False;
-      --  Peripheral increment mode
-      PINC           : Boolean := False;
-      --  Memory increment mode
-      MINC           : Boolean := False;
-      --  Peripheral data size
-      PSIZE          : S6CR_PSIZE_Field := 16#0#;
-      --  Memory data size
-      MSIZE          : S6CR_MSIZE_Field := 16#0#;
-      --  Peripheral increment offset size
-      PINCOS         : Boolean := False;
-      --  Priority level
-      PL             : S6CR_PL_Field := 16#0#;
-      --  Double buffer mode
-      DBM            : Boolean := False;
-      --  Current target (only in double buffer mode)
-      CT             : Boolean := False;
-      --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
-      --  Peripheral burst transfer configuration
-      PBURST         : S6CR_PBURST_Field := 16#0#;
-      --  Memory burst transfer configuration
-      MBURST         : S6CR_MBURST_Field := 16#0#;
-      --  Channel selection
-      CHSEL          : S6CR_CHSEL_Field := 16#0#;
-      --  unspecified
-      Reserved_28_31 : HAL.UInt4 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S6CR_Register use record
-      EN             at 0 range 0 .. 0;
-      DMEIE          at 0 range 1 .. 1;
-      TEIE           at 0 range 2 .. 2;
-      HTIE           at 0 range 3 .. 3;
-      TCIE           at 0 range 4 .. 4;
-      PFCTRL         at 0 range 5 .. 5;
-      DIR            at 0 range 6 .. 7;
-      CIRC           at 0 range 8 .. 8;
-      PINC           at 0 range 9 .. 9;
-      MINC           at 0 range 10 .. 10;
-      PSIZE          at 0 range 11 .. 12;
-      MSIZE          at 0 range 13 .. 14;
-      PINCOS         at 0 range 15 .. 15;
-      PL             at 0 range 16 .. 17;
-      DBM            at 0 range 18 .. 18;
-      CT             at 0 range 19 .. 19;
-      Reserved_20_20 at 0 range 20 .. 20;
-      PBURST         at 0 range 21 .. 22;
-      MBURST         at 0 range 23 .. 24;
-      CHSEL          at 0 range 25 .. 27;
-      Reserved_28_31 at 0 range 28 .. 31;
-   end record;
-
-   subtype S6NDTR_NDT_Field is HAL.Short;
-
-   --  stream x number of data register
-   type S6NDTR_Register is record
-      --  Number of data items to transfer
-      NDT            : S6NDTR_NDT_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S6NDTR_Register use record
-      NDT            at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype S6FCR_FTH_Field is HAL.UInt2;
-   subtype S6FCR_FS_Field is HAL.UInt3;
-
-   --  stream x FIFO control register
-   type S6FCR_Register is record
-      --  FIFO threshold selection
-      FTH           : S6FCR_FTH_Field := 16#1#;
-      --  Direct mode disable
-      DMDIS         : Boolean := False;
-      --  Read-only. FIFO status
-      FS            : S6FCR_FS_Field := 16#4#;
-      --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
-      --  FIFO error interrupt enable
-      FEIE          : Boolean := False;
-      --  unspecified
-      Reserved_8_31 : HAL.UInt24 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S6FCR_Register use record
-      FTH           at 0 range 0 .. 1;
-      DMDIS         at 0 range 2 .. 2;
-      FS            at 0 range 3 .. 5;
-      Reserved_6_6  at 0 range 6 .. 6;
-      FEIE          at 0 range 7 .. 7;
-      Reserved_8_31 at 0 range 8 .. 31;
-   end record;
-
-   subtype S7CR_DIR_Field is HAL.UInt2;
-   subtype S7CR_PSIZE_Field is HAL.UInt2;
-   subtype S7CR_MSIZE_Field is HAL.UInt2;
-   subtype S7CR_PL_Field is HAL.UInt2;
-   subtype S7CR_PBURST_Field is HAL.UInt2;
-   subtype S7CR_MBURST_Field is HAL.UInt2;
-   subtype S7CR_CHSEL_Field is HAL.UInt3;
-
-   --  stream x configuration register
-   type S7CR_Register is record
-      --  Stream enable / flag stream ready when read low
-      EN             : Boolean := False;
-      --  Direct mode error interrupt enable
-      DMEIE          : Boolean := False;
-      --  Transfer error interrupt enable
-      TEIE           : Boolean := False;
-      --  Half transfer interrupt enable
-      HTIE           : Boolean := False;
-      --  Transfer complete interrupt enable
-      TCIE           : Boolean := False;
-      --  Peripheral flow controller
-      PFCTRL         : Boolean := False;
-      --  Data transfer direction
-      DIR            : S7CR_DIR_Field := 16#0#;
-      --  Circular mode
-      CIRC           : Boolean := False;
-      --  Peripheral increment mode
-      PINC           : Boolean := False;
-      --  Memory increment mode
-      MINC           : Boolean := False;
-      --  Peripheral data size
-      PSIZE          : S7CR_PSIZE_Field := 16#0#;
-      --  Memory data size
-      MSIZE          : S7CR_MSIZE_Field := 16#0#;
-      --  Peripheral increment offset size
-      PINCOS         : Boolean := False;
-      --  Priority level
-      PL             : S7CR_PL_Field := 16#0#;
-      --  Double buffer mode
-      DBM            : Boolean := False;
-      --  Current target (only in double buffer mode)
-      CT             : Boolean := False;
-      --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
-      --  Peripheral burst transfer configuration
-      PBURST         : S7CR_PBURST_Field := 16#0#;
-      --  Memory burst transfer configuration
-      MBURST         : S7CR_MBURST_Field := 16#0#;
-      --  Channel selection
-      CHSEL          : S7CR_CHSEL_Field := 16#0#;
-      --  unspecified
-      Reserved_28_31 : HAL.UInt4 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S7CR_Register use record
-      EN             at 0 range 0 .. 0;
-      DMEIE          at 0 range 1 .. 1;
-      TEIE           at 0 range 2 .. 2;
-      HTIE           at 0 range 3 .. 3;
-      TCIE           at 0 range 4 .. 4;
-      PFCTRL         at 0 range 5 .. 5;
-      DIR            at 0 range 6 .. 7;
-      CIRC           at 0 range 8 .. 8;
-      PINC           at 0 range 9 .. 9;
-      MINC           at 0 range 10 .. 10;
-      PSIZE          at 0 range 11 .. 12;
-      MSIZE          at 0 range 13 .. 14;
-      PINCOS         at 0 range 15 .. 15;
-      PL             at 0 range 16 .. 17;
-      DBM            at 0 range 18 .. 18;
-      CT             at 0 range 19 .. 19;
-      Reserved_20_20 at 0 range 20 .. 20;
-      PBURST         at 0 range 21 .. 22;
-      MBURST         at 0 range 23 .. 24;
-      CHSEL          at 0 range 25 .. 27;
-      Reserved_28_31 at 0 range 28 .. 31;
-   end record;
-
-   subtype S7NDTR_NDT_Field is HAL.Short;
-
-   --  stream x number of data register
-   type S7NDTR_Register is record
-      --  Number of data items to transfer
-      NDT            : S7NDTR_NDT_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S7NDTR_Register use record
-      NDT            at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype S7FCR_FTH_Field is HAL.UInt2;
-   subtype S7FCR_FS_Field is HAL.UInt3;
-
-   --  stream x FIFO control register
-   type S7FCR_Register is record
-      --  FIFO threshold selection
-      FTH           : S7FCR_FTH_Field := 16#1#;
-      --  Direct mode disable
-      DMDIS         : Boolean := False;
-      --  Read-only. FIFO status
-      FS            : S7FCR_FS_Field := 16#4#;
-      --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
-      --  FIFO error interrupt enable
-      FEIE          : Boolean := False;
-      --  unspecified
-      Reserved_8_31 : HAL.UInt24 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for S7FCR_Register use record
-      FTH           at 0 range 0 .. 1;
-      DMDIS         at 0 range 2 .. 2;
-      FS            at 0 range 3 .. 5;
-      Reserved_6_6  at 0 range 6 .. 6;
-      FEIE          at 0 range 7 .. 7;
-      Reserved_8_31 at 0 range 8 .. 31;
-   end record;
+   --------------------------------
+   -- Stream cluster's Registers --
+   --------------------------------
 
    -----------------
    -- Peripherals --
@@ -1391,102 +539,8 @@ package STM32_SVD.DMA is
       LIFCR  : LIFCR_Register;
       --  high interrupt flag clear register
       HIFCR  : HIFCR_Register;
-      --  stream x configuration register
-      S0CR   : S0CR_Register;
-      --  stream x number of data register
-      S0NDTR : S0NDTR_Register;
-      --  stream x peripheral address register
-      S0PAR  : HAL.Word;
-      --  stream x memory 0 address register
-      S0M0AR : HAL.Word;
-      --  stream x memory 1 address register
-      S0M1AR : HAL.Word;
-      --  stream x FIFO control register
-      S0FCR  : S0FCR_Register;
-      --  stream x configuration register
-      S1CR   : S1CR_Register;
-      --  stream x number of data register
-      S1NDTR : S1NDTR_Register;
-      --  stream x peripheral address register
-      S1PAR  : HAL.Word;
-      --  stream x memory 0 address register
-      S1M0AR : HAL.Word;
-      --  stream x memory 1 address register
-      S1M1AR : HAL.Word;
-      --  stream x FIFO control register
-      S1FCR  : S1FCR_Register;
-      --  stream x configuration register
-      S2CR   : S2CR_Register;
-      --  stream x number of data register
-      S2NDTR : S2NDTR_Register;
-      --  stream x peripheral address register
-      S2PAR  : HAL.Word;
-      --  stream x memory 0 address register
-      S2M0AR : HAL.Word;
-      --  stream x memory 1 address register
-      S2M1AR : HAL.Word;
-      --  stream x FIFO control register
-      S2FCR  : S2FCR_Register;
-      --  stream x configuration register
-      S3CR   : S3CR_Register;
-      --  stream x number of data register
-      S3NDTR : S3NDTR_Register;
-      --  stream x peripheral address register
-      S3PAR  : HAL.Word;
-      --  stream x memory 0 address register
-      S3M0AR : HAL.Word;
-      --  stream x memory 1 address register
-      S3M1AR : HAL.Word;
-      --  stream x FIFO control register
-      S3FCR  : S3FCR_Register;
-      --  stream x configuration register
-      S4CR   : S4CR_Register;
-      --  stream x number of data register
-      S4NDTR : S4NDTR_Register;
-      --  stream x peripheral address register
-      S4PAR  : HAL.Word;
-      --  stream x memory 0 address register
-      S4M0AR : HAL.Word;
-      --  stream x memory 1 address register
-      S4M1AR : HAL.Word;
-      --  stream x FIFO control register
-      S4FCR  : S4FCR_Register;
-      --  stream x configuration register
-      S5CR   : S5CR_Register;
-      --  stream x number of data register
-      S5NDTR : S5NDTR_Register;
-      --  stream x peripheral address register
-      S5PAR  : HAL.Word;
-      --  stream x memory 0 address register
-      S5M0AR : HAL.Word;
-      --  stream x memory 1 address register
-      S5M1AR : HAL.Word;
-      --  stream x FIFO control register
-      S5FCR  : S5FCR_Register;
-      --  stream x configuration register
-      S6CR   : S6CR_Register;
-      --  stream x number of data register
-      S6NDTR : S6NDTR_Register;
-      --  stream x peripheral address register
-      S6PAR  : HAL.Word;
-      --  stream x memory 0 address register
-      S6M0AR : HAL.Word;
-      --  stream x memory 1 address register
-      S6M1AR : HAL.Word;
-      --  stream x FIFO control register
-      S6FCR  : S6FCR_Register;
-      --  stream x configuration register
-      S7CR   : S7CR_Register;
-      --  stream x number of data register
-      S7NDTR : S7NDTR_Register;
-      --  stream x peripheral address register
-      S7PAR  : HAL.Word;
-      --  stream x memory 0 address register
-      S7M0AR : HAL.Word;
-      --  stream x memory 1 address register
-      S7M1AR : HAL.Word;
-      --  stream x FIFO control register
-      S7FCR  : S7FCR_Register;
+      --  Stream registers
+      Stream : Stream_Clusters;
    end record
      with Volatile;
 
@@ -1495,54 +549,7 @@ package STM32_SVD.DMA is
       HISR   at 4 range 0 .. 31;
       LIFCR  at 8 range 0 .. 31;
       HIFCR  at 12 range 0 .. 31;
-      S0CR   at 16 range 0 .. 31;
-      S0NDTR at 20 range 0 .. 31;
-      S0PAR  at 24 range 0 .. 31;
-      S0M0AR at 28 range 0 .. 31;
-      S0M1AR at 32 range 0 .. 31;
-      S0FCR  at 36 range 0 .. 31;
-      S1CR   at 40 range 0 .. 31;
-      S1NDTR at 44 range 0 .. 31;
-      S1PAR  at 48 range 0 .. 31;
-      S1M0AR at 52 range 0 .. 31;
-      S1M1AR at 56 range 0 .. 31;
-      S1FCR  at 60 range 0 .. 31;
-      S2CR   at 64 range 0 .. 31;
-      S2NDTR at 68 range 0 .. 31;
-      S2PAR  at 72 range 0 .. 31;
-      S2M0AR at 76 range 0 .. 31;
-      S2M1AR at 80 range 0 .. 31;
-      S2FCR  at 84 range 0 .. 31;
-      S3CR   at 88 range 0 .. 31;
-      S3NDTR at 92 range 0 .. 31;
-      S3PAR  at 96 range 0 .. 31;
-      S3M0AR at 100 range 0 .. 31;
-      S3M1AR at 104 range 0 .. 31;
-      S3FCR  at 108 range 0 .. 31;
-      S4CR   at 112 range 0 .. 31;
-      S4NDTR at 116 range 0 .. 31;
-      S4PAR  at 120 range 0 .. 31;
-      S4M0AR at 124 range 0 .. 31;
-      S4M1AR at 128 range 0 .. 31;
-      S4FCR  at 132 range 0 .. 31;
-      S5CR   at 136 range 0 .. 31;
-      S5NDTR at 140 range 0 .. 31;
-      S5PAR  at 144 range 0 .. 31;
-      S5M0AR at 148 range 0 .. 31;
-      S5M1AR at 152 range 0 .. 31;
-      S5FCR  at 156 range 0 .. 31;
-      S6CR   at 160 range 0 .. 31;
-      S6NDTR at 164 range 0 .. 31;
-      S6PAR  at 168 range 0 .. 31;
-      S6M0AR at 172 range 0 .. 31;
-      S6M1AR at 176 range 0 .. 31;
-      S6FCR  at 180 range 0 .. 31;
-      S7CR   at 184 range 0 .. 31;
-      S7NDTR at 188 range 0 .. 31;
-      S7PAR  at 192 range 0 .. 31;
-      S7M0AR at 196 range 0 .. 31;
-      S7M1AR at 200 range 0 .. 31;
-      S7FCR  at 204 range 0 .. 31;
+      Stream at 16 range 0 .. 1535;
    end record;
 
    --  DMA controller
