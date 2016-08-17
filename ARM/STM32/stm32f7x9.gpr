@@ -1,5 +1,6 @@
 with "config";
 with "../../hal/HAL";
+with "../cortex_m/cortex_m7";
 
 library project STM32F7x9 is
 
@@ -9,11 +10,7 @@ library project STM32F7x9 is
    for Object_Dir use "obj/" & Config.Object_Subdir;
 
    for Source_Dirs use
-     ("../cortex_m",
-      "../cortex_m/fpu",
-      "../cortex_m/cache",
-      "../cortex_m/svd",
-      "drivers",
+     ("drivers",
       "svd/stm32f7x9",
       "devices/stm32f7x9",
       "drivers/i2c_stm32f7",
