@@ -231,7 +231,7 @@ package body HAL.Audio is
       Driver.Play;
 
       Start_Transfer_with_Interrupts
-        (Unit               => DMA_Out,
+        (This               => DMA_Out,
          Stream             => DMA_Out_Stream,
          Source             => Buffer (Buffer'First)'Address,
          Destination        => SAI_Out.ADR'Address,

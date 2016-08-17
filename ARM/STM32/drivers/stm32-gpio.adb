@@ -48,7 +48,7 @@ with System.Machine_Code;
 
 package body STM32.GPIO is
 
-   procedure Lock_The_Pin (Port : in out GPIO_Port;  Pin : Short);
+   procedure Lock_The_Pin (This : in out GPIO_Port;  Pin : Short);
    --  This is the routine that actually locks the pin for the port. It is an
    --  internal routine and has no preconditions. We use it to avoid redundant
    --  calls to the precondition that checks that the pin is not already
@@ -163,14 +163,14 @@ package body STM32.GPIO is
    -- Locked --
    ------------
 
-   function Locked (Pin : GPIO_Point) return Boolean is
-     (Pin.Periph.LCKR.LCK.Arr (Pin.Pin));
+   function Locked (This : GPIO_Point) return Boolean is
+     (This.Periph.LCKR.LCK.Arr (This.Pin));
 
    ------------------
    -- Lock_The_Pin --
    ------------------
 
-   procedure Lock_The_Pin (Port : in out GPIO_Port;  Pin : Short) is
+   procedure Lock_The_Pin (This : in out GPIO_Port;  Pin : Short) is
       Temp : Word;
       pragma Volatile (Temp);
 
@@ -218,7 +218,7 @@ package body STM32.GPIO is
            "str  r3, %0"          & LF & HT &  -- temp <- lckr
            "ldr  r3, [%1, #28]"   & LF & HT &
            "str  r3, %0"          & LF & HT,   -- temp <- lckr
-           Inputs => (Address'Asm_Input ("r", Port'Address), -- %1
+           Inputs => (Address'Asm_Input ("r", This'Address), -- %1
                      (Short'Asm_Input ("r", Pin))),            -- %2
            Outputs => (Word'Asm_Output ("=m", Temp)),  -- %0
            Volatile => True,
@@ -229,9 +229,9 @@ package body STM32.GPIO is
    -- Lock --
    ----------
 
-   procedure Lock (Point : GPIO_Point) is
+   procedure Lock (This : GPIO_Point) is
    begin
-      Lock_The_Pin (Point.Periph.all, Shift_Left (1, Point.Pin));
+      Lock_The_Pin (This.Periph.all, Shift_Left (1, This.Pin));
    end Lock;
 
    ----------
@@ -252,27 +252,27 @@ package body STM32.GPIO is
    ------------------
 
    procedure Configure_IO
-     (Point  : GPIO_Point;
+     (This   : GPIO_Point;
       Config : GPIO_Port_Configuration)
    is
-      MODER   : MODER_Register   := Point.Periph.MODER;
-      OTYPER  : OTYPER_Register  := Point.Periph.OTYPER;
-      OSPEEDR : OSPEEDR_Register := Point.Periph.OSPEEDR;
-      PUPDR   : PUPDR_Register   := Point.Periph.PUPDR;
+      MODER   : MODER_Register   := This.Periph.MODER;
+      OTYPER  : OTYPER_Register  := This.Periph.OTYPER;
+      OSPEEDR : OSPEEDR_Register := This.Periph.OSPEEDR;
+      PUPDR   : PUPDR_Register   := This.Periph.PUPDR;
 
    begin
-      MODER.Arr (Point.Pin)     :=
+      MODER.Arr (This.Pin)     :=
         Pin_IO_Modes'Enum_Rep (Config.Mode);
-      OTYPER.OT.Arr (Point.Pin) := Config.Output_Type = Open_Drain;
-      OSPEEDR.Arr (Point.Pin) :=
+      OTYPER.OT.Arr (This.Pin) := Config.Output_Type = Open_Drain;
+      OSPEEDR.Arr (This.Pin) :=
         Pin_Output_Speeds'Enum_Rep (Config.Speed);
-      PUPDR.Arr (Point.Pin)     :=
+      PUPDR.Arr (This.Pin)     :=
         Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
 
-      Point.Periph.MODER   := MODER;
-      Point.Periph.OTYPER  := OTYPER;
-      Point.Periph.OSPEEDR := OSPEEDR;
-      Point.Periph.PUPDR   := PUPDR;
+      This.Periph.MODER   := MODER;
+      This.Periph.OTYPER  := OTYPER;
+      This.Periph.OSPEEDR := OSPEEDR;
+      This.Periph.PUPDR   := PUPDR;
    end Configure_IO;
 
    ------------------
@@ -294,14 +294,14 @@ package body STM32.GPIO is
    ----------------------------------
 
    procedure Configure_Alternate_Function
-     (Point : GPIO_Point;
-      AF    : GPIO_Alternate_Function)
+     (This : GPIO_Point;
+      AF   : GPIO_Alternate_Function)
    is
    begin
-      if Point.Pin < 8 then
-         Point.Periph.AFRL.Arr (Point.Pin) := UInt4 (AF);
+      if This.Pin < 8 then
+         This.Periph.AFRL.Arr (This.Pin) := UInt4 (AF);
       else
-         Point.Periph.AFRH.Arr (Point.Pin) := UInt4 (AF);
+         This.Periph.AFRH.Arr (This.Pin) := UInt4 (AF);
       end if;
    end Configure_Alternate_Function;
 
@@ -324,10 +324,10 @@ package body STM32.GPIO is
    -------------------------------
 
    function Get_Interrupt_Line_Number
-     (Point : GPIO_Point) return EXTI.External_Line_Number
+     (This : GPIO_Point) return EXTI.External_Line_Number
    is
    begin
-      return EXTI.External_Line_Number'Val (Point.Pin);
+      return EXTI.External_Line_Number'Val (This.Pin);
    end Get_Interrupt_Line_Number;
 
    -----------------------
@@ -335,17 +335,17 @@ package body STM32.GPIO is
    -----------------------
 
    procedure Configure_Trigger
-     (Point   : GPIO_Point;
+     (This    : GPIO_Point;
       Trigger : EXTI.External_Triggers)
    is
       use STM32.EXTI;
       Line : constant External_Line_Number :=
-        External_Line_Number'Val (Point.Pin);
+        External_Line_Number'Val (This.Pin);
       use STM32.SYSCFG, STM32.RCC;
    begin
       SYSCFG_Clock_Enable;
 
-      Connect_External_Interrupt (Point);
+      Connect_External_Interrupt (This);
       if Trigger in Interrupt_Triggers then
          Enable_External_Interrupt (Line, Trigger);
       else

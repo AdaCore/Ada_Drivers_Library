@@ -21,35 +21,35 @@ package HAL.UART is
    function Data_Size (Port : UART_Port) return UART_Data_Size is abstract;
 
    procedure Transmit
-     (Port    : in out UART_Port;
+     (This    : in out UART_Port;
       Data    : UART_Data_8b;
       Status  : out UART_Status;
       Timeout : Natural := 1000) is abstract
      with
-       Pre'Class => Data_Size (Port) = Data_Size_8b;
+       Pre'Class => Data_Size (This) = Data_Size_8b;
 
    procedure Transmit
-     (Port    : in out UART_Port;
+     (This    : in out UART_Port;
       Data    : UART_Data_9b;
       Status  : out UART_Status;
       Timeout : Natural := 1000) is abstract
      with
-       Pre'Class => Data_Size (Port) = Data_Size_9b;
+       Pre'Class => Data_Size (This) = Data_Size_9b;
 
    procedure Receive
-     (Port    : in out UART_Port;
+     (This    : in out UART_Port;
       Data    : out UART_Data_8b;
       Status  : out UART_Status;
       Timeout : Natural := 1000) is abstract
      with
-       Pre'Class => Data_Size (Port) = Data_Size_8b;
+       Pre'Class => Data_Size (This) = Data_Size_8b;
 
    procedure Receive
-     (Port    : in out UART_Port;
+     (This    : in out UART_Port;
       Data    : out UART_Data_9b;
       Status  : out UART_Status;
       Timeout : Natural := 1000) is abstract
      with
-       Pre'Class => Data_Size (Port) = Data_Size_9b;
+       Pre'Class => Data_Size (This) = Data_Size_9b;
 
 end HAL.UART;

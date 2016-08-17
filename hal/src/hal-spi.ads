@@ -18,38 +18,38 @@ package HAL.SPI is
 
    type SPI_Port_Ref is access all SPI_Port'Class;
 
-   function Data_Size (Port : SPI_Port) return SPI_Data_Size is abstract;
+   function Data_Size (This : SPI_Port) return SPI_Data_Size is abstract;
 
    procedure Transmit
-     (Port    : in out SPI_Port;
+     (This    : in out SPI_Port;
       Data    : SPI_Data_8b;
       Status  : out SPI_Status;
       Timeout : Natural := 1000) is abstract
      with
-       Pre'Class => Data_Size (Port) = Data_Size_8b;
+       Pre'Class => Data_Size (This) = Data_Size_8b;
 
    procedure Transmit
-     (Port    : in out SPI_Port;
+     (This    : in out SPI_Port;
       Data    : SPI_Data_16b;
       Status  : out SPI_Status;
       Timeout : Natural := 1000) is abstract
      with
-       Pre'Class => Data_Size (Port) = Data_Size_16b;
+       Pre'Class => Data_Size (This) = Data_Size_16b;
 
    procedure Receive
-     (Port    : in out SPI_Port;
+     (This    : in out SPI_Port;
       Data    : out SPI_Data_8b;
       Status  : out SPI_Status;
       Timeout : Natural := 1000) is abstract
      with
-       Pre'Class => Data_Size (Port) = Data_Size_8b;
+       Pre'Class => Data_Size (This) = Data_Size_8b;
 
    procedure Receive
-     (Port    : in out SPI_Port;
+     (This    : in out SPI_Port;
       Data    : out SPI_Data_16b;
       Status  : out SPI_Status;
       Timeout : Natural := 1000) is abstract
      with
-       Pre'Class => Data_Size (Port) = Data_Size_16b;
+       Pre'Class => Data_Size (This) = Data_Size_16b;
 
 end HAL.SPI;

@@ -161,50 +161,50 @@ package STM32.SDMMC is
       Wide_Bus_8B => 2);
 
    function Initialize
-     (Controller : in out SDMMC_Controller;
-      Info       : out Card_Information) return SD_Error;
+     (This : in out SDMMC_Controller;
+      Info : out Card_Information) return SD_Error;
 
-   function Initialized (Controller : SDMMC_Controller) return Boolean;
+   function Initialized (This : SDMMC_Controller) return Boolean;
 
    function Get_Card_Type
-     (Controller : SDMMC_Controller) return Supported_SD_Memory_Cards
-     with Pre => Initialized (Controller);
+     (This : SDMMC_Controller) return Supported_SD_Memory_Cards
+     with Pre => Initialized (This);
 
    function Configure_Wide_Bus_Mode
-     (Controller : in out SDMMC_Controller;
+     (This       : in out SDMMC_Controller;
       Wide_Mode  : Wide_Bus_Mode) return SD_Error;
 
    type SD_Data is array (Unsigned_32 range <>) of Byte
    with Pack;
 
    function Read_Blocks
-     (Controller : in out SDMMC_Controller;
-      Addr       : Unsigned_64;
-      Data       : out SD_Data) return SD_Error
+     (This : in out SDMMC_Controller;
+      Addr : Unsigned_64;
+      Data : out SD_Data) return SD_Error
      with Pre => Data'Length mod 512 = 0;
 
    function Read_Blocks_DMA
-     (Controller : in out SDMMC_Controller;
-      Addr       : Unsigned_64;
-      DMA        : STM32.DMA.DMA_Controller;
-      Stream     : STM32.DMA.DMA_Stream_Selector;
-      Data       : out SD_Data) return SD_Error;
+     (This   : in out SDMMC_Controller;
+      Addr   : Unsigned_64;
+      DMA    : STM32.DMA.DMA_Controller;
+      Stream : STM32.DMA.DMA_Stream_Selector;
+      Data   : out SD_Data) return SD_Error;
 
    function Write_Blocks_DMA
-     (Controller : in out SDMMC_Controller;
-      Addr       : Unsigned_64;
-      DMA        : STM32.DMA.DMA_Controller;
-      Stream     : STM32.DMA.DMA_Stream_Selector;
-      Data       : SD_Data) return SD_Error;
+     (This   : in out SDMMC_Controller;
+      Addr   : Unsigned_64;
+      DMA    : STM32.DMA.DMA_Controller;
+      Stream : STM32.DMA.DMA_Stream_Selector;
+      Data   : SD_Data) return SD_Error;
 
    function Stop_Transfer
-     (Controller : in out SDMMC_Controller) return SD_Error;
+     (This : in out SDMMC_Controller) return SD_Error;
 
    function Get_FIFO_Address
-     (Controller : SDMMC_Controller) return System.Address;
+     (This : SDMMC_Controller) return System.Address;
 
    function Get_Transfer_Status
-     (Controller : in out SDMMC_Controller) return SD_Error;
+     (This : in out SDMMC_Controller) return SD_Error;
 
    type SDMMC_Flags is
      (Data_End,
@@ -218,14 +218,14 @@ package STM32.SDMMC is
    subtype SDMMC_Clearable_Flags is SDMMC_Flags range Data_End .. TX_Underrun;
 
    function Get_Flag
-     (Controller : SDMMC_Controller;
-      Flag       : SDMMC_Flags) return Boolean;
+     (This : SDMMC_Controller;
+      Flag : SDMMC_Flags) return Boolean;
 
    procedure Clear_Flag
-     (Controller : in out SDMMC_Controller;
-      Flag       : SDMMC_Clearable_Flags);
+     (This : in out SDMMC_Controller;
+      Flag : SDMMC_Clearable_Flags);
 
-   procedure Clear_Static_Flags (Controller : in out SDMMC_Controller);
+   procedure Clear_Static_Flags (This : in out SDMMC_Controller);
 
    type SDMMC_Interrupts is
      (Data_End_Interrupt,
@@ -237,15 +237,15 @@ package STM32.SDMMC is
       RX_Overrun_Interrupt);
 
    procedure Enable_Interrupt
-     (Controller : in out SDMMC_Controller;
-      Interrupt  : SDMMC_Interrupts);
+     (This      : in out SDMMC_Controller;
+      Interrupt : SDMMC_Interrupts);
 
    procedure Disable_Interrupt
-     (Controller : in out SDMMC_Controller;
-      Interrupt  : SDMMC_Interrupts);
+     (This      : in out SDMMC_Controller;
+      Interrupt : SDMMC_Interrupts);
 
    procedure Disable_Data
-     (Controller : in out SDMMC_Controller);
+     (This : in out SDMMC_Controller);
 
    type SDMMC_Operation is
      (No_Operation,
@@ -255,7 +255,7 @@ package STM32.SDMMC is
       Write_Multiple_Blocks_Operation);
 
    function Last_Operation
-     (Controller : SDMMC_Controller) return SDMMC_Operation;
+     (This : SDMMC_Controller) return SDMMC_Operation;
 
 private
 
@@ -368,33 +368,33 @@ private
       return SDMMC_Controller
    is (Periph, CID => (others => 0), CSD => (others => 0), others => <>);
 
-   function Initialized (Controller : SDMMC_Controller) return Boolean
-   is (Controller.CID /= (0, 0, 0, 0));
+   function Initialized (This : SDMMC_Controller) return Boolean
+   is (This.CID /= (0, 0, 0, 0));
 
    function Get_Card_Type
-     (Controller : SDMMC_Controller) return Supported_SD_Memory_Cards
-   is (Controller.Card_Type);
+     (This : SDMMC_Controller) return Supported_SD_Memory_Cards
+   is (This.Card_Type);
 
    type Data_Direction is (Read, Write);
 
    function Get_FIFO_Address
-     (Controller : SDMMC_Controller) return System.Address
-   is (Controller.Periph.FIFO'Address);
+     (This : SDMMC_Controller) return System.Address
+   is (This.Periph.FIFO'Address);
 
    function Get_Flag
-     (Controller : SDMMC_Controller;
-      Flag       : SDMMC_Flags) return Boolean
+     (This : SDMMC_Controller;
+      Flag : SDMMC_Flags) return Boolean
    is (case Flag is
-          when Data_End      => Controller.Periph.STA.DATAEND,
-          when Data_CRC_Fail => Controller.Periph.STA.DCRCFAIL,
-          when Data_Timeout  => Controller.Periph.STA.DTIMEOUT,
-          when RX_Overrun    => Controller.Periph.STA.RXOVERR,
-          when TX_Underrun   => Controller.Periph.STA.TXUNDERR,
-          when RX_Active     => Controller.Periph.STA.RXACT,
-          when TX_Active     => Controller.Periph.STA.TXACT);
+          when Data_End      => This.Periph.STA.DATAEND,
+          when Data_CRC_Fail => This.Periph.STA.DCRCFAIL,
+          when Data_Timeout  => This.Periph.STA.DTIMEOUT,
+          when RX_Overrun    => This.Periph.STA.RXOVERR,
+          when TX_Underrun   => This.Periph.STA.TXUNDERR,
+          when RX_Active     => This.Periph.STA.RXACT,
+          when TX_Active     => This.Periph.STA.TXACT);
 
    function Last_Operation
-     (Controller : SDMMC_Controller) return SDMMC_Operation
-   is (Controller.Operation);
+     (This : SDMMC_Controller) return SDMMC_Operation
+   is (This.Operation);
 
 end STM32.SDMMC;

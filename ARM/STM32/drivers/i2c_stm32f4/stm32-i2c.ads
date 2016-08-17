@@ -86,16 +86,16 @@ package STM32.I2C is
       limited new HAL.I2C.I2C_Port with private;
 
    procedure Configure
-     (Handle : in out I2C_Port;
+     (This : in out I2C_Port;
       Conf : I2C_Configuration)
-     with Post => Port_Enabled (Handle);
+     with Post => Port_Enabled (This);
 
    procedure Set_State (This : in out I2C_Port; Enabled : Boolean);
    function Port_Enabled (This : I2C_Port) return Boolean;
 
    overriding
    procedure Master_Transmit
-     (Handle  : in out I2C_Port;
+     (This    : in out I2C_Port;
       Addr    : HAL.I2C.I2C_Address;
       Data    : HAL.I2C.I2C_Data;
       Status  : out HAL.I2C.I2C_Status;
@@ -103,7 +103,7 @@ package STM32.I2C is
 
    overriding
    procedure Master_Receive
-     (Handle  : in out I2C_Port;
+     (This    : in out I2C_Port;
       Addr    : HAL.I2C.I2C_Address;
       Data    : out HAL.I2C.I2C_Data;
       Status  : out HAL.I2C.I2C_Status;
@@ -111,7 +111,7 @@ package STM32.I2C is
 
    overriding
    procedure Mem_Write
-     (Handle        : in out I2C_Port;
+     (This          : in out I2C_Port;
       Addr          : HAL.I2C.I2C_Address;
       Mem_Addr      : Short;
       Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
@@ -121,7 +121,7 @@ package STM32.I2C is
 
    overriding
    procedure Mem_Read
-     (Handle        : in out I2C_Port;
+     (This          : in out I2C_Port;
       Addr          : HAL.I2C.I2C_Address;
       Mem_Addr      : Short;
       Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;

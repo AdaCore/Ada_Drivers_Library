@@ -63,56 +63,56 @@ package STM32.I2C is
    type I2C_Port (Periph : not null access Internal_I2C_Port) is
       new HAL.I2C.I2C_Port with private;
 
-   function Port_Enabled (Port : I2C_Port) return Boolean
+   function Port_Enabled (This : I2C_Port) return Boolean
      with Inline;
 
    procedure Configure
-     (Port          : in out I2C_Port;
+     (This          : in out I2C_Port;
       Configuration : I2C_Configuration)
-     with Pre  => not Is_Configured (Port),
-          Post => Is_Configured (Port);
+     with Pre  => not Is_Configured (This),
+          Post => Is_Configured (This);
 
    function Is_Configured (Port : I2C_Port) return Boolean;
 
    overriding
    procedure Master_Transmit
-     (Port    : in out I2C_Port;
+     (This    : in out I2C_Port;
       Addr    : HAL.I2C.I2C_Address;
       Data    : HAL.I2C.I2C_Data;
       Status  : out HAL.I2C.I2C_Status;
       Timeout : Natural := 1000)
-     with Pre => Is_Configured (Port);
+     with Pre => Is_Configured (This);
 
    overriding
    procedure Master_Receive
-     (Port    : in out I2C_Port;
+     (This    : in out I2C_Port;
       Addr    : HAL.I2C.I2C_Address;
       Data    : out HAL.I2C.I2C_Data;
       Status  : out HAL.I2C.I2C_Status;
       Timeout : Natural := 1000)
-     with Pre => Is_Configured (Port);
+     with Pre => Is_Configured (This);
 
    overriding
    procedure Mem_Write
-     (Port          : in out I2C_Port;
+     (This          : in out I2C_Port;
       Addr          : HAL.I2C.I2C_Address;
       Mem_Addr      : Short;
       Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
       Data          : HAL.I2C.I2C_Data;
       Status        : out HAL.I2C.I2C_Status;
       Timeout       : Natural := 1000)
-     with Pre => Is_Configured (Port);
+     with Pre => Is_Configured (This);
 
    overriding
    procedure Mem_Read
-     (Port          : in out I2C_Port;
+     (This          : in out I2C_Port;
       Addr          : HAL.I2C.I2C_Address;
       Mem_Addr      : Short;
       Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
       Data          : out HAL.I2C.I2C_Data;
       Status        : out HAL.I2C.I2C_Status;
       Timeout       : Natural := 1000)
-     with Pre => Is_Configured (Port);
+     with Pre => Is_Configured (This);
 
 private
 
