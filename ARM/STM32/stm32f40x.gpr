@@ -13,7 +13,7 @@ library project STM32F40x is
       "../cortex_m/fpu",
       "../cortex_m/nocache",
       "../cortex_m/svd",
-      "drivers",
+      "drivers/dma",
       "svd/stm32f40x",
       "devices/stm32f40x",
       "drivers/i2c_stm32f4",
