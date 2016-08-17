@@ -367,4 +367,45 @@ package body STM32.GPIO is
       end loop;
    end Configure_Trigger;
 
+   ------------------
+   -- Configure_IO --
+   ------------------
+
+   procedure Configure_IO
+     (Point  : GPIO_AF_Point;
+      Config : GPIO_Port_Configuration)
+   is
+   begin
+      Point.Point.Configure_IO (Config);
+      Point.Point.Configure_Alternate_Function (Point.AF);
+   end Configure_IO;
+
+   ------------------
+   -- Configure_IO --
+   ------------------
+
+   procedure Configure_IO
+     (Points : GPIO_AF_Points;
+      Config : GPIO_Port_Configuration)
+   is
+   begin
+      for Point of Points loop
+         Point.Point.Configure_IO (Config);
+         Point.Point.Configure_Alternate_Function (Point.AF);
+      end loop;
+   end Configure_IO;
+
+   -----------------------
+   -- Configure_Trigger --
+   -----------------------
+
+   procedure Configure_Trigger
+     (Points  : GPIO_AF_Points;
+      Trigger : EXTI.External_Triggers)
+   is
+   begin
+      for Point of Points loop
+         Point.Point.Configure_Trigger (Trigger);
+      end loop;
+   end Configure_Trigger;
 end STM32.GPIO;

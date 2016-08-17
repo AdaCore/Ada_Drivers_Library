@@ -144,7 +144,7 @@ package body STM32.Board is
       Enable_Clock (Port);
       Reset (Port);
 
-      Configure_Alternate_Function (Points, GPIO_AF_I2C);
+      Configure_Alternate_Function (Points, GPIO_AF_4_I2C2);
       Configure_IO (Points,
                     (Speed       => Speed_25MHz,
                      Mode        => Mode_AF,

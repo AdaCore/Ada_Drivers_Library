@@ -85,7 +85,7 @@ package body OpenMV is
 
       STM32.GPIO.Configure_Alternate_Function
         (Shield_SPI_Points,
-         STM32.GPIO.GPIO_AF_SPI2);
+         GPIO_AF_5_SPI2);
 
       STM32.Device.Enable_Clock (Shield_SPI);
 

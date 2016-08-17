@@ -93,10 +93,10 @@ package body STM32.Board is
       Enable_Clock (Points);
 
       if Id = I2C_Id_1 then
-         Configure_Alternate_Function (Points, GPIO_AF_I2C);
+         Configure_Alternate_Function (Points, GPIO_AF_4_I2C1);
       else
-         Configure_Alternate_Function (I2C4_SCL, GPIO_AF_I2C);
-         Configure_Alternate_Function (I2C4_SDA, GPIO_AF11_I2C4);
+         Configure_Alternate_Function (I2C4_SCL, GPIO_AF_4_I2C4);
+         Configure_Alternate_Function (I2C4_SDA, GPIO_AF_11_I2C4);
       end if;
 
       Configure_IO (Points,
