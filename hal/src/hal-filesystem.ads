@@ -1,3 +1,4 @@
+with Interfaces; use Interfaces;
 package HAL.Filesystem is
 
    subtype Pathname is String;
@@ -34,6 +35,10 @@ package HAL.Filesystem is
                         Read_Would_Block,
                         Call_Was_Interrupted);
 
+   type User_ID is new Natural;
+   type Group_ID is new Natural;
+   type IO_Count is new Unsigned_64;
+
    type FS_Driver is limited interface;
    type FS_Driver_Ref is access all FS_Driver'Class;
 
@@ -41,4 +46,40 @@ package HAL.Filesystem is
                          Path : Pathname;
                          Kind : File_Kind)
                          return Status_Kind is abstract;
+
+   function Create_Directory (This : in out FS_Driver;
+                              Path : Pathname)
+                              return Status_Kind is abstract;
+
+   function Unlink (This : in out FS_Driver;
+                    Path : Pathname)
+                    return Status_Kind is abstract;
+
+   function Remove_Directory (This : in out FS_Driver;
+                              Path : Pathname)
+                              return Status_Kind is abstract;
+
+   function Rename (This : in out FS_Driver;
+                    Old_Path : Pathname;
+                    New_Path : Pathname)
+                    return Status_Kind is abstract;
+
+   function Change_Permissions (This        : in out FS_Driver;
+                                Path        : Pathname;
+                                Permissions : Permission_Set)
+                                return Status_Kind is abstract;
+
+   function Change_Owner_And_Group (This  : in out FS_Driver;
+                                    Path  : Pathname;
+                                    Owner : User_ID;
+                                    Group : Group_ID)
+                                    return Status_Kind is abstract;
+
+   function Change_Permissions (This   : in out FS_Driver;
+                                Path   : Pathname;
+                                Lenght : IO_Count)
+                                return Status_Kind is abstract;
+
+
+
 end HAL.Filesystem;
