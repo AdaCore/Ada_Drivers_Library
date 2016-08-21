@@ -42,6 +42,16 @@ package HAL.Filesystem is
    type FS_Driver is limited interface;
    type FS_Driver_Ref is access all FS_Driver'Class;
 
+   type File_Handle is limited interface;
+   type File_Handle_Ref is access all File_Handle'Class;
+
+   type Directory_Handle is limited interface;
+   type Directory_Handle_Ref is access all Directory_Handle'Class;
+
+   ---------------
+   -- FS_Driver --
+   ---------------
+
    function Create_Node (This : in out FS_Driver;
                          Path : Pathname;
                          Kind : File_Kind)
@@ -80,6 +90,46 @@ package HAL.Filesystem is
                                 Lenght : IO_Count)
                                 return Status_Kind is abstract;
 
+   function Open (This   : in out FS_Driver;
+                  Path   : Pathname;
+                  Handle : out File_Handle_Ref)
+                  return Status_Kind is abstract;
 
+   function Open_Directory (This   : in out FS_Driver;
+                            Path   : Pathname;
+                            Handle : out Directory_Handle_Ref)
+                            return Status_Kind is abstract;
 
+   function Close_Directory (This    : in out FS_Driver;
+                             Handle : out Directory_Handle_Ref)
+                             return Status_Kind is abstract;
+
+   ------------------
+   --  File_Handle --
+   ------------------
+
+   function Read (This : in out File_Handle;
+                  Data : out Byte_Array)
+                  return Status_Kind is abstract;
+
+   function Write (This : in out File_Handle;
+                   Data : Byte_Array)
+                   return Status_Kind is abstract;
+
+   function Seek (This   : in out File_Handle;
+                  Offset : IO_Count)
+                  return Status_Kind is abstract;
+
+   ----------------------
+   -- Directory_Handle --
+   ----------------------
+
+   type Directory_Entry is record
+      Entry_Type : File_Kind;
+   end record;
+
+   function Read_Entry (This         : in out Directory_Handle;
+                        Entry_Number : Natural;
+                        Dir_Entry    : Directory_Entry)
+                        return Status_Kind is abstract;
 end HAL.Filesystem;
