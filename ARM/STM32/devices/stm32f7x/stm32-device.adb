@@ -94,7 +94,19 @@ package body STM32.Device is
    is
    begin
       for Point of Points loop
-         Enable_Clock (Point);
+         Enable_Clock (Point.Periph.all);
+      end loop;
+   end Enable_Clock;
+
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
+   procedure Enable_Clock (Points : GPIO_AF_Points)
+   is
+   begin
+      for Point of Points loop
+         Enable_Clock (Point.Point.Periph.all);
       end loop;
    end Enable_Clock;
 

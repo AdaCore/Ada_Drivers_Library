@@ -36,7 +36,7 @@ package body Framebuffer_ILI9341 is
       Conf.Output_Type := Push_Pull;
       Conf.Resistors   := Floating;
 
-      Configure_Alternate_Function (SPI_Pins, GPIO_AF_SPI5);
+      Configure_Alternate_Function (SPI_Pins, GPIO_AF_5_SPI5);
       Configure_IO (SPI_Pins, Conf);
 
       Reset (LCD_SPI);
@@ -61,20 +61,22 @@ package body Framebuffer_ILI9341 is
    -- LCD_Pins_Init --
    -------------------
 
-   procedure LCD_Pins_Init is
+   procedure LCD_Pins_Init
+   is
+      LCD_Ctrl_Pins : constant GPIO_Points := (LCD_RESET, LCD_CSX, LCD_WRX_DCX);
    begin
-      Enable_Clock (GPIO_Points'(LCD_RESET, LCD_CSX, LCD_WRX_DCX));
+      Enable_Clock (LCD_Ctrl_Pins);
       Enable_Clock (LCD_PINS);
 
       Configure_IO
-        (Points => (LCD_RESET, LCD_CSX, LCD_WRX_DCX),
+        (Points => LCD_Ctrl_Pins,
          Config => (Speed       => Speed_50MHz,
                     Mode        => Mode_Out,
                     Output_Type => Push_Pull,
                     Resistors   => Floating));
 
-      Configure_Alternate_Function (LCD_PINS, GPIO_AF_LTDC);
-      Configure_Alternate_Function (LCD_RGB_AF9, GPIO_AF_LTDC_2);
+      Configure_Alternate_Function (LCD_PINS, GPIO_AF_14_LTDC);
+      Configure_Alternate_Function (LCD_RGB_AF9, GPIO_AF_9_LTDC);
       Configure_IO
         (Points => LCD_PINS,
          Config => (Speed       => Speed_50MHz,

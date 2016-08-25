@@ -118,7 +118,7 @@ private
    Reset       : GPIO_Point renames PD11;
    SPI_Chip    : SPI_Port renames SPI_5;
 
-   SPI_AF      : constant GPIO_Alternate_Function := GPIO_AF_SPI5;
+   SPI_AF      : constant GPIO_Alternate_Function := GPIO_AF_5_SPI5;
    SPI_SCK     : GPIO_Point renames PF7;
    SPI_MISO    : GPIO_Point renames PF8;
    SPI_MOSI    : GPIO_Point renames PF9;

@@ -81,7 +81,8 @@ package body Media_Reader.SDCard is
       Enable_Clock (SD_DMA);
 
       --  Enable the GPIOs
-      Enable_Clock (SD_Pins & SD_Detect_Pin);
+      Enable_Clock (SD_Detect_Pin);
+      Enable_Clock (SD_Pins);
 
       --  GPIO configuration for the SDIO pins
       Configure_IO
@@ -90,7 +91,6 @@ package body Media_Reader.SDCard is
           Output_Type => Push_Pull,
           Speed       => Speed_High,
           Resistors   => Pull_Up));
-      Configure_Alternate_Function (SD_Pins, GPIO_AF_SDIO);
 
       --  GPIO configuration for the SD-Detect pin
       Configure_IO

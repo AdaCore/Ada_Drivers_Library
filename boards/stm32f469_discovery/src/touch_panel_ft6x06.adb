@@ -62,7 +62,7 @@ package body Touch_Panel_FT6x06 is
 
       Reset (TP_I2C);
 
-      Configure_Alternate_Function (Pins, GPIO_AF_I2C);
+      Configure_Alternate_Function (Pins, GPIO_AF_4_I2C1);
       Configure_IO (Pins,
                     (Speed       => Speed_25MHz,
                      Mode        => Mode_AF,

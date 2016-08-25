@@ -194,7 +194,7 @@ package body OpenMV.Sensor is
          GPIO_Conf.Output_Type := Push_Pull;
          GPIO_Conf.Resistors := Pull_Down;
          Configure_IO (DCMI_AF_Points, GPIO_Conf);
-         Configure_Alternate_Function (DCMI_AF_Points, GPIO_AF_DCMI);
+         Configure_Alternate_Function (DCMI_AF_Points, GPIO_AF_13_DCMI);
       end Initialize_IO;
 
       ---------------------

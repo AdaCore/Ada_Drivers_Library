@@ -75,16 +75,16 @@ package body STM32.Eth is
       --  Select RMII (before enabling the clocks)
       STM32_SVD.SYSCFG.SYSCFG_Periph.PMC.MII_RMII_SEL := True;
 
-      Configure_Alternate_Function (PA1,  GPIO_AF_ETH); -- RMII_REF_CLK
-      Configure_Alternate_Function (PA2,  GPIO_AF_ETH); -- RMII_MDIO
-      Configure_Alternate_Function (PA7,  GPIO_AF_ETH); -- RMII_CRS_DV
-      Configure_Alternate_Function (PC1,  GPIO_AF_ETH); -- RMII_MDC
-      Configure_Alternate_Function (PC4,  GPIO_AF_ETH); -- RMII_RXD0
-      Configure_Alternate_Function (PC5,  GPIO_AF_ETH); -- RMII_RXD1
-      Configure_Alternate_Function (PG2,  GPIO_AF_ETH); -- RMII_RXER
-      Configure_Alternate_Function (PG11, GPIO_AF_ETH); -- RMII_TX_EN
-      Configure_Alternate_Function (PG13, GPIO_AF_ETH); -- RMII_TXD0
-      Configure_Alternate_Function (PG14, GPIO_AF_ETH); -- RMII_TXD1
+      Configure_Alternate_Function (PA1,  GPIO_AF_11_ETH); -- RMII_REF_CLK
+      Configure_Alternate_Function (PA2,  GPIO_AF_11_ETH); -- RMII_MDIO
+      Configure_Alternate_Function (PA7,  GPIO_AF_11_ETH); -- RMII_CRS_DV
+      Configure_Alternate_Function (PC1,  GPIO_AF_11_ETH); -- RMII_MDC
+      Configure_Alternate_Function (PC4,  GPIO_AF_11_ETH); -- RMII_RXD0
+      Configure_Alternate_Function (PC5,  GPIO_AF_11_ETH); -- RMII_RXD1
+      Configure_Alternate_Function (PG2,  GPIO_AF_11_ETH); -- RMII_RXER
+      Configure_Alternate_Function (PG11, GPIO_AF_11_ETH); -- RMII_TX_EN
+      Configure_Alternate_Function (PG13, GPIO_AF_11_ETH); -- RMII_TXD0
+      Configure_Alternate_Function (PG14, GPIO_AF_11_ETH); -- RMII_TXD1
       Configure_IO (PA1, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
       Configure_IO (PA2, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
       Configure_IO (PA7, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
