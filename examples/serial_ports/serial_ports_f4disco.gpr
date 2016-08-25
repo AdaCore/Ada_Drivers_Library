@@ -1,5 +1,4 @@
-with "../../config.gpr";
-with "../../boards/stm32f4_discovery.gpr";
+with "../../boards/stm32f407_discovery.gpr";
 
 project Serial_Ports_F4Disco extends "../common/common.gpr" is
 
@@ -13,7 +12,7 @@ project Serial_Ports_F4Disco extends "../common/common.gpr" is
 
    for Object_Dir use "obj/stm32f4";
 
-   for Runtime ("Ada") use STM32F4_Discovery'Runtime ("Ada");
+   for Runtime ("Ada") use STM32F407_Discovery'Runtime ("Ada");
 
    package Builder is
       for Global_Configuration_Pragmas use "gnat.adc";
