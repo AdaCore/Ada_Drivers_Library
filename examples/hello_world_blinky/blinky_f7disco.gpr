@@ -1,9 +1,8 @@
-with "../../config.gpr";
-with "../../boards/stm32f7_discovery.gpr";
+with "../../boards/stm32f746_discovery.gpr";
 
 project Blinky_F7Disco extends "../common/common.gpr" is
 
-  for Runtime ("Ada") use STM32F7_Discovery'Runtime("Ada");
+  for Runtime ("Ada") use STM32F746_Discovery'Runtime("Ada");
   for Target use "arm-eabi";
   for Main use ("blinky.adb");
   for Languages use ("Ada");

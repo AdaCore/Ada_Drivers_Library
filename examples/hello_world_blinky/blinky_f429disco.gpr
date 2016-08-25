@@ -1,4 +1,3 @@
-with "../../config.gpr";
 with "../../boards/stm32f429_discovery.gpr";
 
 project Blinky_F429Disco extends "../common/common.gpr" is
