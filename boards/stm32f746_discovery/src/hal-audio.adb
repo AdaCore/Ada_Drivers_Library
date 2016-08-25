@@ -111,7 +111,7 @@ package body HAL.Audio is
           Speed       => Speed_High,
           Resistors   => Floating));
       Configure_Alternate_Function
-        (SAI_Pins, GPIO_AF_SAI2);
+        (SAI_Pins, GPIO_AF_10_SAI2);
 
       Enable_Clock (DMA_Out);
 

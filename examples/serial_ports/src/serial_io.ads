@@ -29,6 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with STM32;         use STM32;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.USARTs;  use STM32.USARTs;
 

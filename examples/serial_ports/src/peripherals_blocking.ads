@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.GPIO;   use STM32.GPIO;
 with STM32.Device; use STM32.Device;
 
 with Serial_IO.Blocking;  use Serial_IO.Blocking;
@@ -41,7 +40,7 @@ package Peripherals_Blocking is
    --  the specific port, pins, and USART selections are arbitrary.
    Peripheral : aliased Serial_IO.Peripheral_Descriptor :=
                   (Transceiver    => USART_1'Access,
-                   Transceiver_AF => GPIO_AF_USART1,
+                   Transceiver_AF => GPIO_AF_7_USART1,
                    Tx_Pin         => PB6,
                    Rx_Pin         => PB7);
 

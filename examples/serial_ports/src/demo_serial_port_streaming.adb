@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 --  **************************************************************************
---  NOTE: THIS PROGRAM REQUIRES THE RAVENSCAR-FULL-* RUNTIME LIBRARIES. 
+--  NOTE: THIS PROGRAM REQUIRES THE RAVENSCAR-FULL-* RUNTIME LIBRARIES.
 --  Set the scenario variable accordingly.
 --  **************************************************************************
 

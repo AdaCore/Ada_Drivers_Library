@@ -41,7 +41,7 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with STM32.Board;
+with STM32.Board;          use STM32;
 with STM32.I2C;            use STM32.I2C;
 with STM32.GPIO;           use STM32.GPIO;
 
@@ -57,10 +57,10 @@ package body Touch_Panel_STMPE811 is
    use type HAL.I2C.I2C_Status;
 
    SCL      : GPIO_Point renames PA8;
-   SCL_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C;
+   SCL_AF   : constant GPIO_Alternate_Function := GPIO_AF_4_I2C3;
 
    SDA      : GPIO_Point renames PC9;
-   SDA_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C;
+   SDA_AF   : constant GPIO_Alternate_Function := GPIO_AF_4_I2C3;
 
    procedure TP_Ctrl_Lines;
    procedure TP_I2C_Config;

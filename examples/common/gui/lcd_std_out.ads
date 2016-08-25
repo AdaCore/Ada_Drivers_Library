@@ -24,9 +24,6 @@
 --  This package provides a set of convenience routines for putting characters
 --  and strings out to the LCD.
 
-with STM32.GPIO; use STM32.GPIO;
-with STM32.SPI;  use STM32.SPI;
-
 with STM32.Device;  use STM32.Device;
 with BMP_Fonts;     use BMP_Fonts;
 
@@ -108,19 +105,5 @@ package LCD_Std_Out is
    --  Prints the string, starting at the specified location. Has no other
    --  effect whatsoever, especially none on the state of the current logical
    --  line or logical column. Does not wrap around.
-
-private
-
-   --  The STM32F4.ILI9341 is automatically initialized with the following:
-
-   Chip_Select : GPIO_Point renames PC2;
-   WRX         : GPIO_Point renames PD13;
-   Reset       : GPIO_Point renames PD11;
-   SPI_Chip    : SPI_Port renames SPI_5;
-
-   SPI_AF      : constant GPIO_Alternate_Function := GPIO_AF_SPI5;
-   SPI_SCK     : GPIO_Point renames PF7;
-   SPI_MISO    : GPIO_Point renames PF8;
-   SPI_MOSI    : GPIO_Point renames PF9;
 
 end LCD_Std_Out;
