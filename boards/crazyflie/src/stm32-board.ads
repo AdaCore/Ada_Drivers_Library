@@ -94,16 +94,16 @@ package STM32.Board is
    MOTOR_123_Timer : Timer renames Timer_2;
    MOTOR_4_Timer   : Timer renames Timer_4;
    MOTOR_1         : GPIO_Point renames PA1;
-   MOTOR_1_AF      : GPIO_Alternate_Function renames GPIO_AF_TIM2;
+   MOTOR_1_AF      : GPIO_Alternate_Function renames GPIO_AF_1_TIM2;
    MOTOR_1_Channel : Timer_Channel renames Channel_2;
    MOTOR_2         : GPIO_Point renames PB11;
-   MOTOR_2_AF      : GPIO_Alternate_Function renames GPIO_AF_TIM2;
+   MOTOR_2_AF      : GPIO_Alternate_Function renames GPIO_AF_1_TIM2;
    MOTOR_2_Channel : Timer_Channel renames Channel_4;
    MOTOR_3         : GPIO_Point renames PA15;
-   MOTOR_3_AF      : GPIO_Alternate_Function renames GPIO_AF_TIM2;
+   MOTOR_3_AF      : GPIO_Alternate_Function renames GPIO_AF_1_TIM2;
    MOTOR_3_Channel : Timer_Channel renames Channel_1;
    MOTOR_4         : GPIO_Point renames PB9;
-   MOTOR_4_AF      : GPIO_Alternate_Function renames GPIO_AF_TIM4;
+   MOTOR_4_AF      : GPIO_Alternate_Function renames GPIO_AF_2_TIM4;
    MOTOR_4_Channel : Timer_Channel renames Channel_4;
 
    ---------
@@ -152,11 +152,11 @@ package STM32.Board is
    --------------------------
 
    EXT_USART1    : USART renames USART_3;
-   EXT_USART1_AF : GPIO_Alternate_Function renames GPIO_AF_USART3;
+   EXT_USART1_AF : GPIO_Alternate_Function renames GPIO_AF_7_USART3;
    EXT_USART1_TX : GPIO_Point renames PC10;
    EXT_USART1_RX : GPIO_Point renames PC11;
    EXT_USART2    : USART renames USART_2;
-   EXT_USART2_AF : GPIO_Alternate_Function renames GPIO_AF_USART2;
+   EXT_USART2_AF : GPIO_Alternate_Function renames GPIO_AF_7_USART2;
    EXT_USART2_TX : GPIO_Point renames PA2;
    EXT_USART2_RX : GPIO_Point renames PA3;
 
@@ -165,7 +165,7 @@ package STM32.Board is
    -----------
 
    NRF_USART     : USART renames USART_6;
-   NRF_USART_AF  : GPIO_Alternate_Function renames GPIO_AF_USART6;
+   NRF_USART_AF  : GPIO_Alternate_Function renames GPIO_AF_8_USART6;
    NRF_RX        : GPIO_Point renames PC6;
    NRF_TX        : GPIO_Point renames PC7;
    NRF_SWCLK     : GPIO_Point renames PB13;
