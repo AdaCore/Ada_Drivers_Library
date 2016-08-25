@@ -607,6 +607,41 @@ package body STM32.Device is
       end if;
    end Reset;
 
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
+   procedure Enable_Clock (This : in out SDMMC_Controller)
+   is
+   begin
+      if This.Periph.all'Address = SDMMC1_Base then
+         RCC_Periph.APB2ENR.SDMMC1EN := True;
+      elsif This.Periph.all'Address = SDMMC2_Base then
+         RCC_Periph.APB2ENR.SDMMC2EN := True;
+      else
+         raise Unknown_Device;
+      end if;
+   end Enable_Clock;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : in out SDMMC_Controller)
+   is
+   begin
+      if This.Periph.all'Address = SDMMC1_Base then
+         RCC_Periph.APB2RSTR.SDMMC1RST := True;
+         RCC_Periph.APB2RSTR.SDMMC1RST := False;
+      elsif This.Periph.all'Address = SDMMC2_Base then
+         RCC_Periph.APB2RSTR.SDMMC2RST := True;
+         RCC_Periph.APB2RSTR.SDMMC2RST := False;
+      else
+         raise Unknown_Device;
+      end if;
+
+   end Reset;
+
    ------------------------------
    -- System_Clock_Frequencies --
    ------------------------------

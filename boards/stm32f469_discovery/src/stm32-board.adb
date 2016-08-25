@@ -82,4 +82,82 @@ package body STM32.Board is
       Configure_IO (User_Button_Point, Config);
    end Configure_User_Button_GPIO;
 
+   ------------------------------
+   -- Configure_SD_Device_GPIO --
+   ------------------------------
+
+   procedure Configure_SD_Device_GPIO
+   is
+      SD_Pins           : constant STM32.GPIO.GPIO_Points :=
+                            (PC8, PC9, PC10, PC11, PC12, PD2);
+      SD_DMA_Rx_Channel : constant DMA_Channel_Selector :=
+                            Channel_4;
+      SD_DMA_Tx_Channel : constant DMA_Channel_Selector :=
+                            Channel_4;
+
+   begin
+      --  Enable the SDIO clock
+      Enable_Clock (SD_Device);
+      Reset (SD_Device);
+
+      --  Enable the DMA2 clock
+      Enable_Clock (SD_DMA);
+
+      --  Enable the GPIOs
+      Enable_Clock (SD_Pins & SD_Detect_Pin);
+
+      --  GPIO configuration for the SDIO pins
+      Configure_IO
+        (SD_Pins,
+         (Mode        => Mode_AF,
+          Output_Type => Push_Pull,
+          Speed       => Speed_High,
+          Resistors   => Pull_Up));
+      Configure_Alternate_Function (SD_Pins, GPIO_AF_SDIO);
+
+      --  GPIO configuration for the SD-Detect pin
+      Configure_IO
+        (SD_Detect_Pin,
+         (Mode        => Mode_In,
+          Output_Type => Open_Drain,
+          Speed       => Speed_High,
+          Resistors   => Pull_Up));
+
+      Disable (SD_DMA, SD_DMA_Rx_Stream);
+      Configure
+        (SD_DMA,
+         SD_DMA_Rx_Stream,
+         (Channel                      => SD_DMA_Rx_Channel,
+          Direction                    => Peripheral_To_Memory,
+          Increment_Peripheral_Address => False,
+          Increment_Memory_Address     => True,
+          Peripheral_Data_Format       => Words,
+          Memory_Data_Format           => Words,
+          Operation_Mode               => Peripheral_Flow_Control_Mode,
+          Priority                     => Priority_Very_High,
+          FIFO_Enabled                 => True,
+          FIFO_Threshold               => FIFO_Threshold_Full_Configuration,
+          Memory_Burst_Size            => Memory_Burst_Inc4,
+          Peripheral_Burst_Size        => Peripheral_Burst_Inc4));
+      Clear_All_Status (SD_DMA, SD_DMA_Rx_Stream);
+
+      Disable (SD_DMA, SD_DMA_Tx_Stream);
+      Configure
+        (SD_DMA,
+         SD_DMA_Tx_Stream,
+         (Channel                      => SD_DMA_Tx_Channel,
+          Direction                    => Memory_To_Peripheral,
+          Increment_Peripheral_Address => False,
+          Increment_Memory_Address     => True,
+          Peripheral_Data_Format       => Words,
+          Memory_Data_Format           => Words,
+          Operation_Mode               => Peripheral_Flow_Control_Mode,
+          Priority                     => Priority_Very_High,
+          FIFO_Enabled                 => True,
+          FIFO_Threshold               => FIFO_Threshold_Full_Configuration,
+          Memory_Burst_Size            => Memory_Burst_Inc4,
+          Peripheral_Burst_Size        => Peripheral_Burst_Inc4));
+      Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
+   end Configure_SD_Device_GPIO;
+
 end STM32.Board;

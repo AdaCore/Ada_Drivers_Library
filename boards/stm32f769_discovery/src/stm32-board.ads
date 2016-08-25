@@ -36,10 +36,11 @@ with Ada.Interrupts.Names;  use Ada.Interrupts;
 
 with STM32.Device;  use STM32.Device;
 
-with STM32.GPIO;    use STM32.GPIO;
-with STM32.FMC;     use STM32.FMC;
-with STM32.I2C;     use STM32.I2C;
 with STM32.DMA;     use STM32.DMA;
+with STM32.FMC;     use STM32.FMC;
+with STM32.GPIO;    use STM32.GPIO;
+with STM32.I2C;     use STM32.I2C;
+with STM32.SDMMC;   use STM32.SDMMC;
 
 use STM32;
 
@@ -192,5 +193,26 @@ package STM32.Board is
    --  Configures the GPIO port/pin for the blue user button. Sufficient
    --  for polling the button, and necessary for having the button generate
    --  interrupts.
+
+   -------------
+   -- SD Card --
+   -------------
+
+   SD_Detect_Pin     : STM32.GPIO.GPIO_Point renames PI15;
+
+   SD_DMA            : DMA_Controller renames DMA_2;
+   SD_DMA_Rx_Stream  : DMA_Stream_Selector renames Stream_0;
+   SD_Rx_IRQ         : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.DMA2_Stream0_Interrupt;
+   SD_DMA_Tx_Stream  : DMA_Stream_Selector renames Stream_5;
+   SD_Tx_IRQ         : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.DMA2_Stream5_Interrupt;
+
+   SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.SDMMC2_Interrupt;
+
+   SD_Device         : SDMMC_Controller renames SDMMC_2;
+
+   procedure Configure_SD_Device_GPIO;
 
 end STM32.Board;

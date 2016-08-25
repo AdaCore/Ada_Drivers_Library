@@ -11,11 +11,8 @@ with STM32.DMA;
 
 package STM32.SDMMC is
 
-   type SDMMC_Controller is private;
-
-   function As_Controller
-     (Periph : access STM32_SVD.SDMMC.SDMMC_Peripheral)
-      return SDMMC_Controller;
+   type SDMMC_Controller (Periph : access STM32_SVD.SDMMC.SDMMC_Peripheral) is
+   limited private;
 
    type SD_Error is
      (OK,
@@ -353,20 +350,15 @@ private
 
    type Card_Data_Table is array (0 .. 3) of Word;
 
-   type SDMMC_Controller is record
-      Periph    : access STM32_SVD.SDMMC.SDMMC_Peripheral;
-      CID       : Card_Data_Table;
-      CSD       : Card_Data_Table;
+   type SDMMC_Controller (Periph : access STM32_SVD.SDMMC.SDMMC_Peripheral) is
+   limited record
+      CID       : Card_Data_Table := (others => 0);
+      CSD       : Card_Data_Table := (others => 0);
       Card_Type : Supported_SD_Memory_Cards :=
                     STD_Capacity_SD_Card_V1_1;
-      RCA       : Word;
+      RCA       : Word := 0;
       Operation : SDMMC_Operation := No_Operation;
    end record;
-
-   function As_Controller
-     (Periph : access STM32_SVD.SDMMC.SDMMC_Peripheral)
-      return SDMMC_Controller
-   is (Periph, CID => (others => 0), CSD => (others => 0), others => <>);
 
    function Initialized (This : SDMMC_Controller) return Boolean
    is (This.CID /= (0, 0, 0, 0));

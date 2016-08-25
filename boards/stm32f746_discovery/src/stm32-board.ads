@@ -36,10 +36,11 @@ with Ada.Interrupts.Names;  use Ada.Interrupts;
 
 with STM32.Device;  use STM32.Device;
 
-with STM32.GPIO;    use STM32.GPIO;
-with STM32.FMC;     use STM32.FMC;
-with STM32.I2C;     use STM32.I2C;
 with STM32.DMA;     use STM32.DMA;
+with STM32.FMC;     use STM32.FMC;
+with STM32.GPIO;    use STM32.GPIO;
+with STM32.I2C;     use STM32.I2C;
+with STM32.SDMMC;   use STM32.SDMMC;
 
 use STM32;
 
@@ -158,6 +159,30 @@ package STM32.Board is
    Audio_INT   : GPIO_Point renames PD6;
 
    Audio_DMA   : DMA_Controller renames DMA_2;
+
+   --------------------------
+   -- micro SD card reader --
+   --------------------------
+
+   SD_Detect_Pin     : constant STM32.GPIO.GPIO_Point :=
+                         PC13;
+   SD_DMA            : DMA_Controller renames DMA_2;
+   SD_DMA_Rx_Stream  : constant DMA_Stream_Selector :=
+                         Stream_3;
+   SD_Rx_IRQ         : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.DMA2_Stream3_Interrupt;
+   SD_DMA_Tx_Stream  : constant DMA_Stream_Selector :=
+                         Stream_6;
+   SD_Tx_IRQ         : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.DMA2_Stream6_Interrupt;
+
+   SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.SDMMC1_Interrupt;
+
+   SD_Device         : STM32.SDMMC.SDMMC_Controller renames
+                         STM32.Device.SDMMC_1;
+
+   procedure Configure_SD_Device_GPIO;
 
    --  User button
 

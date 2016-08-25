@@ -34,8 +34,10 @@
 
 with STM32.Device;  use STM32.Device;
 
+with STM32.DMA;     use STM32.DMA;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.FMC;     use STM32.FMC;
+with STM32.SDMMC;   use STM32.SDMMC;
 
 with Ada.Interrupts.Names;  use Ada.Interrupts;
 
@@ -73,9 +75,9 @@ package STM32.Board is
    procedure Toggle_LEDs (These : in out GPIO_Points)
      renames STM32.GPIO.Toggle;
 
---     Gyro : Three_Axis_Gyroscope;
-
-   --  GPIO Pins for FMC
+   -----------
+   -- SDRAM --
+   -----------
 
    FMC_D : constant GPIO_Points :=
              (PD0, PD1, PD8, PD9, PD10, PD14, PD15,
@@ -106,6 +108,7 @@ package STM32.Board is
                      FMC_NBL2 & FMC_NBL3;
 
    --  SDRAM CONFIGURATION Parameters
+
    SDRAM_Base            : constant := 16#C0000000#;
    SDRAM_Size            : constant := 16#800000#;
    SDRAM_Bank            : constant STM32.FMC.FMC_SDRAM_Cmd_Target_Bank :=
@@ -169,5 +172,28 @@ package STM32.Board is
    --  Configures the GPIO port/pin for the blue user button. Sufficient
    --  for polling the button, and necessary for having the button generate
    --  interrupts.
+
+   ------------
+   -- SDCARD --
+   ------------
+
+   SD_Detect_Pin     : STM32.GPIO.GPIO_Point renames PG2;
+
+   SD_DMA            : DMA_Controller renames DMA_2;
+   SD_DMA_Rx_Stream  : DMA_Stream_Selector renames Stream_3;
+   SD_Rx_IRQ         : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.DMA2_Stream3_Interrupt;
+   SD_DMA_Tx_Stream  : DMA_Stream_Selector renames Stream_6;
+   SD_Tx_IRQ         : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.DMA2_Stream6_Interrupt;
+
+   SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.SDIO_Interrupt;
+
+   SD_Device         : SDMMC_Controller renames SDIO;
+
+   procedure Configure_SD_Device_GPIO;
+   --  Initializes the clocks and pins of the SDMMC controller, as well as the
+   --  DMA channels
 
 end STM32.Board;

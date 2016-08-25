@@ -47,17 +47,18 @@ private with System.BB.Parameters;
 pragma Warnings (On, "* is an internal GNAT unit");
 
 with STM32_SVD;     use STM32_SVD;
-
 with STM32_SVD.SAI;
+with STM32_SVD.SDMMC;
 
-with STM32.GPIO;    use STM32.GPIO;
 with STM32.ADC;     use STM32.ADC;
---  with STM32.USARTs;  use STM32.USARTs;
-with STM32.I2C;     use STM32.I2C;
-with STM32.SPI;     use STM32.SPI;
-with STM32.Timers;  use STM32.Timers;
 with STM32.DAC;     use STM32.DAC;
 with STM32.DMA;     use STM32.DMA;
+with STM32.GPIO;    use STM32.GPIO;
+--  with STM32.USARTs;  use STM32.USARTs;
+with STM32.I2C;     use STM32.I2C;
+with STM32.SDMMC;   use STM32.SDMMC;
+with STM32.SPI;     use STM32.SPI;
+with STM32.Timers;  use STM32.Timers;
 
 package STM32.Device is
    pragma Elaborate_Body;
@@ -333,11 +334,19 @@ package STM32.Device is
 --
 --     procedure Reset (This : aliased in out USART);
 
+   ---------
+   -- DMA --
+   ---------
+
    DMA_1 : aliased DMA_Controller with Import, Volatile, Address => DMA1_Base;
    DMA_2 : aliased DMA_Controller with Import, Volatile, Address => DMA2_Base;
 
    procedure Enable_Clock (This : aliased in out DMA_Controller);
    procedure Reset (This : aliased in out DMA_Controller);
+
+   ---------
+   -- I2C --
+   ---------
 
    Internal_I2C_Port_1 : aliased Internal_I2C_Port
      with Import, Volatile, Address => I2C1_Base;
@@ -356,6 +365,10 @@ package STM32.Device is
    type I2C_Port_Id is (I2C_Id_1, I2C_Id_2, I2C_Id_3, I2C_Id_4);
 
    function As_Port_Id (Port : I2C_Port) return I2C_Port_Id with Inline;
+
+   ---------
+   -- SPI --
+   ---------
 
    Internal_SPI_1 : aliased Internal_SPI_Port
      with Import, Volatile, Address => SPI1_Base;
@@ -379,6 +392,10 @@ package STM32.Device is
 
    procedure Enable_Clock (This : SPI_Port);
    procedure Reset (This : SPI_Port);
+
+   ------------
+   -- Timers --
+   ------------
 
    Timer_1 : aliased Timer with Volatile, Address => TIM1_Base;
    pragma Import (Ada, Timer_1);
@@ -412,6 +429,10 @@ package STM32.Device is
    procedure Enable_Clock (This : in out Timer);
    procedure Reset (This : in out Timer);
 
+   -----------
+   -- Audio --
+   -----------
+
    subtype SAI_Port is STM32_SVD.SAI.SAI_Peripheral;
 
    SAI_1 : SAI_Port renames STM32_SVD.SAI.SAI1_Periph;
@@ -419,6 +440,15 @@ package STM32.Device is
 
    procedure Enable_Clock (This : in out SAI_Port);
    procedure Reset (This : in out SAI_Port);
+
+   -----------
+   -- SDMMC --
+   -----------
+
+   SDMMC_1 : aliased SDMMC_Controller (STM32_SVD.SDMMC.SDMMC_Periph'Access);
+
+   procedure Enable_Clock (This : in out SDMMC_Controller);
+   procedure Reset (This : in out SDMMC_Controller);
 
    -----------------------------
    -- Reset and Clock Control --

@@ -2,7 +2,9 @@ with STM32.SDMMC;
 
 package Media_Reader.SDCard is
 
-   type SDCard_Controller is limited new Media_Controller with private;
+   type SDCard_Controller
+     (Device : not null access STM32.SDMMC.SDMMC_Controller) is
+   limited new Media_Controller with private;
 
    Device_Error : exception;
 
@@ -33,8 +35,9 @@ package Media_Reader.SDCard is
 
 private
 
-   type SDCard_Controller is limited new Media_Controller with record
-      Device        : STM32.SDMMC.SDMMC_Controller;
+   type SDCard_Controller
+     (Device : not null access STM32.SDMMC.SDMMC_Controller) is
+   limited new Media_Controller with record
       Info          : STM32.SDMMC.Card_Information;
       Has_Info      : Boolean := False;
       Card_Detected : Boolean := False;

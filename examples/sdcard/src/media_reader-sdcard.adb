@@ -1,12 +1,11 @@
 with Ada.Real_Time;           use Ada.Real_Time;
 
+with STM32.Board;             use STM32.Board;
 with STM32.Device;            use STM32.Device;
 with STM32.DMA;               use STM32.DMA;
 with STM32.GPIO;              use STM32.GPIO;
 with STM32.SDMMC;             use STM32.SDMMC;
 with Cortex_M.Cache;
-
-with Device_SD_Configuration; use Device_SD_Configuration;
 
 package body Media_Reader.SDCard is
 
@@ -35,10 +34,10 @@ package body Media_Reader.SDCard is
    private
 
       procedure Interrupt_RX;
-      pragma Attach_Handler (Interrupt_RX, Rx_IRQ);
+      pragma Attach_Handler (Interrupt_RX, SD_Rx_IRQ);
 
       procedure Interrupt_TX;
-      pragma Attach_Handler (Interrupt_TX, Tx_IRQ);
+      pragma Attach_Handler (Interrupt_TX, SD_Tx_IRQ);
 
       Finished   : Boolean := True;
       DMA_Status : DMA_Error_Code := DMA_No_Error;
@@ -58,11 +57,11 @@ package body Media_Reader.SDCard is
 
    private
       procedure Interrupt;
-      pragma Attach_Handler (Interrupt, Device_SD_Configuration.SD_Interrupt);
+      pragma Attach_Handler (Interrupt, SD_Interrupt);
 
       Finished  : Boolean := True;
       SD_Status : SD_Error;
-      Device    : SDMMC_Controller;
+      Device    : access SDMMC_Controller;
    end SDMMC_Interrupt_Handler;
 
    ----------------
@@ -72,72 +71,9 @@ package body Media_Reader.SDCard is
    procedure Initialize
      (Controller : in out SDCard_Controller)
    is
+      pragma Unreferenced (Controller);
    begin
-      --  Enable the SDIO clock
-      Enable_Clock_Device;
-      Reset_Device;
-
-      --  Enable the DMA2 clock
-      Enable_Clock (SD_DMA);
-
-      --  Enable the GPIOs
-      Enable_Clock (SD_Pins & SD_Detect_Pin);
-
-      --  GPIO configuration for the SDIO pins
-      Configure_IO
-        (SD_Pins,
-         (Mode        => Mode_AF,
-          Output_Type => Push_Pull,
-          Speed       => Speed_High,
-          Resistors   => Pull_Up));
-      Configure_Alternate_Function (SD_Pins, GPIO_AF_SDIO);
-
-      --  GPIO configuration for the SD-Detect pin
-      Configure_IO
-        (SD_Detect_Pin,
-         (Mode        => Mode_In,
-          Output_Type => Open_Drain,
-          Speed       => Speed_High,
-          Resistors   => Pull_Up));
-
-      Controller.Device :=
-        STM32.SDMMC.As_Controller (SD_Device'Access);
-
-      Disable (SD_DMA, SD_DMA_Rx_Stream);
-      Configure
-        (SD_DMA,
-         SD_DMA_Rx_Stream,
-         (Channel                      => SD_DMA_Rx_Channel,
-          Direction                    => Peripheral_To_Memory,
-          Increment_Peripheral_Address => False,
-          Increment_Memory_Address     => True,
-          Peripheral_Data_Format       => Words,
-          Memory_Data_Format           => Words,
-          Operation_Mode               => Peripheral_Flow_Control_Mode,
-          Priority                     => Priority_Very_High,
-          FIFO_Enabled                 => True,
-          FIFO_Threshold               => FIFO_Threshold_Full_Configuration,
-          Memory_Burst_Size            => Memory_Burst_Inc4,
-          Peripheral_Burst_Size        => Peripheral_Burst_Inc4));
-      Clear_All_Status (SD_DMA, SD_DMA_Rx_Stream);
-
-      Disable (SD_DMA, SD_DMA_Tx_Stream);
-      Configure
-        (SD_DMA,
-         SD_DMA_Tx_Stream,
-         (Channel                      => SD_DMA_Tx_Channel,
-          Direction                    => Memory_To_Peripheral,
-          Increment_Peripheral_Address => False,
-          Increment_Memory_Address     => True,
-          Peripheral_Data_Format       => Words,
-          Memory_Data_Format           => Words,
-          Operation_Mode               => Peripheral_Flow_Control_Mode,
-          Priority                     => Priority_Very_High,
-          FIFO_Enabled                 => True,
-          FIFO_Threshold               => FIFO_Threshold_Full_Configuration,
-          Memory_Burst_Size            => Memory_Burst_Inc4,
-          Peripheral_Burst_Size        => Peripheral_Burst_Inc4));
-      Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
+      Configure_SD_Device_GPIO;
    end Initialize;
 
    ------------------
@@ -179,7 +115,7 @@ package body Media_Reader.SDCard is
       end if;
 
       Ret := STM32.SDMMC.Initialize
-        (Controller.Device, Controller.Info);
+        (Controller.Device.all, Controller.Info);
 
       if Ret = OK then
          Controller.Has_Info := True;
@@ -378,7 +314,7 @@ package body Media_Reader.SDCard is
       is
       begin
          Finished  := False;
-         Device    := Controller.Device;
+         Device    := Controller.Device.all'Unchecked_Access;
       end Set_Transfer_State;
 
       --------------------------
@@ -401,29 +337,29 @@ package body Media_Reader.SDCard is
       begin
          Finished := True;
 
-         if Get_Flag (Device, Data_End) then
-            Clear_Flag (Device, Data_End);
+         if Get_Flag (Device.all, Data_End) then
+            Clear_Flag (Device.all, Data_End);
             SD_Status := OK;
 
-         elsif Get_Flag (Device, Data_CRC_Fail) then
-            Clear_Flag (Device, Data_CRC_Fail);
+         elsif Get_Flag (Device.all, Data_CRC_Fail) then
+            Clear_Flag (Device.all, Data_CRC_Fail);
             SD_Status := CRC_Check_Fail;
 
-         elsif Get_Flag (Device, Data_Timeout) then
-            Clear_Flag (Device, Data_Timeout);
+         elsif Get_Flag (Device.all, Data_Timeout) then
+            Clear_Flag (Device.all, Data_Timeout);
             SD_Status := Timeout_Error;
 
-         elsif Get_Flag (Device, RX_Overrun) then
-            Clear_Flag (Device, RX_Overrun);
+         elsif Get_Flag (Device.all, RX_Overrun) then
+            Clear_Flag (Device.all, RX_Overrun);
             SD_Status := Rx_Overrun;
 
-         elsif Get_Flag (Device, TX_Underrun) then
-            Clear_Flag (Device, TX_Underrun);
+         elsif Get_Flag (Device.all, TX_Underrun) then
+            Clear_Flag (Device.all, TX_Underrun);
             SD_Status := Tx_Underrun;
          end if;
 
          for Int in SDMMC_Interrupts loop
-            Disable_Interrupt (Device, Int);
+            Disable_Interrupt (Device.all, Int);
          end loop;
       end Interrupt;
 
@@ -453,7 +389,7 @@ package body Media_Reader.SDCard is
 
       Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
       Ret := Write_Blocks_DMA
-        (Controller.Device,
+        (Controller.Device.all,
          Unsigned_64 (Block_Number) *
              Unsigned_64 (Controller.Info.Card_Block_Size),
          SD_DMA,
@@ -477,7 +413,7 @@ package body Media_Reader.SDCard is
       loop
          --  FIXME: some people claim, that this goes wrong with multiblock, see
          --  http://blog.frankvh.com/2011/09/04/stm32f2xx-sdio-sd-card-interface/
-         exit when not Get_Flag (Controller.Device, TX_Active);
+         exit when not Get_Flag (Controller.Device.all, TX_Active);
       end loop;
 
       Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
@@ -514,7 +450,7 @@ package body Media_Reader.SDCard is
       SDMMC_Interrupt_Handler.Set_Transfer_State (Controller);
 
       SD_Err := Read_Blocks_DMA
-        (Controller.Device,
+        (Controller.Device.all,
          Unsigned_64 (Block_Number) *
              Unsigned_64 (Controller.Info.Card_Block_Size),
          SD_DMA,
@@ -533,22 +469,22 @@ package body Media_Reader.SDCard is
       DMA_Interrupt_Handler.Wait_Transfer (DMA_Err);
 
       loop
-         exit when not Get_Flag (Controller.Device, RX_Active);
+         exit when not Get_Flag (Controller.Device.all, RX_Active);
       end loop;
 
       Ret := SD_Err = OK and then DMA_Err = DMA_No_Error;
 
-      if Last_Operation (Controller.Device) =
+      if Last_Operation (Controller.Device.all) =
         Read_Multiple_Blocks_Operation
       then
-         SD_Err := Stop_Transfer (Controller.Device);
+         SD_Err := Stop_Transfer (Controller.Device.all);
          Ret := Ret and then SD_Err = OK;
       end if;
 
       Clear_All_Status (SD_DMA, SD_DMA_Rx_Stream);
       Disable (SD_DMA, SD_DMA_Rx_Stream);
-      Disable_Data (Controller.Device);
-      Clear_Static_Flags (Controller.Device);
+      Disable_Data (Controller.Device.all);
+      Clear_Static_Flags (Controller.Device.all);
 
       Cortex_M.Cache.Invalidate_DCache
         (Start => Data (Data'First)'Address,

@@ -48,18 +48,19 @@ pragma Warnings (On, "* is an internal GNAT unit");
 
 with STM32_SVD;     use STM32_SVD;
 
-with STM32_SVD.SAI;
 with STM32_SVD.DSI;
+with STM32_SVD.SAI;
+with STM32_SVD.SDMMC;
 
-with STM32.GPIO;    use STM32.GPIO;
 with STM32.ADC;     use STM32.ADC;
---  with STM32.USARTs;  use STM32.USARTs;
+with STM32.DAC;     use STM32.DAC;
+with STM32.DMA;     use STM32.DMA;
+with STM32.DSI;     use STM32.DSI;
+with STM32.GPIO;    use STM32.GPIO;
 with STM32.I2C;     use STM32.I2C;
+with STM32.SDMMC;   use STM32.SDMMC;
 with STM32.SPI;     use STM32.SPI;
 with STM32.Timers;  use STM32.Timers;
-with STM32.DAC;     use STM32.DAC;
-with STM32.DSI;     use STM32.DSI;
-with STM32.DMA;     use STM32.DMA;
 
 package STM32.Device is
    pragma Elaborate_Body;
@@ -418,6 +419,10 @@ package STM32.Device is
    procedure Enable_Clock (This : in out Timer);
    procedure Reset (This : in out Timer);
 
+   -----------
+   -- Audio --
+   -----------
+
    subtype SAI_Port is STM32_SVD.SAI.SAI_Peripheral;
 
    SAI_1 : SAI_Port renames STM32_SVD.SAI.SAI1_Periph;
@@ -426,7 +431,21 @@ package STM32.Device is
    procedure Enable_Clock (This : in out SAI_Port);
    procedure Reset (This : in out SAI_Port);
 
+   --------------
+   -- DSI Host --
+   --------------
+
    DSIHOST : aliased DSI_Host (STM32_SVD.DSI.DSI_Periph'Access);
+
+   ------------
+   --  SDMMC --
+   ------------
+
+   SDMMC_1 : aliased SDMMC_Controller (STM32_SVD.SDMMC.SDMMC1_Periph'Access);
+   SDMMC_2 : aliased SDMMC_Controller (STM32_SVD.SDMMC.SDMMC2_Periph'Access);
+
+   procedure Enable_Clock (This : in out SDMMC_Controller);
+   procedure Reset (This : in out SDMMC_Controller);
 
    -----------------------------
    -- Reset and Clock Control --

@@ -21,7 +21,7 @@ with Media_Reader.SDCard;        use Media_Reader.SDCard;
 
 procedure SDCard_Demo
 is
-   SD_Controller : aliased SDCard_Controller;
+   SD_Controller : aliased SDCard_Controller (STM32.Board.SD_Device'Access);
    SD_Card_Info  : Card_Information;
 
    Units         : constant array (Natural range <>) of Character :=
