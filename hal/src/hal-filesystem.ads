@@ -96,18 +96,10 @@ package HAL.Filesystem is
                   Handle : out File_Handle_Ref)
                   return Status_Kind is abstract;
 
-   function Close (This   : in out FS_Driver;
-                   Handle : out File_Handle_Ref)
-                   return Status_Kind is abstract;
-
    function Open_Directory (This   : in out FS_Driver;
                             Path   : Pathname;
                             Handle : out Directory_Handle_Ref)
                             return Status_Kind is abstract;
-
-   function Close_Directory (This   : in out FS_Driver;
-                             Handle : out Directory_Handle_Ref)
-                             return Status_Kind is abstract;
 
    ------------------
    --  File_Handle --
@@ -125,6 +117,9 @@ package HAL.Filesystem is
                   Offset : IO_Count)
                   return Status_Kind is abstract;
 
+   function Close (This : in out File_Handle)
+                   return Status_Kind is abstract;
+
    ----------------------
    -- Directory_Handle --
    ----------------------
@@ -138,5 +133,8 @@ package HAL.Filesystem is
                         Entry_Number : Natural;
                         Dir_Entry    : out Directory_Entry)
                         return Status_Kind is abstract;
+
+   function Close (This : in out Directory_Handle)
+                   return Status_Kind is abstract;
 
 end HAL.Filesystem;
