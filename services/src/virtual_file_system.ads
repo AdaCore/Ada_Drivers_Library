@@ -71,20 +71,10 @@ package Virtual_File_System is
                   return Status_Kind;
 
    overriding
-   function Close (This    : in out VFS;
-                   Handler : out File_Handle_Ref)
-                   return Status_Kind;
-
-   overriding
    function Open_Directory (This   : in out VFS;
                             Path   : Pathname;
                             Handle : out Directory_Handle_Ref)
                             return Status_Kind;
-
-   overriding
-   function Close_Directory (This   : in out VFS;
-                             Handle : out Directory_Handle_Ref)
-                             return Status_Kind;
 
 private
 
@@ -101,8 +91,9 @@ private
       Mount_points : Mount_Point_Access;
    end record;
 
-   function Find_FS (This : in out VFS;
-                     Path : Pathname)
+   function Find_FS (This                : in out VFS;
+                     Path                : Pathname;
+                     Path_Reminder_Start : out Integer)
                      return FS_Driver_Ref;
 
 end Virtual_File_System;

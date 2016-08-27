@@ -1,27 +1,22 @@
 
 package body Pathname_Manipulation is
-   function Root_Dir (Path : Pathname) return Pathname is
-      First : Integer := Path'First;
-      Last  : Integer;
+   procedure Root_Dir (Path        :     Pathname;
+                       Start, Stop : out Integer)
+   is
    begin
-
+      Start := Path'First;
+      Stop := Start;
       if Path'Length = 0 then
-         return "";
+         return;
       end if;
 
-      while First < Path'Last and then Path (First) = '/' loop
-         First := First + 1;
+      while Start <= Path'Last and then Path (Start) = '/' loop
+         Start := Start + 1;
       end loop;
 
-      Last := First;
-      while Last + 1 < Path'Last and then Path (Last + 1) /= '/' loop
-         Last := Last + 1;
+      Stop := Start;
+      while Stop + 1 <= Path'Last and then Path (Stop + 1) /= '/' loop
+         Stop := Stop + 1;
       end loop;
-
-      if Last = First then
-         return "";
-      else
-         return Path (First .. Last);
-      end if;
    end Root_Dir;
 end Pathname_Manipulation;

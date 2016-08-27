@@ -6,22 +6,26 @@ package body Virtual_File_System is
    -- Find_FS --
    -------------
 
-   function Find_FS (This : in out VFS;
-                     Path : Pathname)
+   function Find_FS (This                : in out VFS;
+                     Path                : Pathname;
+                     Path_Reminder_Start : out Integer)
                      return FS_Driver_Ref
    is
-      Root : constant String := Root_Dir (Path);
+      Start, Stop : Integer;
       Elt  : Mount_Point_Access := This.Mount_points;
    begin
-      if Path'Length < 1 and then Path (Path'First) /= '/' then
-         return null;
-      end if;
+      Root_Dir (Path, Start, Stop);
+      declare
+         Root_Dir_Name : constant String := Path (Start .. Stop);
+      begin
 
-      while Elt /= null and then Elt.Directory.all /= Root loop
-         Elt := Elt.Next;
-      end loop;
+         while Elt /= null and then Elt.Directory.all /= Root_Dir_Name loop
+            Elt := Elt.Next;
+         end loop;
 
-      return (if Elt /= null then Elt.FS else null);
+         Path_Reminder_Start := Stop + 1;
+         return (if Elt /= null then Elt.FS else null);
+      end;
    end Find_FS;
 
    -----------
@@ -66,12 +70,13 @@ package body Virtual_File_System is
                          Kind : File_Kind)
                          return Status_Kind
    is
-      FS : constant FS_Driver_Ref := This.Find_FS (Path);
+      Path_Reminder_Start : Integer;
+      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Create_Node (Path, Kind);
+         return FS.Create_Node (Path (Path_Reminder_Start .. Path'Last), Kind);
       end if;
    end Create_Node;
 
@@ -84,12 +89,13 @@ package body Virtual_File_System is
                               Path : Pathname)
                               return Status_Kind
    is
-      FS : constant FS_Driver_Ref := This.Find_FS (Path);
+      Path_Reminder_Start : Integer;
+      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Create_Directory (Path);
+         return FS.Create_Directory (Path (Path_Reminder_Start .. Path'Last));
       end if;
    end Create_Directory;
 
@@ -102,12 +108,13 @@ package body Virtual_File_System is
                     Path : Pathname)
                     return Status_Kind
    is
-      FS : constant FS_Driver_Ref := This.Find_FS (Path);
+      Path_Reminder_Start : Integer;
+      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Unlink (Path);
+         return FS.Unlink (Path (Path_Reminder_Start .. Path'Last));
       end if;
    end Unlink;
 
@@ -120,12 +127,13 @@ package body Virtual_File_System is
                               Path : Pathname)
                               return Status_Kind
    is
-      FS : constant FS_Driver_Ref := This.Find_FS (Path);
+      Path_Reminder_Start : Integer;
+      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Remove_Directory (Path);
+         return FS.Remove_Directory (Path (Path_Reminder_Start .. Path'Last));
       end if;
    end Remove_Directory;
 
@@ -154,12 +162,14 @@ package body Virtual_File_System is
                                 Permissions : Permission_Set)
                                 return Status_Kind
    is
-      FS : constant FS_Driver_Ref := This.Find_FS (Path);
+      Path_Reminder_Start : Integer;
+      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Change_Permissions (Path, Permissions);
+         return FS.Change_Permissions (Path (Path_Reminder_Start .. Path'Last),
+                                       Permissions);
       end if;
    end Change_Permissions;
 
@@ -174,12 +184,14 @@ package body Virtual_File_System is
                                     Group : Group_ID)
                                     return Status_Kind
    is
-      FS : constant FS_Driver_Ref := This.Find_FS (Path);
+      Path_Reminder_Start : Integer;
+      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Change_Owner_And_Group (Path, Owner, Group);
+         return FS.Change_Owner_And_Group (Path (Path_Reminder_Start .. Path'Last),
+                                           Owner, Group);
       end if;
    end Change_Owner_And_Group;
 
@@ -193,12 +205,14 @@ package body Virtual_File_System is
                                 Lenght : IO_Count)
                                 return Status_Kind
    is
-      FS : constant FS_Driver_Ref := This.Find_FS (Path);
+      Path_Reminder_Start : Integer;
+      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Change_Permissions (Path, Lenght);
+         return FS.Change_Permissions (Path (Path_Reminder_Start .. Path'Last),
+                                       Lenght);
       end if;
    end Change_Permissions;
 
@@ -212,28 +226,15 @@ package body Virtual_File_System is
                   Handler : out File_Handle_Ref)
                   return Status_Kind
    is
-      FS : constant FS_Driver_Ref := This.Find_FS (Path);
+      Path_Reminder_Start : Integer;
+      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Open (Path, Handler);
+         return FS.Open (Path (Path_Reminder_Start .. Path'Last), Handler);
       end if;
    end Open;
-
-   -----------
-   -- Close --
-   -----------
-
-   overriding
-   function Close (This    : in out VFS;
-                   Handler : out File_Handle_Ref)
-                   return Status_Kind
-   is
-      pragma Unreferenced (Handler, This);
-   begin
-      return Permission_Denied;
-   end Close;
 
    --------------------
    -- Open_Directory --
@@ -245,28 +246,15 @@ package body Virtual_File_System is
                             Handle : out Directory_Handle_Ref)
                             return Status_Kind
    is
-      FS : constant FS_Driver_Ref := This.Find_FS (Path);
+      Path_Reminder_Start : Integer;
+      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Open_Directory (Path, Handle);
+         return FS.Open_Directory (Path (Path_Reminder_Start .. Path'Last),
+                                   Handle);
       end if;
    end Open_Directory;
-
-   ---------------------
-   -- Close_Directory --
-   ---------------------
-
-   overriding
-   function Close_Directory (This   : in out VFS;
-                             Handle : out Directory_Handle_Ref)
-                             return Status_Kind
-   is
-      pragma Unreferenced (This, Handle);
-   begin
-      return Permission_Denied;
-   end Close_Directory;
-
 
 end Virtual_File_System;
