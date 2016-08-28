@@ -5,6 +5,37 @@ with Semihosting;
 with Semihosting.Filesystem; use Semihosting.Filesystem;
 
 procedure Main is
+
+   procedure List_Dir (FS : in out FS_Driver'Class; Path : Pathname);
+
+   procedure List_Dir (FS : in out FS_Driver'Class; Path : Pathname) is
+      Status : Status_Kind;
+      DH : Directory_Handle_Ref;
+   begin
+      Status := FS.Open_Directory (Path, DH);
+      if Status /= Status_Ok then
+         Semihosting.Log_Line ("Open Directory '" & Path & "' Error: " & Status'Img);
+      else
+         declare
+            Ent : Directory_Entry;
+            Index : Positive := 1;
+         begin
+
+            Semihosting.Log_Line ("Listing '" & Path & "' content:");
+            loop
+               Status := DH.Read_Entry (Index, Ent);
+               if Status = Status_Ok then
+                  Semihosting.Log_Line (" - '" & DH.Entry_Name (Index) & "'");
+                  Semihosting.Log_Line ("   Kind: " & Ent.Entry_Type'Img);
+               else
+                  exit;
+               end if;
+               Index := Index + 1;
+            end loop;
+         end;
+      end if;
+   end List_Dir;
+
    My_VFS : VFS;
    My_VFS2 : aliased VFS;
    My_VFS3 : aliased VFS;
@@ -12,6 +43,7 @@ procedure Main is
    Status : Status_Kind;
    FH : File_Handle_Ref;
    Data : Byte_Array (1 .. 10);
+
 begin
 
    Status := My_VFS.Mount (Path       => "test1",
@@ -83,4 +115,8 @@ begin
    if Status /= Status_Ok then
       Semihosting.Log_Line ("Close Error: " & Status'Img);
    end if;
+
+   List_Dir (My_VFS, "/");
+   List_Dir (My_VFS, "/test1");
+   List_Dir (My_VFS, "/test1/");
 end Main;
