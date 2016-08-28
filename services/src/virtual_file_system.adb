@@ -15,6 +15,12 @@ package body Virtual_File_System is
       Elt  : Mount_Point_Access := This.Mount_points;
    begin
       Root_Dir (Path, Start, Stop);
+
+      if Start not in Path'Range or else Stop not in Path'Range then
+         Path_Reminder_Start := Path'Last + 1;
+         return null;
+      end if;
+
       declare
          Root_Dir_Name : constant String := Path (Start .. Stop);
       begin
@@ -24,6 +30,7 @@ package body Virtual_File_System is
          end loop;
 
          Path_Reminder_Start := Stop + 1;
+
          return (if Elt /= null then Elt.FS else null);
       end;
    end Find_FS;
@@ -38,9 +45,9 @@ package body Virtual_File_System is
                    return Status_Kind
    is
       MP : constant Mount_Point_Access :=
-        new Mount_Point'(Directory => new String'(Path),
-                         FS        => Filesystem,
-                         Next      => This.Mount_points);
+        new Mount_Point'(Directory  => new String'(Path),
+                         FS         => Filesystem,
+                         Next       => This.Mount_points);
    begin
       This.Mount_points := MP;
       return Status_Ok;
@@ -72,11 +79,14 @@ package body Virtual_File_System is
    is
       Path_Reminder_Start : Integer;
       FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
+                                     then ""
+                                     else Path (Path_Reminder_Start .. Path'Last));
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Create_Node (Path (Path_Reminder_Start .. Path'Last), Kind);
+         return FS.Create_Node (Sub_Path, Kind);
       end if;
    end Create_Node;
 
@@ -91,11 +101,14 @@ package body Virtual_File_System is
    is
       Path_Reminder_Start : Integer;
       FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
+                                     then ""
+                                     else Path (Path_Reminder_Start .. Path'Last));
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Create_Directory (Path (Path_Reminder_Start .. Path'Last));
+         return FS.Create_Directory (Sub_Path);
       end if;
    end Create_Directory;
 
@@ -110,11 +123,14 @@ package body Virtual_File_System is
    is
       Path_Reminder_Start : Integer;
       FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
+                                     then ""
+                                     else Path (Path_Reminder_Start .. Path'Last));
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Unlink (Path (Path_Reminder_Start .. Path'Last));
+         return FS.Unlink (Sub_Path);
       end if;
    end Unlink;
 
@@ -129,11 +145,14 @@ package body Virtual_File_System is
    is
       Path_Reminder_Start : Integer;
       FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
+                                     then ""
+                                     else Path (Path_Reminder_Start .. Path'Last));
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Remove_Directory (Path (Path_Reminder_Start .. Path'Last));
+         return FS.Remove_Directory (Sub_Path);
       end if;
    end Remove_Directory;
 
@@ -164,11 +183,14 @@ package body Virtual_File_System is
    is
       Path_Reminder_Start : Integer;
       FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
+                                     then ""
+                                     else Path (Path_Reminder_Start .. Path'Last));
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Change_Permissions (Path (Path_Reminder_Start .. Path'Last),
+         return FS.Change_Permissions (Sub_Path,
                                        Permissions);
       end if;
    end Change_Permissions;
@@ -186,11 +208,14 @@ package body Virtual_File_System is
    is
       Path_Reminder_Start : Integer;
       FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
+                                     then ""
+                                     else Path (Path_Reminder_Start .. Path'Last));
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Change_Owner_And_Group (Path (Path_Reminder_Start .. Path'Last),
+         return FS.Change_Owner_And_Group (Sub_Path,
                                            Owner, Group);
       end if;
    end Change_Owner_And_Group;
@@ -207,11 +232,14 @@ package body Virtual_File_System is
    is
       Path_Reminder_Start : Integer;
       FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
+                                     then ""
+                                     else Path (Path_Reminder_Start .. Path'Last));
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Change_Permissions (Path (Path_Reminder_Start .. Path'Last),
+         return FS.Change_Permissions (Sub_Path,
                                        Lenght);
       end if;
    end Change_Permissions;
@@ -248,13 +276,86 @@ package body Virtual_File_System is
    is
       Path_Reminder_Start : Integer;
       FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
+                                     then ""
+                                     else Path (Path_Reminder_Start .. Path'Last));
    begin
-      if FS = null then
-         return No_Such_File_Or_Directory;
+      if Path = "/" or else Path = "" then
+         This.Dir_Handle.FS := This'Unchecked_Access;
+         Handle := This.Dir_Handle'Unchecked_Access;
+         return Status_Ok;
       else
-         return FS.Open_Directory (Path (Path_Reminder_Start .. Path'Last),
-                                   Handle);
+         if FS = null then
+            return No_Such_File_Or_Directory;
+         else
+            return FS.Open_Directory (Sub_Path,
+                                      Handle);
+         end if;
       end if;
    end Open_Directory;
+
+   ----------------
+   -- Read_Entry --
+   ----------------
+
+   overriding
+   function Read_Entry (This         : in out VFS_Directory_Handle;
+                        Entry_Number : Positive;
+                        Dir_Entry    : out Directory_Entry)
+                        return Status_Kind
+   is
+      Pt  : Mount_Point_Access := This.FS.Mount_points;
+      Nbr : Positive := Positive'First;
+   begin
+      while Pt /= null and then Nbr /= Entry_Number loop
+         Pt := Pt.Next;
+         Nbr := Nbr + 1;
+      end loop;
+
+      if Pt /= null then
+         Dir_Entry.Entry_Type := Directory;
+         Dir_Entry.Permissions := (others => False);
+         return Status_Ok;
+      else
+         return No_Such_File_Or_Directory;
+      end if;
+
+   end Read_Entry;
+
+   ----------------
+   -- Entry_Name --
+   ----------------
+
+   overriding
+   function Entry_Name (This         : in out VFS_Directory_Handle;
+                        Entry_Number : Positive)
+                        return Pathname
+   is
+      Pt  : Mount_Point_Access := This.FS.Mount_points;
+      Nbr : Positive := Positive'First;
+   begin
+      while Pt /= null and then Nbr /= Entry_Number loop
+         Pt := Pt.Next;
+         Nbr := Nbr + 1;
+      end loop;
+
+      if Pt /= null then
+         return Pt.Directory.all;
+      else
+         return "";
+      end if;
+   end Entry_Name;
+
+   -----------
+   -- Close --
+   -----------
+   overriding
+   function Close (This : in out VFS_Directory_Handle)
+                   return Status_Kind
+   is
+      pragma Unreferenced (This);
+   begin
+      return Status_Ok;
+   end Close;
 
 end Virtual_File_System;

@@ -1,5 +1,9 @@
-
 package body Pathname_Manipulation is
+
+   --------------
+   -- Root_Dir --
+   --------------
+
    procedure Root_Dir (Path        :     Pathname;
                        Start, Stop : out Integer)
    is
@@ -19,4 +23,20 @@ package body Pathname_Manipulation is
          Stop := Stop + 1;
       end loop;
    end Root_Dir;
+
+   --------------
+   -- Root_Dir --
+   --------------
+
+   function Root_Dir (Path : Pathname) return Pathname is
+      Start, Stop : Integer;
+   begin
+      Root_Dir (Path, Start, Stop);
+      if Start not in Path'Range or else Stop not in Path'Range then
+         return "";
+      else
+         return Path (Start .. Stop);
+      end if;
+   end Root_Dir;
+
 end Pathname_Manipulation;

@@ -78,6 +78,27 @@ package Virtual_File_System is
 
 private
 
+   type VFS_Directory_Handle is new HAL.Filesystem.Directory_Handle with record
+      FS : access VFS;
+   end record;
+
+   overriding
+   function Read_Entry (This         : in out VFS_Directory_Handle;
+                        Entry_Number : Positive;
+                        Dir_Entry    : out Directory_Entry)
+                        return Status_Kind;
+
+   overriding
+   function Entry_Name (This         : in out VFS_Directory_Handle;
+                        Entry_Number : Positive)
+                        return Pathname;
+
+   overriding
+   function Close (This : in out VFS_Directory_Handle)
+                   return Status_Kind;
+
+   type VFS_Directory_Handle_Access is access all VFS_Directory_Handle;
+
    type Mount_Point;
    type Mount_Point_Access is access all Mount_Point;
 
@@ -89,11 +110,16 @@ private
 
    type VFS is new HAL.Filesystem.FS_Driver with record
       Mount_points : Mount_Point_Access;
+      Dir_Handle   : aliased VFS_Directory_Handle;
    end record;
 
    function Find_FS (This                : in out VFS;
                      Path                : Pathname;
                      Path_Reminder_Start : out Integer)
                      return FS_Driver_Ref;
+   --  Find the mount point for a given path and return the index of the first
+   --  character of the remaining path. Path_Reminder_Start will be out of
+   --  Path'Range is there is no remaining characters.
+
 
 end Virtual_File_System;
