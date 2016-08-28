@@ -130,9 +130,13 @@ package HAL.Filesystem is
    end record;
 
    function Read_Entry (This         : in out Directory_Handle;
-                        Entry_Number : Natural;
+                        Entry_Number : Positive;
                         Dir_Entry    : out Directory_Entry)
                         return Status_Kind is abstract;
+
+   function Entry_Name (This         : in out Directory_Handle;
+                        Entry_Number : Positive)
+                        return Pathname is abstract;
 
    function Close (This : in out Directory_Handle)
                    return Status_Kind is abstract;
