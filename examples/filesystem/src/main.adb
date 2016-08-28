@@ -3,10 +3,19 @@ with Virtual_File_System; use Virtual_File_System;
 with HAL.Filesystem; use HAL.Filesystem;
 with Semihosting;
 with Semihosting.Filesystem; use Semihosting.Filesystem;
+with File_Block_Drivers; use File_Block_Drivers;
+with Partitions; use Partitions;
 
 procedure Main is
 
-   procedure List_Dir (FS : in out FS_Driver'Class; Path : Pathname);
+   procedure List_Dir (FS : in out FS_Driver'Class;
+                       Path : Pathname);
+   procedure List_Partitions (FS : in out FS_Driver'Class;
+                              Path_To_Disk_Image : Pathname);
+
+   --------------
+   -- List_Dir --
+   --------------
 
    procedure List_Dir (FS : in out FS_Driver'Class; Path : Pathname) is
       Status : Status_Kind;
@@ -36,6 +45,48 @@ procedure Main is
       end if;
    end List_Dir;
 
+   ---------------------
+   -- List_Partitions --
+   ---------------------
+
+   procedure List_Partitions (FS : in out FS_Driver'Class;
+                              Path_To_Disk_Image : Pathname)
+   is
+      File : File_Handle_Ref;
+   begin
+      if FS.Open (Path_To_Disk_Image, File) /= Status_Ok then
+         Semihosting.Log_Line ("Cannot open disk image '" &
+                                 Path_To_Disk_Image & "'");
+         return;
+      end if;
+
+      declare
+         Disk    : aliased File_Block_Driver (File);
+         Nbr     : Natural;
+         P_Entry : Partition_Entry;
+      begin
+         Nbr := Number_Of_Partitions (Disk'Unchecked_Access);
+         Semihosting.Log_Line ("Disk '" & Path_To_Disk_Image & "' has " &
+                                 Nbr'Img & " parition(s)");
+
+         for Id in 1 .. Nbr loop
+            if Get_Partition_Entry (Disk'Unchecked_Access,
+                                    Id,
+                                    P_Entry) /= Status_Ok
+            then
+               Semihosting.Log_Line ("Cannot read partition :" & Id'Img);
+            else
+               Semihosting.Log_Line (" - partition :" & Id'Img);
+               Semihosting.Log_Line ("      Status:" & P_Entry.Status'Img);
+               Semihosting.Log_Line ("      Kind: " & P_Entry.Kind'Img);
+               Semihosting.Log_Line ("      LBA: " & P_Entry.First_Sector_LBA'Img);
+               Semihosting.Log_Line ("      Number of sectors: " & P_Entry.Number_Of_Sectors'Img);
+
+            end if;
+         end loop;
+      end;
+   end List_Partitions;
+
    My_VFS : VFS;
    My_VFS2 : aliased VFS;
    My_VFS3 : aliased VFS;
@@ -63,6 +114,9 @@ begin
    if Status /= Status_Ok then
       Semihosting.Log_Line ("Mount Error: " & Status'Img);
    end if;
+
+   List_Partitions (My_VFS, "/host/tmp/disk.img");
+
 
    Status := My_VFS.Unlink ("/test1/no_file");
    if Status /= Status_Ok then
