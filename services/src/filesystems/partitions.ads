@@ -14,7 +14,8 @@ package Partitions is
       Fat32_CHS_Parition,
       Fat32_LBA_Parition,
       Fat16B_LBA_Parition,
-      Extended_LBA_Parition)
+      Extended_LBA_Parition,
+      Linux_Partition)
      with Size => 8;
 
    type CHS_Address is record
@@ -41,6 +42,9 @@ package Partitions is
 
    function Number_Of_Partitions (Disk : Block_Driver_Ref) return Natural;
 
+   function Is_Valid (P_Entry : Partition_Entry) return Boolean is
+     (P_Entry.Status = 16#00# or else P_Entry.Status = 16#80#);
+
 private
 
    for Partition_Kind use
@@ -53,5 +57,6 @@ private
       Fat32_CHS_Parition    => 16#0B#,
       Fat32_LBA_Parition    => 16#0C#,
       Fat16B_LBA_Parition   => 16#0E#,
-      Extended_LBA_Parition => 16#0F#);
+      Extended_LBA_Parition => 16#0F#,
+      Linux_Partition       => 16#83#);
 end Partitions;
