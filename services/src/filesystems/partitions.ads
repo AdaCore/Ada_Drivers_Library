@@ -18,6 +18,8 @@ package Partitions is
       Linux_Partition)
      with Size => 8;
 
+   subtype Logical_Block_Address is Unsigned_32;
+
    type CHS_Address is record
       C : UInt10;
       H : Byte;
@@ -29,7 +31,7 @@ package Partitions is
       First_Sector_CHS  : CHS_Address;
       Kind              : Partition_Kind;
       Last_Sector_CHS   : CHS_Address;
-      First_Sector_LBA  : Unsigned_32;
+      First_Sector_LBA  : Logical_Block_Address;
       Number_Of_Sectors : Unsigned_32;
    end record with Pack, Size => 16 * 8;
 

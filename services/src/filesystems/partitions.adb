@@ -14,11 +14,11 @@ package body Partitions is
      with Pre => Index <= 3;
 
    function Number_Of_Logical_Partitions (Disk        : not null Block_Driver_Ref;
-                                          EBR_Address : Unsigned_32)
+                                          EBR_Address : Logical_Block_Address)
                                           return Natural;
 
    function Get_Logical_Partition_Entry (Disk         : not null Block_Driver_Ref;
-                                         EBR_Address  : Unsigned_32;
+                                         EBR_Address  : Logical_Block_Address;
                                          Entry_Number : Positive;
                                          Entry_Cnt    : in out Natural;
                                          P_Entry      : out Partition_Entry)
@@ -33,8 +33,8 @@ package body Partitions is
                                 P_Entry : out Partition_Entry)
    is
       Entry_Block_Conv : Partition_Entry_Block_Mapping;
-      First : constant Integer := MBR'First + 446 + Index * 16;
-      Last  : constant Integer := First + 15;
+      First            : constant Integer := MBR'First + 446 + Index * 16;
+      Last             : constant Integer := First + 15;
    begin
       if MBR'Length /= 512 then
          P_Entry.Status := 16#FF#;
@@ -49,12 +49,12 @@ package body Partitions is
    ----------------------------------
 
    function Number_Of_Logical_Partitions (Disk        : not null Block_Driver_Ref;
-                                          EBR_Address : Unsigned_32)
+                                          EBR_Address : Logical_Block_Address)
                                           return Natural
    is
       EBR       : Block (0 .. 511);
       Entry_Cnt : Natural := 0;
-      Address   : Unsigned_32 := EBR_Address;
+      Address   : Logical_Block_Address := EBR_Address;
       P_Entry   : Partition_Entry;
    begin
       loop
@@ -82,14 +82,14 @@ package body Partitions is
    ---------------------------------
 
    function Get_Logical_Partition_Entry (Disk         : not null Block_Driver_Ref;
-                                         EBR_Address  : Unsigned_32;
+                                         EBR_Address  : Logical_Block_Address;
                                          Entry_Number : Positive;
                                          Entry_Cnt    : in out Natural;
                                          P_Entry      : out Partition_Entry)
                                          return Status_Code
    is
       EBR     : Block (0 .. 511);
-      Address : Unsigned_32 := EBR_Address;
+      Address : Logical_Block_Address := EBR_Address;
    begin
       loop
          if not Disk.Read (Address, EBR) or else EBR (510 .. 511) /= (16#55#, 16#AA#) then
@@ -126,7 +126,7 @@ package body Partitions is
    is
       MBR         : Block (0 .. 511);
       Entry_Cnt   : Natural := 0;
-      EBR_Address : Unsigned_32;
+      EBR_Address : Logical_Block_Address;
    begin
       if not Disk.Read (0, MBR) then
          return Disk_Error;
