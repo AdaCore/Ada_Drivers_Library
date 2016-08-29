@@ -115,7 +115,7 @@ begin
       Semihosting.Log_Line ("Mount Error: " & Status'Img);
    end if;
 
-   List_Partitions (My_VFS, "/host/tmp/disk.img");
+   List_Partitions (My_VFS, "/host/tmp/disk_8_partitions.img");
 
 
    Status := My_VFS.Unlink ("/test1/no_file");
