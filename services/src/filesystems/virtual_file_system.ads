@@ -67,6 +67,7 @@ package Virtual_File_System is
    overriding
    function Open (This    : in out VFS;
                   Path    : Pathname;
+                  Mode    : File_Mode;
                   Handler : out File_Handle_Ref)
                   return Status_Kind;
 

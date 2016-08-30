@@ -59,6 +59,7 @@ package Semihosting.Filesystem is
    overriding
    function Open (This    : in out SHFS;
                   Path    : Pathname;
+                  Mode    : File_Mode;
                   Handler : out File_Handle_Ref)
                   return Status_Kind;
 

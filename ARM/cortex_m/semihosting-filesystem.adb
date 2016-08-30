@@ -130,6 +130,7 @@ package body Semihosting.Filesystem is
    overriding function Open
      (This    : in out SHFS;
       Path    : Pathname;
+      Mode    : File_Mode;
       Handler : out File_Handle_Ref)
       return Status_Kind
    is
@@ -139,6 +140,10 @@ package body Semihosting.Filesystem is
    begin
       if Path'Length = 0 then
          return No_Such_File_Or_Directory;
+      end if;
+
+      if Mode /= Read_Only then
+         return Permission_Denied;
       end if;
 
       FD := Semihosting.Open (Filename => Path,

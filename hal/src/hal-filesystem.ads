@@ -93,6 +93,7 @@ package HAL.Filesystem is
 
    function Open (This   : in out FS_Driver;
                   Path   : Pathname;
+                  Mode   : File_Mode;
                   Handle : out File_Handle_Ref)
                   return Status_Kind is abstract;
 

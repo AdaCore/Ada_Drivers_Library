@@ -251,6 +251,7 @@ package body Virtual_File_System is
    overriding
    function Open (This    : in out VFS;
                   Path    : Pathname;
+                  Mode    : File_Mode;
                   Handler : out File_Handle_Ref)
                   return Status_Kind
    is
@@ -260,7 +261,7 @@ package body Virtual_File_System is
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Open (Path (Path_Reminder_Start .. Path'Last), Handler);
+         return FS.Open (Path (Path_Reminder_Start .. Path'Last), Mode, Handler);
       end if;
    end Open;
 

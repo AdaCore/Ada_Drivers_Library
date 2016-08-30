@@ -57,7 +57,7 @@ procedure Main is
    is
       File : File_Handle_Ref;
    begin
-      if FS.Open (Path_To_Disk_Image, File) /= Status_Ok then
+      if FS.Open (Path_To_Disk_Image, Read_Only, File) /= Status_Ok then
          Semihosting.Log_Line ("Cannot open disk image '" &
                                  Path_To_Disk_Image & "'");
          return;
@@ -137,7 +137,7 @@ begin
    end if;
 
    --  Open a file on the host
-   Status := My_VFS.Open ("/host/tmp/test.shfs", FH);
+   Status := My_VFS.Open ("/host/tmp/test.shfs", Read_Only, FH);
    if Status /= Status_Ok then
       Semihosting.Log_Line ("Open Error: " & Status'Img);
    end if;
