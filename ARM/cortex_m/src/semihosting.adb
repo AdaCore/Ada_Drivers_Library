@@ -33,11 +33,12 @@ with Cortex_M.Debug;
 with System.Machine_Code; use System.Machine_Code;
 with HAL; use HAL;
 with Ada.Unchecked_Conversion;
+with Interfaces.C; use Interfaces.C;
 
 package body Semihosting is
 
    type SH_u32_Array is array (Integer range <>) of SH_Word
-     with Pack, Convention => C;
+     with Pack, Convention => C, Volatile_Components;
 
    function To_SH_u32 is new Ada.Unchecked_Conversion
      (Source => System.Address, Target => SH_Word);
@@ -122,16 +123,19 @@ package body Semihosting is
    ----------
 
    function Open (Filename : String; Mode : Flag) return SH_Word is
-      Block : SH_u32_Array (0 .. 2);
-      C_Name : String (1 .. Filename'Length + 1);
+      Block  : SH_u32_Array (0 .. 2);
+      C_Name : char_array (0 .. Filename'Length) with Volatile;
    begin
       if not Semihosting_Enabled then
          --  No debugger attached
          return SH_Word'Last;
       end if;
 
-      C_Name (1 .. Filename'Length) := Filename;
-      C_Name (C_Name'Last)          := ASCII.NUL;
+      for J in Filename'Range loop
+         C_Name (size_t (J - Filename'First)) :=
+           char'Val (Character'Pos (Filename (J)));
+      end loop;
+      C_Name (C_Name'Last) := nul;
 
       Block (0) := To_SH_u32 (C_Name'Address);
       Block (1) := Mode;
@@ -190,15 +194,18 @@ package body Semihosting is
 
    function Remove (Filename : String) return SH_Word is
       Block  : SH_u32_Array (0 .. 1);
-      C_Name : String (1 .. Filename'Length + 1);
+      C_Name : char_array (0 .. Filename'Length) with Volatile;
    begin
       if not Semihosting_Enabled then
          --  No debugger attached
          return SH_Word'Last;
       end if;
 
-      C_Name (1 .. Filename'Length) := Filename;
-      C_Name (C_Name'Last)          := ASCII.NUL;
+      for J in Filename'Range loop
+         C_Name (size_t (J - Filename'First)) :=
+           char'Val (Character'Pos (Filename (J)));
+      end loop;
+      C_Name (C_Name'Last) := nul;
 
       Block (0) := To_SH_u32 (C_Name'Address);
       Block (1) := To_SH_u32 (Filename'Length);
