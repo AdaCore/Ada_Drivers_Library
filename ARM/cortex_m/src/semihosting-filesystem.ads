@@ -70,11 +70,14 @@ package Semihosting.Filesystem is
                             return Status_Kind;
 private
 
-   type SHFS_File_Handle is new File_Handle with record
-      FD : SH_Word;
-   end record;
-
+   type SHFS_File_Handle;
    type SHFS_File_Handle_Access is access all SHFS_File_Handle;
+
+   type SHFS_File_Handle is new File_Handle with record
+      FD      : SH_Word;
+      Is_Open : Boolean := False;
+      Next    : SHFS_File_Handle_Access := null;
+   end record;
 
    overriding
    function Read (This : in out SHFS_File_Handle;
@@ -95,6 +98,12 @@ private
    function Close (This   : in out SHFS_File_Handle)
                   return Status_Kind;
 
-   type SHFS is new HAL.Filesystem.FS_Driver with null record;
+   type SHFS is new HAL.Filesystem.FS_Driver with record
+      File_Handles : SHFS_File_Handle_Access := null;
+   end record;
 
+   function Get_File_Handle (This : in out SHFS)
+                             return not null SHFS_File_Handle_Access;
+   --  This function will find an existing free file handle or allocate a new
+   --  one if necessary.
 end Semihosting.Filesystem;

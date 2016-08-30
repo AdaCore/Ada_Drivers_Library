@@ -1,9 +1,5 @@
-with Ada.Unchecked_Deallocation;
 
 package body Semihosting.Filesystem is
-
-   procedure Free is new Ada.Unchecked_Deallocation (SHFS_File_Handle,
-                                                     SHFS_File_Handle_Access);
 
    -----------------
    -- Create_Node --
@@ -134,7 +130,6 @@ package body Semihosting.Filesystem is
       Handler : out File_Handle_Ref)
       return Status_Kind
    is
-      pragma Unreferenced (This);
       FH : SHFS_File_Handle_Access;
       FD : SH_Word;
    begin
@@ -152,8 +147,9 @@ package body Semihosting.Filesystem is
       if FD = SH_Word'Last then
          return No_Such_File_Or_Directory;
       else
-         FH := new SHFS_File_Handle;
+         FH := This.Get_File_Handle;
          FH.FD := FD;
+         FH.Is_Open := True;
          Handler := File_Handle_Ref (FH);
          return Status_Ok;
       end if;
@@ -174,6 +170,32 @@ package body Semihosting.Filesystem is
       return Operation_Not_Permitted;
    end Open_Directory;
 
+   ---------------------
+   -- Get_File_Handle --
+   ---------------------
+
+   function Get_File_Handle (This : in out SHFS)
+                             return not null SHFS_File_Handle_Access
+   is
+      Ret : SHFS_File_Handle_Access := This.File_Handles;
+   begin
+
+      --  Try to find a free handle
+      while Ret /= null and then Ret.Is_Open loop
+         Ret := Ret.Next;
+      end loop;
+
+      --  Allocate a new handle
+      if Ret = null then
+         Ret := new SHFS_File_Handle;
+         Ret.Is_Open := False;
+         Ret.Next := This.File_Handles;
+         This.File_Handles := Ret;
+      end if;
+
+      return Ret;
+   end Get_File_Handle;
+
    ----------
    -- Read --
    ----------
@@ -184,6 +206,10 @@ package body Semihosting.Filesystem is
       return Status_Kind
    is
    begin
+      if not This.Is_Open then
+         return Invalid_Argument;
+      end if;
+
       if Semihosting.Read (File_Handle    => This.FD,
                            Buffer_Address => Data'Address,
                            Buffer_Size    => Data'Length) /= 0
@@ -203,8 +229,12 @@ package body Semihosting.Filesystem is
       Data : Byte_Array)
       return Status_Kind
    is
-      pragma Unreferenced (This, Data);
+      pragma Unreferenced (Data);
    begin
+      if not This.Is_Open then
+         return Invalid_Argument;
+      end if;
+
       return Permission_Denied;
    end Write;
 
@@ -218,6 +248,10 @@ package body Semihosting.Filesystem is
       return Status_Kind
    is
    begin
+      if not This.Is_Open then
+         return Invalid_Argument;
+      end if;
+
       if Semihosting.Seek (File_Handle    => This.FD,
                            Absolute_Position => SH_Word (Offset)) /= 0
       then
@@ -235,12 +269,15 @@ package body Semihosting.Filesystem is
      (This   : in out SHFS_File_Handle)
       return Status_Kind
    is
-      Ptr : SHFS_File_Handle_Access := This'Unchecked_Access;
    begin
+      if not This.Is_Open then
+         return Invalid_Argument;
+      end if;
+
       if Semihosting.Close (This.FD) /= 0 then
          return Invalid_Argument;
       else
-         Free (Ptr);
+         This.Is_Open := False;
          return Status_Ok;
       end if;
    end Close;
