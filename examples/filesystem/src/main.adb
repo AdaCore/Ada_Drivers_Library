@@ -10,8 +10,11 @@ procedure Main is
 
    procedure List_Dir (FS : in out FS_Driver'Class;
                        Path : Pathname);
+   --  List files in directory
+
    procedure List_Partitions (FS : in out FS_Driver'Class;
                               Path_To_Disk_Image : Pathname);
+   --  List partition in a disk file
 
    --------------
    -- List_Dir --
@@ -81,7 +84,6 @@ procedure Main is
                Semihosting.Log_Line ("      Kind: " & P_Entry.Kind'Img);
                Semihosting.Log_Line ("      LBA: " & P_Entry.First_Sector_LBA'Img);
                Semihosting.Log_Line ("      Number of sectors: " & P_Entry.Number_Of_Sectors'Img);
-
             end if;
          end loop;
       end;
@@ -97,49 +99,50 @@ procedure Main is
 
 begin
 
-   Status := My_VFS.Mount (Path       => "test1",
+   --  Mount My_VFS2 in My_VFS1
+   Status := My_VFS.Mount (Path       => "vfs2",
                            Filesystem => My_VFS2'Unchecked_Access);
    if Status /= Status_Ok then
       Semihosting.Log_Line ("Mount Error: " & Status'Img);
    end if;
-   Status := My_VFS2.Mount (Path       => "test2",
-                            Filesystem => My_VFS3'Unchecked_Access);
 
+
+      --  Mount My_VFS3 in My_VFS2
+   Status := My_VFS2.Mount (Path       => "vfs3",
+                            Filesystem => My_VFS3'Unchecked_Access);
    if Status /= Status_Ok then
       Semihosting.Log_Line ("Mount Error: " & Status'Img);
    end if;
 
+   --  Mount semi-hosting filesystem in My_VFS1
    Status := My_VFS.Mount (Path       => "host",
                             Filesystem => My_SHFS'Unchecked_Access);
    if Status /= Status_Ok then
       Semihosting.Log_Line ("Mount Error: " & Status'Img);
    end if;
 
+   --  List all partitions of a disk image on the host
    List_Partitions (My_VFS, "/host/tmp/disk_8_partitions.img");
 
-
-   Status := My_VFS.Unlink ("/test1/no_file");
-   if Status /= Status_Ok then
-      Semihosting.Log_Line ("Unlink Error: " & Status'Img);
-   end if;
-   Status := My_VFS.Unlink ("//test1/no_file");
-   if Status /= Status_Ok then
-      Semihosting.Log_Line ("Unlink Error: " & Status'Img);
-   end if;
-   Status := My_VFS.Unlink ("/test1//no_file");
-   if Status /= Status_Ok then
-      Semihosting.Log_Line ("Unlink Error: " & Status'Img);
-   end if;
-   Status := My_VFS.Unlink ("/test1/test2/no_file");
+   --  Try to unlink a file that doesn't exist in My_VFS2
+   Status := My_VFS.Unlink ("/vfs2/no_file");
    if Status /= Status_Ok then
       Semihosting.Log_Line ("Unlink Error: " & Status'Img);
    end if;
 
+   --  Try to unlink a file that doesn't exist in My_VFS3
+   Status := My_VFS.Unlink ("/vfs2/vfs3/no_file");
+   if Status /= Status_Ok then
+      Semihosting.Log_Line ("Unlink Error: " & Status'Img);
+   end if;
+
+   --  Open a file on the host
    Status := My_VFS.Open ("/host/tmp/test.shfs", FH);
    if Status /= Status_Ok then
       Semihosting.Log_Line ("Open Error: " & Status'Img);
    end if;
 
+   --  Read the first 10 characters
    Status := FH.Read (Data);
    if Status /= Status_Ok then
       Semihosting.Log_Line ("Read Error: " & Status'Img);
@@ -150,11 +153,13 @@ begin
    end loop;
    Semihosting.Log_New_Line;
 
+   --  Move file cursor
    Status := FH.Seek (10);
    if Status /= Status_Ok then
       Semihosting.Log_Line ("Seek Error: " & Status'Img);
    end if;
 
+   --  Read 10 characters again
    Status := FH.Read (Data);
    if Status /= Status_Ok then
       Semihosting.Log_Line ("Read Error: " & Status'Img);
@@ -170,7 +175,8 @@ begin
       Semihosting.Log_Line ("Close Error: " & Status'Img);
    end if;
 
+   --  Test directory listing
    List_Dir (My_VFS, "/");
-   List_Dir (My_VFS, "/test1");
-   List_Dir (My_VFS, "/test1/");
+   List_Dir (My_VFS, "/vfs2");
+   List_Dir (My_VFS, "/vfs2/");
 end Main;
