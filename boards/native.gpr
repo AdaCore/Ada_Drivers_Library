@@ -1,0 +1,15 @@
+aggregate library project Native is
+
+   Build := external ("BUILD", "Debug");
+
+   for Project_Path use ("native");
+
+   for Project_Files use ("../hal/HAL.gpr",
+                          "../components/components.gpr",
+                          "../services/services.gpr",
+                          "native/board.gpr");
+
+   for Library_Dir use "lib/native/" & Build;
+   for Library_Name use "native";
+
+end Native;
