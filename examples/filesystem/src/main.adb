@@ -99,13 +99,12 @@ procedure Main is
 
 begin
 
-   --  Mount My_VFS2 in My_VFS1
+   --  Mount My_VFS2 in My_VFS
    Status := My_VFS.Mount (Path       => "vfs2",
                            Filesystem => My_VFS2'Unchecked_Access);
    if Status /= Status_Ok then
       Semihosting.Log_Line ("Mount Error: " & Status'Img);
    end if;
-
 
       --  Mount My_VFS3 in My_VFS2
    Status := My_VFS2.Mount (Path       => "vfs3",
@@ -114,7 +113,7 @@ begin
       Semihosting.Log_Line ("Mount Error: " & Status'Img);
    end if;
 
-   --  Mount semi-hosting filesystem in My_VFS1
+   --  Mount semi-hosting filesystem in My_VFS
    Status := My_VFS.Mount (Path       => "host",
                             Filesystem => My_SHFS'Unchecked_Access);
    if Status /= Status_Ok then
