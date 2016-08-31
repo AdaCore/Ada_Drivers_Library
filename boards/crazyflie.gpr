@@ -18,7 +18,7 @@ aggregate library project Crazyflie is
 
    for Project_Path use ("OpenMV2");
 
-   for Project_Files use ("Crazyflie/board.gpr");
+   for Project_Files use ("crazyflie/board.gpr");
 
    for Library_Dir use "lib/crazyflie/" & RTS & "/" & Build;
    for Library_Name use "crazyflie";
