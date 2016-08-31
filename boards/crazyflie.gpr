@@ -16,7 +16,7 @@ aggregate library project Crazyflie is
          for Runtime ("Ada") use RTS_Base & "/full";
    end case;
 
-   for Project_Path use ("OpenMV2");
+   for Project_Path use ("crazyflie");
 
    for Project_Files use ("crazyflie/board.gpr");
 
