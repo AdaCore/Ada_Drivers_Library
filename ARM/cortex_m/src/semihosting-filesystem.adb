@@ -108,7 +108,7 @@ package body Semihosting.Filesystem is
    -- Change_Permissions --
    ------------------------
 
-   overriding function Change_Permissions
+   overriding function Truncate_File
      (This   : in out SHFS;
       Path   : Pathname;
       Lenght : IO_Count)
@@ -117,7 +117,7 @@ package body Semihosting.Filesystem is
       pragma Unreferenced (Path, Lenght, This);
    begin
       return Read_Only_File_System;
-   end Change_Permissions;
+   end Truncate_File;
 
    ----------
    -- Open --

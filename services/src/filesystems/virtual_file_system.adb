@@ -225,10 +225,10 @@ package body Virtual_File_System is
    ------------------------
 
    overriding
-   function Change_Permissions (This   : in out VFS;
-                                Path   : Pathname;
-                                Lenght : IO_Count)
-                                return Status_Kind
+   function Truncate_File (This   : in out VFS;
+                           Path   : Pathname;
+                           Lenght : IO_Count)
+                           return Status_Kind
    is
       Path_Reminder_Start : Integer;
       FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
@@ -239,10 +239,9 @@ package body Virtual_File_System is
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Change_Permissions (Sub_Path,
-                                       Lenght);
+         return FS.Truncate_File (Sub_Path, Lenght);
       end if;
-   end Change_Permissions;
+   end Truncate_File;
 
    ----------
    -- Open --

@@ -51,10 +51,10 @@ package Semihosting.Filesystem is
                                     return Status_Kind;
 
    overriding
-   function Change_Permissions (This   : in out SHFS;
-                                Path   : Pathname;
-                                Lenght : IO_Count)
-                                return Status_Kind;
+   function Truncate_File (This   : in out SHFS;
+                           Path   : Pathname;
+                           Lenght : IO_Count)
+                           return Status_Kind;
 
    overriding
    function Open (This    : in out SHFS;

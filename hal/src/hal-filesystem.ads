@@ -86,10 +86,10 @@ package HAL.Filesystem is
                                     Group : Group_ID)
                                     return Status_Kind is abstract;
 
-   function Change_Permissions (This   : in out FS_Driver;
-                                Path   : Pathname;
-                                Lenght : IO_Count)
-                                return Status_Kind is abstract;
+   function Truncate_File (This   : in out FS_Driver;
+                           Path   : Pathname;
+                           Lenght : IO_Count)
+                           return Status_Kind is abstract;
 
    function Open (This   : in out FS_Driver;
                   Path   : Pathname;
