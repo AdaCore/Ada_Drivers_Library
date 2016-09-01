@@ -80,9 +80,9 @@ package STM32_SVD.RNG is
      with Volatile;
 
    for RNG_Peripheral use record
-      CR at 0 range 0 .. 31;
-      SR at 4 range 0 .. 31;
-      DR at 8 range 0 .. 31;
+      CR at 16#0# range 0 .. 31;
+      SR at 16#4# range 0 .. 31;
+      DR at 16#8# range 0 .. 31;
    end record;
 
    --  Random number generator

@@ -36,6 +36,20 @@ with System;
 
 package Cortex_M.Cache is
 
+   procedure Enable_I_Cache;
+
+   procedure Enable_D_Cache;
+
+   procedure Disable_I_Cache;
+
+   procedure Disable_D_Cache;
+
+   function I_Cache_Enabled return Boolean
+     with Inline_Always;
+
+   function D_Cache_Enabled return Boolean
+     with Inline_Always;
+
    procedure Clean_DCache
      (Start : System.Address;
       Len   : Natural)

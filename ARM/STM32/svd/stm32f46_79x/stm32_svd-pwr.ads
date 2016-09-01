@@ -141,8 +141,8 @@ package STM32_SVD.PWR is
      with Volatile;
 
    for PWR_Peripheral use record
-      CR  at 0 range 0 .. 31;
-      CSR at 4 range 0 .. 31;
+      CR  at 16#0# range 0 .. 31;
+      CSR at 16#4# range 0 .. 31;
    end record;
 
    --  Power control

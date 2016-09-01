@@ -65,11 +65,11 @@ package STM32_SVD.CRC is
      with Volatile;
 
    for CRC_Peripheral use record
-      DR   at 0 range 0 .. 31;
-      IDR  at 4 range 0 .. 31;
-      CR   at 8 range 0 .. 31;
-      INIT at 12 range 0 .. 31;
-      POL  at 16 range 0 .. 31;
+      DR   at 16#0# range 0 .. 31;
+      IDR  at 16#4# range 0 .. 31;
+      CR   at 16#8# range 0 .. 31;
+      INIT at 16#C# range 0 .. 31;
+      POL  at 16#10# range 0 .. 31;
    end record;
 
    --  Cryptographic processor

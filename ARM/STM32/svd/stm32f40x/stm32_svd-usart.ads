@@ -403,12 +403,12 @@ package STM32_SVD.USART is
      with Volatile;
 
    for UART4_Peripheral use record
-      SR  at 0 range 0 .. 31;
-      DR  at 4 range 0 .. 31;
-      BRR at 8 range 0 .. 31;
-      CR1 at 12 range 0 .. 31;
-      CR2 at 16 range 0 .. 31;
-      CR3 at 20 range 0 .. 31;
+      SR  at 16#0# range 0 .. 31;
+      DR  at 16#4# range 0 .. 31;
+      BRR at 16#8# range 0 .. 31;
+      CR1 at 16#C# range 0 .. 31;
+      CR2 at 16#10# range 0 .. 31;
+      CR3 at 16#14# range 0 .. 31;
    end record;
 
    --  Universal synchronous asynchronous receiver transmitter
@@ -439,13 +439,13 @@ package STM32_SVD.USART is
      with Volatile;
 
    for USART1_Peripheral use record
-      SR   at 0 range 0 .. 31;
-      DR   at 4 range 0 .. 31;
-      BRR  at 8 range 0 .. 31;
-      CR1  at 12 range 0 .. 31;
-      CR2  at 16 range 0 .. 31;
-      CR3  at 20 range 0 .. 31;
-      GTPR at 24 range 0 .. 31;
+      SR   at 16#0# range 0 .. 31;
+      DR   at 16#4# range 0 .. 31;
+      BRR  at 16#8# range 0 .. 31;
+      CR1  at 16#C# range 0 .. 31;
+      CR2  at 16#10# range 0 .. 31;
+      CR3  at 16#14# range 0 .. 31;
+      GTPR at 16#18# range 0 .. 31;
    end record;
 
    --  Universal synchronous asynchronous receiver transmitter

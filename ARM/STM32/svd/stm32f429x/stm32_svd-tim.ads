@@ -1738,28 +1738,28 @@ package STM32_SVD.TIM is
      with Unchecked_Union, Volatile;
 
    for TIM1_Peripheral use record
-      CR1          at 0 range 0 .. 31;
-      CR2          at 4 range 0 .. 31;
-      SMCR         at 8 range 0 .. 31;
-      DIER         at 12 range 0 .. 31;
-      SR           at 16 range 0 .. 31;
-      EGR          at 20 range 0 .. 31;
-      CCER         at 32 range 0 .. 31;
-      CNT          at 36 range 0 .. 31;
-      PSC          at 40 range 0 .. 31;
-      ARR          at 44 range 0 .. 31;
-      RCR          at 48 range 0 .. 31;
-      CCR1         at 52 range 0 .. 31;
-      CCR2         at 56 range 0 .. 31;
-      CCR3         at 60 range 0 .. 31;
-      CCR4         at 64 range 0 .. 31;
-      BDTR         at 68 range 0 .. 31;
-      DCR          at 72 range 0 .. 31;
-      DMAR         at 76 range 0 .. 31;
-      CCMR1_Output at 24 range 0 .. 31;
-      CCMR2_Output at 28 range 0 .. 31;
-      CCMR1_Input  at 24 range 0 .. 31;
-      CCMR2_Input  at 28 range 0 .. 31;
+      CR1          at 16#0# range 0 .. 31;
+      CR2          at 16#4# range 0 .. 31;
+      SMCR         at 16#8# range 0 .. 31;
+      DIER         at 16#C# range 0 .. 31;
+      SR           at 16#10# range 0 .. 31;
+      EGR          at 16#14# range 0 .. 31;
+      CCER         at 16#20# range 0 .. 31;
+      CNT          at 16#24# range 0 .. 31;
+      PSC          at 16#28# range 0 .. 31;
+      ARR          at 16#2C# range 0 .. 31;
+      RCR          at 16#30# range 0 .. 31;
+      CCR1         at 16#34# range 0 .. 31;
+      CCR2         at 16#38# range 0 .. 31;
+      CCR3         at 16#3C# range 0 .. 31;
+      CCR4         at 16#40# range 0 .. 31;
+      BDTR         at 16#44# range 0 .. 31;
+      DCR          at 16#48# range 0 .. 31;
+      DMAR         at 16#4C# range 0 .. 31;
+      CCMR1_Output at 16#18# range 0 .. 31;
+      CCMR2_Output at 16#1C# range 0 .. 31;
+      CCMR1_Input  at 16#18# range 0 .. 31;
+      CCMR2_Input  at 16#1C# range 0 .. 31;
    end record;
 
    --  Advanced-timers
@@ -1829,27 +1829,27 @@ package STM32_SVD.TIM is
      with Unchecked_Union, Volatile;
 
    for TIM2_Peripheral use record
-      CR1          at 0 range 0 .. 31;
-      CR2          at 4 range 0 .. 31;
-      SMCR         at 8 range 0 .. 31;
-      DIER         at 12 range 0 .. 31;
-      SR           at 16 range 0 .. 31;
-      EGR          at 20 range 0 .. 31;
-      CCER         at 32 range 0 .. 31;
-      CNT          at 36 range 0 .. 31;
-      PSC          at 40 range 0 .. 31;
-      ARR          at 44 range 0 .. 31;
-      CCR1         at 52 range 0 .. 31;
-      CCR2         at 56 range 0 .. 31;
-      CCR3         at 60 range 0 .. 31;
-      CCR4         at 64 range 0 .. 31;
-      DCR          at 72 range 0 .. 31;
-      DMAR         at 76 range 0 .. 31;
-      OR_k         at 80 range 0 .. 31;
-      CCMR1_Output at 24 range 0 .. 31;
-      CCMR2_Output at 28 range 0 .. 31;
-      CCMR1_Input  at 24 range 0 .. 31;
-      CCMR2_Input  at 28 range 0 .. 31;
+      CR1          at 16#0# range 0 .. 31;
+      CR2          at 16#4# range 0 .. 31;
+      SMCR         at 16#8# range 0 .. 31;
+      DIER         at 16#C# range 0 .. 31;
+      SR           at 16#10# range 0 .. 31;
+      EGR          at 16#14# range 0 .. 31;
+      CCER         at 16#20# range 0 .. 31;
+      CNT          at 16#24# range 0 .. 31;
+      PSC          at 16#28# range 0 .. 31;
+      ARR          at 16#2C# range 0 .. 31;
+      CCR1         at 16#34# range 0 .. 31;
+      CCR2         at 16#38# range 0 .. 31;
+      CCR3         at 16#3C# range 0 .. 31;
+      CCR4         at 16#40# range 0 .. 31;
+      DCR          at 16#48# range 0 .. 31;
+      DMAR         at 16#4C# range 0 .. 31;
+      OR_k         at 16#50# range 0 .. 31;
+      CCMR1_Output at 16#18# range 0 .. 31;
+      CCMR2_Output at 16#1C# range 0 .. 31;
+      CCMR1_Input  at 16#18# range 0 .. 31;
+      CCMR2_Input  at 16#1C# range 0 .. 31;
    end record;
 
    --  General purpose timers
@@ -1913,26 +1913,26 @@ package STM32_SVD.TIM is
      with Unchecked_Union, Volatile;
 
    for TIM3_Peripheral use record
-      CR1          at 0 range 0 .. 31;
-      CR2          at 4 range 0 .. 31;
-      SMCR         at 8 range 0 .. 31;
-      DIER         at 12 range 0 .. 31;
-      SR           at 16 range 0 .. 31;
-      EGR          at 20 range 0 .. 31;
-      CCER         at 32 range 0 .. 31;
-      CNT          at 36 range 0 .. 31;
-      PSC          at 40 range 0 .. 31;
-      ARR          at 44 range 0 .. 31;
-      CCR1         at 52 range 0 .. 31;
-      CCR2         at 56 range 0 .. 31;
-      CCR3         at 60 range 0 .. 31;
-      CCR4         at 64 range 0 .. 31;
-      DCR          at 72 range 0 .. 31;
-      DMAR         at 76 range 0 .. 31;
-      CCMR1_Output at 24 range 0 .. 31;
-      CCMR2_Output at 28 range 0 .. 31;
-      CCMR1_Input  at 24 range 0 .. 31;
-      CCMR2_Input  at 28 range 0 .. 31;
+      CR1          at 16#0# range 0 .. 31;
+      CR2          at 16#4# range 0 .. 31;
+      SMCR         at 16#8# range 0 .. 31;
+      DIER         at 16#C# range 0 .. 31;
+      SR           at 16#10# range 0 .. 31;
+      EGR          at 16#14# range 0 .. 31;
+      CCER         at 16#20# range 0 .. 31;
+      CNT          at 16#24# range 0 .. 31;
+      PSC          at 16#28# range 0 .. 31;
+      ARR          at 16#2C# range 0 .. 31;
+      CCR1         at 16#34# range 0 .. 31;
+      CCR2         at 16#38# range 0 .. 31;
+      CCR3         at 16#3C# range 0 .. 31;
+      CCR4         at 16#40# range 0 .. 31;
+      DCR          at 16#48# range 0 .. 31;
+      DMAR         at 16#4C# range 0 .. 31;
+      CCMR1_Output at 16#18# range 0 .. 31;
+      CCMR2_Output at 16#1C# range 0 .. 31;
+      CCMR1_Input  at 16#18# range 0 .. 31;
+      CCMR2_Input  at 16#1C# range 0 .. 31;
    end record;
 
    --  General purpose timers
@@ -2002,27 +2002,27 @@ package STM32_SVD.TIM is
      with Unchecked_Union, Volatile;
 
    for TIM5_Peripheral use record
-      CR1          at 0 range 0 .. 31;
-      CR2          at 4 range 0 .. 31;
-      SMCR         at 8 range 0 .. 31;
-      DIER         at 12 range 0 .. 31;
-      SR           at 16 range 0 .. 31;
-      EGR          at 20 range 0 .. 31;
-      CCER         at 32 range 0 .. 31;
-      CNT          at 36 range 0 .. 31;
-      PSC          at 40 range 0 .. 31;
-      ARR          at 44 range 0 .. 31;
-      CCR1         at 52 range 0 .. 31;
-      CCR2         at 56 range 0 .. 31;
-      CCR3         at 60 range 0 .. 31;
-      CCR4         at 64 range 0 .. 31;
-      DCR          at 72 range 0 .. 31;
-      DMAR         at 76 range 0 .. 31;
-      OR_k         at 80 range 0 .. 31;
-      CCMR1_Output at 24 range 0 .. 31;
-      CCMR2_Output at 28 range 0 .. 31;
-      CCMR1_Input  at 24 range 0 .. 31;
-      CCMR2_Input  at 28 range 0 .. 31;
+      CR1          at 16#0# range 0 .. 31;
+      CR2          at 16#4# range 0 .. 31;
+      SMCR         at 16#8# range 0 .. 31;
+      DIER         at 16#C# range 0 .. 31;
+      SR           at 16#10# range 0 .. 31;
+      EGR          at 16#14# range 0 .. 31;
+      CCER         at 16#20# range 0 .. 31;
+      CNT          at 16#24# range 0 .. 31;
+      PSC          at 16#28# range 0 .. 31;
+      ARR          at 16#2C# range 0 .. 31;
+      CCR1         at 16#34# range 0 .. 31;
+      CCR2         at 16#38# range 0 .. 31;
+      CCR3         at 16#3C# range 0 .. 31;
+      CCR4         at 16#40# range 0 .. 31;
+      DCR          at 16#48# range 0 .. 31;
+      DMAR         at 16#4C# range 0 .. 31;
+      OR_k         at 16#50# range 0 .. 31;
+      CCMR1_Output at 16#18# range 0 .. 31;
+      CCMR2_Output at 16#1C# range 0 .. 31;
+      CCMR1_Input  at 16#18# range 0 .. 31;
+      CCMR2_Input  at 16#1C# range 0 .. 31;
    end record;
 
    --  General-purpose-timers
@@ -2051,14 +2051,14 @@ package STM32_SVD.TIM is
      with Volatile;
 
    for TIM6_Peripheral use record
-      CR1  at 0 range 0 .. 31;
-      CR2  at 4 range 0 .. 31;
-      DIER at 12 range 0 .. 31;
-      SR   at 16 range 0 .. 31;
-      EGR  at 20 range 0 .. 31;
-      CNT  at 36 range 0 .. 31;
-      PSC  at 40 range 0 .. 31;
-      ARR  at 44 range 0 .. 31;
+      CR1  at 16#0# range 0 .. 31;
+      CR2  at 16#4# range 0 .. 31;
+      DIER at 16#C# range 0 .. 31;
+      SR   at 16#10# range 0 .. 31;
+      EGR  at 16#14# range 0 .. 31;
+      CNT  at 16#24# range 0 .. 31;
+      PSC  at 16#28# range 0 .. 31;
+      ARR  at 16#2C# range 0 .. 31;
    end record;
 
    --  Basic timers
@@ -2114,20 +2114,20 @@ package STM32_SVD.TIM is
      with Unchecked_Union, Volatile;
 
    for TIM9_Peripheral use record
-      CR1          at 0 range 0 .. 31;
-      CR2          at 4 range 0 .. 31;
-      SMCR         at 8 range 0 .. 31;
-      DIER         at 12 range 0 .. 31;
-      SR           at 16 range 0 .. 31;
-      EGR          at 20 range 0 .. 31;
-      CCER         at 32 range 0 .. 31;
-      CNT          at 36 range 0 .. 31;
-      PSC          at 40 range 0 .. 31;
-      ARR          at 44 range 0 .. 31;
-      CCR1         at 52 range 0 .. 31;
-      CCR2         at 56 range 0 .. 31;
-      CCMR1_Output at 24 range 0 .. 31;
-      CCMR1_Input  at 24 range 0 .. 31;
+      CR1          at 16#0# range 0 .. 31;
+      CR2          at 16#4# range 0 .. 31;
+      SMCR         at 16#8# range 0 .. 31;
+      DIER         at 16#C# range 0 .. 31;
+      SR           at 16#10# range 0 .. 31;
+      EGR          at 16#14# range 0 .. 31;
+      CCER         at 16#20# range 0 .. 31;
+      CNT          at 16#24# range 0 .. 31;
+      PSC          at 16#28# range 0 .. 31;
+      ARR          at 16#2C# range 0 .. 31;
+      CCR1         at 16#34# range 0 .. 31;
+      CCR2         at 16#38# range 0 .. 31;
+      CCMR1_Output at 16#18# range 0 .. 31;
+      CCMR1_Input  at 16#18# range 0 .. 31;
    end record;
 
    --  General purpose timers
@@ -2177,17 +2177,17 @@ package STM32_SVD.TIM is
      with Unchecked_Union, Volatile;
 
    for TIM10_Peripheral use record
-      CR1          at 0 range 0 .. 31;
-      DIER         at 12 range 0 .. 31;
-      SR           at 16 range 0 .. 31;
-      EGR          at 20 range 0 .. 31;
-      CCER         at 32 range 0 .. 31;
-      CNT          at 36 range 0 .. 31;
-      PSC          at 40 range 0 .. 31;
-      ARR          at 44 range 0 .. 31;
-      CCR1         at 52 range 0 .. 31;
-      CCMR1_Output at 24 range 0 .. 31;
-      CCMR1_Input  at 24 range 0 .. 31;
+      CR1          at 16#0# range 0 .. 31;
+      DIER         at 16#C# range 0 .. 31;
+      SR           at 16#10# range 0 .. 31;
+      EGR          at 16#14# range 0 .. 31;
+      CCER         at 16#20# range 0 .. 31;
+      CNT          at 16#24# range 0 .. 31;
+      PSC          at 16#28# range 0 .. 31;
+      ARR          at 16#2C# range 0 .. 31;
+      CCR1         at 16#34# range 0 .. 31;
+      CCMR1_Output at 16#18# range 0 .. 31;
+      CCMR1_Input  at 16#18# range 0 .. 31;
    end record;
 
    --  General-purpose-timers
@@ -2243,18 +2243,18 @@ package STM32_SVD.TIM is
      with Unchecked_Union, Volatile;
 
    for TIM11_Peripheral use record
-      CR1          at 0 range 0 .. 31;
-      DIER         at 12 range 0 .. 31;
-      SR           at 16 range 0 .. 31;
-      EGR          at 20 range 0 .. 31;
-      CCER         at 32 range 0 .. 31;
-      CNT          at 36 range 0 .. 31;
-      PSC          at 40 range 0 .. 31;
-      ARR          at 44 range 0 .. 31;
-      CCR1         at 52 range 0 .. 31;
-      OR_k         at 80 range 0 .. 31;
-      CCMR1_Output at 24 range 0 .. 31;
-      CCMR1_Input  at 24 range 0 .. 31;
+      CR1          at 16#0# range 0 .. 31;
+      DIER         at 16#C# range 0 .. 31;
+      SR           at 16#10# range 0 .. 31;
+      EGR          at 16#14# range 0 .. 31;
+      CCER         at 16#20# range 0 .. 31;
+      CNT          at 16#24# range 0 .. 31;
+      PSC          at 16#28# range 0 .. 31;
+      ARR          at 16#2C# range 0 .. 31;
+      CCR1         at 16#34# range 0 .. 31;
+      OR_k         at 16#50# range 0 .. 31;
+      CCMR1_Output at 16#18# range 0 .. 31;
+      CCMR1_Input  at 16#18# range 0 .. 31;
    end record;
 
    --  General-purpose-timers

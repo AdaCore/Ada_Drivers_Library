@@ -284,13 +284,13 @@ package STM32_SVD.SPDIF_RX is
      with Volatile;
 
    for SPDIFRX_Peripheral use record
-      CR   at 0 range 0 .. 31;
-      IMR  at 4 range 0 .. 31;
-      SR   at 8 range 0 .. 31;
-      IFCR at 12 range 0 .. 31;
-      DR   at 16 range 0 .. 31;
-      CSR  at 20 range 0 .. 31;
-      DIR  at 24 range 0 .. 31;
+      CR   at 16#0# range 0 .. 31;
+      IMR  at 16#4# range 0 .. 31;
+      SR   at 16#8# range 0 .. 31;
+      IFCR at 16#C# range 0 .. 31;
+      DR   at 16#10# range 0 .. 31;
+      CSR  at 16#14# range 0 .. 31;
+      DIR  at 16#18# range 0 .. 31;
    end record;
 
    --  Receiver Interface

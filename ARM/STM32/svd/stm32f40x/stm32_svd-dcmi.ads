@@ -353,17 +353,17 @@ package STM32_SVD.DCMI is
      with Volatile;
 
    for DCMI_Peripheral use record
-      CR     at 0 range 0 .. 31;
-      SR     at 4 range 0 .. 31;
-      RIS    at 8 range 0 .. 31;
-      IER    at 12 range 0 .. 31;
-      MIS    at 16 range 0 .. 31;
-      ICR    at 20 range 0 .. 31;
-      ESCR   at 24 range 0 .. 31;
-      ESUR   at 28 range 0 .. 31;
-      CWSTRT at 32 range 0 .. 31;
-      CWSIZE at 36 range 0 .. 31;
-      DR     at 40 range 0 .. 31;
+      CR     at 16#0# range 0 .. 31;
+      SR     at 16#4# range 0 .. 31;
+      RIS    at 16#8# range 0 .. 31;
+      IER    at 16#C# range 0 .. 31;
+      MIS    at 16#10# range 0 .. 31;
+      ICR    at 16#14# range 0 .. 31;
+      ESCR   at 16#18# range 0 .. 31;
+      ESUR   at 16#1C# range 0 .. 31;
+      CWSTRT at 16#20# range 0 .. 31;
+      CWSIZE at 16#24# range 0 .. 31;
+      DR     at 16#28# range 0 .. 31;
    end record;
 
    --  Digital camera interface

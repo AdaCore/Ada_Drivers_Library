@@ -33,6 +33,20 @@
 
 package body Cortex_M.Cache is
 
+   procedure Enable_I_Cache is null;
+
+   procedure Enable_D_Cache is null;
+
+   procedure Disable_I_Cache is null;
+
+   procedure Disable_D_Cache is null;
+
+   function I_Cache_Enabled return Boolean
+   is (False);
+
+   function D_Cache_Enabled return Boolean
+   is (False);
+
    procedure Clean_DCache
      (Start : System.Address;
       Len   : Natural) is null;

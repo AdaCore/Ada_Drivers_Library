@@ -183,10 +183,10 @@ package STM32_SVD.DBG is
      with Volatile;
 
    for DBG_Peripheral use record
-      DBGMCU_IDCODE  at 0 range 0 .. 31;
-      DBGMCU_CR      at 4 range 0 .. 31;
-      DBGMCU_APB1_FZ at 8 range 0 .. 31;
-      DBGMCU_APB2_FZ at 12 range 0 .. 31;
+      DBGMCU_IDCODE  at 16#0# range 0 .. 31;
+      DBGMCU_CR      at 16#4# range 0 .. 31;
+      DBGMCU_APB1_FZ at 16#8# range 0 .. 31;
+      DBGMCU_APB2_FZ at 16#C# range 0 .. 31;
    end record;
 
    --  Debug support

@@ -100,10 +100,10 @@ package STM32_SVD.IWDG is
      with Volatile;
 
    for IWDG_Peripheral use record
-      KR  at 0 range 0 .. 31;
-      PR  at 4 range 0 .. 31;
-      RLR at 8 range 0 .. 31;
-      SR  at 12 range 0 .. 31;
+      KR  at 16#0# range 0 .. 31;
+      PR  at 16#4# range 0 .. 31;
+      RLR at 16#8# range 0 .. 31;
+      SR  at 16#C# range 0 .. 31;
    end record;
 
    --  Independent watchdog

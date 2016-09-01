@@ -290,13 +290,13 @@ package STM32_SVD.SYSCFG is
      with Volatile;
 
    for SYSCFG_Peripheral use record
-      MEMRM   at 0 range 0 .. 31;
-      PMC     at 4 range 0 .. 31;
-      EXTICR1 at 8 range 0 .. 31;
-      EXTICR2 at 12 range 0 .. 31;
-      EXTICR3 at 16 range 0 .. 31;
-      EXTICR4 at 20 range 0 .. 31;
-      CMPCR   at 32 range 0 .. 31;
+      MEMRM   at 16#0# range 0 .. 31;
+      PMC     at 16#4# range 0 .. 31;
+      EXTICR1 at 16#8# range 0 .. 31;
+      EXTICR2 at 16#C# range 0 .. 31;
+      EXTICR3 at 16#10# range 0 .. 31;
+      EXTICR4 at 16#14# range 0 .. 31;
+      CMPCR   at 16#20# range 0 .. 31;
    end record;
 
    --  System configuration controller

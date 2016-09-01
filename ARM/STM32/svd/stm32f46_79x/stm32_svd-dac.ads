@@ -396,20 +396,20 @@ package STM32_SVD.DAC is
      with Volatile;
 
    for DAC_Peripheral use record
-      CR      at 0 range 0 .. 31;
-      SWTRIGR at 4 range 0 .. 31;
-      DHR12R1 at 8 range 0 .. 31;
-      DHR12L1 at 12 range 0 .. 31;
-      DHR8R1  at 16 range 0 .. 31;
-      DHR12R2 at 20 range 0 .. 31;
-      DHR12L2 at 24 range 0 .. 31;
-      DHR8R2  at 28 range 0 .. 31;
-      DHR12RD at 32 range 0 .. 31;
-      DHR12LD at 36 range 0 .. 31;
-      DHR8RD  at 40 range 0 .. 31;
-      DOR1    at 44 range 0 .. 31;
-      DOR2    at 48 range 0 .. 31;
-      SR      at 52 range 0 .. 31;
+      CR      at 16#0# range 0 .. 31;
+      SWTRIGR at 16#4# range 0 .. 31;
+      DHR12R1 at 16#8# range 0 .. 31;
+      DHR12L1 at 16#C# range 0 .. 31;
+      DHR8R1  at 16#10# range 0 .. 31;
+      DHR12R2 at 16#14# range 0 .. 31;
+      DHR12L2 at 16#18# range 0 .. 31;
+      DHR8R2  at 16#1C# range 0 .. 31;
+      DHR12RD at 16#20# range 0 .. 31;
+      DHR12LD at 16#24# range 0 .. 31;
+      DHR8RD  at 16#28# range 0 .. 31;
+      DOR1    at 16#2C# range 0 .. 31;
+      DOR2    at 16#30# range 0 .. 31;
+      SR      at 16#34# range 0 .. 31;
    end record;
 
    --  Digital-to-analog converter

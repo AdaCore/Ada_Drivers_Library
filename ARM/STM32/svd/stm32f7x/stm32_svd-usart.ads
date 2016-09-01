@@ -609,17 +609,17 @@ package STM32_SVD.USART is
      with Volatile;
 
    for USART_Peripheral use record
-      CR1  at 0 range 0 .. 31;
-      CR2  at 4 range 0 .. 31;
-      CR3  at 8 range 0 .. 31;
-      BRR  at 12 range 0 .. 31;
-      GTPR at 16 range 0 .. 31;
-      RTOR at 20 range 0 .. 31;
-      RQR  at 24 range 0 .. 31;
-      ISR  at 28 range 0 .. 31;
-      ICR  at 32 range 0 .. 31;
-      RDR  at 36 range 0 .. 31;
-      TDR  at 40 range 0 .. 31;
+      CR1  at 16#0# range 0 .. 31;
+      CR2  at 16#4# range 0 .. 31;
+      CR3  at 16#8# range 0 .. 31;
+      BRR  at 16#C# range 0 .. 31;
+      GTPR at 16#10# range 0 .. 31;
+      RTOR at 16#14# range 0 .. 31;
+      RQR  at 16#18# range 0 .. 31;
+      ISR  at 16#1C# range 0 .. 31;
+      ICR  at 16#20# range 0 .. 31;
+      RDR  at 16#24# range 0 .. 31;
+      TDR  at 16#28# range 0 .. 31;
    end record;
 
    --  Universal synchronous asynchronous receiver transmitter

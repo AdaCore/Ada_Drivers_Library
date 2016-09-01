@@ -1563,31 +1563,31 @@ package STM32_SVD.RCC is
      with Volatile;
 
    for RCC_Peripheral use record
-      CR         at 0 range 0 .. 31;
-      PLLCFGR    at 4 range 0 .. 31;
-      CFGR       at 8 range 0 .. 31;
-      CIR        at 12 range 0 .. 31;
-      AHB1RSTR   at 16 range 0 .. 31;
-      AHB2RSTR   at 20 range 0 .. 31;
-      AHB3RSTR   at 24 range 0 .. 31;
-      APB1RSTR   at 32 range 0 .. 31;
-      APB2RSTR   at 36 range 0 .. 31;
-      AHB1ENR    at 48 range 0 .. 31;
-      AHB2ENR    at 52 range 0 .. 31;
-      AHB3ENR    at 56 range 0 .. 31;
-      APB1ENR    at 64 range 0 .. 31;
-      APB2ENR    at 68 range 0 .. 31;
-      AHB1LPENR  at 80 range 0 .. 31;
-      AHB2LPENR  at 84 range 0 .. 31;
-      AHB3LPENR  at 88 range 0 .. 31;
-      APB1LPENR  at 96 range 0 .. 31;
-      APB2LPENR  at 100 range 0 .. 31;
-      BDCR       at 112 range 0 .. 31;
-      CSR        at 116 range 0 .. 31;
-      SSCGR      at 128 range 0 .. 31;
-      PLLI2SCFGR at 132 range 0 .. 31;
-      PLLSAICFGR at 136 range 0 .. 31;
-      DCKCFGR    at 140 range 0 .. 31;
+      CR         at 16#0# range 0 .. 31;
+      PLLCFGR    at 16#4# range 0 .. 31;
+      CFGR       at 16#8# range 0 .. 31;
+      CIR        at 16#C# range 0 .. 31;
+      AHB1RSTR   at 16#10# range 0 .. 31;
+      AHB2RSTR   at 16#14# range 0 .. 31;
+      AHB3RSTR   at 16#18# range 0 .. 31;
+      APB1RSTR   at 16#20# range 0 .. 31;
+      APB2RSTR   at 16#24# range 0 .. 31;
+      AHB1ENR    at 16#30# range 0 .. 31;
+      AHB2ENR    at 16#34# range 0 .. 31;
+      AHB3ENR    at 16#38# range 0 .. 31;
+      APB1ENR    at 16#40# range 0 .. 31;
+      APB2ENR    at 16#44# range 0 .. 31;
+      AHB1LPENR  at 16#50# range 0 .. 31;
+      AHB2LPENR  at 16#54# range 0 .. 31;
+      AHB3LPENR  at 16#58# range 0 .. 31;
+      APB1LPENR  at 16#60# range 0 .. 31;
+      APB2LPENR  at 16#64# range 0 .. 31;
+      BDCR       at 16#70# range 0 .. 31;
+      CSR        at 16#74# range 0 .. 31;
+      SSCGR      at 16#80# range 0 .. 31;
+      PLLI2SCFGR at 16#84# range 0 .. 31;
+      PLLSAICFGR at 16#88# range 0 .. 31;
+      DCKCFGR    at 16#8C# range 0 .. 31;
    end record;
 
    --  Reset and clock control

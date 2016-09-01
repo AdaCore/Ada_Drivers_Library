@@ -369,16 +369,16 @@ package STM32_SVD.I2C is
      with Volatile;
 
    for I2C_Peripheral use record
-      CR1   at 0 range 0 .. 31;
-      CR2   at 4 range 0 .. 31;
-      OAR1  at 8 range 0 .. 31;
-      OAR2  at 12 range 0 .. 31;
-      DR    at 16 range 0 .. 31;
-      SR1   at 20 range 0 .. 31;
-      SR2   at 24 range 0 .. 31;
-      CCR   at 28 range 0 .. 31;
-      TRISE at 32 range 0 .. 31;
-      FLTR  at 36 range 0 .. 31;
+      CR1   at 16#0# range 0 .. 31;
+      CR2   at 16#4# range 0 .. 31;
+      OAR1  at 16#8# range 0 .. 31;
+      OAR2  at 16#C# range 0 .. 31;
+      DR    at 16#10# range 0 .. 31;
+      SR1   at 16#14# range 0 .. 31;
+      SR2   at 16#18# range 0 .. 31;
+      CCR   at 16#1C# range 0 .. 31;
+      TRISE at 16#20# range 0 .. 31;
+      FLTR  at 16#24# range 0 .. 31;
    end record;
 
    --  Inter-integrated circuit

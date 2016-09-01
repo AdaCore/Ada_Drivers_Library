@@ -35,47 +35,14 @@ with Ada.Unchecked_Conversion;
 with Interfaces;               use Interfaces;
 with HAL;                      use HAL;
 
+with Cortex_M_SVD.SCB;         use Cortex_M_SVD.SCB;
+with Cortex_M_SVD.PF;          use Cortex_M_SVD.PF;
+with Cortex_M_SVD.Cache;       use Cortex_M_SVD.Cache;
+
 package body Cortex_M.Cache is
 
-   SCS_Base : constant := 16#E000_E000#; --  System Control Space base addr.
-   SCB_Base : constant := SCS_Base + 16#0D00#; --  System Control Block
-
-   type CCSIDR_Register is record
-      Line_Size     : UInt3;
-      Associativity : UInt10;
-      Num_Sets      : UInt15;
-      WA            : Boolean;
-      RA            : Boolean;
-      WB            : Boolean;
-      WT            : Boolean;
-   end record with Volatile, Size => 32;
-
-   for CCSIDR_Register use record
-      Line_Size     at 0 range  0 ..  2;
-      Associativity at 0 range  3 .. 12;
-      Num_Sets      at 0 range 13 .. 27;
-      WA            at 0 range 28 .. 28;
-      RA            at 0 range 29 .. 29;
-      WB            at 0 range 30 .. 30;
-      WT            at 0 range 31 .. 31;
-   end record;
-
-   CCSIDR               : CCSIDR_Register
-     with Volatile, Address => System'To_Address (SCB_Base + 16#080#);
-
-   Data_Cache_Line_Size : constant Word := Word (CCSIDR.Line_Size) * 32;
-
-   --  D-Cache clean by MVA to PoC
-   DCCMVAC  : constant System.Address :=
-                System'To_Address (SCB_Base + 16#268#);
-
-   --  D-Cache invalidate by MVA to PoC
-   DCIMVAC  : constant System.Address :=
-                System'To_Address (SCB_Base + 16#25C#);
-
-   --  D-Cache clean and invalidate by MVA to PoC
-   DCCIMVAC : constant System.Address :=
-                System'To_Address (SCB_Base + 16#270#);
+   Data_Cache_Line_Size : constant Word :=
+                            2 ** Natural (PF_Periph.CCSIDR.LineSize + 2);
 
    procedure DSB with Inline_Always;
    --  Data Stored Barrier
@@ -115,31 +82,159 @@ package body Cortex_M.Cache is
      (Start : System.Address;
       Len   : Natural)
    is
-      function To_U32 is new Ada.Unchecked_Conversion
-        (System.Address, Unsigned_32);
+   begin
+      if not D_Cache_Enabled then
+         return;
+      end if;
 
-      Op_Size   : Integer_32 := Integer_32 (Len);
-      Op_Addr   : Unsigned_32 := To_U32 (Start);
-      Reg       : Word with Volatile, Address => Reg_Address;
+      declare
+         function To_U32 is new Ada.Unchecked_Conversion
+           (System.Address, Unsigned_32);
 
+         Op_Size   : Integer_32 := Integer_32 (Len);
+         Op_Addr   : Unsigned_32 := To_U32 (Start);
+         Reg       : Word with Volatile, Address => Reg_Address;
+
+      begin
+         DSB;
+
+         while Op_Size > 0 loop
+            Reg     := Op_Addr;
+            Op_Addr := Op_Addr + Data_Cache_Line_Size;
+            Op_Size := Op_Size - Integer_32 (Data_Cache_Line_Size);
+         end loop;
+
+         DSB;
+         ISB;
+      end;
+   end Cache_Maintenance;
+
+   --------------------
+   -- Enable_I_Cache --
+   --------------------
+
+   procedure Enable_I_Cache
+   is
    begin
       DSB;
+      ISB;
+      Cortex_M_SVD.Cache.Cache_Periph.ICIALLU := 0; --  Invalidate I-Cache
+      Cortex_M_SVD.SCB.SCB_Periph.CCR.IC := True;       --  Enable I-Cache
+      DSB;
+      ISB;
+   end Enable_I_Cache;
 
-      while Op_Size > 0 loop
-         Reg     := Op_Addr;
-         Op_Addr := Op_Addr + Data_Cache_Line_Size;
-         Op_Size := Op_Size - Integer_32 (Data_Cache_Line_Size);
-      end loop;
+   ---------------------
+   -- Disable_I_Cache --
+   ---------------------
+
+   procedure Disable_I_Cache
+   is
+   begin
+      DSB;
+      ISB;
+
+      Cortex_M_SVD.SCB.SCB_Periph.CCR.IC := False;  --  Disable I-Cache
+      Cortex_M_SVD.Cache.Cache_Periph.ICIALLU := 0; --  Invalidate I-Cache
 
       DSB;
       ISB;
-   end Cache_Maintenance;
+   end Disable_I_Cache;
+
+   --------------------
+   -- Enable_D_Cache --
+   --------------------
+
+   procedure Enable_D_Cache
+   is
+      CCSIDR : CCSIDR_Register;
+   begin
+      PF_Periph.CSSELR := (InD    => Data_Cache,
+                           Level  => Level_1,
+                           others => <>);
+
+      DSB;
+
+      CCSIDR := PF_Periph.CCSIDR;
+
+      for S in reverse 0 .. CCSIDR.NumSets loop
+         for W in reverse 0 .. CCSIDR.Associativity loop
+            Cache_Periph.DCISW :=
+              (Set => UInt9 (S),
+               Way => UInt2 (W),
+               others => <>);
+         end loop;
+      end loop;
+
+      DSB;
+
+      SCB_Periph.CCR.DC := True;       --  Enable D-Cache
+
+      DSB;
+      ISB;
+   end Enable_D_Cache;
+
+   ---------------------
+   -- Disable_D_Cache --
+   ---------------------
+
+   procedure Disable_D_Cache
+   is
+      Sets   : DCISW_Set_Field;
+      Ways   : DCISW_Way_Field;
+
+   begin
+      PF_Periph.CSSELR := (InD    => Data_Cache,
+                           Level  => Level_1,
+                           others => <>);
+
+      DSB;
+
+      --  Clean & Invalidate D-Cache
+      Sets := DCISW_Set_Field (PF_Periph.CCSIDR.NumSets);
+      Ways := DCISW_Way_Field (PF_Periph.CCSIDR.Associativity);
+
+      for S in 0 .. Sets loop
+         for W in 0 .. Ways loop
+            Cache_Periph.DCCISW :=
+              (Set => S,
+               Way => W,
+               others => <>);
+         end loop;
+      end loop;
+
+      SCB_Periph.CCR.DC := False; --  Disable D-Cache
+
+      DSB;
+      ISB;
+   end Disable_D_Cache;
+
+   ---------------------
+   -- I_Cache_Enabled --
+   ---------------------
+
+   function I_Cache_Enabled return Boolean
+   is
+   begin
+      return SCB_Periph.CCR.IC;
+   end I_Cache_Enabled;
+
+   ---------------------
+   -- D_Cache_Enabled --
+   ---------------------
+
+   function D_Cache_Enabled return Boolean
+   is
+   begin
+      return SCB_Periph.CCR.DC;
+   end D_Cache_Enabled;
 
    ------------------
    -- Clean_DCache --
    ------------------
 
-   procedure Int_Clean_DCache is new Cache_Maintenance (DCCMVAC);
+   procedure Int_Clean_DCache is
+     new Cache_Maintenance (Cache_Periph.DCCMVAC'Address);
 
    procedure Clean_DCache
      (Start : System.Address;
@@ -150,7 +245,8 @@ package body Cortex_M.Cache is
    -- Invalidate_DCache --
    -----------------------
 
-   procedure Int_Invalidate_DCache is new Cache_Maintenance (DCIMVAC);
+   procedure Int_Invalidate_DCache is
+     new Cache_Maintenance (Cache_Periph.DCIMVAC'Address);
 
    procedure Invalidate_DCache
      (Start : System.Address;
@@ -161,7 +257,8 @@ package body Cortex_M.Cache is
    -- Clean_Invalidate_DCache --
    -----------------------------
 
-   procedure Int_Clean_Invalidate_DCache is new Cache_Maintenance (DCCIMVAC);
+   procedure Int_Clean_Invalidate_DCache is
+     new Cache_Maintenance (Cache_Periph.DCCIMVAC'Address);
 
    procedure Clean_Invalidate_DCache
      (Start : System.Address;

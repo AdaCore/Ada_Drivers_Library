@@ -3,7 +3,7 @@ with "../../hal/HAL";
 
 library project Cortex_M4 is
 
-   for Source_Dirs use ("src", "src/svd", "src/nocache");
+   for Source_Dirs use ("src", "src/cm4", "src/nocache");
 
    for Library_Name use "cortex-m4";
    for Library_Dir use "lib/cortex-m4/" & Config.Object_Subdir;

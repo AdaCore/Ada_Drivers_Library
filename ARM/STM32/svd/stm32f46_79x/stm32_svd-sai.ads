@@ -624,23 +624,23 @@ package STM32_SVD.SAI is
      with Volatile;
 
    for SAI_Peripheral use record
-      GCR    at 0 range 0 .. 31;
-      ACR1   at 4 range 0 .. 31;
-      ACR2   at 8 range 0 .. 31;
-      AFRCR  at 12 range 0 .. 31;
-      ASLOTR at 16 range 0 .. 31;
-      AIM    at 20 range 0 .. 31;
-      ASR    at 24 range 0 .. 31;
-      ACLRFR at 28 range 0 .. 31;
-      ADR    at 32 range 0 .. 31;
-      BCR1   at 36 range 0 .. 31;
-      BCR2   at 40 range 0 .. 31;
-      BFRCR  at 44 range 0 .. 31;
-      BSLOTR at 48 range 0 .. 31;
-      BIM    at 52 range 0 .. 31;
-      BSR    at 56 range 0 .. 31;
-      BCLRFR at 60 range 0 .. 31;
-      BDR    at 64 range 0 .. 31;
+      GCR    at 16#0# range 0 .. 31;
+      ACR1   at 16#4# range 0 .. 31;
+      ACR2   at 16#8# range 0 .. 31;
+      AFRCR  at 16#C# range 0 .. 31;
+      ASLOTR at 16#10# range 0 .. 31;
+      AIM    at 16#14# range 0 .. 31;
+      ASR    at 16#18# range 0 .. 31;
+      ACLRFR at 16#1C# range 0 .. 31;
+      ADR    at 16#20# range 0 .. 31;
+      BCR1   at 16#24# range 0 .. 31;
+      BCR2   at 16#28# range 0 .. 31;
+      BFRCR  at 16#2C# range 0 .. 31;
+      BSLOTR at 16#30# range 0 .. 31;
+      BIM    at 16#34# range 0 .. 31;
+      BSR    at 16#38# range 0 .. 31;
+      BCLRFR at 16#3C# range 0 .. 31;
+      BDR    at 16#40# range 0 .. 31;
    end record;
 
    --  Serial audio interface

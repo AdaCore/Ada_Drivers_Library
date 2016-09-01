@@ -510,28 +510,28 @@ package STM32_SVD.DMA2D is
      with Volatile;
 
    for DMA2D_Peripheral use record
-      CR      at 0 range 0 .. 31;
-      ISR     at 4 range 0 .. 31;
-      IFCR    at 8 range 0 .. 31;
-      FGMAR   at 12 range 0 .. 31;
-      FGOR    at 16 range 0 .. 31;
-      BGMAR   at 20 range 0 .. 31;
-      BGOR    at 24 range 0 .. 31;
-      FGPFCCR at 28 range 0 .. 31;
-      FGCOLR  at 32 range 0 .. 31;
-      BGPFCCR at 36 range 0 .. 31;
-      BGCOLR  at 40 range 0 .. 31;
-      FGCMAR  at 44 range 0 .. 31;
-      BGCMAR  at 48 range 0 .. 31;
-      OPFCCR  at 52 range 0 .. 31;
-      OCOLR   at 56 range 0 .. 31;
-      OMAR    at 60 range 0 .. 31;
-      OOR     at 64 range 0 .. 31;
-      NLR     at 68 range 0 .. 31;
-      LWR     at 72 range 0 .. 31;
-      AMTCR   at 76 range 0 .. 31;
-      FGCLUT  at 1024 range 0 .. 31;
-      BGCLUT  at 2048 range 0 .. 31;
+      CR      at 16#0# range 0 .. 31;
+      ISR     at 16#4# range 0 .. 31;
+      IFCR    at 16#8# range 0 .. 31;
+      FGMAR   at 16#C# range 0 .. 31;
+      FGOR    at 16#10# range 0 .. 31;
+      BGMAR   at 16#14# range 0 .. 31;
+      BGOR    at 16#18# range 0 .. 31;
+      FGPFCCR at 16#1C# range 0 .. 31;
+      FGCOLR  at 16#20# range 0 .. 31;
+      BGPFCCR at 16#24# range 0 .. 31;
+      BGCOLR  at 16#28# range 0 .. 31;
+      FGCMAR  at 16#2C# range 0 .. 31;
+      BGCMAR  at 16#30# range 0 .. 31;
+      OPFCCR  at 16#34# range 0 .. 31;
+      OCOLR   at 16#38# range 0 .. 31;
+      OMAR    at 16#3C# range 0 .. 31;
+      OOR     at 16#40# range 0 .. 31;
+      NLR     at 16#44# range 0 .. 31;
+      LWR     at 16#48# range 0 .. 31;
+      AMTCR   at 16#4C# range 0 .. 31;
+      FGCLUT  at 16#400# range 0 .. 31;
+      BGCLUT  at 16#800# range 0 .. 31;
    end record;
 
    --  DMA2D controller

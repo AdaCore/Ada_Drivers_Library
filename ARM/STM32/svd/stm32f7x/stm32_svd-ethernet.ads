@@ -1123,20 +1123,20 @@ package STM32_SVD.Ethernet is
      with Volatile;
 
    for Ethernet_DMA_Peripheral use record
-      DMABMR    at 0 range 0 .. 31;
-      DMATPDR   at 4 range 0 .. 31;
-      DMARPDR   at 8 range 0 .. 31;
-      DMARDLAR  at 12 range 0 .. 31;
-      DMATDLAR  at 16 range 0 .. 31;
-      DMASR     at 20 range 0 .. 31;
-      DMAOMR    at 24 range 0 .. 31;
-      DMAIER    at 28 range 0 .. 31;
-      DMAMFBOCR at 32 range 0 .. 31;
-      DMARSWTR  at 36 range 0 .. 31;
-      DMACHTDR  at 72 range 0 .. 31;
-      DMACHRDR  at 76 range 0 .. 31;
-      DMACHTBAR at 80 range 0 .. 31;
-      DMACHRBAR at 84 range 0 .. 31;
+      DMABMR    at 16#0# range 0 .. 31;
+      DMATPDR   at 16#4# range 0 .. 31;
+      DMARPDR   at 16#8# range 0 .. 31;
+      DMARDLAR  at 16#C# range 0 .. 31;
+      DMATDLAR  at 16#10# range 0 .. 31;
+      DMASR     at 16#14# range 0 .. 31;
+      DMAOMR    at 16#18# range 0 .. 31;
+      DMAIER    at 16#1C# range 0 .. 31;
+      DMAMFBOCR at 16#20# range 0 .. 31;
+      DMARSWTR  at 16#24# range 0 .. 31;
+      DMACHTDR  at 16#48# range 0 .. 31;
+      DMACHRDR  at 16#4C# range 0 .. 31;
+      DMACHTBAR at 16#50# range 0 .. 31;
+      DMACHRBAR at 16#54# range 0 .. 31;
    end record;
 
    --  Ethernet: DMA controller operation
@@ -1191,27 +1191,27 @@ package STM32_SVD.Ethernet is
      with Volatile;
 
    for Ethernet_MAC_Peripheral use record
-      MACCR      at 0 range 0 .. 31;
-      MACFFR     at 4 range 0 .. 31;
-      MACHTHR    at 8 range 0 .. 31;
-      MACHTLR    at 12 range 0 .. 31;
-      MACMIIAR   at 16 range 0 .. 31;
-      MACMIIDR   at 20 range 0 .. 31;
-      MACFCR     at 24 range 0 .. 31;
-      MACVLANTR  at 28 range 0 .. 31;
-      MACPMTCSR  at 44 range 0 .. 31;
-      MACDBGR    at 52 range 0 .. 31;
-      MACSR      at 56 range 0 .. 31;
-      MACIMR     at 60 range 0 .. 31;
-      MACA0HR    at 64 range 0 .. 31;
-      MACA0LR    at 68 range 0 .. 31;
-      MACA1HR    at 72 range 0 .. 31;
-      MACA1LR    at 76 range 0 .. 31;
-      MACA2HR    at 80 range 0 .. 31;
-      MACA2LR    at 84 range 0 .. 31;
-      MACA3HR    at 88 range 0 .. 31;
-      MACA3LR    at 92 range 0 .. 31;
-      MACRWUFFER at 96 range 0 .. 31;
+      MACCR      at 16#0# range 0 .. 31;
+      MACFFR     at 16#4# range 0 .. 31;
+      MACHTHR    at 16#8# range 0 .. 31;
+      MACHTLR    at 16#C# range 0 .. 31;
+      MACMIIAR   at 16#10# range 0 .. 31;
+      MACMIIDR   at 16#14# range 0 .. 31;
+      MACFCR     at 16#18# range 0 .. 31;
+      MACVLANTR  at 16#1C# range 0 .. 31;
+      MACPMTCSR  at 16#2C# range 0 .. 31;
+      MACDBGR    at 16#34# range 0 .. 31;
+      MACSR      at 16#38# range 0 .. 31;
+      MACIMR     at 16#3C# range 0 .. 31;
+      MACA0HR    at 16#40# range 0 .. 31;
+      MACA0LR    at 16#44# range 0 .. 31;
+      MACA1HR    at 16#48# range 0 .. 31;
+      MACA1LR    at 16#4C# range 0 .. 31;
+      MACA2HR    at 16#50# range 0 .. 31;
+      MACA2LR    at 16#54# range 0 .. 31;
+      MACA3HR    at 16#58# range 0 .. 31;
+      MACA3LR    at 16#5C# range 0 .. 31;
+      MACRWUFFER at 16#60# range 0 .. 31;
    end record;
 
    --  Ethernet: media access control (MAC)
@@ -1247,17 +1247,17 @@ package STM32_SVD.Ethernet is
      with Volatile;
 
    for Ethernet_MMC_Peripheral use record
-      MMCCR       at 0 range 0 .. 31;
-      MMCRIR      at 4 range 0 .. 31;
-      MMCTIR      at 8 range 0 .. 31;
-      MMCRIMR     at 12 range 0 .. 31;
-      MMCTIMR     at 16 range 0 .. 31;
-      MMCTGFSCCR  at 76 range 0 .. 31;
-      MMCTGFMSCCR at 80 range 0 .. 31;
-      MMCTGFCR    at 104 range 0 .. 31;
-      MMCRFCECR   at 148 range 0 .. 31;
-      MMCRFAECR   at 152 range 0 .. 31;
-      MMCRGUFCR   at 196 range 0 .. 31;
+      MMCCR       at 16#0# range 0 .. 31;
+      MMCRIR      at 16#4# range 0 .. 31;
+      MMCTIR      at 16#8# range 0 .. 31;
+      MMCRIMR     at 16#C# range 0 .. 31;
+      MMCTIMR     at 16#10# range 0 .. 31;
+      MMCTGFSCCR  at 16#4C# range 0 .. 31;
+      MMCTGFMSCCR at 16#50# range 0 .. 31;
+      MMCTGFCR    at 16#68# range 0 .. 31;
+      MMCRFCECR   at 16#94# range 0 .. 31;
+      MMCRFAECR   at 16#98# range 0 .. 31;
+      MMCRGUFCR   at 16#C4# range 0 .. 31;
    end record;
 
    --  Ethernet: MAC management counters
@@ -1292,17 +1292,17 @@ package STM32_SVD.Ethernet is
      with Volatile;
 
    for Ethernet_PTP_Peripheral use record
-      PTPTSCR  at 0 range 0 .. 31;
-      PTPSSIR  at 4 range 0 .. 31;
-      PTPTSHR  at 8 range 0 .. 31;
-      PTPTSLR  at 12 range 0 .. 31;
-      PTPTSHUR at 16 range 0 .. 31;
-      PTPTSLUR at 20 range 0 .. 31;
-      PTPTSAR  at 24 range 0 .. 31;
-      PTPTTHR  at 28 range 0 .. 31;
-      PTPTTLR  at 32 range 0 .. 31;
-      PTPTSSR  at 40 range 0 .. 31;
-      PTPPPSCR at 44 range 0 .. 31;
+      PTPTSCR  at 16#0# range 0 .. 31;
+      PTPSSIR  at 16#4# range 0 .. 31;
+      PTPTSHR  at 16#8# range 0 .. 31;
+      PTPTSLR  at 16#C# range 0 .. 31;
+      PTPTSHUR at 16#10# range 0 .. 31;
+      PTPTSLUR at 16#14# range 0 .. 31;
+      PTPTSAR  at 16#18# range 0 .. 31;
+      PTPTTHR  at 16#1C# range 0 .. 31;
+      PTPTTLR  at 16#20# range 0 .. 31;
+      PTPTSSR  at 16#28# range 0 .. 31;
+      PTPPPSCR at 16#2C# range 0 .. 31;
    end record;
 
    --  Ethernet: Precision time protocol

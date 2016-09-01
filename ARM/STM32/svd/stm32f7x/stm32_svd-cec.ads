@@ -234,12 +234,12 @@ package STM32_SVD.CEC is
      with Volatile;
 
    for CEC_Peripheral use record
-      CR   at 0 range 0 .. 31;
-      CFGR at 4 range 0 .. 31;
-      TXDR at 8 range 0 .. 31;
-      RXDR at 12 range 0 .. 31;
-      ISR  at 16 range 0 .. 31;
-      IER  at 20 range 0 .. 31;
+      CR   at 16#0# range 0 .. 31;
+      CFGR at 16#4# range 0 .. 31;
+      TXDR at 16#8# range 0 .. 31;
+      RXDR at 16#C# range 0 .. 31;
+      ISR  at 16#10# range 0 .. 31;
+      IER  at 16#14# range 0 .. 31;
    end record;
 
    --  HDMI-CEC controller

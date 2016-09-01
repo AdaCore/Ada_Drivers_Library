@@ -276,19 +276,19 @@ package STM32_SVD.JPEG is
      with Volatile;
 
    for JPEG_Peripheral use record
-      JPEG_CONFR0 at 0 range 0 .. 31;
-      JPEG_CONFR1 at 4 range 0 .. 31;
-      JPEG_CONFR2 at 8 range 0 .. 31;
-      JPEG_CONFR3 at 12 range 0 .. 31;
-      JPEG_CONFR4 at 16 range 0 .. 31;
-      JPEG_CONFR5 at 20 range 0 .. 31;
-      JPEG_CONFR6 at 24 range 0 .. 31;
-      JPEG_CONFR7 at 28 range 0 .. 31;
-      JPEG_CR     at 32 range 0 .. 31;
-      JPEG_SR     at 36 range 0 .. 31;
-      JPEG_CFR    at 40 range 0 .. 31;
-      JPEG_DIR    at 44 range 0 .. 31;
-      JPEG_DOR    at 48 range 0 .. 31;
+      JPEG_CONFR0 at 16#0# range 0 .. 31;
+      JPEG_CONFR1 at 16#4# range 0 .. 31;
+      JPEG_CONFR2 at 16#8# range 0 .. 31;
+      JPEG_CONFR3 at 16#C# range 0 .. 31;
+      JPEG_CONFR4 at 16#10# range 0 .. 31;
+      JPEG_CONFR5 at 16#14# range 0 .. 31;
+      JPEG_CONFR6 at 16#18# range 0 .. 31;
+      JPEG_CONFR7 at 16#1C# range 0 .. 31;
+      JPEG_CR     at 16#20# range 0 .. 31;
+      JPEG_SR     at 16#24# range 0 .. 31;
+      JPEG_CFR    at 16#28# range 0 .. 31;
+      JPEG_DIR    at 16#2C# range 0 .. 31;
+      JPEG_DOR    at 16#30# range 0 .. 31;
    end record;
 
    --  JPEG codec

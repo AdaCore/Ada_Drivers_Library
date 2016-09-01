@@ -269,12 +269,12 @@ package STM32_SVD.EXTI is
      with Volatile;
 
    for EXTI_Peripheral use record
-      IMR   at 0 range 0 .. 31;
-      EMR   at 4 range 0 .. 31;
-      RTSR  at 8 range 0 .. 31;
-      FTSR  at 12 range 0 .. 31;
-      SWIER at 16 range 0 .. 31;
-      PR    at 20 range 0 .. 31;
+      IMR   at 16#0# range 0 .. 31;
+      EMR   at 16#4# range 0 .. 31;
+      RTSR  at 16#8# range 0 .. 31;
+      FTSR  at 16#C# range 0 .. 31;
+      SWIER at 16#10# range 0 .. 31;
+      PR    at 16#14# range 0 .. 31;
    end record;
 
    --  External interrupt/event controller

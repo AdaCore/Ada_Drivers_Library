@@ -308,19 +308,19 @@ package STM32_SVD.QUADSPI is
      with Volatile;
 
    for QUADSPI_Peripheral use record
-      CR    at 0 range 0 .. 31;
-      DCR   at 4 range 0 .. 31;
-      SR    at 8 range 0 .. 31;
-      FCR   at 12 range 0 .. 31;
-      DLR   at 16 range 0 .. 31;
-      CCR   at 20 range 0 .. 31;
-      AR    at 24 range 0 .. 31;
-      ABR   at 28 range 0 .. 31;
-      DR    at 32 range 0 .. 31;
-      PSMKR at 36 range 0 .. 31;
-      PSMAR at 40 range 0 .. 31;
-      PIR   at 44 range 0 .. 31;
-      LPTR  at 48 range 0 .. 31;
+      CR    at 16#0# range 0 .. 31;
+      DCR   at 16#4# range 0 .. 31;
+      SR    at 16#8# range 0 .. 31;
+      FCR   at 16#C# range 0 .. 31;
+      DLR   at 16#10# range 0 .. 31;
+      CCR   at 16#14# range 0 .. 31;
+      AR    at 16#18# range 0 .. 31;
+      ABR   at 16#1C# range 0 .. 31;
+      DR    at 16#20# range 0 .. 31;
+      PSMKR at 16#24# range 0 .. 31;
+      PSMAR at 16#28# range 0 .. 31;
+      PIR   at 16#2C# range 0 .. 31;
+      LPTR  at 16#30# range 0 .. 31;
    end record;
 
    --  QuadSPI interface

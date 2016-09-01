@@ -280,14 +280,14 @@ package STM32_SVD.LPTIM is
      with Volatile;
 
    for LPTIM1_Peripheral use record
-      ISR  at 0 range 0 .. 31;
-      ICR  at 4 range 0 .. 31;
-      IER  at 8 range 0 .. 31;
-      CFGR at 12 range 0 .. 31;
-      CR   at 16 range 0 .. 31;
-      CMP  at 20 range 0 .. 31;
-      ARR  at 24 range 0 .. 31;
-      CNT  at 28 range 0 .. 31;
+      ISR  at 16#0# range 0 .. 31;
+      ICR  at 16#4# range 0 .. 31;
+      IER  at 16#8# range 0 .. 31;
+      CFGR at 16#C# range 0 .. 31;
+      CR   at 16#10# range 0 .. 31;
+      CMP  at 16#14# range 0 .. 31;
+      ARR  at 16#18# range 0 .. 31;
+      CNT  at 16#1C# range 0 .. 31;
    end record;
 
    --  Low power timer

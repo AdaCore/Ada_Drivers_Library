@@ -111,9 +111,9 @@ package STM32_SVD.WWDG is
      with Volatile;
 
    for WWDG_Peripheral use record
-      CR  at 0 range 0 .. 31;
-      CFR at 4 range 0 .. 31;
-      SR  at 8 range 0 .. 31;
+      CR  at 16#0# range 0 .. 31;
+      CFR at 16#4# range 0 .. 31;
+      SR  at 16#8# range 0 .. 31;
    end record;
 
    --  Window watchdog

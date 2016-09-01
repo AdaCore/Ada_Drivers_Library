@@ -405,16 +405,16 @@ package STM32_SVD.GPIO is
      with Volatile;
 
    for GPIO_Peripheral use record
-      MODER   at 0 range 0 .. 31;
-      OTYPER  at 4 range 0 .. 31;
-      OSPEEDR at 8 range 0 .. 31;
-      PUPDR   at 12 range 0 .. 31;
-      IDR     at 16 range 0 .. 31;
-      ODR     at 20 range 0 .. 31;
-      BSRR    at 24 range 0 .. 31;
-      LCKR    at 28 range 0 .. 31;
-      AFRL    at 32 range 0 .. 31;
-      AFRH    at 36 range 0 .. 31;
+      MODER   at 16#0# range 0 .. 31;
+      OTYPER  at 16#4# range 0 .. 31;
+      OSPEEDR at 16#8# range 0 .. 31;
+      PUPDR   at 16#C# range 0 .. 31;
+      IDR     at 16#10# range 0 .. 31;
+      ODR     at 16#14# range 0 .. 31;
+      BSRR    at 16#18# range 0 .. 31;
+      LCKR    at 16#1C# range 0 .. 31;
+      AFRL    at 16#20# range 0 .. 31;
+      AFRH    at 16#24# range 0 .. 31;
    end record;
 
    --  General-purpose I/Os

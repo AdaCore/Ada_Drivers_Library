@@ -203,12 +203,12 @@ package STM32_SVD.FLASH is
      with Volatile;
 
    for FLASH_Peripheral use record
-      ACR     at 0 range 0 .. 31;
-      KEYR    at 4 range 0 .. 31;
-      OPTKEYR at 8 range 0 .. 31;
-      SR      at 12 range 0 .. 31;
-      CR      at 16 range 0 .. 31;
-      OPTCR   at 20 range 0 .. 31;
+      ACR     at 16#0# range 0 .. 31;
+      KEYR    at 16#4# range 0 .. 31;
+      OPTKEYR at 16#8# range 0 .. 31;
+      SR      at 16#C# range 0 .. 31;
+      CR      at 16#10# range 0 .. 31;
+      OPTCR   at 16#14# range 0 .. 31;
    end record;
 
    --  FLASH

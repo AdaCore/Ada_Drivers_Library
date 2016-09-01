@@ -510,12 +510,12 @@ package STM32_SVD.DMA is
      with Volatile, Size => 192;
 
    for Stream_Cluster use record
-      SxCR   at 0 range 0 .. 31;
-      SxNDTR at 4 range 0 .. 31;
-      SxPAR  at 8 range 0 .. 31;
-      SxM0AR at 12 range 0 .. 31;
-      SxM1AR at 16 range 0 .. 31;
-      SxFCR  at 20 range 0 .. 31;
+      SxCR   at 16#0# range 0 .. 31;
+      SxNDTR at 16#4# range 0 .. 31;
+      SxPAR  at 16#8# range 0 .. 31;
+      SxM0AR at 16#C# range 0 .. 31;
+      SxM1AR at 16#10# range 0 .. 31;
+      SxFCR  at 16#14# range 0 .. 31;
    end record;
 
    --  Stream registers
@@ -545,11 +545,11 @@ package STM32_SVD.DMA is
      with Volatile;
 
    for DMA_Peripheral use record
-      LISR   at 0 range 0 .. 31;
-      HISR   at 4 range 0 .. 31;
-      LIFCR  at 8 range 0 .. 31;
-      HIFCR  at 12 range 0 .. 31;
-      Stream at 16 range 0 .. 1535;
+      LISR   at 16#0# range 0 .. 31;
+      HISR   at 16#4# range 0 .. 31;
+      LIFCR  at 16#8# range 0 .. 31;
+      HIFCR  at 16#C# range 0 .. 31;
+      Stream at 16#10# range 0 .. 1535;
    end record;
 
    --  DMA controller

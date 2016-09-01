@@ -614,24 +614,24 @@ package STM32_SVD.SDIO is
      with Volatile;
 
    for SDIO_Peripheral use record
-      POWER   at 0 range 0 .. 31;
-      CLKCR   at 4 range 0 .. 31;
-      ARG     at 8 range 0 .. 31;
-      CMD     at 12 range 0 .. 31;
-      RESPCMD at 16 range 0 .. 31;
-      RESP1   at 20 range 0 .. 31;
-      RESP2   at 24 range 0 .. 31;
-      RESP3   at 28 range 0 .. 31;
-      RESP4   at 32 range 0 .. 31;
-      DTIMER  at 36 range 0 .. 31;
-      DLEN    at 40 range 0 .. 31;
-      DCTRL   at 44 range 0 .. 31;
-      DCOUNT  at 48 range 0 .. 31;
-      STA     at 52 range 0 .. 31;
-      ICR     at 56 range 0 .. 31;
-      MASK    at 60 range 0 .. 31;
-      FIFOCNT at 72 range 0 .. 31;
-      FIFO    at 128 range 0 .. 31;
+      POWER   at 16#0# range 0 .. 31;
+      CLKCR   at 16#4# range 0 .. 31;
+      ARG     at 16#8# range 0 .. 31;
+      CMD     at 16#C# range 0 .. 31;
+      RESPCMD at 16#10# range 0 .. 31;
+      RESP1   at 16#14# range 0 .. 31;
+      RESP2   at 16#18# range 0 .. 31;
+      RESP3   at 16#1C# range 0 .. 31;
+      RESP4   at 16#20# range 0 .. 31;
+      DTIMER  at 16#24# range 0 .. 31;
+      DLEN    at 16#28# range 0 .. 31;
+      DCTRL   at 16#2C# range 0 .. 31;
+      DCOUNT  at 16#30# range 0 .. 31;
+      STA     at 16#34# range 0 .. 31;
+      ICR     at 16#38# range 0 .. 31;
+      MASK    at 16#3C# range 0 .. 31;
+      FIFOCNT at 16#48# range 0 .. 31;
+      FIFO    at 16#80# range 0 .. 31;
    end record;
 
    --  Secure digital input/output interface

@@ -306,15 +306,15 @@ package STM32_SVD.SPI is
      with Volatile;
 
    for SPI_Peripheral use record
-      CR1     at 0 range 0 .. 31;
-      CR2     at 4 range 0 .. 31;
-      SR      at 8 range 0 .. 31;
-      DR      at 12 range 0 .. 31;
-      CRCPR   at 16 range 0 .. 31;
-      RXCRCR  at 20 range 0 .. 31;
-      TXCRCR  at 24 range 0 .. 31;
-      I2SCFGR at 28 range 0 .. 31;
-      I2SPR   at 32 range 0 .. 31;
+      CR1     at 16#0# range 0 .. 31;
+      CR2     at 16#4# range 0 .. 31;
+      SR      at 16#8# range 0 .. 31;
+      DR      at 16#C# range 0 .. 31;
+      CRCPR   at 16#10# range 0 .. 31;
+      RXCRCR  at 16#14# range 0 .. 31;
+      TXCRCR  at 16#18# range 0 .. 31;
+      I2SCFGR at 16#1C# range 0 .. 31;
+      I2SPR   at 16#20# range 0 .. 31;
    end record;
 
    --  Serial peripheral interface

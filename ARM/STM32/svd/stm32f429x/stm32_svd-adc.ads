@@ -761,26 +761,26 @@ package STM32_SVD.ADC is
      with Volatile;
 
    for ADC1_Peripheral use record
-      SR    at 0 range 0 .. 31;
-      CR1   at 4 range 0 .. 31;
-      CR2   at 8 range 0 .. 31;
-      SMPR1 at 12 range 0 .. 31;
-      SMPR2 at 16 range 0 .. 31;
-      JOFR1 at 20 range 0 .. 31;
-      JOFR2 at 24 range 0 .. 31;
-      JOFR3 at 28 range 0 .. 31;
-      JOFR4 at 32 range 0 .. 31;
-      HTR   at 36 range 0 .. 31;
-      LTR   at 40 range 0 .. 31;
-      SQR1  at 44 range 0 .. 31;
-      SQR2  at 48 range 0 .. 31;
-      SQR3  at 52 range 0 .. 31;
-      JSQR  at 56 range 0 .. 31;
-      JDR1  at 60 range 0 .. 31;
-      JDR2  at 64 range 0 .. 31;
-      JDR3  at 68 range 0 .. 31;
-      JDR4  at 72 range 0 .. 31;
-      DR    at 76 range 0 .. 31;
+      SR    at 16#0# range 0 .. 31;
+      CR1   at 16#4# range 0 .. 31;
+      CR2   at 16#8# range 0 .. 31;
+      SMPR1 at 16#C# range 0 .. 31;
+      SMPR2 at 16#10# range 0 .. 31;
+      JOFR1 at 16#14# range 0 .. 31;
+      JOFR2 at 16#18# range 0 .. 31;
+      JOFR3 at 16#1C# range 0 .. 31;
+      JOFR4 at 16#20# range 0 .. 31;
+      HTR   at 16#24# range 0 .. 31;
+      LTR   at 16#28# range 0 .. 31;
+      SQR1  at 16#2C# range 0 .. 31;
+      SQR2  at 16#30# range 0 .. 31;
+      SQR3  at 16#34# range 0 .. 31;
+      JSQR  at 16#38# range 0 .. 31;
+      JDR1  at 16#3C# range 0 .. 31;
+      JDR2  at 16#40# range 0 .. 31;
+      JDR3  at 16#44# range 0 .. 31;
+      JDR4  at 16#48# range 0 .. 31;
+      DR    at 16#4C# range 0 .. 31;
    end record;
 
    --  Analog-to-digital converter
@@ -807,9 +807,9 @@ package STM32_SVD.ADC is
      with Volatile;
 
    for C_ADC_Peripheral use record
-      CSR at 0 range 0 .. 31;
-      CCR at 4 range 0 .. 31;
-      CDR at 8 range 0 .. 31;
+      CSR at 16#0# range 0 .. 31;
+      CCR at 16#4# range 0 .. 31;
+      CDR at 16#8# range 0 .. 31;
    end record;
 
    --  Common ADC registers
