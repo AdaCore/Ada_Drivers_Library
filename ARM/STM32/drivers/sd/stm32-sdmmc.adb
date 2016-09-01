@@ -1385,8 +1385,8 @@ package body STM32.SDMMC is
 
    function Read_Blocks
      (This : in out SDMMC_Controller;
-      Addr       : Unsigned_64;
-      Data       : out SD_Data) return SD_Error
+      Addr : Unsigned_64;
+      Data : out SD_Data) return SD_Error
    is
       subtype Word_Data is SD_Data (1 .. 4);
       function To_Data is new Ada.Unchecked_Conversion
@@ -1394,7 +1394,7 @@ package body STM32.SDMMC is
       R_Addr   : Unsigned_64 := Addr;
       N_Blocks : Positive;
       Err      : SD_Error;
-      Idx      : Unsigned_32 := Data'First;
+      Idx      : Unsigned_16 := Data'First;
       Dead     : Word with Unreferenced;
 
    begin
@@ -1544,10 +1544,11 @@ package body STM32.SDMMC is
       Command        : SDMMC_Command;
       use STM32.DMA;
    begin
-      if not STM32.DMA.Compatible_Alignments (DMA,
-                                              Stream,
-                                              This.Periph.FIFO'Address,
-                                              Data_Addr)
+      if not STM32.DMA.Compatible_Alignments
+        (DMA,
+         Stream,
+         This.Periph.FIFO'Address,
+         Data_Addr)
       then
          return DMA_Alignment_Error;
       end if;
@@ -1558,7 +1559,10 @@ package body STM32.SDMMC is
       --  So here we make sure the DCTRL is writable
       DCTRL_Write_Delay;
       This.Periph.DCTRL := (DTEN   => False,
-                                  others => <>);
+                            others => <>);
+
+      --  switch to nominal speed, in case polling was active before
+      This.Periph.CLKCR.CLKDIV := 16#0#;
 
       Enable_Interrupt (This, Data_CRC_Fail_Interrupt);
       Enable_Interrupt (This, Data_Timeout_Interrupt);
@@ -1655,11 +1659,10 @@ package body STM32.SDMMC is
          return DMA_Alignment_Error;
       end if;
 
-      --  this is all according tom STM RM0090 sec.31.3.2 p. 1036. But something is wrong.
       DCTRL_Write_Delay;
       This.Periph.DCTRL := (DTEN   => False,
                                   others => <>);
-      --  Wait 1ms: After a data write, data cannot be written to this register
+      --  After a data write, data cannot be written to this register
       --  for three SDMMCCLK (48 MHz) clock periods plus two PCLK2 clock
       --  periods.
       DCTRL_Write_Delay;
@@ -1710,9 +1713,9 @@ package body STM32.SDMMC is
          Stream             => Stream,
          Destination        => This.Periph.FIFO'Address,
          Source             => Data_Addr,
-         Data_Count         => Unsigned_16 (Data_Len_Words), -- because DMA is set up with words
+         Data_Count         => Unsigned_16 (Data_Len_Words), -- DMA uses words
          Enabled_Interrupts => (Transfer_Error_Interrupt    => True,
-                                FIFO_Error_Interrupt        => True, -- test: comment to see what happens
+                                FIFO_Error_Interrupt        => True,
                                 Transfer_Complete_Interrupt => True,
                                 others                      => False));
 
@@ -1746,7 +1749,8 @@ package body STM32.SDMMC is
          CPSM               => True,
          Wait_For_Interrupt => False);
       Err := Response_R1_Error (This, Command);
-      --  according to RM0090 we should wait for SDIO_STA[6] = CMDREND interrupt, which is this:
+      --  according to RM0090 we should wait for SDIO_STA[6] = CMDREND
+      --  interrupt, which is this:
       if Err /= OK then
          return Err;
       end if;
@@ -1762,7 +1766,8 @@ package body STM32.SDMMC is
          DMA_Enabled        => True);
 
       --  according to RM0090: wait for STA[10]=DBCKEND
-      --  check that no channels are still enabled by polling DMA Enabled Channel Status Reg
+      --  check that no channels are still enabled by polling DMA Enabled
+      --  Channel Status Reg
 
       return Err;
    end Write_Blocks_DMA;

@@ -172,7 +172,7 @@ package STM32.SDMMC is
      (This      : in out SDMMC_Controller;
       Wide_Mode : Wide_Bus_Mode) return SD_Error;
 
-   type SD_Data is array (Unsigned_32 range <>) of Byte
+   type SD_Data is array (Unsigned_16 range <>) of Byte
    with Pack;
 
    function Read_Blocks
