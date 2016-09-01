@@ -46,19 +46,6 @@ package Virtual_File_System is
                     return Status_Kind;
 
    overriding
-   function Change_Permissions (This        : in out VFS;
-                                Path        : Pathname;
-                                Permissions : Permission_Set)
-                                return Status_Kind;
-
-   overriding
-   function Change_Owner_And_Group (This  : in out VFS;
-                                    Path  : Pathname;
-                                    Owner : User_ID;
-                                    Group : Group_ID)
-                                    return Status_Kind;
-
-   overriding
    function Truncate_File (This   : in out VFS;
                            Path   : Pathname;
                            Lenght : IO_Count)

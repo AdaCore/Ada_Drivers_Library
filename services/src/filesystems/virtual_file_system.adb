@@ -176,55 +176,6 @@ package body Virtual_File_System is
    ------------------------
 
    overriding
-   function Change_Permissions (This        : in out VFS;
-                                Path        : Pathname;
-                                Permissions : Permission_Set)
-                                return Status_Kind
-   is
-      Path_Reminder_Start : Integer;
-      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
-      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
-                                     then ""
-                                     else Path (Path_Reminder_Start .. Path'Last));
-   begin
-      if FS = null then
-         return No_Such_File_Or_Directory;
-      else
-         return FS.Change_Permissions (Sub_Path,
-                                       Permissions);
-      end if;
-   end Change_Permissions;
-
-   ----------------------------
-   -- Change_Owner_And_Group --
-   ----------------------------
-
-   overriding
-   function Change_Owner_And_Group (This  : in out VFS;
-                                    Path  : Pathname;
-                                    Owner : User_ID;
-                                    Group : Group_ID)
-                                    return Status_Kind
-   is
-      Path_Reminder_Start : Integer;
-      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
-      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
-                                     then ""
-                                     else Path (Path_Reminder_Start .. Path'Last));
-   begin
-      if FS = null then
-         return No_Such_File_Or_Directory;
-      else
-         return FS.Change_Owner_And_Group (Sub_Path,
-                                           Owner, Group);
-      end if;
-   end Change_Owner_And_Group;
-
-   ------------------------
-   -- Change_Permissions --
-   ------------------------
-
-   overriding
    function Truncate_File (This   : in out VFS;
                            Path   : Pathname;
                            Lenght : IO_Count)
@@ -314,7 +265,6 @@ package body Virtual_File_System is
 
       if Pt /= null then
          Dir_Entry.Entry_Type := Directory;
-         Dir_Entry.Permissions := (others => False);
          return Status_Ok;
       else
          return No_Such_File_Or_Directory;

@@ -8,12 +8,6 @@ package HAL.Filesystem is
 
    type File_Mode is (Read_Only, Write_Only, Read_Write);
 
-   type Permission_Kind  is (Others_Execute, Others_Write, Others_Read,
-                             Group_Execute,  Group_Write,  Group_Read,
-                             Owner_Execute,  Owner_Write,  Owner_Read);
-
-   type Permission_Set is array (Permission_Kind) of Boolean;
-
    type Status_Kind is (Status_Ok,
                         Symbolic_Links_Loop,
                         Permission_Denied,
@@ -75,17 +69,6 @@ package HAL.Filesystem is
                     New_Path : Pathname)
                     return Status_Kind is abstract;
 
-   function Change_Permissions (This        : in out FS_Driver;
-                                Path        : Pathname;
-                                Permissions : Permission_Set)
-                                return Status_Kind is abstract;
-
-   function Change_Owner_And_Group (This  : in out FS_Driver;
-                                    Path  : Pathname;
-                                    Owner : User_ID;
-                                    Group : Group_ID)
-                                    return Status_Kind is abstract;
-
    function Truncate_File (This   : in out FS_Driver;
                            Path   : Pathname;
                            Lenght : IO_Count)
@@ -127,7 +110,6 @@ package HAL.Filesystem is
 
    type Directory_Entry is record
       Entry_Type  : File_Kind;
-      Permissions : Permission_Set;
    end record;
 
    function Read_Entry (This         : in out Directory_Handle;
