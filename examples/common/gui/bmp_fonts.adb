@@ -4274,7 +4274,7 @@ package body BMP_Fonts is
    is
       Char_Num   : constant Natural := Character'Pos (C);
       Char_Index : constant Natural := Char_Height (Font) *
-                     (if Char_Num >= 32
+                     (if Char_Num >= 32 and then Char_Num <= 128
                       then Char_Num - 32
                       else Character'Pos ('?') - 32);
    begin
