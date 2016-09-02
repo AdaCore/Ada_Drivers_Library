@@ -1,3 +1,26 @@
+------------------------------------------------------------------------------
+--                        Bareboard drivers examples                        --
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+-- This library is free software;  you can redistribute it and/or modify it --
+-- under terms of the  GNU General Public License  as published by the Free --
+-- Software  Foundation;  either version 3,  or (at your  option) any later --
+-- version. This library is distributed in the hope that it will be useful, --
+-- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --
+-- TABILITY or FITNESS FOR A PARTICULAR PURPOSE.                            --
+--                                                                          --
+-- As a special exception under Section 7 of GPL version 3, you are granted --
+-- additional permissions described in the GCC Runtime Library Exception,   --
+-- version 3.1, as published by the Free Software Foundation.               --
+--                                                                          --
+-- You should have received a copy of the GNU General Public License and    --
+-- a copy of the GCC Runtime Library Exception along with this program;     --
+-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --
+-- <http://www.gnu.org/licenses/>.                                          --
+--                                                                          --
+------------------------------------------------------------------------------
+
 with Ada.Unchecked_Conversion;
 with FAT_Filesystem.Directories;
 
@@ -47,9 +70,24 @@ package body FAT_Filesystem is
 
    overriding function "=" (Name1, Name2 : FAT_Name) return Boolean
    is
+      function To_Upper (C : Character) return Character
+      is (if C in 'a' .. 'z'
+          then Character'Val
+            (Character'Pos (C) - Character'Pos ('a') + Character'Pos ('A'))
+          else C);
+
    begin
-      return Name1.Len = Name2.Len
-        and then Name1.Name (1 .. Name1.Len) = Name2.Name (1 .. Name2.Len);
+      if Name1.Len /= Name2.Len then
+         return False;
+      end if;
+
+      for J in 1 .. Name1.Len loop
+         if To_Upper (Name1.Name (J)) /= To_Upper (Name2.Name (J)) then
+            return False;
+         end if;
+      end loop;
+
+      return True;
    end "=";
 
    ---------
@@ -58,9 +96,24 @@ package body FAT_Filesystem is
 
    overriding function "=" (Name1, Name2 : FAT_Path) return Boolean
    is
+      function To_Upper (C : Character) return Character
+      is (if C in 'a' .. 'z'
+          then Character'Val
+            (Character'Pos (C) - Character'Pos ('a') + Character'Pos ('A'))
+          else C);
+
    begin
-      return Name1.Len = Name2.Len
-        and then Name1.Name (1 .. Name1.Len) = Name2.Name (1 .. Name2.Len);
+      if Name1.Len /= Name2.Len then
+         return False;
+      end if;
+
+      for J in 1 .. Name1.Len loop
+         if To_Upper (Name1.Name (J)) /= To_Upper (Name2.Name (J)) then
+            return False;
+         end if;
+      end loop;
+
+      return True;
    end "=";
 
    ---------
@@ -413,9 +466,10 @@ package body FAT_Filesystem is
          return Null_FAT_Volume;
       end if;
 
-      Ret.Mounted     := True;
-      Ret.Controller  := Controller;
-      Ret.Mount_Point := Mount_Point;
+      Ret.Mounted      := True;
+      Ret.Controller   := Controller;
+      Ret.Mount_Point  := Mount_Point;
+      Ret.Window_Block := 16#FFFF_FFFF#;
 
       --  Let's read the MBR
       Status := Ret.Ensure_Block (0);
@@ -591,26 +645,13 @@ package body FAT_Filesystem is
                                   Unsigned_32 (FS.Reserved_Blocks) +
                                   FS.FAT_Table_Size_In_Blocks *
                                     Unsigned_32 (FS.Number_Of_FATs);
-         Root_Dir_Size        : Unsigned_32 := 0;
       begin
-         if FS.Version = FAT16 then
-            --  Each directory entry is 32 Bytes.
-            Root_Dir_Size :=
-              Unsigned_32
-                (FS.Number_Of_Entries_In_Root_Dir) * 32;
-
-            if (Root_Dir_Size mod FS.Block_Size_In_Bytes) = 0 then
-               Root_Dir_Size := Root_Dir_Size / FS.Block_Size_In_Bytes;
-            else
-               Root_Dir_Size := 1 + Root_Dir_Size / FS.Block_Size_In_Bytes;
-            end if;
-         end if;
-
          FS.FAT_Addr  := FS.LBA + Unsigned_32 (FS.Reserved_Blocks);
-         FS.Data_Area := FS.LBA + Data_Offset_In_Block + Root_Dir_Size;
+         FS.Data_Area := FS.LBA + Data_Offset_In_Block;
          FS.Num_Clusters :=
-           (FS.Total_Number_Of_Blocks - Data_Offset_In_Block) /
-           Unsigned_32 (FS.Number_Of_Blocks_Per_Cluster);
+           Cluster_Type
+             ((FS.Total_Number_Of_Blocks - Data_Offset_In_Block) /
+                    Unsigned_32 (FS.Number_Of_Blocks_Per_Cluster));
       end;
    end Initialize_FS;
 
@@ -629,13 +670,11 @@ package body FAT_Filesystem is
    ------------------
 
    function Ensure_Block
-     (FS    : in out FAT_Filesystem;
-      Block : Unsigned_32) return Status_Code
+     (FS                : in out FAT_Filesystem;
+      Block             : Unsigned_32) return Status_Code
    is
    begin
-      if Block >= FS.Window_Block
-        and then Block < FS.Window_Block + CACHE_SIZE
-      then
+      if Block = FS.Window_Block then
          return OK;
       end if;
 
@@ -832,63 +871,239 @@ package body FAT_Filesystem is
       end case;
    end Close;
 
-   --     function Is_Directory (Path : FAT_Path) return Boolean;
---     function Is_File (Path : FAT_Path) return Boolean;
---     function Is_File_Or_Directory (Path : FAT_Path) return Boolean;
-
    -------------
    -- Get_FAT --
    -------------
 
    function Get_FAT
      (FS      : in out FAT_Filesystem;
-      Cluster : Unsigned_32) return Unsigned_32
+      Cluster : Cluster_Type) return Cluster_Type
    is
       Idx       : Unsigned_16;
-      FAT_Block : Block (0 .. 511);
-      --  When reading the FAT table for the next cluster, don't use the
-      --  FS.Window cache as we might already have part of this cluster in
-      --  cache.
+      Block_Num : Unsigned_32;
 
-      subtype B2 is Block (1 .. 2);
       subtype B4 is Block (1 .. 4);
-      function To_Int16 is new Ada.Unchecked_Conversion
-        (B2, Unsigned_16);
-      function To_Int32 is new Ada.Unchecked_Conversion
-        (B4, Unsigned_32);
+      function To_Cluster is new Ada.Unchecked_Conversion
+        (B4, Cluster_Type);
 
    begin
       if Cluster < 2 or else Cluster >= FS.Num_Clusters then
          return 1;
       end if;
 
-      case FS.Version is
-         when FAT16 =>
-            if not Read_Block
-              (FS.Controller.all,
-               FS.FAT_Addr + Cluster * 2 / FS.Block_Size_In_Bytes,
-               FAT_Block)
-            then
-               return 1;
-            end if;
+      Block_Num :=
+        FS.FAT_Addr + Unsigned_32 (Cluster) * 4 / FS.Block_Size_In_Bytes;
 
-            Idx := Unsigned_16 ((Cluster * 2) mod FS.Block_Size_In_Bytes);
+      if Block_Num /= FS.FAT_Block then
+         FS.FAT_Block := Block_Num;
 
-            return Unsigned_32 (To_Int16 (FAT_Block (Idx .. Idx + 1)));
+         if not Read_Block
+           (FS.Controller.all,
+            FS.FAT_Block,
+            FS.FAT_Window)
+         then
+            FS.FAT_Block := 16#FFFF_FFFF#;
+            return INVALID_CLUSTER;
+         end if;
+      end if;
 
-         when FAT32 =>
-            if not Read_Block
-              (FS.Controller.all,
-               FS.FAT_Addr + Cluster * 4 / FS.Block_Size_In_Bytes,
-               FAT_Block)
-            then
-               return 1;
-            end if;
+      Idx :=
+        Unsigned_16 (Unsigned_32 (Cluster * 4) mod FS.Block_Size_In_Bytes);
 
-            Idx := Unsigned_16 ((Cluster * 4) mod FS.Block_Size_In_Bytes);
-
-            return To_Int32 (FAT_Block (Idx .. Idx + 3)) and 16#0FFF_FFFF#;
-      end case;
+      return To_Cluster (FS.FAT_Window (Idx .. Idx + 3)) and 16#0FFF_FFFF#;
    end Get_FAT;
+
+   -------------
+   -- Set_FAT --
+   -------------
+
+   function Set_FAT
+     (FS      : in out FAT_Filesystem;
+      Cluster : Cluster_Type;
+      Value   : Cluster_Type) return Status_Code
+   is
+      Idx       : Unsigned_16;
+      Block_Num : Unsigned_32;
+      Dead      : Boolean with Unreferenced;
+
+      subtype B4 is Block (1 .. 4);
+      function From_Cluster is new Ada.Unchecked_Conversion
+        (Cluster_Type, B4);
+
+   begin
+      if Cluster < Valid_Cluster'First or else Cluster > FS.Num_Clusters then
+         return Internal_Error;
+      end if;
+
+      Block_Num :=
+        FS.FAT_Addr + Unsigned_32 (Cluster) * 4 / FS.Block_Size_In_Bytes;
+
+      if Block_Num /= FS.FAT_Block then
+         FS.FAT_Block := Block_Num;
+
+         if not Read_Block
+           (FS.Controller.all,
+            FS.FAT_Block,
+            FS.FAT_Window)
+         then
+            FS.FAT_Block := 16#FFFF_FFFF#;
+            return Disk_Error;
+         end if;
+      end if;
+
+      Idx :=
+        Unsigned_16 (Unsigned_32 (Cluster * 4) mod FS.Block_Size_In_Bytes);
+
+      FS.FAT_Window (Idx .. Idx + 3) := From_Cluster (Value);
+
+      if not FS.Controller.Write_Block (FS.FAT_Block, FS.FAT_Window) then
+         return Disk_Error;
+      end if;
+
+      return OK;
+   end Set_FAT;
+
+   ------------------
+   -- Write_FSInfo --
+   ------------------
+
+   procedure Write_FSInfo
+     (FS : in out FAT_Filesystem)
+   is
+      subtype FSInfo_Block is Block (0 .. 11);
+      function From_FSInfo is new Ada.Unchecked_Conversion
+        (FAT_FS_Info, FSInfo_Block);
+
+      Status        : Status_Code;
+      FAT_Begin_LBA : constant Unsigned_32 :=
+                        FS.LBA + Unsigned_32 (FS.FSInfo_Block_Number);
+      Ret           : Status_Code with Unreferenced;
+
+   begin
+      Status := FS.Ensure_Block (FAT_Begin_LBA);
+
+      if Status /= OK then
+         return;
+      end if;
+
+      --  again, check the generic FAT block signature
+      if FS.Window (510 .. 511) /= (16#55#, 16#AA#) then
+         return;
+      end if;
+
+      --  good. now we got the entire FSinfo in our window.
+      --  modify that part of the window and writeback.
+      FS.Window (16#1E4# .. 16#1EF#) := From_FSInfo (FS.FSInfo);
+      Ret := FS.Write_Window;
+   end Write_FSInfo;
+
+   ----------------------
+   -- Get_Free_Cluster --
+   ----------------------
+
+   function Get_Free_Cluster
+     (FS       : in out FAT_Filesystem;
+      Previous : Cluster_Type := INVALID_CLUSTER) return Cluster_Type
+   is
+      Candidate : Cluster_Type := Previous;
+   begin
+      --  First check for a cluster that is just after the previous one
+      --  allocated for the entry
+      if Candidate in Valid_Cluster'Range
+        and then Candidate < FS.Num_Clusters
+      then
+         Candidate := Candidate + 1;
+         if FS.Is_Free_Cluster (FS.Get_FAT (Candidate)) then
+            return Candidate;
+         end if;
+      end if;
+
+      --  Next check the most recently allocated cluster
+      Candidate := FS.Most_Recently_Allocated_Cluster;
+
+      if Candidate in Valid_Cluster'Range
+        and then Candidate < FS.Num_Clusters
+      then
+         Candidate := Candidate + 1;
+         if FS.Is_Free_Cluster (FS.Get_FAT (Candidate)) then
+            return Candidate;
+         end if;
+      end if;
+
+      --  Otherwise, comprehensive search for the first free cluster
+      Candidate := Valid_Cluster'First;
+      while Candidate <= FS.Num_Clusters loop
+         if FS.Is_Free_Cluster (FS.Get_FAT (Candidate)) then
+            return Candidate;
+         end if;
+
+         Candidate := Candidate + 1;
+      end loop;
+
+      return INVALID_CLUSTER;
+   end Get_Free_Cluster;
+
+   -----------------
+   -- New_Cluster --
+   -----------------
+
+   function New_Cluster
+     (FS : in out FAT_Filesystem) return Cluster_Type
+   is
+   begin
+      return FS.New_Cluster (INVALID_CLUSTER);
+   end New_Cluster;
+
+   -----------------
+   -- New_Cluster --
+   -----------------
+
+   function New_Cluster
+     (FS       : in out FAT_Filesystem;
+      Previous : Cluster_Type) return Cluster_Type
+   is
+      Ret : Cluster_Type;
+   begin
+      pragma Assert
+        (FS.Version = FAT32,
+         "FS write only supported on FAT32 for now");
+
+      Ret := FS.Get_Free_Cluster (Previous);
+
+      if Ret = INVALID_CLUSTER then
+         return Ret;
+      end if;
+
+      if Previous /= INVALID_CLUSTER then
+         if FS.Set_FAT (Previous, Ret) /= OK then
+            return INVALID_CLUSTER;
+         end if;
+      end if;
+
+      if FS.Set_FAT (Ret, LAST_CLUSTER_VALUE) /= OK then
+         return INVALID_CLUSTER;
+      end if;
+
+      FS.FSInfo.Free_Clusters := FS.FSInfo.Free_Clusters - 1;
+      FS.FSInfo.Last_Allocated_Cluster := Ret;
+      FS.Write_FSInfo;
+
+      return Ret;
+   end New_Cluster;
+
+   ------------------
+   -- Write_Window --
+   ------------------
+
+   function Write_Window
+     (FS : in out FAT_Filesystem) return Status_Code
+   is
+   begin
+      if FS.Controller.Write_Block (FS.Window_Block, FS.Window) then
+         return OK;
+      else
+         return Disk_Error;
+      end if;
+   end Write_Window;
 
 end FAT_Filesystem;

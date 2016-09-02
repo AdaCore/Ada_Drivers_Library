@@ -1,3 +1,26 @@
+------------------------------------------------------------------------------
+--                        Bareboard drivers examples                        --
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+-- This library is free software;  you can redistribute it and/or modify it --
+-- under terms of the  GNU General Public License  as published by the Free --
+-- Software  Foundation;  either version 3,  or (at your  option) any later --
+-- version. This library is distributed in the hope that it will be useful, --
+-- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --
+-- TABILITY or FITNESS FOR A PARTICULAR PURPOSE.                            --
+--                                                                          --
+-- As a special exception under Section 7 of GPL version 3, you are granted --
+-- additional permissions described in the GCC Runtime Library Exception,   --
+-- version 3.1, as published by the Free Software Foundation.               --
+--                                                                          --
+-- You should have received a copy of the GNU General Public License and    --
+-- a copy of the GCC Runtime Library Exception along with this program;     --
+-- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --
+-- <http://www.gnu.org/licenses/>.                                          --
+--                                                                          --
+------------------------------------------------------------------------------
+
 with Ada.Unchecked_Conversion;
 with Interfaces;                 use Interfaces;
 
@@ -13,11 +36,10 @@ with BMP_Fonts;
 
 with FAT_Filesystem;             use FAT_Filesystem;
 with FAT_Filesystem.Directories; use FAT_Filesystem.Directories;
+with FAT_Filesystem.Files;       use FAT_Filesystem.Files;
 with Media_Reader.SDCard;        use Media_Reader.SDCard;
 
------------------
--- SDCard_Demo --
------------------
+with Wav_Reader;
 
 procedure SDCard_Demo
 is
@@ -35,18 +57,20 @@ is
 
    Y             : Natural := 0;
 
-   procedure Display_Current_Dir;
+   procedure Display_Current_Dir
+     (Dir_Entry : Directory_Entry);
 
    -------------------------
    -- Display_Current_Dir --
    -------------------------
 
    procedure Display_Current_Dir
+     (Dir_Entry : Directory_Entry)
    is
       Dir : Directory_Handle;
       E   : Directory_Entry;
    begin
-      if Open (Current_Directory, Dir) /= OK then
+      if Open_Dir (Dir_Entry, Dir) /= OK then
          Draw_String
            (Display.Get_Hidden_Buffer (1),
             (0, Y),
@@ -74,13 +98,67 @@ is
                Transparent);
             Y := Y + 16;
 
-            if Is_Subdirectory (E)
-              and then -Name (E) /= "."
-              and then -Name (E) /= ".."
-            then
-               Change_Dir (Name (E));
-               Display_Current_Dir;
-               Change_Dir (FAT_Name'(-".."));
+            if Is_Subdirectory (E) then
+               if -Name (E) /= "."
+                 and then -Name (E) /= ".."
+               then
+                  Change_Dir (Name (E));
+                  Display_Current_Dir (E);
+                  Change_Dir (FAT_Name'(-".."));
+               end if;
+            else
+               declare
+                  N : constant String := -Name (E);
+                  F : File_Handle;
+                  I : Wav_Reader.WAV_Info;
+                  use Wav_Reader;
+               begin
+                  if N'Length > 4
+                    and then N (N'Last - 3 .. N'Last) = ".wav"
+                  then
+                     if File_Open (Dir_Entry, Name (E), Read_Mode, F) = OK then
+                        if Wav_Reader.Read_Header (F, I) /= OK then
+                           Draw_String
+                             (Display.Get_Hidden_Buffer (1),
+                              (0, Y),
+                              "Cannot read WAV information",
+                              BMP_Fonts.Font12x12,
+                              HAL.Bitmap.Red,
+                              Transparent);
+                           Display.Update_Layer (1, True);
+                           Y := Y + 13;
+                        else
+                           Draw_String
+                             (Display.Get_Hidden_Buffer (1),
+                              (0, Y),
+                              "Artist: " & I.Metadata.Artist,
+                              BMP_Fonts.Font12x12,
+                              HAL.Bitmap.Blue,
+                              Transparent);
+                           Y := Y + 13;
+                           Draw_String
+                             (Display.Get_Hidden_Buffer (1),
+                              (0, Y),
+                              "Title:  " & I.Metadata.Title,
+                              BMP_Fonts.Font12x12,
+                              HAL.Bitmap.Blue,
+                              Transparent);
+                           Y := Y + 13;
+                           Draw_String
+                             (Display.Get_Hidden_Buffer (1),
+                              (0, Y),
+                              "Album:  " & I.Metadata.Album,
+                              BMP_Fonts.Font12x12,
+                              HAL.Bitmap.Blue,
+                              Transparent);
+                           Y := Y + 13;
+                           Display.Update_Layer (1, True);
+                        end if;
+
+                        File_Close (F);
+                     end if;
+                  end if;
+               end;
             end if;
          end if;
       end loop;
@@ -194,7 +272,22 @@ begin
             Y := Y + 25;
 
             Change_Dir (FAT_Path'(-"/"));
-            Display_Current_Dir;
+
+            declare
+               Handle : Directory_Handle;
+               E      : Directory_Entry;
+            begin
+               if Open (Current_Directory, Handle) /= OK then
+                  Error_State := True;
+               end if;
+
+               while not Error_State and then Read (Handle, E) = OK loop
+                  Change_Dir (Name (E));
+                  Display_Current_Dir (E);
+               end loop;
+               Close (Handle);
+            end;
+
             Close (FS);
          end if;
 
@@ -207,4 +300,5 @@ begin
          end loop;
       end if;
    end loop;
+
 end SDCard_Demo;

@@ -10,7 +10,7 @@ project SDCard_STM32F769Disco extends "../common/common.gpr" is
 
    package Linker is
       for Default_Switches ("Ada") use
-        ("-Wl,--defsym=__stack_size=16384",
+        ("-Wl,--defsym=__stack_size=32768",
          "-Wl,--gc-sections",
          "-Wl,--print-memory-usage");
    end Linker;
