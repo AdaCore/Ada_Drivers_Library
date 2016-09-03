@@ -40,6 +40,10 @@
 
 with HAL.USB; use HAL.USB;
 
+---------------
+-- STM32.USB --
+---------------
+
 package STM32.USB is
 
    type USB_Mode is (USB_Host, USB_Device);
@@ -56,4 +60,51 @@ package STM32.USB is
      with Pre => (if Phy_Interface = USB_PHY_EMBEDDED then Speed = USB_Full_Speed);
 
    procedure Core_Reset;
+
+   type OTG_FS_All_Interrupts is
+     (
+      --  Accessible in host mode only.
+      OTG_Periodic_TxFIFO_Empty_Int, -- Host
+      OTG_Host_Channels_Int, -- Host
+      OTG_Host_Port_Int, -- Host
+      OTG_Incomplete_Periodic_Transfer_Int, -- Host
+      OTG_Non_Periodic_TxFIFO_Empty_Int, -- Host
+      OTG_Disconnect_Detected_Int, -- Host
+
+      --  Accessible in both host and device modes
+      OTG_Wakeup_Int, -- Both
+      OTG_Session_Request_Int, -- Both
+      OTG_Connector_ID_Status_Change_Int, -- Both
+      OTG_RxFIFO_Non_Empty_Int, -- Both
+      OTG_Start_Of_Frame_Int, -- Both
+      OTG_Protocol_Event_Int, -- Both
+      OTG_Mode_Mismatch_Int, -- Both
+
+      --  Accessible in device mode only.
+      OTG_Incomplete_Isochronous_OUT_Transfer_Int, -- Device
+      OTG_Incomplete_Isochronous_IN_Transfer_Int, -- Device
+      OTG_OUT_Endpoint_Int, -- Device
+      OTG_IN_Endpoint_Int, -- Device
+      OTG_End_Of_Periodic_Frame_Int, -- Device
+      OTG_Isochronous_OUT_Packet_Dropped_Int, -- Device
+      OTG_Enumeration_Done_Int, -- Device
+      OTG_USB_Reset_Int, -- Device
+      OTG_USB_Suspend_Int, -- Device
+      OTG_Early_Suspend_Int, -- Device
+      OTG_Global_OUT_NAK_Effective_Int, -- Device
+      OTG_Global_IN_Non_Periodic_NAK_Effective_Int -- Device
+     );
+
+   subtype OTG_FS_Host_Interrutps is OTG_FS_All_Interrupts range
+     OTG_Periodic_TxFIFO_Empty_Int .. OTG_Mode_Mismatch_Int;
+
+   subtype OTG_FS_Device_Interrutps is OTG_FS_All_Interrupts range
+     OTG_Wakeup_Int .. OTG_Global_IN_Non_Periodic_NAK_Effective_Int;
+
+   procedure Enable_Interrupt (Int : OTG_FS_All_Interrupts; Enable : Boolean := True);
+   function Interrupt_Triggered (Int : OTG_FS_All_Interrupts) return Boolean;
+   procedure Clear_Interrupt (Int : OTG_FS_All_Interrupts);
+   function Current_Mode return USB_Mode;
+
+   procedure Wait_For_Event;
 end STM32.USB;
