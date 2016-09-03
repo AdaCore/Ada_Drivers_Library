@@ -180,7 +180,12 @@ package STM32.Board is
    Audio_I2C   : I2C_Port renames I2C_4;
    Audio_INT   : GPIO_Point renames PB10;
 
-   Audio_DMA   : DMA_Controller renames DMA_2;
+   Audio_DMA               : DMA_Controller renames DMA_2;
+   Audio_Out_DMA_Interrupt : Ada.Interrupts.Interrupt_ID renames
+                               Ada.Interrupts.Names.DMA2_Stream1_Interrupt;
+   Audio_DMA_Out_Stream    : DMA_Stream_Selector renames Stream_1;
+   Audio_DMA_Out_Channel   : DMA_Channel_Selector renames Channel_0;
+
 
    -----------------
    -- User button --

@@ -115,10 +115,6 @@ package body STM32.Board is
    is
       I2C_Conf : I2C_Configuration;
    begin
-      if Port /= I2C_3 then
-         return;
-      end if;
-
       if not STM32.I2C.Is_Configured (Port) then
          I2C_Conf.Own_Address := 16#00#;
          I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;
