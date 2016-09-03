@@ -29,6 +29,8 @@
 --  Authors:     Martin Becker (becker@rcs.ei.tum.de)
 --
 --  XXX! Nothing here is proven thread-safe!
+
+with System;
 with FAT_Filesystem;
 with FAT_Filesystem.Directories; use FAT_Filesystem.Directories;
 
@@ -60,11 +62,25 @@ package FAT_Filesystem.Files with SPARK_Mode => Off is
    function Mode (Handle : File_Handle) return File_Mode;
 
    function File_Read
+     (File   : in out File_Handle;
+      Addr   : System.Address;
+      Length : Unsigned_16) return Integer
+     with Pre => Mode (File) = Read_Mode or else Mode (File) = Read_Write_Mode;
+   --  read data from file.
+   --  @return number of bytes read (at most Data'Length), or -1 on error.
+
+   function File_Read
      (File : in out File_Handle;
       Data : out File_Data) return Integer
      with Pre => Mode (File) = Read_Mode or else Mode (File) = Read_Write_Mode;
    --  read data from file.
    --  @return number of bytes read (at most Data'Length), or -1 on error.
+
+   generic
+      type T is private;
+   procedure Generic_Read
+     (File : in out File_Handle;
+      Data : out T);
 
    function File_Write
      (File   : in out File_Handle;
@@ -77,6 +93,11 @@ package FAT_Filesystem.Files with SPARK_Mode => Off is
    function File_Flush
      (File : in out File_Handle) return Status_Code;
    --  force writing file to disk at this very moment (slow!)
+
+--     function File_Seek
+--       (File     : in out File_Handle;
+--        Position : Unsigned_32) return Status_Code;
+   --  Moves the current file position to "Position"
 
    procedure File_Close (File : in out File_Handle);
    --  invalidates the handle, and ensures that
