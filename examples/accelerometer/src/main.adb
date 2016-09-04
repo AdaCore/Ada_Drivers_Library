@@ -2,6 +2,7 @@ with Ada.Real_Time; use Ada.Real_Time;
 with HAL;           use HAL;
 with STM32.Board;   use STM32.Board;
 with LIS3DSH;       use LIS3DSH;
+with Test_I2C_Proxies;
 
 procedure Main is
    use type Byte;
@@ -19,6 +20,9 @@ procedure Main is
    end My_Delay;
 
 begin
+
+   Test_I2C_Proxies.Start_Test;
+
    Initialize_LEDs;
 
    Initialize_Accelerometer;
