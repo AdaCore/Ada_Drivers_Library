@@ -1,4 +1,4 @@
-SVD2ADA_DIR=~/src/svd2ada
+SVD2ADA_DIR?=~/src/svd2ada
 CORTEX_DIR=$(PWD)/cortex_m/src
 STM_DIR=$(PWD)/STM32/svd
 

@@ -199,21 +199,21 @@ package STM32_SVD.USB_OTG_FS is
    end record;
 
    subtype FS_DAINTMSK_IEPM_Field is HAL.Short;
-   subtype FS_DAINTMSK_OEPINT_Field is HAL.Short;
+   subtype FS_DAINTMSK_OEPM_Field is HAL.Short;
 
    --  OTG_FS all endpoints interrupt mask register (OTG_FS_DAINTMSK)
    type FS_DAINTMSK_Register is record
       --  IN EP interrupt mask bits
-      IEPM   : FS_DAINTMSK_IEPM_Field := 16#0#;
-      --  OUT endpoint interrupt bits
-      OEPINT : FS_DAINTMSK_OEPINT_Field := 16#0#;
+      IEPM : FS_DAINTMSK_IEPM_Field := 16#0#;
+      --  OUT EP interrupt mask bits
+      OEPM : FS_DAINTMSK_OEPM_Field := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for FS_DAINTMSK_Register use record
-      IEPM   at 0 range 0 .. 15;
-      OEPINT at 0 range 16 .. 31;
+      IEPM at 0 range 0 .. 15;
+      OEPM at 0 range 16 .. 31;
    end record;
 
    subtype DVBUSDIS_VBUSDT_Field is HAL.Short;
