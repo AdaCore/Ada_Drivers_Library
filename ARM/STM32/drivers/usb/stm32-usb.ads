@@ -61,49 +61,55 @@ package STM32.USB is
 
    procedure Core_Reset;
 
-   type OTG_FS_All_Interrupts is
+   type USB_All_Interrupts is
      (
       --  Accessible in host mode only.
-      OTG_Periodic_TxFIFO_Empty_Int, -- Host
-      OTG_Host_Channels_Int, -- Host
-      OTG_Host_Port_Int, -- Host
-      OTG_Incomplete_Periodic_Transfer_Int, -- Host
-      OTG_Non_Periodic_TxFIFO_Empty_Int, -- Host
-      OTG_Disconnect_Detected_Int, -- Host
+      Periodic_TxFIFO_Empty_Int,
+      Host_Channels_Int,
+      Host_Port_Int,
+      Incomplete_Periodic_Transfer_Int,
+      Non_Periodic_TxFIFO_Empty_Int,
+      Disconnect_Detected_Int,
+      Debounce_Done,
 
       --  Accessible in both host and device modes
-      OTG_Wakeup_Int, -- Both
-      OTG_Session_Request_Int, -- Both
-      OTG_Connector_ID_Status_Change_Int, -- Both
-      OTG_RxFIFO_Non_Empty_Int, -- Both
-      OTG_Start_Of_Frame_Int, -- Both
-      OTG_Protocol_Event_Int, -- Both
-      OTG_Mode_Mismatch_Int, -- Both
+      Wakeup_Int,
+      Session_Request_Int,
+      Connector_ID_Status_Change_Int,
+      RxFIFO_Non_Empty_Int,
+      Start_Of_Frame_Int,
+      Protocol_Event_Int,
+      Mode_Mismatch_Int,
+      A_Device_Timeout_Change_Int,
+      Host_Negotiation_Detected_Int,
+      Host_Negotiation_Success_Status_Change_Int,
+      Session_Request_Success_Status_Change_Int,
+      Session_End_Detected_Int,
 
       --  Accessible in device mode only.
-      OTG_Incomplete_Isochronous_OUT_Transfer_Int, -- Device
-      OTG_Incomplete_Isochronous_IN_Transfer_Int, -- Device
-      OTG_OUT_Endpoint_Int, -- Device
-      OTG_IN_Endpoint_Int, -- Device
-      OTG_End_Of_Periodic_Frame_Int, -- Device
-      OTG_Isochronous_OUT_Packet_Dropped_Int, -- Device
-      OTG_Enumeration_Done_Int, -- Device
-      OTG_USB_Reset_Int, -- Device
-      OTG_USB_Suspend_Int, -- Device
-      OTG_Early_Suspend_Int, -- Device
-      OTG_Global_OUT_NAK_Effective_Int, -- Device
-      OTG_Global_IN_Non_Periodic_NAK_Effective_Int -- Device
+      Incomplete_Isochronous_OUT_Transfer_Int,
+      Incomplete_Isochronous_IN_Transfer_Int,
+      OUT_Endpoint_Int,
+      IN_Endpoint_Int,
+      End_Of_Periodic_Frame_Int,
+      Isochronous_OUT_Packet_Dropped_Int,
+      Enumeration_Done_Int,
+      USB_Reset_Int,
+      USB_Suspend_Int,
+      Early_Suspend_Int,
+      Global_OUT_NAK_Effective_Int,
+      Global_IN_Non_Periodic_NAK_Effective_Int
      );
 
-   subtype OTG_FS_Host_Interrutps is OTG_FS_All_Interrupts range
-     OTG_Periodic_TxFIFO_Empty_Int .. OTG_Mode_Mismatch_Int;
+   subtype USB_Host_Interrutps is USB_All_Interrupts range
+     Periodic_TxFIFO_Empty_Int .. Session_End_Detected_Int;
 
-   subtype OTG_FS_Device_Interrutps is OTG_FS_All_Interrupts range
-     OTG_Wakeup_Int .. OTG_Global_IN_Non_Periodic_NAK_Effective_Int;
+   subtype USB_Device_Interrutps is USB_All_Interrupts range
+     Wakeup_Int .. Global_IN_Non_Periodic_NAK_Effective_Int;
 
-   procedure Enable_Interrupt (Int : OTG_FS_All_Interrupts; Enable : Boolean := True);
-   function Interrupt_Triggered (Int : OTG_FS_All_Interrupts) return Boolean;
-   procedure Clear_Interrupt (Int : OTG_FS_All_Interrupts);
+   procedure Enable_Interrupt (Int : USB_All_Interrupts; Enable : Boolean := True);
+   function Interrupt_Triggered (Int : USB_All_Interrupts) return Boolean;
+   procedure Clear_Interrupt (Int : USB_All_Interrupts);
    function Current_Mode return USB_Mode;
 
    procedure Wait_For_Event;

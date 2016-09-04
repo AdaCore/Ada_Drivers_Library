@@ -47,7 +47,7 @@ with Semihosting;
 
 package body STM32.USB is
 
-   procedure Handle_OTG_Interrupt (Int : OTG_FS_All_Interrupts);
+   procedure Handle_Interrupt (Int : USB_All_Interrupts);
 
    protected IRQ_Handlers is
       pragma Interrupt_Priority;
@@ -67,93 +67,112 @@ package body STM32.USB is
 
    end IRQ_Handlers;
 
-   --------------------------
-   -- Handle_OTG_Interrupt --
-   --------------------------
+   ----------------------
+   -- Handle_Interrupt --
+   ----------------------
 
-   procedure Handle_OTG_Interrupt (Int : OTG_FS_All_Interrupts) is
+   procedure Handle_Interrupt (Int : USB_All_Interrupts) is
    begin
       case Int is
-         when OTG_Wakeup_Int =>
+         when Wakeup_Int =>
             --  Not handled...
             Semihosting.Log_Line ("USB Wakeup");
-         when OTG_Session_Request_Int =>
+         when Session_Request_Int =>
             --  Check Session request/new session detected interrupt. This mean that
             --  a cable is connected.
             --  Not handled...
             Semihosting.Log_Line ("Session Request");
-         when OTG_Disconnect_Detected_Int =>
+         when Disconnect_Detected_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Disconnect detected");
-         when OTG_Connector_ID_Status_Change_Int =>
+         when Connector_ID_Status_Change_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Connector ID status change");
-         when OTG_Periodic_TxFIFO_Empty_Int =>
+         when Periodic_TxFIFO_Empty_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Periodic TxFIFO Empty");
-         when OTG_Host_Channels_Int =>
+         when Host_Channels_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Host Channels");
-         when OTG_Host_Port_Int =>
+         when Host_Port_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Host Port");
-         when OTG_Incomplete_Periodic_Transfer_Int =>
+         when Incomplete_Periodic_Transfer_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Incomplete Periodic Transfer");
-         when OTG_Incomplete_Isochronous_IN_Transfer_Int =>
+         when Incomplete_Isochronous_IN_Transfer_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Incomplete Isochronous IN Transfer");
-         when OTG_Incomplete_Isochronous_OUT_Transfer_Int =>
+         when Incomplete_Isochronous_OUT_Transfer_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Incomplete Isochronous OUT Transfer");
-         when OTG_OUT_Endpoint_Int =>
+         when OUT_Endpoint_Int =>
             --  Not handled...
             Semihosting.Log_Line ("OUT Endpoint Int");
-         when OTG_IN_Endpoint_Int =>
+         when IN_Endpoint_Int =>
             --  Not handled...
             Semihosting.Log_Line ("IN Endpoint Int");
-         when OTG_End_Of_Periodic_Frame_Int =>
+         when End_Of_Periodic_Frame_Int =>
             --  Not handled...
             Semihosting.Log_Line ("End Of Periodic frame");
-         when OTG_Isochronous_OUT_Packet_Dropped_Int =>
+         when Isochronous_OUT_Packet_Dropped_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Isochronous OUT package dropped");
-         when OTG_Enumeration_Done_Int =>
+         when Enumeration_Done_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Enumeration Done");
-         when OTG_USB_Reset_Int =>
+         when USB_Reset_Int =>
             --  Not handled...
             Semihosting.Log_Line ("USB Reset");
-         when OTG_USB_Suspend_Int =>
+         when USB_Suspend_Int =>
             --  Not handled...
             Semihosting.Log_Line ("USB Suspend");
-         when OTG_Early_Suspend_Int =>
+         when Early_Suspend_Int =>
             --  Not handled...
             Semihosting.Log_Line ("USB Suspend");
-         when OTG_Global_OUT_NAK_Effective_Int =>
+         when Global_OUT_NAK_Effective_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Global OUT NAK Effective");
-         when OTG_Global_IN_Non_Periodic_NAK_Effective_Int =>
+         when Global_IN_Non_Periodic_NAK_Effective_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Global IN Non Periodic NAK Effective");
-         when OTG_Non_Periodic_TxFIFO_Empty_Int =>
+         when Non_Periodic_TxFIFO_Empty_Int =>
             --  Not handled...
             Semihosting.Log_Line ("NON Periodic TxFIFO Empty");
-         when OTG_RxFIFO_Non_Empty_Int =>
+         when RxFIFO_Non_Empty_Int =>
             --  Not handled...
             Semihosting.Log_Line ("RxFIFO Non Empty");
-         when OTG_Start_Of_Frame_Int =>
+         when Start_Of_Frame_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Start of Frame");
-         when OTG_Protocol_Event_Int =>
+         when Protocol_Event_Int =>
             --  Not handled...
             Semihosting.Log_Line ("OTG Protocol event");
-         when OTG_Mode_Mismatch_Int =>
+         when Mode_Mismatch_Int =>
             --  Not handled...
             Semihosting.Log_Line ("Mode Mismatch");
+         when A_Device_Timeout_Change_Int =>
+            --  Not handled...
+            Semihosting.Log_Line ("Device timout change");
+         when Host_Negotiation_Detected_Int =>
+            --  Not handled...
+            Semihosting.Log_Line ("Host negotiation detected");
+         when Host_Negotiation_Success_Status_Change_Int =>
+            --  Not handled...
+            Semihosting.Log_Line ("Host negotiation success status change");
+         when Session_Request_Success_Status_Change_Int =>
+            --  Not handled...
+            Semihosting.Log_Line ("Session request susccess status change");
+         when Session_End_Detected_Int =>
+            --  Not handled...
+            Semihosting.Log_Line ("Session end detected");
+         when Debounce_Done =>
+            --  Not handled...
+            Semihosting.Log_Line ("Debounce done");
       end case;
       Clear_Interrupt (Int);
-   end Handle_OTG_Interrupt;
+   end Handle_Interrupt;
+
    ------------------
    -- IRQ_Handlers --
    ------------------
@@ -175,14 +194,14 @@ package body STM32.USB is
       begin
          Got_Event := True;
 
-         for Int in OTG_FS_All_Interrupts loop
+         for Int in USB_All_Interrupts loop
             if
-              (Current_Mode = USB_Host and then Int in OTG_FS_Host_Interrutps)
+              (Current_Mode = USB_Host and then Int in USB_Host_Interrutps)
               or else
-              (Current_Mode = USB_Device and then Int in OTG_FS_Device_Interrutps)
+              (Current_Mode = USB_Device and then Int in USB_Device_Interrutps)
             then
                if Interrupt_Triggered (Int) then
-                  Handle_OTG_Interrupt (Int);
+                  Handle_Interrupt (Int);
                end if;
             end if;
          end loop;
@@ -257,30 +276,23 @@ package body STM32.USB is
 
             OTG_FS_DEVICE_Periph.FS_DCFG.NZLSOHSK := False;
 
---              Enable_Interrupt (OTG_USB_Reset_Int);
---              Enable_Interrupt (OTG_Enumeration_Done_Int);
---              Enable_Interrupt (OTG_Early_Suspend_Int);
---              Enable_Interrupt (OTG_USB_Suspend_Int);
---              Enable_Interrupt (OTG_Start_Of_Frame_Int);
---              Enable_Interrupt (OTG_Session_Request_Int);
-
             --  Disable all interrupts...
-            for Interrupt in OTG_FS_All_Interrupts loop
+            for Interrupt in USB_All_Interrupts loop
                Enable_Interrupt (Interrupt, False);
             end loop;
 
             --  Clear all interrupts...
-            for Interrupt in OTG_FS_All_Interrupts loop
+            for Interrupt in USB_All_Interrupts loop
                Clear_Interrupt (Interrupt);
             end loop;
 
             --  Enable all interupt for that mode
             if Mode = USB_Host then
-               for Interrupt in OTG_FS_Host_Interrutps loop
+               for Interrupt in USB_Host_Interrutps loop
                   Enable_Interrupt (Interrupt);
                end loop;
             else
-               for Interrupt in OTG_FS_Device_Interrutps loop
+               for Interrupt in USB_Device_Interrutps loop
                   Enable_Interrupt (Interrupt);
                end loop;
             end if;
@@ -348,57 +360,69 @@ package body STM32.USB is
       end loop;
    end Core_Reset;
 
-   procedure Enable_Interrupt (Int : OTG_FS_All_Interrupts; Enable : Boolean := True) is
+   procedure Enable_Interrupt (Int : USB_All_Interrupts; Enable : Boolean := True) is
    begin
       case Int is
-         when OTG_Wakeup_Int =>
+         when Wakeup_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.WUIM := Enable;
-         when OTG_Session_Request_Int =>
+         when Session_Request_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.SRQIM := Enable;
-         when OTG_Disconnect_Detected_Int =>
+         when Disconnect_Detected_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.DISCINT := Enable;
-         when OTG_Connector_ID_Status_Change_Int =>
+         when Connector_ID_Status_Change_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.CIDSCHGM := Enable;
-         when OTG_Periodic_TxFIFO_Empty_Int =>
+         when Periodic_TxFIFO_Empty_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.PTXFEM := Enable;
-         when OTG_Host_Channels_Int =>
+         when Host_Channels_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.HCIM := Enable;
-         when OTG_Host_Port_Int =>
+         when Host_Port_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.PRTIM := Enable;
-         when OTG_Incomplete_Periodic_Transfer_Int | OTG_Incomplete_Isochronous_OUT_Transfer_Int =>
+         when Incomplete_Periodic_Transfer_Int | Incomplete_Isochronous_OUT_Transfer_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.IPXFRM_IISOOXFRM := Enable;
-         when OTG_Incomplete_Isochronous_IN_Transfer_Int =>
+         when Incomplete_Isochronous_IN_Transfer_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.IISOIXFRM := Enable;
-         when OTG_OUT_Endpoint_Int =>
+         when OUT_Endpoint_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.OEPINT := Enable;
-         when OTG_IN_Endpoint_Int =>
+         when IN_Endpoint_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.IEPINT := Enable;
-         when OTG_End_Of_Periodic_Frame_Int =>
+         when End_Of_Periodic_Frame_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.EOPFM := Enable;
-         when OTG_Isochronous_OUT_Packet_Dropped_Int =>
+         when Isochronous_OUT_Packet_Dropped_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.ISOODRPM := Enable;
-         when OTG_Enumeration_Done_Int =>
+         when Enumeration_Done_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.ENUMDNEM := Enable;
-         when OTG_USB_Reset_Int =>
+         when USB_Reset_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.USBRST := Enable;
-         when OTG_USB_Suspend_Int =>
+         when USB_Suspend_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.USBSUSPM := Enable;
-         when OTG_Early_Suspend_Int =>
+         when Early_Suspend_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.ESUSPM := Enable;
-         when OTG_Global_OUT_NAK_Effective_Int =>
+         when Global_OUT_NAK_Effective_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.GONAKEFFM := Enable;
-         when OTG_Global_IN_Non_Periodic_NAK_Effective_Int =>
+         when Global_IN_Non_Periodic_NAK_Effective_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.GINAKEFFM := Enable;
-         when OTG_Non_Periodic_TxFIFO_Empty_Int =>
+         when Non_Periodic_TxFIFO_Empty_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.NPTXFEM := Enable;
-         when OTG_RxFIFO_Non_Empty_Int =>
+         when RxFIFO_Non_Empty_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.RXFLVLM := Enable;
-         when OTG_Start_Of_Frame_Int =>
+         when Start_Of_Frame_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.SOFM := Enable;
-         when OTG_Protocol_Event_Int =>
-            OTG_FS_GLOBAL_Periph.FS_GINTMSK.OTGINT := Enable;
-         when OTG_Mode_Mismatch_Int =>
+         when Mode_Mismatch_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTMSK.MMISM := Enable;
+         when Protocol_Event_Int =>
+            OTG_FS_GLOBAL_Periph.FS_GINTMSK.OTGINT := Enable;
+         when A_Device_Timeout_Change_Int =>
+            null;
+         when Host_Negotiation_Detected_Int =>
+            null;
+         when Host_Negotiation_Success_Status_Change_Int =>
+            null;
+         when Session_Request_Success_Status_Change_Int =>
+            null;
+         when Session_End_Detected_Int =>
+            null;
+         when Debounce_Done =>
+            null;
       end case;
    end Enable_Interrupt;
 
@@ -406,57 +430,69 @@ package body STM32.USB is
    -- Interrupt_Triggered --
    -------------------------
 
-   function Interrupt_Triggered (Int : OTG_FS_All_Interrupts) return Boolean is
+   function Interrupt_Triggered (Int : USB_All_Interrupts) return Boolean is
    begin
       case Int is
-         when OTG_Wakeup_Int =>
+         when Wakeup_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.WKUPINT;
-         when OTG_Session_Request_Int =>
+         when Session_Request_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.SRQINT;
-         when OTG_Disconnect_Detected_Int =>
+         when Disconnect_Detected_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.DISCINT;
-         when OTG_Connector_ID_Status_Change_Int =>
+         when Connector_ID_Status_Change_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.CIDSCHG;
-         when OTG_Periodic_TxFIFO_Empty_Int =>
+         when Periodic_TxFIFO_Empty_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.PTXFE;
-         when OTG_Host_Channels_Int =>
+         when Host_Channels_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.HCINT;
-         when OTG_Host_Port_Int =>
+         when Host_Port_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.HPRTINT;
-         when OTG_Incomplete_Periodic_Transfer_Int | OTG_Incomplete_Isochronous_OUT_Transfer_Int =>
+         when Incomplete_Periodic_Transfer_Int | Incomplete_Isochronous_OUT_Transfer_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.IPXFR_INCOMPISOOUT;
-         when OTG_Incomplete_Isochronous_IN_Transfer_Int =>
+         when Incomplete_Isochronous_IN_Transfer_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.IISOIXFR;
-         when OTG_OUT_Endpoint_Int =>
+         when OUT_Endpoint_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.OEPINT;
-         when OTG_IN_Endpoint_Int =>
+         when IN_Endpoint_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.IEPINT;
-         when OTG_End_Of_Periodic_Frame_Int =>
+         when End_Of_Periodic_Frame_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.EOPF;
-         when OTG_Isochronous_OUT_Packet_Dropped_Int =>
+         when Isochronous_OUT_Packet_Dropped_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.ISOODRP;
-         when OTG_Enumeration_Done_Int =>
+         when Enumeration_Done_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.ENUMDNE;
-         when OTG_USB_Reset_Int =>
+         when USB_Reset_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.USBRST;
-         when OTG_USB_Suspend_Int =>
+         when USB_Suspend_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.USBSUSP;
-         when OTG_Early_Suspend_Int =>
+         when Early_Suspend_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.ESUSP;
-         when OTG_Global_OUT_NAK_Effective_Int =>
+         when Global_OUT_NAK_Effective_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.GOUTNAKEFF;
-         when OTG_Global_IN_Non_Periodic_NAK_Effective_Int =>
+         when Global_IN_Non_Periodic_NAK_Effective_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.GINAKEFF;
-         when OTG_Non_Periodic_TxFIFO_Empty_Int =>
+         when Non_Periodic_TxFIFO_Empty_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.NPTXFE;
-         when OTG_RxFIFO_Non_Empty_Int =>
+         when RxFIFO_Non_Empty_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.RXFLVL;
-         when OTG_Start_Of_Frame_Int =>
+         when Start_Of_Frame_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.SOF;
-         when OTG_Protocol_Event_Int =>
+         when Protocol_Event_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.OTGINT;
-         when OTG_Mode_Mismatch_Int =>
+         when Mode_Mismatch_Int =>
             return OTG_FS_GLOBAL_Periph.FS_GINTSTS.MMIS;
+         when A_Device_Timeout_Change_Int =>
+            return OTG_FS_GLOBAL_Periph.FS_GOTGINT.ADTOCHG;
+         when Host_Negotiation_Detected_Int =>
+            return OTG_FS_GLOBAL_Periph.FS_GOTGINT.HNGDET;
+         when Host_Negotiation_Success_Status_Change_Int =>
+            return OTG_FS_GLOBAL_Periph.FS_GOTGINT.HNSSCHG;
+         when Session_Request_Success_Status_Change_Int =>
+            return OTG_FS_GLOBAL_Periph.FS_GOTGINT.SRSSCHG;
+         when Session_End_Detected_Int =>
+            return OTG_FS_GLOBAL_Periph.FS_GOTGINT.SEDET;
+         when Debounce_Done =>
+            return OTG_FS_GLOBAL_Periph.FS_GOTGINT.DBCDNE;
       end case;
    end Interrupt_Triggered;
 
@@ -464,57 +500,69 @@ package body STM32.USB is
    -- Clear_Interrupt --
    ---------------------
 
-   procedure Clear_Interrupt (Int : OTG_FS_All_Interrupts) is
+   procedure Clear_Interrupt (Int : USB_All_Interrupts) is
    begin
       case Int is
-         when OTG_Wakeup_Int =>
+         when Wakeup_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.WKUPINT := True;
-         when OTG_Session_Request_Int =>
+         when Session_Request_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.SRQINT := True;
-         when OTG_Disconnect_Detected_Int =>
+         when Disconnect_Detected_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.DISCINT := True;
-         when OTG_Connector_ID_Status_Change_Int =>
+         when Connector_ID_Status_Change_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.CIDSCHG := True;
-         when OTG_Periodic_TxFIFO_Empty_Int =>
+         when Periodic_TxFIFO_Empty_Int =>
             null; --  Read-only interrupt
-         when OTG_Host_Channels_Int =>
+         when Host_Channels_Int =>
             null; --  Read-only interrupt
-         when OTG_Host_Port_Int =>
+         when Host_Port_Int =>
             null; --  Read-only interrupt
-         when OTG_Incomplete_Periodic_Transfer_Int | OTG_Incomplete_Isochronous_OUT_Transfer_Int =>
+         when Incomplete_Periodic_Transfer_Int | Incomplete_Isochronous_OUT_Transfer_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.IPXFR_INCOMPISOOUT := True;
-         when OTG_Incomplete_Isochronous_IN_Transfer_Int =>
+         when Incomplete_Isochronous_IN_Transfer_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.IISOIXFR := True;
-         when OTG_OUT_Endpoint_Int =>
+         when OUT_Endpoint_Int =>
             null; --  Read-only interrupt
-         when OTG_IN_Endpoint_Int =>
+         when IN_Endpoint_Int =>
             null; --  Read-only interrupt
-         when OTG_End_Of_Periodic_Frame_Int =>
+         when End_Of_Periodic_Frame_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.EOPF := True;
-         when OTG_Isochronous_OUT_Packet_Dropped_Int =>
+         when Isochronous_OUT_Packet_Dropped_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.ISOODRP := True;
-         when OTG_Enumeration_Done_Int =>
+         when Enumeration_Done_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.ENUMDNE := True;
-         when OTG_USB_Reset_Int =>
+         when USB_Reset_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.USBRST := True;
-         when OTG_USB_Suspend_Int =>
+         when USB_Suspend_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.USBSUSP := True;
-         when OTG_Early_Suspend_Int =>
+         when Early_Suspend_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.ESUSP := True;
-         when OTG_Global_OUT_NAK_Effective_Int =>
+         when Global_OUT_NAK_Effective_Int =>
             null; --  Read-only interrupt
-         when OTG_Global_IN_Non_Periodic_NAK_Effective_Int =>
+         when Global_IN_Non_Periodic_NAK_Effective_Int =>
             null; --  Read-only interrupt
-         when OTG_Non_Periodic_TxFIFO_Empty_Int =>
+         when Non_Periodic_TxFIFO_Empty_Int =>
             null; --  Read-only interrupt
-         when OTG_RxFIFO_Non_Empty_Int =>
+         when RxFIFO_Non_Empty_Int =>
             null; --  Read-only interrupt
-         when OTG_Start_Of_Frame_Int =>
+         when Start_Of_Frame_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.SOF := True;
-         when OTG_Protocol_Event_Int =>
+         when Protocol_Event_Int =>
             null; --  Read-only interrupt
-         when OTG_Mode_Mismatch_Int =>
+         when Mode_Mismatch_Int =>
             OTG_FS_GLOBAL_Periph.FS_GINTSTS.MMIS := True;
+         when A_Device_Timeout_Change_Int =>
+            OTG_FS_GLOBAL_Periph.FS_GOTGINT.ADTOCHG := True;
+         when Host_Negotiation_Detected_Int =>
+            OTG_FS_GLOBAL_Periph.FS_GOTGINT.HNGDET := True;
+         when Host_Negotiation_Success_Status_Change_Int =>
+            OTG_FS_GLOBAL_Periph.FS_GOTGINT.HNSSCHG := True;
+         when Session_Request_Success_Status_Change_Int =>
+            OTG_FS_GLOBAL_Periph.FS_GOTGINT.SRSSCHG := True;
+         when Session_End_Detected_Int =>
+            OTG_FS_GLOBAL_Periph.FS_GOTGINT.SEDET := True;
+         when Debounce_Done =>
+            OTG_FS_GLOBAL_Periph.FS_GOTGINT.DBCDNE := True;
       end case;
    end Clear_Interrupt;
 
