@@ -30,16 +30,14 @@ package Proxies.I2C is
         (Addr    : I2C_Address;
          Data    : I2C_Data;
          Status  : out I2C_Status;
-         Timeout : Natural := 1000)
-        with Max_Queue_Length => Positive'Last;
+         Timeout : Natural := 1000);
 
       overriding
       entry Master_Receive
         (Addr    : I2C_Address;
          Data    : out I2C_Data;
          Status  : out I2C_Status;
-         Timeout : Natural := 1000)
-        with Max_Queue_Length => Positive'Last;
+         Timeout : Natural := 1000);
 
       overriding
       entry Mem_Write
@@ -48,8 +46,7 @@ package Proxies.I2C is
          Mem_Addr_Size : I2C_Memory_Address_Size;
          Data          : I2C_Data;
          Status        : out I2C_Status;
-         Timeout       : Natural := 1000)
-        with Max_Queue_Length => Positive'Last;
+         Timeout       : Natural := 1000);
 
       overriding
       entry Mem_Read
@@ -58,7 +55,6 @@ package Proxies.I2C is
          Mem_Addr_Size : I2C_Memory_Address_Size;
          Data          : out I2C_Data;
          Status        : out I2C_Status;
-         Timeout       : Natural := 1000)
-      with Max_Queue_Length => Positive'Last;
+         Timeout       : Natural := 1000);
    end I2C_Proxy;
 end Proxies.I2C;
