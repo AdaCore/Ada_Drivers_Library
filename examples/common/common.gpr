@@ -15,6 +15,7 @@ project Common is
    for Languages use ("Ada");
    for Target use "arm-eabi";
    for Source_Dirs use ("gui");
+   for Create_Missing_Dirs use "true";
 
    case RTS is
       when "ravenscar-sfp" =>

@@ -21,6 +21,7 @@ aggregate library project Crazyflie is
    for Project_Files use ("crazyflie/board.gpr");
 
    for Library_Dir use "lib/crazyflie/" & RTS & "/" & Build;
+   for Create_Missing_Dirs use "true";
    for Library_Name use "crazyflie";
 
 end Crazyflie;

@@ -7,5 +7,6 @@ project Draw_STM32F769Disco extends "../common/common.gpr" is
 
    for Main use ("draw.adb");
    for Source_Dirs use ("src");
+   for Create_Missing_Dirs use "true";
 
 end Draw_STM32F769Disco;

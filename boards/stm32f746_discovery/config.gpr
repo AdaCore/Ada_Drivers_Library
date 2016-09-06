@@ -10,6 +10,7 @@ abstract project Config extends "../common_config" is
    Build := Common_Config.Build;
 
    Object_Subdir := "stm32f746disco/" & RTS & "/" & Build;
+   for Create_Missing_Dirs use "true";
 
    --  Need that for abstract projects
    for Source_Dirs use ();

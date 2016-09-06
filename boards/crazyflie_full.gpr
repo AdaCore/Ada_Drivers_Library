@@ -14,6 +14,7 @@ aggregate library project Crazyflie_Full is
    for Project_Files use ("crazyflie/board.gpr");
 
    for Library_Dir use "lib/crazyflie/ravenscar-full/" & Build;
+   for Create_Missing_Dirs use "true";
    for Library_Name use "crazyflie";
 
 end Crazyflie_Full;

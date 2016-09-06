@@ -21,6 +21,7 @@ aggregate library project OpenMV2 is
    for Project_Files use ("OpenMV2/board.gpr");
 
    for Library_Dir use "lib/openmv2/" & RTS & "/" & Build;
+   for Create_Missing_Dirs use "true";
    for Library_Name use "openmv2";
 
 end OpenMV2;

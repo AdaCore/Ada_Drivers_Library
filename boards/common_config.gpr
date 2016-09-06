@@ -4,6 +4,7 @@ abstract project Common_Config is
 
    for Languages use ("Ada");
    for Source_Dirs use ();
+   for Create_Missing_Dirs use "true";
 
    type BUILD_TYPE is
       ("Debug", "Production");

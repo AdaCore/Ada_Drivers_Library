@@ -5,6 +5,7 @@ project Wolf_STM32F746Disco extends "../common/common.gpr" is
    for Target use STM32F746_Discovery'Target;
    for Runtime ("Ada") use STM32F746_Discovery'Runtime("Ada");
    for Object_Dir use "obj/stm32f746disco";
+   for Create_Missing_Dirs use "true";
 
    for Main use ("wolf_demo.adb");
    for Source_Dirs use ("src", "pics");

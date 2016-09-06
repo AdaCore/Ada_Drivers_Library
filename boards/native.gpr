@@ -10,6 +10,7 @@ aggregate library project Native is
                           "native/board.gpr");
 
    for Library_Dir use "lib/native/" & Build;
+   for Create_Missing_Dirs use "true";
    for Library_Name use "native";
 
 end Native;

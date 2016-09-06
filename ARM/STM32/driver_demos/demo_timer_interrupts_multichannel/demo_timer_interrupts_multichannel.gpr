@@ -13,6 +13,7 @@ project demo_timer_interrupts_multichannel extends "../../../../examples/common/
    for Main use ("demo.adb");
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
+   for Create_Missing_Dirs use "true";
 
    for Runtime ("Ada") use Config.RTS & "-stm32f4";
 

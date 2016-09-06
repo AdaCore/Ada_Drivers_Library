@@ -21,6 +21,7 @@ aggregate library project STM32F407_Discovery is
    for Project_Files use ("stm32f407_discovery/board.gpr");
 
    for Library_Dir use "lib/stm32f407disco/" & RTS & "/" & Build;
+   for Create_Missing_Dirs use "true";
    for Library_Name use "stm32f407disco";
 
 end STM32F407_Discovery;

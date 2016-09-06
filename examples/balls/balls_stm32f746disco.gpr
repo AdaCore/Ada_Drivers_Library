@@ -7,5 +7,6 @@ project Balls_STM32F746Disco extends "../common/common.gpr" is
 
    for Main use ("balls_demo.adb");
    for Source_Dirs use ("src");
+   for Create_Missing_Dirs use "true";
 
 end Balls_STM32F746Disco;
