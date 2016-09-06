@@ -2,60 +2,17 @@ with "../../boards/stm32f407_discovery.gpr";
 
 project Accelerometer extends "../common/common.gpr" is
 
-   type Loader_Type is
-      ("RAM", "ROM");
-   type Rts_Type is
-      ("ravenscar-sfp", "ravenscar-full");
-   type Lch_Type is
-      ("led", "lcd");
-   type Build_Type is
-      ("Debug", "Production");
    for Runtime ("ada") use Stm32F407_Discovery'Runtime ("Ada");
    for Target use "arm-eabi";
    for Languages use ("Ada");
    for Source_Dirs use ("src");
    for Object_Dir use "obj";
-   BUILD : Build_Type := external ("BUILD");
-   LCH : Lch_Type := external ("LCH");
-   RTS : Rts_Type := external ("RTS");
-   LOADER : Loader_Type := external ("LOADER");
 
    package Linker is
       for Default_Switches ("ada") use ("-Wl,--print-memory-usage");
    end Linker;
 
-   case BUILD is
-
-      when "Debug" =>
-
-         case LCH is
-
-            when "led" =>
-
-               case RTS is
-
-                  when "ravenscar-sfp" =>
-                     for Main use ("main.adb");
-
-                  when "ravenscar-full" =>
-
-                     case LOADER is
-
-                        when "RAM" =>
-                           for Main use ("main.adb");
-
-                        when "ROM" =>
-                           for Main use ("main.adb", "main_test_proxies.adb");
-                     end case;
-               end case;
-
-            when "lcd" =>
-               for Main use ("main.adb");
-         end case;
-
-      when "Production" =>
-         for Main use ("main.adb");
-   end case;
+   for Main use ("main.adb", "main_test_proxies.adb");
 
 end Accelerometer;
 
