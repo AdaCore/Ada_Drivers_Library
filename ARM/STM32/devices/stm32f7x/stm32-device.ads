@@ -419,7 +419,7 @@ package STM32.Device is
    Internal_I2C_Port_3 : aliased Internal_I2C_Port
      with Import, Volatile, Address => I2C3_Base;
    Internal_I2C_Port_4 : aliased Internal_I2C_Port
-     with Import, Volatile, Address => I2C3_Base;
+     with Import, Volatile, Address => I2C4_Base;
 
    I2C_1 : aliased I2C_Port (Internal_I2C_Port_1'Access);
    I2C_2 : aliased I2C_Port (Internal_I2C_Port_2'Access);
