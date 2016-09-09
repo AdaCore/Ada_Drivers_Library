@@ -133,6 +133,13 @@ package STM32.Board is
    User_Button_Point     : GPIO_Point renames PA0;
    User_Button_Interrupt : constant Interrupt_ID := Names.EXTI0_Interrupt;
 
+   --  Seems that we need to enable clock on
+   --  GPIO_A, GPIO_B, GPIO_C, and GPIO_D. I tried
+   --  following, but not sure
+   --  Audio_clock_pins     : GPIO_Point := (PA0,PB0,PC0,PD0);
+
+   procedure Initialize_Audio;
+
    procedure Configure_User_Button_GPIO;
    --  Configures the GPIO port/pin for the blue user button. Sufficient
    --  for polling the button, and necessary for having the button generate
