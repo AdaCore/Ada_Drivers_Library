@@ -18,13 +18,14 @@ This example includes a file named disk_8_partitions.img. This is the target fil
 
 3. The basics
 ----------
-a) In a command window run the command
+a) In a shell window run the command
 ```
 st-util --semihosting
 ```
 b) Build the demo and load it onto your stm32 board. 
 
-c) Run the demo on the board and check the outputs in the command window that you used for st-util.
+c) Run the demo on the board and check the outputs in the shell window that you used for st-util.
+
 
 
 
