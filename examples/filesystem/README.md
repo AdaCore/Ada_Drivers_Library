@@ -1,6 +1,6 @@
 # Filesystem example
 
-This filesystem example set currently runs only under a unix host. Most of the other examples in this repository will run under either Windows or Linux, however this set requires a special build of st-util which is not yet available for Windows, and the demo code looks back to the host and expects to see a unix file system. 
+This filesystem example set currently runs only under a unix host. Most of the other examples in this repository will run under either Windows or Linux, however this set requires a special build of st-util which is not yet available for Windows, and the example code looks back to the host computer and expects to see a unix file system. 
 
 The demo will parse the file on the host and print some basic information about the file in the same terminal window used to run st-util and then exits.
 
