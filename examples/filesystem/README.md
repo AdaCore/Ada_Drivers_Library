@@ -23,6 +23,7 @@ a) In a command window run the command
 st-util --semihosting
 ```
 b) Build the demo and load it onto your stm32 board. 
+
 c) Run the demo on the board and check the outputs in the command window that you used for st-util.
 
 
