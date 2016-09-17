@@ -14,6 +14,16 @@ does not generate an error about an unknown option then your st-util is new enou
 
 2. The disk_8_partitions.img file
 ----------
-This demo is delivered with a file named disk_8_partitions.img. This is the target file about which the application will return some basic information. Place the disk_8_partitions.img in hte /tmp/ directory on your host computer before you run the code.
+This example includes a file named disk_8_partitions.img. This is the target file about which the application will return some basic information. Place the disk_8_partitions.img in the /tmp/ directory on your host computer before you run the code.
+
+3. The basics
+----------
+a) In a command window run the command
+```
+st-util --semihosting
+```
+b) Build the demo and load it onto your stm32 board. 
+c) Run the demo on the board and check the outputs in the command window that you used for st-util.
+
 
 
