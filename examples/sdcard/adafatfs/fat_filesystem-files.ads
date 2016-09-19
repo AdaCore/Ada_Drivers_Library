@@ -62,19 +62,23 @@ package FAT_Filesystem.Files with SPARK_Mode => Off is
    function Mode (Handle : File_Handle) return File_Mode;
 
    function File_Read
-     (File   : in out File_Handle;
+     (Handle : in out File_Handle;
       Addr   : System.Address;
       Length : Unsigned_16) return Integer
-     with Pre => Mode (File) = Read_Mode or else Mode (File) = Read_Write_Mode;
+     with Pre => Mode (Handle) /= Write_Mode;
    --  read data from file.
    --  @return number of bytes read (at most Data'Length), or -1 on error.
 
    function File_Read
-     (File : in out File_Handle;
-      Data : out File_Data) return Integer
-     with Pre => Mode (File) = Read_Mode or else Mode (File) = Read_Write_Mode;
+     (Handle : in out File_Handle;
+      Data   : out File_Data) return Integer
+     with Pre => Mode (Handle) /= Write_Mode;
    --  read data from file.
    --  @return number of bytes read (at most Data'Length), or -1 on error.
+
+   function File_Offset
+     (Handle : in out File_Handle) return Unsigned_32;
+   --  Current index within the file
 
    generic
       type T is private;
@@ -129,4 +133,7 @@ private
    function Mode (Handle : File_Handle) return File_Mode
      is (Handle.Mode);
 
+   function File_Offset
+     (Handle : in out File_Handle) return Unsigned_32
+     is (Handle.Bytes_Total);
 end FAT_Filesystem.Files;

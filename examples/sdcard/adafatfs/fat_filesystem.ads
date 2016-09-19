@@ -201,9 +201,9 @@ package FAT_Filesystem is
    function OEM_Name (FS : FAT_Filesystem) return String;
    --  The OEM Name of the Volume. Different from the Volume Label.
 
-   function Block_Size_In_Bytes
+   function Bytes_Per_Block
      (FS : FAT_Filesystem) return Unsigned_32;
-   function Number_Of_Blocks_Per_Cluster
+   function Blocks_Per_Cluster
      (FS : FAT_Filesystem) return Unsigned_8;
    function Bytes_Per_Cluster
      (FS : FAT_Filesystem) return Unsigned_32;
@@ -373,7 +373,7 @@ private
      (FS      : FAT_Filesystem;
       Cluster : Cluster_Type) return Unsigned_32
    is (FS.Data_Area +
-       Unsigned_32 (Cluster - 2) * Unsigned_32 (FS.Number_Of_Blocks_Per_Cluster));
+       Unsigned_32 (Cluster - 2) * Unsigned_32 (FS.Blocks_Per_Cluster));
 
    function Get_FAT
      (FS      : in out FAT_Filesystem;
@@ -447,17 +447,17 @@ private
    function OEM_Name (FS : FAT_Filesystem) return String
    is (FS.Disk_Parameters.OEM_Name);
 
-   function Block_Size_In_Bytes
+   function Bytes_Per_Block
      (FS : FAT_Filesystem) return Unsigned_32
    is (Unsigned_32 (FS.Disk_Parameters.Block_Size_In_Bytes));
 
-   function Number_Of_Blocks_Per_Cluster
+   function Blocks_Per_Cluster
      (FS : FAT_Filesystem) return Unsigned_8
    is (FS.Disk_Parameters.Blocks_Per_Cluster);
 
    function Bytes_Per_Cluster
      (FS : FAT_Filesystem) return Unsigned_32
-   is (Unsigned_32 (FS.Number_Of_Blocks_Per_Cluster) * FS.Block_Size_In_Bytes);
+   is (Unsigned_32 (FS.Blocks_Per_Cluster) * FS.Bytes_Per_Block);
 
    function Reserved_Blocks
      (FS : FAT_Filesystem) return Unsigned_16

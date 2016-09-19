@@ -650,7 +650,7 @@ package body FAT_Filesystem is
          FS.Num_Clusters :=
            Cluster_Type
              ((FS.Total_Number_Of_Blocks + FS.LBA - FS.Data_Area) /
-                    Unsigned_32 (FS.Number_Of_Blocks_Per_Cluster));
+                    Unsigned_32 (FS.Blocks_Per_Cluster));
       end;
    end Initialize_FS;
 
@@ -891,7 +891,7 @@ package body FAT_Filesystem is
       end if;
 
       Block_Num :=
-        FS.FAT_Addr + Unsigned_32 (Cluster) * 4 / FS.Block_Size_In_Bytes;
+        FS.FAT_Addr + Unsigned_32 (Cluster) * 4 / FS.Bytes_Per_Block;
 
       if Block_Num /= FS.FAT_Block then
          FS.FAT_Block := Block_Num;
@@ -907,7 +907,7 @@ package body FAT_Filesystem is
       end if;
 
       Idx :=
-        Unsigned_16 (Unsigned_32 ((Cluster) * 4) mod FS.Block_Size_In_Bytes);
+        Unsigned_16 (Unsigned_32 ((Cluster) * 4) mod FS.Bytes_Per_Block);
 
       return To_Cluster (FS.FAT_Window (Idx .. Idx + 3)) and 16#0FFF_FFFF#;
    end Get_FAT;
@@ -935,7 +935,7 @@ package body FAT_Filesystem is
       end if;
 
       Block_Num :=
-        FS.FAT_Addr + Unsigned_32 (Cluster) * 4 / FS.Block_Size_In_Bytes;
+        FS.FAT_Addr + Unsigned_32 (Cluster) * 4 / FS.Bytes_Per_Block;
 
       if Block_Num /= FS.FAT_Block then
          FS.FAT_Block := Block_Num;
@@ -951,7 +951,7 @@ package body FAT_Filesystem is
       end if;
 
       Idx :=
-        Unsigned_16 (Unsigned_32 (Cluster * 4) mod FS.Block_Size_In_Bytes);
+        Unsigned_16 (Unsigned_32 (Cluster * 4) mod FS.Bytes_Per_Block);
 
       FS.FAT_Window (Idx .. Idx + 3) := From_Cluster (Value);
 
