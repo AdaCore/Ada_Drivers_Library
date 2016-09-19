@@ -40,6 +40,7 @@ with STM32.DMA;     use STM32.DMA;
 with STM32.FMC;     use STM32.FMC;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.I2C;     use STM32.I2C;
+with STM32.SAI;     use STM32.SAI;
 with STM32.SDMMC;   use STM32.SDMMC;
 
 use STM32;
@@ -167,25 +168,33 @@ package STM32.Board is
    -- Audio --
    -----------
 
-   --  Audio out
-   SAI1_MCLK_A : GPIO_Point renames PG7;
-   SAI1_SCK_A  : GPIO_Point renames PE5;
-   SAI1_SD_A   : GPIO_Point renames PE6;
-   SAI1_FS_A   : GPIO_Point renames PE4;
+   Audio_SAI     : SAI_Controller renames SAI_1;
+   Audio_I2C     : I2C_Port renames I2C_4;
+   Audio_INT     : GPIO_Point renames PB10;
 
-   --  Audio in
-   SAI1_SD_B   : GPIO_Point renames PE3;
+   SAI1_MCLK_A   : GPIO_Point renames PG7;
+   SAI1_SCK_A    : GPIO_Point renames PE5;
+   SAI1_SD_A     : GPIO_Point renames PE6;
+   SAI1_SD_B     : GPIO_Point renames PE3;
+   SAI1_FS_A     : GPIO_Point renames PE4;
+   SAI_Pins      : constant GPIO_Points :=
+                     (SAI1_MCLK_A, SAI1_SCK_A, SAI1_SD_A, SAI1_SD_B,
+                      SAI1_FS_A);
+   SAI_Pins_AF   : GPIO_Alternate_Function renames GPIO_AF_6_SAI1;
 
-   --  Audio interrupts
-   Audio_I2C   : I2C_Port renames I2C_4;
-   Audio_INT   : GPIO_Point renames PB10;
+   --  SAI in/out conf
+   SAI_Out_Block : SAI_Block renames Block_A;
+   SAI_In_Block  : SAI_Block renames Block_B;
 
+   --  Audio DMA configuration
    Audio_DMA               : DMA_Controller renames DMA_2;
    Audio_Out_DMA_Interrupt : Ada.Interrupts.Interrupt_ID renames
                                Ada.Interrupts.Names.DMA2_Stream1_Interrupt;
    Audio_DMA_Out_Stream    : DMA_Stream_Selector renames Stream_1;
    Audio_DMA_Out_Channel   : DMA_Channel_Selector renames Channel_0;
 
+   Audio_DMA_In_Sream      : DMA_Stream_Selector renames Stream_7;
+   Audio_DMA_In_Channel    : DMA_Channel_Selector renames Channel_0;
 
    -----------------
    -- User button --

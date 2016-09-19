@@ -23,18 +23,6 @@ package body HAL.Audio is
    Driver : WM8994_Device (Port     => Audio_I2C'Access,
                            I2C_Addr => Audio_I2C_Addr);
 
-   --  AUDIO OUT
-   SAI_Out         : SAI_Controller renames SAI_1;
-   SAI_Out_Block   : SAI_Block renames Block_A;
-   DMA_Out         : STM32.DMA.DMA_Controller renames Audio_DMA;
-
-   --  AUDIO IN
---     SAI_In          : SAI_Controller renames SAI_2;
---     SAI_In_Block    : SAI_Block renames Block_B;
---     DMA_In          : STM32.DMA.DMA_Controller renames DMA_2;
---     DMA_In_Sream    : DMA_Stream_Selector renames Stream_7;
---     DMA_In_Channel  : DMA_Channel_Selector renames Channel_0;
-
 
    --------------------
    -- DMA_Out_Status --
@@ -44,7 +32,7 @@ package body HAL.Audio is
      (Flag : STM32.DMA.DMA_Status_Flag) return Boolean
    is
    begin
-      return STM32.DMA.Status (DMA_Out, Audio_DMA_Out_Stream, Flag);
+      return STM32.DMA.Status (Audio_DMA, Audio_DMA_Out_Stream, Flag);
    end DMA_Out_Status;
 
    --------------------------
@@ -55,7 +43,7 @@ package body HAL.Audio is
      (Flag : STM32.DMA.DMA_Status_Flag)
    is
    begin
-      STM32.DMA.Clear_Status (DMA_Out, Audio_DMA_Out_Stream, Flag);
+      STM32.DMA.Clear_Status (Audio_DMA, Audio_DMA_Out_Stream, Flag);
    end DMA_Out_Clear_Status;
 
    ---------------------
@@ -75,7 +63,7 @@ package body HAL.Audio is
          when Audio_Freq_11kHz | Audio_Freq_22kHz | Audio_Freq_44kHz =>
             --  HSE/PLLM = 1MHz = PLLI2S VCO Input
             Configure_SAI_I2S_Clock
-              (SAI_Out,
+              (Audio_SAI,
                PLLI2SN    => 429,  --  VCO Output = 429MHz
                PLLI2SQ    => 2,    --  SAI Clk(First level) = 214.5 MHz
                PLLI2SDIVQ => 19);  --  I2S Clk = 215.4 / 19 = 11.289 MHz
@@ -83,7 +71,7 @@ package body HAL.Audio is
          when Audio_Freq_8kHz  | Audio_Freq_16kHz |
               Audio_Freq_48kHz | Audio_Freq_96kHz =>
             Configure_SAI_I2S_Clock
-              (SAI_Out,
+              (Audio_SAI,
                PLLI2SN    => 344,  --  VCO Output = 344MHz
                PLLI2SQ    => 7,    --  SAI Clk(First level) = 49.142 MHz
                PLLI2SDIVQ => 1);  --  I2S Clk = 49.142 MHz
@@ -96,10 +84,8 @@ package body HAL.Audio is
 
    procedure Initialize_Audio_Out_Pins
    is
-      SAI_Pins : constant GPIO_Points :=
-                   (SAI1_MCLK_A, SAI1_FS_A, SAI1_SD_A, SAI1_SCK_A);
    begin
-      Enable_Clock (SAI_1);
+      Enable_Clock (Audio_SAI);
       Enable_Clock (SAI_Pins);
 
       Configure_IO
@@ -108,15 +94,14 @@ package body HAL.Audio is
           Output_Type => Push_Pull,
           Speed       => Speed_High,
           Resistors   => Floating));
-      Configure_Alternate_Function
-        (SAI_Pins, GPIO_AF_6_SAI1);
+      Configure_Alternate_Function (SAI_Pins, SAI_Pins_AF);
 
-      Enable_Clock (DMA_Out);
+      Enable_Clock (Audio_DMA);
 
       --  Configure the DMA channel to the SAI peripheral
-      Disable (DMA_Out, Audio_DMA_Out_Stream);
+      Disable (Audio_DMA, Audio_DMA_Out_Stream);
       Configure
-        (DMA_Out,
+        (Audio_DMA,
          Audio_DMA_Out_Stream,
          (Channel                      => Audio_DMA_Out_Channel,
           Direction                    => Memory_To_Peripheral,
@@ -130,7 +115,7 @@ package body HAL.Audio is
           FIFO_Threshold               => FIFO_Threshold_Full_Configuration,
           Memory_Burst_Size            => Memory_Burst_Single,
           Peripheral_Burst_Size        => Peripheral_Burst_Single));
-      Clear_All_Status (DMA_Out, Audio_DMA_Out_Stream);
+      Clear_All_Status (Audio_DMA, Audio_DMA_Out_Stream);
    end Initialize_Audio_Out_Pins;
 
    ------------------------
@@ -140,9 +125,9 @@ package body HAL.Audio is
    procedure Initialize_SAI_Out (Freq : Audio_Frequency)
    is
    begin
-      STM32.SAI.Disable (SAI_Out, SAI_Out_Block);
+      STM32.SAI.Disable (Audio_SAI, SAI_Out_Block);
       STM32.SAI.Configure_Audio_Block
-        (SAI_Out,
+        (Audio_SAI,
          SAI_Out_Block,
          Frequency       => Audio_Frequency'Enum_Rep (Freq),
          Stereo_Mode     => Stereo,
@@ -156,21 +141,21 @@ package body HAL.Audio is
          Output_Drive    => Drive_Immediate,
          FIFO_Threshold  => FIFO_1_Quarter_Full);
       STM32.SAI.Configure_Block_Frame
-        (SAI_Out,
+        (Audio_SAI,
          SAI_Out_Block,
-         Frame_Length => 128,
-         Frame_Active => 64,
+         Frame_Length => 64,
+         Frame_Active => 32,
          Frame_Sync   => FS_Frame_And_Channel_Identification,
          FS_Polarity  => FS_Active_Low,
          FS_Offset    => Before_First_Bit);
       STM32.SAI.Configure_Block_Slot
-        (SAI_Out,
+        (Audio_SAI,
          SAI_Out_Block,
          First_Bit_Offset => 0,
          Slot_Size        => Data_Size,
          Number_Of_Slots  => 4,
          Enabled_Slots    => Slot_0 or Slot_2);
-      STM32.SAI.Enable (SAI_Out, SAI_Out_Block);
+      STM32.SAI.Enable (Audio_SAI, SAI_Out_Block);
    end Initialize_SAI_Out;
 
    --------------------------
@@ -193,7 +178,7 @@ package body HAL.Audio is
       Frequency : Audio_Frequency)
    is
    begin
-      STM32.SAI.Deinitialize (SAI_Out, SAI_Out_Block);
+      STM32.SAI.Deinitialize (Audio_SAI, SAI_Out_Block);
 
       Set_Audio_Clock (Frequency);
 
@@ -229,19 +214,19 @@ package body HAL.Audio is
       Driver.Play;
 
       Start_Transfer_with_Interrupts
-        (This               => DMA_Out,
+        (This               => Audio_DMA,
          Stream             => Audio_DMA_Out_Stream,
          Source             => Buffer (Buffer'First)'Address,
-         Destination        => SAI_Out.ADR'Address,
+         Destination        => Audio_SAI.ADR'Address,
          Data_Count         => Buffer'Length,
          Enabled_Interrupts => (Half_Transfer_Complete_Interrupt => True,
                                 Transfer_Complete_Interrupt      => True,
                                 others                           => False));
 
-      Enable_DMA (SAI_Out, SAI_Out_Block);
+      Enable_DMA (Audio_SAI, SAI_Out_Block);
 
-      if not Enabled (SAI_Out, SAI_Out_Block) then
-         Enable (SAI_Out, SAI_Out_Block);
+      if not Enabled (Audio_SAI, SAI_Out_Block) then
+         Enable (Audio_SAI, SAI_Out_Block);
       end if;
    end Play;
 
@@ -263,7 +248,7 @@ package body HAL.Audio is
    procedure Pause is
    begin
       Driver.Pause;
-      STM32.DMA.Disable (DMA_Out, Audio_DMA_Out_Stream);
+      STM32.DMA.Disable (Audio_DMA, Audio_DMA_Out_Stream);
    end Pause;
 
    ------------
@@ -306,9 +291,9 @@ package body HAL.Audio is
    is
    begin
       Set_Audio_Clock (Frequency);
-      STM32.SAI.Disable (SAI_Out, SAI_Out_Block);
+      STM32.SAI.Disable (Audio_SAI, SAI_Out_Block);
       Initialize_SAI_Out (Frequency);
-      STM32.SAI.Enable (SAI_Out, SAI_Out_Block);
+      STM32.SAI.Enable (Audio_SAI, SAI_Out_Block);
    end Set_Frequency;
 
 end HAL.Audio;
