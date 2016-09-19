@@ -23,6 +23,7 @@
 
 with Interfaces; use Interfaces;
 
+with HAL.Audio;
 with FAT_Filesystem.Files;
 
 package Wav_Reader is
@@ -69,10 +70,17 @@ package Wav_Reader is
    type WAV_Info is record
       Audio_Description : Audio_Description_Block;
       Metadata          : Metadata_Info;
+      Data_Size         : Unsigned_32;
    end record;
+
+   procedure Initialize (Volume : HAL.Audio.Audio_Volume);
 
    function Read_Header
      (F    : in out FAT_Filesystem.Files.File_Handle;
       Info : out WAV_Info) return WAV_Status_Code;
+
+   procedure Play
+     (F    : in out FAT_Filesystem.Files.File_Handle;
+      Info : WAV_Info);
 
 end Wav_Reader;

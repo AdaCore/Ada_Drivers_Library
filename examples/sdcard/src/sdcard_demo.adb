@@ -26,9 +26,9 @@ with Interfaces;                 use Interfaces;
 
 with HAL.Bitmap;                 use HAL.Bitmap;
 with HAL.Framebuffer;            use HAL.Framebuffer;
---  with HAL.Touch_Panel;            use HAL.Touch_Panel;
 with Bitmapped_Drawing;          use Bitmapped_Drawing;
 
+with Cortex_M.Cache;             use Cortex_M.Cache;
 with STM32.SDMMC;                use STM32.SDMMC;
 with STM32.Board;                use STM32.Board;
 
@@ -153,6 +153,9 @@ is
                               Transparent);
                            Y := Y + 13;
                            Display.Update_Layer (1, True);
+
+                           Play (F, I);
+                           Display.Update_Layer (1, True);
                         end if;
 
                         File_Close (F);
@@ -167,10 +170,13 @@ is
    end Display_Current_Dir;
 
 begin
+   Cortex_M.Cache.Disable_D_Cache;
    SD_Controller.Initialize;
    Display.Initialize (Landscape, Interrupt);
    Display.Initialize_Layer (1, ARGB_1555);
    Display.Set_Background (255, 255, 255);
+   STM32.Board.Initialize_LEDs;
+   Wav_Reader.Initialize (30);
 
    loop
       if not SD_Controller.Card_Present then
