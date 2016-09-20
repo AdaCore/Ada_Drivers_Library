@@ -1,6 +1,6 @@
 # Warning!
 
-This repository uses git submodule, please clone with the --recusrsive option:
+This repository uses git submodule, please clone with the --recursive option:
 
 ```shell
 git clone --recursive https://github.com/AdaCore/Ada_Drivers_Library.git
