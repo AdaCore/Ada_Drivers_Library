@@ -41,7 +41,7 @@ package FAT_Filesystem.Files with SPARK_Mode => Off is
 
    type File_Mode is (Read_Mode, Write_Mode, Read_Write_Mode);
 
-   subtype File_Data is Media_Reader.Block;
+   subtype File_Data is HAL.Block_Drivers.Block;
 
    function File_Open
      (Parent : Directory_Entry;
@@ -64,7 +64,7 @@ package FAT_Filesystem.Files with SPARK_Mode => Off is
    function File_Read
      (Handle : in out File_Handle;
       Addr   : System.Address;
-      Length : Unsigned_16) return Integer
+      Length : Natural) return Integer
      with Pre => Mode (Handle) /= Write_Mode;
    --  read data from file.
    --  @return number of bytes read (at most Data'Length), or -1 on error.
@@ -120,7 +120,7 @@ private
       Current_Cluster     : Cluster_Type := 0; -- where we are currently reading/writing
       Current_Block       : Unsigned_32 := 0; -- same, but block
       Buffer              : Block (0 .. 511); --  size of one block in FAT/SD card
-      Buffer_Level        : Unsigned_16 := 0; -- how much data in Buffer is meaningful
+      Buffer_Level        : Natural := 0; -- how much data in Buffer is meaningful
       Bytes_Total         : Unsigned_32 := 0; -- how many bytes were read/written
       D_Entry             : Directory_Entry; -- the associated directory entry
       Parent              : Directory_Entry;

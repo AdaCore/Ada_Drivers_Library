@@ -37,13 +37,11 @@ with BMP_Fonts;
 with FAT_Filesystem;             use FAT_Filesystem;
 with FAT_Filesystem.Directories; use FAT_Filesystem.Directories;
 with FAT_Filesystem.Files;       use FAT_Filesystem.Files;
-with Media_Reader.SDCard;        use Media_Reader.SDCard;
 
 with Wav_Reader;
 
 procedure SDCard_Demo
 is
-   SD_Controller : aliased SDCard_Controller (STM32.Board.SD_Device'Access);
    SD_Card_Info  : Card_Information;
 
    Units         : constant array (Natural range <>) of Character :=
@@ -155,7 +153,6 @@ is
                            Display.Update_Layer (1, True);
 
                            Play (F, I);
-                           Display.Update_Layer (1, True);
                         end if;
 
                         File_Close (F);
@@ -171,15 +168,16 @@ is
 
 begin
    Cortex_M.Cache.Disable_D_Cache;
-   SD_Controller.Initialize;
-   Display.Initialize (Landscape, Interrupt);
-   Display.Initialize_Layer (1, ARGB_1555);
+   Display.Initialize (Portrait, Interrupt);
+   Display.Initialize_Layer (1, ARGB_8888);
    Display.Set_Background (255, 255, 255);
+
+   SDCard_Device.Initialize;
    STM32.Board.Initialize_LEDs;
-   Wav_Reader.Initialize (30);
+   Wav_Reader.Initialize (100);
 
    loop
-      if not SD_Controller.Card_Present then
+      if not SDCard_Device.Card_Present then
          Display.Get_Hidden_Buffer (1).Fill (Transparent);
          Draw_String
            (Display.Get_Hidden_Buffer (1),
@@ -191,7 +189,7 @@ begin
          Display.Update_Layer (1);
 
          loop
-            if Card_Present (SD_Controller) then
+            if SDCard_Device.Card_Present then
                exit;
             end if;
          end loop;
@@ -201,7 +199,7 @@ begin
          Y := 0;
          Error_State := False;
 
-         SD_Card_Info := SD_Controller.Get_Card_Information;
+         SD_Card_Info := SDCard_Device.Get_Card_Information;
 
          --  Dump general info about the SD-card
          Capacity := SD_Card_Info.Card_Capacity;
@@ -228,7 +226,7 @@ begin
             end if;
          end loop;
 
-         FS := Open (SD_Controller'Unchecked_Access, -"sdcard", Status);
+         FS := Open (SDCard_Device'Access, -"sdcard", Status);
 
          if Status /= OK then
             Error_State := True;
@@ -300,9 +298,7 @@ begin
          Display.Update_Layer (1);
 
          loop
-            if not Card_Present (SD_Controller) then
-               exit;
-            end if;
+            exit when not SDCard_Device.Card_Present;
          end loop;
       end if;
    end loop;

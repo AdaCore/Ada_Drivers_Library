@@ -21,8 +21,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces;   use Interfaces;
-with Media_Reader; use Media_Reader;
+with Interfaces;        use Interfaces;
+with HAL.Block_Drivers; use HAL.Block_Drivers;
 
 limited with FAT_Filesystem.Directories;
 
@@ -156,14 +156,14 @@ package FAT_Filesystem is
    Null_FAT_Volume : constant FAT_Filesystem_Access;
 
    function Open
-     (Controller  : Media_Controller_Access;
+     (Controller  : HAL.Block_Drivers.Block_Driver_Ref;
       Mount_Point : FAT_Name;
       Status      : out Status_Code) return FAT_Filesystem_Access;
    --  Search the media for a valid FAT partition and opens it.
    --  If the media contains several partitions, the first one is used
 
    function Open
-     (Controller  : Media_Controller_Access;
+     (Controller  : HAL.Block_Drivers.Block_Driver_Ref;
       LBA         : Unsigned_32;
       Mount_Point : FAT_Name;
       Status      : out Status_Code) return FAT_Filesystem_Access;
@@ -350,7 +350,7 @@ private
       Mount_Point     : FAT_Name;
       Disk_Parameters : FAT_Disk_Parameter;
       LBA             : Unsigned_32;
-      Controller      : Media_Controller_Access;
+      Controller      : Block_Driver_Ref;
       FSInfo          : FAT_FS_Info;
       Data_Area       : Unsigned_32;
       FAT_Addr        : Unsigned_32;

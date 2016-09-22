@@ -438,16 +438,17 @@ package body FAT_Filesystem is
    ----------
 
    function Open
-     (Controller  : Media_Controller_Access;
+     (Controller  : Block_Driver_Ref;
       Mount_Point : FAT_Name;
       Status      : out Status_Code) return FAT_Filesystem_Access
    is
-      subtype Word_Data is Media_Reader.Block (0 .. 3);
+      subtype Word_Data is Block (0 .. 3);
       function To_Word is new
         Ada.Unchecked_Conversion (Word_Data, Unsigned_32);
+      use type HAL.Byte_Array;
       Ret      : FAT_Filesystem_Access;
-      P_Idx    : Unsigned_16;
-      P_Data   : Media_Reader.Block (0 .. 15);
+      P_Idx    : Natural;
+      P_Data   : Block (0 .. 15);
       N_Blocks : Unsigned_32;
 
    begin
@@ -492,7 +493,7 @@ package body FAT_Filesystem is
       for P in 1 .. 4 loop
          --  Partitions are defined as an array of 16 bytes from
          --  base MBR + 446 (16#1BE#)
-         P_Idx  := 446 + Unsigned_16 (P - 1) * 16;
+         P_Idx  := 446 + (P - 1) * 16;
          P_Data := Ret.Window (P_Idx .. P_Idx + 15);
 
          --  Retrieve the number of blocks in the partition.
@@ -529,7 +530,7 @@ package body FAT_Filesystem is
    ----------
 
    function Open
-     (Controller  : Media_Controller_Access;
+     (Controller  : HAL.Block_Drivers.Block_Driver_Ref;
       LBA         : Unsigned_32;
       Mount_Point : FAT_Name;
       Status      : out Status_Code) return FAT_Filesystem_Access
@@ -598,6 +599,8 @@ package body FAT_Filesystem is
      (FS     : in out FAT_Filesystem;
       Status : out Status_Code)
    is
+      use type HAL.Byte_Array;
+
       subtype Disk_Parameter_Block is Block (0 .. 91);
       function To_Disk_Parameter is new Ada.Unchecked_Conversion
         (Disk_Parameter_Block, FAT_Disk_Parameter);
@@ -677,7 +680,7 @@ package body FAT_Filesystem is
          return OK;
       end if;
 
-      if not FS.Controller.Read_Block (Block, FS.Window) then
+      if not FS.Controller.Read (Block, FS.Window) then
          FS.Window_Block  := 16#FFFF_FFFF#;
 
          return Disk_Error;
@@ -878,7 +881,7 @@ package body FAT_Filesystem is
      (FS      : in out FAT_Filesystem;
       Cluster : Cluster_Type) return Cluster_Type
    is
-      Idx       : Unsigned_16;
+      Idx       : Natural;
       Block_Num : Unsigned_32;
 
       subtype B4 is Block (1 .. 4);
@@ -896,18 +899,14 @@ package body FAT_Filesystem is
       if Block_Num /= FS.FAT_Block then
          FS.FAT_Block := Block_Num;
 
-         if not Read_Block
-           (FS.Controller.all,
-            FS.FAT_Block,
-            FS.FAT_Window)
-         then
+         if not FS.Controller.Read (FS.FAT_Block, FS.FAT_Window) then
             FS.FAT_Block := 16#FFFF_FFFF#;
             return INVALID_CLUSTER;
          end if;
       end if;
 
       Idx :=
-        Unsigned_16 (Unsigned_32 ((Cluster) * 4) mod FS.Bytes_Per_Block);
+        Natural (Unsigned_32 ((Cluster) * 4) mod FS.Bytes_Per_Block);
 
       return To_Cluster (FS.FAT_Window (Idx .. Idx + 3)) and 16#0FFF_FFFF#;
    end Get_FAT;
@@ -921,7 +920,7 @@ package body FAT_Filesystem is
       Cluster : Cluster_Type;
       Value   : Cluster_Type) return Status_Code
    is
-      Idx       : Unsigned_16;
+      Idx       : Natural;
       Block_Num : Unsigned_32;
       Dead      : Boolean with Unreferenced;
 
@@ -940,22 +939,17 @@ package body FAT_Filesystem is
       if Block_Num /= FS.FAT_Block then
          FS.FAT_Block := Block_Num;
 
-         if not Read_Block
-           (FS.Controller.all,
-            FS.FAT_Block,
-            FS.FAT_Window)
-         then
+         if not FS.Controller.Read (FS.FAT_Block, FS.FAT_Window) then
             FS.FAT_Block := 16#FFFF_FFFF#;
             return Disk_Error;
          end if;
       end if;
 
-      Idx :=
-        Unsigned_16 (Unsigned_32 (Cluster * 4) mod FS.Bytes_Per_Block);
+      Idx := Natural (Unsigned_32 (Cluster * 4) mod FS.Bytes_Per_Block);
 
       FS.FAT_Window (Idx .. Idx + 3) := From_Cluster (Value);
 
-      if not FS.Controller.Write_Block (FS.FAT_Block, FS.FAT_Window) then
+      if not FS.Controller.Write (FS.FAT_Block, FS.FAT_Window) then
          return Disk_Error;
       end if;
 
@@ -969,6 +963,7 @@ package body FAT_Filesystem is
    procedure Write_FSInfo
      (FS : in out FAT_Filesystem)
    is
+      use type HAL.Byte_Array;
       subtype FSInfo_Block is Block (0 .. 11);
       function From_FSInfo is new Ada.Unchecked_Conversion
         (FAT_FS_Info, FSInfo_Block);
@@ -1098,7 +1093,7 @@ package body FAT_Filesystem is
      (FS : in out FAT_Filesystem) return Status_Code
    is
    begin
-      if FS.Controller.Write_Block (FS.Window_Block, FS.Window) then
+      if FS.Controller.Write (FS.Window_Block, FS.Window) then
          return OK;
       else
          return Disk_Error;

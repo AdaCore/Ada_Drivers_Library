@@ -193,7 +193,7 @@ package body FAT_Filesystem.Directories is
       Ent       : FAT_Directory_Entry;
       Cluster   : Cluster_Type := Parent.Start_Cluster;
       Offset    : Unsigned_32 := Unsigned_32 (Value.Index) * 32;
-      Block_Off : Unsigned_16;
+      Block_Off : Natural;
       Block     : Unsigned_32;
       Ret       : Status_Code;
 
@@ -208,7 +208,7 @@ package body FAT_Filesystem.Directories is
       end loop;
 
       Block     := Offset / Parent.FS.Bytes_Per_Block;
-      Block_Off := Unsigned_16 (Offset mod Parent.FS.Bytes_Per_Block);
+      Block_Off := Natural (Offset mod Parent.FS.Bytes_Per_Block);
 
       Ret := Parent.FS.Ensure_Block
         (Parent.FS.Cluster_To_Block (Cluster) + Block);
@@ -334,14 +334,14 @@ package body FAT_Filesystem.Directories is
         (Entry_Data, FAT_Directory_Entry);
 
       Ret       : Status_Code;
-      Block_Off : Unsigned_16;
+      Block_Off : Natural;
 
    begin
       if Dir.Current_Index = 16#FFFF# then
          return No_More_Entries;
       end if;
 
-      Block_Off := Unsigned_16
+      Block_Off := Natural
         ((Unsigned_32 (Dir.Current_Index) * 32) mod Dir.FS.Bytes_Per_Block);
 
       --  Check if we're on a block boundare
@@ -729,7 +729,7 @@ package body FAT_Filesystem.Directories is
       Next      : Cluster_Type;
       Child_Ent : Directory_Entry;
       Ret       : Status_Code;
-      Block_Off : Unsigned_16;
+      Block_Off : Natural;
 
    begin
       --  Mark the entry's cluster chain as available
@@ -750,7 +750,7 @@ package body FAT_Filesystem.Directories is
 
       while Read_Dir (Handle, Child_Ent) = OK loop
          if Name (Child_Ent) = Name (Ent) then
-            Block_Off := Unsigned_16
+            Block_Off := Natural
               ((Unsigned_32 (Handle.Current_Index - 1) * 32)
                mod Dir.FS.Bytes_Per_Block);
             --  Mark the entry as deleted: first basename character set to
@@ -892,7 +892,7 @@ package body FAT_Filesystem.Directories is
           or else C = '}'
           or else C = '~');
 
-      Block_Off   : Unsigned_16;
+      Block_Off   : Natural;
       Status      : Status_Code;
       DEntry      : Directory_Entry;
       SName       : Short_Name := (others => ' ');
@@ -1282,9 +1282,8 @@ package body FAT_Filesystem.Directories is
                   Bytes := (others => 0);
                end if;
 
-               Block_Off := Unsigned_16
-                 ((Unsigned_32 (Index) * 32)
-                  mod Parent.FS.Bytes_Per_Block);
+               Block_Off := Natural
+                 ((Unsigned_32 (Index) * 32) mod Parent.FS.Bytes_Per_Block);
 
                if J > 1 and then Block_Off = 0 then
                   Status := Parent.FS.Write_Window;

@@ -24,19 +24,21 @@
 with FAT_Filesystem.Files; use FAT_Filesystem.Files;
 with Ada.Unchecked_Conversion;
 
-with STM32.Board;
+with HAL.Audio;    use HAL.Audio;
+
+with STM32.Board;  use STM32.Board;
 with STM32.DMA;
-with HAL.Audio; use HAL.Audio;
 with STM32.Button; use STM32.Button;
 
 package body Wav_Reader is
 
-   subtype Buffer_Type is Audio_Buffer (1 .. 16 * 1024);
+   function To_String (Block : File_Data) return String;
+
+   subtype Buffer_Type is Audio_Buffer (1 .. 32 * 1024);
    Buffer : aliased Buffer_Type := (others => 0);
    for Buffer'Alignment use 32;
 
    protected Buffer_Scheduler is
-      pragma Interrupt_Priority;
       entry Next_Index (Idx  : out Natural;
                         Len  : out Natural);
 
@@ -47,8 +49,6 @@ package body Wav_Reader is
       Current_Idx  : Natural := Buffer'First + Buffer'Length / 2;
       Available    : Boolean := True;
    end Buffer_Scheduler;
-
-   function To_String (Block : File_Data) return String;
 
    ----------------------
    -- Buffer_Scheduler --
@@ -68,12 +68,6 @@ package body Wav_Reader is
          Idx := Current_Idx;
          Len := Buffer'Length / 2;
 
-         if Current_Idx = Buffer'First then
-            Current_Idx := Buffer'First + Buffer'Length / 2;
-         else
-            Current_Idx := Buffer'First;
-         end if;
-
          --  Update the internal state
          Available := False;
       end Next_Index;
@@ -84,21 +78,27 @@ package body Wav_Reader is
 
       procedure Interrupt is
       begin
-         if HAL.Audio.DMA_Out_Status
-           (STM32.DMA.Half_Transfer_Complete_Indicated)
+         if STM32.DMA.Status
+           (Audio_DMA, Audio_DMA_Out_Stream,
+            STM32.DMA.Half_Transfer_Complete_Indicated)
          then
 --              STM32.Board.Turn_On (STM32.Board.Red);
-            HAL.Audio.DMA_Out_Clear_Status
-              (STM32.DMA.Half_Transfer_Complete_Indicated);
+            STM32.DMA.Clear_Status
+              (Audio_DMA, Audio_DMA_Out_Stream,
+               STM32.DMA.Half_Transfer_Complete_Indicated);
+            Current_Idx := Buffer'First;
             Available := True;
          end if;
 
-         if HAL.Audio.DMA_Out_Status
-           (STM32.DMA.Transfer_Complete_Indicated)
+         if STM32.DMA.Status
+           (Audio_DMA, Audio_DMA_Out_Stream,
+            STM32.DMA.Transfer_Complete_Indicated)
          then
 --              STM32.Board.Turn_Off (STM32.Board.Red);
-            HAL.Audio.DMA_Out_Clear_Status
-              (STM32.DMA.Transfer_Complete_Indicated);
+            STM32.DMA.Clear_Status
+              (Audio_DMA, Audio_DMA_Out_Stream,
+               STM32.DMA.Transfer_Complete_Indicated);
+            Current_Idx := Buffer'First + Buffer'Length / 2;
             Available := True;
          end if;
       end Interrupt;
@@ -129,9 +129,11 @@ package body Wav_Reader is
          STM32.Button.Initialize;
       end if;
 
-      HAL.Audio.Initialize_Audio_Out
+      STM32.Board.Audio_Device.Initialize_Audio_Out
         (Volume    => Volume,
          Frequency => Audio_Freq_48kHz);
+      STM32.Board.Audio_Device.Play (Buffer);
+      STM32.Board.Audio_Device.Pause;
    end Initialize;
 
    -----------------
@@ -156,8 +158,8 @@ package body Wav_Reader is
       RIFF_Header       : RIFF_Block;
       Buffer            : File_Data (1 .. 512)
         with Alignment => 32;
-      Index             : Unsigned_16 := Buffer'First;
-      Index_Info        : Unsigned_16;
+      Index             : Natural := Buffer'First;
+      Index_Info        : Natural;
       Num               : Integer with Unreferenced;
 
       -----------------
@@ -170,13 +172,13 @@ package body Wav_Reader is
       is
          Num : Integer with Unreferenced;
       begin
-         Num := File_Read (F, Buffer (1 .. Unsigned_16 (H.Size)));
+         Num := File_Read (F, Buffer (1 .. Natural (H.Size)));
 
          if H.Size - 1 > S'Length then
             S := To_String (Buffer (1 .. S'Length));
          else
             S (S'First .. S'First + Integer (H.Size - 2)) :=
-              To_String (Buffer (1 .. Unsigned_16 (H.Size) - 1));
+              To_String (Buffer (1 .. Natural (H.Size) - 1));
          end if;
       end Read_String;
 
@@ -198,7 +200,7 @@ package body Wav_Reader is
          if Header.ID = "fmt " then
             Read_Audio (F, Info.Audio_Description);
          elsif Header.ID = "LIST" then
-            Index := Unsigned_16 (Header.Size);
+            Index := Natural (Header.Size);
             Index_Info := 4; --  to account for the INFO ID after the header
 
             Read_ID (F, Header.ID);
@@ -209,7 +211,7 @@ package body Wav_Reader is
 
             loop
                Read_Header (F, Header);
-               Index_Info := Index_Info + 8 + Unsigned_16 (Header.Size);
+               Index_Info := Index_Info + 8 + Natural (Header.Size);
 
                if Header.ID = "IART" then
                   Read_String (Header, Info.Metadata.Artist);
@@ -234,7 +236,7 @@ package body Wav_Reader is
                   Read_String (Header, Info.Metadata.Genre);
                else
                   Num :=
-                    File_Read (F, Buffer (1 .. Unsigned_16 (Header.Size)));
+                    File_Read (F, Buffer (1 .. Natural (Header.Size)));
                end if;
 
                --  Aligned on 16bit
@@ -278,28 +280,29 @@ package body Wav_Reader is
          Frq := F;
       end loop;
 
-      HAL.Audio.Set_Frequency (Frq);
+      STM32.Board.Audio_Device.Set_Frequency (Frq);
 
       --  Init the buffer with zeros (silent)
       Buffer := (others => 0);
 
-      --  Read a few data to make sure that read operations are aligned on
+      --  Start playing it
+      STM32.Board.Audio_Device.Resume;
+
+      --  Read a few data to make sure that next read operations are aligned on
       --  blocks.
       Buffer_Scheduler.Next_Index (Idx, Len);
       declare
-         Initial_Length : constant Unsigned_32 :=
-                            512 - (File_Offset (F) mod 512);
+         Initial_Length : constant Natural :=
+                            512 - Natural (File_Offset (F) mod 512);
          Cnt            : Integer;
       begin
          Cnt :=
            File_Read (F,
                       Buffer
                         (Idx + Len - Integer (Initial_Length / 2) - 1)'Address,
-                      Unsigned_16 (Initial_Length));
+                      Initial_Length);
          Total := Total + Unsigned_32 (Cnt / 2);
       end;
-
-      HAL.Audio.Play (Buffer);
 
       loop
          declare
@@ -308,7 +311,7 @@ package body Wav_Reader is
             Buffer_Scheduler.Next_Index (Idx, Len);
 
             STM32.Board.Turn_On (STM32.Board.Green);
-            Cnt := File_Read (F, Buffer (Idx)'Address, Unsigned_16 (Len * 2));
+            Cnt := File_Read (F, Buffer (Idx)'Address, Len * 2);
             STM32.Board.Turn_Off (STM32.Board.Green);
             Total := Total + Unsigned_32 (Cnt / 2);
 
@@ -318,7 +321,7 @@ package body Wav_Reader is
       end loop;
 
       Buffer := (others => 0);
-      HAL.Audio.Pause;
+      STM32.Board.Audio_Device.Pause;
    end Play;
 
 end Wav_Reader;
