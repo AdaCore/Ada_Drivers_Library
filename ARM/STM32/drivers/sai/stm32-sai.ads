@@ -52,7 +52,7 @@ package STM32.SAI is
    subtype SAI_Controller is STM32.Device.SAI_Port;
    type SAI_Block is (Block_A, Block_B);
 
-   subtype Audio_Frequency is Word;
+   subtype SAI_Audio_Frequency is Word;
 
    type SAI_Mono_Stereo_Mode is
      (Stereo,
@@ -280,10 +280,25 @@ package STM32.SAI is
       Block : SAI_Block)
      with Inline;
 
+   procedure DMA_Pause
+     (This  : SAI_Controller;
+      Block : SAI_Block)
+     with Inline;
+
+   procedure DMA_Resume
+     (This  : SAI_Controller;
+      Block : SAI_Block)
+     with Inline;
+
+   procedure DMA_Stop
+     (This  : SAI_Controller;
+      Block : SAI_Block)
+     with Inline;
+
    procedure Configure_Audio_Block
      (This            : SAI_Controller;
       Block           : SAI_Block;
-      Frequency       : Audio_Frequency;
+      Frequency       : SAI_Audio_Frequency;
       Stereo_Mode     : SAI_Mono_Stereo_Mode;
       Mode            : SAI_Audio_Mode;
       MCD_Enabled     : Boolean;

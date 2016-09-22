@@ -32,6 +32,8 @@
 --  This file provides declarations for devices on the STM32F469 Discovery kits
 --  manufactured by ST Microelectronics.
 
+with Ada.Interrupts.Names;  use Ada.Interrupts;
+
 with STM32.Device;  use STM32.Device;
 
 with STM32.DMA;     use STM32.DMA;
@@ -42,6 +44,7 @@ with STM32.SAI;     use STM32.SAI;
 
 use STM32;  -- for base addresses
 
+with Audio;
 with Framebuffer_OTM8009A;
 with Touch_Panel_FT6x06;
 with SDCard;
@@ -127,17 +130,23 @@ package STM32.Board is
    SDRAM_Refresh_Cnt     : constant := 16#0569#;
    SDRAM_Min_Delay_In_ns : constant := 70;
 
-   ---------------
-   -- SPI5 Pins --
-   ---------------
+   ---------
+   -- I2C --
+   ---------
 
---     SPI5_SCK     : GPIO_Point renames PF7;
---     SPI5_MISO    : GPIO_Point renames PF8;
---     SPI5_MOSI    : GPIO_Point renames PF9;
---     NCS_MEMS_SPI : GPIO_Point renames PC1;
---     MEMS_INT1    : GPIO_Point renames PA1;
---     MEMS_INT2    : GPIO_Point renames PA2;
---     LCD_SPI      : SPI_Port   renames SPI_5;
+   I2C1_SCL : GPIO_Point renames PB8;
+   I2C1_SDA : GPIO_Point renames PB9;
+   I2C2_SCL : GPIO_Point renames PH4;
+   I2C2_SDA : GPIO_Point renames PH5;
+
+   procedure Initialize_I2C_GPIO (Port : in out I2C_Port)
+     with
+   --  I2C_3 is not accessible on this board
+     Pre => As_Port_Id (Port) = I2C_Id_1
+            or else
+            As_Port_Id (Port) = I2C_Id_2;
+
+   procedure Configure_I2C (Port : in out I2C_Port);
 
    --------------------------------
    -- Screen/Touch panel devices --
@@ -152,13 +161,24 @@ package STM32.Board is
    -- Touch Panel --
    -----------------
 
-   I2C1_SCL : GPIO_Point renames PB8;
-   I2C1_SDA : GPIO_Point renames PB9;
-
    TP_INT   : GPIO_Point renames PJ5;
 
-   TP_Pins  : constant GPIO_Points :=
-                (I2C1_SCL, I2C1_SDA);
+   -----------
+   -- Audio --
+   -----------
+
+   Audio_SAI       : SAI_Controller renames SAI_1;
+   Audio_I2C       : STM32.I2C.I2C_Port renames I2C_2;
+--     Audio_INT     : GPIO_Point renames PB10;
+
+   --  Audio DMA configuration
+   Audio_DMA               : DMA_Controller renames DMA_2;
+   Audio_Out_DMA_Interrupt : Ada.Interrupts.Interrupt_ID renames
+                               Ada.Interrupts.Names.DMA2_Stream1_Interrupt;
+   Audio_DMA_Out_Stream    : DMA_Stream_Selector renames Stream_1;
+   Audio_DMA_Out_Channel   : DMA_Channel_Selector renames Channel_0;
+
+   Audio_Device : aliased Audio.CS43L22_Audio_Device (Audio_I2C'Access);
 
    -----------------
    -- User button --

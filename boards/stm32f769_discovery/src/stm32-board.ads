@@ -41,10 +41,10 @@ with STM32.FMC;     use STM32.FMC;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.I2C;     use STM32.I2C;
 with STM32.SAI;     use STM32.SAI;
-with STM32.SDMMC;   use STM32.SDMMC;
 
 use STM32;
 
+with Audio;
 with Framebuffer_OTM8009A;
 with Touch_Panel_FT6x06;
 with SDCard;
@@ -132,6 +132,11 @@ package STM32.Board is
    -- I2C --
    ---------
 
+   I2C1_SCL : GPIO_Point renames PB8;
+   I2C1_SDA : GPIO_Point renames PB9;
+   I2C4_SCL : GPIO_Point renames PD12;
+   I2C4_SDA : GPIO_Point renames PB7;
+
    procedure Initialize_I2C_GPIO (Port : in out I2C_Port)
      with
    --  I2C_2 and I2C_4 are not accessible on this board
@@ -155,11 +160,6 @@ package STM32.Board is
    -- Touch Panel --
    -----------------
 
-   I2C1_SCL : GPIO_Point renames PB8;
-   I2C1_SDA : GPIO_Point renames PB9;
-   I2C4_SCL : GPIO_Point renames PD12;
-   I2C4_SDA : GPIO_Point renames PB7;
-
    TP_INT   : GPIO_Point renames PI13;
 
    TP_Pins  : constant GPIO_Points :=
@@ -169,23 +169,7 @@ package STM32.Board is
    -- Audio --
    -----------
 
-   Audio_SAI     : SAI_Controller renames SAI_1;
    Audio_I2C     : I2C_Port renames I2C_4;
-   Audio_INT     : GPIO_Point renames PB10;
-
-   SAI1_MCLK_A   : GPIO_Point renames PG7;
-   SAI1_SCK_A    : GPIO_Point renames PE5;
-   SAI1_SD_A     : GPIO_Point renames PE6;
-   SAI1_SD_B     : GPIO_Point renames PE3;
-   SAI1_FS_A     : GPIO_Point renames PE4;
-   SAI_Pins      : constant GPIO_Points :=
-                     (SAI1_MCLK_A, SAI1_SCK_A, SAI1_SD_A, SAI1_SD_B,
-                      SAI1_FS_A);
-   SAI_Pins_AF   : GPIO_Alternate_Function renames GPIO_AF_6_SAI1;
-
-   --  SAI in/out conf
-   SAI_Out_Block : SAI_Block renames Block_A;
-   SAI_In_Block  : SAI_Block renames Block_B;
 
    --  Audio DMA configuration
    Audio_DMA               : DMA_Controller renames DMA_2;
@@ -196,6 +180,8 @@ package STM32.Board is
 
    Audio_DMA_In_Sream      : DMA_Stream_Selector renames Stream_7;
    Audio_DMA_In_Channel    : DMA_Channel_Selector renames Channel_0;
+
+   Audio_Device : Audio.WM8994_Audio_Device (Audio_I2C'Access);
 
    -----------------
    -- User button --

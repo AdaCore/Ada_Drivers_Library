@@ -1,9 +1,4 @@
---  Generic spec for Audio drivers
-
---  /!\ This is work in progress and not at a real Hardware Abstraction Layer
-
-with Interfaces;  use Interfaces;
-with STM32.DMA;
+with Interfaces; use Interfaces;
 
 package HAL.Audio is
 
@@ -30,37 +25,35 @@ package HAL.Audio is
       Audio_Freq_48kHz => 48_000,
       Audio_Freq_96kHz => 96_000);
 
-   type DMA_Error is
-     (FIFO_Error,
-      Direct_Mode_Error,
-      Transfer_Error);
+   type Audio_Buffer_Completion_Level is
+     (Half, Full);
+
+   type Audio_Device is limited interface;
 
    procedure Initialize_Audio_Out
-     (Volume    : Audio_Volume;
-      Frequency : Audio_Frequency);
-
-   function DMA_Out_Status
-     (Flag : STM32.DMA.DMA_Status_Flag) return Boolean;
-
-   procedure DMA_Out_Clear_Status
-     (Flag : STM32.DMA.DMA_Status_Flag);
+     (This      : in out Audio_Device;
+      Volume    : Audio_Volume;
+      Frequency : Audio_Frequency) is abstract;
 
    procedure Play
-     (Buffer : Audio_Buffer);
+     (This   : in out Audio_Device;
+      Buffer : Audio_Buffer) is abstract;
 
-   procedure Change_Buffer
-     (Buffer : Audio_Buffer);
+   procedure Pause
+     (This : in out Audio_Device) is abstract;
 
-   procedure Pause;
+   procedure Resume
+     (This : in out Audio_Device) is abstract;
 
-   procedure Resume;
-
-   procedure Stop;
+   procedure Stop
+     (This : in out Audio_Device) is abstract;
 
    procedure Set_Volume
-     (Volume : Audio_Volume);
+     (This   : in out Audio_Device;
+      Volume : Audio_Volume) is abstract;
 
    procedure Set_Frequency
-     (Frequency : Audio_Frequency);
+     (This      : in out Audio_Device;
+      Frequency : Audio_Frequency) is abstract;
 
 end HAL.Audio;

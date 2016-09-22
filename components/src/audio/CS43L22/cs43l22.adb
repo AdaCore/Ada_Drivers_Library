@@ -1,3 +1,5 @@
+with Ada.Real_Time; use Ada.Real_Time;
+
 package body CS43L22 is
 
    ---------------
@@ -150,6 +152,8 @@ package body CS43L22 is
    begin
       --  Unmute the output first
       This.Set_Mute (Mute_Off);
+
+      delay until Clock + Milliseconds (1);
 
       This.I2C_Write (CS43L22_REG_POWER_CTL2, This.Output_Dev);
 

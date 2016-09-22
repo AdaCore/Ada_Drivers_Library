@@ -29,6 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with Ada.Real_Time; use Ada.Real_Time;
+
 package body STM32.Board is
 
    ------------------
@@ -66,6 +68,75 @@ package body STM32.Board is
       Configure_IO (All_LEDs, Conf);
       All_LEDs_Off;
    end Initialize_LEDs;
+
+   -------------------------
+   -- Initialize_I2C_GPIO --
+   -------------------------
+
+   procedure Initialize_I2C_GPIO (Port : in out I2C_Port)
+   is
+      Id     : constant I2C_Port_Id := As_Port_Id (Port);
+      Points : GPIO_Points (1 .. 2);
+
+   begin
+      if Port_Enabled (Port) then
+         return;
+      end if;
+
+      case Id is
+         when I2C_Id_1 =>
+            Points := (I2C1_SDA, I2C1_SCL);
+         when I2C_Id_2 =>
+            Points := (I2C2_SDA, I2C2_SCL);
+         when others =>
+            raise Unknown_Device with
+              "This I2C_Port cannot be used on this board";
+      end case;
+
+      Enable_Clock (Points);
+
+      if Id = I2C_Id_1 then
+         Configure_Alternate_Function (Points, GPIO_AF_4_I2C1);
+      else
+         Configure_Alternate_Function (Points, GPIO_AF_4_I2C2);
+      end if;
+
+      Configure_IO (Points,
+                    (Speed       => Speed_High,
+                     Mode        => Mode_AF,
+                     Output_Type => Open_Drain,
+                     Resistors   => Floating));
+      Lock (Points);
+
+      Enable_Clock (Port);
+      Reset (Port);
+   end Initialize_I2C_GPIO;
+
+   -------------------
+   -- Configure_I2C --
+   -------------------
+
+   procedure Configure_I2C (Port : in out I2C_Port)
+   is
+      I2C_Conf : I2C_Configuration;
+   begin
+
+      --  Wait at least 200ms after power up before accessing the TP registers
+      delay until Clock + Milliseconds (200);
+
+      if not Port.Port_Enabled then
+         Reset (Port);
+
+         I2C_Conf.Own_Address := 16#00#;
+         I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;
+         I2C_Conf.General_Call_Enabled := False;
+         I2C_Conf.Clock_Stretching_Enabled := True;
+
+         I2C_Conf.Clock_Speed := 100_000;
+
+         Port.Configure (I2C_Conf);
+      end if;
+   end Configure_I2C;
 
    --------------------------------
    -- Configure_User_Button_GPIO --

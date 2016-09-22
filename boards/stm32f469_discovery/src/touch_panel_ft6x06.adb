@@ -56,19 +56,10 @@ package body Touch_Panel_FT6x06 is
 
    procedure TP_Init_Pins
    is
-      Pins : constant GPIO_Points := TP_Pins;
    begin
-      Enable_Clock (Pins);
-
       Reset (TP_I2C);
 
-      Configure_Alternate_Function (Pins, GPIO_AF_4_I2C1);
-      Configure_IO (Pins,
-                    (Speed       => Speed_25MHz,
-                     Mode        => Mode_AF,
-                     Output_Type => Open_Drain,
-                     Resistors   => Floating));
-      Lock (Pins);
+      Initialize_I2C_GPIO (TP_I2C);
 
       Enable_Clock (TP_INT);
 

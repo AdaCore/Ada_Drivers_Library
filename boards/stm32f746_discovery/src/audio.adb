@@ -1,50 +1,67 @@
-with STM32_SVD.RCC;        use STM32_SVD.RCC;
-with STM32_SVD.SAI;        use STM32_SVD.SAI;
+------------------------------------------------------------------------------
+--                                                                          --
+--                    Copyright (C) 2016, AdaCore                           --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of STMicroelectronics nor the names of its       --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+--  This file is based on:                                                  --
+--   @file    stm32f746g_discovery_audio.c                                  --
+--   @author  MCD Application Team                                          --
+------------------------------------------------------------------------------
 
+with Interfaces;           use Interfaces;
+
+with STM32;                use STM32;
 with STM32.Device;         use STM32.Device;
 with STM32.Board;          use STM32.Board;
 with STM32.GPIO;           use STM32.GPIO;
 with STM32.DMA;            use STM32.DMA;
-with STM32.I2C;            use STM32.I2C;
 with STM32.SAI;            use STM32.SAI;
 
-with WM8994;               use WM8994;
+package body Audio is
 
-package body HAL.Audio is
+   Audio_SAI     : SAI_Controller renames SAI_2;
+   SAI2_MCLK_A   : GPIO_Point renames PI4;
+   SAI2_SCK_A    : GPIO_Point renames PI5;
+   SAI2_SD_A     : GPIO_Point renames PI6;
+   SAI2_SD_B     : GPIO_Point renames PG10;
+   SAI2_FS_A     : GPIO_Point renames PI7;
+   SAI_Pins      : constant GPIO_Points :=
+                     (SAI2_MCLK_A, SAI2_SCK_A, SAI2_SD_A, SAI2_SD_B,
+                      SAI2_FS_A);
+   SAI_Pins_AF   : GPIO_Alternate_Function renames GPIO_AF_10_SAI2;
+
+   --  SAI in/out conf
+   SAI_Out_Block : SAI_Block renames Block_A;
+--     SAI_In_Block  : SAI_Block renames Block_B;
 
    procedure Set_Audio_Clock (Freq : Audio_Frequency);
    procedure Initialize_Audio_Out_Pins;
    procedure Initialize_SAI_Out (Freq : Audio_Frequency);
    procedure Initialize_Audio_I2C;
-
-   --  Communication with the Audio chip
-   Audio_I2C_Addr  : constant I2C_Address := 16#34#;
-
-   Driver : WM8994_Device (Port     => Audio_I2C'Access,
-                           I2C_Addr => Audio_I2C_Addr);
-
-
-   --------------------
-   -- DMA_Out_Status --
-   --------------------
-
-   function DMA_Out_Status
-     (Flag : STM32.DMA.DMA_Status_Flag) return Boolean
-   is
-   begin
-      return STM32.DMA.Status (Audio_DMA, Audio_DMA_Out_Stream, Flag);
-   end DMA_Out_Status;
-
-   --------------------------
-   -- DMA_Out_Clear_Status --
-   --------------------------
-
-   procedure DMA_Out_Clear_Status
-     (Flag : STM32.DMA.DMA_Status_Flag)
-   is
-   begin
-      STM32.DMA.Clear_Status (Audio_DMA, Audio_DMA_Out_Stream, Flag);
-   end DMA_Out_Clear_Status;
 
    ---------------------
    -- Set_Audio_Clock --
@@ -173,8 +190,9 @@ package body HAL.Audio is
    -- Initialize --
    ----------------
 
-   procedure Initialize_Audio_Out
-     (Volume    : Audio_Volume;
+   overriding procedure Initialize_Audio_Out
+     (This      : in out WM8994_Audio_Device;
+      Volume    : Audio_Volume;
       Frequency : Audio_Frequency)
    is
    begin
@@ -189,15 +207,15 @@ package body HAL.Audio is
       --  Initialize the I2C Port to send commands to the driver
       Initialize_Audio_I2C;
 
-      if Driver.Read_ID /= WM8994.WM8994_ID then
+      if This.Device.Read_ID /= WM8994.WM8994_ID then
          raise Constraint_Error with "Invalid ID received from the Audio Code";
       end if;
 
-      Driver.Reset;
-      Driver.Init
+      This.Device.Reset;
+      This.Device.Init
         (Input     => WM8994.No_Input,
          Output    => WM8994.Auto,
-         Volume    => Byte (Volume),
+         Volume    => Unsigned_8 (Volume),
          Frequency =>
            WM8994.Audio_Frequency'Enum_Val
              (Audio_Frequency'Enum_Rep (Frequency)));
@@ -207,11 +225,12 @@ package body HAL.Audio is
    -- Play --
    ----------
 
-   procedure Play
-     (Buffer : Audio_Buffer)
+   overriding procedure Play
+     (This   : in out WM8994_Audio_Device;
+      Buffer : Audio_Buffer)
    is
    begin
-      Driver.Play;
+      This.Device.Play;
 
       Start_Transfer_with_Interrupts
         (This               => Audio_DMA,
@@ -230,65 +249,62 @@ package body HAL.Audio is
       end if;
    end Play;
 
-   -------------------
-   -- Change_Buffer --
-   -------------------
-
-   procedure Change_Buffer
-     (Buffer : Audio_Buffer)
-   is
-   begin
-      null;
-   end Change_Buffer;
-
    -----------
    -- Pause --
    -----------
 
-   procedure Pause is
+   overriding procedure Pause (This : in out WM8994_Audio_Device) is
    begin
-      Driver.Pause;
-      STM32.DMA.Disable (Audio_DMA, Audio_DMA_Out_Stream);
+      This.Device.Pause;
+      DMA_Pause (Audio_SAI, SAI_Out_Block);
    end Pause;
 
    ------------
    -- Resume --
    ------------
 
-   procedure Resume
+   overriding procedure Resume (This : in out WM8994_Audio_Device)
    is
    begin
-      null;
+      This.Device.Resume;
+      DMA_Resume (Audio_SAI, SAI_Out_Block);
    end Resume;
 
    ----------
    -- Stop --
    ----------
 
-   procedure Stop
+   overriding procedure Stop (This : in out WM8994_Audio_Device)
    is
    begin
-      null;
+      This.Device.Stop (WM8994.Stop_Power_Down_Sw);
+      DMA_Stop (Audio_SAI, SAI_Out_Block);
+
+      STM32.DMA.Disable (Audio_DMA, Audio_DMA_Out_Stream);
+      STM32.DMA.Clear_All_Status (Audio_DMA, Audio_DMA_Out_Stream);
    end Stop;
 
    ----------------
    -- Set_Volume --
    ----------------
 
-   procedure Set_Volume
-     (Volume : Audio_Volume)
+   overriding procedure Set_Volume
+     (This   : in out WM8994_Audio_Device;
+      Volume : Audio_Volume)
    is
    begin
-      Driver.Set_Volume (Byte (Volume));
+      This.Device.Set_Volume (Unsigned_8 (Volume));
    end Set_Volume;
 
    -------------------
    -- Set_Frequency --
    -------------------
 
-   procedure Set_Frequency
-     (Frequency : Audio_Frequency)
+   overriding procedure Set_Frequency
+     (This      : in out WM8994_Audio_Device;
+      Frequency : Audio_Frequency)
    is
+      pragma Unreferenced (This);
    begin
       Set_Audio_Clock (Frequency);
       STM32.SAI.Disable (Audio_SAI, SAI_Out_Block);
@@ -296,4 +312,4 @@ package body HAL.Audio is
       STM32.SAI.Enable (Audio_SAI, SAI_Out_Block);
    end Set_Frequency;
 
-end HAL.Audio;
+end Audio;

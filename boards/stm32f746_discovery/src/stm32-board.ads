@@ -40,10 +40,10 @@ with STM32.DMA;     use STM32.DMA;
 with STM32.FMC;     use STM32.FMC;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.I2C;     use STM32.I2C;
-with STM32.SAI;     use STM32.SAI;
 
 use STM32;
 
+with Audio;
 with Touch_Panel_FT5336;
 with Framebuffer_RK043FN48H;
 with SDCard;
@@ -144,23 +144,8 @@ package STM32.Board is
    -- Audio --
    -----------
 
-   Audio_SAI     : SAI_Controller renames SAI_2;
    Audio_I2C     : I2C_Port renames I2C_3;
    Audio_INT     : GPIO_Point renames PD6;
-
-   SAI2_MCLK_A   : GPIO_Point renames PI4;
-   SAI2_SCK_A    : GPIO_Point renames PI5;
-   SAI2_SD_A     : GPIO_Point renames PI6;
-   SAI2_SD_B     : GPIO_Point renames PG10;
-   SAI2_FS_A     : GPIO_Point renames PI7;
-   SAI_Pins      : constant GPIO_Points :=
-                     (SAI2_MCLK_A, SAI2_SCK_A, SAI2_SD_A, SAI2_SD_B,
-                      SAI2_FS_A);
-   SAI_Pins_AF   : GPIO_Alternate_Function renames GPIO_AF_10_SAI2;
-
-   --  SAI in/out conf
-   SAI_Out_Block : SAI_Block renames Block_A;
-   SAI_In_Block  : SAI_Block renames Block_B;
 
    --  Audio DMA configuration
    Audio_DMA               : DMA_Controller renames DMA_2;
@@ -168,6 +153,8 @@ package STM32.Board is
                                Ada.Interrupts.Names.DMA2_Stream4_Interrupt;
    Audio_DMA_Out_Stream    : DMA_Stream_Selector renames Stream_4;
    Audio_DMA_Out_Channel   : DMA_Channel_Selector renames Channel_3;
+
+   Audio_Device : aliased Audio.WM8994_Audio_Device (Audio_I2C'Access);
 
    --------------------------
    -- micro SD card reader --

@@ -19,6 +19,7 @@ library project STM32F46_79x is
       "drivers/fmc",
       "drivers/i2c_stm32f4",
       "drivers/ltdc",
+      "drivers/sai",
       "drivers/sd",
       "drivers/sd/sdio",
       "drivers/uart_stm32f4");

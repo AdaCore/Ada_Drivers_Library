@@ -45,7 +45,6 @@
 --   COPYRIGHT(c) 2015 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with System; use System;
 with Ada.Real_Time;             use Ada.Real_Time;
 
 with STM32.Device;              use STM32.Device;
@@ -90,8 +89,6 @@ package body STM32.SAI is
      (Periph : SAI_Controller;
       Block  : SAI_Block) return Block_Registers_Access;
 
-   function Get_Input_Clock (Periph : SAI_Controller) return Word;
-
    ---------------
    -- Get_Block --
    ---------------
@@ -112,58 +109,6 @@ package body STM32.SAI is
             return BlockB'Unchecked_Access;
       end case;
    end Get_Block;
-
-   ---------------------
-   -- Get_Input_Clock --
-   ---------------------
-
-   function Get_Input_Clock (Periph : SAI_Controller) return Word
-   is
-      Input_Selector  : UInt2;
-      VCO_Input       : Word;
-      SAI_First_Level : Word;
-   begin
-      if Periph'Address = SAI1_Base then
-         Input_Selector := RCC_Periph.DKCFGR1.SAI1SEL;
-      else
-         Input_Selector := RCC_Periph.DKCFGR1.SAI2SEL;
-      end if;
-
-      --  This driver doesn't support external source clock
-      if Input_Selector > 1 then
-         raise Constraint_Error
-           with "External PLL SAI source clock unsupported";
-      end if;
-
-      if not RCC_Periph.PLLCFGR.PLLSRC then
-         --  PLLSAI SRC is HSI
-         VCO_Input := HSI_VALUE / Word (RCC_Periph.PLLCFGR.PLLM);
-      else
-         --  PLLSAI SRC is HSE
-         VCO_Input := HSE_VALUE / Word (RCC_Periph.PLLCFGR.PLLM);
-      end if;
-
-      if Input_Selector = 0 then
-         --  PLLSAI is the clock source
-
-         --  VCO out = VCO in & PLLSAIN
-         --  SAI firstlevel = VCO out / PLLSAIQ
-         SAI_First_Level :=
-           VCO_Input * Word (RCC_Periph.PLLSAICFGR.PLLSAIN) /
-           Word (RCC_Periph.PLLSAICFGR.PLLSAIQ);
-
-         --  SAI frequency is SAI First level / PLLSAIDIVQ
-         return SAI_First_Level / Word (RCC_Periph.DKCFGR1.PLLSAIDIVQ);
-
-      else
-         --  PLLI2S as clock source
-         SAI_First_Level :=
-           VCO_Input * Word (RCC_Periph.PLLI2SCFGR.PLLI2SN) /
-           Word (RCC_Periph.PLLI2SCFGR.PLLI2SQ);
-         --  SAI frequency is SAI First level / PLLI2SDIVQ
-         return SAI_First_Level / Word (RCC_Periph.DKCFGR1.PLLI2SDIV + 1);
-      end if;
-   end Get_Input_Clock;
 
    ------------------
    -- Deinitialize --
@@ -252,6 +197,53 @@ package body STM32.SAI is
       Block_Regs.CR1.DMAEN := True;
    end Enable_DMA;
 
+   ---------------
+   -- DMA_Pause --
+   ---------------
+
+   procedure DMA_Pause
+     (This  : SAI_Controller;
+      Block : SAI_Block)
+   is
+      Block_Regs : constant Block_Registers_Access :=
+                     Get_Block (This, Block);
+   begin
+      Block_Regs.CR1.DMAEN := False;
+   end DMA_Pause;
+
+   ----------------
+   -- DMA_Resume --
+   ----------------
+
+   procedure DMA_Resume
+     (This  : SAI_Controller;
+      Block : SAI_Block)
+   is
+      Block_Regs : constant Block_Registers_Access :=
+                     Get_Block (This, Block);
+   begin
+      Block_Regs.CR1.DMAEN := True;
+
+      if not Block_Regs.CR1.SAIAEN then
+         Enable (This, Block);
+      end if;
+   end DMA_Resume;
+
+   --------------
+   -- DMA_Stop --
+   --------------
+
+   procedure DMA_Stop
+     (This  : SAI_Controller;
+      Block : SAI_Block)
+   is
+      Block_Regs : constant Block_Registers_Access :=
+                     Get_Block (This, Block);
+   begin
+      Block_Regs.CR1.DMAEN := False;
+      Disable (This, Block);
+   end DMA_Stop;
+
    ---------------------------
    -- Configure_Audio_Block --
    ---------------------------
@@ -259,7 +251,7 @@ package body STM32.SAI is
    procedure Configure_Audio_Block
      (This          : SAI_Controller;
       Block           : SAI_Block;
-      Frequency       : Audio_Frequency;
+      Frequency       : SAI_Audio_Frequency;
       Stereo_Mode     : SAI_Mono_Stereo_Mode;
       Mode            : SAI_Audio_Mode;
       MCD_Enabled     : Boolean;
