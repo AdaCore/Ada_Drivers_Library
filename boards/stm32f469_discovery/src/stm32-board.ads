@@ -35,17 +35,16 @@
 with STM32.Device;  use STM32.Device;
 
 with STM32.DMA;     use STM32.DMA;
-with STM32.GPIO;    use STM32.GPIO;
 with STM32.FMC;     use STM32.FMC;
-with STM32.SDMMC;   use STM32.SDMMC;
-
-with Ada.Interrupts.Names;  use Ada.Interrupts;
+with STM32.GPIO;    use STM32.GPIO;
+with STM32.I2C;     use STM32.I2C;
+with STM32.SAI;     use STM32.SAI;
 
 use STM32;  -- for base addresses
---  with STM32.I2C; use STM32.I2C;
 
 with Framebuffer_OTM8009A;
 with Touch_Panel_FT6x06;
+with SDCard;
 
 package STM32.Board is
 
@@ -177,23 +176,6 @@ package STM32.Board is
    -- SDCARD --
    ------------
 
-   SD_Detect_Pin     : STM32.GPIO.GPIO_Point renames PG2;
-
-   SD_DMA            : DMA_Controller renames DMA_2;
-   SD_DMA_Rx_Stream  : DMA_Stream_Selector renames Stream_3;
-   SD_Rx_IRQ         : Ada.Interrupts.Interrupt_ID renames
-                         Ada.Interrupts.Names.DMA2_Stream3_Interrupt;
-   SD_DMA_Tx_Stream  : DMA_Stream_Selector renames Stream_6;
-   SD_Tx_IRQ         : Ada.Interrupts.Interrupt_ID renames
-                         Ada.Interrupts.Names.DMA2_Stream6_Interrupt;
-
-   SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
-                         Ada.Interrupts.Names.SDIO_Interrupt;
-
-   SD_Device         : SDMMC_Controller renames SDIO;
-
-   procedure Configure_SD_Device_GPIO;
-   --  Initializes the clocks and pins of the SDMMC controller, as well as the
-   --  DMA channels
+   SDCard_Device : aliased SDCard.SDCard_Controller (SDIO'Access);
 
 end STM32.Board;

@@ -45,8 +45,9 @@ with STM32.SDMMC;   use STM32.SDMMC;
 
 use STM32;
 
-with Touch_Panel_FT6x06;
 with Framebuffer_OTM8009A;
+with Touch_Panel_FT6x06;
+with SDCard;
 
 package STM32.Board is
    pragma Elaborate_Body;
@@ -212,21 +213,6 @@ package STM32.Board is
    -- SD Card --
    -------------
 
-   SD_Detect_Pin     : STM32.GPIO.GPIO_Point renames PI15;
-
-   SD_DMA            : DMA_Controller renames DMA_2;
-   SD_DMA_Rx_Stream  : DMA_Stream_Selector renames Stream_0;
-   SD_Rx_IRQ         : Ada.Interrupts.Interrupt_ID renames
-                         Ada.Interrupts.Names.DMA2_Stream0_Interrupt;
-   SD_DMA_Tx_Stream  : DMA_Stream_Selector renames Stream_5;
-   SD_Tx_IRQ         : Ada.Interrupts.Interrupt_ID renames
-                         Ada.Interrupts.Names.DMA2_Stream5_Interrupt;
-
-   SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
-                         Ada.Interrupts.Names.SDMMC2_Interrupt;
-
-   SD_Device         : SDMMC_Controller renames SDMMC_2;
-
-   procedure Configure_SD_Device_GPIO;
+   SDCard_Device : aliased SDCard.SDCard_Controller (SDMMC_2'Access);
 
 end STM32.Board;

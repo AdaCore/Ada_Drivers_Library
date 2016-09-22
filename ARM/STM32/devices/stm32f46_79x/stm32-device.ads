@@ -340,7 +340,6 @@ package STM32.Device is
    GPIO_AF_9_LTDC      : constant GPIO_Alternate_Function;
    GPIO_AF_10_SAI2     : constant GPIO_Alternate_Function;
    GPIO_AF_10_QUADSPI  : constant GPIO_Alternate_Function;
-   GPIO_AF_10_SDMMC2   : constant GPIO_Alternate_Function;
    GPIO_AF_10_DFSDM1   : constant GPIO_Alternate_Function;
    GPIO_AF_10_OTG1_FS  : constant GPIO_Alternate_Function;
    GPIO_AF_10_OTG_HS   : constant GPIO_Alternate_Function;
@@ -351,7 +350,7 @@ package STM32.Device is
    GPIO_AF_11_ETH      : constant GPIO_Alternate_Function;
    GPIO_AF_12_UART7    : constant GPIO_Alternate_Function;
    GPIO_AF_12_FMC      : constant GPIO_Alternate_Function;
-   GPIO_AF_12_SDMMC1   : constant GPIO_Alternate_Function;
+   GPIO_AF_12_SDIO     : constant GPIO_Alternate_Function;
    GPIO_AF_12_MDIOS    : constant GPIO_Alternate_Function;
    GPIO_AF_12_OTG2_FS  : constant GPIO_Alternate_Function;
    GPIO_AF_13_DCMI     : constant GPIO_Alternate_Function;
@@ -635,7 +634,6 @@ private
    GPIO_AF_9_LTDC      : constant GPIO_Alternate_Function := 9;
    GPIO_AF_10_SAI2     : constant GPIO_Alternate_Function := 10;
    GPIO_AF_10_QUADSPI  : constant GPIO_Alternate_Function := 10;
-   GPIO_AF_10_SDMMC2   : constant GPIO_Alternate_Function := 10;
    GPIO_AF_10_DFSDM1   : constant GPIO_Alternate_Function := 10;
    GPIO_AF_10_OTG1_FS  : constant GPIO_Alternate_Function := 10;
    GPIO_AF_10_OTG_HS   : constant GPIO_Alternate_Function := 10;
@@ -646,7 +644,7 @@ private
    GPIO_AF_11_ETH      : constant GPIO_Alternate_Function := 11;
    GPIO_AF_12_UART7    : constant GPIO_Alternate_Function := 12;
    GPIO_AF_12_FMC      : constant GPIO_Alternate_Function := 12;
-   GPIO_AF_12_SDMMC1   : constant GPIO_Alternate_Function := 12;
+   GPIO_AF_12_SDIO     : constant GPIO_Alternate_Function := 12;
    GPIO_AF_12_MDIOS    : constant GPIO_Alternate_Function := 12;
    GPIO_AF_12_OTG2_FS  : constant GPIO_Alternate_Function := 12;
    GPIO_AF_13_DCMI     : constant GPIO_Alternate_Function := 13;
