@@ -34,6 +34,7 @@
 
 with STM32_SVD;         use STM32_SVD;
 with STM32_SVD.DSI;
+with STM32_SVD.SAI;
 with STM32_SVD.SDIO;
 
 with STM32.ADC;         use STM32.ADC;
@@ -498,6 +499,18 @@ package STM32.Device is
    DSIHOST : aliased DSI_Host (STM32_SVD.DSI.DSI_Periph'Access);
 
    -----------
+   -- Audio --
+   -----------
+
+   subtype SAI_Port is STM32_SVD.SAI.SAI_Peripheral;
+
+   SAI_1 : SAI_Port renames STM32_SVD.SAI.SAI_Periph;
+
+   procedure Enable_Clock (This : in out SAI_Port);
+   procedure Reset (This : in out SAI_Port);
+   function Get_Input_Clock (Periph : SAI_Port) return Word;
+
+   -----------
    -- SDMMC --
    -----------
 
@@ -534,6 +547,17 @@ package STM32.Device is
 
    procedure Enable_PLLSAI;
    procedure Disable_PLLSAI;
+
+   subtype DIVQ is Natural range 1 .. 32;
+
+--     procedure Enable_PLLI2S;
+--     procedure Disable_PLLI2S;
+
+   procedure Configure_SAI_I2S_Clock
+     (Periph     : SAI_Port;
+      PLLI2SN    : UInt9;
+      PLLI2SQ    : UInt4;
+      PLLI2SDIVQ : DIVQ);
 
    procedure Enable_DCMI_Clock;
    procedure Reset_DCMI;

@@ -607,6 +607,61 @@ package body STM32.Device is
       end if;
    end Reset;
 
+   ---------------------
+   -- Get_Input_Clock --
+   ---------------------
+
+   function Get_Input_Clock (Periph : SAI_Port) return Word
+   is
+      Input_Selector  : UInt2;
+      VCO_Input       : Word;
+      SAI_First_Level : Word;
+   begin
+      if Periph'Address = SAI1_Base then
+         Input_Selector := RCC_Periph.DKCFGR1.SAI1SEL;
+      elsif Periph'Address = SAI2_Base then
+         Input_Selector := RCC_Periph.DKCFGR1.SAI2SEL;
+      else
+         raise Unknown_Device;
+      end if;
+
+
+      --  This driver doesn't support external source clock
+      if Input_Selector > 1 then
+         raise Constraint_Error
+           with "External PLL SAI source clock unsupported";
+      end if;
+
+      if not RCC_Periph.PLLCFGR.PLLSRC then
+         --  PLLSAI SRC is HSI
+         VCO_Input := HSI_VALUE / Word (RCC_Periph.PLLCFGR.PLLM);
+      else
+         --  PLLSAI SRC is HSE
+         VCO_Input := HSE_VALUE / Word (RCC_Periph.PLLCFGR.PLLM);
+      end if;
+
+      if Input_Selector = 0 then
+         --  PLLSAI is the clock source
+
+         --  VCO out = VCO in & PLLSAIN
+         --  SAI firstlevel = VCO out / PLLSAIQ
+         SAI_First_Level :=
+           VCO_Input * Word (RCC_Periph.PLLSAICFGR.PLLSAIN) /
+           Word (RCC_Periph.PLLSAICFGR.PLLSAIQ);
+
+         --  SAI frequency is SAI First level / PLLSAIDIVQ
+         return SAI_First_Level / Word (RCC_Periph.DKCFGR1.PLLSAIDIVQ);
+
+      else
+         --  PLLI2S as clock source
+         SAI_First_Level :=
+           VCO_Input * Word (RCC_Periph.PLLI2SCFGR.PLLI2SN) /
+           Word (RCC_Periph.PLLI2SCFGR.PLLI2SQ);
+         --  SAI frequency is SAI First level / PLLI2SDIVQ
+         return SAI_First_Level / Word (RCC_Periph.DKCFGR1.PLLI2SDIV + 1);
+      end if;
+   end Get_Input_Clock;
+
    ------------------
    -- Enable_Clock --
    ------------------

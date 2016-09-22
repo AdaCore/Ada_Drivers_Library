@@ -504,6 +504,7 @@ package STM32.Device is
 
    procedure Enable_Clock (This : in out SAI_Port);
    procedure Reset (This : in out SAI_Port);
+   function Get_Input_Clock (Periph : SAI_Port) return Word;
 
    -----------
    -- SDMMC --

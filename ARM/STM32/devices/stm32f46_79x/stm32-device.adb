@@ -51,6 +51,8 @@ package body STM32.Device is
    PPRE_Presc_Table : constant array (UInt3) of Word :=
      (1, 1, 1, 1, 2, 4, 8, 16);
 
+   function PLLSAI_Enabled return Boolean;
+
    ------------------
    -- Enable_Clock --
    ------------------
@@ -579,6 +581,81 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
+   procedure Enable_Clock (This : in out SAI_Port)
+   is
+   begin
+      pragma Assert (This'Address = SAI_Base);
+      RCC_Periph.APB2ENR.SAI1EN := True;
+   end Enable_Clock;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : in out SAI_Port)
+   is
+   begin
+      pragma Assert (This'Address = SAI_Base);
+      RCC_Periph.APB2RSTR.SAI1RST := True;
+      RCC_Periph.APB2RSTR.SAI1RST := False;
+   end Reset;
+
+   ---------------------
+   -- Get_Input_Clock --
+   ---------------------
+
+   function Get_Input_Clock (Periph : SAI_Port) return Word
+   is
+      Input_Selector  : UInt2;
+      VCO_Input       : Word;
+      SAI_First_Level : Word;
+   begin
+      if Periph'Address /= SAI_Base then
+         raise Unknown_Device;
+      end if;
+
+      Input_Selector := RCC_Periph.DCKCFGR.SAI1ASRC;
+
+      --  This driver doesn't support external source clock
+      if Input_Selector > 1 then
+         raise Constraint_Error
+           with "External PLL SAI source clock unsupported";
+      end if;
+
+      if not RCC_Periph.PLLCFGR.PLLSRC then
+         --  PLLSAI SRC is HSI
+         VCO_Input := HSI_VALUE / Word (RCC_Periph.PLLCFGR.PLLM);
+      else
+         --  PLLSAI SRC is HSE
+         VCO_Input := HSE_VALUE / Word (RCC_Periph.PLLCFGR.PLLM);
+      end if;
+
+      if Input_Selector = 0 then
+         --  PLLSAI is the clock source
+
+         --  VCO out = VCO in & PLLSAIN
+         --  SAI firstlevel = VCO out / PLLSAIQ
+         SAI_First_Level :=
+           VCO_Input * Word (RCC_Periph.PLLSAICFGR.PLLSAIN) /
+           Word (RCC_Periph.PLLSAICFGR.PLLSAIQ);
+
+         --  SAI frequency is SAI First level / PLLSAIDIVQ
+         return SAI_First_Level / Word (RCC_Periph.DCKCFGR.PLLSAIDIVQ);
+
+      else
+         --  PLLI2S as clock source
+         SAI_First_Level :=
+           VCO_Input * Word (RCC_Periph.PLLI2SCFGR.PLLI2SN) /
+           Word (RCC_Periph.PLLI2SCFGR.PLLI2SQ);
+         --  SAI frequency is SAI First level / PLLI2SDIVQ
+         return SAI_First_Level / Word (RCC_Periph.DCKCFGR.PLLIS2DIVQ + 1);
+      end if;
+   end Get_Input_Clock;
+
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
    procedure Enable_Clock (This : in out SDMMC_Controller)
    is
    begin
@@ -717,6 +794,15 @@ package body STM32.Device is
       RCC_Periph.CR.PLLSAION := False;
    end Disable_PLLSAI;
 
+   --------------------
+   -- PLLSAI_Enabled --
+   --------------------
+
+   function PLLSAI_Enabled return Boolean is
+   begin
+      return RCC_Periph.CR.PLLSAION and then RCC_Periph.CR.PLLSAIRDY;
+   end PLLSAI_Enabled;
+
    ------------------------
    -- Set_PLLSAI_Factors --
    ------------------------
@@ -734,6 +820,56 @@ package body STM32.Device is
       --  The exact bit name is device-specific
       RCC_Periph.DCKCFGR.PLLSAIDIVR := UInt2 (DivR);
    end Set_PLLSAI_Factors;
+
+   -------------------------
+   -- Configure_SAI_Clock --
+   -------------------------
+
+   procedure Configure_SAI_I2S_Clock
+     (Periph     : SAI_Port;
+      PLLI2SN    : UInt9;
+      PLLI2SQ    : UInt4;
+      PLLI2SDIVQ : DIVQ)
+   is
+      PLLI2SCFGR : PLLI2SCFGR_Register := RCC_Periph.PLLI2SCFGR;
+      SAION      : constant Boolean := PLLSAI_Enabled;
+   begin
+      if Periph'Address /= SAI_Base then
+         raise Unknown_Device;
+      end if;
+
+      if SAION then
+         Disable_PLLSAI;
+      end if;
+
+      if RCC_Periph.CR.PLLI2SON then
+         RCC_Periph.CR.PLLI2SON := False;
+      end if;
+
+      --  We will configure the PLLSAI2 clock from a PLLI2S source.
+      --  SAI2SEL (page 188 of the STM32F7xx Ref manual):
+      --  00: SAI clock = PLLSAI_Q / PLLSAIDIVQ
+      --  01: SAI clock = PLLI2S_Q / PLLI2SDIVQ
+      --  10: SAI clock = AF input frequency
+      --  11: invalid
+      RCC_Periph.DCKCFGR.SAI1ASRC := 2#01#;
+
+      PLLI2SCFGR.PLLI2SN := PLLI2SN;
+      PLLI2SCFGR.PLLI2SQ := PLLI2SQ;
+      RCC_Periph.PLLI2SCFGR := PLLI2SCFGR;
+
+      RCC_Periph.DCKCFGR.PLLIS2DIVQ := UInt5 (PLLI2SDIVQ - 1);
+
+      if SAION then
+         Enable_PLLSAI;
+      end if;
+
+      RCC_Periph.CR.PLLI2SON := True;
+
+      loop
+         exit when RCC_Periph.CR.PLLI2SRDY;
+      end loop;
+   end Configure_SAI_I2S_Clock;
 
    -----------------------
    -- Enable_DCMI_Clock --
