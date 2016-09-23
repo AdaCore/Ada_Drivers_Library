@@ -64,6 +64,19 @@ package body Raycaster is
 
    Texture_Size : constant := Textures.Texture'Length (1);
 
+   ColorAda_Dark   : Textures.Texture;
+   pragma Linker_Section (ColorAda_Dark, ".ccmdata");
+   ColorStone_Dark : Textures.Texture;
+   pragma Linker_Section (ColorStone_Dark, ".ccmdata");
+   GreyAda_Dark    : Textures.Texture;
+   pragma Linker_Section (GreyAda_Dark, ".ccmdata");
+   GreyStone_Dark  : Textures.Texture;
+   pragma Linker_Section (GreyStone_Dark, ".ccmdata");
+   RedAda_Dark     : Textures.Texture;
+   pragma Linker_Section (RedAda_Dark, ".ccmdata");
+   RedBrick_Dark   : Textures.Texture;
+   pragma Linker_Section (RedBrick_Dark, ".ccmdata");
+
    --  1 pixel = 1/10 degree
    FOV_Vect : array (0 .. LCD_W - 1) of Degree;
    pragma Linker_Section (FOV_Vect, ".ccmdata");
@@ -103,6 +116,12 @@ package body Raycaster is
 
    function Darken (Col : Unsigned_16) return Unsigned_16 is
      (Shift_Right (Col and 2#11110_111110_11110#, 1)) with Inline_Always;
+
+   function Color
+     (Tile   : Cell;
+      X, Y   : Natural;
+      Darken : Boolean) return Unsigned_16
+     with Inline_Always, Pure_Function;
 
    --------------------
    -- To_Unit_Vector --
@@ -184,6 +203,17 @@ package body Raycaster is
          Height     => LCD_H,
          Color_Mode => Display.Get_Color_Mode (1),
          Swapped    => Display.Is_Swapped);
+
+      for Y in Textures.Texture'Range (1) loop
+         for X in Textures.Texture'Range (2) loop
+            ColorAda_Dark (Y, X) := Darken (Textures.Colorada.Bmp (Y, X));
+            ColorStone_Dark (Y, X) := Darken (Textures.Colorstone.Bmp (Y, X));
+            GreyAda_Dark (Y, X) := Darken (Textures.Greyada.Bmp (Y, X));
+            GreyStone_Dark (Y, X) := Darken (Textures.Greystone.Bmp (Y, X));
+            RedAda_Dark (Y, X) := Darken (Textures.Redada.Bmp (Y, X));
+            RedBrick_Dark (Y, X) := Darken (Textures.Redbrick.Bmp (Y, X));
+         end loop;
+      end loop;
    end Initialize_Tables;
 
    --------------
@@ -299,6 +329,58 @@ package body Raycaster is
       Dist := Cos_Table (Pos.Angle - Current.Angle) * Dist;
    end Distance;
 
+      -----------
+      -- Color --
+      -----------
+
+   function Color
+     (Tile   : Cell;
+      X, Y   : Natural;
+      Darken : Boolean) return Unsigned_16
+   is
+   begin
+      case Tile is
+         when Empty =>
+            return 0;
+         when Grey_Stone =>
+            if not Darken then
+               return Textures.Greystone.Bmp (Y, X);
+            else
+               return GreyStone_Dark (Y, X);
+            end if;
+         when Grey_Ada =>
+            if not Darken then
+               return Textures.Greyada.Bmp (Y, X);
+            else
+               return GreyAda_Dark (Y, X);
+            end if;
+         when Red_Brick =>
+            if not Darken then
+               return Textures.Redbrick.Bmp (Y, X);
+            else
+               return RedBrick_Dark (Y, X);
+            end if;
+         when Red_Ada =>
+            if not Darken then
+               return Textures.Redada.Bmp (Y, X);
+            else
+               return RedAda_Dark (Y, X);
+            end if;
+         when Color_Stone =>
+            if not Darken then
+               return Textures.Colorstone.Bmp (Y, X);
+            else
+               return ColorStone_Dark (Y, X);
+            end if;
+         when Color_Ada =>
+            if not Darken then
+               return Textures.Colorada.Bmp (Y, X);
+            else
+               return ColorAda_Dark (Y, X);
+            end if;
+      end case;
+   end Color;
+
    -----------------
    -- Draw_Column --
    -----------------
@@ -316,7 +398,6 @@ package body Raycaster is
       Height   : Natural;
       Scale    : Natural;
       X, Y, dY : Natural;
-      Bmp      : access constant Textures.Texture;
 
    begin
       Col_Pos.Angle := Current.Angle + FOV_Vect (Col);
@@ -327,25 +408,12 @@ package body Raycaster is
          Dist     => Dist,
          Tile     => Tile);
 
-      case Tile is
-         when Empty =>
-            return;
-         when Grey_Stone =>
-            Bmp := Textures.Greystone.Bmp'Access;
-         when Grey_Ada =>
-            Bmp := Textures.Greyada.Bmp'Access;
-         when Red_Brick =>
-            Bmp := Textures.Redbrick.Bmp'Access;
-         when Red_Ada =>
-            Bmp := Textures.Redada.Bmp'Access;
-         when Color_Stone =>
-            Bmp := Textures.Colorstone.Bmp'Access;
-         when Color_Ada =>
-            Bmp := Textures.Colorada.Bmp'Access;
-      end case;
+      if Tile = Empty then
+         return;
+      end if;
 
       X := Natural
-        (Float'Floor (Off * Float (Bmp'Length (2))));
+        (Float'Floor (Off * Float (Textures.Texture'Length (2))));
 
       Scale := Natural (Height_Multiplier / Dist);
 
@@ -377,16 +445,38 @@ package body Raycaster is
 
          Tmp_Buf.Addr := Tmp.all'Address;
 
-         if Side then
+         if Scale <= Texture_Size then
+            --  Shrinking case
             for Row in 0 .. Height - 1 loop
                Y := (Row + dY) * Texture_Size / Scale;
-               Tmp (Row) := Darken (Bmp (Y, X));
+               Tmp (Row) := Color (Tile, X, Y, Side);
             end loop;
+
          else
-            for Row in 0 .. Height - 1 loop
-               Y := (Row + dY) * Texture_Size / Scale;
-               Tmp (Row) := Bmp (Y, X);
-            end loop;
+            --  Expanding case
+            declare
+               Y0      : constant Natural :=
+                           (dY * Texture_Size) / Scale;
+               Y1      : constant Natural :=
+                           ((Height - 1 + dY) * Texture_Size) / Scale;
+               Row     : Natural;
+               R_Next  : Natural := 0;
+               Col     : Unsigned_16;
+
+            begin
+               for Y in Y0 .. Y1 loop
+                  Col := Color (Tile, X, Y, Side);
+                  Row := R_Next;
+
+                  if Y = Y1 then
+                     R_Next := Height;
+                  else
+                     R_Next := ((Y + 1) * Scale) / Texture_Size - dY;
+                  end if;
+
+                  Tmp (Row .. R_Next - 1) := (others => Col);
+               end loop;
+            end;
          end if;
 
          Cortex_M.Cache.Clean_DCache (Tmp (0)'Address, Height * 2);
