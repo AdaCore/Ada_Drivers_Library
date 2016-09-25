@@ -323,8 +323,8 @@ package body AK8963 is
 
          if Status = Ok then
             Mx := Mx * ((Float (Buffer (1)) - 128.0) / 256.0 + 1.0);
-            My := My * ((Float (Buffer (1)) - 128.0) / 256.0 + 1.0);
-            Mz := Mz * ((Float (Buffer (1)) - 128.0) / 256.0 + 1.0);
+            My := My * ((Float (Buffer (2)) - 128.0) / 256.0 + 1.0);
+            Mz := Mz * ((Float (Buffer (3)) - 128.0) / 256.0 + 1.0);
          end if;
       end if;
    end Get_Heading;
