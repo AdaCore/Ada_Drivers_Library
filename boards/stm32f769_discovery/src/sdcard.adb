@@ -465,6 +465,7 @@ package body SDCard is
          elsif Get_Flag (Device.all, TX_Underrun) then
             Clear_Flag (Device.all, TX_Underrun);
             SD_Status := Tx_Underrun;
+
          end if;
 
          for Int in SDMMC_Interrupts loop
@@ -579,7 +580,12 @@ package body SDCard is
       end if;
 
       SDMMC_Interrupt_Handler.Wait_Transfer (SD_Err);
-      DMA_Interrupt_Handler.Wait_Transfer (DMA_Err);
+      if SD_Err = OK then
+         DMA_Interrupt_Handler.Wait_Transfer (DMA_Err);
+      else
+         DMA_Interrupt_Handler.Clear_Transfer_State;
+         Abort_Transfer (SD_DMA, SD_DMA_Rx_Stream, DMA_Err);
+      end if;
 
       loop
          exit when not Get_Flag (Controller.Device.all, RX_Active);
