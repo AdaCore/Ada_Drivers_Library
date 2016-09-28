@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
---                        Bareboard drivers examples                        --
+--                            Ada FAT FS Library                            --
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                   Copyright (C) 2016, Jerome Lambourg                    --
 --                                                                          --
 -- This library is free software;  you can redistribute it and/or modify it --
 -- under terms of the  GNU General Public License  as published by the Free --
