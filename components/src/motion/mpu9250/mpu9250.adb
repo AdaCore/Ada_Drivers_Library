@@ -191,11 +191,11 @@ package body MPU9250 is
       MPU9250_Write_Byte_At_Register
         (Device, MPU9250_RA_CONFIG, 16#02#);
       MPU9250_Write_Byte_At_Register
-        (Device, MPU9250_RA_GYRO_CONFIG, Shift_Left (1, FS));
+        (Device, MPU9250_RA_GYRO_CONFIG, Shift_Left (FS, 3));
       MPU9250_Write_Byte_At_Register
         (Device, MPU9250_RA_ACCEL_CONFIG_2, 16#02#);
       MPU9250_Write_Byte_At_Register
-        (Device, MPU9250_RA_ACCEL_CONFIG, Shift_Left (1, FS));
+        (Device, MPU9250_RA_ACCEL_CONFIG, Shift_Left (FS, 3));
 
       --  Get average current values of gyro and accelerometer
       for I in 1 .. 200 loop
