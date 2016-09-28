@@ -57,7 +57,7 @@ package body Semihosting is
    --  SYS_ISERROR  : constant Syscall := 16#08#;
    --  SYS_ISTTY    : constant Syscall := 16#09#;
    SYS_SEEK     : constant Syscall := 16#0A#;
-   --  SYS_FLEN     : constant Syscall := 16#0C#;
+   SYS_FLEN     : constant Syscall := 16#0C#;
    --  SYS_TMPNAM   : constant Syscall := 16#0D#;
    SYS_REMOVE   : constant Syscall := 16#0E#;
    --  SYS_RENAME   : constant Syscall := 16#0E#;
@@ -232,6 +232,23 @@ package body Semihosting is
 
       return Generic_SH_Call (SYS_SEEK, Block'Address);
    end Seek;
+
+   ----------
+   -- FLen --
+   ----------
+
+   function FLen (File_Handle : SH_Word) return SH_Word
+   is
+      Block : SH_u32_Array (0 .. 0);
+   begin
+      if not Semihosting_Enabled then
+         --  No debugger attached
+         return SH_Word'Last;
+      end if;
+
+      Block (0) := File_Handle;
+      return Generic_SH_Call (SYS_FLEN, Block'Address);
+   end FLen;
 
    -----------
    -- Errno --

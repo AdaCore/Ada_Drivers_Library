@@ -62,8 +62,9 @@ package Semihosting is
                    Buffer_Address  : System.Address;
                    Buffer_Size     : SH_Word) return SH_Word;
    function Remove (Filename : String) return SH_Word;
-   function Seek (File_Handle : SH_Word;
+   function Seek (File_Handle       : SH_Word;
                   Absolute_Position : SH_Word) return SH_Word;
+   function FLen (File_Handle : SH_Word) return SH_Word;
    function Errno return SH_Word;
 
    procedure Log (C : Character) renames Write_C;
