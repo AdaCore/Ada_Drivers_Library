@@ -173,8 +173,7 @@ begin
    Display.Set_Background (255, 255, 255);
 
    SDCard_Device.Initialize;
-   STM32.Board.Initialize_LEDs;
-   Wav_Reader.Initialize (100);
+   Wav_Reader.Initialize (Volume => 20);
 
    loop
       if not SDCard_Device.Card_Present then

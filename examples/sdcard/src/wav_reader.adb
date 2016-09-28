@@ -34,7 +34,7 @@ package body Wav_Reader is
 
    function To_String (Block : File_Data) return String;
 
-   subtype Buffer_Type is Audio_Buffer (1 .. 32 * 1024);
+   subtype Buffer_Type is Audio_Buffer (1 .. 8 * 1024);
    Buffer : aliased Buffer_Type := (others => 0);
    for Buffer'Alignment use 32;
 
@@ -128,6 +128,8 @@ package body Wav_Reader is
       if not STM32.Button.Initialized then
          STM32.Button.Initialize;
       end if;
+
+      STM32.Board.Initialize_LEDs;
 
       STM32.Board.Audio_Device.Initialize_Audio_Out
         (Volume    => Volume,

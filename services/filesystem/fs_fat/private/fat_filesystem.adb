@@ -24,7 +24,7 @@
 with Ada.Unchecked_Conversion;
 with FAT_Filesystem.Directories;
 
-with Partitions_MBR;
+with Partition_MBR;
 
 package body FAT_Filesystem is
 

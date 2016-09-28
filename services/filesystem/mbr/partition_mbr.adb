@@ -1,5 +1,5 @@
 
-package body Partitions is
+package body Partition_MBR is
 
    type Partition_Entry_Block_Mapping (Kind : Boolean := True) is record
       case Kind is
@@ -198,4 +198,4 @@ package body Partitions is
       return Entry_Cnt;
    end Number_Of_Partitions;
 
-end Partitions;
+end Partition_MBR;
