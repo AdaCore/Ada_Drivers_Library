@@ -19,12 +19,14 @@ support for additional processors, platforms, and vendors.
 2. License
 ----------
 
-All files are provided under a non-restrictive Berkeley Software Distribution
+The Drivers are provided under a non-restrictive Berkeley Software Distribution
 (BSD) license.  As such, and within the conditions required by the license, the
 files are available both for proprietary ("commercial") and non-proprietary use.
 
-For details, see the "License" section in the release notes accompanying the HAL
-drivers provided by ST Microelectronics.
+The Services layer (as opposed to the main AdaCore repository) is provided as
+a LGPL license. This is still available both for proprietary and free software
+use, with a copyleft license on the layer itself. Please refer to the exact
+terms of this license (see lgpl-3.0).
 
 
 3. Requirements
@@ -50,10 +52,8 @@ compiler for that target will also suffice.
 4. Content
 ----------
 
-Initial provision is for the hardware in the STM32F4 family of 32-bit MCUs, as
-defined in the "RM0090 Reference Manual" (Doc ID 018909 Rev 6, Feb 2014) by
-STMicroelectronics and made available on the "STM32F4 Discovery" and the
-"STM32F429 Discovery" kit boards.
+Initial provision is for the hardware in the STM32-discovery family of 32-bit
+Boards, namely the STM32F407-disco, F429, F469, F746 and F769.
 
 Specifically, there are low-level device drivers, higher-level component drivers,
 small demonstration programs for the drivers, and larger example applications.
