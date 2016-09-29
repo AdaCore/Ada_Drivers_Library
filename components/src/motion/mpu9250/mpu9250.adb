@@ -168,7 +168,7 @@ package body MPU9250 is
       Factory_Trim : T_Int32_Array_6 := (others => 0);
       Acc_Diff     : Float_Array_3;
       Gyro_Diff    : Float_Array_3;
-      FS           : constant Natural := 0;
+      FS           : constant Unsigned_8 := 0;
 
       Next_Period : Time;
       Test_Status : Boolean;
