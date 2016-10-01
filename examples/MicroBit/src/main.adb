@@ -29,8 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nrf51.GPIO;   use nrf51.GPIO;
-with nrf51.Device; use nrf51.Device;
+with nRF51.GPIO;   use nRF51.GPIO;
+with nRF51.Device; use nRF51.Device;
 
 procedure Main is
    Conf : GPIO_Configuration;

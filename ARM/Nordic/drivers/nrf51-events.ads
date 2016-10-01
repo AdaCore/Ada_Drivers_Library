@@ -49,7 +49,7 @@ with NRF51_SVD.QDEC;
 with NRF51_SVD.ADC;
 
 
-package nrf51.Events is
+package nRF51.Events is
 
    type Event_Type is private;
 
@@ -381,4 +381,4 @@ private
    ADC_END             : constant Event_Type :=
      Event_Type (NRF51_SVD.ADC.ADC_Periph.EVENTS_END'Address);
 
-end nrf51.Events;
+end nRF51.Events;

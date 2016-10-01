@@ -33,7 +33,7 @@ with HAL;        use HAL;
 with Interfaces; use Interfaces;
 with Ada.Unchecked_Conversion;
 
-package body nrf51.Events is
+package body nRF51.Events is
 
    function To_UInt32 is new Ada.Unchecked_Conversion (System.Address, UInt32);
    function To_Address is new Ada.Unchecked_Conversion (UInt32, System.Address);
@@ -114,4 +114,4 @@ package body nrf51.Events is
       return System.Address (Evt);
    end Get_Address;
 
-end nrf51.Events;
+end nRF51.Events;

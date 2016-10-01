@@ -31,7 +31,7 @@
 
 with HAL.GPIO;
 
-package nrf51.GPIO is
+package nRF51.GPIO is
 
    subtype GPIO_Pin_Index is Natural range 0 .. 31;
 
@@ -96,4 +96,4 @@ package nrf51.GPIO is
       Config : GPIO_Configuration);
    --  Configures the characteristics specified by Config
 
-end nrf51.GPIO;
+end nRF51.GPIO;

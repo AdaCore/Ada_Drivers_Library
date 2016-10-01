@@ -49,7 +49,7 @@ with NRF51_SVD.QDEC;
 with NRF51_SVD.ADC;
 
 
-package nrf51.Tasks is
+package nRF51.Tasks is
 
    type Task_Type is private;
 
@@ -424,4 +424,4 @@ private
    ADC_STOP               : constant Task_Type :=
      Task_Type (NRF51_SVD.ADC.ADC_Periph.TASKS_STOP'Address);
 
-end nrf51.Tasks;
+end nRF51.Tasks;

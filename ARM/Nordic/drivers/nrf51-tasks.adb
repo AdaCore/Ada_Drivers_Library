@@ -31,7 +31,7 @@
 
 with HAL; use HAL;
 
-package body nrf51.Tasks is
+package body nRF51.Tasks is
 
    -------------
    -- Trigger --
@@ -52,4 +52,4 @@ package body nrf51.Tasks is
       return System.Address (T);
    end Get_Address;
 
-end nrf51.Tasks;
+end nRF51.Tasks;

@@ -31,7 +31,7 @@
 
 with NRF51_SVD.GPIO; use NRF51_SVD.GPIO;
 
-package body nrf51.GPIO is
+package body nRF51.GPIO is
 
    ---------
    -- Set --
@@ -121,4 +121,4 @@ package body nrf51.GPIO is
                        when Sense_For_Low_Level  => Low);
    end Configure_IO;
 
-end nrf51.GPIO;
+end nRF51.GPIO;

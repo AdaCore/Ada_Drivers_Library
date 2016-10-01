@@ -29,9 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nrf51.GPIO; use nrf51.GPIO;
+with nRF51.GPIO; use nRF51.GPIO;
 
-package nrf51.Device is
+package nRF51.Device is
 
    P00 : aliased GPIO_Point := (Pin => 00);
    P01 : aliased GPIO_Point := (Pin => 01);
@@ -66,4 +66,4 @@ package nrf51.Device is
    P30 : aliased GPIO_Point := (Pin => 30);
    P31 : aliased GPIO_Point := (Pin => 31);
 
-end nrf51.Device;
+end nRF51.Device;
