@@ -277,7 +277,7 @@ package STM32_SVD.Ethernet is
       Reserved_17_31 at 0 range 17 .. 31;
    end record;
 
-   subtype DMAMFBOCR_MFC_Field is HAL.Short;
+   subtype DMAMFBOCR_MFC_Field is HAL.UInt16;
    subtype DMAMFBOCR_MFA_Field is HAL.UInt11;
 
    --  Ethernet DMA missed frame and buffer overflow counter register
@@ -463,7 +463,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       PA             : MACMIIAR_PA_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -478,14 +478,14 @@ package STM32_SVD.Ethernet is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MACMIIDR_TD_Field is HAL.Short;
+   subtype MACMIIDR_TD_Field is HAL.UInt16;
 
    --  Ethernet MAC MII data register
    type MACMIIDR_Register is record
       --  no description available
       TD             : MACMIIDR_TD_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -496,7 +496,7 @@ package STM32_SVD.Ethernet is
    end record;
 
    subtype MACFCR_PLT_Field is HAL.UInt2;
-   subtype MACFCR_PT_Field is HAL.Short;
+   subtype MACFCR_PT_Field is HAL.UInt16;
 
    --  Ethernet MAC flow control register
    type MACFCR_Register is record
@@ -534,7 +534,7 @@ package STM32_SVD.Ethernet is
       PT            at 0 range 16 .. 31;
    end record;
 
-   subtype MACVLANTR_VLANTI_Field is HAL.Short;
+   subtype MACVLANTR_VLANTI_Field is HAL.UInt16;
 
    --  Ethernet MAC VLAN tag register
    type MACVLANTR_Register is record
@@ -680,7 +680,7 @@ package STM32_SVD.Ethernet is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
-   subtype MACA0HR_MACA0H_Field is HAL.Short;
+   subtype MACA0HR_MACA0H_Field is HAL.UInt16;
 
    --  Ethernet MAC address 0 high register
    type MACA0HR_Register is record
@@ -700,7 +700,7 @@ package STM32_SVD.Ethernet is
       MO             at 0 range 31 .. 31;
    end record;
 
-   subtype MACA1HR_MACA1H_Field is HAL.Short;
+   subtype MACA1HR_MACA1H_Field is HAL.UInt16;
    subtype MACA1HR_MBC_Field is HAL.UInt6;
 
    --  Ethernet MAC address 1 high register
@@ -727,7 +727,7 @@ package STM32_SVD.Ethernet is
       AE             at 0 range 31 .. 31;
    end record;
 
-   subtype MACA2HR_MAC2AH_Field is HAL.Short;
+   subtype MACA2HR_MAC2AH_Field is HAL.UInt16;
    subtype MACA2HR_MBC_Field is HAL.UInt6;
 
    --  Ethernet MAC address 2 high register
@@ -771,7 +771,7 @@ package STM32_SVD.Ethernet is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
-   subtype MACA3HR_MACA3H_Field is HAL.Short;
+   subtype MACA3HR_MACA3H_Field is HAL.UInt16;
    subtype MACA3HR_MBC_Field is HAL.UInt6;
 
    --  Ethernet MAC address 3 high register
@@ -1094,13 +1094,13 @@ package STM32_SVD.Ethernet is
       --  Ethernet DMA bus mode register
       DMABMR    : DMABMR_Register;
       --  Ethernet DMA transmit poll demand register
-      DMATPDR   : HAL.Word;
+      DMATPDR   : HAL.UInt32;
       --  EHERNET DMA receive poll demand register
-      DMARPDR   : HAL.Word;
+      DMARPDR   : HAL.UInt32;
       --  Ethernet DMA receive descriptor list address register
-      DMARDLAR  : HAL.Word;
+      DMARDLAR  : HAL.UInt32;
       --  Ethernet DMA transmit descriptor list address register
-      DMATDLAR  : HAL.Word;
+      DMATDLAR  : HAL.UInt32;
       --  Ethernet DMA status register
       DMASR     : DMASR_Register;
       --  Ethernet DMA operation mode register
@@ -1112,13 +1112,13 @@ package STM32_SVD.Ethernet is
       --  Ethernet DMA receive status watchdog timer register
       DMARSWTR  : DMARSWTR_Register;
       --  Ethernet DMA current host transmit descriptor register
-      DMACHTDR  : HAL.Word;
+      DMACHTDR  : HAL.UInt32;
       --  Ethernet DMA current host receive descriptor register
-      DMACHRDR  : HAL.Word;
+      DMACHRDR  : HAL.UInt32;
       --  Ethernet DMA current host transmit buffer address register
-      DMACHTBAR : HAL.Word;
+      DMACHTBAR : HAL.UInt32;
       --  Ethernet DMA current host receive buffer address register
-      DMACHRBAR : HAL.Word;
+      DMACHRBAR : HAL.UInt32;
    end record
      with Volatile;
 
@@ -1150,9 +1150,9 @@ package STM32_SVD.Ethernet is
       --  Ethernet MAC frame filter register
       MACFFR    : MACFFR_Register;
       --  Ethernet MAC hash table high register
-      MACHTHR   : HAL.Word;
+      MACHTHR   : HAL.UInt32;
       --  Ethernet MAC hash table low register
-      MACHTLR   : HAL.Word;
+      MACHTLR   : HAL.UInt32;
       --  Ethernet MAC MII address register
       MACMIIAR  : MACMIIAR_Register;
       --  Ethernet MAC MII data register
@@ -1172,11 +1172,11 @@ package STM32_SVD.Ethernet is
       --  Ethernet MAC address 0 high register
       MACA0HR   : MACA0HR_Register;
       --  Ethernet MAC address 0 low register
-      MACA0LR   : HAL.Word;
+      MACA0LR   : HAL.UInt32;
       --  Ethernet MAC address 1 high register
       MACA1HR   : MACA1HR_Register;
       --  Ethernet MAC address1 low register
-      MACA1LR   : HAL.Word;
+      MACA1LR   : HAL.UInt32;
       --  Ethernet MAC address 2 high register
       MACA2HR   : MACA2HR_Register;
       --  Ethernet MAC address 2 low register
@@ -1184,7 +1184,7 @@ package STM32_SVD.Ethernet is
       --  Ethernet MAC address 3 high register
       MACA3HR   : MACA3HR_Register;
       --  Ethernet MAC address 3 low register
-      MACA3LR   : HAL.Word;
+      MACA3LR   : HAL.UInt32;
    end record
      with Volatile;
 
@@ -1228,18 +1228,18 @@ package STM32_SVD.Ethernet is
       --  Ethernet MMC transmit interrupt mask register
       MMCTIMR     : MMCTIMR_Register;
       --  Ethernet MMC transmitted good frames after a single collision counter
-      MMCTGFSCCR  : HAL.Word;
+      MMCTGFSCCR  : HAL.UInt32;
       --  Ethernet MMC transmitted good frames after more than a single
       --  collision
-      MMCTGFMSCCR : HAL.Word;
+      MMCTGFMSCCR : HAL.UInt32;
       --  Ethernet MMC transmitted good frames counter register
-      MMCTGFCR    : HAL.Word;
+      MMCTGFCR    : HAL.UInt32;
       --  Ethernet MMC received frames with CRC error counter register
-      MMCRFCECR   : HAL.Word;
+      MMCRFCECR   : HAL.UInt32;
       --  Ethernet MMC received frames with alignment error counter register
-      MMCRFAECR   : HAL.Word;
+      MMCRFAECR   : HAL.UInt32;
       --  MMC received good unicast frames counter register
-      MMCRGUFCR   : HAL.Word;
+      MMCRGUFCR   : HAL.UInt32;
    end record
      with Volatile;
 
@@ -1268,19 +1268,19 @@ package STM32_SVD.Ethernet is
       --  Ethernet PTP subsecond increment register
       PTPSSIR  : PTPSSIR_Register;
       --  Ethernet PTP time stamp high register
-      PTPTSHR  : HAL.Word;
+      PTPTSHR  : HAL.UInt32;
       --  Ethernet PTP time stamp low register
       PTPTSLR  : PTPTSLR_Register;
       --  Ethernet PTP time stamp high update register
-      PTPTSHUR : HAL.Word;
+      PTPTSHUR : HAL.UInt32;
       --  Ethernet PTP time stamp low update register
       PTPTSLUR : PTPTSLUR_Register;
       --  Ethernet PTP time stamp addend register
-      PTPTSAR  : HAL.Word;
+      PTPTSAR  : HAL.UInt32;
       --  Ethernet PTP target time high register
-      PTPTTHR  : HAL.Word;
+      PTPTTHR  : HAL.UInt32;
       --  Ethernet PTP target time low register
-      PTPTTLR  : HAL.Word;
+      PTPTTLR  : HAL.UInt32;
       --  Ethernet PTP time stamp status register
       PTPTSSR  : PTPTSSR_Register;
       --  Ethernet PTP PPS control register

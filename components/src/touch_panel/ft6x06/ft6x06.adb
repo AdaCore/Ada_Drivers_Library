@@ -135,20 +135,20 @@ package body FT6x06 is
                              Touch_Id : Touch_Identifier)
                              return HAL.Touch_Panel.TP_Touch_State
    is
-      type Short_HL_Type is record
+      type UInt16_HL_Type is record
          High, Low : Byte;
       end record with Size => 16;
-      for Short_HL_Type use record
+      for UInt16_HL_Type use record
          High at 1 range 0 .. 7;
          Low  at 0 range 0 .. 7;
       end record;
 
-      function To_Short is
-        new Ada.Unchecked_Conversion (Short_HL_Type, Short);
+      function To_UInt16 is
+        new Ada.Unchecked_Conversion (UInt16_HL_Type, UInt16);
 
       Ret  : TP_Touch_State;
       Regs : FT6206_Pressure_Registers;
-      Tmp  : Short_HL_Type;
+      Tmp  : UInt16_HL_Type;
       Status : Boolean;
    begin
       if Touch_Id not in FT6206_Px_Regs'Range then
@@ -176,7 +176,7 @@ package body FT6x06 is
          return (0, 0, 0);
       end if;
 
-      Ret.Y := Natural (To_Short (Tmp));
+      Ret.Y := Natural (To_UInt16 (Tmp));
 
       Tmp.Low := This.I2C_Read (Regs.YL_Reg, Status);
 
@@ -191,7 +191,7 @@ package body FT6x06 is
          return (0, 0, 0);
       end if;
 
-      Ret.X := Natural (To_Short (Tmp));
+      Ret.X := Natural (To_UInt16 (Tmp));
 
       Ret.Weight := Natural (This.I2C_Read (Regs.Weight_Reg, Status));
 
@@ -264,7 +264,7 @@ package body FT6x06 is
    begin
       This.Port.Mem_Read
         (This.I2C_Addr,
-         Short (Reg),
+         UInt16 (Reg),
          Memory_Size_8b,
          Ret,
          Tmp_Status,
@@ -287,7 +287,7 @@ package body FT6x06 is
    begin
       This.Port.Mem_Write
         (This.I2C_Addr,
-         Short (Reg),
+         UInt16 (Reg),
          Memory_Size_8b,
          (1 => Data),
          Tmp_Status,

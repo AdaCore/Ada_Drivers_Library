@@ -36,9 +36,9 @@ package body STM32.IWDG is
 
    --  commands to the watchdog hardware
 
-   Reload_Counter : constant Short := 16#AAAA#;
-   Enable_Access  : constant Short := 16#5555#;
-   Start          : constant Short := 16#CCCC#;
+   Reload_Counter : constant UInt16 := 16#AAAA#;
+   Enable_Access  : constant UInt16 := 16#5555#;
+   Start          : constant UInt16 := 16#CCCC#;
 
    -------------------------
    -- Initialize_Watchdog --

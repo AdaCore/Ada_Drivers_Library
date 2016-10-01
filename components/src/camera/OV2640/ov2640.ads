@@ -13,7 +13,7 @@ package OV2640 is
    type Frame_Rate is (FR_2FPS, FR_8FPS, FR_15FPS, FR_30FPS, FR_60FPS);
 
    type Resolution is record
-     Width, Height : Short;
+     Width, Height : UInt16;
    end record;
 
    Resolutions : constant array (Frame_Size) of Resolution :=

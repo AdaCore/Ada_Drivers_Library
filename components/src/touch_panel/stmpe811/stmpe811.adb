@@ -130,7 +130,7 @@ package body STMPE811 is
 
    begin
       This.Port.Mem_Read (This.I2C_Addr,
-                          Short (Data_Addr),
+                          UInt16 (Data_Addr),
                           Memory_Size_8b, Data,
                           Status);
 
@@ -153,7 +153,7 @@ package body STMPE811 is
 
    begin
       This.Port.Mem_Read (This.I2C_Addr,
-                          Short (Reg_Addr),
+                          UInt16 (Reg_Addr),
                           Memory_Size_8b,
                           Data,
                           Status);
@@ -176,7 +176,7 @@ package body STMPE811 is
 
    begin
       This.Port.Mem_Write (This.I2C_Addr,
-                           Short (Reg_Addr),
+                           UInt16 (Reg_Addr),
                            Memory_Size_8b,
                            (1 => Data),
                            Status);
@@ -243,10 +243,10 @@ package body STMPE811 is
    -- Get_IOE_ID --
    ----------------
 
-   function Get_IOE_ID (This : in out STMPE811_Device) return Short is
+   function Get_IOE_ID (This : in out STMPE811_Device) return UInt16 is
    begin
-      return (Short (This.Read_Register (0)) * (2**8))
-        or Short (This.Read_Register (1));
+      return (UInt16 (This.Read_Register (0)) * (2**8))
+        or UInt16 (This.Read_Register (1));
    end Get_IOE_ID;
 
    ----------------
@@ -341,9 +341,9 @@ package body STMPE811 is
                              return TP_Touch_State
    is
       State     : TP_Touch_State;
-      Raw_X     : Word;
-      Raw_Y     : Word;
-      Raw_Z     : Word;
+      Raw_X     : UInt32;
+      Raw_Y     : UInt32;
+      Raw_Z     : UInt32;
       X         : Integer;
       Y         : Integer;
       Tmp       : Integer;
@@ -363,17 +363,17 @@ package body STMPE811 is
 
       begin
          Raw_X := 2 ** 12 -
-           (Shift_Left (Word (Data_X (1)) and 16#0F#, 8) or Word (Data_X (2)));
+           (Shift_Left (UInt32 (Data_X (1)) and 16#0F#, 8) or UInt32 (Data_X (2)));
          Raw_Y :=
-           Shift_Left (Word (Data_Y (1)) and 16#0F#, 8) or Word (Data_Y (2));
+           Shift_Left (UInt32 (Data_Y (1)) and 16#0F#, 8) or UInt32 (Data_Y (2));
          Raw_Z :=
-           Shift_Right (Word (Data_Z (1)), Natural (Z_Frac (1) and 2#111#));
+           Shift_Right (UInt32 (Data_Z (1)), Natural (Z_Frac (1) and 2#111#));
       end;
 
       --  Now we adapt the 12 bit resolution to the LCD width.
       X :=
         Integer
-          (Shift_Right (Raw_X * (Word (This.LCD_Natural_Width) + 32), 12));
+          (Shift_Right (Raw_X * (UInt32 (This.LCD_Natural_Width) + 32), 12));
       X := X - 16;
 
       X := Integer'Max (X, 0);

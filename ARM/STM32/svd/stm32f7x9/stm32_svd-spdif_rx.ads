@@ -212,7 +212,7 @@ package STM32_SVD.SPDIF_RX is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   subtype CSR_USR_Field is HAL.Short;
+   subtype CSR_USR_Field is HAL.UInt16;
    subtype CSR_CS_Field is HAL.Byte;
 
    --  Channel Status register

@@ -47,7 +47,7 @@ package body Cortex_M.NVIC is
    -- Priority_Grouping --
    -----------------------
 
-   function Priority_Grouping return Word is
+   function Priority_Grouping return UInt32 is
    begin
       return Shift_Right (SCB.AIRCR and SCB_AIRCR_PRIGROUP_Mask,
                           SCB_AIRCR_PRIGROUP_Pos);
@@ -57,9 +57,9 @@ package body Cortex_M.NVIC is
    -- Set_Priority_Grouping --
    ---------------------------
 
-   procedure Set_Priority_Grouping (Priority_Group : Word) is
-      Reg_Value : Word;
-      PriorityGroupTmp : constant Word := Priority_Group and 16#07#;
+   procedure Set_Priority_Grouping (Priority_Group : UInt32) is
+      Reg_Value : UInt32;
+      PriorityGroupTmp : constant UInt32 := Priority_Group and 16#07#;
       Key              : constant := 16#5FA#;
    begin
       Reg_Value := SCB.AIRCR;
@@ -77,10 +77,10 @@ package body Cortex_M.NVIC is
 
    procedure Set_Priority
      (IRQn     : Interrupt_ID;
-      Priority : Word)
+      Priority : UInt32)
    is
       Index : constant Natural := Integer (IRQn);
-      Value : constant Word :=
+      Value : constant UInt32 :=
         Shift_Left (Priority, 8 - NVIC_PRIO_BITS) and 16#FF#;
    begin
       --  IRQ numbers are never less than 0 in the current definition, hence
@@ -93,17 +93,17 @@ package body Cortex_M.NVIC is
    ----------------------
 
    function Encoded_Priority
-     (Priority_Group : Word;  Preempt_Priority : Word;  Subpriority : Word)
-      return Word
+     (Priority_Group : UInt32;  Preempt_Priority : UInt32;  Subpriority : UInt32)
+      return UInt32
    is
-      PriorityGroupTmp    : constant Word := Priority_Group and 16#07#;
-      PreemptPriorityBits : Word;
-      SubPriorityBits     : Word;
-      Temp1 : Word;
-      Temp2 : Word;
-      Temp3 : Word;
-      Temp4 : Word;
-      Temp5 : Word;
+      PriorityGroupTmp    : constant UInt32 := Priority_Group and 16#07#;
+      PreemptPriorityBits : UInt32;
+      SubPriorityBits     : UInt32;
+      Temp1 : UInt32;
+      Temp2 : UInt32;
+      Temp3 : UInt32;
+      Temp4 : UInt32;
+      Temp5 : UInt32;
    begin
       if (7 - PriorityGroupTmp) > NVIC_PRIO_BITS then
          PreemptPriorityBits := NVIC_PRIO_BITS;
@@ -133,10 +133,10 @@ package body Cortex_M.NVIC is
 
    procedure Set_Priority
      (IRQn             : Interrupt_ID;
-      Preempt_Priority : Word;
-      Subpriority      : Word)
+      Preempt_Priority : UInt32;
+      Subpriority      : UInt32)
    is
-      Priority_Group : constant Word := Priority_Grouping;
+      Priority_Group : constant UInt32 := Priority_Grouping;
    begin
       Set_Priority
         (IRQn,
@@ -148,7 +148,7 @@ package body Cortex_M.NVIC is
    ----------------------
 
    procedure Enable_Interrupt (IRQn : Interrupt_ID) is
-      IRQn_As_Word : constant Word := Word (IRQn);
+      IRQn_As_Word : constant UInt32 := UInt32 (IRQn);
       Index        : constant Natural :=
         Integer (Shift_Right (IRQn_As_Word, 5));
    begin
@@ -160,7 +160,7 @@ package body Cortex_M.NVIC is
    -----------------------
 
    procedure Disable_Interrupt (IRQn : Interrupt_ID) is
-      IRQn_As_Word : constant Word := Word (IRQn);
+      IRQn_As_Word : constant UInt32 := UInt32 (IRQn);
       Index        : constant Natural :=
         Integer (Shift_Right (IRQn_As_Word, 5));
    begin
@@ -173,10 +173,10 @@ package body Cortex_M.NVIC is
    ------------
 
    function Active (IRQn : Interrupt_ID) return Boolean is
-      IRQn_As_Word : constant Word := Word (IRQn);
+      IRQn_As_Word : constant UInt32 := UInt32 (IRQn);
       Index        : constant Natural :=
         Integer (Shift_Right (IRQn_As_Word, 5));
-      Value        : constant Word :=
+      Value        : constant UInt32 :=
         Shift_Left (1, Integer (IRQn_As_Word and 16#1F#));
    begin
       return (NVIC.IABR (Index) and Value) /= 0;
@@ -187,10 +187,10 @@ package body Cortex_M.NVIC is
    -------------
 
    function Pending (IRQn : Interrupt_ID) return Boolean is
-      IRQn_As_Word : constant Word := Word (IRQn);
+      IRQn_As_Word : constant UInt32 := UInt32 (IRQn);
       Index        : constant Natural :=
         Integer (Shift_Right (IRQn_As_Word, 5));
-      Value        : constant Word :=
+      Value        : constant UInt32 :=
         Shift_Left (1, Integer (IRQn_As_Word and 16#1F#));
    begin
       return (NVIC.ISPR (Index) and Value) /= 0;
@@ -201,7 +201,7 @@ package body Cortex_M.NVIC is
    -----------------
 
    procedure Set_Pending (IRQn : Interrupt_ID) is
-      IRQn_As_Word : constant Word := Word (IRQn);
+      IRQn_As_Word : constant UInt32 := UInt32 (IRQn);
       Index        : constant Natural :=
         Integer (Shift_Right (IRQn_As_Word, 5));
    begin
@@ -213,7 +213,7 @@ package body Cortex_M.NVIC is
    -------------------
 
    procedure Clear_Pending (IRQn : Interrupt_ID) is
-      IRQn_As_Word : constant Word := Word (IRQn);
+      IRQn_As_Word : constant UInt32 := UInt32 (IRQn);
       Index        : constant Natural :=
         Integer (Shift_Right (IRQn_As_Word, 5));
    begin

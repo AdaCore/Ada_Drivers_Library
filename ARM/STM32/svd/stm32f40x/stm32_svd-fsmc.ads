@@ -409,7 +409,7 @@ package STM32_SVD.FSMC is
       --  Attribute memory space timing register 2
       PATT2 : PATT_Register;
       --  ECC result register 2
-      ECCR2 : HAL.Word;
+      ECCR2 : HAL.UInt32;
       --  PC Card/NAND Flash control register 3
       PCR3  : PCR_Register;
       --  FIFO status and interrupt register 3
@@ -419,7 +419,7 @@ package STM32_SVD.FSMC is
       --  Attribute memory space timing register 3
       PATT3 : PATT_Register;
       --  ECC result register 3
-      ECCR3 : HAL.Word;
+      ECCR3 : HAL.UInt32;
       --  PC Card/NAND Flash control register 4
       PCR4  : PCR_Register;
       --  FIFO status and interrupt register 4

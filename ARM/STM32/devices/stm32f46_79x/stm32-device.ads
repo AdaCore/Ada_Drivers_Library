@@ -507,7 +507,7 @@ package STM32.Device is
 
    procedure Enable_Clock (This : in out SAI_Port);
    procedure Reset (This : in out SAI_Port);
-   function Get_Input_Clock (Periph : SAI_Port) return Word;
+   function Get_Input_Clock (Periph : SAI_Port) return UInt32;
 
    -----------
    -- SDMMC --
@@ -523,12 +523,12 @@ package STM32.Device is
    -----------------------------
 
    type RCC_System_Clocks is record
-      SYSCLK  : Word;
-      HCLK    : Word;
-      PCLK1   : Word;
-      PCLK2   : Word;
-      TIMCLK1 : Word;
-      TIMCLK2 : Word;
+      SYSCLK  : UInt32;
+      HCLK    : UInt32;
+      PCLK1   : UInt32;
+      PCLK2   : UInt32;
+      TIMCLK1 : UInt32;
+      TIMCLK2 : UInt32;
    end record;
 
    function System_Clock_Frequencies return RCC_System_Clocks;

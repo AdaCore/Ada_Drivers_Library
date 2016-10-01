@@ -96,7 +96,7 @@ package body Bitmapped_Drawing is
       Foreground : Bitmap_Color;
       Fast       : Boolean := True)
    is
-      FG    : constant Word := Bitmap_Color_To_Word (Buffer.Color_Mode,
+      FG    : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
                                                      Foreground);
 
       procedure Internal_Draw_Line
@@ -153,9 +153,9 @@ package body Bitmapped_Drawing is
       Ratio   : Float;
       Current : Point := (0, 0);
       Prev    : Unsigned_32;
-      FG      : constant Word := Bitmap_Color_To_Word (Buffer.Color_Mode,
+      FG      : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
                                                        Foreground);
-      Blk     : constant Word := Bitmap_Color_To_Word (Buffer.Color_Mode,
+      Blk     : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
                                                        Black);
 
       procedure Internal_Draw_Line
@@ -492,7 +492,7 @@ package body Bitmapped_Drawing is
       Radius : Natural;
       Hue    : Bitmap_Color)
    is
-      Col   : constant Word := Bitmap_Color_To_Word (Buffer.Color_Mode, Hue);
+      Col   : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode, Hue);
       F          : Integer := 1 - Radius;
       ddF_X      : Integer := 0;
       ddF_Y      : Integer := (-2) * Radius;
@@ -611,7 +611,7 @@ package body Bitmapped_Drawing is
      (Buffer : Bitmap_Buffer'Class;
       Center : Point;
       Radius : Natural;
-      Hue    : Word)
+      Hue    : UInt32)
    is
       F     : Integer := 1 - Radius;
       ddF_X : Integer := 0;
@@ -654,7 +654,7 @@ package body Bitmapped_Drawing is
       Radius : Natural;
       Hue    : Bitmap_Color)
    is
-      Col : constant Word := Bitmap_Color_To_Word (Buffer.Color_Mode,
+      Col : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
                                                    Hue);
    begin
       Fill_Circle (Buffer, Center, Radius, Col);

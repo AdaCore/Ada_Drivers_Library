@@ -103,7 +103,7 @@ package body STM32.DAC is
    procedure Set_Output
      (This       : in out Digital_To_Analog_Converter;
       Channel    : DAC_Channel;
-      Value      : Word;
+      Value      : UInt32;
       Resolution : DAC_Resolution;
       Alignment  : Data_Alignment)
    is
@@ -167,14 +167,14 @@ package body STM32.DAC is
    function Converted_Output_Value
      (This    : Digital_To_Analog_Converter;
       Channel : DAC_Channel)
-      return Word
+      return UInt32
    is
    begin
       case Channel is
          when Channel_1 =>
-            return Word (This.DOR1.DACC1DOR);
+            return UInt32 (This.DOR1.DACC1DOR);
          when Channel_2 =>
-            return Word (This.DOR2.DACC2DOR);
+            return UInt32 (This.DOR2.DACC2DOR);
       end case;
    end Converted_Output_Value;
 
@@ -184,8 +184,8 @@ package body STM32.DAC is
 
    procedure Set_Dual_Output_Voltages
      (This            : in out Digital_To_Analog_Converter;
-      Channel_1_Value : Word;
-      Channel_2_Value : Word;
+      Channel_1_Value : UInt32;
+      Channel_2_Value : UInt32;
       Resolution      : DAC_Resolution;
       Alignment       : Data_Alignment)
    is
@@ -221,8 +221,8 @@ package body STM32.DAC is
    is
       Result : Dual_Channel_Output;
    begin
-      Result.Channel_1_Data := Short (This.DOR1.DACC1DOR);
-      Result.Channel_2_Data := Short (This.DOR2.DACC2DOR);
+      Result.Channel_1_Data := UInt16 (This.DOR1.DACC1DOR);
+      Result.Channel_2_Data := UInt16 (This.DOR2.DACC2DOR);
       return Result;
    end Converted_Dual_Output_Value;
 

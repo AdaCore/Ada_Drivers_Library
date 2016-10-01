@@ -154,7 +154,7 @@ package body STM32.Eth is
    procedure Init_Rx_Desc (I : Rx_Desc_Range)
    is
       function W is new Ada.Unchecked_Conversion
-        (Address, Word);
+        (Address, UInt32);
       Last : constant Boolean := I = Rx_Desc_Range'Last;
    begin
       Rx_Descs (I) :=
@@ -173,7 +173,7 @@ package body STM32.Eth is
       function To_Rx_Buffer_Arr_Ptr is new Ada.Unchecked_Conversion
         (System.Address, Rx_Buffer_Arr_Ptr);
       function W is new Ada.Unchecked_Conversion
-        (Address, Word);
+        (Address, UInt32);
       Desc_Addr : Address;
    begin
       --  FIXME: check speed, full duplex

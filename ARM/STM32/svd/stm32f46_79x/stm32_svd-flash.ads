@@ -195,7 +195,7 @@ package STM32_SVD.FLASH is
    --  Flash option control register 1
    type OPTCR1_Register is record
       --  unspecified
-      Reserved_0_15  : HAL.Short := 16#0#;
+      Reserved_0_15  : HAL.UInt16 := 16#0#;
       --  Not write protect
       nWRP           : OPTCR1_nWRP_Field := 16#FFF#;
       --  unspecified
@@ -219,9 +219,9 @@ package STM32_SVD.FLASH is
       --  Flash access control register
       ACR     : ACR_Register;
       --  Flash key register
-      KEYR    : HAL.Word;
+      KEYR    : HAL.UInt32;
       --  Flash option key register
-      OPTKEYR : HAL.Word;
+      OPTKEYR : HAL.UInt32;
       --  Status register
       SR      : SR_Register;
       --  Control register

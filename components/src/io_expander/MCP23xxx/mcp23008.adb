@@ -16,7 +16,7 @@ package body MCP23008 is
    begin
       This.Port.Mem_Write
         (BASE_ADDRESS or I2C_Address (This.Addr),
-         Short (WriteAddr),
+         UInt16 (WriteAddr),
          Memory_Size_8b,
          (1 => Value),
          Status,
@@ -43,7 +43,7 @@ package body MCP23008 is
    begin
       This.Port.Mem_Read
         (BASE_ADDRESS or I2C_Address (This.Addr),
-         Short (ReadAddr),
+         UInt16 (ReadAddr),
          Memory_Size_8b,
          Ret,
          Status,

@@ -441,14 +441,14 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype S0NDTR_NDT_Field is HAL.Short;
+   subtype S0NDTR_NDT_Field is HAL.UInt16;
 
    --  stream x number of data register
    type S0NDTR_Register is record
       --  Number of data items to transfer
       NDT            : S0NDTR_NDT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -568,14 +568,14 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype S1NDTR_NDT_Field is HAL.Short;
+   subtype S1NDTR_NDT_Field is HAL.UInt16;
 
    --  stream x number of data register
    type S1NDTR_Register is record
       --  Number of data items to transfer
       NDT            : S1NDTR_NDT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -695,14 +695,14 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype S2NDTR_NDT_Field is HAL.Short;
+   subtype S2NDTR_NDT_Field is HAL.UInt16;
 
    --  stream x number of data register
    type S2NDTR_Register is record
       --  Number of data items to transfer
       NDT            : S2NDTR_NDT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -822,14 +822,14 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype S3NDTR_NDT_Field is HAL.Short;
+   subtype S3NDTR_NDT_Field is HAL.UInt16;
 
    --  stream x number of data register
    type S3NDTR_Register is record
       --  Number of data items to transfer
       NDT            : S3NDTR_NDT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -949,14 +949,14 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype S4NDTR_NDT_Field is HAL.Short;
+   subtype S4NDTR_NDT_Field is HAL.UInt16;
 
    --  stream x number of data register
    type S4NDTR_Register is record
       --  Number of data items to transfer
       NDT            : S4NDTR_NDT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1076,14 +1076,14 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype S5NDTR_NDT_Field is HAL.Short;
+   subtype S5NDTR_NDT_Field is HAL.UInt16;
 
    --  stream x number of data register
    type S5NDTR_Register is record
       --  Number of data items to transfer
       NDT            : S5NDTR_NDT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1203,14 +1203,14 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype S6NDTR_NDT_Field is HAL.Short;
+   subtype S6NDTR_NDT_Field is HAL.UInt16;
 
    --  stream x number of data register
    type S6NDTR_Register is record
       --  Number of data items to transfer
       NDT            : S6NDTR_NDT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1330,14 +1330,14 @@ package STM32_SVD.DMA is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype S7NDTR_NDT_Field is HAL.Short;
+   subtype S7NDTR_NDT_Field is HAL.UInt16;
 
    --  stream x number of data register
    type S7NDTR_Register is record
       --  Number of data items to transfer
       NDT            : S7NDTR_NDT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1396,11 +1396,11 @@ package STM32_SVD.DMA is
       --  stream x number of data register
       S0NDTR : S0NDTR_Register;
       --  stream x peripheral address register
-      S0PAR  : HAL.Word;
+      S0PAR  : HAL.UInt32;
       --  stream x memory 0 address register
-      S0M0AR : HAL.Word;
+      S0M0AR : HAL.UInt32;
       --  stream x memory 1 address register
-      S0M1AR : HAL.Word;
+      S0M1AR : HAL.UInt32;
       --  stream x FIFO control register
       S0FCR  : S0FCR_Register;
       --  stream x configuration register
@@ -1408,11 +1408,11 @@ package STM32_SVD.DMA is
       --  stream x number of data register
       S1NDTR : S1NDTR_Register;
       --  stream x peripheral address register
-      S1PAR  : HAL.Word;
+      S1PAR  : HAL.UInt32;
       --  stream x memory 0 address register
-      S1M0AR : HAL.Word;
+      S1M0AR : HAL.UInt32;
       --  stream x memory 1 address register
-      S1M1AR : HAL.Word;
+      S1M1AR : HAL.UInt32;
       --  stream x FIFO control register
       S1FCR  : S1FCR_Register;
       --  stream x configuration register
@@ -1420,11 +1420,11 @@ package STM32_SVD.DMA is
       --  stream x number of data register
       S2NDTR : S2NDTR_Register;
       --  stream x peripheral address register
-      S2PAR  : HAL.Word;
+      S2PAR  : HAL.UInt32;
       --  stream x memory 0 address register
-      S2M0AR : HAL.Word;
+      S2M0AR : HAL.UInt32;
       --  stream x memory 1 address register
-      S2M1AR : HAL.Word;
+      S2M1AR : HAL.UInt32;
       --  stream x FIFO control register
       S2FCR  : S2FCR_Register;
       --  stream x configuration register
@@ -1432,11 +1432,11 @@ package STM32_SVD.DMA is
       --  stream x number of data register
       S3NDTR : S3NDTR_Register;
       --  stream x peripheral address register
-      S3PAR  : HAL.Word;
+      S3PAR  : HAL.UInt32;
       --  stream x memory 0 address register
-      S3M0AR : HAL.Word;
+      S3M0AR : HAL.UInt32;
       --  stream x memory 1 address register
-      S3M1AR : HAL.Word;
+      S3M1AR : HAL.UInt32;
       --  stream x FIFO control register
       S3FCR  : S3FCR_Register;
       --  stream x configuration register
@@ -1444,11 +1444,11 @@ package STM32_SVD.DMA is
       --  stream x number of data register
       S4NDTR : S4NDTR_Register;
       --  stream x peripheral address register
-      S4PAR  : HAL.Word;
+      S4PAR  : HAL.UInt32;
       --  stream x memory 0 address register
-      S4M0AR : HAL.Word;
+      S4M0AR : HAL.UInt32;
       --  stream x memory 1 address register
-      S4M1AR : HAL.Word;
+      S4M1AR : HAL.UInt32;
       --  stream x FIFO control register
       S4FCR  : S4FCR_Register;
       --  stream x configuration register
@@ -1456,11 +1456,11 @@ package STM32_SVD.DMA is
       --  stream x number of data register
       S5NDTR : S5NDTR_Register;
       --  stream x peripheral address register
-      S5PAR  : HAL.Word;
+      S5PAR  : HAL.UInt32;
       --  stream x memory 0 address register
-      S5M0AR : HAL.Word;
+      S5M0AR : HAL.UInt32;
       --  stream x memory 1 address register
-      S5M1AR : HAL.Word;
+      S5M1AR : HAL.UInt32;
       --  stream x FIFO control register
       S5FCR  : S5FCR_Register;
       --  stream x configuration register
@@ -1468,11 +1468,11 @@ package STM32_SVD.DMA is
       --  stream x number of data register
       S6NDTR : S6NDTR_Register;
       --  stream x peripheral address register
-      S6PAR  : HAL.Word;
+      S6PAR  : HAL.UInt32;
       --  stream x memory 0 address register
-      S6M0AR : HAL.Word;
+      S6M0AR : HAL.UInt32;
       --  stream x memory 1 address register
-      S6M1AR : HAL.Word;
+      S6M1AR : HAL.UInt32;
       --  stream x FIFO control register
       S6FCR  : S6FCR_Register;
       --  stream x configuration register
@@ -1480,11 +1480,11 @@ package STM32_SVD.DMA is
       --  stream x number of data register
       S7NDTR : S7NDTR_Register;
       --  stream x peripheral address register
-      S7PAR  : HAL.Word;
+      S7PAR  : HAL.UInt32;
       --  stream x memory 0 address register
-      S7M0AR : HAL.Word;
+      S7M0AR : HAL.UInt32;
       --  stream x memory 1 address register
-      S7M1AR : HAL.Word;
+      S7M1AR : HAL.UInt32;
       --  stream x FIFO control register
       S7FCR  : S7FCR_Register;
    end record

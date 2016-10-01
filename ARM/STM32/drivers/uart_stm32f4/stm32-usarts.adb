@@ -50,7 +50,7 @@ package body STM32.USARTs is
    -- APB_Clock --
    ---------------
 
-   function APB_Clock (This : USART) return Word is
+   function APB_Clock (This : USART) return UInt32 is
       Clocks : constant RCC_System_Clocks := System_Clock_Frequencies;
    begin
       if This.Periph.all'Address = USART1_Base
@@ -135,11 +135,11 @@ package body STM32.USARTs is
 
    procedure Set_Baud_Rate (This : in out USART; To : Baud_Rates)
    is
-      Clock        : constant Word := APB_Clock (This);
+      Clock        : constant UInt32 := APB_Clock (This);
       Over_By_8    : constant Boolean := This.Periph.CR1.OVER8;
-      Int_Scale    : constant Word := (if Over_By_8 then 2 else 4);
-      Int_Divider  : constant Word := (25 * Clock) / (Int_Scale * To);
-      Frac_Divider : constant Word := Int_Divider rem 100;
+      Int_Scale    : constant UInt32 := (if Over_By_8 then 2 else 4);
+      Int_Divider  : constant UInt32 := (25 * Clock) / (Int_Scale * To);
+      Frac_Divider : constant UInt32 := Int_Divider rem 100;
    begin
       --  the integer part of the divi
       if Over_By_8 then

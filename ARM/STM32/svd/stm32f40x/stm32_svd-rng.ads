@@ -75,7 +75,7 @@ package STM32_SVD.RNG is
       --  status register
       SR : SR_Register;
       --  data register
-      DR : HAL.Word;
+      DR : HAL.UInt32;
    end record
      with Volatile;
 

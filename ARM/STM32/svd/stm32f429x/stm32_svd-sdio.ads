@@ -455,21 +455,21 @@ package STM32_SVD.SDIO is
       --  SDI clock control register
       CLKCR   : CLKCR_Register;
       --  argument register
-      ARG     : HAL.Word;
+      ARG     : HAL.UInt32;
       --  command register
       CMD     : CMD_Register;
       --  command response register
       RESPCMD : RESPCMD_Register;
       --  response 1..4 register
-      RESP1   : HAL.Word;
+      RESP1   : HAL.UInt32;
       --  response 1..4 register
-      RESP2   : HAL.Word;
+      RESP2   : HAL.UInt32;
       --  response 1..4 register
-      RESP3   : HAL.Word;
+      RESP3   : HAL.UInt32;
       --  response 1..4 register
-      RESP4   : HAL.Word;
+      RESP4   : HAL.UInt32;
       --  data timer register
-      DTIMER  : HAL.Word;
+      DTIMER  : HAL.UInt32;
       --  data length register
       DLEN    : DLEN_Register;
       --  data control register
@@ -485,7 +485,7 @@ package STM32_SVD.SDIO is
       --  FIFO counter register
       FIFOCNT : FIFOCNT_Register;
       --  data FIFO register
-      FIFO    : HAL.Word;
+      FIFO    : HAL.UInt32;
    end record
      with Volatile;
 

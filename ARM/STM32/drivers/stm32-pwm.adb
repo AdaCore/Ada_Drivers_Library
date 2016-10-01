@@ -36,13 +36,13 @@ with STM32.Device;  use STM32.Device;
 
 package body STM32.PWM is
 
-   subtype Hertz is Word;
+   subtype Hertz is UInt32;
 
    procedure Compute_Prescalar_and_Period
      (This                : access Timer;
       Requested_Frequency : Hertz;
-      Prescalar           : out Word;
-      Period              : out Word)
+      Prescalar           : out UInt32;
+      Period              : out UInt32)
      with Pre => Requested_Frequency > 0;
    --  Computes the minimum prescaler and thus the maximum resolution for the
    --  given timer, based on the system clocks and the requested frequency
@@ -65,17 +65,17 @@ package body STM32.PWM is
      (This  : in out PWM_Modulator;
       Value : Percentage)
    is
-      Pulse : Short;
+      Pulse : UInt16;
    begin
       This.Timer.Outputs (This.Channel).Duty_Cycle := Value;
 
       if Value = 0 then
          Set_Compare_Value (This.Timer.Output_Timer.all,
                             This.Channel,
-                            Short'(0));
+                            UInt16'(0));
       else
          Pulse :=
-           Short ((This.Timer.Timer_Period + 1) * Word (Value) / 100) - 1;
+           UInt16 ((This.Timer.Timer_Period + 1) * UInt32 (Value) / 100) - 1;
          --  for a Value of 0, the computation of Pulse wraps around to
          --  65535, so we only compute it when not zero
          Set_Compare_Value (This.Timer.Output_Timer.all,
@@ -92,15 +92,15 @@ package body STM32.PWM is
      (This  : in out PWM_Modulator;
       Value : Microseconds)
    is
-      Pulse         : Short;
-      Period        : constant Word := This.Timer.Timer_Period + 1;
-      uS_Per_Period : constant Word := 1_000_000 / This.Timer.Frequency;
+      Pulse         : UInt16;
+      Period        : constant UInt32 := This.Timer.Timer_Period + 1;
+      uS_Per_Period : constant UInt32 := 1_000_000 / This.Timer.Frequency;
    begin
       if Value > uS_Per_Period then
          raise Invalid_Request with "duty time too high";
       end if;
 
-      Pulse := Short ((Period * Value) / uS_Per_Period) - 1;
+      Pulse := UInt16 ((Period * Value) / uS_Per_Period) - 1;
       Set_Compare_Value (This.Timer.Output_Timer.all, This.Channel, Pulse);
    end Set_Duty_Time;
 
@@ -123,22 +123,22 @@ package body STM32.PWM is
      (This                : in out PWM_Timer;
       Requested_Frequency : Float)
    is
-      Prescalar : Word;
+      Prescalar : UInt32;
    begin
       Enable_Clock (This.Output_Timer.all);
 
       Compute_Prescalar_and_Period
         (This.Output_Timer,
-         Requested_Frequency => Word (Requested_Frequency),
+         Requested_Frequency => UInt32 (Requested_Frequency),
          Prescalar           => Prescalar,
          Period              => This.Timer_Period);
 
       This.Timer_Period := This.Timer_Period - 1;
-      This.Frequency    := Word (Requested_Frequency);
+      This.Frequency    := UInt32 (Requested_Frequency);
 
       Configure
         (This.Output_Timer.all,
-         Prescaler     => Short (Prescalar),
+         Prescaler     => UInt16 (Prescalar),
          Period        => This.Timer_Period,
          Clock_Divisor => Div1,
          Counter_Mode  => Up);
@@ -184,7 +184,7 @@ package body STM32.PWM is
          Pulse    => 0,
          Polarity => High);
 
-      Set_Compare_Value (This.Output_Timer.all, Channel, Short (0));
+      Set_Compare_Value (This.Output_Timer.all, Channel, UInt16 (0));
 
       Disable_Channel (This.Output_Timer.all, Channel);
    end Attach_PWM_Channel;
@@ -262,15 +262,15 @@ package body STM32.PWM is
    procedure Compute_Prescalar_and_Period
      (This                : access Timer;
       Requested_Frequency : Hertz;
-      Prescalar           : out Word;
-      Period              : out Word)
+      Prescalar           : out UInt32;
+      Period              : out UInt32)
    is
       Max_Prescalar      : constant := 16#FFFF#;
-      Max_Period         : Word;
-      Hardware_Frequency : Word;
+      Max_Period         : UInt32;
+      Hardware_Frequency : UInt32;
       Clocks             : constant RCC_System_Clocks :=
                              System_Clock_Frequencies;
-      CK_CNT             : Word;
+      CK_CNT             : UInt32;
 
    begin
       if Has_APB1_Frequency (This.all) then

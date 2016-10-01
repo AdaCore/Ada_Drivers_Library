@@ -955,9 +955,9 @@ package body L3GD20 is
    -----------
 
    procedure Swap2 (Location : System.Address) is
-      X : Short;
+      X : UInt16;
       for X'Address use Location;
-      function Bswap_16 (X : Short) return Short;
+      function Bswap_16 (X : UInt16) return UInt16;
       pragma Import (Intrinsic, Bswap_16, "__builtin_bswap16");
    begin
       X := Bswap_16 (X);

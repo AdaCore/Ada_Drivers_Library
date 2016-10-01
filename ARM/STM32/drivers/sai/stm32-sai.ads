@@ -52,7 +52,7 @@ package STM32.SAI is
    subtype SAI_Controller is STM32.Device.SAI_Port;
    type SAI_Block is (Block_A, Block_B);
 
-   subtype SAI_Audio_Frequency is Word;
+   subtype SAI_Audio_Frequency is UInt32;
 
    type SAI_Mono_Stereo_Mode is
      (Stereo,
@@ -237,7 +237,7 @@ package STM32.SAI is
 
    type Slots_Number is range 1 .. 16;
 
-   type SAI_Slots is new Short;
+   type SAI_Slots is new UInt16;
 
    Slot_0  : constant SAI_Slots := 2 ** 0;
    Slot_1  : constant SAI_Slots := 2 ** 1;

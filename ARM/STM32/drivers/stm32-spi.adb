@@ -58,7 +58,7 @@ package body STM32.SPI is
       BRP_128 => 2#110#,
       BRP_256 => 2#111#);
 
-   type Half_Word_Pointer is access all Short
+   type Half_Word_Pointer is access all UInt16
      with Storage_Size => 0;
 
    function As_Half_Word_Pointer is new Ada.Unchecked_Conversion
@@ -144,7 +144,7 @@ package body STM32.SPI is
    -- Send --
    ----------
 
-   procedure Send (This : in out SPI_Port; Data : Short) is
+   procedure Send (This : in out SPI_Port; Data : UInt16) is
    begin
       This.Periph.DR.DR := Data;
    end Send;
@@ -153,7 +153,7 @@ package body STM32.SPI is
    -- Data --
    ----------
 
-   function Data (This : SPI_Port) return Short is
+   function Data (This : SPI_Port) return UInt16 is
    begin
       return This.Periph.DR.DR;
    end Data;
@@ -164,7 +164,7 @@ package body STM32.SPI is
 
    procedure Send (This : in out SPI_Port; Data : Byte) is
    begin
-      Send (This, Short (Data));
+      Send (This, UInt16 (Data));
    end Send;
 
    ----------
@@ -173,7 +173,7 @@ package body STM32.SPI is
 
    function Data (This : SPI_Port) return Byte is
    begin
-      return Byte (Short'(Data (This)));
+      return Byte (UInt16'(Data (This)));
    end Data;
 
    -------------
@@ -305,7 +305,7 @@ package body STM32.SPI is
    -------------------
 
    procedure Clear_Overrun (This : SPI_Port) is
-      Dummy1 : Short;
+      Dummy1 : UInt16;
       Dummy2 : SR_Register;
    begin
       Dummy1 := This.Periph.DR.DR;
@@ -464,7 +464,7 @@ package body STM32.SPI is
          Enable (This);
       end if;
 
-      This.Periph.DR.DR := Short (Outgoing);
+      This.Periph.DR.DR := UInt16 (Outgoing);
 
       while not Tx_Is_Empty (This) loop
          null;
@@ -580,7 +580,7 @@ package body STM32.SPI is
             null;
          end loop;
          Read_CRC : declare
-            Dummy : Short;
+            Dummy : UInt16;
          begin
             Dummy := This.Periph.DR.DR;
          end Read_CRC;
@@ -627,7 +627,7 @@ package body STM32.SPI is
             null;
          end loop;
          Read_CRC : declare
-            Dummy : Short;
+            Dummy : UInt16;
          begin
             Dummy := This.Periph.DR.DR;
          end Read_CRC;
@@ -664,7 +664,7 @@ package body STM32.SPI is
          raise Program_Error;
       end if;
 
-      This.Periph.DR.DR := Short (Outgoing);
+      This.Periph.DR.DR := UInt16 (Outgoing);
 
       --  enable CRC transmission
       if CRC_Enabled (This) then
@@ -685,7 +685,7 @@ package body STM32.SPI is
             null;
          end loop;
          Read_CRC : declare
-            Dummy : Short;
+            Dummy : UInt16;
          begin
             Dummy := This.Periph.DR.DR;
          end Read_CRC;
@@ -794,7 +794,7 @@ package body STM32.SPI is
       Incoming_Index : Natural := Incoming'First;
    begin
       if Current_Mode (This) = Slave or else Tx_Count = 1 then
-         This.Periph.DR.DR := Short (Outgoing (Outgoing_Index));
+         This.Periph.DR.DR := UInt16 (Outgoing (Outgoing_Index));
          Outgoing_Index := Outgoing_Index + 1;
          Tx_Count := Tx_Count - 1;
       end if;
@@ -823,7 +823,7 @@ package body STM32.SPI is
             null;
          end loop;
 
-         This.Periph.DR.DR := Short (Outgoing (Outgoing_Index));
+         This.Periph.DR.DR := UInt16 (Outgoing (Outgoing_Index));
          Outgoing_Index := Outgoing_Index + 1;
          Tx_Count := Tx_Count - 1;
 
@@ -899,7 +899,7 @@ package body STM32.SPI is
       Index    : Natural := Outgoing'First;
    begin
       if Current_Mode (This) = Slave or else Tx_Count = 1 then
-         This.Periph.DR.DR := Short (Outgoing (Index));
+         This.Periph.DR.DR := UInt16 (Outgoing (Index));
          Index := Index + 1;
          Tx_Count := Tx_Count - 1;
       end if;
@@ -910,7 +910,7 @@ package body STM32.SPI is
             null;
          end loop;
 
-         This.Periph.DR.DR := Short (Outgoing (Index));
+         This.Periph.DR.DR := UInt16 (Outgoing (Index));
          Index := Index + 1;
          Tx_Count := Tx_Count - 1;
       end loop;

@@ -42,21 +42,21 @@ package body AK8963 is
 
    function I2C_Read
      (Device : AK8963_Device;
-      Reg    : Short) return Byte;
+      Reg    : UInt16) return Byte;
 
    function I2C_Read
      (Device : AK8963_Device;
-      Reg    : Short;
+      Reg    : UInt16;
       Bit    : Natural) return Boolean;
 
    procedure I2C_Write
      (Device : AK8963_Device;
-      Reg    : Short;
+      Reg    : UInt16;
       Data   : Byte);
 
    procedure I2C_Write
      (Device : AK8963_Device;
-      Reg    : Short;
+      Reg    : UInt16;
       Bit    : Natural;
       State  : Boolean);
 
@@ -66,7 +66,7 @@ package body AK8963 is
 
    function I2C_Read
      (Device : AK8963_Device;
-      Reg    : Short) return Byte
+      Reg    : UInt16) return Byte
    is
       Data   : I2C_Data (1 .. 1);
       Status : I2C_Status;
@@ -86,7 +86,7 @@ package body AK8963 is
 
    function I2C_Read
      (Device : AK8963_Device;
-      Reg    : Short;
+      Reg    : UInt16;
       Bit    : Natural) return Boolean
    is
       Mask : constant Byte := 2 ** Bit;
@@ -101,7 +101,7 @@ package body AK8963 is
 
    procedure I2C_Write
      (Device : AK8963_Device;
-      Reg    : Short;
+      Reg    : UInt16;
       Data   : Byte)
    is
       Status : I2C_Status with Unreferenced;
@@ -120,7 +120,7 @@ package body AK8963 is
 
    procedure I2C_Write
      (Device : AK8963_Device;
-      Reg    : Short;
+      Reg    : UInt16;
       Bit    : Natural;
       State  : Boolean)
    is

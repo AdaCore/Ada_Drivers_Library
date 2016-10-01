@@ -4,7 +4,7 @@ with OpenMV.LCD_Shield;
 
 package body OpenMV.Bitmap is
 
-   subtype Pixel_Data is Short_Array
+   subtype Pixel_Data is UInt16_Array
      (0 .. (OpenMV.LCD_Shield.Width * OpenMV.LCD_Shield.Height) - 1);
 
    --------------

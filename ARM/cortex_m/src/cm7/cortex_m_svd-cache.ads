@@ -26,7 +26,7 @@ package Cortex_M_SVD.Cache is
       --  less than the maximum, use the LSB of this field.
       Set            : DCISW_Set_Field := 16#0#;
       --  unspecified
-      Reserved_14_29 : HAL.Short := 16#0#;
+      Reserved_14_29 : HAL.UInt16 := 16#0#;
       --  Write-only. Way that operation applies to. For the data cache, values
       --  0, 1, 2 and 3 are supported..
       Way            : DCISW_Way_Field := 16#0#;
@@ -53,7 +53,7 @@ package Cortex_M_SVD.Cache is
       --  less than the maximum, use the LSB of this field.
       Set            : DCCSW_Set_Field := 16#0#;
       --  unspecified
-      Reserved_14_29 : HAL.Short := 16#0#;
+      Reserved_14_29 : HAL.UInt16 := 16#0#;
       --  Write-only. Way that operation applies to. For the data cache, values
       --  0, 1, 2 and 3 are supported..
       Way            : DCCSW_Way_Field := 16#0#;
@@ -80,7 +80,7 @@ package Cortex_M_SVD.Cache is
       --  less than the maximum, use the LSB of this field.
       Set            : DCCISW_Set_Field := 16#0#;
       --  unspecified
-      Reserved_14_29 : HAL.Short := 16#0#;
+      Reserved_14_29 : HAL.UInt16 := 16#0#;
       --  Write-only. Way that operation applies to. For the data cache, values
       --  0, 1, 2 and 3 are supported..
       Way            : DCCISW_Way_Field := 16#0#;
@@ -102,21 +102,21 @@ package Cortex_M_SVD.Cache is
    --  Cache maintenance operations
    type Cache_Peripheral is record
       --  Instruction cache invalidate all to the PoU
-      ICIALLU  : HAL.Word;
+      ICIALLU  : HAL.UInt32;
       --  Instruction cache invalidate by address to the PoU
-      ICIMVAU  : HAL.Word;
+      ICIMVAU  : HAL.UInt32;
       --  Data cache invalidate by address to the PoC
-      DCIMVAC  : HAL.Word;
+      DCIMVAC  : HAL.UInt32;
       --  Data cache invalidate by set/way
       DCISW    : DCISW_Register;
       --  Data cache clean by address to the PoU
-      DCCMVAU  : HAL.Word;
+      DCCMVAU  : HAL.UInt32;
       --  Data cache clean by address to the PoC
-      DCCMVAC  : HAL.Word;
+      DCCMVAC  : HAL.UInt32;
       --  Data cache clean by set/way
       DCCSW    : DCCSW_Register;
       --  Data cache clean and invalidate by address to the PoC
-      DCCIMVAC : HAL.Word;
+      DCCIMVAC : HAL.UInt32;
       --  Data cache clean and invalidate by set/way
       DCCISW   : DCCISW_Register;
    end record

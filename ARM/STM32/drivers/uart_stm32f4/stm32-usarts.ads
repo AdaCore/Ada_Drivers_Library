@@ -92,7 +92,7 @@ package STM32.USARTs is
 
    procedure Set_Parity (This : in out USART;  To : Parities);
 
-   subtype Baud_Rates is Word;
+   subtype Baud_Rates is UInt32;
 
    procedure Set_Baud_Rate (This : in out USART;  To : Baud_Rates);
 
@@ -254,7 +254,7 @@ package STM32.USARTs is
 
 private
 
-   function APB_Clock (This : USART) return Word with Inline;
+   function APB_Clock (This : USART) return UInt32 with Inline;
    --  Returns either APB1 or APB2 clock rate, in Hertz, depending on the
    --  USART. For the sake of not making this package board-specific, we assume
    --  that we are given a valid USART object at a valid address, AND that the

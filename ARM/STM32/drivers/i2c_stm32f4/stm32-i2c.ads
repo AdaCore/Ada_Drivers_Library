@@ -65,7 +65,7 @@ package STM32.I2C is
       Addressing_Mode_10bit);
 
    type I2C_Configuration is record
-      Clock_Speed              : Word;
+      Clock_Speed              : UInt32;
       Mode                     : I2C_Device_Mode := I2C_Mode;
       Duty_Cycle               : I2C_Duty_Cycle  := DutyCycle_2;
 
@@ -113,7 +113,7 @@ package STM32.I2C is
    procedure Mem_Write
      (This          : in out I2C_Port;
       Addr          : HAL.I2C.I2C_Address;
-      Mem_Addr      : Short;
+      Mem_Addr      : UInt16;
       Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
       Data          : HAL.I2C.I2C_Data;
       Status        : out HAL.I2C.I2C_Status;
@@ -123,7 +123,7 @@ package STM32.I2C is
    procedure Mem_Read
      (This          : in out I2C_Port;
       Addr          : HAL.I2C.I2C_Address;
-      Mem_Addr      : Short;
+      Mem_Addr      : UInt16;
       Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
       Data          : out HAL.I2C.I2C_Data;
       Status        : out HAL.I2C.I2C_Status;

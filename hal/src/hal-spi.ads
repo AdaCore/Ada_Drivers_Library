@@ -12,7 +12,7 @@ package HAL.SPI is
 
    type SPI_Data_8b is array (Natural range <>) of Byte;
 
-   type SPI_Data_16b is array (Natural range <>) of Short;
+   type SPI_Data_16b is array (Natural range <>) of UInt16;
 
    type SPI_Port is limited interface;
 

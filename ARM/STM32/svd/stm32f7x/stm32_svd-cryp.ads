@@ -173,7 +173,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  b as an array
             Arr : K0LR_b_Field_Array;
@@ -198,7 +198,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  b as an array
             Arr : K0RR_b_Field_Array;
@@ -223,7 +223,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  b as an array
             Arr : K1LR_b_Field_Array;
@@ -248,7 +248,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  b as an array
             Arr : K1RR_b_Field_Array;
@@ -273,7 +273,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  b as an array
             Arr : K2LR_b_Field_Array;
@@ -298,7 +298,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  b as an array
             Arr : K2RR_b_Field_Array;
@@ -323,7 +323,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  b as an array
             Arr : K3LR_b_Field_Array;
@@ -348,7 +348,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  b as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  b as an array
             Arr : K3RR_b_Field_Array;
@@ -373,7 +373,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  IV as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  IV as an array
             Arr : IV0LR_IV_Field_Array;
@@ -398,7 +398,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  IV as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  IV as an array
             Arr : IV0RR_IV_Field_Array;
@@ -423,7 +423,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  IV as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  IV as an array
             Arr : IV1LR_IV_Field_Array;
@@ -448,7 +448,7 @@ package STM32_SVD.CRYP is
       case As_Array is
          when False =>
             --  IV as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  IV as an array
             Arr : IV1RR_IV_Field_Array;
@@ -473,9 +473,9 @@ package STM32_SVD.CRYP is
       --  status register
       SR         : SR_Register;
       --  data input register
-      DIN        : HAL.Word;
+      DIN        : HAL.UInt32;
       --  data output register
-      DOUT       : HAL.Word;
+      DOUT       : HAL.UInt32;
       --  DMA control register
       DMACR      : DMACR_Register;
       --  interrupt mask set/clear register
@@ -509,37 +509,37 @@ package STM32_SVD.CRYP is
       --  initialization vector registers
       IV1RR      : IV1RR_Register;
       --  context swap register
-      CSGCMCCM0R : HAL.Word;
+      CSGCMCCM0R : HAL.UInt32;
       --  context swap register
-      CSGCMCCM1R : HAL.Word;
+      CSGCMCCM1R : HAL.UInt32;
       --  context swap register
-      CSGCMCCM2R : HAL.Word;
+      CSGCMCCM2R : HAL.UInt32;
       --  context swap register
-      CSGCMCCM3R : HAL.Word;
+      CSGCMCCM3R : HAL.UInt32;
       --  context swap register
-      CSGCMCCM4R : HAL.Word;
+      CSGCMCCM4R : HAL.UInt32;
       --  context swap register
-      CSGCMCCM5R : HAL.Word;
+      CSGCMCCM5R : HAL.UInt32;
       --  context swap register
-      CSGCMCCM6R : HAL.Word;
+      CSGCMCCM6R : HAL.UInt32;
       --  context swap register
-      CSGCMCCM7R : HAL.Word;
+      CSGCMCCM7R : HAL.UInt32;
       --  context swap register
-      CSGCM0R    : HAL.Word;
+      CSGCM0R    : HAL.UInt32;
       --  context swap register
-      CSGCM1R    : HAL.Word;
+      CSGCM1R    : HAL.UInt32;
       --  context swap register
-      CSGCM2R    : HAL.Word;
+      CSGCM2R    : HAL.UInt32;
       --  context swap register
-      CSGCM3R    : HAL.Word;
+      CSGCM3R    : HAL.UInt32;
       --  context swap register
-      CSGCM4R    : HAL.Word;
+      CSGCM4R    : HAL.UInt32;
       --  context swap register
-      CSGCM5R    : HAL.Word;
+      CSGCM5R    : HAL.UInt32;
       --  context swap register
-      CSGCM6R    : HAL.Word;
+      CSGCM6R    : HAL.UInt32;
       --  context swap register
-      CSGCM7R    : HAL.Word;
+      CSGCM7R    : HAL.UInt32;
    end record
      with Volatile;
 

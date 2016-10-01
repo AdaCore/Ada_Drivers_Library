@@ -47,8 +47,8 @@ package body STM32.Timers is
 
    procedure Configure
      (This      : in out Timer;
-      Prescaler : Short;
-      Period    : Word)
+      Prescaler : UInt16;
+      Period    : UInt32)
    is
    begin
       This.ARR := Period;
@@ -61,8 +61,8 @@ package body STM32.Timers is
 
    procedure Configure
      (This          : in out Timer;
-      Prescaler     : Short;
-      Period        : Word;
+      Prescaler     : UInt16;
+      Period        : UInt32;
       Clock_Divisor : Timer_Clock_Divisor;
       Counter_Mode  : Timer_Counter_Alignment_Mode)
    is
@@ -112,8 +112,8 @@ package body STM32.Timers is
 
    procedure Configure
      (This          : in out Timer;
-      Prescaler     : Short;
-      Period        : Word;
+      Prescaler     : UInt16;
+      Period        : UInt32;
       Clock_Divisor : Timer_Clock_Divisor;
       Counter_Mode  : Timer_Counter_Alignment_Mode;
       Repetitions   : Byte)
@@ -123,7 +123,7 @@ package body STM32.Timers is
       This.Prescaler := Prescaler;
       This.CR1.Clock_Division := Clock_Divisor;
       This.CR1.Mode_And_Dir := Counter_Mode;
-      This.RCR := Word (Repetitions);
+      This.RCR := UInt32 (Repetitions);
       This.EGR := Immediate'Enum_Rep;
    end Configure;
 
@@ -210,16 +210,16 @@ package body STM32.Timers is
    -- Set_Counter --
    -----------------
 
-   procedure Set_Counter (This : in out Timer;  Value : Short) is
+   procedure Set_Counter (This : in out Timer;  Value : UInt16) is
    begin
-      This.Counter := Word (Value);
+      This.Counter := UInt32 (Value);
    end Set_Counter;
 
    -----------------
    -- Set_Counter --
    -----------------
 
-   procedure Set_Counter (This : in out Timer;  Value : Word) is
+   procedure Set_Counter (This : in out Timer;  Value : UInt32) is
    begin
       This.Counter := Value;
    end Set_Counter;
@@ -228,7 +228,7 @@ package body STM32.Timers is
    -- Current_Counter --
    ---------------------
 
-   function Current_Counter (This : Timer) return Word is
+   function Current_Counter (This : Timer) return UInt32 is
    begin
       return This.Counter;
    end Current_Counter;
@@ -237,7 +237,7 @@ package body STM32.Timers is
    -- Set_Autoreload --
    --------------------
 
-   procedure Set_Autoreload (This : in out Timer;  Value : Word) is
+   procedure Set_Autoreload (This : in out Timer;  Value : UInt32) is
    begin
       This.ARR := Value;
    end Set_Autoreload;
@@ -246,7 +246,7 @@ package body STM32.Timers is
    -- Current_Autoreload --
    ------------------------
 
-   function Current_Autoreload (This : Timer) return Word is
+   function Current_Autoreload (This : Timer) return UInt32 is
    begin
       return This.ARR;
    end Current_Autoreload;
@@ -387,7 +387,7 @@ package body STM32.Timers is
 
    procedure Configure_Prescaler
      (This        : in out Timer;
-      Prescaler   : Short;
+      Prescaler   : UInt16;
       Reload_Mode : Timer_Prescaler_Reload_Mode)
    is
    begin
@@ -439,7 +439,7 @@ package body STM32.Timers is
    -- Current_Prescaler --
    -----------------------
 
-   function Current_Prescaler (This : Timer) return Short is
+   function Current_Prescaler (This : Timer) return UInt16 is
    begin
       return This.Prescaler;
    end Current_Prescaler;
@@ -516,7 +516,7 @@ package body STM32.Timers is
      (This   : in out Timer;
       Source : Timer_Event_Source)
    is
-      Temp_EGR : Word := This.EGR;
+      Temp_EGR : UInt32 := This.EGR;
    begin
       Temp_EGR := Temp_EGR or Source'Enum_Rep;
       This.EGR  := Temp_EGR;
@@ -677,7 +677,7 @@ package body STM32.Timers is
       Channel  : Timer_Channel;
       Mode     : Timer_Output_Compare_And_PWM_Mode;
       State    : Timer_Capture_Compare_State;
-      Pulse    : Word;
+      Pulse    : UInt32;
       Polarity : Timer_Output_Compare_Polarity)
    is
    begin
@@ -705,7 +705,7 @@ package body STM32.Timers is
       Channel                  : Timer_Channel;
       Mode                     : Timer_Output_Compare_And_PWM_Mode;
       State                    : Timer_Capture_Compare_State;
-      Pulse                    : Word;
+      Pulse                    : UInt32;
       Polarity                 : Timer_Output_Compare_Polarity;
       Idle_State               : Timer_Capture_Compare_State;
       Complementary_Polarity   : Timer_Output_Compare_Polarity;
@@ -1006,7 +1006,7 @@ package body STM32.Timers is
      (This    : in out Timer;
       Channel : Timer_Channel)
    is
-      Temp_EGR  : Word := This.EGR;
+      Temp_EGR  : UInt32 := This.EGR;
    begin
       This.CCER (Channel).CCxE := Enable;
 
@@ -1110,7 +1110,7 @@ package body STM32.Timers is
    procedure Set_Compare_Value
      (This       : in out Timer;
       Channel    : Timer_Channel;
-      Word_Value : Word)
+      Word_Value : UInt32)
    is
    begin
       This.CCR1_4 (Channel) := Word_Value;
@@ -1125,10 +1125,10 @@ package body STM32.Timers is
    procedure Set_Compare_Value
      (This    : in out Timer;
       Channel : Timer_Channel;
-      Value   : Short)
+      Value   : UInt16)
    is
    begin
-      This.CCR1_4 (Channel) := Word (Value);
+      This.CCR1_4 (Channel) := UInt32 (Value);
       --  These capture/compare registers are really only 15-bits wide, except
       --  for those of timers 2 and 5. For the sake of simplicity we represent
       --  all of them with full words, but only write word values when
@@ -1144,7 +1144,7 @@ package body STM32.Timers is
    function Current_Capture_Value
      (This    : Timer;
       Channel : Timer_Channel)
-      return Word
+      return UInt32
    is
    begin
       return This.CCR1_4 (Channel);
@@ -1157,10 +1157,10 @@ package body STM32.Timers is
    function Current_Capture_Value
      (This    : Timer;
       Channel : Timer_Channel)
-      return Short
+      return UInt16
    is
    begin
-      return Short (This.CCR1_4 (Channel));
+      return UInt16 (This.CCR1_4 (Channel));
    end Current_Capture_Value;
 
    -------------------------------------

@@ -307,7 +307,7 @@ package STM32_SVD.DCMI is
       case As_Array is
          when False =>
             --  Byte as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  Byte as an array
             Arr : DR_Byte_Field_Array;

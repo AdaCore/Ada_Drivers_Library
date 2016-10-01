@@ -270,14 +270,14 @@ package STM32_SVD.RTC is
       Reserved_23_31 at 0 range 23 .. 31;
    end record;
 
-   subtype WUTR_WUT_Field is HAL.Short;
+   subtype WUTR_WUT_Field is HAL.UInt16;
 
    --  wakeup timer register
    type WUTR_Register is record
       --  Wakeup auto-reload value bits
       WUT            : WUTR_WUT_Field := 16#FFFF#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -424,14 +424,14 @@ package STM32_SVD.RTC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype SSR_SS_Field is HAL.Short;
+   subtype SSR_SS_Field is HAL.UInt16;
 
    --  sub second register
    type SSR_Register is record
       --  Read-only. Sub second value
       SS             : SSR_SS_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -448,7 +448,7 @@ package STM32_SVD.RTC is
       --  Write-only. Subtract a fraction of a second
       SUBFS          : SHIFTR_SUBFS_Field := 16#0#;
       --  unspecified
-      Reserved_15_30 : HAL.Short := 16#0#;
+      Reserved_15_30 : HAL.UInt16 := 16#0#;
       --  Write-only. Add one second
       ADD1S          : Boolean := False;
    end record
@@ -527,7 +527,7 @@ package STM32_SVD.RTC is
       --  Read-only. Week day units
       WDU            : TSDR_WDU_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -542,14 +542,14 @@ package STM32_SVD.RTC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype TSSSR_SS_Field is HAL.Short;
+   subtype TSSSR_SS_Field is HAL.UInt16;
 
    --  timestamp sub second register
    type TSSSR_Register is record
       --  Read-only. Sub second value
       SS             : TSSSR_SS_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -596,7 +596,7 @@ package STM32_SVD.RTC is
       --  Increase frequency of RTC by 488.5 ppm
       CALP           : Boolean := False;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -799,69 +799,69 @@ package STM32_SVD.RTC is
       --  option register
       OR_k     : OR_Register;
       --  backup register
-      BKP0R    : HAL.Word;
+      BKP0R    : HAL.UInt32;
       --  backup register
-      BKP1R    : HAL.Word;
+      BKP1R    : HAL.UInt32;
       --  backup register
-      BKP2R    : HAL.Word;
+      BKP2R    : HAL.UInt32;
       --  backup register
-      BKP3R    : HAL.Word;
+      BKP3R    : HAL.UInt32;
       --  backup register
-      BKP4R    : HAL.Word;
+      BKP4R    : HAL.UInt32;
       --  backup register
-      BKP5R    : HAL.Word;
+      BKP5R    : HAL.UInt32;
       --  backup register
-      BKP6R    : HAL.Word;
+      BKP6R    : HAL.UInt32;
       --  backup register
-      BKP7R    : HAL.Word;
+      BKP7R    : HAL.UInt32;
       --  backup register
-      BKP8R    : HAL.Word;
+      BKP8R    : HAL.UInt32;
       --  backup register
-      BKP9R    : HAL.Word;
+      BKP9R    : HAL.UInt32;
       --  backup register
-      BKP10R   : HAL.Word;
+      BKP10R   : HAL.UInt32;
       --  backup register
-      BKP11R   : HAL.Word;
+      BKP11R   : HAL.UInt32;
       --  backup register
-      BKP12R   : HAL.Word;
+      BKP12R   : HAL.UInt32;
       --  backup register
-      BKP13R   : HAL.Word;
+      BKP13R   : HAL.UInt32;
       --  backup register
-      BKP14R   : HAL.Word;
+      BKP14R   : HAL.UInt32;
       --  backup register
-      BKP15R   : HAL.Word;
+      BKP15R   : HAL.UInt32;
       --  backup register
-      BKP16R   : HAL.Word;
+      BKP16R   : HAL.UInt32;
       --  backup register
-      BKP17R   : HAL.Word;
+      BKP17R   : HAL.UInt32;
       --  backup register
-      BKP18R   : HAL.Word;
+      BKP18R   : HAL.UInt32;
       --  backup register
-      BKP19R   : HAL.Word;
+      BKP19R   : HAL.UInt32;
       --  backup register
-      BKP20R   : HAL.Word;
+      BKP20R   : HAL.UInt32;
       --  backup register
-      BKP21R   : HAL.Word;
+      BKP21R   : HAL.UInt32;
       --  backup register
-      BKP22R   : HAL.Word;
+      BKP22R   : HAL.UInt32;
       --  backup register
-      BKP23R   : HAL.Word;
+      BKP23R   : HAL.UInt32;
       --  backup register
-      BKP24R   : HAL.Word;
+      BKP24R   : HAL.UInt32;
       --  backup register
-      BKP25R   : HAL.Word;
+      BKP25R   : HAL.UInt32;
       --  backup register
-      BKP26R   : HAL.Word;
+      BKP26R   : HAL.UInt32;
       --  backup register
-      BKP27R   : HAL.Word;
+      BKP27R   : HAL.UInt32;
       --  backup register
-      BKP28R   : HAL.Word;
+      BKP28R   : HAL.UInt32;
       --  backup register
-      BKP29R   : HAL.Word;
+      BKP29R   : HAL.UInt32;
       --  backup register
-      BKP30R   : HAL.Word;
+      BKP30R   : HAL.UInt32;
       --  backup register
-      BKP31R   : HAL.Word;
+      BKP31R   : HAL.UInt32;
    end record
      with Volatile;
 

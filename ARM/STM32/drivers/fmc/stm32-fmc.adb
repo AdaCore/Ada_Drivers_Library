@@ -182,7 +182,7 @@ package body STM32.FMC is
    -- FMC_Set_Refresh_Count --
    ---------------------------
 
-   procedure FMC_Set_Refresh_Count (Cnt : Word) is
+   procedure FMC_Set_Refresh_Count (Cnt : UInt32) is
    begin
       FMC_Periph.SDRTR.COUNT := UInt13 (Cnt);
    end FMC_Set_Refresh_Count;

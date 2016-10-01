@@ -48,7 +48,7 @@ with System.Machine_Code;
 
 package body STM32.GPIO is
 
-   procedure Lock_The_Pin (This : in out GPIO_Port;  Pin : Short);
+   procedure Lock_The_Pin (This : in out GPIO_Port;  Pin : UInt16);
    --  This is the routine that actually locks the pin for the port. It is an
    --  internal routine and has no preconditions. We use it to avoid redundant
    --  calls to the precondition that checks that the pin is not already
@@ -170,8 +170,8 @@ package body STM32.GPIO is
    -- Lock_The_Pin --
    ------------------
 
-   procedure Lock_The_Pin (This : in out GPIO_Port;  Pin : Short) is
-      Temp : Word;
+   procedure Lock_The_Pin (This : in out GPIO_Port;  Pin : UInt16) is
+      Temp : UInt32;
       pragma Volatile (Temp);
 
       use System.Machine_Code;
@@ -219,8 +219,8 @@ package body STM32.GPIO is
            "ldr  r3, [%1, #28]"   & LF & HT &
            "str  r3, %0"          & LF & HT,   -- temp <- lckr
            Inputs => (Address'Asm_Input ("r", This'Address), -- %1
-                     (Short'Asm_Input ("r", Pin))),            -- %2
-           Outputs => (Word'Asm_Output ("=m", Temp)),  -- %0
+                     (UInt16'Asm_Input ("r", Pin))),            -- %2
+           Outputs => (UInt32'Asm_Output ("=m", Temp)),  -- %0
            Volatile => True,
            Clobber  => ("r2, r3"));
    end Lock_The_Pin;

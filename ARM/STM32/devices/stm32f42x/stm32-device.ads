@@ -431,12 +431,12 @@ package STM32.Device is
    -----------------------------
 
    type RCC_System_Clocks is record
-      SYSCLK  : Word;
-      HCLK    : Word;
-      PCLK1   : Word;
-      PCLK2   : Word;
-      TIMCLK1 : Word;
-      TIMCLK2 : Word;
+      SYSCLK  : UInt32;
+      HCLK    : UInt32;
+      PCLK1   : UInt32;
+      PCLK2   : UInt32;
+      TIMCLK1 : UInt32;
+      TIMCLK2 : UInt32;
    end record;
 
    function System_Clock_Frequencies return RCC_System_Clocks;

@@ -41,7 +41,7 @@
 
 package body BMP_Fonts is
 
-   BMP_Font16x24 : constant array (0 .. 2279) of Short :=
+   BMP_Font16x24 : constant array (0 .. 2279) of UInt16 :=
      (16#0000#,
       16#0000#,
       16#0000#,
@@ -2323,7 +2323,7 @@ package body BMP_Fonts is
       16#0000#,
       16#0000#);
 
-   BMP_Font12x12 : constant array (0 .. 1151) of Short :=
+   BMP_Font12x12 : constant array (0 .. 1151) of UInt16 :=
      (16#0000#,
       16#0000#,
       16#0000#,
@@ -4251,7 +4251,7 @@ package body BMP_Fonts is
    -- Mask --
    ----------
 
-   function Mask (Font : BMP_Font; Width_Offset : Natural) return Short is
+   function Mask (Font : BMP_Font; Width_Offset : Natural) return UInt16 is
    begin
       case Font is
          when Font8x8 =>
@@ -4270,7 +4270,7 @@ package body BMP_Fonts is
    function Data
      (Font          : BMP_Font;
       C             : Character;
-      Height_Offset : Natural) return Short
+      Height_Offset : Natural) return UInt16
    is
       Char_Num   : constant Natural := Character'Pos (C);
       Char_Index : constant Natural := Char_Height (Font) *
@@ -4280,7 +4280,7 @@ package body BMP_Fonts is
    begin
       case Font is
          when Font8x8 =>
-            return Short (BMP_Font8x8 (Char_Index + Height_Offset));
+            return UInt16 (BMP_Font8x8 (Char_Index + Height_Offset));
          when Font12x12 =>
             return BMP_Font12x12 (Char_Index + Height_Offset);
          when Font16x24 =>

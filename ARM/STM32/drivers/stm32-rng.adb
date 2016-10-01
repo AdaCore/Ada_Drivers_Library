@@ -118,7 +118,7 @@ package body STM32.RNG is
    -- RNG_Data --
    --------------
 
-   function RNG_Data return Word
+   function RNG_Data return UInt32
      is (RNG_Periph.DR);
 
    --------------------

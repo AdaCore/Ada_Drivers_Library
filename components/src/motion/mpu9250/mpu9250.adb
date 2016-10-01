@@ -636,7 +636,7 @@ package body MPU9250 is
    begin
       Device.Port.Mem_Read
         (Addr          => Device.Address,
-         Mem_Addr      => Short (Reg_Addr),
+         Mem_Addr      => UInt16 (Reg_Addr),
          Mem_Addr_Size => Memory_Size_8b,
          Data          => Data,
          Status        => Status);
@@ -656,7 +656,7 @@ package body MPU9250 is
    begin
       Device.Port.Mem_Read
         (Addr          => Device.Address,
-         Mem_Addr      => Short (Reg_Addr),
+         Mem_Addr      => UInt16 (Reg_Addr),
          Mem_Addr_Size => Memory_Size_8b,
          Data          => I_Data,
          Status        => Status);
@@ -692,7 +692,7 @@ package body MPU9250 is
    begin
       Device.Port.Mem_Write
         (Addr          => Device.Address,
-         Mem_Addr      => Short (Reg_Addr),
+         Mem_Addr      => UInt16 (Reg_Addr),
          Mem_Addr_Size => Memory_Size_8b,
          Data          => Data,
          Status        => Status);
@@ -711,7 +711,7 @@ package body MPU9250 is
    begin
       Device.Port.Mem_Write
         (Addr          => Device.Address,
-         Mem_Addr      => Short (Reg_Addr),
+         Mem_Addr      => UInt16 (Reg_Addr),
          Mem_Addr_Size => Memory_Size_8b,
          Data          => (1 => Data),
          Status        => Status);

@@ -39,17 +39,17 @@ with STM32_SVD.RCC; use STM32_SVD.RCC;
 
 package body STM32.Device is
 
-   HSE_VALUE : constant Word :=
-                 Word (System.BB.Parameters.HSE_Clock);
+   HSE_VALUE : constant UInt32 :=
+                 UInt32 (System.BB.Parameters.HSE_Clock);
    --  External oscillator in Hz
 
    HSI_VALUE : constant := 16_000_000;
    --  Internal oscillator in Hz
 
-   HPRE_Presc_Table : constant array (UInt4) of Word :=
+   HPRE_Presc_Table : constant array (UInt4) of UInt32 :=
      (1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 8, 16, 64, 128, 256, 512);
 
-   PPRE_Presc_Table : constant array (UInt3) of Word :=
+   PPRE_Presc_Table : constant array (UInt3) of UInt32 :=
      (1, 1, 1, 1, 2, 4, 8, 16);
 
    ------------------
@@ -596,13 +596,13 @@ package body STM32.Device is
             --  PLL as source
             declare
                HSE_Source : constant Boolean := RCC_Periph.PLLCFGR.PLLSRC;
-               Pllm       : constant Word :=
-                              Word (RCC_Periph.PLLCFGR.PLLM);
-               Plln       : constant Word :=
-                              Word (RCC_Periph.PLLCFGR.PLLN);
-               Pllp       : constant Word :=
-                              (Word (RCC_Periph.PLLCFGR.PLLP) + 1) * 2;
-               Pllvco     : Word;
+               Pllm       : constant UInt32 :=
+                              UInt32 (RCC_Periph.PLLCFGR.PLLM);
+               Plln       : constant UInt32 :=
+                              UInt32 (RCC_Periph.PLLCFGR.PLLN);
+               Pllp       : constant UInt32 :=
+                              (UInt32 (RCC_Periph.PLLCFGR.PLLP) + 1) * 2;
+               Pllvco     : UInt32;
             begin
                if not HSE_Source then
                   Pllvco := (HSI_VALUE / Pllm) * Plln;

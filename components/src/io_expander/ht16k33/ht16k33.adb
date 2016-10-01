@@ -45,7 +45,7 @@ package body HT16K33 is
    begin
       This.Port.Mem_Read
         (I2C_Addr (This),
-         Short (Reg),
+         UInt16 (Reg),
          Memory_Size_8b,
          Data,
          Tmp_Status,
@@ -66,7 +66,7 @@ package body HT16K33 is
    begin
       This.Port.Mem_Write
         (I2C_Addr (This),
-         Short (Reg),
+         UInt16 (Reg),
          Memory_Size_8b,
          Data,
          Tmp_Status,

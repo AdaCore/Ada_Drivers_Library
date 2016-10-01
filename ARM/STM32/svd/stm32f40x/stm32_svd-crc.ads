@@ -52,7 +52,7 @@ package STM32_SVD.CRC is
    --  Cryptographic processor
    type CRC_Peripheral is record
       --  Data register
-      DR  : HAL.Word;
+      DR  : HAL.UInt32;
       --  Independent Data register
       IDR : IDR_Register;
       --  Control register

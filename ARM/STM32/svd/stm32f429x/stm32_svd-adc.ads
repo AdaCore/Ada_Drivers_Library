@@ -530,14 +530,14 @@ package STM32_SVD.ADC is
       Reserved_22_31 at 0 range 22 .. 31;
    end record;
 
-   subtype JDR_JDATA_Field is HAL.Short;
+   subtype JDR_JDATA_Field is HAL.UInt16;
 
    --  injected data register x
    type JDR_Register is record
       --  Read-only. Injected data
       JDATA          : JDR_JDATA_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -547,14 +547,14 @@ package STM32_SVD.ADC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DR_DATA_Field is HAL.Short;
+   subtype DR_DATA_Field is HAL.UInt16;
 
    --  regular data register
    type DR_Register is record
       --  Read-only. Regular data
       DATA           : DR_DATA_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -684,7 +684,7 @@ package STM32_SVD.ADC is
    end record;
 
    --  CDR_DATA array element
-   subtype CDR_DATA_Element is HAL.Short;
+   subtype CDR_DATA_Element is HAL.UInt16;
 
    --  CDR_DATA array
    type CDR_DATA_Field_Array is array (1 .. 2) of CDR_DATA_Element
@@ -697,7 +697,7 @@ package STM32_SVD.ADC is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  DATA as an array
             Arr : CDR_DATA_Field_Array;

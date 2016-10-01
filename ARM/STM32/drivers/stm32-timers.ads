@@ -64,33 +64,33 @@ package STM32.Timers is
 
    procedure Configure
      (This      : in out Timer;
-      Prescaler : Short;
-      Period    : Word)
+      Prescaler : UInt16;
+      Period    : UInt32)
      with
-       Pre  => (if Period > Word (Short'Last) then Has_32bit_Counter (This)),
+       Pre  => (if Period > UInt32 (UInt16'Last) then Has_32bit_Counter (This)),
        Post => Current_Prescaler (This) = Prescaler and
                Current_Autoreload (This) = Period;
 
-   procedure Set_Counter (This : in out Timer;  Value : Short)
-     with Post => Current_Counter (This) = Word (Value);
+   procedure Set_Counter (This : in out Timer;  Value : UInt16)
+     with Post => Current_Counter (This) = UInt32 (Value);
 
-   procedure Set_Counter (This : in out Timer;  Value : Word)
+   procedure Set_Counter (This : in out Timer;  Value : UInt32)
      with
        Pre  => Has_32bit_Counter (This),
        Post => Current_Counter (This) = Value;
 
-   function Current_Counter (This : Timer) return Word;
+   function Current_Counter (This : Timer) return UInt32;
    --  For those timers that actually have a 32-bit counter this function will
    --  return the full word value. For the other timers, the upper half-word of
    --  the result will be all zeros so in effect the result will be a half-word
    --  value.
 
-   procedure Set_Autoreload (This : in out Timer;  Value : Word)
+   procedure Set_Autoreload (This : in out Timer;  Value : UInt32)
      with
-       Pre  => (if Value > Word (Short'Last) then Has_32bit_Counter (This)),
+       Pre  => (if Value > UInt32 (UInt16'Last) then Has_32bit_Counter (This)),
        Post => Current_Autoreload (This) = Value;
 
-   function Current_Autoreload (This : Timer) return Word;
+   function Current_Autoreload (This : Timer) return UInt32;
    --  Returns the value of the timer's Auto Reload Register (ARR)
 
    type Timer_Clock_Divisor is (Div1, Div2, Div4);
@@ -132,13 +132,13 @@ package STM32.Timers is
 
    procedure Configure
      (This          : in out Timer;
-      Prescaler     : Short;
-      Period        : Word;
+      Prescaler     : UInt16;
+      Period        : UInt32;
       Clock_Divisor : Timer_Clock_Divisor;
       Counter_Mode  : Timer_Counter_Alignment_Mode)
      with
        Pre  => not Basic_Timer (This) and
-               (if Period > Word (Short'Last) then Has_32bit_Counter (This)),
+               (if Period > UInt32 (UInt16'Last) then Has_32bit_Counter (This)),
        Post => Current_Prescaler (This) = Prescaler and
                Current_Clock_Division (This) = Clock_Divisor and
                Current_Counter_Mode (This) = Counter_Mode and
@@ -148,11 +148,11 @@ package STM32.Timers is
 
    procedure Configure_Prescaler
      (This        : in out Timer;
-      Prescaler   : Short;
+      Prescaler   : UInt16;
       Reload_Mode : Timer_Prescaler_Reload_Mode)
      with Post => Current_Prescaler (This) = Prescaler;
 
-   function Current_Prescaler (This : Timer) return Short;
+   function Current_Prescaler (This : Timer) return UInt16;
 
    procedure Set_UpdateDisable
      (This : in out Timer;
@@ -505,7 +505,7 @@ package STM32.Timers is
       Channel  : Timer_Channel;
       Mode     : Timer_Output_Compare_And_PWM_Mode;
       State    : Timer_Capture_Compare_State;
-      Pulse    : Word;
+      Pulse    : UInt32;
       Polarity : Timer_Output_Compare_Polarity)
      with
        Pre => (CC_Channel_Exists (This, Channel) and
@@ -518,7 +518,7 @@ package STM32.Timers is
    procedure Set_Compare_Value
      (This       : in out Timer;
       Channel    : Timer_Channel;
-      Word_Value : Word)
+      Word_Value : UInt32)
      with
        Pre  => Has_32bit_CC_Values (This),
        Post => Current_Capture_Value (This, Channel) = Word_Value;
@@ -526,7 +526,7 @@ package STM32.Timers is
    procedure Set_Compare_Value
      (This    : in out Timer;
       Channel : Timer_Channel;
-      Value   : Short)
+      Value   : UInt16)
      with
        Pre  => CC_Channel_Exists (This, Channel),
        Post => Current_Capture_Value (This, Channel) = Value;
@@ -680,7 +680,7 @@ package STM32.Timers is
    function Current_Capture_Value
      (This    : Timer;
       Channel : Timer_Channel)
-      return Word;
+      return UInt32;
    --  Reading the upper reserved area of the CCR register does no harm when
    --  the timer does not support 32-bit CC registers so we do not protect
    --  this function with a precondition.
@@ -688,7 +688,7 @@ package STM32.Timers is
    function Current_Capture_Value
      (This    : Timer;
       Channel : Timer_Channel)
-      return Short;
+      return UInt16;
 
    ----------------------------------------------------------------------------
 
@@ -711,14 +711,14 @@ package STM32.Timers is
 
    procedure Configure
      (This          : in out Timer;
-      Prescaler     : Short;
-      Period        : Word;
+      Prescaler     : UInt16;
+      Period        : UInt32;
       Clock_Divisor : Timer_Clock_Divisor;
       Counter_Mode  : Timer_Counter_Alignment_Mode;
       Repetitions   : Byte)
      with
        Pre  => Advanced_Timer (This) and
-               (if Period > Word (Short'Last) then Has_32bit_Counter (This)),
+               (if Period > UInt32 (UInt16'Last) then Has_32bit_Counter (This)),
        Post => Current_Prescaler (This) = Prescaler and
                Current_Autoreload (This) = Period;
 
@@ -727,7 +727,7 @@ package STM32.Timers is
       Channel                  : Timer_Channel;
       Mode                     : Timer_Output_Compare_And_PWM_Mode;
       State                    : Timer_Capture_Compare_State;
-      Pulse                    : Word;
+      Pulse                    : UInt32;
       Polarity                 : Timer_Output_Compare_Polarity;
       Idle_State               : Timer_Capture_Compare_State;
       Complementary_Polarity   : Timer_Output_Compare_Polarity;
@@ -1152,7 +1152,7 @@ private
    ------------------------  representation for CR2  --------------------------
 
    type TIMx_CR2 is record
-      Reserved0                                 : Short;
+      Reserved0                                 : UInt16;
       Reserved1                                 : Bit;
       Channel_4_Output_Idle_State               : Timer_Capture_Compare_State;
       Channel_3_Complementary_Output_Idle_State : Timer_Capture_Compare_State;
@@ -1190,7 +1190,7 @@ private
    ------------  representation for slave mode control register  --------------
 
    type TIMx_SMCR is record
-      Reserved0                  : Short;
+      Reserved0                  : UInt16;
       External_Trigger_Polarity  : Timer_External_Trigger_Polarity;
       External_Clock_Enable      : Boolean;
       External_Trigger_Prescaler : Timer_External_Trigger_Prescaler;
@@ -1329,7 +1329,7 @@ private
 
    type TIMx_CCMRx is record
       Descriptors : TIMx_CCMRx_Lower_Half;
-      Reserved    : Short;
+      Reserved    : UInt16;
    end record with Volatile_Full_Access, Size => 32;
 
    for TIMx_CCMRx use record
@@ -1396,13 +1396,13 @@ private
    --  all four values, indexed by the channel. Timers 2 and 5 actually use all
    --  32 bits of each, the other timers only use the lower half.
 
-   type Capture_Compare_Registers is array (Timer_Channel) of Word
+   type Capture_Compare_Registers is array (Timer_Channel) of UInt32
      with Volatile_Components, Component_Size => 32, Size => 128;
 
    ----------  representation for the Break and Dead Time Register - ----------
 
    type TIMx_BDTR is record
-      Reserved                      : Short;
+      Reserved                      : UInt16;
       Main_Output_Enabled           : Boolean;
       Automatic_Output_Enabled      : Boolean;
       Break_Polarity                : Timer_Break_Polarity;
@@ -1428,7 +1428,7 @@ private
    -----------  representation for the DMA Control Register type  -------------
 
    type TIMx_DCR is record
-      Reserved0    : Short;
+      Reserved0    : UInt16;
       Reserved1    : UInt3;
       Burst_Length : Timer_DMA_Burst_Length;
       Reserved2    : UInt3;
@@ -1446,7 +1446,7 @@ private
    -------  representation for Timer 2, 5, and 11 remapping options  ----------
 
    type TIMx_OR is record
-      Reserved0 : Short;
+      Reserved0 : UInt16;
       Reserved1 : UInt4;
       ITR1_RMP  : Timer_2_Remapping_Options;
       Reserved2 : UInt2;
@@ -1474,22 +1474,22 @@ private
       CR1                : TIMx_CR1;
       CR2                : TIMx_CR2;
       SMCR               : TIMx_SMCR;
-      DIER               : Word;
-      SR                 : Word;
-      EGR                : Word;
+      DIER               : UInt32;
+      SR                 : UInt32;
+      EGR                : UInt32;
       CCMR1_2            : TIMx_CCMR_Pair;
       CCER               : TIMx_CCER;
-      Reserved_CCER      : Short;
-      Counter            : Word with Atomic;
+      Reserved_CCER      : UInt16;
+      Counter            : UInt32 with Atomic;
       --  a full word for timers 2 and 5 only
-      Prescaler          : Short;
-      Reserved_Prescaler : Short;
-      ARR                : Word;
-      RCR                : Word;
+      Prescaler          : UInt16;
+      Reserved_Prescaler : UInt16;
+      ARR                : UInt32;
+      RCR                : UInt32;
       CCR1_4             : Capture_Compare_Registers;
       BDTR               : TIMx_BDTR;
       DCR                : TIMx_DCR;
-      DMAR               : Word;
+      DMAR               : UInt32;
       Options            : TIMx_OR;
    end record with Volatile, Size => 21 * 32;
 

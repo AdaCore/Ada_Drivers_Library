@@ -203,14 +203,14 @@ package STM32_SVD.LPTIM is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype CMP_CMP_Field is HAL.Short;
+   subtype CMP_CMP_Field is HAL.UInt16;
 
    --  Compare Register
    type CMP_Register is record
       --  Compare value
       CMP            : CMP_CMP_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -220,14 +220,14 @@ package STM32_SVD.LPTIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype ARR_ARR_Field is HAL.Short;
+   subtype ARR_ARR_Field is HAL.UInt16;
 
    --  Autoreload Register
    type ARR_Register is record
       --  Auto reload value
       ARR            : ARR_ARR_Field := 16#1#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -237,14 +237,14 @@ package STM32_SVD.LPTIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype CNT_CNT_Field is HAL.Short;
+   subtype CNT_CNT_Field is HAL.UInt16;
 
    --  Counter Register
    type CNT_Register is record
       --  Read-only. Counter value
       CNT            : CNT_CNT_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

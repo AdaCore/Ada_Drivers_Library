@@ -35,10 +35,10 @@ with STM32_SVD.RCC; use STM32_SVD.RCC;
 package body STM32.Device is
 
 
-   HPRE_Presc_Table : constant array (UInt4) of Word :=
+   HPRE_Presc_Table : constant array (UInt4) of UInt32 :=
      (1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 8, 16, 64, 128, 256, 512);
 
-   PPRE_Presc_Table : constant array (UInt3) of Word :=
+   PPRE_Presc_Table : constant array (UInt3) of UInt32 :=
      (1, 1, 1, 1, 2, 4, 8, 16);
 
    function PLLSAI_Enabled return Boolean;
@@ -611,11 +611,11 @@ package body STM32.Device is
    -- Get_Input_Clock --
    ---------------------
 
-   function Get_Input_Clock (Periph : SAI_Port) return Word
+   function Get_Input_Clock (Periph : SAI_Port) return UInt32
    is
       Input_Selector  : UInt2;
-      VCO_Input       : Word;
-      SAI_First_Level : Word;
+      VCO_Input       : UInt32;
+      SAI_First_Level : UInt32;
    begin
       if Periph'Address = SAI1_Base then
          Input_Selector := RCC_Periph.DKCFGR1.SAI1SEL;
@@ -634,10 +634,10 @@ package body STM32.Device is
 
       if not RCC_Periph.PLLCFGR.PLLSRC then
          --  PLLSAI SRC is HSI
-         VCO_Input := HSI_VALUE / Word (RCC_Periph.PLLCFGR.PLLM);
+         VCO_Input := HSI_VALUE / UInt32 (RCC_Periph.PLLCFGR.PLLM);
       else
          --  PLLSAI SRC is HSE
-         VCO_Input := HSE_VALUE / Word (RCC_Periph.PLLCFGR.PLLM);
+         VCO_Input := HSE_VALUE / UInt32 (RCC_Periph.PLLCFGR.PLLM);
       end if;
 
       if Input_Selector = 0 then
@@ -646,19 +646,19 @@ package body STM32.Device is
          --  VCO out = VCO in & PLLSAIN
          --  SAI firstlevel = VCO out / PLLSAIQ
          SAI_First_Level :=
-           VCO_Input * Word (RCC_Periph.PLLSAICFGR.PLLSAIN) /
-           Word (RCC_Periph.PLLSAICFGR.PLLSAIQ);
+           VCO_Input * UInt32 (RCC_Periph.PLLSAICFGR.PLLSAIN) /
+           UInt32 (RCC_Periph.PLLSAICFGR.PLLSAIQ);
 
          --  SAI frequency is SAI First level / PLLSAIDIVQ
-         return SAI_First_Level / Word (RCC_Periph.DKCFGR1.PLLSAIDIVQ);
+         return SAI_First_Level / UInt32 (RCC_Periph.DKCFGR1.PLLSAIDIVQ);
 
       else
          --  PLLI2S as clock source
          SAI_First_Level :=
-           VCO_Input * Word (RCC_Periph.PLLI2SCFGR.PLLI2SN) /
-           Word (RCC_Periph.PLLI2SCFGR.PLLI2SQ);
+           VCO_Input * UInt32 (RCC_Periph.PLLI2SCFGR.PLLI2SN) /
+           UInt32 (RCC_Periph.PLLI2SCFGR.PLLI2SQ);
          --  SAI frequency is SAI First level / PLLI2SDIVQ
-         return SAI_First_Level / Word (RCC_Periph.DKCFGR1.PLLI2SDIV + 1);
+         return SAI_First_Level / UInt32 (RCC_Periph.DKCFGR1.PLLI2SDIV + 1);
       end if;
    end Get_Input_Clock;
 
@@ -717,13 +717,13 @@ package body STM32.Device is
             --  PLL as source
             declare
                HSE_Source : constant Boolean := RCC_Periph.PLLCFGR.PLLSRC;
-               Pllm       : constant Word :=
-                              Word (RCC_Periph.PLLCFGR.PLLM);
-               Plln       : constant Word :=
-                              Word (RCC_Periph.PLLCFGR.PLLN);
-               Pllp       : constant Word :=
-                              (Word (RCC_Periph.PLLCFGR.PLLP) + 1) * 2;
-               Pllvco     : Word;
+               Pllm       : constant UInt32 :=
+                              UInt32 (RCC_Periph.PLLCFGR.PLLM);
+               Plln       : constant UInt32 :=
+                              UInt32 (RCC_Periph.PLLCFGR.PLLN);
+               Pllp       : constant UInt32 :=
+                              (UInt32 (RCC_Periph.PLLCFGR.PLLP) + 1) * 2;
+               Pllvco     : UInt32;
             begin
                if not HSE_Source then
                   Pllvco := (HSI_VALUE / Pllm) * Plln;

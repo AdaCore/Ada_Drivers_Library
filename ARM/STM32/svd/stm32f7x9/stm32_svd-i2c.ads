@@ -151,7 +151,7 @@ package STM32_SVD.I2C is
       --  Own Address 1 enable
       OA1EN          : Boolean := False;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -180,7 +180,7 @@ package STM32_SVD.I2C is
       --  Own Address 2 enable
       OA2EN          : Boolean := False;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

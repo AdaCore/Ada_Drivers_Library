@@ -165,7 +165,7 @@ package body LIS3DSH is
       Full_Scale      : Full_Scale_Selection;
       Filter_BW       : Anti_Aliasing_Filter_Bandwidth)
    is
-      Temp  : Short;
+      Temp  : UInt16;
       Value : Byte;
    begin
       Temp := Output_DataRate'Enum_Rep or
