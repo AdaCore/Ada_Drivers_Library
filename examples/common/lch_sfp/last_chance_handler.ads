@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  This version is for use with the ravenscar-sfp runtime.
 
 with System;

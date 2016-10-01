@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  The file declares the main procedure for the demonstration.
 
 with Conway_Driver;        pragma Unreferenced (Conway_Driver);

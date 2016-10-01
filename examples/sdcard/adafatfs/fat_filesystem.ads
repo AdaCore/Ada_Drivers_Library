@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 with Interfaces;        use Interfaces;
 with HAL.Block_Drivers; use HAL.Block_Drivers;
 

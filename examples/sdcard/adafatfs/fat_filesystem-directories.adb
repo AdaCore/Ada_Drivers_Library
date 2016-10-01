@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 with Ada.Unchecked_Conversion;
 
 package body FAT_Filesystem.Directories is

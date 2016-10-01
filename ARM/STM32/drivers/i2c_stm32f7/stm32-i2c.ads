@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  This file provides definitions for the STM32F7 (ARM Cortex M7F
 --  from ST Microelectronics) Inter-Integrated Circuit (I2C) facility.
 

@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 with Ada.Unchecked_Conversion;
 with FAT_Filesystem;             use FAT_Filesystem;
 

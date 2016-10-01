@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  This package provides a set of convenience routines for putting characters
 --  and strings out to the LCD.
 

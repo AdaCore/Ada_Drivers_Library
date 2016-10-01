@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  This version of the LCH only toggles the Red LED.
 
 --  Note this version is for use with the ravenscar-sfp runtime.

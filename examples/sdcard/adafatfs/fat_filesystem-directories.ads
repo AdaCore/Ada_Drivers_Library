@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 package FAT_Filesystem.Directories is
 
    type Directory_Entry is private;

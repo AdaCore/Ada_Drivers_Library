@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 with Ada.Real_Time;
 with Interfaces;               use Interfaces;
 with STM32.Eth;

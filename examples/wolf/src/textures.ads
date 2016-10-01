@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 with Interfaces; use Interfaces;
 
 package Textures is

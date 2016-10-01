@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 with STM32.Board;      use STM32.Board;
 with HAL.Bitmap;       use HAL.Bitmap;
 
