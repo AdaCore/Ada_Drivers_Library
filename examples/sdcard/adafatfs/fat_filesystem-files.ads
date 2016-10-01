@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  Initial contribution by:
 --
 --  Institution: Technische Universitaet Muenchen

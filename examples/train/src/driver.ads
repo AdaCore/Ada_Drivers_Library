@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  This file provides the declaration for the task controlling the devices on
 --  the train controller demo.
 

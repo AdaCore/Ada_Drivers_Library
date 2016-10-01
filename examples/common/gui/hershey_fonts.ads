@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  This package handles the Hershey font format.
 
 with Interfaces; use Interfaces;

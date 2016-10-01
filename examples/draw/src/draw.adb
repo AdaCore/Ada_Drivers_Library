@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  A very simple draw application.
 --  Use your finger to draw pixels.
 

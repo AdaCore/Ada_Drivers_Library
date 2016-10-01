@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 package body Partitions is
 
    type Partition_Entry_Block_Mapping (Kind : Boolean := True) is record

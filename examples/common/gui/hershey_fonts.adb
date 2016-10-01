@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 package body Hershey_Fonts is
 
    function Get_Glyph (C : Character) return Glyph_Index;

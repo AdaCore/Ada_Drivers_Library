@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  The file declares the main procedure for the demonstration.
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);

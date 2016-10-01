@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 package body Grid is
 
    function Can_Move_Row (Row : in Row_T) return Boolean;

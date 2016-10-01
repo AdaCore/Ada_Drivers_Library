@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  This code is based on the solver by nneonneo in github:
 --  https://github.com/nneonneo/2048-ai
 --  No specific license is described there, so I assumed some MIT-like license

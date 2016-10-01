@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  This package provides routines for drawing shapes, characters, and strings
 --  on a bit-mapped device or graphical buffer.
 

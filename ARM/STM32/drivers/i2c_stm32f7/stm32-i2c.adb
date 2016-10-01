@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 with Ada.Real_Time; use Ada.Real_Time;
 
 with STM32_SVD.I2C; use STM32_SVD.I2C;

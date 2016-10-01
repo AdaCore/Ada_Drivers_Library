@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  The file declares the main procedure for the demonstration. The LEDs
 --  will blink "in a circle" on the board. The blue user button generates
 --  an interrupt that changes the direction.

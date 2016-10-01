@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 with Bitmapped_Drawing; use Bitmapped_Drawing;
 
 package TP is

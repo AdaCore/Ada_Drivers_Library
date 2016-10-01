@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 package Framebuffer_Helper is
 
    procedure Update_All_Layers;

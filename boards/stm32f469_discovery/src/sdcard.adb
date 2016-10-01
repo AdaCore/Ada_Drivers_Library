@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 with Ada.Real_Time;           use Ada.Real_Time;
 
 with STM32.Device;            use STM32.Device;

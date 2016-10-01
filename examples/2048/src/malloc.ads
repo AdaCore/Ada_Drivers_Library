@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 --  A simple implementation of storage allocation (malloc etc) for ZFP use
 
 pragma Restrictions (No_Elaboration_Code);

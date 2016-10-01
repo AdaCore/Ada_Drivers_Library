@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 with HAL.Bitmap;            use HAL.Bitmap;
 
 with Bitmapped_Drawing;     use Bitmapped_Drawing;
