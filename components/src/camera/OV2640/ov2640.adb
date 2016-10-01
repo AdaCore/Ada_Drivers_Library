@@ -226,7 +226,7 @@ package body OV2640 is
       Status : I2C_Status;
    begin
       This.I2C.Mem_Write (Addr          => This.Addr,
-                          Mem_Addr      => Short (Addr),
+                          Mem_Addr      => UInt16 (Addr),
                           Mem_Addr_Size => Memory_Size_8b,
                           Data          => (1 => Data),
                           Status        => Status);
@@ -244,7 +244,7 @@ package body OV2640 is
       Status : I2C_Status;
    begin
       This.I2C.Mem_Read (Addr          => This.Addr,
-                         Mem_Addr      => Short (Addr),
+                         Mem_Addr      => UInt16 (Addr),
                          Mem_Addr_Size => Memory_Size_8b,
                          Data          => Data,
                          Status        => Status);
@@ -332,8 +332,8 @@ package body OV2640 is
       Res  : Frame_Size)
    is
       H_SIZE, V_SIZE : Bit_Field (0 .. 15);
-      Width : constant Short := Resolutions (Res).Width;
-      Height : constant Short := Resolutions (Res).Height;
+      Width : constant UInt16 := Resolutions (Res).Width;
+      Height : constant UInt16 := Resolutions (Res).Height;
       Is_UXGA : constant Boolean := Res = SXGA or else Res = UXGA;
       CLK_Divider : constant Boolean := Is_UXGA;
    begin
@@ -399,8 +399,8 @@ package body OV2640 is
       Write (This, REG_DSP_SIZEL,
              To_Byte (V_SIZE (0 .. 2) & H_SIZE (0 .. 2) & (H_SIZE (11), 0)));
 
-      H_SIZE := To_Bit_Field (To_Short (H_SIZE) / 4);
-      V_SIZE := To_Bit_Field (To_Short (V_SIZE) / 4);
+      H_SIZE := To_Bit_Field (To_UInt16 (H_SIZE) / 4);
+      V_SIZE := To_Bit_Field (To_UInt16 (V_SIZE) / 4);
 
       Write (This, REG_DSP_XOFFL, 0);
       Write (This, REG_DSP_YOFFL, 0);

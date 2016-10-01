@@ -214,7 +214,7 @@ package body STM32.DMA is
       Stream      : DMA_Stream_Selector;
       Source      : Address;
       Destination : Address;
-      Data_Count  : Short)
+      Data_Count  : UInt16)
    is
    begin
       Disable (This, Stream);  --  per the RM, eg section 10.5.6 for the NDTR
@@ -238,7 +238,7 @@ package body STM32.DMA is
       Stream             : DMA_Stream_Selector;
       Source             : Address;
       Destination        : Address;
-      Data_Count         : Short;
+      Data_Count         : UInt16;
       Enabled_Interrupts : Interrupt_Selections := (others => True))
    is
    begin
@@ -271,11 +271,11 @@ package body STM32.DMA is
       Stream      : DMA_Stream_Selector;
       Source      : Address;
       Destination : Address;
-      Data_Count  : Short)
+      Data_Count  : UInt16)
    is
       This_Stream : DMA_Stream renames Get_Stream (This, Stream);
       function W is new Ada.Unchecked_Conversion
-        (Address, Word);
+        (Address, UInt32);
    begin
       --  the following assignment has NO EFFECT if flow is controlled by
       --  peripheral. The hardware resets it to 16#FFFF#, see RM0090 10.3.15.
@@ -692,7 +692,7 @@ package body STM32.DMA is
    procedure Set_NDT
      (This       : DMA_Controller;
       Stream     : DMA_Stream_Selector;
-      Data_Count : Short)
+      Data_Count : UInt16)
    is
       This_Stream : DMA_Stream renames Get_Stream (This, Stream);
    begin
@@ -702,7 +702,7 @@ package body STM32.DMA is
    function Items_Transferred
      (This   : DMA_Controller;
       Stream : DMA_Stream_Selector)
-      return Short
+      return UInt16
    is
       ndt : constant Unsigned_16 := Current_NDT (This, Stream);
       items : Unsigned_16;
@@ -718,7 +718,7 @@ package body STM32.DMA is
    function Current_NDT
      (This   : DMA_Controller;
       Stream : DMA_Stream_Selector)
-      return Short
+      return UInt16
    is
       This_Stream : DMA_Stream renames Get_Stream (This, Stream);
    begin
@@ -932,7 +932,7 @@ package body STM32.DMA is
       To     : System.Address)
    is
       function W is new Ada.Unchecked_Conversion
-        (System.Address, Word);
+        (System.Address, UInt32);
       This_Stream : DMA_Stream renames Get_Stream (This, Stream);
    begin
       case Buffer is

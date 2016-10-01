@@ -543,7 +543,7 @@ package body STM32.I2C is
    procedure Mem_Write
      (This          : in out I2C_Port;
       Addr          : I2C_Address;
-      Mem_Addr      : Short;
+      Mem_Addr      : UInt16;
       Mem_Addr_Size : I2C_Memory_Address_Size;
       Data          : I2C_Data;
       Status        : out I2C_Status;
@@ -684,7 +684,7 @@ package body STM32.I2C is
    procedure Mem_Read
      (This          : in out I2C_Port;
       Addr          : I2C_Address;
-      Mem_Addr      : Short;
+      Mem_Addr      : UInt16;
       Mem_Addr_Size : I2C_Memory_Address_Size;
       Data          : out I2C_Data;
       Status        : out I2C_Status;

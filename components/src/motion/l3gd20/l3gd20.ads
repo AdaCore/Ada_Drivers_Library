@@ -408,7 +408,7 @@ package L3GD20 is
      (This  : in out Three_Axis_Gyroscope;
       Event : Axes_Interrupts);
 
-   type Axis_Sample_Threshold is new Short range 0 .. 2 ** 15;
+   type Axis_Sample_Threshold is new UInt16 range 0 .. 2 ** 15;
    --  Threshold values do not use the high-order bit
 
    procedure Set_Threshold

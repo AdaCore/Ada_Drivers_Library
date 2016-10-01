@@ -157,7 +157,7 @@ package STM32.DMA with SPARK_Mode => Off is
       Stream      : DMA_Stream_Selector;
       Source      : Address;
       Destination : Address;
-      Data_Count  : Short)
+      Data_Count  : UInt16)
      with
        Pre =>
          not Enabled (This, Stream) and
@@ -196,7 +196,7 @@ package STM32.DMA with SPARK_Mode => Off is
       Stream      : DMA_Stream_Selector;
       Source      : Address;
       Destination : Address;
-      Data_Count  : Short)
+      Data_Count  : UInt16)
      with
        Pre  =>
             Valid_Addresses (Source, Destination)
@@ -227,7 +227,7 @@ package STM32.DMA with SPARK_Mode => Off is
       Stream             : DMA_Stream_Selector;
       Source             : Address;
       Destination        : Address;
-      Data_Count         : Short;
+      Data_Count         : UInt16;
       Enabled_Interrupts : Interrupt_Selections := (others => True))
      with
        Pre =>
@@ -279,7 +279,7 @@ package STM32.DMA with SPARK_Mode => Off is
    procedure Set_NDT
      (This       : DMA_Controller;
       Stream     : DMA_Stream_Selector;
-      Data_Count : Short)
+      Data_Count : UInt16)
      with
        Pre  => not Enabled (This, Stream),
        Post => Current_NDT (This, Stream) = Data_Count,
@@ -292,13 +292,13 @@ package STM32.DMA with SPARK_Mode => Off is
    function Items_Transferred
      (This   : DMA_Controller;
       Stream : DMA_Stream_Selector)
-      return Short;
+      return UInt16;
    --  returns the number of items transfetred
 
    function Current_NDT
      (This   : DMA_Controller;
       Stream : DMA_Stream_Selector)
-      return Short
+      return UInt16
      with Inline;
    --  Returns the value of the NDT register. Should not be used directly,
    --  as the meaning changes depending on transfer mode. rather use

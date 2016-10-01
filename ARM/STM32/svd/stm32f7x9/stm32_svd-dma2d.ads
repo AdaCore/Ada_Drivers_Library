@@ -343,7 +343,7 @@ package STM32_SVD.DMA2D is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   subtype NLR_NL_Field is HAL.Short;
+   subtype NLR_NL_Field is HAL.UInt16;
    subtype NLR_PL_Field is HAL.UInt14;
 
    --  number of line register
@@ -364,14 +364,14 @@ package STM32_SVD.DMA2D is
       Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
-   subtype LWR_LW_Field is HAL.Short;
+   subtype LWR_LW_Field is HAL.UInt16;
 
    --  line watermark register
    type LWR_Register is record
       --  Line watermark
       LW             : LWR_LW_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -392,7 +392,7 @@ package STM32_SVD.DMA2D is
       --  Dead Time
       DT             : AMTCR_DT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -469,11 +469,11 @@ package STM32_SVD.DMA2D is
       --  interrupt flag clear register
       IFCR    : IFCR_Register;
       --  foreground memory address register
-      FGMAR   : HAL.Word;
+      FGMAR   : HAL.UInt32;
       --  foreground offset register
       FGOR    : FGOR_Register;
       --  background memory address register
-      BGMAR   : HAL.Word;
+      BGMAR   : HAL.UInt32;
       --  background offset register
       BGOR    : BGOR_Register;
       --  foreground PFC control register
@@ -485,15 +485,15 @@ package STM32_SVD.DMA2D is
       --  background color register
       BGCOLR  : BGCOLR_Register;
       --  foreground CLUT memory address register
-      FGCMAR  : HAL.Word;
+      FGCMAR  : HAL.UInt32;
       --  background CLUT memory address register
-      BGCMAR  : HAL.Word;
+      BGCMAR  : HAL.UInt32;
       --  output PFC control register
       OPFCCR  : OPFCCR_Register;
       --  output color register
       OCOLR   : OCOLR_Register;
       --  output memory address register
-      OMAR    : HAL.Word;
+      OMAR    : HAL.UInt32;
       --  output offset register
       OOR     : OOR_Register;
       --  number of line register

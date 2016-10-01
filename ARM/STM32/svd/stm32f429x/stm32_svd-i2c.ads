@@ -48,7 +48,7 @@ package STM32_SVD.I2C is
       --  Software reset
       SWRST          : Boolean := False;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -124,7 +124,7 @@ package STM32_SVD.I2C is
       --  Addressing mode (slave mode)
       ADDMODE        : Boolean := False;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -210,7 +210,7 @@ package STM32_SVD.I2C is
       --  SMBus alert
       SMBALERT       : Boolean := False;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -258,7 +258,7 @@ package STM32_SVD.I2C is
       --  Read-only. acket error checking register
       PEC            : SR2_PEC_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -289,7 +289,7 @@ package STM32_SVD.I2C is
       --  I2C master mode selection
       F_S            : Boolean := False;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

@@ -41,7 +41,7 @@ with Cortex_M_SVD.Cache;       use Cortex_M_SVD.Cache;
 
 package body Cortex_M.Cache is
 
-   Data_Cache_Line_Size : constant Word :=
+   Data_Cache_Line_Size : constant UInt32 :=
                             2 ** Natural (PF_Periph.CCSIDR.LineSize + 2);
 
    procedure DSB with Inline_Always;
@@ -93,7 +93,7 @@ package body Cortex_M.Cache is
 
          Op_Size   : Integer_32 := Integer_32 (Len);
          Op_Addr   : Unsigned_32 := To_U32 (Start);
-         Reg       : Word with Volatile, Address => Reg_Address;
+         Reg       : UInt32 with Volatile, Address => Reg_Address;
 
       begin
          DSB;

@@ -31,7 +31,7 @@ package STM32_SVD.JPEG is
    subtype JPEG_CONFR1_NF_Field is HAL.UInt2;
    subtype JPEG_CONFR1_COLORSPACE_Field is HAL.UInt2;
    subtype JPEG_CONFR1_NS_Field is HAL.UInt2;
-   subtype JPEG_CONFR1_YSIZE_Field is HAL.Short;
+   subtype JPEG_CONFR1_YSIZE_Field is HAL.UInt16;
 
    --  JPEG codec configuration register 1
    type JPEG_CONFR1_Register is record
@@ -83,12 +83,12 @@ package STM32_SVD.JPEG is
       Reserved_26_31 at 0 range 26 .. 31;
    end record;
 
-   subtype JPEG_CONFR3_XSIZE_Field is HAL.Short;
+   subtype JPEG_CONFR3_XSIZE_Field is HAL.UInt16;
 
    --  JPEG codec configuration register 3
    type JPEG_CONFR3_Register is record
       --  unspecified
-      Reserved_0_15 : HAL.Short := 16#0#;
+      Reserved_0_15 : HAL.UInt16 := 16#0#;
       --  X size
       XSIZE         : JPEG_CONFR3_XSIZE_Field := 16#0#;
    end record
@@ -120,7 +120,7 @@ package STM32_SVD.JPEG is
       --  Horizontal Sampling Factor
       HSF            : JPEG_CONFR_HSF_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -269,9 +269,9 @@ package STM32_SVD.JPEG is
       --  JPEG clear flag register
       JPEG_CFR    : JPEG_CFR_Register;
       --  JPEG data input register
-      JPEG_DIR    : HAL.Word;
+      JPEG_DIR    : HAL.UInt32;
       --  JPEG data output register
-      JPEG_DOR    : HAL.Word;
+      JPEG_DOR    : HAL.UInt32;
    end record
      with Volatile;
 

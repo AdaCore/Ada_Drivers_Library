@@ -50,37 +50,37 @@ with Ada.Interrupts;       use Ada.Interrupts;
 package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
 
    --  0 bits for pre-emption priority;  4 bits for subpriority
-   Priority_Group_0 : constant Word := 16#00000007#;
+   Priority_Group_0 : constant UInt32 := 16#00000007#;
 
    --  1 bits for pre-emption priority;  3 bits for subpriority
-   Priority_Group_1 : constant Word := 16#00000006#;
+   Priority_Group_1 : constant UInt32 := 16#00000006#;
 
    --  2 bits for pre-emption priority;  2 bits for subpriority
-   Priority_Group_2 : constant Word := 16#00000005#;
+   Priority_Group_2 : constant UInt32 := 16#00000005#;
 
    --  3 bits for pre-emption priority;  1 bits for subpriority
-   Priority_Group_3 : constant Word := 16#00000004#;
+   Priority_Group_3 : constant UInt32 := 16#00000004#;
 
    --  4 bits for pre-emption priority;  0 bits for subpriority
-   Priority_Group_4 : constant Word := 16#00000003#;
+   Priority_Group_4 : constant UInt32 := 16#00000003#;
 
 
-   procedure Set_Priority_Grouping (Priority_Group : Word) with Inline;
+   procedure Set_Priority_Grouping (Priority_Group : UInt32) with Inline;
 
-   function Priority_Grouping return Word with Inline;
+   function Priority_Grouping return UInt32 with Inline;
 
    procedure Set_Priority
      (IRQn     : Interrupt_ID;
-      Priority : Word) with Inline;
+      Priority : UInt32) with Inline;
 
    function Encoded_Priority
-     (Priority_Group : Word;  Preempt_Priority : Word;  Subpriority : Word)
-      return Word with Inline;
+     (Priority_Group : UInt32;  Preempt_Priority : UInt32;  Subpriority : UInt32)
+      return UInt32 with Inline;
 
    procedure Set_Priority
      (IRQn             : Interrupt_ID;
-      Preempt_Priority : Word;
-      Subpriority      : Word) with Inline;
+      Preempt_Priority : UInt32;
+      Subpriority      : UInt32) with Inline;
    --  A convenience routine that first encodes (Priority_Grouping(),
    --  Preempt_Priority, and Subpriority), and then calls the other
    --  Set_Priority with the resulting encoding for the Priority argument.
@@ -101,7 +101,7 @@ package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
 
 private
 
-   type Words is array (Natural range <>) of Word;
+   type Words is array (Natural range <>) of UInt32;
    type Bytes is array (Natural range <>) of Byte;
 
 
@@ -124,7 +124,7 @@ private
       IP        : Bytes (0 .. 239);
       --  Interrupt Priority Register
       Reserved5 : Words (0 .. 643);
-      STIR      : Word;
+      STIR      : UInt32;
       --  Software Trigger Interrupt Register (write-only)
    end record
      with Volatile;
@@ -147,46 +147,46 @@ private
 
 
    type System_Control_Block is record
-      CPUID     : Word;
+      CPUID     : UInt32;
       --  CPUID Base Register   (read-only)
-      ICSR      : Word;
+      ICSR      : UInt32;
       --  Interrupt Control and State Register
-      VTOR      : Word;
+      VTOR      : UInt32;
       --  Vector Table Offset Register
-      AIRCR     : Word;
+      AIRCR     : UInt32;
       --  Application Interrupt and Reset Control Register
-      SCR       : Word;
+      SCR       : UInt32;
       --  System Control Register
-      CCR       : Word;
+      CCR       : UInt32;
       --  Configuration Control Register
       SHP       : Bytes (0 .. 11);
       --  System Handlers Priority Registers (4-7, 8-11, 12-15)
-      SHCSR     : Word;
+      SHCSR     : UInt32;
       --  System Handler Control and State Register
-      CFSR      : Word;
+      CFSR      : UInt32;
       --  Configurable Fault Status Register
-      HFSR      : Word;
+      HFSR      : UInt32;
       --  HardFault Status Register
-      DFSR      : Word;
+      DFSR      : UInt32;
       --  Debug Fault Status Register
-      MMFAR     : Word;
+      MMFAR     : UInt32;
       --  MemManage Fault Address Register
-      BFAR      : Word;
+      BFAR      : UInt32;
       --  BusFault Address Register
-      AFSR      : Word;
+      AFSR      : UInt32;
       --  Auxiliary Fault Status Register
       PFR       : Words (0 .. 1);
       --  Processor Feature Register           (read-only)
-      DFR       : Word;
+      DFR       : UInt32;
       --  Debug Feature Register               (read-only)
-      ADR       : Word;
+      ADR       : UInt32;
       --  Auxiliary Feature Register           (read-only)
       MMFR      : Words (0 .. 3);
       --  Memory Model Feature Register        (read-only)
       ISAR      : Words (0 .. 4);
       --  Instruction Set Attributes Register  (read-only)
       RESERVED0 : Words (0 .. 4);
-      CPACR     : Word;
+      CPACR     : UInt32;
       --  Coprocessor Access Control Register
    end record
      with Volatile;
@@ -234,15 +234,15 @@ private
 
 
    SCB_AIRCR_PRIGROUP_Pos  : constant := 8;
-   SCB_AIRCR_PRIGROUP_Mask : constant Word :=
+   SCB_AIRCR_PRIGROUP_Mask : constant UInt32 :=
      Shift_Left (7, SCB_AIRCR_PRIGROUP_Pos);
 
    SCB_AIRCR_VECTKEY_Pos   : constant := 16;
-   SCB_AIRCR_VECTKEY_Mask  : constant Word :=
+   SCB_AIRCR_VECTKEY_Mask  : constant UInt32 :=
      Shift_Left (16#FFFF#, SCB_AIRCR_VECTKEY_Pos);
 
    SCB_AIRCR_SYSRESETREQ_Pos  : constant := 2;
-   SCB_AIRCR_SYSRESETREQ_Mask : constant Word :=
+   SCB_AIRCR_SYSRESETREQ_Mask : constant UInt32 :=
      Shift_Left (1, SCB_AIRCR_SYSRESETREQ_Pos);
 
    NVIC_PRIO_BITS : constant := 4;

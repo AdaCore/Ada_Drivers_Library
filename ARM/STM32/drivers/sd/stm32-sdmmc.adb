@@ -49,12 +49,12 @@ package body STM32.SDMMC is
    SD_16TO23BITS               : constant := 16#00FF_0000#;
    SD_24TO31BITS               : constant := 16#FF00_0000#;
 
-   type SD_SCR is array (1 .. 2) of Word;
+   type SD_SCR is array (1 .. 2) of UInt32;
 
    procedure Send_Command
      (Controller         : in out SDMMC_Controller;
       Command_Index      : SDMMC_Command;
-      Argument           : Word;
+      Argument           : UInt32;
       Response           : CMD_WAITRESP_Field;
       CPSM               : Boolean;
       Wait_For_Interrupt : Boolean);
@@ -69,7 +69,7 @@ package body STM32.SDMMC is
       DMA_Enabled        : Boolean);
 
    function Read_FIFO
-     (Controller : in out SDMMC_Controller) return Word;
+     (Controller : in out SDMMC_Controller) return UInt32;
 
    function Command_Error
      (Controller : in out SDMMC_Controller) return SD_Error;
@@ -90,7 +90,7 @@ package body STM32.SDMMC is
    function Response_R6_Error
      (Controller    : in out SDMMC_Controller;
       Command_Index : SDMMC_Command;
-      RCA           :    out Word) return SD_Error;
+      RCA           :    out UInt32) return SD_Error;
 
    function Response_R7_Error
      (Controller : in out SDMMC_Controller) return SD_Error;
@@ -245,7 +245,7 @@ package body STM32.SDMMC is
    procedure Send_Command
      (Controller         : in out SDMMC_Controller;
       Command_Index      : SDMMC_Command;
-      Argument           : Word;
+      Argument           : UInt32;
       Response           : CMD_WAITRESP_Field;
       CPSM               : Boolean;
       Wait_For_Interrupt : Boolean)
@@ -308,7 +308,7 @@ package body STM32.SDMMC is
    ---------------
 
    function Read_FIFO
-     (Controller : in out SDMMC_Controller) return Word
+     (Controller : in out SDMMC_Controller) return UInt32
    is
    begin
       return Controller.Periph.FIFO;
@@ -344,7 +344,7 @@ package body STM32.SDMMC is
    is
       Start   : constant Time := Clock;
       Timeout : Boolean := False;
-      R1      : Word;
+      R1      : UInt32;
    begin
       while not Controller.Periph.STA.CCRCFAIL
         and then not Controller.Periph.STA.CMDREND
@@ -495,9 +495,9 @@ package body STM32.SDMMC is
    function Response_R6_Error
      (Controller    : in out SDMMC_Controller;
       Command_Index : SDMMC_Command;
-      RCA           :    out Word) return SD_Error
+      RCA           :    out UInt32) return SD_Error
    is
-      Response : Word;
+      Response : UInt32;
    begin
       while not Controller.Periph.STA.CCRCFAIL
         and then not Controller.Periph.STA.CMDREND
@@ -617,8 +617,8 @@ package body STM32.SDMMC is
    is
       Ret           : SD_Error;
       Valid_Voltage : Boolean;
-      Card_Type     : Word := SD_Std_Capacity;
-      Response      : Word;
+      Card_Type     : UInt32 := SD_Std_Capacity;
+      Response      : UInt32;
    begin
       Controller.Periph.CLKCR.CLKEN := False;
 
@@ -757,7 +757,7 @@ package body STM32.SDMMC is
    function Initialize_Cards
      (Controller : in out SDMMC_Controller) return SD_Error
    is
-      SD_RCA : Word;
+      SD_RCA : UInt32;
       Err    : SD_Error;
    begin
       if not Controller.Periph.CLKCR.CLKEN then
@@ -847,7 +847,7 @@ package body STM32.SDMMC is
       Tmp : Byte;
    begin
       Info.Card_Type := Controller.Card_Type;
-      Info.RCA       := Short (Shift_Right (Controller.RCA, 16));
+      Info.RCA       := UInt16 (Shift_Right (Controller.RCA, 16));
 
       --  Analysis of CSD Byte 0
       Tmp := Byte (Shift_Right (Controller.CSD (0) and 16#FF00_0000#, 24));
@@ -870,7 +870,7 @@ package body STM32.SDMMC is
 
       --  Byte 4 & 5
       Info.SD_CSD.Card_Command_Class :=
-        Short (Shift_Right (Controller.CSD (1) and 16#FFF0_0000#, 20));
+        UInt16 (Shift_Right (Controller.CSD (1) and 16#FFF0_0000#, 20));
       Info.SD_CSD.Max_Read_Data_Block_Length :=
         Byte (Shift_Right (Controller.CSD (1) and 16#000F_0000#, 16));
 
@@ -885,17 +885,17 @@ package body STM32.SDMMC is
       if Controller.Card_Type = STD_Capacity_SD_Card_V1_1
         or else Controller.Card_Type = STD_Capacity_SD_Card_v2_0
       then
-         Info.SD_CSD.Device_Size := Shift_Left (Word (Tmp) and 16#03#, 10);
+         Info.SD_CSD.Device_Size := Shift_Left (UInt32 (Tmp) and 16#03#, 10);
 
          --  Byte 7
          Tmp := Byte (Controller.CSD (1) and 16#0000_00FF#);
          Info.SD_CSD.Device_Size := Info.SD_CSD.Device_Size or
-           Shift_Left (Word (Tmp), 2);
+           Shift_Left (UInt32 (Tmp), 2);
 
          --  Byte 8
          Tmp := Byte (Shift_Right (Controller.CSD (2) and 16#FF00_0000#, 24));
          Info.SD_CSD.Device_Size := Info.SD_CSD.Device_Size or
-           Shift_Right (Word (Tmp and 16#C0#), 6);
+           Shift_Right (UInt32 (Tmp and 16#C0#), 6);
          Info.SD_CSD.Max_Read_Current_At_VDD_Min :=
            Shift_Right (Tmp and 16#38#, 3);
          Info.SD_CSD.Max_Read_Current_At_VDD_Max :=
@@ -926,7 +926,7 @@ package body STM32.SDMMC is
       elsif Controller.Card_Type = High_Capacity_SD_Card then
          --  Byte 7
          Tmp := Byte (Controller.CSD (1) and 16#0000_00FF#);
-         Info.SD_CSD.Device_Size := Shift_Left (Word (Tmp), 16);
+         Info.SD_CSD.Device_Size := Shift_Left (UInt32 (Tmp), 16);
 
          --  Byte 8 & 9
          Info.SD_CSD.Device_Size := Info.SD_CSD.Device_Size or
@@ -1388,14 +1388,14 @@ package body STM32.SDMMC is
       Addr : Unsigned_64;
       Data : out SD_Data) return SD_Error
    is
-      subtype Word_Data is SD_Data (1 .. 4);
+      subtype UInt32_Data is SD_Data (1 .. 4);
       function To_Data is new Ada.Unchecked_Conversion
-        (Word, Word_Data);
+        (UInt32, UInt32_Data);
       R_Addr   : Unsigned_64 := Addr;
       N_Blocks : Positive;
       Err      : SD_Error;
       Idx      : Unsigned_16 := Data'First;
-      Dead     : Word with Unreferenced;
+      Dead     : UInt32 with Unreferenced;
 
    begin
       DCTRL_Write_Delay;
@@ -1434,7 +1434,7 @@ package body STM32.SDMMC is
          Send_Command
            (This,
             Command_Index      => Read_Multi_Block,
-            Argument           => Word (R_Addr),
+            Argument           => UInt32 (R_Addr),
             Response           => Short_Response,
             CPSM               => True,
             Wait_For_Interrupt => False);
@@ -1444,7 +1444,7 @@ package body STM32.SDMMC is
          Send_Command
            (This,
             Command_Index      => Read_Single_Block,
-            Argument           => Word (R_Addr),
+            Argument           => UInt32 (R_Addr),
             Response           => Short_Response,
             CPSM               => True,
             Wait_For_Interrupt => False);
@@ -1613,7 +1613,7 @@ package body STM32.SDMMC is
       Send_Command
         (This,
          Command_Index      => Command,
-         Argument           => Word (Read_Address),
+         Argument           => UInt32 (Read_Address),
          Response           => Short_Response,
          CPSM               => True,
          Wait_For_Interrupt => False);
@@ -1643,7 +1643,7 @@ package body STM32.SDMMC is
       Data_Addr      : constant Address := Data (Data'First)'Address;
 
       Err        : SD_Error;
-      cardstatus : HAL.Word;
+      cardstatus : HAL.UInt32;
       start      : constant Time := Clock;
       Timeout    : Boolean := False;
       Command    : SDMMC_Command;
@@ -1744,7 +1744,7 @@ package body STM32.SDMMC is
       Send_Command
         (This,
          Command_Index      => Command,
-         Argument           => Word (Write_Address),
+         Argument           => UInt32 (Write_Address),
          Response           => Short_Response,
          CPSM               => True,
          Wait_For_Interrupt => False);

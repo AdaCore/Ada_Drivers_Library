@@ -159,7 +159,7 @@ package STM32.DSI is
      (This                        : in out DSI_Host;
       Virtual_Channel             : HAL.DSI.DSI_Virtual_Channel_ID;
       Color_Coding                : DSI_Color_Mode;
-      Command_Size                : Short;
+      Command_Size                : UInt16;
       Tearing_Effect_Source       : DSI_Tearing_Effect_Source;
       Tearing_Effect_Polarity     : DSI_TE_Polarity;
       HSync_Polarity              : DSI_Polarity;

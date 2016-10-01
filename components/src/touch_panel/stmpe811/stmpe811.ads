@@ -94,6 +94,6 @@ private
    procedure IOE_AF_Config (This      : in out STMPE811_Device;
                             Pin       : Byte;
                             Enabled   : Boolean);
-   function Get_IOE_ID (This : in out STMPE811_Device) return Short;
+   function Get_IOE_ID (This : in out STMPE811_Device) return UInt16;
 
 end STMPE811;

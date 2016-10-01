@@ -13,14 +13,14 @@ package STM32_SVD.IWDG is
    -- Registers --
    ---------------
 
-   subtype KR_KEY_Field is HAL.Short;
+   subtype KR_KEY_Field is HAL.UInt16;
 
    --  Key register
    type KR_Register is record
       --  Write-only. Key value (write only, read 0000h)
       KEY            : KR_KEY_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

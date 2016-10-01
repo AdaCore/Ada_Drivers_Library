@@ -108,7 +108,7 @@ package body STM32.I2C is
    procedure Mem_Request_Write
      (This          : in out I2C_Port;
       Addr          :        HAL.I2C.I2C_Address;
-      Mem_Addr      :        Short;
+      Mem_Addr      :        UInt16;
       Mem_Addr_Size :        HAL.I2C.I2C_Memory_Address_Size;
       Timeout       :        Natural;
       Status        :    out HAL.I2C.I2C_Status);
@@ -116,7 +116,7 @@ package body STM32.I2C is
    procedure Mem_Request_Read
      (This          : in out I2C_Port;
       Addr          :        HAL.I2C.I2C_Address;
-      Mem_Addr      :        Short;
+      Mem_Addr      :        UInt16;
       Mem_Addr_Size :        HAL.I2C.I2C_Memory_Address_Size;
       Timeout       :        Natural;
       Status        :    out HAL.I2C.I2C_Status);
@@ -132,8 +132,8 @@ package body STM32.I2C is
       CR1        : CR1_Register;
       CCR        : CCR_Register;
       OAR1       : OAR1_Register;
-      PCLK1      : constant Word := System_Clock_Frequencies.PCLK1;
-      Freq_Range : constant Short := Short (PCLK1 / 1_000_000);
+      PCLK1      : constant UInt32 := System_Clock_Frequencies.PCLK1;
+      Freq_Range : constant UInt16 := UInt16 (PCLK1 / 1_000_000);
 
    begin
       if This.State /= Reset then
@@ -189,7 +189,7 @@ package body STM32.I2C is
          end if;
 
          This.Periph.TRISE.TRISE :=
-           UInt6 ((Word (Freq_Range) * 300) / 1000 + 1);
+           UInt6 ((UInt32 (Freq_Range) * 300) / 1000 + 1);
       end if;
 
       This.Periph.CCR := CCR;
@@ -420,7 +420,7 @@ package body STM32.I2C is
       else
          declare
             MSB : constant Byte :=
-                    Byte (Shift_Right (Short (Addr) and 16#300#, 7));
+                    Byte (Shift_Right (UInt16 (Addr) and 16#300#, 7));
             LSB : constant Byte :=
                     Byte (Addr and 16#FF#);
          begin
@@ -466,7 +466,7 @@ package body STM32.I2C is
       else
          declare
             MSB : constant Byte :=
-                    Byte (Shift_Right (Short (Addr) and 16#300#, 7));
+                    Byte (Shift_Right (UInt16 (Addr) and 16#300#, 7));
             LSB : constant Byte :=
                     Byte (Addr and 16#FF#);
          begin
@@ -516,7 +516,7 @@ package body STM32.I2C is
    procedure Mem_Request_Write
      (This          : in out I2C_Port;
       Addr          :        HAL.I2C.I2C_Address;
-      Mem_Addr      :        Short;
+      Mem_Addr      :        UInt16;
       Mem_Addr_Size :        HAL.I2C.I2C_Memory_Address_Size;
       Timeout       :        Natural;
       Status        :    out HAL.I2C.I2C_Status)
@@ -570,7 +570,7 @@ package body STM32.I2C is
    procedure Mem_Request_Read
      (This          : in out I2C_Port;
       Addr          :        HAL.I2C.I2C_Address;
-      Mem_Addr      :        Short;
+      Mem_Addr      :        UInt16;
       Mem_Addr_Size :        HAL.I2C.I2C_Memory_Address_Size;
       Timeout       :        Natural;
       Status        :    out HAL.I2C.I2C_Status)
@@ -885,7 +885,7 @@ package body STM32.I2C is
    procedure Mem_Write
      (This          : in out I2C_Port;
       Addr          : HAL.I2C.I2C_Address;
-      Mem_Addr      : Short;
+      Mem_Addr      : UInt16;
       Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
       Data          : HAL.I2C.I2C_Data;
       Status        : out HAL.I2C.I2C_Status;
@@ -976,7 +976,7 @@ package body STM32.I2C is
    procedure Mem_Read
      (This          : in out I2C_Port;
       Addr          : HAL.I2C.I2C_Address;
-      Mem_Addr      : Short;
+      Mem_Addr      : UInt16;
       Mem_Addr_Size : HAL.I2C.I2C_Memory_Address_Size;
       Data          : out HAL.I2C.I2C_Data;
       Status        : out HAL.I2C.I2C_Status;

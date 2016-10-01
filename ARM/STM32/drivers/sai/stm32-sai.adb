@@ -71,7 +71,7 @@ package body STM32.SAI is
       --  AClear flag register
       CLRFR : ACLRFR_Register;
       --  AData register
-      DR    : Word;
+      DR    : UInt32;
    end record with Volatile;
    for Block_Registers use record
       CR1   at 0 range 0 .. 31;
@@ -266,9 +266,9 @@ package body STM32.SAI is
       Companding_Mode : SAI_Companding_Mode := No_Companding)
    is
       Block_Reg : constant Block_Registers_Access := Get_Block (This, Block);
-      Freq      : Word;
-      Tmp_Clock : Word;
-      Mckdiv    : Word;
+      Freq      : UInt32;
+      Tmp_Clock : UInt32;
+      Mckdiv    : UInt32;
    begin
       Deinitialize (This, Block);
 
@@ -349,7 +349,7 @@ package body STM32.SAI is
         (FBOFF  => First_Bit_Offset,
          SLOTSZ => SAI_Slot_Size'Enum_Rep (Slot_Size),
          NBSLOT => UInt4 (Number_Of_Slots - 1),
-         SLOTEN => Short (Enabled_Slots),
+         SLOTEN => UInt16 (Enabled_Slots),
          others => <>);
    end Configure_Block_Slot;
 

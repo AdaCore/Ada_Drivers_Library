@@ -37,13 +37,13 @@ with STM32_SVD.RCC;            use STM32_SVD.RCC;
 package body STM32.RCC is
 
    function To_AHB1RSTR_T is new Ada.Unchecked_Conversion
-     (Word, AHB1RSTR_Register);
+     (UInt32, AHB1RSTR_Register);
    function To_AHB2RSTR_T is new Ada.Unchecked_Conversion
-     (Word, AHB2RSTR_Register);
+     (UInt32, AHB2RSTR_Register);
    function To_APB1RSTR_T is new Ada.Unchecked_Conversion
-     (Word, APB1RSTR_Register);
+     (UInt32, APB1RSTR_Register);
    function To_APB2RSTR_T is new Ada.Unchecked_Conversion
-     (Word, APB2RSTR_Register);
+     (UInt32, APB2RSTR_Register);
 
    ---------------------------------------------------------------------------
    -------  Enable/Disable/Reset Routines  -----------------------------------

@@ -38,7 +38,7 @@ package STM32_SVD.DSI is
       --  Timeout Clock Division
       TOCKDIV        : DSI_CCR_TOCKDIV_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -422,14 +422,14 @@ package STM32_SVD.DSI is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   subtype DSI_LCCR_CMDSIZE_Field is HAL.Short;
+   subtype DSI_LCCR_CMDSIZE_Field is HAL.UInt16;
 
    --  DSI Host LTDC Command Configuration Register
    type DSI_LCCR_Register is record
       --  Command Size
       CMDSIZE        : DSI_LCCR_CMDSIZE_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -545,7 +545,7 @@ package STM32_SVD.DSI is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  DATA as an array
             Arr : DSI_GPDR_DATA_Field_Array;
@@ -592,8 +592,8 @@ package STM32_SVD.DSI is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
-   subtype DSI_TCCR0_LPRX_TOCNT_Field is HAL.Short;
-   subtype DSI_TCCR0_HSTX_TOCNT_Field is HAL.Short;
+   subtype DSI_TCCR0_LPRX_TOCNT_Field is HAL.UInt16;
+   subtype DSI_TCCR0_HSTX_TOCNT_Field is HAL.UInt16;
 
    --  DSI Host Timeout Counter Configuration Register 0
    type DSI_TCCR0_Register is record
@@ -610,14 +610,14 @@ package STM32_SVD.DSI is
       HSTX_TOCNT at 0 range 16 .. 31;
    end record;
 
-   subtype DSI_TCCR1_HSRD_TOCNT_Field is HAL.Short;
+   subtype DSI_TCCR1_HSRD_TOCNT_Field is HAL.UInt16;
 
    --  DSI Host Timeout Counter Configuration Register 1
    type DSI_TCCR1_Register is record
       --  High-Speed Read Timeout Counter
       HSRD_TOCNT     : DSI_TCCR1_HSRD_TOCNT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -627,14 +627,14 @@ package STM32_SVD.DSI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DSI_TCCR2_LPRD_TOCNT_Field is HAL.Short;
+   subtype DSI_TCCR2_LPRD_TOCNT_Field is HAL.UInt16;
 
    --  DSI Host Timeout Counter Configuration Register 2
    type DSI_TCCR2_Register is record
       --  Low-Power Read Timeout Counter
       LPRD_TOCNT     : DSI_TCCR2_LPRD_TOCNT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -644,7 +644,7 @@ package STM32_SVD.DSI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DSI_TCCR3_HSWR_TOCNT_Field is HAL.Short;
+   subtype DSI_TCCR3_HSWR_TOCNT_Field is HAL.UInt16;
 
    --  DSI Host Timeout Counter Configuration Register 3
    type DSI_TCCR3_Register is record
@@ -667,14 +667,14 @@ package STM32_SVD.DSI is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   subtype DSI_TCCR4_LSWR_TOCNT_Field is HAL.Short;
+   subtype DSI_TCCR4_LSWR_TOCNT_Field is HAL.UInt16;
 
    --  DSI Host Timeout Counter Configuration Register 4
    type DSI_TCCR4_Register is record
       --  Low-Power Write Timeout Counter
       LSWR_TOCNT     : DSI_TCCR4_LSWR_TOCNT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -684,14 +684,14 @@ package STM32_SVD.DSI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DSI_TCCR5_BTA_TOCNT_Field is HAL.Short;
+   subtype DSI_TCCR5_BTA_TOCNT_Field is HAL.UInt16;
 
    --  DSI Host Timeout Counter Configuration Register 5
    type DSI_TCCR5_Register is record
       --  Bus-Turn-Around Timeout Counter
       BTA_TOCNT      : DSI_TCCR5_BTA_TOCNT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -801,7 +801,7 @@ package STM32_SVD.DSI is
       --  Stop Wait Time
       SW_TIME        : DSI_PCONFR_SW_TIME_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -904,7 +904,7 @@ package STM32_SVD.DSI is
       case As_Array is
          when False =>
             --  AE as a value
-            Val : HAL.Short;
+            Val : HAL.UInt16;
          when True =>
             --  AE as an array
             Arr : DSI_ISR0_AE_Field_Array;
@@ -1147,7 +1147,7 @@ package STM32_SVD.DSI is
       case As_Array is
          when False =>
             --  FAE as a value
-            Val : HAL.Short;
+            Val : HAL.UInt16;
          when True =>
             --  FAE as an array
             Arr : DSI_FIR0_FAE_Field_Array;
@@ -2023,7 +2023,7 @@ package STM32_SVD.DSI is
    --  DSI Host
    type DSI_Peripheral is record
       --  DSI Host Version Register
-      DSI_VR      : HAL.Word;
+      DSI_VR      : HAL.UInt32;
       --  DSI Host Control Register
       DSI_CR      : DSI_CR_Register;
       --  DSI HOST Clock Control Register

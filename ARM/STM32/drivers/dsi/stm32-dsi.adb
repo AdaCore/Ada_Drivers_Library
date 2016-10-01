@@ -170,15 +170,15 @@ package body STM32.DSI is
       --  Where F_PHY_Mhz = (PLLNDIV * HSE_MHz) / (IDF * ODF)
       --  => UIX4 = 4_000 * IDF * ODV / (PLLNDIV * HSE_MHz)
       declare
-         HSE_MHz          : constant Word := HSE_Clock / 1_000_000;
-         IDF              : constant Word :=
+         HSE_MHz          : constant UInt32 := HSE_Clock / 1_000_000;
+         IDF              : constant UInt32 :=
                               (if PLL_IN_Div > 0
-                               then Word (PLL_IN_Div) else 1);
-         ODF              : constant Word :=
+                               then UInt32 (PLL_IN_Div) else 1);
+         ODF              : constant UInt32 :=
                               Shift_Left
                                 (1, DSI_PLL_ODF'Enum_Rep (PLL_OUT_Div));
-         PLLN             : constant Word := Word (PLL_N_Div);
-         Unit_Interval_x4 : constant Word :=
+         PLLN             : constant UInt32 := UInt32 (PLL_N_Div);
+         Unit_Interval_x4 : constant UInt32 :=
                               ((4_000 * IDF * ODF) / (PLLN * HSE_MHz));
       begin
          This.Periph.DSI_WPCR1.UIX4 := UInt6 (Unit_Interval_x4);
@@ -325,7 +325,7 @@ package body STM32.DSI is
      (This                        : in out DSI_Host;
       Virtual_Channel             : DSI_Virtual_Channel_ID;
       Color_Coding                : DSI_Color_Mode;
-      Command_Size                : Short;
+      Command_Size                : UInt16;
       Tearing_Effect_Source       : DSI_Tearing_Effect_Source;
       Tearing_Effect_Polarity     : DSI_TE_Polarity;
       HSync_Polarity              : DSI_Polarity;
@@ -534,8 +534,8 @@ package body STM32.DSI is
       Start : Time;
       Off   : Natural := 0;
       Value : DSI_GPDR_Register;
-      Val1  : Word;
-      Val2  : Word;
+      Val1  : UInt32;
+      Val2  : UInt32;
 
    begin
       --  Wait for FIFO empty
@@ -564,8 +564,8 @@ package body STM32.DSI is
          This.Periph.DSI_GPDR := Value;
       end if;
 
-      Val1 := Word (Parameters'Length + 1) and 16#FF#;
-      Val2 := Shift_Right (Word (Parameters'Length + 1) and 16#FF00#, 8);
+      Val1 := UInt32 (Parameters'Length + 1) and 16#FF#;
+      Val2 := Shift_Right (UInt32 (Parameters'Length + 1) and 16#FF00#, 8);
       This.DSI_Config_Packet_Header
         (Channel_Id, Mode, Byte (Val1), Byte (Val2));
    end DSI_Long_Write;

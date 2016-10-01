@@ -141,147 +141,147 @@ package STM32_SVD.HASH is
       --  control register
       CR       : CR_Register;
       --  data input register
-      DIN      : HAL.Word;
+      DIN      : HAL.UInt32;
       --  start register
       STR      : STR_Register;
       --  digest registers
-      HR0      : HAL.Word;
+      HR0      : HAL.UInt32;
       --  digest registers
-      HR1      : HAL.Word;
+      HR1      : HAL.UInt32;
       --  digest registers
-      HR2      : HAL.Word;
+      HR2      : HAL.UInt32;
       --  digest registers
-      HR3      : HAL.Word;
+      HR3      : HAL.UInt32;
       --  digest registers
-      HR4      : HAL.Word;
+      HR4      : HAL.UInt32;
       --  interrupt enable register
       IMR      : IMR_Register;
       --  status register
       SR       : SR_Register;
       --  context swap registers
-      CSR0     : HAL.Word;
+      CSR0     : HAL.UInt32;
       --  context swap registers
-      CSR1     : HAL.Word;
+      CSR1     : HAL.UInt32;
       --  context swap registers
-      CSR2     : HAL.Word;
+      CSR2     : HAL.UInt32;
       --  context swap registers
-      CSR3     : HAL.Word;
+      CSR3     : HAL.UInt32;
       --  context swap registers
-      CSR4     : HAL.Word;
+      CSR4     : HAL.UInt32;
       --  context swap registers
-      CSR5     : HAL.Word;
+      CSR5     : HAL.UInt32;
       --  context swap registers
-      CSR6     : HAL.Word;
+      CSR6     : HAL.UInt32;
       --  context swap registers
-      CSR7     : HAL.Word;
+      CSR7     : HAL.UInt32;
       --  context swap registers
-      CSR8     : HAL.Word;
+      CSR8     : HAL.UInt32;
       --  context swap registers
-      CSR9     : HAL.Word;
+      CSR9     : HAL.UInt32;
       --  context swap registers
-      CSR10    : HAL.Word;
+      CSR10    : HAL.UInt32;
       --  context swap registers
-      CSR11    : HAL.Word;
+      CSR11    : HAL.UInt32;
       --  context swap registers
-      CSR12    : HAL.Word;
+      CSR12    : HAL.UInt32;
       --  context swap registers
-      CSR13    : HAL.Word;
+      CSR13    : HAL.UInt32;
       --  context swap registers
-      CSR14    : HAL.Word;
+      CSR14    : HAL.UInt32;
       --  context swap registers
-      CSR15    : HAL.Word;
+      CSR15    : HAL.UInt32;
       --  context swap registers
-      CSR16    : HAL.Word;
+      CSR16    : HAL.UInt32;
       --  context swap registers
-      CSR17    : HAL.Word;
+      CSR17    : HAL.UInt32;
       --  context swap registers
-      CSR18    : HAL.Word;
+      CSR18    : HAL.UInt32;
       --  context swap registers
-      CSR19    : HAL.Word;
+      CSR19    : HAL.UInt32;
       --  context swap registers
-      CSR20    : HAL.Word;
+      CSR20    : HAL.UInt32;
       --  context swap registers
-      CSR21    : HAL.Word;
+      CSR21    : HAL.UInt32;
       --  context swap registers
-      CSR22    : HAL.Word;
+      CSR22    : HAL.UInt32;
       --  context swap registers
-      CSR23    : HAL.Word;
+      CSR23    : HAL.UInt32;
       --  context swap registers
-      CSR24    : HAL.Word;
+      CSR24    : HAL.UInt32;
       --  context swap registers
-      CSR25    : HAL.Word;
+      CSR25    : HAL.UInt32;
       --  context swap registers
-      CSR26    : HAL.Word;
+      CSR26    : HAL.UInt32;
       --  context swap registers
-      CSR27    : HAL.Word;
+      CSR27    : HAL.UInt32;
       --  context swap registers
-      CSR28    : HAL.Word;
+      CSR28    : HAL.UInt32;
       --  context swap registers
-      CSR29    : HAL.Word;
+      CSR29    : HAL.UInt32;
       --  context swap registers
-      CSR30    : HAL.Word;
+      CSR30    : HAL.UInt32;
       --  context swap registers
-      CSR31    : HAL.Word;
+      CSR31    : HAL.UInt32;
       --  context swap registers
-      CSR32    : HAL.Word;
+      CSR32    : HAL.UInt32;
       --  context swap registers
-      CSR33    : HAL.Word;
+      CSR33    : HAL.UInt32;
       --  context swap registers
-      CSR34    : HAL.Word;
+      CSR34    : HAL.UInt32;
       --  context swap registers
-      CSR35    : HAL.Word;
+      CSR35    : HAL.UInt32;
       --  context swap registers
-      CSR36    : HAL.Word;
+      CSR36    : HAL.UInt32;
       --  context swap registers
-      CSR37    : HAL.Word;
+      CSR37    : HAL.UInt32;
       --  context swap registers
-      CSR38    : HAL.Word;
+      CSR38    : HAL.UInt32;
       --  context swap registers
-      CSR39    : HAL.Word;
+      CSR39    : HAL.UInt32;
       --  context swap registers
-      CSR40    : HAL.Word;
+      CSR40    : HAL.UInt32;
       --  context swap registers
-      CSR41    : HAL.Word;
+      CSR41    : HAL.UInt32;
       --  context swap registers
-      CSR42    : HAL.Word;
+      CSR42    : HAL.UInt32;
       --  context swap registers
-      CSR43    : HAL.Word;
+      CSR43    : HAL.UInt32;
       --  context swap registers
-      CSR44    : HAL.Word;
+      CSR44    : HAL.UInt32;
       --  context swap registers
-      CSR45    : HAL.Word;
+      CSR45    : HAL.UInt32;
       --  context swap registers
-      CSR46    : HAL.Word;
+      CSR46    : HAL.UInt32;
       --  context swap registers
-      CSR47    : HAL.Word;
+      CSR47    : HAL.UInt32;
       --  context swap registers
-      CSR48    : HAL.Word;
+      CSR48    : HAL.UInt32;
       --  context swap registers
-      CSR49    : HAL.Word;
+      CSR49    : HAL.UInt32;
       --  context swap registers
-      CSR50    : HAL.Word;
+      CSR50    : HAL.UInt32;
       --  context swap registers
-      CSR51    : HAL.Word;
+      CSR51    : HAL.UInt32;
       --  context swap registers
-      CSR52    : HAL.Word;
+      CSR52    : HAL.UInt32;
       --  context swap registers
-      CSR53    : HAL.Word;
+      CSR53    : HAL.UInt32;
       --  HASH digest register
-      HASH_HR0 : HAL.Word;
+      HASH_HR0 : HAL.UInt32;
       --  read-only
-      HASH_HR1 : HAL.Word;
+      HASH_HR1 : HAL.UInt32;
       --  read-only
-      HASH_HR2 : HAL.Word;
+      HASH_HR2 : HAL.UInt32;
       --  read-only
-      HASH_HR3 : HAL.Word;
+      HASH_HR3 : HAL.UInt32;
       --  read-only
-      HASH_HR4 : HAL.Word;
+      HASH_HR4 : HAL.UInt32;
       --  read-only
-      HASH_HR5 : HAL.Word;
+      HASH_HR5 : HAL.UInt32;
       --  read-only
-      HASH_HR6 : HAL.Word;
+      HASH_HR6 : HAL.UInt32;
       --  read-only
-      HASH_HR7 : HAL.Word;
+      HASH_HR7 : HAL.UInt32;
    end record
      with Volatile;
 

@@ -72,7 +72,7 @@ package STM32.Device is
    HSI_VALUE      : constant := 16_000_000;
    --  Internal oscillator in Hz
 
-   HSE_VALUE      : constant Word;
+   HSE_VALUE      : constant UInt32;
    --  External oscillator in Hz
 
    procedure Enable_Clock (This : aliased in out GPIO_Port)
@@ -518,7 +518,7 @@ package STM32.Device is
 
    procedure Enable_Clock (This : in out SAI_Port);
    procedure Reset (This : in out SAI_Port);
-   function Get_Input_Clock (Periph : SAI_Port) return Word;
+   function Get_Input_Clock (Periph : SAI_Port) return UInt32;
 
    --------------
    -- DSI Host --
@@ -541,12 +541,12 @@ package STM32.Device is
    -----------------------------
 
    type RCC_System_Clocks is record
-      SYSCLK  : Word;
-      HCLK    : Word;
-      PCLK1   : Word;
-      PCLK2   : Word;
-      TIMCLK1 : Word;
-      TIMCLK2 : Word;
+      SYSCLK  : UInt32;
+      HCLK    : UInt32;
+      PCLK1   : UInt32;
+      PCLK2   : UInt32;
+      TIMCLK1 : UInt32;
+      TIMCLK2 : UInt32;
    end record;
 
    function System_Clock_Frequencies return RCC_System_Clocks;
@@ -579,7 +579,7 @@ package STM32.Device is
 
 private
 
-   HSE_VALUE : constant Word := System.BB.Parameters.HSE_Clock;
+   HSE_VALUE : constant UInt32 := System.BB.Parameters.HSE_Clock;
 
    GPIO_AF_0_RTC_50Hz  : constant GPIO_Alternate_Function := 0;
    GPIO_AF_0_MCO       : constant GPIO_Alternate_Function := 0;

@@ -288,8 +288,8 @@ package STM32_SVD.LTDC is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
-   subtype CPSR_CYPOS_Field is HAL.Short;
-   subtype CPSR_CXPOS_Field is HAL.Short;
+   subtype CPSR_CYPOS_Field is HAL.UInt16;
+   subtype CPSR_CXPOS_Field is HAL.UInt16;
 
    --  Current Position Status Register
    type CPSR_Register is record
@@ -875,7 +875,7 @@ package STM32_SVD.LTDC is
       --  Layerx Blending Factors Configuration Register
       L1BFCR   : L1BFCR_Register;
       --  Layerx Color Frame Buffer Address Register
-      L1CFBAR  : HAL.Word;
+      L1CFBAR  : HAL.UInt32;
       --  Layerx Color Frame Buffer Length Register
       L1CFBLR  : L1CFBLR_Register;
       --  Layerx ColorFrame Buffer Line Number Register
@@ -899,7 +899,7 @@ package STM32_SVD.LTDC is
       --  Layerx Blending Factors Configuration Register
       L2BFCR   : L2BFCR_Register;
       --  Layerx Color Frame Buffer Address Register
-      L2CFBAR  : HAL.Word;
+      L2CFBAR  : HAL.UInt32;
       --  Layerx Color Frame Buffer Length Register
       L2CFBLR  : L2CFBLR_Register;
       --  Layerx ColorFrame Buffer Line Number Register

@@ -180,8 +180,8 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   subtype FS_DAINT_IEPINT_Field is HAL.Short;
-   subtype FS_DAINT_OEPINT_Field is HAL.Short;
+   subtype FS_DAINT_IEPINT_Field is HAL.UInt16;
+   subtype FS_DAINT_OEPINT_Field is HAL.UInt16;
 
    --  OTG_FS device all endpoints interrupt register (OTG_FS_DAINT)
    type FS_DAINT_Register is record
@@ -198,8 +198,8 @@ package STM32_SVD.USB_OTG_FS is
       OEPINT at 0 range 16 .. 31;
    end record;
 
-   subtype FS_DAINTMSK_IEPM_Field is HAL.Short;
-   subtype FS_DAINTMSK_OEPM_Field is HAL.Short;
+   subtype FS_DAINTMSK_IEPM_Field is HAL.UInt16;
+   subtype FS_DAINTMSK_OEPM_Field is HAL.UInt16;
 
    --  OTG_FS all endpoints interrupt mask register (OTG_FS_DAINTMSK)
    type FS_DAINTMSK_Register is record
@@ -216,14 +216,14 @@ package STM32_SVD.USB_OTG_FS is
       OEPM at 0 range 16 .. 31;
    end record;
 
-   subtype DVBUSDIS_VBUSDT_Field is HAL.Short;
+   subtype DVBUSDIS_VBUSDT_Field is HAL.UInt16;
 
    --  OTG_FS device VBUS discharge time register
    type DVBUSDIS_Register is record
       --  Device VBUS discharge time
       VBUSDT         : DVBUSDIS_VBUSDT_Field := 16#17D7#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -250,14 +250,14 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   subtype DIEPEMPMSK_INEPTXFEM_Field is HAL.Short;
+   subtype DIEPEMPMSK_INEPTXFEM_Field is HAL.UInt16;
 
    --  OTG_FS device IN endpoint FIFO empty interrupt mask register
    type DIEPEMPMSK_Register is record
       --  IN EP Tx FIFO empty interrupt mask bits
       INEPTXFEM      : DIEPEMPMSK_INEPTXFEM_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -382,14 +382,14 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
-   subtype DTXFSTS_INEPTFSAV_Field is HAL.Short;
+   subtype DTXFSTS_INEPTFSAV_Field is HAL.UInt16;
 
    --  OTG_FS device IN endpoint transmit FIFO status register
    type DTXFSTS_Register is record
       --  Read-only. IN endpoint TxFIFO space available
       INEPTFSAV      : DTXFSTS_INEPTFSAV_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1196,14 +1196,14 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   subtype FS_GRXFSIZ_RXFD_Field is HAL.Short;
+   subtype FS_GRXFSIZ_RXFD_Field is HAL.UInt16;
 
    --  OTG_FS Receive FIFO size register (OTG_FS_GRXFSIZ)
    type FS_GRXFSIZ_Register is record
       --  RxFIFO depth
       RXFD           : FS_GRXFSIZ_RXFD_Field := 16#200#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1213,8 +1213,8 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype FS_GNPTXFSIZ_Device_TX0FSA_Field is HAL.Short;
-   subtype FS_GNPTXFSIZ_Device_TX0FD_Field is HAL.Short;
+   subtype FS_GNPTXFSIZ_Device_TX0FSA_Field is HAL.UInt16;
+   subtype FS_GNPTXFSIZ_Device_TX0FD_Field is HAL.UInt16;
 
    --  OTG_FS non-periodic transmit FIFO size register (Device mode)
    type FS_GNPTXFSIZ_Device_Register is record
@@ -1231,8 +1231,8 @@ package STM32_SVD.USB_OTG_FS is
       TX0FD  at 0 range 16 .. 31;
    end record;
 
-   subtype FS_GNPTXFSIZ_Host_NPTXFSA_Field is HAL.Short;
-   subtype FS_GNPTXFSIZ_Host_NPTXFD_Field is HAL.Short;
+   subtype FS_GNPTXFSIZ_Host_NPTXFSA_Field is HAL.UInt16;
+   subtype FS_GNPTXFSIZ_Host_NPTXFD_Field is HAL.UInt16;
 
    --  OTG_FS non-periodic transmit FIFO size register (Host mode)
    type FS_GNPTXFSIZ_Host_Register is record
@@ -1249,7 +1249,7 @@ package STM32_SVD.USB_OTG_FS is
       NPTXFD  at 0 range 16 .. 31;
    end record;
 
-   subtype FS_GNPTXSTS_NPTXFSAV_Field is HAL.Short;
+   subtype FS_GNPTXSTS_NPTXFSAV_Field is HAL.UInt16;
    subtype FS_GNPTXSTS_NPTQXSAV_Field is HAL.Byte;
    subtype FS_GNPTXSTS_NPTXQTOP_Field is HAL.UInt7;
 
@@ -1278,7 +1278,7 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS general core configuration register (OTG_FS_GCCFG)
    type FS_GCCFG_Register is record
       --  unspecified
-      Reserved_0_15  : HAL.Short := 16#0#;
+      Reserved_0_15  : HAL.UInt16 := 16#0#;
       --  Power down
       PWRDWN         : Boolean := False;
       --  unspecified
@@ -1305,8 +1305,8 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
-   subtype FS_HPTXFSIZ_PTXSA_Field is HAL.Short;
-   subtype FS_HPTXFSIZ_PTXFSIZ_Field is HAL.Short;
+   subtype FS_HPTXFSIZ_PTXSA_Field is HAL.UInt16;
+   subtype FS_HPTXFSIZ_PTXFSIZ_Field is HAL.UInt16;
 
    --  OTG_FS Host periodic transmit FIFO size register (OTG_FS_HPTXFSIZ)
    type FS_HPTXFSIZ_Register is record
@@ -1323,8 +1323,8 @@ package STM32_SVD.USB_OTG_FS is
       PTXFSIZ at 0 range 16 .. 31;
    end record;
 
-   subtype FS_DIEPTXF_INEPTXSA_Field is HAL.Short;
-   subtype FS_DIEPTXF_INEPTXFD_Field is HAL.Short;
+   subtype FS_DIEPTXF_INEPTXSA_Field is HAL.UInt16;
+   subtype FS_DIEPTXF_INEPTXFD_Field is HAL.UInt16;
 
    --  OTG_FS device IN endpoint transmit FIFO size register (OTG_FS_DIEPTXF2)
    type FS_DIEPTXF_Register is record
@@ -1361,14 +1361,14 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype HFIR_FRIVL_Field is HAL.Short;
+   subtype HFIR_FRIVL_Field is HAL.UInt16;
 
    --  OTG_FS Host frame interval register
    type HFIR_Register is record
       --  Frame interval
       FRIVL          : HFIR_FRIVL_Field := 16#EA60#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1378,8 +1378,8 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype FS_HFNUM_FRNUM_Field is HAL.Short;
-   subtype FS_HFNUM_FTREM_Field is HAL.Short;
+   subtype FS_HFNUM_FRNUM_Field is HAL.UInt16;
+   subtype FS_HFNUM_FTREM_Field is HAL.UInt16;
 
    --  OTG_FS host frame number/frame time remaining register (OTG_FS_HFNUM)
    type FS_HFNUM_Register is record
@@ -1396,7 +1396,7 @@ package STM32_SVD.USB_OTG_FS is
       FTREM at 0 range 16 .. 31;
    end record;
 
-   subtype FS_HPTXSTS_PTXFSAVL_Field is HAL.Short;
+   subtype FS_HPTXSTS_PTXFSAVL_Field is HAL.UInt16;
    subtype FS_HPTXSTS_PTXQSAV_Field is HAL.Byte;
    subtype FS_HPTXSTS_PTXQTOP_Field is HAL.Byte;
 
@@ -1419,14 +1419,14 @@ package STM32_SVD.USB_OTG_FS is
       PTXQTOP  at 0 range 24 .. 31;
    end record;
 
-   subtype HAINT_HAINT_Field is HAL.Short;
+   subtype HAINT_HAINT_Field is HAL.UInt16;
 
    --  OTG_FS Host all channels interrupt register
    type HAINT_Register is record
       --  Read-only. Channel interrupts
       HAINT          : HAINT_HAINT_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1436,14 +1436,14 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype HAINTMSK_HAINTM_Field is HAL.Short;
+   subtype HAINTMSK_HAINTM_Field is HAL.UInt16;
 
    --  OTG_FS host all channels interrupt mask register
    type HAINTMSK_Register is record
       --  Channel interrupt mask
       HAINTM         : HAINTMSK_HAINTM_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1862,7 +1862,7 @@ package STM32_SVD.USB_OTG_FS is
       --  OTG_FS general core configuration register (OTG_FS_GCCFG)
       FS_GCCFG            : FS_GCCFG_Register;
       --  core ID register
-      FS_CID              : HAL.Word;
+      FS_CID              : HAL.UInt32;
       --  OTG_FS Host periodic transmit FIFO size register (OTG_FS_HPTXFSIZ)
       FS_HPTXFSIZ         : FS_HPTXFSIZ_Register;
       --  OTG_FS device IN endpoint transmit FIFO size register

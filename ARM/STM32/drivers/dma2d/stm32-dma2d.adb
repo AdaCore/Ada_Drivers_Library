@@ -36,10 +36,10 @@ with STM32_SVD.RCC;           use STM32_SVD.RCC;
 
 package body STM32.DMA2D is
 
-   function To_Word is new Ada.Unchecked_Conversion (System.Address, Word);
+   function To_Word is new Ada.Unchecked_Conversion (System.Address, UInt32);
 
    function Offset (Buffer : DMA2D_Buffer;
-                    X, Y   : Integer) return Word with Inline_Always;
+                    X, Y   : Integer) return UInt32 with Inline_Always;
 
    DMA2D_Init_Transfer_Int : DMA2D_Sync_Procedure := null;
    DMA2D_Wait_Transfer_Int : DMA2D_Sync_Procedure := null;
@@ -83,9 +83,9 @@ package body STM32.DMA2D is
    ------------
 
    function Offset (Buffer : DMA2D_Buffer;
-                    X, Y   : Integer) return Word
+                    X, Y   : Integer) return UInt32
    is
-      Off : constant Word := Word (X + Buffer.Width * Y);
+      Off : constant UInt32 := UInt32 (X + Buffer.Width * Y);
    begin
       case Buffer.Color_Mode is
          when ARGB8888 =>
@@ -107,10 +107,10 @@ package body STM32.DMA2D is
 
    procedure DMA2D_Fill
      (Buffer      : DMA2D_Buffer;
-      Color       : Word;
+      Color       : UInt32;
       Synchronous : Boolean := False)
    is
-      function Conv is new Ada.Unchecked_Conversion (Word, OCOLR_Register);
+      function Conv is new Ada.Unchecked_Conversion (UInt32, OCOLR_Register);
    begin
       DMA2D_Wait_Transfer_Int.all;
 
@@ -119,7 +119,7 @@ package body STM32.DMA2D is
       DMA2D_Periph.OCOLR     := Conv (Color);
       DMA2D_Periph.OMAR      := To_Word (Buffer.Addr);
       DMA2D_Periph.OOR       := (LO => 0, others => <>);
-      DMA2D_Periph.NLR       := (NL     => Short (Buffer.Height),
+      DMA2D_Periph.NLR       := (NL     => UInt16 (Buffer.Height),
                                  PL     => UInt14 (Buffer.Width),
                                  others => <>);
 
@@ -136,15 +136,15 @@ package body STM32.DMA2D is
 
    procedure DMA2D_Fill_Rect
      (Buffer      : DMA2D_Buffer;
-      Color       : Word;
+      Color       : UInt32;
       X           : Integer;
       Y           : Integer;
       Width       : Integer;
       Height      : Integer;
       Synchronous : Boolean := False)
    is
-      function Conv is new Ada.Unchecked_Conversion (Word, OCOLR_Register);
-      Off    : constant Word := Offset (Buffer, X, Y);
+      function Conv is new Ada.Unchecked_Conversion (UInt32, OCOLR_Register);
+      Off    : constant UInt32 := Offset (Buffer, X, Y);
 
    begin
       DMA2D_Wait_Transfer_Int.all;
@@ -157,7 +157,7 @@ package body STM32.DMA2D is
       DMA2D_Periph.OMAR   := To_Word (Buffer.Addr) + Off;
       DMA2D_Periph.OOR.LO := UInt14 (Buffer.Width -  Width);
       DMA2D_Periph.NLR :=
-        (NL => Short (Height), PL => UInt14 (Width), others => <>);
+        (NL => UInt16 (Height), PL => UInt14 (Width), others => <>);
 
       DMA2D_Init_Transfer_Int.all;
       if Synchronous then
@@ -171,7 +171,7 @@ package body STM32.DMA2D is
 
    procedure DMA2D_Draw_Rect
      (Buffer    : DMA2D_Buffer;
-      Color     : Word;
+      Color     : UInt32;
       X         : Integer;
       Y         : Integer;
       Width     : Integer;
@@ -202,8 +202,8 @@ package body STM32.DMA2D is
       Height     : Natural;
       Synchronous  : Boolean := False)
    is
-      Src_Off : constant Word := Offset (Src_Buffer, X_Src, Y_Src);
-      Dst_Off : constant Word := Offset (Dst_Buffer, X_Dst, Y_Dst);
+      Src_Off : constant UInt32 := Offset (Src_Buffer, X_Src, Y_Src);
+      Dst_Off : constant UInt32 := Offset (Dst_Buffer, X_Dst, Y_Dst);
 
    begin
       DMA2D_Wait_Transfer_Int.all;
@@ -234,7 +234,7 @@ package body STM32.DMA2D is
 
       if Bg_Buffer /= Null_Buffer then
          declare
-            Bg_Off  : constant Word := Offset (Bg_Buffer, X_Bg, Y_Bg);
+            Bg_Off  : constant UInt32 := Offset (Bg_Buffer, X_Bg, Y_Bg);
          begin
             DMA2D_Periph.BGPFCCR.CM    :=
               DMA2D_Color_Mode'Enum_Rep (Bg_Buffer.Color_Mode);
@@ -254,7 +254,7 @@ package body STM32.DMA2D is
       DMA2D_Periph.OOR       := (LO     => UInt14 (Dst_Buffer.Width - Width),
                                   others => <>);
 
-      DMA2D_Periph.NLR       := (NL     => Short (Height),
+      DMA2D_Periph.NLR       := (NL     => UInt16 (Height),
                                  PL     => UInt14 (Width),
                               others => <>);
 
@@ -270,7 +270,7 @@ package body STM32.DMA2D is
 
    procedure DMA2D_Draw_Vertical_Line
      (Buffer    : DMA2D_Buffer;
-      Color     : Word;
+      Color     : UInt32;
       X         : Integer;
       Y         : Integer;
       Height    : Integer;
@@ -303,7 +303,7 @@ package body STM32.DMA2D is
 
    procedure DMA2D_Draw_Horizontal_Line
      (Buffer    : DMA2D_Buffer;
-      Color     : Word;
+      Color     : UInt32;
       X         : Integer;
       Y         : Integer;
       Width     : Integer;
@@ -337,11 +337,11 @@ package body STM32.DMA2D is
    procedure DMA2D_Set_Pixel
      (Buffer      : DMA2D_Buffer;
       X, Y        : Integer;
-      Color       : Word;
+      Color       : UInt32;
       Synchronous : Boolean := False)
    is
-      function Conv is new Ada.Unchecked_Conversion (Word, OCOLR_Register);
-      Off  : constant Word := Offset (Buffer, X, Y);
+      function Conv is new Ada.Unchecked_Conversion (UInt32, OCOLR_Register);
+      Off  : constant UInt32 := Offset (Buffer, X, Y);
       Dead : Boolean := False with Unreferenced;
    begin
       if X < 0 or else Y < 0
@@ -375,7 +375,7 @@ package body STM32.DMA2D is
       Color       : DMA2D_Color;
       Synchronous : Boolean := False)
    is
-      Off  : constant Word := Offset (Buffer, X, Y);
+      Off  : constant UInt32 := Offset (Buffer, X, Y);
       Dead : Boolean := False with Unreferenced;
    begin
       if X < 0 or else Y < 0

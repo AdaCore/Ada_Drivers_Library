@@ -13,7 +13,7 @@ with STM32_SVD.RCC;   use STM32_SVD.RCC;
 package body STM32.SDRAM is
 
    Initialized : Boolean := False;
-   G_Base_Addr : Word;
+   G_Base_Addr : UInt32;
 
    procedure SDRAM_GPIOConfig;
    procedure SDRAM_InitSequence;
@@ -202,12 +202,12 @@ package body STM32.SDRAM is
    -------------
 
    function Reserve
-     (Amount : Word;
-      Align  : Word := Standard'Maximum_Alignment) return System.Address
+     (Amount : UInt32;
+      Align  : UInt32 := Standard'Maximum_Alignment) return System.Address
    is
       Ret          : constant System.Address :=
                        System'To_Address (G_Base_Addr);
-      Rounded_Size : Word;
+      Rounded_Size : UInt32;
 
    begin
       Initialize;

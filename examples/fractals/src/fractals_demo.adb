@@ -248,10 +248,10 @@ begin
                for Y in 0 .. Display.Get_Height / Size - 1 loop
                   declare
                      use HAL;
-                     use type HAL.Word;
+                     use type HAL.UInt32;
                      Buff : constant HAL.Bitmap.Bitmap_Buffer'Class :=
                               Display.Get_Hidden_Buffer (1);
-                     Col  : Word;
+                     Col  : UInt32;
                   begin
                      for X in 0 .. Display.Get_Width / Size - 1 loop
                         if First_Pass then

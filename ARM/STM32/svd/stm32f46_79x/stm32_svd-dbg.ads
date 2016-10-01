@@ -14,7 +14,7 @@ package STM32_SVD.DBG is
    ---------------
 
    subtype DBGMCU_IDCODE_DEV_ID_Field is HAL.UInt12;
-   subtype DBGMCU_IDCODE_REV_ID_Field is HAL.Short;
+   subtype DBGMCU_IDCODE_REV_ID_Field is HAL.UInt16;
 
    --  IDCODE
    type DBGMCU_IDCODE_Register is record

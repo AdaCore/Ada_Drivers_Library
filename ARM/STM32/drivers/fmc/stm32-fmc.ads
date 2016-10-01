@@ -243,7 +243,7 @@ package STM32.FMC is
    function FMC_SDRAM_Get_Status
      (Bank : FMC_SDRAM_Bank_Type) return FMC_SDRAM_Status_Mode;
 
-   procedure FMC_Set_Refresh_Count (Cnt : Word)
+   procedure FMC_Set_Refresh_Count (Cnt : UInt32)
      with Pre => Cnt < 2 ** 13;
 
 end STM32.FMC;

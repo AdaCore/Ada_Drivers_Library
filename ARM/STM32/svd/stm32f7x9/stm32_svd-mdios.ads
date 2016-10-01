@@ -90,14 +90,14 @@ package STM32_SVD.MDIOS is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype MDIOS_DINR0_DIN0_Field is HAL.Short;
+   subtype MDIOS_DINR0_DIN0_Field is HAL.UInt16;
 
    --  MDIOS input data register 0
    type MDIOS_DINR0_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN0           : MDIOS_DINR0_DIN0_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -107,14 +107,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR1_DIN1_Field is HAL.Short;
+   subtype MDIOS_DINR1_DIN1_Field is HAL.UInt16;
 
    --  MDIOS input data register 1
    type MDIOS_DINR1_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN1           : MDIOS_DINR1_DIN1_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -124,14 +124,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR2_DIN2_Field is HAL.Short;
+   subtype MDIOS_DINR2_DIN2_Field is HAL.UInt16;
 
    --  MDIOS input data register 2
    type MDIOS_DINR2_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN2           : MDIOS_DINR2_DIN2_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -141,14 +141,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR3_DIN3_Field is HAL.Short;
+   subtype MDIOS_DINR3_DIN3_Field is HAL.UInt16;
 
    --  MDIOS input data register 3
    type MDIOS_DINR3_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN3           : MDIOS_DINR3_DIN3_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -158,14 +158,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR4_DIN4_Field is HAL.Short;
+   subtype MDIOS_DINR4_DIN4_Field is HAL.UInt16;
 
    --  MDIOS input data register 4
    type MDIOS_DINR4_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN4           : MDIOS_DINR4_DIN4_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -175,14 +175,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR5_DIN5_Field is HAL.Short;
+   subtype MDIOS_DINR5_DIN5_Field is HAL.UInt16;
 
    --  MDIOS input data register 5
    type MDIOS_DINR5_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN5           : MDIOS_DINR5_DIN5_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -192,14 +192,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR6_DIN6_Field is HAL.Short;
+   subtype MDIOS_DINR6_DIN6_Field is HAL.UInt16;
 
    --  MDIOS input data register 6
    type MDIOS_DINR6_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN6           : MDIOS_DINR6_DIN6_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -209,14 +209,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR7_DIN7_Field is HAL.Short;
+   subtype MDIOS_DINR7_DIN7_Field is HAL.UInt16;
 
    --  MDIOS input data register 7
    type MDIOS_DINR7_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN7           : MDIOS_DINR7_DIN7_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -226,14 +226,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR8_DIN8_Field is HAL.Short;
+   subtype MDIOS_DINR8_DIN8_Field is HAL.UInt16;
 
    --  MDIOS input data register 8
    type MDIOS_DINR8_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN8           : MDIOS_DINR8_DIN8_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -243,14 +243,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR9_DIN9_Field is HAL.Short;
+   subtype MDIOS_DINR9_DIN9_Field is HAL.UInt16;
 
    --  MDIOS input data register 9
    type MDIOS_DINR9_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN9           : MDIOS_DINR9_DIN9_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -260,14 +260,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR10_DIN10_Field is HAL.Short;
+   subtype MDIOS_DINR10_DIN10_Field is HAL.UInt16;
 
    --  MDIOS input data register 10
    type MDIOS_DINR10_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN10          : MDIOS_DINR10_DIN10_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -277,14 +277,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR11_DIN11_Field is HAL.Short;
+   subtype MDIOS_DINR11_DIN11_Field is HAL.UInt16;
 
    --  MDIOS input data register 11
    type MDIOS_DINR11_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN11          : MDIOS_DINR11_DIN11_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -294,14 +294,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR12_DIN12_Field is HAL.Short;
+   subtype MDIOS_DINR12_DIN12_Field is HAL.UInt16;
 
    --  MDIOS input data register 12
    type MDIOS_DINR12_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN12          : MDIOS_DINR12_DIN12_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -311,14 +311,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR13_DIN13_Field is HAL.Short;
+   subtype MDIOS_DINR13_DIN13_Field is HAL.UInt16;
 
    --  MDIOS input data register 13
    type MDIOS_DINR13_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN13          : MDIOS_DINR13_DIN13_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -328,14 +328,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR14_DIN14_Field is HAL.Short;
+   subtype MDIOS_DINR14_DIN14_Field is HAL.UInt16;
 
    --  MDIOS input data register 14
    type MDIOS_DINR14_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN14          : MDIOS_DINR14_DIN14_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -345,14 +345,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR15_DIN15_Field is HAL.Short;
+   subtype MDIOS_DINR15_DIN15_Field is HAL.UInt16;
 
    --  MDIOS input data register 15
    type MDIOS_DINR15_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN15          : MDIOS_DINR15_DIN15_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -362,14 +362,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR16_DIN16_Field is HAL.Short;
+   subtype MDIOS_DINR16_DIN16_Field is HAL.UInt16;
 
    --  MDIOS input data register 16
    type MDIOS_DINR16_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN16          : MDIOS_DINR16_DIN16_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -379,14 +379,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR17_DIN17_Field is HAL.Short;
+   subtype MDIOS_DINR17_DIN17_Field is HAL.UInt16;
 
    --  MDIOS input data register 17
    type MDIOS_DINR17_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN17          : MDIOS_DINR17_DIN17_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -396,14 +396,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR18_DIN18_Field is HAL.Short;
+   subtype MDIOS_DINR18_DIN18_Field is HAL.UInt16;
 
    --  MDIOS input data register 18
    type MDIOS_DINR18_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN18          : MDIOS_DINR18_DIN18_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -413,14 +413,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR19_DIN19_Field is HAL.Short;
+   subtype MDIOS_DINR19_DIN19_Field is HAL.UInt16;
 
    --  MDIOS input data register 19
    type MDIOS_DINR19_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN19          : MDIOS_DINR19_DIN19_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -430,14 +430,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR20_DIN20_Field is HAL.Short;
+   subtype MDIOS_DINR20_DIN20_Field is HAL.UInt16;
 
    --  MDIOS input data register 20
    type MDIOS_DINR20_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN20          : MDIOS_DINR20_DIN20_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -447,14 +447,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR21_DIN21_Field is HAL.Short;
+   subtype MDIOS_DINR21_DIN21_Field is HAL.UInt16;
 
    --  MDIOS input data register 21
    type MDIOS_DINR21_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN21          : MDIOS_DINR21_DIN21_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -464,14 +464,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR22_DIN22_Field is HAL.Short;
+   subtype MDIOS_DINR22_DIN22_Field is HAL.UInt16;
 
    --  MDIOS input data register 22
    type MDIOS_DINR22_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN22          : MDIOS_DINR22_DIN22_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -481,14 +481,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR23_DIN23_Field is HAL.Short;
+   subtype MDIOS_DINR23_DIN23_Field is HAL.UInt16;
 
    --  MDIOS input data register 23
    type MDIOS_DINR23_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN23          : MDIOS_DINR23_DIN23_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -498,14 +498,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR24_DIN24_Field is HAL.Short;
+   subtype MDIOS_DINR24_DIN24_Field is HAL.UInt16;
 
    --  MDIOS input data register 24
    type MDIOS_DINR24_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN24          : MDIOS_DINR24_DIN24_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -515,14 +515,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR25_DIN25_Field is HAL.Short;
+   subtype MDIOS_DINR25_DIN25_Field is HAL.UInt16;
 
    --  MDIOS input data register 25
    type MDIOS_DINR25_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN25          : MDIOS_DINR25_DIN25_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -532,14 +532,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR26_DIN26_Field is HAL.Short;
+   subtype MDIOS_DINR26_DIN26_Field is HAL.UInt16;
 
    --  MDIOS input data register 26
    type MDIOS_DINR26_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN26          : MDIOS_DINR26_DIN26_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -549,14 +549,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR27_DIN27_Field is HAL.Short;
+   subtype MDIOS_DINR27_DIN27_Field is HAL.UInt16;
 
    --  MDIOS input data register 27
    type MDIOS_DINR27_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN27          : MDIOS_DINR27_DIN27_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -566,14 +566,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR28_DIN28_Field is HAL.Short;
+   subtype MDIOS_DINR28_DIN28_Field is HAL.UInt16;
 
    --  MDIOS input data register 28
    type MDIOS_DINR28_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN28          : MDIOS_DINR28_DIN28_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -583,14 +583,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR29_DIN29_Field is HAL.Short;
+   subtype MDIOS_DINR29_DIN29_Field is HAL.UInt16;
 
    --  MDIOS input data register 29
    type MDIOS_DINR29_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN29          : MDIOS_DINR29_DIN29_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -600,14 +600,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR30_DIN30_Field is HAL.Short;
+   subtype MDIOS_DINR30_DIN30_Field is HAL.UInt16;
 
    --  MDIOS input data register 30
    type MDIOS_DINR30_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN30          : MDIOS_DINR30_DIN30_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -617,14 +617,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DINR31_DIN31_Field is HAL.Short;
+   subtype MDIOS_DINR31_DIN31_Field is HAL.UInt16;
 
    --  MDIOS input data register 31
    type MDIOS_DINR31_Register is record
       --  Read-only. Input data received from MDIO Master during write frames
       DIN31          : MDIOS_DINR31_DIN31_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -634,14 +634,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR0_DOUT0_Field is HAL.Short;
+   subtype MDIOS_DOUTR0_DOUT0_Field is HAL.UInt16;
 
    --  MDIOS output data register 0
    type MDIOS_DOUTR0_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT0          : MDIOS_DOUTR0_DOUT0_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -651,14 +651,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR1_DOUT1_Field is HAL.Short;
+   subtype MDIOS_DOUTR1_DOUT1_Field is HAL.UInt16;
 
    --  MDIOS output data register 1
    type MDIOS_DOUTR1_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT1          : MDIOS_DOUTR1_DOUT1_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -668,14 +668,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR2_DOUT2_Field is HAL.Short;
+   subtype MDIOS_DOUTR2_DOUT2_Field is HAL.UInt16;
 
    --  MDIOS output data register 2
    type MDIOS_DOUTR2_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT2          : MDIOS_DOUTR2_DOUT2_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -685,14 +685,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR3_DOUT3_Field is HAL.Short;
+   subtype MDIOS_DOUTR3_DOUT3_Field is HAL.UInt16;
 
    --  MDIOS output data register 3
    type MDIOS_DOUTR3_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT3          : MDIOS_DOUTR3_DOUT3_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -702,14 +702,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR4_DOUT4_Field is HAL.Short;
+   subtype MDIOS_DOUTR4_DOUT4_Field is HAL.UInt16;
 
    --  MDIOS output data register 4
    type MDIOS_DOUTR4_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT4          : MDIOS_DOUTR4_DOUT4_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -719,14 +719,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR5_DOUT5_Field is HAL.Short;
+   subtype MDIOS_DOUTR5_DOUT5_Field is HAL.UInt16;
 
    --  MDIOS output data register 5
    type MDIOS_DOUTR5_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT5          : MDIOS_DOUTR5_DOUT5_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -736,14 +736,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR6_DOUT6_Field is HAL.Short;
+   subtype MDIOS_DOUTR6_DOUT6_Field is HAL.UInt16;
 
    --  MDIOS output data register 6
    type MDIOS_DOUTR6_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT6          : MDIOS_DOUTR6_DOUT6_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -753,14 +753,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR7_DOUT7_Field is HAL.Short;
+   subtype MDIOS_DOUTR7_DOUT7_Field is HAL.UInt16;
 
    --  MDIOS output data register 7
    type MDIOS_DOUTR7_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT7          : MDIOS_DOUTR7_DOUT7_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -770,14 +770,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR8_DOUT8_Field is HAL.Short;
+   subtype MDIOS_DOUTR8_DOUT8_Field is HAL.UInt16;
 
    --  MDIOS output data register 8
    type MDIOS_DOUTR8_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT8          : MDIOS_DOUTR8_DOUT8_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -787,14 +787,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR9_DOUT9_Field is HAL.Short;
+   subtype MDIOS_DOUTR9_DOUT9_Field is HAL.UInt16;
 
    --  MDIOS output data register 9
    type MDIOS_DOUTR9_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT9          : MDIOS_DOUTR9_DOUT9_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -804,14 +804,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR10_DOUT10_Field is HAL.Short;
+   subtype MDIOS_DOUTR10_DOUT10_Field is HAL.UInt16;
 
    --  MDIOS output data register 10
    type MDIOS_DOUTR10_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT10         : MDIOS_DOUTR10_DOUT10_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -821,14 +821,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR11_DOUT11_Field is HAL.Short;
+   subtype MDIOS_DOUTR11_DOUT11_Field is HAL.UInt16;
 
    --  MDIOS output data register 11
    type MDIOS_DOUTR11_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT11         : MDIOS_DOUTR11_DOUT11_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -838,14 +838,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR12_DOUT12_Field is HAL.Short;
+   subtype MDIOS_DOUTR12_DOUT12_Field is HAL.UInt16;
 
    --  MDIOS output data register 12
    type MDIOS_DOUTR12_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT12         : MDIOS_DOUTR12_DOUT12_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -855,14 +855,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR13_DOUT13_Field is HAL.Short;
+   subtype MDIOS_DOUTR13_DOUT13_Field is HAL.UInt16;
 
    --  MDIOS output data register 13
    type MDIOS_DOUTR13_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT13         : MDIOS_DOUTR13_DOUT13_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -872,14 +872,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR14_DOUT14_Field is HAL.Short;
+   subtype MDIOS_DOUTR14_DOUT14_Field is HAL.UInt16;
 
    --  MDIOS output data register 14
    type MDIOS_DOUTR14_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT14         : MDIOS_DOUTR14_DOUT14_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -889,14 +889,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR15_DOUT15_Field is HAL.Short;
+   subtype MDIOS_DOUTR15_DOUT15_Field is HAL.UInt16;
 
    --  MDIOS output data register 15
    type MDIOS_DOUTR15_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT15         : MDIOS_DOUTR15_DOUT15_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -906,14 +906,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR16_DOUT16_Field is HAL.Short;
+   subtype MDIOS_DOUTR16_DOUT16_Field is HAL.UInt16;
 
    --  MDIOS output data register 16
    type MDIOS_DOUTR16_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT16         : MDIOS_DOUTR16_DOUT16_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -923,14 +923,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR17_DOUT17_Field is HAL.Short;
+   subtype MDIOS_DOUTR17_DOUT17_Field is HAL.UInt16;
 
    --  MDIOS output data register 17
    type MDIOS_DOUTR17_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT17         : MDIOS_DOUTR17_DOUT17_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -940,14 +940,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR18_DOUT18_Field is HAL.Short;
+   subtype MDIOS_DOUTR18_DOUT18_Field is HAL.UInt16;
 
    --  MDIOS output data register 18
    type MDIOS_DOUTR18_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT18         : MDIOS_DOUTR18_DOUT18_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -957,14 +957,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR19_DOUT19_Field is HAL.Short;
+   subtype MDIOS_DOUTR19_DOUT19_Field is HAL.UInt16;
 
    --  MDIOS output data register 19
    type MDIOS_DOUTR19_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT19         : MDIOS_DOUTR19_DOUT19_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -974,14 +974,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR20_DOUT20_Field is HAL.Short;
+   subtype MDIOS_DOUTR20_DOUT20_Field is HAL.UInt16;
 
    --  MDIOS output data register 20
    type MDIOS_DOUTR20_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT20         : MDIOS_DOUTR20_DOUT20_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -991,14 +991,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR21_DOUT21_Field is HAL.Short;
+   subtype MDIOS_DOUTR21_DOUT21_Field is HAL.UInt16;
 
    --  MDIOS output data register 21
    type MDIOS_DOUTR21_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT21         : MDIOS_DOUTR21_DOUT21_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1008,14 +1008,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR22_DOUT22_Field is HAL.Short;
+   subtype MDIOS_DOUTR22_DOUT22_Field is HAL.UInt16;
 
    --  MDIOS output data register 22
    type MDIOS_DOUTR22_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT22         : MDIOS_DOUTR22_DOUT22_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1025,14 +1025,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR23_DOUT23_Field is HAL.Short;
+   subtype MDIOS_DOUTR23_DOUT23_Field is HAL.UInt16;
 
    --  MDIOS output data register 23
    type MDIOS_DOUTR23_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT23         : MDIOS_DOUTR23_DOUT23_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1042,14 +1042,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR24_DOUT24_Field is HAL.Short;
+   subtype MDIOS_DOUTR24_DOUT24_Field is HAL.UInt16;
 
    --  MDIOS output data register 24
    type MDIOS_DOUTR24_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT24         : MDIOS_DOUTR24_DOUT24_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1059,14 +1059,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR25_DOUT25_Field is HAL.Short;
+   subtype MDIOS_DOUTR25_DOUT25_Field is HAL.UInt16;
 
    --  MDIOS output data register 25
    type MDIOS_DOUTR25_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT25         : MDIOS_DOUTR25_DOUT25_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1076,14 +1076,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR26_DOUT26_Field is HAL.Short;
+   subtype MDIOS_DOUTR26_DOUT26_Field is HAL.UInt16;
 
    --  MDIOS output data register 26
    type MDIOS_DOUTR26_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT26         : MDIOS_DOUTR26_DOUT26_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1093,14 +1093,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR27_DOUT27_Field is HAL.Short;
+   subtype MDIOS_DOUTR27_DOUT27_Field is HAL.UInt16;
 
    --  MDIOS output data register 27
    type MDIOS_DOUTR27_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT27         : MDIOS_DOUTR27_DOUT27_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1110,14 +1110,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR28_DOUT28_Field is HAL.Short;
+   subtype MDIOS_DOUTR28_DOUT28_Field is HAL.UInt16;
 
    --  MDIOS output data register 28
    type MDIOS_DOUTR28_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT28         : MDIOS_DOUTR28_DOUT28_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1127,14 +1127,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR29_DOUT29_Field is HAL.Short;
+   subtype MDIOS_DOUTR29_DOUT29_Field is HAL.UInt16;
 
    --  MDIOS output data register 29
    type MDIOS_DOUTR29_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT29         : MDIOS_DOUTR29_DOUT29_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1144,14 +1144,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR30_DOUT30_Field is HAL.Short;
+   subtype MDIOS_DOUTR30_DOUT30_Field is HAL.UInt16;
 
    --  MDIOS output data register 30
    type MDIOS_DOUTR30_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT30         : MDIOS_DOUTR30_DOUT30_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1161,14 +1161,14 @@ package STM32_SVD.MDIOS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype MDIOS_DOUTR31_DOUT31_Field is HAL.Short;
+   subtype MDIOS_DOUTR31_DOUT31_Field is HAL.UInt16;
 
    --  MDIOS output data register 31
    type MDIOS_DOUTR31_Register is record
       --  Output data sent to MDIO Master during read frames
       DOUT31         : MDIOS_DOUTR31_DOUT31_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1187,13 +1187,13 @@ package STM32_SVD.MDIOS is
       --  MDIOS configuration register
       MDIOS_CR      : MDIOS_CR_Register;
       --  MDIOS write flag register
-      MDIOS_WRFR    : HAL.Word;
+      MDIOS_WRFR    : HAL.UInt32;
       --  MDIOS clear write flag register
-      MDIOS_CWRFR   : HAL.Word;
+      MDIOS_CWRFR   : HAL.UInt32;
       --  MDIOS read flag register
-      MDIOS_RDFR    : HAL.Word;
+      MDIOS_RDFR    : HAL.UInt32;
       --  MDIOS clear read flag register
-      MDIOS_CRDFR   : HAL.Word;
+      MDIOS_CRDFR   : HAL.UInt32;
       --  MDIOS status register
       MDIOS_SR      : MDIOS_SR_Register;
       --  MDIOS clear flag register

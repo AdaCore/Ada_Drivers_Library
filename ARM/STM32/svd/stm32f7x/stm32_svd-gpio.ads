@@ -27,7 +27,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  MODER as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  MODER as an array
             Arr : MODER_Field_Array;
@@ -52,7 +52,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  OT as a value
-            Val : HAL.Short;
+            Val : HAL.UInt16;
          when True =>
             --  OT as an array
             Arr : OTYPER_OT_Field_Array;
@@ -70,7 +70,7 @@ package STM32_SVD.GPIO is
       --  Port x configuration bits (y = 0..15)
       OT             : OTYPER_OT_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -94,7 +94,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  OSPEEDR as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  OSPEEDR as an array
             Arr : OSPEEDR_Field_Array;
@@ -122,7 +122,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  PUPDR as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  PUPDR as an array
             Arr : PUPDR_Field_Array;
@@ -147,7 +147,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  IDR as a value
-            Val : HAL.Short;
+            Val : HAL.UInt16;
          when True =>
             --  IDR as an array
             Arr : IDR_Field_Array;
@@ -165,7 +165,7 @@ package STM32_SVD.GPIO is
       --  Read-only. Port input data (y = 0..15)
       IDR            : IDR_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -186,7 +186,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  ODR as a value
-            Val : HAL.Short;
+            Val : HAL.UInt16;
          when True =>
             --  ODR as an array
             Arr : ODR_Field_Array;
@@ -204,7 +204,7 @@ package STM32_SVD.GPIO is
       --  Port output data (y = 0..15)
       ODR            : ODR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -225,7 +225,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  BS as a value
-            Val : HAL.Short;
+            Val : HAL.UInt16;
          when True =>
             --  BS as an array
             Arr : BSRR_BS_Field_Array;
@@ -249,7 +249,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  BR as a value
-            Val : HAL.Short;
+            Val : HAL.UInt16;
          when True =>
             --  BR as an array
             Arr : BSRR_BR_Field_Array;
@@ -288,7 +288,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  LCK as a value
-            Val : HAL.Short;
+            Val : HAL.UInt16;
          when True =>
             --  LCK as an array
             Arr : LCKR_LCK_Field_Array;
@@ -333,7 +333,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  AFRL as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  AFRL as an array
             Arr : AFRL_Field_Array;
@@ -361,7 +361,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  AFRH as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  AFRH as an array
             Arr : AFRH_Field_Array;
@@ -386,7 +386,7 @@ package STM32_SVD.GPIO is
       case As_Array is
          when False =>
             --  BR as a value
-            Val : HAL.Short;
+            Val : HAL.UInt16;
          when True =>
             --  BR as an array
             Arr : BRR_BR_Field_Array;
@@ -404,7 +404,7 @@ package STM32_SVD.GPIO is
       --  Port A Reset bit 0
       BR             : BRR_BR_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

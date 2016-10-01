@@ -149,7 +149,7 @@ package STM32_SVD.DAC is
       --  DAC channel1 12-bit left-aligned data
       DACC1DHR       : DHR12L1_DACC1DHR_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -203,7 +203,7 @@ package STM32_SVD.DAC is
       --  DAC channel2 12-bit left-aligned data
       DACC2DHR       : DHR12L2_DACC2DHR_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -289,7 +289,7 @@ package STM32_SVD.DAC is
       --  DAC channel2 8-bit right-aligned data
       DACC2DHR       : DHR8RD_DACC2DHR_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

@@ -696,7 +696,7 @@ package Cortex_M_SVD.SCB is
    --  System Handler Priority Register 3
    type SHPR3_Register is record
       --  unspecified
-      Reserved_0_15 : HAL.Short := 16#0#;
+      Reserved_0_15 : HAL.UInt16 := 16#0#;
       --  Priority of the system handler, PendSV
       PRI_14        : SHPR3_PRI_14_Field := 16#0#;
       --  Priority of the system handler, SysTick
@@ -927,7 +927,7 @@ package Cortex_M_SVD.SCB is
       --  Interrupt Control and State Register
       ICSR  : ICSR_Register;
       --  Vector Table Offset Register
-      VTOR  : HAL.Word;
+      VTOR  : HAL.UInt32;
       --  Application Interrupt and Reset Control Register
       AIRCR : AIRCR_Register;
       --  System Control Register
@@ -951,9 +951,9 @@ package Cortex_M_SVD.SCB is
       --  HardFault Status Register
       HFSR  : HFSR_Register;
       --  MemManage Fault Address Register
-      MMAR  : HAL.Word;
+      MMAR  : HAL.UInt32;
       --  BusFault Address Register
-      BFAR  : HAL.Word;
+      BFAR  : HAL.UInt32;
    end record
      with Volatile;
 

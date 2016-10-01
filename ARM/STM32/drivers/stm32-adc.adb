@@ -101,7 +101,7 @@ package body STM32.ADC is
 
    function Conversion_Value
      (This : Analog_To_Digital_Converter)
-      return Short
+      return UInt16
    is
    begin
       return This.DR.DATA;
@@ -124,7 +124,7 @@ package body STM32.ADC is
    function Injected_Conversion_Value
      (This : Analog_To_Digital_Converter;
       Rank : Injected_Channel_Rank)
-      return Short
+      return UInt16
    is
    begin
       case Rank is
@@ -143,7 +143,7 @@ package body STM32.ADC is
    -- Multimode_Conversion_Value --
    --------------------------------
 
-   function Multimode_Conversion_Value return Word is
+   function Multimode_Conversion_Value return UInt32 is
      (C_ADC_Periph.CDR.Val);
 
    --------------------

@@ -445,14 +445,14 @@ package STM32_SVD.DMA is
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
-   subtype SxNDTR_Stream_NDT_Field is HAL.Short;
+   subtype SxNDTR_Stream_NDT_Field is HAL.UInt16;
 
    --  stream x number of data register
    type SxNDTR_Stream_Register is record
       --  Number of data items to transfer
       NDT            : SxNDTR_Stream_NDT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -499,11 +499,11 @@ package STM32_SVD.DMA is
       --  stream x number of data register
       SxNDTR : SxNDTR_Stream_Register;
       --  stream x peripheral address register
-      SxPAR  : HAL.Word;
+      SxPAR  : HAL.UInt32;
       --  stream x memory 0 address register
-      SxM0AR : HAL.Word;
+      SxM0AR : HAL.UInt32;
       --  stream x memory 1 address register
-      SxM1AR : HAL.Word;
+      SxM1AR : HAL.UInt32;
       --  stream x FIFO control register
       SxFCR  : SxFCR_Stream_Register;
    end record

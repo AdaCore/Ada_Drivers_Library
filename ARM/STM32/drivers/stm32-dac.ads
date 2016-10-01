@@ -92,7 +92,7 @@ package STM32.DAC is
    procedure Set_Output
      (This       : in out Digital_To_Analog_Converter;
       Channel    : DAC_Channel;
-      Value      : Word;
+      Value      : UInt32;
       Resolution : DAC_Resolution;
       Alignment  : Data_Alignment);
    --  For the specified channel, writes the output Value to the data holding
@@ -119,19 +119,19 @@ package STM32.DAC is
    function Converted_Output_Value
      (This    : Digital_To_Analog_Converter;
       Channel : DAC_Channel)
-      return Word;
+      return UInt32;
    --  Returns the latest output value for the specified channel.
 
    procedure Set_Dual_Output_Voltages
      (This            : in out Digital_To_Analog_Converter;
-      Channel_1_Value : Word;
-      Channel_2_Value : Word;
+      Channel_1_Value : UInt32;
+      Channel_2_Value : UInt32;
       Resolution      : DAC_Resolution;
       Alignment       : Data_Alignment);
 
    type Dual_Channel_Output is record
-      Channel_1_Data : Short;
-      Channel_2_Data : Short;
+      Channel_1_Data : UInt16;
+      Channel_2_Data : UInt16;
    end record;
 
    function Converted_Dual_Output_Value (This : Digital_To_Analog_Converter)

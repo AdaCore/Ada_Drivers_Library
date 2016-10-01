@@ -245,7 +245,7 @@ package body FT5336 is
    begin
       This.Port.Mem_Read
         (This.I2C_Addr,
-         Short (Reg),
+         UInt16 (Reg),
          Memory_Size_8b,
          Ret,
          Tmp_Status,
@@ -268,7 +268,7 @@ package body FT5336 is
    begin
       This.Port.Mem_Write
         (This.I2C_Addr,
-         Short (Reg),
+         UInt16 (Reg),
          Memory_Size_8b,
          (1 => Data),
          Tmp_Status,
@@ -371,20 +371,20 @@ package body FT5336 is
                              Touch_Id : Touch_Identifier)
                              return TP_Touch_State
    is
-      type Short_HL_Type is record
+      type UInt16_HL_Type is record
          High, Low : Unsigned_8;
       end record with Size => 16;
-      for Short_HL_Type use record
+      for UInt16_HL_Type use record
          High at 1 range 0 .. 7;
          Low  at 0 range 0 .. 7;
       end record;
 
-      function To_Short is
-        new Ada.Unchecked_Conversion (Short_HL_Type, Unsigned_16);
+      function To_UInt16 is
+        new Ada.Unchecked_Conversion (UInt16_HL_Type, Unsigned_16);
 
       Ret    : TP_Touch_State;
       Regs   : FT5336_Pressure_Registers;
-      Tmp    : Short_HL_Type;
+      Tmp    : UInt16_HL_Type;
       Status : Boolean;
 
    begin
@@ -411,7 +411,7 @@ package body FT5336 is
          return (0, 0, 0);
       end if;
 
-      Ret.Y := Natural (To_Short (Tmp));
+      Ret.Y := Natural (To_UInt16 (Tmp));
 
       Tmp.Low := This.I2C_Read (Regs.YL_Reg, Status);
 
@@ -426,7 +426,7 @@ package body FT5336 is
          return (0, 0, 0);
       end if;
 
-      Ret.X := Natural (To_Short (Tmp));
+      Ret.X := Natural (To_UInt16 (Tmp));
 
       Ret.Weight := Natural (This.I2C_Read (Regs.Weight_Reg, Status));
 

@@ -39,7 +39,7 @@ package body STM32.DMA2D_Bitmap is
      (Buffer : DMA2D_Bitmap_Buffer;
       X      : Natural;
       Y      : Natural;
-      Value  : Word)
+      Value  : UInt32)
    is
    begin
       DMA2D_Wait_Transfer;
@@ -84,7 +84,7 @@ package body STM32.DMA2D_Bitmap is
    overriding function Get_Pixel
      (Buffer : DMA2D_Bitmap_Buffer;
       X      : Natural;
-      Y      : Natural) return Word
+      Y      : Natural) return UInt32
    is
    begin
       DMA2D_Wait_Transfer;
@@ -97,7 +97,7 @@ package body STM32.DMA2D_Bitmap is
 
    overriding procedure Fill
      (Buffer : DMA2D_Bitmap_Buffer;
-      Color  : Word)
+      Color  : UInt32)
    is
    begin
       if To_DMA2D_CM (Buffer.Color_Mode) in DMA2D_Dst_Color_Mode then
@@ -113,7 +113,7 @@ package body STM32.DMA2D_Bitmap is
 
    overriding procedure Fill_Rect
      (Buffer : DMA2D_Bitmap_Buffer;
-      Color  : Word;
+      Color  : UInt32;
       X      : Integer;
       Y      : Integer;
       Width  : Integer;

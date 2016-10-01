@@ -12,7 +12,7 @@ package STM32.DMA2D_Bitmap is
      (Buffer : DMA2D_Bitmap_Buffer;
       X      : Natural;
       Y      : Natural;
-      Value  : Word);
+      Value  : UInt32);
 
    overriding procedure Set_Pixel_Blend
      (Buffer : DMA2D_Bitmap_Buffer;
@@ -23,15 +23,15 @@ package STM32.DMA2D_Bitmap is
    overriding function Get_Pixel
      (Buffer : DMA2D_Bitmap_Buffer;
       X      : Natural;
-      Y      : Natural) return Word;
+      Y      : Natural) return UInt32;
 
    overriding procedure Fill
      (Buffer : DMA2D_Bitmap_Buffer;
-      Color  : Word);
+      Color  : UInt32);
 
    overriding procedure Fill_Rect
      (Buffer : DMA2D_Bitmap_Buffer;
-      Color  : Word;
+      Color  : UInt32;
       X      : Integer;
       Y      : Integer;
       Width  : Integer;

@@ -176,7 +176,7 @@ package STM32.DMA2D is
 
    procedure DMA2D_Fill
      (Buffer      : DMA2D_Buffer;
-      Color       : Word;
+      Color       : UInt32;
       Synchronous : Boolean := False)
      with Pre => Buffer.Color_Mode in Output_Color_Mode;
    --  Same as above, using the destination buffer native color representation
@@ -184,7 +184,7 @@ package STM32.DMA2D is
    procedure DMA2D_Set_Pixel
      (Buffer      : DMA2D_Buffer;
       X, Y        : Integer;
-      Color       : Word;
+      Color       : UInt32;
       Synchronous : Boolean := False)
      with Pre => Buffer.Color_Mode in Output_Color_Mode;
    --  Same as above, using the destination buffer native color representation
@@ -198,7 +198,7 @@ package STM32.DMA2D is
 
    procedure DMA2D_Fill_Rect
      (Buffer      : DMA2D_Buffer;
-      Color       : Word;
+      Color       : UInt32;
       X           : Integer;
       Y           : Integer;
       Width       : Integer;
@@ -209,7 +209,7 @@ package STM32.DMA2D is
 
    procedure DMA2D_Draw_Rect
      (Buffer    : DMA2D_Buffer;
-      Color     : Word;
+      Color     : UInt32;
       X         : Integer;
       Y         : Integer;
       Width     : Integer;
@@ -242,7 +242,7 @@ package STM32.DMA2D is
 
    procedure DMA2D_Draw_Vertical_Line
      (Buffer    : DMA2D_Buffer;
-      Color     : Word;
+      Color     : UInt32;
       X         : Integer;
       Y         : Integer;
       Height    : Integer;
@@ -252,7 +252,7 @@ package STM32.DMA2D is
 
    procedure DMA2D_Draw_Horizontal_Line
      (Buffer    : DMA2D_Buffer;
-      Color     : Word;
+      Color     : UInt32;
       X         : Integer;
       Y         : Integer;
       Width     : Integer;

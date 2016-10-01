@@ -925,14 +925,14 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM_CHWDAT0R_WDATA_Field is HAL.Short;
+   subtype DFSDM_CHWDAT0R_WDATA_Field is HAL.UInt16;
 
    --  DFSDM channel watchdog filter data register
    type DFSDM_CHWDAT0R_Register is record
       --  Read-only. Input channel y watchdog data
       WDATA          : DFSDM_CHWDAT0R_WDATA_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -942,14 +942,14 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM_CHWDAT1R_WDATA_Field is HAL.Short;
+   subtype DFSDM_CHWDAT1R_WDATA_Field is HAL.UInt16;
 
    --  DFSDM channel watchdog filter data register
    type DFSDM_CHWDAT1R_Register is record
       --  Read-only. Input channel y watchdog data
       WDATA          : DFSDM_CHWDAT1R_WDATA_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -959,14 +959,14 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM_CHWDAT2R_WDATA_Field is HAL.Short;
+   subtype DFSDM_CHWDAT2R_WDATA_Field is HAL.UInt16;
 
    --  DFSDM channel watchdog filter data register
    type DFSDM_CHWDAT2R_Register is record
       --  Read-only. Input channel y watchdog data
       WDATA          : DFSDM_CHWDAT2R_WDATA_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -976,14 +976,14 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM_CHWDAT3R_WDATA_Field is HAL.Short;
+   subtype DFSDM_CHWDAT3R_WDATA_Field is HAL.UInt16;
 
    --  DFSDM channel watchdog filter data register
    type DFSDM_CHWDAT3R_Register is record
       --  Read-only. Input channel y watchdog data
       WDATA          : DFSDM_CHWDAT3R_WDATA_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -993,14 +993,14 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM_CHWDAT4R_WDATA_Field is HAL.Short;
+   subtype DFSDM_CHWDAT4R_WDATA_Field is HAL.UInt16;
 
    --  DFSDM channel watchdog filter data register
    type DFSDM_CHWDAT4R_Register is record
       --  Read-only. Input channel y watchdog data
       WDATA          : DFSDM_CHWDAT4R_WDATA_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1010,14 +1010,14 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM_CHWDAT5R_WDATA_Field is HAL.Short;
+   subtype DFSDM_CHWDAT5R_WDATA_Field is HAL.UInt16;
 
    --  DFSDM channel watchdog filter data register
    type DFSDM_CHWDAT5R_Register is record
       --  Read-only. Input channel y watchdog data
       WDATA          : DFSDM_CHWDAT5R_WDATA_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1027,14 +1027,14 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM_CHWDAT6R_WDATA_Field is HAL.Short;
+   subtype DFSDM_CHWDAT6R_WDATA_Field is HAL.UInt16;
 
    --  DFSDM channel watchdog filter data register
    type DFSDM_CHWDAT6R_Register is record
       --  Read-only. Input channel y watchdog data
       WDATA          : DFSDM_CHWDAT6R_WDATA_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1044,14 +1044,14 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM_CHWDAT7R_WDATA_Field is HAL.Short;
+   subtype DFSDM_CHWDAT7R_WDATA_Field is HAL.UInt16;
 
    --  DFSDM channel watchdog filter data register
    type DFSDM_CHWDAT7R_Register is record
       --  Read-only. Input channel y watchdog data
       WDATA          : DFSDM_CHWDAT7R_WDATA_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1062,7 +1062,7 @@ package STM32_SVD.DFSDM is
    end record;
 
    --  DFSDM_CHDATIN0R_INDAT array element
-   subtype DFSDM_CHDATIN0R_INDAT_Element is HAL.Short;
+   subtype DFSDM_CHDATIN0R_INDAT_Element is HAL.UInt16;
 
    --  DFSDM_CHDATIN0R_INDAT array
    type DFSDM_CHDATIN0R_INDAT_Field_Array is array (0 .. 1)
@@ -1076,7 +1076,7 @@ package STM32_SVD.DFSDM is
       case As_Array is
          when False =>
             --  INDAT as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  INDAT as an array
             Arr : DFSDM_CHDATIN0R_INDAT_Field_Array;
@@ -1091,7 +1091,7 @@ package STM32_SVD.DFSDM is
    end record;
 
    --  DFSDM_CHDATIN1R_INDAT array element
-   subtype DFSDM_CHDATIN1R_INDAT_Element is HAL.Short;
+   subtype DFSDM_CHDATIN1R_INDAT_Element is HAL.UInt16;
 
    --  DFSDM_CHDATIN1R_INDAT array
    type DFSDM_CHDATIN1R_INDAT_Field_Array is array (0 .. 1)
@@ -1105,7 +1105,7 @@ package STM32_SVD.DFSDM is
       case As_Array is
          when False =>
             --  INDAT as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  INDAT as an array
             Arr : DFSDM_CHDATIN1R_INDAT_Field_Array;
@@ -1120,7 +1120,7 @@ package STM32_SVD.DFSDM is
    end record;
 
    --  DFSDM_CHDATIN2R_INDAT array element
-   subtype DFSDM_CHDATIN2R_INDAT_Element is HAL.Short;
+   subtype DFSDM_CHDATIN2R_INDAT_Element is HAL.UInt16;
 
    --  DFSDM_CHDATIN2R_INDAT array
    type DFSDM_CHDATIN2R_INDAT_Field_Array is array (0 .. 1)
@@ -1134,7 +1134,7 @@ package STM32_SVD.DFSDM is
       case As_Array is
          when False =>
             --  INDAT as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  INDAT as an array
             Arr : DFSDM_CHDATIN2R_INDAT_Field_Array;
@@ -1149,7 +1149,7 @@ package STM32_SVD.DFSDM is
    end record;
 
    --  DFSDM_CHDATIN3R_INDAT array element
-   subtype DFSDM_CHDATIN3R_INDAT_Element is HAL.Short;
+   subtype DFSDM_CHDATIN3R_INDAT_Element is HAL.UInt16;
 
    --  DFSDM_CHDATIN3R_INDAT array
    type DFSDM_CHDATIN3R_INDAT_Field_Array is array (0 .. 1)
@@ -1163,7 +1163,7 @@ package STM32_SVD.DFSDM is
       case As_Array is
          when False =>
             --  INDAT as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  INDAT as an array
             Arr : DFSDM_CHDATIN3R_INDAT_Field_Array;
@@ -1178,7 +1178,7 @@ package STM32_SVD.DFSDM is
    end record;
 
    --  DFSDM_CHDATIN4R_INDAT array element
-   subtype DFSDM_CHDATIN4R_INDAT_Element is HAL.Short;
+   subtype DFSDM_CHDATIN4R_INDAT_Element is HAL.UInt16;
 
    --  DFSDM_CHDATIN4R_INDAT array
    type DFSDM_CHDATIN4R_INDAT_Field_Array is array (0 .. 1)
@@ -1192,7 +1192,7 @@ package STM32_SVD.DFSDM is
       case As_Array is
          when False =>
             --  INDAT as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  INDAT as an array
             Arr : DFSDM_CHDATIN4R_INDAT_Field_Array;
@@ -1207,7 +1207,7 @@ package STM32_SVD.DFSDM is
    end record;
 
    --  DFSDM_CHDATIN5R_INDAT array element
-   subtype DFSDM_CHDATIN5R_INDAT_Element is HAL.Short;
+   subtype DFSDM_CHDATIN5R_INDAT_Element is HAL.UInt16;
 
    --  DFSDM_CHDATIN5R_INDAT array
    type DFSDM_CHDATIN5R_INDAT_Field_Array is array (0 .. 1)
@@ -1221,7 +1221,7 @@ package STM32_SVD.DFSDM is
       case As_Array is
          when False =>
             --  INDAT as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  INDAT as an array
             Arr : DFSDM_CHDATIN5R_INDAT_Field_Array;
@@ -1236,7 +1236,7 @@ package STM32_SVD.DFSDM is
    end record;
 
    --  DFSDM_CHDATIN6R_INDAT array element
-   subtype DFSDM_CHDATIN6R_INDAT_Element is HAL.Short;
+   subtype DFSDM_CHDATIN6R_INDAT_Element is HAL.UInt16;
 
    --  DFSDM_CHDATIN6R_INDAT array
    type DFSDM_CHDATIN6R_INDAT_Field_Array is array (0 .. 1)
@@ -1250,7 +1250,7 @@ package STM32_SVD.DFSDM is
       case As_Array is
          when False =>
             --  INDAT as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  INDAT as an array
             Arr : DFSDM_CHDATIN6R_INDAT_Field_Array;
@@ -1265,7 +1265,7 @@ package STM32_SVD.DFSDM is
    end record;
 
    --  DFSDM_CHDATIN7R_INDAT array element
-   subtype DFSDM_CHDATIN7R_INDAT_Element is HAL.Short;
+   subtype DFSDM_CHDATIN7R_INDAT_Element is HAL.UInt16;
 
    --  DFSDM_CHDATIN7R_INDAT array
    type DFSDM_CHDATIN7R_INDAT_Field_Array is array (0 .. 1)
@@ -1279,7 +1279,7 @@ package STM32_SVD.DFSDM is
       case As_Array is
          when False =>
             --  INDAT as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  INDAT as an array
             Arr : DFSDM_CHDATIN7R_INDAT_Field_Array;
@@ -2631,7 +2631,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Analog watchdog high threshold flag
       AWHTF          : DFSDM0_AWSR_AWHTF_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2652,7 +2652,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Analog watchdog high threshold flag
       AWHTF          : DFSDM1_AWSR_AWHTF_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2673,7 +2673,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Analog watchdog high threshold flag
       AWHTF          : DFSDM2_AWSR_AWHTF_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2694,7 +2694,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Analog watchdog high threshold flag
       AWHTF          : DFSDM3_AWSR_AWHTF_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2715,7 +2715,7 @@ package STM32_SVD.DFSDM is
       --  Clear the analog watchdog high threshold flag
       CLRAWHTF       : DFSDM0_AWCFR_CLRAWHTF_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2736,7 +2736,7 @@ package STM32_SVD.DFSDM is
       --  Clear the analog watchdog high threshold flag
       CLRAWHTF       : DFSDM1_AWCFR_CLRAWHTF_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2757,7 +2757,7 @@ package STM32_SVD.DFSDM is
       --  Clear the analog watchdog high threshold flag
       CLRAWHTF       : DFSDM2_AWCFR_CLRAWHTF_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2778,7 +2778,7 @@ package STM32_SVD.DFSDM is
       --  Clear the analog watchdog high threshold flag
       CLRAWHTF       : DFSDM3_AWCFR_CLRAWHTF_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

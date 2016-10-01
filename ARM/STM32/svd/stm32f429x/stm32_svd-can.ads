@@ -446,7 +446,7 @@ package STM32_SVD.CAN is
    end record;
 
    subtype TDT0R_DLC_Field is HAL.UInt4;
-   subtype TDT0R_TIME_Field is HAL.Short;
+   subtype TDT0R_TIME_Field is HAL.UInt16;
 
    --  mailbox data length control and time stamp register
    type TDT0R_Register is record
@@ -486,7 +486,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  DATA as an array
             Arr : TDL0R_DATA_Field_Array;
@@ -514,7 +514,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  DATA as an array
             Arr : TDH0R_DATA_Field_Array;
@@ -556,7 +556,7 @@ package STM32_SVD.CAN is
    end record;
 
    subtype TDT1R_DLC_Field is HAL.UInt4;
-   subtype TDT1R_TIME_Field is HAL.Short;
+   subtype TDT1R_TIME_Field is HAL.UInt16;
 
    --  mailbox data length control and time stamp register
    type TDT1R_Register is record
@@ -596,7 +596,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  DATA as an array
             Arr : TDL1R_DATA_Field_Array;
@@ -624,7 +624,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  DATA as an array
             Arr : TDH1R_DATA_Field_Array;
@@ -666,7 +666,7 @@ package STM32_SVD.CAN is
    end record;
 
    subtype TDT2R_DLC_Field is HAL.UInt4;
-   subtype TDT2R_TIME_Field is HAL.Short;
+   subtype TDT2R_TIME_Field is HAL.UInt16;
 
    --  mailbox data length control and time stamp register
    type TDT2R_Register is record
@@ -706,7 +706,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  DATA as an array
             Arr : TDL2R_DATA_Field_Array;
@@ -734,7 +734,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  DATA as an array
             Arr : TDH2R_DATA_Field_Array;
@@ -777,7 +777,7 @@ package STM32_SVD.CAN is
 
    subtype RDT0R_DLC_Field is HAL.UInt4;
    subtype RDT0R_FMI_Field is HAL.Byte;
-   subtype RDT0R_TIME_Field is HAL.Short;
+   subtype RDT0R_TIME_Field is HAL.UInt16;
 
    --  mailbox data high register
    type RDT0R_Register is record
@@ -814,7 +814,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  DATA as an array
             Arr : RDL0R_DATA_Field_Array;
@@ -842,7 +842,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  DATA as an array
             Arr : RDH0R_DATA_Field_Array;
@@ -885,7 +885,7 @@ package STM32_SVD.CAN is
 
    subtype RDT1R_DLC_Field is HAL.UInt4;
    subtype RDT1R_FMI_Field is HAL.Byte;
-   subtype RDT1R_TIME_Field is HAL.Short;
+   subtype RDT1R_TIME_Field is HAL.UInt16;
 
    --  mailbox data high register
    type RDT1R_Register is record
@@ -922,7 +922,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  DATA as an array
             Arr : RDL1R_DATA_Field_Array;
@@ -950,7 +950,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  DATA as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  DATA as an array
             Arr : RDH1R_DATA_Field_Array;
@@ -1154,7 +1154,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F0R_FB_Field_Array;
@@ -1179,7 +1179,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F1R_FB_Field_Array;
@@ -1204,7 +1204,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F2R_FB_Field_Array;
@@ -1229,7 +1229,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F3R_FB_Field_Array;
@@ -1254,7 +1254,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F4R_FB_Field_Array;
@@ -1279,7 +1279,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F5R_FB_Field_Array;
@@ -1304,7 +1304,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F6R_FB_Field_Array;
@@ -1329,7 +1329,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F7R_FB_Field_Array;
@@ -1354,7 +1354,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F8R_FB_Field_Array;
@@ -1379,7 +1379,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F9R_FB_Field_Array;
@@ -1404,7 +1404,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F10R_FB_Field_Array;
@@ -1429,7 +1429,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F11R_FB_Field_Array;
@@ -1454,7 +1454,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F12R_FB_Field_Array;
@@ -1479,7 +1479,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F13R_FB_Field_Array;
@@ -1504,7 +1504,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F14R_FB_Field_Array;
@@ -1529,7 +1529,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F15R_FB_Field_Array;
@@ -1554,7 +1554,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F16R_FB_Field_Array;
@@ -1579,7 +1579,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F17R_FB_Field_Array;
@@ -1604,7 +1604,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F18R_FB_Field_Array;
@@ -1629,7 +1629,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F19R_FB_Field_Array;
@@ -1654,7 +1654,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F20R_FB_Field_Array;
@@ -1679,7 +1679,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F21R_FB_Field_Array;
@@ -1704,7 +1704,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F22R_FB_Field_Array;
@@ -1729,7 +1729,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F23R_FB_Field_Array;
@@ -1754,7 +1754,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F24R_FB_Field_Array;
@@ -1779,7 +1779,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F25R_FB_Field_Array;
@@ -1804,7 +1804,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F26R_FB_Field_Array;
@@ -1829,7 +1829,7 @@ package STM32_SVD.CAN is
       case As_Array is
          when False =>
             --  FB as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  FB as an array
             Arr : F27R_FB_Field_Array;

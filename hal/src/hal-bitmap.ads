@@ -85,7 +85,7 @@ package HAL.Bitmap is
      (Buffer  : Bitmap_Buffer;
       X       : Natural;
       Y       : Natural;
-      Value   : Word);
+      Value   : UInt32);
 
    procedure Set_Pixel_Blend
      (Buffer : Bitmap_Buffer;
@@ -103,7 +103,7 @@ package HAL.Bitmap is
      (Buffer : Bitmap_Buffer;
       X      : Natural;
       Y      : Natural)
-      return Word;
+      return UInt32;
 
    procedure Fill
      (Buffer : Bitmap_Buffer;
@@ -112,7 +112,7 @@ package HAL.Bitmap is
 
    procedure Fill
      (Buffer : Bitmap_Buffer;
-      Color  : Word);
+      Color  : UInt32);
    --  Same as above, using the destination buffer native color representation
 
    procedure Fill_Rect
@@ -126,7 +126,7 @@ package HAL.Bitmap is
 
    procedure Fill_Rect
      (Buffer : Bitmap_Buffer;
-      Color  : Word;
+      Color  : UInt32;
       X      : Integer;
       Y      : Integer;
       Width  : Integer;
@@ -171,7 +171,7 @@ package HAL.Bitmap is
 
    procedure Draw_Vertical_Line
      (Buffer : Bitmap_Buffer;
-      Color  : Word;
+      Color  : UInt32;
       X      : Integer;
       Y      : Integer;
       Height : Integer);
@@ -185,7 +185,7 @@ package HAL.Bitmap is
 
    procedure Draw_Horizontal_Line
      (Buffer : Bitmap_Buffer;
-      Color  : Word;
+      Color  : UInt32;
       X      : Integer;
       Y      : Integer;
       Width  : Integer);
@@ -210,11 +210,11 @@ package HAL.Bitmap is
 
    function Bitmap_Color_To_Word
      (Mode : Bitmap_Color_Mode; Col : Bitmap_Color)
-     return Word;
+     return UInt32;
    --  Translates the DMA2D Color into native buffer color
 
    function Word_To_Bitmap_Color
-     (Mode : Bitmap_Color_Mode; Col : Word)
+     (Mode : Bitmap_Color_Mode; Col : UInt32)
      return Bitmap_Color;
    --  Translates the native buffer color into DMA2D Color
 
