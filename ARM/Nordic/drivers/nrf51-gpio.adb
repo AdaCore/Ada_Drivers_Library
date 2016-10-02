@@ -53,7 +53,7 @@ package body nRF51.GPIO is
      (This : in out GPIO_Point)
    is
    begin
-      GPIO_Periph.OUTSET.Arr (This.Pin) := Set;
+      GPIO_Periph.OUT_k.Arr (This.Pin) := High;
    end Set;
 
    -----------
@@ -64,7 +64,7 @@ package body nRF51.GPIO is
      (This : in out GPIO_Point)
    is
    begin
-      GPIO_Periph.OUTCLR.Arr (This.Pin) := Clear;
+      GPIO_Periph.OUT_k.Arr (This.Pin) := Low;
    end Clear;
 
    ------------
