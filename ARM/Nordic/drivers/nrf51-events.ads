@@ -51,8 +51,6 @@ with NRF51_SVD.ADC;
 
 package nRF51.Events is
 
-   type Event_Type is private;
-
    function Triggered (Evt : Event_Type) return Boolean;
 
    procedure Enable_Interrupt (Evt : Event_Type);
@@ -184,8 +182,6 @@ package nRF51.Events is
    ADC_END             : constant Event_Type;
 
 private
-
-   type Event_Type is new System.Address;
 
    --  Power management events
    Power_POFWARN       : constant Event_Type :=

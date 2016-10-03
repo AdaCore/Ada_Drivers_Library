@@ -51,8 +51,6 @@ with NRF51_SVD.ADC;
 
 package nRF51.Tasks is
 
-   type Task_Type is private;
-
    procedure Trigger (T : Task_Type);
    --  Software task trigger
 
@@ -193,8 +191,6 @@ package nRF51.Tasks is
    ADC_START              : constant Task_Type;
    ADC_STOP               : constant Task_Type;
 private
-
-   type Task_Type is new System.Address;
 
    --  Power management tasks
    Power_CONSTLAT : constant Task_Type :=

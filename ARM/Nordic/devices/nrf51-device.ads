@@ -30,6 +30,8 @@
 ------------------------------------------------------------------------------
 
 with nRF51.GPIO; use nRF51.GPIO;
+with nRF51.RTC;  use nRF51.RTC;
+with NRF51_SVD.RTC;
 
 package nRF51.Device is
 
@@ -65,5 +67,8 @@ package nRF51.Device is
    P29 : aliased GPIO_Point := (Pin => 29);
    P30 : aliased GPIO_Point := (Pin => 30);
    P31 : aliased GPIO_Point := (Pin => 31);
+
+   RTC0 : aliased Real_Time_Counter (NRF51_SVD.RTC.RTC0_Periph'Access);
+   RTC1 : aliased Real_Time_Counter (NRF51_SVD.RTC.RTC1_Periph'Access);
 
 end nRF51.Device;

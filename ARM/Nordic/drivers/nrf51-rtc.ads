@@ -29,15 +29,38 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with System;
+with NRF51_SVD.RTC;
+with HAL; use HAL;
 
-package nRF51 is
+package nRF51.RTC is
 
-   type Event_Type is private;
+   type RTC_Events is (Tick_Event, Overflow_Event, Compare_0_Event,
+                      Compare_1_Event, Compare_2_Event, Compare_3_Event);
 
-   type Task_Type is private;
+   type Compare_Channel is range 0 .. 3;
 
+   type Real_Time_Counter (Periph : not null access NRF51_SVD.RTC.RTC_Peripheral) is private;
+
+   procedure Start (This : Real_Time_Counter);
+   procedure Stop (This : Real_Time_Counter);
+   procedure Clear (This : Real_Time_Counter);
+
+   procedure Set_Prescaler (This      : Real_Time_Counter;
+                            Prescaler : UInt12);
+
+   function Counter (This : Real_Time_Counter) return UInt24;
+
+   procedure Set_Compare (This    : Real_Time_Counter;
+                          Compare : Compare_Channel;
+                          Value   : UInt24);
+
+   function Event (This : Real_Time_Counter;
+                   Evt  : RTC_Events) return Event_Type;
+
+   procedure Enable_Event (This : Real_Time_Counter;
+                           Evt  : RTC_Events);
+   procedure Disable_Event (This : Real_Time_Counter;
+                            Evt  : RTC_Events);
 private
-   type Event_Type is new System.Address;
-   type Task_Type is new System.Address;
-end nRF51;
+   type Real_Time_Counter (Periph : not null access NRF51_SVD.RTC.RTC_Peripheral) is null record;
+end nRF51.RTC;
