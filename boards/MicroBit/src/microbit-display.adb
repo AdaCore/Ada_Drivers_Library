@@ -62,6 +62,7 @@ package body MicroBit.Display is
       ((1, 3), (3, 8), (2, 1), (1, 4), (3, 2))
      );
 
+   procedure Initialize;
    procedure Tick_Handler;
 
    ----------------
@@ -332,4 +333,6 @@ package body MicroBit.Display is
       end case;
    end Display;
 
+begin
+   Initialize;
 end MicroBit.Display;

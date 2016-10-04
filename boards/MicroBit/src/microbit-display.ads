@@ -31,25 +31,18 @@
 
 package MicroBit.Display is
 
-   procedure Initialize;
-   function Initialized return Boolean;
-
    subtype Coord is Natural range 0 .. 4;
 
-   procedure Set (X, Y : Coord)
-     with Pre => Initialized;
+   procedure Set (X, Y : Coord);
    --  Set one pixels
 
-   procedure Clear (X, Y : Coord)
-     with Pre => Initialized;
+   procedure Clear (X, Y : Coord);
    --  Clear one pixels
 
-   procedure Clear
-     with Pre => Initialized;
+   procedure Clear;
    --  Clear all the pixels
 
-   procedure Display (C : Character)
-     with Pre => Initialized;
+   procedure Display (C : Character);
    --  Display a character on the screen
 
 end MicroBit.Display;
