@@ -56,9 +56,9 @@ package body nRF51.Events is
    procedure Enable_Interrupt (Evt : Event_Type) is
 
       Reg_Addr : constant UInt32 := To_UInt32 (System.Address (Evt));
-      Device_Base : constant UInt32 := Reg_Addr and 16#FFFF_FF00#;
+      Device_Base : constant UInt32 := Reg_Addr and 16#FFFF_F000#;
 
-      Event_Index : constant UInt7 := UInt7 (Reg_Addr and 16#0000_007F#);
+      Event_Index : constant UInt7 := UInt7 (Reg_Addr and 16#0000_007F#) / 4;
       --  The bit corresponding to an event is determined by the offset of the
       --  event. (nRF51 Series Reference Manual, section 9.1.6)
 
@@ -79,9 +79,9 @@ package body nRF51.Events is
    procedure Disable_Interrupt (Evt : Event_Type) is
 
       Reg_Addr : constant UInt32 := To_UInt32 (System.Address (Evt));
-      Device_Base : constant UInt32 := Reg_Addr and 16#FFFF_FF00#;
+      Device_Base : constant UInt32 := Reg_Addr and 16#FFFF_F000#;
 
-      Event_Index : constant UInt7 := UInt7 (Reg_Addr and 16#0000_007F#);
+      Event_Index : constant UInt7 := UInt7 (Reg_Addr and 16#0000_007F#) / 4;
       --  The bit corresponding to an event is determined by the offset of the
       --  event. (nRF51 Series Reference Manual, section 9.1.6)
 
