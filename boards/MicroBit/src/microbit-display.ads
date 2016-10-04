@@ -38,8 +38,18 @@ package MicroBit.Display is
 
    procedure Set (X, Y : Coord)
      with Pre => Initialized;
+   --  Set one pixels
 
    procedure Clear (X, Y : Coord)
      with Pre => Initialized;
+   --  Clear one pixels
+
+   procedure Clear
+     with Pre => Initialized;
+   --  Clear all the pixels
+
+   procedure Display (C : Character)
+     with Pre => Initialized;
+   --  Display a character on the screen
 
 end MicroBit.Display;

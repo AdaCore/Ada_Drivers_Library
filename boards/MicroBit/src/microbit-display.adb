@@ -29,13 +29,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.GPIO;   use nRF51.GPIO;
-with nRF51.Device; use nRF51.Device;
+with nRF51.GPIO;    use nRF51.GPIO;
+with nRF51.Device;  use nRF51.Device;
+with MicroBit.Time; use MicroBit.Time;
 
 package body MicroBit.Display is
 
    Is_Initialized : Boolean := False;
 
+   Bitmap : array (Coord, Coord) of Boolean := (others => (others => False));
+   Current_X, Current_Y : Coord := 0;
 
    subtype Row_Range is Natural range 1 .. 3;
    subtype Column_Range is Natural range 1 .. 9;
@@ -52,12 +55,14 @@ package body MicroBit.Display is
      (P04, P05, P06, P07, P08, P09, P10, P11, P12);
 
    Map : constant array (Coord, Coord) of LED_Point :=
-     (((1, 1), (2, 4), (1, 2), (2, 5), (1, 3)),
-      ((3, 4), (3, 5), (3, 6), (3, 7), (3, 8)),
-      ((2, 2), (1, 9), (2, 3), (3, 9), (2, 1)),
-      ((1, 8), (1, 7), (1, 6), (1, 5), (1, 4)),
-      ((3, 3), (2, 7), (3, 1), (2, 6), (3, 2))
+     (((1, 1), (3, 4), (2, 2), (1, 8), (3, 3)),
+      ((2, 4), (3, 5), (1, 9), (1, 7), (2, 7)),
+      ((1, 2), (3, 6), (2, 3), (1, 6), (3, 1)),
+      ((2, 5), (3, 7), (3, 9), (1, 5), (2, 6)),
+      ((1, 3), (3, 8), (2, 1), (1, 4), (3, 2))
      );
+
+   procedure Tick_Handler;
 
    ----------------
    -- Initialize --
@@ -80,7 +85,47 @@ package body MicroBit.Display is
       end loop;
 
       Is_Initialized := True;
+
+      if not Tick_Subscribe (Tick_Handler'Access) then
+         raise Program_Error;
+      end if;
    end Initialize;
+
+   ------------------
+   -- Tick_Handler --
+   ------------------
+
+   procedure Tick_Handler is
+   begin
+
+      --  Turn Off
+
+      --  Row source current
+      Row_Points (Map (Current_X, Current_Y).Row_Id).Clear;
+      --  Column sink current
+      Column_Points (Map (Current_X, Current_Y).Column_Id).Set;
+
+      if Current_X = Coord'Last then
+         Current_X := Coord'First;
+
+         if Current_Y = Coord'Last then
+            Current_Y := Coord'First;
+         else
+            Current_Y := Current_Y + 1;
+         end if;
+      else
+         Current_X := Current_X + 1;
+      end if;
+
+
+      --  Turn on?
+      if Bitmap (Current_X, Current_Y) then
+         --  Row source current
+         Row_Points (Map (Current_X, Current_Y).Row_Id).Set;
+         --  Column sink current
+         Column_Points (Map (Current_X, Current_Y).Column_Id).Clear;
+      end if;
+   end Tick_Handler;
 
    -----------------
    -- Initialized --
@@ -97,10 +142,7 @@ package body MicroBit.Display is
 
    procedure Set (X, Y : Coord) is
    begin
-      --  Row source current
-      Row_Points (Map (X, Y).Row_Id).Set;
-      --  Column sink current
-      Column_Points (Map (X, Y).Column_Id).Clear;
+      Bitmap (X, Y) := True;
    end Set;
 
    -----------
@@ -109,10 +151,185 @@ package body MicroBit.Display is
 
    procedure Clear (X, Y : Coord) is
    begin
-      --  Row source current
-      Row_Points (Map (X, Y).Row_Id).Clear;
-      --  Column sink current
-      Column_Points (Map (X, Y).Column_Id).Set;
+      Bitmap (X, Y) := False;
    end Clear;
+
+   -----------
+   -- Clear --
+   -----------
+
+   procedure Clear is
+   begin
+      Bitmap := (others => (others => False));
+   end Clear;
+
+   -------------
+   -- Display --
+   -------------
+
+   procedure Display (C : Character) is
+   begin
+      Clear;
+      case C is
+         when 'A' =>
+            Bitmap :=  ((False, True,  True, True,  True),
+                        (True,  False, True, False, False),
+                        (True,  False, True, False, False),
+                        (True,  False, True, False, False),
+                        (False, True,  True, True,  True));
+         when 'B' =>
+            Bitmap :=  ((True,  True,  True,  True,  True),
+                        (True,  False, True,  False, True),
+                        (True,  False, True,  False, True),
+                        (True,  False, True,  False, True),
+                        (False, True,  False, True,  False));
+         when 'C' =>
+            Bitmap := ((False, True,  True,  True,  False),
+                       (True,  False, False, False, True),
+                       (True,  False, False, False, True),
+                       (True,  False, False, False, True),
+                       (True, False, False, False, True));
+         when 'D' =>
+            Bitmap := ((True,  True,  True,  True,  True),
+                       (True,  False, False, False, True),
+                       (True,  False, False, False, True),
+                       (True,  False, False, False, True),
+                       (False, True,  True,  True,  False));
+         when 'E' =>
+            Bitmap :=  ((True,  True,  True,  True,  True),
+                        (True,  False, True,  False, True),
+                        (True,  False, True,  False, True),
+                        (True,  False, False, False, True),
+                        (True,  False, False, False, True));
+         when 'F' =>
+            Bitmap :=  ((True,  True, True,  True,  True),
+                        (True, False, True,  False, False),
+                        (True, False, True,  False, False),
+                        (True, False, False, False, False),
+                        (True, False, False, False, False));
+         when 'G' =>
+            Bitmap := ((False, True,  True,  True,  False),
+                       (True,  False, False, False, True),
+                       (True,  False, True,  False, True),
+                       (True,  False, True,  False, True),
+                       (False, False, True,  True, False));
+         when 'H' =>
+            Bitmap := ((True,  True,  True, True,  True),
+                       (False, False, True, False, False),
+                       (False, False, True, False, False),
+                       (False, False, True, False, False),
+                       (True,  True,  True, True,  True));
+         when 'I' =>
+            Bitmap := ((False, False, False, False, False),
+                       (False, False, False, False, False),
+                       (True,  True,  True,  True,  True),
+                       (False, False, False, False, False),
+                       (False, False, False, False, False));
+         when 'J' =>
+            Bitmap := ((False, False, False, True,  False),
+                       (False, False, False, False, True),
+                       (False, False, False, False, True),
+                       (False, False, False, False, True),
+                       (True,  True,  True,  True,  False));
+         when 'K' =>
+            Bitmap :=  ((True,  True,  True,  True,  True),
+                        (False, False, True,  False, False),
+                        (False, True,  False, True,  False),
+                        (True,  False, False, False, True),
+                        (False, False, False, False, False));
+         when 'L' =>
+            Bitmap := ((True,  True,  True,  True,  True),
+                       (False, False, False, False, True),
+                       (False, False, False, False, True),
+                       (False, False, False, False, True),
+                       (False, False, False, False, True));
+         when 'M' =>
+            Bitmap := ((True,  True,  True,  True,  True),
+                       (False, True,  False, False, False),
+                       (False, False, True,  False, False),
+                       (False, True,  False, False, False),
+                       (True,  True,  True,  True,  True));
+         when 'N' =>
+            Bitmap := ((True,  True,  True,  True,  True),
+                       (False, True,  False, False, False),
+                       (False, False, True,  False, False),
+                       (False, False, False, True,  False),
+                       (True,  True,  True,  True,  True));
+         when 'O' =>
+            Bitmap := ((False, True,  True,  True,  False),
+                       (True,  False, False, False, True),
+                       (True,  False, False, False, True),
+                       (True,  False, False, False, True),
+                       (False, True,  True,  True,  False));
+         when 'P' =>
+            Bitmap :=  ((True,  True,  True,  True,  True),
+                        (True,  False, True,  False, False),
+                        (True,  False, True,  False, False),
+                        (True,  False, True,  False, False),
+                        (False, True,  False, False, False));
+         when 'Q' =>
+            Bitmap := ((False, True,  True,  True,  False),
+                       (True,  False, False, False, True),
+                       (True,  False, False, False, True),
+                       (True,  False, False, True,  True),
+                       (False, True,  True,  True,  True));
+         when 'R' =>
+            Bitmap :=  ((True,  True,  True,  True,  True),
+                        (True,  False, True,  False, False),
+                        (True,  False, True,  False, False),
+                        (True,  False, True,  True, False),
+                        (False, True,  False, False, True));
+         when 'S' =>
+            Bitmap :=  ((False, True,  False, False, True),
+                        (True,  False, True,  False, True),
+                        (True,  False, True,  False, True),
+                        (True,  False, True,  False, True),
+                        (True,  False, False, True,  False));
+         when 'T' =>
+            Bitmap := ((True, False, False, False, False),
+                       (True, False, False, False, False),
+                       (True, True,  True,  True,  True),
+                       (True, False, False, False, False),
+                       (True, False, False, False, False));
+         when 'U' =>
+            Bitmap := ((True,  True,  True,  True,  False),
+                       (False, False, False, False, True),
+                       (False, False, False, False, True),
+                       (False, False, False, False, True),
+                       (True,  True,  True,  True,  False));
+         when 'V' =>
+            Bitmap := ((True,  True,  False, False, False),
+                       (False, False, True,  True,  False),
+                       (False, False, False, False, True),
+                       (False, False, True,  True,  False),
+                       (True,  True,  False, False, False));
+         when 'W' =>
+            Bitmap := ((True,  True,  True,  False, False),
+                       (False, False, False, True,  True),
+                       (True,  True,  True,  False, False),
+                       (False, False, False, True,  True),
+                       (True,  True,  True,  False, False));
+         when 'X' =>
+            Bitmap := ((True,  False, False, False, True),
+                       (False, True,  False, True,  False),
+                       (False, False, True,  False, False),
+                       (False, True,  False, True,  False),
+                       (True,  False, False, False, True));
+         when 'Y' =>
+            Bitmap := ((True,  False, False, False, False),
+                       (False, True,  False, False, False),
+                       (False, False, True,  True,  True),
+                       (False, True,  False, False, False),
+                       (True,  False, False, False, False));
+         when 'Z' =>
+            Bitmap := ((True, False, False, False, True),
+                       (True, False, False, True,  True),
+                       (True, False, True,  False, True),
+                       (True, True,  False, False, True),
+                       (True, False, False, False, True));
+
+         when others => null;
+      end case;
+   end Display;
 
 end MicroBit.Display;
