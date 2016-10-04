@@ -1,18 +1,18 @@
 with "config";
 with "../../hal/HAL";
 
-library project Cortex_M4 is
+library project Cortex_M0 is
 
    for Source_Dirs use ("src",
-                        "src/cm4",
+                        "src/cm0",
                         "src/nocache",
-                        "src/nvic_cm4_cm7");
+                        "src/nvic_cm0");
 
-   for Library_Name use "cortex-m4";
+   for Library_Name use "cortex-m0";
    for Library_Dir use "lib/cortex-m4/" & Config.Object_Subdir;
    for Object_Dir use "obj/cortex-m4/" & Config.Object_Subdir;
 
    package Compiler renames Config.Compiler;
    package Builder  renames Config.Builder;
 
-end Cortex_M4;
+end Cortex_M0;
