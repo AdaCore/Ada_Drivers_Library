@@ -30,19 +30,17 @@
 ------------------------------------------------------------------------------
 
 with MicroBit.Display; use MicroBit.Display;
+with HAL;              use HAL;
 
 procedure Main is
+   Tmp : UInt24 with Unreferenced;
+   Str : constant String := "MAKE WITH ADA    ";
 begin
-   Initialize;
-
    loop
-      for X in Coord loop
-         for Y in Coord loop
-            Set (X, Y);
-            for Cnt in 0 .. 100_000 loop
-               null;
-            end loop;
-            Clear (X, Y);
+      for C of Str loop
+         Display (C);
+         for Cnt in 0 .. 200_000 loop
+            null;
          end loop;
       end loop;
    end loop;
