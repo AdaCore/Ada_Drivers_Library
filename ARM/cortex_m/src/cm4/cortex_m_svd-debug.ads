@@ -15,19 +15,19 @@ package Cortex_M_SVD.Debug is
 
    --  Debug Fault Status Register
    type DFSR_Register is record
-      HALTED        : Boolean := True;
+      HALTED        : Boolean := False;
       --  BKPT instruction executed or breakpoint match in FPB.
       BKPT          : Boolean := False;
       --  Data Watchpoint and Trace trap. Indicates that the core halted due to
       --  at least one DWT trap event.
-      DWTTRAP       : Boolean := True;
+      DWTTRAP       : Boolean := False;
       --  Vector catch triggered. Corresponding FSR will contain the primary
       --  cause of the exception.
       VCATCH        : Boolean := False;
       --  An asynchronous exception generated due to the assertion of EDBGRQ.
       EXTERNAL      : Boolean := False;
       --  unspecified
-      Reserved_5_31 : HAL.UInt27 := 16#0#;
+      Reserved_5_31 : HAL.UInt27 := 16#214C8A3#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -98,27 +98,27 @@ package Cortex_M_SVD.Debug is
       Reserved_26_31 at 0 range 26 .. 31;
    end record;
 
-   subtype Write_DHCSR_S_RESET_ST_Field is HAL.Short;
+   subtype Write_DHCSR_S_RESET_ST_Field is HAL.UInt16;
 
    type Write_DHCSR_Register is record
       --  Write-only.
-      C_DEBUGGEN    : Boolean := True;
+      C_DEBUGGEN    : Boolean := False;
       --  Write-only.
       C_HALT        : Boolean := False;
       --  Write-only.
-      C_STEP        : Boolean := True;
+      C_STEP        : Boolean := False;
       --  Write-only.
       C_MASKINTS    : Boolean := False;
       --  unspecified
       Reserved_4_4  : HAL.Bit := 16#0#;
       --  Write-only.
-      C_SNAPSTALL   : Boolean := False;
+      C_SNAPSTALL   : Boolean := True;
       --  unspecified
-      Reserved_6_15 : HAL.UInt10 := 16#0#;
+      Reserved_6_15 : HAL.UInt10 := 16#51#;
       --  Write-only. Debug Key. The value 0xA05F must be written to enable
       --  write accesses to bits [15:0], otherwise the write access will be
       --  ignored. Read behavior of bits [31:16] is as listed below.
-      S_RESET_ST    : Write_DHCSR_S_RESET_ST_Field := 16#0#;
+      S_RESET_ST    : Write_DHCSR_S_RESET_ST_Field := 16#4299#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -218,13 +218,13 @@ package Cortex_M_SVD.Debug is
    --  register is only accessible from Debug state.
    type DCRSR_Register is record
       --  Write-only.
-      HALTED         : DCRSR_HALTED_Field := Cortex_M_SVD.Debug.Register_5;
+      HALTED         : DCRSR_HALTED_Field := Cortex_M_SVD.Debug.Register_0;
       --  unspecified
-      Reserved_5_15  : HAL.UInt11 := 16#0#;
+      Reserved_5_15  : HAL.UInt11 := 16#A3#;
       --  Write-only.
-      REGWnR         : DCRSR_REGWnR_Field := Cortex_M_SVD.Debug.Read;
+      REGWnR         : DCRSR_REGWnR_Field := Cortex_M_SVD.Debug.Write;
       --  unspecified
-      Reserved_17_31 : HAL.UInt15 := 16#0#;
+      Reserved_17_31 : HAL.UInt15 := 16#214C#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -238,27 +238,27 @@ package Cortex_M_SVD.Debug is
 
    --  Debug Exception and Monitor Control Register
    type DEMCR_Register is record
-      VC_CORERESET   : Boolean := True;
+      VC_CORERESET   : Boolean := False;
       --  unspecified
-      Reserved_1_3   : HAL.UInt3 := 16#2#;
+      Reserved_1_3   : HAL.UInt3 := 16#0#;
       VC_MMERR       : Boolean := False;
-      VC_NOCPERR     : Boolean := False;
-      VC_CHKERR      : Boolean := False;
+      VC_NOCPERR     : Boolean := True;
+      VC_CHKERR      : Boolean := True;
       VC_STATERR     : Boolean := False;
       VC_BUSERR      : Boolean := False;
       VC_INTERR      : Boolean := False;
-      VC_HARDERR     : Boolean := False;
+      VC_HARDERR     : Boolean := True;
       --  unspecified
-      Reserved_11_15 : HAL.UInt5 := 16#0#;
-      MON_EN         : Boolean := False;
+      Reserved_11_15 : HAL.UInt5 := 16#2#;
+      MON_EN         : Boolean := True;
       MON_PEND       : Boolean := False;
       MON_STEP       : Boolean := False;
-      MON_REQ        : Boolean := False;
+      MON_REQ        : Boolean := True;
       --  unspecified
-      Reserved_20_23 : HAL.UInt4 := 16#0#;
+      Reserved_20_23 : HAL.UInt4 := 16#9#;
       TRCENA         : Boolean := False;
       --  unspecified
-      Reserved_25_31 : HAL.UInt7 := 16#0#;
+      Reserved_25_31 : HAL.UInt7 := 16#21#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -299,7 +299,7 @@ package Cortex_M_SVD.Debug is
       --  This register is only accessible from Debug state.
       DCRSR : DCRSR_Register;
       --  Debug Core Register Data Register
-      DCRDR : HAL.Word;
+      DCRDR : HAL.UInt32;
       --  Debug Exception and Monitor Control Register
       DEMCR : DEMCR_Register;
    end record

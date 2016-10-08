@@ -16,7 +16,7 @@ package body Bit_Fields is
    type Convert_16 (As_Array : Boolean := False) is record
       case As_Array is
          when False =>
-            Value : Short;
+            Value : UInt16;
          when True =>
             Bits : Bit_Field (0 .. 15);
       end case;
@@ -30,7 +30,7 @@ package body Bit_Fields is
    type Convert_32 (As_Array : Boolean := False) is record
       case As_Array is
          when False =>
-            Value : Word;
+            Value : UInt32;
          when True =>
             Bits : Bit_Field (0 .. 31);
       end case;
@@ -46,7 +46,7 @@ package body Bit_Fields is
    -- To_Word --
    -------------
 
-   function To_Word (Bits : Bit_Field) return Word is
+   function To_Word (Bits : Bit_Field) return UInt32 is
       Tmp : Convert_32;
    begin
       Tmp.Bits := Bits;
@@ -54,15 +54,15 @@ package body Bit_Fields is
    end To_Word;
 
    --------------
-   -- To_Short --
+   -- To_UInt16 --
    --------------
 
-   function To_Short (Bits : Bit_Field) return Short is
+   function To_UInt16 (Bits : Bit_Field) return UInt16 is
       Tmp : Convert_16;
    begin
       Tmp.Bits := Bits;
       return Tmp.Value;
-   end To_Short;
+   end To_UInt16;
 
    -------------
    -- To_Byte --
@@ -79,7 +79,7 @@ package body Bit_Fields is
    -- To_Bit_Field --
    ------------------
 
-   function To_Bit_Field (Value : Word) return Bit_Field is
+   function To_Bit_Field (Value : UInt32) return Bit_Field is
       Tmp : Convert_32;
    begin
       Tmp.Value := Value;
@@ -90,7 +90,7 @@ package body Bit_Fields is
    -- To_Bit_Field --
    ------------------
 
-   function To_Bit_Field (Value : Short) return Bit_Field is
+   function To_Bit_Field (Value : UInt16) return Bit_Field is
       Tmp : Convert_16;
    begin
       Tmp.Value := Value;

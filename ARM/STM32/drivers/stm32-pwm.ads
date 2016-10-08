@@ -112,7 +112,7 @@ package STM32.PWM is
      with Inline,
           Pre => Attached (This) or else raise Not_Attached;
 
-   subtype Microseconds is Word;
+   subtype Microseconds is UInt32;
 
    procedure Set_Duty_Time
      (This  : in out PWM_Modulator;
@@ -153,8 +153,8 @@ private
      (Output_Timer : not null access STM32.Timers.Timer)
    is record
       Outputs      : PWM_Outputs;
-      Timer_Period : Word;
-      Frequency    : Word;
+      Timer_Period : UInt32;
+      Frequency    : UInt32;
    end record;
 
    type PWM_Modulator is record

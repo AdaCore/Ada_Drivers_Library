@@ -106,19 +106,19 @@ package ST7735R is
 
    procedure Set_Vcom (LCD : ST7735R_Device; VCOMS : UInt6);
 
-   procedure Set_Column_Address (LCD : ST7735R_Device; X_Start, X_End : Short);
-   procedure Set_Row_Address (LCD : ST7735R_Device; Y_Start, Y_End : Short);
+   procedure Set_Column_Address (LCD : ST7735R_Device; X_Start, X_End : UInt16);
+   procedure Set_Row_Address (LCD : ST7735R_Device; Y_Start, Y_End : UInt16);
    procedure Set_Address (LCD : ST7735R_Device;
-                          X_Start, X_End, Y_Start, Y_End : Short);
+                          X_Start, X_End, Y_Start, Y_End : UInt16);
 
    procedure Set_Pixel (LCD   : ST7735R_Device;
-                        X, Y  : Short;
-                        Color : Short);
+                        X, Y  : UInt16;
+                        Color : UInt16);
 
    procedure Write_Raw_Pixels (LCD  : ST7735R_Device;
                                Data : HAL.Byte_Array);
    procedure Write_Raw_Pixels (LCD  : ST7735R_Device;
-                               Data : HAL.Short_Array);
+                               Data : HAL.UInt16_Array);
 
    overriding
    function Get_Max_Layers
@@ -233,7 +233,7 @@ private
      (Column_Address_Left_Right => 0,
       Column_Address_Right_Left => 1);
 
-   subtype Pixel_Data is Short_Array (0 .. (Screen_Width * Screen_Height) - 1);
+   subtype Pixel_Data is UInt16_Array (0 .. (Screen_Width * Screen_Height) - 1);
 
    type ST7735R_Device
      (Port : not null SPI_Port_Ref;

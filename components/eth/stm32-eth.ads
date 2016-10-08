@@ -200,8 +200,8 @@ package STM32.Eth is
    type Rx_Desc_Type is record
       Rdes0 : Rdes0_Type;
       Rdes1 : Rdes1_Type;
-      Rdes2 : Word;
-      Rdes3 : Word;
+      Rdes2 : UInt32;
+      Rdes3 : UInt32;
    end record;
 
    for Rx_Desc_Type use record

@@ -98,7 +98,7 @@ package STM32.DCMI is
    procedure Enable_Crop;
    procedure Disable_Crop;
 
-   function Data return Word;
+   function Data return UInt32;
    function Data return DR_Byte_Field_Array;
 
    function Data_Register_Address return System.Address;

@@ -44,7 +44,7 @@ package body ST7735R is
    procedure Write_Data (LCD  : ST7735R_Device;
                          Data : HAL.Byte_Array);
    procedure Write_Data (LCD  : ST7735R_Device;
-                         Data : HAL.Short_Array);
+                         Data : HAL.UInt16_Array);
 
    procedure Set_Command_Mode (LCD : ST7735R_Device);
    procedure Set_Data_Mode (LCD : ST7735R_Device);
@@ -167,7 +167,7 @@ package body ST7735R is
    ----------------
 
    procedure Write_Data (LCD  : ST7735R_Device;
-                         Data : HAL.Short_Array)
+                         Data : HAL.UInt16_Array)
    is
       B1, B2 : Byte;
       Status : SPI_Status;
@@ -460,7 +460,7 @@ package body ST7735R is
    -- Set_Column_Address --
    ------------------------
 
-   procedure Set_Column_Address (LCD : ST7735R_Device; X_Start, X_End : Short)
+   procedure Set_Column_Address (LCD : ST7735R_Device; X_Start, X_End : UInt16)
    is
       P1, P2, P3, P4 : Byte;
    begin
@@ -475,7 +475,7 @@ package body ST7735R is
    -- Set_Row_Address --
    ---------------------
 
-   procedure Set_Row_Address (LCD : ST7735R_Device; Y_Start, Y_End : Short)
+   procedure Set_Row_Address (LCD : ST7735R_Device; Y_Start, Y_End : UInt16)
    is
       P1, P2, P3, P4 : Byte;
    begin
@@ -491,7 +491,7 @@ package body ST7735R is
    -----------------
 
    procedure Set_Address (LCD : ST7735R_Device;
-                          X_Start, X_End, Y_Start, Y_End : Short)
+                          X_Start, X_End, Y_Start, Y_End : UInt16)
    is
    begin
       Set_Column_Address (LCD, X_Start, X_End);
@@ -503,10 +503,10 @@ package body ST7735R is
    ---------------
 
    procedure Set_Pixel (LCD   : ST7735R_Device;
-                        X, Y  : Short;
-                        Color : Short)
+                        X, Y  : UInt16;
+                        Color : UInt16)
    is
-      Data : constant HAL.Short_Array (1 .. 1) := (1 => Color);
+      Data : constant HAL.UInt16_Array (1 .. 1) := (1 => Color);
    begin
       Set_Address (LCD, X, X + 1, Y, Y + 1);
       Write_Raw_Pixels (LCD, Data);
@@ -529,7 +529,7 @@ package body ST7735R is
    ----------------------
 
    procedure Write_Raw_Pixels (LCD  : ST7735R_Device;
-                               Data : HAL.Short_Array)
+                               Data : HAL.UInt16_Array)
    is
    begin
       Write_Command (LCD, 16#2C#);

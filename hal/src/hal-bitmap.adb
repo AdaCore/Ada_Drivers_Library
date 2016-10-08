@@ -38,7 +38,7 @@ package body HAL.Bitmap is
       Y       : Natural;
       Value   : Bitmap_Color)
    is
-      Col : constant Word :=
+      Col : constant UInt32 :=
               Bitmap_Color_To_Word (Buffer.Color_Mode, Value);
    begin
       Set_Pixel (Bitmap_Buffer'Class (Buffer), X, Y, Col);
@@ -52,7 +52,7 @@ package body HAL.Bitmap is
      (Buffer : Bitmap_Buffer;
       X      : Natural;
       Y      : Natural;
-      Value  : Word)
+      Value  : UInt32)
    is
       X0 : Natural := X;
       Y0 : Natural := Y;
@@ -76,7 +76,7 @@ package body HAL.Bitmap is
       case Buffer.Color_Mode is
          when ARGB_8888 =>
             declare
-               Pixel : aliased Word
+               Pixel : aliased UInt32
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 4);
             begin
@@ -107,11 +107,11 @@ package body HAL.Bitmap is
 
          when ARGB_1555 | ARGB_4444 | RGB_565 | AL_88 =>
             declare
-               Pixel : aliased Short
+               Pixel : aliased UInt16
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 2);
             begin
-               Pixel := Short (Value and 16#FF_FF#);
+               Pixel := UInt16 (Value and 16#FF_FF#);
             end;
 
          when L_8 | AL_44 | A_8 =>
@@ -194,7 +194,7 @@ package body HAL.Bitmap is
       Y      : Natural)
       return Bitmap_Color
    is
-      Native_Color : Word;
+      Native_Color : UInt32;
    begin
       Native_Color := Get_Pixel
         (Bitmap_Buffer'Class (Buffer),
@@ -211,7 +211,7 @@ package body HAL.Bitmap is
      (Buffer : Bitmap_Buffer;
       X      : Natural;
       Y      : Natural)
-      return Word
+      return UInt32
    is
       X0 : Natural := X;
       Y0 : Natural := Y;
@@ -229,7 +229,7 @@ package body HAL.Bitmap is
       case Buffer.Color_Mode is
          when ARGB_8888 =>
             declare
-               Pixel : aliased Word
+               Pixel : aliased UInt32
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 4);
             begin
@@ -248,17 +248,17 @@ package body HAL.Bitmap is
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 3 + 2);
             begin
-               return Shift_Left (Word (Pixel_R), 16)
-                 or Shift_Left (Word (Pixel_G), 8) or Word (Pixel_B);
+               return Shift_Left (UInt32 (Pixel_R), 16)
+                 or Shift_Left (UInt32 (Pixel_G), 8) or UInt32 (Pixel_B);
             end;
 
          when ARGB_1555 | ARGB_4444 | RGB_565 | AL_88 =>
             declare
-               Pixel : aliased Short
+               Pixel : aliased UInt16
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 2);
             begin
-               return Word (Pixel);
+               return UInt32 (Pixel);
             end;
 
          when L_8 | AL_44 | A_8 =>
@@ -267,7 +267,7 @@ package body HAL.Bitmap is
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset);
             begin
-               return Word (Pixel);
+               return UInt32 (Pixel);
             end;
 
          when L_4 | A_4 =>
@@ -277,9 +277,9 @@ package body HAL.Bitmap is
                       Address => Buffer.Addr + Storage_Offset (Offset / 2);
             begin
                if Offset mod 2 = 0 then
-                  return Word (Shift_Right (Pixel and 16#F0#, 4));
+                  return UInt32 (Shift_Right (Pixel and 16#F0#, 4));
                else
-                  return Word (Pixel and 16#0F#);
+                  return UInt32 (Pixel and 16#0F#);
                end if;
             end;
       end case;
@@ -293,7 +293,7 @@ package body HAL.Bitmap is
      (Buffer : Bitmap_Buffer;
       Color  : Bitmap_Color)
    is
-      Col : constant Word := Bitmap_Color_To_Word (Buffer.Color_Mode, Color);
+      Col : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode, Color);
    begin
       Fill (Bitmap_Buffer'Class (Buffer), Col);
    end Fill;
@@ -304,7 +304,7 @@ package body HAL.Bitmap is
 
    procedure Fill
      (Buffer : Bitmap_Buffer;
-      Color  : Word)
+      Color  : UInt32)
    is
    begin
       for Y in 0 .. Buffer.Height - 1 loop
@@ -339,7 +339,7 @@ package body HAL.Bitmap is
 
    procedure Fill_Rect
      (Buffer : Bitmap_Buffer;
-      Color  : Word;
+      Color  : UInt32;
       X      : Integer;
       Y      : Integer;
       Width  : Integer;
@@ -449,7 +449,7 @@ package body HAL.Bitmap is
 
    procedure Draw_Vertical_Line
      (Buffer : Bitmap_Buffer;
-      Color  : Word;
+      Color  : UInt32;
       X      : Integer;
       Y      : Integer;
       Height : Integer)
@@ -479,7 +479,7 @@ package body HAL.Bitmap is
 
    procedure Draw_Horizontal_Line
      (Buffer : Bitmap_Buffer;
-      Color  : Word;
+      Color  : UInt32;
       X      : Integer;
       Y      : Integer;
       Width  : Integer)
@@ -555,9 +555,9 @@ package body HAL.Bitmap is
 
    function Bitmap_Color_To_Word
      (Mode : Bitmap_Color_Mode; Col : Bitmap_Color)
-      return Word
+      return UInt32
    is
-      Ret : Word := 0;
+      Ret : UInt32 := 0;
 
       procedure Add_Byte
         (Value : Byte; Pos : Natural; Size : Positive) with Inline;
@@ -571,9 +571,9 @@ package body HAL.Bitmap is
       procedure Add_Byte
         (Value : Byte; Pos : Natural; Size : Positive)
       is
-         Val : constant Word :=
+         Val : constant UInt32 :=
                  Shift_Left
-                   (Word
+                   (UInt32
                       (Shift_Right (Value,
                                     abs (Integer (Size) - 8))),
                     Pos);
@@ -590,7 +590,7 @@ package body HAL.Bitmap is
       begin
          return Byte
            (Shift_Right
-              (Word (Col.Red) * 3 + Word (Col.Blue) + Word (Col.Green) * 4,
+              (UInt32 (Col.Red) * 3 + UInt32 (Col.Blue) + UInt32 (Col.Green) * 4,
                3));
       end Luminance;
 
@@ -653,7 +653,7 @@ package body HAL.Bitmap is
    --------------------------
 
    function Word_To_Bitmap_Color
-     (Mode : Bitmap_Color_Mode; Col : Word)
+     (Mode : Bitmap_Color_Mode; Col : UInt32)
       return Bitmap_Color
    is
 
@@ -668,7 +668,7 @@ package body HAL.Bitmap is
         (Pos : Natural; Size : Positive) return Byte
       is
          Ret : Byte;
-         Mask : constant Word := Shift_Left (2 ** Size - 1, Pos);
+         Mask : constant UInt32 := Shift_Left (2 ** Size - 1, Pos);
       begin
          Ret := Byte (Shift_Right (Col and Mask, Pos));
 

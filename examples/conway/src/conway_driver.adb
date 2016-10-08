@@ -154,7 +154,7 @@ package body Conway_Driver is
    G, G2, Tmp : Grid_Access;
 
    Format : constant HAL.Framebuffer.FB_Color_Mode := RGB_565;
-   Colors : constant array (Cell_State) of Word :=
+   Colors : constant array (Cell_State) of UInt32 :=
      (case Format is
          when ARGB_1555 => (Alive => 16#ffff#, Dead => 16#801f#),
          when ARGB_4444 => (Alive => 16#ffff#, Dead => 16#f00f#),

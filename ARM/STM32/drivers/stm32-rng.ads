@@ -63,7 +63,7 @@ package STM32.RNG is
 
    function RNG_Interrupt_Enabled return Boolean;
 
-   function RNG_Data return Word;
+   function RNG_Data return UInt32;
 
    function RNG_Data_Ready return Boolean;
 

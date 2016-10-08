@@ -234,7 +234,7 @@ package body Framebuffer_OTM8009A is
       DSIHOST.DSI_Setup_Adapted_Command_Mode
         (Virtual_Channel         => LCD_Channel,
          Color_Coding            => STM32.DSI.RGB888,
-         Command_Size            => Short (Display.Get_Width),
+         Command_Size            => UInt16 (Display.Get_Width),
          Tearing_Effect_Source   => STM32.DSI.TE_DSI_Link,
          Tearing_Effect_Polarity => STM32.DSI.Rising_Edge,
          HSync_Polarity          => STM32.DSI.Active_High,
@@ -430,7 +430,7 @@ package body Framebuffer_OTM8009A is
 
       Display.Buffers (LCD_Layer) :=
         (Addr       =>
-           Reserve (Word (HAL.Bitmap.Bits_Per_Pixel (Mode) * W * H / 8)),
+           Reserve (UInt32 (HAL.Bitmap.Bits_Per_Pixel (Mode) * W * H / 8)),
          Width      => W,
          Height     => H,
          Color_Mode => Mode,

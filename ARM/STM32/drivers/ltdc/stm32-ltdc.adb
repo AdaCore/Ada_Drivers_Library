@@ -87,10 +87,10 @@ package body STM32.LTDC is
       LBFCR      : L1BFCR_Register;
       --  Layerx Blending Factors Configuration Register
 
-      Reserved_0 : Word;
-      Reserved_1 : Word;
+      Reserved_0 : UInt32;
+      Reserved_1 : UInt32;
 
-      LCFBAR     : Word;
+      LCFBAR     : UInt32;
       --  Layerx Color Frame Buffer Address Register
 
       LCFBLR     : L1CFBLR_Register;
@@ -99,9 +99,9 @@ package body STM32.LTDC is
       LCFBLNR    : L1CFBLNR_Register;
       --  Layerx ColorFrame Buffer Line Number Register
 
-      Reserved_2 : Word;
-      Reserved_3 : Word;
-      Reserved_4 : Word;
+      Reserved_2 : UInt32;
+      Reserved_3 : UInt32;
+      Reserved_4 : UInt32;
 
       LCLUTWR    : L1CLUTWR_Register;
       --  Layerx CLUT Write Register
@@ -427,7 +427,7 @@ package body STM32.LTDC is
      (Layer : LCD_Layer; Addr : Frame_Buffer_Access)
    is
       function To_Word is new Ada.Unchecked_Conversion
-        (Frame_Buffer_Access, Word);
+        (Frame_Buffer_Access, UInt32);
    begin
       if Layer = Layer1 then
          LTDC_Periph.L1CFBAR := To_Word (Addr);
@@ -446,7 +446,7 @@ package body STM32.LTDC is
    is
       L : constant Layer_Access := Get_Layer (Layer);
       function To_FBA is new Ada.Unchecked_Conversion
-        (Word, Frame_Buffer_Access);
+        (UInt32, Frame_Buffer_Access);
    begin
       return To_FBA (L.LCFBAR);
    end Get_Frame_Buffer;
@@ -456,8 +456,8 @@ package body STM32.LTDC is
    --------------------
 
    procedure Set_Background (R, G, B : Byte) is
-      RShift : constant Word := Shift_Left (Word (R), 16);
-      GShift : constant Word := Shift_Left (Word (G), 8);
+      RShift : constant UInt32 := Shift_Left (UInt32 (R), 16);
+      GShift : constant UInt32 := Shift_Left (UInt32 (G), 8);
    begin
       LTDC_Periph.BCCR.BC :=
         UInt24 (RShift) or UInt24 (GShift) or UInt24 (B);

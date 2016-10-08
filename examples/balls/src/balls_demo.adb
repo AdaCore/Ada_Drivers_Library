@@ -142,8 +142,8 @@ procedure Balls_Demo is
 
    function To_RGB (Col : HSV_Color) return Bitmap_Color
    is
-      V, S, H : Word;
-      Region, FPart, p, q, t : Word;
+      V, S, H : UInt32;
+      Region, FPart, p, q, t : UInt32;
       Ret     : Bitmap_Color;
    begin
       Ret.Alpha := 255;
@@ -156,9 +156,9 @@ procedure Balls_Demo is
          return Ret;
       end if;
 
-      V := Word (Col.Val);
-      S := Word (Col.Sat);
-      H := Word (Col.Hue);
+      V := UInt32 (Col.Val);
+      S := UInt32 (Col.Sat);
+      H := UInt32 (Col.Hue);
 
       --  Hue in the range 0 .. 5
       Region := H / 43;
@@ -292,8 +292,8 @@ procedure Balls_Demo is
                  Natural'Min (LCD_Natural_Width, LCD_Natural_Height);
       R_Min  : constant Natural :=
                  Size / 24;
-      R_Var  : constant Word :=
-                 Word (R_Min) * 4 / 5;
+      R_Var  : constant UInt32 :=
+                 UInt32 (R_Min) * 4 / 5;
       SP_Max : constant Integer :=
                  Size / 7;
    begin
@@ -305,19 +305,19 @@ procedure Balls_Demo is
                          Integer (RNG.Interrupts.Random mod R_Var) + R_Min;
                Col   : constant Byte :=
                          Byte (RNG.Interrupts.Random mod 255);
-               X_Raw : constant Word :=
+               X_Raw : constant UInt32 :=
                          (RNG.Interrupts.Random mod
-                                    Word (LCD_Natural_Width - 2 * R)) +
-                         Word (R);
-               Y_Raw : constant Word :=
+                                    UInt32 (LCD_Natural_Width - 2 * R)) +
+                         UInt32 (R);
+               Y_Raw : constant UInt32 :=
                          (RNG.Interrupts.Random mod
-                                    Word (LCD_Natural_Height - 2 * R)) +
-                         Word (R);
+                                    UInt32 (LCD_Natural_Height - 2 * R)) +
+                         UInt32 (R);
                Sp_X  : constant Integer :=
-                 Integer (RNG.Interrupts.Random mod Word (SP_Max * 2 + 1)) -
+                 Integer (RNG.Interrupts.Random mod UInt32 (SP_Max * 2 + 1)) -
                    SP_Max;
                Sp_Y  : constant Integer :=
-                 Integer (RNG.Interrupts.Random mod Word (SP_Max * 2 + 1)) -
+                 Integer (RNG.Interrupts.Random mod UInt32 (SP_Max * 2 + 1)) -
                    SP_Max;
                Redo  : Boolean := False;
 

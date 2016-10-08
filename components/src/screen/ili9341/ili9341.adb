@@ -49,8 +49,8 @@ with ILI9341_Regs;  use ILI9341_Regs;
 
 package body ILI9341 is
 
-   function As_Short is new Ada.Unchecked_Conversion
-     (Source => Colors, Target => Short);
+   function As_UInt16 is new Ada.Unchecked_Conversion
+     (Source => Colors, Target => UInt16);
 
    -------------------
    -- Current_Width --
@@ -108,9 +108,9 @@ package body ILI9341 is
       Color : Colors)
    is
       Color_High_Byte : constant Byte :=
-        Byte (Shift_Right (As_Short (Color), 8));
+        Byte (Shift_Right (As_UInt16 (Color), 8));
       Color_Low_Byte  : constant Byte :=
-        Byte (As_Short (Color) and 16#FF#);
+        Byte (As_UInt16 (Color) and 16#FF#);
    begin
       This.Set_Cursor_Position (X, Y, X, Y);
       This.Send_Command (ILI9341_GRAM);
@@ -124,9 +124,9 @@ package body ILI9341 is
 
    procedure Fill (This : in out ILI9341_Device; Color : Colors) is
       Color_High_Byte : constant Byte :=
-        Byte (Shift_Right (As_Short (Color), 8));
+        Byte (Shift_Right (As_UInt16 (Color), 8));
       Color_Low_Byte  : constant Byte :=
-        Byte (As_Short (Color) and 16#FF#);
+        Byte (As_UInt16 (Color) and 16#FF#);
    begin
       This.Set_Cursor_Position (X1 => 0,
                                 Y1 => 0,
@@ -197,15 +197,15 @@ package body ILI9341 is
       X2   : Width;
       Y2   : Height)
    is
-      X1_High : constant Byte := Byte (Shift_Right (Short (X1), 8));
-      X1_Low  : constant Byte := Byte (Short (X1) and 16#FF#);
-      X2_High : constant Byte := Byte (Shift_Right (Short (X2), 8));
-      X2_Low  : constant Byte := Byte (Short (X2) and 16#FF#);
+      X1_High : constant Byte := Byte (Shift_Right (UInt16 (X1), 8));
+      X1_Low  : constant Byte := Byte (UInt16 (X1) and 16#FF#);
+      X2_High : constant Byte := Byte (Shift_Right (UInt16 (X2), 8));
+      X2_Low  : constant Byte := Byte (UInt16 (X2) and 16#FF#);
 
-      Y1_High : constant Byte := Byte (Shift_Right (Short (Y1), 8));
-      Y1_Low  : constant Byte := Byte (Short (Y1) and 16#FF#);
-      Y2_High : constant Byte := Byte (Shift_Right (Short (Y2), 8));
-      Y2_Low  : constant Byte := Byte (Short (Y2) and 16#FF#);
+      Y1_High : constant Byte := Byte (Shift_Right (UInt16 (Y1), 8));
+      Y1_Low  : constant Byte := Byte (UInt16 (Y1) and 16#FF#);
+      Y2_High : constant Byte := Byte (Shift_Right (UInt16 (Y2), 8));
+      Y2_Low  : constant Byte := Byte (UInt16 (Y2) and 16#FF#);
    begin
       This.Send_Command (ILI9341_COLUMN_ADDR);
       This.Send_Data (X1_High);

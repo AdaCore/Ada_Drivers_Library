@@ -40,7 +40,7 @@ package STM32.Device_Id is
 
    function Unique_Id return Device_Id_Image;
 
-   type Device_Id_Tuple is array (1 .. 3) of Word
+   type Device_Id_Tuple is array (1 .. 3) of UInt32
      with Component_Size => 32;
 
    function Unique_Id return Device_Id_Tuple;

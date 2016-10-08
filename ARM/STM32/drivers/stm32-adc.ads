@@ -328,7 +328,7 @@ package STM32.ADC is
    --  part of starting.
 
    function Conversion_Value (This : Analog_To_Digital_Converter)
-      return Short with Inline;
+      return UInt16 with Inline;
    --  Returns the latest regular conversion result for the specified ADC unit
 
    function Data_Register_Address (This : Analog_To_Digital_Converter)
@@ -352,7 +352,7 @@ package STM32.ADC is
    function Injected_Conversion_Value
      (This : Analog_To_Digital_Converter;
       Rank : Injected_Channel_Rank)
-      return Short
+      return UInt16
      with Inline;
    --  Returns the latest conversion result for the analog input channel at
    --  the injected sequence position given by Rank on the specified ADC unit.
@@ -360,7 +360,7 @@ package STM32.ADC is
    --  Note that the offset corresponding to the specified Rank is subtracted
    --  automatically, so check the sign bit for a negative result.
 
-   function Multimode_Conversion_Value return Word with Inline;
+   function Multimode_Conversion_Value return UInt32 with Inline;
    --  Returns the latest ADC_1, ADC_2 and ADC_3 regular channel conversions'
    --  results based the selected multi ADC mode
 

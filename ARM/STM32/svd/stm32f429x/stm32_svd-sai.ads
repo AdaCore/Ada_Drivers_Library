@@ -99,7 +99,7 @@ package STM32_SVD.SAI is
       --  Companding mode
       COMP           : ACR2_COMP_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -152,7 +152,7 @@ package STM32_SVD.SAI is
    subtype ASLOTR_FBOFF_Field is HAL.UInt5;
    subtype ASLOTR_SLOTSZ_Field is HAL.UInt2;
    subtype ASLOTR_NBSLOT_Field is HAL.UInt4;
-   subtype ASLOTR_SLOTEN_Field is HAL.Short;
+   subtype ASLOTR_SLOTEN_Field is HAL.UInt16;
 
    --  ASlot register
    type ASLOTR_Register is record
@@ -374,7 +374,7 @@ package STM32_SVD.SAI is
       --  Companding mode
       COMP           : BCR2_COMP_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -427,7 +427,7 @@ package STM32_SVD.SAI is
    subtype BSLOTR_FBOFF_Field is HAL.UInt5;
    subtype BSLOTR_SLOTSZ_Field is HAL.UInt2;
    subtype BSLOTR_NBSLOT_Field is HAL.UInt4;
-   subtype BSLOTR_SLOTEN_Field is HAL.Short;
+   subtype BSLOTR_SLOTEN_Field is HAL.UInt16;
 
    --  BSlot register
    type BSLOTR_Register is record
@@ -584,7 +584,7 @@ package STM32_SVD.SAI is
       --  AClear flag register
       ACLRFR : ACLRFR_Register;
       --  AData register
-      ADR    : HAL.Word;
+      ADR    : HAL.UInt32;
       --  BConfiguration register 1
       BCR1   : BCR1_Register;
       --  BConfiguration register 2
@@ -600,7 +600,7 @@ package STM32_SVD.SAI is
       --  BClear flag register
       BCLRFR : BCLRFR_Register;
       --  BData register
-      BDR    : HAL.Word;
+      BDR    : HAL.UInt32;
    end record
      with Volatile;
 

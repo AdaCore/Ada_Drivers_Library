@@ -597,7 +597,7 @@ package STM32_SVD.FSMC is
       --  Attribute memory space timing register
       PATT  : PATT_Register;
       --  ECC result register
-      ECCR  : HAL.Word;
+      ECCR  : HAL.UInt32;
       --  SRAM/NOR-Flash write timing registers 1
       BWTR1 : BWTR_Register;
       --  SRAM/NOR-Flash write timing registers 2

@@ -209,8 +209,8 @@ package STM32_SVD.USB_OTG_HS is
       Reserved_10_31 at 0 range 10 .. 31;
    end record;
 
-   subtype OTG_HS_DAINT_IEPINT_Field is HAL.Short;
-   subtype OTG_HS_DAINT_OEPINT_Field is HAL.Short;
+   subtype OTG_HS_DAINT_IEPINT_Field is HAL.UInt16;
+   subtype OTG_HS_DAINT_OEPINT_Field is HAL.UInt16;
 
    --  OTG_HS device all endpoints interrupt register
    type OTG_HS_DAINT_Register is record
@@ -227,8 +227,8 @@ package STM32_SVD.USB_OTG_HS is
       OEPINT at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_HS_DAINTMSK_IEPM_Field is HAL.Short;
-   subtype OTG_HS_DAINTMSK_OEPM_Field is HAL.Short;
+   subtype OTG_HS_DAINTMSK_IEPM_Field is HAL.UInt16;
+   subtype OTG_HS_DAINTMSK_OEPM_Field is HAL.UInt16;
 
    --  OTG_HS all endpoints interrupt mask register
    type OTG_HS_DAINTMSK_Register is record
@@ -245,14 +245,14 @@ package STM32_SVD.USB_OTG_HS is
       OEPM at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_HS_DVBUSDIS_VBUSDT_Field is HAL.Short;
+   subtype OTG_HS_DVBUSDIS_VBUSDT_Field is HAL.UInt16;
 
    --  OTG_HS device VBUS discharge time register
    type OTG_HS_DVBUSDIS_Register is record
       --  Device VBUS discharge time
       VBUSDT         : OTG_HS_DVBUSDIS_VBUSDT_Field := 16#17D7#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -318,14 +318,14 @@ package STM32_SVD.USB_OTG_HS is
       Reserved_28_31 at 0 range 28 .. 31;
    end record;
 
-   subtype OTG_HS_DIEPEMPMSK_INEPTXFEM_Field is HAL.Short;
+   subtype OTG_HS_DIEPEMPMSK_INEPTXFEM_Field is HAL.UInt16;
 
    --  OTG_HS device IN endpoint FIFO empty interrupt mask register
    type OTG_HS_DIEPEMPMSK_Register is record
       --  IN EP Tx FIFO empty interrupt mask bits
       INEPTXFEM      : OTG_HS_DIEPEMPMSK_INEPTXFEM_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -519,14 +519,14 @@ package STM32_SVD.USB_OTG_HS is
       Reserved_21_31 at 0 range 21 .. 31;
    end record;
 
-   subtype OTG_HS_DTXFSTS_INEPTFSAV_Field is HAL.Short;
+   subtype OTG_HS_DTXFSTS_INEPTFSAV_Field is HAL.UInt16;
 
    --  OTG_HS device IN endpoint transmit FIFO status register
    type OTG_HS_DTXFSTS_Register is record
       --  Read-only. IN endpoint TxFIFO space avail
       INEPTFSAV      : OTG_HS_DTXFSTS_INEPTFSAV_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1336,14 +1336,14 @@ package STM32_SVD.USB_OTG_HS is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   subtype OTG_HS_GRXFSIZ_RXFD_Field is HAL.Short;
+   subtype OTG_HS_GRXFSIZ_RXFD_Field is HAL.UInt16;
 
    --  OTG_HS Receive FIFO size register
    type OTG_HS_GRXFSIZ_Register is record
       --  RxFIFO depth
       RXFD           : OTG_HS_GRXFSIZ_RXFD_Field := 16#200#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1353,8 +1353,8 @@ package STM32_SVD.USB_OTG_HS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_HS_HNPTXFSIZ_Host_NPTXFSA_Field is HAL.Short;
-   subtype OTG_HS_HNPTXFSIZ_Host_NPTXFD_Field is HAL.Short;
+   subtype OTG_HS_HNPTXFSIZ_Host_NPTXFSA_Field is HAL.UInt16;
+   subtype OTG_HS_HNPTXFSIZ_Host_NPTXFD_Field is HAL.UInt16;
 
    --  OTG_HS nonperiodic transmit FIFO size register (host mode)
    type OTG_HS_HNPTXFSIZ_Host_Register is record
@@ -1371,8 +1371,8 @@ package STM32_SVD.USB_OTG_HS is
       NPTXFD  at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_HS_DIEPTXF0_Device_TX0FSA_Field is HAL.Short;
-   subtype OTG_HS_DIEPTXF0_Device_TX0FD_Field is HAL.Short;
+   subtype OTG_HS_DIEPTXF0_Device_TX0FSA_Field is HAL.UInt16;
+   subtype OTG_HS_DIEPTXF0_Device_TX0FD_Field is HAL.UInt16;
 
    --  Endpoint 0 transmit FIFO size (peripheral mode)
    type OTG_HS_DIEPTXF0_Device_Register is record
@@ -1389,7 +1389,7 @@ package STM32_SVD.USB_OTG_HS is
       TX0FD  at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_HS_GNPTXSTS_NPTXFSAV_Field is HAL.Short;
+   subtype OTG_HS_GNPTXSTS_NPTXFSAV_Field is HAL.UInt16;
    subtype OTG_HS_GNPTXSTS_NPTQXSAV_Field is HAL.Byte;
    subtype OTG_HS_GNPTXSTS_NPTXQTOP_Field is HAL.UInt7;
 
@@ -1523,8 +1523,8 @@ package STM32_SVD.USB_OTG_HS is
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
-   subtype OTG_HS_HPTXFSIZ_PTXSA_Field is HAL.Short;
-   subtype OTG_HS_HPTXFSIZ_PTXFD_Field is HAL.Short;
+   subtype OTG_HS_HPTXFSIZ_PTXSA_Field is HAL.UInt16;
+   subtype OTG_HS_HPTXFSIZ_PTXFD_Field is HAL.UInt16;
 
    --  OTG_HS Host periodic transmit FIFO size register
    type OTG_HS_HPTXFSIZ_Register is record
@@ -1541,8 +1541,8 @@ package STM32_SVD.USB_OTG_HS is
       PTXFD at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_HS_DIEPTXF_INEPTXSA_Field is HAL.Short;
-   subtype OTG_HS_DIEPTXF_INEPTXFD_Field is HAL.Short;
+   subtype OTG_HS_DIEPTXF_INEPTXSA_Field is HAL.UInt16;
+   subtype OTG_HS_DIEPTXF_INEPTXFD_Field is HAL.UInt16;
 
    --  OTG_HS device IN endpoint transmit FIFO size register
    type OTG_HS_DIEPTXF_Register is record
@@ -1579,14 +1579,14 @@ package STM32_SVD.USB_OTG_HS is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype OTG_HS_HFIR_FRIVL_Field is HAL.Short;
+   subtype OTG_HS_HFIR_FRIVL_Field is HAL.UInt16;
 
    --  OTG_HS Host frame interval register
    type OTG_HS_HFIR_Register is record
       --  Frame interval
       FRIVL          : OTG_HS_HFIR_FRIVL_Field := 16#EA60#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1596,8 +1596,8 @@ package STM32_SVD.USB_OTG_HS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_HS_HFNUM_FRNUM_Field is HAL.Short;
-   subtype OTG_HS_HFNUM_FTREM_Field is HAL.Short;
+   subtype OTG_HS_HFNUM_FRNUM_Field is HAL.UInt16;
+   subtype OTG_HS_HFNUM_FTREM_Field is HAL.UInt16;
 
    --  OTG_HS host frame number/frame time remaining register
    type OTG_HS_HFNUM_Register is record
@@ -1614,7 +1614,7 @@ package STM32_SVD.USB_OTG_HS is
       FTREM at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_HS_HPTXSTS_PTXFSAVL_Field is HAL.Short;
+   subtype OTG_HS_HPTXSTS_PTXFSAVL_Field is HAL.UInt16;
    subtype OTG_HS_HPTXSTS_PTXQSAV_Field is HAL.Byte;
    subtype OTG_HS_HPTXSTS_PTXQTOP_Field is HAL.Byte;
 
@@ -1636,14 +1636,14 @@ package STM32_SVD.USB_OTG_HS is
       PTXQTOP  at 0 range 24 .. 31;
    end record;
 
-   subtype OTG_HS_HAINT_HAINT_Field is HAL.Short;
+   subtype OTG_HS_HAINT_HAINT_Field is HAL.UInt16;
 
    --  OTG_HS Host all channels interrupt register
    type OTG_HS_HAINT_Register is record
       --  Read-only. Channel interrupts
       HAINT          : OTG_HS_HAINT_HAINT_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1653,14 +1653,14 @@ package STM32_SVD.USB_OTG_HS is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype OTG_HS_HAINTMSK_HAINTM_Field is HAL.Short;
+   subtype OTG_HS_HAINTMSK_HAINTM_Field is HAL.UInt16;
 
    --  OTG_HS host all channels interrupt mask register
    type OTG_HS_HAINTMSK_Register is record
       --  Channel interrupt mask
       HAINTM         : OTG_HS_HAINTMSK_HAINTM_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -2030,7 +2030,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS device IN endpoint 0 transfer size register
       OTG_HS_DIEPTSIZ0   : OTG_HS_DIEPTSIZ0_Register;
       --  OTG_HS device endpoint-1 DMA address register
-      OTG_HS_DIEPDMA1    : HAL.Word;
+      OTG_HS_DIEPDMA1    : HAL.UInt32;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS0    : OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-1 control register
@@ -2040,7 +2040,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS device endpoint transfer size register
       OTG_HS_DIEPTSIZ1   : OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device endpoint-2 DMA address register
-      OTG_HS_DIEPDMA2    : HAL.Word;
+      OTG_HS_DIEPDMA2    : HAL.UInt32;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS1    : OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-2 control register
@@ -2050,7 +2050,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS device endpoint transfer size register
       OTG_HS_DIEPTSIZ2   : OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device endpoint-3 DMA address register
-      OTG_HS_DIEPDMA3    : HAL.Word;
+      OTG_HS_DIEPDMA3    : HAL.UInt32;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS2    : OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-3 control register
@@ -2060,7 +2060,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS device endpoint transfer size register
       OTG_HS_DIEPTSIZ3   : OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device endpoint-4 DMA address register
-      OTG_HS_DIEPDMA4    : HAL.Word;
+      OTG_HS_DIEPDMA4    : HAL.UInt32;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS3    : OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-4 control register
@@ -2070,7 +2070,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS device endpoint transfer size register
       OTG_HS_DIEPTSIZ4   : OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device endpoint-5 DMA address register
-      OTG_HS_DIEPDMA5    : HAL.Word;
+      OTG_HS_DIEPDMA5    : HAL.UInt32;
       --  OTG_HS device IN endpoint transmit FIFO status register
       OTG_HS_DTXFSTS4    : OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-5 control register
@@ -2261,7 +2261,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS general core configuration register
       OTG_HS_GCCFG           : OTG_HS_GCCFG_Register;
       --  OTG_HS core ID register
-      OTG_HS_CID             : HAL.Word;
+      OTG_HS_CID             : HAL.UInt32;
       --  OTG core LPM configuration register
       OTG_HS_GLPMCFG         : OTG_HS_GLPMCFG_Register;
       --  OTG_HS Host periodic transmit FIFO size register
@@ -2362,7 +2362,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-11 transfer size register
       OTG_HS_HCTSIZ0    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-0 DMA address register
-      OTG_HS_HCDMA0     : HAL.Word;
+      OTG_HS_HCDMA0     : HAL.UInt32;
       --  OTG_HS host channel-1 characteristics register
       OTG_HS_HCCHAR1    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-1 split control register
@@ -2374,7 +2374,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-1 transfer size register
       OTG_HS_HCTSIZ1    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-1 DMA address register
-      OTG_HS_HCDMA1     : HAL.Word;
+      OTG_HS_HCDMA1     : HAL.UInt32;
       --  OTG_HS host channel-2 characteristics register
       OTG_HS_HCCHAR2    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-2 split control register
@@ -2386,7 +2386,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-2 transfer size register
       OTG_HS_HCTSIZ2    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-2 DMA address register
-      OTG_HS_HCDMA2     : HAL.Word;
+      OTG_HS_HCDMA2     : HAL.UInt32;
       --  OTG_HS host channel-3 characteristics register
       OTG_HS_HCCHAR3    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-3 split control register
@@ -2398,7 +2398,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-3 transfer size register
       OTG_HS_HCTSIZ3    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-3 DMA address register
-      OTG_HS_HCDMA3     : HAL.Word;
+      OTG_HS_HCDMA3     : HAL.UInt32;
       --  OTG_HS host channel-4 characteristics register
       OTG_HS_HCCHAR4    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-4 split control register
@@ -2410,7 +2410,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-4 transfer size register
       OTG_HS_HCTSIZ4    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-4 DMA address register
-      OTG_HS_HCDMA4     : HAL.Word;
+      OTG_HS_HCDMA4     : HAL.UInt32;
       --  OTG_HS host channel-5 characteristics register
       OTG_HS_HCCHAR5    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-5 split control register
@@ -2422,7 +2422,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-5 transfer size register
       OTG_HS_HCTSIZ5    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-5 DMA address register
-      OTG_HS_HCDMA5     : HAL.Word;
+      OTG_HS_HCDMA5     : HAL.UInt32;
       --  OTG_HS host channel-6 characteristics register
       OTG_HS_HCCHAR6    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-6 split control register
@@ -2434,7 +2434,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-6 transfer size register
       OTG_HS_HCTSIZ6    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-6 DMA address register
-      OTG_HS_HCDMA6     : HAL.Word;
+      OTG_HS_HCDMA6     : HAL.UInt32;
       --  OTG_HS host channel-7 characteristics register
       OTG_HS_HCCHAR7    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-7 split control register
@@ -2446,7 +2446,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-7 transfer size register
       OTG_HS_HCTSIZ7    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-7 DMA address register
-      OTG_HS_HCDMA7     : HAL.Word;
+      OTG_HS_HCDMA7     : HAL.UInt32;
       --  OTG_HS host channel-8 characteristics register
       OTG_HS_HCCHAR8    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-8 split control register
@@ -2458,7 +2458,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-8 transfer size register
       OTG_HS_HCTSIZ8    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-8 DMA address register
-      OTG_HS_HCDMA8     : HAL.Word;
+      OTG_HS_HCDMA8     : HAL.UInt32;
       --  OTG_HS host channel-9 characteristics register
       OTG_HS_HCCHAR9    : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-9 split control register
@@ -2470,7 +2470,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-9 transfer size register
       OTG_HS_HCTSIZ9    : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-9 DMA address register
-      OTG_HS_HCDMA9     : HAL.Word;
+      OTG_HS_HCDMA9     : HAL.UInt32;
       --  OTG_HS host channel-10 characteristics register
       OTG_HS_HCCHAR10   : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-10 split control register
@@ -2482,7 +2482,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-10 transfer size register
       OTG_HS_HCTSIZ10   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-10 DMA address register
-      OTG_HS_HCDMA10    : HAL.Word;
+      OTG_HS_HCDMA10    : HAL.UInt32;
       --  OTG_HS host channel-11 characteristics register
       OTG_HS_HCCHAR11   : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-11 split control register
@@ -2494,7 +2494,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-11 transfer size register
       OTG_HS_HCTSIZ11   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-11 DMA address register
-      OTG_HS_HCDMA11    : HAL.Word;
+      OTG_HS_HCDMA11    : HAL.UInt32;
       --  OTG_HS host channel-12 characteristics register
       OTG_HS_HCCHAR12   : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-12 split control register
@@ -2506,7 +2506,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-12 transfer size register
       OTG_HS_HCTSIZ12   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-12 DMA address register
-      OTG_HS_HCDMA12    : HAL.Word;
+      OTG_HS_HCDMA12    : HAL.UInt32;
       --  OTG_HS host channel-13 characteristics register
       OTG_HS_HCCHAR13   : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-13 split control register
@@ -2518,7 +2518,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-13 transfer size register
       OTG_HS_HCTSIZ13   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-13 DMA address register
-      OTG_HS_HCDMA13    : HAL.Word;
+      OTG_HS_HCDMA13    : HAL.UInt32;
       --  OTG_HS host channel-14 characteristics register
       OTG_HS_HCCHAR14   : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-14 split control register
@@ -2530,7 +2530,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-14 transfer size register
       OTG_HS_HCTSIZ14   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-14 DMA address register
-      OTG_HS_HCDMA14    : HAL.Word;
+      OTG_HS_HCDMA14    : HAL.UInt32;
       --  OTG_HS host channel-15 characteristics register
       OTG_HS_HCCHAR15   : OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-15 split control register
@@ -2542,7 +2542,7 @@ package STM32_SVD.USB_OTG_HS is
       --  OTG_HS host channel-15 transfer size register
       OTG_HS_HCTSIZ15   : OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-15 DMA address register
-      OTG_HS_HCDMA15    : HAL.Word;
+      OTG_HS_HCDMA15    : HAL.UInt32;
    end record
      with Volatile;
 

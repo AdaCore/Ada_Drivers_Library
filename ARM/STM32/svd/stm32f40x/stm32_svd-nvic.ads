@@ -44,7 +44,7 @@ package STM32_SVD.NVIC is
       case As_Array is
          when False =>
             --  IPR_N as a value
-            Val : HAL.Word;
+            Val : HAL.UInt32;
          when True =>
             --  IPR_N as an array
             Arr : IPR_IPR_N_Field_Array;
@@ -84,35 +84,35 @@ package STM32_SVD.NVIC is
       --  Interrupt Controller Type Register
       ICTR  : ICTR_Register;
       --  Interrupt Set-Enable Register
-      ISER0 : HAL.Word;
+      ISER0 : HAL.UInt32;
       --  Interrupt Set-Enable Register
-      ISER1 : HAL.Word;
+      ISER1 : HAL.UInt32;
       --  Interrupt Set-Enable Register
-      ISER2 : HAL.Word;
+      ISER2 : HAL.UInt32;
       --  Interrupt Clear-Enable Register
-      ICER0 : HAL.Word;
+      ICER0 : HAL.UInt32;
       --  Interrupt Clear-Enable Register
-      ICER1 : HAL.Word;
+      ICER1 : HAL.UInt32;
       --  Interrupt Clear-Enable Register
-      ICER2 : HAL.Word;
+      ICER2 : HAL.UInt32;
       --  Interrupt Set-Pending Register
-      ISPR0 : HAL.Word;
+      ISPR0 : HAL.UInt32;
       --  Interrupt Set-Pending Register
-      ISPR1 : HAL.Word;
+      ISPR1 : HAL.UInt32;
       --  Interrupt Set-Pending Register
-      ISPR2 : HAL.Word;
+      ISPR2 : HAL.UInt32;
       --  Interrupt Clear-Pending Register
-      ICPR0 : HAL.Word;
+      ICPR0 : HAL.UInt32;
       --  Interrupt Clear-Pending Register
-      ICPR1 : HAL.Word;
+      ICPR1 : HAL.UInt32;
       --  Interrupt Clear-Pending Register
-      ICPR2 : HAL.Word;
+      ICPR2 : HAL.UInt32;
       --  Interrupt Active Bit Register
-      IABR0 : HAL.Word;
+      IABR0 : HAL.UInt32;
       --  Interrupt Active Bit Register
-      IABR1 : HAL.Word;
+      IABR1 : HAL.UInt32;
       --  Interrupt Active Bit Register
-      IABR2 : HAL.Word;
+      IABR2 : HAL.UInt32;
       --  Interrupt Priority Register
       IPR0  : IPR_Register;
       --  Interrupt Priority Register

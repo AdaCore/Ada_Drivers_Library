@@ -16,12 +16,12 @@ package body WM8994 is
    ---------------
 
    procedure I2C_Write (This  : in out WM8994_Device;
-                        Reg   : Short;
-                        Value : Short)
+                        Reg   : UInt16;
+                        Value : UInt16)
    is
       Status : I2C_Status with Unreferenced;
       Data   : I2C_Data (1 .. 2);
-      Check  : Short;
+      Check  : UInt16;
    begin
       --  Device is MSB first
       Data (1) := Byte (Shift_Right (Value and 16#FF00#, 8));
@@ -50,12 +50,12 @@ package body WM8994 is
    --------------
 
    function I2C_Read (This : in out WM8994_Device;
-                      Reg : Short)
-                      return Short
+                      Reg : UInt16)
+                      return UInt16
    is
       Status : I2C_Status;
       Data   : I2C_Data (1 .. 2);
-      Ret    : Short;
+      Ret    : UInt16;
    begin
       This.Port.Mem_Read
         (Addr          => This.I2C_Addr,
@@ -63,7 +63,7 @@ package body WM8994 is
          Mem_Addr_Size => Memory_Size_16b,
          Data          => Data,
          Status        => Status);
-      Ret := Shift_Left (Short (Data (1)), 8) or Short (Data (2));
+      Ret := Shift_Left (UInt16 (Data (1)), 8) or UInt16 (Data (2));
 
       return Ret;
    end I2C_Read;

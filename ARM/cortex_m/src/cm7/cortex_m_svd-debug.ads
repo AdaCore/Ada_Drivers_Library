@@ -98,7 +98,7 @@ package Cortex_M_SVD.Debug is
       Reserved_26_31 at 0 range 26 .. 31;
    end record;
 
-   subtype Write_DHCSR_S_RESET_ST_Field is HAL.Short;
+   subtype Write_DHCSR_S_RESET_ST_Field is HAL.UInt16;
 
    type Write_DHCSR_Register is record
       --  Write-only.
@@ -300,7 +300,7 @@ package Cortex_M_SVD.Debug is
       --  This register is only accessible from Debug state.
       DCRSR : DCRSR_Register;
       --  Debug Core Register Data Register
-      DCRDR : HAL.Word;
+      DCRDR : HAL.UInt32;
       --  Debug Exception and Monitor Control Register
       DEMCR : DEMCR_Register;
    end record

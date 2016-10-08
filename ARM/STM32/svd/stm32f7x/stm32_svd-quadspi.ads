@@ -238,14 +238,14 @@ package STM32_SVD.QUADSPI is
       DDRM           at 0 range 31 .. 31;
    end record;
 
-   subtype PIR_INTERVAL_Field is HAL.Short;
+   subtype PIR_INTERVAL_Field is HAL.UInt16;
 
    --  polling interval register
    type PIR_Register is record
       --  Polling interval
       INTERVAL       : PIR_INTERVAL_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -255,14 +255,14 @@ package STM32_SVD.QUADSPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype LPTR_TIMEOUT_Field is HAL.Short;
+   subtype LPTR_TIMEOUT_Field is HAL.UInt16;
 
    --  low-power timeout register
    type LPTR_Register is record
       --  Timeout period
       TIMEOUT        : LPTR_TIMEOUT_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -287,19 +287,19 @@ package STM32_SVD.QUADSPI is
       --  flag clear register
       FCR   : FCR_Register;
       --  data length register
-      DLR   : HAL.Word;
+      DLR   : HAL.UInt32;
       --  communication configuration register
       CCR   : CCR_Register;
       --  address register
-      AR    : HAL.Word;
+      AR    : HAL.UInt32;
       --  ABR
-      ABR   : HAL.Word;
+      ABR   : HAL.UInt32;
       --  data register
-      DR    : HAL.Word;
+      DR    : HAL.UInt32;
       --  polling status mask register
-      PSMKR : HAL.Word;
+      PSMKR : HAL.UInt32;
       --  polling status match register
-      PSMAR : HAL.Word;
+      PSMAR : HAL.UInt32;
       --  polling interval register
       PIR   : PIR_Register;
       --  low-power timeout register

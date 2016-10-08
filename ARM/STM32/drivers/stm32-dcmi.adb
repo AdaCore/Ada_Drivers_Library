@@ -204,7 +204,7 @@ package body STM32.DCMI is
    -- Data --
    ----------
 
-   function Data return Word is (DCMI_Periph.DR.Val);
+   function Data return UInt32 is (DCMI_Periph.DR.Val);
 
    ----------
    -- Data --

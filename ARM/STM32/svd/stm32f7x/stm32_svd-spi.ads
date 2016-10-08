@@ -46,7 +46,7 @@ package STM32_SVD.SPI is
       --  Bidirectional data mode enable
       BIDIMODE       : Boolean := False;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -268,14 +268,14 @@ package STM32_SVD.SPI is
       Reserved_13_31 at 0 range 13 .. 31;
    end record;
 
-   subtype DR_DR_Field is HAL.Short;
+   subtype DR_DR_Field is HAL.UInt16;
 
    --  data register
    type DR_Register is record
       --  Data register
       DR             : DR_DR_Field := 16#0#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -285,14 +285,14 @@ package STM32_SVD.SPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype CRCPR_CRCPOLY_Field is HAL.Short;
+   subtype CRCPR_CRCPOLY_Field is HAL.UInt16;
 
    --  CRC polynomial register
    type CRCPR_Register is record
       --  CRC polynomial register
       CRCPOLY        : CRCPR_CRCPOLY_Field := 16#7#;
       --  unspecified
-      Reserved_16_31 : HAL.Short := 16#0#;
+      Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -302,14 +302,14 @@ package STM32_SVD.SPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype RXCRCR_RxCRC_Field is HAL.Short;
+   subtype RXCRCR_RxCRC_Field is HAL.UInt16;
 
    --  RX CRC register
    type RXCRCR_Register is record
       --  Read-only. Rx CRC register
       RxCRC          : RXCRCR_RxCRC_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -319,14 +319,14 @@ package STM32_SVD.SPI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype TXCRCR_TxCRC_Field is HAL.Short;
+   subtype TXCRCR_TxCRC_Field is HAL.UInt16;
 
    --  TX CRC register
    type TXCRCR_Register is record
       --  Read-only. Tx CRC register
       TxCRC          : TXCRCR_TxCRC_Field;
       --  unspecified
-      Reserved_16_31 : HAL.Short;
+      Reserved_16_31 : HAL.UInt16;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

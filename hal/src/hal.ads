@@ -3,10 +3,6 @@ with Interfaces;
 package HAL is
    pragma Pure;
 
-   subtype Word is Interfaces.Unsigned_32;
-   subtype Short is Interfaces.Unsigned_16;
-   subtype Byte is Interfaces.Unsigned_8;
-
    type Bit is mod 2**1
      with Size => 1;
    type UInt2 is mod 2**2
@@ -23,6 +19,8 @@ package HAL is
      with Size => 7;
    type UInt9 is mod 2**9
      with Size => 9;
+   subtype UInt8 is Interfaces.Unsigned_8;
+   subtype Byte is Interfaces.Unsigned_8;
    type UInt10 is mod 2**10
      with Size => 10;
    type UInt11 is mod 2**11
@@ -35,6 +33,7 @@ package HAL is
      with Size => 14;
    type UInt15 is mod 2**15
      with Size => 15;
+   subtype UInt16 is Interfaces.Unsigned_16;
    type UInt17 is mod 2**17
      with Size => 17;
    type UInt18 is mod 2**18
@@ -65,9 +64,73 @@ package HAL is
      with Size => 30;
    type UInt31 is mod 2**31
      with Size => 31;
+   subtype UInt32 is Interfaces.Unsigned_32;
+   type UInt33 is mod 2**33
+     with Size => 33;
+   type UInt34 is mod 2**34
+     with Size => 34;
+   type UInt35 is mod 2**35
+     with Size => 35;
+   type UInt36 is mod 2**36
+     with Size => 36;
+   type UInt37 is mod 2**37
+     with Size => 37;
+   type UInt38 is mod 2**38
+     with Size => 38;
+   type UInt39 is mod 2**39
+     with Size => 39;
+   type UInt40 is mod 2**40
+     with Size => 40;
+   type UInt41 is mod 2**41
+     with Size => 41;
+   type UInt42 is mod 2**42
+     with Size => 42;
+   type UInt43 is mod 2**43
+     with Size => 43;
+   type UInt44 is mod 2**44
+     with Size => 44;
+   type UInt45 is mod 2**45
+     with Size => 45;
+   type UInt46 is mod 2**46
+     with Size => 46;
+   type UInt47 is mod 2**47
+     with Size => 47;
+   type UInt48 is mod 2**48
+     with Size => 48;
+   type UInt49 is mod 2**49
+     with Size => 49;
+   type UInt50 is mod 2**50
+     with Size => 50;
+   type UInt51 is mod 2**51
+     with Size => 51;
+   type UInt52 is mod 2**52
+     with Size => 52;
+   type UInt53 is mod 2**53
+     with Size => 53;
+   type UInt54 is mod 2**54
+     with Size => 54;
+   type UInt55 is mod 2**55
+     with Size => 55;
+   type UInt56 is mod 2**56
+     with Size => 56;
+   type UInt57 is mod 2**57
+     with Size => 57;
+   type UInt58 is mod 2**58
+     with Size => 58;
+   type UInt59 is mod 2**59
+     with Size => 59;
+   type UInt60 is mod 2**60
+     with Size => 60;
+   type UInt61 is mod 2**61
+     with Size => 61;
+   type UInt62 is mod 2**62
+     with Size => 62;
+   type UInt63 is mod 2**63
+     with Size => 63;
+   subtype UInt64 is Interfaces.Unsigned_64;
 
    type Byte_Array is array (Natural range <>) of Byte;
-   type Short_Array is array (Natural range <>) of Short;
-   type Word_Array is array (Natural range <>) of Word;
+   type UInt16_Array is array (Natural range <>) of UInt16;
+   type Word_Array is array (Natural range <>) of UInt32;
 
 end HAL;

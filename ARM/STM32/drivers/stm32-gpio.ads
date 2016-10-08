@@ -246,7 +246,7 @@ private
 
    type GPIO_Port is new STM32_SVD.GPIO.GPIO_Peripheral;
 
-   LCCK : constant Word := 16#0001_0000#;
+   LCCK : constant UInt32 := 16#0001_0000#;
    --  As per the Reference Manual (RM0090; Doc ID 018909 Rev 6) pg 282,
    --  this is the "Lock Key" used to control the locking of port/pin
    --  configurations. It is bit 16 in the lock register (LCKR) of any

@@ -63,14 +63,14 @@ package STM32.SDMMC is
       Data_Read_Access_Time_1          : Byte;
       Data_Read_Access_Time_2          : Byte; --  In CLK Cycles
       Max_Bus_Clock_Frequency          : Byte;
-      Card_Command_Class               : Short;
+      Card_Command_Class               : UInt16;
       Max_Read_Data_Block_Length       : Byte; -- ld (blocksize in bytes)
       Partial_Block_For_Read_Allowed   : Boolean;
       Write_Block_Missalignment        : Boolean;
       Read_Block_Missalignment         : Boolean;
       DSR_Implemented                  : Boolean;
       Reserved_2                       : Byte;
-      Device_Size                      : Word;
+      Device_Size                      : UInt32;
       Max_Read_Current_At_VDD_Min      : Byte;
       Max_Read_Current_At_VDD_Max      : Byte;
       Max_Write_Current_At_VDD_Min     : Byte;
@@ -126,7 +126,7 @@ package STM32.SDMMC is
       OEM_Application_ID    : String (1 .. 2);
       Product_Name          : String (1 .. 5);
       Product_Revision      : Card_Revision;
-      Product_Serial_Number : Word;
+      Product_Serial_Number : UInt32;
       Reserved_1            : Byte;
       Manufacturing_Date    : Manufacturing_Date_Type;
       CID_CRC               : Byte;
@@ -138,7 +138,7 @@ package STM32.SDMMC is
       SD_CID          : Card_Identification_Data_Register;
       Card_Capacity   : Unsigned_64;
       Card_Block_Size : Unsigned_32;
-      RCA             : Short; --  SD relative card address
+      RCA             : UInt16; --  SD relative card address
       Card_Type       : Supported_SD_Memory_Cards :=
                           STD_Capacity_SD_Card_V1_1;
    end record;
@@ -352,7 +352,7 @@ private
    SD_App_Change_Secure_Area          : constant SD_Specific_Command := 49;
    SD_App_Send_SCR                    : constant SD_Specific_Command := 51;
 
-   type Card_Data_Table is array (0 .. 3) of Word;
+   type Card_Data_Table is array (0 .. 3) of UInt32;
 
    type SDMMC_Controller
      (Periph : not null access STM32_SVD.SDIO.SDIO_Peripheral)
@@ -361,7 +361,7 @@ private
       CSD       : Card_Data_Table := (others => 0);
       Card_Type : Supported_SD_Memory_Cards :=
                     STD_Capacity_SD_Card_V1_1;
-      RCA       : Word := 0;
+      RCA       : UInt32 := 0;
       Operation : SDMMC_Operation := No_Operation;
    end record;
 
