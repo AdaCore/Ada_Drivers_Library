@@ -37,8 +37,6 @@ package MicroBit.Time is
 
    function Clock return Time_Ms;
 
-   procedure Set_Tick_Period (Period : Time_Ms);
-
    function Tick_Period return Time_Ms;
 
    type Tick_Callback is access procedure;

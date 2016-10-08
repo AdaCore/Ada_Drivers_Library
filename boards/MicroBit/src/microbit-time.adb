@@ -41,7 +41,7 @@ package body MicroBit.Time is
    package Clocks renames nRF51.Clock;
 
    Clock_Ms  : Time_Ms := 0;
-   Period_Ms : Time_Ms := 100;
+   Period_Ms : constant Time_Ms := 1;
 
    Subscribers : array (1 .. 10) of Tick_Callback := (others => null);
 
@@ -66,12 +66,10 @@ package body MicroBit.Time is
       end if;
 
       Stop (RTC1);
-      Clear (RTC1);
 
-      --  Arbitrary frequency...
-      Set_Prescaler (RTC1, 1);
-      Set_Compare (RTC1, 0, 10);
-
+      --  1kHz
+      Set_Prescaler (RTC1, 0);
+      Set_Compare (RTC1, 0, 16);
 
       Enable_Event (RTC1, Compare_0_Event);
 
@@ -123,16 +121,6 @@ package body MicroBit.Time is
    begin
       return Clock_Ms;
    end Clock;
-
-   ---------------------
-   -- Set_Tick_Period --
-   ---------------------
-
-   procedure Set_Tick_Period (Period : Time_Ms) is
-   begin
-      Period_Ms := Period;
-      raise Program_Error with "Unimplemented procedure Set_Tick_Period";
-   end Set_Tick_Period;
 
    -----------------
    -- Tick_Period --
