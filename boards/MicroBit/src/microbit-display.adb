@@ -35,8 +35,6 @@ with MicroBit.Time; use MicroBit.Time;
 
 package body MicroBit.Display is
 
-   Is_Initialized : Boolean := False;
-
    Bitmap : array (Coord, Coord) of Boolean := (others => (others => False));
    Current_X, Current_Y : Coord := 0;
 
@@ -85,8 +83,6 @@ package body MicroBit.Display is
          Point.Set;
       end loop;
 
-      Is_Initialized := True;
-
       if not Tick_Subscribe (Tick_Handler'Access) then
          raise Program_Error;
       end if;
@@ -127,15 +123,6 @@ package body MicroBit.Display is
          Column_Points (Map (Current_X, Current_Y).Column_Id).Clear;
       end if;
    end Tick_Handler;
-
-   -----------------
-   -- Initialized --
-   -----------------
-
-   function Initialized return Boolean is
-   begin
-      return Is_Initialized;
-   end Initialized;
 
    ---------
    -- Set --
