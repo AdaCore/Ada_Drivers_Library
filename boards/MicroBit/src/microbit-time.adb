@@ -69,7 +69,7 @@ package body MicroBit.Time is
 
       --  1kHz
       Set_Prescaler (RTC1, 0);
-      Set_Compare (RTC1, 0, 16);
+      Set_Compare (RTC1, 0, 32);
 
       Enable_Event (RTC1, Compare_0_Event);
 
