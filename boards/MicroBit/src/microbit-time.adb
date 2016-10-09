@@ -65,19 +65,19 @@ package body MicroBit.Time is
          end loop;
       end if;
 
-      Stop (RTC1);
+      Stop (RTC_1);
 
       --  1kHz
-      Set_Prescaler (RTC1, 0);
-      Set_Compare (RTC1, 0, 32);
+      Set_Prescaler (RTC_1, 0);
+      Set_Compare (RTC_1, 0, 32);
 
-      Enable_Event (RTC1, Compare_0_Event);
+      Enable_Event (RTC_1, Compare_0_Event);
 
       nRF51.Events.Enable_Interrupt (nRF51.Events.RTC_1_COMPARE_0);
 
       nRF51.Interrupts.Enable (nRF51.Interrupts.RTC1_Interrupt);
 
-      Start (RTC1);
+      Start (RTC_1);
    end Initialize;
 
    ------------------
@@ -95,9 +95,9 @@ package body MicroBit.Time is
 
    procedure RTC1_IRQHandler is
    begin
-      Stop (RTC1);
-      Clear (RTC1);
-      Start (RTC1);
+      Stop (RTC_1);
+      Clear (RTC_1);
+      Start (RTC_1);
 
       nRF51.Events.Clear (nRF51.Events.RTC_1_COMPARE_0);
 

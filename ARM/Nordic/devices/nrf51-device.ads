@@ -71,8 +71,8 @@ package nRF51.Device is
    P30 : aliased GPIO_Point := (Pin => 30);
    P31 : aliased GPIO_Point := (Pin => 31);
 
-   RTC0 : aliased Real_Time_Counter (NRF51_SVD.RTC.RTC0_Periph'Access);
-   RTC1 : aliased Real_Time_Counter (NRF51_SVD.RTC.RTC1_Periph'Access);
+   RTC_0 : aliased Real_Time_Counter (NRF51_SVD.RTC.RTC0_Periph'Access);
+   RTC_1 : aliased Real_Time_Counter (NRF51_SVD.RTC.RTC1_Periph'Access);
 
    TWI_0 : aliased TWI_Master (NRF51_SVD.TWI.TWI0_Periph'Access);
    TWI_1 : aliased TWI_Master (NRF51_SVD.TWI.TWI1_Periph'Access);
