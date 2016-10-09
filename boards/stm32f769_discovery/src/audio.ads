@@ -32,8 +32,9 @@
 --   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Audio; use HAL.Audio;
-with HAL.I2C;   use HAL.I2C;
+with HAL.Audio;      use HAL.Audio;
+with HAL.I2C;        use HAL.I2C;
+with Ravenscar_Time;
 
 private with WM8994;
 
@@ -74,7 +75,7 @@ private
 
    type WM8994_Audio_Device (Port : not null I2C_Port_Ref) is limited new
      Audio_Device with record
-      Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr);
+      Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
    end record;
 
 end Audio;

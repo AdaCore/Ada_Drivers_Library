@@ -1,6 +1,7 @@
 with HAL;             use HAL;
 with HAL.Framebuffer; use HAL.Framebuffer;
 with HAL.Bitmap;
+with Ravenscar_Time;
 
 private with STM32.Device;
 private with STM32.DMA2D_Bitmap;
@@ -106,7 +107,8 @@ private
       record
          Device  : OTM8009A.OTM8009A_Device
                     (DSI_Host   => STM32.Device.DSIHOST'Access,
-                     Channel_Id => LCD_Channel);
+                     Channel_Id => LCD_Channel,
+                     Time       => Ravenscar_Time.Delays);
          Swapped : Boolean;
          Buffers : FB_Array := (others => STM32.DMA2D_Bitmap.Null_Buffer);
       end record;
