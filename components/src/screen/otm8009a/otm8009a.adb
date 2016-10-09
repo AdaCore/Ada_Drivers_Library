@@ -1,4 +1,3 @@
-with Ada.Real_Time; use Ada.Real_Time;
 
 package body OTM8009A is
 
@@ -61,11 +60,11 @@ package body OTM8009A is
       --  -> Source output level during porch and non-display area to GND --
       This.Write (Address => 16#C480#,
                   Data    => (1 => 16#30#));
-      delay until Clock + Milliseconds (10);
+      This.Time.Delay_Milliseconds (10);
       --  Not documented...
       This.Write (Address => 16#C48A#,
                   Data    => (1 => 16#40#));
-      delay until Clock + Milliseconds (10);
+      This.Time.Delay_Milliseconds (10);
       ----------------------------------------------------------------------
 
       ----------------------------------------------------------------------
@@ -271,7 +270,7 @@ package body OTM8009A is
                   Data   => (1 .. 0 => <>));
 
       --  Wait for Sleep Out exit
-      delay until Clock + Milliseconds (120);
+      This.Time.Delay_Milliseconds (120);
 
       case Color_Mode is
          when RGB565 =>
