@@ -1,5 +1,4 @@
 with Ada.Unchecked_Conversion;
-with Ada.Real_Time; use Ada.Real_Time;
 with Interfaces;    use Interfaces;
 
 with HAL.I2C;       use HAL.I2C;
@@ -206,7 +205,7 @@ package body AK8963 is
       while Retry > 0 loop
          exit when Get_Data_Ready (Device);
          Retry := Retry - 1;
-         delay until Clock + Milliseconds (10);
+         Device.Time.Delay_Milliseconds (10);
       end loop;
 
       if Retry = 0 then

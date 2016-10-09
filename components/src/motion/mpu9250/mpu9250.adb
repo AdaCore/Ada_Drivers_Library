@@ -55,7 +55,7 @@ package body MPU9250 is
       end if;
 
       --  Wait for MPU9250 startup
-      delay until Time_First + MPU9250_STARTUP_TIME_MS;
+      Device.Time.Delay_Milliseconds (MPU9250_STARTUP_TIME_MS);
 
       --  Set the device address
       Device.Address :=
@@ -170,7 +170,6 @@ package body MPU9250 is
       Gyro_Diff    : Float_Array_3;
       FS           : constant Unsigned_8 := 0;
 
-      Next_Period : Time;
       Test_Status : Boolean;
    begin
       --  Save old configuration
@@ -241,8 +240,7 @@ package body MPU9250 is
         (Device, MPU9250_RA_GYRO_CONFIG, 16#E0#);
 
       --  Delay a while to let the device stabilize
-      Next_Period := Clock + Milliseconds (25);
-      delay until Next_Period;
+      Device.Time.Delay_Milliseconds (25);
 
       --  Get average self-test values of gyro and accelerometer
       for I in 1 .. 200 loop
@@ -288,8 +286,7 @@ package body MPU9250 is
         (Device, MPU9250_RA_GYRO_CONFIG, 16#00#);
 
       --  Delay a while to let the device stabilize
-      Next_Period := Clock + Milliseconds (25);
-      delay until Next_Period;
+      Device.Time.Delay_Milliseconds (25);
 
       --  Retrieve Accelerometer and Gyro Factory Self - Test Code From USR_Reg
       MPU9250_Read_Byte_At_Register

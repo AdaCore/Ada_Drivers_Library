@@ -42,10 +42,9 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with Ada.Real_Time; use Ada.Real_Time;
-with Interfaces;    use Interfaces;
+with Interfaces;   use Interfaces;
 
-with ILI9341_Regs;  use ILI9341_Regs;
+with ILI9341_Regs; use ILI9341_Regs;
 
 package body ILI9341 is
 
@@ -279,7 +278,7 @@ package body ILI9341 is
    begin
       This.Reset.Set;
       This.Send_Command (ILI9341_RESET);
-      delay until Clock + Milliseconds (5);
+      This.Time.Delay_Milliseconds (5);
 
       This.Send_Command (ILI9341_POWERA);
       This.Send_Data (16#39#);
@@ -390,9 +389,9 @@ package body ILI9341 is
 
       case Mode is
          when RGB_Mode =>
-            delay until Clock + Milliseconds (150);
+            This.Time.Delay_Milliseconds (150);
          when SPI_Mode =>
-            delay until Clock + Milliseconds (20);
+            This.Time.Delay_Milliseconds (20);
       end case;
       --  document ILI9341_DS_V1.02, section 11.2, pg 205 says we need
       --  either 120ms or 5ms, depending on the mode, but seems incorrect.
