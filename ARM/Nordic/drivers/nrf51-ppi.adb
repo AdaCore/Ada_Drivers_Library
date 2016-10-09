@@ -29,39 +29,88 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Unchecked_Conversion;
+with NRF51_SVD.PPI; use NRF51_SVD.PPI;
+with nRF51.Events;  use nRF51.Events;
+with nRF51.Tasks;   use nRF51.Tasks;
 
-package body nRF51.Tasks is
+package body nRF51.PPI is
 
-   function To_UInt32 is new Ada.Unchecked_Conversion (System.Address, UInt32);
+   ---------------
+   -- Configure --
+   ---------------
 
-   -------------
-   -- Trigger --
-   -------------
-
-   procedure Trigger (T : Task_Type) is
-      Reg : UInt32 with Address => System.Address (T);
+   procedure Configure
+     (Chan    : Channel_ID;
+      Evt_EP  : Event_Type;
+      Task_EP : Task_Type)
+   is
    begin
-      Reg := 1;
-   end Trigger;
+      PPI_Periph.CH (Chan).EEP := Get_Address (Evt_EP);
+      PPI_Periph.CH (Chan).TEP := Get_Address (Task_EP);
+   end Configure;
 
-   -----------------
-   -- Get_Address --
-   -----------------
+   --------------------
+   -- Enable_Channel --
+   --------------------
 
-   function Get_Address (T : Task_Type) return System.Address is
+   procedure Enable_Channel (Chan : Channel_ID) is
+      Arr : CHENSET_CH_Field_Array := (others => Chenset_Ch0_Field_Reset);
    begin
-      return System.Address (T);
-   end Get_Address;
+      Arr (Chan) := Set;
+      PPI_Periph.CHENSET.CH.Arr := Arr;
+   end Enable_Channel;
 
-   -----------------
-   -- Get_Address --
-   -----------------
+   ---------------------
+   -- Disable_Channel --
+   ---------------------
 
-   function Get_Address (T : Task_Type) return UInt32 is
+   procedure Disable_Channel (Chan : Channel_ID) is
+      Arr : CHENCLR_CH_Field_Array := (others => Chenclr_Ch0_Field_Reset);
    begin
-      return To_UInt32 (System.Address (T));
-   end Get_Address;
+      Arr (Chan) := Clear;
+      PPI_Periph.CHENCLR.CH.Arr := Arr;
+   end Disable_Channel;
 
+   ------------------
+   -- Add_To_Group --
+   ------------------
 
-end nRF51.Tasks;
+   procedure Add_To_Group
+     (Chan  : Channel_ID;
+      Group : Group_ID)
+   is
+   begin
+      PPI_Periph.CHG (Group).CH.Arr (Chan) := Included;
+   end Add_To_Group;
+
+   -----------------------
+   -- Remove_From_Group --
+   -----------------------
+
+   procedure Remove_From_Group
+     (Chan  : Channel_ID;
+      Group : Group_ID)
+   is
+   begin
+      PPI_Periph.CHG (Group).CH.Arr (Chan) := Excluded;
+   end Remove_From_Group;
+
+   ------------------
+   -- Enable_Group --
+   ------------------
+
+   procedure Enable_Group (Group : Group_ID) is
+   begin
+      PPI_Periph.TASKS_CHG (Group).EN := 1;
+   end Enable_Group;
+
+   -------------------
+   -- Disable_Group --
+   -------------------
+
+   procedure Disable_Group (Group : Group_ID) is
+   begin
+      PPI_Periph.TASKS_CHG (Group).DIS := 1;
+   end Disable_Group;
+
+end nRF51.PPI;

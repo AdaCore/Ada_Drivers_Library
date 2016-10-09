@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL;        use HAL;
 with Interfaces; use Interfaces;
 with Ada.Unchecked_Conversion;
 
@@ -113,5 +112,15 @@ package body nRF51.Events is
    begin
       return System.Address (Evt);
    end Get_Address;
+
+   -----------------
+   -- Get_Address --
+   -----------------
+
+   function Get_Address (Evt : Event_Type) return UInt32 is
+   begin
+      return To_UInt32 (System.Address (Evt));
+   end Get_Address;
+
 
 end nRF51.Events;

@@ -47,6 +47,7 @@ with NRF51_SVD.TWI;
 with NRF51_SVD.UART;
 with NRF51_SVD.QDEC;
 with NRF51_SVD.ADC;
+with HAL; use HAL;
 
 
 package nRF51.Tasks is
@@ -55,6 +56,7 @@ package nRF51.Tasks is
    --  Software task trigger
 
    function Get_Address (T : Task_Type) return System.Address;
+   function Get_Address (T : Task_Type) return UInt32;
 
    --  Power management tasks
    Power_CONSTLAT   : constant Task_Type;

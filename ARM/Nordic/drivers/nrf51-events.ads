@@ -47,6 +47,7 @@ with NRF51_SVD.TWI;
 with NRF51_SVD.UART;
 with NRF51_SVD.QDEC;
 with NRF51_SVD.ADC;
+with HAL; use HAL;
 
 
 package nRF51.Events is
@@ -61,6 +62,7 @@ package nRF51.Events is
    --  Software event clear
 
    function Get_Address (Evt : Event_Type) return System.Address;
+   function Get_Address (Evt : Event_Type) return UInt32;
 
    --  Power management events
    Power_POFWARN       : constant Event_Type;

@@ -29,39 +29,23 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Unchecked_Conversion;
+package nRF51.PPI is
 
-package body nRF51.Tasks is
+   subtype Channel_ID is Natural range 0 .. 15;
+   subtype Group_ID is Natural range 0 .. 3;
 
-   function To_UInt32 is new Ada.Unchecked_Conversion (System.Address, UInt32);
+   procedure Configure (Chan    : Channel_ID;
+                        Evt_EP  : Event_Type;
+                        Task_EP : Task_Type);
 
-   -------------
-   -- Trigger --
-   -------------
+   procedure Enable_Channel (Chan : Channel_ID);
+   procedure Disable_Channel (Chan : Channel_ID);
 
-   procedure Trigger (T : Task_Type) is
-      Reg : UInt32 with Address => System.Address (T);
-   begin
-      Reg := 1;
-   end Trigger;
+   procedure Add_To_Group (Chan  : Channel_ID;
+                           Group : Group_ID);
+   procedure Remove_From_Group (Chan  : Channel_ID;
+                                Group : Group_ID);
 
-   -----------------
-   -- Get_Address --
-   -----------------
-
-   function Get_Address (T : Task_Type) return System.Address is
-   begin
-      return System.Address (T);
-   end Get_Address;
-
-   -----------------
-   -- Get_Address --
-   -----------------
-
-   function Get_Address (T : Task_Type) return UInt32 is
-   begin
-      return To_UInt32 (System.Address (T));
-   end Get_Address;
-
-
-end nRF51.Tasks;
+   procedure Enable_Group (Group : Group_ID);
+   procedure Disable_Group (Group : Group_ID);
+end nRF51.PPI;
