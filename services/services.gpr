@@ -3,7 +3,17 @@ with "config";
 
 library project Services is
 
-   for Source_Dirs use ("src/**");
+   Src_Dirs := ("src/filesystems",
+                "src/utils");
+
+   case Config.RTS is
+      when "ravenscar-sfp" | "ravenscar-full" =>
+         Src_Dirs := Src_Dirs & ("src/ravenscar-common");
+      when others =>
+         null;
+   end case;
+
+   for Source_Dirs use Src_Dirs;
 
    for Languages use ("Ada");
    for Library_Name use "services";
