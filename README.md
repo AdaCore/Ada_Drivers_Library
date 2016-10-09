@@ -69,7 +69,21 @@ Not all devices defined by the Reference Manual are supported, and not all those
 supported are complete. We encourage contributions of corrections, enhancements,
 and new drivers.
 
-5. Project using the Ada_Drivers_Library
+5. Roadmap
+----------
+
+Here is a list of projects that we are either dreaming about or already working
+on. If you are interested by one of those, please contact us on the projects's
+GitHub page.
+
+* ARM
+ * STM32F4/7 USB drivers
+* Components
+* Services
+ * Bluetooth Low Energy stack
+ * USB stack
+
+6. Project using the Ada_Drivers_Library
 ----------------------------------------
 
  * [Certyflie: Ada/SPARK flight controller for the Crazyflie 2.0](https://github.com/AdaCore/Certyflie)
