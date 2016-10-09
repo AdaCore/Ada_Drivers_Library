@@ -29,51 +29,76 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with HAL;           use HAL;
+with HAL.I2C;       use HAL.I2C;
 with nRF51.GPIO;    use nRF51.GPIO;
-with nRF51.RTC;     use nRF51.RTC;
-with NRF51_SVD.RTC;
-with nRF51.TWI;     use nRF51.TWI;
 with NRF51_SVD.TWI;
 
+package nRF51.TWI is
 
-package nRF51.Device is
+   type TWI_Speed is (TWI_100kbps, TWI_250kbps, TWI_400kbps);
 
-   P00 : aliased GPIO_Point := (Pin => 00);
-   P01 : aliased GPIO_Point := (Pin => 01);
-   P02 : aliased GPIO_Point := (Pin => 02);
-   P03 : aliased GPIO_Point := (Pin => 03);
-   P04 : aliased GPIO_Point := (Pin => 04);
-   P05 : aliased GPIO_Point := (Pin => 05);
-   P06 : aliased GPIO_Point := (Pin => 06);
-   P07 : aliased GPIO_Point := (Pin => 07);
-   P08 : aliased GPIO_Point := (Pin => 08);
-   P09 : aliased GPIO_Point := (Pin => 09);
-   P10 : aliased GPIO_Point := (Pin => 10);
-   P11 : aliased GPIO_Point := (Pin => 11);
-   P12 : aliased GPIO_Point := (Pin => 12);
-   P13 : aliased GPIO_Point := (Pin => 13);
-   P14 : aliased GPIO_Point := (Pin => 14);
-   P15 : aliased GPIO_Point := (Pin => 15);
-   P16 : aliased GPIO_Point := (Pin => 16);
-   P17 : aliased GPIO_Point := (Pin => 17);
-   P18 : aliased GPIO_Point := (Pin => 18);
-   P19 : aliased GPIO_Point := (Pin => 19);
-   P20 : aliased GPIO_Point := (Pin => 20);
-   P21 : aliased GPIO_Point := (Pin => 21);
-   P22 : aliased GPIO_Point := (Pin => 22);
-   P23 : aliased GPIO_Point := (Pin => 23);
-   P24 : aliased GPIO_Point := (Pin => 24);
-   P25 : aliased GPIO_Point := (Pin => 25);
-   P26 : aliased GPIO_Point := (Pin => 26);
-   P27 : aliased GPIO_Point := (Pin => 27);
-   P28 : aliased GPIO_Point := (Pin => 28);
-   P29 : aliased GPIO_Point := (Pin => 29);
-   P30 : aliased GPIO_Point := (Pin => 30);
-   P31 : aliased GPIO_Point := (Pin => 31);
+   type TWI_Master (Periph : not null access NRF51_SVD.TWI.TWI_Peripheral) is
+     new HAL.I2C.I2C_Port with private;
 
-   RTC0 : aliased Real_Time_Counter (NRF51_SVD.RTC.RTC0_Periph'Access);
-   RTC1 : aliased Real_Time_Counter (NRF51_SVD.RTC.RTC1_Periph'Access);
+   procedure Enable (This : in out TWI_Master);
 
-   TWI_0 : aliased TWI_Master (NRF51_SVD.TWI.TWI0_Periph'Access);
-   TWI_1 : aliased TWI_Master (NRF51_SVD.TWI.TWI1_Periph'Access);
-end nRF51.Device;
+   procedure Disable (This : in out TWI_Master);
+
+   function Enabled (This : TWI_Master) return Boolean;
+
+   procedure Configure (This     : in out TWI_Master;
+                        SCL, SDA : GPIO_Pin_Index;
+                        Speed    : TWI_Speed);
+
+   procedure Disconnect (This : in out TWI_Master);
+   --  Disconect the peripheral from the GPIO points
+
+   overriding
+   procedure Master_Transmit
+     (This    : in out TWI_Master;
+      Addr    : I2C_Address;
+      Data    : I2C_Data;
+      Status  : out I2C_Status;
+      Timeout : Natural := 1000)
+     with Pre => Enabled (This);
+
+   overriding
+   procedure Master_Receive
+     (This    : in out TWI_Master;
+      Addr    : I2C_Address;
+      Data    : out I2C_Data;
+      Status  : out I2C_Status;
+      Timeout : Natural := 1000)
+     with Pre => Enabled (This);
+
+   overriding
+   procedure Mem_Write
+     (This          : in out TWI_Master;
+      Addr          : I2C_Address;
+      Mem_Addr      : UInt16;
+      Mem_Addr_Size : I2C_Memory_Address_Size;
+      Data          : I2C_Data;
+      Status        : out I2C_Status;
+      Timeout       : Natural := 1000)
+     with Pre => Enabled (This);
+
+   overriding
+   procedure Mem_Read
+     (This          : in out TWI_Master;
+      Addr          : I2C_Address;
+      Mem_Addr      : UInt16;
+      Mem_Addr_Size : I2C_Memory_Address_Size;
+      Data          : out I2C_Data;
+      Status        : out I2C_Status;
+      Timeout       : Natural := 1000)
+     with Pre => Enabled (This);
+
+private
+
+   type TWI_Master (Periph : not null access NRF51_SVD.TWI.TWI_Peripheral) is
+     new HAL.I2C.I2C_Port with record
+      Do_Stop_Sequence : Boolean := True;
+   end record;
+
+end nRF51.TWI;
