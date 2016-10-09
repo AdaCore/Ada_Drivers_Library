@@ -68,3 +68,15 @@ either within GPS or on the command-line.
 Not all devices defined by the Reference Manual are supported, and not all those
 supported are complete. We encourage contributions of corrections, enhancements,
 and new drivers.
+
+5. Project using the Ada_Drivers_Library
+----------------------------------------
+
+ * [Certyflie: Ada/SPARK flight controller for the Crazyflie 2.0](https://github.com/AdaCore/Certyflie)
+ * [ACNC: A Gcode interpreter and CNC controller](https://github.com/Fabien-Chouteau/ACNC)
+ * [AMCQ: Multiple Choice Questions candy dispenser](https://github.com/Fabien-Chouteau/AMCQ)
+ * [Giza: Giza is trying to be a simple widget tool kit for embedded platforms](https://github.com/Fabien-Chouteau/Giza)
+ * [solenoid-engine-controller: Software controller for solenoid engines](https://github.com/Fabien-Chouteau/solenoid-engine-controller)
+ * [un_pola: DIY instant camera with OpenMV](https://github.com/Fabien-Chouteau/un_pola)
+ 
+(Add yours to the list!)
