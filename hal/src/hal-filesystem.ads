@@ -71,7 +71,7 @@ package HAL.Filesystem is
 
    function Truncate_File (This   : in out FS_Driver;
                            Path   : Pathname;
-                           Lenght : IO_Count)
+                           Length : IO_Count)
                            return Status_Kind is abstract;
 
    function Open (This   : in out FS_Driver;

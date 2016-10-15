@@ -178,7 +178,7 @@ package body Virtual_File_System is
    overriding
    function Truncate_File (This   : in out VFS;
                            Path   : Pathname;
-                           Lenght : IO_Count)
+                           Length : IO_Count)
                            return Status_Kind
    is
       Path_Reminder_Start : Integer;
@@ -190,7 +190,7 @@ package body Virtual_File_System is
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Truncate_File (Sub_Path, Lenght);
+         return FS.Truncate_File (Sub_Path, Length);
       end if;
    end Truncate_File;
 
