@@ -21,6 +21,9 @@ set of executed tests, run instead:
 
 This will execute all tests that have either ``foo`` or ``bar`` in their name
 
+If Valgrind is available, add a ``--valgrind`` switch to detect memory issues
+such as invalid operations or leaks.
+
 
 How to write testcases
 ----------------------

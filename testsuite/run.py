@@ -57,7 +57,7 @@ class Testcase:
                  os.path.join(self.dirname, fn))
                 for fn in self.expected_outputs]
 
-    def run(self):
+    def run(self, args):
         """
         Build and run the test drivers for this testcase, then check their
         output. Return a string as an error message if there is an error.
@@ -76,7 +76,7 @@ class Testcase:
         # Run individual testcases
         errors = []
         for program, expected_output_fn in self.drivers:
-            error = self._run_single(program, expected_output_fn)
+            error = self._run_single(args, program, expected_output_fn)
             if error:
                 errors.append('{}:\n{}\n'.format(
                     os.path.basename(program),
@@ -85,12 +85,16 @@ class Testcase:
 
         return '\n'.join(errors) if errors else None
 
-    def _run_single(self, program, expected_output_fn):
+    def _run_single(self, args, program, expected_output_fn):
         """
         Helper for run, execute a single test driver.
         """
         # Run the program, get its output
-        returncode, stdout, stderr = run_program(program)
+        argv = [program]
+        if args.valgrind:
+            argv = ['valgrind', '-q', '--leak-check=full'] + argv
+
+        returncode, stdout, stderr = run_program(*argv)
         if returncode or stderr:
             return 'Program returned {}:\n{}'.format(returncode, stderr)
 
@@ -123,6 +127,11 @@ def find_testcases():
 parser = argparse.ArgumentParser('Run the testsuite')
 
 parser.add_argument(
+    '--valgrind', action='store_true',
+    help='Use Valgrind to detect invalid memory operations and leaks'
+)
+
+parser.add_argument(
     'pattern', nargs='*',
     help='List of pattern to filter the set of testcases to run'
 )
@@ -135,7 +144,7 @@ def main(args):
         if args.pattern and not any(pat in tc.name for pat in args.pattern):
             continue
 
-        error = tc.run()
+        error = tc.run(args)
         if error:
             print('\x1b[31mFAIL\x1b[0m {}:\n{}'.format(tc.name, error))
         else:
