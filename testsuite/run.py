@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python2
 
 import argparse
 import difflib
@@ -89,6 +89,15 @@ class Testcase:
         """
         Helper for run, execute a single test driver.
         """
+        # Get the expected output
+        with open(expected_output_fn, 'r') as f:
+            expected_output = f.read()
+            try:
+                expected_output = expected_output.decode('ascii')
+            except UnicodeError:
+                return 'Expected output is not ASCII'
+            expected_output = expected_output.splitlines()
+
         # Run the program, get its output
         argv = [program]
         if args.valgrind:
@@ -101,8 +110,6 @@ class Testcase:
         stdout = stdout.splitlines()
 
         # Compare the actual output and the expected one
-        with open(expected_output_fn, 'r') as f:
-            expected_output = f.read().splitlines()
         if expected_output != stdout:
             return 'Output mismatch:\n{}'.format(''.join(
                 difflib.unified_diff(
