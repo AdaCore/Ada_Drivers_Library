@@ -41,7 +41,6 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with Ada.Real_Time; use Ada.Real_Time;
 with Interfaces; use Interfaces;
 
 package body STMPE811 is
@@ -195,7 +194,7 @@ package body STMPE811 is
       This.Write_Register (IOE_REG_SYS_CTRL1, 16#02#);
 
       --  Give some time for the reset
-      delay until Clock + Milliseconds (2);
+      This.Time.Delay_Milliseconds (2);
 
       This.Write_Register (IOE_REG_SYS_CTRL1, 16#00#);
    end IOE_Reset;
@@ -257,7 +256,7 @@ package body STMPE811 is
    is
    begin
 
-      delay until Clock + Milliseconds (100);
+      This.Time.Delay_Milliseconds (100);
 
       if This.Get_IOE_ID /= 16#0811# then
          return False;
@@ -270,7 +269,7 @@ package body STMPE811 is
 
       This.Write_Register (IOE_REG_ADC_CTRL1, 16#49#);
 
-      delay until Clock + Milliseconds (2);
+      This.Time.Delay_Milliseconds (2);
 
       This.Write_Register (IOE_REG_ADC_CTRL2, 16#01#);
 

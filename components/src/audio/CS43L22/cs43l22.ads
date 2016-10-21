@@ -3,6 +3,7 @@
 with Interfaces; use Interfaces;
 with HAL;        use HAL;
 with HAL.I2C;    use HAL.I2C;
+with HAL.Time;
 
 package CS43L22 is
 
@@ -46,7 +47,8 @@ package CS43L22 is
 
    subtype Volume_Level is Unsigned_8 range 0 .. 100;
 
-   type CS43L22_Device (Port : not null I2C_Port_Ref) is
+   type CS43L22_Device (Port : not null I2C_Port_Ref;
+                        Time : not null HAL.Time.Delays_Ref) is
      tagged limited private;
 
    procedure Init (This      : in out CS43L22_Device;
@@ -108,7 +110,9 @@ private
    CS43L22_REG_THERMAL_FOLDBACK    : constant := 16#33#;
    CS43L22_REG_CHARGE_PUMP_FREQ    : constant := 16#34#;
 
-   type CS43L22_Device (Port : not null I2C_Port_Ref) is tagged limited record
+   type CS43L22_Device (Port : not null I2C_Port_Ref;
+                        Time : not null HAL.Time.Delays_Ref) is
+     tagged limited record
       Output_Enabled : Boolean := False;
       Output_Dev     : Byte := 0;
    end record;

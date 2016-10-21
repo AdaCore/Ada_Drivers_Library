@@ -1,5 +1,6 @@
 with HAL;             use HAL;
 with HAL.Framebuffer; use HAL.Framebuffer;
+with Ravenscar_Time;
 
 with Framebuffer_LTDC;
 private with ILI9341;
@@ -28,7 +29,8 @@ private
       Device : ILI9341.ILI9341_Device (STM32.Device.SPI_5'Access,
                                        Chip_Select => LCD_CSX'Access,
                                        WRX         => LCD_WRX_DCX'Access,
-                                       Reset       => LCD_RESET'Access);
+                                       Reset       => LCD_RESET'Access,
+                                       Time        => Ravenscar_Time.Delays);
    end record;
 
 end Framebuffer_ILI9341;

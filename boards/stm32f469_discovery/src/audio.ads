@@ -32,8 +32,9 @@
 --   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Audio;   use HAL.Audio;
-with HAL.I2C;     use HAL.I2C;
+with HAL.Audio;      use HAL.Audio;
+with HAL.I2C;        use HAL.I2C;
+with Ravenscar_Time;
 
 private with CS43L22;
 
@@ -72,7 +73,7 @@ private
 
    type CS43L22_Audio_Device (Port : not null I2C_Port_Ref) is limited
    new HAL.Audio.Audio_Device with record
-      Device : CS43L22.CS43L22_Device (Port);
+      Device : CS43L22.CS43L22_Device (Port, Ravenscar_Time.Delays);
    end record;
 
 end Audio;

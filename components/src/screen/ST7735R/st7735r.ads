@@ -3,6 +3,7 @@ with HAL.SPI;         use HAL.SPI;
 with HAL.GPIO;        use HAL.GPIO;
 with HAL.Framebuffer; use HAL.Framebuffer;
 with HAL.Bitmap;      use HAL.Bitmap;
+with HAL.Time;
 
 package ST7735R is
 
@@ -10,7 +11,8 @@ package ST7735R is
      (Port : not null SPI_Port_Ref;
       CS   : not null GPIO_Point_Ref;
       RS   : not null GPIO_Point_Ref;
-      RST  : not null GPIO_Point_Ref)
+      RST  : not null GPIO_Point_Ref;
+      Time : not null HAL.Time.Delays_Ref)
    is limited new HAL.Framebuffer.Frame_Buffer_Display with private;
 
    procedure Initialize (LCD : in out ST7735R_Device);
@@ -239,7 +241,8 @@ private
      (Port : not null SPI_Port_Ref;
       CS   : not null GPIO_Point_Ref;
       RS   : not null GPIO_Point_Ref;
-      RST  : not null GPIO_Point_Ref)
+      RST  : not null GPIO_Point_Ref;
+      Time : not null HAL.Time.Delays_Ref)
    is limited new HAL.Framebuffer.Frame_Buffer_Display with record
       Initialized : Boolean := True;
       Layer : aliased Bitmap_Buffer;

@@ -43,17 +43,18 @@
 --  This file provides declarations for devices on the STM32F4 Discovery kits
 --  manufactured by ST Microelectronics.
 
-with STM32.Device;  use STM32.Device;
+with STM32.Device;   use STM32.Device;
 
-with STM32.GPIO;    use STM32.GPIO;
-with STM32.I2C;     use STM32.I2C;
-with STM32.SPI;     use STM32.SPI;
-with STM32.Timers;  use STM32.Timers;
-with STM32.USARTs;  use STM32.USARTs;
+with STM32.GPIO;     use STM32.GPIO;
+with STM32.I2C;      use STM32.I2C;
+with STM32.SPI;      use STM32.SPI;
+with STM32.Timers;   use STM32.Timers;
+with STM32.USARTs;   use STM32.USARTs;
 
-with MPU9250;       use MPU9250;
-with AK8963;        use AK8963;
+with MPU9250;        use MPU9250;
+with AK8963;         use AK8963;
 
+with Ravenscar_Time;
 package STM32.Board is
    pragma Elaborate_Body;
 
@@ -176,10 +177,14 @@ package STM32.Board is
    -- MPU --
    ---------
 
-   MPU_Device   : MPU9250.MPU9250_Device (I2C_MPU_Port'Access, High);
+   MPU_Device   : MPU9250.MPU9250_Device (I2C_MPU_Port'Access,
+                                          High,
+                                          Ravenscar_Time.Delays);
    MPU_INT      : GPIO_Point renames PC13;
    MPU_FSYNC    : GPIO_Point renames PC14;
 
-   MAG_Device   : AK8963_Device (I2C_MPU_Port'Access, Add_00);
+   MAG_Device   : AK8963_Device (I2C_MPU_Port'Access,
+                                 Add_00,
+                                 Ravenscar_Time.Delays);
 
 end STM32.Board;

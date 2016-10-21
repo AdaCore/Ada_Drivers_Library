@@ -31,6 +31,7 @@
 
 with HAL.Touch_Panel;
 with HAL.Framebuffer;
+with Ravenscar_Time;
 
 private with STMPE811;
 private with STM32.Device;
@@ -61,6 +62,7 @@ private
 
    type Touch_Panel is limited new STMPE811.STMPE811_Device
      (Port     => TP_I2C'Access,
-      I2C_Addr => 16#82#) with null record;
+      I2C_Addr => 16#82#,
+      Time     => Ravenscar_Time.Delays) with null record;
 
 end Touch_Panel_STMPE811;

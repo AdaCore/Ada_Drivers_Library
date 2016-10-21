@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                       Copyright (C) 2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -11,7 +11,7 @@
 --        notice, this list of conditions and the following disclaimer in   --
 --        the documentation and/or other materials provided with the        --
 --        distribution.                                                     --
---     3. Neither the name of STMicroelectronics nor the names of its       --
+--     3. Neither the name of the copyright holder nor the names of its     --
 --        contributors may be used to endorse or promote products derived   --
 --        from this software without specific prior written permission.     --
 --                                                                          --
@@ -27,55 +27,60 @@
 --   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
 --   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
---  This file is based on:                                                  --
---   @file    stm32f746g_discovery_audio.h                                  --
---   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Audio; use HAL.Audio;
-with HAL.I2C;   use HAL.I2C;
-with Ravenscar_Time;
+with Ada.Real_Time; use Ada.Real_Time;
 
-private with WM8994;
+package body Ravenscar_Time is
 
-package Audio is
+   Delay_Singleton : aliased Ravenscar_Delays;
 
-   type WM8994_Audio_Device (Port : not null I2C_Port_Ref) is limited new
-     Audio_Device with private;
+   ------------
+   -- Delays --
+   ------------
 
-   overriding procedure Initialize_Audio_Out
-     (This      : in out WM8994_Audio_Device;
-      Volume    : Audio_Volume;
-      Frequency : Audio_Frequency);
+   function Delays return not null HAL.Time.Delays_Ref is
+   begin
+      return Delay_Singleton'Access;
+   end Delays;
 
-   overriding procedure Set_Volume
-     (This   : in out WM8994_Audio_Device;
-      Volume : Audio_Volume);
+   ------------------------
+   -- Delay_Microseconds --
+   ------------------------
 
-   overriding procedure Set_Frequency
-     (This   : in out WM8994_Audio_Device;
-      Frequency : Audio_Frequency);
+   overriding procedure Delay_Microseconds
+     (This : in out Ravenscar_Delays;
+      Us   : Integer)
+   is
+      pragma Unreferenced (This);
+   begin
+      delay until Clock + Microseconds (Us);
+   end Delay_Microseconds;
 
-   overriding procedure Play
-     (This   : in out WM8994_Audio_Device;
-      Buffer : Audio_Buffer);
+   ------------------------
+   -- Delay_Milliseconds --
+   ------------------------
 
-   overriding procedure Pause
-     (This : in out WM8994_Audio_Device);
+   overriding procedure Delay_Milliseconds
+     (This : in out Ravenscar_Delays;
+      Ms   : Integer)
+   is
+      pragma Unreferenced (This);
+   begin
+      delay until Clock + Milliseconds (Ms);
+   end Delay_Milliseconds;
 
-   overriding procedure Resume
-     (This : in out WM8994_Audio_Device);
+   -------------------
+   -- Delay_Seconds --
+   -------------------
 
-   overriding procedure Stop
-     (This : in out WM8994_Audio_Device);
+   overriding procedure Delay_Seconds
+     (This : in out Ravenscar_Delays;
+      S    : Integer)
+   is
+      pragma Unreferenced (This);
+   begin
+      delay until Clock + Seconds (S);
+   end Delay_Seconds;
 
-private
-
-   Audio_I2C_Addr  : constant I2C_Address := 16#34#;
-
-   type WM8994_Audio_Device (Port : not null I2C_Port_Ref) is limited new
-     Audio_Device with record
-      Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
-   end record;
-
-end Audio;
+end Ravenscar_Time;

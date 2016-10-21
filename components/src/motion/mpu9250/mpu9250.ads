@@ -29,11 +29,11 @@
 
 --  MPU9250 I2C device class package
 
-with Ada.Real_Time;       use Ada.Real_Time;
 with Interfaces;          use Interfaces;
 
 with HAL;                 use HAL;
 with HAL.I2C;             use HAL.I2C;
+with HAL.Time;
 
 package MPU9250 is
 
@@ -43,7 +43,8 @@ package MPU9250 is
 
    --  Types and subtypes
    type MPU9250_Device (Port        : HAL.I2C.I2C_Port_Ref;
-                        I2C_AD0_Pin : MPU9250_AD0_Pin_State) is private;
+                        I2C_AD0_Pin : MPU9250_AD0_Pin_State;
+                        Time        : not null HAL.Time.Delays_Ref) is private;
 
    --  Type reprensnting all the different clock sources of the MPU9250.
    --  See the MPU9250 register map section 4.4 for more details.
@@ -220,7 +221,8 @@ private
 
    type MPU9250_Device
      (Port        : HAL.I2C.I2C_Port_Ref;
-      I2C_AD0_Pin : MPU9250_AD0_Pin_State)
+      I2C_AD0_Pin : MPU9250_AD0_Pin_State;
+      Time        : not null HAL.Time.Delays_Ref)
    is record
       Is_Init : Boolean := False;
       Address : UInt10;
@@ -238,7 +240,7 @@ private
    --  Address pin high (VCC)
    MPU9250_ADDRESS_AD0_HIGH : constant := 16#69#;
 
-   MPU9250_STARTUP_TIME_MS  : constant Time_Span := Milliseconds (1_000);
+   MPU9250_STARTUP_TIME_MS  : constant := 1_000;
 
    --  MPU9250 register adresses and other defines
 

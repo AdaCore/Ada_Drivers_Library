@@ -1,4 +1,3 @@
-with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 with System;
 with Interfaces; use Interfaces;
@@ -196,14 +195,14 @@ package body ST7735R is
       LCD.Initialized := True;
 
       LCD.RST.Clear;
-      delay until Clock + Milliseconds (100);
+      LCD.Time.Delay_Milliseconds (100);
       LCD.RST.Set;
-      delay until Clock + Milliseconds (100);
+      LCD.Time.Delay_Milliseconds (100);
 
       --  Sleep Exit
       Write_Command (LCD, 16#11#);
 
-      delay until Clock + Milliseconds (100);
+      LCD.Time.Delay_Milliseconds (100);
    end Initialize;
 
    -----------------
