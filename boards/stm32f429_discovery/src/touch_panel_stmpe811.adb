@@ -72,9 +72,9 @@ package body Touch_Panel_STMPE811 is
    procedure TP_Ctrl_Lines is
       GPIO_Conf : GPIO_Port_Configuration;
    begin
-      Enable_Clock (GPIO_Points'(SDA, SCL));
+      Power_Up (GPIO_Points'(SDA, SCL));
 
-      Enable_Clock (TP_I2C);
+      Power_Up (TP_I2C);
 
       SCL.Configure_Alternate_Function (SCL_AF);
       SDA.Configure_Alternate_Function (SDA_AF);

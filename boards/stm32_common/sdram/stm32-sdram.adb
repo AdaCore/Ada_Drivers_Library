@@ -25,7 +25,7 @@ package body STM32.SDRAM is
    procedure SDRAM_GPIOConfig
    is
    begin
-      Enable_Clock (SDRAM_PINS);
+      Power_Up (SDRAM_PINS);
 
       Configure_IO (SDRAM_PINS,
                     (Speed       => Speed_50MHz,

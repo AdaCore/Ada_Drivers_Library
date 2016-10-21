@@ -70,7 +70,7 @@ package body STM32.Board is
    procedure Initialize_LEDs is
       Conf : GPIO_Port_Configuration;
    begin
-      Enable_Clock (All_LEDs);
+      Power_Up (All_LEDs);
 
       Conf.Mode        := Mode_Out;
       Conf.Output_Type := Push_Pull;
@@ -87,8 +87,8 @@ package body STM32.Board is
    procedure Initialize_Gyro_IO is
       --  See the STM32F429 Discovery kit User Manual (UM1670) pages 21 and 23.
    begin
-      Enable_Clock (Gyro_SPI);
-      Enable_Clock (NCS_MEMS_SPI & SPI5_SCK & SPI5_MISO & SPI5_MOSI);
+      Power_Up (Gyro_SPI);
+      Power_Up (NCS_MEMS_SPI & SPI5_SCK & SPI5_MISO & SPI5_MOSI);
 
       Init_Chip_Select : declare
          Config : GPIO_Port_Configuration;
@@ -151,7 +151,7 @@ package body STM32.Board is
    procedure Configure_User_Button_GPIO is
       Config : GPIO_Port_Configuration;
    begin
-      Enable_Clock (User_Button_Point);
+      Power_Up (User_Button_Point);
 
       Config.Mode := Mode_In;
       Config.Resistors := Floating;

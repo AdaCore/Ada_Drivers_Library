@@ -28,8 +28,8 @@ package body Framebuffer_ILI9341 is
                    (SPI5_SCK, SPI5_MOSI, SPI5_MISO);
 
    begin
-      Enable_Clock (SPI_Pins);
-      Enable_Clock (LCD_SPI);
+      Power_Up (SPI_Pins);
+      Power_Up (LCD_SPI);
 
       Conf.Speed       := Speed_100MHz;
       Conf.Mode        := Mode_AF;
@@ -63,8 +63,8 @@ package body Framebuffer_ILI9341 is
 
    procedure LCD_Pins_Init is
    begin
-      Enable_Clock (GPIO_Points'(LCD_RESET, LCD_CSX, LCD_WRX_DCX));
-      Enable_Clock (LCD_PINS);
+      Power_Up (GPIO_Points'(LCD_RESET, LCD_CSX, LCD_WRX_DCX));
+      Power_Up (LCD_PINS);
 
       Configure_IO
         (Points => (LCD_RESET, LCD_CSX, LCD_WRX_DCX),

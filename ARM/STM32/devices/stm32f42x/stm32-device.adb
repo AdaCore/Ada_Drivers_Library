@@ -56,7 +56,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out GPIO_Port) is
+   procedure Power_Up (This : aliased in out GPIO_Port) is
    begin
       if This'Address = GPIOA_Base then
          RCC_Periph.AHB1ENR.GPIOAEN := True;
@@ -83,29 +83,29 @@ package body STM32.Device is
       else
          raise Unknown_Device;
       end if;
-   end Enable_Clock;
+   end Power_Up;
 
    ------------------
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (Point : GPIO_Point)
+   procedure Power_Up (Point : GPIO_Point)
    is
    begin
-      Enable_Clock (Point.Periph.all);
-   end Enable_Clock;
+      Power_Up (Point.Periph.all);
+   end Power_Up;
 
    ------------------
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (Points : GPIO_Points)
+   procedure Power_Up (Points : GPIO_Points)
    is
    begin
       for Point of Points loop
-         Enable_Clock (Point.Periph.all);
+         Power_Up (Point.Periph.all);
       end loop;
-   end Enable_Clock;
+   end Power_Up;
 
    -----------
    -- Reset --
@@ -222,7 +222,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter)
+   procedure Power_Up (This : aliased in out Analog_To_Digital_Converter)
    is
    begin
       if This'Address = ADC1_Base then
@@ -234,7 +234,7 @@ package body STM32.Device is
       else
          raise Unknown_Device;
       end if;
-   end Enable_Clock;
+   end Power_Up;
 
    -------------------------
    -- Reset_All_ADC_Units --
@@ -250,12 +250,12 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter)
+   procedure Power_Up (This : aliased in out Digital_To_Analog_Converter)
    is
       pragma Unreferenced (This);
    begin
       RCC_Periph.APB1ENR.DACEN := True;
-   end Enable_Clock;
+   end Power_Up;
 
    -----------
    -- Reset --
@@ -272,7 +272,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out USART) is
+   procedure Power_Up (This : aliased in out USART) is
    begin
       if This.Periph.all'Address = USART1_Base then
          RCC_Periph.APB2ENR.USART1EN := True;
@@ -293,7 +293,7 @@ package body STM32.Device is
       else
          raise Unknown_Device;
       end if;
-   end Enable_Clock;
+   end Power_Up;
 
    -----------
    -- Reset --
@@ -334,7 +334,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out DMA_Controller) is
+   procedure Power_Up (This : aliased in out DMA_Controller) is
    begin
       if This'Address = STM32_SVD.DMA1_Base then
          RCC_Periph.AHB1ENR.DMA1EN := True;
@@ -343,7 +343,7 @@ package body STM32.Device is
       else
          raise Unknown_Device;
       end if;
-   end Enable_Clock;
+   end Power_Up;
 
    -----------
    -- Reset --
@@ -383,16 +383,16 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : I2C_Port) is
+   procedure Power_Up (This : I2C_Port) is
    begin
-      Enable_Clock (As_Port_Id (This));
-   end Enable_Clock;
+      Power_Up (As_Port_Id (This));
+   end Power_Up;
 
    ------------------
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : I2C_Port_Id) is
+   procedure Power_Up (This : I2C_Port_Id) is
    begin
       case This is
          when I2C_Id_1 =>
@@ -402,7 +402,7 @@ package body STM32.Device is
          when I2C_Id_3 =>
             RCC_Periph.APB1ENR.I2C3EN := True;
       end case;
-   end Enable_Clock;
+   end Power_Up;
 
    -----------
    -- Reset --
@@ -436,7 +436,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : SPI_Port) is
+   procedure Power_Up (This : SPI_Port) is
    begin
       if This.Periph.all'Address = SPI1_Base then
          RCC_Periph.APB2ENR.SPI1EN := True;
@@ -453,7 +453,7 @@ package body STM32.Device is
       else
          raise Unknown_Device;
       end if;
-   end Enable_Clock;
+   end Power_Up;
 
    -----------
    -- Reset --
@@ -488,7 +488,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : in out Timer) is
+   procedure Power_Up (This : in out Timer) is
    begin
       if This'Address = TIM1_Base then
          RCC_Periph.APB2ENR.TIM1EN := True;
@@ -521,7 +521,7 @@ package body STM32.Device is
       else
          raise Unknown_Device;
       end if;
-   end Enable_Clock;
+   end Power_Up;
 
    -----------
    -- Reset --
@@ -728,10 +728,10 @@ package body STM32.Device is
    -- Enable_DCMI_Clock --
    -----------------------
 
-   procedure Enable_DCMI_Clock is
+   procedure Power_Up_DCMI is
    begin
       RCC_Periph.AHB2ENR.DCMIEN := True;
-   end Enable_DCMI_Clock;
+   end Power_Up_DCMI;
 
    ----------------
    -- Reset_DCMI --

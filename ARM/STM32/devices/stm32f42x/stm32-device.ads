@@ -60,13 +60,12 @@ package STM32.Device is
    --  Raised by the routines below for a device passed as an actual parameter
    --  when that device is not present on the given hardware instance.
 
-   procedure Enable_Clock (This : aliased in out GPIO_Port)
+   procedure Power_Up (This : aliased in out GPIO_Port)
      with Inline;
-   procedure Enable_Clock (Point : GPIO_Point)
+   procedure Power_Up (Point : GPIO_Point)
      with Inline;
-   procedure Enable_Clock (Points : GPIO_Points)
+   procedure Power_Up (Points : GPIO_Points)
      with Inline;
-
 
    procedure Reset (This : aliased in out GPIO_Port)
      with Inline;
@@ -331,7 +330,7 @@ package STM32.Device is
    --  voltage is the raw conversion value * the divisor. See section 13.11,
    --  pg 412 of the RM.
 
-   procedure Enable_Clock (This : aliased in out Analog_To_Digital_Converter);
+   procedure Power_Up (This : aliased in out Analog_To_Digital_Converter);
 
    procedure Reset_All_ADC_Units;
 
@@ -340,7 +339,7 @@ package STM32.Device is
    DAC_Channel_1_IO : GPIO_Point renames PA4;
    DAC_Channel_2_IO : GPIO_Point renames PA5;
 
-   procedure Enable_Clock (This : aliased in out Digital_To_Analog_Converter);
+   procedure Power_Up (This : aliased in out Digital_To_Analog_Converter);
 
    procedure Reset (This : aliased in out Digital_To_Analog_Converter);
 
@@ -362,14 +361,14 @@ package STM32.Device is
    UART_7  : aliased USART (Internal_UART_7'Access);
    UART_8  : aliased USART (Internal_UART_8'Access);
 
-   procedure Enable_Clock (This : aliased in out USART);
+   procedure Power_Up (This : aliased in out USART);
 
    procedure Reset (This : aliased in out USART);
 
    DMA_1 : aliased DMA_Controller with Import, Volatile, Address => DMA1_Base;
    DMA_2 : aliased DMA_Controller with Import, Volatile, Address => DMA2_Base;
 
-   procedure Enable_Clock (This : aliased in out DMA_Controller);
+   procedure Power_Up (This : aliased in out DMA_Controller);
    procedure Reset (This : aliased in out DMA_Controller);
 
    Internal_I2C_Port_1 : aliased Internal_I2C_Port with Import, Volatile, Address => I2C1_Base;
@@ -384,8 +383,8 @@ package STM32.Device is
 
    function As_Port_Id (Port : I2C_Port) return I2C_Port_Id with Inline;
 
-   procedure Enable_Clock (This : I2C_Port);
-   procedure Enable_Clock (This : I2C_Port_Id);
+   procedure Power_Up (This : I2C_Port);
+   procedure Power_Up (This : I2C_Port_Id);
 
    procedure Reset (This : I2C_Port);
    procedure Reset (This : I2C_Port_Id);
@@ -404,7 +403,7 @@ package STM32.Device is
    SPI_5 : aliased SPI_Port (Internal_SPI_5'Access);
    SPI_6 : aliased SPI_Port (Internal_SPI_6'Access);
 
-   procedure Enable_Clock (This : SPI_Port);
+   procedure Power_Up (This : SPI_Port);
    procedure Reset (This : SPI_Port);
 
    Timer_1  : aliased Timer with Import, Volatile, Address => TIM1_Base;
@@ -422,7 +421,7 @@ package STM32.Device is
    Timer_13 : aliased Timer with Import, Volatile, Address => TIM13_Base;
    Timer_14 : aliased Timer with Import, Volatile, Address => TIM14_Base;
 
-   procedure Enable_Clock (This : in out Timer);
+   procedure Power_Up (This : in out Timer);
 
    procedure Reset (This : in out Timer);
 
@@ -459,7 +458,7 @@ package STM32.Device is
 
    function PLLSAI_Ready return Boolean;
 
-   procedure Enable_DCMI_Clock;
+   procedure Power_Up_DCMI;
 
    procedure Reset_DCMI;
 

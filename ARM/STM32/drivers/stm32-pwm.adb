@@ -125,7 +125,7 @@ package body STM32.PWM is
    is
       Prescalar : UInt32;
    begin
-      Enable_Clock (This.Output_Timer.all);
+      Power_Up (This.Output_Timer.all);
 
       Compute_Prescalar_and_Period
         (This.Output_Timer,
@@ -172,7 +172,7 @@ package body STM32.PWM is
       Modulator.Timer   := This;
       Modulator.Channel := Channel;
 
-      Enable_Clock (Point);
+      Power_Up (Point);
 
       Configure_PWM_GPIO (Point, PWM_AF);
 
