@@ -117,7 +117,7 @@ package body STM32.Button is
 
    procedure Initialize (Use_Rising_Edge : Boolean := True) is
    begin
-      Enable_Clock (User_Button_Point);
+      Power_Up (User_Button_Point);
 
       User_Button_Point.Configure_IO
         ((Mode        => Mode_In,
