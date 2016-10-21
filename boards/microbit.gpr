@@ -1,0 +1,26 @@
+aggregate library project MicroBit is
+
+   Build := external ("BUILD", "Debug");
+
+   type RTS_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS : RTS_Type := External ("RTS", "ravenscar-sfp");
+
+   RTS_Base := Project'Project_Dir &
+               "../embedded-runtimes/zfp-nRF51";
+   for Target use "arm-eabi";
+
+   case RTS is
+      when "ravenscar-sfp" =>
+         for Runtime ("Ada") use RTS_Base & "/sfp";
+      when "ravenscar-full" =>
+         for Runtime ("Ada") use RTS_Base & "/full";
+   end case;
+
+   for Project_Path use ("OpenMV2");
+
+   for Project_Files use ("MicroBit/board.gpr");
+
+   for Library_Dir use "lib/microbit/" & RTS & "/" & Build;
+   for Library_Name use "microbit";
+
+end MicroBit;
