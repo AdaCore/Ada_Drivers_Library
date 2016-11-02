@@ -94,5 +94,6 @@ GitHub page.
  * [solenoid-engine-controller: Software controller for solenoid engines](https://github.com/Fabien-Chouteau/solenoid-engine-controller)
  * [un_pola: DIY instant camera with OpenMV](https://github.com/Fabien-Chouteau/un_pola)
  * [bare metal demos: Various Ada Demos on STM32*-Disco boards using this library](https://github.com/lambourg/Ada_Bare_Metal_Demos)
+ * [SPARK Railway Demo: Simulated railway network in SPARK/Ada](https://github.com/Fabien-Chouteau/spark-railway-demo)
 
 (Add yours to the list!)
