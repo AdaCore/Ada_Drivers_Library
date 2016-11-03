@@ -1,7 +1,6 @@
 with "config";
 with "../../ARM/STM32/stm32f427x";
 with "../../components/components";
-with "../../services/services";
 
 library project Board is
 
