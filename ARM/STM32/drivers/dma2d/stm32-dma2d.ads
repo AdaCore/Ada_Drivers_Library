@@ -129,6 +129,9 @@ package STM32.DMA2D is
       A8,
       A4) with Size => 4;
 
+   subtype DMA2D_CLUT_Color_Mode is DMA2D_Color_Mode range
+     ARGB8888 .. RGB888;
+
    subtype DMA2D_Dst_Color_Mode is DMA2D_Color_Mode range ARGB8888 .. ARGB4444;
 
    subtype Foreground_Color_Mode is DMA2D_Color_Mode;
@@ -161,15 +164,21 @@ package STM32.DMA2D is
      (Init : DMA2D_Sync_Procedure;
       Wait : DMA2D_Sync_Procedure);
 
-   type DMA2D_Buffer is record
+   type DMA2D_Buffer (Color_Mode : DMA2D_Color_Mode := ARGB8888) is record
       Addr       : System.Address;
       Width      : Natural;
       Height     : Natural;
-      Color_Mode : DMA2D_Color_Mode;
+      case Color_Mode is
+         when L8 | L4 =>
+            CLUT_Color_Mode : DMA2D_CLUT_Color_Mode;
+            CLUT_Addr       : System.Address;
+         when others =>
+            null;
+      end case;
    end record;
 
    Null_Buffer : constant DMA2D_Buffer :=
-                   (Addr       => System'To_Address (0),
+                   (Addr       => System.Null_Address,
                     Width      => 0,
                     Height     => 0,
                     Color_Mode => DMA2D_Color_Mode'First);
@@ -218,18 +227,18 @@ package STM32.DMA2D is
    --  Fill the specified area of the buffer with 'Color'
 
    procedure DMA2D_Copy_Rect
-     (Src_Buffer : DMA2D_Buffer;
-      X_Src      : Natural;
-      Y_Src      : Natural;
-      Dst_Buffer : DMA2D_Buffer;
-      X_Dst      : Natural;
-      Y_Dst      : Natural;
-      Bg_Buffer  : DMA2D_Buffer;
-      X_Bg       : Natural;
-      Y_Bg       : Natural;
-      Width      : Natural;
-      Height     : Natural;
-      Synchronous  : Boolean := False)
+     (Src_Buffer  : DMA2D_Buffer;
+      X_Src       : Natural;
+      Y_Src       : Natural;
+      Dst_Buffer  : DMA2D_Buffer;
+      X_Dst       : Natural;
+      Y_Dst       : Natural;
+      Bg_Buffer   : DMA2D_Buffer;
+      X_Bg        : Natural;
+      Y_Bg        : Natural;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean := False)
      with Pre => Dst_Buffer.Color_Mode in Output_Color_Mode;
    --  Copy a rectangular area from Src to Dst
    --  If Blend is set, then the rectangle will be merged with the destination
@@ -269,6 +278,5 @@ private
      (DMA2D_Dst_Color_Mode, UInt3);
    function As_UInt4 is new Ada.Unchecked_Conversion
      (DMA2D_Color_Mode, UInt4);
-
 
 end STM32.DMA2D;
