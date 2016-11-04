@@ -80,10 +80,10 @@ package body Semihosting.Filesystem is
    overriding function Truncate_File
      (This   : in out SHFS;
       Path   : Pathname;
-      Lenght : IO_Count)
+      Length : IO_Count)
       return Status_Kind
    is
-      pragma Unreferenced (Path, Lenght, This);
+      pragma Unreferenced (Path, Length, This);
    begin
       return Read_Only_File_System;
    end Truncate_File;

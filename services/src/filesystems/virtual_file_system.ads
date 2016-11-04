@@ -48,7 +48,7 @@ package Virtual_File_System is
    overriding
    function Truncate_File (This   : in out VFS;
                            Path   : Pathname;
-                           Lenght : IO_Count)
+                           Length : IO_Count)
                            return Status_Kind;
 
    overriding

@@ -1,0 +1,18 @@
+with "../../../boards/native";
+with "../../../boards/native/config";
+
+project TC is
+
+   for Languages use ("Ada");
+   for Source_Dirs use ("src");
+   for Main use
+       ("tc_empty_vfs.adb",
+        "tc_simple_mount.adb",
+        "tc_nested_mount.adb");
+   for Object_Dir use "obj";
+   for Exec_Dir use "bin";
+
+   package Compiler renames Config.Compiler;
+   package Builder renames Config.Builder;
+
+end TC;
