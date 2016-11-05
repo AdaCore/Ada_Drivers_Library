@@ -36,6 +36,8 @@ with STM32_SVD.RCC;           use STM32_SVD.RCC;
 
 package body STM32.DMA2D is
 
+   use type System.Address;
+
    function To_Word is new Ada.Unchecked_Conversion (System.Address, UInt32);
 
    function Offset (Buffer : DMA2D_Buffer;
@@ -189,22 +191,21 @@ package body STM32.DMA2D is
    ---------------------
 
    procedure DMA2D_Copy_Rect
-     (Src_Buffer : DMA2D_Buffer;
-      X_Src      : Natural;
-      Y_Src      : Natural;
-      Dst_Buffer : DMA2D_Buffer;
-      X_Dst      : Natural;
-      Y_Dst      : Natural;
-      Bg_Buffer  : DMA2D_Buffer;
-      X_Bg       : Natural;
-      Y_Bg       : Natural;
-      Width      : Natural;
-      Height     : Natural;
-      Synchronous  : Boolean := False)
+     (Src_Buffer  : DMA2D_Buffer;
+      X_Src       : Natural;
+      Y_Src       : Natural;
+      Dst_Buffer  : DMA2D_Buffer;
+      X_Dst       : Natural;
+      Y_Dst       : Natural;
+      Bg_Buffer   : DMA2D_Buffer;
+      X_Bg        : Natural;
+      Y_Bg        : Natural;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean := False)
    is
       Src_Off : constant UInt32 := Offset (Src_Buffer, X_Src, Y_Src);
       Dst_Off : constant UInt32 := Offset (Dst_Buffer, X_Dst, Y_Dst);
-
    begin
       DMA2D_Wait_Transfer_Int.all;
 
@@ -215,10 +216,7 @@ package body STM32.DMA2D is
       elsif Src_Buffer.Color_Mode = Dst_Buffer.Color_Mode then
          --  Direct memory transfer
          DMA2D_Periph.CR.MODE := DMA2D_MODE'Enum_Rep (M2M);
-
       else
-         --  Requires color conversion
-         --  ??? TODO
          DMA2D_Periph.CR.MODE := DMA2D_MODE'Enum_Rep (M2M_PFC);
       end if;
 
@@ -228,6 +226,32 @@ package body STM32.DMA2D is
          AM    => DMA2D_AM'Enum_Rep (NO_MODIF),
          ALPHA => 255,
          others => <>);
+
+      if Src_Buffer.Color_Mode = L8 or else Src_Buffer.Color_Mode = L4 then
+
+         if Src_Buffer.CLUT_Addr = System.Null_Address then
+            raise Program_Error with "Source CLUT address required";
+         end if;
+
+         DMA2D_Periph.FGCMAR := To_Word (Src_Buffer.CLUT_Addr);
+
+         DMA2D_Periph.FGCMAR := To_Word (Src_Buffer.CLUT_Addr);
+         DMA2D_Periph.FGPFCCR.CS := (case Src_Buffer.Color_Mode is
+                                        when L8 => 2**8 - 1,
+                                        when L4 => 2**4 - 1,
+                                        when others => 0);
+         --  Set CLUT mode to RGB888
+         DMA2D_Periph.FGPFCCR.CCM := Src_Buffer.CLUT_Color_Mode = RGB888;
+
+         --  Start loading the CLUT
+         DMA2D_Periph.FGPFCCR.START := True;
+
+         while DMA2D_Periph.FGPFCCR.START loop
+            --  Wait for CLUT loading...
+            null;
+         end loop;
+      end if;
+
       DMA2D_Periph.FGOR    := (LO     => UInt14 (Src_Buffer.Width - Width),
                                others => <>);
       DMA2D_Periph.FGMAR   := To_Word (Src_Buffer.Addr) + Src_Off;
@@ -243,7 +267,29 @@ package body STM32.DMA2D is
             DMA2D_Periph.BGPFCCR.START := False;
             DMA2D_Periph.BGOR          :=
               (LO => UInt14 (Bg_Buffer.Width - Width), others => <>);
-            DMA2D_Periph.BGPFCCR.CCM   := False; -- Disable CLUT color mode
+
+            if Bg_Buffer.Color_Mode = L8 or else Bg_Buffer.Color_Mode = L4 then
+
+               if Bg_Buffer.CLUT_Addr = System.Null_Address then
+                  raise Program_Error with "Background CLUT address required";
+               end if;
+
+               DMA2D_Periph.BGCMAR := To_Word (Bg_Buffer.CLUT_Addr);
+               DMA2D_Periph.BGPFCCR.CS := (case Bg_Buffer.Color_Mode is
+                                              when L8 => 2**8 - 1,
+                                              when L4 => 2**4 - 1,
+                                              when others => 0);
+               --  Set CLUT mode to RGB888
+               DMA2D_Periph.BGPFCCR.CCM := Bg_Buffer.CLUT_Color_Mode = RGB888;
+
+               --  Start loading the CLUT
+               DMA2D_Periph.BGPFCCR.START := True;
+
+               while DMA2D_Periph.BGPFCCR.START loop
+                  --  Wait for CLUT loading...
+                  null;
+               end loop;
+            end if;
          end;
       end if;
 

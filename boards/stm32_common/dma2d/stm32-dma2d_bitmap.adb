@@ -5,10 +5,6 @@ with STM32.DMA2D;    use STM32.DMA2D;
 
 package body STM32.DMA2D_Bitmap is
 
-   function To_DMA2D_Buffer
-     (Buffer : HAL.Bitmap.Bitmap_Buffer'Class) return DMA2D_Buffer
-     with Inline;
-
    function To_DMA2D_CM is new Ada.Unchecked_Conversion
      (HAL.Bitmap.Bitmap_Color_Mode, STM32.DMA2D.DMA2D_Color_Mode);
 
@@ -22,13 +18,16 @@ package body STM32.DMA2D_Bitmap is
    function To_DMA2D_Buffer
      (Buffer : HAL.Bitmap.Bitmap_Buffer'Class) return DMA2D_Buffer
    is
+      Color_Mode : constant DMA2D_Color_Mode :=
+        To_DMA2D_CM (Buffer.Color_Mode);
+      Ret : DMA2D_Buffer (Color_Mode);
    begin
-      return (Addr       => Buffer.Addr,
-              Width      => (if Buffer.Swapped then Buffer.Height
-                             else Buffer.Width),
-              Height     => (if Buffer.Swapped then Buffer.Width
-                             else Buffer.Height),
-              Color_Mode => To_DMA2D_CM (Buffer.Color_Mode));
+      Ret.Addr := Buffer.Addr;
+      Ret.Width := (if Buffer.Swapped then Buffer.Height
+                             else Buffer.Width);
+      Ret.Height := (if Buffer.Swapped then Buffer.Width
+                     else Buffer.Height);
+      return Ret;
    end To_DMA2D_Buffer;
 
    ---------------
