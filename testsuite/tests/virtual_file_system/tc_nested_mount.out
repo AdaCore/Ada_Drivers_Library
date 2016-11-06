@@ -1,0 +1,19 @@
+Entering /
+Entering /child_vfs
+Entering /child_vfs/subdirs
+  File: /child_vfs/subdirs/hello.txt
+  Contents: HELLO\x0a
+Entering /child_vfs/subdirs/subdir1
+Entering /child_vfs/subdirs/subdir1/subdir2
+  File: /child_vfs/subdirs/subdir1/subdir2/subfile.txt
+  Contents: SUBFILE\x0a
+Leaving /child_vfs/subdirs/subdir1/subdir2
+  File: /child_vfs/subdirs/subdir1/world.txt
+  Contents: WORLD\x0a
+Leaving /child_vfs/subdirs/subdir1
+Leaving /child_vfs/subdirs
+Leaving /child_vfs
+Entering /empty
+Leaving /empty
+Leaving /
+Done.

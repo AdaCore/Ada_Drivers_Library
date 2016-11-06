@@ -3,6 +3,7 @@
 
 with System;
 with HAL.Bitmap;
+with STM32.DMA2D;
 
 package STM32.DMA2D_Bitmap is
 
@@ -61,5 +62,9 @@ package STM32.DMA2D_Bitmap is
                     Height     => 0,
                     Color_Mode => HAL.Bitmap.L_8,
                     Swapped    => False);
+
+   function To_DMA2D_Buffer
+     (Buffer : HAL.Bitmap.Bitmap_Buffer'Class) return STM32.DMA2D.DMA2D_Buffer
+     with Inline;
 
 end STM32.DMA2D_Bitmap;
