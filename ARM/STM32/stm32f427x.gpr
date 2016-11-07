@@ -21,6 +21,7 @@ library project STM32F427x is
       "drivers/dma",
       "drivers/dma2d",
       "drivers/i2c_stm32f4",
+      "drivers/power_control_stm32f4",
       "drivers/uart_stm32f4");
 
    package Compiler renames Config.Compiler;
