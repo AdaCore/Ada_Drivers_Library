@@ -23,11 +23,6 @@ The Drivers are provided under a non-restrictive Berkeley Software Distribution
 (BSD) license.  As such, and within the conditions required by the license, the
 files are available both for proprietary ("commercial") and non-proprietary use.
 
-The Services layer (as opposed to the main AdaCore repository) is provided as
-a LGPL license. This is still available both for proprietary and free software
-use, with a copyleft license on the layer itself. Please refer to the exact
-terms of this license (see lgpl-3.0).
-
 
 3. Requirements
 ---------------
