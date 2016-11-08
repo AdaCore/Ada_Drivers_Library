@@ -59,6 +59,7 @@ with STM32.I2C;     use STM32.I2C;
 with STM32.SDMMC;   use STM32.SDMMC;
 with STM32.SPI;     use STM32.SPI;
 with STM32.Timers;  use STM32.Timers;
+with STM32.RTC;     use STM32.RTC;
 
 package STM32.Device is
    pragma Elaborate_Body;
@@ -555,6 +556,8 @@ package STM32.Device is
 
    procedure Enable_DCMI_Clock;
    procedure Reset_DCMI;
+
+   RTC : aliased RTC_Device;
 
 private
 

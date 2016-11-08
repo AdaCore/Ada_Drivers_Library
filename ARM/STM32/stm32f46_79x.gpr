@@ -18,6 +18,7 @@ library project STM32F46_79x is
       "drivers/dsi",
       "drivers/fmc",
       "drivers/i2c_stm32f4",
+      "drivers/power_control_stm32f4",
       "drivers/ltdc",
       "drivers/sai",
       "drivers/sd",
