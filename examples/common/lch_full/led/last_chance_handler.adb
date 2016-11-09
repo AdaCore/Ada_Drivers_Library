@@ -34,7 +34,6 @@
 --  Note this version is for use with the ravenscar-full runtime.
 
 with STM32.Board;   use STM32.Board;
-with STM32.GPIO;    use STM32.GPIO;
 with Ada.Real_Time; use Ada.Real_Time;
 
 package body Last_Chance_Handler is
