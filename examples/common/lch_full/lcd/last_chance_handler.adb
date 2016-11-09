@@ -51,7 +51,6 @@ with Ada.Real_Time;             use Ada.Real_Time;
 with STM32.Board;               use STM32.Board;
 with LCD_Std_Out;
 with BMP_Fonts;
-with STM32.GPIO;                use STM32.GPIO;
 
 with Ada.Exceptions.Traceback;  use Ada.Exceptions.Traceback;
 with GNAT.Debug_Utilities;      use GNAT.Debug_Utilities;
