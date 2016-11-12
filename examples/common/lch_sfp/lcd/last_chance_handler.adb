@@ -37,13 +37,12 @@
 --  Note this version is for use with the ravenscar-sfp runtime, in which full
 --  exception semantics are not available.
 
-with STM32.Board;       use STM32.Board;
-with STM32.GPIO;        use STM32.GPIO;
+with STM32.Board; use STM32.Board;
 
 with LCD_Std_Out;
 with BMP_Fonts;
 
-with Ada.Real_Time;     use Ada.Real_Time;
+with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 
 package body Last_Chance_Handler is
