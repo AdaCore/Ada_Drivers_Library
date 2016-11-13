@@ -473,7 +473,7 @@ package body SDCard is
 
    overriding function Write
      (Controller   : in out SDCard_Controller;
-      Block_Number : Unsigned_32;
+      Block_Number : Unsigned_64;
       Data         : Block) return Boolean
    is
       Ret     : SD_Error;
@@ -492,8 +492,7 @@ package body SDCard is
       Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
       Ret := Write_Blocks_DMA
         (Controller.Device.all,
-         Unsigned_64 (Block_Number) *
-             Unsigned_64 (Controller.Info.Card_Block_Size),
+         Block_Number * Unsigned_64 (Controller.Info.Card_Block_Size),
          SD_DMA,
          SD_DMA_Tx_Stream,
          SD_Data (Data));
@@ -539,7 +538,7 @@ package body SDCard is
 
    overriding function Read
      (Controller   : in out SDCard_Controller;
-      Block_Number : Unsigned_32;
+      Block_Number : Unsigned_64;
       Data         : out Block) return Boolean
    is
       Ret     : Boolean;
@@ -557,8 +556,7 @@ package body SDCard is
 
       SD_Err := Read_Blocks_DMA
         (Controller.Device.all,
-         Unsigned_64 (Block_Number) *
-             Unsigned_64 (Controller.Info.Card_Block_Size),
+         Block_Number * Unsigned_64 (Controller.Info.Card_Block_Size),
          SD_DMA,
          SD_DMA_Rx_Stream,
          SD_Data (Data));
