@@ -1,0 +1,41 @@
+Disk 'disk_8_partitions.img' has  8 parition(s)
+ - partition : 1
+      Status: 128
+      Kind:  1
+      LBA:  1
+      Number of sectors:  2
+ - partition : 2
+      Status: 0
+      Kind:  4
+      LBA:  3
+      Number of sectors:  2
+ - partition : 3
+      Status: 0
+      Kind:  7
+      LBA:  5
+      Number of sectors:  2
+ - partition : 4
+      Status: 0
+      Kind:  5
+      LBA:  7
+      Number of sectors:  13
+ - partition : 5
+      Status: 0
+      Kind:  6
+      LBA:  1
+      Number of sectors:  2
+ - partition : 6
+      Status: 0
+      Kind:  11
+      LBA:  1
+      Number of sectors:  2
+ - partition : 7
+      Status: 0
+      Kind:  12
+      LBA:  1
+      Number of sectors:  2
+ - partition : 8
+      Status: 0
+      Kind:  131
+      LBA:  1
+      Number of sectors:  3
