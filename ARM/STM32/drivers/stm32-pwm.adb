@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2016, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -36,17 +36,17 @@ with STM32.Device;  use STM32.Device;
 
 package body STM32.PWM is
 
-   subtype Hertz is UInt32;
-
-   procedure Compute_Prescalar_and_Period
+   procedure Compute_Prescalar_And_Period
      (This                : access Timer;
       Requested_Frequency : Hertz;
       Prescalar           : out UInt32;
       Period              : out UInt32)
      with Pre => Requested_Frequency > 0;
    --  Computes the minimum prescaler and thus the maximum resolution for the
-   --  given timer, based on the system clocks and the requested frequency
+   --  given timer, based on the system clocks and the requested frequency.
+   --  Computes the period required for the requested frequency.
 
+   --  TODO: move these two functions to the STM32.Device packages?
    function Has_APB2_Frequency  (This : Timer) return Boolean;
    --  timers 1, 8, 9, 10, 11
 
@@ -56,6 +56,23 @@ package body STM32.PWM is
    procedure Configure_PWM_GPIO
      (Output : GPIO_Point;
       PWM_AF : GPIO_Alternate_Function);
+
+   procedure Initialize_PWM_Modulator
+     (This                : in out PWM_Modulator;
+      Generator           : not null access STM32.Timers.Timer;
+      Frequency           : Hertz;
+      Configure_Generator : Boolean := True)
+   is
+   begin
+      if Configure_Generator then
+         Configure_PWM_Timer (Generator, Frequency, This.Timer_Period);
+      else
+         --  Or call Compute_Prescalar_And_Period and compute This.Timer_Period
+         This.Timer_Period := Current_Autoreload (Generator.all);
+      end if;
+      This.Generator := Generator;
+      This.Frequency := UInt32 (Frequency);
+   end Initialize_PWM_Modulator;
 
    --------------------
    -- Set_Duty_Cycle --
@@ -67,20 +84,15 @@ package body STM32.PWM is
    is
       Pulse : UInt16;
    begin
-      This.Timer.Outputs (This.Channel).Duty_Cycle := Value;
+      This.Duty_Cycle := Value;
 
       if Value = 0 then
-         Set_Compare_Value (This.Timer.Output_Timer.all,
-                            This.Channel,
-                            UInt16'(0));
+         Set_Compare_Value (This.Generator.all, This.Channel, UInt16'(0));
       else
-         Pulse :=
-           UInt16 ((This.Timer.Timer_Period + 1) * UInt32 (Value) / 100) - 1;
+         Pulse := UInt16 ((This.Timer_Period + 1) * UInt32 (Value) / 100) - 1;
          --  for a Value of 0, the computation of Pulse wraps around to
          --  65535, so we only compute it when not zero
-         Set_Compare_Value (This.Timer.Output_Timer.all,
-                            This.Channel,
-                            Pulse);
+         Set_Compare_Value (This.Generator.all, This.Channel, Pulse);
       end if;
    end Set_Duty_Cycle;
 
@@ -93,145 +105,119 @@ package body STM32.PWM is
       Value : Microseconds)
    is
       Pulse         : UInt16;
-      Period        : constant UInt32 := This.Timer.Timer_Period + 1;
-      uS_Per_Period : constant UInt32 := 1_000_000 / This.Timer.Frequency;
+      Period        : constant UInt32 := This.Timer_Period + 1;
+      uS_Per_Period : constant UInt32 := 1_000_000 / This.Frequency;
    begin
       if Value > uS_Per_Period then
          raise Invalid_Request with "duty time too high";
       end if;
 
       Pulse := UInt16 ((Period * Value) / uS_Per_Period) - 1;
-      Set_Compare_Value (This.Timer.Output_Timer.all, This.Channel, Pulse);
+      Set_Compare_Value (This.Generator.all, This.Channel, Pulse);
    end Set_Duty_Time;
 
    ------------------------
    -- Current_Duty_Cycle --
    ------------------------
 
-   function Current_Duty_Cycle
-     (This : PWM_Modulator) return Percentage
-   is
+   function Current_Duty_Cycle (This : PWM_Modulator) return Percentage is
    begin
-      return This.Timer.Outputs (This.Channel).Duty_Cycle;
+      return This.Duty_Cycle;
    end Current_Duty_Cycle;
 
-   --------------------------
-   -- Initialise_PWM_Timer --
-   --------------------------
+   -------------------------
+   -- Configure_PWM_Timer --
+   -------------------------
 
-   procedure Initialise_PWM_Timer
-     (This                : in out PWM_Timer;
-      Requested_Frequency : Float)
+   procedure Configure_PWM_Timer
+     (This                : not null access STM32.Timers.Timer;
+      Requested_Frequency : Hertz;
+      Computed_Period     : out UInt32)
    is
-      Prescalar : UInt32;
+      Computed_Prescalar : UInt32;
    begin
-      Enable_Clock (This.Output_Timer.all);
+      Enable_Clock (This.all);
 
-      Compute_Prescalar_and_Period
-        (This.Output_Timer,
-         Requested_Frequency => UInt32 (Requested_Frequency),
-         Prescalar           => Prescalar,
-         Period              => This.Timer_Period);
+      Compute_Prescalar_And_Period
+        (This,
+         Requested_Frequency => Requested_Frequency,
+         Prescalar           => Computed_Prescalar,
+         Period              => Computed_Period);
 
-      This.Timer_Period := This.Timer_Period - 1;
-      This.Frequency    := UInt32 (Requested_Frequency);
+      Computed_Period := Computed_Period - 1;
 
       Configure
-        (This.Output_Timer.all,
-         Prescaler     => UInt16 (Prescalar),
-         Period        => This.Timer_Period,
+        (This.all,
+         Prescaler     => UInt16 (Computed_Prescalar),
+         Period        => Computed_Period,
          Clock_Divisor => Div1,
          Counter_Mode  => Up);
 
-      Set_Autoreload_Preload (This.Output_Timer.all, True);
+      Set_Autoreload_Preload (This.all, True);
 
-      if Advanced_Timer (This.Output_Timer.all) then
-         Enable_Main_Output (This.Output_Timer.all);
+      if Advanced_Timer (This.all) then
+         Enable_Main_Output (This.all);
       end if;
 
-      Enable (This.Output_Timer.all);
-
-      for Channel in Timer_Channel loop
-         This.Outputs (Channel).Attached := False;
-      end loop;
-   end Initialise_PWM_Timer;
+      Enable (This.all);
+   end Configure_PWM_Timer;
 
    ------------------------
    -- Attach_PWM_Channel --
    ------------------------
 
    procedure Attach_PWM_Channel
-     (This      : access PWM_Timer;
-      Modulator : in out PWM_Modulator;
-      Channel   : Timer_Channel;
-      Point     : GPIO_Point;
-      PWM_AF    : GPIO_Alternate_Function)
+     (This    : in out PWM_Modulator;
+      Channel : Timer_Channel;
+      Point   : GPIO_Point;
+      PWM_AF  : GPIO_Alternate_Function)
    is
    begin
-      This.Outputs (Channel).Attached := True;
-      Modulator.Timer   := This;
-      Modulator.Channel := Channel;
+      This.Channel := Channel;
 
       Enable_Clock (Point);
 
       Configure_PWM_GPIO (Point, PWM_AF);
 
       Configure_Channel_Output
-        (This.Output_Timer.all,
+        (This.Generator.all,
          Channel  => Channel,
          Mode     => PWM1,
          State    => Disable,
          Pulse    => 0,
          Polarity => High);
 
-      Set_Compare_Value (This.Output_Timer.all, Channel, UInt16 (0));
+      Set_Compare_Value (This.Generator.all, Channel, UInt16 (0));
 
-      Disable_Channel (This.Output_Timer.all, Channel);
+      Disable_Channel (This.Generator.all, Channel);
    end Attach_PWM_Channel;
 
    ----------------
    -- Enable_PWM --
    ----------------
 
-   procedure Enable_PWM
-     (This    : in out PWM_Modulator)
-   is
+   procedure Enable_PWM (This    : in out PWM_Modulator) is
    begin
-      Enable_Channel (This.Timer.Output_Timer.all, This.Channel);
+      Enable_Channel (This.Generator.all, This.Channel);
    end Enable_PWM;
 
    -------------
    -- Enabled --
    -------------
 
-   function Enabled
-     (This : PWM_Modulator)
-      return Boolean
-   is
+   function Enabled (This : PWM_Modulator) return Boolean is
    begin
-      return Channel_Enabled (This.Timer.Output_Timer.all, This.Channel);
+      return Channel_Enabled (This.Generator.all, This.Channel);
    end Enabled;
 
    -------------------------
    -- Disable_PWM_Channel --
    -------------------------
 
-   procedure Disable_PWM
-     (This : in out PWM_Modulator)
-   is
+   procedure Disable_PWM (This : in out PWM_Modulator) is
    begin
-      Disable_Channel (This.Timer.Output_Timer.all, This.Channel);
+      Disable_Channel (This.Generator.all, This.Channel);
    end Disable_PWM;
-
-   --------------
-   -- Attached --
-   --------------
-
-   function Attached
-     (This : PWM_Modulator)
-      return Boolean
-   is
-     (This.Timer /= null and then This.Timer.Outputs (This.Channel).Attached);
 
    ------------------------
    -- Configure_PWM_GPIO --
@@ -259,7 +245,7 @@ package body STM32.PWM is
    -- Compute_Prescalar_and_Period --
    ----------------------------------
 
-   procedure Compute_Prescalar_and_Period
+   procedure Compute_Prescalar_And_Period
      (This                : access Timer;
       Requested_Frequency : Hertz;
       Prescalar           : out UInt32;
@@ -268,10 +254,8 @@ package body STM32.PWM is
       Max_Prescalar      : constant := 16#FFFF#;
       Max_Period         : UInt32;
       Hardware_Frequency : UInt32;
-      Clocks             : constant RCC_System_Clocks :=
-                             System_Clock_Frequencies;
+      Clocks             : constant RCC_System_Clocks := System_Clock_Frequencies;
       CK_CNT             : UInt32;
-
    begin
       if Has_APB1_Frequency (This.all) then
          Hardware_Frequency := Clocks.TIMCLK1;
@@ -308,7 +292,7 @@ package body STM32.PWM is
       if Prescalar > Max_Prescalar then
          raise Invalid_Request with "Freq too low";
       end if;
-   end Compute_Prescalar_and_Period;
+   end Compute_Prescalar_And_Period;
 
    ------------------------
    -- Has_APB2_Frequency --

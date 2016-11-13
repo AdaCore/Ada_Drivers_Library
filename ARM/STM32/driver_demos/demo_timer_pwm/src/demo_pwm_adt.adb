@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2016, AdaCore                         --
+--                    Copyright (C) 2016, AdaCore                           --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,34 +29,35 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This demonstration illustrates the use of a timer to control
---  the brightness of an LED. The point is to make the LED increase
---  and decrease in brightness, iteratively, for as long as the
---  application runs. In effect the LED light waxes and wanes.
---  See http://visualgdb.com/tutorials/arm/stm32/fpu/ for the inspiration.
+--  This demonstration illustrates the use of PWM to control the brightness of
+--  an LED. The effect is to make the LED increase and decrease in brightness,
+--  iteratively, for as long as the application runs. In effect the LED light
+--  waxes and wanes. See http://visualgdb.com/tutorials/arm/stm32/fpu/ for the
+--  inspiration.
 --
---  The demo uses the timer directly to achieve the effect of
---  pulse-width-modulation, but note that there is a PWM package that does
---  this directly, hiding much of the details that are explicit here.
+--  The demo uses an abstract data type PWM_Modulator to control the power to
+--  the LED via pulse-width-modulation. A timer is still used underneath, but
+--  the details are hidden.  For direct use of the timer see the other demo.
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
 with STM32.Board;  use STM32.Board;
 with STM32.Device; use STM32.Device;
-with HAL;          use HAL;
-
+with STM32.PWM;    use STM32.PWM;
 with STM32.GPIO;   use STM32.GPIO;
 with STM32.Timers; use STM32.Timers;
 
-procedure Demo is -- low-level demo of the PWM capabilities of the timers
+procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
 
-   Period : constant := 1000;
+   PWM_Timer : STM32.Timers.Timer renames Timer_4;
+   --  NOT arbitrary!
+   --  We drive the on-board LEDs that are tied to the channels of Timer_4.
 
-   Output_Channel : constant Timer_Channel := Channel_2;
+   Output_Channel : constant Timer_Channel := Channel_2; -- arbitrary
    --  The LED driven by this example is determined by the channel selected.
    --  That is so because each channel of Timer_4 is connected to a specific
    --  LED in the alternate function configuration on this board. We will
-   --  initialize all of the LEDs to be in the AF mode for Timer_4. The
+   --  initialize all of the LEDs to be in the AF mode. The
    --  particular channel selected is completely arbitrary, as long as the
    --  selected GPIO port/pin for the LED matches the selected channel.
    --
@@ -64,12 +65,22 @@ procedure Demo is -- low-level demo of the PWM capabilities of the timers
    --  Channel_2 is connected to the orange LED.
    --  Channel_3 is connected to the red LED.
    --  Channel_4 is connected to the blue LED.
+   LED_For : constant array (Timer_Channel) of User_LED :=
+               (Channel_1 => Green,
+                Channel_2 => Orange,
+                Channel_3 => Red,
+                Channel_4 => Blue);
+
+   Requested_Frequency : constant Hertz := 30_000;  -- arbitrary
+
+   Power_Control : PWM_Modulator;
+
+   procedure Configure_LEDs;
+   --  initialize all of the LEDs to be in the AF mode
 
    --------------------
    -- Configure_LEDs --
    --------------------
-
-   procedure Configure_LEDs;
 
    procedure Configure_LEDs is
       Configuration : GPIO_Port_Configuration;
@@ -89,7 +100,6 @@ procedure Demo is -- low-level demo of the PWM capabilities of the timers
    --  by the Ada language. The elementary functions are not included, for
    --  example. In contrast, the Ravenscar "full" run-times do have these
    --  functions.
-
    function Sine (Input : Long_Float) return Long_Float;
 
    --  Therefore there are four choices: 1) use the "ravescar-full-stm32f4"
@@ -122,47 +132,32 @@ procedure Demo is -- low-level demo of the PWM capabilities of the timers
 begin
    Configure_LEDs;
 
-   Enable_Clock (Timer_4);
+   Initialize_PWM_Modulator
+     (Power_Control,
+      Generator => PWM_Timer'Access,
+      Frequency => Requested_Frequency,
+      Configure_Generator => True);
 
-   Reset (Timer_4);
+   Attach_PWM_Channel
+     (Power_Control,
+      Output_Channel,
+      LED_For (Output_Channel),
+      GPIO_AF_2_TIM4);
 
-   Configure
-     (Timer_4,
-      Prescaler     => 1,
-      Period        => Period,
-      Clock_Divisor => Div1,
-      Counter_Mode  => Up);
-
-   Configure_Channel_Output
-     (Timer_4,
-      Channel  => Output_Channel,
-      Mode     => PWM1,
-      State    => Enable,
-      Pulse    => 0,
-      Polarity => High);
-
-   Set_Autoreload_Preload (Timer_4, True);
-
-   Configure_Alternate_Function (All_LEDs, AF => GPIO_AF_2_TIM4);
-   --  Note we configured the LEDs to be in the AF mode in Configure_LEDs
-
-   Enable_Channel (Timer_4, Output_Channel);
-
-   Enable (Timer_4);
+   Enable_PWM (Power_Control);
 
    declare
-      use STM32;
       Arg       : Long_Float := 0.0;
-      Pulse     : UInt16;
+      Value     : Percentage;
       Increment : constant Long_Float := 0.00003;
       --  The Increment value controls the rate at which the brightness
       --  increases and decreases. The value is more or less arbitrary, but
       --  note that the effect of optimization is observable.
    begin
       loop
-         Pulse := UInt16 (Long_Float (Period / 2) * (1.0 + Sine (Arg)));
-         Set_Compare_Value (Timer_4, Output_Channel, Pulse);
+         Value := Percentage (50.0 * (1.0 + Sine (Arg)));
+         Set_Duty_Cycle (Power_Control, Value);
          Arg := Arg + Increment;
       end loop;
    end;
-end Demo;
+end Demo_PWM_ADT;
