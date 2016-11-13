@@ -6,6 +6,7 @@ with Interfaces;    use Interfaces;
 with HAL.I2C;       use HAL.I2C;
 with HAL.Bitmap;    use HAL.Bitmap;
 with HAL;           use HAL;
+with STM32.PWM;     use STM32.PWM;
 
 package body OpenMV.Sensor is
 
@@ -62,14 +63,16 @@ package body OpenMV.Sensor is
 
       procedure Initialize_Clock is
       begin
-         Initialise_PWM_Timer (SENSOR_CLK_TIM,
-                               Float (SENSOR_CLK_FREQ));
+         Initialize_PWM_Modulator
+           (This                => CLK_PWM_Mod,
+            Generator           => SENSOR_CLK_TIM'Access,
+            Frequency           => SENSOR_CLK_FREQ,
+            Configure_Generator => True);
 
-         Attach_PWM_Channel (This      => SENSOR_CLK_TIM'Access,
-                             Modulator => CLK_PWM_Mod,
-                             Channel   => SENSOR_CLK_CHAN,
-                             Point     => SENSOR_CLK_IO,
-                             PWM_AF    => SENSOR_CLK_AF);
+         Attach_PWM_Channel (This    => CLK_PWM_Mod,
+                             Channel => SENSOR_CLK_CHAN,
+                             Point   => SENSOR_CLK_IO,
+                             PWM_AF  => SENSOR_CLK_AF);
 
          Set_Duty_Cycle (This    => CLK_PWM_Mod,
                          Value   => 50);
