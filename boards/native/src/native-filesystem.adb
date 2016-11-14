@@ -448,7 +448,7 @@ package body Native.Filesystem is
       return Status_Kind
    is
    begin
-      Byte_IO.Set_Index (This.File, Byte_IO.Positive_Count (Offset));
+      Byte_IO.Set_Index (This.File, Byte_IO.Positive_Count (Offset + 1));
       return Status_Ok;
    end Seek;
 
