@@ -18,8 +18,8 @@ package body OpenMV.Sensor is
 
    CLK_PWM_Mod    : PWM_Modulator;
    Camera_PID     : HAL.Byte := 0;
-   Camera_2640    : OV2640_Cam (Sensor_I2C'Access);
-   Camera_7725    : OV7725_Cam (Sensor_I2C'Access);
+   Camera_2640    : OV2640_Camera (Sensor_I2C'Access);
+   Camera_7725    : OV7725_Camera (Sensor_I2C'Access);
    Is_Initialized : Boolean := False;
 
    -----------------

@@ -30,33 +30,33 @@ package OV2640 is
       (1600,  1200)  --  /* UXGA  */
      );
 
-   type OV2640_Cam (I2C : not null I2C_Port_Ref) is private;
+   type OV2640_Camera (I2C : not null I2C_Port_Ref) is private;
 
-   procedure Initialize (This : in out OV2640_Cam;
+   procedure Initialize (This : in out OV2640_Camera;
                          Addr : I2C_Address);
 
-   procedure Set_Pixel_Format (This : OV2640_Cam;
+   procedure Set_Pixel_Format (This : OV2640_Camera;
                                Pix  : Pixel_Format);
 
-   procedure Set_Frame_Size (This : OV2640_Cam;
+   procedure Set_Frame_Size (This : OV2640_Camera;
                              Res  : Frame_Size);
 
-   procedure Set_Frame_Rate (This : OV2640_Cam;
+   procedure Set_Frame_Rate (This : OV2640_Camera;
                              FR   : Frame_Rate);
 
-   function Get_PID (This : OV2640_Cam) return Byte;
+   function Get_PID (This : OV2640_Camera) return Byte;
 
-   procedure Enable_Auto_Gain_Control (This   : OV2640_Cam;
+   procedure Enable_Auto_Gain_Control (This   : OV2640_Camera;
                                        Enable : Boolean := True);
-   procedure Enable_Auto_White_Balance (This   : OV2640_Cam;
+   procedure Enable_Auto_White_Balance (This   : OV2640_Camera;
                                         Enable : Boolean := True);
-   procedure Enable_Auto_Exposure_Control (This   : OV2640_Cam;
+   procedure Enable_Auto_Exposure_Control (This   : OV2640_Camera;
                                            Enable : Boolean := True);
-   procedure Enable_Auto_Band_Filter (This   : OV2640_Cam;
+   procedure Enable_Auto_Band_Filter (This   : OV2640_Camera;
                                       Enable : Boolean := True);
 private
 
-   type OV2640_Cam (I2C  : not null I2C_Port_Ref) is record
+   type OV2640_Camera (I2C  : not null I2C_Port_Ref) is record
       Addr : UInt10;
    end record;
 

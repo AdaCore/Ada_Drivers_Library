@@ -126,10 +126,10 @@ package body OV7725 is
       (REG_LC_CTR,        16#05#),
       (REG_COM5,          16#D5#));
 
-   function Read (This     : OV7725_Cam;
+   function Read (This     : OV7725_Camera;
                   Mem_Addr : UInt8) return Byte;
 
-   procedure Write (This     : OV7725_Cam;
+   procedure Write (This     : OV7725_Camera;
                     Mem_Addr : UInt8;
                     Data     : Byte);
 
@@ -137,7 +137,7 @@ package body OV7725 is
    -- Read --
    ----------
 
-   function Read (This     : OV7725_Cam;
+   function Read (This     : OV7725_Camera;
                   Mem_Addr : UInt8) return Byte
    is
       Status : I2C_Status;
@@ -163,7 +163,7 @@ package body OV7725 is
    -- Write --
    -----------
 
-   procedure Write (This     : OV7725_Cam;
+   procedure Write (This     : OV7725_Camera;
                     Mem_Addr : UInt8;
                     Data     : Byte)
    is
@@ -182,7 +182,7 @@ package body OV7725 is
    ----------------
 
    procedure Initialize
-     (This : in out OV7725_Cam;
+     (This : in out OV7725_Camera;
       Addr : I2C_Address)
    is
    begin
@@ -197,7 +197,7 @@ package body OV7725 is
    ----------------------
 
    procedure Set_Pixel_Format
-     (This : OV7725_Cam;
+     (This : OV7725_Camera;
       Pix  : Pixel_Format)
    is
       Reg : Byte := Read (This, REG_COM7);
@@ -222,7 +222,7 @@ package body OV7725 is
    --------------------
 
    procedure Set_Frame_Size
-     (This : OV7725_Cam;
+     (This : OV7725_Camera;
       Res  : OV2640.Frame_Size)
    is
       use type OV2640.Frame_Size;
@@ -251,7 +251,7 @@ package body OV7725 is
    -- Get_PID --
    -------------
 
-   function Get_PID (This : OV7725_Cam) return Byte is
+   function Get_PID (This : OV7725_Camera) return Byte is
    begin
       return Read (This, REG_PID);
    end Get_PID;
