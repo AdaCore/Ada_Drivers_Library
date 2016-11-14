@@ -137,6 +137,9 @@ package body HAL.SDCard is
       Read_Rsp136 (Driver, W0, W1, W2, W3);
       Convert_Card_Specific_Data_Register (W0, W1, W2, W3, Info);
 
+      --  Switch to 25Mhz
+      Set_Clock (Driver, 25_000_000);
+
       --  CMD7: SELECT
       Send_Cmd (Driver, Select_Card, Rca, Status);
       if Status /= Ok then
