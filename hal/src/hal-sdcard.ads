@@ -261,10 +261,15 @@ package HAL.SDCard is
 
    type SDCard_Driver is Interface;
 
-   --  Initialize the driver, enable clocking.
    procedure Reset
      (This : in out SDCard_Driver;
       Status : out SD_Error) is abstract;
+   --  Initialize the driver, enable clocking.
+
+   procedure Set_Clock
+     (This : in out SDCard_Driver;
+      Freq : Natural) is abstract;
+   --  Set clock frequency.
 
    procedure Send_Cmd
      (This : in out SDCard_Driver;
