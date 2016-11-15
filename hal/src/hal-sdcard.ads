@@ -221,7 +221,7 @@ package HAL.SDCard is
    --  App_Cmd should be sent before sending these commands
    subtype SD_Specific_Command is SD_Command;
 
-   SD_App_Set_Buswidth                : constant SD_Specific_Command := 6;
+   SD_App_Set_Bus_Width               : constant SD_Specific_Command := 6;
    SD_App_Status                      : constant SD_Specific_Command := 13;
    SD_App_Secure_Read_Multi_Block     : constant SD_Specific_Command := 18;
    SD_App_Send_Num_Write_Blocks       : constant SD_Specific_Command := 22;
@@ -270,6 +270,11 @@ package HAL.SDCard is
      (This : in out SDCard_Driver;
       Freq : Natural) is abstract;
    --  Set clock frequency.
+
+   procedure Set_Bus_Size
+     (This : in out SDCard_Driver;
+      Mode : Wide_Bus_Mode) is abstract;
+   --  Set host bus size; the command must have been set to the card.
 
    procedure Send_Cmd
      (This : in out SDCard_Driver;
@@ -357,15 +362,18 @@ package HAL.SDCard is
                              Tfr => Tfr_Invalid));
 
    Acmd_Desc : constant Acmd_Desc_Array :=
-     (SD_App_Send_Op_Cond => (Cmd => SD_App_Send_Op_Cond,
-                              Rsp => Rsp_R3,
-                              Tfr => Tfr_No),
-      SD_App_Send_SCR     => (Cmd => SD_App_Send_Scr,
-                              Rsp => Rsp_R1,
-                              Tfr => Tfr_Read),
-      others              => (Cmd => 0,
-                              Rsp => Rsp_Invalid,
-                              Tfr => Tfr_Invalid));
+     (SD_App_Set_Bus_Width => (Cmd => SD_App_Set_Bus_Width,
+                               Rsp => Rsp_R1,
+                               Tfr => Tfr_No),
+      SD_App_Send_Op_Cond  => (Cmd => SD_App_Send_Op_Cond,
+                               Rsp => Rsp_R3,
+                               Tfr => Tfr_No),
+      SD_App_Send_SCR      => (Cmd => SD_App_Send_Scr,
+                               Rsp => Rsp_R1,
+                               Tfr => Tfr_Read),
+      others               => (Cmd => 0,
+                               Rsp => Rsp_Invalid,
+                               Tfr => Tfr_Invalid));
 
    --  OCR bits
    SD_OCR_Power_Up             : constant := 16#8000_0000#;
