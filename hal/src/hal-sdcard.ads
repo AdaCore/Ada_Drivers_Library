@@ -264,7 +264,10 @@ package HAL.SDCard is
      );
    --  Response format
 
-   type Tfr_Kind is (Tfr_Invalid, Tfr_No, Tfr_Read, Tfr_Write);
+   type Tfr_Kind is
+     (Tfr_Invalid, Tfr_No,
+      Tfr_Read, Tfr_Write,
+      Tfr_Read_Multi, Tfr_Write_Multi);
    --  Transfer
 
    type Cmd_Desc_Type is record
@@ -365,9 +368,12 @@ package HAL.SDCard is
       Send_CSD           => (Cmd => Send_CSD,
                              Rsp => Rsp_R2,
                              Tfr => Tfr_No),
-      Read_Single_BLock  => (Cmd => Read_Single_BLock,
+      Read_Single_Block  => (Cmd => Read_Single_Block,
                              Rsp => Rsp_R1,
                              Tfr => Tfr_Read),
+      Read_Multi_Block   => (Cmd => Read_Multi_Block,
+                             Rsp => Rsp_R1,
+                             Tfr => Tfr_Read_Multi),
       Send_Status        => (Cmd => Send_Status,
                              Rsp => Rsp_R1,
                              Tfr => Tfr_No),
