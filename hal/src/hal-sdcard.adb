@@ -1,5 +1,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Real_Time; use Ada.Real_Time;
+with Hex_Images; use Hex_Images;
 
 package body HAL.SDCard is
    procedure Convert_Card_Identification_Data_Register
@@ -11,6 +12,11 @@ package body HAL.SDCard is
      (W0, W1, W2, W3 : Unsigned_32;
       Info : in out Card_Information);
    --  Convert the R2 reply to Info.CD_CSD
+
+   procedure Convert_SDCard_Configuration_Register
+     (W0, W1 : Unsigned_32;
+      SCR : out SDCard_Configuration_Register);
+   --  Convert W0 (MSB) / W1 (LSB) to SCR.
 
    procedure Send_Cmd
      (This : in out SDCard_Driver'Class;
@@ -34,6 +40,25 @@ package body HAL.SDCard is
       end if;
       Send_Cmd (This, Acmd_Desc (Cmd), A_Arg, Status);
    end Send_ACmd;
+
+   --  Swap bytes in a word
+   function Swap32 (Val : Uint32) return Uint32 is
+   begin
+      return Shift_Left  (Val and 16#00_00_00_ff#, 24)
+        or   Shift_Left  (Val and 16#00_00_ff_00#, 8)
+        or   Shift_Right (Val and 16#00_ff_00_00#, 8)
+        or   Shift_Right (Val and 16#ff_00_00_00#, 24);
+   end Swap32;
+
+   function BE32_To_Host (Val : Uint32) return Uint32 is
+      use System;
+   begin
+      if Default_Bit_Order = Low_Order_First then
+         return Swap32 (Val);
+      else
+         return Val;
+      end if;
+   end BE32_To_Host;
 
    --  Generic initialization procedure.
    procedure Initialize (Driver : in out SDCard_Driver'Class;
@@ -76,12 +101,12 @@ package body HAL.SDCard is
       --  ACMD41: SD_SEND_OP_COND (no crc check)
       --  Arg: HCS=1, XPC=0, S18R=0
       for I in 1 .. 5 loop
-         Put_Line ("wait...");
          delay until Clock + Milliseconds (200);
 
          Send_Acmd (Driver, SD_App_Send_Op_Cond, 0, 16#40ff_0000#, Status);
          if Status /= Ok then
             Put_Line ("send_op_cond failed");
+            return;
          end if;
 
          Read_Rsp48 (Driver, Rsp);
@@ -89,7 +114,6 @@ package body HAL.SDCard is
             Info.Card_Type := High_Capacity_SD_Card;
          end if;
          if (Rsp and SD_OCR_Power_Up) = 0 then
-            Put_Line ("op_cond: card is busy");
             Status := Error;
          else
             Status := OK;
@@ -126,6 +150,9 @@ package body HAL.SDCard is
          return;
       end if;
 
+      --  Switch to 25Mhz
+      Set_Clock (Driver, 25_000_000);
+
       --  CMD9: SEND_CSD
       Send_Cmd (Driver, Send_CSD, Rca, Status);
       if Status /= OK then
@@ -134,9 +161,6 @@ package body HAL.SDCard is
       end if;
       Read_Rsp136 (Driver, W0, W1, W2, W3);
       Convert_Card_Specific_Data_Register (W0, W1, W2, W3, Info);
-
-      --  Switch to 25Mhz
-      Set_Clock (Driver, 25_000_000);
 
       --  CMD7: SELECT
       Send_Cmd (Driver, Select_Card, Rca, Status);
@@ -157,12 +181,6 @@ package body HAL.SDCard is
          type SD_SCR is array (1 .. 2) of Uint32;
 
          SCR : SD_SCR;
-         Tmp  : SD_SCR;
-
-         SD_0TO7BITS                 : constant := 16#0000_00FF#;
-         SD_8TO715ITS                : constant := 16#0000_FF00#;
-         SD_16TO23BITS               : constant := 16#00FF_0000#;
-         SD_24TO31BITS               : constant := 16#FF00_0000#;
       begin
          Send_Cmd (Driver, App_Cmd, Rca, Status);
          if Status /= Ok then
@@ -171,20 +189,14 @@ package body HAL.SDCard is
          end if;
 
          Read_Cmd (Driver, Acmd_Desc (SD_App_Send_SCR), 0,
-                   Tmp'Address, 8, Status);
+                   SCR'Address, 8, Status);
          if Status /= Ok then
             Put_Line ("send_scr failed");
             return;
          end if;
 
-         SCR (1) := Shift_Left (Tmp (2) and SD_0TO7BITS, 24)
-           or Shift_Left (Tmp (2) and SD_8TO715ITS, 8)
-           or Shift_Right (Tmp (2) and SD_16TO23BITS, 8)
-           or Shift_Right (Tmp (2) and SD_24TO31BITS, 24);
-         SCR (2) := Shift_Left (Tmp (1) and SD_0TO7BITS, 24)
-           or Shift_Left (Tmp (1) and SD_8TO715ITS, 8)
-           or Shift_Right (Tmp (1) and SD_16TO23BITS, 8)
-           or Shift_Right (Tmp (1) and SD_24TO31BITS, 24);
+         Convert_SDCard_Configuration_Register
+           (BE32_To_Host (SCR (1)), BE32_To_Host (SCR (2)), Info.SD_SCR);
       end;
 
       --  Bus size
@@ -202,6 +214,40 @@ package body HAL.SDCard is
          when others =>
             null;
       end case;
+
+      if (Info.SD_CSD.Card_Command_Class and 2**10) /= 0 then
+         --  Class 10 supported.
+         declare
+            type Switch_Status_Type is array (1 .. 16) of Uint32;
+
+            Switch_Status : Switch_Status_Type;
+         begin
+            Read_Cmd (Driver, Cmd_Desc (Switch_Func), 16#00_fffff0#,
+                      Switch_Status'Address, 512 / 8, Status);
+            if Status /= Ok then
+               Put_Line ("switch_func check failed");
+               return;
+            end if;
+
+            --  Handle endianness
+            for I in Switch_Status'Range loop
+               Switch_Status (I) := BE32_To_Host (Switch_Status (I));
+            end loop;
+
+            --  Switch tp 50Mhz if possible.
+            if (Switch_Status (4) and 2**(16 + 1)) /= 0 then
+               Read_Cmd (Driver, Cmd_Desc (Switch_Func), 16#80_fffff1#,
+                         Switch_Status'Address, 512 / 8, Status);
+               if Status /= OK then
+                  Put_Line ("switch_func failed");
+                  return;
+               end if;
+
+               --  Switch to 50Mhz
+               Set_Clock (Driver, 50_000_000);
+            end if;
+         end;
+      end if;
    end Initialize;
 
    procedure Convert_Card_Identification_Data_Register
@@ -276,7 +322,7 @@ package body HAL.SDCard is
 
       --  Byte 3
       Tmp := Byte (W0 and 16#0000_00FF#);
-      Info.SD_CSD.Max_Bus_Clock_Frequency := Tmp;
+      Info.SD_CSD.Max_Data_Transfer_Rate := Tmp;
 
       --  Byte 4 & 5
       Info.SD_CSD.Card_Command_Class :=
@@ -396,4 +442,22 @@ package body HAL.SDCard is
       Info.SD_CSD.CSD_CRC := Shift_Right (Tmp and 16#FE#, 1);
       Info.SD_CSD.Reserved_4 := 0;
    end Convert_Card_Specific_Data_Register;
+
+   procedure Convert_SDCard_Configuration_Register
+     (W0, W1 : Unsigned_32;
+      SCR : out SDCard_Configuration_Register) is
+   begin
+      SCR := (SCR_Structure         => Byte (Shift_Right (W0, 28) and 16#f#),
+              SD_Spec               => Byte (Shift_Right (W0, 24) and 16#f#),
+              Data_Stat_After_Erase => Byte (Shift_Right (W0, 23) and 1),
+              SD_Security           => Byte (Shift_Right (W0, 20) and 7),
+              SD_Bus_Widths         => Byte (Shift_Right (W0, 16) and 16#f#),
+              SD_Spec3              => (Shift_Right (W0, 15) and 1) /= 0,
+              Ex_Security           => Byte (Shift_Right (W0, 11) and 16#f#),
+              SD_Spec4              => (Shift_Right (W0, 10) and 1) /= 0,
+              Reserved_1            => Byte (Shift_Right (W0, 4) and 16#3f#),
+              CMD_Support           => Byte (Shift_Right (W0, 0) and 16#f#),
+              Reserved_2            => W1);
+   end Convert_SDCard_Configuration_Register;
+
 end HAL.SDCard;
