@@ -50,7 +50,7 @@ package HAL.SDCard is
       Reserved                         : Byte;
       Data_Read_Access_Time_1          : Byte;
       Data_Read_Access_Time_2          : Byte; --  In CLK Cycles
-      Max_Bus_Clock_Frequency          : Byte;
+      Max_Data_Transfer_Rate           : Byte;
       Card_Command_Class               : Uint16;
       Max_Read_Data_Block_Length       : Byte;
       Partial_Block_For_Read_Allowed   : Boolean;
@@ -121,9 +121,24 @@ package HAL.SDCard is
       Reserved_2            : Byte; --  Always 1
    end record;
 
+   type SDCard_Configuration_Register is record
+      SCR_Structure         : Byte;
+      SD_Spec               : Byte;
+      Data_Stat_After_Erase : Byte;
+      SD_Security           : Byte;
+      SD_Bus_Widths         : Byte;
+      SD_Spec3              : Boolean;
+      Ex_Security           : Byte;
+      SD_Spec4              : Boolean;
+      Reserved_1            : Byte;
+      CMD_Support           : Byte;
+      Reserved_2            : Uint32;
+   end record;
+
    type Card_Information is record
       SD_CSD          : Card_Specific_Data_Register;
       SD_CID          : Card_Identification_Data_Register;
+      SD_SCR          : SDCard_Configuration_Register;
       Card_Capacity   : Unsigned_64;
       Card_Block_Size : Unsigned_32;
       RCA             : Uint16; --  SD relative card address
@@ -170,9 +185,8 @@ package HAL.SDCard is
    --  response on the CMD line.
    SDMMC_Send_Op_Cond   : constant SD_Command := 5;
 
-   --  Checks switchable function (mode 0) and switch card function (mode
-   --  1).
-   HS_Switch            : constant SD_Command := 6;
+   --  Checks switchable function (mode 0) and switch card function (mode 1).
+   Switch_Func          : constant SD_Command := 6;
 
    --  Selects the card by its own relative address and gets deselected by
    --  any other address
@@ -333,24 +347,27 @@ package HAL.SDCard is
      (Go_Idle_State      => (Cmd => Go_Idle_State,
                              Rsp => Rsp_No,
                              Tfr => Tfr_No),
-      Send_If_Cond       => (Cmd => Send_If_Cond,
-                             Rsp => Rsp_R7,
-                             Tfr => Tfr_No),
-      Read_Single_BLock  => (Cmd => Read_Single_BLock,
-                             Rsp => Rsp_R1,
-                             Tfr => Tfr_Read),
       All_Send_CID       => (Cmd => All_Send_CID,
                              Rsp => Rsp_R2,
                              Tfr => Tfr_No),
       Send_Relative_Addr => (Cmd => Send_Relative_Addr,
                              Rsp => Rsp_R3,
                              Tfr => Tfr_No),
-      Send_CSD           => (Cmd => Send_CSD,
-                             Rsp => Rsp_R2,
-                             Tfr => Tfr_No),
+      Switch_Func        => (Cmd => Switch_Func,
+                             Rsp => Rsp_R1,
+                             Tfr => Tfr_Read),
       Select_Card        => (Cmd => Select_Card,
                              Rsp => Rsp_R1B,
                              Tfr => Tfr_No),
+      Send_If_Cond       => (Cmd => Send_If_Cond,
+                             Rsp => Rsp_R7,
+                             Tfr => Tfr_No),
+      Send_CSD           => (Cmd => Send_CSD,
+                             Rsp => Rsp_R2,
+                             Tfr => Tfr_No),
+      Read_Single_BLock  => (Cmd => Read_Single_BLock,
+                             Rsp => Rsp_R1,
+                             Tfr => Tfr_Read),
       Send_Status        => (Cmd => Send_Status,
                              Rsp => Rsp_R1,
                              Tfr => Tfr_No),
