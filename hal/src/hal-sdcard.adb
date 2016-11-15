@@ -56,7 +56,6 @@ package body HAL.SDCard is
       end if;
 
       --  CMD8: IF_Cond, voltage supplied: 0x1 (2.7V - 3.6V)
-      Put_Line ("cmd: if_cond");
       Send_Cmd (Driver, Send_If_Cond, 16#1a5#, Status);
       if Status = OK then
          --  at least SD Card 2.0
@@ -102,7 +101,6 @@ package body HAL.SDCard is
       end if;
 
       --  TODO: Switch voltage
-      --  TODO: Switch clock rate
 
       --  CMD2: ALL_SEND_CID (136 bits)
       Send_Cmd (Driver, All_Send_CID, 0, Status);
@@ -188,6 +186,22 @@ package body HAL.SDCard is
            or Shift_Right (Tmp (1) and SD_16TO23BITS, 8)
            or Shift_Right (Tmp (1) and SD_24TO31BITS, 24);
       end;
+
+      --  Bus size
+      case Info.Card_Type is
+         when STD_Capacity_SD_Card_V1_1
+           | STD_Capacity_SD_Card_v2_0
+           | High_Capacity_SD_Card =>
+            Send_ACmd (Driver, SD_App_Set_Bus_Width, Rca, 2, Status);
+            if Status /= OK then
+               Put_Line ("set bus width failed");
+               return;
+            else
+               Set_Bus_Size (Driver, Wide_Bus_4B);
+            end if;
+         when others =>
+            null;
+      end case;
    end Initialize;
 
    procedure Convert_Card_Identification_Data_Register
