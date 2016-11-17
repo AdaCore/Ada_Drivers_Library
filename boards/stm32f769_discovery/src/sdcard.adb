@@ -34,6 +34,14 @@
 
 with Ada.Real_Time;           use Ada.Real_Time;
 
+pragma Warnings (Off);
+with System.BB.Board_Parameters;
+pragma Warnings (On);
+
+with HAL.SDCard;              use HAL.SDCard;
+
+with STM32_SVD.RCC;           use STM32_SVD.RCC;
+
 with STM32.Device;            use STM32.Device;
 with STM32.DMA;               use STM32.DMA;
 with STM32.GPIO;              use STM32.GPIO;
@@ -117,6 +125,8 @@ package body SDCard is
                         (PD6, PD7, PG9, PG10);
 
    begin
+      RCC_Periph.DKCFGR2.SDMMC2SEL := True; --  SDMMC uses the SYSCLK
+
       --  Enable the SDIO clock
       Enable_Clock (SDMMC_Controller (Controller.Device.all));
       Reset (SDMMC_Controller (Controller.Device.all));
@@ -134,11 +144,10 @@ package body SDCard is
           Output_Type => Push_Pull,
           Speed       => Speed_High,
           Resistors   => Pull_Up));
-      --  ??? no GPIO_AF10_SDMMC or AF11 names for now. Waiting for AF
-      --  functions to be moved outside of STM32.GPIO (that is common to
-      --  all STM32)
+
       Configure_Alternate_Function (SD_Pins_AF_10, GPIO_AF_10_SDMMC2);
       Configure_Alternate_Function (SD_Pins_AF_11, GPIO_AF_11_SDMMC2);
+      Lock (SD_Pins_AF_10 & SD_Pins_AF_11);
 
       --  GPIO configuration for the SD-Detect pin
       Configure_IO
@@ -223,8 +232,13 @@ package body SDCard is
          return;
       end if;
 
+      Enable_Clock (SDMMC_Controller (Controller.Device.all));
+      Reset (SDMMC_Controller (Controller.Device.all));
+
       Ret := STM32.SDMMC.Initialize
-        (Controller.Device.all, Controller.Info);
+        (Controller.Device.all,
+         System.BB.Board_Parameters.Main_Clock_Frequency,
+         Controller.Info);
 
       if Ret = OK then
          Controller.Has_Info := True;
@@ -239,15 +253,10 @@ package body SDCard is
 
    function Get_Card_Information
      (Controller : in out SDCard_Controller)
-      return STM32.SDMMC.Card_Information
+      return Card_Information
    is
    begin
       Ensure_Card_Informations (Controller);
-
-      if not Controller.Has_Info then
-         --  Issue reading the SD-card information
-         Ensure_Card_Informations (Controller);
-      end if;
 
       if not Controller.Has_Info then
          raise Device_Error;
@@ -559,7 +568,7 @@ package body SDCard is
       SDMMC_Interrupt_Handler.Set_Transfer_State (Controller);
 
       Cortex_M.Cache.Clean_DCache
-        (Start => Data'Address,
+        (Start => Data (Data'First)'Address,
          Len   => Data'Length);
 
       SD_Err := Read_Blocks_DMA
