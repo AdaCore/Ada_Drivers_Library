@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -652,10 +653,10 @@ package STM32_SVD.SAI is
 
    --  Serial audio interface
    SAI1_Periph : aliased SAI_Peripheral
-     with Import, Address => SAI1_Base;
+     with Import, Address => System'To_Address (16#40015800#);
 
    --  Serial audio interface
    SAI2_Periph : aliased SAI_Peripheral
-     with Import, Address => SAI2_Base;
+     with Import, Address => System'To_Address (16#40015C00#);
 
 end STM32_SVD.SAI;

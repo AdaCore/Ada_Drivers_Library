@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -3339,6 +3340,6 @@ package STM32_SVD.DFSDM is
 
    --  Digital filter for sigma delta modulators
    DFSDM_Periph : aliased DFSDM_Peripheral
-     with Import, Address => DFSDM_Base;
+     with Import, Address => System'To_Address (16#40017400#);
 
 end STM32_SVD.DFSDM;

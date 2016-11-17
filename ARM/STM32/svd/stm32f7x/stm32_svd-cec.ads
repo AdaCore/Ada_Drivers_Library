@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -244,6 +245,6 @@ package STM32_SVD.CEC is
 
    --  HDMI-CEC controller
    CEC_Periph : aliased CEC_Peripheral
-     with Import, Address => CEC_Base;
+     with Import, Address => System'To_Address (16#40006C00#);
 
 end STM32_SVD.CEC;

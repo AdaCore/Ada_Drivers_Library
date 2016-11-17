@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -383,14 +384,14 @@ package STM32_SVD.I2C is
 
    --  Inter-integrated circuit
    I2C1_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C1_Base;
+     with Import, Address => System'To_Address (16#40005400#);
 
    --  Inter-integrated circuit
    I2C2_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C2_Base;
+     with Import, Address => System'To_Address (16#40005800#);
 
    --  Inter-integrated circuit
    I2C3_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C3_Base;
+     with Import, Address => System'To_Address (16#40005C00#);
 
 end STM32_SVD.I2C;

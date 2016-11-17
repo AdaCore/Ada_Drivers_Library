@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -295,6 +296,6 @@ package STM32_SVD.SPDIF_RX is
 
    --  Receiver Interface
    SPDIF_RX_Periph : aliased SPDIF_RX_Peripheral
-     with Import, Address => SPDIF_RX_Base;
+     with Import, Address => System'To_Address (16#40004000#);
 
 end STM32_SVD.SPDIF_RX;

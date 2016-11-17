@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -413,19 +414,19 @@ package STM32_SVD.USART is
 
    --  Universal synchronous asynchronous receiver transmitter
    UART4_Periph : aliased UART4_Peripheral
-     with Import, Address => UART4_Base;
+     with Import, Address => System'To_Address (16#40004C00#);
 
    --  Universal synchronous asynchronous receiver transmitter
    UART5_Periph : aliased UART4_Peripheral
-     with Import, Address => UART5_Base;
+     with Import, Address => System'To_Address (16#40005000#);
 
    --  Universal synchronous asynchronous receiver transmitter
    UART7_Periph : aliased UART4_Peripheral
-     with Import, Address => UART7_Base;
+     with Import, Address => System'To_Address (16#40007800#);
 
    --  Universal synchronous asynchronous receiver transmitter
    UART8_Periph : aliased UART4_Peripheral
-     with Import, Address => UART8_Base;
+     with Import, Address => System'To_Address (16#40007C00#);
 
    --  Universal synchronous asynchronous receiver transmitter
    type USART1_Peripheral is record
@@ -458,18 +459,18 @@ package STM32_SVD.USART is
 
    --  Universal synchronous asynchronous receiver transmitter
    USART1_Periph : aliased USART1_Peripheral
-     with Import, Address => USART1_Base;
+     with Import, Address => System'To_Address (16#40011000#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART2_Periph : aliased USART1_Peripheral
-     with Import, Address => USART2_Base;
+     with Import, Address => System'To_Address (16#40004400#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART3_Periph : aliased USART1_Peripheral
-     with Import, Address => USART3_Base;
+     with Import, Address => System'To_Address (16#40004800#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART6_Periph : aliased USART1_Peripheral
-     with Import, Address => USART6_Base;
+     with Import, Address => System'To_Address (16#40011400#);
 
 end STM32_SVD.USART;

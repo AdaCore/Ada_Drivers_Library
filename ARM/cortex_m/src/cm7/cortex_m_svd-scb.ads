@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -586,7 +587,7 @@ package Cortex_M_SVD.SCB is
    end record;
 
    --  Indicates how the processor enters Thread mode
-   type CCR_NONBASETHERADENA_Field is
+   type CCR_NONBASETHREADENA_Field is
      (
       --  Processor can enter Thread mode only when no exception is active
       No_Active_Exception,
@@ -594,14 +595,14 @@ package Cortex_M_SVD.SCB is
       --  an EXC_RETURN value
       On_Exc_Return)
      with Size => 1;
-   for CCR_NONBASETHERADENA_Field use
+   for CCR_NONBASETHREADENA_Field use
      (No_Active_Exception => 0,
       On_Exc_Return => 1);
 
    --  Configuration and Control Register
    type CCR_Register is record
       --  Indicates how the processor enters Thread mode
-      NONBASETHERADENA : CCR_NONBASETHERADENA_Field :=
+      NONBASETHREADENA : CCR_NONBASETHREADENA_Field :=
                           Cortex_M_SVD.SCB.No_Active_Exception;
       --  Enables unprivileged software access to the STIR
       USERSETMPEND     : Boolean := False;
@@ -634,7 +635,7 @@ package Cortex_M_SVD.SCB is
           Bit_Order => System.Low_Order_First;
 
    for CCR_Register use record
-      NONBASETHERADENA at 0 range 0 .. 0;
+      NONBASETHREADENA at 0 range 0 .. 0;
       USERSETMPEND     at 0 range 1 .. 1;
       Reserved_2_2     at 0 range 2 .. 2;
       UNALIGNED_TRP    at 0 range 3 .. 3;
@@ -979,6 +980,6 @@ package Cortex_M_SVD.SCB is
 
    --  System control block
    SCB_Periph : aliased SCB_Peripheral
-     with Import, Address => SCB_Base;
+     with Import, Address => System'To_Address (16#E000E000#);
 
 end Cortex_M_SVD.SCB;

@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -536,6 +537,6 @@ package STM32_SVD.DMA2D is
 
    --  DMA2D controller
    DMA2D_Periph : aliased DMA2D_Peripheral
-     with Import, Address => DMA2D_Base;
+     with Import, Address => System'To_Address (16#4002B000#);
 
 end STM32_SVD.DMA2D;

@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -951,6 +952,6 @@ package STM32_SVD.LTDC is
 
    --  LCD-TFT Controller
    LTDC_Periph : aliased LTDC_Peripheral
-     with Import, Address => LTDC_Base;
+     with Import, Address => System'To_Address (16#40016800#);
 
 end STM32_SVD.LTDC;

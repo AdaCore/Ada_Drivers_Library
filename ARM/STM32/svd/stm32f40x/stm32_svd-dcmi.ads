@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -368,6 +369,6 @@ package STM32_SVD.DCMI is
 
    --  Digital camera interface
    DCMI_Periph : aliased DCMI_Peripheral
-     with Import, Address => DCMI_Base;
+     with Import, Address => System'To_Address (16#50050000#);
 
 end STM32_SVD.DCMI;

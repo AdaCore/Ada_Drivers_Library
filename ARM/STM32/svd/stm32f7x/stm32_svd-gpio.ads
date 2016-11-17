@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -461,46 +462,46 @@ package STM32_SVD.GPIO is
 
    --  General-purpose I/Os
    GPIOA_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOA_Base;
+     with Import, Address => System'To_Address (16#40020000#);
 
    --  General-purpose I/Os
    GPIOB_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOB_Base;
+     with Import, Address => System'To_Address (16#40020400#);
 
    --  General-purpose I/Os
    GPIOC_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOC_Base;
+     with Import, Address => System'To_Address (16#40020800#);
 
    --  General-purpose I/Os
    GPIOD_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOD_Base;
+     with Import, Address => System'To_Address (16#40020C00#);
 
    --  General-purpose I/Os
    GPIOE_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOE_Base;
+     with Import, Address => System'To_Address (16#40021000#);
 
    --  General-purpose I/Os
    GPIOF_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOF_Base;
+     with Import, Address => System'To_Address (16#40021400#);
 
    --  General-purpose I/Os
    GPIOG_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOG_Base;
+     with Import, Address => System'To_Address (16#40021800#);
 
    --  General-purpose I/Os
    GPIOH_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOH_Base;
+     with Import, Address => System'To_Address (16#40021C00#);
 
    --  General-purpose I/Os
    GPIOI_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOI_Base;
+     with Import, Address => System'To_Address (16#40022000#);
 
    --  General-purpose I/Os
    GPIOJ_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOJ_Base;
+     with Import, Address => System'To_Address (16#40022400#);
 
    --  General-purpose I/Os
    GPIOK_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOK_Base;
+     with Import, Address => System'To_Address (16#40022800#);
 
 end STM32_SVD.GPIO;

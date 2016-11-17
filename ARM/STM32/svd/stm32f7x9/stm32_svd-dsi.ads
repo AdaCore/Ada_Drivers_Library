@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -2246,6 +2247,6 @@ package STM32_SVD.DSI is
 
    --  DSI Host
    DSI_Periph : aliased DSI_Peripheral
-     with Import, Address => DSI_Base;
+     with Import, Address => System'To_Address (16#40016C00#);
 
 end STM32_SVD.DSI;

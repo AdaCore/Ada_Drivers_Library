@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -2178,7 +2179,7 @@ package STM32_SVD.USB_OTG_HS is
 
    --  USB on the go high speed
    OTG_HS_DEVICE_Periph : aliased OTG_HS_DEVICE_Peripheral
-     with Import, Address => OTG_HS_DEVICE_Base;
+     with Import, Address => System'To_Address (16#40040800#);
 
    type OTG_HS_GLOBAL_Disc is
      (
@@ -2281,7 +2282,7 @@ package STM32_SVD.USB_OTG_HS is
 
    --  USB on the go high speed
    OTG_HS_GLOBAL_Periph : aliased OTG_HS_GLOBAL_Peripheral
-     with Import, Address => OTG_HS_GLOBAL_Base;
+     with Import, Address => System'To_Address (16#40040000#);
 
    --  USB on the go high speed
    type OTG_HS_HOST_Peripheral is record
@@ -2530,7 +2531,7 @@ package STM32_SVD.USB_OTG_HS is
 
    --  USB on the go high speed
    OTG_HS_HOST_Periph : aliased OTG_HS_HOST_Peripheral
-     with Import, Address => OTG_HS_HOST_Base;
+     with Import, Address => System'To_Address (16#40040400#);
 
    --  USB on the go high speed
    type OTG_HS_PWRCLK_Peripheral is record
@@ -2545,6 +2546,6 @@ package STM32_SVD.USB_OTG_HS is
 
    --  USB on the go high speed
    OTG_HS_PWRCLK_Periph : aliased OTG_HS_PWRCLK_Peripheral
-     with Import, Address => OTG_HS_PWRCLK_Base;
+     with Import, Address => System'To_Address (16#40040E00#);
 
 end STM32_SVD.USB_OTG_HS;

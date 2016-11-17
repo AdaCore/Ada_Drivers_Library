@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -27,7 +28,7 @@ package Cortex_M_SVD.Debug is
       --  An asynchronous exception generated due to the assertion of EDBGRQ.
       EXTERNAL      : Boolean := False;
       --  unspecified
-      Reserved_5_31 : HAL.UInt27 := 16#2B45D72#;
+      Reserved_5_31 : HAL.UInt27 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -114,11 +115,11 @@ package Cortex_M_SVD.Debug is
       --  Write-only.
       C_SNAPSTALL   : Boolean := False;
       --  unspecified
-      Reserved_6_15 : HAL.UInt10 := 16#2B9#;
+      Reserved_6_15 : HAL.UInt10 := 16#0#;
       --  Write-only. Debug Key. The value 0xA05F must be written to enable
       --  write accesses to bits [15:0], otherwise the write access will be
       --  ignored. Read behavior of bits [31:16] is as listed below.
-      S_RESET_ST    : Write_DHCSR_S_RESET_ST_Field := 16#568B#;
+      S_RESET_ST    : Write_DHCSR_S_RESET_ST_Field := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -220,11 +221,11 @@ package Cortex_M_SVD.Debug is
       --  Write-only.
       HALTED         : DCRSR_HALTED_Field := Cortex_M_SVD.Debug.Register_0;
       --  unspecified
-      Reserved_5_15  : HAL.UInt11 := 16#572#;
+      Reserved_5_15  : HAL.UInt11 := 16#0#;
       --  Write-only.
-      REGWnR         : DCRSR_REGWnR_Field := Cortex_M_SVD.Debug.Write;
+      REGWnR         : DCRSR_REGWnR_Field := Cortex_M_SVD.Debug.Read;
       --  unspecified
-      Reserved_17_31 : HAL.UInt15 := 16#2B45#;
+      Reserved_17_31 : HAL.UInt15 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -243,22 +244,22 @@ package Cortex_M_SVD.Debug is
       Reserved_1_3   : HAL.UInt3 := 16#0#;
       VC_MMERR       : Boolean := False;
       VC_NOCPERR     : Boolean := False;
-      VC_CHKERR      : Boolean := True;
+      VC_CHKERR      : Boolean := False;
       VC_STATERR     : Boolean := False;
       VC_BUSERR      : Boolean := False;
-      VC_INTERR      : Boolean := True;
-      VC_HARDERR     : Boolean := True;
+      VC_INTERR      : Boolean := False;
+      VC_HARDERR     : Boolean := False;
       --  unspecified
-      Reserved_11_15 : HAL.UInt5 := 16#15#;
-      MON_EN         : Boolean := True;
-      MON_PEND       : Boolean := True;
+      Reserved_11_15 : HAL.UInt5 := 16#0#;
+      MON_EN         : Boolean := False;
+      MON_PEND       : Boolean := False;
       MON_STEP       : Boolean := False;
-      MON_REQ        : Boolean := True;
+      MON_REQ        : Boolean := False;
       --  unspecified
-      Reserved_20_23 : HAL.UInt4 := 16#8#;
+      Reserved_20_23 : HAL.UInt4 := 16#0#;
       TRCENA         : Boolean := False;
       --  unspecified
-      Reserved_25_31 : HAL.UInt7 := 16#2B#;
+      Reserved_25_31 : HAL.UInt7 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

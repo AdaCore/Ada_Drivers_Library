@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -292,6 +293,6 @@ package STM32_SVD.LPTIM is
 
    --  Low power timer
    LPTIM1_Periph : aliased LPTIM1_Peripheral
-     with Import, Address => LPTIM1_Base;
+     with Import, Address => System'To_Address (16#40002400#);
 
 end STM32_SVD.LPTIM;

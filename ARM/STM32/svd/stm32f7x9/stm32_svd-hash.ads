@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -362,6 +363,6 @@ package STM32_SVD.HASH is
 
    --  Hash processor
    HASH_Periph : aliased HASH_Peripheral
-     with Import, Address => HASH_Base;
+     with Import, Address => System'To_Address (16#50060400#);
 
 end STM32_SVD.HASH;

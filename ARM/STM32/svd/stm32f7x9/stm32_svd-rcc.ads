@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -1569,10 +1570,12 @@ package STM32_SVD.RCC is
       CECSEL         : Boolean := False;
       --  48MHz clock source selection
       CK48MSEL       : Boolean := False;
-      --  SDMMC clock source selection
-      SDMMCSEL       : Boolean := False;
+      --  SDMMC1 clock source selection
+      SDMMC1SEL      : Boolean := False;
+      --  SDMMC2 clock source selection
+      SDMMC2SEL      : Boolean := True;
       --  unspecified
-      Reserved_29_31 : HAL.UInt3 := 16#1#;
+      Reserved_30_31 : HAL.UInt2 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1593,8 +1596,9 @@ package STM32_SVD.RCC is
       LPTIM1SEL      at 0 range 24 .. 25;
       CECSEL         at 0 range 26 .. 26;
       CK48MSEL       at 0 range 27 .. 27;
-      SDMMCSEL       at 0 range 28 .. 28;
-      Reserved_29_31 at 0 range 29 .. 31;
+      SDMMC1SEL      at 0 range 28 .. 28;
+      SDMMC2SEL      at 0 range 29 .. 29;
+      Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
    -----------------
@@ -1689,6 +1693,6 @@ package STM32_SVD.RCC is
 
    --  Reset and clock control
    RCC_Periph : aliased RCC_Peripheral
-     with Import, Address => RCC_Base;
+     with Import, Address => System'To_Address (16#40023800#);
 
 end STM32_SVD.RCC;

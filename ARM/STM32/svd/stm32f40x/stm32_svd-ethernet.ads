@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -1141,7 +1142,7 @@ package STM32_SVD.Ethernet is
 
    --  Ethernet: DMA controller operation
    Ethernet_DMA_Periph : aliased Ethernet_DMA_Peripheral
-     with Import, Address => Ethernet_DMA_Base;
+     with Import, Address => System'To_Address (16#40029000#);
 
    --  Ethernet: media access control (MAC)
    type Ethernet_MAC_Peripheral is record
@@ -1213,7 +1214,7 @@ package STM32_SVD.Ethernet is
 
    --  Ethernet: media access control (MAC)
    Ethernet_MAC_Periph : aliased Ethernet_MAC_Peripheral
-     with Import, Address => Ethernet_MAC_Base;
+     with Import, Address => System'To_Address (16#40028000#);
 
    --  Ethernet: MAC management counters
    type Ethernet_MMC_Peripheral is record
@@ -1259,7 +1260,7 @@ package STM32_SVD.Ethernet is
 
    --  Ethernet: MAC management counters
    Ethernet_MMC_Periph : aliased Ethernet_MMC_Peripheral
-     with Import, Address => Ethernet_MMC_Base;
+     with Import, Address => System'To_Address (16#40028100#);
 
    --  Ethernet: Precision time protocol
    type Ethernet_PTP_Peripheral is record
@@ -1304,6 +1305,6 @@ package STM32_SVD.Ethernet is
 
    --  Ethernet: Precision time protocol
    Ethernet_PTP_Periph : aliased Ethernet_PTP_Peripheral
-     with Import, Address => Ethernet_PTP_Base;
+     with Import, Address => System'To_Address (16#40028700#);
 
 end STM32_SVD.Ethernet;

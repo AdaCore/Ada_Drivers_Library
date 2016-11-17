@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -209,6 +210,6 @@ package STM32_SVD.DBG is
 
    --  Debug support
    DBG_Periph : aliased DBG_Peripheral
-     with Import, Address => DBG_Base;
+     with Import, Address => System'To_Address (16#E0042000#);
 
 end STM32_SVD.DBG;
