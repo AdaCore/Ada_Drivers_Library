@@ -18,6 +18,7 @@ library project STM32F7x9 is
       "drivers/dma_stm32f769",
       "drivers/dma2d",
       "drivers/dsi",
+      "drivers/jpeg",
       "drivers/ltdc",
       "drivers/sai",
       "drivers/sd",

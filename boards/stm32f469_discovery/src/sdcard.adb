@@ -23,6 +23,13 @@
 
 with Ada.Real_Time;           use Ada.Real_Time;
 
+pragma Warnings (Off);
+with System.BB.Board_Parameters;
+pragma Warnings (On);
+
+with HAL.SDCard;              use HAL.SDCard;
+with STM32_SVD.RCC;           use STM32_SVD.RCC;
+
 with STM32.Device;            use STM32.Device;
 with STM32.DMA;               use STM32.DMA;
 with STM32.GPIO;              use STM32.GPIO;
@@ -104,6 +111,8 @@ package body SDCard is
                   (PC8, PC9, PC10, PC11, PC12, PD2);
 
    begin
+      RCC_Periph.DCKCFGR.SDMMCSEL := True; --  SDMMC uses the SYSCLK
+
       --  Enable the SDIO clock
       Enable_Clock (SDMMC_Controller (Controller.Device.all));
       Reset (SDMMC_Controller (Controller.Device.all));
@@ -207,7 +216,9 @@ package body SDCard is
       end if;
 
       Ret := STM32.SDMMC.Initialize
-        (Controller.Device.all, Controller.Info);
+        (Controller.Device.all,
+         System.BB.Board_Parameters.Main_Clock_Frequency,
+         Controller.Info);
 
       if Ret = OK then
          Controller.Has_Info := True;
@@ -222,15 +233,10 @@ package body SDCard is
 
    function Get_Card_Information
      (Controller : in out SDCard_Controller)
-      return STM32.SDMMC.Card_Information
+      return HAL.SDCard.Card_Information
    is
    begin
       Ensure_Card_Informations (Controller);
-
-      if not Controller.Has_Info then
-         --  Issue reading the SD-card information
-         Ensure_Card_Informations (Controller);
-      end if;
 
       if not Controller.Has_Info then
          raise Device_Error;

@@ -35,6 +35,7 @@
 with Interfaces;           use Interfaces;
 with Ada.Interrupts.Names;
 
+with HAL.SDCard;
 with STM32.SDMMC;
 
 with HAL.Block_Drivers; use HAL.Block_Drivers;
@@ -50,7 +51,7 @@ package SDCard is
 
    type SDCard_Controller
      (Device : not null access STM32.SDMMC.SDMMC_Controller) is
-   limited new HAL.Block_Drivers.Block_Driver with private;
+   limited new Block_Driver with private;
 
    Device_Error : exception;
 
@@ -64,7 +65,7 @@ package SDCard is
 
    function Get_Card_Information
      (Controller : in out SDCard_Controller)
-      return STM32.SDMMC.Card_Information
+      return HAL.SDCard.Card_Information
      with Pre => Controller.Card_Present;
    --  Retrieves the card informations
 
@@ -77,7 +78,7 @@ package SDCard is
      (Controller   : in out SDCard_Controller;
       Block_Number : Unsigned_64;
       Data         : out Block) return Boolean
-     with Pre => Data'Size < 2 ** 16;
+     with Pre => Data'Length <= 16#10000#;
    --  Reads Data.
    --  Data size needs to be a multiple of the card's block size and maximum
    --  length is 2**16
@@ -86,7 +87,7 @@ package SDCard is
      (Controller   : in out SDCard_Controller;
       Block_Number : Unsigned_64;
       Data         : Block) return Boolean
-     with Pre => Data'Size < 2 ** 16;
+     with Pre => Data'Length <= 16#10000#;
    --  Writes Data.
    --  Data size needs to be a multiple of the card's block size and maximum
    --  length is 2**16
@@ -96,7 +97,7 @@ private
    type SDCard_Controller
      (Device : not null access STM32.SDMMC.SDMMC_Controller) is
    limited new HAL.Block_Drivers.Block_Driver with record
-      Info          : STM32.SDMMC.Card_Information;
+      Info          : HAL.SDCard.Card_Information;
       Has_Info      : Boolean := False;
       Card_Detected : Boolean := False;
    end record;

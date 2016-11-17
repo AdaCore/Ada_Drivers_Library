@@ -51,14 +51,14 @@ package HAL.SDCard is
       Data_Read_Access_Time_1          : Byte;
       Data_Read_Access_Time_2          : Byte; --  In CLK Cycles
       Max_Data_Transfer_Rate           : Byte;
-      Card_Command_Class               : Uint16;
+      Card_Command_Class               : UInt16;
       Max_Read_Data_Block_Length       : Byte;
       Partial_Block_For_Read_Allowed   : Boolean;
       Write_Block_Missalignment        : Boolean;
       Read_Block_Missalignment         : Boolean;
       DSR_Implemented                  : Boolean;
       Reserved_2                       : Byte;
-      Device_Size                      : Uint32;
+      Device_Size                      : UInt32;
       Max_Read_Current_At_VDD_Min      : Byte;
       Max_Read_Current_At_VDD_Max      : Byte;
       Max_Write_Current_At_VDD_Min     : Byte;
@@ -114,7 +114,7 @@ package HAL.SDCard is
       OEM_Application_ID    : String (1 .. 2);
       Product_Name          : String (1 .. 5);
       Product_Revision      : Card_Revision;
-      Product_Serial_Number : Uint32;
+      Product_Serial_Number : UInt32;
       Reserved_1            : Byte;
       Manufacturing_Date    : Manufacturing_Date_Type;
       CID_CRC               : Byte;
@@ -132,16 +132,15 @@ package HAL.SDCard is
       SD_Spec4              : Boolean;
       Reserved_1            : Byte;
       CMD_Support           : Byte;
-      Reserved_2            : Uint32;
+      Reserved_2            : UInt32;
    end record;
 
    type Card_Information is record
       SD_CSD          : Card_Specific_Data_Register;
       SD_CID          : Card_Identification_Data_Register;
-      SD_SCR          : SDCard_Configuration_Register;
       Card_Capacity   : Unsigned_64;
       Card_Block_Size : Unsigned_32;
-      RCA             : Uint16; --  SD relative card address
+      RCA             : UInt16; --  SD relative card address
       Card_Type       : Supported_SD_Memory_Cards :=
                           STD_Capacity_SD_Card_V1_1;
    end record;
@@ -161,7 +160,7 @@ package HAL.SDCard is
       Wide_Bus_4B => 1,
       Wide_Bus_8B => 2);
 
-   type SD_Command is new Uint6;
+   type SD_Command is new UInt6;
 
    --  Resets the SD memory card
    Go_Idle_State        : constant SD_Command := 0;
@@ -276,10 +275,10 @@ package HAL.SDCard is
       Tfr : Tfr_Kind;
    end record;
 
-   type SDCard_Driver is Interface;
+   type SDCard_Driver is limited interface;
 
    procedure Reset
-     (This : in out SDCard_Driver;
+     (This   : in out SDCard_Driver;
       Status : out SD_Error) is abstract;
    --  Initialize the driver, enable clocking.
 
@@ -294,54 +293,60 @@ package HAL.SDCard is
    --  Set host bus size; the command must have been set to the card.
 
    procedure Send_Cmd
-     (This : in out SDCard_Driver;
-      Cmd : Cmd_Desc_Type;
-      Arg : Unsigned_32;
+     (This   : in out SDCard_Driver;
+      Cmd    : Cmd_Desc_Type;
+      Arg    : Unsigned_32;
       Status : out SD_Error) is abstract;
    --  Send a command (without data transfer) and wait for result.
 
    procedure Send_Cmd
-     (This : in out SDCard_Driver'Class;
-      Cmd : SD_Command;
-      Arg : Unsigned_32;
+     (This   : in out SDCard_Driver'Class;
+      Cmd    : SD_Command;
+      Arg    : Unsigned_32;
       Status : out SD_Error);
    --  Wrapper for Send_Cmd using a generic command.
 
    procedure Send_ACmd
-     (This : in out SDCard_Driver'Class;
-      Cmd : SD_Specific_Command;
-      S_Arg : Unsigned_32;
-      A_Arg : Unsigned_32;
+     (This   : in out SDCard_Driver'Class;
+      Cmd    : SD_Specific_Command;
+      Rca    : Unsigned_16;
+      Arg    : Unsigned_32;
       Status : out SD_Error);
    --  Send application specific command
 
    procedure Read_Cmd
-     (This : in out SDCard_Driver;
-      Cmd : Cmd_Desc_Type;
-      Arg : Unsigned_32;
-      Buf : System.Address;
-      Len : Unsigned_32;
+     (This   : in out SDCard_Driver;
+      Cmd    : Cmd_Desc_Type;
+      Arg    : Unsigned_32;
+      Buf    : System.Address;
+      Len    : Unsigned_32;
       Status : out SD_Error) is abstract;
    --  Read data command
 
    procedure Read_Rsp48
      (This : in out SDCard_Driver;
-      Rsp : out Unsigned_32) is abstract;
+      Rsp  : out Unsigned_32) is abstract;
    --  Read the 32 interesting bits of the last 48bits response (start bit,
    --  transmission bit, command index, crc and end bit are discarded).
    --  Cannot fail.
 
    procedure Read_Rsp136
-     (This : in out SDCard_Driver;
+     (This           : in out SDCard_Driver;
       W0, W1, W2, W3 : out Unsigned_32) is abstract;
    --  Read the 128 interesting bits of the last 136 bit response.
    --  W0 is the MSB, W3 the LSB
    --  Cannot fail.
 
    procedure Initialize (Driver : in out SDCard_Driver'Class;
-                         Info : out Card_Information;
+                         Info   : out Card_Information;
                          Status : out SD_Error);
    --  Generic initialization procedure.
+
+   procedure Read_SCR (Driver : in out SDCard_Driver'Class;
+      Info   : Card_Information;
+      SCR    : out SDCard_Configuration_Register;
+                       Status : out SD_Error);
+   --  Retrieve the current SDCard configuration
 
    type Cmd_Desc_Array is array (SD_Command) of Cmd_Desc_Type;
    type ACmd_Desc_Array is array (SD_Specific_Command) of Cmd_Desc_Type;
@@ -368,6 +373,9 @@ package HAL.SDCard is
       Send_CSD           => (Cmd => Send_CSD,
                              Rsp => Rsp_R2,
                              Tfr => Tfr_No),
+      Stop_Transmission  => (Cmd => Stop_Transmission,
+                             Rsp => Rsp_R1,
+                             Tfr => Tfr_No),
       Read_Single_Block  => (Cmd => Read_Single_Block,
                              Rsp => Rsp_R1,
                              Tfr => Tfr_Read),
@@ -377,6 +385,9 @@ package HAL.SDCard is
       Send_Status        => (Cmd => Send_Status,
                              Rsp => Rsp_R1,
                              Tfr => Tfr_No),
+      Set_Blocklen       => (Cmd => Set_Blocklen,
+                             Rsp => Rsp_R1,
+                             Tfr => Tfr_No),
       App_Cmd            => (Cmd => App_Cmd,
                              Rsp => Rsp_R1,
                              Tfr => Tfr_No),
@@ -384,14 +395,14 @@ package HAL.SDCard is
                              Rsp => Rsp_Invalid,
                              Tfr => Tfr_Invalid));
 
-   Acmd_Desc : constant Acmd_Desc_Array :=
+   Acmd_Desc : constant ACmd_Desc_Array :=
      (SD_App_Set_Bus_Width => (Cmd => SD_App_Set_Bus_Width,
                                Rsp => Rsp_R1,
                                Tfr => Tfr_No),
       SD_App_Send_Op_Cond  => (Cmd => SD_App_Send_Op_Cond,
                                Rsp => Rsp_R3,
                                Tfr => Tfr_No),
-      SD_App_Send_SCR      => (Cmd => SD_App_Send_Scr,
+      SD_App_Send_SCR      => (Cmd => SD_App_Send_SCR,
                                Rsp => Rsp_R1,
                                Tfr => Tfr_Read),
       others               => (Cmd => 0,
@@ -404,9 +415,5 @@ package HAL.SDCard is
    SD_OCR_Std_Capacity         : constant := 16#0000_0000#;
 
    SD_MAX_VOLT_TRIAL           : constant := 16#0000_FFFF#;
-
-   SD_WIDE_BUS_SUPPORT         : constant := 16#0004_0000#;
-   SD_SINGLE_BUS_SUPPORT       : constant := 16#0001_0000#;
-   SD_CARD_LOCKED              : constant := 16#0200_0000#;
 
 end HAL.SDCard;
