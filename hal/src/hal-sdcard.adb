@@ -10,13 +10,21 @@ package body HAL.SDCard is
 
    procedure Convert_Card_Specific_Data_Register
      (W0, W1, W2, W3 : Unsigned_32;
-      Info : in out Card_Information);
-   --  Convert the R2 reply to Info.CD_CSD
+      CSD : out Card_Specific_Data_Register);
+   --  Convert the R2 reply to CSD
 
    procedure Convert_SDCard_Configuration_Register
      (W0, W1 : Unsigned_32;
       SCR : out SDCard_Configuration_Register);
    --  Convert W0 (MSB) / W1 (LSB) to SCR.
+
+   function Compute_Card_Capacity
+     (CSD : Card_Specific_Data_Register) return Unsigned_64;
+   --  Compute the card capacity (in bytes) from the CSD
+
+   function Compute_Card_Block_Size
+     (CSD : Card_Specific_Data_Register) return Unsigned_32;
+   --  Compute the card block size (in bytes) from the CSD.
 
    procedure Send_Cmd
      (This : in out SDCard_Driver'Class;
@@ -160,7 +168,9 @@ package body HAL.SDCard is
          return;
       end if;
       Read_Rsp136 (Driver, W0, W1, W2, W3);
-      Convert_Card_Specific_Data_Register (W0, W1, W2, W3, Info);
+      Convert_Card_Specific_Data_Register (W0, W1, W2, W3, Info.SD_CSD);
+      Info.Card_Capacity := Compute_Card_Capacity (Info.SD_CSD);
+      Info.Card_Block_Size := Compute_Card_Block_Size (Info.SD_CSD);
 
       --  CMD7: SELECT
       Send_Cmd (Driver, Select_Card, Rca, Status);
@@ -301,96 +311,73 @@ package body HAL.SDCard is
 
    procedure Convert_Card_Specific_Data_Register
      (W0, W1, W2, W3 : Unsigned_32;
-      Info : in out Card_Information)
-   is
+      CSD : out Card_Specific_Data_Register) is
       Tmp : Byte;
    begin
       --  Analysis of CSD Byte 0
       Tmp := Byte (Shift_Right (W0 and 16#FF00_0000#, 24));
-      Info.SD_CSD.CSD_Structure := Shift_Right (Tmp and 16#C0#, 6);
-      Info.SD_CSD.System_Specification_Version :=
-        Shift_Right (Tmp and 16#3C#, 2);
-      Info.SD_CSD.Reserved := Tmp and 16#03#;
+      CSD.CSD_Structure := Shift_Right (Tmp and 16#C0#, 6);
+      CSD.System_Specification_Version := Shift_Right (Tmp and 16#3C#, 2);
+      CSD.Reserved := Tmp and 16#03#;
 
       --  Byte 1
       Tmp := Byte (Shift_Right (W0 and 16#00FF_0000#, 16));
-      Info.SD_CSD.Data_Read_Access_Time_1 := Tmp;
+      CSD.Data_Read_Access_Time_1 := Tmp;
 
       --  Byte 2
       Tmp := Byte (Shift_Right (W0 and 16#0000_FF00#, 8));
-      Info.SD_CSD.Data_Read_Access_Time_2 := Tmp;
+      CSD.Data_Read_Access_Time_2 := Tmp;
 
       --  Byte 3
       Tmp := Byte (W0 and 16#0000_00FF#);
-      Info.SD_CSD.Max_Data_Transfer_Rate := Tmp;
+      CSD.Max_Data_Transfer_Rate := Tmp;
 
       --  Byte 4 & 5
-      Info.SD_CSD.Card_Command_Class :=
+      CSD.Card_Command_Class :=
         Uint16 (Shift_Right (W1 and 16#FFF0_0000#, 20));
-      Info.SD_CSD.Max_Read_Data_Block_Length :=
+      CSD.Max_Read_Data_Block_Length :=
         Byte (Shift_Right (W1 and 16#000F_0000#, 16));
 
       --  Byte 6
       Tmp := Byte (Shift_Right (W1 and 16#0000_FF00#, 8));
-      Info.SD_CSD.Partial_Block_For_Read_Allowed := (Tmp and 16#80#) /= 0;
-      Info.SD_CSD.Write_Block_Missalignment := (Tmp and 16#40#) /= 0;
-      Info.SD_CSD.Read_Block_Missalignment := (Tmp and 16#20#) /= 0;
-      Info.SD_CSD.DSR_Implemented := (Tmp and 16#10#) /= 0;
-      Info.SD_CSD.Reserved_2 := 0;
+      CSD.Partial_Block_For_Read_Allowed := (Tmp and 16#80#) /= 0;
+      CSD.Write_Block_Missalignment := (Tmp and 16#40#) /= 0;
+      CSD.Read_Block_Missalignment := (Tmp and 16#20#) /= 0;
+      CSD.DSR_Implemented := (Tmp and 16#10#) /= 0;
+      CSD.Reserved_2 := 0;
 
-      if Info.Card_Type = STD_Capacity_SD_Card_V1_1
-        or else Info.Card_Type = STD_Capacity_SD_Card_v2_0
-      then
-         Info.SD_CSD.Device_Size := Shift_Left (Uint32 (Tmp) and 16#03#, 10);
+      if CSD.CSD_Structure = 0 then
+         CSD.Device_Size := Shift_Left (Uint32 (Tmp) and 16#03#, 10);
 
          --  Byte 7
          Tmp := Byte (W1 and 16#0000_00FF#);
-         Info.SD_CSD.Device_Size := Info.SD_CSD.Device_Size or
-           Shift_Left (Uint32 (Tmp), 2);
+         CSD.Device_Size := CSD.Device_Size or Shift_Left (Uint32 (Tmp), 2);
 
          --  Byte 8
          Tmp := Byte (Shift_Right (W2 and 16#FF00_0000#, 24));
-         Info.SD_CSD.Device_Size := Info.SD_CSD.Device_Size or
+         CSD.Device_Size := CSD.Device_Size or
            Shift_Right (Uint32 (Tmp and 16#C0#), 6);
-         Info.SD_CSD.Max_Read_Current_At_VDD_Min :=
-           Shift_Right (Tmp and 16#38#, 3);
-         Info.SD_CSD.Max_Read_Current_At_VDD_Max :=
-           Tmp and 16#07#;
+         CSD.Max_Read_Current_At_VDD_Min := Shift_Right (Tmp and 16#38#, 3);
+         CSD.Max_Read_Current_At_VDD_Max := Tmp and 16#07#;
 
          --  Byte 9
          Tmp := Byte (Shift_Right (W2 and 16#00FF_0000#, 16));
-         Info.SD_CSD.Max_Write_Current_At_VDD_Min :=
-           Shift_Right (Tmp and 16#E0#, 5);
-         Info.SD_CSD.Max_Write_Current_At_VDD_Max :=
-           Shift_Right (Tmp and 16#1C#, 2);
-         Info.SD_CSD.Device_Size_Multiplier :=
-           Shift_Left (Tmp and 16#03#, 2);
+         CSD.Max_Write_Current_At_VDD_Min := Shift_Right (Tmp and 16#E0#, 5);
+         CSD.Max_Write_Current_At_VDD_Max := Shift_Right (Tmp and 16#1C#, 2);
+         CSD.Device_Size_Multiplier := Shift_Left (Tmp and 16#03#, 1);
 
          --  Byte 10
          Tmp := Byte (Shift_Right (W2 and 16#0000_FF00#, 8));
-         Info.SD_CSD.Device_Size_Multiplier :=
-           Info.SD_CSD.Device_Size_Multiplier
-           or Shift_Right (Tmp and 16#80#, 7);
-
-         Info.Card_Block_Size :=
-           2 ** Natural (Info.SD_CSD.Max_Read_Data_Block_Length);
-         Info.Card_Capacity :=
-           Unsigned_64 (Info.SD_CSD.Device_Size + 1) *
-           2 ** Natural (Info.SD_CSD.Device_Size_Multiplier + 2) *
-           Unsigned_64 (Info.Card_Block_Size);
-
-      elsif Info.Card_Type = High_Capacity_SD_Card then
+         CSD.Device_Size_Multiplier :=
+           CSD.Device_Size_Multiplier or Shift_Right (Tmp and 16#80#, 7);
+      elsif CSD.CSD_Structure = 1 then
          --  Byte 7
          Tmp := Byte (W1 and 16#0000_00FF#);
-         Info.SD_CSD.Device_Size := Shift_Left (Uint32 (Tmp), 16);
+         CSD.Device_Size := Shift_Left (Uint32 (Tmp), 16);
 
          --  Byte 8 & 9
-         Info.SD_CSD.Device_Size := Info.SD_CSD.Device_Size or
+         CSD.Device_Size := CSD.Device_Size or
            (Shift_Right (W2 and 16#FFFF_0000#, 16));
-
-         Info.Card_Capacity :=
-           Unsigned_64 (Info.SD_CSD.Device_Size + 1) * 512 * 1024;
-         Info.Card_Block_Size := 512;
 
          --  Byte 10
          Tmp := Byte (Shift_Right (W2 and 16#0000_FF00#, 8));
@@ -400,48 +387,70 @@ package body HAL.SDCard is
          --  return Unsupported_Card;
       end if;
 
-      Info.SD_CSD.Erase_Group_Size := Shift_Right (Tmp and 16#40#, 6);
-      Info.SD_CSD.Erase_Group_Size_Multiplier :=
-        Shift_Left (Tmp and 16#3F#, 1);
+      CSD.Erase_Group_Size := Shift_Right (Tmp and 16#40#, 6);
+      CSD.Erase_Group_Size_Multiplier := Shift_Left (Tmp and 16#3F#, 1);
 
       --  Byte 11
       Tmp := Byte (W2 and 16#0000_00FF#);
-      Info.SD_CSD.Erase_Group_Size_Multiplier :=
-        Info.SD_CSD.Erase_Group_Size_Multiplier
-        or Shift_Right (Tmp and 16#80#, 7);
-      Info.SD_CSD.Write_Protect_Group_Size := Tmp and 16#7F#;
+      CSD.Erase_Group_Size_Multiplier :=
+        CSD.Erase_Group_Size_Multiplier or Shift_Right (Tmp and 16#80#, 7);
+      CSD.Write_Protect_Group_Size := Tmp and 16#7F#;
 
       --  Byte 12
       Tmp := Byte (Shift_Right (W3 and 16#FF00_0000#, 24));
-      Info.SD_CSD.Write_Protect_Group_Enable := (Tmp and 16#80#) /= 0;
-      Info.SD_CSD.Manufacturer_Default_ECC := Shift_Right (Tmp and 16#60#, 5);
-      Info.SD_CSD.Write_Speed_Factor := Shift_Right (Tmp and 16#1C#, 2);
-      Info.SD_CSD.Max_Write_Data_Block_Length :=
-        Shift_Left (Tmp and 16#03#, 2);
+      CSD.Write_Protect_Group_Enable := (Tmp and 16#80#) /= 0;
+      CSD.Manufacturer_Default_ECC := Shift_Right (Tmp and 16#60#, 5);
+      CSD.Write_Speed_Factor := Shift_Right (Tmp and 16#1C#, 2);
+      CSD.Max_Write_Data_Block_Length := Shift_Left (Tmp and 16#03#, 2);
 
       --  Byte 13
       Tmp := Byte (Shift_Right (W3 and 16#00FF_0000#, 16));
-      Info.SD_CSD.Max_Write_Data_Block_Length :=
-        Info.SD_CSD.Max_Read_Data_Block_Length or
-        Shift_Right (Tmp and 16#C0#, 6);
-      Info.SD_CSD.Partial_Blocks_For_Write_Allowed := (Tmp and 16#20#) /= 0;
-      Info.SD_CSD.Reserved_3 := 0;
-      Info.SD_CSD.Content_Protection_Application := (Tmp and 16#01#) /= 0;
+      CSD.Max_Write_Data_Block_Length :=
+        CSD.Max_Read_Data_Block_Length or Shift_Right (Tmp and 16#C0#, 6);
+      CSD.Partial_Blocks_For_Write_Allowed := (Tmp and 16#20#) /= 0;
+      CSD.Reserved_3 := 0;
+      CSD.Content_Protection_Application := (Tmp and 16#01#) /= 0;
 
       --  Byte 14
       Tmp := Byte (Shift_Right (W3 and 16#0000_FF00#, 8));
-      Info.SD_CSD.File_Format_Group := (Tmp and 16#80#) /= 0;
-      Info.SD_CSD.Copy_Flag := (Tmp and 16#40#) /= 0;
-      Info.SD_CSD.Permanent_Write_Protection := (Tmp and 16#20#) /= 0;
-      Info.SD_CSD.Temporary_Write_Protection := (Tmp and 16#10#) /= 0;
-      Info.SD_CSD.File_Format := Shift_Right (Tmp and 16#0C#, 2);
-      Info.SD_CSD.ECC_Code := Tmp and 16#03#;
+      CSD.File_Format_Group := (Tmp and 16#80#) /= 0;
+      CSD.Copy_Flag := (Tmp and 16#40#) /= 0;
+      CSD.Permanent_Write_Protection := (Tmp and 16#20#) /= 0;
+      CSD.Temporary_Write_Protection := (Tmp and 16#10#) /= 0;
+      CSD.File_Format := Shift_Right (Tmp and 16#0C#, 2);
+      CSD.ECC_Code := Tmp and 16#03#;
 
       --  Byte 15
       Tmp := Byte (W3 and 16#0000_00FF#);
-      Info.SD_CSD.CSD_CRC := Shift_Right (Tmp and 16#FE#, 1);
-      Info.SD_CSD.Reserved_4 := 0;
+      CSD.CSD_CRC := Shift_Right (Tmp and 16#FE#, 1);
+      CSD.Reserved_4 := 0;
    end Convert_Card_Specific_Data_Register;
+
+   function Compute_Card_Capacity
+     (CSD : Card_Specific_Data_Register) return Unsigned_64 is
+   begin
+      if CSD.CSD_Structure = 0 then
+         return Unsigned_64 (CSD.Device_Size + 1) *
+           2 ** Natural (CSD.Device_Size_Multiplier + 2) *
+           2 ** Natural (CSD.Max_Read_Data_Block_Length);
+      elsif CSD.CSD_Structure = 1 then
+         return Unsigned_64 (CSD.Device_Size + 1) * 512 * 1024;
+      else
+         return 0;
+      end if;
+   end Compute_Card_Capacity;
+
+   function Compute_Card_Block_Size
+     (CSD : Card_Specific_Data_Register) return Unsigned_32 is
+   begin
+      if CSD.CSD_Structure = 0 then
+         return 2 ** Natural (CSD.Max_Read_Data_Block_Length);
+      elsif CSD.CSD_Structure = 1 then
+         return 512;
+      else
+         return 0;
+      end if;
+   end Compute_Card_Block_Size;
 
    procedure Convert_SDCard_Configuration_Register
      (W0, W1 : Unsigned_32;
