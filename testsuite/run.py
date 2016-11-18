@@ -73,6 +73,9 @@ class Testcase:
                 returncode, stderr
             )
 
+        if len(self.drivers) == 0:
+            return "No testcase to execute...\n"
+
         # Run individual testcases
         errors = []
         for program, expected_output_fn in self.drivers:
