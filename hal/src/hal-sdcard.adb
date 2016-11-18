@@ -93,11 +93,11 @@ package body HAL.SDCard is
       end if;
    end BE32_To_Host;
 
-   ----------------
-   -- Initialize --
-   ----------------
+   ---------------------------------
+   -- Card_Identification_Process --
+   ---------------------------------
 
-   procedure Initialize
+   procedure Card_Identification_Process
      (Driver : in out SDCard_Driver'Class;
       Info   : out Card_Information;
       Status : out SD_Error)
@@ -283,7 +283,7 @@ package body HAL.SDCard is
             end if;
          end;
       end if;
-   end Initialize;
+   end Card_Identification_Process;
 
    --------------
    -- Read_SCR --
