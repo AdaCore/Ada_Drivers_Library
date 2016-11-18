@@ -104,8 +104,14 @@ class Testcase:
             argv = ['valgrind', '-q', '--leak-check=full'] + argv
 
         returncode, stdout, stderr = run_program(*argv)
+
+        program_returned_msg = \
+            'Program returned {}:\n{}'.format(returncode, stderr)
+
         if returncode or stderr:
-            return 'Program returned {}:\n{}'.format(returncode, stderr)
+            return program_returned_msg
+        elif args.verbose:
+            print program_returned_msg
 
         stdout = stdout.splitlines()
 
@@ -119,7 +125,8 @@ class Testcase:
                     tofile='<stdout>'
                 )
             ))
-
+        elif args.verbose:
+            print "\n".join(stdout)
 
 
 def find_testcases():
@@ -136,6 +143,11 @@ parser = argparse.ArgumentParser('Run the testsuite')
 parser.add_argument(
     '--valgrind', action='store_true',
     help='Use Valgrind to detect invalid memory operations and leaks'
+)
+
+parser.add_argument(
+    '--verbose', action='store_true',
+    help='Print exit code and output for all tests, regardless of results'
 )
 
 parser.add_argument(
