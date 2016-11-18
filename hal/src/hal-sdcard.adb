@@ -10,6 +10,7 @@ package body HAL.SDCard is
 
    procedure Convert_Card_Specific_Data_Register
      (W0, W1, W2, W3 : Unsigned_32;
+      Card_Type : Supported_SD_Memory_Cards;
       CSD : out Card_Specific_Data_Register);
    --  Convert the R2 reply to CSD
 
@@ -19,12 +20,18 @@ package body HAL.SDCard is
    --  Convert W0 (MSB) / W1 (LSB) to SCR.
 
    function Compute_Card_Capacity
-     (CSD : Card_Specific_Data_Register) return Unsigned_64;
+     (CSD       : Card_Specific_Data_Register;
+      Card_Type : Supported_SD_Memory_Cards) return Unsigned_64;
    --  Compute the card capacity (in bytes) from the CSD
 
    function Compute_Card_Block_Size
-     (CSD : Card_Specific_Data_Register) return Unsigned_32;
+     (CSD       : Card_Specific_Data_Register;
+      Card_Type : Supported_SD_Memory_Cards) return Unsigned_32;
    --  Compute the card block size (in bytes) from the CSD.
+
+   function Get_Transfer_Rate
+     (CSD: Card_Specific_Data_Register) return Natural;
+   --  Compute transfer rate from CSD
 
    function Swap32 (Val : UInt32) return UInt32 with Inline_Always;
 
@@ -144,12 +151,29 @@ package body HAL.SDCard is
          Info.Card_Type := STD_Capacity_SD_Card_V1_1;
       end if;
 
-      --  ACMD41: SD_SEND_OP_COND (no crc check)
-      --  Arg: HCS=1, XPC=0, S18R=0
       for I in 1 .. 5 loop
          delay until Clock + Milliseconds (200);
-         Send_ACmd (Driver, SD_App_Send_Op_Cond, 0, 16#40ff_0000#, Status);
 
+         --  CMD55: APP_CMD
+         --  This is done manually to handle error (this command is not
+         --  supported by mmc).
+         Send_Cmd (Driver, Cmd_Desc (App_Cmd), 0, Status);
+         if Status /= OK then
+            if Status = Command_Timeout_Error
+              and then I = 1
+              and then Info.Card_Type = STD_Capacity_SD_Card_V1_1
+            then
+               --  Not an SDCard.  Suppose MMC.
+               Info.Card_Type := Multimedia_Card;
+               exit;
+            end if;
+            return;
+         end if;
+
+         --  ACMD41: SD_SEND_OP_COND (no crc check)
+         --  Arg: HCS=1, XPC=0, S18R=0
+         Send_Cmd
+           (Driver, Acmd_Desc (SD_App_Send_Op_Cond), 16#40ff_0000#, Status);
          if Status /= OK then
             Put_Line ("send_op_cond failed");
             return;
@@ -171,6 +195,36 @@ package body HAL.SDCard is
          end if;
       end loop;
 
+      if Status = Command_Timeout_Error
+        and then Info.Card_Type = Multimedia_Card
+      then
+         for I in 1 .. 5 loop
+            delay until Clock + Milliseconds (200);
+
+            --  CMD1: SEND_OP_COND query voltage
+            Send_Cmd (Driver, Cmd_Desc (Send_Op_Cond), 16#00ff_8000#, Status);
+            if Status /= OK then
+               Put_Line ("send_op_cond failed");
+               return;
+            end if;
+
+            Read_Rsp48 (Driver, Rsp);
+
+            if (Rsp and SD_OCR_Power_Up) = 0 then
+               Status := Error;
+               Put_Line ("wait...");
+            else
+               if (Rsp and 16#00ff_8000#) /= 16#00ff_8000# then
+                  Put_Line ("non-supported MMC voltage");
+                  Status := Error;
+                  return;
+               end if;
+               Status := OK;
+               exit;
+            end if;
+         end loop;
+      end if;
+
       if Status /= OK then
          return;
       end if;
@@ -179,9 +233,8 @@ package body HAL.SDCard is
 
       --  CMD2: ALL_SEND_CID (136 bits)
       Send_Cmd (Driver, All_Send_CID, 0, Status);
-
       if Status /= OK then
-         Put_Line ("send_sid: timeout");
+         Put_Line ("all_send_sid: timeout");
          return;
       end if;
 
@@ -189,22 +242,50 @@ package body HAL.SDCard is
       Convert_Card_Identification_Data_Register (W0, W1, W2, W3, Info.SD_CID);
 
       --  CMD3: SEND_RELATIVE_ADDR
-      Send_Cmd (Driver, Send_Relative_Addr, 0, Status);
+      case Info.Card_Type is
+         when Multimedia_Card =>
+            Rca := 16#01_0000#;
+         when others =>
+            Rca := 0;
+      end case;
+
+      Send_Cmd (Driver, Send_Relative_Addr, Rca, Status);
       if Status /= OK then
          Put_Line ("send_relative_addr: timeout");
          return;
       end if;
-      Read_Rsp48 (Driver, Rsp);
-      Rca := Rsp and 16#ffff_0000#;
+      case Info.Card_Type is
+         when Multimedia_Card =>
+            null;
+         when others =>
+            Read_Rsp48 (Driver, Rsp);
+            Rca := Rsp and 16#ffff_0000#;
+            if (Rsp and 16#e100#) /= 16#0100# then
+               Put_Line ("card is not ready");
+               return;
+            end if;
+      end case;
       Info.RCA := UInt16 (Shift_Right (Rca, 16));
 
-      if (Rsp and 16#e100#) /= 16#0100# then
-         Put_Line ("card is not ready");
+      --  Switch to 25Mhz
+      case Info.Card_Type is
+         when Multimedia_Card =>
+            Set_Clock (Driver, Get_Transfer_Rate (Info.SD_CSD));
+         when STD_Capacity_SD_Card_V1_1
+           | STD_Capacity_SD_Card_v2_0
+           | High_Capacity_SD_Card =>
+            Set_Clock (Driver, 25_000_000);
+         when others =>
+            --  Not yet handled
+            raise Program_Error;
+      end case;
+
+      --  CMD10: SEND_CID (136 bits)
+      Send_Cmd (Driver, Send_CID, Rca, Status);
+      if Status /= OK then
+         Put_Line ("send_sid: timeout");
          return;
       end if;
-
-      --  Switch to 25Mhz
-      Set_Clock (Driver, 25_000_000);
 
       --  CMD9: SEND_CSD
       Send_Cmd (Driver, Send_CSD, Rca, Status);
@@ -213,9 +294,12 @@ package body HAL.SDCard is
          return;
       end if;
       Read_Rsp136 (Driver, W0, W1, W2, W3);
-      Convert_Card_Specific_Data_Register (W0, W1, W2, W3, Info.SD_CSD);
-      Info.Card_Capacity := Compute_Card_Capacity (Info.SD_CSD);
-      Info.Card_Block_Size := Compute_Card_Block_Size (Info.SD_CSD);
+      Convert_Card_Specific_Data_Register
+        (W0, W1, W2, W3, Info.Card_Type, Info.SD_CSD);
+      Info.Card_Capacity :=
+        Compute_Card_Capacity (Info.SD_CSD, Info.Card_Type);
+      Info.Card_Block_Size :=
+        Compute_Card_Block_Size (Info.SD_CSD, Info.Card_Type);
 
       --  CMD7: SELECT
       Send_Cmd (Driver, Select_Card, Rca, Status);
@@ -379,6 +463,7 @@ package body HAL.SDCard is
 
    procedure Convert_Card_Specific_Data_Register
      (W0, W1, W2, W3 : Unsigned_32;
+      Card_Type : Supported_SD_Memory_Cards;
       CSD : out Card_Specific_Data_Register) is
       Tmp : Byte;
    begin
@@ -414,7 +499,9 @@ package body HAL.SDCard is
       CSD.DSR_Implemented := (Tmp and 16#10#) /= 0;
       CSD.Reserved_2 := 0;
 
-      if CSD.CSD_Structure = 0 then
+      if Card_Type = Multimedia_Card
+        or else CSD.CSD_Structure = 0
+      then
          CSD.Device_Size := Shift_Left (UInt32 (Tmp) and 16#03#, 10);
 
          --  Byte 7
@@ -499,9 +586,12 @@ package body HAL.SDCard is
    ---------------------------
 
    function Compute_Card_Capacity
-     (CSD : Card_Specific_Data_Register) return Unsigned_64 is
+     (CSD       : Card_Specific_Data_Register;
+      Card_Type : Supported_SD_Memory_Cards) return Unsigned_64 is
    begin
-      if CSD.CSD_Structure = 0 then
+      if Card_Type = Multimedia_Card
+        or else CSD.CSD_Structure = 0
+      then
          return Unsigned_64 (CSD.Device_Size + 1) *
            2 ** Natural (CSD.Device_Size_Multiplier + 2) *
            2 ** Natural (CSD.Max_Read_Data_Block_Length);
@@ -517,9 +607,12 @@ package body HAL.SDCard is
    -----------------------------
 
    function Compute_Card_Block_Size
-     (CSD : Card_Specific_Data_Register) return Unsigned_32 is
+     (CSD       : Card_Specific_Data_Register;
+      Card_Type : Supported_SD_Memory_Cards) return Unsigned_32 is
    begin
-      if CSD.CSD_Structure = 0 then
+      if Card_Type = Multimedia_Card
+        or else CSD.CSD_Structure = 0
+      then
          return 2 ** Natural (CSD.Max_Read_Data_Block_Length);
       elsif CSD.CSD_Structure = 1 then
          return 512;
@@ -549,5 +642,42 @@ package body HAL.SDCard is
               CMD_Support           => Byte (Shift_Right (W0, 0) and 16#f#),
               Reserved_2            => W1);
    end Convert_SDCard_Configuration_Register;
+
+   -----------------------
+   -- Get_Transfer_Rate --
+   -----------------------
+
+   function Get_Transfer_Rate
+     (CSD: Card_Specific_Data_Register) return Natural
+   is
+      Res : Natural;
+   begin
+      case Shift_Right (CSD.Max_Data_Transfer_Rate, 3) and 15 is
+         when 16#1# => Res := 10;
+         when 16#2# => Res := 12;
+         when 16#3# => Res := 13;
+         when 16#4# => Res := 15;
+         when 16#5# => Res := 20;
+         when 16#6# => Res := 25;
+         when 16#7# => Res := 30;
+         when 16#8# => Res := 35;
+         when 16#9# => Res := 40;
+         when 16#a# => Res := 45;
+         when 16#b# => Res := 50;
+         when 16#c# => Res := 55;
+         when 16#d# => Res := 60;
+         when 16#e# => Res := 70;
+         when 16#f# => Res := 80;
+         when others => return 400_000;
+      end case;
+      case CSD.Max_Data_Transfer_Rate and 7 is
+         when 0 => return Res * 100_000 / 10;
+         when 1 => return Res * 1_000_000 / 10;
+         when 2 => return Res * 10_000_000 / 10;
+         when 3 => return Res * 100_000_000 / 10;
+         when others => return 400_000;
+      end case;
+   end Get_Transfer_Rate;
+
 
 end HAL.SDCard;

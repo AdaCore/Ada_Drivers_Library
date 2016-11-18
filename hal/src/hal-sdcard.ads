@@ -7,6 +7,7 @@ package HAL.SDCard is
      (OK,
       Error,
       Timeout_Error,
+      Command_Timeout_Error,
       Unsupported_Card,
       Rx_Overrun,
       Tx_Underrun,
@@ -167,7 +168,7 @@ package HAL.SDCard is
 
    --  Sends host capacity support information and activates the card's
    --  initialization process
-   Send_Op_Cond         : constant SD_Command := 1;
+   Send_Op_Cond         : constant SD_Command := 1;  --  Only for MMC
 
    --  Asks any card connected to the host to send the CID numbers on the
    --  CMD line.
@@ -355,6 +356,9 @@ package HAL.SDCard is
      (Go_Idle_State      => (Cmd => Go_Idle_State,
                              Rsp => Rsp_No,
                              Tfr => Tfr_No),
+      Send_Op_Cond       => (Cmd => Send_Op_Cond,
+                             Rsp => Rsp_R3,
+                             Tfr => Tfr_No),
       All_Send_CID       => (Cmd => All_Send_CID,
                              Rsp => Rsp_R2,
                              Tfr => Tfr_No),
@@ -371,6 +375,9 @@ package HAL.SDCard is
                              Rsp => Rsp_R7,
                              Tfr => Tfr_No),
       Send_CSD           => (Cmd => Send_CSD,
+                             Rsp => Rsp_R2,
+                             Tfr => Tfr_No),
+      Send_CID           => (Cmd => Send_CID,
                              Rsp => Rsp_R2,
                              Tfr => Tfr_No),
       Stop_Transmission  => (Cmd => Stop_Transmission,
