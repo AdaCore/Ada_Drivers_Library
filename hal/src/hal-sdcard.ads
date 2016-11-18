@@ -337,14 +337,14 @@ package HAL.SDCard is
    --  W0 is the MSB, W3 the LSB
    --  Cannot fail.
 
-   procedure Initialize (Driver : in out SDCard_Driver'Class;
-                         Info   : out Card_Information;
-                         Status : out SD_Error);
-   --  Generic initialization procedure.
+   procedure Card_Identification_Process (Driver : in out SDCard_Driver'Class;
+                                          Info   : out Card_Information;
+                                          Status : out SD_Error);
+   --  Generic card identification process procedure.
 
    procedure Read_SCR (Driver : in out SDCard_Driver'Class;
-      Info   : Card_Information;
-      SCR    : out SDCard_Configuration_Register;
+                       Info   : Card_Information;
+                       SCR    : out SDCard_Configuration_Register;
                        Status : out SD_Error);
    --  Retrieve the current SDCard configuration
 
