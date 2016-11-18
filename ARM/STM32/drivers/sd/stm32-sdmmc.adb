@@ -225,10 +225,7 @@ package body STM32.SDMMC is
 
       delay until Clock + Milliseconds (20);
 
-      --  CMD0: Sets the SDCard state to Idle
-      Send_Cmd (This, Go_Idle_State, 0, Status);
-
-      delay until Clock + Milliseconds (10);
+      Status := OK;
    end Reset;
 
    ---------------
@@ -304,7 +301,7 @@ package body STM32.SDMMC is
 
       case Cmd.Rsp is
          when Rsp_No =>
-            Status := OK;
+            Status := This.Command_Error;
 
          when Rsp_R1 | Rsp_R1B =>
             Status := This.Response_R1_Error (Cmd.Cmd);
@@ -515,6 +512,26 @@ package body STM32.SDMMC is
    begin
       return Controller.Periph.FIFO;
    end Read_FIFO;
+
+   -------------------
+   -- Command_Error --
+   -------------------
+
+   function Command_Error
+     (Controller : in out SDMMC_Controller) return SD_Error
+   is
+      Start : constant Time := Clock;
+   begin
+      while not Controller.Periph.STA.CMDSENT loop
+         if Clock - Start > Milliseconds (1000) then
+            return Timeout_Error;
+         end if;
+      end loop;
+
+      Clear_Static_Flags (Controller);
+
+      return OK;
+   end Command_Error;
 
    -----------------------
    -- Response_R1_Error --

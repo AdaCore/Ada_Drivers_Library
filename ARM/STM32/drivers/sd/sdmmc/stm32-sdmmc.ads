@@ -144,6 +144,9 @@ private
       Len    : Unsigned_32;
       Status : out SD_Error);
 
+   function Command_Error
+     (Controller : in out SDMMC_Controller) return SD_Error;
+
    overriding procedure Read_Rsp48
      (This : in out SDMMC_Controller;
       Rsp  : out Unsigned_32);
