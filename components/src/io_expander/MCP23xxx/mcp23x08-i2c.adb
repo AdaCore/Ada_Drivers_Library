@@ -31,7 +31,7 @@
 
 with HAL.I2C; use HAL.I2C;
 
-package body MCP23008 is
+package body MCP23x08.I2C is
 
    --------------
    -- IO_Write --
@@ -39,7 +39,7 @@ package body MCP23008 is
 
    overriding
    procedure IO_Write
-     (This      : in out MCP23008_Device;
+     (This      : in out MCP23008_IO_Expander;
       WriteAddr : Register_Address;
       Value     : Byte)
    is
@@ -65,7 +65,7 @@ package body MCP23008 is
 
    overriding
    procedure IO_Read
-     (This     : MCP23008_Device;
+     (This     : MCP23008_IO_Expander;
       ReadAddr : Register_Address;
       Value    : out Byte)
    is
@@ -88,4 +88,4 @@ package body MCP23008 is
       Value := Ret (1);
    end IO_Read;
 
-end MCP23008;
+end MCP23x08.I2C;
