@@ -593,7 +593,8 @@ private
    MPU9250_ST_ACCEL_LOW          : constant := (-14.0);
    MPU9250_ST_ACCEL_HIGH         : constant := 14.0;
 
-   MPU9250_ST_TB : constant array (1 .. 256) of Unsigned_16
+   --  This represents 2620 * (1.01 ** n)
+   MPU9250_ST_TB : constant array (0 .. 255) of Unsigned_16
      := (
          2620, 2646, 2672, 2699, 2726, 2753, 2781, 2808,
          2837, 2865, 2894, 2923, 2952, 2981, 3011, 3041,
