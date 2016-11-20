@@ -42,7 +42,7 @@ package body nRF51.GPIO is
       return Boolean
    is
    begin
-      return GPIO_Periph.OUT_k.Arr (This.Pin) = High;
+      return GPIO_Periph.IN_k.Arr (This.Pin) = High;
    end Set;
 
    ---------
