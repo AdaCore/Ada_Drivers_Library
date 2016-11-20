@@ -40,6 +40,8 @@ package nRF51.Clock is
 
    procedure Set_High_Freq_External_Frequency (Freq : High_Freq_Ext_Freq);
 
+   procedure Set_High_Freq_Source (Src : High_Freq_Source_Kind);
+
    function High_Freq_Source return High_Freq_Source_Kind;
 
    function High_Freq_Running return Boolean;
