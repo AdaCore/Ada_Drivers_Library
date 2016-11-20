@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                        Copyright (C) 2016, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,25 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with MicroBit.Display; use MicroBit.Display;
-
-with Beacon;
-
-procedure Main is
-   Str : constant String := "MAKE WITH ADA    ";
-begin
-
-   Beacon.Initialize_Radio;
-
-   loop
-      for C of Str loop
-         Display (C);
-
-         Beacon.Send_Beacon_Packet;
-
-         for Cnt in 0 .. 200_000 loop
-            null;
-         end loop;
-      end loop;
-   end loop;
-end Main;
+package Beacon is
+   procedure Initialize_Radio;
+   procedure Send_Beacon_Packet;
+end Beacon;
