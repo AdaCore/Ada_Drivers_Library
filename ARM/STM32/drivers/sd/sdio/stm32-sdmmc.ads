@@ -185,6 +185,9 @@ private
      (This           : in out SDMMC_Controller;
       W0, W1, W2, W3 : out Unsigned_32);
 
+   function Command_Error
+     (Controller : in out SDMMC_Controller) return SD_Error;
+
    type Data_Direction is (Read, Write);
 
    function Get_FIFO_Address
