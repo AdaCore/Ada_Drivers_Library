@@ -922,39 +922,39 @@ package Cortex_M_SVD.SCB is
       --  Dynamic read allocate mode. By default this register is set to
       --  provide optimum performance from the Cortex-M7 processor, and does
       --  not normally require modification.
-      ACTLR : ACTLR_Register;
+      ACTLR : aliased ACTLR_Register;
       --  CPUID Base Register
-      CPUID : CPUID_Register;
+      CPUID : aliased CPUID_Register;
       --  Interrupt Control and State Register
-      ICSR  : ICSR_Register;
+      ICSR  : aliased ICSR_Register;
       --  Vector Table Offset Register
-      VTOR  : HAL.UInt32;
+      VTOR  : aliased HAL.UInt32;
       --  Application Interrupt and Reset Control Register
-      AIRCR : AIRCR_Register;
+      AIRCR : aliased AIRCR_Register;
       --  System Control Register
-      SCR   : SCR_Register;
+      SCR   : aliased SCR_Register;
       --  Configuration and Control Register
-      CCR   : CCR_Register;
+      CCR   : aliased CCR_Register;
       --  System Handler Priority Register 1
-      SHPR1 : SHPR1_Register;
+      SHPR1 : aliased SHPR1_Register;
       --  System Handler Priority Register 2
-      SHPR2 : SHPR2_Register;
+      SHPR2 : aliased SHPR2_Register;
       --  System Handler Priority Register 3
-      SHPR3 : SHPR3_Register;
+      SHPR3 : aliased SHPR3_Register;
       --  System Handler Control and State Register
-      SHPRS : SHPRS_Register;
+      SHPRS : aliased SHPRS_Register;
       --  MemManage Fault Status Register
-      MMSR  : MMSR_Register;
+      MMSR  : aliased MMSR_Register;
       --  BusFault Status Register
-      BFSR  : BFSR_Register;
+      BFSR  : aliased BFSR_Register;
       --  UsageFault Status Register
-      UFSR  : UFSR_Register;
+      UFSR  : aliased UFSR_Register;
       --  HardFault Status Register
-      HFSR  : HFSR_Register;
+      HFSR  : aliased HFSR_Register;
       --  MemManage Fault Address Register
-      MMAR  : HAL.UInt32;
+      MMAR  : aliased HAL.UInt32;
       --  BusFault Address Register
-      BFAR  : HAL.UInt32;
+      BFAR  : aliased HAL.UInt32;
    end record
      with Volatile;
 

@@ -3033,205 +3033,205 @@ package STM32_SVD.DFSDM is
    --  Digital filter for sigma delta modulators
    type DFSDM_Peripheral is record
       --  DFSDM channel configuration 0 register 1
-      DFSDM_CHCFG0R1  : DFSDM_CHCFG0R1_Register;
+      DFSDM_CHCFG0R1  : aliased DFSDM_CHCFG0R1_Register;
       --  DFSDM channel configuration 1 register 1
-      DFSDM_CHCFG1R1  : DFSDM_CHCFG1R1_Register;
+      DFSDM_CHCFG1R1  : aliased DFSDM_CHCFG1R1_Register;
       --  DFSDM channel configuration 2 register 1
-      DFSDM_CHCFG2R1  : DFSDM_CHCFG2R1_Register;
+      DFSDM_CHCFG2R1  : aliased DFSDM_CHCFG2R1_Register;
       --  DFSDM channel configuration 3 register 1
-      DFSDM_CHCFG3R1  : DFSDM_CHCFG3R1_Register;
+      DFSDM_CHCFG3R1  : aliased DFSDM_CHCFG3R1_Register;
       --  DFSDM channel configuration 4 register 1
-      DFSDM_CHCFG4R1  : DFSDM_CHCFG4R1_Register;
+      DFSDM_CHCFG4R1  : aliased DFSDM_CHCFG4R1_Register;
       --  DFSDM channel configuration 5 register 1
-      DFSDM_CHCFG5R1  : DFSDM_CHCFG5R1_Register;
+      DFSDM_CHCFG5R1  : aliased DFSDM_CHCFG5R1_Register;
       --  DFSDM channel configuration 6 register 1
-      DFSDM_CHCFG6R1  : DFSDM_CHCFG6R1_Register;
+      DFSDM_CHCFG6R1  : aliased DFSDM_CHCFG6R1_Register;
       --  DFSDM channel configuration 7 register 1
-      DFSDM_CHCFG7R1  : DFSDM_CHCFG7R1_Register;
+      DFSDM_CHCFG7R1  : aliased DFSDM_CHCFG7R1_Register;
       --  DFSDM channel configuration 0 register 2
-      DFSDM_CHCFG0R2  : DFSDM_CHCFG0R2_Register;
+      DFSDM_CHCFG0R2  : aliased DFSDM_CHCFG0R2_Register;
       --  DFSDM channel configuration 1 register 2
-      DFSDM_CHCFG1R2  : DFSDM_CHCFG1R2_Register;
+      DFSDM_CHCFG1R2  : aliased DFSDM_CHCFG1R2_Register;
       --  DFSDM channel configuration 2 register 2
-      DFSDM_CHCFG2R2  : DFSDM_CHCFG2R2_Register;
+      DFSDM_CHCFG2R2  : aliased DFSDM_CHCFG2R2_Register;
       --  DFSDM channel configuration 3 register 2
-      DFSDM_CHCFG3R2  : DFSDM_CHCFG3R2_Register;
+      DFSDM_CHCFG3R2  : aliased DFSDM_CHCFG3R2_Register;
       --  DFSDM channel configuration 4 register 2
-      DFSDM_CHCFG4R2  : DFSDM_CHCFG4R2_Register;
+      DFSDM_CHCFG4R2  : aliased DFSDM_CHCFG4R2_Register;
       --  DFSDM channel configuration 5 register 2
-      DFSDM_CHCFG5R2  : DFSDM_CHCFG5R2_Register;
+      DFSDM_CHCFG5R2  : aliased DFSDM_CHCFG5R2_Register;
       --  DFSDM channel configuration 6 register 2
-      DFSDM_CHCFG6R2  : DFSDM_CHCFG6R2_Register;
+      DFSDM_CHCFG6R2  : aliased DFSDM_CHCFG6R2_Register;
       --  DFSDM channel configuration 7 register 2
-      DFSDM_CHCFG7R2  : DFSDM_CHCFG7R2_Register;
+      DFSDM_CHCFG7R2  : aliased DFSDM_CHCFG7R2_Register;
       --  DFSDM analog watchdog and short-circuit detector register
-      DFSDM_AWSCD0R   : DFSDM_AWSCD0R_Register;
+      DFSDM_AWSCD0R   : aliased DFSDM_AWSCD0R_Register;
       --  DFSDM analog watchdog and short-circuit detector register
-      DFSDM_AWSCD1R   : DFSDM_AWSCD1R_Register;
+      DFSDM_AWSCD1R   : aliased DFSDM_AWSCD1R_Register;
       --  DFSDM analog watchdog and short-circuit detector register
-      DFSDM_AWSCD2R   : DFSDM_AWSCD2R_Register;
+      DFSDM_AWSCD2R   : aliased DFSDM_AWSCD2R_Register;
       --  DFSDM analog watchdog and short-circuit detector register
-      DFSDM_AWSCD3R   : DFSDM_AWSCD3R_Register;
+      DFSDM_AWSCD3R   : aliased DFSDM_AWSCD3R_Register;
       --  DFSDM analog watchdog and short-circuit detector register
-      DFSDM_AWSCD4R   : DFSDM_AWSCD4R_Register;
+      DFSDM_AWSCD4R   : aliased DFSDM_AWSCD4R_Register;
       --  DFSDM analog watchdog and short-circuit detector register
-      DFSDM_AWSCD5R   : DFSDM_AWSCD5R_Register;
+      DFSDM_AWSCD5R   : aliased DFSDM_AWSCD5R_Register;
       --  DFSDM analog watchdog and short-circuit detector register
-      DFSDM_AWSCD6R   : DFSDM_AWSCD6R_Register;
+      DFSDM_AWSCD6R   : aliased DFSDM_AWSCD6R_Register;
       --  DFSDM analog watchdog and short-circuit detector register
-      DFSDM_AWSCD7R   : DFSDM_AWSCD7R_Register;
+      DFSDM_AWSCD7R   : aliased DFSDM_AWSCD7R_Register;
       --  DFSDM channel watchdog filter data register
-      DFSDM_CHWDAT0R  : DFSDM_CHWDAT0R_Register;
+      DFSDM_CHWDAT0R  : aliased DFSDM_CHWDAT0R_Register;
       --  DFSDM channel watchdog filter data register
-      DFSDM_CHWDAT1R  : DFSDM_CHWDAT1R_Register;
+      DFSDM_CHWDAT1R  : aliased DFSDM_CHWDAT1R_Register;
       --  DFSDM channel watchdog filter data register
-      DFSDM_CHWDAT2R  : DFSDM_CHWDAT2R_Register;
+      DFSDM_CHWDAT2R  : aliased DFSDM_CHWDAT2R_Register;
       --  DFSDM channel watchdog filter data register
-      DFSDM_CHWDAT3R  : DFSDM_CHWDAT3R_Register;
+      DFSDM_CHWDAT3R  : aliased DFSDM_CHWDAT3R_Register;
       --  DFSDM channel watchdog filter data register
-      DFSDM_CHWDAT4R  : DFSDM_CHWDAT4R_Register;
+      DFSDM_CHWDAT4R  : aliased DFSDM_CHWDAT4R_Register;
       --  DFSDM channel watchdog filter data register
-      DFSDM_CHWDAT5R  : DFSDM_CHWDAT5R_Register;
+      DFSDM_CHWDAT5R  : aliased DFSDM_CHWDAT5R_Register;
       --  DFSDM channel watchdog filter data register
-      DFSDM_CHWDAT6R  : DFSDM_CHWDAT6R_Register;
+      DFSDM_CHWDAT6R  : aliased DFSDM_CHWDAT6R_Register;
       --  DFSDM channel watchdog filter data register
-      DFSDM_CHWDAT7R  : DFSDM_CHWDAT7R_Register;
+      DFSDM_CHWDAT7R  : aliased DFSDM_CHWDAT7R_Register;
       --  DFSDM channel data input register
-      DFSDM_CHDATIN0R : DFSDM_CHDATIN0R_Register;
+      DFSDM_CHDATIN0R : aliased DFSDM_CHDATIN0R_Register;
       --  DFSDM channel data input register
-      DFSDM_CHDATIN1R : DFSDM_CHDATIN1R_Register;
+      DFSDM_CHDATIN1R : aliased DFSDM_CHDATIN1R_Register;
       --  DFSDM channel data input register
-      DFSDM_CHDATIN2R : DFSDM_CHDATIN2R_Register;
+      DFSDM_CHDATIN2R : aliased DFSDM_CHDATIN2R_Register;
       --  DFSDM channel data input register
-      DFSDM_CHDATIN3R : DFSDM_CHDATIN3R_Register;
+      DFSDM_CHDATIN3R : aliased DFSDM_CHDATIN3R_Register;
       --  DFSDM channel data input register
-      DFSDM_CHDATIN4R : DFSDM_CHDATIN4R_Register;
+      DFSDM_CHDATIN4R : aliased DFSDM_CHDATIN4R_Register;
       --  DFSDM channel data input register
-      DFSDM_CHDATIN5R : DFSDM_CHDATIN5R_Register;
+      DFSDM_CHDATIN5R : aliased DFSDM_CHDATIN5R_Register;
       --  DFSDM channel data input register
-      DFSDM_CHDATIN6R : DFSDM_CHDATIN6R_Register;
+      DFSDM_CHDATIN6R : aliased DFSDM_CHDATIN6R_Register;
       --  DFSDM channel data input register
-      DFSDM_CHDATIN7R : DFSDM_CHDATIN7R_Register;
+      DFSDM_CHDATIN7R : aliased DFSDM_CHDATIN7R_Register;
       --  DFSDM control register 1
-      DFSDM0_CR1      : DFSDM0_CR1_Register;
+      DFSDM0_CR1      : aliased DFSDM0_CR1_Register;
       --  DFSDM control register 1
-      DFSDM1_CR1      : DFSDM1_CR1_Register;
+      DFSDM1_CR1      : aliased DFSDM1_CR1_Register;
       --  DFSDM control register 1
-      DFSDM2_CR1      : DFSDM2_CR1_Register;
+      DFSDM2_CR1      : aliased DFSDM2_CR1_Register;
       --  DFSDM control register 1
-      DFSDM3_CR1      : DFSDM3_CR1_Register;
+      DFSDM3_CR1      : aliased DFSDM3_CR1_Register;
       --  DFSDM control register 2
-      DFSDM0_CR2      : DFSDM0_CR2_Register;
+      DFSDM0_CR2      : aliased DFSDM0_CR2_Register;
       --  DFSDM control register 2
-      DFSDM1_CR2      : DFSDM1_CR2_Register;
+      DFSDM1_CR2      : aliased DFSDM1_CR2_Register;
       --  DFSDM control register 2
-      DFSDM2_CR2      : DFSDM2_CR2_Register;
+      DFSDM2_CR2      : aliased DFSDM2_CR2_Register;
       --  DFSDM control register 2
-      DFSDM3_CR2      : DFSDM3_CR2_Register;
+      DFSDM3_CR2      : aliased DFSDM3_CR2_Register;
       --  DFSDM interrupt and status register
-      DFSDM0_ISR      : DFSDM0_ISR_Register;
+      DFSDM0_ISR      : aliased DFSDM0_ISR_Register;
       --  DFSDM interrupt and status register
-      DFSDM1_ISR      : DFSDM1_ISR_Register;
+      DFSDM1_ISR      : aliased DFSDM1_ISR_Register;
       --  DFSDM interrupt and status register
-      DFSDM2_ISR      : DFSDM2_ISR_Register;
+      DFSDM2_ISR      : aliased DFSDM2_ISR_Register;
       --  DFSDM interrupt and status register
-      DFSDM3_ISR      : DFSDM3_ISR_Register;
+      DFSDM3_ISR      : aliased DFSDM3_ISR_Register;
       --  DFSDM interrupt flag clear register
-      DFSDM0_ICR      : DFSDM0_ICR_Register;
+      DFSDM0_ICR      : aliased DFSDM0_ICR_Register;
       --  DFSDM interrupt flag clear register
-      DFSDM1_ICR      : DFSDM1_ICR_Register;
+      DFSDM1_ICR      : aliased DFSDM1_ICR_Register;
       --  DFSDM interrupt flag clear register
-      DFSDM2_ICR      : DFSDM2_ICR_Register;
+      DFSDM2_ICR      : aliased DFSDM2_ICR_Register;
       --  DFSDM interrupt flag clear register
-      DFSDM3_ICR      : DFSDM3_ICR_Register;
+      DFSDM3_ICR      : aliased DFSDM3_ICR_Register;
       --  DFSDM injected channel group selection register
-      DFSDM0_JCHGR    : DFSDM0_JCHGR_Register;
+      DFSDM0_JCHGR    : aliased DFSDM0_JCHGR_Register;
       --  DFSDM injected channel group selection register
-      DFSDM1_JCHGR    : DFSDM1_JCHGR_Register;
+      DFSDM1_JCHGR    : aliased DFSDM1_JCHGR_Register;
       --  DFSDM injected channel group selection register
-      DFSDM2_JCHGR    : DFSDM2_JCHGR_Register;
+      DFSDM2_JCHGR    : aliased DFSDM2_JCHGR_Register;
       --  DFSDM injected channel group selection register
-      DFSDM3_JCHGR    : DFSDM3_JCHGR_Register;
+      DFSDM3_JCHGR    : aliased DFSDM3_JCHGR_Register;
       --  DFSDM filter control register
-      DFSDM0_FCR      : DFSDM0_FCR_Register;
+      DFSDM0_FCR      : aliased DFSDM0_FCR_Register;
       --  DFSDM filter control register
-      DFSDM1_FCR      : DFSDM1_FCR_Register;
+      DFSDM1_FCR      : aliased DFSDM1_FCR_Register;
       --  DFSDM filter control register
-      DFSDM2_FCR      : DFSDM2_FCR_Register;
+      DFSDM2_FCR      : aliased DFSDM2_FCR_Register;
       --  DFSDM filter control register
-      DFSDM3_FCR      : DFSDM3_FCR_Register;
+      DFSDM3_FCR      : aliased DFSDM3_FCR_Register;
       --  DFSDM data register for injected group
-      DFSDM0_JDATAR   : DFSDM0_JDATAR_Register;
+      DFSDM0_JDATAR   : aliased DFSDM0_JDATAR_Register;
       --  DFSDM data register for injected group
-      DFSDM1_JDATAR   : DFSDM1_JDATAR_Register;
+      DFSDM1_JDATAR   : aliased DFSDM1_JDATAR_Register;
       --  DFSDM data register for injected group
-      DFSDM2_JDATAR   : DFSDM2_JDATAR_Register;
+      DFSDM2_JDATAR   : aliased DFSDM2_JDATAR_Register;
       --  DFSDM data register for injected group
-      DFSDM3_JDATAR   : DFSDM3_JDATAR_Register;
+      DFSDM3_JDATAR   : aliased DFSDM3_JDATAR_Register;
       --  DFSDM data register for the regular channel
-      DFSDM0_RDATAR   : DFSDM0_RDATAR_Register;
+      DFSDM0_RDATAR   : aliased DFSDM0_RDATAR_Register;
       --  DFSDM data register for the regular channel
-      DFSDM1_RDATAR   : DFSDM1_RDATAR_Register;
+      DFSDM1_RDATAR   : aliased DFSDM1_RDATAR_Register;
       --  DFSDM data register for the regular channel
-      DFSDM2_RDATAR   : DFSDM2_RDATAR_Register;
+      DFSDM2_RDATAR   : aliased DFSDM2_RDATAR_Register;
       --  DFSDM data register for the regular channel
-      DFSDM3_RDATAR   : DFSDM3_RDATAR_Register;
+      DFSDM3_RDATAR   : aliased DFSDM3_RDATAR_Register;
       --  DFSDM analog watchdog high threshold register
-      DFSDM0_AWHTR    : DFSDM0_AWHTR_Register;
+      DFSDM0_AWHTR    : aliased DFSDM0_AWHTR_Register;
       --  DFSDM analog watchdog high threshold register
-      DFSDM1_AWHTR    : DFSDM1_AWHTR_Register;
+      DFSDM1_AWHTR    : aliased DFSDM1_AWHTR_Register;
       --  DFSDM analog watchdog high threshold register
-      DFSDM2_AWHTR    : DFSDM2_AWHTR_Register;
+      DFSDM2_AWHTR    : aliased DFSDM2_AWHTR_Register;
       --  DFSDM analog watchdog high threshold register
-      DFSDM3_AWHTR    : DFSDM3_AWHTR_Register;
+      DFSDM3_AWHTR    : aliased DFSDM3_AWHTR_Register;
       --  DFSDM analog watchdog low threshold register
-      DFSDM0_AWLTR    : DFSDM0_AWLTR_Register;
+      DFSDM0_AWLTR    : aliased DFSDM0_AWLTR_Register;
       --  DFSDM analog watchdog low threshold register
-      DFSDM1_AWLTR    : DFSDM1_AWLTR_Register;
+      DFSDM1_AWLTR    : aliased DFSDM1_AWLTR_Register;
       --  DFSDM analog watchdog low threshold register
-      DFSDM2_AWLTR    : DFSDM2_AWLTR_Register;
+      DFSDM2_AWLTR    : aliased DFSDM2_AWLTR_Register;
       --  DFSDM analog watchdog low threshold register
-      DFSDM3_AWLTR    : DFSDM3_AWLTR_Register;
+      DFSDM3_AWLTR    : aliased DFSDM3_AWLTR_Register;
       --  DFSDM analog watchdog status register
-      DFSDM0_AWSR     : DFSDM0_AWSR_Register;
+      DFSDM0_AWSR     : aliased DFSDM0_AWSR_Register;
       --  DFSDM analog watchdog status register
-      DFSDM1_AWSR     : DFSDM1_AWSR_Register;
+      DFSDM1_AWSR     : aliased DFSDM1_AWSR_Register;
       --  DFSDM analog watchdog status register
-      DFSDM2_AWSR     : DFSDM2_AWSR_Register;
+      DFSDM2_AWSR     : aliased DFSDM2_AWSR_Register;
       --  DFSDM analog watchdog status register
-      DFSDM3_AWSR     : DFSDM3_AWSR_Register;
+      DFSDM3_AWSR     : aliased DFSDM3_AWSR_Register;
       --  DFSDM analog watchdog clear flag register
-      DFSDM0_AWCFR    : DFSDM0_AWCFR_Register;
+      DFSDM0_AWCFR    : aliased DFSDM0_AWCFR_Register;
       --  DFSDM analog watchdog clear flag register
-      DFSDM1_AWCFR    : DFSDM1_AWCFR_Register;
+      DFSDM1_AWCFR    : aliased DFSDM1_AWCFR_Register;
       --  DFSDM analog watchdog clear flag register
-      DFSDM2_AWCFR    : DFSDM2_AWCFR_Register;
+      DFSDM2_AWCFR    : aliased DFSDM2_AWCFR_Register;
       --  DFSDM analog watchdog clear flag register
-      DFSDM3_AWCFR    : DFSDM3_AWCFR_Register;
+      DFSDM3_AWCFR    : aliased DFSDM3_AWCFR_Register;
       --  DFSDM Extremes detector maximum register
-      DFSDM0_EXMAX    : DFSDM0_EXMAX_Register;
+      DFSDM0_EXMAX    : aliased DFSDM0_EXMAX_Register;
       --  DFSDM Extremes detector maximum register
-      DFSDM1_EXMAX    : DFSDM1_EXMAX_Register;
+      DFSDM1_EXMAX    : aliased DFSDM1_EXMAX_Register;
       --  DFSDM Extremes detector maximum register
-      DFSDM2_EXMAX    : DFSDM2_EXMAX_Register;
+      DFSDM2_EXMAX    : aliased DFSDM2_EXMAX_Register;
       --  DFSDM Extremes detector maximum register
-      DFSDM3_EXMAX    : DFSDM3_EXMAX_Register;
+      DFSDM3_EXMAX    : aliased DFSDM3_EXMAX_Register;
       --  DFSDM Extremes detector minimum register
-      DFSDM0_EXMIN    : DFSDM0_EXMIN_Register;
+      DFSDM0_EXMIN    : aliased DFSDM0_EXMIN_Register;
       --  DFSDM Extremes detector minimum register
-      DFSDM1_EXMIN    : DFSDM1_EXMIN_Register;
+      DFSDM1_EXMIN    : aliased DFSDM1_EXMIN_Register;
       --  DFSDM Extremes detector minimum register
-      DFSDM2_EXMIN    : DFSDM2_EXMIN_Register;
+      DFSDM2_EXMIN    : aliased DFSDM2_EXMIN_Register;
       --  DFSDM Extremes detector minimum register
-      DFSDM3_EXMIN    : DFSDM3_EXMIN_Register;
+      DFSDM3_EXMIN    : aliased DFSDM3_EXMIN_Register;
       --  DFSDM conversion timer register
-      DFSDM0_CNVTIMR  : DFSDM0_CNVTIMR_Register;
+      DFSDM0_CNVTIMR  : aliased DFSDM0_CNVTIMR_Register;
       --  DFSDM conversion timer register
-      DFSDM1_CNVTIMR  : DFSDM1_CNVTIMR_Register;
+      DFSDM1_CNVTIMR  : aliased DFSDM1_CNVTIMR_Register;
       --  DFSDM conversion timer register
-      DFSDM2_CNVTIMR  : DFSDM2_CNVTIMR_Register;
+      DFSDM2_CNVTIMR  : aliased DFSDM2_CNVTIMR_Register;
       --  DFSDM conversion timer register
-      DFSDM3_CNVTIMR  : DFSDM3_CNVTIMR_Register;
+      DFSDM3_CNVTIMR  : aliased DFSDM3_CNVTIMR_Register;
    end record
      with Volatile;
 

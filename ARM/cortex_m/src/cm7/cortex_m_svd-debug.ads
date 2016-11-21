@@ -146,9 +146,9 @@ package Cortex_M_SVD.Debug is
    is record
       case Discriminent is
          when Mode_1 =>
-            Read : Read_DHCSR_Register;
+            Read : aliased Read_DHCSR_Register;
          when Mode_2 =>
-            Write : Write_DHCSR_Register;
+            Write : aliased Write_DHCSR_Register;
       end case;
    end record
      with Unchecked_Union, Volatile, Size => 32;
@@ -290,19 +290,19 @@ package Cortex_M_SVD.Debug is
 
    type Debug_Peripheral is record
       --  Debug Fault Status Register
-      DFSR  : DFSR_Register;
+      DFSR  : aliased DFSR_Register;
       --  Debug Halting Control and Status Register
-      DHCSR : DHCSR_Cluster;
+      DHCSR : aliased DHCSR_Cluster;
       --  Debug Core Register Selector Register: The DCRSR write-only register
       --  generates a handshake to the core to transfer the selected register
       --  to/from the DCRDR. The DHCSR S_REGRDY bit is cleared when the DCRSR
       --  is written, and remains clear until the core transaction completes.
       --  This register is only accessible from Debug state.
-      DCRSR : DCRSR_Register;
+      DCRSR : aliased DCRSR_Register;
       --  Debug Core Register Data Register
-      DCRDR : HAL.UInt32;
+      DCRDR : aliased HAL.UInt32;
       --  Debug Exception and Monitor Control Register
-      DEMCR : DEMCR_Register;
+      DEMCR : aliased DEMCR_Register;
    end record
      with Volatile;
 

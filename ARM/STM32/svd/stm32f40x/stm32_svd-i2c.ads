@@ -327,23 +327,23 @@ package STM32_SVD.I2C is
    --  Inter-integrated circuit
    type I2C_Peripheral is record
       --  Control register 1
-      CR1   : CR1_Register;
+      CR1   : aliased CR1_Register;
       --  Control register 2
-      CR2   : CR2_Register;
+      CR2   : aliased CR2_Register;
       --  Own address register 1
-      OAR1  : OAR1_Register;
+      OAR1  : aliased OAR1_Register;
       --  Own address register 2
-      OAR2  : OAR2_Register;
+      OAR2  : aliased OAR2_Register;
       --  Data register
-      DR    : DR_Register;
+      DR    : aliased DR_Register;
       --  Status register 1
-      SR1   : SR1_Register;
+      SR1   : aliased SR1_Register;
       --  Status register 2
-      SR2   : SR2_Register;
+      SR2   : aliased SR2_Register;
       --  Clock control register
-      CCR   : CCR_Register;
+      CCR   : aliased CCR_Register;
       --  TRISE register
-      TRISE : TRISE_Register;
+      TRISE : aliased TRISE_Register;
    end record
      with Volatile;
 

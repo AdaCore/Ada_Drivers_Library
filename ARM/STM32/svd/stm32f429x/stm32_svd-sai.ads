@@ -571,37 +571,37 @@ package STM32_SVD.SAI is
    --  Serial audio interface
    type SAI_Peripheral is record
       --  AConfiguration register 1
-      ACR1   : ACR1_Register;
+      ACR1   : aliased ACR1_Register;
       --  AConfiguration register 2
-      ACR2   : ACR2_Register;
+      ACR2   : aliased ACR2_Register;
       --  AFRCR
-      AFRCR  : AFRCR_Register;
+      AFRCR  : aliased AFRCR_Register;
       --  ASlot register
-      ASLOTR : ASLOTR_Register;
+      ASLOTR : aliased ASLOTR_Register;
       --  AInterrupt mask register2
-      AIM    : AIM_Register;
+      AIM    : aliased AIM_Register;
       --  AStatus register
-      ASR    : ASR_Register;
+      ASR    : aliased ASR_Register;
       --  AClear flag register
-      ACLRFR : ACLRFR_Register;
+      ACLRFR : aliased ACLRFR_Register;
       --  AData register
-      ADR    : HAL.UInt32;
+      ADR    : aliased HAL.UInt32;
       --  BConfiguration register 1
-      BCR1   : BCR1_Register;
+      BCR1   : aliased BCR1_Register;
       --  BConfiguration register 2
-      BCR2   : BCR2_Register;
+      BCR2   : aliased BCR2_Register;
       --  BFRCR
-      BFRCR  : BFRCR_Register;
+      BFRCR  : aliased BFRCR_Register;
       --  BSlot register
-      BSLOTR : BSLOTR_Register;
+      BSLOTR : aliased BSLOTR_Register;
       --  BInterrupt mask register2
-      BIM    : BIM_Register;
+      BIM    : aliased BIM_Register;
       --  BStatus register
-      BSR    : BSR_Register;
+      BSR    : aliased BSR_Register;
       --  BClear flag register
-      BCLRFR : BCLRFR_Register;
+      BCLRFR : aliased BCLRFR_Register;
       --  BData register
-      BDR    : HAL.UInt32;
+      BDR    : aliased HAL.UInt32;
    end record
      with Volatile;
 

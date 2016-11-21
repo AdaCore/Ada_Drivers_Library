@@ -103,11 +103,11 @@ package STM32_SVD.WWDG is
    --  Window watchdog
    type WWDG_Peripheral is record
       --  Control register
-      CR  : CR_Register;
+      CR  : aliased CR_Register;
       --  Configuration register
-      CFR : CFR_Register;
+      CFR : aliased CFR_Register;
       --  Status register
-      SR  : SR_Register;
+      SR  : aliased SR_Register;
    end record
      with Volatile;
 

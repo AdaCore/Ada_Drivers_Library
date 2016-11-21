@@ -185,13 +185,13 @@ package Cortex_M_SVD.FPU is
    --  Floating Point Unit
    type FPU_Peripheral is record
       --  Coprocessor Access Control Register
-      CPACR  : CPACR_Register;
+      CPACR  : aliased CPACR_Register;
       --  Floating-Point Context Control Register
-      FPCCR  : FPCCR_Register;
+      FPCCR  : aliased FPCCR_Register;
       --  Floating-Point Context Address Register
-      FPCAR  : FPCAR_Register;
+      FPCAR  : aliased FPCAR_Register;
       --  Floating-Point Default Status Control Register
-      FPDSCR : FPDSCR_Register;
+      FPDSCR : aliased FPDSCR_Register;
    end record
      with Volatile;
 

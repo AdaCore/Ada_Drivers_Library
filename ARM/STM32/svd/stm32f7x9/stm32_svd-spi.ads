@@ -413,23 +413,23 @@ package STM32_SVD.SPI is
    --  Serial peripheral interface
    type SPI_Peripheral is record
       --  control register 1
-      CR1     : CR1_Register;
+      CR1     : aliased CR1_Register;
       --  control register 2
-      CR2     : CR2_Register;
+      CR2     : aliased CR2_Register;
       --  status register
-      SR      : SR_Register;
+      SR      : aliased SR_Register;
       --  data register
-      DR      : DR_Register;
+      DR      : aliased DR_Register;
       --  CRC polynomial register
-      CRCPR   : CRCPR_Register;
+      CRCPR   : aliased CRCPR_Register;
       --  RX CRC register
-      RXCRCR  : RXCRCR_Register;
+      RXCRCR  : aliased RXCRCR_Register;
       --  TX CRC register
-      TXCRCR  : TXCRCR_Register;
+      TXCRCR  : aliased TXCRCR_Register;
       --  I2S configuration register
-      I2SCFGR : I2SCFGR_Register;
+      I2SCFGR : aliased I2SCFGR_Register;
       --  I2S prescaler register
-      I2SPR   : I2SPR_Register;
+      I2SPR   : aliased I2SPR_Register;
    end record
      with Volatile;
 

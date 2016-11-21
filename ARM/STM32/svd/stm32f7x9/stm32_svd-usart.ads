@@ -585,27 +585,27 @@ package STM32_SVD.USART is
    --  Universal synchronous asynchronous receiver transmitter
    type USART_Peripheral is record
       --  Control register 1
-      CR1  : CR1_Register;
+      CR1  : aliased CR1_Register;
       --  Control register 2
-      CR2  : CR2_Register;
+      CR2  : aliased CR2_Register;
       --  Control register 3
-      CR3  : CR3_Register;
+      CR3  : aliased CR3_Register;
       --  Baud rate register
-      BRR  : BRR_Register;
+      BRR  : aliased BRR_Register;
       --  Guard time and prescaler register
-      GTPR : GTPR_Register;
+      GTPR : aliased GTPR_Register;
       --  Receiver timeout register
-      RTOR : RTOR_Register;
+      RTOR : aliased RTOR_Register;
       --  Request register
-      RQR  : RQR_Register;
+      RQR  : aliased RQR_Register;
       --  Interrupt & status register
-      ISR  : ISR_Register;
+      ISR  : aliased ISR_Register;
       --  Interrupt flag clear register
-      ICR  : ICR_Register;
+      ICR  : aliased ICR_Register;
       --  Receive data register
-      RDR  : RDR_Register;
+      RDR  : aliased RDR_Register;
       --  Transmit data register
-      TDR  : TDR_Register;
+      TDR  : aliased TDR_Register;
    end record
      with Volatile;
 

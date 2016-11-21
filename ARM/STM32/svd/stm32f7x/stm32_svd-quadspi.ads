@@ -280,31 +280,31 @@ package STM32_SVD.QUADSPI is
    --  QuadSPI interface
    type QUADSPI_Peripheral is record
       --  control register
-      CR    : CR_Register;
+      CR    : aliased CR_Register;
       --  device configuration register
-      DCR   : DCR_Register;
+      DCR   : aliased DCR_Register;
       --  status register
-      SR    : SR_Register;
+      SR    : aliased SR_Register;
       --  flag clear register
-      FCR   : FCR_Register;
+      FCR   : aliased FCR_Register;
       --  data length register
-      DLR   : HAL.UInt32;
+      DLR   : aliased HAL.UInt32;
       --  communication configuration register
-      CCR   : CCR_Register;
+      CCR   : aliased CCR_Register;
       --  address register
-      AR    : HAL.UInt32;
+      AR    : aliased HAL.UInt32;
       --  ABR
-      ABR   : HAL.UInt32;
+      ABR   : aliased HAL.UInt32;
       --  data register
-      DR    : HAL.UInt32;
+      DR    : aliased HAL.UInt32;
       --  polling status mask register
-      PSMKR : HAL.UInt32;
+      PSMKR : aliased HAL.UInt32;
       --  polling status match register
-      PSMAR : HAL.UInt32;
+      PSMAR : aliased HAL.UInt32;
       --  polling interval register
-      PIR   : PIR_Register;
+      PIR   : aliased PIR_Register;
       --  low-power timeout register
-      LPTR  : LPTR_Register;
+      LPTR  : aliased LPTR_Register;
    end record
      with Volatile;
 

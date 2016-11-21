@@ -53,15 +53,15 @@ package STM32_SVD.CRC is
    --  Cryptographic processor
    type CRC_Peripheral is record
       --  Data register
-      DR   : HAL.UInt32;
+      DR   : aliased HAL.UInt32;
       --  Independent Data register
-      IDR  : IDR_Register;
+      IDR  : aliased IDR_Register;
       --  Control register
-      CR   : CR_Register;
+      CR   : aliased CR_Register;
       --  Initial CRC value
-      INIT : HAL.UInt32;
+      INIT : aliased HAL.UInt32;
       --  CRC polynomial
-      POL  : HAL.UInt32;
+      POL  : aliased HAL.UInt32;
    end record
      with Volatile;
 
