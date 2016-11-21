@@ -30,7 +30,7 @@ package body HAL.SDCard is
    --  Compute the card block size (in bytes) from the CSD.
 
    function Get_Transfer_Rate
-     (CSD: Card_Specific_Data_Register) return Natural;
+     (CSD : Card_Specific_Data_Register) return Natural;
    --  Compute transfer rate from CSD
 
    function Swap32 (Val : UInt32) return UInt32 with Inline_Always;
@@ -648,7 +648,7 @@ package body HAL.SDCard is
    -----------------------
 
    function Get_Transfer_Rate
-     (CSD: Card_Specific_Data_Register) return Natural
+     (CSD : Card_Specific_Data_Register) return Natural
    is
       Res : Natural;
    begin
@@ -670,6 +670,7 @@ package body HAL.SDCard is
          when 16#f# => Res := 80;
          when others => return 400_000;
       end case;
+
       case CSD.Max_Data_Transfer_Rate and 7 is
          when 0 => return Res * 100_000 / 10;
          when 1 => return Res * 1_000_000 / 10;
