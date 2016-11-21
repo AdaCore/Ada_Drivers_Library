@@ -240,11 +240,8 @@ package body STM32.SDMMC is
 
       Div : Natural;
    begin
-      if Freq < 1_000_000 then
-         Div := (This.CLK_In + Freq - 1) / Freq;
-      else
-         Div := (This.CLK_In + 2 * Freq - 1) / (2 * Freq);
-      end if;
+      Div := (This.CLK_In + 2 * Freq - 1) / (2 * Freq);
+
       --  Make sure the POWER register is writable by waiting a bit after
       --  the Power_Off command
       DCTRL_Write_Delay;
@@ -253,6 +250,7 @@ package body STM32.SDMMC is
          This.Periph.CLKCR.BYPASS := True;
       else
          Div := Div - 2;
+
          if Div > Natural (CLKCR_CLKDIV_Field'Last) then
             This.Periph.CLKCR.CLKDIV := CLKCR_CLKDIV_Field'Last;
          else
@@ -815,7 +813,7 @@ package body STM32.SDMMC is
       Ret : SD_Error;
    begin
       This.CLK_In    := SDMMC_CLK;
-      HAL.SDCard.Initialize (This, Info, Ret);
+      HAL.SDCard.Card_Identification_Process (This, Info, Ret);
       This.Card_Type := Info.Card_Type;
       This.RCA       := Info.RCA;
 
