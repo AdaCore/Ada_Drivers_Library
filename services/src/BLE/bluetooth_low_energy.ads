@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                        Copyright (C) 2016, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,41 +29,52 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package nRF51.Clock is
+with HAL;        use HAL;
+with Interfaces; use Interfaces;
 
-   --------------------------
-   -- High frequency clock --
-   --------------------------
+package Bluetooth_Low_Energy is
 
-   type High_Freq_Source_Kind is (HFCLK_RC, HFCLK_XTAL);
-   type High_Freq_Ext_Freq is (HFCLK_16MHz, HFCLK_32MHz);
+   --------------
+   -- Channels --
+   --------------
 
-   procedure Set_High_Freq_External_Frequency (Freq : High_Freq_Ext_Freq);
+   type BLE_Channel_Number is range 0 .. 39;
+   subtype BLE_Data_Channel_Number is BLE_Channel_Number range 0 .. 36;
+   subtype BLE_Advertising_Channel_Number is BLE_Channel_Number range 37 .. 39;
 
-   procedure Set_High_Freq_Source (Src : High_Freq_Source_Kind);
+   type BLE_Frequency_MHz is range 2402 .. 2480;
 
-   function High_Freq_Source return High_Freq_Source_Kind;
+   Channel_Frequency : array (BLE_Channel_Number) of BLE_Frequency_MHz :=
+     (0 => 2404,  1 => 2406,  2 => 2408,  3 => 2410,  4 => 2412,
+      5 => 2414,  6 => 2416,  7 => 2418,  8 => 2420,  9 => 2422,
+     10 => 2424, 11 => 2428, 12 => 2430, 13 => 2432, 14 => 2434,
+     15 => 2436, 16 => 2438, 17 => 2440, 18 => 2442, 19 => 2444,
+     20 => 2446, 21 => 2448, 22 => 2450, 23 => 2452, 24 => 2454,
+     25 => 2456, 26 => 2458, 27 => 2460, 28 => 2462, 29 => 2464,
+     30 => 2466, 31 => 2468, 32 => 2470, 33 => 2472, 34 => 2474,
+     35 => 2476, 36 => 2478, 37 => 2402, 38 => 2426, 39 => 2480);
 
-   function High_Freq_Running return Boolean;
+   ----------
+   -- UUID --
+   ----------
 
-   procedure Start_High_Freq;
+   type BLE_UUID_Kind is (UUID_16bits, UUID_32bits, UUID_16bytes);
 
-   procedure Stop_High_Freq;
+   subtype BLE_16bytes_UUID is Byte_Array (1 .. 16);
 
-   -------------------------
-   -- Low frequency clock --
-   -------------------------
+   type BLE_UUID (Kind : BLE_UUID_Kind) is record
+      case Kind is
+         when UUID_16bits =>
+            UUID_16 : Unsigned_16;
+         when UUID_32bits =>
+            UUID_32 : Unsigned_32;
+         when UUID_16bytes =>
+            UUID_16_Bytes : BLE_16bytes_UUID;
+      end case;
+   end record;
 
-   type Low_Freq_Source_Kind is (LFCLK_RC, LFCLK_XTAL, LFCLK_SYNTH);
+   function Make_UUID (UUID : Unsigned_16) return BLE_UUID;
+   function Make_UUID (UUID : Unsigned_32) return BLE_UUID;
+   function Make_UUID (UUID : BLE_16bytes_UUID) return BLE_UUID;
 
-   procedure Set_Low_Freq_Source (Src : Low_Freq_Source_Kind);
-
-   function Low_Freq_Source return Low_Freq_Source_Kind;
-
-   function Low_Freq_Running return Boolean;
-
-   procedure Start_Low_Freq;
-
-   procedure Stop_Low_Freq;
-
-end nRF51.Clock;
+end Bluetooth_Low_Energy;

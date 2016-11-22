@@ -4,6 +4,7 @@ with "config";
 library project Services is
 
    Src_Dirs := ("src/filesystems",
+                "src/BLE",
                 "src/utils");
 
    case Config.RTS is

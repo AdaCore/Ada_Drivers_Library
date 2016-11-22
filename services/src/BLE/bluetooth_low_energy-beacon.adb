@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                        Copyright (C) 2016, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,41 +29,40 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package nRF51.Clock is
 
-   --------------------------
-   -- High frequency clock --
-   --------------------------
+package body Bluetooth_Low_Energy.Beacon is
 
-   type High_Freq_Source_Kind is (HFCLK_RC, HFCLK_XTAL);
-   type High_Freq_Ext_Freq is (HFCLK_16MHz, HFCLK_32MHz);
+   function Make_Beacon_Packet (UUID         : BLE_UUID;
+                                Major, Minor : UInt16;
+                                Power        : Integer_8)
+                                return BLE_Packet
+   is
+      Pck : BLE_Packet;
+   begin
+      Set_Header (Pck, 16#42#);
+      --  MAC
+      Push (Pck, (16#FE#, 16#CA#, 16#EF#, 16#BE#, 16#AD#, 16#DE#));
+      --  Flag length
+      Push (Pck, Byte (2));
+      --  Flag type
+      Push (Pck, Byte (1));
+      --  Flag Content
+      Push (Pck, Byte (6));
+      --  Data length
+      Push (Pck, Byte (16#1A#));
+      --  Data type
+      Push (Pck, Byte (16#FF#));
+      --  Data header
+      Push (Pck, (16#4C#, 16#00#, 16#02#, 16#15#));
+      --  UUID
+      Push_UUID (Pck, UUID);
+      --  Major
+      Push (Pck, Major);
+      --  Minor
+      Push (Pck, Minor);
+      --  Power
+      Push (Pck, Power);
+      return Pck;
+   end Make_Beacon_Packet;
 
-   procedure Set_High_Freq_External_Frequency (Freq : High_Freq_Ext_Freq);
-
-   procedure Set_High_Freq_Source (Src : High_Freq_Source_Kind);
-
-   function High_Freq_Source return High_Freq_Source_Kind;
-
-   function High_Freq_Running return Boolean;
-
-   procedure Start_High_Freq;
-
-   procedure Stop_High_Freq;
-
-   -------------------------
-   -- Low frequency clock --
-   -------------------------
-
-   type Low_Freq_Source_Kind is (LFCLK_RC, LFCLK_XTAL, LFCLK_SYNTH);
-
-   procedure Set_Low_Freq_Source (Src : Low_Freq_Source_Kind);
-
-   function Low_Freq_Source return Low_Freq_Source_Kind;
-
-   function Low_Freq_Running return Boolean;
-
-   procedure Start_Low_Freq;
-
-   procedure Stop_Low_Freq;
-
-end nRF51.Clock;
+end Bluetooth_Low_Energy.Beacon;

@@ -45,6 +45,17 @@ package body nRF51.Clock is
                                             when HFCLK_32MHz => XTALFREQ_XTALFREQ_Field_16Mhz);
    end Set_High_Freq_External_Frequency;
 
+   --------------------------
+   -- Set_High_Freq_Source --
+   --------------------------
+
+   procedure Set_High_Freq_Source (Src : High_Freq_Source_Kind) is
+   begin
+      CLOCK_Periph.HFCLKSTAT.SRC := (case Src is
+                                        when HFCLK_RC => Rc,
+                                        when HFCLK_XTAL => Xtal);
+   end Set_High_Freq_Source;
+
    ----------------------
    -- High_Freq_Source --
    ----------------------
@@ -72,7 +83,7 @@ package body nRF51.Clock is
 
    procedure Start_High_Freq is
    begin
-      Tasks.Trigger (Tasks.Clock_HFCLKSTOP);
+      Tasks.Trigger (Tasks.Clock_HFCLKSTART);
    end Start_High_Freq;
 
    --------------------

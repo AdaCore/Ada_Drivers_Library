@@ -30,15 +30,21 @@
 ------------------------------------------------------------------------------
 
 with MicroBit.Display; use MicroBit.Display;
-with HAL;              use HAL;
+
+with Beacon;
 
 procedure Main is
-   Tmp : UInt24 with Unreferenced;
    Str : constant String := "MAKE WITH ADA    ";
 begin
+
+   Beacon.Initialize_Radio;
+
    loop
       for C of Str loop
          Display (C);
+
+         Beacon.Send_Beacon_Packet;
+
          for Cnt in 0 .. 200_000 loop
             null;
          end loop;
