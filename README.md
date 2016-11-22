@@ -19,11 +19,11 @@ support for additional processors, platforms, and vendors.
 2. License
 ----------
 
-All files are provided under a 3-clause Berkeley Software Distribution (BSD)
-license. As such, and within the conditions required by the license, the files
-are available both for proprietary ("commercial") and non-proprietary use.
-
-For details, see the "LICENSE" file in the root directory.
+All files are provided under a non-restrictive Berkeley Software Distribution
+(BSD) license, specifically, the "Modified BSD license", also known as the
+"3-clause BSD license".  As such, and within the conditions required by the
+license, the files are available both for proprietary ("commercial") and
+non-proprietary use.
 
 
 3. Requirements
