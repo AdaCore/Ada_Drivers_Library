@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                        Copyright (C) 2016, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,41 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package nRF51.Clock is
-
-   --------------------------
-   -- High frequency clock --
-   --------------------------
-
-   type High_Freq_Source_Kind is (HFCLK_RC, HFCLK_XTAL);
-   type High_Freq_Ext_Freq is (HFCLK_16MHz, HFCLK_32MHz);
-
-   procedure Set_High_Freq_External_Frequency (Freq : High_Freq_Ext_Freq);
-
-   procedure Set_High_Freq_Source (Src : High_Freq_Source_Kind);
-
-   function High_Freq_Source return High_Freq_Source_Kind;
-
-   function High_Freq_Running return Boolean;
-
-   procedure Start_High_Freq;
-
-   procedure Stop_High_Freq;
-
-   -------------------------
-   -- Low frequency clock --
-   -------------------------
-
-   type Low_Freq_Source_Kind is (LFCLK_RC, LFCLK_XTAL, LFCLK_SYNTH);
-
-   procedure Set_Low_Freq_Source (Src : Low_Freq_Source_Kind);
-
-   function Low_Freq_Source return Low_Freq_Source_Kind;
-
-   function Low_Freq_Running return Boolean;
-
-   procedure Start_Low_Freq;
-
-   procedure Stop_Low_Freq;
-
-end nRF51.Clock;
+package Beacon is
+   procedure Initialize_Radio;
+   procedure Send_Beacon_Packet;
+end Beacon;

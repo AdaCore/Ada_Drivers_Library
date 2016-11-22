@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                        Copyright (C) 2016, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,41 +29,52 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package nRF51.Clock is
+with System;
 
-   --------------------------
-   -- High frequency clock --
-   --------------------------
+package Bluetooth_Low_Energy.Packets is
 
-   type High_Freq_Source_Kind is (HFCLK_RC, HFCLK_XTAL);
-   type High_Freq_Ext_Freq is (HFCLK_16MHz, HFCLK_32MHz);
+   type BLE_Packet is private;
 
-   procedure Set_High_Freq_External_Frequency (Freq : High_Freq_Ext_Freq);
+   function Memory_Address (This : BLE_Packet) return System.Address;
+   --  Return memory address of the radio data to be transmitted
 
-   procedure Set_High_Freq_Source (Src : High_Freq_Source_Kind);
+   procedure Set_Header (This   : in out BLE_Packet;
+                         Header : Unsigned_8);
 
-   function High_Freq_Source return High_Freq_Source_Kind;
+   procedure Push (This : in out BLE_Packet;
+                   Data : Unsigned_8);
 
-   function High_Freq_Running return Boolean;
+   procedure Push (This : in out BLE_Packet;
+                   Data : Integer_8);
 
-   procedure Start_High_Freq;
+   procedure Push (This : in out BLE_Packet;
+                   Data : Unsigned_16);
 
-   procedure Stop_High_Freq;
+   procedure Push (This : in out BLE_Packet;
+                   Data : Unsigned_32);
 
-   -------------------------
-   -- Low frequency clock --
-   -------------------------
+   procedure Push (This : in out BLE_Packet;
+                   Data : Byte_Array);
 
-   type Low_Freq_Source_Kind is (LFCLK_RC, LFCLK_XTAL, LFCLK_SYNTH);
+   procedure Push_UUID (This : in out BLE_Packet;
+                        UUID : BLE_UUID);
+private
 
-   procedure Set_Low_Freq_Source (Src : Low_Freq_Source_Kind);
+   BLE_PACKET_MIC_SIZE    : constant := 4;
+   --  Size of Message integrity check (MIC) field
 
-   function Low_Freq_Source return Low_Freq_Source_Kind;
+   BLE_PACKET_MAX_PAYLOAD : constant := 37;
+   --  Maximum size of BLE payload (without header, MIC or CRC)
 
-   function Low_Freq_Running return Boolean;
+   type BLE_Data is array (1 .. BLE_PACKET_MAX_PAYLOAD + BLE_PACKET_MIC_SIZE)
+     of Byte with Pack;
+   --  BLE Payload plus optional MIC field
 
-   procedure Start_Low_Freq;
+   type BLE_Packet is record
+      Header        : Byte;
+      Packet_Length : Byte := 0;
+      Data          : BLE_Data;
+   end record with Pack;
 
-   procedure Stop_Low_Freq;
 
-end nRF51.Clock;
+end Bluetooth_Low_Energy.Packets;
