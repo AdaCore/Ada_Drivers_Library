@@ -29,6 +29,13 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  The MCP23008 and MCP23S08 are two versions of the same chip, respectively
+--  with an I2C and SPI interface. This package provides an abstract
+--  implementation of the features common to both chips.
+--
+--  Please use the MCP23008 (or MCP23x008.I2C) package for the I2C interface.
+--  The SPI interface is not implemented yet.
+
 with HAL; use HAL;
 with HAL.GPIO;
 
@@ -37,52 +44,45 @@ package MCP23x08 is
    type MCP23x08_Pin is (Pin_0, Pin_1, Pin_2, Pin_3,
                          Pin_4, Pin_5, Pin_6, Pin_7);
 
-   type MCP23x08_Device is abstract tagged private;
+   type MCP23x08_IO_Expander is abstract tagged private;
 
-   procedure Configure (This    : in out MCP23x08_Device;
+   procedure Configure (This    : in out MCP23x08_IO_Expander;
                         Pin     : MCP23x08_Pin;
                         Output  : Boolean;
                         Pull_Up : Boolean);
+   --  Configure single pin as input or output and optinaly enable the pull-up
+   --  resistor.
 
-   function Set (This  : MCP23x08_Device;
+   function Set (This  : MCP23x08_IO_Expander;
                  Pin   : MCP23x08_Pin) return Boolean;
+   --  Return the curent status of Pin
 
-   procedure Set (This  : in out MCP23x08_Device;
+   procedure Set (This  : in out MCP23x08_IO_Expander;
                   Pin   : MCP23x08_Pin);
+   --  Change status of Pin to logic high
 
-   procedure Clear (This  : in out MCP23x08_Device;
+   procedure Clear (This  : in out MCP23x08_IO_Expander;
                     Pin   : MCP23x08_Pin);
+   --  Change status of Pin to logic low
 
-   procedure Toggle (This  : in out MCP23x08_Device;
+   procedure Toggle (This  : in out MCP23x08_IO_Expander;
                      Pin   : MCP23x08_Pin);
-
+   --  Toggle status of Pin
 
    type ALl_IO_Array is array (MCP23x08_Pin) of Boolean
      with Pack, Size => 8;
 
-   function Get_All_IO (This : in out MCP23x08_Device) return ALl_IO_Array;
+   function All_IO (This : in out MCP23x08_IO_Expander) return ALl_IO_Array;
+   --  Return the current status of all pins in an array
 
-   procedure Set_All_IO (This : in out MCP23x08_Device; IOs : ALl_IO_Array);
+   procedure Set_All_IO (This : in out MCP23x08_IO_Expander;
+                         IOs  : ALl_IO_Array);
+   --  Set the current status of all pins with an array
 
-   function Get_GPIO_Point (This : in out MCP23x08_Device;
-                            Pin  : MCP23x08_Pin)
-                            return not null HAL.GPIO.GPIO_Point_Ref;
-
-   -----------------------------
-   -- IO abstract subprograms --
-   -----------------------------
-
-   type Register_Address is new Byte;
-
-   procedure IO_Write
-     (This      : in out MCP23x08_Device;
-      WriteAddr : Register_Address;
-      Value     : Byte) is abstract;
-
-   procedure IO_Read
-     (This     : MCP23x08_Device;
-      ReadAddr : Register_Address;
-      Value    : out Byte) is abstract;
+   function As_GPIO_Point (This : in out MCP23x08_IO_Expander;
+                           Pin  : MCP23x08_Pin)
+                           return not null HAL.GPIO.GPIO_Point_Ref;
+   --  Return the HAL.GPIO interface conresponding to Pin
 
 private
 
@@ -97,17 +97,10 @@ private
       Pin_7  => 16#0080#);
 
    type MCP23_GPIO_Point is new HAL.GPIO.GPIO_Point with record
-      Device : access MCP23x08_Device;
+      Device : access MCP23x08_IO_Expander;
       Pin    : MCP23x08_Pin;
    end record;
    --  Internal implementation of HAL.GPIO interface
-
-   type MCP23_GPIO_Point_Array is array (MCP23x08_Pin) of
-     aliased MCP23_GPIO_Point;
-
-   type MCP23x08_Device is abstract tagged record
-      Points : MCP23_GPIO_Point_Array;
-   end record;
 
    overriding
    function Set (Point : MCP23_GPIO_Point) return Boolean;
@@ -120,6 +113,35 @@ private
 
    overriding
    procedure Toggle (Point : in out MCP23_GPIO_Point);
+
+   type MCP23_GPIO_Point_Array is array (MCP23x08_Pin) of
+     aliased MCP23_GPIO_Point;
+
+   --------------------------
+   -- MCP23x08_IO_Expander --
+   --------------------------
+
+   type MCP23x08_IO_Expander is abstract tagged record
+      Points : MCP23_GPIO_Point_Array;
+   end record;
+
+   ----------------------------
+   -- IO private subprograms --
+   ----------------------------
+
+   type Register_Address is new Byte;
+
+   procedure IO_Write
+     (This      : in out MCP23x08_IO_Expander;
+      WriteAddr : Register_Address;
+      Value     : Byte) is null;
+   --  This procedure must be overridden by the I2C or SPI implementation
+
+   procedure IO_Read
+     (This     : MCP23x08_IO_Expander;
+      ReadAddr : Register_Address;
+      Value    : out Byte) is null;
+   --  This procedure must be overridden by the I2C or SPI implementation
 
    IO_DIRECTION_REG     : constant Register_Address := 16#00#;
    INPUT_POLARITY_REG   : constant Register_Address := 16#01#;
