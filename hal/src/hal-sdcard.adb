@@ -341,6 +341,7 @@ package body HAL.SDCard is
 
             Switch_Status : Switch_Status_Type;
          begin
+            --  CMD6
             Read_Cmd (Driver, Cmd_Desc (Switch_Func), 16#00_fffff0#,
                       Switch_Status'Address, 512 / 8, Status);
             if Status /= OK then
@@ -679,6 +680,4 @@ package body HAL.SDCard is
          when others => return 400_000;
       end case;
    end Get_Transfer_Rate;
-
-
 end HAL.SDCard;
