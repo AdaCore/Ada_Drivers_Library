@@ -112,7 +112,7 @@ package body Beacon is
       end if;
 
       --  Set TX packet address
-      Set_Packet (Get_Address (Beacon_Packet));
+      Set_Packet (Memory_Address (Beacon_Packet));
 
       --  Clear all events
       nRF51.Events.Clear (nRF51.Events.Radio_DISABLED);
