@@ -79,7 +79,7 @@ package body OpenMV.LCD_Shield is
       Initialize (LCD_Driver);
 
       Set_Memory_Data_Access
-        (LCD                 => LCD_Driver,
+        (This                => LCD_Driver,
          Color_Order         => RGB_Order,
          Vertical            => Vertical_Refresh_Top_Bottom,
          Horizontal          => Horizontal_Refresh_Left_Right,
@@ -156,7 +156,7 @@ package body OpenMV.LCD_Shield is
    procedure Rotate_Screen_90 is
    begin
       Set_Memory_Data_Access
-        (LCD                 => LCD_Driver,
+        (This                => LCD_Driver,
          Color_Order         => RGB_Order,
          Vertical            => Vertical_Refresh_Top_Bottom,
          Horizontal          => Horizontal_Refresh_Left_Right,
@@ -172,7 +172,7 @@ package body OpenMV.LCD_Shield is
    procedure Rotate_Screen_0 is
    begin
       Set_Memory_Data_Access
-        (LCD                 => LCD_Driver,
+        (This                => LCD_Driver,
          Color_Order         => RGB_Order,
          Vertical            => Vertical_Refresh_Top_Bottom,
          Horizontal          => Horizontal_Refresh_Left_Right,
