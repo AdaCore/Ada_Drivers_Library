@@ -129,6 +129,7 @@ package body OpenMV.LCD_Shield is
                    X_End   => 127,
                    Y_Start => 0,
                    Y_End   => 159);
+
       Turn_On (LCD_Driver);
 
       LCD_Driver.Initialize_Layer (Layer  => 1,

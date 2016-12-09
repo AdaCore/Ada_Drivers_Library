@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 with HAL.SPI;
+with STM32.DMA; use STM32.DMA;
 
 package body OpenMV is
 
@@ -104,7 +105,38 @@ package body OpenMV is
    procedure Initialize_Shield_SPI is
       SPI_Conf  : STM32.SPI.SPI_Configuration;
       GPIO_Conf : STM32.GPIO.GPIO_Port_Configuration;
+
+      procedure Initialize_DMA;
+
+      --------------------
+      -- Initialize_DMA --
+      --------------------
+
+      procedure Initialize_DMA is
+         Config : DMA_Stream_Configuration;
+      begin
+         Enable_Clock (Shield_SPI_DMA);
+
+         Config.Channel := Shield_SPI_DMA_Chan;
+         Config.Direction := Memory_To_Peripheral;
+         Config.Increment_Peripheral_Address := False;
+         Config.Increment_Memory_Address := True;
+         Config.Peripheral_Data_Format := Bytes;
+         Config.Memory_Data_Format := Bytes;
+         Config.Operation_Mode := Normal_Mode;
+         Config.Priority := Priority_High;
+         Config.FIFO_Enabled := True;
+         Config.FIFO_Threshold := FIFO_Threshold_Full_Configuration;
+         Config.Memory_Burst_Size := Memory_Burst_Inc4;
+         Config.Peripheral_Burst_Size := Peripheral_Burst_Single;
+         Configure (Shield_SPI_DMA, Shield_SPI_DMA_Stream, Config);
+
+         Shield_SPI.Set_TX_DMA_Handler (Shield_SPI_DMA_Int'Access);
+      end Initialize_DMA;
    begin
+
+      Initialize_DMA;
+
       STM32.Device.Enable_Clock (Shield_SPI_Points);
 
       GPIO_Conf.Speed       := STM32.GPIO.Speed_100MHz;
@@ -120,7 +152,7 @@ package body OpenMV is
 
       STM32.Device.Enable_Clock (Shield_SPI);
 
-      STM32.SPI.Disable (Shield_SPI);
+      Shield_SPI.Disable;
 
       SPI_Conf.Direction           := STM32.SPI.D2Lines_FullDuplex;
       SPI_Conf.Mode                := STM32.SPI.Master;
@@ -132,9 +164,9 @@ package body OpenMV is
       SPI_Conf.First_Bit           := STM32.SPI.MSB;
       SPI_Conf.CRC_Poly            := 7;
 
-      STM32.SPI.Configure (Shield_SPI, SPI_Conf);
+      Shield_SPI.Configure (SPI_Conf);
 
-      STM32.SPI.Enable (Shield_SPI);
+      Shield_SPI.Enable;
    end Initialize_Shield_SPI;
 
    -----------------------------
