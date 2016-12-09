@@ -34,8 +34,10 @@ with STM32.GPIO;    use STM32.GPIO;
 
 use STM32;  -- for base addresses
 with STM32.SPI;
+with STM32.SPI.DMA;
 with STM32.Timers; use STM32.Timers;
 with STM32.DMA;
+with STM32.DMA.Interrupts;
 with STM32.I2C; use STM32.I2C;
 with STM32.USARTs; use STM32.USARTs;
 
@@ -106,11 +108,19 @@ private
    SPI2_MOSI : GPIO_Point renames PB15;
    SPI2_NSS  : GPIO_Point renames PB12;
 
-   Shield_SPI : STM32.SPI.SPI_Port renames STM32.Device.SPI_2;
+   Shield_SPI : STM32.SPI.DMA.SPI_Port_DMA renames STM32.Device.SPI_2_DMA;
    Shield_SPI_Points : constant STM32.GPIO.GPIO_Points :=
      (Shield_MISO,
       Shield_MOSI,
       Shield_SCK);
+
+   Shield_SPI_DMA        : STM32.DMA.DMA_Controller renames DMA_1;
+   Shield_SPI_DMA_Chan   : STM32.DMA.DMA_Channel_Selector renames
+     STM32.DMA.Channel_0;
+   Shield_SPI_DMA_Stream : STM32.DMA.DMA_Stream_Selector renames
+     STM32.DMA.Stream_4;
+   Shield_SPI_DMA_Int    : STM32.DMA.Interrupts.DMA_Interrupt_Controller renames
+     DMA1_Stream4;
 
    ------------
    -- USART3 --
@@ -143,6 +153,8 @@ private
      STM32.DMA.Channel_1;
    Sensor_DMA_Stream : STM32.DMA.DMA_Stream_Selector renames
      STM32.DMA.Stream_1;
+   Sensor_DMA_Int    : STM32.DMA.Interrupts.DMA_Interrupt_Controller renames
+     DMA2_Stream1;
 
    ---------------
    -- I2C2 Pins --

@@ -45,7 +45,7 @@ begin
 
    loop
       --  Take a snapshot...
-      OpenMV.Sensor.Snapshot (OpenMV.LCD_Shield.Get_Bitmap);
+      OpenMV.Sensor.Snapshot (OpenMV.LCD_Shield.Bitmap);
 
       --  ...and display it.
       OpenMV.LCD_Shield.Display;
