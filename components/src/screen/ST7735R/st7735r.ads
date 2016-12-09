@@ -163,9 +163,9 @@ package ST7735R is
                    return UInt16;
 
    procedure Write_Raw_Pixels (This : ST7735R_Screen;
-                               Data : HAL.UInt8_Array);
+                               Data : in out HAL.UInt8_Array);
    procedure Write_Raw_Pixels (This : ST7735R_Screen;
-                               Data : HAL.UInt16_Array);
+                               Data : in out HAL.UInt16_Array);
 
    overriding
    function Max_Layers
