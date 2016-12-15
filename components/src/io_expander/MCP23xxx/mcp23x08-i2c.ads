@@ -29,7 +29,31 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with MCP23x08.I2C;
+with HAL.I2C;
 
-package MCP23008 renames MCP23x08.I2C;
+package MCP23x08.I2C is
 
+   type MCP23008_IO_Expander (Port : HAL.I2C.I2C_Port_Ref;
+                         Addr : UInt3) is
+     new MCP23x08_IO_Expander with private;
+
+private
+
+   type MCP23008_IO_Expander (Port : HAL.I2C.I2C_Port_Ref;
+                         Addr : UInt3) is
+     new MCP23x08_IO_Expander with null record;
+
+   overriding
+   procedure IO_Write
+     (This      : in out MCP23008_IO_Expander;
+      WriteAddr : Register_Address;
+      Value     : Byte);
+
+   overriding
+   procedure IO_Read
+     (This     : MCP23008_IO_Expander;
+      ReadAddr : Register_Address;
+      Value    : out Byte);
+
+   BASE_ADDRESS : constant HAL.I2C.I2C_Address := 16#40#;
+end MCP23x08.I2C;
