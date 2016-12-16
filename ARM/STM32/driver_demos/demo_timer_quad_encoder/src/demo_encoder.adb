@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Thius program demonstrates the encoder interface provided by the ST Micro
+--  This program demonstrates the encoder interface provided by the ST Micro
 --  timers. We use a timer (TIM3) to emulate quadrature encoder hardware as if
 --  attached to a motor, providing the two off-phase signals a hardware encoder
 --  would produce. These two signals are fed into another timer (TIM1) working

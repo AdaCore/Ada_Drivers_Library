@@ -73,7 +73,7 @@ procedure Demo_ADC_GPIO_Polling is
    All_Regular_Conversions : constant Regular_Channel_Conversions :=
           (1 => (Channel => Input_Channel, Sample_Time => Sample_144_Cycles));
 
-   Raw : Word := 0;
+   Raw : UInt32 := 0;
 
    Successful : Boolean;
    Timed_Out  : exception;
@@ -139,10 +139,10 @@ begin
          raise Timed_Out;
       end if;
 
-      Raw := Word (Conversion_Value (Converter));
+      Raw := UInt32 (Conversion_Value (Converter));
       Print (0, 0, Raw'Img);
 
-      Toggle (Green);
+      Green.Toggle;
 
       delay until Clock + Milliseconds (200); -- slow it down to ease reading
    end loop;

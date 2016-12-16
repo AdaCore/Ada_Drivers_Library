@@ -50,7 +50,7 @@ with HAL;                use HAL;
 package Motor is
    pragma Elaborate_Body;
 
-   function Encoder_Count return Word;
+   function Encoder_Count return UInt32;
 
    type Direction is (Forward, Backward);
 
@@ -63,6 +63,6 @@ private
 
    Encoder_Timer : Timer renames Timer_1;
 
-   Encoder_AF : constant GPIO_Alternate_Function := GPIO_AF_TIM1;
+   Encoder_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_1_TIM1;
 
 end Motor;

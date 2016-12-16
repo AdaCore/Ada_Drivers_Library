@@ -53,6 +53,9 @@ procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
    --  NOT arbitrary!
    --  We drive the on-board LEDs that are tied to the channels of Timer_4.
 
+   Timer_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_2_TIM4;
+   --  Note that this value MUST match the corresponding timer selected!
+
    Output_Channel : constant Timer_Channel := Channel_2; -- arbitrary
    --  The LED driven by this example is determined by the channel selected.
    --  That is so because each channel of Timer_4 is connected to a specific
@@ -142,7 +145,7 @@ begin
      (Power_Control,
       Output_Channel,
       LED_For (Output_Channel),
-      GPIO_AF_2_TIM4);
+      Timer_AF);
 
    Enable_PWM (Power_Control);
 

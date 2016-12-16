@@ -58,7 +58,7 @@ with System;
 
 procedure Demo_DAC_DMA is
 
-   use type Word;
+   use type UInt32;
 
    ---------------------------------  DMA  ------------------------------------
 
@@ -91,11 +91,11 @@ procedure Demo_DAC_DMA is
 
    ----------------------------------------------------------------------------
 
-   Requested_Percentage : Word range 0 .. 100;
+   Requested_Percentage : UInt32 range 0 .. 100;
    --  User input (via the button) representing the currently requested
    --  percentage of the VRef+ DAC output voltage.
 
-   Counts : Word := 0 with Atomic;
+   Counts : UInt32 := 0 with Atomic;
    --  The numeric input to the DAC that ultimately controls the voltage
    --  produced (by the DAC) on the GPIO analog output pin. The value is
    --  computed using the Requested_Percentage variable (set by the user)
@@ -103,7 +103,7 @@ procedure Demo_DAC_DMA is
    --  resolution). For example, at 12-bit resolution, to get half of the VRef+
    --  output voltage would require Counts to be 2048.
 
-   procedure Print (Value : Word);
+   procedure Print (Value : UInt32);
    --  Prints the image of the arg at a fixed location
 
    procedure Await_Button;
@@ -121,7 +121,7 @@ procedure Demo_DAC_DMA is
    -- Print --
    -----------
 
-   procedure Print (Value : Word) is
+   procedure Print (Value : UInt32) is
       Value_Image : constant String := Value'Img;
    begin
       Put (170, 52, Value_Image (2 .. Value_Image'Last) & "   ");
@@ -238,7 +238,7 @@ begin  -- main subprogram
    Put (0, 25, "Button advances");
    Put (0, 52, "Current %:");
    loop
-      for K in Word range 0 .. 10 loop
+      for K in UInt32 range 0 .. 10 loop
          Requested_Percentage := K * 10;
          Print (Requested_Percentage);
          Counts := (Requested_Percentage * Max_12bit_Resolution) / 100;
