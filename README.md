@@ -91,5 +91,5 @@ GitHub page.
  * [Giza: Giza is trying to be a simple widget tool kit for embedded platforms](https://github.com/Fabien-Chouteau/Giza)
  * [solenoid-engine-controller: Software controller for solenoid engines](https://github.com/Fabien-Chouteau/solenoid-engine-controller)
  * [un_pola: DIY instant camera with OpenMV](https://github.com/Fabien-Chouteau/un_pola)
- 
+ * [bare metal demos: Various Ada Demos on STM32*-Disco boards using this library](https://github.com/lambourg/Ada_Drivers_Library.git) 
 (Add yours to the list!)
