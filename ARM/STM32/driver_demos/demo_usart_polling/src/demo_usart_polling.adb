@@ -48,7 +48,7 @@ procedure Demo_USART_Polling is
 
    procedure Await_Send_Ready (This : USART) with Inline;
 
-   procedure Put_Blocking (This : in out USART;  Data : Short);
+   procedure Put_Blocking (This : in out USART;  Data : UInt16);
 
    --------------------------
    -- Initialize_UART_GPIO --
@@ -67,7 +67,7 @@ procedure Demo_USART_Polling is
 
       Configure_IO (RX_Pin & TX_Pin, Configuration);
 
-      Configure_Alternate_Function (RX_Pin & TX_Pin, AF => GPIO_AF_USART1);
+      Configure_Alternate_Function (RX_Pin & TX_Pin, AF => GPIO_AF_7_USART1);
    end Initialize_UART_GPIO;
 
    ----------------
@@ -105,7 +105,7 @@ procedure Demo_USART_Polling is
    -- Put_Blocking --
    ------------------
 
-   procedure Put_Blocking (This : in out USART;  Data : Short) is
+   procedure Put_Blocking (This : in out USART;  Data : UInt16) is
    begin
       Await_Send_Ready (This);
       Transmit (This, UInt9 (Data));

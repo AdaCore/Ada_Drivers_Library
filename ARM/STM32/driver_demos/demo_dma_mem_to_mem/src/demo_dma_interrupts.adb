@@ -45,7 +45,9 @@ with Ada.Real_Time;  use Ada.Real_Time;
 with STM32.DMA;      use STM32.DMA;
 with STM32.GPIO;     use STM32.GPIO;
 
-procedure Demo_DMA.Main is
+with Peripherals;    use Peripherals;
+
+procedure Demo_DMA_Interrupts is
 
    type Data is array (1 .. 100) of Integer; -- arbitrary size and type
 
@@ -97,7 +99,7 @@ begin
    if Event_Kind in Direct_Mode_Error_Interrupt | FIFO_Error_Interrupt | Transfer_Error_Interrupt then
       --  signal the problem and loop forever
       loop
-         Toggle (Green);
+         Green.Toggle;
          delay until Clock + Milliseconds (200);
       end loop;
    end if;
@@ -111,4 +113,4 @@ begin
    loop
       null; -- normal completion
    end loop;
-end Demo_DMA.Main;
+end Demo_DMA_Interrupts;

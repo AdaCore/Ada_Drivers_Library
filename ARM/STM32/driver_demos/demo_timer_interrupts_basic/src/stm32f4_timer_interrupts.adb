@@ -51,7 +51,7 @@ package body STM32F4_Timer_Interrupts is
          if Status (Timer_7, Timer_Update_Indicated) then
             if Interrupt_Enabled (Timer_7, Timer_Update_Interrupt) then
                Clear_Pending_Interrupt (Timer_7, Timer_Update_Interrupt);
-               Toggle (Green);
+               Green.Toggle;
             end if;
          end if;
       end IRQ_Handler;

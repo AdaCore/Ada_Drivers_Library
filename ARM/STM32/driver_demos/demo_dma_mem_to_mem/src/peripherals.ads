@@ -34,7 +34,7 @@ with STM32F4_DMA_Interrupts;
 with STM32.Device;           use STM32.Device;
 with STM32.DMA;              use STM32.DMA;
 
-package Demo_DMA is
+package Peripherals is
 
    Controller : DMA_Controller renames DMA_2;
    --  DMA_2 is required for memory-to-memory transfers, per the ST Micro
@@ -47,4 +47,4 @@ package Demo_DMA is
 
    IRQ_Handler : STM32F4_DMA_Interrupts.Handler (Controller'Access, Stream, IRQ_Id);
 
-end Demo_DMA;
+end Peripherals;

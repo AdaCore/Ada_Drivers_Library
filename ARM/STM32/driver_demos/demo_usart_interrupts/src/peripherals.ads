@@ -45,7 +45,7 @@ package Peripherals is
 
    Transceiver_Interrupt_Id : constant Interrupt_ID := USART1_Interrupt;
 
-   Transceiver_AF : constant GPIO_Alternate_Function := GPIO_AF_USART1;
+   Transceiver_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_7_USART1;
 
    COM : Serial_Port.Controller (Transceiver'Access, Transceiver_Interrupt_Id);
 

@@ -39,22 +39,23 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 --  predefined version. We need it in the executable, therefore it must be
 --  somewhere in the closure of the context clauses.
 
-with STM32F4.DMA;  use STM32F4.DMA;
+with STM32.Board;    use STM32.Board;
+with STM32.Device;   use STM32.Device;
 
-with STM32F4.F407_LEDs;  use STm32F4.F407_LEDs;
-with Ada.Real_Time;      use Ada.Real_Time;
+with Ada.Real_Time;  use Ada.Real_Time;
+with STM32.DMA;      use STM32.DMA;
+with STM32.GPIO;     use STM32.GPIO;
 
-procedure Demo_DMA is
+with Peripherals;    use Peripherals;
+
+procedure Demo_DMA_Polling is
 
    type Data is array (1 .. 100) of Integer;
 
    Source_Block      : constant Data := (others => 42);
    Destination_Block : Data := (others => 0);
 
-   Controller : constant DMA_Controller := DMA_2;  -- required for memory-to-memory xfer
-   Stream     : constant DMA_Stream_Selector := Stream_0;
-
-   Config : Configuration;
+   Config : DMA_Stream_Configuration;
 
    Status : DMA_Error_Code;
 
@@ -63,21 +64,21 @@ begin
 
    --  just to signal that we are indeed running...
    for K in 1 .. 3 loop
-      LED_On (Green);
+      All_LEDs_On;
       delay until Clock + Milliseconds (200);
-      LED_Off (Green);
+      All_LEDs_Off;
       delay until Clock + Milliseconds (200);
    end loop;
 
    Enable_Clock (Controller);
 
-   Config.Channel := Channel_0;
-   Config.Direction := Memory_To_Memory;
-   Config.Mode := Normal_Mode;  -- non-circular
-   Config.Priority := Priority_Medium;
-   Config.PeriphDataAlignment := Peripheral_Data_Alignment_Word;
-   Config.MemDataAlignment := Memory_Data_Alignment_Word;
-   Config.MemInc := True;
+   Config.Channel                  := Channel_0;
+   Config.Direction                := Memory_To_Memory;
+   Config.Operation_Mode           := Normal_Mode;  -- non-circular
+   Config.Priority                 := Priority_Medium;
+   Config.Peripheral_Data_Format   := Words;
+   Config.Memory_Data_Format       := Words;
+   Config.Increment_Memory_Address := True;
 
    Configure (Controller, Stream, Config);
    --  note the controller is disabled by the call to Configure
@@ -87,7 +88,7 @@ begin
       Stream,
       Source => Source_Block'Address,
       Destination => Destination_Block'Address,
-      Data_Length => Data'Length); -- Integer is same size as Word
+      Data_Count => Data'Length); -- Integer is same size as Word
 
    Poll_For_Completion
      (Controller,
@@ -99,20 +100,18 @@ begin
    if Status /= DMA_No_Error then
       --  signal the problem
       loop
-         LED_On (Blue);
-         delay until Clock + Milliseconds (200);
-         LED_Off (Blue);
+         Green.Toggle;
          delay until Clock + Milliseconds (200);
       end loop;
    end if;
 
    if Source_Block = Destination_Block then
-      LED_On (Green);
+      Turn_On (Green);
    else
-      LED_On (Orange);
+      Turn_On (Red);
    end if;
 
    loop
       null;
    end loop;
-end Demo_DMA;
+end Demo_DMA_Polling;
