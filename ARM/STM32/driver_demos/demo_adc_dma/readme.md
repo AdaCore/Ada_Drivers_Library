@@ -1,5 +1,8 @@
-Note that you will probably need to enable optimization (see the scenario
-variable) for proper execution.
+This program demonstrates reading the VBat (battery voltage) value from
+an ADC unit, using DMA.
+
+Note that you may need to enable optimization (see the scenario variable) for
+proper execution.
 
 This program is set up to run on the STM32F429 Discovery boards because
 it uses the LCD to display results.  This display usage is entirely for

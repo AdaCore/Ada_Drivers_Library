@@ -55,7 +55,7 @@ with LCD_Std_Out;  use LCD_Std_Out;
 
 procedure Demo_DAC_Basic is
 
-   use type Word;
+   use type UInt32;
 
    Output_Channel : constant DAC_Channel := Channel_1;  -- arbitrary
 
@@ -66,7 +66,7 @@ procedure Demo_DAC_Basic is
    --  should first be configured to analog mode. See the note in the RM, page
    --  431.
 
-   procedure Print (Value : Word);
+   procedure Print (Value : UInt32);
    --  Prints the image of the arg at a fixed location
 
    procedure Await_Button;
@@ -76,7 +76,7 @@ procedure Demo_DAC_Basic is
    -- Print --
    -----------
 
-   procedure Print (Value : Word) is
+   procedure Print (Value : UInt32) is
       Value_Image : constant String := Value'Img;
    begin
       LCD_Std_Out.Put (170, 52, Value_Image (2 .. Value_Image'Last) & "   ");
@@ -134,21 +134,21 @@ begin
    Enable (DAC_1, Output_Channel);
 
    declare
-      Value   : Word := 0;
-      Percent : Word;
+      Value   : UInt32 := 0;
+      Percent : UInt32;
 
       Resolution : constant DAC_Resolution := DAC_Resolution_12_Bits;
       --  Arbitrary, change as desired.  Counts will automatically adjust.
 
-      Max_Counts : constant Word := (if Resolution = DAC_Resolution_12_Bits
-                                     then Max_12bit_Resolution
-                                     else Max_8bit_Resolution);
+      Max_Counts : constant UInt32 := (if Resolution = DAC_Resolution_12_Bits
+                                       then Max_12bit_Resolution
+                                       else Max_8bit_Resolution);
    begin
       Put (0, 0, "VRef+ is 2.95V"); -- measured
       Put (0, 25, "Button advances");
       Put (0, 52, "Current %:");
       loop
-         for K in Word range 0 .. 10 loop
+         for K in UInt32 range 0 .. 10 loop
             Percent := K * 10;
             Print (Percent);
 

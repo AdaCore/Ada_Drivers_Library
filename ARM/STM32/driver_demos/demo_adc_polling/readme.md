@@ -1,3 +1,6 @@
+This program demonstrates reading the VBat (battery voltage) value from
+an ADC unit, using polling.
+
 There are three separate main programs in this project. These programs are set
 up to run on the STM32F429 Discovery boards because they use the LCD to display
 results.  This display usage is entirely for convenience -- some other means
