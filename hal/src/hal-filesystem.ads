@@ -68,15 +68,15 @@ package HAL.Filesystem is
    type IO_Count is new Unsigned_64;
 
    type FS_Driver is limited interface;
-   type FS_Driver_Ref is access all FS_Driver'Class;
+   type Any_FS_Driver is access all FS_Driver'Class;
    --  Interface to provide access a filesystem
 
    type File_Handle is limited interface;
-   type File_Handle_Ref is access all File_Handle'Class;
+   type Any_File_Handle is access all File_Handle'Class;
    --  Interface to provide access to a regular file
 
    type Directory_Handle is limited interface;
-   type Directory_Handle_Ref is access all Directory_Handle'Class;
+   type Any_Directory_Handle is access all Directory_Handle'Class;
    --  Interface to provide access to a directory
 
    --  ??? Document error cases for all primitives below
@@ -123,7 +123,7 @@ package HAL.Filesystem is
    function Open (This   : in out FS_Driver;
                   Path   : Pathname;
                   Mode   : File_Mode;
-                  Handle : out File_Handle_Ref)
+                  Handle : out Any_File_Handle)
                   return Status_Kind is abstract;
    --  Assuming Path designates a regular file, open it with the given Mode and
    --  create a Handle for it.
@@ -133,7 +133,7 @@ package HAL.Filesystem is
 
    function Open_Directory (This   : in out FS_Driver;
                             Path   : Pathname;
-                            Handle : out Directory_Handle_Ref)
+                            Handle : out Any_Directory_Handle)
                             return Status_Kind is abstract;
    --  Assuming Path designates a directory, open it and create a Handle for
    --  it.

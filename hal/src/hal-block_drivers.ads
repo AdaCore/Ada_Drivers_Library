@@ -34,7 +34,7 @@ with Interfaces; use Interfaces;
 package HAL.Block_Drivers is
 
    type Block_Driver is limited interface;
-   type Block_Driver_Ref is access all Block_Driver'Class;
+   type Any_Block_Driver is access all Block_Driver'Class;
 
    subtype Block is Byte_Array;
 

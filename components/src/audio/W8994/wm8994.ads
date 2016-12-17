@@ -88,9 +88,9 @@ package WM8994 is
    subtype Volume_Level is Unsigned_8 range 0 .. 100;
 
    type WM8994_Device
-     (Port     : not null I2C_Port_Ref;
+     (Port     : not null Any_I2C_Port;
       I2C_Addr : UInt10;
-      Time     : not null HAL.Time.Delays_Ref)
+      Time     : not null HAL.Time.Any_Delays)
    is tagged limited private;
 
    procedure Init (This      : in out WM8994_Device;
@@ -113,9 +113,9 @@ package WM8994 is
    procedure Reset (This : in out WM8994_Device);
 
 private
-   type WM8994_Device (Port     : not null I2C_Port_Ref;
+   type WM8994_Device (Port     : not null Any_I2C_Port;
                        I2C_Addr : UInt10;
-                       Time     : not null HAL.Time.Delays_Ref) is tagged limited null record;
+                       Time     : not null HAL.Time.Any_Delays) is tagged limited null record;
 
    procedure I2C_Write (This   : in out WM8994_Device;
                         Reg   : UInt16;

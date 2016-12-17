@@ -77,7 +77,7 @@ package HAL.Real_Time_Clock is
                       December  => 12);
 
    type RTC_Device is limited interface;
-   type RTC_Device_Ref is access all RTC_Device'Class;
+   type Any_RTC_Device is access all RTC_Device'Class;
 
    procedure Set (This : in out RTC_Device;
                   Time : RTC_Time;

@@ -49,8 +49,8 @@ with HAL.GPIO;  use HAL.GPIO;
 package LIS3DSH.SPI is
 
    type Three_Axis_Accelerometer_SPI
-     (Port        : not null SPI_Port_Ref;
-      Chip_Select : not null GPIO_Point_Ref)
+     (Port        : not null Any_SPI_Port;
+      Chip_Select : not null Any_GPIO_Point)
    is new Three_Axis_Accelerometer with private;
 
    overriding
@@ -68,8 +68,8 @@ package LIS3DSH.SPI is
 private
 
    type Three_Axis_Accelerometer_SPI
-     (Port        : not null SPI_Port_Ref;
-      Chip_Select : not null GPIO_Point_Ref)
+     (Port        : not null Any_SPI_Port;
+      Chip_Select : not null Any_GPIO_Point)
    is new Three_Axis_Accelerometer with null record;
 
 end LIS3DSH.SPI;

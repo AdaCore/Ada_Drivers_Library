@@ -58,7 +58,7 @@ package HAL.DSI is
 
    type DSI_Port is limited interface;
 
-   type DSI_Port_Ref is access all DSI_Port'Class;
+   type Any_DSI_Port is access all DSI_Port'Class;
 
    procedure DSI_Short_Write
      (Port       : in out DSI_Port;

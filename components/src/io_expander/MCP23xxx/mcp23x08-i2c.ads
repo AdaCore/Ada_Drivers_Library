@@ -33,13 +33,13 @@ with HAL.I2C;
 
 package MCP23x08.I2C is
 
-   type MCP23008_IO_Expander (Port : HAL.I2C.I2C_Port_Ref;
+   type MCP23008_IO_Expander (Port : HAL.I2C.Any_I2C_Port;
                          Addr : UInt3) is
      new MCP23x08_IO_Expander with private;
 
 private
 
-   type MCP23008_IO_Expander (Port : HAL.I2C.I2C_Port_Ref;
+   type MCP23008_IO_Expander (Port : HAL.I2C.Any_I2C_Port;
                          Addr : UInt3) is
      new MCP23x08_IO_Expander with null record;
 

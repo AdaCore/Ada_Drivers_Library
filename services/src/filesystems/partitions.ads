@@ -69,12 +69,12 @@ package Partitions is
 
    type Status_Code is (Status_Ok, Disk_Error, Invalid_Parition);
 
-   function Get_Partition_Entry (Disk         : not null Block_Driver_Ref;
+   function Get_Partition_Entry (Disk         : not null Any_Block_Driver;
                                  Entry_Number : Positive;
                                  P_Entry      : out Partition_Entry)
                                  return Status_Code;
 
-   function Number_Of_Partitions (Disk : Block_Driver_Ref) return Natural;
+   function Number_Of_Partitions (Disk : Any_Block_Driver) return Natural;
 
    function Is_Valid (P_Entry : Partition_Entry) return Boolean is
      (P_Entry.Status = 16#00# or else P_Entry.Status = 16#80#);

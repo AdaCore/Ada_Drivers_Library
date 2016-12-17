@@ -81,7 +81,7 @@ package MCP23x08 is
 
    function As_GPIO_Point (This : in out MCP23x08_IO_Expander;
                            Pin  : MCP23x08_Pin)
-                           return not null HAL.GPIO.GPIO_Point_Ref;
+                           return not null HAL.GPIO.Any_GPIO_Point;
    --  Return the HAL.GPIO interface conresponding to Pin
 
 private

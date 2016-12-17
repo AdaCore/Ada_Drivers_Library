@@ -39,7 +39,7 @@ with HAL.Touch_Panel;
 
 package FT6x06 is
 
-   type FT6x06_Device (Port     : not null I2C_Port_Ref;
+   type FT6x06_Device (Port     : not null Any_I2C_Port;
                        I2C_Addr : I2C_Address) is
      limited new HAL.Touch_Panel.Touch_Panel_Device with private;
 
@@ -79,7 +79,7 @@ package FT6x06 is
    --  points
 private
 
-   type FT6x06_Device (Port     : not null I2C_Port_Ref;
+   type FT6x06_Device (Port     : not null Any_I2C_Port;
                        I2C_Addr : I2C_Address) is
      limited new HAL.Touch_Panel.Touch_Panel_Device with record
       LCD_Natural_Width  : Natural := 0;

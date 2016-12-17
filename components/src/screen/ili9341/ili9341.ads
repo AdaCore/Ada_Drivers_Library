@@ -54,10 +54,10 @@ package ILI9341 is
 
    type ILI9341_Device
      (Port        : not null access SPI_Port'Class;
-      Chip_Select : not null GPIO_Point_Ref;
-      WRX         : not null GPIO_Point_Ref;
-      Reset       : not null GPIO_Point_Ref;
-      Time        : not null HAL.Time.Delays_Ref)
+      Chip_Select : not null Any_GPIO_Point;
+      WRX         : not null Any_GPIO_Point;
+      Reset       : not null Any_GPIO_Point;
+      Time        : not null HAL.Time.Any_Delays)
    is tagged limited private;
 
    type ILI9341_Mode is
@@ -152,10 +152,10 @@ private
 
    type ILI9341_Device
      (Port        : not null access SPI_Port'Class;
-      Chip_Select : not null GPIO_Point_Ref;
-      WRX         : not null GPIO_Point_Ref;
-      Reset       : not null GPIO_Point_Ref;
-      Time        : not null HAL.Time.Delays_Ref)
+      Chip_Select : not null Any_GPIO_Point;
+      WRX         : not null Any_GPIO_Point;
+      Reset       : not null Any_GPIO_Point;
+      Time        : not null HAL.Time.Any_Delays)
    is tagged limited record
       Selected_Orientation : Orientations;
 

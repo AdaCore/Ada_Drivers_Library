@@ -126,7 +126,7 @@ package body Semihosting.Filesystem is
      (This    : in out SHFS;
       Path    : Pathname;
       Mode    : File_Mode;
-      Handler : out File_Handle_Ref)
+      Handler : out Any_File_Handle)
       return Status_Kind
    is
       FH : SHFS_File_Handle_Access;
@@ -149,7 +149,7 @@ package body Semihosting.Filesystem is
          FH := This.Get_File_Handle;
          FH.FD := FD;
          FH.Is_Open := True;
-         Handler := File_Handle_Ref (FH);
+         Handler := Any_File_Handle (FH);
          return Status_Ok;
       end if;
    end Open;
@@ -161,7 +161,7 @@ package body Semihosting.Filesystem is
    overriding function Open_Directory
      (This   : in out SHFS;
       Path   : Pathname;
-      Handle : out Directory_Handle_Ref)
+      Handle : out Any_Directory_Handle)
       return Status_Kind
    is
       pragma Unreferenced (This, Path, Handle);

@@ -38,7 +38,7 @@ use HAL;
 package BNO055_I2C_IO is
 
    type IO_Port is tagged record
-      Port   : I2C_Port_Ref;
+      Port   : Any_I2C_Port;
       Device : I2C_Address;
    end record;
 

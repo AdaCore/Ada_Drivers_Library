@@ -61,7 +61,7 @@ package OV2640 is
       (1600,  1200)  --  /* UXGA  */
      );
 
-   type OV2640_Camera (I2C : not null I2C_Port_Ref) is private;
+   type OV2640_Camera (I2C : not null Any_I2C_Port) is private;
 
    procedure Initialize (This : in out OV2640_Camera;
                          Addr : I2C_Address);
@@ -87,7 +87,7 @@ package OV2640 is
                                       Enable : Boolean := True);
 private
 
-   type OV2640_Camera (I2C  : not null I2C_Port_Ref) is record
+   type OV2640_Camera (I2C  : not null Any_I2C_Port) is record
       Addr : UInt10;
    end record;
 

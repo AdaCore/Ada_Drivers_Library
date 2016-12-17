@@ -39,11 +39,11 @@ with HAL.Time;
 package ST7735R is
 
    type ST7735R_Device
-     (Port : not null SPI_Port_Ref;
-      CS   : not null GPIO_Point_Ref;
-      RS   : not null GPIO_Point_Ref;
-      RST  : not null GPIO_Point_Ref;
-      Time : not null HAL.Time.Delays_Ref)
+     (Port : not null Any_SPI_Port;
+      CS   : not null Any_GPIO_Point;
+      RS   : not null Any_GPIO_Point;
+      RST  : not null Any_GPIO_Point;
+      Time : not null HAL.Time.Any_Delays)
    is limited new HAL.Framebuffer.Frame_Buffer_Display with private;
 
    procedure Initialize (LCD : in out ST7735R_Device);
@@ -269,11 +269,11 @@ private
    subtype Pixel_Data is UInt16_Array (0 .. (Screen_Width * Screen_Height) - 1);
 
    type ST7735R_Device
-     (Port : not null SPI_Port_Ref;
-      CS   : not null GPIO_Point_Ref;
-      RS   : not null GPIO_Point_Ref;
-      RST  : not null GPIO_Point_Ref;
-      Time : not null HAL.Time.Delays_Ref)
+     (Port : not null Any_SPI_Port;
+      CS   : not null Any_GPIO_Point;
+      RS   : not null Any_GPIO_Point;
+      RST  : not null Any_GPIO_Point;
+      Time : not null HAL.Time.Any_Delays)
    is limited new HAL.Framebuffer.Frame_Buffer_Display with record
       Initialized : Boolean := True;
       Layer : aliased Bitmap_Buffer;

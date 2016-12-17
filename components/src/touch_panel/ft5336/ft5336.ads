@@ -37,7 +37,7 @@ with HAL.Touch_Panel; use HAL.Touch_Panel;
 
 package FT5336 is
 
-   type FT5336_Device (Port     : not null I2C_Port_Ref;
+   type FT5336_Device (Port     : not null Any_I2C_Port;
                        I2C_Addr : I2C_Address) is
      limited new Touch_Panel_Device with private;
 
@@ -78,7 +78,7 @@ package FT5336 is
 
 private
 
-   type FT5336_Device (Port     : not null I2C_Port_Ref;
+   type FT5336_Device (Port     : not null Any_I2C_Port;
                        I2C_Addr : I2C_Address) is
      limited new HAL.Touch_Panel.Touch_Panel_Device with record
       LCD_Natural_Width  : Natural := 0;
