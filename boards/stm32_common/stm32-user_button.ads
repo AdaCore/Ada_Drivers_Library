@@ -33,7 +33,7 @@
 --  on many (most) STM boards. It uses an interrupt handler to track presses,
 --  reflected in the result of calling function Has_Been_Pressed.
 
-package STM32.Button is
+package STM32.User_Button is
 
    procedure Initialize (Use_Rising_Edge : Boolean := True) with
      Pre  => not Initialized,
@@ -41,7 +41,9 @@ package STM32.Button is
 
    function Has_Been_Pressed return Boolean with
      Pre => Initialized;
+   --  Returns whether the user button has been pressed since the last time
+   --  this subprogram was called.
 
    function Initialized return Boolean;
 
-end STM32.Button;
+end STM32.User_Button;

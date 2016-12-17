@@ -40,7 +40,7 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 with STM32.Board;           use STM32.Board;
 with HAL.Bitmap;            use HAL.Bitmap;
 with HAL.Touch_Panel;       use HAL.Touch_Panel;
-with STM32.Button;
+with STM32.User_Button;     use STM32;
 
 with Bitmapped_Drawing;     use Bitmapped_Drawing;
 
@@ -70,7 +70,7 @@ begin
    Touch_Panel.Initialize;
 
    --  Initialize button
-   STM32.Button.Initialize;
+   User_Button.Initialize;
 
    --  Clear LCD (set background)
    Clear;
@@ -78,7 +78,7 @@ begin
    --  The application: set pixel where the finger is (so that you
    --  cannot see what you are drawing).
    loop
-      if STM32.Button.Has_Been_Pressed then
+      if User_Button.Has_Been_Pressed then
          Clear;
       end if;
 

@@ -36,40 +36,42 @@ with STM32.Device;  use STM32.Device;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.EXTI;    use STM32.EXTI;
 
-package body STM32.Button is
+package body STM32.User_Button is
 
    Button_High : Boolean := True;
 
    Debounce_Time : constant Time_Span := Milliseconds (250);
 
-   EXTI_Line : constant External_Line_Number := User_Button_Point.Get_Interrupt_Line_Number;
+   EXTI_Line : constant External_Line_Number := User_Button_Point.Interrupt_Line_Number;
 
    Initialization_Complete : Boolean := False;
 
-   -----------------
-   -- User_Button --
-   -----------------
+   ------------
+   -- Button --
+   ------------
 
-   protected User_Button is
+   protected Button is
       pragma Interrupt_Priority;
 
-      function Get_State return Boolean;
+      function Current_State return Boolean;
 
       procedure Clear_State;
 
    private
+
       procedure Interrupt;
       pragma Attach_Handler (Interrupt, User_Button_Interrupt);
 
       Pressed    : Boolean := False;
       Start_Time : Time    := Clock;
-   end User_Button;
 
-   -----------------
-   -- User_Button --
-   -----------------
+   end Button;
 
-   protected body User_Button is
+   ------------
+   -- Button --
+   ------------
+
+   protected body Button is
 
       ---------------
       -- Interrupt --
@@ -88,14 +90,14 @@ package body STM32.Button is
          end if;
       end Interrupt;
 
-      ---------------
-      -- Get_State --
-      ---------------
+      -------------------
+      -- Current_State --
+      -------------------
 
-      function Get_State return Boolean is
+      function Current_State return Boolean is
       begin
          return Pressed;
-      end Get_State;
+      end Current_State;
 
       -----------------
       -- Clear_State --
@@ -109,13 +111,16 @@ package body STM32.Button is
          end if;
       end Clear_State;
 
-   end User_Button;
+   end Button;
 
    ----------------
    -- Initialize --
    ----------------
 
    procedure Initialize (Use_Rising_Edge : Boolean := True) is
+      Edge : constant EXTI.External_Triggers :=
+               (if Use_Rising_Edge then Interrupt_Rising_Edge
+                else Interrupt_Falling_Edge);
    begin
       Enable_Clock (User_Button_Point);
 
@@ -126,9 +131,7 @@ package body STM32.Button is
           Resistors   => (if Use_Rising_Edge then Pull_Down else Pull_Up)));
 
       --  Connect the button's pin to the External Interrupt Handler
-      User_Button_Point.Configure_Trigger
-        ((if Use_Rising_Edge then Interrupt_Rising_Edge
-          else Interrupt_Falling_Edge));
+      User_Button_Point.Configure_Trigger (Edge);
 
       Button_High := Use_Rising_Edge;
       Initialization_Complete := True;
@@ -138,12 +141,11 @@ package body STM32.Button is
    -- Has_Been_Pressed --
    ----------------------
 
-   function Has_Been_Pressed return Boolean
-   is
+   function Has_Been_Pressed return Boolean is
       State : Boolean;
    begin
-      State := User_Button.Get_State;
-      User_Button.Clear_State;
+      State := Button.Current_State;
+      Button.Clear_State;
 
       return State;
    end Has_Been_Pressed;
@@ -154,4 +156,4 @@ package body STM32.Button is
 
    function Initialized return Boolean is (Initialization_Complete);
 
-end STM32.Button;
+end STM32.User_Button;
