@@ -199,11 +199,9 @@ package STM32.DMA with SPARK_Mode => Off is
       Data_Count  : UInt16)
      with
        Pre  =>
-            Valid_Addresses (Source, Destination)
-         and
-            Compatible_Alignments (This, Stream, Source, Destination)
-         and
-            (for all Flag in DMA_Status_Flag =>
+         Valid_Addresses (Source, Destination) and
+         Compatible_Alignments (This, Stream, Source, Destination) and
+         (for all Flag in DMA_Status_Flag =>
              (not Status (This, Stream, Flag)));
    --  Convenience routine: disables the stream, calls Configure_Data_Flow,
    --  and then enables the stream to start the transfer. DMA interrupts are
@@ -231,11 +229,9 @@ package STM32.DMA with SPARK_Mode => Off is
       Enabled_Interrupts : Interrupt_Selections := (others => True))
      with
        Pre =>
-             Valid_Addresses (Source, Destination)
-          and
-             Compatible_Alignments (This, Stream, Source, Destination)
-          and
-             (for all Flag in DMA_Status_Flag =>
+          Valid_Addresses (Source, Destination) and
+          Compatible_Alignments (This, Stream, Source, Destination) and
+          (for all Flag in DMA_Status_Flag =>
               (not Status (This, Stream, Flag)));
    --  Convenience routine: disables the stream, calls Configure_Data_Flow,
    --  enables the selected DMA interrupts (by default, all of them), and
@@ -518,45 +514,40 @@ package STM32.DMA with SPARK_Mode => Off is
       --  however, that the default values specified do not represent a valid
       --  configuration as a whole.
 
-      Channel                      : DMA_Channel_Selector :=
-                                       DMA_Channel_Selector'First;
+      Channel : DMA_Channel_Selector := DMA_Channel_Selector'First;
       --  The channel in the multiplexed connections of controllers, streams,
       --  and peripherals. It is vital to note that not all peripherals can
       --  be connected to all streams. The possibilities are organized by
       --  channels, per controller, as specified by the ST Micro Reference
       --  Manual in the "DMA Request Mapping" tables.
 
-      Direction                    : DMA_Data_Transfer_Direction :=
-                                       DMA_Data_Transfer_Direction'First;
+      Direction : DMA_Data_Transfer_Direction := DMA_Data_Transfer_Direction'First;
 
       Increment_Peripheral_Address : Boolean := False;
       --  Whether the peripheral address value should be incremented
       --  automatically after each transfer
 
-      Increment_Memory_Address     : Boolean := False;
+      Increment_Memory_Address : Boolean := False;
       --  Whether the memory address value should be incremented automatically
       --  after each transfer
 
-      Peripheral_Data_Format       : DMA_Data_Transfer_Widths :=
-                                       DMA_Data_Transfer_Widths'First;
+      Peripheral_Data_Format : DMA_Data_Transfer_Widths := DMA_Data_Transfer_Widths'First;
       --  The units of data (the format) in which the peripheral side of the
       --  transaction is expressed. For example, a USART would work in terms
       --  of bytes. See the description in Configure_Data_Flow.
 
-      Memory_Data_Format           : DMA_Data_Transfer_Widths :=
-                                       DMA_Data_Transfer_Widths'First;
+      Memory_Data_Format : DMA_Data_Transfer_Widths := DMA_Data_Transfer_Widths'First;
       --  The units of data (the format) in which the memory side of the
       --  transaction is expressed. See the description in Configure_Data_Flow.
 
-      Operation_Mode               : DMA_Mode := DMA_Mode'First;
+      Operation_Mode : DMA_Mode := DMA_Mode'First;
       --  Note that the circular buffer mode cannot be used if memory-to-memory
       --  data transfer is configured on the selected Stream
 
-      Priority                     : DMA_Priority_Level :=
-                                       DMA_Priority_Level'First;
+      Priority : DMA_Priority_Level := DMA_Priority_Level'First;
       --  The relative priority of the given stream to all other streams
 
-      FIFO_Enabled                 : Boolean := False;
+      FIFO_Enabled : Boolean := False;
       --  Specifies whether the internal FIFO will be used for the transactions
       --  occurring on the specified stream. By default the FIFO is disabled by
       --  the hardware, and so the unit works in the so-called "direct mode"
@@ -566,22 +557,19 @@ package STM32.DMA with SPARK_Mode => Off is
       --  burst sizes are only considered if the FIFO is enabled, and the
       --  corresponding values are highly dependent upon one another!
 
-      FIFO_Threshold               : DMA_FIFO_Threshold_Level :=
-                                       DMA_FIFO_Threshold_Level'First;
+      FIFO_Threshold : DMA_FIFO_Threshold_Level := DMA_FIFO_Threshold_Level'First;
       --  The threshold at which the FIFO is refilled. It is vital that the
       --  threshold and burst sizes, if specified, are compatible. See the
       --  Reference Manual and especially the Application Note.
 
-      Memory_Burst_Size            : DMA_Memory_Burst :=
-                                       DMA_Memory_Burst'First;
+      Memory_Burst_Size : DMA_Memory_Burst := DMA_Memory_Burst'First;
       --  Specifies the amount of data to be transferred in a single non-
       --  interruptible transaction. Note: The burst mode is possible only if
       --  the address increment mode is enabled.
 
-      Peripheral_Burst_Size        : DMA_Peripheral_Burst :=
-                                       DMA_Peripheral_Burst'First;
+      Peripheral_Burst_Size : DMA_Peripheral_Burst := DMA_Peripheral_Burst'First;
       --  Specifies the the amount of data to be transferred in
-      --  a single non-interruptible transaction. Note :The burst mode is
+      --  a single non-interruptible transaction. Note: The burst mode is
       --  possible only if the address increment mode is enabled.
    end record;
 

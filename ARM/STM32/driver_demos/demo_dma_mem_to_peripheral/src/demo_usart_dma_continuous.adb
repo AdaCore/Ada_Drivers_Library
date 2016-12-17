@@ -124,7 +124,7 @@ procedure Demo_USART_DMA_Continuous is
       Configuration.FIFO_Enabled                 := True;
       Configuration.FIFO_Threshold               := FIFO_Threshold_Full_Configuration;
       Configuration.Memory_Burst_Size            := Memory_Burst_Inc4;
-      Configuration.Peripheral_Burst_Size        := Peripheral_Burst_Inc4;
+      Configuration.Peripheral_Burst_Size        := Peripheral_Burst_Single;
 
       Configure (Controller, Tx_Stream, Configuration);
       --  note the controller is disabled by the call to Configure

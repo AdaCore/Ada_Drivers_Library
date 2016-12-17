@@ -14,8 +14,8 @@ The end of the cable is a female header, described in the datasheet
 Using male-to-female connector wires, connect the following on the STM32F4:
 
 * header pin 1, the black wire's header slot, to a ground pin on the board
-* header pin 4, the orange wire's header slot, to **PA2**
-* header pin 5, the yellow wire's header slot, to **PA3**
+* header pin 4, the orange wire's header slot, to **PA3**
+* header pin 5, the yellow wire's header slot, to **PA2**
 
 Header pin 4 on the cable is TXD, the transmit data output.
 Header pin 5 on the cable is RXD, the receive data input.
