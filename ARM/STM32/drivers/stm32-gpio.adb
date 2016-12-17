@@ -319,16 +319,16 @@ package body STM32.GPIO is
       end loop;
    end Configure_Alternate_Function;
 
-   -------------------------------
-   -- Get_Interrupt_Line_Number --
-   -------------------------------
+   ---------------------------
+   -- Interrupt_Line_Number --
+   ---------------------------
 
-   function Get_Interrupt_Line_Number
+   function Interrupt_Line_Number
      (This : GPIO_Point) return EXTI.External_Line_Number
    is
    begin
       return EXTI.External_Line_Number'Val (This.Pin);
-   end Get_Interrupt_Line_Number;
+   end Interrupt_Line_Number;
 
    -----------------------
    -- Configure_Trigger --
@@ -339,8 +339,7 @@ package body STM32.GPIO is
       Trigger : EXTI.External_Triggers)
    is
       use STM32.EXTI;
-      Line : constant External_Line_Number :=
-        External_Line_Number'Val (This.Pin);
+      Line : constant External_Line_Number := External_Line_Number'Val (This.Pin);
       use STM32.SYSCFG, STM32.RCC;
    begin
       SYSCFG_Clock_Enable;
