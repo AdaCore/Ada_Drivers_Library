@@ -52,6 +52,8 @@ with Ada.Real_Time;          use Ada.Real_Time;
 with Peripherals;            use Peripherals;
 with STM32F4_DMA_Interrupts; use STM32F4_DMA_Interrupts;
 
+with HAL; use HAL;
+
 procedure Demo_USART_DMA is
 
    type Data is array (1 .. 26) of Character; -- arbitrary size and component
@@ -130,7 +132,7 @@ procedure Demo_USART_DMA is
       Configuration.FIFO_Enabled                 := True;
       Configuration.FIFO_Threshold               := FIFO_Threshold_Full_Configuration;
       Configuration.Memory_Burst_Size            := Memory_Burst_Inc4;
-      Configuration.Peripheral_Burst_Size        := Peripheral_Burst_Inc4;
+      Configuration.Peripheral_Burst_Size        := Peripheral_Burst_Single;
 
       Configure (Controller, Tx_Stream, Configuration);
       --  note the controller is disabled by the call to Configure
@@ -170,8 +172,6 @@ begin
       Data_Count  => Bytes_To_Transfer);
    --  also enables the stream
 
---  TODO: clear the flags esp the overrun flag   ???
-
    Enable_DMA_Transmit_Requests (Transceiver);
 
    Handler.Await_Event (Event_Kind);
@@ -186,13 +186,11 @@ begin
          when Transfer_Error_Interrupt         => Status_LED := Red;
          when Half_Transfer_Complete_Interrupt => Status_LED := Green;
          when Transfer_Complete_Interrupt      => Status_LED := Green;
-            Interval := 800;
+            Interval := 1000;
             --  also change the blink rate, to distinguish from the HTCI
       end case;
       loop
-         Turn_On (Status_LED);
-         delay until Clock + Milliseconds (Interval);
-         Turn_Off (Status_LED);
+         Status_LED.Toggle;
          delay until Clock + Milliseconds (Interval);
       end loop;
    end;
