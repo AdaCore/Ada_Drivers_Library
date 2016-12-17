@@ -80,6 +80,23 @@ procedure Demo_LIS3DSH_PWM is
    procedure Initialize_PWM_Outputs;
    --  Set up all the PWM output modulators tied to the LEDs
 
+   procedure Panic with No_Return;
+   --  indicate that there is a fatal problem (accelerometer not found)
+
+   -----------
+   -- Panic --
+   -----------
+
+   procedure Panic is
+   begin
+      loop
+         All_LEDs_On;
+         delay until Clock + Milliseconds (250);
+         All_LEDs_Off;
+         delay until Clock + Milliseconds (250);
+      end loop;
+   end Panic;
+
    ----------------
    -- Brightness --
    ----------------
@@ -218,7 +235,7 @@ begin
       Filter_BW       => Filter_800Hz);
 
    if Accelerometer.Device_Id /= I_Am_LIS3DSH then
-      raise Program_Error with "invalid accelerometer";
+      Panic;
    end if;
 
    Initialize_PWM_Outputs;

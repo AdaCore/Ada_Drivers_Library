@@ -30,7 +30,9 @@
 ------------------------------------------------------------------------------
 
 --  This program demonstrates reading the internal temperature sensor value
---  from an ADC unit, using polling.
+--  from an ADC unit, using polling. This temperature can be used to calibrate
+--  the ADC results because those results vary with the internal device
+--  temperature. Note that this is not an external (ambient air) reading.
 
 --  Note that you will likely need to reset the board manually after loading.
 

@@ -1,12 +1,22 @@
+This program demonstrates using the DMA controller to send data from 
+memory to a peripheral. 
+
+Specifically, it uses DMA to send a block of characters to a USART. The 
+characters are sent continuously as long as the program executes. 
+
+Note that all the LEDs flash initially, before any characters are sent, 
+as a confirmation of overall execution. 
+
 You need a way to connect the GPIO pins on the target board to a serial port on
 your host computer.
 
-You can use a USB cable specifically designed to appear as a COM port:
+You can use a USB cable specifically designed to appear as a serial port. 
+For example, one among many such cables is the following:
 
-* Mouser Part No: 	895-TTL-232R-5V
-* Manufacturer Part No: 	TTL-232R-5V
-* Manufacturer: 	FTDI
-* Description: 	USB Cables / IEEE 1394 Cables USB Embedded Serial Conv 5V 0.1" Header
+* Mouser Part No:       895-TTL-232R-5V
+* Manufacturer Part No: TTL-232R-5V
+* Manufacturer:         FTDI
+* Description:          USB Cables / IEEE 1394 Cables USB Embedded Serial Conv 5V 0.1" Header
 
 The end of the cable is a female header, described in the datasheet
 (`DS_TTL-232R_CABLES-217672.pdf`).  See pages 10 and 11 in particular.
