@@ -58,9 +58,8 @@ package HAL.Audio is
 
    type Audio_Stream is limited interface;
 
-   procedure Set_Frequency
-     (This      : in out Audio_Stream;
-      Frequency : Audio_Frequency) is abstract;
+   procedure Set_Frequency (This      : in out Audio_Stream;
+                            Frequency : Audio_Frequency) is abstract;
 
    procedure Transmit (This : in out Audio_Stream;
                        Data : Audio_Buffer) is abstract;

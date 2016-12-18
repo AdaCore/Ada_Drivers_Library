@@ -229,7 +229,7 @@ package body Audio is
         (Output    => CS43L22.Auto,
          Volume    => Unsigned_8 (Volume),
          Frequency =>
-           CS43L22.Audio_Frequency'Enum_Val
+           HAL.Audio.Audio_Frequency'Enum_Val
              (Audio_Frequency'Enum_Rep (Frequency)));
    end Initialize_Audio_Out;
 
