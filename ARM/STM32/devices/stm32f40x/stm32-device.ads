@@ -329,7 +329,6 @@ package STM32.Device is
    DMA_2 : aliased DMA_Controller with Import, Volatile, Address => DMA2_Base;
 
    procedure Enable_Clock (This : aliased in out DMA_Controller);
-
    procedure Reset (This : aliased in out DMA_Controller);
 
    Internal_I2C_Port_1 : aliased Internal_I2C_Port with Import, Volatile, Address => I2C1_Base;

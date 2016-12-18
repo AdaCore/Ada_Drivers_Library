@@ -852,7 +852,7 @@ package body STM32.Device is
 
    -------------------
    -- Enable_PLLSAI --
-   -------------------;
+   -------------------
 
    procedure Enable_PLLSAI is
    begin
@@ -866,7 +866,7 @@ package body STM32.Device is
 
    -------------------
    -- Enable_PLLSAI --
-   -------------------;
+   -------------------
 
    procedure Disable_PLLSAI is
    begin
