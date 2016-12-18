@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                     Copyright (C) 2015-2016, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -489,6 +489,58 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
+   procedure Enable_Clock (This : I2S_Port) is
+   begin
+      if This.Periph.all'Address = SPI1_Base then
+         RCC_Periph.APB2ENR.SPI1EN := True;
+      elsif This.Periph.all'Address = SPI2_Base then
+         RCC_Periph.APB1ENR.SPI2EN := True;
+      elsif This.Periph.all'Address = SPI3_Base then
+         RCC_Periph.APB1ENR.SPI3EN := True;
+      elsif This.Periph.all'Address = SPI4_Base then
+         RCC_Periph.APB2ENR.SPI5ENR := True;
+      elsif This.Periph.all'Address = SPI5_Base then
+         RCC_Periph.APB2ENR.SPI5ENR := True;
+      elsif This.Periph.all'Address = SPI6_Base then
+         RCC_Periph.APB2ENR.SPI6ENR := True;
+      else
+         raise Unknown_Device;
+      end if;
+   end Enable_Clock;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : in out I2S_Port) is
+   begin
+      if This.Periph.all'Address = SPI1_Base then
+         RCC_Periph.APB2RSTR.SPI1RST := True;
+         RCC_Periph.APB2RSTR.SPI1RST := False;
+      elsif This.Periph.all'Address = SPI2_Base then
+         RCC_Periph.APB1RSTR.SPI2RST := True;
+         RCC_Periph.APB1RSTR.SPI2RST := False;
+      elsif This.Periph.all'Address = SPI3_Base then
+         RCC_Periph.APB1RSTR.SPI3RST := True;
+         RCC_Periph.APB1RSTR.SPI3RST := False;
+      elsif This.Periph.all'Address = SPI4_Base then
+         RCC_Periph.APB2RSTR.SPI4RST := True;
+         RCC_Periph.APB2RSTR.SPI4RST := False;
+      elsif This.Periph.all'Address = SPI5_Base then
+         RCC_Periph.APB2RSTR.SPI5RST := True;
+         RCC_Periph.APB2RSTR.SPI5RST := False;
+      elsif This.Periph.all'Address = SPI6_Base then
+         RCC_Periph.APB2RSTR.SPI6RST := True;
+         RCC_Periph.APB2RSTR.SPI6RST := False;
+      else
+         raise Unknown_Device;
+      end if;
+   end Reset;
+
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
    procedure Enable_Clock (This : in out Timer) is
    begin
       if This'Address = TIM1_Base then
@@ -690,6 +742,8 @@ package body STM32.Device is
       Source       : constant UInt2 := RCC_Periph.CFGR.SWS;
       Result       : RCC_System_Clocks;
    begin
+      Result.I2SCLK := 0;
+
       case Source is
          when 0 =>
             --  HSI as source
@@ -710,10 +764,17 @@ package body STM32.Device is
                Pllvco     : UInt32;
             begin
                if not HSE_Source then
-                  Pllvco := (HSI_VALUE / Pllm) * Plln;
+                  Pllvco := HSI_VALUE;
                else
-                  Pllvco := (HSE_VALUE / Pllm) * Plln;
+                  Pllvco := HSE_VALUE;
                end if;
+
+               Pllvco := Pllvco / Pllm;
+
+               Result.I2SCLK := Pllvco;
+
+               Pllvco := Pllvco * Plln;
+
                Result.SYSCLK := Pllvco / Pllp;
             end;
          when others =>
@@ -768,8 +829,70 @@ package body STM32.Device is
          end if;
       end;
 
+      -- I2S Clock --
+
+      if RCC_Periph.CFGR.I2SSRC then
+         --  External clock source
+         Result.I2SCLK := 0;
+         raise Program_Error with "External I2S clock value is unknown";
+      else
+         --  Pll clock source
+         declare
+            Plli2sn : constant UInt32 :=
+              UInt32 (RCC_Periph.PLLI2SCFGR.PLLI2SN);
+            Plli2sr : constant UInt32
+              := UInt32 (RCC_Periph.PLLI2SCFGR.PLLI2SR);
+         begin
+            Result.I2SCLK := (Result.I2SCLK * Plli2sn) / Plli2sr;
+         end;
+      end if;
+
       return Result;
    end System_Clock_Frequencies;
+
+   --------------------
+   -- PLLI2S_Enabled --
+   --------------------
+
+   function PLLI2S_Enabled return Boolean is
+     (RCC_Periph.CR.PLLI2SRDY);
+
+   ------------------------
+   -- Set_PLLI2S_Factors --
+   ------------------------
+
+   procedure Set_PLLI2S_Factors (Pll_N : UInt9;
+                                 Pll_R : UInt3)
+
+   is
+   begin
+      RCC_Periph.PLLI2SCFGR.PLLI2SN := Pll_N;
+      RCC_Periph.PLLI2SCFGR.PLLI2SR := Pll_R;
+   end Set_PLLI2S_Factors;
+
+   -------------------
+   -- Enable_PLLI2S --
+   -------------------
+
+   procedure Enable_PLLI2S is
+   begin
+      RCC_Periph.CR.PLLI2SON := True;
+      loop
+         exit when PLLI2S_Enabled;
+      end loop;
+   end Enable_PLLI2S;
+
+   --------------------
+   -- Disable_PLLI2S --
+   --------------------
+
+   procedure Disable_PLLI2S is
+   begin
+      RCC_Periph.CR.PLLI2SON := False;
+      loop
+         exit when not PLLI2S_Enabled;
+      end loop;
+   end Disable_PLLI2S;
 
    -------------------
    -- Enable_PLLSAI --
