@@ -203,7 +203,7 @@ package body Audio is
    -- Initialize --
    ----------------
 
-   overriding procedure Initialize_Audio_Out
+   procedure Initialize_Audio_Out
      (This      : in out CS43L22_Audio_Device;
       Volume    : Audio_Volume;
       Frequency : Audio_Frequency)
@@ -251,7 +251,7 @@ package body Audio is
    -- Play --
    ----------
 
-   overriding procedure Play
+   procedure Play
      (This   : in out CS43L22_Audio_Device;
       Buffer : Audio_Buffer)
    is
@@ -275,7 +275,7 @@ package body Audio is
    -- Pause --
    -----------
 
-   overriding procedure Pause (This : in out CS43L22_Audio_Device) is
+   procedure Pause (This : in out CS43L22_Audio_Device) is
    begin
       This.Device.Pause;
       DMA_Pause (Audio_SAI, SAI_Out_Block);
@@ -285,7 +285,7 @@ package body Audio is
    -- Resume --
    ------------
 
-   overriding procedure Resume (This : in out CS43L22_Audio_Device)
+   procedure Resume (This : in out CS43L22_Audio_Device)
    is
    begin
       This.Device.Resume;
@@ -296,7 +296,7 @@ package body Audio is
    -- Stop --
    ----------
 
-   overriding procedure Stop (This : in out CS43L22_Audio_Device)
+   procedure Stop (This : in out CS43L22_Audio_Device)
    is
    begin
       This.Device.Stop;
@@ -310,7 +310,7 @@ package body Audio is
    -- Set_Volume --
    ----------------
 
-   overriding procedure Set_Volume
+   procedure Set_Volume
      (This   : in out CS43L22_Audio_Device;
       Volume : Audio_Volume)
    is
@@ -322,7 +322,7 @@ package body Audio is
    -- Set_Frequency --
    -------------------
 
-   overriding procedure Set_Frequency
+   procedure Set_Frequency
      (This      : in out CS43L22_Audio_Device;
       Frequency : Audio_Frequency)
    is

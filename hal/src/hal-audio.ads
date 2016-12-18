@@ -34,7 +34,7 @@ with Interfaces; use Interfaces;
 package HAL.Audio is
 
    type Audio_Buffer is array (Natural range <>) of Integer_16
-     with Component_Size => 16, Alignment => 32;
+     with Component_Size => 16, Alignment => 16;
 
    type Audio_Volume is new Natural range 0 .. 100;
 
@@ -56,35 +56,16 @@ package HAL.Audio is
       Audio_Freq_48kHz => 48_000,
       Audio_Freq_96kHz => 96_000);
 
-   type Audio_Buffer_Completion_Level is
-     (Half, Full);
-
-   type Audio_Device is limited interface;
-
-   procedure Initialize_Audio_Out
-     (This      : in out Audio_Device;
-      Volume    : Audio_Volume;
-      Frequency : Audio_Frequency) is abstract;
-
-   procedure Play
-     (This   : in out Audio_Device;
-      Buffer : Audio_Buffer) is abstract;
-
-   procedure Pause
-     (This : in out Audio_Device) is abstract;
-
-   procedure Resume
-     (This : in out Audio_Device) is abstract;
-
-   procedure Stop
-     (This : in out Audio_Device) is abstract;
-
-   procedure Set_Volume
-     (This   : in out Audio_Device;
-      Volume : Audio_Volume) is abstract;
+   type Audio_Stream is limited interface;
 
    procedure Set_Frequency
-     (This      : in out Audio_Device;
+     (This      : in out Audio_Stream;
       Frequency : Audio_Frequency) is abstract;
+
+   procedure Transmit (This : in out Audio_Stream;
+                       Data : Audio_Buffer) is abstract;
+
+   procedure Receive (This : in out Audio_Stream;
+                      Data : out Audio_Buffer) is abstract;
 
 end HAL.Audio;
