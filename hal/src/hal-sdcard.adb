@@ -1,4 +1,3 @@
-with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Real_Time; use Ada.Real_Time;
 
 package body HAL.SDCard is
@@ -125,7 +124,6 @@ package body HAL.SDCard is
       Send_Cmd (Driver, Go_Idle_State, 0, Status);
 
       if Status /= OK then
-         Put_Line ("go_idle_state: bad reply");
          return;
       end if;
 
@@ -142,7 +140,6 @@ package body HAL.SDCard is
 
          if (Rsp and 16#fff#) /= 16#1a5# then
             --  Bad voltage or bad pattern.
-            Put_Line ("if_cond: bad reply");
             Status := Error;
             return;
          end if;
@@ -175,7 +172,6 @@ package body HAL.SDCard is
          Send_Cmd
            (Driver, Acmd_Desc (SD_App_Send_Op_Cond), 16#40ff_0000#, Status);
          if Status /= OK then
-            Put_Line ("send_op_cond failed");
             return;
          end if;
 
@@ -187,7 +183,6 @@ package body HAL.SDCard is
 
          if (Rsp and SD_OCR_Power_Up) = 0 then
             Status := Error;
-            Put_Line ("wait...");
 
          else
             Status := OK;
@@ -204,7 +199,6 @@ package body HAL.SDCard is
             --  CMD1: SEND_OP_COND query voltage
             Send_Cmd (Driver, Cmd_Desc (Send_Op_Cond), 16#00ff_8000#, Status);
             if Status /= OK then
-               Put_Line ("send_op_cond failed");
                return;
             end if;
 
@@ -212,10 +206,8 @@ package body HAL.SDCard is
 
             if (Rsp and SD_OCR_Power_Up) = 0 then
                Status := Error;
-               Put_Line ("wait...");
             else
                if (Rsp and 16#00ff_8000#) /= 16#00ff_8000# then
-                  Put_Line ("non-supported MMC voltage");
                   Status := Error;
                   return;
                end if;
@@ -234,7 +226,6 @@ package body HAL.SDCard is
       --  CMD2: ALL_SEND_CID (136 bits)
       Send_Cmd (Driver, All_Send_CID, 0, Status);
       if Status /= OK then
-         Put_Line ("all_send_sid: timeout");
          return;
       end if;
 
@@ -251,7 +242,6 @@ package body HAL.SDCard is
 
       Send_Cmd (Driver, Send_Relative_Addr, Rca, Status);
       if Status /= OK then
-         Put_Line ("send_relative_addr: timeout");
          return;
       end if;
       case Info.Card_Type is
@@ -261,7 +251,6 @@ package body HAL.SDCard is
             Read_Rsp48 (Driver, Rsp);
             Rca := Rsp and 16#ffff_0000#;
             if (Rsp and 16#e100#) /= 16#0100# then
-               Put_Line ("card is not ready");
                return;
             end if;
       end case;
@@ -283,14 +272,12 @@ package body HAL.SDCard is
       --  CMD10: SEND_CID (136 bits)
       Send_Cmd (Driver, Send_CID, Rca, Status);
       if Status /= OK then
-         Put_Line ("send_sid: timeout");
          return;
       end if;
 
       --  CMD9: SEND_CSD
       Send_Cmd (Driver, Send_CSD, Rca, Status);
       if Status /= OK then
-         Put_Line ("send_csd: timeout");
          return;
       end if;
       Read_Rsp136 (Driver, W0, W1, W2, W3);
@@ -304,19 +291,14 @@ package body HAL.SDCard is
       --  CMD7: SELECT
       Send_Cmd (Driver, Select_Card, Rca, Status);
       if Status /= OK then
-         Put_Line ("select: timeout");
          return;
       end if;
 
       --  CMD13: STATUS
       Send_Cmd (Driver, Send_Status, Rca, Status);
       if Status /= OK then
-         Put_Line ("send_status: timeout");
          return;
       end if;
-
---        --  ACMD51: Read SCR
---        Read_SCR (Driver, Info, SCR, Status);
 
       --  Bus size
       case Info.Card_Type is
@@ -325,7 +307,6 @@ package body HAL.SDCard is
            | High_Capacity_SD_Card =>
             Send_ACmd (Driver, SD_App_Set_Bus_Width, Info.RCA, 2, Status);
             if Status /= OK then
-               Put_Line ("set bus width failed");
                return;
             else
                Set_Bus_Size (Driver, Wide_Bus_4B);
@@ -345,7 +326,6 @@ package body HAL.SDCard is
             Read_Cmd (Driver, Cmd_Desc (Switch_Func), 16#00_fffff0#,
                       Switch_Status'Address, 512 / 8, Status);
             if Status /= OK then
-               Put_Line ("switch_func check failed");
                return;
             end if;
 
@@ -359,7 +339,6 @@ package body HAL.SDCard is
                Read_Cmd (Driver, Cmd_Desc (Switch_Func), 16#80_fffff1#,
                          Switch_Status'Address, 512 / 8, Status);
                if Status /= OK then
-                  Put_Line ("switch_func failed");
                   return;
                end if;
 
@@ -389,7 +368,6 @@ package body HAL.SDCard is
 
       Send_Cmd (Driver, App_Cmd, Rca, Status);
       if Status /= OK then
-         Put_Line ("app_specific failed");
          return;
       end if;
 
@@ -397,7 +375,6 @@ package body HAL.SDCard is
                 Tmp'Address, 8, Status);
 
       if Status /= OK then
-         Put_Line ("send_scr failed");
          return;
       end if;
 
@@ -680,4 +657,5 @@ package body HAL.SDCard is
          when others => return 400_000;
       end case;
    end Get_Transfer_Rate;
+
 end HAL.SDCard;
