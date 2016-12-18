@@ -30,8 +30,8 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with Ada.Real_Time;   use Ada.Real_Time;
-with System;          use System;
+with Ada.Real_Time;       use Ada.Real_Time;
+with System;              use System;
 with System.Machine_Code;
 
 package body STM32.SDMMC is
@@ -158,6 +158,10 @@ package body STM32.SDMMC is
    --  wait 3 48MHz periods + 2 90MHz periods. So instead of inserting a 1ms
    --  delay statement (which would be overkill), we just issue a few
    --  nop instructions to let the CPU wait this period.
+
+   -----------------------
+   -- DCTRL_Write_Delay --
+   -----------------------
 
    procedure DCTRL_Write_Delay
    is
@@ -660,6 +664,9 @@ package body STM32.SDMMC is
       DCTRL_Write_Delay;
 
       Controller.Periph.CLKCR.CLKEN := True;
+
+      --  Wait for the clock to stabilize.
+      delay until Clock + Milliseconds (10);
 
       --  CMD0: Go idle state
       --  no CMD reponse required
@@ -1303,7 +1310,7 @@ package body STM32.SDMMC is
 
    function Initialize
      (This : in out SDMMC_Controller;
-      Info       : out Card_Information) return SD_Error
+      Info : out Card_Information) return SD_Error
    is
       Ret : SD_Error;
    begin
@@ -1341,8 +1348,6 @@ package body STM32.SDMMC is
       if Ret /= OK then
          return Ret;
       end if;
-
-      delay until Clock +  Milliseconds (50);
 
       Ret := Initialize_Cards (This);
 

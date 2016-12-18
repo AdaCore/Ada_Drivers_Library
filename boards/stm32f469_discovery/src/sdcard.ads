@@ -72,20 +72,18 @@ package SDCard is
 
    overriding function Read
      (Controller   : in out SDCard_Controller;
-      Block_Number : Unsigned_32;
+      Block_Number : Unsigned_64;
       Data         : out Block) return Boolean
-     with Pre => (Data'Size mod Controller.Block_Size) = 0
-                 and then Data'Size < 2 ** 16;
+     with Pre => Data'Size < 2 ** 16;
    --  Reads Data.
    --  Data size needs to be a multiple of the card's block size and maximum
    --  length is 2**16
 
    overriding function Write
      (Controller   : in out SDCard_Controller;
-      Block_Number : Unsigned_32;
+      Block_Number : Unsigned_64;
       Data         : Block) return Boolean
-     with Pre => (Data'Size mod Controller.Block_Size) = 0
-                 and then Data'Size < 2 ** 16;
+     with Pre => Data'Size < 2 ** 16;
    --  Writes Data.
    --  Data size needs to be a multiple of the card's block size and maximum
    --  length is 2**16
