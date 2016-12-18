@@ -435,17 +435,17 @@ package body STM32.Device is
 
    procedure Enable_Clock (This : SPI_Port) is
    begin
-      if This'Address = SPI1_Base then
+      if This.Periph.all'Address = SPI1_Base then
          RCC_Periph.APB2ENR.SPI1EN := True;
-      elsif This'Address = SPI2_Base then
+      elsif This.Periph.all'Address = SPI2_Base then
          RCC_Periph.APB1ENR.SPI2EN := True;
-      elsif This'Address = SPI3_Base then
+      elsif This.Periph.all'Address = SPI3_Base then
          RCC_Periph.APB1ENR.SPI3EN := True;
-      elsif This'Address = SPI4_Base then
+      elsif This.Periph.all'Address = SPI4_Base then
          RCC_Periph.APB2ENR.SPI4ENR := True;
-      elsif This'Address = SPI5_Base then
+      elsif This.Periph.all'Address = SPI5_Base then
          RCC_Periph.APB2ENR.SPI5ENR := True;
-      elsif This'Address = SPI6_Base then
+      elsif This.Periph.all'Address = SPI6_Base then
          RCC_Periph.APB2ENR.SPI6ENR := True;
       else
          raise Unknown_Device;
@@ -458,22 +458,22 @@ package body STM32.Device is
 
    procedure Reset (This : SPI_Port) is
    begin
-      if This'Address = SPI1_Base then
+      if This.Periph.all'Address = SPI1_Base then
          RCC_Periph.APB2RSTR.SPI1RST := True;
          RCC_Periph.APB2RSTR.SPI1RST := False;
-      elsif This'Address = SPI2_Base then
+      elsif This.Periph.all'Address = SPI2_Base then
          RCC_Periph.APB1RSTR.SPI2RST := True;
          RCC_Periph.APB1RSTR.SPI2RST := False;
-      elsif This'Address = SPI3_Base then
+      elsif This.Periph.all'Address = SPI3_Base then
          RCC_Periph.APB1RSTR.SPI3RST := True;
          RCC_Periph.APB1RSTR.SPI3RST := False;
-      elsif This'Address = SPI4_Base then
+      elsif This.Periph.all'Address = SPI4_Base then
          RCC_Periph.APB2RSTR.SPI4RST := True;
          RCC_Periph.APB2RSTR.SPI4RST := False;
-      elsif This'Address = SPI5_Base then
+      elsif This.Periph.all'Address = SPI5_Base then
          RCC_Periph.APB2RSTR.SPI5RST := True;
          RCC_Periph.APB2RSTR.SPI5RST := False;
-      elsif This'Address = SPI6_Base then
+      elsif This.Periph.all'Address = SPI6_Base then
          RCC_Periph.APB2RSTR.SPI6RST := True;
          RCC_Periph.APB2RSTR.SPI6RST := False;
       else

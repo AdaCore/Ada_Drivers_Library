@@ -419,13 +419,13 @@ package body STM32.Device is
 
    procedure Reset (This : in out SPI_Port) is
    begin
-      if This'Address = SPI1_Base then
+      if This.Periph.all'Address = SPI1_Base then
          RCC_Periph.APB2RSTR.SPI1RST := True;
          RCC_Periph.APB2RSTR.SPI1RST := False;
-      elsif This'Address = SPI2_Base then
+      elsif This.Periph.all'Address = SPI2_Base then
          RCC_Periph.APB1RSTR.SPI2RST := True;
          RCC_Periph.APB1RSTR.SPI2RST := False;
-      elsif This'Address = SPI3_Base then
+      elsif This.Periph.all'Address = SPI3_Base then
          RCC_Periph.APB1RSTR.SPI3RST := True;
          RCC_Periph.APB1RSTR.SPI3RST := False;
       else
