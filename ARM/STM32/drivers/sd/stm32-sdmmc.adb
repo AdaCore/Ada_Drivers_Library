@@ -271,7 +271,7 @@ package body STM32.SDMMC is
 
       Div : Natural;
    begin
-      Div := (This.CLK_In + 2 * Freq - 1) / (2 * Freq);
+      Div := (This.CLK_In + Freq - 1) / Freq;
 
       --  Make sure the POWER register is writable by waiting a bit after
       --  the Power_Off command
