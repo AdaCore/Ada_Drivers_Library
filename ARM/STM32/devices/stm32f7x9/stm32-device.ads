@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                     Copyright (C) 2015-2016, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -60,6 +60,7 @@ with STM32.GPIO;    use STM32.GPIO;
 with STM32.I2C;     use STM32.I2C;
 with STM32.SDMMC;   use STM32.SDMMC;
 with STM32.SPI;     use STM32.SPI;
+with STM32.I2S;     use STM32.I2S;
 with STM32.Timers;  use STM32.Timers;
 with STM32.RTC;     use STM32.RTC;
 
@@ -476,6 +477,29 @@ package STM32.Device is
    procedure Enable_Clock (This : SPI_Port);
    procedure Reset (This : SPI_Port);
 
+   Internal_I2S_1 : aliased Internal_I2S_Port
+     with Import, Volatile, Address => SPI1_Base;
+   Internal_I2S_2 : aliased Internal_I2S_Port
+     with Import, Volatile, Address => SPI2_Base;
+   Internal_I2S_3 : aliased Internal_I2S_Port
+     with Import, Volatile, Address => SPI3_Base;
+   Internal_I2S_4 : aliased Internal_I2S_Port
+     with Import, Volatile, Address => SPI4_Base;
+   Internal_I2S_5 : aliased Internal_I2S_Port
+     with Import, Volatile, Address => SPI5_Base;
+   Internal_I2S_6 : aliased Internal_I2S_Port
+     with Import, Volatile, Address => SPI6_Base;
+
+   I2S_1 : aliased I2S_Port (Internal_I2S_1'Access);
+   I2S_2 : aliased I2S_Port (Internal_I2S_2'Access);
+   I2S_3 : aliased I2S_Port (Internal_I2S_3'Access);
+   I2S_4 : aliased I2S_Port (Internal_I2S_4'Access);
+   I2S_5 : aliased I2S_Port (Internal_I2S_5'Access);
+   I2S_6 : aliased I2S_Port (Internal_I2S_6'Access);
+
+   procedure Enable_Clock (This : I2S_Port);
+   procedure Reset (This : in out I2S_Port);
+
    Timer_1 : aliased Timer with Volatile, Address => TIM1_Base;
    pragma Import (Ada, Timer_1);
    Timer_2 : aliased Timer with Volatile, Address => TIM2_Base;
@@ -548,9 +572,21 @@ package STM32.Device is
       PCLK2   : UInt32;
       TIMCLK1 : UInt32;
       TIMCLK2 : UInt32;
+      I2SCLK  : UInt32;
    end record;
 
    function System_Clock_Frequencies return RCC_System_Clocks;
+
+   procedure Set_PLLI2S_Factors (Pll_N : UInt9;
+                                 Pll_R : UInt3);
+
+   function PLLI2S_Enabled return Boolean;
+
+   procedure Enable_PLLI2S
+     with Post => PLLI2S_Enabled;
+
+   procedure Disable_PLLI2S
+     with Post => not PLLI2S_Enabled;
 
    type PLLSAI_DivR is new UInt2;
    PLLSAI_DIV2  : constant PLLSAI_DivR := 0;

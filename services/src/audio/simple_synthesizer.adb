@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                        Copyright (C) 2016, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -31,40 +31,92 @@
 
 with Interfaces; use Interfaces;
 
-package HAL.Audio is
+package body Simple_Synthesizer is
 
-   type Audio_Buffer is array (Natural range <>) of Integer_16
-     with Component_Size => 16, Alignment => 16;
+   ------------------------
+   -- Set_Note_Frequency --
+   ------------------------
 
-   type Audio_Volume is new Natural range 0 .. 100;
+   procedure Set_Note_Frequency
+     (This : in out Synthesizer;
+      Note : Float)
+   is
+   begin
+      This.Note := Note;
+   end Set_Note_Frequency;
 
-   type Audio_Frequency is
-     (Audio_Freq_8kHz,
-      Audio_Freq_11kHz,
-      Audio_Freq_16kHz,
-      Audio_Freq_22kHz,
-      Audio_Freq_44kHz,
-      Audio_Freq_48kHz,
-      Audio_Freq_96kHz)
-     with Size => 32;
-   for Audio_Frequency use
-     (Audio_Freq_8kHz  =>  8_000,
-      Audio_Freq_11kHz => 11_025,
-      Audio_Freq_16kHz => 16_000,
-      Audio_Freq_22kHz => 22_050,
-      Audio_Freq_44kHz => 44_100,
-      Audio_Freq_48kHz => 48_000,
-      Audio_Freq_96kHz => 96_000);
+   -------------------
+   -- Set_Frequency --
+   -------------------
 
-   type Audio_Stream is limited interface;
+   overriding procedure Set_Frequency
+     (This      : in out Synthesizer;
+      Frequency : Audio_Frequency)
+   is
+   begin
+      This.Frequency := Frequency;
+   end Set_Frequency;
 
-   procedure Set_Frequency (This      : in out Audio_Stream;
-                            Frequency : Audio_Frequency) is abstract;
+   --------------
+   -- Transmit --
+   --------------
 
-   procedure Transmit (This : in out Audio_Stream;
-                       Data : Audio_Buffer) is abstract;
+   overriding procedure Transmit
+     (This : in out Synthesizer;
+      Data : Audio_Buffer)
+   is
+   begin
+      raise Program_Error with "This Synthesizer doesn't take input";
+   end Transmit;
 
-   procedure Receive (This : in out Audio_Stream;
-                      Data : out Audio_Buffer) is abstract;
+   -------------
+   -- Receive --
+   -------------
 
-end HAL.Audio;
+   overriding procedure Receive
+     (This : in out Synthesizer;
+      Data : out Audio_Buffer)
+   is
+      function Next_Sample return Integer_16;
+
+      Rate      : constant Float :=
+        Float (Audio_Frequency'Enum_Rep (This.Frequency));
+      Note      : constant Float := This.Note;
+      Amplitude : constant Float := Float (This.Amplitude);
+      Delt      : constant Float := 2.0 / (Rate * (1.0 / Note));
+
+
+      -----------------
+      -- Next_Sample --
+      -----------------
+
+      function Next_Sample return Integer_16 is
+      begin
+         This.Last_Sample := This.Last_Sample + Delt;
+         if This.Last_Sample >  1.0 then
+            This.Last_Sample := -1.0;
+         end if;
+         return Integer_16 (This.Last_Sample * Amplitude);
+      end Next_Sample;
+
+      Tmp : Integer_16;
+   begin
+      if This.Stereo then
+         if Data'Length mod 2 /= 0 then
+            raise Program_Error with
+              "Audio buffer for stereo output should have even length";
+         end if;
+
+         for Index in 0 .. (Data'Length / 2) - 1 loop
+            Tmp := Next_Sample;
+            Data ((Index * 2) + Data'First) := Tmp;
+            Data ((Index * 2) + Data'First + 1) := Tmp;
+         end loop;
+      else
+         for Elt of Data loop
+            Elt := Next_Sample;
+         end loop;
+      end if;
+   end Receive;
+
+end Simple_Synthesizer;
