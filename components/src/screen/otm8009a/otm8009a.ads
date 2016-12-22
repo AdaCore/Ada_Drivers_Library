@@ -87,9 +87,9 @@ package OTM8009A is
    type LCD_Orientation is (Portrait, Landscape);
 
    type OTM8009A_Device
-     (DSI_Host   : not null DSI_Port_Ref;
+     (DSI_Host   : not null Any_DSI_Port;
       Channel_ID : DSI_Virtual_Channel_ID;
-      Time       : not null HAL.Time.Delays_Ref)
+      Time       : not null HAL.Time.Any_Delays)
    is tagged limited private;
 
    procedure Initialize
@@ -100,9 +100,9 @@ package OTM8009A is
 private
 
    type OTM8009A_Device
-     (DSI_Host   : not null DSI_Port_Ref;
+     (DSI_Host   : not null Any_DSI_Port;
       Channel_ID : DSI_Virtual_Channel_ID;
-      Time       : not null HAL.Time.Delays_Ref)
+      Time       : not null HAL.Time.Any_Delays)
    is tagged limited record
       Current_Shift : Byte := 0;
    end record;

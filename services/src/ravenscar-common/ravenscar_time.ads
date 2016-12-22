@@ -33,7 +33,7 @@ with HAL.Time;
 
 package Ravenscar_Time is
 
-   function Delays return not null HAL.Time.Delays_Ref;
+   function Delays return not null HAL.Time.Any_Delays;
 
 private
 

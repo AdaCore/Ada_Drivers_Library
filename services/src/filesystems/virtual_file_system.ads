@@ -34,11 +34,11 @@ with HAL.Filesystem; use HAL.Filesystem;
 package Virtual_File_System is
 
    type VFS is new HAL.Filesystem.FS_Driver with private;
-   type VFS_Ref is access all VFS'Class;
+   type Any_VFS is access all VFS'Class;
 
    function Mount (This       : in out VFS;
                    Path       : Pathname;
-                   Filesystem : not null FS_Driver_Ref)
+                   Filesystem : not null Any_FS_Driver)
                    return Status_Kind;
 
    function Umount (This       : in out VFS;
@@ -86,13 +86,13 @@ package Virtual_File_System is
    function Open (This    : in out VFS;
                   Path    : Pathname;
                   Mode    : File_Mode;
-                  Handler : out File_Handle_Ref)
+                  Handler : out Any_File_Handle)
                   return Status_Kind;
 
    overriding
    function Open_Directory (This   : in out VFS;
                             Path   : Pathname;
-                            Handle : out Directory_Handle_Ref)
+                            Handle : out Any_Directory_Handle)
                             return Status_Kind;
 
 private
@@ -123,7 +123,7 @@ private
 
    type Mount_Point is record
       Directory : not null access String;
-      FS        : not null FS_Driver_Ref;
+      FS        : not null Any_FS_Driver;
       Next      : Mount_Point_Access := null;
    end record;
 
@@ -135,7 +135,7 @@ private
    function Find_FS (This                : in out VFS;
                      Path                : Pathname;
                      Path_Reminder_Start : out Integer)
-                     return FS_Driver_Ref;
+                     return Any_FS_Driver;
    --  Find the mount point for a given path and return the index of the first
    --  character of the remaining path. Path_Reminder_Start will be out of
    --  Path'Range is there is no remaining characters.

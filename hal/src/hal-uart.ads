@@ -47,7 +47,7 @@ package HAL.UART is
 
    type UART_Port is limited interface;
 
-   type UART_Port_Ref is access all UART_Port'Class;
+   type Any_UART_Port is access all UART_Port'Class;
 
    function Data_Size (Port : UART_Port) return UART_Data_Size is abstract;
 

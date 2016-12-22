@@ -51,9 +51,9 @@ package AK8963 is
       Self_Test,
       Fuse_ROM_Access);
 
-   type AK8963_Device (I2C_Port         : not null HAL.I2C.I2C_Port_Ref;
+   type AK8963_Device (I2C_Port         : not null HAL.I2C.Any_I2C_Port;
                        Address_Selector : AK8963_Address_Selector;
-                        Time            : not null HAL.Time.Delays_Ref) is private;
+                        Time            : not null HAL.Time.Any_Delays) is private;
 
    procedure Initialize (Device : in out AK8963_Device);
 
@@ -80,9 +80,9 @@ package AK8963 is
 
 private
 
-   type AK8963_Device (I2C_Port         : not null HAL.I2C.I2C_Port_Ref;
+   type AK8963_Device (I2C_Port         : not null HAL.I2C.Any_I2C_Port;
                        Address_Selector : AK8963_Address_Selector;
-                        Time            : not null HAL.Time.Delays_Ref)
+                        Time            : not null HAL.Time.Any_Delays)
    is record
       Address : UInt10;
       Is_Init : Boolean := False;

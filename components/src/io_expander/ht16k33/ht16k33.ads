@@ -34,7 +34,7 @@ with HAL; use HAL;
 
 package HT16K33 is
 
-   type HT16K33_Device (Port : not null I2C_Port_Ref;
+   type HT16K33_Device (Port : not null Any_I2C_Port;
                         Addr : UInt3) is tagged private;
 
    type HT16K33_Brightness is new Positive range 1 .. 16;
@@ -89,7 +89,7 @@ private
                           Blink_1hz  => 2#10#,
                           Blink_05hz => 2#11#);
 
-   type HT16K33_Device (Port : not null I2C_Port_Ref;
+   type HT16K33_Device (Port : not null Any_I2C_Port;
                         Addr : UInt3) is tagged
       record
          Enabled : Boolean := False;

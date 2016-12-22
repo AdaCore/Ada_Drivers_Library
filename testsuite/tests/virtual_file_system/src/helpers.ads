@@ -30,8 +30,8 @@ package Helpers is
    --  Dump the content of the Dir directory in FS to the standard output
 
    procedure Destroy is new Ada.Unchecked_Deallocation
-     (FS_Driver'Class, FS_Driver_Ref);
+     (FS_Driver'Class, Any_FS_Driver);
    procedure Destroy is new Ada.Unchecked_Deallocation
-     (Virtual_File_System.VFS'Class, Virtual_File_System.VFS_Ref);
+     (Virtual_File_System.VFS'Class, Virtual_File_System.Any_VFS);
 
 end Helpers;

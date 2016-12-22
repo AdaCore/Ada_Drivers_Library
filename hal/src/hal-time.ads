@@ -33,7 +33,7 @@ package HAL.Time is
 
    type Delays is limited interface;
 
-   type Delays_Ref is access all Delays'Class;
+   type Any_Delays is access all Delays'Class;
 
    procedure Delay_Microseconds (This : in out Delays;
                                  Us   : Integer) is abstract;

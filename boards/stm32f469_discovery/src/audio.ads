@@ -40,8 +40,8 @@ private with CS43L22;
 
 package Audio is
 
-   type CS43L22_Audio_Device (Port : not null I2C_Port_Ref) is
-     tagged limited private;
+   type CS43L22_Audio_Device (Port : not null Any_I2C_Port) is limited
+     new HAL.Audio.Audio_Device with private;
 
    procedure Initialize_Audio_Out
      (This      : in out CS43L22_Audio_Device;
@@ -71,8 +71,8 @@ package Audio is
 
 private
 
-   type CS43L22_Audio_Device (Port : not null I2C_Port_Ref) is
-     tagged limited record
+   type CS43L22_Audio_Device (Port : not null Any_I2C_Port) is limited
+   new HAL.Audio.Audio_Device with record
       Device : CS43L22.CS43L22_Device (Port, Ravenscar_Time.Delays);
    end record;
 

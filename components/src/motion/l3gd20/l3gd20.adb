@@ -148,8 +148,8 @@ package body L3GD20 is
 
    procedure Initialize
      (This        : in out Three_Axis_Gyroscope;
-      Port        : SPI_Port_Ref;
-      Chip_Select : GPIO_Point_Ref)
+      Port        : Any_SPI_Port;
+      Chip_Select : Any_GPIO_Point)
    is
    begin
       This.Port := Port;

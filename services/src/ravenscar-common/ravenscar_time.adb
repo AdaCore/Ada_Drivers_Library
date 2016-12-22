@@ -39,7 +39,7 @@ package body Ravenscar_Time is
    -- Delays --
    ------------
 
-   function Delays return not null HAL.Time.Delays_Ref is
+   function Delays return not null HAL.Time.Any_Delays is
    begin
       return Delay_Singleton'Access;
    end Delays;

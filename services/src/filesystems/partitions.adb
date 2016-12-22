@@ -43,11 +43,11 @@ package body Partitions is
                                 P_Entry : out Partition_Entry)
      with Pre => Index <= 3;
 
-   function Number_Of_Logical_Partitions (Disk        : not null Block_Driver_Ref;
+   function Number_Of_Logical_Partitions (Disk        : not null Any_Block_Driver;
                                           EBR_Address : Logical_Block_Address)
                                           return Natural;
 
-   function Get_Logical_Partition_Entry (Disk         : not null Block_Driver_Ref;
+   function Get_Logical_Partition_Entry (Disk         : not null Any_Block_Driver;
                                          EBR_Address  : Logical_Block_Address;
                                          Entry_Number : Positive;
                                          Entry_Cnt    : in out Natural;
@@ -78,7 +78,7 @@ package body Partitions is
    -- Number_Of_Logical_Partitions --
    ----------------------------------
 
-   function Number_Of_Logical_Partitions (Disk        : not null Block_Driver_Ref;
+   function Number_Of_Logical_Partitions (Disk        : not null Any_Block_Driver;
                                           EBR_Address : Logical_Block_Address)
                                           return Natural
    is
@@ -111,7 +111,7 @@ package body Partitions is
    -- Get_Logical_Partition_Entry --
    ---------------------------------
 
-   function Get_Logical_Partition_Entry (Disk         : not null Block_Driver_Ref;
+   function Get_Logical_Partition_Entry (Disk         : not null Any_Block_Driver;
                                          EBR_Address  : Logical_Block_Address;
                                          Entry_Number : Positive;
                                          Entry_Cnt    : in out Natural;
@@ -149,7 +149,7 @@ package body Partitions is
    -- Get_Partition_Entry --
    -------------------------
 
-   function Get_Partition_Entry (Disk         : not null Block_Driver_Ref;
+   function Get_Partition_Entry (Disk         : not null Any_Block_Driver;
                                  Entry_Number : Positive;
                                  P_Entry      : out Partition_Entry)
                                  return Status_Code
@@ -199,7 +199,7 @@ package body Partitions is
    -- Number_Of_Partitions --
    --------------------------
 
-   function Number_Of_Partitions (Disk : Block_Driver_Ref) return Natural is
+   function Number_Of_Partitions (Disk : Any_Block_Driver) return Natural is
       MBR       : Block (0 .. 511);
       Entry_Cnt : Natural := 0;
       P_Entry   : Partition_Entry;

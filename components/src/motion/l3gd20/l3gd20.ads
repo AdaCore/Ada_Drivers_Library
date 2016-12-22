@@ -58,8 +58,8 @@ package L3GD20 is
 
    procedure Initialize
      (This        : in out Three_Axis_Gyroscope;
-      Port        : SPI_Port_Ref;
-      Chip_Select : GPIO_Point_Ref);
+      Port        : Any_SPI_Port;
+      Chip_Select : Any_GPIO_Point);
    --  Does device-specific initialization. Must be called prior to use.
    --
    --  NB: does NOT init/configure SPI and GPIO IO, which must be done
@@ -528,8 +528,8 @@ package L3GD20 is
 private
 
    type Three_Axis_Gyroscope is tagged limited record
-      Port : SPI_Port_Ref;
-      CS   : GPIO_Point_Ref;
+      Port : Any_SPI_Port;
+      CS   : Any_GPIO_Point;
    end record;
 
    type Register is new Byte;

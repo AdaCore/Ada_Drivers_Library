@@ -44,9 +44,9 @@ package MPU9250 is
    --  its I2C address.
 
    --  Types and subtypes
-   type MPU9250_Device (Port        : HAL.I2C.I2C_Port_Ref;
+   type MPU9250_Device (Port        : HAL.I2C.Any_I2C_Port;
                         I2C_AD0_Pin : MPU9250_AD0_Pin_State;
-                        Time        : not null HAL.Time.Delays_Ref) is private;
+                        Time        : not null HAL.Time.Any_Delays) is private;
 
    --  Type reprensnting all the different clock sources of the MPU9250.
    --  See the MPU9250 register map section 4.4 for more details.
@@ -222,9 +222,9 @@ package MPU9250 is
 private
 
    type MPU9250_Device
-     (Port        : HAL.I2C.I2C_Port_Ref;
+     (Port        : HAL.I2C.Any_I2C_Port;
       I2C_AD0_Pin : MPU9250_AD0_Pin_State;
-      Time        : not null HAL.Time.Delays_Ref)
+      Time        : not null HAL.Time.Any_Delays)
    is record
       Is_Init : Boolean := False;
       Address : UInt10;
