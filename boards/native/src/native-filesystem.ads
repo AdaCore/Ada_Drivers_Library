@@ -67,13 +67,13 @@ package Native.Filesystem is
      (This   : in out Native_FS_Driver;
       Path   : Pathname;
       Mode   : File_Mode;
-      Handle : out File_Handle_Ref)
+      Handle : out Any_File_Handle)
       return Status_Kind;
 
    overriding function Open_Directory
      (This   : in out Native_FS_Driver;
       Path   : Pathname;
-      Handle : out Directory_Handle_Ref)
+      Handle : out Any_Directory_Handle)
       return Status_Kind;
 
    ------------------------
