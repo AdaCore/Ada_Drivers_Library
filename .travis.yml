@@ -1,0 +1,37 @@
+# We are using Python 2.7 to run the testsuite
+language: python
+python:
+  - "2.7"
+
+# Global variables
+env:
+  global:
+    - TOOLS_DIR=$HOME/build_tools
+    - GNAT_TAR_PATH=$TOOLS_DIR/gnat-gpl-2016-x86_64-linux-bin.tar.gz
+
+os:
+  - linux
+
+# Cache directory that allows us to not download GNAT GPL every time, speeding
+# up the process.
+cache:
+  directories:
+  - $HOME/build_tools
+
+install:
+  # Check if the GNAT package is already available in the cache directory. If
+  # not, download it.
+  - test -f  $GNAT_TAR_PATH ||( mkdir -p $TOOLS_DIR && wget http://mirrors.cdn.adacore.com/art/5739cefdc7a447658e0b016b -O $GNAT_TAR_PATH)
+
+  # Extract GNAT from its package
+  - tar -xf $GNAT_TAR_PATH
+
+  # Add GNAT to $PATH
+  - export PATH=$PATH:$PWD/gnat-gpl-2016-x86_64-linux-bin/bin/
+
+script:
+  # Show GNAT version for the record
+  - $PWD/gnat-gpl-2016-x86_64-linux-bin/bin/gprbuild --version
+
+  # Start the testsuite
+  - python $PWD/testsuite/run.py

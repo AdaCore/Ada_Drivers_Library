@@ -43,30 +43,30 @@ package Audio is
    type WM8994_Audio_Device (Port : not null Any_I2C_Port) is limited new
      Audio_Device with private;
 
-   overriding procedure Initialize_Audio_Out
+   procedure Initialize_Audio_Out
      (This      : in out WM8994_Audio_Device;
       Volume    : Audio_Volume;
       Frequency : Audio_Frequency);
 
-   overriding procedure Set_Volume
+   procedure Set_Volume
      (This   : in out WM8994_Audio_Device;
       Volume : Audio_Volume);
 
-   overriding procedure Set_Frequency
+   procedure Set_Frequency
      (This   : in out WM8994_Audio_Device;
       Frequency : Audio_Frequency);
 
-   overriding procedure Play
+   procedure Play
      (This   : in out WM8994_Audio_Device;
       Buffer : Audio_Buffer);
 
-   overriding procedure Pause
+   procedure Pause
      (This : in out WM8994_Audio_Device);
 
-   overriding procedure Resume
+   procedure Resume
      (This : in out WM8994_Audio_Device);
 
-   overriding procedure Stop
+   procedure Stop
      (This : in out WM8994_Audio_Device);
 
 private
@@ -74,7 +74,7 @@ private
    Audio_I2C_Addr  : constant I2C_Address := 16#34#;
 
    type WM8994_Audio_Device (Port : not null Any_I2C_Port) is limited new
-     Audio_Device with record
+   Audio_Device with record
       Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
    end record;
 

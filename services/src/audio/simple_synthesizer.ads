@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                        Copyright (C) 2016, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -11,7 +11,7 @@
 --        notice, this list of conditions and the following disclaimer in   --
 --        the documentation and/or other materials provided with the        --
 --        distribution.                                                     --
---     3. Neither the name of STMicroelectronics nor the names of its       --
+--     3. Neither the name of the copyright holder nor the names of its     --
 --        contributors may be used to endorse or promote products derived   --
 --        from this software without specific prior written permission.     --
 --                                                                          --
@@ -27,55 +27,39 @@
 --   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
 --   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
---  This file is based on:                                                  --
---   @file    stm32f746g_discovery_audio.h                                  --
---   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Audio;      use HAL.Audio;
-with HAL.I2C;        use HAL.I2C;
-with Ravenscar_Time;
+--  This package provides a simple software synthesizer that can be used to try
+--  audio streams and DACs.
 
-private with WM8994;
+with HAL.Audio;  use HAL.Audio;
 
-package Audio is
+package Simple_Synthesizer is
 
-   type WM8994_Audio_Device (Port : not null Any_I2C_Port) is limited new
-     Audio_Device with private;
+   type Synthesizer (Stereo    : Boolean := True;
+                     Amplitude : Natural := 500) is
+     limited new Audio_Stream with private;
 
-   procedure Initialize_Audio_Out
-     (This      : in out WM8994_Audio_Device;
-      Volume    : Audio_Volume;
-      Frequency : Audio_Frequency);
+   procedure Set_Note_Frequency (This : in out Synthesizer;
+                                 Note : Float);
 
-   procedure Set_Volume
-     (This   : in out WM8994_Audio_Device;
-      Volume : Audio_Volume);
+   overriding
+   procedure Set_Frequency (This      : in out Synthesizer;
+                            Frequency : Audio_Frequency);
 
-   procedure Set_Frequency
-     (This   : in out WM8994_Audio_Device;
-      Frequency : Audio_Frequency);
+   overriding
+   procedure Transmit (This : in out Synthesizer;
+                       Data : Audio_Buffer);
 
-   procedure Play
-     (This   : in out WM8994_Audio_Device;
-      Buffer : Audio_Buffer);
-
-   procedure Pause
-     (This : in out WM8994_Audio_Device);
-
-   procedure Resume
-     (This : in out WM8994_Audio_Device);
-
-   procedure Stop
-     (This : in out WM8994_Audio_Device);
-
+   overriding
+   procedure Receive (This : in out Synthesizer;
+                      Data : out Audio_Buffer);
 private
-
-   Audio_I2C_Addr  : constant I2C_Address := 16#34#;
-
-   type WM8994_Audio_Device (Port : not null Any_I2C_Port) is limited new
-   Audio_Device with record
-      Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
+   type Synthesizer (Stereo    : Boolean := True;
+                     Amplitude : Natural := 500) is
+     limited new Audio_Stream with record
+      Frequency   : Audio_Frequency;
+      Note        : Float := 0.0;
+      Last_Sample : Float := 0.0;
    end record;
-
-end Audio;
+end Simple_Synthesizer;

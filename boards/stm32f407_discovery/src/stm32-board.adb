@@ -41,8 +41,9 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with Ada.Real_Time; use Ada.Real_Time;
 with HAL.SPI;
-with LIS3DSH; use LIS3DSH;
+with LIS3DSH;       use LIS3DSH;
 
 package body STM32.Board is
 
@@ -80,6 +81,121 @@ package body STM32.Board is
       Configure_IO (All_LEDs,
                     Config => Configuration);
    end Initialize_LEDs;
+
+   ----------------------
+   -- Initialize_Audio --
+   ----------------------
+
+   procedure Initialize_Audio is
+
+      procedure Initialize_GPIO;
+      procedure Configure_I2C;
+
+      ---------------------
+      -- Initialize_GPIO --
+      ---------------------
+
+      procedure Initialize_GPIO is
+      begin
+
+         -- I2C --
+
+         Enable_Clock (Audio_I2C_Points);
+
+         Configure_Alternate_Function (Audio_I2C_Points, GPIO_AF_4_I2C1);
+
+         Configure_IO (Audio_I2C_Points,
+                       (Speed       => Speed_High,
+                        Mode        => Mode_AF,
+                        Output_Type => Open_Drain,
+                        Resistors   => Floating));
+         Lock (Audio_I2C_Points);
+
+         -- I2S --
+
+         Enable_Clock (Audio_I2S_Points);
+
+         Configure_IO (Audio_I2S_Points,
+                       (Speed       => Speed_High,
+                        Mode        => Mode_AF,
+                        Output_Type => Push_Pull,
+                        Resistors   => Floating));
+
+         Configure_Alternate_Function (Audio_I2S_Points, GPIO_AF_6_I2S3);
+
+         Lock (Audio_I2S_Points);
+
+         -- DAC reset --
+
+         Enable_Clock (DAC_Reset_Point);
+         Configure_IO (DAC_Reset_Point,
+                       (Speed       => Speed_High,
+                        Mode        => Mode_Out,
+                        Output_Type => Push_Pull,
+                        Resistors   => Pull_Down));
+
+         Lock (DAC_Reset_Point);
+      end Initialize_GPIO;
+
+      -------------------
+      -- Configure_I2C --
+      -------------------
+
+      procedure Configure_I2C
+      is
+         I2C_Conf : I2C_Configuration;
+      begin
+
+         Enable_Clock (I2C_1);
+         delay until Clock + Milliseconds (200);
+         Reset (I2C_1);
+
+         I2C_Conf.Own_Address := 16#00#;
+         I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;
+         I2C_Conf.General_Call_Enabled := False;
+         I2C_Conf.Clock_Stretching_Enabled := True;
+
+         I2C_Conf.Clock_Speed := 100_000;
+
+         I2C_1.Configure (I2C_Conf);
+      end Configure_I2C;
+
+      Conf : I2S_Configuration;
+
+   begin
+      Initialize_GPIO;
+      Configure_I2C;
+
+      Set_PLLI2S_Factors (Pll_N => 258,
+                          Pll_R => 3);
+      Enable_PLLI2S;
+
+      Enable_Clock (Audio_I2S);
+
+      Conf.Mode                     := Master_Transmit;
+      Conf.Standard                 := I2S_Philips_Standard;
+      Conf.Clock_Polarity           := Steady_State_Low;
+      Conf.Data_Length              := Data_16bits;
+      Conf.Chan_Length              := Channel_16bits;
+      Conf.Master_Clock_Out_Enabled := True;
+      Conf.Transmit_DMA_Enabled     := True;
+      Conf.Receive_DMA_Enabled      := False;
+
+      Audio_I2S.Configure (Conf);
+      Audio_I2S.Set_Frequency (Audio_Freq_48kHz);
+      Audio_I2S.Enable;
+
+
+      DAC_Reset_Point.Clear;
+      delay until Clock + Microseconds (200);
+      DAC_Reset_Point.Set;
+      delay until Clock + Microseconds (200);
+
+      Audio_DAC.Init (Output    => CS43L22.Headphone,
+                      Volume    => 0,
+                      Frequency => Audio_Rate);
+
+   end Initialize_Audio;
 
    --------------------------------
    -- Configure_User_Button_GPIO --

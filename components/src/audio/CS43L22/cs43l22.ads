@@ -34,6 +34,7 @@
 with Interfaces; use Interfaces;
 with HAL;        use HAL;
 with HAL.I2C;    use HAL.I2C;
+with HAL.Audio;  use HAL.Audio;
 with HAL.Time;
 
 package CS43L22 is
@@ -49,28 +50,6 @@ package CS43L22 is
 
    CS43L22_ID       : constant := 16#E0#;
    CS43L22_ID_MASK  : constant := 16#F8#;
-
-   type Audio_Frequency is
-     (Audio_Freq_8kHz,
-      Audio_Freq_11kHz,
-      Audio_Freq_16kHz,
-      Audio_Freq_22kHz,
-      Audio_Freq_32kHz,
-      Audio_Freq_44kHz,
-      Audio_Freq_48kHz,
-      Audio_Freq_96kHz,
-      Audio_Freq_192kHz)
-     with Size => 32;
-   for Audio_Frequency use
-     (Audio_Freq_8kHz   =>  8_000,
-      Audio_Freq_11kHz  => 11_025,
-      Audio_Freq_16kHz  => 16_000,
-      Audio_Freq_22kHz  => 22_050,
-      Audio_Freq_32kHz  => 32_000,
-      Audio_Freq_44kHz  => 44_100,
-      Audio_Freq_48kHz  => 48_000,
-      Audio_Freq_96kHz  => 96_000,
-      Audio_Freq_192kHz => 192_000);
 
    type Mute is
      (Mute_On,
