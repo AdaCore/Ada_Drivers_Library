@@ -7,7 +7,7 @@ abstract project Common_Config is
 
    type BUILD_TYPE is
       ("Debug", "Production");
-   Build : BUILD_Type := external ("BUILD", "Debug");
+   Build : BUILD_Type := external ("PLATFORM_BUILD", "Debug");
 
    package Compiler is
       case Build is
