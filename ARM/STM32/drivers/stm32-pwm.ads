@@ -86,11 +86,14 @@ package STM32.PWM is
    --  given timer, this configuration need only be done once, unless a
    --  different frequency is required for some reason.
 
+   type Output_Polarity is (Active_High, Active_Low);
+
    procedure Attach_PWM_Channel
-     (This    : in out PWM_Modulator;
-      Channel : Timer_Channel;
-      Point   : GPIO_Point;
-      PWM_AF  : GPIO_Alternate_Function)
+     (This     : in out PWM_Modulator;
+      Channel  : Timer_Channel;
+      Point    : GPIO_Point;
+      PWM_AF   : GPIO_Alternate_Function;
+      Polarity : Output_Polarity := Active_High)
      with Post => not Enabled (This) and
                   Current_Duty_Cycle (This) = 0;
    --  Initializes the channel on the timer associated with This modulator,

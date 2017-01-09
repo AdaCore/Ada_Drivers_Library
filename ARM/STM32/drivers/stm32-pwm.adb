@@ -57,6 +57,10 @@ package body STM32.PWM is
      (Output : GPIO_Point;
       PWM_AF : GPIO_Alternate_Function);
 
+   ------------------------------
+   -- Initialize_PWM_Modulator --
+   ------------------------------
+
    procedure Initialize_PWM_Modulator
      (This                : in out PWM_Modulator;
       Generator           : not null access STM32.Timers.Timer;
@@ -167,10 +171,11 @@ package body STM32.PWM is
    ------------------------
 
    procedure Attach_PWM_Channel
-     (This    : in out PWM_Modulator;
-      Channel : Timer_Channel;
-      Point   : GPIO_Point;
-      PWM_AF  : GPIO_Alternate_Function)
+     (This     : in out PWM_Modulator;
+      Channel  : Timer_Channel;
+      Point    : GPIO_Point;
+      PWM_AF   : GPIO_Alternate_Function;
+      Polarity : Output_Polarity := Active_High)
    is
    begin
       This.Channel := Channel;
@@ -185,7 +190,7 @@ package body STM32.PWM is
          Mode     => PWM1,
          State    => Disable,
          Pulse    => 0,
-         Polarity => High);
+         Polarity => (if Polarity = Active_High then High else Low));
 
       Set_Compare_Value (This.Generator.all, Channel, UInt16 (0));
 
