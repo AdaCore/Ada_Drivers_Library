@@ -50,7 +50,7 @@ package STM32.SDMMC is
 
    function Initialize
      (This      : in out SDMMC_Controller;
-      SDMMC_CLK : Natural;
+      SDMMC_CLK : Unsigned_32;
       Info      : out Card_Information) return SD_Error;
 
    type SD_Data is array (Unsigned_16 range <>) of Byte
@@ -144,7 +144,7 @@ private
    type SDMMC_Controller
      (Periph : not null access STM32_SVD.SDIO.SDIO_Peripheral)
    is limited new SDCard_Driver with record
-      CLK_In    : Natural;
+      CLK_In    : Unsigned_32;
       RCA       : Unsigned_16;
       Card_Type : Supported_SD_Memory_Cards :=
                     STD_Capacity_SD_Card_V1_1;
