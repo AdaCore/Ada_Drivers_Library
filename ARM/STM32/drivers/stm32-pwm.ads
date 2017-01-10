@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2016, AdaCore                         --
+--                 Copyright (C) 2015-2017, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -54,7 +54,7 @@
 --        LED_For (Output_Channel),
 --        GPIO_AF_2_TIM4);
 --
---     Enable_PWM (Power_Control);
+--     Enable_Output (Power_Control);
 --
 --     Set_Duty_Cycle (Power_Control, Value);
 
@@ -86,32 +86,58 @@ package STM32.PWM is
    --  given timer, this configuration need only be done once, unless a
    --  different frequency is required for some reason.
 
-   type Output_Polarity is (Active_High, Active_Low);
-
    procedure Attach_PWM_Channel
      (This     : in out PWM_Modulator;
       Channel  : Timer_Channel;
       Point    : GPIO_Point;
       PWM_AF   : GPIO_Alternate_Function;
-      Polarity : Output_Polarity := Active_High)
-     with Post => not Enabled (This) and
+      Polarity : Timer_Output_Compare_Polarity := High)
+     with Post => not Output_Enabled (This) and
                   Current_Duty_Cycle (This) = 0;
    --  Initializes the channel on the timer associated with This modulator,
    --  and the corresponding GPIO port/pin pair, for PWM output.
    --
-   --  To be called at least once. May Be called multiple times for the same
-   --  PWM_Modulator object, with different channels, because the corresponding
-   --  timer can drive multiple channels (assuming such a timer is in use).
+   --  May be called multiple times for the same PWM_Modulator object, with
+   --  different channels, because the corresponding timer can drive multiple
+   --  channels (assuming such a timer is in use).
 
-   procedure Enable_PWM
-     (This : in out PWM_Modulator)
-     with Post => Enabled (This);
+   procedure Attach_PWM_Channel
+     (This                     : in out PWM_Modulator;
+      Channel                  : Timer_Channel;
+      Point                    : GPIO_Point;
+      Complementary_Point      : GPIO_Point;
+      PWM_AF                   : GPIO_Alternate_Function;
+      Polarity                 : Timer_Output_Compare_Polarity;
+      Idle_State               : Timer_Capture_Compare_State;
+      Complementary_Polarity   : Timer_Output_Compare_Polarity;
+      Complementary_Idle_State : Timer_Capture_Compare_State)
+     with Post => not Output_Enabled (This) and
+                  not Complementary_Output_Enabled (This) and
+                  Current_Duty_Cycle (This) = 0;
+   --  Initializes the channel on the timer associated with This modulator, and
+   --  the corresponding GPIO port/pin pairs, for PWM output with complementary
+   --  output included.
+   --
+   --  May be called multiple times for the same PWM_Modulator object, with
+   --  different channels, because the corresponding timer can drive multiple
+   --  channels (assuming such a timer is in use).
 
-   function Enabled (This : PWM_Modulator) return Boolean;
+   procedure Enable_Output (This : in out PWM_Modulator)
+     with Post => Output_Enabled (This);
 
-   procedure Disable_PWM
-     (This : in out PWM_Modulator)
-     with Post => not Enabled (This);
+   procedure Enable_Complementary_Output (This    : in out PWM_Modulator)
+     with Post => Complementary_Output_Enabled (This);
+
+   procedure Disable_Output (This : in out PWM_Modulator)
+     with Post => not Output_Enabled (This);
+
+   procedure Disable_Complementary_Output (This : in out PWM_Modulator)
+     with Post => not Complementary_Output_Enabled (This);
+
+   function Output_Enabled (This : PWM_Modulator) return Boolean;
+
+   function Complementary_Output_Enabled
+     (This : PWM_Modulator) return Boolean;
 
    subtype Percentage is Integer range 0 .. 100;
 
@@ -136,6 +162,16 @@ package STM32.PWM is
    --  Set the pulse width such that the requested number of microseconds is
    --  achieved. Raises Invalid_Request if the requested time is greater than
    --  the period previously configured via Configure_PWM_Timer.
+
+   procedure Set_Polarity
+     (This     : in PWM_Modulator;
+      Polarity : in Timer_Output_Compare_Polarity);
+   --  Set the polarity of the output of This modulator.
+
+   procedure Set_Complementary_Polarity
+     (This     : in PWM_Modulator;
+      Polarity : in Timer_Output_Compare_Polarity);
+   --  Set the polarity of the complimentary output of This modulator.
 
    Invalid_Request : exception;
    --  Raised when the requested frequency is too high or too low for the given
