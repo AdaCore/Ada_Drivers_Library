@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -431,27 +432,27 @@ package STM32_SVD.I2C is
    --  Inter-integrated circuit
    type I2C_Peripheral is record
       --  Control register 1
-      CR1      : CR1_Register;
+      CR1      : aliased CR1_Register;
       --  Control register 2
-      CR2      : CR2_Register;
+      CR2      : aliased CR2_Register;
       --  Own address register 1
-      OAR1     : OAR1_Register;
+      OAR1     : aliased OAR1_Register;
       --  Own address register 2
-      OAR2     : OAR2_Register;
+      OAR2     : aliased OAR2_Register;
       --  Timing register
-      TIMINGR  : TIMINGR_Register;
+      TIMINGR  : aliased TIMINGR_Register;
       --  Status register 1
-      TIMEOUTR : TIMEOUTR_Register;
+      TIMEOUTR : aliased TIMEOUTR_Register;
       --  Interrupt and Status register
-      ISR      : ISR_Register;
+      ISR      : aliased ISR_Register;
       --  Interrupt clear register
-      ICR      : ICR_Register;
+      ICR      : aliased ICR_Register;
       --  PEC register
-      PECR     : PECR_Register;
+      PECR     : aliased PECR_Register;
       --  Receive data register
-      RXDR     : RXDR_Register;
+      RXDR     : aliased RXDR_Register;
       --  Transmit data register
-      TXDR     : TXDR_Register;
+      TXDR     : aliased TXDR_Register;
    end record
      with Volatile;
 
@@ -471,18 +472,18 @@ package STM32_SVD.I2C is
 
    --  Inter-integrated circuit
    I2C1_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C1_Base;
+     with Import, Address => System'To_Address (16#40005400#);
 
    --  Inter-integrated circuit
    I2C2_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C2_Base;
+     with Import, Address => System'To_Address (16#40005800#);
 
    --  Inter-integrated circuit
    I2C3_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C3_Base;
+     with Import, Address => System'To_Address (16#40005C00#);
 
    --  Inter-integrated circuit
    I2C4_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C4_Base;
+     with Import, Address => System'To_Address (16#40006000#);
 
 end STM32_SVD.I2C;

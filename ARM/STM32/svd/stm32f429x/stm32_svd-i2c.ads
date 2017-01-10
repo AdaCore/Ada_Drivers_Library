@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -347,25 +348,25 @@ package STM32_SVD.I2C is
    --  Inter-integrated circuit
    type I2C_Peripheral is record
       --  Control register 1
-      CR1   : CR1_Register;
+      CR1   : aliased CR1_Register;
       --  Control register 2
-      CR2   : CR2_Register;
+      CR2   : aliased CR2_Register;
       --  Own address register 1
-      OAR1  : OAR1_Register;
+      OAR1  : aliased OAR1_Register;
       --  Own address register 2
-      OAR2  : OAR2_Register;
+      OAR2  : aliased OAR2_Register;
       --  Data register
-      DR    : DR_Register;
+      DR    : aliased DR_Register;
       --  Status register 1
-      SR1   : SR1_Register;
+      SR1   : aliased SR1_Register;
       --  Status register 2
-      SR2   : SR2_Register;
+      SR2   : aliased SR2_Register;
       --  Clock control register
-      CCR   : CCR_Register;
+      CCR   : aliased CCR_Register;
       --  TRISE register
-      TRISE : TRISE_Register;
+      TRISE : aliased TRISE_Register;
       --  FLTR register
-      FLTR  : FLTR_Register;
+      FLTR  : aliased FLTR_Register;
    end record
      with Volatile;
 
@@ -384,14 +385,14 @@ package STM32_SVD.I2C is
 
    --  Inter-integrated circuit
    I2C1_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C1_Base;
+     with Import, Address => System'To_Address (16#40005400#);
 
    --  Inter-integrated circuit
    I2C2_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C2_Base;
+     with Import, Address => System'To_Address (16#40005800#);
 
    --  Inter-integrated circuit
    I2C3_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C3_Base;
+     with Import, Address => System'To_Address (16#40005C00#);
 
 end STM32_SVD.I2C;

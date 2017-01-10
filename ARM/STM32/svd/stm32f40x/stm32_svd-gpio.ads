@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -382,25 +383,25 @@ package STM32_SVD.GPIO is
    --  General-purpose I/Os
    type GPIO_Peripheral is record
       --  GPIO port mode register
-      MODER   : MODER_Register;
+      MODER   : aliased MODER_Register;
       --  GPIO port output type register
-      OTYPER  : OTYPER_Register;
+      OTYPER  : aliased OTYPER_Register;
       --  GPIO port output speed register
-      OSPEEDR : OSPEEDR_Register;
+      OSPEEDR : aliased OSPEEDR_Register;
       --  GPIO port pull-up/pull-down register
-      PUPDR   : PUPDR_Register;
+      PUPDR   : aliased PUPDR_Register;
       --  GPIO port input data register
-      IDR     : IDR_Register;
+      IDR     : aliased IDR_Register;
       --  GPIO port output data register
-      ODR     : ODR_Register;
+      ODR     : aliased ODR_Register;
       --  GPIO port bit set/reset register
-      BSRR    : BSRR_Register;
+      BSRR    : aliased BSRR_Register;
       --  GPIO port configuration lock register
-      LCKR    : LCKR_Register;
+      LCKR    : aliased LCKR_Register;
       --  GPIO alternate function low register
-      AFRL    : AFRL_Register;
+      AFRL    : aliased AFRL_Register;
       --  GPIO alternate function high register
-      AFRH    : AFRH_Register;
+      AFRH    : aliased AFRH_Register;
    end record
      with Volatile;
 
@@ -419,38 +420,38 @@ package STM32_SVD.GPIO is
 
    --  General-purpose I/Os
    GPIOA_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOA_Base;
+     with Import, Address => System'To_Address (16#40020000#);
 
    --  General-purpose I/Os
    GPIOB_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOB_Base;
+     with Import, Address => System'To_Address (16#40020400#);
 
    --  General-purpose I/Os
    GPIOC_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOC_Base;
+     with Import, Address => System'To_Address (16#40020800#);
 
    --  General-purpose I/Os
    GPIOD_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOD_Base;
+     with Import, Address => System'To_Address (16#40020C00#);
 
    --  General-purpose I/Os
    GPIOE_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOE_Base;
+     with Import, Address => System'To_Address (16#40021000#);
 
    --  General-purpose I/Os
    GPIOF_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOF_Base;
+     with Import, Address => System'To_Address (16#40021400#);
 
    --  General-purpose I/Os
    GPIOG_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOG_Base;
+     with Import, Address => System'To_Address (16#40021800#);
 
    --  General-purpose I/Os
    GPIOH_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOH_Base;
+     with Import, Address => System'To_Address (16#40021C00#);
 
    --  General-purpose I/Os
    GPIOI_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIOI_Base;
+     with Import, Address => System'To_Address (16#40022000#);
 
 end STM32_SVD.GPIO;

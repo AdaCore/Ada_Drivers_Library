@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -385,59 +386,59 @@ package STM32_SVD.FSMC is
    --  Flexible static memory controller
    type FSMC_Peripheral is record
       --  SRAM/NOR-Flash chip-select control register 1
-      BCR1  : BCR1_Register;
+      BCR1  : aliased BCR1_Register;
       --  SRAM/NOR-Flash chip-select timing register 1
-      BTR1  : BTR_Register;
+      BTR1  : aliased BTR_Register;
       --  SRAM/NOR-Flash chip-select control register 2
-      BCR2  : BCR_Register;
+      BCR2  : aliased BCR_Register;
       --  SRAM/NOR-Flash chip-select timing register 2
-      BTR2  : BTR_Register;
+      BTR2  : aliased BTR_Register;
       --  SRAM/NOR-Flash chip-select control register 3
-      BCR3  : BCR_Register;
+      BCR3  : aliased BCR_Register;
       --  SRAM/NOR-Flash chip-select timing register 3
-      BTR3  : BTR_Register;
+      BTR3  : aliased BTR_Register;
       --  SRAM/NOR-Flash chip-select control register 4
-      BCR4  : BCR_Register;
+      BCR4  : aliased BCR_Register;
       --  SRAM/NOR-Flash chip-select timing register 4
-      BTR4  : BTR_Register;
+      BTR4  : aliased BTR_Register;
       --  PC Card/NAND Flash control register 2
-      PCR2  : PCR_Register;
+      PCR2  : aliased PCR_Register;
       --  FIFO status and interrupt register 2
-      SR2   : SR_Register;
+      SR2   : aliased SR_Register;
       --  Common memory space timing register 2
-      PMEM2 : PMEM_Register;
+      PMEM2 : aliased PMEM_Register;
       --  Attribute memory space timing register 2
-      PATT2 : PATT_Register;
+      PATT2 : aliased PATT_Register;
       --  ECC result register 2
-      ECCR2 : HAL.UInt32;
+      ECCR2 : aliased HAL.UInt32;
       --  PC Card/NAND Flash control register 3
-      PCR3  : PCR_Register;
+      PCR3  : aliased PCR_Register;
       --  FIFO status and interrupt register 3
-      SR3   : SR_Register;
+      SR3   : aliased SR_Register;
       --  Common memory space timing register 3
-      PMEM3 : PMEM_Register;
+      PMEM3 : aliased PMEM_Register;
       --  Attribute memory space timing register 3
-      PATT3 : PATT_Register;
+      PATT3 : aliased PATT_Register;
       --  ECC result register 3
-      ECCR3 : HAL.UInt32;
+      ECCR3 : aliased HAL.UInt32;
       --  PC Card/NAND Flash control register 4
-      PCR4  : PCR_Register;
+      PCR4  : aliased PCR_Register;
       --  FIFO status and interrupt register 4
-      SR4   : SR_Register;
+      SR4   : aliased SR_Register;
       --  Common memory space timing register 4
-      PMEM4 : PMEM_Register;
+      PMEM4 : aliased PMEM_Register;
       --  Attribute memory space timing register 4
-      PATT4 : PATT_Register;
+      PATT4 : aliased PATT_Register;
       --  I/O space timing register 4
-      PIO4  : PIO4_Register;
+      PIO4  : aliased PIO4_Register;
       --  SRAM/NOR-Flash write timing registers 1
-      BWTR1 : BWTR_Register;
+      BWTR1 : aliased BWTR_Register;
       --  SRAM/NOR-Flash write timing registers 2
-      BWTR2 : BWTR_Register;
+      BWTR2 : aliased BWTR_Register;
       --  SRAM/NOR-Flash write timing registers 3
-      BWTR3 : BWTR_Register;
+      BWTR3 : aliased BWTR_Register;
       --  SRAM/NOR-Flash write timing registers 4
-      BWTR4 : BWTR_Register;
+      BWTR4 : aliased BWTR_Register;
    end record
      with Volatile;
 
@@ -473,6 +474,6 @@ package STM32_SVD.FSMC is
 
    --  Flexible static memory controller
    FSMC_Periph : aliased FSMC_Peripheral
-     with Import, Address => FSMC_Base;
+     with Import, Address => System'To_Address (16#A0000000#);
 
 end STM32_SVD.FSMC;

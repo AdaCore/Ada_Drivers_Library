@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -469,77 +470,77 @@ package STM32_SVD.CRYP is
    --  Cryptographic processor
    type CRYP_Peripheral is record
       --  control register
-      CR         : CR_Register;
+      CR         : aliased CR_Register;
       --  status register
-      SR         : SR_Register;
+      SR         : aliased SR_Register;
       --  data input register
-      DIN        : HAL.UInt32;
+      DIN        : aliased HAL.UInt32;
       --  data output register
-      DOUT       : HAL.UInt32;
+      DOUT       : aliased HAL.UInt32;
       --  DMA control register
-      DMACR      : DMACR_Register;
+      DMACR      : aliased DMACR_Register;
       --  interrupt mask set/clear register
-      IMSCR      : IMSCR_Register;
+      IMSCR      : aliased IMSCR_Register;
       --  raw interrupt status register
-      RISR       : RISR_Register;
+      RISR       : aliased RISR_Register;
       --  masked interrupt status register
-      MISR       : MISR_Register;
+      MISR       : aliased MISR_Register;
       --  key registers
-      K0LR       : K0LR_Register;
+      K0LR       : aliased K0LR_Register;
       --  key registers
-      K0RR       : K0RR_Register;
+      K0RR       : aliased K0RR_Register;
       --  key registers
-      K1LR       : K1LR_Register;
+      K1LR       : aliased K1LR_Register;
       --  key registers
-      K1RR       : K1RR_Register;
+      K1RR       : aliased K1RR_Register;
       --  key registers
-      K2LR       : K2LR_Register;
+      K2LR       : aliased K2LR_Register;
       --  key registers
-      K2RR       : K2RR_Register;
+      K2RR       : aliased K2RR_Register;
       --  key registers
-      K3LR       : K3LR_Register;
+      K3LR       : aliased K3LR_Register;
       --  key registers
-      K3RR       : K3RR_Register;
+      K3RR       : aliased K3RR_Register;
       --  initialization vector registers
-      IV0LR      : IV0LR_Register;
+      IV0LR      : aliased IV0LR_Register;
       --  initialization vector registers
-      IV0RR      : IV0RR_Register;
+      IV0RR      : aliased IV0RR_Register;
       --  initialization vector registers
-      IV1LR      : IV1LR_Register;
+      IV1LR      : aliased IV1LR_Register;
       --  initialization vector registers
-      IV1RR      : IV1RR_Register;
+      IV1RR      : aliased IV1RR_Register;
       --  context swap register
-      CSGCMCCM0R : HAL.UInt32;
+      CSGCMCCM0R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM1R : HAL.UInt32;
+      CSGCMCCM1R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM2R : HAL.UInt32;
+      CSGCMCCM2R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM3R : HAL.UInt32;
+      CSGCMCCM3R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM4R : HAL.UInt32;
+      CSGCMCCM4R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM5R : HAL.UInt32;
+      CSGCMCCM5R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM6R : HAL.UInt32;
+      CSGCMCCM6R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM7R : HAL.UInt32;
+      CSGCMCCM7R : aliased HAL.UInt32;
       --  context swap register
-      CSGCM0R    : HAL.UInt32;
+      CSGCM0R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM1R    : HAL.UInt32;
+      CSGCM1R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM2R    : HAL.UInt32;
+      CSGCM2R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM3R    : HAL.UInt32;
+      CSGCM3R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM4R    : HAL.UInt32;
+      CSGCM4R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM5R    : HAL.UInt32;
+      CSGCM5R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM6R    : HAL.UInt32;
+      CSGCM6R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM7R    : HAL.UInt32;
+      CSGCM7R    : aliased HAL.UInt32;
    end record
      with Volatile;
 
@@ -584,6 +585,6 @@ package STM32_SVD.CRYP is
 
    --  Cryptographic processor
    CRYP_Periph : aliased CRYP_Peripheral
-     with Import, Address => CRYP_Base;
+     with Import, Address => System'To_Address (16#50060000#);
 
 end STM32_SVD.CRYP;

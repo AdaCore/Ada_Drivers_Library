@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -328,27 +329,27 @@ package STM32_SVD.DCMI is
    --  Digital camera interface
    type DCMI_Peripheral is record
       --  control register 1
-      CR     : CR_Register;
+      CR     : aliased CR_Register;
       --  status register
-      SR     : SR_Register;
+      SR     : aliased SR_Register;
       --  raw interrupt status register
-      RIS    : RIS_Register;
+      RIS    : aliased RIS_Register;
       --  interrupt enable register
-      IER    : IER_Register;
+      IER    : aliased IER_Register;
       --  masked interrupt status register
-      MIS    : MIS_Register;
+      MIS    : aliased MIS_Register;
       --  interrupt clear register
-      ICR    : ICR_Register;
+      ICR    : aliased ICR_Register;
       --  embedded synchronization code register
-      ESCR   : ESCR_Register;
+      ESCR   : aliased ESCR_Register;
       --  embedded synchronization unmask register
-      ESUR   : ESUR_Register;
+      ESUR   : aliased ESUR_Register;
       --  crop window start
-      CWSTRT : CWSTRT_Register;
+      CWSTRT : aliased CWSTRT_Register;
       --  crop window size
-      CWSIZE : CWSIZE_Register;
+      CWSIZE : aliased CWSIZE_Register;
       --  data register
-      DR     : DR_Register;
+      DR     : aliased DR_Register;
    end record
      with Volatile;
 
@@ -368,6 +369,6 @@ package STM32_SVD.DCMI is
 
    --  Digital camera interface
    DCMI_Periph : aliased DCMI_Peripheral
-     with Import, Address => DCMI_Base;
+     with Import, Address => System'To_Address (16#50050000#);
 
 end STM32_SVD.DCMI;
