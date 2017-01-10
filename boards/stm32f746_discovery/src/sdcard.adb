@@ -34,10 +34,6 @@
 
 with Ada.Real_Time;           use Ada.Real_Time;
 
-pragma Warnings (Off);
-with System.BB.Board_Parameters;
-pragma Warnings (On);
-
 with HAL.SDCard;              use HAL.SDCard;
 
 with STM32_SVD.RCC;           use STM32_SVD.RCC;
@@ -234,7 +230,7 @@ package body SDCard is
 
       Ret := STM32.SDMMC.Initialize
         (Controller.Device.all,
-         System.BB.Board_Parameters.Main_Clock_Frequency,
+         System_Clock_Frequencies.SYSCLK,
          Controller.Info);
 
       if Ret = OK then

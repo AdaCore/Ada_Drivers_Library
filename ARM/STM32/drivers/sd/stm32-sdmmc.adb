@@ -269,9 +269,9 @@ package body STM32.SDMMC is
    is
       use System.BB.Board_Parameters;
 
-      Div : Natural;
+      Div : Unsigned_32;
    begin
-      Div := (This.CLK_In + Freq - 1) / Freq;
+      Div := (This.CLK_In + UInt32 (Freq) - 1) / UInt32 (Freq);
 
       --  Make sure the POWER register is writable by waiting a bit after
       --  the Power_Off command
@@ -282,7 +282,7 @@ package body STM32.SDMMC is
       else
          Div := Div - 2;
 
-         if Div > Natural (CLKCR_CLKDIV_Field'Last) then
+         if Div > Unsigned_32 (CLKCR_CLKDIV_Field'Last) then
             This.Periph.CLKCR.CLKDIV := CLKCR_CLKDIV_Field'Last;
          else
             This.Periph.CLKCR.CLKDIV := CLKCR_CLKDIV_Field (Div);
@@ -838,7 +838,7 @@ package body STM32.SDMMC is
 
    function Initialize
      (This      : in out SDMMC_Controller;
-      SDMMC_CLK : Natural;
+      SDMMC_CLK : Unsigned_32;
       Info      : out Card_Information) return SD_Error
    is
       Ret : SD_Error;
