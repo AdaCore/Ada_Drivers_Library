@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                  Copyright (C) 2016-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -38,6 +38,10 @@
 --  The demo uses an abstract data type PWM_Modulator to control the power to
 --  the LED via pulse-width-modulation. A timer is still used underneath, but
 --  the details are hidden.  For direct use of the timer see the other demo.
+--
+--  The demo is currently intended for the STM32F4 Discovery board for the sake
+--  of the convenience of the four LEDs and their association with Timer_4, but
+--  other boards could be used.
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 
@@ -49,9 +53,11 @@ with STM32.Timers; use STM32.Timers;
 
 procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
 
-   PWM_Timer : STM32.Timers.Timer renames Timer_4;
-   --  NOT arbitrary!
-   --  We drive the on-board LEDs that are tied to the channels of Timer_4.
+   Selected_Timer : STM32.Timers.Timer renames Timer_4;
+   --  NOT arbitrary! We drive the on-board LEDs that are tied to the channels
+   --  of Timer_4 on some boards. Not all boards have this association. If you
+   --  use a difference board, select a GPIO point connected to your selected
+   --  timer and drive that instead.
 
    Timer_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_2_TIM4;
    --  Note that this value MUST match the corresponding timer selected!
@@ -76,7 +82,7 @@ procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
 
    Requested_Frequency : constant Hertz := 30_000;  -- arbitrary
 
-   Power_Control : PWM_Modulator;
+   Power_Control : PWM_Modulator (Selected_Timer'Access);
 
    procedure Configure_LEDs;
    --  initialize all of the LEDs to be in the AF mode
@@ -135,11 +141,7 @@ procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
 begin
    Configure_LEDs;
 
-   Initialize_PWM_Modulator
-     (Power_Control,
-      Generator => PWM_Timer'Access,
-      Frequency => Requested_Frequency,
-      Configure_Generator => True);
+   Configure_PWM_Timer (Power_Control.Generator, Requested_Frequency);
 
    Attach_PWM_Channel
      (Power_Control,
