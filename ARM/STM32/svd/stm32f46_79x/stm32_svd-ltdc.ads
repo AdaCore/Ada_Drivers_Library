@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -833,79 +834,79 @@ package STM32_SVD.LTDC is
    --  LCD-TFT Controller
    type LTDC_Peripheral is record
       --  Synchronization Size Configuration Register
-      SSCR     : SSCR_Register;
+      SSCR     : aliased SSCR_Register;
       --  Back Porch Configuration Register
-      BPCR     : BPCR_Register;
+      BPCR     : aliased BPCR_Register;
       --  Active Width Configuration Register
-      AWCR     : AWCR_Register;
+      AWCR     : aliased AWCR_Register;
       --  Total Width Configuration Register
-      TWCR     : TWCR_Register;
+      TWCR     : aliased TWCR_Register;
       --  Global Control Register
-      GCR      : GCR_Register;
+      GCR      : aliased GCR_Register;
       --  Shadow Reload Configuration Register
-      SRCR     : SRCR_Register;
+      SRCR     : aliased SRCR_Register;
       --  Background Color Configuration Register
-      BCCR     : BCCR_Register;
+      BCCR     : aliased BCCR_Register;
       --  Interrupt Enable Register
-      IER      : IER_Register;
+      IER      : aliased IER_Register;
       --  Interrupt Status Register
-      ISR      : ISR_Register;
+      ISR      : aliased ISR_Register;
       --  Interrupt Clear Register
-      ICR      : ICR_Register;
+      ICR      : aliased ICR_Register;
       --  Line Interrupt Position Configuration Register
-      LIPCR    : LIPCR_Register;
+      LIPCR    : aliased LIPCR_Register;
       --  Current Position Status Register
-      CPSR     : CPSR_Register;
+      CPSR     : aliased CPSR_Register;
       --  Current Display Status Register
-      CDSR     : CDSR_Register;
+      CDSR     : aliased CDSR_Register;
       --  Layerx Control Register
-      L1CR     : L1CR_Register;
+      L1CR     : aliased L1CR_Register;
       --  Layerx Window Horizontal Position Configuration Register
-      L1WHPCR  : L1WHPCR_Register;
+      L1WHPCR  : aliased L1WHPCR_Register;
       --  Layerx Window Vertical Position Configuration Register
-      L1WVPCR  : L1WVPCR_Register;
+      L1WVPCR  : aliased L1WVPCR_Register;
       --  Layerx Color Keying Configuration Register
-      L1CKCR   : L1CKCR_Register;
+      L1CKCR   : aliased L1CKCR_Register;
       --  Layerx Pixel Format Configuration Register
-      L1PFCR   : L1PFCR_Register;
+      L1PFCR   : aliased L1PFCR_Register;
       --  Layerx Constant Alpha Configuration Register
-      L1CACR   : L1CACR_Register;
+      L1CACR   : aliased L1CACR_Register;
       --  Layerx Default Color Configuration Register
-      L1DCCR   : L1DCCR_Register;
+      L1DCCR   : aliased L1DCCR_Register;
       --  Layerx Blending Factors Configuration Register
-      L1BFCR   : L1BFCR_Register;
+      L1BFCR   : aliased L1BFCR_Register;
       --  Layerx Color Frame Buffer Address Register
-      L1CFBAR  : HAL.UInt32;
+      L1CFBAR  : aliased HAL.UInt32;
       --  Layerx Color Frame Buffer Length Register
-      L1CFBLR  : L1CFBLR_Register;
+      L1CFBLR  : aliased L1CFBLR_Register;
       --  Layerx ColorFrame Buffer Line Number Register
-      L1CFBLNR : L1CFBLNR_Register;
+      L1CFBLNR : aliased L1CFBLNR_Register;
       --  Layerx CLUT Write Register
-      L1CLUTWR : L1CLUTWR_Register;
+      L1CLUTWR : aliased L1CLUTWR_Register;
       --  Layerx Control Register
-      L2CR     : L2CR_Register;
+      L2CR     : aliased L2CR_Register;
       --  Layerx Window Horizontal Position Configuration Register
-      L2WHPCR  : L2WHPCR_Register;
+      L2WHPCR  : aliased L2WHPCR_Register;
       --  Layerx Window Vertical Position Configuration Register
-      L2WVPCR  : L2WVPCR_Register;
+      L2WVPCR  : aliased L2WVPCR_Register;
       --  Layerx Color Keying Configuration Register
-      L2CKCR   : L2CKCR_Register;
+      L2CKCR   : aliased L2CKCR_Register;
       --  Layerx Pixel Format Configuration Register
-      L2PFCR   : L2PFCR_Register;
+      L2PFCR   : aliased L2PFCR_Register;
       --  Layerx Constant Alpha Configuration Register
-      L2CACR   : L2CACR_Register;
+      L2CACR   : aliased L2CACR_Register;
       --  Layerx Default Color Configuration Register
-      L2DCCR   : L2DCCR_Register;
+      L2DCCR   : aliased L2DCCR_Register;
       --  Layerx Blending Factors Configuration Register
-      L2BFCR   : L2BFCR_Register;
+      L2BFCR   : aliased L2BFCR_Register;
       --  Layerx Color Frame Buffer Address Register
-      L2CFBAR  : HAL.UInt32;
+      L2CFBAR  : aliased HAL.UInt32;
       --  Layerx Color Frame Buffer Length Register
-      L2CFBLR  : L2CFBLR_Register;
+      L2CFBLR  : aliased L2CFBLR_Register;
       --  Layerx ColorFrame Buffer Line Number Register
-      L2CFBLNR : L2CFBLNR_Register;
+      L2CFBLNR : aliased L2CFBLNR_Register;
       --  Layerx CLUT Write Register
-      L2CLUTWR : L2CLUTWR_Register;
+      L2CLUTWR : aliased L2CLUTWR_Register;
    end record
      with Volatile;
 
@@ -951,6 +952,6 @@ package STM32_SVD.LTDC is
 
    --  LCD-TFT Controller
    LTDC_Periph : aliased LTDC_Peripheral
-     with Import, Address => LTDC_Base;
+     with Import, Address => System'To_Address (16#40016800#);
 
 end STM32_SVD.LTDC;

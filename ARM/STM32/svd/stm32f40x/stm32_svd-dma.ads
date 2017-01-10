@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -1384,109 +1385,109 @@ package STM32_SVD.DMA is
    --  DMA controller
    type DMA_Peripheral is record
       --  low interrupt status register
-      LISR   : LISR_Register;
+      LISR   : aliased LISR_Register;
       --  high interrupt status register
-      HISR   : HISR_Register;
+      HISR   : aliased HISR_Register;
       --  low interrupt flag clear register
-      LIFCR  : LIFCR_Register;
+      LIFCR  : aliased LIFCR_Register;
       --  high interrupt flag clear register
-      HIFCR  : HIFCR_Register;
+      HIFCR  : aliased HIFCR_Register;
       --  stream x configuration register
-      S0CR   : S0CR_Register;
+      S0CR   : aliased S0CR_Register;
       --  stream x number of data register
-      S0NDTR : S0NDTR_Register;
+      S0NDTR : aliased S0NDTR_Register;
       --  stream x peripheral address register
-      S0PAR  : HAL.UInt32;
+      S0PAR  : aliased HAL.UInt32;
       --  stream x memory 0 address register
-      S0M0AR : HAL.UInt32;
+      S0M0AR : aliased HAL.UInt32;
       --  stream x memory 1 address register
-      S0M1AR : HAL.UInt32;
+      S0M1AR : aliased HAL.UInt32;
       --  stream x FIFO control register
-      S0FCR  : S0FCR_Register;
+      S0FCR  : aliased S0FCR_Register;
       --  stream x configuration register
-      S1CR   : S1CR_Register;
+      S1CR   : aliased S1CR_Register;
       --  stream x number of data register
-      S1NDTR : S1NDTR_Register;
+      S1NDTR : aliased S1NDTR_Register;
       --  stream x peripheral address register
-      S1PAR  : HAL.UInt32;
+      S1PAR  : aliased HAL.UInt32;
       --  stream x memory 0 address register
-      S1M0AR : HAL.UInt32;
+      S1M0AR : aliased HAL.UInt32;
       --  stream x memory 1 address register
-      S1M1AR : HAL.UInt32;
+      S1M1AR : aliased HAL.UInt32;
       --  stream x FIFO control register
-      S1FCR  : S1FCR_Register;
+      S1FCR  : aliased S1FCR_Register;
       --  stream x configuration register
-      S2CR   : S2CR_Register;
+      S2CR   : aliased S2CR_Register;
       --  stream x number of data register
-      S2NDTR : S2NDTR_Register;
+      S2NDTR : aliased S2NDTR_Register;
       --  stream x peripheral address register
-      S2PAR  : HAL.UInt32;
+      S2PAR  : aliased HAL.UInt32;
       --  stream x memory 0 address register
-      S2M0AR : HAL.UInt32;
+      S2M0AR : aliased HAL.UInt32;
       --  stream x memory 1 address register
-      S2M1AR : HAL.UInt32;
+      S2M1AR : aliased HAL.UInt32;
       --  stream x FIFO control register
-      S2FCR  : S2FCR_Register;
+      S2FCR  : aliased S2FCR_Register;
       --  stream x configuration register
-      S3CR   : S3CR_Register;
+      S3CR   : aliased S3CR_Register;
       --  stream x number of data register
-      S3NDTR : S3NDTR_Register;
+      S3NDTR : aliased S3NDTR_Register;
       --  stream x peripheral address register
-      S3PAR  : HAL.UInt32;
+      S3PAR  : aliased HAL.UInt32;
       --  stream x memory 0 address register
-      S3M0AR : HAL.UInt32;
+      S3M0AR : aliased HAL.UInt32;
       --  stream x memory 1 address register
-      S3M1AR : HAL.UInt32;
+      S3M1AR : aliased HAL.UInt32;
       --  stream x FIFO control register
-      S3FCR  : S3FCR_Register;
+      S3FCR  : aliased S3FCR_Register;
       --  stream x configuration register
-      S4CR   : S4CR_Register;
+      S4CR   : aliased S4CR_Register;
       --  stream x number of data register
-      S4NDTR : S4NDTR_Register;
+      S4NDTR : aliased S4NDTR_Register;
       --  stream x peripheral address register
-      S4PAR  : HAL.UInt32;
+      S4PAR  : aliased HAL.UInt32;
       --  stream x memory 0 address register
-      S4M0AR : HAL.UInt32;
+      S4M0AR : aliased HAL.UInt32;
       --  stream x memory 1 address register
-      S4M1AR : HAL.UInt32;
+      S4M1AR : aliased HAL.UInt32;
       --  stream x FIFO control register
-      S4FCR  : S4FCR_Register;
+      S4FCR  : aliased S4FCR_Register;
       --  stream x configuration register
-      S5CR   : S5CR_Register;
+      S5CR   : aliased S5CR_Register;
       --  stream x number of data register
-      S5NDTR : S5NDTR_Register;
+      S5NDTR : aliased S5NDTR_Register;
       --  stream x peripheral address register
-      S5PAR  : HAL.UInt32;
+      S5PAR  : aliased HAL.UInt32;
       --  stream x memory 0 address register
-      S5M0AR : HAL.UInt32;
+      S5M0AR : aliased HAL.UInt32;
       --  stream x memory 1 address register
-      S5M1AR : HAL.UInt32;
+      S5M1AR : aliased HAL.UInt32;
       --  stream x FIFO control register
-      S5FCR  : S5FCR_Register;
+      S5FCR  : aliased S5FCR_Register;
       --  stream x configuration register
-      S6CR   : S6CR_Register;
+      S6CR   : aliased S6CR_Register;
       --  stream x number of data register
-      S6NDTR : S6NDTR_Register;
+      S6NDTR : aliased S6NDTR_Register;
       --  stream x peripheral address register
-      S6PAR  : HAL.UInt32;
+      S6PAR  : aliased HAL.UInt32;
       --  stream x memory 0 address register
-      S6M0AR : HAL.UInt32;
+      S6M0AR : aliased HAL.UInt32;
       --  stream x memory 1 address register
-      S6M1AR : HAL.UInt32;
+      S6M1AR : aliased HAL.UInt32;
       --  stream x FIFO control register
-      S6FCR  : S6FCR_Register;
+      S6FCR  : aliased S6FCR_Register;
       --  stream x configuration register
-      S7CR   : S7CR_Register;
+      S7CR   : aliased S7CR_Register;
       --  stream x number of data register
-      S7NDTR : S7NDTR_Register;
+      S7NDTR : aliased S7NDTR_Register;
       --  stream x peripheral address register
-      S7PAR  : HAL.UInt32;
+      S7PAR  : aliased HAL.UInt32;
       --  stream x memory 0 address register
-      S7M0AR : HAL.UInt32;
+      S7M0AR : aliased HAL.UInt32;
       --  stream x memory 1 address register
-      S7M1AR : HAL.UInt32;
+      S7M1AR : aliased HAL.UInt32;
       --  stream x FIFO control register
-      S7FCR  : S7FCR_Register;
+      S7FCR  : aliased S7FCR_Register;
    end record
      with Volatile;
 
@@ -1547,10 +1548,10 @@ package STM32_SVD.DMA is
 
    --  DMA controller
    DMA1_Periph : aliased DMA_Peripheral
-     with Import, Address => DMA1_Base;
+     with Import, Address => System'To_Address (16#40026000#);
 
    --  DMA controller
    DMA2_Periph : aliased DMA_Peripheral
-     with Import, Address => DMA2_Base;
+     with Import, Address => System'To_Address (16#40026400#);
 
 end STM32_SVD.DMA;

@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -102,23 +103,23 @@ package Cortex_M_SVD.Cache is
    --  Cache maintenance operations
    type Cache_Peripheral is record
       --  Instruction cache invalidate all to the PoU
-      ICIALLU  : HAL.UInt32;
+      ICIALLU  : aliased HAL.UInt32;
       --  Instruction cache invalidate by address to the PoU
-      ICIMVAU  : HAL.UInt32;
+      ICIMVAU  : aliased HAL.UInt32;
       --  Data cache invalidate by address to the PoC
-      DCIMVAC  : HAL.UInt32;
+      DCIMVAC  : aliased HAL.UInt32;
       --  Data cache invalidate by set/way
-      DCISW    : DCISW_Register;
+      DCISW    : aliased DCISW_Register;
       --  Data cache clean by address to the PoU
-      DCCMVAU  : HAL.UInt32;
+      DCCMVAU  : aliased HAL.UInt32;
       --  Data cache clean by address to the PoC
-      DCCMVAC  : HAL.UInt32;
+      DCCMVAC  : aliased HAL.UInt32;
       --  Data cache clean by set/way
-      DCCSW    : DCCSW_Register;
+      DCCSW    : aliased DCCSW_Register;
       --  Data cache clean and invalidate by address to the PoC
-      DCCIMVAC : HAL.UInt32;
+      DCCIMVAC : aliased HAL.UInt32;
       --  Data cache clean and invalidate by set/way
-      DCCISW   : DCCISW_Register;
+      DCCISW   : aliased DCCISW_Register;
    end record
      with Volatile;
 

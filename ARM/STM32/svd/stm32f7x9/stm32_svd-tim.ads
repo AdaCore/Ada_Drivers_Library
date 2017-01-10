@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -1814,58 +1815,58 @@ package STM32_SVD.TIM is
      (Discriminent : TIM1_Disc := Output)
    is record
       --  control register 1
-      CR1          : CR1_Register;
+      CR1          : aliased CR1_Register;
       --  control register 2
-      CR2          : CR2_Register;
+      CR2          : aliased CR2_Register;
       --  slave mode control register
-      SMCR         : SMCR_Register;
+      SMCR         : aliased SMCR_Register;
       --  DMA/Interrupt enable register
-      DIER         : DIER_Register;
+      DIER         : aliased DIER_Register;
       --  status register
-      SR           : SR_Register;
+      SR           : aliased SR_Register;
       --  event generation register
-      EGR          : EGR_Register;
+      EGR          : aliased EGR_Register;
       --  capture/compare enable register
-      CCER         : CCER_Register;
+      CCER         : aliased CCER_Register;
       --  counter
-      CNT          : CNT_Register;
+      CNT          : aliased CNT_Register;
       --  prescaler
-      PSC          : PSC_Register;
+      PSC          : aliased PSC_Register;
       --  auto-reload register
-      ARR          : ARR_Register;
+      ARR          : aliased ARR_Register;
       --  repetition counter register
-      RCR          : RCR_Register;
+      RCR          : aliased RCR_Register;
       --  capture/compare register 1
-      CCR1         : CCR1_Register;
+      CCR1         : aliased CCR1_Register;
       --  capture/compare register 2
-      CCR2         : CCR2_Register;
+      CCR2         : aliased CCR2_Register;
       --  capture/compare register 3
-      CCR3         : CCR3_Register;
+      CCR3         : aliased CCR3_Register;
       --  capture/compare register 4
-      CCR4         : CCR4_Register;
+      CCR4         : aliased CCR4_Register;
       --  break and dead-time register
-      BDTR         : BDTR_Register;
+      BDTR         : aliased BDTR_Register;
       --  DMA control register
-      DCR          : DCR_Register;
+      DCR          : aliased DCR_Register;
       --  DMA address for full transfer
-      DMAR         : DMAR_Register;
+      DMAR         : aliased DMAR_Register;
       --  capture/compare mode register 3 (output mode)
-      CCMR3_Output : CCMR3_Output_Register;
+      CCMR3_Output : aliased CCMR3_Output_Register;
       --  capture/compare register 5
-      CCR5         : CCR5_Register;
+      CCR5         : aliased CCR5_Register;
       --  capture/compare register 6
-      CRR6         : CRR6_Register;
+      CRR6         : aliased CRR6_Register;
       case Discriminent is
          when Output =>
             --  capture/compare mode register 1 (output mode)
-            CCMR1_Output : CCMR1_Output_Register;
+            CCMR1_Output : aliased CCMR1_Output_Register;
             --  capture/compare mode register 2 (output mode)
-            CCMR2_Output : CCMR2_Output_Register;
+            CCMR2_Output : aliased CCMR2_Output_Register;
          when Input =>
             --  capture/compare mode register 1 (input mode)
-            CCMR1_Input : CCMR1_Input_Register;
+            CCMR1_Input : aliased CCMR1_Input_Register;
             --  capture/compare mode register 2 (input mode)
-            CCMR2_Input : CCMR2_Input_Register;
+            CCMR2_Input : aliased CCMR2_Input_Register;
       end case;
    end record
      with Unchecked_Union, Volatile;
@@ -1900,11 +1901,11 @@ package STM32_SVD.TIM is
 
    --  Advanced-timers
    TIM1_Periph : aliased TIM1_Peripheral
-     with Import, Address => TIM1_Base;
+     with Import, Address => System'To_Address (16#40010000#);
 
    --  Advanced-timers
    TIM8_Periph : aliased TIM1_Peripheral
-     with Import, Address => TIM8_Base;
+     with Import, Address => System'To_Address (16#40010400#);
 
    type TIM2_Disc is
      (
@@ -1916,52 +1917,52 @@ package STM32_SVD.TIM is
      (Discriminent : TIM2_Disc := Output)
    is record
       --  control register 1
-      CR1          : CR1_Register;
+      CR1          : aliased CR1_Register;
       --  control register 2
-      CR2          : CR2_Register_1;
+      CR2          : aliased CR2_Register_1;
       --  slave mode control register
-      SMCR         : SMCR_Register;
+      SMCR         : aliased SMCR_Register;
       --  DMA/Interrupt enable register
-      DIER         : DIER_Register_1;
+      DIER         : aliased DIER_Register_1;
       --  status register
-      SR           : SR_Register_1;
+      SR           : aliased SR_Register_1;
       --  event generation register
-      EGR          : EGR_Register_1;
+      EGR          : aliased EGR_Register_1;
       --  capture/compare enable register
-      CCER         : CCER_Register_1;
+      CCER         : aliased CCER_Register_1;
       --  counter
-      CNT          : CNT_Register_1;
+      CNT          : aliased CNT_Register_1;
       --  prescaler
-      PSC          : PSC_Register;
+      PSC          : aliased PSC_Register;
       --  auto-reload register
-      ARR          : ARR_Register_1;
+      ARR          : aliased ARR_Register_1;
       --  capture/compare register 1
-      CCR1         : CCR1_Register_1;
+      CCR1         : aliased CCR1_Register_1;
       --  capture/compare register 2
-      CCR2         : CCR2_Register_1;
+      CCR2         : aliased CCR2_Register_1;
       --  capture/compare register 3
-      CCR3         : CCR3_Register_1;
+      CCR3         : aliased CCR3_Register_1;
       --  capture/compare register 4
-      CCR4         : CCR4_Register_1;
+      CCR4         : aliased CCR4_Register_1;
       --  DMA control register
-      DCR          : DCR_Register;
+      DCR          : aliased DCR_Register;
       --  DMA address for full transfer
-      DMAR         : DMAR_Register;
+      DMAR         : aliased DMAR_Register;
       --  TIM2 option register 1
-      OR1          : OR1_Register;
+      OR1          : aliased OR1_Register;
       --  TIM2 option register 2
-      OR2          : OR2_Register;
+      OR2          : aliased OR2_Register;
       case Discriminent is
          when Output =>
             --  capture/compare mode register 1 (output mode)
-            CCMR1_Output : CCMR1_Output_Register;
+            CCMR1_Output : aliased CCMR1_Output_Register;
             --  capture/compare mode register 2 (output mode)
-            CCMR2_Output : CCMR2_Output_Register_1;
+            CCMR2_Output : aliased CCMR2_Output_Register_1;
          when Input =>
             --  capture/compare mode register 1 (input mode)
-            CCMR1_Input : CCMR1_Input_Register;
+            CCMR1_Input : aliased CCMR1_Input_Register;
             --  capture/compare mode register 2 (input mode)
-            CCMR2_Input : CCMR2_Input_Register;
+            CCMR2_Input : aliased CCMR2_Input_Register;
       end case;
    end record
      with Unchecked_Union, Volatile;
@@ -1993,7 +1994,7 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM2_Periph : aliased TIM2_Peripheral
-     with Import, Address => TIM2_Base;
+     with Import, Address => System'To_Address (16#40000000#);
 
    type TIM3_Disc is
      (
@@ -2005,52 +2006,52 @@ package STM32_SVD.TIM is
      (Discriminent : TIM3_Disc := Output)
    is record
       --  control register 1
-      CR1          : CR1_Register;
+      CR1          : aliased CR1_Register;
       --  control register 2
-      CR2          : CR2_Register_1;
+      CR2          : aliased CR2_Register_1;
       --  slave mode control register
-      SMCR         : SMCR_Register;
+      SMCR         : aliased SMCR_Register;
       --  DMA/Interrupt enable register
-      DIER         : DIER_Register_1;
+      DIER         : aliased DIER_Register_1;
       --  status register
-      SR           : SR_Register_1;
+      SR           : aliased SR_Register_1;
       --  event generation register
-      EGR          : EGR_Register_1;
+      EGR          : aliased EGR_Register_1;
       --  capture/compare enable register
-      CCER         : CCER_Register_1;
+      CCER         : aliased CCER_Register_1;
       --  counter
-      CNT          : CNT_Register_1;
+      CNT          : aliased CNT_Register_1;
       --  prescaler
-      PSC          : PSC_Register;
+      PSC          : aliased PSC_Register;
       --  auto-reload register
-      ARR          : ARR_Register_1;
+      ARR          : aliased ARR_Register_1;
       --  capture/compare register 1
-      CCR1         : CCR1_Register_1;
+      CCR1         : aliased CCR1_Register_1;
       --  capture/compare register 2
-      CCR2         : CCR2_Register_1;
+      CCR2         : aliased CCR2_Register_1;
       --  capture/compare register 3
-      CCR3         : CCR3_Register_1;
+      CCR3         : aliased CCR3_Register_1;
       --  capture/compare register 4
-      CCR4         : CCR4_Register_1;
+      CCR4         : aliased CCR4_Register_1;
       --  DMA control register
-      DCR          : DCR_Register;
+      DCR          : aliased DCR_Register;
       --  DMA address for full transfer
-      DMAR         : DMAR_Register;
+      DMAR         : aliased DMAR_Register;
       --  TIM3 option register 1
-      OR1          : OR_Register;
+      OR1          : aliased OR_Register;
       --  TIM3 option register 2
-      OR2          : OR2_Register;
+      OR2          : aliased OR2_Register;
       case Discriminent is
          when Output =>
             --  capture/compare mode register 1 (output mode)
-            CCMR1_Output : CCMR1_Output_Register;
+            CCMR1_Output : aliased CCMR1_Output_Register;
             --  capture/compare mode register 2 (output mode)
-            CCMR2_Output : CCMR2_Output_Register_1;
+            CCMR2_Output : aliased CCMR2_Output_Register_1;
          when Input =>
             --  capture/compare mode register 1 (input mode)
-            CCMR1_Input : CCMR1_Input_Register;
+            CCMR1_Input : aliased CCMR1_Input_Register;
             --  capture/compare mode register 2 (input mode)
-            CCMR2_Input : CCMR2_Input_Register;
+            CCMR2_Input : aliased CCMR2_Input_Register;
       end case;
    end record
      with Unchecked_Union, Volatile;
@@ -2082,7 +2083,7 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM3_Periph : aliased TIM3_Peripheral
-     with Import, Address => TIM3_Base;
+     with Import, Address => System'To_Address (16#40000400#);
 
    type TIM4_Disc is
      (
@@ -2094,48 +2095,48 @@ package STM32_SVD.TIM is
      (Discriminent : TIM4_Disc := Output)
    is record
       --  control register 1
-      CR1          : CR1_Register;
+      CR1          : aliased CR1_Register;
       --  control register 2
-      CR2          : CR2_Register_1;
+      CR2          : aliased CR2_Register_1;
       --  slave mode control register
-      SMCR         : SMCR_Register;
+      SMCR         : aliased SMCR_Register;
       --  DMA/Interrupt enable register
-      DIER         : DIER_Register_1;
+      DIER         : aliased DIER_Register_1;
       --  status register
-      SR           : SR_Register_1;
+      SR           : aliased SR_Register_1;
       --  event generation register
-      EGR          : EGR_Register_1;
+      EGR          : aliased EGR_Register_1;
       --  capture/compare enable register
-      CCER         : CCER_Register_1;
+      CCER         : aliased CCER_Register_1;
       --  counter
-      CNT          : CNT_Register_1;
+      CNT          : aliased CNT_Register_1;
       --  prescaler
-      PSC          : PSC_Register;
+      PSC          : aliased PSC_Register;
       --  auto-reload register
-      ARR          : ARR_Register_1;
+      ARR          : aliased ARR_Register_1;
       --  capture/compare register 1
-      CCR1         : CCR1_Register_1;
+      CCR1         : aliased CCR1_Register_1;
       --  capture/compare register 2
-      CCR2         : CCR2_Register_1;
+      CCR2         : aliased CCR2_Register_1;
       --  capture/compare register 3
-      CCR3         : CCR3_Register_1;
+      CCR3         : aliased CCR3_Register_1;
       --  capture/compare register 4
-      CCR4         : CCR4_Register_1;
+      CCR4         : aliased CCR4_Register_1;
       --  DMA control register
-      DCR          : DCR_Register;
+      DCR          : aliased DCR_Register;
       --  DMA address for full transfer
-      DMAR         : DMAR_Register;
+      DMAR         : aliased DMAR_Register;
       case Discriminent is
          when Output =>
             --  capture/compare mode register 1 (output mode)
-            CCMR1_Output : CCMR1_Output_Register;
+            CCMR1_Output : aliased CCMR1_Output_Register;
             --  capture/compare mode register 2 (output mode)
-            CCMR2_Output : CCMR2_Output_Register_1;
+            CCMR2_Output : aliased CCMR2_Output_Register_1;
          when Input =>
             --  capture/compare mode register 1 (input mode)
-            CCMR1_Input : CCMR1_Input_Register;
+            CCMR1_Input : aliased CCMR1_Input_Register;
             --  capture/compare mode register 2 (input mode)
-            CCMR2_Input : CCMR2_Input_Register;
+            CCMR2_Input : aliased CCMR2_Input_Register;
       end case;
    end record
      with Unchecked_Union, Volatile;
@@ -2165,30 +2166,30 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM4_Periph : aliased TIM4_Peripheral
-     with Import, Address => TIM4_Base;
+     with Import, Address => System'To_Address (16#40000800#);
 
    --  General purpose timers
    TIM5_Periph : aliased TIM4_Peripheral
-     with Import, Address => TIM5_Base;
+     with Import, Address => System'To_Address (16#40000C00#);
 
    --  Basic timers
    type TIM6_Peripheral is record
       --  control register 1
-      CR1  : CR1_Register_1;
+      CR1  : aliased CR1_Register_1;
       --  control register 2
-      CR2  : CR2_Register_2;
+      CR2  : aliased CR2_Register_2;
       --  DMA/Interrupt enable register
-      DIER : DIER_Register_2;
+      DIER : aliased DIER_Register_2;
       --  status register
-      SR   : SR_Register_2;
+      SR   : aliased SR_Register_2;
       --  event generation register
-      EGR  : EGR_Register_2;
+      EGR  : aliased EGR_Register_2;
       --  counter
-      CNT  : CNT_Register;
+      CNT  : aliased CNT_Register;
       --  prescaler
-      PSC  : PSC_Register;
+      PSC  : aliased PSC_Register;
       --  auto-reload register
-      ARR  : ARR_Register;
+      ARR  : aliased ARR_Register;
    end record
      with Volatile;
 
@@ -2205,11 +2206,11 @@ package STM32_SVD.TIM is
 
    --  Basic timers
    TIM6_Periph : aliased TIM6_Peripheral
-     with Import, Address => TIM6_Base;
+     with Import, Address => System'To_Address (16#40001000#);
 
    --  Basic timers
    TIM7_Periph : aliased TIM6_Peripheral
-     with Import, Address => TIM7_Base;
+     with Import, Address => System'To_Address (16#40001400#);
 
    type TIM9_Disc is
      (
@@ -2221,34 +2222,34 @@ package STM32_SVD.TIM is
      (Discriminent : TIM9_Disc := Output)
    is record
       --  control register 1
-      CR1          : CR1_Register_2;
+      CR1          : aliased CR1_Register_2;
       --  slave mode control register
-      SMCR         : SMCR_Register_1;
+      SMCR         : aliased SMCR_Register_1;
       --  DMA/Interrupt enable register
-      DIER         : DIER_Register_3;
+      DIER         : aliased DIER_Register_3;
       --  status register
-      SR           : SR_Register_3;
+      SR           : aliased SR_Register_3;
       --  event generation register
-      EGR          : EGR_Register_3;
+      EGR          : aliased EGR_Register_3;
       --  capture/compare enable register
-      CCER         : CCER_Register_2;
+      CCER         : aliased CCER_Register_2;
       --  counter
-      CNT          : CNT_Register;
+      CNT          : aliased CNT_Register;
       --  prescaler
-      PSC          : PSC_Register;
+      PSC          : aliased PSC_Register;
       --  auto-reload register
-      ARR          : ARR_Register;
+      ARR          : aliased ARR_Register;
       --  capture/compare register 1
-      CCR1         : CCR1_Register;
+      CCR1         : aliased CCR1_Register;
       --  capture/compare register 2
-      CCR2         : CCR2_Register;
+      CCR2         : aliased CCR2_Register;
       case Discriminent is
          when Output =>
             --  capture/compare mode register 1 (output mode)
-            CCMR1_Output : CCMR1_Output_Register_1;
+            CCMR1_Output : aliased CCMR1_Output_Register_1;
          when Input =>
             --  capture/compare mode register 1 (input mode)
-            CCMR1_Input : CCMR1_Input_Register_1;
+            CCMR1_Input : aliased CCMR1_Input_Register_1;
       end case;
    end record
      with Unchecked_Union, Volatile;
@@ -2271,11 +2272,11 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM9_Periph : aliased TIM9_Peripheral
-     with Import, Address => TIM9_Base;
+     with Import, Address => System'To_Address (16#40014000#);
 
    --  General purpose timers
    TIM12_Periph : aliased TIM9_Peripheral
-     with Import, Address => TIM12_Base;
+     with Import, Address => System'To_Address (16#40001800#);
 
    type TIM10_Disc is
      (
@@ -2287,34 +2288,34 @@ package STM32_SVD.TIM is
      (Discriminent : TIM10_Disc := Output)
    is record
       --  control register 1
-      CR1          : CR1_Register_3;
+      CR1          : aliased CR1_Register_3;
       --  slave mode control register
-      SMCR         : SMCR_Register;
+      SMCR         : aliased SMCR_Register;
       --  DMA/Interrupt enable register
-      DIER         : DIER_Register_4;
+      DIER         : aliased DIER_Register_4;
       --  status register
-      SR           : SR_Register_4;
+      SR           : aliased SR_Register_4;
       --  event generation register
-      EGR          : EGR_Register_4;
+      EGR          : aliased EGR_Register_4;
       --  capture/compare enable register
-      CCER         : CCER_Register_3;
+      CCER         : aliased CCER_Register_3;
       --  counter
-      CNT          : CNT_Register;
+      CNT          : aliased CNT_Register;
       --  prescaler
-      PSC          : PSC_Register;
+      PSC          : aliased PSC_Register;
       --  auto-reload register
-      ARR          : ARR_Register;
+      ARR          : aliased ARR_Register;
       --  capture/compare register 1
-      CCR1         : CCR1_Register;
+      CCR1         : aliased CCR1_Register;
       --  option register
-      OR_k         : OR_Register;
+      OR_k         : aliased OR_Register;
       case Discriminent is
          when Output =>
             --  capture/compare mode register 1 (output mode)
-            CCMR1_Output : CCMR1_Output_Register_2;
+            CCMR1_Output : aliased CCMR1_Output_Register_2;
          when Input =>
             --  capture/compare mode register 1 (input mode)
-            CCMR1_Input : CCMR1_Input_Register_2;
+            CCMR1_Input : aliased CCMR1_Input_Register_2;
       end case;
    end record
      with Unchecked_Union, Volatile;
@@ -2337,18 +2338,18 @@ package STM32_SVD.TIM is
 
    --  General-purpose-timers
    TIM10_Periph : aliased TIM10_Peripheral
-     with Import, Address => TIM10_Base;
+     with Import, Address => System'To_Address (16#40014400#);
 
    --  General-purpose-timers
    TIM11_Periph : aliased TIM10_Peripheral
-     with Import, Address => TIM11_Base;
+     with Import, Address => System'To_Address (16#40014800#);
 
    --  General-purpose-timers
    TIM13_Periph : aliased TIM10_Peripheral
-     with Import, Address => TIM13_Base;
+     with Import, Address => System'To_Address (16#40001C00#);
 
    --  General-purpose-timers
    TIM14_Periph : aliased TIM10_Peripheral
-     with Import, Address => TIM14_Base;
+     with Import, Address => System'To_Address (16#40002000#);
 
 end STM32_SVD.TIM;
