@@ -147,7 +147,7 @@ begin
       LED_For (Output_Channel),
       Timer_AF);
 
-   Enable_PWM (Power_Control);
+   Enable_Output (Power_Control);
 
    declare
       Arg       : Long_Float := 0.0;

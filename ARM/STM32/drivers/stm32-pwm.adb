@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2016, AdaCore                         --
+--                 Copyright (C) 2015-2017, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -31,7 +31,6 @@
 
 with System;        use System;
 with STM32_SVD;     use STM32_SVD;
-
 with STM32.Device;  use STM32.Device;
 
 package body STM32.PWM is
@@ -75,7 +74,7 @@ package body STM32.PWM is
          This.Timer_Period := Current_Autoreload (Generator.all);
       end if;
       This.Generator := Generator;
-      This.Frequency := UInt32 (Frequency);
+      This.Frequency := Frequency;
    end Initialize_PWM_Modulator;
 
    --------------------
@@ -175,7 +174,7 @@ package body STM32.PWM is
       Channel  : Timer_Channel;
       Point    : GPIO_Point;
       PWM_AF   : GPIO_Alternate_Function;
-      Polarity : Output_Polarity := Active_High)
+      Polarity : Timer_Output_Compare_Polarity := High)
    is
    begin
       This.Channel := Channel;
@@ -190,39 +189,128 @@ package body STM32.PWM is
          Mode     => PWM1,
          State    => Disable,
          Pulse    => 0,
-         Polarity => (if Polarity = Active_High then High else Low));
+         Polarity => Polarity);
 
       Set_Compare_Value (This.Generator.all, Channel, UInt16 (0));
 
       Disable_Channel (This.Generator.all, Channel);
    end Attach_PWM_Channel;
 
-   ----------------
-   -- Enable_PWM --
-   ----------------
+   ------------------------
+   -- Attach_PWM_Channel --
+   ------------------------
 
-   procedure Enable_PWM (This    : in out PWM_Modulator) is
+   procedure Attach_PWM_Channel
+     (This                     : in out PWM_Modulator;
+      Channel                  : Timer_Channel;
+      Point                    : GPIO_Point;
+      Complementary_Point      : GPIO_Point;
+      PWM_AF                   : GPIO_Alternate_Function;
+      Polarity                 : Timer_Output_Compare_Polarity;
+      Idle_State               : Timer_Capture_Compare_State;
+      Complementary_Polarity   : Timer_Output_Compare_Polarity;
+      Complementary_Idle_State : Timer_Capture_Compare_State)
+   is
+   begin
+      This.Channel := Channel;
+
+      Enable_Clock (Point);
+      Enable_Clock (Complementary_Point);
+
+      Configure_PWM_GPIO (Point, PWM_AF);
+      Configure_PWM_GPIO (Complementary_Point, PWM_AF);
+
+      Configure_Channel_Output
+        (This.Generator.all,
+         Channel => Channel,
+         Mode    => PWM1,
+         State   => Disable,
+         Pulse   => 0,
+         Polarity                 => Polarity,
+         Idle_State               => Idle_State,
+         Complementary_Polarity   => Complementary_Polarity,
+         Complementary_Idle_State => Complementary_Idle_State);
+
+      Set_Compare_Value (This.Generator.all, Channel, UInt16 (0));
+
+      Disable_Channel (This.Generator.all, Channel);
+   end Attach_PWM_Channel;
+
+   -------------------
+   -- Enable_Output --
+   -------------------
+
+   procedure Enable_Output (This    : in out PWM_Modulator) is
    begin
       Enable_Channel (This.Generator.all, This.Channel);
-   end Enable_PWM;
+   end Enable_Output;
 
-   -------------
-   -- Enabled --
-   -------------
+   ---------------------------------
+   -- Enable_Complementary_Output --
+   ---------------------------------
 
-   function Enabled (This : PWM_Modulator) return Boolean is
+   procedure Enable_Complementary_Output (This    : in out PWM_Modulator) is
+   begin
+      Enable_Complementary_Channel (This.Generator.all, This.Channel);
+   end Enable_Complementary_Output;
+
+   --------------------
+   -- Output_Enabled --
+   --------------------
+
+   function Output_Enabled (This : PWM_Modulator) return Boolean is
    begin
       return Channel_Enabled (This.Generator.all, This.Channel);
-   end Enabled;
+   end Output_Enabled;
 
-   -------------------------
-   -- Disable_PWM_Channel --
-   -------------------------
+   ----------------------------------
+   -- Complementary_Output_Enabled --
+   ----------------------------------
 
-   procedure Disable_PWM (This : in out PWM_Modulator) is
+   function Complementary_Output_Enabled (This : PWM_Modulator) return Boolean is
+   begin
+      return Complementary_Channel_Enabled (This.Generator.all, This.Channel);
+   end Complementary_Output_Enabled;
+
+   --------------------
+   -- Disable_Output --
+   --------------------
+
+   procedure Disable_Output (This : in out PWM_Modulator) is
    begin
       Disable_Channel (This.Generator.all, This.Channel);
-   end Disable_PWM;
+   end Disable_Output;
+
+   ----------------------------------
+   -- Disable_Complementary_Output --
+   ----------------------------------
+
+   procedure Disable_Complementary_Output (This : in out PWM_Modulator) is
+   begin
+      Disable_Complementary_Channel (This.Generator.all, This.Channel);
+   end Disable_Complementary_Output;
+
+   ------------------
+   -- Set_Polarity --
+   ------------------
+
+   procedure Set_Polarity
+     (This     : in PWM_Modulator;
+      Polarity : in Timer_Output_Compare_Polarity) is
+   begin
+      Set_Output_Polarity (This.Generator.all, This.Channel, Polarity);
+   end Set_Polarity;
+
+   --------------------------------
+   -- Set_Complementary_Polarity --
+   --------------------------------
+
+   procedure Set_Complementary_Polarity
+     (This     : in PWM_Modulator;
+      Polarity : in Timer_Output_Compare_Polarity) is
+   begin
+      Set_Output_Complementary_Polarity (This.Generator.all, This.Channel, Polarity);
+   end Set_Complementary_Polarity;
 
    ------------------------
    -- Configure_PWM_GPIO --
