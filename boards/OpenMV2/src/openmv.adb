@@ -172,7 +172,7 @@ package body OpenMV is
    -- Get_Shield_USART --
    ----------------------
 
-   function Get_Shield_USART return not null HAL.UART.UART_Port_Ref is
+   function Get_Shield_USART return not null HAL.UART.Any_UART_Port is
       (USART_3'Access);
 
 end OpenMV;

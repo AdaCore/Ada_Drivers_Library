@@ -5,7 +5,8 @@ library project Services is
 
    Src_Dirs := ("src/filesystems",
                 "src/BLE",
-                "src/utils");
+                "src/utils",
+                "src/audio");
 
    case Config.RTS is
       when "ravenscar-sfp" | "ravenscar-full" =>

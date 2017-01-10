@@ -23,7 +23,7 @@ procedure TC_Read_Partitions is
    procedure List_Partitions (FS : in out FS_Driver'Class;
                               Path_To_Disk_Image : Pathname)
    is
-      File : File_Handle_Ref;
+      File : Any_File_Handle;
    begin
       if FS.Open (Path_To_Disk_Image, Read_Only, File) /= Status_Ok then
          Put_Line ("Cannot open disk image '" & Path_To_Disk_Image & "'");

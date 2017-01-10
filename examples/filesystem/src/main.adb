@@ -53,7 +53,7 @@ procedure Main is
 
    procedure List_Dir (FS : in out FS_Driver'Class; Path : Pathname) is
       Status : Status_Kind;
-      DH : Directory_Handle_Ref;
+      DH : Any_Directory_Handle;
    begin
       Status := FS.Open_Directory (Path, DH);
       if Status /= Status_Ok then
@@ -86,7 +86,7 @@ procedure Main is
    procedure List_Partitions (FS : in out FS_Driver'Class;
                               Path_To_Disk_Image : Pathname)
    is
-      File : File_Handle_Ref;
+      File : Any_File_Handle;
    begin
       if FS.Open (Path_To_Disk_Image, Read_Only, File) /= Status_Ok then
          Semihosting.Log_Line ("Cannot open disk image '" &
@@ -125,7 +125,7 @@ procedure Main is
    My_VFS3 : aliased VFS;
    My_SHFS : aliased SHFS;
    Status : Status_Kind;
-   FH : File_Handle_Ref;
+   FH : Any_File_Handle;
    Data : Byte_Array (1 .. 10);
 
 begin

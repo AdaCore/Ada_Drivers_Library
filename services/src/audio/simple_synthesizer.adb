@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                        Copyright (C) 2016, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,53 +29,94 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL; use HAL;
-with HAL.Block_Drivers; use HAL.Block_Drivers;
 with Interfaces; use Interfaces;
 
-package Partitions is
+package body Simple_Synthesizer is
 
-   type Partition_Kind is new Unsigned_8;
+   ------------------------
+   -- Set_Note_Frequency --
+   ------------------------
 
-   Empty_Partition       : constant Partition_Kind := 16#00#;
-   Fat12_Parition        : constant Partition_Kind := 16#01#;
-   Fat16_Parition        : constant Partition_Kind := 16#04#;
-   Extended_Parition     : constant Partition_Kind := 16#05#;
-   Fat16B_Parition       : constant Partition_Kind := 16#06#;
-   NTFS_Partition        : constant Partition_Kind := 16#07#;
-   Fat32_CHS_Parition    : constant Partition_Kind := 16#0B#;
-   Fat32_LBA_Parition    : constant Partition_Kind := 16#0C#;
-   Fat16B_LBA_Parition   : constant Partition_Kind := 16#0E#;
-   Extended_LBA_Parition : constant Partition_Kind := 16#0F#;
-   Linux_Swap_Partition  : constant Partition_Kind := 16#82#;
-   Linux_Partition       : constant Partition_Kind := 16#83#;
+   procedure Set_Note_Frequency
+     (This : in out Synthesizer;
+      Note : Float)
+   is
+   begin
+      This.Note := Note;
+   end Set_Note_Frequency;
 
-   subtype Logical_Block_Address is Unsigned_32;
+   -------------------
+   -- Set_Frequency --
+   -------------------
 
-   type CHS_Address is record
-      C : UInt10;
-      H : Byte;
-      S : UInt6;
-   end record with Pack, Size => 24;
+   overriding procedure Set_Frequency
+     (This      : in out Synthesizer;
+      Frequency : Audio_Frequency)
+   is
+   begin
+      This.Frequency := Frequency;
+   end Set_Frequency;
 
-   type Partition_Entry is record
-      Status            : Byte;
-      First_Sector_CHS  : CHS_Address;
-      Kind              : Partition_Kind;
-      Last_Sector_CHS   : CHS_Address;
-      First_Sector_LBA  : Logical_Block_Address;
-      Number_Of_Sectors : Unsigned_32;
-   end record with Pack, Size => 16 * 8;
+   --------------
+   -- Transmit --
+   --------------
 
-   type Status_Code is (Status_Ok, Disk_Error, Invalid_Parition);
+   overriding procedure Transmit
+     (This : in out Synthesizer;
+      Data : Audio_Buffer)
+   is
+   begin
+      raise Program_Error with "This Synthesizer doesn't take input";
+   end Transmit;
 
-   function Get_Partition_Entry (Disk         : not null Any_Block_Driver;
-                                 Entry_Number : Positive;
-                                 P_Entry      : out Partition_Entry)
-                                 return Status_Code;
+   -------------
+   -- Receive --
+   -------------
 
-   function Number_Of_Partitions (Disk : Any_Block_Driver) return Natural;
+   overriding procedure Receive
+     (This : in out Synthesizer;
+      Data : out Audio_Buffer)
+   is
+      function Next_Sample return Integer_16;
 
-   function Is_Valid (P_Entry : Partition_Entry) return Boolean is
-     (P_Entry.Status = 16#00# or else P_Entry.Status = 16#80#);
-end Partitions;
+      Rate      : constant Float :=
+        Float (Audio_Frequency'Enum_Rep (This.Frequency));
+      Note      : constant Float := This.Note;
+      Amplitude : constant Float := Float (This.Amplitude);
+      Delt      : constant Float := 2.0 / (Rate * (1.0 / Note));
+
+
+      -----------------
+      -- Next_Sample --
+      -----------------
+
+      function Next_Sample return Integer_16 is
+      begin
+         This.Last_Sample := This.Last_Sample + Delt;
+         if This.Last_Sample >  1.0 then
+            This.Last_Sample := -1.0;
+         end if;
+         return Integer_16 (This.Last_Sample * Amplitude);
+      end Next_Sample;
+
+      Tmp : Integer_16;
+   begin
+      if This.Stereo then
+         if Data'Length mod 2 /= 0 then
+            raise Program_Error with
+              "Audio buffer for stereo output should have even length";
+         end if;
+
+         for Index in 0 .. (Data'Length / 2) - 1 loop
+            Tmp := Next_Sample;
+            Data ((Index * 2) + Data'First) := Tmp;
+            Data ((Index * 2) + Data'First + 1) := Tmp;
+         end loop;
+      else
+         for Elt of Data loop
+            Elt := Next_Sample;
+         end loop;
+      end if;
+   end Receive;
+
+end Simple_Synthesizer;

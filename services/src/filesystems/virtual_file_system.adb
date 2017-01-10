@@ -40,7 +40,7 @@ package body Virtual_File_System is
    function Find_FS (This                : in out VFS;
                      Path                : Pathname;
                      Path_Reminder_Start : out Integer)
-                     return FS_Driver_Ref
+                     return Any_FS_Driver
    is
       Start, Stop : Integer;
       Elt  : Mount_Point_Access := This.Mount_points;
@@ -72,7 +72,7 @@ package body Virtual_File_System is
 
    function Mount (This       : in out VFS;
                    Path       : Pathname;
-                   Filesystem : not null FS_Driver_Ref)
+                   Filesystem : not null Any_FS_Driver)
                    return Status_Kind
    is
       MP : constant Mount_Point_Access :=
@@ -109,7 +109,7 @@ package body Virtual_File_System is
                          return Status_Kind
    is
       Path_Reminder_Start : Integer;
-      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
       Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
                                      then ""
                                      else Path (Path_Reminder_Start .. Path'Last));
@@ -131,7 +131,7 @@ package body Virtual_File_System is
                               return Status_Kind
    is
       Path_Reminder_Start : Integer;
-      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
       Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
                                      then ""
                                      else Path (Path_Reminder_Start .. Path'Last));
@@ -153,7 +153,7 @@ package body Virtual_File_System is
                     return Status_Kind
    is
       Path_Reminder_Start : Integer;
-      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
       Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
                                      then ""
                                      else Path (Path_Reminder_Start .. Path'Last));
@@ -175,7 +175,7 @@ package body Virtual_File_System is
                               return Status_Kind
    is
       Path_Reminder_Start : Integer;
-      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
       Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
                                      then ""
                                      else Path (Path_Reminder_Start .. Path'Last));
@@ -213,7 +213,7 @@ package body Virtual_File_System is
                            return Status_Kind
    is
       Path_Reminder_Start : Integer;
-      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
       Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
                                      then ""
                                      else Path (Path_Reminder_Start .. Path'Last));
@@ -233,11 +233,11 @@ package body Virtual_File_System is
    function Open (This    : in out VFS;
                   Path    : Pathname;
                   Mode    : File_Mode;
-                  Handler : out File_Handle_Ref)
+                  Handler : out Any_File_Handle)
                   return Status_Kind
    is
       Path_Reminder_Start : Integer;
-      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
@@ -253,11 +253,11 @@ package body Virtual_File_System is
    overriding
    function Open_Directory (This   : in out VFS;
                             Path   : Pathname;
-                            Handle : out Directory_Handle_Ref)
+                            Handle : out Any_Directory_Handle)
                             return Status_Kind
    is
       Path_Reminder_Start : Integer;
-      FS : constant FS_Driver_Ref := This.Find_FS (Path, Path_Reminder_Start);
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
       Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
                                      then ""
                                      else Path (Path_Reminder_Start .. Path'Last));

@@ -37,7 +37,7 @@ with Interfaces;        use Interfaces;
 
 package File_Block_Drivers is
 
-   type File_Block_Driver (File : not null File_Handle_Ref) is new Block_Driver with private;
+   type File_Block_Driver (File : not null Any_File_Handle) is new Block_Driver with private;
 
    overriding
    function Read
@@ -54,5 +54,5 @@ package File_Block_Drivers is
       return Boolean;
 
 private
-   type File_Block_Driver (File : not null File_Handle_Ref) is new Block_Driver with null record;
+   type File_Block_Driver (File : not null Any_File_Handle) is new Block_Driver with null record;
 end File_Block_Drivers;

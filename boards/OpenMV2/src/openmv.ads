@@ -70,7 +70,7 @@ package OpenMV is
    procedure Initialize_Shield_USART (Baud : STM32.USARTs.Baud_Rates);
    --  Initialize the USART port available for shields (USART3)
 
-   function Get_Shield_USART return not null HAL.UART.UART_Port_Ref;
+   function Get_Shield_USART return not null HAL.UART.Any_UART_Port;
    --  Get the USART port available for shields (USART3)
 
    Shield_MOSI  : GPIO_Point renames PB15;

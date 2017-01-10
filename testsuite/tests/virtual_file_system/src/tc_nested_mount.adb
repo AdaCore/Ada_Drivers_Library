@@ -11,7 +11,7 @@ procedure TC_Nested_Mount is
    --  calls that are more or less expected to fail.
 
    Root_VFS   : Virtual_File_System.VFS;
-   Child_VFS  : Virtual_File_System.VFS_Ref := new Virtual_File_System.VFS;
+   Child_VFS  : Virtual_File_System.Any_VFS := new Virtual_File_System.VFS;
    Empty_FS   : Native_FS_Driver_Ref :=
      Create ("empty", Create_If_Missing => True);
    Subdirs_FS : Native_FS_Driver_Ref := Create ("subdirs");

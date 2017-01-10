@@ -128,7 +128,7 @@ package body Helpers is
    ----------
 
    procedure Dump (FS : in out FS_Driver'Class; Dir : Pathname) is
-      DH     : Directory_Handle_Ref;
+      DH     : Any_Directory_Handle;
       DE     : Directory_Entry;
       I      : Positive := 1;
       Status : Status_Kind;
@@ -149,7 +149,7 @@ package body Helpers is
                when Regular_File =>
                   Put_Line ("  File: " & Name);
                   declare
-                     File : File_Handle_Ref;
+                     File : Any_File_Handle;
                   begin
                      Test (FS.Open (Name, Read_Only, File));
                      declare

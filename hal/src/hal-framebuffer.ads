@@ -43,7 +43,7 @@ package HAL.Framebuffer is
 
    type Frame_Buffer_Display is limited interface;
 
-   type Frame_Buffer_Display_Access is access all Frame_Buffer_Display'Class;
+   type Any_Frame_Buffer_Display is access all Frame_Buffer_Display'Class;
 
    function Get_Max_Layers
      (This : Frame_Buffer_Display) return Positive

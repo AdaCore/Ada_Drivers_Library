@@ -51,7 +51,7 @@ package HAL.Touch_Panel is
 
    type Touch_Panel_Device is limited interface;
 
-   type Touch_Panel_Ref is access all Touch_Panel_Device'Class;
+   type Any_Touch_Panel is access all Touch_Panel_Device'Class;
 
    procedure Set_Bounds (This   : in out Touch_Panel_Device;
                          Width  : Natural;

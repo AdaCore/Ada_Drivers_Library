@@ -35,7 +35,7 @@ with HAL; use HAL;
 package Semihosting.Filesystem is
 
    type SHFS is new HAL.Filesystem.FS_Driver with private;
-   type SHFS_Ref is access all SHFS'Class;
+   type Any_SHFS is access all SHFS'Class;
 
    -------------------------------
    --  FS_Driver implementation --
@@ -78,13 +78,13 @@ package Semihosting.Filesystem is
    function Open (This    : in out SHFS;
                   Path    : Pathname;
                   Mode    : File_Mode;
-                  Handler : out File_Handle_Ref)
+                  Handler : out Any_File_Handle)
                   return Status_Kind;
 
    overriding
    function Open_Directory (This   : in out SHFS;
                             Path   : Pathname;
-                            Handle : out Directory_Handle_Ref)
+                            Handle : out Any_Directory_Handle)
                             return Status_Kind;
 private
 
