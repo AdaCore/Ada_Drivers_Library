@@ -48,7 +48,7 @@ package body OpenMV.Sensor is
    REG_PID : constant := 16#0A#;
    --  REG_VER : constant := 16#0B#;
 
-   CLK_PWM_Mod    : PWM_Modulator;
+   CLK_PWM_Mod    : PWM_Modulator (SENSOR_CLK_TIM'Access);
    Camera_PID     : HAL.Byte := 0;
    Camera_2640    : OV2640_Camera (Sensor_I2C'Access);
    Camera_7725    : OV7725_Camera (Sensor_I2C'Access);
@@ -98,20 +98,16 @@ package body OpenMV.Sensor is
 
       procedure Initialize_Clock is
       begin
-         Initialize_PWM_Modulator
-           (This                => CLK_PWM_Mod,
-            Generator           => SENSOR_CLK_TIM'Access,
-            Frequency           => SENSOR_CLK_FREQ,
-            Configure_Generator => True);
+         Configure_PWM_Timer (SENSOR_CLK_TIM'Access, SENSOR_CLK_FREQ);
 
          Attach_PWM_Channel (This    => CLK_PWM_Mod,
                              Channel => SENSOR_CLK_CHAN,
                              Point   => SENSOR_CLK_IO,
                              PWM_AF  => SENSOR_CLK_AF);
 
-         Set_Duty_Cycle (This    => CLK_PWM_Mod,
-                         Value   => 50);
-         Enable_PWM (CLK_PWM_Mod);
+         Set_Duty_Cycle (CLK_PWM_Mod, Value => 50);
+
+         Enable_Output (CLK_PWM_Mod);
       end Initialize_Clock;
 
       -----------------------

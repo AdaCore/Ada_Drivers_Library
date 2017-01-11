@@ -29,20 +29,18 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.Board;     use STM32.Board;
 with STM32.Device;    use STM32.Device;
-with STM32.GPIO;      use STM32.GPIO;
 with STM32.Timers;    use STM32.Timers;
 with STM32.PWM;       use STM32.PWM;
 
 package Demo_PWM_Settings is
 
-   PWM_Output_Green  : aliased PWM_Modulator;
-   PWM_Output_Orange : aliased PWM_Modulator;
-   PWM_Output_Red    : aliased PWM_Modulator;
-   PWM_Output_Blue   : aliased PWM_Modulator;
-
    PWM_Output_Timer : Timer renames Timer_4;
+
+   PWM_Output_Green  : aliased PWM_Modulator (PWM_Output_Timer'Access);
+   PWM_Output_Orange : aliased PWM_Modulator (PWM_Output_Timer'Access);
+   PWM_Output_Red    : aliased PWM_Modulator (PWM_Output_Timer'Access);
+   PWM_Output_Blue   : aliased PWM_Modulator (PWM_Output_Timer'Access);
 
    PWM_Output_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_2_TIM4;
 
@@ -54,13 +52,5 @@ package Demo_PWM_Settings is
    --  Channel_2 is connected to the orange LED.
    --  Channel_3 is connected to the red LED.
    --  Channel_4 is connected to the blue LED.
-
-   Channel_1_Point : constant GPIO_Point := Green;
-
-   Channel_2_Point : constant GPIO_Point := Orange;
-
-   Channel_3_Point : constant GPIO_Point := Red;
-
-   Channel_4_Point : constant GPIO_Point := Blue;
 
 end Demo_PWM_Settings;

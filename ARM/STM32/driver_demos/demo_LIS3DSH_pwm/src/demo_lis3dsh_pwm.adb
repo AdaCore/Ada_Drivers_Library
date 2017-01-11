@@ -169,58 +169,36 @@ procedure Demo_LIS3DSH_PWM is
 
    procedure Initialize_PWM_Outputs is
    begin
-      Initialize_PWM_Modulator
-        (PWM_Output_Green,
-         Frequency           => PWM_Frequency,
-         Generator           => PWM_Output_Timer'Access,
-         Configure_Generator => True);
-
-      Initialize_PWM_Modulator
-        (PWM_Output_Orange,
-         Frequency           => PWM_Frequency,
-         Generator           => PWM_Output_Timer'Access,
-         Configure_Generator => False);
-
-      Initialize_PWM_Modulator
-        (PWM_Output_Red,
-         Frequency           => PWM_Frequency,
-         Generator           => PWM_Output_Timer'Access,
-         Configure_Generator => False);
-
-      Initialize_PWM_Modulator
-        (PWM_Output_Blue,
-         Frequency           => PWM_Frequency,
-         Generator           => PWM_Output_Timer'Access,
-         Configure_Generator => False);
+      Configure_PWM_Timer (PWM_Output_Timer'Access, PWM_Frequency);
 
       Attach_PWM_Channel
         (PWM_Output_Green,
          Channel => Channel_1,
-         Point   => Channel_1_Point,
+         Point   => Green,
          PWM_AF  => PWM_Output_AF);
 
       Attach_PWM_Channel
         (PWM_Output_Orange,
          Channel => Channel_2,
-         Point   => Channel_2_Point,
+         Point   => Orange,
          PWM_AF  => PWM_Output_AF);
 
       Attach_PWM_Channel
         (PWM_Output_Red,
          Channel => Channel_3,
-         Point   => Channel_3_Point,
+         Point   => Red,
          PWM_AF  => PWM_Output_AF);
 
       Attach_PWM_Channel
         (PWM_Output_Blue,
          Channel => Channel_4,
-         Point   => Channel_4_Point,
+         Point   => Blue,
          PWM_AF  => PWM_Output_AF);
 
-      Enable_PWM (PWM_Output_Green);
-      Enable_PWM (PWM_Output_Orange);
-      Enable_PWM (PWM_Output_Red);
-      Enable_PWM (PWM_Output_Blue);
+      Enable_Output (PWM_Output_Green);
+      Enable_Output (PWM_Output_Orange);
+      Enable_Output (PWM_Output_Red);
+      Enable_Output (PWM_Output_Blue);
    end Initialize_PWM_Outputs;
 
 begin
