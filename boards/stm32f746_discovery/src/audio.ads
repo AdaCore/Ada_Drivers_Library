@@ -40,8 +40,8 @@ private with WM8994;
 
 package Audio is
 
-   type WM8994_Audio_Device (Port : not null Any_I2C_Port) is limited new
-     Audio_Device with private;
+   type WM8994_Audio_Device (Port : not null Any_I2C_Port) is
+     tagged limited private;
 
    procedure Initialize_Audio_Out
      (This      : in out WM8994_Audio_Device;
@@ -73,8 +73,8 @@ private
 
    Audio_I2C_Addr  : constant I2C_Address := 16#34#;
 
-   type WM8994_Audio_Device (Port : not null Any_I2C_Port) is limited new
-   Audio_Device with record
+   type WM8994_Audio_Device (Port : not null Any_I2C_Port) is
+     tagged limited record
       Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
    end record;
 
