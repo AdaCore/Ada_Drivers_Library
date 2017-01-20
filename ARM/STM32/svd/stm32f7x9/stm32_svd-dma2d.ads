@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -463,49 +464,49 @@ package STM32_SVD.DMA2D is
    --  DMA2D controller
    type DMA2D_Peripheral is record
       --  control register
-      CR      : CR_Register;
+      CR      : aliased CR_Register;
       --  Interrupt Status Register
-      ISR     : ISR_Register;
+      ISR     : aliased ISR_Register;
       --  interrupt flag clear register
-      IFCR    : IFCR_Register;
+      IFCR    : aliased IFCR_Register;
       --  foreground memory address register
-      FGMAR   : HAL.UInt32;
+      FGMAR   : aliased HAL.UInt32;
       --  foreground offset register
-      FGOR    : FGOR_Register;
+      FGOR    : aliased FGOR_Register;
       --  background memory address register
-      BGMAR   : HAL.UInt32;
+      BGMAR   : aliased HAL.UInt32;
       --  background offset register
-      BGOR    : BGOR_Register;
+      BGOR    : aliased BGOR_Register;
       --  foreground PFC control register
-      FGPFCCR : FGPFCCR_Register;
+      FGPFCCR : aliased FGPFCCR_Register;
       --  foreground color register
-      FGCOLR  : FGCOLR_Register;
+      FGCOLR  : aliased FGCOLR_Register;
       --  background PFC control register
-      BGPFCCR : BGPFCCR_Register;
+      BGPFCCR : aliased BGPFCCR_Register;
       --  background color register
-      BGCOLR  : BGCOLR_Register;
+      BGCOLR  : aliased BGCOLR_Register;
       --  foreground CLUT memory address register
-      FGCMAR  : HAL.UInt32;
+      FGCMAR  : aliased HAL.UInt32;
       --  background CLUT memory address register
-      BGCMAR  : HAL.UInt32;
+      BGCMAR  : aliased HAL.UInt32;
       --  output PFC control register
-      OPFCCR  : OPFCCR_Register;
+      OPFCCR  : aliased OPFCCR_Register;
       --  output color register
-      OCOLR   : OCOLR_Register;
+      OCOLR   : aliased OCOLR_Register;
       --  output memory address register
-      OMAR    : HAL.UInt32;
+      OMAR    : aliased HAL.UInt32;
       --  output offset register
-      OOR     : OOR_Register;
+      OOR     : aliased OOR_Register;
       --  number of line register
-      NLR     : NLR_Register;
+      NLR     : aliased NLR_Register;
       --  line watermark register
-      LWR     : LWR_Register;
+      LWR     : aliased LWR_Register;
       --  AHB master timer configuration register
-      AMTCR   : AMTCR_Register;
+      AMTCR   : aliased AMTCR_Register;
       --  FGCLUT
-      FGCLUT  : FGCLUT_Register;
+      FGCLUT  : aliased FGCLUT_Register;
       --  BGCLUT
-      BGCLUT  : BGCLUT_Register;
+      BGCLUT  : aliased BGCLUT_Register;
    end record
      with Volatile;
 
@@ -536,6 +537,6 @@ package STM32_SVD.DMA2D is
 
    --  DMA2D controller
    DMA2D_Periph : aliased DMA2D_Peripheral
-     with Import, Address => DMA2D_Base;
+     with Import, Address => System'To_Address (16#4002B000#);
 
 end STM32_SVD.DMA2D;

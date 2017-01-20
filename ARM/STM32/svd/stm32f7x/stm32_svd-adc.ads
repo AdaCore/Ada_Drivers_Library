@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -718,45 +719,45 @@ package STM32_SVD.ADC is
    --  Analog-to-digital converter
    type ADC1_Peripheral is record
       --  status register
-      SR    : SR_Register;
+      SR    : aliased SR_Register;
       --  control register 1
-      CR1   : CR1_Register;
+      CR1   : aliased CR1_Register;
       --  control register 2
-      CR2   : CR2_Register;
+      CR2   : aliased CR2_Register;
       --  sample time register 1
-      SMPR1 : SMPR1_Register;
+      SMPR1 : aliased SMPR1_Register;
       --  sample time register 2
-      SMPR2 : SMPR2_Register;
+      SMPR2 : aliased SMPR2_Register;
       --  injected channel data offset register x
-      JOFR1 : JOFR1_Register;
+      JOFR1 : aliased JOFR1_Register;
       --  injected channel data offset register x
-      JOFR2 : JOFR2_Register;
+      JOFR2 : aliased JOFR2_Register;
       --  injected channel data offset register x
-      JOFR3 : JOFR3_Register;
+      JOFR3 : aliased JOFR3_Register;
       --  injected channel data offset register x
-      JOFR4 : JOFR4_Register;
+      JOFR4 : aliased JOFR4_Register;
       --  watchdog higher threshold register
-      HTR   : HTR_Register;
+      HTR   : aliased HTR_Register;
       --  watchdog lower threshold register
-      LTR   : LTR_Register;
+      LTR   : aliased LTR_Register;
       --  regular sequence register 1
-      SQR1  : SQR1_Register;
+      SQR1  : aliased SQR1_Register;
       --  regular sequence register 2
-      SQR2  : SQR2_Register;
+      SQR2  : aliased SQR2_Register;
       --  regular sequence register 3
-      SQR3  : SQR3_Register;
+      SQR3  : aliased SQR3_Register;
       --  injected sequence register
-      JSQR  : JSQR_Register;
+      JSQR  : aliased JSQR_Register;
       --  injected data register x
-      JDR1  : JDR_Register;
+      JDR1  : aliased JDR_Register;
       --  injected data register x
-      JDR2  : JDR_Register;
+      JDR2  : aliased JDR_Register;
       --  injected data register x
-      JDR3  : JDR_Register;
+      JDR3  : aliased JDR_Register;
       --  injected data register x
-      JDR4  : JDR_Register;
+      JDR4  : aliased JDR_Register;
       --  regular data register
-      DR    : DR_Register;
+      DR    : aliased DR_Register;
    end record
      with Volatile;
 
@@ -785,24 +786,24 @@ package STM32_SVD.ADC is
 
    --  Analog-to-digital converter
    ADC1_Periph : aliased ADC1_Peripheral
-     with Import, Address => ADC1_Base;
+     with Import, Address => System'To_Address (16#40012000#);
 
    --  Analog-to-digital converter
    ADC2_Periph : aliased ADC1_Peripheral
-     with Import, Address => ADC2_Base;
+     with Import, Address => System'To_Address (16#40012100#);
 
    --  Analog-to-digital converter
    ADC3_Periph : aliased ADC1_Peripheral
-     with Import, Address => ADC3_Base;
+     with Import, Address => System'To_Address (16#40012200#);
 
    --  Common ADC registers
    type C_ADC_Peripheral is record
       --  ADC Common status register
-      CSR : CSR_Register;
+      CSR : aliased CSR_Register;
       --  ADC common control register
-      CCR : CCR_Register;
+      CCR : aliased CCR_Register;
       --  ADC common regular data register for dual and triple modes
-      CDR : CDR_Register;
+      CDR : aliased CDR_Register;
    end record
      with Volatile;
 
@@ -814,6 +815,6 @@ package STM32_SVD.ADC is
 
    --  Common ADC registers
    C_ADC_Periph : aliased C_ADC_Peripheral
-     with Import, Address => C_ADC_Base;
+     with Import, Address => System'To_Address (16#40012300#);
 
 end STM32_SVD.ADC;

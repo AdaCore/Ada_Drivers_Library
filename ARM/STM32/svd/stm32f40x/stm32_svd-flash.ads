@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -188,17 +189,17 @@ package STM32_SVD.FLASH is
    --  FLASH
    type FLASH_Peripheral is record
       --  Flash access control register
-      ACR     : ACR_Register;
+      ACR     : aliased ACR_Register;
       --  Flash key register
-      KEYR    : HAL.UInt32;
+      KEYR    : aliased HAL.UInt32;
       --  Flash option key register
-      OPTKEYR : HAL.UInt32;
+      OPTKEYR : aliased HAL.UInt32;
       --  Status register
-      SR      : SR_Register;
+      SR      : aliased SR_Register;
       --  Control register
-      CR      : CR_Register;
+      CR      : aliased CR_Register;
       --  Flash option control register
-      OPTCR   : OPTCR_Register;
+      OPTCR   : aliased OPTCR_Register;
    end record
      with Volatile;
 
@@ -213,6 +214,6 @@ package STM32_SVD.FLASH is
 
    --  FLASH
    FLASH_Periph : aliased FLASH_Peripheral
-     with Import, Address => FLASH_Base;
+     with Import, Address => System'To_Address (16#40023C00#);
 
 end STM32_SVD.FLASH;

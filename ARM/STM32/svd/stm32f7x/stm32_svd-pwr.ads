@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -272,13 +273,13 @@ package STM32_SVD.PWR is
    --  Power control
    type PWR_Peripheral is record
       --  power control register
-      CR1  : CR1_Register;
+      CR1  : aliased CR1_Register;
       --  power control/status register
-      CSR1 : CSR1_Register;
+      CSR1 : aliased CSR1_Register;
       --  power control register
-      CR2  : CR2_Register;
+      CR2  : aliased CR2_Register;
       --  power control/status register
-      CSR2 : CSR2_Register;
+      CSR2 : aliased CSR2_Register;
    end record
      with Volatile;
 
@@ -291,6 +292,6 @@ package STM32_SVD.PWR is
 
    --  Power control
    PWR_Periph : aliased PWR_Peripheral
-     with Import, Address => PWR_Base;
+     with Import, Address => System'To_Address (16#40007000#);
 
 end STM32_SVD.PWR;

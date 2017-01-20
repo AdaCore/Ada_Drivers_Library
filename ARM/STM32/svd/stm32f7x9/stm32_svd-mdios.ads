@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -1185,147 +1186,147 @@ package STM32_SVD.MDIOS is
    --  Management data input/output slave
    type MDIOS_Peripheral is record
       --  MDIOS configuration register
-      MDIOS_CR      : MDIOS_CR_Register;
+      MDIOS_CR      : aliased MDIOS_CR_Register;
       --  MDIOS write flag register
-      MDIOS_WRFR    : HAL.UInt32;
+      MDIOS_WRFR    : aliased HAL.UInt32;
       --  MDIOS clear write flag register
-      MDIOS_CWRFR   : HAL.UInt32;
+      MDIOS_CWRFR   : aliased HAL.UInt32;
       --  MDIOS read flag register
-      MDIOS_RDFR    : HAL.UInt32;
+      MDIOS_RDFR    : aliased HAL.UInt32;
       --  MDIOS clear read flag register
-      MDIOS_CRDFR   : HAL.UInt32;
+      MDIOS_CRDFR   : aliased HAL.UInt32;
       --  MDIOS status register
-      MDIOS_SR      : MDIOS_SR_Register;
+      MDIOS_SR      : aliased MDIOS_SR_Register;
       --  MDIOS clear flag register
-      MDIOS_CLRFR   : MDIOS_CLRFR_Register;
+      MDIOS_CLRFR   : aliased MDIOS_CLRFR_Register;
       --  MDIOS input data register 0
-      MDIOS_DINR0   : MDIOS_DINR0_Register;
+      MDIOS_DINR0   : aliased MDIOS_DINR0_Register;
       --  MDIOS input data register 1
-      MDIOS_DINR1   : MDIOS_DINR1_Register;
+      MDIOS_DINR1   : aliased MDIOS_DINR1_Register;
       --  MDIOS input data register 2
-      MDIOS_DINR2   : MDIOS_DINR2_Register;
+      MDIOS_DINR2   : aliased MDIOS_DINR2_Register;
       --  MDIOS input data register 3
-      MDIOS_DINR3   : MDIOS_DINR3_Register;
+      MDIOS_DINR3   : aliased MDIOS_DINR3_Register;
       --  MDIOS input data register 4
-      MDIOS_DINR4   : MDIOS_DINR4_Register;
+      MDIOS_DINR4   : aliased MDIOS_DINR4_Register;
       --  MDIOS input data register 5
-      MDIOS_DINR5   : MDIOS_DINR5_Register;
+      MDIOS_DINR5   : aliased MDIOS_DINR5_Register;
       --  MDIOS input data register 6
-      MDIOS_DINR6   : MDIOS_DINR6_Register;
+      MDIOS_DINR6   : aliased MDIOS_DINR6_Register;
       --  MDIOS input data register 7
-      MDIOS_DINR7   : MDIOS_DINR7_Register;
+      MDIOS_DINR7   : aliased MDIOS_DINR7_Register;
       --  MDIOS input data register 8
-      MDIOS_DINR8   : MDIOS_DINR8_Register;
+      MDIOS_DINR8   : aliased MDIOS_DINR8_Register;
       --  MDIOS input data register 9
-      MDIOS_DINR9   : MDIOS_DINR9_Register;
+      MDIOS_DINR9   : aliased MDIOS_DINR9_Register;
       --  MDIOS input data register 10
-      MDIOS_DINR10  : MDIOS_DINR10_Register;
+      MDIOS_DINR10  : aliased MDIOS_DINR10_Register;
       --  MDIOS input data register 11
-      MDIOS_DINR11  : MDIOS_DINR11_Register;
+      MDIOS_DINR11  : aliased MDIOS_DINR11_Register;
       --  MDIOS input data register 12
-      MDIOS_DINR12  : MDIOS_DINR12_Register;
+      MDIOS_DINR12  : aliased MDIOS_DINR12_Register;
       --  MDIOS input data register 13
-      MDIOS_DINR13  : MDIOS_DINR13_Register;
+      MDIOS_DINR13  : aliased MDIOS_DINR13_Register;
       --  MDIOS input data register 14
-      MDIOS_DINR14  : MDIOS_DINR14_Register;
+      MDIOS_DINR14  : aliased MDIOS_DINR14_Register;
       --  MDIOS input data register 15
-      MDIOS_DINR15  : MDIOS_DINR15_Register;
+      MDIOS_DINR15  : aliased MDIOS_DINR15_Register;
       --  MDIOS input data register 16
-      MDIOS_DINR16  : MDIOS_DINR16_Register;
+      MDIOS_DINR16  : aliased MDIOS_DINR16_Register;
       --  MDIOS input data register 17
-      MDIOS_DINR17  : MDIOS_DINR17_Register;
+      MDIOS_DINR17  : aliased MDIOS_DINR17_Register;
       --  MDIOS input data register 18
-      MDIOS_DINR18  : MDIOS_DINR18_Register;
+      MDIOS_DINR18  : aliased MDIOS_DINR18_Register;
       --  MDIOS input data register 19
-      MDIOS_DINR19  : MDIOS_DINR19_Register;
+      MDIOS_DINR19  : aliased MDIOS_DINR19_Register;
       --  MDIOS input data register 20
-      MDIOS_DINR20  : MDIOS_DINR20_Register;
+      MDIOS_DINR20  : aliased MDIOS_DINR20_Register;
       --  MDIOS input data register 21
-      MDIOS_DINR21  : MDIOS_DINR21_Register;
+      MDIOS_DINR21  : aliased MDIOS_DINR21_Register;
       --  MDIOS input data register 22
-      MDIOS_DINR22  : MDIOS_DINR22_Register;
+      MDIOS_DINR22  : aliased MDIOS_DINR22_Register;
       --  MDIOS input data register 23
-      MDIOS_DINR23  : MDIOS_DINR23_Register;
+      MDIOS_DINR23  : aliased MDIOS_DINR23_Register;
       --  MDIOS input data register 24
-      MDIOS_DINR24  : MDIOS_DINR24_Register;
+      MDIOS_DINR24  : aliased MDIOS_DINR24_Register;
       --  MDIOS input data register 25
-      MDIOS_DINR25  : MDIOS_DINR25_Register;
+      MDIOS_DINR25  : aliased MDIOS_DINR25_Register;
       --  MDIOS input data register 26
-      MDIOS_DINR26  : MDIOS_DINR26_Register;
+      MDIOS_DINR26  : aliased MDIOS_DINR26_Register;
       --  MDIOS input data register 27
-      MDIOS_DINR27  : MDIOS_DINR27_Register;
+      MDIOS_DINR27  : aliased MDIOS_DINR27_Register;
       --  MDIOS input data register 28
-      MDIOS_DINR28  : MDIOS_DINR28_Register;
+      MDIOS_DINR28  : aliased MDIOS_DINR28_Register;
       --  MDIOS input data register 29
-      MDIOS_DINR29  : MDIOS_DINR29_Register;
+      MDIOS_DINR29  : aliased MDIOS_DINR29_Register;
       --  MDIOS input data register 30
-      MDIOS_DINR30  : MDIOS_DINR30_Register;
+      MDIOS_DINR30  : aliased MDIOS_DINR30_Register;
       --  MDIOS input data register 31
-      MDIOS_DINR31  : MDIOS_DINR31_Register;
+      MDIOS_DINR31  : aliased MDIOS_DINR31_Register;
       --  MDIOS output data register 0
-      MDIOS_DOUTR0  : MDIOS_DOUTR0_Register;
+      MDIOS_DOUTR0  : aliased MDIOS_DOUTR0_Register;
       --  MDIOS output data register 1
-      MDIOS_DOUTR1  : MDIOS_DOUTR1_Register;
+      MDIOS_DOUTR1  : aliased MDIOS_DOUTR1_Register;
       --  MDIOS output data register 2
-      MDIOS_DOUTR2  : MDIOS_DOUTR2_Register;
+      MDIOS_DOUTR2  : aliased MDIOS_DOUTR2_Register;
       --  MDIOS output data register 3
-      MDIOS_DOUTR3  : MDIOS_DOUTR3_Register;
+      MDIOS_DOUTR3  : aliased MDIOS_DOUTR3_Register;
       --  MDIOS output data register 4
-      MDIOS_DOUTR4  : MDIOS_DOUTR4_Register;
+      MDIOS_DOUTR4  : aliased MDIOS_DOUTR4_Register;
       --  MDIOS output data register 5
-      MDIOS_DOUTR5  : MDIOS_DOUTR5_Register;
+      MDIOS_DOUTR5  : aliased MDIOS_DOUTR5_Register;
       --  MDIOS output data register 6
-      MDIOS_DOUTR6  : MDIOS_DOUTR6_Register;
+      MDIOS_DOUTR6  : aliased MDIOS_DOUTR6_Register;
       --  MDIOS output data register 7
-      MDIOS_DOUTR7  : MDIOS_DOUTR7_Register;
+      MDIOS_DOUTR7  : aliased MDIOS_DOUTR7_Register;
       --  MDIOS output data register 8
-      MDIOS_DOUTR8  : MDIOS_DOUTR8_Register;
+      MDIOS_DOUTR8  : aliased MDIOS_DOUTR8_Register;
       --  MDIOS output data register 9
-      MDIOS_DOUTR9  : MDIOS_DOUTR9_Register;
+      MDIOS_DOUTR9  : aliased MDIOS_DOUTR9_Register;
       --  MDIOS output data register 10
-      MDIOS_DOUTR10 : MDIOS_DOUTR10_Register;
+      MDIOS_DOUTR10 : aliased MDIOS_DOUTR10_Register;
       --  MDIOS output data register 11
-      MDIOS_DOUTR11 : MDIOS_DOUTR11_Register;
+      MDIOS_DOUTR11 : aliased MDIOS_DOUTR11_Register;
       --  MDIOS output data register 12
-      MDIOS_DOUTR12 : MDIOS_DOUTR12_Register;
+      MDIOS_DOUTR12 : aliased MDIOS_DOUTR12_Register;
       --  MDIOS output data register 13
-      MDIOS_DOUTR13 : MDIOS_DOUTR13_Register;
+      MDIOS_DOUTR13 : aliased MDIOS_DOUTR13_Register;
       --  MDIOS output data register 14
-      MDIOS_DOUTR14 : MDIOS_DOUTR14_Register;
+      MDIOS_DOUTR14 : aliased MDIOS_DOUTR14_Register;
       --  MDIOS output data register 15
-      MDIOS_DOUTR15 : MDIOS_DOUTR15_Register;
+      MDIOS_DOUTR15 : aliased MDIOS_DOUTR15_Register;
       --  MDIOS output data register 16
-      MDIOS_DOUTR16 : MDIOS_DOUTR16_Register;
+      MDIOS_DOUTR16 : aliased MDIOS_DOUTR16_Register;
       --  MDIOS output data register 17
-      MDIOS_DOUTR17 : MDIOS_DOUTR17_Register;
+      MDIOS_DOUTR17 : aliased MDIOS_DOUTR17_Register;
       --  MDIOS output data register 18
-      MDIOS_DOUTR18 : MDIOS_DOUTR18_Register;
+      MDIOS_DOUTR18 : aliased MDIOS_DOUTR18_Register;
       --  MDIOS output data register 19
-      MDIOS_DOUTR19 : MDIOS_DOUTR19_Register;
+      MDIOS_DOUTR19 : aliased MDIOS_DOUTR19_Register;
       --  MDIOS output data register 20
-      MDIOS_DOUTR20 : MDIOS_DOUTR20_Register;
+      MDIOS_DOUTR20 : aliased MDIOS_DOUTR20_Register;
       --  MDIOS output data register 21
-      MDIOS_DOUTR21 : MDIOS_DOUTR21_Register;
+      MDIOS_DOUTR21 : aliased MDIOS_DOUTR21_Register;
       --  MDIOS output data register 22
-      MDIOS_DOUTR22 : MDIOS_DOUTR22_Register;
+      MDIOS_DOUTR22 : aliased MDIOS_DOUTR22_Register;
       --  MDIOS output data register 23
-      MDIOS_DOUTR23 : MDIOS_DOUTR23_Register;
+      MDIOS_DOUTR23 : aliased MDIOS_DOUTR23_Register;
       --  MDIOS output data register 24
-      MDIOS_DOUTR24 : MDIOS_DOUTR24_Register;
+      MDIOS_DOUTR24 : aliased MDIOS_DOUTR24_Register;
       --  MDIOS output data register 25
-      MDIOS_DOUTR25 : MDIOS_DOUTR25_Register;
+      MDIOS_DOUTR25 : aliased MDIOS_DOUTR25_Register;
       --  MDIOS output data register 26
-      MDIOS_DOUTR26 : MDIOS_DOUTR26_Register;
+      MDIOS_DOUTR26 : aliased MDIOS_DOUTR26_Register;
       --  MDIOS output data register 27
-      MDIOS_DOUTR27 : MDIOS_DOUTR27_Register;
+      MDIOS_DOUTR27 : aliased MDIOS_DOUTR27_Register;
       --  MDIOS output data register 28
-      MDIOS_DOUTR28 : MDIOS_DOUTR28_Register;
+      MDIOS_DOUTR28 : aliased MDIOS_DOUTR28_Register;
       --  MDIOS output data register 29
-      MDIOS_DOUTR29 : MDIOS_DOUTR29_Register;
+      MDIOS_DOUTR29 : aliased MDIOS_DOUTR29_Register;
       --  MDIOS output data register 30
-      MDIOS_DOUTR30 : MDIOS_DOUTR30_Register;
+      MDIOS_DOUTR30 : aliased MDIOS_DOUTR30_Register;
       --  MDIOS output data register 31
-      MDIOS_DOUTR31 : MDIOS_DOUTR31_Register;
+      MDIOS_DOUTR31 : aliased MDIOS_DOUTR31_Register;
    end record
      with Volatile;
 
@@ -1405,6 +1406,6 @@ package STM32_SVD.MDIOS is
 
    --  Management data input/output slave
    MDIOS_Periph : aliased MDIOS_Peripheral
-     with Import, Address => MDIOS_Base;
+     with Import, Address => System'To_Address (16#40017800#);
 
 end STM32_SVD.MDIOS;

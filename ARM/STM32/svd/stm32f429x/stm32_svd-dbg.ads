@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -172,13 +173,13 @@ package STM32_SVD.DBG is
    --  Debug support
    type DBG_Peripheral is record
       --  IDCODE
-      DBGMCU_IDCODE  : DBGMCU_IDCODE_Register;
+      DBGMCU_IDCODE  : aliased DBGMCU_IDCODE_Register;
       --  Control Register
-      DBGMCU_CR      : DBGMCU_CR_Register;
+      DBGMCU_CR      : aliased DBGMCU_CR_Register;
       --  Debug MCU APB1 Freeze registe
-      DBGMCU_APB1_FZ : DBGMCU_APB1_FZ_Register;
+      DBGMCU_APB1_FZ : aliased DBGMCU_APB1_FZ_Register;
       --  Debug MCU APB2 Freeze registe
-      DBGMCU_APB2_FZ : DBGMCU_APB2_FZ_Register;
+      DBGMCU_APB2_FZ : aliased DBGMCU_APB2_FZ_Register;
    end record
      with Volatile;
 
@@ -191,6 +192,6 @@ package STM32_SVD.DBG is
 
    --  Debug support
    DBG_Periph : aliased DBG_Peripheral
-     with Import, Address => DBG_Base;
+     with Import, Address => System'To_Address (16#E0042000#);
 
 end STM32_SVD.DBG;
