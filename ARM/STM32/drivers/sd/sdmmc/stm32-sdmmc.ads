@@ -37,14 +37,14 @@
 
 with System;
 with STM32_SVD.SDMMC; use STM32_SVD.SDMMC;
-with HAL.SDCard;      use HAL.SDCard;
+with HAL.SDMMC;       use HAL.SDMMC;
 
 with STM32.DMA;
 
 package STM32.SDMMC is
 
    type SDMMC_Controller (Periph : access STM32_SVD.SDMMC.SDMMC_Peripheral) is
-   limited new HAL.SDCard.SDCard_Driver with private;
+   limited new HAL.SDMMC.SDMMC_Driver with private;
 
    function Initialize
      (This      : in out SDMMC_Controller;
@@ -142,12 +142,16 @@ private
    type Card_Data_Table is array (0 .. 3) of UInt32;
 
    type SDMMC_Controller (Periph : access STM32_SVD.SDMMC.SDMMC_Peripheral) is
-   limited new SDCard_Driver with record
+   limited new SDMMC_Driver with record
       CLK_In    : Unsigned_32;
       RCA       : Unsigned_16;
       Card_Type : Supported_SD_Memory_Cards := STD_Capacity_SD_Card_V1_1;
       Operation : SDMMC_Operation := No_Operation;
    end record;
+
+   overriding procedure Delay_Milliseconds
+     (This   : SDMMC_Controller;
+      Amount : Natural);
 
    overriding procedure Reset
      (This   : in out SDMMC_Controller;

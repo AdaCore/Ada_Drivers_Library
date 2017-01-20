@@ -38,7 +38,7 @@
 with System;
 with STM32_SVD.SDIO; use STM32_SVD.SDIO;
 
-with HAL.SDCard;     use HAL.SDCard;
+with HAL.SDMMC;      use HAL.SDMMC;
 
 with STM32.DMA;
 
@@ -143,13 +143,17 @@ private
 
    type SDMMC_Controller
      (Periph : not null access STM32_SVD.SDIO.SDIO_Peripheral)
-   is limited new SDCard_Driver with record
+   is limited new SDMMC_Driver with record
       CLK_In    : Unsigned_32;
       RCA       : Unsigned_16;
       Card_Type : Supported_SD_Memory_Cards :=
                     STD_Capacity_SD_Card_V1_1;
       Operation : SDMMC_Operation := No_Operation;
    end record;
+
+   overriding procedure Delay_Milliseconds
+     (This   : SDMMC_Controller;
+      Amount : Natural);
 
    overriding procedure Reset
      (This   : in out SDMMC_Controller;

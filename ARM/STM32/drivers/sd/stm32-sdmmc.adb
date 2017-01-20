@@ -225,6 +225,19 @@ package body STM32.SDMMC is
       end case;
    end Disable_Interrupt;
 
+   ------------------------
+   -- Delay_Milliseconds --
+   ------------------------
+
+   overriding procedure Delay_Milliseconds
+     (This   : SDMMC_Controller;
+      Amount : Natural)
+   is
+      pragma Unreferenced (This);
+   begin
+      delay until Clock + Milliseconds (Amount);
+   end Delay_Milliseconds;
+
    -----------
    -- Reset --
    -----------
@@ -353,7 +366,7 @@ package body STM32.SDMMC is
             Status := This.Response_R7_Error;
 
          when Rsp_Invalid =>
-            Status := HAL.SDCard.Error;
+            Status := HAL.SDMMC.Error;
       end case;
    end Send_Cmd;
 
@@ -844,7 +857,7 @@ package body STM32.SDMMC is
       Ret : SD_Error;
    begin
       This.CLK_In    := SDMMC_CLK;
-      HAL.SDCard.Card_Identification_Process (This, Info, Ret);
+      HAL.SDMMC.Card_Identification_Process (This, Info, Ret);
       This.Card_Type := Info.Card_Type;
       This.RCA       := Info.RCA;
 
