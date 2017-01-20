@@ -40,6 +40,8 @@ pragma Warnings (Off);
 with System.BB.Board_Parameters;
 pragma Warnings (On);
 
+with SDMMC.Card_Identification; use SDMMC.Card_Identification;
+
 package body STM32.SDMMC is
 
    --  Mask for errors Card Status R1 (OCR Register)
@@ -857,7 +859,7 @@ package body STM32.SDMMC is
       Ret : SD_Error;
    begin
       This.CLK_In    := SDMMC_CLK;
-      HAL.SDMMC.Card_Identification_Process (This, Info, Ret);
+      Card_Identification_Process (This, Info, Ret);
       This.Card_Type := Info.Card_Type;
       This.RCA       := Info.RCA;
 

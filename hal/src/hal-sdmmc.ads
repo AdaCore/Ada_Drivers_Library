@@ -376,17 +376,6 @@ package HAL.SDMMC is
    --  W0 is the MSB, W3 the LSB
    --  Cannot fail.
 
-   procedure Card_Identification_Process (This   : in out SDMMC_Driver'Class;
-                                          Info   : out Card_Information;
-                                          Status : out SD_Error);
-   --  Generic card identification process procedure.
-
-   procedure Read_SCR (This   : in out SDMMC_Driver'Class;
-                       Info   : Card_Information;
-                       SCR    : out SDCard_Configuration_Register;
-                       Status : out SD_Error);
-   --  Retrieve the current SDCard configuration
-
    type Cmd_Desc_Array is array (SD_Command) of Cmd_Desc_Type;
    type ACmd_Desc_Array is array (SD_Specific_Command) of Cmd_Desc_Type;
 

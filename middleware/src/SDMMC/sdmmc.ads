@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2017, AdaCore                     --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,41 +29,5 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package body HAL.SDMMC is
-
-   --------------
-   -- Send_Cmd --
-   --------------
-
-   procedure Send_Cmd
-     (This   : in out SDMMC_Driver'Class;
-      Cmd    : SD_Command;
-      Arg    : Unsigned_32;
-      Status : out SD_Error) is
-   begin
-      Send_Cmd (This, Cmd_Desc (Cmd), Arg, Status);
-   end Send_Cmd;
-
-   ---------------
-   -- Send_ACmd --
-   ---------------
-
-   procedure Send_ACmd
-     (This   : in out SDMMC_Driver'Class;
-      Cmd    : SD_Specific_Command;
-      Rca    : Unsigned_16;
-      Arg    : Unsigned_32;
-      Status : out SD_Error)
-   is
-      S_Arg : constant Unsigned_32 :=
-                Shift_Left (Unsigned_32 (Rca), 16);
-   begin
-      Send_Cmd (This, Cmd_Desc (App_Cmd), S_Arg, Status);
-
-      if Status /= OK then
-         return;
-      end if;
-
-      Send_Cmd (This, Acmd_Desc (Cmd), Arg, Status);
-   end Send_ACmd;
-end HAL.SDMMC;
+package SDMMC is
+end SDMMC;
