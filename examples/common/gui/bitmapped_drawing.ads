@@ -39,30 +39,6 @@ with HAL.Bitmap;    use HAL.Bitmap;
 
 package Bitmapped_Drawing is
 
-   procedure Draw_Line
-     (Buffer      : in out Bitmap_Buffer'Class;
-      Start, Stop : Point;
-      Hue         : Unsigned_32;
-      Thickness   : Natural := 1;
-      Fast        : Boolean := True);
-
-   procedure Draw_Line
-     (Buffer      : in out Bitmap_Buffer'Class;
-      Start, Stop : Point;
-      Hue         : Bitmap_Color;
-      Thickness   : Natural := 1;
-      Fast        : Boolean := True);
-   --  If fast is set, then the line thickness uses squares to draw, while
-   --  if not set, then the line will be composed of circles, much slower to
-   --  draw but providing nicer line cap.
-
-   procedure Cubic_Bezier
-     (Buffer         : in out Bitmap_Buffer'Class;
-      P1, P2, P3, P4 : Point;
-      Hue            : Bitmap_Color;
-      N              : Positive := 20;
-      Thickness      : Natural := 1);
-
    procedure Draw_Char
      (Buffer     : in out Bitmap_Buffer'Class;
       Start      : Point;

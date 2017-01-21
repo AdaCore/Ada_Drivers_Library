@@ -45,6 +45,22 @@ package Soft_Drawing_Bitmap is
      access all Soft_Drawing_Bitmap_Buffer'Class;
 
    overriding
+   procedure Draw_Line
+     (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
+      Color       : UInt32;
+      Start, Stop : Point;
+      Thickness   : Natural := 1;
+      Fast        : Boolean := True);
+
+   overriding
+   procedure Draw_Line
+     (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
+      Color       : Bitmap_Color;
+      Start, Stop : Point;
+      Thickness   : Natural := 1;
+      Fast        : Boolean := True);
+
+   overriding
    procedure Fill
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : Bitmap_Color);
@@ -180,4 +196,13 @@ package Soft_Drawing_Bitmap is
       Color  : Bitmap_Color;
       Center : Point;
       Radius : Natural);
+
+   overriding
+   procedure Cubic_Bezier
+     (Buffer         : in out Soft_Drawing_Bitmap_Buffer;
+      Color          : Bitmap_Color;
+      P1, P2, P3, P4 : Point;
+      N              : Positive := 20;
+      Thickness      : Natural := 1);
+
 end Soft_Drawing_Bitmap;

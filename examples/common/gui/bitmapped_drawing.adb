@@ -29,7 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL; use HAL;
+with HAL;                     use HAL;
+with Bitmap_Color_Conversion; use Bitmap_Color_Conversion;
 
 package body Bitmapped_Drawing is
 
@@ -117,9 +118,9 @@ package body Bitmapped_Drawing is
       is
       begin
          Draw_Line (Buffer,
+                    FG,
                     (X0, Y0),
                     (X1, Y1),
-                    FG,
                     Width,
                     Fast => Fast);
       end Internal_Draw_Line;
@@ -176,11 +177,11 @@ package body Bitmapped_Drawing is
       is
       begin
          Draw_Line (Buffer,
+                    Foreground,
                     (Area.Position.X + Natural (Float (X0) * Ratio),
                      Area.Position.Y + Y0),
                     (Area.Position.X + Natural (Float (X1) * Ratio),
                      Area.Position.Y + Y1),
-                    Foreground,
                     Width,
                     Fast);
       end Internal_Draw_Line;
@@ -248,141 +249,5 @@ package body Bitmapped_Drawing is
       end if;
    end Draw_String;
 
-   ---------------
-   -- Draw_Line --
-   ---------------
-
-   procedure Draw_Line
-     (Buffer      : in out Bitmap_Buffer'Class;
-      Start, Stop : Point;
-      Hue         : Bitmap_Color;
-      Thickness   : Natural := 1;
-      Fast        : Boolean := True)
-   is
-      Col : constant Unsigned_32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
-                                                          Hue);
-   begin
-      Draw_Line (Buffer, Start, Stop, Col, Thickness, Fast);
-   end Draw_Line;
-
-   --  http://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#Ada
-   ---------------
-   -- Draw_Line --
-   ---------------
-
-   procedure Draw_Line
-     (Buffer      : in out Bitmap_Buffer'Class;
-      Start, Stop : Point;
-      Hue         : Unsigned_32;
-      Thickness   : Natural := 1;
-      Fast        : Boolean := True)
-   is
-      DX     : constant Float := abs Float (Stop.X - Start.X);
-      DY     : constant Float := abs Float (Stop.Y - Start.Y);
-      Err    : Float;
-      X      : Natural := Start.X;
-      Y      : Natural := Start.Y;
-      Step_X : Integer := 1;
-      Step_Y : Integer := 1;
-
-      procedure Draw_Point (P : Point) with Inline;
-
-      ----------------
-      -- Draw_Point --
-      ----------------
-
-      procedure Draw_Point (P : Point) is
-      begin
-         if Thickness /= 1 then
-            if not Fast then
-               Fill_Circle (Buffer,
-                            Color  => Hue,
-                            Center => P,
-                            Radius => Thickness / 2);
-            else
-               Buffer.Fill_Rect
-                 (Hue,
-                  ((P.X - (Thickness / 2), P.Y - (Thickness / 2)),
-                   Thickness,
-                   Thickness));
-            end if;
-         else
-            Buffer.Set_Pixel ((P.X, P.Y), Hue);
-         end if;
-      end Draw_Point;
-
-   begin
-      if Start.X > Stop.X then
-         Step_X := -1;
-      end if;
-
-      if Start.Y > Stop.Y then
-         Step_Y := -1;
-      end if;
-
-      if DX > DY then
-         Err := DX / 2.0;
-         while X /= Stop.X loop
-            Draw_Point ((X, Y));
-            Err := Err - DY;
-            if Err < 0.0 then
-               Y := Y + Step_Y;
-               Err := Err + DX;
-            end if;
-            X := X + Step_X;
-         end loop;
-      else
-         Err := DY / 2.0;
-         while Y /= Stop.Y loop
-            Draw_Point ((X, Y));
-            Err := Err - DX;
-            if Err < 0.0 then
-               X := X + Step_X;
-               Err := Err + DY;
-            end if;
-            Y := Y + Step_Y;
-         end loop;
-      end if;
-
-      Draw_Point ((X, Y));
-   end Draw_Line;
-
-   --  http://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Cubic
-   ------------------
-   -- Cubic_Bezier --
-   ------------------
-
-   procedure Cubic_Bezier
-     (Buffer         : in out Bitmap_Buffer'Class;
-      P1, P2, P3, P4 : Point;
-      Hue            : Bitmap_Color;
-      N              : Positive := 20;
-      Thickness      : Natural := 1)
-   is
-      Points : array (0 .. N) of Point;
-   begin
-      for I in Points'Range loop
-         declare
-            T : constant Float := Float (I) / Float (N);
-            A : constant Float := (1.0 - T)**3;
-            B : constant Float := 3.0 * T * (1.0 - T)**2;
-            C : constant Float := 3.0 * T**2 * (1.0 - T);
-            D : constant Float := T**3;
-         begin
-            Points (I).X := Natural (A * Float (P1.X) +
-                                    B * Float (P2.X) +
-                                    C * Float (P3.X) +
-                                    D * Float (P4.X));
-            Points (I).Y := Natural (A * Float (P1.Y) +
-                                    B * Float (P2.Y) +
-                                    C * Float (P3.Y) +
-                                    D * Float (P4.Y));
-         end;
-      end loop;
-      for I in Points'First .. Points'Last - 1 loop
-         Draw_Line (Buffer, Points (I), Points (I + 1), Hue,
-                    Thickness => Thickness);
-      end loop;
-   end Cubic_Bezier;
 
 end Bitmapped_Drawing;

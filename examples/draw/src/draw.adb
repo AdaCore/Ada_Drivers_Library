@@ -42,8 +42,6 @@ with HAL.Bitmap;            use HAL.Bitmap;
 with HAL.Touch_Panel;       use HAL.Touch_Panel;
 with STM32.User_Button;     use STM32;
 
-with Bitmapped_Drawing;     use Bitmapped_Drawing;
-
 procedure Draw
 is
    procedure Clear;
@@ -96,9 +94,9 @@ begin
             if Last_X > 0 then
                Draw_Line
                  (Display.Hidden_Buffer (1).all,
+                  Color     => HAL.Bitmap.Green,
                   Start     => (Last_X, Last_Y),
                   Stop      => (State (State'First).X, State (State'First).Y),
-                  Hue       => HAL.Bitmap.Green,
                   Thickness => State (State'First).Weight / 2,
                   Fast      => False);
             end if;

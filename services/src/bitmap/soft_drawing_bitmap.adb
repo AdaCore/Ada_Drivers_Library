@@ -33,6 +33,98 @@ package body Soft_Drawing_Bitmap is
 
    subtype Dispatch is Soft_Drawing_Bitmap_Buffer'Class;
 
+   overriding
+   procedure Draw_Line
+     (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
+      Color       : UInt32;
+      Start, Stop : Point;
+      Thickness   : Natural := 1;
+      Fast        : Boolean := True)
+   is
+      DX     : constant Float := abs Float (Stop.X - Start.X);
+      DY     : constant Float := abs Float (Stop.Y - Start.Y);
+      Err    : Float;
+      X      : Natural := Start.X;
+      Y      : Natural := Start.Y;
+      Step_X : Integer := 1;
+      Step_Y : Integer := 1;
+
+      procedure Draw_Point (P : Point) with Inline;
+
+      ----------------
+      -- Draw_Point --
+      ----------------
+
+      procedure Draw_Point (P : Point) is
+      begin
+         if Thickness /= 1 then
+            if not Fast then
+               Fill_Circle (Buffer,
+                            Color  => Color,
+                            Center => P,
+                            Radius => Thickness / 2);
+            else
+               Buffer.Fill_Rect
+                 (Color,
+                  ((P.X - (Thickness / 2), P.Y - (Thickness / 2)),
+                   Thickness,
+                   Thickness));
+            end if;
+         else
+            Dispatch (Buffer).Set_Pixel ((P.X, P.Y), Color);
+         end if;
+      end Draw_Point;
+
+   begin
+      if Start.X > Stop.X then
+         Step_X := -1;
+      end if;
+
+      if Start.Y > Stop.Y then
+         Step_Y := -1;
+      end if;
+
+      if DX > DY then
+         Err := DX / 2.0;
+         while X /= Stop.X loop
+            Draw_Point ((X, Y));
+            Err := Err - DY;
+            if Err < 0.0 then
+               Y := Y + Step_Y;
+               Err := Err + DX;
+            end if;
+            X := X + Step_X;
+         end loop;
+      else
+         Err := DY / 2.0;
+         while Y /= Stop.Y loop
+            Draw_Point ((X, Y));
+            Err := Err - DX;
+            if Err < 0.0 then
+               X := X + Step_X;
+               Err := Err + DY;
+            end if;
+            Y := Y + Step_Y;
+         end loop;
+      end if;
+
+      Draw_Point ((X, Y));
+   end Draw_Line;
+
+   overriding
+   procedure Draw_Line
+     (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
+      Color       : Bitmap_Color;
+      Start, Stop : Point;
+      Thickness   : Natural := 1;
+      Fast        : Boolean := True)
+   is
+      Col : constant UInt32 :=
+        Bitmap_Color_To_Word (Dispatch (Buffer).Color_Mode, Color);
+   begin
+      Draw_Line (Buffer, Col, Start, Stop, Thickness, Fast);
+   end Draw_Line;
+
    ----------
    -- Fill --
    ----------
@@ -133,24 +225,8 @@ package body Soft_Drawing_Bitmap is
       Height      : Natural;
       Synchronous : Boolean)
    is
---        Null_Buffer : Bitmap_Buffer'Class := Src_Buffer;
    begin
       raise Constraint_Error with "Not implemented yet.";
---        Null_Buffer.Addr := System.Null_Address;
---        Null_Buffer.Width := 0;
---        Null_Buffer.Height := 0;
---        Null_Buffer.Swapped := False;
---
---        Copy_Rect
---          (Src_Buffer  => Src_Buffer,
---           Src_Pt      => Src_Pt,
---           Dst_Buffer  => Dispatch (Dst_Buffer),
---           Dst_Pt      => Dst_Pt,
---           Bg_Buffer   => Null_Buffer,
---           Bg_Pt       => (0, 0),
---           Width       => Width,
---           Height      => Height,
---           Synchronous => Synchronous);
    end Copy_Rect;
 
    ---------------------
@@ -647,5 +723,43 @@ package body Soft_Drawing_Bitmap is
          Draw_Horizontal_Line (Center.X - Y, Center.Y - X, 2 * Y);
       end loop;
    end Fill_Circle;
+
+   ------------------
+   -- Cubic_Bezier --
+   ------------------
+
+   overriding
+   procedure Cubic_Bezier
+     (Buffer         : in out Soft_Drawing_Bitmap_Buffer;
+      Color          : Bitmap_Color;
+      P1, P2, P3, P4 : Point;
+      N              : Positive := 20;
+      Thickness      : Natural := 1)
+   is
+      Points : array (0 .. N) of Point;
+   begin
+      for I in Points'Range loop
+         declare
+            T : constant Float := Float (I) / Float (N);
+            A : constant Float := (1.0 - T)**3;
+            B : constant Float := 3.0 * T * (1.0 - T)**2;
+            C : constant Float := 3.0 * T**2 * (1.0 - T);
+            D : constant Float := T**3;
+         begin
+            Points (I).X := Natural (A * Float (P1.X) +
+                                    B * Float (P2.X) +
+                                    C * Float (P3.X) +
+                                    D * Float (P4.X));
+            Points (I).Y := Natural (A * Float (P1.Y) +
+                                    B * Float (P2.Y) +
+                                    C * Float (P3.Y) +
+                                    D * Float (P4.Y));
+         end;
+      end loop;
+      for I in Points'First .. Points'Last - 1 loop
+         Draw_Line (Buffer, Color, Points (I), Points (I + 1),
+                    Thickness => Thickness);
+      end loop;
+   end Cubic_Bezier;
 
 end Soft_Drawing_Bitmap;

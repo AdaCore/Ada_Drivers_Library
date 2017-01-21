@@ -159,6 +159,23 @@ package HAL.Bitmap is
       Pt     : Point)
       return UInt32 is abstract;
 
+   procedure Draw_Line
+     (Buffer      : in out Bitmap_Buffer;
+      Color       : UInt32;
+      Start, Stop : Point;
+      Thickness   : Natural := 1;
+      Fast        : Boolean := True) is abstract;
+
+   procedure Draw_Line
+     (Buffer      : in out Bitmap_Buffer;
+      Color       : Bitmap_Color;
+      Start, Stop : Point;
+      Thickness   : Natural := 1;
+      Fast        : Boolean := True) is abstract;
+   --  If fast is set, then the line thickness uses squares to draw, while
+   --  if not set, then the line will be composed of circles, much slower to
+   --  draw but providing nicer line cap.
+
    procedure Fill
      (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color) is abstract;
@@ -277,6 +294,13 @@ package HAL.Bitmap is
       Color  : Bitmap_Color;
       Center : Point;
       Radius : Natural) is abstract;
+
+   procedure Cubic_Bezier
+     (Buffer         : in out Bitmap_Buffer;
+      Color          : Bitmap_Color;
+      P1, P2, P3, P4 : Point;
+      N              : Positive := 20;
+      Thickness      : Natural := 1) is abstract;
 
    function Buffer_Size (Buffer : Bitmap_Buffer) return Natural is abstract;
 
