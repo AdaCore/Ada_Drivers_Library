@@ -239,13 +239,33 @@ package HAL.Bitmap is
       Width  : Integer);
 
    procedure Draw_Rect
+     (Buffer    : in out Bitmap_Buffer;
+      Color     : Bitmap_Color;
+      X         : Integer;
+      Y         : Integer;
+      Width     : Integer;
+      Height    : Integer;
+      Thickness : Natural := 1);
+   --  Draws a rectangle
+
+   procedure Draw_Rounded_Rect
+     (Buffer    : in out Bitmap_Buffer;
+      Color     : Bitmap_Color;
+      X         : Integer;
+      Y         : Integer;
+      Width     : Integer;
+      Height    : Integer;
+      Radius    : Natural;
+      Thickness : Natural := 1);
+
+   procedure Fill_Rounded_Rect
      (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
-      X      : Integer;
-      Y      : Integer;
-      Width  : Integer;
-      Height : Integer);
-   --  Draws a rectangle
+      X      : Natural;
+      Y      : Natural;
+      Width  : Positive;
+      Height : Positive;
+      Radius : Natural);
 
    procedure Draw_Circle
      (Buffer   : in out Bitmap_Buffer;

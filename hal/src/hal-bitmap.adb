@@ -553,35 +553,209 @@ package body HAL.Bitmap is
    ---------------
 
    procedure Draw_Rect
-     (Buffer : in out Bitmap_Buffer;
-      Color  : Bitmap_Color;
-      X      : Integer;
-      Y      : Integer;
-      Width  : Integer;
-      Height : Integer)
+     (Buffer    : in out Bitmap_Buffer;
+      Color     : Bitmap_Color;
+      X         : Integer;
+      Y         : Integer;
+      Width     : Integer;
+      Height    : Integer;
+      Thickness : Natural := 1)
    is
-      Buf2 : Bitmap_Buffer'Class := Buffer;
-      X0   : Integer := X;
-      Y0   : Integer := Y;
-      W    : Integer := Width;
-      H    : Integer := Height;
+      X0, Y0, X1, Y1 : Natural;
+   begin
+      X0 := X;
+      Y0 := Y;
+      X1 := X + Width - 1;
+      Y1 := Y + Height - 1;
+      Buffer.Fill_Rect
+        (Color,
+         X0 - Thickness / 2, Y0,
+         Thickness,
+         Height + Thickness / 2);
+      Buffer.Fill_Rect
+        (Color,
+         X1 - Thickness / 2, Y0,
+         Thickness,
+         Height + Thickness / 2);
+      Buffer.Fill_Rect
+        (Color,
+         X0,
+         Y0 - Thickness / 2,
+         Width + Thickness / 2,
+         Thickness);
+      Buffer.Fill_Rect
+        (Color,
+         X0,
+         Y1 - Thickness / 2,
+         Width + Thickness / 2,
+         Thickness);
+   end Draw_Rect;
+
+   -----------------------
+   -- Draw_Rounded_Rect --
+   -----------------------
+
+   procedure Draw_Rounded_Rect
+     (Buffer    : in out Bitmap_Buffer;
+      Color     : Bitmap_Color;
+      X         : Integer;
+      Y         : Integer;
+      Width     : Integer;
+      Height    : Integer;
+      Radius    : Natural;
+      Thickness : Natural := 1)
+   is
+      F     : Integer := 1 - Radius;
+      ddF_X : Integer := 0;
+      ddF_Y : Integer := (-2) * Radius;
+      X0     : Integer := 0;
+      Y0     : Integer := Radius;
+      Center_Top : constant Natural := Y + Radius;
+      Center_Bot : constant Natural := Y + Height - 1 - Radius;
+      Center_Lft : constant Natural := X + Radius;
+      Center_Rgt : constant Natural := X + Width - 1 - Radius;
+
+      procedure Draw_Point (X, Y : Natural) with Inline;
+
+      ----------------
+      -- Draw_Point --
+      ----------------
+
+      procedure Draw_Point (X, Y : Natural) is
+      begin
+         if Thickness /= 1 then
+            Buffer.Fill_Rect
+              (Color,
+               X - (Thickness / 2),
+               Y - (Thickness / 2),
+               Thickness,
+               Thickness);
+         else
+            Buffer.Set_Pixel (X, Y, Color);
+         end if;
+      end Draw_Point;
 
    begin
-      if Buffer.Swapped then
-         W := Height;
-         H := Width;
-         X0 := Y;
-         Y0 := Buffer.Width - X - Width;
-         Buf2.Width   := Buffer.Height;
-         Buf2.Height  := Buffer.Width;
-         Buf2.Swapped := False;
+      if Radius = 0 then
+         Draw_Rect (Buffer, Color, X, Y, Width, Height, Thickness);
+         return;
       end if;
 
-      Draw_Horizontal_Line (Buf2, Color, X0, Y0, W);
-      Draw_Horizontal_Line (Buf2, Color, X0, Y0 + H - 1, W);
-      Draw_Vertical_Line (Buf2, Color, X0, Y0, H);
-      Draw_Vertical_Line (Buf2, Color, X0 + W - 1, Y0, H);
-   end Draw_Rect;
+      Buffer.Fill_Rect
+        (Color,
+         X - Thickness / 2,
+         Y + Radius,
+         Thickness,
+         Height - 2 * Radius);
+      Buffer.Fill_Rect
+        (Color,
+         X + Width - Thickness / 2 - 1,
+         Y + Radius,
+         Thickness,
+         Height - 2 * Radius);
+      Buffer.Fill_Rect
+        (Color,
+         X + Radius,
+         Y - Thickness / 2,
+         Width - 2 * Radius,
+         Thickness);
+      Buffer.Fill_Rect
+        (Color,
+         X + Radius,
+         Y + Height - Thickness / 2 - 1,
+         Width - 2 * Radius,
+         Thickness);
+
+      while X0 < Y0 loop
+         if F >= 0 then
+            Y0 := Y0 - 1;
+            ddF_Y := ddF_Y + 2;
+            F := F + ddF_Y;
+         end if;
+         X0 := X0 + 1;
+         ddF_X := ddF_X + 2;
+         F := F + ddF_X + 1;
+
+
+         Draw_Point (Center_Rgt + X0, Center_Bot + Y0);
+         Draw_Point (Center_Lft - X0, Center_Bot + Y0);
+         Draw_Point (Center_Rgt + X0, Center_Top - Y0);
+         Draw_Point (Center_Lft - X0, Center_Top - Y0);
+         Draw_Point (Center_Rgt + Y0, Center_Bot + X0);
+         Draw_Point (Center_Lft - Y0, Center_Bot + X0);
+         Draw_Point (Center_Rgt + Y0, Center_Top - X0);
+         Draw_Point (Center_Lft - Y0, Center_Top - X0);
+      end loop;
+   end Draw_Rounded_Rect;
+
+   -----------------------
+   -- Fill_Rounded_Rect --
+   -----------------------
+
+   procedure Fill_Rounded_Rect
+     (Buffer : in out Bitmap_Buffer;
+      Color  : Bitmap_Color;
+      X      : Natural;
+      Y      : Natural;
+      Width  : Positive;
+      Height : Positive;
+      Radius : Natural)
+   is
+      Col   : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode, Color);
+      F          : Integer := 1 - Radius;
+      ddF_X      : Integer := 0;
+      ddF_Y      : Integer := (-2) * Radius;
+      X0         : Integer := 0;
+      Y0         : Integer := Radius;
+      Center_Top : constant Natural := Y + Radius;
+      Center_Bot : constant Natural := Y + Height - 1 - Radius;
+      Center_Lft : constant Natural := X + Radius;
+
+   begin
+      if Radius = 0 then
+         Buffer.Fill_Rect
+           (Color  => Col,
+            X      => X0,
+            Y      => Y0,
+            Width  => Width,
+            Height => Height);
+         return;
+      end if;
+
+      Buffer.Fill_Rect
+        (Col,
+         X, Center_Top,
+         Width, Height - 2 * Radius);
+
+      while X0 < Y0 loop
+         if F >= 0 then
+            Y0 := Y0 - 1;
+            ddF_Y := ddF_Y + 2;
+            F := F + ddF_Y;
+         end if;
+
+         X0 := X0 + 1;
+         ddF_X := ddF_X + 2;
+         F := F + ddF_X + 1;
+
+         Buffer.Draw_Horizontal_Line
+           (Col,
+            Center_Lft - X0, Center_Bot + Y0,
+            Width - 2 * Radius + 2 * X0);
+         Buffer.Draw_Horizontal_Line
+           (Col,
+            Center_Lft - X0, Center_Top - Y0,
+            Width - 2 * Radius + 2 * X0);
+         Buffer.Draw_Horizontal_Line
+           (Col,
+            Center_Lft - Y0, Center_Bot + X0,
+            Width - 2 * Radius + 2 * Y0);
+         Buffer.Draw_Horizontal_Line
+           (Col,
+            Center_Lft - Y0, Center_Top - X0,
+            Width - 2 * Radius + 2 * Y0);
+      end loop;
+   end Fill_Rounded_Rect;
 
    -----------------
    -- Draw_Circle --

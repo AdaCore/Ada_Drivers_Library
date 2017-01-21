@@ -73,28 +73,6 @@ package Bitmapped_Drawing is
    --  if not set, then the line will be composed of circles, much slower to
    --  draw but providing nicer line cap.
 
-   procedure Draw_Rectangle
-     (Buffer    : in out Bitmap_Buffer'Class;
-      Area      : Rect;
-      Hue       : Bitmap_Color;
-      Thickness : Natural := 1);
-
-   procedure Draw_Rounded_Rectangle
-     (Buffer    : in out Bitmap_Buffer'Class;
-      Area      : Rect;
-      Radius    : Natural;
-      Hue       : Bitmap_Color;
-      Thickness : Natural := 1);
-
-   procedure Fill_Rounded_Rectangle
-     (Buffer : in out Bitmap_Buffer'Class;
-      X      : Natural;
-      Y      : Natural;
-      Width  : Positive;
-      Height : Positive;
-      Radius : Natural;
-      Hue    : Bitmap_Color);
-
    procedure Cubic_Bezier
      (Buffer         : in out Bitmap_Buffer'Class;
       P1, P2, P3, P4 : Point;
