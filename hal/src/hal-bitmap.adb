@@ -59,6 +59,20 @@ package body HAL.Bitmap is
       Y := Buffer.Width - Tmp - 1;
    end Handle_Swap;
 
+   -------------------
+   -- Mapped_In_RAM --
+   -------------------
+
+   function Mapped_In_RAM (Buffer : Bitmap_Buffer) return Boolean is
+     (True);
+
+   -------------------
+   -- Memory_Addres --
+   -------------------
+
+   function Memory_Addres (Buffer : Bitmap_Buffer) return System.Address is
+     (Buffer.Addr);
+
    ---------------
    -- Set_Pixel --
    ---------------

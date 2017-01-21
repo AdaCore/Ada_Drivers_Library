@@ -108,6 +108,14 @@ package HAL.Bitmap is
       Alpha at 3 range 0 .. 7;
    end record;
 
+   function Mapped_In_RAM (Buffer : Bitmap_Buffer) return Boolean;
+   --  Return True is the bitmap is storred in the CPU address space
+
+   function Memory_Addres (Buffer : Bitmap_Buffer) return System.Address
+     with Pre => Buffer.Mapped_In_RAM;
+   --  Return the address of the bitmap in the CPU address space. If the bitmap
+   --  is not in the CPU address space, the result is undefined.
+
    procedure Set_Pixel
      (Buffer  : in out Bitmap_Buffer;
       X       : Natural;
