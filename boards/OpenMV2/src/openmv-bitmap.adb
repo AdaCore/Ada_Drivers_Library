@@ -29,8 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Bitmap; use HAL.Bitmap;
-with HAL; use HAL;
+with HAL.Bitmap;          use HAL.Bitmap;
+with HAL;                 use HAL;
+with Soft_Drawing_Bitmap; use Soft_Drawing_Bitmap;
 with OpenMV.LCD_Shield;
 
 package body OpenMV.Bitmap is
@@ -43,7 +44,7 @@ package body OpenMV.Bitmap is
    --------------
 
    function Allocate return HAL.Bitmap.Bitmap_Buffer'Class is
-      BM : Bitmap_Buffer;
+      BM : Soft_Drawing_Bitmap_Buffer;
       Data : constant access Pixel_Data := new Pixel_Data;
    begin
       BM.Width := OpenMV.LCD_Shield.Width;

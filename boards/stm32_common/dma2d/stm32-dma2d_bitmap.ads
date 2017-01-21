@@ -33,12 +33,13 @@
 --  bitmap surfaces
 
 with System;
-with HAL.Bitmap;  use HAL.Bitmap;
+with HAL.Bitmap;          use HAL.Bitmap;
 with STM32.DMA2D;
+with Soft_Drawing_Bitmap; use Soft_Drawing_Bitmap;
 
 package STM32.DMA2D_Bitmap is
 
-   type DMA2D_Bitmap_Buffer is new Bitmap_Buffer with null record;
+   type DMA2D_Bitmap_Buffer is new Soft_Drawing_Bitmap_Buffer with null record;
    type Any_DMA2D_Bitmap_Buffer is access all DMA2D_Bitmap_Buffer'Class;
 
    overriding procedure Set_Pixel

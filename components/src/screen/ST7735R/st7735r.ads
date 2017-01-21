@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,12 +29,13 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL;             use HAL;
-with HAL.SPI;         use HAL.SPI;
-with HAL.GPIO;        use HAL.GPIO;
-with HAL.Framebuffer; use HAL.Framebuffer;
-with HAL.Bitmap;      use HAL.Bitmap;
+with HAL;                 use HAL;
+with HAL.SPI;             use HAL.SPI;
+with HAL.GPIO;            use HAL.GPIO;
+with HAL.Framebuffer;     use HAL.Framebuffer;
+with HAL.Bitmap;          use HAL.Bitmap;
 with HAL.Time;
+with Soft_Drawing_Bitmap; use Soft_Drawing_Bitmap;
 
 package ST7735R is
 
@@ -276,7 +277,7 @@ private
       Time : not null HAL.Time.Any_Delays)
    is limited new HAL.Framebuffer.Frame_Buffer_Display with record
       Initialized : Boolean := True;
-      Layer : aliased Bitmap_Buffer;
+      Layer : aliased Soft_Drawing_Bitmap_Buffer;
       Layer_Data : Pixel_Data;
       Layer_Initialized : Boolean := False;
    end record;

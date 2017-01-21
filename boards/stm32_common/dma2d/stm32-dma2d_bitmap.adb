@@ -130,7 +130,7 @@ package body STM32.DMA2D_Bitmap is
       if To_DMA2D_CM (Buffer.Color_Mode) in DMA2D_Dst_Color_Mode then
          DMA2D_Fill (To_DMA2D_Buffer (Buffer), Color, True);
       else
-         HAL.Bitmap.Bitmap_Buffer (Buffer).Fill (Color);
+         HAL.Bitmap.Bitmap_Buffer'Class (Buffer).Fill (Color);
       end if;
    end Fill;
 
@@ -164,7 +164,7 @@ package body STM32.DMA2D_Bitmap is
                Height => Area.Width);
          end if;
       else
-         HAL.Bitmap.Bitmap_Buffer (Buffer).Fill_Rect (Color, Area);
+         HAL.Bitmap.Bitmap_Buffer'Class (Buffer).Fill_Rect (Color, Area);
       end if;
    end Fill_Rect;
 
