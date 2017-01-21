@@ -78,40 +78,6 @@ package HAL.Bitmap is
       Height   : Natural;
    end record;
 
-
-   type Bitmap_Buffer is abstract tagged record
-      Addr       : System.Address;
-
-      Width      : Natural;
-      Height     : Natural;
-      --  Width and Height of the buffer. Note that it's the user-visible width
-      --  (see below for the meaning of the Swapped value).
-
-      Color_Mode : Bitmap_Color_Mode;
-      --  The buffer color mode. Note that not all color modes are supported by
-      --  the hardware acceleration (if any), so you need to check your actual
-      --  hardware to optimize buffer transfers.
-
-      Swapped    : Boolean := False;
-      --  If Swap is set, then operations on this buffer will consider:
-      --  Width0 = Height
-      --  Height0 = Width
-      --  Y0 = Buffer.Width - X - 1
-      --  X0 = Y
-      --
-      --  As an example, the Bitmap buffer that corresponds to a 240x320
-      --  swapped display (to display images in landscape mode) with have
-      --  the following values:
-      --  Width => 320
-      --  Height => 240
-      --  Swapped => True
-      --  So Put_Pixel (Buffer, 30, 10, Color) will place the pixel at
-      --  Y0 = 320 - 30 - 1 = 289
-      --  X0 = 10
-   end record;
-
-   type Any_Bitmap_Buffer is access all Bitmap_Buffer'Class;
-
    type Bitmap_Color is record
       Alpha : Byte;
       Red   : Byte;
@@ -126,38 +92,72 @@ package HAL.Bitmap is
       Alpha at 3 range 0 .. 7;
    end record;
 
-   function Mapped_In_RAM (Buffer : Bitmap_Buffer) return Boolean;
+   type Bitmap_Buffer is interface;
+
+   type Any_Bitmap_Buffer is access all Bitmap_Buffer'Class;
+
+   function Width (Buffer : Bitmap_Buffer) return Natural is abstract;
+   --  Width of the buffer. Note that it's the user-visible width
+   --  (see below for the meaning of the Swapped value).
+
+   function Height (Buffer : Bitmap_Buffer) return Natural is abstract;
+   --  Height of the buffer. Note that it's the user-visible height
+   --  (see below for the meaning of the Swapped value).
+
+   function Swapped (Buffer : Bitmap_Buffer) return Boolean is abstract;
+   --  If Swapped return True, operations on this buffer will consider:
+   --  Width0 = Height
+   --  Height0 = Width
+   --  Y0 = Buffer.Width - X - 1
+   --  X0 = Y
+   --
+   --  As an example, the Bitmap buffer that corresponds to a 240x320
+   --  swapped display (to display images in landscape mode) with have
+   --  the following values:
+   --  Width => 320
+   --  Height => 240
+   --  Swapped => True
+   --  So Put_Pixel (Buffer, 30, 10, Color) will place the pixel at
+   --  Y0 = 320 - 30 - 1 = 289
+   --  X0 = 10
+
+   function Color_Mode (Buffer : Bitmap_Buffer) return Bitmap_Color_Mode is abstract;
+   --  The buffer color mode. Note that not all color modes are supported by
+   --  the hardware acceleration (if any), so you need to check your actual
+   --  hardware to optimize buffer transfers.
+
+   function Mapped_In_RAM (Buffer : Bitmap_Buffer) return Boolean is abstract;
    --  Return True is the bitmap is storred in the CPU address space
 
-   function Memory_Addres (Buffer : Bitmap_Buffer) return System.Address
-     with Pre => Buffer.Mapped_In_RAM;
+   function Memory_Address (Buffer : Bitmap_Buffer) return System.Address is abstract
+     with Pre'Class => Buffer.Mapped_In_RAM;
    --  Return the address of the bitmap in the CPU address space. If the bitmap
    --  is not in the CPU address space, the result is undefined.
 
    procedure Set_Pixel
      (Buffer  : in out Bitmap_Buffer;
       Pt      : Point;
-      Value   : Bitmap_Color);
+      Value   : Bitmap_Color) is abstract;
 
    procedure Set_Pixel
      (Buffer  : in out Bitmap_Buffer;
       Pt      : Point;
-      Value   : UInt32);
+      Value   : UInt32) is abstract;
 
    procedure Set_Pixel_Blend
      (Buffer : in out Bitmap_Buffer;
       Pt      : Point;
-      Value  : Bitmap_Color);
+      Value  : Bitmap_Color) is abstract;
 
    function Pixel
      (Buffer : Bitmap_Buffer;
       Pt     : Point)
-      return Bitmap_Color;
+      return Bitmap_Color is abstract;
 
    function Pixel
      (Buffer : Bitmap_Buffer;
       Pt     : Point)
-      return UInt32;
+      return UInt32 is abstract;
 
    procedure Fill
      (Buffer : in out Bitmap_Buffer;
@@ -278,7 +278,7 @@ package HAL.Bitmap is
       Center : Point;
       Radius : Natural) is abstract;
 
-   function Buffer_Size (Buffer : Bitmap_Buffer) return Natural;
+   function Buffer_Size (Buffer : Bitmap_Buffer) return Natural is abstract;
 
    function Bitmap_Color_To_Word
      (Mode : Bitmap_Color_Mode; Col : Bitmap_Color)
@@ -289,9 +289,6 @@ package HAL.Bitmap is
      (Mode : Bitmap_Color_Mode; Col : UInt32)
      return Bitmap_Color;
    --  Translates the native buffer color into DMA2D Color
-
-   procedure Wait_Transfer (Buffer : Bitmap_Buffer);
-   --  Makes sure the DMA2D transfers are done
 
    Transparent         : constant Bitmap_Color := (000, 000, 000, 000);
    Dark_Red            : constant Bitmap_Color := (255, 139, 000, 000);

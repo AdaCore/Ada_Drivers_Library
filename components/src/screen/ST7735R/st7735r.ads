@@ -29,13 +29,13 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL;                 use HAL;
-with HAL.SPI;             use HAL.SPI;
-with HAL.GPIO;            use HAL.GPIO;
-with HAL.Framebuffer;     use HAL.Framebuffer;
-with HAL.Bitmap;          use HAL.Bitmap;
+with HAL;                  use HAL;
+with HAL.SPI;              use HAL.SPI;
+with HAL.GPIO;             use HAL.GPIO;
+with HAL.Framebuffer;      use HAL.Framebuffer;
+with HAL.Bitmap;           use HAL.Bitmap;
 with HAL.Time;
-with Soft_Drawing_Bitmap; use Soft_Drawing_Bitmap;
+with Memory_Mapped_Bitmap; use Memory_Mapped_Bitmap;
 
 package ST7735R is
 
@@ -277,7 +277,8 @@ private
       Time : not null HAL.Time.Any_Delays)
    is limited new HAL.Framebuffer.Frame_Buffer_Display with record
       Initialized : Boolean := True;
-      Layer : aliased Soft_Drawing_Bitmap_Buffer;
+      Layer : aliased Memory_Mapped_Bitmap_Buffer
+      ;
       Layer_Data : Pixel_Data;
       Layer_Initialized : Boolean := False;
    end record;

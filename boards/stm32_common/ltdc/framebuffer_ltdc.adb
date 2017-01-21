@@ -124,11 +124,11 @@ package body Framebuffer_LTDC is
       for Layer in STM32.LTDC.LCD_Layer loop
          for Buf in 1 .. 2 loop
             if Display.Buffers (Layer, Buf) /= Null_Buffer then
-               Display.Buffers (Layer, Buf).Swapped := Display.Swapped;
-               Tmp := Display.Buffers (Layer, Buf).Width;
-               Display.Buffers (Layer, Buf).Width :=
+               Display.Buffers (Layer, Buf).Currently_Swapped := Display.Swapped;
+               Tmp := Display.Buffers (Layer, Buf).Actual_Width;
+               Display.Buffers (Layer, Buf).Actual_Width :=
                  Display.Buffers (Layer, Buf).Height;
-               Display.Buffers (Layer, Buf).Height := Tmp;
+               Display.Buffers (Layer, Buf).Actual_Height := Tmp;
                Display.Buffers (Layer, Buf).Fill (0);
             end if;
          end loop;
@@ -306,23 +306,23 @@ package body Framebuffer_LTDC is
       if not Display.Swapped then
          for Buf in 1 .. 2 loop
             Display.Buffers (LCD_Layer, Buf) :=
-              (Addr       =>
+              (Addr              =>
                  Reserve (UInt32 (HAL.Bitmap.Bits_Per_Pixel (Mode) * W * H / 8)),
-               Width      => W,
-               Height     => H,
-               Color_Mode => Mode,
-               Swapped    => False);
+               Actual_Width      => W,
+               Actual_Height     => H,
+               Actual_Color_Mode => Mode,
+               Currently_Swapped => False);
             Display.Buffers (LCD_Layer, Buf).Fill (0);
          end loop;
       else
          for Buf in 1 .. 2 loop
             Display.Buffers (LCD_Layer, Buf) :=
-              (Addr       =>
+              (Addr              =>
                  Reserve (UInt32 (HAL.Bitmap.Bits_Per_Pixel (Mode) * W * H / 8)),
-               Width      => H,
-               Height     => W,
-               Color_Mode => Mode,
-               Swapped    => True);
+               Actual_Width      => H,
+               Actual_Height     => W,
+               Actual_Color_Mode => Mode,
+               Currently_Swapped => True);
             Display.Buffers (LCD_Layer, Buf).Fill (0);
          end loop;
       end if;

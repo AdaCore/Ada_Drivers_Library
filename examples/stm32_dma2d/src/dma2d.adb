@@ -39,25 +39,25 @@ with STM32.DMA2D;           use STM32.DMA2D;
 with STM32.DMA2D_Bitmap;    use STM32.DMA2D_Bitmap;
 with HAL;                   use HAL;
 with Interfaces;            use Interfaces;
-with HAL.Bitmap;
+with HAL.Bitmap;            use HAL.Bitmap;
 
 procedure Dma2d
 is
 
-   function Bitmap_Buffer return not null Any_DMA2D_Bitmap_Buffer;
+   function Bitmap_Buffer return not null Any_Bitmap_Buffer;
    function Buffer return DMA2D_Buffer;
 
-   -----------------
-   -- DM2D_Bugger --
-   -----------------
+   -------------------
+   -- Bitmap_Buffer --
+   -------------------
 
-   function Bitmap_Buffer return not null Any_DMA2D_Bitmap_Buffer is
+   function Bitmap_Buffer return not null Any_Bitmap_Buffer is
    begin
       if Display.Hidden_Buffer (1).all not in DMA2D_Bitmap_Buffer then
          raise Program_Error with "We expect a DM2D buffer here";
       end if;
 
-      return Any_DMA2D_Bitmap_Buffer (Display.Hidden_Buffer (1));
+      return Display.Hidden_Buffer (1);
    end Bitmap_Buffer;
 
    ------------

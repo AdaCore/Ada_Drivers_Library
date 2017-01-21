@@ -39,7 +39,7 @@ package Soft_Drawing_Bitmap is
 
    subtype Parent is Bitmap_Buffer;
 
-   type Soft_Drawing_Bitmap_Buffer is new Parent with null record;
+   type Soft_Drawing_Bitmap_Buffer is abstract new Parent with null record;
 
    type Any_Soft_Drawing_Bitmap_Buffer is
      access all Soft_Drawing_Bitmap_Buffer'Class;

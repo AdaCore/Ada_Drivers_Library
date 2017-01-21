@@ -29,9 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Bitmap;          use HAL.Bitmap;
-with HAL;                 use HAL;
-with Soft_Drawing_Bitmap; use Soft_Drawing_Bitmap;
+with HAL.Bitmap;           use HAL.Bitmap;
+with HAL;                  use HAL;
+with Memory_Mapped_Bitmap; use Memory_Mapped_Bitmap;
 with OpenMV.LCD_Shield;
 
 package body OpenMV.Bitmap is
@@ -43,15 +43,15 @@ package body OpenMV.Bitmap is
    -- Allocate --
    --------------
 
-   function Allocate return HAL.Bitmap.Bitmap_Buffer'Class is
-      BM : Soft_Drawing_Bitmap_Buffer;
+   function Allocate return not null HAL.Bitmap.Any_Bitmap_Buffer is
+      BM : constant Any_Memory_Mapped_Bitmap_Buffer := new Memory_Mapped_Bitmap_Buffer;
       Data : constant access Pixel_Data := new Pixel_Data;
    begin
-      BM.Width := OpenMV.LCD_Shield.Width;
-      BM.Height := OpenMV.LCD_Shield.Height;
-      BM.Color_Mode := RGB_565;
-      BM.Swapped := False;
+      BM.Actual_Width := OpenMV.LCD_Shield.Width;
+      BM.Actual_Height := OpenMV.LCD_Shield.Height;
+      BM.Actual_Color_Mode := RGB_565;
+      BM.Currently_Swapped := False;
       BM.Addr := Data.all'Address;
-      return BM;
+      return Any_Bitmap_Buffer (BM);
    end Allocate;
 end OpenMV.Bitmap;

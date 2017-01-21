@@ -53,11 +53,9 @@ package body STM32.DMA2D_Bitmap is
         To_DMA2D_CM (Buffer.Color_Mode);
       Ret : DMA2D_Buffer (Color_Mode);
    begin
-      Ret.Addr := Buffer.Addr;
-      Ret.Width := (if Buffer.Swapped then Buffer.Height
-                             else Buffer.Width);
-      Ret.Height := (if Buffer.Swapped then Buffer.Width
-                     else Buffer.Height);
+      Ret.Addr := Buffer.Memory_Address;
+      Ret.Width := Buffer.Width;
+      Ret.Height := Buffer.Height;
       return Ret;
    end To_DMA2D_Buffer;
 
@@ -72,7 +70,7 @@ package body STM32.DMA2D_Bitmap is
    is
    begin
       DMA2D_Wait_Transfer;
-      HAL.Bitmap.Bitmap_Buffer (Buffer).Set_Pixel (Pt, Value);
+      Parent (Buffer).Set_Pixel (Pt, Value);
    end Set_Pixel;
 
    ---------------------
@@ -101,7 +99,7 @@ package body STM32.DMA2D_Bitmap is
                Color  => To_DMA2D_Color (Value));
          end if;
       else
-         HAL.Bitmap.Bitmap_Buffer (Buffer).Set_Pixel_Blend (Pt, Value);
+         Parent (Buffer).Set_Pixel_Blend (Pt, Value);
       end if;
    end Set_Pixel_Blend;
 
@@ -115,7 +113,7 @@ package body STM32.DMA2D_Bitmap is
    is
    begin
       DMA2D_Wait_Transfer;
-      return HAL.Bitmap.Bitmap_Buffer (Buffer).Pixel (Pt);
+      return Parent (Buffer).Pixel (Pt);
    end Pixel;
 
    ----------
@@ -130,7 +128,7 @@ package body STM32.DMA2D_Bitmap is
       if To_DMA2D_CM (Buffer.Color_Mode) in DMA2D_Dst_Color_Mode then
          DMA2D_Fill (To_DMA2D_Buffer (Buffer), Color, True);
       else
-         HAL.Bitmap.Bitmap_Buffer'Class (Buffer).Fill (Color);
+         Parent (Buffer).Fill (Color);
       end if;
    end Fill;
 
@@ -164,7 +162,7 @@ package body STM32.DMA2D_Bitmap is
                Height => Area.Width);
          end if;
       else
-         HAL.Bitmap.Bitmap_Buffer'Class (Buffer).Fill_Rect (Color, Area);
+         Parent (Buffer).Fill_Rect (Color, Area);
       end if;
    end Fill_Rect;
 
@@ -208,7 +206,7 @@ package body STM32.DMA2D_Bitmap is
          H := Width;
       end if;
 
-      if Bg_Buffer.Addr = System.Null_Address then
+      if Bg_Buffer.Memory_Address = System.Null_Address then
          DMA_Buf_Bg := STM32.DMA2D.Null_Buffer;
          X0_Bg := 0;
          Y0_Bg := 0;
@@ -217,7 +215,7 @@ package body STM32.DMA2D_Bitmap is
          Y0_Bg := Bg_Buffer.Width - Bg_Pt.X - Width;
       end if;
 
-      Cortex_M.Cache.Clean_DCache (Src_Buffer.Addr, Src_Buffer.Buffer_Size);
+      Cortex_M.Cache.Clean_DCache (Src_Buffer.Memory_Address, Src_Buffer.Buffer_Size);
 
       DMA2D_Copy_Rect
         (DMA_Buf_Src, X0_Src, Y0_Src,
@@ -227,11 +225,33 @@ package body STM32.DMA2D_Bitmap is
          Synchronous => Synchronous);
    end Copy_Rect;
 
+   overriding procedure Copy_Rect
+     (Src_Buffer  : Bitmap_Buffer'Class;
+      Src_Pt      : Point;
+      Dst_Buffer  : in out DMA2D_Bitmap_Buffer;
+      Dst_Pt      : Point;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean)
+   is
+   begin
+      Copy_Rect
+        (Src_Buffer  => Src_Buffer,
+         Src_Pt      => Src_Pt,
+         Dst_Buffer  => Dst_Buffer,
+         Dst_Pt      => Dst_Pt,
+         Bg_Buffer   => Null_Buffer,
+         Bg_Pt       => (0, 0),
+         Width       => Width,
+         Height      => Height,
+         Synchronous => Synchronous);
+   end Copy_Rect;
+
    -------------------
    -- Wait_Transfer --
    -------------------
 
-   overriding procedure Wait_Transfer (Buffer : DMA2D_Bitmap_Buffer)
+   procedure Wait_Transfer (Buffer : DMA2D_Bitmap_Buffer)
    is
    begin
       DMA2D_Wait_Transfer;

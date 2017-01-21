@@ -667,10 +667,10 @@ package body ST7735R is
          raise Program_Error;
       end if;
 
-      Display.Layer.Width := Screen_Width;
-      Display.Layer.Height := Screen_Height;
+      Display.Layer.Actual_Width := Screen_Width;
+      Display.Layer.Actual_Height := Screen_Height;
       Display.Layer.Addr := Display.Layer_Data'Address;
-      Display.Layer.Color_Mode := Mode;
+      Display.Layer.Actual_Color_Mode := Mode;
       Display.Layer_Initialized := True;
    end Initialize_Layer;
 
