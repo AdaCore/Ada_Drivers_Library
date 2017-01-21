@@ -114,9 +114,10 @@ begin
          for Id in State'Range loop
             Fill_Circle
               (Display.Hidden_Buffer (1).all,
-               Center => (State (Id).X, State (Id).Y),
-               Radius => State (Id).Weight / 4,
-               Hue    => HAL.Bitmap.Green);
+               Color => HAL.Bitmap.Green,
+               Center_X => State (Id).X,
+               Center_Y => State (Id).Y,
+               Radius => State (Id).Weight / 4);
          end loop;
 
          if State'Length > 0 then

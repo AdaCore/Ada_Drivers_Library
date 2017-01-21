@@ -102,28 +102,6 @@ package Bitmapped_Drawing is
       N              : Positive := 20;
       Thickness      : Natural := 1);
 
-   procedure Draw_Circle
-     (Buffer : in out Bitmap_Buffer'Class;
-      Center : Point;
-      Radius : Natural;
-      Hue    : Unsigned_32);
-   procedure Draw_Circle
-     (Buffer : in out Bitmap_Buffer'Class;
-      Center : Point;
-      Radius : Natural;
-      Hue    : Bitmap_Color);
-
-   procedure Fill_Circle
-     (Buffer : in out Bitmap_Buffer'Class;
-      Center : Point;
-      Radius : Natural;
-      Hue    : Unsigned_32);
-   procedure Fill_Circle
-     (Buffer : in out Bitmap_Buffer'Class;
-      Center : Point;
-      Radius : Natural;
-      Hue    : Bitmap_Color);
-
    procedure Draw_Char
      (Buffer     : in out Bitmap_Buffer'Class;
       Start      : Point;

@@ -584,6 +584,211 @@ package body HAL.Bitmap is
    end Draw_Rect;
 
    -----------------
+   -- Draw_Circle --
+   -----------------
+
+   procedure Draw_Circle
+     (Buffer   : in out Bitmap_Buffer;
+      Color    : Bitmap_Color;
+      Center_X : Integer;
+      Center_Y : Integer;
+      Radius   : Natural)
+   is
+   begin
+      Draw_Circle
+        (Buffer,
+         Bitmap_Color_To_Word (Buffer.Color_Mode, Color),
+         Center_X,
+         Center_Y,
+         Radius);
+   end Draw_Circle;
+
+   --  http://rosettacode.org/wiki/Bitmap/Midpoint_circle_algorithm
+   -----------------
+   -- Draw_Circle --
+   -----------------
+
+   procedure Draw_Circle
+     (Buffer   : in out Bitmap_Buffer;
+      Color    : UInt32;
+      Center_X : Integer;
+      Center_Y : Integer;
+      Radius   : Natural)
+   is
+      F     : Integer := 1 - Radius;
+      ddF_X : Integer := 0;
+      ddF_Y : Integer := (-2) * Radius;
+      X     : Integer := 0;
+      Y     : Integer := Radius;
+   begin
+      Buffer.Set_Pixel (Center_X, Center_Y + Radius, Color);
+      Buffer.Set_Pixel (Center_X, Center_Y - Radius, Color);
+      Buffer.Set_Pixel (Center_X + Radius, Center_Y, Color);
+      Buffer.Set_Pixel (Center_X - Radius, Center_Y, Color);
+
+      while X < Y loop
+         if F >= 0 then
+            Y := Y - 1;
+            ddF_Y := ddF_Y + 2;
+            F := F + ddF_Y;
+         end if;
+         X := X + 1;
+         ddF_X := ddF_X + 2;
+         F := F + ddF_X + 1;
+         Buffer.Set_Pixel (Center_X + X, Center_Y + Y, Color);
+         Buffer.Set_Pixel (Center_X - X, Center_Y + Y, Color);
+         Buffer.Set_Pixel (Center_X + X, Center_Y - Y, Color);
+         Buffer.Set_Pixel (Center_X - X, Center_Y - Y, Color);
+         Buffer.Set_Pixel (Center_X + Y, Center_Y + X, Color);
+         Buffer.Set_Pixel (Center_X - Y, Center_Y + X, Color);
+         Buffer.Set_Pixel (Center_X + Y, Center_Y - X, Color);
+         Buffer.Set_Pixel (Center_X - Y, Center_Y - X, Color);
+      end loop;
+   end Draw_Circle;
+
+   -----------------
+   -- Fill_Circle --
+   -----------------
+
+   procedure Fill_Circle
+     (Buffer   : in out Bitmap_Buffer;
+      Color    : Bitmap_Color;
+      Center_X : Integer;
+      Center_Y : Integer;
+      Radius   : Natural)
+   is
+      U32_Color : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
+                                                           Color);
+   begin
+      Fill_Circle (Buffer, U32_Color, Center_X, Center_Y, Radius);
+   end Fill_Circle;
+
+   -----------------
+   -- Fill_Circle --
+   -----------------
+
+   procedure Fill_Circle
+     (Buffer : in out Bitmap_Buffer;
+      Color    : UInt32;
+      Center_X : Integer;
+      Center_Y : Integer;
+      Radius   : Natural)
+   is
+      procedure Draw_Horizontal_Line (X, Y : Integer; Width : Natural);
+      ------------------------
+      -- Draw_Vertical_Line --
+      ------------------------
+
+      procedure Draw_Vertical_Line (X, Y : Integer; Height : Natural);
+
+      --------------------------
+      -- Draw_Horizontal_Line --
+      --------------------------
+
+      procedure Draw_Horizontal_Line (X, Y : Integer; Width : Natural)
+      is
+         X1, W1 : Natural;
+      begin
+         if Width = 0 then
+            return;
+
+         elsif Y < 0 or else Y >= Buffer.Height then
+            return;
+
+         elsif X + Width < 0 or else X >= Buffer.Width then
+            return;
+         end if;
+
+         if X < 0 then
+            X1 := 0;
+            W1 := Width + X;
+         else
+            X1 := X;
+            W1 := Width;
+         end if;
+
+         if X1 + W1 >= Buffer.Width then
+            W1 := Buffer.Width - X1 - 1;
+         end if;
+
+         if W1 = 0 then
+            return;
+         end if;
+
+         Buffer.Fill_Rect (Color, X1, Y, W1, 1);
+      end Draw_Horizontal_Line;
+
+      ------------------------
+      -- Draw_Vertical_Line --
+      ------------------------
+
+      procedure Draw_Vertical_Line (X, Y : Integer; Height : Natural)
+      is
+         Y1, H1 : Natural;
+      begin
+         if Height = 0 then
+            return;
+
+         elsif X < 0 or else X >= Buffer.Width then
+            return;
+
+         elsif Y + Height < 0 or else Y >= Buffer.Height then
+            return;
+         end if;
+
+         if Y < 0 then
+            Y1 := 0;
+            H1 := Height + Y;
+         else
+            Y1 := Y;
+            H1 := Height;
+         end if;
+
+         if Y1 + H1 >= Buffer.Height then
+            H1 := Buffer.Height - Y1 - 1;
+         end if;
+
+         if H1 = 0 then
+            return;
+         end if;
+
+         Buffer.Fill_Rect (Color, X, Y1, 1, H1);
+      end Draw_Vertical_Line;
+
+      F     : Integer := 1 - Radius;
+      ddF_X : Integer := 1;
+      ddF_Y : Integer := -(2 * Radius);
+      X     : Integer := 0;
+      Y     : Integer := Radius;
+
+   begin
+      Draw_Vertical_Line
+        (Center_X,
+         Center_Y - Radius,
+         2 * Radius);
+      Draw_Horizontal_Line
+        (Center_X - Radius,
+         Center_Y,
+         2 * Radius);
+
+      while X < Y loop
+         if F >= 0 then
+            Y := Y - 1;
+            ddF_Y := ddF_Y + 2;
+            F := F + ddF_Y;
+         end if;
+         X := X + 1;
+         ddF_X := ddF_X + 2;
+         F := F + ddF_X;
+
+         Draw_Horizontal_Line (Center_X - X, Center_Y + Y, 2 * X);
+         Draw_Horizontal_Line (Center_X - X, Center_Y - Y, 2 * X);
+         Draw_Horizontal_Line (Center_X - Y, Center_Y + X, 2 * Y);
+         Draw_Horizontal_Line (Center_X - Y, Center_Y - X, 2 * Y);
+      end loop;
+   end Fill_Circle;
+
+   -----------------
    -- Buffer_Size --
    -----------------
 

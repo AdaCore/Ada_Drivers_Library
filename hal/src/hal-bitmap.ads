@@ -247,6 +247,33 @@ package HAL.Bitmap is
       Height : Integer);
    --  Draws a rectangle
 
+   procedure Draw_Circle
+     (Buffer   : in out Bitmap_Buffer;
+      Color    : UInt32;
+      Center_X : Integer;
+      Center_Y : Integer;
+      Radius   : Natural);
+
+   procedure Draw_Circle
+     (Buffer   : in out Bitmap_Buffer;
+      Color    : Bitmap_Color;
+      Center_X : Integer;
+      Center_Y : Integer;
+      Radius   : Natural);
+
+   procedure Fill_Circle
+     (Buffer   : in out Bitmap_Buffer;
+      Color    : UInt32;
+      Center_X : Integer;
+      Center_Y : Integer;
+      Radius   : Natural);
+   procedure Fill_Circle
+     (Buffer   : in out Bitmap_Buffer;
+      Color    : Bitmap_Color;
+      Center_X : Integer;
+      Center_Y : Integer;
+      Radius   : Natural);
+
    function Buffer_Size (Buffer : Bitmap_Buffer) return Natural;
 
    function Bitmap_Color_To_Word
