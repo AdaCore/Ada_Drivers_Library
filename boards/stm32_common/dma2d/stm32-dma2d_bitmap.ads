@@ -33,30 +33,27 @@
 --  bitmap surfaces
 
 with System;
-with HAL.Bitmap;
+with HAL.Bitmap;  use HAL.Bitmap;
 with STM32.DMA2D;
 
 package STM32.DMA2D_Bitmap is
 
-   type DMA2D_Bitmap_Buffer is new HAL.Bitmap.Bitmap_Buffer with null record;
+   type DMA2D_Bitmap_Buffer is new Bitmap_Buffer with null record;
    type Any_DMA2D_Bitmap_Buffer is access all DMA2D_Bitmap_Buffer'Class;
 
    overriding procedure Set_Pixel
      (Buffer : in out DMA2D_Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural;
+      Pt     : Point;
       Value  : UInt32);
 
    overriding procedure Set_Pixel_Blend
      (Buffer : in out DMA2D_Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural;
+      Pt     : Point;
       Value  : HAL.Bitmap.Bitmap_Color);
 
    overriding function Pixel
      (Buffer : DMA2D_Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural) return UInt32;
+      Pt     : Point) return UInt32;
 
    overriding procedure Fill
      (Buffer : in out DMA2D_Bitmap_Buffer;
@@ -65,21 +62,15 @@ package STM32.DMA2D_Bitmap is
    overriding procedure Fill_Rect
      (Buffer : in out DMA2D_Bitmap_Buffer;
       Color  : UInt32;
-      X      : Integer;
-      Y      : Integer;
-      Width  : Integer;
-      Height : Integer);
+      Area   : Rect);
 
    overriding procedure Copy_Rect
      (Src_Buffer  : HAL.Bitmap.Bitmap_Buffer'Class;
-      X_Src       : Natural;
-      Y_Src       : Natural;
+      Src_Pt      : Point;
       Dst_Buffer  : in out DMA2D_Bitmap_Buffer;
-      X_Dst       : Natural;
-      Y_Dst       : Natural;
+      Dst_Pt      : Point;
       Bg_Buffer   : HAL.Bitmap.Bitmap_Buffer'Class;
-      X_Bg        : Natural;
-      Y_Bg        : Natural;
+      Bg_Pt       : Point;
       Width       : Natural;
       Height      : Natural;
       Synchronous : Boolean)

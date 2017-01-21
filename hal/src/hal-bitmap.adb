@@ -78,15 +78,14 @@ package body HAL.Bitmap is
    ---------------
 
    procedure Set_Pixel
-     (Buffer  : in out Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
-      Value   : Bitmap_Color)
+     (Buffer : in out Bitmap_Buffer;
+      Pt     : Point;
+      Value  : Bitmap_Color)
    is
       Col : constant UInt32 :=
               Bitmap_Color_To_Word (Buffer.Color_Mode, Value);
    begin
-      Set_Pixel (Bitmap_Buffer'Class (Buffer), X, Y, Col);
+      Set_Pixel (Bitmap_Buffer'Class (Buffer), Pt, Col);
    end Set_Pixel;
 
    ---------------
@@ -95,17 +94,16 @@ package body HAL.Bitmap is
 
    procedure Set_Pixel
      (Buffer : in out Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural;
+      Pt     : Point;
       Value  : UInt32)
    is
-      X0 : Natural := X;
-      Y0 : Natural := Y;
+      X0 : Natural := Pt.X;
+      Y0 : Natural := Pt.Y;
       Offset : Natural;
 
    begin
-      if X >= Buffer.Width
-        or else Y >= Buffer.Height
+      if Pt.X >= Buffer.Width
+        or else Pt.Y >= Buffer.Height
       then
          return;
       end if;
@@ -115,7 +113,7 @@ package body HAL.Bitmap is
          Offset := X0 + Y0 * Buffer.Height;
 
       else
-         Offset := X + Y * Buffer.Width;
+         Offset := Pt.X + Pt.Y * Buffer.Width;
       end if;
 
       case Buffer.Color_Mode is
@@ -192,8 +190,7 @@ package body HAL.Bitmap is
 
    procedure Set_Pixel_Blend
      (Buffer : in out Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural;
+      Pt     : Point;
       Value  : Bitmap_Color)
    is
       Col : Bitmap_Color;
@@ -203,9 +200,9 @@ package body HAL.Bitmap is
 
    begin
       if Value.Alpha = 255 then
-         Set_Pixel (Bitmap_Buffer'Class (Buffer), X, Y, Value);
+         Set_Pixel (Bitmap_Buffer'Class (Buffer), Pt, Value);
       else
-         Col := Pixel (Bitmap_Buffer'Class (Buffer), X, Y);
+         Col := Pixel (Bitmap_Buffer'Class (Buffer), Pt);
          BgA := Float (Col.Alpha) / 255.0;
          BgR := Float (Col.Red) / 255.0;
          BgG := Float (Col.Green) / 255.0;
@@ -225,7 +222,7 @@ package body HAL.Bitmap is
                  Red   => Byte (RR * 255.0),
                  Green => Byte (RG * 255.0),
                  Blue  => Byte (RB * 255.0));
-         Set_Pixel (Bitmap_Buffer'Class (Buffer), X, Y, Col);
+         Set_Pixel (Bitmap_Buffer'Class (Buffer), Pt, Col);
       end if;
    end Set_Pixel_Blend;
 
@@ -235,15 +232,12 @@ package body HAL.Bitmap is
 
    function Pixel
      (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
+      Pt     : Point)
       return Bitmap_Color
    is
       Native_Color : UInt32;
    begin
-      Native_Color := Pixel
-        (Bitmap_Buffer'Class (Buffer),
-         X, Y);
+      Native_Color := Pixel (Bitmap_Buffer'Class (Buffer), Pt);
 
       return Word_To_Bitmap_Color (Buffer.Color_Mode, Native_Color);
    end Pixel;
@@ -254,12 +248,11 @@ package body HAL.Bitmap is
 
    function Pixel
      (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
+      Pt     : Point)
       return UInt32
    is
-      X0 : Natural := X;
-      Y0 : Natural := Y;
+      X0 : Natural := Pt.X;
+      Y0 : Natural := Pt.Y;
       Offset : Natural;
 
    begin
@@ -268,7 +261,7 @@ package body HAL.Bitmap is
          Offset := X0 + Y0 * Buffer.Height;
 
       else
-         Offset := X + Y * Buffer.Width;
+         Offset := Pt.X + Pt.Y * Buffer.Width;
       end if;
 
       case Buffer.Color_Mode is
@@ -354,7 +347,7 @@ package body HAL.Bitmap is
    begin
       for Y in 0 .. Buffer.Height - 1 loop
          for X in 0 .. Buffer.Width - 1 loop
-            Set_Pixel (Buffer, X, Y, Color);
+            Set_Pixel (Buffer, (X, Y), Color);
          end loop;
       end loop;
    end Fill;
@@ -366,16 +359,13 @@ package body HAL.Bitmap is
    procedure Fill_Rect
      (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
-      X      : Integer;
-      Y      : Integer;
-      Width  : Integer;
-      Height : Integer)
+      Area   : Rect)
    is
    begin
       Fill_Rect
         (Bitmap_Buffer'Class (Buffer),
          Bitmap_Color_To_Word (Buffer.Color_Mode, Color),
-         X, Y, Width, Height);
+         Area);
    end Fill_Rect;
 
    ---------------
@@ -385,15 +375,12 @@ package body HAL.Bitmap is
    procedure Fill_Rect
      (Buffer : in out Bitmap_Buffer;
       Color  : UInt32;
-      X      : Integer;
-      Y      : Integer;
-      Width  : Integer;
-      Height : Integer)
+      Area   : Rect)
    is
    begin
-      for Y0 in Y .. Y + Height - 1 loop
-         for X0 in X .. X + Width - 1 loop
-            Set_Pixel (Buffer, X0, Y0, Color);
+      for Y0 in Area.Position.Y .. Area.Position.Y + Area.Height - 1 loop
+         for X0 in Area.Position.X .. Area.Position.X + Area.Width - 1 loop
+            Set_Pixel (Buffer, (X0, Y0), Color);
          end loop;
       end loop;
    end Fill_Rect;
@@ -404,14 +391,11 @@ package body HAL.Bitmap is
 
    procedure Copy_Rect
      (Src_Buffer  : Bitmap_Buffer'Class;
-      X_Src       : Natural;
-      Y_Src       : Natural;
+      Src_Pt      : Point;
       Dst_Buffer  : in out Bitmap_Buffer;
-      X_Dst       : Natural;
-      Y_Dst       : Natural;
+      Dst_Pt      : Point;
       Bg_Buffer   : Bitmap_Buffer'Class;
-      X_Bg        : Natural;
-      Y_Bg        : Natural;
+      Bg_Pt       : Point;
       Width       : Natural;
       Height      : Natural;
       Synchronous : Boolean)
@@ -426,11 +410,9 @@ package body HAL.Bitmap is
 
    procedure Copy_Rect
      (Src_Buffer  : Bitmap_Buffer'Class;
-      X_Src       : Natural;
-      Y_Src       : Natural;
+      Src_Pt      : Point;
       Dst_Buffer  : in out Bitmap_Buffer;
-      X_Dst       : Natural;
-      Y_Dst       : Natural;
+      Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
       Synchronous : Boolean)
@@ -444,14 +426,11 @@ package body HAL.Bitmap is
 
       Copy_Rect
         (Src_Buffer  => Src_Buffer,
-         X_Src       => X_Src,
-         Y_Src       => Y_Src,
+         Src_Pt      => Src_Pt,
          Dst_Buffer  => Bitmap_Buffer'Class (Dst_Buffer),
-         X_Dst       => X_Dst,
-         Y_Dst       => Y_Dst,
+         Dst_Pt      => Dst_Pt,
          Bg_Buffer   => Null_Buffer,
-         X_Bg        => 0,
-         Y_Bg        => 0,
+         Bg_Pt       => (0, 0),
          Width       => Width,
          Height      => Height,
          Synchronous => Synchronous);
@@ -463,11 +442,9 @@ package body HAL.Bitmap is
 
    procedure Copy_Rect_Blend
      (Src_Buffer  : Bitmap_Buffer;
-      X_Src       : Natural;
-      Y_Src       : Natural;
+      Src_Pt      : Point;
       Dst_Buffer  : in out Bitmap_Buffer'Class;
-      X_Dst       : Natural;
-      Y_Dst       : Natural;
+      Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
       Synchronous : Boolean)
@@ -475,14 +452,11 @@ package body HAL.Bitmap is
    begin
       Copy_Rect
         (Src_Buffer  => Bitmap_Buffer'Class (Src_Buffer),
-         X_Src       => X_Src,
-         Y_Src       => Y_Src,
+         Src_Pt      => Src_Pt,
          Dst_Buffer  => Dst_Buffer,
-         X_Dst       => X_Dst,
-         Y_Dst       => Y_Dst,
+         Dst_Pt      => Dst_Pt,
          Bg_Buffer   => Dst_Buffer,
-         X_Bg        => X_Dst,
-         Y_Bg        => Y_Dst,
+         Bg_Pt       => Dst_Pt,
          Width       => Width,
          Height      => Height,
          Synchronous => Synchronous);
@@ -495,12 +469,14 @@ package body HAL.Bitmap is
    procedure Draw_Vertical_Line
      (Buffer : in out Bitmap_Buffer;
       Color  : UInt32;
-      X      : Integer;
-      Y      : Integer;
+      Pt     : Point;
       Height : Integer)
    is
    begin
-      Fill_Rect (Bitmap_Buffer'Class (Buffer), Color, X, Y, 1, Height);
+      Fill_Rect (Bitmap_Buffer'Class (Buffer), Color,
+                 (Position => Pt,
+                  Width    => 1,
+                  Height   => Height));
    end Draw_Vertical_Line;
 
    ------------------------
@@ -510,12 +486,14 @@ package body HAL.Bitmap is
    procedure Draw_Vertical_Line
      (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
-      X      : Integer;
-      Y      : Integer;
+      Pt     : Point;
       Height : Integer)
    is
    begin
-      Fill_Rect (Bitmap_Buffer'Class (Buffer), Color, X, Y, 1, Height);
+      Fill_Rect (Bitmap_Buffer'Class (Buffer), Color,
+                 (Position => Pt,
+                  Width    => 1,
+                  Height   => Height));
    end Draw_Vertical_Line;
 
    --------------------------
@@ -525,12 +503,14 @@ package body HAL.Bitmap is
    procedure Draw_Horizontal_Line
      (Buffer : in out Bitmap_Buffer;
       Color  : UInt32;
-      X      : Integer;
-      Y      : Integer;
+      Pt     : Point;
       Width  : Integer)
    is
    begin
-      Fill_Rect (Bitmap_Buffer'Class (Buffer), Color, X, Y, Width, 1);
+      Fill_Rect (Bitmap_Buffer'Class (Buffer), Color,
+                 (Position => Pt,
+                  Width    => Width,
+                  Height   => 1));
    end Draw_Horizontal_Line;
 
    --------------------------
@@ -540,12 +520,14 @@ package body HAL.Bitmap is
    procedure Draw_Horizontal_Line
      (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
-      X      : Integer;
-      Y      : Integer;
+      Pt     : Point;
       Width  : Integer)
    is
    begin
-      Fill_Rect (Bitmap_Buffer'Class (Buffer), Color, X, Y, Width, 1);
+      Fill_Rect (Bitmap_Buffer'Class (Buffer), Color,
+                 (Position => Pt,
+                  Width    => Width,
+                  Height   => 1));
    end Draw_Horizontal_Line;
 
    ---------------
@@ -555,40 +537,35 @@ package body HAL.Bitmap is
    procedure Draw_Rect
      (Buffer    : in out Bitmap_Buffer;
       Color     : Bitmap_Color;
-      X         : Integer;
-      Y         : Integer;
-      Width     : Integer;
-      Height    : Integer;
+      Area      : Rect;
       Thickness : Natural := 1)
    is
       X0, Y0, X1, Y1 : Natural;
    begin
-      X0 := X;
-      Y0 := Y;
-      X1 := X + Width - 1;
-      Y1 := Y + Height - 1;
+      X0 := Area.Position.X;
+      Y0 := Area.Position.Y;
+      X1 := Area.Position.X + Area.Width - 1;
+      Y1 := Area.Position.Y + Area.Height - 1;
       Buffer.Fill_Rect
         (Color,
-         X0 - Thickness / 2, Y0,
-         Thickness,
-         Height + Thickness / 2);
+         (Position => (X0 - Thickness / 2, Y0),
+          Width    => Thickness,
+          Height   => Area.Height + Thickness / 2));
       Buffer.Fill_Rect
         (Color,
-         X1 - Thickness / 2, Y0,
-         Thickness,
-         Height + Thickness / 2);
+         (Position => (X1 - Thickness / 2, Y0),
+          Width    => Thickness,
+          Height   => Area.Height + Thickness / 2));
       Buffer.Fill_Rect
         (Color,
-         X0,
-         Y0 - Thickness / 2,
-         Width + Thickness / 2,
-         Thickness);
+         (Position => (X0, Y0 - Thickness / 2),
+          Width    => Area.Width + Thickness / 2,
+          Height   => Thickness));
       Buffer.Fill_Rect
         (Color,
-         X0,
-         Y1 - Thickness / 2,
-         Width + Thickness / 2,
-         Thickness);
+         (Position => (X0, Y1 - Thickness / 2),
+          Width    => Area. Width + Thickness / 2,
+          Height   => Thickness));
    end Draw_Rect;
 
    -----------------------
@@ -598,10 +575,7 @@ package body HAL.Bitmap is
    procedure Draw_Rounded_Rect
      (Buffer    : in out Bitmap_Buffer;
       Color     : Bitmap_Color;
-      X         : Integer;
-      Y         : Integer;
-      Width     : Integer;
-      Height    : Integer;
+      Area      : Rect;
       Radius    : Natural;
       Thickness : Natural := 1)
    is
@@ -610,10 +584,10 @@ package body HAL.Bitmap is
       ddF_Y : Integer := (-2) * Radius;
       X0     : Integer := 0;
       Y0     : Integer := Radius;
-      Center_Top : constant Natural := Y + Radius;
-      Center_Bot : constant Natural := Y + Height - 1 - Radius;
-      Center_Lft : constant Natural := X + Radius;
-      Center_Rgt : constant Natural := X + Width - 1 - Radius;
+      Center_Top : constant Natural := Area.Position.Y + Radius;
+      Center_Bot : constant Natural := Area.Position.Y + Area.Height - 1 - Radius;
+      Center_Lft : constant Natural := Area.Position.X + Radius;
+      Center_Rgt : constant Natural := Area.Position.X + Area.Width - 1 - Radius;
 
       procedure Draw_Point (X, Y : Natural) with Inline;
 
@@ -626,45 +600,40 @@ package body HAL.Bitmap is
          if Thickness /= 1 then
             Buffer.Fill_Rect
               (Color,
-               X - (Thickness / 2),
-               Y - (Thickness / 2),
-               Thickness,
-               Thickness);
+               (Position => (X - (Thickness / 2), Y - (Thickness / 2)),
+                Width    => Thickness,
+                Height   => Thickness));
          else
-            Buffer.Set_Pixel (X, Y, Color);
+            Buffer.Set_Pixel ((X, Y), Color);
          end if;
       end Draw_Point;
 
    begin
       if Radius = 0 then
-         Draw_Rect (Buffer, Color, X, Y, Width, Height, Thickness);
+         Draw_Rect (Buffer, Color, Area, Thickness);
          return;
       end if;
 
       Buffer.Fill_Rect
         (Color,
-         X - Thickness / 2,
-         Y + Radius,
-         Thickness,
-         Height - 2 * Radius);
+         (Position => (Area.Position.X - Thickness / 2, Area.Position.Y + Radius),
+          Width    => Thickness,
+          Height   => Area.Height - 2 * Radius));
       Buffer.Fill_Rect
         (Color,
-         X + Width - Thickness / 2 - 1,
-         Y + Radius,
-         Thickness,
-         Height - 2 * Radius);
+         (Position => (Area.Position.X + Area.Width - Thickness / 2 - 1, Area.Position.Y + Radius),
+          Width    => Thickness,
+          Height   => Area.Height - 2 * Radius));
       Buffer.Fill_Rect
         (Color,
-         X + Radius,
-         Y - Thickness / 2,
-         Width - 2 * Radius,
-         Thickness);
+         (Position => (Area.Position.X + Radius, Area.Position.Y - Thickness / 2),
+          Width    => Area.Width - 2 * Radius,
+          Height   => Thickness));
       Buffer.Fill_Rect
         (Color,
-         X + Radius,
-         Y + Height - Thickness / 2 - 1,
-         Width - 2 * Radius,
-         Thickness);
+         (Position => (Area.Position.X + Radius, Area.Position.Y + Area.Height - Thickness / 2 - 1),
+          Width    => Area.Width - 2 * Radius,
+          Height   => Thickness));
 
       while X0 < Y0 loop
          if F >= 0 then
@@ -695,10 +664,7 @@ package body HAL.Bitmap is
    procedure Fill_Rounded_Rect
      (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
-      X      : Natural;
-      Y      : Natural;
-      Width  : Positive;
-      Height : Positive;
+      Area   : Rect;
       Radius : Natural)
    is
       Col   : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode, Color);
@@ -707,25 +673,21 @@ package body HAL.Bitmap is
       ddF_Y      : Integer := (-2) * Radius;
       X0         : Integer := 0;
       Y0         : Integer := Radius;
-      Center_Top : constant Natural := Y + Radius;
-      Center_Bot : constant Natural := Y + Height - 1 - Radius;
-      Center_Lft : constant Natural := X + Radius;
+      Center_Top : constant Natural := Area.Position.Y + Radius;
+      Center_Bot : constant Natural := Area.Position.Y + Area.Height - 1 - Radius;
+      Center_Lft : constant Natural := Area.Position.X + Radius;
 
    begin
       if Radius = 0 then
-         Buffer.Fill_Rect
-           (Color  => Col,
-            X      => X0,
-            Y      => Y0,
-            Width  => Width,
-            Height => Height);
+         Buffer.Fill_Rect (Col, Area'Update (Position => (X0, Y0)));
          return;
       end if;
 
       Buffer.Fill_Rect
         (Col,
-         X, Center_Top,
-         Width, Height - 2 * Radius);
+         (Position => (Area.Position.X, Center_Top),
+          Width    => Area.Width,
+          Height   => Area.Height - 2 * Radius));
 
       while X0 < Y0 loop
          if F >= 0 then
@@ -740,20 +702,20 @@ package body HAL.Bitmap is
 
          Buffer.Draw_Horizontal_Line
            (Col,
-            Center_Lft - X0, Center_Bot + Y0,
-            Width - 2 * Radius + 2 * X0);
+            (Center_Lft - X0, Center_Bot + Y0),
+            Area.Width - 2 * Radius + 2 * X0);
          Buffer.Draw_Horizontal_Line
            (Col,
-            Center_Lft - X0, Center_Top - Y0,
-            Width - 2 * Radius + 2 * X0);
+            (Center_Lft - X0, Center_Top - Y0),
+            Area.Width - 2 * Radius + 2 * X0);
          Buffer.Draw_Horizontal_Line
            (Col,
-            Center_Lft - Y0, Center_Bot + X0,
-            Width - 2 * Radius + 2 * Y0);
+            (Center_Lft - Y0, Center_Bot + X0),
+            Area.Width - 2 * Radius + 2 * Y0);
          Buffer.Draw_Horizontal_Line
            (Col,
-            Center_Lft - Y0, Center_Top - X0,
-            Width - 2 * Radius + 2 * Y0);
+            (Center_Lft - Y0, Center_Top - X0),
+            Area.Width - 2 * Radius + 2 * Y0);
       end loop;
    end Fill_Rounded_Rect;
 
@@ -762,18 +724,16 @@ package body HAL.Bitmap is
    -----------------
 
    procedure Draw_Circle
-     (Buffer   : in out Bitmap_Buffer;
-      Color    : Bitmap_Color;
-      Center_X : Integer;
-      Center_Y : Integer;
-      Radius   : Natural)
+     (Buffer : in out Bitmap_Buffer;
+      Color  : Bitmap_Color;
+      Center : Point;
+      Radius : Natural)
    is
    begin
       Draw_Circle
         (Buffer,
          Bitmap_Color_To_Word (Buffer.Color_Mode, Color),
-         Center_X,
-         Center_Y,
+         Center,
          Radius);
    end Draw_Circle;
 
@@ -783,11 +743,10 @@ package body HAL.Bitmap is
    -----------------
 
    procedure Draw_Circle
-     (Buffer   : in out Bitmap_Buffer;
-      Color    : UInt32;
-      Center_X : Integer;
-      Center_Y : Integer;
-      Radius   : Natural)
+     (Buffer : in out Bitmap_Buffer;
+      Color  : UInt32;
+      Center : Point;
+      Radius : Natural)
    is
       F     : Integer := 1 - Radius;
       ddF_X : Integer := 0;
@@ -795,10 +754,10 @@ package body HAL.Bitmap is
       X     : Integer := 0;
       Y     : Integer := Radius;
    begin
-      Buffer.Set_Pixel (Center_X, Center_Y + Radius, Color);
-      Buffer.Set_Pixel (Center_X, Center_Y - Radius, Color);
-      Buffer.Set_Pixel (Center_X + Radius, Center_Y, Color);
-      Buffer.Set_Pixel (Center_X - Radius, Center_Y, Color);
+      Buffer.Set_Pixel ((Center.X, Center.Y + Radius), Color);
+      Buffer.Set_Pixel ((Center.X, Center.Y - Radius), Color);
+      Buffer.Set_Pixel ((Center.X + Radius, Center.Y), Color);
+      Buffer.Set_Pixel ((Center.X - Radius, Center.Y), Color);
 
       while X < Y loop
          if F >= 0 then
@@ -809,14 +768,14 @@ package body HAL.Bitmap is
          X := X + 1;
          ddF_X := ddF_X + 2;
          F := F + ddF_X + 1;
-         Buffer.Set_Pixel (Center_X + X, Center_Y + Y, Color);
-         Buffer.Set_Pixel (Center_X - X, Center_Y + Y, Color);
-         Buffer.Set_Pixel (Center_X + X, Center_Y - Y, Color);
-         Buffer.Set_Pixel (Center_X - X, Center_Y - Y, Color);
-         Buffer.Set_Pixel (Center_X + Y, Center_Y + X, Color);
-         Buffer.Set_Pixel (Center_X - Y, Center_Y + X, Color);
-         Buffer.Set_Pixel (Center_X + Y, Center_Y - X, Color);
-         Buffer.Set_Pixel (Center_X - Y, Center_Y - X, Color);
+         Buffer.Set_Pixel ((Center.X + X, Center.Y + Y), Color);
+         Buffer.Set_Pixel ((Center.X - X, Center.Y + Y), Color);
+         Buffer.Set_Pixel ((Center.X + X, Center.Y - Y), Color);
+         Buffer.Set_Pixel ((Center.X - X, Center.Y - Y), Color);
+         Buffer.Set_Pixel ((Center.X + Y, Center.Y + X), Color);
+         Buffer.Set_Pixel ((Center.X - Y, Center.Y + X), Color);
+         Buffer.Set_Pixel ((Center.X + Y, Center.Y - X), Color);
+         Buffer.Set_Pixel ((Center.X - Y, Center.Y - X), Color);
       end loop;
    end Draw_Circle;
 
@@ -825,16 +784,15 @@ package body HAL.Bitmap is
    -----------------
 
    procedure Fill_Circle
-     (Buffer   : in out Bitmap_Buffer;
-      Color    : Bitmap_Color;
-      Center_X : Integer;
-      Center_Y : Integer;
-      Radius   : Natural)
+     (Buffer : in out Bitmap_Buffer;
+      Color  : Bitmap_Color;
+      Center : Point;
+      Radius : Natural)
    is
       U32_Color : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
                                                            Color);
    begin
-      Fill_Circle (Buffer, U32_Color, Center_X, Center_Y, Radius);
+      Fill_Circle (Buffer, U32_Color, Center, Radius);
    end Fill_Circle;
 
    -----------------
@@ -843,10 +801,9 @@ package body HAL.Bitmap is
 
    procedure Fill_Circle
      (Buffer : in out Bitmap_Buffer;
-      Color    : UInt32;
-      Center_X : Integer;
-      Center_Y : Integer;
-      Radius   : Natural)
+      Color  : UInt32;
+      Center : Point;
+      Radius : Natural)
    is
       procedure Draw_Horizontal_Line (X, Y : Integer; Width : Natural);
       ------------------------
@@ -889,7 +846,7 @@ package body HAL.Bitmap is
             return;
          end if;
 
-         Buffer.Fill_Rect (Color, X1, Y, W1, 1);
+         Buffer.Fill_Rect (Color, ((X1, Y), W1, 1));
       end Draw_Horizontal_Line;
 
       ------------------------
@@ -926,7 +883,7 @@ package body HAL.Bitmap is
             return;
          end if;
 
-         Buffer.Fill_Rect (Color, X, Y1, 1, H1);
+         Buffer.Fill_Rect (Color, ((X, Y1), 1, H1));
       end Draw_Vertical_Line;
 
       F     : Integer := 1 - Radius;
@@ -937,12 +894,12 @@ package body HAL.Bitmap is
 
    begin
       Draw_Vertical_Line
-        (Center_X,
-         Center_Y - Radius,
+        (Center.X,
+         Center.Y - Radius,
          2 * Radius);
       Draw_Horizontal_Line
-        (Center_X - Radius,
-         Center_Y,
+        (Center.X - Radius,
+         Center.Y,
          2 * Radius);
 
       while X < Y loop
@@ -955,10 +912,10 @@ package body HAL.Bitmap is
          ddF_X := ddF_X + 2;
          F := F + ddF_X;
 
-         Draw_Horizontal_Line (Center_X - X, Center_Y + Y, 2 * X);
-         Draw_Horizontal_Line (Center_X - X, Center_Y - Y, 2 * X);
-         Draw_Horizontal_Line (Center_X - Y, Center_Y + X, 2 * Y);
-         Draw_Horizontal_Line (Center_X - Y, Center_Y - X, 2 * Y);
+         Draw_Horizontal_Line (Center.X - X, Center.Y + Y, 2 * X);
+         Draw_Horizontal_Line (Center.X - X, Center.Y - Y, 2 * X);
+         Draw_Horizontal_Line (Center.X - Y, Center.Y + X, 2 * Y);
+         Draw_Horizontal_Line (Center.X - Y, Center.Y - X, 2 * Y);
       end loop;
    end Fill_Circle;
 

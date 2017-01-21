@@ -50,10 +50,10 @@ package body Bitmapped_Drawing is
          for W in 0 .. Char_Width (Font) - 1 loop
             if (Data (Font, Char, H) and Mask (Font, W)) /= 0 then
                Buffer.Set_Pixel
-                 (Start.X + W, Start.Y + H, Foreground);
+                 ((Start.X + W, Start.Y + H), Foreground);
             else
                Buffer.Set_Pixel
-                 (Start.X + W, Start.Y + H, Background);
+                 ((Start.X + W, Start.Y + H), Background);
             end if;
          end loop;
       end loop;
@@ -208,37 +208,37 @@ package body Bitmapped_Drawing is
 
       if Outline and then Area.Height > 40 then
          for Y in Area.Position.Y + 1 .. Area.Position.Y + Area.Height loop
-            Prev := Buffer.Pixel (Area.Position.X, Y);
+            Prev := Buffer.Pixel ((Area.Position.X, Y));
             if Prev = FG then
-               Buffer.Set_Pixel (Area.Position.X, Y, Black);
+               Buffer.Set_Pixel ((Area.Position.X, Y), Black);
             end if;
 
             for X in Area.Position.X + 1 .. Area.Position.X + Area.Width loop
                declare
-                  Col : constant Unsigned_32 := Buffer.Pixel (X, Y);
-                  Top : constant Unsigned_32 := Buffer.Pixel (X, Y - 1);
+                  Col : constant Unsigned_32 := Buffer.Pixel ((X, Y));
+                  Top : constant Unsigned_32 := Buffer.Pixel ((X, Y - 1));
                begin
 
                   if Prev /= FG
                     and then Col = FG
                   then
-                     Buffer.Set_Pixel (X, Y, Blk);
+                     Buffer.Set_Pixel ((X, Y), Blk);
 
                   elsif Prev = FG
                     and then Col /= FG
                   then
-                     Buffer.Set_Pixel (X - 1, Y, Blk);
+                     Buffer.Set_Pixel ((X - 1, Y), Blk);
 
                   elsif Top /= FG
                     and then Top /= Blk
                     and then Col = FG
                   then
-                     Buffer.Set_Pixel (X, Y, Blk);
+                     Buffer.Set_Pixel ((X, Y), Blk);
 
                   elsif Top = FG
                     and then Col /= FG
                   then
-                     Buffer.Set_Pixel (X, Y - 1, Blk);
+                     Buffer.Set_Pixel ((X, Y - 1), Blk);
                   end if;
 
                   Prev := Col;
@@ -297,19 +297,17 @@ package body Bitmapped_Drawing is
             if not Fast then
                Fill_Circle (Buffer,
                             Color  => Hue,
-                            Center_X => P.X,
-                            Center_Y => P.Y,
+                            Center => P,
                             Radius => Thickness / 2);
             else
                Buffer.Fill_Rect
                  (Hue,
-                  P.X - (Thickness / 2),
-                  P.Y - (Thickness / 2),
-                  Thickness,
-                  Thickness);
+                  ((P.X - (Thickness / 2), P.Y - (Thickness / 2)),
+                   Thickness,
+                   Thickness));
             end if;
          else
-            Buffer.Set_Pixel (P.X, P.Y, Hue);
+            Buffer.Set_Pixel ((P.X, P.Y), Hue);
          end if;
       end Draw_Point;
 

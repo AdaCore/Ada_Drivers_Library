@@ -61,6 +61,24 @@ package HAL.Bitmap is
          when L_8 | AL_44 | A_8 => 8,
          when L_4 | A_4 => 4);
 
+   type Point is record
+      X : Natural;
+      Y : Natural;
+   end record;
+
+   function "+" (P1, P2 : Point) return Point
+     is ((P1.X + P2.X, P1.Y + P2.Y));
+
+   function "-" (P1, P2 : Point) return Point
+     is ((P1.X - P2.X, P1.Y - P2.Y));
+
+   type Rect is record
+      Position : Point;
+      Width    : Natural;
+      Height   : Natural;
+   end record;
+
+
    type Bitmap_Buffer is tagged record
       Addr       : System.Address;
 
@@ -118,32 +136,27 @@ package HAL.Bitmap is
 
    procedure Set_Pixel
      (Buffer  : in out Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
+      Pt      : Point;
       Value   : Bitmap_Color);
 
    procedure Set_Pixel
      (Buffer  : in out Bitmap_Buffer;
-      X       : Natural;
-      Y       : Natural;
+      Pt      : Point;
       Value   : UInt32);
 
    procedure Set_Pixel_Blend
      (Buffer : in out Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural;
+      Pt      : Point;
       Value  : Bitmap_Color);
 
    function Pixel
      (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
+      Pt     : Point)
       return Bitmap_Color;
 
    function Pixel
      (Buffer : Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural)
+      Pt     : Point)
       return UInt32;
 
    procedure Fill
@@ -159,53 +172,40 @@ package HAL.Bitmap is
    procedure Fill_Rect
      (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
-      X      : Integer;
-      Y      : Integer;
-      Width  : Integer;
-      Height : Integer);
+      Area   : Rect);
    --  Fill the specified area of the buffer with 'Color'
 
    procedure Fill_Rect
      (Buffer : in out Bitmap_Buffer;
       Color  : UInt32;
-      X      : Integer;
-      Y      : Integer;
-      Width  : Integer;
-      Height : Integer);
+      Area   : Rect);
    --  Same as above, using the destination buffer native color representation
 
    procedure Copy_Rect
      (Src_Buffer  : Bitmap_Buffer'Class;
-      X_Src       : Natural;
-      Y_Src       : Natural;
+      Src_Pt      : Point;
       Dst_Buffer  : in out Bitmap_Buffer;
-      X_Dst       : Natural;
-      Y_Dst       : Natural;
+      Dst_Pt      : Point;
       Bg_Buffer   : Bitmap_Buffer'Class;
-      X_Bg        : Natural;
-      Y_Bg        : Natural;
+      Bg_Pt       : Point;
       Width       : Natural;
       Height      : Natural;
       Synchronous : Boolean);
 
    procedure Copy_Rect
      (Src_Buffer  : Bitmap_Buffer'Class;
-      X_Src       : Natural;
-      Y_Src       : Natural;
+      Src_Pt      : Point;
       Dst_Buffer  : in out Bitmap_Buffer;
-      X_Dst       : Natural;
-      Y_Dst       : Natural;
+      Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
       Synchronous : Boolean);
 
    procedure Copy_Rect_Blend
      (Src_Buffer  : Bitmap_Buffer;
-      X_Src       : Natural;
-      Y_Src       : Natural;
+      Src_Pt      : Point;
       Dst_Buffer  : in out Bitmap_Buffer'Class;
-      X_Dst       : Natural;
-      Y_Dst       : Natural;
+      Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
       Synchronous : Boolean);
@@ -213,86 +213,69 @@ package HAL.Bitmap is
    procedure Draw_Vertical_Line
      (Buffer : in out Bitmap_Buffer;
       Color  : UInt32;
-      X      : Integer;
-      Y      : Integer;
+      Pt     : Point;
       Height : Integer);
 
    procedure Draw_Vertical_Line
      (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
-      X      : Integer;
-      Y      : Integer;
+      Pt     : Point;
       Height : Integer);
 
    procedure Draw_Horizontal_Line
      (Buffer : in out Bitmap_Buffer;
       Color  : UInt32;
-      X      : Integer;
-      Y      : Integer;
+      Pt     : Point;
       Width  : Integer);
 
    procedure Draw_Horizontal_Line
      (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
-      X      : Integer;
-      Y      : Integer;
+      Pt     : Point;
       Width  : Integer);
 
    procedure Draw_Rect
      (Buffer    : in out Bitmap_Buffer;
       Color     : Bitmap_Color;
-      X         : Integer;
-      Y         : Integer;
-      Width     : Integer;
-      Height    : Integer;
+      Area      : Rect;
       Thickness : Natural := 1);
    --  Draws a rectangle
 
    procedure Draw_Rounded_Rect
      (Buffer    : in out Bitmap_Buffer;
       Color     : Bitmap_Color;
-      X         : Integer;
-      Y         : Integer;
-      Width     : Integer;
-      Height    : Integer;
+      Area      : Rect;
       Radius    : Natural;
       Thickness : Natural := 1);
 
    procedure Fill_Rounded_Rect
      (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
-      X      : Natural;
-      Y      : Natural;
-      Width  : Positive;
-      Height : Positive;
+      Area   : Rect;
       Radius : Natural);
 
    procedure Draw_Circle
-     (Buffer   : in out Bitmap_Buffer;
-      Color    : UInt32;
-      Center_X : Integer;
-      Center_Y : Integer;
-      Radius   : Natural);
+     (Buffer : in out Bitmap_Buffer;
+      Color  : UInt32;
+      Center : Point;
+      Radius : Natural);
 
    procedure Draw_Circle
-     (Buffer   : in out Bitmap_Buffer;
-      Color    : Bitmap_Color;
-      Center_X : Integer;
-      Center_Y : Integer;
-      Radius   : Natural);
+     (Buffer : in out Bitmap_Buffer;
+      Color  : Bitmap_Color;
+      Center : Point;
+      Radius : Natural);
 
    procedure Fill_Circle
-     (Buffer   : in out Bitmap_Buffer;
-      Color    : UInt32;
-      Center_X : Integer;
-      Center_Y : Integer;
-      Radius   : Natural);
+     (Buffer : in out Bitmap_Buffer;
+      Color  : UInt32;
+      Center : Point;
+      Radius : Natural);
    procedure Fill_Circle
-     (Buffer   : in out Bitmap_Buffer;
-      Color    : Bitmap_Color;
-      Center_X : Integer;
-      Center_Y : Integer;
-      Radius   : Natural);
+     (Buffer : in out Bitmap_Buffer;
+      Color  : Bitmap_Color;
+      Center : Point;
+      Radius : Natural);
 
    function Buffer_Size (Buffer : Bitmap_Buffer) return Natural;
 

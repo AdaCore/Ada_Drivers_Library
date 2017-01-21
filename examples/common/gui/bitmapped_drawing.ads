@@ -39,23 +39,6 @@ with HAL.Bitmap;    use HAL.Bitmap;
 
 package Bitmapped_Drawing is
 
-   type Point is record
-      X : Natural;
-      Y : Natural;
-   end record;
-
-   function "+" (P1, P2 : Point) return Point
-     is ((P1.X + P2.X, P1.Y + P2.Y));
-
-   function "-" (P1, P2 : Point) return Point
-     is ((P1.X - P2.X, P1.Y - P2.Y));
-
-   type Rect is record
-      Position : Point;
-      Width    : Natural;
-      Height   : Natural;
-   end record;
-
    procedure Draw_Line
      (Buffer      : in out Bitmap_Buffer'Class;
       Start, Stop : Point;

@@ -115,8 +115,7 @@ begin
             Fill_Circle
               (Display.Hidden_Buffer (1).all,
                Color => HAL.Bitmap.Green,
-               Center_X => State (Id).X,
-               Center_Y => State (Id).Y,
+               Center => (State (Id).X, State (Id).Y),
                Radius => State (Id).Weight / 4);
          end loop;
 

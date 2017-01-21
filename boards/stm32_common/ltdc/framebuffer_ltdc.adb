@@ -418,7 +418,7 @@ package body Framebuffer_LTDC is
          end if;
 
          STM32.DMA2D_Bitmap.Copy_Rect
-           (Visible, 0, 0, Hidden, 0, 0, Visible.Width, Visible.Height,
+           (Visible, (0, 0), Hidden, (0, 0), Visible.Width, Visible.Height,
             Synchronous => True);
       end if;
    end Update_Layer;
@@ -473,7 +473,7 @@ package body Framebuffer_LTDC is
             end if;
 
             STM32.DMA2D_Bitmap.Copy_Rect
-              (Visible, 0, 0, Hidden, 0, 0, Visible.Width, Visible.Height,
+              (Visible, (0, 0), Hidden, (0, 0), Visible.Width, Visible.Height,
                Synchronous => True);
          end if;
       end loop;
