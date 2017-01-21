@@ -571,7 +571,7 @@ package body ST7735R is
    --------------------
 
    overriding
-   function Get_Max_Layers
+   function Max_Layers
      (Display : ST7735R_Device) return Positive is (1);
 
    ------------------
@@ -579,7 +579,7 @@ package body ST7735R is
    ------------------
 
    overriding
-   function Is_Supported
+   function Supported
      (Display : ST7735R_Device;
       Mode    : FB_Color_Mode) return Boolean is
      (Mode = HAL.Bitmap.RGB_565);
@@ -615,7 +615,7 @@ package body ST7735R is
    ---------------
 
    overriding
-   function Get_Width
+   function Width
      (Display : ST7735R_Device) return Positive is (Screen_Width);
 
    ----------------
@@ -623,7 +623,7 @@ package body ST7735R is
    ----------------
 
    overriding
-   function Get_Height
+   function Height
      (Display : ST7735R_Device) return Positive is (Screen_Height);
 
    ----------------
@@ -631,7 +631,7 @@ package body ST7735R is
    ----------------
 
    overriding
-   function Is_Swapped
+   function Swapped
      (Display : ST7735R_Device) return Boolean is (False);
 
    --------------------
@@ -728,7 +728,7 @@ package body ST7735R is
    --------------------
 
    overriding
-   function Get_Color_Mode
+   function Color_Mode
      (Display : ST7735R_Device;
       Layer   : Positive) return FB_Color_Mode
    is
@@ -737,14 +737,14 @@ package body ST7735R is
          raise Program_Error;
       end if;
       return Display.Layer.Color_Mode;
-   end Get_Color_Mode;
+   end Color_Mode;
 
    -----------------------
    -- Get_Hidden_Buffer --
    -----------------------
 
    overriding
-   function Get_Hidden_Buffer
+   function Hidden_Buffer
      (Display : in out ST7735R_Device;
       Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer
    is
@@ -753,14 +753,14 @@ package body ST7735R is
          raise Program_Error;
       end if;
       return Display.Layer'Unchecked_Access;
-   end Get_Hidden_Buffer;
+   end Hidden_Buffer;
 
    --------------------
    -- Get_Pixel_Size --
    --------------------
 
    overriding
-   function Get_Pixel_Size
+   function Pixel_Size
      (Display : ST7735R_Device;
       Layer   : Positive) return Positive is (16);
 

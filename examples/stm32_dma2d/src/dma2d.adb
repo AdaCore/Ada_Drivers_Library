@@ -53,11 +53,11 @@ is
 
    function Bitmap_Buffer return not null Any_DMA2D_Bitmap_Buffer is
    begin
-      if Display.Get_Hidden_Buffer (1).all not in DMA2D_Bitmap_Buffer then
+      if Display.Hidden_Buffer (1).all not in DMA2D_Bitmap_Buffer then
          raise Program_Error with "We expect a DM2D buffer here";
       end if;
 
-      return Any_DMA2D_Bitmap_Buffer (Display.Get_Hidden_Buffer (1));
+      return Any_DMA2D_Bitmap_Buffer (Display.Hidden_Buffer (1));
    end Bitmap_Buffer;
 
    ------------
@@ -66,7 +66,7 @@ is
 
    function Buffer return DMA2D_Buffer is
    begin
-      return To_DMA2D_Buffer (Display.Get_Hidden_Buffer (1).all);
+      return To_DMA2D_Buffer (Display.Hidden_Buffer (1).all);
    end Buffer;
 
    Width  : Natural;
@@ -101,8 +101,8 @@ begin
    Display.Initialize;
    Display.Initialize_Layer (1, HAL.Bitmap.ARGB_8888);
 
-   Width := Display.Get_Hidden_Buffer (1).Width;
-   Height := Display.Get_Hidden_Buffer (1).Height;
+   Width := Display.Hidden_Buffer (1).Width;
+   Height := Display.Hidden_Buffer (1).Height;
 
    loop
       Bitmap_Buffer.Fill (HAL.Bitmap.Dark_Green);

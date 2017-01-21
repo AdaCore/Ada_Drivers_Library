@@ -145,7 +145,7 @@ package body OpenMV.LCD_Shield is
 
    function Get_Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer is
    begin
-      return LCD_Driver.Get_Hidden_Buffer (1);
+      return LCD_Driver.Hidden_Buffer (1);
    end Get_Bitmap;
 
    ----------------------

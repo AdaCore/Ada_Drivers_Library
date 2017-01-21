@@ -154,11 +154,11 @@ package ST7735R is
                                Data : HAL.UInt16_Array);
 
    overriding
-   function Get_Max_Layers
+   function Max_Layers
      (Display : ST7735R_Device) return Positive;
 
    overriding
-   function Is_Supported
+   function Supported
      (Display : ST7735R_Device;
       Mode    : FB_Color_Mode) return Boolean;
 
@@ -173,15 +173,15 @@ package ST7735R is
       Mode    : Wait_Mode);
 
    overriding
-   function Get_Width
+   function Width
      (Display : ST7735R_Device) return Positive;
 
    overriding
-   function Get_Height
+   function Height
      (Display : ST7735R_Device) return Positive;
 
    overriding
-   function Is_Swapped
+   function Swapped
      (Display : ST7735R_Device) return Boolean;
    --  Whether X/Y coordinates are considered Swapped by the drawing primitives
    --  This simulates Landscape/Portrait orientation on displays not supporting
@@ -224,19 +224,19 @@ package ST7735R is
    --  buffer
 
    overriding
-   function Get_Color_Mode
+   function Color_Mode
      (Display : ST7735R_Device;
       Layer   : Positive) return FB_Color_Mode;
    --  Retrieves the current color mode for the layer.
 
    overriding
-   function Get_Hidden_Buffer
+   function Hidden_Buffer
      (Display : in out ST7735R_Device;
       Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer;
    --  Retrieves the current hidden buffer for the layer.
 
    overriding
-   function Get_Pixel_Size
+   function Pixel_Size
      (Display : ST7735R_Device;
       Layer   : Positive) return Positive;
    --  Retrieves the current hidden buffer for the layer.

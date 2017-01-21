@@ -165,24 +165,24 @@ package body Framebuffer_LTDC is
       return STM32.LTDC.Initialized;
    end Initialized;
 
-   --------------------
-   -- Get_Max_Layers --
-   --------------------
+   ----------------
+   -- Max_Layers --
+   ----------------
 
-   overriding function Get_Max_Layers
+   overriding function Max_Layers
      (Display : Frame_Buffer)
       return Positive
    is
       pragma Unreferenced (Display);
    begin
       return 2;
-   end Get_Max_Layers;
+   end Max_Layers;
 
-   ------------------
-   -- Is_Supported --
-   ------------------
+   ---------------
+   -- Supported --
+   ---------------
 
-   overriding function Is_Supported
+   overriding function Supported
      (Display : Frame_Buffer;
       Mode    : HAL.Framebuffer.FB_Color_Mode) return Boolean
    is
@@ -190,13 +190,13 @@ package body Framebuffer_LTDC is
    begin
       --  The LTDC supports all HAL color modes
       return True;
-   end Is_Supported;
+   end Supported;
 
-   ---------------
-   -- Get_Width --
-   ---------------
+   -----------
+   -- Width --
+   -----------
 
-   overriding function Get_Width
+   overriding function Width
      (Display : Frame_Buffer)
       return Positive
    is
@@ -206,13 +206,13 @@ package body Framebuffer_LTDC is
       else
          return Display.Height;
       end if;
-   end Get_Width;
+   end Width;
 
-   ----------------
-   -- Get_Height --
-   ----------------
+   ------------
+   -- Height --
+   ------------
 
-   overriding function Get_Height
+   overriding function Height
      (Display : Frame_Buffer)
       return Positive
    is
@@ -222,18 +222,18 @@ package body Framebuffer_LTDC is
       else
          return Display.Width;
       end if;
-   end Get_Height;
+   end Height;
 
-   ----------------
-   -- Is_Swapped --
-   ----------------
+   -------------
+   -- Swapped --
+   -------------
 
-   overriding function Is_Swapped
+   overriding function Swapped
      (Display : Frame_Buffer) return Boolean
    is
    begin
       return Display.Swapped;
-   end Is_Swapped;
+   end Swapped;
 
    --------------------
    -- Set_Background --
@@ -479,11 +479,11 @@ package body Framebuffer_LTDC is
       end loop;
    end Update_Layers;
 
-   --------------------
-   -- Get_Color_Mode --
-   --------------------
+   ----------------
+   -- Color_Mode --
+   ----------------
 
-   overriding function Get_Color_Mode
+   overriding function Color_Mode
      (Display : Frame_Buffer;
       Layer   : Positive)
       return HAL.Framebuffer.FB_Color_Mode
@@ -494,13 +494,13 @@ package body Framebuffer_LTDC is
                       else STM32.LTDC.Layer2);
    begin
       return Display.Buffers (LCD_Layer, 1).Color_Mode;
-   end Get_Color_Mode;
+   end Color_Mode;
 
-   -----------------------
-   -- Get_Hidden_Buffer --
-   -----------------------
+   -------------------
+   -- Hidden_Buffer --
+   -------------------
 
-   overriding function Get_Hidden_Buffer
+   overriding function Hidden_Buffer
      (Display : in out Frame_Buffer;
       Layer   : Positive)
       return not null HAL.Bitmap.Any_Bitmap_Buffer
@@ -516,13 +516,13 @@ package body Framebuffer_LTDC is
          when 1 =>
             return Display.Buffers (LCD_Layer, 2)'Unchecked_Access;
       end case;
-   end Get_Hidden_Buffer;
+   end Hidden_Buffer;
 
-   --------------------
-   -- Get_Pixel_Size --
-   --------------------
+   ----------------
+   -- Pixel_Size --
+   ----------------
 
-   overriding function Get_Pixel_Size
+   overriding function Pixel_Size
      (Display : Frame_Buffer;
       Layer   : Positive) return Positive
    is
@@ -534,6 +534,6 @@ package body Framebuffer_LTDC is
       return
         HAL.Bitmap.Bits_Per_Pixel
           (Display.Buffers (LCD_Layer, 1).Color_Mode) / 8;
-   end Get_Pixel_Size;
+   end Pixel_Size;
 
 end Framebuffer_LTDC;
