@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,9 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces;              use Interfaces;
+with Interfaces; use Interfaces;
 
-package body HAL.Bitmap is
+package body Bitmap_Color_Conversion is
 
    --------------------------
    -- Bitmap_Color_To_Word --
@@ -245,4 +245,4 @@ package body HAL.Bitmap is
               Blue  => B);
    end Word_To_Bitmap_Color;
 
-end HAL.Bitmap;
+end Bitmap_Color_Conversion;

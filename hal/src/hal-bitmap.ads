@@ -304,16 +304,6 @@ package HAL.Bitmap is
 
    function Buffer_Size (Buffer : Bitmap_Buffer) return Natural is abstract;
 
-   function Bitmap_Color_To_Word
-     (Mode : Bitmap_Color_Mode; Col : Bitmap_Color)
-     return UInt32;
-   --  Translates the DMA2D Color into native buffer color
-
-   function Word_To_Bitmap_Color
-     (Mode : Bitmap_Color_Mode; Col : UInt32)
-     return Bitmap_Color;
-   --  Translates the native buffer color into DMA2D Color
-
    Transparent         : constant Bitmap_Color := (000, 000, 000, 000);
    Dark_Red            : constant Bitmap_Color := (255, 139, 000, 000);
    Brown               : constant Bitmap_Color := (255, 165, 042, 042);

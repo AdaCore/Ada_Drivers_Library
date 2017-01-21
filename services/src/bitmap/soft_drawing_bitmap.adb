@@ -29,6 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with Bitmap_Color_Conversion; use Bitmap_Color_Conversion;
+
 package body Soft_Drawing_Bitmap is
 
    subtype Dispatch is Soft_Drawing_Bitmap_Buffer'Class;
