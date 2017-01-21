@@ -231,8 +231,8 @@ package ST7735R is
 
    overriding
    function Get_Hidden_Buffer
-     (Display : ST7735R_Device;
-      Layer   : Positive) return HAL.Bitmap.Bitmap_Buffer'Class;
+     (Display : in out ST7735R_Device;
+      Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer;
    --  Retrieves the current hidden buffer for the layer.
 
    overriding

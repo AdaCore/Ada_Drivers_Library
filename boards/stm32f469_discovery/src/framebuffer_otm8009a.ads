@@ -118,8 +118,8 @@ package Framebuffer_OTM8009A is
       Layer   : Positive) return HAL.Framebuffer.FB_Color_Mode;
 
    overriding function Get_Hidden_Buffer
-     (Display : Frame_Buffer;
-      Layer   : Positive) return HAL.Bitmap.Bitmap_Buffer'Class;
+     (Display : in out Frame_Buffer;
+      Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer;
    --  Retrieves the current hidden buffer for the layer.
 
    overriding function Get_Pixel_Size
@@ -129,10 +129,11 @@ package Framebuffer_OTM8009A is
 private
 
    type FB_Array is array (STM32.LTDC.LCD_Layer) of
-     STM32.DMA2D_Bitmap.DMA2D_Bitmap_Buffer;
+     aliased STM32.DMA2D_Bitmap.DMA2D_Bitmap_Buffer;
 
    LCD_Channel : constant HAL.DSI.DSI_Virtual_Channel_ID := 0;
    --  Only one display on this board, constant to 0
+
 
    type Frame_Buffer is limited new HAL.Framebuffer.Frame_Buffer_Display with
       record

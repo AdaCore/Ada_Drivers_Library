@@ -95,7 +95,7 @@ begin
             --  necessarily preserved by the hardware.
             if Last_X > 0 then
                Draw_Line
-                 (Display.Get_Hidden_Buffer (1),
+                 (Display.Get_Hidden_Buffer (1).all,
                   Start     => (Last_X, Last_Y),
                   Stop      => (State (State'First).X, State (State'First).Y),
                   Hue       => HAL.Bitmap.Green,
@@ -113,7 +113,7 @@ begin
 
          for Id in State'Range loop
             Fill_Circle
-              (Display.Get_Hidden_Buffer (1),
+              (Display.Get_Hidden_Buffer (1).all,
                Center => (State (Id).X, State (Id).Y),
                Radius => State (Id).Weight / 4,
                Hue    => HAL.Bitmap.Green);

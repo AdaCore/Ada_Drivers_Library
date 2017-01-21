@@ -144,8 +144,8 @@ package Framebuffer_LTDC is
      with Pre => Initialized (Display, Layer);
 
    overriding function Get_Hidden_Buffer
-     (Display : Frame_Buffer;
-      Layer   : Positive) return HAL.Bitmap.Bitmap_Buffer'Class
+     (Display : in out Frame_Buffer;
+      Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer
      with Pre => Initialized (Display, Layer);
    --  Retrieves the current hidden buffer for the layer.
 
@@ -157,7 +157,7 @@ package Framebuffer_LTDC is
 private
 
    type FB_Array is array (STM32.LTDC.LCD_Layer, 1 .. 2) of
-     STM32.DMA2D_Bitmap.DMA2D_Bitmap_Buffer;
+     aliased STM32.DMA2D_Bitmap.DMA2D_Bitmap_Buffer;
    type Buffer_Idx is range 0 .. 2;
    type FB_Current is array (STM32.LTDC.LCD_Layer) of Buffer_Idx;
 

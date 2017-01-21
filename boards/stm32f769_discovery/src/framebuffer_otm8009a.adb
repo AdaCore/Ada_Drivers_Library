@@ -569,15 +569,15 @@ package body Framebuffer_OTM8009A is
    -----------------------
 
    overriding function Get_Hidden_Buffer
-     (Display : Frame_Buffer;
-      Layer   : Positive) return HAL.Bitmap.Bitmap_Buffer'Class
+     (Display : in out Frame_Buffer;
+      Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer
    is
       LCD_Layer  : constant STM32.LTDC.LCD_Layer :=
                      (if Layer = 1
                       then STM32.LTDC.Layer1
                       else STM32.LTDC.Layer2);
    begin
-      return Display.Buffers (LCD_Layer);
+      return Display.Buffers (LCD_Layer)'Unchecked_Access;
    end Get_Hidden_Buffer;
 
    --------------------

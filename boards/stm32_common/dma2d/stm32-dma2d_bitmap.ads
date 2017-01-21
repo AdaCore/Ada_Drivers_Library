@@ -39,15 +39,16 @@ with STM32.DMA2D;
 package STM32.DMA2D_Bitmap is
 
    type DMA2D_Bitmap_Buffer is new HAL.Bitmap.Bitmap_Buffer with null record;
+   type Any_DMA2D_Bitmap_Buffer is access all DMA2D_Bitmap_Buffer'Class;
 
    overriding procedure Set_Pixel
-     (Buffer : DMA2D_Bitmap_Buffer;
+     (Buffer : in out DMA2D_Bitmap_Buffer;
       X      : Natural;
       Y      : Natural;
       Value  : UInt32);
 
    overriding procedure Set_Pixel_Blend
-     (Buffer : DMA2D_Bitmap_Buffer;
+     (Buffer : in out DMA2D_Bitmap_Buffer;
       X      : Natural;
       Y      : Natural;
       Value  : HAL.Bitmap.Bitmap_Color);
@@ -58,11 +59,11 @@ package STM32.DMA2D_Bitmap is
       Y      : Natural) return UInt32;
 
    overriding procedure Fill
-     (Buffer : DMA2D_Bitmap_Buffer;
+     (Buffer : in out DMA2D_Bitmap_Buffer;
       Color  : UInt32);
 
    overriding procedure Fill_Rect
-     (Buffer : DMA2D_Bitmap_Buffer;
+     (Buffer : in out DMA2D_Bitmap_Buffer;
       Color  : UInt32;
       X      : Integer;
       Y      : Integer;
@@ -73,7 +74,7 @@ package STM32.DMA2D_Bitmap is
      (Src_Buffer  : HAL.Bitmap.Bitmap_Buffer'Class;
       X_Src       : Natural;
       Y_Src       : Natural;
-      Dst_Buffer  : DMA2D_Bitmap_Buffer;
+      Dst_Buffer  : in out DMA2D_Bitmap_Buffer;
       X_Dst       : Natural;
       Y_Dst       : Natural;
       Bg_Buffer   : HAL.Bitmap.Bitmap_Buffer'Class;

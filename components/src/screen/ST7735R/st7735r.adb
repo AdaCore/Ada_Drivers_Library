@@ -745,14 +745,14 @@ package body ST7735R is
 
    overriding
    function Get_Hidden_Buffer
-     (Display : ST7735R_Device;
-      Layer   : Positive) return HAL.Bitmap.Bitmap_Buffer'Class
+     (Display : in out ST7735R_Device;
+      Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer
    is
    begin
       if Layer /= 1 then
          raise Program_Error;
       end if;
-      return Display.Layer;
+      return Display.Layer'Unchecked_Access;
    end Get_Hidden_Buffer;
 
    --------------------

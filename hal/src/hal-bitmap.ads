@@ -92,6 +92,8 @@ package HAL.Bitmap is
       --  X0 = 10
    end record;
 
+   type Any_Bitmap_Buffer is access all Bitmap_Buffer'Class;
+
    type Bitmap_Color is record
       Alpha : Byte;
       Red   : Byte;
@@ -107,19 +109,19 @@ package HAL.Bitmap is
    end record;
 
    procedure Set_Pixel
-     (Buffer  : Bitmap_Buffer;
+     (Buffer  : in out Bitmap_Buffer;
       X       : Natural;
       Y       : Natural;
       Value   : Bitmap_Color);
 
    procedure Set_Pixel
-     (Buffer  : Bitmap_Buffer;
+     (Buffer  : in out Bitmap_Buffer;
       X       : Natural;
       Y       : Natural;
       Value   : UInt32);
 
    procedure Set_Pixel_Blend
-     (Buffer : Bitmap_Buffer;
+     (Buffer : in out Bitmap_Buffer;
       X      : Natural;
       Y      : Natural;
       Value  : Bitmap_Color);
@@ -137,17 +139,17 @@ package HAL.Bitmap is
       return UInt32;
 
    procedure Fill
-     (Buffer : Bitmap_Buffer;
+     (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color);
    --  Fill the specified buffer with 'Color'
 
    procedure Fill
-     (Buffer : Bitmap_Buffer;
+     (Buffer : in out Bitmap_Buffer;
       Color  : UInt32);
    --  Same as above, using the destination buffer native color representation
 
    procedure Fill_Rect
-     (Buffer : Bitmap_Buffer;
+     (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
       X      : Integer;
       Y      : Integer;
@@ -156,7 +158,7 @@ package HAL.Bitmap is
    --  Fill the specified area of the buffer with 'Color'
 
    procedure Fill_Rect
-     (Buffer : Bitmap_Buffer;
+     (Buffer : in out Bitmap_Buffer;
       Color  : UInt32;
       X      : Integer;
       Y      : Integer;
@@ -168,7 +170,7 @@ package HAL.Bitmap is
      (Src_Buffer  : Bitmap_Buffer'Class;
       X_Src       : Natural;
       Y_Src       : Natural;
-      Dst_Buffer  : Bitmap_Buffer;
+      Dst_Buffer  : in out Bitmap_Buffer;
       X_Dst       : Natural;
       Y_Dst       : Natural;
       Bg_Buffer   : Bitmap_Buffer'Class;
@@ -182,7 +184,7 @@ package HAL.Bitmap is
      (Src_Buffer  : Bitmap_Buffer'Class;
       X_Src       : Natural;
       Y_Src       : Natural;
-      Dst_Buffer  : Bitmap_Buffer;
+      Dst_Buffer  : in out Bitmap_Buffer;
       X_Dst       : Natural;
       Y_Dst       : Natural;
       Width       : Natural;
@@ -193,7 +195,7 @@ package HAL.Bitmap is
      (Src_Buffer  : Bitmap_Buffer;
       X_Src       : Natural;
       Y_Src       : Natural;
-      Dst_Buffer  : Bitmap_Buffer'Class;
+      Dst_Buffer  : in out Bitmap_Buffer'Class;
       X_Dst       : Natural;
       Y_Dst       : Natural;
       Width       : Natural;
@@ -201,35 +203,35 @@ package HAL.Bitmap is
       Synchronous : Boolean);
 
    procedure Draw_Vertical_Line
-     (Buffer : Bitmap_Buffer;
+     (Buffer : in out Bitmap_Buffer;
       Color  : UInt32;
       X      : Integer;
       Y      : Integer;
       Height : Integer);
 
    procedure Draw_Vertical_Line
-     (Buffer : Bitmap_Buffer;
+     (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
       X      : Integer;
       Y      : Integer;
       Height : Integer);
 
    procedure Draw_Horizontal_Line
-     (Buffer : Bitmap_Buffer;
+     (Buffer : in out Bitmap_Buffer;
       Color  : UInt32;
       X      : Integer;
       Y      : Integer;
       Width  : Integer);
 
    procedure Draw_Horizontal_Line
-     (Buffer : Bitmap_Buffer;
+     (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
       X      : Integer;
       Y      : Integer;
       Width  : Integer);
 
    procedure Draw_Rect
-     (Buffer : Bitmap_Buffer;
+     (Buffer : in out Bitmap_Buffer;
       Color  : Bitmap_Color;
       X      : Integer;
       Y      : Integer;

@@ -44,20 +44,20 @@ with HAL.Bitmap;
 procedure Dma2d
 is
 
-   function Bitmap_Buffer return DMA2D_Bitmap_Buffer'Class;
+   function Bitmap_Buffer return not null Any_DMA2D_Bitmap_Buffer;
    function Buffer return DMA2D_Buffer;
 
    -----------------
    -- DM2D_Bugger --
    -----------------
 
-   function Bitmap_Buffer return DMA2D_Bitmap_Buffer'Class is
+   function Bitmap_Buffer return not null Any_DMA2D_Bitmap_Buffer is
    begin
-      if Display.Get_Hidden_Buffer (1) not in DMA2D_Bitmap_Buffer then
+      if Display.Get_Hidden_Buffer (1).all not in DMA2D_Bitmap_Buffer then
          raise Program_Error with "We expect a DM2D buffer here";
       end if;
 
-      return DMA2D_Bitmap_Buffer'Class (Display.Get_Hidden_Buffer (1));
+      return Any_DMA2D_Bitmap_Buffer (Display.Get_Hidden_Buffer (1));
    end Bitmap_Buffer;
 
    ------------
@@ -66,7 +66,7 @@ is
 
    function Buffer return DMA2D_Buffer is
    begin
-      return To_DMA2D_Buffer (Display.Get_Hidden_Buffer (1));
+      return To_DMA2D_Buffer (Display.Get_Hidden_Buffer (1).all);
    end Buffer;
 
    Width  : Natural;
@@ -148,10 +148,10 @@ begin
       end loop;
 
       --  Copy half of the screen to the other half
-      Copy_Rect (Src_Buffer => Bitmap_Buffer,
+      Copy_Rect (Src_Buffer  => Bitmap_Buffer.all,
                  X_Src       => 0,
                  Y_Src       => 0,
-                 Dst_Buffer  => Bitmap_Buffer,
+                 Dst_Buffer  => Bitmap_Buffer.all,
                  X_Dst       => Width / 2,
                  Y_Dst       => 0,
                  Bg_Buffer   => STM32.DMA2D_Bitmap.Null_Buffer,

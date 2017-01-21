@@ -38,7 +38,7 @@ package body Bitmapped_Drawing is
    ---------------
 
    procedure Draw_Char
-     (Buffer     : Bitmap_Buffer'Class;
+     (Buffer     : in out Bitmap_Buffer'Class;
       Start      : Point;
       Char       : Character;
       Font       : BMP_Font;
@@ -64,7 +64,7 @@ package body Bitmapped_Drawing is
    -----------------
 
    procedure Draw_String
-     (Buffer     : Bitmap_Buffer'Class;
+     (Buffer     : in out Bitmap_Buffer'Class;
       Start      : Point;
       Msg        : String;
       Font       : BMP_Font;
@@ -95,7 +95,7 @@ package body Bitmapped_Drawing is
    -----------------
 
    procedure Draw_String
-     (Buffer     : Bitmap_Buffer'Class;
+     (Buffer     : in out Bitmap_Buffer'Class;
       Start      : Point;
       Msg        : String;
       Font       : Hershey_Font;
@@ -147,7 +147,7 @@ package body Bitmapped_Drawing is
    -----------------
 
    procedure Draw_String
-     (Buffer     : Bitmap_Buffer'Class;
+     (Buffer     : in out Bitmap_Buffer'Class;
       Area       : Rect;
       Msg        : String;
       Font       : Hershey_Font;
@@ -253,7 +253,7 @@ package body Bitmapped_Drawing is
    ---------------
 
    procedure Draw_Line
-     (Buffer      : Bitmap_Buffer'Class;
+     (Buffer      : in out Bitmap_Buffer'Class;
       Start, Stop : Point;
       Hue         : Bitmap_Color;
       Thickness   : Natural := 1;
@@ -271,7 +271,7 @@ package body Bitmapped_Drawing is
    ---------------
 
    procedure Draw_Line
-     (Buffer      : Bitmap_Buffer'Class;
+     (Buffer      : in out Bitmap_Buffer'Class;
       Start, Stop : Point;
       Hue         : Unsigned_32;
       Thickness   : Natural := 1;
@@ -353,7 +353,7 @@ package body Bitmapped_Drawing is
    --------------------
 
    procedure Draw_Rectangle
-     (Buffer    : Bitmap_Buffer'Class;
+     (Buffer    : in out Bitmap_Buffer'Class;
       Area      : Rect;
       Hue       : Bitmap_Color;
       Thickness : Natural := 1)
@@ -393,7 +393,7 @@ package body Bitmapped_Drawing is
    ----------------------------
 
    procedure Draw_Rounded_Rectangle
-     (Buffer    : Bitmap_Buffer'Class;
+     (Buffer    : in out Bitmap_Buffer'Class;
       Area      : Rect;
       Radius    : Natural;
       Hue       : Bitmap_Color;
@@ -492,7 +492,7 @@ package body Bitmapped_Drawing is
    ----------------------------
 
    procedure Fill_Rounded_Rectangle
-     (Buffer : Bitmap_Buffer'Class;
+     (Buffer : in out Bitmap_Buffer'Class;
       X      : Natural;
       Y      : Natural;
       Width  : Positive;
@@ -562,7 +562,7 @@ package body Bitmapped_Drawing is
    ------------------
 
    procedure Cubic_Bezier
-     (Buffer         : Bitmap_Buffer'Class;
+     (Buffer         : in out Bitmap_Buffer'Class;
       P1, P2, P3, P4 : Point;
       Hue            : Bitmap_Color;
       N              : Positive := 20;
@@ -599,7 +599,7 @@ package body Bitmapped_Drawing is
    -----------------
 
    procedure Draw_Circle
-     (Buffer : Bitmap_Buffer'Class;
+     (Buffer : in out Bitmap_Buffer'Class;
       Center : Point;
       Radius : Natural;
       Hue    : Bitmap_Color)
@@ -616,7 +616,7 @@ package body Bitmapped_Drawing is
    -----------------
 
    procedure Draw_Circle
-     (Buffer : Bitmap_Buffer'Class;
+     (Buffer : in out Bitmap_Buffer'Class;
       Center : Point;
       Radius : Natural;
       Hue    : UInt32)
@@ -657,7 +657,7 @@ package body Bitmapped_Drawing is
    -----------------
 
    procedure Fill_Circle
-     (Buffer : Bitmap_Buffer'Class;
+     (Buffer : in out Bitmap_Buffer'Class;
       Center : Point;
       Radius : Natural;
       Hue    : Bitmap_Color)
@@ -669,7 +669,7 @@ package body Bitmapped_Drawing is
    end Fill_Circle;
 
    procedure Fill_Circle
-     (Buffer : Bitmap_Buffer'Class;
+     (Buffer : in out Bitmap_Buffer'Class;
       Center : Point;
       Radius : Natural;
       Hue    : Unsigned_32)

@@ -114,8 +114,9 @@ package HAL.Framebuffer is
    --  Retrieves the current color mode for the layer.
 
    function Get_Hidden_Buffer
-     (This  : Frame_Buffer_Display;
-      Layer : Positive) return HAL.Bitmap.Bitmap_Buffer'Class is abstract;
+     (This  : in out Frame_Buffer_Display;
+      Layer : Positive)
+      return not null HAL.Bitmap.Any_Bitmap_Buffer is abstract;
    --  Retrieves the current hidden buffer for the layer.
 
    function Get_Pixel_Size

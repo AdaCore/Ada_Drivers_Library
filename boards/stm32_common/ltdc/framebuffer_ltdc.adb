@@ -501,9 +501,9 @@ package body Framebuffer_LTDC is
    -----------------------
 
    overriding function Get_Hidden_Buffer
-     (Display : Frame_Buffer;
+     (Display : in out Frame_Buffer;
       Layer   : Positive)
-      return HAL.Bitmap.Bitmap_Buffer'Class
+      return not null HAL.Bitmap.Any_Bitmap_Buffer
    is
       LCD_Layer  : constant STM32.LTDC.LCD_Layer :=
                      (if Layer = 1
@@ -512,9 +512,9 @@ package body Framebuffer_LTDC is
    begin
       case Display.Current (LCD_Layer) is
          when 0 | 2 =>
-            return Display.Buffers (LCD_Layer, 1);
+            return Display.Buffers (LCD_Layer, 1)'Unchecked_Access;
          when 1 =>
-            return Display.Buffers (LCD_Layer, 2);
+            return Display.Buffers (LCD_Layer, 2)'Unchecked_Access;
       end case;
    end Get_Hidden_Buffer;
 

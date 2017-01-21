@@ -316,7 +316,7 @@ package body OpenMV.Sensor is
    -- Snapshot --
    --------------
 
-   procedure Snapshot (BM : HAL.Bitmap.Bitmap_Buffer'Class) is
+   procedure Snapshot (BM : not null HAL.Bitmap.Any_Bitmap_Buffer) is
       Status : DMA_Error_Code;
       Cnt : constant Interfaces.Unsigned_16 :=
         Interfaces.Unsigned_16 ((BM.Width * BM.Height) / 2);
