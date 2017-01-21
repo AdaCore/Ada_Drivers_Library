@@ -227,8 +227,29 @@ package body Soft_Drawing_Bitmap is
       Height      : Natural;
       Synchronous : Boolean)
    is
+      pragma Unreferenced (Synchronous);
+      Pix : UInt32;
    begin
-      raise Constraint_Error with "Not implemented yet.";
+      if Src_Pt.X + Width > Src_Buffer.Width
+        or else
+         Src_Pt.Y + Height > Src_Buffer.Height
+      then
+         raise Constraint_Error with "invalid copy area for source bitmap";
+      end if;
+
+      if Dst_Pt.X + Width > Dispatch (Dst_Buffer).Width
+        or else
+         Dst_Pt.Y + Height > Dispatch (Dst_Buffer).Height
+      then
+         raise Constraint_Error with "invalid copy area for destination bitmap";
+      end if;
+
+      for X in 0 .. Width - 1 loop
+         for Y in 0 .. Height - 1 loop
+            Pix := Src_Buffer.Pixel (Src_Pt + (X, Y));
+            Dispatch (Dst_Buffer).Set_Pixel (Dst_Pt + (X, Y), Pix);
+         end loop;
+      end loop;
    end Copy_Rect;
 
    ---------------------
