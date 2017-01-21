@@ -191,7 +191,7 @@ package body HAL.Bitmap is
       if Value.Alpha = 255 then
          Set_Pixel (Bitmap_Buffer'Class (Buffer), X, Y, Value);
       else
-         Col := Get_Pixel (Bitmap_Buffer'Class (Buffer), X, Y);
+         Col := Pixel (Bitmap_Buffer'Class (Buffer), X, Y);
          BgA := Float (Col.Alpha) / 255.0;
          BgR := Float (Col.Red) / 255.0;
          BgG := Float (Col.Green) / 255.0;
@@ -219,7 +219,7 @@ package body HAL.Bitmap is
    -- Get_Pixel --
    ---------------
 
-   function Get_Pixel
+   function Pixel
      (Buffer : Bitmap_Buffer;
       X      : Natural;
       Y      : Natural)
@@ -227,18 +227,18 @@ package body HAL.Bitmap is
    is
       Native_Color : UInt32;
    begin
-      Native_Color := Get_Pixel
+      Native_Color := Pixel
         (Bitmap_Buffer'Class (Buffer),
          X, Y);
 
       return Word_To_Bitmap_Color (Buffer.Color_Mode, Native_Color);
-   end Get_Pixel;
+   end Pixel;
 
    ---------------
    -- Get_Pixel --
    ---------------
 
-   function Get_Pixel
+   function Pixel
      (Buffer : Bitmap_Buffer;
       X      : Natural;
       Y      : Natural)
@@ -314,7 +314,7 @@ package body HAL.Bitmap is
                end if;
             end;
       end case;
-   end Get_Pixel;
+   end Pixel;
 
    ----------
    -- Fill --

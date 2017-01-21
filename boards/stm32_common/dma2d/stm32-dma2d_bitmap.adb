@@ -111,15 +111,15 @@ package body STM32.DMA2D_Bitmap is
    -- Get_Pixel --
    ---------------
 
-   overriding function Get_Pixel
+   overriding function Pixel
      (Buffer : DMA2D_Bitmap_Buffer;
       X      : Natural;
       Y      : Natural) return UInt32
    is
    begin
       DMA2D_Wait_Transfer;
-      return HAL.Bitmap.Bitmap_Buffer (Buffer).Get_Pixel (X, Y);
-   end Get_Pixel;
+      return HAL.Bitmap.Bitmap_Buffer (Buffer).Pixel (X, Y);
+   end Pixel;
 
    ----------
    -- Fill --

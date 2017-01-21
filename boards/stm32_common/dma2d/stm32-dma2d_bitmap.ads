@@ -53,7 +53,7 @@ package STM32.DMA2D_Bitmap is
       Y      : Natural;
       Value  : HAL.Bitmap.Bitmap_Color);
 
-   overriding function Get_Pixel
+   overriding function Pixel
      (Buffer : DMA2D_Bitmap_Buffer;
       X      : Natural;
       Y      : Natural) return UInt32;

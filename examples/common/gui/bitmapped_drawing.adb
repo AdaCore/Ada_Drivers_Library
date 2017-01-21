@@ -208,15 +208,15 @@ package body Bitmapped_Drawing is
 
       if Outline and then Area.Height > 40 then
          for Y in Area.Position.Y + 1 .. Area.Position.Y + Area.Height loop
-            Prev := Buffer.Get_Pixel (Area.Position.X, Y);
+            Prev := Buffer.Pixel (Area.Position.X, Y);
             if Prev = FG then
                Buffer.Set_Pixel (Area.Position.X, Y, Black);
             end if;
 
             for X in Area.Position.X + 1 .. Area.Position.X + Area.Width loop
                declare
-                  Col : constant Unsigned_32 := Buffer.Get_Pixel (X, Y);
-                  Top : constant Unsigned_32 := Buffer.Get_Pixel (X, Y - 1);
+                  Col : constant Unsigned_32 := Buffer.Pixel (X, Y);
+                  Top : constant Unsigned_32 := Buffer.Pixel (X, Y - 1);
                begin
 
                   if Prev /= FG

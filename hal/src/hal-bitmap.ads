@@ -126,13 +126,13 @@ package HAL.Bitmap is
       Y      : Natural;
       Value  : Bitmap_Color);
 
-   function Get_Pixel
+   function Pixel
      (Buffer : Bitmap_Buffer;
       X      : Natural;
       Y      : Natural)
       return Bitmap_Color;
 
-   function Get_Pixel
+   function Pixel
      (Buffer : Bitmap_Buffer;
       X      : Natural;
       Y      : Natural)
