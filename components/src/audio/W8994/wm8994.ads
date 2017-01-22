@@ -34,7 +34,6 @@
 with Interfaces; use Interfaces;
 with HAL;        use HAL;
 with HAL.I2C;    use HAL.I2C;
-with HAL.Time;
 
 package WM8994 is
 
@@ -89,8 +88,7 @@ package WM8994 is
 
    type WM8994_Device
      (Port     : not null Any_I2C_Port;
-      I2C_Addr : UInt10;
-      Time     : not null HAL.Time.Any_Delays)
+      I2C_Addr : UInt10)
    is tagged limited private;
 
    procedure Init (This      : in out WM8994_Device;
@@ -114,8 +112,7 @@ package WM8994 is
 
 private
    type WM8994_Device (Port     : not null Any_I2C_Port;
-                       I2C_Addr : UInt10;
-                       Time     : not null HAL.Time.Any_Delays) is tagged limited null record;
+                       I2C_Addr : UInt10) is tagged limited null record;
 
    procedure I2C_Write (This   : in out WM8994_Device;
                         Reg   : UInt16;

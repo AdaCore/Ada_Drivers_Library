@@ -33,7 +33,6 @@ with STM32.GPIO;
 with STM32.Device;
 with OpenMV;
 with ST7735R; use ST7735R;
-with Ravenscar_Time;
 
 package body OpenMV.LCD_Shield is
 
@@ -45,8 +44,7 @@ package body OpenMV.LCD_Shield is
    LCD_Driver : ST7735R.ST7735R_Device (Shield_SPI'Access,
                                         LCD_CS'Access,
                                         LCD_RS'Access,
-                                        LCD_RST'Access,
-                                        Ravenscar_Time.Delays);
+                                        LCD_RST'Access);
    Is_Initialized : Boolean := False;
 
    -----------------

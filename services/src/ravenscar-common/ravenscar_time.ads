@@ -33,21 +33,21 @@ with HAL.Time;
 
 package Ravenscar_Time is
 
-   function Delays return not null HAL.Time.Any_Delays;
+   function Delay_Provider return not null HAL.Time.Any_Delay_Provider;
 
 private
 
-   type Ravenscar_Delays is new HAL.Time.Delays with null record;
+   type Ravenscar_Delay_Provider is new HAL.Time.Delay_Provider with null record;
 
    overriding
-   procedure Delay_Microseconds (This : in out Ravenscar_Delays;
-                                 Us   : Integer);
+   procedure Delay_Microseconds (This : in out Ravenscar_Delay_Provider;
+                                 Us   : Natural);
 
    overriding
-   procedure Delay_Milliseconds (This : in out Ravenscar_Delays;
-                                 Ms   : Integer);
+   procedure Delay_Milliseconds (This : in out Ravenscar_Delay_Provider;
+                                 Ms   : Natural);
 
    overriding
-   procedure Delay_Seconds      (This : in out Ravenscar_Delays;
-                                 S    : Integer);
+   procedure Delay_Seconds      (This : in out Ravenscar_Delay_Provider;
+                                 S    : Natural);
 end Ravenscar_Time;

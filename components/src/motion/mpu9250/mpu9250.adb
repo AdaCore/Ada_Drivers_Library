@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
+with HAL.Time;
 
 package body MPU9250 is
 
@@ -57,7 +58,7 @@ package body MPU9250 is
       end if;
 
       --  Wait for MPU9250 startup
-      Device.Time.Delay_Milliseconds (MPU9250_STARTUP_TIME_MS);
+      HAL.Time.Delay_Milliseconds (MPU9250_STARTUP_TIME_MS);
 
       --  Set the device address
       Device.Address :=
@@ -242,7 +243,7 @@ package body MPU9250 is
         (Device, MPU9250_RA_GYRO_CONFIG, 16#E0#);
 
       --  Delay a while to let the device stabilize
-      Device.Time.Delay_Milliseconds (25);
+      HAL.Time.Delay_Milliseconds (25);
 
       --  Get average self-test values of gyro and accelerometer
       for I in 1 .. 200 loop
@@ -288,7 +289,7 @@ package body MPU9250 is
         (Device, MPU9250_RA_GYRO_CONFIG, 16#00#);
 
       --  Delay a while to let the device stabilize
-      Device.Time.Delay_Milliseconds (25);
+      HAL.Time.Delay_Milliseconds (25);
 
       --  Retrieve Accelerometer and Gyro Factory Self - Test Code From USR_Reg
       MPU9250_Read_Byte_At_Register

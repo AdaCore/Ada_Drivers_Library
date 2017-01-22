@@ -44,6 +44,8 @@
 with Ada.Real_Time; use Ada.Real_Time;
 with HAL.SPI;
 with LIS3DSH;       use LIS3DSH;
+with HAL.Time;
+with Ravenscar_Time;
 
 package body STM32.Board is
 
@@ -280,5 +282,6 @@ package body STM32.Board is
       Init_SPI;
    end Initialize_Accelerometer;
 
-
+begin
+   HAL.Time.Set_Global_Delay_Provider (Ravenscar_Time.Delay_Provider);
 end STM32.Board;

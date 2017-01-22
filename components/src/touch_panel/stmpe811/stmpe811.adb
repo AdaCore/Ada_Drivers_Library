@@ -42,6 +42,7 @@
 ------------------------------------------------------------------------------
 
 with Interfaces; use Interfaces;
+with HAL.Time;
 
 package body STMPE811 is
 
@@ -194,7 +195,7 @@ package body STMPE811 is
       This.Write_Register (IOE_REG_SYS_CTRL1, 16#02#);
 
       --  Give some time for the reset
-      This.Time.Delay_Milliseconds (2);
+      HAL.Time.Delay_Milliseconds (2);
 
       This.Write_Register (IOE_REG_SYS_CTRL1, 16#00#);
    end IOE_Reset;
@@ -256,7 +257,7 @@ package body STMPE811 is
    is
    begin
 
-      This.Time.Delay_Milliseconds (100);
+      HAL.Time.Delay_Milliseconds (100);
 
       if This.Get_IOE_ID /= 16#0811# then
          return False;
@@ -269,7 +270,7 @@ package body STMPE811 is
 
       This.Write_Register (IOE_REG_ADC_CTRL1, 16#49#);
 
-      This.Time.Delay_Milliseconds (2);
+      HAL.Time.Delay_Milliseconds (2);
 
       This.Write_Register (IOE_REG_ADC_CTRL2, 16#01#);
 

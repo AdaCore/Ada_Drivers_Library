@@ -31,7 +31,8 @@
 
 with Ada.Unchecked_Conversion;
 with System;
-with Interfaces; use Interfaces;
+with Interfaces;               use Interfaces;
+with HAL.Time;
 
 package body ST7735R is
 
@@ -226,14 +227,14 @@ package body ST7735R is
       LCD.Initialized := True;
 
       LCD.RST.Clear;
-      LCD.Time.Delay_Milliseconds (100);
+      HAL.Time.Delay_Milliseconds (100);
       LCD.RST.Set;
-      LCD.Time.Delay_Milliseconds (100);
+      HAL.Time.Delay_Milliseconds (100);
 
       --  Sleep Exit
       Write_Command (LCD, 16#11#);
 
-      LCD.Time.Delay_Milliseconds (100);
+      HAL.Time.Delay_Milliseconds (100);
    end Initialize;
 
    -----------------

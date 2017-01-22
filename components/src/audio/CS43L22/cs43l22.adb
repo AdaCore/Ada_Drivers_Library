@@ -29,6 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with HAL.Time;
+
 package body CS43L22 is
 
    ---------------
@@ -182,7 +184,7 @@ package body CS43L22 is
       --  Unmute the output first
       This.Set_Mute (Mute_Off);
 
-      This.Time.Delay_Milliseconds (1);
+      HAL.Time.Delay_Milliseconds (1);
 
       This.I2C_Write (CS43L22_REG_POWER_CTL2, This.Output_Dev);
 

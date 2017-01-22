@@ -35,12 +35,12 @@
 --  blue button to enter sound mode where a two tone audio is played in the
 --  headphone jack. Press the black button to reset.
 
-with Ada.Real_Time;      use Ada.Real_Time;
 with HAL;                use HAL;
 with STM32.Board;        use STM32.Board;
 with STM32.User_Button;
 with LIS3DSH;            use LIS3DSH;
 with HAL.Audio;          use HAL.Audio;
+with HAL.Time;
 with Simple_Synthesizer;
 with CS43L22;
 
@@ -51,13 +51,6 @@ procedure Main is
 
    Threshold_High : constant LIS3DSH.Axis_Acceleration :=  200;
    Threshold_Low  : constant LIS3DSH.Axis_Acceleration := -200;
-
-   procedure My_Delay (Milli : Natural);
-
-   procedure My_Delay (Milli : Natural) is
-   begin
-      delay until Clock + Milliseconds (Milli);
-   end My_Delay;
 
    Synth : Simple_Synthesizer.Synthesizer;
    Audio_Data : Audio_Buffer (1 .. 128);
@@ -84,9 +77,9 @@ begin
    if Accelerometer.Device_Id /= I_Am_LIS3DSH then
       loop
          All_LEDs_On;
-         My_Delay (100);
+         HAL.Time.Delay_Milliseconds (100);
          All_LEDs_Off;
-         My_Delay (100);
+         HAL.Time.Delay_Milliseconds (100);
       end loop;
    end if;
 
@@ -99,14 +92,14 @@ begin
          elsif Values.X < Threshold_Low then
             STM32.Board.Green.Set;
          end if;
-         My_Delay (10);
+         HAL.Time.Delay_Milliseconds (10);
       else
          if Values.Y > Threshold_High then
             STM32.Board.Orange.Set;
          elsif Values.Y < Threshold_Low then
             STM32.Board.Blue.Set;
          end if;
-         My_Delay (10);
+         HAL.Time.Delay_Milliseconds (10);
       end if;
 
       if STM32.User_Button.Has_Been_Pressed then

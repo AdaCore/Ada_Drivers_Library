@@ -29,6 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with HAL.Time;
+
 package body OTM8009A is
 
    ADDR_SHIFT_CMD : constant := 16#00#;
@@ -90,11 +92,11 @@ package body OTM8009A is
       --  -> Source output level during porch and non-display area to GND --
       This.Write (Address => 16#C480#,
                   Data    => (1 => 16#30#));
-      This.Time.Delay_Milliseconds (10);
+      HAL.Time.Delay_Milliseconds (10);
       --  Not documented...
       This.Write (Address => 16#C48A#,
                   Data    => (1 => 16#40#));
-      This.Time.Delay_Milliseconds (10);
+      HAL.Time.Delay_Milliseconds (10);
       ----------------------------------------------------------------------
 
       ----------------------------------------------------------------------
@@ -300,7 +302,7 @@ package body OTM8009A is
                   Data   => (1 .. 0 => <>));
 
       --  Wait for Sleep Out exit
-      This.Time.Delay_Milliseconds (120);
+      HAL.Time.Delay_Milliseconds (120);
 
       case Color_Mode is
          when RGB565 =>

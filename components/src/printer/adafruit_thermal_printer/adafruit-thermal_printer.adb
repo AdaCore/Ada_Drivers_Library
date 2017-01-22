@@ -30,8 +30,10 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with HAL.UART; use HAL.UART;
-with Interfaces; use Interfaces;
+with HAL.Time;
+with HAL.UART;                 use HAL.UART;
+with Interfaces;               use Interfaces;
+
 
 package body AdaFruit.Thermal_Printer is
 
@@ -225,7 +227,7 @@ package body AdaFruit.Thermal_Printer is
          Write (This, Str);
 
          --  delay until Clock + Microseconds (10000 * Str'Length);
-         This.Time.Delay_Microseconds (600 * Str'Length);
+         HAL.Time.Delay_Microseconds (600 * Str'Length);
       end loop;
    end Print_Bitmap;
 
@@ -245,12 +247,12 @@ package body AdaFruit.Thermal_Printer is
    procedure Reset (This : in out TP_Device) is
    begin
       Write (This, "" & To_Char (16#FF#));
-      This.Time.Delay_Milliseconds (50);
+      HAL.Time.Delay_Milliseconds (50);
 
       Write (This, ASCII.ESC & '8' & ASCII.NUL & ASCII.NUL);
 
       for X in 1 .. 10 loop
-         This.Time.Delay_Microseconds (10_000);
+         HAL.Time.Delay_Microseconds (10_000);
          Write (This, "" & ASCII.NUL);
       end loop;
 

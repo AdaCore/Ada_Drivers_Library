@@ -33,24 +33,22 @@ with Ada.Real_Time; use Ada.Real_Time;
 
 package body Ravenscar_Time is
 
-   Delay_Singleton : aliased Ravenscar_Delays;
+   Delay_Singleton : aliased Ravenscar_Delay_Provider;
 
-   ------------
-   -- Delays --
-   ------------
+   --------------------
+   -- Delay_Provider --
+   --------------------
 
-   function Delays return not null HAL.Time.Any_Delays is
-   begin
-      return Delay_Singleton'Access;
-   end Delays;
+   function Delay_Provider return not null HAL.Time.Any_Delay_Provider is
+      (Delay_Singleton'Access);
 
    ------------------------
    -- Delay_Microseconds --
    ------------------------
 
    overriding procedure Delay_Microseconds
-     (This : in out Ravenscar_Delays;
-      Us   : Integer)
+     (This : in out Ravenscar_Delay_Provider;
+      Us   : Natural)
    is
       pragma Unreferenced (This);
    begin
@@ -62,8 +60,8 @@ package body Ravenscar_Time is
    ------------------------
 
    overriding procedure Delay_Milliseconds
-     (This : in out Ravenscar_Delays;
-      Ms   : Integer)
+     (This : in out Ravenscar_Delay_Provider;
+      Ms   : Natural)
    is
       pragma Unreferenced (This);
    begin
@@ -75,8 +73,8 @@ package body Ravenscar_Time is
    -------------------
 
    overriding procedure Delay_Seconds
-     (This : in out Ravenscar_Delays;
-      S    : Integer)
+     (This : in out Ravenscar_Delay_Provider;
+      S    : Natural)
    is
       pragma Unreferenced (This);
    begin

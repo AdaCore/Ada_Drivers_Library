@@ -32,7 +32,6 @@
 with Interfaces; use Interfaces;
 with HAL;        use HAL;
 with HAL.DSI;    use HAL.DSI;
-with HAL.Time;
 
 package OTM8009A is
 
@@ -88,8 +87,7 @@ package OTM8009A is
 
    type OTM8009A_Device
      (DSI_Host   : not null Any_DSI_Port;
-      Channel_ID : DSI_Virtual_Channel_ID;
-      Time       : not null HAL.Time.Any_Delays)
+      Channel_ID : DSI_Virtual_Channel_ID)
    is tagged limited private;
 
    procedure Initialize
@@ -101,8 +99,7 @@ private
 
    type OTM8009A_Device
      (DSI_Host   : not null Any_DSI_Port;
-      Channel_ID : DSI_Virtual_Channel_ID;
-      Time       : not null HAL.Time.Any_Delays)
+      Channel_ID : DSI_Virtual_Channel_ID)
    is tagged limited record
       Current_Shift : Byte := 0;
    end record;

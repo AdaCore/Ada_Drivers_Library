@@ -41,6 +41,9 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
+with HAL.Time;
+with Ravenscar_Time;
+
 package body STM32.Board is
 
    -------------
@@ -173,4 +176,6 @@ package body STM32.Board is
       end if;
    end Configure_I2C;
 
+begin
+   HAL.Time.Set_Global_Delay_Provider (Ravenscar_Time.Delay_Provider);
 end STM32.Board;

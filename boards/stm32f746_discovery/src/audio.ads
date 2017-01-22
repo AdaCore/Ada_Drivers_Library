@@ -34,7 +34,6 @@
 
 with HAL.Audio; use HAL.Audio;
 with HAL.I2C;   use HAL.I2C;
-with Ravenscar_Time;
 
 private with WM8994;
 
@@ -75,7 +74,7 @@ private
 
    type WM8994_Audio_Device (Port : not null Any_I2C_Port) is
      tagged limited record
-      Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
+      Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr);
    end record;
 
 end Audio;

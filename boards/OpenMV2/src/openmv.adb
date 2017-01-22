@@ -30,6 +30,8 @@
 ------------------------------------------------------------------------------
 
 with HAL.SPI;
+with HAL.Time;
+with Ravenscar_Time;
 
 package body OpenMV is
 
@@ -175,4 +177,6 @@ package body OpenMV is
    function Get_Shield_USART return not null HAL.UART.Any_UART_Port is
       (USART_3'Access);
 
+begin
+   HAL.Time.Set_Global_Delay_Provider (Ravenscar_Time.Delay_Provider);
 end OpenMV;

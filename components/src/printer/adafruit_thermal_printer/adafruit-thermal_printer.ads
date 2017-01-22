@@ -29,14 +29,12 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL; use HAL;
+with HAL;     use HAL;
 with HAL.UART;
-with HAL.Time;
 
 package AdaFruit.Thermal_Printer is
 
-   type TP_Device (Port : not null HAL.UART.Any_UART_Port;
-                   Time : not null HAL.Time.Any_Delays) is
+   type TP_Device (Port : not null HAL.UART.Any_UART_Port) is
      tagged private;
 
    --  The baud rate for this printers is usually 19_200 but some printers
@@ -103,8 +101,7 @@ package AdaFruit.Thermal_Printer is
    procedure Print_Test_Page (This : in out TP_Device);
 
 private
-   type TP_Device (Port : not null HAL.UART.Any_UART_Port;
-                   Time : not null HAL.Time.Any_Delays) is
+   type TP_Device (Port : not null HAL.UART.Any_UART_Port) is
      tagged null record;
 
 end AdaFruit.Thermal_Printer;

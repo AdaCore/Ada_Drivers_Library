@@ -32,7 +32,6 @@
 --  AK8963 I2C device class package
 
 with HAL.I2C;    use HAL;
-with HAL.Time;
 
 package AK8963 is
 
@@ -52,8 +51,7 @@ package AK8963 is
       Fuse_ROM_Access);
 
    type AK8963_Device (I2C_Port         : not null HAL.I2C.Any_I2C_Port;
-                       Address_Selector : AK8963_Address_Selector;
-                        Time            : not null HAL.Time.Any_Delays) is private;
+                       Address_Selector : AK8963_Address_Selector) is private;
 
    procedure Initialize (Device : in out AK8963_Device);
 
@@ -81,8 +79,7 @@ package AK8963 is
 private
 
    type AK8963_Device (I2C_Port         : not null HAL.I2C.Any_I2C_Port;
-                       Address_Selector : AK8963_Address_Selector;
-                        Time            : not null HAL.Time.Any_Delays)
+                       Address_Selector : AK8963_Address_Selector)
    is record
       Address : UInt10;
       Is_Init : Boolean := False;

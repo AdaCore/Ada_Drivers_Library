@@ -33,6 +33,7 @@ with Ada.Unchecked_Conversion;
 with Interfaces;    use Interfaces;
 
 with HAL.I2C;       use HAL.I2C;
+with HAL.Time;
 
 package body AK8963 is
 
@@ -236,7 +237,7 @@ package body AK8963 is
       while Retry > 0 loop
          exit when Get_Data_Ready (Device);
          Retry := Retry - 1;
-         Device.Time.Delay_Milliseconds (10);
+         HAL.Time.Delay_Milliseconds (10);
       end loop;
 
       if Retry = 0 then

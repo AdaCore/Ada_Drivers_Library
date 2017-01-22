@@ -30,15 +30,13 @@
 ------------------------------------------------------------------------------
 
 with HAL;             use HAL;
-with HAL.Time;        use HAL.Time;
 with HAL.I2C;         use HAL.I2C;
 with HAL.Touch_Panel; use HAL.Touch_Panel;
 
 package STMPE811 is
 
    type STMPE811_Device (Port     : not null Any_I2C_Port;
-                         I2C_Addr : I2C_Address;
-                         Time     : not null HAL.Time.Any_Delays) is
+                         I2C_Addr : I2C_Address) is
      limited new Touch_Panel_Device with private;
 
    function Initialize (This : in out STMPE811_Device) return Boolean;
@@ -72,8 +70,7 @@ package STMPE811 is
 private
 
    type STMPE811_Device (Port     : not null Any_I2C_Port;
-                         I2C_Addr : I2C_Address;
-                         Time     : not null HAL.Time.Any_Delays) is
+                         I2C_Addr : I2C_Address) is
      limited new Touch_Panel_Device with record
       LCD_Natural_Width  : Natural := 0;
       LCD_Natural_Height : Natural := 0;

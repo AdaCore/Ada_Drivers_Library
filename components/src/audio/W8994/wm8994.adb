@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Text_IO;
+with HAL.Time;
 
 package body WM8994 is
 
@@ -122,7 +123,7 @@ package body WM8994 is
       --  Enable BIAS generator, Enable VMID
       I2C_Write (This, 16#01#, 16#0003#);
 
-      This.Time.Delay_Milliseconds (50);
+      HAL.Time.Delay_Milliseconds (50);
 
       Output_Enabled := Output /= No_Output;
       Input_Enabled  := Input /= No_Input;
@@ -223,7 +224,7 @@ package body WM8994 is
          I2C_Write (This, 16#4C#, 16#9F25#);
 
          --  Add Delay
-         This.Time.Delay_Milliseconds (15);
+         HAL.Time.Delay_Milliseconds (15);
 
          --  Select DAC1 (Left) to Left Headphone Output PGA (HPOUT1LVOL) path
          I2C_Write (This, 16#2D#, 16#0001#);
@@ -241,7 +242,7 @@ package body WM8994 is
          I2C_Write (This, 16#54#, 16#0033#);
 
          --  Add Delay
-         This.Time.Delay_Milliseconds (250);
+         HAL.Time.Delay_Milliseconds (250);
 
          --  Enable HPOUT1 (Left) and HPOUT1 (Right) intermediate and output
          --  stages. Remove clamps.

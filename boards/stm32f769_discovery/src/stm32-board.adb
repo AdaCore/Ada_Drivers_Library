@@ -29,6 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with HAL.Time;
+with Ravenscar_Time;
+
 package body STM32.Board is
 
    ------------------
@@ -142,4 +145,6 @@ package body STM32.Board is
       Configure_IO (User_Button_Point, Config);
    end Configure_User_Button_GPIO;
 
+begin
+   HAL.Time.Set_Global_Delay_Provider (Ravenscar_Time.Delay_Provider);
 end STM32.Board;

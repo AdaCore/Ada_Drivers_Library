@@ -55,7 +55,6 @@ with STM32.I2C; use STM32.I2C;
 with STM32.I2S; use STM32.I2S;
 with HAL.Audio; use HAL.Audio;
 with CS43L22;
-with Ravenscar_Time;
 
 package STM32.Board is
    pragma Elaborate_Body;
@@ -90,8 +89,7 @@ package STM32.Board is
    Audio_I2S : I2S_Port renames I2S_3;
    Audio_Rate : constant Audio_Frequency := Audio_Freq_48kHz;
    DAC_Reset_Point : GPIO_Point renames PD4;
-   Audio_DAC : CS43L22.CS43L22_Device (Audio_I2C'Access,
-                                       Ravenscar_Time.Delays);
+   Audio_DAC : CS43L22.CS43L22_Device (Audio_I2C'Access);
 
    Acc_SPI    : SPI_Port renames SPI_1;
    Acc_SPI_AF : GPIO_Alternate_Function renames GPIO_AF_5_SPI1;

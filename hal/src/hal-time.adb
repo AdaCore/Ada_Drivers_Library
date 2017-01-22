@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,32 +29,59 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package HAL.Time is
+package body HAL.Time is
 
-   function Delay_Provided return Boolean;
+   Global_Delay_Provider : Any_Delay_Provider := null;
 
-   procedure Delay_Seconds (S : Natural)
-     with Pre => Delay_Provided;
+   --------------------
+   -- Delay_Provided --
+   --------------------
 
-   procedure Delay_Milliseconds (Ms : Natural)
-     with Pre => Delay_Provided;
+   function Delay_Provided return Boolean is
+     (Global_Delay_Provider /= null);
 
-   procedure Delay_Microseconds (Us : Natural)
-     with Pre => Delay_Provided;
+   -------------------
+   -- Delay_Seconds --
+   -------------------
 
-   type Delay_Provider is limited interface;
+   procedure Delay_Seconds (S : Natural) is
+   begin
+      if Global_Delay_Provider /= null then
+         Global_Delay_Provider.Delay_Seconds (S);
+      end if;
+   end Delay_Seconds;
 
-   type Any_Delay_Provider is access all Delay_Provider'Class;
+   ------------------------
+   -- Delay_Milliseconds --
+   ------------------------
 
-   procedure Delay_Microseconds (This : in out Delay_Provider;
-                                 Us   : Natural) is abstract;
+   procedure Delay_Milliseconds (Ms : Natural) is
+   begin
+      if Global_Delay_Provider /= null then
+         Global_Delay_Provider.Delay_Milliseconds (Ms);
+      end if;
+   end Delay_Milliseconds;
 
-   procedure Delay_Milliseconds (This : in out Delay_Provider;
-                                 Ms   : Natural) is abstract;
+   ------------------------
+   -- Delay_Microseconds --
+   ------------------------
 
-   procedure Delay_Seconds      (This : in out Delay_Provider;
-                                 S    : Natural) is abstract;
+   procedure Delay_Microseconds (Us : Natural) is
+   begin
+      if Global_Delay_Provider /= null then
+         Global_Delay_Provider.Delay_Microseconds (Us);
+      end if;
+   end Delay_Microseconds;
 
-   procedure Set_Global_Delay_Provider (Provider : not null Any_Delay_Provider);
+   -------------------------------
+   -- Set_Global_Delay_Provider --
+   -------------------------------
+
+   procedure Set_Global_Delay_Provider
+     (Provider : not null Any_Delay_Provider)
+   is
+   begin
+      Global_Delay_Provider := Provider;
+   end Set_Global_Delay_Provider;
 
 end HAL.Time;

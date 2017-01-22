@@ -48,7 +48,6 @@
 with HAL;      use HAL;
 with HAL.SPI;  use HAL.SPI;
 with HAL.GPIO; use HAL.GPIO;
-with HAL.Time;
 
 package ILI9341 is
 
@@ -56,8 +55,7 @@ package ILI9341 is
      (Port        : not null access SPI_Port'Class;
       Chip_Select : not null Any_GPIO_Point;
       WRX         : not null Any_GPIO_Point;
-      Reset       : not null Any_GPIO_Point;
-      Time        : not null HAL.Time.Any_Delays)
+      Reset       : not null Any_GPIO_Point)
    is tagged limited private;
 
    type ILI9341_Mode is
@@ -154,8 +152,7 @@ private
      (Port        : not null access SPI_Port'Class;
       Chip_Select : not null Any_GPIO_Point;
       WRX         : not null Any_GPIO_Point;
-      Reset       : not null Any_GPIO_Point;
-      Time        : not null HAL.Time.Any_Delays)
+      Reset       : not null Any_GPIO_Point)
    is tagged limited record
       Selected_Orientation : Orientations;
 
