@@ -41,8 +41,8 @@ with STM32.Board;           use STM32.Board;
 with HAL.Bitmap;            use HAL.Bitmap;
 with HAL.Touch_Panel;       use HAL.Touch_Panel;
 with STM32.User_Button;     use STM32;
-
 with Bitmapped_Drawing;     use Bitmapped_Drawing;
+with BMP_Fonts;
 
 procedure Draw
 is
@@ -53,13 +53,40 @@ is
    -----------
 
    procedure Clear is
+      BG : constant Bitmap_Color := (Alpha => 255, others => 64);
    begin
-      Display.Get_Hidden_Buffer (1).Fill ((Alpha => 255, others => 64));
+      Display.Hidden_Buffer (1).Fill (BG);
+
+      Draw_String (Buffer     => Display.Hidden_Buffer (1).all,
+                   Start      => (0, 0),
+                   Msg        => "Touch the screen to draw or",
+                   Font       => BMP_Fonts.Font8x8,
+                   Foreground => HAL.Bitmap.White,
+                   Background => BG);
+
+      Draw_String (Buffer     => Display.Hidden_Buffer (1).all,
+                   Start      => (0, 10),
+                   Msg        => "press the blue button for",
+                   Font       => BMP_Fonts.Font8x8,
+                   Foreground => HAL.Bitmap.White,
+                   Background => BG);
+
+      Draw_String (Buffer     => Display.Hidden_Buffer (1).all,
+                   Start      => (0, 20),
+                   Msg        => "a demo of drawing pimitives.",
+                   Font       => BMP_Fonts.Font8x8,
+                   Foreground => HAL.Bitmap.White,
+                   Background => BG);
+
       Display.Update_Layer (1, Copy_Back => True);
    end Clear;
 
    Last_X : Integer := -1;
    Last_Y : Integer := -1;
+
+   type Mode is (Drawing_Mode, Bitmap_Showcase_Mode);
+
+   Current_Mode : Mode := Drawing_Mode;
 
 begin
    --  Initialize LCD
@@ -79,49 +106,93 @@ begin
    --  cannot see what you are drawing).
    loop
       if User_Button.Has_Been_Pressed then
-         Clear;
+         case Current_Mode is
+            when Drawing_Mode =>
+               Current_Mode := Bitmap_Showcase_Mode;
+            when Bitmap_Showcase_Mode =>
+               Clear;
+               Current_Mode := Drawing_Mode;
+         end case;
       end if;
 
-      declare
-         State : constant TP_State := Touch_Panel.Get_All_Touch_Points;
-      begin
-         if State'Length = 0 then
-            Last_X := -1;
-            Last_Y := -1;
+      if Current_Mode = Drawing_Mode then
 
-         elsif State'Length = 1 then
-            --  Lines can be drawn between two consecutive points only when
-            --  one touch point is active: the order of the touch data is not
-            --  necessarily preserved by the hardware.
-            if Last_X > 0 then
-               Draw_Line
-                 (Display.Get_Hidden_Buffer (1),
-                  Start     => (Last_X, Last_Y),
-                  Stop      => (State (State'First).X, State (State'First).Y),
-                  Hue       => HAL.Bitmap.Green,
-                  Thickness => State (State'First).Weight / 2,
-                  Fast      => False);
+         declare
+            State : constant TP_State := Touch_Panel.Get_All_Touch_Points;
+         begin
+            if State'Length = 0 then
+               Last_X := -1;
+               Last_Y := -1;
+
+            elsif State'Length = 1 then
+               --  Lines can be drawn between two consecutive points only when
+               --  one touch point is active: the order of the touch data is not
+               --  necessarily preserved by the hardware.
+               if Last_X > 0 then
+                  Draw_Line
+                    (Display.Hidden_Buffer (1).all,
+                     Color     => HAL.Bitmap.Green,
+                     Start     => (Last_X, Last_Y),
+                     Stop      => (State (State'First).X, State (State'First).Y),
+                     Thickness => State (State'First).Weight / 2,
+                     Fast      => False);
+               end if;
+
+               Last_X := State (State'First).X;
+               Last_Y := State (State'First).Y;
+
+            else
+               Last_X := -1;
+               Last_Y := -1;
             end if;
 
-            Last_X := State (State'First).X;
-            Last_Y := State (State'First).Y;
+            for Id in State'Range loop
+               Fill_Circle
+                 (Display.Hidden_Buffer (1).all,
+                  Color => HAL.Bitmap.Green,
+                  Center => (State (Id).X, State (Id).Y),
+                  Radius => State (Id).Weight / 4);
+            end loop;
 
-         else
-            Last_X := -1;
-            Last_Y := -1;
-         end if;
+            if State'Length > 0 then
+               Display.Update_Layer (1, Copy_Back => True);
+            end if;
+         end;
 
-         for Id in State'Range loop
-            Fill_Circle
-              (Display.Get_Hidden_Buffer (1),
-               Center => (State (Id).X, State (Id).Y),
-               Radius => State (Id).Weight / 4,
-               Hue    => HAL.Bitmap.Green);
-         end loop;
+      else
 
-         if State'Length > 0 then
-            Display.Update_Layer (1, Copy_Back => True);
-         end if;
-      end;
+         --  Show some of the supported drawing primitives
+
+         Display.Hidden_Buffer (1).Fill (Black);
+
+         Display.Hidden_Buffer (1).Fill_Rounded_Rect
+           (HAL.Bitmap.Green, ((10, 10), 100, 100), 20);
+
+         Display.Hidden_Buffer (1).Draw_Rounded_Rect
+           (HAL.Bitmap.Red, ((10, 10), 100, 100), 20, Thickness => 4);
+
+         Display.Hidden_Buffer (1).Fill_Circle (HAL.Bitmap.Yellow,
+                                                (60, 60), 20);
+         Display.Hidden_Buffer (1).Draw_Circle (HAL.Bitmap.Blue,
+                                                (60, 60), 20);
+
+         Display.Hidden_Buffer (1).Cubic_Bezier (Color     => HAL.Bitmap.Violet,
+                                                 P1        => (10, 10),
+                                                 P2        => (60, 10),
+                                                 P3        => (60, 60),
+                                                 P4        => (100, 100),
+                                                 N         => 200,
+                                                 Thickness => 5);
+
+         Copy_Rect (Src_Buffer  => Display.Hidden_Buffer (1).all,
+                    Src_Pt      => (0, 0),
+                    Dst_Buffer  => Display.Hidden_Buffer (1).all,
+                    Dst_Pt      => (100, 100),
+                    Width       => 100,
+                    Height      => 100,
+                    Synchronous => True);
+
+         Display.Update_Layer (1, Copy_Back => False);
+      end if;
    end loop;
 end Draw;

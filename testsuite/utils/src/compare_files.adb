@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,22 +29,42 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Bitmap;
+with Ada.Streams;
+with Ada.Streams.Stream_IO;
 
-package OpenMV.LCD_Shield is
-   Width  : constant := 128;
-   Height : constant := 160;
+with GNAT.MD5; use GNAT.MD5;
 
-   procedure Initialize;
-   function Initialized return Boolean;
+package body Compare_Files is
 
-   function Get_Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer;
+   package Hash renames GNAT.MD5;
 
-   procedure Rotate_Screen_90
-     with Pre => Initialized;
-   procedure Rotate_Screen_0
-     with Pre => Initialized;
-   procedure Display
-     with Pre => Initialized;
+   function Binnary_Equal (A_Path, B_Path : String) return Boolean is
 
-end OpenMV.LCD_Shield;
+      function Compute_Hash (Path : String) return Message_Digest;
+
+      function Compute_Hash (Path : String) return Message_Digest
+      is
+         Context : aliased GNAT.MD5.Context := GNAT.MD5.Initial_Context;
+
+         File   : Ada.Streams.Stream_IO.File_Type;
+         Buffer : Ada.Streams.Stream_Element_Array (1 .. 4096);
+         Last   : Ada.Streams.Stream_Element_Offset;
+         use type Ada.Streams.Stream_Element_Offset;
+      begin
+         Ada.Streams.Stream_IO.Open (File,
+                                     Mode => Ada.Streams.Stream_IO.In_File,
+                                     Name => Path);
+         loop
+            Ada.Streams.Stream_IO.Read (File, Item => Buffer, Last => Last);
+            Hash.Update (Context, Buffer (1 .. Last));
+            Ada.Streams.Stream_IO.Read (File, Item => Buffer, Last => Last);
+            exit when Last < Buffer'Last;
+         end loop;
+         Ada.Streams.Stream_IO.Close (File);
+         return Hash.Digest (Context);
+      end Compute_Hash;
+   begin
+      return Compute_Hash (A_Path) = Compute_Hash (B_Path);
+   end Binnary_Equal;
+
+end Compare_Files;

@@ -30,8 +30,8 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with System;
-with Interfaces; use Interfaces;
+with Interfaces;               use Interfaces;
+with Bitmap_Color_Conversion;  use Bitmap_Color_Conversion;
 
 package body ST7735R is
 
@@ -75,6 +75,9 @@ package body ST7735R is
                          Data : HAL.Byte_Array);
    procedure Write_Data (LCD  : ST7735R_Device;
                          Data : HAL.UInt16_Array);
+
+   procedure Read_Data (LCD  : ST7735R_Device;
+                        Data : out UInt16);
 
    procedure Set_Command_Mode (LCD : ST7735R_Device);
    procedure Set_Data_Mode (LCD : ST7735R_Device);
@@ -217,13 +220,36 @@ package body ST7735R is
       End_Transaction (LCD);
    end Write_Data;
 
+   ---------------
+   -- Read_Data --
+   ---------------
+
+   procedure Read_Data (LCD  : ST7735R_Device;
+                        Data : out UInt16)
+   is
+      SPI_Data : SPI_Data_16b (1 .. 1);
+      Status : SPI_Status;
+   begin
+      Start_Transaction (LCD);
+      Set_Data_Mode (LCD);
+      LCD.Port.Receive (SPI_Data, Status);
+      if Status /= Ok then
+         --  No error handling...
+         raise Program_Error;
+      end if;
+      End_Transaction (LCD);
+
+      Data := SPI_Data (SPI_Data'First);
+
+   end Read_Data;
+
    ----------------
    -- Initialize --
    ----------------
 
    procedure Initialize (LCD : in out ST7735R_Device) is
    begin
-      LCD.Initialized := True;
+      LCD.Layer.LCD := LCD'Unchecked_Access;
 
       LCD.RST.Clear;
       LCD.Time.Delay_Milliseconds (100);
@@ -234,6 +260,8 @@ package body ST7735R is
       Write_Command (LCD, 16#11#);
 
       LCD.Time.Delay_Milliseconds (100);
+
+      LCD.Initialized := True;
    end Initialize;
 
    -----------------
@@ -542,6 +570,22 @@ package body ST7735R is
       Write_Raw_Pixels (LCD, Data);
    end Set_Pixel;
 
+   -----------
+   -- Pixel --
+   -----------
+
+   function Pixel (LCD   : ST7735R_Device;
+                    X, Y  : UInt16)
+                    return UInt16
+   is
+      Ret : UInt16;
+   begin
+      Set_Address (LCD, X, X + 1, Y, Y + 1);
+      Read_Data (LCD, Ret);
+      return Ret;
+   end Pixel;
+
+
    ----------------------
    -- Write_Raw_Pixels --
    ----------------------
@@ -571,7 +615,7 @@ package body ST7735R is
    --------------------
 
    overriding
-   function Get_Max_Layers
+   function Max_Layers
      (Display : ST7735R_Device) return Positive is (1);
 
    ------------------
@@ -579,7 +623,7 @@ package body ST7735R is
    ------------------
 
    overriding
-   function Is_Supported
+   function Supported
      (Display : ST7735R_Device;
       Mode    : FB_Color_Mode) return Boolean is
      (Mode = HAL.Bitmap.RGB_565);
@@ -615,7 +659,7 @@ package body ST7735R is
    ---------------
 
    overriding
-   function Get_Width
+   function Width
      (Display : ST7735R_Device) return Positive is (Screen_Width);
 
    ----------------
@@ -623,7 +667,7 @@ package body ST7735R is
    ----------------
 
    overriding
-   function Get_Height
+   function Height
      (Display : ST7735R_Device) return Positive is (Screen_Height);
 
    ----------------
@@ -631,7 +675,7 @@ package body ST7735R is
    ----------------
 
    overriding
-   function Is_Swapped
+   function Swapped
      (Display : ST7735R_Device) return Boolean is (False);
 
    --------------------
@@ -661,17 +705,11 @@ package body ST7735R is
       Width   : Positive := Positive'Last;
       Height  : Positive := Positive'Last)
    is
-      pragma Unreferenced (X, Y, Width, Height);
+      pragma Unreferenced (X, Y, Width, Height, Display);
    begin
       if Layer /= 1 or else Mode /= RGB_565 then
          raise Program_Error;
       end if;
-
-      Display.Layer.Width := Screen_Width;
-      Display.Layer.Height := Screen_Height;
-      Display.Layer.Addr := Display.Layer_Data'Address;
-      Display.Layer.Color_Mode := Mode;
-      Display.Layer_Initialized := True;
    end Initialize_Layer;
 
    -----------------
@@ -683,8 +721,9 @@ package body ST7735R is
      (Display : ST7735R_Device;
       Layer   : Positive) return Boolean
    is
+      pragma Unreferenced (Display);
    begin
-      return Layer = 1 and then Display.Layer_Initialized;
+      return Layer = 1;
    end Initialized;
 
    ------------------
@@ -697,19 +736,12 @@ package body ST7735R is
       Layer     : Positive;
       Copy_Back : Boolean := False)
    is
-      pragma Unreferenced (Copy_Back);
+      pragma Unreferenced (Copy_Back, Display);
    begin
       if Layer /= 1 then
          raise Program_Error;
       end if;
-      Set_Address (Display,
-                   X_Start => 0,
-                   X_End   => Unsigned_16 (Display.Layer.Width - 1),
-                   Y_Start => 0,
-                   Y_End   => Unsigned_16 (Display.Layer.Height - 1));
-      Display.Write_Raw_Pixels (Display.Layer_Data);
    end Update_Layer;
-
 
    -------------------
    -- Update_Layers --
@@ -728,40 +760,103 @@ package body ST7735R is
    --------------------
 
    overriding
-   function Get_Color_Mode
+   function Color_Mode
      (Display : ST7735R_Device;
       Layer   : Positive) return FB_Color_Mode
    is
+      pragma Unreferenced (Display);
    begin
       if Layer /= 1 then
          raise Program_Error;
       end if;
-      return Display.Layer.Color_Mode;
-   end Get_Color_Mode;
+      return RGB_565;
+   end Color_Mode;
 
    -----------------------
    -- Get_Hidden_Buffer --
    -----------------------
 
    overriding
-   function Get_Hidden_Buffer
-     (Display : ST7735R_Device;
-      Layer   : Positive) return HAL.Bitmap.Bitmap_Buffer'Class
+   function Hidden_Buffer
+     (Display : in out ST7735R_Device;
+      Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer
    is
    begin
       if Layer /= 1 then
          raise Program_Error;
       end if;
-      return Display.Layer;
-   end Get_Hidden_Buffer;
+      return Display.Layer'Unchecked_Access;
+   end Hidden_Buffer;
 
    --------------------
    -- Get_Pixel_Size --
    --------------------
 
    overriding
-   function Get_Pixel_Size
+   function Pixel_Size
      (Display : ST7735R_Device;
       Layer   : Positive) return Positive is (16);
+
+   ---------------
+   -- Set_Pixel --
+   ---------------
+
+   overriding
+   procedure Set_Pixel
+     (Buffer  : in out ST7735R_Bitmap_Buffer;
+      Pt      : Point;
+      Value   : Bitmap_Color)
+   is
+   begin
+      Buffer.Set_Pixel (Pt, Bitmap_Color_To_Word (RGB_565, Value));
+   end Set_Pixel;
+
+   ---------------
+   -- Set_Pixel --
+   ---------------
+
+   overriding
+   procedure Set_Pixel
+     (Buffer  : in out ST7735R_Bitmap_Buffer;
+      Pt      : Point;
+      Value   : UInt32)
+   is
+   begin
+      Buffer.LCD.Set_Pixel (UInt16 (Pt.X), UInt16 (Pt.Y), UInt16 (Value));
+   end Set_Pixel;
+
+   ---------------------
+   -- Set_Pixel_Blend --
+   ---------------------
+
+   overriding
+   procedure Set_Pixel_Blend
+     (Buffer : in out ST7735R_Bitmap_Buffer;
+      Pt     : Point;
+      Value  : Bitmap_Color) renames Set_Pixel;
+
+   -----------
+   -- Pixel --
+   -----------
+
+   overriding
+   function Pixel
+     (Buffer : ST7735R_Bitmap_Buffer;
+      Pt     : Point)
+      return Bitmap_Color
+   is
+   begin
+      return Word_To_Bitmap_Color (RGB_565, Buffer.Pixel (Pt));
+   end Pixel;
+
+   overriding
+   function Pixel
+     (Buffer : ST7735R_Bitmap_Buffer;
+      Pt     : Point)
+      return UInt32
+   is
+   begin
+      return UInt32 (Buffer.LCD.Pixel (UInt16 (Pt.X), UInt16 (Pt.Y)));
+   end Pixel;
 
 end ST7735R;

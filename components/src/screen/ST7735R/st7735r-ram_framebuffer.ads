@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,99 +29,77 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Bitmap;
+--  This a buffered driver for the ST7735R LCD. Pixels are stored in RAM
+--  which means more memory consumption but also fast operations.
+--
+--  Please use ST7735R for a low memory foot print implementation.
 
-package HAL.Framebuffer is
+with Memory_Mapped_Bitmap; use Memory_Mapped_Bitmap;
 
-   subtype FB_Color_Mode is HAL.Bitmap.Bitmap_Color_Mode range
-     HAL.Bitmap.ARGB_8888 .. HAL.Bitmap.AL_88;
+package ST7735R.RAM_Framebuffer is
 
-   type Display_Orientation is
-     (Default, Landscape, Portrait);
+   subtype Parent is ST7735R_Device;
 
-   type Wait_Mode is (Polling, Interrupt);
+   type ST7735R_RAM_Framebuffer_Device
+     (Port : not null Any_SPI_Port;
+      CS   : not null Any_GPIO_Point;
+      RS   : not null Any_GPIO_Point;
+      RST  : not null Any_GPIO_Point;
+      Time : not null HAL.Time.Any_Delays)
+   is limited new Parent with private;
 
-   type Frame_Buffer_Display is limited interface;
-
-   type Any_Frame_Buffer_Display is access all Frame_Buffer_Display'Class;
-
-   function Max_Layers
-     (This : Frame_Buffer_Display) return Positive
-      is abstract;
-
-   function Supported
-     (This : Frame_Buffer_Display;
-      Mode : FB_Color_Mode) return Boolean
-      is abstract;
-
-   procedure Set_Orientation
-     (This        : in out Frame_Buffer_Display;
-      Orientation : Display_Orientation) is abstract;
-
-   procedure Set_Mode
-     (This    : in out Frame_Buffer_Display;
-      Mode    : Wait_Mode) is abstract;
-
-   function Initialized
-     (This : Frame_Buffer_Display) return Boolean is abstract;
-
-   function Width
-     (This : Frame_Buffer_Display) return Positive is abstract;
-
-   function Height
-     (This : Frame_Buffer_Display) return Positive is abstract;
-
-   function Swapped
-     (This : Frame_Buffer_Display) return Boolean is abstract;
-   --  Whether X/Y coordinates are considered Swapped by the drawing primitives
-   --  This simulates Landscape/Portrait orientation on displays not supporting
-   --  hardware orientation change.
-
-   procedure Set_Background
-     (This : Frame_Buffer_Display; R, G, B : Byte) is abstract;
-
+   overriding
    procedure Initialize_Layer
-     (This   : in out Frame_Buffer_Display;
-      Layer  : Positive;
-      Mode   : FB_Color_Mode;
-      X      : Natural := 0;
-      Y      : Natural := 0;
-      Width  : Positive := Positive'Last;
-      Height : Positive := Positive'Last) is abstract;
+     (Display : in out ST7735R_RAM_Framebuffer_Device;
+      Layer   : Positive;
+      Mode    : FB_Color_Mode;
+      X       : Natural := 0;
+      Y       : Natural := 0;
+      Width   : Positive := Positive'Last;
+      Height  : Positive := Positive'Last);
    --  All layers are double buffered, so an explicit call to Update_Layer
    --  needs to be performed to actually display the current buffer attached
    --  to the layer.
    --  Alloc is called to create the actual buffer.
 
+   overriding
    function Initialized
-     (This  : Frame_Buffer_Display;
-      Layer : Positive) return Boolean is abstract;
+     (Display : ST7735R_RAM_Framebuffer_Device;
+      Layer   : Positive) return Boolean;
 
+   overriding
    procedure Update_Layer
-     (This      : in out Frame_Buffer_Display;
+     (Display   : in out ST7735R_RAM_Framebuffer_Device;
       Layer     : Positive;
-      Copy_Back : Boolean := False) is abstract;
+      Copy_Back : Boolean := False);
    --  Updates the layer so that the hidden buffer is displayed.
 
+   overriding
    procedure Update_Layers
-     (This : in out Frame_Buffer_Display) is abstract;
+     (Display : in out ST7735R_RAM_Framebuffer_Device);
    --  Updates all initialized layers at once with their respective hidden
-   --  buffer.
+   --  buffer
 
-   function Color_Mode
-     (This  : Frame_Buffer_Display;
-      Layer : Positive) return FB_Color_Mode is abstract;
-   --  Retrieves the current color mode for the layer.
-
+   overriding
    function Hidden_Buffer
-     (This  : in out Frame_Buffer_Display;
-      Layer : Positive)
-      return not null HAL.Bitmap.Any_Bitmap_Buffer is abstract;
+     (Display : in out ST7735R_RAM_Framebuffer_Device;
+      Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer;
    --  Retrieves the current hidden buffer for the layer.
 
-   function Pixel_Size
-     (Display : Frame_Buffer_Display;
-      Layer   : Positive) return Positive is abstract;
-   --  Retrieves the current hidden buffer for the layer.
+private
 
-end HAL.Framebuffer;
+   subtype Pixel_Data is UInt16_Array (0 .. (Screen_Width * Screen_Height) - 1);
+
+   type ST7735R_RAM_Framebuffer_Device
+     (Port : not null Any_SPI_Port;
+      CS   : not null Any_GPIO_Point;
+      RS   : not null Any_GPIO_Point;
+      RST  : not null Any_GPIO_Point;
+      Time : not null HAL.Time.Any_Delays)
+   is limited new Parent (Port, CS, RS, RST, Time) with record
+      Memory_Layer : aliased Memory_Mapped_Bitmap_Buffer;
+      Layer_Data : Pixel_Data;
+      Layer_Initialized : Boolean := False;
+   end record;
+
+end ST7735R.RAM_Framebuffer;

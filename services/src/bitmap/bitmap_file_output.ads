@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,22 +29,12 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Bitmap;
+with HAL.Filesystem; use HAL.Filesystem;
+with HAL.Bitmap;     use HAL.Bitmap;
 
-package OpenMV.LCD_Shield is
-   Width  : constant := 128;
-   Height : constant := 160;
+package Bitmap_File_Output is
 
-   procedure Initialize;
-   function Initialized return Boolean;
+   procedure Write_BMP_File (File   : in out File_Handle'Class;
+                             Bitmap : Bitmap_Buffer'Class);
 
-   function Get_Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer;
-
-   procedure Rotate_Screen_90
-     with Pre => Initialized;
-   procedure Rotate_Screen_0
-     with Pre => Initialized;
-   procedure Display
-     with Pre => Initialized;
-
-end OpenMV.LCD_Shield;
+end Bitmap_File_Output;

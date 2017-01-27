@@ -1,0 +1,16 @@
+library project Test_Utils extends "../../boards/common_config.gpr" is
+
+   Src_Dirs := ("src");
+
+   for Source_Dirs use Src_Dirs;
+
+   for Languages use ("Ada");
+   for Library_Name use "test_utils";
+   for Library_Kind use "static";
+   for Library_Dir use "lib/";
+   for Object_Dir use "obj/";
+
+   package Compiler renames Common_Config.Compiler;
+   package Builder renames Common_Config.Builder;
+
+end Test_Utils;

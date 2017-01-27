@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,22 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Bitmap;
+package Compare_Files is
 
-package OpenMV.LCD_Shield is
-   Width  : constant := 128;
-   Height : constant := 160;
+   function Binnary_Equal (A_Path, B_Path : String) return Boolean;
 
-   procedure Initialize;
-   function Initialized return Boolean;
-
-   function Get_Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer;
-
-   procedure Rotate_Screen_90
-     with Pre => Initialized;
-   procedure Rotate_Screen_0
-     with Pre => Initialized;
-   procedure Display
-     with Pre => Initialized;
-
-end OpenMV.LCD_Shield;
+end Compare_Files;

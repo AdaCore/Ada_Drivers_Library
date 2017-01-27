@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,22 +29,19 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Bitmap;
+with HAL;        use HAL;
+with HAL.Bitmap; use HAL.Bitmap;
 
-package OpenMV.LCD_Shield is
-   Width  : constant := 128;
-   Height : constant := 160;
+package Bitmap_Color_Conversion is
 
-   procedure Initialize;
-   function Initialized return Boolean;
+   function Bitmap_Color_To_Word
+     (Mode : Bitmap_Color_Mode; Col : Bitmap_Color)
+     return UInt32;
+   --  Translates the DMA2D Color into native buffer color
 
-   function Get_Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer;
+   function Word_To_Bitmap_Color
+     (Mode : Bitmap_Color_Mode; Col : UInt32)
+     return Bitmap_Color;
+   --  Translates the native buffer color into DMA2D Color
 
-   procedure Rotate_Screen_90
-     with Pre => Initialized;
-   procedure Rotate_Screen_0
-     with Pre => Initialized;
-   procedure Display
-     with Pre => Initialized;
-
-end OpenMV.LCD_Shield;
+end Bitmap_Color_Conversion;
