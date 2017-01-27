@@ -1,0 +1,16 @@
+--  The HAL has to be compilable with the most restricted run-times used by the
+--  platforms supported by the Ada_Drivers_Library. Including the "Zero Foot
+--  Print" (ZFP) profile that doens't support tasking.
+--
+--  We use configuration pragmas to make sure some of those restrition are
+--  enforced.
+
+pragma Restrictions (No_Dependence => Ada.Real_Time);
+pragma Restrictions (No_Dependence => Ada.Calandar);
+
+--  We should restrict protected objects and tasking but the No_Tasking and
+--  No_Protected_Types restriction are propagated to all unit linking with the
+--  componenet layer, this is not what we want...
+--  pragma Restrictions (No_Protected_Types)
+--  pragma Restrictions (No_Tasking);
+
