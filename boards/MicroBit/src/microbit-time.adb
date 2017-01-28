@@ -30,10 +30,11 @@
 ------------------------------------------------------------------------------
 
 with nRF51.Clock;
-with nRF51.Device;     use nRF51.Device;
-with nRF51.RTC;        use nRF51.RTC;
+with nRF51.Device;        use nRF51.Device;
+with nRF51.RTC;           use nRF51.RTC;
 with nRF51.Events;
 with nRF51.Interrupts;
+with System.Machine_Code; use System.Machine_Code;
 
 package body MicroBit.Time is
 
@@ -120,6 +121,19 @@ package body MicroBit.Time is
    begin
       return Clock_Ms;
    end Clock;
+
+   --------------
+   -- Delay_Ms --
+   --------------
+
+   procedure Delay_Ms (Milliseconds : UInt64) is
+      Wakeup_Time : constant UInt64 := Clock + Milliseconds;
+   begin
+      while Wakeup_Time > Clock loop
+         Asm (Template => "wfi", -- Wait for interrupt
+              Volatile => True);
+      end loop;
+   end Delay_Ms;
 
    -----------------
    -- Tick_Period --

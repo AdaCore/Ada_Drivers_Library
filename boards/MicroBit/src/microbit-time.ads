@@ -37,6 +37,10 @@ package MicroBit.Time is
 
    function Clock return Time_Ms;
 
+   procedure Delay_Ms (Milliseconds : UInt64);
+
+   procedure Sleep (Milliseconds : UInt64) renames Delay_Ms;
+
    function Tick_Period return Time_Ms;
 
    type Tick_Callback is access procedure;
