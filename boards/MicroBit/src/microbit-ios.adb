@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 with nRF51.GPIO; use nRF51.GPIO;
+with nRF51.ADC;  use nRF51.ADC;
 
 package body MicroBit.IOs is
 
@@ -142,9 +143,19 @@ package body MicroBit.IOs is
       if Current_Mode (Pin) /= Analog_In then
          Current_Mode (Pin) := Analog_In;
       end if;
-      --  Generated stub: replace with real body!
-      raise Program_Error with "Unimplemented function Read_Analog";
-      return Read_Analog (Pin => Pin);
+
+      Start_Pin_Conversion (Pin   => (case Pin is
+                                         when 0      => 4,
+                                         when 1      => 3,
+                                         when 2      => 2,
+                                         when 3      => 5,
+                                         when 4      => 6,
+                                         when 10     => 7,
+                                         when others => 0),
+                            Input => Pin_One_Third,
+                            Ref   => VDD_One_Third,
+                            Res   => 10);
+      return Analog_Value (Wait_For_Result);
    end Read_Analog;
 
    ----------------

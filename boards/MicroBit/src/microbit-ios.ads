@@ -41,8 +41,8 @@ package MicroBit.IOs is
                              when 0 .. 16 | 19 .. 20 => True,
                              when others             => False),
          when Analog  => (case Pin is
-                             when 3 | 4 | 10 => True,
-                             when others     => False),
+                             when 0 .. 4 | 10 => True,
+                             when others                 => False),
          when Touch   => (case Pin is
                              when 0 | 1 | 2 => True,
                              when others    => False));
