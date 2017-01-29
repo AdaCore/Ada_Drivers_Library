@@ -33,6 +33,25 @@ with NRF51_SVD.TWI; use NRF51_SVD.TWI;
 
 package body nRF51.TWI is
 
+   procedure Stop_Sequence (This : in out TWI_Master'Class);
+
+   -------------------
+   -- Stop_Sequence --
+   -------------------
+
+   procedure Stop_Sequence (This : in out TWI_Master'Class) is
+   begin
+      --  Stop sequence
+
+      This.Periph.EVENTS_STOPPED := 0;
+
+      This.Periph.TASKS_STOP := 1;
+
+      while This.Periph.EVENTS_STOPPED = 0 loop
+         null;
+      end loop;
+   end Stop_Sequence;
+
    ------------
    -- Enable --
    ------------
@@ -149,15 +168,7 @@ package body nRF51.TWI is
       end loop;
 
       if This.Do_Stop_Sequence then
-         --  Stop sequence
-
-         This.Periph.EVENTS_STOPPED := 0;
-
-         This.Periph.TASKS_STOP := 1;
-
-         while This.Periph.EVENTS_STOPPED = 0 loop
-            null;
-         end loop;
+         Stop_Sequence (This);
       end if;
 
       Status := Ok;
@@ -189,10 +200,15 @@ package body nRF51.TWI is
       --  Set Address
       This.Periph.ADDRESS.ADDRESS := UInt7 (Addr);
 
+      --  Configure SHORTS to automatically suspend TWI port when receiving a
+      --  byte.
+      This.Periph.SHORTS.BB_SUSPEND := Enabled;
+      This.Periph.SHORTS.BB_STOP    := Disabled;
+
       --  Start RX sequence
       This.Periph.TASKS_STARTRX := 1;
 
-      for Elt of Data loop
+      for Index in Data'Range loop
 
          loop
 
@@ -201,8 +217,7 @@ package body nRF51.TWI is
                --  Clear the error
                This.Periph.EVENTS_ERROR := 0;
 
-               --  Stop sequence
-               This.Periph.TASKS_STOP := 1;
+               Stop_Sequence (This);
 
                return;
             end if;
@@ -210,23 +225,20 @@ package body nRF51.TWI is
             exit when This.Periph.EVENTS_RXDREADY /= 0;
          end loop;
 
+         if Index = Data'Last and then This.Do_Stop_Sequence then
+
+            --  Configure SHORTS to automatically stop the TWI port and produce
+            --  a STOP event on the bus when receiving a byte.
+            This.Periph.SHORTS.BB_SUSPEND := Disabled;
+            This.Periph.SHORTS.BB_STOP    := Enabled;
+         end if;
+
          --  Clear the event
          This.Periph.EVENTS_RXDREADY := 0;
 
-         Elt := This.Periph.RXD.RXD;
+         Data (Index) := This.Periph.RXD.RXD;
       end loop;
 
-      if This.Do_Stop_Sequence then
-         --  Stop sequence
-
-         This.Periph.EVENTS_STOPPED := 0;
-
-         This.Periph.TASKS_STOP := 1;
-
-         while This.Periph.EVENTS_STOPPED = 0 loop
-            null;
-         end loop;
-      end if;
       Status := Ok;
    end Master_Receive;
 
