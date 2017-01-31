@@ -6,7 +6,7 @@ aggregate library project Native is
 
    for Project_Files use ("../hal/HAL.gpr",
                           "../components/components.gpr",
-                          "../services/services.gpr",
+                          "../middleware/middleware.gpr",
                           "native/board.gpr");
 
    for Library_Dir use "lib/native/" & Build;

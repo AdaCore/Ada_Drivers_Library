@@ -32,5 +32,5 @@
 with HAL.Bitmap;
 
 package OpenMV.Bitmap is
-   function Allocate return HAL.Bitmap.Bitmap_Buffer'Class;
+   function Allocate return not null HAL.Bitmap.Any_Bitmap_Buffer;
 end OpenMV.Bitmap;

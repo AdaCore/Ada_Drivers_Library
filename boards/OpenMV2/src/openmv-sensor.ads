@@ -35,5 +35,5 @@ package OpenMV.Sensor is
    procedure Initialize;
    function Initialized return Boolean;
 
-   procedure Snapshot (BM : HAL.Bitmap.Bitmap_Buffer'Class);
+   procedure Snapshot (BM : not null HAL.Bitmap.Any_Bitmap_Buffer);
 end OpenMV.Sensor;

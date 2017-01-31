@@ -1,12 +1,13 @@
 with "../hal/HAL";
 with "config";
 
-library project Services is
+library project Middleware is
 
    Src_Dirs := ("src/filesystems",
                 "src/BLE",
                 "src/utils",
-                "src/audio");
+                "src/audio",
+                "src/bitmap");
 
    case Config.RTS is
       when "ravenscar-sfp" | "ravenscar-full" =>
@@ -26,4 +27,4 @@ library project Services is
    package Compiler renames Config.Compiler;
    package Builder renames Config.Builder;
 
-end Services;
+end Middleware;

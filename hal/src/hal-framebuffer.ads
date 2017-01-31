@@ -45,11 +45,11 @@ package HAL.Framebuffer is
 
    type Any_Frame_Buffer_Display is access all Frame_Buffer_Display'Class;
 
-   function Get_Max_Layers
+   function Max_Layers
      (This : Frame_Buffer_Display) return Positive
       is abstract;
 
-   function Is_Supported
+   function Supported
      (This : Frame_Buffer_Display;
       Mode : FB_Color_Mode) return Boolean
       is abstract;
@@ -65,13 +65,13 @@ package HAL.Framebuffer is
    function Initialized
      (This : Frame_Buffer_Display) return Boolean is abstract;
 
-   function Get_Width
+   function Width
      (This : Frame_Buffer_Display) return Positive is abstract;
 
-   function Get_Height
+   function Height
      (This : Frame_Buffer_Display) return Positive is abstract;
 
-   function Is_Swapped
+   function Swapped
      (This : Frame_Buffer_Display) return Boolean is abstract;
    --  Whether X/Y coordinates are considered Swapped by the drawing primitives
    --  This simulates Landscape/Portrait orientation on displays not supporting
@@ -108,17 +108,18 @@ package HAL.Framebuffer is
    --  Updates all initialized layers at once with their respective hidden
    --  buffer.
 
-   function Get_Color_Mode
+   function Color_Mode
      (This  : Frame_Buffer_Display;
       Layer : Positive) return FB_Color_Mode is abstract;
    --  Retrieves the current color mode for the layer.
 
-   function Get_Hidden_Buffer
-     (This  : Frame_Buffer_Display;
-      Layer : Positive) return HAL.Bitmap.Bitmap_Buffer'Class is abstract;
+   function Hidden_Buffer
+     (This  : in out Frame_Buffer_Display;
+      Layer : Positive)
+      return not null HAL.Bitmap.Any_Bitmap_Buffer is abstract;
    --  Retrieves the current hidden buffer for the layer.
 
-   function Get_Pixel_Size
+   function Pixel_Size
      (Display : Frame_Buffer_Display;
       Layer   : Positive) return Positive is abstract;
    --  Retrieves the current hidden buffer for the layer.

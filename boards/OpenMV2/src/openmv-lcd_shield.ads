@@ -38,7 +38,7 @@ package OpenMV.LCD_Shield is
    procedure Initialize;
    function Initialized return Boolean;
 
-   function Get_Bitmap return HAL.Bitmap.Bitmap_Buffer'Class;
+   function Get_Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer;
 
    procedure Rotate_Screen_90
      with Pre => Initialized;

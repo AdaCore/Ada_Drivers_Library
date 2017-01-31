@@ -3,7 +3,7 @@ with "../../boards/MicroBit/config";
 
 project MicroBit_Example is
 
-  for Runtime ("Ada") use "zfp-nrf51";
+  for Runtime ("ada") use Project'Project_Dir & "/zfp-nrf51";
   for Target use "arm-eabi";
   for Main use ("main.adb");
   for Languages use ("Ada");
@@ -14,7 +14,13 @@ project MicroBit_Example is
   package Builder renames Config.Builder;
 
   package Linker is
-     for Default_Switches ("Ada") use ("-Wl,--print-memory-usage");
+     for Default_Switches ("Ada") use ("-Wl,--print-memory-usage",
+                                       "-Wl,--gc-sections");
   end Linker;
 
-end MicroBit_Example ;
+  package Ide is
+     for Program_Host use ":2331";
+     for Communication_Protocol use "remote";
+  end Ide;
+
+end MicroBit_Example;

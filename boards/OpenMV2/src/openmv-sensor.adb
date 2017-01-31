@@ -316,19 +316,24 @@ package body OpenMV.Sensor is
    -- Snapshot --
    --------------
 
-   procedure Snapshot (BM : HAL.Bitmap.Bitmap_Buffer'Class) is
+   procedure Snapshot (BM : not null HAL.Bitmap.Any_Bitmap_Buffer) is
       Status : DMA_Error_Code;
       Cnt : constant Interfaces.Unsigned_16 :=
         Interfaces.Unsigned_16 ((BM.Width * BM.Height) / 2);
    begin
-      if BM.Width /= Image_Width or else BM.Height /= Image_Height then
+      if BM.Width /= Image_Width
+        or else
+          BM.Height /= Image_Height
+        or else
+          not BM.Mapped_In_RAM
+      then
          raise Program_Error;
       end if;
 
       if not Compatible_Alignments (Sensor_DMA,
                                     Sensor_DMA_Stream,
                                     DCMI.Data_Register_Address,
-                                    BM.Addr)
+                                    BM.Memory_Address)
       then
          raise Program_Error;
       end if;
@@ -338,7 +343,7 @@ package body OpenMV.Sensor is
       Start_Transfer (This        => Sensor_DMA,
                       Stream      => Sensor_DMA_Stream,
                       Source      => DCMI.Data_Register_Address,
-                      Destination => BM.Addr,
+                      Destination => BM.Memory_Address,
                       Data_Count  => Cnt);
 
       DCMI.Start_Capture (DCMI.Snapshot);

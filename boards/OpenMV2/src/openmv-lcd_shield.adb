@@ -32,7 +32,8 @@
 with STM32.GPIO;
 with STM32.Device;
 with OpenMV;
-with ST7735R; use ST7735R;
+with ST7735R;                 use ST7735R;
+with ST7735R.RAM_Framebuffer; use ST7735R.RAM_Framebuffer;
 with Ravenscar_Time;
 
 package body OpenMV.LCD_Shield is
@@ -42,11 +43,11 @@ package body OpenMV.LCD_Shield is
    LCD_CS  : STM32.GPIO.GPIO_Point renames Shield_SEL;
    All_Points  : constant STM32.GPIO.GPIO_Points := (LCD_RS, LCD_CS, LCD_RST);
 
-   LCD_Driver : ST7735R.ST7735R_Device (Shield_SPI'Access,
-                                        LCD_CS'Access,
-                                        LCD_RS'Access,
-                                        LCD_RST'Access,
-                                        Ravenscar_Time.Delays);
+   LCD_Driver : ST7735R_RAM_Framebuffer_Device (Shield_SPI'Access,
+                                                LCD_CS'Access,
+                                                LCD_RS'Access,
+                                                LCD_RST'Access,
+                                                Ravenscar_Time.Delays);
    Is_Initialized : Boolean := False;
 
    -----------------
@@ -143,9 +144,9 @@ package body OpenMV.LCD_Shield is
    -- Get_Bitmap --
    ----------------
 
-   function Get_Bitmap return HAL.Bitmap.Bitmap_Buffer'Class is
+   function Get_Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer is
    begin
-      return LCD_Driver.Get_Hidden_Buffer (1);
+      return LCD_Driver.Hidden_Buffer (1);
    end Get_Bitmap;
 
    ----------------------

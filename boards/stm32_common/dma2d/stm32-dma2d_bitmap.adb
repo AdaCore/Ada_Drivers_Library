@@ -53,11 +53,9 @@ package body STM32.DMA2D_Bitmap is
         To_DMA2D_CM (Buffer.Color_Mode);
       Ret : DMA2D_Buffer (Color_Mode);
    begin
-      Ret.Addr := Buffer.Addr;
-      Ret.Width := (if Buffer.Swapped then Buffer.Height
-                             else Buffer.Width);
-      Ret.Height := (if Buffer.Swapped then Buffer.Width
-                     else Buffer.Height);
+      Ret.Addr := Buffer.Memory_Address;
+      Ret.Width := Buffer.Width;
+      Ret.Height := Buffer.Height;
       return Ret;
    end To_DMA2D_Buffer;
 
@@ -66,14 +64,13 @@ package body STM32.DMA2D_Bitmap is
    ---------------
 
    overriding procedure Set_Pixel
-     (Buffer : DMA2D_Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural;
+     (Buffer : in out DMA2D_Bitmap_Buffer;
+      Pt     : Point;
       Value  : UInt32)
    is
    begin
       DMA2D_Wait_Transfer;
-      HAL.Bitmap.Bitmap_Buffer (Buffer).Set_Pixel (X, Y, Value);
+      Parent (Buffer).Set_Pixel (Pt, Value);
    end Set_Pixel;
 
    ---------------------
@@ -81,9 +78,8 @@ package body STM32.DMA2D_Bitmap is
    ---------------------
 
    overriding procedure Set_Pixel_Blend
-     (Buffer : DMA2D_Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural;
+     (Buffer : in out DMA2D_Bitmap_Buffer;
+      Pt     : Point;
       Value  : HAL.Bitmap.Bitmap_Color)
    is
       DMA_Buf : constant DMA2D_Buffer := To_DMA2D_Buffer (Buffer);
@@ -92,18 +88,18 @@ package body STM32.DMA2D_Bitmap is
          if not Buffer.Swapped then
             DMA2D_Set_Pixel_Blend
               (Buffer => DMA_Buf,
-               X      => X,
-               Y      => Y,
+               X      => Pt.X,
+               Y      => Pt.Y,
                Color  => To_DMA2D_Color (Value));
          else
             DMA2D_Set_Pixel_Blend
               (Buffer => DMA_Buf,
-               X      => Y,
-               Y      => Buffer.Width - X - 1,
+               X      => Pt.Y,
+               Y      => Buffer.Width - Pt.X - 1,
                Color  => To_DMA2D_Color (Value));
          end if;
       else
-         HAL.Bitmap.Bitmap_Buffer (Buffer).Set_Pixel_Blend (X, Y, Value);
+         Parent (Buffer).Set_Pixel_Blend (Pt, Value);
       end if;
    end Set_Pixel_Blend;
 
@@ -111,29 +107,28 @@ package body STM32.DMA2D_Bitmap is
    -- Get_Pixel --
    ---------------
 
-   overriding function Get_Pixel
+   overriding function Pixel
      (Buffer : DMA2D_Bitmap_Buffer;
-      X      : Natural;
-      Y      : Natural) return UInt32
+      Pt     : Point) return UInt32
    is
    begin
       DMA2D_Wait_Transfer;
-      return HAL.Bitmap.Bitmap_Buffer (Buffer).Get_Pixel (X, Y);
-   end Get_Pixel;
+      return Parent (Buffer).Pixel (Pt);
+   end Pixel;
 
    ----------
    -- Fill --
    ----------
 
    overriding procedure Fill
-     (Buffer : DMA2D_Bitmap_Buffer;
+     (Buffer : in out DMA2D_Bitmap_Buffer;
       Color  : UInt32)
    is
    begin
       if To_DMA2D_CM (Buffer.Color_Mode) in DMA2D_Dst_Color_Mode then
          DMA2D_Fill (To_DMA2D_Buffer (Buffer), Color, True);
       else
-         HAL.Bitmap.Bitmap_Buffer (Buffer).Fill (Color);
+         Parent (Buffer).Fill (Color);
       end if;
    end Fill;
 
@@ -142,12 +137,9 @@ package body STM32.DMA2D_Bitmap is
    ---------------
 
    overriding procedure Fill_Rect
-     (Buffer : DMA2D_Bitmap_Buffer;
+     (Buffer : in out DMA2D_Bitmap_Buffer;
       Color  : UInt32;
-      X      : Integer;
-      Y      : Integer;
-      Width  : Integer;
-      Height : Integer)
+      Area   : Rect)
    is
       DMA_Buf : constant DMA2D_Buffer := To_DMA2D_Buffer (Buffer);
    begin
@@ -156,22 +148,21 @@ package body STM32.DMA2D_Bitmap is
             DMA2D_Fill_Rect
               (DMA_Buf,
                Color  => Color,
-               X      => X,
-               Y      => Y,
-               Width  => Width,
-               Height => Height);
+               X      => Area.Position.X,
+               Y      => Area.Position.Y,
+               Width  => Area.Width,
+               Height => Area.Height);
          else
             DMA2D_Fill_Rect
               (DMA_Buf,
                Color  => Color,
-               X      => Y,
-               Y      => Buffer.Width - X - Width,
-               Width  => Height,
-               Height => Width);
+               X      => Area.Position.Y,
+               Y      => Buffer.Width - Area.Position.X - Area.Width,
+               Width  => Area.Height,
+               Height => Area.Width);
          end if;
       else
-         HAL.Bitmap.Bitmap_Buffer (Buffer).Fill_Rect
-           (Color, X, Y, Width, Height);
+         Parent (Buffer).Fill_Rect (Color, Area);
       end if;
    end Fill_Rect;
 
@@ -181,14 +172,11 @@ package body STM32.DMA2D_Bitmap is
 
    overriding procedure Copy_Rect
      (Src_Buffer  : HAL.Bitmap.Bitmap_Buffer'Class;
-      X_Src       : Natural;
-      Y_Src       : Natural;
-      Dst_Buffer  : DMA2D_Bitmap_Buffer;
-      X_Dst       : Natural;
-      Y_Dst       : Natural;
+      Src_Pt      : Point;
+      Dst_Buffer  : in out DMA2D_Bitmap_Buffer;
+      Dst_Pt      : Point;
       Bg_Buffer   : HAL.Bitmap.Bitmap_Buffer'Class;
-      X_Bg        : Natural;
-      Y_Bg        : Natural;
+      Bg_Pt       : Point;
       Width       : Natural;
       Height      : Natural;
       Synchronous : Boolean)
@@ -197,37 +185,37 @@ package body STM32.DMA2D_Bitmap is
       DMA_Buf_Src : constant DMA2D_Buffer := To_DMA2D_Buffer (Src_Buffer);
       DMA_Buf_Dst : constant DMA2D_Buffer := To_DMA2D_Buffer (Dst_Buffer);
       DMA_Buf_Bg  : DMA2D_Buffer := To_DMA2D_Buffer (Bg_Buffer);
-      X0_Src      : Natural := X_Src;
-      Y0_Src      : Natural := Y_Src;
-      X0_Dst      : Natural := X_Dst;
-      Y0_Dst      : Natural := Y_Dst;
-      X0_Bg       : Natural := X_Bg;
-      Y0_Bg       : Natural := Y_Bg;
+      X0_Src      : Natural := Src_Pt.X;
+      Y0_Src      : Natural := Src_Pt.Y;
+      X0_Dst      : Natural := Dst_Pt.X;
+      Y0_Dst      : Natural := Dst_Pt.Y;
+      X0_Bg       : Natural := Bg_Pt.X;
+      Y0_Bg       : Natural := Bg_Pt.Y;
       W           : Natural := Width;
       H           : Natural := Height;
    begin
       if Src_Buffer.Swapped then
-         X0_Src := Y_Src;
-         Y0_Src := Src_Buffer.Width - X_Src - Width;
+         X0_Src := Src_Pt.Y;
+         Y0_Src := Src_Buffer.Width - Src_Pt.X - Width;
       end if;
 
       if Dst_Buffer.Swapped then
-         X0_Dst := Y_Dst;
-         Y0_Dst := Dst_Buffer.Width - X_Dst - Width;
+         X0_Dst := Dst_Pt.Y;
+         Y0_Dst := Dst_Buffer.Width - Dst_Pt.X - Width;
          W := Height;
          H := Width;
       end if;
 
-      if Bg_Buffer.Addr = System.Null_Address then
+      if Bg_Buffer.Memory_Address = System.Null_Address then
          DMA_Buf_Bg := STM32.DMA2D.Null_Buffer;
          X0_Bg := 0;
          Y0_Bg := 0;
       elsif Bg_Buffer.Swapped then
-         X0_Bg := Y_Bg;
-         Y0_Bg := Bg_Buffer.Width - X_Bg - Width;
+         X0_Bg := Bg_Pt.Y;
+         Y0_Bg := Bg_Buffer.Width - Bg_Pt.X - Width;
       end if;
 
-      Cortex_M.Cache.Clean_DCache (Src_Buffer.Addr, Src_Buffer.Buffer_Size);
+      Cortex_M.Cache.Clean_DCache (Src_Buffer.Memory_Address, Src_Buffer.Buffer_Size);
 
       DMA2D_Copy_Rect
         (DMA_Buf_Src, X0_Src, Y0_Src,
@@ -237,11 +225,33 @@ package body STM32.DMA2D_Bitmap is
          Synchronous => Synchronous);
    end Copy_Rect;
 
+   overriding procedure Copy_Rect
+     (Src_Buffer  : Bitmap_Buffer'Class;
+      Src_Pt      : Point;
+      Dst_Buffer  : in out DMA2D_Bitmap_Buffer;
+      Dst_Pt      : Point;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean)
+   is
+   begin
+      Copy_Rect
+        (Src_Buffer  => Src_Buffer,
+         Src_Pt      => Src_Pt,
+         Dst_Buffer  => Dst_Buffer,
+         Dst_Pt      => Dst_Pt,
+         Bg_Buffer   => Null_Buffer,
+         Bg_Pt       => (0, 0),
+         Width       => Width,
+         Height      => Height,
+         Synchronous => Synchronous);
+   end Copy_Rect;
+
    -------------------
    -- Wait_Transfer --
    -------------------
 
-   overriding procedure Wait_Transfer (Buffer : DMA2D_Bitmap_Buffer)
+   procedure Wait_Transfer (Buffer : DMA2D_Bitmap_Buffer)
    is
    begin
       DMA2D_Wait_Transfer;

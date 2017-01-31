@@ -120,7 +120,7 @@ class Testcase:
 
         # Compare the actual output and the expected one
         if expected_output != stdout:
-            return 'Output mismatch:\n{}'.format(''.join(
+            return 'Output mismatch:\n{}'.format('\n'.join(
                 difflib.unified_diff(
                     expected_output,
                     stdout,
