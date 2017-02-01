@@ -6,7 +6,6 @@
 *.cgpr
 *.bexch
 *.lexch
-*.a
 *.ci
 *.cswi
 *~
