@@ -109,18 +109,10 @@ package STMPE1600 is
       Inversion_State : Boolean);
    --  Enables or disables the polarity inversion of the given input pin
 
-   type STMPE1600_Pin
-     (Port : not null Any_STMPE1600_Expander;
-      Pin  : STMPE1600_Pin_Number)
-   is new HAL.GPIO.GPIO_Point with null record;
+   function As_GPIO_Point
+     (This : in out STMPE1600_Expander;
+      Pin  : STMPE1600_Pin_Number) return HAL.GPIO.Any_GPIO_Point;
 
-   overriding function Set (This : STMPE1600_Pin) return Boolean;
-
-   overriding procedure Set (This : in out STMPE1600_Pin);
-
-   overriding procedure Clear (This : in out STMPE1600_Pin);
-
-   overriding procedure Toggle (This : in out STMPE1600_Pin);
 
 private
 
@@ -144,8 +136,27 @@ private
       Soft_Reset   at 0 range 7 .. 7;
    end record;
 
+
+   type STMPE1600_Pin is new HAL.GPIO.GPIO_Point with record
+      Port : Any_STMPE1600_Expander;
+      Pin  : STMPE1600_Pin_Number;
+   end record;
+   type STMPE1600_Pin_Array is
+     array (STMPE1600_Pin_Number) of aliased STMPE1600_Pin;
+
+   overriding function Set (This : STMPE1600_Pin) return Boolean;
+
+   overriding procedure Set (This : in out STMPE1600_Pin);
+
+   overriding procedure Clear (This : in out STMPE1600_Pin);
+
+   overriding procedure Toggle (This : in out STMPE1600_Pin);
+
    type STMPE1600_Expander (Port : not null HAL.I2C.Any_I2C_Port;
-                            Addr : HAL.I2C.I2C_Address) is limited null record;
+                            Addr : HAL.I2C.I2C_Address)
+   is limited record
+      Points : STMPE1600_Pin_Array;
+   end record;
 
    STMPE1600_REG_ChipID      : constant := 16#00#;
    STMPE1600_REG_Version_ID  : constant := 16#02#;

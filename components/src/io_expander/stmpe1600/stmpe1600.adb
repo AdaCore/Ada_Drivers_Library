@@ -291,6 +291,19 @@ package body STMPE1600 is
       Write (This, STMPE1600_REG_GPPIR_0, BA, Status);
    end Set_Pin_Polarity_Inversion;
 
+   -------------------
+   -- As_GPIO_Point --
+   -------------------
+
+   function As_GPIO_Point
+     (This : in out STMPE1600_Expander;
+      Pin  : STMPE1600_Pin_Number) return HAL.GPIO.Any_GPIO_Point
+   is
+   begin
+      This.Points (Pin) := (This'Unrestricted_Access, Pin);
+      return This.Points (Pin)'Unchecked_Access;
+   end As_GPIO_Point;
+
    ---------
    -- Set --
    ---------
