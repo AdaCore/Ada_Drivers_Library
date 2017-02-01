@@ -68,20 +68,20 @@ package STMPE1600 is
    --  Enables the interrupt from a particular GPIO interrupt source to the
    --  host.
 
-   function Get_Interrupt_Mask
+   function Interrupt_Mask
      (This : STMPE1600_Expander) return STMPE1600_Pins;
    --  Returns the current value of the interrupt mask.
 
-   function Get_Interrupt_State
+   function Interrupt_State
      (This : STMPE1600_Expander) return STMPE1600_Pins;
    --  Tells if pins have changed since last query. Reading this value
    --  clears the state.
    --  The state is set regardless of the interrupt mask.
 
-   function Get_Pins_State
+   function Pins_State
      (This : in out STMPE1600_Expander) return STMPE1600_Pins;
 
-   function Get_Pin_State
+   function Pin_State
      (This : in out STMPE1600_Expander;
       Pin  : STMPE1600_Pin_Number) return Boolean;
 

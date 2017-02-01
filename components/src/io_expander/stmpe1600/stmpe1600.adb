@@ -140,11 +140,11 @@ package body STMPE1600 is
       Write (This, STMPE1600_REG_IEGPIOR_0, BA, Status);
    end Set_Interrupt_Mask;
 
-   ------------------------
-   -- Get_Interrupt_Mask --
-   ------------------------
+   --------------------
+   -- Interrupt_Mask --
+   --------------------
 
-   function Get_Interrupt_Mask
+   function Interrupt_Mask
      (This   : STMPE1600_Expander) return STMPE1600_Pins
    is
       BA  : aliased Byte_Array (1 .. 2);
@@ -153,13 +153,13 @@ package body STMPE1600 is
    begin
       Read (This, STMPE1600_REG_IEGPIOR_0, BA, Status);
       return To_Pins (BA);
-   end Get_Interrupt_Mask;
+   end Interrupt_Mask;
 
-   -------------------------
-   -- Get_Interrupt_State --
-   -------------------------
+   ---------------------
+   -- Interrupt_State --
+   ---------------------
 
-   function Get_Interrupt_State
+   function Interrupt_State
      (This : STMPE1600_Expander) return STMPE1600_Pins
    is
       BA  : aliased Byte_Array (1 .. 2);
@@ -168,13 +168,13 @@ package body STMPE1600 is
    begin
       Read (This, STMPE1600_REG_ISGPIOR_0, BA, Status);
       return To_Pins (BA);
-   end Get_Interrupt_State;
+   end Interrupt_State;
 
-   --------------------
-   -- Get_Pins_State --
-   --------------------
+   ----------------
+   -- Pins_State --
+   ----------------
 
-   function Get_Pins_State
+   function Pins_State
      (This : in out STMPE1600_Expander) return STMPE1600_Pins
    is
       BA  : aliased Byte_Array (1 .. 2);
@@ -183,20 +183,20 @@ package body STMPE1600 is
    begin
       Read (This, STMPE1600_REG_GPMR_0, BA, Status);
       return To_Pins (BA);
-   end Get_Pins_State;
+   end Pins_State;
 
-   -------------------
-   -- Get_Pin_State --
-   -------------------
+   ---------------
+   -- Pin_State --
+   ---------------
 
-   function Get_Pin_State
+   function Pin_State
      (This : in out STMPE1600_Expander;
       Pin  : STMPE1600_Pin_Number) return Boolean
    is
-      Pins : constant STMPE1600_Pins := Get_Pins_State (This);
+      Pins : constant STMPE1600_Pins := Pins_State (This);
    begin
       return Pins (Pin);
-   end Get_Pin_State;
+   end Pin_State;
 
    --------------------
    -- Set_Pins_State --
@@ -222,7 +222,7 @@ package body STMPE1600 is
       Pin   : STMPE1600_Pin_Number;
       State : Boolean)
    is
-      Pins : STMPE1600_Pins := Get_Pins_State (This);
+      Pins : STMPE1600_Pins := Pins_State (This);
    begin
       Pins (Pin) := State;
       Set_Pins_State (This, Pins);
@@ -298,7 +298,7 @@ package body STMPE1600 is
    overriding function Set (This : STMPE1600_Pin) return Boolean
    is
    begin
-      return Get_Pin_State (This.Port.all, This.Pin);
+      return Pin_State (This.Port.all, This.Pin);
    end Set;
 
    ---------
