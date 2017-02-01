@@ -55,7 +55,7 @@ The most of the Middleware part is located in the middleware/ directory at the
 root of the project. It is subdivided in Protocols, Bitmap_Drawings, Audio,
 Tools, etc.
 
-There is also the Component library, it's a little bit special because it
+There is also the Components library, it's a little bit special because it
 implements drivers for external chips (IO expander, gyro, thermal printer,
 etc). That doesn't sound very hardware agnostic, however the code can be used
 on any micro-controller. From a logical standpoint, it belongs in the machine
