@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2017, AdaCore                           --
+--                     Copyright (C) 2017, AdaCore                          --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -11,7 +11,7 @@
 --        notice, this list of conditions and the following disclaimer in   --
 --        the documentation and/or other materials provided with the        --
 --        distribution.                                                     --
---     3. Neither the name of STMicroelectronics nor the names of its       --
+--     3. Neither the name of the copyright holder nor the names of its     --
 --        contributors may be used to endorse or promote products derived   --
 --        from this software without specific prior written permission.     --
 --                                                                          --
@@ -49,7 +49,7 @@ package STMPE1600 is
      array (STMPE1600_Pin_Number) of Pin_Direction
      with Pack, Size => 16;
 
-   procedure Configure
+   procedure Check_Id
      (This   : in out STMPE1600_Expander;
       Status : out Boolean);
 
