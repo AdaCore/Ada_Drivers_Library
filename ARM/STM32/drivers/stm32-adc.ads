@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                  Copyright (C) 2015-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -318,7 +318,7 @@ package STM32.ADC is
    --  connection enabled
 
    procedure Start_Conversion (This : in out Analog_To_Digital_Converter) with
-     Pre => Regular_Conversions_Expected (This) > 0;
+     Pre => Enabled (This) and Regular_Conversions_Expected (This) > 0;
    --  Starts the conversion(s) for the regular channels
 
    function Conversion_Started (This : Analog_To_Digital_Converter)
@@ -341,7 +341,7 @@ package STM32.ADC is
 
    procedure Start_Injected_Conversion
      (This : in out Analog_To_Digital_Converter)
-     with Pre => Injected_Conversions_Expected (This) > 0;
+     with Pre => Enabled (This) and Injected_Conversions_Expected (This) > 0;
    --  Note that the ADC hardware clears the corresponding bit immediately, as
    --  part of starting.
 

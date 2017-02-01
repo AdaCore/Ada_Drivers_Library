@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -207,21 +207,19 @@ package body STM32.ADC is
       Enable_EOC  : Boolean;
       Conversions : Regular_Channel_Conversions)
    is
-      Total_Regular_Conversions : UInt5; --  UInt5 required as max value is 16
    begin
       This.CR2.EOCS := Enable_EOC;
       This.CR2.CONT := Continuous;
 
-      This.CR1.SCAN := Conversions'Length > 0;
-
-      This.CR2.EXTEN := External_Trigger'Enum_Rep (Trigger.Enabler);
+      This.CR1.SCAN := Conversions'Length > 1;
 
       if Trigger.Enabler /= Trigger_Disabled then
-         This.CR2.EXTSEL :=
-           External_Events_Regular_Group'Enum_Rep (Trigger.Event);
+         This.CR2.EXTSEL := External_Events_Regular_Group'Enum_Rep (Trigger.Event);
+         This.CR2.EXTEN := External_Trigger'Enum_Rep (Trigger.Enabler);
+      else
+         This.CR2.EXTSEL := 0;
+         This.CR2.EXTEN := 0;
       end if;
-
-      Total_Regular_Conversions := 0;
 
       for Rank in Conversions'Range loop
          declare
@@ -240,12 +238,10 @@ package body STM32.ADC is
             then
                Enable_VRef_TemperatureSensor_Connection;
             end if;
-
-            Total_Regular_Conversions := Total_Regular_Conversions + 1;
          end;
       end loop;
 
-      This.SQR1.L := UInt4 (Total_Regular_Conversions - 1);  -- biased
+      This.SQR1.L := UInt4 (Conversions'Length - 1);  -- biased rep
    end Configure_Regular_Conversions;
 
    ------------------------------------
@@ -259,7 +255,6 @@ package body STM32.ADC is
       Enable_EOC    : Boolean;
       Conversions   : Injected_Channel_Conversions)
    is
-      Total_Injected_Conversions : UInt3; -- at most four channels possible
    begin
       This.CR2.EOCS := Enable_EOC;
 
@@ -269,14 +264,13 @@ package body STM32.ADC is
       --  RM 13.3.5, pg 390, and "Auto-injection" section on pg 392.
       This.CR1.JAUTO := AutoInjection;
 
-      This.CR2.JEXTEN := External_Trigger'Enum_Rep (Trigger.Enabler);
-
       if Trigger.Enabler /= Trigger_Disabled then
-         This.CR2.JEXTSEL :=
-           External_Events_Injected_Group'Enum_Rep (Trigger.Event);
+         This.CR2.JEXTEN := External_Trigger'Enum_Rep (Trigger.Enabler);
+         This.CR2.JEXTSEL := External_Events_Injected_Group'Enum_Rep (Trigger.Event);
+      else
+         This.CR2.JEXTEN := 0;
+         This.CR2.JEXTSEL := 0;
       end if;
-
-      Total_Injected_Conversions := 0;
 
       for Rank in Conversions'Range loop
          declare
@@ -300,12 +294,10 @@ package body STM32.ADC is
             then
                Enable_VRef_TemperatureSensor_Connection;
             end if;
-
-            Total_Injected_Conversions := Total_Injected_Conversions + 1;
          end;
       end loop;
 
-      This.JSQR.JL := UInt2 (Total_Injected_Conversions - 1);  -- biased
+      This.JSQR.JL := UInt2 (Conversions'Length - 1);  -- biased rep
    end Configure_Injected_Conversions;
 
    ----------------------------
