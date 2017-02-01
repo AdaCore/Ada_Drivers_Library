@@ -37,7 +37,7 @@ package HAL.I2C is
       Err_Timeout,
       Busy);
 
-   type I2C_Data is array (Natural range <>) of Byte;
+   subtype I2C_Data is Byte_Array;
 
    type I2C_Memory_Address_Size is
      (Memory_Size_8b,
