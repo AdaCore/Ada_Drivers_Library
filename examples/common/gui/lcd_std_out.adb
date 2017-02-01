@@ -31,6 +31,7 @@
 
 with STM32.Board; use STM32.Board;
 with Bitmapped_Drawing;
+with Bitmap_Color_Conversion; use Bitmap_Color_Conversion;
 
 package body LCD_Std_Out is
 
@@ -110,8 +111,8 @@ package body LCD_Std_Out is
       Check_Initialized;
       Char_Width  := BMP_Fonts.Char_Width (Font);
       Char_Height := BMP_Fonts.Char_Height (Font);
-      Max_Width   := Display.Get_Width - Char_Width - 1;
-      Max_Height  := Display.Get_Height - Char_Height - 1;
+      Max_Width   := Display.Width - Char_Width - 1;
+      Max_Height  := Display.Height - Char_Height - 1;
    end Recompute_Screen_Dimensions;
 
    --------------
@@ -142,7 +143,7 @@ package body LCD_Std_Out is
    procedure Clear_Screen is
    begin
       Check_Initialized;
-      Display.Get_Hidden_Buffer (1).Fill (Current_Background_Color);
+      Display.Hidden_Buffer (1).Fill (Current_Background_Color);
       Current_Y := 0;
       Char_Count := 0;
       Display.Update_Layer (1, True);
@@ -181,16 +182,16 @@ package body LCD_Std_Out is
    begin
       Check_Initialized;
       Bitmapped_Drawing.Draw_Char
-        (Display.Get_Hidden_Buffer (1),
+        (Display.Hidden_Buffer (1).all,
          Start      => (X, Y),
          Char       => Msg,
          Font       => Current_Font,
          Foreground =>
-           HAL.Bitmap.Bitmap_Color_To_Word (Display.Get_Color_Mode (1),
-                                            Current_Text_Color),
+           Bitmap_Color_To_Word (Display.Color_Mode (1),
+             Current_Text_Color),
          Background =>
-           HAL.Bitmap.Bitmap_Color_To_Word (Display.Get_Color_Mode (1),
-                                            Current_Background_Color));
+           Bitmap_Color_To_Word (Display.Color_Mode (1),
+             Current_Background_Color));
    end Draw_Char;
 
    ---------

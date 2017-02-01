@@ -41,11 +41,13 @@ with STM32.Board;           use STM32.Board;
 with HAL.Bitmap;            use HAL.Bitmap;
 with HAL.Touch_Panel;       use HAL.Touch_Panel;
 with STM32.User_Button;     use STM32;
-with Bitmapped_Drawing;     use Bitmapped_Drawing;
 with BMP_Fonts;
+with LCD_Std_Out;
 
 procedure Draw
 is
+   BG : constant Bitmap_Color := (Alpha => 255, others => 64);
+
    procedure Clear;
 
    -----------
@@ -53,30 +55,13 @@ is
    -----------
 
    procedure Clear is
-      BG : constant Bitmap_Color := (Alpha => 255, others => 64);
    begin
       Display.Hidden_Buffer (1).Fill (BG);
 
-      Draw_String (Buffer     => Display.Hidden_Buffer (1).all,
-                   Start      => (0, 0),
-                   Msg        => "Touch the screen to draw or",
-                   Font       => BMP_Fonts.Font8x8,
-                   Foreground => HAL.Bitmap.White,
-                   Background => BG);
-
-      Draw_String (Buffer     => Display.Hidden_Buffer (1).all,
-                   Start      => (0, 10),
-                   Msg        => "press the blue button for",
-                   Font       => BMP_Fonts.Font8x8,
-                   Foreground => HAL.Bitmap.White,
-                   Background => BG);
-
-      Draw_String (Buffer     => Display.Hidden_Buffer (1).all,
-                   Start      => (0, 20),
-                   Msg        => "a demo of drawing pimitives.",
-                   Font       => BMP_Fonts.Font8x8,
-                   Foreground => HAL.Bitmap.White,
-                   Background => BG);
+      LCD_Std_Out.Clear_Screen;
+      LCD_Std_Out.Put_Line ("Touch the screen to draw or");
+      LCD_Std_Out.Put_Line ("press the blue button for");
+      LCD_Std_Out.Put_Line ("a demo of drawing pimitives.");
 
       Display.Update_Layer (1, Copy_Back => True);
    end Clear;
@@ -89,6 +74,7 @@ is
    Current_Mode : Mode := Drawing_Mode;
 
 begin
+
    --  Initialize LCD
    Display.Initialize;
    Display.Initialize_Layer (1, ARGB_8888);
@@ -98,6 +84,9 @@ begin
 
    --  Initialize button
    User_Button.Initialize;
+
+   LCD_Std_Out.Set_Font (BMP_Fonts.Font8x8);
+   LCD_Std_Out.Current_Background_Color := BG;
 
    --  Clear LCD (set background)
    Clear;
@@ -158,7 +147,6 @@ begin
                Display.Update_Layer (1, Copy_Back => True);
             end if;
          end;
-
       else
 
          --  Show some of the supported drawing primitives
