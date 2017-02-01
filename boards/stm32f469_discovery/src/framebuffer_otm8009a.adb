@@ -462,10 +462,10 @@ package body Framebuffer_OTM8009A is
       Display.Buffers (LCD_Layer) :=
         (Addr       =>
            Reserve (UInt32 (HAL.Bitmap.Bits_Per_Pixel (Mode) * W * H / 8)),
-         Width      => W,
-         Height     => H,
-         Color_Mode => Mode,
-         Swapped    => False);
+         Actual_Width      => W,
+         Actual_Height     => H,
+         Actual_Color_Mode => Mode,
+         Currently_Swapped => False);
       Display.Buffers (LCD_Layer).Fill (0);
 
       DSIHOST.DSI_Wrapper_Disable;
