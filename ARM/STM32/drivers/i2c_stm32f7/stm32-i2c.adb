@@ -411,7 +411,7 @@ package body STM32.I2C is
       end if;
 
       --  Transfer the data
-      while Transmitted <= Data'Length loop
+      while Transmitted < Data'Length loop
          Wait_Tx_Interrupt_Status (This, Timeout, Status);
 
          if Status /= Ok then
