@@ -72,6 +72,38 @@ package body STM32.GPIO is
       return False;
    end Any_Set;
 
+   ----------
+   -- Mode --
+   ----------
+
+   overriding
+   function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode is
+   begin
+      case This.Periph.MODER.Arr (This.Pin) is
+         when Pin_IO_Modes'Enum_Rep (Mode_Out) => return HAL.GPIO.Output;
+         when Pin_IO_Modes'Enum_Rep (Mode_In) => return HAL.GPIO.Input;
+         when others => return HAL.GPIO.Unknown;
+      end case;
+   end Mode;
+
+   --------------
+   -- Set_Mode --
+   --------------
+
+   overriding
+   function Set_Mode (This : in out GPIO_Point;
+                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean
+   is
+   begin
+      case Mode is
+         when HAL.GPIO.Output =>
+            This.Periph.MODER.Arr (This.Pin) := Pin_IO_Modes'Enum_Rep (Mode_Out);
+         when HAL.GPIO.Input =>
+            This.Periph.MODER.Arr (This.Pin) := Pin_IO_Modes'Enum_Rep (Mode_In);
+      end case;
+      return True;
+   end Set_Mode;
+
    ---------
    -- Set --
    ---------

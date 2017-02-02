@@ -112,7 +112,7 @@ package body STMPE1600 is
    procedure Set_Interrupt_Enable
      (This     : in out STMPE1600_Expander;
       Enable   : Boolean;
-      Polarity : Pin_Polarity;
+      Polarity : STMPE1600_Pin_Polarity;
       Status   : out Boolean)
    is
       Sys_Ctrl : aliased STMPE1600_SYS_CTRL;
@@ -249,7 +249,7 @@ package body STMPE1600 is
    procedure Set_Pin_Direction
      (This      : STMPE1600_Expander;
       Pin       : STMPE1600_Pin_Number;
-      Direction : Pin_Direction)
+      Direction : STMPE1600_Pin_Direction)
    is
       Pins      : aliased STMPE1600_Pins;
       BA        : aliased Byte_Array (1 .. 2) with Address => Pins'Address;
@@ -266,6 +266,24 @@ package body STMPE1600 is
       Pins (Pin) := New_State;
       Write (This, STMPE1600_REG_GPDR_0, BA, Status);
    end Set_Pin_Direction;
+
+   -------------------
+   -- Pin_Direction --
+   -------------------
+
+   function Pin_Direction
+     (This : STMPE1600_Expander;
+      Pin  : STMPE1600_Pin_Number)
+      return STMPE1600_Pin_Direction
+   is
+      Pins      : aliased STMPE1600_Pins;
+      BA        : aliased Byte_Array (1 .. 2) with Address => Pins'Address;
+      Status    : Boolean with Unreferenced;
+
+   begin
+      Read (This, STMPE1600_REG_GPDR_0, BA, Status);
+      return (if Pins (Pin) then Output else Input);
+   end Pin_Direction;
 
    --------------------------------
    -- Set_Pin_Polarity_Inversion --
@@ -303,6 +321,34 @@ package body STMPE1600 is
       This.Points (Pin) := (This'Unrestricted_Access, Pin);
       return This.Points (Pin)'Unchecked_Access;
    end As_GPIO_Point;
+
+   ----------
+   -- Mode --
+   ----------
+
+   overriding
+   function Mode (This : STMPE1600_Pin) return HAL.GPIO.GPIO_Mode is
+   begin
+      return (case Pin_Direction (This.Port.all, This.Pin) is
+                 when Input => HAL.GPIO.Input,
+                 when Output => HAL.GPIO.Output);
+   end Mode;
+
+   --------------
+   -- Set_Mode --
+   --------------
+
+   overriding
+   function Set_Mode (This : in out STMPE1600_Pin;
+                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean
+   is
+   begin
+      Set_Pin_Direction (This.Port.all, This.Pin, (case Mode is
+                                                      when HAL.GPIO.Input => Input,
+                                                      when HAL.GPIO.Output => Output));
+      return True;
+   end Set_Mode;
+
 
    ---------
    -- Set --

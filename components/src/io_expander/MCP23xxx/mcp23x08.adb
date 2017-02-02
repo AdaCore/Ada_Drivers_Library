@@ -31,6 +31,7 @@
 
 with Interfaces; use Interfaces;
 with Ada.Unchecked_Conversion;
+with HAL.GPIO;                   use HAL.GPIO;
 
 package body MCP23x08 is
 
@@ -61,6 +62,12 @@ package body MCP23x08 is
      (This     : in out MCP23x08_IO_Expander;
       RegAddr  : Register_Address;
       Pin      : MCP23x08_Pin);
+
+   function Read_Bit
+     (This     : in out MCP23x08_IO_Expander;
+      RegAddr  : Register_Address;
+      Pin      : MCP23x08_Pin)
+      return Boolean;
 
    ------------------
    -- Loc_IO_Write --
@@ -125,6 +132,22 @@ package body MCP23x08 is
       end if;
    end Clear_Bit;
 
+   --------------
+   -- Read_Bit --
+   --------------
+
+   function Read_Bit
+     (This     : in out MCP23x08_IO_Expander;
+      RegAddr : Register_Address;
+      Pin      : MCP23x08_Pin)
+      return Boolean
+   is
+      Reg : Byte;
+   begin
+      Loc_IO_Read (This, RegAddr, Reg);
+      return (Reg and Pin'Enum_Rep) /= 0;
+   end Read_Bit;
+
    ---------------
    -- Configure --
    ---------------
@@ -135,18 +158,50 @@ package body MCP23x08 is
                         Pull_Up : Boolean)
    is
    begin
+      This.Configure_Mode (Pin, Output);
+      This.Configure_Pull (Pin, Pull_Up);
+   end Configure;
+
+   procedure Configure_Mode (This    : in out MCP23x08_IO_Expander;
+                             Pin     : MCP23x08_Pin;
+                             Output  : Boolean)
+   is
+   begin
       if Output then
          Clear_Bit (This, IO_DIRECTION_REG, Pin);
       else
          Set_Bit (This, IO_DIRECTION_REG, Pin);
       end if;
+   end Configure_Mode;
 
+   ---------------
+   -- Is_Output --
+   ---------------
+
+   function Is_Output (This : in out MCP23x08_IO_Expander;
+                       Pin  : MCP23x08_Pin)
+                       return Boolean
+   is
+   begin
+      return not Read_Bit (This, IO_DIRECTION_REG, Pin);
+   end Is_Output;
+
+
+   --------------------
+   -- Configure_Pull --
+   --------------------
+
+   procedure Configure_Pull (This    : in out MCP23x08_IO_Expander;
+                             Pin     : MCP23x08_Pin;
+                             Pull_Up : Boolean)
+   is
+   begin
       if Pull_Up then
          Set_Bit (This, PULL_UP_REG, Pin);
       else
          Clear_Bit (This, PULL_UP_REG, Pin);
       end if;
-   end Configure;
+   end Configure_Pull;
 
    ---------
    -- Set --
@@ -231,6 +286,32 @@ package body MCP23x08 is
                             Pin    => Pin);
       return This.Points (Pin)'Unchecked_Access;
    end As_GPIO_Point;
+
+   ----------
+   -- Mode --
+   ----------
+
+   overriding
+   function Mode (This : MCP23_GPIO_Point) return HAL.GPIO.GPIO_Mode is
+      pragma Unreferenced (This);
+   begin
+      return HAL.GPIO.Output;
+   end Mode;
+
+
+   --------------
+   -- Set_Mode --
+   --------------
+
+   overriding
+   function Set_Mode (This : in out MCP23_GPIO_Point;
+                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean
+   is
+   begin
+      This.Device.Configure_Mode (Pin    => This.Pin,
+                                  Output => (Mode = HAL.GPIO.Output));
+      return True;
+   end Set_Mode;
 
    ---------
    -- Set --

@@ -53,6 +53,20 @@ package MCP23x08 is
    --  Configure single pin as input or output and optinaly enable the pull-up
    --  resistor.
 
+   procedure Configure_Mode (This    : in out MCP23x08_IO_Expander;
+                             Pin     : MCP23x08_Pin;
+                             Output  : Boolean);
+   --  Configure single pin as input or output
+
+   function Is_Output (This : in out MCP23x08_IO_Expander;
+                       Pin  : MCP23x08_Pin)
+                       return Boolean;
+
+   procedure Configure_Pull (This    : in out MCP23x08_IO_Expander;
+                             Pin     : MCP23x08_Pin;
+                             Pull_Up : Boolean);
+   --  Configure single pin pull up resistor
+
    function Set (This  : MCP23x08_IO_Expander;
                  Pin   : MCP23x08_Pin) return Boolean;
    --  Return the curent status of Pin
@@ -101,6 +115,13 @@ private
       Pin    : MCP23x08_Pin;
    end record;
    --  Internal implementation of HAL.GPIO interface
+
+   overriding
+   function Mode (This : MCP23_GPIO_Point) return HAL.GPIO.GPIO_Mode;
+
+   overriding
+   function Set_Mode (This : in out MCP23_GPIO_Point;
+                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean;
 
    overriding
    function Set (This : MCP23_GPIO_Point) return Boolean;

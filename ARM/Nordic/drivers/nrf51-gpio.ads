@@ -68,6 +68,13 @@ package nRF51.GPIO is
    end record;
 
    overriding
+   function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode;
+
+   overriding
+   function Set_Mode (This : in out GPIO_Point;
+                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean;
+
+   overriding
    function Set (This : GPIO_Point) return Boolean with
      Inline;
    --  Returns True if the bit specified by This.Pin is set (not zero) in the

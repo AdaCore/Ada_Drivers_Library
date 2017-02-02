@@ -31,16 +31,32 @@
 
 package HAL.GPIO is
 
+   type GPIO_Mode is (Unknown, Input, Output);
+   --  Possible modes for a GPIO point
+
+   subtype GPIO_Config_Mode is GPIO_Mode range Input .. Output;
+   --  Modes a GPIO point can be configured in
+
    type GPIO_Point is limited interface;
 
    type Any_GPIO_Point is access all GPIO_Point'Class;
 
-   function Set (This : GPIO_Point) return Boolean is abstract;
+   function Mode (This : GPIO_Point) return GPIO_Mode is abstract;
 
-   procedure Set (This : in out GPIO_Point) is abstract;
+   function Set_Mode (This : in out GPIO_Point;
+                      Mode : GPIO_Config_Mode) return Boolean is abstract;
+   --  Return False if the mode is not available
 
-   procedure Clear (This : in out GPIO_Point) is abstract;
+   function Set (This : GPIO_Point) return Boolean is abstract
+     with Pre'Class => This.Mode = Input;
 
-   procedure Toggle (This : in out GPIO_Point) is abstract;
+   procedure Set (This : in out GPIO_Point) is abstract
+     with Pre'Class => This.Mode = Output;
+
+   procedure Clear (This : in out GPIO_Point) is abstract
+     with Pre'Class => This.Mode = Output;
+
+   procedure Toggle (This : in out GPIO_Point) is abstract
+     with Pre'Class => This.Mode = Output;
 
 end HAL.GPIO;

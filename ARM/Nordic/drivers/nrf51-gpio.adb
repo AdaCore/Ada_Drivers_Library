@@ -33,6 +33,32 @@ with NRF51_SVD.GPIO; use NRF51_SVD.GPIO;
 
 package body nRF51.GPIO is
 
+   overriding
+   function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode is
+      CNF : PIN_CNF_Register renames GPIO_Periph.PIN_CNF (This.Pin);
+   begin
+      case CNF.DIR is
+         when Input => return HAL.GPIO.Input;
+         when Output => return HAL.GPIO.Output;
+      end case;
+   end Mode;
+
+   --------------
+   -- Set_Mode --
+   --------------
+
+   overriding
+   function Set_Mode (This : in out GPIO_Point;
+                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean
+   is
+      CNF : PIN_CNF_Register renames GPIO_Periph.PIN_CNF (This.Pin);
+   begin
+      CNF.DIR := (case Mode is
+                     when HAL.GPIO.Input  => Input,
+                     when HAL.GPIO.Output => Output);
+      return True;
+   end Set_Mode;
+
    ---------
    -- Set --
    ---------

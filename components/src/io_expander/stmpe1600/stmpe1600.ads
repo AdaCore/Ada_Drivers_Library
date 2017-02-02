@@ -38,15 +38,15 @@ package STMPE1600 is
                             Addr : HAL.I2C.I2C_Address) is limited private;
    type Any_STMPE1600_Expander is access all STMPE1600_Expander;
 
-   type Pin_Polarity is (Low, High) with Size => 1;
-   type Pin_Direction is (Input, Output) with Size => 1;
+   type STMPE1600_Pin_Polarity is (Low, High) with Size => 1;
+   type STMPE1600_Pin_Direction is (Input, Output) with Size => 1;
    type STMPE1600_Pin_Number is range 0 .. 15;
 
    type STMPE1600_Pins is array (STMPE1600_Pin_Number) of Boolean
      with Pack, Size => 16;
 
    type STMPE1600_Pins_Direction is
-     array (STMPE1600_Pin_Number) of Pin_Direction
+     array (STMPE1600_Pin_Number) of STMPE1600_Pin_Direction
      with Pack, Size => 16;
 
    procedure Check_Id
@@ -56,7 +56,7 @@ package STMPE1600 is
    procedure Set_Interrupt_Enable
      (This     : in out STMPE1600_Expander;
       Enable   : Boolean;
-      Polarity : Pin_Polarity;
+      Polarity : STMPE1600_Pin_Polarity;
       Status   : out Boolean);
    --  Enables/Disables the interrupt to the host.
    --  Allows also to set whether the interrupt is active High or Low.
@@ -101,7 +101,12 @@ package STMPE1600 is
    procedure Set_Pin_Direction
      (This      : STMPE1600_Expander;
       Pin       : STMPE1600_Pin_Number;
-      Direction : Pin_Direction);
+      Direction : STMPE1600_Pin_Direction);
+
+   function Pin_Direction
+     (This : STMPE1600_Expander;
+      Pin  : STMPE1600_Pin_Number)
+      return STMPE1600_Pin_Direction;
 
    procedure Set_Pin_Polarity_Inversion
      (This            : STMPE1600_Expander;
@@ -117,7 +122,7 @@ package STMPE1600 is
 private
 
    type STMPE1600_SYS_CTRL is record
-      INT_Polarity : Pin_Polarity := Low;
+      INT_Polarity : STMPE1600_Pin_Polarity := Low;
       Reserved_1   : HAL.Bit := 0;
       INT_Enable   : Boolean := False;
       Reserved_3_4 : HAL.UInt2 := 0;
@@ -141,16 +146,29 @@ private
       Port : Any_STMPE1600_Expander;
       Pin  : STMPE1600_Pin_Number;
    end record;
+
    type STMPE1600_Pin_Array is
      array (STMPE1600_Pin_Number) of aliased STMPE1600_Pin;
 
-   overriding function Set (This : STMPE1600_Pin) return Boolean;
 
-   overriding procedure Set (This : in out STMPE1600_Pin);
+   overriding
+   function Mode (This : STMPE1600_Pin) return HAL.GPIO.GPIO_Mode;
 
-   overriding procedure Clear (This : in out STMPE1600_Pin);
+   overriding
+   function Set_Mode (This : in out STMPE1600_Pin;
+                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean;
 
-   overriding procedure Toggle (This : in out STMPE1600_Pin);
+   overriding
+   function Set (This : STMPE1600_Pin) return Boolean;
+
+   overriding
+   procedure Set (This : in out STMPE1600_Pin);
+
+   overriding
+   procedure Clear (This : in out STMPE1600_Pin);
+
+   overriding
+   procedure Toggle (This : in out STMPE1600_Pin);
 
    type STMPE1600_Expander (Port : not null HAL.I2C.Any_I2C_Port;
                             Addr : HAL.I2C.I2C_Address)
