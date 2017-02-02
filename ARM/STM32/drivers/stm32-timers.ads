@@ -487,7 +487,7 @@ package STM32.Timers is
    --  as an input when it is set to be an output, and vice versa
 
    type Timer_Output_Compare_And_PWM_Mode is
-     (Timing,
+     (Frozen,
       Active,
       Inactive,
       Toggle,
@@ -495,6 +495,7 @@ package STM32.Timers is
       Force_Active,
       PWM1,
       PWM2);
+   --  See RM pg 560 for the effects of these values
 
    type Timer_Capture_Compare_State is (Disable, Enable);
 
