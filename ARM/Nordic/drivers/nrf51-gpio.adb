@@ -63,13 +63,46 @@ package body nRF51.GPIO is
    -- Set --
    ---------
 
-   overriding function Set
+   overriding
+   function Set
      (This : GPIO_Point)
       return Boolean
    is
    begin
       return GPIO_Periph.IN_k.Arr (This.Pin) = High;
    end Set;
+
+   ----------
+   -- Pull --
+   ----------
+
+   overriding
+   function Pull (This : GPIO_Point) return HAL.GPIO.GPIO_Pull is
+   begin
+      case GPIO_Periph.PIN_CNF (This.Pin).PULL is
+         when Disabled => return HAL.GPIO.Floating;
+         when Pulldown => return HAL.GPIO.Pull_Down;
+         when Pullup => return HAL.GPIO.Pull_Up;
+      end case;
+   end Pull;
+
+   --------------
+   -- Set_Pull --
+   --------------
+
+   overriding
+   function Set_Pull (This : in out GPIO_Point;
+                      Pull : HAL.GPIO.GPIO_Pull)
+                      return Boolean
+   is
+   begin
+      GPIO_Periph.PIN_CNF (This.Pin).PULL :=
+        (case Pull is
+            when HAL.GPIO.Floating  => Disabled,
+            when HAL.GPIO.Pull_Down => Pulldown,
+            when HAL.GPIO.Pull_Up   => Pullup);
+      return True;
+   end Set_Pull;
 
    ---------
    -- Set --

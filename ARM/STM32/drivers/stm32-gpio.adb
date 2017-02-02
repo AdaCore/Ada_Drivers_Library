@@ -104,6 +104,43 @@ package body STM32.GPIO is
       return True;
    end Set_Mode;
 
+   ----------
+   -- Pull --
+   ----------
+
+   overriding
+   function Pull (This : GPIO_Point) return HAL.GPIO.GPIO_Pull is
+   begin
+      if  This.Periph.PUPDR.Arr (This.Pin) = 0 then
+         return HAL.GPIO.Floating;
+      elsif This.Periph.PUPDR.Arr (This.Pin) = 1 then
+         return HAL.GPIO.Pull_Up;
+      else
+         return HAL.GPIO.Pull_Down;
+      end if;
+   end Pull;
+
+   --------------
+   -- Set_Pull --
+   --------------
+
+   overriding
+   function Set_Pull (This : in out GPIO_Point;
+                      Pull : HAL.GPIO.GPIO_Pull)
+                      return Boolean
+   is
+   begin
+      case Pull is
+         when HAL.GPIO.Floating =>
+            This.Periph.PUPDR.Arr (This.Pin) := 0;
+         when HAL.GPIO.Pull_Up =>
+            This.Periph.PUPDR.Arr (This.Pin) := 1;
+         when HAL.GPIO.Pull_Down =>
+            This.Periph.PUPDR.Arr (This.Pin) := 2;
+      end case;
+      return True;
+   end Set_Pull;
+
    ---------
    -- Set --
    ---------

@@ -349,7 +349,6 @@ package body STMPE1600 is
       return True;
    end Set_Mode;
 
-
    ---------
    -- Set --
    ---------

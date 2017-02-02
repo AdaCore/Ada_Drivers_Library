@@ -37,6 +37,8 @@ package HAL.GPIO is
    subtype GPIO_Config_Mode is GPIO_Mode range Input .. Output;
    --  Modes a GPIO point can be configured in
 
+   type GPIO_Pull is (Floating, Pull_Up, Pull_Down);
+
    type GPIO_Point is limited interface;
 
    type Any_GPIO_Point is access all GPIO_Point'Class;
@@ -46,6 +48,13 @@ package HAL.GPIO is
    function Set_Mode (This : in out GPIO_Point;
                       Mode : GPIO_Config_Mode) return Boolean is abstract;
    --  Return False if the mode is not available
+
+   function Pull (This : GPIO_Point) return GPIO_Pull is abstract;
+
+   function Set_Pull (This : in out GPIO_Point;
+                      Pull : GPIO_Pull)
+                      return Boolean is abstract;
+   --  Return False if pull is not available for this GPIO point
 
    function Set (This : GPIO_Point) return Boolean is abstract
      with Pre'Class => This.Mode = Input;

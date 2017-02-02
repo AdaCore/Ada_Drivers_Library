@@ -54,19 +54,19 @@ package body MCP23x08 is
      with Inline_Always;
 
    procedure Set_Bit
-     (This     : in out MCP23x08_IO_Expander;
-      RegAddr  : Register_Address;
-      Pin      : MCP23x08_Pin);
+     (This    : in out MCP23x08_IO_Expander;
+      RegAddr : Register_Address;
+      Pin     : MCP23x08_Pin);
 
    procedure Clear_Bit
-     (This     : in out MCP23x08_IO_Expander;
-      RegAddr  : Register_Address;
-      Pin      : MCP23x08_Pin);
+     (This    : in out MCP23x08_IO_Expander;
+      RegAddr : Register_Address;
+      Pin     : MCP23x08_Pin);
 
    function Read_Bit
-     (This     : in out MCP23x08_IO_Expander;
-      RegAddr  : Register_Address;
-      Pin      : MCP23x08_Pin)
+     (This    : MCP23x08_IO_Expander;
+      RegAddr : Register_Address;
+      Pin     : MCP23x08_Pin)
       return Boolean;
 
    ------------------
@@ -101,9 +101,9 @@ package body MCP23x08 is
    -------------
 
    procedure Set_Bit
-     (This     : in out MCP23x08_IO_Expander;
-      RegAddr  : Register_Address;
-      Pin      : MCP23x08_Pin)
+     (This    : in out MCP23x08_IO_Expander;
+      RegAddr : Register_Address;
+      Pin     : MCP23x08_Pin)
    is
       Prev, Next : Byte;
    begin
@@ -119,9 +119,9 @@ package body MCP23x08 is
    ---------------
 
    procedure Clear_Bit
-     (This     : in out MCP23x08_IO_Expander;
+     (This    : in out MCP23x08_IO_Expander;
       RegAddr : Register_Address;
-      Pin      : MCP23x08_Pin)
+      Pin     : MCP23x08_Pin)
    is
       Prev, Next : Byte;
    begin
@@ -137,9 +137,9 @@ package body MCP23x08 is
    --------------
 
    function Read_Bit
-     (This     : in out MCP23x08_IO_Expander;
+     (This    : MCP23x08_IO_Expander;
       RegAddr : Register_Address;
-      Pin      : MCP23x08_Pin)
+      Pin     : MCP23x08_Pin)
       return Boolean
    is
       Reg : Byte;
@@ -202,6 +202,17 @@ package body MCP23x08 is
          Clear_Bit (This, PULL_UP_REG, Pin);
       end if;
    end Configure_Pull;
+
+   -------------
+   -- Pull_Up --
+   -------------
+
+   function Pull_Up (This : MCP23x08_IO_Expander;
+                     Pin  : MCP23x08_Pin) return Boolean
+   is
+   begin
+      return Read_Bit (This, PULL_UP_REG, Pin);
+   end Pull_Up;
 
    ---------
    -- Set --
@@ -312,6 +323,37 @@ package body MCP23x08 is
                                   Output => (Mode = HAL.GPIO.Output));
       return True;
    end Set_Mode;
+
+   ----------
+   -- Pull --
+   ----------
+
+   overriding
+   function Pull (This : MCP23_GPIO_Point) return HAL.GPIO.GPIO_Pull is
+   begin
+      return (if This.Device.Pull_Up (This.Pin) then
+                 HAL.GPIO.Pull_Up
+              else
+                 HAL.GPIO.Floating);
+   end Pull;
+
+   --------------
+   -- Set_Pull --
+   --------------
+
+   overriding
+   function Set_Pull (This : in out MCP23_GPIO_Point;
+                      Pull : HAL.GPIO.GPIO_Pull)
+                      return Boolean
+   is
+   begin
+      if Pull = HAL.GPIO.Pull_Down then
+         return False;
+      else
+         This.Device.Configure_Pull (This.Pin, Pull = HAL.GPIO.Pull_Up);
+         return True;
+      end if;
+   end Set_Pull;
 
    ---------
    -- Set --

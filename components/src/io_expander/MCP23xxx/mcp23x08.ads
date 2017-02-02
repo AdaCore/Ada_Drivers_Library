@@ -67,6 +67,10 @@ package MCP23x08 is
                              Pull_Up : Boolean);
    --  Configure single pin pull up resistor
 
+   function Pull_Up (This : MCP23x08_IO_Expander;
+                     Pin  : MCP23x08_Pin) return Boolean;
+   --  Return True if the internal pull-up resistor in enabled
+
    function Set (This  : MCP23x08_IO_Expander;
                  Pin   : MCP23x08_Pin) return Boolean;
    --  Return the curent status of Pin
@@ -123,6 +127,13 @@ private
    function Set_Mode (This : in out MCP23_GPIO_Point;
                       Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean;
 
+   overriding
+   function Pull (This : MCP23_GPIO_Point) return HAL.GPIO.GPIO_Pull;
+
+   overriding
+   function Set_Pull (This : in out MCP23_GPIO_Point;
+                      Pull : HAL.GPIO.GPIO_Pull)
+                      return Boolean;
    overriding
    function Set (This : MCP23_GPIO_Point) return Boolean;
 
