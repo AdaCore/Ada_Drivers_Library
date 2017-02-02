@@ -103,16 +103,16 @@ private
    --  Internal implementation of HAL.GPIO interface
 
    overriding
-   function Set (Point : MCP23_GPIO_Point) return Boolean;
+   function Set (This : MCP23_GPIO_Point) return Boolean;
 
    overriding
-   procedure Set (Point : in out MCP23_GPIO_Point);
+   procedure Set (This : in out MCP23_GPIO_Point);
 
    overriding
-   procedure Clear (Point : in out MCP23_GPIO_Point);
+   procedure Clear (This : in out MCP23_GPIO_Point);
 
    overriding
-   procedure Toggle (Point : in out MCP23_GPIO_Point);
+   procedure Toggle (This : in out MCP23_GPIO_Point);
 
    type MCP23_GPIO_Point_Array is array (MCP23x08_Pin) of
      aliased MCP23_GPIO_Point;

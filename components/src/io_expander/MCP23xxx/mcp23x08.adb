@@ -237,9 +237,9 @@ package body MCP23x08 is
    ---------
 
    overriding
-   function Set (Point : MCP23_GPIO_Point) return Boolean is
+   function Set (This : MCP23_GPIO_Point) return Boolean is
    begin
-      return Point.Device.Set (Point.Pin);
+      return This.Device.Set (This.Pin);
    end Set;
 
    ---------
@@ -247,9 +247,9 @@ package body MCP23x08 is
    ---------
 
    overriding
-   procedure Set (Point : in out MCP23_GPIO_Point) is
+   procedure Set (This : in out MCP23_GPIO_Point) is
    begin
-      Point.Device.Set (Point.Pin);
+      This.Device.Set (This.Pin);
    end Set;
 
    -----------
@@ -257,9 +257,9 @@ package body MCP23x08 is
    -----------
 
    overriding
-   procedure Clear (Point : in out MCP23_GPIO_Point) is
+   procedure Clear (This : in out MCP23_GPIO_Point) is
    begin
-      Point.Device.Clear (Point.Pin);
+      This.Device.Clear (This.Pin);
    end Clear;
 
    ------------
@@ -267,9 +267,9 @@ package body MCP23x08 is
    ------------
 
    overriding
-   procedure Toggle (Point : in out MCP23_GPIO_Point) is
+   procedure Toggle (This : in out MCP23_GPIO_Point) is
    begin
-      Point.Device.Toggle (Point.Pin);
+      This.Device.Toggle (This.Pin);
    end Toggle;
 
 end MCP23x08;
