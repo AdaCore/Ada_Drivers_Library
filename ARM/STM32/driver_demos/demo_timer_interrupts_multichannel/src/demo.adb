@@ -77,7 +77,7 @@ begin
       Configure_Channel_Output
         (Timer_3,
          Channel  => Next_Channel,
-         Mode     => Timing,
+         Mode     => Frozen,
          State    => Enable,
          Pulse    => Channel_Periods (Next_Channel),
          Polarity => High);
