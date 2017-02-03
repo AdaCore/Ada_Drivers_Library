@@ -53,7 +53,9 @@ procedure Demo_ADC_Timer_Triggered is
 
    Selected_Timer : Timer renames Timer_1;
 
-   Power_Control : PWM_Modulator (Selected_Timer'Access);
+   Triggering_Signal : PWM_Modulator (Selected_Timer'Access);
+   --  the PWM modulator used to generate the square wave that triggers the ADC
+   --  conversions
 
    procedure Configure_ADC;
    --  Set up ADC1 to read the VBat voltage value. Note that only ADC1 can
@@ -123,21 +125,21 @@ procedure Demo_ADC_Timer_Triggered is
 
    procedure Configure_Timer is
       Timer_AF       : constant STM32.GPIO_Alternate_Function := GPIO_AF_1_TIM1;
-      Output_Channel : constant Timer_Channel := Channel_1;
+      Output_Channel : constant Timer_Channel := Channel_1; --  must match ADC trigger
       Frequency      : constant Hertz := 10_000;  -- arbitrary
       Output_Pin     : constant GPIO_Point := PA8;  -- timer 1, channel 1
       --  note that the output pin is not used since we are reading the
       --  internal VBat channel, which is ADC1_IN18
    begin
-      Configure_PWM_Timer (Power_Control.Generator, Frequency);
+      Configure_PWM_Timer (Triggering_Signal.Generator, Frequency);
 
       Attach_PWM_Channel
-        (Power_Control,
+        (Triggering_Signal,
          Output_Channel,
          Output_Pin,
          Timer_AF);
 
-      Set_Duty_Cycle (Power_Control, Value => 10);
+      Set_Duty_Cycle (Triggering_Signal, Value => 10);
       --  An arbitrary percentage, but determines the number of rising/falling
       --  transitions
    end Configure_Timer;
@@ -159,7 +161,7 @@ begin
    Configure_Timer;
 
    Enable (VBat.ADC.all);
-   Enable_Output (Power_Control);
+   Enable_Output (Triggering_Signal);
 
    loop
       Print (0, 24, VBat_Reader.Voltage, "mv");
