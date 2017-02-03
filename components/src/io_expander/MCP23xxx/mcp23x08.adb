@@ -324,27 +324,29 @@ package body MCP23x08 is
       return True;
    end Set_Mode;
 
-   ----------
-   -- Pull --
-   ----------
+   -------------------
+   -- Pull_Resistor --
+   -------------------
 
    overriding
-   function Pull (This : MCP23_GPIO_Point) return HAL.GPIO.GPIO_Pull is
+   function Pull_Resistor (This : MCP23_GPIO_Point)
+                           return HAL.GPIO.GPIO_Pull_Resistor
+   is
    begin
       return (if This.Device.Pull_Up (This.Pin) then
                  HAL.GPIO.Pull_Up
               else
                  HAL.GPIO.Floating);
-   end Pull;
+   end Pull_Resistor;
 
-   --------------
-   -- Set_Pull --
-   --------------
+   -----------------------
+   -- Set_Pull_Resistor --
+   -----------------------
 
    overriding
-   function Set_Pull (This : in out MCP23_GPIO_Point;
-                      Pull : HAL.GPIO.GPIO_Pull)
-                      return Boolean
+   function Set_Pull_Resistor (This : in out MCP23_GPIO_Point;
+                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
+                               return Boolean
    is
    begin
       if Pull = HAL.GPIO.Pull_Down then
@@ -353,7 +355,7 @@ package body MCP23x08 is
          This.Device.Configure_Pull (This.Pin, Pull = HAL.GPIO.Pull_Up);
          return True;
       end if;
-   end Set_Pull;
+   end Set_Pull_Resistor;
 
    ---------
    -- Set --

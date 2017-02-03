@@ -75,12 +75,13 @@ package nRF51.GPIO is
                       Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean;
 
    overriding
-   function Pull (This : GPIO_Point) return HAL.GPIO.GPIO_Pull;
+   function Pull_Resistor (This : GPIO_Point)
+                           return HAL.GPIO.GPIO_Pull_Resistor;
 
    overriding
-   function Set_Pull (This : in out GPIO_Point;
-                      Pull : HAL.GPIO.GPIO_Pull)
-                      return Boolean;
+   function Set_Pull_Resistor (This : in out GPIO_Point;
+                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
+                               return Boolean;
 
    overriding
    function Set (This : GPIO_Point) return Boolean with

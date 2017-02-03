@@ -72,28 +72,30 @@ package body nRF51.GPIO is
       return GPIO_Periph.IN_k.Arr (This.Pin) = High;
    end Set;
 
-   ----------
-   -- Pull --
-   ----------
+   -------------------
+   -- Pull_Resistor --
+   -------------------
 
    overriding
-   function Pull (This : GPIO_Point) return HAL.GPIO.GPIO_Pull is
+   function Pull_Resistor (This : GPIO_Point)
+                           return HAL.GPIO.GPIO_Pull_Resistor
+   is
    begin
       case GPIO_Periph.PIN_CNF (This.Pin).PULL is
          when Disabled => return HAL.GPIO.Floating;
          when Pulldown => return HAL.GPIO.Pull_Down;
          when Pullup => return HAL.GPIO.Pull_Up;
       end case;
-   end Pull;
+   end Pull_Resistor;
 
-   --------------
-   -- Set_Pull --
-   --------------
+   -----------------------
+   -- Set_Pull_Resistor --
+   -----------------------
 
    overriding
-   function Set_Pull (This : in out GPIO_Point;
-                      Pull : HAL.GPIO.GPIO_Pull)
-                      return Boolean
+   function Set_Pull_Resistor (This : in out GPIO_Point;
+                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
+                               return Boolean
    is
    begin
       GPIO_Periph.PIN_CNF (This.Pin).PULL :=
@@ -102,7 +104,7 @@ package body nRF51.GPIO is
             when HAL.GPIO.Pull_Down => Pulldown,
             when HAL.GPIO.Pull_Up   => Pullup);
       return True;
-   end Set_Pull;
+   end Set_Pull_Resistor;
 
    ---------
    -- Set --

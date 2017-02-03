@@ -121,7 +121,7 @@ package STMPE1600 is
 
 private
 
-   use type HAL.GPIO.GPIO_Pull;
+   use type HAL.GPIO.GPIO_Pull_Resistor;
 
    type STMPE1600_SYS_CTRL is record
       INT_Polarity : STMPE1600_Pin_Polarity := Low;
@@ -161,13 +161,14 @@ private
                       Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean;
 
    overriding
-   function Pull (This : STMPE1600_Pin) return HAL.GPIO.GPIO_Pull is
+   function Pull_Resistor (This : STMPE1600_Pin)
+                           return HAL.GPIO.GPIO_Pull_Resistor is
      (HAL.GPIO.Floating);
 
    overriding
-   function Set_Pull (This : in out STMPE1600_Pin;
-                      Pull : HAL.GPIO.GPIO_Pull)
-                      return Boolean is (Pull = HAL.GPIO.Floating);
+   function Set_Pull_Resistor (This : in out STMPE1600_Pin;
+                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
+                               return Boolean is (Pull = HAL.GPIO.Floating);
    --  STMPE1600 doesn't have internal pull resistors
 
    overriding

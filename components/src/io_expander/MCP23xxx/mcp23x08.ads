@@ -128,12 +128,13 @@ private
                       Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean;
 
    overriding
-   function Pull (This : MCP23_GPIO_Point) return HAL.GPIO.GPIO_Pull;
+   function Pull_Resistor (This : MCP23_GPIO_Point)
+                           return HAL.GPIO.GPIO_Pull_Resistor;
 
    overriding
-   function Set_Pull (This : in out MCP23_GPIO_Point;
-                      Pull : HAL.GPIO.GPIO_Pull)
-                      return Boolean;
+   function Set_Pull_Resistor (This : in out MCP23_GPIO_Point;
+                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
+                               return Boolean;
    overriding
    function Set (This : MCP23_GPIO_Point) return Boolean;
 
