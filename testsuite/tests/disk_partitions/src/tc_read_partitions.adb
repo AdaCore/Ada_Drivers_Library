@@ -3,15 +3,9 @@ with Native.Filesystem;  use Native.Filesystem;
 with HAL.Filesystem;     use HAL.Filesystem;
 with Partitions;         use Partitions;
 with File_Block_Drivers; use File_Block_Drivers;
-with Ada.Command_Line;
-with Ada.Directories;
+with Test_Directories;   use Test_Directories;
 
 procedure TC_Read_Partitions is
-
-   Program_Abspath : constant Pathname := Native.Filesystem.Join
-     (Ada.Directories.Current_Directory, Ada.Command_Line.Command_Name, False);
-   Test_Dir : constant Pathname := Ada.Directories.Containing_Directory
-     (Ada.Directories.Containing_Directory (Program_Abspath));
 
    procedure List_Partitions (FS : in out FS_Driver'Class;
                               Path_To_Disk_Image : Pathname);
