@@ -32,7 +32,9 @@
 package HAL.GPIO is
 
    type GPIO_Mode is (Unknown, Input, Output);
-   --  Possible modes for a GPIO point
+   --  Possible modes for a GPIO point. Unknown means that the point is
+   --  configured in a mode that is not described in this interface. For
+   --  instance alternate function mode on an STM32 micro-controller.
 
    subtype GPIO_Config_Mode is GPIO_Mode range Input .. Output;
    --  Modes a GPIO point can be configured in
@@ -57,8 +59,17 @@ package HAL.GPIO is
                                return Boolean is abstract;
    --  Return False if pull is not available for this GPIO point
 
-   function Set (This : GPIO_Point) return Boolean is abstract
-     with Pre'Class => This.Mode = Input;
+   function Set (This : GPIO_Point) return Boolean is abstract;
+   --  Read actual state of the GPIO_Point.
+   --
+   --  So far all the GPIO supported by this library have the ability to read
+   --  the state even when they are configured as output.
+
+
+   --  For the output control procedures below, depending on configuration
+   --  and/or other devices conected to the IO line, these procedures may have
+   --  no actual effect on the line. For example trying to set the IO when
+   --  another device is pulling the line to low.
 
    procedure Set (This : in out GPIO_Point) is abstract
      with Pre'Class => This.Mode = Output;
