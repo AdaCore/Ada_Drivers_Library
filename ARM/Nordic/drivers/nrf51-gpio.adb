@@ -56,6 +56,9 @@ package body nRF51.GPIO is
       CNF.DIR := (case Mode is
                      when HAL.GPIO.Input  => Input,
                      when HAL.GPIO.Output => Output);
+      CNF.INPUT := (case Mode is
+                       when HAL.GPIO.Input  => Connect,
+                       when HAL.GPIO.Output => Disconnect);
       return True;
    end Set_Mode;
 
