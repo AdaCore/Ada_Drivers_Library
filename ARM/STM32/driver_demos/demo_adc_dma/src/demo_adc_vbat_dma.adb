@@ -53,11 +53,13 @@ with LCD_Std_Out;
 procedure Demo_ADC_VBat_DMA is
 
    Controller : DMA_Controller renames DMA_2;
+   Stream     : constant DMA_Stream_Selector := Stream_0;
 
-   Stream : constant DMA_Stream_Selector := Stream_0;
+   Counts  : UInt16 with Volatile;
+   --  The raw sample from the ADC conversion of the VBat input
 
-   Counts  : UInt16;
    Voltage : UInt32;  -- in millivolts
+   --  the converted voltage representing the VBat level, in millivolts
 
    procedure Print (X, Y : Natural; Value : UInt32; Suffix : String := "");
 
@@ -108,7 +110,7 @@ procedure Demo_ADC_VBat_DMA is
 
    procedure Initialize_ADC is
       All_Regular_Conversions : constant Regular_Channel_Conversions :=
-        (1 => (Channel => VBat.Channel, Sample_Time => Sample_15_Cycles));
+        (1 => (Channel => VBat.Channel, Sample_Time => Sample_480_Cycles));
    begin
       Enable_Clock (VBat.ADC.all);
 
@@ -140,6 +142,9 @@ procedure Demo_ADC_VBat_DMA is
 begin
    Initialize_LEDs;
 
+   delay until Clock + Milliseconds (500);
+   LCD_Std_Out.Clear_Screen;
+
    Initialize_DMA;
 
    Initialize_ADC;
@@ -156,18 +161,13 @@ begin
       Data_Count  => 1);  -- ie, 1 halfword
 
    loop
-      Voltage := UInt32 (Counts);
-
-      Print (0, 0, Voltage);
-
-      Voltage := ((Voltage * VBat_Bridge_Divisor) * ADC_Supply_Voltage) / 16#FFF#;
+      Voltage := ((UInt32 (Counts) * VBat_Bridge_Divisor) * ADC_Supply_Voltage) / 16#FFF#;
       --  16#FFF# because we are using 12-bit conversion resolution
 
       Print (0, 24, Voltage, "mv");
 
       Green.Toggle;
 
-      delay until Clock + Milliseconds (200);
-      --  slow it down a little for easier viewing
+      delay until Clock + Milliseconds (100);
    end loop;
 end Demo_ADC_VBat_DMA;
