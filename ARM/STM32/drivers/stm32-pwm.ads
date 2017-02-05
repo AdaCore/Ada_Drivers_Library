@@ -36,28 +36,28 @@
 
 --     Selected_Timer : STM32.Timers.Timer renames Timer_4;
 --
---     PWM1 : PWM_Modulator (Selected_Timer'Access);
---     PWM2 : PWM_Modulator (Selected_Timer'Access);
+--     Modulator1 : PWM_Modulator (Selected_Timer'Access);
+--     Modulator2 : PWM_Modulator (Selected_Timer'Access);
 --     ...
 --     --  Note that a single timer can drive multiple PWM modulators.
 --
---     Requested_Frequency : constant Hertz := 30_000;
+--     Frequency : constant Hertz := 30_000;
 --
 --     ...
 --
---     Configure_PWM_Timer (Selected_Timer'Access, Requested_Frequency);
+--     Configure_PWM_Timer (Selected_Timer'Access, Frequency);
 --
 --     Attach_PWM_Channel
---       (PWM1,
+--       (Modulator1,
 --        Output_Channel,
 --        PD13,
 --        GPIO_AF_2_TIM4);
 --     ...
 --
---     Enable_Output (PWM1);
---     Enable_Output (PWM2);
+--     Enable_Output (Modulator1);
+--     Enable_Output (Modulator2);
 --
---     Set_Duty_Cycle (PWM1, Value);
+--     Set_Duty_Cycle (Modulator1, Value);
 --     ...
 
 with STM32.GPIO;   use STM32.GPIO;
