@@ -80,6 +80,7 @@ GitHub page.
 * ARM
  * STM32F4/7 USB drivers
 * Components
+ * BlueNRG-MS (Bluetooth Low Energy Network Processor)
 * Services
  * Bluetooth Low Energy stack
  * USB stack
