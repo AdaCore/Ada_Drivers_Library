@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -261,21 +262,21 @@ package STM32_SVD.LPTIM is
    --  Low power timer
    type LPTIM1_Peripheral is record
       --  Interrupt and Status Register
-      ISR  : ISR_Register;
+      ISR  : aliased ISR_Register;
       --  Interrupt Clear Register
-      ICR  : ICR_Register;
+      ICR  : aliased ICR_Register;
       --  Interrupt Enable Register
-      IER  : IER_Register;
+      IER  : aliased IER_Register;
       --  Configuration Register
-      CFGR : CFGR_Register;
+      CFGR : aliased CFGR_Register;
       --  Control Register
-      CR   : CR_Register;
+      CR   : aliased CR_Register;
       --  Compare Register
-      CMP  : CMP_Register;
+      CMP  : aliased CMP_Register;
       --  Autoreload Register
-      ARR  : ARR_Register;
+      ARR  : aliased ARR_Register;
       --  Counter Register
-      CNT  : CNT_Register;
+      CNT  : aliased CNT_Register;
    end record
      with Volatile;
 
@@ -292,6 +293,6 @@ package STM32_SVD.LPTIM is
 
    --  Low power timer
    LPTIM1_Periph : aliased LPTIM1_Peripheral
-     with Import, Address => LPTIM1_Base;
+     with Import, Address => System'To_Address (16#40002400#);
 
 end STM32_SVD.LPTIM;

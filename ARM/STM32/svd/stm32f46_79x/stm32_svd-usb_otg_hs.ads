@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -1976,135 +1977,135 @@ package STM32_SVD.USB_OTG_HS is
    --  USB on the go high speed
    type OTG_HS_DEVICE_Peripheral is record
       --  OTG_HS device configuration register
-      OTG_HS_DCFG         : OTG_HS_DCFG_Register;
+      OTG_HS_DCFG         : aliased OTG_HS_DCFG_Register;
       --  OTG_HS device control register
-      OTG_HS_DCTL         : OTG_HS_DCTL_Register;
+      OTG_HS_DCTL         : aliased OTG_HS_DCTL_Register;
       --  OTG_HS device status register
-      OTG_HS_DSTS         : OTG_HS_DSTS_Register;
+      OTG_HS_DSTS         : aliased OTG_HS_DSTS_Register;
       --  OTG_HS device IN endpoint common interrupt mask register
-      OTG_HS_DIEPMSK      : OTG_HS_DIEPMSK_Register;
+      OTG_HS_DIEPMSK      : aliased OTG_HS_DIEPMSK_Register;
       --  OTG_HS device OUT endpoint common interrupt mask register
-      OTG_HS_DOEPMSK      : OTG_HS_DOEPMSK_Register;
+      OTG_HS_DOEPMSK      : aliased OTG_HS_DOEPMSK_Register;
       --  OTG_HS device all endpoints interrupt register
-      OTG_HS_DAINT        : OTG_HS_DAINT_Register;
+      OTG_HS_DAINT        : aliased OTG_HS_DAINT_Register;
       --  OTG_HS all endpoints interrupt mask register
-      OTG_HS_DAINTMSK     : OTG_HS_DAINTMSK_Register;
+      OTG_HS_DAINTMSK     : aliased OTG_HS_DAINTMSK_Register;
       --  OTG_HS device VBUS discharge time register
-      OTG_HS_DVBUSDIS     : OTG_HS_DVBUSDIS_Register;
+      OTG_HS_DVBUSDIS     : aliased OTG_HS_DVBUSDIS_Register;
       --  OTG_HS device VBUS pulsing time register
-      OTG_HS_DVBUSPULSE   : OTG_HS_DVBUSPULSE_Register;
+      OTG_HS_DVBUSPULSE   : aliased OTG_HS_DVBUSPULSE_Register;
       --  OTG_HS Device threshold control register
-      OTG_HS_DTHRCTL      : OTG_HS_DTHRCTL_Register;
+      OTG_HS_DTHRCTL      : aliased OTG_HS_DTHRCTL_Register;
       --  OTG_HS device IN endpoint FIFO empty interrupt mask register
-      OTG_HS_DIEPEMPMSK   : OTG_HS_DIEPEMPMSK_Register;
+      OTG_HS_DIEPEMPMSK   : aliased OTG_HS_DIEPEMPMSK_Register;
       --  OTG_HS device each endpoint interrupt register
-      OTG_HS_DEACHINT     : OTG_HS_DEACHINT_Register;
+      OTG_HS_DEACHINT     : aliased OTG_HS_DEACHINT_Register;
       --  OTG_HS device each endpoint interrupt register mask
-      OTG_HS_DEACHINTMSK  : OTG_HS_DEACHINTMSK_Register;
+      OTG_HS_DEACHINTMSK  : aliased OTG_HS_DEACHINTMSK_Register;
       --  OTG_HS device each in endpoint-1 interrupt register
-      OTG_HS_DIEPEACHMSK1 : OTG_HS_DIEPEACHMSK1_Register;
+      OTG_HS_DIEPEACHMSK1 : aliased OTG_HS_DIEPEACHMSK1_Register;
       --  OTG_HS device each OUT endpoint-1 interrupt register
-      OTG_HS_DOEPEACHMSK1 : OTG_HS_DOEPEACHMSK1_Register;
+      OTG_HS_DOEPEACHMSK1 : aliased OTG_HS_DOEPEACHMSK1_Register;
       --  OTG device endpoint-0 control register
-      OTG_HS_DIEPCTL0     : OTG_HS_DIEPCTL_Register;
+      OTG_HS_DIEPCTL0     : aliased OTG_HS_DIEPCTL_Register;
       --  OTG device endpoint-0 interrupt register
-      OTG_HS_DIEPINT0     : OTG_HS_DIEPINT_Register;
+      OTG_HS_DIEPINT0     : aliased OTG_HS_DIEPINT_Register;
       --  OTG_HS device IN endpoint 0 transfer size register
-      OTG_HS_DIEPTSIZ0    : OTG_HS_DIEPTSIZ0_Register;
+      OTG_HS_DIEPTSIZ0    : aliased OTG_HS_DIEPTSIZ0_Register;
       --  OTG_HS device endpoint-1 DMA address register
-      OTG_HS_DIEPDMA1     : HAL.UInt32;
+      OTG_HS_DIEPDMA1     : aliased HAL.UInt32;
       --  OTG_HS device IN endpoint transmit FIFO status register
-      OTG_HS_DTXFSTS0     : OTG_HS_DTXFSTS_Register;
+      OTG_HS_DTXFSTS0     : aliased OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-1 control register
-      OTG_HS_DIEPCTL1     : OTG_HS_DIEPCTL_Register;
+      OTG_HS_DIEPCTL1     : aliased OTG_HS_DIEPCTL_Register;
       --  OTG device endpoint-1 interrupt register
-      OTG_HS_DIEPINT1     : OTG_HS_DIEPINT_Register;
+      OTG_HS_DIEPINT1     : aliased OTG_HS_DIEPINT_Register;
       --  OTG_HS device endpoint transfer size register
-      OTG_HS_DIEPTSIZ1    : OTG_HS_DIEPTSIZ_Register;
+      OTG_HS_DIEPTSIZ1    : aliased OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device endpoint-2 DMA address register
-      OTG_HS_DIEPDMA2     : HAL.UInt32;
+      OTG_HS_DIEPDMA2     : aliased HAL.UInt32;
       --  OTG_HS device IN endpoint transmit FIFO status register
-      OTG_HS_DTXFSTS1     : OTG_HS_DTXFSTS_Register;
+      OTG_HS_DTXFSTS1     : aliased OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-2 control register
-      OTG_HS_DIEPCTL2     : OTG_HS_DIEPCTL_Register;
+      OTG_HS_DIEPCTL2     : aliased OTG_HS_DIEPCTL_Register;
       --  OTG device endpoint-2 interrupt register
-      OTG_HS_DIEPINT2     : OTG_HS_DIEPINT_Register;
+      OTG_HS_DIEPINT2     : aliased OTG_HS_DIEPINT_Register;
       --  OTG_HS device endpoint transfer size register
-      OTG_HS_DIEPTSIZ2    : OTG_HS_DIEPTSIZ_Register;
+      OTG_HS_DIEPTSIZ2    : aliased OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device endpoint-3 DMA address register
-      OTG_HS_DIEPDMA3     : HAL.UInt32;
+      OTG_HS_DIEPDMA3     : aliased HAL.UInt32;
       --  OTG_HS device IN endpoint transmit FIFO status register
-      OTG_HS_DTXFSTS2     : OTG_HS_DTXFSTS_Register;
+      OTG_HS_DTXFSTS2     : aliased OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-3 control register
-      OTG_HS_DIEPCTL3     : OTG_HS_DIEPCTL_Register;
+      OTG_HS_DIEPCTL3     : aliased OTG_HS_DIEPCTL_Register;
       --  OTG device endpoint-3 interrupt register
-      OTG_HS_DIEPINT3     : OTG_HS_DIEPINT_Register;
+      OTG_HS_DIEPINT3     : aliased OTG_HS_DIEPINT_Register;
       --  OTG_HS device endpoint transfer size register
-      OTG_HS_DIEPTSIZ3    : OTG_HS_DIEPTSIZ_Register;
+      OTG_HS_DIEPTSIZ3    : aliased OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device endpoint-4 DMA address register
-      OTG_HS_DIEPDMA4     : HAL.UInt32;
+      OTG_HS_DIEPDMA4     : aliased HAL.UInt32;
       --  OTG_HS device IN endpoint transmit FIFO status register
-      OTG_HS_DTXFSTS3     : OTG_HS_DTXFSTS_Register;
+      OTG_HS_DTXFSTS3     : aliased OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-4 control register
-      OTG_HS_DIEPCTL4     : OTG_HS_DIEPCTL_Register;
+      OTG_HS_DIEPCTL4     : aliased OTG_HS_DIEPCTL_Register;
       --  OTG device endpoint-4 interrupt register
-      OTG_HS_DIEPINT4     : OTG_HS_DIEPINT_Register;
+      OTG_HS_DIEPINT4     : aliased OTG_HS_DIEPINT_Register;
       --  OTG_HS device endpoint transfer size register
-      OTG_HS_DIEPTSIZ4    : OTG_HS_DIEPTSIZ_Register;
+      OTG_HS_DIEPTSIZ4    : aliased OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device endpoint-5 DMA address register
-      OTG_HS_DIEPDMA5     : HAL.UInt32;
+      OTG_HS_DIEPDMA5     : aliased HAL.UInt32;
       --  OTG_HS device IN endpoint transmit FIFO status register
-      OTG_HS_DTXFSTS4     : OTG_HS_DTXFSTS_Register;
+      OTG_HS_DTXFSTS4     : aliased OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-5 control register
-      OTG_HS_DIEPCTL5     : OTG_HS_DIEPCTL_Register;
+      OTG_HS_DIEPCTL5     : aliased OTG_HS_DIEPCTL_Register;
       --  OTG device endpoint-5 interrupt register
-      OTG_HS_DIEPINT5     : OTG_HS_DIEPINT_Register;
+      OTG_HS_DIEPINT5     : aliased OTG_HS_DIEPINT_Register;
       --  OTG_HS device endpoint transfer size register
-      OTG_HS_DIEPTSIZ5    : OTG_HS_DIEPTSIZ_Register;
+      OTG_HS_DIEPTSIZ5    : aliased OTG_HS_DIEPTSIZ_Register;
       --  OTG_HS device IN endpoint transmit FIFO status register
-      OTG_HS_DTXFSTS5     : OTG_HS_DTXFSTS_Register;
+      OTG_HS_DTXFSTS5     : aliased OTG_HS_DTXFSTS_Register;
       --  OTG device endpoint-6 control register
-      OTG_HS_DIEPCTL6     : OTG_HS_DIEPCTL_Register;
+      OTG_HS_DIEPCTL6     : aliased OTG_HS_DIEPCTL_Register;
       --  OTG device endpoint-6 interrupt register
-      OTG_HS_DIEPINT6     : OTG_HS_DIEPINT_Register;
+      OTG_HS_DIEPINT6     : aliased OTG_HS_DIEPINT_Register;
       --  OTG device endpoint-7 control register
-      OTG_HS_DIEPCTL7     : OTG_HS_DIEPCTL_Register;
+      OTG_HS_DIEPCTL7     : aliased OTG_HS_DIEPCTL_Register;
       --  OTG device endpoint-7 interrupt register
-      OTG_HS_DIEPINT7     : OTG_HS_DIEPINT_Register;
+      OTG_HS_DIEPINT7     : aliased OTG_HS_DIEPINT_Register;
       --  OTG_HS device control OUT endpoint 0 control register
-      OTG_HS_DOEPCTL0     : OTG_HS_DOEPCTL0_Register;
+      OTG_HS_DOEPCTL0     : aliased OTG_HS_DOEPCTL0_Register;
       --  OTG_HS device endpoint-0 interrupt register
-      OTG_HS_DOEPINT0     : OTG_HS_DOEPINT_Register;
+      OTG_HS_DOEPINT0     : aliased OTG_HS_DOEPINT_Register;
       --  OTG_HS device endpoint-1 transfer size register
-      OTG_HS_DOEPTSIZ0    : OTG_HS_DOEPTSIZ0_Register;
+      OTG_HS_DOEPTSIZ0    : aliased OTG_HS_DOEPTSIZ0_Register;
       --  OTG device endpoint-1 control register
-      OTG_HS_DOEPCTL1     : OTG_HS_DOEPCTL_Register;
+      OTG_HS_DOEPCTL1     : aliased OTG_HS_DOEPCTL_Register;
       --  OTG_HS device endpoint-1 interrupt register
-      OTG_HS_DOEPINT1     : OTG_HS_DOEPINT_Register;
+      OTG_HS_DOEPINT1     : aliased OTG_HS_DOEPINT_Register;
       --  OTG_HS device endpoint-2 transfer size register
-      OTG_HS_DOEPTSIZ1    : OTG_HS_DOEPTSIZ_Register;
+      OTG_HS_DOEPTSIZ1    : aliased OTG_HS_DOEPTSIZ_Register;
       --  OTG device endpoint-2 control register
-      OTG_HS_DOEPCTL2     : OTG_HS_DOEPCTL_Register;
+      OTG_HS_DOEPCTL2     : aliased OTG_HS_DOEPCTL_Register;
       --  OTG_HS device endpoint-2 interrupt register
-      OTG_HS_DOEPINT2     : OTG_HS_DOEPINT_Register;
+      OTG_HS_DOEPINT2     : aliased OTG_HS_DOEPINT_Register;
       --  OTG_HS device endpoint-3 transfer size register
-      OTG_HS_DOEPTSIZ2    : OTG_HS_DOEPTSIZ_Register;
+      OTG_HS_DOEPTSIZ2    : aliased OTG_HS_DOEPTSIZ_Register;
       --  OTG device endpoint-3 control register
-      OTG_HS_DOEPCTL3     : OTG_HS_DOEPCTL_Register;
+      OTG_HS_DOEPCTL3     : aliased OTG_HS_DOEPCTL_Register;
       --  OTG_HS device endpoint-3 interrupt register
-      OTG_HS_DOEPINT3     : OTG_HS_DOEPINT_Register;
+      OTG_HS_DOEPINT3     : aliased OTG_HS_DOEPINT_Register;
       --  OTG_HS device endpoint-4 transfer size register
-      OTG_HS_DOEPTSIZ3    : OTG_HS_DOEPTSIZ_Register;
+      OTG_HS_DOEPTSIZ3    : aliased OTG_HS_DOEPTSIZ_Register;
       --  OTG_HS device endpoint-4 interrupt register
-      OTG_HS_DOEPINT4     : OTG_HS_DOEPINT_Register;
+      OTG_HS_DOEPINT4     : aliased OTG_HS_DOEPINT_Register;
       --  OTG_HS device endpoint-5 transfer size register
-      OTG_HS_DOEPTSIZ4    : OTG_HS_DOEPTSIZ_Register;
+      OTG_HS_DOEPTSIZ4    : aliased OTG_HS_DOEPTSIZ_Register;
       --  OTG_HS device endpoint-5 interrupt register
-      OTG_HS_DOEPINT5     : OTG_HS_DOEPINT_Register;
+      OTG_HS_DOEPINT5     : aliased OTG_HS_DOEPINT_Register;
       --  OTG_HS device endpoint-6 interrupt register
-      OTG_HS_DOEPINT6     : OTG_HS_DOEPINT_Register;
+      OTG_HS_DOEPINT6     : aliased OTG_HS_DOEPINT_Register;
       --  OTG_HS device endpoint-7 interrupt register
-      OTG_HS_DOEPINT7     : OTG_HS_DOEPINT_Register;
+      OTG_HS_DOEPINT7     : aliased OTG_HS_DOEPINT_Register;
    end record
      with Volatile;
 
@@ -2178,7 +2179,7 @@ package STM32_SVD.USB_OTG_HS is
 
    --  USB on the go high speed
    OTG_HS_DEVICE_Periph : aliased OTG_HS_DEVICE_Peripheral
-     with Import, Address => OTG_HS_DEVICE_Base;
+     with Import, Address => System'To_Address (16#40040800#);
 
    type OTG_HS_GLOBAL_Disc is
      (
@@ -2192,61 +2193,61 @@ package STM32_SVD.USB_OTG_HS is
      (Discriminent : OTG_HS_GLOBAL_Disc := Host)
    is record
       --  OTG_HS control and status register
-      OTG_HS_GOTGCTL            : OTG_HS_GOTGCTL_Register;
+      OTG_HS_GOTGCTL            : aliased OTG_HS_GOTGCTL_Register;
       --  OTG_HS interrupt register
-      OTG_HS_GOTGINT            : OTG_HS_GOTGINT_Register;
+      OTG_HS_GOTGINT            : aliased OTG_HS_GOTGINT_Register;
       --  OTG_HS AHB configuration register
-      OTG_HS_GAHBCFG            : OTG_HS_GAHBCFG_Register;
+      OTG_HS_GAHBCFG            : aliased OTG_HS_GAHBCFG_Register;
       --  OTG_HS USB configuration register
-      OTG_HS_GUSBCFG            : OTG_HS_GUSBCFG_Register;
+      OTG_HS_GUSBCFG            : aliased OTG_HS_GUSBCFG_Register;
       --  OTG_HS reset register
-      OTG_HS_GRSTCTL            : OTG_HS_GRSTCTL_Register;
+      OTG_HS_GRSTCTL            : aliased OTG_HS_GRSTCTL_Register;
       --  OTG_HS core interrupt register
-      OTG_HS_GINTSTS            : OTG_HS_GINTSTS_Register;
+      OTG_HS_GINTSTS            : aliased OTG_HS_GINTSTS_Register;
       --  OTG_HS interrupt mask register
-      OTG_HS_GINTMSK            : OTG_HS_GINTMSK_Register;
+      OTG_HS_GINTMSK            : aliased OTG_HS_GINTMSK_Register;
       --  OTG_HS Receive FIFO size register
-      OTG_HS_GRXFSIZ            : OTG_HS_GRXFSIZ_Register;
+      OTG_HS_GRXFSIZ            : aliased OTG_HS_GRXFSIZ_Register;
       --  OTG_HS nonperiodic transmit FIFO/queue status register
-      OTG_HS_GNPTXSTS           : OTG_HS_GNPTXSTS_Register;
+      OTG_HS_GNPTXSTS           : aliased OTG_HS_GNPTXSTS_Register;
       --  OTG_HS general core configuration register
-      OTG_HS_GCCFG              : OTG_HS_GCCFG_Register;
+      OTG_HS_GCCFG              : aliased OTG_HS_GCCFG_Register;
       --  OTG_HS core ID register
-      OTG_HS_CID                : HAL.UInt32;
+      OTG_HS_CID                : aliased HAL.UInt32;
       --  OTG_HS Host periodic transmit FIFO size register
-      OTG_HS_HPTXFSIZ           : OTG_HS_HPTXFSIZ_Register;
+      OTG_HS_HPTXFSIZ           : aliased OTG_HS_HPTXFSIZ_Register;
       --  OTG_HS device IN endpoint transmit FIFO size register
-      OTG_HS_DIEPTXF1           : OTG_HS_DIEPTXF_Register;
+      OTG_HS_DIEPTXF1           : aliased OTG_HS_DIEPTXF_Register;
       --  OTG_HS device IN endpoint transmit FIFO size register
-      OTG_HS_DIEPTXF2           : OTG_HS_DIEPTXF_Register;
+      OTG_HS_DIEPTXF2           : aliased OTG_HS_DIEPTXF_Register;
       --  OTG_HS device IN endpoint transmit FIFO size register
-      OTG_HS_DIEPTXF3           : OTG_HS_DIEPTXF_Register;
+      OTG_HS_DIEPTXF3           : aliased OTG_HS_DIEPTXF_Register;
       --  OTG_HS device IN endpoint transmit FIFO size register
-      OTG_HS_DIEPTXF4           : OTG_HS_DIEPTXF_Register;
+      OTG_HS_DIEPTXF4           : aliased OTG_HS_DIEPTXF_Register;
       --  OTG_HS device IN endpoint transmit FIFO size register
-      OTG_HS_DIEPTXF5           : OTG_HS_DIEPTXF_Register;
+      OTG_HS_DIEPTXF5           : aliased OTG_HS_DIEPTXF_Register;
       --  OTG_HS device IN endpoint transmit FIFO size register
-      OTG_HS_DIEPTXF6           : OTG_HS_DIEPTXF_Register;
+      OTG_HS_DIEPTXF6           : aliased OTG_HS_DIEPTXF_Register;
       --  OTG_HS device IN endpoint transmit FIFO size register
-      OTG_HS_DIEPTXF7           : OTG_HS_DIEPTXF_Register;
+      OTG_HS_DIEPTXF7           : aliased OTG_HS_DIEPTXF_Register;
       case Discriminent is
          when Host =>
             --  OTG_HS Receive status debug read register (host mode)
-            OTG_HS_GRXSTSR_Host : OTG_HS_GRXSTSR_Host_Register;
+            OTG_HS_GRXSTSR_Host : aliased OTG_HS_GRXSTSR_Host_Register;
             --  OTG_HS status read and pop register (host mode)
-            OTG_HS_GRXSTSP_Host : OTG_HS_GRXSTSP_Host_Register;
+            OTG_HS_GRXSTSP_Host : aliased OTG_HS_GRXSTSP_Host_Register;
          when Peripheral =>
             --  OTG_HS Receive status debug read register (peripheral mode
             --  mode)
-            OTG_HS_GRXSTSR_Peripheral : OTG_HS_GRXSTSR_Peripheral_Register;
+            OTG_HS_GRXSTSR_Peripheral : aliased OTG_HS_GRXSTSR_Peripheral_Register;
             --  OTG_HS status read and pop register (peripheral mode)
-            OTG_HS_GRXSTSP_Peripheral : OTG_HS_GRXSTSP_Peripheral_Register;
+            OTG_HS_GRXSTSP_Peripheral : aliased OTG_HS_GRXSTSP_Peripheral_Register;
          when Gnptxfsiz_Host =>
             --  OTG_HS nonperiodic transmit FIFO size register (host mode)
-            OTG_HS_GNPTXFSIZ_Host : OTG_HS_GNPTXFSIZ_Host_Register;
+            OTG_HS_GNPTXFSIZ_Host : aliased OTG_HS_GNPTXFSIZ_Host_Register;
          when Tx0Fsiz_Peripheral =>
             --  Endpoint 0 transmit FIFO size (peripheral mode)
-            OTG_HS_TX0FSIZ_Peripheral : OTG_HS_TX0FSIZ_Peripheral_Register;
+            OTG_HS_TX0FSIZ_Peripheral : aliased OTG_HS_TX0FSIZ_Peripheral_Register;
       end case;
    end record
      with Unchecked_Union, Volatile;
@@ -2281,168 +2282,168 @@ package STM32_SVD.USB_OTG_HS is
 
    --  USB on the go high speed
    OTG_HS_GLOBAL_Periph : aliased OTG_HS_GLOBAL_Peripheral
-     with Import, Address => OTG_HS_GLOBAL_Base;
+     with Import, Address => System'To_Address (16#40040000#);
 
    --  USB on the go high speed
    type OTG_HS_HOST_Peripheral is record
       --  OTG_HS host configuration register
-      OTG_HS_HCFG       : OTG_HS_HCFG_Register;
+      OTG_HS_HCFG       : aliased OTG_HS_HCFG_Register;
       --  OTG_HS Host frame interval register
-      OTG_HS_HFIR       : OTG_HS_HFIR_Register;
+      OTG_HS_HFIR       : aliased OTG_HS_HFIR_Register;
       --  OTG_HS host frame number/frame time remaining register
-      OTG_HS_HFNUM      : OTG_HS_HFNUM_Register;
+      OTG_HS_HFNUM      : aliased OTG_HS_HFNUM_Register;
       --  OTG_HS_Host periodic transmit FIFO/queue status register
-      OTG_HS_HPTXSTS    : OTG_HS_HPTXSTS_Register;
+      OTG_HS_HPTXSTS    : aliased OTG_HS_HPTXSTS_Register;
       --  OTG_HS Host all channels interrupt register
-      OTG_HS_HAINT      : OTG_HS_HAINT_Register;
+      OTG_HS_HAINT      : aliased OTG_HS_HAINT_Register;
       --  OTG_HS host all channels interrupt mask register
-      OTG_HS_HAINTMSK   : OTG_HS_HAINTMSK_Register;
+      OTG_HS_HAINTMSK   : aliased OTG_HS_HAINTMSK_Register;
       --  OTG_HS host port control and status register
-      OTG_HS_HPRT       : OTG_HS_HPRT_Register;
+      OTG_HS_HPRT       : aliased OTG_HS_HPRT_Register;
       --  OTG_HS host channel-0 characteristics register
-      OTG_HS_HCCHAR0    : OTG_HS_HCCHAR_Register;
+      OTG_HS_HCCHAR0    : aliased OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-0 split control register
-      OTG_HS_HCSPLT0    : OTG_HS_HCSPLT_Register;
+      OTG_HS_HCSPLT0    : aliased OTG_HS_HCSPLT_Register;
       --  OTG_HS host channel-11 interrupt register
-      OTG_HS_HCINT0     : OTG_HS_HCINT_Register;
+      OTG_HS_HCINT0     : aliased OTG_HS_HCINT_Register;
       --  OTG_HS host channel-11 interrupt mask register
-      OTG_HS_HCINTMSK0  : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK0  : aliased OTG_HS_HCINTMSK_Register;
       --  OTG_HS host channel-11 transfer size register
-      OTG_HS_HCTSIZ0    : OTG_HS_HCTSIZ_Register;
+      OTG_HS_HCTSIZ0    : aliased OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-0 DMA address register
-      OTG_HS_HCDMA0     : HAL.UInt32;
+      OTG_HS_HCDMA0     : aliased HAL.UInt32;
       --  OTG_HS host channel-1 characteristics register
-      OTG_HS_HCCHAR1    : OTG_HS_HCCHAR_Register;
+      OTG_HS_HCCHAR1    : aliased OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-1 split control register
-      OTG_HS_HCSPLT1    : OTG_HS_HCSPLT_Register;
+      OTG_HS_HCSPLT1    : aliased OTG_HS_HCSPLT_Register;
       --  OTG_HS host channel-1 interrupt register
-      OTG_HS_HCINT1     : OTG_HS_HCINT_Register;
+      OTG_HS_HCINT1     : aliased OTG_HS_HCINT_Register;
       --  OTG_HS host channel-1 interrupt mask register
-      OTG_HS_HCINTMSK1  : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK1  : aliased OTG_HS_HCINTMSK_Register;
       --  OTG_HS host channel-1 transfer size register
-      OTG_HS_HCTSIZ1    : OTG_HS_HCTSIZ_Register;
+      OTG_HS_HCTSIZ1    : aliased OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-1 DMA address register
-      OTG_HS_HCDMA1     : HAL.UInt32;
+      OTG_HS_HCDMA1     : aliased HAL.UInt32;
       --  OTG_HS host channel-2 characteristics register
-      OTG_HS_HCCHAR2    : OTG_HS_HCCHAR_Register;
+      OTG_HS_HCCHAR2    : aliased OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-2 split control register
-      OTG_HS_HCSPLT2    : OTG_HS_HCSPLT_Register;
+      OTG_HS_HCSPLT2    : aliased OTG_HS_HCSPLT_Register;
       --  OTG_HS host channel-2 interrupt register
-      OTG_HS_HCINT2     : OTG_HS_HCINT_Register;
+      OTG_HS_HCINT2     : aliased OTG_HS_HCINT_Register;
       --  OTG_HS host channel-2 interrupt mask register
-      OTG_HS_HCINTMSK2  : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK2  : aliased OTG_HS_HCINTMSK_Register;
       --  OTG_HS host channel-2 transfer size register
-      OTG_HS_HCTSIZ2    : OTG_HS_HCTSIZ_Register;
+      OTG_HS_HCTSIZ2    : aliased OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-2 DMA address register
-      OTG_HS_HCDMA2     : HAL.UInt32;
+      OTG_HS_HCDMA2     : aliased HAL.UInt32;
       --  OTG_HS host channel-3 characteristics register
-      OTG_HS_HCCHAR3    : OTG_HS_HCCHAR_Register;
+      OTG_HS_HCCHAR3    : aliased OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-3 split control register
-      OTG_HS_HCSPLT3    : OTG_HS_HCSPLT_Register;
+      OTG_HS_HCSPLT3    : aliased OTG_HS_HCSPLT_Register;
       --  OTG_HS host channel-3 interrupt register
-      OTG_HS_HCINT3     : OTG_HS_HCINT_Register;
+      OTG_HS_HCINT3     : aliased OTG_HS_HCINT_Register;
       --  OTG_HS host channel-3 interrupt mask register
-      OTG_HS_HCINTMSK3  : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK3  : aliased OTG_HS_HCINTMSK_Register;
       --  OTG_HS host channel-3 transfer size register
-      OTG_HS_HCTSIZ3    : OTG_HS_HCTSIZ_Register;
+      OTG_HS_HCTSIZ3    : aliased OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-3 DMA address register
-      OTG_HS_HCDMA3     : HAL.UInt32;
+      OTG_HS_HCDMA3     : aliased HAL.UInt32;
       --  OTG_HS host channel-4 characteristics register
-      OTG_HS_HCCHAR4    : OTG_HS_HCCHAR_Register;
+      OTG_HS_HCCHAR4    : aliased OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-4 split control register
-      OTG_HS_HCSPLT4    : OTG_HS_HCSPLT_Register;
+      OTG_HS_HCSPLT4    : aliased OTG_HS_HCSPLT_Register;
       --  OTG_HS host channel-4 interrupt register
-      OTG_HS_HCINT4     : OTG_HS_HCINT_Register;
+      OTG_HS_HCINT4     : aliased OTG_HS_HCINT_Register;
       --  OTG_HS host channel-4 interrupt mask register
-      OTG_HS_HCINTMSK4  : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK4  : aliased OTG_HS_HCINTMSK_Register;
       --  OTG_HS host channel-4 transfer size register
-      OTG_HS_HCTSIZ4    : OTG_HS_HCTSIZ_Register;
+      OTG_HS_HCTSIZ4    : aliased OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-4 DMA address register
-      OTG_HS_HCDMA4     : HAL.UInt32;
+      OTG_HS_HCDMA4     : aliased HAL.UInt32;
       --  OTG_HS host channel-5 characteristics register
-      OTG_HS_HCCHAR5    : OTG_HS_HCCHAR_Register;
+      OTG_HS_HCCHAR5    : aliased OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-5 split control register
-      OTG_HS_HCSPLT5    : OTG_HS_HCSPLT_Register;
+      OTG_HS_HCSPLT5    : aliased OTG_HS_HCSPLT_Register;
       --  OTG_HS host channel-5 interrupt register
-      OTG_HS_HCINT5     : OTG_HS_HCINT_Register;
+      OTG_HS_HCINT5     : aliased OTG_HS_HCINT_Register;
       --  OTG_HS host channel-5 interrupt mask register
-      OTG_HS_HCINTMSK5  : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK5  : aliased OTG_HS_HCINTMSK_Register;
       --  OTG_HS host channel-5 transfer size register
-      OTG_HS_HCTSIZ5    : OTG_HS_HCTSIZ_Register;
+      OTG_HS_HCTSIZ5    : aliased OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-5 DMA address register
-      OTG_HS_HCDMA5     : HAL.UInt32;
+      OTG_HS_HCDMA5     : aliased HAL.UInt32;
       --  OTG_HS host channel-6 characteristics register
-      OTG_HS_HCCHAR6    : OTG_HS_HCCHAR_Register;
+      OTG_HS_HCCHAR6    : aliased OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-6 split control register
-      OTG_HS_HCSPLT6    : OTG_HS_HCSPLT_Register;
+      OTG_HS_HCSPLT6    : aliased OTG_HS_HCSPLT_Register;
       --  OTG_HS host channel-6 interrupt register
-      OTG_HS_HCINT6     : OTG_HS_HCINT_Register;
+      OTG_HS_HCINT6     : aliased OTG_HS_HCINT_Register;
       --  OTG_HS host channel-6 interrupt mask register
-      OTG_HS_HCINTMSK6  : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK6  : aliased OTG_HS_HCINTMSK_Register;
       --  OTG_HS host channel-6 transfer size register
-      OTG_HS_HCTSIZ6    : OTG_HS_HCTSIZ_Register;
+      OTG_HS_HCTSIZ6    : aliased OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-6 DMA address register
-      OTG_HS_HCDMA6     : HAL.UInt32;
+      OTG_HS_HCDMA6     : aliased HAL.UInt32;
       --  OTG_HS host channel-7 characteristics register
-      OTG_HS_HCCHAR7    : OTG_HS_HCCHAR_Register;
+      OTG_HS_HCCHAR7    : aliased OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-7 split control register
-      OTG_HS_HCSPLT7    : OTG_HS_HCSPLT_Register;
+      OTG_HS_HCSPLT7    : aliased OTG_HS_HCSPLT_Register;
       --  OTG_HS host channel-7 interrupt register
-      OTG_HS_HCINT7     : OTG_HS_HCINT_Register;
+      OTG_HS_HCINT7     : aliased OTG_HS_HCINT_Register;
       --  OTG_HS host channel-7 interrupt mask register
-      OTG_HS_HCINTMSK7  : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK7  : aliased OTG_HS_HCINTMSK_Register;
       --  OTG_HS host channel-7 transfer size register
-      OTG_HS_HCTSIZ7    : OTG_HS_HCTSIZ_Register;
+      OTG_HS_HCTSIZ7    : aliased OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-7 DMA address register
-      OTG_HS_HCDMA7     : HAL.UInt32;
+      OTG_HS_HCDMA7     : aliased HAL.UInt32;
       --  OTG_HS host channel-8 characteristics register
-      OTG_HS_HCCHAR8    : OTG_HS_HCCHAR_Register;
+      OTG_HS_HCCHAR8    : aliased OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-8 split control register
-      OTG_HS_HCSPLT8    : OTG_HS_HCSPLT_Register;
+      OTG_HS_HCSPLT8    : aliased OTG_HS_HCSPLT_Register;
       --  OTG_HS host channel-8 interrupt register
-      OTG_HS_HCINT8     : OTG_HS_HCINT_Register;
+      OTG_HS_HCINT8     : aliased OTG_HS_HCINT_Register;
       --  OTG_HS host channel-8 interrupt mask register
-      OTG_HS_HCINTMSK8  : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK8  : aliased OTG_HS_HCINTMSK_Register;
       --  OTG_HS host channel-8 transfer size register
-      OTG_HS_HCTSIZ8    : OTG_HS_HCTSIZ_Register;
+      OTG_HS_HCTSIZ8    : aliased OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-8 DMA address register
-      OTG_HS_HCDMA8     : HAL.UInt32;
+      OTG_HS_HCDMA8     : aliased HAL.UInt32;
       --  OTG_HS host channel-9 characteristics register
-      OTG_HS_HCCHAR9    : OTG_HS_HCCHAR_Register;
+      OTG_HS_HCCHAR9    : aliased OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-9 split control register
-      OTG_HS_HCSPLT9    : OTG_HS_HCSPLT_Register;
+      OTG_HS_HCSPLT9    : aliased OTG_HS_HCSPLT_Register;
       --  OTG_HS host channel-9 interrupt register
-      OTG_HS_HCINT9     : OTG_HS_HCINT_Register;
+      OTG_HS_HCINT9     : aliased OTG_HS_HCINT_Register;
       --  OTG_HS host channel-9 interrupt mask register
-      OTG_HS_HCINTMSK9  : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK9  : aliased OTG_HS_HCINTMSK_Register;
       --  OTG_HS host channel-9 transfer size register
-      OTG_HS_HCTSIZ9    : OTG_HS_HCTSIZ_Register;
+      OTG_HS_HCTSIZ9    : aliased OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-9 DMA address register
-      OTG_HS_HCDMA9     : HAL.UInt32;
+      OTG_HS_HCDMA9     : aliased HAL.UInt32;
       --  OTG_HS host channel-10 characteristics register
-      OTG_HS_HCCHAR10   : OTG_HS_HCCHAR_Register;
+      OTG_HS_HCCHAR10   : aliased OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-10 split control register
-      OTG_HS_HCSPLT10   : OTG_HS_HCSPLT_Register;
+      OTG_HS_HCSPLT10   : aliased OTG_HS_HCSPLT_Register;
       --  OTG_HS host channel-10 interrupt register
-      OTG_HS_HCINT10    : OTG_HS_HCINT_Register;
+      OTG_HS_HCINT10    : aliased OTG_HS_HCINT_Register;
       --  OTG_HS host channel-10 interrupt mask register
-      OTG_HS_HCINTMSK10 : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK10 : aliased OTG_HS_HCINTMSK_Register;
       --  OTG_HS host channel-10 transfer size register
-      OTG_HS_HCTSIZ10   : OTG_HS_HCTSIZ_Register;
+      OTG_HS_HCTSIZ10   : aliased OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-10 DMA address register
-      OTG_HS_HCDMA10    : HAL.UInt32;
+      OTG_HS_HCDMA10    : aliased HAL.UInt32;
       --  OTG_HS host channel-11 characteristics register
-      OTG_HS_HCCHAR11   : OTG_HS_HCCHAR_Register;
+      OTG_HS_HCCHAR11   : aliased OTG_HS_HCCHAR_Register;
       --  OTG_HS host channel-11 split control register
-      OTG_HS_HCSPLT11   : OTG_HS_HCSPLT_Register;
+      OTG_HS_HCSPLT11   : aliased OTG_HS_HCSPLT_Register;
       --  OTG_HS host channel-11 interrupt register
-      OTG_HS_HCINT11    : OTG_HS_HCINT_Register;
+      OTG_HS_HCINT11    : aliased OTG_HS_HCINT_Register;
       --  OTG_HS host channel-11 interrupt mask register
-      OTG_HS_HCINTMSK11 : OTG_HS_HCINTMSK_Register;
+      OTG_HS_HCINTMSK11 : aliased OTG_HS_HCINTMSK_Register;
       --  OTG_HS host channel-11 transfer size register
-      OTG_HS_HCTSIZ11   : OTG_HS_HCTSIZ_Register;
+      OTG_HS_HCTSIZ11   : aliased OTG_HS_HCTSIZ_Register;
       --  OTG_HS host channel-11 DMA address register
-      OTG_HS_HCDMA11    : HAL.UInt32;
+      OTG_HS_HCDMA11    : aliased HAL.UInt32;
    end record
      with Volatile;
 
@@ -2530,12 +2531,12 @@ package STM32_SVD.USB_OTG_HS is
 
    --  USB on the go high speed
    OTG_HS_HOST_Periph : aliased OTG_HS_HOST_Peripheral
-     with Import, Address => OTG_HS_HOST_Base;
+     with Import, Address => System'To_Address (16#40040400#);
 
    --  USB on the go high speed
    type OTG_HS_PWRCLK_Peripheral is record
       --  Power and clock gating control register
-      OTG_HS_PCGCR : OTG_HS_PCGCR_Register;
+      OTG_HS_PCGCR : aliased OTG_HS_PCGCR_Register;
    end record
      with Volatile;
 
@@ -2545,6 +2546,6 @@ package STM32_SVD.USB_OTG_HS is
 
    --  USB on the go high speed
    OTG_HS_PWRCLK_Periph : aliased OTG_HS_PWRCLK_Peripheral
-     with Import, Address => OTG_HS_PWRCLK_Base;
+     with Import, Address => System'To_Address (16#40040E00#);
 
 end STM32_SVD.USB_OTG_HS;

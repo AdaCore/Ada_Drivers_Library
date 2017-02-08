@@ -34,6 +34,10 @@
 
 with Ada.Real_Time;           use Ada.Real_Time;
 
+with HAL.SDMMC;               use HAL.SDMMC;
+
+with STM32_SVD.RCC;           use STM32_SVD.RCC;
+
 with STM32.Device;            use STM32.Device;
 with STM32.DMA;               use STM32.DMA;
 with STM32.GPIO;              use STM32.GPIO;
@@ -117,6 +121,8 @@ package body SDCard is
                         (PD6, PD7, PG9, PG10);
 
    begin
+      RCC_Periph.DKCFGR2.SDMMC2SEL := True; --  SDMMC uses the SYSCLK
+
       --  Enable the SDIO clock
       Enable_Clock (SDMMC_Controller (Controller.Device.all));
       Reset (SDMMC_Controller (Controller.Device.all));
@@ -134,11 +140,10 @@ package body SDCard is
           Output_Type => Push_Pull,
           Speed       => Speed_High,
           Resistors   => Pull_Up));
-      --  ??? no GPIO_AF10_SDMMC or AF11 names for now. Waiting for AF
-      --  functions to be moved outside of STM32.GPIO (that is common to
-      --  all STM32)
+
       Configure_Alternate_Function (SD_Pins_AF_10, GPIO_AF_10_SDMMC2);
       Configure_Alternate_Function (SD_Pins_AF_11, GPIO_AF_11_SDMMC2);
+      Lock (SD_Pins_AF_10 & SD_Pins_AF_11);
 
       --  GPIO configuration for the SD-Detect pin
       Configure_IO
@@ -223,8 +228,13 @@ package body SDCard is
          return;
       end if;
 
+      Enable_Clock (SDMMC_Controller (Controller.Device.all));
+      Reset (SDMMC_Controller (Controller.Device.all));
+
       Ret := STM32.SDMMC.Initialize
-        (Controller.Device.all, Controller.Info);
+        (Controller.Device.all,
+         System_Clock_Frequencies.SYSCLK,
+         Controller.Info);
 
       if Ret = OK then
          Controller.Has_Info := True;
@@ -239,15 +249,10 @@ package body SDCard is
 
    function Get_Card_Information
      (Controller : in out SDCard_Controller)
-      return STM32.SDMMC.Card_Information
+      return Card_Information
    is
    begin
       Ensure_Card_Informations (Controller);
-
-      if not Controller.Has_Info then
-         --  Issue reading the SD-card information
-         Ensure_Card_Informations (Controller);
-      end if;
 
       if not Controller.Has_Info then
          raise Device_Error;
@@ -465,6 +470,7 @@ package body SDCard is
          elsif Get_Flag (Device.all, TX_Underrun) then
             Clear_Flag (Device.all, TX_Underrun);
             SD_Status := Tx_Underrun;
+
          end if;
 
          for Int in SDMMC_Interrupts loop
@@ -480,7 +486,7 @@ package body SDCard is
 
    overriding function Write
      (Controller   : in out SDCard_Controller;
-      Block_Number : Unsigned_32;
+      Block_Number : Unsigned_64;
       Data         : Block) return Boolean
    is
       Ret     : SD_Error;
@@ -499,8 +505,7 @@ package body SDCard is
       Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
       Ret := Write_Blocks_DMA
         (Controller.Device.all,
-         Unsigned_64 (Block_Number) *
-             Unsigned_64 (Controller.Info.Card_Block_Size),
+         Block_Number * Unsigned_64 (Controller.Info.Card_Block_Size),
          SD_DMA,
          SD_DMA_Tx_Stream,
          SD_Data (Data));
@@ -546,7 +551,7 @@ package body SDCard is
 
    overriding function Read
      (Controller   : in out SDCard_Controller;
-      Block_Number : Unsigned_32;
+      Block_Number : Unsigned_64;
       Data         : out Block) return Boolean
    is
       Ret     : Boolean;
@@ -559,13 +564,12 @@ package body SDCard is
       SDMMC_Interrupt_Handler.Set_Transfer_State (Controller);
 
       Cortex_M.Cache.Clean_DCache
-        (Start => Data'Address,
+        (Start => Data (Data'First)'Address,
          Len   => Data'Length);
 
       SD_Err := Read_Blocks_DMA
         (Controller.Device.all,
-         Unsigned_64 (Block_Number) *
-             Unsigned_64 (Controller.Info.Card_Block_Size),
+         Block_Number * Unsigned_64 (Controller.Info.Card_Block_Size),
          SD_DMA,
          SD_DMA_Rx_Stream,
          SD_Data (Data));
@@ -579,7 +583,12 @@ package body SDCard is
       end if;
 
       SDMMC_Interrupt_Handler.Wait_Transfer (SD_Err);
-      DMA_Interrupt_Handler.Wait_Transfer (DMA_Err);
+      if SD_Err = OK then
+         DMA_Interrupt_Handler.Wait_Transfer (DMA_Err);
+      else
+         DMA_Interrupt_Handler.Clear_Transfer_State;
+         Abort_Transfer (SD_DMA, SD_DMA_Rx_Stream, DMA_Err);
+      end if;
 
       loop
          exit when not Get_Flag (Controller.Device.all, RX_Active);

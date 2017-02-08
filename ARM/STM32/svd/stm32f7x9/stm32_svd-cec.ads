@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -219,17 +220,17 @@ package STM32_SVD.CEC is
    --  HDMI-CEC controller
    type CEC_Peripheral is record
       --  control register
-      CR   : CR_Register;
+      CR   : aliased CR_Register;
       --  configuration register
-      CFGR : CFGR_Register;
+      CFGR : aliased CFGR_Register;
       --  Tx data register
-      TXDR : TXDR_Register;
+      TXDR : aliased TXDR_Register;
       --  Rx Data Register
-      RXDR : RXDR_Register;
+      RXDR : aliased RXDR_Register;
       --  Interrupt and Status Register
-      ISR  : ISR_Register;
+      ISR  : aliased ISR_Register;
       --  interrupt enable register
-      IER  : IER_Register;
+      IER  : aliased IER_Register;
    end record
      with Volatile;
 
@@ -244,6 +245,6 @@ package STM32_SVD.CEC is
 
    --  HDMI-CEC controller
    CEC_Periph : aliased CEC_Peripheral
-     with Import, Address => CEC_Base;
+     with Import, Address => System'To_Address (16#40006C00#);
 
 end STM32_SVD.CEC;

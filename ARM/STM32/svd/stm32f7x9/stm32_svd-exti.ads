@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -254,17 +255,17 @@ package STM32_SVD.EXTI is
    --  External interrupt/event controller
    type EXTI_Peripheral is record
       --  Interrupt mask register (EXTI_IMR)
-      IMR   : IMR_Register;
+      IMR   : aliased IMR_Register;
       --  Event mask register (EXTI_EMR)
-      EMR   : EMR_Register;
+      EMR   : aliased EMR_Register;
       --  Rising Trigger selection register (EXTI_RTSR)
-      RTSR  : RTSR_Register;
+      RTSR  : aliased RTSR_Register;
       --  Falling Trigger selection register (EXTI_FTSR)
-      FTSR  : FTSR_Register;
+      FTSR  : aliased FTSR_Register;
       --  Software interrupt event register (EXTI_SWIER)
-      SWIER : SWIER_Register;
+      SWIER : aliased SWIER_Register;
       --  Pending register (EXTI_PR)
-      PR    : PR_Register;
+      PR    : aliased PR_Register;
    end record
      with Volatile;
 
@@ -279,6 +280,6 @@ package STM32_SVD.EXTI is
 
    --  External interrupt/event controller
    EXTI_Periph : aliased EXTI_Peripheral
-     with Import, Address => EXTI_Base;
+     with Import, Address => System'To_Address (16#40013C00#);
 
 end STM32_SVD.EXTI;

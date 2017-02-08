@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -573,53 +574,53 @@ package STM32_SVD.FSMC is
    --  Flexible memory controller
    type FMC_Peripheral is record
       --  SRAM/NOR-Flash chip-select control register 1
-      BCR1  : BCR1_Register;
+      BCR1  : aliased BCR1_Register;
       --  SRAM/NOR-Flash chip-select timing register 1
-      BTR1  : BTR_Register;
+      BTR1  : aliased BTR_Register;
       --  SRAM/NOR-Flash chip-select control register 2
-      BCR2  : BCR_Register;
+      BCR2  : aliased BCR_Register;
       --  SRAM/NOR-Flash chip-select timing register 2
-      BTR2  : BTR_Register;
+      BTR2  : aliased BTR_Register;
       --  SRAM/NOR-Flash chip-select control register 3
-      BCR3  : BCR_Register;
+      BCR3  : aliased BCR_Register;
       --  SRAM/NOR-Flash chip-select timing register 3
-      BTR3  : BTR_Register;
+      BTR3  : aliased BTR_Register;
       --  SRAM/NOR-Flash chip-select control register 4
-      BCR4  : BCR_Register;
+      BCR4  : aliased BCR_Register;
       --  SRAM/NOR-Flash chip-select timing register 4
-      BTR4  : BTR_Register;
+      BTR4  : aliased BTR_Register;
       --  PC Card/NAND Flash control register
-      PCR   : PCR_Register;
+      PCR   : aliased PCR_Register;
       --  FIFO status and interrupt register
-      SR    : SR_Register;
+      SR    : aliased SR_Register;
       --  Common memory space timing register
-      PMEM  : PMEM_Register;
+      PMEM  : aliased PMEM_Register;
       --  Attribute memory space timing register
-      PATT  : PATT_Register;
+      PATT  : aliased PATT_Register;
       --  ECC result register
-      ECCR  : HAL.UInt32;
+      ECCR  : aliased HAL.UInt32;
       --  SRAM/NOR-Flash write timing registers 1
-      BWTR1 : BWTR_Register;
+      BWTR1 : aliased BWTR_Register;
       --  SRAM/NOR-Flash write timing registers 2
-      BWTR2 : BWTR_Register;
+      BWTR2 : aliased BWTR_Register;
       --  SRAM/NOR-Flash write timing registers 3
-      BWTR3 : BWTR_Register;
+      BWTR3 : aliased BWTR_Register;
       --  SRAM/NOR-Flash write timing registers 4
-      BWTR4 : BWTR_Register;
+      BWTR4 : aliased BWTR_Register;
       --  SDRAM Control Register 1
-      SDCR1 : SDCR_Register;
+      SDCR1 : aliased SDCR_Register;
       --  SDRAM Control Register 2
-      SDCR2 : SDCR_Register;
+      SDCR2 : aliased SDCR_Register;
       --  SDRAM Timing register 1
-      SDTR1 : SDTR_Register;
+      SDTR1 : aliased SDTR_Register;
       --  SDRAM Timing register 2
-      SDTR2 : SDTR_Register;
+      SDTR2 : aliased SDTR_Register;
       --  SDRAM Command Mode register
-      SDCMR : SDCMR_Register;
+      SDCMR : aliased SDCMR_Register;
       --  SDRAM Refresh Timer register
-      SDRTR : SDRTR_Register;
+      SDRTR : aliased SDRTR_Register;
       --  SDRAM Status register
-      SDSR  : SDSR_Register;
+      SDSR  : aliased SDSR_Register;
    end record
      with Volatile;
 
@@ -652,6 +653,6 @@ package STM32_SVD.FSMC is
 
    --  Flexible memory controller
    FMC_Periph : aliased FMC_Peripheral
-     with Import, Address => FMC_Base;
+     with Import, Address => System'To_Address (16#A0000000#);
 
 end STM32_SVD.FSMC;

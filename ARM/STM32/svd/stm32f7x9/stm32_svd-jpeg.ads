@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -240,6 +241,48 @@ package STM32_SVD.JPEG is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
+   --  Quantization table
+
+   --  Quantization table
+   type QMEM_Registers is array (0 .. 15) of HAL.UInt32
+     with Volatile;
+
+   --  HuffMin register
+
+   --  HuffMin register
+   type HUFFMIN_Registers is array (0 .. 15) of HAL.UInt32
+     with Volatile;
+
+   --  HuffBase register
+
+   --  HuffBase register
+   type HUFFBASE_Registers is array (0 .. 31) of HAL.UInt32
+     with Volatile;
+
+   --  HuffSymb register
+
+   --  HuffSymb register
+   type HUFFSYMB_Registers is array (0 .. 83) of HAL.UInt32
+     with Volatile;
+
+   --  JPEG DHTMem tables
+
+   --  JPEG DHTMem tables
+   type DHTMEM_Registers is array (0 .. 102) of HAL.UInt32
+     with Volatile;
+
+   --  JPEG encoder, AC Huffman table 0
+
+   --  JPEG encoder, AC Huffman table 0
+   type HUFFENC_AC_Registers is array (0 .. 87) of HAL.UInt32
+     with Volatile;
+
+   --  JPEG encoder, DC Huffman table 0
+
+   --  JPEG encoder, DC Huffman table 0
+   type HUFFENC_DC_Registers is array (0 .. 7) of HAL.UInt32
+     with Volatile;
+
    -----------------
    -- Peripherals --
    -----------------
@@ -247,31 +290,55 @@ package STM32_SVD.JPEG is
    --  JPEG codec
    type JPEG_Peripheral is record
       --  JPEG codec configuration register 0
-      JPEG_CONFR0 : JPEG_CONFR0_Register;
+      JPEG_CONFR0 : aliased JPEG_CONFR0_Register;
       --  JPEG codec configuration register 1
-      JPEG_CONFR1 : JPEG_CONFR1_Register;
+      JPEG_CONFR1 : aliased JPEG_CONFR1_Register;
       --  JPEG codec configuration register 2
-      JPEG_CONFR2 : JPEG_CONFR2_Register;
+      JPEG_CONFR2 : aliased JPEG_CONFR2_Register;
       --  JPEG codec configuration register 3
-      JPEG_CONFR3 : JPEG_CONFR3_Register;
+      JPEG_CONFR3 : aliased JPEG_CONFR3_Register;
       --  JPEG codec configuration register 4
-      JPEG_CONFR4 : JPEG_CONFR_Register;
+      JPEG_CONFR4 : aliased JPEG_CONFR_Register;
       --  JPEG codec configuration register 5
-      JPEG_CONFR5 : JPEG_CONFR_Register;
+      JPEG_CONFR5 : aliased JPEG_CONFR_Register;
       --  JPEG codec configuration register 6
-      JPEG_CONFR6 : JPEG_CONFR_Register;
+      JPEG_CONFR6 : aliased JPEG_CONFR_Register;
       --  JPEG codec configuration register 7
-      JPEG_CONFR7 : JPEG_CONFR_Register;
+      JPEG_CONFR7 : aliased JPEG_CONFR_Register;
       --  JPEG control register
-      JPEG_CR     : JPEG_CR_Register;
+      JPEG_CR     : aliased JPEG_CR_Register;
       --  JPEG status register
-      JPEG_SR     : JPEG_SR_Register;
+      JPEG_SR     : aliased JPEG_SR_Register;
       --  JPEG clear flag register
-      JPEG_CFR    : JPEG_CFR_Register;
+      JPEG_CFR    : aliased JPEG_CFR_Register;
       --  JPEG data input register
-      JPEG_DIR    : HAL.UInt32;
+      JPEG_DIR    : aliased HAL.UInt32;
       --  JPEG data output register
-      JPEG_DOR    : HAL.UInt32;
+      JPEG_DOR    : aliased HAL.UInt32;
+      --  Quantization table
+      QMEM0       : aliased QMEM_Registers;
+      --  Quantization table
+      QMEM1       : aliased QMEM_Registers;
+      --  Quantization table
+      QMEM2       : aliased QMEM_Registers;
+      --  Quantization table
+      QMEM3       : aliased QMEM_Registers;
+      --  HuffMin register
+      HUFFMIN     : aliased HUFFMIN_Registers;
+      --  HuffBase register
+      HUFFBASE    : aliased HUFFBASE_Registers;
+      --  HuffSymb register
+      HUFFSYMB    : aliased HUFFSYMB_Registers;
+      --  JPEG DHTMem tables
+      DHTMEM      : aliased DHTMEM_Registers;
+      --  JPEG encoder, AC Huffman table 0
+      HUFFENC_AC0 : aliased HUFFENC_AC_Registers;
+      --  JPEG encoder, AC Huffman table 1
+      HUFFENC_AC1 : aliased HUFFENC_AC_Registers;
+      --  JPEG encoder, DC Huffman table 0
+      HUFFENC_DC0 : aliased HUFFENC_DC_Registers;
+      --  JPEG encoder, DC Huffman table 1
+      HUFFENC_DC1 : aliased HUFFENC_DC_Registers;
    end record
      with Volatile;
 
@@ -284,15 +351,27 @@ package STM32_SVD.JPEG is
       JPEG_CONFR5 at 16#14# range 0 .. 31;
       JPEG_CONFR6 at 16#18# range 0 .. 31;
       JPEG_CONFR7 at 16#1C# range 0 .. 31;
-      JPEG_CR     at 16#20# range 0 .. 31;
-      JPEG_SR     at 16#24# range 0 .. 31;
-      JPEG_CFR    at 16#28# range 0 .. 31;
-      JPEG_DIR    at 16#2C# range 0 .. 31;
-      JPEG_DOR    at 16#30# range 0 .. 31;
+      JPEG_CR     at 16#30# range 0 .. 31;
+      JPEG_SR     at 16#34# range 0 .. 31;
+      JPEG_CFR    at 16#38# range 0 .. 31;
+      JPEG_DIR    at 16#40# range 0 .. 31;
+      JPEG_DOR    at 16#44# range 0 .. 31;
+      QMEM0       at 16#50# range 0 .. 511;
+      QMEM1       at 16#90# range 0 .. 511;
+      QMEM2       at 16#D0# range 0 .. 511;
+      QMEM3       at 16#110# range 0 .. 511;
+      HUFFMIN     at 16#150# range 0 .. 511;
+      HUFFBASE    at 16#190# range 0 .. 1023;
+      HUFFSYMB    at 16#210# range 0 .. 2687;
+      DHTMEM      at 16#360# range 0 .. 3295;
+      HUFFENC_AC0 at 16#500# range 0 .. 2815;
+      HUFFENC_AC1 at 16#660# range 0 .. 2815;
+      HUFFENC_DC0 at 16#7C0# range 0 .. 255;
+      HUFFENC_DC1 at 16#7E0# range 0 .. 255;
    end record;
 
    --  JPEG codec
    JPEG_Periph : aliased JPEG_Peripheral
-     with Import, Address => JPEG_Base;
+     with Import, Address => System'To_Address (16#50051000#);
 
 end STM32_SVD.JPEG;

@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -586,7 +587,7 @@ package Cortex_M_SVD.SCB is
    end record;
 
    --  Indicates how the processor enters Thread mode
-   type CCR_NONBASETHERADENA_Field is
+   type CCR_NONBASETHREADENA_Field is
      (
       --  Processor can enter Thread mode only when no exception is active
       No_Active_Exception,
@@ -594,14 +595,14 @@ package Cortex_M_SVD.SCB is
       --  an EXC_RETURN value
       On_Exc_Return)
      with Size => 1;
-   for CCR_NONBASETHERADENA_Field use
+   for CCR_NONBASETHREADENA_Field use
      (No_Active_Exception => 0,
       On_Exc_Return => 1);
 
    --  Configuration and Control Register
    type CCR_Register is record
       --  Indicates how the processor enters Thread mode
-      NONBASETHERADENA : CCR_NONBASETHERADENA_Field :=
+      NONBASETHREADENA : CCR_NONBASETHREADENA_Field :=
                           Cortex_M_SVD.SCB.No_Active_Exception;
       --  Enables unprivileged software access to the STIR
       USERSETMPEND     : Boolean := False;
@@ -634,7 +635,7 @@ package Cortex_M_SVD.SCB is
           Bit_Order => System.Low_Order_First;
 
    for CCR_Register use record
-      NONBASETHERADENA at 0 range 0 .. 0;
+      NONBASETHREADENA at 0 range 0 .. 0;
       USERSETMPEND     at 0 range 1 .. 1;
       Reserved_2_2     at 0 range 2 .. 2;
       UNALIGNED_TRP    at 0 range 3 .. 3;
@@ -921,39 +922,39 @@ package Cortex_M_SVD.SCB is
       --  Dynamic read allocate mode. By default this register is set to
       --  provide optimum performance from the Cortex-M7 processor, and does
       --  not normally require modification.
-      ACTLR : ACTLR_Register;
+      ACTLR : aliased ACTLR_Register;
       --  CPUID Base Register
-      CPUID : CPUID_Register;
+      CPUID : aliased CPUID_Register;
       --  Interrupt Control and State Register
-      ICSR  : ICSR_Register;
+      ICSR  : aliased ICSR_Register;
       --  Vector Table Offset Register
-      VTOR  : HAL.UInt32;
+      VTOR  : aliased HAL.UInt32;
       --  Application Interrupt and Reset Control Register
-      AIRCR : AIRCR_Register;
+      AIRCR : aliased AIRCR_Register;
       --  System Control Register
-      SCR   : SCR_Register;
+      SCR   : aliased SCR_Register;
       --  Configuration and Control Register
-      CCR   : CCR_Register;
+      CCR   : aliased CCR_Register;
       --  System Handler Priority Register 1
-      SHPR1 : SHPR1_Register;
+      SHPR1 : aliased SHPR1_Register;
       --  System Handler Priority Register 2
-      SHPR2 : SHPR2_Register;
+      SHPR2 : aliased SHPR2_Register;
       --  System Handler Priority Register 3
-      SHPR3 : SHPR3_Register;
+      SHPR3 : aliased SHPR3_Register;
       --  System Handler Control and State Register
-      SHPRS : SHPRS_Register;
+      SHPRS : aliased SHPRS_Register;
       --  MemManage Fault Status Register
-      MMSR  : MMSR_Register;
+      MMSR  : aliased MMSR_Register;
       --  BusFault Status Register
-      BFSR  : BFSR_Register;
+      BFSR  : aliased BFSR_Register;
       --  UsageFault Status Register
-      UFSR  : UFSR_Register;
+      UFSR  : aliased UFSR_Register;
       --  HardFault Status Register
-      HFSR  : HFSR_Register;
+      HFSR  : aliased HFSR_Register;
       --  MemManage Fault Address Register
-      MMAR  : HAL.UInt32;
+      MMAR  : aliased HAL.UInt32;
       --  BusFault Address Register
-      BFAR  : HAL.UInt32;
+      BFAR  : aliased HAL.UInt32;
    end record
      with Volatile;
 
@@ -979,6 +980,6 @@ package Cortex_M_SVD.SCB is
 
    --  System control block
    SCB_Periph : aliased SCB_Peripheral
-     with Import, Address => SCB_Base;
+     with Import, Address => System'To_Address (16#E000E000#);
 
 end Cortex_M_SVD.SCB;

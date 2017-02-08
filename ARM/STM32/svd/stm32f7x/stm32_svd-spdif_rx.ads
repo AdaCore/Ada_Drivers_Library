@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -267,19 +268,19 @@ package STM32_SVD.SPDIF_RX is
    --  Receiver Interface
    type SPDIF_RX_Peripheral is record
       --  Control register
-      CR   : CR_Register;
+      CR   : aliased CR_Register;
       --  Interrupt mask register
-      IMR  : IMR_Register;
+      IMR  : aliased IMR_Register;
       --  Status register
-      SR   : SR_Register;
+      SR   : aliased SR_Register;
       --  Interrupt Flag Clear register
-      IFCR : IFCR_Register;
+      IFCR : aliased IFCR_Register;
       --  Data input register
-      DR   : DR_Register;
+      DR   : aliased DR_Register;
       --  Channel Status register
-      CSR  : CSR_Register;
+      CSR  : aliased CSR_Register;
       --  Debug Information register
-      DIR  : DIR_Register;
+      DIR  : aliased DIR_Register;
    end record
      with Volatile;
 
@@ -295,6 +296,6 @@ package STM32_SVD.SPDIF_RX is
 
    --  Receiver Interface
    SPDIF_RX_Periph : aliased SPDIF_RX_Peripheral
-     with Import, Address => SPDIF_RX_Base;
+     with Import, Address => System'To_Address (16#40004000#);
 
 end STM32_SVD.SPDIF_RX;

@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -729,83 +730,83 @@ package STM32_SVD.RTC is
    --  Real-time clock
    type RTC_Peripheral is record
       --  time register
-      TR       : TR_Register;
+      TR       : aliased TR_Register;
       --  date register
-      DR       : DR_Register;
+      DR       : aliased DR_Register;
       --  control register
-      CR       : CR_Register;
+      CR       : aliased CR_Register;
       --  initialization and status register
-      ISR      : ISR_Register;
+      ISR      : aliased ISR_Register;
       --  prescaler register
-      PRER     : PRER_Register;
+      PRER     : aliased PRER_Register;
       --  wakeup timer register
-      WUTR     : WUTR_Register;
+      WUTR     : aliased WUTR_Register;
       --  calibration register
-      CALIBR   : CALIBR_Register;
+      CALIBR   : aliased CALIBR_Register;
       --  alarm A register
-      ALRMAR   : ALRMAR_Register;
+      ALRMAR   : aliased ALRMAR_Register;
       --  alarm B register
-      ALRMBR   : ALRMBR_Register;
+      ALRMBR   : aliased ALRMBR_Register;
       --  write protection register
-      WPR      : WPR_Register;
+      WPR      : aliased WPR_Register;
       --  sub second register
-      SSR      : SSR_Register;
+      SSR      : aliased SSR_Register;
       --  shift control register
-      SHIFTR   : SHIFTR_Register;
+      SHIFTR   : aliased SHIFTR_Register;
       --  time stamp time register
-      TSTR     : TSTR_Register;
+      TSTR     : aliased TSTR_Register;
       --  time stamp date register
-      TSDR     : TSDR_Register;
+      TSDR     : aliased TSDR_Register;
       --  timestamp sub second register
-      TSSSR    : TSSSR_Register;
+      TSSSR    : aliased TSSSR_Register;
       --  calibration register
-      CALR     : CALR_Register;
+      CALR     : aliased CALR_Register;
       --  tamper and alternate function configuration register
-      TAFCR    : TAFCR_Register;
+      TAFCR    : aliased TAFCR_Register;
       --  alarm A sub second register
-      ALRMASSR : ALRMASSR_Register;
+      ALRMASSR : aliased ALRMASSR_Register;
       --  alarm B sub second register
-      ALRMBSSR : ALRMBSSR_Register;
+      ALRMBSSR : aliased ALRMBSSR_Register;
       --  backup register
-      BKP0R    : HAL.UInt32;
+      BKP0R    : aliased HAL.UInt32;
       --  backup register
-      BKP1R    : HAL.UInt32;
+      BKP1R    : aliased HAL.UInt32;
       --  backup register
-      BKP2R    : HAL.UInt32;
+      BKP2R    : aliased HAL.UInt32;
       --  backup register
-      BKP3R    : HAL.UInt32;
+      BKP3R    : aliased HAL.UInt32;
       --  backup register
-      BKP4R    : HAL.UInt32;
+      BKP4R    : aliased HAL.UInt32;
       --  backup register
-      BKP5R    : HAL.UInt32;
+      BKP5R    : aliased HAL.UInt32;
       --  backup register
-      BKP6R    : HAL.UInt32;
+      BKP6R    : aliased HAL.UInt32;
       --  backup register
-      BKP7R    : HAL.UInt32;
+      BKP7R    : aliased HAL.UInt32;
       --  backup register
-      BKP8R    : HAL.UInt32;
+      BKP8R    : aliased HAL.UInt32;
       --  backup register
-      BKP9R    : HAL.UInt32;
+      BKP9R    : aliased HAL.UInt32;
       --  backup register
-      BKP10R   : HAL.UInt32;
+      BKP10R   : aliased HAL.UInt32;
       --  backup register
-      BKP11R   : HAL.UInt32;
+      BKP11R   : aliased HAL.UInt32;
       --  backup register
-      BKP12R   : HAL.UInt32;
+      BKP12R   : aliased HAL.UInt32;
       --  backup register
-      BKP13R   : HAL.UInt32;
+      BKP13R   : aliased HAL.UInt32;
       --  backup register
-      BKP14R   : HAL.UInt32;
+      BKP14R   : aliased HAL.UInt32;
       --  backup register
-      BKP15R   : HAL.UInt32;
+      BKP15R   : aliased HAL.UInt32;
       --  backup register
-      BKP16R   : HAL.UInt32;
+      BKP16R   : aliased HAL.UInt32;
       --  backup register
-      BKP17R   : HAL.UInt32;
+      BKP17R   : aliased HAL.UInt32;
       --  backup register
-      BKP18R   : HAL.UInt32;
+      BKP18R   : aliased HAL.UInt32;
       --  backup register
-      BKP19R   : HAL.UInt32;
+      BKP19R   : aliased HAL.UInt32;
    end record
      with Volatile;
 
@@ -853,6 +854,6 @@ package STM32_SVD.RTC is
 
    --  Real-time clock
    RTC_Periph : aliased RTC_Peripheral
-     with Import, Address => RTC_Base;
+     with Import, Address => System'To_Address (16#40002800#);
 
 end STM32_SVD.RTC;

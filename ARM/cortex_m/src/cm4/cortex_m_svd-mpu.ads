@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -401,27 +402,27 @@ package Cortex_M_SVD.MPU is
    --  Memory Protection Unit
    type MPU_Peripheral is record
       --  MPU Type Register
-      TYPE_k  : MPU_TYPE_Register;
+      TYPE_k  : aliased MPU_TYPE_Register;
       --  MPU Control Register
-      CTRL    : MPU_CTRL_Register;
+      CTRL    : aliased MPU_CTRL_Register;
       --  MPU Region Number Register
-      RNR     : MPU_RNR_Register;
+      RNR     : aliased MPU_RNR_Register;
       --  MPU Region Base Address Register
-      RBAR    : MPU_RBAR_Register;
+      RBAR    : aliased MPU_RBAR_Register;
       --  MPU Region Base Attribute and Size Register
-      RASR    : MPU_RASR_Register;
+      RASR    : aliased MPU_RASR_Register;
       --  Uses (MPU_RNR[7:2]<<2) + 1
-      RBAR_A1 : RBAR_A_Register;
+      RBAR_A1 : aliased RBAR_A_Register;
       --  Uses (MPU_RNR[7:2]<<2) + 1
-      RASR_A1 : RASR_A_Register;
+      RASR_A1 : aliased RASR_A_Register;
       --  Uses (MPU_RNR[7:2]<<2) + 2
-      RBAR_A2 : RBAR_A_Register;
+      RBAR_A2 : aliased RBAR_A_Register;
       --  Uses (MPU_RNR[7:2]<<2) + 2
-      RASR_A2 : RASR_A_Register;
+      RASR_A2 : aliased RASR_A_Register;
       --  Uses (MPU_RNR[7:2]<<2) + 3
-      RBAR_A3 : RBAR_A_Register;
+      RBAR_A3 : aliased RBAR_A_Register;
       --  Uses (MPU_RNR[7:2]<<2) + 3
-      RASR_A3 : RASR_A_Register;
+      RASR_A3 : aliased RASR_A_Register;
    end record
      with Volatile;
 
