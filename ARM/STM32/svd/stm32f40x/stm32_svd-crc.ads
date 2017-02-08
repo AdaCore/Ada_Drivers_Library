@@ -49,10 +49,10 @@ package STM32_SVD.CRC is
    -- Peripherals --
    -----------------
 
-   --  Cryptographic processor
+   --  Cyclic Redundancy Check (CRC) unit
    type CRC_Peripheral is record
       --  Data register
-      DR  : HAL.UInt32;
+      DR  : HAL.UInt32 with Volatile_Full_Access;
       --  Independent Data register
       IDR : IDR_Register;
       --  Control register
@@ -66,7 +66,7 @@ package STM32_SVD.CRC is
       CR  at 16#8# range 0 .. 31;
    end record;
 
-   --  Cryptographic processor
+   --  Cyclic Redundancy Check (CRC) unit
    CRC_Periph : aliased CRC_Peripheral
      with Import, Address => CRC_Base;
 
