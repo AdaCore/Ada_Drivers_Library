@@ -107,6 +107,6 @@ begin
 
       Print (0, 24, VRefInt, "mv");
 
-      Green.Toggle;
+      Green_LED.Toggle;
    end loop;
 end Demo_ADC_VRef_Polling;

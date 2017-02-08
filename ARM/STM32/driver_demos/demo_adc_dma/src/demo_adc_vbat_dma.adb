@@ -166,7 +166,7 @@ begin
 
       Print (0, 24, Voltage, "mv");
 
-      Green.Toggle;
+      Green_LED.Toggle;
 
       delay until Clock + Milliseconds (100);
    end loop;

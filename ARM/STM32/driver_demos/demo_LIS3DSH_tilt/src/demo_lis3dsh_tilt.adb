@@ -91,27 +91,27 @@ begin
       Accelerometer.Get_Accelerations (Axes);
 
       if Axes.X > Threshold then
-         Turn_On (Red);
+         Turn_On (Red_LED);
       else
-         Turn_Off (Red);
+         Turn_Off (Red_LED);
       end if;
 
       if Axes.X < -Threshold then
-         Turn_On (Green);
+         Turn_On (Green_LED);
       else
-         Turn_Off (Green);
+         Turn_Off (Green_LED);
       end if;
 
       if Axes.Y > Threshold then
-         Turn_On (Orange);
+         Turn_On (Orange_LED);
       else
-         Turn_Off (Orange);
+         Turn_Off (Orange_LED);
       end if;
 
       if Axes.Y < -Threshold then
-         Turn_On (Blue);
+         Turn_On (Blue_LED);
       else
-         Turn_Off (Blue);
+         Turn_Off (Blue_LED);
       end if;
    end loop;
 end Demo_LIS3DSH_Tilt;

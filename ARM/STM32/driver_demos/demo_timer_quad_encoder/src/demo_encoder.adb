@@ -82,11 +82,11 @@ procedure Demo_Encoder is
    begin
       case Motor.Current_Direction is
          when Motor.Forward =>
-            Turn_Off (Red);
-            Turn_On (Green);
+            Turn_Off (Red_LED);
+            Turn_On (Green_LED);
          when Motor.Backward =>
-            Turn_Off (Green);
-            Turn_On (Red);
+            Turn_Off (Green_LED);
+            Turn_On (Red_LED);
       end case;
    end Indicate_Direction;
 

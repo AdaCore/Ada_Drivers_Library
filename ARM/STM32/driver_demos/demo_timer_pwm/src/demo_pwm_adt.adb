@@ -75,10 +75,10 @@ procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
    --  Channel_3 is connected to the red LED.
    --  Channel_4 is connected to the blue LED.
    LED_For : constant array (Timer_Channel) of User_LED :=
-               (Channel_1 => Green,
-                Channel_2 => Orange,
-                Channel_3 => Red,
-                Channel_4 => Blue);
+               (Channel_1 => Green_LED,
+                Channel_2 => Orange_LED,
+                Channel_3 => Red_LED,
+                Channel_4 => Blue_LED);
 
    Requested_Frequency : constant Hertz := 30_000;  -- arbitrary
 

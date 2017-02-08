@@ -80,13 +80,13 @@ procedure Demo_IWDG is
       Interval : constant Time_Span := Time_Required / 4;
       --  We divide so that we can blink more often
    begin
-      Turn_On (Green);
+      Turn_On (Green_LED);
       delay until Clock + Interval;
-      Turn_Off (Green);
+      Turn_Off (Green_LED);
       delay until Clock + Interval;
-      Turn_On (Green);
+      Turn_On (Green_LED);
       delay until Clock + Interval;
-      Turn_Off (Green);
+      Turn_Off (Green_LED);
       delay until Clock + Interval;
    end Do_Work;
 

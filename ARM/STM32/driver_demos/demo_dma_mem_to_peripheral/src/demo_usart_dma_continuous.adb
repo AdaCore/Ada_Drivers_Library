@@ -167,7 +167,7 @@ begin
 
    --  at this point the characters will be coming continuously from the USART
 
-   Turn_On (Green);
+   Turn_On (Green_LED);
 
    loop
       null;

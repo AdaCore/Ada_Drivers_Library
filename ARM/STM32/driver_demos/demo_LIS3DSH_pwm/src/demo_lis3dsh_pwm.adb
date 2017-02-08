@@ -174,25 +174,25 @@ procedure Demo_LIS3DSH_PWM is
       Attach_PWM_Channel
         (PWM_Output_Green,
          Channel => Channel_1,
-         Point   => Green,
+         Point   => Green_LED,
          PWM_AF  => PWM_Output_AF);
 
       Attach_PWM_Channel
         (PWM_Output_Orange,
          Channel => Channel_2,
-         Point   => Orange,
+         Point   => Orange_LED,
          PWM_AF  => PWM_Output_AF);
 
       Attach_PWM_Channel
         (PWM_Output_Red,
          Channel => Channel_3,
-         Point   => Red,
+         Point   => Red_LED,
          PWM_AF  => PWM_Output_AF);
 
       Attach_PWM_Channel
         (PWM_Output_Blue,
          Channel => Channel_4,
-         Point   => Blue,
+         Point   => Blue_LED,
          PWM_AF  => PWM_Output_AF);
 
       Enable_Output (PWM_Output_Green);
