@@ -295,8 +295,6 @@ package body STM32.DMA is
       for Selected_Interrupt in Enabled_Interrupts'Range loop
          if Enabled_Interrupts (Selected_Interrupt) then
             Enable_Interrupt (This, Stream, Selected_Interrupt);
-         else
-            Disable_Interrupt (This, Stream, Selected_Interrupt);
          end if;
       end loop;
 
