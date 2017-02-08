@@ -62,13 +62,13 @@ package STM32.Board is
 
    subtype User_LED is GPIO_Point;
 
-   Green  : User_LED renames PD12;
-   Orange : User_LED renames PD13;
-   Red    : User_LED renames PD14;
-   Blue   : User_LED renames PD15;
+   Green_LED  : User_LED renames PD12;
+   Orange_LED : User_LED renames PD13;
+   Red_LED    : User_LED renames PD14;
+   Blue_LED   : User_LED renames PD15;
 
-   All_LEDs : GPIO_Points := Green & Orange & Red & Blue;
-   LCH_LED  : GPIO_Point renames Red;
+   All_LEDs : GPIO_Points := Green_LED & Orange_LED & Red_LED & Blue_LED;
+   LCH_LED  : GPIO_Point renames Red_LED;
 
    procedure Initialize_LEDs;
    --  MUST be called prior to any use of the LEDs

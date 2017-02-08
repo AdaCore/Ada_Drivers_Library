@@ -99,15 +99,15 @@ begin
    if Event_Kind in Direct_Mode_Error_Interrupt | FIFO_Error_Interrupt | Transfer_Error_Interrupt then
       --  signal the problem and loop forever
       loop
-         Green.Toggle;
+         Green_LED.Toggle;
          delay until Clock + Milliseconds (200);
       end loop;
    end if;
 
    if Source_Block = Destination_Block then
-      Turn_On (Green);
+      Turn_On (Green_LED);
    else
-      Turn_On (Red);
+      Turn_On (Red_LED);
    end if;
 
    loop

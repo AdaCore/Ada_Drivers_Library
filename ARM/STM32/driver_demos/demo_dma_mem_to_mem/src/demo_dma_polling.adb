@@ -100,15 +100,15 @@ begin
    if Status /= DMA_No_Error then
       --  signal the problem
       loop
-         Green.Toggle;
+         Green_LED.Toggle;
          delay until Clock + Milliseconds (200);
       end loop;
    end if;
 
    if Source_Block = Destination_Block then
-      Turn_On (Green);
+      Turn_On (Green_LED);
    else
-      Turn_On (Red);
+      Turn_On (Red_LED);
    end if;
 
    loop

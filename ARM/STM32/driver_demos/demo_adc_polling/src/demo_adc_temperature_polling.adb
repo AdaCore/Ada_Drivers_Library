@@ -139,6 +139,6 @@ begin
 
       Print (0, 24, UInt32 (Temperature), " degrees C");
 
-      Green.Toggle;
+      Green_LED.Toggle;
    end loop;
 end Demo_ADC_Temperature_Polling;

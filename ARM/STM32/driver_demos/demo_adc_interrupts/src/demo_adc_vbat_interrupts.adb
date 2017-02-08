@@ -110,6 +110,6 @@ begin
 
       Print (0, 24, Voltage, "mv");
 
-      Green.Toggle;
+      Green_LED.Toggle;
    end loop;
 end Demo_ADC_VBat_Interrupts;

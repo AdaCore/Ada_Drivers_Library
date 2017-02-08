@@ -95,16 +95,16 @@ begin
       Accelerometer.Get_Accelerations (Values);
       if abs Values.X > abs Values.Y then
          if Values.X > Threshold_High then
-            STM32.Board.Red.Set;
+            STM32.Board.Red_LED.Set;
          elsif Values.X < Threshold_Low then
-            STM32.Board.Green.Set;
+            STM32.Board.Green_LED.Set;
          end if;
          My_Delay (10);
       else
          if Values.Y > Threshold_High then
-            STM32.Board.Orange.Set;
+            STM32.Board.Orange_LED.Set;
          elsif Values.Y < Threshold_Low then
-            STM32.Board.Blue.Set;
+            STM32.Board.Blue_LED.Set;
          end if;
          My_Delay (10);
       end if;

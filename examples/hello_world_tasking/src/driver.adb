@@ -39,7 +39,7 @@ package body Driver is
 
    type Index is mod 4;
 
-   Pattern : array (Index) of User_LED := (Orange, Red, Blue, Green);
+   Pattern : array (Index) of User_LED := (Orange_LED, Red_LED, Blue_LED, Green_LED);
    --  The LEDs are not physically laid out "consecutively" in such a way that
    --  we can simply go in enumeral order to get circular rotation. Thus we
    --  define this mapping, using a consecutive index to get the physical LED

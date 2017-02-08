@@ -50,7 +50,7 @@ package body STM32F4_Timer_Interrupts is
          if Status (Timer_3, Timer_CC1_Indicated) then
             Clear_Pending_Interrupt (Timer_3, Timer_CC1_Interrupt);
 
-            Blue.Toggle;
+            Blue_LED.Toggle;
 
             Current := Current_Capture_Value (Timer_3, Channel_1);
             Set_Compare_Value (Timer_3, Channel_1, Current + Channel_1_Period);
@@ -59,7 +59,7 @@ package body STM32F4_Timer_Interrupts is
          if Status (Timer_3, Timer_CC2_Indicated) then
             Clear_Pending_Interrupt (Timer_3, Timer_CC2_Interrupt);
 
-            Green.Toggle;
+            Green_LED.Toggle;
 
             Current := Current_Capture_Value (Timer_3, Channel_2);
             Set_Compare_Value (Timer_3, Channel_2, Current + Channel_2_Period);
@@ -68,7 +68,7 @@ package body STM32F4_Timer_Interrupts is
          if Status (Timer_3, Timer_CC3_Indicated) then
             Clear_Pending_Interrupt (Timer_3, Timer_CC3_Interrupt);
 
-            Orange.Toggle;
+            Orange_LED.Toggle;
 
             Current := Current_Capture_Value (Timer_3, Channel_3);
             Set_Compare_Value (Timer_3, Channel_3, Current + Channel_3_Period);
@@ -77,7 +77,7 @@ package body STM32F4_Timer_Interrupts is
          if Status (Timer_3, Timer_CC4_Indicated) then
             Clear_Pending_Interrupt (Timer_3, Timer_CC4_Interrupt);
 
-            Red.Toggle;
+            Red_LED.Toggle;
 
             Current := Current_Capture_Value (Timer_3, Channel_4);
             Set_Compare_Value (Timer_3, Channel_4, Current + Channel_4_Period);

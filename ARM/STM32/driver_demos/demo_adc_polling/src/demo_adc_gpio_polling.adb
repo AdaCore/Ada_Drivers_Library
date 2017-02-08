@@ -142,7 +142,7 @@ begin
       Raw := UInt32 (Conversion_Value (Converter));
       Print (0, 0, Raw'Img);
 
-      Green.Toggle;
+      Green_LED.Toggle;
 
       delay until Clock + Milliseconds (200); -- slow it down to ease reading
    end loop;
