@@ -12,6 +12,7 @@ library project STM32F40x is
    for Source_Dirs use Project'Source_Dirs &
      ("drivers",
       "drivers/dma",
+      "drivers/crc_stm32f4",
       "svd/stm32f40x",
       "devices/stm32f40x",
       "drivers/i2c_stm32f4",
