@@ -1013,4 +1013,35 @@ package body STM32.Device is
       RCC_Periph.AHB2RSTR.DCMIRST := False;
    end Reset_DCMI;
 
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
+   procedure Enable_Clock (This : in out CRC_32) is
+      pragma Unreferenced (This);
+   begin
+      RCC_Periph.AHB1ENR.CRCEN := True;
+   end Enable_Clock;
+
+   -------------------
+   -- Disable_Clock --
+   -------------------
+
+   procedure Disable_Clock (This : in out CRC_32) is
+      pragma Unreferenced (This);
+   begin
+      RCC_Periph.AHB1ENR.CRCEN := False;
+   end Disable_Clock;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : in out CRC_32) is
+      pragma Unreferenced (This);
+   begin
+      RCC_Periph.AHB1RSTR.CRCRST := True;
+      RCC_Periph.AHB1RSTR.CRCRST := False;
+   end Reset;
+
 end STM32.Device;
