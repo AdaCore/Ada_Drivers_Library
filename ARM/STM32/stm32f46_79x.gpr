@@ -13,6 +13,7 @@ library project STM32F46_79x is
      ("drivers",
       "svd/stm32f46_79x",
       "devices/stm32f46_79x",
+      "drivers/crc_stm32f4",
       "drivers/dma",
       "drivers/dma2d",
       "drivers/dsi",
