@@ -54,6 +54,7 @@ with STM32.I2C;     use STM32.I2C;
 with STM32.Timers;  use STM32.Timers;
 with STM32.DAC;     use STM32.DAC;
 with STM32.RTC;     use STM32.RTC;
+with STM32.CRC;     use STM32.CRC;
 
 package STM32.Device is
    pragma Elaborate_Body;
@@ -443,6 +444,14 @@ package STM32.Device is
    procedure Enable_Clock (This : in out Timer);
 
    procedure Reset (This : in out Timer);
+
+   CRC_Unit : CRC_32 with Import, Volatile, Address => CRC_Base;
+
+   procedure Enable_Clock (This : in out CRC_32);
+
+   procedure Disable_Clock (This : in out CRC_32);
+
+   procedure Reset (This : in out CRC_32);
 
    -----------------------------
    -- Reset and Clock Control --
