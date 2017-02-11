@@ -29,10 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Cyclic Redundancy Check CRC-32 calculation unit in hardware
-
---  see AN4187 section 2 "Using CRC through DMA"
-
 with STM32.Device;    use STM32.Device;
 
 package body STM32.CRC.DMA is
@@ -41,6 +37,37 @@ package body STM32.CRC.DMA is
      (Controller : access DMA_Controller;
       Stream     : DMA_Stream_Selector;
       Data_Width : DMA_Data_Transfer_Widths);
+   --  Configures the DMA controller and stream for transfering memory blocks,
+   --  of the width specified, to the CRC processor.
+
+   ---------------------------
+   -- Transfer_Input_To_CRC --
+   ---------------------------
+
+   procedure Transfer_Input_To_CRC
+     (This          : in out CRC_32;
+      Controller    : access DMA_Controller;
+      Stream        : DMA_Stream_Selector;
+      Input_Address : System.Address;
+      Input_Length  : UInt16;
+      Data_Width    : DMA_Data_Transfer_Widths)
+   is
+   begin
+      Configure_DMA (Controller, Stream, Data_Width);
+      --  We configure the unit each time to ensure the data width is right.
+
+      Clear_All_Status (Controller.all, Stream);
+      --  Ensure previous calls or other use hasn't set any status flags.
+
+      Start_Transfer_with_Interrupts
+        (Controller.all,
+         Stream,
+         Source             => Input_Address,
+         Destination        => This.DR'Address,
+         Data_Count         => Input_Length,
+         Enabled_Interrupts => (Transfer_Complete_Interrupt => True,
+                                others                      => False));
+   end Transfer_Input_To_CRC;
 
    ----------------
    -- Update_CRC --
@@ -52,16 +79,13 @@ package body STM32.CRC.DMA is
       Stream     : DMA_Stream_Selector;
       Input      : Block_32) is
    begin
-      Clear_All_Status (Controller.all, Stream);
-      Configure_DMA (Controller, Stream, Data_Width => Words);
-      Start_Transfer_with_Interrupts
-        (Controller.all,
+      Transfer_Input_To_CRC
+        (This,
+         Controller,
          Stream,
-         Source             => Input'Address,
-         Destination        => This.DR'Address,
-         Data_Count         => Input'Length,
-         Enabled_Interrupts => (Transfer_Complete_Interrupt => True,
-                                others                      => False));
+         Input'Address,
+         Input'Length,
+         Data_Width => Words);
    end Update_CRC;
 
    ----------------
@@ -74,16 +98,13 @@ package body STM32.CRC.DMA is
       Stream     : DMA_Stream_Selector;
       Input      : Block_16) is
    begin
-      Clear_All_Status (Controller.all, Stream);
-      Configure_DMA (Controller, Stream, Data_Width => HalfWords);
-      Start_Transfer_with_Interrupts
-        (Controller.all,
+      Transfer_Input_To_CRC
+        (This,
+         Controller,
          Stream,
-         Source             => Input'Address,
-         Destination        => This.DR'Address,
-         Data_Count         => Input'Length,
-         Enabled_Interrupts => (Transfer_Complete_Interrupt => True,
-                                others                      => False));
+         Input'Address,
+         Input'Length,
+         Data_Width => HalfWords);
    end Update_CRC;
 
    ----------------
@@ -96,16 +117,13 @@ package body STM32.CRC.DMA is
       Stream     : DMA_Stream_Selector;
       Input      : Block_8) is
    begin
-      Clear_All_Status (Controller.all, Stream);
-      Configure_DMA (Controller, Stream, Data_Width => Bytes);
-      Start_Transfer_with_Interrupts
-        (Controller.all,
+      Transfer_Input_To_CRC
+        (This,
+         Controller,
          Stream,
-         Source             => Input'Address,
-         Destination        => This.DR'Address,
-         Data_Count         => Input'Length,
-         Enabled_Interrupts => (Transfer_Complete_Interrupt => True,
-                                others                      => False));
+         Input'Address,
+         Input'Length,
+         Data_Width => Bytes);
    end Update_CRC;
 
    -------------------
@@ -119,10 +137,6 @@ package body STM32.CRC.DMA is
    is
       Config : DMA_Stream_Configuration;
    begin
-      Enable_Clock (Controller.all);
-
-      Reset (Controller.all, Stream);
-
       --  See app note AN4187 Table 3 for this configuration (other than the
       --  channel number). It works, although it looks counterintuitive.
 
@@ -139,8 +153,6 @@ package body STM32.CRC.DMA is
       Config.Peripheral_Burst_Size        := Peripheral_Burst_Single;
 
       Configure (Controller.all, Stream, Config);
-
-      Clear_All_Status (Controller.all, Stream);
    end Configure_DMA;
 
 end STM32.CRC.DMA;
