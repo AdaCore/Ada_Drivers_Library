@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,55 +29,17 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package HAL.GPIO is
+with Ada.Command_Line;
+with Ada.Directories;
+with HAL.Filesystem;    use HAL.Filesystem;
+with Native.Filesystem; use Native.Filesystem;
 
-   type GPIO_Mode is (Unknown, Input, Output);
-   --  Possible modes for a GPIO point. Unknown means that the point is
-   --  configured in a mode that is not described in this interface. For
-   --  instance alternate function mode on an STM32 micro-controller.
+package Test_Directories is
+   Program_Abspath : constant Pathname := Native.Filesystem.Join
+     (Ada.Directories.Current_Directory, Ada.Command_Line.Command_Name, False);
+   --  Absolute path of the test executable
 
-   subtype GPIO_Config_Mode is GPIO_Mode range Input .. Output;
-   --  Modes a GPIO point can be configured in
-
-   type GPIO_Pull_Resistor is (Floating, Pull_Up, Pull_Down);
-
-   type GPIO_Point is limited interface;
-
-   type Any_GPIO_Point is access all GPIO_Point'Class;
-
-   function Mode (This : GPIO_Point) return GPIO_Mode is abstract;
-
-   function Set_Mode (This : in out GPIO_Point;
-                      Mode : GPIO_Config_Mode) return Boolean is abstract;
-   --  Return False if the mode is not available
-
-   function Pull_Resistor (This : GPIO_Point)
-                           return GPIO_Pull_Resistor is abstract;
-
-   function Set_Pull_Resistor (This : in out GPIO_Point;
-                               Pull : GPIO_Pull_Resistor)
-                               return Boolean is abstract;
-   --  Return False if pull is not available for this GPIO point
-
-   function Set (This : GPIO_Point) return Boolean is abstract;
-   --  Read actual state of the GPIO_Point.
-   --
-   --  So far all the GPIO supported by this library have the ability to read
-   --  the state even when they are configured as output.
-
-
-   --  For the output control procedures below, depending on configuration
-   --  and/or other devices conected to the IO line, these procedures may have
-   --  no actual effect on the line. For example trying to set the IO when
-   --  another device is pulling the line to low.
-
-   procedure Set (This : in out GPIO_Point) is abstract
-     with Pre'Class => This.Mode = Output;
-
-   procedure Clear (This : in out GPIO_Point) is abstract
-     with Pre'Class => This.Mode = Output;
-
-   procedure Toggle (This : in out GPIO_Point) is abstract
-     with Pre'Class => This.Mode = Output;
-
-end HAL.GPIO;
+   Test_Dir : constant Pathname := Ada.Directories.Containing_Directory
+     (Ada.Directories.Containing_Directory (Program_Abspath));
+   --  Absolute path to the test directory
+end Test_Directories;

@@ -53,6 +53,24 @@ package MCP23x08 is
    --  Configure single pin as input or output and optinaly enable the pull-up
    --  resistor.
 
+   procedure Configure_Mode (This    : in out MCP23x08_IO_Expander;
+                             Pin     : MCP23x08_Pin;
+                             Output  : Boolean);
+   --  Configure single pin as input or output
+
+   function Is_Output (This : in out MCP23x08_IO_Expander;
+                       Pin  : MCP23x08_Pin)
+                       return Boolean;
+
+   procedure Configure_Pull (This    : in out MCP23x08_IO_Expander;
+                             Pin     : MCP23x08_Pin;
+                             Pull_Up : Boolean);
+   --  Configure single pin pull up resistor
+
+   function Pull_Up (This : MCP23x08_IO_Expander;
+                     Pin  : MCP23x08_Pin) return Boolean;
+   --  Return True if the internal pull-up resistor in enabled
+
    function Set (This  : MCP23x08_IO_Expander;
                  Pin   : MCP23x08_Pin) return Boolean;
    --  Return the curent status of Pin
@@ -103,16 +121,31 @@ private
    --  Internal implementation of HAL.GPIO interface
 
    overriding
-   function Set (Point : MCP23_GPIO_Point) return Boolean;
+   function Mode (This : MCP23_GPIO_Point) return HAL.GPIO.GPIO_Mode;
 
    overriding
-   procedure Set (Point : in out MCP23_GPIO_Point);
+   function Set_Mode (This : in out MCP23_GPIO_Point;
+                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean;
 
    overriding
-   procedure Clear (Point : in out MCP23_GPIO_Point);
+   function Pull_Resistor (This : MCP23_GPIO_Point)
+                           return HAL.GPIO.GPIO_Pull_Resistor;
 
    overriding
-   procedure Toggle (Point : in out MCP23_GPIO_Point);
+   function Set_Pull_Resistor (This : in out MCP23_GPIO_Point;
+                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
+                               return Boolean;
+   overriding
+   function Set (This : MCP23_GPIO_Point) return Boolean;
+
+   overriding
+   procedure Set (This : in out MCP23_GPIO_Point);
+
+   overriding
+   procedure Clear (This : in out MCP23_GPIO_Point);
+
+   overriding
+   procedure Toggle (This : in out MCP23_GPIO_Point);
 
    type MCP23_GPIO_Point_Array is array (MCP23x08_Pin) of
      aliased MCP23_GPIO_Point;

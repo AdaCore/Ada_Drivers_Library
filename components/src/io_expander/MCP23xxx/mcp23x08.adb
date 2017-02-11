@@ -31,6 +31,7 @@
 
 with Interfaces; use Interfaces;
 with Ada.Unchecked_Conversion;
+with HAL.GPIO;                   use HAL.GPIO;
 
 package body MCP23x08 is
 
@@ -53,14 +54,20 @@ package body MCP23x08 is
      with Inline_Always;
 
    procedure Set_Bit
-     (This     : in out MCP23x08_IO_Expander;
-      RegAddr  : Register_Address;
-      Pin      : MCP23x08_Pin);
+     (This    : in out MCP23x08_IO_Expander;
+      RegAddr : Register_Address;
+      Pin     : MCP23x08_Pin);
 
    procedure Clear_Bit
-     (This     : in out MCP23x08_IO_Expander;
-      RegAddr  : Register_Address;
-      Pin      : MCP23x08_Pin);
+     (This    : in out MCP23x08_IO_Expander;
+      RegAddr : Register_Address;
+      Pin     : MCP23x08_Pin);
+
+   function Read_Bit
+     (This    : MCP23x08_IO_Expander;
+      RegAddr : Register_Address;
+      Pin     : MCP23x08_Pin)
+      return Boolean;
 
    ------------------
    -- Loc_IO_Write --
@@ -94,9 +101,9 @@ package body MCP23x08 is
    -------------
 
    procedure Set_Bit
-     (This     : in out MCP23x08_IO_Expander;
-      RegAddr  : Register_Address;
-      Pin      : MCP23x08_Pin)
+     (This    : in out MCP23x08_IO_Expander;
+      RegAddr : Register_Address;
+      Pin     : MCP23x08_Pin)
    is
       Prev, Next : Byte;
    begin
@@ -112,9 +119,9 @@ package body MCP23x08 is
    ---------------
 
    procedure Clear_Bit
-     (This     : in out MCP23x08_IO_Expander;
+     (This    : in out MCP23x08_IO_Expander;
       RegAddr : Register_Address;
-      Pin      : MCP23x08_Pin)
+      Pin     : MCP23x08_Pin)
    is
       Prev, Next : Byte;
    begin
@@ -124,6 +131,22 @@ package body MCP23x08 is
          Loc_IO_Write (This, RegAddr, Next);
       end if;
    end Clear_Bit;
+
+   --------------
+   -- Read_Bit --
+   --------------
+
+   function Read_Bit
+     (This    : MCP23x08_IO_Expander;
+      RegAddr : Register_Address;
+      Pin     : MCP23x08_Pin)
+      return Boolean
+   is
+      Reg : Byte;
+   begin
+      Loc_IO_Read (This, RegAddr, Reg);
+      return (Reg and Pin'Enum_Rep) /= 0;
+   end Read_Bit;
 
    ---------------
    -- Configure --
@@ -135,18 +158,61 @@ package body MCP23x08 is
                         Pull_Up : Boolean)
    is
    begin
+      This.Configure_Mode (Pin, Output);
+      This.Configure_Pull (Pin, Pull_Up);
+   end Configure;
+
+   procedure Configure_Mode (This    : in out MCP23x08_IO_Expander;
+                             Pin     : MCP23x08_Pin;
+                             Output  : Boolean)
+   is
+   begin
       if Output then
          Clear_Bit (This, IO_DIRECTION_REG, Pin);
       else
          Set_Bit (This, IO_DIRECTION_REG, Pin);
       end if;
+   end Configure_Mode;
 
+   ---------------
+   -- Is_Output --
+   ---------------
+
+   function Is_Output (This : in out MCP23x08_IO_Expander;
+                       Pin  : MCP23x08_Pin)
+                       return Boolean
+   is
+   begin
+      return not Read_Bit (This, IO_DIRECTION_REG, Pin);
+   end Is_Output;
+
+
+   --------------------
+   -- Configure_Pull --
+   --------------------
+
+   procedure Configure_Pull (This    : in out MCP23x08_IO_Expander;
+                             Pin     : MCP23x08_Pin;
+                             Pull_Up : Boolean)
+   is
+   begin
       if Pull_Up then
          Set_Bit (This, PULL_UP_REG, Pin);
       else
          Clear_Bit (This, PULL_UP_REG, Pin);
       end if;
-   end Configure;
+   end Configure_Pull;
+
+   -------------
+   -- Pull_Up --
+   -------------
+
+   function Pull_Up (This : MCP23x08_IO_Expander;
+                     Pin  : MCP23x08_Pin) return Boolean
+   is
+   begin
+      return Read_Bit (This, PULL_UP_REG, Pin);
+   end Pull_Up;
 
    ---------
    -- Set --
@@ -232,14 +298,73 @@ package body MCP23x08 is
       return This.Points (Pin)'Unchecked_Access;
    end As_GPIO_Point;
 
+   ----------
+   -- Mode --
+   ----------
+
+   overriding
+   function Mode (This : MCP23_GPIO_Point) return HAL.GPIO.GPIO_Mode is
+      pragma Unreferenced (This);
+   begin
+      return HAL.GPIO.Output;
+   end Mode;
+
+
+   --------------
+   -- Set_Mode --
+   --------------
+
+   overriding
+   function Set_Mode (This : in out MCP23_GPIO_Point;
+                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean
+   is
+   begin
+      This.Device.Configure_Mode (Pin    => This.Pin,
+                                  Output => (Mode = HAL.GPIO.Output));
+      return True;
+   end Set_Mode;
+
+   -------------------
+   -- Pull_Resistor --
+   -------------------
+
+   overriding
+   function Pull_Resistor (This : MCP23_GPIO_Point)
+                           return HAL.GPIO.GPIO_Pull_Resistor
+   is
+   begin
+      return (if This.Device.Pull_Up (This.Pin) then
+                 HAL.GPIO.Pull_Up
+              else
+                 HAL.GPIO.Floating);
+   end Pull_Resistor;
+
+   -----------------------
+   -- Set_Pull_Resistor --
+   -----------------------
+
+   overriding
+   function Set_Pull_Resistor (This : in out MCP23_GPIO_Point;
+                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
+                               return Boolean
+   is
+   begin
+      if Pull = HAL.GPIO.Pull_Down then
+         return False;
+      else
+         This.Device.Configure_Pull (This.Pin, Pull = HAL.GPIO.Pull_Up);
+         return True;
+      end if;
+   end Set_Pull_Resistor;
+
    ---------
    -- Set --
    ---------
 
    overriding
-   function Set (Point : MCP23_GPIO_Point) return Boolean is
+   function Set (This : MCP23_GPIO_Point) return Boolean is
    begin
-      return Point.Device.Set (Point.Pin);
+      return This.Device.Set (This.Pin);
    end Set;
 
    ---------
@@ -247,9 +372,9 @@ package body MCP23x08 is
    ---------
 
    overriding
-   procedure Set (Point : in out MCP23_GPIO_Point) is
+   procedure Set (This : in out MCP23_GPIO_Point) is
    begin
-      Point.Device.Set (Point.Pin);
+      This.Device.Set (This.Pin);
    end Set;
 
    -----------
@@ -257,9 +382,9 @@ package body MCP23x08 is
    -----------
 
    overriding
-   procedure Clear (Point : in out MCP23_GPIO_Point) is
+   procedure Clear (This : in out MCP23_GPIO_Point) is
    begin
-      Point.Device.Clear (Point.Pin);
+      This.Device.Clear (This.Pin);
    end Clear;
 
    ------------
@@ -267,9 +392,9 @@ package body MCP23x08 is
    ------------
 
    overriding
-   procedure Toggle (Point : in out MCP23_GPIO_Point) is
+   procedure Toggle (This : in out MCP23_GPIO_Point) is
    begin
-      Point.Device.Toggle (Point.Pin);
+      This.Device.Toggle (This.Pin);
    end Toggle;
 
 end MCP23x08;

@@ -1,3 +1,4 @@
+with Test_Directories;     use Test_Directories;
 with Ada.Text_IO;          use Ada.Text_IO;
 with Native.Filesystem;    use Native.Filesystem;
 with HAL;                  use HAL;
@@ -5,16 +6,9 @@ with HAL.Filesystem;       use HAL.Filesystem;
 with HAL.Bitmap;           use HAL.Bitmap;
 with Memory_Mapped_Bitmap; use Memory_Mapped_Bitmap;
 with Bitmap_File_Output;   use Bitmap_File_Output;
-with Ada.Command_Line;
-with Ada.Directories;
 with Compare_Files;
 
 procedure TC_Bitmap_Drawing is
-
-   Program_Abspath : constant Pathname := Native.Filesystem.Join
-     (Ada.Directories.Current_Directory, Ada.Command_Line.Command_Name, False);
-   Test_Dir : constant Pathname := Ada.Directories.Containing_Directory
-     (Ada.Directories.Containing_Directory (Program_Abspath));
 
    BM_Width  : constant := 100;
    BM_Height : constant := 100;

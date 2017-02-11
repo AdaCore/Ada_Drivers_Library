@@ -72,6 +72,76 @@ package body STM32.GPIO is
       return False;
    end Any_Set;
 
+   ----------
+   -- Mode --
+   ----------
+
+   overriding
+   function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode is
+   begin
+      case This.Periph.MODER.Arr (This.Pin) is
+         when Pin_IO_Modes'Enum_Rep (Mode_Out) => return HAL.GPIO.Output;
+         when Pin_IO_Modes'Enum_Rep (Mode_In) => return HAL.GPIO.Input;
+         when others => return HAL.GPIO.Unknown;
+      end case;
+   end Mode;
+
+   --------------
+   -- Set_Mode --
+   --------------
+
+   overriding
+   function Set_Mode (This : in out GPIO_Point;
+                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean
+   is
+   begin
+      case Mode is
+         when HAL.GPIO.Output =>
+            This.Periph.MODER.Arr (This.Pin) := Pin_IO_Modes'Enum_Rep (Mode_Out);
+         when HAL.GPIO.Input =>
+            This.Periph.MODER.Arr (This.Pin) := Pin_IO_Modes'Enum_Rep (Mode_In);
+      end case;
+      return True;
+   end Set_Mode;
+
+   -------------------
+   -- Pull_Resistor --
+   -------------------
+
+   overriding
+   function Pull_Resistor (This : GPIO_Point)
+                           return HAL.GPIO.GPIO_Pull_Resistor is
+   begin
+      if  This.Periph.PUPDR.Arr (This.Pin) = 0 then
+         return HAL.GPIO.Floating;
+      elsif This.Periph.PUPDR.Arr (This.Pin) = 1 then
+         return HAL.GPIO.Pull_Up;
+      else
+         return HAL.GPIO.Pull_Down;
+      end if;
+   end Pull_Resistor;
+
+   -----------------------
+   -- Set_Pull_Resistor --
+   -----------------------
+
+   overriding
+   function Set_Pull_Resistor (This : in out GPIO_Point;
+                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
+                               return Boolean
+   is
+   begin
+      case Pull is
+         when HAL.GPIO.Floating =>
+            This.Periph.PUPDR.Arr (This.Pin) := 0;
+         when HAL.GPIO.Pull_Up =>
+            This.Periph.PUPDR.Arr (This.Pin) := 1;
+         when HAL.GPIO.Pull_Down =>
+            This.Periph.PUPDR.Arr (This.Pin) := 2;
+      end case;
+      return True;
+   end Set_Pull_Resistor;
+
    ---------
    -- Set --
    ---------

@@ -33,17 +33,81 @@ with NRF51_SVD.GPIO; use NRF51_SVD.GPIO;
 
 package body nRF51.GPIO is
 
+   overriding
+   function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode is
+      CNF : PIN_CNF_Register renames GPIO_Periph.PIN_CNF (This.Pin);
+   begin
+      case CNF.DIR is
+         when Input => return HAL.GPIO.Input;
+         when Output => return HAL.GPIO.Output;
+      end case;
+   end Mode;
+
+   --------------
+   -- Set_Mode --
+   --------------
+
+   overriding
+   function Set_Mode (This : in out GPIO_Point;
+                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean
+   is
+      CNF : PIN_CNF_Register renames GPIO_Periph.PIN_CNF (This.Pin);
+   begin
+      CNF.DIR := (case Mode is
+                     when HAL.GPIO.Input  => Input,
+                     when HAL.GPIO.Output => Output);
+      CNF.INPUT := (case Mode is
+                       when HAL.GPIO.Input  => Connect,
+                       when HAL.GPIO.Output => Disconnect);
+      return True;
+   end Set_Mode;
+
    ---------
    -- Set --
    ---------
 
-   overriding function Set
+   overriding
+   function Set
      (This : GPIO_Point)
       return Boolean
    is
    begin
       return GPIO_Periph.IN_k.Arr (This.Pin) = High;
    end Set;
+
+   -------------------
+   -- Pull_Resistor --
+   -------------------
+
+   overriding
+   function Pull_Resistor (This : GPIO_Point)
+                           return HAL.GPIO.GPIO_Pull_Resistor
+   is
+   begin
+      case GPIO_Periph.PIN_CNF (This.Pin).PULL is
+         when Disabled => return HAL.GPIO.Floating;
+         when Pulldown => return HAL.GPIO.Pull_Down;
+         when Pullup => return HAL.GPIO.Pull_Up;
+      end case;
+   end Pull_Resistor;
+
+   -----------------------
+   -- Set_Pull_Resistor --
+   -----------------------
+
+   overriding
+   function Set_Pull_Resistor (This : in out GPIO_Point;
+                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
+                               return Boolean
+   is
+   begin
+      GPIO_Periph.PIN_CNF (This.Pin).PULL :=
+        (case Pull is
+            when HAL.GPIO.Floating  => Disabled,
+            when HAL.GPIO.Pull_Down => Pulldown,
+            when HAL.GPIO.Pull_Up   => Pullup);
+      return True;
+   end Set_Pull_Resistor;
 
    ---------
    -- Set --
