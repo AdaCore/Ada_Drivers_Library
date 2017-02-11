@@ -1,5 +1,5 @@
 with "config.gpr";
-with "../../ARM/STM32/stm32f42x";
+with "../../arch/ARM/STM32/stm32f42x";
 with "../../components/components";
 with "../../middleware/middleware";
 

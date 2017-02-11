@@ -4,10 +4,10 @@
 --  fewer LEDs, change the number of interrupts generated to match only the
 --  number of LEDs available.
 
-with "../../../../boards/common_config.gpr";
-with "../../../../boards/stm32f407_discovery.gpr";
+with "../../../../../boards/common_config.gpr";
+with "../../../../../boards/stm32f407_discovery.gpr";
 
-project demo_timer_interrupts_multichannel extends "../../../../examples/common/common.gpr" is
+project demo_timer_interrupts_multichannel extends "../../../../../examples/common/common.gpr" is
 
    for Languages use ("Ada");
    for Main use ("demo.adb");

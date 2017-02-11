@@ -1,9 +1,10 @@
-with "../../../../boards/common_config.gpr";
-with "../../../../boards/stm32f429_discovery.gpr";
+with "../../../../../boards/common_config.gpr";
+with "../../../../../boards/stm32f429_discovery.gpr";
 
-project Demo_L3GD20_FIFO_Int extends "../../../../examples/common/common.gpr" is
+project Demo_ADC_Timer_Triggered extends "../../../../../examples/common/common.gpr" is
 
-   for Main use ("demo_l3gd20.adb");
+   for Main use ("demo_adc_timer_triggered");
+
    for Languages use ("Ada");
    for Source_Dirs use ("src");
    for Object_Dir use "obj/" & Common_Config.Build;
@@ -14,4 +15,4 @@ project Demo_L3GD20_FIFO_Int extends "../../../../examples/common/common.gpr" is
       for Global_Configuration_Pragmas use "gnat.adc";
    end Builder;
 
-end Demo_L3GD20_FIFO_Int;
+end Demo_ADC_Timer_Triggered;

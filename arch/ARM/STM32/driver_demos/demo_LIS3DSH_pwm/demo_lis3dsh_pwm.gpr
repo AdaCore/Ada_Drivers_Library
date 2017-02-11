@@ -1,7 +1,7 @@
-with "../../../../boards/common_config.gpr";
-with "../../../../boards/stm32f407_discovery.gpr";
+with "../../../../../boards/common_config.gpr";
+with "../../../../../boards/stm32f407_discovery.gpr";
 
-project Demo_LIS3DSH_PWM extends "../../../../examples/common/common.gpr" is
+project Demo_LIS3DSH_PWM extends "../../../../../examples/common/common.gpr" is
 
    for Languages use ("Ada");
    for Main use ("demo_lis3dsh_pwm.adb");

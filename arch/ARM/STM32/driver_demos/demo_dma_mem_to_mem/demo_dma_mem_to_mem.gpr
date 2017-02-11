@@ -1,7 +1,7 @@
-with "../../../../boards/common_config.gpr";
-with "../../../../boards/stm32f407_discovery.gpr";
+with "../../../../../boards/common_config.gpr";
+with "../../../../../boards/stm32f407_discovery.gpr";
 
-project Demo_DMA_Mem_to_Mem extends "../../../../examples/common/common.gpr" is
+project Demo_DMA_Mem_to_Mem extends "../../../../../examples/common/common.gpr" is
 
    for Main use ("demo_dma_interrupts.adb", "demo_dma_polling.adb");
    for Languages use ("Ada");

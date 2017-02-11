@@ -1,7 +1,7 @@
-with "../../../../boards/common_config.gpr";
-with "../../../../boards/stm32f407_discovery.gpr";
+with "../../../../../boards/common_config.gpr";
+with "../../../../../boards/stm32f407_discovery.gpr";
 
-project Demo_USART_Polling extends "../../../../examples/common/common.gpr" is
+project Demo_USART_Polling extends "../../../../../examples/common/common.gpr" is
 
    for Main use ("demo_usart_polling.adb");
    for Languages use ("Ada");
