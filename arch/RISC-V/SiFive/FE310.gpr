@@ -1,0 +1,17 @@
+with "config";
+with "../../hal/HAL";
+
+library project FE310 is
+
+   for Library_Name use "FE310";
+   for Library_Kind use "static";
+   for Library_Dir use "lib/" & Config.Object_Subdir;
+   for Object_Dir use "obj/" & Config.Object_Subdir;
+
+   for Source_Dirs use Project'Source_Dirs &
+     ("drivers");
+
+   package Compiler renames Config.Compiler;
+   package Builder renames Config.Builder;
+
+end FE310;
