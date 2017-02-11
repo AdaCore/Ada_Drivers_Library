@@ -9,7 +9,7 @@ pragma Style_Checks (Off);
 with HAL;
 with System;
 
-package FE310.GPIO is
+package FE310_SVD.GPIO is
    pragma Preelaborate;
 
    ---------------
@@ -508,4 +508,4 @@ package FE310.GPIO is
    GPIO_Periph : aliased GPIO_Peripheral
      with Import, Address => System'To_Address (16#10012000#);
 
-end FE310.GPIO;
+end FE310_SVD.GPIO;

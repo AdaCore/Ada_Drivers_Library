@@ -10,7 +10,7 @@ with System;
 
 --  E31 CPU Coreplex, high-performance, 32-bit RV32IMAC core
 --    
-package FE310 is
+package FE310_SVD is
    pragma Preelaborate;
 
    --------------------
@@ -20,4 +20,4 @@ package FE310 is
    GPIO_Base : constant System.Address :=
      System'To_Address (16#10012000#);
 
-end FE310;
+end FE310_SVD;
