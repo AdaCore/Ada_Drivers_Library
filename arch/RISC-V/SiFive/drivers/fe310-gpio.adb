@@ -58,8 +58,10 @@ package body FE310.GPIO is
    function Set_Mode (This : in out GPIO_Point;
                       Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean is
    begin
-      GPIO_Periph.INPUT_EN.Arr (This.Pin) := Mode = Input;
-      GPIO_Periph.INPUT_EN.Arr (This.Pin) := Mode = Output;
+      --  Input mode is always on to make sure we can read IO state even in
+      --  output mode.
+      GPIO_Periph.INPUT_EN.Arr (This.Pin) := True;
+      GPIO_Periph.OUTPUT_EN.Arr (This.Pin) := Mode = Output;
       return True;
    end Set_Mode;
 
