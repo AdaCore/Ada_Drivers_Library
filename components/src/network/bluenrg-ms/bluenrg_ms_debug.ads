@@ -21,12 +21,13 @@
 -- THIS SOFTWARE.                                                         --
 --                                                                        --
 ----------------------------------------------------------------------------
+with HAL; use HAL;
 
-package BlueNRG_MS.Debug is
+package BlueNRG_MS_Debug is
 
    function HCI_Event_To_String
       (Data : Byte_Array)
        return String;
    -- Returns a string representing HCI event data
 
-end BlueNRG_MS.Debug;
+end BlueNRG_MS_Debug;

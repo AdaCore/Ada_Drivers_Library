@@ -21,8 +21,9 @@
 -- THIS SOFTWARE.                                                         --
 --                                                                        --
 ----------------------------------------------------------------------------
+with HAL; use HAL;
 
-package Bluetooth.Debug is
+package Bluetooth_Debug is
    
    function Error_Code_To_String
      (Code : Byte)
@@ -33,4 +34,4 @@ package Bluetooth.Debug is
        return String;
    -- Returns a string representing HCI event data
 
-end Bluetooth.Debug;
+end Bluetooth_Debug;

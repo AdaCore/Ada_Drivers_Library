@@ -21,12 +21,125 @@
 -- THIS SOFTWARE.                                                         --
 --                                                                        --
 ----------------------------------------------------------------------------
+with Bluetooth_Debug;
+with Interfaces;      use Interfaces;
 
-package body BlueNRG_MS.Debug is
+package body BlueNRG_MS_Debug is
    
    LF   : constant Character := Character'Val(16#0A#);
    CR   : constant Character := Character'Val(16#0D#);
    CRLF : constant String    := CR & LF;
+
+   ------------
+   -- To_Hex --
+   ------------
+
+   function To_Hex
+     (Input : Byte)
+      return String
+   is
+      Output : String (1 .. 2);
+   begin
+
+      case Input and 16#0F# is
+         when 16#00# =>
+            Output(2) := '0';
+         when 16#01# =>
+            Output(2) := '1';
+         when 16#02# =>
+            Output(2) := '2';
+         when 16#03# =>
+            Output(2) := '3';
+         when 16#04# =>
+            Output(2) := '4';
+         when 16#05# =>
+            Output(2) := '5';
+         when 16#06# =>
+            Output(2) := '6';
+         when 16#07# =>
+            Output(2) := '7';
+         when 16#08# =>
+            Output(2) := '8';
+         when 16#09# =>
+            Output(2) := '9';
+         when 16#0A# => 
+            Output(2) := 'A';
+         when 16#0B# =>
+            Output(2) := 'B';
+         when 16#0C# =>
+            Output(2) := 'C';
+         when 16#0D# =>
+            Output(2) := 'D';
+         when 16#0E# =>
+            Output(2) := 'E';
+         when 16#0F# =>
+            Output(2) := 'F';
+         when others =>
+            Output(2) := '?';
+      end case;
+      
+      case Input and 16#F0# is
+         when 16#00# =>
+            Output(1) := '0';
+         when 16#10# =>
+            Output(1) := '1';
+         when 16#20# =>
+            Output(1) := '2';
+         when 16#30# =>
+            Output(1) := '3';
+         when 16#40# =>
+            Output(1) := '4';
+         when 16#50# =>
+            Output(1) := '5';
+         when 16#60# =>
+            Output(1) := '6';
+         when 16#70# =>
+            Output(1) := '7';
+         when 16#80# =>
+            Output(1) := '8';
+         when 16#90# =>
+            Output(1) := '9';
+         when 16#A0# => 
+            Output(1) := 'A';
+         when 16#B0# =>
+            Output(1) := 'B';
+         when 16#C0# =>
+            Output(1) := 'C';
+         when 16#D0# =>
+            Output(1) := 'D';
+         when 16#E0# =>
+            Output(1) := 'E';
+         when 16#F0# =>
+            Output(1) := 'F';
+         when others =>
+            Output(1) := '?';
+      end case;
+
+      return Output;
+   end To_Hex;
+   
+   ------------
+   -- To_Hex --
+   ------------
+   
+   function To_Hex
+     (Input : Byte_Array)
+      return String
+   is
+      Output : String (1 .. Input'Length * 3);
+   begin
+
+      if Input'Length = 0 then
+         return "";
+      end if;
+
+      for I in Integer range Input'Range loop
+         Output(1 + 3 * (I - Input'First) .. 2 + 3 * (I - Input'First)) := To_Hex(Input(I));
+         Output(3 + 3 * (I - Input'First)) := ' ';
+      end loop;
+
+      return Output;
+   end To_Hex;
 
    -------------------------
    -- HCI_Event_To_String --
@@ -50,7 +163,7 @@ package body BlueNRG_MS.Debug is
       end if;
 
       if Data(2) /= 16#FF# then
-         return Bluetooth.Debug.HCI_Event_To_String(Data);
+         return Bluetooth_Debug.HCI_Event_To_String(Data);
       end if;
 
       if Data(5) = 16#08# and
@@ -241,4 +354,4 @@ package body BlueNRG_MS.Debug is
          return "Malformed Packet";
    end HCI_Event_To_String;
 
-end BlueNRG_MS.Debug;
+end BlueNRG_MS_Debug;
