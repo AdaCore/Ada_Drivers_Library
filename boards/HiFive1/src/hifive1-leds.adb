@@ -29,37 +29,50 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HiFive1.LEDs; use HiFive1.LEDs;
+with HAL.GPIO; use HAL.GPIO;
 
-procedure Main is
-   procedure Busy_Loop;
+package body HiFive1.LEDs is
 
-   ---------------
-   -- Busy_Loop --
-   ---------------
+   ----------------
+   -- Initialize --
+   ----------------
 
-   procedure Busy_Loop is
+   procedure Initialize is
+      Unref : Boolean with Unreferenced;
    begin
-      for Cnt in 1 .. 500_000 loop
-         null;
-      end loop;
-   end Busy_Loop;
-
-begin
-   HiFive1.LEDs.Initialize;
-
-   --  Blinky!
-   loop
-      Turn_On (Red_LED);
-      Busy_Loop;
-      Turn_Off (Red_LED);
-
-      Turn_On (Green_LED);
-      Busy_Loop;
+      Unref := Green_LED.Set_Mode (Output);
+      Unref := Green_LED.Set_Pull_Resistor (Pull_Up);
       Turn_Off (Green_LED);
 
-      Turn_On (Blue_LED);
-      Busy_Loop;
+      Unref := Red_LED.Set_Mode (Output);
+      Unref := Red_LED.Set_Pull_Resistor (Pull_Up);
+      Turn_Off (Red_LED);
+
+      Unref := Blue_LED.Set_Mode (Output);
+      Unref := Blue_LED.Set_Pull_Resistor (Pull_Up);
       Turn_Off (Blue_LED);
-   end loop;
-end Main;
+   end Initialize;
+
+   ------------------
+   -- All_LEDs_Off --
+   ------------------
+
+   procedure All_LEDs_Off is
+   begin
+      Turn_Off (Green_LED);
+      Turn_Off (Blue_LED);
+      Turn_Off (Red_LED);
+   end All_LEDs_Off;
+
+   -----------------
+   -- All_LEDs_On --
+   -----------------
+
+   procedure All_LEDs_On is
+   begin
+      Turn_On (Green_LED);
+      Turn_On (Blue_LED);
+      Turn_On (Red_LED);
+   end All_LEDs_On;
+
+end HiFive1.LEDs;

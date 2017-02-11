@@ -29,37 +29,23 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HiFive1.LEDs; use HiFive1.LEDs;
+with FE310.GPIO;
 
-procedure Main is
-   procedure Busy_Loop;
+package HiFive1.LEDs is
 
-   ---------------
-   -- Busy_Loop --
-   ---------------
+   subtype User_LED is GPIO_Point;
 
-   procedure Busy_Loop is
-   begin
-      for Cnt in 1 .. 500_000 loop
-         null;
-      end loop;
-   end Busy_Loop;
+   Green_LED : User_LED renames HF1_Pin_3;
+   Red_LED   : User_LED renames HF1_Pin_6;
+   Blue_LED  : User_LED renames HF1_Pin_5;
 
-begin
-   HiFive1.LEDs.Initialize;
+   procedure Initialize;
+   --  MUST be called prior to any use of the LEDs
 
-   --  Blinky!
-   loop
-      Turn_On (Red_LED);
-      Busy_Loop;
-      Turn_Off (Red_LED);
+   procedure Turn_On  (This : in out User_LED) renames FE310.GPIO.Clear;
+   procedure Turn_Off (This : in out User_LED) renames FE310.GPIO.Set;
+   procedure Toggle   (This : in out User_LED) renames FE310.GPIO.Toggle;
 
-      Turn_On (Green_LED);
-      Busy_Loop;
-      Turn_Off (Green_LED);
-
-      Turn_On (Blue_LED);
-      Busy_Loop;
-      Turn_Off (Blue_LED);
-   end loop;
-end Main;
+   procedure All_LEDs_Off with Inline;
+   procedure All_LEDs_On with Inline;
+end HiFive1.LEDs;

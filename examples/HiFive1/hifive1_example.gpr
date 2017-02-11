@@ -3,7 +3,7 @@ with "../../boards/HiFive1/config";
 
 project HiFive1_Example is
 
-  for Runtime ("ada") use "zfp-hifive1";
+  for Runtime ("ada") use Project'Project_Dir & "/zfp-hifive1";
   for Target use "riscv32-unknown-elf";
   for Main use ("main.adb");
   for Languages use ("Ada");
