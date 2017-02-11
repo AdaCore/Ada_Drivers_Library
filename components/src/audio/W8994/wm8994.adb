@@ -29,8 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO;
-
 package body WM8994 is
 
    WM8994_CHIPID_ADDR      : constant := 16#00#;
@@ -50,7 +48,7 @@ package body WM8994 is
    is
       Status : I2C_Status with Unreferenced;
       Data   : I2C_Data (1 .. 2);
-      Check  : UInt16;
+      Check  : UInt16 with Unreferenced;
    begin
       --  Device is MSB first
       Data (1) := Byte (Shift_Right (Value and 16#FF00#, 8));
@@ -65,12 +63,6 @@ package body WM8994 is
 
       if Reg /= 0 then
          Check := I2C_Read (This, Reg);
-         if Check /= Value then
-            Ada.Text_IO.Put_Line
-              ("Written " & Value'Img &
-                 " got " & Check'Img &
-                 " for reg " & Reg'Img);
-         end if;
       end if;
    end I2C_Write;
 
