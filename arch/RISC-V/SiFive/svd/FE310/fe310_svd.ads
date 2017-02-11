@@ -1,5 +1,3 @@
---  
-
 --  This spec has been automatically generated from FE310.svd
 
 pragma Restrictions (No_Elaboration_Code);
