@@ -23,6 +23,10 @@
 ----------------------------------------------------------------------------
 
 package body Bluetooth.Debug is
+
+   LF   : constant Character := Character'Val(16#0A#);
+   CR   : constant Character := Character'Val(16#0D#);
+   CRLF : constant String    := CR & LF;
    
    --------------------------
    -- Error_Code_To_String --
@@ -190,25 +194,25 @@ package body Bluetooth.Debug is
           return String
       is
       begin
-         return "Event_LE_Conn_Complete " & UART.CRLF &
+         return "Event_LE_Conn_Complete " & CRLF &
 
          "Status      : " &
          (if Data(5) = 16#00# then
             "Success"
          else
-             "Error:" & Error_Code_To_String(Data(5))) & UART.CRLF &
+             "Error:" & Error_Code_To_String(Data(5))) & CRLF &
             
-         "Handle      : " & To_Hex(Data(6 .. 7)) & UART.CRLF &
+         "Handle      : " & To_Hex(Data(6 .. 7)) & CRLF &
          
          "Role        : " & 
          (if Data(8) = 16#00# then
            "Master "
          else
-           "Slave ") & UART.CRLF &
+           "Slave ") & CRLF &
            
-         "Address     : " & To_Hex(Data(9 .. 15)) & UART.CRLF &
+         "Address     : " & To_Hex(Data(9 .. 15)) & CRLF &
 
-         "ConnInt     :" & Integer'Image(Integer(Data(16) + Data(17) * 16#FF#)) & UART.CRLF &
+         "ConnInt     :" & Integer'Image(Integer(Data(16) + Data(17) * 16#FF#)) & CRLF &
 
          "SuperTimeout:" & Integer'Image(Integer(Data(20) + Data(21) * 16#FF#));
 
@@ -223,7 +227,7 @@ package body Bluetooth.Debug is
          return String
       is
       begin
-         return "LE_Connection_Update_Complete" & UART.CRLF &
+         return "LE_Connection_Update_Complete" & CRLF &
 
          "Status      : " &
          (if Data(5) = 16#00# then
@@ -248,14 +252,14 @@ package body Bluetooth.Debug is
 
       case Data(2) is
          when 16#05# =>
-            return "Event_Disconn_Complete" & UART.CRLF &
+            return "Event_Disconn_Complete" & CRLF &
 
            (if Data(4) = 16#00# then
                "Disconnection Occured"
             else
-               Error_Code_To_String(Data(4))) & UART.CRLF &
+               Error_Code_To_String(Data(4))) & CRLF &
 
-            "Handle      : " & To_Hex(Data(5 .. 6)) & UART.CRLF &
+            "Handle      : " & To_Hex(Data(5 .. 6)) & CRLF &
 
             Error_Code_To_String(Data(7));
 
