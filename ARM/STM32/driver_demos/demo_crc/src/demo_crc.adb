@@ -64,40 +64,52 @@ with Ada.Real_Time;   use Ada.Real_Time;
 with Memory_Transfer; use Memory_Transfer;
 with Interfaces;      use Interfaces;
 
+with Ada.Unchecked_Conversion;
+with System;
+
 procedure Demo_CRC is
 
    Checksum_CPU : UInt32 := 0;
+   --  the checksum obtained by calling a routine that uses the CPU to transfer
+   --  the memory block to the CRC processor
+
    Checksum_DMA : UInt32 := 0;
+   --  the checksum obtained by calling a routine that uses DMA to transfer the
+   --  memory block to the CRC processor
 
-   --  see STM32Cube_FW_F4_V1.6.0\Projects\STM324x9I_EVAL\Examples\CRC\CRC_Example\Src\main.c
-   --  for data and expected CRC value
+   --  see the STM32Cube_FW_F4_V1.6.0\Projects\ CRC example for data and
+   --  expected CRC checksum value
 
-   Data : constant Block_32 :=
-   (16#00001021#, 16#20423063#, 16#408450a5#, 16#60c670e7#, 16#9129a14a#, 16#b16bc18c#,
-    16#d1ade1ce#, 16#f1ef1231#, 16#32732252#, 16#52b54294#, 16#72f762d6#, 16#93398318#,
-    16#a35ad3bd#, 16#c39cf3ff#, 16#e3de2462#, 16#34430420#, 16#64e674c7#, 16#44a45485#,
-    16#a56ab54b#, 16#85289509#, 16#f5cfc5ac#, 16#d58d3653#, 16#26721611#, 16#063076d7#,
-    16#569546b4#, 16#b75ba77a#, 16#97198738#, 16#f7dfe7fe#, 16#c7bc48c4#, 16#58e56886#,
-    16#78a70840#, 16#18612802#, 16#c9ccd9ed#, 16#e98ef9af#, 16#89489969#, 16#a90ab92b#,
-    16#4ad47ab7#, 16#6a961a71#, 16#0a503a33#, 16#2a12dbfd#, 16#fbbfeb9e#, 16#9b798b58#,
-    16#bb3bab1a#, 16#6ca67c87#, 16#5cc52c22#, 16#3c030c60#, 16#1c41edae#, 16#fd8fcdec#,
-    16#ad2abd0b#, 16#8d689d49#, 16#7e976eb6#, 16#5ed54ef4#, 16#2e321e51#, 16#0e70ff9f#,
-    16#efbedfdd#, 16#cffcbf1b#, 16#9f598f78#, 16#918881a9#, 16#b1caa1eb#, 16#d10cc12d#,
-    16#e16f1080#, 16#00a130c2#, 16#20e35004#, 16#40257046#, 16#83b99398#, 16#a3fbb3da#,
-    16#c33dd31c#, 16#e37ff35e#, 16#129022f3#, 16#32d24235#, 16#52146277#, 16#7256b5ea#,
-    16#95a88589#, 16#f56ee54f#, 16#d52cc50d#, 16#34e224c3#, 16#04817466#, 16#64475424#,
-    16#4405a7db#, 16#b7fa8799#, 16#e75ff77e#, 16#c71dd73c#, 16#26d336f2#, 16#069116b0#,
-    16#76764615#, 16#5634d94c#, 16#c96df90e#, 16#e92f99c8#, 16#b98aa9ab#, 16#58444865#,
-    16#78066827#, 16#18c008e1#, 16#28a3cb7d#, 16#db5ceb3f#, 16#fb1e8bf9#, 16#9bd8abbb#,
-    16#4a755a54#, 16#6a377a16#, 16#0af11ad0#, 16#2ab33a92#, 16#ed0fdd6c#, 16#cd4dbdaa#,
-    16#ad8b9de8#, 16#8dc97c26#, 16#5c644c45#, 16#3ca22c83#, 16#1ce00cc1#, 16#ef1fff3e#,
-    16#df7caf9b#, 16#bfba8fd9#, 16#9ff86e17#, 16#7e364e55#, 16#2e933eb2#, 16#0ed11ef0#);
+   Section1 : constant Block_32 :=
+   (16#00001021#, 16#20423063#, 16#408450A5#, 16#60C670E7#, 16#9129A14A#, 16#B16BC18C#,
+    16#D1ADE1CE#, 16#F1EF1231#, 16#32732252#, 16#52B54294#, 16#72F762D6#, 16#93398318#,
+    16#A35AD3BD#, 16#C39CF3FF#, 16#E3DE2462#, 16#34430420#, 16#64E674C7#, 16#44A45485#,
+    16#A56AB54B#, 16#85289509#, 16#F5CFC5AC#, 16#D58D3653#, 16#26721611#, 16#063076D7#,
+    16#569546B4#, 16#B75BA77A#, 16#97198738#, 16#F7DFE7FE#, 16#C7BC48C4#, 16#58E56886#,
+    16#78A70840#, 16#18612802#, 16#C9CCD9ED#, 16#E98EF9AF#, 16#89489969#, 16#A90AB92B#,
+    16#4AD47AB7#, 16#6A961A71#, 16#0A503A33#, 16#2A12DBFD#, 16#FBBFEB9E#, 16#9B798B58#,
+    16#BB3BAB1A#, 16#6CA67C87#, 16#5CC52C22#, 16#3C030C60#, 16#1C41EDAE#, 16#FD8FCDEC#,
+    16#AD2ABD0B#, 16#8D689D49#, 16#7E976EB6#, 16#5ED54EF4#, 16#2E321E51#, 16#0E70FF9F#);
 
-   --  expected CRC value is 379E9F06 hex, or 933142278 decimal
+   Section2 : constant Block_32 :=
+   (16#EFBEDFDD#, 16#CFFCBF1B#, 16#9F598F78#, 16#918881A9#, 16#B1CAA1EB#, 16#D10CC12D#,
+    16#E16F1080#, 16#00A130C2#, 16#20E35004#, 16#40257046#, 16#83B99398#, 16#A3FBB3DA#,
+    16#C33DD31C#, 16#E37FF35E#, 16#129022F3#, 16#32D24235#, 16#52146277#, 16#7256B5EA#,
+    16#95A88589#, 16#F56EE54F#, 16#D52CC50D#, 16#34E224C3#, 16#04817466#, 16#64475424#,
+    16#4405A7DB#, 16#B7FA8799#, 16#E75FF77E#, 16#C71DD73C#, 16#26D336F2#, 16#069116B0#,
+    16#76764615#, 16#5634D94C#, 16#C96DF90E#, 16#E92F99C8#, 16#B98AA9AB#, 16#58444865#,
+    16#78066827#, 16#18C008E1#, 16#28A3CB7D#, 16#DB5CEB3F#, 16#FB1E8BF9#, 16#9BD8ABBB#,
+    16#4A755A54#, 16#6A377A16#, 16#0AF11AD0#, 16#2AB33A92#, 16#ED0FDD6C#, 16#CD4DBDAA#,
+    16#AD8B9DE8#, 16#8DC97C26#, 16#5C644C45#, 16#3CA22C83#, 16#1CE00CC1#, 16#EF1FFF3E#,
+    16#DF7CAF9B#, 16#BFBA8FD9#, 16#9FF86E17#, 16#7E364E55#, 16#2E933EB2#, 16#0ED11EF0#);
+
+   --  expected CRC value for the data above is 379E9F06 hex, or 933142278 dec
+   Expected_Checksum : constant UInt32 := 933142278;
 
    Next_DMA_Interrupt : DMA_Interrupt;
 
-   procedure Panic;
+   procedure Panic with No_Return;
+   --  flash the on-board LEDs, indefinitely, to indicate a failure
 
    procedure Panic is
    begin
@@ -108,31 +120,70 @@ procedure Demo_CRC is
    end Panic;
 
 begin
-   delay until Clock + Seconds (1);  --  work-around for LCD issue
    Clear_Screen;
    Initialize_LEDs;
 
    Enable_Clock (CRC_Unit);
 
-   Reset_CRC (CRC_Unit);
+   --  get the checksum using the CPU to transfer memory to the CRC processor;
+   --  verify it is the expected value
 
-   Update_CRC (CRC_Unit, Input => Data, Output => Checksum_CPU);
+   Update_CRC (CRC_Unit, Input => Section1, Output => Checksum_CPU);
+   Update_CRC (CRC_Unit, Input => Section2, Output => Checksum_CPU);
 
    Put_Line ("CRC:" & Checksum_CPU'Img);
 
-   Reset_CRC (CRC_Unit);
+   if Checksum_CPU /= Expected_Checksum then
+      Panic;
+   end if;
 
-   Update_CRC (CRC_Unit, Controller'Access, Stream, Input => Data);
+   --  get the checksum using DMA to transfer memory to the CRC processor
+
+   Enable_Clock (Controller);
+
+   Reset (Controller);
+
+   Reset_Calculator (CRC_Unit);
+
+   Update_CRC (CRC_Unit, Controller'Access, Stream, Input => Section1);
 
    DMA_IRQ_Handler.Await_Event (Next_DMA_Interrupt);
 
    if Next_DMA_Interrupt /= Transfer_Complete_Interrupt then
-      Panic;  --  forever
+      Panic;
    end if;
 
-   Checksum_DMA := CRC_Value (CRC_Unit);
+   --  In this code fragment we use the approach suited for the case in which
+   --  we are calculating the CRC for a section of system memory rather than a
+   --  block of application data. We pretend that Section2 is a memory section.
+   --  All we need is a known starting address and a known length. Given that,
+   --  we can create a view of it as if it is an object of type Block_32 (or
+   --  whichever block type is appropriate).
+   declare
+      subtype Memory_Section is Block_32 (1 .. Section2'Length);
+      type Section_Pointer is access all Memory_Section with Storage_Size => 0;
+      function As_Memory_Section_Reference is new Ada.Unchecked_Conversion
+        (Source   => System.Address, Target => Section_Pointer);
+   begin
+      Update_CRC
+        (CRC_Unit,
+         Controller'Access,
+         Stream,
+         Input => As_Memory_Section_Reference (Section2'Address).all);
+   end;
+
+   DMA_IRQ_Handler.Await_Event (Next_DMA_Interrupt);
+
+   if Next_DMA_Interrupt /= Transfer_Complete_Interrupt then
+      Panic;
+   end if;
+
+   Checksum_DMA := Value (CRC_Unit);
 
    Put_Line ("CRC:" & Checksum_DMA'Img);
+
+   --  verify the two checksums are identical (one of which is already verified
+   --  as the expected value)
 
    if Checksum_CPU = Checksum_DMA then
       Turn_On (Green_LED);

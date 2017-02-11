@@ -31,20 +31,20 @@
 
 package body STM32.CRC is
 
-   ---------------
-   -- Reset_CRC --
-   ---------------
+   ----------------------
+   -- Reset_Calculator --
+   ----------------------
 
-   procedure Reset_CRC (This : in out CRC_32) is
+   procedure Reset_Calculator (This : in out CRC_32) is
    begin
       This.CR.CR := True;
-   end Reset_CRC;
+   end Reset_Calculator;
 
-   ---------------
-   -- CRC_Value --
-   ---------------
+   -----------
+   -- Value --
+   -----------
 
-   function CRC_Value (This : CRC_32) return UInt32 is
+   function Value (This : CRC_32) return UInt32 is
       (This.DR);
 
    ----------------

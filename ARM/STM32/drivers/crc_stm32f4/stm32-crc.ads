@@ -29,8 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  A driver for the Cyclic Redundancy Check CRC-32 calculation processor. Note
---  the CPU transfers the data to the CRC processor.
+--  A driver for the Cyclic Redundancy Check CRC-32 calculation processor. 
+--  The CPU transfers the data to the CRC processor.
 
 --  Note this API is for the STM32 F4x family. Other STM MCUs have additional
 --  CRC capabilities.
@@ -42,21 +42,28 @@ package STM32.CRC is
 
    type CRC_32 is limited private;
 
-   procedure Reset_CRC (This : in out CRC_32);
-   --  Reset the unit's calculator to 16#FFFF_FFFF#. Does not affect the
-   --  contents of the unit's independent data.
+   procedure Reset_Calculator (This : in out CRC_32) with
+     Post => Value (This) = 16#FFFF_FFFF#;
+   --  Reset the unit's calculator value to 16#FFFF_FFFF#. All previous
+   --  calculations due to calls to Update_CRC are lost. Does not affect
+   --  the contents of the unit's independent data.
 
-   function CRC_Value (This : CRC_32) return UInt32;
+   function Value (This : CRC_32) return UInt32;
    --  Returns the currently calculated CRC value, reflecting any prior calls
    --  to Update_CRC. This is the same value returned via the Update_CRC.Output
-   --  parameter in calls to that routine.
+   --  parameter.
+
+   --  The Update_CRC routines can be called multiple times, back-to-back,
+   --  presumably with different input blocks, in order to update the value
+   --  of the calculated CRC checksum within the CRC processor with differing
+   --  input values.
 
    procedure Update_CRC
      (This   : in out CRC_32;
       Input  : UInt32;
       Output : out UInt32);
-   --  Updates the 32-bit CRC value in This from the 32-bit Input value.
-   --  Output is the resulting CRC-32 value.
+   --  Updates the 32-bit CRC value in This from the 32-bit Input value and any
+   --  previously-calculated CRC value. Output is the resulting CRC-32 value.
 
    type Block_32 is array (Positive range <>) of UInt32
      with Component_Size => 32;
@@ -65,8 +72,9 @@ package STM32.CRC is
      (This   : in out CRC_32;
       Input  : Block_32;
       Output : out UInt32);
-   --  Updates the 32-bit CRC value in This from the 32-bit Input values.
-   --  Output is the resulting CRC-32 value.
+   --  Updates the 32-bit CRC value in This from the 32-bit Input values and
+   --  any previously-calculated CRC value. Output is the resulting CRC-32
+   --  value.
 
    type Block_16 is array (Positive range <>) of UInt16
      with Component_Size => 16;
@@ -75,8 +83,8 @@ package STM32.CRC is
      (This   : in out CRC_32;
       Input  : Block_16;
       Output : out UInt32);
-   --  Updates the 32-bit CRC value in This from the 16-bit Input values.
-   --  Output is the resulting CRC-32 value.
+   --  Updates the 32-bit CRC value in This from the 16-bit Input values and any
+   --  previously-calculated CRC value. Output is the resulting CRC-32 value.
 
    type Block_8 is array (Positive range <>) of UInt8
      with Component_Size => 8;
@@ -85,8 +93,8 @@ package STM32.CRC is
      (This   : in out CRC_32;
       Input  : Block_8;
       Output : out UInt32);
-   --  Updates the 32-bit CRC value in This from the 8-bit Input values.
-   --  Output is the resulting CRC-32 value.
+   --  Updates the 32-bit CRC value in This from the 8-bit Input values and any
+   --  previously-calculated CRC value. Output is the resulting CRC-32 value.
 
    procedure Set_Independent_Data
      (This  : in out CRC_32;
