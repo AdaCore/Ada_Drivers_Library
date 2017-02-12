@@ -29,11 +29,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL; use HAL;
+package body FE310 is
 
-package FE310 is
+   --  External_Clock : constant := 32_768;
 
-   function CPU_Frequency return UInt32;
-   --  Compute CPU frequency
+   -------------------
+   -- CPU_Frequency --
+   -------------------
+
+   function CPU_Frequency return UInt32 is
+   begin
+      return 259_830_579;
+   end CPU_Frequency;
 end FE310;
-

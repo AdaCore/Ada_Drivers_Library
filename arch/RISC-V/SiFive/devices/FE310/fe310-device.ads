@@ -30,6 +30,9 @@
 ------------------------------------------------------------------------------
 
 with FE310.GPIO; use FE310.GPIO;
+with FE310.UART; use FE310.UART;
+
+with FE310_SVD;
 
 package FE310.Device is
 
@@ -65,5 +68,11 @@ package FE310.Device is
    P29 : aliased GPIO_Point := (Pin => 29);
    P30 : aliased GPIO_Point := (Pin => 30);
    P31 : aliased GPIO_Point := (Pin => 31);
+
+   Internal_UART0 : aliased Internal_UART with Import, Volatile, Address => FE310_SVD.UART0_Base;
+   Internal_UART1 : aliased Internal_UART with Import, Volatile, Address => FE310_SVD.UART1_Base;
+
+   UART0 : aliased UART_Port (Internal_UART0'Access);
+   UART1 : aliased UART_Port (Internal_UART1'Access);
 
 end FE310.Device;
