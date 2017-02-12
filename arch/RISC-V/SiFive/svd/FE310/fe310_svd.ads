@@ -15,7 +15,11 @@ package FE310_SVD is
    -- Base addresses --
    --------------------
 
-   GPIO_Base : constant System.Address :=
+   GPIO0_Base : constant System.Address :=
      System'To_Address (16#10012000#);
+   UART0_Base : constant System.Address :=
+     System'To_Address (16#10013000#);
+   UART1_Base : constant System.Address :=
+     System'To_Address (16#10023000#);
 
 end FE310_SVD;

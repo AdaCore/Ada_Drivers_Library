@@ -444,7 +444,7 @@ package FE310_SVD.GPIO is
    -----------------
 
    --  General purpose input/output controller.
-   type GPIO_Peripheral is record
+   type GPIO0_Peripheral is record
       --  Pin value.
       VALUE         : VALUE_Register;
       --  Pin input enable.
@@ -482,7 +482,7 @@ package FE310_SVD.GPIO is
    end record
      with Volatile;
 
-   for GPIO_Peripheral use record
+   for GPIO0_Peripheral use record
       VALUE         at 16#0# range 0 .. 31;
       INPUT_EN      at 16#4# range 0 .. 31;
       OUTPUT_EN     at 16#8# range 0 .. 31;
@@ -503,7 +503,7 @@ package FE310_SVD.GPIO is
    end record;
 
    --  General purpose input/output controller.
-   GPIO_Periph : aliased GPIO_Peripheral
+   GPIO0_Periph : aliased GPIO0_Peripheral
      with Import, Address => System'To_Address (16#10012000#);
 
 end FE310_SVD.GPIO;

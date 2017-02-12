@@ -41,9 +41,9 @@ package body FE310.GPIO is
    overriding
    function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode is
    begin
-      if GPIO_Periph.IO_FUNC_EN.Arr (This.Pin) then
+      if GPIO0_Periph.IO_FUNC_EN.Arr (This.Pin) then
          return Unknown;
-      elsif GPIO_Periph.OUTPUT_EN.Arr (This.Pin) then
+      elsif GPIO0_Periph.OUTPUT_EN.Arr (This.Pin) then
          return Output;
       else
          return Input;
@@ -60,8 +60,8 @@ package body FE310.GPIO is
    begin
       --  Input mode is always on to make sure we can read IO state even in
       --  output mode.
-      GPIO_Periph.INPUT_EN.Arr (This.Pin) := True;
-      GPIO_Periph.OUTPUT_EN.Arr (This.Pin) := Mode = Output;
+      GPIO0_Periph.INPUT_EN.Arr (This.Pin) := True;
+      GPIO0_Periph.OUTPUT_EN.Arr (This.Pin) := Mode = Output;
       return True;
    end Set_Mode;
 
@@ -73,7 +73,7 @@ package body FE310.GPIO is
    function Pull_Resistor (This : GPIO_Point)
                            return HAL.GPIO.GPIO_Pull_Resistor is
    begin
-      if GPIO_Periph.PULLUP.Arr (This.Pin) then
+      if GPIO0_Periph.PULLUP.Arr (This.Pin) then
          return Pull_Up;
       else
          return Floating;
@@ -92,7 +92,7 @@ package body FE310.GPIO is
       if Pull = Pull_Down then
          return False;
       else
-         GPIO_Periph.PULLUP.Arr (This.Pin) := Pull = Pull_Up;
+         GPIO0_Periph.PULLUP.Arr (This.Pin) := Pull = Pull_Up;
          return True;
       end if;
    end Set_Pull_Resistor;
@@ -104,7 +104,7 @@ package body FE310.GPIO is
    overriding
    function Set (This : GPIO_Point) return Boolean is
    begin
-      return GPIO_Periph.VALUE.Arr (This.Pin);
+      return GPIO0_Periph.VALUE.Arr (This.Pin);
    end Set;
 
    ---------
@@ -114,7 +114,7 @@ package body FE310.GPIO is
    overriding
    procedure Set (This : in out GPIO_Point) is
    begin
-      GPIO_Periph.PORT.Arr (This.Pin) := True;
+      GPIO0_Periph.PORT.Arr (This.Pin) := True;
    end Set;
 
    -----------
@@ -124,7 +124,7 @@ package body FE310.GPIO is
    overriding
    procedure Clear (This : in out GPIO_Point) is
    begin
-      GPIO_Periph.PORT.Arr (This.Pin) := False;
+      GPIO0_Periph.PORT.Arr (This.Pin) := False;
    end Clear;
 
    ------------
@@ -134,7 +134,7 @@ package body FE310.GPIO is
    overriding
    procedure Toggle (This : in out GPIO_Point) is
    begin
-      GPIO_Periph.PORT.Arr (This.Pin) := not GPIO_Periph.VALUE.Arr (This.Pin);
+      GPIO0_Periph.PORT.Arr (This.Pin) := not GPIO0_Periph.VALUE.Arr (This.Pin);
    end Toggle;
 
 end FE310.GPIO;
