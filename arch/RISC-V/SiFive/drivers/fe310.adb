@@ -39,6 +39,6 @@ package body FE310 is
 
    function CPU_Frequency return UInt32 is
    begin
-      return 259_830_579;
+      return 1_6954_396;
    end CPU_Frequency;
 end FE310;

@@ -54,7 +54,6 @@ package body FE310.UART is
    -------------------
 
    procedure Set_Baud_Rate (This : in out UART_Port;  To : Baud_Rates) is
-      CPU_Frequency : constant := 1;
    begin
       This.Periph.DIV.DIV := UInt16 (CPU_Frequency / (To - 1));
    end Set_Baud_Rate;
