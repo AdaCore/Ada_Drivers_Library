@@ -34,6 +34,23 @@ with HAL.GPIO;       use HAL.GPIO;
 
 package body FE310.GPIO is
 
+   ---------------------
+   -- Set_IO_Function --
+   ---------------------
+
+   procedure Set_IO_Function (This : in out GPIO_Point;
+                              Func : IO_Function)
+   is
+   begin
+      case Func is
+         when Disabled =>
+            GPIO0_Periph.IO_FUNC_EN.Arr (This.Pin) := False;
+         when IOF0 | IOF1 =>
+            GPIO0_Periph.IO_FUNC_SEL.Arr (This.Pin) := Func = IOF1;
+            GPIO0_Periph.IO_FUNC_EN.Arr (This.Pin) := True;
+      end case;
+   end Set_IO_Function;
+
    ----------
    -- Mode --
    ----------

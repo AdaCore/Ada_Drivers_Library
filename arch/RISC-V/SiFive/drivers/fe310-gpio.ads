@@ -35,9 +35,19 @@ package FE310.GPIO is
 
    subtype GPIO_Pin_Index is Natural range 0 .. 31;
 
-   type GPIO_Point is new HAL.GPIO.GPIO_Point with record
-      Pin : GPIO_Pin_Index;
-   end record;
+   type GPIO_Point (Pin : GPIO_Pin_Index) is new HAL.GPIO.GPIO_Point with
+     private;
+
+   type IO_Function is (Disabled, IOF0, IOF1);
+   --  Alternative function for a GPIO pin (UART, SPI, PWM, etc).
+   --  The IOF values are defined in the package FE310.Device.
+
+   procedure Set_IO_Function (This : in out GPIO_Point;
+                              Func : IO_Function);
+
+   ---------------
+   --  HAL.GPIO --
+   ---------------
 
    overriding
    function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode;
@@ -66,5 +76,9 @@ package FE310.GPIO is
 
    overriding
    procedure Toggle (This : in out GPIO_Point);
+
+private
+   type GPIO_Point (Pin : GPIO_Pin_Index) is new HAL.GPIO.GPIO_Point with
+     null record;
 
 end FE310.GPIO;
