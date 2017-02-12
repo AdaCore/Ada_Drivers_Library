@@ -21,5 +21,11 @@ package FE310_SVD is
      System'To_Address (16#10013000#);
    UART1_Base : constant System.Address :=
      System'To_Address (16#10023000#);
+   PWM0_Base : constant System.Address :=
+     System'To_Address (16#10015000#);
+   PWM1_Base : constant System.Address :=
+     System'To_Address (16#10025000#);
+   PWM2_Base : constant System.Address :=
+     System'To_Address (16#10035000#);
 
 end FE310_SVD;
