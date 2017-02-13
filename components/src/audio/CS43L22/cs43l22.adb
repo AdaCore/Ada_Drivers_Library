@@ -36,15 +36,15 @@ package body CS43L22 is
    ---------------
 
    procedure I2C_Write (This  : in out CS43L22_Device;
-                        Reg   : Byte;
-                        Value : Byte)
+                        Reg   : UInt8;
+                        Value : UInt8)
    is
       Status : I2C_Status with Unreferenced;
 
    begin
       This.Port.Mem_Write
         (Addr          => CS43L22_I2C_Addr,
-         Mem_Addr      => Unsigned_16 (Reg),
+         Mem_Addr      => UInt16 (Reg),
          Mem_Addr_Size => Memory_Size_8b,
          Data          => (1 => Value),
          Status        => Status);
@@ -55,8 +55,8 @@ package body CS43L22 is
    --------------
 
    function I2C_Read (This : in out CS43L22_Device;
-                      Reg : Byte)
-                      return Byte
+                      Reg : UInt8)
+                      return UInt8
    is
       Status : I2C_Status;
       Data   : I2C_Data (1 .. 1);
@@ -64,7 +64,7 @@ package body CS43L22 is
    begin
       This.Port.Mem_Read
         (Addr          => CS43L22_I2C_Addr,
-         Mem_Addr      => Unsigned_16 (Reg),
+         Mem_Addr      => UInt16 (Reg),
          Mem_Addr_Size => Memory_Size_8b,
          Data          => Data,
          Status        => Status);
@@ -135,7 +135,7 @@ package body CS43L22 is
    -- Read_ID --
    -------------
 
-   function Read_ID (This : in out CS43L22_Device) return Unsigned_8 is
+   function Read_ID (This : in out CS43L22_Device) return UInt8 is
    begin
       return This.I2C_Read (CS43L22_REG_ID) and CS43L22_ID_MASK;
    end Read_ID;
@@ -217,8 +217,8 @@ package body CS43L22 is
    procedure Set_Volume (This : in out CS43L22_Device; Volume : Volume_Level)
    is
       --  Actual Volume in range 0 .. 16#3F#
-      Converted_Volume : Unsigned_8 :=
-                           Unsigned_8 (Unsigned_16 (Volume) * 200 / 100);
+      Converted_Volume : UInt8 :=
+                           UInt8 (UInt16 (Volume) * 200 / 100);
 
    begin
       --  range goes the following:

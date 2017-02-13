@@ -372,7 +372,7 @@ package body STM32.LTDC is
       Buffer         : System.Address;
       X, Y           : Natural;
       W, H           : Positive;
-      Constant_Alpha : Byte := 255;
+      Constant_Alpha : UInt8 := 255;
       BF             : Blending_Factor := BF_Pixel_Alpha_X_Constant_Alpha)
    is
       L        : constant Layer_Access := Get_Layer (Layer);
@@ -407,8 +407,8 @@ package body STM32.LTDC is
             L.LBFCR.BF2 := BF2_Pixel_Alpha;
       end case;
 
-      CFBL.CFBLL := UInt13 (W * Bytes_Per_Pixel (Config)) + 3;
-      CFBL.CFBP := UInt13 (W * Bytes_Per_Pixel (Config));
+      CFBL.CFBLL := UInt13 (W * UInt8s_Per_Pixel (Config)) + 3;
+      CFBL.CFBP := UInt13 (W * UInt8s_Per_Pixel (Config));
       L.LCFBLR := CFBL;
 
       L.LCFBLNR.CFBLNBR := UInt11 (H);
@@ -455,7 +455,7 @@ package body STM32.LTDC is
    -- Set_Background --
    --------------------
 
-   procedure Set_Background (R, G, B : Byte) is
+   procedure Set_Background (R, G, B : UInt8) is
       RShift : constant UInt32 := Shift_Left (UInt32 (R), 16);
       GShift : constant UInt32 := Shift_Left (UInt32 (G), 8);
    begin

@@ -136,15 +136,15 @@ package ST7735R is
 
    procedure Set_Power_Control_3
      (LCD : ST7735R_Device;
-      P1, P2 : Byte);
+      P1, P2 : UInt8);
 
    procedure Set_Power_Control_4
      (LCD : ST7735R_Device;
-      P1, P2 : Byte);
+      P1, P2 : UInt8);
 
    procedure Set_Power_Control_5
      (LCD : ST7735R_Device;
-      P1, P2 : Byte);
+      P1, P2 : UInt8);
 
    procedure Set_Vcom (LCD : ST7735R_Device; VCOMS : UInt6);
 
@@ -162,7 +162,7 @@ package ST7735R is
                    return UInt16;
 
    procedure Write_Raw_Pixels (LCD  : ST7735R_Device;
-                               Data : HAL.Byte_Array);
+                               Data : HAL.UInt8_Array);
    procedure Write_Raw_Pixels (LCD  : ST7735R_Device;
                                Data : HAL.UInt16_Array);
 
@@ -202,7 +202,7 @@ package ST7735R is
 
    overriding
    procedure Set_Background
-     (Display : ST7735R_Device; R, G, B : Byte);
+     (Display : ST7735R_Device; R, G, B : UInt8);
 
    overriding
    procedure Initialize_Layer

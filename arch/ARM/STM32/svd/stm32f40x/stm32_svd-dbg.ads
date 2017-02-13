@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -51,7 +52,7 @@ package STM32_SVD.DBG is
       --  TRACE_MODE
       TRACE_MODE             : DBGMCU_CR_TRACE_MODE_Field := 16#0#;
       --  unspecified
-      Reserved_8_15          : HAL.Byte := 16#0#;
+      Reserved_8_15          : HAL.UInt8 := 16#0#;
       --  DBG_I2C2_SMBUS_TIMEOUT
       DBG_I2C2_SMBUS_TIMEOUT : Boolean := False;
       --  DBG_TIM8_STOP
@@ -111,7 +112,7 @@ package STM32_SVD.DBG is
       --  DBG_IWDEG_STOP
       DBG_IWDEG_STOP         : Boolean := False;
       --  unspecified
-      Reserved_13_20         : HAL.Byte := 16#0#;
+      Reserved_13_20         : HAL.UInt8 := 16#0#;
       --  DBG_J2C1_SMBUS_TIMEOUT
       DBG_J2C1_SMBUS_TIMEOUT : Boolean := False;
       --  DBG_J2C2_SMBUS_TIMEOUT
@@ -119,7 +120,7 @@ package STM32_SVD.DBG is
       --  DBG_J2C3SMBUS_TIMEOUT
       DBG_J2C3SMBUS_TIMEOUT  : Boolean := False;
       --  unspecified
-      Reserved_24_24         : HAL.Bit := 16#0#;
+      Reserved_24_24         : HAL.UInt1 := 16#0#;
       --  DBG_CAN1_STOP
       DBG_CAN1_STOP          : Boolean := False;
       --  DBG_CAN2_STOP
@@ -209,6 +210,6 @@ package STM32_SVD.DBG is
 
    --  Debug support
    DBG_Periph : aliased DBG_Peripheral
-     with Import, Address => DBG_Base;
+     with Import, Address => System'To_Address (16#E0042000#);
 
 end STM32_SVD.DBG;

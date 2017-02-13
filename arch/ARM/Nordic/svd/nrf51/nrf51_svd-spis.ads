@@ -1,20 +1,20 @@
 --    Copyright (c) 2013, Nordic Semiconductor ASA
 --    All rights reserved.
---
+--  
 --    Redistribution and use in source and binary forms, with or without
 --    modification, are permitted provided that the following conditions are met:
---
+--  
 --    * Redistributions of source code must retain the above copyright notice, this
 --      list of conditions and the following disclaimer.
---
+--  
 --    * Redistributions in binary form must reproduce the above copyright notice,
 --      this list of conditions and the following disclaimer in the documentation
 --      and/or other materials provided with the distribution.
---
+--  
 --    * Neither the name of Nordic Semiconductor ASA nor the names of its
 --      contributors may be used to endorse or promote products derived from
 --      this software without specific prior written permission.
---
+--  
 --    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 --    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 --    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -25,12 +25,13 @@
 --    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 --    OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 --    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
---
+--  
 
 --  This spec has been automatically generated from nrf51.svd
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -123,11 +124,11 @@ package NRF51_SVD.SPIS is
    --  Interrupt enable set register.
    type INTENSET_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.Bit := 16#0#;
+      Reserved_0_0   : HAL.UInt1 := 16#0#;
       --  Enable interrupt on END event.
       END_k          : INTENSET_END_Field_1 := Intenset_End_Field_Reset;
       --  unspecified
-      Reserved_2_9   : HAL.Byte := 16#0#;
+      Reserved_2_9   : HAL.UInt8 := 16#0#;
       --  Enable interrupt on ACQUIRED event.
       ACQUIRED       : INTENSET_ACQUIRED_Field_1 :=
                         Intenset_Acquired_Field_Reset;
@@ -196,11 +197,11 @@ package NRF51_SVD.SPIS is
    --  Interrupt enable clear register.
    type INTENCLR_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.Bit := 16#0#;
+      Reserved_0_0   : HAL.UInt1 := 16#0#;
       --  Disable interrupt on END event.
       END_k          : INTENCLR_END_Field_1 := Intenclr_End_Field_Reset;
       --  unspecified
-      Reserved_2_9   : HAL.Byte := 16#0#;
+      Reserved_2_9   : HAL.UInt8 := 16#0#;
       --  Disable interrupt on ACQUIRED event.
       ACQUIRED       : INTENCLR_ACQUIRED_Field_1 :=
                         Intenclr_Acquired_Field_Reset;
@@ -345,7 +346,7 @@ package NRF51_SVD.SPIS is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype MAXRX_MAXRX_Field is HAL.Byte;
+   subtype MAXRX_MAXRX_Field is HAL.UInt8;
 
    --  Maximum number of bytes in the receive buffer.
    type MAXRX_Register is record
@@ -362,7 +363,7 @@ package NRF51_SVD.SPIS is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype AMOUNTRX_AMOUNTRX_Field is HAL.Byte;
+   subtype AMOUNTRX_AMOUNTRX_Field is HAL.UInt8;
 
    --  Number of bytes received in last granted transaction.
    type AMOUNTRX_Register is record
@@ -379,7 +380,7 @@ package NRF51_SVD.SPIS is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype MAXTX_MAXTX_Field is HAL.Byte;
+   subtype MAXTX_MAXTX_Field is HAL.UInt8;
 
    --  Maximum number of bytes in the transmit buffer.
    type MAXTX_Register is record
@@ -396,7 +397,7 @@ package NRF51_SVD.SPIS is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype AMOUNTTX_AMOUNTTX_Field is HAL.Byte;
+   subtype AMOUNTTX_AMOUNTTX_Field is HAL.UInt8;
 
    --  Number of bytes transmitted in last granted transaction.
    type AMOUNTTX_Register is record
@@ -472,7 +473,7 @@ package NRF51_SVD.SPIS is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype DEF_DEF_Field is HAL.Byte;
+   subtype DEF_DEF_Field is HAL.UInt8;
 
    --  Default character.
    type DEF_Register is record
@@ -489,7 +490,7 @@ package NRF51_SVD.SPIS is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype ORC_ORC_Field is HAL.Byte;
+   subtype ORC_ORC_Field is HAL.UInt8;
 
    --  Over-read character.
    type ORC_Register is record
@@ -619,6 +620,6 @@ package NRF51_SVD.SPIS is
 
    --  SPI slave 1.
    SPIS1_Periph : aliased SPIS_Peripheral
-     with Import, Address => SPIS1_Base;
+     with Import, Address => System'To_Address (16#40004000#);
 
 end NRF51_SVD.SPIS;

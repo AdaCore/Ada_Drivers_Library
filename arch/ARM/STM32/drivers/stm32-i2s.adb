@@ -44,9 +44,9 @@ with STM32.Device; use STM32.Device;
 
 package body STM32.I2S is
 
-   function To_Unsigned_16 is new Ada.Unchecked_Conversion (Integer_16,
-                                                            Unsigned_16);
-   function To_Integer_16 is new Ada.Unchecked_Conversion (Unsigned_16,
+   function To_UInt16 is new Ada.Unchecked_Conversion (Integer_16,
+                                                            UInt16);
+   function To_Integer_16 is new Ada.Unchecked_Conversion (UInt16,
                                                            Integer_16);
    ---------------
    -- Configure --
@@ -170,7 +170,7 @@ package body STM32.I2S is
       end if;
 
       This.Periph.I2SPR.ODD    := Is_Odd;
-      This.Periph.I2SPR.I2SDIV := Byte (Divider);
+      This.Periph.I2SPR.I2SDIV := UInt8 (Divider);
    end Set_Frequency;
 
    -------------
@@ -203,7 +203,7 @@ package body STM32.I2S is
          while not This.Periph.SR.TXE loop
             null;
          end loop;
-         This.Periph.DR.DR := To_Unsigned_16 (Elt);
+         This.Periph.DR.DR := To_UInt16 (Elt);
       end loop;
    end Transmit;
 

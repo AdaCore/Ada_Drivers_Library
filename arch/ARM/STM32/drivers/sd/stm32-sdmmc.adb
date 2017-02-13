@@ -875,38 +875,38 @@ package body STM32.SDMMC is
      (Controller : in out SDMMC_Controller;
       Info       :    out Card_Information) return SD_Error
    is
-      Tmp : Byte;
+      Tmp : UInt8;
    begin
       Info.Card_Type := Controller.Card_Type;
       Info.RCA       := UInt16 (Shift_Right (Controller.RCA, 16));
 
       --  Analysis of CSD Byte 0
-      Tmp := Byte (Shift_Right (Controller.CSD (0) and 16#FF00_0000#, 24));
+      Tmp := UInt8 (Shift_Right (Controller.CSD (0) and 16#FF00_0000#, 24));
       Info.SD_CSD.CSD_Structure := Shift_Right (Tmp and 16#C0#, 6);
       Info.SD_CSD.System_Specification_Version :=
         Shift_Right (Tmp and 16#3C#, 2);
       Info.SD_CSD.Reserved := Tmp and 16#03#;
 
       --  Byte 1
-      Tmp := Byte (Shift_Right (Controller.CSD (0) and 16#00FF_0000#, 16));
+      Tmp := UInt8 (Shift_Right (Controller.CSD (0) and 16#00FF_0000#, 16));
       Info.SD_CSD.Data_Read_Access_Time_1 := Tmp;
 
       --  Byte 2
-      Tmp := Byte (Shift_Right (Controller.CSD (0) and 16#0000_FF00#, 8));
+      Tmp := UInt8 (Shift_Right (Controller.CSD (0) and 16#0000_FF00#, 8));
       Info.SD_CSD.Data_Read_Access_Time_2 := Tmp;
 
       --  Byte 3
-      Tmp := Byte (Controller.CSD (0) and 16#0000_00FF#);
+      Tmp := UInt8 (Controller.CSD (0) and 16#0000_00FF#);
       Info.SD_CSD.Max_Bus_Clock_Frequency := Tmp;
 
       --  Byte 4 & 5
       Info.SD_CSD.Card_Command_Class :=
         UInt16 (Shift_Right (Controller.CSD (1) and 16#FFF0_0000#, 20));
       Info.SD_CSD.Max_Read_Data_Block_Length :=
-        Byte (Shift_Right (Controller.CSD (1) and 16#000F_0000#, 16));
+        UInt8 (Shift_Right (Controller.CSD (1) and 16#000F_0000#, 16));
 
       --  Byte 6
-      Tmp := Byte (Shift_Right (Controller.CSD (1) and 16#0000_FF00#, 8));
+      Tmp := UInt8 (Shift_Right (Controller.CSD (1) and 16#0000_FF00#, 8));
       Info.SD_CSD.Partial_Block_For_Read_Allowed := (Tmp and 16#80#) /= 0;
       Info.SD_CSD.Write_Block_Missalignment := (Tmp and 16#40#) /= 0;
       Info.SD_CSD.Read_Block_Missalignment := (Tmp and 16#20#) /= 0;
@@ -919,12 +919,12 @@ package body STM32.SDMMC is
          Info.SD_CSD.Device_Size := Shift_Left (UInt32 (Tmp) and 16#03#, 10);
 
          --  Byte 7
-         Tmp := Byte (Controller.CSD (1) and 16#0000_00FF#);
+         Tmp := UInt8 (Controller.CSD (1) and 16#0000_00FF#);
          Info.SD_CSD.Device_Size := Info.SD_CSD.Device_Size or
            Shift_Left (UInt32 (Tmp), 2);
 
          --  Byte 8
-         Tmp := Byte (Shift_Right (Controller.CSD (2) and 16#FF00_0000#, 24));
+         Tmp := UInt8 (Shift_Right (Controller.CSD (2) and 16#FF00_0000#, 24));
          Info.SD_CSD.Device_Size := Info.SD_CSD.Device_Size or
            Shift_Right (UInt32 (Tmp and 16#C0#), 6);
          Info.SD_CSD.Max_Read_Current_At_VDD_Min :=
@@ -933,7 +933,7 @@ package body STM32.SDMMC is
            Tmp and 16#07#;
 
          --  Byte 9
-         Tmp := Byte (Shift_Right (Controller.CSD (2) and 16#00FF_0000#, 16));
+         Tmp := UInt8 (Shift_Right (Controller.CSD (2) and 16#00FF_0000#, 16));
          Info.SD_CSD.Max_Write_Current_At_VDD_Min :=
            Shift_Right (Tmp and 16#E0#, 5);
          Info.SD_CSD.Max_Write_Current_At_VDD_Max :=
@@ -942,7 +942,7 @@ package body STM32.SDMMC is
            Shift_Left (Tmp and 16#03#, 2);
 
          --  Byte 10
-         Tmp := Byte (Shift_Right (Controller.CSD (2) and 16#0000_FF00#, 8));
+         Tmp := UInt8 (Shift_Right (Controller.CSD (2) and 16#0000_FF00#, 8));
          Info.SD_CSD.Device_Size_Multiplier :=
            Info.SD_CSD.Device_Size_Multiplier or
            Shift_Right (Tmp and 16#80#, 7);
@@ -956,7 +956,7 @@ package body STM32.SDMMC is
 
       elsif Controller.Card_Type = High_Capacity_SD_Card then
          --  Byte 7
-         Tmp := Byte (Controller.CSD (1) and 16#0000_00FF#);
+         Tmp := UInt8 (Controller.CSD (1) and 16#0000_00FF#);
          Info.SD_CSD.Device_Size := Shift_Left (UInt32 (Tmp), 16);
 
          --  Byte 8 & 9
@@ -968,7 +968,7 @@ package body STM32.SDMMC is
          Info.Card_Block_Size := 512;
 
          --  Byte 10
-         Tmp := Byte (Shift_Right (Controller.CSD (2) and 16#0000_FF00#, 8));
+         Tmp := UInt8 (Shift_Right (Controller.CSD (2) and 16#0000_FF00#, 8));
       else
          return Unsupported_Card;
       end if;
@@ -978,14 +978,14 @@ package body STM32.SDMMC is
         Shift_Left (Tmp and 16#3F#, 1);
 
       --  Byte 11
-      Tmp := Byte (Controller.CSD (2) and 16#0000_00FF#);
+      Tmp := UInt8 (Controller.CSD (2) and 16#0000_00FF#);
       Info.SD_CSD.Erase_Group_Size_Multiplier :=
         Info.SD_CSD.Erase_Group_Size_Multiplier or
         Shift_Right (Tmp and 16#80#, 7);
       Info.SD_CSD.Write_Protect_Group_Size := Tmp and 16#7F#;
 
       --  Byte 12
-      Tmp := Byte (Shift_Right (Controller.CSD (3) and 16#FF00_0000#, 24));
+      Tmp := UInt8 (Shift_Right (Controller.CSD (3) and 16#FF00_0000#, 24));
       Info.SD_CSD.Write_Protect_Group_Enable := (Tmp and 16#80#) /= 0;
       Info.SD_CSD.Manufacturer_Default_ECC := Shift_Right (Tmp and 16#60#, 5);
       Info.SD_CSD.Write_Speed_Factor := Shift_Right (Tmp and 16#1C#, 2);
@@ -993,7 +993,7 @@ package body STM32.SDMMC is
         Shift_Left (Tmp and 16#03#, 2);
 
       --  Byte 13
-      Tmp := Byte (Shift_Right (Controller.CSD (3) and 16#00FF_0000#, 16));
+      Tmp := UInt8 (Shift_Right (Controller.CSD (3) and 16#00FF_0000#, 16));
       Info.SD_CSD.Max_Write_Data_Block_Length :=
         Info.SD_CSD.Max_Read_Data_Block_Length or
         Shift_Right (Tmp and 16#C0#, 6);
@@ -1002,7 +1002,7 @@ package body STM32.SDMMC is
       Info.SD_CSD.Content_Protection_Application := (Tmp and 16#01#) /= 0;
 
       --  Byte 14
-      Tmp := Byte (Shift_Right (Controller.CSD (3) and 16#0000_FF00#, 8));
+      Tmp := UInt8 (Shift_Right (Controller.CSD (3) and 16#0000_FF00#, 8));
       Info.SD_CSD.File_Format_Group := (Tmp and 16#80#) /= 0;
       Info.SD_CSD.Copy_Flag := (Tmp and 16#40#) /= 0;
       Info.SD_CSD.Permanent_Write_Protection := (Tmp and 16#20#) /= 0;
@@ -1011,34 +1011,34 @@ package body STM32.SDMMC is
       Info.SD_CSD.ECC_Code := Tmp and 16#03#;
 
       --  Byte 15
-      Tmp := Byte (Controller.CSD (3) and 16#0000_00FF#);
+      Tmp := UInt8 (Controller.CSD (3) and 16#0000_00FF#);
       Info.SD_CSD.CSD_CRC := Shift_Right (Tmp and 16#FE#, 1);
       Info.SD_CSD.Reserved_4 := 0;
 
       --  Byte 0
-      Tmp := Byte (Shift_Right (Controller.CID (0) and 16#FF00_0000#, 24));
+      Tmp := UInt8 (Shift_Right (Controller.CID (0) and 16#FF00_0000#, 24));
       Info.SD_CID.Manufacturer_ID := Tmp;
 
       --  Byte 1 & 2
-      Tmp := Byte (Shift_Right (Controller.CID (0) and 16#00FF_0000#, 16));
+      Tmp := UInt8 (Shift_Right (Controller.CID (0) and 16#00FF_0000#, 16));
       Info.SD_CID.OEM_Application_ID (1) := Character'Val (Tmp);
-      Tmp := Byte (Shift_Right (Controller.CID (0) and 16#0000_FF00#, 8));
+      Tmp := UInt8 (Shift_Right (Controller.CID (0) and 16#0000_FF00#, 8));
       Info.SD_CID.OEM_Application_ID (2) := Character'Val (Tmp);
 
       --  Byte 3-7
-      Tmp := Byte (Controller.CID (0) and 16#0000_00FF#);
+      Tmp := UInt8 (Controller.CID (0) and 16#0000_00FF#);
       Info.SD_CID.Product_Name (1) := Character'Val (Tmp);
-      Tmp := Byte (Shift_Right (Controller.CID (1) and 16#FF00_0000#, 24));
+      Tmp := UInt8 (Shift_Right (Controller.CID (1) and 16#FF00_0000#, 24));
       Info.SD_CID.Product_Name (2) := Character'Val (Tmp);
-      Tmp := Byte (Shift_Right (Controller.CID (1) and 16#00FF_0000#, 16));
+      Tmp := UInt8 (Shift_Right (Controller.CID (1) and 16#00FF_0000#, 16));
       Info.SD_CID.Product_Name (3) := Character'Val (Tmp);
-      Tmp := Byte (Shift_Right (Controller.CID (1) and 16#0000_FF00#, 8));
+      Tmp := UInt8 (Shift_Right (Controller.CID (1) and 16#0000_FF00#, 8));
       Info.SD_CID.Product_Name (4) := Character'Val (Tmp);
-      Tmp := Byte (Controller.CID (1) and 16#0000_00FF#);
+      Tmp := UInt8 (Controller.CID (1) and 16#0000_00FF#);
       Info.SD_CID.Product_Name (5) := Character'Val (Tmp);
 
       --  Byte 8
-      Tmp := Byte (Shift_Right (Controller.CID (2) and 16#FF00_0000#, 24));
+      Tmp := UInt8 (Shift_Right (Controller.CID (2) and 16#FF00_0000#, 24));
       Info.SD_CID.Product_Revision.Major := UInt4 (Shift_Right (Tmp, 4));
       Info.SD_CID.Product_Revision.Minor := UInt4 (Tmp and 16#0F#);
 
@@ -1056,7 +1056,7 @@ package body STM32.SDMMC is
           (2000 + Shift_Right (Controller.CID (3) and 16#000F_F000#, 12));
 
       --  Byte 15
-      Tmp := Byte (Controller.CID (3) and 16#0000_00FF#);
+      Tmp := UInt8 (Controller.CID (3) and 16#0000_00FF#);
       Info.SD_CID.CID_CRC := Shift_Right (Tmp and 16#FE#, 1);
 
       return OK;
@@ -1073,7 +1073,7 @@ package body STM32.SDMMC is
       Err  : SD_Error;
       Idx  : Natural;
       Tmp  : SD_SCR;
-      Dead : Unsigned_32 with Unreferenced;
+      Dead : UInt32 with Unreferenced;
 
    begin
       Send_Command
@@ -1605,7 +1605,7 @@ package body STM32.SDMMC is
          Stream             => Stream,
          Source             => This.Periph.FIFO'Address,
          Destination        => Data_Addr,
-         Data_Count         => Unsigned_16 (Data_Len_Words), -- because DMA is set up with words
+         Data_Count         => UInt16 (Data_Len_Words), -- because DMA is set up with words
          Enabled_Interrupts => (Transfer_Error_Interrupt    => True,
                                 FIFO_Error_Interrupt        => True,
                                 Transfer_Complete_Interrupt => True,
@@ -1744,7 +1744,7 @@ package body STM32.SDMMC is
          Stream             => Stream,
          Destination        => This.Periph.FIFO'Address,
          Source             => Data_Addr,
-         Data_Count         => Unsigned_16 (Data_Len_Words), -- DMA uses words
+         Data_Count         => UInt16 (Data_Len_Words), -- DMA uses words
          Enabled_Interrupts => (Transfer_Error_Interrupt    => True,
                                 FIFO_Error_Interrupt        => True,
                                 Transfer_Complete_Interrupt => True,

@@ -189,7 +189,7 @@ package STM32.DMA with SPARK_Mode => Off is
    --  In contrast, on a memory-to-memory transfer the most efficient approach
    --  is to work in units of words. One would therefore specify word units for
    --  the source and destination formats and then specify 1/4 the total number
-   --  of bytes involved (assuming a four-byte word).
+   --  of bytes involved (assuming a four-UInt8 word).
 
    procedure Start_Transfer
      (This        : DMA_Controller;
@@ -596,7 +596,7 @@ package STM32.DMA with SPARK_Mode => Off is
 
    function Aligned (This : Address;  Width : DMA_Data_Transfer_Widths)
       return Boolean with Inline;
-   --  Returns whether the address is aligned on a word, half-word, or byte
+   --  Returns whether the address is aligned on a word, half-word, or UInt8
    --  boundary
 
    function Compatible_Alignments

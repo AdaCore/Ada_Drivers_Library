@@ -31,9 +31,8 @@
 
 --  Driver for the WM8994 CODEC
 
-with Interfaces; use Interfaces;
-with HAL;        use HAL;
-with HAL.I2C;    use HAL.I2C;
+with HAL;      use HAL;
+with HAL.I2C;  use HAL.I2C;
 with HAL.Time;
 
 package WM8994 is
@@ -85,7 +84,7 @@ package WM8994 is
    --  is set to default configuration (user should re-Initialize the codec in
    --  order to play again the audio stream).
 
-   subtype Volume_Level is Unsigned_8 range 0 .. 100;
+   subtype Volume_Level is UInt8 range 0 .. 100;
 
    type WM8994_Device
      (Port     : not null Any_I2C_Port;
@@ -96,10 +95,10 @@ package WM8994 is
    procedure Init (This      : in out WM8994_Device;
                    Input     : Input_Device;
                    Output    : Output_Device;
-                   Volume    : Unsigned_8;
+                   Volume    : UInt8;
                    Frequency : Audio_Frequency);
 
-   function Read_ID (This : in out WM8994_Device) return Unsigned_16;
+   function Read_ID (This : in out WM8994_Device) return UInt16;
    procedure Play (This : in out WM8994_Device);
    procedure Pause (This : in out WM8994_Device);
    procedure Resume (This : in out WM8994_Device);

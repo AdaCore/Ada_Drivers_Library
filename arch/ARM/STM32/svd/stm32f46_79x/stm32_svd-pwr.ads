@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -97,7 +98,7 @@ package STM32_SVD.PWR is
       --  Regulator voltage scaling output selection ready bit
       VOSRDY         : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.Bit := 16#0#;
+      Reserved_15_15 : HAL.UInt1 := 16#0#;
       --  Read-only. Over-drive mode ready
       ODRDY          : Boolean := False;
       --  Read-only. Over-drive mode switching ready
@@ -147,6 +148,6 @@ package STM32_SVD.PWR is
 
    --  Power control
    PWR_Periph : aliased PWR_Peripheral
-     with Import, Address => PWR_Base;
+     with Import, Address => System'To_Address (16#40007000#);
 
 end STM32_SVD.PWR;

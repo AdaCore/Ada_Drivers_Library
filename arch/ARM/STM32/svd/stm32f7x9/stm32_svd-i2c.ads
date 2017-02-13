@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -38,7 +39,7 @@ package STM32_SVD.I2C is
       --  Analog noise filter OFF
       ANFOFF         : Boolean := False;
       --  unspecified
-      Reserved_13_13 : HAL.Bit := 16#0#;
+      Reserved_13_13 : HAL.UInt1 := 16#0#;
       --  DMA transmission requests enable
       TXDMAEN        : Boolean := False;
       --  DMA reception requests enable
@@ -60,7 +61,7 @@ package STM32_SVD.I2C is
       --  PEC enable
       PECEN          : Boolean := False;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -91,7 +92,7 @@ package STM32_SVD.I2C is
    end record;
 
    subtype CR2_SADD_Field is HAL.UInt10;
-   subtype CR2_NBYTES_Field is HAL.Byte;
+   subtype CR2_NBYTES_Field is HAL.UInt8;
 
    --  Control register 2
    type CR2_Register is record
@@ -170,7 +171,7 @@ package STM32_SVD.I2C is
    --  Own address register 2
    type OAR2_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.Bit := 16#0#;
+      Reserved_0_0   : HAL.UInt1 := 16#0#;
       --  Interface address
       OA2            : OAR2_OA2_Field := 16#0#;
       --  Own Address 2 masks
@@ -194,8 +195,8 @@ package STM32_SVD.I2C is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype TIMINGR_SCLL_Field is HAL.Byte;
-   subtype TIMINGR_SCLH_Field is HAL.Byte;
+   subtype TIMINGR_SCLL_Field is HAL.UInt8;
+   subtype TIMINGR_SCLH_Field is HAL.UInt8;
    subtype TIMINGR_SDADEL_Field is HAL.UInt4;
    subtype TIMINGR_SCLDEL_Field is HAL.UInt4;
    subtype TIMINGR_PRESC_Field is HAL.UInt4;
@@ -293,7 +294,7 @@ package STM32_SVD.I2C is
       --  Read-only. SMBus alert
       ALERT          : Boolean := False;
       --  unspecified
-      Reserved_14_14 : HAL.Bit := 16#0#;
+      Reserved_14_14 : HAL.UInt1 := 16#0#;
       --  Read-only. Bus busy
       BUSY           : Boolean := False;
       --  Read-only. Transfer direction (Slave mode)
@@ -301,7 +302,7 @@ package STM32_SVD.I2C is
       --  Read-only. Address match code (Slave mode)
       ADDCODE        : ISR_ADDCODE_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -373,7 +374,7 @@ package STM32_SVD.I2C is
       Reserved_14_31 at 0 range 14 .. 31;
    end record;
 
-   subtype PECR_PEC_Field is HAL.Byte;
+   subtype PECR_PEC_Field is HAL.UInt8;
 
    --  PEC register
    type PECR_Register is record
@@ -390,7 +391,7 @@ package STM32_SVD.I2C is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype RXDR_RXDATA_Field is HAL.Byte;
+   subtype RXDR_RXDATA_Field is HAL.UInt8;
 
    --  Receive data register
    type RXDR_Register is record
@@ -407,7 +408,7 @@ package STM32_SVD.I2C is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype TXDR_TXDATA_Field is HAL.Byte;
+   subtype TXDR_TXDATA_Field is HAL.UInt8;
 
    --  Transmit data register
    type TXDR_Register is record
@@ -471,18 +472,18 @@ package STM32_SVD.I2C is
 
    --  Inter-integrated circuit
    I2C1_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C1_Base;
+     with Import, Address => System'To_Address (16#40005400#);
 
    --  Inter-integrated circuit
    I2C2_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C2_Base;
+     with Import, Address => System'To_Address (16#40005800#);
 
    --  Inter-integrated circuit
    I2C3_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C3_Base;
+     with Import, Address => System'To_Address (16#40005C00#);
 
    --  Inter-integrated circuit
    I2C4_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C4_Base;
+     with Import, Address => System'To_Address (16#40006000#);
 
 end STM32_SVD.I2C;

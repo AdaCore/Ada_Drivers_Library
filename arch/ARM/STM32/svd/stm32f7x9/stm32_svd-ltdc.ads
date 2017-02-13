@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -122,15 +123,15 @@ package STM32_SVD.LTDC is
       --  Read-only. Dither Blue Width
       DBW            : GCR_DBW_Field := 16#2#;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  Read-only. Dither Green Width
       DGW            : GCR_DGW_Field := 16#2#;
       --  unspecified
-      Reserved_11_11 : HAL.Bit := 16#0#;
+      Reserved_11_11 : HAL.UInt1 := 16#0#;
       --  Read-only. Dither Red Width
       DRW            : GCR_DRW_Field := 16#2#;
       --  unspecified
-      Reserved_15_15 : HAL.Bit := 16#0#;
+      Reserved_15_15 : HAL.UInt1 := 16#0#;
       --  Dither Enable
       DEN            : Boolean := False;
       --  unspecified
@@ -189,7 +190,7 @@ package STM32_SVD.LTDC is
       --  Background Color Red value
       BC             : BCCR_BC_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -402,9 +403,9 @@ package STM32_SVD.LTDC is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
-   subtype L1CKCR_CKBLUE_Field is HAL.Byte;
-   subtype L1CKCR_CKGREEN_Field is HAL.Byte;
-   subtype L1CKCR_CKRED_Field is HAL.Byte;
+   subtype L1CKCR_CKBLUE_Field is HAL.UInt8;
+   subtype L1CKCR_CKGREEN_Field is HAL.UInt8;
+   subtype L1CKCR_CKRED_Field is HAL.UInt8;
 
    --  Layerx Color Keying Configuration Register
    type L1CKCR_Register is record
@@ -415,7 +416,7 @@ package STM32_SVD.LTDC is
       --  Color Key Red value
       CKRED          : L1CKCR_CKRED_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -444,7 +445,7 @@ package STM32_SVD.LTDC is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype L1CACR_CONSTA_Field is HAL.Byte;
+   subtype L1CACR_CONSTA_Field is HAL.UInt8;
 
    --  Layerx Constant Alpha Configuration Register
    type L1CACR_Register is record
@@ -461,10 +462,10 @@ package STM32_SVD.LTDC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype L1DCCR_DCBLUE_Field is HAL.Byte;
-   subtype L1DCCR_DCGREEN_Field is HAL.Byte;
-   subtype L1DCCR_DCRED_Field is HAL.Byte;
-   subtype L1DCCR_DCALPHA_Field is HAL.Byte;
+   subtype L1DCCR_DCBLUE_Field is HAL.UInt8;
+   subtype L1DCCR_DCGREEN_Field is HAL.UInt8;
+   subtype L1DCCR_DCRED_Field is HAL.UInt8;
+   subtype L1DCCR_DCALPHA_Field is HAL.UInt8;
 
    --  Layerx Default Color Configuration Register
    type L1DCCR_Register is record
@@ -552,10 +553,10 @@ package STM32_SVD.LTDC is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
-   subtype L1CLUTWR_BLUE_Field is HAL.Byte;
-   subtype L1CLUTWR_GREEN_Field is HAL.Byte;
-   subtype L1CLUTWR_RED_Field is HAL.Byte;
-   subtype L1CLUTWR_CLUTADD_Field is HAL.Byte;
+   subtype L1CLUTWR_BLUE_Field is HAL.UInt8;
+   subtype L1CLUTWR_GREEN_Field is HAL.UInt8;
+   subtype L1CLUTWR_RED_Field is HAL.UInt8;
+   subtype L1CLUTWR_CLUTADD_Field is HAL.UInt8;
 
    --  Layerx CLUT Write Register
    type L1CLUTWR_Register is record
@@ -650,7 +651,7 @@ package STM32_SVD.LTDC is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
-   subtype L2CKCR_CKBLUE_Field is HAL.Byte;
+   subtype L2CKCR_CKBLUE_Field is HAL.UInt8;
    subtype L2CKCR_CKGREEN_Field is HAL.UInt7;
    subtype L2CKCR_CKRED_Field is HAL.UInt9;
 
@@ -663,7 +664,7 @@ package STM32_SVD.LTDC is
       --  Color Key Red value
       CKRED          : L2CKCR_CKRED_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -692,7 +693,7 @@ package STM32_SVD.LTDC is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype L2CACR_CONSTA_Field is HAL.Byte;
+   subtype L2CACR_CONSTA_Field is HAL.UInt8;
 
    --  Layerx Constant Alpha Configuration Register
    type L2CACR_Register is record
@@ -709,10 +710,10 @@ package STM32_SVD.LTDC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype L2DCCR_DCBLUE_Field is HAL.Byte;
-   subtype L2DCCR_DCGREEN_Field is HAL.Byte;
-   subtype L2DCCR_DCRED_Field is HAL.Byte;
-   subtype L2DCCR_DCALPHA_Field is HAL.Byte;
+   subtype L2DCCR_DCBLUE_Field is HAL.UInt8;
+   subtype L2DCCR_DCGREEN_Field is HAL.UInt8;
+   subtype L2DCCR_DCRED_Field is HAL.UInt8;
+   subtype L2DCCR_DCALPHA_Field is HAL.UInt8;
 
    --  Layerx Default Color Configuration Register
    type L2DCCR_Register is record
@@ -800,10 +801,10 @@ package STM32_SVD.LTDC is
       Reserved_11_31 at 0 range 11 .. 31;
    end record;
 
-   subtype L2CLUTWR_BLUE_Field is HAL.Byte;
-   subtype L2CLUTWR_GREEN_Field is HAL.Byte;
-   subtype L2CLUTWR_RED_Field is HAL.Byte;
-   subtype L2CLUTWR_CLUTADD_Field is HAL.Byte;
+   subtype L2CLUTWR_BLUE_Field is HAL.UInt8;
+   subtype L2CLUTWR_GREEN_Field is HAL.UInt8;
+   subtype L2CLUTWR_RED_Field is HAL.UInt8;
+   subtype L2CLUTWR_CLUTADD_Field is HAL.UInt8;
 
    --  Layerx CLUT Write Register
    type L2CLUTWR_Register is record
@@ -951,6 +952,6 @@ package STM32_SVD.LTDC is
 
    --  LCD-TFT Controller
    LTDC_Periph : aliased LTDC_Peripheral
-     with Import, Address => LTDC_Base;
+     with Import, Address => System'To_Address (16#40016800#);
 
 end STM32_SVD.LTDC;

@@ -50,7 +50,7 @@ package OV7725 is
    procedure Set_Frame_Size (This : OV7725_Camera;
                              Res  : OV2640.Frame_Size);
 
-   function Get_PID (This : OV7725_Camera) return Byte;
+   function Get_PID (This : OV7725_Camera) return UInt8;
 
 private
 

@@ -51,8 +51,8 @@ package body WM8994 is
       Check  : UInt16 with Unreferenced;
    begin
       --  Device is MSB first
-      Data (1) := Byte (Shift_Right (Value and 16#FF00#, 8));
-      Data (2) := Byte (Value and 16#FF#);
+      Data (1) := UInt8 (Shift_Right (Value and 16#FF00#, 8));
+      Data (2) := UInt8 (Value and 16#FF#);
 
       This.Port.Mem_Write
         (Addr          => This.I2C_Addr,
@@ -97,10 +97,10 @@ package body WM8994 is
      (This      : in out WM8994_Device;
       Input     : Input_Device;
       Output    : Output_Device;
-      Volume    : Unsigned_8;
+      Volume    : UInt8;
       Frequency : Audio_Frequency)
    is
-      Power_Mgnt_Reg_1 : Unsigned_16 := 0;
+      Power_Mgnt_Reg_1 : UInt16 := 0;
 
    begin
       --  WM8994 Errata work-arounds
@@ -308,7 +308,7 @@ package body WM8994 is
    -- Read_ID --
    -------------
 
-   function Read_ID (This : in out WM8994_Device) return Unsigned_16 is
+   function Read_ID (This : in out WM8994_Device) return UInt16 is
    begin
       return This.I2C_Read (WM8994_CHIPID_ADDR);
    end Read_ID;
@@ -387,9 +387,9 @@ package body WM8994 is
    procedure Set_Volume (This : in out WM8994_Device; Volume : Volume_Level)
    is
       --  Actual Volume in range 0 .. 16#3F#
-      Converted_Volume : constant Unsigned_16 :=
+      Converted_Volume : constant UInt16 :=
                            (if Volume = 100 then 63
-                            else Unsigned_16 (Volume) * 63 / 100);
+                            else UInt16 (Volume) * 63 / 100);
 
    begin
       if Volume = 0 then

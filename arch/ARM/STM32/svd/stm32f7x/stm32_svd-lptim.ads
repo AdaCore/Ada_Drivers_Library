@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -128,19 +129,19 @@ package STM32_SVD.LPTIM is
       --  Configurable digital filter for external clock
       CKFLT          : CFGR_CKFLT_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : HAL.Bit := 16#0#;
+      Reserved_5_5   : HAL.UInt1 := 16#0#;
       --  Configurable digital filter for trigger
       TRGFLT         : CFGR_TRGFLT_Field := 16#0#;
       --  unspecified
-      Reserved_8_8   : HAL.Bit := 16#0#;
+      Reserved_8_8   : HAL.UInt1 := 16#0#;
       --  Clock prescaler
       PRESC          : CFGR_PRESC_Field := 16#0#;
       --  unspecified
-      Reserved_12_12 : HAL.Bit := 16#0#;
+      Reserved_12_12 : HAL.UInt1 := 16#0#;
       --  Trigger selector
       TRIGSEL        : CFGR_TRIGSEL_Field := 16#0#;
       --  unspecified
-      Reserved_16_16 : HAL.Bit := 16#0#;
+      Reserved_16_16 : HAL.UInt1 := 16#0#;
       --  Trigger enable and polarity
       TRIGEN         : CFGR_TRIGEN_Field := 16#0#;
       --  Timeout enable
@@ -292,6 +293,6 @@ package STM32_SVD.LPTIM is
 
    --  Low power timer
    LPTIM1_Periph : aliased LPTIM1_Peripheral
-     with Import, Address => LPTIM1_Base;
+     with Import, Address => System'To_Address (16#40002400#);
 
 end STM32_SVD.LPTIM;

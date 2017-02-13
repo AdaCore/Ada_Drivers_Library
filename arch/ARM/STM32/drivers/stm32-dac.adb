@@ -122,7 +122,7 @@ package body STM32.DAC is
                           UInt12 (Value and Max_12bit_Resolution);
                   end case;
                when DAC_Resolution_8_Bits =>
-                  This.DHR8R1.DACC1DHR := Byte (Value and Max_8bit_Resolution);
+                  This.DHR8R1.DACC1DHR := UInt8 (Value and Max_8bit_Resolution);
             end case;
 
          when Channel_2 =>
@@ -137,7 +137,7 @@ package body STM32.DAC is
                           UInt12 (Value and Max_12bit_Resolution);
                   end case;
                when DAC_Resolution_8_Bits =>
-                  This.DHR8R2.DACC2DHR := Byte (Value and Max_8bit_Resolution);
+                  This.DHR8R2.DACC2DHR := UInt8 (Value and Max_8bit_Resolution);
             end case;
 
       end case;
@@ -206,9 +206,9 @@ package body STM32.DAC is
             end case;
          when DAC_Resolution_8_Bits =>
             This.DHR8RD.DACC1DHR :=
-              Byte (Channel_1_Value and Max_8bit_Resolution);
+              UInt8 (Channel_1_Value and Max_8bit_Resolution);
             This.DHR8RD.DACC2DHR :=
-              Byte (Channel_2_Value and Max_8bit_Resolution);
+              UInt8 (Channel_2_Value and Max_8bit_Resolution);
       end case;
    end Set_Dual_Output_Voltages;
 

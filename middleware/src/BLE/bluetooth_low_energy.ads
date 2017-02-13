@@ -30,7 +30,6 @@
 ------------------------------------------------------------------------------
 
 with HAL;        use HAL;
-with Interfaces; use Interfaces;
 
 package Bluetooth_Low_Energy is
 
@@ -58,23 +57,23 @@ package Bluetooth_Low_Energy is
    -- UUID --
    ----------
 
-   type BLE_UUID_Kind is (UUID_16bits, UUID_32bits, UUID_16bytes);
+   type BLE_UUID_Kind is (UUID_16bits, UUID_32bits, UUID_16UInt8s);
 
-   subtype BLE_16bytes_UUID is Byte_Array (1 .. 16);
+   subtype BLE_16UInt8s_UUID is UInt8_Array (1 .. 16);
 
    type BLE_UUID (Kind : BLE_UUID_Kind) is record
       case Kind is
          when UUID_16bits =>
-            UUID_16 : Unsigned_16;
+            UUID_16 : UInt16;
          when UUID_32bits =>
-            UUID_32 : Unsigned_32;
-         when UUID_16bytes =>
-            UUID_16_Bytes : BLE_16bytes_UUID;
+            UUID_32 : UInt32;
+         when UUID_16UInt8s =>
+            UUID_16_UInt8s : BLE_16UInt8s_UUID;
       end case;
    end record;
 
-   function Make_UUID (UUID : Unsigned_16) return BLE_UUID;
-   function Make_UUID (UUID : Unsigned_32) return BLE_UUID;
-   function Make_UUID (UUID : BLE_16bytes_UUID) return BLE_UUID;
+   function Make_UUID (UUID : UInt16) return BLE_UUID;
+   function Make_UUID (UUID : UInt32) return BLE_UUID;
+   function Make_UUID (UUID : BLE_16UInt8s_UUID) return BLE_UUID;
 
 end Bluetooth_Low_Energy;

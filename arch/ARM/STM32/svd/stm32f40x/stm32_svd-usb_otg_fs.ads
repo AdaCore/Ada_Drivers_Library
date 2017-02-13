@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -24,7 +25,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Non-zero-length status OUT handshake
       NZLSOHSK       : Boolean := False;
       --  unspecified
-      Reserved_3_3   : HAL.Bit := 16#0#;
+      Reserved_3_3   : HAL.UInt1 := 16#0#;
       --  Device address
       DAD            : FS_DCFG_DAD_Field := 16#0#;
       --  Periodic frame interval
@@ -126,7 +127,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Endpoint disabled interrupt mask
       EPDM          : Boolean := False;
       --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
+      Reserved_2_2  : HAL.UInt1 := 16#0#;
       --  Timeout condition mask (Non-isochronous endpoints)
       TOM           : Boolean := False;
       --  IN token received when TxFIFO empty mask
@@ -160,7 +161,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Endpoint disabled interrupt mask
       EPDM          : Boolean := False;
       --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
+      Reserved_2_2  : HAL.UInt1 := 16#0#;
       --  SETUP phase done mask
       STUPM         : Boolean := False;
       --  OUT token received when endpoint disabled mask
@@ -280,13 +281,13 @@ package STM32_SVD.USB_OTG_FS is
       --  Read-only. USB active endpoint
       USBAEP         : Boolean := False;
       --  unspecified
-      Reserved_16_16 : HAL.Bit := 16#0#;
+      Reserved_16_16 : HAL.UInt1 := 16#0#;
       --  Read-only. NAK status
       NAKSTS         : Boolean := False;
       --  Read-only. Endpoint type
       EPTYP          : FS_DIEPCTL0_EPTYP_Field := 16#0#;
       --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
+      Reserved_20_20 : HAL.UInt1 := 16#0#;
       --  STALL handshake
       STALL          : Boolean := False;
       --  TxFIFO number
@@ -329,13 +330,13 @@ package STM32_SVD.USB_OTG_FS is
       --  EPDISD
       EPDISD        : Boolean := False;
       --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
+      Reserved_2_2  : HAL.UInt1 := 16#0#;
       --  TOC
       TOC           : Boolean := False;
       --  ITTXFE
       ITTXFE        : Boolean := False;
       --  unspecified
-      Reserved_5_5  : HAL.Bit := 16#0#;
+      Reserved_5_5  : HAL.UInt1 := 16#0#;
       --  INEPNE
       INEPNE        : Boolean := False;
       --  Read-only. TXFE
@@ -418,7 +419,7 @@ package STM32_SVD.USB_OTG_FS is
       --  EPTYP
       EPTYP          : DIEPCTL1_EPTYP_Field := 16#0#;
       --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
+      Reserved_20_20 : HAL.UInt1 := 16#0#;
       --  Stall
       Stall          : Boolean := False;
       --  TXFNUM
@@ -470,7 +471,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Multi count
       MCNT           : DIEPTSIZ_MCNT_Field := 16#0#;
       --  unspecified
-      Reserved_31_31 : HAL.Bit := 16#0#;
+      Reserved_31_31 : HAL.UInt1 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -501,7 +502,7 @@ package STM32_SVD.USB_OTG_FS is
       --  EPTYP
       EPTYP          : DIEPCTL_EPTYP_Field := 16#0#;
       --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
+      Reserved_20_20 : HAL.UInt1 := 16#0#;
       --  Stall
       Stall          : Boolean := False;
       --  TXFNUM
@@ -552,7 +553,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Read-only. USBAEP
       USBAEP         : Boolean := True;
       --  unspecified
-      Reserved_16_16 : HAL.Bit := 16#0#;
+      Reserved_16_16 : HAL.UInt1 := 16#0#;
       --  Read-only. NAKSTS
       NAKSTS         : Boolean := False;
       --  Read-only. EPTYP
@@ -601,13 +602,13 @@ package STM32_SVD.USB_OTG_FS is
       --  EPDISD
       EPDISD        : Boolean := False;
       --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
+      Reserved_2_2  : HAL.UInt1 := 16#0#;
       --  STUP
       STUP          : Boolean := False;
       --  OTEPDIS
       OTEPDIS       : Boolean := False;
       --  unspecified
-      Reserved_5_5  : HAL.Bit := 16#0#;
+      Reserved_5_5  : HAL.UInt1 := 16#0#;
       --  B2BSTUP
       B2BSTUP       : Boolean := False;
       --  unspecified
@@ -643,7 +644,7 @@ package STM32_SVD.USB_OTG_FS is
       --  SETUP packet count
       STUPCNT        : DOEPTSIZ0_STUPCNT_Field := 16#0#;
       --  unspecified
-      Reserved_31_31 : HAL.Bit := 16#0#;
+      Reserved_31_31 : HAL.UInt1 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -727,7 +728,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Received data PID/SETUP packet count
       RXDPID_STUPCNT : DOEPTSIZ_RXDPID_STUPCNT_Field := 16#0#;
       --  unspecified
-      Reserved_31_31 : HAL.Bit := 16#0#;
+      Reserved_31_31 : HAL.UInt1 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -862,7 +863,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Write-only. Full Speed serial transceiver select
       PHYSEL         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  SRP-capable
       SRPCAP         : Boolean := False;
       --  HNP-capable
@@ -906,7 +907,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Host frame counter reset
       FCRST          : Boolean := False;
       --  unspecified
-      Reserved_3_3   : HAL.Bit := 16#0#;
+      Reserved_3_3   : HAL.UInt1 := 16#0#;
       --  RxFIFO flush
       RXFFLSH        : Boolean := False;
       --  TxFIFO flush
@@ -985,7 +986,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Read-only. Periodic TxFIFO empty
       PTXFE              : Boolean := True;
       --  unspecified
-      Reserved_27_27     : HAL.Bit := 16#0#;
+      Reserved_27_27     : HAL.UInt1 := 16#0#;
       --  Connector ID status change
       CIDSCHG            : Boolean := False;
       --  Disconnect detected interrupt
@@ -1033,7 +1034,7 @@ package STM32_SVD.USB_OTG_FS is
    --  OTG_FS interrupt mask register (OTG_FS_GINTMSK)
    type FS_GINTMSK_Register is record
       --  unspecified
-      Reserved_0_0     : HAL.Bit := 16#0#;
+      Reserved_0_0     : HAL.UInt1 := 16#0#;
       --  Mode mismatch interrupt mask
       MMISM            : Boolean := False;
       --  OTG interrupt mask
@@ -1063,7 +1064,7 @@ package STM32_SVD.USB_OTG_FS is
       --  End of periodic frame interrupt mask
       EOPFM            : Boolean := False;
       --  unspecified
-      Reserved_16_16   : HAL.Bit := 16#0#;
+      Reserved_16_16   : HAL.UInt1 := 16#0#;
       --  Endpoint mismatch interrupt mask
       EPMISM           : Boolean := False;
       --  IN endpoints interrupt mask
@@ -1084,7 +1085,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Periodic TxFIFO empty mask
       PTXFEM           : Boolean := False;
       --  unspecified
-      Reserved_27_27   : HAL.Bit := 16#0#;
+      Reserved_27_27   : HAL.UInt1 := 16#0#;
       --  Connector ID status change mask
       CIDSCHGM         : Boolean := False;
       --  Disconnect detected interrupt mask
@@ -1250,7 +1251,7 @@ package STM32_SVD.USB_OTG_FS is
    end record;
 
    subtype FS_GNPTXSTS_NPTXFSAV_Field is HAL.UInt16;
-   subtype FS_GNPTXSTS_NPTQXSAV_Field is HAL.Byte;
+   subtype FS_GNPTXSTS_NPTQXSAV_Field is HAL.UInt8;
    subtype FS_GNPTXSTS_NPTXQTOP_Field is HAL.UInt7;
 
    --  OTG_FS non-periodic transmit FIFO/queue status register
@@ -1263,7 +1264,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Read-only. Top of the non-periodic transmit request queue
       NPTXQTOP       : FS_GNPTXSTS_NPTXQTOP_Field;
       --  unspecified
-      Reserved_31_31 : HAL.Bit;
+      Reserved_31_31 : HAL.UInt1;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1282,7 +1283,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Power down
       PWRDWN         : Boolean := False;
       --  unspecified
-      Reserved_17_17 : HAL.Bit := 16#0#;
+      Reserved_17_17 : HAL.UInt1 := 16#0#;
       --  Enable the VBUS sensing device
       VBUSASEN       : Boolean := False;
       --  Enable the VBUS sensing device
@@ -1397,8 +1398,8 @@ package STM32_SVD.USB_OTG_FS is
    end record;
 
    subtype FS_HPTXSTS_PTXFSAVL_Field is HAL.UInt16;
-   subtype FS_HPTXSTS_PTXQSAV_Field is HAL.Byte;
-   subtype FS_HPTXSTS_PTXQTOP_Field is HAL.Byte;
+   subtype FS_HPTXSTS_PTXQSAV_Field is HAL.UInt8;
+   subtype FS_HPTXSTS_PTXQTOP_Field is HAL.UInt8;
 
    --  OTG_FS_Host periodic transmit FIFO/queue status register
    --  (OTG_FS_HPTXSTS)
@@ -1478,7 +1479,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Port reset
       PRST           : Boolean := False;
       --  unspecified
-      Reserved_9_9   : HAL.Bit := 16#0#;
+      Reserved_9_9   : HAL.UInt1 := 16#0#;
       --  Read-only. Port line status
       PLSTS          : FS_HPRT_PLSTS_Field := 16#0#;
       --  Port power
@@ -1526,7 +1527,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Endpoint direction
       EPDIR          : Boolean := False;
       --  unspecified
-      Reserved_16_16 : HAL.Bit := 16#0#;
+      Reserved_16_16 : HAL.UInt1 := 16#0#;
       --  Low-speed device
       LSDEV          : Boolean := False;
       --  Endpoint type
@@ -1566,7 +1567,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Channel halted
       CHH            : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.Bit := 16#0#;
+      Reserved_2_2   : HAL.UInt1 := 16#0#;
       --  STALL response received interrupt
       STALL          : Boolean := False;
       --  NAK response received interrupt
@@ -1574,7 +1575,7 @@ package STM32_SVD.USB_OTG_FS is
       --  ACK response received/transmitted interrupt
       ACK            : Boolean := False;
       --  unspecified
-      Reserved_6_6   : HAL.Bit := 16#0#;
+      Reserved_6_6   : HAL.UInt1 := 16#0#;
       --  Transaction error
       TXERR          : Boolean := False;
       --  Babble error
@@ -1611,7 +1612,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Channel halted mask
       CHHM           : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.Bit := 16#0#;
+      Reserved_2_2   : HAL.UInt1 := 16#0#;
       --  STALL response received interrupt mask
       STALLM         : Boolean := False;
       --  NAK response received interrupt mask
@@ -1662,7 +1663,7 @@ package STM32_SVD.USB_OTG_FS is
       --  Data PID
       DPID           : FS_HCTSIZ_DPID_Field := 16#0#;
       --  unspecified
-      Reserved_31_31 : HAL.Bit := 16#0#;
+      Reserved_31_31 : HAL.UInt1 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1829,7 +1830,7 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_DEVICE_Periph : aliased OTG_FS_DEVICE_Peripheral
-     with Import, Address => OTG_FS_DEVICE_Base;
+     with Import, Address => System'To_Address (16#50000800#);
 
    type OTG_FS_GLOBAL_Disc is
      (
@@ -1913,7 +1914,7 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_GLOBAL_Periph : aliased OTG_FS_GLOBAL_Peripheral
-     with Import, Address => OTG_FS_GLOBAL_Base;
+     with Import, Address => System'To_Address (16#50000000#);
 
    --  USB on the go full speed
    type OTG_FS_HOST_Peripheral is record
@@ -2043,7 +2044,7 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_HOST_Periph : aliased OTG_FS_HOST_Peripheral
-     with Import, Address => OTG_FS_HOST_Base;
+     with Import, Address => System'To_Address (16#50000400#);
 
    --  USB on the go full speed
    type OTG_FS_PWRCLK_Peripheral is record
@@ -2058,6 +2059,6 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_PWRCLK_Periph : aliased OTG_FS_PWRCLK_Peripheral
-     with Import, Address => OTG_FS_PWRCLK_Base;
+     with Import, Address => System'To_Address (16#50000E00#);
 
 end STM32_SVD.USB_OTG_FS;

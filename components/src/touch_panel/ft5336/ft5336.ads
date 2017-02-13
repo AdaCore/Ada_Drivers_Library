@@ -87,13 +87,13 @@ private
    end record;
 
    function I2C_Read (This   : in out FT5336_Device;
-                      Reg    : Byte;
+                      Reg    : UInt8;
                       Status : out Boolean)
-                      return Byte;
+                      return UInt8;
 
    procedure I2C_Write (This   : in out FT5336_Device;
-                        Reg    : Byte;
-                        Data   : Byte;
+                        Reg    : UInt8;
+                        Data   : UInt8;
                         Status : out Boolean);
 
 end FT5336;

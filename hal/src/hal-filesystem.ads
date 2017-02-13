@@ -117,7 +117,7 @@ package HAL.Filesystem is
                            Length : IO_Count)
                            return Status_Kind is abstract;
    --  Assuming Path designates a regular file, set its size to be Length. This
-   --  operation preserves the first Length bytes and leaves the other with
+   --  operation preserves the first Length UInt8s and leaves the other with
    --  undefined values.
 
    function Open (This   : in out FS_Driver;
@@ -149,21 +149,21 @@ package HAL.Filesystem is
    ------------------
 
    function Read (This : in out File_Handle;
-                  Data : out Byte_Array)
+                  Data : out UInt8_Array)
                   return Status_Kind is abstract;
-   --  Read the next Data'Length bytes in This and put to in Data. If there
-   --  isn't enough byte to read to fill Data, return Input_Output_Error.
+   --  Read the next Data'Length UInt8s in This and put to in Data. If there
+   --  isn't enough UInt8 to read to fill Data, return Input_Output_Error.
 
    function Write (This : in out File_Handle;
-                   Data : Byte_Array)
+                   Data : UInt8_Array)
                    return Status_Kind is abstract;
-   --  Write bytes in Data to This. This overrides the next Data'Length bytes in
+   --  Write UInt8s in Data to This. This overrides the next Data'Length UInt8s in
    --  this file, if they exist, it extends the file otherwise.
 
    function Seek (This   : in out File_Handle;
                   Offset : IO_Count)
                   return Status_Kind is abstract;
-   --  Set the read/write cursor of This to point to its byte at the absolute
+   --  Set the read/write cursor of This to point to its UInt8 at the absolute
    --  Offset.
    --
    --  ??? What should happen if this offset is beyond the end of the file?

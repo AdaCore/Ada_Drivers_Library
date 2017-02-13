@@ -41,7 +41,7 @@ package HAL.UART is
      (Data_Size_8b,
       Data_Size_9b);
 
-   type UART_Data_8b is array (Natural range <>) of Byte;
+   type UART_Data_8b is array (Natural range <>) of UInt8;
 
    type UART_Data_9b is array (Natural range <>) of UInt9;
 

@@ -1,20 +1,20 @@
 --    Copyright (c) 2013, Nordic Semiconductor ASA
 --    All rights reserved.
---
+--  
 --    Redistribution and use in source and binary forms, with or without
 --    modification, are permitted provided that the following conditions are met:
---
+--  
 --    * Redistributions of source code must retain the above copyright notice, this
 --      list of conditions and the following disclaimer.
---
+--  
 --    * Redistributions in binary form must reproduce the above copyright notice,
 --      this list of conditions and the following disclaimer in the documentation
 --      and/or other materials provided with the distribution.
---
+--  
 --    * Neither the name of Nordic Semiconductor ASA nor the names of its
 --      contributors may be used to endorse or promote products derived from
 --      this software without specific prior written permission.
---
+--  
 --    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 --    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 --    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -25,12 +25,13 @@
 --    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 --    OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 --    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
---
+--  
 
 --  This spec has been automatically generated from nrf51.svd
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -161,7 +162,7 @@ package NRF51_SVD.RADIO is
       ADDRESS_BCSTART   : SHORTS_ADDRESS_BCSTART_Field :=
                            NRF51_SVD.RADIO.Disabled;
       --  unspecified
-      Reserved_7_7      : HAL.Bit := 16#0#;
+      Reserved_7_7      : HAL.UInt1 := 16#0#;
       --  Shortcut between DISABLED event and RSSISTOP task.
       DISABLED_RSSISTOP : SHORTS_DISABLED_RSSISTOP_Field :=
                            NRF51_SVD.RADIO.Disabled;
@@ -765,7 +766,7 @@ package NRF51_SVD.RADIO is
       --  Read-only. CRC field of previously received packet.
       RXCRC          : RXCRC_RXCRC_Field;
       --  unspecified
-      Reserved_24_31 : HAL.Byte;
+      Reserved_24_31 : HAL.UInt8;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -922,8 +923,8 @@ package NRF51_SVD.RADIO is
       Reserved_20_31 at 0 range 20 .. 31;
    end record;
 
-   subtype PCNF1_MAXLEN_Field is HAL.Byte;
-   subtype PCNF1_STATLEN_Field is HAL.Byte;
+   subtype PCNF1_MAXLEN_Field is HAL.UInt8;
+   subtype PCNF1_STATLEN_Field is HAL.UInt8;
    subtype PCNF1_BALEN_Field is HAL.UInt3;
 
    --  On air endianness of packet length field. Decision point: START task.
@@ -981,7 +982,7 @@ package NRF51_SVD.RADIO is
    end record;
 
    --  PREFIX0_AP array element
-   subtype PREFIX0_AP_Element is HAL.Byte;
+   subtype PREFIX0_AP_Element is HAL.UInt8;
 
    --  PREFIX0_AP array
    type PREFIX0_AP_Field_Array is array (0 .. 3) of PREFIX0_AP_Element
@@ -1009,7 +1010,7 @@ package NRF51_SVD.RADIO is
    end record;
 
    --  PREFIX1_AP array element
-   subtype PREFIX1_AP_Element is HAL.Byte;
+   subtype PREFIX1_AP_Element is HAL.UInt8;
 
    --  PREFIX1_AP array
    type PREFIX1_AP_Field_Array is array (4 .. 7) of PREFIX1_AP_Element
@@ -1078,7 +1079,7 @@ package NRF51_SVD.RADIO is
       case As_Array is
          when False =>
             --  ADDR as a value
-            Val : HAL.Byte;
+            Val : HAL.UInt8;
          when True =>
             --  ADDR as an array
             Arr : RXADDRESSES_ADDR_Field_Array;
@@ -1168,7 +1169,7 @@ package NRF51_SVD.RADIO is
       --  CRC polynomial. Decision point: START task.
       CRCPOLY        : CRCPOLY_CRCPOLY_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1185,7 +1186,7 @@ package NRF51_SVD.RADIO is
       --  Initial value for CRC calculation. Decision point: START task.
       CRCINIT        : CRCINIT_CRCINIT_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1237,7 +1238,7 @@ package NRF51_SVD.RADIO is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   subtype TIFS_TIFS_Field is HAL.Byte;
+   subtype TIFS_TIFS_Field is HAL.UInt8;
 
    --  Inter Frame Spacing in microseconds.
    type TIFS_Register is record
@@ -1386,7 +1387,7 @@ package NRF51_SVD.RADIO is
       case As_Array is
          when False =>
             --  ENA as a value
-            Val : HAL.Byte;
+            Val : HAL.UInt8;
          when True =>
             --  ENA as an array
             Arr : DACNF_ENA_Field_Array;
@@ -1410,7 +1411,7 @@ package NRF51_SVD.RADIO is
       case As_Array is
          when False =>
             --  TXADD as a value
-            Val : HAL.Byte;
+            Val : HAL.UInt8;
          when True =>
             --  TXADD as an array
             Arr : DACNF_TXADD_Field_Array;
@@ -1680,6 +1681,6 @@ package NRF51_SVD.RADIO is
 
    --  The radio.
    RADIO_Periph : aliased RADIO_Peripheral
-     with Import, Address => RADIO_Base;
+     with Import, Address => System'To_Address (16#40001000#);
 
 end NRF51_SVD.RADIO;

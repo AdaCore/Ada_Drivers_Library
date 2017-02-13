@@ -75,7 +75,7 @@ package OV2640 is
    procedure Set_Frame_Rate (This : OV2640_Camera;
                              FR   : Frame_Rate);
 
-   function Get_PID (This : OV2640_Camera) return Byte;
+   function Get_PID (This : OV2640_Camera) return UInt8;
 
    procedure Enable_Auto_Gain_Control (This   : OV2640_Camera;
                                        Enable : Boolean := True);

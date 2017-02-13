@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -61,7 +62,7 @@ package Cortex_M_SVD.FPU is
       --  Access privileges for coprocessor 10.
       CP             : CPACR_CP_Field := (As_Array => False, Val => 16#0#);
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -80,7 +81,7 @@ package Cortex_M_SVD.FPU is
       --  stack frame was allocated.
       USER          : Boolean := False;
       --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
+      Reserved_2_2  : HAL.UInt1 := 16#0#;
       --  Read-only. If set, the mode was Thread Mode when the floating-point
       --  stack frame was allocated.
       THREAD        : Boolean := False;
@@ -97,7 +98,7 @@ package Cortex_M_SVD.FPU is
       --  stack frame was allocated.
       BFRDY         : Boolean := False;
       --  unspecified
-      Reserved_7_7  : HAL.Bit := 16#0#;
+      Reserved_7_7  : HAL.UInt1 := 16#0#;
       --  Read-only. If set, DebugMonitor is enabled and priority permitted
       --  setting the DebugMonitor handler to the pending state when the
       --  floating-point stack frame was allocated.

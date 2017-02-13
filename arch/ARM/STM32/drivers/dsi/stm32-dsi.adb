@@ -68,8 +68,8 @@ package body STM32.DSI is
      (This       : in out DSI_Host;
       Channel_ID : DSI_Virtual_Channel_ID;
       Data_Type  : DSI_Pkt_Data_Type;
-      Data0      : Byte;
-      Data1      : Byte);
+      Data0      : UInt8;
+      Data1      : UInt8);
 
    ------------------------------
    -- DSI_Config_Packet_Header --
@@ -79,8 +79,8 @@ package body STM32.DSI is
      (This       : in out DSI_Host;
       Channel_ID : DSI_Virtual_Channel_ID;
       Data_Type  : DSI_Pkt_Data_Type;
-      Data0      : Byte;
-      Data1      : Byte)
+      Data0      : UInt8;
+      Data1      : UInt8)
    is
    begin
       This.Periph.DSI_GHCR :=
@@ -101,7 +101,7 @@ package body STM32.DSI is
       PLL_IN_Div               : DSI_PLL_IDF;
       PLL_OUT_Div              : DSI_PLL_ODF;
       Auto_Clock_Lane_Control  : Boolean;
-      TX_Escape_Clock_Division : Byte;
+      TX_Escape_Clock_Division : UInt8;
       --  The TX_ESC clock division. 0 or 1 stops the clock.
       Number_Of_Lanes          : DSI_Number_Of_Lanes)
    is
@@ -237,8 +237,8 @@ package body STM32.DSI is
       Vertical_FrontPorch         : UInt10;
       Vertical_Active             : UInt14;
       LP_Command_Enabled          : Boolean;
-      LP_Largest_Packet_Size      : Byte;
-      LP_VACT_Largest_Packet_Size : Byte;
+      LP_Largest_Packet_Size      : UInt8;
+      LP_VACT_Largest_Packet_Size : UInt8;
       LP_H_Front_Porch_Enable     : Boolean;
       LP_H_Back_Porch_Enable      : Boolean;
       LP_V_Active_Enable          : Boolean;
@@ -284,7 +284,7 @@ package body STM32.DSI is
          This.Periph.DSI_LCOLCR.LPE := Loosely_Packed;
       end if;
 
-      --  Set the Horizontal Synchronization Active (HSA) in lane byte clock
+      --  Set the Horizontal Synchronization Active (HSA) in lane UInt8 clock
       --  cycles
       This.Periph.DSI_VHSACR.HSA := HSync_Active_Duration;
       --  Set the Horizontal Back Porch
@@ -500,8 +500,8 @@ package body STM32.DSI is
      (This       : in out DSI_Host;
       Channel_ID : DSI_Virtual_Channel_ID;
       Mode       : DSI_Short_Write_Packet_Data_Type;
-      Param1     : Byte;
-      Param2     : Byte)
+      Param1     : UInt8;
+      Param2     : UInt8)
    is
       Start : Time;
    begin
@@ -528,7 +528,7 @@ package body STM32.DSI is
      (This       : in out DSI_Host;
       Channel_Id : DSI_Virtual_Channel_ID;
       Mode       : DSI_Long_Write_Packet_Data_Type;
-      Param1     : Byte;
+      Param1     : UInt8;
       Parameters : DSI_Data)
    is
       Start : Time;
@@ -567,7 +567,7 @@ package body STM32.DSI is
       Val1 := UInt32 (Parameters'Length + 1) and 16#FF#;
       Val2 := Shift_Right (UInt32 (Parameters'Length + 1) and 16#FF00#, 8);
       This.DSI_Config_Packet_Header
-        (Channel_Id, Mode, Byte (Val1), Byte (Val2));
+        (Channel_Id, Mode, UInt8 (Val1), UInt8 (Val2));
    end DSI_Long_Write;
 
 end STM32.DSI;

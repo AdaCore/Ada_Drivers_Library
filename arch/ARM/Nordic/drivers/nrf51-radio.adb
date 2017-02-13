@@ -31,7 +31,6 @@
 
 with NRF51_SVD.RADIO; use NRF51_SVD.RADIO;
 with System.Storage_Elements; use System.Storage_Elements;
-with Interfaces; use Interfaces;
 
 package body nRF51.Radio is
 
@@ -299,7 +298,7 @@ package body nRF51.Radio is
    ----------------------
 
    procedure Configure_Packet
-     (S0_Field_Size_In_Byte        : Bit;
+     (S0_Field_Size_In_Byte        : UInt1;
       S1_Field_Size_In_Bit         : UInt4;
       Length_Field_Size_In_Bit     : UInt4;
       Max_Packet_Length_In_Byte    : Packet_Len;

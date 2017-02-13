@@ -78,7 +78,7 @@ package HAL.Framebuffer is
    --  hardware orientation change.
 
    procedure Set_Background
-     (This : Frame_Buffer_Display; R, G, B : Byte) is abstract;
+     (This : Frame_Buffer_Display; R, G, B : UInt8) is abstract;
 
    procedure Initialize_Layer
      (This   : in out Frame_Buffer_Display;

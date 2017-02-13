@@ -38,13 +38,13 @@ package body OTM8009A is
    -----------
 
    procedure Write (This    : in out OTM8009A_Device;
-                    Address : Unsigned_16;
+                    Address : UInt16;
                     Data    : DSI_Data)
    is
-      MSB, LSB : Byte;
+      MSB, LSB : UInt8;
    begin
-      MSB := Byte (Shift_Right (Address and 16#FF00#, 8));
-      LSB := Byte (Address and 16#FF#);
+      MSB := UInt8 (Shift_Right (Address and 16#FF00#, 8));
+      LSB := UInt8 (Address and 16#FF#);
       if LSB /= This.Current_Shift then
          This.DSI_IO_WriteCmd ((ADDR_SHIFT_CMD, LSB));
          This.Current_Shift := LSB;
@@ -57,7 +57,7 @@ package body OTM8009A is
    -----------
 
    procedure Write (This   : in out OTM8009A_Device;
-                    S_Addr : Byte;
+                    S_Addr : UInt8;
                     Data   : DSI_Data)
    is
    begin

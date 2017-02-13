@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -76,7 +77,7 @@ package STM32_SVD.CEC is
       LSTN          at 0 range 31 .. 31;
    end record;
 
-   subtype TXDR_TXD_Field is HAL.Byte;
+   subtype TXDR_TXD_Field is HAL.UInt8;
 
    --  Tx data register
    type TXDR_Register is record
@@ -93,7 +94,7 @@ package STM32_SVD.CEC is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype RXDR_RXDR_Field is HAL.Byte;
+   subtype RXDR_RXDR_Field is HAL.UInt8;
 
    --  Rx Data Register
    type RXDR_Register is record
@@ -244,6 +245,6 @@ package STM32_SVD.CEC is
 
    --  HDMI-CEC controller
    CEC_Periph : aliased CEC_Peripheral
-     with Import, Address => CEC_Base;
+     with Import, Address => System'To_Address (16#40006C00#);
 
 end STM32_SVD.CEC;

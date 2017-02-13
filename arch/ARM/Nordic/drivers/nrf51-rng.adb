@@ -56,7 +56,7 @@ package body nRF51.RNG is
    -- Read --
    ----------
 
-   function Read return Byte is
+   function Read return UInt8 is
    begin
       --  Clear event
       RNG_Periph.EVENTS_VALRDY := 0;

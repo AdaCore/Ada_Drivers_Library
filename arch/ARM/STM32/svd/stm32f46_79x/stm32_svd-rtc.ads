@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -27,13 +28,13 @@ package STM32_SVD.RTC is
       --  Second tens in BCD format
       ST             : TR_ST_Field := 16#0#;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  Minute units in BCD format
       MNU            : TR_MNU_Field := 16#0#;
       --  Minute tens in BCD format
       MNT            : TR_MNT_Field := 16#0#;
       --  unspecified
-      Reserved_15_15 : HAL.Bit := 16#0#;
+      Reserved_15_15 : HAL.UInt1 := 16#0#;
       --  Hour units in BCD format
       HU             : TR_HU_Field := 16#0#;
       --  Hour tens in BCD format
@@ -85,7 +86,7 @@ package STM32_SVD.RTC is
       --  Year tens in BCD format
       YT             : DR_YT_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -114,7 +115,7 @@ package STM32_SVD.RTC is
       --  Reference clock detection enable (50 or 60 Hz)
       REFCKON        : Boolean := False;
       --  unspecified
-      Reserved_5_5   : HAL.Bit := 16#0#;
+      Reserved_5_5   : HAL.UInt1 := 16#0#;
       --  Hour format
       FMT            : Boolean := False;
       --  Coarse digital calibration enable
@@ -142,7 +143,7 @@ package STM32_SVD.RTC is
       --  Backup
       BKP            : Boolean := False;
       --  unspecified
-      Reserved_19_19 : HAL.Bit := 16#0#;
+      Reserved_19_19 : HAL.UInt1 := 16#0#;
       --  Output polarity
       POL            : Boolean := False;
       --  Output selection
@@ -150,7 +151,7 @@ package STM32_SVD.RTC is
       --  Calibration output enable
       COE            : Boolean := False;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -213,7 +214,7 @@ package STM32_SVD.RTC is
       --  TAMPER2 detection flag
       TAMP2F         : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.Bit := 16#0#;
+      Reserved_15_15 : HAL.UInt1 := 16#0#;
       --  Read-only. Recalibration pending Flag
       RECALPF        : Boolean := False;
       --  unspecified
@@ -251,7 +252,7 @@ package STM32_SVD.RTC is
       --  Synchronous prescaler factor
       PREDIV_S       : PRER_PREDIV_S_Field := 16#FF#;
       --  unspecified
-      Reserved_15_15 : HAL.Bit := 16#0#;
+      Reserved_15_15 : HAL.UInt1 := 16#0#;
       --  Asynchronous prescaler factor
       PREDIV_A       : PRER_PREDIV_A_Field := 16#7F#;
       --  unspecified
@@ -427,7 +428,7 @@ package STM32_SVD.RTC is
       MSK4  at 0 range 31 .. 31;
    end record;
 
-   subtype WPR_KEY_Field is HAL.Byte;
+   subtype WPR_KEY_Field is HAL.UInt8;
 
    --  write protection register
    type WPR_Register is record
@@ -853,6 +854,6 @@ package STM32_SVD.RTC is
 
    --  Real-time clock
    RTC_Periph : aliased RTC_Peripheral
-     with Import, Address => RTC_Base;
+     with Import, Address => System'To_Address (16#40002800#);
 
 end STM32_SVD.RTC;

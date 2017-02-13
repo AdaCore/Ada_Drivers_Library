@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -59,7 +60,7 @@ package STM32_SVD.TIM is
       --  Capture/compare preloaded control
       CCPC           : Boolean := False;
       --  unspecified
-      Reserved_1_1   : HAL.Bit := 16#0#;
+      Reserved_1_1   : HAL.UInt1 := 16#0#;
       --  Capture/compare control update selection
       CCUS           : Boolean := False;
       --  Capture/compare DMA selection
@@ -115,7 +116,7 @@ package STM32_SVD.TIM is
       --  Slave mode selection - bit[2:0]
       SMS            : SMCR_SMS_Field := 16#0#;
       --  unspecified
-      Reserved_3_3   : HAL.Bit := 16#0#;
+      Reserved_3_3   : HAL.UInt1 := 16#0#;
       --  Trigger selection
       TS             : SMCR_TS_Field := 16#0#;
       --  Master/Slave mode
@@ -225,7 +226,7 @@ package STM32_SVD.TIM is
       --  Break interrupt flag
       BIF            : Boolean := False;
       --  unspecified
-      Reserved_8_8   : HAL.Bit := 16#0#;
+      Reserved_8_8   : HAL.UInt1 := 16#0#;
       --  Capture/Compare 1 overcapture flag
       CC1OF          : Boolean := False;
       --  Capture/compare 2 overcapture flag
@@ -566,7 +567,7 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype RCR_REP_Field is HAL.Byte;
+   subtype RCR_REP_Field is HAL.UInt8;
 
    --  repetition counter register
    type RCR_Register is record
@@ -651,7 +652,7 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype BDTR_DTG_Field is HAL.Byte;
+   subtype BDTR_DTG_Field is HAL.UInt8;
    subtype BDTR_LOCK_Field is HAL.UInt2;
 
    --  break and dead-time register
@@ -883,11 +884,11 @@ package STM32_SVD.TIM is
       --  Capture/Compare 4 interrupt enable
       CC4IE          : Boolean := False;
       --  unspecified
-      Reserved_5_5   : HAL.Bit := 16#0#;
+      Reserved_5_5   : HAL.UInt1 := 16#0#;
       --  Trigger interrupt enable
       TIE            : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  Update DMA request enable
       UDE            : Boolean := False;
       --  Capture/Compare 1 DMA request enable
@@ -899,7 +900,7 @@ package STM32_SVD.TIM is
       --  Capture/Compare 4 DMA request enable
       CC4DE          : Boolean := False;
       --  unspecified
-      Reserved_13_13 : HAL.Bit := 16#0#;
+      Reserved_13_13 : HAL.UInt1 := 16#0#;
       --  Trigger DMA request enable
       TDE            : Boolean := False;
       --  unspecified
@@ -940,7 +941,7 @@ package STM32_SVD.TIM is
       --  Capture/Compare 4 interrupt flag
       CC4IF          : Boolean := False;
       --  unspecified
-      Reserved_5_5   : HAL.Bit := 16#0#;
+      Reserved_5_5   : HAL.UInt1 := 16#0#;
       --  Trigger interrupt flag
       TIF            : Boolean := False;
       --  unspecified
@@ -988,7 +989,7 @@ package STM32_SVD.TIM is
       --  Write-only. Capture/compare 4 generation
       CC4G          : Boolean := False;
       --  unspecified
-      Reserved_5_5  : HAL.Bit := 16#0#;
+      Reserved_5_5  : HAL.UInt1 := 16#0#;
       --  Write-only. Trigger generation
       TG            : Boolean := False;
       --  unspecified
@@ -1057,7 +1058,7 @@ package STM32_SVD.TIM is
       --  Capture/Compare 1 output Polarity
       CC1P           : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.Bit := 16#0#;
+      Reserved_2_2   : HAL.UInt1 := 16#0#;
       --  Capture/Compare 1 output Polarity
       CC1NP          : Boolean := False;
       --  Capture/Compare 2 output enable
@@ -1065,7 +1066,7 @@ package STM32_SVD.TIM is
       --  Capture/Compare 2 output Polarity
       CC2P           : Boolean := False;
       --  unspecified
-      Reserved_6_6   : HAL.Bit := 16#0#;
+      Reserved_6_6   : HAL.UInt1 := 16#0#;
       --  Capture/Compare 2 output Polarity
       CC2NP          : Boolean := False;
       --  Capture/Compare 3 output enable
@@ -1073,7 +1074,7 @@ package STM32_SVD.TIM is
       --  Capture/Compare 3 output Polarity
       CC3P           : Boolean := False;
       --  unspecified
-      Reserved_10_10 : HAL.Bit := 16#0#;
+      Reserved_10_10 : HAL.UInt1 := 16#0#;
       --  Capture/Compare 3 output Polarity
       CC3NP          : Boolean := False;
       --  Capture/Compare 4 output enable
@@ -1081,7 +1082,7 @@ package STM32_SVD.TIM is
       --  Capture/Compare 3 output Polarity
       CC4P           : Boolean := False;
       --  unspecified
-      Reserved_14_14 : HAL.Bit := 16#0#;
+      Reserved_14_14 : HAL.UInt1 := 16#0#;
       --  Capture/Compare 4 output Polarity
       CC4NP          : Boolean := False;
       --  unspecified
@@ -1415,13 +1416,13 @@ package STM32_SVD.TIM is
       --  Slave mode selection
       SMS            : SMCR_SMS_Field := 16#0#;
       --  unspecified
-      Reserved_3_3   : HAL.Bit := 16#0#;
+      Reserved_3_3   : HAL.UInt1 := 16#0#;
       --  Trigger selection
       TS             : SMCR_TS_Field := 16#0#;
       --  Master/Slave mode
       MSM            : Boolean := False;
       --  unspecified
-      Reserved_8_15  : HAL.Byte := 16#0#;
+      Reserved_8_15  : HAL.UInt8 := 16#0#;
       --  Slave mode selection
       SMS_3          : Boolean := False;
       --  unspecified
@@ -1541,7 +1542,7 @@ package STM32_SVD.TIM is
       --  Output Compare 1 mode
       OC1M           : CCMR1_Output_OC1M_Field := 16#0#;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  Capture/Compare 2 selection
       CC2S           : CCMR1_Output_CC2S_Field := 16#0#;
       --  Output Compare 2 fast enable
@@ -1581,7 +1582,7 @@ package STM32_SVD.TIM is
       --  Input capture 1 filter
       IC1F           : CCMR1_Input_IC1F_Field_1 := 16#0#;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  Capture/Compare 2 selection
       CC2S           : CCMR1_Input_CC2S_Field := 16#0#;
       --  Input capture 2 prescaler
@@ -1612,7 +1613,7 @@ package STM32_SVD.TIM is
       --  Capture/Compare 1 output Polarity
       CC1P          : Boolean := False;
       --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
+      Reserved_2_2  : HAL.UInt1 := 16#0#;
       --  Capture/Compare 1 output Polarity
       CC1NP         : Boolean := False;
       --  Capture/Compare 2 output enable
@@ -1620,7 +1621,7 @@ package STM32_SVD.TIM is
       --  Capture/Compare 2 output Polarity
       CC2P          : Boolean := False;
       --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
+      Reserved_6_6  : HAL.UInt1 := 16#0#;
       --  Capture/Compare 2 output Polarity
       CC2NP         : Boolean := False;
       --  unspecified
@@ -1783,7 +1784,7 @@ package STM32_SVD.TIM is
       --  Capture/Compare 1 output Polarity
       CC1P          : Boolean := False;
       --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
+      Reserved_2_2  : HAL.UInt1 := 16#0#;
       --  Capture/Compare 1 output Polarity
       CC1NP         : Boolean := False;
       --  unspecified
@@ -1900,11 +1901,11 @@ package STM32_SVD.TIM is
 
    --  Advanced-timers
    TIM1_Periph : aliased TIM1_Peripheral
-     with Import, Address => TIM1_Base;
+     with Import, Address => System'To_Address (16#40010000#);
 
    --  Advanced-timers
    TIM8_Periph : aliased TIM1_Peripheral
-     with Import, Address => TIM8_Base;
+     with Import, Address => System'To_Address (16#40010400#);
 
    type TIM2_Disc is
      (
@@ -1993,7 +1994,7 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM2_Periph : aliased TIM2_Peripheral
-     with Import, Address => TIM2_Base;
+     with Import, Address => System'To_Address (16#40000000#);
 
    type TIM3_Disc is
      (
@@ -2082,7 +2083,7 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM3_Periph : aliased TIM3_Peripheral
-     with Import, Address => TIM3_Base;
+     with Import, Address => System'To_Address (16#40000400#);
 
    type TIM4_Disc is
      (
@@ -2165,11 +2166,11 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM4_Periph : aliased TIM4_Peripheral
-     with Import, Address => TIM4_Base;
+     with Import, Address => System'To_Address (16#40000800#);
 
    --  General purpose timers
    TIM5_Periph : aliased TIM4_Peripheral
-     with Import, Address => TIM5_Base;
+     with Import, Address => System'To_Address (16#40000C00#);
 
    --  Basic timers
    type TIM6_Peripheral is record
@@ -2205,11 +2206,11 @@ package STM32_SVD.TIM is
 
    --  Basic timers
    TIM6_Periph : aliased TIM6_Peripheral
-     with Import, Address => TIM6_Base;
+     with Import, Address => System'To_Address (16#40001000#);
 
    --  Basic timers
    TIM7_Periph : aliased TIM6_Peripheral
-     with Import, Address => TIM7_Base;
+     with Import, Address => System'To_Address (16#40001400#);
 
    type TIM9_Disc is
      (
@@ -2271,11 +2272,11 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM9_Periph : aliased TIM9_Peripheral
-     with Import, Address => TIM9_Base;
+     with Import, Address => System'To_Address (16#40014000#);
 
    --  General purpose timers
    TIM12_Periph : aliased TIM9_Peripheral
-     with Import, Address => TIM12_Base;
+     with Import, Address => System'To_Address (16#40001800#);
 
    type TIM10_Disc is
      (
@@ -2337,18 +2338,18 @@ package STM32_SVD.TIM is
 
    --  General-purpose-timers
    TIM10_Periph : aliased TIM10_Peripheral
-     with Import, Address => TIM10_Base;
+     with Import, Address => System'To_Address (16#40014400#);
 
    --  General-purpose-timers
    TIM11_Periph : aliased TIM10_Peripheral
-     with Import, Address => TIM11_Base;
+     with Import, Address => System'To_Address (16#40014800#);
 
    --  General-purpose-timers
    TIM13_Periph : aliased TIM10_Peripheral
-     with Import, Address => TIM13_Base;
+     with Import, Address => System'To_Address (16#40001C00#);
 
    --  General-purpose-timers
    TIM14_Periph : aliased TIM10_Peripheral
-     with Import, Address => TIM14_Base;
+     with Import, Address => System'To_Address (16#40002000#);
 
 end STM32_SVD.TIM;

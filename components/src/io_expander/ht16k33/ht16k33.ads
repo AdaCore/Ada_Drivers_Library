@@ -64,7 +64,7 @@ package HT16K33 is
 
    procedure Set_Row (This : in out HT16K33_Device;
                       Addr : LED_Row_Addr;
-                      Row  : Byte);
+                      Row  : UInt8);
    --  This procedure only changes the internal buffer, use the Update_LEDs
    --  procedure to actually update the LEDs state on the device.
 

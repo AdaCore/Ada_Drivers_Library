@@ -37,6 +37,6 @@ package nRF51.RNG is
 
    procedure Disable_Digital_Error_Correction;
 
-   function Read return Byte;
+   function Read return UInt8;
 
 end nRF51.RNG;

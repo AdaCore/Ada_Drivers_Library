@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -176,7 +177,7 @@ package STM32_SVD.USART is
       --  LIN break detection interrupt enable
       LBDIE        : Boolean := False;
       --  unspecified
-      Reserved_7_7 : HAL.Bit := 16#0#;
+      Reserved_7_7 : HAL.UInt1 := 16#0#;
       --  Last bit clock pulse
       LBCL         : Boolean := False;
       --  Clock phase
@@ -275,7 +276,7 @@ package STM32_SVD.USART is
       --  Driver enable polarity selection
       DEP            : Boolean := False;
       --  unspecified
-      Reserved_16_16 : HAL.Bit := 16#0#;
+      Reserved_16_16 : HAL.UInt1 := 16#0#;
       --  Smartcard auto-retry count
       SCARCNT        : CR3_SCARCNT_Field := 16#0#;
       --  Wakeup from Stop mode interrupt flag selection
@@ -333,8 +334,8 @@ package STM32_SVD.USART is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype GTPR_PSC_Field is HAL.Byte;
-   subtype GTPR_GT_Field is HAL.Byte;
+   subtype GTPR_PSC_Field is HAL.UInt8;
+   subtype GTPR_GT_Field is HAL.UInt8;
 
    --  Guard time and prescaler register
    type GTPR_Register is record
@@ -355,7 +356,7 @@ package STM32_SVD.USART is
    end record;
 
    subtype RTOR_RTO_Field is HAL.UInt24;
-   subtype RTOR_BLEN_Field is HAL.Byte;
+   subtype RTOR_BLEN_Field is HAL.UInt8;
 
    --  Receiver timeout register
    type RTOR_Register is record
@@ -428,7 +429,7 @@ package STM32_SVD.USART is
       --  Read-only. EOBF
       EOBF           : Boolean;
       --  unspecified
-      Reserved_13_13 : HAL.Bit;
+      Reserved_13_13 : HAL.UInt1;
       --  Read-only. ABRE
       ABRE           : Boolean;
       --  Read-only. ABRF
@@ -493,17 +494,17 @@ package STM32_SVD.USART is
       --  Write-only. Idle line detected clear flag
       IDLECF         : Boolean := False;
       --  unspecified
-      Reserved_5_5   : HAL.Bit := 16#0#;
+      Reserved_5_5   : HAL.UInt1 := 16#0#;
       --  Write-only. Transmission complete clear flag
       TCCF           : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  Write-only. LIN break detection clear flag
       LBDCF          : Boolean := False;
       --  Write-only. CTS clear flag
       CTSCF          : Boolean := False;
       --  unspecified
-      Reserved_10_10 : HAL.Bit := 16#0#;
+      Reserved_10_10 : HAL.UInt1 := 16#0#;
       --  Write-only. Receiver timeout clear flag
       RTOCF          : Boolean := False;
       --  Write-only. End of block clear flag
@@ -624,34 +625,34 @@ package STM32_SVD.USART is
 
    --  Universal synchronous asynchronous receiver transmitter
    UART4_Periph : aliased USART_Peripheral
-     with Import, Address => UART4_Base;
+     with Import, Address => System'To_Address (16#40004C00#);
 
    --  Universal synchronous asynchronous receiver transmitter
    UART5_Periph : aliased USART_Peripheral
-     with Import, Address => UART5_Base;
+     with Import, Address => System'To_Address (16#40005000#);
 
    --  Universal synchronous asynchronous receiver transmitter
    UART7_Periph : aliased USART_Peripheral
-     with Import, Address => UART7_Base;
+     with Import, Address => System'To_Address (16#40007800#);
 
    --  Universal synchronous asynchronous receiver transmitter
    UART8_Periph : aliased USART_Peripheral
-     with Import, Address => UART8_Base;
+     with Import, Address => System'To_Address (16#40007C00#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART1_Periph : aliased USART_Peripheral
-     with Import, Address => USART1_Base;
+     with Import, Address => System'To_Address (16#40011000#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART2_Periph : aliased USART_Peripheral
-     with Import, Address => USART2_Base;
+     with Import, Address => System'To_Address (16#40004400#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART3_Periph : aliased USART_Peripheral
-     with Import, Address => USART3_Base;
+     with Import, Address => System'To_Address (16#40004800#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART6_Periph : aliased USART_Peripheral
-     with Import, Address => USART6_Base;
+     with Import, Address => System'To_Address (16#40011400#);
 
 end STM32_SVD.USART;

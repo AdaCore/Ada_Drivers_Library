@@ -40,7 +40,6 @@
 ------------------------------------------------------------------------------
 
 with Cortex_M_SVD.NVIC; use Cortex_M_SVD.NVIC;
-with Interfaces; use Interfaces;
 
 package body Cortex_M.NVIC is
 

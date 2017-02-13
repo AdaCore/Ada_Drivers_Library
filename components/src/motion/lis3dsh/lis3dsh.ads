@@ -77,7 +77,7 @@ package LIS3DSH is
    --  axis runs through the chip itself, orthogonal to the plane of the board,
    --  and will indicate 1G when the board is resting level.
 
-   function Device_Id (This : Three_Axis_Accelerometer) return Byte;
+   function Device_Id (This : Three_Axis_Accelerometer) return UInt8;
 
    I_Am_LIS3DSH : constant := 16#3F#;
 
@@ -95,7 +95,7 @@ package LIS3DSH is
       Fullscale_6g,   --  6 g
       Fullscale_8g,   --  8 g
       Fullscale_16g)  --  16 g
-   with Size => Byte'Size;
+   with Size => UInt8'Size;
 
    for Full_Scale_Selection use -- bits 3..5 of CTRL5
      (Fullscale_2g  => 16#00#,
@@ -261,12 +261,12 @@ package LIS3DSH is
    procedure Configure_Click_Interrupt (This : in out Three_Axis_Accelerometer)
      with Pre => Configured (This);
 
-   function Temperature (This : Three_Axis_Accelerometer) return Byte;
+   function Temperature (This : Three_Axis_Accelerometer) return UInt8;
    --   Zero corresponds to approx. 25 degrees Celsius
 
    function Configured (This : Three_Axis_Accelerometer) return Boolean;
 
-   type Register_Address is new Byte;
+   type Register_Address is new UInt8;
    --  Prevent accidentally mixing addresses and data in I/O calls
 
    -----------------------------
@@ -275,12 +275,12 @@ package LIS3DSH is
 
    procedure IO_Write
      (This      : in out Three_Axis_Accelerometer;
-      Value     : Byte;
+      Value     : UInt8;
       WriteAddr : Register_Address) is abstract;
 
    procedure IO_Read
      (This     : Three_Axis_Accelerometer;
-      Value    : out Byte;
+      Value    : out UInt8;
       ReadAddr : Register_Address) is abstract;
 
 private
@@ -632,7 +632,7 @@ private
    --             0: disable (Default)
    --             1: enable
    --  4 IF_ADD_INC: Register address automatically increased during a
-   --                multiple byte access with a serial interface (I2C or SPI)
+   --                multiple UInt8 access with a serial interface (I2C or SPI)
    --                0: disable (Default)
    --                1: enable
    --  3 I1_EMPTY: Enable FIFO Empty indication on INT1 pin.

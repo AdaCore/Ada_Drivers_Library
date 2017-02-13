@@ -79,7 +79,7 @@ package Cortex_M.FPU is
       --  rounding mode
       RM        : Rounding_Mode;
       Reserved2 : Bits_6;
-      Reserved3 : Byte;
+      Reserved3 : UInt8;
       --  flush to zero
       IDC       : Boolean;
       Reserved4 : Bits_2;

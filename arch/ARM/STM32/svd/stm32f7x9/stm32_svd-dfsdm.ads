@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -17,7 +18,7 @@ package STM32_SVD.DFSDM is
    subtype DFSDM_CHCFG0R1_SPICKSEL_Field is HAL.UInt2;
    subtype DFSDM_CHCFG0R1_DATMPX_Field is HAL.UInt2;
    subtype DFSDM_CHCFG0R1_DATPACK_Field is HAL.UInt2;
-   subtype DFSDM_CHCFG0R1_CKOUTDIV_Field is HAL.Byte;
+   subtype DFSDM_CHCFG0R1_CKOUTDIV_Field is HAL.UInt8;
 
    --  DFSDM channel configuration 0 register 1
    type DFSDM_CHCFG0R1_Register is record
@@ -26,7 +27,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 0
       SPICKSEL       : DFSDM_CHCFG0R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.Bit := 16#0#;
+      Reserved_4_4   : HAL.UInt1 := 16#0#;
       --  Short-circuit detector enable on channel 0
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 0
@@ -74,7 +75,7 @@ package STM32_SVD.DFSDM is
    subtype DFSDM_CHCFG1R1_SPICKSEL_Field is HAL.UInt2;
    subtype DFSDM_CHCFG1R1_DATMPX_Field is HAL.UInt2;
    subtype DFSDM_CHCFG1R1_DATPACK_Field is HAL.UInt2;
-   subtype DFSDM_CHCFG1R1_CKOUTDIV_Field is HAL.Byte;
+   subtype DFSDM_CHCFG1R1_CKOUTDIV_Field is HAL.UInt8;
 
    --  DFSDM channel configuration 1 register 1
    type DFSDM_CHCFG1R1_Register is record
@@ -83,7 +84,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 1
       SPICKSEL       : DFSDM_CHCFG1R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.Bit := 16#0#;
+      Reserved_4_4   : HAL.UInt1 := 16#0#;
       --  Short-circuit detector enable on channel 1
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 1
@@ -131,7 +132,7 @@ package STM32_SVD.DFSDM is
    subtype DFSDM_CHCFG2R1_SPICKSEL_Field is HAL.UInt2;
    subtype DFSDM_CHCFG2R1_DATMPX_Field is HAL.UInt2;
    subtype DFSDM_CHCFG2R1_DATPACK_Field is HAL.UInt2;
-   subtype DFSDM_CHCFG2R1_CKOUTDIV_Field is HAL.Byte;
+   subtype DFSDM_CHCFG2R1_CKOUTDIV_Field is HAL.UInt8;
 
    --  DFSDM channel configuration 2 register 1
    type DFSDM_CHCFG2R1_Register is record
@@ -140,7 +141,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 2
       SPICKSEL       : DFSDM_CHCFG2R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.Bit := 16#0#;
+      Reserved_4_4   : HAL.UInt1 := 16#0#;
       --  Short-circuit detector enable on channel 2
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 2
@@ -188,7 +189,7 @@ package STM32_SVD.DFSDM is
    subtype DFSDM_CHCFG3R1_SPICKSEL_Field is HAL.UInt2;
    subtype DFSDM_CHCFG3R1_DATMPX_Field is HAL.UInt2;
    subtype DFSDM_CHCFG3R1_DATPACK_Field is HAL.UInt2;
-   subtype DFSDM_CHCFG3R1_CKOUTDIV_Field is HAL.Byte;
+   subtype DFSDM_CHCFG3R1_CKOUTDIV_Field is HAL.UInt8;
 
    --  DFSDM channel configuration 3 register 1
    type DFSDM_CHCFG3R1_Register is record
@@ -197,7 +198,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 3
       SPICKSEL       : DFSDM_CHCFG3R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.Bit := 16#0#;
+      Reserved_4_4   : HAL.UInt1 := 16#0#;
       --  Short-circuit detector enable on channel 3
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 3
@@ -245,7 +246,7 @@ package STM32_SVD.DFSDM is
    subtype DFSDM_CHCFG4R1_SPICKSEL_Field is HAL.UInt2;
    subtype DFSDM_CHCFG4R1_DATMPX_Field is HAL.UInt2;
    subtype DFSDM_CHCFG4R1_DATPACK_Field is HAL.UInt2;
-   subtype DFSDM_CHCFG4R1_CKOUTDIV_Field is HAL.Byte;
+   subtype DFSDM_CHCFG4R1_CKOUTDIV_Field is HAL.UInt8;
 
    --  DFSDM channel configuration 4 register 1
    type DFSDM_CHCFG4R1_Register is record
@@ -254,7 +255,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 4
       SPICKSEL       : DFSDM_CHCFG4R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.Bit := 16#0#;
+      Reserved_4_4   : HAL.UInt1 := 16#0#;
       --  Short-circuit detector enable on channel 4
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 4
@@ -302,7 +303,7 @@ package STM32_SVD.DFSDM is
    subtype DFSDM_CHCFG5R1_SPICKSEL_Field is HAL.UInt2;
    subtype DFSDM_CHCFG5R1_DATMPX_Field is HAL.UInt2;
    subtype DFSDM_CHCFG5R1_DATPACK_Field is HAL.UInt2;
-   subtype DFSDM_CHCFG5R1_CKOUTDIV_Field is HAL.Byte;
+   subtype DFSDM_CHCFG5R1_CKOUTDIV_Field is HAL.UInt8;
 
    --  DFSDM channel configuration 5 register 1
    type DFSDM_CHCFG5R1_Register is record
@@ -311,7 +312,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 5
       SPICKSEL       : DFSDM_CHCFG5R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.Bit := 16#0#;
+      Reserved_4_4   : HAL.UInt1 := 16#0#;
       --  Short-circuit detector enable on channel 5
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 5
@@ -359,7 +360,7 @@ package STM32_SVD.DFSDM is
    subtype DFSDM_CHCFG6R1_SPICKSEL_Field is HAL.UInt2;
    subtype DFSDM_CHCFG6R1_DATMPX_Field is HAL.UInt2;
    subtype DFSDM_CHCFG6R1_DATPACK_Field is HAL.UInt2;
-   subtype DFSDM_CHCFG6R1_CKOUTDIV_Field is HAL.Byte;
+   subtype DFSDM_CHCFG6R1_CKOUTDIV_Field is HAL.UInt8;
 
    --  DFSDM channel configuration 6 register 1
    type DFSDM_CHCFG6R1_Register is record
@@ -368,7 +369,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 6
       SPICKSEL       : DFSDM_CHCFG6R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.Bit := 16#0#;
+      Reserved_4_4   : HAL.UInt1 := 16#0#;
       --  Short-circuit detector enable on channel 6
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 6
@@ -416,7 +417,7 @@ package STM32_SVD.DFSDM is
    subtype DFSDM_CHCFG7R1_SPICKSEL_Field is HAL.UInt2;
    subtype DFSDM_CHCFG7R1_DATMPX_Field is HAL.UInt2;
    subtype DFSDM_CHCFG7R1_DATPACK_Field is HAL.UInt2;
-   subtype DFSDM_CHCFG7R1_CKOUTDIV_Field is HAL.Byte;
+   subtype DFSDM_CHCFG7R1_CKOUTDIV_Field is HAL.UInt8;
 
    --  DFSDM channel configuration 7 register 1
    type DFSDM_CHCFG7R1_Register is record
@@ -425,7 +426,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 7
       SPICKSEL       : DFSDM_CHCFG7R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.Bit := 16#0#;
+      Reserved_4_4   : HAL.UInt1 := 16#0#;
       --  Short-circuit detector enable on channel 7
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 7
@@ -637,7 +638,7 @@ package STM32_SVD.DFSDM is
       OFFSET       at 0 range 8 .. 31;
    end record;
 
-   subtype DFSDM_AWSCD0R_SCDT_Field is HAL.Byte;
+   subtype DFSDM_AWSCD0R_SCDT_Field is HAL.UInt8;
    subtype DFSDM_AWSCD0R_BKSCD_Field is HAL.UInt4;
    subtype DFSDM_AWSCD0R_AWFOSR_Field is HAL.UInt5;
    subtype DFSDM_AWSCD0R_AWFORD_Field is HAL.UInt2;
@@ -654,11 +655,11 @@ package STM32_SVD.DFSDM is
       --  channel 0
       AWFOSR         : DFSDM_AWSCD0R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.Bit := 16#0#;
+      Reserved_21_21 : HAL.UInt1 := 16#0#;
       --  Analog watchdog Sinc filter order on channel 0
       AWFORD         : DFSDM_AWSCD0R_AWFORD_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -673,7 +674,7 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM_AWSCD1R_SCDT_Field is HAL.Byte;
+   subtype DFSDM_AWSCD1R_SCDT_Field is HAL.UInt8;
    subtype DFSDM_AWSCD1R_BKSCD_Field is HAL.UInt4;
    subtype DFSDM_AWSCD1R_AWFOSR_Field is HAL.UInt5;
    subtype DFSDM_AWSCD1R_AWFORD_Field is HAL.UInt2;
@@ -690,11 +691,11 @@ package STM32_SVD.DFSDM is
       --  channel 1
       AWFOSR         : DFSDM_AWSCD1R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.Bit := 16#0#;
+      Reserved_21_21 : HAL.UInt1 := 16#0#;
       --  Analog watchdog Sinc filter order on channel 1
       AWFORD         : DFSDM_AWSCD1R_AWFORD_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -709,7 +710,7 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM_AWSCD2R_SCDT_Field is HAL.Byte;
+   subtype DFSDM_AWSCD2R_SCDT_Field is HAL.UInt8;
    subtype DFSDM_AWSCD2R_BKSCD_Field is HAL.UInt4;
    subtype DFSDM_AWSCD2R_AWFOSR_Field is HAL.UInt5;
    subtype DFSDM_AWSCD2R_AWFORD_Field is HAL.UInt2;
@@ -726,11 +727,11 @@ package STM32_SVD.DFSDM is
       --  channel 2
       AWFOSR         : DFSDM_AWSCD2R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.Bit := 16#0#;
+      Reserved_21_21 : HAL.UInt1 := 16#0#;
       --  Analog watchdog Sinc filter order on channel 2
       AWFORD         : DFSDM_AWSCD2R_AWFORD_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -745,7 +746,7 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM_AWSCD3R_SCDT_Field is HAL.Byte;
+   subtype DFSDM_AWSCD3R_SCDT_Field is HAL.UInt8;
    subtype DFSDM_AWSCD3R_BKSCD_Field is HAL.UInt4;
    subtype DFSDM_AWSCD3R_AWFOSR_Field is HAL.UInt5;
    subtype DFSDM_AWSCD3R_AWFORD_Field is HAL.UInt2;
@@ -762,11 +763,11 @@ package STM32_SVD.DFSDM is
       --  channel 3
       AWFOSR         : DFSDM_AWSCD3R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.Bit := 16#0#;
+      Reserved_21_21 : HAL.UInt1 := 16#0#;
       --  Analog watchdog Sinc filter order on channel 3
       AWFORD         : DFSDM_AWSCD3R_AWFORD_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -781,7 +782,7 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM_AWSCD4R_SCDT_Field is HAL.Byte;
+   subtype DFSDM_AWSCD4R_SCDT_Field is HAL.UInt8;
    subtype DFSDM_AWSCD4R_BKSCD_Field is HAL.UInt4;
    subtype DFSDM_AWSCD4R_AWFOSR_Field is HAL.UInt5;
    subtype DFSDM_AWSCD4R_AWFORD_Field is HAL.UInt2;
@@ -798,11 +799,11 @@ package STM32_SVD.DFSDM is
       --  channel 4
       AWFOSR         : DFSDM_AWSCD4R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.Bit := 16#0#;
+      Reserved_21_21 : HAL.UInt1 := 16#0#;
       --  Analog watchdog Sinc filter order on channel 4
       AWFORD         : DFSDM_AWSCD4R_AWFORD_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -817,7 +818,7 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM_AWSCD5R_SCDT_Field is HAL.Byte;
+   subtype DFSDM_AWSCD5R_SCDT_Field is HAL.UInt8;
    subtype DFSDM_AWSCD5R_BKSCD_Field is HAL.UInt4;
    subtype DFSDM_AWSCD5R_AWFOSR_Field is HAL.UInt5;
    subtype DFSDM_AWSCD5R_AWFORD_Field is HAL.UInt2;
@@ -834,11 +835,11 @@ package STM32_SVD.DFSDM is
       --  channel 5
       AWFOSR         : DFSDM_AWSCD5R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.Bit := 16#0#;
+      Reserved_21_21 : HAL.UInt1 := 16#0#;
       --  Analog watchdog Sinc filter order on channel 5
       AWFORD         : DFSDM_AWSCD5R_AWFORD_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -853,7 +854,7 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM_AWSCD6R_SCDT_Field is HAL.Byte;
+   subtype DFSDM_AWSCD6R_SCDT_Field is HAL.UInt8;
    subtype DFSDM_AWSCD6R_BKSCD_Field is HAL.UInt4;
    subtype DFSDM_AWSCD6R_AWFOSR_Field is HAL.UInt5;
    subtype DFSDM_AWSCD6R_AWFORD_Field is HAL.UInt2;
@@ -870,11 +871,11 @@ package STM32_SVD.DFSDM is
       --  channel 6
       AWFOSR         : DFSDM_AWSCD6R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.Bit := 16#0#;
+      Reserved_21_21 : HAL.UInt1 := 16#0#;
       --  Analog watchdog Sinc filter order on channel 6
       AWFORD         : DFSDM_AWSCD6R_AWFORD_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -889,7 +890,7 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM_AWSCD7R_SCDT_Field is HAL.Byte;
+   subtype DFSDM_AWSCD7R_SCDT_Field is HAL.UInt8;
    subtype DFSDM_AWSCD7R_BKSCD_Field is HAL.UInt4;
    subtype DFSDM_AWSCD7R_AWFOSR_Field is HAL.UInt5;
    subtype DFSDM_AWSCD7R_AWFORD_Field is HAL.UInt2;
@@ -906,11 +907,11 @@ package STM32_SVD.DFSDM is
       --  channel 7
       AWFOSR         : DFSDM_AWSCD7R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.Bit := 16#0#;
+      Reserved_21_21 : HAL.UInt1 := 16#0#;
       --  Analog watchdog Sinc filter order on channel 7
       AWFORD         : DFSDM_AWSCD7R_AWFORD_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1304,7 +1305,7 @@ package STM32_SVD.DFSDM is
       --  Start a conversion of the injected group of channels
       JSWSTART       : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.Bit := 16#0#;
+      Reserved_2_2   : HAL.UInt1 := 16#0#;
       --  Launch an injected conversion synchronously with the DFSDM0 JSWSTART
       --  trigger
       JSYNC          : Boolean := False;
@@ -1327,7 +1328,7 @@ package STM32_SVD.DFSDM is
       --  Launch regular conversion synchronously with DFSDM0
       RSYNC          : Boolean := False;
       --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
+      Reserved_20_20 : HAL.UInt1 := 16#0#;
       --  DMA channel enabled to read data for the regular conversion
       RDMAEN         : Boolean := False;
       --  unspecified
@@ -1341,7 +1342,7 @@ package STM32_SVD.DFSDM is
       --  Analog watchdog fast mode select
       AWFSEL         : Boolean := False;
       --  unspecified
-      Reserved_31_31 : HAL.Bit := 16#0#;
+      Reserved_31_31 : HAL.UInt1 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1381,7 +1382,7 @@ package STM32_SVD.DFSDM is
       --  Start a conversion of the injected group of channels
       JSWSTART       : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.Bit := 16#0#;
+      Reserved_2_2   : HAL.UInt1 := 16#0#;
       --  Launch an injected conversion synchronously with the DFSDM0 JSWSTART
       --  trigger
       JSYNC          : Boolean := False;
@@ -1404,7 +1405,7 @@ package STM32_SVD.DFSDM is
       --  Launch regular conversion synchronously with DFSDM0
       RSYNC          : Boolean := False;
       --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
+      Reserved_20_20 : HAL.UInt1 := 16#0#;
       --  DMA channel enabled to read data for the regular conversion
       RDMAEN         : Boolean := False;
       --  unspecified
@@ -1418,7 +1419,7 @@ package STM32_SVD.DFSDM is
       --  Analog watchdog fast mode select
       AWFSEL         : Boolean := False;
       --  unspecified
-      Reserved_31_31 : HAL.Bit := 16#0#;
+      Reserved_31_31 : HAL.UInt1 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1458,7 +1459,7 @@ package STM32_SVD.DFSDM is
       --  Start a conversion of the injected group of channels
       JSWSTART       : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.Bit := 16#0#;
+      Reserved_2_2   : HAL.UInt1 := 16#0#;
       --  Launch an injected conversion synchronously with the DFSDM0 JSWSTART
       --  trigger
       JSYNC          : Boolean := False;
@@ -1481,7 +1482,7 @@ package STM32_SVD.DFSDM is
       --  Launch regular conversion synchronously with DFSDM0
       RSYNC          : Boolean := False;
       --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
+      Reserved_20_20 : HAL.UInt1 := 16#0#;
       --  DMA channel enabled to read data for the regular conversion
       RDMAEN         : Boolean := False;
       --  unspecified
@@ -1495,7 +1496,7 @@ package STM32_SVD.DFSDM is
       --  Analog watchdog fast mode select
       AWFSEL         : Boolean := False;
       --  unspecified
-      Reserved_31_31 : HAL.Bit := 16#0#;
+      Reserved_31_31 : HAL.UInt1 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1535,7 +1536,7 @@ package STM32_SVD.DFSDM is
       --  Start a conversion of the injected group of channels
       JSWSTART       : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.Bit := 16#0#;
+      Reserved_2_2   : HAL.UInt1 := 16#0#;
       --  Launch an injected conversion synchronously with the DFSDM0 JSWSTART
       --  trigger
       JSYNC          : Boolean := False;
@@ -1558,7 +1559,7 @@ package STM32_SVD.DFSDM is
       --  Launch regular conversion synchronously with DFSDM0
       RSYNC          : Boolean := False;
       --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
+      Reserved_20_20 : HAL.UInt1 := 16#0#;
       --  DMA channel enabled to read data for the regular conversion
       RDMAEN         : Boolean := False;
       --  unspecified
@@ -1572,7 +1573,7 @@ package STM32_SVD.DFSDM is
       --  Analog watchdog fast mode select
       AWFSEL         : Boolean := False;
       --  unspecified
-      Reserved_31_31 : HAL.Bit := 16#0#;
+      Reserved_31_31 : HAL.UInt1 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1601,8 +1602,8 @@ package STM32_SVD.DFSDM is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
-   subtype DFSDM0_CR2_EXCH_Field is HAL.Byte;
-   subtype DFSDM0_CR2_AWDCH_Field is HAL.Byte;
+   subtype DFSDM0_CR2_EXCH_Field is HAL.UInt8;
+   subtype DFSDM0_CR2_AWDCH_Field is HAL.UInt8;
 
    --  DFSDM control register 2
    type DFSDM0_CR2_Register is record
@@ -1621,13 +1622,13 @@ package STM32_SVD.DFSDM is
       --  Clock absence interrupt enable
       CKABIE         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  Extremes detector channel selection
       EXCH           : DFSDM0_CR2_EXCH_Field := 16#0#;
       --  Analog watchdog channel selection
       AWDCH          : DFSDM0_CR2_AWDCH_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1646,8 +1647,8 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM1_CR2_EXCH_Field is HAL.Byte;
-   subtype DFSDM1_CR2_AWDCH_Field is HAL.Byte;
+   subtype DFSDM1_CR2_EXCH_Field is HAL.UInt8;
+   subtype DFSDM1_CR2_AWDCH_Field is HAL.UInt8;
 
    --  DFSDM control register 2
    type DFSDM1_CR2_Register is record
@@ -1666,13 +1667,13 @@ package STM32_SVD.DFSDM is
       --  Clock absence interrupt enable
       CKABIE         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  Extremes detector channel selection
       EXCH           : DFSDM1_CR2_EXCH_Field := 16#0#;
       --  Analog watchdog channel selection
       AWDCH          : DFSDM1_CR2_AWDCH_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1691,8 +1692,8 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM2_CR2_EXCH_Field is HAL.Byte;
-   subtype DFSDM2_CR2_AWDCH_Field is HAL.Byte;
+   subtype DFSDM2_CR2_EXCH_Field is HAL.UInt8;
+   subtype DFSDM2_CR2_AWDCH_Field is HAL.UInt8;
 
    --  DFSDM control register 2
    type DFSDM2_CR2_Register is record
@@ -1711,13 +1712,13 @@ package STM32_SVD.DFSDM is
       --  Clock absence interrupt enable
       CKABIE         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  Extremes detector channel selection
       EXCH           : DFSDM2_CR2_EXCH_Field := 16#0#;
       --  Analog watchdog channel selection
       AWDCH          : DFSDM2_CR2_AWDCH_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1736,8 +1737,8 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM3_CR2_EXCH_Field is HAL.Byte;
-   subtype DFSDM3_CR2_AWDCH_Field is HAL.Byte;
+   subtype DFSDM3_CR2_EXCH_Field is HAL.UInt8;
+   subtype DFSDM3_CR2_AWDCH_Field is HAL.UInt8;
 
    --  DFSDM control register 2
    type DFSDM3_CR2_Register is record
@@ -1756,13 +1757,13 @@ package STM32_SVD.DFSDM is
       --  Clock absence interrupt enable
       CKABIE         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  Extremes detector channel selection
       EXCH           : DFSDM3_CR2_EXCH_Field := 16#0#;
       --  Analog watchdog channel selection
       AWDCH          : DFSDM3_CR2_AWDCH_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1781,8 +1782,8 @@ package STM32_SVD.DFSDM is
       Reserved_24_31 at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM0_ISR_CKABF_Field is HAL.Byte;
-   subtype DFSDM0_ISR_SCDF_Field is HAL.Byte;
+   subtype DFSDM0_ISR_CKABF_Field is HAL.UInt8;
+   subtype DFSDM0_ISR_SCDF_Field is HAL.UInt8;
 
    --  DFSDM interrupt and status register
    type DFSDM0_ISR_Register is record
@@ -1797,13 +1798,13 @@ package STM32_SVD.DFSDM is
       --  Read-only. Analog watchdog
       AWDF           : Boolean;
       --  unspecified
-      Reserved_5_12  : HAL.Byte;
+      Reserved_5_12  : HAL.UInt8;
       --  Read-only. Injected conversion in progress status
       JCIP           : Boolean;
       --  Read-only. Regular conversion in progress status
       RCIP           : Boolean;
       --  unspecified
-      Reserved_15_15 : HAL.Bit;
+      Reserved_15_15 : HAL.UInt1;
       --  Read-only. Clock absence flag
       CKABF          : DFSDM0_ISR_CKABF_Field;
       --  Read-only. short-circuit detector flag
@@ -1826,8 +1827,8 @@ package STM32_SVD.DFSDM is
       SCDF           at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM1_ISR_CKABF_Field is HAL.Byte;
-   subtype DFSDM1_ISR_SCDF_Field is HAL.Byte;
+   subtype DFSDM1_ISR_CKABF_Field is HAL.UInt8;
+   subtype DFSDM1_ISR_SCDF_Field is HAL.UInt8;
 
    --  DFSDM interrupt and status register
    type DFSDM1_ISR_Register is record
@@ -1842,13 +1843,13 @@ package STM32_SVD.DFSDM is
       --  Read-only. Analog watchdog
       AWDF           : Boolean;
       --  unspecified
-      Reserved_5_12  : HAL.Byte;
+      Reserved_5_12  : HAL.UInt8;
       --  Read-only. Injected conversion in progress status
       JCIP           : Boolean;
       --  Read-only. Regular conversion in progress status
       RCIP           : Boolean;
       --  unspecified
-      Reserved_15_15 : HAL.Bit;
+      Reserved_15_15 : HAL.UInt1;
       --  Read-only. Clock absence flag
       CKABF          : DFSDM1_ISR_CKABF_Field;
       --  Read-only. short-circuit detector flag
@@ -1871,8 +1872,8 @@ package STM32_SVD.DFSDM is
       SCDF           at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM2_ISR_CKABF_Field is HAL.Byte;
-   subtype DFSDM2_ISR_SCDF_Field is HAL.Byte;
+   subtype DFSDM2_ISR_CKABF_Field is HAL.UInt8;
+   subtype DFSDM2_ISR_SCDF_Field is HAL.UInt8;
 
    --  DFSDM interrupt and status register
    type DFSDM2_ISR_Register is record
@@ -1887,13 +1888,13 @@ package STM32_SVD.DFSDM is
       --  Read-only. Analog watchdog
       AWDF           : Boolean;
       --  unspecified
-      Reserved_5_12  : HAL.Byte;
+      Reserved_5_12  : HAL.UInt8;
       --  Read-only. Injected conversion in progress status
       JCIP           : Boolean;
       --  Read-only. Regular conversion in progress status
       RCIP           : Boolean;
       --  unspecified
-      Reserved_15_15 : HAL.Bit;
+      Reserved_15_15 : HAL.UInt1;
       --  Read-only. Clock absence flag
       CKABF          : DFSDM2_ISR_CKABF_Field;
       --  Read-only. short-circuit detector flag
@@ -1916,8 +1917,8 @@ package STM32_SVD.DFSDM is
       SCDF           at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM3_ISR_CKABF_Field is HAL.Byte;
-   subtype DFSDM3_ISR_SCDF_Field is HAL.Byte;
+   subtype DFSDM3_ISR_CKABF_Field is HAL.UInt8;
+   subtype DFSDM3_ISR_SCDF_Field is HAL.UInt8;
 
    --  DFSDM interrupt and status register
    type DFSDM3_ISR_Register is record
@@ -1932,13 +1933,13 @@ package STM32_SVD.DFSDM is
       --  Read-only. Analog watchdog
       AWDF           : Boolean;
       --  unspecified
-      Reserved_5_12  : HAL.Byte;
+      Reserved_5_12  : HAL.UInt8;
       --  Read-only. Injected conversion in progress status
       JCIP           : Boolean;
       --  Read-only. Regular conversion in progress status
       RCIP           : Boolean;
       --  unspecified
-      Reserved_15_15 : HAL.Bit;
+      Reserved_15_15 : HAL.UInt1;
       --  Read-only. Clock absence flag
       CKABF          : DFSDM3_ISR_CKABF_Field;
       --  Read-only. short-circuit detector flag
@@ -1961,8 +1962,8 @@ package STM32_SVD.DFSDM is
       SCDF           at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM0_ICR_CLRCKABF_Field is HAL.Byte;
-   subtype DFSDM0_ICR_CLRSCDF_Field is HAL.Byte;
+   subtype DFSDM0_ICR_CLRCKABF_Field is HAL.UInt8;
+   subtype DFSDM0_ICR_CLRSCDF_Field is HAL.UInt8;
 
    --  DFSDM interrupt flag clear register
    type DFSDM0_ICR_Register is record
@@ -1991,8 +1992,8 @@ package STM32_SVD.DFSDM is
       CLRSCDF       at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM1_ICR_CLRCKABF_Field is HAL.Byte;
-   subtype DFSDM1_ICR_CLRSCDF_Field is HAL.Byte;
+   subtype DFSDM1_ICR_CLRCKABF_Field is HAL.UInt8;
+   subtype DFSDM1_ICR_CLRSCDF_Field is HAL.UInt8;
 
    --  DFSDM interrupt flag clear register
    type DFSDM1_ICR_Register is record
@@ -2021,8 +2022,8 @@ package STM32_SVD.DFSDM is
       CLRSCDF       at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM2_ICR_CLRCKABF_Field is HAL.Byte;
-   subtype DFSDM2_ICR_CLRSCDF_Field is HAL.Byte;
+   subtype DFSDM2_ICR_CLRCKABF_Field is HAL.UInt8;
+   subtype DFSDM2_ICR_CLRSCDF_Field is HAL.UInt8;
 
    --  DFSDM interrupt flag clear register
    type DFSDM2_ICR_Register is record
@@ -2051,8 +2052,8 @@ package STM32_SVD.DFSDM is
       CLRSCDF       at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM3_ICR_CLRCKABF_Field is HAL.Byte;
-   subtype DFSDM3_ICR_CLRSCDF_Field is HAL.Byte;
+   subtype DFSDM3_ICR_CLRCKABF_Field is HAL.UInt8;
+   subtype DFSDM3_ICR_CLRSCDF_Field is HAL.UInt8;
 
    --  DFSDM interrupt flag clear register
    type DFSDM3_ICR_Register is record
@@ -2081,7 +2082,7 @@ package STM32_SVD.DFSDM is
       CLRSCDF       at 0 range 24 .. 31;
    end record;
 
-   subtype DFSDM0_JCHGR_JCHG_Field is HAL.Byte;
+   subtype DFSDM0_JCHGR_JCHG_Field is HAL.UInt8;
 
    --  DFSDM injected channel group selection register
    type DFSDM0_JCHGR_Register is record
@@ -2098,7 +2099,7 @@ package STM32_SVD.DFSDM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype DFSDM1_JCHGR_JCHG_Field is HAL.Byte;
+   subtype DFSDM1_JCHGR_JCHG_Field is HAL.UInt8;
 
    --  DFSDM injected channel group selection register
    type DFSDM1_JCHGR_Register is record
@@ -2115,7 +2116,7 @@ package STM32_SVD.DFSDM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype DFSDM2_JCHGR_JCHG_Field is HAL.Byte;
+   subtype DFSDM2_JCHGR_JCHG_Field is HAL.UInt8;
 
    --  DFSDM injected channel group selection register
    type DFSDM2_JCHGR_Register is record
@@ -2132,7 +2133,7 @@ package STM32_SVD.DFSDM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype DFSDM3_JCHGR_JCHG_Field is HAL.Byte;
+   subtype DFSDM3_JCHGR_JCHG_Field is HAL.UInt8;
 
    --  DFSDM injected channel group selection register
    type DFSDM3_JCHGR_Register is record
@@ -2149,7 +2150,7 @@ package STM32_SVD.DFSDM is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype DFSDM0_FCR_IOSR_Field is HAL.Byte;
+   subtype DFSDM0_FCR_IOSR_Field is HAL.UInt8;
    subtype DFSDM0_FCR_FOSR_Field is HAL.UInt10;
    subtype DFSDM0_FCR_FORD_Field is HAL.UInt3;
 
@@ -2158,7 +2159,7 @@ package STM32_SVD.DFSDM is
       --  Integrator oversampling ratio (averaging length)
       IOSR           : DFSDM0_FCR_IOSR_Field := 16#0#;
       --  unspecified
-      Reserved_8_15  : HAL.Byte := 16#0#;
+      Reserved_8_15  : HAL.UInt8 := 16#0#;
       --  Sinc filter oversampling ratio (decimation rate)
       FOSR           : DFSDM0_FCR_FOSR_Field := 16#0#;
       --  unspecified
@@ -2177,7 +2178,7 @@ package STM32_SVD.DFSDM is
       FORD           at 0 range 29 .. 31;
    end record;
 
-   subtype DFSDM1_FCR_IOSR_Field is HAL.Byte;
+   subtype DFSDM1_FCR_IOSR_Field is HAL.UInt8;
    subtype DFSDM1_FCR_FOSR_Field is HAL.UInt10;
    subtype DFSDM1_FCR_FORD_Field is HAL.UInt3;
 
@@ -2186,7 +2187,7 @@ package STM32_SVD.DFSDM is
       --  Integrator oversampling ratio (averaging length)
       IOSR           : DFSDM1_FCR_IOSR_Field := 16#0#;
       --  unspecified
-      Reserved_8_15  : HAL.Byte := 16#0#;
+      Reserved_8_15  : HAL.UInt8 := 16#0#;
       --  Sinc filter oversampling ratio (decimation rate)
       FOSR           : DFSDM1_FCR_FOSR_Field := 16#0#;
       --  unspecified
@@ -2205,7 +2206,7 @@ package STM32_SVD.DFSDM is
       FORD           at 0 range 29 .. 31;
    end record;
 
-   subtype DFSDM2_FCR_IOSR_Field is HAL.Byte;
+   subtype DFSDM2_FCR_IOSR_Field is HAL.UInt8;
    subtype DFSDM2_FCR_FOSR_Field is HAL.UInt10;
    subtype DFSDM2_FCR_FORD_Field is HAL.UInt3;
 
@@ -2214,7 +2215,7 @@ package STM32_SVD.DFSDM is
       --  Integrator oversampling ratio (averaging length)
       IOSR           : DFSDM2_FCR_IOSR_Field := 16#0#;
       --  unspecified
-      Reserved_8_15  : HAL.Byte := 16#0#;
+      Reserved_8_15  : HAL.UInt8 := 16#0#;
       --  Sinc filter oversampling ratio (decimation rate)
       FOSR           : DFSDM2_FCR_FOSR_Field := 16#0#;
       --  unspecified
@@ -2233,7 +2234,7 @@ package STM32_SVD.DFSDM is
       FORD           at 0 range 29 .. 31;
    end record;
 
-   subtype DFSDM3_FCR_IOSR_Field is HAL.Byte;
+   subtype DFSDM3_FCR_IOSR_Field is HAL.UInt8;
    subtype DFSDM3_FCR_FOSR_Field is HAL.UInt10;
    subtype DFSDM3_FCR_FORD_Field is HAL.UInt3;
 
@@ -2242,7 +2243,7 @@ package STM32_SVD.DFSDM is
       --  Integrator oversampling ratio (averaging length)
       IOSR           : DFSDM3_FCR_IOSR_Field := 16#0#;
       --  unspecified
-      Reserved_8_15  : HAL.Byte := 16#0#;
+      Reserved_8_15  : HAL.UInt8 := 16#0#;
       --  Sinc filter oversampling ratio (decimation rate)
       FOSR           : DFSDM3_FCR_FOSR_Field := 16#0#;
       --  unspecified
@@ -2353,7 +2354,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Regular channel most recently converted
       RDATACH      : DFSDM0_RDATAR_RDATACH_Field;
       --  unspecified
-      Reserved_3_3 : HAL.Bit;
+      Reserved_3_3 : HAL.UInt1;
       --  Read-only. Regular channel pending data
       RPEND        : Boolean;
       --  unspecified
@@ -2380,7 +2381,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Regular channel most recently converted
       RDATACH      : DFSDM1_RDATAR_RDATACH_Field;
       --  unspecified
-      Reserved_3_3 : HAL.Bit;
+      Reserved_3_3 : HAL.UInt1;
       --  Read-only. Regular channel pending data
       RPEND        : Boolean;
       --  unspecified
@@ -2407,7 +2408,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Regular channel most recently converted
       RDATACH      : DFSDM2_RDATAR_RDATACH_Field;
       --  unspecified
-      Reserved_3_3 : HAL.Bit;
+      Reserved_3_3 : HAL.UInt1;
       --  Read-only. Regular channel pending data
       RPEND        : Boolean;
       --  unspecified
@@ -2434,7 +2435,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Regular channel most recently converted
       RDATACH      : DFSDM3_RDATAR_RDATACH_Field;
       --  unspecified
-      Reserved_3_3 : HAL.Bit;
+      Reserved_3_3 : HAL.UInt1;
       --  Read-only. Regular channel pending data
       RPEND        : Boolean;
       --  unspecified
@@ -2621,8 +2622,8 @@ package STM32_SVD.DFSDM is
       AWLT         at 0 range 8 .. 31;
    end record;
 
-   subtype DFSDM0_AWSR_AWLTF_Field is HAL.Byte;
-   subtype DFSDM0_AWSR_AWHTF_Field is HAL.Byte;
+   subtype DFSDM0_AWSR_AWLTF_Field is HAL.UInt8;
+   subtype DFSDM0_AWSR_AWHTF_Field is HAL.UInt8;
 
    --  DFSDM analog watchdog status register
    type DFSDM0_AWSR_Register is record
@@ -2642,8 +2643,8 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM1_AWSR_AWLTF_Field is HAL.Byte;
-   subtype DFSDM1_AWSR_AWHTF_Field is HAL.Byte;
+   subtype DFSDM1_AWSR_AWLTF_Field is HAL.UInt8;
+   subtype DFSDM1_AWSR_AWHTF_Field is HAL.UInt8;
 
    --  DFSDM analog watchdog status register
    type DFSDM1_AWSR_Register is record
@@ -2663,8 +2664,8 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM2_AWSR_AWLTF_Field is HAL.Byte;
-   subtype DFSDM2_AWSR_AWHTF_Field is HAL.Byte;
+   subtype DFSDM2_AWSR_AWLTF_Field is HAL.UInt8;
+   subtype DFSDM2_AWSR_AWHTF_Field is HAL.UInt8;
 
    --  DFSDM analog watchdog status register
    type DFSDM2_AWSR_Register is record
@@ -2684,8 +2685,8 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM3_AWSR_AWLTF_Field is HAL.Byte;
-   subtype DFSDM3_AWSR_AWHTF_Field is HAL.Byte;
+   subtype DFSDM3_AWSR_AWLTF_Field is HAL.UInt8;
+   subtype DFSDM3_AWSR_AWHTF_Field is HAL.UInt8;
 
    --  DFSDM analog watchdog status register
    type DFSDM3_AWSR_Register is record
@@ -2705,8 +2706,8 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM0_AWCFR_CLRAWLTF_Field is HAL.Byte;
-   subtype DFSDM0_AWCFR_CLRAWHTF_Field is HAL.Byte;
+   subtype DFSDM0_AWCFR_CLRAWLTF_Field is HAL.UInt8;
+   subtype DFSDM0_AWCFR_CLRAWHTF_Field is HAL.UInt8;
 
    --  DFSDM analog watchdog clear flag register
    type DFSDM0_AWCFR_Register is record
@@ -2726,8 +2727,8 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM1_AWCFR_CLRAWLTF_Field is HAL.Byte;
-   subtype DFSDM1_AWCFR_CLRAWHTF_Field is HAL.Byte;
+   subtype DFSDM1_AWCFR_CLRAWLTF_Field is HAL.UInt8;
+   subtype DFSDM1_AWCFR_CLRAWHTF_Field is HAL.UInt8;
 
    --  DFSDM analog watchdog clear flag register
    type DFSDM1_AWCFR_Register is record
@@ -2747,8 +2748,8 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM2_AWCFR_CLRAWLTF_Field is HAL.Byte;
-   subtype DFSDM2_AWCFR_CLRAWHTF_Field is HAL.Byte;
+   subtype DFSDM2_AWCFR_CLRAWLTF_Field is HAL.UInt8;
+   subtype DFSDM2_AWCFR_CLRAWHTF_Field is HAL.UInt8;
 
    --  DFSDM analog watchdog clear flag register
    type DFSDM2_AWCFR_Register is record
@@ -2768,8 +2769,8 @@ package STM32_SVD.DFSDM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DFSDM3_AWCFR_CLRAWLTF_Field is HAL.Byte;
-   subtype DFSDM3_AWCFR_CLRAWHTF_Field is HAL.Byte;
+   subtype DFSDM3_AWCFR_CLRAWLTF_Field is HAL.UInt8;
+   subtype DFSDM3_AWCFR_CLRAWHTF_Field is HAL.UInt8;
 
    --  DFSDM analog watchdog clear flag register
    type DFSDM3_AWCFR_Register is record
@@ -3339,6 +3340,6 @@ package STM32_SVD.DFSDM is
 
    --  Digital filter for sigma delta modulators
    DFSDM_Periph : aliased DFSDM_Peripheral
-     with Import, Address => DFSDM_Base;
+     with Import, Address => System'To_Address (16#40017400#);
 
 end STM32_SVD.DFSDM;

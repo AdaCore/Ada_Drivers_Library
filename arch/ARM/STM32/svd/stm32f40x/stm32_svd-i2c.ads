@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -20,7 +21,7 @@ package STM32_SVD.I2C is
       --  SMBus mode
       SMBUS          : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.Bit := 16#0#;
+      Reserved_2_2   : HAL.UInt1 := 16#0#;
       --  SMBus type
       SMBTYPE        : Boolean := False;
       --  ARP enable
@@ -44,7 +45,7 @@ package STM32_SVD.I2C is
       --  SMBus alert
       ALERT          : Boolean := False;
       --  unspecified
-      Reserved_14_14 : HAL.Bit := 16#0#;
+      Reserved_14_14 : HAL.UInt1 := 16#0#;
       --  Software reset
       SWRST          : Boolean := False;
       --  unspecified
@@ -158,7 +159,7 @@ package STM32_SVD.I2C is
       Reserved_8_31 at 0 range 8 .. 31;
    end record;
 
-   subtype DR_DR_Field is HAL.Byte;
+   subtype DR_DR_Field is HAL.UInt8;
 
    --  Data register
    type DR_Register is record
@@ -188,7 +189,7 @@ package STM32_SVD.I2C is
       --  Read-only. Stop detection (slave mode)
       STOPF          : Boolean := False;
       --  unspecified
-      Reserved_5_5   : HAL.Bit := 16#0#;
+      Reserved_5_5   : HAL.UInt1 := 16#0#;
       --  Read-only. Data register not empty (receivers)
       RxNE           : Boolean := False;
       --  Read-only. Data register empty (transmitters)
@@ -204,7 +205,7 @@ package STM32_SVD.I2C is
       --  PEC Error in reception
       PECERR         : Boolean := False;
       --  unspecified
-      Reserved_13_13 : HAL.Bit := 16#0#;
+      Reserved_13_13 : HAL.UInt1 := 16#0#;
       --  Timeout or Tlow error
       TIMEOUT        : Boolean := False;
       --  SMBus alert
@@ -235,7 +236,7 @@ package STM32_SVD.I2C is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype SR2_PEC_Field is HAL.Byte;
+   subtype SR2_PEC_Field is HAL.UInt8;
 
    --  Status register 2
    type SR2_Register is record
@@ -246,7 +247,7 @@ package STM32_SVD.I2C is
       --  Read-only. Transmitter/receiver
       TRA            : Boolean;
       --  unspecified
-      Reserved_3_3   : HAL.Bit;
+      Reserved_3_3   : HAL.UInt1;
       --  Read-only. General call address (Slave mode)
       GENCALL        : Boolean;
       --  Read-only. SMBus device default address (Slave mode)
@@ -360,14 +361,14 @@ package STM32_SVD.I2C is
 
    --  Inter-integrated circuit
    I2C1_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C1_Base;
+     with Import, Address => System'To_Address (16#40005400#);
 
    --  Inter-integrated circuit
    I2C2_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C2_Base;
+     with Import, Address => System'To_Address (16#40005800#);
 
    --  Inter-integrated circuit
    I2C3_Periph : aliased I2C_Peripheral
-     with Import, Address => I2C3_Base;
+     with Import, Address => System'To_Address (16#40005C00#);
 
 end STM32_SVD.I2C;

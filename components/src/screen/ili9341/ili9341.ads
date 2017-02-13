@@ -70,9 +70,9 @@ package ILI9341 is
    --  Initializes the device. Afterward, the device is also enabled so there
    --  is no immediate need to call Enable_Display.
 
-   procedure Send_Command (This : in out ILI9341_Device; Cmd : Byte);
+   procedure Send_Command (This : in out ILI9341_Device; Cmd : UInt8);
 
-   procedure Send_Data (This : in out ILI9341_Device; Data : Byte);
+   procedure Send_Data (This : in out ILI9341_Device; Data : UInt8);
 
    Device_Width  : constant := 240;
    Device_Height : constant := 320;

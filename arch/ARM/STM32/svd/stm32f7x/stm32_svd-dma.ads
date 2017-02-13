@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -18,7 +19,7 @@ package STM32_SVD.DMA is
       --  Read-only. Stream x FIFO error interrupt flag (x=3..0)
       FEIF0          : Boolean;
       --  unspecified
-      Reserved_1_1   : HAL.Bit;
+      Reserved_1_1   : HAL.UInt1;
       --  Read-only. Stream x direct mode error interrupt flag (x=3..0)
       DMEIF0         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=3..0)
@@ -30,7 +31,7 @@ package STM32_SVD.DMA is
       --  Read-only. Stream x FIFO error interrupt flag (x=3..0)
       FEIF1          : Boolean;
       --  unspecified
-      Reserved_7_7   : HAL.Bit;
+      Reserved_7_7   : HAL.UInt1;
       --  Read-only. Stream x direct mode error interrupt flag (x=3..0)
       DMEIF1         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=3..0)
@@ -44,7 +45,7 @@ package STM32_SVD.DMA is
       --  Read-only. Stream x FIFO error interrupt flag (x=3..0)
       FEIF2          : Boolean;
       --  unspecified
-      Reserved_17_17 : HAL.Bit;
+      Reserved_17_17 : HAL.UInt1;
       --  Read-only. Stream x direct mode error interrupt flag (x=3..0)
       DMEIF2         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=3..0)
@@ -56,7 +57,7 @@ package STM32_SVD.DMA is
       --  Read-only. Stream x FIFO error interrupt flag (x=3..0)
       FEIF3          : Boolean;
       --  unspecified
-      Reserved_23_23 : HAL.Bit;
+      Reserved_23_23 : HAL.UInt1;
       --  Read-only. Stream x direct mode error interrupt flag (x=3..0)
       DMEIF3         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=3..0)
@@ -105,7 +106,7 @@ package STM32_SVD.DMA is
       --  Read-only. Stream x FIFO error interrupt flag (x=7..4)
       FEIF4          : Boolean;
       --  unspecified
-      Reserved_1_1   : HAL.Bit;
+      Reserved_1_1   : HAL.UInt1;
       --  Read-only. Stream x direct mode error interrupt flag (x=7..4)
       DMEIF4         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=7..4)
@@ -117,7 +118,7 @@ package STM32_SVD.DMA is
       --  Read-only. Stream x FIFO error interrupt flag (x=7..4)
       FEIF5          : Boolean;
       --  unspecified
-      Reserved_7_7   : HAL.Bit;
+      Reserved_7_7   : HAL.UInt1;
       --  Read-only. Stream x direct mode error interrupt flag (x=7..4)
       DMEIF5         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=7..4)
@@ -131,7 +132,7 @@ package STM32_SVD.DMA is
       --  Read-only. Stream x FIFO error interrupt flag (x=7..4)
       FEIF6          : Boolean;
       --  unspecified
-      Reserved_17_17 : HAL.Bit;
+      Reserved_17_17 : HAL.UInt1;
       --  Read-only. Stream x direct mode error interrupt flag (x=7..4)
       DMEIF6         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=7..4)
@@ -143,7 +144,7 @@ package STM32_SVD.DMA is
       --  Read-only. Stream x FIFO error interrupt flag (x=7..4)
       FEIF7          : Boolean;
       --  unspecified
-      Reserved_23_23 : HAL.Bit;
+      Reserved_23_23 : HAL.UInt1;
       --  Read-only. Stream x direct mode error interrupt flag (x=7..4)
       DMEIF7         : Boolean;
       --  Read-only. Stream x transfer error interrupt flag (x=7..4)
@@ -192,7 +193,7 @@ package STM32_SVD.DMA is
       --  Stream x clear FIFO error interrupt flag (x = 3..0)
       CFEIF0         : Boolean := False;
       --  unspecified
-      Reserved_1_1   : HAL.Bit := 16#0#;
+      Reserved_1_1   : HAL.UInt1 := 16#0#;
       --  Stream x clear direct mode error interrupt flag (x = 3..0)
       CDMEIF0        : Boolean := False;
       --  Stream x clear transfer error interrupt flag (x = 3..0)
@@ -204,7 +205,7 @@ package STM32_SVD.DMA is
       --  Stream x clear FIFO error interrupt flag (x = 3..0)
       CFEIF1         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  Stream x clear direct mode error interrupt flag (x = 3..0)
       CDMEIF1        : Boolean := False;
       --  Stream x clear transfer error interrupt flag (x = 3..0)
@@ -218,7 +219,7 @@ package STM32_SVD.DMA is
       --  Stream x clear FIFO error interrupt flag (x = 3..0)
       CFEIF2         : Boolean := False;
       --  unspecified
-      Reserved_17_17 : HAL.Bit := 16#0#;
+      Reserved_17_17 : HAL.UInt1 := 16#0#;
       --  Stream x clear direct mode error interrupt flag (x = 3..0)
       CDMEIF2        : Boolean := False;
       --  Stream x clear transfer error interrupt flag (x = 3..0)
@@ -230,7 +231,7 @@ package STM32_SVD.DMA is
       --  Stream x clear FIFO error interrupt flag (x = 3..0)
       CFEIF3         : Boolean := False;
       --  unspecified
-      Reserved_23_23 : HAL.Bit := 16#0#;
+      Reserved_23_23 : HAL.UInt1 := 16#0#;
       --  Stream x clear direct mode error interrupt flag (x = 3..0)
       CDMEIF3        : Boolean := False;
       --  Stream x clear transfer error interrupt flag (x = 3..0)
@@ -279,7 +280,7 @@ package STM32_SVD.DMA is
       --  Stream x clear FIFO error interrupt flag (x = 7..4)
       CFEIF4         : Boolean := False;
       --  unspecified
-      Reserved_1_1   : HAL.Bit := 16#0#;
+      Reserved_1_1   : HAL.UInt1 := 16#0#;
       --  Stream x clear direct mode error interrupt flag (x = 7..4)
       CDMEIF4        : Boolean := False;
       --  Stream x clear transfer error interrupt flag (x = 7..4)
@@ -291,7 +292,7 @@ package STM32_SVD.DMA is
       --  Stream x clear FIFO error interrupt flag (x = 7..4)
       CFEIF5         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  Stream x clear direct mode error interrupt flag (x = 7..4)
       CDMEIF5        : Boolean := False;
       --  Stream x clear transfer error interrupt flag (x = 7..4)
@@ -305,7 +306,7 @@ package STM32_SVD.DMA is
       --  Stream x clear FIFO error interrupt flag (x = 7..4)
       CFEIF6         : Boolean := False;
       --  unspecified
-      Reserved_17_17 : HAL.Bit := 16#0#;
+      Reserved_17_17 : HAL.UInt1 := 16#0#;
       --  Stream x clear direct mode error interrupt flag (x = 7..4)
       CDMEIF6        : Boolean := False;
       --  Stream x clear transfer error interrupt flag (x = 7..4)
@@ -317,7 +318,7 @@ package STM32_SVD.DMA is
       --  Stream x clear FIFO error interrupt flag (x = 7..4)
       CFEIF7         : Boolean := False;
       --  unspecified
-      Reserved_23_23 : HAL.Bit := 16#0#;
+      Reserved_23_23 : HAL.UInt1 := 16#0#;
       --  Stream x clear direct mode error interrupt flag (x = 7..4)
       CDMEIF7        : Boolean := False;
       --  Stream x clear transfer error interrupt flag (x = 7..4)
@@ -404,7 +405,7 @@ package STM32_SVD.DMA is
       --  Current target (only in double buffer mode)
       CT             : Boolean := False;
       --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
+      Reserved_20_20 : HAL.UInt1 := 16#0#;
       --  Peripheral burst transfer configuration
       PBURST         : S0CR_PBURST_Field := 16#0#;
       --  Memory burst transfer configuration
@@ -470,7 +471,7 @@ package STM32_SVD.DMA is
       --  Read-only. FIFO status
       FS            : S0FCR_FS_Field := 16#4#;
       --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
+      Reserved_6_6  : HAL.UInt1 := 16#0#;
       --  FIFO error interrupt enable
       FEIE          : Boolean := False;
       --  unspecified
@@ -531,7 +532,7 @@ package STM32_SVD.DMA is
       --  Current target (only in double buffer mode)
       CT             : Boolean := False;
       --  unspecified
-      Reserved_20_20 : HAL.Bit := 16#0#;
+      Reserved_20_20 : HAL.UInt1 := 16#0#;
       --  Peripheral burst transfer configuration
       PBURST         : S1CR_PBURST_Field := 16#0#;
       --  Memory burst transfer configuration
@@ -597,7 +598,7 @@ package STM32_SVD.DMA is
       --  Read-only. FIFO status
       FS            : S1FCR_FS_Field := 16#4#;
       --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
+      Reserved_6_6  : HAL.UInt1 := 16#0#;
       --  FIFO error interrupt enable
       FEIE          : Boolean := False;
       --  unspecified
@@ -724,7 +725,7 @@ package STM32_SVD.DMA is
       --  Read-only. FIFO status
       FS            : S2FCR_FS_Field := 16#4#;
       --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
+      Reserved_6_6  : HAL.UInt1 := 16#0#;
       --  FIFO error interrupt enable
       FEIE          : Boolean := False;
       --  unspecified
@@ -851,7 +852,7 @@ package STM32_SVD.DMA is
       --  Read-only. FIFO status
       FS            : S3FCR_FS_Field := 16#4#;
       --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
+      Reserved_6_6  : HAL.UInt1 := 16#0#;
       --  FIFO error interrupt enable
       FEIE          : Boolean := False;
       --  unspecified
@@ -978,7 +979,7 @@ package STM32_SVD.DMA is
       --  Read-only. FIFO status
       FS            : S4FCR_FS_Field := 16#4#;
       --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
+      Reserved_6_6  : HAL.UInt1 := 16#0#;
       --  FIFO error interrupt enable
       FEIE          : Boolean := False;
       --  unspecified
@@ -1105,7 +1106,7 @@ package STM32_SVD.DMA is
       --  Read-only. FIFO status
       FS            : S5FCR_FS_Field := 16#4#;
       --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
+      Reserved_6_6  : HAL.UInt1 := 16#0#;
       --  FIFO error interrupt enable
       FEIE          : Boolean := False;
       --  unspecified
@@ -1232,7 +1233,7 @@ package STM32_SVD.DMA is
       --  Read-only. FIFO status
       FS            : S6FCR_FS_Field := 16#4#;
       --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
+      Reserved_6_6  : HAL.UInt1 := 16#0#;
       --  FIFO error interrupt enable
       FEIE          : Boolean := False;
       --  unspecified
@@ -1359,7 +1360,7 @@ package STM32_SVD.DMA is
       --  Read-only. FIFO status
       FS            : S7FCR_FS_Field := 16#4#;
       --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
+      Reserved_6_6  : HAL.UInt1 := 16#0#;
       --  FIFO error interrupt enable
       FEIE          : Boolean := False;
       --  unspecified
@@ -1547,10 +1548,10 @@ package STM32_SVD.DMA is
 
    --  DMA controller
    DMA1_Periph : aliased DMA_Peripheral
-     with Import, Address => DMA1_Base;
+     with Import, Address => System'To_Address (16#40026000#);
 
    --  DMA controller
    DMA2_Periph : aliased DMA_Peripheral
-     with Import, Address => DMA2_Base;
+     with Import, Address => System'To_Address (16#40026400#);
 
 end STM32_SVD.DMA;

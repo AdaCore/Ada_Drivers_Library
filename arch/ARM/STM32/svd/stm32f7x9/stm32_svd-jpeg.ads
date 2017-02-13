@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -38,7 +39,7 @@ package STM32_SVD.JPEG is
       --  Number of color components
       NF            : JPEG_CONFR1_NF_Field := 16#0#;
       --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
+      Reserved_2_2  : HAL.UInt1 := 16#0#;
       --  Decoding Enable
       DE            : Boolean := False;
       --  Color Space
@@ -186,7 +187,7 @@ package STM32_SVD.JPEG is
    --  JPEG status register
    type JPEG_SR_Register is record
       --  unspecified
-      Reserved_0_0  : HAL.Bit;
+      Reserved_0_0  : HAL.UInt1;
       --  Read-only. Input FIFO Threshold Flag
       IFTF          : Boolean;
       --  Read-only. Input FIFO Not Full Flag
@@ -293,6 +294,6 @@ package STM32_SVD.JPEG is
 
    --  JPEG codec
    JPEG_Periph : aliased JPEG_Peripheral
-     with Import, Address => JPEG_Base;
+     with Import, Address => System'To_Address (16#50051000#);
 
 end STM32_SVD.JPEG;

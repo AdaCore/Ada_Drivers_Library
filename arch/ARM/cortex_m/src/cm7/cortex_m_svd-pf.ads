@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -123,7 +124,7 @@ package Cortex_M_SVD.PF is
       --  Read-only. Cache Writable Granule.
       CWG            : CTR_CWG_Field;
       --  unspecified
-      Reserved_28_28 : HAL.Bit;
+      Reserved_28_28 : HAL.UInt1;
       --  Read-only. Cache Writable Granule.
       Format         : CTR_Format_Field;
    end record

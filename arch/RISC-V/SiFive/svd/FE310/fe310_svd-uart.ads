@@ -14,7 +14,7 @@ package FE310_SVD.UART is
    -- Registers --
    ---------------
 
-   subtype TXDATA_DATA_Field is HAL.Byte;
+   subtype TXDATA_DATA_Field is HAL.UInt8;
 
    --  Transmit Data Register.
    type TXDATA_Register is record
@@ -32,7 +32,7 @@ package FE310_SVD.UART is
       FULL          at 0 range 31 .. 31;
    end record;
 
-   subtype RXDATA_DATA_Field is HAL.Byte;
+   subtype RXDATA_DATA_Field is HAL.UInt8;
 
    --  Receive Data Register.
    type RXDATA_Register is record

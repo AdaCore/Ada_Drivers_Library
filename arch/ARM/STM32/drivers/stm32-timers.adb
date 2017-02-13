@@ -116,7 +116,7 @@ package body STM32.Timers is
       Period        : UInt32;
       Clock_Divisor : Timer_Clock_Divisor;
       Counter_Mode  : Timer_Counter_Alignment_Mode;
-      Repetitions   : Byte)
+      Repetitions   : UInt8)
    is
    begin
       This.ARR := Period;
@@ -1410,10 +1410,10 @@ package body STM32.Timers is
       Automatic_Output_Enabled      : Boolean;
       Break_Polarity                : Timer_Break_Polarity;
       Break_Enabled                 : Boolean;
-      Off_State_Selection_Run_Mode  : Bit;
-      Off_State_Selection_Idle_Mode : Bit;
+      Off_State_Selection_Run_Mode  : UInt1;
+      Off_State_Selection_Idle_Mode : UInt1;
       Lock_Configuration            : Timer_Lock_Level;
-      Deadtime_Generator            : Byte)
+      Deadtime_Generator            : UInt8)
    is
    begin
       This.BDTR.Automatic_Output_Enabled      := Automatic_Output_Enabled;

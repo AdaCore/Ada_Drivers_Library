@@ -53,7 +53,7 @@ package STM32.RNG.Interrupts is
    --  interrupts. Both necessary and sufficient.
    --  Enables the clock as well.
 
-   function Random return Interfaces.Unsigned_32;
+   function Random return UInt32;
    --  Uses the interrupt interface to get the next available number.
    --  NB: call Initialize_RNG before any calls to this function.
 

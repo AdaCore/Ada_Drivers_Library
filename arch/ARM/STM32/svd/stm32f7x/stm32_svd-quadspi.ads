@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -14,7 +15,7 @@ package STM32_SVD.QUADSPI is
    ---------------
 
    subtype CR_FTHRES_Field is HAL.UInt5;
-   subtype CR_PRESCALER_Field is HAL.Byte;
+   subtype CR_PRESCALER_Field is HAL.UInt8;
 
    --  control register
    type CR_Register is record
@@ -29,7 +30,7 @@ package STM32_SVD.QUADSPI is
       --  Sample shift
       SSHIFT         : Boolean := False;
       --  unspecified
-      Reserved_5_5   : HAL.Bit := 16#0#;
+      Reserved_5_5   : HAL.UInt1 := 16#0#;
       --  Dual-flash mode
       DFM            : Boolean := False;
       --  FLASH memory selection
@@ -49,7 +50,7 @@ package STM32_SVD.QUADSPI is
       --  TimeOut interrupt enable
       TOIE           : Boolean := False;
       --  unspecified
-      Reserved_21_21 : HAL.Bit := 16#0#;
+      Reserved_21_21 : HAL.UInt1 := 16#0#;
       --  Automatic poll mode stop
       APMS           : Boolean := False;
       --  Polling match mode
@@ -157,7 +158,7 @@ package STM32_SVD.QUADSPI is
       --  Clear transfer complete flag
       CTCF          : Boolean := False;
       --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
+      Reserved_2_2  : HAL.UInt1 := 16#0#;
       --  Clear status match flag
       CSMF          : Boolean := False;
       --  Clear timeout flag
@@ -177,7 +178,7 @@ package STM32_SVD.QUADSPI is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   subtype CCR_INSTRUCTION_Field is HAL.Byte;
+   subtype CCR_INSTRUCTION_Field is HAL.UInt8;
    subtype CCR_IMODE_Field is HAL.UInt2;
    subtype CCR_ADMODE_Field is HAL.UInt2;
    subtype CCR_ADSIZE_Field is HAL.UInt2;
@@ -204,7 +205,7 @@ package STM32_SVD.QUADSPI is
       --  Number of dummy cycles
       DCYC           : CCR_DCYC_Field := 16#0#;
       --  unspecified
-      Reserved_23_23 : HAL.Bit := 16#0#;
+      Reserved_23_23 : HAL.UInt1 := 16#0#;
       --  Data mode
       DMODE          : CCR_DMODE_Field := 16#0#;
       --  Functional mode
@@ -212,7 +213,7 @@ package STM32_SVD.QUADSPI is
       --  Send instruction only once mode
       SIOO           : Boolean := False;
       --  unspecified
-      Reserved_29_29 : HAL.Bit := 16#0#;
+      Reserved_29_29 : HAL.UInt1 := 16#0#;
       --  DDR hold half cycle
       DHHC           : Boolean := False;
       --  Double data rate mode
@@ -325,6 +326,6 @@ package STM32_SVD.QUADSPI is
 
    --  QuadSPI interface
    QUADSPI_Periph : aliased QUADSPI_Peripheral
-     with Import, Address => QUADSPI_Base;
+     with Import, Address => System'To_Address (16#A0001000#);
 
 end STM32_SVD.QUADSPI;

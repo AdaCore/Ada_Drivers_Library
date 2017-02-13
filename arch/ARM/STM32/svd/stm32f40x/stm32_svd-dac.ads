@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -160,7 +161,7 @@ package STM32_SVD.DAC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DHR8R1_DACC1DHR_Field is HAL.Byte;
+   subtype DHR8R1_DACC1DHR_Field is HAL.UInt8;
 
    --  channel1 8-bit right aligned data holding register
    type DHR8R1_Register is record
@@ -214,7 +215,7 @@ package STM32_SVD.DAC is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype DHR8R2_DACC2DHR_Field is HAL.Byte;
+   subtype DHR8R2_DACC2DHR_Field is HAL.UInt8;
 
    --  channel2 8-bit right-aligned data holding register
    type DHR8R2_Register is record
@@ -279,8 +280,8 @@ package STM32_SVD.DAC is
       DACC2DHR       at 0 range 20 .. 31;
    end record;
 
-   subtype DHR8RD_DACC1DHR_Field is HAL.Byte;
-   subtype DHR8RD_DACC2DHR_Field is HAL.Byte;
+   subtype DHR8RD_DACC1DHR_Field is HAL.UInt8;
+   subtype DHR8RD_DACC2DHR_Field is HAL.UInt8;
 
    --  DUAL DAC 8-bit right aligned data holding register
    type DHR8RD_Register is record
@@ -414,6 +415,6 @@ package STM32_SVD.DAC is
 
    --  Digital-to-analog converter
    DAC_Periph : aliased DAC_Peripheral
-     with Import, Address => DAC_Base;
+     with Import, Address => System'To_Address (16#40007400#);
 
 end STM32_SVD.DAC;

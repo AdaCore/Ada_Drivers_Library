@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -78,7 +79,7 @@ package STM32_SVD.SPI is
       --  SS output enable
       SSOE          : Boolean := False;
       --  unspecified
-      Reserved_3_3  : HAL.Bit := 16#0#;
+      Reserved_3_3  : HAL.UInt1 := 16#0#;
       --  Frame format
       FRF           : Boolean := False;
       --  Error interrupt enable
@@ -227,7 +228,7 @@ package STM32_SVD.SPI is
       --  I2S standard selection
       I2SSTD         : I2SCFGR_I2SSTD_Field := 16#0#;
       --  unspecified
-      Reserved_6_6   : HAL.Bit := 16#0#;
+      Reserved_6_6   : HAL.UInt1 := 16#0#;
       --  PCM frame synchronization
       PCMSYNC        : Boolean := False;
       --  I2S configuration mode
@@ -255,7 +256,7 @@ package STM32_SVD.SPI is
       Reserved_12_31 at 0 range 12 .. 31;
    end record;
 
-   subtype I2SPR_I2SDIV_Field is HAL.Byte;
+   subtype I2SPR_I2SDIV_Field is HAL.UInt8;
 
    --  I2S prescaler register
    type I2SPR_Register is record
@@ -319,22 +320,22 @@ package STM32_SVD.SPI is
 
    --  Serial peripheral interface
    I2S2ext_Periph : aliased SPI_Peripheral
-     with Import, Address => I2S2ext_Base;
+     with Import, Address => System'To_Address (16#40003400#);
 
    --  Serial peripheral interface
    I2S3ext_Periph : aliased SPI_Peripheral
-     with Import, Address => I2S3ext_Base;
+     with Import, Address => System'To_Address (16#40004000#);
 
    --  Serial peripheral interface
    SPI1_Periph : aliased SPI_Peripheral
-     with Import, Address => SPI1_Base;
+     with Import, Address => System'To_Address (16#40013000#);
 
    --  Serial peripheral interface
    SPI2_Periph : aliased SPI_Peripheral
-     with Import, Address => SPI2_Base;
+     with Import, Address => System'To_Address (16#40003800#);
 
    --  Serial peripheral interface
    SPI3_Periph : aliased SPI_Peripheral
-     with Import, Address => SPI3_Base;
+     with Import, Address => System'To_Address (16#40003C00#);
 
 end STM32_SVD.SPI;

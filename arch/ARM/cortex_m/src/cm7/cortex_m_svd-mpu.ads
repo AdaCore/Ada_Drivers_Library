@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -24,8 +25,8 @@ package Cortex_M_SVD.MPU is
    for TYPE_SEPARATE_Field use
      (Unified => 0);
 
-   subtype MPU_TYPE_DREGION_Field is HAL.Byte;
-   subtype MPU_TYPE_IREGION_Field is HAL.Byte;
+   subtype MPU_TYPE_DREGION_Field is HAL.UInt8;
+   subtype MPU_TYPE_IREGION_Field is HAL.UInt8;
 
    --  MPU Type Register
    type MPU_TYPE_Register is record
@@ -42,7 +43,7 @@ package Cortex_M_SVD.MPU is
       --  by the DREGION field.
       IREGION        : MPU_TYPE_IREGION_Field;
       --  unspecified
-      Reserved_24_31 : HAL.Byte;
+      Reserved_24_31 : HAL.UInt8;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -77,7 +78,7 @@ package Cortex_M_SVD.MPU is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype MPU_RNR_REGION_Field is HAL.Byte;
+   subtype MPU_RNR_REGION_Field is HAL.UInt8;
 
    --  MPU Region Number Register
    type MPU_RNR_Register is record
@@ -141,7 +142,7 @@ package Cortex_M_SVD.MPU is
       case As_Array is
          when False =>
             --  SRD as a value
-            Val : HAL.Byte;
+            Val : HAL.UInt8;
          when True =>
             --  SRD as an array
             Arr : MPU_RASR_SRD_Field_Array;
@@ -220,7 +221,7 @@ package Cortex_M_SVD.MPU is
       --  Access permission field
       AP             : RASR_AP_Field := Cortex_M_SVD.MPU.No_Access;
       --  unspecified
-      Reserved_27_27 : HAL.Bit := 16#0#;
+      Reserved_27_27 : HAL.UInt1 := 16#0#;
       --  Instruction access disable bit
       XN             : RASR_XN_Field := Cortex_M_SVD.MPU.I_Enabled;
       --  unspecified
@@ -291,7 +292,7 @@ package Cortex_M_SVD.MPU is
       case As_Array is
          when False =>
             --  SRD as a value
-            Val : HAL.Byte;
+            Val : HAL.UInt8;
          when True =>
             --  SRD as an array
             Arr : RASR_A_SRD_Field_Array;
@@ -369,7 +370,7 @@ package Cortex_M_SVD.MPU is
       --  Access permission field
       AP             : RASR_A1_AP_Field := Cortex_M_SVD.MPU.No_Access;
       --  unspecified
-      Reserved_27_27 : HAL.Bit := 16#0#;
+      Reserved_27_27 : HAL.UInt1 := 16#0#;
       --  Instruction access disable bit
       XN             : RASR_A1_XN_Field := Cortex_M_SVD.MPU.I_Enabled;
       --  unspecified

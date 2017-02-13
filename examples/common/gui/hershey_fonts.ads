@@ -32,6 +32,7 @@
 --  This package handles the Hershey font format.
 
 with Interfaces; use Interfaces;
+with HAL;        use HAL;
 
 package Hershey_Fonts is
 
@@ -75,8 +76,8 @@ private
 
    type Glyph is record
       Vertices : Natural;
-      Width    : Unsigned_8;
-      Height   : Unsigned_8;
+      Width    : UInt8;
+      Height   : UInt8;
       Coords   : Coord_Array (1 .. 120);
    end record with Pack;
 
@@ -87,8 +88,8 @@ private
    type Hershey_Font is record
       Number_Of_Glyphs : Glyph_Index;
       Glyphs           : Glyph_Array;
-      Font_Height      : Unsigned_8;
-      Baseline         : Unsigned_8;
+      Font_Height      : UInt8;
+      Baseline         : UInt8;
    end record;
 
 end Hershey_Fonts;

@@ -29,24 +29,22 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
-
 package HAL.Block_Drivers is
 
    type Block_Driver is limited interface;
    type Any_Block_Driver is access all Block_Driver'Class;
 
-   subtype Block is Byte_Array;
+   subtype Block is UInt8_Array;
 
    function Read
      (This         : in out Block_Driver;
-      Block_Number : Unsigned_32;
+      Block_Number : UInt32;
       Data         : out Block)
       return Boolean is abstract;
 
    function Write
      (This         : in out Block_Driver;
-      Block_Number : Unsigned_32;
+      Block_Number : UInt32;
       Data         : Block)
       return Boolean is abstract;
 

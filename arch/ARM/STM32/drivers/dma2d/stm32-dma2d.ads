@@ -35,10 +35,10 @@ with Ada.Unchecked_Conversion;
 package STM32.DMA2D is
 
    type DMA2D_Color is record
-      Alpha : Byte;
-      Red   : Byte;
-      Green : Byte;
-      Blue  : Byte;
+      Alpha : UInt8;
+      Red   : UInt8;
+      Green : UInt8;
+      Blue  : UInt8;
    end record;
 
    for DMA2D_Color use record
@@ -138,7 +138,7 @@ package STM32.DMA2D is
    subtype Background_Color_Mode is DMA2D_Color_Mode;
    subtype Output_Color_Mode is DMA2D_Color_Mode range ARGB8888 .. ARGB4444;
 
---     function Bytes_Per_Pixel (CM : DMA2D_Color_Mode) return Positive
+--     function UInt8s_Per_Pixel (CM : DMA2D_Color_Mode) return Positive
 --     is (case CM is
 --            when ARGB8888 => 4,
 --            when RGB888 => 3,

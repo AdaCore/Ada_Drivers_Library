@@ -31,11 +31,10 @@
 
 with HAL; use HAL;
 with HAL.Block_Drivers; use HAL.Block_Drivers;
-with Interfaces; use Interfaces;
 
 package Partitions is
 
-   type Partition_Kind is new Unsigned_8;
+   type Partition_Kind is new UInt8;
 
    Empty_Partition       : constant Partition_Kind := 16#00#;
    Fat12_Parition        : constant Partition_Kind := 16#01#;
@@ -50,21 +49,21 @@ package Partitions is
    Linux_Swap_Partition  : constant Partition_Kind := 16#82#;
    Linux_Partition       : constant Partition_Kind := 16#83#;
 
-   subtype Logical_Block_Address is Unsigned_32;
+   subtype Logical_Block_Address is UInt32;
 
    type CHS_Address is record
       C : UInt10;
-      H : Byte;
+      H : UInt8;
       S : UInt6;
    end record with Pack, Size => 24;
 
    type Partition_Entry is record
-      Status            : Byte;
+      Status            : UInt8;
       First_Sector_CHS  : CHS_Address;
       Kind              : Partition_Kind;
       Last_Sector_CHS   : CHS_Address;
       First_Sector_LBA  : Logical_Block_Address;
-      Number_Of_Sectors : Unsigned_32;
+      Number_Of_Sectors : UInt32;
    end record with Pack, Size => 16 * 8;
 
    type Status_Code is (Status_Ok, Disk_Error, Invalid_Parition);

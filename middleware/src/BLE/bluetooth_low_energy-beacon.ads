@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 with Bluetooth_Low_Energy.Packets; use Bluetooth_Low_Energy.Packets;
+with Interfaces;                   use Interfaces;
 
 package Bluetooth_Low_Energy.Beacon is
 

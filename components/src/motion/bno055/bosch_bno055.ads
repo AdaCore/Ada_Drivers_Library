@@ -283,7 +283,7 @@ package Bosch_BNO055 is
       Accelerometer : UInt8;
       Magnetometer  : UInt8;
       Gyroscope     : UInt8;
-      Software      : Unsigned_16;
+      Software      : UInt16;
       Bootloader    : UInt8;
    end record;
 

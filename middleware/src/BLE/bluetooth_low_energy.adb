@@ -24,10 +24,10 @@ package body Bluetooth_Low_Energy is
    -- Make_UUID --
    ---------------
 
-   function Make_UUID (UUID : BLE_16bytes_UUID) return BLE_UUID is
+   function Make_UUID (UUID : BLE_16UInt8s_UUID) return BLE_UUID is
    begin
-      return (Kind          => UUID_16bytes,
-              UUID_16_Bytes => UUID);
+      return (Kind          => UUID_16UInt8s,
+              UUID_16_UInt8s => UUID);
    end Make_UUID;
 
 end Bluetooth_Low_Energy;

@@ -85,7 +85,7 @@ package body Cortex_M.NVIC is
    begin
       --  IRQ numbers are never less than 0 in the current definition, hence
       --  the code is different from that in the CMSIS.
-      NVIC.IP (Index) := Byte (Value);
+      NVIC.IP (Index) := UInt8 (Value);
    end Set_Priority;
 
    ----------------------

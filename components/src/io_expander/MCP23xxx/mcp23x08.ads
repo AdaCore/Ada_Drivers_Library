@@ -162,18 +162,18 @@ private
    -- IO private subprograms --
    ----------------------------
 
-   type Register_Address is new Byte;
+   type Register_Address is new UInt8;
 
    procedure IO_Write
      (This      : in out MCP23x08_IO_Expander;
       WriteAddr : Register_Address;
-      Value     : Byte) is null;
+      Value     : UInt8) is null;
    --  This procedure must be overridden by the I2C or SPI implementation
 
    procedure IO_Read
      (This     : MCP23x08_IO_Expander;
       ReadAddr : Register_Address;
-      Value    : out Byte) is null;
+      Value    : out UInt8) is null;
    --  This procedure must be overridden by the I2C or SPI implementation
 
    IO_DIRECTION_REG     : constant Register_Address := 16#00#;

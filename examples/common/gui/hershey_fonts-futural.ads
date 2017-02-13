@@ -58,7 +58,7 @@
 --     format *EXCEPT* the format distributed by the U.S. NTIS (which
 --     organization holds the rights to the distribution and use of the font
 --     data in that particular format). Not that anybody would really *want*
---     to use their format... each point is described in eight bytes as
+--     to use their format... each point is described in eight UInt8s as
 --     "xxx yyy:", where xxx and yyy are the coordinate values as ASCII
 --     numbers.
 --

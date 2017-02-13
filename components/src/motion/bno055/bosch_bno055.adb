@@ -37,7 +37,7 @@ package body Bosch_BNO055 is
 
    function Value_At
      (This : in out BNO055_9DOF_IMU;  MSB, LSB : Register_Address)
-      return Unsigned_16 with Inline;
+      return UInt16 with Inline;
    --  MSB and LSB are the *register addresses* from which to get the values,
    --  not the values themselves
 
@@ -393,8 +393,8 @@ package body Bosch_BNO055 is
       end case;
 
       Read_Buffer (This.Port, Source, Buffer);
-      --  By reading multiple bytes, the device ensures data consistency,
-      --  whereas reading single bytes individually does not have that
+      --  By reading multiple UInt8s, the device ensures data consistency,
+      --  whereas reading single UInt8s individually does not have that
       --  guarantee. See the Datasheet, section 3.7 "Data register shadowing"
 
       New_X := To_Integer_16 (LSB => Buffer (0), MSB => Buffer (1));
@@ -444,8 +444,8 @@ package body Bosch_BNO055 is
       Scale  : constant Float := 1.0 / Float (2 ** 14); -- see section 3.6.5.5
    begin
       Read_Buffer (This.Port, BNO055_QUATERNION_DATA_W_LSB_ADDR, Buffer);
-      --  By reading multiple bytes, the device ensures data consistency,
-      --  whereas reading single bytes individually does not have that
+      --  By reading multiple UInt8s, the device ensures data consistency,
+      --  whereas reading single UInt8s individually does not have that
       --  guarantee. See the Datasheet, section 3.7 "Data register shadowing"
 
       New_W := To_Integer_16 (MSB => Buffer (1), LSB => Buffer (0));
@@ -522,60 +522,60 @@ package body Bosch_BNO055 is
       Offsets : Sensor_Offset_Values)
    is
       Previous_Mode : constant Operating_Modes := This.Mode;
-      Outgoing      : Unsigned_16;
+      Outgoing      : UInt16;
    begin
       Set_Mode (This, Operating_Mode_Config);
       Delay_Milliseconds (25);
 
-      Outgoing := Unsigned_16'Mod (Offsets.Accel_Offset_X);
+      Outgoing := UInt16'Mod (Offsets.Accel_Offset_X);
       Write (This.Port, ACCEL_OFFSET_X_LSB_ADDR, Value => UInt8 (Outgoing and 16#FF#));
       Write (This.Port, ACCEL_OFFSET_X_MSB_ADDR, Value => UInt8 (Shift_Right (Outgoing, 8)));
 
-      Outgoing := Unsigned_16'Mod (Offsets.Accel_Offset_Y);
+      Outgoing := UInt16'Mod (Offsets.Accel_Offset_Y);
       Write (This.Port, ACCEL_OFFSET_Y_LSB_ADDR, Value => UInt8 (Outgoing and 16#FF#));
       Write (This.Port, ACCEL_OFFSET_Y_MSB_ADDR, Value => UInt8 (Shift_Right (Outgoing, 8)));
 
-      Outgoing := Unsigned_16'Mod (Offsets.Accel_Offset_Z);
+      Outgoing := UInt16'Mod (Offsets.Accel_Offset_Z);
       Write (This.Port, ACCEL_OFFSET_Z_LSB_ADDR, Value => UInt8 (Outgoing and 16#FF#));
       Write (This.Port, ACCEL_OFFSET_Z_MSB_ADDR, Value => UInt8 (Shift_Right (Outgoing, 8)));
       --  The Datasheet, section 3.6.4.1 "Accelerometer offset" says the
       --  configuration only occurs when the MSB of the Z offset is written
 
-      Outgoing := Unsigned_16'Mod (Offsets.Gyro_Offset_X);
+      Outgoing := UInt16'Mod (Offsets.Gyro_Offset_X);
       Write (This.Port, GYRO_OFFSET_X_LSB_ADDR, Value => UInt8 (Outgoing and 16#FF#));
       Write (This.Port, GYRO_OFFSET_X_MSB_ADDR, Value => UInt8 (Shift_Right (Outgoing, 8)));
 
-      Outgoing := Unsigned_16'Mod (Offsets.Gyro_Offset_Y);
+      Outgoing := UInt16'Mod (Offsets.Gyro_Offset_Y);
       Write (This.Port, GYRO_OFFSET_Y_LSB_ADDR, Value => UInt8 (Outgoing and 16#FF#));
       Write (This.Port, GYRO_OFFSET_Y_MSB_ADDR, Value => UInt8 (Shift_Right (Outgoing, 8)));
 
-      Outgoing := Unsigned_16'Mod (Offsets.Gyro_Offset_Z);
+      Outgoing := UInt16'Mod (Offsets.Gyro_Offset_Z);
       Write (This.Port, GYRO_OFFSET_Z_LSB_ADDR, Value => UInt8 (Outgoing and 16#FF#));
       Write (This.Port, GYRO_OFFSET_Z_MSB_ADDR, Value => UInt8 (Shift_Right (Outgoing, 8)));
       --  The Datasheet, section 3.6.4.3 "Gyroscope offset" says the
       --  configuration only occurs when the MSB of the Z offset is written
 
-      Outgoing := Unsigned_16'Mod (Offsets.Mag_Offset_X);
+      Outgoing := UInt16'Mod (Offsets.Mag_Offset_X);
       Write (This.Port, MAG_OFFSET_X_LSB_ADDR, Value => UInt8 (Outgoing and 16#FF#));
       Write (This.Port, MAG_OFFSET_X_MSB_ADDR, Value => UInt8 (Shift_Right (Outgoing, 8)));
 
-      Outgoing := Unsigned_16'Mod (Offsets.Mag_Offset_Y);
+      Outgoing := UInt16'Mod (Offsets.Mag_Offset_Y);
       Write (This.Port, MAG_OFFSET_Y_LSB_ADDR, Value => UInt8 (Outgoing and 16#FF#));
       Write (This.Port, MAG_OFFSET_Y_MSB_ADDR, Value => UInt8 (Shift_Right (Outgoing, 8)));
 
-      Outgoing := Unsigned_16'Mod (Offsets.Mag_Offset_Z);
+      Outgoing := UInt16'Mod (Offsets.Mag_Offset_Z);
       Write (This.Port, MAG_OFFSET_Z_LSB_ADDR, Value => UInt8 (Outgoing and 16#FF#));
       Write (This.Port, MAG_OFFSET_Z_MSB_ADDR, Value => UInt8 (Shift_Right (Outgoing, 8)));
       --  The Datasheet, section 3.6.4.2 "Magnetometer offset" says the
       --  configuration only occurs when the MSB of the Z offset is written
 
-      Outgoing := Unsigned_16'Mod (Offsets.Accel_Radius);
+      Outgoing := UInt16'Mod (Offsets.Accel_Radius);
       Write (This.Port, ACCEL_RADIUS_LSB_ADDR, Value => UInt8 (Outgoing and 16#FF#));
       Write (This.Port, ACCEL_RADIUS_MSB_ADDR, Value => UInt8 (Shift_Right (Outgoing, 8)));
       --  The Datasheet, section 3.6.4.4 "Radius" says the
       --  configuration only occurs when the MSB of the radius is written
 
-      Outgoing := Unsigned_16'Mod (Offsets.Mag_Radius);
+      Outgoing := UInt16'Mod (Offsets.Mag_Radius);
       Write (This.Port, MAG_RADIUS_LSB_ADDR, Value => UInt8 (Outgoing and 16#FF#));
       Write (This.Port, MAG_RADIUS_MSB_ADDR, Value => UInt8 (Shift_Right (Outgoing, 8)));
       --  The Datasheet, section 3.6.4.4 "Radius" says the
@@ -671,15 +671,15 @@ package body Bosch_BNO055 is
    -- Value_At --
    --------------
 
-   function Value_At (This : in out BNO055_9DOF_IMU; MSB, LSB : Register_Address) return Unsigned_16 is
+   function Value_At (This : in out BNO055_9DOF_IMU; MSB, LSB : Register_Address) return UInt16 is
       High, Low : UInt8;
-      Result    : Unsigned_16;
+      Result    : UInt16;
    begin
       Read (This.Port, Register => MSB, Value => High);
       Read (This.Port, Register => LSB, Value => Low);
-      Result := Unsigned_16 (High);
+      Result := UInt16 (High);
       Result := Shift_Left (Result, 8);
-      Result := Result or Unsigned_16 (Low);
+      Result := Result or UInt16 (Low);
       return Result;
    end Value_At;
 

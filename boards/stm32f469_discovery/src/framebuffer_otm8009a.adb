@@ -233,7 +233,7 @@ package body Framebuffer_OTM8009A is
    --------------------
 
    overriding procedure Set_Background
-     (Display : Frame_Buffer; R, G, B : Byte)
+     (Display : Frame_Buffer; R, G, B : UInt8)
    is
       pragma Unreferenced (Display);
    begin

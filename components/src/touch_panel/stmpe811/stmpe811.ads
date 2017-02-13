@@ -83,19 +83,19 @@ private
    subtype TSC_Data is I2C_Data;
 
    function Read_Data (This      : in out STMPE811_Device;
-                       Data_Addr : Byte;
+                       Data_Addr : UInt8;
                        Length    : Natural) return TSC_Data;
    function Read_Register (This     : STMPE811_Device;
-                           Reg_Addr : Byte) return Byte;
+                           Reg_Addr : UInt8) return UInt8;
    procedure Write_Register (This     : in out STMPE811_Device;
-                             Reg_Addr : Byte;
-                             Data     : Byte);
+                             Reg_Addr : UInt8;
+                             Data     : UInt8);
    procedure IOE_Reset (This : in out STMPE811_Device);
    procedure IOE_Function_Command (This : in out STMPE811_Device;
-                                   Func : Byte;
+                                   Func : UInt8;
                                    Enabled : Boolean);
    procedure IOE_AF_Config (This      : in out STMPE811_Device;
-                            Pin       : Byte;
+                            Pin       : UInt8;
                             Enabled   : Boolean);
    function Get_IOE_ID (This : in out STMPE811_Device) return UInt16;
 

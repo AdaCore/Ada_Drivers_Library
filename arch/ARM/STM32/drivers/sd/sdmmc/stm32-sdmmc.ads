@@ -87,43 +87,43 @@ package STM32.SDMMC is
       High_Capacity_MMC_Card);
 
    type Card_Specific_Data_Register is record
-      CSD_Structure                    : Byte;
-      System_Specification_Version     : Byte;
-      Reserved                         : Byte;
-      Data_Read_Access_Time_1          : Byte;
-      Data_Read_Access_Time_2          : Byte; --  In CLK Cycles
-      Max_Bus_Clock_Frequency          : Byte;
+      CSD_Structure                    : UInt8;
+      System_Specification_Version     : UInt8;
+      Reserved                         : UInt8;
+      Data_Read_Access_Time_1          : UInt8;
+      Data_Read_Access_Time_2          : UInt8; --  In CLK Cycles
+      Max_Bus_Clock_Frequency          : UInt8;
       Card_Command_Class               : UInt16;
-      Max_Read_Data_Block_Length       : Byte;
+      Max_Read_Data_Block_Length       : UInt8;
       Partial_Block_For_Read_Allowed   : Boolean;
       Write_Block_Missalignment        : Boolean;
       Read_Block_Missalignment         : Boolean;
       DSR_Implemented                  : Boolean;
-      Reserved_2                       : Byte;
+      Reserved_2                       : UInt8;
       Device_Size                      : UInt32;
-      Max_Read_Current_At_VDD_Min      : Byte;
-      Max_Read_Current_At_VDD_Max      : Byte;
-      Max_Write_Current_At_VDD_Min     : Byte;
-      Max_Write_Current_At_VDD_Max     : Byte;
-      Device_Size_Multiplier           : Byte;
-      Erase_Group_Size                 : Byte;
-      Erase_Group_Size_Multiplier      : Byte;
-      Write_Protect_Group_Size         : Byte;
+      Max_Read_Current_At_VDD_Min      : UInt8;
+      Max_Read_Current_At_VDD_Max      : UInt8;
+      Max_Write_Current_At_VDD_Min     : UInt8;
+      Max_Write_Current_At_VDD_Max     : UInt8;
+      Device_Size_Multiplier           : UInt8;
+      Erase_Group_Size                 : UInt8;
+      Erase_Group_Size_Multiplier      : UInt8;
+      Write_Protect_Group_Size         : UInt8;
       Write_Protect_Group_Enable       : Boolean;
-      Manufacturer_Default_ECC         : Byte;
-      Write_Speed_Factor               : Byte;
-      Max_Write_Data_Block_Length      : Byte;
+      Manufacturer_Default_ECC         : UInt8;
+      Write_Speed_Factor               : UInt8;
+      Max_Write_Data_Block_Length      : UInt8;
       Partial_Blocks_For_Write_Allowed : Boolean;
-      Reserved_3                       : Byte;
+      Reserved_3                       : UInt8;
       Content_Protection_Application   : Boolean;
       File_Format_Group                : Boolean;
       Copy_Flag                        : Boolean;
       Permanent_Write_Protection       : Boolean;
       Temporary_Write_Protection       : Boolean;
-      File_Format                      : Byte;
-      ECC_Code                         : Byte;
-      CSD_CRC                          : Byte;
-      Reserved_4                       : Byte; --  Always 1
+      File_Format                      : UInt8;
+      ECC_Code                         : UInt8;
+      CSD_CRC                          : UInt8;
+      Reserved_4                       : UInt8; --  Always 1
    end record;
 
    type Card_Revision is record
@@ -152,15 +152,15 @@ package STM32.SDMMC is
    end record;
 
    type Card_Identification_Data_Register is record
-      Manufacturer_ID       : Byte;
+      Manufacturer_ID       : UInt8;
       OEM_Application_ID    : String (1 .. 2);
       Product_Name          : String (1 .. 5);
       Product_Revision      : Card_Revision;
       Product_Serial_Number : UInt32;
-      Reserved_1            : Byte;
+      Reserved_1            : UInt8;
       Manufacturing_Date    : Manufacturing_Date_Type;
-      CID_CRC               : Byte;
-      Reserved_2            : Byte; --  Always 1
+      CID_CRC               : UInt8;
+      Reserved_2            : UInt8; --  Always 1
    end record;
 
    type Card_Information is record
@@ -202,7 +202,7 @@ package STM32.SDMMC is
      (This       : in out SDMMC_Controller;
       Wide_Mode  : Wide_Bus_Mode) return SD_Error;
 
-   type SD_Data is array (Unsigned_16 range <>) of Byte
+   type SD_Data is array (Unsigned_16 range <>) of UInt8
    with Pack;
 
    function Read_Blocks
@@ -287,7 +287,7 @@ package STM32.SDMMC is
 
 private
 
-   type SDMMC_Command is new Byte;
+   type SDMMC_Command is new UInt8;
 
    --  Resets the SD memory card
    Go_Idle_State        : constant SDMMC_Command := 0;

@@ -125,7 +125,7 @@ private
 
    type STMPE1600_SYS_CTRL is record
       INT_Polarity : STMPE1600_Pin_Polarity := Low;
-      Reserved_1   : HAL.Bit := 0;
+      Reserved_1   : HAL.UInt1 := 0;
       INT_Enable   : Boolean := False;
       Reserved_3_4 : HAL.UInt2 := 0;
       Wakeup_En    : Boolean := False;
@@ -207,14 +207,14 @@ private
 
    procedure Read
      (This   : STMPE1600_Expander;
-      Reg    : HAL.Byte;
-      Data   : out HAL.Byte_Array;
+      Reg    : HAL.UInt8;
+      Data   : out HAL.UInt8_Array;
       Status : out Boolean);
 
    procedure Write
      (This   : STMPE1600_Expander;
-      Reg    : HAL.Byte;
-      Data   : HAL.Byte_Array;
+      Reg    : HAL.UInt8;
+      Data   : HAL.UInt8_Array;
       Status : out Boolean);
 
 end STMPE1600;

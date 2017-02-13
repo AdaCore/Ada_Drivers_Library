@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -25,7 +26,7 @@ package STM32_SVD.SYSCFG is
       --  Flash bank mode selection
       FB_MODE        : Boolean := False;
       --  unspecified
-      Reserved_9_9   : HAL.Bit := 16#0#;
+      Reserved_9_9   : HAL.UInt1 := 16#0#;
       --  FMC memory mapping swap
       SWP_FMC        : MEMRM_SWP_FMC_Field := 16#0#;
       --  unspecified
@@ -58,7 +59,7 @@ package STM32_SVD.SYSCFG is
       --  Ethernet PHY interface selection
       MII_RMII_SEL   : Boolean := False;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -301,6 +302,6 @@ package STM32_SVD.SYSCFG is
 
    --  System configuration controller
    SYSCFG_Periph : aliased SYSCFG_Peripheral
-     with Import, Address => SYSCFG_Base;
+     with Import, Address => System'To_Address (16#40013800#);
 
 end STM32_SVD.SYSCFG;

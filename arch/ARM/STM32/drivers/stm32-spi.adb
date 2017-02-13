@@ -63,7 +63,7 @@ package body STM32.SPI is
 
    function As_Half_Word_Pointer is new Ada.Unchecked_Conversion
      (Source => System.Address, Target => Half_Word_Pointer);
-   --  So that we can treat the address of a byte as a pointer to a two-byte
+   --  So that we can treat the address of a UInt8 as a pointer to a two-UInt8
    --  sequence representing a Half_Word quantity
 
    ---------------
@@ -162,7 +162,7 @@ package body STM32.SPI is
    -- Send --
    ----------
 
-   procedure Send (This : in out SPI_Port; Data : Byte) is
+   procedure Send (This : in out SPI_Port; Data : UInt8) is
    begin
       Send (This, UInt16 (Data));
    end Send;
@@ -171,9 +171,9 @@ package body STM32.SPI is
    -- Data --
    ----------
 
-   function Data (This : SPI_Port) return Byte is
+   function Data (This : SPI_Port) return UInt8 is
    begin
-      return Byte (UInt16'(Data (This)));
+      return UInt8 (UInt16'(Data (This)));
    end Data;
 
    -------------
@@ -383,7 +383,7 @@ package body STM32.SPI is
          null;
       end loop;
 
-      --  Clear OVERUN flag in 2-Line communication mode because received byte
+      --  Clear OVERUN flag in 2-Line communication mode because received UInt8
       --  is not read.
       if Current_Data_Direction (This) in D2Lines_RxOnly | D2Lines_FullDuplex
       then  -- right comparison ???
@@ -432,7 +432,7 @@ package body STM32.SPI is
          null;
       end loop;
 
-      --  Clear OVERUN flag in 2-Line communication mode because received byte
+      --  Clear OVERUN flag in 2-Line communication mode because received UInt8
       --  is not read.
       if Current_Data_Direction (This) in D2Lines_RxOnly | D2Lines_FullDuplex
       then  -- right comparison ???
@@ -448,7 +448,7 @@ package body STM32.SPI is
 
    procedure Transmit
      (This     : in out SPI_Port;
-      Outgoing : Byte)
+      Outgoing : UInt8)
    is
    begin
       if CRC_Enabled (This) then
@@ -474,7 +474,7 @@ package body STM32.SPI is
          null;
       end loop;
 
-      --  Clear OVERUN flag in 2-Line communication mode because received byte
+      --  Clear OVERUN flag in 2-Line communication mode because received UInt8
       --  is not read.
       if Current_Data_Direction (This) in D2Lines_RxOnly | D2Lines_FullDuplex
       then  -- right comparison ???
@@ -556,7 +556,7 @@ package body STM32.SPI is
 
    procedure Receive
      (This     : in out SPI_Port;
-      Incoming : out Byte)
+      Incoming : out UInt8)
    is
    begin
       if CRC_Enabled (This) then
@@ -573,7 +573,7 @@ package body STM32.SPI is
          null;
       end loop;
 
-      Incoming := Byte (This.Periph.DR.DR);
+      Incoming := UInt8 (This.Periph.DR.DR);
 
       if CRC_Enabled (This) then
          while Rx_Is_Empty (This) loop
@@ -601,8 +601,8 @@ package body STM32.SPI is
 
    procedure Transmit_Receive
      (This     : in out SPI_Port;
-      Outgoing : Byte_Buffer;
-      Incoming : out Byte_Buffer;
+      Outgoing : UInt8_Buffer;
+      Incoming : out UInt8_Buffer;
       Size     : Positive)
    is
    begin
@@ -648,8 +648,8 @@ package body STM32.SPI is
 
    procedure Transmit_Receive
      (This     : in out SPI_Port;
-      Outgoing : Byte;
-      Incoming : out Byte)
+      Outgoing : UInt8;
+      Incoming : out UInt8)
    is
    begin
       if CRC_Enabled (This) then
@@ -676,9 +676,9 @@ package body STM32.SPI is
          null;
       end loop;
 
-      Incoming := Byte (This.Periph.DR.DR);
+      Incoming := UInt8 (This.Periph.DR.DR);
 
-      --  Read CRC byte to close CRC calculation
+      --  Read CRC UInt8 to close CRC calculation
       if CRC_Enabled (This) then
          --  wait until data is received
          while Rx_Is_Empty (This) loop
@@ -706,8 +706,8 @@ package body STM32.SPI is
 
    procedure Send_Receive_16bit_Mode
      (This     : in out SPI_Port;
-      Outgoing : Byte_Buffer;
-      Incoming : out Byte_Buffer;
+      Outgoing : UInt8_Buffer;
+      Incoming : out UInt8_Buffer;
       Size     : Positive)
    is
       Tx_Count : Natural := Size;
@@ -766,7 +766,7 @@ package body STM32.SPI is
          Incoming_Index := Incoming_Index + 2;
       end loop;
 
-      --  receive the last byte
+      --  receive the last UInt8
       if Current_Mode (This) = Slave then
          --  wait until data is received
          while Rx_Is_Empty (This) loop
@@ -785,8 +785,8 @@ package body STM32.SPI is
 
    procedure Send_Receive_8bit_Mode
      (This     : in out SPI_Port;
-      Outgoing : Byte_Buffer;
-      Incoming : out Byte_Buffer;
+      Outgoing : UInt8_Buffer;
+      Incoming : out UInt8_Buffer;
       Size     : Positive)
    is
       Tx_Count : Natural := Size;
@@ -811,7 +811,7 @@ package body STM32.SPI is
             null;
          end loop;
 
-         Incoming (Incoming_Index) := Byte (This.Periph.DR.DR);
+         Incoming (Incoming_Index) := UInt8 (This.Periph.DR.DR);
 
          return;
 
@@ -837,7 +837,7 @@ package body STM32.SPI is
             null;
          end loop;
 
-         Incoming (Incoming_Index) := Byte (This.Periph.DR.DR);
+         Incoming (Incoming_Index) := UInt8 (This.Periph.DR.DR);
          Incoming_Index := Incoming_Index + 1;
       end loop;
 
@@ -958,7 +958,7 @@ package body STM32.SPI is
          while Rx_Is_Empty (This) loop
             null;
          end loop;
-         K := Byte (This.Periph.DR.DR);
+         K := UInt8 (This.Periph.DR.DR);
       end loop;
    end Receive_8bit_Mode;
 

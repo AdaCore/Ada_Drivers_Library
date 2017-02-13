@@ -30,11 +30,11 @@
 ------------------------------------------------------------------------------
 
 with System;
-with Interfaces;
+with HAL;
 
 package Semihosting is
 
-   type SH_Word is new Interfaces.Unsigned_32;
+   type SH_Word is new HAL.UInt32;
 
    subtype Flag is SH_Word;
 

@@ -60,7 +60,7 @@ package STM32.LTDC is
       Pixel_Fmt_AL88) --  8-bit Alpha, 8-bit Luniunance
      with Size => 3;
 
-   function Bytes_Per_Pixel (Fmt : Pixel_Format) return Natural
+   function UInt8s_Per_Pixel (Fmt : Pixel_Format) return Natural
      with Inline;
 
    subtype Frame_Buffer_Access is System.Address;
@@ -85,7 +85,7 @@ package STM32.LTDC is
    procedure Start;
    procedure Stop;
 
-   procedure Set_Background (R, G, B : Byte);
+   procedure Set_Background (R, G, B : UInt8);
 
    procedure Layer_Init
      (Layer          : LCD_Layer;
@@ -93,7 +93,7 @@ package STM32.LTDC is
       Buffer         : System.Address;
       X, Y           : Natural;
       W, H           : Positive;
-      Constant_Alpha : Byte := 255;
+      Constant_Alpha : UInt8 := 255;
       BF             : Blending_Factor := BF_Pixel_Alpha_X_Constant_Alpha);
 
    procedure Set_Layer_State
@@ -111,7 +111,7 @@ package STM32.LTDC is
 
 private
 
-   function Bytes_Per_Pixel (Fmt : Pixel_Format) return Natural
+   function UInt8s_Per_Pixel (Fmt : Pixel_Format) return Natural
    is (case Fmt is
           when Pixel_Fmt_ARGB8888 => 4,
           when Pixel_Fmt_RGB888 => 3,

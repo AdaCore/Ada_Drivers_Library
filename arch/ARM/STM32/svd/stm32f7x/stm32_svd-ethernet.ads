@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -111,7 +112,7 @@ package STM32_SVD.Ethernet is
       --  Read-only. no description available
       EBS            : DMASR_EBS_Field := 16#0#;
       --  unspecified
-      Reserved_26_26 : HAL.Bit := 16#0#;
+      Reserved_26_26 : HAL.UInt1 := 16#0#;
       --  Read-only. no description available
       MMCS           : Boolean := False;
       --  Read-only. no description available
@@ -157,7 +158,7 @@ package STM32_SVD.Ethernet is
    --  Ethernet DMA operation mode register
    type DMAOMR_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.Bit := 16#0#;
+      Reserved_0_0   : HAL.UInt1 := 16#0#;
       --  SR
       SR             : Boolean := False;
       --  OSF
@@ -165,7 +166,7 @@ package STM32_SVD.Ethernet is
       --  RTC
       RTC            : DMAOMR_RTC_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : HAL.Bit := 16#0#;
+      Reserved_5_5   : HAL.UInt1 := 16#0#;
       --  FUGF
       FUGF           : Boolean := False;
       --  FEF
@@ -304,7 +305,7 @@ package STM32_SVD.Ethernet is
       Reserved_29_31 at 0 range 29 .. 31;
    end record;
 
-   subtype DMARSWTR_RSWTC_Field is HAL.Byte;
+   subtype DMARSWTR_RSWTC_Field is HAL.UInt8;
 
    --  Ethernet DMA receive status watchdog timer register
    type DMARSWTR_Register is record
@@ -339,7 +340,7 @@ package STM32_SVD.Ethernet is
       --  APCS
       APCS           : Boolean := False;
       --  unspecified
-      Reserved_8_8   : HAL.Bit := 16#0#;
+      Reserved_8_8   : HAL.UInt1 := 16#0#;
       --  RD
       RD             : Boolean := False;
       --  IPCO
@@ -353,7 +354,7 @@ package STM32_SVD.Ethernet is
       --  FES
       FES            : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.Bit := 16#1#;
+      Reserved_15_15 : HAL.UInt1 := 16#1#;
       --  CSD
       CSD            : Boolean := False;
       --  IFG
@@ -365,7 +366,7 @@ package STM32_SVD.Ethernet is
       --  WD
       WD             : Boolean := False;
       --  unspecified
-      Reserved_24_24 : HAL.Bit := 16#0#;
+      Reserved_24_24 : HAL.UInt1 := 16#0#;
       --  CSTF
       CSTF           : Boolean := False;
       --  unspecified
@@ -457,7 +458,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       CR             : MACMIIAR_CR_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : HAL.Bit := 16#0#;
+      Reserved_5_5   : HAL.UInt1 := 16#0#;
       --  no description available
       MR             : MACMIIAR_MR_Field := 16#0#;
       --  no description available
@@ -511,11 +512,11 @@ package STM32_SVD.Ethernet is
       --  no description available
       PLT           : MACFCR_PLT_Field := 16#0#;
       --  unspecified
-      Reserved_6_6  : HAL.Bit := 16#0#;
+      Reserved_6_6  : HAL.UInt1 := 16#0#;
       --  no description available
       ZQPD          : Boolean := False;
       --  unspecified
-      Reserved_8_15 : HAL.Byte := 16#0#;
+      Reserved_8_15 : HAL.UInt8 := 16#0#;
       --  no description available
       PT            : MACFCR_PT_Field := 16#0#;
    end record
@@ -708,7 +709,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       MACA1H         : MACA1HR_MACA1H_Field := 16#FFFF#;
       --  unspecified
-      Reserved_16_23 : HAL.Byte := 16#0#;
+      Reserved_16_23 : HAL.UInt8 := 16#0#;
       --  no description available
       MBC            : MACA1HR_MBC_Field := 16#0#;
       --  no description available
@@ -735,7 +736,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       MAC2AH         : MACA2HR_MAC2AH_Field := 16#FFFF#;
       --  unspecified
-      Reserved_16_23 : HAL.Byte := 16#0#;
+      Reserved_16_23 : HAL.UInt8 := 16#0#;
       --  no description available
       MBC            : MACA2HR_MBC_Field := 16#0#;
       --  no description available
@@ -761,7 +762,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       MACA2L         : MACA2LR_MACA2L_Field := 16#7FFFFFFF#;
       --  unspecified
-      Reserved_31_31 : HAL.Bit := 16#1#;
+      Reserved_31_31 : HAL.UInt1 := 16#1#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -779,7 +780,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       MACA3H         : MACA3HR_MACA3H_Field := 16#FFFF#;
       --  unspecified
-      Reserved_16_23 : HAL.Byte := 16#0#;
+      Reserved_16_23 : HAL.UInt8 := 16#0#;
       --  no description available
       MBC            : MACA3HR_MBC_Field := 16#0#;
       --  no description available
@@ -998,7 +999,7 @@ package STM32_SVD.Ethernet is
       Reserved_19_31 at 0 range 19 .. 31;
    end record;
 
-   subtype PTPSSIR_STSSI_Field is HAL.Byte;
+   subtype PTPSSIR_STSSI_Field is HAL.UInt8;
 
    --  Ethernet PTP subsecond increment register
    type PTPSSIR_Register is record
@@ -1141,7 +1142,7 @@ package STM32_SVD.Ethernet is
 
    --  Ethernet: DMA controller operation
    Ethernet_DMA_Periph : aliased Ethernet_DMA_Peripheral
-     with Import, Address => Ethernet_DMA_Base;
+     with Import, Address => System'To_Address (16#40029000#);
 
    --  Ethernet: media access control (MAC)
    type Ethernet_MAC_Peripheral is record
@@ -1216,7 +1217,7 @@ package STM32_SVD.Ethernet is
 
    --  Ethernet: media access control (MAC)
    Ethernet_MAC_Periph : aliased Ethernet_MAC_Peripheral
-     with Import, Address => Ethernet_MAC_Base;
+     with Import, Address => System'To_Address (16#40028000#);
 
    --  Ethernet: MAC management counters
    type Ethernet_MMC_Peripheral is record
@@ -1262,7 +1263,7 @@ package STM32_SVD.Ethernet is
 
    --  Ethernet: MAC management counters
    Ethernet_MMC_Periph : aliased Ethernet_MMC_Peripheral
-     with Import, Address => Ethernet_MMC_Base;
+     with Import, Address => System'To_Address (16#40028100#);
 
    --  Ethernet: Precision time protocol
    type Ethernet_PTP_Peripheral is record
@@ -1307,6 +1308,6 @@ package STM32_SVD.Ethernet is
 
    --  Ethernet: Precision time protocol
    Ethernet_PTP_Periph : aliased Ethernet_PTP_Peripheral
-     with Import, Address => Ethernet_PTP_Base;
+     with Import, Address => System'To_Address (16#40028700#);
 
 end STM32_SVD.Ethernet;

@@ -56,13 +56,13 @@ package LIS3DSH.SPI is
    overriding
    procedure IO_Write
      (This      : in out Three_Axis_Accelerometer_SPI;
-      Value     : Byte;
+      Value     : UInt8;
       WriteAddr : Register_Address);
 
    overriding
    procedure IO_Read
      (This     : Three_Axis_Accelerometer_SPI;
-      Value    : out Byte;
+      Value    : out UInt8;
       ReadAddr : Register_Address);
 
 private

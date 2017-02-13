@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -229,7 +230,7 @@ package STM32_SVD.CAN is
       --  Read-only. FMP0
       FMP0          : RF0R_FMP0_Field := 16#0#;
       --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
+      Reserved_2_2  : HAL.UInt1 := 16#0#;
       --  FULL0
       FULL0         : Boolean := False;
       --  FOVR0
@@ -258,7 +259,7 @@ package STM32_SVD.CAN is
       --  Read-only. FMP1
       FMP1          : RF1R_FMP1_Field := 16#0#;
       --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
+      Reserved_2_2  : HAL.UInt1 := 16#0#;
       --  FULL1
       FULL1         : Boolean := False;
       --  FOVR1
@@ -297,7 +298,7 @@ package STM32_SVD.CAN is
       --  FOVIE1
       FOVIE1         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.Bit := 16#0#;
+      Reserved_7_7   : HAL.UInt1 := 16#0#;
       --  EWGIE
       EWGIE          : Boolean := False;
       --  EPVIE
@@ -341,8 +342,8 @@ package STM32_SVD.CAN is
    end record;
 
    subtype ESR_LEC_Field is HAL.UInt3;
-   subtype ESR_TEC_Field is HAL.Byte;
-   subtype ESR_REC_Field is HAL.Byte;
+   subtype ESR_TEC_Field is HAL.UInt8;
+   subtype ESR_REC_Field is HAL.UInt8;
 
    --  interrupt enable register
    type ESR_Register is record
@@ -353,7 +354,7 @@ package STM32_SVD.CAN is
       --  Read-only. BOFF
       BOFF          : Boolean := False;
       --  unspecified
-      Reserved_3_3  : HAL.Bit := 16#0#;
+      Reserved_3_3  : HAL.UInt1 := 16#0#;
       --  LEC
       LEC           : ESR_LEC_Field := 16#0#;
       --  unspecified
@@ -393,7 +394,7 @@ package STM32_SVD.CAN is
       --  TS2
       TS2            : BTR_TS2_Field := 16#0#;
       --  unspecified
-      Reserved_23_23 : HAL.Bit := 16#0#;
+      Reserved_23_23 : HAL.UInt1 := 16#0#;
       --  SJW
       SJW            : BTR_SJW_Field := 16#0#;
       --  unspecified
@@ -473,7 +474,7 @@ package STM32_SVD.CAN is
    end record;
 
    --  TDL0R_DATA array element
-   subtype TDL0R_DATA_Element is HAL.Byte;
+   subtype TDL0R_DATA_Element is HAL.UInt8;
 
    --  TDL0R_DATA array
    type TDL0R_DATA_Field_Array is array (0 .. 3) of TDL0R_DATA_Element
@@ -501,7 +502,7 @@ package STM32_SVD.CAN is
    end record;
 
    --  TDH0R_DATA array element
-   subtype TDH0R_DATA_Element is HAL.Byte;
+   subtype TDH0R_DATA_Element is HAL.UInt8;
 
    --  TDH0R_DATA array
    type TDH0R_DATA_Field_Array is array (4 .. 7) of TDH0R_DATA_Element
@@ -583,7 +584,7 @@ package STM32_SVD.CAN is
    end record;
 
    --  TDL1R_DATA array element
-   subtype TDL1R_DATA_Element is HAL.Byte;
+   subtype TDL1R_DATA_Element is HAL.UInt8;
 
    --  TDL1R_DATA array
    type TDL1R_DATA_Field_Array is array (0 .. 3) of TDL1R_DATA_Element
@@ -611,7 +612,7 @@ package STM32_SVD.CAN is
    end record;
 
    --  TDH1R_DATA array element
-   subtype TDH1R_DATA_Element is HAL.Byte;
+   subtype TDH1R_DATA_Element is HAL.UInt8;
 
    --  TDH1R_DATA array
    type TDH1R_DATA_Field_Array is array (4 .. 7) of TDH1R_DATA_Element
@@ -693,7 +694,7 @@ package STM32_SVD.CAN is
    end record;
 
    --  TDL2R_DATA array element
-   subtype TDL2R_DATA_Element is HAL.Byte;
+   subtype TDL2R_DATA_Element is HAL.UInt8;
 
    --  TDL2R_DATA array
    type TDL2R_DATA_Field_Array is array (0 .. 3) of TDL2R_DATA_Element
@@ -721,7 +722,7 @@ package STM32_SVD.CAN is
    end record;
 
    --  TDH2R_DATA array element
-   subtype TDH2R_DATA_Element is HAL.Byte;
+   subtype TDH2R_DATA_Element is HAL.UInt8;
 
    --  TDH2R_DATA array
    type TDH2R_DATA_Field_Array is array (4 .. 7) of TDH2R_DATA_Element
@@ -754,7 +755,7 @@ package STM32_SVD.CAN is
    --  receive FIFO mailbox identifier register
    type RI0R_Register is record
       --  unspecified
-      Reserved_0_0 : HAL.Bit;
+      Reserved_0_0 : HAL.UInt1;
       --  Read-only. RTR
       RTR          : Boolean;
       --  Read-only. IDE
@@ -776,7 +777,7 @@ package STM32_SVD.CAN is
    end record;
 
    subtype RDT0R_DLC_Field is HAL.UInt4;
-   subtype RDT0R_FMI_Field is HAL.Byte;
+   subtype RDT0R_FMI_Field is HAL.UInt8;
    subtype RDT0R_TIME_Field is HAL.UInt16;
 
    --  mailbox data high register
@@ -801,7 +802,7 @@ package STM32_SVD.CAN is
    end record;
 
    --  RDL0R_DATA array element
-   subtype RDL0R_DATA_Element is HAL.Byte;
+   subtype RDL0R_DATA_Element is HAL.UInt8;
 
    --  RDL0R_DATA array
    type RDL0R_DATA_Field_Array is array (0 .. 3) of RDL0R_DATA_Element
@@ -829,7 +830,7 @@ package STM32_SVD.CAN is
    end record;
 
    --  RDH0R_DATA array element
-   subtype RDH0R_DATA_Element is HAL.Byte;
+   subtype RDH0R_DATA_Element is HAL.UInt8;
 
    --  RDH0R_DATA array
    type RDH0R_DATA_Field_Array is array (4 .. 7) of RDH0R_DATA_Element
@@ -862,7 +863,7 @@ package STM32_SVD.CAN is
    --  mailbox data high register
    type RI1R_Register is record
       --  unspecified
-      Reserved_0_0 : HAL.Bit;
+      Reserved_0_0 : HAL.UInt1;
       --  Read-only. RTR
       RTR          : Boolean;
       --  Read-only. IDE
@@ -884,7 +885,7 @@ package STM32_SVD.CAN is
    end record;
 
    subtype RDT1R_DLC_Field is HAL.UInt4;
-   subtype RDT1R_FMI_Field is HAL.Byte;
+   subtype RDT1R_FMI_Field is HAL.UInt8;
    subtype RDT1R_TIME_Field is HAL.UInt16;
 
    --  mailbox data high register
@@ -909,7 +910,7 @@ package STM32_SVD.CAN is
    end record;
 
    --  RDL1R_DATA array element
-   subtype RDL1R_DATA_Element is HAL.Byte;
+   subtype RDL1R_DATA_Element is HAL.UInt8;
 
    --  RDL1R_DATA array
    type RDL1R_DATA_Field_Array is array (0 .. 3) of RDL1R_DATA_Element
@@ -937,7 +938,7 @@ package STM32_SVD.CAN is
    end record;
 
    --  RDH1R_DATA array element
-   subtype RDH1R_DATA_Element is HAL.Byte;
+   subtype RDH1R_DATA_Element is HAL.UInt8;
 
    --  RDH1R_DATA array
    type RDH1R_DATA_Field_Array is array (4 .. 7) of RDH1R_DATA_Element
@@ -2124,10 +2125,10 @@ package STM32_SVD.CAN is
 
    --  Controller area network
    CAN1_Periph : aliased CAN_Peripheral
-     with Import, Address => CAN1_Base;
+     with Import, Address => System'To_Address (16#40006400#);
 
    --  Controller area network
    CAN2_Periph : aliased CAN_Peripheral
-     with Import, Address => CAN2_Base;
+     with Import, Address => System'To_Address (16#40006800#);
 
 end STM32_SVD.CAN;

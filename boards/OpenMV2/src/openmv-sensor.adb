@@ -34,7 +34,6 @@ with STM32.DMA;     use STM32.DMA;
 with Ada.Real_Time; use Ada.Real_Time;
 with OV2640;        use OV2640;
 with OV7725;        use OV7725;
-with Interfaces;    use Interfaces;
 with HAL.I2C;       use HAL.I2C;
 with HAL.Bitmap;    use HAL.Bitmap;
 with HAL;           use HAL;
@@ -49,7 +48,7 @@ package body OpenMV.Sensor is
    --  REG_VER : constant := 16#0B#;
 
    CLK_PWM_Mod    : PWM_Modulator (SENSOR_CLK_TIM'Access);
-   Camera_PID     : HAL.Byte := 0;
+   Camera_PID     : HAL.UInt8 := 0;
    Camera_2640    : OV2640_Camera (Sensor_I2C'Access);
    Camera_7725    : OV7725_Camera (Sensor_I2C'Access);
    Is_Initialized : Boolean := False;
@@ -318,8 +317,7 @@ package body OpenMV.Sensor is
 
    procedure Snapshot (BM : not null HAL.Bitmap.Any_Bitmap_Buffer) is
       Status : DMA_Error_Code;
-      Cnt : constant Interfaces.Unsigned_16 :=
-        Interfaces.Unsigned_16 ((BM.Width * BM.Height) / 2);
+      Cnt : constant UInt16 := UInt16 ((BM.Width * BM.Height) / 2);
    begin
       if BM.Width /= Image_Width
         or else
