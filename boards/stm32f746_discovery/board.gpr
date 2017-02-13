@@ -1,5 +1,5 @@
 with "config";
-with "../../ARM/STM32/stm32f7x";
+with "../../arch/ARM/STM32/stm32f7x";
 with "../../components/components";
 with "../../middleware/middleware";
 

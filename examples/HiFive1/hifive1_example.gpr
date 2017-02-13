@@ -1,0 +1,26 @@
+with "../../boards/hifive1.gpr";
+with "../../boards/HiFive1/config";
+
+project HiFive1_Example is
+
+  for Runtime ("ada") use Project'Project_Dir & "/zfp-hifive1";
+  for Target use "riscv32-unknown-elf";
+  for Main use ("main.adb");
+  for Languages use ("Ada");
+  for Source_Dirs use ("src");
+  for Object_Dir use "obj";
+
+  package Compiler renames Config.Compiler;
+  package Builder renames Config.Builder;
+
+  package Linker is
+     for Default_Switches ("Ada") use ("-Wl,--print-memory-usage",
+                                       "-Wl,--gc-sections");
+  end Linker;
+
+  package Ide is
+     for Program_Host use ":3333";
+     for Communication_Protocol use "remote";
+  end Ide;
+
+end HiFive1_Example;
