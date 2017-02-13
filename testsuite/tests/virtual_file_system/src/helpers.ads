@@ -19,11 +19,11 @@ package Helpers is
    --  Create a native FS driver rooted at Root_Dir, in the Material_Name
    --  material directory.
 
-   function Read_File (File : in out File_Handle'Class) return Byte_Array;
+   function Read_File (File : in out File_Handle'Class) return UInt8_Array;
    --  Read the whole content of File and return it. Raise a Program_Error if
    --  anything goes wrong.
 
-   function Quote_Bytes (Bytes : Byte_Array) return String;
+   function Quote_Bytes (Bytes : UInt8_Array) return String;
    --  Return a human-readable representation of Bytes, considered as ASCII
 
    procedure Dump (FS : in out FS_Driver'Class; Dir : Pathname);

@@ -401,7 +401,7 @@ package body Native.Filesystem is
 
    overriding function Read
      (This : in out Native_File_Handle;
-      Data : out Byte_Array)
+      Data : out UInt8_Array)
       return Status_Kind
    is
    begin
@@ -423,7 +423,7 @@ package body Native.Filesystem is
 
    overriding function Write
      (This : in out Native_File_Handle;
-      Data : Byte_Array)
+      Data : UInt8_Array)
       return Status_Kind
    is
    begin

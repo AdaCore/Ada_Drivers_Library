@@ -50,12 +50,12 @@ package body Helpers is
    -- Read_File --
    ---------------
 
-   function Read_File (File : in out File_Handle'Class) return Byte_Array is
-      type Byte_Array_Access is access Byte_Array;
+   function Read_File (File : in out File_Handle'Class) return UInt8_Array is
+      type UInt8_Array_Access is access UInt8_Array;
       procedure Destroy is new Ada.Unchecked_Deallocation
-        (Byte_Array, Byte_Array_Access);
+        (UInt8_Array, UInt8_Array_Access);
 
-      Buffer : Byte_Array_Access := new Byte_Array (1 .. 1024);
+      Buffer : UInt8_Array_Access := new UInt8_Array (1 .. 1024);
       Last   : Natural := 0;
    begin
       loop
@@ -63,8 +63,8 @@ package body Helpers is
 
          if Last >= Buffer'Last then
             declare
-               New_Buffer : constant Byte_Array_Access :=
-                 new Byte_Array (1 .. 2 * Buffer'Length);
+               New_Buffer : constant UInt8_Array_Access :=
+                 new UInt8_Array (1 .. 2 * Buffer'Length);
             begin
                New_Buffer (1 .. Buffer'Length) := Buffer.all;
                Destroy (Buffer);
@@ -87,7 +87,7 @@ package body Helpers is
       end loop;
 
       declare
-         Result : constant Byte_Array := Buffer (1 .. Last);
+         Result : constant UInt8_Array := Buffer (1 .. Last);
       begin
          Destroy (Buffer);
          return Result;
@@ -98,12 +98,11 @@ package body Helpers is
    -- Quote_Bytes --
    -----------------
 
-   function Quote_Bytes (Bytes : Byte_Array) return String is
+   function Quote_Bytes (Bytes : UInt8_Array) return String is
       use Ada.Strings.Unbounded;
-      use type HAL.Byte;
       Result : Unbounded_String;
 
-      Hex_Digits : constant array (Byte range 0 .. 15) of Character :=
+      Hex_Digits : constant array (UInt8 range 0 .. 15) of Character :=
         "0123456789abcdef";
    begin
       for B of Bytes loop
@@ -153,7 +152,7 @@ package body Helpers is
                   begin
                      Test (FS.Open (Name, Read_Only, File));
                      declare
-                        Content : constant Byte_Array := Read_File (File.all);
+                        Content : constant UInt8_Array := Read_File (File.all);
                      begin
                         Put_Line ("  Contents: " & Quote_Bytes (Content));
                      end;
