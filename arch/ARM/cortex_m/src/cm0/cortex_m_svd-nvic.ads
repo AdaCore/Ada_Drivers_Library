@@ -17,7 +17,7 @@ package Cortex_M_SVD.NVIC is
    --  Interrupt Priority Register
 
    --  Interrupt Priority Register
-   type NVIC_IPR_Registers is array (0 .. 31) of HAL.UInt8;
+   type NVIC_IPR_Registers is array (0 .. 7) of HAL.UInt32;
 
    -----------------
    -- Peripherals --
