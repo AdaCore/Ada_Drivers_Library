@@ -135,7 +135,7 @@ package STM32_SVD.ADC is
       --  Start conversion of injected channels
       JSWSTART       : Boolean := False;
       --  unspecified
-      Reserved_23_23 : HAL.UInt1 := 16#0#;
+      Reserved_23_23 : HAL.Bit := 16#0#;
       --  External event select for regular group
       EXTSEL         : CR2_EXTSEL_Field := 16#0#;
       --  External trigger enable for regular channels
@@ -143,7 +143,7 @@ package STM32_SVD.ADC is
       --  Start conversion of regular channels
       SWSTART        : Boolean := False;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -651,7 +651,7 @@ package STM32_SVD.ADC is
       --  Delay between 2 sampling phases
       DELAY_k        : CCR_DELAY_Field := 16#0#;
       --  unspecified
-      Reserved_12_12 : HAL.UInt1 := 16#0#;
+      Reserved_12_12 : HAL.Bit := 16#0#;
       --  DMA disable selection for multi-ADC mode
       DDS            : Boolean := False;
       --  Direct memory access mode for multi ADC mode

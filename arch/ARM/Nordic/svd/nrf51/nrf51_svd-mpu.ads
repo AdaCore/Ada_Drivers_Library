@@ -308,7 +308,7 @@ package NRF51_SVD.MPU is
       --  SPI1 and TWI1 region configuration.
       SPI1_TWI1      : PERR0_SPI1_TWI1_Field := NRF51_SVD.MPU.Inregion1;
       --  unspecified
-      Reserved_5_5   : HAL.UInt1 := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  GPIOTE region configuration.
       GPIOTE         : PERR0_GPIOTE_Field := NRF51_SVD.MPU.Inregion1;
       --  ADC region configuration.

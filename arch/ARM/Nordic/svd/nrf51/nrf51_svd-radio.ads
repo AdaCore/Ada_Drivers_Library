@@ -162,7 +162,7 @@ package NRF51_SVD.RADIO is
       ADDRESS_BCSTART   : SHORTS_ADDRESS_BCSTART_Field :=
                            NRF51_SVD.RADIO.Disabled;
       --  unspecified
-      Reserved_7_7      : HAL.UInt1 := 16#0#;
+      Reserved_7_7      : HAL.Bit := 16#0#;
       --  Shortcut between DISABLED event and RSSISTOP task.
       DISABLED_RSSISTOP : SHORTS_DISABLED_RSSISTOP_Field :=
                            NRF51_SVD.RADIO.Disabled;

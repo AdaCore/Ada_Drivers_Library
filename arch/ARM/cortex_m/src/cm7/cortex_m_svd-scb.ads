@@ -430,7 +430,7 @@ package Cortex_M_SVD.SCB is
       --  pending enabled exception.
       VECTPENDING    : ICSR_VECTPENDING_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.UInt1 := 16#0#;
+      Reserved_21_21 : HAL.Bit := 16#0#;
       --  Interrupt pending flag, excluding NMI and Faults
       ISRPENDING     : Boolean := False;
       --  unspecified
@@ -560,12 +560,12 @@ package Cortex_M_SVD.SCB is
    --  System Control Register
    type SCR_Register is record
       --  unspecified
-      Reserved_0_0  : HAL.UInt1 := 16#0#;
+      Reserved_0_0  : HAL.Bit := 16#0#;
       --  Indicates sleep-on-exit when returning from Handler mode to Thread
       --  mode
       SLEEPONEXIT   : Boolean := False;
       --  unspecified
-      Reserved_2_2  : HAL.UInt1 := 16#0#;
+      Reserved_2_2  : HAL.Bit := 16#0#;
       --  Controls whether the processor uses sleep or deep sleep as its
       --  low-power mode
       SLEEPDEEP     : Boolean := False;
@@ -607,7 +607,7 @@ package Cortex_M_SVD.SCB is
       --  Enables unprivileged software access to the STIR
       USERSETMPEND     : Boolean := False;
       --  unspecified
-      Reserved_2_2     : HAL.UInt1 := 16#0#;
+      Reserved_2_2     : HAL.Bit := 16#0#;
       --  Enables unalign access traps.
       UNALIGNED_TRP    : Boolean := False;
       --  Enables faulting or halting when the processor executes an SDIF or
@@ -721,7 +721,7 @@ package Cortex_M_SVD.SCB is
       --  active.
       BUSFAULTACT    : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.UInt1 := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  Read-only. UsageFault exception active bit, reads as 1 if exception
       --  is active.
       USGFAULTACT    : Boolean := False;
@@ -733,7 +733,7 @@ package Cortex_M_SVD.SCB is
       --  active.
       MONITORACT     : Boolean := False;
       --  unspecified
-      Reserved_9_9   : HAL.UInt1 := 16#0#;
+      Reserved_9_9   : HAL.Bit := 16#0#;
       --  Read-only. PendSV exception active bit, reads as 1 if exception is
       --  active.
       PENDSVACT      : Boolean := False;
@@ -791,7 +791,7 @@ package Cortex_M_SVD.SCB is
       --  Data access violation flag
       DACCVIOL     : Boolean := False;
       --  unspecified
-      Reserved_2_2 : HAL.UInt1 := 16#0#;
+      Reserved_2_2 : HAL.Bit := 16#0#;
       --  MemManage fault on unstacking for a return from exception
       MUNSTKERR    : Boolean := False;
       --  MemManage fault on stacking for exception entry
@@ -799,7 +799,7 @@ package Cortex_M_SVD.SCB is
       --  MemManage fault during floating-point lazy state preservation.
       MLSPERR      : Boolean := False;
       --  unspecified
-      Reserved_6_6 : HAL.UInt1 := 16#0#;
+      Reserved_6_6 : HAL.Bit := 16#0#;
       --  MemManage fault address register valid flag.
       MMARVALID    : Boolean := False;
    end record
@@ -831,7 +831,7 @@ package Cortex_M_SVD.SCB is
       --  BusFault on floating-point lazy state preservation.
       LSPERR       : Boolean := False;
       --  unspecified
-      Reserved_6_6 : HAL.UInt1 := 16#0#;
+      Reserved_6_6 : HAL.Bit := 16#0#;
       --  BusFault Address Register valid flag.
       BFARVALID    : Boolean := False;
    end record
@@ -885,7 +885,7 @@ package Cortex_M_SVD.SCB is
    --  HardFault Status Register
    type HFSR_Register is record
       --  unspecified
-      Reserved_0_0  : HAL.UInt1 := 16#0#;
+      Reserved_0_0  : HAL.Bit := 16#0#;
       --  Indicates a BusFault on a vector table read during exception
       --  processing.
       VECTTBL       : Boolean := False;

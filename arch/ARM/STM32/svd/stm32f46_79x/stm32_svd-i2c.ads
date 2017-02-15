@@ -21,7 +21,7 @@ package STM32_SVD.I2C is
       --  SMBus mode
       SMBUS          : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.UInt1 := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  SMBus type
       SMBTYPE        : Boolean := False;
       --  ARP enable
@@ -45,7 +45,7 @@ package STM32_SVD.I2C is
       --  SMBus alert
       ALERT          : Boolean := False;
       --  unspecified
-      Reserved_14_14 : HAL.UInt1 := 16#0#;
+      Reserved_14_14 : HAL.Bit := 16#0#;
       --  Software reset
       SWRST          : Boolean := False;
       --  unspecified
@@ -189,7 +189,7 @@ package STM32_SVD.I2C is
       --  Read-only. Stop detection (slave mode)
       STOPF          : Boolean := False;
       --  unspecified
-      Reserved_5_5   : HAL.UInt1 := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  Read-only. Data register not empty (receivers)
       RxNE           : Boolean := False;
       --  Read-only. Data register empty (transmitters)
@@ -205,7 +205,7 @@ package STM32_SVD.I2C is
       --  PEC Error in reception
       PECERR         : Boolean := False;
       --  unspecified
-      Reserved_13_13 : HAL.UInt1 := 16#0#;
+      Reserved_13_13 : HAL.Bit := 16#0#;
       --  Timeout or Tlow error
       TIMEOUT        : Boolean := False;
       --  SMBus alert
@@ -247,7 +247,7 @@ package STM32_SVD.I2C is
       --  Read-only. Transmitter/receiver
       TRA            : Boolean;
       --  unspecified
-      Reserved_3_3   : HAL.UInt1;
+      Reserved_3_3   : HAL.Bit;
       --  Read-only. General call address (Slave mode)
       GENCALL        : Boolean;
       --  Read-only. SMBus device default address (Slave mode)

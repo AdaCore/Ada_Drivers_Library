@@ -81,7 +81,7 @@ package Cortex_M_SVD.FPU is
       --  stack frame was allocated.
       USER          : Boolean := False;
       --  unspecified
-      Reserved_2_2  : HAL.UInt1 := 16#0#;
+      Reserved_2_2  : HAL.Bit := 16#0#;
       --  Read-only. If set, the mode was Thread Mode when the floating-point
       --  stack frame was allocated.
       THREAD        : Boolean := False;
@@ -98,7 +98,7 @@ package Cortex_M_SVD.FPU is
       --  stack frame was allocated.
       BFRDY         : Boolean := False;
       --  unspecified
-      Reserved_7_7  : HAL.UInt1 := 16#0#;
+      Reserved_7_7  : HAL.Bit := 16#0#;
       --  Read-only. If set, DebugMonitor is enabled and priority permitted
       --  setting the DebugMonitor handler to the pending state when the
       --  floating-point stack frame was allocated.

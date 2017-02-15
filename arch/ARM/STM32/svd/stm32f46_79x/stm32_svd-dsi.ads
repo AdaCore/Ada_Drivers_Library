@@ -463,7 +463,7 @@ package STM32_SVD.DSI is
       --  Generic Long Write Transmission
       GLWTX          : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  DCS Short Write Zero parameter Transmission
       DSW0TX         : Boolean := False;
       --  DCS Short Read One parameter Transmission
@@ -753,7 +753,7 @@ package STM32_SVD.DSI is
       --  Maximum Read Time
       MRD_TIME       : DSI_DLTCR_MRD_TIME_Field := 16#0#;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Low-Power To High-Speed Time
       LP2HS_TIME     : DSI_DLTCR_LP2HS_TIME_Field := 16#0#;
       --  High-Speed To Low-Power Time
@@ -772,7 +772,7 @@ package STM32_SVD.DSI is
    --  DSI Host PHY Control Register
    type DSI_PCTLR_Register is record
       --  unspecified
-      Reserved_0_0  : HAL.UInt1 := 16#0#;
+      Reserved_0_0  : HAL.Bit := 16#0#;
       --  Digital Enable
       DEN           : Boolean := False;
       --  Clock Enable
@@ -858,7 +858,7 @@ package STM32_SVD.DSI is
    --  DSI Host PHY Status Register
    type DSI_PSR_Register is record
       --  unspecified
-      Reserved_0_0  : HAL.UInt1;
+      Reserved_0_0  : HAL.Bit;
       --  Read-only. PHY Direction
       PD            : Boolean;
       --  Read-only. PHY Stop State Clock lane
@@ -1658,7 +1658,7 @@ package STM32_SVD.DSI is
       --  Read-only. PLL Unlock Interrupt Flag
       PLLUIF         : Boolean;
       --  unspecified
-      Reserved_11_11 : HAL.UInt1;
+      Reserved_11_11 : HAL.Bit;
       --  Read-only. Regulator Ready Status
       RRS            : Boolean;
       --  Read-only. Regulator Ready Interrupt Flag
@@ -1787,11 +1787,11 @@ package STM32_SVD.DSI is
       --  Contention Detection OFF on Data Lanes
       CDOFFDL        : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Turn Disable Data Lanes
       TDDL           : Boolean := False;
       --  unspecified
-      Reserved_17_17 : HAL.UInt1 := 16#0#;
+      Reserved_17_17 : HAL.Bit := 16#0#;
       --  Pull-Down Enable
       PDEN           : Boolean := False;
       --  custom time for tCLK-PREPARE Enable
@@ -1983,7 +1983,7 @@ package STM32_SVD.DSI is
       --  PLL Enable
       PLLEN          : Boolean := False;
       --  unspecified
-      Reserved_1_1   : HAL.UInt1 := 16#0#;
+      Reserved_1_1   : HAL.Bit := 16#0#;
       --  PLL Loop Division Factor
       NDIV           : DSI_WRPCR_NDIV_Field := 16#0#;
       --  unspecified
@@ -1991,7 +1991,7 @@ package STM32_SVD.DSI is
       --  PLL Input Division Factor
       IDF            : DSI_WRPCR_IDF_Field := 16#0#;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  PLL Output Division Factor
       ODF            : DSI_WRPCR_ODF_Field := 16#0#;
       --  unspecified

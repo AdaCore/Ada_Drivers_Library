@@ -25,7 +25,7 @@ package STM32_SVD.PWR is
       --  Power down deepsleep
       PDDS           : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.UInt1 := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  Clear standby flag
       CSBF           : Boolean := False;
       --  Power voltage detector enable
@@ -41,7 +41,7 @@ package STM32_SVD.PWR is
       --  Main regulator in deepsleep under-drive mode
       MRUDS          : Boolean := False;
       --  unspecified
-      Reserved_12_12 : HAL.UInt1 := 16#0#;
+      Reserved_12_12 : HAL.Bit := 16#0#;
       --  ADCDC1
       ADCDC1         : Boolean := False;
       --  Regulator voltage scaling output selection
@@ -99,7 +99,7 @@ package STM32_SVD.PWR is
       --  Regulator voltage scaling output selection ready bit
       VOSRDY         : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Over-drive mode ready
       ODRDY          : Boolean := False;
       --  Over-drive mode switching ready

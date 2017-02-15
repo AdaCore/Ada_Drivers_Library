@@ -167,7 +167,7 @@ package Cortex_M_SVD.SCB is
    --  Application Interrupt and Reset Control Register
    type AIRCR_Register is record
       --  unspecified
-      Reserved_0_0  : HAL.UInt1 := 16#0#;
+      Reserved_0_0  : HAL.Bit := 16#0#;
       --  Write-only. Reserved for debug use. This bit reads as 0. When writing
       --  to the register youmust write 0 to this bit, otherwise behavior is
       --  Unpredictable.
@@ -199,7 +199,7 @@ package Cortex_M_SVD.SCB is
    --  System Control Register
    type SCR_Register is record
       --  unspecified
-      Reserved_0_0  : HAL.UInt1 := 16#0#;
+      Reserved_0_0  : HAL.Bit := 16#0#;
       --  Indicates sleep-on-exit when returning from Handler mode to Thread
       --  mode
       SLEEPONEXIT   : Boolean := False;
@@ -207,7 +207,7 @@ package Cortex_M_SVD.SCB is
       --  low-power mode
       SLEEPDEEP     : Boolean := False;
       --  unspecified
-      Reserved_3_3  : HAL.UInt1 := 16#0#;
+      Reserved_3_3  : HAL.Bit := 16#0#;
       --  Send event on pending bit
       SEVONPEND     : Boolean := False;
       --  unspecified

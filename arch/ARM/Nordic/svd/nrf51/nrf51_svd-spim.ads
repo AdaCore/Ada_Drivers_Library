@@ -142,7 +142,7 @@ package NRF51_SVD.SPIM is
    --  Interrupt enable set register.
    type INTENSET_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.UInt1 := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  Enable interrupt on STOPPED event.
       STOPPED        : INTENSET_STOPPED_Field_1 :=
                         Intenset_Stopped_Field_Reset;
@@ -276,7 +276,7 @@ package NRF51_SVD.SPIM is
    --  Interrupt enable clear register.
    type INTENCLR_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.UInt1 := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  Disable interrupt on STOPPED event.
       STOPPED        : INTENCLR_STOPPED_Field_1 :=
                         Intenclr_Stopped_Field_Reset;

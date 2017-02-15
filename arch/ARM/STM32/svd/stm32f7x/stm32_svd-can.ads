@@ -230,7 +230,7 @@ package STM32_SVD.CAN is
       --  Read-only. FMP0
       FMP0          : RF0R_FMP0_Field := 16#0#;
       --  unspecified
-      Reserved_2_2  : HAL.UInt1 := 16#0#;
+      Reserved_2_2  : HAL.Bit := 16#0#;
       --  FULL0
       FULL0         : Boolean := False;
       --  FOVR0
@@ -259,7 +259,7 @@ package STM32_SVD.CAN is
       --  Read-only. FMP1
       FMP1          : RF1R_FMP1_Field := 16#0#;
       --  unspecified
-      Reserved_2_2  : HAL.UInt1 := 16#0#;
+      Reserved_2_2  : HAL.Bit := 16#0#;
       --  FULL1
       FULL1         : Boolean := False;
       --  FOVR1
@@ -298,7 +298,7 @@ package STM32_SVD.CAN is
       --  FOVIE1
       FOVIE1         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  EWGIE
       EWGIE          : Boolean := False;
       --  EPVIE
@@ -354,7 +354,7 @@ package STM32_SVD.CAN is
       --  Read-only. BOFF
       BOFF          : Boolean := False;
       --  unspecified
-      Reserved_3_3  : HAL.UInt1 := 16#0#;
+      Reserved_3_3  : HAL.Bit := 16#0#;
       --  LEC
       LEC           : ESR_LEC_Field := 16#0#;
       --  unspecified
@@ -394,7 +394,7 @@ package STM32_SVD.CAN is
       --  TS2
       TS2            : BTR_TS2_Field := 16#0#;
       --  unspecified
-      Reserved_23_23 : HAL.UInt1 := 16#0#;
+      Reserved_23_23 : HAL.Bit := 16#0#;
       --  SJW
       SJW            : BTR_SJW_Field := 16#0#;
       --  unspecified
@@ -755,7 +755,7 @@ package STM32_SVD.CAN is
    --  receive FIFO mailbox identifier register
    type RI0R_Register is record
       --  unspecified
-      Reserved_0_0 : HAL.UInt1;
+      Reserved_0_0 : HAL.Bit;
       --  Read-only. RTR
       RTR          : Boolean;
       --  Read-only. IDE
@@ -863,7 +863,7 @@ package STM32_SVD.CAN is
    --  mailbox data high register
    type RI1R_Register is record
       --  unspecified
-      Reserved_0_0 : HAL.UInt1;
+      Reserved_0_0 : HAL.Bit;
       --  Read-only. RTR
       RTR          : Boolean;
       --  Read-only. IDE

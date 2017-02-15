@@ -112,7 +112,7 @@ package STM32_SVD.Ethernet is
       --  Read-only. no description available
       EBS            : DMASR_EBS_Field := 16#0#;
       --  unspecified
-      Reserved_26_26 : HAL.UInt1 := 16#0#;
+      Reserved_26_26 : HAL.Bit := 16#0#;
       --  Read-only. no description available
       MMCS           : Boolean := False;
       --  Read-only. no description available
@@ -158,7 +158,7 @@ package STM32_SVD.Ethernet is
    --  Ethernet DMA operation mode register
    type DMAOMR_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.UInt1 := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  SR
       SR             : Boolean := False;
       --  OSF
@@ -166,7 +166,7 @@ package STM32_SVD.Ethernet is
       --  RTC
       RTC            : DMAOMR_RTC_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : HAL.UInt1 := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  FUGF
       FUGF           : Boolean := False;
       --  FEF
@@ -340,7 +340,7 @@ package STM32_SVD.Ethernet is
       --  APCS
       APCS           : Boolean := False;
       --  unspecified
-      Reserved_8_8   : HAL.UInt1 := 16#0#;
+      Reserved_8_8   : HAL.Bit := 16#0#;
       --  RD
       RD             : Boolean := False;
       --  IPCO
@@ -354,7 +354,7 @@ package STM32_SVD.Ethernet is
       --  FES
       FES            : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#1#;
+      Reserved_15_15 : HAL.Bit := 16#1#;
       --  CSD
       CSD            : Boolean := False;
       --  IFG
@@ -366,7 +366,7 @@ package STM32_SVD.Ethernet is
       --  WD
       WD             : Boolean := False;
       --  unspecified
-      Reserved_24_24 : HAL.UInt1 := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  CSTF
       CSTF           : Boolean := False;
       --  unspecified
@@ -458,7 +458,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       CR             : MACMIIAR_CR_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : HAL.UInt1 := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  no description available
       MR             : MACMIIAR_MR_Field := 16#0#;
       --  no description available
@@ -512,7 +512,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       PLT           : MACFCR_PLT_Field := 16#0#;
       --  unspecified
-      Reserved_6_6  : HAL.UInt1 := 16#0#;
+      Reserved_6_6  : HAL.Bit := 16#0#;
       --  no description available
       ZQPD          : Boolean := False;
       --  unspecified
@@ -762,7 +762,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       MACA2L         : MACA2LR_MACA2L_Field := 16#7FFFFFFF#;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#1#;
+      Reserved_31_31 : HAL.Bit := 16#1#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

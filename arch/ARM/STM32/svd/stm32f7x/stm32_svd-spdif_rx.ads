@@ -46,7 +46,7 @@ package STM32_SVD.SPDIF_RX is
       --  Wait For Activity
       WFA            : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  input selection
       INSEL          : CR_INSEL_Field := 16#0#;
       --  unspecified
@@ -133,7 +133,7 @@ package STM32_SVD.SPDIF_RX is
       --  Read-only. Duration of 5 symbols counted with SPDIF_CLK
       WIDTH5         : SR_WIDTH5_Field;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1;
+      Reserved_31_31 : HAL.Bit;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

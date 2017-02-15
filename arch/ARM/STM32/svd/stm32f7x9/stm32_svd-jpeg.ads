@@ -39,7 +39,7 @@ package STM32_SVD.JPEG is
       --  Number of color components
       NF            : JPEG_CONFR1_NF_Field := 16#0#;
       --  unspecified
-      Reserved_2_2  : HAL.UInt1 := 16#0#;
+      Reserved_2_2  : HAL.Bit := 16#0#;
       --  Decoding Enable
       DE            : Boolean := False;
       --  Color Space
@@ -187,7 +187,7 @@ package STM32_SVD.JPEG is
    --  JPEG status register
    type JPEG_SR_Register is record
       --  unspecified
-      Reserved_0_0  : HAL.UInt1;
+      Reserved_0_0  : HAL.Bit;
       --  Read-only. Input FIFO Threshold Flag
       IFTF          : Boolean;
       --  Read-only. Input FIFO Not Full Flag

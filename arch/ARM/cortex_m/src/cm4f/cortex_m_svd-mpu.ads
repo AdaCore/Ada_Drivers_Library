@@ -221,7 +221,7 @@ package Cortex_M_SVD.MPU is
       --  Access permission field
       AP             : RASR_AP_Field := Cortex_M_SVD.MPU.No_Access;
       --  unspecified
-      Reserved_27_27 : HAL.UInt1 := 16#0#;
+      Reserved_27_27 : HAL.Bit := 16#0#;
       --  Instruction access disable bit
       XN             : RASR_XN_Field := Cortex_M_SVD.MPU.I_Enabled;
       --  unspecified
@@ -370,7 +370,7 @@ package Cortex_M_SVD.MPU is
       --  Access permission field
       AP             : RASR_A1_AP_Field := Cortex_M_SVD.MPU.No_Access;
       --  unspecified
-      Reserved_27_27 : HAL.UInt1 := 16#0#;
+      Reserved_27_27 : HAL.Bit := 16#0#;
       --  Instruction access disable bit
       XN             : RASR_A1_XN_Field := Cortex_M_SVD.MPU.I_Enabled;
       --  unspecified

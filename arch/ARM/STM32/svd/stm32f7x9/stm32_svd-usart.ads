@@ -177,7 +177,7 @@ package STM32_SVD.USART is
       --  LIN break detection interrupt enable
       LBDIE        : Boolean := False;
       --  unspecified
-      Reserved_7_7 : HAL.UInt1 := 16#0#;
+      Reserved_7_7 : HAL.Bit := 16#0#;
       --  Last bit clock pulse
       LBCL         : Boolean := False;
       --  Clock phase
@@ -276,7 +276,7 @@ package STM32_SVD.USART is
       --  Driver enable polarity selection
       DEP            : Boolean := False;
       --  unspecified
-      Reserved_16_16 : HAL.UInt1 := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  Smartcard auto-retry count
       SCARCNT        : CR3_SCARCNT_Field := 16#0#;
       --  Wakeup from Stop mode interrupt flag selection
@@ -429,7 +429,7 @@ package STM32_SVD.USART is
       --  Read-only. EOBF
       EOBF           : Boolean;
       --  unspecified
-      Reserved_13_13 : HAL.UInt1;
+      Reserved_13_13 : HAL.Bit;
       --  Read-only. ABRE
       ABRE           : Boolean;
       --  Read-only. ABRF
@@ -494,17 +494,17 @@ package STM32_SVD.USART is
       --  Write-only. Idle line detected clear flag
       IDLECF         : Boolean := False;
       --  unspecified
-      Reserved_5_5   : HAL.UInt1 := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  Write-only. Transmission complete clear flag
       TCCF           : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Write-only. LIN break detection clear flag
       LBDCF          : Boolean := False;
       --  Write-only. CTS clear flag
       CTSCF          : Boolean := False;
       --  unspecified
-      Reserved_10_10 : HAL.UInt1 := 16#0#;
+      Reserved_10_10 : HAL.Bit := 16#0#;
       --  Write-only. Receiver timeout clear flag
       RTOCF          : Boolean := False;
       --  Write-only. End of block clear flag

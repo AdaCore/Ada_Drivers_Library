@@ -352,7 +352,7 @@ package STM32_SVD.SPI is
       --  I2S standard selection
       I2SSTD         : I2SCFGR_I2SSTD_Field := 16#0#;
       --  unspecified
-      Reserved_6_6   : HAL.UInt1 := 16#0#;
+      Reserved_6_6   : HAL.Bit := 16#0#;
       --  PCM frame synchronization
       PCMSYNC        : Boolean := False;
       --  I2S configuration mode

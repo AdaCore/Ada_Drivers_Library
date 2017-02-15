@@ -295,7 +295,7 @@ package NRF51_SVD.ADC is
       --  ADC reference selection.
       REFSEL         : CONFIG_REFSEL_Field := NRF51_SVD.ADC.Vbg;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  ADC analog pin selection.
       PSEL           : CONFIG_PSEL_Field := NRF51_SVD.ADC.Disabled;
       --  ADC external reference pin selection.

@@ -25,7 +25,7 @@ package FE310_SVD.PWM is
       ZEROCMP        : Boolean := False;
       DEGLITCH       : Boolean := False;
       --  unspecified
-      Reserved_11_11 : HAL.UInt1 := 16#0#;
+      Reserved_11_11 : HAL.Bit := 16#0#;
       ENALWAYS       : Boolean := False;
       ENONESHOT      : Boolean := False;
       --  unspecified
@@ -79,7 +79,7 @@ package FE310_SVD.PWM is
    type COUNT_16_Register is record
       CNT            : COUNT_16_CNT_Field := 16#0#;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

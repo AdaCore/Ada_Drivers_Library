@@ -98,7 +98,7 @@ package STM32_SVD.PWR is
       --  Regulator voltage scaling output selection ready bit
       VOSRDY         : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Read-only. Over-drive mode ready
       ODRDY          : Boolean := False;
       --  Read-only. Over-drive mode switching ready

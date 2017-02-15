@@ -152,7 +152,7 @@ package STM32_SVD.FLASH is
       --  BOR reset Level
       BOR_LEV        : OPTCR_BOR_LEV_Field := 16#3#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  WDG_SW User option bytes
       WDG_SW         : Boolean := True;
       --  nRST_STOP User option bytes

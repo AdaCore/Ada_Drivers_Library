@@ -24,7 +24,7 @@ package STM32_SVD.RCC is
       --  Read-only. Internal high-speed clock ready flag
       HSIRDY         : Boolean := True;
       --  unspecified
-      Reserved_2_2   : HAL.UInt1 := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  Internal high-speed clock trimming
       HSITRIM        : CR_HSITRIM_Field := 16#10#;
       --  Read-only. Internal high-speed clock calibration
@@ -84,7 +84,7 @@ package STM32_SVD.RCC is
       --  Main PLL (PLL) multiplication factor for VCO
       PLLN           : PLLCFGR_PLLN_Field := 16#C0#;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Main PLL (PLL) division factor for main system clock
       PLLP           : PLLCFGR_PLLP_Field := 16#0#;
       --  unspecified
@@ -92,7 +92,7 @@ package STM32_SVD.RCC is
       --  Main PLL(PLL) and audio PLL (PLLI2S) entry clock source
       PLLSRC         : Boolean := False;
       --  unspecified
-      Reserved_23_23 : HAL.UInt1 := 16#0#;
+      Reserved_23_23 : HAL.Bit := 16#0#;
       --  Main PLL (PLL) division factor for USB OTG FS, SDIO and random number
       --  generator clocks
       PLLQ           : PLLCFGR_PLLQ_Field := 16#4#;
@@ -207,7 +207,7 @@ package STM32_SVD.RCC is
       --  Read-only. PLLI2S ready interrupt flag
       PLLI2SRDYF     : Boolean := False;
       --  unspecified
-      Reserved_6_6   : HAL.UInt1 := 16#0#;
+      Reserved_6_6   : HAL.Bit := 16#0#;
       --  Read-only. Clock security system interrupt flag
       CSSF           : Boolean := False;
       --  LSI ready interrupt enable
@@ -237,7 +237,7 @@ package STM32_SVD.RCC is
       --  Write-only. PLLI2S ready interrupt clear
       PLLI2SRDYC     : Boolean := False;
       --  unspecified
-      Reserved_22_22 : HAL.UInt1 := 16#0#;
+      Reserved_22_22 : HAL.Bit := 16#0#;
       --  Write-only. Clock security system interrupt clear
       CSSC           : Boolean := False;
       --  unspecified
@@ -409,7 +409,7 @@ package STM32_SVD.RCC is
       --  SPI 3 reset
       SPI3RST        : Boolean := False;
       --  unspecified
-      Reserved_16_16 : HAL.UInt1 := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  USART 2 reset
       UART2RST       : Boolean := False;
       --  USART 3 reset
@@ -425,13 +425,13 @@ package STM32_SVD.RCC is
       --  I2C3 reset
       I2C3RST        : Boolean := False;
       --  unspecified
-      Reserved_24_24 : HAL.UInt1 := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  CAN1 reset
       CAN1RST        : Boolean := False;
       --  CAN2 reset
       CAN2RST        : Boolean := False;
       --  unspecified
-      Reserved_27_27 : HAL.UInt1 := 16#0#;
+      Reserved_27_27 : HAL.Bit := 16#0#;
       --  Power interface reset
       PWRRST         : Boolean := False;
       --  DAC reset
@@ -497,11 +497,11 @@ package STM32_SVD.RCC is
       --  SPI 1 reset
       SPI1RST        : Boolean := False;
       --  unspecified
-      Reserved_13_13 : HAL.UInt1 := 16#0#;
+      Reserved_13_13 : HAL.Bit := 16#0#;
       --  System configuration controller reset
       SYSCFGRST      : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  TIM9 reset
       TIM9RST        : Boolean := False;
       --  TIM10 reset
@@ -583,7 +583,7 @@ package STM32_SVD.RCC is
       --  USB OTG HSULPI clock enable
       OTGHSULPIEN    : Boolean := False;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -685,7 +685,7 @@ package STM32_SVD.RCC is
       --  SPI3 clock enable
       SPI3EN         : Boolean := False;
       --  unspecified
-      Reserved_16_16 : HAL.UInt1 := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  USART 2 clock enable
       USART2EN       : Boolean := False;
       --  USART3 clock enable
@@ -701,13 +701,13 @@ package STM32_SVD.RCC is
       --  I2C3 clock enable
       I2C3EN         : Boolean := False;
       --  unspecified
-      Reserved_24_24 : HAL.UInt1 := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  CAN 1 clock enable
       CAN1EN         : Boolean := False;
       --  CAN 2 clock enable
       CAN2EN         : Boolean := False;
       --  unspecified
-      Reserved_27_27 : HAL.UInt1 := 16#0#;
+      Reserved_27_27 : HAL.Bit := 16#0#;
       --  Power interface clock enable
       PWREN          : Boolean := False;
       --  DAC interface clock enable
@@ -775,11 +775,11 @@ package STM32_SVD.RCC is
       --  SPI1 clock enable
       SPI1EN         : Boolean := False;
       --  unspecified
-      Reserved_13_13 : HAL.UInt1 := 16#0#;
+      Reserved_13_13 : HAL.Bit := 16#0#;
       --  System configuration controller clock enable
       SYSCFGEN       : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  TIM9 clock enable
       TIM9EN         : Boolean := False;
       --  TIM10 clock enable
@@ -868,7 +868,7 @@ package STM32_SVD.RCC is
       --  USB OTG HS ULPI clock enable during Sleep mode
       OTGHSULPILPEN  : Boolean := True;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -974,7 +974,7 @@ package STM32_SVD.RCC is
       --  SPI3 clock enable during Sleep mode
       SPI3LPEN       : Boolean := True;
       --  unspecified
-      Reserved_16_16 : HAL.UInt1 := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  USART2 clock enable during Sleep mode
       USART2LPEN     : Boolean := True;
       --  USART3 clock enable during Sleep mode
@@ -990,13 +990,13 @@ package STM32_SVD.RCC is
       --  I2C3 clock enable during Sleep mode
       I2C3LPEN       : Boolean := True;
       --  unspecified
-      Reserved_24_24 : HAL.UInt1 := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  CAN 1 clock enable during Sleep mode
       CAN1LPEN       : Boolean := True;
       --  CAN 2 clock enable during Sleep mode
       CAN2LPEN       : Boolean := True;
       --  unspecified
-      Reserved_27_27 : HAL.UInt1 := 16#0#;
+      Reserved_27_27 : HAL.Bit := 16#0#;
       --  Power interface clock enable during Sleep mode
       PWRLPEN        : Boolean := True;
       --  DAC interface clock enable during Sleep mode
@@ -1064,11 +1064,11 @@ package STM32_SVD.RCC is
       --  SPI 1 clock enable during Sleep mode
       SPI1LPEN       : Boolean := True;
       --  unspecified
-      Reserved_13_13 : HAL.UInt1 := 16#0#;
+      Reserved_13_13 : HAL.Bit := 16#0#;
       --  System configuration controller clock enable during Sleep mode
       SYSCFGLPEN     : Boolean := True;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  TIM9 clock enable during sleep mode
       TIM9LPEN       : Boolean := True;
       --  TIM10 clock enable during Sleep mode
@@ -1245,7 +1245,7 @@ package STM32_SVD.RCC is
       --  PLLI2S division factor for I2S clocks
       PLLI2SRx       : PLLI2SCFGR_PLLI2SRx_Field := 16#2#;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

@@ -129,19 +129,19 @@ package STM32_SVD.LPTIM is
       --  Configurable digital filter for external clock
       CKFLT          : CFGR_CKFLT_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : HAL.UInt1 := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  Configurable digital filter for trigger
       TRGFLT         : CFGR_TRGFLT_Field := 16#0#;
       --  unspecified
-      Reserved_8_8   : HAL.UInt1 := 16#0#;
+      Reserved_8_8   : HAL.Bit := 16#0#;
       --  Clock prescaler
       PRESC          : CFGR_PRESC_Field := 16#0#;
       --  unspecified
-      Reserved_12_12 : HAL.UInt1 := 16#0#;
+      Reserved_12_12 : HAL.Bit := 16#0#;
       --  Trigger selector
       TRIGSEL        : CFGR_TRIGSEL_Field := 16#0#;
       --  unspecified
-      Reserved_16_16 : HAL.UInt1 := 16#0#;
+      Reserved_16_16 : HAL.Bit := 16#0#;
       --  Trigger enable and polarity
       TRIGEN         : CFGR_TRIGEN_Field := 16#0#;
       --  Timeout enable

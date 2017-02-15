@@ -245,7 +245,7 @@ package NRF51_SVD.UART is
       --  Enable interrupt on TXRDY event.
       TXDRDY         : INTENSET_TXDRDY_Field_1 := Intenset_Txdrdy_Field_Reset;
       --  unspecified
-      Reserved_8_8   : HAL.UInt1 := 16#0#;
+      Reserved_8_8   : HAL.Bit := 16#0#;
       --  Enable interrupt on ERROR event.
       ERROR          : INTENSET_ERROR_Field_1 := Intenset_Error_Field_Reset;
       --  unspecified
@@ -428,7 +428,7 @@ package NRF51_SVD.UART is
       --  Disable interrupt on TXRDY event.
       TXDRDY         : INTENCLR_TXDRDY_Field_1 := Intenclr_Txdrdy_Field_Reset;
       --  unspecified
-      Reserved_8_8   : HAL.UInt1 := 16#0#;
+      Reserved_8_8   : HAL.Bit := 16#0#;
       --  Disable interrupt on ERROR event.
       ERROR          : INTENCLR_ERROR_Field_1 := Intenclr_Error_Field_Reset;
       --  unspecified

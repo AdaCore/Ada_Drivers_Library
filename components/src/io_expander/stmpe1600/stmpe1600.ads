@@ -125,7 +125,7 @@ private
 
    type STMPE1600_SYS_CTRL is record
       INT_Polarity : STMPE1600_Pin_Polarity := Low;
-      Reserved_1   : HAL.UInt1 := 0;
+      Reserved_1   : HAL.Bit := 0;
       INT_Enable   : Boolean := False;
       Reserved_3_4 : HAL.UInt2 := 0;
       Wakeup_En    : Boolean := False;

@@ -32,7 +32,7 @@
 with HAL; use HAL;
 
 package Bit_Fields is
-   type Bit_Field is array (Natural range <>) of UInt1
+   type Bit_Field is array (Natural range <>) of Bit
      with Component_Size => 1;
 
    function To_Word (Bits : Bit_Field) return UInt32;

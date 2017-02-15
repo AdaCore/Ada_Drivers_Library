@@ -123,15 +123,15 @@ package STM32_SVD.LTDC is
       --  Read-only. Dither Blue Width
       DBW            : GCR_DBW_Field := 16#2#;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Read-only. Dither Green Width
       DGW            : GCR_DGW_Field := 16#2#;
       --  unspecified
-      Reserved_11_11 : HAL.UInt1 := 16#0#;
+      Reserved_11_11 : HAL.Bit := 16#0#;
       --  Read-only. Dither Red Width
       DRW            : GCR_DRW_Field := 16#2#;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Dither Enable
       DEN            : Boolean := False;
       --  unspecified

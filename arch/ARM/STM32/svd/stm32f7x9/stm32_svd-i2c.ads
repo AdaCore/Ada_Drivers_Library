@@ -39,7 +39,7 @@ package STM32_SVD.I2C is
       --  Analog noise filter OFF
       ANFOFF         : Boolean := False;
       --  unspecified
-      Reserved_13_13 : HAL.UInt1 := 16#0#;
+      Reserved_13_13 : HAL.Bit := 16#0#;
       --  DMA transmission requests enable
       TXDMAEN        : Boolean := False;
       --  DMA reception requests enable
@@ -171,7 +171,7 @@ package STM32_SVD.I2C is
    --  Own address register 2
    type OAR2_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.UInt1 := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  Interface address
       OA2            : OAR2_OA2_Field := 16#0#;
       --  Own Address 2 masks
@@ -294,7 +294,7 @@ package STM32_SVD.I2C is
       --  Read-only. SMBus alert
       ALERT          : Boolean := False;
       --  unspecified
-      Reserved_14_14 : HAL.UInt1 := 16#0#;
+      Reserved_14_14 : HAL.Bit := 16#0#;
       --  Read-only. Bus busy
       BUSY           : Boolean := False;
       --  Read-only. Transfer direction (Slave mode)

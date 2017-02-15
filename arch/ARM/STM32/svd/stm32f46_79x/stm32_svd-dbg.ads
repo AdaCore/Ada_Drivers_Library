@@ -102,7 +102,7 @@ package STM32_SVD.DBG is
       --  DBG_J2C3SMBUS_TIMEOUT
       DBG_J2C3SMBUS_TIMEOUT  : Boolean := False;
       --  unspecified
-      Reserved_24_24         : HAL.UInt1 := 16#0#;
+      Reserved_24_24         : HAL.Bit := 16#0#;
       --  DBG_CAN1_STOP
       DBG_CAN1_STOP          : Boolean := False;
       --  DBG_CAN2_STOP

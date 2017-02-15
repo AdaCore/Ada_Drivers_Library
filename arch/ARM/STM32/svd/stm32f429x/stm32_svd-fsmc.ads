@@ -30,13 +30,13 @@ package STM32_SVD.FSMC is
       --  FACCEN
       FACCEN         : Boolean := True;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#1#;
+      Reserved_7_7   : HAL.Bit := 16#1#;
       --  BURSTEN
       BURSTEN        : Boolean := False;
       --  WAITPOL
       WAITPOL        : Boolean := False;
       --  unspecified
-      Reserved_10_10 : HAL.UInt1 := 16#0#;
+      Reserved_10_10 : HAL.Bit := 16#0#;
       --  WAITCFG
       WAITCFG        : Boolean := False;
       --  WREN
@@ -137,7 +137,7 @@ package STM32_SVD.FSMC is
       --  FACCEN
       FACCEN         : Boolean := True;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#1#;
+      Reserved_7_7   : HAL.Bit := 16#1#;
       --  BURSTEN
       BURSTEN        : Boolean := False;
       --  WAITPOL
@@ -192,7 +192,7 @@ package STM32_SVD.FSMC is
    --  PC Card/NAND Flash control register 2
    type PCR_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.UInt1 := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  PWAITEN
       PWAITEN        : Boolean := False;
       --  PBKEN

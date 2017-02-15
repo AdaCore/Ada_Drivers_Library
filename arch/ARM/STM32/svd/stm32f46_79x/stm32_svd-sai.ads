@@ -44,7 +44,7 @@ package STM32_SVD.SAI is
       --  Protocol configuration
       PRTCFG         : ACR1_PRTCFG_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  Data size
       DS             : ACR1_DS_Field := 16#2#;
       --  Least significant bit first
@@ -64,7 +64,7 @@ package STM32_SVD.SAI is
       --  DMA enable
       DMAEN          : Boolean := False;
       --  unspecified
-      Reserved_18_18 : HAL.UInt1 := 16#0#;
+      Reserved_18_18 : HAL.Bit := 16#0#;
       --  No divider
       NODIV          : Boolean := False;
       --  Master clock divider
@@ -144,7 +144,7 @@ package STM32_SVD.SAI is
       --  Frame synchronization active level length
       FSALL          : AFRCR_FSALL_Field := 16#0#;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Frame synchronization definition
       FSDEF          : Boolean := False;
       --  Frame synchronization polarity
@@ -177,7 +177,7 @@ package STM32_SVD.SAI is
       --  First bit offset
       FBOFF          : ASLOTR_FBOFF_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : HAL.UInt1 := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  Slot size
       SLOTSZ         : ASLOTR_SLOTSZ_Field := 16#0#;
       --  Number of slots in an audio frame
@@ -282,7 +282,7 @@ package STM32_SVD.SAI is
       --  Clear wrong clock configuration flag
       WCKCFG        : Boolean := False;
       --  unspecified
-      Reserved_3_3  : HAL.UInt1 := 16#0#;
+      Reserved_3_3  : HAL.Bit := 16#0#;
       --  Clear codec not ready flag
       CNRDY         : Boolean := False;
       --  Clear anticipated frame synchronization detection flag.
@@ -319,7 +319,7 @@ package STM32_SVD.SAI is
       --  Protocol configuration
       PRTCFG         : BCR1_PRTCFG_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  Data size
       DS             : BCR1_DS_Field := 16#2#;
       --  Least significant bit first
@@ -339,7 +339,7 @@ package STM32_SVD.SAI is
       --  DMA enable
       DMAEN          : Boolean := False;
       --  unspecified
-      Reserved_18_18 : HAL.UInt1 := 16#0#;
+      Reserved_18_18 : HAL.Bit := 16#0#;
       --  No divider
       NODIV          : Boolean := False;
       --  Master clock divider
@@ -419,7 +419,7 @@ package STM32_SVD.SAI is
       --  Frame synchronization active level length
       FSALL          : BFRCR_FSALL_Field := 16#0#;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Frame synchronization definition
       FSDEF          : Boolean := False;
       --  Frame synchronization polarity
@@ -452,7 +452,7 @@ package STM32_SVD.SAI is
       --  First bit offset
       FBOFF          : BSLOTR_FBOFF_Field := 16#0#;
       --  unspecified
-      Reserved_5_5   : HAL.UInt1 := 16#0#;
+      Reserved_5_5   : HAL.Bit := 16#0#;
       --  Slot size
       SLOTSZ         : BSLOTR_SLOTSZ_Field := 16#0#;
       --  Number of slots in an audio frame
@@ -557,7 +557,7 @@ package STM32_SVD.SAI is
       --  Write-only. Clear wrong clock configuration flag
       WCKCFG        : Boolean := False;
       --  unspecified
-      Reserved_3_3  : HAL.UInt1 := 16#0#;
+      Reserved_3_3  : HAL.Bit := 16#0#;
       --  Write-only. Clear codec not ready flag
       CNRDY         : Boolean := False;
       --  Write-only. Clear anticipated frame synchronization detection flag

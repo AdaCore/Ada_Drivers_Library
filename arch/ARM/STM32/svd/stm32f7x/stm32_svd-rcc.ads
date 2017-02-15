@@ -24,7 +24,7 @@ package STM32_SVD.RCC is
       --  Read-only. Internal high-speed clock ready flag
       HSIRDY         : Boolean := True;
       --  unspecified
-      Reserved_2_2   : HAL.UInt1 := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  Internal high-speed clock trimming
       HSITRIM        : CR_HSITRIM_Field := 16#10#;
       --  Read-only. Internal high-speed clock calibration
@@ -90,7 +90,7 @@ package STM32_SVD.RCC is
       --  Main PLL (PLL) multiplication factor for VCO
       PLLN           : PLLCFGR_PLLN_Field := 16#C0#;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Main PLL (PLL) division factor for main system clock
       PLLP           : PLLCFGR_PLLP_Field := 16#0#;
       --  unspecified
@@ -98,7 +98,7 @@ package STM32_SVD.RCC is
       --  Main PLL(PLL) and audio PLL (PLLI2S) entry clock source
       PLLSRC         : Boolean := False;
       --  unspecified
-      Reserved_23_23 : HAL.UInt1 := 16#0#;
+      Reserved_23_23 : HAL.Bit := 16#0#;
       --  Main PLL (PLL) division factor for USB OTG FS, SDIO and random number
       --  generator clocks
       PLLQ           : PLLCFGR_PLLQ_Field := 16#4#;
@@ -231,7 +231,7 @@ package STM32_SVD.RCC is
       --  PLLSAI Ready Interrupt Enable
       PLLSAIRDYIE    : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Write-only. LSI ready interrupt clear
       LSIRDYC        : Boolean := False;
       --  Write-only. LSE ready interrupt clear
@@ -307,7 +307,7 @@ package STM32_SVD.RCC is
       --  IO port K reset
       GPIOKRST       : Boolean := False;
       --  unspecified
-      Reserved_11_11 : HAL.UInt1 := 16#0#;
+      Reserved_11_11 : HAL.Bit := 16#0#;
       --  CRC reset
       CRCRST         : Boolean := False;
       --  unspecified
@@ -319,7 +319,7 @@ package STM32_SVD.RCC is
       --  DMA2D reset
       DMA2DRST       : Boolean := False;
       --  unspecified
-      Reserved_24_24 : HAL.UInt1 := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  Ethernet MAC reset
       ETHMACRST      : Boolean := False;
       --  unspecified
@@ -428,7 +428,7 @@ package STM32_SVD.RCC is
       --  Low power timer 1 reset
       LPTIM1RST      : Boolean := False;
       --  unspecified
-      Reserved_10_10 : HAL.UInt1 := 16#0#;
+      Reserved_10_10 : HAL.Bit := 16#0#;
       --  Window watchdog reset
       WWDGRST        : Boolean := False;
       --  unspecified
@@ -534,7 +534,7 @@ package STM32_SVD.RCC is
       --  System configuration controller reset
       SYSCFGRST      : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  TIM9 reset
       TIM9RST        : Boolean := False;
       --  TIM10 reset
@@ -542,7 +542,7 @@ package STM32_SVD.RCC is
       --  TIM11 reset
       TIM11RST       : Boolean := False;
       --  unspecified
-      Reserved_19_19 : HAL.UInt1 := 16#0#;
+      Reserved_19_19 : HAL.Bit := 16#0#;
       --  SPI5 reset
       SPI5RST        : Boolean := False;
       --  SPI6 reset
@@ -613,7 +613,7 @@ package STM32_SVD.RCC is
       --  IO port K clock enable
       GPIOKEN        : Boolean := False;
       --  unspecified
-      Reserved_11_11 : HAL.UInt1 := 16#0#;
+      Reserved_11_11 : HAL.Bit := 16#0#;
       --  CRC clock enable
       CRCEN          : Boolean := False;
       --  unspecified
@@ -621,7 +621,7 @@ package STM32_SVD.RCC is
       --  Backup SRAM interface clock enable
       BKPSRAMEN      : Boolean := False;
       --  unspecified
-      Reserved_19_19 : HAL.UInt1 := 16#0#;
+      Reserved_19_19 : HAL.Bit := 16#0#;
       --  CCM data RAM clock enable
       CCMDATARAMEN   : Boolean := True;
       --  DMA1 clock enable
@@ -631,7 +631,7 @@ package STM32_SVD.RCC is
       --  DMA2D clock enable
       DMA2DEN        : Boolean := False;
       --  unspecified
-      Reserved_24_24 : HAL.UInt1 := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  Ethernet MAC clock enable
       ETHMACEN       : Boolean := False;
       --  Ethernet Transmission clock enable
@@ -645,7 +645,7 @@ package STM32_SVD.RCC is
       --  USB OTG HSULPI clock enable
       OTGHSULPIEN    : Boolean := False;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -752,7 +752,7 @@ package STM32_SVD.RCC is
       --  Low power timer 1 clock enable
       LPTMI1EN       : Boolean := False;
       --  unspecified
-      Reserved_10_10 : HAL.UInt1 := 16#0#;
+      Reserved_10_10 : HAL.Bit := 16#0#;
       --  Window watchdog clock enable
       WWDGEN         : Boolean := False;
       --  unspecified
@@ -860,7 +860,7 @@ package STM32_SVD.RCC is
       --  System configuration controller clock enable
       SYSCFGEN       : Boolean := False;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  TIM9 clock enable
       TIM9EN         : Boolean := False;
       --  TIM10 clock enable
@@ -868,7 +868,7 @@ package STM32_SVD.RCC is
       --  TIM11 clock enable
       TIM11EN        : Boolean := False;
       --  unspecified
-      Reserved_19_19 : HAL.UInt1 := 16#0#;
+      Reserved_19_19 : HAL.Bit := 16#0#;
       --  SPI5 clock enable
       SPI5ENR        : Boolean := False;
       --  SPI6 clock enable
@@ -940,7 +940,7 @@ package STM32_SVD.RCC is
       --  IO port K clock enable during Sleep mode
       GPIOKLPEN      : Boolean := False;
       --  unspecified
-      Reserved_11_11 : HAL.UInt1 := 16#0#;
+      Reserved_11_11 : HAL.Bit := 16#0#;
       --  CRC clock enable during Sleep mode
       CRCLPEN        : Boolean := True;
       --  unspecified
@@ -956,7 +956,7 @@ package STM32_SVD.RCC is
       --  SRAM 3 interface clock enable during Sleep mode
       SRAM3LPEN      : Boolean := False;
       --  unspecified
-      Reserved_20_20 : HAL.UInt1 := 16#0#;
+      Reserved_20_20 : HAL.Bit := 16#0#;
       --  DMA1 clock enable during Sleep mode
       DMA1LPEN       : Boolean := True;
       --  DMA2 clock enable during Sleep mode
@@ -964,7 +964,7 @@ package STM32_SVD.RCC is
       --  DMA2D clock enable during Sleep mode
       DMA2DLPEN      : Boolean := False;
       --  unspecified
-      Reserved_24_24 : HAL.UInt1 := 16#0#;
+      Reserved_24_24 : HAL.Bit := 16#0#;
       --  Ethernet MAC clock enable during Sleep mode
       ETHMACLPEN     : Boolean := True;
       --  Ethernet transmission clock enable during Sleep mode
@@ -978,7 +978,7 @@ package STM32_SVD.RCC is
       --  USB OTG HS ULPI clock enable during Sleep mode
       OTGHSULPILPEN  : Boolean := True;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1088,7 +1088,7 @@ package STM32_SVD.RCC is
       --  low power timer 1 clock enable during Sleep mode
       LPTIM1LPEN     : Boolean := False;
       --  unspecified
-      Reserved_10_10 : HAL.UInt1 := 16#0#;
+      Reserved_10_10 : HAL.Bit := 16#0#;
       --  Window watchdog clock enable during Sleep mode
       WWDGLPEN       : Boolean := True;
       --  unspecified
@@ -1196,7 +1196,7 @@ package STM32_SVD.RCC is
       --  System configuration controller clock enable during Sleep mode
       SYSCFGLPEN     : Boolean := True;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  TIM9 clock enable during sleep mode
       TIM9LPEN       : Boolean := True;
       --  TIM10 clock enable during Sleep mode
@@ -1204,7 +1204,7 @@ package STM32_SVD.RCC is
       --  TIM11 clock enable during Sleep mode
       TIM11LPEN      : Boolean := True;
       --  unspecified
-      Reserved_19_19 : HAL.UInt1 := 16#0#;
+      Reserved_19_19 : HAL.Bit := 16#0#;
       --  SPI 5 clock enable during Sleep mode
       SPI5LPEN       : Boolean := False;
       --  SPI 6 clock enable during Sleep mode
@@ -1397,7 +1397,7 @@ package STM32_SVD.RCC is
       --  PLLI2S division factor for I2S clocks
       PLLI2SR        : PLLI2SCFGR_PLLI2SR_Field := 16#2#;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1423,7 +1423,7 @@ package STM32_SVD.RCC is
       --  PLLSAI division factor for VCO
       PLLSAIN        : PLLSAICFGR_PLLSAIN_Field := 16#C0#;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  PLLSAI division factor for 48MHz clock
       PLLSAIP        : PLLSAICFGR_PLLSAIP_Field := 16#0#;
       --  unspecified
@@ -1433,7 +1433,7 @@ package STM32_SVD.RCC is
       --  PLLSAI division factor for LCD clock
       PLLSAIR        : PLLSAICFGR_PLLSAIR_Field := 16#2#;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

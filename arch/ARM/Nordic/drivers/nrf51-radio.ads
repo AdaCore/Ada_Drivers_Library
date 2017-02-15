@@ -159,7 +159,7 @@ package nRF51.Radio is
    type Length_Field_Endianness is (Little_Endian, Big_Endian);
 
    procedure Configure_Packet
-     (S0_Field_Size_In_Byte        : UInt1;
+     (S0_Field_Size_In_Byte        : Bit;
       S1_Field_Size_In_Bit         : UInt4;
       Length_Field_Size_In_Bit     : UInt4;
       Max_Packet_Length_In_Byte    : Packet_Len;

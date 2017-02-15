@@ -124,7 +124,7 @@ package Cortex_M_SVD.PF is
       --  Read-only. Cache Writable Granule.
       CWG            : CTR_CWG_Field;
       --  unspecified
-      Reserved_28_28 : HAL.UInt1;
+      Reserved_28_28 : HAL.Bit;
       --  Read-only. Cache Writable Granule.
       Format         : CTR_Format_Field;
    end record

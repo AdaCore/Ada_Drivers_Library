@@ -232,7 +232,7 @@ package NRF51_SVD.TWI is
    --  Interrupt enable set register.
    type INTENSET_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.UInt1 := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  Enable interrupt on STOPPED event.
       STOPPED        : INTENSET_STOPPED_Field_1 :=
                         Intenset_Stopped_Field_Reset;
@@ -245,7 +245,7 @@ package NRF51_SVD.TWI is
       TXDSENT        : INTENSET_TXDSENT_Field_1 :=
                         Intenset_Txdsent_Field_Reset;
       --  unspecified
-      Reserved_8_8   : HAL.UInt1 := 16#0#;
+      Reserved_8_8   : HAL.Bit := 16#0#;
       --  Enable interrupt on ERROR event.
       ERROR          : INTENSET_ERROR_Field_1 := Intenset_Error_Field_Reset;
       --  unspecified
@@ -425,7 +425,7 @@ package NRF51_SVD.TWI is
    --  Interrupt enable clear register.
    type INTENCLR_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.UInt1 := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  Disable interrupt on STOPPED event.
       STOPPED        : INTENCLR_STOPPED_Field_1 :=
                         Intenclr_Stopped_Field_Reset;
@@ -438,7 +438,7 @@ package NRF51_SVD.TWI is
       TXDSENT        : INTENCLR_TXDSENT_Field_1 :=
                         Intenclr_Txdsent_Field_Reset;
       --  unspecified
-      Reserved_8_8   : HAL.UInt1 := 16#0#;
+      Reserved_8_8   : HAL.Bit := 16#0#;
       --  Disable interrupt on ERROR event.
       ERROR          : INTENCLR_ERROR_Field_1 := Intenclr_Error_Field_Reset;
       --  unspecified

@@ -29,8 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
-
 package body ST7735R.RAM_Framebuffer is
 
    ----------------------

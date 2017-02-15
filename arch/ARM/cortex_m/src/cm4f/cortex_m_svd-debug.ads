@@ -56,7 +56,7 @@ package Cortex_M_SVD.Debug is
       --  Read-only.
       C_MASKINTS     : Boolean;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1;
+      Reserved_4_4   : HAL.Bit;
       --  Read-only.
       C_SNAPSTALL    : Boolean;
       --  unspecified
@@ -111,7 +111,7 @@ package Cortex_M_SVD.Debug is
       --  Write-only.
       C_MASKINTS    : Boolean := False;
       --  unspecified
-      Reserved_4_4  : HAL.UInt1 := 16#0#;
+      Reserved_4_4  : HAL.Bit := 16#0#;
       --  Write-only.
       C_SNAPSTALL   : Boolean := False;
       --  unspecified

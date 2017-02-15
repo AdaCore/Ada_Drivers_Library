@@ -26,7 +26,7 @@ package STM32_SVD.SYSCFG is
       --  Flash bank mode selection
       FB_MODE        : Boolean := False;
       --  unspecified
-      Reserved_9_9   : HAL.UInt1 := 16#0#;
+      Reserved_9_9   : HAL.Bit := 16#0#;
       --  FMC memory mapping swap
       SWP_FMC        : MEMRM_SWP_FMC_Field := 16#0#;
       --  unspecified

@@ -761,8 +761,8 @@ package STM32.Timers is
       Automatic_Output_Enabled      : Boolean;
       Break_Polarity                : Timer_Break_Polarity;
       Break_Enabled                 : Boolean;
-      Off_State_Selection_Run_Mode  : UInt1;
-      Off_State_Selection_Idle_Mode : UInt1;
+      Off_State_Selection_Run_Mode  : Bit;
+      Off_State_Selection_Idle_Mode : Bit;
       Lock_Configuration            : Timer_Lock_Level;
       Deadtime_Generator            : UInt8)
      with Pre => Advanced_Timer (This);
@@ -1154,7 +1154,7 @@ private
 
    type TIMx_CR2 is record
       Reserved0                                 : UInt16;
-      Reserved1                                 : UInt1;
+      Reserved1                                 : Bit;
       Channel_4_Output_Idle_State               : Timer_Capture_Compare_State;
       Channel_3_Complementary_Output_Idle_State : Timer_Capture_Compare_State;
       Channel_3_Output_Idle_State               : Timer_Capture_Compare_State;
@@ -1166,7 +1166,7 @@ private
       Master_Mode_Selection                     : Timer_Trigger_Output_Source;
       Capture_Compare_DMA_Selection             : Boolean;
       Capture_Compare_Control_Update_Selection  : Boolean;
-      Reserved2                                 : UInt1;
+      Reserved2                                 : Bit;
       Capture_Compare_Preloaded_Control         : Boolean;
    end record with Volatile_Full_Access, Size => 32;
 
@@ -1198,7 +1198,7 @@ private
       External_Trigger_Filter    : Timer_External_Trigger_Filter;
       Master_Slave_Mode          : Boolean;
       Trigger_Selection          : Timer_Trigger_Input_Source;
-      Reserved1                  : UInt1;
+      Reserved1                  : Bit;
       Slave_Mode_Selection       : Timer_Slave_Mode;
    end record with Volatile_Full_Access, Size => 32;
 
@@ -1375,9 +1375,9 @@ private
 
    type Single_CCE is record
       CCxE  : Timer_Capture_Compare_State;
-      CCxP  : UInt1;
+      CCxP  : Bit;
       CCxNE : Timer_Capture_Compare_State;
-      CCxNP : UInt1;
+      CCxNP : Bit;
    end record with Size => 4;
 
    for Single_CCE use record
@@ -1408,8 +1408,8 @@ private
       Automatic_Output_Enabled      : Boolean;
       Break_Polarity                : Timer_Break_Polarity;
       Break_Enable                  : Boolean;
-      Off_State_Selection_Run_Mode  : UInt1;
-      Off_State_Selection_Idle_Mode : UInt1;
+      Off_State_Selection_Run_Mode  : Bit;
+      Off_State_Selection_Idle_Mode : Bit;
       Lock                          : Timer_Lock_Level;
       Deadtime_Generator            : UInt8;
    end record with Volatile_Full_Access, Size => 32;

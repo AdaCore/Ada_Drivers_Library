@@ -1410,8 +1410,8 @@ package body STM32.Timers is
       Automatic_Output_Enabled      : Boolean;
       Break_Polarity                : Timer_Break_Polarity;
       Break_Enabled                 : Boolean;
-      Off_State_Selection_Run_Mode  : UInt1;
-      Off_State_Selection_Idle_Mode : UInt1;
+      Off_State_Selection_Run_Mode  : Bit;
+      Off_State_Selection_Idle_Mode : Bit;
       Lock_Configuration            : Timer_Lock_Level;
       Deadtime_Generator            : UInt8)
    is

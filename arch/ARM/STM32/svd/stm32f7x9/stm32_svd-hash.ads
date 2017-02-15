@@ -42,7 +42,7 @@ package STM32_SVD.HASH is
       --  Long key selection
       LKEY           : Boolean := False;
       --  unspecified
-      Reserved_17_17 : HAL.UInt1 := 16#0#;
+      Reserved_17_17 : HAL.Bit := 16#0#;
       --  ALGO
       ALGO1          : Boolean := False;
       --  unspecified

@@ -29,8 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
-
 package body HT16K33 is
 
    HT16K33_Base_Addr : constant I2C_Address := 2#1110_0000#;

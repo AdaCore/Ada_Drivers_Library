@@ -34,7 +34,7 @@ with Interfaces;
 package HAL is
    pragma Pure;
 
-   type UInt1 is mod 2**1
+   type Bit is mod 2**1
      with Size => 1;
    type UInt2 is mod 2**2
      with Size => 2;

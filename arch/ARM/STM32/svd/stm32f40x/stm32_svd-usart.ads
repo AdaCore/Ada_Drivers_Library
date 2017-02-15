@@ -122,7 +122,7 @@ package STM32_SVD.USART is
       --  USART enable
       UE             : Boolean := False;
       --  unspecified
-      Reserved_14_14 : HAL.UInt1 := 16#0#;
+      Reserved_14_14 : HAL.Bit := 16#0#;
       --  Oversampling mode
       OVER8          : Boolean := False;
       --  unspecified
@@ -159,7 +159,7 @@ package STM32_SVD.USART is
       --  Address of the USART node
       ADD            : CR2_ADD_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  lin break detection length
       LBDL           : Boolean := False;
       --  LIN break detection interrupt enable
@@ -273,13 +273,13 @@ package STM32_SVD.USART is
       --  Address of the USART node
       ADD            : CR2_ADD_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  lin break detection length
       LBDL           : Boolean := False;
       --  LIN break detection interrupt enable
       LBDIE          : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Last bit clock pulse
       LBCL           : Boolean := False;
       --  Clock phase

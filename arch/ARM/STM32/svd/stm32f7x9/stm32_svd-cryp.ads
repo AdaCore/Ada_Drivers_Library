@@ -40,7 +40,7 @@ package STM32_SVD.CRYP is
       --  GCM_CCMPH
       GCM_CCMPH      : CR_GCM_CCMPH_Field := 16#0#;
       --  unspecified
-      Reserved_18_18 : HAL.UInt1 := 16#0#;
+      Reserved_18_18 : HAL.Bit := 16#0#;
       --  ALGOMODE
       ALGOMODE3      : Boolean := False;
       --  unspecified

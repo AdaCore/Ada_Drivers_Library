@@ -27,7 +27,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 0
       SPICKSEL       : DFSDM_CHCFG0R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  Short-circuit detector enable on channel 0
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 0
@@ -84,7 +84,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 1
       SPICKSEL       : DFSDM_CHCFG1R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  Short-circuit detector enable on channel 1
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 1
@@ -141,7 +141,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 2
       SPICKSEL       : DFSDM_CHCFG2R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  Short-circuit detector enable on channel 2
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 2
@@ -198,7 +198,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 3
       SPICKSEL       : DFSDM_CHCFG3R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  Short-circuit detector enable on channel 3
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 3
@@ -255,7 +255,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 4
       SPICKSEL       : DFSDM_CHCFG4R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  Short-circuit detector enable on channel 4
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 4
@@ -312,7 +312,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 5
       SPICKSEL       : DFSDM_CHCFG5R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  Short-circuit detector enable on channel 5
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 5
@@ -369,7 +369,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 6
       SPICKSEL       : DFSDM_CHCFG6R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  Short-circuit detector enable on channel 6
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 6
@@ -426,7 +426,7 @@ package STM32_SVD.DFSDM is
       --  SPI clock select for channel 7
       SPICKSEL       : DFSDM_CHCFG7R1_SPICKSEL_Field := 16#0#;
       --  unspecified
-      Reserved_4_4   : HAL.UInt1 := 16#0#;
+      Reserved_4_4   : HAL.Bit := 16#0#;
       --  Short-circuit detector enable on channel 7
       SCDEN          : Boolean := False;
       --  Clock absence detector enable on channel 7
@@ -655,7 +655,7 @@ package STM32_SVD.DFSDM is
       --  channel 0
       AWFOSR         : DFSDM_AWSCD0R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.UInt1 := 16#0#;
+      Reserved_21_21 : HAL.Bit := 16#0#;
       --  Analog watchdog Sinc filter order on channel 0
       AWFORD         : DFSDM_AWSCD0R_AWFORD_Field := 16#0#;
       --  unspecified
@@ -691,7 +691,7 @@ package STM32_SVD.DFSDM is
       --  channel 1
       AWFOSR         : DFSDM_AWSCD1R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.UInt1 := 16#0#;
+      Reserved_21_21 : HAL.Bit := 16#0#;
       --  Analog watchdog Sinc filter order on channel 1
       AWFORD         : DFSDM_AWSCD1R_AWFORD_Field := 16#0#;
       --  unspecified
@@ -727,7 +727,7 @@ package STM32_SVD.DFSDM is
       --  channel 2
       AWFOSR         : DFSDM_AWSCD2R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.UInt1 := 16#0#;
+      Reserved_21_21 : HAL.Bit := 16#0#;
       --  Analog watchdog Sinc filter order on channel 2
       AWFORD         : DFSDM_AWSCD2R_AWFORD_Field := 16#0#;
       --  unspecified
@@ -763,7 +763,7 @@ package STM32_SVD.DFSDM is
       --  channel 3
       AWFOSR         : DFSDM_AWSCD3R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.UInt1 := 16#0#;
+      Reserved_21_21 : HAL.Bit := 16#0#;
       --  Analog watchdog Sinc filter order on channel 3
       AWFORD         : DFSDM_AWSCD3R_AWFORD_Field := 16#0#;
       --  unspecified
@@ -799,7 +799,7 @@ package STM32_SVD.DFSDM is
       --  channel 4
       AWFOSR         : DFSDM_AWSCD4R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.UInt1 := 16#0#;
+      Reserved_21_21 : HAL.Bit := 16#0#;
       --  Analog watchdog Sinc filter order on channel 4
       AWFORD         : DFSDM_AWSCD4R_AWFORD_Field := 16#0#;
       --  unspecified
@@ -835,7 +835,7 @@ package STM32_SVD.DFSDM is
       --  channel 5
       AWFOSR         : DFSDM_AWSCD5R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.UInt1 := 16#0#;
+      Reserved_21_21 : HAL.Bit := 16#0#;
       --  Analog watchdog Sinc filter order on channel 5
       AWFORD         : DFSDM_AWSCD5R_AWFORD_Field := 16#0#;
       --  unspecified
@@ -871,7 +871,7 @@ package STM32_SVD.DFSDM is
       --  channel 6
       AWFOSR         : DFSDM_AWSCD6R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.UInt1 := 16#0#;
+      Reserved_21_21 : HAL.Bit := 16#0#;
       --  Analog watchdog Sinc filter order on channel 6
       AWFORD         : DFSDM_AWSCD6R_AWFORD_Field := 16#0#;
       --  unspecified
@@ -907,7 +907,7 @@ package STM32_SVD.DFSDM is
       --  channel 7
       AWFOSR         : DFSDM_AWSCD7R_AWFOSR_Field := 16#0#;
       --  unspecified
-      Reserved_21_21 : HAL.UInt1 := 16#0#;
+      Reserved_21_21 : HAL.Bit := 16#0#;
       --  Analog watchdog Sinc filter order on channel 7
       AWFORD         : DFSDM_AWSCD7R_AWFORD_Field := 16#0#;
       --  unspecified
@@ -1305,7 +1305,7 @@ package STM32_SVD.DFSDM is
       --  Start a conversion of the injected group of channels
       JSWSTART       : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.UInt1 := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  Launch an injected conversion synchronously with the DFSDM0 JSWSTART
       --  trigger
       JSYNC          : Boolean := False;
@@ -1328,7 +1328,7 @@ package STM32_SVD.DFSDM is
       --  Launch regular conversion synchronously with DFSDM0
       RSYNC          : Boolean := False;
       --  unspecified
-      Reserved_20_20 : HAL.UInt1 := 16#0#;
+      Reserved_20_20 : HAL.Bit := 16#0#;
       --  DMA channel enabled to read data for the regular conversion
       RDMAEN         : Boolean := False;
       --  unspecified
@@ -1342,7 +1342,7 @@ package STM32_SVD.DFSDM is
       --  Analog watchdog fast mode select
       AWFSEL         : Boolean := False;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1382,7 +1382,7 @@ package STM32_SVD.DFSDM is
       --  Start a conversion of the injected group of channels
       JSWSTART       : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.UInt1 := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  Launch an injected conversion synchronously with the DFSDM0 JSWSTART
       --  trigger
       JSYNC          : Boolean := False;
@@ -1405,7 +1405,7 @@ package STM32_SVD.DFSDM is
       --  Launch regular conversion synchronously with DFSDM0
       RSYNC          : Boolean := False;
       --  unspecified
-      Reserved_20_20 : HAL.UInt1 := 16#0#;
+      Reserved_20_20 : HAL.Bit := 16#0#;
       --  DMA channel enabled to read data for the regular conversion
       RDMAEN         : Boolean := False;
       --  unspecified
@@ -1419,7 +1419,7 @@ package STM32_SVD.DFSDM is
       --  Analog watchdog fast mode select
       AWFSEL         : Boolean := False;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1459,7 +1459,7 @@ package STM32_SVD.DFSDM is
       --  Start a conversion of the injected group of channels
       JSWSTART       : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.UInt1 := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  Launch an injected conversion synchronously with the DFSDM0 JSWSTART
       --  trigger
       JSYNC          : Boolean := False;
@@ -1482,7 +1482,7 @@ package STM32_SVD.DFSDM is
       --  Launch regular conversion synchronously with DFSDM0
       RSYNC          : Boolean := False;
       --  unspecified
-      Reserved_20_20 : HAL.UInt1 := 16#0#;
+      Reserved_20_20 : HAL.Bit := 16#0#;
       --  DMA channel enabled to read data for the regular conversion
       RDMAEN         : Boolean := False;
       --  unspecified
@@ -1496,7 +1496,7 @@ package STM32_SVD.DFSDM is
       --  Analog watchdog fast mode select
       AWFSEL         : Boolean := False;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1536,7 +1536,7 @@ package STM32_SVD.DFSDM is
       --  Start a conversion of the injected group of channels
       JSWSTART       : Boolean := False;
       --  unspecified
-      Reserved_2_2   : HAL.UInt1 := 16#0#;
+      Reserved_2_2   : HAL.Bit := 16#0#;
       --  Launch an injected conversion synchronously with the DFSDM0 JSWSTART
       --  trigger
       JSYNC          : Boolean := False;
@@ -1559,7 +1559,7 @@ package STM32_SVD.DFSDM is
       --  Launch regular conversion synchronously with DFSDM0
       RSYNC          : Boolean := False;
       --  unspecified
-      Reserved_20_20 : HAL.UInt1 := 16#0#;
+      Reserved_20_20 : HAL.Bit := 16#0#;
       --  DMA channel enabled to read data for the regular conversion
       RDMAEN         : Boolean := False;
       --  unspecified
@@ -1573,7 +1573,7 @@ package STM32_SVD.DFSDM is
       --  Analog watchdog fast mode select
       AWFSEL         : Boolean := False;
       --  unspecified
-      Reserved_31_31 : HAL.UInt1 := 16#0#;
+      Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1622,7 +1622,7 @@ package STM32_SVD.DFSDM is
       --  Clock absence interrupt enable
       CKABIE         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Extremes detector channel selection
       EXCH           : DFSDM0_CR2_EXCH_Field := 16#0#;
       --  Analog watchdog channel selection
@@ -1667,7 +1667,7 @@ package STM32_SVD.DFSDM is
       --  Clock absence interrupt enable
       CKABIE         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Extremes detector channel selection
       EXCH           : DFSDM1_CR2_EXCH_Field := 16#0#;
       --  Analog watchdog channel selection
@@ -1712,7 +1712,7 @@ package STM32_SVD.DFSDM is
       --  Clock absence interrupt enable
       CKABIE         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Extremes detector channel selection
       EXCH           : DFSDM2_CR2_EXCH_Field := 16#0#;
       --  Analog watchdog channel selection
@@ -1757,7 +1757,7 @@ package STM32_SVD.DFSDM is
       --  Clock absence interrupt enable
       CKABIE         : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Extremes detector channel selection
       EXCH           : DFSDM3_CR2_EXCH_Field := 16#0#;
       --  Analog watchdog channel selection
@@ -1804,7 +1804,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Regular conversion in progress status
       RCIP           : Boolean;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1;
+      Reserved_15_15 : HAL.Bit;
       --  Read-only. Clock absence flag
       CKABF          : DFSDM0_ISR_CKABF_Field;
       --  Read-only. short-circuit detector flag
@@ -1849,7 +1849,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Regular conversion in progress status
       RCIP           : Boolean;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1;
+      Reserved_15_15 : HAL.Bit;
       --  Read-only. Clock absence flag
       CKABF          : DFSDM1_ISR_CKABF_Field;
       --  Read-only. short-circuit detector flag
@@ -1894,7 +1894,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Regular conversion in progress status
       RCIP           : Boolean;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1;
+      Reserved_15_15 : HAL.Bit;
       --  Read-only. Clock absence flag
       CKABF          : DFSDM2_ISR_CKABF_Field;
       --  Read-only. short-circuit detector flag
@@ -1939,7 +1939,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Regular conversion in progress status
       RCIP           : Boolean;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1;
+      Reserved_15_15 : HAL.Bit;
       --  Read-only. Clock absence flag
       CKABF          : DFSDM3_ISR_CKABF_Field;
       --  Read-only. short-circuit detector flag
@@ -2354,7 +2354,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Regular channel most recently converted
       RDATACH      : DFSDM0_RDATAR_RDATACH_Field;
       --  unspecified
-      Reserved_3_3 : HAL.UInt1;
+      Reserved_3_3 : HAL.Bit;
       --  Read-only. Regular channel pending data
       RPEND        : Boolean;
       --  unspecified
@@ -2381,7 +2381,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Regular channel most recently converted
       RDATACH      : DFSDM1_RDATAR_RDATACH_Field;
       --  unspecified
-      Reserved_3_3 : HAL.UInt1;
+      Reserved_3_3 : HAL.Bit;
       --  Read-only. Regular channel pending data
       RPEND        : Boolean;
       --  unspecified
@@ -2408,7 +2408,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Regular channel most recently converted
       RDATACH      : DFSDM2_RDATAR_RDATACH_Field;
       --  unspecified
-      Reserved_3_3 : HAL.UInt1;
+      Reserved_3_3 : HAL.Bit;
       --  Read-only. Regular channel pending data
       RPEND        : Boolean;
       --  unspecified
@@ -2435,7 +2435,7 @@ package STM32_SVD.DFSDM is
       --  Read-only. Regular channel most recently converted
       RDATACH      : DFSDM3_RDATAR_RDATACH_Field;
       --  unspecified
-      Reserved_3_3 : HAL.UInt1;
+      Reserved_3_3 : HAL.Bit;
       --  Read-only. Regular channel pending data
       RPEND        : Boolean;
       --  unspecified

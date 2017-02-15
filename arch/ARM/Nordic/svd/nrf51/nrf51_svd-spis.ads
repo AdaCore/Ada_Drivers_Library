@@ -124,7 +124,7 @@ package NRF51_SVD.SPIS is
    --  Interrupt enable set register.
    type INTENSET_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.UInt1 := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  Enable interrupt on END event.
       END_k          : INTENSET_END_Field_1 := Intenset_End_Field_Reset;
       --  unspecified
@@ -197,7 +197,7 @@ package NRF51_SVD.SPIS is
    --  Interrupt enable clear register.
    type INTENCLR_Register is record
       --  unspecified
-      Reserved_0_0   : HAL.UInt1 := 16#0#;
+      Reserved_0_0   : HAL.Bit := 16#0#;
       --  Disable interrupt on END event.
       END_k          : INTENCLR_END_Field_1 := Intenclr_End_Field_Reset;
       --  unspecified

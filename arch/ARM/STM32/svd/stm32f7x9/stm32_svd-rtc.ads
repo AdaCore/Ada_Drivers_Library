@@ -28,13 +28,13 @@ package STM32_SVD.RTC is
       --  Second tens in BCD format
       ST             : TR_ST_Field := 16#0#;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Minute units in BCD format
       MNU            : TR_MNU_Field := 16#0#;
       --  Minute tens in BCD format
       MNT            : TR_MNT_Field := 16#0#;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Hour units in BCD format
       HU             : TR_HU_Field := 16#0#;
       --  Hour tens in BCD format
@@ -119,7 +119,7 @@ package STM32_SVD.RTC is
       --  Hour format
       FMT            : Boolean := False;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1 := 16#0#;
+      Reserved_7_7   : HAL.Bit := 16#0#;
       --  Alarm A enable
       ALRAE          : Boolean := False;
       --  Alarm B enable
@@ -255,7 +255,7 @@ package STM32_SVD.RTC is
       --  Synchronous prescaler factor
       PREDIV_S       : PRER_PREDIV_S_Field := 16#FF#;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1 := 16#0#;
+      Reserved_15_15 : HAL.Bit := 16#0#;
       --  Asynchronous prescaler factor
       PREDIV_A       : PRER_PREDIV_A_Field := 16#7F#;
       --  unspecified
@@ -476,13 +476,13 @@ package STM32_SVD.RTC is
       --  Read-only. Second tens in BCD format
       ST             : TSTR_ST_Field;
       --  unspecified
-      Reserved_7_7   : HAL.UInt1;
+      Reserved_7_7   : HAL.Bit;
       --  Read-only. Minute units in BCD format
       MNU            : TSTR_MNU_Field;
       --  Read-only. Minute tens in BCD format
       MNT            : TSTR_MNT_Field;
       --  unspecified
-      Reserved_15_15 : HAL.UInt1;
+      Reserved_15_15 : HAL.Bit;
       --  Read-only. Hour units in BCD format
       HU             : TSTR_HU_Field;
       --  Read-only. Hour tens in BCD format

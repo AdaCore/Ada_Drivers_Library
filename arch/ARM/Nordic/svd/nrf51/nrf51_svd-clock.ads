@@ -148,7 +148,7 @@ package NRF51_SVD.CLOCK is
       LFCLKSTARTED  : INTENSET_LFCLKSTARTED_Field_1 :=
                        Intenset_Lfclkstarted_Field_Reset;
       --  unspecified
-      Reserved_2_2  : HAL.UInt1 := 16#0#;
+      Reserved_2_2  : HAL.Bit := 16#0#;
       --  Enable interrupt on DONE event.
       DONE          : INTENSET_DONE_Field_1 := Intenset_Done_Field_Reset;
       --  Enable interrupt on CTTO event.
@@ -273,7 +273,7 @@ package NRF51_SVD.CLOCK is
       LFCLKSTARTED  : INTENCLR_LFCLKSTARTED_Field_1 :=
                        Intenclr_Lfclkstarted_Field_Reset;
       --  unspecified
-      Reserved_2_2  : HAL.UInt1 := 16#0#;
+      Reserved_2_2  : HAL.Bit := 16#0#;
       --  Disable interrupt on DONE event.
       DONE          : INTENCLR_DONE_Field_1 := Intenclr_Done_Field_Reset;
       --  Disable interrupt on CTTO event.

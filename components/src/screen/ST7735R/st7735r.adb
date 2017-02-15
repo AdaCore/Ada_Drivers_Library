@@ -30,7 +30,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with Interfaces;               use Interfaces;
 with Bitmap_Color_Conversion;  use Bitmap_Color_Conversion;
 
 package body ST7735R is
