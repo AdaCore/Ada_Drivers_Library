@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                  Copyright (C) 2015-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -36,7 +36,6 @@
 --  some sort.
 
 with Ada.Real_Time; use Ada.Real_Time;
-with Interfaces;    use Interfaces;
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 

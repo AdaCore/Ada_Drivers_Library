@@ -62,7 +62,6 @@ with HAL;             use HAL;
 with STM32.DMA;       use STM32.DMA;
 with Ada.Real_Time;   use Ada.Real_Time;
 with Memory_Transfer; use Memory_Transfer;
-with Interfaces;      use Interfaces;
 
 with Ada.Unchecked_Conversion;
 with System;
