@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -85,7 +86,7 @@ package Cortex_M_SVD.SysTick is
       --  Value to auto reload SysTick after reaching zero
       RELOAD         : SYST_RVR_RELOAD_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -102,7 +103,7 @@ package Cortex_M_SVD.SysTick is
       --  Current value
       CURRENT        : SYST_CVR_CURRENT_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

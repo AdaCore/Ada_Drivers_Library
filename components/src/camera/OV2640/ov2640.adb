@@ -39,13 +39,12 @@
 --  OV2640 driver.
 --
 
-with Interfaces; use Interfaces;
 with Bit_Fields; use Bit_Fields;
 
 package body OV2640 is
 
    type Addr_And_Data is record
-      Addr, Data : Byte;
+      Addr, Data : UInt8;
    end record;
 
    type Command_Array is array (Natural range <>) of Addr_And_Data;
@@ -243,8 +242,8 @@ package body OV2640 is
       (16#00#,     16#00#)
      );
 
-   procedure Write (This : OV2640_Camera; Addr, Data : Byte);
-   function Read (This : OV2640_Camera; Addr : Byte) return Byte;
+   procedure Write (This : OV2640_Camera; Addr, Data : UInt8);
+   function Read (This : OV2640_Camera; Addr : UInt8) return UInt8;
    procedure Select_Sensor_Bank (This : OV2640_Camera);
    procedure Select_DSP_Bank (This : OV2640_Camera);
    procedure Enable_DSP (This : OV2640_Camera; Enable : Boolean);
@@ -253,7 +252,7 @@ package body OV2640 is
    -- Write --
    -----------
 
-   procedure Write (This : OV2640_Camera; Addr, Data : Byte) is
+   procedure Write (This : OV2640_Camera; Addr, Data : UInt8) is
       Status : I2C_Status;
    begin
       This.I2C.Mem_Write (Addr          => This.Addr,
@@ -270,7 +269,7 @@ package body OV2640 is
    -- Read --
    ----------
 
-   function Read (This : OV2640_Camera; Addr : Byte) return Byte is
+   function Read (This : OV2640_Camera; Addr : UInt8) return UInt8 is
       Data : I2C_Data (1 .. 1);
       Status : I2C_Status;
    begin
@@ -372,12 +371,12 @@ package body OV2640 is
       Enable_DSP (This, False);
       --  DSP bank selected
 
-      Write (This, REG_DSP_ZMOW, Byte ((Width / 4) and 16#FF#));
-      Write (This, REG_DSP_ZMOH, Byte ((Height / 4) and 16#FF#));
+      Write (This, REG_DSP_ZMOW, UInt8 ((Width / 4) and 16#FF#));
+      Write (This, REG_DSP_ZMOH, UInt8 ((Height / 4) and 16#FF#));
       Write (This, REG_DSP_ZMHH,
-             Byte (Shift_Right (Width, 10) and 16#3#)
+             UInt8 (Shift_Right (Width, 10) and 16#3#)
              or
-             Byte (Shift_Right (Height, 8) and 16#4#));
+             UInt8 (Shift_Right (Height, 8) and 16#4#));
 
       Select_Sensor_Bank (This);
       Write (This, REG_SENSOR_CLKRC, (if CLK_Divider then 16#81# else 16#80#));
@@ -422,24 +421,24 @@ package body OV2640 is
       end if;
 
       --  Real HSIZE[10..3]
-      Write (This, REG_DSP_HSIZE8, To_Byte (H_SIZE (3 .. 10)));
+      Write (This, REG_DSP_HSIZE8, To_UInt8 (H_SIZE (3 .. 10)));
       --  Real VSIZE[10..3]
-      Write (This, REG_DSP_VSIZE8, To_Byte (V_SIZE (3 .. 10)));
+      Write (This, REG_DSP_VSIZE8, To_UInt8 (V_SIZE (3 .. 10)));
 
       --  Real HSIZE[11] real HSIZE[2..0]
       Write (This, REG_DSP_SIZEL,
-             To_Byte (V_SIZE (0 .. 2) & H_SIZE (0 .. 2) & (H_SIZE (11), 0)));
+             To_UInt8 (V_SIZE (0 .. 2) & H_SIZE (0 .. 2) & (H_SIZE (11), 0)));
 
       H_SIZE := To_Bit_Field (To_UInt16 (H_SIZE) / 4);
       V_SIZE := To_Bit_Field (To_UInt16 (V_SIZE) / 4);
 
       Write (This, REG_DSP_XOFFL, 0);
       Write (This, REG_DSP_YOFFL, 0);
-      Write (This, REG_DSP_HSIZE, To_Byte (H_SIZE (0 .. 7)));
-      Write (This, REG_DSP_VSIZE, To_Byte (V_SIZE (0 .. 7)));
+      Write (This, REG_DSP_HSIZE, To_UInt8 (H_SIZE (0 .. 7)));
+      Write (This, REG_DSP_VSIZE, To_UInt8 (V_SIZE (0 .. 7)));
 
       Write (This, REG_DSP_VHYX,
-             To_Byte ((0 => 0,
+             To_UInt8 ((0 => 0,
                        1 => 0,
                        2 => 0,
                        3 => H_SIZE (8),
@@ -448,7 +447,7 @@ package body OV2640 is
                        6 => 0,
                        7 => V_SIZE (8))));
       Write (This, REG_DSP_TEST,
-             To_Byte ((0 => 0,
+             To_UInt8 ((0 => 0,
                        1 => 0,
                        2 => 0,
                        3 => 0,
@@ -485,7 +484,7 @@ package body OV2640 is
    -- Get_PID --
    -------------
 
-   function Get_PID (This : OV2640_Camera) return Byte is
+   function Get_PID (This : OV2640_Camera) return UInt8 is
    begin
       Select_Sensor_Bank (This);
       return Read (This, REG_SENSOR_PID);
@@ -498,7 +497,7 @@ package body OV2640 is
    procedure Enable_Auto_Gain_Control (This   : OV2640_Camera;
                                        Enable : Boolean := True)
    is
-      COM8 : Byte;
+      COM8 : UInt8;
    begin
       Select_Sensor_Bank (This);
       COM8 := Read (This, REG_SENSOR_COM8);
@@ -518,7 +517,7 @@ package body OV2640 is
    procedure Enable_Auto_White_Balance (This   : OV2640_Camera;
                                         Enable : Boolean := True)
    is
-      CTRL1 : Byte;
+      CTRL1 : UInt8;
    begin
       Select_DSP_Bank (This);
       CTRL1 := Read (This, REG_DSP_CTRL1);
@@ -538,7 +537,7 @@ package body OV2640 is
    procedure Enable_Auto_Exposure_Control (This   : OV2640_Camera;
                                            Enable : Boolean := True)
    is
-      CTRL0 : Byte;
+      CTRL0 : UInt8;
    begin
       Select_DSP_Bank (This);
       CTRL0 := Read (This, REG_DSP_CTRL0);
@@ -558,7 +557,7 @@ package body OV2640 is
    procedure Enable_Auto_Band_Filter (This   : OV2640_Camera;
                                       Enable : Boolean := True)
    is
-      COM8 : Byte;
+      COM8 : UInt8;
    begin
       Select_Sensor_Bank (This);
       COM8 := Read (This, REG_SENSOR_COM8);

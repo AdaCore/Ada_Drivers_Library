@@ -1,36 +1,37 @@
---    Copyright (c) 2013, Nordic Semiconductor ASA
---    All rights reserved.
+--  Copyright (c) 2013, Nordic Semiconductor ASA
+--  All rights reserved.
 --
---    Redistribution and use in source and binary forms, with or without
---    modification, are permitted provided that the following conditions are met:
+--  Redistribution and use in source and binary forms, with or without
+--  modification, are permitted provided that the following conditions are met:
 --
---    * Redistributions of source code must retain the above copyright notice, this
---      list of conditions and the following disclaimer.
+--  * Redistributions of source code must retain the above copyright notice, this
+--  list of conditions and the following disclaimer.
 --
---    * Redistributions in binary form must reproduce the above copyright notice,
---      this list of conditions and the following disclaimer in the documentation
---      and/or other materials provided with the distribution.
+--  * Redistributions in binary form must reproduce the above copyright notice,
+--  this list of conditions and the following disclaimer in the documentation
+--  and/or other materials provided with the distribution.
 --
---    * Neither the name of Nordic Semiconductor ASA nor the names of its
---      contributors may be used to endorse or promote products derived from
---      this software without specific prior written permission.
+--  * Neither the name of Nordic Semiconductor ASA nor the names of its
+--  contributors may be used to endorse or promote products derived from
+--  this software without specific prior written permission.
 --
---    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
---    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
---    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
---    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
---    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
---    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
---    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
---    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
---    OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
---    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+--  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+--  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+--  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+--  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+--  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+--  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+--  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+--  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 --  This spec has been automatically generated from nrf51.svd
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -629,7 +630,7 @@ package NRF51_SVD.RTC is
       --  Read-only. Counter value.
       COUNTER        : COUNTER_COUNTER_Field;
       --  unspecified
-      Reserved_24_31 : HAL.Byte;
+      Reserved_24_31 : HAL.UInt8;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -664,7 +665,7 @@ package NRF51_SVD.RTC is
       --  Compare value.
       COMPARE        : CC_COMPARE_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -769,10 +770,10 @@ package NRF51_SVD.RTC is
 
    --  Real time counter 0.
    RTC0_Periph : aliased RTC_Peripheral
-     with Import, Address => RTC0_Base;
+     with Import, Address => System'To_Address (16#4000B000#);
 
    --  Real time counter 1.
    RTC1_Periph : aliased RTC_Peripheral
-     with Import, Address => RTC1_Base;
+     with Import, Address => System'To_Address (16#40011000#);
 
 end NRF51_SVD.RTC;

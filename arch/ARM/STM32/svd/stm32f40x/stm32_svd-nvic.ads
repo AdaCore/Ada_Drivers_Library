@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -31,7 +32,7 @@ package STM32_SVD.NVIC is
    end record;
 
    --  IPR_IPR_N array element
-   subtype IPR_IPR_N_Element is HAL.Byte;
+   subtype IPR_IPR_N_Element is HAL.UInt8;
 
    --  IPR_IPR_N array
    type IPR_IPR_N_Field_Array is array (0 .. 3) of IPR_IPR_N_Element
@@ -200,6 +201,6 @@ package STM32_SVD.NVIC is
 
    --  Nested Vectored Interrupt Controller
    NVIC_Periph : aliased NVIC_Peripheral
-     with Import, Address => NVIC_Base;
+     with Import, Address => System'To_Address (16#E000E000#);
 
 end STM32_SVD.NVIC;

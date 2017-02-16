@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -14,7 +15,7 @@ package STM32_SVD.RCC is
    ---------------
 
    subtype CR_HSITRIM_Field is HAL.UInt5;
-   subtype CR_HSICAL_Field is HAL.Byte;
+   subtype CR_HSICAL_Field is HAL.UInt8;
 
    --  clock control register
    type CR_Register is record
@@ -248,7 +249,7 @@ package STM32_SVD.RCC is
       --  Write-only. Clock security system interrupt clear
       CSSC           : Boolean := False;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -310,7 +311,7 @@ package STM32_SVD.RCC is
       --  CRC reset
       CRCRST         : Boolean := False;
       --  unspecified
-      Reserved_13_20 : HAL.Byte := 16#0#;
+      Reserved_13_20 : HAL.UInt8 := 16#0#;
       --  DMA2 reset
       DMA1RST        : Boolean := False;
       --  DMA2 reset
@@ -1689,6 +1690,6 @@ package STM32_SVD.RCC is
 
    --  Reset and clock control
    RCC_Periph : aliased RCC_Peripheral
-     with Import, Address => RCC_Base;
+     with Import, Address => System'To_Address (16#40023800#);
 
 end STM32_SVD.RCC;

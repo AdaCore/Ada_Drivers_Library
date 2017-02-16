@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -85,7 +86,7 @@ package STM32_SVD.RTC is
       --  Year tens in BCD format
       YT             : DR_YT_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -150,7 +151,7 @@ package STM32_SVD.RTC is
       --  Calibration output enable
       COE            : Boolean := False;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -427,7 +428,7 @@ package STM32_SVD.RTC is
       MSK4  at 0 range 31 .. 31;
    end record;
 
-   subtype WPR_KEY_Field is HAL.Byte;
+   subtype WPR_KEY_Field is HAL.UInt8;
 
    --  write protection register
    type WPR_Register is record
@@ -853,6 +854,6 @@ package STM32_SVD.RTC is
 
    --  Real-time clock
    RTC_Periph : aliased RTC_Peripheral
-     with Import, Address => RTC_Base;
+     with Import, Address => System'To_Address (16#40002800#);
 
 end STM32_SVD.RTC;

@@ -43,7 +43,7 @@ package AdaFruit.Thermal_Printer is
    --  use 9_600.
 
    --  Sets the line spacing to n dots. The default value is 32
-   procedure Set_Line_Spacing (This : in out TP_Device; Spacing : Byte);
+   procedure Set_Line_Spacing (This : in out TP_Device; Spacing : UInt8);
 
    type Text_Align is (Right, Center, Left);
    procedure Set_Align (This : in out TP_Device; Align : Text_Align);
@@ -58,7 +58,7 @@ package AdaFruit.Thermal_Printer is
 
    procedure Set_Reversed (This : in out TP_Device; Reversed : Boolean);
 
-   subtype Underline_Height is Byte range 0 .. 2;
+   subtype Underline_Height is UInt8 range 0 .. 2;
    procedure Set_Underline_Height (This : in out TP_Device; Height : Underline_Height);
 
    type Character_Set is (USA, France, Germany, UK, Denmark1, Sweden, Italy,
@@ -66,7 +66,7 @@ package AdaFruit.Thermal_Printer is
                           Latin_Americam, Korea);
    procedure Set_Character_Set (This : in out TP_Device; Set : Character_Set);
 
-   procedure Feed (This : in out TP_Device; Rows : Byte);
+   procedure Feed (This : in out TP_Device; Rows : UInt8);
 
    type Thermal_Printer_Bitmap is array (Natural range <>,
                                          Natural range <>) of Boolean
@@ -90,14 +90,14 @@ package AdaFruit.Thermal_Printer is
 
    type Printer_Settings is record
       --  Unit: 8 dots,  Default: 7 (64 dots))
-      Max_Printing_Dots : Byte;
+      Max_Printing_Dots : UInt8;
       --  Unit 10us, Default: 80 (800us)
-      Heating_Time      : Byte;
+      Heating_Time      : UInt8;
       --  Unit 10us, Default: 2 (20us)
-      Heating_Interval  : Byte;
+      Heating_Interval  : UInt8;
    end record;
 
-   procedure Set_Density (This : in out TP_Device; Density, Breaktime : Byte);
+   procedure Set_Density (This : in out TP_Device; Density, Breaktime : UInt8);
    procedure Set_Printer_Settings (This : in out TP_Device; Settings : Printer_Settings);
 
    procedure Print_Test_Page (This : in out TP_Device);

@@ -87,7 +87,7 @@ package Framebuffer_LTDC is
      (Display : Frame_Buffer) return Boolean;
 
    overriding procedure Set_Background
-     (Display : Frame_Buffer; R, G, B : Byte)
+     (Display : Frame_Buffer; R, G, B : UInt8)
      with Pre => Display.Initialized;
 
    overriding procedure Initialize_Layer

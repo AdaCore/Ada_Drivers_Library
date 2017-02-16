@@ -30,7 +30,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with Interfaces;               use Interfaces;
 with Bitmap_Color_Conversion;  use Bitmap_Color_Conversion;
 
 package body ST7735R is
@@ -60,19 +59,19 @@ package body ST7735R is
       MY        at 0 range 7 .. 7;
    end record;
 
-   function To_Byte is new Ada.Unchecked_Conversion (MADCTL, Byte);
+   function To_UInt8 is new Ada.Unchecked_Conversion (MADCTL, UInt8);
 
    procedure Write_Command (LCD : ST7735R_Device;
-                            Cmd : Byte);
+                            Cmd : UInt8);
    procedure Write_Command (LCD  : ST7735R_Device;
-                            Cmd  : Byte;
-                            Data : HAL.Byte_Array);
+                            Cmd  : UInt8;
+                            Data : HAL.UInt8_Array);
 
    procedure Write_Data (LCD : ST7735R_Device;
-                         Data : Byte);
+                         Data : UInt8);
    pragma Unreferenced (Write_Data);
    procedure Write_Data (LCD  : ST7735R_Device;
-                         Data : HAL.Byte_Array);
+                         Data : HAL.UInt8_Array);
    procedure Write_Data (LCD  : ST7735R_Device;
                          Data : HAL.UInt16_Array);
 
@@ -125,7 +124,7 @@ package body ST7735R is
    -------------------
 
    procedure Write_Command (LCD : ST7735R_Device;
-                            Cmd : Byte)
+                            Cmd : UInt8)
    is
       Status : SPI_Status;
    begin
@@ -145,8 +144,8 @@ package body ST7735R is
    -------------------
 
    procedure Write_Command (LCD  : ST7735R_Device;
-                            Cmd  : Byte;
-                            Data : HAL.Byte_Array)
+                            Cmd  : UInt8;
+                            Data : HAL.UInt8_Array)
    is
    begin
       Write_Command (LCD, Cmd);
@@ -158,7 +157,7 @@ package body ST7735R is
    ----------------
 
    procedure Write_Data (LCD : ST7735R_Device;
-                         Data : Byte)
+                         Data : UInt8)
    is
       Status : SPI_Status;
    begin
@@ -178,7 +177,7 @@ package body ST7735R is
    ----------------
 
    procedure Write_Data (LCD  : ST7735R_Device;
-                         Data : HAL.Byte_Array)
+                         Data : HAL.UInt8_Array)
    is
       Status : SPI_Status;
    begin
@@ -202,14 +201,14 @@ package body ST7735R is
    procedure Write_Data (LCD  : ST7735R_Device;
                          Data : HAL.UInt16_Array)
    is
-      B1, B2 : Byte;
+      B1, B2 : UInt8;
       Status : SPI_Status;
    begin
       Start_Transaction (LCD);
       Set_Data_Mode (LCD);
       for Elt of Data loop
-         B1 := Byte (Interfaces.Shift_Right (Elt, 8));
-         B2 := Byte (Elt and 16#FF#);
+         B1 := UInt8 (Shift_Right (Elt, 8));
+         B2 := UInt8 (Elt and 16#FF#);
          LCD.Port.Transmit (SPI_Data_8b'(B1, B2),
                             Status);
          if Status /= Ok then
@@ -316,7 +315,7 @@ package body ST7735R is
 
    procedure Gamma_Set (LCD : ST7735R_Device; Gamma_Curve : UInt4) is
    begin
-      Write_Command (LCD, 16#26#, (0 => Byte (Gamma_Curve)));
+      Write_Command (LCD, 16#26#, (0 => UInt8 (Gamma_Curve)));
    end Gamma_Set;
 
    ----------------------
@@ -324,7 +323,7 @@ package body ST7735R is
    ----------------------
 
    procedure Set_Pixel_Format (LCD : ST7735R_Device; Pix_Fmt : Pixel_Format) is
-      Value : constant Byte := (case Pix_Fmt is
+      Value : constant UInt8 := (case Pix_Fmt is
                                    when Pixel_12bits => 2#011#,
                                    when Pixel_16bits => 2#101#,
                                    when Pixel_18bits => 2#110#);
@@ -354,7 +353,7 @@ package body ST7735R is
       Value.ML := Vertical;
       Value.RGB := Color_Order;
       Value.MH := Horizontal;
-      Write_Command (LCD, 16#36#, (0 => To_Byte (Value)));
+      Write_Command (LCD, 16#36#, (0 => To_UInt8 (Value)));
    end Set_Memory_Data_Access;
 
    ---------------------------
@@ -369,7 +368,7 @@ package body ST7735R is
    is
    begin
       Write_Command (LCD, 16#B1#,
-                     (Byte (RTN), Byte (Front_Porch), Byte (Back_Porch)));
+                     (UInt8 (RTN), UInt8 (Front_Porch), UInt8 (Back_Porch)));
    end Set_Frame_Rate_Normal;
 
    -------------------------
@@ -384,7 +383,7 @@ package body ST7735R is
    is
    begin
       Write_Command (LCD, 16#B2#,
-                     (Byte (RTN), Byte (Front_Porch), Byte (Back_Porch)));
+                     (UInt8 (RTN), UInt8 (Front_Porch), UInt8 (Back_Porch)));
    end Set_Frame_Rate_Idle;
 
    ---------------------------------
@@ -402,12 +401,12 @@ package body ST7735R is
    is
    begin
       Write_Command (LCD, 16#B3#,
-                     (Byte (RTN_Part),
-                      Byte (Front_Porch_Part),
-                      Byte (Back_Porch_Part),
-                      Byte (RTN_Full),
-                      Byte (Front_Porch_Full),
-                      Byte (Back_Porch_Full)));
+                     (UInt8 (RTN_Part),
+                      UInt8 (Front_Porch_Part),
+                      UInt8 (Back_Porch_Part),
+                      UInt8 (RTN_Full),
+                      UInt8 (Front_Porch_Full),
+                      UInt8 (Back_Porch_Full)));
    end Set_Frame_Rate_Partial_Full;
 
    ---------------------------
@@ -418,7 +417,7 @@ package body ST7735R is
      (LCD : ST7735R_Device;
       Normal, Idle, Full_Partial : Inversion_Control)
    is
-      Value : Byte := 0;
+      Value : UInt8 := 0;
    begin
       if Normal = Line_Inversion then
          Value := Value or 2#100#;
@@ -443,11 +442,11 @@ package body ST7735R is
       VRHN : UInt5;
       MODE : UInt2)
    is
-      P1, P2, P3 : Byte;
+      P1, P2, P3 : UInt8;
    begin
-      P1 := Interfaces.Shift_Left (Byte (AVDD), 5) or Byte (VRHP);
-      P2 := Byte (VRHN);
-      P3 := Interfaces.Shift_Left (Byte (MODE), 6) or 2#00_0100#;
+      P1 := Shift_Left (UInt8 (AVDD), 5) or UInt8 (VRHP);
+      P2 := UInt8 (VRHN);
+      P3 := Shift_Left (UInt8 (MODE), 6) or 2#00_0100#;
       Write_Command (LCD, 16#C0#, (P1, P2, P3));
    end Set_Power_Control_1;
 
@@ -461,11 +460,11 @@ package body ST7735R is
       VGSEL : UInt2;
       VGHBT : UInt2)
    is
-      P1 : Byte;
+      P1 : UInt8;
    begin
-      P1 := Interfaces.Shift_Left (Byte (VGH25), 6) or
-        Interfaces.Shift_Left (Byte (VGSEL), 2) or
-        Byte (VGHBT);
+      P1 := Shift_Left (UInt8 (VGH25), 6) or
+        Shift_Left (UInt8 (VGSEL), 2) or
+        UInt8 (VGHBT);
       Write_Command (LCD, 16#C1#, (0 => P1));
    end Set_Power_Control_2;
 
@@ -475,7 +474,7 @@ package body ST7735R is
 
    procedure Set_Power_Control_3
      (LCD : ST7735R_Device;
-      P1, P2 : Byte)
+      P1, P2 : UInt8)
    is
    begin
       Write_Command (LCD, 16#C2#, (P1, P2));
@@ -487,7 +486,7 @@ package body ST7735R is
 
    procedure Set_Power_Control_4
      (LCD : ST7735R_Device;
-      P1, P2 : Byte)
+      P1, P2 : UInt8)
    is
    begin
       Write_Command (LCD, 16#C3#, (P1, P2));
@@ -499,7 +498,7 @@ package body ST7735R is
 
    procedure Set_Power_Control_5
      (LCD : ST7735R_Device;
-      P1, P2 : Byte)
+      P1, P2 : UInt8)
    is
    begin
       Write_Command (LCD, 16#C4#, (P1, P2));
@@ -511,7 +510,7 @@ package body ST7735R is
 
    procedure Set_Vcom (LCD : ST7735R_Device; VCOMS : UInt6) is
    begin
-      Write_Command (LCD, 16#C5#, (0 => Byte (VCOMS)));
+      Write_Command (LCD, 16#C5#, (0 => UInt8 (VCOMS)));
    end Set_Vcom;
 
    ------------------------
@@ -520,12 +519,12 @@ package body ST7735R is
 
    procedure Set_Column_Address (LCD : ST7735R_Device; X_Start, X_End : UInt16)
    is
-      P1, P2, P3, P4 : Byte;
+      P1, P2, P3, P4 : UInt8;
    begin
-      P1 := Byte (Shift_Right (X_Start and 16#FF#, 8));
-      P2 := Byte (X_Start and 16#FF#);
-      P3 := Byte (Shift_Right (X_End and 16#FF#, 8));
-      P4 := Byte (X_End and 16#FF#);
+      P1 := UInt8 (Shift_Right (X_Start and 16#FF#, 8));
+      P2 := UInt8 (X_Start and 16#FF#);
+      P3 := UInt8 (Shift_Right (X_End and 16#FF#, 8));
+      P4 := UInt8 (X_End and 16#FF#);
       Write_Command (LCD, 16#2A#, (P1, P2, P3, P4));
    end Set_Column_Address;
 
@@ -535,12 +534,12 @@ package body ST7735R is
 
    procedure Set_Row_Address (LCD : ST7735R_Device; Y_Start, Y_End : UInt16)
    is
-      P1, P2, P3, P4 : Byte;
+      P1, P2, P3, P4 : UInt8;
    begin
-      P1 := Byte (Shift_Right (Y_Start and 16#FF#, 8));
-      P2 := Byte (Y_Start and 16#FF#);
-      P3 := Byte (Shift_Right (Y_End and 16#FF#, 8));
-      P4 := Byte (Y_End and 16#FF#);
+      P1 := UInt8 (Shift_Right (Y_Start and 16#FF#, 8));
+      P2 := UInt8 (Y_Start and 16#FF#);
+      P3 := UInt8 (Shift_Right (Y_End and 16#FF#, 8));
+      P4 := UInt8 (Y_End and 16#FF#);
       Write_Command (LCD, 16#2B#, (P1, P2, P3, P4));
    end Set_Row_Address;
 
@@ -591,7 +590,7 @@ package body ST7735R is
    ----------------------
 
    procedure Write_Raw_Pixels (LCD  : ST7735R_Device;
-                               Data : HAL.Byte_Array)
+                               Data : HAL.UInt8_Array)
    is
    begin
       Write_Command (LCD, 16#2C#);
@@ -684,7 +683,7 @@ package body ST7735R is
 
    overriding
    procedure Set_Background
-     (Display : ST7735R_Device; R, G, B : Byte)
+     (Display : ST7735R_Device; R, G, B : UInt8)
    is
    begin
       --  Does it make sense when there's no alpha channel...

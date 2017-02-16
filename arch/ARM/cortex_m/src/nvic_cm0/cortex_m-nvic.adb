@@ -40,7 +40,6 @@
 ------------------------------------------------------------------------------
 
 with Cortex_M_SVD.NVIC; use Cortex_M_SVD.NVIC;
-with Interfaces; use Interfaces;
 
 package body Cortex_M.NVIC is
 
@@ -53,8 +52,25 @@ package body Cortex_M.NVIC is
      (IRQn     : Interrupt_ID;
       Priority : Interrupt_Priority)
    is
+      type As_Array (As_Arr : Boolean := True) is record
+         case As_Arr is
+            when True =>
+               Arr : UInt8_Array (0 .. 3);
+            when False =>
+               IPR : UInt32;
+         end case;
+      end record with Unchecked_Union, Pack, Size => 32;
+
+      IPR_Index : constant Natural := IRQn / 4;
+      IP_Index  : constant Natural := IRQn mod 4;
+      IPR       : As_Array;
    begin
-      NVIC_Periph.NVIC_IPR (IRQn) := Priority;
+
+      IPR.IPR := NVIC_Periph.NVIC_IPR (IPR_Index);
+
+      IPR.Arr (IP_Index) := Priority;
+
+      NVIC_Periph.NVIC_IPR (IPR_Index) := IPR.IPR;
    end Set_Priority;
 
    -------------

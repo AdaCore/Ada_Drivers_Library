@@ -31,10 +31,9 @@
 
 --  Driver for the WM8994 CODEC
 
-with Interfaces; use Interfaces;
-with HAL;        use HAL;
-with HAL.I2C;    use HAL.I2C;
-with HAL.Audio;  use HAL.Audio;
+with HAL;       use HAL;
+with HAL.I2C;   use HAL.I2C;
+with HAL.Audio; use HAL.Audio;
 with HAL.Time;
 
 package CS43L22 is
@@ -55,7 +54,7 @@ package CS43L22 is
      (Mute_On,
       Mute_Off);
 
-   subtype Volume_Level is Unsigned_8 range 0 .. 100;
+   subtype Volume_Level is UInt8 range 0 .. 100;
 
    type CS43L22_Device (Port : not null Any_I2C_Port;
                         Time : not null HAL.Time.Any_Delays) is
@@ -66,7 +65,7 @@ package CS43L22 is
                    Volume    : Volume_Level;
                    Frequency : Audio_Frequency);
 
-   function Read_ID (This : in out CS43L22_Device) return Unsigned_8;
+   function Read_ID (This : in out CS43L22_Device) return UInt8;
    procedure Play (This : in out CS43L22_Device);
    procedure Pause (This : in out CS43L22_Device);
    procedure Resume (This : in out CS43L22_Device);
@@ -124,14 +123,14 @@ private
                         Time : not null HAL.Time.Any_Delays) is
      tagged limited record
       Output_Enabled : Boolean := False;
-      Output_Dev     : Byte := 0;
+      Output_Dev     : UInt8 := 0;
    end record;
 
    procedure I2C_Write (This  : in out CS43L22_Device;
-                        Reg   : Byte;
-                        Value : Byte);
+                        Reg   : UInt8;
+                        Value : UInt8);
    function I2C_Read (This : in out CS43L22_Device;
-                      Reg  : Byte)
-                      return Byte;
+                      Reg  : UInt8)
+                      return UInt8;
 
 end CS43L22;

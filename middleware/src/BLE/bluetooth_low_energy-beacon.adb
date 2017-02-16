@@ -43,15 +43,15 @@ package body Bluetooth_Low_Energy.Beacon is
       --  MAC
       Push (Pck, (16#FE#, 16#CA#, 16#EF#, 16#BE#, 16#AD#, 16#DE#));
       --  Flag length
-      Push (Pck, Byte (2));
+      Push (Pck, UInt8 (2));
       --  Flag type
-      Push (Pck, Byte (1));
+      Push (Pck, UInt8 (1));
       --  Flag Content
-      Push (Pck, Byte (6));
+      Push (Pck, UInt8 (6));
       --  Data length
-      Push (Pck, Byte (16#1A#));
+      Push (Pck, UInt8 (16#1A#));
       --  Data type
-      Push (Pck, Byte (16#FF#));
+      Push (Pck, UInt8 (16#FF#));
       --  Data header
       Push (Pck, (16#4C#, 16#00#, 16#02#, 16#15#));
       --  UUID

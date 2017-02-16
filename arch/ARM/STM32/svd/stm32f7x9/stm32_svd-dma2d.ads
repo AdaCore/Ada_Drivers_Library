@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -158,9 +159,9 @@ package STM32_SVD.DMA2D is
    end record;
 
    subtype FGPFCCR_CM_Field is HAL.UInt4;
-   subtype FGPFCCR_CS_Field is HAL.Byte;
+   subtype FGPFCCR_CS_Field is HAL.UInt8;
    subtype FGPFCCR_AM_Field is HAL.UInt2;
-   subtype FGPFCCR_ALPHA_Field is HAL.Byte;
+   subtype FGPFCCR_ALPHA_Field is HAL.UInt8;
 
    --  foreground PFC control register
    type FGPFCCR_Register is record
@@ -195,9 +196,9 @@ package STM32_SVD.DMA2D is
       ALPHA          at 0 range 24 .. 31;
    end record;
 
-   subtype FGCOLR_BLUE_Field is HAL.Byte;
-   subtype FGCOLR_GREEN_Field is HAL.Byte;
-   subtype FGCOLR_RED_Field is HAL.Byte;
+   subtype FGCOLR_BLUE_Field is HAL.UInt8;
+   subtype FGCOLR_GREEN_Field is HAL.UInt8;
+   subtype FGCOLR_RED_Field is HAL.UInt8;
 
    --  foreground color register
    type FGCOLR_Register is record
@@ -208,7 +209,7 @@ package STM32_SVD.DMA2D is
       --  Red Value
       RED            : FGCOLR_RED_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -221,9 +222,9 @@ package STM32_SVD.DMA2D is
    end record;
 
    subtype BGPFCCR_CM_Field is HAL.UInt4;
-   subtype BGPFCCR_CS_Field is HAL.Byte;
+   subtype BGPFCCR_CS_Field is HAL.UInt8;
    subtype BGPFCCR_AM_Field is HAL.UInt2;
-   subtype BGPFCCR_ALPHA_Field is HAL.Byte;
+   subtype BGPFCCR_ALPHA_Field is HAL.UInt8;
 
    --  background PFC control register
    type BGPFCCR_Register is record
@@ -258,9 +259,9 @@ package STM32_SVD.DMA2D is
       ALPHA          at 0 range 24 .. 31;
    end record;
 
-   subtype BGCOLR_BLUE_Field is HAL.Byte;
-   subtype BGCOLR_GREEN_Field is HAL.Byte;
-   subtype BGCOLR_RED_Field is HAL.Byte;
+   subtype BGCOLR_BLUE_Field is HAL.UInt8;
+   subtype BGCOLR_GREEN_Field is HAL.UInt8;
+   subtype BGCOLR_RED_Field is HAL.UInt8;
 
    --  background color register
    type BGCOLR_Register is record
@@ -271,7 +272,7 @@ package STM32_SVD.DMA2D is
       --  Red Value
       RED            : BGCOLR_RED_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -300,10 +301,10 @@ package STM32_SVD.DMA2D is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype OCOLR_BLUE_Field is HAL.Byte;
-   subtype OCOLR_GREEN_Field is HAL.Byte;
-   subtype OCOLR_RED_Field is HAL.Byte;
-   subtype OCOLR_APLHA_Field is HAL.Byte;
+   subtype OCOLR_BLUE_Field is HAL.UInt8;
+   subtype OCOLR_GREEN_Field is HAL.UInt8;
+   subtype OCOLR_RED_Field is HAL.UInt8;
+   subtype OCOLR_APLHA_Field is HAL.UInt8;
 
    --  output color register
    type OCOLR_Register is record
@@ -381,7 +382,7 @@ package STM32_SVD.DMA2D is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype AMTCR_DT_Field is HAL.Byte;
+   subtype AMTCR_DT_Field is HAL.UInt8;
 
    --  AHB master timer configuration register
    type AMTCR_Register is record
@@ -404,10 +405,10 @@ package STM32_SVD.DMA2D is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype FGCLUT_BLUE_Field is HAL.Byte;
-   subtype FGCLUT_GREEN_Field is HAL.Byte;
-   subtype FGCLUT_RED_Field is HAL.Byte;
-   subtype FGCLUT_APLHA_Field is HAL.Byte;
+   subtype FGCLUT_BLUE_Field is HAL.UInt8;
+   subtype FGCLUT_GREEN_Field is HAL.UInt8;
+   subtype FGCLUT_RED_Field is HAL.UInt8;
+   subtype FGCLUT_APLHA_Field is HAL.UInt8;
 
    --  FGCLUT
    type FGCLUT_Register is record
@@ -430,10 +431,10 @@ package STM32_SVD.DMA2D is
       APLHA at 0 range 24 .. 31;
    end record;
 
-   subtype BGCLUT_BLUE_Field is HAL.Byte;
-   subtype BGCLUT_GREEN_Field is HAL.Byte;
-   subtype BGCLUT_RED_Field is HAL.Byte;
-   subtype BGCLUT_APLHA_Field is HAL.Byte;
+   subtype BGCLUT_BLUE_Field is HAL.UInt8;
+   subtype BGCLUT_GREEN_Field is HAL.UInt8;
+   subtype BGCLUT_RED_Field is HAL.UInt8;
+   subtype BGCLUT_APLHA_Field is HAL.UInt8;
 
    --  BGCLUT
    type BGCLUT_Register is record
@@ -536,6 +537,6 @@ package STM32_SVD.DMA2D is
 
    --  DMA2D controller
    DMA2D_Periph : aliased DMA2D_Peripheral
-     with Import, Address => DMA2D_Base;
+     with Import, Address => System'To_Address (16#4002B000#);
 
 end STM32_SVD.DMA2D;

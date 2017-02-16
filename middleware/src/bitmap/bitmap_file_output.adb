@@ -37,7 +37,7 @@ package body Bitmap_File_Output is
    type Header (As_Array : Boolean := True) is record
       case As_Array is
          when True =>
-            Arr : Byte_Array (1 .. 14);
+            Arr : UInt8_Array (1 .. 14);
          when False =>
             Signature : Integer_16;
             Size      : Integer_32; --  File size
@@ -50,7 +50,7 @@ package body Bitmap_File_Output is
    type Info (As_Array : Boolean := True) is record
       case As_Array is
          when True =>
-            Arr : Byte_Array (1 .. 40);
+            Arr : UInt8_Array (1 .. 40);
          when False =>
             Struct_Size   : Integer_32;
             Width         : Integer_32; -- Image width in pixels
@@ -58,7 +58,7 @@ package body Bitmap_File_Output is
             Planes        : Integer_16;
             Pixel_Size    : Integer_16; -- Bits per pixel
             Compression   : Integer_32; -- Zero means no compression
-            Image_Size    : Integer_32; -- Size of the image data in bytes
+            Image_Size    : Integer_32; -- Size of the image data in UInt8s
             PPMX          : Integer_32; -- Pixels per meter in x led
             PPMY          : Integer_32; -- Pixels per meter in y led
             Palette_Size  : Integer_32; -- Number of colors
@@ -81,8 +81,8 @@ package body Bitmap_File_Output is
       Data_Size   : constant Integer_32 := (Row_Size + Row_Padding) * Integer_32 (Bitmap.Height);
 
       RGB_Pix : Bitmap_Color;
-      Pix_Out : Byte_Array (1 .. 3);
-      Padding : constant Byte_Array (1 .. Integer (Row_Padding)) := (others => 0);
+      Pix_Out : UInt8_Array (1 .. 3);
+      Padding : constant UInt8_Array (1 .. Integer (Row_Padding)) := (others => 0);
    begin
       Hdr.Signature := 16#4D42#;
       Hdr.Size      := (Data_Size + 54) / 4;

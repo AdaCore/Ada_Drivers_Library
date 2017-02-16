@@ -262,7 +262,7 @@ package body Semihosting is
    -------------
 
    procedure Write_0 (Str : String) is
-      Data : Byte_Array (Str'First .. Str'Last + 1);
+      Data : UInt8_Array (Str'First .. Str'Last + 1);
       Ret  : SH_Word with Unreferenced;
    begin
       if not Semihosting_Enabled then

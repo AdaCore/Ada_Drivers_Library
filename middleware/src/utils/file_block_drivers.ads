@@ -33,7 +33,7 @@
 
 with HAL.Block_Drivers; use HAL.Block_Drivers;
 with HAL.Filesystem;    use HAL.Filesystem;
-with Interfaces;        use Interfaces;
+with HAL;               use HAL;
 
 package File_Block_Drivers is
 
@@ -42,14 +42,14 @@ package File_Block_Drivers is
    overriding
    function Read
      (This         : in out File_Block_Driver;
-      Block_Number : Unsigned_32;
+      Block_Number : UInt32;
       Data         : out Block)
       return Boolean;
 
    overriding
    function Write
      (This         : in out File_Block_Driver;
-      Block_Number : Unsigned_32;
+      Block_Number : UInt32;
       Data         : Block)
       return Boolean;
 

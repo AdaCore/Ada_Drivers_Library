@@ -41,7 +41,7 @@ package HAL.SPI is
      (Data_Size_8b,
       Data_Size_16b);
 
-   type SPI_Data_8b is array (Natural range <>) of Byte;
+   type SPI_Data_8b is array (Natural range <>) of UInt8;
 
    type SPI_Data_16b is array (Natural range <>) of UInt16;
 

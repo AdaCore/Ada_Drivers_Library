@@ -33,8 +33,8 @@ with Ada.Unchecked_Conversion;
 
 package body Bluetooth_Low_Energy.Packets is
 
-   function As_Unsigned_8 is new Ada.Unchecked_Conversion (Integer_8,
-                                                           Unsigned_8);
+   function As_UInt8 is new Ada.Unchecked_Conversion (Interfaces.Integer_8,
+                                                      UInt8);
    -----------------
    -- Get_Address --
    -----------------
@@ -49,7 +49,7 @@ package body Bluetooth_Low_Energy.Packets is
    ----------------
 
    procedure Set_Header (This   : in out BLE_Packet;
-                         Header : Unsigned_8)
+                         Header : UInt8)
    is
    begin
       This.Header := Header;
@@ -61,7 +61,7 @@ package body Bluetooth_Low_Energy.Packets is
 
    procedure Push
      (This : in out BLE_Packet;
-      Data : Byte)
+      Data : UInt8)
    is
       Next_Index : constant Integer :=
         This.Data'First + Integer (This.Packet_Length);
@@ -77,10 +77,10 @@ package body Bluetooth_Low_Energy.Packets is
    ----------
 
    procedure Push (This : in out BLE_Packet;
-                        Data : Integer_8)
+                   Data : Interfaces.Integer_8)
    is
    begin
-      Push (This, As_Unsigned_8 (Data));
+      Push (This, As_UInt8 (Data));
    end Push;
 
    ----------
@@ -91,7 +91,7 @@ package body Bluetooth_Low_Energy.Packets is
      (This : in out BLE_Packet;
       Data : UInt16)
    is
-      type As_Array is array (1 .. 2) of Byte with Pack, Size => 16;
+      type As_Array is array (1 .. 2) of UInt8 with Pack, Size => 16;
 
       Data_As_Array : As_Array;
       for Data_As_Array'Address use Data'Address;
@@ -108,7 +108,7 @@ package body Bluetooth_Low_Energy.Packets is
      (This : in out BLE_Packet;
       Data : UInt32)
    is
-      type As_Array is array (1 .. 4) of Byte with Pack, Size => 32;
+      type As_Array is array (1 .. 4) of UInt8 with Pack, Size => 32;
 
       Data_As_Array : As_Array;
       for Data_As_Array'Address use Data'Address;
@@ -125,7 +125,7 @@ package body Bluetooth_Low_Energy.Packets is
 
    procedure Push
      (This : in out BLE_Packet;
-      Data : Byte_Array)
+      Data : UInt8_Array)
    is
    begin
       for Elt of Data loop
@@ -147,8 +147,8 @@ package body Bluetooth_Low_Energy.Packets is
             Push (This, UUID.UUID_16);
          when UUID_32bits =>
             Push (This, UUID.UUID_32);
-         when UUID_16bytes =>
-            Push (This, UUID.UUID_16_Bytes);
+         when UUID_16UInt8s =>
+            Push (This, UUID.UUID_16_UInt8s);
       end case;
    end Push_UUID;
 

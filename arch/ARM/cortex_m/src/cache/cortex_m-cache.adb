@@ -90,10 +90,10 @@ package body Cortex_M.Cache is
 
       declare
          function To_U32 is new Ada.Unchecked_Conversion
-           (System.Address, Unsigned_32);
+           (System.Address, UInt32);
 
          Op_Size   : Integer_32 := Integer_32 (Len);
-         Op_Addr   : Unsigned_32 := To_U32 (Start);
+         Op_Addr   : UInt32 := To_U32 (Start);
          Reg       : UInt32 with Volatile, Address => Reg_Address;
 
       begin

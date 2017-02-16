@@ -43,9 +43,8 @@
 --  STM32F4 (ARM Cortex M4F) microcontrollers from ST Microelectronics.
 
 with System;
-with Interfaces;           use Interfaces;
-with HAL;                  use HAL;
-with Ada.Interrupts;       use Ada.Interrupts;
+with HAL;            use HAL;
+with Ada.Interrupts; use Ada.Interrupts;
 
 package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
 
@@ -102,7 +101,7 @@ package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
 private
 
    type Words is array (Natural range <>) of UInt32;
-   type Bytes is array (Natural range <>) of Byte;
+   type UInt8s is array (Natural range <>) of UInt8;
 
 
    type Nested_Vectored_Interrupt_Controller is record
@@ -121,7 +120,7 @@ private
       IABR      : Words (0 .. 7);
       --  Interrupt Active Bit Register
       Reserved4 : Words (0 .. 55);
-      IP        : Bytes (0 .. 239);
+      IP        : UInt8s (0 .. 239);
       --  Interrupt Priority Register
       Reserved5 : Words (0 .. 643);
       STIR      : UInt32;
@@ -130,19 +129,19 @@ private
      with Volatile;
 
    for Nested_Vectored_Interrupt_Controller use record
-      ISER      at 0    range 0 .. 255;    -- 32 bytes
-      Reserved0 at 32   range 0 .. 767;    -- 96 bytes
-      ICER      at 128  range 0 .. 255;    -- 32 bytes
-      Reserved1 at 160  range 0 .. 767;    -- 96 bytes
-      ISPR      at 256  range 0 .. 255;    -- 32 bytes
-      Reserved2 at 288  range 0 .. 767;    -- 96 bytes
-      ICPR      at 384  range 0 .. 255;    -- 32 bytes
-      Reserved3 at 416  range 0 .. 767;    -- 96 bytes
-      IABR      at 512  range 0 .. 255;    -- 32 bytes
-      Reserved4 at 544  range 0 .. 1791;   -- 220 bytes
-      IP        at 768  range 0 .. 1919;   -- 240 bytes
-      Reserved5 at 1008 range 0 .. 20607;  -- 2576 bytes
-      STIR      at 3584 range 0 .. 31;     -- 4 bytes
+      ISER      at 0    range 0 .. 255;    -- 32 UInt8s
+      Reserved0 at 32   range 0 .. 767;    -- 96 UInt8s
+      ICER      at 128  range 0 .. 255;    -- 32 UInt8s
+      Reserved1 at 160  range 0 .. 767;    -- 96 UInt8s
+      ISPR      at 256  range 0 .. 255;    -- 32 UInt8s
+      Reserved2 at 288  range 0 .. 767;    -- 96 UInt8s
+      ICPR      at 384  range 0 .. 255;    -- 32 UInt8s
+      Reserved3 at 416  range 0 .. 767;    -- 96 UInt8s
+      IABR      at 512  range 0 .. 255;    -- 32 UInt8s
+      Reserved4 at 544  range 0 .. 1791;   -- 220 UInt8s
+      IP        at 768  range 0 .. 1919;   -- 240 UInt8s
+      Reserved5 at 1008 range 0 .. 20607;  -- 2576 UInt8s
+      STIR      at 3584 range 0 .. 31;     -- 4 UInt8s
    end record;
 
 
@@ -159,7 +158,7 @@ private
       --  System Control Register
       CCR       : UInt32;
       --  Configuration Control Register
-      SHP       : Bytes (0 .. 11);
+      SHP       : UInt8s (0 .. 11);
       --  System Handlers Priority Registers (4-7, 8-11, 12-15)
       SHCSR     : UInt32;
       --  System Handler Control and State Register

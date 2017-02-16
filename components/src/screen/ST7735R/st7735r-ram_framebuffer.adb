@@ -29,8 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
-
 package body ST7735R.RAM_Framebuffer is
 
    ----------------------
@@ -90,9 +88,9 @@ package body ST7735R.RAM_Framebuffer is
       end if;
       Set_Address (Display,
                    X_Start => 0,
-                   X_End   => Unsigned_16 (Display.Layer.Width - 1),
+                   X_End   => UInt16 (Display.Layer.Width - 1),
                    Y_Start => 0,
-                   Y_End   => Unsigned_16 (Display.Layer.Height - 1));
+                   Y_End   => UInt16 (Display.Layer.Height - 1));
       Display.Write_Raw_Pixels (Display.Layer_Data);
    end Update_Layer;
 

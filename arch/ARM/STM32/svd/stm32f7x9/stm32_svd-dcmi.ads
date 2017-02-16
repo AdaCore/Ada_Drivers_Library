@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -193,10 +194,10 @@ package STM32_SVD.DCMI is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   subtype ESCR_FSC_Field is HAL.Byte;
-   subtype ESCR_LSC_Field is HAL.Byte;
-   subtype ESCR_LEC_Field is HAL.Byte;
-   subtype ESCR_FEC_Field is HAL.Byte;
+   subtype ESCR_FSC_Field is HAL.UInt8;
+   subtype ESCR_LSC_Field is HAL.UInt8;
+   subtype ESCR_LEC_Field is HAL.UInt8;
+   subtype ESCR_FEC_Field is HAL.UInt8;
 
    --  embedded synchronization code register
    type ESCR_Register is record
@@ -219,10 +220,10 @@ package STM32_SVD.DCMI is
       FEC at 0 range 24 .. 31;
    end record;
 
-   subtype ESUR_FSU_Field is HAL.Byte;
-   subtype ESUR_LSU_Field is HAL.Byte;
-   subtype ESUR_LEU_Field is HAL.Byte;
-   subtype ESUR_FEU_Field is HAL.Byte;
+   subtype ESUR_FSU_Field is HAL.UInt8;
+   subtype ESUR_LSU_Field is HAL.UInt8;
+   subtype ESUR_LEU_Field is HAL.UInt8;
+   subtype ESUR_FEU_Field is HAL.UInt8;
 
    --  embedded synchronization unmask register
    type ESUR_Register is record
@@ -294,7 +295,7 @@ package STM32_SVD.DCMI is
    end record;
 
    --  DR_Byte array element
-   subtype DR_Byte_Element is HAL.Byte;
+   subtype DR_Byte_Element is HAL.UInt8;
 
    --  DR_Byte array
    type DR_Byte_Field_Array is array (0 .. 3) of DR_Byte_Element
@@ -368,6 +369,6 @@ package STM32_SVD.DCMI is
 
    --  Digital camera interface
    DCMI_Periph : aliased DCMI_Peripheral
-     with Import, Address => DCMI_Base;
+     with Import, Address => System'To_Address (16#50050000#);
 
 end STM32_SVD.DCMI;

@@ -30,7 +30,6 @@
 ------------------------------------------------------------------------------
 
 with System.Storage_Elements; use System.Storage_Elements;
-with Interfaces;              use Interfaces;
 with Bitmap_Color_Conversion; use Bitmap_Color_Conversion;
 
 package body Memory_Mapped_Bitmap is
@@ -117,20 +116,20 @@ package body Memory_Mapped_Bitmap is
 
          when RGB_888 =>
             declare
-               Pixel_B : aliased Byte
+               Pixel_B : aliased UInt8
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 3);
-               Pixel_G : aliased Byte
+               Pixel_G : aliased UInt8
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 3 + 1);
-               Pixel_R : aliased Byte
+               Pixel_R : aliased UInt8
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 3 + 2);
-               R       : constant Byte :=
-                           Byte (Shift_Right (Value and 16#FF0000#, 16));
-               G       : constant Byte :=
-                           Byte (Shift_Right (Value and 16#FF00#, 8));
-               B       : constant Byte := Byte (Value and 16#FF#);
+               R       : constant UInt8 :=
+                           UInt8 (Shift_Right (Value and 16#FF0000#, 16));
+               G       : constant UInt8 :=
+                           UInt8 (Shift_Right (Value and 16#FF00#, 8));
+               B       : constant UInt8 := UInt8 (Value and 16#FF#);
             begin
                Pixel_B := B;
                Pixel_G := G;
@@ -148,25 +147,25 @@ package body Memory_Mapped_Bitmap is
 
          when L_8 | AL_44 | A_8 =>
             declare
-               Pixel : aliased Byte
+               Pixel : aliased UInt8
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset);
             begin
-               Pixel := Byte (Value and 16#FF#);
+               Pixel := UInt8 (Value and 16#FF#);
             end;
 
          when L_4 | A_4 =>
             declare
-               Pixel : aliased Byte
+               Pixel : aliased UInt8
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset / 2);
             begin
                if Offset mod 2 = 0 then
                   Pixel :=
                     (Pixel and 16#0F#) or
-                    Shift_Left (Byte (Value and 16#0F#), 4);
+                    Shift_Left (UInt8 (Value and 16#0F#), 4);
                else
-                  Pixel := (Pixel and 16#F0#) or Byte (Value and 16#0F#);
+                  Pixel := (Pixel and 16#F0#) or UInt8 (Value and 16#0F#);
                end if;
             end;
 
@@ -208,10 +207,10 @@ package body Memory_Mapped_Bitmap is
          RG := FgG * FgA / RA + BgG * BgA * (1.0 - FgA) / RA;
          RB := FgB * FgA / RA + BgB * BgA * (1.0 - FgA) / RA;
 
-         Col := (Alpha => Byte (RA * 255.0),
-                 Red   => Byte (RR * 255.0),
-                 Green => Byte (RG * 255.0),
-                 Blue  => Byte (RB * 255.0));
+         Col := (Alpha => UInt8 (RA * 255.0),
+                 Red   => UInt8 (RR * 255.0),
+                 Green => UInt8 (RG * 255.0),
+                 Blue  => UInt8 (RB * 255.0));
          Set_Pixel (Bitmap_Buffer'Class (Buffer), Pt, Col);
       end if;
    end Set_Pixel_Blend;
@@ -268,13 +267,13 @@ package body Memory_Mapped_Bitmap is
 
          when RGB_888 =>
             declare
-               Pixel_B : aliased Byte
+               Pixel_B : aliased UInt8
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 3);
-               Pixel_G : aliased Byte
+               Pixel_G : aliased UInt8
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 3 + 1);
-               Pixel_R : aliased Byte
+               Pixel_R : aliased UInt8
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 3 + 2);
             begin
@@ -293,7 +292,7 @@ package body Memory_Mapped_Bitmap is
 
          when L_8 | AL_44 | A_8 =>
             declare
-               Pixel : aliased Byte
+               Pixel : aliased UInt8
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset);
             begin
@@ -302,7 +301,7 @@ package body Memory_Mapped_Bitmap is
 
          when L_4 | A_4 =>
             declare
-               Pixel : aliased Byte
+               Pixel : aliased UInt8
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset / 2);
             begin

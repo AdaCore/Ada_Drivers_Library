@@ -207,14 +207,14 @@ private
 
    procedure Read
      (This   : STMPE1600_Expander;
-      Reg    : HAL.Byte;
-      Data   : out HAL.Byte_Array;
+      Reg    : HAL.UInt8;
+      Data   : out HAL.UInt8_Array;
       Status : out Boolean);
 
    procedure Write
      (This   : STMPE1600_Expander;
-      Reg    : HAL.Byte;
-      Data   : HAL.Byte_Array;
+      Reg    : HAL.UInt8;
+      Data   : HAL.UInt8_Array;
       Status : out Boolean);
 
 end STMPE1600;

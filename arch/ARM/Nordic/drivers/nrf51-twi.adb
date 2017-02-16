@@ -30,7 +30,6 @@
 ------------------------------------------------------------------------------
 
 with NRF51_SVD.TWI; use NRF51_SVD.TWI;
-with Interfaces;    use Interfaces;
 
 package body nRF51.TWI is
 
@@ -251,13 +250,13 @@ package body nRF51.TWI is
       case Mem_Addr_Size is
          when Memory_Size_8b =>
             This.Master_Transmit (Addr    => Addr,
-                                  Data    => (0 => Byte (Mem_Addr)),
+                                  Data    => (0 => UInt8 (Mem_Addr)),
                                   Status  => Status,
                                   Timeout => Timeout);
          when Memory_Size_16b =>
             This.Master_Transmit (Addr    => Addr,
-                                  Data    => (Byte (Shift_Right (Mem_Addr, 8)),
-                                              Byte (Mem_Addr and 16#FF#)),
+                                  Data    => (UInt8 (Shift_Right (Mem_Addr, 8)),
+                                              UInt8 (Mem_Addr and 16#FF#)),
                                   Status  => Status,
                                   Timeout => Timeout);
       end case;
@@ -294,13 +293,13 @@ package body nRF51.TWI is
       case Mem_Addr_Size is
          when Memory_Size_8b =>
             This.Master_Transmit (Addr    => Addr,
-                                  Data    => (0 => Byte (Mem_Addr)),
+                                  Data    => (0 => UInt8 (Mem_Addr)),
                                   Status  => Status,
                                   Timeout => Timeout);
          when Memory_Size_16b =>
             This.Master_Transmit (Addr    => Addr,
-                                  Data    => (Byte (Shift_Right (Mem_Addr, 8)),
-                                              Byte (Mem_Addr and 16#FF#)),
+                                  Data    => (UInt8 (Shift_Right (Mem_Addr, 8)),
+                                              UInt8 (Mem_Addr and 16#FF#)),
                                   Status  => Status,
                                   Timeout => Timeout);
       end case;

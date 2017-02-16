@@ -81,7 +81,7 @@ package Framebuffer_OTM8009A is
      (Display : Frame_Buffer) return Boolean;
 
    overriding procedure Set_Background
-     (Display : Frame_Buffer; R, G, B : Byte);
+     (Display : Frame_Buffer; R, G, B : UInt8);
 
    overriding procedure Initialize_Layer
      (Display : in out Frame_Buffer;

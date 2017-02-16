@@ -249,11 +249,11 @@ package L3GD20 is
 
    function Reference_Value
      (This : Three_Axis_Gyroscope)
-      return Byte
+      return UInt8
      with Inline;
 
    procedure Set_Reference
-     (This : in out Three_Axis_Gyroscope; Value : Byte)
+     (This : in out Three_Axis_Gyroscope; Value : UInt8)
      with Inline;
 
    --  Basic data access functionality
@@ -302,7 +302,7 @@ package L3GD20 is
    procedure Get_Raw_Angle_Rates
      (This  : Three_Axis_Gyroscope;
       Rates : out Angle_Rates);
-   --  Returns the latest data, swapping bytes if required by the endianess
+   --  Returns the latest data, swapping UInt8s if required by the endianess
    --  selected by a previous call to Configure.
    --  NB: does NOT check whether the gyro status indicates data are ready.
    --  NB: does NOT apply any sensitity scaling.
@@ -342,7 +342,7 @@ package L3GD20 is
    procedure Get_Raw_Angle_Rates_FIFO
      (This   : in out Three_Axis_Gyroscope;
       Buffer : out Angle_Rates_FIFO_Buffer);
-   --  Returns the latest raw data in the FIFO, swapping bytes if required by
+   --  Returns the latest raw data in the FIFO, swapping UInt8s if required by
    --  the endianess selected by a previous call to Configure. Fills the entire
    --  buffer passed.
    --  NB: does NOT apply any sensitity scaling.
@@ -415,7 +415,7 @@ package L3GD20 is
      (This  : in out Three_Axis_Gyroscope;
       Event : Axes_Interrupts;
       Value : Axis_Sample_Threshold);
-   --  Writes the two-byte threshold value into the two threshold registers for
+   --  Writes the two-UInt8 threshold value into the two threshold registers for
    --  the specified interrupt event.  Does not enable the event itself.
 
    type Threshold_Event is record
@@ -519,10 +519,10 @@ package L3GD20 is
 
    I_Am_L3GD20 : constant := 16#D4#;
 
-   function Device_Id (This : Three_Axis_Gyroscope) return Byte;
+   function Device_Id (This : Three_Axis_Gyroscope) return UInt8;
    --  Will return I_Am_L3GD20 when functioning properly
 
-   function Temperature (This : Three_Axis_Gyroscope) return Byte;
+   function Temperature (This : Three_Axis_Gyroscope) return UInt8;
    --  the temperature of the chip itself
 
 private
@@ -532,23 +532,23 @@ private
       CS   : Any_GPIO_Point;
    end record;
 
-   type Register is new Byte;
+   type Register is new UInt8;
 
    procedure Write
      (This : Three_Axis_Gyroscope;
       Addr : Register;
-      Data : Byte)
+      Data : UInt8)
      with Inline;
    --  Writes Data to the specified register within the gyro chip
 
    procedure Read
      (This : Three_Axis_Gyroscope;
       Addr : Register;
-      Data : out Byte)
+      Data : out UInt8)
      with Inline;
    --  Reads Data from the specified register within the gyro chip
 
-   procedure Read_Bytes
+   procedure Read_UInt8s
      (This   : Three_Axis_Gyroscope;
       Addr   : Register;
       Buffer : out SPI_Data_8b;
@@ -566,12 +566,12 @@ private
    Reference     : constant Register := 16#25#; --  Reference
    OUT_Temp      : constant Register := 16#26#; --  Temperature
    Status        : constant Register := 16#27#; --  Status
-   OUT_X_L       : constant Register := 16#28#; --  Output X low byte
-   OUT_X_H       : constant Register := 16#29#; --  Output X high byte
-   OUT_Y_L       : constant Register := 16#2A#; --  Output Y low byte
-   OUT_Y_H       : constant Register := 16#2B#; --  Output Y high byte
-   OUT_Z_L       : constant Register := 16#2C#; --  Output Z low byte
-   OUT_Z_H       : constant Register := 16#2D#; --  Output Z high byte
+   OUT_X_L       : constant Register := 16#28#; --  Output X low UInt8
+   OUT_X_H       : constant Register := 16#29#; --  Output X high UInt8
+   OUT_Y_L       : constant Register := 16#2A#; --  Output Y low UInt8
+   OUT_Y_H       : constant Register := 16#2B#; --  Output Y high UInt8
+   OUT_Z_L       : constant Register := 16#2C#; --  Output Z low UInt8
+   OUT_Z_H       : constant Register := 16#2D#; --  Output Z high UInt8
    FIFO_CTRL     : constant Register := 16#2E#; --  FIFO control
    FIFO_SRC      : constant Register := 16#2F#; --  FIFO src
    INT1_CFG      : constant Register := 16#30#; --  Interrupt 1 configuration

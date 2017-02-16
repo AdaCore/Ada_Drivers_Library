@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -1250,7 +1251,7 @@ package STM32_SVD.USB_OTG_FS is
    end record;
 
    subtype FS_GNPTXSTS_NPTXFSAV_Field is HAL.UInt16;
-   subtype FS_GNPTXSTS_NPTQXSAV_Field is HAL.Byte;
+   subtype FS_GNPTXSTS_NPTQXSAV_Field is HAL.UInt8;
    subtype FS_GNPTXSTS_NPTXQTOP_Field is HAL.UInt7;
 
    --  OTG_FS non-periodic transmit FIFO/queue status register
@@ -1397,8 +1398,8 @@ package STM32_SVD.USB_OTG_FS is
    end record;
 
    subtype FS_HPTXSTS_PTXFSAVL_Field is HAL.UInt16;
-   subtype FS_HPTXSTS_PTXQSAV_Field is HAL.Byte;
-   subtype FS_HPTXSTS_PTXQTOP_Field is HAL.Byte;
+   subtype FS_HPTXSTS_PTXQSAV_Field is HAL.UInt8;
+   subtype FS_HPTXSTS_PTXQTOP_Field is HAL.UInt8;
 
    --  OTG_FS_Host periodic transmit FIFO/queue status register
    --  (OTG_FS_HPTXSTS)
@@ -1829,7 +1830,7 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_DEVICE_Periph : aliased OTG_FS_DEVICE_Peripheral
-     with Import, Address => OTG_FS_DEVICE_Base;
+     with Import, Address => System'To_Address (16#50000800#);
 
    type OTG_FS_GLOBAL_Disc is
      (
@@ -1913,7 +1914,7 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_GLOBAL_Periph : aliased OTG_FS_GLOBAL_Peripheral
-     with Import, Address => OTG_FS_GLOBAL_Base;
+     with Import, Address => System'To_Address (16#50000000#);
 
    --  USB on the go full speed
    type OTG_FS_HOST_Peripheral is record
@@ -2043,7 +2044,7 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_HOST_Periph : aliased OTG_FS_HOST_Peripheral
-     with Import, Address => OTG_FS_HOST_Base;
+     with Import, Address => System'To_Address (16#50000400#);
 
    --  USB on the go full speed
    type OTG_FS_PWRCLK_Peripheral is record
@@ -2058,6 +2059,6 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_PWRCLK_Periph : aliased OTG_FS_PWRCLK_Peripheral
-     with Import, Address => OTG_FS_PWRCLK_Base;
+     with Import, Address => System'To_Address (16#50000E00#);
 
 end STM32_SVD.USB_OTG_FS;

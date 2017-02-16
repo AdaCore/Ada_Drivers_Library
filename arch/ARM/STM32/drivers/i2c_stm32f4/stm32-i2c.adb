@@ -51,7 +51,7 @@ package body STM32.I2C is
    type I2C_Status_Flag is
      (Start_Bit,
       Address_Sent,
-      Byte_Transfer_Finished,
+      UInt8_Transfer_Finished,
       Address_Sent_10bit,
       Stop_Detection,
       Rx_Data_Register_Not_Empty,
@@ -242,7 +242,7 @@ package body STM32.I2C is
             return This.Periph.SR1.SB;
          when Address_Sent =>
             return This.Periph.SR1.ADDR;
-         when Byte_Transfer_Finished =>
+         when UInt8_Transfer_Finished =>
             return This.Periph.SR1.BTF;
          when Address_Sent_10bit =>
             return This.Periph.SR1.ADD10;
@@ -416,13 +416,13 @@ package body STM32.I2C is
       end if;
 
       if This.Config.Addressing_Mode = Addressing_Mode_7bit then
-         This.Periph.DR.DR := Byte (Addr) and not 2#1#;
+         This.Periph.DR.DR := UInt8 (Addr) and not 2#1#;
       else
          declare
-            MSB : constant Byte :=
-                    Byte (Shift_Right (UInt16 (Addr) and 16#300#, 7));
-            LSB : constant Byte :=
-                    Byte (Addr and 16#FF#);
+            MSB : constant UInt8 :=
+                    UInt8 (Shift_Right (UInt16 (Addr) and 16#300#, 7));
+            LSB : constant UInt8 :=
+                    UInt8 (Addr and 16#FF#);
          begin
             --  We need to send 2#1111_MSB0# when MSB are the 3 most
             --  significant bits of the address
@@ -462,13 +462,13 @@ package body STM32.I2C is
       end if;
 
       if This.Config.Addressing_Mode = Addressing_Mode_7bit then
-         This.Periph.DR.DR := Byte (Addr) or 2#1#;
+         This.Periph.DR.DR := UInt8 (Addr) or 2#1#;
       else
          declare
-            MSB : constant Byte :=
-                    Byte (Shift_Right (UInt16 (Addr) and 16#300#, 7));
-            LSB : constant Byte :=
-                    Byte (Addr and 16#FF#);
+            MSB : constant UInt8 :=
+                    UInt8 (Shift_Right (UInt16 (Addr) and 16#300#, 7));
+            LSB : constant UInt8 :=
+                    UInt8 (Addr and 16#FF#);
          begin
             --  We need to write the address bit. So let's start with a
             --  write header
@@ -531,7 +531,7 @@ package body STM32.I2C is
       end if;
 
       --  Send slave address
-      This.Periph.DR.DR := Byte (Addr) and not 2#1#;
+      This.Periph.DR.DR := UInt8 (Addr) and not 2#1#;
       Wait_Master_Flag (This, Address_Sent, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
@@ -549,9 +549,9 @@ package body STM32.I2C is
 
       case Mem_Addr_Size is
          when HAL.I2C.Memory_Size_8b =>
-            This.Periph.DR.DR := Byte (Mem_Addr);
+            This.Periph.DR.DR := UInt8 (Mem_Addr);
          when HAL.I2C.Memory_Size_16b =>
-            This.Periph.DR.DR := Byte (Shift_Right (Mem_Addr, 8));
+            This.Periph.DR.DR := UInt8 (Shift_Right (Mem_Addr, 8));
 
             Wait_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
 
@@ -559,7 +559,7 @@ package body STM32.I2C is
                return;
             end if;
 
-            This.Periph.DR.DR := Byte (Mem_Addr and 16#FF#);
+            This.Periph.DR.DR := UInt8 (Mem_Addr and 16#FF#);
       end case;
    end Mem_Request_Write;
 
@@ -586,7 +586,7 @@ package body STM32.I2C is
       end if;
 
       --  Send slave address in write mode
-      This.Periph.DR.DR := Byte (Addr) and not 16#1#;
+      This.Periph.DR.DR := UInt8 (Addr) and not 16#1#;
 
       Wait_Master_Flag (This, Address_Sent, Timeout, Status);
 
@@ -605,9 +605,9 @@ package body STM32.I2C is
 
       case Mem_Addr_Size is
          when HAL.I2C.Memory_Size_8b =>
-            This.Periph.DR.DR := Byte (Mem_Addr);
+            This.Periph.DR.DR := UInt8 (Mem_Addr);
          when HAL.I2C.Memory_Size_16b =>
-            This.Periph.DR.DR := Byte (Shift_Right (Mem_Addr, 8));
+            This.Periph.DR.DR := UInt8 (Shift_Right (Mem_Addr, 8));
 
             Wait_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
 
@@ -615,7 +615,7 @@ package body STM32.I2C is
                return;
             end if;
 
-            This.Periph.DR.DR := Byte (Mem_Addr and 16#FF#);
+            This.Periph.DR.DR := UInt8 (Mem_Addr and 16#FF#);
       end case;
 
       --  We now need to reset and send the slave address in read mode
@@ -628,7 +628,7 @@ package body STM32.I2C is
       end if;
 
       --  Send slave address in read mode
-      This.Periph.DR.DR := Byte (Addr) or 16#1#;
+      This.Periph.DR.DR := UInt8 (Addr) or 16#1#;
 
       Wait_Master_Flag (This, Address_Sent, Timeout, Status);
    end Mem_Request_Read;
@@ -692,7 +692,7 @@ package body STM32.I2C is
          Idx := Idx + 1;
 
          if Idx <= Data'Last then
-            Wait_Flag (This, Byte_Transfer_Finished, True, Timeout, Status);
+            Wait_Flag (This, UInt8_Transfer_Finished, True, Timeout, Status);
 
             if Status = HAL.I2C.Ok then
                This.Periph.DR.DR := Data (Idx);
@@ -776,7 +776,7 @@ package body STM32.I2C is
 
       while Idx <= Data'Last loop
          if Idx = Data'Last then
-            --  One byte to read
+            --  One UInt8 to read
             Wait_Flag
               (This,
                Rx_Data_Register_Not_Empty,
@@ -791,11 +791,11 @@ package body STM32.I2C is
             Idx := Idx + 1;
 
          elsif Idx + 1 = Data'Last then
-            --  Two bytes to read
+            --  Two UInt8s to read
             This.Periph.CR1.ACK := False;
 
             Wait_Flag (This,
-                       Byte_Transfer_Finished,
+                       UInt8_Transfer_Finished,
                        False,
                        Timeout,
                        Status);
@@ -812,9 +812,9 @@ package body STM32.I2C is
             Idx := Idx + 1;
 
          elsif Idx + 2 = Data'Last then
-            --  Three bytes to read
+            --  Three UInt8s to read
             Wait_Flag (This,
-                       Byte_Transfer_Finished,
+                       UInt8_Transfer_Finished,
                        False,
                        Timeout,
                        Status);
@@ -829,7 +829,7 @@ package body STM32.I2C is
             Idx := Idx + 1;
 
             Wait_Flag (This,
-                       Byte_Transfer_Finished,
+                       UInt8_Transfer_Finished,
                        False,
                        Timeout,
                        Status);
@@ -846,7 +846,7 @@ package body STM32.I2C is
             Idx := Idx + 1;
 
          else
-            --  One byte to read
+            --  One UInt8 to read
             Wait_Flag
               (This,
                Rx_Data_Register_Not_Empty,
@@ -861,7 +861,7 @@ package body STM32.I2C is
             Idx := Idx + 1;
 
             Wait_Flag (This,
-                       Byte_Transfer_Finished,
+                       UInt8_Transfer_Finished,
                        False,
                        Timeout,
                        Status);
@@ -941,7 +941,7 @@ package body STM32.I2C is
 
          if Idx <= Data'Last then
             Wait_Flag (This,
-                       Byte_Transfer_Finished,
+                       UInt8_Transfer_Finished,
                        True,
                        Timeout,
                        Status);
@@ -1035,7 +1035,7 @@ package body STM32.I2C is
 
       while Idx <= Data'Last loop
          if Idx = Data'Last then
-            --  One byte to read
+            --  One UInt8 to read
             Wait_Flag
               (This, Rx_Data_Register_Not_Empty, False, Timeout, Status);
             if Status /= HAL.I2C.Ok then
@@ -1046,10 +1046,10 @@ package body STM32.I2C is
             Idx := Idx + 1;
 
          elsif Idx + 1 = Data'Last then
-            --  Two bytes to read
+            --  Two UInt8s to read
             This.Periph.CR1.ACK := False;
 
-            Wait_Flag (This, Byte_Transfer_Finished, False, Timeout, Status);
+            Wait_Flag (This, UInt8_Transfer_Finished, False, Timeout, Status);
             if Status /= HAL.I2C.Ok then
                return;
             end if;
@@ -1063,8 +1063,8 @@ package body STM32.I2C is
             Idx := Idx + 1;
 
          elsif Idx + 2 = Data'Last then
-            --  Three bytes to read
-            Wait_Flag (This, Byte_Transfer_Finished, False, Timeout, Status);
+            --  Three UInt8s to read
+            Wait_Flag (This, UInt8_Transfer_Finished, False, Timeout, Status);
             if Status /= HAL.I2C.Ok then
                return;
             end if;
@@ -1075,7 +1075,7 @@ package body STM32.I2C is
             Data (Idx) := This.Periph.DR.DR;
             Idx := Idx + 1;
 
-            Wait_Flag (This, Byte_Transfer_Finished, False, Timeout, Status);
+            Wait_Flag (This, UInt8_Transfer_Finished, False, Timeout, Status);
             if Status /= HAL.I2C.Ok then
                return;
             end if;
@@ -1089,7 +1089,7 @@ package body STM32.I2C is
             Idx := Idx + 1;
 
          else
-            --  One byte to read
+            --  One UInt8 to read
             Wait_Flag
               (This, Rx_Data_Register_Not_Empty, False, Timeout, Status);
             if Status /= HAL.I2C.Ok then
@@ -1099,7 +1099,7 @@ package body STM32.I2C is
             Data (Idx) := This.Periph.DR.DR;
             Idx := Idx + 1;
 
-            Wait_Flag (This, Byte_Transfer_Finished, False, Timeout, Status);
+            Wait_Flag (This, UInt8_Transfer_Finished, False, Timeout, Status);
 
             if Status = HAL.I2C.Ok then
                Data (Idx) := This.Periph.DR.DR;

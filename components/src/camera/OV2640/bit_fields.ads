@@ -37,7 +37,7 @@ package Bit_Fields is
 
    function To_Word (Bits : Bit_Field) return UInt32;
    function To_UInt16 (Bits : Bit_Field) return UInt16;
-   function To_Byte (Bits : Bit_Field) return Byte;
+   function To_UInt8 (Bits : Bit_Field) return UInt8;
 
    function To_Bit_Field (Value : UInt32) return Bit_Field
      with Post => To_Bit_Field'Result'First = 0
@@ -47,7 +47,7 @@ package Bit_Fields is
      with Post => To_Bit_Field'Result'First = 0
      and then
        To_Bit_Field'Result'Last = 15;
-   function To_Bit_Field (Value : Byte) return Bit_Field
+   function To_Bit_Field (Value : UInt8) return Bit_Field
      with Post => To_Bit_Field'Result'First = 0
      and then
        To_Bit_Field'Result'Last = 7;

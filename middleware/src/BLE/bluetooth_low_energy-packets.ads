@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 with System;
+with Interfaces;
 
 package Bluetooth_Low_Energy.Packets is
 
@@ -39,22 +40,22 @@ package Bluetooth_Low_Energy.Packets is
    --  Return memory address of the radio data to be transmitted
 
    procedure Set_Header (This   : in out BLE_Packet;
-                         Header : Unsigned_8);
+                         Header : UInt8);
 
    procedure Push (This : in out BLE_Packet;
-                   Data : Unsigned_8);
+                   Data : UInt8);
 
    procedure Push (This : in out BLE_Packet;
-                   Data : Integer_8);
+                   Data : Interfaces.Integer_8);
 
    procedure Push (This : in out BLE_Packet;
-                   Data : Unsigned_16);
+                   Data : UInt16);
 
    procedure Push (This : in out BLE_Packet;
-                   Data : Unsigned_32);
+                   Data : UInt32);
 
    procedure Push (This : in out BLE_Packet;
-                   Data : Byte_Array);
+                   Data : UInt8_Array);
 
    procedure Push_UUID (This : in out BLE_Packet;
                         UUID : BLE_UUID);
@@ -67,12 +68,12 @@ private
    --  Maximum size of BLE payload (without header, MIC or CRC)
 
    type BLE_Data is array (1 .. BLE_PACKET_MAX_PAYLOAD + BLE_PACKET_MIC_SIZE)
-     of Byte with Pack;
+     of UInt8 with Pack;
    --  BLE Payload plus optional MIC field
 
    type BLE_Packet is record
-      Header        : Byte;
-      Packet_Length : Byte := 0;
+      Header        : UInt8;
+      Packet_Length : UInt8 := 0;
       Data          : BLE_Data;
    end record with Pack;
 

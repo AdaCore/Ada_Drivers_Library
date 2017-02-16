@@ -52,7 +52,7 @@ package STM32.RNG.Polling is
    --  polling. Both necessary and sufficient.
    --  Enables the clock as well.
 
-   function Random return Interfaces.Unsigned_32;
+   function Random return UInt32;
    --  Polls the RNG directly to get the next available number.
    --  NB: call Initialize_RNG before any calls to this function.
 

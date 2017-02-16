@@ -78,16 +78,16 @@ package STM32.DCMI is
      with Pre => (if JPEG then not Hardware_Sync);
 
    procedure Set_Software_Synchronization_Codes
-     (Frame_Start : Byte;
-      Frame_End   : Byte;
-      Line_Start  : Byte;
-      Line_End    : Byte);
+     (Frame_Start : UInt8;
+      Frame_End   : UInt8;
+      Line_Start  : UInt8;
+      Line_End    : UInt8);
 
    procedure Set_Software_Synchronization_Masks
-     (Frame_Start : Byte;
-      Frame_End   : Byte;
-      Line_Start  : Byte;
-      Line_End    : Byte);
+     (Frame_Start : UInt8;
+      Frame_End   : UInt8;
+      Line_Start  : UInt8;
+      Line_End    : UInt8);
 
    procedure Set_Crop_Window
      (X      : UInt13;

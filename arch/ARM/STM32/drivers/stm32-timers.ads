@@ -716,7 +716,7 @@ package STM32.Timers is
       Period        : UInt32;
       Clock_Divisor : Timer_Clock_Divisor;
       Counter_Mode  : Timer_Counter_Alignment_Mode;
-      Repetitions   : Byte)
+      Repetitions   : UInt8)
      with
        Pre  => Advanced_Timer (This) and
                (if Period > UInt32 (UInt16'Last) then Has_32bit_Counter (This)),
@@ -764,7 +764,7 @@ package STM32.Timers is
       Off_State_Selection_Run_Mode  : Bit;
       Off_State_Selection_Idle_Mode : Bit;
       Lock_Configuration            : Timer_Lock_Level;
-      Deadtime_Generator            : Byte)
+      Deadtime_Generator            : UInt8)
      with Pre => Advanced_Timer (This);
 
    ----------------------------------------------------------------------------
@@ -1411,7 +1411,7 @@ private
       Off_State_Selection_Run_Mode  : Bit;
       Off_State_Selection_Idle_Mode : Bit;
       Lock                          : Timer_Lock_Level;
-      Deadtime_Generator            : Byte;
+      Deadtime_Generator            : UInt8;
    end record with Volatile_Full_Access, Size => 32;
 
    for TIMx_BDTR use record

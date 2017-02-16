@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -142,7 +143,7 @@ package STM32_SVD.FLASH is
    end record;
 
    subtype OPTCR_BOR_LEV_Field is HAL.UInt2;
-   subtype OPTCR_RDP_Field is HAL.Byte;
+   subtype OPTCR_RDP_Field is HAL.UInt8;
    subtype OPTCR_nWRP_Field is HAL.UInt12;
 
    --  Flash option control register
@@ -245,6 +246,6 @@ package STM32_SVD.FLASH is
 
    --  FLASH
    FLASH_Periph : aliased FLASH_Peripheral
-     with Import, Address => FLASH_Base;
+     with Import, Address => System'To_Address (16#40023C00#);
 
 end STM32_SVD.FLASH;

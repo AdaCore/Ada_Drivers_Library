@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -40,7 +41,7 @@ package STM32_SVD.SDIO is
       Reserved_2_31 at 0 range 2 .. 31;
    end record;
 
-   subtype CLKCR_CLKDIV_Field is HAL.Byte;
+   subtype CLKCR_CLKDIV_Field is HAL.UInt8;
 
    --  Wide bus mode enable bit
    type CLKCR_WIDBUS_Field is
@@ -379,7 +380,7 @@ package STM32_SVD.SDIO is
       --  Read-only. CE-ATA command completion signal received for CMD61
       CEATAEND       : Boolean;
       --  unspecified
-      Reserved_24_31 : HAL.Byte;
+      Reserved_24_31 : HAL.UInt8;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -443,7 +444,7 @@ package STM32_SVD.SDIO is
       --  CEATAEND flag clear bit
       CEATAENDC      : Boolean := False;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -517,7 +518,7 @@ package STM32_SVD.SDIO is
       --  CE-ATA command completion signal received interrupt enable
       CEATAENDIE     : Boolean := False;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -558,7 +559,7 @@ package STM32_SVD.SDIO is
       --  the FIFO.
       FIFOCOUNT      : FIFOCNT_FIFOCOUNT_Field;
       --  unspecified
-      Reserved_24_31 : HAL.Byte;
+      Reserved_24_31 : HAL.UInt8;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -636,6 +637,6 @@ package STM32_SVD.SDIO is
 
    --  Secure digital input/output interface
    SDIO_Periph : aliased SDIO_Peripheral
-     with Import, Address => SDIO_Base;
+     with Import, Address => System'To_Address (16#40012C00#);
 
 end STM32_SVD.SDIO;

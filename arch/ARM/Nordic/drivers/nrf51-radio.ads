@@ -69,7 +69,7 @@ package nRF51.Radio is
    --  Setup shortcuts for the radio device. Shortcuts will start a task when
    --  the associated event is triggered.
 
-   subtype Packet_Len is Byte;
+   subtype Packet_Len is UInt8;
 
    type Radio_Frequency_MHz is range 2400 .. 2527;
 

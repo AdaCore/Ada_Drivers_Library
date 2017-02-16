@@ -61,12 +61,11 @@ package body Soft_Drawing_Bitmap is
       begin
          if Thickness /= 1 then
             if not Fast then
-               Fill_Circle (Buffer,
-                            Color  => Color,
-                            Center => P,
-                            Radius => Thickness / 2);
+               Dispatch (Buffer). Fill_Circle (Color  => Color,
+                                               Center => P,
+                                               Radius => Thickness / 2);
             else
-               Buffer.Fill_Rect
+               Dispatch (Buffer).Fill_Rect
                  (Color,
                   ((P.X - (Thickness / 2), P.Y - (Thickness / 2)),
                    Thickness,
@@ -124,7 +123,7 @@ package body Soft_Drawing_Bitmap is
       Col : constant UInt32 :=
         Bitmap_Color_To_Word (Dispatch (Buffer).Color_Mode, Color);
    begin
-      Draw_Line (Buffer, Col, Start, Stop, Thickness, Fast);
+      Dispatch (Buffer).Draw_Line (Col, Start, Stop, Thickness, Fast);
    end Draw_Line;
 
    ----------
@@ -368,22 +367,22 @@ package body Soft_Drawing_Bitmap is
       Y0 := Area.Position.Y;
       X1 := Area.Position.X + Area.Width - 1;
       Y1 := Area.Position.Y + Area.Height - 1;
-      Buffer.Fill_Rect
+      Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (X0 - Thickness / 2, Y0),
           Width    => Thickness,
           Height   => Area.Height + Thickness / 2));
-      Buffer.Fill_Rect
+      Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (X1 - Thickness / 2, Y0),
           Width    => Thickness,
           Height   => Area.Height + Thickness / 2));
-      Buffer.Fill_Rect
+      Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (X0, Y0 - Thickness / 2),
           Width    => Area.Width + Thickness / 2,
           Height   => Thickness));
-      Buffer.Fill_Rect
+      Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (X0, Y1 - Thickness / 2),
           Width    => Area. Width + Thickness / 2,
@@ -421,7 +420,7 @@ package body Soft_Drawing_Bitmap is
       procedure Draw_Point (X, Y : Natural) is
       begin
          if Thickness /= 1 then
-            Buffer.Fill_Rect
+            Dispatch (Buffer).Fill_Rect
               (Color,
                (Position => (X - (Thickness / 2), Y - (Thickness / 2)),
                 Width    => Thickness,
@@ -437,22 +436,22 @@ package body Soft_Drawing_Bitmap is
          return;
       end if;
 
-      Buffer.Fill_Rect
+      Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (Area.Position.X - Thickness / 2, Area.Position.Y + Radius),
           Width    => Thickness,
           Height   => Area.Height - 2 * Radius));
-      Buffer.Fill_Rect
+      Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (Area.Position.X + Area.Width - Thickness / 2 - 1, Area.Position.Y + Radius),
           Width    => Thickness,
           Height   => Area.Height - 2 * Radius));
-      Buffer.Fill_Rect
+      Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (Area.Position.X + Radius, Area.Position.Y - Thickness / 2),
           Width    => Area.Width - 2 * Radius,
           Height   => Thickness));
-      Buffer.Fill_Rect
+      Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (Area.Position.X + Radius, Area.Position.Y + Area.Height - Thickness / 2 - 1),
           Width    => Area.Width - 2 * Radius,
@@ -503,11 +502,11 @@ package body Soft_Drawing_Bitmap is
 
    begin
       if Radius = 0 then
-         Buffer.Fill_Rect (Col, Area'Update (Position => (X0, Y0)));
+         Dispatch (Buffer).Fill_Rect (Col, Area'Update (Position => (X0, Y0)));
          return;
       end if;
 
-      Buffer.Fill_Rect
+      Dispatch (Buffer).Fill_Rect
         (Col,
          (Position => (Area.Position.X, Center_Top),
           Width    => Area.Width,
@@ -524,19 +523,19 @@ package body Soft_Drawing_Bitmap is
          ddF_X := ddF_X + 2;
          F := F + ddF_X + 1;
 
-         Buffer.Draw_Horizontal_Line
+         Dispatch (Buffer).Draw_Horizontal_Line
            (Col,
             (Center_Lft - X0, Center_Bot + Y0),
             Area.Width - 2 * Radius + 2 * X0);
-         Buffer.Draw_Horizontal_Line
+         Dispatch (Buffer).Draw_Horizontal_Line
            (Col,
             (Center_Lft - X0, Center_Top - Y0),
             Area.Width - 2 * Radius + 2 * X0);
-         Buffer.Draw_Horizontal_Line
+         Dispatch (Buffer).Draw_Horizontal_Line
            (Col,
             (Center_Lft - Y0, Center_Bot + X0),
             Area.Width - 2 * Radius + 2 * Y0);
-         Buffer.Draw_Horizontal_Line
+         Dispatch (Buffer).Draw_Horizontal_Line
            (Col,
             (Center_Lft - Y0, Center_Top - X0),
             Area.Width - 2 * Radius + 2 * Y0);
@@ -556,7 +555,7 @@ package body Soft_Drawing_Bitmap is
    is
    begin
       Draw_Circle
-        (Buffer,
+        (Dispatch (Buffer),
          Bitmap_Color_To_Word (Dispatch (Buffer).Color_Mode, Color),
          Center,
          Radius);
@@ -619,7 +618,7 @@ package body Soft_Drawing_Bitmap is
       U32_Color : constant UInt32 :=
         Bitmap_Color_To_Word (Dispatch (Buffer).Color_Mode, Color);
    begin
-      Fill_Circle (Buffer, U32_Color, Center, Radius);
+      Dispatch (Buffer).Fill_Circle (U32_Color, Center, Radius);
    end Fill_Circle;
 
    -----------------
@@ -674,7 +673,7 @@ package body Soft_Drawing_Bitmap is
             return;
          end if;
 
-         Buffer.Fill_Rect (Color, ((X1, Y), W1, 1));
+         Dispatch (Buffer).Fill_Rect (Color, ((X1, Y), W1, 1));
       end Draw_Horizontal_Line;
 
       ------------------------
@@ -711,7 +710,7 @@ package body Soft_Drawing_Bitmap is
             return;
          end if;
 
-         Buffer.Fill_Rect (Color, ((X, Y1), 1, H1));
+         Dispatch (Buffer).Fill_Rect (Color, ((X, Y1), 1, H1));
       end Draw_Vertical_Line;
 
       F     : Integer := 1 - Radius;
@@ -780,8 +779,8 @@ package body Soft_Drawing_Bitmap is
          end;
       end loop;
       for I in Points'First .. Points'Last - 1 loop
-         Draw_Line (Buffer, Color, Points (I), Points (I + 1),
-                    Thickness => Thickness);
+         Dispatch (Buffer).Draw_Line (Color, Points (I), Points (I + 1),
+                                      Thickness => Thickness);
       end loop;
    end Cubic_Bezier;
 

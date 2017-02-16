@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -14,7 +15,7 @@ package STM32_SVD.QUADSPI is
    ---------------
 
    subtype CR_FTHRES_Field is HAL.UInt5;
-   subtype CR_PRESCALER_Field is HAL.Byte;
+   subtype CR_PRESCALER_Field is HAL.UInt8;
 
    --  control register
    type CR_Register is record
@@ -177,7 +178,7 @@ package STM32_SVD.QUADSPI is
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
 
-   subtype CCR_INSTRUCTION_Field is HAL.Byte;
+   subtype CCR_INSTRUCTION_Field is HAL.UInt8;
    subtype CCR_IMODE_Field is HAL.UInt2;
    subtype CCR_ADMODE_Field is HAL.UInt2;
    subtype CCR_ADSIZE_Field is HAL.UInt2;
@@ -325,6 +326,6 @@ package STM32_SVD.QUADSPI is
 
    --  QuadSPI interface
    QUADSPI_Periph : aliased QUADSPI_Peripheral
-     with Import, Address => QUADSPI_Base;
+     with Import, Address => System'To_Address (16#A0001000#);
 
 end STM32_SVD.QUADSPI;

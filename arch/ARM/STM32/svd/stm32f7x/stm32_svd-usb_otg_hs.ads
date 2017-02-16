@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -1390,7 +1391,7 @@ package STM32_SVD.USB_OTG_HS is
    end record;
 
    subtype OTG_HS_GNPTXSTS_NPTXFSAV_Field is HAL.UInt16;
-   subtype OTG_HS_GNPTXSTS_NPTQXSAV_Field is HAL.Byte;
+   subtype OTG_HS_GNPTXSTS_NPTQXSAV_Field is HAL.UInt8;
    subtype OTG_HS_GNPTXSTS_NPTXQTOP_Field is HAL.UInt7;
 
    --  OTG_HS nonperiodic transmit FIFO/queue status register
@@ -1615,8 +1616,8 @@ package STM32_SVD.USB_OTG_HS is
    end record;
 
    subtype OTG_HS_HPTXSTS_PTXFSAVL_Field is HAL.UInt16;
-   subtype OTG_HS_HPTXSTS_PTXQSAV_Field is HAL.Byte;
-   subtype OTG_HS_HPTXSTS_PTXQTOP_Field is HAL.Byte;
+   subtype OTG_HS_HPTXSTS_PTXQSAV_Field is HAL.UInt8;
+   subtype OTG_HS_HPTXSTS_PTXQTOP_Field is HAL.UInt8;
 
    --  OTG_HS_Host periodic transmit FIFO/queue status register
    type OTG_HS_HPTXSTS_Register is record
@@ -2227,7 +2228,7 @@ package STM32_SVD.USB_OTG_HS is
 
    --  USB on the go high speed
    OTG_HS_DEVICE_Periph : aliased OTG_HS_DEVICE_Peripheral
-     with Import, Address => OTG_HS_DEVICE_Base;
+     with Import, Address => System'To_Address (16#40040800#);
 
    type OTG_HS_GLOBAL_Disc is
      (
@@ -2333,7 +2334,7 @@ package STM32_SVD.USB_OTG_HS is
 
    --  USB on the go high speed
    OTG_HS_GLOBAL_Periph : aliased OTG_HS_GLOBAL_Peripheral
-     with Import, Address => OTG_HS_GLOBAL_Base;
+     with Import, Address => System'To_Address (16#40040000#);
 
    --  USB on the go high speed
    type OTG_HS_HOST_Peripheral is record
@@ -2654,7 +2655,7 @@ package STM32_SVD.USB_OTG_HS is
 
    --  USB on the go high speed
    OTG_HS_HOST_Periph : aliased OTG_HS_HOST_Peripheral
-     with Import, Address => OTG_HS_HOST_Base;
+     with Import, Address => System'To_Address (16#40040400#);
 
    --  USB on the go high speed
    type OTG_HS_PWRCLK_Peripheral is record
@@ -2669,6 +2670,6 @@ package STM32_SVD.USB_OTG_HS is
 
    --  USB on the go high speed
    OTG_HS_PWRCLK_Periph : aliased OTG_HS_PWRCLK_Peripheral
-     with Import, Address => OTG_HS_PWRCLK_Base;
+     with Import, Address => System'To_Address (16#40040E00#);
 
 end STM32_SVD.USB_OTG_HS;

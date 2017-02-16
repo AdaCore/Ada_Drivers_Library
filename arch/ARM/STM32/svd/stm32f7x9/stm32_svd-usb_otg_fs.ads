@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -1335,7 +1336,7 @@ package STM32_SVD.USB_OTG_FS is
    end record;
 
    subtype OTG_FS_HNPTXSTS_NPTXFSAV_Field is HAL.UInt16;
-   subtype OTG_FS_HNPTXSTS_NPTQXSAV_Field is HAL.Byte;
+   subtype OTG_FS_HNPTXSTS_NPTQXSAV_Field is HAL.UInt8;
    subtype OTG_FS_HNPTXSTS_NPTXQTOP_Field is HAL.UInt7;
 
    --  OTG_FS non-periodic transmit FIFO/queue status register
@@ -1360,8 +1361,8 @@ package STM32_SVD.USB_OTG_FS is
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
-   subtype OTG_FS_GI2CCTL_RWDATA_Field is HAL.Byte;
-   subtype OTG_FS_GI2CCTL_REGADDR_Field is HAL.Byte;
+   subtype OTG_FS_GI2CCTL_RWDATA_Field is HAL.UInt8;
+   subtype OTG_FS_GI2CCTL_REGADDR_Field is HAL.UInt8;
    subtype OTG_FS_GI2CCTL_ADDR_Field is HAL.UInt7;
    subtype OTG_FS_GI2CCTL_I2CDEVADR_Field is HAL.UInt2;
 
@@ -1525,7 +1526,7 @@ package STM32_SVD.USB_OTG_FS is
       --  ADP interrupt flag
       ADPIF          : Boolean := False;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#2#;
+      Reserved_24_31 : HAL.UInt8 := 16#2#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1692,8 +1693,8 @@ package STM32_SVD.USB_OTG_FS is
    end record;
 
    subtype OTG_FS_HPTXSTS_PTXFSAVL_Field is HAL.UInt16;
-   subtype OTG_FS_HPTXSTS_PTXQSAV_Field is HAL.Byte;
-   subtype OTG_FS_HPTXSTS_PTXQTOP_Field is HAL.Byte;
+   subtype OTG_FS_HPTXSTS_PTXQSAV_Field is HAL.UInt8;
+   subtype OTG_FS_HPTXSTS_PTXQTOP_Field is HAL.UInt8;
 
    --  OTG_FS_Host periodic transmit FIFO/queue status register
    --  (OTG_FS_HPTXSTS)
@@ -2166,7 +2167,7 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_DEVICE_Periph : aliased OTG_FS_DEVICE_Peripheral
-     with Import, Address => OTG_FS_DEVICE_Base;
+     with Import, Address => System'To_Address (16#50000800#);
 
    type OTG_FS_GLOBAL_Disc is
      (
@@ -2280,7 +2281,7 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_GLOBAL_Periph : aliased OTG_FS_GLOBAL_Peripheral
-     with Import, Address => OTG_FS_GLOBAL_Base;
+     with Import, Address => System'To_Address (16#50000000#);
 
    --  USB on the go full speed
    type OTG_FS_HOST_Peripheral is record
@@ -2458,7 +2459,7 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_HOST_Periph : aliased OTG_FS_HOST_Peripheral
-     with Import, Address => OTG_FS_HOST_Base;
+     with Import, Address => System'To_Address (16#50000400#);
 
    --  USB on the go full speed
    type OTG_FS_PWRCLK_Peripheral is record
@@ -2473,6 +2474,6 @@ package STM32_SVD.USB_OTG_FS is
 
    --  USB on the go full speed
    OTG_FS_PWRCLK_Periph : aliased OTG_FS_PWRCLK_Peripheral
-     with Import, Address => OTG_FS_PWRCLK_Base;
+     with Import, Address => System'To_Address (16#50000E00#);
 
 end STM32_SVD.USB_OTG_FS;

@@ -32,9 +32,9 @@
 --  This package provides routines for drawing shapes, characters, and strings
 --  on a bit-mapped device or graphical buffer.
 
-with Interfaces;    use Interfaces;
 with BMP_Fonts;     use BMP_Fonts;
 with Hershey_Fonts; use Hershey_Fonts;
+with HAL;           use HAL;
 with HAL.Bitmap;    use HAL.Bitmap;
 
 package Bitmapped_Drawing is
@@ -44,8 +44,8 @@ package Bitmapped_Drawing is
       Start      : Point;
       Char       : Character;
       Font       : BMP_Font;
-      Foreground : Unsigned_32;
-      Background : Unsigned_32);
+      Foreground : UInt32;
+      Background : UInt32);
 
    procedure Draw_String
      (Buffer     : in out Bitmap_Buffer'Class;

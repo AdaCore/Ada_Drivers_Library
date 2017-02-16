@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL;                     use HAL;
 with Bitmap_Color_Conversion; use Bitmap_Color_Conversion;
 
 package body Bitmapped_Drawing is
@@ -43,8 +42,8 @@ package body Bitmapped_Drawing is
       Start      : Point;
       Char       : Character;
       Font       : BMP_Font;
-      Foreground : Unsigned_32;
-      Background : Unsigned_32)
+      Foreground : UInt32;
+      Background : UInt32)
    is
    begin
       for H in 0 .. Char_Height (Font) - 1 loop
@@ -73,9 +72,9 @@ package body Bitmapped_Drawing is
       Background : Bitmap_Color)
    is
       Count : Natural := 0;
-      FG    : constant Unsigned_32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
+      FG    : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
                                                             Foreground);
-      BG    : constant Unsigned_32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
+      BG    : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
                                                             Background);
    begin
       for C of Msg loop
@@ -161,7 +160,7 @@ package body Bitmapped_Drawing is
                   Hershey_Fonts.Strlen (Msg, Font, Area.Height);
       Ratio   : Float;
       Current : Point := (0, 0);
-      Prev    : Unsigned_32;
+      Prev    : UInt32;
       FG      : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
                                                        Foreground);
       Blk     : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
@@ -216,8 +215,8 @@ package body Bitmapped_Drawing is
 
             for X in Area.Position.X + 1 .. Area.Position.X + Area.Width loop
                declare
-                  Col : constant Unsigned_32 := Buffer.Pixel ((X, Y));
-                  Top : constant Unsigned_32 := Buffer.Pixel ((X, Y - 1));
+                  Col : constant UInt32 := Buffer.Pixel ((X, Y));
+                  Top : constant UInt32 := Buffer.Pixel ((X, Y - 1));
                begin
 
                   if Prev /= FG

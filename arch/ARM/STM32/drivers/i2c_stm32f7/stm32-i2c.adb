@@ -54,7 +54,7 @@ package body STM32.I2C is
    procedure Config_Transfer
      (Port    : in out I2C_Port;
       Addr    : I2C_Address;
-      Size    : Byte;
+      Size    : UInt8;
       Mode    : I2C_Transfer_Mode;
       Request : I2C_Request);
 
@@ -171,7 +171,7 @@ package body STM32.I2C is
    procedure Config_Transfer
      (Port    : in out I2C_Port;
       Addr    : I2C_Address;
-      Size    : Byte;
+      Size    : UInt8;
       Mode    : I2C_Transfer_Mode;
       Request : I2C_Request)
    is
@@ -436,7 +436,7 @@ package body STM32.I2C is
                Size_Temp := 255;
             else
                Config_Transfer
-                 (This, Addr, Byte (Data'Length - Transmitted), Autoend_Mode,
+                 (This, Addr, UInt8 (Data'Length - Transmitted), Autoend_Mode,
                   No_Start_Stop);
                Size_Temp := Data'Length - Transmitted;
             end if;
@@ -521,7 +521,7 @@ package body STM32.I2C is
                Size_Temp := 255;
             else
                Config_Transfer
-                 (This, Addr, Byte (Data'Length - Transmitted), Autoend_Mode,
+                 (This, Addr, UInt8 (Data'Length - Transmitted), Autoend_Mode,
                   No_Start_Stop);
                Size_Temp := Data'Length - Transmitted;
             end if;
@@ -598,12 +598,12 @@ package body STM32.I2C is
 
       case Mem_Addr_Size is
          when Memory_Size_8b =>
-            This.Periph.TXDR.TXDATA := Byte (Mem_Addr);
+            This.Periph.TXDR.TXDATA := UInt8 (Mem_Addr);
 
          when Memory_Size_16b =>
             declare
-               MSB : constant Byte := Byte (Shift_Right (Mem_Addr, 8));
-               LSB : constant Byte := Byte (Mem_Addr and 16#FF#);
+               MSB : constant UInt8 := UInt8 (Shift_Right (Mem_Addr, 8));
+               LSB : constant UInt8 := UInt8 (Mem_Addr and 16#FF#);
             begin
                This.Periph.TXDR.TXDATA := MSB;
 
@@ -661,7 +661,7 @@ package body STM32.I2C is
             else
                Config_Transfer
                  (This, Addr,
-                  Byte (Data'Length - Transmitted),
+                  UInt8 (Data'Length - Transmitted),
                   Autoend_Mode,
                   No_Start_Stop);
                Size_Temp := Data'Length - Transmitted;
@@ -738,12 +738,12 @@ package body STM32.I2C is
 
       case Mem_Addr_Size is
          when Memory_Size_8b =>
-            This.Periph.TXDR.TXDATA := Byte (Mem_Addr);
+            This.Periph.TXDR.TXDATA := UInt8 (Mem_Addr);
 
          when Memory_Size_16b =>
             declare
-               MSB : constant Byte := Byte (Shift_Right (Mem_Addr, 8));
-               LSB : constant Byte := Byte (Mem_Addr and 16#FF#);
+               MSB : constant UInt8 := UInt8 (Shift_Right (Mem_Addr, 8));
+               LSB : constant UInt8 := UInt8 (Mem_Addr and 16#FF#);
             begin
                This.Periph.TXDR.TXDATA := MSB;
 
@@ -798,7 +798,7 @@ package body STM32.I2C is
             else
                Config_Transfer
                  (This, Addr,
-                  Byte (Data'Length - Transmitted),
+                  UInt8 (Data'Length - Transmitted),
                   Autoend_Mode,
                   No_Start_Stop);
                Size_Temp := Data'Length - Transmitted;

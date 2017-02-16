@@ -41,7 +41,7 @@ package body MCP23x08.I2C is
    procedure IO_Write
      (This      : in out MCP23008_IO_Expander;
       WriteAddr : Register_Address;
-      Value     : Byte)
+      Value     : UInt8)
    is
       Status : I2C_Status;
    begin
@@ -67,7 +67,7 @@ package body MCP23x08.I2C is
    procedure IO_Read
      (This     : MCP23008_IO_Expander;
       ReadAddr : Register_Address;
-      Value    : out Byte)
+      Value    : out UInt8)
    is
       Ret    : I2C_Data (1 .. 1);
       Status : I2C_Status;

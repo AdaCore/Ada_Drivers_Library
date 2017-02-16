@@ -46,7 +46,7 @@ package body STM32.RNG.Polling is
    --------------------
 
    procedure Initialize_RNG is
-      Discard : Unsigned_32;
+      Discard : UInt32;
    begin
       Enable_RNG_Clock;
       Enable_RNG;
@@ -60,7 +60,7 @@ package body STM32.RNG.Polling is
    -- Random --
    ------------
 
-   function Random return Interfaces.Unsigned_32 is
+   function Random return UInt32 is
    begin
       while not RNG_Data_Ready loop
          null;

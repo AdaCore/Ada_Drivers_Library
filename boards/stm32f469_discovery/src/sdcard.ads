@@ -34,6 +34,7 @@ with Ada.Interrupts.Names;
 
 with STM32.SDMMC;
 
+with HAL;               use HAL;
 with HAL.Block_Drivers; use HAL.Block_Drivers;
 
 package SDCard is
@@ -72,7 +73,7 @@ package SDCard is
 
    overriding function Read
      (Controller   : in out SDCard_Controller;
-      Block_Number : Unsigned_32;
+      Block_Number : UInt32;
       Data         : out Block) return Boolean
      with Pre => (Data'Size mod Controller.Block_Size) = 0
                  and then Data'Size < 2 ** 16;
@@ -82,7 +83,7 @@ package SDCard is
 
    overriding function Write
      (Controller   : in out SDCard_Controller;
-      Block_Number : Unsigned_32;
+      Block_Number : UInt32;
       Data         : Block) return Boolean
      with Pre => (Data'Size mod Controller.Block_Size) = 0
                  and then Data'Size < 2 ** 16;

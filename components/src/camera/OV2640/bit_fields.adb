@@ -33,7 +33,7 @@ package body Bit_Fields is
    type Convert_8 (As_Array : Boolean := False) is record
       case As_Array is
          when False =>
-            Value : Byte;
+            Value : UInt8;
          when True =>
             Bits : Bit_Field (0 .. 7);
       end case;
@@ -96,15 +96,15 @@ package body Bit_Fields is
    end To_UInt16;
 
    -------------
-   -- To_Byte --
+   -- To_UInt8 --
    -------------
 
-   function To_Byte (Bits : Bit_Field) return Byte is
+   function To_UInt8 (Bits : Bit_Field) return UInt8 is
       Tmp : Convert_8;
    begin
       Tmp.Bits := Bits;
       return Tmp.Value;
-   end To_Byte;
+   end To_UInt8;
 
    ------------------
    -- To_Bit_Field --
@@ -132,7 +132,7 @@ package body Bit_Fields is
    -- To_Bit_Field --
    ------------------
 
-   function To_Bit_Field (Value : Byte) return Bit_Field is
+   function To_Bit_Field (Value : UInt8) return Bit_Field is
       Tmp : Convert_8;
    begin
       Tmp.Value := Value;

@@ -45,7 +45,6 @@ with Simple_Synthesizer;
 with CS43L22;
 
 procedure Main is
-   use type Byte;
 
    Values : LIS3DSH.Axes_Accelerations;
 

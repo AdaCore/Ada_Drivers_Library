@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -81,7 +82,7 @@ package STM32_SVD.FSMC is
 
    subtype BTR_ADDSET_Field is HAL.UInt4;
    subtype BTR_ADDHLD_Field is HAL.UInt4;
-   subtype BTR_DATAST_Field is HAL.Byte;
+   subtype BTR_DATAST_Field is HAL.UInt8;
    subtype BTR_BUSTURN_Field is HAL.UInt4;
    subtype BTR_CLKDIV_Field is HAL.UInt4;
    subtype BTR_DATLAT_Field is HAL.UInt4;
@@ -263,10 +264,10 @@ package STM32_SVD.FSMC is
       Reserved_7_31 at 0 range 7 .. 31;
    end record;
 
-   subtype PMEM_MEMSETx_Field is HAL.Byte;
-   subtype PMEM_MEMWAITx_Field is HAL.Byte;
-   subtype PMEM_MEMHOLDx_Field is HAL.Byte;
-   subtype PMEM_MEMHIZx_Field is HAL.Byte;
+   subtype PMEM_MEMSETx_Field is HAL.UInt8;
+   subtype PMEM_MEMWAITx_Field is HAL.UInt8;
+   subtype PMEM_MEMHOLDx_Field is HAL.UInt8;
+   subtype PMEM_MEMHIZx_Field is HAL.UInt8;
 
    --  Common memory space timing register
    type PMEM_Register is record
@@ -289,10 +290,10 @@ package STM32_SVD.FSMC is
       MEMHIZx  at 0 range 24 .. 31;
    end record;
 
-   subtype PATT_ATTSETx_Field is HAL.Byte;
-   subtype PATT_ATTWAITx_Field is HAL.Byte;
-   subtype PATT_ATTHOLDx_Field is HAL.Byte;
-   subtype PATT_ATTHIZx_Field is HAL.Byte;
+   subtype PATT_ATTSETx_Field is HAL.UInt8;
+   subtype PATT_ATTWAITx_Field is HAL.UInt8;
+   subtype PATT_ATTHOLDx_Field is HAL.UInt8;
+   subtype PATT_ATTHIZx_Field is HAL.UInt8;
 
    --  Attribute memory space timing register
    type PATT_Register is record
@@ -317,7 +318,7 @@ package STM32_SVD.FSMC is
 
    subtype BWTR_ADDSET_Field is HAL.UInt4;
    subtype BWTR_ADDHLD_Field is HAL.UInt4;
-   subtype BWTR_DATAST_Field is HAL.Byte;
+   subtype BWTR_DATAST_Field is HAL.UInt8;
    subtype BWTR_CLKDIV_Field is HAL.UInt4;
    subtype BWTR_DATLAT_Field is HAL.UInt4;
    subtype BWTR_ACCMOD_Field is HAL.UInt2;
@@ -652,6 +653,6 @@ package STM32_SVD.FSMC is
 
    --  Flexible memory controller
    FMC_Periph : aliased FMC_Peripheral
-     with Import, Address => FMC_Base;
+     with Import, Address => System'To_Address (16#A0000000#);
 
 end STM32_SVD.FSMC;

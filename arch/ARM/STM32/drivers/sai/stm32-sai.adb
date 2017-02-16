@@ -314,7 +314,7 @@ package body STM32.SAI is
    procedure Configure_Block_Frame
      (This       : SAI_Controller;
       Block        : SAI_Block;
-      Frame_Length : Byte;
+      Frame_Length : UInt8;
       Frame_Active : UInt7;
       Frame_Sync   : SAI_Frame_Synchronization;
       FS_Polarity  : SAI_Frame_Sync_Polarity;

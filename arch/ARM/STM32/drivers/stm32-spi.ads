@@ -96,9 +96,9 @@ package STM32.SPI is
    function Data (This : SPI_Port) return UInt16
      with Inline;
 
-   procedure Send (This : in out SPI_Port; Data : Byte);
+   procedure Send (This : in out SPI_Port; Data : UInt8);
 
-   function Data (This : SPI_Port) return Byte
+   function Data (This : SPI_Port) return UInt8
      with Inline;
 
    function Is_Busy (This : SPI_Port) return Boolean
@@ -146,7 +146,7 @@ package STM32.SPI is
    --  The following I/O routines implement the higher level functionality for
    --  CRC and data direction, among others.
 
-   type Byte_Buffer is array (Natural range <>) of Byte
+   type UInt8_Buffer is array (Natural range <>) of UInt8
      with Alignment => 2;
    --  The alignment is set to 2 because we treat component pairs as half_word
    --  values when sending/receiving in 16-bit mode.
@@ -172,7 +172,7 @@ package STM32.SPI is
 
    procedure Transmit
      (This     : in out SPI_Port;
-      Outgoing : Byte);
+      Outgoing : UInt8);
 
    overriding
    procedure Receive
@@ -190,18 +190,18 @@ package STM32.SPI is
 
    procedure Receive
      (This     : in out SPI_Port;
-      Incoming : out Byte);
+      Incoming : out UInt8);
 
    procedure Transmit_Receive
      (This      : in out SPI_Port;
-      Outgoing  : Byte_Buffer;
-      Incoming  : out Byte_Buffer;
+      Outgoing  : UInt8_Buffer;
+      Incoming  : out UInt8_Buffer;
       Size      : Positive);
 
    procedure Transmit_Receive
      (This      : in out SPI_Port;
-      Outgoing  : Byte;
-      Incoming  : out Byte);
+      Outgoing  : UInt8;
+      Incoming  : out UInt8);
 
    --  TODO: add the other higher-level HAL routines for interrupts and DMA
 
@@ -214,14 +214,14 @@ private
 
    procedure Send_Receive_16bit_Mode
      (This     : in out SPI_Port;
-      Outgoing : Byte_Buffer;
-      Incoming : out Byte_Buffer;
+      Outgoing : UInt8_Buffer;
+      Incoming : out UInt8_Buffer;
       Size     : Positive);
 
    procedure Send_Receive_8bit_Mode
      (This     : in out SPI_Port;
-      Outgoing : Byte_Buffer;
-      Incoming : out Byte_Buffer;
+      Outgoing : UInt8_Buffer;
+      Incoming : out UInt8_Buffer;
       Size     : Positive);
 
    procedure Send_16bit_Mode

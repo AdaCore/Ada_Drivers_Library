@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -52,7 +53,7 @@ package STM32_SVD.SAI is
       --  Master clock divider
       MCJDIV         : ACR1_MCJDIV_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -116,7 +117,7 @@ package STM32_SVD.SAI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype AFRCR_FRL_Field is HAL.Byte;
+   subtype AFRCR_FRL_Field is HAL.UInt8;
    subtype AFRCR_FSALL_Field is HAL.UInt7;
 
    --  AFRCR
@@ -327,7 +328,7 @@ package STM32_SVD.SAI is
       --  Master clock divider
       MCJDIV         : BCR1_MCJDIV_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -391,7 +392,7 @@ package STM32_SVD.SAI is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype BFRCR_FRL_Field is HAL.Byte;
+   subtype BFRCR_FRL_Field is HAL.UInt8;
    subtype BFRCR_FSALL_Field is HAL.UInt7;
 
    --  BFRCR
@@ -625,6 +626,6 @@ package STM32_SVD.SAI is
 
    --  Serial audio interface
    SAI_Periph : aliased SAI_Peripheral
-     with Import, Address => SAI_Base;
+     with Import, Address => System'To_Address (16#40015800#);
 
 end STM32_SVD.SAI;

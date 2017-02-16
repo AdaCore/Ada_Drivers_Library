@@ -85,12 +85,12 @@ package Native.Filesystem is
 
    overriding function Read
      (This : in out Native_File_Handle;
-      Data : out Byte_Array)
+      Data : out UInt8_Array)
       return Status_Kind;
 
    overriding function Write
      (This : in out Native_File_Handle;
-      Data : Byte_Array)
+      Data : UInt8_Array)
       return Status_Kind;
 
    overriding function Seek
@@ -147,7 +147,7 @@ package Native.Filesystem is
 
 private
 
-   package Byte_IO is new Ada.Direct_IO (Byte);
+   package Byte_IO is new Ada.Direct_IO (UInt8);
 
    type Native_FS_Driver is limited new FS_Driver with record
       Root_Dir          : Ada.Strings.Unbounded.Unbounded_String;

@@ -29,17 +29,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
+with Last_Chance_Handler; pragma Unreferenced (Last_Chance_Handler);
 --  The "last chance handler" is the user-defined routine that is called when
 --  an exception is propagated. We need it in the executable, therefore it
 --  must be somewhere in the closure of the context clauses.
 
-with STM32.Board;           use STM32.Board;
-with STM32.DMA2D;           use STM32.DMA2D;
-with STM32.DMA2D_Bitmap;    use STM32.DMA2D_Bitmap;
-with HAL;                   use HAL;
-with Interfaces;            use Interfaces;
-with HAL.Bitmap;            use HAL.Bitmap;
+with STM32.Board;         use STM32.Board;
+with STM32.DMA2D;         use STM32.DMA2D;
+with STM32.DMA2D_Bitmap;  use STM32.DMA2D_Bitmap;
+with HAL;                 use HAL;
+with HAL.Bitmap;          use HAL.Bitmap;
 
 procedure Dma2d
 is
@@ -155,7 +154,7 @@ begin
 
       --  Fill L4 CLUT
       for Index in UInt4 loop
-         L4_CLUT (Index) := (255, 0, 0, Byte (Index) * 16);
+         L4_CLUT (Index) := (255, 0, 0, UInt8 (Index) * 16);
       end loop;
 
       --  Fill L4 bitmap

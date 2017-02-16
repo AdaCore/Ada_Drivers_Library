@@ -31,7 +31,6 @@
 
 with NRF51_SVD.RADIO; use NRF51_SVD.RADIO;
 with System.Storage_Elements; use System.Storage_Elements;
-with Interfaces; use Interfaces;
 
 package body nRF51.Radio is
 

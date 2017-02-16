@@ -29,8 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
-
 package body Bitmap_Color_Conversion is
 
    --------------------------
@@ -43,17 +41,17 @@ package body Bitmap_Color_Conversion is
    is
       Ret : UInt32 := 0;
 
-      procedure Add_Byte
-        (Value : Byte; Pos : Natural; Size : Positive) with Inline;
+      procedure Add_UInt8
+        (Value : UInt8; Pos : Natural; Size : Positive) with Inline;
 
-      function Luminance return Byte;
+      function Luminance return UInt8;
 
       --------------
-      -- Add_Byte --
+      -- Add_UInt8 --
       --------------
 
-      procedure Add_Byte
-        (Value : Byte; Pos : Natural; Size : Positive)
+      procedure Add_UInt8
+        (Value : UInt8; Pos : Natural; Size : Positive)
       is
          Val : constant UInt32 :=
                  Shift_Left
@@ -63,16 +61,16 @@ package body Bitmap_Color_Conversion is
                     Pos);
       begin
          Ret := Ret or Val;
-      end Add_Byte;
+      end Add_UInt8;
 
       ---------------
       -- Luminance --
       ---------------
 
-      function Luminance return Byte
+      function Luminance return UInt8
       is
       begin
-         return Byte
+         return UInt8
            (Shift_Right
               (UInt32 (Col.Red) * 3 + UInt32 (Col.Blue) + UInt32 (Col.Green) * 4,
                3));
@@ -81,52 +79,52 @@ package body Bitmap_Color_Conversion is
    begin
       case Mode is
          when ARGB_8888 =>
-            Add_Byte (Col.Alpha, 24, 8);
-            Add_Byte (Col.Red,   16, 8);
-            Add_Byte (Col.Green,  8, 8);
-            Add_Byte (Col.Blue,   0, 8);
+            Add_UInt8 (Col.Alpha, 24, 8);
+            Add_UInt8 (Col.Red,   16, 8);
+            Add_UInt8 (Col.Green,  8, 8);
+            Add_UInt8 (Col.Blue,   0, 8);
 
          when RGB_888 =>
-            Add_Byte (Col.Red,   16, 8);
-            Add_Byte (Col.Green,  8, 8);
-            Add_Byte (Col.Blue,   0, 8);
+            Add_UInt8 (Col.Red,   16, 8);
+            Add_UInt8 (Col.Green,  8, 8);
+            Add_UInt8 (Col.Blue,   0, 8);
 
          when RGB_565 =>
-            Add_Byte (Col.Red,   11, 5);
-            Add_Byte (Col.Green,  5, 6);
-            Add_Byte (Col.Blue,   0, 5);
+            Add_UInt8 (Col.Red,   11, 5);
+            Add_UInt8 (Col.Green,  5, 6);
+            Add_UInt8 (Col.Blue,   0, 5);
 
          when ARGB_1555 =>
-            Add_Byte (Col.Alpha, 15, 1);
-            Add_Byte (Col.Red,   10, 5);
-            Add_Byte (Col.Green,  5, 5);
-            Add_Byte (Col.Blue,   0, 5);
+            Add_UInt8 (Col.Alpha, 15, 1);
+            Add_UInt8 (Col.Red,   10, 5);
+            Add_UInt8 (Col.Green,  5, 5);
+            Add_UInt8 (Col.Blue,   0, 5);
 
          when ARGB_4444 =>
-            Add_Byte (Col.Alpha, 12, 4);
-            Add_Byte (Col.Red,    8, 4);
-            Add_Byte (Col.Green,  4, 4);
-            Add_Byte (Col.Blue,   0, 4);
+            Add_UInt8 (Col.Alpha, 12, 4);
+            Add_UInt8 (Col.Red,    8, 4);
+            Add_UInt8 (Col.Green,  4, 4);
+            Add_UInt8 (Col.Blue,   0, 4);
 
          when L_8 =>
-            Add_Byte (Luminance, 0, 8);
+            Add_UInt8 (Luminance, 0, 8);
 
          when AL_44 =>
-            Add_Byte (Col.Alpha, 4, 4);
-            Add_Byte (Luminance, 0, 4);
+            Add_UInt8 (Col.Alpha, 4, 4);
+            Add_UInt8 (Luminance, 0, 4);
 
          when AL_88 =>
-            Add_Byte (Col.Alpha, 8, 8);
-            Add_Byte (Luminance, 0, 8);
+            Add_UInt8 (Col.Alpha, 8, 8);
+            Add_UInt8 (Luminance, 0, 8);
 
          when L_4 =>
-            Add_Byte (Luminance, 0, 4);
+            Add_UInt8 (Luminance, 0, 4);
 
          when A_8 =>
-            Add_Byte (Col.Alpha, 0, 8);
+            Add_UInt8 (Col.Alpha, 0, 8);
 
          when A_4 =>
-            Add_Byte (Col.Alpha, 0, 4);
+            Add_UInt8 (Col.Alpha, 0, 4);
       end case;
 
       return Ret;
@@ -141,20 +139,20 @@ package body Bitmap_Color_Conversion is
       return Bitmap_Color
    is
 
-      function Get_Byte
-        (Pos : Natural; Size : Positive) return Byte with Inline;
+      function Get_UInt8
+        (Pos : Natural; Size : Positive) return UInt8 with Inline;
 
       --------------
-      -- Get_Byte --
+      -- Get_UInt8 --
       --------------
 
-      function Get_Byte
-        (Pos : Natural; Size : Positive) return Byte
+      function Get_UInt8
+        (Pos : Natural; Size : Positive) return UInt8
       is
-         Ret : Byte;
+         Ret : UInt8;
          Mask : constant UInt32 := Shift_Left (2 ** Size - 1, Pos);
       begin
-         Ret := Byte (Shift_Right (Col and Mask, Pos));
+         Ret := UInt8 (Shift_Right (Col and Mask, Pos));
 
          if Size = 8 then
             return Ret;
@@ -167,73 +165,73 @@ package body Bitmap_Color_Conversion is
          else
             raise Constraint_Error with "Unsupported color component size";
          end if;
-      end Get_Byte;
+      end Get_UInt8;
 
-      A, R, G, B : Byte;
+      A, R, G, B : UInt8;
    begin
       case Mode is
          when ARGB_8888 =>
-            A := Get_Byte (24, 8);
-            R := Get_Byte (16, 8);
-            G := Get_Byte (8, 8);
-            B := Get_Byte (0, 8);
+            A := Get_UInt8 (24, 8);
+            R := Get_UInt8 (16, 8);
+            G := Get_UInt8 (8, 8);
+            B := Get_UInt8 (0, 8);
 
          when RGB_888 =>
             A := 255;
-            R := Get_Byte (16, 8);
-            G := Get_Byte (8, 8);
-            B := Get_Byte (0, 8);
+            R := Get_UInt8 (16, 8);
+            G := Get_UInt8 (8, 8);
+            B := Get_UInt8 (0, 8);
 
          when RGB_565 =>
             A := 255;
-            R := Get_Byte (11, 5);
-            G := Get_Byte (5, 6);
-            B := Get_Byte (0, 5);
+            R := Get_UInt8 (11, 5);
+            G := Get_UInt8 (5, 6);
+            B := Get_UInt8 (0, 5);
 
          when ARGB_1555 =>
-            A := Get_Byte (15, 1);
-            R := Get_Byte (10, 5);
-            G := Get_Byte (5, 5);
-            B := Get_Byte (0, 5);
+            A := Get_UInt8 (15, 1);
+            R := Get_UInt8 (10, 5);
+            G := Get_UInt8 (5, 5);
+            B := Get_UInt8 (0, 5);
 
          when ARGB_4444 =>
-            A := Get_Byte (12, 4);
-            R := Get_Byte (8, 4);
-            G := Get_Byte (4, 4);
-            B := Get_Byte (0, 4);
+            A := Get_UInt8 (12, 4);
+            R := Get_UInt8 (8, 4);
+            G := Get_UInt8 (4, 4);
+            B := Get_UInt8 (0, 4);
 
          when L_8 =>
             A := 255;
-            R := Get_Byte (0, 8);
+            R := Get_UInt8 (0, 8);
             G := R;
             B := R;
 
          when AL_44 =>
-            A := Get_Byte (4, 4);
-            R := Get_Byte (0, 4);
+            A := Get_UInt8 (4, 4);
+            R := Get_UInt8 (0, 4);
             G := R;
             B := R;
 
          when AL_88 =>
-            A := Get_Byte (8, 8);
-            R := Get_Byte (0, 8);
+            A := Get_UInt8 (8, 8);
+            R := Get_UInt8 (0, 8);
             G := R;
             B := R;
 
          when L_4 =>
             A := 255;
-            R := Get_Byte (0, 4);
+            R := Get_UInt8 (0, 4);
             G := R;
             B := R;
 
          when A_8 =>
-            A := Get_Byte (0, 8);
+            A := Get_UInt8 (0, 8);
             R := 255;
             G := 255;
             B := 255;
 
          when A_4 =>
-            A := Get_Byte (0, 4);
+            A := Get_UInt8 (0, 4);
             R := 255;
             G := 255;
             B := 255;

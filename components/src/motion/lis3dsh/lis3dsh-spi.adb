@@ -52,13 +52,13 @@ package body LIS3DSH.SPI is
    overriding
    procedure IO_Write
      (This      : in out Three_Axis_Accelerometer_SPI;
-      Value     : Byte;
+      Value     : UInt8;
       WriteAddr : Register_Address)
    is
       Status : SPI_Status;
    begin
       This.Chip_Select.Clear;
-      This.Port.Transmit (SPI_Data_8b'(Byte (WriteAddr or SPI_Write_Flag),
+      This.Port.Transmit (SPI_Data_8b'(UInt8 (WriteAddr or SPI_Write_Flag),
                           Value),
                           Status);
       This.Chip_Select.Set;
@@ -76,14 +76,14 @@ package body LIS3DSH.SPI is
    overriding
    procedure IO_Read
      (This     : Three_Axis_Accelerometer_SPI;
-      Value    : out Byte;
+      Value    : out UInt8;
       ReadAddr : Register_Address)
    is
       Data : SPI_Data_8b (1 .. 1);
       Status : SPI_Status;
    begin
       This.Chip_Select.Clear;
-      This.Port.Transmit (SPI_Data_8b'(1 => Byte (ReadAddr or SPI_Read_Flag)),
+      This.Port.Transmit (SPI_Data_8b'(1 => UInt8 (ReadAddr or SPI_Read_Flag)),
                           Status);
       if Status /= Ok then
          --  No error handling...

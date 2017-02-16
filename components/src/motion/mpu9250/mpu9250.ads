@@ -203,7 +203,7 @@ package MPU9250 is
    --  Set gyroscope sample rate divider
    procedure MPU9250_Set_Rate
      (Device   : in out MPU9250_Device;
-      Rate_Div : Byte);
+      Rate_Div : UInt8);
 
    --  Set sleep mode status.
    procedure MPU9250_Set_Sleep_Enabled
@@ -448,7 +448,7 @@ private
    MPU9250_I2C_SLV_ADDR_BIT    : constant := 6;
    MPU9250_I2C_SLV_ADDR_LENGTH : constant := 7;
    MPU9250_I2C_SLV_EN_BIT      : constant := 7;
-   MPU9250_I2C_SLV_BYTE_SW_BIT : constant := 6;
+   MPU9250_I2C_SLV_UInt8_SW_BIT : constant := 6;
    MPU9250_I2C_SLV_REG_DIS_BIT : constant := 5;
    MPU9250_I2C_SLV_GRP_BIT     : constant := 4;
    MPU9250_I2C_SLV_LEN_BIT     : constant := 3;
@@ -595,7 +595,7 @@ private
    MPU9250_ST_ACCEL_LOW          : constant := (-14.0);
    MPU9250_ST_ACCEL_HIGH         : constant := 14.0;
 
-   MPU9250_ST_TB : constant array (1 .. 256) of Unsigned_16
+   MPU9250_ST_TB : constant array (1 .. 256) of UInt16
      := (
          2620, 2646, 2672, 2699, 2726, 2753, 2781, 2808,
          2837, 2865, 2894, 2923, 2952, 2981, 3011, 3041,
@@ -636,37 +636,37 @@ private
    --  Read data to the specified MPU9250 register
    procedure MPU9250_Read_Register
      (Device   : MPU9250_Device;
-      Reg_Addr    : Byte;
+      Reg_Addr    : UInt8;
       Data        : in out I2C_Data);
 
-   --  Read one byte at the specified MPU9250 register
-   procedure MPU9250_Read_Byte_At_Register
+   --  Read one UInt8 at the specified MPU9250 register
+   procedure MPU9250_Read_UInt8_At_Register
      (Device   : MPU9250_Device;
-      Reg_Addr : Byte;
-      Data     : out Byte);
+      Reg_Addr : UInt8;
+      Data     : out UInt8);
 
    --  Read one but at the specified MPU9250 register
    function MPU9250_Read_Bit_At_Register
      (Device    : MPU9250_Device;
-      Reg_Addr  : Byte;
+      Reg_Addr  : UInt8;
       Bit_Pos   : T_Bit_Pos_8) return Boolean;
 
    --  Write data to the specified MPU9250 register
    procedure MPU9250_Write_Register
      (Device      : MPU9250_Device;
-      Reg_Addr    : Byte;
+      Reg_Addr    : UInt8;
       Data        : I2C_Data);
 
-   --  Write one byte at the specified MPU9250 register
-   procedure MPU9250_Write_Byte_At_Register
+   --  Write one UInt8 at the specified MPU9250 register
+   procedure MPU9250_Write_UInt8_At_Register
      (Device   : MPU9250_Device;
-      Reg_Addr : Byte;
-      Data     : Byte);
+      Reg_Addr : UInt8;
+      Data     : UInt8);
 
    --  Write one bit at the specified MPU9250 register
    procedure MPU9250_Write_Bit_At_Register
      (Device    : MPU9250_Device;
-      Reg_Addr  : Byte;
+      Reg_Addr  : UInt8;
       Bit_Pos   : T_Bit_Pos_8;
       Bit_Value : Boolean);
 
@@ -674,14 +674,14 @@ private
    --  bit specified in Start_Bit_Pos
    procedure MPU9250_Write_Bits_At_Register
      (Device    : MPU9250_Device;
-      Reg_Addr      : Byte;
+      Reg_Addr      : UInt8;
       Start_Bit_Pos : T_Bit_Pos_8;
-      Data          : Byte;
+      Data          : UInt8;
       Length        : T_Bit_Pos_8);
 
    function Fuse_Low_And_High_Register_Parts
-     (High : Byte;
-      Low  : Byte) return Integer_16;
+     (High : UInt8;
+      Low  : UInt8) return Integer_16;
    pragma Inline (Fuse_Low_And_High_Register_Parts);
 
 end MPU9250;

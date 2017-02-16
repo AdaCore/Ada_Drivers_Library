@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  A driver for the Cyclic Redundancy Check CRC-32 calculation processor. 
+--  A driver for the Cyclic Redundancy Check CRC-32 calculation processor.
 --  The CPU transfers the data to the CRC processor.
 
 --  Note this API is for the STM32 F4x family. Other STM MCUs have additional

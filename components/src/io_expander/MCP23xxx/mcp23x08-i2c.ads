@@ -47,13 +47,13 @@ private
    procedure IO_Write
      (This      : in out MCP23008_IO_Expander;
       WriteAddr : Register_Address;
-      Value     : Byte);
+      Value     : UInt8);
 
    overriding
    procedure IO_Read
      (This     : MCP23008_IO_Expander;
       ReadAddr : Register_Address;
-      Value    : out Byte);
+      Value    : out UInt8);
 
    BASE_ADDRESS : constant HAL.I2C.I2C_Address := 16#40#;
 end MCP23x08.I2C;

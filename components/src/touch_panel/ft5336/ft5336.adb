@@ -30,7 +30,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with Interfaces;  use Interfaces;
 
 package body FT5336 is
 
@@ -42,73 +41,73 @@ package body FT5336 is
    ------------------------------------------------------------
 
    --  Current mode register of the FT5336 (R/W)
-   FT5336_DEV_MODE_REG                 : constant Unsigned_8 := 16#00#;
+   FT5336_DEV_MODE_REG                 : constant UInt8 := 16#00#;
 
    --  Possible values of FT5336_DEV_MODE_REG
-   FT5336_DEV_MODE_WORKING             : constant Unsigned_8 := 16#00#;
-   FT5336_DEV_MODE_FACTORY             : constant Unsigned_8 := 16#04#;
+   FT5336_DEV_MODE_WORKING             : constant UInt8 := 16#00#;
+   FT5336_DEV_MODE_FACTORY             : constant UInt8 := 16#04#;
 
-   FT5336_DEV_MODE_MASK                : constant Unsigned_8 := 16#07#;
-   FT5336_DEV_MODE_SHIFT               : constant Unsigned_8 := 16#04#;
+   FT5336_DEV_MODE_MASK                : constant UInt8 := 16#07#;
+   FT5336_DEV_MODE_SHIFT               : constant UInt8 := 16#04#;
 
    --  Gesture ID register
-   FT5336_GEST_ID_REG                  : constant Unsigned_8 := 16#01#;
+   FT5336_GEST_ID_REG                  : constant UInt8 := 16#01#;
 
    --  Possible values of FT5336_GEST_ID_REG
-   FT5336_GEST_ID_NO_GESTURE           : constant Unsigned_8 := 16#00#;
-   FT5336_GEST_ID_MOVE_UP              : constant Unsigned_8 := 16#10#;
-   FT5336_GEST_ID_MOVE_RIGHT           : constant Unsigned_8 := 16#14#;
-   FT5336_GEST_ID_MOVE_DOWN            : constant Unsigned_8 := 16#18#;
-   FT5336_GEST_ID_MOVE_LEFT            : constant Unsigned_8 := 16#1C#;
-   FT5336_GEST_ID_SINGLE_CLICK         : constant Unsigned_8 := 16#20#;
-   FT5336_GEST_ID_DOUBLE_CLICK         : constant Unsigned_8 := 16#22#;
-   FT5336_GEST_ID_ROTATE_CLOCKWISE     : constant Unsigned_8 := 16#28#;
-   FT5336_GEST_ID_ROTATE_C_CLOCKWISE   : constant Unsigned_8 := 16#29#;
-   FT5336_GEST_ID_ZOOM_IN              : constant Unsigned_8 := 16#40#;
-   FT5336_GEST_ID_ZOOM_OUT             : constant Unsigned_8 := 16#49#;
+   FT5336_GEST_ID_NO_GESTURE           : constant UInt8 := 16#00#;
+   FT5336_GEST_ID_MOVE_UP              : constant UInt8 := 16#10#;
+   FT5336_GEST_ID_MOVE_RIGHT           : constant UInt8 := 16#14#;
+   FT5336_GEST_ID_MOVE_DOWN            : constant UInt8 := 16#18#;
+   FT5336_GEST_ID_MOVE_LEFT            : constant UInt8 := 16#1C#;
+   FT5336_GEST_ID_SINGLE_CLICK         : constant UInt8 := 16#20#;
+   FT5336_GEST_ID_DOUBLE_CLICK         : constant UInt8 := 16#22#;
+   FT5336_GEST_ID_ROTATE_CLOCKWISE     : constant UInt8 := 16#28#;
+   FT5336_GEST_ID_ROTATE_C_CLOCKWISE   : constant UInt8 := 16#29#;
+   FT5336_GEST_ID_ZOOM_IN              : constant UInt8 := 16#40#;
+   FT5336_GEST_ID_ZOOM_OUT             : constant UInt8 := 16#49#;
 
    --  Touch Data Status register : gives number of active touch points (0..5)
-   FT5336_TD_STAT_REG                  : constant Unsigned_8 := 16#02#;
+   FT5336_TD_STAT_REG                  : constant UInt8 := 16#02#;
 
    --  Values related to FT5336_TD_STAT_REG
-   FT5336_TD_STAT_MASK                 : constant Unsigned_8 := 16#0F#;
-   FT5336_TD_STAT_SHIFT                : constant Unsigned_8 := 16#00#;
+   FT5336_TD_STAT_MASK                 : constant UInt8 := 16#0F#;
+   FT5336_TD_STAT_SHIFT                : constant UInt8 := 16#00#;
 
    --  Values Pn_XH and Pn_YH related
-   FT5336_TOUCH_EVT_FLAG_PRESS_DOWN    : constant Unsigned_8 := 16#00#;
-   FT5336_TOUCH_EVT_FLAG_LIFT_UP       : constant Unsigned_8 := 16#01#;
-   FT5336_TOUCH_EVT_FLAG_CONTACT       : constant Unsigned_8 := 16#02#;
-   FT5336_TOUCH_EVT_FLAG_NO_EVENT      : constant Unsigned_8 := 16#03#;
+   FT5336_TOUCH_EVT_FLAG_PRESS_DOWN    : constant UInt8 := 16#00#;
+   FT5336_TOUCH_EVT_FLAG_LIFT_UP       : constant UInt8 := 16#01#;
+   FT5336_TOUCH_EVT_FLAG_CONTACT       : constant UInt8 := 16#02#;
+   FT5336_TOUCH_EVT_FLAG_NO_EVENT      : constant UInt8 := 16#03#;
 
-   FT5336_TOUCH_EVT_FLAG_SHIFT         : constant Unsigned_8 := 16#06#;
-   FT5336_TOUCH_EVT_FLAG_MASK          : constant Unsigned_8 := 2#1100_0000#;
+   FT5336_TOUCH_EVT_FLAG_SHIFT         : constant UInt8 := 16#06#;
+   FT5336_TOUCH_EVT_FLAG_MASK          : constant UInt8 := 2#1100_0000#;
 
-   FT5336_TOUCH_POS_MSB_MASK           : constant Unsigned_8 := 16#0F#;
-   FT5336_TOUCH_POS_MSB_SHIFT          : constant Unsigned_8 := 16#00#;
+   FT5336_TOUCH_POS_MSB_MASK           : constant UInt8 := 16#0F#;
+   FT5336_TOUCH_POS_MSB_SHIFT          : constant UInt8 := 16#00#;
 
    --  Values Pn_XL and Pn_YL related
-   FT5336_TOUCH_POS_LSB_MASK           : constant Unsigned_8 := 16#FF#;
-   FT5336_TOUCH_POS_LSB_SHIFT          : constant Unsigned_8 := 16#00#;
+   FT5336_TOUCH_POS_LSB_MASK           : constant UInt8 := 16#FF#;
+   FT5336_TOUCH_POS_LSB_SHIFT          : constant UInt8 := 16#00#;
 
 
    --  Values Pn_WEIGHT related
-   FT5336_TOUCH_WEIGHT_MASK            : constant Unsigned_8 := 16#FF#;
-   FT5336_TOUCH_WEIGHT_SHIFT           : constant Unsigned_8 := 16#00#;
+   FT5336_TOUCH_WEIGHT_MASK            : constant UInt8 := 16#FF#;
+   FT5336_TOUCH_WEIGHT_SHIFT           : constant UInt8 := 16#00#;
 
 
    --  Values related to FT5336_Pn_MISC_REG
-   FT5336_TOUCH_AREA_MASK              : constant Unsigned_8 := 2#0100_0000#;
-   FT5336_TOUCH_AREA_SHIFT             : constant Unsigned_8 := 16#04#;
+   FT5336_TOUCH_AREA_MASK              : constant UInt8 := 2#0100_0000#;
+   FT5336_TOUCH_AREA_SHIFT             : constant UInt8 := 16#04#;
 
    type FT5336_Pressure_Registers is record
-      XH_Reg     : Unsigned_8;
-      XL_Reg     : Unsigned_8;
-      YH_Reg     : Unsigned_8;
-      YL_Reg     : Unsigned_8;
+      XH_Reg     : UInt8;
+      XL_Reg     : UInt8;
+      YH_Reg     : UInt8;
+      YL_Reg     : UInt8;
       --  Touch Pressure register value (R)
-      Weight_Reg : Unsigned_8;
+      Weight_Reg : UInt8;
       --  Touch area register
-      Misc_Reg   : Unsigned_8;
+      Misc_Reg   : UInt8;
    end record;
 
    FT5336_Px_Regs                : constant array (Positive range <>)
@@ -175,90 +174,90 @@ package body FT5336 is
                                              Misc_Reg   => 16#3E#));
 
    --  Threshold for touch detection
-   FT5336_TH_GROUP_REG                 : constant Unsigned_8 := 16#80#;
+   FT5336_TH_GROUP_REG                 : constant UInt8 := 16#80#;
 
    --  Values FT5336_TH_GROUP_REG : threshold related
-   FT5336_THRESHOLD_MASK               : constant Unsigned_8 := 16#FF#;
-   FT5336_THRESHOLD_SHIFT              : constant Unsigned_8 := 16#00#;
+   FT5336_THRESHOLD_MASK               : constant UInt8 := 16#FF#;
+   FT5336_THRESHOLD_SHIFT              : constant UInt8 := 16#00#;
 
    --  Filter function coefficients
-   FT5336_TH_DIFF_REG                  : constant Unsigned_8 := 16#85#;
+   FT5336_TH_DIFF_REG                  : constant UInt8 := 16#85#;
 
    --  Control register
-   FT5336_CTRL_REG                     : constant Unsigned_8 := 16#86#;
+   FT5336_CTRL_REG                     : constant UInt8 := 16#86#;
 
    --  Values related to FT5336_CTRL_REG
 
    --  Will keep the Active mode when there is no touching
-   FT5336_CTRL_KEEP_ACTIVE_MODE        : constant Unsigned_8 := 16#00#;
+   FT5336_CTRL_KEEP_ACTIVE_MODE        : constant UInt8 := 16#00#;
 
    --  Switching from Active mode to Monitor mode automatically when there
    --  is no touching
-   FT5336_CTRL_KEEP_AUTO_SWITCH_MONITOR_MODE : constant Unsigned_8 := 16#01#;
+   FT5336_CTRL_KEEP_AUTO_SWITCH_MONITOR_MODE : constant UInt8 := 16#01#;
 
    --  The time period of switching from Active mode to Monitor mode when
    --  there is no touching
-   FT5336_TIMEENTERMONITOR_REG               : constant Unsigned_8 := 16#87#;
+   FT5336_TIMEENTERMONITOR_REG               : constant UInt8 := 16#87#;
 
    --  Report rate in Active mode
-   FT5336_PERIODACTIVE_REG             : constant Unsigned_8 := 16#88#;
+   FT5336_PERIODACTIVE_REG             : constant UInt8 := 16#88#;
 
    --  Report rate in Monitor mode
-   FT5336_PERIODMONITOR_REG            : constant Unsigned_8 := 16#89#;
+   FT5336_PERIODMONITOR_REG            : constant UInt8 := 16#89#;
 
    --  The value of the minimum allowed angle while Rotating gesture mode
-   FT5336_RADIAN_VALUE_REG             : constant Unsigned_8 := 16#91#;
+   FT5336_RADIAN_VALUE_REG             : constant UInt8 := 16#91#;
 
    --  Maximum offset while Moving Left and Moving Right gesture
-   FT5336_OFFSET_LEFT_RIGHT_REG        : constant Unsigned_8 := 16#92#;
+   FT5336_OFFSET_LEFT_RIGHT_REG        : constant UInt8 := 16#92#;
 
    --  Maximum offset while Moving Up and Moving Down gesture
-   FT5336_OFFSET_UP_DOWN_REG           : constant Unsigned_8 := 16#93#;
+   FT5336_OFFSET_UP_DOWN_REG           : constant UInt8 := 16#93#;
 
    --  Minimum distance while Moving Left and Moving Right gesture
-   FT5336_DISTANCE_LEFT_RIGHT_REG      : constant Unsigned_8 := 16#94#;
+   FT5336_DISTANCE_LEFT_RIGHT_REG      : constant UInt8 := 16#94#;
 
    --  Minimum distance while Moving Up and Moving Down gesture
-   FT5336_DISTANCE_UP_DOWN_REG         : constant Unsigned_8 := 16#95#;
+   FT5336_DISTANCE_UP_DOWN_REG         : constant UInt8 := 16#95#;
 
    --  Maximum distance while Zoom In and Zoom Out gesture
-   FT5336_DISTANCE_ZOOM_REG            : constant Unsigned_8 := 16#96#;
+   FT5336_DISTANCE_ZOOM_REG            : constant UInt8 := 16#96#;
 
    --  High 8-bit of LIB Version info
-   FT5336_LIB_VER_H_REG                : constant Unsigned_8 := 16#A1#;
+   FT5336_LIB_VER_H_REG                : constant UInt8 := 16#A1#;
 
    --  Low 8-bit of LIB Version info
-   FT5336_LIB_VER_L_REG                : constant Unsigned_8 := 16#A2#;
+   FT5336_LIB_VER_L_REG                : constant UInt8 := 16#A2#;
 
    --  Chip Selecting
-   FT5336_CIPHER_REG                   : constant Unsigned_8 := 16#A3#;
+   FT5336_CIPHER_REG                   : constant UInt8 := 16#A3#;
 
    --  Interrupt mode register (used when in interrupt mode)
-   FT5336_GMODE_REG                    : constant Unsigned_8 := 16#A4#;
+   FT5336_GMODE_REG                    : constant UInt8 := 16#A4#;
 
-   FT5336_G_MODE_INTERRUPT_MASK        : constant Unsigned_8 := 16#03#;
+   FT5336_G_MODE_INTERRUPT_MASK        : constant UInt8 := 16#03#;
 
    --  Possible values of FT5336_GMODE_REG
-   FT5336_G_MODE_INTERRUPT_POLLING     : constant Unsigned_8 := 16#00#;
-   FT5336_G_MODE_INTERRUPT_TRIGGER     : constant Unsigned_8 := 16#01#;
+   FT5336_G_MODE_INTERRUPT_POLLING     : constant UInt8 := 16#00#;
+   FT5336_G_MODE_INTERRUPT_TRIGGER     : constant UInt8 := 16#01#;
 
    --  Current power mode the FT5336 system is in (R)
-   FT5336_PWR_MODE_REG                 : constant Unsigned_8 := 16#A5#;
+   FT5336_PWR_MODE_REG                 : constant UInt8 := 16#A5#;
 
    --  FT5336 firmware version
-   FT5336_FIRMID_REG                   : constant Unsigned_8 := 16#A6#;
+   FT5336_FIRMID_REG                   : constant UInt8 := 16#A6#;
 
    --  FT5336 Chip identification register
-   FT5336_CHIP_ID_REG                  : constant Unsigned_8 := 16#A8#;
+   FT5336_CHIP_ID_REG                  : constant UInt8 := 16#A8#;
 
    --   Possible values of FT5336_CHIP_ID_REG
-   FT5336_ID_VALUE                     : constant Unsigned_8 := 16#51#;
+   FT5336_ID_VALUE                     : constant UInt8 := 16#51#;
 
    --  Release code version
-   FT5336_RELEASE_CODE_ID_REG          : constant Unsigned_8 := 16#AF#;
+   FT5336_RELEASE_CODE_ID_REG          : constant UInt8 := 16#AF#;
 
    --  Current operating mode the FT5336 system is in (R)
-   FT5336_STATE_REG                    : constant Unsigned_8 := 16#BC#;
+   FT5336_STATE_REG                    : constant UInt8 := 16#BC#;
 
    pragma Warnings (On, "* is not referenced");
 
@@ -267,9 +266,9 @@ package body FT5336 is
    --------------
 
    function I2C_Read (This   : in out FT5336_Device;
-                      Reg    : Byte;
+                      Reg    : UInt8;
                       Status : out Boolean)
-                      return Byte
+                      return UInt8
    is
       Ret        : I2C_Data (1 .. 1);
       Tmp_Status : I2C_Status;
@@ -291,8 +290,8 @@ package body FT5336 is
    ---------------
 
    procedure I2C_Write (This   : in out FT5336_Device;
-                        Reg    : Byte;
-                        Data   : Byte;
+                        Reg    : UInt8;
+                        Data   : UInt8;
                         Status : out Boolean)
    is
       Tmp_Status : I2C_Status;
@@ -312,7 +311,7 @@ package body FT5336 is
 
    function Check_Id (This : in out FT5336_Device) return Boolean
    is
-      Id     : Unsigned_8;
+      Id     : UInt8;
       Status : Boolean;
 
    begin
@@ -338,7 +337,7 @@ package body FT5336 is
    procedure TP_Set_Use_Interrupts (This    : in out FT5336_Device;
                                     Enabled : Boolean)
    is
-      Reg_Value : Unsigned_8 := 0;
+      Reg_Value : UInt8 := 0;
       Status    : Boolean with Unreferenced;
    begin
       if Enabled then
@@ -375,7 +374,7 @@ package body FT5336 is
                                  return Touch_Identifier
    is
       Status   : Boolean;
-      Nb_Touch : Unsigned_8 := 0;
+      Nb_Touch : UInt8 := 0;
    begin
       Nb_Touch := This.I2C_Read (FT5336_TD_STAT_REG, Status);
 
@@ -403,7 +402,7 @@ package body FT5336 is
                              return TP_Touch_State
    is
       type UInt16_HL_Type is record
-         High, Low : Unsigned_8;
+         High, Low : UInt8;
       end record with Size => 16;
       for UInt16_HL_Type use record
          High at 1 range 0 .. 7;
@@ -411,7 +410,7 @@ package body FT5336 is
       end record;
 
       function To_UInt16 is
-        new Ada.Unchecked_Conversion (UInt16_HL_Type, Unsigned_16);
+        new Ada.Unchecked_Conversion (UInt16_HL_Type, UInt16);
 
       Ret    : TP_Touch_State;
       Regs   : FT5336_Pressure_Registers;

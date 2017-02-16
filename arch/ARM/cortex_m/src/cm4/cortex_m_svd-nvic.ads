@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -49,9 +50,9 @@ package Cortex_M_SVD.NVIC is
    type STIR_Register is record
       --  Write-only. Interrupt ID of the interrupt to trigger, in the range
       --  0-239.
-      INTID         : STIR_INTID_Field := 16#60#;
+      INTID         : STIR_INTID_Field := 16#0#;
       --  unspecified
-      Reserved_9_31 : HAL.UInt23 := 16#214C8A#;
+      Reserved_9_31 : HAL.UInt23 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;

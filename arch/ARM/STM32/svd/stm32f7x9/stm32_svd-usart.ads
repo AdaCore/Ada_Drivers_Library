@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -333,8 +334,8 @@ package STM32_SVD.USART is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype GTPR_PSC_Field is HAL.Byte;
-   subtype GTPR_GT_Field is HAL.Byte;
+   subtype GTPR_PSC_Field is HAL.UInt8;
+   subtype GTPR_GT_Field is HAL.UInt8;
 
    --  Guard time and prescaler register
    type GTPR_Register is record
@@ -355,7 +356,7 @@ package STM32_SVD.USART is
    end record;
 
    subtype RTOR_RTO_Field is HAL.UInt24;
-   subtype RTOR_BLEN_Field is HAL.Byte;
+   subtype RTOR_BLEN_Field is HAL.UInt8;
 
    --  Receiver timeout register
    type RTOR_Register is record
@@ -624,34 +625,34 @@ package STM32_SVD.USART is
 
    --  Universal synchronous asynchronous receiver transmitter
    UART4_Periph : aliased USART_Peripheral
-     with Import, Address => UART4_Base;
+     with Import, Address => System'To_Address (16#40004C00#);
 
    --  Universal synchronous asynchronous receiver transmitter
    UART5_Periph : aliased USART_Peripheral
-     with Import, Address => UART5_Base;
+     with Import, Address => System'To_Address (16#40005000#);
 
    --  Universal synchronous asynchronous receiver transmitter
    UART7_Periph : aliased USART_Peripheral
-     with Import, Address => UART7_Base;
+     with Import, Address => System'To_Address (16#40007800#);
 
    --  Universal synchronous asynchronous receiver transmitter
    UART8_Periph : aliased USART_Peripheral
-     with Import, Address => UART8_Base;
+     with Import, Address => System'To_Address (16#40007C00#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART1_Periph : aliased USART_Peripheral
-     with Import, Address => USART1_Base;
+     with Import, Address => System'To_Address (16#40011000#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART2_Periph : aliased USART_Peripheral
-     with Import, Address => USART2_Base;
+     with Import, Address => System'To_Address (16#40004400#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART3_Periph : aliased USART_Peripheral
-     with Import, Address => USART3_Base;
+     with Import, Address => System'To_Address (16#40004800#);
 
    --  Universal synchronous asynchronous receiver transmitter
    USART6_Periph : aliased USART_Peripheral
-     with Import, Address => USART6_Base;
+     with Import, Address => System'To_Address (16#40011400#);
 
 end STM32_SVD.USART;

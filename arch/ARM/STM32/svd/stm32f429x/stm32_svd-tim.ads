@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -563,7 +564,7 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype RCR_REP_Field is HAL.Byte;
+   subtype RCR_REP_Field is HAL.UInt8;
 
    --  repetition counter register
    type RCR_Register is record
@@ -648,7 +649,7 @@ package STM32_SVD.TIM is
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype BDTR_DTG_Field is HAL.Byte;
+   subtype BDTR_DTG_Field is HAL.UInt8;
    subtype BDTR_LOCK_Field is HAL.UInt2;
 
    --  break and dead-time register
@@ -1764,11 +1765,11 @@ package STM32_SVD.TIM is
 
    --  Advanced-timers
    TIM1_Periph : aliased TIM1_Peripheral
-     with Import, Address => TIM1_Base;
+     with Import, Address => System'To_Address (16#40010000#);
 
    --  Advanced-timers
    TIM8_Periph : aliased TIM1_Peripheral
-     with Import, Address => TIM8_Base;
+     with Import, Address => System'To_Address (16#40010400#);
 
    type TIM2_Disc is
      (
@@ -1854,7 +1855,7 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM2_Periph : aliased TIM2_Peripheral
-     with Import, Address => TIM2_Base;
+     with Import, Address => System'To_Address (16#40000000#);
 
    type TIM3_Disc is
      (
@@ -1937,11 +1938,11 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM3_Periph : aliased TIM3_Peripheral
-     with Import, Address => TIM3_Base;
+     with Import, Address => System'To_Address (16#40000400#);
 
    --  General purpose timers
    TIM4_Periph : aliased TIM3_Peripheral
-     with Import, Address => TIM4_Base;
+     with Import, Address => System'To_Address (16#40000800#);
 
    type TIM5_Disc is
      (
@@ -2027,7 +2028,7 @@ package STM32_SVD.TIM is
 
    --  General-purpose-timers
    TIM5_Periph : aliased TIM5_Peripheral
-     with Import, Address => TIM5_Base;
+     with Import, Address => System'To_Address (16#40000C00#);
 
    --  Basic timers
    type TIM6_Peripheral is record
@@ -2063,11 +2064,11 @@ package STM32_SVD.TIM is
 
    --  Basic timers
    TIM6_Periph : aliased TIM6_Peripheral
-     with Import, Address => TIM6_Base;
+     with Import, Address => System'To_Address (16#40001000#);
 
    --  Basic timers
    TIM7_Periph : aliased TIM6_Peripheral
-     with Import, Address => TIM7_Base;
+     with Import, Address => System'To_Address (16#40001400#);
 
    type TIM9_Disc is
      (
@@ -2132,11 +2133,11 @@ package STM32_SVD.TIM is
 
    --  General purpose timers
    TIM9_Periph : aliased TIM9_Peripheral
-     with Import, Address => TIM9_Base;
+     with Import, Address => System'To_Address (16#40014000#);
 
    --  General purpose timers
    TIM12_Periph : aliased TIM9_Peripheral
-     with Import, Address => TIM12_Base;
+     with Import, Address => System'To_Address (16#40001800#);
 
    type TIM10_Disc is
      (
@@ -2192,15 +2193,15 @@ package STM32_SVD.TIM is
 
    --  General-purpose-timers
    TIM10_Periph : aliased TIM10_Peripheral
-     with Import, Address => TIM10_Base;
+     with Import, Address => System'To_Address (16#40014400#);
 
    --  General-purpose-timers
    TIM13_Periph : aliased TIM10_Peripheral
-     with Import, Address => TIM13_Base;
+     with Import, Address => System'To_Address (16#40001C00#);
 
    --  General-purpose-timers
    TIM14_Periph : aliased TIM10_Peripheral
-     with Import, Address => TIM14_Base;
+     with Import, Address => System'To_Address (16#40002000#);
 
    type TIM11_Disc is
      (
@@ -2259,6 +2260,6 @@ package STM32_SVD.TIM is
 
    --  General-purpose-timers
    TIM11_Periph : aliased TIM11_Peripheral
-     with Import, Address => TIM11_Base;
+     with Import, Address => System'To_Address (16#40014800#);
 
 end STM32_SVD.TIM;

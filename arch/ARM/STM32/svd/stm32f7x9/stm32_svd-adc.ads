@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -388,7 +389,7 @@ package STM32_SVD.ADC is
       --  Regular channel sequence length
       L              : SQR1_L_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -664,7 +665,7 @@ package STM32_SVD.ADC is
       --  Temperature sensor and VREFINT enable
       TSVREFE        : Boolean := False;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -785,15 +786,15 @@ package STM32_SVD.ADC is
 
    --  Analog-to-digital converter
    ADC1_Periph : aliased ADC1_Peripheral
-     with Import, Address => ADC1_Base;
+     with Import, Address => System'To_Address (16#40012000#);
 
    --  Analog-to-digital converter
    ADC2_Periph : aliased ADC1_Peripheral
-     with Import, Address => ADC2_Base;
+     with Import, Address => System'To_Address (16#40012100#);
 
    --  Analog-to-digital converter
    ADC3_Periph : aliased ADC1_Peripheral
-     with Import, Address => ADC3_Base;
+     with Import, Address => System'To_Address (16#40012200#);
 
    --  Common ADC registers
    type C_ADC_Peripheral is record
@@ -814,6 +815,6 @@ package STM32_SVD.ADC is
 
    --  Common ADC registers
    C_ADC_Periph : aliased C_ADC_Peripheral
-     with Import, Address => C_ADC_Base;
+     with Import, Address => System'To_Address (16#40012300#);
 
 end STM32_SVD.ADC;

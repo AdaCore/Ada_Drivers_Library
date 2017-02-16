@@ -119,7 +119,7 @@ package STM32.DSI is
       PLL_IN_Div               : DSI_PLL_IDF;
       PLL_OUT_Div              : DSI_PLL_ODF;
       Auto_Clock_Lane_Control  : Boolean;
-      TX_Escape_Clock_Division : Byte;
+      TX_Escape_Clock_Division : UInt8;
       --  The TX_ESC clock division. 0 or 1 stops the clock.
       Number_Of_Lanes          : DSI_Number_Of_Lanes);
 
@@ -145,8 +145,8 @@ package STM32.DSI is
       Vertical_FrontPorch         : UInt10;
       Vertical_Active             : UInt14;
       LP_Command_Enabled          : Boolean;
-      LP_Largest_Packet_Size      : Byte;
-      LP_VACT_Largest_Packet_Size : Byte;
+      LP_Largest_Packet_Size      : UInt8;
+      LP_VACT_Largest_Packet_Size : UInt8;
       LP_H_Front_Porch_Enable     : Boolean;
       LP_H_Back_Porch_Enable      : Boolean;
       LP_V_Active_Enable          : Boolean;
@@ -200,15 +200,15 @@ package STM32.DSI is
      (This       : in out DSI_Host;
       Channel_ID : HAL.DSI.DSI_Virtual_Channel_ID;
       Mode       : HAL.DSI.DSI_Short_Write_Packet_Data_Type;
-      Param1     : Byte;
-      Param2     : Byte);
+      Param1     : UInt8;
+      Param2     : UInt8);
 
    overriding
    procedure DSI_Long_Write
      (This       : in out DSI_Host;
       Channel_Id : HAL.DSI.DSI_Virtual_Channel_ID;
       Mode       : HAL.DSI.DSI_Long_Write_Packet_Data_Type;
-      Param1     : Byte;
+      Param1     : UInt8;
       Parameters : HAL.DSI.DSI_Data);
 private
    type DSI_Host (Periph : not null access SVD_DSI.DSI_Peripheral) is

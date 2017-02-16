@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 with NRF51_SVD.TEMP; use NRF51_SVD.TEMP;
-with Interfaces;     use Interfaces;
+with HAL;            use HAL;
 
 package body nRF51.Temperature is
 

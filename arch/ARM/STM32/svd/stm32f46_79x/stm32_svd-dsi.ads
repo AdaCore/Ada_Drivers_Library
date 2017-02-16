@@ -2,6 +2,7 @@
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
+pragma Style_Checks (Off);
 
 with HAL;
 with System;
@@ -28,8 +29,8 @@ package STM32_SVD.DSI is
       Reserved_1_31 at 0 range 1 .. 31;
    end record;
 
-   subtype DSI_CCR_TXECKDIV_Field is HAL.Byte;
-   subtype DSI_CCR_TOCKDIV_Field is HAL.Byte;
+   subtype DSI_CCR_TXECKDIV_Field is HAL.UInt8;
+   subtype DSI_CCR_TOCKDIV_Field is HAL.UInt8;
 
    --  DSI HOST Clock Control Register
    type DSI_CCR_Register is record
@@ -110,19 +111,19 @@ package STM32_SVD.DSI is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   subtype DSI_LPMCR_VLPSIZE_Field is HAL.Byte;
-   subtype DSI_LPMCR_LPSIZE_Field is HAL.Byte;
+   subtype DSI_LPMCR_VLPSIZE_Field is HAL.UInt8;
+   subtype DSI_LPMCR_LPSIZE_Field is HAL.UInt8;
 
    --  DSI Host Low-Power Mode Configuration Register
    type DSI_LPMCR_Register is record
       --  VACT Largest Packet Size
       VLPSIZE        : DSI_LPMCR_VLPSIZE_Field := 16#0#;
       --  unspecified
-      Reserved_8_15  : HAL.Byte := 16#0#;
+      Reserved_8_15  : HAL.UInt8 := 16#0#;
       --  Largest Packet Size
       LPSIZE         : DSI_LPMCR_LPSIZE_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -504,8 +505,8 @@ package STM32_SVD.DSI is
 
    subtype DSI_GHCR_DT_Field is HAL.UInt6;
    subtype DSI_GHCR_VCID_Field is HAL.UInt2;
-   subtype DSI_GHCR_WCLSB_Field is HAL.Byte;
-   subtype DSI_GHCR_WCMSB_Field is HAL.Byte;
+   subtype DSI_GHCR_WCLSB_Field is HAL.UInt8;
+   subtype DSI_GHCR_WCMSB_Field is HAL.UInt8;
 
    --  DSI Host Generic Header Configuration Register
    type DSI_GHCR_Register is record
@@ -518,7 +519,7 @@ package STM32_SVD.DSI is
       --  WordCount MSB
       WCMSB          : DSI_GHCR_WCMSB_Field := 16#0#;
       --  unspecified
-      Reserved_24_31 : HAL.Byte := 16#0#;
+      Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -532,7 +533,7 @@ package STM32_SVD.DSI is
    end record;
 
    --  DSI_GPDR_DATA array element
-   subtype DSI_GPDR_DATA_Element is HAL.Byte;
+   subtype DSI_GPDR_DATA_Element is HAL.UInt8;
 
    --  DSI_GPDR_DATA array
    type DSI_GPDR_DATA_Field_Array is array (1 .. 4) of DSI_GPDR_DATA_Element
@@ -651,7 +652,7 @@ package STM32_SVD.DSI is
       --  High-Speed Write Timeout Counter
       HSWR_TOCNT     : DSI_TCCR3_HSWR_TOCNT_Field := 16#0#;
       --  unspecified
-      Reserved_16_23 : HAL.Byte := 16#0#;
+      Reserved_16_23 : HAL.UInt8 := 16#0#;
       --  Presp Mode
       PM             : Boolean := False;
       --  unspecified
@@ -744,8 +745,8 @@ package STM32_SVD.DSI is
    end record;
 
    subtype DSI_DLTCR_MRD_TIME_Field is HAL.UInt15;
-   subtype DSI_DLTCR_LP2HS_TIME_Field is HAL.Byte;
-   subtype DSI_DLTCR_HS2LP_TIME_Field is HAL.Byte;
+   subtype DSI_DLTCR_LP2HS_TIME_Field is HAL.UInt8;
+   subtype DSI_DLTCR_HS2LP_TIME_Field is HAL.UInt8;
 
    --  DSI Host Data Lane Timer Configuration Register
    type DSI_DLTCR_Register is record
@@ -790,7 +791,7 @@ package STM32_SVD.DSI is
    end record;
 
    subtype DSI_PCONFR_NL_Field is HAL.UInt2;
-   subtype DSI_PCONFR_SW_TIME_Field is HAL.Byte;
+   subtype DSI_PCONFR_SW_TIME_Field is HAL.UInt8;
 
    --  DSI Host PHY Configuration Register
    type DSI_PCONFR_Register is record
@@ -1316,19 +1317,19 @@ package STM32_SVD.DSI is
       Reserved_9_31 at 0 range 9 .. 31;
    end record;
 
-   subtype DSI_LPMCCR_VLPSIZE_Field is HAL.Byte;
-   subtype DSI_LPMCCR_LPSIZE_Field is HAL.Byte;
+   subtype DSI_LPMCCR_VLPSIZE_Field is HAL.UInt8;
+   subtype DSI_LPMCCR_LPSIZE_Field is HAL.UInt8;
 
    --  DSI Host Low-power Mode Current Configuration Register
    type DSI_LPMCCR_Register is record
       --  Read-only. VACT Largest Packet Size
       VLPSIZE        : DSI_LPMCCR_VLPSIZE_Field;
       --  unspecified
-      Reserved_8_15  : HAL.Byte;
+      Reserved_8_15  : HAL.UInt8;
       --  Read-only. Largest Packet Size
       LPSIZE         : DSI_LPMCCR_LPSIZE_Field;
       --  unspecified
-      Reserved_24_31 : HAL.Byte;
+      Reserved_24_31 : HAL.UInt8;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1904,10 +1905,10 @@ package STM32_SVD.DSI is
       Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
-   subtype DSI_WPCR3_TCLKPREP_Field is HAL.Byte;
-   subtype DSI_WPCR3_TCLKZEO_Field is HAL.Byte;
-   subtype DSI_WPCR3_THSPREP_Field is HAL.Byte;
-   subtype DSI_WPCR3_THSTRAIL_Field is HAL.Byte;
+   subtype DSI_WPCR3_TCLKPREP_Field is HAL.UInt8;
+   subtype DSI_WPCR3_TCLKZEO_Field is HAL.UInt8;
+   subtype DSI_WPCR3_THSPREP_Field is HAL.UInt8;
+   subtype DSI_WPCR3_THSTRAIL_Field is HAL.UInt8;
 
    --  DSI Wrapper PHY Configuration Register 3
    type DSI_WPCR3_Register is record
@@ -1930,10 +1931,10 @@ package STM32_SVD.DSI is
       THSTRAIL at 0 range 24 .. 31;
    end record;
 
-   subtype DSI_WPCR4_THSZERO_Field is HAL.Byte;
-   subtype DSI_WPCR4_TLPXD_Field is HAL.Byte;
-   subtype DSI_WPCR4_THSEXIT_Field is HAL.Byte;
-   subtype DSI_WPCR4_TLPXC_Field is HAL.Byte;
+   subtype DSI_WPCR4_THSZERO_Field is HAL.UInt8;
+   subtype DSI_WPCR4_TLPXD_Field is HAL.UInt8;
+   subtype DSI_WPCR4_THSEXIT_Field is HAL.UInt8;
+   subtype DSI_WPCR4_TLPXC_Field is HAL.UInt8;
 
    --  DSI_WPCR4
    type DSI_WPCR4_Register is record
@@ -1956,7 +1957,7 @@ package STM32_SVD.DSI is
       TLPXC   at 0 range 24 .. 31;
    end record;
 
-   subtype DSI_WPCR5_THSZERO_Field is HAL.Byte;
+   subtype DSI_WPCR5_THSZERO_Field is HAL.UInt8;
 
    --  DSI Wrapper PHY Configuration Register 5
    type DSI_WPCR5_Register is record
@@ -2246,6 +2247,6 @@ package STM32_SVD.DSI is
 
    --  DSI Host
    DSI_Periph : aliased DSI_Peripheral
-     with Import, Address => DSI_Base;
+     with Import, Address => System'To_Address (16#40016C00#);
 
 end STM32_SVD.DSI;

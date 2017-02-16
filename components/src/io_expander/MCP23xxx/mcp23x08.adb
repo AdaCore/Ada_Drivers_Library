@@ -29,28 +29,27 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
 with Ada.Unchecked_Conversion;
 with HAL.GPIO;                   use HAL.GPIO;
 
 package body MCP23x08 is
 
-   function To_Byte is
+   function To_UInt8 is
       new Ada.Unchecked_Conversion (Source => ALl_IO_Array,
-                                    Target => Byte);
+                                    Target => UInt8);
    function To_All_IO_Array is
-      new Ada.Unchecked_Conversion (Source => Byte,
+      new Ada.Unchecked_Conversion (Source => UInt8,
                                     Target => ALl_IO_Array);
    procedure Loc_IO_Write
      (This      : in out MCP23x08_IO_Expander'Class;
       WriteAddr : Register_Address;
-      Value     : Byte)
+      Value     : UInt8)
      with Inline_Always;
 
    procedure Loc_IO_Read
      (This     : MCP23x08_IO_Expander'Class;
       ReadAddr : Register_Address;
-      Value    : out Byte)
+      Value    : out UInt8)
      with Inline_Always;
 
    procedure Set_Bit
@@ -76,7 +75,7 @@ package body MCP23x08 is
    procedure Loc_IO_Write
      (This      : in out MCP23x08_IO_Expander'Class;
       WriteAddr : Register_Address;
-      Value     : Byte)
+      Value     : UInt8)
    is
 
    begin
@@ -90,7 +89,7 @@ package body MCP23x08 is
    procedure Loc_IO_Read
      (This     : MCP23x08_IO_Expander'Class;
       ReadAddr : Register_Address;
-      Value    : out Byte)
+      Value    : out UInt8)
       is
    begin
       IO_Read (This, ReadAddr, Value);
@@ -105,7 +104,7 @@ package body MCP23x08 is
       RegAddr : Register_Address;
       Pin     : MCP23x08_Pin)
    is
-      Prev, Next : Byte;
+      Prev, Next : UInt8;
    begin
       Loc_IO_Read (This, RegAddr, Prev);
       Next := Prev or Pin'Enum_Rep;
@@ -123,7 +122,7 @@ package body MCP23x08 is
       RegAddr : Register_Address;
       Pin     : MCP23x08_Pin)
    is
-      Prev, Next : Byte;
+      Prev, Next : UInt8;
    begin
       Loc_IO_Read (This, RegAddr, Prev);
       Next := Prev and (not  Pin'Enum_Rep);
@@ -142,7 +141,7 @@ package body MCP23x08 is
       Pin     : MCP23x08_Pin)
       return Boolean
    is
-      Reg : Byte;
+      Reg : UInt8;
    begin
       Loc_IO_Read (This, RegAddr, Reg);
       return (Reg and Pin'Enum_Rep) /= 0;
@@ -221,7 +220,7 @@ package body MCP23x08 is
    function Set (This  : MCP23x08_IO_Expander;
                  Pin   : MCP23x08_Pin) return Boolean
    is
-      Val : Byte;
+      Val : UInt8;
    begin
       Loc_IO_Read (This, LOGIC_LEVLEL_REG, Val);
       return (Pin'Enum_Rep and Val) /= 0;
@@ -269,7 +268,7 @@ package body MCP23x08 is
    ------------
 
    function All_IO (This : in out MCP23x08_IO_Expander) return ALl_IO_Array is
-      Val : Byte;
+      Val : UInt8;
    begin
       Loc_IO_Read (This, LOGIC_LEVLEL_REG, Val);
       return To_All_IO_Array (Val);
@@ -281,7 +280,7 @@ package body MCP23x08 is
 
    procedure Set_All_IO (This : in out MCP23x08_IO_Expander; IOs : ALl_IO_Array) is
    begin
-      Loc_IO_Write (This, LOGIC_LEVLEL_REG, To_Byte (IOs));
+      Loc_IO_Write (This, LOGIC_LEVLEL_REG, To_UInt8 (IOs));
    end Set_All_IO;
 
    -------------------

@@ -99,12 +99,12 @@ private
 
    overriding
    function Read (This : in out SHFS_File_Handle;
-                  Data : out Byte_Array)
+                  Data : out UInt8_Array)
                   return Status_Kind;
 
    overriding
    function Write (This : in out SHFS_File_Handle;
-                   Data : Byte_Array)
+                   Data : UInt8_Array)
                    return Status_Kind;
 
    overriding

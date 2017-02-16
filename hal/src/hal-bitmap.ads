@@ -79,10 +79,10 @@ package HAL.Bitmap is
    end record;
 
    type Bitmap_Color is record
-      Alpha : Byte;
-      Red   : Byte;
-      Green : Byte;
-      Blue  : Byte;
+      Alpha : UInt8;
+      Red   : UInt8;
+      Green : UInt8;
+      Blue  : UInt8;
    end record with Size => 32;
 
    for Bitmap_Color use record

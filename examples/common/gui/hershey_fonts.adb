@@ -139,13 +139,13 @@ package body Hershey_Fonts is
       Fnt_Idx     : Natural;
       Fnt_Y_Min   : Integer_8 := Integer_8'Last;
 
-      function To_Byte (S : String) return Natural;
+      function To_UInt8 (S : String) return Natural;
 
       -------------
-      -- To_Byte --
+      -- To_UInt8 --
       -------------
 
-      function To_Byte (S : String) return Natural
+      function To_UInt8 (S : String) return Natural
       is
          Ret : Natural := 0;
       begin
@@ -155,7 +155,7 @@ package body Hershey_Fonts is
             end if;
          end loop;
          return Ret;
-      end To_Byte;
+      end To_UInt8;
 
    begin
       Fnt_Idx := Fnt'First;
@@ -165,7 +165,7 @@ package body Hershey_Fonts is
          Fnt_Idx := Fnt_Idx + 5;
 
          declare
-            Size  : constant Natural := To_Byte (Fnt (Fnt_Idx .. Fnt_Idx + 2));
+            Size  : constant Natural := To_UInt8 (Fnt (Fnt_Idx .. Fnt_Idx + 2));
             G     : Glyph;
             CStr  : String (1 .. 2);
             C     : Coord;
@@ -198,7 +198,7 @@ package body Hershey_Fonts is
                      --  First coordinate tells the left and right borders of
                      --  the glyph.
                      Left := C.X;
-                     G.Width := Unsigned_8 (C.Y - C.X + 1);
+                     G.Width := UInt8 (C.Y - C.X + 1);
                   else
                      C.X := C.X - Left;
                      XMin := Integer_8'Min (XMin, C.X);
@@ -216,7 +216,7 @@ package body Hershey_Fonts is
             if G.Vertices = 0 then
                G.Height := 0;
             else
-               G.Height := Unsigned_8 (YMax - YMin);
+               G.Height := UInt8 (YMax - YMin);
                Fnt_Y_Min := Integer_8'Min (YMin, Fnt_Y_Min);
             end if;
 
@@ -238,8 +238,8 @@ package body Hershey_Fonts is
                end if;
             end loop;
 
-            Ret.Baseline := Unsigned_8 (-Fnt_Y_Min);
-            Ret.Font_Height := Unsigned_8'Max (Ret.Font_Height, G.Height);
+            Ret.Baseline := UInt8 (-Fnt_Y_Min);
+            Ret.Font_Height := UInt8'Max (Ret.Font_Height, G.Height);
          end;
       end loop;
    end Read;
