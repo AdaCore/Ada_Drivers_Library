@@ -54,7 +54,7 @@ package Serial_Port is
    --  convenience routine
 
 
-   type Error_Conditions is new Byte;
+   type Error_Conditions is new UInt8;
 
    No_Error_Detected      : constant Error_Conditions := 2#0000_0000#;
    Parity_Error_Detected  : constant Error_Conditions := 2#0000_0001#;

@@ -1,7 +1,7 @@
-with "../../../../boards/common_config.gpr";
-with "../../../../boards/stm32f429_discovery.gpr";
+with "../../../../../boards/common_config.gpr";
+with "../../../../../boards/stm32f429_discovery.gpr";
 
-project Demo_CRC extends "../../../../examples/common/common.gpr" is
+project Demo_CRC extends "../../../../../examples/common/common.gpr" is
 
    for Runtime ("Ada") use STM32F429_Discovery'Runtime ("Ada");
 

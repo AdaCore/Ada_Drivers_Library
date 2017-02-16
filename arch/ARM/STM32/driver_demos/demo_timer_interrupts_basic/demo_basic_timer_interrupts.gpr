@@ -1,7 +1,7 @@
-with "../../../../boards/common_config.gpr";
-with "../../../../boards/stm32f407_discovery.gpr";
+with "../../../../../boards/common_config.gpr";
+with "../../../../../boards/stm32f407_discovery.gpr";
 
-project demo_basic_timer_interrupts extends "../../../../examples/common/common.gpr" is
+project demo_basic_timer_interrupts extends "../../../../../examples/common/common.gpr" is
 
    for Languages use ("Ada");
    for Main use ("demo.adb");

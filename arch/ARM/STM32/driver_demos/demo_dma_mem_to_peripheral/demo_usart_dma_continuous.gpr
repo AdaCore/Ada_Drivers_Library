@@ -1,7 +1,7 @@
-with "../../../../boards/common_config.gpr";
-with "../../../../boards/stm32f407_discovery.gpr";
+with "../../../../../boards/common_config.gpr";
+with "../../../../../boards/stm32f407_discovery.gpr";
 
-project Demo_USART_DMA_Continuous extends "../../../../examples/common/common.gpr" is
+project Demo_USART_DMA_Continuous extends "../../../../../examples/common/common.gpr" is
 
    for Main use ("demo_usart_dma_continuous.adb");
    for Languages use ("Ada");
