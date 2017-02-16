@@ -31,7 +31,6 @@
 
 with STM32.Device; use STM32.Device;
 with STM32.ADC;    use STM32.ADC;
-with Interfaces;   use Interfaces;
 
 package body ADC_Interrupt_Handling is
 

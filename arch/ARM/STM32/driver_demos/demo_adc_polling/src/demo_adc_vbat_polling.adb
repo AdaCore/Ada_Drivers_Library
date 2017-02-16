@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                  Copyright (C) 2015-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -35,7 +35,6 @@
 --  Note that you will likely need to reset the board manually after loading.
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
-with Interfaces;   use Interfaces;
 
 with STM32.Board;  use STM32.Board;
 with STM32.Device; use STM32.Device;

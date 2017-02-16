@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2016, AdaCore                         --
+--                 Copyright (C) 2015-2017, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -55,8 +55,6 @@
 --        Encoder_Emulator.Stop;
 --        Encoder_Emulator.Emulate_Forward_Direction;
 --        Encoder_Emulator.Start;
-
-with Interfaces;    use Interfaces;
 
 with STM32.Device;  use STM32.Device;
 with STM32.GPIO;    use STM32.GPIO;

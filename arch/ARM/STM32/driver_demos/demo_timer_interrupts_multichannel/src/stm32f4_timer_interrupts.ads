@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                   Copyright (C) 2015-2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -40,7 +40,6 @@
 --  demonstration.
 
 with Ada.Interrupts.Names; use Ada.Interrupts.Names;
-with Interfaces;           use Interfaces;
 
 with STM32;                use STM32;
 with STM32.Device;         use STM32.Device;
