@@ -19,8 +19,8 @@ abstract project Common_Config is
               ("-g", "-O0", "-gnata", "-fcallgraph-info=su");
       end case;
       for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
-        ("-gnatwa", "-gnatQ", "-gnatw.X", "-gnaty", "-gnatyO", "-gnatyM120",
-         "-ffunction-sections", "-fdata-sections");
+        ("-gnatwa", "-gnatwe", "-gnatQ", "-gnatw.X", "-gnaty", "-gnatyO",
+         "-gnatyM120", "-ffunction-sections", "-fdata-sections");
    end Compiler;
 
    package Builder is
