@@ -131,4 +131,14 @@ package body STM32.WWDG is
       RCC_Periph.CSR.RMVF := True;
    end Clear_WWDG_Reset_Flag;
 
+   ------------------
+   -- Reset_System --
+   ------------------
+
+   procedure Reset_System is
+   begin
+      WWDG_Periph.CR.T := 0;
+      WWDG_Periph.CR.WDGA := True;
+   end Reset_System;
+
 end STM32.WWDG;

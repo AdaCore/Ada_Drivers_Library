@@ -128,4 +128,7 @@ package STM32.WWDG is  --  the Window Watchdog
    procedure Clear_WWDG_Reset_Flag;
    --  In the RCC peripheral
 
+   procedure Reset_System;
+   --  an immediate software-driven reset, just as if the count hit 16#3F#
+
 end STM32.WWDG;
