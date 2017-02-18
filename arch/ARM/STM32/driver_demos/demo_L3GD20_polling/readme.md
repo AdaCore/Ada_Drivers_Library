@@ -9,4 +9,5 @@ not moving, due to noise.
 
 Polling is used to determine when gyro data are available.
 
-
+Note that you will need to set the RTS scenaqrio variable to "ravenscar-full"
+because the demo code uses the floating point image attribute.

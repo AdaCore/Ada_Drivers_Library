@@ -14,3 +14,6 @@ each axis value and scale by the selected sensitivity. The adjusted and
 scaled values are displayed on each iteration. The stable bias offsets
 are also displayed, initially (not iteratively since they are not
 recomputed).
+
+Note that you will need to set the RTS scenaqrio variable to "ravenscar-full"
+because the demo code uses the floating point image attribute.
