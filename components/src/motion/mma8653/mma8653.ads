@@ -52,7 +52,7 @@ private
    type MMA8653_Accelerometer (Port : not null Any_I2C_Port) is tagged limited
      null record;
 
-   type Register_Addresss is new Byte;
+   type Register_Addresss is new UInt8;
 
    Device_Id  : constant := 16#5A#;
 

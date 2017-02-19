@@ -37,14 +37,14 @@ package body MMA8653 is
    function To_Int_16 is new Ada.Unchecked_Conversion (Unsigned_16, Integer_16);
 
    function Read_Register (This : MMA8653_Accelerometer'Class;
-                           Addr : Register_Addresss) return Byte;
+                           Addr : Register_Addresss) return UInt8;
 
    -------------------
    -- Read_Register --
    -------------------
 
    function Read_Register (This : MMA8653_Accelerometer'Class;
-                           Addr : Register_Addresss) return Byte
+                           Addr : Register_Addresss) return UInt8
    is
       Data   : I2C_Data (1 .. 1);
       Status : I2C_Status;
