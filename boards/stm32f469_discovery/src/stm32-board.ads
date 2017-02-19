@@ -34,6 +34,8 @@
 
 with Ada.Interrupts.Names;  use Ada.Interrupts;
 
+with HAL.Arduino_Headers;   use HAL.Arduino_Headers;
+
 with STM32.Device;  use STM32.Device;
 
 with STM32.DMA;     use STM32.DMA;
@@ -48,6 +50,7 @@ with Audio;
 with Framebuffer_OTM8009A;
 with Touch_Panel_FT6x06;
 with SDCard;
+with Arduino_Headers;
 
 package STM32.Board is
 
@@ -75,6 +78,9 @@ package STM32.Board is
    procedure All_LEDs_On  with Inline;
    procedure Toggle_LEDs (These : in out GPIO_Points)
      renames STM32.GPIO.Toggle;
+
+   function Arduino_Headers return not null Any_UNO_Headers
+     renames Arduino_Headers.Header;
 
    -----------
    -- SDRAM --
