@@ -691,13 +691,14 @@ package body STM32.I2C is
          This.Periph.DR.DR := Data (Idx);
          Idx := Idx + 1;
 
-         if Idx <= Data'Last then
-            Wait_Flag (This, UInt8_Transfer_Finished, True, Timeout, Status);
-
-            if Status = HAL.I2C.Ok then
-               This.Periph.DR.DR := Data (Idx);
-               Idx := Idx + 1;
-            end if;
+         if Flag_Status (This, Byte_Transfer_Finished)
+           and then
+            Idx <= Data'Last
+           and then
+            Status = HAL.I2C.Ok
+         then
+            This.Periph.DR.DR := Data (Idx);
+            Idx := Idx + 1;
          end if;
       end loop;
 
@@ -941,17 +942,14 @@ package body STM32.I2C is
          This.Periph.DR.DR := Data (Idx);
          Idx := Idx + 1;
 
-         if Idx <= Data'Last then
-            Wait_Flag (This,
-                       UInt8_Transfer_Finished,
-                       True,
-                       Timeout,
-                       Status);
-
-            if Status = HAL.I2C.Ok then
-               This.Periph.DR.DR := Data (Idx);
-               Idx := Idx + 1;
-            end if;
+         if Flag_Status (This, Byte_Transfer_Finished)
+           and then
+            Idx <= Data'Last
+           and then
+            Status = HAL.I2C.Ok
+         then
+            This.Periph.DR.DR := Data (Idx);
+            Idx := Idx + 1;
          end if;
       end loop;
 
