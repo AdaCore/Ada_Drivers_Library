@@ -9,3 +9,6 @@ movement. Note that the values are not constant, even when the board is
 not moving, due to noise.
 
 This program demonstrates use of interrupts rather than polling.
+
+Note that you will need to set the RTS scenario variable to "ravenscar-full"
+because the demo code uses the floating point image attribute.
