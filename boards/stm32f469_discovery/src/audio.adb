@@ -33,7 +33,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time;        use Ada.Real_Time;
-with Interfaces;           use Interfaces;
 
 with HAL;                  use HAL;
 with STM32;                use STM32;
