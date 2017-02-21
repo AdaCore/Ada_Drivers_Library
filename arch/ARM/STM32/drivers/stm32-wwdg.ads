@@ -32,12 +32,13 @@
 --  This package provides an interface to the on-board "window watchdog"
 --  provided by the STM32F4 family.
 
---  Important: see Figure 215 in RM0090, he STM32 reference manual,
+--  Important: see Figure 215 in RM0090, the STM32 reference manual,
 --  illustrating the watchdog behavior and significant events.
 --  Note that time is increasing to the right in the figure.
 --  www.st.com/resource/en/reference_manual/DM00031020.pdf
 
 package STM32.WWDG is  --  the Window Watchdog
+   pragma Elaborate_Body;
 
    procedure Enable_Watchdog_Clock;
 
@@ -50,15 +51,22 @@ package STM32.WWDG is  --  the Window Watchdog
       Divider_4,
       Divider_8)
      with Size => 2;
+   --  These prescalers are clock frequency dividers, with numeric divisor
+   --  values corresponding to the digits in the names. The dividers are used
+   --  to determine the watchdog counter clock frequency driving the countdown
+   --  timer.
+   --
+   --  The frequency is computed as follows:
+   --     PCLK1 / 4096 / divider-value
+   --  For example, assuming PCLK1 of 45MHz and Divider_8, we'd get:
+   --     45_000_000 / 4096 / 8 => 1373 Hz
+   --
+   --  The frequency can be used to calculate the time span values for the
+   --  refresh window, for example. See the demo program for doing that.
 
    procedure Set_Watchdog_Prescaler (Value : Prescalers);
    --  Set the divider used to derive the watchdog counter clock frequency
-   --  driving the countdown timer. The value is PCLK1 / 4096 / divider-value.
-   --  For example, assuming PCLK1 of 45MHz and Divider_8, we'd get:
-   --     45_000_000 / 4096 / 8 = 1373 Hz
-   --  You'd want to know that value if you want to calculate the time span
-   --  values for the refresh window, for example. See the demo program for
-   --  doing that.
+   --  driving the countdown timer.
    --
    --  Note that the watchdog counter only counts down to 16#40# (64) before
    --  triggering the reset, and the upper limit for the counter value is 127,
