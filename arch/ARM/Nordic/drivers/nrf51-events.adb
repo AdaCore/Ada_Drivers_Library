@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
 with Ada.Unchecked_Conversion;
 
 package body nRF51.Events is

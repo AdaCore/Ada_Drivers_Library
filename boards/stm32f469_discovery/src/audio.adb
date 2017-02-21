@@ -32,16 +32,15 @@
 --   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Real_Time;        use Ada.Real_Time;
-with Interfaces;           use Interfaces;
+with Ada.Real_Time; use Ada.Real_Time;
 
-with HAL;                  use HAL;
-with STM32;                use STM32;
-with STM32.Board;          use STM32.Board;
-with STM32.Device;         use STM32.Device;
-with STM32.GPIO;           use STM32.GPIO;
-with STM32.DMA;            use STM32.DMA;
-with STM32.SAI;            use STM32.SAI;
+with HAL;           use HAL;
+with STM32;         use STM32;
+with STM32.Board;   use STM32.Board;
+with STM32.Device;  use STM32.Device;
+with STM32.GPIO;    use STM32.GPIO;
+with STM32.DMA;     use STM32.DMA;
+with STM32.SAI;     use STM32.SAI;
 
 package body Audio is
 
