@@ -30,7 +30,6 @@
 ------------------------------------------------------------------------------
 
 with NRF51_SVD.RNG; use NRF51_SVD.RNG;
-with Interfaces;    use Interfaces;
 
 package body nRF51.RNG is
 

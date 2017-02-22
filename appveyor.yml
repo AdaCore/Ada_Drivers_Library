@@ -1,0 +1,61 @@
+# Appveyor continuous builder configuration
+
+# Version format, we don't have version number for ADL yet
+version: 0.0.{build}
+
+# Setup python for build and test-suite scripts
+environment:
+  PYTHON: C:\\Python27
+
+# Cache directories will be preseved from one build to the other
+cache:
+ - C:\ADL_tools\
+ 
+install:
+
+# Get the submodules
+- cmd: git submodule init
+- cmd: git submodule update --recursive
+
+
+# Define environment variables
+- ps: $env:TOOLS_DIR = "C:\ADL_tools\" 
+- ps: $env:GNAT_ARM_ELF_INSTALLER = $env:TOOLS_DIR + "gnat-gpl-2016-arm-elf-windows-bin.exe"
+
+# Show current dir and its content
+- cmd: cd
+- cmd: dir
+
+# Create the tool dir if it doesn't exists
+- ps: md -f $env:TOOLS_DIR
+
+# Show content of tool dir
+- ps: dir $env:TOOLS_DIR
+
+# Download compiler installer if not already in the tool dir 
+- ps: If (Test-Path $env:GNAT_ARM_ELF_INSTALLER){echo compiler already in cache}Else{(new-object net.webclient).DownloadFile('http://mirrors.cdn.adacore.com/art/5742ee65a3f5d77ed752e1ad', $env:GNAT_ARM_ELF_INSTALLER)}
+
+# Show content of tool dir again so we can see if the download was ok
+- ps: dir $env:TOOLS_DIR
+
+# Install the compiler
+- cmd: cmd /c start /wait %GNAT_ARM_ELF_INSTALLER% /S /D=%TOOLS_DIR%
+
+# Show content of tool dir again so we can see if install was ok
+- ps: dir $env:TOOLS_DIR
+
+# Add compiler to the PATH
+- ps: $env:Path += ";" + $env:TOOLS_DIR +"bin" 
+
+# Check that we can run the compiler (also display the version)
+- ps: arm-eabi-gnatls -v
+
+# Install optional dependencies
+- cmd: python scripts/install_optional_deps.py
+
+# We don't need a build step
+build: off
+
+# Run the test script(s)
+test_script:
+- cmd: python scripts/build_all_examples.py

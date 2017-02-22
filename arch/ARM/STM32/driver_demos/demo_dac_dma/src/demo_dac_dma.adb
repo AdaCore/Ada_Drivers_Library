@@ -58,8 +58,6 @@ with System;
 
 procedure Demo_DAC_DMA is
 
-   use type UInt32;
-
    ---------------------------------  DMA  ------------------------------------
 
    --  Note that DAC channel 1 uses DMA controller 1, Stream 5, Channel 7

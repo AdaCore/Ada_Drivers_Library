@@ -55,8 +55,6 @@ with LCD_Std_Out;  use LCD_Std_Out;
 
 procedure Demo_DAC_Basic is
 
-   use type UInt32;
-
    Output_Channel : constant DAC_Channel := Channel_1;  -- arbitrary
 
    procedure Configure_DAC_GPIO (Output_Channel : DAC_Channel);
