@@ -1,8 +1,39 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
+
 --  Driver for the WM8994 CODEC
 
-with Interfaces; use Interfaces;
-with HAL;        use HAL;
-with HAL.I2C;    use HAL.I2C;
+with HAL;       use HAL;
+with HAL.I2C;   use HAL.I2C;
+with HAL.Audio; use HAL.Audio;
 with HAL.Time;
 
 package CS43L22 is
@@ -19,36 +50,14 @@ package CS43L22 is
    CS43L22_ID       : constant := 16#E0#;
    CS43L22_ID_MASK  : constant := 16#F8#;
 
-   type Audio_Frequency is
-     (Audio_Freq_8kHz,
-      Audio_Freq_11kHz,
-      Audio_Freq_16kHz,
-      Audio_Freq_22kHz,
-      Audio_Freq_32kHz,
-      Audio_Freq_44kHz,
-      Audio_Freq_48kHz,
-      Audio_Freq_96kHz,
-      Audio_Freq_192kHz)
-     with Size => 32;
-   for Audio_Frequency use
-     (Audio_Freq_8kHz   =>  8_000,
-      Audio_Freq_11kHz  => 11_025,
-      Audio_Freq_16kHz  => 16_000,
-      Audio_Freq_22kHz  => 22_050,
-      Audio_Freq_32kHz  => 32_000,
-      Audio_Freq_44kHz  => 44_100,
-      Audio_Freq_48kHz  => 48_000,
-      Audio_Freq_96kHz  => 96_000,
-      Audio_Freq_192kHz => 192_000);
-
    type Mute is
      (Mute_On,
       Mute_Off);
 
-   subtype Volume_Level is Unsigned_8 range 0 .. 100;
+   subtype Volume_Level is UInt8 range 0 .. 100;
 
-   type CS43L22_Device (Port : not null I2C_Port_Ref;
-                        Time : not null HAL.Time.Delays_Ref) is
+   type CS43L22_Device (Port : not null Any_I2C_Port;
+                        Time : not null HAL.Time.Any_Delays) is
      tagged limited private;
 
    procedure Init (This      : in out CS43L22_Device;
@@ -56,7 +65,7 @@ package CS43L22 is
                    Volume    : Volume_Level;
                    Frequency : Audio_Frequency);
 
-   function Read_ID (This : in out CS43L22_Device) return Unsigned_8;
+   function Read_ID (This : in out CS43L22_Device) return UInt8;
    procedure Play (This : in out CS43L22_Device);
    procedure Pause (This : in out CS43L22_Device);
    procedure Resume (This : in out CS43L22_Device);
@@ -110,18 +119,18 @@ private
    CS43L22_REG_THERMAL_FOLDBACK    : constant := 16#33#;
    CS43L22_REG_CHARGE_PUMP_FREQ    : constant := 16#34#;
 
-   type CS43L22_Device (Port : not null I2C_Port_Ref;
-                        Time : not null HAL.Time.Delays_Ref) is
+   type CS43L22_Device (Port : not null Any_I2C_Port;
+                        Time : not null HAL.Time.Any_Delays) is
      tagged limited record
       Output_Enabled : Boolean := False;
-      Output_Dev     : Byte := 0;
+      Output_Dev     : UInt8 := 0;
    end record;
 
    procedure I2C_Write (This  : in out CS43L22_Device;
-                        Reg   : Byte;
-                        Value : Byte);
+                        Reg   : UInt8;
+                        Value : UInt8);
    function I2C_Read (This : in out CS43L22_Device;
-                      Reg  : Byte)
-                      return Byte;
+                      Reg  : UInt8)
+                      return UInt8;
 
 end CS43L22;

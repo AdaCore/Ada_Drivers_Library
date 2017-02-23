@@ -32,14 +32,13 @@
 --   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces;           use Interfaces;
-
-with STM32;                use STM32;
-with STM32.Device;         use STM32.Device;
-with STM32.Board;          use STM32.Board;
-with STM32.GPIO;           use STM32.GPIO;
-with STM32.DMA;            use STM32.DMA;
-with STM32.SAI;            use STM32.SAI;
+with HAL;          use HAL;
+with STM32;        use STM32;
+with STM32.Device; use STM32.Device;
+with STM32.Board;  use STM32.Board;
+with STM32.GPIO;   use STM32.GPIO;
+with STM32.DMA;    use STM32.DMA;
+with STM32.SAI;    use STM32.SAI;
 
 package body Audio is
 
@@ -192,7 +191,7 @@ package body Audio is
    -- Initialize --
    ----------------
 
-   overriding procedure Initialize_Audio_Out
+   procedure Initialize_Audio_Out
      (This      : in out WM8994_Audio_Device;
       Volume    : Audio_Volume;
       Frequency : Audio_Frequency)
@@ -217,7 +216,7 @@ package body Audio is
       This.Device.Init
         (Input     => WM8994.No_Input,
          Output    => WM8994.Auto,
-         Volume    => Unsigned_8 (Volume),
+         Volume    => UInt8 (Volume),
          Frequency =>
            WM8994.Audio_Frequency'Enum_Val
              (Audio_Frequency'Enum_Rep (Frequency)));
@@ -227,7 +226,7 @@ package body Audio is
    -- Play --
    ----------
 
-   overriding procedure Play
+   procedure Play
      (This   : in out WM8994_Audio_Device;
       Buffer : Audio_Buffer)
    is
@@ -255,7 +254,7 @@ package body Audio is
    -- Pause --
    -----------
 
-   overriding procedure Pause (This : in out WM8994_Audio_Device) is
+   procedure Pause (This : in out WM8994_Audio_Device) is
    begin
       This.Device.Pause;
       DMA_Pause (Audio_SAI, SAI_Out_Block);
@@ -265,7 +264,7 @@ package body Audio is
    -- Resume --
    ------------
 
-   overriding procedure Resume (This : in out WM8994_Audio_Device)
+   procedure Resume (This : in out WM8994_Audio_Device)
    is
    begin
       This.Device.Resume;
@@ -276,7 +275,7 @@ package body Audio is
    -- Stop --
    ----------
 
-   overriding procedure Stop (This : in out WM8994_Audio_Device)
+   procedure Stop (This : in out WM8994_Audio_Device)
    is
    begin
       This.Device.Stop (WM8994.Stop_Power_Down_Sw);
@@ -290,19 +289,19 @@ package body Audio is
    -- Set_Volume --
    ----------------
 
-   overriding procedure Set_Volume
+   procedure Set_Volume
      (This   : in out WM8994_Audio_Device;
       Volume : Audio_Volume)
    is
    begin
-      This.Device.Set_Volume (Unsigned_8 (Volume));
+      This.Device.Set_Volume (UInt8 (Volume));
    end Set_Volume;
 
    -------------------
    -- Set_Frequency --
    -------------------
 
-   overriding procedure Set_Frequency
+   procedure Set_Frequency
      (This      : in out WM8994_Audio_Device;
       Frequency : Audio_Frequency)
    is

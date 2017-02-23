@@ -39,7 +39,7 @@ package OV7725 is
 
    type Pixel_Format is (Pix_RGB565, Pix_RGB555, Pix_RGB444);
 
-   type OV7725_Camera (I2C : not null I2C_Port_Ref) is private;
+   type OV7725_Camera (I2C : not null Any_I2C_Port) is private;
 
    procedure Initialize (This : in out OV7725_Camera;
                          Addr : I2C_Address);
@@ -50,11 +50,11 @@ package OV7725 is
    procedure Set_Frame_Size (This : OV7725_Camera;
                              Res  : OV2640.Frame_Size);
 
-   function Get_PID (This : OV7725_Camera) return Byte;
+   function Get_PID (This : OV7725_Camera) return UInt8;
 
 private
 
-   type OV7725_Camera (I2C  : not null I2C_Port_Ref) is record
+   type OV7725_Camera (I2C  : not null Any_I2C_Port) is record
       Addr : UInt10;
    end record;
 

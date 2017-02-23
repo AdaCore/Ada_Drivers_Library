@@ -13,4 +13,4 @@ project Dma2d_STM32F429Disco extends "../common/common.gpr" is
         ("-gc-section", "-Wl,--print-memory-usage");
    end Linker;
 
-end Dma2dy_STM32F429Disco;
+end Dma2d_STM32F429Disco;

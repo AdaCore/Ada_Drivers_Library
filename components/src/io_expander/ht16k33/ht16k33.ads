@@ -1,9 +1,40 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
+
 with HAL.I2C; use HAL.I2C;
 with HAL; use HAL;
 
 package HT16K33 is
 
-   type HT16K33_Device (Port : not null I2C_Port_Ref;
+   type HT16K33_Device (Port : not null Any_I2C_Port;
                         Addr : UInt3) is tagged private;
 
    type HT16K33_Brightness is new Positive range 1 .. 16;
@@ -33,7 +64,7 @@ package HT16K33 is
 
    procedure Set_Row (This : in out HT16K33_Device;
                       Addr : LED_Row_Addr;
-                      Row  : Byte);
+                      Row  : UInt8);
    --  This procedure only changes the internal buffer, use the Update_LEDs
    --  procedure to actually update the LEDs state on the device.
 
@@ -58,7 +89,7 @@ private
                           Blink_1hz  => 2#10#,
                           Blink_05hz => 2#11#);
 
-   type HT16K33_Device (Port : not null I2C_Port_Ref;
+   type HT16K33_Device (Port : not null Any_I2C_Port;
                         Addr : UInt3) is tagged
       record
          Enabled : Boolean := False;

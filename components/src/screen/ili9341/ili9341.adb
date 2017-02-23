@@ -42,7 +42,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with Interfaces;   use Interfaces;
 
 with ILI9341_Regs; use ILI9341_Regs;
 
@@ -106,15 +105,15 @@ package body ILI9341 is
       Y     : Height;
       Color : Colors)
    is
-      Color_High_Byte : constant Byte :=
-        Byte (Shift_Right (As_UInt16 (Color), 8));
-      Color_Low_Byte  : constant Byte :=
-        Byte (As_UInt16 (Color) and 16#FF#);
+      Color_High_UInt8 : constant UInt8 :=
+        UInt8 (Shift_Right (As_UInt16 (Color), 8));
+      Color_Low_UInt8  : constant UInt8 :=
+        UInt8 (As_UInt16 (Color) and 16#FF#);
    begin
       This.Set_Cursor_Position (X, Y, X, Y);
       This.Send_Command (ILI9341_GRAM);
-      This.Send_Data (Color_High_Byte);
-      This.Send_Data (Color_Low_Byte);
+      This.Send_Data (Color_High_UInt8);
+      This.Send_Data (Color_Low_UInt8);
    end Set_Pixel;
 
    ----------
@@ -122,10 +121,10 @@ package body ILI9341 is
    ----------
 
    procedure Fill (This : in out ILI9341_Device; Color : Colors) is
-      Color_High_Byte : constant Byte :=
-        Byte (Shift_Right (As_UInt16 (Color), 8));
-      Color_Low_Byte  : constant Byte :=
-        Byte (As_UInt16 (Color) and 16#FF#);
+      Color_High_UInt8 : constant UInt8 :=
+        UInt8 (Shift_Right (As_UInt16 (Color), 8));
+      Color_Low_UInt8  : constant UInt8 :=
+        UInt8 (As_UInt16 (Color) and 16#FF#);
    begin
       This.Set_Cursor_Position (X1 => 0,
                                 Y1 => 0,
@@ -134,8 +133,8 @@ package body ILI9341 is
 
       This.Send_Command (ILI9341_GRAM);
       for N in 1 .. (Device_Width * Device_Height) loop
-         This.Send_Data (Color_High_Byte);
-         This.Send_Data (Color_Low_Byte);
+         This.Send_Data (Color_High_UInt8);
+         This.Send_Data (Color_Low_UInt8);
       end loop;
    end Fill;
 
@@ -196,15 +195,15 @@ package body ILI9341 is
       X2   : Width;
       Y2   : Height)
    is
-      X1_High : constant Byte := Byte (Shift_Right (UInt16 (X1), 8));
-      X1_Low  : constant Byte := Byte (UInt16 (X1) and 16#FF#);
-      X2_High : constant Byte := Byte (Shift_Right (UInt16 (X2), 8));
-      X2_Low  : constant Byte := Byte (UInt16 (X2) and 16#FF#);
+      X1_High : constant UInt8 := UInt8 (Shift_Right (UInt16 (X1), 8));
+      X1_Low  : constant UInt8 := UInt8 (UInt16 (X1) and 16#FF#);
+      X2_High : constant UInt8 := UInt8 (Shift_Right (UInt16 (X2), 8));
+      X2_Low  : constant UInt8 := UInt8 (UInt16 (X2) and 16#FF#);
 
-      Y1_High : constant Byte := Byte (Shift_Right (UInt16 (Y1), 8));
-      Y1_Low  : constant Byte := Byte (UInt16 (Y1) and 16#FF#);
-      Y2_High : constant Byte := Byte (Shift_Right (UInt16 (Y2), 8));
-      Y2_Low  : constant Byte := Byte (UInt16 (Y2) and 16#FF#);
+      Y1_High : constant UInt8 := UInt8 (Shift_Right (UInt16 (Y1), 8));
+      Y1_Low  : constant UInt8 := UInt8 (UInt16 (Y1) and 16#FF#);
+      Y2_High : constant UInt8 := UInt8 (Shift_Right (UInt16 (Y2), 8));
+      Y2_Low  : constant UInt8 := UInt8 (UInt16 (Y2) and 16#FF#);
    begin
       This.Send_Command (ILI9341_COLUMN_ADDR);
       This.Send_Data (X1_High);
@@ -241,7 +240,7 @@ package body ILI9341 is
    -- Send_Data --
    ---------------
 
-   procedure Send_Data (This : in out ILI9341_Device; Data : Byte) is
+   procedure Send_Data (This : in out ILI9341_Device; Data : UInt8) is
       Status : SPI_Status;
    begin
       This.WRX.Set;
@@ -257,7 +256,7 @@ package body ILI9341 is
    -- Send_Command --
    ------------------
 
-   procedure Send_Command (This : in out ILI9341_Device; Cmd : Byte) is
+   procedure Send_Command (This : in out ILI9341_Device; Cmd : UInt8) is
       Status : SPI_Status;
    begin
       This.WRX.Clear;

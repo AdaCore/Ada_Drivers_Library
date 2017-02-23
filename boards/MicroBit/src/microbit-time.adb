@@ -29,7 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces;       use Interfaces;
 with nRF51.Clock;
 with nRF51.Device;     use nRF51.Device;
 with nRF51.RTC;        use nRF51.RTC;

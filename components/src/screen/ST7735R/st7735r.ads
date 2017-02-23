@@ -1,19 +1,59 @@
-with HAL;             use HAL;
-with HAL.SPI;         use HAL.SPI;
-with HAL.GPIO;        use HAL.GPIO;
-with HAL.Framebuffer; use HAL.Framebuffer;
-with HAL.Bitmap;      use HAL.Bitmap;
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2017, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
+
+--  This a buffer-less driver for the ST7735R LCD. No pixels are stored in RAM
+--  which means low memory consumption but also slow operations.
+--
+--  Please use ST7735R.RAM_Framebuffer for a faster implementation.
+
+with HAL;                  use HAL;
+with HAL.SPI;              use HAL.SPI;
+with HAL.GPIO;             use HAL.GPIO;
+with HAL.Framebuffer;      use HAL.Framebuffer;
+with HAL.Bitmap;           use HAL.Bitmap;
 with HAL.Time;
+with Soft_Drawing_Bitmap;  use Soft_Drawing_Bitmap;
+with System;
 
 package ST7735R is
 
    type ST7735R_Device
-     (Port : not null SPI_Port_Ref;
-      CS   : not null GPIO_Point_Ref;
-      RS   : not null GPIO_Point_Ref;
-      RST  : not null GPIO_Point_Ref;
-      Time : not null HAL.Time.Delays_Ref)
+     (Port : not null Any_SPI_Port;
+      CS   : not null Any_GPIO_Point;
+      RS   : not null Any_GPIO_Point;
+      RST  : not null Any_GPIO_Point;
+      Time : not null HAL.Time.Any_Delays)
    is limited new HAL.Framebuffer.Frame_Buffer_Display with private;
+
+   type Any_ST7735R_Device is access all ST7735R_Device'Class;
 
    procedure Initialize (LCD : in out ST7735R_Device);
 
@@ -96,15 +136,15 @@ package ST7735R is
 
    procedure Set_Power_Control_3
      (LCD : ST7735R_Device;
-      P1, P2 : Byte);
+      P1, P2 : UInt8);
 
    procedure Set_Power_Control_4
      (LCD : ST7735R_Device;
-      P1, P2 : Byte);
+      P1, P2 : UInt8);
 
    procedure Set_Power_Control_5
      (LCD : ST7735R_Device;
-      P1, P2 : Byte);
+      P1, P2 : UInt8);
 
    procedure Set_Vcom (LCD : ST7735R_Device; VCOMS : UInt6);
 
@@ -117,17 +157,21 @@ package ST7735R is
                         X, Y  : UInt16;
                         Color : UInt16);
 
+   function Pixel (LCD   : ST7735R_Device;
+                   X, Y  : UInt16)
+                   return UInt16;
+
    procedure Write_Raw_Pixels (LCD  : ST7735R_Device;
-                               Data : HAL.Byte_Array);
+                               Data : HAL.UInt8_Array);
    procedure Write_Raw_Pixels (LCD  : ST7735R_Device;
                                Data : HAL.UInt16_Array);
 
    overriding
-   function Get_Max_Layers
+   function Max_Layers
      (Display : ST7735R_Device) return Positive;
 
    overriding
-   function Is_Supported
+   function Supported
      (Display : ST7735R_Device;
       Mode    : FB_Color_Mode) return Boolean;
 
@@ -142,15 +186,15 @@ package ST7735R is
       Mode    : Wait_Mode);
 
    overriding
-   function Get_Width
+   function Width
      (Display : ST7735R_Device) return Positive;
 
    overriding
-   function Get_Height
+   function Height
      (Display : ST7735R_Device) return Positive;
 
    overriding
-   function Is_Swapped
+   function Swapped
      (Display : ST7735R_Device) return Boolean;
    --  Whether X/Y coordinates are considered Swapped by the drawing primitives
    --  This simulates Landscape/Portrait orientation on displays not supporting
@@ -158,7 +202,7 @@ package ST7735R is
 
    overriding
    procedure Set_Background
-     (Display : ST7735R_Device; R, G, B : Byte);
+     (Display : ST7735R_Device; R, G, B : UInt8);
 
    overriding
    procedure Initialize_Layer
@@ -193,19 +237,19 @@ package ST7735R is
    --  buffer
 
    overriding
-   function Get_Color_Mode
+   function Color_Mode
      (Display : ST7735R_Device;
       Layer   : Positive) return FB_Color_Mode;
    --  Retrieves the current color mode for the layer.
 
    overriding
-   function Get_Hidden_Buffer
-     (Display : ST7735R_Device;
-      Layer   : Positive) return HAL.Bitmap.Bitmap_Buffer'Class;
+   function Hidden_Buffer
+     (Display : in out ST7735R_Device;
+      Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer;
    --  Retrieves the current hidden buffer for the layer.
 
    overriding
-   function Get_Pixel_Size
+   function Pixel_Size
      (Display : ST7735R_Device;
       Layer   : Positive) return Positive;
    --  Retrieves the current hidden buffer for the layer.
@@ -235,19 +279,86 @@ private
      (Column_Address_Left_Right => 0,
       Column_Address_Right_Left => 1);
 
-   subtype Pixel_Data is UInt16_Array (0 .. (Screen_Width * Screen_Height) - 1);
+   type ST7735R_Bitmap_Buffer is new Soft_Drawing_Bitmap_Buffer with record
+      LCD : Any_ST7735R_Device := null;
+   end record;
+
+   overriding
+   function Width (Buffer : ST7735R_Bitmap_Buffer) return Natural is
+     (Screen_Width);
+
+   overriding
+   function Height (Buffer : ST7735R_Bitmap_Buffer) return Natural is
+     (Screen_Height);
+
+   overriding
+   function Swapped (Buffer : ST7735R_Bitmap_Buffer) return Boolean is
+     (False);
+
+   overriding
+   function Color_Mode (Buffer : ST7735R_Bitmap_Buffer) return Bitmap_Color_Mode is
+     (RGB_565);
+
+   overriding
+   function Mapped_In_RAM (Buffer : ST7735R_Bitmap_Buffer) return Boolean is
+      (False);
+
+   overriding
+   function Memory_Address (Buffer : ST7735R_Bitmap_Buffer) return System.Address is
+     (System.Null_Address);
+
+   overriding
+   procedure Set_Pixel
+     (Buffer  : in out ST7735R_Bitmap_Buffer;
+      Pt      : Point;
+      Value   : Bitmap_Color)
+     with Pre => Buffer.LCD /= null;
+
+   overriding
+   procedure Set_Pixel
+     (Buffer  : in out ST7735R_Bitmap_Buffer;
+      Pt      : Point;
+      Value   : UInt32)
+     with Pre => Buffer.LCD /= null;
+
+
+   overriding
+   procedure Set_Pixel_Blend
+     (Buffer : in out ST7735R_Bitmap_Buffer;
+      Pt     : Point;
+      Value  : Bitmap_Color)
+     with Pre => Buffer.LCD /= null;
+
+
+   overriding
+   function Pixel
+     (Buffer : ST7735R_Bitmap_Buffer;
+      Pt     : Point)
+      return Bitmap_Color
+     with Pre => Buffer.LCD /= null;
+
+
+   overriding
+   function Pixel
+     (Buffer : ST7735R_Bitmap_Buffer;
+      Pt     : Point)
+      return UInt32
+     with Pre => Buffer.LCD /= null;
+
+
+   overriding
+   function Buffer_Size (Buffer : ST7735R_Bitmap_Buffer) return Natural is
+      (0);
 
    type ST7735R_Device
-     (Port : not null SPI_Port_Ref;
-      CS   : not null GPIO_Point_Ref;
-      RS   : not null GPIO_Point_Ref;
-      RST  : not null GPIO_Point_Ref;
-      Time : not null HAL.Time.Delays_Ref)
+     (Port : not null Any_SPI_Port;
+      CS   : not null Any_GPIO_Point;
+      RS   : not null Any_GPIO_Point;
+      RST  : not null Any_GPIO_Point;
+      Time : not null HAL.Time.Any_Delays)
    is limited new HAL.Framebuffer.Frame_Buffer_Display with record
       Initialized : Boolean := True;
-      Layer : aliased Bitmap_Buffer;
-      Layer_Data : Pixel_Data;
-      Layer_Initialized : Boolean := False;
+      Layer : aliased ST7735R_Bitmap_Buffer;
    end record;
 
 end ST7735R;

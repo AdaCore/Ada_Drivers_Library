@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/AdaCore/Ada_Drivers_Library.svg?branch=master)](https://travis-ci.org/AdaCore/Ada_Drivers_Library)
+[![Build status](https://ci.appveyor.com/api/projects/status/dvay075xkwxgppwm?svg=true)](https://ci.appveyor.com/project/AdaCore/ada-drivers-library)
+
 # Warning!
 
 This repository uses git submodule, please clone with the --recursive option:
@@ -19,12 +22,11 @@ support for additional processors, platforms, and vendors.
 2. License
 ----------
 
-All files are provided under a non-restrictive Berkeley Software Distribution
-(BSD) license.  As such, and within the conditions required by the license, the
-files are available both for proprietary ("commercial") and non-proprietary use.
+All files are provided under a 3-clause Berkeley Software Distribution (BSD)
+license. As such, and within the conditions required by the license, the files
+are available both for proprietary ("commercial") and non-proprietary use.
 
-For details, see the "License" section in the release notes accompanying the HAL
-drivers provided by ST Microelectronics.
+For details, see the "LICENSE" file in the root directory.
 
 
 3. Requirements
@@ -79,6 +81,7 @@ GitHub page.
 * ARM
  * STM32F4/7 USB drivers
 * Components
+ * BlueNRG-MS (Bluetooth Low Energy Network Processor)
 * Services
  * Bluetooth Low Energy stack
  * USB stack
@@ -92,5 +95,7 @@ GitHub page.
  * [Giza: Giza is trying to be a simple widget tool kit for embedded platforms](https://github.com/Fabien-Chouteau/Giza)
  * [solenoid-engine-controller: Software controller for solenoid engines](https://github.com/Fabien-Chouteau/solenoid-engine-controller)
  * [un_pola: DIY instant camera with OpenMV](https://github.com/Fabien-Chouteau/un_pola)
- 
+ * [bare metal demos: Various Ada Demos on STM32*-Disco boards using this library](https://github.com/lambourg/Ada_Bare_Metal_Demos)
+ * [SPARK Railway Demo: Simulated railway network in SPARK/Ada](https://github.com/AdaCore/SPARK_Railway_Simulation_Demo)
+
 (Add yours to the list!)

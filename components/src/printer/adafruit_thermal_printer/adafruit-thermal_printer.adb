@@ -1,13 +1,43 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
+
 with Ada.Unchecked_Conversion;
 with HAL.UART; use HAL.UART;
-with Interfaces; use Interfaces;
 
 package body AdaFruit.Thermal_Printer is
 
-   function To_Char is new Ada.Unchecked_Conversion (Source => Byte,
+   function To_Char is new Ada.Unchecked_Conversion (Source => UInt8,
                                                      Target => Character);
-   function To_Byte is new Ada.Unchecked_Conversion (Source => Character,
-                                                     Target => Byte);
+   function To_UInt8 is new Ada.Unchecked_Conversion (Source => Character,
+                                                     Target => UInt8);
 
    procedure Write (This : in out TP_Device; Cmd : String);
    procedure Read (This : in out TP_Device; Str : out String);
@@ -22,7 +52,7 @@ package body AdaFruit.Thermal_Printer is
    begin
 
       for Index in Cmd'Range loop
-         Data (Index) := To_Byte (Cmd (Index));
+         Data (Index) := To_UInt8 (Cmd (Index));
       end loop;
 
       This.Port.Transmit (Data, Status);
@@ -57,7 +87,7 @@ package body AdaFruit.Thermal_Printer is
    -- Set_Line_Spacing --
    ----------------------
 
-   procedure Set_Line_Spacing (This : in out TP_Device; Spacing : Byte) is
+   procedure Set_Line_Spacing (This : in out TP_Device; Spacing : UInt8) is
    begin
       Write (This, ASCII.ESC & '3' & To_Char (Spacing));
    end Set_Line_Spacing;
@@ -82,7 +112,7 @@ package body AdaFruit.Thermal_Printer is
    ----------------------
 
    procedure Set_Font_Enlarge (This : in out TP_Device; Height, Width : Boolean) is
-      Data : Byte := 0;
+      Data : UInt8 := 0;
    begin
       if Height then
          Data := Data or 16#01#;
@@ -155,7 +185,7 @@ package body AdaFruit.Thermal_Printer is
    -- Feed --
    ----------
 
-   procedure Feed (This : in out TP_Device; Rows : Byte) is
+   procedure Feed (This : in out TP_Device; Rows : UInt8) is
    begin
       Write (This, ASCII.ESC & 'd' & To_Char (Rows));
    end Feed;
@@ -173,15 +203,15 @@ package body AdaFruit.Thermal_Printer is
    begin
 
       Write (This, ASCII.DC2 & 'v' &
-               To_Char (Byte (Nbr_Of_Rows rem 256)) &
-               To_Char (Byte (Nbr_Of_Rows / 256)));
+               To_Char (UInt8 (Nbr_Of_Rows rem 256)) &
+               To_Char (UInt8 (Nbr_Of_Rows / 256)));
 
       for Row in 0 .. Nbr_Of_Rows - 1 loop
          for Colum in 0 .. (Nbr_Of_Columns / 8) - 1 loop
             declare
                BM_Index  : constant Natural := BM'First (1) + Colum * 8;
                Str_Index : constant Natural := Str'First + Colum;
-               B : Byte := 0;
+               B : UInt8 := 0;
             begin
                for X in 0 .. 7 loop
                   B := B or (if BM (BM_Index + X,
@@ -272,7 +302,7 @@ package body AdaFruit.Thermal_Printer is
    -- Set_Density --
    -----------------
 
-   procedure Set_Density (This : in out TP_Device; Density, Breaktime : Byte) is
+   procedure Set_Density (This : in out TP_Device; Density, Breaktime : UInt8) is
    begin
       Write (This,
              ASCII.DC2 & '#' & To_Char (Shift_Left (Breaktime, 5) or Density));

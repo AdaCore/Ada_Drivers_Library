@@ -480,7 +480,7 @@ package body SDCard is
 
    overriding function Write
      (Controller   : in out SDCard_Controller;
-      Block_Number : Unsigned_32;
+      Block_Number : UInt32;
       Data         : Block) return Boolean
    is
       Ret     : SD_Error;
@@ -546,7 +546,7 @@ package body SDCard is
 
    overriding function Read
      (Controller   : in out SDCard_Controller;
-      Block_Number : Unsigned_32;
+      Block_Number : UInt32;
       Data         : out Block) return Boolean
    is
       Ret     : Boolean;

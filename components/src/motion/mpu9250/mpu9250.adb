@@ -1,30 +1,32 @@
 ------------------------------------------------------------------------------
---                              Certyflie                                   --
 --                                                                          --
 --                     Copyright (C) 2015-2016, AdaCore                     --
 --                                                                          --
---  This library is free software;  you can redistribute it and/or modify   --
---  it under terms of the  GNU General Public License  as published by the  --
---  Free Software  Foundation;  either version 3,  or (at your  option) any --
---  later version. This library is distributed in the hope that it will be  --
---  useful, but WITHOUT ANY WARRANTY;  without even the implied warranty of --
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                    --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
 --                                                                          --
---  As a special exception under Section 7 of GPL version 3, you are        --
---  granted additional permissions described in the GCC Runtime Library     --
---  Exception, version 3.1, as published by the Free Software Foundation.   --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
---  You should have received a copy of the GNU General Public License and   --
---  a copy of the GCC Runtime Library Exception along with this program;    --
---  see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see   --
---  <http://www.gnu.org/licenses/>.                                         --
---                                                                          --
---  As a special exception, if other files instantiate generics from this   --
---  unit, or you link this unit with other files to produce an executable,  --
---  this  unit  does not  by itself cause  the resulting executable to be   --
---  covered by the GNU General Public License. This exception does not      --
---  however invalidate any other reasons why the executable file  might be  --
---  covered by the  GNU Public License.                                     --
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
@@ -134,9 +136,9 @@ package body MPU9250 is
 
    function MPU9250_Test_Connection (Device : MPU9250_Device) return Boolean
    is
-      Who_Am_I : Byte;
+      Who_Am_I : UInt8;
    begin
-      MPU9250_Read_Byte_At_Register
+      MPU9250_Read_UInt8_At_Register
         (Device   => Device,
          Reg_Addr => MPU9250_RA_WHO_AM_I,
          Data     => Who_Am_I);
@@ -168,32 +170,32 @@ package body MPU9250 is
       Factory_Trim : T_Int32_Array_6 := (others => 0);
       Acc_Diff     : Float_Array_3;
       Gyro_Diff    : Float_Array_3;
-      FS           : constant Unsigned_8 := 0;
+      FS           : constant UInt8 := 0;
 
       Test_Status : Boolean;
    begin
       --  Save old configuration
-      MPU9250_Read_Byte_At_Register
+      MPU9250_Read_UInt8_At_Register
         (Device, MPU9250_RA_SMPLRT_DIV, Saved_Reg (1));
-      MPU9250_Read_Byte_At_Register
+      MPU9250_Read_UInt8_At_Register
         (Device, MPU9250_RA_CONFIG, Saved_Reg (2));
-      MPU9250_Read_Byte_At_Register
+      MPU9250_Read_UInt8_At_Register
         (Device, MPU9250_RA_GYRO_CONFIG, Saved_Reg (3));
-      MPU9250_Read_Byte_At_Register
+      MPU9250_Read_UInt8_At_Register
         (Device, MPU9250_RA_ACCEL_CONFIG_2, Saved_Reg (4));
-      MPU9250_Read_Byte_At_Register
+      MPU9250_Read_UInt8_At_Register
         (Device, MPU9250_RA_ACCEL_CONFIG, Saved_Reg (5));
 
       --  Write test configuration
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_SMPLRT_DIV, 16#00#);
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_CONFIG, 16#02#);
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_GYRO_CONFIG, Shift_Left (FS, 3));
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_ACCEL_CONFIG_2, 16#02#);
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_ACCEL_CONFIG, Shift_Left (FS, 3));
 
       --  Get average current values of gyro and accelerometer
@@ -234,9 +236,9 @@ package body MPU9250 is
       end loop;
 
       --  Configure the acceleromter for self test
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_ACCEL_CONFIG, 16#E0#);
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_GYRO_CONFIG, 16#E0#);
 
       --  Delay a while to let the device stabilize
@@ -280,26 +282,26 @@ package body MPU9250 is
       end loop;
 
       --  Configure the gyro and accelerometer for normal operation
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_ACCEL_CONFIG, 16#00#);
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_GYRO_CONFIG, 16#00#);
 
       --  Delay a while to let the device stabilize
       Device.Time.Delay_Milliseconds (25);
 
       --  Retrieve Accelerometer and Gyro Factory Self - Test Code From USR_Reg
-      MPU9250_Read_Byte_At_Register
+      MPU9250_Read_UInt8_At_Register
         (Device, MPU9250_RA_ST_X_ACCEL, Self_Test (1));
-      MPU9250_Read_Byte_At_Register
+      MPU9250_Read_UInt8_At_Register
         (Device, MPU9250_RA_ST_Y_ACCEL, Self_Test (2));
-      MPU9250_Read_Byte_At_Register
+      MPU9250_Read_UInt8_At_Register
         (Device, MPU9250_RA_ST_Z_ACCEL, Self_Test (3));
-      MPU9250_Read_Byte_At_Register
+      MPU9250_Read_UInt8_At_Register
         (Device, MPU9250_RA_ST_X_GYRO, Self_Test (4));
-      MPU9250_Read_Byte_At_Register
+      MPU9250_Read_UInt8_At_Register
         (Device, MPU9250_RA_ST_Y_GYRO, Self_Test (5));
-      MPU9250_Read_Byte_At_Register
+      MPU9250_Read_UInt8_At_Register
         (Device, MPU9250_RA_ST_Z_GYRO, Self_Test (6));
 
       for I in 1 .. 6 loop
@@ -322,15 +324,15 @@ package body MPU9250 is
       end loop;
 
       --  Restore old configuration
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_SMPLRT_DIV, Saved_Reg (1));
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_CONFIG, Saved_Reg (2));
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_GYRO_CONFIG, Saved_Reg (3));
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_ACCEL_CONFIG_2, Saved_Reg (4));
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device, MPU9250_RA_ACCEL_CONFIG, Saved_Reg (5));
 
       --  Check result
@@ -508,15 +510,15 @@ package body MPU9250 is
       Value  : Boolean)
    is
    begin
-      --  Full register byte for all interrupts, for quick reading.
+      --  Full register UInt8 for all interrupts, for quick reading.
       --  Each bit should be set 0 for disabled, 1 for enabled.
       if Value then
-         MPU9250_Write_Byte_At_Register
+         MPU9250_Write_UInt8_At_Register
            (Device   => Device,
             Reg_Addr => MPU9250_RA_INT_ENABLE,
             Data     => 16#FF#);
       else
-         MPU9250_Write_Byte_At_Register
+         MPU9250_Write_UInt8_At_Register
            (Device   => Device,
             Reg_Addr => MPU9250_RA_INT_ENABLE,
             Data     => 16#00#);
@@ -529,10 +531,10 @@ package body MPU9250 is
 
    procedure MPU9250_Set_Rate
      (Device   : in out MPU9250_Device;
-      Rate_Div : Byte)
+      Rate_Div : UInt8)
    is
    begin
-      MPU9250_Write_Byte_At_Register
+      MPU9250_Write_UInt8_At_Register
         (Device   => Device,
          Reg_Addr => MPU9250_RA_SMPLRT_DIV,
          Data     => Rate_Div);
@@ -622,7 +624,7 @@ package body MPU9250 is
 
    procedure MPU9250_Read_Register
      (Device   : MPU9250_Device;
-      Reg_Addr : Byte;
+      Reg_Addr : UInt8;
       Data     : in out I2C_Data)
    is
       Status : I2C_Status;
@@ -636,13 +638,13 @@ package body MPU9250 is
    end MPU9250_Read_Register;
 
    -----------------------------------
-   -- MPU9250_Read_Byte_At_Register --
+   -- MPU9250_Read_UInt8_At_Register --
    -----------------------------------
 
-   procedure MPU9250_Read_Byte_At_Register
+   procedure MPU9250_Read_UInt8_At_Register
      (Device   : MPU9250_Device;
-      Reg_Addr : Byte;
-      Data     : out Byte)
+      Reg_Addr : UInt8;
+      Data     : out UInt8)
    is
       Status : I2C_Status;
       I_Data : I2C_Data (1 .. 1);
@@ -654,7 +656,7 @@ package body MPU9250 is
          Data          => I_Data,
          Status        => Status);
       Data := I_Data (1);
-   end MPU9250_Read_Byte_At_Register;
+   end MPU9250_Read_UInt8_At_Register;
 
    ----------------------------------
    -- MPU9250_Read_Bit_At_Register --
@@ -662,12 +664,12 @@ package body MPU9250 is
 
    function MPU9250_Read_Bit_At_Register
      (Device   : MPU9250_Device;
-      Reg_Addr : Byte;
+      Reg_Addr : UInt8;
       Bit_Pos  : T_Bit_Pos_8) return Boolean
    is
-      Register_Value : Byte;
+      Register_Value : UInt8;
    begin
-      MPU9250_Read_Byte_At_Register (Device, Reg_Addr, Register_Value);
+      MPU9250_Read_UInt8_At_Register (Device, Reg_Addr, Register_Value);
 
       return (Register_Value and Shift_Left (1, Bit_Pos)) /= 0;
    end MPU9250_Read_Bit_At_Register;
@@ -678,7 +680,7 @@ package body MPU9250 is
 
    procedure MPU9250_Write_Register
      (Device   : MPU9250_Device;
-      Reg_Addr : Byte;
+      Reg_Addr : UInt8;
       Data     : I2C_Data)
    is
       Status : I2C_Status;
@@ -692,13 +694,13 @@ package body MPU9250 is
    end MPU9250_Write_Register;
 
    ------------------------------------
-   -- MPU9250_Write_Byte_At_Register --
+   -- MPU9250_Write_UInt8_At_Register --
    ------------------------------------
 
-   procedure MPU9250_Write_Byte_At_Register
+   procedure MPU9250_Write_UInt8_At_Register
      (Device   : MPU9250_Device;
-      Reg_Addr : Byte;
-      Data     : Byte)
+      Reg_Addr : UInt8;
+      Data     : UInt8)
    is
       Status : I2C_Status;
    begin
@@ -708,7 +710,7 @@ package body MPU9250 is
          Mem_Addr_Size => Memory_Size_8b,
          Data          => (1 => Data),
          Status        => Status);
-   end MPU9250_Write_Byte_At_Register;
+   end MPU9250_Write_UInt8_At_Register;
 
    -----------------------------------
    -- MPU9250_Write_Bit_At_Register --
@@ -716,20 +718,20 @@ package body MPU9250 is
 
    procedure MPU9250_Write_Bit_At_Register
      (Device    : MPU9250_Device;
-      Reg_Addr  : Byte;
+      Reg_Addr  : UInt8;
       Bit_Pos   : T_Bit_Pos_8;
       Bit_Value : Boolean)
    is
-      Register_Value : Byte;
+      Register_Value : UInt8;
    begin
-      MPU9250_Read_Byte_At_Register (Device, Reg_Addr, Register_Value);
+      MPU9250_Read_UInt8_At_Register (Device, Reg_Addr, Register_Value);
 
       Register_Value := (if Bit_Value then
                             Register_Value or (Shift_Left (1, Bit_Pos))
                          else
                             Register_Value and not (Shift_Left (1, Bit_Pos)));
 
-      MPU9250_Write_Byte_At_Register (Device, Reg_Addr, Register_Value);
+      MPU9250_Write_UInt8_At_Register (Device, Reg_Addr, Register_Value);
    end MPU9250_Write_Bit_At_Register;
 
    ------------------------------------
@@ -738,16 +740,16 @@ package body MPU9250 is
 
    procedure MPU9250_Write_Bits_At_Register
      (Device        : MPU9250_Device;
-      Reg_Addr      : Byte;
+      Reg_Addr      : UInt8;
       Start_Bit_Pos : T_Bit_Pos_8;
-      Data          : Byte;
+      Data          : UInt8;
       Length        : T_Bit_Pos_8)
    is
-      Register_Value : Byte;
-      Mask           : Byte;
-      Data_Aux       : Byte := Data;
+      Register_Value : UInt8;
+      Mask           : UInt8;
+      Data_Aux       : UInt8 := Data;
    begin
-      MPU9250_Read_Byte_At_Register (Device, Reg_Addr, Register_Value);
+      MPU9250_Read_UInt8_At_Register (Device, Reg_Addr, Register_Value);
 
       Mask := Shift_Left
         ((Shift_Left (1, Length) - 1), Start_Bit_Pos - Length + 1);
@@ -757,7 +759,7 @@ package body MPU9250 is
       Register_Value := Register_Value and not Mask;
       Register_Value := Register_Value or Data_Aux;
 
-      MPU9250_Write_Byte_At_Register (Device, Reg_Addr, Register_Value);
+      MPU9250_Write_UInt8_At_Register (Device, Reg_Addr, Register_Value);
    end MPU9250_Write_Bits_At_Register;
 
    --------------------------------------
@@ -765,20 +767,20 @@ package body MPU9250 is
    --------------------------------------
 
    function Fuse_Low_And_High_Register_Parts
-     (High : Byte;
-      Low  : Byte) return Integer_16
+     (High : UInt8;
+      Low  : UInt8) return Integer_16
    is
       ---------------------
       -- Uint16_To_Int16 --
       ---------------------
 
       function Uint16_To_Int16 is new Ada.Unchecked_Conversion
-        (Unsigned_16, Integer_16);
+        (UInt16, Integer_16);
 
-      Register : Unsigned_16;
+      Register : UInt16;
    begin
-      Register := Shift_Left (Unsigned_16 (High), 8);
-      Register := Register or Unsigned_16 (Low);
+      Register := Shift_Left (UInt16 (High), 8);
+      Register := Register or UInt16 (Low);
 
       return Uint16_To_Int16 (Register);
    end Fuse_Low_And_High_Register_Parts;

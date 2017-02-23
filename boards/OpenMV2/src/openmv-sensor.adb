@@ -1,9 +1,39 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
+
 with STM32.DCMI;
 with STM32.DMA;     use STM32.DMA;
 with Ada.Real_Time; use Ada.Real_Time;
 with OV2640;        use OV2640;
 with OV7725;        use OV7725;
-with Interfaces;    use Interfaces;
 with HAL.I2C;       use HAL.I2C;
 with HAL.Bitmap;    use HAL.Bitmap;
 with HAL;           use HAL;
@@ -17,8 +47,8 @@ package body OpenMV.Sensor is
    REG_PID : constant := 16#0A#;
    --  REG_VER : constant := 16#0B#;
 
-   CLK_PWM_Mod    : PWM_Modulator;
-   Camera_PID     : HAL.Byte := 0;
+   CLK_PWM_Mod    : PWM_Modulator (SENSOR_CLK_TIM'Access);
+   Camera_PID     : HAL.UInt8 := 0;
    Camera_2640    : OV2640_Camera (Sensor_I2C'Access);
    Camera_7725    : OV7725_Camera (Sensor_I2C'Access);
    Is_Initialized : Boolean := False;
@@ -67,20 +97,16 @@ package body OpenMV.Sensor is
 
       procedure Initialize_Clock is
       begin
-         Initialize_PWM_Modulator
-           (This                => CLK_PWM_Mod,
-            Generator           => SENSOR_CLK_TIM'Access,
-            Frequency           => SENSOR_CLK_FREQ,
-            Configure_Generator => True);
+         Configure_PWM_Timer (SENSOR_CLK_TIM'Access, SENSOR_CLK_FREQ);
 
          Attach_PWM_Channel (This    => CLK_PWM_Mod,
                              Channel => SENSOR_CLK_CHAN,
                              Point   => SENSOR_CLK_IO,
                              PWM_AF  => SENSOR_CLK_AF);
 
-         Set_Duty_Cycle (This    => CLK_PWM_Mod,
-                         Value   => 50);
-         Enable_PWM (CLK_PWM_Mod);
+         Set_Duty_Cycle (CLK_PWM_Mod, Value => 50);
+
+         Enable_Output (CLK_PWM_Mod);
       end Initialize_Clock;
 
       -----------------------
@@ -289,19 +315,23 @@ package body OpenMV.Sensor is
    -- Snapshot --
    --------------
 
-   procedure Snapshot (BM : HAL.Bitmap.Bitmap_Buffer'Class) is
+   procedure Snapshot (BM : not null HAL.Bitmap.Any_Bitmap_Buffer) is
       Status : DMA_Error_Code;
-      Cnt : constant Interfaces.Unsigned_16 :=
-        Interfaces.Unsigned_16 ((BM.Width * BM.Height) / 2);
+      Cnt : constant UInt16 := UInt16 ((BM.Width * BM.Height) / 2);
    begin
-      if BM.Width /= Image_Width or else BM.Height /= Image_Height then
+      if BM.Width /= Image_Width
+        or else
+          BM.Height /= Image_Height
+        or else
+          not BM.Mapped_In_RAM
+      then
          raise Program_Error;
       end if;
 
       if not Compatible_Alignments (Sensor_DMA,
                                     Sensor_DMA_Stream,
                                     DCMI.Data_Register_Address,
-                                    BM.Addr)
+                                    BM.Memory_Address)
       then
          raise Program_Error;
       end if;
@@ -311,7 +341,7 @@ package body OpenMV.Sensor is
       Start_Transfer (This        => Sensor_DMA,
                       Stream      => Sensor_DMA_Stream,
                       Source      => DCMI.Data_Register_Address,
-                      Destination => BM.Addr,
+                      Destination => BM.Memory_Address,
                       Data_Count  => Cnt);
 
       DCMI.Start_Capture (DCMI.Snapshot);
