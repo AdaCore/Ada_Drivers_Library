@@ -42,7 +42,7 @@ package body FT6x06 is
    --------------
 
    function Check_Id (This : in out FT6x06_Device) return Boolean is
-      Id     : Byte;
+      Id     : UInt8;
       Status : Boolean;
    begin
       for J in 1 .. 3 loop
@@ -68,7 +68,7 @@ package body FT6x06 is
      (This    : in out FT6x06_Device;
       Enabled : Boolean)
    is
-      Reg_Value : Byte := 0;
+      Reg_Value : UInt8 := 0;
       Status    : Boolean with Unreferenced;
    begin
       if Enabled then
@@ -105,7 +105,7 @@ package body FT6x06 is
                                  return Touch_Identifier
    is
       Status   : Boolean;
-      Nb_Touch : Unsigned_8 := 0;
+      Nb_Touch : UInt8 := 0;
    begin
       Nb_Touch := This.I2C_Read (FT6206_TD_STAT_REG, Status);
 
@@ -136,7 +136,7 @@ package body FT6x06 is
                              return HAL.Touch_Panel.TP_Touch_State
    is
       type UInt16_HL_Type is record
-         High, Low : Byte;
+         High, Low : UInt8;
       end record with Size => 16;
       for UInt16_HL_Type use record
          High at 1 range 0 .. 7;
@@ -255,9 +255,9 @@ package body FT6x06 is
    --------------
 
    function I2C_Read (This   : in out FT6x06_Device;
-                      Reg    : Byte;
+                      Reg    : UInt8;
                       Status : out Boolean)
-                      return Byte
+                      return UInt8
    is
       Ret        : I2C_Data (1 .. 1);
       Tmp_Status : I2C_Status;
@@ -279,8 +279,8 @@ package body FT6x06 is
    ---------------
 
    procedure I2C_Write (This   : in out FT6x06_Device;
-                        Reg    : Byte;
-                        Data   : Byte;
+                        Reg    : UInt8;
+                        Data   : UInt8;
                         Status : out Boolean)
    is
       Tmp_Status : I2C_Status;

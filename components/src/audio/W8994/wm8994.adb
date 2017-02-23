@@ -1,5 +1,33 @@
-
-with Ada.Text_IO;
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
 
 package body WM8994 is
 
@@ -20,11 +48,11 @@ package body WM8994 is
    is
       Status : I2C_Status with Unreferenced;
       Data   : I2C_Data (1 .. 2);
-      Check  : UInt16;
+      Check  : UInt16 with Unreferenced;
    begin
       --  Device is MSB first
-      Data (1) := Byte (Shift_Right (Value and 16#FF00#, 8));
-      Data (2) := Byte (Value and 16#FF#);
+      Data (1) := UInt8 (Shift_Right (Value and 16#FF00#, 8));
+      Data (2) := UInt8 (Value and 16#FF#);
 
       This.Port.Mem_Write
         (Addr          => This.I2C_Addr,
@@ -35,12 +63,6 @@ package body WM8994 is
 
       if Reg /= 0 then
          Check := I2C_Read (This, Reg);
-         if Check /= Value then
-            Ada.Text_IO.Put_Line
-              ("Written " & Value'Img &
-                 " got " & Check'Img &
-                 " for reg " & Reg'Img);
-         end if;
       end if;
    end I2C_Write;
 
@@ -75,10 +97,10 @@ package body WM8994 is
      (This      : in out WM8994_Device;
       Input     : Input_Device;
       Output    : Output_Device;
-      Volume    : Unsigned_8;
+      Volume    : UInt8;
       Frequency : Audio_Frequency)
    is
-      Power_Mgnt_Reg_1 : Unsigned_16 := 0;
+      Power_Mgnt_Reg_1 : UInt16 := 0;
 
    begin
       --  WM8994 Errata work-arounds
@@ -286,7 +308,7 @@ package body WM8994 is
    -- Read_ID --
    -------------
 
-   function Read_ID (This : in out WM8994_Device) return Unsigned_16 is
+   function Read_ID (This : in out WM8994_Device) return UInt16 is
    begin
       return This.I2C_Read (WM8994_CHIPID_ADDR);
    end Read_ID;
@@ -365,9 +387,9 @@ package body WM8994 is
    procedure Set_Volume (This : in out WM8994_Device; Volume : Volume_Level)
    is
       --  Actual Volume in range 0 .. 16#3F#
-      Converted_Volume : constant Unsigned_16 :=
+      Converted_Volume : constant UInt16 :=
                            (if Volume = 100 then 63
-                            else Unsigned_16 (Volume) * 63 / 100);
+                            else UInt16 (Volume) * 63 / 100);
 
    begin
       if Volume = 0 then

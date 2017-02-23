@@ -3477,7 +3477,7 @@ package body BMP_Fonts is
       16#0000#,
       16#0000#);
 
-   BMP_Font8x8 : constant array (0 .. 767) of Byte :=
+   BMP_Font8x8 : constant array (0 .. 767) of UInt8 :=
      (16#00#,
       16#00#,
       16#00#,

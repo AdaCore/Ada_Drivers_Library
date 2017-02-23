@@ -29,10 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
 package body OV7725 is
    type Addr_And_Data is record
-      Addr, Data : Byte;
+      Addr, Data : UInt8;
    end record;
 
    type Command_Array is array (Natural range <>) of Addr_And_Data;
@@ -127,18 +126,18 @@ package body OV7725 is
       (REG_COM5,          16#D5#));
 
    function Read (This     : OV7725_Camera;
-                  Mem_Addr : UInt8) return Byte;
+                  Mem_Addr : UInt8) return UInt8;
 
    procedure Write (This     : OV7725_Camera;
                     Mem_Addr : UInt8;
-                    Data     : Byte);
+                    Data     : UInt8);
 
    ----------
    -- Read --
    ----------
 
    function Read (This     : OV7725_Camera;
-                  Mem_Addr : UInt8) return Byte
+                  Mem_Addr : UInt8) return UInt8
    is
       Status : I2C_Status;
       Data   : I2C_Data (1 .. 1);
@@ -165,7 +164,7 @@ package body OV7725 is
 
    procedure Write (This     : OV7725_Camera;
                     Mem_Addr : UInt8;
-                    Data     : Byte)
+                    Data     : UInt8)
    is
       Status : I2C_Status;
    begin
@@ -200,7 +199,7 @@ package body OV7725 is
      (This : OV7725_Camera;
       Pix  : Pixel_Format)
    is
-      Reg : Byte := Read (This, REG_COM7);
+      Reg : UInt8 := Read (This, REG_COM7);
    begin
       Reg := Reg and 2#1111_00_11#;
       case Pix is
@@ -251,7 +250,7 @@ package body OV7725 is
    -- Get_PID --
    -------------
 
-   function Get_PID (This : OV7725_Camera) return Byte is
+   function Get_PID (This : OV7725_Camera) return UInt8 is
    begin
       return Read (This, REG_PID);
    end Get_PID;

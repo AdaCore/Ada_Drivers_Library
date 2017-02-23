@@ -1,7 +1,7 @@
 with "../../../boards/native";
 with "../../../boards/native/config";
 
-project TC is
+project TC extends "../../utils/test_utils.gpr" is
 
    for Languages use ("Ada");
    for Source_Dirs use ("src");

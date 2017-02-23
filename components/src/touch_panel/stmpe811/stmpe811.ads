@@ -11,7 +11,7 @@
 --        notice, this list of conditions and the following disclaimer in   --
 --        the documentation and/or other materials provided with the        --
 --        distribution.                                                     --
---     3. Neither the name of STMicroelectronics nor the names of its       --
+--     3. Neither the name of the copyright holder nor the names of its     --
 --        contributors may be used to endorse or promote products derived   --
 --        from this software without specific prior written permission.     --
 --                                                                          --
@@ -36,9 +36,9 @@ with HAL.Touch_Panel; use HAL.Touch_Panel;
 
 package STMPE811 is
 
-   type STMPE811_Device (Port     : not null I2C_Port_Ref;
+   type STMPE811_Device (Port     : not null Any_I2C_Port;
                          I2C_Addr : I2C_Address;
-                         Time     : not null HAL.Time.Delays_Ref) is
+                         Time     : not null HAL.Time.Any_Delays) is
      limited new Touch_Panel_Device with private;
 
    function Initialize (This : in out STMPE811_Device) return Boolean;
@@ -71,9 +71,9 @@ package STMPE811 is
 
 private
 
-   type STMPE811_Device (Port     : not null I2C_Port_Ref;
+   type STMPE811_Device (Port     : not null Any_I2C_Port;
                          I2C_Addr : I2C_Address;
-                         Time     : not null HAL.Time.Delays_Ref) is
+                         Time     : not null HAL.Time.Any_Delays) is
      limited new Touch_Panel_Device with record
       LCD_Natural_Width  : Natural := 0;
       LCD_Natural_Height : Natural := 0;
@@ -83,19 +83,19 @@ private
    subtype TSC_Data is I2C_Data;
 
    function Read_Data (This      : in out STMPE811_Device;
-                       Data_Addr : Byte;
+                       Data_Addr : UInt8;
                        Length    : Natural) return TSC_Data;
    function Read_Register (This     : STMPE811_Device;
-                           Reg_Addr : Byte) return Byte;
+                           Reg_Addr : UInt8) return UInt8;
    procedure Write_Register (This     : in out STMPE811_Device;
-                             Reg_Addr : Byte;
-                             Data     : Byte);
+                             Reg_Addr : UInt8;
+                             Data     : UInt8);
    procedure IOE_Reset (This : in out STMPE811_Device);
    procedure IOE_Function_Command (This : in out STMPE811_Device;
-                                   Func : Byte;
+                                   Func : UInt8;
                                    Enabled : Boolean);
    procedure IOE_AF_Config (This      : in out STMPE811_Device;
-                            Pin       : Byte;
+                            Pin       : UInt8;
                             Enabled   : Boolean);
    function Get_IOE_ID (This : in out STMPE811_Device) return UInt16;
 

@@ -1,3 +1,34 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
+
 with Ada.Unchecked_Conversion;
 
 with STM32.Device;          use STM32.Device;
@@ -93,11 +124,11 @@ package body Framebuffer_LTDC is
       for Layer in STM32.LTDC.LCD_Layer loop
          for Buf in 1 .. 2 loop
             if Display.Buffers (Layer, Buf) /= Null_Buffer then
-               Display.Buffers (Layer, Buf).Swapped := Display.Swapped;
-               Tmp := Display.Buffers (Layer, Buf).Width;
-               Display.Buffers (Layer, Buf).Width :=
+               Display.Buffers (Layer, Buf).Currently_Swapped := Display.Swapped;
+               Tmp := Display.Buffers (Layer, Buf).Actual_Width;
+               Display.Buffers (Layer, Buf).Actual_Width :=
                  Display.Buffers (Layer, Buf).Height;
-               Display.Buffers (Layer, Buf).Height := Tmp;
+               Display.Buffers (Layer, Buf).Actual_Height := Tmp;
                Display.Buffers (Layer, Buf).Fill (0);
             end if;
          end loop;
@@ -134,24 +165,24 @@ package body Framebuffer_LTDC is
       return STM32.LTDC.Initialized;
    end Initialized;
 
-   --------------------
-   -- Get_Max_Layers --
-   --------------------
+   ----------------
+   -- Max_Layers --
+   ----------------
 
-   overriding function Get_Max_Layers
+   overriding function Max_Layers
      (Display : Frame_Buffer)
       return Positive
    is
       pragma Unreferenced (Display);
    begin
       return 2;
-   end Get_Max_Layers;
+   end Max_Layers;
 
-   ------------------
-   -- Is_Supported --
-   ------------------
+   ---------------
+   -- Supported --
+   ---------------
 
-   overriding function Is_Supported
+   overriding function Supported
      (Display : Frame_Buffer;
       Mode    : HAL.Framebuffer.FB_Color_Mode) return Boolean
    is
@@ -159,13 +190,13 @@ package body Framebuffer_LTDC is
    begin
       --  The LTDC supports all HAL color modes
       return True;
-   end Is_Supported;
+   end Supported;
 
-   ---------------
-   -- Get_Width --
-   ---------------
+   -----------
+   -- Width --
+   -----------
 
-   overriding function Get_Width
+   overriding function Width
      (Display : Frame_Buffer)
       return Positive
    is
@@ -175,13 +206,13 @@ package body Framebuffer_LTDC is
       else
          return Display.Height;
       end if;
-   end Get_Width;
+   end Width;
 
-   ----------------
-   -- Get_Height --
-   ----------------
+   ------------
+   -- Height --
+   ------------
 
-   overriding function Get_Height
+   overriding function Height
      (Display : Frame_Buffer)
       return Positive
    is
@@ -191,25 +222,25 @@ package body Framebuffer_LTDC is
       else
          return Display.Width;
       end if;
-   end Get_Height;
+   end Height;
 
-   ----------------
-   -- Is_Swapped --
-   ----------------
+   -------------
+   -- Swapped --
+   -------------
 
-   overriding function Is_Swapped
+   overriding function Swapped
      (Display : Frame_Buffer) return Boolean
    is
    begin
       return Display.Swapped;
-   end Is_Swapped;
+   end Swapped;
 
    --------------------
    -- Set_Background --
    --------------------
 
    overriding procedure Set_Background
-     (Display : Frame_Buffer; R, G, B : Byte)
+     (Display : Frame_Buffer; R, G, B : UInt8)
    is
       pragma Unreferenced (Display);
    begin
@@ -275,23 +306,23 @@ package body Framebuffer_LTDC is
       if not Display.Swapped then
          for Buf in 1 .. 2 loop
             Display.Buffers (LCD_Layer, Buf) :=
-              (Addr       =>
+              (Addr              =>
                  Reserve (UInt32 (HAL.Bitmap.Bits_Per_Pixel (Mode) * W * H / 8)),
-               Width      => W,
-               Height     => H,
-               Color_Mode => Mode,
-               Swapped    => False);
+               Actual_Width      => W,
+               Actual_Height     => H,
+               Actual_Color_Mode => Mode,
+               Currently_Swapped => False);
             Display.Buffers (LCD_Layer, Buf).Fill (0);
          end loop;
       else
          for Buf in 1 .. 2 loop
             Display.Buffers (LCD_Layer, Buf) :=
-              (Addr       =>
+              (Addr              =>
                  Reserve (UInt32 (HAL.Bitmap.Bits_Per_Pixel (Mode) * W * H / 8)),
-               Width      => H,
-               Height     => W,
-               Color_Mode => Mode,
-               Swapped    => True);
+               Actual_Width      => H,
+               Actual_Height     => W,
+               Actual_Color_Mode => Mode,
+               Currently_Swapped => True);
             Display.Buffers (LCD_Layer, Buf).Fill (0);
          end loop;
       end if;
@@ -387,7 +418,7 @@ package body Framebuffer_LTDC is
          end if;
 
          STM32.DMA2D_Bitmap.Copy_Rect
-           (Visible, 0, 0, Hidden, 0, 0, Visible.Width, Visible.Height,
+           (Visible, (0, 0), Hidden, (0, 0), Visible.Width, Visible.Height,
             Synchronous => True);
       end if;
    end Update_Layer;
@@ -442,17 +473,17 @@ package body Framebuffer_LTDC is
             end if;
 
             STM32.DMA2D_Bitmap.Copy_Rect
-              (Visible, 0, 0, Hidden, 0, 0, Visible.Width, Visible.Height,
+              (Visible, (0, 0), Hidden, (0, 0), Visible.Width, Visible.Height,
                Synchronous => True);
          end if;
       end loop;
    end Update_Layers;
 
-   --------------------
-   -- Get_Color_Mode --
-   --------------------
+   ----------------
+   -- Color_Mode --
+   ----------------
 
-   overriding function Get_Color_Mode
+   overriding function Color_Mode
      (Display : Frame_Buffer;
       Layer   : Positive)
       return HAL.Framebuffer.FB_Color_Mode
@@ -463,16 +494,16 @@ package body Framebuffer_LTDC is
                       else STM32.LTDC.Layer2);
    begin
       return Display.Buffers (LCD_Layer, 1).Color_Mode;
-   end Get_Color_Mode;
+   end Color_Mode;
 
-   -----------------------
-   -- Get_Hidden_Buffer --
-   -----------------------
+   -------------------
+   -- Hidden_Buffer --
+   -------------------
 
-   overriding function Get_Hidden_Buffer
-     (Display : Frame_Buffer;
+   overriding function Hidden_Buffer
+     (Display : in out Frame_Buffer;
       Layer   : Positive)
-      return HAL.Bitmap.Bitmap_Buffer'Class
+      return not null HAL.Bitmap.Any_Bitmap_Buffer
    is
       LCD_Layer  : constant STM32.LTDC.LCD_Layer :=
                      (if Layer = 1
@@ -481,17 +512,17 @@ package body Framebuffer_LTDC is
    begin
       case Display.Current (LCD_Layer) is
          when 0 | 2 =>
-            return Display.Buffers (LCD_Layer, 1);
+            return Display.Buffers (LCD_Layer, 1)'Unchecked_Access;
          when 1 =>
-            return Display.Buffers (LCD_Layer, 2);
+            return Display.Buffers (LCD_Layer, 2)'Unchecked_Access;
       end case;
-   end Get_Hidden_Buffer;
+   end Hidden_Buffer;
 
-   --------------------
-   -- Get_Pixel_Size --
-   --------------------
+   ----------------
+   -- Pixel_Size --
+   ----------------
 
-   overriding function Get_Pixel_Size
+   overriding function Pixel_Size
      (Display : Frame_Buffer;
       Layer   : Positive) return Positive
    is
@@ -503,6 +534,6 @@ package body Framebuffer_LTDC is
       return
         HAL.Bitmap.Bits_Per_Pixel
           (Display.Buffers (LCD_Layer, 1).Color_Mode) / 8;
-   end Get_Pixel_Size;
+   end Pixel_Size;
 
 end Framebuffer_LTDC;

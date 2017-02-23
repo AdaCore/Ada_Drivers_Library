@@ -1,7 +1,7 @@
 with "config.gpr";
-with "../../ARM/STM32/stm32f42x";
+with "../../arch/ARM/STM32/stm32f42x";
 with "../../components/components";
-with "../../services/services";
+with "../../middleware/middleware";
 
 library project Board is
 

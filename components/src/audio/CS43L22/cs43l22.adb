@@ -1,3 +1,33 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
 
 package body CS43L22 is
 
@@ -6,15 +36,15 @@ package body CS43L22 is
    ---------------
 
    procedure I2C_Write (This  : in out CS43L22_Device;
-                        Reg   : Byte;
-                        Value : Byte)
+                        Reg   : UInt8;
+                        Value : UInt8)
    is
       Status : I2C_Status with Unreferenced;
 
    begin
       This.Port.Mem_Write
         (Addr          => CS43L22_I2C_Addr,
-         Mem_Addr      => Unsigned_16 (Reg),
+         Mem_Addr      => UInt16 (Reg),
          Mem_Addr_Size => Memory_Size_8b,
          Data          => (1 => Value),
          Status        => Status);
@@ -25,8 +55,8 @@ package body CS43L22 is
    --------------
 
    function I2C_Read (This : in out CS43L22_Device;
-                      Reg : Byte)
-                      return Byte
+                      Reg : UInt8)
+                      return UInt8
    is
       Status : I2C_Status;
       Data   : I2C_Data (1 .. 1);
@@ -34,7 +64,7 @@ package body CS43L22 is
    begin
       This.Port.Mem_Read
         (Addr          => CS43L22_I2C_Addr,
-         Mem_Addr      => Unsigned_16 (Reg),
+         Mem_Addr      => UInt16 (Reg),
          Mem_Addr_Size => Memory_Size_8b,
          Data          => Data,
          Status        => Status);
@@ -105,7 +135,7 @@ package body CS43L22 is
    -- Read_ID --
    -------------
 
-   function Read_ID (This : in out CS43L22_Device) return Unsigned_8 is
+   function Read_ID (This : in out CS43L22_Device) return UInt8 is
    begin
       return This.I2C_Read (CS43L22_REG_ID) and CS43L22_ID_MASK;
    end Read_ID;
@@ -187,8 +217,8 @@ package body CS43L22 is
    procedure Set_Volume (This : in out CS43L22_Device; Volume : Volume_Level)
    is
       --  Actual Volume in range 0 .. 16#3F#
-      Converted_Volume : Unsigned_8 :=
-                           Unsigned_8 (Unsigned_16 (Volume) * 200 / 100);
+      Converted_Volume : UInt8 :=
+                           UInt8 (UInt16 (Volume) * 200 / 100);
 
    begin
       --  range goes the following:

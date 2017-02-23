@@ -53,7 +53,7 @@ package body L3GD20 is
    Sensitivity_2000dps : constant := 70.0 * 0.001; -- mdps/digit
 
    ReadWrite_CMD : constant := 16#80#;
-   MultiByte_CMD       : constant := 16#40#;
+   MultiUInt8_CMD       : constant := 16#40#;
 
    --  bit definitions for the CTRL_REG3 register
 
@@ -93,7 +93,7 @@ package body L3GD20 is
    Logically_And_Or_Events_Bit : constant := 2#1000_0000#;
    Int1_Latch_Enable_Bit       : constant := 2#0100_0000#;
 
-   Axes_Interrupt_Enablers : constant array (Axes_Interrupts) of Byte :=
+   Axes_Interrupt_Enablers : constant array (Axes_Interrupts) of UInt8 :=
      (Z_High_Interrupt => 2#0010_0000#,
       Z_Low_Interrupt  => 2#0001_0000#,
       Y_High_Interrupt => 2#0000_1000#,
@@ -101,42 +101,42 @@ package body L3GD20 is
       X_High_Interrupt => 2#0000_0010#,
       X_Low_Interrupt  => 2#0000_0001#);
 
-   function As_Byte is new Ada.Unchecked_Conversion
-     (Source => High_Pass_Filter_Mode, Target => Byte);
+   function As_UInt8 is new Ada.Unchecked_Conversion
+     (Source => High_Pass_Filter_Mode, Target => UInt8);
 
-   function As_Byte is new Ada.Unchecked_Conversion
-     (Source => High_Pass_Cutoff_Frequency, Target => Byte);
+   function As_UInt8 is new Ada.Unchecked_Conversion
+     (Source => High_Pass_Cutoff_Frequency, Target => UInt8);
 
-   function As_Byte is new Ada.Unchecked_Conversion
-     (Source => Power_Mode_Selection, Target => Byte);
+   function As_UInt8 is new Ada.Unchecked_Conversion
+     (Source => Power_Mode_Selection, Target => UInt8);
 
-   function As_Byte is new Ada.Unchecked_Conversion
-     (Source => Output_Data_Rate_Selection, Target => Byte);
+   function As_UInt8 is new Ada.Unchecked_Conversion
+     (Source => Output_Data_Rate_Selection, Target => UInt8);
 
-   function As_Byte is new Ada.Unchecked_Conversion
-     (Source => Axes_Selection, Target => Byte);
+   function As_UInt8 is new Ada.Unchecked_Conversion
+     (Source => Axes_Selection, Target => UInt8);
 
-   function As_Byte is new Ada.Unchecked_Conversion
-     (Source => Bandwidth_Selection, Target => Byte);
+   function As_UInt8 is new Ada.Unchecked_Conversion
+     (Source => Bandwidth_Selection, Target => UInt8);
 
-   function As_Byte is new Ada.Unchecked_Conversion
-     (Source => Block_Data_Update_Selection, Target => Byte);
+   function As_UInt8 is new Ada.Unchecked_Conversion
+     (Source => Block_Data_Update_Selection, Target => UInt8);
 
-   function As_Byte is new Ada.Unchecked_Conversion
-     (Source => Endian_Data_Selection, Target => Byte);
+   function As_UInt8 is new Ada.Unchecked_Conversion
+     (Source => Endian_Data_Selection, Target => UInt8);
 
-   function As_Byte is new Ada.Unchecked_Conversion
-     (Source => Full_Scale_Selection, Target => Byte);
+   function As_UInt8 is new Ada.Unchecked_Conversion
+     (Source => Full_Scale_Selection, Target => UInt8);
 
    type Angle_Rate_Pointer is access all Angle_Rate with Storage_Size => 0;
 
    function As_Angle_Rate_Pointer is new Ada.Unchecked_Conversion
      (Source => System.Address, Target => Angle_Rate_Pointer);
-   --  So that we can treat the address of a byte as a pointer to a two-byte
+   --  So that we can treat the address of a UInt8 as a pointer to a two-UInt8
    --  sequence representing a signed integer quantity.
 
    procedure Swap2 (Location : System.Address) with Inline;
-   --  Swaps the two bytes at Location and Location+1
+   --  Swaps the two UInt8s at Location and Location+1
 
    procedure SPI_Mode (This : Three_Axis_Gyroscope; Enabled : Boolean);
    --  Enable or disable SPI mode communication with the device. This is named
@@ -148,8 +148,8 @@ package body L3GD20 is
 
    procedure Initialize
      (This        : in out Three_Axis_Gyroscope;
-      Port        : SPI_Port_Ref;
-      Chip_Select : GPIO_Point_Ref)
+      Port        : Any_SPI_Port;
+      Chip_Select : Any_GPIO_Point)
    is
    begin
       This.Port := Port;
@@ -179,13 +179,13 @@ package body L3GD20 is
    -- Write --
    -----------
 
-   procedure Write (This : Three_Axis_Gyroscope; Addr : Register;  Data : Byte)
+   procedure Write (This : Three_Axis_Gyroscope; Addr : Register;  Data : UInt8)
    is
       Status : SPI_Status;
    begin
       SPI_Mode (This, Enabled => True);
 
-      This.Port.Transmit (SPI_Data_8b'(1 => Byte (Addr)), Status);
+      This.Port.Transmit (SPI_Data_8b'(1 => UInt8 (Addr)), Status);
       if Status /= Ok then
          raise Program_Error;
       end if;
@@ -205,14 +205,14 @@ package body L3GD20 is
    procedure Read
      (This : Three_Axis_Gyroscope;
       Addr : Register;
-      Data : out Byte)
+      Data : out UInt8)
    is
       Status : SPI_Status;
       Tmp_Data : SPI_Data_8b (1 .. 1);
    begin
       SPI_Mode (This, Enabled => True);
 
-      This.Port.Transmit (SPI_Data_8b'(1 => Byte (Addr) or ReadWrite_CMD),
+      This.Port.Transmit (SPI_Data_8b'(1 => UInt8 (Addr) or ReadWrite_CMD),
                          Status);
       if Status /= Ok then
          raise Program_Error;
@@ -228,10 +228,10 @@ package body L3GD20 is
    end Read;
 
    ----------------
-   -- Read_Bytes --
+   -- Read_UInt8s --
    ----------------
 
-   procedure Read_Bytes
+   procedure Read_UInt8s
      (This   : Three_Axis_Gyroscope;
       Addr   : Register;
       Buffer : out SPI_Data_8b;
@@ -244,7 +244,7 @@ package body L3GD20 is
       SPI_Mode (This, Enabled => True);
 
       This.Port.Transmit
-        (SPI_Data_8b'(1 => Byte (Addr) or ReadWrite_CMD or MultiByte_CMD),
+        (SPI_Data_8b'(1 => UInt8 (Addr) or ReadWrite_CMD or MultiUInt8_CMD),
          Status);
 
       if Status /= Ok then
@@ -261,7 +261,7 @@ package body L3GD20 is
       end loop;
 
       SPI_Mode (This, Enabled => False);
-   end Read_Bytes;
+   end Read_UInt8s;
 
    ---------------
    -- Configure --
@@ -277,17 +277,17 @@ package body L3GD20 is
       Endianness       : Endian_Data_Selection;
       Full_Scale       : Full_Scale_Selection)
    is
-      Ctrl1 : Byte;
-      Ctrl4 : Byte;
+      Ctrl1 : UInt8;
+      Ctrl4 : UInt8;
    begin
-      Ctrl1 := As_Byte (Power_Mode)       or
-               As_Byte (Output_Data_Rate) or
-               As_Byte (Axes_Enable)      or
-               As_Byte (Bandwidth);
+      Ctrl1 := As_UInt8 (Power_Mode)       or
+               As_UInt8 (Output_Data_Rate) or
+               As_UInt8 (Axes_Enable)      or
+               As_UInt8 (Bandwidth);
 
-      Ctrl4 := As_Byte (BlockData_Update) or
-               As_Byte (Endianness)       or
-               As_Byte (Full_Scale);
+      Ctrl4 := As_UInt8 (BlockData_Update) or
+               As_UInt8 (Endianness)       or
+               As_UInt8 (Full_Scale);
 
       Write (This, CTRL_REG1, Ctrl1);
       Write (This, CTRL_REG4, Ctrl4);
@@ -298,7 +298,7 @@ package body L3GD20 is
    -----------
 
    procedure Sleep (This : in out Three_Axis_Gyroscope) is
-      Ctrl1      : Byte;
+      Ctrl1      : UInt8;
       Sleep_Mode : constant := 2#1000#;  -- per the Datasheet, Table 22, pg 32
    begin
       Read (This, CTRL_REG1, Ctrl1);
@@ -315,10 +315,10 @@ package body L3GD20 is
       Mode_Selection   : High_Pass_Filter_Mode;
       Cutoff_Frequency : High_Pass_Cutoff_Frequency)
    is
-      Ctrl2 : Byte;
+      Ctrl2 : UInt8;
    begin
       --  note that the two high-order bits must remain zero, per the datasheet
-      Ctrl2 := As_Byte (Mode_Selection) or As_Byte (Cutoff_Frequency);
+      Ctrl2 := As_UInt8 (Mode_Selection) or As_UInt8 (Cutoff_Frequency);
       Write (This, CTRL_REG2, Ctrl2);
    end Configure_High_Pass_Filter;
 
@@ -327,7 +327,7 @@ package body L3GD20 is
    -----------------------------
 
    procedure Enable_High_Pass_Filter (This : in out Three_Axis_Gyroscope) is
-      Ctrl5 : Byte;
+      Ctrl5 : UInt8;
    begin
       Read (This, CTRL_REG5, Ctrl5);
       --  set HPen bit
@@ -340,7 +340,7 @@ package body L3GD20 is
    ------------------------------
 
    procedure Disable_High_Pass_Filter (This : in out Three_Axis_Gyroscope) is
-      Ctrl5 : Byte;
+      Ctrl5 : UInt8;
    begin
       Read (This, CTRL_REG5, Ctrl5);
       --  clear HPen bit
@@ -353,7 +353,7 @@ package body L3GD20 is
    ----------------------------
 
    procedure Enable_Low_Pass_Filter (This : in out Three_Axis_Gyroscope) is
-      Ctrl5 : Byte;
+      Ctrl5 : UInt8;
    begin
       Read (This, CTRL_REG5, Ctrl5);
       Ctrl5 := Ctrl5 or LowPass_Filter_Enable;
@@ -365,7 +365,7 @@ package body L3GD20 is
    -----------------------------
 
    procedure Disable_Low_Pass_Filter (This : in out Three_Axis_Gyroscope) is
-      Ctrl5 : Byte;
+      Ctrl5 : UInt8;
    begin
       Read (This, CTRL_REG5, Ctrl5);
       --  clear HPen bit
@@ -377,8 +377,8 @@ package body L3GD20 is
    -- Reference_Value --
    ---------------------
 
-   function Reference_Value (This : Three_Axis_Gyroscope) return Byte is
-      Result : Byte;
+   function Reference_Value (This : Three_Axis_Gyroscope) return UInt8 is
+      Result : UInt8;
    begin
       Read (This, Reference, Result);
       return Result;
@@ -388,7 +388,7 @@ package body L3GD20 is
    -- Set_Reference --
    -------------------
 
-   procedure Set_Reference (This : in out Three_Axis_Gyroscope; Value : Byte) is
+   procedure Set_Reference (This : in out Three_Axis_Gyroscope; Value : UInt8) is
    begin
       Write (This, Reference, Value);
    end Set_Reference;
@@ -398,9 +398,9 @@ package body L3GD20 is
    -----------------
 
    function Data_Status (This : Three_Axis_Gyroscope) return Gyro_Data_Status is
-      Result : Byte;
+      Result : UInt8;
       function As_Gyro_Data_Status is
-        new Ada.Unchecked_Conversion (Source => Byte,
+        new Ada.Unchecked_Conversion (Source => UInt8,
                                       Target => Gyro_Data_Status);
    begin
       Read (This, Status, Result);
@@ -411,8 +411,8 @@ package body L3GD20 is
    -- Device_Id --
    ---------------
 
-   function Device_Id (This : Three_Axis_Gyroscope) return Byte is
-      Result : Byte;
+   function Device_Id (This : Three_Axis_Gyroscope) return UInt8 is
+      Result : UInt8;
    begin
       Read (This, Who_Am_I, Result);
       return Result;
@@ -422,8 +422,8 @@ package body L3GD20 is
    -- Temperature --
    -----------------
 
-   function Temperature (This : Three_Axis_Gyroscope) return Byte is
-      Result : Byte;
+   function Temperature (This : Three_Axis_Gyroscope) return UInt8 is
+      Result : UInt8;
    begin
       Read (This, OUT_Temp, Result);
       return Result;
@@ -434,7 +434,7 @@ package body L3GD20 is
    ------------
 
    procedure Reboot (This : Three_Axis_Gyroscope) is
-      Ctrl5 : Byte;
+      Ctrl5 : UInt8;
    begin
       Read (This, CTRL_REG5, Ctrl5);
       --  set the boot bit
@@ -447,9 +447,9 @@ package body L3GD20 is
    ----------------------------
 
    function Full_Scale_Sensitivity (This : Three_Axis_Gyroscope) return Float is
-      Ctrl4  : Byte;
+      Ctrl4  : UInt8;
       Result : Float;
-      Fullscale_Selection : Byte;
+      Fullscale_Selection : UInt8;
    begin
       Read (This, CTRL_REG4, Ctrl4);
 
@@ -475,17 +475,17 @@ package body L3GD20 is
       Rates : out Angle_Rates)
    is
 
-      Ctrl4 : Byte;
+      Ctrl4 : UInt8;
 
-      Bytes_To_Read : constant Integer := 6;  -- ie, three 2-byte integers
-      --  the number of bytes in an Angle_Rates record object
+      UInt8s_To_Read : constant Integer := 6;  -- ie, three 2-UInt8 integers
+      --  the number of UInt8s in an Angle_Rates record object
 
-      Received : SPI_Data_8b (1 .. Bytes_To_Read);
+      Received : SPI_Data_8b (1 .. UInt8s_To_Read);
 
    begin
       Read (This, CTRL_REG4, Ctrl4);
 
-      Read_Bytes (This, OUT_X_L, Received, Bytes_To_Read);
+      Read_UInt8s (This, OUT_X_L, Received, UInt8s_To_Read);
       --  The above has the effect of separate reads, as follows:
       --    Read (This, OUT_X_L, Received (1));
       --    Read (This, OUT_X_H, Received (2));
@@ -517,8 +517,8 @@ package body L3GD20 is
       Combine_Events : Boolean := False;
       Sample_Count   : Sample_Counter := 0)
    is
-      Config : Byte;
-      Ctrl3  : Byte;
+      Config : UInt8;
+      Ctrl3  : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and 16#DF#;
@@ -559,7 +559,7 @@ package body L3GD20 is
      (This : in out Three_Axis_Gyroscope;
       Mode : Pin_Modes)
    is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and (not Interrupt_Pin_Mode_Bit);
@@ -572,7 +572,7 @@ package body L3GD20 is
    -----------------------
 
    procedure Enable_Interrupt1 (This : in out Three_Axis_Gyroscope) is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 or INT1_Interrupt_Enable;
@@ -584,7 +584,7 @@ package body L3GD20 is
    ------------------------
 
    procedure Disable_Interrupt1 (This : in out Three_Axis_Gyroscope) is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and (not INT1_Interrupt_Enable);
@@ -596,9 +596,9 @@ package body L3GD20 is
    -----------------------
 
    function Interrupt1_Source (This : Three_Axis_Gyroscope) return Interrupt1_Sources is
-      Result : Byte;
+      Result : UInt8;
       function As_Interrupt_Source is new Ada.Unchecked_Conversion
-        (Source => Byte, Target => Interrupt1_Sources);
+        (Source => UInt8, Target => Interrupt1_Sources);
    begin
       Read (This, INT1_SRC, Result);
       return As_Interrupt_Source (Result);
@@ -614,7 +614,7 @@ package body L3GD20 is
    is
       Wait_Bit : constant := 2#1000_0000#;
    begin
-      Write (This, INT1_Duration, Byte (Value) or Wait_Bit);
+      Write (This, INT1_Duration, UInt8 (Value) or Wait_Bit);
    end Set_Duration_Counter;
 
    ------------------
@@ -625,7 +625,7 @@ package body L3GD20 is
      (This  : in out Three_Axis_Gyroscope;
       Event : Axes_Interrupts)
    is
-      Config : Byte;
+      Config : UInt8;
    begin
       Read (This, INT1_CFG, Config);
       Config := Config or Axes_Interrupt_Enablers (Event);
@@ -640,7 +640,7 @@ package body L3GD20 is
      (This  : in out Three_Axis_Gyroscope;
       Event : Axes_Interrupts)
    is
-      Config : Byte;
+      Config : UInt8;
    begin
       Read (This, INT1_CFG, Config);
       Config := Config and (not Axes_Interrupt_Enablers (Event));
@@ -659,16 +659,16 @@ package body L3GD20 is
    begin
       case Event is
          when Z_High_Interrupt | Z_Low_Interrupt =>
-            Write (This, INT1_TSH_ZL, Byte (Value));
-            Write (This, INT1_TSH_ZH, Byte (Shift_Right (Value, 8)));
+            Write (This, INT1_TSH_ZL, UInt8 (Value));
+            Write (This, INT1_TSH_ZH, UInt8 (Shift_Right (Value, 8)));
 
          when Y_High_Interrupt | Y_Low_Interrupt =>
-            Write (This, INT1_TSH_YL, Byte (Value));
-            Write (This, INT1_TSH_YH, Byte (Shift_Right (Value, 8)));
+            Write (This, INT1_TSH_YL, UInt8 (Value));
+            Write (This, INT1_TSH_YH, UInt8 (Shift_Right (Value, 8)));
 
          when X_High_Interrupt | X_Low_Interrupt =>
-            Write (This, INT1_TSH_XL, Byte (Value));
-            Write (This, INT1_TSH_XH, Byte (Shift_Right (Value, 8)));
+            Write (This, INT1_TSH_XL, UInt8 (Value));
+            Write (This, INT1_TSH_XH, UInt8 (Shift_Right (Value, 8)));
       end case;
    end Set_Threshold;
 
@@ -680,7 +680,7 @@ package body L3GD20 is
      (This : in out Three_Axis_Gyroscope;
       Mode : FIFO_Modes)
    is
-      FIFO  : Byte;
+      FIFO  : UInt8;
    begin
       Read (This, FIFO_CTRL, FIFO);
       FIFO := FIFO and (not FIFO_Mode_Bits);  -- clear the current bits
@@ -693,7 +693,7 @@ package body L3GD20 is
    -----------------
 
    procedure Enable_FIFO (This : in out Three_Axis_Gyroscope) is
-      Ctrl5 : Byte;
+      Ctrl5 : UInt8;
    begin
       Read (This, CTRL_REG5, Ctrl5);
       Ctrl5 := Ctrl5 or FIFO_Enable_Bit;
@@ -705,7 +705,7 @@ package body L3GD20 is
    ------------------
 
    procedure Disable_FIFO (This : in out Three_Axis_Gyroscope) is
-      Ctrl5 : Byte;
+      Ctrl5 : UInt8;
    begin
       Read (This, CTRL_REG5, Ctrl5);
       Ctrl5 := Ctrl5 and (not FIFO_Enable_Bit);
@@ -720,11 +720,11 @@ package body L3GD20 is
      (This  : in out Three_Axis_Gyroscope;
       Level : FIFO_Level)
    is
-      Value : Byte;
+      Value : UInt8;
    begin
       Read (This, FIFO_CTRL, Value);
       Value := Value and (not Watermark_Threshold_Bits); -- clear the bits
-      Value := Value or Byte (Level);
+      Value := Value or UInt8 (Level);
       Write (This, FIFO_CTRL, Value);
    end Set_FIFO_Watermark;
 
@@ -736,16 +736,16 @@ package body L3GD20 is
      (This   : in out Three_Axis_Gyroscope;
       Buffer : out Angle_Rates_FIFO_Buffer)
    is
-      Ctrl4 : Byte;
+      Ctrl4 : UInt8;
 
-      Angle_Rate_Size : constant Integer := 6;  -- bytes
-      Bytes_To_Read   : constant Integer := Buffer'Length * Angle_Rate_Size;
-      Received        : SPI_Data_8b (0 .. Bytes_To_Read - 1)
+      Angle_Rate_Size : constant Integer := 6;  -- UInt8s
+      UInt8s_To_Read   : constant Integer := Buffer'Length * Angle_Rate_Size;
+      Received        : SPI_Data_8b (0 .. UInt8s_To_Read - 1)
         with Alignment => 2;
    begin
       Read (This, CTRL_REG4, Ctrl4);
 
-      Read_Bytes (This, OUT_X_L, Received, Bytes_To_Read);
+      Read_UInt8s (This, OUT_X_L, Received, UInt8s_To_Read);
 
       if (Ctrl4 and Endian_Selection_Mask) = L3GD20_Big_Endian'Enum_Rep then
          declare
@@ -777,7 +777,7 @@ package body L3GD20 is
    ------------------------
 
    function Current_FIFO_Depth (This : Three_Axis_Gyroscope) return FIFO_Level is
-      Result : Byte;
+      Result : UInt8;
    begin
       Read (This, FIFO_SRC, Result);
       Result := Result and FIFO_Depth_Bits;
@@ -789,7 +789,7 @@ package body L3GD20 is
    --------------------------
 
    function FIFO_Below_Watermark (This : Three_Axis_Gyroscope) return Boolean is
-      Result : Byte;
+      Result : UInt8;
    begin
       Read (This, FIFO_SRC, Result);
       Result := Result and Watermark_Status_Bit;
@@ -801,7 +801,7 @@ package body L3GD20 is
    ----------------
 
    function FIFO_Empty (This : Three_Axis_Gyroscope) return Boolean is
-      Result : Byte;
+      Result : UInt8;
    begin
       Read (This, FIFO_SRC, Result);
       Result := Result and FIFO_Empty_Bit;
@@ -813,7 +813,7 @@ package body L3GD20 is
    ------------------
 
    function FIFO_Overrun (This : Three_Axis_Gyroscope) return Boolean is
-      Result : Byte;
+      Result : UInt8;
    begin
       Read (This, FIFO_SRC, Result);
       Result := Result and FIFO_Overrun_Bit;
@@ -825,7 +825,7 @@ package body L3GD20 is
    ---------------------------------
 
    procedure Enable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope) is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 or INT2_Data_Ready_Interrupt_Enable;
@@ -837,7 +837,7 @@ package body L3GD20 is
    ----------------------------------
 
    procedure Disable_Data_Ready_Interrupt (This : in out Three_Axis_Gyroscope) is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and (not INT2_Data_Ready_Interrupt_Enable);
@@ -849,7 +849,7 @@ package body L3GD20 is
    -------------------------------------
 
    procedure Enable_FIFO_Watermark_Interrupt (This : in out Three_Axis_Gyroscope) is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 or INT2_Watermark_Interrupt_Enable;
@@ -861,7 +861,7 @@ package body L3GD20 is
    -----------------------------
 
    procedure Disable_Int1_Interrupts (This : in out Three_Axis_Gyroscope) is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and 2#0001_1111#;
@@ -873,7 +873,7 @@ package body L3GD20 is
    -----------------------------
 
    procedure Disable_Int2_Interrupts (This : in out Three_Axis_Gyroscope) is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and 2#1111_0000#;
@@ -887,7 +887,7 @@ package body L3GD20 is
    procedure Disable_FIFO_Watermark_Interrupt
      (This : in out Three_Axis_Gyroscope)
    is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and (not INT2_Watermark_Interrupt_Enable);
@@ -901,7 +901,7 @@ package body L3GD20 is
    procedure Enable_FIFO_Overrun_Interrupt
      (This : in out Three_Axis_Gyroscope)
    is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 or INT2_Overrun_Interrupt_Enable;
@@ -915,7 +915,7 @@ package body L3GD20 is
    procedure Disable_FIFO_Overrun_Interrupt
      (This : in out Three_Axis_Gyroscope)
    is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and (not INT2_Overrun_Interrupt_Enable);
@@ -929,7 +929,7 @@ package body L3GD20 is
    procedure Enable_FIFO_Empty_Interrupt
      (This : in out Three_Axis_Gyroscope)
    is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 or INT2_FIFO_Empty_Interrupt_Enable;
@@ -943,7 +943,7 @@ package body L3GD20 is
    procedure Disable_FIFO_Empty_Interrupt
      (This : in out Three_Axis_Gyroscope)
    is
-      Ctrl3 : Byte;
+      Ctrl3 : UInt8;
    begin
       Read (This, CTRL_REG3, Ctrl3);
       Ctrl3 := Ctrl3 and (not INT2_FIFO_Empty_Interrupt_Enable);

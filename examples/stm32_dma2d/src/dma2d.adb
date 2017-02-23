@@ -29,35 +29,34 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
+with Last_Chance_Handler; pragma Unreferenced (Last_Chance_Handler);
 --  The "last chance handler" is the user-defined routine that is called when
 --  an exception is propagated. We need it in the executable, therefore it
 --  must be somewhere in the closure of the context clauses.
 
-with STM32.Board;           use STM32.Board;
-with STM32.DMA2D;           use STM32.DMA2D;
-with STM32.DMA2D_Bitmap;    use STM32.DMA2D_Bitmap;
-with HAL;                   use HAL;
-with Interfaces;            use Interfaces;
-with HAL.Bitmap;
+with STM32.Board;         use STM32.Board;
+with STM32.DMA2D;         use STM32.DMA2D;
+with STM32.DMA2D_Bitmap;  use STM32.DMA2D_Bitmap;
+with HAL;                 use HAL;
+with HAL.Bitmap;          use HAL.Bitmap;
 
 procedure Dma2d
 is
 
-   function Bitmap_Buffer return DMA2D_Bitmap_Buffer'Class;
+   function Bitmap_Buffer return not null Any_Bitmap_Buffer;
    function Buffer return DMA2D_Buffer;
 
-   -----------------
-   -- DM2D_Bugger --
-   -----------------
+   -------------------
+   -- Bitmap_Buffer --
+   -------------------
 
-   function Bitmap_Buffer return DMA2D_Bitmap_Buffer'Class is
+   function Bitmap_Buffer return not null Any_Bitmap_Buffer is
    begin
-      if Display.Get_Hidden_Buffer (1) not in DMA2D_Bitmap_Buffer then
+      if Display.Hidden_Buffer (1).all not in DMA2D_Bitmap_Buffer then
          raise Program_Error with "We expect a DM2D buffer here";
       end if;
 
-      return DMA2D_Bitmap_Buffer'Class (Display.Get_Hidden_Buffer (1));
+      return Display.Hidden_Buffer (1);
    end Bitmap_Buffer;
 
    ------------
@@ -66,7 +65,7 @@ is
 
    function Buffer return DMA2D_Buffer is
    begin
-      return To_DMA2D_Buffer (Display.Get_Hidden_Buffer (1));
+      return To_DMA2D_Buffer (Display.Hidden_Buffer (1).all);
    end Buffer;
 
    Width  : Natural;
@@ -101,34 +100,30 @@ begin
    Display.Initialize;
    Display.Initialize_Layer (1, HAL.Bitmap.ARGB_8888);
 
-   Width := Display.Get_Hidden_Buffer (1).Width;
-   Height := Display.Get_Hidden_Buffer (1).Height;
+   Width := Display.Hidden_Buffer (1).Width;
+   Height := Display.Hidden_Buffer (1).Height;
 
    loop
       Bitmap_Buffer.Fill (HAL.Bitmap.Dark_Green);
 
       --  Draw blue filled rectangle in the upper left corner
-      Bitmap_Buffer.Fill_Rect (Color  => HAL.Bitmap.Blue,
-                               X      => 0,
-                               Y      => 0,
-                               Width  => Width / 2,
-                               Height => Height / 2);
+      Bitmap_Buffer.Fill_Rect (HAL.Bitmap.Blue,
+                               (Position => (0, 0),
+                                Width    => Width / 2,
+                                Height   => Height / 2));
 
       --  Drawn yellow rectangle outline in the lower left corner
-      Bitmap_Buffer.Draw_Rect (Color  => HAL.Bitmap.Yellow,
-                               X      => 0,
-                               Y      => Height / 2,
-                               Width  => Width / 2,
-                               Height => Height / 2);
+      Bitmap_Buffer.Draw_Rect (HAL.Bitmap.Yellow,
+                               (Position => (0, Height / 2),
+                                Width  => Width / 2,
+                                Height => Height / 2));
 
       --  Draw 10 red lines in the blue rectangle
       X := 0;
       Y := 0;
       while X < Width / 2 and then Y < ((Height / 2) - 10) loop
          for Cnt in 0 .. 10 loop
-            Bitmap_Buffer.Set_Pixel (X     => X,
-                                     Y     => Y + Cnt,
-                                     Value => HAL.Bitmap.Red);
+            Bitmap_Buffer.Set_Pixel ((X, Y + Cnt), HAL.Bitmap.Red);
          end loop;
          X := X + 1;
          Y := Y + 1;
@@ -139,24 +134,19 @@ begin
       Y := Height / 2;
       while X < Width / 2 and then Y < Height - 10 loop
          for Cnt in 0 .. 10 loop
-            Bitmap_Buffer.Set_Pixel_Blend (X     => X,
-                                           Y     => Y + Cnt,
-                                           Value => (100, 255, 0, 0));
+            Bitmap_Buffer.Set_Pixel_Blend ((X, Y + Cnt), (100, 255, 0, 0));
          end loop;
          X := X + 1;
          Y := Y + 1;
       end loop;
 
       --  Copy half of the screen to the other half
-      Copy_Rect (Src_Buffer => Bitmap_Buffer,
-                 X_Src       => 0,
-                 Y_Src       => 0,
-                 Dst_Buffer  => Bitmap_Buffer,
-                 X_Dst       => Width / 2,
-                 Y_Dst       => 0,
+      Copy_Rect (Src_Buffer  => Bitmap_Buffer.all,
+                 Src_Pt      => (0, 0),
+                 Dst_Buffer  => Bitmap_Buffer.all,
+                 Dst_Pt      => (Width / 2, 0),
                  Bg_Buffer   => STM32.DMA2D_Bitmap.Null_Buffer,
-                 X_Bg        => 0,
-                 Y_Bg        => 0,
+                 Bg_Pt       => (0, 0),
                  Width       => Width / 2,
                  Height      => Height,
                  Synchronous => True);
@@ -164,7 +154,7 @@ begin
 
       --  Fill L4 CLUT
       for Index in UInt4 loop
-         L4_CLUT (Index) := (255, 0, 0, Byte (Index) * 16);
+         L4_CLUT (Index) := (255, 0, 0, UInt8 (Index) * 16);
       end loop;
 
       --  Fill L4 bitmap

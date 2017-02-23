@@ -1,3 +1,34 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
+
 with Interfaces; use Interfaces;
 
 --  Provide common interfaces to deal with filesystems
@@ -37,15 +68,15 @@ package HAL.Filesystem is
    type IO_Count is new Unsigned_64;
 
    type FS_Driver is limited interface;
-   type FS_Driver_Ref is access all FS_Driver'Class;
+   type Any_FS_Driver is access all FS_Driver'Class;
    --  Interface to provide access a filesystem
 
    type File_Handle is limited interface;
-   type File_Handle_Ref is access all File_Handle'Class;
+   type Any_File_Handle is access all File_Handle'Class;
    --  Interface to provide access to a regular file
 
    type Directory_Handle is limited interface;
-   type Directory_Handle_Ref is access all Directory_Handle'Class;
+   type Any_Directory_Handle is access all Directory_Handle'Class;
    --  Interface to provide access to a directory
 
    --  ??? Document error cases for all primitives below
@@ -86,13 +117,13 @@ package HAL.Filesystem is
                            Length : IO_Count)
                            return Status_Kind is abstract;
    --  Assuming Path designates a regular file, set its size to be Length. This
-   --  operation preserves the first Length bytes and leaves the other with
+   --  operation preserves the first Length UInt8s and leaves the other with
    --  undefined values.
 
    function Open (This   : in out FS_Driver;
                   Path   : Pathname;
                   Mode   : File_Mode;
-                  Handle : out File_Handle_Ref)
+                  Handle : out Any_File_Handle)
                   return Status_Kind is abstract;
    --  Assuming Path designates a regular file, open it with the given Mode and
    --  create a Handle for it.
@@ -102,7 +133,7 @@ package HAL.Filesystem is
 
    function Open_Directory (This   : in out FS_Driver;
                             Path   : Pathname;
-                            Handle : out Directory_Handle_Ref)
+                            Handle : out Any_Directory_Handle)
                             return Status_Kind is abstract;
    --  Assuming Path designates a directory, open it and create a Handle for
    --  it.
@@ -118,21 +149,21 @@ package HAL.Filesystem is
    ------------------
 
    function Read (This : in out File_Handle;
-                  Data : out Byte_Array)
+                  Data : out UInt8_Array)
                   return Status_Kind is abstract;
-   --  Read the next Data'Length bytes in This and put to in Data. If there
-   --  isn't enough byte to read to fill Data, return Input_Output_Error.
+   --  Read the next Data'Length UInt8s in This and put to in Data. If there
+   --  isn't enough UInt8 to read to fill Data, return Input_Output_Error.
 
    function Write (This : in out File_Handle;
-                   Data : Byte_Array)
+                   Data : UInt8_Array)
                    return Status_Kind is abstract;
-   --  Write bytes in Data to This. This overrides the next Data'Length bytes in
+   --  Write UInt8s in Data to This. This overrides the next Data'Length UInt8s in
    --  this file, if they exist, it extends the file otherwise.
 
    function Seek (This   : in out File_Handle;
                   Offset : IO_Count)
                   return Status_Kind is abstract;
-   --  Set the read/write cursor of This to point to its byte at the absolute
+   --  Set the read/write cursor of This to point to its UInt8 at the absolute
    --  Offset.
    --
    --  ??? What should happen if this offset is beyond the end of the file?

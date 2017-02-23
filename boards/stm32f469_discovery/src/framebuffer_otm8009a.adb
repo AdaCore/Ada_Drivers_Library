@@ -1,3 +1,34 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
+
 with Ada.Real_Time;        use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 with Ada.Interrupts.Names;
@@ -126,23 +157,23 @@ package body Framebuffer_OTM8009A is
       delay until Clock + Microseconds (10);
    end LCD_Reset;
 
-   --------------------
-   -- Get_Max_Layers --
-   --------------------
+   ----------------
+   -- Max_Layers --
+   ----------------
 
-   overriding function Get_Max_Layers
+   overriding function Max_Layers
      (Display : Frame_Buffer) return Positive
    is
       pragma Unreferenced (Display);
    begin
       return 2;
-   end Get_Max_Layers;
+   end Max_Layers;
 
-   ------------------
-   -- Is_Supported --
-   ------------------
+   ---------------
+   -- Supported --
+   ---------------
 
-   overriding function Is_Supported
+   overriding function Supported
      (Display : Frame_Buffer;
       Mode    : HAL.Framebuffer.FB_Color_Mode) return Boolean
    is
@@ -150,13 +181,13 @@ package body Framebuffer_OTM8009A is
    begin
       --  The LTDC supports all HAL color modes
       return True;
-   end Is_Supported;
+   end Supported;
 
-   ---------------
-   -- Get_Width --
-   ---------------
+   -----------
+   -- Width --
+   -----------
 
-   overriding function Get_Width
+   overriding function Width
      (Display : Frame_Buffer) return Positive
    is
    begin
@@ -165,13 +196,13 @@ package body Framebuffer_OTM8009A is
       else
          return LCD_Natural_Height;
       end if;
-   end Get_Width;
+   end Width;
 
-   ----------------
-   -- Get_Height --
-   ----------------
+   ------------
+   -- Height --
+   ------------
 
-   overriding function Get_Height
+   overriding function Height
      (Display : Frame_Buffer) return Positive
    is
    begin
@@ -180,13 +211,13 @@ package body Framebuffer_OTM8009A is
       else
          return LCD_Natural_Width;
       end if;
-   end Get_Height;
+   end Height;
 
-   ----------------
-   -- Is_Swapped --
-   ----------------
+   -------------
+   -- Swapped --
+   -------------
 
-   overriding function Is_Swapped
+   overriding function Swapped
      (Display : Frame_Buffer) return Boolean
    is
       pragma Unreferenced (Display);
@@ -195,14 +226,14 @@ package body Framebuffer_OTM8009A is
       --  So to the outside world (e.g. bitmap operations), the buffer always
       --  has to be treated as 'native orientation'
       return False;
-   end Is_Swapped;
+   end Swapped;
 
    --------------------
    -- Set_Background --
    --------------------
 
    overriding procedure Set_Background
-     (Display : Frame_Buffer; R, G, B : Byte)
+     (Display : Frame_Buffer; R, G, B : UInt8)
    is
       pragma Unreferenced (Display);
    begin
@@ -234,7 +265,7 @@ package body Framebuffer_OTM8009A is
       DSIHOST.DSI_Setup_Adapted_Command_Mode
         (Virtual_Channel         => LCD_Channel,
          Color_Coding            => STM32.DSI.RGB888,
-         Command_Size            => UInt16 (Display.Get_Width),
+         Command_Size            => UInt16 (Display.Width),
          Tearing_Effect_Source   => STM32.DSI.TE_DSI_Link,
          Tearing_Effect_Polarity => STM32.DSI.Rising_Edge,
          HSync_Polarity          => STM32.DSI.Active_High,
@@ -260,8 +291,8 @@ package body Framebuffer_OTM8009A is
          Acknowledge_Request      => False);
 
       STM32.LTDC.Initialize
-        (Width         => Display.Get_Width,
-         Height        => Display.Get_Height,
+        (Width         => Display.Width,
+         Height        => Display.Height,
          H_Sync        => 2,
          H_Back_Porch  => 1,
          H_Front_Porch => 1,
@@ -414,27 +445,27 @@ package body Framebuffer_OTM8009A is
       H         : Natural := Height;
 
    begin
-      if X >= Display.Get_Width then
+      if X >= Display.Width then
          raise Constraint_Error with "Layer X position outside of screen";
-      elsif Y >= Display.Get_Height then
+      elsif Y >= Display.Height then
          raise Constraint_Error with "Layer Y position outside of screen";
       end if;
 
-      if W = Positive'Last or else X + W > Display.Get_Width then
-         W := Display.Get_Width - X;
+      if W = Positive'Last or else X + W > Display.Width then
+         W := Display.Width - X;
       end if;
 
-      if H = Positive'Last or else Y + H > Display.Get_Height then
-         H := Display.Get_Height - Y;
+      if H = Positive'Last or else Y + H > Display.Height then
+         H := Display.Height - Y;
       end if;
 
       Display.Buffers (LCD_Layer) :=
         (Addr       =>
            Reserve (UInt32 (HAL.Bitmap.Bits_Per_Pixel (Mode) * W * H / 8)),
-         Width      => W,
-         Height     => H,
-         Color_Mode => Mode,
-         Swapped    => False);
+         Actual_Width      => W,
+         Actual_Height     => H,
+         Actual_Color_Mode => Mode,
+         Currently_Swapped => False);
       Display.Buffers (LCD_Layer).Fill (0);
 
       DSIHOST.DSI_Wrapper_Disable;
@@ -502,11 +533,11 @@ package body Framebuffer_OTM8009A is
       Sync.Wait;
    end Update_Layers;
 
-   --------------------
-   -- Get_Color_Mode --
-   --------------------
+   ----------------
+   -- Color_Mode --
+   ----------------
 
-   overriding function Get_Color_Mode
+   overriding function Color_Mode
      (Display : Frame_Buffer;
       Layer   : Positive) return HAL.Framebuffer.FB_Color_Mode
    is
@@ -516,29 +547,29 @@ package body Framebuffer_OTM8009A is
                       else STM32.LTDC.Layer2);
    begin
       return Display.Buffers (LCD_Layer).Color_Mode;
-   end Get_Color_Mode;
+   end Color_Mode;
 
-   -----------------------
-   -- Get_Hidden_Buffer --
-   -----------------------
+   -------------------
+   -- Hidden_Buffer --
+   -------------------
 
-   overriding function Get_Hidden_Buffer
-     (Display : Frame_Buffer;
-      Layer   : Positive) return HAL.Bitmap.Bitmap_Buffer'Class
+   overriding function Hidden_Buffer
+     (Display : in out Frame_Buffer;
+      Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer
    is
       LCD_Layer  : constant STM32.LTDC.LCD_Layer :=
                      (if Layer = 1
                       then STM32.LTDC.Layer1
                       else STM32.LTDC.Layer2);
    begin
-      return Display.Buffers (LCD_Layer);
-   end Get_Hidden_Buffer;
+      return Display.Buffers (LCD_Layer)'Unchecked_Access;
+   end Hidden_Buffer;
 
-   --------------------
-   -- Get_Pixel_Size --
-   --------------------
+   ----------------
+   -- Pixel_Size --
+   ----------------
 
-   overriding function Get_Pixel_Size
+   overriding function Pixel_Size
      (Display : Frame_Buffer;
       Layer   : Positive) return Positive
    is
@@ -550,6 +581,6 @@ package body Framebuffer_OTM8009A is
       return
         HAL.Bitmap.Bits_Per_Pixel
           (Display.Buffers (LCD_Layer).Color_Mode) / 8;
-   end Get_Pixel_Size;
+   end Pixel_Size;
 
 end Framebuffer_OTM8009A;

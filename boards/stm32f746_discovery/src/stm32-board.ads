@@ -11,7 +11,7 @@
 --        notice, this list of conditions and the following disclaimer in   --
 --        the documentation and/or other materials provided with the        --
 --        distribution.                                                     --
---     3. Neither the name of STMicroelectronics nor the names of its       --
+--     3. Neither the name of the copyright holder nor the names of its     --
 --        contributors may be used to endorse or promote products derived   --
 --        from this software without specific prior written permission.     --
 --                                                                          --
@@ -53,11 +53,11 @@ package STM32.Board is
 
    subtype User_LED is GPIO_Point;
 
-   Green    : User_LED renames PI1;
-   LED1     : User_LED renames Green;
-   LCH_LED  : User_LED renames Green;
+   Green_LED : User_LED renames PI1;
+   LED1      : User_LED renames Green_LED;
+   LCH_LED   : User_LED renames Green_LED;
 
-   All_LEDs : GPIO_Points := (1 => Green);
+   All_LEDs : GPIO_Points := (1 => Green_LED);
 
    procedure Initialize_LEDs;
    --  MUST be called prior to any use of the LEDs

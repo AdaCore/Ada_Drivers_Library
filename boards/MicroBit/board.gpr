@@ -1,10 +1,10 @@
 with "config";
-with "../../ARM/Nordic/nrf51";
+with "../../arch/ARM/Nordic/nrf51";
 
 --  The component library is not run-time agostic as it should be, we cannot
 --  use it with the zfp-nrf51 run-time.
 --  with "../../components/components";
-with "../../services/services";
+with "../../middleware/middleware";
 
 library project Board is
 

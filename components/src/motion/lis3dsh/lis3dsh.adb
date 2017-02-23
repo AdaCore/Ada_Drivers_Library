@@ -46,21 +46,21 @@ with Interfaces; use Interfaces;
 
 package body LIS3DSH is
 
-   Full_Scale_Selection_Mask : constant Byte := 2#0011_1000#;
+   Full_Scale_Selection_Mask : constant UInt8 := 2#0011_1000#;
    --  bits 3..5 of CTRL5
 
-   Data_Rate_Selection_Mask : constant Byte := 2#0111_0000#;
+   Data_Rate_Selection_Mask : constant UInt8 := 2#0111_0000#;
    --  bits 4..6 of CTRL4
 
    procedure Loc_IO_Write
      (This      : in out Three_Axis_Accelerometer;
-      Value     : Byte;
+      Value     : UInt8;
       WriteAddr : Register_Address)
      with Inline_Always;
 
    procedure Loc_IO_Read
      (This     : Three_Axis_Accelerometer;
-      Value    : out Byte;
+      Value    : out UInt8;
       ReadAddr : Register_Address)
      with Inline_Always;
 
@@ -70,7 +70,7 @@ package body LIS3DSH is
 
    procedure Loc_IO_Write
      (This      : in out Three_Axis_Accelerometer;
-      Value     : Byte;
+      Value     : UInt8;
       WriteAddr : Register_Address)
    is
 
@@ -86,7 +86,7 @@ package body LIS3DSH is
 
    procedure Loc_IO_Read
      (This     : Three_Axis_Accelerometer;
-      Value    : out Byte;
+      Value    : out UInt8;
       ReadAddr : Register_Address)
       is
    begin
@@ -111,7 +111,7 @@ package body LIS3DSH is
       Axes : out Axes_Accelerations)
    is
 
-      Buffer : array (0 .. 5) of Byte with Alignment => 2, Size => 48;
+      Buffer : array (0 .. 5) of UInt8 with Alignment => 2, Size => 48;
       Scaled : Float;
 
       type Integer16_Pointer is access all Integer_16
@@ -119,7 +119,7 @@ package body LIS3DSH is
 
       function As_Pointer is new Ada.Unchecked_Conversion
         (Source => System.Address, Target => Integer16_Pointer);
-      --  So that we can treat the address of a byte as a pointer to a two-byte
+      --  So that we can treat the address of a UInt8 as a pointer to a two-UInt8
       --  sequence representing a signed Integer_16 quantity
 
    begin
@@ -166,7 +166,7 @@ package body LIS3DSH is
       Filter_BW       : Anti_Aliasing_Filter_Bandwidth)
    is
       Temp  : UInt16;
-      Value : Byte;
+      Value : UInt8;
    begin
       Temp := Output_DataRate'Enum_Rep or
               Axes_Enable'Enum_Rep     or
@@ -175,10 +175,10 @@ package body LIS3DSH is
               Full_Scale'Enum_Rep      or
               Filter_BW'Enum_Rep;
 
-      Value := Byte (Temp); -- the low byte of the half-word
+      Value := UInt8 (Temp); -- the low UInt8 of the half-word
       This.Loc_IO_Write (Value, CTRL_REG4);
 
-      Value := Byte (Shift_Right (Temp, 8)); -- the high byte
+      Value := UInt8 (Shift_Right (Temp, 8)); -- the high UInt8
       This.Loc_IO_Write (Value, CTRL_REG5);
 
       case Full_Scale is
@@ -201,8 +201,8 @@ package body LIS3DSH is
    -- Device_Id --
    ---------------
 
-   function Device_Id (This : Three_Axis_Accelerometer) return Byte is
-      Response : Byte;
+   function Device_Id (This : Three_Axis_Accelerometer) return UInt8 is
+      Response : UInt8;
    begin
       This.Loc_IO_Read (Response, WHO_AM_I);
       return Response;
@@ -213,8 +213,8 @@ package body LIS3DSH is
    ------------
 
    procedure Reboot (This : in out Three_Axis_Accelerometer) is
-      Value : Byte;
-      Force_Reboot : constant Byte := 2#1000_0000#;
+      Value : UInt8;
+      Force_Reboot : constant UInt8 := 2#1000_0000#;
    begin
       This.Loc_IO_Read (Value, CTRL_REG6);
       Value := Value or Force_Reboot;
@@ -235,7 +235,7 @@ package body LIS3DSH is
       State_Machine2_Enable      : Boolean;
       State_Machine2_Interrupt   : State_Machine_Routed_Interrupt)
    is
-      CTRL : Byte;
+      CTRL : UInt8;
    begin
       CTRL := Interrupt_Selection_Enable'Enum_Rep or
               Interrupt_Request'Enum_Rep          or
@@ -300,7 +300,7 @@ package body LIS3DSH is
      (This : in out Three_Axis_Accelerometer;
       Mode : Data_Rate_Power_Mode_Selection)
    is
-      Value : Byte;
+      Value : UInt8;
    begin
       This.Loc_IO_Read (Value, CTRL_REG4);
       Value := Value and (not Data_Rate_Selection_Mask); -- clear bits
@@ -316,7 +316,7 @@ package body LIS3DSH is
      (This     : in out Three_Axis_Accelerometer;
       DataRate : Data_Rate_Power_Mode_Selection)
    is
-      Value : Byte;
+      Value : UInt8;
    begin
       This.Loc_IO_Read (Value, CTRL_REG4);
       Value := Value and (not Data_Rate_Selection_Mask); -- clear bits
@@ -332,7 +332,7 @@ package body LIS3DSH is
      (This : in out Three_Axis_Accelerometer;
       Scale : Full_Scale_Selection)
    is
-      Value : Byte;
+      Value : UInt8;
    begin
       This.Loc_IO_Read (Value, CTRL_REG5);
       Value := Value and (not Full_Scale_Selection_Mask); -- clear bits
@@ -345,7 +345,7 @@ package body LIS3DSH is
    -------------------
 
    function As_Full_Scale is new Ada.Unchecked_Conversion
-     (Source => Byte, Target => Full_Scale_Selection);
+     (Source => UInt8, Target => Full_Scale_Selection);
 
    --------------------------
    -- Selected_Sensitivity --
@@ -354,7 +354,7 @@ package body LIS3DSH is
    function Selected_Sensitivity (This : Three_Axis_Accelerometer)
                                   return Float
    is
-      CTRL5 : Byte;
+      CTRL5 : UInt8;
    begin
       This.Loc_IO_Read (CTRL5, CTRL_REG5);
       case As_Full_Scale (CTRL5 and Full_Scale_Selection_Mask) is
@@ -375,8 +375,8 @@ package body LIS3DSH is
    -- Temperature --
    -----------------
 
-   function Temperature (This : Three_Axis_Accelerometer) return Byte is
-      Result : Byte;
+   function Temperature (This : Three_Axis_Accelerometer) return UInt8 is
+      Result : UInt8;
    begin
 
       This.Loc_IO_Read (Result, Out_T);

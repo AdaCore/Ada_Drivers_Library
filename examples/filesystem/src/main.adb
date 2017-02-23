@@ -1,3 +1,34 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
+
 with HAL;           use HAL;
 with Virtual_File_System; use Virtual_File_System;
 with HAL.Filesystem; use HAL.Filesystem;
@@ -22,7 +53,7 @@ procedure Main is
 
    procedure List_Dir (FS : in out FS_Driver'Class; Path : Pathname) is
       Status : Status_Kind;
-      DH : Directory_Handle_Ref;
+      DH : Any_Directory_Handle;
    begin
       Status := FS.Open_Directory (Path, DH);
       if Status /= Status_Ok then
@@ -55,7 +86,7 @@ procedure Main is
    procedure List_Partitions (FS : in out FS_Driver'Class;
                               Path_To_Disk_Image : Pathname)
    is
-      File : File_Handle_Ref;
+      File : Any_File_Handle;
    begin
       if FS.Open (Path_To_Disk_Image, Read_Only, File) /= Status_Ok then
          Semihosting.Log_Line ("Cannot open disk image '" &
@@ -94,7 +125,7 @@ procedure Main is
    My_VFS3 : aliased VFS;
    My_SHFS : aliased SHFS;
    Status : Status_Kind;
-   FH : File_Handle_Ref;
+   FH : Any_File_Handle;
    Data : Byte_Array (1 .. 10);
 
 begin

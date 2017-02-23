@@ -1,25 +1,54 @@
-with Interfaces; use Interfaces;
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
 
 package body HT16K33 is
 
    HT16K33_Base_Addr : constant I2C_Address := 2#1110_0000#;
-   Reg_Display_Setup : constant Byte := 16#80#;
-   Reg_Dimming       : constant Byte := 16#E0#;
+   Reg_Display_Setup : constant UInt8 := 16#80#;
+   Reg_Dimming       : constant UInt8 := 16#E0#;
 
    function I2C_Addr (This : HT16K33_Device) return I2C_Address;
 
    procedure I2C_Read (This   : in out HT16K33_Device;
-                       Reg    : Byte;
+                       Reg    : UInt8;
                        Data   : out I2C_Data;
                        Status : out Boolean);
 
    procedure I2C_Write (This   : in out HT16K33_Device;
-                        Reg    : Byte;
+                        Reg    : UInt8;
                         Data   : I2C_Data;
                         Status : out Boolean);
 
    procedure I2C_Command (This : in out HT16K33_Device;
-                          Cmd  : Byte;
+                          Cmd  : UInt8;
                           Status : out Boolean);
 
 
@@ -37,7 +66,7 @@ package body HT16K33 is
    --------------
 
    procedure I2C_Read (This   : in out HT16K33_Device;
-                      Reg    : Byte;
+                      Reg    : UInt8;
                       Data   : out I2C_Data;
                       Status : out Boolean)
    is
@@ -58,7 +87,7 @@ package body HT16K33 is
    ---------------
 
    procedure I2C_Write (This   : in out HT16K33_Device;
-                        Reg    : Byte;
+                        Reg    : UInt8;
                         Data   : I2C_Data;
                         Status : out Boolean)
    is
@@ -79,7 +108,7 @@ package body HT16K33 is
    -----------------
 
    procedure I2C_Command (This : in out HT16K33_Device;
-                          Cmd  : Byte;
+                          Cmd  : UInt8;
                           Status : out Boolean)
    is
       Data : constant I2C_Data (1 .. 1) := (others => Cmd);
@@ -99,8 +128,8 @@ package body HT16K33 is
 
    procedure Update_Setup_Reg (This : in out HT16K33_Device) is
       Status  : Boolean;
-      Enabled : constant Byte := (if This.Enabled then 1 else 0);
-      Blink   : constant Byte :=
+      Enabled : constant UInt8 := (if This.Enabled then 1 else 0);
+      Blink   : constant UInt8 :=
         Shift_Left (HT16K33_Blink'Enum_Rep (This.Blink), 1);
    begin
       I2C_Command (This, Reg_Display_Setup or Blink or Enabled, Status);
@@ -140,7 +169,7 @@ package body HT16K33 is
       Status : Boolean;
    begin
 
-      I2C_Command (This, Reg_Dimming or (Byte (Brightness) - 1), Status);
+      I2C_Command (This, Reg_Dimming or (UInt8 (Brightness) - 1), Status);
 
       if not Status then
          raise Program_Error;
@@ -186,7 +215,7 @@ package body HT16K33 is
 
    procedure Set_Row (This : in out HT16K33_Device;
                       Addr : LED_Row_Addr;
-                      Row  : Byte)
+                      Row  : UInt8)
    is
    begin
       This.LEDs (Integer (Addr)) := Row;

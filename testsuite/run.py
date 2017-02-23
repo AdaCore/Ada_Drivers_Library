@@ -5,6 +5,7 @@ import difflib
 import os
 import os.path
 import subprocess
+import sys
 
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -73,6 +74,9 @@ class Testcase:
                 returncode, stderr
             )
 
+        if len(self.drivers) == 0:
+            return "No testcase to execute...\n"
+
         # Run individual testcases
         errors = []
         for program, expected_output_fn in self.drivers:
@@ -104,14 +108,20 @@ class Testcase:
             argv = ['valgrind', '-q', '--leak-check=full'] + argv
 
         returncode, stdout, stderr = run_program(*argv)
+
+        program_returned_msg = \
+            'Program returned {}:\n{}'.format(returncode, stderr)
+
         if returncode or stderr:
-            return 'Program returned {}:\n{}'.format(returncode, stderr)
+            return program_returned_msg
+        elif args.verbose:
+            print program_returned_msg
 
         stdout = stdout.splitlines()
 
         # Compare the actual output and the expected one
         if expected_output != stdout:
-            return 'Output mismatch:\n{}'.format(''.join(
+            return 'Output mismatch:\n{}'.format('\n'.join(
                 difflib.unified_diff(
                     expected_output,
                     stdout,
@@ -119,7 +129,8 @@ class Testcase:
                     tofile='<stdout>'
                 )
             ))
-
+        elif args.verbose:
+            print "\n".join(stdout)
 
 
 def find_testcases():
@@ -139,12 +150,18 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    '--verbose', action='store_true',
+    help='Print exit code and output for all tests, regardless of results'
+)
+
+parser.add_argument(
     'pattern', nargs='*',
     help='List of pattern to filter the set of testcases to run'
 )
 
 
 def main(args):
+    at_least_one_error = False
     for tc in find_testcases():
 
         # Don't run the testcase if we have filters and none of them matches it
@@ -153,10 +170,12 @@ def main(args):
 
         error = tc.run(args)
         if error:
+            at_least_one_error = True
             print('\x1b[31mFAIL\x1b[0m {}:\n{}'.format(tc.name, error))
         else:
             print('\x1b[32mOK\x1b[0m   {}'.format(tc.name))
-
+    if at_least_one_error:
+        sys.exit(1)
 
 if __name__ == '__main__':
     main(parser.parse_args())

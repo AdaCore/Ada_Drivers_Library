@@ -1,3 +1,34 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2015-2016, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
+
 with Interfaces;
 
 package HAL is
@@ -19,8 +50,7 @@ package HAL is
      with Size => 7;
    type UInt9 is mod 2**9
      with Size => 9;
-   subtype UInt8 is Interfaces.Unsigned_8;
-   subtype Byte is Interfaces.Unsigned_8;
+   type UInt8 is new Interfaces.Unsigned_8;
    type UInt10 is mod 2**10
      with Size => 10;
    type UInt11 is mod 2**11
@@ -33,7 +63,7 @@ package HAL is
      with Size => 14;
    type UInt15 is mod 2**15
      with Size => 15;
-   subtype UInt16 is Interfaces.Unsigned_16;
+   type UInt16 is new Interfaces.Unsigned_16;
    type UInt17 is mod 2**17
      with Size => 17;
    type UInt18 is mod 2**18
@@ -64,7 +94,7 @@ package HAL is
      with Size => 30;
    type UInt31 is mod 2**31
      with Size => 31;
-   subtype UInt32 is Interfaces.Unsigned_32;
+   type UInt32 is new Interfaces.Unsigned_32;
    type UInt33 is mod 2**33
      with Size => 33;
    type UInt34 is mod 2**34
@@ -127,9 +157,9 @@ package HAL is
      with Size => 62;
    type UInt63 is mod 2**63
      with Size => 63;
-   subtype UInt64 is Interfaces.Unsigned_64;
+   type UInt64 is new Interfaces.Unsigned_64;
 
-   type Byte_Array is array (Natural range <>) of Byte;
+   type UInt8_Array is array (Natural range <>) of UInt8;
    type UInt16_Array is array (Natural range <>) of UInt16;
    type Word_Array is array (Natural range <>) of UInt32;
 

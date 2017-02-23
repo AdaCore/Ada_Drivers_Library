@@ -1,30 +1,32 @@
 ------------------------------------------------------------------------------
---                              Certyflie                                   --
 --                                                                          --
 --                     Copyright (C) 2015-2016, AdaCore                     --
 --                                                                          --
---  This library is free software;  you can redistribute it and/or modify   --
---  it under terms of the  GNU General Public License  as published by the  --
---  Free Software  Foundation;  either version 3,  or (at your  option) any --
---  later version. This library is distributed in the hope that it will be  --
---  useful, but WITHOUT ANY WARRANTY;  without even the implied warranty of --
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                    --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
 --                                                                          --
---  As a special exception under Section 7 of GPL version 3, you are        --
---  granted additional permissions described in the GCC Runtime Library     --
---  Exception, version 3.1, as published by the Free Software Foundation.   --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
---  You should have received a copy of the GNU General Public License and   --
---  a copy of the GCC Runtime Library Exception along with this program;    --
---  see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see   --
---  <http://www.gnu.org/licenses/>.                                         --
---                                                                          --
---  As a special exception, if other files instantiate generics from this   --
---  unit, or you link this unit with other files to produce an executable,  --
---  this  unit  does not  by itself cause  the resulting executable to be   --
---  covered by the GNU General Public License. This exception does not      --
---  however invalidate any other reasons why the executable file  might be  --
---  covered by the  GNU Public License.                                     --
 ------------------------------------------------------------------------------
 
 --  MPU9250 I2C device class package
@@ -42,9 +44,9 @@ package MPU9250 is
    --  its I2C address.
 
    --  Types and subtypes
-   type MPU9250_Device (Port        : HAL.I2C.I2C_Port_Ref;
+   type MPU9250_Device (Port        : HAL.I2C.Any_I2C_Port;
                         I2C_AD0_Pin : MPU9250_AD0_Pin_State;
-                        Time        : not null HAL.Time.Delays_Ref) is private;
+                        Time        : not null HAL.Time.Any_Delays) is private;
 
    --  Type reprensnting all the different clock sources of the MPU9250.
    --  See the MPU9250 register map section 4.4 for more details.
@@ -201,7 +203,7 @@ package MPU9250 is
    --  Set gyroscope sample rate divider
    procedure MPU9250_Set_Rate
      (Device   : in out MPU9250_Device;
-      Rate_Div : Byte);
+      Rate_Div : UInt8);
 
    --  Set sleep mode status.
    procedure MPU9250_Set_Sleep_Enabled
@@ -220,9 +222,9 @@ package MPU9250 is
 private
 
    type MPU9250_Device
-     (Port        : HAL.I2C.I2C_Port_Ref;
+     (Port        : HAL.I2C.Any_I2C_Port;
       I2C_AD0_Pin : MPU9250_AD0_Pin_State;
-      Time        : not null HAL.Time.Delays_Ref)
+      Time        : not null HAL.Time.Any_Delays)
    is record
       Is_Init : Boolean := False;
       Address : UInt10;
@@ -446,7 +448,7 @@ private
    MPU9250_I2C_SLV_ADDR_BIT    : constant := 6;
    MPU9250_I2C_SLV_ADDR_LENGTH : constant := 7;
    MPU9250_I2C_SLV_EN_BIT      : constant := 7;
-   MPU9250_I2C_SLV_BYTE_SW_BIT : constant := 6;
+   MPU9250_I2C_SLV_UInt8_SW_BIT : constant := 6;
    MPU9250_I2C_SLV_REG_DIS_BIT : constant := 5;
    MPU9250_I2C_SLV_GRP_BIT     : constant := 4;
    MPU9250_I2C_SLV_LEN_BIT     : constant := 3;
@@ -593,7 +595,7 @@ private
    MPU9250_ST_ACCEL_LOW          : constant := (-14.0);
    MPU9250_ST_ACCEL_HIGH         : constant := 14.0;
 
-   MPU9250_ST_TB : constant array (1 .. 256) of Unsigned_16
+   MPU9250_ST_TB : constant array (1 .. 256) of UInt16
      := (
          2620, 2646, 2672, 2699, 2726, 2753, 2781, 2808,
          2837, 2865, 2894, 2923, 2952, 2981, 3011, 3041,
@@ -634,37 +636,37 @@ private
    --  Read data to the specified MPU9250 register
    procedure MPU9250_Read_Register
      (Device   : MPU9250_Device;
-      Reg_Addr    : Byte;
+      Reg_Addr    : UInt8;
       Data        : in out I2C_Data);
 
-   --  Read one byte at the specified MPU9250 register
-   procedure MPU9250_Read_Byte_At_Register
+   --  Read one UInt8 at the specified MPU9250 register
+   procedure MPU9250_Read_UInt8_At_Register
      (Device   : MPU9250_Device;
-      Reg_Addr : Byte;
-      Data     : out Byte);
+      Reg_Addr : UInt8;
+      Data     : out UInt8);
 
    --  Read one but at the specified MPU9250 register
    function MPU9250_Read_Bit_At_Register
      (Device    : MPU9250_Device;
-      Reg_Addr  : Byte;
+      Reg_Addr  : UInt8;
       Bit_Pos   : T_Bit_Pos_8) return Boolean;
 
    --  Write data to the specified MPU9250 register
    procedure MPU9250_Write_Register
      (Device      : MPU9250_Device;
-      Reg_Addr    : Byte;
+      Reg_Addr    : UInt8;
       Data        : I2C_Data);
 
-   --  Write one byte at the specified MPU9250 register
-   procedure MPU9250_Write_Byte_At_Register
+   --  Write one UInt8 at the specified MPU9250 register
+   procedure MPU9250_Write_UInt8_At_Register
      (Device   : MPU9250_Device;
-      Reg_Addr : Byte;
-      Data     : Byte);
+      Reg_Addr : UInt8;
+      Data     : UInt8);
 
    --  Write one bit at the specified MPU9250 register
    procedure MPU9250_Write_Bit_At_Register
      (Device    : MPU9250_Device;
-      Reg_Addr  : Byte;
+      Reg_Addr  : UInt8;
       Bit_Pos   : T_Bit_Pos_8;
       Bit_Value : Boolean);
 
@@ -672,14 +674,14 @@ private
    --  bit specified in Start_Bit_Pos
    procedure MPU9250_Write_Bits_At_Register
      (Device    : MPU9250_Device;
-      Reg_Addr      : Byte;
+      Reg_Addr      : UInt8;
       Start_Bit_Pos : T_Bit_Pos_8;
-      Data          : Byte;
+      Data          : UInt8;
       Length        : T_Bit_Pos_8);
 
    function Fuse_Low_And_High_Register_Parts
-     (High : Byte;
-      Low  : Byte) return Integer_16;
+     (High : UInt8;
+      Low  : UInt8) return Integer_16;
    pragma Inline (Fuse_Low_And_High_Register_Parts);
 
 end MPU9250;

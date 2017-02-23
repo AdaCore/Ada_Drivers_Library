@@ -11,7 +11,7 @@
 --        notice, this list of conditions and the following disclaimer in   --
 --        the documentation and/or other materials provided with the        --
 --        distribution.                                                     --
---     3. Neither the name of STMicroelectronics nor the names of its       --
+--     3. Neither the name of the copyright holder nor the names of its     --
 --        contributors may be used to endorse or promote products derived   --
 --        from this software without specific prior written permission.     --
 --                                                                          --
@@ -29,15 +29,17 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.Board;   use STM32.Board;
-with STM32.Button;  use STM32.Button;
-with Ada.Real_Time; use Ada.Real_Time;
+with STM32.Board;       use STM32.Board;
+with STM32.User_Button; use STM32.User_Button;
+with Ada.Real_Time;     use Ada.Real_Time;
+
+use STM32;
 
 package body Driver is
 
    type Index is mod 4;
 
-   Pattern : array (Index) of User_LED := (Orange, Red, Blue, Green);
+   Pattern : array (Index) of User_LED := (Orange_LED, Red_LED, Blue_LED, Green_LED);
    --  The LEDs are not physically laid out "consecutively" in such a way that
    --  we can simply go in enumeral order to get circular rotation. Thus we
    --  define this mapping, using a consecutive index to get the physical LED
@@ -51,25 +53,25 @@ package body Driver is
    begin
       Initialize_LEDs;
       All_LEDs_Off;
-      STM32.Button.Initialize;
+      User_Button.Initialize;
 
       loop
-            Turn_Off (Pattern (Next_LED));
+         Turn_Off (Pattern (Next_LED));
 
-            if STM32.Button.Has_Been_Pressed then
-               Clockwise := not Clockwise;
-            end if;
+         if User_Button.Has_Been_Pressed then
+            Clockwise := not Clockwise;
+         end if;
 
-            if Clockwise then
-               Next_LED := Next_LED + 1;
-            else
-               Next_LED := Next_LED - 1;
-            end if;
+         if Clockwise then
+            Next_LED := Next_LED + 1;
+         else
+            Next_LED := Next_LED - 1;
+         end if;
 
-            Turn_On (Pattern (Next_LED));
+         Turn_On (Pattern (Next_LED));
 
-            Next_Release := Next_Release + Period;
-            delay until Next_Release;
+         Next_Release := Next_Release + Period;
+         delay until Next_Release;
       end loop;
    end Controller;
 
