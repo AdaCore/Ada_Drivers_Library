@@ -305,12 +305,8 @@ package body MPU9250 is
         (Device, MPU9250_RA_ST_Z_GYRO, Self_Test (6));
 
       for I in 1 .. 6 loop
-         if Self_Test (I) /= 0 then
-            Factory_Trim (I) := Integer_32
-              (MPU9250_ST_TB (Integer (Self_Test (I))));
-         else
-            Factory_Trim (I) := 0;
-         end if;
+         Factory_Trim (I) := Integer_32
+           (MPU9250_ST_TB (Integer (Self_Test (I))));
       end loop;
 
       --  Report results as a ratio of (STR - FT)/FT; the change from
