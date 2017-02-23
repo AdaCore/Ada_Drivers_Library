@@ -61,11 +61,11 @@ package body MicroBit.IOs is
 
    Current_Mode : array (Pin_Id) of Pin_Mode := (others => None);
 
-   -------------------
-   -- Write_Digital --
-   -------------------
+   ---------
+   -- Set --
+   ---------
 
-   procedure Write_Digital
+   procedure Set
      (Pin : Pin_Id;
       Value : Boolean)
    is
@@ -87,13 +87,13 @@ package body MicroBit.IOs is
       else
          Pt.Clear;
       end if;
-   end Write_Digital;
+   end Set;
 
-   ------------------
-   -- Read_Digital --
-   ------------------
+   ---------
+   -- Set --
+   ---------
 
-   function Read_Digital
+   function Set
      (Pin : Pin_Id)
       return Boolean
    is
@@ -112,13 +112,13 @@ package body MicroBit.IOs is
       end if;
 
       return Pt.Set;
-   end Read_Digital;
+   end Set;
 
-   ------------------
-   -- Write_Analog --
-   ------------------
+   -----------
+   -- Write --
+   -----------
 
-   procedure Write_Analog
+   procedure Write
      (Pin : Pin_Id;
       Value : Analog_Value)
    is
@@ -129,13 +129,13 @@ package body MicroBit.IOs is
       end if;
       --  Generated stub: replace with real body!
       raise Program_Error with "Unimplemented procedure Write_Analog";
-   end Write_Analog;
+   end Write;
 
-   -----------------
-   -- Read_Analog --
-   -----------------
+   ------------
+   -- Analog --
+   ------------
 
-   function Read_Analog
+   function Analog
      (Pin : Pin_Id)
       return Analog_Value
    is
@@ -156,20 +156,20 @@ package body MicroBit.IOs is
                             Ref   => VDD_One_Third,
                             Res   => 10);
       return Analog_Value (Wait_For_Result);
-   end Read_Analog;
+   end Analog;
 
-   ----------------
-   -- Is_Touched --
-   ----------------
+   -------------
+   -- Touched --
+   -------------
 
-   function Is_Touched
+   function Touched
      (Pin : Pin_Id)
       return Boolean
    is
    begin
       --  Generated stub: replace with real body!
       raise Program_Error with "Unimplemented function Is_Touched";
-      return Is_Touched (Pin => Pin);
-   end Is_Touched;
+      return Touched (Pin => Pin);
+   end Touched;
 
 end MicroBit.IOs;

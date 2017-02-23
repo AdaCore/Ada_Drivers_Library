@@ -47,20 +47,21 @@ package MicroBit.IOs is
                              when 0 | 1 | 2 => True,
                              when others    => False));
 
-   procedure Write_Digital (Pin : Pin_Id; Value : Boolean)
+   procedure Set (Pin : Pin_Id; Value : Boolean)
      with Pre => Supports (Pin, Digital);
 
-   function Read_Digital (Pin : Pin_Id) return Boolean
+   function Set (Pin : Pin_Id) return Boolean
      with Pre => Supports (Pin, Digital);
 
    type Analog_Value is range 0 .. 1023;
 
-   procedure Write_Analog (Pin : Pin_Id; Value : Analog_Value)
+   procedure Write (Pin : Pin_Id; Value : Analog_Value)
      with Pre => Supports (Pin, Analog);
 
-   function Read_Analog (Pin : Pin_Id) return Analog_Value
+   function Analog (Pin : Pin_Id) return Analog_Value
      with Pre => Supports (Pin, Analog);
 
-   function Is_Touched (Pin : Pin_Id) return Boolean
+   function Touched (Pin : Pin_Id) return Boolean
      with Pre => Supports (Pin, Touch);
+
 end MicroBit.IOs;
