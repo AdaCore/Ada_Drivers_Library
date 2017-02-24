@@ -80,7 +80,16 @@ generic
    --  Driving the BNO055 is accomplished by writing to, and reading from,
    --  8-bit registers on the device. This internal communication is in
    --  terms of either I2C or serial (UART) input/output, specified as
-   --  actual parameters for the following generic formals.
+   --  actual parameters for the following generic formal parameters.
+   --
+   --  Note that selection of the protocol is configured by the hardware
+   --  "protocol select" pins PS0 and PS1, described in section 4.5 of the
+   --  Bosch manual. These are explicitly marked header pins on the AdaFruit
+   --  breakout board, for example. The protocol selected via the pins must
+   --  match the generic actual parameters used to instantiate this generic
+   --  unit. Thus, for example, if you use the pins to select the I2C-based
+   --  protocol you must instantiate the generic unit with an I2C-based
+   --  software abstraction via these parameters.
 
    type IO_Port (<>) is abstract tagged limited private;
 
