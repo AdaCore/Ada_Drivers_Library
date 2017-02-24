@@ -735,7 +735,6 @@ package body STM32.SPI is
 
          As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all :=
            This.Periph.DR.DR;
-         Incoming_Index := Incoming_Index + 2;
 
          return;
       end if;
@@ -775,7 +774,6 @@ package body STM32.SPI is
 
          As_Half_Word_Pointer (Incoming (Incoming_Index)'Address).all :=
            This.Periph.DR.DR;
-         Incoming_Index := Incoming_Index + 2;
       end if;
    end Send_Receive_16bit_Mode;
 
@@ -848,7 +846,6 @@ package body STM32.SPI is
          end loop;
 
          Incoming (Incoming_Index) := Data (This);
-         Incoming_Index := Incoming_Index + 1;
       end if;
    end Send_Receive_8bit_Mode;
 
