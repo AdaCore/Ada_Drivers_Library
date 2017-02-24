@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                       Copyright (C) 2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,39 +29,39 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.Device;
-with nRF51.GPIO;
+package MicroBit.IOs is
 
-package MicroBit is
+   type Pin_Id is range 0 .. 20;
 
-   --  http://tech.microbit.org/hardware/edgeconnector_ds/
+   type IO_Features is (Digital, Analog, Touch);
 
-   MB_P0   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P03;  --  0 pad on edge connector
-   MB_P1   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P02;  --  1 pad on edge connector
-   MB_P2   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P01;  --  2 pad on edge connector
-   MB_P3   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P04;  --  Display column 1
-   MB_P4   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P05;  --  Display column 2
-   MB_P5   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P17;  --  Button A
-   MB_P6   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P12;  --  Display column 9
-   MB_P7   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P11;  --  Display column 8
-   MB_P8   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P18;
-   MB_P9   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P10;  --  Display column 7
-   MB_P10  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P06;  --  Display column 3
-   MB_P11  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P26;  --  Button B
-   MB_P12  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P20;
-   MB_P13  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P23;  --  SCK
-   MB_P14  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P22;  --  MISO
-   MB_P15  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P21;  --  MOSI
-   MB_P16  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P16;
-   MB_P19  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P00;  --  SCL
-   MB_P20  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P30;  --  SDA
+   function Supports (Pin : Pin_Id; Feature : IO_Features) return Boolean is
+     (case Feature is
+         when Digital => (case Pin is
+                             when 0 .. 16 | 19 .. 20 => True,
+                             when others             => False),
+         when Analog  => (case Pin is
+                             when 0 .. 4 | 10 => True,
+                             when others                 => False),
+         when Touch   => (case Pin is
+                             when 0 | 1 | 2 => True,
+                             when others    => False));
 
-   MB_SCK  : nRF51.GPIO.GPIO_Point renames MB_P13;
-   MB_MISO : nRF51.GPIO.GPIO_Point renames MB_P14;
-   MB_MOSI : nRF51.GPIO.GPIO_Point renames MB_P15;
+   procedure Set (Pin : Pin_Id; Value : Boolean)
+     with Pre => Supports (Pin, Digital);
 
-   MB_SCL  : nRF51.GPIO.GPIO_Point renames MB_P19;
-   MB_SDA  : nRF51.GPIO.GPIO_Point renames MB_P20;
+   function Set (Pin : Pin_Id) return Boolean
+     with Pre => Supports (Pin, Digital);
 
+   type Analog_Value is range 0 .. 1023;
 
-end MicroBit;
+   procedure Write (Pin : Pin_Id; Value : Analog_Value)
+     with Pre => Supports (Pin, Analog);
+
+   function Analog (Pin : Pin_Id) return Analog_Value
+     with Pre => Supports (Pin, Analog);
+
+   function Touched (Pin : Pin_Id) return Boolean
+     with Pre => Supports (Pin, Touch);
+
+end MicroBit.IOs;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                       Copyright (C) 2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,140 +29,89 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.Clock;
-with nRF51.Device;        use nRF51.Device;
-with nRF51.RTC;           use nRF51.RTC;
-with nRF51.Events;
-with nRF51.Interrupts;
-with System.Machine_Code; use System.Machine_Code;
+with nRF51.GPIO;    use nRF51.GPIO;
+with MicroBit.Time; use MicroBit.Time;
 
-package body MicroBit.Time is
+package body MicroBit.Buttons is
 
-   package Clocks renames nRF51.Clock;
-
-   Clock_Ms  : Time_Ms := 0;
-   Period_Ms : constant Time_Ms := 1;
-
-   Subscribers : array (1 .. 10) of Tick_Callback := (others => null);
+   Points : constant array (Button_Id) of GPIO_Point := (MB_P5, MB_P11);
+   States : array (Button_Id) of Button_State := (others => Released);
+   Subscribers : array (1 .. 10) of Button_Callback := (others => null);
 
    procedure Initialize;
-   procedure Update_Clock;
-   procedure RTC1_IRQHandler;
-   pragma Export (C, RTC1_IRQHandler, "RTC1_IRQHandler");
+   procedure Tick_Handler;
 
    ----------------
    -- Initialize --
    ----------------
 
    procedure Initialize is
+      Conf : GPIO_Configuration;
    begin
-      if not Clocks.Low_Freq_Running then
-         Clocks.Set_Low_Freq_Source (Clocks.LFCLK_XTAL);
-         Clocks.Start_Low_Freq;
+      Conf.Mode         := Mode_In;
+      Conf.Resistors    := No_Pull;
+      Conf.Input_Buffer := Input_Buffer_Connect;
+      Conf.Sense        := Sense_Disabled;
 
-         loop
-            exit when Clocks.Low_Freq_Running;
-         end loop;
+      for Pt of Points loop
+         Pt.Configure_IO (Conf);
+      end loop;
+
+      if not Tick_Subscribe (Tick_Handler'Access) then
+         raise Program_Error;
       end if;
 
-      Stop (RTC_1);
-
-      --  1kHz
-      Set_Prescaler (RTC_1, 0);
-      Set_Compare (RTC_1, 0, 32);
-
-      Enable_Event (RTC_1, Compare_0_Event);
-
-      nRF51.Events.Enable_Interrupt (nRF51.Events.RTC_1_COMPARE_0);
-
-      nRF51.Interrupts.Enable (nRF51.Interrupts.RTC1_Interrupt);
-
-      Start (RTC_1);
    end Initialize;
 
    ------------------
-   -- Update_Clock --
+   -- Tick_Handler --
    ------------------
 
-   procedure Update_Clock is
+   procedure Tick_Handler is
+      New_State : Button_State;
    begin
-      Clock_Ms := Clock_Ms + Period_Ms;
-   end Update_Clock;
 
-   ---------------------
-   -- RTC1_IRQHandler --
-   ---------------------
-
-   procedure RTC1_IRQHandler is
-   begin
-      Stop (RTC_1);
-      Clear (RTC_1);
-      Start (RTC_1);
-
-      nRF51.Events.Clear (nRF51.Events.RTC_1_COMPARE_0);
-
-      Update_Clock;
-
-      for Subs of Subscribers loop
-
-         if Subs /= null then
-            --  Call the subscriber
-            Subs.all;
+      for Id in Button_Id loop
+         if not Set (Points (Id)) then
+            New_State := Pressed;
+         else
+            New_State := Released;
          end if;
 
-      end loop;
-   end RTC1_IRQHandler;
+         if States (Id) /= New_State then
+            for Sub of Subscribers loop
 
-   -----------
-   -- Clock --
-   -----------
+               if Sub /= null then
+                  Sub.all (Id, New_State);
+               end if;
+            end loop;
 
-   function Clock return Time_Ms is
-   begin
-      return Clock_Ms;
-   end Clock;
-
-   --------------
-   -- Delay_Ms --
-   --------------
-
-   procedure Delay_Ms (Milliseconds : UInt64) is
-      Wakeup_Time : constant UInt64 := Clock + Milliseconds;
-   begin
-      while Wakeup_Time > Clock loop
-         Asm (Template => "wfi", -- Wait for interrupt
-              Volatile => True);
-      end loop;
-   end Delay_Ms;
-
-   -----------------
-   -- Tick_Period --
-   -----------------
-
-   function Tick_Period return Time_Ms is
-   begin
-      return Period_Ms;
-   end Tick_Period;
-
-   --------------------
-   -- Tick_Subscribe --
-   --------------------
-
-   function Tick_Subscriber (Callback : not null Tick_Callback) return Boolean is
-   begin
-      for Subs of Subscribers loop
-         if Subs = Callback then
-            return True;
+            States (Id) := New_State;
          end if;
       end loop;
-      return False;
-   end Tick_Subscriber;
+   end Tick_Handler;
 
-   --------------------
-   -- Tick_Subscribe --
-   --------------------
+   -----------
+   -- State --
+   -----------
 
-   function Tick_Subscribe (Callback : not null Tick_Callback) return Boolean is
+   function State (Button : Button_Id) return Button_State is
+   begin
+      if Button =  Button_B then
+         --  For a reason that I don't understand right now, the B button is a
+         --  always detected as pressed (low). As far as I can see the code is
+         --  the same as button A and probing the hardware didn't show any
+         --  problem...
+         raise Program_Error with "Button B is not working...";
+      end if;
+      return States (Button);
+   end State;
+
+   ---------------
+   -- Subscribe --
+   ---------------
+
+   function Subscribe (Callback : not null Button_Callback) return Boolean is
    begin
       for Subs of Subscribers loop
          if Subs = null then
@@ -172,13 +121,13 @@ package body MicroBit.Time is
       end loop;
 
       return False;
-   end Tick_Subscribe;
+   end Subscribe;
 
-   ----------------------
-   -- Tick_Unsubscribe --
-   ----------------------
+   -----------------
+   -- Unsubscribe --
+   -----------------
 
-   function Tick_Unsubscribe (Callback : not null Tick_Callback) return Boolean is
+   function Unsubscribe (Callback : not null Button_Callback) return Boolean is
    begin
       for Subs of Subscribers loop
          if Subs = Callback then
@@ -187,8 +136,8 @@ package body MicroBit.Time is
          end if;
       end loop;
       return False;
-   end Tick_Unsubscribe;
+   end Unsubscribe;
 
 begin
    Initialize;
-end MicroBit.Time;
+end MicroBit.Buttons;

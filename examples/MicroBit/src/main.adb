@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 with MicroBit.Display; use MicroBit.Display;
-
+with MicroBit.Time;
 with Beacon;
 
 procedure Main is
@@ -45,9 +45,7 @@ begin
 
          Beacon.Send_Beacon_Packet;
 
-         for Cnt in 0 .. 200_000 loop
-            null;
-         end loop;
+         MicroBit.Time.Delay_Ms (500);
       end loop;
    end loop;
 end Main;

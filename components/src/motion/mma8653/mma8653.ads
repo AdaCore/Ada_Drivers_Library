@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                       Copyright (C) 2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,39 +29,42 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.Device;
-with nRF51.GPIO;
+with HAL;     use HAL;
+with HAL.I2C; use HAL.I2C;
 
-package MicroBit is
+package MMA8653 is
 
-   --  http://tech.microbit.org/hardware/edgeconnector_ds/
-
-   MB_P0   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P03;  --  0 pad on edge connector
-   MB_P1   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P02;  --  1 pad on edge connector
-   MB_P2   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P01;  --  2 pad on edge connector
-   MB_P3   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P04;  --  Display column 1
-   MB_P4   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P05;  --  Display column 2
-   MB_P5   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P17;  --  Button A
-   MB_P6   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P12;  --  Display column 9
-   MB_P7   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P11;  --  Display column 8
-   MB_P8   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P18;
-   MB_P9   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P10;  --  Display column 7
-   MB_P10  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P06;  --  Display column 3
-   MB_P11  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P26;  --  Button B
-   MB_P12  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P20;
-   MB_P13  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P23;  --  SCK
-   MB_P14  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P22;  --  MISO
-   MB_P15  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P21;  --  MOSI
-   MB_P16  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P16;
-   MB_P19  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P00;  --  SCL
-   MB_P20  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P30;  --  SDA
-
-   MB_SCK  : nRF51.GPIO.GPIO_Point renames MB_P13;
-   MB_MISO : nRF51.GPIO.GPIO_Point renames MB_P14;
-   MB_MOSI : nRF51.GPIO.GPIO_Point renames MB_P15;
-
-   MB_SCL  : nRF51.GPIO.GPIO_Point renames MB_P19;
-   MB_SDA  : nRF51.GPIO.GPIO_Point renames MB_P20;
+   type MMA8653_Accelerometer (Port : not null Any_I2C_Port) is tagged limited private;
 
 
-end MicroBit;
+   function Check_Device_Id (This : MMA8653_Accelerometer) return Boolean;
+   --  Return False if device ID in incorrect or cannot be read
+
+   type Axis_Data is range -2 ** 9 .. 2 **  10 - 1;
+
+   type All_Axes_Data is record
+      X, Y, Z : Axis_Data;
+   end record;
+
+   function Read_Data (This : MMA8653_Accelerometer) return All_Axes_Data;
+
+private
+   type MMA8653_Accelerometer (Port : not null Any_I2C_Port) is tagged limited
+     null record;
+
+   type Register_Addresss is new UInt8;
+
+   Device_Id  : constant := 16#5A#;
+
+   Device_Address : constant I2C_Address := 16#3A# / 2;
+
+   STATUS    : constant Register_Addresss := 16#00#;
+   OUT_X_MSB : constant Register_Addresss := 16#01#;
+   OUT_X_LSB : constant Register_Addresss := 16#02#;
+   OUT_Y_MSB : constant Register_Addresss := 16#03#;
+   OUT_Y_LSB : constant Register_Addresss := 16#04#;
+   OUT_Z_MSB : constant Register_Addresss := 16#05#;
+   OUT_Z_LSB : constant Register_Addresss := 16#06#;
+   Who_Am_I : constant Register_Addresss := 16#0D#;
+
+end MMA8653;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                       Copyright (C) 2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,39 +29,24 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.Device;
-with nRF51.GPIO;
+package MicroBit.Buttons is
 
-package MicroBit is
+   type Button_State is (Pressed, Released);
+   type Button_Id is (Button_A, Button_B);
 
-   --  http://tech.microbit.org/hardware/edgeconnector_ds/
+   function State (Button : Button_Id) return Button_State;
 
-   MB_P0   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P03;  --  0 pad on edge connector
-   MB_P1   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P02;  --  1 pad on edge connector
-   MB_P2   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P01;  --  2 pad on edge connector
-   MB_P3   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P04;  --  Display column 1
-   MB_P4   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P05;  --  Display column 2
-   MB_P5   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P17;  --  Button A
-   MB_P6   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P12;  --  Display column 9
-   MB_P7   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P11;  --  Display column 8
-   MB_P8   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P18;
-   MB_P9   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P10;  --  Display column 7
-   MB_P10  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P06;  --  Display column 3
-   MB_P11  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P26;  --  Button B
-   MB_P12  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P20;
-   MB_P13  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P23;  --  SCK
-   MB_P14  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P22;  --  MISO
-   MB_P15  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P21;  --  MOSI
-   MB_P16  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P16;
-   MB_P19  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P00;  --  SCL
-   MB_P20  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P30;  --  SDA
+   type Button_Callback is access procedure (Button : Button_Id;
+                                             State  : Button_State);
 
-   MB_SCK  : nRF51.GPIO.GPIO_Point renames MB_P13;
-   MB_MISO : nRF51.GPIO.GPIO_Point renames MB_P14;
-   MB_MOSI : nRF51.GPIO.GPIO_Point renames MB_P15;
+   function Subscribe (Callback : not null Button_Callback) return Boolean;
+   --  Add Callback to the list of subscribers. Return False if Callback cannot
+   --  be added.
+   --
+   --  Callback will be executed each time a button state changes.
 
-   MB_SCL  : nRF51.GPIO.GPIO_Point renames MB_P19;
-   MB_SDA  : nRF51.GPIO.GPIO_Point renames MB_P20;
+   function Unsubscribe (Callback : not null Button_Callback) return Boolean;
+   --  Remove Callback from the list of subscribers. Return False if Callback
+   --  is not in the list of sucbscribers.
 
-
-end MicroBit;
+end MicroBit.Buttons;
