@@ -268,6 +268,8 @@ package body STM32.LTDC is
       DivR          : Natural)
    is
       DivR_Val : PLLSAI_DivR;
+      Timing_H : UInt16;
+      Timing_V : UInt16;
 
    begin
       if Initialized then
@@ -289,6 +291,13 @@ package body STM32.LTDC is
       Disable_PLLSAI;
 
       RCC_Periph.APB2ENR.LTDCEN := True;
+      RCC_Periph.APB2RSTR.LTDCRST := True;
+      RCC_Periph.APB2RSTR.LTDCRST := False;
+
+      --  Disable output + both layers
+      LTDC_Periph.GCR.LTDCEN := False;
+      LTDC_Periph.L1CR.LEN := False;
+      LTDC_Periph.L2CR.LEN := False;
 
       LTDC_Periph.GCR.VSPOL := To_Bool (Polarity_Active_Low);
       LTDC_Periph.GCR.HSPOL := To_Bool (Polarity_Active_Low);
@@ -302,31 +311,35 @@ package body STM32.LTDC is
       Enable_PLLSAI;
 
       --  Synchronization size
+      Timing_H := UInt16 (H_Sync - 1);
+      Timing_V := UInt16 (V_Sync - 1);
       LTDC_Periph.SSCR :=
-        (HSW => SSCR_HSW_Field (H_Sync - 1),
-         VSH => SSCR_VSH_Field (V_Sync - 1),
+        (HSW    => SSCR_HSW_Field (Timing_H),
+         VSH    => SSCR_VSH_Field (Timing_V),
          others => <>);
 
       --  Accumulated Back Porch
+      Timing_H := Timing_H + UInt16 (H_Back_Porch);
+      Timing_V := Timing_V + UInt16 (V_Back_Porch);
       LTDC_Periph.BPCR :=
-        (AHBP => BPCR_AHBP_Field (H_Sync + H_Back_Porch - 1),
-         AVBP => BPCR_AVBP_Field (V_Sync + V_Back_Porch - 1),
+        (AHBP   => BPCR_AHBP_Field (Timing_H),
+         AVBP   => BPCR_AVBP_Field (Timing_V),
          others => <>);
 
       --  Accumulated Active Width/Height
+      Timing_H := Timing_H + UInt16 (Width);
+      Timing_V := Timing_V + UInt16 (Height);
       LTDC_Periph.AWCR :=
-        (AAW => AWCR_AAW_Field (H_Sync + H_Back_Porch + Width - 1),
-         AAH => AWCR_AAH_Field (V_Sync + V_Back_Porch + Height - 1),
+        (AAW    => AWCR_AAW_Field (Timing_H),
+         AAH    => AWCR_AAH_Field (Timing_V),
          others => <>);
 
       --  VTotal Width/Height
+      Timing_H := Timing_H + UInt16 (H_Front_Porch);
+      Timing_V := Timing_V + UInt16 (V_Front_Porch);
       LTDC_Periph.TWCR :=
-        (TOTALW =>
-           TWCR_TOTALW_Field
-             (H_Sync + H_Back_Porch + Width + H_Front_Porch - 1),
-         TOTALH =>
-           TWCR_TOTALH_Field
-             (V_Sync + V_Back_Porch + Height + V_Front_Porch - 1),
+        (TOTALW => TWCR_TOTALW_Field (Timing_H),
+         TOTALH => TWCR_TOTALH_Field (Timing_V),
          others => <>);
 
       --  Background color to black
@@ -376,7 +389,6 @@ package body STM32.LTDC is
       BF             : Blending_Factor := BF_Pixel_Alpha_X_Constant_Alpha)
    is
       L        : constant Layer_Access := Get_Layer (Layer);
-      CFBL     : L1CFBLR_Register := L.LCFBLR;
    begin
       --  Horizontal start and stop = sync + Back Porch
       L.LWHPCR :=
@@ -407,9 +419,10 @@ package body STM32.LTDC is
             L.LBFCR.BF2 := BF2_Pixel_Alpha;
       end case;
 
-      CFBL.CFBLL := UInt13 (W * UInt8s_Per_Pixel (Config)) + 3;
-      CFBL.CFBP := UInt13 (W * UInt8s_Per_Pixel (Config));
-      L.LCFBLR := CFBL;
+      L.LCFBLR :=
+        (CFBLL  => UInt13 (W * Bytes_Per_Pixel (Config)) + 3,
+         CFBP   => UInt13 (W * Bytes_Per_Pixel (Config)),
+         others => <>);
 
       L.LCFBLNR.CFBLNBR := UInt11 (H);
 
