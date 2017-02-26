@@ -42,7 +42,8 @@
 
 with System;
 
-with STM32.Device; use STM32.Device;
+with STM32.Device;    use STM32.Device;
+with HAL.Framebuffer;
 
 package STM32.LTDC is
 
@@ -108,6 +109,10 @@ package STM32.LTDC is
       return Frame_Buffer_Access;
 
    procedure Reload_Config (Immediate : Boolean := False);
+
+   function To_LTDC_Mode (HAL_Mode : HAL.Framebuffer.FB_Color_Mode)
+                          return STM32.LTDC.Pixel_Format;
+   --  Convert HAL.Framebuffer color mode to LTDC color mode
 
 private
 

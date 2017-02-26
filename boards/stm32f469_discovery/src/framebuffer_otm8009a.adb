@@ -435,8 +435,6 @@ package body Framebuffer_OTM8009A is
       Width   : Positive := Positive'Last;
       Height  : Positive := Positive'Last)
    is
-      function To_LTDC_Mode is new Ada.Unchecked_Conversion
-        (HAL.Framebuffer.FB_Color_Mode, STM32.LTDC.Pixel_Format);
       LCD_Layer : constant STM32.LTDC.LCD_Layer :=
                     (if Layer = 1
                      then STM32.LTDC.Layer1
@@ -472,7 +470,7 @@ package body Framebuffer_OTM8009A is
 
       STM32.LTDC.Layer_Init
         (Layer          => LCD_Layer,
-         Config         => To_LTDC_Mode (Mode),
+         Config         => STM32.LTDC.To_LTDC_Mode (Mode),
          Buffer         => Display.Buffers (LCD_Layer).Addr,
          X              => X,
          Y              => Y,
