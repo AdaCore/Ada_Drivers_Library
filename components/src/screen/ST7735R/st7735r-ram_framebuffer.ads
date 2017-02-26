@@ -38,9 +38,9 @@ with Memory_Mapped_Bitmap; use Memory_Mapped_Bitmap;
 
 package ST7735R.RAM_Framebuffer is
 
-   subtype Parent is ST7735R_Device;
+   subtype Parent is ST7735R_Screen;
 
-   type ST7735R_RAM_Framebuffer_Device
+   type ST7735R_RAM_Framebuffer_Screen
      (Port : not null Any_SPI_Port;
       CS   : not null Any_GPIO_Point;
       RS   : not null Any_GPIO_Point;
@@ -50,7 +50,7 @@ package ST7735R.RAM_Framebuffer is
 
    overriding
    procedure Initialize_Layer
-     (Display : in out ST7735R_RAM_Framebuffer_Device;
+     (Display : in out ST7735R_RAM_Framebuffer_Screen;
       Layer   : Positive;
       Mode    : FB_Color_Mode;
       X       : Natural := 0;
@@ -64,25 +64,25 @@ package ST7735R.RAM_Framebuffer is
 
    overriding
    function Initialized
-     (Display : ST7735R_RAM_Framebuffer_Device;
+     (Display : ST7735R_RAM_Framebuffer_Screen;
       Layer   : Positive) return Boolean;
 
    overriding
    procedure Update_Layer
-     (Display   : in out ST7735R_RAM_Framebuffer_Device;
+     (Display   : in out ST7735R_RAM_Framebuffer_Screen;
       Layer     : Positive;
       Copy_Back : Boolean := False);
    --  Updates the layer so that the hidden buffer is displayed.
 
    overriding
    procedure Update_Layers
-     (Display : in out ST7735R_RAM_Framebuffer_Device);
+     (Display : in out ST7735R_RAM_Framebuffer_Screen);
    --  Updates all initialized layers at once with their respective hidden
    --  buffer
 
    overriding
    function Hidden_Buffer
-     (Display : in out ST7735R_RAM_Framebuffer_Device;
+     (Display : in out ST7735R_RAM_Framebuffer_Screen;
       Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer;
    --  Retrieves the current hidden buffer for the layer.
 
@@ -90,7 +90,7 @@ private
 
    subtype Pixel_Data is UInt16_Array (0 .. (Screen_Width * Screen_Height) - 1);
 
-   type ST7735R_RAM_Framebuffer_Device
+   type ST7735R_RAM_Framebuffer_Screen
      (Port : not null Any_SPI_Port;
       CS   : not null Any_GPIO_Point;
       RS   : not null Any_GPIO_Point;

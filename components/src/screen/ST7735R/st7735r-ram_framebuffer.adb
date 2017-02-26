@@ -37,7 +37,7 @@ package body ST7735R.RAM_Framebuffer is
 
    overriding
    procedure Initialize_Layer
-     (Display : in out ST7735R_RAM_Framebuffer_Device;
+     (Display : in out ST7735R_RAM_Framebuffer_Screen;
       Layer   : Positive;
       Mode    : FB_Color_Mode;
       X       : Natural := 0;
@@ -64,7 +64,7 @@ package body ST7735R.RAM_Framebuffer is
 
    overriding
    function Initialized
-     (Display : ST7735R_RAM_Framebuffer_Device;
+     (Display : ST7735R_RAM_Framebuffer_Screen;
       Layer   : Positive) return Boolean
    is
    begin
@@ -77,7 +77,7 @@ package body ST7735R.RAM_Framebuffer is
 
    overriding
    procedure Update_Layer
-     (Display   : in out ST7735R_RAM_Framebuffer_Device;
+     (Display   : in out ST7735R_RAM_Framebuffer_Screen;
       Layer     : Positive;
       Copy_Back : Boolean := False)
    is
@@ -101,7 +101,7 @@ package body ST7735R.RAM_Framebuffer is
 
    overriding
    procedure Update_Layers
-     (Display : in out ST7735R_RAM_Framebuffer_Device)
+     (Display : in out ST7735R_RAM_Framebuffer_Screen)
    is
    begin
       Display.Update_Layer (1);
@@ -113,7 +113,7 @@ package body ST7735R.RAM_Framebuffer is
 
    overriding
    function Hidden_Buffer
-     (Display : in out ST7735R_RAM_Framebuffer_Device;
+     (Display : in out ST7735R_RAM_Framebuffer_Screen;
       Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer
    is
    begin

@@ -34,7 +34,7 @@ with HAL.Bitmap;
 package HAL.Framebuffer is
 
    subtype FB_Color_Mode is HAL.Bitmap.Bitmap_Color_Mode range
-     HAL.Bitmap.ARGB_8888 .. HAL.Bitmap.AL_88;
+     HAL.Bitmap.ARGB_8888 .. HAL.Bitmap.M_1;
 
    type Display_Orientation is
      (Default, Landscape, Portrait);
