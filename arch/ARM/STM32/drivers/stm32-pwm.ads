@@ -36,8 +36,8 @@
 
 --     Selected_Timer : STM32.Timers.Timer renames Timer_4;
 --
---     Modulator1 : PWM_Modulator (Selected_Timer'Access);
---     Modulator2 : PWM_Modulator (Selected_Timer'Access);
+--     Modulator1 : PWM_Modulator;
+--     Modulator2 : PWM_Modulator;
 --     ...
 --     --  Note that a single timer can drive multiple PWM modulators.
 --
@@ -47,17 +47,17 @@
 --
 --     Configure_PWM_Timer (Selected_Timer'Access, Frequency);
 --
---     Attach_PWM_Channel
---       (Modulator1,
+--     Modulator1.Attach_PWM_Channel
+--       (Selected_Timer'Access,
 --        Output_Channel,
 --        PD13,
 --        GPIO_AF_2_TIM4);
 --     ...
 --
---     Enable_Output (Modulator1);
---     Enable_Output (Modulator2);
+--     Modulator1.Enable_Output;
+--     Modulator2.Enable_Output;
 --
---     Set_Duty_Cycle (Modulator1, Value);
+--     Modulator1.Set_Duty_Cycle (Value);
 --     ...
 
 with STM32.GPIO;   use STM32.GPIO;
@@ -84,17 +84,18 @@ package STM32.PWM is
    --  Raises Unknown_Timer if Generator.all is not known to the board.
    --  Raises Invalid_Request if Frequency is too high or too low.
 
-   type PWM_Modulator (Generator : not null access Timer) is limited private;
+   type PWM_Modulator is tagged limited private;
    --  An abstraction for PWM modulation using a timer operating at a given
    --  frequency. Essentially a convenience wrapper for the PWM functionality
    --  of the timers.
 
    procedure Attach_PWM_Channel
-     (This     : in out PWM_Modulator;
-      Channel  : Timer_Channel;
-      Point    : GPIO_Point;
-      PWM_AF   : GPIO_Alternate_Function;
-      Polarity : Timer_Output_Compare_Polarity := High)
+     (This      : in out PWM_Modulator;
+      Generator : not null access Timer;
+      Channel   : Timer_Channel;
+      Point     : GPIO_Point;
+      PWM_AF    : GPIO_Alternate_Function;
+      Polarity  : Timer_Output_Compare_Polarity := High)
      with Post => not Output_Enabled (This) and
                   Current_Duty_Cycle (This) = 0;
    --  Initializes the channel on the timer associated with This modulator,
@@ -106,6 +107,7 @@ package STM32.PWM is
 
    procedure Attach_PWM_Channel
      (This                     : in out PWM_Modulator;
+      Generator                : not null access Timer;
       Channel                  : Timer_Channel;
       Point                    : GPIO_Point;
       Complementary_Point      : GPIO_Point;
@@ -198,7 +200,8 @@ package STM32.PWM is
 
 private
 
-   type PWM_Modulator (Generator : not null access Timer) is record
+   type PWM_Modulator is tagged limited record
+      Generator  : access Timer;
       Duty_Cycle : Percentage := 0;
       Channel    : Timer_Channel;
    end record;

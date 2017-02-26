@@ -36,11 +36,13 @@ with STM32.PWM;       use STM32.PWM;
 package Demo_PWM_Settings is
 
    PWM_Output_Timer : Timer renames Timer_4;
+   --  This timer is shared among the four PWM objects. Timer 4 is used because
+   --  it is tied to the four LEDs on the STM32F4 Disco board.
 
-   PWM_Output_Green  : aliased PWM_Modulator (PWM_Output_Timer'Access);
-   PWM_Output_Orange : aliased PWM_Modulator (PWM_Output_Timer'Access);
-   PWM_Output_Red    : aliased PWM_Modulator (PWM_Output_Timer'Access);
-   PWM_Output_Blue   : aliased PWM_Modulator (PWM_Output_Timer'Access);
+   PWM_Output_Green  : PWM_Modulator;
+   PWM_Output_Orange : PWM_Modulator;
+   PWM_Output_Red    : PWM_Modulator;
+   PWM_Output_Blue   : PWM_Modulator;
 
    PWM_Output_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_2_TIM4;
 

@@ -154,14 +154,16 @@ package body STM32.PWM is
    ------------------------
 
    procedure Attach_PWM_Channel
-     (This     : in out PWM_Modulator;
-      Channel  : Timer_Channel;
-      Point    : GPIO_Point;
-      PWM_AF   : GPIO_Alternate_Function;
-      Polarity : Timer_Output_Compare_Polarity := High)
+     (This      : in out PWM_Modulator;
+      Generator : not null access Timer;
+      Channel   : Timer_Channel;
+      Point     : GPIO_Point;
+      PWM_AF    : GPIO_Alternate_Function;
+      Polarity  : Timer_Output_Compare_Polarity := High)
    is
    begin
       This.Channel := Channel;
+      This.Generator := Generator;
 
       Enable_Clock (Point);
 
@@ -186,6 +188,7 @@ package body STM32.PWM is
 
    procedure Attach_PWM_Channel
      (This                     : in out PWM_Modulator;
+      Generator                : not null access Timer;
       Channel                  : Timer_Channel;
       Point                    : GPIO_Point;
       Complementary_Point      : GPIO_Point;
@@ -197,6 +200,7 @@ package body STM32.PWM is
    is
    begin
       This.Channel := Channel;
+      This.Generator := Generator;
 
       Enable_Clock (Point);
       Enable_Clock (Complementary_Point);
