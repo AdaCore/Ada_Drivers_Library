@@ -82,7 +82,7 @@ procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
 
    Requested_Frequency : constant Hertz := 30_000;  -- arbitrary
 
-   Power_Control : PWM_Modulator (Selected_Timer'Access);
+   Power_Control : PWM_Modulator;
 
    procedure Configure_LEDs;
    --  initialize all of the LEDs to be in the AF mode
@@ -141,15 +141,15 @@ procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
 begin
    Configure_LEDs;
 
-   Configure_PWM_Timer (Power_Control.Generator, Requested_Frequency);
+   Configure_PWM_Timer (Selected_Timer'Access, Requested_Frequency);
 
-   Attach_PWM_Channel
-     (Power_Control,
+   Power_Control.Attach_PWM_Channel
+     (Selected_Timer'Access,
       Output_Channel,
       LED_For (Output_Channel),
       Timer_AF);
 
-   Enable_Output (Power_Control);
+   Power_Control.Enable_Output;
 
    declare
       Arg       : Long_Float := 0.0;

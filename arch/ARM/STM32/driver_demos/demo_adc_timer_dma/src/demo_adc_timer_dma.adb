@@ -50,7 +50,7 @@ procedure Demo_ADC_Timer_DMA is
 
    Selected_Timer : Timer renames Timer_1;
 
-   Triggering_Signal : PWM_Modulator (Selected_Timer'Access);
+   Triggering_Signal : PWM_Modulator;
    --  the PWM modulator used to generate the square wave that triggers the ADC
    --  conversions
 
@@ -149,15 +149,15 @@ procedure Demo_ADC_Timer_DMA is
       --  note that the output pin is not used since we are reading the
       --  internal VBat channel, which is ADC1_IN18
    begin
-      Configure_PWM_Timer (Triggering_Signal.Generator, Frequency);
+      Configure_PWM_Timer (Selected_Timer'Access, Frequency);
 
-      Attach_PWM_Channel
-        (Triggering_Signal,
+      Triggering_Signal.Attach_PWM_Channel
+        (Selected_Timer'Access,
          Output_Channel,
          Output_Pin,
          Timer_AF);
 
-      Set_Duty_Cycle (Triggering_Signal, Value => 10);
+      Triggering_Signal.Set_Duty_Cycle (Value => 10);
       --  An arbitrary percentage, but determines the number of rising/falling
       --  transitions
    end Configure_Timer;
@@ -215,7 +215,7 @@ begin
       Data_Count  => 1);  -- ie, 1 halfword
 
    Enable (VBat.ADC.all);
-   Enable_Output (Triggering_Signal);
+   Triggering_Signal.Enable_Output;
 
    loop
       Print (0, 24, Voltage, "mv");
