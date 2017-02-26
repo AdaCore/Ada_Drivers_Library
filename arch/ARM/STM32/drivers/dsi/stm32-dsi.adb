@@ -171,9 +171,7 @@ package body STM32.DSI is
       --  => UIX4 = 4_000 * IDF * ODV / (PLLNDIV * HSE_MHz)
       declare
          HSE_MHz          : constant UInt32 := HSE_Clock / 1_000_000;
-         IDF              : constant UInt32 :=
-                              (if PLL_IN_Div > 0
-                               then UInt32 (PLL_IN_Div) else 1);
+         IDF              : constant UInt32 := UInt32 (PLL_IN_Div);
          ODF              : constant UInt32 :=
                               Shift_Left
                                 (1, DSI_PLL_ODF'Enum_Rep (PLL_OUT_Div));
@@ -284,7 +282,7 @@ package body STM32.DSI is
          This.Periph.DSI_LCOLCR.LPE := Loosely_Packed;
       end if;
 
-      --  Set the Horizontal Synchronization Active (HSA) in lane UInt8 clock
+      --  Set the Horizontal Synchronization Active (HSA) in lane byte clock
       --  cycles
       This.Periph.DSI_VHSACR.HSA := HSync_Active_Duration;
       --  Set the Horizontal Back Porch
@@ -344,7 +342,6 @@ package body STM32.DSI is
    begin
       --  Select the command mode by setting CMDM and DSIM bits
       This.Periph.DSI_MCR.CMDM := True;
-      This.Periph.DSI_WCFGR.DSIM := False;
       This.Periph.DSI_WCFGR.DSIM := True;
 
       --  Select the virtual channel for the LTDC interface traffic

@@ -145,18 +145,18 @@ package body Framebuffer_OTM8009A is
       Enable_Clock (DSI_RESET);
       Configure_IO (DSI_RESET,
                     (Mode        => Mode_Out,
-                     Output_Type => Open_Drain,
+                     Output_Type => Push_Pull,
                      Speed       => Speed_50MHz,
-                     Resistors   => Floating));
+                     Resistors   => Pull_Up));
 
       --  Activate XRES active low
       Clear (DSI_RESET);
 
-      delay until Clock + Milliseconds (1);
+      delay until Clock + Milliseconds (20);
 
       Set (DSI_RESET);
 
-      delay until Clock + Milliseconds (1);
+      delay until Clock + Milliseconds (10);
    end LCD_Reset;
 
    ----------------

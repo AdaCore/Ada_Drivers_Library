@@ -60,7 +60,7 @@ package STM32.LTDC is
       Pixel_Fmt_AL88) --  8-bit Alpha, 8-bit Luniunance
      with Size => 3;
 
-   function UInt8s_Per_Pixel (Fmt : Pixel_Format) return Natural
+   function Bytes_Per_Pixel (Fmt : Pixel_Format) return Natural
      with Inline;
 
    subtype Frame_Buffer_Access is System.Address;
@@ -111,7 +111,7 @@ package STM32.LTDC is
 
 private
 
-   function UInt8s_Per_Pixel (Fmt : Pixel_Format) return Natural
+   function Bytes_Per_Pixel (Fmt : Pixel_Format) return Natural
    is (case Fmt is
           when Pixel_Fmt_ARGB8888 => 4,
           when Pixel_Fmt_RGB888 => 3,

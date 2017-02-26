@@ -51,7 +51,7 @@ package STM32.DSI is
    --  Values 2#10# and 2#11# are reserved
 
    subtype DSI_PLLN_Div is UInt7 range 10 .. 125;
-   subtype DSI_PLL_IDF is UInt4 range 0 .. 7;
+   subtype DSI_PLL_IDF is UInt4 range 1 .. 7;
    PLL_IN_DIV1 : constant DSI_PLL_IDF := 1;
    PLL_IN_DIV2 : constant DSI_PLL_IDF := 2;
    PLL_IN_DIV3 : constant DSI_PLL_IDF := 3;
