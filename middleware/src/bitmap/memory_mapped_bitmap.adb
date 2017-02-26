@@ -168,6 +168,15 @@ package body Memory_Mapped_Bitmap is
                   Pixel := (Pixel and 16#F0#) or UInt8 (Value and 16#0F#);
                end if;
             end;
+         when M_1 =>
+            declare
+               type Mono_BM is array (Natural range <>) of Bit with Pack;
+
+               BM : aliased Mono_BM (0 .. (Buffer.Height * Buffer.Width) - 1)
+                 with Import, Address => Buffer.Addr;
+            begin
+               BM (Offset) := (if Value /= 0 then 1 else 0);
+            end;
 
       end case;
    end Set_Pixel;
@@ -310,6 +319,15 @@ package body Memory_Mapped_Bitmap is
                else
                   return UInt32 (Pixel and 16#0F#);
                end if;
+            end;
+         when M_1 =>
+            declare
+               type Mono_BM is array (Natural range <>) of Bit with Pack;
+
+               BM : aliased Mono_BM (0 .. (Buffer.Height * Buffer.Width) - 1)
+                 with Import, Address => Buffer.Addr;
+            begin
+               return UInt32 (BM (Offset));
             end;
       end case;
    end Pixel;
