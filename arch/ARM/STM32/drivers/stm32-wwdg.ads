@@ -91,8 +91,8 @@ package STM32.WWDG is  --  the Window Watchdog
    --  watchdog to trigger the system reset (when activated).
    --
    --  To prevent a reset, the watchdog counter must be refreshed by the
-   --  application but only when the counter is lower than Value and greater
-   --  than 16#3F#.
+   --  application but only when the counter is lower than Window_Start_Count
+   --  and greater than 16#3F#.
 
    procedure Activate_Watchdog (New_Count : Downcounter);
    --  Set the watchdog counter to begin counting down from New_Count and
