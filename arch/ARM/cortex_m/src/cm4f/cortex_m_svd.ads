@@ -25,5 +25,7 @@ package Cortex_M_SVD is
      System'To_Address (16#E000ED90#);
    Debug_Base : constant System.Address :=
      System'To_Address (16#E000ED00#);
+   DWT_Base : constant System.Address :=
+     System'To_Address (16#E0001000#);
 
 end Cortex_M_SVD;
