@@ -34,8 +34,6 @@ with Ada.Real_Time; use Ada.Real_Time;
 with STM32_SVD.I2C; use STM32_SVD.I2C;
 with STM32_SVD.RCC; use STM32_SVD.RCC;
 
-with STM32.RCC;
-
 with HAL.I2C; use HAL.I2C;
 
 package body STM32.I2C is
@@ -104,9 +102,6 @@ package body STM32.I2C is
       end if;
 
       This.Config := Configuration;
-
-      STM32.RCC.Enable_Clock (STM32_SVD.I2C.I2C_Peripheral (This.Periph.all));
-      STM32.RCC.Reset (STM32_SVD.I2C.I2C_Peripheral (This.Periph.all));
 
       --  Disable the I2C port
       This.Periph.CR1.PE := False;

@@ -433,6 +433,12 @@ package STM32.Device is
 
    function As_Port_Id (Port : I2C_Port) return I2C_Port_Id with Inline;
 
+   procedure Enable_Clock (This : aliased I2C_Port);
+   procedure Enable_Clock (This : I2C_Port_Id);
+
+   procedure Reset (This : I2C_Port);
+   procedure Reset (This : I2C_Port_Id);
+
    ---------
    -- SPI --
    ---------
