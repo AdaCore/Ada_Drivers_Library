@@ -51,7 +51,9 @@ package HAL.Bitmap is
       AL_88,
       L_4,
       A_8,
-      A_4) with Size => 4;
+      A_4,
+      M_1 -- Monochrome
+     ) with Size => 4;
 
    function Bits_Per_Pixel (Mode : Bitmap_Color_Mode) return Positive is
      (case Mode is
@@ -59,7 +61,8 @@ package HAL.Bitmap is
          when RGB_888 => 24,
          when RGB_565 | ARGB_1555 | ARGB_4444 | AL_88 => 16,
          when L_8 | AL_44 | A_8 => 8,
-         when L_4 | A_4 => 4);
+         when L_4 | A_4 => 4,
+         when M_1 => 1);
 
    type Point is record
       X : Natural;

@@ -46,6 +46,7 @@ with System;         use System;
 
 with STM32_SVD.LTDC; use STM32_SVD.LTDC;
 with STM32_SVD.RCC;  use STM32_SVD.RCC;
+with HAL.Bitmap;
 
 package body STM32.LTDC is
 
@@ -233,6 +234,28 @@ package body STM32.LTDC is
          Sync.Wait;
       end if;
    end Reload_Config;
+
+   ------------------
+   -- To_LTDC_Mode --
+   ------------------
+
+   function To_LTDC_Mode (HAL_Mode : HAL.Framebuffer.FB_Color_Mode)
+                          return STM32.LTDC.Pixel_Format
+   is
+   begin
+      case HAL_Mode is
+         when HAL.Bitmap.ARGB_8888 => return STM32.LTDC.Pixel_Fmt_ARGB8888;
+         when HAL.Bitmap.RGB_888   => return STM32.LTDC.Pixel_Fmt_RGB888;
+         when HAL.Bitmap.RGB_565   => return STM32.LTDC.Pixel_Fmt_RGB565;
+         when HAL.Bitmap.ARGB_1555 => return STM32.LTDC.Pixel_Fmt_ARGB1555;
+         when HAL.Bitmap.ARGB_4444 => return STM32.LTDC.Pixel_Fmt_ARGB4444;
+         when HAL.Bitmap.L_8       => return STM32.LTDC.Pixel_Fmt_L8;
+         when HAL.Bitmap.AL_44     => return STM32.LTDC.Pixel_Fmt_AL44;
+         when HAL.Bitmap.AL_88     => return STM32.LTDC.Pixel_Fmt_AL88;
+         when others =>
+            raise Program_Error;
+      end case;
+   end To_LTDC_Mode;
 
    ---------------------
    -- Set_Layer_State --

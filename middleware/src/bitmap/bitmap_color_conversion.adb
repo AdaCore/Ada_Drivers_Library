@@ -125,6 +125,8 @@ package body Bitmap_Color_Conversion is
 
          when A_4 =>
             Add_UInt8 (Col.Alpha, 0, 4);
+         when M_1 =>
+            Ret := (if Luminance > 127 then 1 else 0);
       end case;
 
       return Ret;
@@ -235,6 +237,18 @@ package body Bitmap_Color_Conversion is
             R := 255;
             G := 255;
             B := 255;
+         when M_1 =>
+            A := 255;
+            if Col /= 0 then
+               R := 255;
+               G := 255;
+               B := 255;
+            else
+               A := 0;
+               R := 0;
+               G := 0;
+            end if;
+
       end case;
 
       return (Alpha => A,

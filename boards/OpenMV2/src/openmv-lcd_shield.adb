@@ -43,7 +43,7 @@ package body OpenMV.LCD_Shield is
    LCD_CS  : STM32.GPIO.GPIO_Point renames Shield_SEL;
    All_Points  : constant STM32.GPIO.GPIO_Points := (LCD_RS, LCD_CS, LCD_RST);
 
-   LCD_Driver : ST7735R_RAM_Framebuffer_Device (Shield_SPI'Access,
+   LCD_Driver : ST7735R_RAM_Framebuffer_Screen (Shield_SPI'Access,
                                                 LCD_CS'Access,
                                                 LCD_RS'Access,
                                                 LCD_RST'Access,
