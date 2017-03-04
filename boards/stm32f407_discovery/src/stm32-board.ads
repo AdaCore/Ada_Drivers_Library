@@ -94,7 +94,7 @@ package STM32.Board is
                                        Ravenscar_Time.Delays);
 
    Acc_SPI    : SPI_Port renames SPI_1;
-   Acc_SPI_AF : GPIO_Alternate_Function renames GPIO_AF_5_SPI1;
+   Acc_SPI_AF : GPIO_Alternate_Function renames GPIO_AF_SPI1_5;
 
    Acc_Chip_Select_Pin : GPIO_Point renames PE3;
    Acc_SPI_SCK_Pin     : GPIO_Point renames PA5;

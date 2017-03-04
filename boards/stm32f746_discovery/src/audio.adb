@@ -51,7 +51,7 @@ package body Audio is
    SAI_Pins      : constant GPIO_Points :=
                      (SAI2_MCLK_A, SAI2_SCK_A, SAI2_SD_A, SAI2_SD_B,
                       SAI2_FS_A);
-   SAI_Pins_AF   : GPIO_Alternate_Function renames GPIO_AF_10_SAI2;
+   SAI_Pins_AF   : GPIO_Alternate_Function renames GPIO_AF_SAI2_10;
 
    --  SAI in/out conf
    SAI_Out_Block : SAI_Block renames Block_A;

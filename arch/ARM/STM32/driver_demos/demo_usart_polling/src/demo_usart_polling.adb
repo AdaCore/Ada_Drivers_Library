@@ -67,7 +67,7 @@ procedure Demo_USART_Polling is
 
       Configure_IO (RX_Pin & TX_Pin, Configuration);
 
-      Configure_Alternate_Function (RX_Pin & TX_Pin, AF => GPIO_AF_7_USART1);
+      Configure_Alternate_Function (RX_Pin & TX_Pin, AF => GPIO_AF_USART1_7);
    end Initialize_UART_GPIO;
 
    ----------------

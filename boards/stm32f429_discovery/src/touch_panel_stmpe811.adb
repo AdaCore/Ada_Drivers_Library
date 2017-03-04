@@ -57,10 +57,10 @@ package body Touch_Panel_STMPE811 is
    use type HAL.I2C.I2C_Status;
 
    SCL      : GPIO_Point renames PA8;
-   SCL_AF   : constant GPIO_Alternate_Function := GPIO_AF_4_I2C3;
+   SCL_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C3_4;
 
    SDA      : GPIO_Point renames PC9;
-   SDA_AF   : constant GPIO_Alternate_Function := GPIO_AF_4_I2C3;
+   SDA_AF   : constant GPIO_Alternate_Function := GPIO_AF_I2C3_4;
 
    procedure TP_Ctrl_Lines;
    procedure TP_I2C_Config;

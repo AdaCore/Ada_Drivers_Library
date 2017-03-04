@@ -142,7 +142,7 @@ procedure Demo_ADC_Timer_DMA is
    ---------------------
 
    procedure Configure_Timer is
-      Timer_AF       : constant STM32.GPIO_Alternate_Function := GPIO_AF_1_TIM1;
+      Timer_AF       : constant STM32.GPIO_Alternate_Function := GPIO_AF_TIM1_1;
       Output_Channel : constant Timer_Channel := Channel_1; --  must match ADC trigger
       Frequency      : constant Hertz := 10_000;  -- arbitrary
       Output_Pin     : constant GPIO_Point := PA8;  -- timer 1, channel 1

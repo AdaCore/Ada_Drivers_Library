@@ -123,7 +123,7 @@ private
    Shield_USART_Points : constant STM32.GPIO.GPIO_Points :=
      (USART_3_TX,
       USART_3_RX);
-   Shield_USART_AF : constant GPIO_Alternate_Function := GPIO_AF_7_USART3;
+   Shield_USART_AF : constant GPIO_Alternate_Function := GPIO_AF_USART3_7;
 
    ---------------
    -- I2C1 Pins --
@@ -132,8 +132,8 @@ private
    Sensor_I2C     : I2C_Port renames I2C_1;
    Sensor_I2C_SCL : GPIO_Point renames PB8;
    Sensor_I2C_SDA : GPIO_Point renames PB9;
-   Sensor_I2C_SCL_AF : GPIO_Alternate_Function renames GPIO_AF_4_I2C1;
-   Sensor_I2C_SDA_AF : GPIO_Alternate_Function renames GPIO_AF_4_I2C1;
+   Sensor_I2C_SCL_AF : GPIO_Alternate_Function renames GPIO_AF_I2C1_4;
+   Sensor_I2C_SDA_AF : GPIO_Alternate_Function renames GPIO_AF_I2C1_4;
 
    -----------------
    --  Sensor DMA --
@@ -173,7 +173,7 @@ private
    FS_IN : GPIO_Point renames PD3;
 
    SENSOR_CLK_IO   : GPIO_Point renames PA8;
-   SENSOR_CLK_AF   : GPIO_Alternate_Function renames GPIO_AF_1_TIM1;
+   SENSOR_CLK_AF   : GPIO_Alternate_Function renames GPIO_AF_TIM1_1;
    SENSOR_CLK_TIM  : STM32.Timers.Timer renames Timer_1;
    SENSOR_CLK_CHAN : constant Timer_Channel := Channel_1;
    SENSOR_CLK_FREQ : constant := 12_000_000;

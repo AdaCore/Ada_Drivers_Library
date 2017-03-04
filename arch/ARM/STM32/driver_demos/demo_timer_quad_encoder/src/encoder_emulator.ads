@@ -79,7 +79,7 @@ private
 
    Emulator_Timer : Timer renames Timer_3;
 
-   Emulator_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_2_TIM3;
+   Emulator_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_TIM3_2;
 
    Emulator_Period : constant UInt32 := ((System_Clock_Frequencies.SYSCLK / 4) / 10000) - 1;
 

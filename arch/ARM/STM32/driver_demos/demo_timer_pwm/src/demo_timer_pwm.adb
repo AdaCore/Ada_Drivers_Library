@@ -143,7 +143,7 @@ begin
 
    Set_Autoreload_Preload (Timer_4, True);
 
-   Configure_Alternate_Function (All_LEDs, AF => GPIO_AF_2_TIM4);
+   Configure_Alternate_Function (All_LEDs, AF => GPIO_AF_TIM4_2);
    --  Note we configured the LEDs to be in the AF mode in Configure_LEDs
 
    Enable_Channel (Timer_4, Output_Channel);

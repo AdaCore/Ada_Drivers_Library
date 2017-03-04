@@ -129,7 +129,7 @@ package body SDCard is
           Output_Type => Push_Pull,
           Speed       => Speed_High,
           Resistors   => Pull_Up));
-      Configure_Alternate_Function (SD_Pins, GPIO_AF_12_SDIO);
+      Configure_Alternate_Function (SD_Pins, GPIO_AF_SDIO_12);
 
       --  GPIO configuration for the SD-Detect pin
       Configure_IO

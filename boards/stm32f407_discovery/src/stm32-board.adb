@@ -102,7 +102,7 @@ package body STM32.Board is
 
          Enable_Clock (Audio_I2C_Points);
 
-         Configure_Alternate_Function (Audio_I2C_Points, GPIO_AF_4_I2C1);
+         Configure_Alternate_Function (Audio_I2C_Points, GPIO_AF_I2C1_4);
 
          Configure_IO (Audio_I2C_Points,
                        (Speed       => Speed_High,
@@ -121,7 +121,7 @@ package body STM32.Board is
                         Output_Type => Push_Pull,
                         Resistors   => Floating));
 
-         Configure_Alternate_Function (Audio_I2S_Points, GPIO_AF_6_I2S3);
+         Configure_Alternate_Function (Audio_I2S_Points, GPIO_AF_I2S3_6);
 
          Lock (Audio_I2S_Points);
 

@@ -137,8 +137,8 @@ package body SDCard is
       --  ??? no GPIO_AF10_SDMMC or AF11 names for now. Waiting for AF
       --  functions to be moved outside of STM32.GPIO (that is common to
       --  all STM32)
-      Configure_Alternate_Function (SD_Pins_AF_10, GPIO_AF_10_SDMMC2);
-      Configure_Alternate_Function (SD_Pins_AF_11, GPIO_AF_11_SDMMC2);
+      Configure_Alternate_Function (SD_Pins_AF_10, GPIO_AF_SDMMC2_10);
+      Configure_Alternate_Function (SD_Pins_AF_11, GPIO_AF_SDMMC2_11);
 
       --  GPIO configuration for the SD-Detect pin
       Configure_IO
