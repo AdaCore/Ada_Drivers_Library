@@ -35,6 +35,7 @@ with HAL.Framebuffer;
 private with FT5336;
 private with STM32.Device;
 private with STM32.I2C;
+private with STM32.GPIO;
 
 package Touch_Panel_FT5336 is
 
@@ -57,7 +58,11 @@ package Touch_Panel_FT5336 is
 
 private
 
-   TP_I2C   : STM32.I2C.I2C_Port renames STM32.Device.I2C_3;
+   TP_I2C        : STM32.I2C.I2C_Port renames STM32.Device.I2C_3;
+   TP_I2C_Points : constant STM32.GPIO.GPIO_Points :=
+     (STM32.Device.PH7, STM32.Device.PH8);
+   TP_I2C_AF     : constant STM32.GPIO_Alternate_Function :=
+     STM32.Device.GPIO_AF_I2C3_4;
 
    type Touch_Panel is limited new FT5336.FT5336_Device
      (Port     => TP_I2C'Access,

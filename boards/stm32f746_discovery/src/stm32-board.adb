@@ -95,30 +95,6 @@ package body STM32.Board is
       Lock (Points);
    end Initialize_I2C_GPIO;
 
-   -------------------
-   -- TP_I2C_Config --
-   -------------------
-
-   procedure Configure_I2C (Port : in out I2C_Port)
-   is
-      I2C_Conf : I2C_Configuration;
-   begin
-      if Port /= I2C_3 then
-         return;
-      end if;
-
-      if not STM32.I2C.Is_Configured (Port) then
-         I2C_Conf.Own_Address := 16#00#;
-         I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;
-         I2C_Conf.General_Call_Enabled := False;
-         I2C_Conf.Clock_Stretching_Enabled := True;
-
-         I2C_Conf.Clock_Speed := 100_000;
-
-         Configure (Port, I2C_Conf);
-      end if;
-   end Configure_I2C;
-
    --------------------------------
    -- Configure_User_Button_GPIO --
    --------------------------------

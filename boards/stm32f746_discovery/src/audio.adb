@@ -39,6 +39,7 @@ with STM32.Board;  use STM32.Board;
 with STM32.GPIO;   use STM32.GPIO;
 with STM32.DMA;    use STM32.DMA;
 with STM32.SAI;    use STM32.SAI;
+with STM32.Setup;
 
 package body Audio is
 
@@ -181,8 +182,10 @@ package body Audio is
    procedure Initialize_Audio_I2C
    is
    begin
-      Initialize_I2C_GPIO (Audio_I2C);
-      Configure_I2C (Audio_I2C);
+      STM32.Setup.Setup_I2C_Master (Port        => Audio_I2C,
+                                    SDA_SCL     => Audio_I2C_Points,
+                                    GPIO_AF     => Audio_I2C_AF,
+                                    Clock_Speed => 100_000);
    end Initialize_Audio_I2C;
 
    ----------------
