@@ -29,8 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Real_Time; use Ada.Real_Time;
-
 package body STM32.Board is
 
    ------------------
@@ -111,32 +109,6 @@ package body STM32.Board is
       Enable_Clock (Port);
       Reset (Port);
    end Initialize_I2C_GPIO;
-
-   -------------------
-   -- Configure_I2C --
-   -------------------
-
-   procedure Configure_I2C (Port : in out I2C_Port)
-   is
-      I2C_Conf : I2C_Configuration;
-   begin
-
-      --  Wait at least 200ms after power up before accessing the TP registers
-      delay until Clock + Milliseconds (200);
-
-      if not Port.Port_Enabled then
-         Reset (Port);
-
-         I2C_Conf.Own_Address := 16#00#;
-         I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;
-         I2C_Conf.General_Call_Enabled := False;
-         I2C_Conf.Clock_Stretching_Enabled := True;
-
-         I2C_Conf.Clock_Speed := 100_000;
-
-         Port.Configure (I2C_Conf);
-      end if;
-   end Configure_I2C;
 
    --------------------------------
    -- Configure_User_Button_GPIO --
