@@ -142,8 +142,6 @@ package STM32.Board is
             or else
             As_Port_Id (Port) = I2C_Id_4;
 
-   procedure Configure_I2C (Port : in out I2C_Port);
-
    --------------------------------
    -- Screen/Touch panel devices --
    --------------------------------
@@ -167,7 +165,10 @@ package STM32.Board is
    -- Audio --
    -----------
 
-   Audio_I2C     : I2C_Port renames I2C_4;
+   Audio_I2C        : I2C_Port renames I2C_4;
+   Audio_I2C_Points : constant STM32.GPIO.GPIO_Points := (I2C4_SCL, I2C4_SDA);
+   Audio_I2C_AF     : constant STM32.GPIO_Alternate_Function :=
+     STM32.Device.GPIO_AF_I2C4_4;
 
    --  Audio DMA configuration
    Audio_DMA               : DMA_Controller renames DMA_2;
