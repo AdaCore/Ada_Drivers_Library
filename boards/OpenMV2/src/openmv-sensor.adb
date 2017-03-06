@@ -38,6 +38,7 @@ with HAL.I2C;       use HAL.I2C;
 with HAL.Bitmap;    use HAL.Bitmap;
 with HAL;           use HAL;
 with STM32.PWM;     use STM32.PWM;
+with STM32.Setup;
 
 package body OpenMV.Sensor is
 
@@ -205,31 +206,11 @@ package body OpenMV.Sensor is
          DCMI_Out_Points : GPIO_Points :=
            GPIO_Points'(DCMI_PWDN, DCMI_RST, FS_IN);
       begin
-         Enable_Clock (GPIO_Points'(Sensor_I2C_SCL, Sensor_I2C_SDA));
 
-         GPIO_Conf.Speed       := Speed_25MHz;
-         GPIO_Conf.Mode        := Mode_AF;
-         GPIO_Conf.Output_Type := Open_Drain;
-         GPIO_Conf.Resistors   := Floating;
-         Configure_IO
-           (GPIO_Points'(Sensor_I2C_SCL, Sensor_I2C_SDA), GPIO_Conf);
-
-         Configure_Alternate_Function (Sensor_I2C_SCL, Sensor_I2C_SCL_AF);
-         Configure_Alternate_Function (Sensor_I2C_SDA, Sensor_I2C_SDA_AF);
-
-         Enable_Clock (Sensor_I2C);
-         Reset (Sensor_I2C);
-         Enable_Clock (Sensor_I2C);
-
-         Configure
-           (Sensor_I2C,
-            (Mode                     => I2C_Mode,
-             Duty_Cycle               => DutyCycle_2,
-             Own_Address              => 16#00#,
-             Addressing_Mode          => Addressing_Mode_7bit,
-             General_Call_Enabled     => False,
-             Clock_Stretching_Enabled => False,
-             Clock_Speed              => 10_000));
+         STM32.Setup.Setup_I2C_Master (Port        => Sensor_I2C,
+                                       SDA_SCL     => GPIO_Points'(Sensor_I2C_SCL, Sensor_I2C_SDA),
+                                       GPIO_AF     => Sensor_I2C_AF,
+                                       Clock_Speed => 100_000);
 
          Enable_Clock (DCMI_Out_Points);
          --  Sensor PowerDown, Reset and FSIN

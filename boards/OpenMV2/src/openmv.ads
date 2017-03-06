@@ -132,8 +132,7 @@ private
    Sensor_I2C     : I2C_Port renames I2C_1;
    Sensor_I2C_SCL : GPIO_Point renames PB8;
    Sensor_I2C_SDA : GPIO_Point renames PB9;
-   Sensor_I2C_SCL_AF : GPIO_Alternate_Function renames GPIO_AF_I2C1_4;
-   Sensor_I2C_SDA_AF : GPIO_Alternate_Function renames GPIO_AF_I2C1_4;
+   Sensor_I2C_AF  : GPIO_Alternate_Function renames GPIO_AF_I2C1_4;
 
    -----------------
    --  Sensor DMA --
