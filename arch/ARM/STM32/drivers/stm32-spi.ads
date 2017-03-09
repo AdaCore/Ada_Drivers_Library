@@ -198,6 +198,7 @@ package STM32.SPI is
       Incoming  : out UInt8_Buffer;
       Size      : Positive);
 
+   overriding
    procedure Transmit_Receive
      (This      : in out SPI_Port;
       Outgoing  : UInt8;
