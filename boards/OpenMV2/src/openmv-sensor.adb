@@ -208,8 +208,10 @@ package body OpenMV.Sensor is
       begin
 
          STM32.Setup.Setup_I2C_Master (Port        => Sensor_I2C,
-                                       SDA_SCL     => GPIO_Points'(Sensor_I2C_SCL, Sensor_I2C_SDA),
-                                       GPIO_AF     => Sensor_I2C_AF,
+                                       SDA         => Sensor_I2C_SDA,
+                                       SCL         => Sensor_I2C_SCL,
+                                       SDA_AF      => Sensor_I2C_AF,
+                                       SCL_AF      => Sensor_I2C_AF,
                                        Clock_Speed => 100_000);
 
          Enable_Clock (DCMI_Out_Points);

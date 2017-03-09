@@ -59,10 +59,9 @@ package Touch_Panel_FT6x06 is
 private
 
    TP_I2C        : STM32.I2C.I2C_Port renames STM32.Device.I2C_1;
-   TP_I2C_Points : constant STM32.GPIO.GPIO_Points := (STM32.Device.PB8,
-                                                       STM32.Device.PB9);
-   TP_I2C_AF     : constant STM32.GPIO_Alternate_Function :=
-     STM32.Device.GPIO_AF_I2C1_4;
+   TP_I2C_SCL    : STM32.GPIO.GPIO_Point renames STM32.Device.PB8;
+   TP_I2C_SDA    : STM32.GPIO.GPIO_Point renames STM32.Device.PB9;
+   TP_I2C_AF     : STM32.GPIO_Alternate_Function renames STM32.Device.GPIO_AF_I2C1_4;
 
    type Touch_Panel is limited new FT6x06.FT6x06_Device
      (Port     => TP_I2C'Access,

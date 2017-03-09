@@ -74,8 +74,10 @@ package body Touch_Panel_STMPE811 is
    begin
       if not TP_I2C.Port_Enabled then
          STM32.Setup.Setup_I2C_Master (Port        => TP_I2C,
-                                       SDA_SCL     => GPIO_Points'(SDA, SCL),
-                                       GPIO_AF     => SCL_SDA_AF,
+                                       SDA         => SDA,
+                                       SCL         => SCL,
+                                       SDA_AF      => SCL_SDA_AF,
+                                       SCL_AF      => SCL_SDA_AF,
                                        Clock_Speed => 100_000);
       end if;
 

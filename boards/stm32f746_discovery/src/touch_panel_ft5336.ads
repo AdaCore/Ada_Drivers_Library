@@ -58,11 +58,10 @@ package Touch_Panel_FT5336 is
 
 private
 
-   TP_I2C        : STM32.I2C.I2C_Port renames STM32.Device.I2C_3;
-   TP_I2C_Points : constant STM32.GPIO.GPIO_Points :=
-     (STM32.Device.PH7, STM32.Device.PH8);
-   TP_I2C_AF     : constant STM32.GPIO_Alternate_Function :=
-     STM32.Device.GPIO_AF_I2C3_4;
+   TP_I2C     : STM32.I2C.I2C_Port renames STM32.Device.I2C_3;
+   TP_I2C_SDA : STM32.GPIO.GPIO_Point renames STM32.Device.PH7;
+   TP_I2C_SCL : STM32.GPIO.GPIO_Point renames STM32.Device.PH8;
+   TP_I2C_AF  : STM32.GPIO_Alternate_Function renames STM32.Device.GPIO_AF_I2C3_4;
 
    type Touch_Panel is limited new FT5336.FT5336_Device
      (Port     => TP_I2C'Access,

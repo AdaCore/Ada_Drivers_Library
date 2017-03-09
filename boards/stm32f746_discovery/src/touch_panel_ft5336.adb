@@ -58,8 +58,10 @@ package body Touch_Panel_FT5336 is
       delay until Clock + Milliseconds (200);
 
       STM32.Setup.Setup_I2C_Master (Port        => TP_I2C,
-                                    SDA_SCL     => TP_I2C_Points,
-                                    GPIO_AF     => TP_I2C_AF,
+                                    SDA         => TP_I2C_SDA,
+                                    SCL         => TP_I2C_SCL,
+                                    SDA_AF      => TP_I2C_AF,
+                                    SCL_AF      => TP_I2C_AF,
                                     Clock_Speed => 100_000);
 
       This.TP_Set_Use_Interrupts (False);

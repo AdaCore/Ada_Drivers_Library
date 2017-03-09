@@ -130,8 +130,10 @@ package body STM32.Board is
       Initialize_GPIO;
 
       STM32.Setup.Setup_I2C_Master (Port        => I2C_1,
-                                    SDA_SCL     => Audio_I2C_Points,
-                                    GPIO_AF     => GPIO_AF_I2C1_4,
+                                    SDA         => Audio_I2C_SDA,
+                                    SCL         => Audio_I2C_SCL,
+                                    SDA_AF      => GPIO_AF_I2C1_4,
+                                    SCL_AF      => GPIO_AF_I2C1_4,
                                     Clock_Speed => 100_000);
 
       Set_PLLI2S_Factors (Pll_N => 258,

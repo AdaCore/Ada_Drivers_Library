@@ -38,24 +38,25 @@ package body STM32.Setup is
    -- Setup_I2C_Master --
    ----------------------
 
-   procedure Setup_I2C_Master (Port        : in out I2C_Port;
-                               SDA_SCL     : GPIO_Points;
-                               GPIO_AF     : GPIO_Alternate_Function;
-                               Clock_Speed : UInt32)
+   procedure Setup_I2C_Master (Port           : in out I2C_Port;
+                               SDA, SCL       : GPIO_Point;
+                               SDA_AF, SCL_AF : GPIO_Alternate_Function;
+                               Clock_Speed    : UInt32)
    is
       I2C_Conf : I2C_Configuration;
    begin
       --  GPIO --
-      Enable_Clock (SDA_SCL);
+      Enable_Clock (SDA & SCL);
 
-      Configure_Alternate_Function (SDA_SCL, GPIO_AF);
+      Configure_Alternate_Function (SDA, SDA_AF);
+      Configure_Alternate_Function (SCL, SCL_AF);
 
-      Configure_IO (SDA_SCL,
+      Configure_IO (SDA & SCL,
                     (Speed       => Speed_High,
                      Mode        => Mode_AF,
                      Output_Type => Open_Drain,
                      Resistors   => Floating));
-      Lock (SDA_SCL);
+      Lock (SDA & SCL);
 
       -- I2C --
 

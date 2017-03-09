@@ -81,40 +81,37 @@ begin
       Filter_BW       => Filter_800Hz);
 
    if Accelerometer.Device_Id /= I_Am_LIS3DSH then
+      All_LEDs_On;
+      My_Delay (100);
+      All_LEDs_Off;
+      My_Delay (100);
+   else
       loop
-         All_LEDs_On;
-         My_Delay (100);
+         Accelerometer.Get_Accelerations (Values);
+         if abs Values.X > abs Values.Y then
+            if Values.X > Threshold_High then
+               STM32.Board.Red_LED.Set;
+            elsif Values.X < Threshold_Low then
+               STM32.Board.Green_LED.Set;
+            end if;
+            My_Delay (10);
+         else
+            if Values.Y > Threshold_High then
+               STM32.Board.Orange_LED.Set;
+            elsif Values.Y < Threshold_Low then
+               STM32.Board.Blue_LED.Set;
+            end if;
+            My_Delay (10);
+         end if;
+
+         if STM32.User_Button.Has_Been_Pressed then
+            --  Go to the sound loop
+            exit;
+         end if;
+
          All_LEDs_Off;
-         My_Delay (100);
       end loop;
    end if;
-
-
-   loop
-      Accelerometer.Get_Accelerations (Values);
-      if abs Values.X > abs Values.Y then
-         if Values.X > Threshold_High then
-            STM32.Board.Red_LED.Set;
-         elsif Values.X < Threshold_Low then
-            STM32.Board.Green_LED.Set;
-         end if;
-         My_Delay (10);
-      else
-         if Values.Y > Threshold_High then
-            STM32.Board.Orange_LED.Set;
-         elsif Values.Y < Threshold_Low then
-            STM32.Board.Blue_LED.Set;
-         end if;
-         My_Delay (10);
-      end if;
-
-      if STM32.User_Button.Has_Been_Pressed then
-         --  Go to the sound loop
-         exit;
-      end if;
-
-      All_LEDs_Off;
-   end loop;
 
    STM32.Board.Audio_DAC.Play;
    loop

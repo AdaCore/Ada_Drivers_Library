@@ -183,8 +183,10 @@ package body Audio is
    is
    begin
       STM32.Setup.Setup_I2C_Master (Port        => Audio_I2C,
-                                    SDA_SCL     => Audio_I2C_Points,
-                                    GPIO_AF     => Audio_I2C_AF,
+                                    SDA         => Audio_I2C_SDA,
+                                    SCL         => Audio_I2C_SCL,
+                                    SDA_AF      => Audio_I2C_AF,
+                                    SCL_AF      => Audio_I2C_AF,
                                     Clock_Speed => 100_000);
    end Initialize_Audio_I2C;
 
