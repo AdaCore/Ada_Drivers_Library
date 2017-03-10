@@ -113,7 +113,7 @@ package body STM32.Board is
 
          Configure_Alternate_Function
            (SPI5_SCK & SPI5_MISO & SPI5_MOSI,
-            GPIO_AF_5_SPI5);
+            GPIO_AF_SPI5_5);
       end Init_SPI_IO_Pins;
 
       Init_SPI_Port : declare

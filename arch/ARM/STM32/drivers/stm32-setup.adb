@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,42 +29,49 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Touch_Panel;
-with HAL.Framebuffer;
+with STM32.Device;  use STM32.Device;
+with Ada.Real_Time; use Ada.Real_Time;
 
-private with FT6x06;
-private with STM32.Device;
-private with STM32.I2C;
-private with STM32.GPIO;
+package body STM32.Setup is
 
-package Touch_Panel_FT6x06 is
+   ----------------------
+   -- Setup_I2C_Master --
+   ----------------------
 
-   type Touch_Panel is limited new HAL.Touch_Panel.Touch_Panel_Device
-   with private;
+   procedure Setup_I2C_Master (Port           : in out I2C_Port;
+                               SDA, SCL       : GPIO_Point;
+                               SDA_AF, SCL_AF : GPIO_Alternate_Function;
+                               Clock_Speed    : UInt32)
+   is
+      I2C_Conf : I2C_Configuration;
+   begin
+      --  GPIO --
+      Enable_Clock (SDA & SCL);
 
-   function Initialize
-     (This : in out Touch_Panel;
-      Orientation : HAL.Framebuffer.Display_Orientation :=
-        HAL.Framebuffer.Default) return Boolean;
+      Configure_Alternate_Function (SDA, SDA_AF);
+      Configure_Alternate_Function (SCL, SCL_AF);
 
-   procedure Initialize
-     (This : in out Touch_Panel;
-      Orientation : HAL.Framebuffer.Display_Orientation :=
-        HAL.Framebuffer.Default);
+      Configure_IO (SDA & SCL,
+                    (Speed       => Speed_High,
+                     Mode        => Mode_AF,
+                     Output_Type => Open_Drain,
+                     Resistors   => Floating));
+      Lock (SDA & SCL);
 
-   procedure Set_Orientation
-     (This        : in out Touch_Panel;
-      Orientation : HAL.Framebuffer.Display_Orientation);
+      -- I2C --
 
-private
+      Enable_Clock (Port);
+      delay until Clock + Milliseconds (200);
+      Reset (Port);
 
-   TP_I2C        : STM32.I2C.I2C_Port renames STM32.Device.I2C_1;
-   TP_I2C_SCL    : STM32.GPIO.GPIO_Point renames STM32.Device.PB8;
-   TP_I2C_SDA    : STM32.GPIO.GPIO_Point renames STM32.Device.PB9;
-   TP_I2C_AF     : STM32.GPIO_Alternate_Function renames STM32.Device.GPIO_AF_I2C1_4;
+      I2C_Conf.Own_Address := 16#00#;
+      I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;
+      I2C_Conf.General_Call_Enabled := False;
+      I2C_Conf.Clock_Stretching_Enabled := True;
 
-   type Touch_Panel is limited new FT6x06.FT6x06_Device
-     (Port     => TP_I2C'Access,
-      I2C_Addr => 16#54#) with null record;
+      I2C_Conf.Clock_Speed := Clock_Speed;
 
-end Touch_Panel_FT6x06;
+      Port.Configure (I2C_Conf);
+   end Setup_I2C_Master;
+
+end STM32.Setup;

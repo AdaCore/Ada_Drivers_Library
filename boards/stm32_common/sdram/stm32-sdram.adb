@@ -63,7 +63,7 @@ package body STM32.SDRAM is
                      Mode        => Mode_AF,
                      Output_Type => Push_Pull,
                      Resistors   => Pull_Up));
-      Configure_Alternate_Function (SDRAM_PINS, GPIO_AF_12_FMC);
+      Configure_Alternate_Function (SDRAM_PINS, GPIO_AF_FMC_12);
       Lock (SDRAM_PINS);
    end SDRAM_GPIOConfig;
 

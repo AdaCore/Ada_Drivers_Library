@@ -70,8 +70,8 @@ package body Framebuffer_RK043FN48H is
       Enable_Clock (LTDC_Pins);
 
       Configure_Alternate_Function
-        (LCD_CTRL_PINS & LCD_RGB_AF14, GPIO_AF_14_LTDC);
-      Configure_Alternate_Function (LCD_RGB_AF9, GPIO_AF_9_LTDC);
+        (LCD_CTRL_PINS & LCD_RGB_AF14, GPIO_AF_LTDC_14);
+      Configure_Alternate_Function (LCD_RGB_AF9, GPIO_AF_LTDC_9);
       Configure_IO
         (Points => LTDC_Pins,
          Config => (Speed       => Speed_50MHz,

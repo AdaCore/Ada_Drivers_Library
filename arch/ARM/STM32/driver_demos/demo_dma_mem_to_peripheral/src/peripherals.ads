@@ -41,7 +41,7 @@ package Peripherals is
 
    Transceiver : USART renames USART_2;
 
-   Transceiver_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_7_USART2;
+   Transceiver_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_USART2_7;
 
    TX_Pin : constant GPIO_Point := PA2;
    RX_Pin : constant GPIO_Point := PA3;

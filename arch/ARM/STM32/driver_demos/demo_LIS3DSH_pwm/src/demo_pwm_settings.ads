@@ -44,7 +44,7 @@ package Demo_PWM_Settings is
    PWM_Output_Red    : PWM_Modulator;
    PWM_Output_Blue   : PWM_Modulator;
 
-   PWM_Output_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_2_TIM4;
+   PWM_Output_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_TIM4_2;
 
    PWM_Frequency : constant := 10_000;  -- arbitrary
 

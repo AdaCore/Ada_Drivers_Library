@@ -59,7 +59,7 @@ procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
    --  use a difference board, select a GPIO point connected to your selected
    --  timer and drive that instead.
 
-   Timer_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_2_TIM4;
+   Timer_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_TIM4_2;
    --  Note that this value MUST match the corresponding timer selected!
 
    Output_Channel : constant Timer_Channel := Channel_2; -- arbitrary

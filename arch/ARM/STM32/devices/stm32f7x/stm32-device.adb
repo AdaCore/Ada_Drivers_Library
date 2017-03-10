@@ -376,6 +376,64 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
+   procedure Enable_Clock (This : aliased I2C_Port) is
+   begin
+      Enable_Clock (As_Port_Id (This));
+   end Enable_Clock;
+
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
+   procedure Enable_Clock (This : I2C_Port_Id) is
+   begin
+      case This is
+         when I2C_Id_1 =>
+            RCC_Periph.APB1ENR.I2C1EN := True;
+         when I2C_Id_2 =>
+            RCC_Periph.APB1ENR.I2C2EN := True;
+         when I2C_Id_3 =>
+            RCC_Periph.APB1ENR.I2C3EN := True;
+         when I2C_Id_4 =>
+            RCC_Periph.APB1ENR.I2C4EN := True;
+      end case;
+   end Enable_Clock;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : I2C_Port) is
+   begin
+      Reset (As_Port_Id (This));
+   end Reset;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : I2C_Port_Id) is
+   begin
+      case This is
+         when I2C_Id_1 =>
+            RCC_Periph.APB1RSTR.I2C1RST := True;
+            RCC_Periph.APB1RSTR.I2C1RST := False;
+         when I2C_Id_2 =>
+            RCC_Periph.APB1RSTR.I2C2RST := True;
+            RCC_Periph.APB1RSTR.I2C2RST := False;
+         when I2C_Id_3 =>
+            RCC_Periph.APB1RSTR.I2C3RST := True;
+            RCC_Periph.APB1RSTR.I2C3RST := False;
+         when I2C_Id_4 =>
+            RCC_Periph.APB1RSTR.I2C4RST := True;
+            RCC_Periph.APB1RSTR.I2C4RST := False;
+      end case;
+   end Reset;
+
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
    procedure Enable_Clock (This : SPI_Port) is
    begin
       if This.Periph.all'Address = SPI1_Base then

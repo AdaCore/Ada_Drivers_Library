@@ -42,6 +42,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time; use Ada.Real_Time;
+with STM32.Setup;
 with HAL.SPI;
 with LIS3DSH;       use LIS3DSH;
 
@@ -89,7 +90,6 @@ package body STM32.Board is
    procedure Initialize_Audio is
 
       procedure Initialize_GPIO;
-      procedure Configure_I2C;
 
       ---------------------
       -- Initialize_GPIO --
@@ -97,19 +97,6 @@ package body STM32.Board is
 
       procedure Initialize_GPIO is
       begin
-
-         -- I2C --
-
-         Enable_Clock (Audio_I2C_Points);
-
-         Configure_Alternate_Function (Audio_I2C_Points, GPIO_AF_4_I2C1);
-
-         Configure_IO (Audio_I2C_Points,
-                       (Speed       => Speed_High,
-                        Mode        => Mode_AF,
-                        Output_Type => Open_Drain,
-                        Resistors   => Floating));
-         Lock (Audio_I2C_Points);
 
          -- I2S --
 
@@ -121,7 +108,7 @@ package body STM32.Board is
                         Output_Type => Push_Pull,
                         Resistors   => Floating));
 
-         Configure_Alternate_Function (Audio_I2S_Points, GPIO_AF_6_I2S3);
+         Configure_Alternate_Function (Audio_I2S_Points, GPIO_AF_I2S3_6);
 
          Lock (Audio_I2S_Points);
 
@@ -137,34 +124,17 @@ package body STM32.Board is
          Lock (DAC_Reset_Point);
       end Initialize_GPIO;
 
-      -------------------
-      -- Configure_I2C --
-      -------------------
-
-      procedure Configure_I2C
-      is
-         I2C_Conf : I2C_Configuration;
-      begin
-
-         Enable_Clock (I2C_1);
-         delay until Clock + Milliseconds (200);
-         Reset (I2C_1);
-
-         I2C_Conf.Own_Address := 16#00#;
-         I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;
-         I2C_Conf.General_Call_Enabled := False;
-         I2C_Conf.Clock_Stretching_Enabled := True;
-
-         I2C_Conf.Clock_Speed := 100_000;
-
-         I2C_1.Configure (I2C_Conf);
-      end Configure_I2C;
-
       Conf : I2S_Configuration;
 
    begin
       Initialize_GPIO;
-      Configure_I2C;
+
+      STM32.Setup.Setup_I2C_Master (Port        => I2C_1,
+                                    SDA         => Audio_I2C_SDA,
+                                    SCL         => Audio_I2C_SCL,
+                                    SDA_AF      => GPIO_AF_I2C1_4,
+                                    SCL_AF      => GPIO_AF_I2C1_4,
+                                    Clock_Speed => 100_000);
 
       Set_PLLI2S_Factors (Pll_N => 258,
                           Pll_R => 3);

@@ -41,6 +41,7 @@ with STM32.Device;  use STM32.Device;
 with STM32.GPIO;    use STM32.GPIO;
 with STM32.DMA;     use STM32.DMA;
 with STM32.SAI;     use STM32.SAI;
+with STM32.Setup;
 
 package body Audio is
 
@@ -51,7 +52,7 @@ package body Audio is
    SAI_Pins        : constant GPIO_Points :=
                        (SAI1_MCLK_A, SAI1_SCK_A, SAI1_SD_A,
                         SAI1_FS_A);
-   SAI_Pins_AF     : GPIO_Alternate_Function renames GPIO_AF_6_SAI1;
+   SAI_Pins_AF     : GPIO_Alternate_Function renames GPIO_AF_SAI1_6;
 
    Audio_Reset_Pin : GPIO_Point renames PE2;
 
@@ -196,7 +197,12 @@ package body Audio is
    is
    begin
       Initialize_I2C_GPIO (Audio_I2C);
-      Configure_I2C (Audio_I2C);
+      STM32.Setup.Setup_I2C_Master (Port        => Audio_I2C,
+                                    SDA         => Audio_I2C_SDA,
+                                    SCL         => Audio_I2C_SCL,
+                                    SDA_AF      => Audio_I2C_AF,
+                                    SCL_AF      => Audio_I2C_AF,
+                                    Clock_Speed => 100_000);
    end Initialize_Audio_I2C;
 
    ----------------

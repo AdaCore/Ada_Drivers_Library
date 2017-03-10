@@ -31,24 +31,22 @@
 
 --  Based on ft6x06.h from MCD Application Team
 
-with Ada.Real_Time;        use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 
 with STM32.Board;          use STM32.Board;
 with STM32.Device;         use STM32.Device;
 with STM32.I2C;            use STM32.I2C;
 with STM32.GPIO;           use STM32.GPIO;
+with STM32.Setup;
 with HAL.Touch_Panel;      use HAL.Touch_Panel;
 
 with FT6x06;               use FT6x06;
+with Ada.Real_Time;        use Ada.Real_Time;
 
 package body Touch_Panel_FT6x06 is
 
    procedure TP_Init_Pins;
    --  Initializes the Touch Panel GPIO pins
-
-   procedure TP_I2C_Config;
-   --  Initializes the I2C bus
 
    ---------------
    -- Init_Pins --
@@ -57,10 +55,6 @@ package body Touch_Panel_FT6x06 is
    procedure TP_Init_Pins
    is
    begin
-      Reset (TP_I2C);
-
-      Initialize_I2C_GPIO (TP_I2C);
-
       Enable_Clock (TP_INT);
 
       Configure_IO (TP_INT,
@@ -70,33 +64,6 @@ package body Touch_Panel_FT6x06 is
                      Resistors   => Pull_Up));
       Lock (TP_INT);
    end TP_Init_Pins;
-
-   -------------------
-   -- TP_I2C_Config --
-   -------------------
-
-   procedure TP_I2C_Config
-   is
-      I2C_Conf : I2C_Configuration;
-   begin
-      Enable_Clock (TP_I2C);
-
-      --  Wait at least 200ms after power up before accessing the TP registers
-      delay until Clock + Milliseconds (200);
-
-      if not TP_I2C.Port_Enabled then
-         Reset (TP_I2C);
-
-         I2C_Conf.Own_Address := 16#00#;
-         I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;
-         I2C_Conf.General_Call_Enabled := False;
-         I2C_Conf.Clock_Stretching_Enabled := True;
-
-         I2C_Conf.Clock_Speed := 100_000;
-
-         TP_I2C.Configure (I2C_Conf);
-      end if;
-   end TP_I2C_Config;
 
    ----------------
    -- Initialize --
@@ -109,7 +76,17 @@ package body Touch_Panel_FT6x06 is
    is
    begin
       TP_Init_Pins;
-      TP_I2C_Config;
+
+      delay until Clock + Milliseconds (200);
+
+      if not TP_I2C.Port_Enabled then
+         STM32.Setup.Setup_I2C_Master (Port        => TP_I2C,
+                                       SDA         => TP_I2C_SDA,
+                                       SCL         => TP_I2C_SCL,
+                                       SDA_AF      => TP_I2C_AF,
+                                       SCL_AF      => TP_I2C_AF,
+                                       Clock_Speed => 100_000);
+      end if;
 
       This.TP_Set_Use_Interrupts (False);
       This.Set_Orientation (Orientation);

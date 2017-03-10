@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,42 +29,25 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Touch_Panel;
-with HAL.Framebuffer;
+--  This package provides utility sub-program to quicly configure the STM32
+--  drivers. The intent factorize code by enabling and configuring device and
+--  associated GPIO points with a standard/most common setup.
+--
+--  The devices are configured for the most common usage, but if you need
+--  something more specific you can still do it by directly using
+--  confguration sub-programs of the device or reconfigure it after using the
+--  standard setup.
 
-private with FT6x06;
-private with STM32.Device;
-private with STM32.I2C;
-private with STM32.GPIO;
+with STM32.I2C;  use STM32.I2C;
+with STM32.GPIO; use STM32.GPIO;
 
-package Touch_Panel_FT6x06 is
+package STM32.Setup is
 
-   type Touch_Panel is limited new HAL.Touch_Panel.Touch_Panel_Device
-   with private;
+   procedure Setup_I2C_Master (Port           : in out I2C_Port;
+                               SDA, SCL       : GPIO_Point;
+                               SDA_AF, SCL_AF : GPIO_Alternate_Function;
+                               Clock_Speed    : UInt32);
+   --  GPIO : Alternate function, High speed, open drain, floating
+   --  I2C  : 7bit address, stretching enabled, general call disabled
 
-   function Initialize
-     (This : in out Touch_Panel;
-      Orientation : HAL.Framebuffer.Display_Orientation :=
-        HAL.Framebuffer.Default) return Boolean;
-
-   procedure Initialize
-     (This : in out Touch_Panel;
-      Orientation : HAL.Framebuffer.Display_Orientation :=
-        HAL.Framebuffer.Default);
-
-   procedure Set_Orientation
-     (This        : in out Touch_Panel;
-      Orientation : HAL.Framebuffer.Display_Orientation);
-
-private
-
-   TP_I2C        : STM32.I2C.I2C_Port renames STM32.Device.I2C_1;
-   TP_I2C_SCL    : STM32.GPIO.GPIO_Point renames STM32.Device.PB8;
-   TP_I2C_SDA    : STM32.GPIO.GPIO_Point renames STM32.Device.PB9;
-   TP_I2C_AF     : STM32.GPIO_Alternate_Function renames STM32.Device.GPIO_AF_I2C1_4;
-
-   type Touch_Panel is limited new FT6x06.FT6x06_Device
-     (Port     => TP_I2C'Access,
-      I2C_Addr => 16#54#) with null record;
-
-end Touch_Panel_FT6x06;
+end STM32.Setup;

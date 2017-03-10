@@ -38,6 +38,7 @@ with HAL.Touch_Panel;      use HAL.Touch_Panel;
 
 with STM32.Board;          use STM32.Board;
 with STM32.Device;         use STM32.Device;
+with STM32.Setup;
 with FT5336;               use FT5336;
 
 package body Touch_Panel_FT5336 is
@@ -53,12 +54,15 @@ package body Touch_Panel_FT5336 is
       return Boolean
    is
    begin
-      Initialize_I2C_GPIO (TP_I2C);
-
       --  Wait at least 200ms after power up before accessing the TP registers
       delay until Clock + Milliseconds (200);
 
-      Configure_I2C (TP_I2C);
+      STM32.Setup.Setup_I2C_Master (Port        => TP_I2C,
+                                    SDA         => TP_I2C_SDA,
+                                    SCL         => TP_I2C_SCL,
+                                    SDA_AF      => TP_I2C_AF,
+                                    SCL_AF      => TP_I2C_AF,
+                                    Clock_Speed => 100_000);
 
       This.TP_Set_Use_Interrupts (False);
       This.Set_Orientation (Orientation);
