@@ -71,7 +71,10 @@ def main(args):
         if args.pattern and not any(pat in repo for pat in args.pattern):
             continue
 
-        ret = git_clone (repo, dest, recursive)
+        if not os.path.exists(ROOT_DIR + dest):
+            ret = git_clone (repo, dest, recursive)
+        else:
+            print "%s already cloned" % dest
 
         if ret:
             at_least_one_error = True
