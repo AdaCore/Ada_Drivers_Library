@@ -30,7 +30,6 @@
 ------------------------------------------------------------------------------
 
 with FE310_SVD.UART; use FE310_SVD.UART;
-with Interfaces;     use Interfaces;
 
 ----------------
 -- FE310.UART --
