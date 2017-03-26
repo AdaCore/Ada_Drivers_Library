@@ -21,7 +21,7 @@
 -- THIS SOFTWARE.                                                         --
 --                                                                        --
 ----------------------------------------------------------------------------
-   
+
 package body Bluetooth.HCI is
 
    -----------------------
@@ -30,8 +30,8 @@ package body Bluetooth.HCI is
 
    function Build_HCI_Command
      (Command    : OpCode;
-      Parameters : Byte_Array)
-      return Byte_Array
+      Parameters : UInt8_Array)
+      return UInt8_Array
    is
    begin
       return (Command_Packet_Type &
@@ -46,7 +46,7 @@ package body Bluetooth.HCI is
 
    function Build_HCI_Command
      (Command    : OpCode)
-      return Byte_Array
+      return UInt8_Array
    is
    begin
       return (Command_Packet_Type &

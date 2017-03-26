@@ -21,15 +21,12 @@
 -- THIS SOFTWARE.                                                         --
 --                                                                        --
 ----------------------------------------------------------------------------
-with HAL;        use HAL;
 with HAL.GPIO;   use HAL.GPIO;
-with HAL.SPI;    use HAL.SPI;
-with Interfaces; use Interfaces;
 
 package Bluetooth.HCI is
 
-   Command_Packet_Type : constant Byte := 16#01#;
-   Event_Packet_Type   : constant Byte := 16#04#;
+   Command_Packet_Type : constant UInt8 := 16#01#;
+   Event_Packet_Type   : constant UInt8 := 16#04#;
 
    type Event is
      (Event_Disconn_Complete,
@@ -57,17 +54,17 @@ package Bluetooth.HCI is
 
    function Build_HCI_Command
      (Command    : OpCode;
-      Parameters : Byte_Array)
-      return Byte_Array
+      Parameters : UInt8_Array)
+      return UInt8_Array
      with
       Pre => Parameters'Length < 256;
-   -- Returns a Bluetooth HCI packet using the OpCode
-   -- and parameters.
+   --  Returns a Bluetooth HCI packet using the OpCode
+   --  and parameters.
 
    function Build_HCI_Command
      (Command    : OpCode)
-      return Byte_Array;
-   -- Returns a Bluetooth HCI packet using the OpCode
-   -- and no parameters.
+      return UInt8_Array;
+   --  Returns a Bluetooth HCI packet using the OpCode
+   --  and no parameters.
 
 end Bluetooth.HCI;

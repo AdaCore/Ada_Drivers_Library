@@ -21,20 +21,27 @@
 -- THIS SOFTWARE.                                                         --
 --                                                                        --
 ----------------------------------------------------------------------------
-with Interfaces; use Interfaces;
 
 package body Bluetooth_Debug is
 
-   LF   : constant Character := Character'Val(16#0A#);
-   CR   : constant Character := Character'Val(16#0D#);
+   LF   : constant Character := Character'Val (16#0A#);
+   CR   : constant Character := Character'Val (16#0D#);
    CRLF : constant String    := CR & LF;
+
+   function To_Hex
+     (Input : UInt8)
+      return String;
+
+   function To_Hex
+     (Input : UInt8_Array)
+      return String;
 
    ------------
    -- To_Hex --
    ------------
 
    function To_Hex
-     (Input : Byte)
+     (Input : UInt8)
       return String
    is
       Output : String (1 .. 2);
@@ -42,87 +49,87 @@ package body Bluetooth_Debug is
 
       case Input and 16#0F# is
          when 16#00# =>
-            Output(2) := '0';
+            Output (2) := '0';
          when 16#01# =>
-            Output(2) := '1';
+            Output (2) := '1';
          when 16#02# =>
-            Output(2) := '2';
+            Output (2) := '2';
          when 16#03# =>
-            Output(2) := '3';
+            Output (2) := '3';
          when 16#04# =>
-            Output(2) := '4';
+            Output (2) := '4';
          when 16#05# =>
-            Output(2) := '5';
+            Output (2) := '5';
          when 16#06# =>
-            Output(2) := '6';
+            Output (2) := '6';
          when 16#07# =>
-            Output(2) := '7';
+            Output (2) := '7';
          when 16#08# =>
-            Output(2) := '8';
+            Output (2) := '8';
          when 16#09# =>
-            Output(2) := '9';
-         when 16#0A# => 
-            Output(2) := 'A';
+            Output (2) := '9';
+         when 16#0A# =>
+            Output (2) := 'A';
          when 16#0B# =>
-            Output(2) := 'B';
+            Output (2) := 'B';
          when 16#0C# =>
-            Output(2) := 'C';
+            Output (2) := 'C';
          when 16#0D# =>
-            Output(2) := 'D';
+            Output (2) := 'D';
          when 16#0E# =>
-            Output(2) := 'E';
+            Output (2) := 'E';
          when 16#0F# =>
-            Output(2) := 'F';
+            Output (2) := 'F';
          when others =>
-            Output(2) := '?';
+            Output (2) := '?';
       end case;
-      
+
       case Input and 16#F0# is
          when 16#00# =>
-            Output(1) := '0';
+            Output (1) := '0';
          when 16#10# =>
-            Output(1) := '1';
+            Output (1) := '1';
          when 16#20# =>
-            Output(1) := '2';
+            Output (1) := '2';
          when 16#30# =>
-            Output(1) := '3';
+            Output (1) := '3';
          when 16#40# =>
-            Output(1) := '4';
+            Output (1) := '4';
          when 16#50# =>
-            Output(1) := '5';
+            Output (1) := '5';
          when 16#60# =>
-            Output(1) := '6';
+            Output (1) := '6';
          when 16#70# =>
-            Output(1) := '7';
+            Output (1) := '7';
          when 16#80# =>
-            Output(1) := '8';
+            Output (1) := '8';
          when 16#90# =>
-            Output(1) := '9';
-         when 16#A0# => 
-            Output(1) := 'A';
+            Output (1) := '9';
+         when 16#A0# =>
+            Output (1) := 'A';
          when 16#B0# =>
-            Output(1) := 'B';
+            Output (1) := 'B';
          when 16#C0# =>
-            Output(1) := 'C';
+            Output (1) := 'C';
          when 16#D0# =>
-            Output(1) := 'D';
+            Output (1) := 'D';
          when 16#E0# =>
-            Output(1) := 'E';
+            Output (1) := 'E';
          when 16#F0# =>
-            Output(1) := 'F';
+            Output (1) := 'F';
          when others =>
-            Output(1) := '?';
+            Output (1) := '?';
       end case;
 
       return Output;
    end To_Hex;
-   
+
    ------------
    -- To_Hex --
    ------------
-   
+
    function To_Hex
-     (Input : Byte_Array)
+     (Input : UInt8_Array)
       return String
    is
       Output : String (1 .. Input'Length * 3);
@@ -133,19 +140,19 @@ package body Bluetooth_Debug is
       end if;
 
       for I in Integer range Input'Range loop
-         Output(1 + 3 * (I - Input'First) .. 2 + 3 * (I - Input'First)) := To_Hex(Input(I));
-         Output(3 + 3 * (I - Input'First)) := ' ';
+         Output (1 + 3 * (I - Input'First) .. 2 + 3 * (I - Input'First)) := To_Hex (Input (I));
+         Output (3 + 3 * (I - Input'First)) := ' ';
       end loop;
 
       return Output;
    end To_Hex;
-   
+
    --------------------------
    -- Error_Code_To_String --
    --------------------------
 
    function Error_Code_To_String
-     (Code : Byte)
+     (Code : UInt8)
       return String
    is
    begin
@@ -294,39 +301,47 @@ package body Bluetooth_Debug is
    -------------------------
 
    function HCI_Event_To_String
-     (Data : Byte_Array)
+     (Data : UInt8_Array)
       return String
    is
+      function LE_Connection_Complete_To_String
+         (Data : UInt8_Array)
+          return String;
+
+      function LE_Connection_Update_Complete_To_String
+        (Data : UInt8_Array)
+         return String;
+
       --------------------------------------
       -- LE_Connection_Complete_To_String --
       --------------------------------------
-     
-      function LE_Connection_Complete_To_String 
-         (Data : Byte_Array)
+
+      function LE_Connection_Complete_To_String
+         (Data : UInt8_Array)
           return String
       is
       begin
          return "Event_LE_Conn_Complete " & CRLF &
 
          "Status      : " &
-         (if Data(5) = 16#00# then
+         (if Data (5) = 16#00# then
             "Success"
          else
-             "Error:" & Error_Code_To_String(Data(5))) & CRLF &
-            
-         "Handle      : " & To_Hex(Data(6 .. 7)) & CRLF &
-         
-         "Role        : " & 
-         (if Data(8) = 16#00# then
+             "Error:" & Error_Code_To_String (Data (5))) & CRLF &
+
+         "Handle      : " & To_Hex (Data (6 .. 7)) & CRLF &
+
+         "Role        : " &
+         (if Data (8) = 16#00# then
            "Master "
          else
            "Slave ") & CRLF &
-           
-         "Address     : " & To_Hex(Data(9 .. 15)) & CRLF &
 
-         "ConnInt     :" & Integer'Image(Integer(Data(16) + Data(17) * 16#FF#)) & CRLF &
+         "Address     : " & To_Hex (Data (9 .. 15)) & CRLF &
 
-         "SuperTimeout:" & Integer'Image(Integer(Data(20) + Data(21) * 16#FF#));
+         "ConnInt     :" & Integer'Image (Integer (Data (16) + Data (17) * 16#FF#)) & CRLF &
+
+         "SuperTimeout:" & Integer'Image (Integer (Data (20) + Data (21) * 16#FF#));
 
       end LE_Connection_Complete_To_String;
 
@@ -335,17 +350,17 @@ package body Bluetooth_Debug is
       ---------------------------------------------
 
       function LE_Connection_Update_Complete_To_String
-        (Data : Byte_Array)
+        (Data : UInt8_Array)
          return String
       is
       begin
          return "LE_Connection_Update_Complete" & CRLF &
 
          "Status      : " &
-         (if Data(5) = 16#00# then
+         (if Data (5) = 16#00# then
              "Success"
           else
-             "Error: " & Error_Code_To_String(Data(5)));
+             "Error: " & Error_Code_To_String (Data (5)));
 
       end LE_Connection_Update_Complete_To_String;
 
@@ -354,7 +369,7 @@ package body Bluetooth_Debug is
          return "No Data";
       end if;
 
-      if Data(1) /= 16#04# then
+      if Data (1) /= 16#04# then
          return "Not an Event";
       end if;
 
@@ -362,18 +377,18 @@ package body Bluetooth_Debug is
          return "Not enough data";
       end if;
 
-      case Data(2) is
+      case Data (2) is
          when 16#05# =>
             return "Event_Disconn_Complete" & CRLF &
 
-           (if Data(4) = 16#00# then
+           (if Data (4) = 16#00# then
                "Disconnection Occured"
             else
-               Error_Code_To_String(Data(4))) & CRLF &
+               Error_Code_To_String (Data (4))) & CRLF &
 
-            "Handle      : " & To_Hex(Data(5 .. 6)) & CRLF &
+            "Handle      : " & To_Hex (Data (5 .. 6)) & CRLF &
 
-            Error_Code_To_String(Data(7));
+            Error_Code_To_String (Data (7));
 
          when 16#08# =>
             return "Event_Encrypt_Change";
@@ -392,13 +407,13 @@ package body Bluetooth_Debug is
          when 16#30# =>
             return "Event_Encryption_Key_Refresh_Complete";
          when 16#3E# =>
-            case Data(4) is
+            case Data (4) is
                when 16#01# =>
-                  return LE_Connection_Complete_To_String(Data);
+                  return LE_Connection_Complete_To_String (Data);
                when 16#02# =>
                   return "Event_LE_Advertising_Report";
                when 16#03# =>
-                  return LE_Connection_Update_Complete_To_String(Data);
+                  return LE_Connection_Update_Complete_To_String (Data);
                when 16#04# =>
                   return "Event_LE_Read_Remote_Used_Features_Complete";
                when 16#05# =>

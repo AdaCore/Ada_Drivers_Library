@@ -26,8 +26,18 @@ with HAL; use HAL;
 package BlueNRG_MS_Debug is
 
    function HCI_Event_To_String
-      (Data : Byte_Array)
+      (Data : UInt8_Array)
        return String;
-   -- Returns a string representing HCI event data
+   --  Returns a string representing HCI event data
+
+private
+
+   function To_Hex
+     (Input : UInt8)
+      return String;
+
+   function To_Hex
+     (Input : UInt8_Array)
+      return String;
 
 end BlueNRG_MS_Debug;

@@ -41,14 +41,14 @@ package body BlueNRG_MS is
      (Device                  : in out BlueNRG_MS_Device;
       Role                    :        Device_Role;
       Enable_Privacy          :        Boolean;
-      Device_Name_Length      :        Byte;
-      Status                  :    out Byte;
+      Device_Name_Length      :        UInt8;
+      Status                  :    out UInt8;
       Service_Handle          :    out Handle;
       Device_Name_Char_Handle :    out Handle;
       Appearance_Char_Handle  :    out Handle)
       return Boolean
    is
-      Privacy : Byte;
+      Privacy : UInt8;
       Command : constant OpCode := ACI_GAP_Init;
    begin
       if Enable_Privacy then
@@ -58,11 +58,11 @@ package body BlueNRG_MS is
       end if;
       declare
          Parameters : constant
-                      Byte_Array := Byte_Array'(Role'Enum_Rep &
+                      UInt8_Array := UInt8_Array'(Role'Enum_Rep &
                                                 Privacy &
                                                 Device_Name_Length);
          Response   : constant
-                      Byte_Array := Send_Command
+                      UInt8_Array := Send_Command
                                       (Device,
                                        Command,
                                        Parameters);
@@ -88,21 +88,21 @@ package body BlueNRG_MS is
      (Device                  : in out BlueNRG_MS_Device;
       MITM_Required           :        Boolean;
       OOB_Enabled             :        Boolean;
-      OOB_Data                :        Byte_Array;
-      Min_Encryption_Key_Size :        Byte;
-      Max_Encryption_Key_Size :        Byte;
+      OOB_Data                :        UInt8_Array;
+      Min_Encryption_Key_Size :        UInt8;
+      Max_Encryption_Key_Size :        UInt8;
       Use_Fixed_Pin           :        Boolean;
       Pin                     :        Unsigned_32;
       Bonding_Required        :        Boolean;
-      Status                  :    out Byte)
+      Status                  :    out UInt8)
       return Boolean
    is
       Command       : constant OpCode := ACI_GAP_Set_Auth_Requirement;
-      MITM_Mode     : Byte := 0;
-      OOB_Enable    : Byte := 0;
-      Bonding_Mode  : Byte := 0;
-      Fixed_Pin     : Byte := 0;
-      Pin_Parameter : Byte_Array (1 .. 4);
+      MITM_Mode     : UInt8 := 0;
+      OOB_Enable    : UInt8 := 0;
+      Bonding_Mode  : UInt8 := 0;
+      Fixed_Pin     : UInt8 := 0;
+      Pin_Parameter : UInt8_Array (1 .. 4);
    begin
 
       if MITM_Required then
@@ -121,14 +121,14 @@ package body BlueNRG_MS is
          Bonding_Mode := 1;
       end if;
 
-      Pin_Parameter (1) := Byte (Pin and 16#FF#);
-      Pin_Parameter (2) := Byte (Shift_Right (Pin,  8) and 16#FF#);
-      Pin_Parameter (3) := Byte (Shift_Right (Pin, 16) and 16#FF#);
-      Pin_Parameter (4) := Byte (Shift_Right (Pin, 24) and 16#FF#);
+      Pin_Parameter (1) := UInt8 (Pin and 16#FF#);
+      Pin_Parameter (2) := UInt8 (Shift_Right (Pin,  8) and 16#FF#);
+      Pin_Parameter (3) := UInt8 (Shift_Right (Pin, 16) and 16#FF#);
+      Pin_Parameter (4) := UInt8 (Shift_Right (Pin, 24) and 16#FF#);
 
       declare
          Parameters : constant
-                      Byte_Array := Byte_Array'(MITM_Mode &
+                      UInt8_Array := UInt8_Array'(MITM_Mode &
                                                 OOB_Enable &
                                                 OOB_Data &
                                                 Min_Encryption_Key_Size &
@@ -137,7 +137,7 @@ package body BlueNRG_MS is
                                                 Pin_Parameter &
                                                 Bonding_Mode);
          Response   : constant
-                      Byte_Array := Send_Command
+                      UInt8_Array := Send_Command
                                       (Device,
                                        Command,
                                        Parameters);
@@ -159,20 +159,20 @@ package body BlueNRG_MS is
    function GAP_Set_Discoverable
      (Device                   : in out BlueNRG_MS_Device;
       Advertising_Event        :        Advertising_Event_Type;
-      Advertising_Interval_Min :        Unsigned_16;
-      Advertising_Interval_Max :        Unsigned_16;
+      Advertising_Interval_Min :        UInt16;
+      Advertising_Interval_Max :        UInt16;
       BT_Address_Type          :        Address_Type;
       Filter_Policy            :        Filter_Policy_Type;
       Local_Name_Type          :        Name_Type;
       Local_Name               :        String;
-      Service_UUID_List        :        Byte_Array;
-      Slave_Conn_Interval_Min  :        Unsigned_16;
-      Slave_Conn_Interval_Max  :        Unsigned_16;
-      Status                   :    out Byte)
+      Service_UUID_List        :        UInt8_Array;
+      Slave_Conn_Interval_Min  :        UInt16;
+      Slave_Conn_Interval_Max  :        UInt16;
+      Status                   :    out UInt8)
       return Boolean
    is
-      Advertising_Event_Byte : constant Byte := Advertising_Event'Enum_Rep;
-      Name_Length            : Byte;
+      Advertising_Event_UInt8 : constant UInt8 := Advertising_Event'Enum_Rep;
+      Name_Length            : UInt8;
       Command                : constant OpCode := ACI_GAP_Set_Discoverable;
    begin
 
@@ -185,20 +185,20 @@ package body BlueNRG_MS is
 
       declare
          Parameters : constant
-                      Byte_Array := Byte_Array'(Advertising_Event_Byte &
-                                                To_Byte_Array (Advertising_Interval_Min) &
-                                                To_Byte_Array (Advertising_Interval_Max) &
+                      UInt8_Array := UInt8_Array'(Advertising_Event_UInt8 &
+                                                To_UInt8_Array (Advertising_Interval_Min) &
+                                                To_UInt8_Array (Advertising_Interval_Max) &
                                                 BT_Address_Type'Enum_Rep &
                                                 Filter_Policy'Enum_Rep &
                                                 Name_Length &
                                                 Local_Name_Type'Enum_Rep &
-                                                To_Byte_Array (Local_Name) &
-                                                Byte (Service_UUID_List'Length) &
+                                                To_UInt8_Array (Local_Name) &
+                                                UInt8 (Service_UUID_List'Length) &
                                                 Service_UUID_List &
-                                                To_Byte_Array (Slave_Conn_Interval_Min) &
-                                                To_Byte_Array (Slave_Conn_Interval_Max));
+                                                To_UInt8_Array (Slave_Conn_Interval_Min) &
+                                                To_UInt8_Array (Slave_Conn_Interval_Max));
          Response   : constant
-                      Byte_Array := Send_Command (Device, Command, Parameters);
+                      UInt8_Array := Send_Command (Device, Command, Parameters);
       begin
          if Response'Length = 7 then
             Status := Response (7);
@@ -216,13 +216,13 @@ package body BlueNRG_MS is
 
    function GAP_Slave_Security_Request
      (Device           : in out BlueNRG_MS_Device;
-      Conn_Handle      :        Byte_Array;
+      Conn_Handle      :        UInt8_Array;
       Bonding_Required :        Boolean;
       MITM_Required    :        Boolean)
       return Boolean
    is
-      Bonding : Byte            := 0;
-      MITM    : Byte            := 0;
+      Bonding : UInt8            := 0;
+      MITM    : UInt8            := 0;
       Command : constant OpCode := ACI_GAP_Slave_Security_request;
    begin
 
@@ -236,11 +236,11 @@ package body BlueNRG_MS is
 
       declare
          Parameters : constant
-                      Byte_Array := Byte_Array'(Conn_Handle &
+                      UInt8_Array := UInt8_Array'(Conn_Handle &
                                                 Bonding &
                                                 MITM);
          Response   : constant
-                      Byte_Array := Send_Command (Device, Command, Parameters);
+                      UInt8_Array := Send_Command (Device, Command, Parameters);
       begin
          if Response'Length = 4 then
             if Response (4) = 0 then
@@ -261,17 +261,17 @@ package body BlueNRG_MS is
      (Device                : in out BlueNRG_MS_Device;
       Service               :        Handle;
       UUID                  :        UUID_16;
-      Max_Value_Length      :        Byte;
-      Properties            :        Byte;
-      Security              :        Byte;
-      Event_Mask            :        Byte;
-      Encryption_Key_Size   :        Byte;
+      Max_Value_Length      :        UInt8;
+      Properties            :        UInt8;
+      Security              :        UInt8;
+      Event_Mask            :        UInt8;
+      Encryption_Key_Size   :        UInt8;
       Value_Is_Fixed_Length :        Boolean;
-      Status                :    out Byte;
+      Status                :    out UInt8;
       Char_Handle           :    out Handle)
       return Boolean
    is
-      Is_Variable : Byte;
+      Is_Variable : UInt8;
       Command     : constant OpCode := ACI_GATT_Add_Char;
    begin
 
@@ -282,17 +282,17 @@ package body BlueNRG_MS is
       end if;
 
       declare
-         Parameters : constant Byte_Array :=
-                                  Byte_Array'(Service &
+         Parameters : constant UInt8_Array :=
+                                  UInt8_Array'(Service &
                                               16#01# &
-                                              Byte_Array (UUID) &
+                                              UInt8_Array (UUID) &
                                               Max_Value_Length &
                                               Properties &
                                               Security &
                                               Event_Mask &
                                               Encryption_Key_Size &
                                               Is_Variable);
-         Response   : constant Byte_Array := Send_Command (Device, Command, Parameters);
+         Response   : constant UInt8_Array := Send_Command (Device, Command, Parameters);
       begin
          if Response'Length = 9 then
             Status      := Response (7);
@@ -313,17 +313,17 @@ package body BlueNRG_MS is
      (Device                : in out BlueNRG_MS_Device;
       Service               :        Handle;
       UUID                  :        UUID_128;
-      Max_Value_Length      :        Byte;
-      Properties            :        Byte;
-      Security              :        Byte;
-      Event_Mask            :        Byte;
-      Encryption_Key_Size   :        Byte;
+      Max_Value_Length      :        UInt8;
+      Properties            :        UInt8;
+      Security              :        UInt8;
+      Event_Mask            :        UInt8;
+      Encryption_Key_Size   :        UInt8;
       Value_Is_Fixed_Length :        Boolean;
-      Status                :    out Byte;
+      Status                :    out UInt8;
       Char_Handle           :    out Handle)
       return Boolean
    is
-      Is_Variable : Byte;
+      Is_Variable : UInt8;
       Command     : constant OpCode := ACI_GATT_Add_Char;
    begin
 
@@ -334,17 +334,17 @@ package body BlueNRG_MS is
       end if;
 
       declare
-         Parameters : constant Byte_Array :=
-                                 Byte_Array'(Service &
+         Parameters : constant UInt8_Array :=
+                                 UInt8_Array'(Service &
                                              16#02# &
-                                             Byte_Array (UUID) &
+                                             UInt8_Array (UUID) &
                                              Max_Value_Length &
                                              Properties &
                                              Security &
                                              Event_Mask &
                                              Encryption_Key_Size &
                                              Is_Variable);
-         Response   : constant Byte_Array := Send_Command (Device, Command, Parameters);
+         Response   : constant UInt8_Array := Send_Command (Device, Command, Parameters);
       begin
          if Response'Length = 9 then
             Status      := Response (7);
@@ -365,20 +365,20 @@ package body BlueNRG_MS is
       (Device                : in out BlueNRG_MS_Device;
        UUID                  :        UUID_16;
        Service               :        Service_Type;
-       Max_Attribute_Records :        Byte;
-       Status                :    out Byte;
+       Max_Attribute_Records :        UInt8;
+       Status                :    out UInt8;
        Service_Handle        :    out Handle)
        return Boolean
    is
       Command : constant OpCode := ACI_GATT_Add_Serv;
    begin
       declare
-         Parameters : constant Byte_Array :=
-                                 Byte_Array'(16#01# &
-                                             Byte_Array (UUID) &
+         Parameters : constant UInt8_Array :=
+                                 UInt8_Array'(16#01# &
+                                             UInt8_Array (UUID) &
                                              Service'Enum_Rep &
                                              Max_Attribute_Records);
-         Response   : constant Byte_Array := Send_Command (Device, Command, Parameters);
+         Response   : constant UInt8_Array := Send_Command (Device, Command, Parameters);
       begin
          if Response'Length = 9 then
             Status         := Response (7);
@@ -399,20 +399,20 @@ package body BlueNRG_MS is
       (Device                : in out BlueNRG_MS_Device;
        UUID                  :        UUID_128;
        Service               :        Service_Type;
-       Max_Attribute_Records :        Byte;
-       Status                :    out Byte;
+       Max_Attribute_Records :        UInt8;
+       Status                :    out UInt8;
        Service_Handle        :    out Handle)
        return Boolean
    is
       Command : constant OpCode := ACI_GATT_Add_Serv;
    begin
       declare
-         Parameters : constant Byte_Array :=
-                                 Byte_Array'(16#02# &
-                                             Byte_Array (UUID) &
+         Parameters : constant UInt8_Array :=
+                                 UInt8_Array'(16#02# &
+                                             UInt8_Array (UUID) &
                                              Service'Enum_Rep &
                                              Max_Attribute_Records);
-         Response   : constant Byte_Array := Send_Command (Device, Command, Parameters);
+         Response   : constant UInt8_Array := Send_Command (Device, Command, Parameters);
       begin
          if Response'Length = 9 then
             Status         := Response (7);
@@ -431,13 +431,13 @@ package body BlueNRG_MS is
 
    function GATT_Init
      (Device : in out BlueNRG_MS_Device;
-      Status :    out Byte)
+      Status :    out UInt8)
       return Boolean
    is
       Command : constant OpCode := ACI_GATT_Init;
    begin
       declare
-         Response : constant Byte_Array := Send_Command (Device, Command);
+         Response : constant UInt8_Array := Send_Command (Device, Command);
       begin
          if Response'Length = 7 then
             Status := Response (7);
@@ -460,21 +460,21 @@ package body BlueNRG_MS is
      (Device            : in out BlueNRG_MS_Device;
       Service_Handle    :        Handle;
       Char_Handle       :        Handle;
-      Offset            :        Byte;
-      Char_Value        :        Byte_Array;
-      Status            :    out Byte)
+      Offset            :        UInt8;
+      Char_Value        :        UInt8_Array;
+      Status            :    out UInt8)
       return Boolean
    is
       Command : constant OpCode := ACI_GATT_Update_Char_Value;
    begin
       declare
-         Parameters : constant Byte_Array :=
-                                 Byte_Array'(Service_Handle &
+         Parameters : constant UInt8_Array :=
+                                 UInt8_Array'(Service_Handle &
                                              Char_Handle &
                                              Offset &
-                                             Byte (Char_Value'Length) &
+                                             UInt8 (Char_Value'Length) &
                                              Char_Value);
-         Response   : constant Byte_Array := Send_Command (Device, Command, Parameters);
+         Response   : constant UInt8_Array := Send_Command (Device, Command, Parameters);
       begin
          if Response'Length = 7 then
             Status := Response (7);
@@ -492,28 +492,28 @@ package body BlueNRG_MS is
 
    function Get_BlueNRG_Version
      (Device             : in out BlueNRG_MS_Device;
-      HCI_Version        :    out Unsigned_8;
-      HCI_Revision       :    out Unsigned_16;
-      LMP_PAL_Version    :    out Unsigned_8;
-      Mfr_Name           :    out Unsigned_16;
-      LMP_PAL_Subversion :    out Unsigned_16;
-      Status             :    out Byte)
+      HCI_Version        :    out UInt8;
+      HCI_Revision       :    out UInt16;
+      LMP_PAL_Version    :    out UInt8;
+      Mfr_Name           :    out UInt16;
+      LMP_PAL_Subversion :    out UInt16;
+      Status             :    out UInt8)
       return Boolean
    is
       Command : constant OpCode := HCI_Read_Local_Version_Information;
    begin
       declare
-         Response : constant Byte_Array := Send_Command (Device, Command);
+         Response : constant UInt8_Array := Send_Command (Device, Command);
       begin
          if Response'Length = 15 then
             Status := Response (7);
             HCI_Version        := Response (8);
-            HCI_Revision       := Unsigned_16 (Response (9) +
+            HCI_Revision       := UInt16 (Response (9) +
                                                Response (10) * 16#FF#);
             LMP_PAL_Version    := Response (11);
-            Mfr_Name           := Unsigned_16 (Response (12) +
+            Mfr_Name           := UInt16 (Response (12) +
                                                Response (13) * 16#FF#);
-            LMP_PAL_Subversion := Unsigned_16 (Response (14) +
+            LMP_PAL_Subversion := UInt16 (Response (14) +
                                                Response (15) * 16#FF#);
             return True;
          else
@@ -522,7 +522,7 @@ package body BlueNRG_MS is
             LMP_PAL_Version    := 0;
             Mfr_Name           := 0;
             LMP_PAL_Subversion := 0;
-            Status := 0;
+            Status             := 0;
             return False;
          end if;
       end;
@@ -536,23 +536,23 @@ package body BlueNRG_MS is
      (Device            : in out BlueNRG_MS_Device;
       Enable_High_Power :        Boolean;
       Level             :        Power_Level;
-      Status            :    out Byte)
+      Status            :    out UInt8)
       return Boolean
    is
-      High_Power_Byte  : Byte;
-      Power_Level_Byte : constant Byte := Byte (Level);
+      High_Power_UInt8  : UInt8;
+      Power_Level_UInt8 : constant UInt8 := UInt8 (Level);
       Command          : constant OpCode := ACI_HAL_Set_Tx_Power_Level;
    begin
       if Enable_High_Power then
-         High_Power_Byte := 1;
+         High_Power_UInt8 := 1;
       else
-         High_Power_Byte := 0;
+         High_Power_UInt8 := 0;
       end if;
 
       declare
-         Parameters : constant Byte_Array := Byte_Array'(High_Power_Byte &
-                                                         Power_Level_Byte);
-         Response   : constant Byte_Array := Send_Command (Device, Command, Parameters);
+         Parameters : constant UInt8_Array := UInt8_Array'(High_Power_UInt8 &
+                                                         Power_Level_UInt8);
+         Response   : constant UInt8_Array := Send_Command (Device, Command, Parameters);
       begin
          if Response'Length = 7 then
             Status := Response (7);
@@ -570,12 +570,12 @@ package body BlueNRG_MS is
 
    function HAL_Write_Config_Data
      (Device : in out BlueNRG_MS_Device;
-      Offset :        Byte;
-      Value  :        Byte_Array;
-      Status :    out Byte)
+      Offset :        UInt8;
+      Value  :        UInt8_Array;
+      Status :    out UInt8)
       return Boolean
    is
-      Parameters : Byte_Array (1 .. Value'Length + 2);
+      Parameters : UInt8_Array (1 .. Value'Length + 2);
       Command    : constant OpCode := ACI_HAL_Write_Config_Data;
    begin
       Parameters (1)                    := Offset;
@@ -583,7 +583,7 @@ package body BlueNRG_MS is
       Parameters (3 .. Parameters'Last) := Value;
 
       declare
-         Response : constant Byte_Array := Send_Command (Device, Command, Parameters);
+         Response : constant UInt8_Array := Send_Command (Device, Command, Parameters);
       begin
          if Response'Length = 7 then
             Status := Response (7);
@@ -601,12 +601,12 @@ package body BlueNRG_MS is
 
    function Read
      (Device : in out BlueNRG_MS_Device)
-      return Byte_Array
+      return UInt8_Array
    is
       Operation        : constant SPI_Data_8b (1 .. 1) := (1 => Read_Operation);
       Empty            : constant SPI_Data_8b (1 .. 4) := (others => 16#00#);
-      No_Data          : Byte_Array (1 .. 0);
-      Read_Buffer_Size : Byte;
+      No_Data          : UInt8_Array (1 .. 0);
+      Read_Buffer_Size : UInt8;
       Ready            : SPI_Data_8b (1 .. 1);
       SPI_Response     : SPI_Data_8b (1 .. 4);
       Transfer_Status  : SPI_Status;
@@ -628,7 +628,7 @@ package body BlueNRG_MS is
       end if;
 
       declare
-         Data  : Byte_Array  (1 .. Integer (Read_Buffer_Size));
+         Data  : UInt8_Array  (1 .. Integer (Read_Buffer_Size));
          Zeros : constant SPI_Data_8b (1 .. Integer (Read_Buffer_Size)) := (others => 16#00#);
       begin
          Device.SPI_Port.all.Transfer (Zeros, SPI_Data_8b (Data), Transfer_Status);
@@ -644,12 +644,12 @@ package body BlueNRG_MS is
    function Read
      (Device : in out BlueNRG_MS_Device;
       Count  : in out Natural)
-      return Byte_Array
+      return UInt8_Array
    is
       Operation        : constant SPI_Data_8b (1 .. 1) := (1 => Read_Operation);
       Empty            : constant SPI_Data_8b (1 .. 4) := (others => 16#00#);
-      No_Data          : Byte_Array (1 .. 0);
-      Read_Buffer_Size : Byte;
+      No_Data          : UInt8_Array (1 .. 0);
+      Read_Buffer_Size : UInt8;
       Ready            : SPI_Data_8b (1 .. 1);
       SPI_Response     : SPI_Data_8b (1 .. 4);
       Transfer_Status  : SPI_Status;
@@ -675,7 +675,7 @@ package body BlueNRG_MS is
       end if;
 
       declare
-         Data  : Byte_Array  (1 .. Integer (Count));
+         Data  : UInt8_Array  (1 .. Integer (Count));
          Zeros : constant SPI_Data_8b (1 .. Integer (Count)) := (others => 16#00#);
       begin
          Device.SPI_Port.all.Transfer (Zeros, SPI_Data_8b (Data), Transfer_Status);
@@ -706,7 +706,7 @@ package body BlueNRG_MS is
    function Send_Command
      (Device     : in out BlueNRG_MS_Device;
       Command    :        OpCode;
-      Parameters :        Byte_Array)
+      Parameters :        UInt8_Array)
       return Boolean
    is
       HAL_Time  : constant HAL.Time.Any_Delays := Ravenscar_Time.Delays;
@@ -758,12 +758,12 @@ package body BlueNRG_MS is
    function Send_Command
      (Device     : in out BlueNRG_MS_Device;
       Command    :        OpCode;
-      Parameters :        Byte_Array)
-      return Byte_Array
+      Parameters :        UInt8_Array)
+      return UInt8_Array
    is
       HAL_Time   : constant HAL.Time.Any_Delays := Ravenscar_Time.Delays;
       Try_Count  : Natural := 0;
-      Null_Array : Byte_Array (1 .. 0);
+      Null_Array : UInt8_Array (1 .. 0);
    begin
       -- Send Command --
       loop
@@ -782,7 +782,7 @@ package body BlueNRG_MS is
 
       loop
          declare
-            Response : constant Byte_Array := Device.Read;
+            Response : constant UInt8_Array := Device.Read;
          begin
             if Response'Length >= 7 then
                if Response (1) = Event_Packet_Type and then
@@ -807,11 +807,11 @@ package body BlueNRG_MS is
    function Send_Command
      (Device     : in out BlueNRG_MS_Device;
       Command    :        OpCode)
-      return Byte_Array
+      return UInt8_Array
    is
       HAL_Time   : constant HAL.Time.Any_Delays := Ravenscar_Time.Delays;
       Try_Count  : Natural := 0;
-      Null_Array : Byte_Array (1 .. 0);
+      Null_Array : UInt8_Array (1 .. 0);
    begin
       -- Send Command --
       loop
@@ -829,7 +829,7 @@ package body BlueNRG_MS is
 
       loop
          declare
-            Response : constant Byte_Array := Device.Read;
+            Response : constant UInt8_Array := Device.Read;
          begin
             if Response'Length >= 7 then
                if Response (1) = Event_Packet_Type and then
@@ -854,7 +854,7 @@ package body BlueNRG_MS is
    function Set_Bluetooth_Public_Address
      (Device            : in out BlueNRG_MS_Device;
       Bluetooth_Address :        Address;
-      Status            :    out Byte)
+      Status            :    out UInt8)
       return Boolean
    is
    begin
@@ -866,41 +866,41 @@ package body BlueNRG_MS is
    end Set_Bluetooth_Public_Address;
 
    -------------------
-   -- To_Byte_Array --
+   -- To_UInt8_Array --
    -------------------
 
-   function To_Byte_Array
-     (Input : Unsigned_16)
-      return Byte_Array
+   function To_UInt8_Array
+     (Input : UInt16)
+      return UInt8_Array
    is
-      No_Output : Byte_Array (1 .. 0);
-      First     : Byte;
-      Second    : Byte;
+      No_Output : UInt8_Array (1 .. 0);
+      First     : UInt8;
+      Second    : UInt8;
    begin
-      First  := Byte (Input and 16#00FF#);
-      Second := Byte (Shift_Right (Input, 8));
-      return Byte_Array'(Second, First);
+      First  := UInt8 (Input and 16#00FF#);
+      Second := UInt8 (Shift_Right (Input, 8));
+      return UInt8_Array'(Second, First);
    exception
       when Constraint_Error =>
          return No_Output;
-   end To_Byte_Array;
+   end To_UInt8_Array;
 
    -------------------
-   -- To_Byte_Array --
+   -- To_UInt8_Array --
    -------------------
 
-   function To_Byte_Array
+   function To_UInt8_Array
      (Input : String)
-      return Byte_Array
+      return UInt8_Array
    is
-      No_Output    : Byte_Array (1 .. 0);
+      No_Output    : UInt8_Array (1 .. 0);
       Output_Index : Natural := 1;
    begin
       declare
-         Output : Byte_Array (1 .. Input'Length);
+         Output : UInt8_Array (1 .. Input'Length);
       begin
          for Input_Index in Integer range Input'Range loop
-            Output (Output_Index) := Byte (Character'Pos (Input (Input_Index)));
+            Output (Output_Index) := UInt8 (Character'Pos (Input (Input_Index)));
             Output_Index := Output_Index + 1;
          end loop;
          return Output;
@@ -908,7 +908,7 @@ package body BlueNRG_MS is
    exception
       when Constraint_Error =>
          return No_Output;
-   end To_Byte_Array;
+   end To_UInt8_Array;
 
    -----------
    -- Write --
@@ -916,12 +916,12 @@ package body BlueNRG_MS is
 
    function Write
      (Device : in out BlueNRG_MS_Device;
-      Data   :        Byte_Array)
+      Data   :        UInt8_Array)
       return Boolean
    is
       Operation         : constant SPI_Data_8b (1 .. 1) := (1 => Write_Operation);
       Empty             : constant SPI_Data_8b (1 .. 4) := (others => 16#00#);
-      Write_Buffer_Size : Byte;
+      Write_Buffer_Size : UInt8;
       Ready             : SPI_Data_8b (1 .. 1);
       SPI_Response      : SPI_Data_8b (1 .. 4);
       Transfer_Status   : SPI_Status;
@@ -933,11 +933,6 @@ package body BlueNRG_MS is
          Device.Chip_Select_Pin.all.Set;
          return False;
       end if;
-
---      Device.SPI_Port.all.Transmit_Receive (16#00#, Write_Buffer_Size);
---      Device.SPI_Port.all.Transmit_Receive (16#00#, Dummy);
---      Device.SPI_Port.all.Transmit_Receive (16#00#, Dummy);
---      Device.SPI_Port.all.Transmit_Receive (16#00#, Dummy);
 
       Device.SPI_Port.all.Transfer (Empty, SPI_Response, Transfer_Status);
       Write_Buffer_Size := SPI_Response (1);
@@ -952,10 +947,6 @@ package body BlueNRG_MS is
       begin
          Device.SPI_Port.all.Transfer (SPI_Data_8b (Data), Not_Used, Transfer_Status);
       end;
-
---      for Index in Integer range Data'First .. Data'Last loop
---         Device.SPI_Port.all.Transmit_Receive (Data (Index), Dummy);
---      end loop;
 
       Device.Chip_Select_Pin.all.Set;
 

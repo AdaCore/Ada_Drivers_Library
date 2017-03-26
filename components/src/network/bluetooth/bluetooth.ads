@@ -29,12 +29,12 @@ package Bluetooth is
    Read_Operation  : constant := 16#0B#;
    Device_Ready    : constant := 16#02#;
 
-   subtype OpCode  is Byte_Array (1 .. 2);
-   subtype Handle  is Byte_Array (1 .. 2);
-   subtype Address is Byte_Array (1 .. 6);
+   subtype OpCode  is UInt8_Array (1 .. 2);
+   subtype Handle  is UInt8_Array (1 .. 2);
+   subtype Address is UInt8_Array (1 .. 6);
 
-   type UUID_16  is new Byte_Array (1 .. 2);
-   type UUID_128 is new Byte_Array (1 .. 16);
+   type UUID_16  is new UInt8_Array (1 .. 2);
+   type UUID_128 is new UInt8_Array (1 .. 16);
 
    type Service_Type is
      (Primary,

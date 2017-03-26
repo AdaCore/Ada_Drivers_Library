@@ -24,14 +24,14 @@
 with HAL; use HAL;
 
 package Bluetooth_Debug is
-   
+
    function Error_Code_To_String
-     (Code : Byte)
+     (Code : UInt8)
       return String;
 
    function HCI_Event_To_String
-      (Data : Byte_Array)
+      (Data : UInt8_Array)
        return String;
-   -- Returns a string representing HCI event data
+   --  Returns a string representing HCI event data
 
 end Bluetooth_Debug;

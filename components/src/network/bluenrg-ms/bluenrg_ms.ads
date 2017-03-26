@@ -37,34 +37,34 @@ package BlueNRG_MS is
 
    subtype Power_Level is Integer range 0 .. 7;
 
-   Config_Data_Public_Address_Offset     : constant Byte         := 16#00#;
+   Config_Data_Public_Address_Offset     : constant UInt8         := 16#00#;
    -- Bluetooth public address --
 
-   Config_Data_Div_Offset                : constant Byte         := 16#06#;
+   Config_Data_Div_Offset                : constant UInt8         := 16#06#;
    -- DIV used to derive CSRK --
 
-   Config_Data_ER_Offset                 : constant Byte         := 16#08#;
+   Config_Data_ER_Offset                 : constant UInt8         := 16#08#;
    -- Encryption root key used to derive LTK and CSRK --
 
-   Config_Data_IR_Offset                 : constant Byte         := 16#18#;
+   Config_Data_IR_Offset                 : constant UInt8         := 16#18#;
    -- Identity root key used to derive LTK and CSRK --
 
-   Config_Data_LL_Without_Host           : constant Byte         := 16#2C#;
+   Config_Data_LL_Without_Host           : constant UInt8         := 16#2C#;
    -- Switch on/off Link Layer only mode. Set to 1 to disable Host. --
 
-   No_Properties                         : constant Byte         := 16#00#;
-   Broadcast_Property                    : constant Byte         := 16#01#;
-   Read_Property                         : constant Byte         := 16#02#;
-   Write_Without_Response_Property       : constant Byte         := 16#04#;
-   Write_Property                        : constant Byte         := 16#08#;
-   Notify_Property                       : constant Byte         := 16#10#;
-   Indicate_Property                     : constant Byte         := 16#20#;
-   Authenticated_Signed_Writes_Property  : constant Byte         := 16#40#;
+   No_Properties                         : constant UInt8         := 16#00#;
+   Broadcast_Property                    : constant UInt8         := 16#01#;
+   Read_Property                         : constant UInt8         := 16#02#;
+   Write_Without_Response_Property       : constant UInt8         := 16#04#;
+   Write_Property                        : constant UInt8         := 16#08#;
+   Notify_Property                       : constant UInt8         := 16#10#;
+   Indicate_Property                     : constant UInt8         := 16#20#;
+   Authenticated_Signed_Writes_Property  : constant UInt8         := 16#40#;
 
-   Dont_Notify_Events_Mask               : constant Byte         := 16#00#;
-   Server_Write_Attribute_Mask           : constant Byte         := 16#01#;
-   Intimate_And_Write_For_Appl_Auth_Mask : constant Byte         := 16#02#;
-   Intimate_Appl_When_Read_And_Wait_Mask : constant Byte         := 16#04#;
+   Dont_Notify_Events_Mask               : constant UInt8         := 16#00#;
+   Server_Write_Attribute_Mask           : constant UInt8         := 16#01#;
+   Intimate_And_Write_For_Appl_Auth_Mask : constant UInt8         := 16#02#;
+   Intimate_Appl_When_Read_And_Wait_Mask : constant UInt8         := 16#04#;
 
    type Device_Role is
       (Peripheral,
@@ -388,283 +388,283 @@ package BlueNRG_MS is
      (Device                  : in out BlueNRG_MS_Device;
       Role                    :        Device_Role;
       Enable_Privacy          :        Boolean;
-      Device_Name_Length      :        Byte;
-      Status                  :    out Byte;
+      Device_Name_Length      :        UInt8;
+      Status                  :    out UInt8;
       Service_Handle          :    out Handle;
       Device_Name_Char_Handle :    out Handle;
       Appearance_Char_Handle  :    out Handle)
       return Boolean;
-   -- Register the GAP service with the GATT. The device name characteristic and appearance
-   -- characteristic are added by default and the handles of these characteristics are returned in
-   -- the event data. The role parameter can be a bitwise OR of any of the values mentioned
-   -- below.
-   -- Returns: True when command is sent successfully
+   --  Register the GAP service with the GATT. The device name characteristic and appearance
+   --  characteristic are added by default and the handles of these characteristics are returned in
+   --  the event data. The role parameter can be a bitwise OR of any of the values mentioned
+   --  below.
+   --  Returns: True when command is sent successfully
 
    function GAP_Set_Auth_Requirement
      (Device                  : in out BlueNRG_MS_Device;
       MITM_Required           :        Boolean;
       OOB_Enabled             :        Boolean;
-      OOB_Data                :        Byte_Array;
-      Min_Encryption_Key_Size :        Byte;
-      Max_Encryption_Key_Size :        Byte;
+      OOB_Data                :        UInt8_Array;
+      Min_Encryption_Key_Size :        UInt8;
+      Max_Encryption_Key_Size :        UInt8;
       Use_Fixed_Pin           :        Boolean;
       Pin                     :        Unsigned_32;
       Bonding_Required        :        Boolean;
-      Status                  :    out Byte)
+      Status                  :    out UInt8)
       return Boolean
       with Pre => OOB_Data'Length = 16 and
                   Pin <= 999999 and
                   Pin >= 0;
-   -- Set the authentication requirements for the device. If the OOB_Enable is set to 0, the
-   -- following 16 octets of OOB_Data will be ignored on reception. This command has to be
-   -- given only when the device is not in a connected state.
-   -- Returns: True when command is sent successfully
+   --  Set the authentication requirements for the device. If the OOB_Enable is set to 0, the
+   --  following 16 octets of OOB_Data will be ignored on reception. This command has to be
+   --  given only when the device is not in a connected state.
+   --  Returns: True when command is sent successfully
 
    function GAP_Set_Discoverable
      (Device                   : in out BlueNRG_MS_Device;
       Advertising_Event        :        Advertising_Event_Type;
-      Advertising_Interval_Min :        Unsigned_16;
-      Advertising_Interval_Max :        Unsigned_16;
+      Advertising_Interval_Min :        UInt16;
+      Advertising_Interval_Max :        UInt16;
       BT_Address_Type          :        Address_Type;
       Filter_Policy            :        Filter_Policy_Type;
       Local_Name_Type          :        Name_Type;
       Local_Name               :        String;
-      Service_UUID_List        :        Byte_Array;
-      Slave_Conn_Interval_Min  :        Unsigned_16;
-      Slave_Conn_Interval_Max  :        Unsigned_16;
-      Status                   :    out Byte)
+      Service_UUID_List        :        UInt8_Array;
+      Slave_Conn_Interval_Min  :        UInt16;
+      Slave_Conn_Interval_Max  :        UInt16;
+      Status                   :    out UInt8)
       return Boolean
       with Pre => Service_UUID_List'Length < 256 and
                   Local_Name'Length < 256;
-   -- Set the device in general discoverable mode (as defined in GAP specification volume 3,
-   -- section 9.2.4). The device will be discoverable until the host issues the
-   -- Aci_Gap_Set_Non_Discoverable command. The Adv_Interval_Min and Adv_Interval_Max
-   -- parameters are optional. If both are set to 0, the GAP uses the default values for adv
-   -- intervals for general discoverable mode.
-   -- Returns: True when command is sent successfully
+   --  Set the device in general discoverable mode (as defined in GAP specification volume 3,
+   --  section 9.2.4). The device will be discoverable until the host issues the
+   --  Aci_Gap_Set_Non_Discoverable command. The Adv_Interval_Min and Adv_Interval_Max
+   --  parameters are optional. If both are set to 0, the GAP uses the default values for adv
+   --  intervals for general discoverable mode.
+   --  Returns: True when command is sent successfully
 
    function GAP_Slave_Security_Request
      (Device           : in out BlueNRG_MS_Device;
-      Conn_Handle      :        Byte_Array;
+      Conn_Handle      :        UInt8_Array;
       Bonding_Required :        Boolean;
       MITM_Required    :        Boolean)
       return Boolean
       with Pre => Conn_Handle'Length = 2;
-   -- This command has to be issued to notify the master of the security requirements of the
-   -- slave.
-   -- Returns: True when command is sent successfully
+   --  This command has to be issued to notify the master of the security requirements of the
+   --  slave.
+   --  Returns: True when command is sent successfully
 
    function GATT_Add_Characteristic
      (Device                : in out BlueNRG_MS_Device;
       Service               :        Handle;
       UUID                  :        UUID_16;
-      Max_Value_Length      :        Byte;
-      Properties            :        Byte;
-      Security              :        Byte;
-      Event_Mask            :        Byte;
-      Encryption_Key_Size   :        Byte;
+      Max_Value_Length      :        UInt8;
+      Properties            :        UInt8;
+      Security              :        UInt8;
+      Event_Mask            :        UInt8;
+      Encryption_Key_Size   :        UInt8;
       Value_Is_Fixed_Length :        Boolean;
-      Status                :    out Byte;
+      Status                :    out UInt8;
       Char_Handle           :    out Handle)
       return Boolean;
-   -- Add a characteristic to a service
-   -- Returns: True when command is sent successfully
+   --  Add a characteristic to a service
+   --  Returns: True when command is sent successfully
 
    function GATT_Add_Characteristic
      (Device                : in out BlueNRG_MS_Device;
       Service               :        Handle;
       UUID                  :        UUID_128;
-      Max_Value_Length      :        Byte;
-      Properties            :        Byte;
-      Security              :        Byte;
-      Event_Mask            :        Byte;
-      Encryption_Key_Size   :        Byte;
+      Max_Value_Length      :        UInt8;
+      Properties            :        UInt8;
+      Security              :        UInt8;
+      Event_Mask            :        UInt8;
+      Encryption_Key_Size   :        UInt8;
       Value_Is_Fixed_Length :        Boolean;
-      Status                :    out Byte;
+      Status                :    out UInt8;
       Char_Handle           :    out Handle)
       return Boolean;
-   -- Add a characteristic to a service
-   -- Returns: True when command is sent successfully
+   --  Add a characteristic to a service
+   --  Returns: True when command is sent successfully
 
    function GATT_Add_Service
       (Device                : in out BlueNRG_MS_Device;
        UUID                  :        UUID_16;
        Service               :        Service_Type;
-       Max_Attribute_Records :        Byte;
-       Status                :    out Byte;
+       Max_Attribute_Records :        UInt8;
+       Status                :    out UInt8;
        Service_Handle        :    out Handle)
        return Boolean;
-   -- Add a service to GATT Server. When a service is created in the server, the host needs to
-   -- reserve the handle ranges for this service using Max_Attribute_Records parameter. This
-   -- parameter specifies the maximum number of attribute records that can be added to this
-   -- service (including the service attribute, include attribute, characteristic attribute,
-   -- characteristic value attribute and characteristic descriptor attribute). Handle of the created
-   -- service is returned in command complete event.
-   -- Returns: True when command is sent successfully
+   --  Add a service to GATT Server. When a service is created in the server, the host needs to
+   --  reserve the handle ranges for this service using Max_Attribute_Records parameter. This
+   --  parameter specifies the maximum number of attribute records that can be added to this
+   --  service (including the service attribute, include attribute, characteristic attribute,
+   --  characteristic value attribute and characteristic descriptor attribute). Handle of the created
+   --  service is returned in command complete event.
+   --  Returns: True when command is sent successfully
 
    function GATT_Add_Service
       (Device                : in out BlueNRG_MS_Device;
        UUID                  :        UUID_128;
        Service               :        Service_Type;
-       Max_Attribute_Records :        Byte;
-       Status                :    out Byte;
+       Max_Attribute_Records :        UInt8;
+       Status                :    out UInt8;
        Service_Handle        :    out Handle)
        return Boolean;
-   -- Add a service to GATT Server. When a service is created in the server, the host needs to
-   -- reserve the handle ranges for this service using Max_Attribute_Records parameter. This
-   -- parameter specifies the maximum number of attribute records that can be added to this
-   -- service (including the service attribute, include attribute, characteristic attribute,
-   -- characteristic value attribute and characteristic descriptor attribute). Handle of the created
-   -- service is returned in command complete event.
-   -- Returns: True when command is sent successfully
+   --  Add a service to GATT Server. When a service is created in the server, the host needs to
+   --  reserve the handle ranges for this service using Max_Attribute_Records parameter. This
+   --  parameter specifies the maximum number of attribute records that can be added to this
+   --  service (including the service attribute, include attribute, characteristic attribute,
+   --  characteristic value attribute and characteristic descriptor attribute). Handle of the created
+   --  service is returned in command complete event.
+   --  Returns: True when command is sent successfully
 
    function GATT_Init
      (Device : in out BlueNRG_MS_Device;
-      Status :    out Byte)
+      Status :    out UInt8)
       return Boolean;
-   -- Initialize the GATT server on the slave device. Initialize all the pools and active nodes. Also
-   -- it adds GATT service with service changed characteristic. Until this command is issued the
-   -- GATT channel will not process any commands even if the connection is opened. This
-   -- command has to be given before using any of the GAP features.
-   -- Returns: True when command is sent successfully
+   --  Initialize the GATT server on the slave device. Initialize all the pools and active nodes. Also
+   --  it adds GATT service with service changed characteristic. Until this command is issued the
+   --  GATT channel will not process any commands even if the connection is opened. This
+   --  command has to be given before using any of the GAP features.
+   --  Returns: True when command is sent successfully
 
    function GATT_Update_Characteristic_Value
      (Device            : in out BlueNRG_MS_Device;
       Service_Handle    :        Handle;
       Char_Handle       :        Handle;
-      Offset            :        Byte;
-      Char_Value        :        Byte_Array;
-      Status            :    out Byte)
+      Offset            :        UInt8;
+      Char_Value        :        UInt8_Array;
+      Status            :    out UInt8)
       return Boolean
       with Pre => Char_Value'Length < 256;
-   -- Update a characteristic value in a service
-   -- Returns: True when command is sent successfully
+   --  Update a characteristic value in a service
+   --  Returns: True when command is sent successfully
 
    function Get_BlueNRG_Version
      (Device             : in out BlueNRG_MS_Device;
-      HCI_Version        :    out Unsigned_8;
-      HCI_Revision       :    out Unsigned_16;
-      LMP_PAL_Version    :    out Unsigned_8;
-      Mfr_Name           :    out Unsigned_16;
-      LMP_PAL_Subversion :    out Unsigned_16;
-      Status             :    out Byte)
+      HCI_Version        :    out UInt8;
+      HCI_Revision       :    out UInt16;
+      LMP_PAL_Version    :    out UInt8;
+      Mfr_Name           :    out UInt16;
+      LMP_PAL_Subversion :    out UInt16;
+      Status             :    out UInt8)
       return Boolean;
-   -- Returns true when the command is sent successfully
+   --  Returns true when the command is sent successfully
 
    function HAL_Set_TX_Power_Level
      (Device            : in out BlueNRG_MS_Device;
       Enable_High_Power :        Boolean;
       Level             :        Power_Level;
-      Status            :    out Byte)
+      Status            :    out UInt8)
       return Boolean;
-   -- This command sets the TX power level of the BlueNRG-MS. By controlling the
-   -- EN_HIGH_POWER and the PA_LEVEL, the combination of the 2 determines the output
-   -- power level (dBm). See the table below.
-   -- When the system starts up or reboots, the default TX power level will be used, which is the
-   -- maximum value of 8 dBm. Once this command is given, the output power will be changed
-   -- instantly, regardless if there is Bluetooth communication going on or not. For example, for
-   -- debugging purpose, the BlueNRG-MS can be set to advertise all the time. And use this
-   -- command to observe the signal strength changing.
-   -- Returns: True when command is sent successfully
+   --  This command sets the TX power level of the BlueNRG-MS. By controlling the
+   --  EN_HIGH_POWER and the PA_LEVEL, the combination of the 2 determines the output
+   --  power level (dBm). See the table below.
+   --  When the system starts up or reboots, the default TX power level will be used, which is the
+   --  maximum value of 8 dBm. Once this command is given, the output power will be changed
+   --  instantly, regardless if there is Bluetooth communication going on or not. For example, for
+   --  debugging purpose, the BlueNRG-MS can be set to advertise all the time. And use this
+   --  command to observe the signal strength changing.
+   --  Returns: True when command is sent successfully
 
-   -- EN_HIGH_POWER | PA_LEVEL TX | Power Level (dBm)
-   --        0      |    0        |   -18
-   --        0      |    1        |   -14.7
-   --        0      |    2        |   -11.4
-   --        0      |    3        |   -8.1
-   --        0      |    4        |   -4.9
-   --        0      |    5        |   -1.6
-   --        0      |    6        |    1.7
-   --        0      |    7        |    5.0
-   --        1      |    0        |   -15
-   --        1      |    1        |   -11.7
-   --        1      |    2        |   -8.4
-   --        1      |    3        |   -5.1
-   --        1      |    4        |   -2.1
-   --        1      |    5        |    1.4
-   --        1      |    6        |    4.7
-   --        1      |    7        |    8.0 (default)
+   --  EN_HIGH_POWER | PA_LEVEL TX | Power Level (dBm)
+   --         0      |    0        |   -18
+   --         0      |    1        |   -14.7
+   --         0      |    2        |   -11.4
+   --         0      |    3        |   -8.1
+   --         0      |    4        |   -4.9
+   --         0      |    5        |   -1.6
+   --         0      |    6        |    1.7
+   --         0      |    7        |    5.0
+   --         1      |    0        |   -15
+   --         1      |    1        |   -11.7
+   --         1      |    2        |   -8.4
+   --         1      |    3        |   -5.1
+   --         1      |    4        |   -2.1
+   --         1      |    5        |    1.4
+   --         1      |    6        |    4.7
+   --         1      |    7        |    8.0 (default)
 
    function HAL_Write_Config_Data
      (Device : in out BlueNRG_MS_Device;
-      Offset :        Byte;
-      Value  :        Byte_Array;
-      Status :    out Byte)
+      Offset :        UInt8;
+      Value  :        UInt8_Array;
+      Status :    out UInt8)
       return Boolean;
-   -- This command writes a value to a low level configure data structure.
-   -- It is useful to setup directly some low level parameters for the
-   -- system in the runtime.
-   -- Returns true when the command is sent successfully
+   --  This command writes a value to a low level configure data structure.
+   --  It is useful to setup directly some low level parameters for the
+   --  system in the runtime.
+   --  Returns true when the command is sent successfully
 
    procedure Reset
      (Device : in out BlueNRG_MS_Device);
-   -- Activates reset line of device to perform a hard reset
+   --  Activates reset line of device to perform a hard reset
 
    function Set_Bluetooth_Public_Address
      (Device            : in out BlueNRG_MS_Device;
       Bluetooth_Address :        Address;
-      Status            :    out Byte)
+      Status            :    out UInt8)
       return Boolean;
-   -- Writes to the Bluetooth Public Address segment in the
-   -- device config data.
-   -- Returns true when command is sent successfully
+   --  Writes to the Bluetooth Public Address segment in the
+   --  device config data.
+   --  Returns true when command is sent successfully
 
 private
 
    function Read
      (Device : in out BlueNRG_MS_Device)
-      return Byte_Array;
-   -- Reads all bytes that are available in the read buffer
+      return UInt8_Array;
+   --  Reads all bytes that are available in the read buffer
 
    function Read
       (Device : in out BlueNRG_MS_Device;
        Count  : in out Natural)
-       return Byte_Array;
-   -- Reads a maximum of Count bytes from the read buffer
+       return UInt8_Array;
+   --  Reads a maximum of Count bytes from the read buffer
 
    function Send_Command
      (Device     : in out BlueNRG_MS_Device;
       Command    :        OpCode;
-      Parameters :        Byte_Array)
+      Parameters :        UInt8_Array)
       return Boolean
       with Pre => Parameters'Length < 256;
-   -- Returns true when command is sent successfully
+   --  Returns true when command is sent successfully
 
    function Send_Command
      (Device     : in out BlueNRG_MS_Device;
       Command    :        OpCode)
       return Boolean;
-   -- Returns true when command is sent successfully
+   --  Returns true when command is sent successfully
 
    function Send_Command
      (Device     : in out BlueNRG_MS_Device;
       Command    :        OpCode;
-      Parameters :        Byte_Array)
-      return Byte_Array
+      Parameters :        UInt8_Array)
+      return UInt8_Array
       with Pre => Parameters'Length < 256;
-   -- Returns the HID event response from the BlueNRG
-   -- or an empty array if a timeout condition occured.
+   --  Returns the HID event response from the BlueNRG
+   --  or an empty array if a timeout condition occured.
 
    function Send_Command
      (Device     : in out BlueNRG_MS_Device;
       Command    :        OpCode)
-      return Byte_Array;
-   -- Returns the HID event response from the BlueNRG
-   -- or an empty array if a timeout condition occured.
+      return UInt8_Array;
+   --  Returns the HID event response from the BlueNRG
+   --  or an empty array if a timeout condition occured.
 
-   function To_Byte_Array
-     (Input : Unsigned_16)
-      return Byte_Array;
-   -- Convert a Unsigned_16 to Bluetooth byte order
+   function To_UInt8_Array
+     (Input : UInt16)
+      return UInt8_Array;
+   --  Convert a UInt16 to Bluetooth byte order
 
-   function To_Byte_Array
+   function To_UInt8_Array
      (Input : String)
-      return Byte_Array;
+      return UInt8_Array;
 
    function Write
      (Device : in out BlueNRG_MS_Device;
-      Data   :        Byte_Array)
+      Data   :        UInt8_Array)
       return Boolean;
-   -- Returns true if data was successfully written
+   --  Returns true if data was successfully written
 
 end BlueNRG_MS;
