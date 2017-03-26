@@ -192,13 +192,20 @@ package STM32.SPI is
      (This     : in out SPI_Port;
       Incoming : out UInt8);
 
+   overriding
+   procedure Transfer
+     (This      : in out SPI_Port;
+      Data_Out  :        HAL.SPI.SPI_Data_8b;
+      Data_In   :    out HAL.SPI.SPI_Data_8b;
+      Status    :    out HAL.SPI.SPI_Status;
+      Timeout   :        Natural := 1000);
+
    procedure Transmit_Receive
      (This      : in out SPI_Port;
       Outgoing  : UInt8_Buffer;
       Incoming  : out UInt8_Buffer;
       Size      : Positive);
 
-   overriding
    procedure Transmit_Receive
      (This      : in out SPI_Port;
       Outgoing  : UInt8;
