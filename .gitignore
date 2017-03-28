@@ -8,4 +8,6 @@
 *.lexch
 *.ci
 *.cswi
+*.stderr
+*.stdout
 *~
