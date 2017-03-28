@@ -383,25 +383,25 @@ package STM32_SVD.GPIO is
    --  General-purpose I/Os
    type GPIO_Peripheral is record
       --  GPIO port mode register
-      MODER   : MODER_Register;
+      MODER   : aliased MODER_Register;
       --  GPIO port output type register
-      OTYPER  : OTYPER_Register;
+      OTYPER  : aliased OTYPER_Register;
       --  GPIO port output speed register
-      OSPEEDR : OSPEEDR_Register;
+      OSPEEDR : aliased OSPEEDR_Register;
       --  GPIO port pull-up/pull-down register
-      PUPDR   : PUPDR_Register;
+      PUPDR   : aliased PUPDR_Register;
       --  GPIO port input data register
-      IDR     : IDR_Register;
+      IDR     : aliased IDR_Register;
       --  GPIO port output data register
-      ODR     : ODR_Register;
+      ODR     : aliased ODR_Register;
       --  GPIO port bit set/reset register
-      BSRR    : BSRR_Register;
+      BSRR    : aliased BSRR_Register;
       --  GPIO port configuration lock register
-      LCKR    : LCKR_Register;
+      LCKR    : aliased LCKR_Register;
       --  GPIO alternate function low register
-      AFRL    : AFRL_Register;
+      AFRL    : aliased AFRL_Register;
       --  GPIO alternate function high register
-      AFRH    : AFRH_Register;
+      AFRH    : aliased AFRH_Register;
    end record
      with Volatile;
 

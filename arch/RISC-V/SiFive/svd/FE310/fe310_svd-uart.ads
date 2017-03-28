@@ -149,19 +149,19 @@ package FE310_SVD.UART is
    --  Universal Asynchronous Receiver/Transmitter.
    type UART_Peripheral is record
       --  Transmit Data Register.
-      TXDATA : TXDATA_Register;
+      TXDATA : aliased TXDATA_Register;
       --  Receive Data Register.
-      RXDATA : RXDATA_Register;
+      RXDATA : aliased RXDATA_Register;
       --  Transmit Control Register.
-      TXCTRL : TXCTRL_Register;
+      TXCTRL : aliased TXCTRL_Register;
       --  Receive Control Register.
-      RXCTRL : RXCTRL_Register;
+      RXCTRL : aliased RXCTRL_Register;
       --  Interrupt Pending Register.
-      IP     : IP_Register;
+      IP     : aliased IP_Register;
       --  Interrupt Enable Register.
-      IE     : IE_Register;
+      IE     : aliased IE_Register;
       --  Baud Rate Divisor Register (BAUD = Fin / (DIV + 1)).
-      DIV    : DIV_Register;
+      DIV    : aliased DIV_Register;
    end record
      with Volatile;
 

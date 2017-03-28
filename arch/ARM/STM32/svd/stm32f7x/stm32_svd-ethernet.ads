@@ -1093,33 +1093,33 @@ package STM32_SVD.Ethernet is
    --  Ethernet: DMA controller operation
    type Ethernet_DMA_Peripheral is record
       --  Ethernet DMA bus mode register
-      DMABMR    : DMABMR_Register;
+      DMABMR    : aliased DMABMR_Register;
       --  Ethernet DMA transmit poll demand register
-      DMATPDR   : HAL.UInt32;
+      DMATPDR   : aliased HAL.UInt32;
       --  EHERNET DMA receive poll demand register
-      DMARPDR   : HAL.UInt32;
+      DMARPDR   : aliased HAL.UInt32;
       --  Ethernet DMA receive descriptor list address register
-      DMARDLAR  : HAL.UInt32;
+      DMARDLAR  : aliased HAL.UInt32;
       --  Ethernet DMA transmit descriptor list address register
-      DMATDLAR  : HAL.UInt32;
+      DMATDLAR  : aliased HAL.UInt32;
       --  Ethernet DMA status register
-      DMASR     : DMASR_Register;
+      DMASR     : aliased DMASR_Register;
       --  Ethernet DMA operation mode register
-      DMAOMR    : DMAOMR_Register;
+      DMAOMR    : aliased DMAOMR_Register;
       --  Ethernet DMA interrupt enable register
-      DMAIER    : DMAIER_Register;
+      DMAIER    : aliased DMAIER_Register;
       --  Ethernet DMA missed frame and buffer overflow counter register
-      DMAMFBOCR : DMAMFBOCR_Register;
+      DMAMFBOCR : aliased DMAMFBOCR_Register;
       --  Ethernet DMA receive status watchdog timer register
-      DMARSWTR  : DMARSWTR_Register;
+      DMARSWTR  : aliased DMARSWTR_Register;
       --  Ethernet DMA current host transmit descriptor register
-      DMACHTDR  : HAL.UInt32;
+      DMACHTDR  : aliased HAL.UInt32;
       --  Ethernet DMA current host receive descriptor register
-      DMACHRDR  : HAL.UInt32;
+      DMACHRDR  : aliased HAL.UInt32;
       --  Ethernet DMA current host transmit buffer address register
-      DMACHTBAR : HAL.UInt32;
+      DMACHTBAR : aliased HAL.UInt32;
       --  Ethernet DMA current host receive buffer address register
-      DMACHRBAR : HAL.UInt32;
+      DMACHRBAR : aliased HAL.UInt32;
    end record
      with Volatile;
 
@@ -1147,47 +1147,47 @@ package STM32_SVD.Ethernet is
    --  Ethernet: media access control (MAC)
    type Ethernet_MAC_Peripheral is record
       --  Ethernet MAC configuration register
-      MACCR      : MACCR_Register;
+      MACCR      : aliased MACCR_Register;
       --  Ethernet MAC frame filter register
-      MACFFR     : MACFFR_Register;
+      MACFFR     : aliased MACFFR_Register;
       --  Ethernet MAC hash table high register
-      MACHTHR    : HAL.UInt32;
+      MACHTHR    : aliased HAL.UInt32;
       --  Ethernet MAC hash table low register
-      MACHTLR    : HAL.UInt32;
+      MACHTLR    : aliased HAL.UInt32;
       --  Ethernet MAC MII address register
-      MACMIIAR   : MACMIIAR_Register;
+      MACMIIAR   : aliased MACMIIAR_Register;
       --  Ethernet MAC MII data register
-      MACMIIDR   : MACMIIDR_Register;
+      MACMIIDR   : aliased MACMIIDR_Register;
       --  Ethernet MAC flow control register
-      MACFCR     : MACFCR_Register;
+      MACFCR     : aliased MACFCR_Register;
       --  Ethernet MAC VLAN tag register
-      MACVLANTR  : MACVLANTR_Register;
+      MACVLANTR  : aliased MACVLANTR_Register;
       --  Ethernet MAC PMT control and status register
-      MACPMTCSR  : MACPMTCSR_Register;
+      MACPMTCSR  : aliased MACPMTCSR_Register;
       --  Ethernet MAC debug register
-      MACDBGR    : MACDBGR_Register;
+      MACDBGR    : aliased MACDBGR_Register;
       --  Ethernet MAC interrupt status register
-      MACSR      : MACSR_Register;
+      MACSR      : aliased MACSR_Register;
       --  Ethernet MAC interrupt mask register
-      MACIMR     : MACIMR_Register;
+      MACIMR     : aliased MACIMR_Register;
       --  Ethernet MAC address 0 high register
-      MACA0HR    : MACA0HR_Register;
+      MACA0HR    : aliased MACA0HR_Register;
       --  Ethernet MAC address 0 low register
-      MACA0LR    : HAL.UInt32;
+      MACA0LR    : aliased HAL.UInt32;
       --  Ethernet MAC address 1 high register
-      MACA1HR    : MACA1HR_Register;
+      MACA1HR    : aliased MACA1HR_Register;
       --  Ethernet MAC address1 low register
-      MACA1LR    : HAL.UInt32;
+      MACA1LR    : aliased HAL.UInt32;
       --  Ethernet MAC address 2 high register
-      MACA2HR    : MACA2HR_Register;
+      MACA2HR    : aliased MACA2HR_Register;
       --  Ethernet MAC address 2 low register
-      MACA2LR    : MACA2LR_Register;
+      MACA2LR    : aliased MACA2LR_Register;
       --  Ethernet MAC address 3 high register
-      MACA3HR    : MACA3HR_Register;
+      MACA3HR    : aliased MACA3HR_Register;
       --  Ethernet MAC address 3 low register
-      MACA3LR    : HAL.UInt32;
+      MACA3LR    : aliased HAL.UInt32;
       --  Ethernet MAC remote wakeup frame filter register
-      MACRWUFFER : HAL.UInt32;
+      MACRWUFFER : aliased HAL.UInt32;
    end record
      with Volatile;
 
@@ -1222,28 +1222,28 @@ package STM32_SVD.Ethernet is
    --  Ethernet: MAC management counters
    type Ethernet_MMC_Peripheral is record
       --  Ethernet MMC control register
-      MMCCR       : MMCCR_Register;
+      MMCCR       : aliased MMCCR_Register;
       --  Ethernet MMC receive interrupt register
-      MMCRIR      : MMCRIR_Register;
+      MMCRIR      : aliased MMCRIR_Register;
       --  Ethernet MMC transmit interrupt register
-      MMCTIR      : MMCTIR_Register;
+      MMCTIR      : aliased MMCTIR_Register;
       --  Ethernet MMC receive interrupt mask register
-      MMCRIMR     : MMCRIMR_Register;
+      MMCRIMR     : aliased MMCRIMR_Register;
       --  Ethernet MMC transmit interrupt mask register
-      MMCTIMR     : MMCTIMR_Register;
+      MMCTIMR     : aliased MMCTIMR_Register;
       --  Ethernet MMC transmitted good frames after a single collision counter
-      MMCTGFSCCR  : HAL.UInt32;
+      MMCTGFSCCR  : aliased HAL.UInt32;
       --  Ethernet MMC transmitted good frames after more than a single
       --  collision
-      MMCTGFMSCCR : HAL.UInt32;
+      MMCTGFMSCCR : aliased HAL.UInt32;
       --  Ethernet MMC transmitted good frames counter register
-      MMCTGFCR    : HAL.UInt32;
+      MMCTGFCR    : aliased HAL.UInt32;
       --  Ethernet MMC received frames with CRC error counter register
-      MMCRFCECR   : HAL.UInt32;
+      MMCRFCECR   : aliased HAL.UInt32;
       --  Ethernet MMC received frames with alignment error counter register
-      MMCRFAECR   : HAL.UInt32;
+      MMCRFAECR   : aliased HAL.UInt32;
       --  MMC received good unicast frames counter register
-      MMCRGUFCR   : HAL.UInt32;
+      MMCRGUFCR   : aliased HAL.UInt32;
    end record
      with Volatile;
 
@@ -1268,27 +1268,27 @@ package STM32_SVD.Ethernet is
    --  Ethernet: Precision time protocol
    type Ethernet_PTP_Peripheral is record
       --  Ethernet PTP time stamp control register
-      PTPTSCR  : PTPTSCR_Register;
+      PTPTSCR  : aliased PTPTSCR_Register;
       --  Ethernet PTP subsecond increment register
-      PTPSSIR  : PTPSSIR_Register;
+      PTPSSIR  : aliased PTPSSIR_Register;
       --  Ethernet PTP time stamp high register
-      PTPTSHR  : HAL.UInt32;
+      PTPTSHR  : aliased HAL.UInt32;
       --  Ethernet PTP time stamp low register
-      PTPTSLR  : PTPTSLR_Register;
+      PTPTSLR  : aliased PTPTSLR_Register;
       --  Ethernet PTP time stamp high update register
-      PTPTSHUR : HAL.UInt32;
+      PTPTSHUR : aliased HAL.UInt32;
       --  Ethernet PTP time stamp low update register
-      PTPTSLUR : PTPTSLUR_Register;
+      PTPTSLUR : aliased PTPTSLUR_Register;
       --  Ethernet PTP time stamp addend register
-      PTPTSAR  : HAL.UInt32;
+      PTPTSAR  : aliased HAL.UInt32;
       --  Ethernet PTP target time high register
-      PTPTTHR  : HAL.UInt32;
+      PTPTTHR  : aliased HAL.UInt32;
       --  Ethernet PTP target time low register
-      PTPTTLR  : HAL.UInt32;
+      PTPTTLR  : aliased HAL.UInt32;
       --  Ethernet PTP time stamp status register
-      PTPTSSR  : PTPTSSR_Register;
+      PTPTSSR  : aliased PTPTSSR_Register;
       --  Ethernet PTP PPS control register
-      PTPPPSCR : PTPPPSCR_Register;
+      PTPPPSCR : aliased PTPPPSCR_Register;
    end record
      with Volatile;
 

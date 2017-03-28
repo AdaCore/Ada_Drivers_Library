@@ -72,11 +72,11 @@ package STM32_SVD.RNG is
    --  Random number generator
    type RNG_Peripheral is record
       --  control register
-      CR : CR_Register;
+      CR : aliased CR_Register;
       --  status register
-      SR : SR_Register;
+      SR : aliased SR_Register;
       --  data register
-      DR : HAL.UInt32;
+      DR : aliased HAL.UInt32;
    end record
      with Volatile;
 

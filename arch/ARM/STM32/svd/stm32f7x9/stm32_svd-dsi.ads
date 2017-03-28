@@ -2024,149 +2024,149 @@ package STM32_SVD.DSI is
    --  DSI Host
    type DSI_Peripheral is record
       --  DSI Host Version Register
-      DSI_VR      : HAL.UInt32;
+      DSI_VR      : aliased HAL.UInt32;
       --  DSI Host Control Register
-      DSI_CR      : DSI_CR_Register;
+      DSI_CR      : aliased DSI_CR_Register;
       --  DSI HOST Clock Control Register
-      DSI_CCR     : DSI_CCR_Register;
+      DSI_CCR     : aliased DSI_CCR_Register;
       --  DSI Host LTDC VCID Register
-      DSI_LVCIDR  : DSI_LVCIDR_Register;
+      DSI_LVCIDR  : aliased DSI_LVCIDR_Register;
       --  DSI Host LTDC Color Coding Register
-      DSI_LCOLCR  : DSI_LCOLCR_Register;
+      DSI_LCOLCR  : aliased DSI_LCOLCR_Register;
       --  DSI Host LTDC Polarity Configuration Register
-      DSI_LPCR    : DSI_LPCR_Register;
+      DSI_LPCR    : aliased DSI_LPCR_Register;
       --  DSI Host Low-Power mode Configuration Register
-      DSI_LPMCR   : DSI_LPMCR_Register;
+      DSI_LPMCR   : aliased DSI_LPMCR_Register;
       --  DSI Host Protocol Configuration Register
-      DSI_PCR     : DSI_PCR_Register;
+      DSI_PCR     : aliased DSI_PCR_Register;
       --  DSI Host Generic VCID Register
-      DSI_GVCIDR  : DSI_GVCIDR_Register;
+      DSI_GVCIDR  : aliased DSI_GVCIDR_Register;
       --  DSI Host mode Configuration Register
-      DSI_MCR     : DSI_MCR_Register;
+      DSI_MCR     : aliased DSI_MCR_Register;
       --  DSI Host Video mode Configuration Register
-      DSI_VMCR    : DSI_VMCR_Register;
+      DSI_VMCR    : aliased DSI_VMCR_Register;
       --  DSI Host Video Packet Configuration Register
-      DSI_VPCR    : DSI_VPCR_Register;
+      DSI_VPCR    : aliased DSI_VPCR_Register;
       --  DSI Host Video Chunks Configuration Register
-      DSI_VCCR    : DSI_VCCR_Register;
+      DSI_VCCR    : aliased DSI_VCCR_Register;
       --  DSI Host Video Null Packet Configuration Register
-      DSI_VNPCR   : DSI_VNPCR_Register;
+      DSI_VNPCR   : aliased DSI_VNPCR_Register;
       --  DSI Host Video HSA Configuration Register
-      DSI_VHSACR  : DSI_VHSACR_Register;
+      DSI_VHSACR  : aliased DSI_VHSACR_Register;
       --  DSI Host Video HBP Configuration Register
-      DSI_VHBPCR  : DSI_VHBPCR_Register;
+      DSI_VHBPCR  : aliased DSI_VHBPCR_Register;
       --  DSI Host Video Line Configuration Register
-      DSI_VLCR    : DSI_VLCR_Register;
+      DSI_VLCR    : aliased DSI_VLCR_Register;
       --  DSI Host Video VSA Configuration Register
-      DSI_VVSACR  : DSI_VVSACR_Register;
+      DSI_VVSACR  : aliased DSI_VVSACR_Register;
       --  DSI Host Video VBP Configuration Register
-      DSI_VVBPCR  : DSI_VVBPCR_Register;
+      DSI_VVBPCR  : aliased DSI_VVBPCR_Register;
       --  DSI Host Video VFP Configuration Register
-      DSI_VVFPCR  : DSI_VVFPCR_Register;
+      DSI_VVFPCR  : aliased DSI_VVFPCR_Register;
       --  DSI Host Video VA Configuration Register
-      DSI_VVACR   : DSI_VVACR_Register;
+      DSI_VVACR   : aliased DSI_VVACR_Register;
       --  DSI Host LTDC Command Configuration Register
-      DSI_LCCR    : DSI_LCCR_Register;
+      DSI_LCCR    : aliased DSI_LCCR_Register;
       --  DSI Host Command mode Configuration Register
-      DSI_CMCR    : DSI_CMCR_Register;
+      DSI_CMCR    : aliased DSI_CMCR_Register;
       --  DSI Host Generic Header Configuration Register
-      DSI_GHCR    : DSI_GHCR_Register;
+      DSI_GHCR    : aliased DSI_GHCR_Register;
       --  DSI Host Generic Payload Data Register
-      DSI_GPDR    : DSI_GPDR_Register;
+      DSI_GPDR    : aliased DSI_GPDR_Register;
       --  DSI Host Generic Packet Status Register
-      DSI_GPSR    : DSI_GPSR_Register;
+      DSI_GPSR    : aliased DSI_GPSR_Register;
       --  DSI Host Timeout Counter Configuration Register 0
-      DSI_TCCR0   : DSI_TCCR0_Register;
+      DSI_TCCR0   : aliased DSI_TCCR0_Register;
       --  DSI Host Timeout Counter Configuration Register 1
-      DSI_TCCR1   : DSI_TCCR1_Register;
+      DSI_TCCR1   : aliased DSI_TCCR1_Register;
       --  DSI Host Timeout Counter Configuration Register 2
-      DSI_TCCR2   : DSI_TCCR2_Register;
+      DSI_TCCR2   : aliased DSI_TCCR2_Register;
       --  DSI Host Timeout Counter Configuration Register 3
-      DSI_TCCR3   : DSI_TCCR3_Register;
+      DSI_TCCR3   : aliased DSI_TCCR3_Register;
       --  DSI Host Timeout Counter Configuration Register 4
-      DSI_TCCR4   : DSI_TCCR4_Register;
+      DSI_TCCR4   : aliased DSI_TCCR4_Register;
       --  DSI Host Timeout Counter Configuration Register 5
-      DSI_TCCR5   : DSI_TCCR5_Register;
+      DSI_TCCR5   : aliased DSI_TCCR5_Register;
       --  DSI Host Clock Lane Configuration Register
-      DSI_CLCR    : DSI_CLCR_Register;
+      DSI_CLCR    : aliased DSI_CLCR_Register;
       --  DSI Host Clock Lane Timer Configuration Register
-      DSI_CLTCR   : DSI_CLTCR_Register;
+      DSI_CLTCR   : aliased DSI_CLTCR_Register;
       --  DSI Host Data Lane Timer Configuration Register
-      DSI_DLTCR   : DSI_DLTCR_Register;
+      DSI_DLTCR   : aliased DSI_DLTCR_Register;
       --  DSI Host PHY Control Register
-      DSI_PCTLR   : DSI_PCTLR_Register;
+      DSI_PCTLR   : aliased DSI_PCTLR_Register;
       --  DSI Host PHY Configuration Register
-      DSI_PCONFR  : DSI_PCONFR_Register;
+      DSI_PCONFR  : aliased DSI_PCONFR_Register;
       --  DSI Host PHY ULPS Control Register
-      DSI_PUCR    : DSI_PUCR_Register;
+      DSI_PUCR    : aliased DSI_PUCR_Register;
       --  DSI Host PHY TX Triggers Configuration Register
-      DSI_PTTCR   : DSI_PTTCR_Register;
+      DSI_PTTCR   : aliased DSI_PTTCR_Register;
       --  DSI Host PHY Status Register
-      DSI_PSR     : DSI_PSR_Register;
+      DSI_PSR     : aliased DSI_PSR_Register;
       --  DSI Host Interrupt & Status Register 0
-      DSI_ISR0    : DSI_ISR0_Register;
+      DSI_ISR0    : aliased DSI_ISR0_Register;
       --  DSI Host Interrupt & Status Register 1
-      DSI_ISR1    : DSI_ISR1_Register;
+      DSI_ISR1    : aliased DSI_ISR1_Register;
       --  DSI Host Interrupt Enable Register 0
-      DSI_IER0    : DSI_IER0_Register;
+      DSI_IER0    : aliased DSI_IER0_Register;
       --  DSI Host Interrupt Enable Register 1
-      DSI_IER1    : DSI_IER1_Register;
+      DSI_IER1    : aliased DSI_IER1_Register;
       --  DSI Host Force Interrupt Register 0
-      DSI_FIR0    : DSI_FIR0_Register;
+      DSI_FIR0    : aliased DSI_FIR0_Register;
       --  DSI Host Force Interrupt Register 1
-      DSI_FIR1    : DSI_FIR1_Register;
+      DSI_FIR1    : aliased DSI_FIR1_Register;
       --  DSI Host Video Shadow Control Register
-      DSI_VSCR    : DSI_VSCR_Register;
+      DSI_VSCR    : aliased DSI_VSCR_Register;
       --  DSI Host LTDC Current VCID Register
-      DSI_LCVCIDR : DSI_LCVCIDR_Register;
+      DSI_LCVCIDR : aliased DSI_LCVCIDR_Register;
       --  DSI Host LTDC Current Color Coding Register
-      DSI_LCCCR   : DSI_LCCCR_Register;
+      DSI_LCCCR   : aliased DSI_LCCCR_Register;
       --  DSI Host Low-Power mode Current Configuration Register
-      DSI_LPMCCR  : DSI_LPMCCR_Register;
+      DSI_LPMCCR  : aliased DSI_LPMCCR_Register;
       --  DSI Host Video mode Current Configuration Register
-      DSI_VMCCR   : DSI_VMCCR_Register;
+      DSI_VMCCR   : aliased DSI_VMCCR_Register;
       --  DSI Host Video Packet Current Configuration Register
-      DSI_VPCCR   : DSI_VPCCR_Register;
+      DSI_VPCCR   : aliased DSI_VPCCR_Register;
       --  DSI Host Video Chunks Current Configuration Register
-      DSI_VCCCR   : DSI_VCCCR_Register;
+      DSI_VCCCR   : aliased DSI_VCCCR_Register;
       --  DSI Host Video Null Packet Current Configuration Register
-      DSI_VNPCCR  : DSI_VNPCCR_Register;
+      DSI_VNPCCR  : aliased DSI_VNPCCR_Register;
       --  DSI Host Video HSA Current Configuration Register
-      DSI_VHSACCR : DSI_VHSACCR_Register;
+      DSI_VHSACCR : aliased DSI_VHSACCR_Register;
       --  DSI Host Video HBP Current Configuration Register
-      DSI_VHBPCCR : DSI_VHBPCCR_Register;
+      DSI_VHBPCCR : aliased DSI_VHBPCCR_Register;
       --  DSI Host Video Line Current Configuration Register
-      DSI_VLCCR   : DSI_VLCCR_Register;
+      DSI_VLCCR   : aliased DSI_VLCCR_Register;
       --  DSI Host Video VSA Current Configuration Register
-      DSI_VVSACCR : DSI_VVSACCR_Register;
+      DSI_VVSACCR : aliased DSI_VVSACCR_Register;
       --  DSI Host Video VBP Current Configuration Register
-      DSI_VVBPCCR : DSI_VVBPCCR_Register;
+      DSI_VVBPCCR : aliased DSI_VVBPCCR_Register;
       --  DSI Host Video VFP Current Configuration Register
-      DSI_VVFPCCR : DSI_VVFPCCR_Register;
+      DSI_VVFPCCR : aliased DSI_VVFPCCR_Register;
       --  DSI Host Video VA Current Configuration Register
-      DSI_VVACCR  : DSI_VVACCR_Register;
+      DSI_VVACCR  : aliased DSI_VVACCR_Register;
       --  DSI Wrapper Configuration Register
-      DSI_WCFGR   : DSI_WCFGR_Register;
+      DSI_WCFGR   : aliased DSI_WCFGR_Register;
       --  DSI Wrapper Control Register
-      DSI_WCR     : DSI_WCR_Register;
+      DSI_WCR     : aliased DSI_WCR_Register;
       --  DSI Wrapper Interrupt Enable Register
-      DSI_WIER    : DSI_WIER_Register;
+      DSI_WIER    : aliased DSI_WIER_Register;
       --  DSI Wrapper Interrupt & Status Register
-      DSI_WISR    : DSI_WISR_Register;
+      DSI_WISR    : aliased DSI_WISR_Register;
       --  DSI Wrapper Interrupt Flag Clear Register
-      DSI_WIFCR   : DSI_WIFCR_Register;
+      DSI_WIFCR   : aliased DSI_WIFCR_Register;
       --  DSI Wrapper PHY Configuration Register 1
-      DSI_WPCR1   : DSI_WPCR1_Register;
+      DSI_WPCR1   : aliased DSI_WPCR1_Register;
       --  DSI Wrapper PHY Configuration Register 2
-      DSI_WPCR2   : DSI_WPCR2_Register;
+      DSI_WPCR2   : aliased DSI_WPCR2_Register;
       --  DSI Wrapper PHY Configuration Register 3
-      DSI_WPCR3   : DSI_WPCR3_Register;
+      DSI_WPCR3   : aliased DSI_WPCR3_Register;
       --  DSI_WPCR4
-      DSI_WPCR4   : DSI_WPCR4_Register;
+      DSI_WPCR4   : aliased DSI_WPCR4_Register;
       --  DSI Wrapper PHY Configuration Register 5
-      DSI_WPCR5   : DSI_WPCR5_Register;
+      DSI_WPCR5   : aliased DSI_WPCR5_Register;
       --  DSI Wrapper Regulator and PLL Control Register
-      DSI_WRPCR   : DSI_WRPCR_Register;
+      DSI_WRPCR   : aliased DSI_WRPCR_Register;
    end record
      with Volatile;
 

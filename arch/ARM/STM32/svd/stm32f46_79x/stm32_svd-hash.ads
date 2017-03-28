@@ -140,149 +140,149 @@ package STM32_SVD.HASH is
    --  Hash processor
    type HASH_Peripheral is record
       --  control register
-      CR       : CR_Register;
+      CR       : aliased CR_Register;
       --  data input register
-      DIN      : HAL.UInt32;
+      DIN      : aliased HAL.UInt32;
       --  start register
-      STR      : STR_Register;
+      STR      : aliased STR_Register;
       --  digest registers
-      HR0      : HAL.UInt32;
+      HR0      : aliased HAL.UInt32;
       --  digest registers
-      HR1      : HAL.UInt32;
+      HR1      : aliased HAL.UInt32;
       --  digest registers
-      HR2      : HAL.UInt32;
+      HR2      : aliased HAL.UInt32;
       --  digest registers
-      HR3      : HAL.UInt32;
+      HR3      : aliased HAL.UInt32;
       --  digest registers
-      HR4      : HAL.UInt32;
+      HR4      : aliased HAL.UInt32;
       --  interrupt enable register
-      IMR      : IMR_Register;
+      IMR      : aliased IMR_Register;
       --  status register
-      SR       : SR_Register;
+      SR       : aliased SR_Register;
       --  context swap registers
-      CSR0     : HAL.UInt32;
+      CSR0     : aliased HAL.UInt32;
       --  context swap registers
-      CSR1     : HAL.UInt32;
+      CSR1     : aliased HAL.UInt32;
       --  context swap registers
-      CSR2     : HAL.UInt32;
+      CSR2     : aliased HAL.UInt32;
       --  context swap registers
-      CSR3     : HAL.UInt32;
+      CSR3     : aliased HAL.UInt32;
       --  context swap registers
-      CSR4     : HAL.UInt32;
+      CSR4     : aliased HAL.UInt32;
       --  context swap registers
-      CSR5     : HAL.UInt32;
+      CSR5     : aliased HAL.UInt32;
       --  context swap registers
-      CSR6     : HAL.UInt32;
+      CSR6     : aliased HAL.UInt32;
       --  context swap registers
-      CSR7     : HAL.UInt32;
+      CSR7     : aliased HAL.UInt32;
       --  context swap registers
-      CSR8     : HAL.UInt32;
+      CSR8     : aliased HAL.UInt32;
       --  context swap registers
-      CSR9     : HAL.UInt32;
+      CSR9     : aliased HAL.UInt32;
       --  context swap registers
-      CSR10    : HAL.UInt32;
+      CSR10    : aliased HAL.UInt32;
       --  context swap registers
-      CSR11    : HAL.UInt32;
+      CSR11    : aliased HAL.UInt32;
       --  context swap registers
-      CSR12    : HAL.UInt32;
+      CSR12    : aliased HAL.UInt32;
       --  context swap registers
-      CSR13    : HAL.UInt32;
+      CSR13    : aliased HAL.UInt32;
       --  context swap registers
-      CSR14    : HAL.UInt32;
+      CSR14    : aliased HAL.UInt32;
       --  context swap registers
-      CSR15    : HAL.UInt32;
+      CSR15    : aliased HAL.UInt32;
       --  context swap registers
-      CSR16    : HAL.UInt32;
+      CSR16    : aliased HAL.UInt32;
       --  context swap registers
-      CSR17    : HAL.UInt32;
+      CSR17    : aliased HAL.UInt32;
       --  context swap registers
-      CSR18    : HAL.UInt32;
+      CSR18    : aliased HAL.UInt32;
       --  context swap registers
-      CSR19    : HAL.UInt32;
+      CSR19    : aliased HAL.UInt32;
       --  context swap registers
-      CSR20    : HAL.UInt32;
+      CSR20    : aliased HAL.UInt32;
       --  context swap registers
-      CSR21    : HAL.UInt32;
+      CSR21    : aliased HAL.UInt32;
       --  context swap registers
-      CSR22    : HAL.UInt32;
+      CSR22    : aliased HAL.UInt32;
       --  context swap registers
-      CSR23    : HAL.UInt32;
+      CSR23    : aliased HAL.UInt32;
       --  context swap registers
-      CSR24    : HAL.UInt32;
+      CSR24    : aliased HAL.UInt32;
       --  context swap registers
-      CSR25    : HAL.UInt32;
+      CSR25    : aliased HAL.UInt32;
       --  context swap registers
-      CSR26    : HAL.UInt32;
+      CSR26    : aliased HAL.UInt32;
       --  context swap registers
-      CSR27    : HAL.UInt32;
+      CSR27    : aliased HAL.UInt32;
       --  context swap registers
-      CSR28    : HAL.UInt32;
+      CSR28    : aliased HAL.UInt32;
       --  context swap registers
-      CSR29    : HAL.UInt32;
+      CSR29    : aliased HAL.UInt32;
       --  context swap registers
-      CSR30    : HAL.UInt32;
+      CSR30    : aliased HAL.UInt32;
       --  context swap registers
-      CSR31    : HAL.UInt32;
+      CSR31    : aliased HAL.UInt32;
       --  context swap registers
-      CSR32    : HAL.UInt32;
+      CSR32    : aliased HAL.UInt32;
       --  context swap registers
-      CSR33    : HAL.UInt32;
+      CSR33    : aliased HAL.UInt32;
       --  context swap registers
-      CSR34    : HAL.UInt32;
+      CSR34    : aliased HAL.UInt32;
       --  context swap registers
-      CSR35    : HAL.UInt32;
+      CSR35    : aliased HAL.UInt32;
       --  context swap registers
-      CSR36    : HAL.UInt32;
+      CSR36    : aliased HAL.UInt32;
       --  context swap registers
-      CSR37    : HAL.UInt32;
+      CSR37    : aliased HAL.UInt32;
       --  context swap registers
-      CSR38    : HAL.UInt32;
+      CSR38    : aliased HAL.UInt32;
       --  context swap registers
-      CSR39    : HAL.UInt32;
+      CSR39    : aliased HAL.UInt32;
       --  context swap registers
-      CSR40    : HAL.UInt32;
+      CSR40    : aliased HAL.UInt32;
       --  context swap registers
-      CSR41    : HAL.UInt32;
+      CSR41    : aliased HAL.UInt32;
       --  context swap registers
-      CSR42    : HAL.UInt32;
+      CSR42    : aliased HAL.UInt32;
       --  context swap registers
-      CSR43    : HAL.UInt32;
+      CSR43    : aliased HAL.UInt32;
       --  context swap registers
-      CSR44    : HAL.UInt32;
+      CSR44    : aliased HAL.UInt32;
       --  context swap registers
-      CSR45    : HAL.UInt32;
+      CSR45    : aliased HAL.UInt32;
       --  context swap registers
-      CSR46    : HAL.UInt32;
+      CSR46    : aliased HAL.UInt32;
       --  context swap registers
-      CSR47    : HAL.UInt32;
+      CSR47    : aliased HAL.UInt32;
       --  context swap registers
-      CSR48    : HAL.UInt32;
+      CSR48    : aliased HAL.UInt32;
       --  context swap registers
-      CSR49    : HAL.UInt32;
+      CSR49    : aliased HAL.UInt32;
       --  context swap registers
-      CSR50    : HAL.UInt32;
+      CSR50    : aliased HAL.UInt32;
       --  context swap registers
-      CSR51    : HAL.UInt32;
+      CSR51    : aliased HAL.UInt32;
       --  context swap registers
-      CSR52    : HAL.UInt32;
+      CSR52    : aliased HAL.UInt32;
       --  context swap registers
-      CSR53    : HAL.UInt32;
+      CSR53    : aliased HAL.UInt32;
       --  HASH digest register
-      HASH_HR0 : HAL.UInt32;
+      HASH_HR0 : aliased HAL.UInt32;
       --  read-only
-      HASH_HR1 : HAL.UInt32;
+      HASH_HR1 : aliased HAL.UInt32;
       --  read-only
-      HASH_HR2 : HAL.UInt32;
+      HASH_HR2 : aliased HAL.UInt32;
       --  read-only
-      HASH_HR3 : HAL.UInt32;
+      HASH_HR3 : aliased HAL.UInt32;
       --  read-only
-      HASH_HR4 : HAL.UInt32;
+      HASH_HR4 : aliased HAL.UInt32;
       --  read-only
-      HASH_HR5 : HAL.UInt32;
+      HASH_HR5 : aliased HAL.UInt32;
       --  read-only
-      HASH_HR6 : HAL.UInt32;
+      HASH_HR6 : aliased HAL.UInt32;
       --  read-only
-      HASH_HR7 : HAL.UInt32;
+      HASH_HR7 : aliased HAL.UInt32;
    end record
      with Volatile;
 

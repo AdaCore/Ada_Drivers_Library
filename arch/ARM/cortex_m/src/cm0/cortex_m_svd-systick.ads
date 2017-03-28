@@ -167,13 +167,13 @@ package Cortex_M_SVD.SysTick is
    --  24Bit System Tick Timer for use in RTOS
    type SysTick_Peripheral is record
       --  SysTick Control and Status Register
-      CSR   : SYST_CSR_Register;
+      CSR   : aliased SYST_CSR_Register;
       --  SysTick Reload Value Register
-      RVR   : SYST_RVR_Register;
+      RVR   : aliased SYST_RVR_Register;
       --  SysTick Current Value Register
-      CVR   : SYST_CVR_Register;
+      CVR   : aliased SYST_CVR_Register;
       --  SysTick Calibration Value Register
-      CALIB : SYST_CALIB_Register;
+      CALIB : aliased SYST_CALIB_Register;
    end record
      with Volatile;
 

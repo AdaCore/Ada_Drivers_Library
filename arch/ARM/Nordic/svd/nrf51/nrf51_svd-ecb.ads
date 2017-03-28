@@ -213,22 +213,22 @@ package NRF51_SVD.ECB is
       --  Start ECB block encrypt. If a crypto operation is running, this will
       --  not initiate a new encryption and the ERRORECB event will be
       --  triggered.
-      TASKS_STARTECB  : HAL.UInt32;
+      TASKS_STARTECB  : aliased HAL.UInt32;
       --  Stop current ECB encryption. If a crypto operation is running, this
       --  will will trigger the ERRORECB event.
-      TASKS_STOPECB   : HAL.UInt32;
+      TASKS_STOPECB   : aliased HAL.UInt32;
       --  ECB block encrypt complete.
-      EVENTS_ENDECB   : HAL.UInt32;
+      EVENTS_ENDECB   : aliased HAL.UInt32;
       --  ECB block encrypt aborted due to a STOPECB task or due to an error.
-      EVENTS_ERRORECB : HAL.UInt32;
+      EVENTS_ERRORECB : aliased HAL.UInt32;
       --  Interrupt enable set register.
-      INTENSET        : INTENSET_Register;
+      INTENSET        : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR        : INTENCLR_Register;
+      INTENCLR        : aliased INTENCLR_Register;
       --  ECB block encrypt memory pointer.
-      ECBDATAPTR      : HAL.UInt32;
+      ECBDATAPTR      : aliased HAL.UInt32;
       --  Peripheral power control.
-      POWER           : POWER_Register;
+      POWER           : aliased POWER_Register;
    end record
      with Volatile;
 

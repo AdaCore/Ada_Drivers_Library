@@ -46,12 +46,14 @@ package NRF51_SVD.GPIOTE is
    --  Tasks asssociated with GPIOTE channels.
 
    --  Tasks asssociated with GPIOTE channels.
-   type TASKS_OUT_Registers is array (0 .. 3) of HAL.UInt32;
+   type TASKS_OUT_Registers is array (0 .. 3) of HAL.UInt32
+     with Volatile;
 
    --  Tasks asssociated with GPIOTE channels.
 
    --  Tasks asssociated with GPIOTE channels.
-   type EVENTS_IN_Registers is array (0 .. 3) of HAL.UInt32;
+   type EVENTS_IN_Registers is array (0 .. 3) of HAL.UInt32
+     with Volatile;
 
    --  Enable interrupt on IN[0] event.
    type INTENSET_IN0_Field is
@@ -318,7 +320,8 @@ package NRF51_SVD.GPIOTE is
    end record;
 
    --  Channel configuration registers.
-   type CONFIG_Registers is array (0 .. 3) of CONFIG_Register;
+   type CONFIG_Registers is array (0 .. 3) of CONFIG_Register
+     with Volatile;
 
    --  Peripheral power control.
    type POWER_POWER_Field is
@@ -354,19 +357,19 @@ package NRF51_SVD.GPIOTE is
    --  GPIO tasks and events.
    type GPIOTE_Peripheral is record
       --  Tasks asssociated with GPIOTE channels.
-      TASKS_OUT   : TASKS_OUT_Registers;
+      TASKS_OUT   : aliased TASKS_OUT_Registers;
       --  Tasks asssociated with GPIOTE channels.
-      EVENTS_IN   : EVENTS_IN_Registers;
+      EVENTS_IN   : aliased EVENTS_IN_Registers;
       --  Event generated from multiple pins.
-      EVENTS_PORT : HAL.UInt32;
+      EVENTS_PORT : aliased HAL.UInt32;
       --  Interrupt enable set register.
-      INTENSET    : INTENSET_Register;
+      INTENSET    : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR    : INTENCLR_Register;
+      INTENCLR    : aliased INTENCLR_Register;
       --  Channel configuration registers.
-      CONFIG      : CONFIG_Registers;
+      CONFIG      : aliased CONFIG_Registers;
       --  Peripheral power control.
-      POWER       : POWER_Register;
+      POWER       : aliased POWER_Register;
    end record
      with Volatile;
 

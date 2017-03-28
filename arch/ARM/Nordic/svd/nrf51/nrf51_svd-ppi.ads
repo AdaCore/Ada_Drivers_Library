@@ -50,9 +50,9 @@ package NRF51_SVD.PPI is
    --  Channel group tasks.
    type PPI_TASKS_CHG_Cluster is record
       --  Enable channel group.
-      EN  : HAL.UInt32;
+      EN  : aliased HAL.UInt32;
       --  Disable channel group.
-      DIS : HAL.UInt32;
+      DIS : aliased HAL.UInt32;
    end record
      with Volatile, Size => 64;
 
@@ -445,9 +445,9 @@ package NRF51_SVD.PPI is
    --  PPI Channel.
    type PPI_CH_Cluster is record
       --  Channel event end-point.
-      EEP : HAL.UInt32;
+      EEP : aliased HAL.UInt32;
       --  Channel task end-point.
-      TEP : HAL.UInt32;
+      TEP : aliased HAL.UInt32;
    end record
      with Volatile, Size => 64;
 
@@ -550,7 +550,8 @@ package NRF51_SVD.PPI is
    end record;
 
    --  Channel group configuration.
-   type CHG_Registers is array (0 .. 3) of CHG_Register;
+   type CHG_Registers is array (0 .. 3) of CHG_Register
+     with Volatile;
 
    -----------------
    -- Peripherals --
@@ -559,17 +560,17 @@ package NRF51_SVD.PPI is
    --  PPI controller.
    type PPI_Peripheral is record
       --  Channel group tasks.
-      TASKS_CHG : PPI_TASKS_CHG_Clusters;
+      TASKS_CHG : aliased PPI_TASKS_CHG_Clusters;
       --  Channel enable.
-      CHEN      : CHEN_Register;
+      CHEN      : aliased CHEN_Register;
       --  Channel enable set.
-      CHENSET   : CHENSET_Register;
+      CHENSET   : aliased CHENSET_Register;
       --  Channel enable clear.
-      CHENCLR   : CHENCLR_Register;
+      CHENCLR   : aliased CHENCLR_Register;
       --  PPI Channel.
-      CH        : PPI_CH_Clusters;
+      CH        : aliased PPI_CH_Clusters;
       --  Channel group configuration.
-      CHG       : CHG_Registers;
+      CHG       : aliased CHG_Registers;
    end record
      with Volatile;
 

@@ -1706,84 +1706,84 @@ package STM32_SVD.USB_OTG_FS is
    --  USB on the go full speed
    type OTG_FS_DEVICE_Peripheral is record
       --  OTG_FS device configuration register (OTG_FS_DCFG)
-      FS_DCFG     : FS_DCFG_Register;
+      FS_DCFG     : aliased FS_DCFG_Register;
       --  OTG_FS device control register (OTG_FS_DCTL)
-      FS_DCTL     : FS_DCTL_Register;
+      FS_DCTL     : aliased FS_DCTL_Register;
       --  OTG_FS device status register (OTG_FS_DSTS)
-      FS_DSTS     : FS_DSTS_Register;
+      FS_DSTS     : aliased FS_DSTS_Register;
       --  OTG_FS device IN endpoint common interrupt mask register
       --  (OTG_FS_DIEPMSK)
-      FS_DIEPMSK  : FS_DIEPMSK_Register;
+      FS_DIEPMSK  : aliased FS_DIEPMSK_Register;
       --  OTG_FS device OUT endpoint common interrupt mask register
       --  (OTG_FS_DOEPMSK)
-      FS_DOEPMSK  : FS_DOEPMSK_Register;
+      FS_DOEPMSK  : aliased FS_DOEPMSK_Register;
       --  OTG_FS device all endpoints interrupt register (OTG_FS_DAINT)
-      FS_DAINT    : FS_DAINT_Register;
+      FS_DAINT    : aliased FS_DAINT_Register;
       --  OTG_FS all endpoints interrupt mask register (OTG_FS_DAINTMSK)
-      FS_DAINTMSK : FS_DAINTMSK_Register;
+      FS_DAINTMSK : aliased FS_DAINTMSK_Register;
       --  OTG_FS device VBUS discharge time register
-      DVBUSDIS    : DVBUSDIS_Register;
+      DVBUSDIS    : aliased DVBUSDIS_Register;
       --  OTG_FS device VBUS pulsing time register
-      DVBUSPULSE  : DVBUSPULSE_Register;
+      DVBUSPULSE  : aliased DVBUSPULSE_Register;
       --  OTG_FS device IN endpoint FIFO empty interrupt mask register
-      DIEPEMPMSK  : DIEPEMPMSK_Register;
+      DIEPEMPMSK  : aliased DIEPEMPMSK_Register;
       --  OTG_FS device control IN endpoint 0 control register
       --  (OTG_FS_DIEPCTL0)
-      FS_DIEPCTL0 : FS_DIEPCTL0_Register;
+      FS_DIEPCTL0 : aliased FS_DIEPCTL0_Register;
       --  device endpoint-x interrupt register
-      DIEPINT0    : DIEPINT_Register;
+      DIEPINT0    : aliased DIEPINT_Register;
       --  device endpoint-0 transfer size register
-      DIEPTSIZ0   : DIEPTSIZ0_Register;
+      DIEPTSIZ0   : aliased DIEPTSIZ0_Register;
       --  OTG_FS device IN endpoint transmit FIFO status register
-      DTXFSTS0    : DTXFSTS_Register;
+      DTXFSTS0    : aliased DTXFSTS_Register;
       --  OTG device endpoint-1 control register
-      DIEPCTL1    : DIEPCTL1_Register;
+      DIEPCTL1    : aliased DIEPCTL1_Register;
       --  device endpoint-1 interrupt register
-      DIEPINT1    : DIEPINT_Register;
+      DIEPINT1    : aliased DIEPINT_Register;
       --  device endpoint-1 transfer size register
-      DIEPTSIZ1   : DIEPTSIZ_Register;
+      DIEPTSIZ1   : aliased DIEPTSIZ_Register;
       --  OTG_FS device IN endpoint transmit FIFO status register
-      DTXFSTS1    : DTXFSTS_Register;
+      DTXFSTS1    : aliased DTXFSTS_Register;
       --  OTG device endpoint-2 control register
-      DIEPCTL2    : DIEPCTL_Register;
+      DIEPCTL2    : aliased DIEPCTL_Register;
       --  device endpoint-2 interrupt register
-      DIEPINT2    : DIEPINT_Register;
+      DIEPINT2    : aliased DIEPINT_Register;
       --  device endpoint-2 transfer size register
-      DIEPTSIZ2   : DIEPTSIZ_Register;
+      DIEPTSIZ2   : aliased DIEPTSIZ_Register;
       --  OTG_FS device IN endpoint transmit FIFO status register
-      DTXFSTS2    : DTXFSTS_Register;
+      DTXFSTS2    : aliased DTXFSTS_Register;
       --  OTG device endpoint-3 control register
-      DIEPCTL3    : DIEPCTL_Register;
+      DIEPCTL3    : aliased DIEPCTL_Register;
       --  device endpoint-3 interrupt register
-      DIEPINT3    : DIEPINT_Register;
+      DIEPINT3    : aliased DIEPINT_Register;
       --  device endpoint-3 transfer size register
-      DIEPTSIZ3   : DIEPTSIZ_Register;
+      DIEPTSIZ3   : aliased DIEPTSIZ_Register;
       --  OTG_FS device IN endpoint transmit FIFO status register
-      DTXFSTS3    : DTXFSTS_Register;
+      DTXFSTS3    : aliased DTXFSTS_Register;
       --  device endpoint-0 control register
-      DOEPCTL0    : DOEPCTL0_Register;
+      DOEPCTL0    : aliased DOEPCTL0_Register;
       --  device endpoint-0 interrupt register
-      DOEPINT0    : DOEPINT_Register;
+      DOEPINT0    : aliased DOEPINT_Register;
       --  device OUT endpoint-0 transfer size register
-      DOEPTSIZ0   : DOEPTSIZ0_Register;
+      DOEPTSIZ0   : aliased DOEPTSIZ0_Register;
       --  device endpoint-1 control register
-      DOEPCTL1    : DOEPCTL_Register;
+      DOEPCTL1    : aliased DOEPCTL_Register;
       --  device endpoint-1 interrupt register
-      DOEPINT1    : DOEPINT_Register;
+      DOEPINT1    : aliased DOEPINT_Register;
       --  device OUT endpoint-1 transfer size register
-      DOEPTSIZ1   : DOEPTSIZ_Register;
+      DOEPTSIZ1   : aliased DOEPTSIZ_Register;
       --  device endpoint-2 control register
-      DOEPCTL2    : DOEPCTL_Register;
+      DOEPCTL2    : aliased DOEPCTL_Register;
       --  device endpoint-2 interrupt register
-      DOEPINT2    : DOEPINT_Register;
+      DOEPINT2    : aliased DOEPINT_Register;
       --  device OUT endpoint-2 transfer size register
-      DOEPTSIZ2   : DOEPTSIZ_Register;
+      DOEPTSIZ2   : aliased DOEPTSIZ_Register;
       --  device endpoint-3 control register
-      DOEPCTL3    : DOEPCTL_Register;
+      DOEPCTL3    : aliased DOEPCTL_Register;
       --  device endpoint-3 interrupt register
-      DOEPINT3    : DOEPINT_Register;
+      DOEPINT3    : aliased DOEPINT_Register;
       --  device OUT endpoint-3 transfer size register
-      DOEPTSIZ3   : DOEPTSIZ_Register;
+      DOEPTSIZ3   : aliased DOEPTSIZ_Register;
    end record
      with Volatile;
 
@@ -1842,56 +1842,56 @@ package STM32_SVD.USB_OTG_FS is
      (Discriminent : OTG_FS_GLOBAL_Disc := Device)
    is record
       --  OTG_FS control and status register (OTG_FS_GOTGCTL)
-      FS_GOTGCTL          : FS_GOTGCTL_Register;
+      FS_GOTGCTL          : aliased FS_GOTGCTL_Register;
       --  OTG_FS interrupt register (OTG_FS_GOTGINT)
-      FS_GOTGINT          : FS_GOTGINT_Register;
+      FS_GOTGINT          : aliased FS_GOTGINT_Register;
       --  OTG_FS AHB configuration register (OTG_FS_GAHBCFG)
-      FS_GAHBCFG          : FS_GAHBCFG_Register;
+      FS_GAHBCFG          : aliased FS_GAHBCFG_Register;
       --  OTG_FS USB configuration register (OTG_FS_GUSBCFG)
-      FS_GUSBCFG          : FS_GUSBCFG_Register;
+      FS_GUSBCFG          : aliased FS_GUSBCFG_Register;
       --  OTG_FS reset register (OTG_FS_GRSTCTL)
-      FS_GRSTCTL          : FS_GRSTCTL_Register;
+      FS_GRSTCTL          : aliased FS_GRSTCTL_Register;
       --  OTG_FS core interrupt register (OTG_FS_GINTSTS)
-      FS_GINTSTS          : FS_GINTSTS_Register;
+      FS_GINTSTS          : aliased FS_GINTSTS_Register;
       --  OTG_FS interrupt mask register (OTG_FS_GINTMSK)
-      FS_GINTMSK          : FS_GINTMSK_Register;
+      FS_GINTMSK          : aliased FS_GINTMSK_Register;
       --  OTG_FS Receive FIFO size register (OTG_FS_GRXFSIZ)
-      FS_GRXFSIZ          : FS_GRXFSIZ_Register;
+      FS_GRXFSIZ          : aliased FS_GRXFSIZ_Register;
       --  OTG_FS non-periodic transmit FIFO/queue status register
       --  (OTG_FS_GNPTXSTS)
-      FS_GNPTXSTS         : FS_GNPTXSTS_Register;
+      FS_GNPTXSTS         : aliased FS_GNPTXSTS_Register;
       --  OTG_FS general core configuration register (OTG_FS_GCCFG)
-      FS_GCCFG            : FS_GCCFG_Register;
+      FS_GCCFG            : aliased FS_GCCFG_Register;
       --  core ID register
-      FS_CID              : HAL.UInt32;
+      FS_CID              : aliased HAL.UInt32;
       --  OTG_FS Host periodic transmit FIFO size register (OTG_FS_HPTXFSIZ)
-      FS_HPTXFSIZ         : FS_HPTXFSIZ_Register;
+      FS_HPTXFSIZ         : aliased FS_HPTXFSIZ_Register;
       --  OTG_FS device IN endpoint transmit FIFO size register
       --  (OTG_FS_DIEPTXF1)
-      FS_DIEPTXF1         : FS_DIEPTXF_Register;
+      FS_DIEPTXF1         : aliased FS_DIEPTXF_Register;
       --  OTG_FS device IN endpoint transmit FIFO size register
       --  (OTG_FS_DIEPTXF2)
-      FS_DIEPTXF2         : FS_DIEPTXF_Register;
+      FS_DIEPTXF2         : aliased FS_DIEPTXF_Register;
       --  OTG_FS device IN endpoint transmit FIFO size register
       --  (OTG_FS_DIEPTXF3)
-      FS_DIEPTXF3         : FS_DIEPTXF_Register;
+      FS_DIEPTXF3         : aliased FS_DIEPTXF_Register;
       --  OTG_FS device IN endpoint transmit FIFO size register
       --  (OTG_FS_DIEPTXF4)
-      FS_DIEPTXF4         : HAL.UInt32;
+      FS_DIEPTXF4         : aliased HAL.UInt32;
       --  OTG_FS device IN endpoint transmit FIFO size register
       --  (OTG_FS_DIEPTXF5)
-      FS_DIEPTXF5         : HAL.UInt32;
+      FS_DIEPTXF5         : aliased HAL.UInt32;
       case Discriminent is
          when Device =>
             --  OTG_FS Receive status debug read(Device mode)
-            FS_GRXSTSR_Device : FS_GRXSTSR_Device_Register;
+            FS_GRXSTSR_Device : aliased FS_GRXSTSR_Device_Register;
             --  OTG_FS non-periodic transmit FIFO size register (Device mode)
-            FS_GNPTXFSIZ_Device : FS_GNPTXFSIZ_Device_Register;
+            FS_GNPTXFSIZ_Device : aliased FS_GNPTXFSIZ_Device_Register;
          when Host =>
             --  OTG_FS Receive status debug read(Hostmode)
-            FS_GRXSTSR_Host : FS_GRXSTSR_Host_Register;
+            FS_GRXSTSR_Host : aliased FS_GRXSTSR_Host_Register;
             --  OTG_FS non-periodic transmit FIFO size register (Host mode)
-            FS_GNPTXFSIZ_Host : FS_GNPTXFSIZ_Host_Register;
+            FS_GNPTXFSIZ_Host : aliased FS_GNPTXFSIZ_Host_Register;
       end case;
    end record
      with Unchecked_Union, Volatile;
@@ -1927,84 +1927,84 @@ package STM32_SVD.USB_OTG_FS is
    --  USB on the go full speed
    type OTG_FS_HOST_Peripheral is record
       --  OTG_FS host configuration register (OTG_FS_HCFG)
-      FS_HCFG      : FS_HCFG_Register;
+      FS_HCFG      : aliased FS_HCFG_Register;
       --  OTG_FS Host frame interval register
-      HFIR         : HFIR_Register;
+      HFIR         : aliased HFIR_Register;
       --  OTG_FS host frame number/frame time remaining register (OTG_FS_HFNUM)
-      FS_HFNUM     : FS_HFNUM_Register;
+      FS_HFNUM     : aliased FS_HFNUM_Register;
       --  OTG_FS_Host periodic transmit FIFO/queue status register
       --  (OTG_FS_HPTXSTS)
-      FS_HPTXSTS   : FS_HPTXSTS_Register;
+      FS_HPTXSTS   : aliased FS_HPTXSTS_Register;
       --  OTG_FS Host all channels interrupt register
-      HAINT        : HAINT_Register;
+      HAINT        : aliased HAINT_Register;
       --  OTG_FS host all channels interrupt mask register
-      HAINTMSK     : HAINTMSK_Register;
+      HAINTMSK     : aliased HAINTMSK_Register;
       --  OTG_FS host port control and status register (OTG_FS_HPRT)
-      FS_HPRT      : FS_HPRT_Register;
+      FS_HPRT      : aliased FS_HPRT_Register;
       --  OTG_FS host channel-0 characteristics register (OTG_FS_HCCHAR0)
-      FS_HCCHAR0   : FS_HCCHAR_Register;
+      FS_HCCHAR0   : aliased FS_HCCHAR_Register;
       --  OTG_FS host channel-0 interrupt register (OTG_FS_HCINT0)
-      FS_HCINT0    : FS_HCINT_Register;
+      FS_HCINT0    : aliased FS_HCINT_Register;
       --  OTG_FS host channel-0 mask register (OTG_FS_HCINTMSK0)
-      FS_HCINTMSK0 : FS_HCINTMSK_Register;
+      FS_HCINTMSK0 : aliased FS_HCINTMSK_Register;
       --  OTG_FS host channel-0 transfer size register
-      FS_HCTSIZ0   : FS_HCTSIZ_Register;
+      FS_HCTSIZ0   : aliased FS_HCTSIZ_Register;
       --  OTG_FS host channel-1 characteristics register (OTG_FS_HCCHAR1)
-      FS_HCCHAR1   : FS_HCCHAR_Register;
+      FS_HCCHAR1   : aliased FS_HCCHAR_Register;
       --  OTG_FS host channel-1 interrupt register (OTG_FS_HCINT1)
-      FS_HCINT1    : FS_HCINT_Register;
+      FS_HCINT1    : aliased FS_HCINT_Register;
       --  OTG_FS host channel-1 mask register (OTG_FS_HCINTMSK1)
-      FS_HCINTMSK1 : FS_HCINTMSK_Register;
+      FS_HCINTMSK1 : aliased FS_HCINTMSK_Register;
       --  OTG_FS host channel-1 transfer size register
-      FS_HCTSIZ1   : FS_HCTSIZ_Register;
+      FS_HCTSIZ1   : aliased FS_HCTSIZ_Register;
       --  OTG_FS host channel-2 characteristics register (OTG_FS_HCCHAR2)
-      FS_HCCHAR2   : FS_HCCHAR_Register;
+      FS_HCCHAR2   : aliased FS_HCCHAR_Register;
       --  OTG_FS host channel-2 interrupt register (OTG_FS_HCINT2)
-      FS_HCINT2    : FS_HCINT_Register;
+      FS_HCINT2    : aliased FS_HCINT_Register;
       --  OTG_FS host channel-2 mask register (OTG_FS_HCINTMSK2)
-      FS_HCINTMSK2 : FS_HCINTMSK_Register;
+      FS_HCINTMSK2 : aliased FS_HCINTMSK_Register;
       --  OTG_FS host channel-2 transfer size register
-      FS_HCTSIZ2   : FS_HCTSIZ_Register;
+      FS_HCTSIZ2   : aliased FS_HCTSIZ_Register;
       --  OTG_FS host channel-3 characteristics register (OTG_FS_HCCHAR3)
-      FS_HCCHAR3   : FS_HCCHAR_Register;
+      FS_HCCHAR3   : aliased FS_HCCHAR_Register;
       --  OTG_FS host channel-3 interrupt register (OTG_FS_HCINT3)
-      FS_HCINT3    : FS_HCINT_Register;
+      FS_HCINT3    : aliased FS_HCINT_Register;
       --  OTG_FS host channel-3 mask register (OTG_FS_HCINTMSK3)
-      FS_HCINTMSK3 : FS_HCINTMSK_Register;
+      FS_HCINTMSK3 : aliased FS_HCINTMSK_Register;
       --  OTG_FS host channel-3 transfer size register
-      FS_HCTSIZ3   : FS_HCTSIZ_Register;
+      FS_HCTSIZ3   : aliased FS_HCTSIZ_Register;
       --  OTG_FS host channel-4 characteristics register (OTG_FS_HCCHAR4)
-      FS_HCCHAR4   : FS_HCCHAR_Register;
+      FS_HCCHAR4   : aliased FS_HCCHAR_Register;
       --  OTG_FS host channel-4 interrupt register (OTG_FS_HCINT4)
-      FS_HCINT4    : FS_HCINT_Register;
+      FS_HCINT4    : aliased FS_HCINT_Register;
       --  OTG_FS host channel-4 mask register (OTG_FS_HCINTMSK4)
-      FS_HCINTMSK4 : FS_HCINTMSK_Register;
+      FS_HCINTMSK4 : aliased FS_HCINTMSK_Register;
       --  OTG_FS host channel-x transfer size register
-      FS_HCTSIZ4   : FS_HCTSIZ_Register;
+      FS_HCTSIZ4   : aliased FS_HCTSIZ_Register;
       --  OTG_FS host channel-5 characteristics register (OTG_FS_HCCHAR5)
-      FS_HCCHAR5   : FS_HCCHAR_Register;
+      FS_HCCHAR5   : aliased FS_HCCHAR_Register;
       --  OTG_FS host channel-5 interrupt register (OTG_FS_HCINT5)
-      FS_HCINT5    : FS_HCINT_Register;
+      FS_HCINT5    : aliased FS_HCINT_Register;
       --  OTG_FS host channel-5 mask register (OTG_FS_HCINTMSK5)
-      FS_HCINTMSK5 : FS_HCINTMSK_Register;
+      FS_HCINTMSK5 : aliased FS_HCINTMSK_Register;
       --  OTG_FS host channel-5 transfer size register
-      FS_HCTSIZ5   : FS_HCTSIZ_Register;
+      FS_HCTSIZ5   : aliased FS_HCTSIZ_Register;
       --  OTG_FS host channel-6 characteristics register (OTG_FS_HCCHAR6)
-      FS_HCCHAR6   : FS_HCCHAR_Register;
+      FS_HCCHAR6   : aliased FS_HCCHAR_Register;
       --  OTG_FS host channel-6 interrupt register (OTG_FS_HCINT6)
-      FS_HCINT6    : FS_HCINT_Register;
+      FS_HCINT6    : aliased FS_HCINT_Register;
       --  OTG_FS host channel-6 mask register (OTG_FS_HCINTMSK6)
-      FS_HCINTMSK6 : FS_HCINTMSK_Register;
+      FS_HCINTMSK6 : aliased FS_HCINTMSK_Register;
       --  OTG_FS host channel-6 transfer size register
-      FS_HCTSIZ6   : FS_HCTSIZ_Register;
+      FS_HCTSIZ6   : aliased FS_HCTSIZ_Register;
       --  OTG_FS host channel-7 characteristics register (OTG_FS_HCCHAR7)
-      FS_HCCHAR7   : FS_HCCHAR_Register;
+      FS_HCCHAR7   : aliased FS_HCCHAR_Register;
       --  OTG_FS host channel-7 interrupt register (OTG_FS_HCINT7)
-      FS_HCINT7    : FS_HCINT_Register;
+      FS_HCINT7    : aliased FS_HCINT_Register;
       --  OTG_FS host channel-7 mask register (OTG_FS_HCINTMSK7)
-      FS_HCINTMSK7 : FS_HCINTMSK_Register;
+      FS_HCINTMSK7 : aliased FS_HCINTMSK_Register;
       --  OTG_FS host channel-7 transfer size register
-      FS_HCTSIZ7   : FS_HCTSIZ_Register;
+      FS_HCTSIZ7   : aliased FS_HCTSIZ_Register;
    end record
      with Volatile;
 
@@ -2057,7 +2057,7 @@ package STM32_SVD.USB_OTG_FS is
    --  USB on the go full speed
    type OTG_FS_PWRCLK_Peripheral is record
       --  OTG_FS power and clock gating control register (OTG_FS_PCGCCTL)
-      FS_PCGCCTL : FS_PCGCCTL_Register;
+      FS_PCGCCTL : aliased FS_PCGCCTL_Register;
    end record
      with Volatile;
 

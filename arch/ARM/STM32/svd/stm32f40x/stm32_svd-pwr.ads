@@ -104,9 +104,9 @@ package STM32_SVD.PWR is
    --  Power control
    type PWR_Peripheral is record
       --  power control register
-      CR  : CR_Register;
+      CR  : aliased CR_Register;
       --  power control/status register
-      CSR : CSR_Register;
+      CSR : aliased CSR_Register;
    end record
      with Volatile;
 

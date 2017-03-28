@@ -607,39 +607,39 @@ package NRF51_SVD.LPCOMP is
    --  Low power comparator.
    type LPCOMP_Peripheral is record
       --  Start the comparator.
-      TASKS_START  : HAL.UInt32;
+      TASKS_START  : aliased HAL.UInt32;
       --  Stop the comparator.
-      TASKS_STOP   : HAL.UInt32;
+      TASKS_STOP   : aliased HAL.UInt32;
       --  Sample comparator value.
-      TASKS_SAMPLE : HAL.UInt32;
+      TASKS_SAMPLE : aliased HAL.UInt32;
       --  LPCOMP is ready and output is valid.
-      EVENTS_READY : HAL.UInt32;
+      EVENTS_READY : aliased HAL.UInt32;
       --  Input voltage crossed the threshold going down.
-      EVENTS_DOWN  : HAL.UInt32;
+      EVENTS_DOWN  : aliased HAL.UInt32;
       --  Input voltage crossed the threshold going up.
-      EVENTS_UP    : HAL.UInt32;
+      EVENTS_UP    : aliased HAL.UInt32;
       --  Input voltage crossed the threshold in any direction.
-      EVENTS_CROSS : HAL.UInt32;
+      EVENTS_CROSS : aliased HAL.UInt32;
       --  Shortcuts for the LPCOMP.
-      SHORTS       : SHORTS_Register;
+      SHORTS       : aliased SHORTS_Register;
       --  Interrupt enable set register.
-      INTENSET     : INTENSET_Register;
+      INTENSET     : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR     : INTENCLR_Register;
+      INTENCLR     : aliased INTENCLR_Register;
       --  Result of last compare.
-      RESULT       : RESULT_Register;
+      RESULT       : aliased RESULT_Register;
       --  Enable the LPCOMP.
-      ENABLE       : ENABLE_Register;
+      ENABLE       : aliased ENABLE_Register;
       --  Input pin select.
-      PSEL         : PSEL_Register;
+      PSEL         : aliased PSEL_Register;
       --  Reference select.
-      REFSEL       : REFSEL_Register;
+      REFSEL       : aliased REFSEL_Register;
       --  External reference select.
-      EXTREFSEL    : EXTREFSEL_Register;
+      EXTREFSEL    : aliased EXTREFSEL_Register;
       --  Analog detect configuration.
-      ANADETECT    : ANADETECT_Register;
+      ANADETECT    : aliased ANADETECT_Register;
       --  Peripheral power control.
-      POWER        : POWER_Register;
+      POWER        : aliased POWER_Register;
    end record
      with Volatile;
 

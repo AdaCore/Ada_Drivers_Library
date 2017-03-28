@@ -576,41 +576,41 @@ package STM32_SVD.SDIO is
    --  Secure digital input/output interface
    type SDIO_Peripheral is record
       --  power control register
-      POWER   : POWER_Register;
+      POWER   : aliased POWER_Register;
       --  SDI clock control register
-      CLKCR   : CLKCR_Register;
+      CLKCR   : aliased CLKCR_Register;
       --  argument register
-      ARG     : HAL.UInt32;
+      ARG     : aliased HAL.UInt32;
       --  command register
-      CMD     : CMD_Register;
+      CMD     : aliased CMD_Register;
       --  command response register
-      RESPCMD : RESPCMD_Register;
+      RESPCMD : aliased RESPCMD_Register;
       --  response 1..4 register
-      RESP1   : HAL.UInt32;
+      RESP1   : aliased HAL.UInt32;
       --  response 1..4 register
-      RESP2   : HAL.UInt32;
+      RESP2   : aliased HAL.UInt32;
       --  response 1..4 register
-      RESP3   : HAL.UInt32;
+      RESP3   : aliased HAL.UInt32;
       --  response 1..4 register
-      RESP4   : HAL.UInt32;
+      RESP4   : aliased HAL.UInt32;
       --  data timer register
-      DTIMER  : HAL.UInt32;
+      DTIMER  : aliased HAL.UInt32;
       --  data length register
-      DLEN    : DLEN_Register;
+      DLEN    : aliased DLEN_Register;
       --  data control register
-      DCTRL   : DCTRL_Register;
+      DCTRL   : aliased DCTRL_Register;
       --  data counter register
-      DCOUNT  : DCOUNT_Register;
+      DCOUNT  : aliased DCOUNT_Register;
       --  status register
-      STA     : STA_Register;
+      STA     : aliased STA_Register;
       --  interrupt clear register
-      ICR     : ICR_Register;
+      ICR     : aliased ICR_Register;
       --  mask register
-      MASK    : MASK_Register;
+      MASK    : aliased MASK_Register;
       --  FIFO counter register
-      FIFOCNT : FIFOCNT_Register;
+      FIFOCNT : aliased FIFOCNT_Register;
       --  data FIFO register
-      FIFO    : HAL.UInt32;
+      FIFO    : aliased HAL.UInt32;
    end record
      with Volatile;
 

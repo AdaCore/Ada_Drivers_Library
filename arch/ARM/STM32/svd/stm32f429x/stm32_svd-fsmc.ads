@@ -470,31 +470,6 @@ package STM32_SVD.FSMC is
    end record;
 
    subtype SDCMR_MODE_Field is HAL.UInt3;
-
-   --  SDCMR_CTB array
-   type SDCMR_CTB_Field_Array is array (1 .. 2) of Boolean
-     with Component_Size => 1, Size => 2;
-
-   --  Type definition for SDCMR_CTB
-   type SDCMR_CTB_Field
-     (As_Array : Boolean := False)
-   is record
-      case As_Array is
-         when False =>
-            --  CTB as a value
-            Val : HAL.UInt2;
-         when True =>
-            --  CTB as an array
-            Arr : SDCMR_CTB_Field_Array;
-      end case;
-   end record
-     with Unchecked_Union, Size => 2;
-
-   for SDCMR_CTB_Field use record
-      Val at 0 range 0 .. 1;
-      Arr at 0 range 0 .. 1;
-   end record;
-
    subtype SDCMR_NRFS_Field is HAL.UInt4;
    subtype SDCMR_MRD_Field is HAL.UInt13;
 
@@ -503,7 +478,9 @@ package STM32_SVD.FSMC is
       --  Write-only. Command mode
       MODE           : SDCMR_MODE_Field := 16#0#;
       --  Write-only. Command target bank 2
-      CTB            : SDCMR_CTB_Field := (As_Array => False, Val => 16#0#);
+      CTB2           : Boolean := False;
+      --  Write-only. Command target bank 1
+      CTB1           : Boolean := False;
       --  Number of Auto-refresh
       NRFS           : SDCMR_NRFS_Field := 16#0#;
       --  Mode Register definition
@@ -516,7 +493,8 @@ package STM32_SVD.FSMC is
 
    for SDCMR_Register use record
       MODE           at 0 range 0 .. 2;
-      CTB            at 0 range 3 .. 4;
+      CTB2           at 0 range 3 .. 3;
+      CTB1           at 0 range 4 .. 4;
       NRFS           at 0 range 5 .. 8;
       MRD            at 0 range 9 .. 21;
       Reserved_22_31 at 0 range 22 .. 31;
@@ -600,73 +578,73 @@ package STM32_SVD.FSMC is
    --  Flexible memory controller
    type FMC_Peripheral is record
       --  SRAM/NOR-Flash chip-select control register 1
-      BCR1  : BCR1_Register;
+      BCR1  : aliased BCR1_Register;
       --  SRAM/NOR-Flash chip-select timing register 1
-      BTR1  : BTR_Register;
+      BTR1  : aliased BTR_Register;
       --  SRAM/NOR-Flash chip-select control register 2
-      BCR2  : BCR_Register;
+      BCR2  : aliased BCR_Register;
       --  SRAM/NOR-Flash chip-select timing register 2
-      BTR2  : BTR_Register;
+      BTR2  : aliased BTR_Register;
       --  SRAM/NOR-Flash chip-select control register 3
-      BCR3  : BCR_Register;
+      BCR3  : aliased BCR_Register;
       --  SRAM/NOR-Flash chip-select timing register 3
-      BTR3  : BTR_Register;
+      BTR3  : aliased BTR_Register;
       --  SRAM/NOR-Flash chip-select control register 4
-      BCR4  : BCR_Register;
+      BCR4  : aliased BCR_Register;
       --  SRAM/NOR-Flash chip-select timing register 4
-      BTR4  : BTR_Register;
+      BTR4  : aliased BTR_Register;
       --  PC Card/NAND Flash control register 2
-      PCR2  : PCR_Register;
+      PCR2  : aliased PCR_Register;
       --  FIFO status and interrupt register 2
-      SR2   : SR_Register;
+      SR2   : aliased SR_Register;
       --  Common memory space timing register 2
-      PMEM2 : PMEM_Register;
+      PMEM2 : aliased PMEM_Register;
       --  Attribute memory space timing register 2
-      PATT2 : PATT_Register;
+      PATT2 : aliased PATT_Register;
       --  ECC result register 2
-      ECCR2 : HAL.UInt32;
+      ECCR2 : aliased HAL.UInt32;
       --  PC Card/NAND Flash control register 3
-      PCR3  : PCR_Register;
+      PCR3  : aliased PCR_Register;
       --  FIFO status and interrupt register 3
-      SR3   : SR_Register;
+      SR3   : aliased SR_Register;
       --  Common memory space timing register 3
-      PMEM3 : PMEM_Register;
+      PMEM3 : aliased PMEM_Register;
       --  Attribute memory space timing register 3
-      PATT3 : PATT_Register;
+      PATT3 : aliased PATT_Register;
       --  ECC result register 3
-      ECCR3 : HAL.UInt32;
+      ECCR3 : aliased HAL.UInt32;
       --  PC Card/NAND Flash control register 4
-      PCR4  : PCR_Register;
+      PCR4  : aliased PCR_Register;
       --  FIFO status and interrupt register 4
-      SR4   : SR_Register;
+      SR4   : aliased SR_Register;
       --  Common memory space timing register 4
-      PMEM4 : PMEM_Register;
+      PMEM4 : aliased PMEM_Register;
       --  Attribute memory space timing register 4
-      PATT4 : PATT_Register;
+      PATT4 : aliased PATT_Register;
       --  I/O space timing register 4
-      PIO4  : PIO4_Register;
+      PIO4  : aliased PIO4_Register;
       --  SRAM/NOR-Flash write timing registers 1
-      BWTR1 : BWTR_Register;
+      BWTR1 : aliased BWTR_Register;
       --  SRAM/NOR-Flash write timing registers 2
-      BWTR2 : BWTR_Register;
+      BWTR2 : aliased BWTR_Register;
       --  SRAM/NOR-Flash write timing registers 3
-      BWTR3 : BWTR_Register;
+      BWTR3 : aliased BWTR_Register;
       --  SRAM/NOR-Flash write timing registers 4
-      BWTR4 : BWTR_Register;
+      BWTR4 : aliased BWTR_Register;
       --  SDRAM Control Register 1
-      SDCR1 : SDCR_Register;
+      SDCR1 : aliased SDCR_Register;
       --  SDRAM Control Register 2
-      SDCR2 : SDCR_Register;
+      SDCR2 : aliased SDCR_Register;
       --  SDRAM Timing register 1
-      SDTR1 : SDTR_Register;
+      SDTR1 : aliased SDTR_Register;
       --  SDRAM Timing register 2
-      SDTR2 : SDTR_Register;
+      SDTR2 : aliased SDTR_Register;
       --  SDRAM Command Mode register
-      SDCMR : SDCMR_Register;
+      SDCMR : aliased SDCMR_Register;
       --  SDRAM Refresh Timer register
-      SDRTR : SDRTR_Register;
+      SDRTR : aliased SDRTR_Register;
       --  SDRAM Status register
-      SDSR  : SDSR_Register;
+      SDSR  : aliased SDSR_Register;
    end record
      with Volatile;
 

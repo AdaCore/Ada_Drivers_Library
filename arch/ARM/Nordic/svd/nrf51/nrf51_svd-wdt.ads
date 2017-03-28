@@ -464,7 +464,8 @@ package NRF51_SVD.WDT is
    --  Reload requests registers.
 
    --  Reload requests registers.
-   type RR_Registers is array (0 .. 7) of HAL.UInt32;
+   type RR_Registers is array (0 .. 7) of HAL.UInt32
+     with Volatile;
 
    --  Peripheral power control.
    type POWER_POWER_Field is
@@ -500,27 +501,27 @@ package NRF51_SVD.WDT is
    --  Watchdog Timer.
    type WDT_Peripheral is record
       --  Start the watchdog.
-      TASKS_START    : HAL.UInt32;
+      TASKS_START    : aliased HAL.UInt32;
       --  Watchdog timeout.
-      EVENTS_TIMEOUT : HAL.UInt32;
+      EVENTS_TIMEOUT : aliased HAL.UInt32;
       --  Interrupt enable set register.
-      INTENSET       : INTENSET_Register;
+      INTENSET       : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR       : INTENCLR_Register;
+      INTENCLR       : aliased INTENCLR_Register;
       --  Watchdog running status.
-      RUNSTATUS      : RUNSTATUS_Register;
+      RUNSTATUS      : aliased RUNSTATUS_Register;
       --  Request status.
-      REQSTATUS      : REQSTATUS_Register;
+      REQSTATUS      : aliased REQSTATUS_Register;
       --  Counter reload value in number of 32kiHz clock cycles.
-      CRV            : HAL.UInt32;
+      CRV            : aliased HAL.UInt32;
       --  Reload request enable.
-      RREN           : RREN_Register;
+      RREN           : aliased RREN_Register;
       --  Configuration register.
-      CONFIG         : CONFIG_Register;
+      CONFIG         : aliased CONFIG_Register;
       --  Reload requests registers.
-      RR             : RR_Registers;
+      RR             : aliased RR_Registers;
       --  Peripheral power control.
-      POWER          : POWER_Register;
+      POWER          : aliased POWER_Register;
    end record
      with Volatile;
 

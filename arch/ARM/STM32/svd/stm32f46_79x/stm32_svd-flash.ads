@@ -218,19 +218,19 @@ package STM32_SVD.FLASH is
    --  FLASH
    type FLASH_Peripheral is record
       --  Flash access control register
-      ACR     : ACR_Register;
+      ACR     : aliased ACR_Register;
       --  Flash key register
-      KEYR    : HAL.UInt32;
+      KEYR    : aliased HAL.UInt32;
       --  Flash option key register
-      OPTKEYR : HAL.UInt32;
+      OPTKEYR : aliased HAL.UInt32;
       --  Status register
-      SR      : SR_Register;
+      SR      : aliased SR_Register;
       --  Control register
-      CR      : CR_Register;
+      CR      : aliased CR_Register;
       --  Flash option control register
-      OPTCR   : OPTCR_Register;
+      OPTCR   : aliased OPTCR_Register;
       --  Flash option control register 1
-      OPTCR1  : OPTCR1_Register;
+      OPTCR1  : aliased OPTCR1_Register;
    end record
      with Volatile;
 

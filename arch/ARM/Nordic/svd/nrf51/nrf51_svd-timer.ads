@@ -46,12 +46,14 @@ package NRF51_SVD.TIMER is
    --  Capture Timer value to CC[n] registers.
 
    --  Capture Timer value to CC[n] registers.
-   type TASKS_CAPTURE_Registers is array (0 .. 3) of HAL.UInt32;
+   type TASKS_CAPTURE_Registers is array (0 .. 3) of HAL.UInt32
+     with Volatile;
 
    --  Compare event on CC[n] match.
 
    --  Compare event on CC[n] match.
-   type EVENTS_COMPARE_Registers is array (0 .. 3) of HAL.UInt32;
+   type EVENTS_COMPARE_Registers is array (0 .. 3) of HAL.UInt32
+     with Volatile;
 
    --  Shortcut between CC[0] event and the CLEAR task.
    type SHORTS_COMPARE0_CLEAR_Field is
@@ -412,7 +414,8 @@ package NRF51_SVD.TIMER is
    --  Capture/compare registers.
 
    --  Capture/compare registers.
-   type CC_Registers is array (0 .. 3) of HAL.UInt32;
+   type CC_Registers is array (0 .. 3) of HAL.UInt32
+     with Volatile;
 
    --  Peripheral power control.
    type POWER_POWER_Field is
@@ -448,36 +451,36 @@ package NRF51_SVD.TIMER is
    --  Timer 0.
    type TIMER_Peripheral is record
       --  Start Timer.
-      TASKS_START    : HAL.UInt32;
+      TASKS_START    : aliased HAL.UInt32;
       --  Stop Timer.
-      TASKS_STOP     : HAL.UInt32;
+      TASKS_STOP     : aliased HAL.UInt32;
       --  Increment Timer (In counter mode).
-      TASKS_COUNT    : HAL.UInt32;
+      TASKS_COUNT    : aliased HAL.UInt32;
       --  Clear timer.
-      TASKS_CLEAR    : HAL.UInt32;
+      TASKS_CLEAR    : aliased HAL.UInt32;
       --  Shutdown timer.
-      TASKS_SHUTDOWN : HAL.UInt32;
+      TASKS_SHUTDOWN : aliased HAL.UInt32;
       --  Capture Timer value to CC[n] registers.
-      TASKS_CAPTURE  : TASKS_CAPTURE_Registers;
+      TASKS_CAPTURE  : aliased TASKS_CAPTURE_Registers;
       --  Compare event on CC[n] match.
-      EVENTS_COMPARE : EVENTS_COMPARE_Registers;
+      EVENTS_COMPARE : aliased EVENTS_COMPARE_Registers;
       --  Shortcuts for Timer.
-      SHORTS         : SHORTS_Register;
+      SHORTS         : aliased SHORTS_Register;
       --  Interrupt enable set register.
-      INTENSET       : INTENSET_Register;
+      INTENSET       : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR       : INTENCLR_Register;
+      INTENCLR       : aliased INTENCLR_Register;
       --  Timer Mode selection.
-      MODE           : MODE_Register;
+      MODE           : aliased MODE_Register;
       --  Sets timer behaviour.
-      BITMODE        : BITMODE_Register;
+      BITMODE        : aliased BITMODE_Register;
       --  4-bit prescaler to source clock frequency (max value 9). Source clock
       --  frequency is divided by 2^SCALE.
-      PRESCALER      : PRESCALER_Register;
+      PRESCALER      : aliased PRESCALER_Register;
       --  Capture/compare registers.
-      CC             : CC_Registers;
+      CC             : aliased CC_Registers;
       --  Peripheral power control.
-      POWER          : POWER_Register;
+      POWER          : aliased POWER_Register;
    end record
      with Volatile;
 

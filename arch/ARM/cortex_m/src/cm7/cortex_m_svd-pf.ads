@@ -222,13 +222,13 @@ package Cortex_M_SVD.PF is
    --  Processor Features
    type PF_Peripheral is record
       --  Cache Level ID Register
-      CLIDR  : CLIDR_Register;
+      CLIDR  : aliased CLIDR_Register;
       --  Cache Type Register
-      CTR    : CTR_Register;
+      CTR    : aliased CTR_Register;
       --  Cache Size ID Register
-      CCSIDR : CCSIDR_Register;
+      CCSIDR : aliased CCSIDR_Register;
       --  Cache Size Selection Register
-      CSSELR : CSSELR_Register;
+      CSSELR : aliased CSSELR_Register;
    end record
      with Volatile;
 

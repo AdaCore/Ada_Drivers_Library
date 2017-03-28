@@ -363,104 +363,424 @@ package STM32_SVD.CRYP is
       Arr at 0 range 0 .. 31;
    end record;
 
-   --  IV0LR_IV array
-   type IV0LR_IV_Field_Array is array (0 .. 31) of Boolean
-     with Component_Size => 1, Size => 32;
-
    --  initialization vector registers
-   type IV0LR_Register
-     (As_Array : Boolean := False)
-   is record
-      case As_Array is
-         when False =>
-            --  IV as a value
-            Val : HAL.UInt32;
-         when True =>
-            --  IV as an array
-            Arr : IV0LR_IV_Field_Array;
-      end case;
+   type IV0LR_Register is record
+      --  IV31
+      IV31 : Boolean := False;
+      --  IV30
+      IV30 : Boolean := False;
+      --  IV29
+      IV29 : Boolean := False;
+      --  IV28
+      IV28 : Boolean := False;
+      --  IV27
+      IV27 : Boolean := False;
+      --  IV26
+      IV26 : Boolean := False;
+      --  IV25
+      IV25 : Boolean := False;
+      --  IV24
+      IV24 : Boolean := False;
+      --  IV23
+      IV23 : Boolean := False;
+      --  IV22
+      IV22 : Boolean := False;
+      --  IV21
+      IV21 : Boolean := False;
+      --  IV20
+      IV20 : Boolean := False;
+      --  IV19
+      IV19 : Boolean := False;
+      --  IV18
+      IV18 : Boolean := False;
+      --  IV17
+      IV17 : Boolean := False;
+      --  IV16
+      IV16 : Boolean := False;
+      --  IV15
+      IV15 : Boolean := False;
+      --  IV14
+      IV14 : Boolean := False;
+      --  IV13
+      IV13 : Boolean := False;
+      --  IV12
+      IV12 : Boolean := False;
+      --  IV11
+      IV11 : Boolean := False;
+      --  IV10
+      IV10 : Boolean := False;
+      --  IV9
+      IV9  : Boolean := False;
+      --  IV8
+      IV8  : Boolean := False;
+      --  IV7
+      IV7  : Boolean := False;
+      --  IV6
+      IV6  : Boolean := False;
+      --  IV5
+      IV5  : Boolean := False;
+      --  IV4
+      IV4  : Boolean := False;
+      --  IV3
+      IV3  : Boolean := False;
+      --  IV2
+      IV2  : Boolean := False;
+      --  IV1
+      IV1  : Boolean := False;
+      --  IV0
+      IV0  : Boolean := False;
    end record
-     with Unchecked_Union, Size => 32, Volatile_Full_Access,
+     with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for IV0LR_Register use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
+      IV31 at 0 range 0 .. 0;
+      IV30 at 0 range 1 .. 1;
+      IV29 at 0 range 2 .. 2;
+      IV28 at 0 range 3 .. 3;
+      IV27 at 0 range 4 .. 4;
+      IV26 at 0 range 5 .. 5;
+      IV25 at 0 range 6 .. 6;
+      IV24 at 0 range 7 .. 7;
+      IV23 at 0 range 8 .. 8;
+      IV22 at 0 range 9 .. 9;
+      IV21 at 0 range 10 .. 10;
+      IV20 at 0 range 11 .. 11;
+      IV19 at 0 range 12 .. 12;
+      IV18 at 0 range 13 .. 13;
+      IV17 at 0 range 14 .. 14;
+      IV16 at 0 range 15 .. 15;
+      IV15 at 0 range 16 .. 16;
+      IV14 at 0 range 17 .. 17;
+      IV13 at 0 range 18 .. 18;
+      IV12 at 0 range 19 .. 19;
+      IV11 at 0 range 20 .. 20;
+      IV10 at 0 range 21 .. 21;
+      IV9  at 0 range 22 .. 22;
+      IV8  at 0 range 23 .. 23;
+      IV7  at 0 range 24 .. 24;
+      IV6  at 0 range 25 .. 25;
+      IV5  at 0 range 26 .. 26;
+      IV4  at 0 range 27 .. 27;
+      IV3  at 0 range 28 .. 28;
+      IV2  at 0 range 29 .. 29;
+      IV1  at 0 range 30 .. 30;
+      IV0  at 0 range 31 .. 31;
    end record;
 
-   --  IV0RR_IV array
-   type IV0RR_IV_Field_Array is array (32 .. 63) of Boolean
-     with Component_Size => 1, Size => 32;
-
    --  initialization vector registers
-   type IV0RR_Register
-     (As_Array : Boolean := False)
-   is record
-      case As_Array is
-         when False =>
-            --  IV as a value
-            Val : HAL.UInt32;
-         when True =>
-            --  IV as an array
-            Arr : IV0RR_IV_Field_Array;
-      end case;
+   type IV0RR_Register is record
+      --  IV63
+      IV63 : Boolean := False;
+      --  IV62
+      IV62 : Boolean := False;
+      --  IV61
+      IV61 : Boolean := False;
+      --  IV60
+      IV60 : Boolean := False;
+      --  IV59
+      IV59 : Boolean := False;
+      --  IV58
+      IV58 : Boolean := False;
+      --  IV57
+      IV57 : Boolean := False;
+      --  IV56
+      IV56 : Boolean := False;
+      --  IV55
+      IV55 : Boolean := False;
+      --  IV54
+      IV54 : Boolean := False;
+      --  IV53
+      IV53 : Boolean := False;
+      --  IV52
+      IV52 : Boolean := False;
+      --  IV51
+      IV51 : Boolean := False;
+      --  IV50
+      IV50 : Boolean := False;
+      --  IV49
+      IV49 : Boolean := False;
+      --  IV48
+      IV48 : Boolean := False;
+      --  IV47
+      IV47 : Boolean := False;
+      --  IV46
+      IV46 : Boolean := False;
+      --  IV45
+      IV45 : Boolean := False;
+      --  IV44
+      IV44 : Boolean := False;
+      --  IV43
+      IV43 : Boolean := False;
+      --  IV42
+      IV42 : Boolean := False;
+      --  IV41
+      IV41 : Boolean := False;
+      --  IV40
+      IV40 : Boolean := False;
+      --  IV39
+      IV39 : Boolean := False;
+      --  IV38
+      IV38 : Boolean := False;
+      --  IV37
+      IV37 : Boolean := False;
+      --  IV36
+      IV36 : Boolean := False;
+      --  IV35
+      IV35 : Boolean := False;
+      --  IV34
+      IV34 : Boolean := False;
+      --  IV33
+      IV33 : Boolean := False;
+      --  IV32
+      IV32 : Boolean := False;
    end record
-     with Unchecked_Union, Size => 32, Volatile_Full_Access,
+     with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for IV0RR_Register use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
+      IV63 at 0 range 0 .. 0;
+      IV62 at 0 range 1 .. 1;
+      IV61 at 0 range 2 .. 2;
+      IV60 at 0 range 3 .. 3;
+      IV59 at 0 range 4 .. 4;
+      IV58 at 0 range 5 .. 5;
+      IV57 at 0 range 6 .. 6;
+      IV56 at 0 range 7 .. 7;
+      IV55 at 0 range 8 .. 8;
+      IV54 at 0 range 9 .. 9;
+      IV53 at 0 range 10 .. 10;
+      IV52 at 0 range 11 .. 11;
+      IV51 at 0 range 12 .. 12;
+      IV50 at 0 range 13 .. 13;
+      IV49 at 0 range 14 .. 14;
+      IV48 at 0 range 15 .. 15;
+      IV47 at 0 range 16 .. 16;
+      IV46 at 0 range 17 .. 17;
+      IV45 at 0 range 18 .. 18;
+      IV44 at 0 range 19 .. 19;
+      IV43 at 0 range 20 .. 20;
+      IV42 at 0 range 21 .. 21;
+      IV41 at 0 range 22 .. 22;
+      IV40 at 0 range 23 .. 23;
+      IV39 at 0 range 24 .. 24;
+      IV38 at 0 range 25 .. 25;
+      IV37 at 0 range 26 .. 26;
+      IV36 at 0 range 27 .. 27;
+      IV35 at 0 range 28 .. 28;
+      IV34 at 0 range 29 .. 29;
+      IV33 at 0 range 30 .. 30;
+      IV32 at 0 range 31 .. 31;
    end record;
 
-   --  IV1LR_IV array
-   type IV1LR_IV_Field_Array is array (64 .. 95) of Boolean
-     with Component_Size => 1, Size => 32;
-
    --  initialization vector registers
-   type IV1LR_Register
-     (As_Array : Boolean := False)
-   is record
-      case As_Array is
-         when False =>
-            --  IV as a value
-            Val : HAL.UInt32;
-         when True =>
-            --  IV as an array
-            Arr : IV1LR_IV_Field_Array;
-      end case;
+   type IV1LR_Register is record
+      --  IV95
+      IV95 : Boolean := False;
+      --  IV94
+      IV94 : Boolean := False;
+      --  IV93
+      IV93 : Boolean := False;
+      --  IV92
+      IV92 : Boolean := False;
+      --  IV91
+      IV91 : Boolean := False;
+      --  IV90
+      IV90 : Boolean := False;
+      --  IV89
+      IV89 : Boolean := False;
+      --  IV88
+      IV88 : Boolean := False;
+      --  IV87
+      IV87 : Boolean := False;
+      --  IV86
+      IV86 : Boolean := False;
+      --  IV85
+      IV85 : Boolean := False;
+      --  IV84
+      IV84 : Boolean := False;
+      --  IV83
+      IV83 : Boolean := False;
+      --  IV82
+      IV82 : Boolean := False;
+      --  IV81
+      IV81 : Boolean := False;
+      --  IV80
+      IV80 : Boolean := False;
+      --  IV79
+      IV79 : Boolean := False;
+      --  IV78
+      IV78 : Boolean := False;
+      --  IV77
+      IV77 : Boolean := False;
+      --  IV76
+      IV76 : Boolean := False;
+      --  IV75
+      IV75 : Boolean := False;
+      --  IV74
+      IV74 : Boolean := False;
+      --  IV73
+      IV73 : Boolean := False;
+      --  IV72
+      IV72 : Boolean := False;
+      --  IV71
+      IV71 : Boolean := False;
+      --  IV70
+      IV70 : Boolean := False;
+      --  IV69
+      IV69 : Boolean := False;
+      --  IV68
+      IV68 : Boolean := False;
+      --  IV67
+      IV67 : Boolean := False;
+      --  IV66
+      IV66 : Boolean := False;
+      --  IV65
+      IV65 : Boolean := False;
+      --  IV64
+      IV64 : Boolean := False;
    end record
-     with Unchecked_Union, Size => 32, Volatile_Full_Access,
+     with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for IV1LR_Register use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
+      IV95 at 0 range 0 .. 0;
+      IV94 at 0 range 1 .. 1;
+      IV93 at 0 range 2 .. 2;
+      IV92 at 0 range 3 .. 3;
+      IV91 at 0 range 4 .. 4;
+      IV90 at 0 range 5 .. 5;
+      IV89 at 0 range 6 .. 6;
+      IV88 at 0 range 7 .. 7;
+      IV87 at 0 range 8 .. 8;
+      IV86 at 0 range 9 .. 9;
+      IV85 at 0 range 10 .. 10;
+      IV84 at 0 range 11 .. 11;
+      IV83 at 0 range 12 .. 12;
+      IV82 at 0 range 13 .. 13;
+      IV81 at 0 range 14 .. 14;
+      IV80 at 0 range 15 .. 15;
+      IV79 at 0 range 16 .. 16;
+      IV78 at 0 range 17 .. 17;
+      IV77 at 0 range 18 .. 18;
+      IV76 at 0 range 19 .. 19;
+      IV75 at 0 range 20 .. 20;
+      IV74 at 0 range 21 .. 21;
+      IV73 at 0 range 22 .. 22;
+      IV72 at 0 range 23 .. 23;
+      IV71 at 0 range 24 .. 24;
+      IV70 at 0 range 25 .. 25;
+      IV69 at 0 range 26 .. 26;
+      IV68 at 0 range 27 .. 27;
+      IV67 at 0 range 28 .. 28;
+      IV66 at 0 range 29 .. 29;
+      IV65 at 0 range 30 .. 30;
+      IV64 at 0 range 31 .. 31;
    end record;
 
-   --  IV1RR_IV array
-   type IV1RR_IV_Field_Array is array (96 .. 127) of Boolean
-     with Component_Size => 1, Size => 32;
-
    --  initialization vector registers
-   type IV1RR_Register
-     (As_Array : Boolean := False)
-   is record
-      case As_Array is
-         when False =>
-            --  IV as a value
-            Val : HAL.UInt32;
-         when True =>
-            --  IV as an array
-            Arr : IV1RR_IV_Field_Array;
-      end case;
+   type IV1RR_Register is record
+      --  IV127
+      IV127 : Boolean := False;
+      --  IV126
+      IV126 : Boolean := False;
+      --  IV125
+      IV125 : Boolean := False;
+      --  IV124
+      IV124 : Boolean := False;
+      --  IV123
+      IV123 : Boolean := False;
+      --  IV122
+      IV122 : Boolean := False;
+      --  IV121
+      IV121 : Boolean := False;
+      --  IV120
+      IV120 : Boolean := False;
+      --  IV119
+      IV119 : Boolean := False;
+      --  IV118
+      IV118 : Boolean := False;
+      --  IV117
+      IV117 : Boolean := False;
+      --  IV116
+      IV116 : Boolean := False;
+      --  IV115
+      IV115 : Boolean := False;
+      --  IV114
+      IV114 : Boolean := False;
+      --  IV113
+      IV113 : Boolean := False;
+      --  IV112
+      IV112 : Boolean := False;
+      --  IV111
+      IV111 : Boolean := False;
+      --  IV110
+      IV110 : Boolean := False;
+      --  IV109
+      IV109 : Boolean := False;
+      --  IV108
+      IV108 : Boolean := False;
+      --  IV107
+      IV107 : Boolean := False;
+      --  IV106
+      IV106 : Boolean := False;
+      --  IV105
+      IV105 : Boolean := False;
+      --  IV104
+      IV104 : Boolean := False;
+      --  IV103
+      IV103 : Boolean := False;
+      --  IV102
+      IV102 : Boolean := False;
+      --  IV101
+      IV101 : Boolean := False;
+      --  IV100
+      IV100 : Boolean := False;
+      --  IV99
+      IV99  : Boolean := False;
+      --  IV98
+      IV98  : Boolean := False;
+      --  IV97
+      IV97  : Boolean := False;
+      --  IV96
+      IV96  : Boolean := False;
    end record
-     with Unchecked_Union, Size => 32, Volatile_Full_Access,
+     with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for IV1RR_Register use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
+      IV127 at 0 range 0 .. 0;
+      IV126 at 0 range 1 .. 1;
+      IV125 at 0 range 2 .. 2;
+      IV124 at 0 range 3 .. 3;
+      IV123 at 0 range 4 .. 4;
+      IV122 at 0 range 5 .. 5;
+      IV121 at 0 range 6 .. 6;
+      IV120 at 0 range 7 .. 7;
+      IV119 at 0 range 8 .. 8;
+      IV118 at 0 range 9 .. 9;
+      IV117 at 0 range 10 .. 10;
+      IV116 at 0 range 11 .. 11;
+      IV115 at 0 range 12 .. 12;
+      IV114 at 0 range 13 .. 13;
+      IV113 at 0 range 14 .. 14;
+      IV112 at 0 range 15 .. 15;
+      IV111 at 0 range 16 .. 16;
+      IV110 at 0 range 17 .. 17;
+      IV109 at 0 range 18 .. 18;
+      IV108 at 0 range 19 .. 19;
+      IV107 at 0 range 20 .. 20;
+      IV106 at 0 range 21 .. 21;
+      IV105 at 0 range 22 .. 22;
+      IV104 at 0 range 23 .. 23;
+      IV103 at 0 range 24 .. 24;
+      IV102 at 0 range 25 .. 25;
+      IV101 at 0 range 26 .. 26;
+      IV100 at 0 range 27 .. 27;
+      IV99  at 0 range 28 .. 28;
+      IV98  at 0 range 29 .. 29;
+      IV97  at 0 range 30 .. 30;
+      IV96  at 0 range 31 .. 31;
    end record;
 
    -----------------
@@ -470,77 +790,77 @@ package STM32_SVD.CRYP is
    --  Cryptographic processor
    type CRYP_Peripheral is record
       --  control register
-      CR         : CR_Register;
+      CR         : aliased CR_Register;
       --  status register
-      SR         : SR_Register;
+      SR         : aliased SR_Register;
       --  data input register
-      DIN        : HAL.UInt32;
+      DIN        : aliased HAL.UInt32;
       --  data output register
-      DOUT       : HAL.UInt32;
+      DOUT       : aliased HAL.UInt32;
       --  DMA control register
-      DMACR      : DMACR_Register;
+      DMACR      : aliased DMACR_Register;
       --  interrupt mask set/clear register
-      IMSCR      : IMSCR_Register;
+      IMSCR      : aliased IMSCR_Register;
       --  raw interrupt status register
-      RISR       : RISR_Register;
+      RISR       : aliased RISR_Register;
       --  masked interrupt status register
-      MISR       : MISR_Register;
+      MISR       : aliased MISR_Register;
       --  key registers
-      K0LR       : K0LR_Register;
+      K0LR       : aliased K0LR_Register;
       --  key registers
-      K0RR       : K0RR_Register;
+      K0RR       : aliased K0RR_Register;
       --  key registers
-      K1LR       : K1LR_Register;
+      K1LR       : aliased K1LR_Register;
       --  key registers
-      K1RR       : K1RR_Register;
+      K1RR       : aliased K1RR_Register;
       --  key registers
-      K2LR       : K2LR_Register;
+      K2LR       : aliased K2LR_Register;
       --  key registers
-      K2RR       : K2RR_Register;
+      K2RR       : aliased K2RR_Register;
       --  key registers
-      K3LR       : K3LR_Register;
+      K3LR       : aliased K3LR_Register;
       --  key registers
-      K3RR       : K3RR_Register;
+      K3RR       : aliased K3RR_Register;
       --  initialization vector registers
-      IV0LR      : IV0LR_Register;
+      IV0LR      : aliased IV0LR_Register;
       --  initialization vector registers
-      IV0RR      : IV0RR_Register;
+      IV0RR      : aliased IV0RR_Register;
       --  initialization vector registers
-      IV1LR      : IV1LR_Register;
+      IV1LR      : aliased IV1LR_Register;
       --  initialization vector registers
-      IV1RR      : IV1RR_Register;
+      IV1RR      : aliased IV1RR_Register;
       --  context swap register
-      CSGCMCCM0R : HAL.UInt32;
+      CSGCMCCM0R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM1R : HAL.UInt32;
+      CSGCMCCM1R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM2R : HAL.UInt32;
+      CSGCMCCM2R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM3R : HAL.UInt32;
+      CSGCMCCM3R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM4R : HAL.UInt32;
+      CSGCMCCM4R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM5R : HAL.UInt32;
+      CSGCMCCM5R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM6R : HAL.UInt32;
+      CSGCMCCM6R : aliased HAL.UInt32;
       --  context swap register
-      CSGCMCCM7R : HAL.UInt32;
+      CSGCMCCM7R : aliased HAL.UInt32;
       --  context swap register
-      CSGCM0R    : HAL.UInt32;
+      CSGCM0R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM1R    : HAL.UInt32;
+      CSGCM1R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM2R    : HAL.UInt32;
+      CSGCM2R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM3R    : HAL.UInt32;
+      CSGCM3R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM4R    : HAL.UInt32;
+      CSGCM4R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM5R    : HAL.UInt32;
+      CSGCM5R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM6R    : HAL.UInt32;
+      CSGCM6R    : aliased HAL.UInt32;
       --  context swap register
-      CSGCM7R    : HAL.UInt32;
+      CSGCM7R    : aliased HAL.UInt32;
    end record
      with Volatile;
 

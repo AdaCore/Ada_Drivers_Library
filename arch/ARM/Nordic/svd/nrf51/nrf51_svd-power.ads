@@ -676,37 +676,37 @@ package NRF51_SVD.POWER is
    --  Power Control.
    type POWER_Peripheral is record
       --  Enable constant latency mode.
-      TASKS_CONSTLAT : HAL.UInt32;
+      TASKS_CONSTLAT : aliased HAL.UInt32;
       --  Enable low power mode (variable latency).
-      TASKS_LOWPWR   : HAL.UInt32;
+      TASKS_LOWPWR   : aliased HAL.UInt32;
       --  Power failure warning.
-      EVENTS_POFWARN : HAL.UInt32;
+      EVENTS_POFWARN : aliased HAL.UInt32;
       --  Interrupt enable set register.
-      INTENSET       : INTENSET_Register;
+      INTENSET       : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR       : INTENCLR_Register;
+      INTENCLR       : aliased INTENCLR_Register;
       --  Reset reason.
-      RESETREAS      : RESETREAS_Register;
+      RESETREAS      : aliased RESETREAS_Register;
       --  Ram status register.
-      RAMSTATUS      : RAMSTATUS_Register;
+      RAMSTATUS      : aliased RAMSTATUS_Register;
       --  System off register.
-      SYSTEMOFF      : SYSTEMOFF_Register;
+      SYSTEMOFF      : aliased SYSTEMOFF_Register;
       --  Power failure configuration.
-      POFCON         : POFCON_Register;
+      POFCON         : aliased POFCON_Register;
       --  General purpose retention register. This register is a retained
       --  register.
-      GPREGRET       : GPREGRET_Register;
+      GPREGRET       : aliased GPREGRET_Register;
       --  Ram on/off.
-      RAMON          : RAMON_Register;
+      RAMON          : aliased RAMON_Register;
       --  Pin reset functionality configuration register. This register is a
       --  retained register.
-      RESET          : RESET_Register;
+      RESET          : aliased RESET_Register;
       --  Ram on/off.
-      RAMONB         : RAMONB_Register;
+      RAMONB         : aliased RAMONB_Register;
       --  DCDC converter enable configuration register.
-      DCDCEN         : DCDCEN_Register;
+      DCDCEN         : aliased DCDCEN_Register;
       --  DCDC power-up force register.
-      DCDCFORCE      : DCDCFORCE_Register;
+      DCDCFORCE      : aliased DCDCFORCE_Register;
    end record
      with Volatile;
 

@@ -556,48 +556,48 @@ package NRF51_SVD.CLOCK is
    --  Clock control.
    type CLOCK_Peripheral is record
       --  Start HFCLK clock source.
-      TASKS_HFCLKSTART    : HAL.UInt32;
+      TASKS_HFCLKSTART    : aliased HAL.UInt32;
       --  Stop HFCLK clock source.
-      TASKS_HFCLKSTOP     : HAL.UInt32;
+      TASKS_HFCLKSTOP     : aliased HAL.UInt32;
       --  Start LFCLK clock source.
-      TASKS_LFCLKSTART    : HAL.UInt32;
+      TASKS_LFCLKSTART    : aliased HAL.UInt32;
       --  Stop LFCLK clock source.
-      TASKS_LFCLKSTOP     : HAL.UInt32;
+      TASKS_LFCLKSTOP     : aliased HAL.UInt32;
       --  Start calibration of LFCLK RC oscillator.
-      TASKS_CAL           : HAL.UInt32;
+      TASKS_CAL           : aliased HAL.UInt32;
       --  Start calibration timer.
-      TASKS_CTSTART       : HAL.UInt32;
+      TASKS_CTSTART       : aliased HAL.UInt32;
       --  Stop calibration timer.
-      TASKS_CTSTOP        : HAL.UInt32;
+      TASKS_CTSTOP        : aliased HAL.UInt32;
       --  HFCLK oscillator started.
-      EVENTS_HFCLKSTARTED : HAL.UInt32;
+      EVENTS_HFCLKSTARTED : aliased HAL.UInt32;
       --  LFCLK oscillator started.
-      EVENTS_LFCLKSTARTED : HAL.UInt32;
+      EVENTS_LFCLKSTARTED : aliased HAL.UInt32;
       --  Calibration of LFCLK RC oscillator completed.
-      EVENTS_DONE         : HAL.UInt32;
+      EVENTS_DONE         : aliased HAL.UInt32;
       --  Calibration timer timeout.
-      EVENTS_CTTO         : HAL.UInt32;
+      EVENTS_CTTO         : aliased HAL.UInt32;
       --  Interrupt enable set register.
-      INTENSET            : INTENSET_Register;
+      INTENSET            : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR            : INTENCLR_Register;
+      INTENCLR            : aliased INTENCLR_Register;
       --  Task HFCLKSTART trigger status.
-      HFCLKRUN            : HFCLKRUN_Register;
+      HFCLKRUN            : aliased HFCLKRUN_Register;
       --  High frequency clock status.
-      HFCLKSTAT           : HFCLKSTAT_Register;
+      HFCLKSTAT           : aliased HFCLKSTAT_Register;
       --  Task LFCLKSTART triggered status.
-      LFCLKRUN            : LFCLKRUN_Register;
+      LFCLKRUN            : aliased LFCLKRUN_Register;
       --  Low frequency clock status.
-      LFCLKSTAT           : LFCLKSTAT_Register;
+      LFCLKSTAT           : aliased LFCLKSTAT_Register;
       --  Clock source for the LFCLK clock, set when task LKCLKSTART is
       --  triggered.
-      LFCLKSRCCOPY        : LFCLKSRCCOPY_Register;
+      LFCLKSRCCOPY        : aliased LFCLKSRCCOPY_Register;
       --  Clock source for the LFCLK clock.
-      LFCLKSRC            : LFCLKSRC_Register;
+      LFCLKSRC            : aliased LFCLKSRC_Register;
       --  Calibration timer interval.
-      CTIV                : CTIV_Register;
+      CTIV                : aliased CTIV_Register;
       --  Crystal frequency.
-      XTALFREQ            : XTALFREQ_Register;
+      XTALFREQ            : aliased XTALFREQ_Register;
    end record
      with Volatile;
 

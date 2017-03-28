@@ -377,41 +377,41 @@ package NRF51_SVD.CCM is
    type CCM_Peripheral is record
       --  Start generation of key-stream. This operation will stop by itself
       --  when completed.
-      TASKS_KSGEN     : HAL.UInt32;
+      TASKS_KSGEN     : aliased HAL.UInt32;
       --  Start encrypt/decrypt. This operation will stop by itself when
       --  completed.
-      TASKS_CRYPT     : HAL.UInt32;
+      TASKS_CRYPT     : aliased HAL.UInt32;
       --  Stop encrypt/decrypt.
-      TASKS_STOP      : HAL.UInt32;
+      TASKS_STOP      : aliased HAL.UInt32;
       --  Keystream generation completed.
-      EVENTS_ENDKSGEN : HAL.UInt32;
+      EVENTS_ENDKSGEN : aliased HAL.UInt32;
       --  Encrypt/decrypt completed.
-      EVENTS_ENDCRYPT : HAL.UInt32;
+      EVENTS_ENDCRYPT : aliased HAL.UInt32;
       --  Error happened.
-      EVENTS_ERROR    : HAL.UInt32;
+      EVENTS_ERROR    : aliased HAL.UInt32;
       --  Shortcuts for the CCM.
-      SHORTS          : SHORTS_Register;
+      SHORTS          : aliased SHORTS_Register;
       --  Interrupt enable set register.
-      INTENSET        : INTENSET_Register;
+      INTENSET        : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR        : INTENCLR_Register;
+      INTENCLR        : aliased INTENCLR_Register;
       --  CCM RX MIC check result.
-      MICSTATUS       : MICSTATUS_Register;
+      MICSTATUS       : aliased MICSTATUS_Register;
       --  CCM enable.
-      ENABLE          : ENABLE_Register;
+      ENABLE          : aliased ENABLE_Register;
       --  Operation mode.
-      MODE            : MODE_Register;
+      MODE            : aliased MODE_Register;
       --  Pointer to a data structure holding AES key and NONCE vector.
-      CNFPTR          : HAL.UInt32;
+      CNFPTR          : aliased HAL.UInt32;
       --  Pointer to the input packet.
-      INPTR           : HAL.UInt32;
+      INPTR           : aliased HAL.UInt32;
       --  Pointer to the output packet.
-      OUTPTR          : HAL.UInt32;
+      OUTPTR          : aliased HAL.UInt32;
       --  Pointer to a "scratch" data area used for temporary storage during
       --  resolution. A minimum of 43 bytes must be reserved.
-      SCRATCHPTR      : HAL.UInt32;
+      SCRATCHPTR      : aliased HAL.UInt32;
       --  Peripheral power control.
-      POWER           : POWER_Register;
+      POWER           : aliased POWER_Register;
    end record
      with Volatile;
 

@@ -345,11 +345,11 @@ package NRF51_SVD.SPIM is
    --  Pin select configuration.
    type SPIM_PSEL_Cluster is record
       --  Pin select for SCK.
-      SCK  : HAL.UInt32;
+      SCK  : aliased HAL.UInt32;
       --  Pin select for MOSI.
-      MOSI : HAL.UInt32;
+      MOSI : aliased HAL.UInt32;
       --  Pin select for MISO.
-      MISO : HAL.UInt32;
+      MISO : aliased HAL.UInt32;
    end record
      with Volatile, Size => 96;
 
@@ -400,11 +400,11 @@ package NRF51_SVD.SPIM is
    --  RXD EasyDMA configuration and status.
    type SPIM_RXD_Cluster is record
       --  Data pointer.
-      PTR    : HAL.UInt32;
+      PTR    : aliased HAL.UInt32;
       --  Maximum number of buffer bytes to receive.
-      MAXCNT : MAXCNT_RXD_Register;
+      MAXCNT : aliased MAXCNT_RXD_Register;
       --  Number of bytes received in the last transaction.
-      AMOUNT : AMOUNT_RXD_Register;
+      AMOUNT : aliased AMOUNT_RXD_Register;
    end record
      with Volatile, Size => 96;
 
@@ -455,11 +455,11 @@ package NRF51_SVD.SPIM is
    --  TXD EasyDMA configuration and status.
    type SPIM_TXD_Cluster is record
       --  Data pointer.
-      PTR    : HAL.UInt32;
+      PTR    : aliased HAL.UInt32;
       --  Maximum number of buffer bytes to send.
-      MAXCNT : MAXCNT_TXD_Register;
+      MAXCNT : aliased MAXCNT_TXD_Register;
       --  Number of bytes sent in the last transaction.
-      AMOUNT : AMOUNT_TXD_Register;
+      AMOUNT : aliased AMOUNT_TXD_Register;
    end record
      with Volatile, Size => 96;
 
@@ -579,41 +579,41 @@ package NRF51_SVD.SPIM is
    --  SPI master with easyDMA 1.
    type SPIM_Peripheral is record
       --  Start SPI transaction.
-      TASKS_START    : HAL.UInt32;
+      TASKS_START    : aliased HAL.UInt32;
       --  Stop SPI transaction.
-      TASKS_STOP     : HAL.UInt32;
+      TASKS_STOP     : aliased HAL.UInt32;
       --  Suspend SPI transaction.
-      TASKS_SUSPEND  : HAL.UInt32;
+      TASKS_SUSPEND  : aliased HAL.UInt32;
       --  Resume SPI transaction.
-      TASKS_RESUME   : HAL.UInt32;
+      TASKS_RESUME   : aliased HAL.UInt32;
       --  SPI transaction has stopped.
-      EVENTS_STOPPED : HAL.UInt32;
+      EVENTS_STOPPED : aliased HAL.UInt32;
       --  End of RXD buffer reached.
-      EVENTS_ENDRX   : HAL.UInt32;
+      EVENTS_ENDRX   : aliased HAL.UInt32;
       --  End of TXD buffer reached.
-      EVENTS_ENDTX   : HAL.UInt32;
+      EVENTS_ENDTX   : aliased HAL.UInt32;
       --  Transaction started.
-      EVENTS_STARTED : HAL.UInt32;
+      EVENTS_STARTED : aliased HAL.UInt32;
       --  Interrupt enable set register.
-      INTENSET       : INTENSET_Register;
+      INTENSET       : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR       : INTENCLR_Register;
+      INTENCLR       : aliased INTENCLR_Register;
       --  Enable SPIM.
-      ENABLE         : ENABLE_Register;
+      ENABLE         : aliased ENABLE_Register;
       --  Pin select configuration.
-      PSEL           : SPIM_PSEL_Cluster;
+      PSEL           : aliased SPIM_PSEL_Cluster;
       --  SPI frequency.
-      FREQUENCY      : HAL.UInt32;
+      FREQUENCY      : aliased HAL.UInt32;
       --  RXD EasyDMA configuration and status.
-      RXD            : SPIM_RXD_Cluster;
+      RXD            : aliased SPIM_RXD_Cluster;
       --  TXD EasyDMA configuration and status.
-      TXD            : SPIM_TXD_Cluster;
+      TXD            : aliased SPIM_TXD_Cluster;
       --  Configuration register.
-      CONFIG         : CONFIG_Register;
+      CONFIG         : aliased CONFIG_Register;
       --  Over-read character.
-      ORC            : ORC_Register;
+      ORC            : aliased ORC_Register;
       --  Peripheral power control.
-      POWER          : POWER_Register;
+      POWER          : aliased POWER_Register;
    end record
      with Volatile;
 

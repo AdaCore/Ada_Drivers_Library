@@ -380,17 +380,17 @@ package NRF51_SVD.AMLI is
    --  RAM configurable priority configuration structure.
    type AMLI_RAMPRI_Cluster is record
       --  Configurable priority configuration register for CPU0.
-      CPU0  : CPU0_RAMPRI_Register;
+      CPU0  : aliased CPU0_RAMPRI_Register;
       --  Configurable priority configuration register for SPIS1.
-      SPIS1 : SPIS1_RAMPRI_Register;
+      SPIS1 : aliased SPIS1_RAMPRI_Register;
       --  Configurable priority configuration register for RADIO.
-      RADIO : RADIO_RAMPRI_Register;
+      RADIO : aliased RADIO_RAMPRI_Register;
       --  Configurable priority configuration register for ECB.
-      ECB   : ECB_RAMPRI_Register;
+      ECB   : aliased ECB_RAMPRI_Register;
       --  Configurable priority configuration register for CCM.
-      CCM   : CCM_RAMPRI_Register;
+      CCM   : aliased CCM_RAMPRI_Register;
       --  Configurable priority configuration register for AAR.
-      AAR   : AAR_RAMPRI_Register;
+      AAR   : aliased AAR_RAMPRI_Register;
    end record
      with Volatile, Size => 192;
 
@@ -410,7 +410,7 @@ package NRF51_SVD.AMLI is
    --  AHB Multi-Layer Interface.
    type AMLI_Peripheral is record
       --  RAM configurable priority configuration structure.
-      RAMPRI : AMLI_RAMPRI_Cluster;
+      RAMPRI : aliased AMLI_RAMPRI_Cluster;
    end record
      with Volatile;
 
