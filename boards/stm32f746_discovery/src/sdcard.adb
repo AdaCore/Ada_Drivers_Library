@@ -28,11 +28,15 @@
 --   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
 --  This file is based on:                                                  --
---   @file    stm32f746g_discovery_sd.c                                     --
+--   @file    stm32f769i_discovery_sd.c                                     --
 --   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time;           use Ada.Real_Time;
+
+with HAL.SDMMC;               use HAL.SDMMC;
+
+with STM32_SVD.RCC;           use STM32_SVD.RCC;
 
 with STM32.Device;            use STM32.Device;
 with STM32.DMA;               use STM32.DMA;
@@ -42,14 +46,14 @@ with Cortex_M.Cache;
 
 package body SDCard is
 
-   SD_Detect_Pin     : constant STM32.GPIO.GPIO_Point :=
-                         PC13;
+   SD_Detect_Pin     : STM32.GPIO.GPIO_Point renames PC13;
+
    SD_DMA            : DMA_Controller renames DMA_2;
    SD_DMA_Rx_Stream  : DMA_Stream_Selector renames Stream_3;
    SD_DMA_Rx_Channel : DMA_Channel_Selector renames Channel_4;
    SD_DMA_Tx_Stream  : DMA_Stream_Selector renames Stream_6;
    SD_DMA_Tx_Channel : DMA_Channel_Selector renames Channel_4;
-   SD_Pins           : constant STM32.GPIO.GPIO_Points :=
+   SD_Pins           : constant GPIO_Points :=
                          (PC8, PC9, PC10, PC11, PC12, PD2);
 
    procedure Ensure_Card_Informations
@@ -113,7 +117,10 @@ package body SDCard is
    procedure Initialize
      (Controller : in out SDCard_Controller)
    is
+
    begin
+      RCC_Periph.DKCFGR2.SDMMCSEL := True; --  SDMMC uses the SYSCLK
+
       --  Enable the SDIO clock
       Enable_Clock (SDMMC_Controller (Controller.Device.all));
       Reset (SDMMC_Controller (Controller.Device.all));
@@ -216,8 +223,13 @@ package body SDCard is
          return;
       end if;
 
+      Enable_Clock (SDMMC_Controller (Controller.Device.all));
+      Reset (SDMMC_Controller (Controller.Device.all));
+
       Ret := STM32.SDMMC.Initialize
-        (Controller.Device.all, Controller.Info);
+        (Controller.Device.all,
+         System_Clock_Frequencies.SYSCLK,
+         Controller.Info);
 
       if Ret = OK then
          Controller.Has_Info := True;
@@ -232,15 +244,10 @@ package body SDCard is
 
    function Get_Card_Information
      (Controller : in out SDCard_Controller)
-      return STM32.SDMMC.Card_Information
+      return Card_Information
    is
    begin
       Ensure_Card_Informations (Controller);
-
-      if not Controller.Has_Info then
-         --  Issue reading the SD-card information
-         Ensure_Card_Informations (Controller);
-      end if;
 
       if not Controller.Has_Info then
          raise Device_Error;
@@ -255,7 +262,7 @@ package body SDCard is
 
    function Block_Size
      (Controller : in out SDCard_Controller)
-      return Unsigned_32
+      return UInt32
    is
    begin
       Ensure_Card_Informations (Controller);
@@ -458,6 +465,7 @@ package body SDCard is
          elsif Get_Flag (Device.all, TX_Underrun) then
             Clear_Flag (Device.all, TX_Underrun);
             SD_Status := Tx_Underrun;
+
          end if;
 
          for Int in SDMMC_Interrupts loop
@@ -473,7 +481,7 @@ package body SDCard is
 
    overriding function Write
      (Controller   : in out SDCard_Controller;
-      Block_Number : UInt32;
+      Block_Number : UInt64;
       Data         : Block) return Boolean
    is
       Ret     : SD_Error;
@@ -492,8 +500,7 @@ package body SDCard is
       Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
       Ret := Write_Blocks_DMA
         (Controller.Device.all,
-         Unsigned_64 (Block_Number) *
-             Unsigned_64 (Controller.Info.Card_Block_Size),
+         Block_Number * UInt64 (Controller.Info.Card_Block_Size),
          SD_DMA,
          SD_DMA_Tx_Stream,
          SD_Data (Data));
@@ -539,7 +546,7 @@ package body SDCard is
 
    overriding function Read
      (Controller   : in out SDCard_Controller;
-      Block_Number : UInt32;
+      Block_Number : UInt64;
       Data         : out Block) return Boolean
    is
       Ret     : Boolean;
@@ -552,13 +559,12 @@ package body SDCard is
       SDMMC_Interrupt_Handler.Set_Transfer_State (Controller);
 
       Cortex_M.Cache.Clean_DCache
-        (Start => Data'Address,
+        (Start => Data (Data'First)'Address,
          Len   => Data'Length);
 
       SD_Err := Read_Blocks_DMA
         (Controller.Device.all,
-         Unsigned_64 (Block_Number) *
-             Unsigned_64 (Controller.Info.Card_Block_Size),
+         Block_Number * UInt64 (Controller.Info.Card_Block_Size),
          SD_DMA,
          SD_DMA_Rx_Stream,
          SD_Data (Data));
@@ -572,7 +578,12 @@ package body SDCard is
       end if;
 
       SDMMC_Interrupt_Handler.Wait_Transfer (SD_Err);
-      DMA_Interrupt_Handler.Wait_Transfer (DMA_Err);
+      if SD_Err = OK then
+         DMA_Interrupt_Handler.Wait_Transfer (DMA_Err);
+      else
+         DMA_Interrupt_Handler.Clear_Transfer_State;
+         Abort_Transfer (SD_DMA, SD_DMA_Rx_Stream, DMA_Err);
+      end if;
 
       loop
          exit when not Get_Flag (Controller.Device.all, RX_Active);

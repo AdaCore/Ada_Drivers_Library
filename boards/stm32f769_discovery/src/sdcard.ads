@@ -32,9 +32,9 @@
 --   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces;           use Interfaces;
 with Ada.Interrupts.Names;
 
+with HAL.SDMMC;
 with STM32.SDMMC;
 
 with HAL;               use HAL;
@@ -51,45 +51,43 @@ package SDCard is
 
    type SDCard_Controller
      (Device : not null access STM32.SDMMC.SDMMC_Controller) is
-   limited new HAL.Block_Drivers.Block_Driver with private;
+   limited new Block_Driver with private;
 
    Device_Error : exception;
 
    procedure Initialize
-     (Controller : in out SDCard_Controller);
+     (This : in out SDCard_Controller);
    --  Initilizes the Controller's pins
 
    function Card_Present
-     (Controller : in out SDCard_Controller) return Boolean;
+     (This : in out SDCard_Controller) return Boolean;
    --  Whether a SD-Card is present in the sdcard reader
 
    function Get_Card_Information
-     (Controller : in out SDCard_Controller)
-      return STM32.SDMMC.Card_Information
-     with Pre => Controller.Card_Present;
+     (This : in out SDCard_Controller)
+      return HAL.SDMMC.Card_Information
+     with Pre => This.Card_Present;
    --  Retrieves the card informations
 
    function Block_Size
-     (Controller : in out SDCard_Controller)
-     return Unsigned_32;
+     (This : in out SDCard_Controller)
+     return UInt32;
    --  The insterted card block size. 512 Bytes for sd-cards
 
    overriding function Read
-     (Controller   : in out SDCard_Controller;
-      Block_Number : UInt32;
+     (This         : in out SDCard_Controller;
+      Block_Number : UInt64;
       Data         : out Block) return Boolean
-     with Pre => (Data'Size mod Controller.Block_Size) = 0
-                 and then Data'Size < 2 ** 16;
+     with Pre => Data'Length <= 16#10000#;
    --  Reads Data.
    --  Data size needs to be a multiple of the card's block size and maximum
    --  length is 2**16
 
    overriding function Write
-     (Controller   : in out SDCard_Controller;
-      Block_Number : UInt32;
+     (This         : in out SDCard_Controller;
+      Block_Number : UInt64;
       Data         : Block) return Boolean
-     with Pre => (Data'Size mod Controller.Block_Size) = 0
-                 and then Data'Size < 2 ** 16;
+     with Pre => Data'Length <= 16#10000#;
    --  Writes Data.
    --  Data size needs to be a multiple of the card's block size and maximum
    --  length is 2**16
@@ -99,7 +97,7 @@ private
    type SDCard_Controller
      (Device : not null access STM32.SDMMC.SDMMC_Controller) is
    limited new HAL.Block_Drivers.Block_Driver with record
-      Info          : STM32.SDMMC.Card_Information;
+      Info          : HAL.SDMMC.Card_Information;
       Has_Info      : Boolean := False;
       Card_Detected : Boolean := False;
    end record;

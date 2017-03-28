@@ -161,6 +161,6 @@ package HAL is
 
    type UInt8_Array is array (Natural range <>) of UInt8;
    type UInt16_Array is array (Natural range <>) of UInt16;
-   type Word_Array is array (Natural range <>) of UInt32;
+   type UInt32_Array is array (Natural range <>) of UInt32;
 
 end HAL;

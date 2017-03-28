@@ -31,6 +31,9 @@
 
 with Ada.Real_Time;           use Ada.Real_Time;
 
+with HAL.SDMMC;               use HAL.SDMMC;
+with STM32_SVD.RCC;           use STM32_SVD.RCC;
+
 with STM32.Device;            use STM32.Device;
 with STM32.DMA;               use STM32.DMA;
 with STM32.GPIO;              use STM32.GPIO;
@@ -112,6 +115,8 @@ package body SDCard is
                   (PC8, PC9, PC10, PC11, PC12, PD2);
 
    begin
+      RCC_Periph.DCKCFGR.SDMMCSEL := True; --  SDMMC uses the SYSCLK
+
       --  Enable the SDIO clock
       Enable_Clock (SDMMC_Controller (Controller.Device.all));
       Reset (SDMMC_Controller (Controller.Device.all));
@@ -215,7 +220,9 @@ package body SDCard is
       end if;
 
       Ret := STM32.SDMMC.Initialize
-        (Controller.Device.all, Controller.Info);
+        (Controller.Device.all,
+         System_Clock_Frequencies.SYSCLK,
+         Controller.Info);
 
       if Ret = OK then
          Controller.Has_Info := True;
@@ -230,15 +237,10 @@ package body SDCard is
 
    function Get_Card_Information
      (Controller : in out SDCard_Controller)
-      return STM32.SDMMC.Card_Information
+      return Card_Information
    is
    begin
       Ensure_Card_Informations (Controller);
-
-      if not Controller.Has_Info then
-         --  Issue reading the SD-card information
-         Ensure_Card_Informations (Controller);
-      end if;
 
       if not Controller.Has_Info then
          raise Device_Error;
@@ -253,7 +255,7 @@ package body SDCard is
 
    function Block_Size
      (Controller : in out SDCard_Controller)
-      return Unsigned_32
+      return UInt32
    is
    begin
       Ensure_Card_Informations (Controller);
@@ -471,7 +473,7 @@ package body SDCard is
 
    overriding function Write
      (Controller   : in out SDCard_Controller;
-      Block_Number : UInt32;
+      Block_Number : UInt64;
       Data         : Block) return Boolean
    is
       Ret     : SD_Error;
@@ -490,8 +492,7 @@ package body SDCard is
       Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
       Ret := Write_Blocks_DMA
         (Controller.Device.all,
-         Unsigned_64 (Block_Number) *
-             Unsigned_64 (Controller.Info.Card_Block_Size),
+         Block_Number * UInt64 (Controller.Info.Card_Block_Size),
          SD_DMA,
          SD_DMA_Tx_Stream,
          SD_Data (Data));
@@ -537,7 +538,7 @@ package body SDCard is
 
    overriding function Read
      (Controller   : in out SDCard_Controller;
-      Block_Number : UInt32;
+      Block_Number : UInt64;
       Data         : out Block) return Boolean
    is
       Ret     : Boolean;
@@ -555,8 +556,7 @@ package body SDCard is
 
       SD_Err := Read_Blocks_DMA
         (Controller.Device.all,
-         Unsigned_64 (Block_Number) *
-             Unsigned_64 (Controller.Info.Card_Block_Size),
+         Block_Number * UInt64 (Controller.Info.Card_Block_Size),
          SD_DMA,
          SD_DMA_Rx_Stream,
          SD_Data (Data));

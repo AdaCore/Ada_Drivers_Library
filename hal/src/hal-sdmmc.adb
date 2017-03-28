@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                  Copyright (C) 2016-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -11,7 +11,7 @@
 --        notice, this list of conditions and the following disclaimer in   --
 --        the documentation and/or other materials provided with the        --
 --        distribution.                                                     --
---     3. Neither the name of the copyright holder nor the names of its     --
+--     3. Neither the name of STMicroelectronics nor the names of its       --
 --        contributors may be used to endorse or promote products derived   --
 --        from this software without specific prior written permission.     --
 --                                                                          --
@@ -29,30 +29,42 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Simulate a disk by readind into a file
+package body HAL.SDMMC is
 
-with HAL.Block_Drivers; use HAL.Block_Drivers;
-with HAL.Filesystem;    use HAL.Filesystem;
-with HAL;               use HAL;
+   --------------
+   -- Send_Cmd --
+   --------------
 
-package File_Block_Drivers is
+   procedure Send_Cmd
+     (This   : in out SDMMC_Driver'Class;
+      Cmd    : SD_Command;
+      Arg    : UInt32;
+      Status : out SD_Error) is
+   begin
+      Send_Cmd (This, Cmd_Desc (Cmd), Arg, Status);
+   end Send_Cmd;
 
-   type File_Block_Driver (File : not null Any_File_Handle) is new Block_Driver with private;
+   ---------------
+   -- Send_ACmd --
+   ---------------
 
-   overriding
-   function Read
-     (This         : in out File_Block_Driver;
-      Block_Number : UInt64;
-      Data         : out Block)
-      return Boolean;
+   procedure Send_ACmd
+     (This   : in out SDMMC_Driver'Class;
+      Cmd    : SD_Specific_Command;
+      Rca    : UInt16;
+      Arg    : UInt32;
+      Status : out SD_Error)
+   is
+      S_Arg : constant UInt32 :=
+                Shift_Left (UInt32 (Rca), 16);
+   begin
+      Send_Cmd (This, Cmd_Desc (App_Cmd), S_Arg, Status);
 
-   overriding
-   function Write
-     (This         : in out File_Block_Driver;
-      Block_Number : UInt64;
-      Data         : Block)
-      return Boolean;
+      if Status /= OK then
+         return;
+      end if;
 
-private
-   type File_Block_Driver (File : not null Any_File_Handle) is new Block_Driver with null record;
-end File_Block_Drivers;
+      Send_Cmd (This, Acmd_Desc (Cmd), Arg, Status);
+   end Send_ACmd;
+
+end HAL.SDMMC;

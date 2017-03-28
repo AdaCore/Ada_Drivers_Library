@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,30 +29,27 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Simulate a disk by readind into a file
+with HAL.SDMMC;  use HAL, HAL.SDMMC;
 
-with HAL.Block_Drivers; use HAL.Block_Drivers;
-with HAL.Filesystem;    use HAL.Filesystem;
-with HAL;               use HAL;
+--  This package implements the SD and MMC card identification protocol.
+package SDMMC_Init is
 
-package File_Block_Drivers is
+   procedure Card_Identification_Process (This   : in out SDMMC_Driver'Class;
+                                          Info   : out Card_Information;
+                                          Status : out SD_Error);
+   --  Generic card identification process procedure.
 
-   type File_Block_Driver (File : not null Any_File_Handle) is new Block_Driver with private;
+   procedure Read_SCR (This   : in out SDMMC_Driver'Class;
+                       Info   : Card_Information;
+                       SCR    : out SDCard_Configuration_Register;
+                       Status : out SD_Error);
+   --  Retrieve the current SDCard configuration
 
-   overriding
-   function Read
-     (This         : in out File_Block_Driver;
-      Block_Number : UInt64;
-      Data         : out Block)
-      return Boolean;
+   --  OCR bits
+   SD_OCR_Power_Up             : constant := 16#8000_0000#;
+   SD_OCR_High_Capacity        : constant := 16#4000_0000#;
+   SD_OCR_Std_Capacity         : constant := 16#0000_0000#;
 
-   overriding
-   function Write
-     (This         : in out File_Block_Driver;
-      Block_Number : UInt64;
-      Data         : Block)
-      return Boolean;
+   SD_MAX_VOLT_TRIAL           : constant := 16#0000_FFFF#;
 
-private
-   type File_Block_Driver (File : not null Any_File_Handle) is new Block_Driver with null record;
-end File_Block_Drivers;
+end SDMMC_Init;
