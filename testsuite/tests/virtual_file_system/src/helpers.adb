@@ -1,7 +1,8 @@
 with Ada.Command_Line;
 with Ada.Directories;
 with Ada.Strings.Unbounded;
-with Ada.Text_IO; use Ada.Text_IO;
+with Pathname_Manipulation; use Pathname_Manipulation;
+with Ada.Text_IO;           use Ada.Text_IO;
 
 package body Helpers is
 
@@ -133,7 +134,7 @@ package body Helpers is
       Status : Status_Kind;
    begin
       Put_Line ("Entering " & Dir);
-      Test (FS.Open_Directory (Dir, DH));
+      Test (FS.Open_Directory (Dir, Parse (Dir), DH));
 
       loop
          Status := DH.Read_Entry (I, DE);
@@ -150,7 +151,7 @@ package body Helpers is
                   declare
                      File : Any_File_Handle;
                   begin
-                     Test (FS.Open (Name, Read_Only, File));
+                     Test (FS.Open (Name, Parse (Name), Read_Only, File));
                      declare
                         Content : constant UInt8_Array := Read_File (File.all);
                      begin

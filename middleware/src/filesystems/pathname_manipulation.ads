@@ -33,9 +33,75 @@ with HAL.Filesystem; use HAL.Filesystem;
 
 package Pathname_Manipulation is
 
-   procedure Root_Dir (Path        :     Pathname;
-                       Start, Stop : out Integer);
+   type New_Path (String_Length     : Natural;
+                  Delimiters_Length : Natural)
+   is record
+      Str   : String (1 .. String_Length);
+      Delim : Path_Delimiters (1 .. Delimiters_Length);
+   end record;
 
-   function Root_Dir (Path : Pathname) return Pathname;
+   Empty_Path : constant New_Path := (String_Length => 0,
+                                      Delimiters_Length => 0,
+                                      Str => "",
+                                      Delim => (others => (0, 0)));
+
+   function Valid (Path : New_Path) return Boolean
+   is (
+       --  From is always less than or equal to To
+       (for all E of Path.Delim =>
+           E.From <= E.To)
+       and then
+       --  All indexes are within the range of path String
+         (for all E of Path.Delim =>
+             E.From in Path.Str'Range and then E.To in Path.Str'Range)
+       and then
+       --  Indexes are strictly incresing
+         (for all Index in Path.Delim'First .. Path.Delim'Last - 1 =>
+             Path.Delim (Index).To < Path.Delim (Index + 1).From))
+   with Ghost;
+
+   function Parse (Path : Pathname) return New_Path
+     with Post => Valid (Parse'Result);
+
+   function "&"(Left : New_Path; Right : New_Path) return New_Path
+     with Post => Valid ("&"'Result);
+
+   function Slice (Path       : New_Path;
+                   Index      : Integer)
+                   return Pathname;
+
+   function Valid (Path : Pathname; Delimiters : Path_Delimiters) return Boolean
+   is (
+       --  From is always less than or equal to To
+       (for all E of Delimiters =>
+           E.From <= E.To)
+       and then
+       --  All indexes are within the range of path String
+         (for all E of Delimiters =>
+             E.From in Path'Range and then E.To in Path'Range)
+       and then
+       --  Indexes are strictly incresing
+         (for all Index in Delimiters'First .. Delimiters'Last - 1 =>
+             Delimiters (Index).To < Delimiters (Index + 1).From))
+   with Ghost;
+
+   function Parse (Path : Pathname) return Path_Delimiters
+     with Post => Valid (Path, Parse'Result);
+
+   function Sub_Delimiters (Delimiters : Path_Delimiters)
+                            return Path_Delimiters;
+
+   function Sub_Path (Path       : Pathname;
+                      Delimiters : Path_Delimiters)
+                      return Pathname;
+
+   function Slice (Path       : Pathname;
+                   Delimiters : Path_Delimiters;
+                   Index      : Integer)
+                   return Pathname;
+
+   function Root (Path       : Pathname;
+                  Delimiters : Path_Delimiters)
+                  return Pathname;
 
 end Pathname_Manipulation;

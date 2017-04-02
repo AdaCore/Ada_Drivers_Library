@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -37,30 +37,24 @@ package body Virtual_File_System is
    -- Find_FS --
    -------------
 
-   function Find_FS (This                : in out VFS;
-                     Path                : Pathname;
-                     Path_Reminder_Start : out Integer)
+   function Find_FS (This       : in out VFS;
+                     Path       : Pathname;
+                     Delimiters : Path_Delimiters)
                      return Any_FS_Driver
    is
-      Start, Stop : Integer;
       Elt  : Mount_Point_Access := This.Mount_points;
    begin
-      Root_Dir (Path, Start, Stop);
-
-      if Start not in Path'Range or else Stop not in Path'Range then
-         Path_Reminder_Start := Path'Last + 1;
+      if Delimiters'Length = 0 then
          return null;
       end if;
 
       declare
-         Root_Dir_Name : constant String := Path (Start .. Stop);
+         Root_Dir_Name : constant String := Root (Path, Delimiters);
       begin
 
          while Elt /= null and then Elt.Directory.all /= Root_Dir_Name loop
             Elt := Elt.Next;
          end loop;
-
-         Path_Reminder_Start := Stop + 1;
 
          return (if Elt /= null then Elt.FS else null);
       end;
@@ -104,20 +98,19 @@ package body Virtual_File_System is
 
    overriding
    function Create_Node (This : in out VFS;
-                         Path : Pathname;
+                         Path       : Pathname;
+                         Delimiters : Path_Delimiters;
                          Kind : File_Kind)
                          return Status_Kind
    is
-      Path_Reminder_Start : Integer;
-      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
-      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
-                                     then ""
-                                     else Path (Path_Reminder_Start .. Path'Last));
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Delimiters);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Create_Node (Sub_Path, Kind);
+         return FS.Create_Node (Sub_Path (Path, Delimiters),
+                                Sub_Delimiters (Delimiters),
+                                Kind);
       end if;
    end Create_Node;
 
@@ -127,19 +120,17 @@ package body Virtual_File_System is
 
    overriding
    function Create_Directory (This : in out VFS;
-                              Path : Pathname)
+                              Path       : Pathname;
+                              Delimiters : Path_Delimiters)
                               return Status_Kind
    is
-      Path_Reminder_Start : Integer;
-      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
-      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
-                                     then ""
-                                     else Path (Path_Reminder_Start .. Path'Last));
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Delimiters);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Create_Directory (Sub_Path);
+         return FS.Create_Directory (Sub_Path (Path, Delimiters),
+                                     Sub_Delimiters (Delimiters));
       end if;
    end Create_Directory;
 
@@ -149,19 +140,17 @@ package body Virtual_File_System is
 
    overriding
    function Unlink (This : in out VFS;
-                    Path : Pathname)
+                    Path       : Pathname;
+                    Delimiters : Path_Delimiters)
                     return Status_Kind
    is
-      Path_Reminder_Start : Integer;
-      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
-      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
-                                     then ""
-                                     else Path (Path_Reminder_Start .. Path'Last));
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Delimiters);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Unlink (Sub_Path);
+         return FS.Unlink (Sub_Path (Path, Delimiters),
+                           Sub_Delimiters (Delimiters));
       end if;
    end Unlink;
 
@@ -171,19 +160,17 @@ package body Virtual_File_System is
 
    overriding
    function Remove_Directory (This : in out VFS;
-                              Path : Pathname)
+                              Path       : Pathname;
+                              Delimiters : Path_Delimiters)
                               return Status_Kind
    is
-      Path_Reminder_Start : Integer;
-      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
-      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
-                                     then ""
-                                     else Path (Path_Reminder_Start .. Path'Last));
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Delimiters);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Remove_Directory (Sub_Path);
+         return FS.Remove_Directory (Sub_Path (Path, Delimiters),
+                                     Sub_Delimiters (Delimiters));
       end if;
    end Remove_Directory;
 
@@ -208,20 +195,19 @@ package body Virtual_File_System is
 
    overriding
    function Truncate_File (This   : in out VFS;
-                           Path   : Pathname;
+                           Path       : Pathname;
+                           Delimiters : Path_Delimiters;
                            Length : IO_Count)
                            return Status_Kind
    is
-      Path_Reminder_Start : Integer;
-      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
-      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
-                                     then ""
-                                     else Path (Path_Reminder_Start .. Path'Last));
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Delimiters);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Truncate_File (Sub_Path, Length);
+         return FS.Truncate_File (Sub_Path (Path, Delimiters),
+                                  Sub_Delimiters (Delimiters),
+                                  Length);
       end if;
    end Truncate_File;
 
@@ -230,19 +216,22 @@ package body Virtual_File_System is
    ----------
 
    overriding
-   function Open (This    : in out VFS;
-                  Path    : Pathname;
-                  Mode    : File_Mode;
-                  Handler : out Any_File_Handle)
+   function Open (This       : in out VFS;
+                  Path       : Pathname;
+                  Delimiters : Path_Delimiters;
+                  Mode       : File_Mode;
+                  Handle     : out Any_File_Handle)
                   return Status_Kind
    is
-      Path_Reminder_Start : Integer;
-      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Delimiters);
    begin
       if FS = null then
          return No_Such_File_Or_Directory;
       else
-         return FS.Open (Path (Path_Reminder_Start .. Path'Last), Mode, Handler);
+         return FS.Open (Sub_Path (Path, Delimiters),
+                         Sub_Delimiters (Delimiters),
+                         Mode,
+                         Handle);
       end if;
    end Open;
 
@@ -252,15 +241,12 @@ package body Virtual_File_System is
 
    overriding
    function Open_Directory (This   : in out VFS;
-                            Path   : Pathname;
+                            Path       : Pathname;
+                            Delimiters : Path_Delimiters;
                             Handle : out Any_Directory_Handle)
                             return Status_Kind
    is
-      Path_Reminder_Start : Integer;
-      FS : constant Any_FS_Driver := This.Find_FS (Path, Path_Reminder_Start);
-      Sub_Path : constant String := (if Path_Reminder_Start not in Path'Range
-                                     then ""
-                                     else Path (Path_Reminder_Start .. Path'Last));
+      FS : constant Any_FS_Driver := This.Find_FS (Path, Delimiters);
    begin
       if Path = "/" or else Path = "" then
          This.Dir_Handle.FS := This'Unchecked_Access;
@@ -270,7 +256,8 @@ package body Virtual_File_System is
          if FS = null then
             return No_Such_File_Or_Directory;
          else
-            return FS.Open_Directory (Sub_Path,
+            return FS.Open_Directory (Sub_Path (Path, Delimiters),
+                                      Sub_Delimiters (Delimiters),
                                       Handle);
          end if;
       end if;

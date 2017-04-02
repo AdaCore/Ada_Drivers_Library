@@ -31,43 +31,201 @@
 
 package body Pathname_Manipulation is
 
-   --------------
-   -- Root_Dir --
-   --------------
+   -----------
+   -- Parse --
+   -----------
 
-   procedure Root_Dir (Path        :     Pathname;
-                       Start, Stop : out Integer)
+   function Parse (Path : Pathname) return New_Path is
+      From, To : Integer;
+   begin
+      if Path'Length = 0 then
+         return Empty_Path;
+      end if;
+
+      --  Skip the first delimiter, if any
+      if Path (Path'First) = '/' then
+         From := Path'First + 1;
+      else
+         From := Path'First;
+      end if;
+      To := From - 1;
+
+      for Index in From .. Path'Last loop
+
+         --  Look for next delimiter or end of string
+
+         if Path (Index) = '/' then
+            To := Index - 1;
+            exit;
+         elsif Index = Path'Last then
+            To := Index;
+            exit;
+         end if;
+      end loop;
+
+      declare
+         Next : constant New_Path := Parse (Path (To + 1 .. Path'Last));
+      begin
+         if To < From then
+            return Next;
+         else
+            declare
+               Ret : New_Path := (String_Length => To - From + 1,
+                                  Delimiters_Length => 1,
+                                  Str => Path (From .. To),
+                                  Delim => (others => (0, 0)));
+            begin
+               Ret.Delim (Ret.Delim'First) := (Ret.Str'First, Ret.Str'Last);
+               return Ret & Next;
+            end;
+         end if;
+      end;
+   end Parse;
+
+   ---------
+   -- "&" --
+   ---------
+
+   function "&"(Left : New_Path; Right : New_Path) return New_Path is
+   begin
+      if Left.Delimiters_Length = 0 then
+         return Right;
+      elsif Right.Delimiters_Length = 0 then
+         return Left;
+      end if;
+
+      declare
+         Path : New_Path :=
+           (String_Length     => Left.String_Length + Right.String_Length,
+            Delimiters_Length => Left.Delimiters_Length + Right.Delimiters_Length,
+            Str               => Left.Str & Right.Str,
+            Delim             => Left.Delim & Right.Delim);
+         L_Diff : constant Integer := Path.Str'First - Left.Str'First;
+         R_Diff : constant Integer := Path.Str'First - Right.Str'First + Left.Str'Length;
+      begin
+                  --  Adjust indexes
+         for Index in Path.Delim'First .. Path.Delim'First + Left.Delim'Length - 1 loop
+            Path.Delim (Index).From := Path.Delim (Index).From + L_Diff;
+            Path.Delim (Index).To := Path.Delim (Index).To + L_Diff;
+         end loop;
+
+         for Index in Path.Delim'First + Left.Delim'Length .. Path.Delim'Last loop
+            Path.Delim (Index).From := Path.Delim (Index).From + R_Diff;
+            Path.Delim (Index).To := Path.Delim (Index).To + R_Diff;
+         end loop;
+         return Path;
+      end;
+   end "&";
+
+   -----------
+   -- Slice --
+   -----------
+
+   function Slice (Path       : New_Path;
+                   Index      : Integer)
+                   return Pathname
    is
    begin
-      Start := Path'First;
-      Stop := Start;
-      if Path'Length = 0 then
-         return;
-      end if;
-
-      while Start <= Path'Last and then Path (Start) = '/' loop
-         Start := Start + 1;
-      end loop;
-
-      Stop := Start;
-      while Stop + 1 <= Path'Last and then Path (Stop + 1) /= '/' loop
-         Stop := Stop + 1;
-      end loop;
-   end Root_Dir;
-
-   --------------
-   -- Root_Dir --
-   --------------
-
-   function Root_Dir (Path : Pathname) return Pathname is
-      Start, Stop : Integer;
-   begin
-      Root_Dir (Path, Start, Stop);
-      if Start not in Path'Range or else Stop not in Path'Range then
-         return "";
+      if Index in Path.Delim'Range then
+         return Path.Str (Path.Delim (Index).From .. Path.Delim (Index).To);
       else
-         return Path (Start .. Stop);
+         return "";
       end if;
-   end Root_Dir;
+   end Slice;
+
+   -----------
+   -- Parse --
+   -----------
+
+   function Parse (Path : Pathname) return Path_Delimiters is
+      Empty : constant Path_Delimiters (1 .. 0) :=
+        (others => Delimiter'(0, 0));
+      From, To : Integer;
+   begin
+      if Path'Length = 0 then
+         return Empty;
+      end if;
+
+      --  Skip the first delimiter, if any
+      if Path (Path'First) = '/' then
+         From := Path'First + 1;
+      else
+         From := Path'First;
+      end if;
+      To := From - 1;
+
+      for Index in From .. Path'Last loop
+
+         --  Look for next delimiter or end of string
+
+         if Path (Index) = '/' then
+            To := Index - 1;
+            exit;
+         elsif Index = Path'Last then
+            To := Index;
+            exit;
+         end if;
+      end loop;
+
+      return (if To < From then Empty else (1 => Delimiter'(From, To))) &
+        Parse (Path (To + 1 .. Path'Last));
+   end Parse;
+
+   --------------------
+   -- Sub_Delimiters --
+   --------------------
+
+   function Sub_Delimiters (Delimiters : Path_Delimiters)
+                            return Path_Delimiters
+   is
+   begin
+      return Delimiters (Delimiters'First + 1 .. Delimiters'Last);
+   end Sub_Delimiters;
+
+   --------------
+   -- Sub_Path --
+   --------------
+
+   function Sub_Path (Path       : Pathname;
+                      Delimiters : Path_Delimiters)
+                      return Pathname
+   is
+      From : Integer;
+   begin
+
+      if Delimiters'Length <= 1 then
+         return "/";
+      else
+         From := Delimiters (Delimiters'First + 1).From;
+         return Path (From .. Path'Last);
+      end if;
+   end Sub_Path;
+
+   -----------
+   -- Slice --
+   -----------
+
+   function Slice (Path       : Pathname;
+                   Delimiters : Path_Delimiters;
+                   Index      : Integer)
+                   return Pathname
+   is
+   begin
+      if Index in Delimiters'Range then
+         return Path (Delimiters (Index).From .. Delimiters (Index).To);
+      else
+         return "";
+      end if;
+   end Slice;
+
+   ----------
+   -- Root --
+   ----------
+
+   function Root (Path       : Pathname;
+                  Delimiters : Path_Delimiters)
+                  return Pathname
+   is (Slice (Path, Delimiters, Delimiters'First));
+
 
 end Pathname_Manipulation;

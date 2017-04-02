@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -31,17 +31,39 @@
 
 package body Semihosting.Filesystem is
 
+   function Remaining_Path (Full_Path  : String;
+                            Delimiters : Path_Delimiters)
+                            return String;
+
+   --------------------
+   -- Remaining_Path --
+   --------------------
+
+   function Remaining_Path (Full_Path  : String;
+                            Delimiters : Path_Delimiters)
+                            return String
+   is
+      From : constant Integer := Delimiters (Delimiters'First).From;
+   begin
+      if From not in Full_Path'Range then
+         return "";
+      else
+         return Full_Path (From .. Full_Path'Last);
+      end if;
+   end Remaining_Path;
+
    -----------------
    -- Create_Node --
    -----------------
 
    overriding function Create_Node
      (This : in out SHFS;
-      Path : Pathname;
+      Path       : Pathname;
+      Delimiters : Path_Delimiters;
       Kind : File_Kind)
       return Status_Kind
    is
-      pragma Unreferenced (This, Path, Kind);
+      pragma Unreferenced (This, Path, Kind, Delimiters);
    begin
       return Read_Only_File_System;
    end Create_Node;
@@ -52,10 +74,11 @@ package body Semihosting.Filesystem is
 
    overriding function Create_Directory
      (This : in out SHFS;
-      Path : Pathname)
+      Path       : Pathname;
+      Delimiters : Path_Delimiters)
       return Status_Kind
    is
-      pragma Unreferenced (This, Path);
+      pragma Unreferenced (This, Path, Delimiters);
    begin
       return Read_Only_File_System;
    end Create_Directory;
@@ -66,10 +89,11 @@ package body Semihosting.Filesystem is
 
    overriding function Unlink
      (This : in out SHFS;
-      Path : Pathname)
+      Path       : Pathname;
+      Delimiters : Path_Delimiters)
       return Status_Kind
    is
-      pragma Unreferenced (This, Path);
+      pragma Unreferenced (This, Path, Delimiters);
    begin
       return Read_Only_File_System;
    end Unlink;
@@ -80,10 +104,11 @@ package body Semihosting.Filesystem is
 
    overriding function Remove_Directory
      (This : in out SHFS;
-      Path : Pathname)
+      Path       : Pathname;
+      Delimiters : Path_Delimiters)
       return Status_Kind
    is
-      pragma Unreferenced (This, Path);
+      pragma Unreferenced (This, Path, Delimiters);
    begin
       return Read_Only_File_System;
    end Remove_Directory;
@@ -109,11 +134,12 @@ package body Semihosting.Filesystem is
 
    overriding function Truncate_File
      (This   : in out SHFS;
-      Path   : Pathname;
+      Path       : Pathname;
+      Delimiters : Path_Delimiters;
       Length : IO_Count)
       return Status_Kind
    is
-      pragma Unreferenced (Path, Length, This);
+      pragma Unreferenced (Path, Length, This, Delimiters);
    begin
       return Read_Only_File_System;
    end Truncate_File;
@@ -123,10 +149,11 @@ package body Semihosting.Filesystem is
    ----------
 
    overriding function Open
-     (This    : in out SHFS;
-      Path    : Pathname;
-      Mode    : File_Mode;
-      Handler : out Any_File_Handle)
+     (This       : in out SHFS;
+      Path       : Pathname;
+      Delimiters : Path_Delimiters;
+      Mode       : File_Mode;
+      Handler    : out Any_File_Handle)
       return Status_Kind
    is
       FH : SHFS_File_Handle_Access;
@@ -140,7 +167,7 @@ package body Semihosting.Filesystem is
          return Permission_Denied;
       end if;
 
-      FD := Semihosting.Open (Filename => Path,
+      FD := Semihosting.Open (Filename => Remaining_Path (Path, Delimiters),
                               Mode     => OPEN_FLAG_RB);
 
       if FD = SH_Word'Last then
@@ -160,11 +187,12 @@ package body Semihosting.Filesystem is
 
    overriding function Open_Directory
      (This   : in out SHFS;
-      Path   : Pathname;
+      Path       : Pathname;
+      Delimiters : Path_Delimiters;
       Handle : out Any_Directory_Handle)
       return Status_Kind
    is
-      pragma Unreferenced (This, Path, Handle);
+      pragma Unreferenced (This, Path, Handle, Delimiters);
    begin
       return Operation_Not_Permitted;
    end Open_Directory;

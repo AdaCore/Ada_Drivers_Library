@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -43,23 +43,27 @@ package Semihosting.Filesystem is
 
    overriding
    function Create_Node (This : in out SHFS;
-                         Path : Pathname;
+                         Path       : Pathname;
+                         Delimiters : Path_Delimiters;
                          Kind : File_Kind)
                          return Status_Kind;
 
    overriding
    function Create_Directory (This : in out SHFS;
-                              Path : Pathname)
+                              Path       : Pathname;
+                              Delimiters : Path_Delimiters)
                               return Status_Kind;
 
    overriding
    function Unlink (This : in out SHFS;
-                    Path : Pathname)
+                    Path       : Pathname;
+                    Delimiters : Path_Delimiters)
                     return Status_Kind;
 
    overriding
    function Remove_Directory (This : in out SHFS;
-                              Path : Pathname)
+                              Path       : Pathname;
+                              Delimiters : Path_Delimiters)
                               return Status_Kind;
 
    overriding
@@ -70,20 +74,23 @@ package Semihosting.Filesystem is
 
    overriding
    function Truncate_File (This   : in out SHFS;
-                           Path   : Pathname;
+                           Path       : Pathname;
+                           Delimiters : Path_Delimiters;
                            Length : IO_Count)
                            return Status_Kind;
 
    overriding
    function Open (This    : in out SHFS;
-                  Path    : Pathname;
+                  Path       : Pathname;
+                  Delimiters : Path_Delimiters;
                   Mode    : File_Mode;
                   Handler : out Any_File_Handle)
                   return Status_Kind;
 
    overriding
    function Open_Directory (This   : in out SHFS;
-                            Path   : Pathname;
+                            Path       : Pathname;
+                            Delimiters : Path_Delimiters;
                             Handle : out Any_Directory_Handle)
                             return Status_Kind;
 private

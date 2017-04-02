@@ -30,7 +30,8 @@
 ------------------------------------------------------------------------------
 
 with Interfaces; use Interfaces;
-with HAL;        use HAL;
+with HAL;            use HAL;
+with HAL.Filesystem; use HAL.Filesystem;
 
 package body Bitmap_File_Output is
 
@@ -70,7 +71,7 @@ package body Bitmap_File_Output is
    -- Write_BMP_File --
    --------------------
 
-   procedure Write_BMP_File (File   : in out File_Handle'Class;
+   procedure Write_BMP_File (File   : in out File_Descriptor;
                              Bitmap : Bitmap_Buffer'Class)
    is
       Hdr    : Header;

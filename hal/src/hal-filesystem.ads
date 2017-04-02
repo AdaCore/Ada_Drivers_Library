@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -42,6 +42,7 @@ package HAL.Filesystem is
    type File_Mode is (Read_Only, Write_Only, Read_Write);
 
    type Status_Kind is (Status_Ok,
+                        Invalid_FD,
                         Symbolic_Links_Loop,
                         Permission_Denied,
                         Input_Output_Error,
@@ -81,28 +82,38 @@ package HAL.Filesystem is
 
    --  ??? Document error cases for all primitives below
 
+   type Delimiter is record
+      From, To : Integer;
+   end record;
+
+   type Path_Delimiters is array (Natural range <>) of Delimiter;
+
    ---------------
    -- FS_Driver --
    ---------------
 
-   function Create_Node (This : in out FS_Driver;
-                         Path : Pathname;
-                         Kind : File_Kind)
+   function Create_Node (This       : in out FS_Driver;
+                         Path       : Pathname;
+                         Delimiters : Path_Delimiters;
+                         Kind       : File_Kind)
                          return Status_Kind is abstract;
    --  Create a Kind node in the This filesystem at the Path location
 
-   function Create_Directory (This : in out FS_Driver;
-                              Path : Pathname)
+   function Create_Directory (This       : in out FS_Driver;
+                              Path       : Pathname;
+                              Delimiters : Path_Delimiters)
                               return Status_Kind is abstract;
    --  Shortcut for Create_Node (This, Path, Directory)
 
-   function Unlink (This : in out FS_Driver;
-                    Path : Pathname)
+   function Unlink (This       : in out FS_Driver;
+                    Path       : Pathname;
+                    Delimiters : Path_Delimiters)
                     return Status_Kind is abstract;
    --  Remove the regular file located at Path in the This filesystem
 
-   function Remove_Directory (This : in out FS_Driver;
-                              Path : Pathname)
+   function Remove_Directory (This       : in out FS_Driver;
+                              Path       : Pathname;
+                              Delimiters : Path_Delimiters)
                               return Status_Kind is abstract;
    --  Remove the directory located at Path in the This filesystem
 
@@ -112,18 +123,20 @@ package HAL.Filesystem is
                     return Status_Kind is abstract;
    --  Move a node in the This filesystem
 
-   function Truncate_File (This   : in out FS_Driver;
-                           Path   : Pathname;
-                           Length : IO_Count)
+   function Truncate_File (This       : in out FS_Driver;
+                           Path       : Pathname;
+                           Delimiters : Path_Delimiters;
+                           Length     : IO_Count)
                            return Status_Kind is abstract;
    --  Assuming Path designates a regular file, set its size to be Length. This
    --  operation preserves the first Length UInt8s and leaves the other with
    --  undefined values.
 
-   function Open (This   : in out FS_Driver;
-                  Path   : Pathname;
-                  Mode   : File_Mode;
-                  Handle : out Any_File_Handle)
+   function Open (This       : in out FS_Driver;
+                  Path       : Pathname;
+                  Delimiters : Path_Delimiters;
+                  Mode       : File_Mode;
+                  Handle     : out Any_File_Handle)
                   return Status_Kind is abstract;
    --  Assuming Path designates a regular file, open it with the given Mode and
    --  create a Handle for it.
@@ -131,9 +144,10 @@ package HAL.Filesystem is
    --  The This filesystem owns the resulting handle. Callers are simply
    --  expected to call Close on it when done with the file.
 
-   function Open_Directory (This   : in out FS_Driver;
-                            Path   : Pathname;
-                            Handle : out Any_Directory_Handle)
+   function Open_Directory (This       : in out FS_Driver;
+                            Path       : Pathname;
+                            Delimiters : Path_Delimiters;
+                            Handle     : out Any_Directory_Handle)
                             return Status_Kind is abstract;
    --  Assuming Path designates a directory, open it and create a Handle for
    --  it.

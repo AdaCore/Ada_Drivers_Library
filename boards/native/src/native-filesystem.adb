@@ -1,3 +1,34 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                     Copyright (C) 2016-2017, AdaCore                     --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------
+
 with Ada.Directories;
 with Ada.Unchecked_Deallocation;
 
@@ -167,11 +198,13 @@ package body Native.Filesystem is
    -----------------
 
    overriding function Create_Node
-     (This : in out Native_FS_Driver;
-      Path : Pathname;
-      Kind : File_Kind)
+     (This       : in out Native_FS_Driver;
+      Path       : Pathname;
+      Delimiters : Path_Delimiters;
+      Kind       : File_Kind)
       return Status_Kind
    is
+      pragma Unreferenced (Delimiters);
       Abs_Path : constant Pathname := Absolute_Path (This, Path);
    begin
       case Kind is
@@ -210,12 +243,13 @@ package body Native.Filesystem is
    ----------------------
 
    overriding function Create_Directory
-     (This : in out Native_FS_Driver;
-      Path : Pathname)
+     (This       : in out Native_FS_Driver;
+      Path       : Pathname;
+      Delimiters : Path_Delimiters)
       return Status_Kind
    is
    begin
-      return This.Create_Node (Absolute_Path (This, Path), Directory);
+      return This.Create_Node (Path, Delimiters, Directory);
    end Create_Directory;
 
    ------------
@@ -223,10 +257,12 @@ package body Native.Filesystem is
    ------------
 
    overriding function Unlink
-     (This : in out Native_FS_Driver;
-      Path : Pathname)
+     (This       : in out Native_FS_Driver;
+      Path       : Pathname;
+      Delimiters : Path_Delimiters)
       return Status_Kind
    is
+      pragma Unreferenced (Delimiters);
    begin
       Ada.Directories.Delete_File (Absolute_Path (This, Path));
       return Status_Ok;
@@ -242,10 +278,12 @@ package body Native.Filesystem is
    ----------------------
 
    overriding function Remove_Directory
-     (This : in out Native_FS_Driver;
-      Path : Pathname)
+     (This       : in out Native_FS_Driver;
+      Path       : Pathname;
+      Delimiters : Path_Delimiters)
       return Status_Kind
    is
+      pragma Unreferenced (Delimiters);
    begin
       Ada.Directories.Delete_Directory (Absolute_Path (This, Path));
       return Status_Ok;
@@ -283,12 +321,13 @@ package body Native.Filesystem is
    -------------------
 
    overriding function Truncate_File
-     (This   : in out Native_FS_Driver;
-      Path   : Pathname;
-      Length : IO_Count)
+     (This       : in out Native_FS_Driver;
+      Path       : Pathname;
+      Delimiters : Path_Delimiters;
+      Length     : IO_Count)
       return Status_Kind
    is
-      pragma Unreferenced (This, Path, Length);
+      pragma Unreferenced (This, Path, Length, Delimiters);
    begin
       --  ??? Implement this. This is not done at the moment as there seems to
       --  be no other way using standard Ada packages than do delete the file
@@ -302,13 +341,15 @@ package body Native.Filesystem is
    ----------
 
    overriding function Open
-     (This   : in out Native_FS_Driver;
-      Path   : Pathname;
-      Mode   : File_Mode;
-      Handle : out Any_File_Handle)
+     (This       : in out Native_FS_Driver;
+      Path       : Pathname;
+      Delimiters : Path_Delimiters;
+      Mode       : File_Mode;
+      Handle     : out Any_File_Handle)
       return Status_Kind
    is
-      Result : Native_File_Handle_Ref := This.Get_Handle;
+      pragma Unreferenced (Delimiters);
+      Result     : Native_File_Handle_Ref := This.Get_Handle;
    begin
       begin
          Byte_IO.Open
@@ -334,11 +375,13 @@ package body Native.Filesystem is
    --------------------
 
    overriding function Open_Directory
-     (This   : in out Native_FS_Driver;
-      Path   : Pathname;
-      Handle : out Any_Directory_Handle)
+     (This       : in out Native_FS_Driver;
+      Path       : Pathname;
+      Delimiters : Path_Delimiters;
+      Handle     : out Any_Directory_Handle)
       return Status_Kind
    is
+      pragma Unreferenced (Delimiters);
       use Ada.Strings.Unbounded;
 
       Result : Native_Directory_Handle_Ref := This.Get_Handle;

@@ -1,10 +1,10 @@
-with Ada.Text_IO;        use Ada.Text_IO;
-with Native.Filesystem;  use Native.Filesystem;
-with HAL.Filesystem;     use HAL.Filesystem;
-with Partitions;         use Partitions;
-with File_Block_Drivers; use File_Block_Drivers;
-with Test_Directories;   use Test_Directories;
-
+with Ada.Text_IO;           use Ada.Text_IO;
+with Native.Filesystem;     use Native.Filesystem;
+with HAL.Filesystem;        use HAL.Filesystem;
+with Partitions;            use Partitions;
+with File_Block_Drivers;    use File_Block_Drivers;
+with Test_Directories;      use Test_Directories;
+with Pathname_Manipulation; use Pathname_Manipulation;
 procedure TC_Read_Partitions is
 
    procedure List_Partitions (FS : in out FS_Driver'Class;
@@ -19,7 +19,11 @@ procedure TC_Read_Partitions is
    is
       File : Any_File_Handle;
    begin
-      if FS.Open (Path_To_Disk_Image, Read_Only, File) /= Status_Ok then
+      if FS.Open (Path_To_Disk_Image,
+                  Parse (Path_To_Disk_Image),
+                  Read_Only,
+                  File) /= Status_Ok
+      then
          Put_Line ("Cannot open disk image '" & Path_To_Disk_Image & "'");
          return;
       end if;

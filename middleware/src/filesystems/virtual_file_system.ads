@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -50,48 +50,55 @@ package Virtual_File_System is
    -------------------------------
 
    overriding
-   function Create_Node (This : in out VFS;
-                         Path : Pathname;
-                         Kind : File_Kind)
+   function Create_Node (This       : in out VFS;
+                         Path       : Pathname;
+                         Delimiters : Path_Delimiters;
+                         Kind       : File_Kind)
                          return Status_Kind;
 
    overriding
-   function Create_Directory (This : in out VFS;
-                              Path : Pathname)
+   function Create_Directory (This       : in out VFS;
+                              Path       : Pathname;
+                              Delimiters : Path_Delimiters)
                               return Status_Kind;
 
    overriding
-   function Unlink (This : in out VFS;
-                    Path : Pathname)
+   function Unlink (This       : in out VFS;
+                    Path       : Pathname;
+                    Delimiters : Path_Delimiters)
                     return Status_Kind;
 
    overriding
-   function Remove_Directory (This : in out VFS;
-                              Path : Pathname)
+   function Remove_Directory (This       : in out VFS;
+                              Path       : Pathname;
+                              Delimiters : Path_Delimiters)
                               return Status_Kind;
 
    overriding
-   function Rename (This : in out VFS;
+   function Rename (This     : in out VFS;
                     Old_Path : Pathname;
                     New_Path : Pathname)
                     return Status_Kind;
 
    overriding
-   function Truncate_File (This   : in out VFS;
-                           Path   : Pathname;
-                           Length : IO_Count)
+   function Truncate_File (This       : in out VFS;
+                           Path       : Pathname;
+                           Delimiters : Path_Delimiters;
+                           Length     : IO_Count)
                            return Status_Kind;
 
    overriding
-   function Open (This    : in out VFS;
-                  Path    : Pathname;
-                  Mode    : File_Mode;
-                  Handler : out Any_File_Handle)
+   function Open (This       : in out VFS;
+                  Path       : Pathname;
+                  Delimiters : Path_Delimiters;
+                  Mode       : File_Mode;
+                  Handle     : out Any_File_Handle)
                   return Status_Kind;
 
    overriding
    function Open_Directory (This   : in out VFS;
-                            Path   : Pathname;
+                            Path       : Pathname;
+                            Delimiters : Path_Delimiters;
                             Handle : out Any_Directory_Handle)
                             return Status_Kind;
 
@@ -132,13 +139,9 @@ private
       Dir_Handle   : aliased VFS_Directory_Handle;
    end record;
 
-   function Find_FS (This                : in out VFS;
-                     Path                : Pathname;
-                     Path_Reminder_Start : out Integer)
+   function Find_FS (This       : in out VFS;
+                     Path       : Pathname;
+                     Delimiters : Path_Delimiters)
                      return Any_FS_Driver;
-   --  Find the mount point for a given path and return the index of the first
-   --  character of the remaining path. Path_Reminder_Start will be out of
-   --  Path'Range is there is no remaining characters.
-
 
 end Virtual_File_System;

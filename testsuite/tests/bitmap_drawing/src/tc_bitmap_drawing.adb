@@ -1,12 +1,13 @@
-with Test_Directories;     use Test_Directories;
-with Ada.Text_IO;          use Ada.Text_IO;
-with Native.Filesystem;    use Native.Filesystem;
-with HAL;                  use HAL;
-with HAL.Filesystem;       use HAL.Filesystem;
-with HAL.Bitmap;           use HAL.Bitmap;
-with Memory_Mapped_Bitmap; use Memory_Mapped_Bitmap;
-with Bitmap_File_Output;   use Bitmap_File_Output;
+with Test_Directories;      use Test_Directories;
+with Ada.Text_IO;           use Ada.Text_IO;
+with Native.Filesystem;     use Native.Filesystem;
+with HAL;                   use HAL;
+with HAL.Filesystem;        use HAL.Filesystem;
+with HAL.Bitmap;            use HAL.Bitmap;
+with Memory_Mapped_Bitmap;  use Memory_Mapped_Bitmap;
+with Bitmap_File_Output;    use Bitmap_File_Output;
 with Compare_Files;
+with Filesystem;            use Filesystem;
 
 procedure TC_Bitmap_Drawing is
 
@@ -32,27 +33,34 @@ procedure TC_Bitmap_Drawing is
       return Any_Bitmap_Buffer (BM);
    end Allocate_Bitmap;
 
-   FS       : Native_FS_Driver;
-   BMP_File : Any_File_Handle;
+   FS       : aliased Native_FS_Driver;
+   BMP_File : File_Descriptor;
    Status   : Status_Kind;
    BM       : constant not null Any_Bitmap_Buffer := Allocate_Bitmap;
 
-   Filename : constant String := "test.bmp";
+   Filename  : constant String := "test.bmp";
+   Mount_Dir : constant String := "test_dir";
+   Path      : constant String := "/" & Mount_Dir & "/" & Filename;
 begin
    if FS.Create (Root_Dir => Test_Dir) /= Status_Ok then
       raise Program_Error with "Cannot create native file system at '" &
         Test_Dir & "'";
    end if;
 
-   Status := FS.Create_Node (Filename, Regular_File);
+   if Mount (Mount_Dir, FS'Unchecked_Access) /= Status_Ok then
+      raise Program_Error with "Cannot mount native filesystem";
+   end if;
+
+   Status := Create_File (Path);
 
    if Status /= Status_Ok then
       raise Program_Error with "Cannot Create BMP file";
    end if;
 
-   Status := FS.Open (Filename, Write_Only, BMP_File);
 
-   if Status /= Status_Ok or else BMP_File = null then
+   Status := Open (Path, Write_Only, BMP_File);
+
+   if Status /= Status_Ok then
       raise Program_Error with "Cannot open BMP file";
    end if;
 
@@ -101,8 +109,8 @@ begin
               Synchronous => True);
 
 
-   Write_BMP_File (BMP_File.all, BM.all);
-   if BMP_File.Close /= Status_Ok then
+   Write_BMP_File (BMP_File, BM.all);
+   if Close (BMP_File) /= Status_Ok then
       raise Program_Error with "Cannot close BMP file";
    end if;
 
