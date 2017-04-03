@@ -565,10 +565,6 @@ package body STM32.I2C is
       --  Wait until TXE flag is set
       Wait_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
 
-      if Status /= HAL.I2C.Ok then
-         return;
-      end if;
-
    end Mem_Request_Write;
 
    ----------------------
