@@ -5,6 +5,7 @@ pragma Ada_2012;
 pragma Style_Checks (Off);
 
 with HAL;
+with System;
 
 package Cortex_M_SVD.NVIC is
    pragma Preelaborate;
