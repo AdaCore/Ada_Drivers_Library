@@ -19,7 +19,7 @@ project MicroBit_Example is
   end Linker;
 
   package Ide is
-     for Program_Host use ":2331";
+     for Program_Host use ":1234";
      for Communication_Protocol use "remote";
   end Ide;
 
