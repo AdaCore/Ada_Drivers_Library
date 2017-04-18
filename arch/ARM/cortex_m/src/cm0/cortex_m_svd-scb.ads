@@ -295,19 +295,19 @@ package Cortex_M_SVD.SCB is
    --  System control block
    type SCB_Peripheral is record
       --  CPUID Base Register
-      CPUID : CPUID_Register;
+      CPUID : aliased CPUID_Register;
       --  Interrupt Control and State Register
-      ICSR  : ICSR_Register;
+      ICSR  : aliased ICSR_Register;
       --  Application Interrupt and Reset Control Register
-      AIRCR : AIRCR_Register;
+      AIRCR : aliased AIRCR_Register;
       --  System Control Register
-      SCR   : SCR_Register;
+      SCR   : aliased SCR_Register;
       --  Configuration and Control Register
-      CCR   : CCR_Register;
+      CCR   : aliased CCR_Register;
       --  System Handler Priority Register 2
-      SHPR2 : SHPR2_Register;
+      SHPR2 : aliased SHPR2_Register;
       --  System Handler Priority Register 3
-      SHPR3 : SHPR3_Register;
+      SHPR3 : aliased SHPR3_Register;
    end record
      with Volatile;
 

@@ -1570,10 +1570,12 @@ package STM32_SVD.RCC is
       CECSEL         : Boolean := False;
       --  48MHz clock source selection
       CK48MSEL       : Boolean := False;
-      --  SDMMC clock source selection
-      SDMMCSEL       : Boolean := False;
+      --  SDMMC1 clock source selection
+      SDMMC1SEL      : Boolean := False;
+      --  SDMMC2 clock source selection
+      SDMMC2SEL      : Boolean := True;
       --  unspecified
-      Reserved_29_31 : HAL.UInt3 := 16#1#;
+      Reserved_30_31 : HAL.UInt2 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -1594,8 +1596,9 @@ package STM32_SVD.RCC is
       LPTIM1SEL      at 0 range 24 .. 25;
       CECSEL         at 0 range 26 .. 26;
       CK48MSEL       at 0 range 27 .. 27;
-      SDMMCSEL       at 0 range 28 .. 28;
-      Reserved_29_31 at 0 range 29 .. 31;
+      SDMMC1SEL      at 0 range 28 .. 28;
+      SDMMC2SEL      at 0 range 29 .. 29;
+      Reserved_30_31 at 0 range 30 .. 31;
    end record;
 
    -----------------
@@ -1605,57 +1608,57 @@ package STM32_SVD.RCC is
    --  Reset and clock control
    type RCC_Peripheral is record
       --  clock control register
-      CR         : CR_Register;
+      CR         : aliased CR_Register;
       --  PLL configuration register
-      PLLCFGR    : PLLCFGR_Register;
+      PLLCFGR    : aliased PLLCFGR_Register;
       --  clock configuration register
-      CFGR       : CFGR_Register;
+      CFGR       : aliased CFGR_Register;
       --  clock interrupt register
-      CIR        : CIR_Register;
+      CIR        : aliased CIR_Register;
       --  AHB1 peripheral reset register
-      AHB1RSTR   : AHB1RSTR_Register;
+      AHB1RSTR   : aliased AHB1RSTR_Register;
       --  AHB2 peripheral reset register
-      AHB2RSTR   : AHB2RSTR_Register;
+      AHB2RSTR   : aliased AHB2RSTR_Register;
       --  AHB3 peripheral reset register
-      AHB3RSTR   : AHB3RSTR_Register;
+      AHB3RSTR   : aliased AHB3RSTR_Register;
       --  APB1 peripheral reset register
-      APB1RSTR   : APB1RSTR_Register;
+      APB1RSTR   : aliased APB1RSTR_Register;
       --  APB2 peripheral reset register
-      APB2RSTR   : APB2RSTR_Register;
+      APB2RSTR   : aliased APB2RSTR_Register;
       --  AHB1 peripheral clock register
-      AHB1ENR    : AHB1ENR_Register;
+      AHB1ENR    : aliased AHB1ENR_Register;
       --  AHB2 peripheral clock enable register
-      AHB2ENR    : AHB2ENR_Register;
+      AHB2ENR    : aliased AHB2ENR_Register;
       --  AHB3 peripheral clock enable register
-      AHB3ENR    : AHB3ENR_Register;
+      AHB3ENR    : aliased AHB3ENR_Register;
       --  APB1 peripheral clock enable register
-      APB1ENR    : APB1ENR_Register;
+      APB1ENR    : aliased APB1ENR_Register;
       --  APB2 peripheral clock enable register
-      APB2ENR    : APB2ENR_Register;
+      APB2ENR    : aliased APB2ENR_Register;
       --  AHB1 peripheral clock enable in low power mode register
-      AHB1LPENR  : AHB1LPENR_Register;
+      AHB1LPENR  : aliased AHB1LPENR_Register;
       --  AHB2 peripheral clock enable in low power mode register
-      AHB2LPENR  : AHB2LPENR_Register;
+      AHB2LPENR  : aliased AHB2LPENR_Register;
       --  AHB3 peripheral clock enable in low power mode register
-      AHB3LPENR  : AHB3LPENR_Register;
+      AHB3LPENR  : aliased AHB3LPENR_Register;
       --  APB1 peripheral clock enable in low power mode register
-      APB1LPENR  : APB1LPENR_Register;
+      APB1LPENR  : aliased APB1LPENR_Register;
       --  APB2 peripheral clock enabled in low power mode register
-      APB2LPENR  : APB2LPENR_Register;
+      APB2LPENR  : aliased APB2LPENR_Register;
       --  Backup domain control register
-      BDCR       : BDCR_Register;
+      BDCR       : aliased BDCR_Register;
       --  clock control & status register
-      CSR        : CSR_Register;
+      CSR        : aliased CSR_Register;
       --  spread spectrum clock generation register
-      SSCGR      : SSCGR_Register;
+      SSCGR      : aliased SSCGR_Register;
       --  PLLI2S configuration register
-      PLLI2SCFGR : PLLI2SCFGR_Register;
+      PLLI2SCFGR : aliased PLLI2SCFGR_Register;
       --  PLL configuration register
-      PLLSAICFGR : PLLSAICFGR_Register;
+      PLLSAICFGR : aliased PLLSAICFGR_Register;
       --  dedicated clocks configuration register
-      DKCFGR1    : DKCFGR1_Register;
+      DKCFGR1    : aliased DKCFGR1_Register;
       --  dedicated clocks configuration register
-      DKCFGR2    : DKCFGR2_Register;
+      DKCFGR2    : aliased DKCFGR2_Register;
    end record
      with Volatile;
 

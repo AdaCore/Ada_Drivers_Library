@@ -42,14 +42,14 @@ package File_Block_Drivers is
    overriding
    function Read
      (This         : in out File_Block_Driver;
-      Block_Number : UInt32;
+      Block_Number : UInt64;
       Data         : out Block)
       return Boolean;
 
    overriding
    function Write
      (This         : in out File_Block_Driver;
-      Block_Number : UInt32;
+      Block_Number : UInt64;
       Data         : Block)
       return Boolean;
 

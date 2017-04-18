@@ -367,25 +367,25 @@ package NRF51_SVD.ADC is
    --  Analog to digital converter.
    type ADC_Peripheral is record
       --  Start an ADC conversion.
-      TASKS_START : HAL.UInt32;
+      TASKS_START : aliased HAL.UInt32;
       --  Stop ADC.
-      TASKS_STOP  : HAL.UInt32;
+      TASKS_STOP  : aliased HAL.UInt32;
       --  ADC conversion complete.
-      EVENTS_END  : HAL.UInt32;
+      EVENTS_END  : aliased HAL.UInt32;
       --  Interrupt enable set register.
-      INTENSET    : INTENSET_Register;
+      INTENSET    : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR    : INTENCLR_Register;
+      INTENCLR    : aliased INTENCLR_Register;
       --  ADC busy register.
-      BUSY        : BUSY_Register;
+      BUSY        : aliased BUSY_Register;
       --  ADC enable.
-      ENABLE      : ENABLE_Register;
+      ENABLE      : aliased ENABLE_Register;
       --  ADC configuration register.
-      CONFIG      : CONFIG_Register;
+      CONFIG      : aliased CONFIG_Register;
       --  Result of ADC conversion.
-      RESULT      : RESULT_Register;
+      RESULT      : aliased RESULT_Register;
       --  Peripheral power control.
-      POWER       : POWER_Register;
+      POWER       : aliased POWER_Register;
    end record
      with Volatile;
 

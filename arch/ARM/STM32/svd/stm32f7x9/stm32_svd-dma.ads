@@ -496,17 +496,17 @@ package STM32_SVD.DMA is
    --  Stream registers
    type Stream_Cluster is record
       --  stream x configuration register
-      SxCR   : SxCR_Stream_Register;
+      SxCR   : aliased SxCR_Stream_Register;
       --  stream x number of data register
-      SxNDTR : SxNDTR_Stream_Register;
+      SxNDTR : aliased SxNDTR_Stream_Register;
       --  stream x peripheral address register
-      SxPAR  : HAL.UInt32;
+      SxPAR  : aliased HAL.UInt32;
       --  stream x memory 0 address register
-      SxM0AR : HAL.UInt32;
+      SxM0AR : aliased HAL.UInt32;
       --  stream x memory 1 address register
-      SxM1AR : HAL.UInt32;
+      SxM1AR : aliased HAL.UInt32;
       --  stream x FIFO control register
-      SxFCR  : SxFCR_Stream_Register;
+      SxFCR  : aliased SxFCR_Stream_Register;
    end record
      with Volatile, Size => 192;
 
@@ -533,15 +533,15 @@ package STM32_SVD.DMA is
    --  DMA controller
    type DMA_Peripheral is record
       --  low interrupt status register
-      LISR   : LISR_Register;
+      LISR   : aliased LISR_Register;
       --  high interrupt status register
-      HISR   : HISR_Register;
+      HISR   : aliased HISR_Register;
       --  low interrupt flag clear register
-      LIFCR  : LIFCR_Register;
+      LIFCR  : aliased LIFCR_Register;
       --  high interrupt flag clear register
-      HIFCR  : HIFCR_Register;
+      HIFCR  : aliased HIFCR_Register;
       --  Stream registers
-      Stream : Stream_Clusters;
+      Stream : aliased Stream_Clusters;
    end record
      with Volatile;
 

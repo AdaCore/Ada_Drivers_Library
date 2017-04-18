@@ -1,0 +1,17 @@
+with "config";
+with "../hal/HAL";
+
+library project SDMMC is
+
+   for Library_Name use "sdmmc";
+   for Library_Kind use "static";
+   for Library_Dir use "lib/" & Config.Object_Subdir;
+   for Object_Dir use "obj/" & Config.Object_Subdir;
+
+   for Source_Dirs use
+     ("sdmmc");
+
+   package Compiler renames Config.Compiler;
+   package Builder renames Config.Builder;
+
+end SDMMC;

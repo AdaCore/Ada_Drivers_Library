@@ -74,7 +74,8 @@ package NRF51_SVD.FICR is
 
    --  Deprecated array of size of RAM block in bytes. This name is kept for
    --  backward compatinility purposes. Use SIZERAMBLOCKS instead.
-   type SIZERAMBLOCK_Registers is array (0 .. 3) of HAL.UInt32;
+   type SIZERAMBLOCK_Registers is array (0 .. 3) of HAL.UInt32
+     with Volatile;
 
    subtype CONFIGID_HWID_Field is HAL.UInt16;
    subtype CONFIGID_FWID_Field is HAL.UInt16;
@@ -97,17 +98,20 @@ package NRF51_SVD.FICR is
    --  Device identifier.
 
    --  Device identifier.
-   type DEVICEID_Registers is array (0 .. 1) of HAL.UInt32;
+   type DEVICEID_Registers is array (0 .. 1) of HAL.UInt32
+     with Volatile;
 
    --  Encryption root.
 
    --  Encryption root.
-   type ER_Registers is array (0 .. 3) of HAL.UInt32;
+   type ER_Registers is array (0 .. 3) of HAL.UInt32
+     with Volatile;
 
    --  Identity root.
 
    --  Identity root.
-   type IR_Registers is array (0 .. 3) of HAL.UInt32;
+   type IR_Registers is array (0 .. 3) of HAL.UInt32
+     with Volatile;
 
    --  Device address type.
    type DEVICEADDRTYPE_DEVICEADDRTYPE_Field is
@@ -139,7 +143,8 @@ package NRF51_SVD.FICR is
    --  Device address.
 
    --  Device address.
-   type DEVICEADDR_Registers is array (0 .. 1) of HAL.UInt32;
+   type DEVICEADDR_Registers is array (0 .. 1) of HAL.UInt32
+     with Volatile;
 
    --  Override default values for NRF_1Mbit mode.
    type OVERRIDEEN_NRF_1MBIT_Field is
@@ -189,12 +194,14 @@ package NRF51_SVD.FICR is
    --  Override values for the OVERRIDEn registers in RADIO for NRF_1Mbit mode.
 
    --  Override values for the OVERRIDEn registers in RADIO for NRF_1Mbit mode.
-   type NRF_1MBIT_Registers is array (0 .. 4) of HAL.UInt32;
+   type NRF_1MBIT_Registers is array (0 .. 4) of HAL.UInt32
+     with Volatile;
 
    --  Override values for the OVERRIDEn registers in RADIO for BLE_1Mbit mode.
 
    --  Override values for the OVERRIDEn registers in RADIO for BLE_1Mbit mode.
-   type BLE_1MBIT_Registers is array (0 .. 4) of HAL.UInt32;
+   type BLE_1MBIT_Registers is array (0 .. 4) of HAL.UInt32
+     with Volatile;
 
    -----------------
    -- Peripherals --
@@ -210,44 +217,44 @@ package NRF51_SVD.FICR is
      (Discriminent : FICR_Disc := S)
    is record
       --  Code memory page size in bytes.
-      CODEPAGESIZE   : HAL.UInt32;
+      CODEPAGESIZE   : aliased HAL.UInt32;
       --  Code memory size in pages.
-      CODESIZE       : HAL.UInt32;
+      CODESIZE       : aliased HAL.UInt32;
       --  Length of code region 0 in bytes.
-      CLENR0         : HAL.UInt32;
+      CLENR0         : aliased HAL.UInt32;
       --  Pre-programmed factory code present.
-      PPFC           : PPFC_Register;
+      PPFC           : aliased PPFC_Register;
       --  Number of individualy controllable RAM blocks.
-      NUMRAMBLOCK    : HAL.UInt32;
+      NUMRAMBLOCK    : aliased HAL.UInt32;
       --  Configuration identifier.
-      CONFIGID       : CONFIGID_Register;
+      CONFIGID       : aliased CONFIGID_Register;
       --  Device identifier.
-      DEVICEID       : DEVICEID_Registers;
+      DEVICEID       : aliased DEVICEID_Registers;
       --  Encryption root.
-      ER             : ER_Registers;
+      ER             : aliased ER_Registers;
       --  Identity root.
-      IR             : IR_Registers;
+      IR             : aliased IR_Registers;
       --  Device address type.
-      DEVICEADDRTYPE : DEVICEADDRTYPE_Register;
+      DEVICEADDRTYPE : aliased DEVICEADDRTYPE_Register;
       --  Device address.
-      DEVICEADDR     : DEVICEADDR_Registers;
+      DEVICEADDR     : aliased DEVICEADDR_Registers;
       --  Radio calibration override enable.
-      OVERRIDEEN     : OVERRIDEEN_Register;
+      OVERRIDEEN     : aliased OVERRIDEEN_Register;
       --  Override values for the OVERRIDEn registers in RADIO for NRF_1Mbit
       --  mode.
-      NRF_1MBIT      : NRF_1MBIT_Registers;
+      NRF_1MBIT      : aliased NRF_1MBIT_Registers;
       --  Override values for the OVERRIDEn registers in RADIO for BLE_1Mbit
       --  mode.
-      BLE_1MBIT      : BLE_1MBIT_Registers;
+      BLE_1MBIT      : aliased BLE_1MBIT_Registers;
       case Discriminent is
          when S =>
             --  Size of RAM blocks in bytes.
-            SIZERAMBLOCKS : HAL.UInt32;
+            SIZERAMBLOCKS : aliased HAL.UInt32;
          when Default =>
             --  Deprecated array of size of RAM block in bytes. This name is
             --  kept for backward compatinility purposes. Use SIZERAMBLOCKS
             --  instead.
-            SIZERAMBLOCK : SIZERAMBLOCK_Registers;
+            SIZERAMBLOCK : aliased SIZERAMBLOCK_Registers;
       end case;
    end record
      with Unchecked_Union, Volatile;

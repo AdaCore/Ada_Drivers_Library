@@ -1342,7 +1342,8 @@ package NRF51_SVD.RADIO is
    --  Device address base segment.
 
    --  Device address base segment.
-   type DAB_Registers is array (0 .. 7) of HAL.UInt32;
+   type DAB_Registers is array (0 .. 7) of HAL.UInt32
+     with Volatile;
 
    subtype DAP_DAP_Field is HAL.UInt16;
 
@@ -1362,7 +1363,8 @@ package NRF51_SVD.RADIO is
    end record;
 
    --  Device address prefix.
-   type DAP_Registers is array (0 .. 7) of DAP_Register;
+   type DAP_Registers is array (0 .. 7) of DAP_Register
+     with Volatile;
 
    --  Enable or disable device address matching using device address 0.
    type DACNF_ENA0_Field is
@@ -1508,116 +1510,116 @@ package NRF51_SVD.RADIO is
    --  The radio.
    type RADIO_Peripheral is record
       --  Enable radio in TX mode.
-      TASKS_TXEN      : HAL.UInt32;
+      TASKS_TXEN      : aliased HAL.UInt32;
       --  Enable radio in RX mode.
-      TASKS_RXEN      : HAL.UInt32;
+      TASKS_RXEN      : aliased HAL.UInt32;
       --  Start radio.
-      TASKS_START     : HAL.UInt32;
+      TASKS_START     : aliased HAL.UInt32;
       --  Stop radio.
-      TASKS_STOP      : HAL.UInt32;
+      TASKS_STOP      : aliased HAL.UInt32;
       --  Disable radio.
-      TASKS_DISABLE   : HAL.UInt32;
+      TASKS_DISABLE   : aliased HAL.UInt32;
       --  Start the RSSI and take one sample of the receive signal strength.
-      TASKS_RSSISTART : HAL.UInt32;
+      TASKS_RSSISTART : aliased HAL.UInt32;
       --  Stop the RSSI measurement.
-      TASKS_RSSISTOP  : HAL.UInt32;
+      TASKS_RSSISTOP  : aliased HAL.UInt32;
       --  Start the bit counter.
-      TASKS_BCSTART   : HAL.UInt32;
+      TASKS_BCSTART   : aliased HAL.UInt32;
       --  Stop the bit counter.
-      TASKS_BCSTOP    : HAL.UInt32;
+      TASKS_BCSTOP    : aliased HAL.UInt32;
       --  Ready event.
-      EVENTS_READY    : HAL.UInt32;
+      EVENTS_READY    : aliased HAL.UInt32;
       --  Address event.
-      EVENTS_ADDRESS  : HAL.UInt32;
+      EVENTS_ADDRESS  : aliased HAL.UInt32;
       --  Payload event.
-      EVENTS_PAYLOAD  : HAL.UInt32;
+      EVENTS_PAYLOAD  : aliased HAL.UInt32;
       --  End event.
-      EVENTS_END      : HAL.UInt32;
+      EVENTS_END      : aliased HAL.UInt32;
       --  Disable event.
-      EVENTS_DISABLED : HAL.UInt32;
+      EVENTS_DISABLED : aliased HAL.UInt32;
       --  A device address match occurred on the last received packet.
-      EVENTS_DEVMATCH : HAL.UInt32;
+      EVENTS_DEVMATCH : aliased HAL.UInt32;
       --  No device address match occurred on the last received packet.
-      EVENTS_DEVMISS  : HAL.UInt32;
+      EVENTS_DEVMISS  : aliased HAL.UInt32;
       --  Sampling of the receive signal strength complete. A new RSSI sample
       --  is ready for readout at the RSSISAMPLE register.
-      EVENTS_RSSIEND  : HAL.UInt32;
+      EVENTS_RSSIEND  : aliased HAL.UInt32;
       --  Bit counter reached bit count value specified in BCC register.
-      EVENTS_BCMATCH  : HAL.UInt32;
+      EVENTS_BCMATCH  : aliased HAL.UInt32;
       --  Shortcuts for the radio.
-      SHORTS          : SHORTS_Register;
+      SHORTS          : aliased SHORTS_Register;
       --  Interrupt enable set register.
-      INTENSET        : INTENSET_Register;
+      INTENSET        : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR        : INTENCLR_Register;
+      INTENCLR        : aliased INTENCLR_Register;
       --  CRC status of received packet.
-      CRCSTATUS       : CRCSTATUS_Register;
+      CRCSTATUS       : aliased CRCSTATUS_Register;
       --  Received address.
-      RXMATCH         : RXMATCH_Register;
+      RXMATCH         : aliased RXMATCH_Register;
       --  Received CRC.
-      RXCRC           : RXCRC_Register;
+      RXCRC           : aliased RXCRC_Register;
       --  Device address match index.
-      DAI             : DAI_Register;
+      DAI             : aliased DAI_Register;
       --  Packet pointer. Decision point: START task.
-      PACKETPTR       : HAL.UInt32;
+      PACKETPTR       : aliased HAL.UInt32;
       --  Frequency.
-      FREQUENCY       : FREQUENCY_Register;
+      FREQUENCY       : aliased FREQUENCY_Register;
       --  Output power.
-      TXPOWER         : TXPOWER_Register;
+      TXPOWER         : aliased TXPOWER_Register;
       --  Data rate and modulation.
-      MODE            : MODE_Register;
+      MODE            : aliased MODE_Register;
       --  Packet configuration 0.
-      PCNF0           : PCNF0_Register;
+      PCNF0           : aliased PCNF0_Register;
       --  Packet configuration 1.
-      PCNF1           : PCNF1_Register;
+      PCNF1           : aliased PCNF1_Register;
       --  Radio base address 0. Decision point: START task.
-      BASE0           : HAL.UInt32;
+      BASE0           : aliased HAL.UInt32;
       --  Radio base address 1. Decision point: START task.
-      BASE1           : HAL.UInt32;
+      BASE1           : aliased HAL.UInt32;
       --  Prefixes bytes for logical addresses 0 to 3.
-      PREFIX0         : PREFIX0_Register;
+      PREFIX0         : aliased PREFIX0_Register;
       --  Prefixes bytes for logical addresses 4 to 7.
-      PREFIX1         : PREFIX1_Register;
+      PREFIX1         : aliased PREFIX1_Register;
       --  Transmit address select.
-      TXADDRESS       : TXADDRESS_Register;
+      TXADDRESS       : aliased TXADDRESS_Register;
       --  Receive address select.
-      RXADDRESSES     : RXADDRESSES_Register;
+      RXADDRESSES     : aliased RXADDRESSES_Register;
       --  CRC configuration.
-      CRCCNF          : CRCCNF_Register;
+      CRCCNF          : aliased CRCCNF_Register;
       --  CRC polynomial.
-      CRCPOLY         : CRCPOLY_Register;
+      CRCPOLY         : aliased CRCPOLY_Register;
       --  CRC initial value.
-      CRCINIT         : CRCINIT_Register;
+      CRCINIT         : aliased CRCINIT_Register;
       --  Test features enable register.
-      TEST            : TEST_Register;
+      TEST            : aliased TEST_Register;
       --  Inter Frame Spacing in microseconds.
-      TIFS            : TIFS_Register;
+      TIFS            : aliased TIFS_Register;
       --  RSSI sample.
-      RSSISAMPLE      : RSSISAMPLE_Register;
+      RSSISAMPLE      : aliased RSSISAMPLE_Register;
       --  Current radio state.
-      STATE           : STATE_Register;
+      STATE           : aliased STATE_Register;
       --  Data whitening initial value.
-      DATAWHITEIV     : DATAWHITEIV_Register;
+      DATAWHITEIV     : aliased DATAWHITEIV_Register;
       --  Bit counter compare.
-      BCC             : HAL.UInt32;
+      BCC             : aliased HAL.UInt32;
       --  Device address base segment.
-      DAB             : DAB_Registers;
+      DAB             : aliased DAB_Registers;
       --  Device address prefix.
-      DAP             : DAP_Registers;
+      DAP             : aliased DAP_Registers;
       --  Device address match configuration.
-      DACNF           : DACNF_Register;
+      DACNF           : aliased DACNF_Register;
       --  Trim value override register 0.
-      OVERRIDE0       : HAL.UInt32;
+      OVERRIDE0       : aliased HAL.UInt32;
       --  Trim value override register 1.
-      OVERRIDE1       : HAL.UInt32;
+      OVERRIDE1       : aliased HAL.UInt32;
       --  Trim value override register 2.
-      OVERRIDE2       : HAL.UInt32;
+      OVERRIDE2       : aliased HAL.UInt32;
       --  Trim value override register 3.
-      OVERRIDE3       : HAL.UInt32;
+      OVERRIDE3       : aliased HAL.UInt32;
       --  Trim value override register 4.
-      OVERRIDE4       : OVERRIDE4_Register;
+      OVERRIDE4       : aliased OVERRIDE4_Register;
       --  Peripheral power control.
-      POWER           : POWER_Register;
+      POWER           : aliased POWER_Register;
    end record
      with Volatile;
 

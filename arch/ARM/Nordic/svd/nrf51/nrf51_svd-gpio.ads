@@ -468,7 +468,8 @@ package NRF51_SVD.GPIO is
    end record;
 
    --  Configuration of GPIO pins.
-   type PIN_CNF_Registers is array (0 .. 31) of PIN_CNF_Register;
+   type PIN_CNF_Registers is array (0 .. 31) of PIN_CNF_Register
+     with Volatile;
 
    -----------------
    -- Peripherals --
@@ -477,21 +478,21 @@ package NRF51_SVD.GPIO is
    --  General purpose input and output.
    type GPIO_Peripheral is record
       --  Write GPIO port.
-      OUT_k   : OUT_Register;
+      OUT_k   : aliased OUT_Register;
       --  Set individual bits in GPIO port.
-      OUTSET  : OUTSET_Register;
+      OUTSET  : aliased OUTSET_Register;
       --  Clear individual bits in GPIO port.
-      OUTCLR  : OUTCLR_Register;
+      OUTCLR  : aliased OUTCLR_Register;
       --  Read GPIO port.
-      IN_k    : IN_Register;
+      IN_k    : aliased IN_Register;
       --  Direction of GPIO pins.
-      DIR     : DIR_Register;
+      DIR     : aliased DIR_Register;
       --  DIR set register.
-      DIRSET  : DIRSET_Register;
+      DIRSET  : aliased DIRSET_Register;
       --  DIR clear register.
-      DIRCLR  : DIRCLR_Register;
+      DIRCLR  : aliased DIRCLR_Register;
       --  Configuration of GPIO pins.
-      PIN_CNF : PIN_CNF_Registers;
+      PIN_CNF : aliased PIN_CNF_Registers;
    end record
      with Volatile;
 

@@ -90,13 +90,13 @@ package STM32_SVD.IWDG is
    --  Independent watchdog
    type IWDG_Peripheral is record
       --  Key register
-      KR  : KR_Register;
+      KR  : aliased KR_Register;
       --  Prescaler register
-      PR  : PR_Register;
+      PR  : aliased PR_Register;
       --  Reload register
-      RLR : RLR_Register;
+      RLR : aliased RLR_Register;
       --  Status register
-      SR  : SR_Register;
+      SR  : aliased SR_Register;
    end record
      with Volatile;
 

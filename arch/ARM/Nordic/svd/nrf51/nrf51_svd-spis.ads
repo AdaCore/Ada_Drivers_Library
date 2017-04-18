@@ -541,53 +541,53 @@ package NRF51_SVD.SPIS is
    --  SPI slave 1.
    type SPIS_Peripheral is record
       --  Acquire SPI semaphore.
-      TASKS_ACQUIRE   : HAL.UInt32;
+      TASKS_ACQUIRE   : aliased HAL.UInt32;
       --  Release SPI semaphore.
-      TASKS_RELEASE   : HAL.UInt32;
+      TASKS_RELEASE   : aliased HAL.UInt32;
       --  Granted transaction completed.
-      EVENTS_END      : HAL.UInt32;
+      EVENTS_END      : aliased HAL.UInt32;
       --  Semaphore acquired.
-      EVENTS_ACQUIRED : HAL.UInt32;
+      EVENTS_ACQUIRED : aliased HAL.UInt32;
       --  Shortcuts for SPIS.
-      SHORTS          : SHORTS_Register;
+      SHORTS          : aliased SHORTS_Register;
       --  Interrupt enable set register.
-      INTENSET        : INTENSET_Register;
+      INTENSET        : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR        : INTENCLR_Register;
+      INTENCLR        : aliased INTENCLR_Register;
       --  Semaphore status.
-      SEMSTAT         : SEMSTAT_Register;
+      SEMSTAT         : aliased SEMSTAT_Register;
       --  Status from last transaction.
-      STATUS          : STATUS_Register;
+      STATUS          : aliased STATUS_Register;
       --  Enable SPIS.
-      ENABLE          : ENABLE_Register;
+      ENABLE          : aliased ENABLE_Register;
       --  Pin select for SCK.
-      PSELSCK         : HAL.UInt32;
+      PSELSCK         : aliased HAL.UInt32;
       --  Pin select for MISO.
-      PSELMISO        : HAL.UInt32;
+      PSELMISO        : aliased HAL.UInt32;
       --  Pin select for MOSI.
-      PSELMOSI        : HAL.UInt32;
+      PSELMOSI        : aliased HAL.UInt32;
       --  Pin select for CSN.
-      PSELCSN         : HAL.UInt32;
+      PSELCSN         : aliased HAL.UInt32;
       --  RX data pointer.
-      RXDPTR          : HAL.UInt32;
+      RXDPTR          : aliased HAL.UInt32;
       --  Maximum number of bytes in the receive buffer.
-      MAXRX           : MAXRX_Register;
+      MAXRX           : aliased MAXRX_Register;
       --  Number of bytes received in last granted transaction.
-      AMOUNTRX        : AMOUNTRX_Register;
+      AMOUNTRX        : aliased AMOUNTRX_Register;
       --  TX data pointer.
-      TXDPTR          : HAL.UInt32;
+      TXDPTR          : aliased HAL.UInt32;
       --  Maximum number of bytes in the transmit buffer.
-      MAXTX           : MAXTX_Register;
+      MAXTX           : aliased MAXTX_Register;
       --  Number of bytes transmitted in last granted transaction.
-      AMOUNTTX        : AMOUNTTX_Register;
+      AMOUNTTX        : aliased AMOUNTTX_Register;
       --  Configuration register.
-      CONFIG          : CONFIG_Register;
+      CONFIG          : aliased CONFIG_Register;
       --  Default character.
-      DEF             : DEF_Register;
+      DEF             : aliased DEF_Register;
       --  Over-read character.
-      ORC             : ORC_Register;
+      ORC             : aliased ORC_Register;
       --  Peripheral power control.
-      POWER           : POWER_Register;
+      POWER           : aliased POWER_Register;
    end record
      with Volatile;
 

@@ -97,51 +97,51 @@ package Cortex_M_SVD.DWT is
    --  Data Watchpoint Trace
    type DWT_Peripheral is record
       --  Control Register
-      CTRL      : CTRL_Register;
+      CTRL      : aliased CTRL_Register;
       --  Cycle Count Register
-      CYCCNT    : HAL.UInt32;
+      CYCCNT    : aliased HAL.UInt32;
       --  CPI Count Register
-      CPICNT    : HAL.UInt32;
+      CPICNT    : aliased HAL.UInt32;
       --  Exception Overhead Count Register
-      EXCCNT    : HAL.UInt32;
+      EXCCNT    : aliased HAL.UInt32;
       --  Sleep Count Register
-      SLEEPCNT  : HAL.UInt32;
+      SLEEPCNT  : aliased HAL.UInt32;
       --  LSU Count Register
-      LSUCNT    : HAL.UInt32;
+      LSUCNT    : aliased HAL.UInt32;
       --  Folded-instruction Count Register
-      FOLDCNT   : HAL.UInt32;
+      FOLDCNT   : aliased HAL.UInt32;
       --  Program Counter Sample Register
-      PCSR      : HAL.UInt32;
+      PCSR      : aliased HAL.UInt32;
       --  Comparator Register 0
-      COMP0     : HAL.UInt32;
+      COMP0     : aliased HAL.UInt32;
       --  Mask Register 0
-      MASK0     : HAL.UInt32;
+      MASK0     : aliased HAL.UInt32;
       --  Function Register 0
-      FUNCTION0 : HAL.UInt32;
+      FUNCTION0 : aliased HAL.UInt32;
       --  Reserved 0
-      RESERVED0 : HAL.UInt32;
+      RESERVED0 : aliased HAL.UInt32;
       --  Comparator Register 1
-      COMP1     : HAL.UInt32;
+      COMP1     : aliased HAL.UInt32;
       --  Mask Register 1
-      MASK1     : HAL.UInt32;
+      MASK1     : aliased HAL.UInt32;
       --  Function Register 1
-      FUNCTION1 : HAL.UInt32;
+      FUNCTION1 : aliased HAL.UInt32;
       --  Reserved 1
-      RESERVED1 : HAL.UInt32;
+      RESERVED1 : aliased HAL.UInt32;
       --  Comparator Register 2
-      COMP2     : HAL.UInt32;
+      COMP2     : aliased HAL.UInt32;
       --  Mask Register 2
-      MASK2     : HAL.UInt32;
+      MASK2     : aliased HAL.UInt32;
       --  Function Register 2
-      FUNCTION2 : HAL.UInt32;
+      FUNCTION2 : aliased HAL.UInt32;
       --  Reserved 2
-      RESERVED2 : HAL.UInt32;
+      RESERVED2 : aliased HAL.UInt32;
       --  Comparator Register 3
-      COMP3     : HAL.UInt32;
+      COMP3     : aliased HAL.UInt32;
       --  Mask Register 3
-      MASK3     : HAL.UInt32;
+      MASK3     : aliased HAL.UInt32;
       --  Function Register 3
-      FUNCTION3 : HAL.UInt32;
+      FUNCTION3 : aliased HAL.UInt32;
    end record
      with Volatile;
 

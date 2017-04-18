@@ -226,23 +226,23 @@ package NRF51_SVD.RNG is
    --  Random Number Generator.
    type RNG_Peripheral is record
       --  Start the random number generator.
-      TASKS_START   : HAL.UInt32;
+      TASKS_START   : aliased HAL.UInt32;
       --  Stop the random number generator.
-      TASKS_STOP    : HAL.UInt32;
+      TASKS_STOP    : aliased HAL.UInt32;
       --  New random number generated and written to VALUE register.
-      EVENTS_VALRDY : HAL.UInt32;
+      EVENTS_VALRDY : aliased HAL.UInt32;
       --  Shortcuts for the RNG.
-      SHORTS        : SHORTS_Register;
+      SHORTS        : aliased SHORTS_Register;
       --  Interrupt enable set register
-      INTENSET      : INTENSET_Register;
+      INTENSET      : aliased INTENSET_Register;
       --  Interrupt enable clear register
-      INTENCLR      : INTENCLR_Register;
+      INTENCLR      : aliased INTENCLR_Register;
       --  Configuration register.
-      CONFIG        : CONFIG_Register;
+      CONFIG        : aliased CONFIG_Register;
       --  RNG random number.
-      VALUE         : VALUE_Register;
+      VALUE         : aliased VALUE_Register;
       --  Peripheral power control.
-      POWER         : POWER_Register;
+      POWER         : aliased POWER_Register;
    end record
      with Volatile;
 

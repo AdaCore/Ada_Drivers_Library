@@ -50,7 +50,7 @@ package NRF51_SVD.SWI is
    --  SW Interrupts.
    type SWI_Peripheral is record
       --  Unused.
-      UNUSED : HAL.UInt32;
+      UNUSED : aliased HAL.UInt32;
    end record
      with Volatile;
 

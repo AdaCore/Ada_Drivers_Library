@@ -53,11 +53,11 @@ package STM32_SVD.CRC is
    --  Cyclic Redundancy Check (CRC) unit
    type CRC_Peripheral is record
       --  Data register
-      DR  : HAL.UInt32;
+      DR  : aliased HAL.UInt32;
       --  Independent Data register
-      IDR : IDR_Register;
+      IDR : aliased IDR_Register;
       --  Control register
-      CR  : CR_Register;
+      CR  : aliased CR_Register;
    end record
      with Volatile;
 

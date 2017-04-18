@@ -136,17 +136,20 @@ package NRF51_SVD.UICR is
    --  Reserved for Nordic firmware design.
 
    --  Reserved for Nordic firmware design.
-   type NRFFW_Registers is array (0 .. 14) of HAL.UInt32;
+   type NRFFW_Registers is array (0 .. 14) of HAL.UInt32
+     with Volatile;
 
    --  Reserved for Nordic hardware design.
 
    --  Reserved for Nordic hardware design.
-   type NRFHW_Registers is array (0 .. 11) of HAL.UInt32;
+   type NRFHW_Registers is array (0 .. 11) of HAL.UInt32
+     with Volatile;
 
    --  Reserved for customer.
 
    --  Reserved for customer.
-   type CUSTOMER_Registers is array (0 .. 31) of HAL.UInt32;
+   type CUSTOMER_Registers is array (0 .. 31) of HAL.UInt32
+     with Volatile;
 
    -----------------
    -- Peripherals --
@@ -162,24 +165,24 @@ package NRF51_SVD.UICR is
      (Discriminent : UICR_Disc := Mode_1)
    is record
       --  Length of code region 0.
-      CLENR0         : HAL.UInt32;
+      CLENR0         : aliased HAL.UInt32;
       --  Readback protection configuration.
-      RBPCONF        : RBPCONF_Register;
+      RBPCONF        : aliased RBPCONF_Register;
       --  Reset value for CLOCK XTALFREQ register.
-      XTALFREQ       : XTALFREQ_Register;
+      XTALFREQ       : aliased XTALFREQ_Register;
       --  Firmware ID.
-      FWID           : FWID_Register;
+      FWID           : aliased FWID_Register;
       --  Reserved for Nordic hardware design.
-      NRFHW          : NRFHW_Registers;
+      NRFHW          : aliased NRFHW_Registers;
       --  Reserved for customer.
-      CUSTOMER       : CUSTOMER_Registers;
+      CUSTOMER       : aliased CUSTOMER_Registers;
       case Discriminent is
          when Mode_1 =>
             --  Bootloader start address.
-            BOOTLOADERADDR : HAL.UInt32;
+            BOOTLOADERADDR : aliased HAL.UInt32;
          when Mode_2 =>
             --  Reserved for Nordic firmware design.
-            NRFFW : NRFFW_Registers;
+            NRFFW : aliased NRFFW_Registers;
       end case;
    end record
      with Unchecked_Union, Volatile;

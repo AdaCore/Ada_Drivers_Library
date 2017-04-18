@@ -169,22 +169,22 @@ package NRF51_SVD.NVMC is
      (Discriminent : NVMC_Disc := Age)
    is record
       --  Ready flag.
-      READY     : READY_Register;
+      READY     : aliased READY_Register;
       --  Configuration register.
-      CONFIG    : CONFIG_Register;
+      CONFIG    : aliased CONFIG_Register;
       --  Register for erasing all non-volatile user memory.
-      ERASEALL  : ERASEALL_Register;
+      ERASEALL  : aliased ERASEALL_Register;
       --  Register for erasing a protected non-volatile memory page.
-      ERASEPCR0 : HAL.UInt32;
+      ERASEPCR0 : aliased HAL.UInt32;
       --  Register for start erasing User Information Congfiguration Registers.
-      ERASEUICR : ERASEUICR_Register;
+      ERASEUICR : aliased ERASEUICR_Register;
       case Discriminent is
          when Age =>
             --  Register for erasing a non-protected non-volatile memory page.
-            ERASEPAGE : HAL.UInt32;
+            ERASEPAGE : aliased HAL.UInt32;
          when Cr1 =>
             --  Register for erasing a non-protected non-volatile memory page.
-            ERASEPCR1 : HAL.UInt32;
+            ERASEPCR1 : aliased HAL.UInt32;
       end case;
    end record
      with Unchecked_Union, Volatile;

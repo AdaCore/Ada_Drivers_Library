@@ -279,34 +279,34 @@ package FE310_SVD.PWM is
      (Discriminent : PWM0_Disc := PWM0_Disc_16)
    is record
       --  PWM Configuration Register.
-      CONFIG         : CONFIG_Register;
+      CONFIG         : aliased CONFIG_Register;
       case Discriminent is
          when PWM0_Disc_16 =>
             --  PWM Count Register.
-            COUNT_16 : COUNT_16_Register;
+            COUNT_16 : aliased COUNT_16_Register;
             --  PWM Scaled Conunter Register.
-            SCALE_COUNT_16 : SCALE_COUNT_16_Register;
+            SCALE_COUNT_16 : aliased SCALE_COUNT_16_Register;
             --  PWM Compare Register.
-            COMPARE_0_16 : COMPARE_0_16_Register;
+            COMPARE_0_16 : aliased COMPARE_0_16_Register;
             --  PWM Compare Register.
-            COMPARE_1_16 : COMPARE_1_16_Register;
+            COMPARE_1_16 : aliased COMPARE_1_16_Register;
             --  PWM Compare Register.
-            COMPARE_2_16 : COMPARE_2_16_Register;
+            COMPARE_2_16 : aliased COMPARE_2_16_Register;
             --  PWM Compare Register.
-            COMPARE_3_16 : COMPARE_3_16_Register;
+            COMPARE_3_16 : aliased COMPARE_3_16_Register;
          when PWM0_Disc_8 =>
             --  PWM Count Register.
-            COUNT_8 : COUNT_8_Register;
+            COUNT_8 : aliased COUNT_8_Register;
             --  PWM Scaled Conunter Register.
-            SCALE_COUNT_8 : SCALE_COUNT_8_Register;
+            SCALE_COUNT_8 : aliased SCALE_COUNT_8_Register;
             --  PWM Compare Register.
-            COMPARE_0_8 : COMPARE_0_8_Register;
+            COMPARE_0_8 : aliased COMPARE_0_8_Register;
             --  PWM Compare Register.
-            COMPARE_1_8 : COMPARE_1_8_Register;
+            COMPARE_1_8 : aliased COMPARE_1_8_Register;
             --  PWM Compare Register.
-            COMPARE_2_8 : COMPARE_2_8_Register;
+            COMPARE_2_8 : aliased COMPARE_2_8_Register;
             --  PWM Compare Register.
-            COMPARE_3_8 : COMPARE_3_8_Register;
+            COMPARE_3_8 : aliased COMPARE_3_8_Register;
       end case;
    end record
      with Unchecked_Union, Volatile;

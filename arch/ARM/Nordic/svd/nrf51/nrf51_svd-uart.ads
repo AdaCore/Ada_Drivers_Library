@@ -726,57 +726,57 @@ package NRF51_SVD.UART is
    --  Universal Asynchronous Receiver/Transmitter.
    type UART_Peripheral is record
       --  Start UART receiver.
-      TASKS_STARTRX : HAL.UInt32;
+      TASKS_STARTRX : aliased HAL.UInt32;
       --  Stop UART receiver.
-      TASKS_STOPRX  : HAL.UInt32;
+      TASKS_STOPRX  : aliased HAL.UInt32;
       --  Start UART transmitter.
-      TASKS_STARTTX : HAL.UInt32;
+      TASKS_STARTTX : aliased HAL.UInt32;
       --  Stop UART transmitter.
-      TASKS_STOPTX  : HAL.UInt32;
+      TASKS_STOPTX  : aliased HAL.UInt32;
       --  Suspend UART.
-      TASKS_SUSPEND : HAL.UInt32;
+      TASKS_SUSPEND : aliased HAL.UInt32;
       --  CTS activated.
-      EVENTS_CTS    : HAL.UInt32;
+      EVENTS_CTS    : aliased HAL.UInt32;
       --  CTS deactivated.
-      EVENTS_NCTS   : HAL.UInt32;
+      EVENTS_NCTS   : aliased HAL.UInt32;
       --  Data received in RXD.
-      EVENTS_RXDRDY : HAL.UInt32;
+      EVENTS_RXDRDY : aliased HAL.UInt32;
       --  Data sent from TXD.
-      EVENTS_TXDRDY : HAL.UInt32;
+      EVENTS_TXDRDY : aliased HAL.UInt32;
       --  Error detected.
-      EVENTS_ERROR  : HAL.UInt32;
+      EVENTS_ERROR  : aliased HAL.UInt32;
       --  Receiver timeout.
-      EVENTS_RXTO   : HAL.UInt32;
+      EVENTS_RXTO   : aliased HAL.UInt32;
       --  Shortcuts for UART.
-      SHORTS        : SHORTS_Register;
+      SHORTS        : aliased SHORTS_Register;
       --  Interrupt enable set register.
-      INTENSET      : INTENSET_Register;
+      INTENSET      : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR      : INTENCLR_Register;
+      INTENCLR      : aliased INTENCLR_Register;
       --  Error source. Write error field to 1 to clear error.
-      ERRORSRC      : ERRORSRC_Register;
+      ERRORSRC      : aliased ERRORSRC_Register;
       --  Enable UART and acquire IOs.
-      ENABLE        : ENABLE_Register;
+      ENABLE        : aliased ENABLE_Register;
       --  Pin select for RTS.
-      PSELRTS       : HAL.UInt32;
+      PSELRTS       : aliased HAL.UInt32;
       --  Pin select for TXD.
-      PSELTXD       : HAL.UInt32;
+      PSELTXD       : aliased HAL.UInt32;
       --  Pin select for CTS.
-      PSELCTS       : HAL.UInt32;
+      PSELCTS       : aliased HAL.UInt32;
       --  Pin select for RXD.
-      PSELRXD       : HAL.UInt32;
+      PSELRXD       : aliased HAL.UInt32;
       --  RXD register. On read action the buffer pointer is displaced. Once
       --  read the character is consumed. If read when no character available,
       --  the UART will stop working.
-      RXD           : RXD_Register;
+      RXD           : aliased RXD_Register;
       --  TXD register.
-      TXD           : TXD_Register;
+      TXD           : aliased TXD_Register;
       --  UART Baudrate.
-      BAUDRATE      : HAL.UInt32;
+      BAUDRATE      : aliased HAL.UInt32;
       --  Configuration of parity and hardware flow control register.
-      CONFIG        : CONFIG_Register;
+      CONFIG        : aliased CONFIG_Register;
       --  Peripheral power control.
-      POWER         : POWER_Register;
+      POWER         : aliased POWER_Register;
    end record
      with Volatile;
 

@@ -16,7 +16,8 @@ package Cortex_M_SVD.NVIC is
    --  Interrupt Priority Register
 
    --  Interrupt Priority Register
-   type NVIC_IPR_Registers is array (0 .. 7) of HAL.UInt32;
+   type NVIC_IPR_Registers is array (0 .. 7) of HAL.UInt32
+     with Volatile;
 
    -----------------
    -- Peripherals --
@@ -24,15 +25,15 @@ package Cortex_M_SVD.NVIC is
 
    type NVIC_Peripheral is record
       --  Interrupt Set-Enable Registers
-      NVIC_ISER : HAL.UInt32;
+      NVIC_ISER : aliased HAL.UInt32;
       --  Interrupt Clear-Enable Registers
-      NVIC_ICER : HAL.UInt32;
+      NVIC_ICER : aliased HAL.UInt32;
       --  Interrupt Set-Pending Registers
-      NVIC_ISPR : HAL.UInt32;
+      NVIC_ISPR : aliased HAL.UInt32;
       --  Interrupt Clear-Pending Registers
-      NVIC_ICPR : HAL.UInt32;
+      NVIC_ICPR : aliased HAL.UInt32;
       --  Interrupt Priority Register
-      NVIC_IPR  : NVIC_IPR_Registers;
+      NVIC_IPR  : aliased NVIC_IPR_Registers;
    end record
      with Volatile;
 

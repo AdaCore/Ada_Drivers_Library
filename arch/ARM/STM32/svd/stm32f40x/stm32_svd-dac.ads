@@ -366,33 +366,33 @@ package STM32_SVD.DAC is
    --  Digital-to-analog converter
    type DAC_Peripheral is record
       --  control register
-      CR      : CR_Register;
+      CR      : aliased CR_Register;
       --  software trigger register
-      SWTRIGR : SWTRIGR_Register;
+      SWTRIGR : aliased SWTRIGR_Register;
       --  channel1 12-bit right-aligned data holding register
-      DHR12R1 : DHR12R1_Register;
+      DHR12R1 : aliased DHR12R1_Register;
       --  channel1 12-bit left aligned data holding register
-      DHR12L1 : DHR12L1_Register;
+      DHR12L1 : aliased DHR12L1_Register;
       --  channel1 8-bit right aligned data holding register
-      DHR8R1  : DHR8R1_Register;
+      DHR8R1  : aliased DHR8R1_Register;
       --  channel2 12-bit right aligned data holding register
-      DHR12R2 : DHR12R2_Register;
+      DHR12R2 : aliased DHR12R2_Register;
       --  channel2 12-bit left aligned data holding register
-      DHR12L2 : DHR12L2_Register;
+      DHR12L2 : aliased DHR12L2_Register;
       --  channel2 8-bit right-aligned data holding register
-      DHR8R2  : DHR8R2_Register;
+      DHR8R2  : aliased DHR8R2_Register;
       --  Dual DAC 12-bit right-aligned data holding register
-      DHR12RD : DHR12RD_Register;
+      DHR12RD : aliased DHR12RD_Register;
       --  DUAL DAC 12-bit left aligned data holding register
-      DHR12LD : DHR12LD_Register;
+      DHR12LD : aliased DHR12LD_Register;
       --  DUAL DAC 8-bit right aligned data holding register
-      DHR8RD  : DHR8RD_Register;
+      DHR8RD  : aliased DHR8RD_Register;
       --  channel1 data output register
-      DOR1    : DOR1_Register;
+      DOR1    : aliased DOR1_Register;
       --  channel2 data output register
-      DOR2    : DOR2_Register;
+      DOR2    : aliased DOR2_Register;
       --  status register
-      SR      : SR_Register;
+      SR      : aliased SR_Register;
    end record
      with Volatile;
 

@@ -527,17 +527,17 @@ package NRF51_SVD.MPU is
    --  Memory Protection Unit.
    type MPU_Peripheral is record
       --  Configuration of peripherals in mpu regions.
-      PERR0          : PERR0_Register;
+      PERR0          : aliased PERR0_Register;
       --  Length of RAM region 0.
-      RLENR0         : HAL.UInt32;
+      RLENR0         : aliased HAL.UInt32;
       --  Erase and write protection bit enable set register.
-      PROTENSET0     : PROTENSET0_Register;
+      PROTENSET0     : aliased PROTENSET0_Register;
       --  Erase and write protection bit enable set register.
-      PROTENSET1     : PROTENSET1_Register;
+      PROTENSET1     : aliased PROTENSET1_Register;
       --  Disable erase and write protection mechanism in debug mode.
-      DISABLEINDEBUG : DISABLEINDEBUG_Register;
+      DISABLEINDEBUG : aliased DISABLEINDEBUG_Register;
       --  Erase and write protection block size.
-      PROTBLOCKSIZE  : PROTBLOCKSIZE_Register;
+      PROTBLOCKSIZE  : aliased PROTBLOCKSIZE_Register;
    end record
      with Volatile;
 

@@ -17,32 +17,38 @@ package Cortex_M_SVD.NVIC is
    --  Interrupt Set-Enable Registers
 
    --  Interrupt Set-Enable Registers
-   type NVIC_ISER_Registers is array (0 .. 7) of HAL.UInt32;
+   type NVIC_ISER_Registers is array (0 .. 7) of HAL.UInt32
+     with Volatile;
 
    --  Interrupt Clear-Enable Registers
 
    --  Interrupt Clear-Enable Registers
-   type NVIC_ICER_Registers is array (0 .. 7) of HAL.UInt32;
+   type NVIC_ICER_Registers is array (0 .. 7) of HAL.UInt32
+     with Volatile;
 
    --  Interrupt Set-Pending Registers
 
    --  Interrupt Set-Pending Registers
-   type NVIC_ISPR_Registers is array (0 .. 7) of HAL.UInt32;
+   type NVIC_ISPR_Registers is array (0 .. 7) of HAL.UInt32
+     with Volatile;
 
    --  Interrupt Clear-Pending Registers
 
    --  Interrupt Clear-Pending Registers
-   type NVIC_ICPR_Registers is array (0 .. 7) of HAL.UInt32;
+   type NVIC_ICPR_Registers is array (0 .. 7) of HAL.UInt32
+     with Volatile;
 
    --  Interrupt Active Bit Register
 
    --  Interrupt Active Bit Register
-   type NVIC_IABR_Registers is array (0 .. 7) of HAL.UInt32;
+   type NVIC_IABR_Registers is array (0 .. 7) of HAL.UInt32
+     with Volatile;
 
    --  Interrupt Priority Register
 
    --  Interrupt Priority Register
-   type NVIC_IPR_Registers is array (0 .. 59) of HAL.UInt32;
+   type NVIC_IPR_Registers is array (0 .. 59) of HAL.UInt32
+     with Volatile;
 
    subtype STIR_INTID_Field is HAL.UInt9;
 
@@ -68,19 +74,19 @@ package Cortex_M_SVD.NVIC is
 
    type NVIC_Peripheral is record
       --  Interrupt Set-Enable Registers
-      NVIC_ISER : NVIC_ISER_Registers;
+      NVIC_ISER : aliased NVIC_ISER_Registers;
       --  Interrupt Clear-Enable Registers
-      NVIC_ICER : NVIC_ICER_Registers;
+      NVIC_ICER : aliased NVIC_ICER_Registers;
       --  Interrupt Set-Pending Registers
-      NVIC_ISPR : NVIC_ISPR_Registers;
+      NVIC_ISPR : aliased NVIC_ISPR_Registers;
       --  Interrupt Clear-Pending Registers
-      NVIC_ICPR : NVIC_ICPR_Registers;
+      NVIC_ICPR : aliased NVIC_ICPR_Registers;
       --  Interrupt Active Bit Register
-      NVIC_IABR : NVIC_IABR_Registers;
+      NVIC_IABR : aliased NVIC_IABR_Registers;
       --  Interrupt Priority Register
-      NVIC_IPR  : NVIC_IPR_Registers;
+      NVIC_IPR  : aliased NVIC_IPR_Registers;
       --  Software Trigger Interrupt Register
-      STIR      : STIR_Register;
+      STIR      : aliased STIR_Register;
    end record
      with Volatile;
 

@@ -282,29 +282,29 @@ package NRF51_SVD.SPI is
    --  SPI master 0.
    type SPI_Peripheral is record
       --  TXD byte sent and RXD byte received.
-      EVENTS_READY : HAL.UInt32;
+      EVENTS_READY : aliased HAL.UInt32;
       --  Interrupt enable set register.
-      INTENSET     : INTENSET_Register;
+      INTENSET     : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR     : INTENCLR_Register;
+      INTENCLR     : aliased INTENCLR_Register;
       --  Enable SPI.
-      ENABLE       : ENABLE_Register;
+      ENABLE       : aliased ENABLE_Register;
       --  Pin select for SCK.
-      PSELSCK      : HAL.UInt32;
+      PSELSCK      : aliased HAL.UInt32;
       --  Pin select for MOSI.
-      PSELMOSI     : HAL.UInt32;
+      PSELMOSI     : aliased HAL.UInt32;
       --  Pin select for MISO.
-      PSELMISO     : HAL.UInt32;
+      PSELMISO     : aliased HAL.UInt32;
       --  RX data.
-      RXD          : RXD_Register;
+      RXD          : aliased RXD_Register;
       --  TX data.
-      TXD          : TXD_Register;
+      TXD          : aliased TXD_Register;
       --  SPI frequency
-      FREQUENCY    : HAL.UInt32;
+      FREQUENCY    : aliased HAL.UInt32;
       --  Configuration register.
-      CONFIG       : CONFIG_Register;
+      CONFIG       : aliased CONFIG_Register;
       --  Peripheral power control.
-      POWER        : POWER_Register;
+      POWER        : aliased POWER_Register;
    end record
      with Volatile;
 

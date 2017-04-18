@@ -157,19 +157,19 @@ package NRF51_SVD.TEMP is
    --  Temperature Sensor.
    type TEMP_Peripheral is record
       --  Start temperature measurement.
-      TASKS_START    : HAL.UInt32;
+      TASKS_START    : aliased HAL.UInt32;
       --  Stop temperature measurement.
-      TASKS_STOP     : HAL.UInt32;
+      TASKS_STOP     : aliased HAL.UInt32;
       --  Temperature measurement complete, data ready event.
-      EVENTS_DATARDY : HAL.UInt32;
+      EVENTS_DATARDY : aliased HAL.UInt32;
       --  Interrupt enable set register.
-      INTENSET       : INTENSET_Register;
+      INTENSET       : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR       : INTENCLR_Register;
+      INTENCLR       : aliased INTENCLR_Register;
       --  Die temperature in degC, 2's complement format, 0.25 degC pecision.
-      TEMP           : HAL.UInt32;
+      TEMP           : aliased HAL.UInt32;
       --  Peripheral power control.
-      POWER          : POWER_Register;
+      POWER          : aliased POWER_Register;
    end record
      with Volatile;
 

@@ -681,51 +681,51 @@ package NRF51_SVD.TWI is
    --  Two-wire interface master 0.
    type TWI_Peripheral is record
       --  Start 2-Wire master receive sequence.
-      TASKS_STARTRX    : HAL.UInt32;
+      TASKS_STARTRX    : aliased HAL.UInt32;
       --  Start 2-Wire master transmit sequence.
-      TASKS_STARTTX    : HAL.UInt32;
+      TASKS_STARTTX    : aliased HAL.UInt32;
       --  Stop 2-Wire transaction.
-      TASKS_STOP       : HAL.UInt32;
+      TASKS_STOP       : aliased HAL.UInt32;
       --  Suspend 2-Wire transaction.
-      TASKS_SUSPEND    : HAL.UInt32;
+      TASKS_SUSPEND    : aliased HAL.UInt32;
       --  Resume 2-Wire transaction.
-      TASKS_RESUME     : HAL.UInt32;
+      TASKS_RESUME     : aliased HAL.UInt32;
       --  Two-wire stopped.
-      EVENTS_STOPPED   : HAL.UInt32;
+      EVENTS_STOPPED   : aliased HAL.UInt32;
       --  Two-wire ready to deliver new RXD byte received.
-      EVENTS_RXDREADY  : HAL.UInt32;
+      EVENTS_RXDREADY  : aliased HAL.UInt32;
       --  Two-wire finished sending last TXD byte.
-      EVENTS_TXDSENT   : HAL.UInt32;
+      EVENTS_TXDSENT   : aliased HAL.UInt32;
       --  Two-wire error detected.
-      EVENTS_ERROR     : HAL.UInt32;
+      EVENTS_ERROR     : aliased HAL.UInt32;
       --  Two-wire byte boundary.
-      EVENTS_BB        : HAL.UInt32;
+      EVENTS_BB        : aliased HAL.UInt32;
       --  Two-wire suspended.
-      EVENTS_SUSPENDED : HAL.UInt32;
+      EVENTS_SUSPENDED : aliased HAL.UInt32;
       --  Shortcuts for TWI.
-      SHORTS           : SHORTS_Register;
+      SHORTS           : aliased SHORTS_Register;
       --  Interrupt enable set register.
-      INTENSET         : INTENSET_Register;
+      INTENSET         : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR         : INTENCLR_Register;
+      INTENCLR         : aliased INTENCLR_Register;
       --  Two-wire error source. Write error field to 1 to clear error.
-      ERRORSRC         : ERRORSRC_Register;
+      ERRORSRC         : aliased ERRORSRC_Register;
       --  Enable two-wire master.
-      ENABLE           : ENABLE_Register;
+      ENABLE           : aliased ENABLE_Register;
       --  Pin select for SCL.
-      PSELSCL          : HAL.UInt32;
+      PSELSCL          : aliased HAL.UInt32;
       --  Pin select for SDA.
-      PSELSDA          : HAL.UInt32;
+      PSELSDA          : aliased HAL.UInt32;
       --  RX data register.
-      RXD              : RXD_Register;
+      RXD              : aliased RXD_Register;
       --  TX data register.
-      TXD              : TXD_Register;
+      TXD              : aliased TXD_Register;
       --  Two-wire frequency.
-      FREQUENCY        : HAL.UInt32;
+      FREQUENCY        : aliased HAL.UInt32;
       --  Address used in the two-wire transfer.
-      ADDRESS          : ADDRESS_Register;
+      ADDRESS          : aliased ADDRESS_Register;
       --  Peripheral power control.
-      POWER            : POWER_Register;
+      POWER            : aliased POWER_Register;
    end record
      with Volatile;
 

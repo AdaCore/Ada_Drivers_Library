@@ -329,34 +329,34 @@ package NRF51_SVD.AAR is
    type AAR_Peripheral is record
       --  Start resolving addresses based on IRKs specified in the IRK data
       --  structure.
-      TASKS_START        : HAL.UInt32;
+      TASKS_START        : aliased HAL.UInt32;
       --  Stop resolving addresses.
-      TASKS_STOP         : HAL.UInt32;
+      TASKS_STOP         : aliased HAL.UInt32;
       --  Address resolution procedure completed.
-      EVENTS_END         : HAL.UInt32;
+      EVENTS_END         : aliased HAL.UInt32;
       --  Address resolved.
-      EVENTS_RESOLVED    : HAL.UInt32;
+      EVENTS_RESOLVED    : aliased HAL.UInt32;
       --  Address not resolved.
-      EVENTS_NOTRESOLVED : HAL.UInt32;
+      EVENTS_NOTRESOLVED : aliased HAL.UInt32;
       --  Interrupt enable set register.
-      INTENSET           : INTENSET_Register;
+      INTENSET           : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR           : INTENCLR_Register;
+      INTENCLR           : aliased INTENCLR_Register;
       --  Resolution status.
-      STATUS             : STATUS_Register;
+      STATUS             : aliased STATUS_Register;
       --  Enable AAR.
-      ENABLE             : ENABLE_Register;
+      ENABLE             : aliased ENABLE_Register;
       --  Number of Identity root Keys in the IRK data structure.
-      NIRK               : NIRK_Register;
+      NIRK               : aliased NIRK_Register;
       --  Pointer to the IRK data structure.
-      IRKPTR             : HAL.UInt32;
+      IRKPTR             : aliased HAL.UInt32;
       --  Pointer to the resolvable address (6 bytes).
-      ADDRPTR            : HAL.UInt32;
+      ADDRPTR            : aliased HAL.UInt32;
       --  Pointer to a "scratch" data area used for temporary storage during
       --  resolution. A minimum of 3 bytes must be reserved.
-      SCRATCHPTR         : HAL.UInt32;
+      SCRATCHPTR         : aliased HAL.UInt32;
       --  Peripheral power control.
-      POWER              : POWER_Register;
+      POWER              : aliased POWER_Register;
    end record
      with Volatile;
 

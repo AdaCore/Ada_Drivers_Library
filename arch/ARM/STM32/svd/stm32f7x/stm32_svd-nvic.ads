@@ -83,81 +83,81 @@ package STM32_SVD.NVIC is
    --  Nested Vectored Interrupt Controller
    type NVIC_Peripheral is record
       --  Interrupt Controller Type Register
-      ICTR  : ICTR_Register;
+      ICTR  : aliased ICTR_Register;
       --  Interrupt Set-Enable Register
-      ISER0 : HAL.UInt32;
+      ISER0 : aliased HAL.UInt32;
       --  Interrupt Set-Enable Register
-      ISER1 : HAL.UInt32;
+      ISER1 : aliased HAL.UInt32;
       --  Interrupt Set-Enable Register
-      ISER2 : HAL.UInt32;
+      ISER2 : aliased HAL.UInt32;
       --  Interrupt Clear-Enable Register
-      ICER0 : HAL.UInt32;
+      ICER0 : aliased HAL.UInt32;
       --  Interrupt Clear-Enable Register
-      ICER1 : HAL.UInt32;
+      ICER1 : aliased HAL.UInt32;
       --  Interrupt Clear-Enable Register
-      ICER2 : HAL.UInt32;
+      ICER2 : aliased HAL.UInt32;
       --  Interrupt Set-Pending Register
-      ISPR0 : HAL.UInt32;
+      ISPR0 : aliased HAL.UInt32;
       --  Interrupt Set-Pending Register
-      ISPR1 : HAL.UInt32;
+      ISPR1 : aliased HAL.UInt32;
       --  Interrupt Set-Pending Register
-      ISPR2 : HAL.UInt32;
+      ISPR2 : aliased HAL.UInt32;
       --  Interrupt Clear-Pending Register
-      ICPR0 : HAL.UInt32;
+      ICPR0 : aliased HAL.UInt32;
       --  Interrupt Clear-Pending Register
-      ICPR1 : HAL.UInt32;
+      ICPR1 : aliased HAL.UInt32;
       --  Interrupt Clear-Pending Register
-      ICPR2 : HAL.UInt32;
+      ICPR2 : aliased HAL.UInt32;
       --  Interrupt Active Bit Register
-      IABR0 : HAL.UInt32;
+      IABR0 : aliased HAL.UInt32;
       --  Interrupt Active Bit Register
-      IABR1 : HAL.UInt32;
+      IABR1 : aliased HAL.UInt32;
       --  Interrupt Active Bit Register
-      IABR2 : HAL.UInt32;
+      IABR2 : aliased HAL.UInt32;
       --  Interrupt Priority Register
-      IPR0  : IPR_Register;
+      IPR0  : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR1  : IPR_Register;
+      IPR1  : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR2  : IPR_Register;
+      IPR2  : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR3  : IPR_Register;
+      IPR3  : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR4  : IPR_Register;
+      IPR4  : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR5  : IPR_Register;
+      IPR5  : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR6  : IPR_Register;
+      IPR6  : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR7  : IPR_Register;
+      IPR7  : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR8  : IPR_Register;
+      IPR8  : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR9  : IPR_Register;
+      IPR9  : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR10 : IPR_Register;
+      IPR10 : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR11 : IPR_Register;
+      IPR11 : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR12 : IPR_Register;
+      IPR12 : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR13 : IPR_Register;
+      IPR13 : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR14 : IPR_Register;
+      IPR14 : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR15 : IPR_Register;
+      IPR15 : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR16 : IPR_Register;
+      IPR16 : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR17 : IPR_Register;
+      IPR17 : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR18 : IPR_Register;
+      IPR18 : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR19 : IPR_Register;
+      IPR19 : aliased IPR_Register;
       --  Interrupt Priority Register
-      IPR20 : IPR_Register;
+      IPR20 : aliased IPR_Register;
       --  Software Triggered Interrupt Register
-      STIR  : STIR_Register;
+      STIR  : aliased STIR_Register;
    end record
      with Volatile;
 

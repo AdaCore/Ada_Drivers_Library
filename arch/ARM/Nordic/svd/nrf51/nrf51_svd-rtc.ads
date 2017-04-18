@@ -46,7 +46,8 @@ package NRF51_SVD.RTC is
    --  Compare event on CC[n] match.
 
    --  Compare event on CC[n] match.
-   type EVENTS_COMPARE_Registers is array (0 .. 3) of HAL.UInt32;
+   type EVENTS_COMPARE_Registers is array (0 .. 3) of HAL.UInt32
+     with Volatile;
 
    --  Enable interrupt on TICK event.
    type INTENSET_TICK_Field is
@@ -676,7 +677,8 @@ package NRF51_SVD.RTC is
    end record;
 
    --  Capture/compare registers.
-   type CC_Registers is array (0 .. 3) of CC_Register;
+   type CC_Registers is array (0 .. 3) of CC_Register
+     with Volatile;
 
    --  Peripheral power control.
    type POWER_POWER_Field is
@@ -712,40 +714,40 @@ package NRF51_SVD.RTC is
    --  Real time counter 0.
    type RTC_Peripheral is record
       --  Start RTC Counter.
-      TASKS_START      : HAL.UInt32;
+      TASKS_START      : aliased HAL.UInt32;
       --  Stop RTC Counter.
-      TASKS_STOP       : HAL.UInt32;
+      TASKS_STOP       : aliased HAL.UInt32;
       --  Clear RTC Counter.
-      TASKS_CLEAR      : HAL.UInt32;
+      TASKS_CLEAR      : aliased HAL.UInt32;
       --  Set COUNTER to 0xFFFFFFF0.
-      TASKS_TRIGOVRFLW : HAL.UInt32;
+      TASKS_TRIGOVRFLW : aliased HAL.UInt32;
       --  Event on COUNTER increment.
-      EVENTS_TICK      : HAL.UInt32;
+      EVENTS_TICK      : aliased HAL.UInt32;
       --  Event on COUNTER overflow.
-      EVENTS_OVRFLW    : HAL.UInt32;
+      EVENTS_OVRFLW    : aliased HAL.UInt32;
       --  Compare event on CC[n] match.
-      EVENTS_COMPARE   : EVENTS_COMPARE_Registers;
+      EVENTS_COMPARE   : aliased EVENTS_COMPARE_Registers;
       --  Interrupt enable set register.
-      INTENSET         : INTENSET_Register;
+      INTENSET         : aliased INTENSET_Register;
       --  Interrupt enable clear register.
-      INTENCLR         : INTENCLR_Register;
+      INTENCLR         : aliased INTENCLR_Register;
       --  Configures event enable routing to PPI for each RTC event.
-      EVTEN            : EVTEN_Register;
+      EVTEN            : aliased EVTEN_Register;
       --  Enable events routing to PPI. The reading of this register gives the
       --  value of EVTEN.
-      EVTENSET         : EVTENSET_Register;
+      EVTENSET         : aliased EVTENSET_Register;
       --  Disable events routing to PPI. The reading of this register gives the
       --  value of EVTEN.
-      EVTENCLR         : EVTENCLR_Register;
+      EVTENCLR         : aliased EVTENCLR_Register;
       --  Current COUNTER value.
-      COUNTER          : COUNTER_Register;
+      COUNTER          : aliased COUNTER_Register;
       --  12-bit prescaler for COUNTER frequency (32768/(PRESCALER+1)). Must be
       --  written when RTC is STOPed.
-      PRESCALER        : PRESCALER_Register;
+      PRESCALER        : aliased PRESCALER_Register;
       --  Capture/compare registers.
-      CC               : CC_Registers;
+      CC               : aliased CC_Registers;
       --  Peripheral power control.
-      POWER            : POWER_Register;
+      POWER            : aliased POWER_Register;
    end record
      with Volatile;
 

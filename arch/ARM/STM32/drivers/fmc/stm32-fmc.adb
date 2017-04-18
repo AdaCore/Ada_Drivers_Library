@@ -144,7 +144,17 @@ package body STM32.FMC is
             null;
       end case;
 
-      SDCMR.CTB.Val := FMC_SDRAM_Cmd_Target_Bank'Enum_Rep (Cmd.Target);
+      case Cmd.Target is
+         when FMC_Bank1_SDRAM =>
+            SDCMR.CTB1 := True;
+            SDCMR.CTB2 := False;
+         when FMC_Bank2_SDRAM =>
+            SDCMR.CTB1 := False;
+            SDCMR.CTB2 := True;
+         when FMC_Banks_1_2_SDRAM =>
+            SDCMR.CTB1 := True;
+            SDCMR.CTB2 := True;
+      end case;
       SDCMR.MODE    := FMC_SDRAM_Cmd_Mode'Enum_Rep (Cmd.Mode);
 
       FMC_Periph.SDCMR := SDCMR;

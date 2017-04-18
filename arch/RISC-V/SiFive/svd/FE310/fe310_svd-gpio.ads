@@ -446,39 +446,39 @@ package FE310_SVD.GPIO is
    --  General purpose input/output controller.
    type GPIO0_Peripheral is record
       --  Pin value.
-      VALUE         : VALUE_Register;
+      VALUE         : aliased VALUE_Register;
       --  Pin input enable.
-      INPUT_EN      : INPUT_EN_Register;
+      INPUT_EN      : aliased INPUT_EN_Register;
       --  Pin output enable.
-      OUTPUT_EN     : OUTPUT_EN_Register;
+      OUTPUT_EN     : aliased OUTPUT_EN_Register;
       --  Output port value.
-      PORT          : PORT_Register;
+      PORT          : aliased PORT_Register;
       --  Internal Pull-Up enable.
-      PULLUP        : PULLUP_Register;
+      PULLUP        : aliased PULLUP_Register;
       --  Drive Strength.
-      DRIVE         : DRIVE_Register;
+      DRIVE         : aliased DRIVE_Register;
       --  Rise interrupt enable.
-      RISE_INT_EN   : RISE_INT_EN_Register;
+      RISE_INT_EN   : aliased RISE_INT_EN_Register;
       --  Rise interrupt pending.
-      RISE_INT_PEMD : RISE_INT_PEMD_Register;
+      RISE_INT_PEMD : aliased RISE_INT_PEMD_Register;
       --  Fall interrupt enable.
-      FALL_INT_EN   : FALL_INT_EN_Register;
+      FALL_INT_EN   : aliased FALL_INT_EN_Register;
       --  Fall interrupt pending.
-      FALL_INT_PEND : FALL_INT_PEND_Register;
+      FALL_INT_PEND : aliased FALL_INT_PEND_Register;
       --  High interrupt enable.
-      HIGH_INT_EN   : HIGH_INT_EN_Register;
+      HIGH_INT_EN   : aliased HIGH_INT_EN_Register;
       --  High interrupt pending.
-      HIGH_INT_PEND : HIGH_INT_PEND_Register;
+      HIGH_INT_PEND : aliased HIGH_INT_PEND_Register;
       --  Low interrupt enable.
-      LOW_INT_EN    : LOW_INT_EN_Register;
+      LOW_INT_EN    : aliased LOW_INT_EN_Register;
       --  Low interrupt pending.
-      LOW_INT_PEND  : LOW_INT_PEND_Register;
+      LOW_INT_PEND  : aliased LOW_INT_PEND_Register;
       --  HW I/O function enable.
-      IO_FUNC_EN    : IO_FUNC_EN_Register;
+      IO_FUNC_EN    : aliased IO_FUNC_EN_Register;
       --  HW I/O function select.
-      IO_FUNC_SEL   : IO_FUNC_SEL_Register;
+      IO_FUNC_SEL   : aliased IO_FUNC_SEL_Register;
       --  Output XOR (invert).
-      OUT_XOR       : OUT_XOR_Register;
+      OUT_XOR       : aliased OUT_XOR_Register;
    end record
      with Volatile;
 

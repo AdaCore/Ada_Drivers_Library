@@ -562,30 +562,6 @@ package STM32_SVD.RTC is
 
    subtype CALR_CALM_Field is HAL.UInt9;
 
-   --  CALR_CALW array
-   type CALR_CALW_Field_Array is array (8 .. 9) of Boolean
-     with Component_Size => 1, Size => 2;
-
-   --  Type definition for CALR_CALW
-   type CALR_CALW_Field
-     (As_Array : Boolean := False)
-   is record
-      case As_Array is
-         when False =>
-            --  CALW as a value
-            Val : HAL.UInt2;
-         when True =>
-            --  CALW as an array
-            Arr : CALR_CALW_Field_Array;
-      end case;
-   end record
-     with Unchecked_Union, Size => 2;
-
-   for CALR_CALW_Field use record
-      Val at 0 range 0 .. 1;
-      Arr at 0 range 0 .. 1;
-   end record;
-
    --  calibration register
    type CALR_Register is record
       --  Calibration minus
@@ -593,7 +569,9 @@ package STM32_SVD.RTC is
       --  unspecified
       Reserved_9_12  : HAL.UInt4 := 16#0#;
       --  Use a 16-second calibration cycle period
-      CALW           : CALR_CALW_Field := (As_Array => False, Val => 16#0#);
+      CALW16         : Boolean := False;
+      --  Use an 8-second calibration cycle period
+      CALW8          : Boolean := False;
       --  Increase frequency of RTC by 488.5 ppm
       CALP           : Boolean := False;
       --  unspecified
@@ -605,7 +583,8 @@ package STM32_SVD.RTC is
    for CALR_Register use record
       CALM           at 0 range 0 .. 8;
       Reserved_9_12  at 0 range 9 .. 12;
-      CALW           at 0 range 13 .. 14;
+      CALW16         at 0 range 13 .. 13;
+      CALW8          at 0 range 14 .. 14;
       CALP           at 0 range 15 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
@@ -762,107 +741,107 @@ package STM32_SVD.RTC is
    --  Real-time clock
    type RTC_Peripheral is record
       --  time register
-      TR       : TR_Register;
+      TR       : aliased TR_Register;
       --  date register
-      DR       : DR_Register;
+      DR       : aliased DR_Register;
       --  control register
-      CR       : CR_Register;
+      CR       : aliased CR_Register;
       --  initialization and status register
-      ISR      : ISR_Register;
+      ISR      : aliased ISR_Register;
       --  prescaler register
-      PRER     : PRER_Register;
+      PRER     : aliased PRER_Register;
       --  wakeup timer register
-      WUTR     : WUTR_Register;
+      WUTR     : aliased WUTR_Register;
       --  alarm A register
-      ALRMAR   : ALRMAR_Register;
+      ALRMAR   : aliased ALRMAR_Register;
       --  alarm B register
-      ALRMBR   : ALRMBR_Register;
+      ALRMBR   : aliased ALRMBR_Register;
       --  write protection register
-      WPR      : WPR_Register;
+      WPR      : aliased WPR_Register;
       --  sub second register
-      SSR      : SSR_Register;
+      SSR      : aliased SSR_Register;
       --  shift control register
-      SHIFTR   : SHIFTR_Register;
+      SHIFTR   : aliased SHIFTR_Register;
       --  time stamp time register
-      TSTR     : TSTR_Register;
+      TSTR     : aliased TSTR_Register;
       --  time stamp date register
-      TSDR     : TSDR_Register;
+      TSDR     : aliased TSDR_Register;
       --  timestamp sub second register
-      TSSSR    : TSSSR_Register;
+      TSSSR    : aliased TSSSR_Register;
       --  calibration register
-      CALR     : CALR_Register;
+      CALR     : aliased CALR_Register;
       --  tamper configuration register
-      TAMPCR   : TAMPCR_Register;
+      TAMPCR   : aliased TAMPCR_Register;
       --  alarm A sub second register
-      ALRMASSR : ALRMASSR_Register;
+      ALRMASSR : aliased ALRMASSR_Register;
       --  alarm B sub second register
-      ALRMBSSR : ALRMBSSR_Register;
+      ALRMBSSR : aliased ALRMBSSR_Register;
       --  option register
-      OR_k     : OR_Register;
+      OR_k     : aliased OR_Register;
       --  backup register
-      BKP0R    : HAL.UInt32;
+      BKP0R    : aliased HAL.UInt32;
       --  backup register
-      BKP1R    : HAL.UInt32;
+      BKP1R    : aliased HAL.UInt32;
       --  backup register
-      BKP2R    : HAL.UInt32;
+      BKP2R    : aliased HAL.UInt32;
       --  backup register
-      BKP3R    : HAL.UInt32;
+      BKP3R    : aliased HAL.UInt32;
       --  backup register
-      BKP4R    : HAL.UInt32;
+      BKP4R    : aliased HAL.UInt32;
       --  backup register
-      BKP5R    : HAL.UInt32;
+      BKP5R    : aliased HAL.UInt32;
       --  backup register
-      BKP6R    : HAL.UInt32;
+      BKP6R    : aliased HAL.UInt32;
       --  backup register
-      BKP7R    : HAL.UInt32;
+      BKP7R    : aliased HAL.UInt32;
       --  backup register
-      BKP8R    : HAL.UInt32;
+      BKP8R    : aliased HAL.UInt32;
       --  backup register
-      BKP9R    : HAL.UInt32;
+      BKP9R    : aliased HAL.UInt32;
       --  backup register
-      BKP10R   : HAL.UInt32;
+      BKP10R   : aliased HAL.UInt32;
       --  backup register
-      BKP11R   : HAL.UInt32;
+      BKP11R   : aliased HAL.UInt32;
       --  backup register
-      BKP12R   : HAL.UInt32;
+      BKP12R   : aliased HAL.UInt32;
       --  backup register
-      BKP13R   : HAL.UInt32;
+      BKP13R   : aliased HAL.UInt32;
       --  backup register
-      BKP14R   : HAL.UInt32;
+      BKP14R   : aliased HAL.UInt32;
       --  backup register
-      BKP15R   : HAL.UInt32;
+      BKP15R   : aliased HAL.UInt32;
       --  backup register
-      BKP16R   : HAL.UInt32;
+      BKP16R   : aliased HAL.UInt32;
       --  backup register
-      BKP17R   : HAL.UInt32;
+      BKP17R   : aliased HAL.UInt32;
       --  backup register
-      BKP18R   : HAL.UInt32;
+      BKP18R   : aliased HAL.UInt32;
       --  backup register
-      BKP19R   : HAL.UInt32;
+      BKP19R   : aliased HAL.UInt32;
       --  backup register
-      BKP20R   : HAL.UInt32;
+      BKP20R   : aliased HAL.UInt32;
       --  backup register
-      BKP21R   : HAL.UInt32;
+      BKP21R   : aliased HAL.UInt32;
       --  backup register
-      BKP22R   : HAL.UInt32;
+      BKP22R   : aliased HAL.UInt32;
       --  backup register
-      BKP23R   : HAL.UInt32;
+      BKP23R   : aliased HAL.UInt32;
       --  backup register
-      BKP24R   : HAL.UInt32;
+      BKP24R   : aliased HAL.UInt32;
       --  backup register
-      BKP25R   : HAL.UInt32;
+      BKP25R   : aliased HAL.UInt32;
       --  backup register
-      BKP26R   : HAL.UInt32;
+      BKP26R   : aliased HAL.UInt32;
       --  backup register
-      BKP27R   : HAL.UInt32;
+      BKP27R   : aliased HAL.UInt32;
       --  backup register
-      BKP28R   : HAL.UInt32;
+      BKP28R   : aliased HAL.UInt32;
       --  backup register
-      BKP29R   : HAL.UInt32;
+      BKP29R   : aliased HAL.UInt32;
       --  backup register
-      BKP30R   : HAL.UInt32;
+      BKP30R   : aliased HAL.UInt32;
       --  backup register
-      BKP31R   : HAL.UInt32;
+      BKP31R   : aliased HAL.UInt32;
    end record
      with Volatile;
 

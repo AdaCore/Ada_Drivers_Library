@@ -1851,183 +1851,183 @@ package STM32_SVD.CAN is
    --  Controller area network
    type CAN_Peripheral is record
       --  master control register
-      MCR   : MCR_Register;
+      MCR   : aliased MCR_Register;
       --  master status register
-      MSR   : MSR_Register;
+      MSR   : aliased MSR_Register;
       --  transmit status register
-      TSR   : TSR_Register;
+      TSR   : aliased TSR_Register;
       --  receive FIFO 0 register
-      RF0R  : RF0R_Register;
+      RF0R  : aliased RF0R_Register;
       --  receive FIFO 1 register
-      RF1R  : RF1R_Register;
+      RF1R  : aliased RF1R_Register;
       --  interrupt enable register
-      IER   : IER_Register;
+      IER   : aliased IER_Register;
       --  interrupt enable register
-      ESR   : ESR_Register;
+      ESR   : aliased ESR_Register;
       --  bit timing register
-      BTR   : BTR_Register;
+      BTR   : aliased BTR_Register;
       --  TX mailbox identifier register
-      TI0R  : TI0R_Register;
+      TI0R  : aliased TI0R_Register;
       --  mailbox data length control and time stamp register
-      TDT0R : TDT0R_Register;
+      TDT0R : aliased TDT0R_Register;
       --  mailbox data low register
-      TDL0R : TDL0R_Register;
+      TDL0R : aliased TDL0R_Register;
       --  mailbox data high register
-      TDH0R : TDH0R_Register;
+      TDH0R : aliased TDH0R_Register;
       --  mailbox identifier register
-      TI1R  : TI1R_Register;
+      TI1R  : aliased TI1R_Register;
       --  mailbox data length control and time stamp register
-      TDT1R : TDT1R_Register;
+      TDT1R : aliased TDT1R_Register;
       --  mailbox data low register
-      TDL1R : TDL1R_Register;
+      TDL1R : aliased TDL1R_Register;
       --  mailbox data high register
-      TDH1R : TDH1R_Register;
+      TDH1R : aliased TDH1R_Register;
       --  mailbox identifier register
-      TI2R  : TI2R_Register;
+      TI2R  : aliased TI2R_Register;
       --  mailbox data length control and time stamp register
-      TDT2R : TDT2R_Register;
+      TDT2R : aliased TDT2R_Register;
       --  mailbox data low register
-      TDL2R : TDL2R_Register;
+      TDL2R : aliased TDL2R_Register;
       --  mailbox data high register
-      TDH2R : TDH2R_Register;
+      TDH2R : aliased TDH2R_Register;
       --  receive FIFO mailbox identifier register
-      RI0R  : RI0R_Register;
+      RI0R  : aliased RI0R_Register;
       --  mailbox data high register
-      RDT0R : RDT0R_Register;
+      RDT0R : aliased RDT0R_Register;
       --  mailbox data high register
-      RDL0R : RDL0R_Register;
+      RDL0R : aliased RDL0R_Register;
       --  receive FIFO mailbox data high register
-      RDH0R : RDH0R_Register;
+      RDH0R : aliased RDH0R_Register;
       --  mailbox data high register
-      RI1R  : RI1R_Register;
+      RI1R  : aliased RI1R_Register;
       --  mailbox data high register
-      RDT1R : RDT1R_Register;
+      RDT1R : aliased RDT1R_Register;
       --  mailbox data high register
-      RDL1R : RDL1R_Register;
+      RDL1R : aliased RDL1R_Register;
       --  mailbox data high register
-      RDH1R : RDH1R_Register;
+      RDH1R : aliased RDH1R_Register;
       --  filter master register
-      FMR   : FMR_Register;
+      FMR   : aliased FMR_Register;
       --  filter mode register
-      FM1R  : FM1R_Register;
+      FM1R  : aliased FM1R_Register;
       --  filter scale register
-      FS1R  : FS1R_Register;
+      FS1R  : aliased FS1R_Register;
       --  filter FIFO assignment register
-      FFA1R : FFA1R_Register;
+      FFA1R : aliased FFA1R_Register;
       --  filter activation register
-      FA1R  : FA1R_Register;
+      FA1R  : aliased FA1R_Register;
       --  Filter bank 0 register 1
-      F0R1  : F0R_Register;
+      F0R1  : aliased F0R_Register;
       --  Filter bank 0 register 2
-      F0R2  : F0R_Register;
+      F0R2  : aliased F0R_Register;
       --  Filter bank 1 register 1
-      F1R1  : F1R_Register;
+      F1R1  : aliased F1R_Register;
       --  Filter bank 1 register 2
-      F1R2  : F1R_Register;
+      F1R2  : aliased F1R_Register;
       --  Filter bank 2 register 1
-      F2R1  : F2R_Register;
+      F2R1  : aliased F2R_Register;
       --  Filter bank 2 register 2
-      F2R2  : F2R_Register;
+      F2R2  : aliased F2R_Register;
       --  Filter bank 3 register 1
-      F3R1  : F3R_Register;
+      F3R1  : aliased F3R_Register;
       --  Filter bank 3 register 2
-      F3R2  : F3R_Register;
+      F3R2  : aliased F3R_Register;
       --  Filter bank 4 register 1
-      F4R1  : F4R_Register;
+      F4R1  : aliased F4R_Register;
       --  Filter bank 4 register 2
-      F4R2  : F4R_Register;
+      F4R2  : aliased F4R_Register;
       --  Filter bank 5 register 1
-      F5R1  : F5R_Register;
+      F5R1  : aliased F5R_Register;
       --  Filter bank 5 register 2
-      F5R2  : F5R_Register;
+      F5R2  : aliased F5R_Register;
       --  Filter bank 6 register 1
-      F6R1  : F6R_Register;
+      F6R1  : aliased F6R_Register;
       --  Filter bank 6 register 2
-      F6R2  : F6R_Register;
+      F6R2  : aliased F6R_Register;
       --  Filter bank 7 register 1
-      F7R1  : F7R_Register;
+      F7R1  : aliased F7R_Register;
       --  Filter bank 7 register 2
-      F7R2  : F7R_Register;
+      F7R2  : aliased F7R_Register;
       --  Filter bank 8 register 1
-      F8R1  : F8R_Register;
+      F8R1  : aliased F8R_Register;
       --  Filter bank 8 register 2
-      F8R2  : F8R_Register;
+      F8R2  : aliased F8R_Register;
       --  Filter bank 9 register 1
-      F9R1  : F9R_Register;
+      F9R1  : aliased F9R_Register;
       --  Filter bank 9 register 2
-      F9R2  : F9R_Register;
+      F9R2  : aliased F9R_Register;
       --  Filter bank 10 register 1
-      F10R1 : F10R_Register;
+      F10R1 : aliased F10R_Register;
       --  Filter bank 10 register 2
-      F10R2 : F10R_Register;
+      F10R2 : aliased F10R_Register;
       --  Filter bank 11 register 1
-      F11R1 : F11R_Register;
+      F11R1 : aliased F11R_Register;
       --  Filter bank 11 register 2
-      F11R2 : F11R_Register;
+      F11R2 : aliased F11R_Register;
       --  Filter bank 4 register 1
-      F12R1 : F12R_Register;
+      F12R1 : aliased F12R_Register;
       --  Filter bank 12 register 2
-      F12R2 : F12R_Register;
+      F12R2 : aliased F12R_Register;
       --  Filter bank 13 register 1
-      F13R1 : F13R_Register;
+      F13R1 : aliased F13R_Register;
       --  Filter bank 13 register 2
-      F13R2 : F13R_Register;
+      F13R2 : aliased F13R_Register;
       --  Filter bank 14 register 1
-      F14R1 : F14R_Register;
+      F14R1 : aliased F14R_Register;
       --  Filter bank 14 register 2
-      F14R2 : F14R_Register;
+      F14R2 : aliased F14R_Register;
       --  Filter bank 15 register 1
-      F15R1 : F15R_Register;
+      F15R1 : aliased F15R_Register;
       --  Filter bank 15 register 2
-      F15R2 : F15R_Register;
+      F15R2 : aliased F15R_Register;
       --  Filter bank 16 register 1
-      F16R1 : F16R_Register;
+      F16R1 : aliased F16R_Register;
       --  Filter bank 16 register 2
-      F16R2 : F16R_Register;
+      F16R2 : aliased F16R_Register;
       --  Filter bank 17 register 1
-      F17R1 : F17R_Register;
+      F17R1 : aliased F17R_Register;
       --  Filter bank 17 register 2
-      F17R2 : F17R_Register;
+      F17R2 : aliased F17R_Register;
       --  Filter bank 18 register 1
-      F18R1 : F18R_Register;
+      F18R1 : aliased F18R_Register;
       --  Filter bank 18 register 2
-      F18R2 : F18R_Register;
+      F18R2 : aliased F18R_Register;
       --  Filter bank 19 register 1
-      F19R1 : F19R_Register;
+      F19R1 : aliased F19R_Register;
       --  Filter bank 19 register 2
-      F19R2 : F19R_Register;
+      F19R2 : aliased F19R_Register;
       --  Filter bank 20 register 1
-      F20R1 : F20R_Register;
+      F20R1 : aliased F20R_Register;
       --  Filter bank 20 register 2
-      F20R2 : F20R_Register;
+      F20R2 : aliased F20R_Register;
       --  Filter bank 21 register 1
-      F21R1 : F21R_Register;
+      F21R1 : aliased F21R_Register;
       --  Filter bank 21 register 2
-      F21R2 : F21R_Register;
+      F21R2 : aliased F21R_Register;
       --  Filter bank 22 register 1
-      F22R1 : F22R_Register;
+      F22R1 : aliased F22R_Register;
       --  Filter bank 22 register 2
-      F22R2 : F22R_Register;
+      F22R2 : aliased F22R_Register;
       --  Filter bank 23 register 1
-      F23R1 : F23R_Register;
+      F23R1 : aliased F23R_Register;
       --  Filter bank 23 register 2
-      F23R2 : F23R_Register;
+      F23R2 : aliased F23R_Register;
       --  Filter bank 24 register 1
-      F24R1 : F24R_Register;
+      F24R1 : aliased F24R_Register;
       --  Filter bank 24 register 2
-      F24R2 : F24R_Register;
+      F24R2 : aliased F24R_Register;
       --  Filter bank 25 register 1
-      F25R1 : F25R_Register;
+      F25R1 : aliased F25R_Register;
       --  Filter bank 25 register 2
-      F25R2 : F25R_Register;
+      F25R2 : aliased F25R_Register;
       --  Filter bank 26 register 1
-      F26R1 : F26R_Register;
+      F26R1 : aliased F26R_Register;
       --  Filter bank 26 register 2
-      F26R2 : F26R_Register;
+      F26R2 : aliased F26R_Register;
       --  Filter bank 27 register 1
-      F27R1 : F27R_Register;
+      F27R1 : aliased F27R_Register;
       --  Filter bank 27 register 2
-      F27R2 : F27R_Register;
+      F27R2 : aliased F27R_Register;
    end record
      with Volatile;
 
