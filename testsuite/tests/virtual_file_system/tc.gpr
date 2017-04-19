@@ -1,5 +1,4 @@
 with "../../../boards/native";
-with "../../../boards/native/config";
 
 project TC extends "../../utils/test_utils.gpr" is
 
@@ -12,7 +11,7 @@ project TC extends "../../utils/test_utils.gpr" is
    for Object_Dir use "obj";
    for Exec_Dir use "bin";
 
-   package Compiler renames Config.Compiler;
-   package Builder renames Config.Builder;
+   package Compiler renames Test_Utils.Compiler;
+   package Builder renames Test_Utils.Builder;
 
 end TC;
