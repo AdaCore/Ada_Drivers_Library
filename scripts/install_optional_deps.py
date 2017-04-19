@@ -52,7 +52,8 @@ def git_clone(repo_url, dst, recursive=False):
 
 # Git repositories
 #              Git repository                                       Destination directory            Recursive clone?
-git_repos = [("https://github.com/nocko/zfp-nrf51",                 "/examples/MicroBit/zfp-nrf51",  False),
+git_repos = [("https://github.com/AdaCore/embedded-runtimes",       "/embedded-runtimes", False),
+             ("https://github.com/nocko/zfp-nrf51",                 "/examples/MicroBit/zfp-nrf51",  False),
              ("https://github.com/Fabien-Chouteau/zfp-hifive1.git", "/examples/HiFive1/zfp-hifive1", False)
              ]
 
