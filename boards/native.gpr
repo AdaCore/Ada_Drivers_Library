@@ -1,15 +1,19 @@
 aggregate library project Native is
 
-   Build := external ("BUILD", "Debug");
+   Board := "native";
 
-   for Project_Path use ("native");
+   type Build_Type is ("Debug", "Production");
+   Build : Build_Type := external ("PLATFORM_BUILD", "Production");
 
-   for Project_Files use ("../hal/HAL.gpr",
-                          "../components/components.gpr",
-                          "../middleware/middleware.gpr",
-                          "native/board.gpr");
 
-   for Library_Dir use "lib/native/" & Build;
-   for Library_Name use "native";
+   Obj_Suffix := "native-" & Build;
+
+   for Library_Name use Board;
+   for Library_Dir use "lib/" & Obj_Suffix;
+
+   for external ("Obj_Suffix") use Obj_Suffix;
+   for Project_Path use 
+     (Project'Project_Dir, Project'Project_Dir & "..");
+   for Project_Files use ("native/board.gpr");
 
 end Native;

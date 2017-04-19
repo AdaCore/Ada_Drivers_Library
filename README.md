@@ -1,14 +1,6 @@
 [![Build Status](https://travis-ci.org/AdaCore/Ada_Drivers_Library.svg?branch=master)](https://travis-ci.org/AdaCore/Ada_Drivers_Library)
 [![Build status](https://ci.appveyor.com/api/projects/status/dvay075xkwxgppwm?svg=true)](https://ci.appveyor.com/project/AdaCore/ada-drivers-library)
 
-## Warning!
-
-This repository uses git submodule, please clone with the `--recursive` option:
-
-```shell
-git clone --recursive https://github.com/AdaCore/Ada_Drivers_Library.git
-```
-
 # 1. Introduction
 
 This repository contains Ada source code and complete sample GNAT projects for
@@ -30,7 +22,6 @@ are available both for proprietary ("commercial") and non-proprietary use.
 
 For details, see the `LICENSE` file in the root directory.
 
-
 # 4. Requirements
 
 The software is written in Ada 2012 and uses, for example, preconditions,
@@ -48,7 +39,6 @@ Therefore, building with the sources requires a compiler supporting both Ada
 compiler for ARM ELF is one such compiler [(Download it
 here)](http://libre.adacore.com/download/configurations). A recent GNAT Pro
 compiler for that target will also suffice.
-
 
 # 5. Content
 
