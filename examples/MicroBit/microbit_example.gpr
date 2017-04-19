@@ -1,5 +1,5 @@
 with "../../boards/microbit.gpr";
-with "../../boards/MicroBit/config";
+with "../../boards/config";
 
 project MicroBit_Example is
 

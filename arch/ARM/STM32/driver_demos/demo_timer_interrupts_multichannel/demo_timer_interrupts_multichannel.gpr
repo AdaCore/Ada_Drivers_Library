@@ -4,7 +4,7 @@
 --  fewer LEDs, change the number of interrupts generated to match only the
 --  number of LEDs available.
 
-with "../../../../../boards/common_config.gpr";
+with "../../../../../boards/config.gpr";
 with "../../../../../boards/stm32f407_discovery.gpr";
 
 project demo_timer_interrupts_multichannel extends "../../../../../examples/shared/common/common.gpr" is
@@ -12,7 +12,7 @@ project demo_timer_interrupts_multichannel extends "../../../../../examples/shar
    for Languages use ("Ada");
    for Main use ("demo.adb");
    for Source_Dirs use ("src");
-   for Object_Dir use "obj/" & Common_Config.Build;
+   for Object_Dir use "obj/" & Config.Build;
    for Runtime ("Ada") use STM32F407_Discovery'Runtime("Ada");
 --   for Create_Missing_Dirs use "true";
 
