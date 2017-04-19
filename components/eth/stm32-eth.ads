@@ -35,7 +35,7 @@ package STM32.Eth is
    procedure Initialize_RMII;
    --  Initialize the driver using RMII configuration.
 
-   procedure Read_MMI (Reg : UInt5; Val : out Unsigned_16);
+   procedure Read_MMI (Reg : UInt5; Val : out UInt16);
    --  Read an MMI register.
 
    procedure Init_Mac;
