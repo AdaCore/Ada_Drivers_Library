@@ -1,4 +1,3 @@
-with "../../../../../boards/common_config.gpr";
 with "../../../../../boards/stm32f429_discovery.gpr";
 
 project Demo_CRC extends "../../../../../examples/common/common.gpr" is
@@ -16,4 +15,3 @@ project Demo_CRC extends "../../../../../examples/common/common.gpr" is
    for Main use ("demo_crc.adb");
 
 end Demo_CRC;
-
