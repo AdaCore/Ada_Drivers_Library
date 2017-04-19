@@ -1,10 +1,8 @@
-aggregate library project Stm32F407_Discovery is
+aggregate library project Stm32F407_Discovery_Full is
 
    Board := "stm32f407disco";
 
-   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
-   RTS_Profile : RTS_Profile_Type :=
-     external ("RTS_Profile", "ravenscar-sfp");
+   RTS_Profile := "ravenscar-full";
 
    type Build_Type is ("Debug", "Production");
    Build : Build_Type := external ("PLATFORM_BUILD", "Production");
@@ -23,4 +21,4 @@ aggregate library project Stm32F407_Discovery is
      (Project'Project_Dir, Project'Project_Dir & "..");
    for Project_Files use ("stm32f407_discovery/board.gpr");
 
-end Stm32F407_Discovery;
+end Stm32F407_Discovery_Full;

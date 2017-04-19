@@ -1,6 +1,6 @@
 --  This abstract project defines common scenario variables and switches used
 --  all over the library.
-abstract project Common_Config is
+abstract project Config is
 
    for Languages use ("Ada");
    for Source_Dirs use ();
@@ -8,6 +8,9 @@ abstract project Common_Config is
    type BUILD_TYPE is
       ("Debug", "Production");
    Build : BUILD_Type := external ("PLATFORM_BUILD", "Debug");
+
+   RTS := external ("RTS_Profile", "ravenscar-sfp");
+   Object_Subdir := external ("Obj_Suffix", "");
 
    package Compiler is
       case Build is
@@ -26,4 +29,4 @@ abstract project Common_Config is
    package Builder is
    end Builder;
 
-end Common_Config;
+end Config;
