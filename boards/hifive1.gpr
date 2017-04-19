@@ -1,26 +1,24 @@
-aggregate library project HiFive1 is
+aggregate library project Hifive1 is
 
-   Build := external ("BUILD", "Debug");
+   Board := "hifive1";
 
-   type RTS_Type is ("ravenscar-sfp", "ravenscar-full");
-   RTS : RTS_Type := External ("RTS", "ravenscar-sfp");
+   RTS_Profile := "zfp";
 
-   RTS_Base := Project'Project_Dir &
-               "../embedded-runtimes/zfp-hifive1";
-   for Target use "riscv32-unknown-elf";
+   type Build_Type is ("Debug", "Production");
+   Build : Build_Type := external ("PLATFORM_BUILD", "Production");
 
-   case RTS is
-      when "ravenscar-sfp" =>
-         for Runtime ("Ada") use RTS_Base & "/sfp";
-      when "ravenscar-full" =>
-         for Runtime ("Ada") use RTS_Base & "/full";
-   end case;
+   for Target use "arm-eabi";
+   for Runtime ("Ada") use RTS_Profile & "-" & Board;
 
-   for Project_Path use ("HiFive1");
+   Obj_Suffix := Board & "/" & RTS_Profile & "/" & Build;
 
-   for Project_Files use ("HiFive1/board.gpr");
+   for Library_Name use Board;
+   for Library_Dir use "lib/" & Obj_Suffix;
 
-   for Library_Dir use "lib/hifive1/" & RTS & "/" & Build;
-   for Library_Name use "hifive1";
+   for external ("Obj_Suffix") use Obj_Suffix;
+   for external ("RTS_Profile") use RTS_Profile;
+   for Project_Path use 
+     (Project'Project_Dir, Project'Project_Dir & "..");
+   for Project_Files use ("hifive1/board.gpr");
 
-end HiFive1;
+end Hifive1;

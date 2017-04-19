@@ -1,26 +1,26 @@
-aggregate library project STM32F769_Discovery is
+aggregate library project Stm32F769_Discovery is
 
-   Build := external ("BUILD", "Debug");
+   Board := "stm32f769disco";
 
-   type RTS_Type is ("ravenscar-sfp", "ravenscar-full");
-   RTS : RTS_Type := External ("RTS", "ravenscar-sfp");
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS_Profile : RTS_Profile_Type :=
+     external ("RTS_Profile", "ravenscar-sfp");
 
-   RTS_Base := Project'Project_Dir &
-               "../embedded-runtimes/ravenscar-stm32f769disco";
+   type Build_Type is ("Debug", "Production");
+   Build : Build_Type := external ("PLATFORM_BUILD", "Production");
+
    for Target use "arm-eabi";
+   for Runtime ("Ada") use RTS_Profile & "-" & Board;
 
-   case RTS is
-      when "ravenscar-sfp" =>
-         for Runtime ("Ada") use RTS_Base & "/sfp";
-      when "ravenscar-full" =>
-         for Runtime ("Ada") use RTS_Base & "/full";
-   end case;
+   Obj_Suffix := Board & "/" & RTS_Profile & "/" & Build;
 
-   for Project_Path use ("stm32f769_discovery");
+   for Library_Name use Board;
+   for Library_Dir use "lib/" & Obj_Suffix;
 
+   for external ("Obj_Suffix") use Obj_Suffix;
+   for external ("RTS_Profile") use RTS_Profile;
+   for Project_Path use 
+     (Project'Project_Dir, Project'Project_Dir & "..");
    for Project_Files use ("stm32f769_discovery/board.gpr");
 
-   for Library_Dir use "lib/stm32f769disco/" & RTS & "/" & Build;
-   for Library_Name use "stm32f769disco";
-
-end STM32F769_Discovery;
+end Stm32F769_Discovery;

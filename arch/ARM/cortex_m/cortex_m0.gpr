@@ -1,5 +1,5 @@
 with "config";
-with "../../hal/HAL";
+with "hal/HAL";
 
 library project Cortex_M0 is
 

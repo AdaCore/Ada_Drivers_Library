@@ -1,16 +1,14 @@
-aggregate library project Stm32F407_Discovery is
+aggregate library project Stm32F429_Discovery_SFP is
 
-   Board := "stm32f407disco";
+   Board := "stm32f429disco";
 
-   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
-   RTS_Profile : RTS_Profile_Type :=
-     external ("RTS_Profile", "ravenscar-sfp");
+   RTS_Profile := "ravenscar-sfp";
 
    type Build_Type is ("Debug", "Production");
    Build : Build_Type := external ("PLATFORM_BUILD", "Production");
 
    for Target use "arm-eabi";
-   for Runtime ("Ada") use RTS_Profile & "-stm32f4";
+   for Runtime ("Ada") use RTS_Profile & "-" & Board;
 
    Obj_Suffix := Board & "/" & RTS_Profile & "/" & Build;
 
@@ -21,6 +19,6 @@ aggregate library project Stm32F407_Discovery is
    for external ("RTS_Profile") use RTS_Profile;
    for Project_Path use 
      (Project'Project_Dir, Project'Project_Dir & "..");
-   for Project_Files use ("stm32f407_discovery/board.gpr");
+   for Project_Files use ("stm32f429_discovery/board.gpr");
 
-end Stm32F407_Discovery;
+end Stm32F429_Discovery_SFP;
