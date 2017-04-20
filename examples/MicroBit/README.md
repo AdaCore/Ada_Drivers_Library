@@ -11,41 +11,60 @@ at:
 
 # How to setup the Ada development environment for the Micro:Bit
 
-## J-Link embedded programmer
+## pyOCD programmer
 
-In order to use gdb to program and debug the Micro:Bit, you have to replace the
-firmware of the embedded programmer. Go to this page:
-https://www.segger.com/bbc-micro-bit.html and follow the instructions toinstall
-the J-Link firmware on the Micro:Bit.
-
-## J-Link GDBServer
-
-Now you need to download and install the "J-Link Software and Documentation
-Pack" for your development machine (Linux, Windows, MacOS) from this page:
-https://www.segger.com/downloads/jlink
-
-You can now start the J-Link GDB server, for instance on Linux:
-
-`$ <JLINK_INSTALLATION_DIR>/JLinkGDBServer -device nrf51822`
-
-Note that JLinkGDBServer may require administrator/root access to talk to the
-board. To avoid running JLinkGDBServer as root on Linux, copy the UDev rule
-file "99-jlink.rules" from the J-Link installation to "/etc/udev" and reload
-the rules:
-
+The Micro:Bit comes with an embedded programming/debugging probe implementing
+the
+[CMSIS-DAP](https://docs.mbed.com/docs/mbed-os-handbook/en/latest/advanced/DAP/)
+protocol defined by ARM. In order to use it, you have to install a Python
+library called pyOCD. Here's the procedure:
 
 ```
-$ sudo cp  <JLINK_INSTALLATION_DIR>/99-jlink.rules /etc/udev/rules.d
-$ sudo udevadm control --reload-rules
+$ sudo apt-get install python-pip
+$ pip install --pre -U pyocd
 ```
+
+pyOCD will need premissions to talk with the Micro:Bit. Instead of running the
+pyOCD as priviledged user (root), it's better to add a UDEV rules saying that
+the device is accessible for non-priviledged users:
+
+`$ sudo sh -c 'echo SUBSYSTEM==\"usb\", ATTR{idVendor}==\"0d28\", ATTR{idProduct}==\"0204\", MODE:=\"666\" > /etc/udev/rules.d/mbed.rules'`
+
+Now that there's a new UDEV rule and if you already pluged your Micro:Bit
+before, you have to unplug it and plug it back again.
+
+To run pyOCD, use the following command:
+
+```
+$ pyocd-gdbserver -S -p 1234
+INFO:root:DAP SWD MODE initialised
+INFO:root:ROM table #0 @ 0xf0000000 cidr=b105100d pidr=2007c4001
+INFO:root:[0]<e00ff000: cidr=b105100d, pidr=4000bb471, class=1>
+INFO:root:ROM table #1 @ 0xe00ff000 cidr=b105100d pidr=4000bb471
+INFO:root:[0]<e000e000:SCS-M0+ cidr=b105e00d, pidr=4000bb008, class=14>
+INFO:root:[1]<e0001000:DWT-M0+ cidr=b105e00d, pidr=4000bb00a, class=14>
+INFO:root:[2]<e0002000:BPU cidr=b105e00d, pidr=4000bb00b, class=14>
+INFO:root:[1]<f0002000: cidr=b105900d, pidr=4000bb9a3, class=9, devtype=13, devid=0>
+INFO:root:CPU core is Cortex-M0
+INFO:root:4 hardware breakpoints, 0 literal comparators
+INFO:root:2 hardware watchpoints
+INFO:root:Telnet: server started on port 4444
+INFO:root:GDB server started at port:1234
+[...]
+```
+
+`-S` is to enable semihosting support, `-p 1234` is the port that Gdb will use
+to talk with pyOCD.
+
+At this point, pyOCD is waiting for a connection from Gdb.
 
 ## Install the Ada ZFP run-time
 
-Go to theMicro:Bit example directory and download or clone the run-time from
+Go to the Micro:Bit example directory and download or clone the run-time from
 Shawn Nock's GitHub repository: https://github.com/nocko/zfp-nrf51
 
 ```
-$ cd da_Drivers_Library/examples/MicroBit/
+$ cd Ada_Drivers_Library/examples/MicroBit/
 $ git clone https://github.com/nocko/zfp-nrf51
 ```
 
@@ -56,10 +75,10 @@ Start GNAT Programming studio (GPS) and open the Micro:Bit example project:
 
 Press F4 and then press Enter to build the project.
 
-## program and debugthe board
+## program and debug the board
 
 In GPS, start a debug session with the top menu "Debug -> Initialize -> main".
-GPS will start gdb and connect it to the J-Link debugger.
+GPS will start Gdb and connect it to pyOCD.
 
 In the gdb console, use the "load" command to program the board:
 
@@ -69,7 +88,7 @@ Loading section .text, size 0xbd04 lma 0x0
 Loading section .ARM.exidx, size 0x8 lma 0xbd04
 [...]
 ```
-Reset the board with this command
+Reset the board with this command:
 
 `(gdb) monitor reset`
 
