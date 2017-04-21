@@ -126,7 +126,7 @@ procedure Main is
    My_SHFS : aliased SHFS;
    Status : Status_Kind;
    FH : Any_File_Handle;
-   Data : Byte_Array (1 .. 10);
+   Data : UInt8_Array (1 .. 10);
 
 begin
 

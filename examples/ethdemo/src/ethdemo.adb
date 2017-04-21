@@ -31,6 +31,7 @@
 
 with Ada.Real_Time;
 with Interfaces;               use Interfaces;
+with HAL;                      use HAL;
 with STM32.Eth;
 with LCD_Std_Out;              use LCD_Std_Out;
 
@@ -84,7 +85,7 @@ begin
       use Ada.Real_Time;
       T : Time := Clock;
       P : constant Time_Span := Seconds (2);
-      V : Unsigned_16;
+      V : UInt16;
    begin
       loop
          Read_MMI (1, V);

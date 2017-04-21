@@ -42,7 +42,7 @@ package Peripherals_Nonblocking is
 
    Peripheral : aliased Serial_IO.Peripheral_Descriptor :=
                   (Transceiver    => USART_1'Access,
-                   Transceiver_AF => GPIO_AF_7_USART1,
+                   Transceiver_AF => GPIO_AF_USART1_7,
                    Tx_Pin         => PB6,
                    Rx_Pin         => PB7);
 
