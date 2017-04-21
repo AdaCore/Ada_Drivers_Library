@@ -35,7 +35,7 @@ def gprbuild(project_file, debug=False, rts_profile=None):
     extra_args = []
 
     if rts_profile:
-        extra_args = extra_args + ["-XRTS=" + rts_profile]
+        extra_args = extra_args + ["-XRTS_Profile=" + rts_profile]
 
     extra_args = extra_args + ["-XPLATFORM_BUILD=" + ("Debug" if debug else "Production")]
 
