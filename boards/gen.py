@@ -116,7 +116,10 @@ def gen_project(board_name, rts):
     board = BOARDS[board_name]
 
     # Generate the project's dependencies
-    cnt = 'with "config";\n'
+    cnt = '--  **AUTOMATICALLY GENERATED** Do not edit !!\n'
+    cnt += '--  Please see gen.py and edit this script instead.\n'
+    cnt += '\n'
+    cnt += 'with "config";\n'
     if 'mcu' in board:
         cnt += 'with "../%s";\n' % board['mcu']
     cnt += 'with "../components/components";\n'
