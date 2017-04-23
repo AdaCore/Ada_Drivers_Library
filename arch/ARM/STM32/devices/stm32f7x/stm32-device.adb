@@ -744,6 +744,31 @@ package body STM32.Device is
       RCC_Periph.APB2RSTR.SDMMC1RST := False;
    end Reset;
 
+   ----------------------
+   -- Set_Clock_Source --
+   ----------------------
+
+   procedure Set_Clock_Source
+     (This : in out SDMMC_Controller;
+      Src  : SDMMC_Clock_Source)
+   is
+   begin
+      if This.Periph.all'Address /= SDMMC_Base then
+         raise Unknown_Device;
+      end if;
+
+      RCC_Periph.DKCFGR2.SDMMCSEL := Src = Src_Sysclk;
+
+      case Src is
+         when Src_Sysclk =>
+            STM32.SDMMC.Set_Clk_Src_Speed
+              (This, System_Clock_Frequencies.SYSCLK);
+         when Src_48Mhz =>
+            STM32.SDMMC.Set_Clk_Src_Speed
+              (This, 48_000_000);
+      end case;
+   end Set_Clock_Source;
+
    ------------------------------
    -- System_Clock_Frequencies --
    ------------------------------

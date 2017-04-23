@@ -196,6 +196,25 @@ package STM32.Board is
    -- SDCARD --
    ------------
 
+   SD_Detect_Pin     : STM32.GPIO.GPIO_Point renames PG2;
+
+   SD_DMA            : DMA_Controller renames DMA_2;
+   SD_DMA_Rx_Stream  : DMA_Stream_Selector renames Stream_3;
+   SD_DMA_Rx_Channel : DMA_Channel_Selector renames Channel_4;
+   SD_DMA_Tx_Stream  : DMA_Stream_Selector renames Stream_6;
+   SD_DMA_Tx_Channel : DMA_Channel_Selector renames Channel_4;
+   SD_Pins           : constant GPIO_Points :=
+                         (PC8, PC9, PC10, PC11, PC12, PD2);
+   SD_Pins_AF        : constant GPIO_Alternate_Function := GPIO_AF_SDIO_12;
+   SD_Pins_2         : constant GPIO_Points := (1 .. 0 => <>);
+   SD_Pins_AF_2      : constant GPIO_Alternate_Function := GPIO_AF_SDIO_12;
+   SD_Rx_IRQ         : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.DMA2_Stream3_Interrupt;
+   SD_Tx_IRQ         : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.DMA2_Stream6_Interrupt;
+   SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.SDIO_Interrupt;
+
    SDCard_Device : aliased SDCard.SDCard_Controller (SDIO'Access);
 
 end STM32.Board;

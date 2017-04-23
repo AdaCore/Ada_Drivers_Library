@@ -48,9 +48,12 @@ package STM32.SDMMC is
      (Periph : not null access STM32_SVD.SDIO.SDIO_Peripheral)
    is limited private;
 
+   procedure Set_Clk_Src_Speed
+     (This : in out SDMMC_Controller;
+      CLK  : UInt32);
+
    function Initialize
      (This      : in out SDMMC_Controller;
-      SDMMC_CLK : UInt32;
       Info      : out Card_Information) return SD_Error;
 
    type SD_Data is array (UInt16 range <>) of UInt8
@@ -68,7 +71,7 @@ package STM32.SDMMC is
       DMA    : STM32.DMA.DMA_Controller;
       Stream : STM32.DMA.DMA_Stream_Selector;
       Data   : out SD_Data) return SD_Error
-     with Pre => Data'Length <= 65535;
+     with Pre => Data'Length <= 65536;
 
    function Write_Blocks_DMA
      (This   : in out SDMMC_Controller;
@@ -144,7 +147,7 @@ private
    type SDMMC_Controller
      (Periph : not null access STM32_SVD.SDIO.SDIO_Peripheral)
    is limited new SDMMC_Driver with record
-      CLK_In    : UInt32;
+      CLK_In    : UInt32 := 48_000_000; --  By default at hardware reset
       RCA       : UInt16;
       Card_Type : Supported_SD_Memory_Cards :=
                     STD_Capacity_SD_Card_V1_1;

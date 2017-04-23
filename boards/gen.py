@@ -55,6 +55,8 @@ BOARDS = {
         'source_dirs':           ['stm32/stm32f469disco',
                                   'stm32/common',
                                   'stm32/dma2d',
+                                  'stm32/otm8009a',
+                                  'stm32/sdcard',
                                   'stm32/sdram']},
     'STM32F746_Discovery': {
         'rts_board':             'stm32f746disco',
@@ -65,6 +67,7 @@ BOARDS = {
                                   'stm32/common',
                                   'stm32/dma2d',
                                   'stm32/ltdc',
+                                  'stm32/sdcard',
                                   'stm32/sdram']},
     'STM32F769_Discovery': {
         'rts_board':             'stm32f769disco',
@@ -74,6 +77,8 @@ BOARDS = {
         'source_dirs':           ['stm32/stm32f769disco',
                                   'stm32/common',
                                   'stm32/dma2d',
+                                  'stm32/otm8009a',
+                                  'stm32/sdcard',
                                   'stm32/sdram']},
     }
 
