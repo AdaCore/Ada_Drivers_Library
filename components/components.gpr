@@ -1,6 +1,6 @@
 with "../hal/HAL";
 with "../middleware/middleware";
-with "config";
+with "../boards/config";
 
 library project Components is
 
@@ -9,8 +9,8 @@ library project Components is
    for Languages use ("Ada");
    for Library_Name use "components";
    for Library_Kind use "static";
-   for Library_Dir use "lib/" & Config.Object_Subdir;
-   for Object_Dir use "obj/" & Config.Object_Subdir;
+   for Library_Dir use "lib";
+   for Object_Dir use "obj";
 
    Root_Dir := Components'Project_Dir;
    GNAT_ADC_FILE := Root_Dir & "gnat.adc";
@@ -20,7 +20,5 @@ library project Components is
         Config.Compiler'Default_Switches ("ada") &
       ("-gnatec=" &  GNAT_ADC_FILE); --  Use a configuration pragma file
    end Compiler;
-
-   package Builder renames Config.Builder;
 
 end Components;

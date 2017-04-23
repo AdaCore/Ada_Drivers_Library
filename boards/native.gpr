@@ -1,19 +1,23 @@
-aggregate library project Native is
+with "config";
+with "../components/components";
+with "../middleware/middleware";
 
-   Board := "native";
+library project Native is
 
-   type Build_Type is ("Debug", "Production");
-   Build : Build_Type := external ("PLATFORM_BUILD", "Production");
+   Obj_Suffix := "native";
 
-
-   Obj_Suffix := "native-" & Build;
-
-   for Library_Name use Board;
+   for Library_Name use "native";
    for Library_Dir use "lib/" & Obj_Suffix;
+   for Object_Dir use "obj/" & Obj_Suffix;
 
-   for external ("Obj_Suffix") use Obj_Suffix;
-   for Project_Path use 
-     (Project'Project_Dir, Project'Project_Dir & "..");
-   for Project_Files use ("native/board.gpr");
+   for Source_Dirs use
+     ("native");
+
+   package Builder is
+      for Switches ("Ada") use
+        ("-s");
+   end Builder;
+
+   package Compiler renames Config.Compiler;
 
 end Native;
