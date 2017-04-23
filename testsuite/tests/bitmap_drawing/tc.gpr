@@ -10,6 +10,5 @@ project TC extends "../../utils/test_utils.gpr" is
    for Exec_Dir use "bin";
 
    package Compiler renames Test_Utils.Compiler;
-   package Builder renames Test_Utils.Builder;
 
 end TC;
