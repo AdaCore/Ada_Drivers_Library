@@ -18,6 +18,5 @@ project OpenMV2_Example is
    for Main use ("main.adb");
 
    package Compiler renames Config.Compiler;
-   package Builder renames Config.Builder;
 
  end OpenMV2_Example;
