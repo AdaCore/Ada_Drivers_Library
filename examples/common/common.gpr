@@ -36,7 +36,6 @@ project Common is
    end case;
 
    package Compiler renames Config.Compiler;
-   package Builder renames Config.Builder;
 
    package Linker is
       for Default_Switches ("Ada") use

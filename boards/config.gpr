@@ -10,7 +10,6 @@ abstract project Config is
    Build : BUILD_Type := external ("PLATFORM_BUILD", "Debug");
 
    RTS := external ("RTS_Profile", "ravenscar-sfp");
-   Object_Subdir := external ("Obj_Suffix", "");
 
    package Compiler is
       case Build is
@@ -25,8 +24,5 @@ abstract project Config is
         ("-gnatwa", "-gnatwe", "-gnatQ", "-gnatw.X", "-gnaty", "-gnatyO",
          "-gnatyM120", "-ffunction-sections", "-fdata-sections");
    end Compiler;
-
-   package Builder is
-   end Builder;
 
 end Config;

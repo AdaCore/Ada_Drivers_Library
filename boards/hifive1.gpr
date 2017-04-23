@@ -1,24 +1,29 @@
-aggregate library project Hifive1 is
+with "config";
+with "../arch/RISC-V/SiFive/FE310";
+with "../components/components";
+with "../middleware/middleware";
 
-   Board := "hifive1";
+library project HiFive1 is
 
    RTS_Profile := "zfp";
 
-   type Build_Type is ("Debug", "Production");
-   Build : Build_Type := external ("PLATFORM_BUILD", "Production");
+   for Target use "riscv32-unknown-elf";
+   for Runtime ("Ada") use RTS_Profile & "-hifive1";
 
-   for Target use "arm-eabi";
-   for Runtime ("Ada") use RTS_Profile & "-" & Board;
+   Obj_Suffix := Project'Runtime ("Ada");
 
-   Obj_Suffix := Board & "/" & RTS_Profile & "/" & Build;
-
-   for Library_Name use Board;
+   for Library_Name use "hifive1";
    for Library_Dir use "lib/" & Obj_Suffix;
+   for Object_Dir use "obj/" & Obj_Suffix;
 
-   for external ("Obj_Suffix") use Obj_Suffix;
-   for external ("RTS_Profile") use RTS_Profile;
-   for Project_Path use 
-     (Project'Project_Dir, Project'Project_Dir & "..");
-   for Project_Files use ("hifive1/board.gpr");
+   for Source_Dirs use
+     ("HiFive1");
 
-end Hifive1;
+   package Builder is
+      for Switches ("Ada") use
+        ("--RTS=" & Project'Runtime("Ada"), "-s");
+   end Builder;
+
+   package Compiler renames Config.Compiler;
+
+end HiFive1;

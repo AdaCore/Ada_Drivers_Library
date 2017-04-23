@@ -1,24 +1,33 @@
-aggregate library project Stm32F769_Discovery_Full is
+with "config";
+with "../arch/ARM/STM32/stm32f7x9";
+with "../components/components";
+with "../middleware/middleware";
+with "../middleware/ravenscar_support";
 
-   Board := "stm32f769disco";
+library project STM32F769_Discovery_Full is
 
    RTS_Profile := "ravenscar-full";
 
-   type Build_Type is ("Debug", "Production");
-   Build : Build_Type := external ("PLATFORM_BUILD", "Production");
-
    for Target use "arm-eabi";
-   for Runtime ("Ada") use RTS_Profile & "-" & Board;
+   for Runtime ("Ada") use RTS_Profile & "-stm32f769disco";
 
-   Obj_Suffix := Board & "/" & RTS_Profile & "/" & Build;
+   Obj_Suffix := Project'Runtime ("Ada");
 
-   for Library_Name use Board;
+   for Library_Name use "stm32f769_discovery";
    for Library_Dir use "lib/" & Obj_Suffix;
+   for Object_Dir use "obj/" & Obj_Suffix;
 
-   for external ("Obj_Suffix") use Obj_Suffix;
-   for external ("RTS_Profile") use RTS_Profile;
-   for Project_Path use 
-     (Project'Project_Dir, Project'Project_Dir & "..");
-   for Project_Files use ("stm32f769_discovery/board.gpr");
+   for Source_Dirs use
+     ("stm32/stm32f769disco",
+      "stm32/common",
+      "stm32/dma2d",
+      "stm32/sdram");
 
-end Stm32F769_Discovery_Full;
+   package Builder is
+      for Switches ("Ada") use
+        ("--RTS=" & Project'Runtime("Ada"), "-s");
+   end Builder;
+
+   package Compiler renames Config.Compiler;
+
+end STM32F769_Discovery_Full;

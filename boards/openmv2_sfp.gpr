@@ -1,24 +1,30 @@
-aggregate library project Openmv2_SFP is
+with "config";
+with "../arch/ARM/STM32/stm32f427x";
+with "../components/components";
+with "../middleware/middleware";
+with "../middleware/ravenscar_support";
 
-   Board := "openmv2";
+library project OpenMV2_SFP is
 
    RTS_Profile := "ravenscar-sfp";
 
-   type Build_Type is ("Debug", "Production");
-   Build : Build_Type := external ("PLATFORM_BUILD", "Production");
-
    for Target use "arm-eabi";
-   for Runtime ("Ada") use RTS_Profile & "-" & Board;
+   for Runtime ("Ada") use RTS_Profile & "-openmv2";
 
-   Obj_Suffix := Board & "/" & RTS_Profile & "/" & Build;
+   Obj_Suffix := Project'Runtime ("Ada");
 
-   for Library_Name use Board;
+   for Library_Name use "openmv2";
    for Library_Dir use "lib/" & Obj_Suffix;
+   for Object_Dir use "obj/" & Obj_Suffix;
 
-   for external ("Obj_Suffix") use Obj_Suffix;
-   for external ("RTS_Profile") use RTS_Profile;
-   for Project_Path use 
-     (Project'Project_Dir, Project'Project_Dir & "..");
-   for Project_Files use ("openmv2/board.gpr");
+   for Source_Dirs use
+     ("OpenMV2");
 
-end Openmv2_SFP;
+   package Builder is
+      for Switches ("Ada") use
+        ("--RTS=" & Project'Runtime("Ada"), "-s");
+   end Builder;
+
+   package Compiler renames Config.Compiler;
+
+end OpenMV2_SFP;

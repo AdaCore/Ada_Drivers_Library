@@ -1,21 +1,16 @@
 with "../hal/HAL";
 with "../boards/config";
 
-library project Middleware is
+library project Ravenscar_Support is
 
-   for Source_Dirs use
-     ("src/filesystems",
-      "src/BLE",
-      "src/utils",
-      "src/audio",
-      "src/bitmap");
+   for Source_Dirs use ("src/ravenscar-common");
 
    for Languages use ("Ada");
-   for Library_Name use "services";
+   for Library_Name use "ravenscarsupport";
    for Library_Kind use "static";
    for Library_Dir use "lib";
    for Object_Dir use "obj";
 
    package Compiler renames Config.Compiler;
 
-end Middleware;
+end Ravenscar_Support;
