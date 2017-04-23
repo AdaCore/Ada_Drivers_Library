@@ -1,3 +1,6 @@
+--  **AUTOMATICALLY GENERATED** Do not edit !!
+--  Please see gen.py and edit this script instead.
+
 with "config";
 with "../components/components";
 with "../middleware/middleware";

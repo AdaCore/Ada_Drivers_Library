@@ -542,10 +542,15 @@ package STM32.Device is
    -- SDMMC --
    -----------
 
+   type SDMMC_Clock_Source is (Src_Sysclk, Src_48Mhz);
+
    SDMMC_1 : aliased SDMMC_Controller (STM32_SVD.SDMMC.SDMMC_Periph'Access);
 
    procedure Enable_Clock (This : in out SDMMC_Controller);
    procedure Reset (This : in out SDMMC_Controller);
+   procedure Set_Clock_Source
+     (This : in out SDMMC_Controller;
+      Src  : SDMMC_Clock_Source);
 
    -----------------------------
    -- Reset and Clock Control --

@@ -1,3 +1,6 @@
+--  **AUTOMATICALLY GENERATED** Do not edit !!
+--  Please see gen.py and edit this script instead.
+
 with "config";
 with "../arch/ARM/STM32/stm32f7x9";
 with "../components/components";
@@ -21,6 +24,8 @@ library project STM32F769_Discovery_SFP is
      ("stm32/stm32f769disco",
       "stm32/common",
       "stm32/dma2d",
+      "stm32/otm8009a",
+      "stm32/sdcard",
       "stm32/sdram");
 
    package Builder is

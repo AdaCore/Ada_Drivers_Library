@@ -1,3 +1,6 @@
+--  **AUTOMATICALLY GENERATED** Do not edit !!
+--  Please see gen.py and edit this script instead.
+
 with "config";
 with "../arch/ARM/STM32/stm32f46_79x";
 with "../components/components";
@@ -21,6 +24,8 @@ library project STM32F469_Discovery_Full is
      ("stm32/stm32f469disco",
       "stm32/common",
       "stm32/dma2d",
+      "stm32/otm8009a",
+      "stm32/sdcard",
       "stm32/sdram");
 
    package Builder is
