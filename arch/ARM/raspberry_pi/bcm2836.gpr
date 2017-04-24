@@ -1,0 +1,18 @@
+with "../../../boards/config";
+with "../../../hal/HAL";
+with "../../../middleware/sdmmc";
+
+library project BCM2836 is
+
+   for Library_Name use "bcm2836";
+   for Library_Kind use "static";
+   for Library_Dir use "lib";
+   for Object_Dir use "obj";
+
+   for Source_Dirs use
+     ("drivers",
+      "devices/rpi2");
+
+   package Compiler renames Config.Compiler;
+
+end BCM2836;

@@ -82,6 +82,18 @@ BOARDS = {
                                   'stm32/otm8009a',
                                   'stm32/sdcard',
                                   'stm32/sdram']},
+    'RPi2': {
+        'rts_board':             'rpi2',
+        'rts_profiles':          ['ravenscar-sfp', 'ravenscar-full'],
+        'target':                'arm-eabi',
+        'mcu':                   'arch/ARM/raspberry_pi/bcm2836',
+        'source_dirs':           ['raspberry/pi2']},
+    'RPi3': {
+        'rts_board':             'rpi3',
+        'rts_profiles':          ['ravenscar-sfp', 'ravenscar-full'],
+        'target':                'aarch64-elf',
+        'mcu':                   'arch/ARM/raspberry_pi/bcm2836',
+        'source_dirs':           ['raspberry/pi2']},
     }
 
 
