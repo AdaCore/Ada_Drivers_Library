@@ -834,6 +834,16 @@ package body ST7735R is
       Pt     : Point;
       Value  : Bitmap_Color) renames Set_Pixel;
 
+   ---------------------
+   -- Set_Pixel_Blend --
+   ---------------------
+
+   overriding
+   procedure Set_Pixel_Blend
+     (Buffer : in out ST7735R_Bitmap_Buffer;
+      Pt     : Point;
+      Value  : UInt32) renames Set_Pixel;
+
    -----------
    -- Pixel --
    -----------

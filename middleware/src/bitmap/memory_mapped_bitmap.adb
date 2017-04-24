@@ -224,6 +224,22 @@ package body Memory_Mapped_Bitmap is
       end if;
    end Set_Pixel_Blend;
 
+   ---------------------
+   -- Set_Pixel_Blend --
+   ---------------------
+
+   overriding
+   procedure Set_Pixel_Blend
+     (Buffer : in out Memory_Mapped_Bitmap_Buffer;
+      Pt     : Point;
+      Value  : UInt32)
+   is
+      Col : constant Bitmap_Color :=
+              Word_To_Bitmap_Color (Buffer.Color_Mode, Value);
+   begin
+      Set_Pixel_Blend (Bitmap_Buffer'Class (Buffer), Pt, Col);
+   end Set_Pixel_Blend;
+
    -----------
    -- Pixel --
    -----------

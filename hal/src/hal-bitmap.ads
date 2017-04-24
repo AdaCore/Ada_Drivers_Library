@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -149,8 +149,13 @@ package HAL.Bitmap is
 
    procedure Set_Pixel_Blend
      (Buffer : in out Bitmap_Buffer;
-      Pt      : Point;
+      Pt     : Point;
       Value  : Bitmap_Color) is abstract;
+
+   procedure Set_Pixel_Blend
+     (Buffer : in out Bitmap_Buffer;
+      Pt     : Point;
+      Value  : UInt32) is abstract;
 
    function Pixel
      (Buffer : Bitmap_Buffer;
@@ -210,7 +215,16 @@ package HAL.Bitmap is
       Bg_Pt       : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean) is abstract;
+      Synchronous : Boolean;
+      Clean_Cache : Boolean := True) is abstract;
+   --   If Bg_Buffer is valid, blends Src_Buffer and Bg_Buffer and copy the
+   --   resulting rect on Dst_Buffer.
+   --   If Bg_Buffer is invalid, copy Src_Buffer rect on Dst_Buffer.
+   --   In case of hardware (e.g. DMA) acceleration, Synchronous, if set,
+   --   ensures that the operation is completed upon return.
+   --   In case the CPU supports data memory cache, setting Clean_Cache
+   --   to True will ensure that the source buffers are visible to both the
+   --   CPU and the DMA.
 
    procedure Copy_Rect
      (Src_Buffer  : Bitmap_Buffer'Class;
@@ -219,7 +233,8 @@ package HAL.Bitmap is
       Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean) is abstract;
+      Synchronous : Boolean;
+      Clean_Cache : Boolean := True) is abstract;
 
    procedure Copy_Rect_Blend
      (Src_Buffer  : Bitmap_Buffer;
@@ -228,7 +243,8 @@ package HAL.Bitmap is
       Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean) is abstract;
+      Synchronous : Boolean;
+      Clean_Cache : Boolean := True) is abstract;
 
    procedure Draw_Vertical_Line
      (Buffer : in out Bitmap_Buffer;

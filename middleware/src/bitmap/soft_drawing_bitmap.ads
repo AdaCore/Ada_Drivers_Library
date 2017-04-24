@@ -96,7 +96,8 @@ package Soft_Drawing_Bitmap is
       Bg_Pt       : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean);
+      Synchronous : Boolean;
+      Clean_Cache : Boolean := True);
 
    overriding
    procedure Copy_Rect
@@ -106,7 +107,8 @@ package Soft_Drawing_Bitmap is
       Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean);
+      Synchronous : Boolean;
+      Clean_Cache : Boolean := True);
 
    overriding
    procedure Copy_Rect_Blend
@@ -116,7 +118,8 @@ package Soft_Drawing_Bitmap is
       Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean);
+      Synchronous : Boolean;
+      Clean_Cache : Boolean := True);
 
    overriding
    procedure Draw_Vertical_Line

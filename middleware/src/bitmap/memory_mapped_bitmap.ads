@@ -114,6 +114,12 @@ package Memory_Mapped_Bitmap is
       Value  : Bitmap_Color);
 
    overriding
+   procedure Set_Pixel_Blend
+     (Buffer : in out Memory_Mapped_Bitmap_Buffer;
+      Pt     : Point;
+      Value  : UInt32);
+
+   overriding
    function Pixel
      (Buffer : Memory_Mapped_Bitmap_Buffer;
       Pt     : Point)

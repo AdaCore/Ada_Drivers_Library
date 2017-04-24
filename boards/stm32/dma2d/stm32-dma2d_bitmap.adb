@@ -179,7 +179,8 @@ package body STM32.DMA2D_Bitmap is
       Bg_Pt       : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean)
+      Synchronous : Boolean;
+      Clean_Cache : Boolean := True)
    is
       use type System.Address;
       DMA_Buf_Src : constant DMA2D_Buffer := To_DMA2D_Buffer (Src_Buffer);
@@ -215,35 +216,16 @@ package body STM32.DMA2D_Bitmap is
          Y0_Bg := Bg_Buffer.Width - Bg_Pt.X - Width;
       end if;
 
-      Cortex_M.Cache.Clean_DCache (Src_Buffer.Memory_Address, Src_Buffer.Buffer_Size);
+      if Clean_Cache then
+         Cortex_M.Cache.Clean_DCache
+           (Src_Buffer.Memory_Address, Src_Buffer.Buffer_Size);
+      end if;
 
       DMA2D_Copy_Rect
         (DMA_Buf_Src, X0_Src, Y0_Src,
          DMA_Buf_Dst, X0_Dst, Y0_Dst,
          DMA_Buf_Bg, X0_Bg, Y0_Bg,
          W, H,
-         Synchronous => Synchronous);
-   end Copy_Rect;
-
-   overriding procedure Copy_Rect
-     (Src_Buffer  : Bitmap_Buffer'Class;
-      Src_Pt      : Point;
-      Dst_Buffer  : in out DMA2D_Bitmap_Buffer;
-      Dst_Pt      : Point;
-      Width       : Natural;
-      Height      : Natural;
-      Synchronous : Boolean)
-   is
-   begin
-      Copy_Rect
-        (Src_Buffer  => Src_Buffer,
-         Src_Pt      => Src_Pt,
-         Dst_Buffer  => Dst_Buffer,
-         Dst_Pt      => Dst_Pt,
-         Bg_Buffer   => Null_Buffer,
-         Bg_Pt       => (0, 0),
-         Width       => Width,
-         Height      => Height,
          Synchronous => Synchronous);
    end Copy_Rect;
 

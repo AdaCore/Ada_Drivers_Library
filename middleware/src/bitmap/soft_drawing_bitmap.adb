@@ -29,14 +29,51 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with System;
 with Bitmap_Color_Conversion; use Bitmap_Color_Conversion;
 
 package body Soft_Drawing_Bitmap is
 
    subtype Dispatch is Soft_Drawing_Bitmap_Buffer'Class;
 
-   overriding
-   procedure Draw_Line
+   type Null_Bitmap_Buffer is new Soft_Drawing_Bitmap_Buffer with null record;
+   overriding function Width (B : Null_Bitmap_Buffer) return Natural is (0);
+   overriding function Height (B : Null_Bitmap_Buffer) return Natural is (0);
+   overriding function Swapped (B : Null_Bitmap_Buffer) return Boolean is (False);
+   overriding function Color_Mode (B : Null_Bitmap_Buffer) return Bitmap_Color_Mode is (Bitmap_Color_Mode'First);
+   overriding function Mapped_In_RAM (B : Null_Bitmap_Buffer) return Boolean is (False);
+   overriding function Memory_Address (B : Null_Bitmap_Buffer) return System.Address is (System.Null_Address);
+   overriding procedure Set_Pixel
+     (Buffer  : in out Null_Bitmap_Buffer;
+      Pt      : Point;
+      Value   : Bitmap_Color) is null;
+   overriding procedure Set_Pixel
+     (Buffer  : in out Null_Bitmap_Buffer;
+      Pt      : Point;
+      Value   : UInt32) is null;
+   overriding procedure Set_Pixel_Blend
+     (Buffer : in out Null_Bitmap_Buffer;
+      Pt     : Point;
+      Value  : Bitmap_Color) is null;
+   overriding procedure Set_Pixel_Blend
+     (Buffer : in out Null_Bitmap_Buffer;
+      Pt     : Point;
+      Value  : UInt32) is null;
+   overriding function Pixel
+     (Buffer : Null_Bitmap_Buffer;
+      Pt     : Point)
+      return Bitmap_Color is ((0, 0, 0, 0));
+   overriding function Pixel
+     (Buffer : Null_Bitmap_Buffer;
+      Pt     : Point)
+      return UInt32 is (0);
+   overriding function Buffer_Size (B : Null_Bitmap_Buffer) return Natural is (0);
+
+     ---------------
+     -- Draw_Line --
+     ---------------
+
+   overriding procedure Draw_Line
      (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
       Color       : UInt32;
       Start, Stop : Point;
@@ -150,11 +187,11 @@ package body Soft_Drawing_Bitmap is
       Color  : UInt32)
    is
    begin
-      for Y in 0 .. Dispatch (Buffer).Height - 1 loop
-         for X in 0 .. Dispatch (Buffer).Width - 1 loop
-            Dispatch (Buffer).Set_Pixel ((X, Y), Color);
-         end loop;
-      end loop;
+      Dispatch (Buffer).Fill_Rect
+        (Color => Color,
+         Area  => (Position => (0, 0),
+                   Width    => Dispatch (Buffer).Width,
+                   Height   => Dispatch (Buffer).Height));
    end Fill;
 
    ---------------
@@ -206,28 +243,14 @@ package body Soft_Drawing_Bitmap is
       Bg_Pt       : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean)
+      Synchronous : Boolean;
+      Clean_Cache : Boolean := True)
    is
-   begin
-      raise Constraint_Error with "Not implemented yet.";
-   end Copy_Rect;
+      pragma Unreferenced (Synchronous, Clean_Cache);
+      Pix      : UInt32;
+      Do_Blend : Boolean := False;
+      use type System.Address;
 
-   ---------------
-   -- Copy_Rect --
-   ---------------
-
-   overriding
-   procedure Copy_Rect
-     (Src_Buffer  : Bitmap_Buffer'Class;
-      Src_Pt      : Point;
-      Dst_Buffer  : in out Soft_Drawing_Bitmap_Buffer;
-      Dst_Pt      : Point;
-      Width       : Natural;
-      Height      : Natural;
-      Synchronous : Boolean)
-   is
-      pragma Unreferenced (Synchronous);
-      Pix : UInt32;
    begin
       if Src_Pt.X + Width > Src_Buffer.Width
         or else
@@ -243,12 +266,51 @@ package body Soft_Drawing_Bitmap is
          raise Constraint_Error with "invalid copy area for destination bitmap";
       end if;
 
+      if Bg_Buffer.Memory_Address = Dispatch (Dst_Buffer).Memory_Address
+        and then Bg_Pt = Dst_Pt
+      then
+         Do_Blend := True;
+      elsif Bg_Buffer.Memory_Address /= System.Null_Address then
+         raise Constraint_Error with "Not implemented for now";
+      end if;
+
       for X in 0 .. Width - 1 loop
          for Y in 0 .. Height - 1 loop
             Pix := Src_Buffer.Pixel (Src_Pt + (X, Y));
-            Dispatch (Dst_Buffer).Set_Pixel (Dst_Pt + (X, Y), Pix);
+            if not Do_Blend then
+               Dispatch (Dst_Buffer).Set_Pixel (Dst_Pt + (X, Y), Pix);
+            else
+               Dispatch (Dst_Buffer).Set_Pixel_Blend (Dst_Pt + (X, Y), Pix);
+            end if;
          end loop;
       end loop;
+   end Copy_Rect;
+
+   ---------------
+   -- Copy_Rect --
+   ---------------
+
+   overriding
+   procedure Copy_Rect
+     (Src_Buffer  : Bitmap_Buffer'Class;
+      Src_Pt      : Point;
+      Dst_Buffer  : in out Soft_Drawing_Bitmap_Buffer;
+      Dst_Pt      : Point;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean;
+      Clean_Cache : Boolean := True)
+   is
+      Null_Buf : Null_Bitmap_Buffer;
+   begin
+      Copy_Rect
+        (Src_Buffer, Src_Pt, Dst_Buffer, Dst_Pt,
+         Bg_Buffer   => Null_Buf,
+         Bg_Pt       => (0, 0),
+         Width       => Width,
+         Height      => Height,
+         Synchronous => Synchronous,
+         Clean_Cache => Clean_Cache);
    end Copy_Rect;
 
    ---------------------
@@ -263,7 +325,8 @@ package body Soft_Drawing_Bitmap is
       Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean)
+      Synchronous : Boolean;
+      Clean_Cache : Boolean := True)
    is
    begin
       Copy_Rect
@@ -275,7 +338,8 @@ package body Soft_Drawing_Bitmap is
          Bg_Pt       => Dst_Pt,
          Width       => Width,
          Height      => Height,
-         Synchronous => Synchronous);
+         Synchronous => Synchronous,
+         Clean_Cache => Clean_Cache);
    end Copy_Rect_Blend;
 
    ------------------------

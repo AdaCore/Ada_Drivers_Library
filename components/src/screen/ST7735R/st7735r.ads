@@ -321,7 +321,6 @@ private
       Value   : UInt32)
      with Pre => Buffer.LCD /= null;
 
-
    overriding
    procedure Set_Pixel_Blend
      (Buffer : in out ST7735R_Bitmap_Buffer;
@@ -329,6 +328,12 @@ private
       Value  : Bitmap_Color)
      with Pre => Buffer.LCD /= null;
 
+   overriding
+   procedure Set_Pixel_Blend
+     (Buffer : in out ST7735R_Bitmap_Buffer;
+      Pt     : Point;
+      Value  : UInt32)
+     with Pre => Buffer.LCD /= null;
 
    overriding
    function Pixel

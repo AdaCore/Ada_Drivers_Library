@@ -76,18 +76,8 @@ package STM32.DMA2D_Bitmap is
       Bg_Pt       : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean)
-     with Pre =>
-       Dst_Buffer.Color_Mode in HAL.Bitmap.ARGB_8888 .. HAL.Bitmap.ARGB_4444;
-
-   overriding procedure Copy_Rect
-     (Src_Buffer  : Bitmap_Buffer'Class;
-      Src_Pt      : Point;
-      Dst_Buffer  : in out DMA2D_Bitmap_Buffer;
-      Dst_Pt      : Point;
-      Width       : Natural;
-      Height      : Natural;
-      Synchronous : Boolean)
+      Synchronous : Boolean;
+      Clean_Cache : Boolean := True)
      with Pre =>
        Dst_Buffer.Color_Mode in HAL.Bitmap.ARGB_8888 .. HAL.Bitmap.ARGB_4444;
 
