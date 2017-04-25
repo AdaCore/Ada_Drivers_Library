@@ -30,15 +30,14 @@
 ------------------------------------------------------------------------------
 
 with STM32.DCMI;
-with STM32.DMA;            use STM32.DMA;
-with Ada.Real_Time;        use Ada.Real_Time;
-with OV2640;               use OV2640;
-with OV7725;               use OV7725;
-with Interfaces;           use Interfaces;
-with HAL.I2C;              use HAL.I2C;
-with HAL.Bitmap;           use HAL.Bitmap;
-with HAL;                  use HAL;
-with STM32.PWM;            use STM32.PWM;
+with STM32.DMA;     use STM32.DMA;
+with Ada.Real_Time; use Ada.Real_Time;
+with OV2640;        use OV2640;
+with OV7725;        use OV7725;
+with HAL.I2C;       use HAL.I2C;
+with HAL.Bitmap;    use HAL.Bitmap;
+with HAL;           use HAL;
+with STM32.PWM;     use STM32.PWM;
 with STM32.Setup;
 
 package body OpenMV.Sensor is
@@ -321,20 +320,10 @@ package body OpenMV.Sensor is
          raise Program_Error;
       end if;
 
-<<<<<<< f4e4bb22981169061f6971e1412c40fd437f822d
-      Clear_All_Status (Sensor_DMA, Sensor_DMA_Stream);
-
-      Start_Transfer (This        => Sensor_DMA,
-                      Stream      => Sensor_DMA_Stream,
-                      Source      => DCMI.Data_Register_Address,
-                      Destination => BM.Memory_Address,
-                      Data_Count  => Cnt);
-=======
       Sensor_DMA_Int.Start_Transfer
         (Source      => DCMI.Data_Register_Address,
-         Destination => BM.Addr,
+         Destination => BM.Memory_Address,
          Data_Count  => Cnt);
->>>>>>> OpenMV: Use the new DMA services for sensor and display
 
       DCMI.Start_Capture (DCMI.Snapshot);
 
