@@ -37,7 +37,7 @@ package STM32.SPI.DMA is
    type SPI_Port_DMA is limited new Parent with private;
 
    procedure Set_TX_DMA_Handler (This : in out SPI_Port_DMA;
-                                 DMA  : DMA_Interrupt_Controller_Ref);
+                                 DMA  : Any_DMA_Interrupt_Controller);
 
    overriding
    procedure Configure (This : in out SPI_Port_DMA;
@@ -74,7 +74,7 @@ package STM32.SPI.DMA is
 private
 
    type SPI_Port_DMA is limited new Parent with record
-      TX_DMA : DMA_Interrupt_Controller_Ref := null;
+      TX_DMA : Any_DMA_Interrupt_Controller := null;
    end record;
 
    Polling_Threshold : constant := 5;

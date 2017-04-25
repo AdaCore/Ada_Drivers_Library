@@ -86,7 +86,7 @@ package body STM32.SPI.DMA is
 
    procedure Set_TX_DMA_Handler
      (This : in out SPI_Port_DMA;
-      DMA  : DMA_Interrupt_Controller_Ref)
+      DMA  : Any_DMA_Interrupt_Controller)
    is
    begin
       This.TX_DMA := DMA;

@@ -56,6 +56,6 @@ package STM32.DMA.Interrupts is
       Last_Status            : DMA_Error_Code := DMA_No_Error;
    end DMA_Interrupt_Controller;
 
-   type DMA_Interrupt_Controller_Ref is access all DMA_Interrupt_Controller;
+   type Any_DMA_Interrupt_Controller is access all DMA_Interrupt_Controller;
 
 end STM32.DMA.Interrupts;
