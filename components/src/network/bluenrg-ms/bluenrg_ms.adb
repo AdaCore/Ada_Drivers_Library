@@ -22,8 +22,6 @@
 --                                                                        --
 ----------------------------------------------------------------------------
 with Bluetooth.HCI;  use Bluetooth.HCI;
-with HAL.Time;
-with Ravenscar_Time;
 
 package body BlueNRG_MS is
 
@@ -691,12 +689,11 @@ package body BlueNRG_MS is
    procedure Reset
      (Device : in out BlueNRG_MS_Device)
    is
-      HAL_Time  : constant HAL.Time.Any_Delays := Ravenscar_Time.Delays;
    begin
       Device.Reset_Pin.all.Clear;
-      HAL_Time.all.Delay_Milliseconds (Reset_Duration);
+      Device.Time.Delay_Milliseconds (Reset_Duration);
       Device.Reset_Pin.all.Set;
-      HAL_Time.all.Delay_Milliseconds (Reset_Duration);
+      Device.Time.Delay_Milliseconds (Reset_Duration);
    end Reset;
 
    ------------------
@@ -709,7 +706,6 @@ package body BlueNRG_MS is
       Parameters :        UInt8_Array)
       return Boolean
    is
-      HAL_Time  : constant HAL.Time.Any_Delays := Ravenscar_Time.Delays;
       Try_Count : Natural := 0;
    begin
       loop
@@ -721,7 +717,7 @@ package body BlueNRG_MS is
          if Try_Count = Maximum_Command_Retries then
             return False;
          end if;
-         HAL_Time.all.Delay_Microseconds (Wait_For_Wakeup_Duration);
+         Device.Time.Delay_Microseconds (Wait_For_Wakeup_Duration);
       end loop;
       return True;
    end Send_Command;
@@ -735,7 +731,6 @@ package body BlueNRG_MS is
       Command    :        OpCode)
       return Boolean
    is
-      HAL_Time  : constant HAL.Time.Any_Delays := Ravenscar_Time.Delays;
       Try_Count : Natural := 0;
    begin
       loop
@@ -746,7 +741,7 @@ package body BlueNRG_MS is
          if Try_Count = Maximum_Command_Retries then
             return False;
          end if;
-         HAL_Time.all.Delay_Microseconds (Wait_For_Wakeup_Duration);
+         Device.Time.Delay_Microseconds (Wait_For_Wakeup_Duration);
       end loop;
       return True;
    end Send_Command;
@@ -761,7 +756,6 @@ package body BlueNRG_MS is
       Parameters :        UInt8_Array)
       return UInt8_Array
    is
-      HAL_Time   : constant HAL.Time.Any_Delays := Ravenscar_Time.Delays;
       Try_Count  : Natural := 0;
       Null_Array : UInt8_Array (1 .. 0);
    begin
@@ -775,7 +769,7 @@ package body BlueNRG_MS is
          if Try_Count = Maximum_Command_Retries then
             return Null_Array;
          end if;
-         HAL_Time.all.Delay_Microseconds (Wait_For_Wakeup_Duration);
+         Device.Time.Delay_Microseconds (Wait_For_Wakeup_Duration);
       end loop;
 
       Try_Count := 0;
@@ -793,7 +787,7 @@ package body BlueNRG_MS is
             end if;
          end;
          exit when Try_Count = Maximum_Response_Retries;
-         HAL_Time.all.Delay_Microseconds (Response_Delay_Duration);
+         Device.Time.Delay_Microseconds (Response_Delay_Duration);
          Try_Count := Try_Count + 1;
       end loop;
 
@@ -809,7 +803,6 @@ package body BlueNRG_MS is
       Command    :        OpCode)
       return UInt8_Array
    is
-      HAL_Time   : constant HAL.Time.Any_Delays := Ravenscar_Time.Delays;
       Try_Count  : Natural := 0;
       Null_Array : UInt8_Array (1 .. 0);
    begin
@@ -822,7 +815,7 @@ package body BlueNRG_MS is
          if Try_Count = Maximum_Command_Retries then
             return Null_Array;
          end if;
-         HAL_Time.all.Delay_Microseconds (Wait_For_Wakeup_Duration);
+         Device.Time.Delay_Microseconds (Wait_For_Wakeup_Duration);
       end loop;
 
       Try_Count := 0;
@@ -840,7 +833,7 @@ package body BlueNRG_MS is
             end if;
          end;
          exit when Try_Count = Maximum_Response_Retries;
-         HAL_Time.all.Delay_Microseconds (Response_Delay_Duration);
+         Device.Time.Delay_Microseconds (Response_Delay_Duration);
          Try_Count := Try_Count + 1;
       end loop;
 

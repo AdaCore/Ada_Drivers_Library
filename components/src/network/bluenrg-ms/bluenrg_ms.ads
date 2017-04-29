@@ -25,6 +25,7 @@ with Bluetooth;     use Bluetooth;
 with HAL;           use HAL;
 with HAL.GPIO;      use HAL.GPIO;
 with HAL.SPI;       use HAL.SPI;
+with HAL.Time;
 with Interfaces;    use Interfaces;
 
 package BlueNRG_MS is
@@ -33,6 +34,7 @@ package BlueNRG_MS is
       SPI_Port        : not null Any_SPI_Port;
       Chip_Select_Pin : not null Any_GPIO_Point;
       Reset_Pin       : not null Any_GPIO_Point;
+      Time            : not null HAL.Time.Any_Delays;
    end record;
 
    subtype Power_Level is Integer range 0 .. 7;
