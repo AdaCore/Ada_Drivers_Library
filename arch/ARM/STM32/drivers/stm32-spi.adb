@@ -921,6 +921,7 @@ package body STM32.SPI is
    -- Transfer --
    --------------
 
+   overriding
    procedure Transfer
      (This      : in out SPI_Port;
       Data_Out  :        HAL.SPI.SPI_Data_8b;
@@ -930,8 +931,8 @@ package body STM32.SPI is
    is
       pragma Unreferenced (Timeout);
    begin
-      Send_Receive_8bit_Mode(This, UInt8_Buffer (Data_Out), UInt8_Buffer (Data_In), Data_Out'Length);
-      Status := HAL.SPI.OK;
+      Send_Receive_8bit_Mode (This, UInt8_Buffer (Data_Out), UInt8_Buffer (Data_In), Data_Out'Length);
+      Status := HAL.SPI.Ok;
    end Transfer;
 
    ------------------------
