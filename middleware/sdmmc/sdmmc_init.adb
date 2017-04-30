@@ -298,9 +298,10 @@ package body SDMMC_Init is
 
       --  Bus size
       case Info.Card_Type is
-         when STD_Capacity_SD_Card_V1_1
-           | STD_Capacity_SD_Card_v2_0
-           | High_Capacity_SD_Card =>
+         when STD_Capacity_SD_Card_V1_1 |
+              STD_Capacity_SD_Card_v2_0 |
+              High_Capacity_SD_Card =>
+            --  ACMD42
             Send_ACmd (This, SD_App_Set_Bus_Width, Info.RCA, 2, Status);
             if Status /= OK then
                return;
@@ -311,35 +312,75 @@ package body SDMMC_Init is
             null;
       end case;
 
-      if (Info.SD_CSD.Card_Command_Class and 2**10) /= 0 then
+      if (Info.SD_CSD.Card_Command_Class and 2 ** 10) /= 0 then
          --  Class 10 supported.
          declare
             subtype Switch_Status_Type is UInt32_Array (1 .. 16);
 
             Switch_Status : Switch_Status_Type;
+            Group1_Fn     : UInt16;
          begin
             --  CMD6
-            Read_Cmd (This, Cmd_Desc (Switch_Func), 16#00_fffff0#,
+            --  [31]    0: Mode0, query; 1: Mode1, select
+            --  [30:24] reserved, set to 0
+            --  [23:16] reserved for futur function groups
+            --  [15:12] function group 4 for Power Limit
+            --  [11:8]  function group 3 for Drive Strength
+            --  [7:4]   function group 2 for Command System
+            --  [3:0]   function group 1 for Access Mode
+            --  In mode 0, only one group
+
+            --  Query access mode
+            Read_Cmd (This, Cmd_Desc (Switch_Func), 16#00FF_FF_F0#,
                       Switch_Status, Status);
-            if Status /= OK then
-               return;
-            end if;
+            if Status = OK then
+               --  Handle endianness
+               for I in Switch_Status'Range loop
+                  Switch_Status (I) := BE32_To_Host (Switch_Status (I));
+               end loop;
 
-            --  Handle endianness
-            for I in Switch_Status'Range loop
-               Switch_Status (I) := BE32_To_Host (Switch_Status (I));
-            end loop;
+               --  Switch_Status is
+               --  1: [16:31] : Max current/power consumption
+               --     [0:15]  : Group6 supported functions
+               --  2: [16:31] : Group5
+               --     [0:15]  : Group4
+               --  3: [16:31] : Group3
+               --     [0:15]  : Group2
+               --  4: [16:31] : Group1
+               --     [12:15] : Group6 function selection
+               --     [8:11]  : Group5 function selection
+               --     [4:7]   : Group4 function selection
+               --     [0:3]   : Group3 function selection
+               --  5: [28:31] : Group2 function selection
+               --     [24:27] : Group1 function selection
+               Group1_Fn :=
+                 UInt16 (Shift_Right (Switch_Status (4) and 16#FFFF_0000#, 16));
 
-            --  Switch tp 50Mhz if possible.
-            if (Switch_Status (4) and 2**(16 + 1)) /= 0 then
-               Read_Cmd (This, Cmd_Desc (Switch_Func), 16#80_fffff1#,
-                         Switch_Status, Status);
-               if Status /= OK then
-                  return;
+               if (Group1_Fn and 2#1000#) /= 0 then
+                  --  DDR50: UHS-I 1.8V signaling, Freq up to 50 MHz
+                  Read_Cmd (This, Cmd_Desc (Switch_Func), 16#80_FFFFF4#,
+                            Switch_Status, Status);
+
+               elsif (Group1_Fn and 2#0100#) /= 0 then
+                  --  SDR104: UHS-I 1.8V signaling, Freq up to 208 MHz
+                  Read_Cmd (This, Cmd_Desc (Switch_Func), 16#80_FFFFF3#,
+                            Switch_Status, Status);
+
+               elsif (Group1_Fn and 2#0010#) /= 0 then
+                  --  SDR50: UHS-I 1.8V signaling, Freq up to 100 MHz
+                  Read_Cmd (This, Cmd_Desc (Switch_Func), 16#80_FFFFF2#,
+                            Switch_Status, Status);
+
+               elsif (Group1_Fn and 2#0100#) /= 0 then
+                  --  SDR25: UHS-I 1.8V signaling, Freq up to 50 MHz
+                  Read_Cmd (This, Cmd_Desc (Switch_Func), 16#80_FFFFF1#,
+                            Switch_Status, Status);
                end if;
 
-               --  Switch to 50Mhz
-               Set_Clock (This, 50_000_000);
+               if Status = OK then
+                  --  Switch to 50Mhz
+                  Set_Clock (This, 50_000_000);
+               end if;
             end if;
          end;
       end if;
