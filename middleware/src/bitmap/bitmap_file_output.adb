@@ -37,12 +37,12 @@ package body Bitmap_File_Output is
    type Header (As_Array : Boolean := True) is record
       case As_Array is
          when True =>
-            Arr : UInt8_Array (1 .. 14);
+            Arr : UInt8_Array (1 .. 14) := (others => 0);
          when False =>
             Signature : Integer_16;
             Size      : Integer_32; --  File size
-            Reserved1 : Integer_16;
-            Reserved2 : Integer_16;
+            Reserved1 : Integer_16 := 0;
+            Reserved2 : Integer_16 := 0;
             Offset    : Integer_32; --  Data offset
       end case;
    end record with Unchecked_Union, Pack, Size => 14 * 8;
@@ -73,16 +73,17 @@ package body Bitmap_File_Output is
    procedure Write_BMP_File (File   : in out File_Handle'Class;
                              Bitmap : Bitmap_Buffer'Class)
    is
-      Hdr    : Header;
-      Inf    : Info;
-      Status : Status_Kind;
+      Hdr         : Header;
+      Inf         : Info;
+      Status      : Status_Kind;
       Row_Size    : constant Integer_32 := Integer_32 (Bitmap.Width * 24);
       Row_Padding : constant Integer_32 := (32 - (Row_Size mod 32)) mod 32 / 8;
       Data_Size   : constant Integer_32 := (Row_Size + Row_Padding) * Integer_32 (Bitmap.Height);
 
-      RGB_Pix : Bitmap_Color;
-      Pix_Out : UInt8_Array (1 .. 3);
-      Padding : constant UInt8_Array (1 .. Integer (Row_Padding)) := (others => 0);
+      RGB_Pix     : Bitmap_Color;
+      Pix_Out     : UInt8_Array (1 .. 3);
+      Padding     : constant UInt8_Array (1 .. Integer (Row_Padding)) := (others => 0);
+
    begin
       Hdr.Signature := 16#4D42#;
       Hdr.Size      := (Data_Size + 54) / 4;
