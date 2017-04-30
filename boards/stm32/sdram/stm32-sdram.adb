@@ -30,9 +30,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time;   use Ada.Real_Time;
-pragma Warnings (Off, "* is an internal GNAT unit*");
-with System.BB.Parameters;
-pragma Warnings (On, "* is an internal GNAT unit*");
+with Ada.Unchecked_Conversion;
 
 with STM32.Board;     use STM32.Board;
 with STM32.Device;    use STM32.Device;
@@ -141,11 +139,11 @@ package body STM32.SDRAM is
    is
       Timing_Conf     : FMC_SDRAM_TimingInit_Config;
       SDRAM_Conf      : FMC_SDRAM_Init_Config;
-      SDCLK           : constant :=
-                          System.BB.Parameters.Clock_Frequency / 2;
-      SDPeriod_In_ns  : constant :=
+      SDCLK           : constant UInt32 :=
+                          STM32.Device.System_Clock_Frequencies.SYSCLK;
+      SDPeriod_In_ns  : constant UInt32 :=
                           1_000_000_000 / SDCLK;
-      Refresh_Delay   : Unsigned_32;
+      Refresh_Delay   : UInt32;
 
    begin
       if Initialized then
@@ -251,5 +249,17 @@ package body STM32.SDRAM is
       return Ret;
    end Reserve;
 
+   --------------
+   -- Rollback --
+   --------------
+
+   procedure Rollback
+     (Addr : System.Address)
+   is
+      function To_U32 is new Ada.Unchecked_Conversion
+        (System.Address, UInt32);
+   begin
+      G_Base_Addr := To_U32 (Addr);
+   end Rollback;
 
 end STM32.SDRAM;

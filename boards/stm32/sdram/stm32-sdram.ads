@@ -40,5 +40,12 @@ package STM32.SDRAM is
    function Reserve
      (Amount : UInt32;
       Align  : UInt32 := Standard'Maximum_Alignment) return System.Address;
+   --  Reserves Amount of SDRAM. Returns null is there's not enough space
+
+   procedure Rollback
+     (Addr : System.Address);
+   --  This "frees" the memory that's been reserved at address Addr and after.
+
+   --  ??? TODO: Move Reserve and Rollback to a specific user-land library?
 
 end STM32.SDRAM;
