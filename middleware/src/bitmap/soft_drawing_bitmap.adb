@@ -62,6 +62,10 @@ package body Soft_Drawing_Bitmap is
 
       procedure Draw_Point (P : Point) is
       begin
+         if P.X >= Buffer.Width or else P.Y >= Buffer.Height then
+            return;
+         end if;
+
          if Thickness /= 1 then
             if not Fast then
                Dispatch (Buffer).Fill_Circle (Color  => Color,
@@ -95,6 +99,11 @@ package body Soft_Drawing_Bitmap is
             Draw_Point ((X, Y));
             Err := Err - DY;
             if Err < 0.0 then
+               if (Step_Y = -1 and then Y = 0) or else
+                 (Step_Y = 1 and then Y = Buffer.Height - 1)
+               then
+                  return;
+               end if;
                Y := Y + Step_Y;
                Err := Err + DX;
             end if;
@@ -106,6 +115,11 @@ package body Soft_Drawing_Bitmap is
             Draw_Point ((X, Y));
             Err := Err - DX;
             if Err < 0.0 then
+               if (Step_X = -1 and then X = 0) or else
+                 (Step_X = 1 and then X = Buffer.Width - 1)
+               then
+                  return;
+               end if;
                X := X + Step_X;
                Err := Err + DY;
             end if;
