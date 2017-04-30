@@ -29,6 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with HAL.Bitmap;
 with STM32.GPIO;
 with STM32.Device;
 with OpenMV;
@@ -144,9 +145,9 @@ package body OpenMV.LCD_Shield is
    -- Get_Bitmap --
    ----------------
 
-   function Get_Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer is
+   function Get_Bitmap return not null Any_Memory_Mapped_Bitmap_Buffer is
    begin
-      return LCD_Driver.Hidden_Buffer (1);
+      return Any_Memory_Mapped_Bitmap_Buffer (LCD_Driver.Hidden_Buffer (1));
    end Get_Bitmap;
 
    ----------------------

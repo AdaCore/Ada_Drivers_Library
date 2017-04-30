@@ -47,10 +47,10 @@ package body OpenMV.Bitmap is
       BM : constant Any_Memory_Mapped_Bitmap_Buffer := new Memory_Mapped_Bitmap_Buffer;
       Data : constant access Pixel_Data := new Pixel_Data;
    begin
-      BM.Actual_Width := OpenMV.LCD_Shield.Width;
-      BM.Actual_Height := OpenMV.LCD_Shield.Height;
-      BM.Actual_Color_Mode := RGB_565;
-      BM.Currently_Swapped := False;
+      BM.Width := OpenMV.LCD_Shield.Width;
+      BM.Height := OpenMV.LCD_Shield.Height;
+      BM.Color_Mode := RGB_565;
+      BM.Swapped := False;
       BM.Addr := Data.all'Address;
       return Any_Bitmap_Buffer (BM);
    end Allocate;

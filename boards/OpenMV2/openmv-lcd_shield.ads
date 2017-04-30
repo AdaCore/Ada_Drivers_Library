@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Bitmap;
+with Memory_Mapped_Bitmap; use Memory_Mapped_Bitmap;
 
 package OpenMV.LCD_Shield is
    Width  : constant := 128;
@@ -38,7 +38,7 @@ package OpenMV.LCD_Shield is
    procedure Initialize;
    function Initialized return Boolean;
 
-   function Get_Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer;
+   function Get_Bitmap return not null Any_Memory_Mapped_Bitmap_Buffer;
 
    procedure Rotate_Screen_90
      with Pre => Initialized;

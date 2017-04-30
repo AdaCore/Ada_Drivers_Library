@@ -29,11 +29,12 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Bitmap;
+with Memory_Mapped_Bitmap;
 
 package OpenMV.Sensor is
    procedure Initialize;
    function Initialized return Boolean;
 
-   procedure Snapshot (BM : not null HAL.Bitmap.Any_Bitmap_Buffer);
+   procedure Snapshot
+     (BM : not null Memory_Mapped_Bitmap.Any_Memory_Mapped_Bitmap_Buffer);
 end OpenMV.Sensor;
