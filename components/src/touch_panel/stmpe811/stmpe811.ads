@@ -36,44 +36,42 @@ with HAL.Touch_Panel; use HAL.Touch_Panel;
 
 package STMPE811 is
 
-   type STMPE811_Device (Port     : not null Any_I2C_Port;
-                         I2C_Addr : I2C_Address;
-                         Time     : not null HAL.Time.Any_Delays) is
+   type STMPE811_Device
+     (Port     : not null Any_I2C_Port;
+      I2C_Addr : I2C_Address;
+      Time     : not null HAL.Time.Any_Delays) is
      limited new Touch_Panel_Device with private;
 
    function Initialize (This : in out STMPE811_Device) return Boolean;
    --  Initializes the LCD touch panel
 
-   overriding
-   procedure Set_Bounds (This   : in out STMPE811_Device;
-                         Width  : Natural;
-                         Height : Natural;
-                         Swap   : HAL.Touch_Panel.Swap_State);
+   overriding procedure Set_Bounds
+     (This   : in out STMPE811_Device;
+      Width  : Natural;
+      Height : Natural;
+      Swap   : HAL.Touch_Panel.Swap_State);
 
-   overriding
-   function Active_Touch_Points (This : in out STMPE811_Device)
-                                 return Touch_Identifier;
+   overriding function Active_Touch_Points
+     (This : in out STMPE811_Device) return Touch_Identifier;
    --  Retrieve the number of active touch points
 
-   overriding
-   function Get_Touch_Point (This     : in out STMPE811_Device;
-                             Touch_Id : Touch_Identifier)
-                             return HAL.Touch_Panel.TP_Touch_State;
+   overriding function Get_Touch_Point
+     (This     : in out STMPE811_Device;
+      Touch_Id : Touch_Identifier) return HAL.Touch_Panel.TP_Touch_State;
    --  Retrieves the position and pressure information of the specified
    --  touch
 
-   overriding
-   function Get_All_Touch_Points
-     (This     : in out STMPE811_Device)
-      return HAL.Touch_Panel.TP_State;
+   overriding function Get_All_Touch_Points
+     (This : in out STMPE811_Device) return HAL.Touch_Panel.TP_State;
    --  Retrieves the position and pressure information of every active touch
    --  points
 
 private
 
-   type STMPE811_Device (Port     : not null Any_I2C_Port;
-                         I2C_Addr : I2C_Address;
-                         Time     : not null HAL.Time.Any_Delays) is
+   type STMPE811_Device
+     (Port     : not null Any_I2C_Port;
+      I2C_Addr : I2C_Address;
+      Time     : not null HAL.Time.Any_Delays) is
      limited new Touch_Panel_Device with record
       LCD_Natural_Width  : Natural := 0;
       LCD_Natural_Height : Natural := 0;

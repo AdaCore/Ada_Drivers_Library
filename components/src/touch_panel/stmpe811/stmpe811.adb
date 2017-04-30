@@ -118,9 +118,10 @@ package body STMPE811 is
    -- Read_Data --
    ---------------
 
-   function Read_Data (This      : in out STMPE811_Device;
-                       Data_Addr : UInt8;
-                       Length    : Natural) return TSC_Data
+   function Read_Data
+     (This      : in out STMPE811_Device;
+      Data_Addr : UInt8;
+      Length    : Natural) return TSC_Data
    is
       Data   : TSC_Data (1 .. Length);
       Status : I2C_Status;
@@ -142,8 +143,9 @@ package body STMPE811 is
    -- Read_Register --
    -------------------
 
-   function Read_Register (This     : STMPE811_Device;
-                           Reg_Addr : UInt8) return UInt8
+   function Read_Register
+     (This     : STMPE811_Device;
+      Reg_Addr : UInt8) return UInt8
    is
       Data : TSC_Data (1 .. 1);
       Status : I2C_Status;
@@ -166,9 +168,11 @@ package body STMPE811 is
    -- Write_Register --
    --------------------
 
-   procedure Write_Register (This     : in out STMPE811_Device;
-                             Reg_Addr : UInt8;
-                             Data     : UInt8) is
+   procedure Write_Register
+     (This     : in out STMPE811_Device;
+      Reg_Addr : UInt8;
+      Data     : UInt8)
+   is
       Status : I2C_Status;
 
    begin
@@ -201,9 +205,10 @@ package body STMPE811 is
    -- IOE_Function_Command --
    --------------------------
 
-   procedure IOE_Function_Command (This : in out STMPE811_Device;
-                                   Func : UInt8;
-                                   Enabled : Boolean)
+   procedure IOE_Function_Command
+     (This    : in out STMPE811_Device;
+      Func    : UInt8;
+      Enabled : Boolean)
    is
       Reg : UInt8 := This.Read_Register (IOE_REG_SYS_CTRL2);
    begin
@@ -222,9 +227,11 @@ package body STMPE811 is
    -- IOE_AF_Config --
    -------------------
 
-   procedure IOE_AF_Config (This      : in out STMPE811_Device;
-                            Pin       : UInt8;
-                            Enabled   : Boolean) is
+   procedure IOE_AF_Config
+     (This      : in out STMPE811_Device;
+      Pin       : UInt8;
+      Enabled   : Boolean)
+   is
       Reg : UInt8 := This.Read_Register (IOE_REG_GPIO_AF);
    begin
       if Enabled then
@@ -296,11 +303,11 @@ package body STMPE811 is
    -- Set_Bounds --
    ----------------
 
-   overriding
-   procedure Set_Bounds (This   : in out STMPE811_Device;
-                         Width  : Natural;
-                         Height : Natural;
-                         Swap   : HAL.Touch_Panel.Swap_State)
+   overriding procedure Set_Bounds
+     (This   : in out STMPE811_Device;
+      Width  : Natural;
+      Height : Natural;
+      Swap   : HAL.Touch_Panel.Swap_State)
    is
    begin
       This.LCD_Natural_Width := Width;
@@ -312,9 +319,8 @@ package body STMPE811 is
    -- Active_Touch_Points --
    -------------------------
 
-   overriding
-   function Active_Touch_Points (This : in out STMPE811_Device)
-                                 return Touch_Identifier
+   overriding function Active_Touch_Points
+     (This : in out STMPE811_Device) return Touch_Identifier
    is
       Val : constant UInt8 := This.Read_Register (IOE_REG_TSC_CTRL) and 16#80#;
    begin
@@ -332,10 +338,9 @@ package body STMPE811 is
    -- Get_Touch_Point --
    ---------------------
 
-   overriding
-   function Get_Touch_Point (This     : in out STMPE811_Device;
-                             Touch_Id : Touch_Identifier)
-                             return TP_Touch_State
+   overriding function Get_Touch_Point
+     (This     : in out STMPE811_Device;
+      Touch_Id : Touch_Identifier) return TP_Touch_State
    is
       State     : TP_Touch_State;
       Raw_X     : UInt32;
@@ -349,7 +354,7 @@ package body STMPE811 is
 
       --  Check Touch detected bit in CTRL register
       if Touch_Id /= 1 or else This.Active_Touch_Points = 0 then
-         return (0, 0, 0);
+         return Null_Touch_State;
       end if;
 
       declare
@@ -387,7 +392,7 @@ package body STMPE811 is
       --  sometimes it reports dummy points at X = LCD_Natural_Width.
       --  Let's filter this out
       if X = This.LCD_Natural_Width - 1 then
-         return (0, 0, 0);
+         return Null_Touch_State;
       end if;
 
       if (This.Swap and Invert_X) /= 0 then
@@ -405,7 +410,12 @@ package body STMPE811 is
       State.X := X;
       State.Y := Y;
 
-      State.Weight := Integer'Max (Integer (Raw_Z), 8);
+      State.Weight   := Integer'Max (Integer (Raw_Z), 8);
+      --  constant event kind: the hw does not tell us if it's a new touch or
+      --  if the finger is released
+      State.Event    := Press_Down;
+      --  No multitouch here: touch_id is always 0
+      State.Touch_Id := 0;
 
       This.Write_Register (IOE_REG_FIFO_STA, 16#01#);
       This.Write_Register (IOE_REG_FIFO_STA, 16#00#);

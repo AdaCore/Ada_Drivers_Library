@@ -33,6 +33,7 @@ with Ada.Unchecked_Conversion;
 
 package body FT5336 is
 
+   function Get_Dev_Mode (This : in out FT5336_Device) return UInt8;
 
    pragma Warnings (Off, "* is not referenced");
 
@@ -265,10 +266,11 @@ package body FT5336 is
    -- I2C_Read --
    --------------
 
-   function I2C_Read (This   : in out FT5336_Device;
-                      Reg    : UInt8;
-                      Status : out Boolean)
-                      return UInt8
+   function I2C_Read
+     (This   : in out FT5336_Device;
+      Reg    : UInt8;
+      Status : out Boolean)
+      return UInt8
    is
       Ret        : I2C_Data (1 .. 1);
       Tmp_Status : I2C_Status;
@@ -285,14 +287,37 @@ package body FT5336 is
       return Ret (1);
    end I2C_Read;
 
+   --------------
+   -- I2C_Read --
+   --------------
+
+   procedure I2C_Read
+     (This   : in out FT5336_Device;
+      Reg    : UInt8;
+      Values : out UInt8_Array;
+      Status : out Boolean)
+   is
+      Tmp_Status : I2C_Status;
+   begin
+      This.Port.Mem_Read
+        (This.I2C_Addr,
+         UInt16 (Reg),
+         Memory_Size_8b,
+         Values,
+         Tmp_Status,
+         1000);
+      Status := Tmp_Status = Ok;
+   end I2C_Read;
+
    ---------------
    -- I2C_Write --
    ---------------
 
-   procedure I2C_Write (This   : in out FT5336_Device;
-                        Reg    : UInt8;
-                        Data   : UInt8;
-                        Status : out Boolean)
+   procedure I2C_Write
+     (This   : in out FT5336_Device;
+      Reg    : UInt8;
+      Data   : UInt8;
+      Status : out Boolean)
    is
       Tmp_Status : I2C_Status;
    begin
@@ -330,12 +355,24 @@ package body FT5336 is
       return False;
    end Check_Id;
 
-   ---------------------------
-   -- TP_Set_Use_Interrupts --
-   ---------------------------
+   ------------------
+   -- Get_Dev_Mode --
+   ------------------
 
-   procedure TP_Set_Use_Interrupts (This    : in out FT5336_Device;
-                                    Enabled : Boolean)
+   function Get_Dev_Mode (This : in out FT5336_Device) return UInt8
+   is
+      Status : Boolean;
+   begin
+      return This.I2C_Read
+        (FT5336_DEV_MODE_REG, Status) and FT5336_DEV_MODE_MASK;
+   end Get_Dev_Mode;
+
+   ------------------------
+   -- Set_Use_Interrupts --
+   ------------------------
+
+   procedure Set_Use_Interrupts (This    : in out FT5336_Device;
+                                 Enabled : Boolean)
    is
       Reg_Value : UInt8 := 0;
       Status    : Boolean with Unreferenced;
@@ -347,17 +384,54 @@ package body FT5336 is
       end if;
 
       This.I2C_Write (FT5336_GMODE_REG, Reg_Value, Status);
-   end TP_Set_Use_Interrupts;
+   end Set_Use_Interrupts;
+
+   ---------------
+   -- Calibrate --
+   ---------------
+
+   function Calibrate (This : in out FT5336_Device) return Boolean
+   is
+      Reg_Value : UInt8;
+      Status    : Boolean;
+
+   begin
+      --  Switch to factory mode
+      This.I2C_Write (FT5336_DEV_MODE_REG, FT5336_DEV_MODE_FACTORY, Status);
+
+      --  Read the DEV_MODE_REG
+      HAL.Time.Delay_Milliseconds (This.Time.all, 300);
+      Reg_Value := Get_Dev_Mode (This);
+
+      if Reg_Value /= FT5336_DEV_MODE_FACTORY then
+         return False;
+      end if;
+
+      --  Start the calibration command
+      This.I2C_Write (FT5336_TD_STAT_REG, 16#04#, Status);
+         HAL.Time.Delay_Milliseconds (This.Time.all, 300);
+
+      --  100 attempts to wait the switch to working mode
+      for J in 1 .. 100 loop
+         Reg_Value := Get_Dev_Mode (This);
+         if Reg_Value = FT5336_DEV_MODE_WORKING then
+            return True;
+         end if;
+         HAL.Time.Delay_Milliseconds (This.Time.all, 200);
+      end loop;
+
+      return False;
+   end Calibrate;
 
    ----------------
    -- Set_Bounds --
    ----------------
 
-   overriding
-   procedure Set_Bounds (This   : in out FT5336_Device;
-                         Width  : Natural;
-                         Height : Natural;
-                         Swap   : HAL.Touch_Panel.Swap_State)
+   overriding procedure Set_Bounds
+     (This   : in out FT5336_Device;
+      Width  : Natural;
+      Height : Natural;
+      Swap   : HAL.Touch_Panel.Swap_State)
    is
    begin
       This.LCD_Natural_Width := Width;
@@ -369,9 +443,8 @@ package body FT5336 is
    -- Active_Touch_Points --
    -------------------------
 
-   overriding
-   function Active_Touch_Points (This : in out FT5336_Device)
-                                 return Touch_Identifier
+   overriding function Active_Touch_Points
+     (This : in out FT5336_Device) return Touch_Identifier
    is
       Status   : Boolean;
       Nb_Touch : UInt8 := 0;
@@ -396,10 +469,9 @@ package body FT5336 is
    -- Get_Touch_Point --
    ---------------------
 
-   overriding
-   function Get_Touch_Point (This     : in out FT5336_Device;
-                             Touch_Id : Touch_Identifier)
-                             return TP_Touch_State
+   overriding function Get_Touch_Point
+     (This     : in out FT5336_Device;
+      Touch_Id : Touch_Identifier) return TP_Touch_State
    is
       type UInt16_HL_Type is record
          High, Low : UInt8;
@@ -412,10 +484,12 @@ package body FT5336 is
       function To_UInt16 is
         new Ada.Unchecked_Conversion (UInt16_HL_Type, UInt16);
 
-      Ret    : TP_Touch_State;
-      Regs   : FT5336_Pressure_Registers;
-      Tmp    : UInt16_HL_Type;
-      Status : Boolean;
+      Ret     : TP_Touch_State;
+      Regs    : FT5336_Pressure_Registers;
+      Tmp     : UInt16_HL_Type;
+      Status  : Boolean;
+      Data_XY : UInt8_Array (1 .. 6);
+      Event   : UInt2;
 
    begin
       --  X/Y are swaped from the screen coordinates
@@ -423,46 +497,41 @@ package body FT5336 is
       if Touch_Id not in FT5336_Px_Regs'Range
         or else Touch_Id > This.Active_Touch_Points
       then
-         return (0, 0, 0);
+         return Null_Touch_State;
       end if;
 
       Regs := FT5336_Px_Regs (Touch_Id);
-
-      Tmp.Low := This.I2C_Read (Regs.XL_Reg, Status);
-
-      if not Status then
-         return (0, 0, 0);
-      end if;
-
-      Tmp.High := This.I2C_Read (Regs.XH_Reg, Status) and
-        FT5336_TOUCH_POS_MSB_MASK;
+      This.I2C_Read (Regs.XH_Reg, Data_XY, Status);
 
       if not Status then
-         return (0, 0, 0);
+         return Null_Touch_State;
       end if;
 
-      Ret.Y := Natural (To_UInt16 (Tmp));
+      Event := UInt2 (Shift_Right (Data_XY (1) and 16#C0#, 6));
 
-      Tmp.Low := This.I2C_Read (Regs.YL_Reg, Status);
+      case Event is
+         when 0 =>
+            Ret.Event := Press_Down;
+         when 1 =>
+            Ret.Event := Lift_Up;
+         when 2 =>
+            Ret.Event := Contact;
+         when 3 =>
+            Ret.Event := No_Event;
+      end case;
 
-      if not Status then
-         return (0, 0, 0);
-      end if;
+      Ret.Touch_Id := Shift_Right (Data_XY (3) and 16#F0#, 4);
 
-      Tmp.High := This.I2C_Read (Regs.YH_Reg, Status) and
-        FT5336_TOUCH_POS_MSB_MASK;
+      --  Y and X are switch as regard to the display
+      Tmp.High := Data_XY (1) and 16#0F#;
+      Tmp.Low  := Data_XY (2);
+      Ret.Y    := Natural (To_UInt16 (Tmp));
 
-      if not Status then
-         return (0, 0, 0);
-      end if;
+      Tmp.High := Data_XY (3) and 16#0F#;
+      Tmp.Low  := Data_XY (4);
+      Ret.X    := Natural (To_UInt16 (Tmp));
 
-      Ret.X := Natural (To_UInt16 (Tmp));
-
-      Ret.Weight := Natural (This.I2C_Read (Regs.Weight_Reg, Status));
-
-      if not Status then
-         Ret.Weight := 0;
-      end if;
+      Ret.Weight := Natural (Data_XY (5));
 
       Ret.X :=
         Natural'Min (Natural'Max (0, Ret.X), This.LCD_Natural_Width - 1);

@@ -137,29 +137,37 @@ package STM32.Board is
 
    procedure Initialize_I2C_GPIO (Port : in out I2C_Port)
      with
-   --  I2C_2 and I2C_4 are not accessible on this board
+   --  I2C_2 and I2C_3 are not accessible on this board
      Pre => As_Port_Id (Port) = I2C_Id_1
             or else
             As_Port_Id (Port) = I2C_Id_4;
 
-   --------------------------------
-   -- Screen/Touch panel devices --
-   --------------------------------
+   ------------
+   -- Screen --
+   ------------
 
    LCD_Natural_Width  : constant := Framebuffer_OTM8009A.LCD_Natural_Width;
    LCD_Natural_Height : constant := Framebuffer_OTM8009A.LCD_Natural_Height;
 
    Display     : Framebuffer_OTM8009A.Frame_Buffer;
-   Touch_Panel : Touch_Panel_FT6x06.Touch_Panel;
 
    -----------------
    -- Touch Panel --
    -----------------
 
    TP_INT   : GPIO_Point renames PI13;
+   TP_Interrupt : constant Interrupt_ID := Names.EXTI15_10_Interrupt;
 
    TP_Pins  : constant GPIO_Points :=
                 (I2C4_SCL, I2C4_SDA);
+
+   package TP is new Touch_Panel_FT6x06
+     (TP_I2C              => I2C_4'Access,
+      TP_INT              => TP_INT,
+      Initialize_I2C_GPIO => Initialize_I2C_GPIO,
+      Width               => LCD_Natural_Width,
+      Height              => LCD_Natural_Height);
+   Touch_Panel : TP.Touch_Panel;
 
    -----------
    -- Audio --

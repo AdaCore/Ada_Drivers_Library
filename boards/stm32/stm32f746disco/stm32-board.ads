@@ -137,6 +137,11 @@ package STM32.Board is
    Display     : Framebuffer_RK043FN48H.Frame_Buffer;
    Touch_Panel : Touch_Panel_FT5336.Touch_Panel;
 
+
+   TP_INT       : GPIO_Point renames PI13;
+   TP_Interrupt : Ada.Interrupts.Interrupt_ID renames
+                    Names.EXTI15_10_Interrupt;
+
    -----------
    -- Audio --
    -----------

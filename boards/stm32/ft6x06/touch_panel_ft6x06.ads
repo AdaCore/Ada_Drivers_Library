@@ -32,25 +32,41 @@
 with HAL.Touch_Panel;
 with HAL.Framebuffer;
 
+with STM32.I2C;
+with STM32.GPIO;
+
 private with FT6x06;
-private with STM32.Device;
-private with STM32.I2C;
-private with STM32.GPIO;
+private with Ravenscar_Time;
+
+generic
+
+   TP_I2C : access STM32.I2C.I2C_Port;
+   TP_INT : STM32.GPIO.GPIO_Point;
+   Width  : Natural;
+   Height : Natural;
+
+   with procedure Initialize_I2C_GPIO (Port : in out STM32.I2C.I2C_Port);
+
 
 package Touch_Panel_FT6x06 is
 
-   type Touch_Panel is limited new HAL.Touch_Panel.Touch_Panel_Device
-   with private;
+   type Touch_Panel is
+     limited new HAL.Touch_Panel.Touch_Panel_Device
+     with private;
 
    function Initialize
-     (This : in out Touch_Panel;
-      Orientation : HAL.Framebuffer.Display_Orientation :=
-        HAL.Framebuffer.Default) return Boolean;
+     (This              : in out Touch_Panel;
+      Orientation       : HAL.Framebuffer.Display_Orientation :=
+                            HAL.Framebuffer.Default;
+      Calibrate         : Boolean := False;
+      Enable_Interrupts : Boolean := False) return Boolean;
 
    procedure Initialize
-     (This : in out Touch_Panel;
-      Orientation : HAL.Framebuffer.Display_Orientation :=
-        HAL.Framebuffer.Default);
+     (This              : in out Touch_Panel;
+      Orientation       : HAL.Framebuffer.Display_Orientation :=
+                            HAL.Framebuffer.Default;
+      Calibrate         : Boolean := False;
+      Enable_Interrupts : Boolean := False);
 
    procedure Set_Orientation
      (This        : in out Touch_Panel;
@@ -58,13 +74,9 @@ package Touch_Panel_FT6x06 is
 
 private
 
-   TP_I2C        : STM32.I2C.I2C_Port renames STM32.Device.I2C_1;
-   TP_I2C_SCL    : STM32.GPIO.GPIO_Point renames STM32.Device.PB8;
-   TP_I2C_SDA    : STM32.GPIO.GPIO_Point renames STM32.Device.PB9;
-   TP_I2C_AF     : STM32.GPIO_Alternate_Function renames STM32.Device.GPIO_AF_I2C1_4;
-
    type Touch_Panel is limited new FT6x06.FT6x06_Device
-     (Port     => TP_I2C'Access,
-      I2C_Addr => 16#54#) with null record;
+       (Port     => TP_I2C,
+        I2C_Addr => 16#54#,
+        Time     => Ravenscar_Time.Delays) with null record;
 
 end Touch_Panel_FT6x06;

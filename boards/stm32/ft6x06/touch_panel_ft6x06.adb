@@ -32,83 +32,119 @@
 --  Based on ft6x06.h from MCD Application Team
 
 with Ada.Real_Time;        use Ada.Real_Time;
-with Ada.Unchecked_Conversion;
 
-with STM32.Board;          use STM32.Board;
 with STM32.Device;         use STM32.Device;
 with STM32.I2C;            use STM32.I2C;
-with STM32.Setup;
 --  with STM32.GPIO;           use STM32.GPIO;
 with HAL.Touch_Panel;      use HAL.Touch_Panel;
 
 with FT6x06;               use FT6x06;
 
+with STM32.EXTI; use STM32.EXTI;
+with STM32.GPIO; use STM32.GPIO;
+
 package body Touch_Panel_FT6x06 is
 
-   procedure TP_Init_Pins;
+   procedure Init_Pins
+     (Enable_Interrupt : Boolean);
    --  Initializes the Touch Panel GPIO pins
+
+   procedure I2C_Config;
+   --  Initializes the I2C bus
 
    ---------------
    -- Init_Pins --
    ---------------
 
-   procedure TP_Init_Pins
+   procedure Init_Pins
+     (Enable_Interrupt : Boolean)
    is
    begin
-      null;
---        Enable_Clock (TP_INT);
---
---        Configure_IO (TP_INT,
---                      (Speed       => Speed_50MHz,
---                       Mode        => Mode_In,
---                       Output_Type => Open_Drain,
---                       Resistors   => Pull_Up));
---        Configure_Trigger (TP_INT, STM32.EXTI.Interrupt_Falling_Edge);
---        Lock (TP_INT);
-   end TP_Init_Pins;
+      Initialize_I2C_GPIO (TP_I2C.all);
+
+      if not Enable_Interrupt then
+         return;
+      end if;
+
+      Enable_Clock (TP_INT);
+      STM32.GPIO.Configure_IO
+        (TP_INT,
+         (Mode        => Mode_In,
+          Output_Type => Open_Drain,
+          Speed       => Speed_High,
+          Resistors   => Pull_Up));
+      STM32.GPIO.Configure_Trigger (TP_INT, Interrupt_Falling_Edge);
+   end Init_Pins;
+
+   ----------------
+   -- I2C_Config --
+   ----------------
+
+   procedure I2C_Config
+   is
+      I2C_Conf : I2C_Configuration;
+   begin
+      Enable_Clock (TP_I2C.all);
+
+      if not TP_I2C.Port_Enabled then
+         Reset (TP_I2C.all);
+
+         I2C_Conf.Own_Address := 16#00#;
+         I2C_Conf.Addressing_Mode := Addressing_Mode_7bit;
+         I2C_Conf.General_Call_Enabled := False;
+         I2C_Conf.Clock_Stretching_Enabled := True;
+
+         I2C_Conf.Clock_Speed := 100_000;
+
+         TP_I2C.Configure (I2C_Conf);
+      end if;
+
+      --  Wait at least 200ms after power up before accessing the TP registers
+      delay until Clock + Milliseconds (200);
+   end I2C_Config;
 
    ----------------
    -- Initialize --
    ----------------
 
    function Initialize
-     (This : in out Touch_Panel;
-      Orientation : HAL.Framebuffer.Display_Orientation :=
-        HAL.Framebuffer.Default) return Boolean
+     (This              : in out Touch_Panel;
+      Orientation       : HAL.Framebuffer.Display_Orientation :=
+                            HAL.Framebuffer.Default;
+      Calibrate         : Boolean := False;
+      Enable_Interrupts : Boolean := False) return Boolean
    is
    begin
-      TP_Init_Pins;
-      if not TP_I2C.Port_Enabled then
-         STM32.Setup.Setup_I2C_Master (Port        => TP_I2C,
-                                       SDA         => TP_I2C_SDA,
-                                       SCL         => TP_I2C_SCL,
-                                       SDA_AF      => TP_I2C_SDA_AF,
-                                       SCL_AF      => TP_I2C_SCL_AF,
-                                       Clock_Speed => 100_000);
-      end if;
+      Init_Pins (Enable_Interrupts);
+      I2C_Config;
 
-      --  Wait at least 200ms after power up before accessing the TP registers
-      delay until Clock + Milliseconds (200);
-
-      if This.Check_Id then
-         This.TP_Set_Use_Interrupts (False);
-         This.Set_Orientation (Orientation);
-
-         return True;
-      else
+      if not This.Check_Id then
          return False;
       end if;
+
+      if Calibrate and then not This.Calibrate then
+         return False;
+      end if;
+
+      This.Set_Use_Interrupts (Enable_Interrupts);
+      This.Set_Orientation (Orientation);
+
+      return True;
    end Initialize;
 
    ----------------
    -- Initialize --
    ----------------
 
-   procedure Initialize (This : in out Touch_Panel;
-      Orientation : HAL.Framebuffer.Display_Orientation :=
-                           HAL.Framebuffer.Default) is
+   procedure Initialize
+     (This              : in out Touch_Panel;
+      Orientation       : HAL.Framebuffer.Display_Orientation :=
+                            HAL.Framebuffer.Default;
+      Calibrate         : Boolean := False;
+      Enable_Interrupts : Boolean := False)
+   is
    begin
-      if not This.Initialize (Orientation) then
+      if not This.Initialize (Orientation, Calibrate, Enable_Interrupts) then
          raise Constraint_Error with "Cannot initialize the touch panel";
       end if;
    end Initialize;
@@ -124,12 +160,12 @@ package body Touch_Panel_FT6x06 is
    begin
       case Orientation is
          when HAL.Framebuffer.Default | HAL.Framebuffer.Landscape =>
-            This.Set_Bounds (LCD_Natural_Width,
-                             LCD_Natural_Height,
+            This.Set_Bounds (Width,
+                             Height,
                              Invert_Y);
          when HAL.Framebuffer.Portrait =>
-            This.Set_Bounds (LCD_Natural_Width,
-                             LCD_Natural_Height,
+            This.Set_Bounds (Width,
+                             Height,
                              Swap_XY);
       end case;
    end Set_Orientation;

@@ -37,6 +37,9 @@ with HAL.Touch_Panel; use HAL.Touch_Panel;
 
 package body FT6x06 is
 
+   function Get_Dev_Mode (This : in out FT6x06_Device) return UInt8
+     with Inline_Always;
+
    --------------
    -- Check_Id --
    --------------
@@ -60,11 +63,11 @@ package body FT6x06 is
       return False;
    end Check_Id;
 
-   ---------------------------
-   -- TP_Set_Use_Interrupts --
-   ---------------------------
+   ------------------------
+   -- Set_Use_Interrupts --
+   ------------------------
 
-   procedure TP_Set_Use_Interrupts
+   procedure Set_Use_Interrupts
      (This    : in out FT6x06_Device;
       Enabled : Boolean)
    is
@@ -78,7 +81,70 @@ package body FT6x06 is
       end if;
 
       This.I2C_Write (FT6206_GMODE_REG, Reg_Value, Status);
-   end TP_Set_Use_Interrupts;
+   end Set_Use_Interrupts;
+
+   ------------------
+   -- Get_Dev_Mode --
+   ------------------
+
+   function Get_Dev_Mode (This : in out FT6x06_Device) return UInt8
+   is
+      Status : Boolean;
+   begin
+      return This.I2C_Read (FT6206_DEV_MODE_REG, Status);
+   end Get_Dev_Mode;
+
+   ---------------
+   -- Calibrate --
+   ---------------
+
+   function Calibrate (This : in out FT6x06_Device) return Boolean
+   is
+      Reg_Value : UInt8;
+      Status    : Boolean;
+
+   begin
+      --  Switch to factory mode
+      This.I2C_Write (FT6206_DEV_MODE_REG, FT6206_DEV_MODE_FACTORY, Status);
+      HAL.Time.Delay_Milliseconds (This.Time.all, 300);
+
+      --  Check that we properly switched
+      Reg_Value := Get_Dev_Mode (This);
+
+      if Reg_Value /= FT6206_DEV_MODE_FACTORY then
+         return False;
+      end if;
+
+      --  Start the calibration command
+      This.I2C_Write (FT6206_REG_CALIBRATE, 16#04#, Status);
+      HAL.Time.Delay_Milliseconds (This.Time.all, 300);
+
+      --  100 attempts to wait the switch to working mode
+      for J in 1 .. 100 loop
+         Reg_Value := Get_Dev_Mode (This);
+         if (Reg_Value and 16#70#) = FT6206_DEV_MODE_WORKING then
+            return True;
+         end if;
+         HAL.Time.Delay_Milliseconds (This.Time.all, 200);
+      end loop;
+
+      return False;
+   end Calibrate;
+
+   ---------------------
+   -- Set_Update_Rate --
+   ---------------------
+
+   procedure Set_Update_Rate
+     (This         : in out FT6x06_Device;
+      Active_Rate  : UInt8 := 60;
+      Monitor_Rate : UInt8 := 60)
+   is
+      Status : Boolean;
+   begin
+      This.I2C_Write (FT6206_PERIODACTIVE_REG, Active_Rate, Status);
+      This.I2C_Write (FT6206_PERIODMONITOR_REG, Monitor_Rate, Status);
+   end Set_Update_Rate;
 
    ----------------
    -- Set_Bounds --
@@ -100,9 +166,8 @@ package body FT6x06 is
    -- Active_Touch_Points --
    -------------------------
 
-   overriding
-   function Active_Touch_Points (This : in out FT6x06_Device)
-                                 return Touch_Identifier
+   overriding function Active_Touch_Points
+     (This : in out FT6x06_Device) return Touch_Identifier
    is
       Status   : Boolean;
       Nb_Touch : UInt8 := 0;
@@ -130,10 +195,9 @@ package body FT6x06 is
    -- Get_Touch_State --
    ---------------------
 
-   overriding
-   function Get_Touch_Point (This     : in out FT6x06_Device;
-                             Touch_Id : Touch_Identifier)
-                             return HAL.Touch_Panel.TP_Touch_State
+   overriding function Get_Touch_Point
+     (This     : in out FT6x06_Device;
+      Touch_Id : Touch_Identifier) return HAL.Touch_Panel.TP_Touch_State
    is
       type UInt16_HL_Type is record
          High, Low : UInt8;
@@ -146,58 +210,57 @@ package body FT6x06 is
       function To_UInt16 is
         new Ada.Unchecked_Conversion (UInt16_HL_Type, UInt16);
 
-      Ret  : TP_Touch_State;
-      Regs : FT6206_Pressure_Registers;
-      Tmp  : UInt16_HL_Type;
-      Status : Boolean;
+      Ret     : TP_Touch_State;
+      Regs    : FT6206_Pressure_Registers;
+      Tmp     : UInt16_HL_Type;
+      Status  : Boolean;
+      Data_XY : UInt8_Array (1 .. 6);
+      Event   : UInt2;
+
    begin
       if Touch_Id not in FT6206_Px_Regs'Range then
-         return (0, 0, 0);
+         return Null_Touch_State;
       end if;
 
       if Touch_Id > This.Active_Touch_Points then
-         return (0, 0, 0);
+         return Null_Touch_State;
       end if;
 
       --  X/Y are swaped from the screen coordinates
 
       Regs := FT6206_Px_Regs (Touch_Id);
-
-      Tmp.Low := This.I2C_Read (Regs.XL_Reg, Status);
-
-      if not Status then
-         return (0, 0, 0);
-      end if;
-
-      Tmp.High := This.I2C_Read (Regs.XH_Reg, Status) and
-        FT6206_TOUCH_POS_MSB_MASK;
+      This.I2C_Read (Regs.XH_Reg, Data_XY, Status);
 
       if not Status then
-         return (0, 0, 0);
+         return Null_Touch_State;
       end if;
 
+      --  X/Y are swaped from the screen coordinates
+      --  ??? TODO: make it a generic parameter of this package.
+      Event    := UInt2 (Shift_Right (Data_XY (1) and 16#C0#, 6));
+
+      case Event is
+         when 0 =>
+            Ret.Event := Press_Down;
+         when 1 =>
+            Ret.Event := Lift_Up;
+         when 2 =>
+            Ret.Event := Contact;
+         when 3 =>
+            Ret.Event := No_Event;
+      end case;
+
+      Ret.Touch_Id := Shift_Right (Data_XY (3) and 16#F0#, 4);
+
+      Tmp.High := Data_XY (1) and 16#0F#;
+      Tmp.Low  := Data_XY (2);
       Ret.Y := Natural (To_UInt16 (Tmp));
 
-      Tmp.Low := This.I2C_Read (Regs.YL_Reg, Status);
-
-      if not Status then
-         return (0, 0, 0);
-      end if;
-
-      Tmp.High := This.I2C_Read (Regs.YH_Reg, Status) and
-        FT6206_TOUCH_POS_MSB_MASK;
-
-      if not Status then
-         return (0, 0, 0);
-      end if;
-
+      Tmp.High := Data_XY (3) and 16#0F#;
+      Tmp.Low  := Data_XY (4);
       Ret.X := Natural (To_UInt16 (Tmp));
 
-      Ret.Weight := Natural (This.I2C_Read (Regs.Weight_Reg, Status));
-
-      if not Status then
-         Ret.Weight := 0;
-      end if;
+      Ret.Weight := Natural (Data_XY (5));
 
       if Ret.Weight = 0 then
          Ret.Weight := 50;
@@ -254,10 +317,11 @@ package body FT6x06 is
    -- I2C_Read --
    --------------
 
-   function I2C_Read (This   : in out FT6x06_Device;
-                      Reg    : UInt8;
-                      Status : out Boolean)
-                      return UInt8
+   function I2C_Read
+     (This   : in out FT6x06_Device;
+      Reg    : UInt8;
+      Status : out Boolean)
+      return UInt8
    is
       Ret        : I2C_Data (1 .. 1);
       Tmp_Status : I2C_Status;
@@ -272,6 +336,28 @@ package body FT6x06 is
       Status := Tmp_Status = Ok;
 
       return Ret (1);
+   end I2C_Read;
+
+   --------------
+   -- I2C_Read --
+   --------------
+
+   procedure I2C_Read
+     (This   : in out FT6x06_Device;
+      Reg    : UInt8;
+      Values : out UInt8_Array;
+      Status : out Boolean)
+   is
+      Tmp_Status : I2C_Status;
+   begin
+      This.Port.Mem_Read
+        (This.I2C_Addr,
+         UInt16 (Reg),
+         Memory_Size_8b,
+         Values,
+         Tmp_Status,
+         1000);
+      Status := Tmp_Status = Ok;
    end I2C_Read;
 
    ---------------

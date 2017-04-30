@@ -31,13 +31,21 @@
 
 package HAL.Touch_Panel is
 
+   type Event_Kind is
+     (No_Event,
+      Press_Down,
+      Lift_Up,
+      Contact);
+
    type TP_Touch_State is record
-      X      : Natural;
-      Y      : Natural;
-      Weight : Natural;
+      X        : Natural;
+      Y        : Natural;
+      Weight   : Natural;
+      Event    : Event_Kind;
+      Touch_Id : UInt8;
    end record;
 
-   Null_Touch_State : constant TP_Touch_State := (0, 0, 0);
+   Null_Touch_State : constant TP_Touch_State := (0, 0, 0, No_Event, 0);
 
    type Swap_State is new UInt3;
 

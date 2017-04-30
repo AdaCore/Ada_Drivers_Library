@@ -34,67 +34,87 @@
 
 with HAL;             use HAL;
 with HAL.I2C;         use HAL.I2C;
+with HAL.Time;
 with HAL.Touch_Panel;
 
 package FT6x06 is
 
-   type FT6x06_Device (Port     : not null Any_I2C_Port;
-                       I2C_Addr : I2C_Address) is
+   type FT6x06_Device
+     (Port     : not null Any_I2C_Port;
+      I2C_Addr : I2C_Address;
+      Time     : not null HAL.Time.Any_Delays) is
      limited new HAL.Touch_Panel.Touch_Panel_Device with private;
 
    function Check_Id (This : in out FT6x06_Device) return Boolean;
    --  Check the device Id: returns true on a FT5336 touch panel, False is
    --  none is found.
 
-   procedure TP_Set_Use_Interrupts (This : in out FT6x06_Device;
-                                    Enabled : Boolean);
+   procedure Set_Use_Interrupts (This : in out FT6x06_Device;
+                                 Enabled : Boolean);
    --  Whether the touch panel uses interrupts of polling to process touch
    --  information
 
-   overriding
-   procedure Set_Bounds (This   : in out FT6x06_Device;
-                         Width  : Natural;
-                         Height : Natural;
-                         Swap   : HAL.Touch_Panel.Swap_State);
+   function Calibrate (This : in out FT6x06_Device) return Boolean;
+   --  Performs a factory calibration on the device.
+
+   procedure Set_Update_Rate
+     (This         : in out FT6x06_Device;
+      Active_Rate  : UInt8 := 60;
+      Monitor_Rate : UInt8 := 60);
+
+   overriding procedure Set_Bounds
+     (This   : in out FT6x06_Device;
+      Width  : Natural;
+      Height : Natural;
+      Swap   : HAL.Touch_Panel.Swap_State);
    --  Set screen bounds. Touch_State must should stay within screen bounds
 
-   overriding
-   function Active_Touch_Points (This : in out FT6x06_Device)
-                                 return HAL.Touch_Panel.Touch_Identifier;
+   overriding function Active_Touch_Points
+     (This : in out FT6x06_Device) return HAL.Touch_Panel.Touch_Identifier;
    --  Retrieve the number of active touch points
 
-   overriding
-   function Get_Touch_Point (This     : in out FT6x06_Device;
-                             Touch_Id : HAL.Touch_Panel.Touch_Identifier)
-                             return HAL.Touch_Panel.TP_Touch_State;
+   overriding function Get_Touch_Point
+     (This     : in out FT6x06_Device;
+      Touch_Id : HAL.Touch_Panel.Touch_Identifier)
+      return HAL.Touch_Panel.TP_Touch_State;
    --  Retrieves the position and pressure information of the specified
    --  touch
 
-   overriding
-   function Get_All_Touch_Points
-     (This : in out FT6x06_Device)
-      return HAL.Touch_Panel.TP_State;
+   overriding function Get_All_Touch_Points
+     (This : in out FT6x06_Device) return HAL.Touch_Panel.TP_State;
    --  Retrieves the position and pressure information of every active touch
    --  points
+
 private
 
-   type FT6x06_Device (Port     : not null Any_I2C_Port;
-                       I2C_Addr : I2C_Address) is
+   type FT6x06_Device
+     (Port     : not null Any_I2C_Port;
+      I2C_Addr : I2C_Address;
+      Time     : not null HAL.Time.Any_Delays) is
      limited new HAL.Touch_Panel.Touch_Panel_Device with record
       LCD_Natural_Width  : Natural := 0;
       LCD_Natural_Height : Natural := 0;
       Swap               : HAL.Touch_Panel.Swap_State := 0;
    end record;
 
-   function I2C_Read (This   : in out FT6x06_Device;
-                      Reg    : UInt8;
-                      Status : out Boolean)
-                      return UInt8;
+   function I2C_Read
+     (This   : in out FT6x06_Device;
+      Reg    : UInt8;
+      Status : out Boolean)
+      return UInt8;
 
-   procedure I2C_Write (This   : in out FT6x06_Device;
-                        Reg    : UInt8;
-                        Data   : UInt8;
-                        Status : out Boolean);
+   procedure I2C_Read
+     (This   : in out FT6x06_Device;
+      Reg    : UInt8;
+      Values : out UInt8_Array;
+      Status : out Boolean);
+
+   procedure I2C_Write
+     (This   : in out FT6x06_Device;
+      Reg    : UInt8;
+      Data   : UInt8;
+      Status : out Boolean);
+
    ------------------------------------------------------------
    -- Definitions for FT6206 I2C register addresses on 8 bit --
    ------------------------------------------------------------
@@ -104,10 +124,10 @@ private
 
    --  Possible values of FT6206_DEV_MODE_REG
    FT6206_DEV_MODE_WORKING             : constant UInt8 := 16#00#;
-   FT6206_DEV_MODE_FACTORY             : constant UInt8 := 16#04#;
+   FT6206_DEV_MODE_FACTORY             : constant UInt8 := 16#40#;
 
-   FT6206_DEV_MODE_MASK                : constant UInt8 := 16#07#;
-   FT6206_DEV_MODE_SHIFT               : constant UInt8 := 16#04#;
+   --  Registers in Factory mode
+   FT6206_REG_CALIBRATE                : constant := 16#02#;
 
    --  Gesture ID register
    FT6206_GEST_ID_REG                  : constant UInt8 := 16#01#;
@@ -164,20 +184,19 @@ private
       Misc_Reg   : UInt8;
    end record;
 
-   FT6206_Px_Regs                : constant array (Positive range <>)
-                                      of FT6206_Pressure_Registers  :=
-                                     (1  => (XH_Reg     => 16#03#,
-                                             XL_Reg     => 16#04#,
-                                             YH_Reg     => 16#05#,
-                                             YL_Reg     => 16#06#,
-                                             Weight_Reg => 16#07#,
-                                             Misc_Reg   => 16#08#),
-                                      2  => (XH_Reg     => 16#09#,
-                                             XL_Reg     => 16#0A#,
-                                             YH_Reg     => 16#0B#,
-                                             YL_Reg     => 16#0C#,
-                                             Weight_Reg => 16#0D#,
-                                             Misc_Reg   => 16#0E#));
+   FT6206_Px_Regs : constant array (Positive range <>) of FT6206_Pressure_Registers  :=
+                      (1  => (XH_Reg     => 16#03#,
+                              XL_Reg     => 16#04#,
+                              YH_Reg     => 16#05#,
+                              YL_Reg     => 16#06#,
+                              Weight_Reg => 16#07#,
+                              Misc_Reg   => 16#08#),
+                       2  => (XH_Reg     => 16#09#,
+                              XL_Reg     => 16#0A#,
+                              YH_Reg     => 16#0B#,
+                              YL_Reg     => 16#0C#,
+                              Weight_Reg => 16#0D#,
+                              Misc_Reg   => 16#0E#));
 
    --  Threshold for touch detection
    FT6206_TH_GROUP_REG                 : constant UInt8 := 16#80#;

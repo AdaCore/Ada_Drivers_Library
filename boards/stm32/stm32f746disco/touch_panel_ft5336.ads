@@ -36,6 +36,7 @@ private with FT5336;
 private with STM32.Device;
 private with STM32.I2C;
 private with STM32.GPIO;
+private with Ravenscar_Time;
 
 package Touch_Panel_FT5336 is
 
@@ -43,14 +44,18 @@ package Touch_Panel_FT5336 is
    with private;
 
    function Initialize
-     (This : in out Touch_Panel;
-      Orientation : HAL.Framebuffer.Display_Orientation :=
-        HAL.Framebuffer.Default) return Boolean;
+     (This              : in out Touch_Panel;
+      Orientation       : HAL.Framebuffer.Display_Orientation :=
+        HAL.Framebuffer.Default;
+      Calibrate         : Boolean := False;
+      Enable_Interrupts : Boolean := False) return Boolean;
 
    procedure Initialize
-     (This : in out Touch_Panel;
-      Orientation : HAL.Framebuffer.Display_Orientation :=
-        HAL.Framebuffer.Default);
+     (This              : in out Touch_Panel;
+      Orientation       : HAL.Framebuffer.Display_Orientation :=
+        HAL.Framebuffer.Default;
+      Calibrate         : Boolean := False;
+      Enable_Interrupts : Boolean := False);
 
    procedure Set_Orientation
      (This        : in out Touch_Panel;
@@ -65,6 +70,7 @@ private
 
    type Touch_Panel is limited new FT5336.FT5336_Device
      (Port     => TP_I2C'Access,
-      I2C_Addr => 16#70#) with null record;
+      I2C_Addr => 16#70#,
+      Time     => Ravenscar_Time.Delays) with null record;
 
 end Touch_Panel_FT5336;
