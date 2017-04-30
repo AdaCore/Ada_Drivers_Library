@@ -297,10 +297,10 @@ package body SSD1306 is
       if Layer /= 1 or else Mode /= M_1 then
          raise Program_Error;
       end if;
-      This.Memory_Layer.Actual_Width := This.Width;
-      This.Memory_Layer.Actual_Height := This.Height;
+      This.Memory_Layer.Width := This.Width;
+      This.Memory_Layer.Height := This.Height;
       This.Memory_Layer.Addr := This.Memory_Layer.Data'Address;
-      This.Memory_Layer.Actual_Color_Mode := Mode;
+      This.Memory_Layer.Color_Mode := Mode;
       This.Layer_Initialized := True;
    end Initialize_Layer;
 
@@ -400,7 +400,7 @@ package body SSD1306 is
       Pt      : Point;
       Value   : UInt32)
    is
-      Index : constant Natural := Pt.X + (Pt.Y / 8) * Buffer.Actual_Width;
+      Index : constant Natural := Pt.X + (Pt.Y / 8) * Buffer.Width;
       Byte  : UInt8 renames Buffer.Data (Buffer.Data'First + Index);
    begin
 
@@ -421,7 +421,7 @@ package body SSD1306 is
       Pt     : Point)
       return UInt32
    is
-      Index : constant Natural := Pt.X + (Pt.Y / 8) * Buffer.Actual_Width;
+      Index : constant Natural := Pt.X + (Pt.Y / 8) * Buffer.Width;
       Byte  : UInt8 renames Buffer.Data (Buffer.Data'First + Index);
    begin
       return UInt32 (Byte);

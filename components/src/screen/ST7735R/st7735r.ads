@@ -41,7 +41,6 @@ with HAL.Framebuffer;      use HAL.Framebuffer;
 with HAL.Bitmap;           use HAL.Bitmap;
 with HAL.Time;
 with Soft_Drawing_Bitmap;  use Soft_Drawing_Bitmap;
-with System;
 
 package ST7735R is
 
@@ -283,29 +282,9 @@ private
       LCD : Any_ST7735R_Device := null;
    end record;
 
-   overriding
-   function Width (Buffer : ST7735R_Bitmap_Buffer) return Natural is
-     (Screen_Width);
-
-   overriding
-   function Height (Buffer : ST7735R_Bitmap_Buffer) return Natural is
-     (Screen_Height);
-
-   overriding
-   function Swapped (Buffer : ST7735R_Bitmap_Buffer) return Boolean is
-     (False);
-
-   overriding
-   function Color_Mode (Buffer : ST7735R_Bitmap_Buffer) return Bitmap_Color_Mode is
-     (RGB_565);
-
-   overriding
-   function Mapped_In_RAM (Buffer : ST7735R_Bitmap_Buffer) return Boolean is
-      (False);
-
-   overriding
-   function Memory_Address (Buffer : ST7735R_Bitmap_Buffer) return System.Address is
-     (System.Null_Address);
+   overriding function Kind
+     (Buffer : ST7735R_Bitmap_Buffer) return Bitmap_Buffer_Kind
+   is (Device);
 
    overriding
    procedure Set_Pixel

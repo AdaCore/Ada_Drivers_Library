@@ -29,71 +29,30 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with System;
+with System.Storage_Elements;
+
 with HAL;                 use HAL;
 with HAL.Bitmap;          use HAL.Bitmap;
 with Soft_Drawing_Bitmap; use Soft_Drawing_Bitmap;
-with System;
 
 package Memory_Mapped_Bitmap is
 
    subtype Parent is Soft_Drawing_Bitmap_Buffer;
 
    type Memory_Mapped_Bitmap_Buffer is new Parent with record
-      Addr              : System.Address;
-
-      Actual_Width      : Natural;
-      Actual_Height     : Natural;
-      --  Width and Height of the buffer. Note that it's the user-visible width
-      --  (see below for the meaning of the Swapped value).
-
-      Actual_Color_Mode : Bitmap_Color_Mode;
-      --  The buffer color mode. Note that not all color modes are supported by
-      --  the hardware acceleration (if any), so you need to check your actual
-      --  hardware to optimize buffer transfers.
-
-      Currently_Swapped : Boolean := False;
-      --  If Swap is set, then operations on this buffer will consider:
-      --  Width0 = Height
-      --  Height0 = Width
-      --  Y0 = Buffer.Width - X - 1
-      --  X0 = Y
-      --
-      --  As an example, the Bitmap buffer that corresponds to a 240x320
-      --  swapped display (to display images in landscape mode) with have
-      --  the following values:
-      --  Width => 320
-      --  Height => 240
-      --  Swapped => True
-      --  So Put_Pixel (Buffer, 30, 10, Color) will place the pixel at
-      --  Y0 = 320 - 30 - 1 = 289
-      --  X0 = 10
+      Addr    : System.Address;
+      Swapped : Boolean := False;
+      --  Set to True if the X/Y coordinates meaning are reversed in the
+      --  buffer representation. This is meant to accomodate portrait mode
+      --  on landscape-only display, or the reverse.
    end record;
 
    type Any_Memory_Mapped_Bitmap_Buffer is access all Memory_Mapped_Bitmap_Buffer'Class;
 
-   overriding
-   function Width (Buffer : Memory_Mapped_Bitmap_Buffer) return Natural is
-     (if Buffer.Currently_Swapped then Buffer.Actual_Height else Buffer.Actual_Width);
-
-   overriding
-   function Height (Buffer : Memory_Mapped_Bitmap_Buffer) return Natural is
-     (if Buffer.Currently_Swapped then Buffer.Actual_Width else Buffer.Actual_Height);
-
-   overriding
-   function Swapped (Buffer : Memory_Mapped_Bitmap_Buffer) return Boolean is
-     (Buffer.Currently_Swapped);
-
-   overriding
-   function Color_Mode (Buffer : Memory_Mapped_Bitmap_Buffer) return Bitmap_Color_Mode is
-     (Buffer.Actual_Color_Mode);
-
-   overriding
-   function Mapped_In_RAM (Buffer : Memory_Mapped_Bitmap_Buffer) return Boolean is
-     (True);
-
-   overriding
-   function Memory_Address (Buffer : Memory_Mapped_Bitmap_Buffer) return System.Address is
-     (Buffer.Addr);
+   overriding function Kind
+     (Buffer : Memory_Mapped_Bitmap_Buffer) return Bitmap_Buffer_Kind
+   is (Memory_Mapped);
 
    overriding
    procedure Set_Pixel
@@ -131,7 +90,56 @@ package Memory_Mapped_Bitmap is
       Pt     : Point)
       return UInt32;
 
-   overriding
-   function Buffer_Size (Buffer : Memory_Mapped_Bitmap_Buffer) return Natural;
+   overriding procedure Copy_Rect
+     (Src_Buffer  : Bitmap_Buffer'Class;
+      Src_Pt      : Point;
+      Dst_Buffer  : in out Memory_Mapped_Bitmap_Buffer;
+      Dst_Pt      : Point;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean := True;
+      Clean_Cache : Boolean := True);
+   --  Copy the area denoted by Src_Pt, Width, Height from Src_Buffer to
+   --  Dst_Buffer.
+   --  In case of hardware (e.g. DMA) acceleration, Synchronous, if set,
+   --  ensures that the operation is completed upon return.
+   --  In case the CPU supports data memory cache, setting Clean_Cache
+   --  to True will ensure that the source buffers are visible to both the
+   --  CPU and the DMA. Has no effect on software rendered operation.
+
+   overriding procedure Copy_Rect_Blend
+     (Src_Buffer  : Bitmap_Buffer'Class;
+      Src_Pt      : Point;
+      Dst_Buffer  : in out Memory_Mapped_Bitmap_Buffer;
+      Dst_Pt      : Point;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean := True;
+      Clean_Cache : Boolean := True);
+   --  Blends the area denoted by Src_Pt, Width, Height from Src_Buffer with
+   --  Dst_Buffer in the area Dst_Pt, Width, Height.
+   --  In case of hardware (e.g. DMA) acceleration, Synchronous, if set,
+   --  ensures that the operation is completed upon return.
+   --  In case the CPU supports data memory cache, setting Clean_Cache
+   --  to True will ensure that the source buffers are visible to both the
+   --  CPU and the DMA. Has no effect on software rendered operation.
+
+   overriding function Buffer_Size
+     (Buffer : Memory_Mapped_Bitmap_Buffer) return Natural;
+
+   function Swap
+     (Buffer : Memory_Mapped_Bitmap_Buffer'Class;
+      Pt     : Point) return Point
+     with Inline_Always;
+   --  Swaps X/Y to translate Pt from respectively Protrait/Landscape into
+   --  Lanscape/Portrait modes, if indicated by Buffer.
+
+   function Pixel_Offset
+     (Buffer : Memory_Mapped_Bitmap_Buffer'Class;
+      Pt     : Point) return System.Storage_Elements.Storage_Offset
+     with Inline_Always;
+   --  Offset is pixels of Pt in Buffer natural order
+
+   overriding procedure Sync (Buffer : Memory_Mapped_Bitmap_Buffer) is null;
 
 end Memory_Mapped_Bitmap;

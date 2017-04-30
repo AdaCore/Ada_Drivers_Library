@@ -24,10 +24,10 @@ procedure TC_Bitmap_Drawing is
       BM : constant Any_Memory_Mapped_Bitmap_Buffer := new Memory_Mapped_Bitmap_Buffer;
       Data : constant access Pixel_Data := new Pixel_Data;
    begin
-      BM.Actual_Width := BM_Width;
-      BM.Actual_Height := BM_Height;
-      BM.Actual_Color_Mode := RGB_565;
-      BM.Currently_Swapped := False;
+      BM.Width := BM_Width;
+      BM.Height := BM_Height;
+      BM.Color_Mode := RGB_565;
+      BM.Swapped := False;
       BM.Addr := Data.all'Address;
       return Any_Bitmap_Buffer (BM);
    end Allocate_Bitmap;

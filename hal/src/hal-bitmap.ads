@@ -29,8 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with System;
-
 package HAL.Bitmap is
 
    type Orientation_Mode is
@@ -95,47 +93,20 @@ package HAL.Bitmap is
       Alpha at 3 range 0 .. 7;
    end record;
 
-   type Bitmap_Buffer is interface;
+   type Bitmap_Buffer_Kind is
+     (Memory_Mapped, --  Frame buffer
+      Device);       --  Direct device access
+
+   type Bitmap_Buffer is abstract tagged record
+      Width      : Natural;
+      Height     : Natural;
+      Color_Mode : Bitmap_Color_Mode;
+   end record;
 
    type Any_Bitmap_Buffer is access all Bitmap_Buffer'Class;
 
-   function Width (Buffer : Bitmap_Buffer) return Natural is abstract;
-   --  Width of the buffer. Note that it's the user-visible width
-   --  (see below for the meaning of the Swapped value).
-
-   function Height (Buffer : Bitmap_Buffer) return Natural is abstract;
-   --  Height of the buffer. Note that it's the user-visible height
-   --  (see below for the meaning of the Swapped value).
-
-   function Swapped (Buffer : Bitmap_Buffer) return Boolean is abstract;
-   --  If Swapped return True, operations on this buffer will consider:
-   --  Width0 = Height
-   --  Height0 = Width
-   --  Y0 = Buffer.Width - X - 1
-   --  X0 = Y
-   --
-   --  As an example, the Bitmap buffer that corresponds to a 240x320
-   --  swapped display (to display images in landscape mode) with have
-   --  the following values:
-   --  Width => 320
-   --  Height => 240
-   --  Swapped => True
-   --  So Put_Pixel (Buffer, 30, 10, Color) will place the pixel at
-   --  Y0 = 320 - 30 - 1 = 289
-   --  X0 = 10
-
-   function Color_Mode (Buffer : Bitmap_Buffer) return Bitmap_Color_Mode is abstract;
-   --  The buffer color mode. Note that not all color modes are supported by
-   --  the hardware acceleration (if any), so you need to check your actual
-   --  hardware to optimize buffer transfers.
-
-   function Mapped_In_RAM (Buffer : Bitmap_Buffer) return Boolean is abstract;
-   --  Return True is the bitmap is storred in the CPU address space
-
-   function Memory_Address (Buffer : Bitmap_Buffer) return System.Address is abstract
-     with Pre'Class => Buffer.Mapped_In_RAM;
-   --  Return the address of the bitmap in the CPU address space. If the bitmap
-   --  is not in the CPU address space, the result is undefined.
+   function Kind
+     (Buffer : Bitmap_Buffer) return Bitmap_Buffer_Kind is abstract;
 
    procedure Set_Pixel
      (Buffer  : in out Bitmap_Buffer;
@@ -195,36 +166,18 @@ package HAL.Bitmap is
    --  Same as above, using the destination buffer native color representation
 
    procedure Fill_Rect
-     (Buffer : in out Bitmap_Buffer;
-      Color  : Bitmap_Color;
-      Area   : Rect) is abstract;
+     (Buffer      : in out Bitmap_Buffer;
+      Color       : Bitmap_Color;
+      Area        : Rect;
+      Synchronous : Boolean := True) is abstract;
    --  Fill the specified area of the buffer with 'Color'
 
    procedure Fill_Rect
-     (Buffer : in out Bitmap_Buffer;
-      Color  : UInt32;
-      Area   : Rect) is abstract;
+     (Buffer      : in out Bitmap_Buffer;
+      Color       : UInt32;
+      Area        : Rect;
+      Synchronous : Boolean := True) is abstract;
    --  Same as above, using the destination buffer native color representation
-
-   procedure Copy_Rect
-     (Src_Buffer  : Bitmap_Buffer'Class;
-      Src_Pt      : Point;
-      Dst_Buffer  : in out Bitmap_Buffer;
-      Dst_Pt      : Point;
-      Bg_Buffer   : Bitmap_Buffer'Class;
-      Bg_Pt       : Point;
-      Width       : Natural;
-      Height      : Natural;
-      Synchronous : Boolean;
-      Clean_Cache : Boolean := True) is abstract;
-   --   If Bg_Buffer is valid, blends Src_Buffer and Bg_Buffer and copy the
-   --   resulting rect on Dst_Buffer.
-   --   If Bg_Buffer is invalid, copy Src_Buffer rect on Dst_Buffer.
-   --   In case of hardware (e.g. DMA) acceleration, Synchronous, if set,
-   --   ensures that the operation is completed upon return.
-   --   In case the CPU supports data memory cache, setting Clean_Cache
-   --   to True will ensure that the source buffers are visible to both the
-   --   CPU and the DMA.
 
    procedure Copy_Rect
      (Src_Buffer  : Bitmap_Buffer'Class;
@@ -237,9 +190,9 @@ package HAL.Bitmap is
       Clean_Cache : Boolean := True) is abstract;
 
    procedure Copy_Rect_Blend
-     (Src_Buffer  : Bitmap_Buffer;
+     (Src_Buffer  : Bitmap_Buffer'Class;
       Src_Pt      : Point;
-      Dst_Buffer  : in out Bitmap_Buffer'Class;
+      Dst_Buffer  : in out Bitmap_Buffer;
       Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
@@ -322,6 +275,10 @@ package HAL.Bitmap is
       Thickness      : Natural := 1) is abstract;
 
    function Buffer_Size (Buffer : Bitmap_Buffer) return Natural is abstract;
+
+   procedure Sync (Buffer : Bitmap_Buffer) is null;
+   --  In case some of the primitive of the buffer are asynchronous, this
+   --  ensures that all such operations are done when Sync returns.
 
    Transparent         : constant Bitmap_Color := (000, 000, 000, 000);
    Dark_Red            : constant Bitmap_Color := (255, 139, 000, 000);

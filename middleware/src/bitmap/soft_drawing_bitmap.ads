@@ -44,164 +44,133 @@ package Soft_Drawing_Bitmap is
    type Any_Soft_Drawing_Bitmap_Buffer is
      access all Soft_Drawing_Bitmap_Buffer'Class;
 
-   overriding
-   procedure Draw_Line
+   overriding procedure Draw_Line
      (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
       Color       : UInt32;
       Start, Stop : Point;
       Thickness   : Natural := 1;
       Fast        : Boolean := True);
 
-   overriding
-   procedure Draw_Line
+   overriding procedure Draw_Line
      (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
       Color       : Bitmap_Color;
       Start, Stop : Point;
       Thickness   : Natural := 1;
       Fast        : Boolean := True);
 
-   overriding
-   procedure Fill
+   overriding procedure Fill
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : Bitmap_Color);
    --  Fill the specified buffer with 'Color'
 
-   overriding
-   procedure Fill
+   overriding procedure Fill
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : UInt32);
    --  Same as above, using the destination buffer native color representation
 
-   overriding
-   procedure Fill_Rect
-     (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : Bitmap_Color;
-      Area   : Rect);
+   overriding procedure Fill_Rect
+     (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
+      Color       : Bitmap_Color;
+      Area        : Rect;
+      Synchronous : Boolean := True);
    --  Fill the specified area of the buffer with 'Color'
 
-   overriding
-   procedure Fill_Rect
-     (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : UInt32;
-      Area   : Rect);
+   overriding procedure Fill_Rect
+     (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
+      Color       : UInt32;
+      Area        : Rect;
+      Synchronous : Boolean := True);
    --  Same as above, using the destination buffer native color representation
 
-   overriding
-   procedure Copy_Rect
-     (Src_Buffer  : Bitmap_Buffer'Class;
-      Src_Pt      : Point;
-      Dst_Buffer  : in out Soft_Drawing_Bitmap_Buffer;
-      Dst_Pt      : Point;
-      Bg_Buffer   : Bitmap_Buffer'Class;
-      Bg_Pt       : Point;
-      Width       : Natural;
-      Height      : Natural;
-      Synchronous : Boolean;
-      Clean_Cache : Boolean := True);
-
-   overriding
-   procedure Copy_Rect
+   overriding procedure Copy_Rect
      (Src_Buffer  : Bitmap_Buffer'Class;
       Src_Pt      : Point;
       Dst_Buffer  : in out Soft_Drawing_Bitmap_Buffer;
       Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean;
+      Synchronous : Boolean := True;
       Clean_Cache : Boolean := True);
 
-   overriding
-   procedure Copy_Rect_Blend
-     (Src_Buffer  : Soft_Drawing_Bitmap_Buffer;
+   overriding procedure Copy_Rect_Blend
+     (Src_Buffer  : Bitmap_Buffer'Class;
       Src_Pt      : Point;
-      Dst_Buffer  : in out Bitmap_Buffer'Class;
+      Dst_Buffer  : in out Soft_Drawing_Bitmap_Buffer;
       Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean;
+      Synchronous : Boolean := True;
       Clean_Cache : Boolean := True);
 
-   overriding
-   procedure Draw_Vertical_Line
+   overriding procedure Draw_Vertical_Line
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : UInt32;
       Pt     : Point;
       Height : Integer);
 
-   overriding
-   procedure Draw_Vertical_Line
+   overriding procedure Draw_Vertical_Line
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : Bitmap_Color;
       Pt     : Point;
       Height : Integer);
 
-   overriding
-   procedure Draw_Horizontal_Line
+   overriding procedure Draw_Horizontal_Line
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : UInt32;
       Pt     : Point;
       Width  : Integer);
 
-   overriding
-   procedure Draw_Horizontal_Line
+   overriding procedure Draw_Horizontal_Line
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : Bitmap_Color;
       Pt     : Point;
       Width  : Integer);
 
-   overriding
-   procedure Draw_Rect
+   overriding procedure Draw_Rect
      (Buffer    : in out Soft_Drawing_Bitmap_Buffer;
       Color     : Bitmap_Color;
       Area      : Rect;
       Thickness : Natural := 1);
    --  Draws a rectangle
 
-   overriding
-   procedure Draw_Rounded_Rect
+   overriding procedure Draw_Rounded_Rect
      (Buffer    : in out Soft_Drawing_Bitmap_Buffer;
       Color     : Bitmap_Color;
       Area      : Rect;
       Radius    : Natural;
       Thickness : Natural := 1);
 
-   overriding
-   procedure Fill_Rounded_Rect
+   overriding procedure Fill_Rounded_Rect
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : Bitmap_Color;
       Area   : Rect;
       Radius : Natural);
 
-   overriding
-   procedure Draw_Circle
+   overriding procedure Draw_Circle
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : UInt32;
       Center : Point;
       Radius : Natural);
 
-   overriding
-   procedure Draw_Circle
+   overriding procedure Draw_Circle
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : Bitmap_Color;
       Center : Point;
       Radius : Natural);
 
-   overriding
-   procedure Fill_Circle
+   overriding procedure Fill_Circle
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : UInt32;
       Center : Point;
       Radius : Natural);
 
-   overriding
-   procedure Fill_Circle
+   overriding procedure Fill_Circle
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : Bitmap_Color;
       Center : Point;
       Radius : Natural);
 
-   overriding
-   procedure Cubic_Bezier
+   overriding procedure Cubic_Bezier
      (Buffer         : in out Soft_Drawing_Bitmap_Buffer;
       Color          : Bitmap_Color;
       P1, P2, P3, P4 : Point;

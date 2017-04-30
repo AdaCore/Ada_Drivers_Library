@@ -468,12 +468,12 @@ package body Framebuffer_DSI is
       end if;
 
       Display.Buffers (LCD_Layer) :=
-        (Addr              =>
+        (Addr       =>
            Reserve (UInt32 (HAL.Bitmap.Bits_Per_Pixel (Mode) * W * H / 8)),
-         Actual_Width      => W,
-         Actual_Height     => H,
-         Actual_Color_Mode => Mode,
-         Currently_Swapped => False);
+         Width      => W,
+         Height     => H,
+         Color_Mode => Mode,
+         Swapped    => False);
       Display.Buffers (LCD_Layer).Fill (0);
 
       DSIHOST.DSI_Wrapper_Disable;
@@ -585,6 +585,22 @@ package body Framebuffer_DSI is
    begin
       return Display.Buffers (LCD_Layer)'Unchecked_Access;
    end Hidden_Buffer;
+
+   -------------------------
+   -- DMA2D_Hidden_Buffer --
+   -------------------------
+
+   function DMA2D_Hidden_Buffer
+     (Display : Frame_Buffer;
+      Layer   : Positive) return STM32.DMA2D_Bitmap.DMA2D_Bitmap_Buffer
+   is
+      LCD_Layer  : constant STM32.LTDC.LCD_Layer :=
+                     (if Layer = 1
+                      then STM32.LTDC.Layer1
+                      else STM32.LTDC.Layer2);
+   begin
+      return Display.Buffers (LCD_Layer);
+   end DMA2D_Hidden_Buffer;
 
    ----------------
    -- Pixel_Size --

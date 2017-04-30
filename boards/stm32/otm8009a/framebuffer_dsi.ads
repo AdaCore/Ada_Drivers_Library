@@ -33,11 +33,11 @@ with HAL;             use HAL;
 with HAL.Framebuffer; use HAL.Framebuffer;
 with HAL.Bitmap;
 with STM32.DSI;
+with STM32.DMA2D_Bitmap;
 with STM32.GPIO;
 with Ravenscar_Time;
 
 private with STM32.Device;
-private with STM32.DMA2D_Bitmap;
 private with STM32.LTDC;
 private with OTM8009A;
 private with HAL.DSI;
@@ -129,6 +129,11 @@ package Framebuffer_DSI is
    overriding function Hidden_Buffer
      (Display : in out Frame_Buffer;
       Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer;
+   --  Retrieves the current hidden buffer for the layer.
+
+   function DMA2D_Hidden_Buffer
+     (Display : Frame_Buffer;
+      Layer   : Positive) return STM32.DMA2D_Bitmap.DMA2D_Bitmap_Buffer;
    --  Retrieves the current hidden buffer for the layer.
 
    overriding function Pixel_Size

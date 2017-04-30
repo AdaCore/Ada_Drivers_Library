@@ -51,10 +51,10 @@ package body ST7735R.RAM_Framebuffer is
          raise Program_Error;
       end if;
 
-      Display.Memory_Layer.Actual_Width := Screen_Width;
-      Display.Memory_Layer.Actual_Height := Screen_Height;
+      Display.Memory_Layer.Width := Screen_Width;
+      Display.Memory_Layer.Height := Screen_Height;
       Display.Memory_Layer.Addr := Display.Layer_Data'Address;
-      Display.Memory_Layer.Actual_Color_Mode := Mode;
+      Display.Memory_Layer.Color_Mode := Mode;
       Display.Layer_Initialized := True;
    end Initialize_Layer;
 

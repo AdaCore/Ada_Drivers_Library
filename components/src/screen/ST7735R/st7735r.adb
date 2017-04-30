@@ -29,6 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with System;
 with Ada.Unchecked_Conversion;
 with Bitmap_Color_Conversion;  use Bitmap_Color_Conversion;
 

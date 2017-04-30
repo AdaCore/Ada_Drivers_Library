@@ -33,7 +33,7 @@ with HAL;             use HAL;
 with HAL.Framebuffer; use HAL.Framebuffer;
 with HAL.Bitmap;
 
-private with STM32.DMA2D_Bitmap;
+with STM32.DMA2D_Bitmap;
 private with STM32.LTDC;
 
 package Framebuffer_LTDC is
@@ -148,6 +148,10 @@ package Framebuffer_LTDC is
       Layer   : Positive) return not null HAL.Bitmap.Any_Bitmap_Buffer
      with Pre => Initialized (Display, Layer);
    --  Retrieves the current hidden buffer for the layer.
+
+   function DMA2D_Hidden_Buffer
+     (Display : Frame_Buffer;
+      Layer   : Positive) return STM32.DMA2D_Bitmap.DMA2D_Bitmap_Buffer;
 
    overriding function Pixel_Size
      (Display : Frame_Buffer;

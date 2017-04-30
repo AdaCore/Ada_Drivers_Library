@@ -31,22 +31,19 @@
 
 with HAL;             use HAL;
 with HAL.Framebuffer; use HAL.Framebuffer;
-with HAL.Bitmap;
 
 with Framebuffer_DSI;
 
 private with STM32.Device;
-private with STM32.DMA2D_Bitmap;
 private with STM32.DSI;
 private with STM32.GPIO;
 
 package Framebuffer_OTM8009A is
 
    LCD_Natural_Width  : constant := Framebuffer_DSI.LCD_Natural_Width;
-   LCD_Natural_Height : constant := Framebuffer_DSI.LCD_Natural_Width;
+   LCD_Natural_Height : constant := Framebuffer_DSI.LCD_Natural_Height;
 
-   type Frame_Buffer is limited
-     new HAL.Framebuffer.Frame_Buffer_Display with private;
+   type Frame_Buffer is limited new Framebuffer_DSI.Frame_Buffer with private;
 
    procedure Initialize
      (Display     : in out Frame_Buffer;

@@ -65,7 +65,7 @@ is
 
    function Buffer return DMA2D_Buffer is
    begin
-      return To_DMA2D_Buffer (Display.Hidden_Buffer (1).all);
+      return To_DMA2D_Buffer (Display.DMA2D_Hidden_Buffer (1));
    end Buffer;
 
    Width  : Natural;
@@ -145,8 +145,6 @@ begin
                  Src_Pt      => (0, 0),
                  Dst_Buffer  => Bitmap_Buffer.all,
                  Dst_Pt      => (Width / 2, 0),
-                 Bg_Buffer   => STM32.DMA2D_Bitmap.Null_Buffer,
-                 Bg_Pt       => (0, 0),
                  Width       => Width / 2,
                  Height      => Height,
                  Synchronous => True);

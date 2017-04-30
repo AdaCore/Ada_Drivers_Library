@@ -29,49 +29,15 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with System;
 with Bitmap_Color_Conversion; use Bitmap_Color_Conversion;
 
 package body Soft_Drawing_Bitmap is
 
    subtype Dispatch is Soft_Drawing_Bitmap_Buffer'Class;
 
-   type Null_Bitmap_Buffer is new Soft_Drawing_Bitmap_Buffer with null record;
-   overriding function Width (B : Null_Bitmap_Buffer) return Natural is (0);
-   overriding function Height (B : Null_Bitmap_Buffer) return Natural is (0);
-   overriding function Swapped (B : Null_Bitmap_Buffer) return Boolean is (False);
-   overriding function Color_Mode (B : Null_Bitmap_Buffer) return Bitmap_Color_Mode is (Bitmap_Color_Mode'First);
-   overriding function Mapped_In_RAM (B : Null_Bitmap_Buffer) return Boolean is (False);
-   overriding function Memory_Address (B : Null_Bitmap_Buffer) return System.Address is (System.Null_Address);
-   overriding procedure Set_Pixel
-     (Buffer  : in out Null_Bitmap_Buffer;
-      Pt      : Point;
-      Value   : Bitmap_Color) is null;
-   overriding procedure Set_Pixel
-     (Buffer  : in out Null_Bitmap_Buffer;
-      Pt      : Point;
-      Value   : UInt32) is null;
-   overriding procedure Set_Pixel_Blend
-     (Buffer : in out Null_Bitmap_Buffer;
-      Pt     : Point;
-      Value  : Bitmap_Color) is null;
-   overriding procedure Set_Pixel_Blend
-     (Buffer : in out Null_Bitmap_Buffer;
-      Pt     : Point;
-      Value  : UInt32) is null;
-   overriding function Pixel
-     (Buffer : Null_Bitmap_Buffer;
-      Pt     : Point)
-      return Bitmap_Color is ((0, 0, 0, 0));
-   overriding function Pixel
-     (Buffer : Null_Bitmap_Buffer;
-      Pt     : Point)
-      return UInt32 is (0);
-   overriding function Buffer_Size (B : Null_Bitmap_Buffer) return Natural is (0);
-
-     ---------------
-     -- Draw_Line --
-     ---------------
+   ---------------
+   -- Draw_Line --
+   ---------------
 
    overriding procedure Draw_Line
      (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
@@ -98,15 +64,16 @@ package body Soft_Drawing_Bitmap is
       begin
          if Thickness /= 1 then
             if not Fast then
-               Dispatch (Buffer). Fill_Circle (Color  => Color,
-                                               Center => P,
-                                               Radius => Thickness / 2);
+               Dispatch (Buffer).Fill_Circle (Color  => Color,
+                                              Center => P,
+                                              Radius => Thickness / 2);
             else
                Dispatch (Buffer).Fill_Rect
-                 (Color,
-                  ((P.X - (Thickness / 2), P.Y - (Thickness / 2)),
-                   Thickness,
-                   Thickness));
+                 (Color       => Color,
+                  Area        => ((P.X - (Thickness / 2), P.Y - (Thickness / 2)),
+                                  Thickness,
+                                  Thickness),
+                  Synchronous => False);
             end if;
          else
             Dispatch (Buffer).Set_Pixel ((P.X, P.Y), Color);
@@ -147,10 +114,19 @@ package body Soft_Drawing_Bitmap is
       end if;
 
       Draw_Point ((X, Y));
+
+      if Thickness > 1 then
+         --  Fill_Rect may be executed asynchronously, so this ensures that
+         --  all operations are done before exiting
+         Dispatch (Buffer).Sync;
+      end if;
    end Draw_Line;
 
-   overriding
-   procedure Draw_Line
+   ---------------
+   -- Draw_Line --
+   ---------------
+
+   overriding procedure Draw_Line
      (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
       Color       : Bitmap_Color;
       Start, Stop : Point;
@@ -158,7 +134,7 @@ package body Soft_Drawing_Bitmap is
       Fast        : Boolean := True)
    is
       Col : constant UInt32 :=
-        Bitmap_Color_To_Word (Dispatch (Buffer).Color_Mode, Color);
+        Bitmap_Color_To_Word (Buffer.Color_Mode, Color);
    begin
       Dispatch (Buffer).Draw_Line (Col, Start, Stop, Thickness, Fast);
    end Draw_Line;
@@ -167,12 +143,11 @@ package body Soft_Drawing_Bitmap is
    -- Fill --
    ----------
 
-   overriding
-   procedure Fill
+   overriding procedure Fill
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : Bitmap_Color)
    is
-      Col : constant UInt32 := Bitmap_Color_To_Word (Dispatch (Buffer).Color_Mode, Color);
+      Col : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode, Color);
    begin
       Fill (Dispatch (Buffer), Col);
    end Fill;
@@ -181,46 +156,47 @@ package body Soft_Drawing_Bitmap is
    -- Fill --
    ----------
 
-   overriding
-   procedure Fill
+   overriding procedure Fill
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
       Color  : UInt32)
    is
    begin
       Dispatch (Buffer).Fill_Rect
-        (Color => Color,
-         Area  => (Position => (0, 0),
-                   Width    => Dispatch (Buffer).Width,
-                   Height   => Dispatch (Buffer).Height));
+        (Color       => Color,
+         Area        => (Position => (0, 0),
+                         Width    => Buffer.Width,
+                         Height   => Buffer.Height),
+         Synchronous => True);
    end Fill;
 
    ---------------
    -- Fill_Rect --
    ---------------
 
-   overriding
-   procedure Fill_Rect
-     (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : Bitmap_Color;
-      Area   : Rect)
+   overriding procedure Fill_Rect
+     (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
+      Color       : Bitmap_Color;
+      Area        : Rect;
+      Synchronous : Boolean := True)
    is
    begin
-      Fill_Rect
-        (Dispatch (Buffer),
-         Bitmap_Color_To_Word (Dispatch (Buffer).Color_Mode, Color),
-         Area);
+      Dispatch (Buffer).Fill_Rect
+        (Color       => Bitmap_Color_To_Word (Buffer.Color_Mode, Color),
+         Area        => Area,
+         Synchronous => Synchronous);
    end Fill_Rect;
 
    ---------------
    -- Fill_Rect --
    ---------------
 
-   overriding
-   procedure Fill_Rect
-     (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : UInt32;
-      Area   : Rect)
+   overriding procedure Fill_Rect
+     (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
+      Color       : UInt32;
+      Area        : Rect;
+      Synchronous : Boolean := True)
    is
+      pragma Unreferenced (Synchronous);
    begin
       for Y0 in Area.Position.Y .. Area.Position.Y + Area.Height - 1 loop
          for X0 in Area.Position.X .. Area.Position.X + Area.Width - 1 loop
@@ -233,113 +209,66 @@ package body Soft_Drawing_Bitmap is
    -- Copy_Rect --
    ---------------
 
-   overriding
-   procedure Copy_Rect
+   overriding procedure Copy_Rect
      (Src_Buffer  : Bitmap_Buffer'Class;
       Src_Pt      : Point;
       Dst_Buffer  : in out Soft_Drawing_Bitmap_Buffer;
       Dst_Pt      : Point;
-      Bg_Buffer   : Bitmap_Buffer'Class;
-      Bg_Pt       : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean;
+      Synchronous : Boolean := True;
       Clean_Cache : Boolean := True)
    is
       pragma Unreferenced (Synchronous, Clean_Cache);
-      Pix      : UInt32;
-      Do_Blend : Boolean := False;
-      use type System.Address;
-
+      Pix : UInt32;
    begin
       if Src_Pt.X + Width > Src_Buffer.Width
-        or else
-         Src_Pt.Y + Height > Src_Buffer.Height
+        or else Src_Pt.Y + Height > Src_Buffer.Height
+        or else Dst_Pt.X + Width > Dst_Buffer.Width
+        or else Dst_Pt.Y + Height > Dst_Buffer.Height
       then
-         raise Constraint_Error with "invalid copy area for source bitmap";
-      end if;
-
-      if Dst_Pt.X + Width > Dispatch (Dst_Buffer).Width
-        or else
-         Dst_Pt.Y + Height > Dispatch (Dst_Buffer).Height
-      then
-         raise Constraint_Error with "invalid copy area for destination bitmap";
-      end if;
-
-      if Bg_Buffer.Memory_Address = Dispatch (Dst_Buffer).Memory_Address
-        and then Bg_Pt = Dst_Pt
-      then
-         Do_Blend := True;
-      elsif Bg_Buffer.Memory_Address /= System.Null_Address then
-         raise Constraint_Error with "Not implemented for now";
+         raise Constraint_Error with "X, Y not in range in call to Copy_Rect";
       end if;
 
       for X in 0 .. Width - 1 loop
          for Y in 0 .. Height - 1 loop
             Pix := Src_Buffer.Pixel (Src_Pt + (X, Y));
-            if not Do_Blend then
-               Dispatch (Dst_Buffer).Set_Pixel (Dst_Pt + (X, Y), Pix);
-            else
-               Dispatch (Dst_Buffer).Set_Pixel_Blend (Dst_Pt + (X, Y), Pix);
-            end if;
+            Dispatch (Dst_Buffer).Set_Pixel (Dst_Pt + (X, Y), Pix);
          end loop;
       end loop;
-   end Copy_Rect;
-
-   ---------------
-   -- Copy_Rect --
-   ---------------
-
-   overriding
-   procedure Copy_Rect
-     (Src_Buffer  : Bitmap_Buffer'Class;
-      Src_Pt      : Point;
-      Dst_Buffer  : in out Soft_Drawing_Bitmap_Buffer;
-      Dst_Pt      : Point;
-      Width       : Natural;
-      Height      : Natural;
-      Synchronous : Boolean;
-      Clean_Cache : Boolean := True)
-   is
-      Null_Buf : Null_Bitmap_Buffer;
-   begin
-      Copy_Rect
-        (Src_Buffer, Src_Pt, Dst_Buffer, Dst_Pt,
-         Bg_Buffer   => Null_Buf,
-         Bg_Pt       => (0, 0),
-         Width       => Width,
-         Height      => Height,
-         Synchronous => Synchronous,
-         Clean_Cache => Clean_Cache);
    end Copy_Rect;
 
    ---------------------
    -- Copy_Rect_Blend --
    ---------------------
 
-   overriding
-   procedure Copy_Rect_Blend
-     (Src_Buffer  : Soft_Drawing_Bitmap_Buffer;
+   overriding procedure Copy_Rect_Blend
+     (Src_Buffer  : Bitmap_Buffer'Class;
       Src_Pt      : Point;
-      Dst_Buffer  : in out Bitmap_Buffer'Class;
+      Dst_Buffer  : in out Soft_Drawing_Bitmap_Buffer;
       Dst_Pt      : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean;
+      Synchronous : Boolean := True;
       Clean_Cache : Boolean := True)
    is
+      pragma Unreferenced (Synchronous, Clean_Cache);
+      Pix : UInt32;
    begin
-      Copy_Rect
-        (Src_Buffer  => Dispatch (Src_Buffer),
-         Src_Pt      => Src_Pt,
-         Dst_Buffer  => Dst_Buffer,
-         Dst_Pt      => Dst_Pt,
-         Bg_Buffer   => Dst_Buffer,
-         Bg_Pt       => Dst_Pt,
-         Width       => Width,
-         Height      => Height,
-         Synchronous => Synchronous,
-         Clean_Cache => Clean_Cache);
+      if Src_Pt.X + Width > Src_Buffer.Width
+        or else Src_Pt.Y + Height > Src_Buffer.Height
+        or else Dst_Pt.X + Width > Dst_Buffer.Width
+        or else Dst_Pt.Y + Height > Dst_Buffer.Height
+      then
+         raise Constraint_Error with "X, Y not in range in call to Copy_Rect";
+      end if;
+
+      for X in 0 .. Width - 1 loop
+         for Y in 0 .. Height - 1 loop
+            Pix := Src_Buffer.Pixel (Src_Pt + (X, Y));
+            Dispatch (Dst_Buffer).Set_Pixel_Blend (Dst_Pt + (X, Y), Pix);
+         end loop;
+      end loop;
    end Copy_Rect_Blend;
 
    ------------------------
@@ -354,10 +283,12 @@ package body Soft_Drawing_Bitmap is
       Height : Integer)
    is
    begin
-      Fill_Rect (Dispatch (Buffer), Color,
-                 (Position => Pt,
-                  Width    => 1,
-                  Height   => Height));
+      Dispatch (Buffer).Fill_Rect
+        (Color       => Color,
+         Area        => (Position => Pt,
+                         Width    => 1,
+                         Height   => Height),
+         Synchronous => True);
    end Draw_Vertical_Line;
 
    ------------------------
@@ -372,10 +303,12 @@ package body Soft_Drawing_Bitmap is
       Height : Integer)
    is
    begin
-      Fill_Rect (Dispatch (Buffer), Color,
-                 (Position => Pt,
-                  Width    => 1,
-                  Height   => Height));
+      Dispatch (Buffer).Fill_Rect
+        (Color       => Bitmap_Color_To_Word (Buffer.Color_Mode, Color),
+         Area        => (Position => Pt,
+                         Width    => 1,
+                         Height   => Height),
+         Synchronous => True);
    end Draw_Vertical_Line;
 
    --------------------------
@@ -390,10 +323,12 @@ package body Soft_Drawing_Bitmap is
       Width  : Integer)
    is
    begin
-      Fill_Rect (Dispatch (Buffer), Color,
-                 (Position => Pt,
-                  Width    => Width,
-                  Height   => 1));
+      Dispatch (Buffer).Fill_Rect
+        (Color       => Color,
+         Area        => (Position => Pt,
+                         Width    => Width,
+                         Height   => 1),
+         Synchronous => True);
    end Draw_Horizontal_Line;
 
    --------------------------
@@ -408,10 +343,12 @@ package body Soft_Drawing_Bitmap is
       Width  : Integer)
    is
    begin
-      Fill_Rect (Dispatch (Buffer), Color,
-                 (Position => Pt,
-                  Width    => Width,
-                  Height   => 1));
+      Dispatch (Buffer).Fill_Rect
+        (Color       => Bitmap_Color_To_Word (Buffer.Color_Mode, Color),
+         Area        => (Position => Pt,
+                         Width    => Width,
+                         Height   => 1),
+         Synchronous => True);
    end Draw_Horizontal_Line;
 
    ---------------
@@ -435,22 +372,27 @@ package body Soft_Drawing_Bitmap is
         (Color,
          (Position => (X0 - Thickness / 2, Y0),
           Width    => Thickness,
-          Height   => Area.Height + Thickness / 2));
+          Height   => Area.Height + Thickness / 2),
+        Synchronous => False);
       Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (X1 - Thickness / 2, Y0),
           Width    => Thickness,
-          Height   => Area.Height + Thickness / 2));
+          Height   => Area.Height + Thickness / 2),
+        Synchronous => False);
       Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (X0, Y0 - Thickness / 2),
           Width    => Area.Width + Thickness / 2,
-          Height   => Thickness));
+          Height   => Thickness),
+        Synchronous => False);
       Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (X0, Y1 - Thickness / 2),
           Width    => Area. Width + Thickness / 2,
-          Height   => Thickness));
+          Height   => Thickness),
+         Synchronous => False);
+      Dispatch (Buffer).Sync;
    end Draw_Rect;
 
    -----------------------
@@ -488,7 +430,8 @@ package body Soft_Drawing_Bitmap is
               (Color,
                (Position => (X - (Thickness / 2), Y - (Thickness / 2)),
                 Width    => Thickness,
-                Height   => Thickness));
+                Height   => Thickness),
+               Synchronous => False);
          else
             Dispatch (Buffer).Set_Pixel ((X, Y), Color);
          end if;
@@ -504,22 +447,26 @@ package body Soft_Drawing_Bitmap is
         (Color,
          (Position => (Area.Position.X - Thickness / 2, Area.Position.Y + Radius),
           Width    => Thickness,
-          Height   => Area.Height - 2 * Radius));
+          Height   => Area.Height - 2 * Radius),
+         Synchronous => False);
       Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (Area.Position.X + Area.Width - Thickness / 2 - 1, Area.Position.Y + Radius),
           Width    => Thickness,
-          Height   => Area.Height - 2 * Radius));
+          Height   => Area.Height - 2 * Radius),
+         Synchronous => False);
       Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (Area.Position.X + Radius, Area.Position.Y - Thickness / 2),
           Width    => Area.Width - 2 * Radius,
-          Height   => Thickness));
+          Height   => Thickness),
+         Synchronous => False);
       Dispatch (Buffer).Fill_Rect
         (Color,
          (Position => (Area.Position.X + Radius, Area.Position.Y + Area.Height - Thickness / 2 - 1),
           Width    => Area.Width - 2 * Radius,
-          Height   => Thickness));
+          Height   => Thickness),
+         Synchronous => False);
 
       while X0 < Y0 loop
          if F >= 0 then
@@ -541,6 +488,8 @@ package body Soft_Drawing_Bitmap is
          Draw_Point (Center_Rgt + Y0, Center_Top - X0);
          Draw_Point (Center_Lft - Y0, Center_Top - X0);
       end loop;
+
+      Dispatch (Buffer).Sync;
    end Draw_Rounded_Rect;
 
    -----------------------
@@ -554,7 +503,8 @@ package body Soft_Drawing_Bitmap is
       Area   : Rect;
       Radius : Natural)
    is
-      Col   : constant UInt32 := Bitmap_Color_To_Word (Dispatch (Buffer).Color_Mode, Color);
+      Col        : constant UInt32 :=
+                     Bitmap_Color_To_Word (Buffer.Color_Mode, Color);
       F          : Integer := 1 - Radius;
       ddF_X      : Integer := 0;
       ddF_Y      : Integer := (-2) * Radius;
@@ -566,7 +516,10 @@ package body Soft_Drawing_Bitmap is
 
    begin
       if Radius = 0 then
-         Dispatch (Buffer).Fill_Rect (Col, Area'Update (Position => (X0, Y0)));
+         Dispatch (Buffer).Fill_Rect
+           (Col,
+            Area,
+            Synchronous => True);
          return;
       end if;
 
@@ -574,7 +527,8 @@ package body Soft_Drawing_Bitmap is
         (Col,
          (Position => (Area.Position.X, Center_Top),
           Width    => Area.Width,
-          Height   => Area.Height - 2 * Radius));
+          Height   => Area.Height - 2 * Radius),
+         Synchronous => True);
 
       while X0 < Y0 loop
          if F >= 0 then
@@ -620,7 +574,7 @@ package body Soft_Drawing_Bitmap is
    begin
       Draw_Circle
         (Dispatch (Buffer),
-         Bitmap_Color_To_Word (Dispatch (Buffer).Color_Mode, Color),
+         Bitmap_Color_To_Word (Buffer.Color_Mode, Color),
          Center,
          Radius);
    end Draw_Circle;
@@ -680,7 +634,7 @@ package body Soft_Drawing_Bitmap is
       Radius : Natural)
    is
       U32_Color : constant UInt32 :=
-        Bitmap_Color_To_Word (Dispatch (Buffer).Color_Mode, Color);
+        Bitmap_Color_To_Word (Buffer.Color_Mode, Color);
    begin
       Dispatch (Buffer).Fill_Circle (U32_Color, Center, Radius);
    end Fill_Circle;
@@ -714,10 +668,10 @@ package body Soft_Drawing_Bitmap is
          if Width = 0 then
             return;
 
-         elsif Y < 0 or else Y >= Dispatch (Buffer).Height then
+         elsif Y < 0 or else Y >= Buffer.Height then
             return;
 
-         elsif X + Width < 0 or else X >= Dispatch (Buffer).Width then
+         elsif X + Width < 0 or else X >= Buffer.Width then
             return;
          end if;
 
@@ -729,15 +683,15 @@ package body Soft_Drawing_Bitmap is
             W1 := Width;
          end if;
 
-         if X1 + W1 >= Dispatch (Buffer).Width then
-            W1 := Dispatch (Buffer).Width - X1 - 1;
+         if X1 + W1 >= Buffer.Width then
+            W1 := Buffer.Width - X1 - 1;
          end if;
 
          if W1 = 0 then
             return;
          end if;
 
-         Dispatch (Buffer).Fill_Rect (Color, ((X1, Y), W1, 1));
+         Dispatch (Buffer).Fill_Rect (Color, ((X1, Y), W1, 1), True);
       end Draw_Horizontal_Line;
 
       ------------------------
@@ -751,10 +705,10 @@ package body Soft_Drawing_Bitmap is
          if Height = 0 then
             return;
 
-         elsif X < 0 or else X >= Dispatch (Buffer).Width then
+         elsif X < 0 or else X >= Buffer.Width then
             return;
 
-         elsif Y + Height < 0 or else Y >= Dispatch (Buffer).Height then
+         elsif Y + Height < 0 or else Y >= Buffer.Height then
             return;
          end if;
 
@@ -766,15 +720,15 @@ package body Soft_Drawing_Bitmap is
             H1 := Height;
          end if;
 
-         if Y1 + H1 >= Dispatch (Buffer).Height then
-            H1 := Dispatch (Buffer).Height - Y1 - 1;
+         if Y1 + H1 >= Buffer.Height then
+            H1 := Buffer.Height - Y1 - 1;
          end if;
 
          if H1 = 0 then
             return;
          end if;
 
-         Dispatch (Buffer).Fill_Rect (Color, ((X, Y1), 1, H1));
+         Dispatch (Buffer).Fill_Rect (Color, ((X, Y1), 1, H1), True);
       end Draw_Vertical_Line;
 
       F     : Integer := 1 - Radius;

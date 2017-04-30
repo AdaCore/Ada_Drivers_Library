@@ -44,55 +44,57 @@ package STM32.DMA2D_Bitmap is
 
    type Any_DMA2D_Bitmap_Buffer is access all DMA2D_Bitmap_Buffer'Class;
 
-   overriding procedure Set_Pixel
-     (Buffer : in out DMA2D_Bitmap_Buffer;
-      Pt     : Point;
-      Value  : UInt32);
-
    overriding procedure Set_Pixel_Blend
      (Buffer : in out DMA2D_Bitmap_Buffer;
       Pt     : Point;
       Value  : HAL.Bitmap.Bitmap_Color);
-
-   overriding function Pixel
-     (Buffer : DMA2D_Bitmap_Buffer;
-      Pt     : Point) return UInt32;
 
    overriding procedure Fill
      (Buffer : in out DMA2D_Bitmap_Buffer;
       Color  : UInt32);
 
    overriding procedure Fill_Rect
-     (Buffer : in out DMA2D_Bitmap_Buffer;
-      Color  : UInt32;
-      Area   : Rect);
+     (Buffer      : in out DMA2D_Bitmap_Buffer;
+      Color       : UInt32;
+      Area        : Rect;
+      Synchronous : Boolean := True);
 
    overriding procedure Copy_Rect
-     (Src_Buffer  : HAL.Bitmap.Bitmap_Buffer'Class;
+     (Src_Buffer  : Bitmap_Buffer'Class;
       Src_Pt      : Point;
       Dst_Buffer  : in out DMA2D_Bitmap_Buffer;
       Dst_Pt      : Point;
-      Bg_Buffer   : HAL.Bitmap.Bitmap_Buffer'Class;
-      Bg_Pt       : Point;
       Width       : Natural;
       Height      : Natural;
-      Synchronous : Boolean;
+      Synchronous : Boolean := True;
       Clean_Cache : Boolean := True)
      with Pre =>
        Dst_Buffer.Color_Mode in HAL.Bitmap.ARGB_8888 .. HAL.Bitmap.ARGB_4444;
 
-   procedure Wait_Transfer (Buffer : DMA2D_Bitmap_Buffer);
+   overriding procedure Copy_Rect_Blend
+     (Src_Buffer  : Bitmap_Buffer'Class;
+      Src_Pt      : Point;
+      Dst_Buffer  : in out DMA2D_Bitmap_Buffer;
+      Dst_Pt      : Point;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean := True;
+      Clean_Cache : Boolean := True)
+     with Pre =>
+       Dst_Buffer.Color_Mode in HAL.Bitmap.ARGB_8888 .. HAL.Bitmap.ARGB_4444;
+
+   overriding procedure Sync (Buffer : DMA2D_Bitmap_Buffer);
    --  Makes sure the DMA2D transfers are done
 
    Null_Buffer : constant DMA2D_Bitmap_Buffer :=
-                   (Addr              => System.Null_Address,
-                    Actual_Width      => 0,
-                    Actual_Height     => 0,
-                    Actual_Color_Mode => HAL.Bitmap.L_8,
-                    Currently_Swapped => False);
+                   (Addr       => System.Null_Address,
+                    Width      => 0,
+                    Height     => 0,
+                    Color_Mode => HAL.Bitmap.L_8,
+                    Swapped    => False);
 
    function To_DMA2D_Buffer
-     (Buffer : HAL.Bitmap.Bitmap_Buffer'Class) return STM32.DMA2D.DMA2D_Buffer
-     with Inline, Pre => Buffer.Mapped_In_RAM;
+     (Buffer : Memory_Mapped_Bitmap_Buffer'Class) return STM32.DMA2D.DMA2D_Buffer
+     with Inline;
 
 end STM32.DMA2D_Bitmap;

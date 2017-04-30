@@ -124,11 +124,11 @@ package body Framebuffer_LTDC is
       for Layer in STM32.LTDC.LCD_Layer loop
          for Buf in 1 .. 2 loop
             if Display.Buffers (Layer, Buf) /= Null_Buffer then
-               Display.Buffers (Layer, Buf).Currently_Swapped := Display.Swapped;
-               Tmp := Display.Buffers (Layer, Buf).Actual_Width;
-               Display.Buffers (Layer, Buf).Actual_Width :=
+               Display.Buffers (Layer, Buf).Swapped := Display.Swapped;
+               Tmp := Display.Buffers (Layer, Buf).Width;
+               Display.Buffers (Layer, Buf).Width :=
                  Display.Buffers (Layer, Buf).Height;
-               Display.Buffers (Layer, Buf).Actual_Height := Tmp;
+               Display.Buffers (Layer, Buf).Height := Tmp;
                Display.Buffers (Layer, Buf).Fill (0);
             end if;
          end loop;
@@ -304,23 +304,23 @@ package body Framebuffer_LTDC is
       if not Display.Swapped then
          for Buf in 1 .. 2 loop
             Display.Buffers (LCD_Layer, Buf) :=
-              (Addr              =>
+              (Addr       =>
                  Reserve (UInt32 (HAL.Bitmap.Bits_Per_Pixel (Mode) * W * H / 8)),
-               Actual_Width      => W,
-               Actual_Height     => H,
-               Actual_Color_Mode => Mode,
-               Currently_Swapped => False);
+               Width      => W,
+               Height     => H,
+               Color_Mode => Mode,
+               Swapped    => False);
             Display.Buffers (LCD_Layer, Buf).Fill (0);
          end loop;
       else
          for Buf in 1 .. 2 loop
             Display.Buffers (LCD_Layer, Buf) :=
-              (Addr              =>
+              (Addr       =>
                  Reserve (UInt32 (HAL.Bitmap.Bits_Per_Pixel (Mode) * W * H / 8)),
-               Actual_Width      => H,
-               Actual_Height     => W,
-               Actual_Color_Mode => Mode,
-               Currently_Swapped => True);
+               Width      => H,
+               Height     => W,
+               Color_Mode => Mode,
+               Swapped    => True);
             Display.Buffers (LCD_Layer, Buf).Fill (0);
          end loop;
       end if;
@@ -374,13 +374,11 @@ package body Framebuffer_LTDC is
          when 0 =>
             null;
          when 1 =>
-            Display.Buffers (LCD_Layer, 2).Wait_Transfer;
             STM32.LTDC.Set_Frame_Buffer
               (Layer => LCD_Layer,
                Addr  => Display.Buffers (LCD_Layer, 2).Addr);
             Display.Current (LCD_Layer) := 2;
          when 2 =>
-            Display.Buffers (LCD_Layer, 1).Wait_Transfer;
             STM32.LTDC.Set_Frame_Buffer
               (Layer => LCD_Layer,
                Addr  => Display.Buffers (LCD_Layer, 1).Addr);
@@ -417,7 +415,8 @@ package body Framebuffer_LTDC is
 
          STM32.DMA2D_Bitmap.Copy_Rect
            (Visible, (0, 0), Hidden, (0, 0), Visible.Width, Visible.Height,
-            Synchronous => True);
+            Synchronous => True,
+            Clean_Cache => False);
       end if;
    end Update_Layer;
 
@@ -515,6 +514,28 @@ package body Framebuffer_LTDC is
             return Display.Buffers (LCD_Layer, 2)'Unchecked_Access;
       end case;
    end Hidden_Buffer;
+
+   -------------------------
+   -- DMA2D_Hidden_Buffer --
+   -------------------------
+
+   function DMA2D_Hidden_Buffer
+     (Display : Frame_Buffer;
+      Layer   : Positive)
+      return STM32.DMA2D_Bitmap.DMA2D_Bitmap_Buffer
+   is
+      LCD_Layer  : constant STM32.LTDC.LCD_Layer :=
+                     (if Layer = 1
+                      then STM32.LTDC.Layer1
+                      else STM32.LTDC.Layer2);
+   begin
+      case Display.Current (LCD_Layer) is
+         when 0 | 2 =>
+            return Display.Buffers (LCD_Layer, 1);
+         when 1 =>
+            return Display.Buffers (LCD_Layer, 2);
+      end case;
+   end DMA2D_Hidden_Buffer;
 
    ----------------
    -- Pixel_Size --

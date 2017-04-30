@@ -209,7 +209,7 @@ package body STM32.DMA2D is
    begin
       DMA2D_Wait_Transfer_Int.all;
 
-      if Bg_Buffer /= Null_Buffer then
+      if Bg_Buffer.Addr /= System.Null_Address then
          --  PFC and blending
          DMA2D_Periph.CR.MODE := DMA2D_MODE'Enum_Rep (M2M_BLEND);
 
