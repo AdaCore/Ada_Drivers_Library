@@ -34,7 +34,7 @@ with Interfaces; use Interfaces;
 package HAL.Audio is
 
    type Audio_Buffer is array (Natural range <>) of Integer_16
-     with Component_Size => 16, Alignment => 16;
+     with Component_Size => 16, Alignment => 4;
 
    type Audio_Volume is new Natural range 0 .. 100;
 
