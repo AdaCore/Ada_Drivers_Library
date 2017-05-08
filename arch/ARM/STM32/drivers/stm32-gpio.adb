@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2017, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -39,8 +39,8 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with System;              use System;
-with STM32_SVD.GPIO;      use STM32_SVD.GPIO;
+with System;          use System;
+with STM32_SVD.GPIO;  use STM32_SVD.GPIO;
 
 with STM32.RCC;
 with STM32.SYSCFG;
@@ -48,7 +48,7 @@ with System.Machine_Code;
 
 package body STM32.GPIO is
 
-   procedure Lock_The_Pin (This : in out GPIO_Port;  Pin : UInt16);
+   procedure Lock_The_Pin (This : in out GPIO_Port;  Pin : GPIO_Pin);
    --  This is the routine that actually locks the pin for the port. It is an
    --  internal routine and has no preconditions. We use it to avoid redundant
    --  calls to the precondition that checks that the pin is not already
@@ -56,6 +56,8 @@ package body STM32.GPIO is
    --  locks an array of pins is implemented by calling the routine that locks
    --  a single pin: both those Lock routines have a precondition that checks
    --  that the pin(s) is not already being locked.
+
+   subtype GPIO_Pin_Index is Natural range 0 .. GPIO_Pin'Pos (GPIO_Pin'Last);
 
    -------------
    -- Any_Set --
@@ -78,8 +80,9 @@ package body STM32.GPIO is
 
    overriding
    function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode is
+      Index : constant GPIO_Pin_Index := GPIO_Pin'Pos (This.Pin);
    begin
-      case This.Periph.MODER.Arr (This.Pin) is
+      case This.Periph.MODER.Arr (Index) is
          when Pin_IO_Modes'Enum_Rep (Mode_Out) => return HAL.GPIO.Output;
          when Pin_IO_Modes'Enum_Rep (Mode_In) => return HAL.GPIO.Input;
          when others => return HAL.GPIO.Unknown;
@@ -91,15 +94,18 @@ package body STM32.GPIO is
    --------------
 
    overriding
-   function Set_Mode (This : in out GPIO_Point;
-                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean
+   function Set_Mode
+     (This : in out GPIO_Point;
+      Mode : HAL.GPIO.GPIO_Config_Mode)
+      return Boolean
    is
+      Index : constant GPIO_Pin_Index := GPIO_Pin'Pos (This.Pin);
    begin
       case Mode is
          when HAL.GPIO.Output =>
-            This.Periph.MODER.Arr (This.Pin) := Pin_IO_Modes'Enum_Rep (Mode_Out);
+            This.Periph.MODER.Arr (Index) := Pin_IO_Modes'Enum_Rep (Mode_Out);
          when HAL.GPIO.Input =>
-            This.Periph.MODER.Arr (This.Pin) := Pin_IO_Modes'Enum_Rep (Mode_In);
+            This.Periph.MODER.Arr (Index) := Pin_IO_Modes'Enum_Rep (Mode_In);
       end case;
       return True;
    end Set_Mode;
@@ -109,12 +115,15 @@ package body STM32.GPIO is
    -------------------
 
    overriding
-   function Pull_Resistor (This : GPIO_Point)
-                           return HAL.GPIO.GPIO_Pull_Resistor is
+   function Pull_Resistor
+     (This : GPIO_Point)
+      return HAL.GPIO.GPIO_Pull_Resistor
+   is
+      Index : constant GPIO_Pin_Index := GPIO_Pin'Pos (This.Pin);
    begin
-      if  This.Periph.PUPDR.Arr (This.Pin) = 0 then
+      if  This.Periph.PUPDR.Arr (Index) = 0 then
          return HAL.GPIO.Floating;
-      elsif This.Periph.PUPDR.Arr (This.Pin) = 1 then
+      elsif This.Periph.PUPDR.Arr (Index) = 1 then
          return HAL.GPIO.Pull_Up;
       else
          return HAL.GPIO.Pull_Down;
@@ -126,18 +135,20 @@ package body STM32.GPIO is
    -----------------------
 
    overriding
-   function Set_Pull_Resistor (This : in out GPIO_Point;
-                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
-                               return Boolean
+   function Set_Pull_Resistor
+     (This : in out GPIO_Point;
+      Pull : HAL.GPIO.GPIO_Pull_Resistor)
+      return Boolean
    is
+      Index : constant GPIO_Pin_Index := GPIO_Pin'Pos (This.Pin);
    begin
       case Pull is
          when HAL.GPIO.Floating =>
-            This.Periph.PUPDR.Arr (This.Pin) := 0;
+            This.Periph.PUPDR.Arr (Index) := 0;
          when HAL.GPIO.Pull_Up =>
-            This.Periph.PUPDR.Arr (This.Pin) := 1;
+            This.Periph.PUPDR.Arr (Index) := 1;
          when HAL.GPIO.Pull_Down =>
-            This.Periph.PUPDR.Arr (This.Pin) := 2;
+            This.Periph.PUPDR.Arr (Index) := 2;
       end case;
       return True;
    end Set_Pull_Resistor;
@@ -148,7 +159,10 @@ package body STM32.GPIO is
 
    overriding
    function Set (This : GPIO_Point) return Boolean is
-     (This.Periph.IDR.IDR.Arr (This.Pin));
+      Pin_Mask : constant UInt16 := GPIO_Pin'Enum_Rep (This.Pin);
+   begin
+      return (This.Periph.IDR.IDR.Val and Pin_Mask) = Pin_Mask;
+   end Set;
 
    -------------
    -- All_Set --
@@ -172,7 +186,9 @@ package body STM32.GPIO is
    overriding
    procedure Set (This : in out GPIO_Point) is
    begin
-      This.Periph.BSRR.BS.Arr (This.Pin) := True;
+      This.Periph.BSRR.BS.Val := GPIO_Pin'Enum_Rep (This.Pin);
+      --  The bit-set and bit-reset registers ignore writes of zeros so we
+      --  don't need to preserve the existing bit values in those registers.
    end Set;
 
    ---------
@@ -193,7 +209,9 @@ package body STM32.GPIO is
    overriding
    procedure Clear (This : in out GPIO_Point) is
    begin
-      This.Periph.BSRR.BR.Arr (This.Pin) := True;
+      This.Periph.BSRR.BR.Val := GPIO_Pin'Enum_Rep (This.Pin);
+      --  The bit-set and bit-reset registers ignore writes of zeros so we
+      --  don't need to preserve the existing bit values in those registers.
    end Clear;
 
    -----------
@@ -214,8 +232,7 @@ package body STM32.GPIO is
    overriding
    procedure Toggle (This : in out GPIO_Point) is
    begin
-      This.Periph.ODR.ODR.Arr (This.Pin) :=
-        not This.Periph.ODR.ODR.Arr (This.Pin);
+      This.Periph.ODR.ODR.Val := This.Periph.ODR.ODR.Val xor GPIO_Pin'Enum_Rep (This.Pin);
    end Toggle;
 
    ------------
@@ -234,13 +251,16 @@ package body STM32.GPIO is
    ------------
 
    function Locked (This : GPIO_Point) return Boolean is
-     (This.Periph.LCKR.LCK.Arr (This.Pin));
+      Mask : constant UInt16 := GPIO_Pin'Enum_Rep (This.Pin);
+   begin
+      return (This.Periph.LCKR.LCK.Val and Mask) = Mask;
+   end Locked;
 
    ------------------
    -- Lock_The_Pin --
    ------------------
 
-   procedure Lock_The_Pin (This : in out GPIO_Port;  Pin : UInt16) is
+   procedure Lock_The_Pin (This : in out GPIO_Port;  Pin : GPIO_Pin) is
       Temp : UInt32;
       pragma Volatile (Temp);
 
@@ -289,7 +309,7 @@ package body STM32.GPIO is
            "ldr  r3, [%1, #28]"   & LF & HT &
            "str  r3, %0"          & LF & HT,   -- temp <- lckr
            Inputs => (Address'Asm_Input ("r", This'Address), -- %1
-                     (UInt16'Asm_Input ("r", Pin))),            -- %2
+                     (GPIO_Pin'Asm_Input ("r", Pin))),            -- %2
            Outputs => (UInt32'Asm_Output ("=m", Temp)),  -- %0
            Volatile => True,
            Clobber  => ("r2, r3"));
@@ -301,7 +321,7 @@ package body STM32.GPIO is
 
    procedure Lock (This : GPIO_Point) is
    begin
-      Lock_The_Pin (This.Periph.all, Shift_Left (1, This.Pin));
+      Lock_The_Pin (This.Periph.all, This.Pin);
    end Lock;
 
    ----------
@@ -325,24 +345,12 @@ package body STM32.GPIO is
      (This   : GPIO_Point;
       Config : GPIO_Port_Configuration)
    is
-      MODER   : MODER_Register   := This.Periph.MODER;
-      OTYPER  : OTYPER_Register  := This.Periph.OTYPER;
-      OSPEEDR : OSPEEDR_Register := This.Periph.OSPEEDR;
-      PUPDR   : PUPDR_Register   := This.Periph.PUPDR;
-
+      Index : constant GPIO_Pin_Index := GPIO_Pin'Pos (This.Pin);
    begin
-      MODER.Arr (This.Pin)     :=
-        Pin_IO_Modes'Enum_Rep (Config.Mode);
-      OTYPER.OT.Arr (This.Pin) := Config.Output_Type = Open_Drain;
-      OSPEEDR.Arr (This.Pin) :=
-        Pin_Output_Speeds'Enum_Rep (Config.Speed);
-      PUPDR.Arr (This.Pin)     :=
-        Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
-
-      This.Periph.MODER   := MODER;
-      This.Periph.OTYPER  := OTYPER;
-      This.Periph.OSPEEDR := OSPEEDR;
-      This.Periph.PUPDR   := PUPDR;
+      This.Periph.MODER.Arr (Index)     := Pin_IO_Modes'Enum_Rep (Config.Mode);
+      This.Periph.OTYPER.OT.Arr (Index) := Config.Output_Type = Open_Drain;
+      This.Periph.OSPEEDR.Arr (Index)   := Pin_Output_Speeds'Enum_Rep (Config.Speed);
+      This.Periph.PUPDR.Arr (Index)     := Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
    end Configure_IO;
 
    ------------------
@@ -367,11 +375,12 @@ package body STM32.GPIO is
      (This : GPIO_Point;
       AF   : GPIO_Alternate_Function)
    is
+      Index : constant GPIO_Pin_Index := GPIO_Pin'Pos (This.Pin);
    begin
-      if This.Pin < 8 then
-         This.Periph.AFRL.Arr (This.Pin) := UInt4 (AF);
+      if Index < 8 then
+         This.Periph.AFRL.Arr (Index) := UInt4 (AF);
       else
-         This.Periph.AFRH.Arr (This.Pin) := UInt4 (AF);
+         This.Periph.AFRH.Arr (Index) := UInt4 (AF);
       end if;
    end Configure_Alternate_Function;
 
@@ -397,7 +406,7 @@ package body STM32.GPIO is
      (This : GPIO_Point) return EXTI.External_Line_Number
    is
    begin
-      return EXTI.External_Line_Number'Val (This.Pin);
+      return EXTI.External_Line_Number'Val (GPIO_Pin'Pos (This.Pin));
    end Interrupt_Line_Number;
 
    -----------------------
@@ -409,7 +418,7 @@ package body STM32.GPIO is
       Trigger : EXTI.External_Triggers)
    is
       use STM32.EXTI;
-      Line : constant External_Line_Number := External_Line_Number'Val (This.Pin);
+      Line : constant External_Line_Number := External_Line_Number'Val (GPIO_Pin'Pos (This.Pin));
       use STM32.SYSCFG, STM32.RCC;
    begin
       SYSCFG_Clock_Enable;

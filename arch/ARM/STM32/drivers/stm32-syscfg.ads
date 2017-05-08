@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -56,7 +56,5 @@ package STM32.SYSCFG is
      (Port : GPIO_Port;  Pins : GPIO_Pins) with Inline;
 
    procedure Clear_External_Interrupt (Pin : GPIO_Pin) with Inline;
-
-   procedure Clear_External_Interrupt (Pin : GPIO_Pin_Index) with Inline;
 
 end STM32.SYSCFG;
