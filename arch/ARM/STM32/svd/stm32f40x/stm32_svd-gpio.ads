@@ -270,7 +270,8 @@ package STM32_SVD.GPIO is
       --  Write-only. Port x set bit y (y= 0..15)
       BR : BSRR_BR_Field := (As_Array => False, Val => 16#0#);
    end record
-     with Volatile_Full_Access, Size => 32,
+     with --  Volatile_Full_Access,
+          Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for BSRR_Register use record
