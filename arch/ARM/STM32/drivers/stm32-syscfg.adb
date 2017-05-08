@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -51,9 +51,15 @@ with STM32.Device;     use STM32.Device;
 
 package body STM32.SYSCFG is
 
+   subtype GPIO_Pin_Index is Natural range 0 .. 15;
+
    procedure Connect_External_Interrupt
      (Port : GPIO_Port;
       Pin  : GPIO_Pin_Index);
+
+   --------------------------------
+   -- Connect_External_Interrupt --
+   --------------------------------
 
    procedure Connect_External_Interrupt
      (Port : GPIO_Port;
@@ -124,15 +130,6 @@ package body STM32.SYSCFG is
       use STM32.EXTI;
    begin
       Clear_External_Interrupt (External_Line_Number'Val (GPIO_Pin'Pos (Pin)));
-   end Clear_External_Interrupt;
-
-   ------------------------------
-   -- Clear_External_Interrupt --
-   ------------------------------
-
-   procedure Clear_External_Interrupt (Pin : GPIO_Pin_Index) is
-   begin
-      EXTI_Periph.PR.PR.Arr (Pin) := True; --  Set to 1 to clear
    end Clear_External_Interrupt;
 
 end STM32.SYSCFG;
