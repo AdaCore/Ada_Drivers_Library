@@ -59,21 +59,53 @@ package body Memory_Mapped_Bitmap is
       Y := Buffer.Width - Tmp - 1;
    end Handle_Swap;
 
-   ---------------
-   -- Set_Pixel --
-   ---------------
+   ----------------
+   -- Set_Source --
+   ----------------
 
    overriding
-   procedure Set_Pixel
-     (Buffer : in out Memory_Mapped_Bitmap_Buffer;
-      Pt     : Point;
-      Value  : Bitmap_Color)
+   procedure Set_Source (Buffer : in out Memory_Mapped_Bitmap_Buffer;
+                         ARGB   : Bitmap_Color)
    is
-      Col : constant UInt32 :=
-              Bitmap_Color_To_Word (Buffer.Color_Mode, Value);
    begin
-      Set_Pixel (Bitmap_Buffer'Class (Buffer), Pt, Col);
-   end Set_Pixel;
+      Buffer.Native_Source := Bitmap_Color_Conversion.Bitmap_Color_To_Word
+        (Buffer.Actual_Color_Mode, ARGB);
+   end Set_Source;
+
+   ----------------
+   -- Set_Source --
+   ----------------
+
+   overriding
+   procedure Set_Source (Buffer : in out Memory_Mapped_Bitmap_Buffer;
+                         Native : UInt32)
+   is
+   begin
+      Buffer.Native_Source := Native;
+   end Set_Source;
+
+   ------------
+   -- Source --
+   ------------
+
+   overriding
+   function Source
+     (Buffer : Memory_Mapped_Bitmap_Buffer)
+      return Bitmap_Color
+   is
+   begin
+      return Bitmap_Color_Conversion.Word_To_Bitmap_Color
+        (Buffer.Actual_Color_Mode, Buffer.Native_Source);
+   end Source;
+
+   ------------
+   -- Source --
+   ------------
+
+   overriding
+   function Source (Buffer : Memory_Mapped_Bitmap_Buffer)
+                    return UInt32
+   is (Buffer.Native_Source);
 
    ---------------
    -- Set_Pixel --
@@ -82,13 +114,13 @@ package body Memory_Mapped_Bitmap is
    overriding
    procedure Set_Pixel
      (Buffer : in out Memory_Mapped_Bitmap_Buffer;
-      Pt     : Point;
-      Value  : UInt32)
+      Pt     : Point)
    is
-      X0 : Natural := Pt.X;
-      Y0 : Natural := Pt.Y;
+      X0     : Natural := Pt.X;
+      Y0     : Natural := Pt.Y;
       Offset : Natural;
 
+      Value  : constant UInt32 := Buffer.Native_Source;
    begin
       if Pt.X >= Buffer.Width
         or else Pt.Y >= Buffer.Height
@@ -181,6 +213,37 @@ package body Memory_Mapped_Bitmap is
       end case;
    end Set_Pixel;
 
+   ---------------
+   -- Set_Pixel --
+   ---------------
+
+   overriding
+   procedure Set_Pixel
+     (Buffer  : in out Memory_Mapped_Bitmap_Buffer;
+      Pt      : Point;
+      Color   : Bitmap_Color)
+   is
+   begin
+      Buffer.Native_Source := Bitmap_Color_Conversion.Bitmap_Color_To_Word
+        (Buffer.Actual_Color_Mode, Color);
+      Set_Pixel (Buffer, Pt);
+   end Set_Pixel;
+
+   ---------------
+   -- Set_Pixel --
+   ---------------
+
+   overriding
+   procedure Set_Pixel
+     (Buffer  : in out Memory_Mapped_Bitmap_Buffer;
+      Pt      : Point;
+      Raw     : UInt32)
+   is
+   begin
+      Buffer.Native_Source := Raw;
+      Set_Pixel (Buffer, Pt);
+   end Set_Pixel;
+
    ---------------------
    -- Set_Pixel_Blend --
    ---------------------
@@ -188,17 +251,18 @@ package body Memory_Mapped_Bitmap is
    overriding
    procedure Set_Pixel_Blend
      (Buffer : in out Memory_Mapped_Bitmap_Buffer;
-      Pt     : Point;
-      Value  : Bitmap_Color)
+      Pt     : Point)
    is
       Col : Bitmap_Color;
       FgA, FgR, FgG, FgB : Float;
       BgA, BgR, BgG, BgB : Float;
       RA, RR, RG, RB     : Float;
-
+      Value : constant Bitmap_Color :=
+        Bitmap_Color_Conversion.Word_To_Bitmap_Color (Buffer.Actual_Color_Mode,
+                                                      Buffer.Native_Source);
    begin
       if Value.Alpha = 255 then
-         Set_Pixel (Memory_Mapped_Bitmap_Buffer'Class (Buffer), Pt, Value);
+         Set_Pixel (Memory_Mapped_Bitmap_Buffer'Class (Buffer), Pt);
       else
          Col := Pixel (Bitmap_Buffer'Class (Buffer), Pt);
          BgA := Float (Col.Alpha) / 255.0;
@@ -220,26 +284,13 @@ package body Memory_Mapped_Bitmap is
                  Red   => UInt8 (RR * 255.0),
                  Green => UInt8 (RG * 255.0),
                  Blue  => UInt8 (RB * 255.0));
-         Set_Pixel (Bitmap_Buffer'Class (Buffer), Pt, Col);
+         Set_Source (Buffer, Col);
+         Set_Pixel (Buffer, Pt);
       end if;
+
+      --  Restore source color value
+      Set_Source (Buffer, Value);
    end Set_Pixel_Blend;
-
-   -----------
-   -- Pixel --
-   -----------
-
-   overriding
-   function Pixel
-     (Buffer : Memory_Mapped_Bitmap_Buffer;
-      Pt     : Point)
-      return Bitmap_Color
-   is
-      Native_Color : UInt32;
-   begin
-      Native_Color := Pixel (Bitmap_Buffer'Class (Buffer), Pt);
-
-      return Word_To_Bitmap_Color (Buffer.Color_Mode, Native_Color);
-   end Pixel;
 
    -----------
    -- Pixel --
@@ -255,6 +306,7 @@ package body Memory_Mapped_Bitmap is
       Y0 : Natural := Pt.Y;
       Offset : Natural;
 
+      Native_Color : UInt32;
    begin
       if Buffer.Swapped then
          Handle_Swap (Buffer, X0, Y0);
@@ -271,7 +323,7 @@ package body Memory_Mapped_Bitmap is
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 4);
             begin
-               return Pixel;
+               Native_Color := Pixel;
             end;
 
          when RGB_888 =>
@@ -286,7 +338,7 @@ package body Memory_Mapped_Bitmap is
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 3 + 2);
             begin
-               return Shift_Left (UInt32 (Pixel_R), 16)
+               Native_Color := Shift_Left (UInt32 (Pixel_R), 16)
                  or Shift_Left (UInt32 (Pixel_G), 8) or UInt32 (Pixel_B);
             end;
 
@@ -296,7 +348,7 @@ package body Memory_Mapped_Bitmap is
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset * 2);
             begin
-               return UInt32 (Pixel);
+               Native_Color := UInt32 (Pixel);
             end;
 
          when L_8 | AL_44 | A_8 =>
@@ -305,7 +357,7 @@ package body Memory_Mapped_Bitmap is
                  with Import,
                       Address => Buffer.Addr + Storage_Offset (Offset);
             begin
-               return UInt32 (Pixel);
+               Native_Color := UInt32 (Pixel);
             end;
 
          when L_4 | A_4 =>
@@ -315,9 +367,9 @@ package body Memory_Mapped_Bitmap is
                       Address => Buffer.Addr + Storage_Offset (Offset / 2);
             begin
                if Offset mod 2 = 0 then
-                  return UInt32 (Shift_Right (Pixel and 16#F0#, 4));
+                  Native_Color := UInt32 (Shift_Right (Pixel and 16#F0#, 4));
                else
-                  return UInt32 (Pixel and 16#0F#);
+                  Native_Color := UInt32 (Pixel and 16#0F#);
                end if;
             end;
          when M_1 =>
@@ -327,9 +379,27 @@ package body Memory_Mapped_Bitmap is
                BM : aliased Mono_BM (0 .. (Buffer.Height * Buffer.Width) - 1)
                  with Import, Address => Buffer.Addr;
             begin
-               return UInt32 (BM (Offset));
+               Native_Color := UInt32 (BM (Offset));
             end;
       end case;
+
+      return Native_Color;
+   end Pixel;
+
+   -----------
+   -- Pixel --
+   -----------
+
+   overriding
+   function Pixel
+     (Buffer : Memory_Mapped_Bitmap_Buffer;
+      Pt     : Point)
+      return Bitmap_Color
+   is
+   begin
+      return Bitmap_Color_Conversion.Word_To_Bitmap_Color
+        (Buffer.Actual_Color_Mode,
+         Pixel (Buffer, Pt));
    end Pixel;
 
    -----------------

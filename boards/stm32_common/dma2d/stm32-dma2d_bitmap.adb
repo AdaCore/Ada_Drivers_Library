@@ -65,12 +65,11 @@ package body STM32.DMA2D_Bitmap is
 
    overriding procedure Set_Pixel
      (Buffer : in out DMA2D_Bitmap_Buffer;
-      Pt     : Point;
-      Value  : UInt32)
+      Pt     : Point)
    is
    begin
       DMA2D_Wait_Transfer;
-      Parent (Buffer).Set_Pixel (Pt, Value);
+      Parent (Buffer).Set_Pixel (Pt);
    end Set_Pixel;
 
    ---------------------
@@ -79,10 +78,10 @@ package body STM32.DMA2D_Bitmap is
 
    overriding procedure Set_Pixel_Blend
      (Buffer : in out DMA2D_Bitmap_Buffer;
-      Pt     : Point;
-      Value  : HAL.Bitmap.Bitmap_Color)
+      Pt     : Point)
    is
       DMA_Buf : constant DMA2D_Buffer := To_DMA2D_Buffer (Buffer);
+      Value   : constant HAL.Bitmap.Bitmap_Color := Buffer.Source;
    begin
       if To_DMA2D_CM (Buffer.Color_Mode) in DMA2D_Dst_Color_Mode then
          if not Buffer.Swapped then
@@ -99,7 +98,7 @@ package body STM32.DMA2D_Bitmap is
                Color  => To_DMA2D_Color (Value));
          end if;
       else
-         Parent (Buffer).Set_Pixel_Blend (Pt, Value);
+         Parent (Buffer).Set_Pixel_Blend (Pt);
       end if;
    end Set_Pixel_Blend;
 
@@ -109,7 +108,7 @@ package body STM32.DMA2D_Bitmap is
 
    overriding function Pixel
      (Buffer : DMA2D_Bitmap_Buffer;
-      Pt     : Point) return UInt32
+      Pt     : Point) return Bitmap_Color
    is
    begin
       DMA2D_Wait_Transfer;
@@ -121,14 +120,13 @@ package body STM32.DMA2D_Bitmap is
    ----------
 
    overriding procedure Fill
-     (Buffer : in out DMA2D_Bitmap_Buffer;
-      Color  : UInt32)
+     (Buffer : in out DMA2D_Bitmap_Buffer)
    is
    begin
       if To_DMA2D_CM (Buffer.Color_Mode) in DMA2D_Dst_Color_Mode then
-         DMA2D_Fill (To_DMA2D_Buffer (Buffer), Color, True);
+         DMA2D_Fill (To_DMA2D_Buffer (Buffer), Buffer.Native_Source, True);
       else
-         Parent (Buffer).Fill (Color);
+         Parent (Buffer).Fill;
       end if;
    end Fill;
 
@@ -138,7 +136,6 @@ package body STM32.DMA2D_Bitmap is
 
    overriding procedure Fill_Rect
      (Buffer : in out DMA2D_Bitmap_Buffer;
-      Color  : UInt32;
       Area   : Rect)
    is
       DMA_Buf : constant DMA2D_Buffer := To_DMA2D_Buffer (Buffer);
@@ -147,7 +144,7 @@ package body STM32.DMA2D_Bitmap is
          if not Buffer.Swapped then
             DMA2D_Fill_Rect
               (DMA_Buf,
-               Color  => Color,
+               Color  => Buffer.Native_Source,
                X      => Area.Position.X,
                Y      => Area.Position.Y,
                Width  => Area.Width,
@@ -155,14 +152,14 @@ package body STM32.DMA2D_Bitmap is
          else
             DMA2D_Fill_Rect
               (DMA_Buf,
-               Color  => Color,
+               Color  => Buffer.Native_Source,
                X      => Area.Position.Y,
                Y      => Buffer.Width - Area.Position.X - Area.Width,
                Width  => Area.Height,
                Height => Area.Width);
          end if;
       else
-         Parent (Buffer).Fill_Rect (Color, Area);
+         Parent (Buffer).Fill_Rect (Area);
       end if;
    end Fill_Rect;
 

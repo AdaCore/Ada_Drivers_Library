@@ -173,20 +173,19 @@ private
    --  Set_Pixel () and Pixel () correctly.
    type SSD1306_Bitmap_Buffer (Buffer_Size_In_Byte : Positive) is
      new Memory_Mapped_Bitmap_Buffer with record
-       Data : UInt8_Array (1 .. Buffer_Size_In_Byte);
+      Data : UInt8_Array (1 .. Buffer_Size_In_Byte);
      end record;
 
    overriding
    procedure Set_Pixel
      (Buffer  : in out SSD1306_Bitmap_Buffer;
-      Pt      : Point;
-      Value   : UInt32);
+      Pt      : Point);
 
    overriding
    function Pixel
      (Buffer : SSD1306_Bitmap_Buffer;
       Pt     : Point)
-      return UInt32;
+      return Bitmap_Color;
 
    SSD1306_I2C_Addr : constant := 16#78#;
 

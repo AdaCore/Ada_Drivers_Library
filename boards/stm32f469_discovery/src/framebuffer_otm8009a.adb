@@ -463,8 +463,9 @@ package body Framebuffer_OTM8009A is
          Actual_Width      => W,
          Actual_Height     => H,
          Actual_Color_Mode => Mode,
-         Currently_Swapped => False);
-      Display.Buffers (LCD_Layer).Fill (0);
+         Currently_Swapped => False,
+         Native_Source     => 0);
+      Display.Buffers (LCD_Layer).Fill;
 
       DSIHOST.DSI_Wrapper_Disable;
 

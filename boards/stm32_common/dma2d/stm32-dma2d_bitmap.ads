@@ -46,25 +46,21 @@ package STM32.DMA2D_Bitmap is
 
    overriding procedure Set_Pixel
      (Buffer : in out DMA2D_Bitmap_Buffer;
-      Pt     : Point;
-      Value  : UInt32);
+      Pt     : Point);
 
    overriding procedure Set_Pixel_Blend
      (Buffer : in out DMA2D_Bitmap_Buffer;
-      Pt     : Point;
-      Value  : HAL.Bitmap.Bitmap_Color);
+      Pt     : Point);
 
    overriding function Pixel
      (Buffer : DMA2D_Bitmap_Buffer;
-      Pt     : Point) return UInt32;
+      Pt     : Point) return Bitmap_Color;
 
    overriding procedure Fill
-     (Buffer : in out DMA2D_Bitmap_Buffer;
-      Color  : UInt32);
+     (Buffer : in out DMA2D_Bitmap_Buffer);
 
    overriding procedure Fill_Rect
      (Buffer : in out DMA2D_Bitmap_Buffer;
-      Color  : UInt32;
       Area   : Rect);
 
    overriding procedure Copy_Rect
@@ -99,7 +95,8 @@ package STM32.DMA2D_Bitmap is
                     Actual_Width      => 0,
                     Actual_Height     => 0,
                     Actual_Color_Mode => HAL.Bitmap.L_8,
-                    Currently_Swapped => False);
+                    Currently_Swapped => False,
+                    Native_Source     => 0);
 
    function To_DMA2D_Buffer
      (Buffer : HAL.Bitmap.Bitmap_Buffer'Class) return STM32.DMA2D.DMA2D_Buffer

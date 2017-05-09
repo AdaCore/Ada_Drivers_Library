@@ -137,41 +137,59 @@ package HAL.Bitmap is
    --  Return the address of the bitmap in the CPU address space. If the bitmap
    --  is not in the CPU address space, the result is undefined.
 
+   procedure Set_Source (Buffer : in out Bitmap_Buffer;
+                         ARGB   : Bitmap_Color) is abstract;
+   --  Set the source color for the following drawing operations
+
+   procedure Set_Source (Buffer : in out Bitmap_Buffer;
+                         Native : UInt32) is abstract;
+   --  Set the source color for the following drawing operations
+
+   function Source
+     (Buffer : Bitmap_Buffer)
+      return Bitmap_Color is abstract;
+   --  Current source color in ARGB format
+
+   function Source
+     (Buffer : Bitmap_Buffer)
+      return UInt32 is abstract;
+   --  Current source color in native format
+
    procedure Set_Pixel
      (Buffer  : in out Bitmap_Buffer;
-      Pt      : Point;
-      Value   : Bitmap_Color) is abstract;
+      Pt      : Point) is abstract;
+   --  Set pixel with current source color
 
    procedure Set_Pixel
      (Buffer  : in out Bitmap_Buffer;
       Pt      : Point;
-      Value   : UInt32) is abstract;
+      Color   : Bitmap_Color) is abstract;
+   --  Set pixel with Color and update source color
+
+   procedure Set_Pixel
+     (Buffer  : in out Bitmap_Buffer;
+      Pt      : Point;
+      Native  : UInt32) is abstract;
+   --  Set pixel with low level native pixel value Color and update source color
 
    procedure Set_Pixel_Blend
      (Buffer : in out Bitmap_Buffer;
-      Pt      : Point;
-      Value  : Bitmap_Color) is abstract;
+      Pt     : Point) is abstract;
 
    function Pixel
      (Buffer : Bitmap_Buffer;
       Pt     : Point)
       return Bitmap_Color is abstract;
+   --  Return ARGB pixel value
 
    function Pixel
      (Buffer : Bitmap_Buffer;
       Pt     : Point)
       return UInt32 is abstract;
+   --  Return raw pixel value
 
    procedure Draw_Line
      (Buffer      : in out Bitmap_Buffer;
-      Color       : UInt32;
-      Start, Stop : Point;
-      Thickness   : Natural := 1;
-      Fast        : Boolean := True) is abstract;
-
-   procedure Draw_Line
-     (Buffer      : in out Bitmap_Buffer;
-      Color       : Bitmap_Color;
       Start, Stop : Point;
       Thickness   : Natural := 1;
       Fast        : Boolean := True) is abstract;
@@ -180,26 +198,13 @@ package HAL.Bitmap is
    --  draw but providing nicer line cap.
 
    procedure Fill
-     (Buffer : in out Bitmap_Buffer;
-      Color  : Bitmap_Color) is abstract;
-   --  Fill the specified buffer with 'Color'
-
-   procedure Fill
-     (Buffer : in out Bitmap_Buffer;
-      Color  : UInt32) is abstract;
-   --  Same as above, using the destination buffer native color representation
+     (Buffer : in out Bitmap_Buffer) is abstract;
+   --  Fill the entire buffer with the source color
 
    procedure Fill_Rect
      (Buffer : in out Bitmap_Buffer;
-      Color  : Bitmap_Color;
       Area   : Rect) is abstract;
-   --  Fill the specified area of the buffer with 'Color'
-
-   procedure Fill_Rect
-     (Buffer : in out Bitmap_Buffer;
-      Color  : UInt32;
-      Area   : Rect) is abstract;
-   --  Same as above, using the destination buffer native color representation
+   --  Fill the specified area of the buffer with the source color
 
    procedure Copy_Rect
      (Src_Buffer  : Bitmap_Buffer'Class;
@@ -232,75 +237,43 @@ package HAL.Bitmap is
 
    procedure Draw_Vertical_Line
      (Buffer : in out Bitmap_Buffer;
-      Color  : UInt32;
-      Pt     : Point;
-      Height : Integer) is abstract;
-
-   procedure Draw_Vertical_Line
-     (Buffer : in out Bitmap_Buffer;
-      Color  : Bitmap_Color;
       Pt     : Point;
       Height : Integer) is abstract;
 
    procedure Draw_Horizontal_Line
      (Buffer : in out Bitmap_Buffer;
-      Color  : UInt32;
-      Pt     : Point;
-      Width  : Integer) is abstract;
-
-   procedure Draw_Horizontal_Line
-     (Buffer : in out Bitmap_Buffer;
-      Color  : Bitmap_Color;
       Pt     : Point;
       Width  : Integer) is abstract;
 
    procedure Draw_Rect
      (Buffer    : in out Bitmap_Buffer;
-      Color     : Bitmap_Color;
       Area      : Rect;
       Thickness : Natural := 1) is abstract;
    --  Draws a rectangle
 
    procedure Draw_Rounded_Rect
      (Buffer    : in out Bitmap_Buffer;
-      Color     : Bitmap_Color;
       Area      : Rect;
       Radius    : Natural;
       Thickness : Natural := 1) is abstract;
 
    procedure Fill_Rounded_Rect
      (Buffer : in out Bitmap_Buffer;
-      Color  : Bitmap_Color;
       Area   : Rect;
       Radius : Natural) is abstract;
 
    procedure Draw_Circle
      (Buffer : in out Bitmap_Buffer;
-      Color  : UInt32;
-      Center : Point;
-      Radius : Natural) is abstract;
-
-   procedure Draw_Circle
-     (Buffer : in out Bitmap_Buffer;
-      Color  : Bitmap_Color;
       Center : Point;
       Radius : Natural) is abstract;
 
    procedure Fill_Circle
      (Buffer : in out Bitmap_Buffer;
-      Color  : UInt32;
-      Center : Point;
-      Radius : Natural) is abstract;
-
-   procedure Fill_Circle
-     (Buffer : in out Bitmap_Buffer;
-      Color  : Bitmap_Color;
       Center : Point;
       Radius : Natural) is abstract;
 
    procedure Cubic_Bezier
      (Buffer         : in out Bitmap_Buffer;
-      Color          : Bitmap_Color;
       P1, P2, P3, P4 : Point;
       N              : Positive := 20;
       Thickness      : Natural := 1) is abstract;
