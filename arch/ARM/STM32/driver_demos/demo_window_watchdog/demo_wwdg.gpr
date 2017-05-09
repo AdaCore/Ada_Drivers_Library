@@ -1,5 +1,4 @@
 with "../../../../../boards/stm32f429_discovery.gpr";
-with "../../../../../boards/common_config.gpr";
 
 project Demo_WWDG extends "../../../../../examples/common/common.gpr" is
 
@@ -16,4 +15,3 @@ project Demo_WWDG extends "../../../../../examples/common/common.gpr" is
    for Main use ("demo_wwdg.adb");
 
 end Demo_WWDG;
-

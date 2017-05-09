@@ -1,5 +1,5 @@
 with "../../boards/openmv2";
-with "../../boards/OpenMV2/config";
+with "../../boards/config";
 
 project OpenMV2_Example is
 
@@ -18,6 +18,5 @@ project OpenMV2_Example is
    for Main use ("main.adb");
 
    package Compiler renames Config.Compiler;
-   package Builder renames Config.Builder;
 
  end OpenMV2_Example;

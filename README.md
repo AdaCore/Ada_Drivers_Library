@@ -1,14 +1,6 @@
 [![Build Status](https://travis-ci.org/AdaCore/Ada_Drivers_Library.svg?branch=master)](https://travis-ci.org/AdaCore/Ada_Drivers_Library)
 [![Build status](https://ci.appveyor.com/api/projects/status/dvay075xkwxgppwm?svg=true)](https://ci.appveyor.com/project/AdaCore/ada-drivers-library)
 
-## Warning!
-
-This repository uses git submodule, please clone with the `--recursive` option:
-
-```shell
-git clone --recursive https://github.com/AdaCore/Ada_Drivers_Library.git
-```
-
 # 1. Introduction
 
 This repository contains Ada source code and complete sample GNAT projects for
@@ -18,7 +10,17 @@ to be a location for both AdaCore and the community in general to contribute
 support for additional processors, platforms, and vendors.
 
 
-# 2. License
+# 2. Quick install
+
+To use this library, you need:
+
+* an Ada2012 compiler, targeting one of the supported architecture of the library: ARM, RISC-V (for example [GNAT GPL](http://libre.adacore.com/download/configurations#))
+* [run-times](https://github.com/AdaCore/embedded-runtimes) for the board you want to use.
+  * please install first the runtimes before using the library
+* try it out with the examples
+
+
+# 3. License
 
 All files are provided under a 3-clause Berkeley Software Distribution (BSD)
 license. As such, and within the conditions required by the license, the files
@@ -27,7 +29,7 @@ are available both for proprietary ("commercial") and non-proprietary use.
 For details, see the `LICENSE` file in the root directory.
 
 
-# 3. Requirements
+# 4. Requirements
 
 The software is written in Ada 2012 and uses, for example, preconditions,
 postconditions, and the high-level iterator form of for-loops.
@@ -46,7 +48,7 @@ here)](http://libre.adacore.com/download/configurations). A recent GNAT Pro
 compiler for that target will also suffice.
 
 
-# 4. Content
+# 5. Content
 
 Initial provision is for the hardware in the STM32F4 family of 32-bit MCUs, as
 defined in the "RM0090 Reference Manual" (Doc ID 018909 Rev 6, Feb 2014) by
@@ -67,7 +69,8 @@ Not all devices defined by the Reference Manual are supported, and not all those
 supported are complete. We encourage contributions of corrections, enhancements,
 and new drivers.
 
-# 5. Roadmap
+
+# 6. Roadmap
 
 Here is a list of projects that we are either dreaming about or already working
 on. If you are interested by one of those, please contact us on the projects's
@@ -81,7 +84,8 @@ GitHub page.
  * Bluetooth Low Energy stack
  * USB stack
 
-# 6. Project using the Ada_Drivers_Library
+
+# 7. Project using the Ada_Drivers_Library
 
  * [Certyflie: Ada/SPARK flight controller for the Crazyflie 2.0](https://github.com/AdaCore/Certyflie)
  * [ACNC: A Gcode interpreter and CNC controller](https://github.com/Fabien-Chouteau/ACNC)

@@ -1,14 +1,14 @@
-with "config";
-with "../../hal/HAL";
-with "../../middleware/sdmmc";
+with "../../../boards/config";
+with "../../../hal/HAL";
+with "../../../middleware/sdmmc";
 with "../cortex_m/cortex_m4f";
 
 library project STM32F46_79x is
 
    for Library_Name use "stm32f469";
    for Library_Kind use "static";
-   for Library_Dir use "lib/" & Config.Object_Subdir;
-   for Object_Dir use "obj/" & Config.Object_Subdir;
+   for Library_Dir use "lib/" & Project'Library_Name;
+   for Object_Dir use "obj/" & Project'Library_Name;
 
   for Source_Dirs use Project'Source_Dirs &
      ("drivers",
@@ -28,6 +28,5 @@ library project STM32F46_79x is
       "drivers/uart_stm32f4");
 
    package Compiler renames Config.Compiler;
-   package Builder renames Config.Builder;
 
 end STM32F46_79x;

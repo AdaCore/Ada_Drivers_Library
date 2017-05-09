@@ -279,6 +279,7 @@ package body STM32.SDMMC is
       Freq   : Natural)
    is
       Div : UInt32;
+      CLKCR : CLKCR_Register;
    begin
       Div := (This.CLK_In + UInt32 (Freq) - 1) / UInt32 (Freq);
 
@@ -290,14 +291,16 @@ package body STM32.SDMMC is
          This.Periph.CLKCR.BYPASS := True;
       else
          Div := Div - 2;
+         CLKCR := This.Periph.CLKCR;
+         CLKCR.BYPASS := False;
 
          if Div > UInt32 (CLKCR_CLKDIV_Field'Last) then
-            This.Periph.CLKCR.CLKDIV := CLKCR_CLKDIV_Field'Last;
+            CLKCR.CLKDIV := CLKCR_CLKDIV_Field'Last;
          else
-            This.Periph.CLKCR.CLKDIV := CLKCR_CLKDIV_Field (Div);
+            CLKCR.CLKDIV := CLKCR_CLKDIV_Field (Div);
          end if;
 
-         This.Periph.CLKCR.BYPASS := False;
+         This.Periph.CLKCR := CLKCR;
       end if;
    end Set_Clock;
 
@@ -391,15 +394,15 @@ package body STM32.SDMMC is
 
       for J in DCTRL_DBLOCKSIZE_Field'Range loop
          BS := 2 ** J'Enum_Rep;
-         exit when Buf'Length < BS;
-         if Buf'Length mod BS = 0 then
+         exit when Buf'Length * 4 < BS;
+         if Buf'Length * 4 mod BS = 0 then
             Block_Size := J;
          end if;
       end loop;
 
       Configure_Data
         (This,
-         Data_Length        => UInt25 (Buf'Length),
+         Data_Length        => UInt25 (Buf'Length * 4),
          Data_Block_Size    => Block_Size,
          Transfer_Direction => Read,
          Transfer_Mode      => Block,
@@ -440,7 +443,12 @@ package body STM32.SDMMC is
 
       while This.Periph.STA.RXDAVL loop
          --  Empty the FIFO if needed
-         Dead := Read_FIFO (This);
+         if Idx <= Buf'Last then
+            Buf (Idx) := Read_FIFO (This);
+            Idx := Idx + 1;
+         else
+            Dead := Read_FIFO (This);
+         end if;
       end loop;
 
       if This.Periph.STA.DTIMEOUT then
@@ -832,6 +840,17 @@ package body STM32.SDMMC is
       return Ret;
    end Stop_Transfer;
 
+   -----------------------
+   -- Set_Clk_Src_Speed --
+   -----------------------
+
+   procedure Set_Clk_Src_Speed
+     (This : in out SDMMC_Controller;
+      CLK  : UInt32)
+   is
+   begin
+      This.CLK_In := CLK;
+   end Set_Clk_Src_Speed;
 
    ----------------
    -- Initialize --
@@ -839,12 +858,10 @@ package body STM32.SDMMC is
 
    function Initialize
      (This      : in out SDMMC_Controller;
-      SDMMC_CLK : UInt32;
       Info      : out Card_Information) return SD_Error
    is
       Ret : SD_Error;
    begin
-      This.CLK_In    := SDMMC_CLK;
       SDMMC_Init.Card_Identification_Process (This, Info, Ret);
       This.Card_Type := Info.Card_Type;
       This.RCA       := Info.RCA;
@@ -963,7 +980,6 @@ package body STM32.SDMMC is
       elsif This.Periph.STA.STBITERR then
          This.Periph.ICR.STBITERRC := True;
          return Startbit_Not_Detected;
-
       end if;
 
       for J in UInt32'(1) .. SD_DATATIMEOUT loop

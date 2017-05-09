@@ -1,26 +1,32 @@
-aggregate library project HiFive1 is
+--  **AUTOMATICALLY GENERATED** Do not edit !!
+--  Please see gen.py and edit this script instead.
 
-   Build := external ("BUILD", "Debug");
+with "config";
+with "../arch/RISC-V/SiFive/FE310";
+with "../components/components";
+with "../middleware/middleware";
 
-   type RTS_Type is ("ravenscar-sfp", "ravenscar-full");
-   RTS : RTS_Type := External ("RTS", "ravenscar-sfp");
+library project HiFive1 is
 
-   RTS_Base := Project'Project_Dir &
-               "../embedded-runtimes/zfp-hifive1";
+   RTS_Profile := "zfp";
+
    for Target use "riscv32-unknown-elf";
+   for Runtime ("Ada") use RTS_Profile & "-hifive1";
 
-   case RTS is
-      when "ravenscar-sfp" =>
-         for Runtime ("Ada") use RTS_Base & "/sfp";
-      when "ravenscar-full" =>
-         for Runtime ("Ada") use RTS_Base & "/full";
-   end case;
+   Obj_Suffix := Project'Runtime ("Ada");
 
-   for Project_Path use ("HiFive1");
-
-   for Project_Files use ("HiFive1/board.gpr");
-
-   for Library_Dir use "lib/hifive1/" & RTS & "/" & Build;
    for Library_Name use "hifive1";
+   for Library_Dir use "lib/" & Obj_Suffix;
+   for Object_Dir use "obj/" & Obj_Suffix;
+
+   for Source_Dirs use
+     ("HiFive1");
+
+   package Builder is
+      for Switches ("Ada") use
+        ("--RTS=" & Project'Runtime("Ada"), "-s");
+   end Builder;
+
+   package Compiler renames Config.Compiler;
 
 end HiFive1;

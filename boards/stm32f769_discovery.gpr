@@ -1,26 +1,40 @@
-aggregate library project STM32F769_Discovery is
+--  **AUTOMATICALLY GENERATED** Do not edit !!
+--  Please see gen.py and edit this script instead.
 
-   Build := external ("BUILD", "Debug");
+with "config";
+with "../arch/ARM/STM32/stm32f7x9";
+with "../components/components";
+with "../middleware/middleware";
+with "../middleware/ravenscar_support";
 
-   type RTS_Type is ("ravenscar-sfp", "ravenscar-full");
-   RTS : RTS_Type := External ("RTS", "ravenscar-sfp");
+library project STM32F769_Discovery is
 
-   RTS_Base := Project'Project_Dir &
-               "../embedded-runtimes/ravenscar-stm32f769disco";
+   type RTS_Profile_Type is ("ravenscar-sfp", "ravenscar-full");
+   RTS_Profile : RTS_Profile_Type :=
+     external ("RTS_Profile", "ravenscar-sfp");
+
    for Target use "arm-eabi";
+   for Runtime ("Ada") use RTS_Profile & "-stm32f769disco";
 
-   case RTS is
-      when "ravenscar-sfp" =>
-         for Runtime ("Ada") use RTS_Base & "/sfp";
-      when "ravenscar-full" =>
-         for Runtime ("Ada") use RTS_Base & "/full";
-   end case;
+   Obj_Suffix := Project'Runtime ("Ada");
 
-   for Project_Path use ("stm32f769_discovery");
+   for Library_Name use "stm32f769_discovery";
+   for Library_Dir use "lib/" & Obj_Suffix;
+   for Object_Dir use "obj/" & Obj_Suffix;
 
-   for Project_Files use ("stm32f769_discovery/board.gpr");
+   for Source_Dirs use
+     ("stm32/stm32f769disco",
+      "stm32/common",
+      "stm32/dma2d",
+      "stm32/otm8009a",
+      "stm32/sdcard",
+      "stm32/sdram");
 
-   for Library_Dir use "lib/stm32f769disco/" & RTS & "/" & Build;
-   for Library_Name use "stm32f769disco";
+   package Builder is
+      for Switches ("Ada") use
+        ("--RTS=" & Project'Runtime("Ada"), "-s");
+   end Builder;
+
+   package Compiler renames Config.Compiler;
 
 end STM32F769_Discovery;

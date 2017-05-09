@@ -1,5 +1,5 @@
 with "../../boards/microbit.gpr";
-with "../../boards/MicroBit/config";
+with "../../boards/config";
 
 project MicroBit_Example is
 
@@ -11,7 +11,6 @@ project MicroBit_Example is
   for Object_Dir use "obj";
 
   package Compiler renames Config.Compiler;
-  package Builder renames Config.Builder;
 
   package Linker is
      for Default_Switches ("Ada") use ("-Wl,--print-memory-usage",
