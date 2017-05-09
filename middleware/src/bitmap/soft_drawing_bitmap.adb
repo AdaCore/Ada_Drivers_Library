@@ -559,6 +559,9 @@ package body Soft_Drawing_Bitmap is
       Center : Point;
       Radius : Natural)
    is
+      Buffer_Width  : constant Natural := Dispatch (Buffer).Width;
+      Buffer_Height : constant Natural := Dispatch (Buffer).Height;
+
       procedure Draw_Horizontal_Line (X, Y : Integer; Width : Natural);
       ------------------------
       -- Draw_Vertical_Line --
@@ -577,10 +580,10 @@ package body Soft_Drawing_Bitmap is
          if Width = 0 then
             return;
 
-         elsif Y < 0 or else Y >= Dispatch (Buffer).Height then
+         elsif Y < 0 or else Y >= Buffer_Height then
             return;
 
-         elsif X + Width < 0 or else X >= Dispatch (Buffer).Width then
+         elsif X + Width < 0 or else X >= Buffer_Width then
             return;
          end if;
 
@@ -592,8 +595,8 @@ package body Soft_Drawing_Bitmap is
             W1 := Width;
          end if;
 
-         if X1 + W1 >= Dispatch (Buffer).Width then
-            W1 := Dispatch (Buffer).Width - X1 - 1;
+         if X1 + W1 >= Buffer_Width then
+            W1 := Buffer_Width - X1 - 1;
          end if;
 
          if W1 = 0 then
@@ -614,10 +617,10 @@ package body Soft_Drawing_Bitmap is
          if Height = 0 then
             return;
 
-         elsif X < 0 or else X >= Dispatch (Buffer).Width then
+         elsif X < 0 or else X >= Buffer_Width then
             return;
 
-         elsif Y + Height < 0 or else Y >= Dispatch (Buffer).Height then
+         elsif Y + Height < 0 or else Y >= Buffer_Height then
             return;
          end if;
 
@@ -629,8 +632,8 @@ package body Soft_Drawing_Bitmap is
             H1 := Height;
          end if;
 
-         if Y1 + H1 >= Dispatch (Buffer).Height then
-            H1 := Dispatch (Buffer).Height - Y1 - 1;
+         if Y1 + H1 >= Buffer_Height then
+            H1 := Buffer_Height - Y1 - 1;
          end if;
 
          if H1 = 0 then
