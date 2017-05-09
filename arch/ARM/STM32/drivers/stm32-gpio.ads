@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2017, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -75,13 +75,10 @@ package STM32.GPIO is
    for GPIO_Pin'Size use 16;
    --  for compatibility with hardware registers
 
-   subtype GPIO_Pin_Index is Natural range 0 .. 15;
-
    type GPIO_Pins is array (Positive range <>) of GPIO_Pin;
    --  Note that, in addition to aggregates, the language-defined catenation
    --  operator "&" is available for types GPIO_Pin and GPIO_Pins, allowing one
    --  to construct GPIO_Pins values conveniently
-
 
    All_Pins : constant GPIO_Pins :=
                 (Pin_0, Pin_1, Pin_2, Pin_3, Pin_4, Pin_5, Pin_6, Pin_7,
@@ -89,6 +86,7 @@ package STM32.GPIO is
 
    type Pin_IO_Modes is (Mode_In, Mode_Out, Mode_AF, Mode_Analog)
      with Size => 2;
+
    for Pin_IO_Modes use
      (Mode_In     => 0,
       Mode_Out    => 1,
@@ -97,11 +95,12 @@ package STM32.GPIO is
 
    type Pin_Output_Types is (Push_Pull, Open_Drain)
      with Size => 1;
+
    for Pin_Output_Types use (Push_Pull => 0, Open_Drain => 1);
 
-   type Pin_Output_Speeds is
-     (Speed_2MHz,  Speed_25MHz, Speed_50MHz, Speed_100MHz)
+   type Pin_Output_Speeds is (Speed_2MHz,  Speed_25MHz, Speed_50MHz, Speed_100MHz)
      with Size => 2;
+
    for Pin_Output_Speeds use
      (Speed_2MHz   => 0,  -- low
       Speed_25MHz  => 1,  -- medium
@@ -115,6 +114,7 @@ package STM32.GPIO is
 
    type Internal_Pin_Resistors is (Floating, Pull_Up, Pull_Down)
      with Size => 2;
+
    for Internal_Pin_Resistors use (Floating  => 0,
                                    Pull_Up   => 1,
                                    Pull_Down => 2);
@@ -130,7 +130,7 @@ package STM32.GPIO is
       Periph : access GPIO_Port;
       --  Port should be a not null access, but this raises an exception
       --  during elaboration.
-      Pin    : GPIO_Pin_Index;
+      Pin    : GPIO_Pin;
    end record;
 
    overriding
