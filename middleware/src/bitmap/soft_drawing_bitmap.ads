@@ -45,46 +45,49 @@ package Soft_Drawing_Bitmap is
      access all Soft_Drawing_Bitmap_Buffer'Class;
 
    overriding
-   procedure Draw_Line
-     (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
-      Color       : UInt32;
-      Start, Stop : Point;
-      Thickness   : Natural := 1;
-      Fast        : Boolean := True);
+   procedure Set_Source (Buffer : in out Soft_Drawing_Bitmap_Buffer;
+                         ARGB   : Bitmap_Color);
+
+   overriding
+   function Source
+     (Buffer : Soft_Drawing_Bitmap_Buffer)
+      return Bitmap_Color;
+
+   overriding
+   procedure Set_Pixel
+     (Buffer  : in out Soft_Drawing_Bitmap_Buffer;
+      Pt      : Point;
+      Color   : Bitmap_Color);
+
+   overriding
+   procedure Set_Pixel
+     (Buffer  : in out Soft_Drawing_Bitmap_Buffer;
+      Pt      : Point;
+      Native  : UInt32);
+
+   overriding
+   function Pixel
+     (Buffer : Soft_Drawing_Bitmap_Buffer;
+      Pt     : Point)
+      return Bitmap_Color;
 
    overriding
    procedure Draw_Line
      (Buffer      : in out Soft_Drawing_Bitmap_Buffer;
-      Color       : Bitmap_Color;
       Start, Stop : Point;
       Thickness   : Natural := 1;
       Fast        : Boolean := True);
 
    overriding
    procedure Fill
-     (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : Bitmap_Color);
-   --  Fill the specified buffer with 'Color'
-
-   overriding
-   procedure Fill
-     (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : UInt32);
-   --  Same as above, using the destination buffer native color representation
+     (Buffer : in out Soft_Drawing_Bitmap_Buffer);
+   --  Fill the entire buffer with the source color
 
    overriding
    procedure Fill_Rect
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : Bitmap_Color;
       Area   : Rect);
-   --  Fill the specified area of the buffer with 'Color'
-
-   overriding
-   procedure Fill_Rect
-     (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : UInt32;
-      Area   : Rect);
-   --  Same as above, using the destination buffer native color representation
+   --  Fill the specified area of the buffer with the source color
 
    overriding
    procedure Copy_Rect
@@ -121,35 +124,18 @@ package Soft_Drawing_Bitmap is
    overriding
    procedure Draw_Vertical_Line
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : UInt32;
-      Pt     : Point;
-      Height : Integer);
-
-   overriding
-   procedure Draw_Vertical_Line
-     (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : Bitmap_Color;
       Pt     : Point;
       Height : Integer);
 
    overriding
    procedure Draw_Horizontal_Line
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : UInt32;
-      Pt     : Point;
-      Width  : Integer);
-
-   overriding
-   procedure Draw_Horizontal_Line
-     (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : Bitmap_Color;
       Pt     : Point;
       Width  : Integer);
 
    overriding
    procedure Draw_Rect
      (Buffer    : in out Soft_Drawing_Bitmap_Buffer;
-      Color     : Bitmap_Color;
       Area      : Rect;
       Thickness : Natural := 1);
    --  Draws a rectangle
@@ -157,7 +143,6 @@ package Soft_Drawing_Bitmap is
    overriding
    procedure Draw_Rounded_Rect
      (Buffer    : in out Soft_Drawing_Bitmap_Buffer;
-      Color     : Bitmap_Color;
       Area      : Rect;
       Radius    : Natural;
       Thickness : Natural := 1);
@@ -165,42 +150,24 @@ package Soft_Drawing_Bitmap is
    overriding
    procedure Fill_Rounded_Rect
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : Bitmap_Color;
       Area   : Rect;
       Radius : Natural);
 
    overriding
    procedure Draw_Circle
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : UInt32;
-      Center : Point;
-      Radius : Natural);
-
-   overriding
-   procedure Draw_Circle
-     (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : Bitmap_Color;
       Center : Point;
       Radius : Natural);
 
    overriding
    procedure Fill_Circle
      (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : UInt32;
-      Center : Point;
-      Radius : Natural);
-
-   overriding
-   procedure Fill_Circle
-     (Buffer : in out Soft_Drawing_Bitmap_Buffer;
-      Color  : Bitmap_Color;
       Center : Point;
       Radius : Natural);
 
    overriding
    procedure Cubic_Bezier
      (Buffer         : in out Soft_Drawing_Bitmap_Buffer;
-      Color          : Bitmap_Color;
       P1, P2, P3, P4 : Point;
       N              : Positive := 20;
       Thickness      : Natural := 1);

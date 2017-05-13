@@ -56,41 +56,46 @@ begin
       raise Program_Error with "Cannot open BMP file";
    end if;
 
-   BM.Fill (Black);
-   BM.Fill_Rounded_Rect (Color  => Green,
-                         Area   => ((5, 5), BM_Width / 2, BM_Height / 2),
+   BM.Set_Source (Black);
+   BM.Fill;
+
+   BM.Set_Source (Green);
+   BM.Fill_Rounded_Rect (Area   => ((5, 5), BM_Width / 2, BM_Height / 2),
                          Radius => 10);
 
-   BM.Draw_Rounded_Rect (Color  => Red,
-                         Area   => ((5, 5), BM_Width / 2, BM_Height / 2),
+   BM.Set_Source (Red);
+   BM.Draw_Rounded_Rect (Area   => ((5, 5), BM_Width / 2, BM_Height / 2),
                          Radius => 10,
                          Thickness => 3);
 
-   BM.Fill_Circle (Color  => Yellow,
-                   Center => (BM_Width / 2, BM_Height / 2),
+   BM.Set_Source (Yellow);
+   BM.Fill_Circle (Center => (BM_Width / 2, BM_Height / 2),
                    Radius => BM_Width / 4);
 
-   BM.Draw_Circle (Color  => Blue,
-                   Center => (BM_Width / 2, BM_Height / 2),
+   BM.Set_Source (Blue);
+   BM.Draw_Circle (Center => (BM_Width / 2, BM_Height / 2),
                    Radius => BM_Width / 4);
 
-   BM.Cubic_Bezier (Color     => Violet,
-                    P1        => (5, 5),
+   BM.Set_Source (Violet);
+   BM.Cubic_Bezier (P1        => (5, 5),
                     P2        => (0, BM_Height / 2),
                     P3        => (BM_Width / 2, BM_Height / 2),
                     P4        => (BM_Width - 5, BM_Height - 5),
                     N         => 100,
                     Thickness => 3);
 
-   BM.Draw_Line (Color     => White,
-                 Start     => (0, 0),
+   BM.Set_Source (White);
+   BM.Draw_Line (Start     => (0, 0),
                  Stop      => (BM_Width - 1, BM_Height / 2),
                  Thickness => 1,
                  Fast      => True);
 
-   BM.Set_Pixel ((0, 0), Red);
-   BM.Set_Pixel ((0, 1), Green);
-   BM.Set_Pixel ((0, 2), Blue);
+   BM.Set_Source (Red);
+   BM.Set_Pixel ((0, 0));
+   BM.Set_Source (Green);
+   BM.Set_Pixel ((0, 1));
+   BM.Set_Source (Blue);
+   BM.Set_Pixel ((0, 2));
 
    Copy_Rect (Src_Buffer  => BM.all,
               Src_Pt      => (0, 0),

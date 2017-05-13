@@ -67,6 +67,9 @@ package Memory_Mapped_Bitmap is
       --  So Put_Pixel (Buffer, 30, 10, Color) will place the pixel at
       --  Y0 = 320 - 30 - 1 = 289
       --  X0 = 10
+
+      Native_Source : UInt32 := 0;
+      --  Source color in native format
    end record;
 
    type Any_Memory_Mapped_Bitmap_Buffer is access all Memory_Mapped_Bitmap_Buffer'Class;
@@ -96,22 +99,42 @@ package Memory_Mapped_Bitmap is
      (Buffer.Addr);
 
    overriding
+   procedure Set_Source (Buffer : in out Memory_Mapped_Bitmap_Buffer;
+                         ARGB   : Bitmap_Color);
+
+   overriding
+   procedure Set_Source (Buffer : in out Memory_Mapped_Bitmap_Buffer;
+                         Native : UInt32);
+
+   overriding
+   function Source (Buffer : Memory_Mapped_Bitmap_Buffer)
+                    return Bitmap_Color;
+
+   overriding
+   function Source (Buffer : Memory_Mapped_Bitmap_Buffer)
+                    return UInt32;
+
+   overriding
    procedure Set_Pixel
      (Buffer  : in out Memory_Mapped_Bitmap_Buffer;
-      Pt      : Point;
-      Value   : Bitmap_Color);
+      Pt      : Point);
 
    overriding
    procedure Set_Pixel
      (Buffer  : in out Memory_Mapped_Bitmap_Buffer;
       Pt      : Point;
-      Value   : UInt32);
+      Color   : Bitmap_Color);
+
+   overriding
+   procedure Set_Pixel
+     (Buffer  : in out Memory_Mapped_Bitmap_Buffer;
+      Pt      : Point;
+      Raw     : UInt32);
 
    overriding
    procedure Set_Pixel_Blend
      (Buffer : in out Memory_Mapped_Bitmap_Buffer;
-      Pt      : Point;
-      Value  : Bitmap_Color);
+      Pt     : Point);
 
    overriding
    function Pixel

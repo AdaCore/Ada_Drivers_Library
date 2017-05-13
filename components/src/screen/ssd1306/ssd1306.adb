@@ -397,14 +397,13 @@ package body SSD1306 is
    overriding
    procedure Set_Pixel
      (Buffer  : in out SSD1306_Bitmap_Buffer;
-      Pt      : Point;
-      Value   : UInt32)
+      Pt      : Point)
    is
       Index : constant Natural := Pt.X + (Pt.Y / 8) * Buffer.Actual_Width;
       Byte  : UInt8 renames Buffer.Data (Buffer.Data'First + Index);
    begin
 
-      if Value = 0 then
+      if Buffer.Native_Source = 0 then
          Byte := Byte and not (Shift_Left (1, Pt.Y mod 8));
       else
          Byte := Byte or Shift_Left (1, Pt.Y mod 8);
@@ -419,12 +418,12 @@ package body SSD1306 is
    function Pixel
      (Buffer : SSD1306_Bitmap_Buffer;
       Pt     : Point)
-      return UInt32
+      return Bitmap_Color
    is
       Index : constant Natural := Pt.X + (Pt.Y / 8) * Buffer.Actual_Width;
       Byte  : UInt8 renames Buffer.Data (Buffer.Data'First + Index);
    begin
-      return UInt32 (Byte);
+      return (if Byte = 0 then Black else White);
    end Pixel;
 
 end SSD1306;

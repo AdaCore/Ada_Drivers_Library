@@ -30,7 +30,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with Bitmap_Color_Conversion;  use Bitmap_Color_Conversion;
 
 package body ST7735R is
 
@@ -787,15 +786,41 @@ package body ST7735R is
       return Display.Layer'Unchecked_Access;
    end Hidden_Buffer;
 
-   --------------------
-   -- Get_Pixel_Size --
-   --------------------
+   ----------------
+   -- Pixel_Size --
+   ----------------
 
    overriding
    function Pixel_Size
      (Display : ST7735R_Screen;
       Layer   : Positive) return Positive is (16);
 
+   ----------------
+   -- Set_Source --
+   ----------------
+
+   overriding
+   procedure Set_Source (Buffer : in out ST7735R_Bitmap_Buffer;
+                         Native : UInt32)
+   is
+   begin
+      Buffer.Native_Source := Native;
+   end Set_Source;
+
+   ------------
+   -- Source --
+   ------------
+
+   overriding
+   function Source
+     (Buffer : ST7735R_Bitmap_Buffer)
+      return UInt32
+   is
+   begin
+      return Buffer.Native_Source;
+   end Source;
+
+
    ---------------
    -- Set_Pixel --
    ---------------
@@ -803,25 +828,11 @@ package body ST7735R is
    overriding
    procedure Set_Pixel
      (Buffer  : in out ST7735R_Bitmap_Buffer;
-      Pt      : Point;
-      Value   : Bitmap_Color)
+      Pt      : Point)
    is
    begin
-      Buffer.Set_Pixel (Pt, Bitmap_Color_To_Word (RGB_565, Value));
-   end Set_Pixel;
-
-   ---------------
-   -- Set_Pixel --
-   ---------------
-
-   overriding
-   procedure Set_Pixel
-     (Buffer  : in out ST7735R_Bitmap_Buffer;
-      Pt      : Point;
-      Value   : UInt32)
-   is
-   begin
-      Buffer.LCD.Set_Pixel (UInt16 (Pt.X), UInt16 (Pt.Y), UInt16 (Value));
+      Buffer.LCD.Set_Pixel (UInt16 (Pt.X), UInt16 (Pt.Y),
+                            UInt16 (Buffer.Native_Source));
    end Set_Pixel;
 
    ---------------------
@@ -831,8 +842,7 @@ package body ST7735R is
    overriding
    procedure Set_Pixel_Blend
      (Buffer : in out ST7735R_Bitmap_Buffer;
-      Pt     : Point;
-      Value  : Bitmap_Color) renames Set_Pixel;
+      Pt     : Point) renames Set_Pixel;
 
    -----------
    -- Pixel --
@@ -842,20 +852,7 @@ package body ST7735R is
    function Pixel
      (Buffer : ST7735R_Bitmap_Buffer;
       Pt     : Point)
-      return Bitmap_Color
-   is
-   begin
-      return Word_To_Bitmap_Color (RGB_565, Buffer.Pixel (Pt));
-   end Pixel;
-
-   overriding
-   function Pixel
-     (Buffer : ST7735R_Bitmap_Buffer;
-      Pt     : Point)
       return UInt32
-   is
-   begin
-      return UInt32 (Buffer.LCD.Pixel (UInt16 (Pt.X), UInt16 (Pt.Y)));
-   end Pixel;
+   is (UInt32 (Buffer.LCD.Pixel (UInt16 (Pt.X), UInt16 (Pt.Y))));
 
 end ST7735R;

@@ -129,7 +129,8 @@ package body Framebuffer_LTDC is
                Display.Buffers (Layer, Buf).Actual_Width :=
                  Display.Buffers (Layer, Buf).Height;
                Display.Buffers (Layer, Buf).Actual_Height := Tmp;
-               Display.Buffers (Layer, Buf).Fill (0);
+               Display.Buffers (Layer, Buf).Set_Source (HAL.Bitmap.Black);
+               Display.Buffers (Layer, Buf).Fill;
             end if;
          end loop;
       end loop;
@@ -309,8 +310,10 @@ package body Framebuffer_LTDC is
                Actual_Width      => W,
                Actual_Height     => H,
                Actual_Color_Mode => Mode,
-               Currently_Swapped => False);
-            Display.Buffers (LCD_Layer, Buf).Fill (0);
+               Currently_Swapped => False,
+               Native_Source     => 0);
+            Display.Buffers (LCD_Layer, Buf).Set_Source (HAL.Bitmap.Black);
+            Display.Buffers (LCD_Layer, Buf).Fill;
          end loop;
       else
          for Buf in 1 .. 2 loop
@@ -320,8 +323,10 @@ package body Framebuffer_LTDC is
                Actual_Width      => H,
                Actual_Height     => W,
                Actual_Color_Mode => Mode,
-               Currently_Swapped => True);
-            Display.Buffers (LCD_Layer, Buf).Fill (0);
+               Currently_Swapped => True,
+               Native_Source     => 0);
+            Display.Buffers (LCD_Layer, Buf).Set_Source (HAL.Bitmap.Black);
+            Display.Buffers (LCD_Layer, Buf).Fill;
          end loop;
       end if;
 

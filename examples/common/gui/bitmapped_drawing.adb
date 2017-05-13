@@ -49,11 +49,11 @@ package body Bitmapped_Drawing is
       for H in 0 .. Char_Height (Font) - 1 loop
          for W in 0 .. Char_Width (Font) - 1 loop
             if (Data (Font, Char, H) and Mask (Font, W)) /= 0 then
-               Buffer.Set_Pixel
-                 ((Start.X + W, Start.Y + H), Foreground);
+               Buffer.Set_Source (Word_To_Bitmap_Color (Buffer.Color_Mode, Foreground));
+               Buffer.Set_Pixel ((Start.X + W, Start.Y + H));
             else
-               Buffer.Set_Pixel
-                 ((Start.X + W, Start.Y + H), Background);
+               Buffer.Set_Source (Word_To_Bitmap_Color (Buffer.Color_Mode, Background));
+               Buffer.Set_Pixel ((Start.X + W, Start.Y + H));
             end if;
          end loop;
       end loop;
@@ -104,9 +104,6 @@ package body Bitmapped_Drawing is
       Foreground : Bitmap_Color;
       Fast       : Boolean := True)
    is
-      FG    : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
-                                                     Foreground);
-
       procedure Internal_Draw_Line
         (X0, Y0, X1, Y1 : Natural;
          Width          : Positive);
@@ -116,8 +113,8 @@ package body Bitmapped_Drawing is
          Width          : Positive)
       is
       begin
+
          Draw_Line (Buffer,
-                    FG,
                     (X0, Y0),
                     (X1, Y1),
                     Width,
@@ -130,6 +127,7 @@ package body Bitmapped_Drawing is
       Current : Point := Start;
 
    begin
+      Buffer.Set_Source (Foreground);
       for C of Msg loop
          exit when Current.X > Buffer.Width;
          Draw_Glyph
@@ -162,9 +160,9 @@ package body Bitmapped_Drawing is
       Current : Point := (0, 0);
       Prev    : UInt32;
       FG      : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
-                                                       Foreground);
+                                                         Foreground);
       Blk     : constant UInt32 := Bitmap_Color_To_Word (Buffer.Color_Mode,
-                                                       Black);
+                                                         Black);
 
       procedure Internal_Draw_Line
         (X0, Y0, X1, Y1 : Natural;
@@ -176,7 +174,6 @@ package body Bitmapped_Drawing is
       is
       begin
          Draw_Line (Buffer,
-                    Foreground,
                     (Area.Position.X + Natural (Float (X0) * Ratio),
                      Area.Position.Y + Y0),
                     (Area.Position.X + Natural (Float (X1) * Ratio),
@@ -195,6 +192,8 @@ package body Bitmapped_Drawing is
          Ratio := 1.0;
          Current.X := (Area.Width - Length) / 2;
       end if;
+
+      Buffer.Set_Source (Foreground);
 
       for C of Msg loop
          Draw_Glyph

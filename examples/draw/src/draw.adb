@@ -56,7 +56,8 @@ is
 
    procedure Clear is
    begin
-      Display.Hidden_Buffer (1).Fill (BG);
+      Display.Hidden_Buffer (1).Set_Source (BG);
+      Display.Hidden_Buffer (1).Fill;
 
       LCD_Std_Out.Clear_Screen;
       LCD_Std_Out.Put_Line ("Touch the screen to draw or");
@@ -106,6 +107,8 @@ begin
 
       if Current_Mode = Drawing_Mode then
 
+         Display.Hidden_Buffer (1).Set_Source (HAL.Bitmap.Green);
+
          declare
             State : constant TP_State := Touch_Panel.Get_All_Touch_Points;
          begin
@@ -120,7 +123,6 @@ begin
                if Last_X > 0 then
                   Draw_Line
                     (Display.Hidden_Buffer (1).all,
-                     Color     => HAL.Bitmap.Green,
                      Start     => (Last_X, Last_Y),
                      Stop      => (State (State'First).X, State (State'First).Y),
                      Thickness => State (State'First).Weight / 2,
@@ -138,7 +140,6 @@ begin
             for Id in State'Range loop
                Fill_Circle
                  (Display.Hidden_Buffer (1).all,
-                  Color => HAL.Bitmap.Green,
                   Center => (State (Id).X, State (Id).Y),
                   Radius => State (Id).Weight / 4);
             end loop;
@@ -151,21 +152,25 @@ begin
 
          --  Show some of the supported drawing primitives
 
-         Display.Hidden_Buffer (1).Fill (Black);
+         Display.Hidden_Buffer (1).Set_Source (Black);
+         Display.Hidden_Buffer (1).Fill;
 
+         Display.Hidden_Buffer (1).Set_Source (Green);
          Display.Hidden_Buffer (1).Fill_Rounded_Rect
-           (HAL.Bitmap.Green, ((10, 10), 100, 100), 20);
+           (((10, 10), 100, 100), 20);
 
+         Display.Hidden_Buffer (1).Set_Source (HAL.Bitmap.Red);
          Display.Hidden_Buffer (1).Draw_Rounded_Rect
-           (HAL.Bitmap.Red, ((10, 10), 100, 100), 20, Thickness => 4);
+           (((10, 10), 100, 100), 20, Thickness => 4);
 
-         Display.Hidden_Buffer (1).Fill_Circle (HAL.Bitmap.Yellow,
-                                                (60, 60), 20);
-         Display.Hidden_Buffer (1).Draw_Circle (HAL.Bitmap.Blue,
-                                                (60, 60), 20);
+         Display.Hidden_Buffer (1).Set_Source (HAL.Bitmap.Yellow);
+         Display.Hidden_Buffer (1).Fill_Circle ((60, 60), 20);
 
-         Display.Hidden_Buffer (1).Cubic_Bezier (Color     => HAL.Bitmap.Violet,
-                                                 P1        => (10, 10),
+         Display.Hidden_Buffer (1).Set_Source (HAL.Bitmap.Blue);
+         Display.Hidden_Buffer (1).Draw_Circle ((60, 60), 20);
+
+         Display.Hidden_Buffer (1).Set_Source (HAL.Bitmap.Violet);
+         Display.Hidden_Buffer (1).Cubic_Bezier (P1        => (10, 10),
                                                  P2        => (60, 10),
                                                  P3        => (60, 60),
                                                  P4        => (100, 100),

@@ -104,17 +104,18 @@ begin
    Height := Display.Hidden_Buffer (1).Height;
 
    loop
-      Bitmap_Buffer.Fill (HAL.Bitmap.Dark_Green);
+      Bitmap_Buffer.Set_Source (HAL.Bitmap.Dark_Green);
+      Bitmap_Buffer.Fill;
 
       --  Draw blue filled rectangle in the upper left corner
-      Bitmap_Buffer.Fill_Rect (HAL.Bitmap.Blue,
-                               (Position => (0, 0),
+      Bitmap_Buffer.Set_Source (HAL.Bitmap.Blue);
+      Bitmap_Buffer.Fill_Rect ((Position => (0, 0),
                                 Width    => Width / 2,
                                 Height   => Height / 2));
 
       --  Drawn yellow rectangle outline in the lower left corner
-      Bitmap_Buffer.Draw_Rect (HAL.Bitmap.Yellow,
-                               (Position => (0, Height / 2),
+      Bitmap_Buffer.Set_Source (HAL.Bitmap.Yellow);
+      Bitmap_Buffer.Draw_Rect ((Position => (0, Height / 2),
                                 Width  => Width / 2,
                                 Height => Height / 2));
 
@@ -134,7 +135,8 @@ begin
       Y := Height / 2;
       while X < Width / 2 and then Y < Height - 10 loop
          for Cnt in 0 .. 10 loop
-            Bitmap_Buffer.Set_Pixel_Blend ((X, Y + Cnt), (100, 255, 0, 0));
+            Bitmap_Buffer.Set_Source ((100, 255, 0, 0));
+            Bitmap_Buffer.Set_Pixel_Blend ((X, Y + Cnt));
          end loop;
          X := X + 1;
          Y := Y + 1;

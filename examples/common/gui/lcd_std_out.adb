@@ -143,7 +143,8 @@ package body LCD_Std_Out is
    procedure Clear_Screen is
    begin
       Check_Initialized;
-      Display.Hidden_Buffer (1).Fill (Current_Background_Color);
+      Display.Hidden_Buffer (1).Set_Source (Current_Background_Color);
+      Display.Hidden_Buffer (1).Fill;
       Current_Y := 0;
       Char_Count := 0;
       Display.Update_Layer (1, True);
