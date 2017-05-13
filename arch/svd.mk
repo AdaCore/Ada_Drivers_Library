@@ -1,4 +1,3 @@
-# IMPORTANT NOTE: due to a bug in the compiler (Q207-001), the data structure in stm32_svd-crc.ads must be manually modified after this makefile
 # generates the code. See Ada Drivers Library issue #163.
 
 SVD2ADA_DIR?=~/src/github/svd2ada
