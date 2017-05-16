@@ -1,7 +1,7 @@
 with "../../../../../boards/common_config.gpr";
 with "../../../../../boards/stm32f407_discovery.gpr";
 
-project Demo_Timer_Quad_Encoder extends "../../../../../examples/common/common.gpr" is
+project Demo_Timer_Quad_Encoder extends "../../../../../examples/shared/common/common.gpr" is
 
    for Languages use ("Ada");
    for Main use ("demo_encoder.adb");

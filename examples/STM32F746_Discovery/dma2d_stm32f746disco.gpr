@@ -1,0 +1,11 @@
+with "../../boards/stm32f746_discovery.gpr";
+
+project Dma2d_STM32F746Disco extends "../shared/common/common.gpr" is
+
+   for Runtime ("Ada") use STM32F746_Discovery'Runtime("Ada");
+   for Object_Dir use "../shared/stm32_dma2d/obj/stm32f746disco";
+
+   for Main use ("dma2d.adb");
+   for Source_Dirs use ("../shared/stm32_dma2d/src");
+
+end Dma2d_STM32F746Disco;
