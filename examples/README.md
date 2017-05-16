@@ -30,8 +30,7 @@ Follow the instructions to install GNAT and GPS.
 For the STM32 board we recommend to use the open-source probe interface
 [stlink](https://github.com/texane/stlink).
 
-On Windows, stlink should be provided in your install of GNAT Programming
-Studio.
+On Windows, stlink should be included with your cross-compiler installation.
 
 On Linux, you have to download the source and compile the tool:
 
