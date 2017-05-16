@@ -1,5 +1,3 @@
-# generates the code. See Ada Drivers Library issue #163.
-
 SVD2ADA_DIR?=~/src/github/svd2ada
 CORTEX_DIR=$(PWD)/ARM/cortex_m/src
 STM_DIR=$(PWD)/ARM/STM32/svd
