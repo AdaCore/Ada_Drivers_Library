@@ -1,0 +1,11 @@
+with "../../boards/stm32f769_discovery.gpr";
+
+project Draw_STM32F769Disco extends "../shared/common/common.gpr" is
+
+   for Runtime ("Ada") use STM32F769_Discovery'Runtime("Ada");
+   for Object_Dir use "../shared/draw/obj/stm32f769disco";
+
+   for Main use ("draw.adb");
+   for Source_Dirs use ("../shared/draw/src");
+
+end Draw_STM32F769Disco;

@@ -1,0 +1,16 @@
+with "../../boards/stm32f469_discovery.gpr";
+
+project Hello_World_Tasking_F469Disco extends "../shared/common/common.gpr" is
+
+  for Runtime ("Ada") use STM32F469_Discovery'Runtime("Ada");
+  for Target use "arm-eabi";
+  for Main use ("hello_world.adb");
+  for Languages use ("Ada");
+  for Source_Dirs use ("../shared/hello_world_tasking/src");
+  for Object_Dir use "../shared/hello_world_tasking/obj/" & "stm32f469disco";
+
+  package Builder is
+    for Global_Configuration_Pragmas use "../shared/hello_world_tasking/gnat.adc";
+  end Builder;
+
+end Hello_World_Tasking_F469Disco;

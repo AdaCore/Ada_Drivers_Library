@@ -74,19 +74,42 @@ STM_DRIVERS="/arch/ARM/STM32/driver_demos/"
 # List of project to compile
 #
 #            Project file                                                                                List of run-time profiles
-projects = [("/examples/accelerometer/accelerometer.gpr",                                                BOTH_RAVENSCAR),
-            ("/examples/draw/draw_stm32f429disco.gpr",                                                   BOTH_RAVENSCAR),
-            ("/examples/draw/draw_stm32f469disco.gpr",                                                   BOTH_RAVENSCAR),
-            ("/examples/draw/draw_stm32f746disco.gpr",                                                   BOTH_RAVENSCAR),
-            ("/examples/draw/draw_stm32f769disco.gpr",                                                   BOTH_RAVENSCAR),
-            ("/examples/stm32_dma2d/dma2d_stm32f469disco.gpr",                                           BOTH_RAVENSCAR),
-            ("/examples/stm32_dma2d/dma2d_stm32f429disco.gpr",                                           BOTH_RAVENSCAR),
-            ("/examples/stm32_dma2d/dma2d_stm32f746disco.gpr",                                           BOTH_RAVENSCAR),
-            ("/examples/stm32_dma2d/dma2d_stm32f769disco.gpr",                                           BOTH_RAVENSCAR),
+projects = [
+            # STM32F429 Discovery
+            ("/examples/STM32F429_Discovery/draw_stm32f429disco.gpr",                                    BOTH_RAVENSCAR),
+            ("/examples/STM32F429_Discovery/blinky_f429disco.gpr",                                       BOTH_RAVENSCAR),
+            ("/examples/STM32F429_Discovery/dma2d_stm32f429disco.gpr",                                   BOTH_RAVENSCAR),
+            ("/examples/STM32F429_Discovery/serial_ports_f429disco.gpr",                                 RAVENSCAR_FULL),
+
+
+            # STM32F4 DISCO
+            ("/examples/STM32F4_DISCO/accelerometer/accelerometer.gpr",                                  BOTH_RAVENSCAR),
+            ("/examples/STM32F4_DISCO/filesystem/filesystem.gpr",                                        BOTH_RAVENSCAR),
+
+            # STM32F469 Discovery
+            ("/examples/STM32F469_Discovery/dma2d_stm32f469disco.gpr",                                   BOTH_RAVENSCAR),
+            ("/examples/STM32F469_Discovery/draw_stm32f469disco.gpr",                                    BOTH_RAVENSCAR),
+            ("/examples/STM32F469_Discovery/hello_world_tasking_f469disco.gpr",                          BOTH_RAVENSCAR),
+
+
+            # STM32F746 Discovery
+            ("/examples/STM32F746_Discovery/dma2d_stm32f746disco.gpr",                                   BOTH_RAVENSCAR),
+            ("/examples/STM32F746_Discovery/draw_stm32f746disco.gpr",                                    BOTH_RAVENSCAR),
+            ("/examples/STM32F746_Discovery/blinky_f7disco.gpr",                                         BOTH_RAVENSCAR),
+
+            # STM32F769 Discovery
+            ("/examples/STM32F769_Discovery/dma2d_stm32f769disco.gpr",                                   BOTH_RAVENSCAR),
+            ("/examples/STM32F769_Discovery/draw_stm32f769disco.gpr",                                    BOTH_RAVENSCAR),
+
+            # OpenMV2
             ("/examples/OpenMV2/openmv2_example.gpr",                                                    BOTH_RAVENSCAR),
             ("/examples/OpenMV2/openmv2_example.gpr",                                                    BOTH_RAVENSCAR),
             ("/examples/OpenMV2/openmv2_example.gpr",                                                    BOTH_RAVENSCAR),
+
+            # MicroBit
             ("/examples/MicroBit/microbit_example.gpr",                                                  ZFP),
+
+            # STM32 driver examples
             (STM_DRIVERS + "/demo_adc_dma/demo_adc_dma.gpr",                                             BOTH_RAVENSCAR),
             (STM_DRIVERS + "/demo_adc_interrupts/demo_adc_interrupts.gpr",                               BOTH_RAVENSCAR),
             (STM_DRIVERS + "/demo_adc_polling/demo_adc_polling.gpr",                                     BOTH_RAVENSCAR),

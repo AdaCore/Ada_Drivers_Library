@@ -1,7 +1,7 @@
 with "../../../../../boards/common_config.gpr";
 with "../../../../../boards/stm32f429_discovery.gpr";
 
-project Demo_DAC_DMA extends "../../../../../examples/common/common.gpr" is
+project Demo_DAC_DMA extends "../../../../../examples/shared/common/common.gpr" is
 
    for Main use ("demo_dac_dma");
    for Languages use ("Ada");
