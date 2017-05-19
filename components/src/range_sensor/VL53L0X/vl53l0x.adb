@@ -58,9 +58,10 @@ package body VL53L0X is
      (Timeout_Period_us  : UInt32;
       VCSel_Period_Pclks : UInt8) return UInt32;
 
-   function Perform_Single_Ref_Calibration
+   procedure Perform_Single_Ref_Calibration
      (This     : VL53L0X_Ranging_Sensor;
-      VHV_Init : UInt8) return Boolean;
+      VHV_Init : UInt8;
+      Status   : out Boolean);
 
    ---------------
    -- I2C_Write --
@@ -371,17 +372,17 @@ package body VL53L0X is
    -- Data_Init --
    ---------------
 
-   function Data_Init
-     (This : in out VL53L0X_Ranging_Sensor) return Boolean
+   procedure Data_Init
+     (This   : in out VL53L0X_Ranging_Sensor;
+      Status : out Boolean)
    is
-      Status : Boolean;
       Regval : UInt8;
    begin
       --  Set I2C Standard mode
       Write (This, 16#88#, UInt8'(16#00#), Status);
 
       if not Status then
-         return False;
+         return;
       end if;
 
 --        This.Device_Specific_Params.Read_Data_From_Device_Done := False;
@@ -437,17 +438,16 @@ package body VL53L0X is
       if Status then
          Write (This, REG_SYSTEM_SEQUENCE_CONFIG, UInt8'(16#FF#), Status);
       end if;
-
-      return Status;
    end Data_Init;
 
    -----------------
    -- Static_Init --
    -----------------
 
-   function Static_Init
+   procedure Static_Init
      (This          : in out VL53L0X_Ranging_Sensor;
-      GPIO_Function : VL53L0X_GPIO_Functionality) return Boolean
+      GPIO_Function : VL53L0X_GPIO_Functionality;
+      Status        : out Boolean)
    is
       type SPAD_Map is array (UInt8 range 1 .. 48) of Boolean
         with Pack, Size => 48;
@@ -457,20 +457,19 @@ package body VL53L0X is
       function To_Bytes is new Ada.Unchecked_Conversion
         (SPAD_Map, SPAD_Map_Bytes);
 
-      SPAD_Count                : UInt8;
-      SPAD_Is_Aperture          : Boolean;
-      Status                    : Boolean;
-      Ref_SPAD_Map_Bytes        : SPAD_Map_Bytes;
-      Ref_SPAD_Map              : SPAD_Map;
-      First_SPAD                : UInt8;
-      SPADS_Enabled             : UInt8;
-      Measurement_Timing_Budget : UInt32;
+      SPAD_Count         : UInt8;
+      SPAD_Is_Aperture   : Boolean;
+      Ref_SPAD_Map_Bytes : SPAD_Map_Bytes;
+      Ref_SPAD_Map       : SPAD_Map;
+      First_SPAD         : UInt8;
+      SPADS_Enabled      : UInt8;
+      Timing_Budget      : UInt32;
 
    begin
-      Status := Get_SPAD_Info (This, SPAD_Count, SPAD_Is_Aperture);
+      Status := SPAD_Info (This, SPAD_Count, SPAD_Is_Aperture);
 
       if not Status then
-         return False;
+         return;
       end if;
 
       Read
@@ -625,46 +624,40 @@ package body VL53L0X is
          Write (This, 16#80#, UInt8'(16#00#), Status);
       end if;
 
-      Status := Set_GPIO_Config (This, GPIO_Function, Polarity_High);
+      Set_GPIO_Config (This, GPIO_Function, Polarity_High, Status);
 
-      if not Status then
-         return False;
-      end if;
+      if Status then
+         Timing_Budget := Measurement_Timing_Budget (This);
 
-      Measurement_Timing_Budget := Get_Measurement_Timing_Budget (This);
+         --  Disable MSRC and TCC by default
+         --  MSRC = Minimum Signal Rate Check
+         --  TCC  = Target CenterCheck
 
-      --  Disable MSRC and TCC by default
-      --  MSRC = Minimum Signal Rate Check
-      --  TCC  = Target CenterCheck
-
-      Write (This, REG_SYSTEM_SEQUENCE_CONFIG, UInt8'(16#E8#), Status);
-
-      if not Status then
-         return False;
+         Write (This, REG_SYSTEM_SEQUENCE_CONFIG, UInt8'(16#E8#), Status);
       end if;
 
       --  Recalculate the timing Budget
-      Status :=
-        Set_Measurement_Timing_Budget (This, Measurement_Timing_Budget);
-
-      return Status;
+      if Status then
+         Set_Measurement_Timing_Budget (This, Timing_Budget, Status);
+      end if;
    end Static_Init;
 
    ------------------------------------
    -- Perform_Single_Ref_Calibration --
    ------------------------------------
 
-   function Perform_Single_Ref_Calibration
+   procedure Perform_Single_Ref_Calibration
      (This     : VL53L0X_Ranging_Sensor;
-      VHV_Init : UInt8) return Boolean
+      VHV_Init : UInt8;
+      Status   : out Boolean)
    is
       Val    : UInt8;
-      Status : Boolean;
+
    begin
       Write (This, REG_SYSRANGE_START, VHV_Init or 16#01#, Status);
 
       if not Status then
-         return False;
+         return;
       end if;
 
       loop
@@ -674,68 +667,56 @@ package body VL53L0X is
       end loop;
 
       if not Status then
-         return False;
+         return;
       end if;
 
       Write (This, REG_SYSTEM_INTERRUPT_CLEAR, UInt8'(16#01#), Status);
       if not Status then
-         return False;
+         return;
       end if;
 
       Write (This, REG_SYSRANGE_START, UInt8'(16#00#), Status);
-
-      return Status;
    end Perform_Single_Ref_Calibration;
 
    -----------------------------
    -- Perform_Ref_Calibration --
    -----------------------------
 
-   function Perform_Ref_Calibration
-     (This : in out VL53L0X_Ranging_Sensor) return Boolean
+   procedure Perform_Ref_Calibration
+     (This   : in out VL53L0X_Ranging_Sensor;
+      Status : out Boolean)
    is
-      Status : Boolean;
    begin
       --  VHV calibration
       Write (This, REG_SYSTEM_SEQUENCE_CONFIG, UInt8'(16#01#), Status);
 
-      if not Status then
-         return False;
-      end if;
-
-      Status := Perform_Single_Ref_Calibration (This, 16#40#);
-
-      if not Status then
-         return False;
+      if Status then
+         Perform_Single_Ref_Calibration (This, 16#40#, Status);
       end if;
 
       --  Phase calibration
-      Write (This, REG_SYSTEM_SEQUENCE_CONFIG, UInt8'(16#02#), Status);
-
-      if not Status then
-         return False;
+      if Status then
+         Write (This, REG_SYSTEM_SEQUENCE_CONFIG, UInt8'(16#02#), Status);
       end if;
 
-      Status := Perform_Single_Ref_Calibration (This, 16#00#);
-
-      if not Status then
-         return False;
+      if Status then
+         Perform_Single_Ref_Calibration (This, 16#00#, Status);
       end if;
 
       --  Restore the sequence config
-      Write (This, REG_SYSTEM_SEQUENCE_CONFIG, UInt8'(16#E8#), Status);
-
-      return Status;
+      if Status then
+         Write (This, REG_SYSTEM_SEQUENCE_CONFIG, UInt8'(16#E8#), Status);
+      end if;
    end Perform_Ref_Calibration;
 
    ------------------------------------
    -- Start_Range_Single_Millimeters --
    ------------------------------------
 
-   function Start_Range_Single_Millimeters
-     (This : VL53L0X_Ranging_Sensor) return Boolean
+   procedure Start_Range_Single_Millimeters
+     (This   : VL53L0X_Ranging_Sensor;
+      Status : out Boolean)
    is
-      Status : Boolean;
       Val    : UInt8;
    begin
       Write (This, 16#80#, UInt8'(16#01#), Status);
@@ -763,7 +744,7 @@ package body VL53L0X is
       end if;
 
       if not Status then
-         return Status;
+         return;
       end if;
 
       loop
@@ -771,8 +752,6 @@ package body VL53L0X is
          exit when not Status;
          exit when (Val and 16#01#) = 0;
       end loop;
-
-      return True;
    end Start_Range_Single_Millimeters;
 
    ---------------------------
@@ -812,8 +791,10 @@ package body VL53L0X is
    function Read_Range_Single_Millimeters
      (This : VL53L0X_Ranging_Sensor) return HAL.UInt16
    is
+      Status : Boolean;
    begin
-      if not Start_Range_Single_Millimeters (This) then
+      Start_Range_Single_Millimeters (This, Status);
+      if not Status then
          return 4000;
       end if;
 
@@ -828,12 +809,12 @@ package body VL53L0X is
    -- Set_GPIO_Config --
    ---------------------
 
-   function Set_GPIO_Config
+   procedure Set_GPIO_Config
      (This          : in out VL53L0X_Ranging_Sensor;
       Functionality : VL53L0X_GPIO_Functionality;
-      Polarity      : VL53L0X_Interrupt_Polarity) return Boolean
+      Polarity      : VL53L0X_Interrupt_Polarity;
+      Status        : out Boolean)
    is
-      Status : Boolean;
       Data   : UInt8;
       Tmp    : UInt8;
    begin
@@ -870,8 +851,6 @@ package body VL53L0X is
       if Status then
          Clear_Interrupt_Mask (This);
       end if;
-
-      return Status;
    end Set_GPIO_Config;
 
    --------------------------
@@ -895,11 +874,11 @@ package body VL53L0X is
 --        end loop;
    end Clear_Interrupt_Mask;
 
-   -------------------------------
-   -- Get_Sequence_Step_Enabled --
-   -------------------------------
+   ---------------------------
+   -- Sequence_Step_Enabled --
+   ---------------------------
 
-   function Get_Sequence_Step_Enabled
+   function Sequence_Step_Enabled
      (This : VL53L0X_Ranging_Sensor) return VL53L0x_Sequence_Step_Enabled
    is
       Sequence_Steps  : VL53L0x_Sequence_Step_Enabled;
@@ -946,7 +925,7 @@ package body VL53L0X is
       end loop;
 
       return Sequence_Steps;
-   end Get_Sequence_Step_Enabled;
+   end Sequence_Step_Enabled;
 
    ---------------------------
    -- Sequence_Step_Timeout --
@@ -977,7 +956,7 @@ package body VL53L0X is
                return Timeout_Mclks;
             else
                VCSel_Pulse_Period_Pclk :=
-                 Get_VCSel_Pulse_Period (This, Pre_Range);
+                 VCSel_Pulse_Period (This, Pre_Range);
 
                return To_Timeout_Microseconds
                  (Timeout_Mclks, VCSel_Pulse_Period_Pclk);
@@ -995,18 +974,18 @@ package body VL53L0X is
                return Timeout_Mclks;
             else
                VCSel_Pulse_Period_Pclk :=
-                 Get_VCSel_Pulse_Period (This, Pre_Range);
+                 VCSel_Pulse_Period (This, Pre_Range);
 
                return To_Timeout_Microseconds
                  (Timeout_Mclks, VCSel_Pulse_Period_Pclk);
             end if;
 
          when Final_Range =>
-            Sequence_Steps := Get_Sequence_Step_Enabled (This);
+            Sequence_Steps := Sequence_Step_Enabled (This);
 
             if Sequence_Steps (Pre_Range) then
                VCSel_Pulse_Period_Pclk :=
-                 Get_VCSel_Pulse_Period (This, Pre_Range);
+                 VCSel_Pulse_Period (This, Pre_Range);
 
                Read (This, REG_PRE_RANGE_CONFIG_TIMEOUT_MACROP_HI,
                      Encoded_UInt16, Status);
@@ -1019,7 +998,7 @@ package body VL53L0X is
             end if;
 
             VCSel_Pulse_Period_Pclk :=
-              Get_VCSel_Pulse_Period (This, Final_Range);
+              VCSel_Pulse_Period (This, Final_Range);
 
             Read (This, REG_FINAL_RANGE_CONFIG_TIMEOUT_MACROP_HI,
                   Encoded_UInt16, Status);
@@ -1036,11 +1015,11 @@ package body VL53L0X is
       end case;
    end Sequence_Step_Timeout;
 
-   -----------------------------------
-   -- Get_Measurement_Timing_Budget --
-   -----------------------------------
+   -------------------------------
+   -- Measurement_Timing_Budget --
+   -------------------------------
 
-   function Get_Measurement_Timing_Budget
+   function Measurement_Timing_Budget
         (This : VL53L0X_Ranging_Sensor) return HAL.UInt32
    is
       Ret                  : UInt32;
@@ -1052,7 +1031,7 @@ package body VL53L0X is
    begin
       Ret := Start_Overhead + End_Overhead;
 
-      Sequence_Steps := Get_Sequence_Step_Enabled (This);
+      Sequence_Steps := Sequence_Step_Enabled (This);
 
       if Sequence_Steps (TCC)
         or else Sequence_Steps (MSRC)
@@ -1080,32 +1059,34 @@ package body VL53L0X is
       end if;
 
       return Ret;
-   end Get_Measurement_Timing_Budget;
+   end Measurement_Timing_Budget;
 
    -----------------------------------
    -- Set_Measurement_Timing_Budget --
    -----------------------------------
 
-   function Set_Measurement_Timing_Budget
+   procedure Set_Measurement_Timing_Budget
      (This                 : VL53L0X_Ranging_Sensor;
-      Budget_Micro_Seconds : HAL.UInt32) return Boolean
+      Budget_Micro_Seconds : HAL.UInt32;
+      Status               : out Boolean)
    is
       Final_Range_Timing_Budget_us : UInt32;
       Sequence_Steps               : VL53L0x_Sequence_Step_Enabled;
       Pre_Range_Timeout_us         : UInt32 := 0;
       Sub_Timeout                  : UInt32 := 0;
       Msrc_Dcc_Tcc_Timeout         : UInt32;
-      Status                       : Boolean := True;
 
    begin
+      Status := True;
+
       Final_Range_Timing_Budget_us :=
         Budget_Micro_Seconds - Start_Overhead - End_Overhead
           - Final_Range_Overhead;
 
-      Sequence_Steps := Get_Sequence_Step_Enabled (This);
+      Sequence_Steps := Sequence_Step_Enabled (This);
 
       if not Sequence_Steps (Final_Range) then
-         return True;
+         return;
       end if;
 
       if Sequence_Steps (TCC)
@@ -1137,9 +1118,12 @@ package body VL53L0X is
       if Sub_Timeout < Final_Range_Timing_Budget_us then
          Final_Range_Timing_Budget_us :=
            Final_Range_Timing_Budget_us - Sub_Timeout;
+
       else
          --  Requested timeout too big
-         return False;
+         Status := False;
+
+         return;
       end if;
 
       declare
@@ -1149,7 +1133,7 @@ package body VL53L0X is
       begin
          if Sequence_Steps (Pre_Range) then
             VCSel_Pulse_Period_Pclk :=
-              Get_VCSel_Pulse_Period (This, Pre_Range);
+              VCSel_Pulse_Period (This, Pre_Range);
 
             Read (This, REG_PRE_RANGE_CONFIG_TIMEOUT_MACROP_HI,
                   Encoded_UInt16, Status);
@@ -1162,7 +1146,7 @@ package body VL53L0X is
          end if;
 
          VCSel_Pulse_Period_Pclk :=
-           Get_VCSel_Pulse_Period (This, Final_Range);
+           VCSel_Pulse_Period (This, Final_Range);
 
          Timeout_Mclks := Timeout_Mclks + To_Timeout_Mclks
            (Final_Range_Timing_Budget_us,
@@ -1172,7 +1156,7 @@ package body VL53L0X is
                 Encode_Timeout (Timeout_Mclks), Status);
       end;
 
-      return Status;
+      return;
    end Set_Measurement_Timing_Budget;
 
    ---------------------------
@@ -1197,11 +1181,11 @@ package body VL53L0X is
       return Status;
    end Set_Signal_Rate_Limit;
 
-   -------------------
-   -- Get_SPAD_Info --
-   -------------------
+   ---------------
+   -- SPAD_Info --
+   ---------------
 
-   function Get_SPAD_Info
+   function SPAD_Info
      (This        : VL53L0X_Ranging_Sensor;
       SPAD_Count  : out HAL.UInt8;
       Is_Aperture : out Boolean) return Boolean
@@ -1288,7 +1272,7 @@ package body VL53L0X is
       end if;
 
       return Status;
-   end Get_SPAD_Info;
+   end SPAD_Info;
 
    ---------------------------
    -- Set_Signal_Rate_Limit --
@@ -1313,50 +1297,52 @@ package body VL53L0X is
    -- Set_Vcsel_Pulse_Period_Pre_Range --
    --------------------------------------
 
-   function Set_VCSEL_Pulse_Period_Pre_Range
+   procedure Set_VCSEL_Pulse_Period_Pre_Range
      (This   : VL53L0X_Ranging_Sensor;
-      Period : UInt8) return Boolean
+      Period : UInt8;
+      Status : out Boolean)
    is
    begin
-      return Set_VCSel_Pulse_Period (This, Period, Pre_Range);
+      Set_VCSel_Pulse_Period (This, Period, Pre_Range, Status);
    end Set_VCSEL_Pulse_Period_Pre_Range;
 
    ----------------------------------------
    -- Set_Vcsel_Pulse_Period_Final_Range --
    ----------------------------------------
 
-   function Set_VCSEL_Pulse_Period_Final_Range
+   procedure Set_VCSEL_Pulse_Period_Final_Range
      (This   : VL53L0X_Ranging_Sensor;
-      Period : UInt8) return Boolean
+      Period : UInt8;
+      Status : out Boolean)
    is
    begin
-      return Set_VCSel_Pulse_Period (This, Period, Final_Range);
+      Set_VCSel_Pulse_Period (This, Period, Final_Range, Status);
    end Set_VCSEL_Pulse_Period_Final_Range;
 
    ----------------------------
    -- Set_VCSel_Pulse_Period --
    ----------------------------
 
-   function Set_VCSel_Pulse_Period
+   procedure Set_VCSel_Pulse_Period
      (This     : VL53L0X_Ranging_Sensor;
       Period   : UInt8;
-      Sequence : VL53L0x_Sequence_Step) return Boolean
+      Sequence : VL53L0x_Sequence_Step;
+      Status   : out Boolean)
    is
       Encoded       : constant UInt8 := Shift_Right (Period, 1) - 1;
       Phase_High    : UInt8;
-      Status        : Boolean;
       Pre_Timeout   : UInt32;
       Final_Timeout : UInt32;
       Msrc_Timeout  : UInt32;
       Timeout_Mclks : UInt32;
       Steps_Enabled : constant VL53L0x_Sequence_Step_Enabled :=
-                        Get_Sequence_Step_Enabled (This);
+                        Sequence_Step_Enabled (This);
       Budget        : UInt32;
       Sequence_Cfg  : UInt8;
 
    begin
       --  Save the measurement timing budget
-      Budget := Get_Measurement_Timing_Budget (This);
+      Budget := Measurement_Timing_Budget (This);
 
       case Sequence is
          when Pre_Range =>
@@ -1373,25 +1359,27 @@ package body VL53L0X is
                when 18 =>
                   Phase_High := 16#50#;
                when others =>
-                  return False;
+                  Status := False;
+
+                  return;
             end case;
 
             Write (This, REG_PRE_RANGE_CONFIG_VALID_PHASE_HIGH,
                    Phase_High, Status);
             if not Status then
-               return False;
+               return;
             end if;
 
             Write (This, REG_PRE_RANGE_CONFIG_VALID_PHASE_LOW,
                    UInt8'(16#08#), Status);
             if not Status then
-               return False;
+               return;
             end if;
 
             Write (This, REG_PRE_RANGE_CONFIG_VCSEL_PERIOD,
                    Encoded, Status);
             if not Status then
-               return False;
+               return;
             end if;
 
             --  Update the timeouts
@@ -1442,31 +1430,31 @@ package body VL53L0X is
                      Cal_Timeout := 16#07#;
                      Cal_Lim     := 16#20#;
                   when others =>
-                     return False;
+                     return;
                end case;
 
                Write (This, REG_FINAL_RANGE_CONFIG_VALID_PHASE_HIGH,
                       Phase_High, Status);
                if not Status then
-                  return False;
+                  return;
                end if;
 
                Write (This, REG_FINAL_RANGE_CONFIG_VALID_PHASE_LOW,
                       UInt8'(16#08#), Status);
                if not Status then
-                  return False;
+                  return;
                end if;
 
                Write (This, REG_GLOBAL_CONFIG_VCSEL_WIDTH,
                       Width, Status);
                if not Status then
-                  return False;
+                  return;
                end if;
 
                Write (This, REG_ALGO_PHASECAL_CONFIG_TIMEOUT,
                       Cal_Timeout, Status);
                if not Status then
-                  return False;
+                  return;
                end if;
 
                Write (This, 16#FF#, UInt8'(16#01#), Status);
@@ -1474,7 +1462,7 @@ package body VL53L0X is
                       Cal_Lim, Status);
                Write (This, 16#FF#, UInt8'(16#00#), Status);
                if not Status then
-                  return False;
+                  return;
                end if;
             end;
 
@@ -1494,12 +1482,14 @@ package body VL53L0X is
                    Encode_Timeout (Timeout_Mclks), Status);
 
          when others =>
-            return False;
+            Status := False;
+
+            return;
       end case;
 
       if Status then
          --  Restore the measurement timing budget
-         Status := Set_Measurement_Timing_Budget (This, Budget);
+         Set_Measurement_Timing_Budget (This, Budget, Status);
       end if;
 
       --  And finally perform the phase calibration.
@@ -1509,20 +1499,18 @@ package body VL53L0X is
          Write (This, REG_SYSTEM_SEQUENCE_CONFIG, UInt8'(16#02#), Status);
       end if;
       if Status then
-         Status := Perform_Single_Ref_Calibration (This, 16#00#);
+         Perform_Single_Ref_Calibration (This, 16#00#, Status);
       end if;
       if Status then
          Write (This, REG_SYSTEM_SEQUENCE_CONFIG, Sequence_Cfg, Status);
       end if;
-
-      return Status;
    end Set_VCSel_Pulse_Period;
 
-   ----------------------------
-   -- Get_VCSel_Pulse_Period --
-   ----------------------------
+   ------------------------
+   -- VCSel_Pulse_Period --
+   ------------------------
 
-   function Get_VCSel_Pulse_Period
+   function VCSel_Pulse_Period
      (This     : VL53L0X_Ranging_Sensor;
       Sequence : VL53L0x_Sequence_Step) return UInt8
    is
@@ -1545,6 +1533,6 @@ package body VL53L0X is
       else
          return 0;
       end if;
-   end Get_VCSel_Pulse_Period;
+   end VCSel_Pulse_Period;
 
 end VL53L0X;

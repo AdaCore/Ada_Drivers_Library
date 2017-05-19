@@ -68,18 +68,22 @@ package VL53L0X is
       Addr   : HAL.I2C.I2C_Address;
       Status : out Boolean);
 
-   function Data_Init
-     (This : in out VL53L0X_Ranging_Sensor) return Boolean;
+   procedure Data_Init
+     (This   : in out VL53L0X_Ranging_Sensor;
+      Status : out Boolean);
 
-   function Static_Init
+   procedure Static_Init
      (This          : in out VL53L0X_Ranging_Sensor;
-      GPIO_Function : VL53L0X_GPIO_Functionality) return Boolean;
+      GPIO_Function : VL53L0X_GPIO_Functionality;
+      Status        : out Boolean);
 
-   function Perform_Ref_Calibration
-     (This : in out VL53L0X_Ranging_Sensor) return Boolean;
+   procedure Perform_Ref_Calibration
+     (This   : in out VL53L0X_Ranging_Sensor;
+      Status : out Boolean);
 
-   function Start_Range_Single_Millimeters
-     (This : VL53L0X_Ranging_Sensor) return Boolean;
+   procedure Start_Range_Single_Millimeters
+     (This   : VL53L0X_Ranging_Sensor;
+      Status : out Boolean);
    --  Start a read operation on sensor
 
    function Range_Value_Available
@@ -94,20 +98,22 @@ package VL53L0X is
    function Read_Range_Single_Millimeters
      (This : VL53L0X_Ranging_Sensor) return HAL.UInt16;
 
-   function Set_GPIO_Config
+   procedure Set_GPIO_Config
      (This          : in out VL53L0X_Ranging_Sensor;
       Functionality : VL53L0X_GPIO_Functionality;
-      Polarity      : VL53L0X_Interrupt_Polarity) return Boolean;
+      Polarity      : VL53L0X_Interrupt_Polarity;
+      Status        : out Boolean);
 
    procedure Clear_Interrupt_Mask
      (This : VL53L0X_Ranging_Sensor);
 
-   function Get_Measurement_Timing_Budget
+   function Measurement_Timing_Budget
      (This : VL53L0X_Ranging_Sensor) return HAL.UInt32;
 
-   function Set_Measurement_Timing_Budget
+   procedure Set_Measurement_Timing_Budget
      (This                 : VL53L0X_Ranging_Sensor;
-      Budget_Micro_Seconds : HAL.UInt32) return Boolean;
+      Budget_Micro_Seconds : HAL.UInt32;
+      Status               : out Boolean);
    --  Sets the measurement timing budget.
    --  The more time, the more precisions. By default, the budget is ~33ms
 
@@ -116,14 +122,16 @@ package VL53L0X is
       Rate_Limit : Fix_Point_16_16);
    --  Default signal rate: 0.25 MCPS
 
-   function Set_VCSEL_Pulse_Period_Pre_Range
+   procedure Set_VCSEL_Pulse_Period_Pre_Range
      (This   : VL53L0X_Ranging_Sensor;
-      Period : HAL.UInt8) return Boolean;
+      Period : HAL.UInt8;
+      Status : out Boolean);
    --  Default period: 14 PCLKs
 
-   function Set_VCSEL_Pulse_Period_Final_Range
+   procedure Set_VCSEL_Pulse_Period_Final_Range
      (This   : VL53L0X_Ranging_Sensor;
-      Period : HAL.UInt8) return Boolean;
+      Period : HAL.UInt8;
+      Status : out Boolean);
    --  Default period: 10 PCLKs
 
 private
@@ -335,7 +343,7 @@ private
      (This       : VL53L0X_Ranging_Sensor;
       Limit_Mcps : Fix_Point_16_16) return Boolean;
 
-   function Get_SPAD_Info
+   function SPAD_Info
      (This        : VL53L0X_Ranging_Sensor;
       SPAD_Count  : out HAL.UInt8;
       Is_Aperture : out Boolean) return Boolean;
@@ -349,7 +357,7 @@ private
    type VL53L0x_Sequence_Step_Timeout is
      array (VL53L0x_Sequence_Step) of HAL.UInt32;
 
-   function Get_Sequence_Step_Enabled
+   function Sequence_Step_Enabled
      (This : VL53L0X_Ranging_Sensor) return VL53L0x_Sequence_Step_Enabled;
 
    function Sequence_Step_Timeout
@@ -357,13 +365,14 @@ private
       Step     : VL53L0x_Sequence_Step;
       As_Mclks : Boolean := False) return HAL.UInt32;
 
-   function Get_VCSel_Pulse_Period
+   function VCSel_Pulse_Period
      (This     : VL53L0X_Ranging_Sensor;
       Sequence : VL53L0x_Sequence_Step) return HAL.UInt8;
 
-   function Set_VCSel_Pulse_Period
+   procedure Set_VCSel_Pulse_Period
      (This     : VL53L0X_Ranging_Sensor;
       Period   : HAL.UInt8;
-      Sequence : VL53L0x_Sequence_Step) return Boolean;
+      Sequence : VL53L0x_Sequence_Step;
+      Status   : out Boolean);
 
 end VL53L0X;
