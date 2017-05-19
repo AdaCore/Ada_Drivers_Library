@@ -239,14 +239,13 @@ package body Bosch_BNO055 is
      (This : in out BNO055_9DOF_IMU;
       Mode : Operating_Modes)
    is
-      --  These delay values do not match the Datasheet, table 3-6, but they
-      --  are what the Bosch driver uses
-      Switching_From_Config_Mode : constant := 600; -- milliseconds
+      --  Table 3-6 of the datasheet + 1ms as margin
+      Switching_From_Config_Mode : constant := 8; -- milliseconds
       Switching_To_Config_Mode   : constant := 20; -- milliseconds
    begin
       if This.Mode = Operating_Mode_Config then
          Write (This.Port, BNO055_OPR_MODE_ADDR, Value => Mode'Enum_Rep);
-         Delay_Milliseconds (Switching_From_Config_Mode);
+         Delay_Milliseconds (Switching_To_Config_Mode);
       else
          Write (This.Port, BNO055_OPR_MODE_ADDR, Value => Operating_Mode_Config'Enum_Rep);
          Delay_Milliseconds (Switching_To_Config_Mode);

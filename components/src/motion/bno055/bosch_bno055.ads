@@ -305,7 +305,7 @@ package Bosch_BNO055 is
      (Idle,
       System_Error,
       Initializing_Peripherals,
-      System_Iniitalization,
+      System_Initalization,
       Executing_Self_Test,
       Sensor_Fusion_Algorithm_Running,
       System_Running_Without_Fusion_Algorithms)
@@ -315,7 +315,7 @@ package Bosch_BNO055 is
      (Idle                                     => 0,
       System_Error                             => 1,
       Initializing_Peripherals                 => 2,
-      System_Iniitalization                    => 3,
+      System_Initalization                     => 3,
       Executing_Self_Test                      => 4,
       Sensor_Fusion_Algorithm_Running          => 5,
       System_Running_Without_Fusion_Algorithms => 6);
