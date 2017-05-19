@@ -242,10 +242,11 @@ package body Bosch_BNO055 is
       --  Table 3-6 of the datasheet + 1ms as margin
       Switching_From_Config_Mode : constant := 8; -- milliseconds
       Switching_To_Config_Mode   : constant := 20; -- milliseconds
+
    begin
       if This.Mode = Operating_Mode_Config then
          Write (This.Port, BNO055_OPR_MODE_ADDR, Value => Mode'Enum_Rep);
-         Delay_Milliseconds (Switching_To_Config_Mode);
+         Delay_Milliseconds (Switching_From_Config_Mode);
       else
          Write (This.Port, BNO055_OPR_MODE_ADDR, Value => Operating_Mode_Config'Enum_Rep);
          Delay_Milliseconds (Switching_To_Config_Mode);
@@ -253,6 +254,7 @@ package body Bosch_BNO055 is
          Write (This.Port, BNO055_OPR_MODE_ADDR, Value => Mode'Enum_Rep);
          Delay_Milliseconds (Switching_From_Config_Mode);
       end if;
+
       This.Mode := Mode;
    end Set_Mode;
 
