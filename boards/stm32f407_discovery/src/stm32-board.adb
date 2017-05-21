@@ -250,5 +250,17 @@ package body STM32.Board is
       Init_SPI;
    end Initialize_Accelerometer;
 
+   procedure Initialize_Audio is
+   begin
+      --  first thing it looks like we need to do is
+      --  the following. I don't know if this is correct, because
+      --  I see all this GPIO_A'Access, 1 through 15 stuff
+      Enable_Clock (GPIO_A);
+      Enable_Clock (GPIO_B);
+      Enable_Clock (GPIO_C);
+      Enable_Clock (GPIO_D);
+   end Initialize_Audio;
+
+
 
 end STM32.Board;
