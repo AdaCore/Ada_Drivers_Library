@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                       Copyright (C) 2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,22 +29,33 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Bitmap;
+with Ada.Interrupts;
 
-package OpenMV.LCD_Shield is
-   Width  : constant := 128;
-   Height : constant := 160;
+package STM32.DMA.Interrupts is
 
-   procedure Initialize;
-   function Initialized return Boolean;
+   protected type DMA_Interrupt_Controller
+     (Controller : not null access DMA_Controller;
+      Stream     : DMA_Stream_Selector;
+      ID         : Ada.Interrupts.Interrupt_ID)
+   is
 
-   function Get_Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer;
+      procedure Start_Transfer (Source      : Address;
+                                Destination : Address;
+                                Data_Count  : UInt16);
 
-   procedure Rotate_Screen_180
-     with Pre => Initialized;
-   procedure Rotate_Screen_0
-     with Pre => Initialized;
-   procedure Display
-     with Pre => Initialized;
+      procedure Abort_Transfer (Result : out DMA_Error_Code);
 
-end OpenMV.LCD_Shield;
+      entry Wait_For_Completion (Status : out DMA_Error_Code);
+
+   private
+
+      procedure Interrupt_Handler;
+      pragma Attach_Handler (Interrupt_Handler, ID);
+
+      No_Transfer_In_Progess : Boolean := True;
+      Last_Status            : DMA_Error_Code := DMA_No_Error;
+   end DMA_Interrupt_Controller;
+
+   type Any_DMA_Interrupt_Controller is access all DMA_Interrupt_Controller;
+
+end STM32.DMA.Interrupts;

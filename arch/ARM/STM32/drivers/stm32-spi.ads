@@ -44,6 +44,7 @@
 
 private with STM32_SVD.SPI;
 with HAL.SPI;
+with System;
 
 package STM32.SPI is
 
@@ -204,6 +205,11 @@ package STM32.SPI is
       Incoming  : out UInt8);
 
    --  TODO: add the other higher-level HAL routines for interrupts and DMA
+
+   function Data_Register_Address
+     (This : SPI_Port)
+      return System.Address;
+   --  For DMA transfer
 
 private
 

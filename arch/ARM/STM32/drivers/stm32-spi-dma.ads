@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                       Copyright (C) 2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,22 +29,56 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Bitmap;
+with STM32.DMA.Interrupts; use STM32.DMA.Interrupts;
 
-package OpenMV.LCD_Shield is
-   Width  : constant := 128;
-   Height : constant := 160;
+package STM32.SPI.DMA is
 
-   procedure Initialize;
-   function Initialized return Boolean;
+   subtype Parent is SPI_Port;
+   type SPI_Port_DMA is limited new Parent with private;
 
-   function Get_Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer;
+   procedure Set_TX_DMA_Handler (This : in out SPI_Port_DMA;
+                                 DMA  : Any_DMA_Interrupt_Controller);
 
-   procedure Rotate_Screen_180
-     with Pre => Initialized;
-   procedure Rotate_Screen_0
-     with Pre => Initialized;
-   procedure Display
-     with Pre => Initialized;
+   overriding
+   procedure Configure (This : in out SPI_Port_DMA;
+                        Conf : SPI_Configuration);
 
-end OpenMV.LCD_Shield;
+   overriding
+   procedure Transmit
+     (This   : in out SPI_Port_DMA;
+      Data   : HAL.SPI.SPI_Data_8b;
+      Status : out HAL.SPI.SPI_Status;
+      Timeout : Natural := 1000);
+
+   overriding
+   procedure Transmit
+     (This   : in out SPI_Port_DMA;
+      Data   : HAL.SPI.SPI_Data_16b;
+      Status : out HAL.SPI.SPI_Status;
+      Timeout : Natural := 1000);
+
+   overriding
+   procedure Receive
+     (This    : in out SPI_Port_DMA;
+      Data    : out HAL.SPI.SPI_Data_8b;
+      Status  : out HAL.SPI.SPI_Status;
+      Timeout : Natural := 1000);
+
+   overriding
+   procedure Receive
+     (This    : in out SPI_Port_DMA;
+      Data    : out HAL.SPI.SPI_Data_16b;
+      Status  : out HAL.SPI.SPI_Status;
+      Timeout : Natural := 1000);
+
+private
+
+   type SPI_Port_DMA is limited new Parent with record
+      TX_DMA : Any_DMA_Interrupt_Controller := null;
+   end record;
+
+   Polling_Threshold : constant := 5;
+   --  Bellow a certain amount of data polling is faster and more efficient
+   --  than DMA. This value arbitrary fixed, it could be user defined at some
+   --  point.
+end STM32.SPI.DMA;
