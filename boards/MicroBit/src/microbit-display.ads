@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                    Copyright (C) 2016-2017, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -34,15 +34,36 @@ package MicroBit.Display is
    subtype Coord is Natural range 0 .. 4;
 
    procedure Set (X, Y : Coord);
-   --  Set one pixels
+   --  Set one pixel
 
    procedure Clear (X, Y : Coord);
-   --  Clear one pixels
+   --  Clear one pixel
 
    procedure Clear;
    --  Clear all the pixels
 
    procedure Display (C : Character);
    --  Display a character on the screen
+
+   Scroll_Text_Max_Length : constant := 128;
+   --  Maximum length of a string displayed
+
+   procedure Display (Str : String)
+     with Pre => Str'Length <= Scroll_Text_Max_Length;
+   --  Display a string on the screen and wait until the end of scrolling
+
+   procedure Display_Async (Str : String)
+     with Pre => Str'Length <= Scroll_Text_Max_Length;
+   --  Start scrolling a string on the screen and return imediatly while the
+   --  scroll animation continues in the background.
+
+   procedure Shift_Left;
+   --  Shift all the pixels to the left
+
+   procedure Set_Animation_Step_Duration (Ms : Natural);
+   --  Set the number of miliseconds between two animation steps
+
+   function Animation_In_Progress return Boolean;
+   --  Is there an animation in progress?
 
 end MicroBit.Display;
