@@ -7,7 +7,8 @@ library project Middleware is
                 "src/BLE",
                 "src/utils",
                 "src/audio",
-                "src/bitmap");
+                "src/bitmap",
+                "src/managed_buffers");
 
    case Config.RTS is
       when "ravenscar-sfp" | "ravenscar-full" =>
