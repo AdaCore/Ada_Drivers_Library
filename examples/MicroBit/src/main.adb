@@ -29,23 +29,25 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with MicroBit.Display; use MicroBit.Display;
+with MicroBit.Display;
 with MicroBit.Time;
 with Beacon;
 
 procedure Main is
-   Str : constant String := "MAKE WITH ADA    ";
 begin
+
+   MicroBit.Display.Set_Animation_Step_Duration (80);
 
    Beacon.Initialize_Radio;
 
    loop
-      for C of Str loop
-         Display (C);
 
-         Beacon.Send_Beacon_Packet;
+      if not MicroBit.Display.Animation_In_Progress then
+         MicroBit.Display.Display_Async ("MAKE WITH Ada!  ");
+      end if;
 
-         MicroBit.Time.Delay_Ms (500);
-      end loop;
+      Beacon.Send_Beacon_Packet;
+
+      MicroBit.Time.Delay_Ms (500);
    end loop;
 end Main;
