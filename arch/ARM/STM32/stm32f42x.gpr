@@ -17,6 +17,7 @@ library project STM32F42x is
       "drivers/fmc",
       "drivers/crc_stm32f4",
       "drivers/dma",
+      "drivers/dma_interrupts",
       "drivers/dma2d",
       "drivers/i2c_stm32f4",
       "drivers/power_control_stm32f4",

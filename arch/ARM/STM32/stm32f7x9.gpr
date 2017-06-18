@@ -19,6 +19,7 @@ library project STM32F7x9 is
       "drivers/power_control_stm32f7",
       "drivers/fmc",
       "drivers/dma_stm32f769",
+      "drivers/dma_interrupts",
       "drivers/dma2d",
       "drivers/dsi",
       "drivers/ltdc",

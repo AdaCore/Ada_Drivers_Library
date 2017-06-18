@@ -32,24 +32,26 @@
 --  This file provides declarations for devices on the STM32F469x and
 --  STM32F479x MCUs manufactured by ST Microelectronics.
 
-with STM32_SVD;         use STM32_SVD;
+with STM32_SVD;            use STM32_SVD;
 with STM32_SVD.DSI;
 with STM32_SVD.SAI;
 with STM32_SVD.SDIO;
 
-with STM32.ADC;         use STM32.ADC;
-with STM32.DAC;         use STM32.DAC;
-with STM32.DMA;         use STM32.DMA;
-with STM32.DSI;         use STM32.DSI;
-with STM32.GPIO;        use STM32.GPIO;
-with STM32.I2C;         use STM32.I2C;
-with STM32.SDMMC;       use STM32.SDMMC;
-with STM32.SPI;         use STM32.SPI;
-with STM32.I2S;         use STM32.I2S;
-with STM32.Timers;      use STM32.Timers;
-with STM32.USARTs;      use STM32.USARTs;
-with STM32.RTC;         use STM32.RTC;
-with STM32.CRC;         use STM32.CRC;
+with STM32.ADC;            use STM32.ADC;
+with STM32.DAC;            use STM32.DAC;
+with STM32.DMA;            use STM32.DMA;
+with STM32.DMA.Interrupts; use STM32.DMA.Interrupts;
+with STM32.DSI;            use STM32.DSI;
+with STM32.GPIO;           use STM32.GPIO;
+with STM32.I2C;            use STM32.I2C;
+with STM32.SDMMC;          use STM32.SDMMC;
+with STM32.SPI;            use STM32.SPI;
+with STM32.I2S;            use STM32.I2S;
+with STM32.Timers;         use STM32.Timers;
+with STM32.USARTs;         use STM32.USARTs;
+with STM32.RTC;            use STM32.RTC;
+with STM32.CRC;            use STM32.CRC;
+with Ada.Interrupts.Names;
 
 package STM32.Device is
    pragma Elaborate_Body;
@@ -419,6 +421,40 @@ package STM32.Device is
 
    procedure Enable_Clock (This : aliased in out DMA_Controller);
    procedure Reset (This : aliased in out DMA_Controller);
+
+   DMA1_Stream0 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_0, Ada.Interrupts.Names.DMA1_Stream0_Interrupt);
+   DMA1_Stream1 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_1, Ada.Interrupts.Names.DMA1_Stream1_Interrupt);
+   DMA1_Stream2 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_2, Ada.Interrupts.Names.DMA1_Stream2_Interrupt);
+   DMA1_Stream3 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_3, Ada.Interrupts.Names.DMA1_Stream3_Interrupt);
+   DMA1_Stream4 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_4, Ada.Interrupts.Names.DMA1_Stream4_Interrupt);
+   DMA1_Stream5 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_5, Ada.Interrupts.Names.DMA1_Stream5_Interrupt);
+   DMA1_Stream6 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_6, Ada.Interrupts.Names.DMA1_Stream6_Interrupt);
+   DMA1_Stream7 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_7, Ada.Interrupts.Names.DMA1_Stream7_Interrupt);
+
+   DMA2_Stream0 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_0, Ada.Interrupts.Names.DMA2_Stream0_Interrupt);
+   DMA2_Stream1 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_1, Ada.Interrupts.Names.DMA2_Stream1_Interrupt);
+   DMA2_Stream2 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_2, Ada.Interrupts.Names.DMA2_Stream2_Interrupt);
+   DMA2_Stream3 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_3, Ada.Interrupts.Names.DMA2_Stream3_Interrupt);
+   DMA2_Stream4 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_4, Ada.Interrupts.Names.DMA2_Stream4_Interrupt);
+   DMA2_Stream5 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_5, Ada.Interrupts.Names.DMA2_Stream5_Interrupt);
+   DMA2_Stream6 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_6, Ada.Interrupts.Names.DMA2_Stream6_Interrupt);
+   DMA2_Stream7 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_7, Ada.Interrupts.Names.DMA2_Stream7_Interrupt);
 
    Internal_I2C_Port_1 : aliased Internal_I2C_Port
      with Import, Volatile, Address => I2C1_Base;

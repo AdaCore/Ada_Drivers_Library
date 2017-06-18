@@ -19,6 +19,7 @@ library project STM32F7x is
       "drivers/power_control_stm32f7",
       "drivers/fmc",
       "drivers/dma",
+      "drivers/dma_interrupts",
       "drivers/dma2d",
       "drivers/ltdc",
       "drivers/sai",
