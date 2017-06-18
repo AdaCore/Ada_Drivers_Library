@@ -44,6 +44,7 @@
 
 private with STM32_SVD.I2C;
 with HAL.I2C;
+with System;
 
 package STM32.I2C is
 
@@ -79,6 +80,8 @@ package STM32.I2C is
       --  Clock stretching is a mean for a slave device to slow down the
       --  i2c clock in order to process the communication.
       Clock_Stretching_Enabled : Boolean := True;
+
+      Enable_DMA               : Boolean := False;
    end record;
 
    type Internal_I2C_Port is private;
@@ -162,8 +165,99 @@ private
 
    type I2C_Port (Periph : not null access Internal_I2C_Port) is
       limited new HAL.I2C.I2C_Port with record
-         Config   : I2C_Configuration;
-         State    : I2C_State := Reset;
+         Config      : I2C_Configuration;
+         State       : I2C_State := Reset;
+         DMA_Enabled : Boolean := False;
       end record;
+
+   type I2C_Status_Flag is
+     (Start_Bit,
+      Address_Sent,
+      Byte_Transfer_Finished,
+      Address_Sent_10bit,
+      Stop_Detection,
+      Rx_Data_Register_Not_Empty,
+      Tx_Data_Register_Empty,
+      Bus_Error,
+      Arbitration_Lost,
+      Ack_Failure,
+      UnderOverrun,
+      Packet_Error,
+      Timeout,
+      SMB_Alert,
+      Master_Slave_Mode,
+      Busy,
+      Transmitter_Receiver_Mode,
+      General_Call,
+      SMB_Default,
+      SMB_Host,
+      Dual_Flag);
+
+   --  Low level flag handling
+
+   function Flag_Status (This : I2C_Port;
+                         Flag : I2C_Status_Flag)
+                         return Boolean;
+   procedure Clear_Address_Sent_Status (This : I2C_Port);
+
+   --  Higher level flag handling
+
+   procedure Wait_Flag
+     (This    : in out I2C_Port;
+      Flag    :        I2C_Status_Flag;
+      F_State :        Boolean;
+      Timeout :        Natural;
+      Status  :    out HAL.I2C.I2C_Status);
+
+   procedure Wait_Master_Flag
+     (This    : in out I2C_Port;
+      Flag    :        I2C_Status_Flag;
+      Timeout :        Natural;
+      Status  :    out HAL.I2C.I2C_Status);
+
+   procedure Master_Request_Write
+     (This       : in out I2C_Port;
+      Addr       :        HAL.I2C.I2C_Address;
+      Timeout    :        Natural;
+      Status     :    out HAL.I2C.I2C_Status);
+
+   procedure Master_Request_Read
+     (This    : in out I2C_Port;
+      Addr    :        HAL.I2C.I2C_Address;
+      Timeout :        Natural;
+      Status  :    out HAL.I2C.I2C_Status);
+
+   procedure Mem_Request_Write
+     (This          : in out I2C_Port;
+      Addr          :        HAL.I2C.I2C_Address;
+      Mem_Addr      :        UInt16;
+      Mem_Addr_Size :        HAL.I2C.I2C_Memory_Address_Size;
+      Timeout       :        Natural;
+      Status        :    out HAL.I2C.I2C_Status);
+
+   procedure Mem_Request_Read
+     (This          : in out I2C_Port;
+      Addr          :        HAL.I2C.I2C_Address;
+      Mem_Addr      :        UInt16;
+      Mem_Addr_Size :        HAL.I2C.I2C_Memory_Address_Size;
+      Timeout       :        Natural;
+      Status        :    out HAL.I2C.I2C_Status);
+
+   procedure Data_Send
+     (This    : in out I2C_Port;
+      Data    :        HAL.I2C.I2C_Data;
+      Timeout :        Natural;
+      Status  : out    HAL.I2C.I2C_Status);
+
+   procedure Data_Receive
+     (This    : in out I2C_Port;
+      Data    :    out HAL.I2C.I2C_Data;
+      Timeout :        Natural;
+      Status  :    out HAL.I2C.I2C_Status);
+
+   function Data_Register_Address
+     (This : I2C_Port)
+      return System.Address;
+   --  For DMA transfer
 
 end STM32.I2C;

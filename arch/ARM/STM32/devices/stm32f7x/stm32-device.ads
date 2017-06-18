@@ -466,12 +466,12 @@ package STM32.Device is
 
    type I2C_Port_Id is (I2C_Id_1, I2C_Id_2, I2C_Id_3, I2C_Id_4);
 
-   function As_Port_Id (Port : I2C_Port) return I2C_Port_Id with Inline;
+   function As_Port_Id (Port : I2C_Port'Class) return I2C_Port_Id with Inline;
 
-   procedure Enable_Clock (This : aliased I2C_Port);
+   procedure Enable_Clock (This : aliased I2C_Port'Class);
    procedure Enable_Clock (This : I2C_Port_Id);
 
-   procedure Reset (This : I2C_Port);
+   procedure Reset (This : I2C_Port'Class);
    procedure Reset (This : I2C_Port_Id);
 
    ---------

@@ -44,6 +44,7 @@ with STM32.DMA.Interrupts; use STM32.DMA.Interrupts;
 with STM32.DSI;            use STM32.DSI;
 with STM32.GPIO;           use STM32.GPIO;
 with STM32.I2C;            use STM32.I2C;
+with STM32.I2C.DMA;        use STM32.I2C.DMA;
 with STM32.SDMMC;          use STM32.SDMMC;
 with STM32.SPI;            use STM32.SPI;
 with STM32.SPI.DMA;        use STM32.SPI.DMA;
@@ -470,10 +471,14 @@ package STM32.Device is
    I2C_2 : aliased I2C_Port (Internal_I2C_Port_2'Access);
    I2C_3 : aliased I2C_Port (Internal_I2C_Port_3'Access);
 
-   function As_Port_Id (Port : I2C_Port) return I2C_Port_Id with Inline;
-   procedure Enable_Clock (This : I2C_Port);
+   I2C_1_DMA : aliased I2C_Port_DMA (Internal_I2C_Port_1'Access);
+   I2C_2_DMA : aliased I2C_Port_DMA (Internal_I2C_Port_2'Access);
+   I2C_3_DMA : aliased I2C_Port_DMA (Internal_I2C_Port_3'Access);
+
+   function As_Port_Id (Port : I2C_Port'Class) return I2C_Port_Id with Inline;
+   procedure Enable_Clock (This : I2C_Port'Class);
    procedure Enable_Clock (This : I2C_Port_Id);
-   procedure Reset (This : I2C_Port);
+   procedure Reset (This : I2C_Port'Class);
    procedure Reset (This : I2C_Port_Id);
 
    Internal_SPI_1 : aliased Internal_SPI_Port

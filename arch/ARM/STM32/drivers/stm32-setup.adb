@@ -38,7 +38,7 @@ package body STM32.Setup is
    -- Setup_I2C_Master --
    ----------------------
 
-   procedure Setup_I2C_Master (Port           : in out I2C_Port;
+   procedure Setup_I2C_Master (Port           : in out I2C_Port'Class;
                                SDA, SCL       : GPIO_Point;
                                SDA_AF, SCL_AF : GPIO_Alternate_Function;
                                Clock_Speed    : UInt32)
@@ -70,6 +70,7 @@ package body STM32.Setup is
       I2C_Conf.Clock_Stretching_Enabled := True;
 
       I2C_Conf.Clock_Speed := Clock_Speed;
+      I2C_Conf.Enable_DMA  := True;
 
       Port.Configure (I2C_Conf);
    end Setup_I2C_Master;

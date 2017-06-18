@@ -330,7 +330,7 @@ package body STM32.Device is
    -- As_Port_Id --
    ----------------
 
-   function As_Port_Id (Port : I2C_Port) return I2C_Port_Id is
+   function As_Port_Id (Port : I2C_Port'Class) return I2C_Port_Id is
    begin
       if Port.Periph.all'Address = I2C1_Base then
          return I2C_Id_1;
@@ -347,7 +347,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased I2C_Port) is
+   procedure Enable_Clock (This : aliased I2C_Port'Class) is
    begin
       Enable_Clock (As_Port_Id (This));
    end Enable_Clock;
@@ -372,7 +372,7 @@ package body STM32.Device is
    -- Reset --
    -----------
 
-   procedure Reset (This : I2C_Port) is
+   procedure Reset (This : I2C_Port'Class) is
    begin
       Reset (As_Port_Id (This));
    end Reset;

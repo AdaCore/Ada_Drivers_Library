@@ -55,6 +55,9 @@ package STM32.I2C is
       --  Clock stretching is a mean for a slave device to slow down the
       --  i2c clock in order to process the communication.
       Clock_Stretching_Enabled : Boolean := True;
+
+      Enable_DMA               : Boolean := True;
+      --  For compatibility with STM32F4 implementation
    end record;
 
    subtype I2C_Address is UInt10;
