@@ -437,7 +437,7 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
-   procedure Enable_Clock (This : aliased in out SPI_Port) is
+   procedure Enable_Clock (This : aliased in out SPI_Port'Class) is
    begin
       if This'Address = SPI1_Base then
          RCC_Periph.APB2ENR.SPI1EN := True;
@@ -460,7 +460,7 @@ package body STM32.Device is
    -- Reset --
    -----------
 
-   procedure Reset (This : in out SPI_Port) is
+   procedure Reset (This : in out SPI_Port'Class) is
    begin
       if This.Periph.all'Address = SPI1_Base then
          RCC_Periph.APB2RSTR.SPI1RST := True;

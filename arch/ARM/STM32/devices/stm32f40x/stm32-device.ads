@@ -50,6 +50,7 @@ with STM32.GPIO;           use STM32.GPIO;
 with STM32.ADC;            use STM32.ADC;
 with STM32.USARTs;         use STM32.USARTs;
 with STM32.SPI;            use STM32.SPI;
+with STM32.SPI.DMA;        use STM32.SPI.DMA;
 with STM32.I2S;            use STM32.I2S;
 with STM32.Timers;         use STM32.Timers;
 with STM32.DAC;            use STM32.DAC;
@@ -391,9 +392,12 @@ package STM32.Device is
    SPI_2 : aliased SPI_Port (Internal_SPI_2'Access);
    SPI_3 : aliased SPI_Port (Internal_SPI_3'Access);
 
-   procedure Enable_Clock (This : SPI_Port);
+   SPI_1_DMA : aliased SPI_Port_DMA (Internal_SPI_1'Access);
+   SPI_2_DMA : aliased SPI_Port_DMA (Internal_SPI_2'Access);
+   SPI_3_DMA : aliased SPI_Port_DMA (Internal_SPI_3'Access);
 
-   procedure Reset (This : in out SPI_Port);
+   procedure Enable_Clock (This : SPI_Port'Class);
+   procedure Reset (This : in out SPI_Port'Class);
 
    Internal_I2S_1 : aliased Internal_I2S_Port with Import, Volatile, Address => SPI1_Base;
    Internal_I2S_2 : aliased Internal_I2S_Port with Import, Volatile, Address => SPI2_Base;
