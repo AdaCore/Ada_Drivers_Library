@@ -150,11 +150,11 @@ package body OpenMV.LCD_Shield is
       return LCD_Driver.Hidden_Buffer (1);
    end Bitmap;
 
-   ----------------------
-   -- Rotate_Screen_90 --
-   ----------------------
+   -----------------------
+   -- Rotate_Screen_180 --
+   -----------------------
 
-   procedure Rotate_Screen_90 is
+   procedure Rotate_Screen_180 is
    begin
       Set_Memory_Data_Access
         (LCD                 => LCD_Driver,
@@ -164,7 +164,7 @@ package body OpenMV.LCD_Shield is
          Row_Addr_Order      => Row_Address_Top_Bottom,
          Column_Addr_Order   => Column_Address_Left_Right,
          Row_Column_Exchange => False);
-   end Rotate_Screen_90;
+   end Rotate_Screen_180;
 
    ---------------------
    -- Rotate_Screen_0 --
