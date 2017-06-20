@@ -71,8 +71,6 @@ package body ST7735R is
    pragma Unreferenced (Write_Data);
    procedure Write_Data (LCD  : ST7735R_Screen;
                          Data : HAL.UInt8_Array);
-   procedure Write_Data (LCD  : ST7735R_Screen;
-                         Data : HAL.UInt16_Array);
 
    procedure Read_Data (LCD  : ST7735R_Screen;
                         Data : out UInt16);
@@ -182,39 +180,11 @@ package body ST7735R is
    begin
       Start_Transaction (LCD);
       Set_Data_Mode (LCD);
-      for Elt of Data loop
-         LCD.Port.Transmit (SPI_Data_8b'(1 => Elt),
-                            Status);
-         if Status /= Ok then
-            --  No error handling...
-            raise Program_Error;
-         end if;
-      end loop;
-      End_Transaction (LCD);
-   end Write_Data;
-
-   ----------------
-   -- Write_Data --
-   ----------------
-
-   procedure Write_Data (LCD  : ST7735R_Screen;
-                         Data : HAL.UInt16_Array)
-   is
-      B1, B2 : UInt8;
-      Status : SPI_Status;
-   begin
-      Start_Transaction (LCD);
-      Set_Data_Mode (LCD);
-      for Elt of Data loop
-         B1 := UInt8 (Shift_Right (Elt, 8));
-         B2 := UInt8 (Elt and 16#FF#);
-         LCD.Port.Transmit (SPI_Data_8b'(B1, B2),
-                            Status);
-         if Status /= Ok then
-            --  No error handling...
-            raise Program_Error;
-         end if;
-      end loop;
+      LCD.Port.Transmit (SPI_Data_8b (Data), Status);
+      if Status /= Ok then
+         --  No error handling...
+         raise Program_Error;
+      end if;
       End_Transaction (LCD);
    end Write_Data;
 
@@ -562,7 +532,7 @@ package body ST7735R is
                         X, Y  : UInt16;
                         Color : UInt16)
    is
-      Data : constant HAL.UInt16_Array (1 .. 1) := (1 => Color);
+      Data : HAL.UInt16_Array (1 .. 1) := (1 => Color);
    begin
       Set_Address (LCD, X, X + 1, Y, Y + 1);
       Write_Raw_Pixels (LCD, Data);
@@ -583,15 +553,24 @@ package body ST7735R is
       return Ret;
    end Pixel;
 
-
    ----------------------
    -- Write_Raw_Pixels --
    ----------------------
 
    procedure Write_Raw_Pixels (LCD  : ST7735R_Screen;
-                               Data : HAL.UInt8_Array)
+                               Data : in out HAL.UInt8_Array)
    is
+      Index : Natural := Data'First + 1;
+      Tmp   : UInt8;
    begin
+      --  The ST7735R uses a different endianness than our bitmaps
+      while Index <= Data'Last loop
+         Tmp := Data (Index);
+         Data (Index) := Data (Index - 1);
+         Data (Index - 1) := Tmp;
+         Index := Index + 1;
+      end loop;
+
       Write_Command (LCD, 16#2C#);
       Write_Data (LCD, Data);
    end Write_Raw_Pixels;
@@ -601,11 +580,12 @@ package body ST7735R is
    ----------------------
 
    procedure Write_Raw_Pixels (LCD  : ST7735R_Screen;
-                               Data : HAL.UInt16_Array)
+                               Data : in out HAL.UInt16_Array)
    is
+      Data_8b : HAL.UInt8_Array (1 .. Data'Length * 2)
+        with Address => Data'Address;
    begin
-      Write_Command (LCD, 16#2C#);
-      Write_Data (LCD, Data);
+      Write_Raw_Pixels (LCD, Data_8b);
    end Write_Raw_Pixels;
 
    --------------------
