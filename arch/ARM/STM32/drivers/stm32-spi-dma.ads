@@ -39,6 +39,9 @@ package STM32.SPI.DMA is
    procedure Set_TX_DMA_Handler (This : in out SPI_Port_DMA;
                                  DMA  : DMA_Interrupt_Controller_Access);
 
+   procedure Set_Polling_Threshold (This      : in out SPI_Port_DMA;
+                                    Threshold : Natural);
+
    overriding
    procedure Configure (This : in out SPI_Port_DMA;
                         Conf : SPI_Configuration);
@@ -74,11 +77,8 @@ package STM32.SPI.DMA is
 private
 
    type SPI_Port_DMA is limited new Parent with record
-      TX_DMA : DMA_Interrupt_Controller_Access := null;
+      TX_DMA    : DMA_Interrupt_Controller_Access := null;
+      Threshold : Natural := 5;
    end record;
 
-   Polling_Threshold : constant := 5;
-   --  Bellow a certain amount of data polling is faster and more efficient
-   --  than DMA. This value arbitrary fixed, it could be user defined at some
-   --  point.
 end STM32.SPI.DMA;

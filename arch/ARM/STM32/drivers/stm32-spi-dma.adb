@@ -92,6 +92,18 @@ package body STM32.SPI.DMA is
       This.TX_DMA := DMA;
    end Set_TX_DMA_Handler;
 
+   ---------------------------
+   -- Set_Polling_Threshold --
+   ---------------------------
+
+   procedure Set_Polling_Threshold
+     (This      : in out SPI_Port_DMA;
+      Threshold : Natural)
+   is
+   begin
+      This.Threshold := Threshold;
+   end Set_Polling_Threshold;
+
    ---------------
    -- Configure --
    ---------------
@@ -115,7 +127,7 @@ package body STM32.SPI.DMA is
       Timeout : Natural := 1000)
    is
    begin
-      if This.TX_DMA = null or else Data'Length < Polling_Threshold then
+      if This.TX_DMA = null or else Data'Length < This.Threshold then
          --  Fallback to polling implementation
          Transmit (Parent (This), Data, Status, Timeout);
       else
@@ -138,7 +150,7 @@ package body STM32.SPI.DMA is
       Timeout : Natural := 1000)
    is
    begin
-      if This.TX_DMA = null or else Data'Length < Polling_Threshold then
+      if This.TX_DMA = null or else Data'Length < This.Threshold then
          --  Fallback to polling implementation
          Transmit (Parent (This), Data, Status, Timeout);
       else
