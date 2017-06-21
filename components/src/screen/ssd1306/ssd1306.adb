@@ -399,15 +399,46 @@ package body SSD1306 is
      (Buffer  : in out SSD1306_Bitmap_Buffer;
       Pt      : Point)
    is
-      Index : constant Natural := Pt.X + (Pt.Y / 8) * Buffer.Actual_Width;
+      X     : constant Natural := Buffer.Width - 1 - Pt.X;
+      Y     : constant Natural := Buffer.Height - 1 - Pt.Y;
+      Index : constant Natural :=  X + (Y / 8) * Buffer.Actual_Width;
       Byte  : UInt8 renames Buffer.Data (Buffer.Data'First + Index);
    begin
 
       if Buffer.Native_Source = 0 then
-         Byte := Byte and not (Shift_Left (1, Pt.Y mod 8));
+         Byte := Byte and not (Shift_Left (1, Y mod 8));
       else
-         Byte := Byte or Shift_Left (1, Pt.Y mod 8);
+         Byte := Byte or Shift_Left (1, Y mod 8);
       end if;
+   end Set_Pixel;
+
+   ---------------
+   -- Set_Pixel --
+   ---------------
+
+   overriding
+   procedure Set_Pixel
+     (Buffer  : in out SSD1306_Bitmap_Buffer;
+      Pt      : Point;
+      Color   : Bitmap_Color)
+   is
+   begin
+      Buffer.Set_Pixel (Pt, (if Color = Black then 0 else 1));
+   end Set_Pixel;
+
+   ---------------
+   -- Set_Pixel --
+   ---------------
+
+   overriding
+   procedure Set_Pixel
+     (Buffer  : in out SSD1306_Bitmap_Buffer;
+      Pt      : Point;
+      Raw     : UInt32)
+   is
+   begin
+      Buffer.Native_Source := Raw;
+      Buffer.Set_Pixel (Pt);
    end Set_Pixel;
 
    -----------
@@ -420,10 +451,31 @@ package body SSD1306 is
       Pt     : Point)
       return Bitmap_Color
    is
-      Index : constant Natural := Pt.X + (Pt.Y / 8) * Buffer.Actual_Width;
+   begin
+      return (if Buffer.Pixel (Pt) = 0 then Black else White);
+   end Pixel;
+
+   -----------
+   -- Pixel --
+   -----------
+
+   overriding
+   function Pixel
+     (Buffer : SSD1306_Bitmap_Buffer;
+      Pt     : Point)
+      return UInt32
+   is
+      X     : constant Natural := Buffer.Width - 1 - Pt.X;
+      Y     : constant Natural := Buffer.Height - 1 - Pt.Y;
+      Index : constant Natural :=  X + (Y / 8) * Buffer.Actual_Width;
       Byte  : UInt8 renames Buffer.Data (Buffer.Data'First + Index);
    begin
-      return (if Byte = 0 then Black else White);
+
+      if (Byte and (Shift_Left (1, Y mod 8))) /= 0 then
+         return 1;
+      else
+         return 0;
+      end if;
    end Pixel;
 
 end SSD1306;
