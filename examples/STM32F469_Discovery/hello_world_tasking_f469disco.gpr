@@ -1,4 +1,4 @@
-with "../../boards/stm32f469_discovery.gpr";
+with "../../boards/stm32f469_discovery/stm32f469_discovery.gpr";
 
 project Hello_World_Tasking_F469Disco extends "../shared/common/common.gpr" is
 

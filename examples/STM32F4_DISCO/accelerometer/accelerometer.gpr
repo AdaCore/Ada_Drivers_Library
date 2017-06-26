@@ -1,4 +1,4 @@
-with "../../../boards/stm32f407_discovery.gpr";
+with "../../../boards/stm32f407_discovery/stm32f407_discovery.gpr";
 
 project Accelerometer extends "../../shared/common/common.gpr" is
 

@@ -2,7 +2,7 @@
 --  Please see board_projects_generator.py
 --  and edit this script instead.
 
-with "config";
+with "../config";
 with "../../arch/ARM/STM32/stm32f40x";
 with "../../components/components";
 with "../../middleware/middleware";
@@ -22,8 +22,8 @@ library project STM32F407_Discovery_Full is
    for Object_Dir use "obj/" & Obj_Suffix;
 
    for Source_Dirs use
-     ("stm32/stm32f407disco",
-      "stm32/common");
+     ("../stm32_common/stm32f407disco",
+      "../stm32_common/common");
 
    package Builder is
       for Switches ("Ada") use

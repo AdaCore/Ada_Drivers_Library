@@ -1,4 +1,4 @@
-with "../../boards/hifive1.gpr";
+with "../../boards/HiFive1/hifive1.gpr";
 with "../../boards/config";
 
 project HiFive1_Example is

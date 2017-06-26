@@ -2,7 +2,7 @@
 --  Please see board_projects_generator.py
 --  and edit this script instead.
 
-with "config";
+with "../config";
 with "../../arch/RISC-V/SiFive/FE310";
 with "../../components/components";
 with "../../middleware/middleware";

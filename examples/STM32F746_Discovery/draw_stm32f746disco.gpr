@@ -1,4 +1,4 @@
-with "../../boards/stm32f746_discovery.gpr";
+with "../../boards/stm32f746_discovery/stm32f746_discovery.gpr";
 
 project Draw_STM32F746Disco extends "../shared/common/common.gpr" is
 

@@ -1,4 +1,4 @@
-with "../../boards/stm32f769_discovery.gpr";
+with "../../boards/stm32f769_discovery/stm32f769_discovery.gpr";
 
 project Dma2d_STM32F769Disco extends "../shared/common/common.gpr" is
 

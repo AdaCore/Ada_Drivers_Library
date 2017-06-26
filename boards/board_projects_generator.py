@@ -36,7 +36,8 @@ BOARDS = {
         'rts_profiles':          ['ravenscar-sfp', 'ravenscar-full'],
         'target':                'arm-eabi',
         'mcu':                   'arch/ARM/STM32/stm32f40x',
-        'source_dirs':           ['stm32/stm32f407disco', 'stm32/common']},
+        'source_dirs':           ['../stm32_common/stm32f407disco',
+                                  '../stm32_common/common']},
     'STM32F429_Discovery': {
         'rts_board':             'stm32f429disco',
         'rts_profiles':          ['ravenscar-sfp', 'ravenscar-full'],
@@ -123,7 +124,7 @@ def gen_project(board_name, rts):
     cnt += '--  Please see board_projects_generator.py\n'
     cnt += '--  and edit this script instead.\n'
     cnt += '\n'
-    cnt += 'with "config";\n'
+    cnt += 'with "../config";\n'
     if 'mcu' in board:
         cnt += 'with "../../%s";\n' % board['mcu']
     cnt += 'with "../../components/components";\n'
