@@ -3,9 +3,9 @@
 --  and edit this script instead.
 
 with "config";
-with "../arch/ARM/Nordic/nrf51";
-with "../components/components";
-with "../middleware/middleware";
+with "../../arch/ARM/Nordic/nrf51";
+with "../../components/components";
+with "../../middleware/middleware";
 
 library project MicroBit is
 
@@ -21,7 +21,7 @@ library project MicroBit is
    for Object_Dir use "obj/" & Obj_Suffix;
 
    for Source_Dirs use
-     ("MicroBit");
+     ("src");
 
    package Builder is
       for Switches ("Ada") use

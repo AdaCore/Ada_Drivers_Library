@@ -3,10 +3,10 @@
 --  and edit this script instead.
 
 with "config";
-with "../arch/ARM/STM32/stm32f40x";
-with "../components/components";
-with "../middleware/middleware";
-with "../middleware/ravenscar_support";
+with "../../arch/ARM/STM32/stm32f40x";
+with "../../components/components";
+with "../../middleware/middleware";
+with "../../middleware/ravenscar_support";
 
 library project STM32F407_Discovery_SFP is
 

@@ -3,9 +3,9 @@
 --  and edit this script instead.
 
 with "config";
-with "../arch/RISC-V/SiFive/FE310";
-with "../components/components";
-with "../middleware/middleware";
+with "../../arch/RISC-V/SiFive/FE310";
+with "../../components/components";
+with "../../middleware/middleware";
 
 library project HiFive1 is
 
@@ -21,7 +21,7 @@ library project HiFive1 is
    for Object_Dir use "obj/" & Obj_Suffix;
 
    for Source_Dirs use
-     ("HiFive1");
+     ("src");
 
    package Builder is
       for Switches ("Ada") use

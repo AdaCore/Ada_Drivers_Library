@@ -3,10 +3,10 @@
 --  and edit this script instead.
 
 with "config";
-with "../arch/ARM/STM32/stm32f42x";
-with "../components/components";
-with "../middleware/middleware";
-with "../middleware/ravenscar_support";
+with "../../arch/ARM/STM32/stm32f42x";
+with "../../components/components";
+with "../../middleware/middleware";
+with "../../middleware/ravenscar_support";
 
 library project STM32F429_Discovery_Full is
 
@@ -22,11 +22,11 @@ library project STM32F429_Discovery_Full is
    for Object_Dir use "obj/" & Obj_Suffix;
 
    for Source_Dirs use
-     ("stm32/stm32f429disco",
-      "stm32/common",
-      "stm32/dma2d",
-      "stm32/ltdc",
-      "stm32/sdram");
+     ("../stm32_common/stm32f429disco",
+      "../stm32_common/common",
+      "../stm32_common/dma2d",
+      "../stm32_common/ltdc",
+      "../stm32_common/sdram");
 
    package Builder is
       for Switches ("Ada") use

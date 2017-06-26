@@ -3,8 +3,8 @@
 --  and edit this script instead.
 
 with "config";
-with "../components/components";
-with "../middleware/middleware";
+with "../../components/components";
+with "../../middleware/middleware";
 
 library project Native is
 
