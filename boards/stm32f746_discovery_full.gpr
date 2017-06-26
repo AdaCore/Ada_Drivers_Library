@@ -1,5 +1,6 @@
 --  **AUTOMATICALLY GENERATED** Do not edit !!
---  Please see gen.py and edit this script instead.
+--  Please see board_projects_generator.py
+--  and edit this script instead.
 
 with "config";
 with "../arch/ARM/STM32/stm32f7x";

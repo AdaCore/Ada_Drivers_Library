@@ -83,10 +83,6 @@ BOARDS = {
     }
 
 
-# BOARDS = {'STM32F469Disco': ['ravenscar-sfp', 'ravenscar-full'],
-#           'STM32F746Disco': ['ravenscar-sfp', 'ravenscar-full'],
-#           'STM32F769Disco': ['ravenscar-sfp', 'ravenscar-full']}
-
 FOLDERS = {'Crazyflie': 'crazyflie',
            'HiFive1': 'hifive1',
            'MicroBit': 'microbit',
@@ -122,7 +118,8 @@ def gen_project(board_name, rts):
 
     # Generate the project's dependencies
     cnt = '--  **AUTOMATICALLY GENERATED** Do not edit !!\n'
-    cnt += '--  Please see gen.py and edit this script instead.\n'
+    cnt += '--  Please see board_projects_generator.py\n'
+    cnt += '--  and edit this script instead.\n'
     cnt += '\n'
     cnt += 'with "config";\n'
     if 'mcu' in board:
