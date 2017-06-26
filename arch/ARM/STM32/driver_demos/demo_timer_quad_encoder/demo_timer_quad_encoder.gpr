@@ -1,5 +1,5 @@
 with "../../../../../boards/config.gpr";
-with "../../../../../boards/stm32f407_discovery.gpr";
+with "../../../../../boards/stm32f407_discovery/stm32f407_discovery.gpr";
 
 project Demo_Timer_Quad_Encoder extends "../../../../../examples/shared/common/common.gpr" is
 

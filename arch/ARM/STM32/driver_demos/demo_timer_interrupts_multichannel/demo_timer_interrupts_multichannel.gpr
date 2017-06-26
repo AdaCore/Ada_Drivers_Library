@@ -5,7 +5,7 @@
 --  number of LEDs available.
 
 with "../../../../../boards/config.gpr";
-with "../../../../../boards/stm32f407_discovery.gpr";
+with "../../../../../boards/stm32f407_discovery/stm32f407_discovery.gpr";
 
 project demo_timer_interrupts_multichannel extends "../../../../../examples/shared/common/common.gpr" is
 

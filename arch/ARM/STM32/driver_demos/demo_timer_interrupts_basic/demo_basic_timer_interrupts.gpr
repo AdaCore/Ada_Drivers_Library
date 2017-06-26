@@ -1,5 +1,5 @@
 with "../../../../../boards/config.gpr";
-with "../../../../../boards/stm32f407_discovery.gpr";
+with "../../../../../boards/stm32f407_discovery/stm32f407_discovery.gpr";
 
 project demo_basic_timer_interrupts extends "../../../../../examples/shared/common/common.gpr" is
 

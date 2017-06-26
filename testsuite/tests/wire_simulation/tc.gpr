@@ -1,4 +1,4 @@
-with "../../../boards/native";
+with "../../../boards/native/native.gpr";
 
 project TC extends "../../utils/test_utils.gpr" is
 

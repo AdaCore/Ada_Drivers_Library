@@ -1,5 +1,5 @@
 with "../../../../../boards/config.gpr";
-with "../../../../../boards/stm32f429_discovery_full.gpr";
+with "../../../../../boards/stm32f429_discovery/stm32f429_discovery_full.gpr";
 
 project Demo_L3GD20_Dataready_Int extends "../../../../../examples/shared/common/common.gpr" is
 

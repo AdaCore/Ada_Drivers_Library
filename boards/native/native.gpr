@@ -15,7 +15,7 @@ library project Native is
    for Object_Dir use "obj/" & Obj_Suffix;
 
    for Source_Dirs use
-     ("native");
+     ("src");
 
    package Builder is
       for Switches ("Ada") use

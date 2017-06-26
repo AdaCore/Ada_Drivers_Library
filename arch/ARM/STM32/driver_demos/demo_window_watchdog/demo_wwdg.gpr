@@ -1,4 +1,4 @@
-with "../../../../../boards/stm32f429_discovery.gpr";
+with "../../../../../boards/stm32f429_discovery/stm32f429_discovery.gpr";
 
 project Demo_WWDG extends "../../../../../examples/shared/common/common.gpr" is
 

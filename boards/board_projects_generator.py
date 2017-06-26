@@ -24,7 +24,7 @@ BOARDS = {
         'mcu':                   'arch/ARM/Nordic/nrf51',
         'source_dirs':           ['MicroBit']},
     'Native': {
-        'source_dirs':           ['native']},
+        'source_dirs':           ['src']},
     'OpenMV2': {
         'rts_board':             'openmv2',
         'rts_profiles':          ['ravenscar-sfp', 'ravenscar-full'],
@@ -84,15 +84,16 @@ BOARDS = {
 
 
 FOLDERS = {'Crazyflie': 'crazyflie',
-           'HiFive1': 'hifive1',
-           'MicroBit': 'microbit',
+           'HiFive1': 'HiFive1',
+           'MicroBit': 'MicroBit',
            'Native': 'native',
-           'OpenMV2': 'openmv2',
-           'STM32F407Disco': 'stm32f407_discovery',
-           'STM32F429Disco': 'stm32f429_discovery',
-           'STM32F469Disco': 'stm32f469_discovery',
-           'STM32F746Disco': 'stm32f746_discovery',
-           'STM32F769Disco': 'stm32f769_discovery'}
+           'OpenMV2': 'OpenMV2',
+           'STM32F407_Discovery': 'stm32f407_discovery',
+           'STM32F429_Discovery': 'stm32f429_discovery',
+           'STM32F469_Discovery': 'stm32f469_discovery',
+           'STM32F746_Discovery': 'stm32f746_discovery',
+           'STM32F769_Discovery': 'stm32f769_discovery'}
+
 
 def gen_project(board_name, rts):
     assert board_name is not None, "board is undefined"
@@ -115,6 +116,7 @@ def gen_project(board_name, rts):
         project_name = board_name
 
     board = BOARDS[board_name]
+    board_folder = FOLDERS[board_name]
 
     # Generate the project's dependencies
     cnt = '--  **AUTOMATICALLY GENERATED** Do not edit !!\n'
@@ -123,9 +125,9 @@ def gen_project(board_name, rts):
     cnt += '\n'
     cnt += 'with "config";\n'
     if 'mcu' in board:
-        cnt += 'with "../%s";\n' % board['mcu']
-    cnt += 'with "../components/components";\n'
-    cnt += 'with "../middleware/middleware";\n'
+        cnt += 'with "../../%s";\n' % board['mcu']
+    cnt += 'with "../../components/components";\n'
+    cnt += 'with "../../middleware/middleware";\n'
     if 'rts_profiles' in board:
         add_ravenscar_support = True
         if rts is None:
@@ -136,12 +138,12 @@ def gen_project(board_name, rts):
         elif 'ravenscar' not in rts:
             add_ravenscar_support = False
         if add_ravenscar_support:
-            cnt += 'with "../middleware/ravenscar_support";\n'
+            cnt += 'with "../../middleware/ravenscar_support";\n'
     if 'additional_dependency' in board:
         deps = board['additional_dependency']
         if deps is not None:
             for dep in deps:
-                cnt += 'with "../%s";\n' % dep
+                cnt += 'with "../../%s";\n' % dep
 
     cnt += '\n'
     cnt += 'library project %s is\n' % project_name
@@ -201,7 +203,7 @@ def gen_project(board_name, rts):
     cnt += 'end %s;\n' % project_name
 
     print "creating %s.gpr" % project_name.lower()
-    with open('%s.gpr' % project_name.lower(), 'w') as fp:
+    with open('%s/%s.gpr' % (board_folder, project_name.lower()), 'w') as fp:
         fp.write(cnt)
 
 
