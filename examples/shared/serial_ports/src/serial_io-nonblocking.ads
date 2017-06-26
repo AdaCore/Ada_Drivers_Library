@@ -98,11 +98,13 @@ private
 
       pragma Interrupt_Priority;
 
-      procedure Start_Sending (Msg : not null access Message) with
-        Pre => not Sending;
+      procedure Start_Sending (Msg : not null access Message);
+      --  error: internal call cannot appear in precondition of protected operation
+      --  with Pre => not Sending;
 
-      procedure Start_Receiving (Msg : not null access Message) with
-        Pre => not Receiving;
+      procedure Start_Receiving (Msg : not null access Message);
+      --  error: internal call cannot appear in precondition of protected operation
+      --  with Pre => not Receiving;
 
       function Sending   return Boolean;
       function Receiving return Boolean;
