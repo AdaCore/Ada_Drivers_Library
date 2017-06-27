@@ -11,6 +11,7 @@ library project Components is
    for Library_Kind use "static";
    for Library_Dir use "lib";
    for Object_Dir use "obj";
+   for Create_Missing_Dirs use "True";
 
    Root_Dir := Components'Project_Dir;
    GNAT_ADC_FILE := Root_Dir & "gnat.adc";

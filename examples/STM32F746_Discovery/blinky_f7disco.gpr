@@ -8,5 +8,6 @@ project Blinky_F7Disco extends "../shared/common/common.gpr" is
   for Languages use ("Ada");
   for Source_Dirs use ("../shared/hello_world_blinky/src");
   for Object_Dir use "../shared/hello_world_blinky/obj/stm32f7disco";
+  for Create_Missing_Dirs use "True";
 
 end Blinky_F7Disco;

@@ -15,6 +15,7 @@ library project Middleware is
    for Library_Kind use "static";
    for Library_Dir use "lib";
    for Object_Dir use "obj";
+   for Create_Missing_Dirs use "True";
 
    package Compiler renames Config.Compiler;
 

@@ -8,6 +8,7 @@ project Hello_World_Tasking_F469Disco extends "../shared/common/common.gpr" is
   for Languages use ("Ada");
   for Source_Dirs use ("../shared/hello_world_tasking/src");
   for Object_Dir use "../shared/hello_world_tasking/obj/" & "stm32f469disco";
+  for Create_Missing_Dirs use "True";
 
   package Builder is
     for Global_Configuration_Pragmas use "../shared/hello_world_tasking/gnat.adc";

@@ -5,6 +5,7 @@ project Test_Utils is
    for Source_Dirs use ("src");
    for Languages use ("Ada");
    for Object_Dir use "obj/";
+   for Create_Missing_Dirs use "True";
 
    package Compiler renames Config.Compiler;
 

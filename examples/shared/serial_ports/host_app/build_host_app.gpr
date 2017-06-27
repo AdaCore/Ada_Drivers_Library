@@ -15,4 +15,6 @@ project Build_Host_App is
 
    for Exec_Dir use ".";
 
+   for Create_Missing_Dirs use "True";
+
 end Build_Host_App;

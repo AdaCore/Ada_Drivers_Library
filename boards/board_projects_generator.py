@@ -184,6 +184,7 @@ def gen_project(board_name, rts):
     else:
         cnt += '   Obj_Suffix := Project\'Runtime ("Ada");\n'
     cnt += '\n'
+    cnt += '   for Create_Missing_Dirs use "True";\n'
     cnt += '   for Library_Name use "%s";\n' % board_name.lower()
     cnt += '   for Library_Dir use "lib/" & Obj_Suffix;\n'
     cnt += '   for Object_Dir use "obj/" & Obj_Suffix;\n'
