@@ -35,7 +35,7 @@ wishing to submit additions to the library should see the GNAT Reference Manual
 for details.
 
 Therefore, building with the sources requires a compiler supporting both Ada
-2012 and the GNAT-defined pragma `Volatile_Full_Access`. The "GNAT GPL 2016"
+2012 and the GNAT-defined pragma `Volatile_Full_Access`. The "GNAT GPL 2017"
 compiler for ARM ELF is one such compiler [(Download it
 here)](http://libre.adacore.com/download/configurations). A recent GNAT Pro
 compiler for that target will also suffice.
