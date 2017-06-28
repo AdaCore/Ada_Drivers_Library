@@ -1,5 +1,5 @@
-with "../../../../../boards/common_config.gpr";
-with "../../../../../boards/stm32f407_discovery.gpr";
+with "../../../../../boards/config.gpr";
+with "../../../../../boards/stm32f407_discovery/stm32f407_discovery.gpr";
 
 project Demo_GPIO extends "../../../../../examples/shared/common/common.gpr" is
 
@@ -9,11 +9,11 @@ project Demo_GPIO extends "../../../../../examples/shared/common/common.gpr" is
 
    for Source_Dirs use ("src");
 
-   for Object_Dir use "obj/" & Common_Config.Build;
+   for Object_Dir use "obj/" & Config.Build;
 
    for Runtime ("Ada") use STM32F407_Discovery'Runtime("Ada");
 
---   for Create_Missing_Dirs use "true";
+   for Create_Missing_Dirs use "true";
 
    package Builder is
       for Global_Configuration_Pragmas use "gnat.adc";

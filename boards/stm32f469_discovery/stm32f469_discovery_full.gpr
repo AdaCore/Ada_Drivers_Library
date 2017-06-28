@@ -1,0 +1,40 @@
+--  **AUTOMATICALLY GENERATED** Do not edit !!
+--  Please see board_projects_generator.py
+--  and edit this script instead.
+
+with "../config";
+with "../../arch/ARM/STM32/stm32f46_79x";
+with "../../components/components";
+with "../../middleware/middleware";
+with "../../middleware/ravenscar_support";
+
+library project STM32F469_Discovery_Full is
+
+   RTS_Profile := "ravenscar-full";
+
+   for Target use "arm-eabi";
+   for Runtime ("Ada") use RTS_Profile & "-stm32f469disco";
+
+   Obj_Suffix := Project'Runtime ("Ada");
+
+   for Create_Missing_Dirs use "True";
+   for Library_Name use "stm32f469_discovery";
+   for Library_Dir use "lib/" & Obj_Suffix;
+   for Object_Dir use "obj/" & Obj_Suffix;
+
+   for Source_Dirs use
+     ("../stm32_common/stm32f469disco",
+      "../stm32_common/common",
+      "../stm32_common/dma2d",
+      "../stm32_common/otm8009a",
+      "../stm32_common/sdcard",
+      "../stm32_common/sdram");
+
+   package Builder is
+      for Switches ("Ada") use
+        ("--RTS=" & Project'Runtime("Ada"), "-s");
+   end Builder;
+
+   package Compiler renames Config.Compiler;
+
+end STM32F469_Discovery_Full;

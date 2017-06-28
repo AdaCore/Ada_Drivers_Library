@@ -1,0 +1,41 @@
+--  This abstract project defines common scenario variables and switches used
+--  all over the library.
+abstract project Config is
+
+   for Languages use ("Ada");
+   for Source_Dirs use ();
+
+   type BUILD_TYPE is
+      ("Debug", "Production");
+   Build : BUILD_Type := external ("PLATFORM_BUILD", "Debug");
+
+   RTS := external ("RTS_Profile", "ravenscar-sfp");
+
+   --  Target architecture
+   Target := Project'Target;
+
+   --  Callgraph info is not available on all architectures
+   Callgraph_Switch := ();
+   case Target is
+      when "riscv32-unknown-elf" =>
+         null;
+      when others =>
+         Callgraph_Switch := ("-fcallgraph-info=su");
+   end case;
+
+
+   package Compiler is
+      case Build is
+         when "Production" =>
+            for Default_Switches ("Ada") use
+              ("-g", "-O3", "-gnatp", "-gnatn");
+         when "Debug" =>
+            for Default_Switches ("Ada") use
+              ("-g", "-O0", "-gnata") & Callgraph_Switch;
+      end case;
+      for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
+        ("-gnatwa", "-gnatwe", "-gnatQ", "-gnatw.X", "-gnaty", "-gnatyO",
+         "-gnatyM120", "-ffunction-sections", "-fdata-sections");
+   end Compiler;
+
+end Config;

@@ -1,0 +1,40 @@
+--  **AUTOMATICALLY GENERATED** Do not edit !!
+--  Please see board_projects_generator.py
+--  and edit this script instead.
+
+with "../config";
+with "../../arch/ARM/STM32/stm32f7x";
+with "../../components/components";
+with "../../middleware/middleware";
+with "../../middleware/ravenscar_support";
+
+library project STM32F746_Discovery_SFP is
+
+   RTS_Profile := "ravenscar-sfp";
+
+   for Target use "arm-eabi";
+   for Runtime ("Ada") use RTS_Profile & "-stm32f746disco";
+
+   Obj_Suffix := Project'Runtime ("Ada");
+
+   for Create_Missing_Dirs use "True";
+   for Library_Name use "stm32f746_discovery";
+   for Library_Dir use "lib/" & Obj_Suffix;
+   for Object_Dir use "obj/" & Obj_Suffix;
+
+   for Source_Dirs use
+     ("../stm32_common/stm32f746disco",
+      "../stm32_common/common",
+      "../stm32_common/dma2d",
+      "../stm32_common/ltdc",
+      "../stm32_common/sdcard",
+      "../stm32_common/sdram");
+
+   package Builder is
+      for Switches ("Ada") use
+        ("--RTS=" & Project'Runtime("Ada"), "-s");
+   end Builder;
+
+   package Compiler renames Config.Compiler;
+
+end STM32F746_Discovery_SFP;

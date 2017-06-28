@@ -48,15 +48,22 @@ board (for instance [Micro:bit](MicroBit/)).
 
 ## Clone the repository
 
-Ada_Drivers_Library uses git submodules which may require a specific option
-when you clone the repository.
-
 If you are on Windows, we recomand to use the 
 [GitHub Desktop application](https://desktop.github.com/).
 
 Otherwise, from the command line:
 ```shell
 git clone --recursive https://github.com/AdaCore/Ada_Drivers_Library.git
+```
+
+## Build and install the run-times
+
+Not all the GNAT run-times used in the Ada_Drivers_Library are packaged with the compiler.
+
+To build and install the missing run-times, use the `install_dependencies.py` script:
+
+```shell
+python ./scripts/install_dependencies.py
 ```
 
 ## Open an example project

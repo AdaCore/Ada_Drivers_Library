@@ -1,4 +1,4 @@
-with "../../boards/stm32f429_discovery.gpr";
+with "../../boards/stm32f429_discovery/stm32f429_discovery.gpr";
 
 project Serial_Ports_F429Disco extends "../shared/common/common.gpr" is
 
@@ -11,6 +11,8 @@ project Serial_Ports_F429Disco extends "../shared/common/common.gpr" is
    for Object_Dir use "../shared/serial_ports/obj/stm32f429disco";
 
    for Runtime ("Ada") use STM32F429_Discovery'Runtime("Ada");
+
+   for Create_Missing_Dirs use "True";
 
    package Builder is
       for Global_Configuration_Pragmas use "../shared/serial_ports/gnat.adc";

@@ -1,5 +1,5 @@
-with "config";
-with "../../hal/HAL";
+with "../../../boards/config";
+with "../../../hal/HAL";
 
 library project Cortex_M4 is
 
@@ -9,10 +9,10 @@ library project Cortex_M4 is
                         "src/nvic_cm4_cm7");
 
    for Library_Name use "cortex-m4";
-   for Library_Dir use "lib/cortex-m4/" & Config.Object_Subdir;
-   for Object_Dir use "obj/cortex-m4/" & Config.Object_Subdir;
+   for Library_Dir use "lib/" & Project'Library_Name;
+   for Object_Dir use "obj/" & Project'Library_Name;
+   for Create_Missing_Dirs use "True";
 
    package Compiler renames Config.Compiler;
-   package Builder  renames Config.Builder;
 
 end Cortex_M4;

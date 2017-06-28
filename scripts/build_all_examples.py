@@ -35,7 +35,7 @@ def gprbuild(project_file, debug=False, rts_profile=None):
     extra_args = []
 
     if rts_profile:
-        extra_args = extra_args + ["-XRTS=" + rts_profile]
+        extra_args = extra_args + ["-XRTS_Profile=" + rts_profile]
 
     extra_args = extra_args + ["-XPLATFORM_BUILD=" + ("Debug" if debug else "Production")]
 
@@ -43,7 +43,7 @@ def gprbuild(project_file, debug=False, rts_profile=None):
 
     # Build the project
     returncode, stdout, stderr = run_program(
-        'gprbuild', '-j0', '-p', '-q', '-P', project_file, *extra_args
+        'gprbuild', '-j0', '-p', '-q', '-s', '-P', project_file, *extra_args
     )
 
     print stdout
@@ -55,7 +55,7 @@ def gprbuild(project_file, debug=False, rts_profile=None):
 
     # Clean to avoid error in the next build with a different run-time or
     # compile switches.
-    run_program ('gprclean', "-P",  project_file, *extra_args)
+    run_program ('gprclean', '-r', "-P",  project_file, *extra_args)
 
     return returncode
 

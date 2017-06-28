@@ -1,5 +1,4 @@
-with "../../../../../boards/common_config.gpr";
-with "../../../../../boards/stm32f429_discovery.gpr";
+with "../../../../../boards/stm32f429_discovery/stm32f429_discovery.gpr";
 
 project Demo_CRC extends "../../../../../examples/shared/common/common.gpr" is
 
@@ -13,7 +12,8 @@ project Demo_CRC extends "../../../../../examples/shared/common/common.gpr" is
 
    for Object_Dir use "obj";
 
+   for Create_Missing_Dirs use "True";
+
    for Main use ("demo_crc.adb");
 
 end Demo_CRC;
-

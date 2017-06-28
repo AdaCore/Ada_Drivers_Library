@@ -11,3 +11,5 @@
 *.stderr
 *.stdout
 *~
+obj/
+lib/

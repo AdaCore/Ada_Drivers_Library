@@ -535,8 +535,13 @@ package STM32.Device is
 
    SDIO : aliased SDMMC_Controller (STM32_SVD.SDIO.SDIO_Periph'Access);
 
+   type SDIO_Clock_Source is (Src_Sysclk, Src_48Mhz);
+
    procedure Enable_Clock (This : in out SDMMC_Controller);
    procedure Reset (This : in out SDMMC_Controller);
+   procedure Set_Clock_Source
+     (This : in out SDMMC_Controller;
+      Src  : SDIO_Clock_Source);
 
    ---------
    -- CRC --

@@ -1,4 +1,4 @@
-with "../../boards/stm32f429_discovery.gpr";
+with "../../boards/stm32f429_discovery/stm32f429_discovery.gpr";
 
 project Blinky_F429Disco extends "../shared/common/common.gpr" is
 
@@ -8,5 +8,6 @@ project Blinky_F429Disco extends "../shared/common/common.gpr" is
   for Languages use ("Ada");
   for Source_Dirs use ("../shared/hello_world_blinky/src");
   for Object_Dir use "../shared/hello_world_blinky/obj/stm32f429disco";
+  for Create_Missing_Dirs use "True";
 
 end Blinky_F429Disco;
