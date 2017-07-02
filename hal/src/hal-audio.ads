@@ -43,6 +43,7 @@ package HAL.Audio is
       Audio_Freq_11kHz,
       Audio_Freq_16kHz,
       Audio_Freq_22kHz,
+      Audio_Freq_32kHz,
       Audio_Freq_44kHz,
       Audio_Freq_48kHz,
       Audio_Freq_96kHz)
@@ -52,6 +53,7 @@ package HAL.Audio is
       Audio_Freq_11kHz => 11_025,
       Audio_Freq_16kHz => 16_000,
       Audio_Freq_22kHz => 22_050,
+      Audio_Freq_32kHz => 32_000,
       Audio_Freq_44kHz => 44_100,
       Audio_Freq_48kHz => 48_000,
       Audio_Freq_96kHz => 96_000);
