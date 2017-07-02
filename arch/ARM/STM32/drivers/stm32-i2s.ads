@@ -83,15 +83,23 @@ package STM32.I2S is
 
    type Internal_I2S_Port is private;
 
-   type I2S_Port (Periph : not null access Internal_I2S_Port) is
+   type I2S_Port (Periph   : not null access Internal_I2S_Port;
+                  Extended : Boolean) is
       limited new Audio_Stream with private;
 
    function In_I2S_Mode (This : in out I2S_Port) return Boolean;
    --  I2S peripherals are shared with SPI, this function returns True only if
    --  the periperal is configure in I2S mode.
 
+   function Valid_Extended_Config (Conf : I2S_Configuration) return Boolean
+   is ((Conf.Mode = Slave_Transmit or else Conf.Mode = Slave_Receive)
+         and then
+       not Conf.Master_Clock_Out_Enabled);
+
    procedure Configure (This : in out I2S_Port; Conf : I2S_Configuration)
-     with Pre  => not This.Enabled,
+     with Pre  => not This.Enabled
+                    and then
+                  (not This.Extended or else Valid_Extended_Config (Conf)),
           Post => not This.Enabled;
 
    procedure Enable (This : in out I2S_Port)
@@ -125,7 +133,8 @@ private
 
    type Internal_I2S_Port is new STM32_SVD.SPI.SPI_Peripheral;
 
-   type I2S_Port (Periph : not null access Internal_I2S_Port) is
+   type I2S_Port (Periph   : not null access Internal_I2S_Port;
+                  Extended : Boolean) is
      limited new Audio_Stream with null record;
 
 end STM32.I2S;
