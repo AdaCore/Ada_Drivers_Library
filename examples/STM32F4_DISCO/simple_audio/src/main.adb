@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -31,64 +31,60 @@
 
 --  This is a demo of the features available on the STM32F4-DISCOVERY board.
 --
---  Tilt the board and the LED closer to the ground will light up.
+--  Press the blue button to change the note of the sound played in the
+--  headphone jack. Press the black button to reset.
 
-with Ada.Real_Time;      use Ada.Real_Time;
-with HAL;                use HAL;
-with STM32.Board;        use STM32.Board;
-with LIS3DSH;            use LIS3DSH;
+with HAL;                  use HAL;
+with STM32.Device;         use STM32.Device;
+with STM32.Board;          use STM32.Board;
+with HAL.Audio;            use HAL.Audio;
+with Simple_Synthesizer;
+with Audio_Stream;         use Audio_Stream;
+with System;               use System;
+with Interfaces;           use Interfaces;
+with STM32.User_Button;
 
 procedure Main is
 
-   Values : LIS3DSH.Axes_Accelerations;
-
-   Threshold_High : constant LIS3DSH.Axis_Acceleration :=  200;
-   Threshold_Low  : constant LIS3DSH.Axis_Acceleration := -200;
-
-   procedure My_Delay (Milli : Natural);
-
-   procedure My_Delay (Milli : Natural) is
-   begin
-      delay until Clock + Milliseconds (Milli);
-   end My_Delay;
-
+   Synth : Simple_Synthesizer.Synthesizer
+     (Stereo    => True,
+      Amplitude => Natural (Integer_16'Last / 3));
+   Audio_Data_0 : Audio_Buffer (1 .. 64);
+   Audio_Data_1 : Audio_Buffer (1 .. 64);
+   Note : Float := 110.0;
 begin
    Initialize_LEDs;
 
-   Initialize_Accelerometer;
+   Initialize_Audio;
+   STM32.User_Button.Initialize;
 
-   Accelerometer.Configure
-     (Output_DataRate => Data_Rate_100Hz,
-      Axes_Enable     => XYZ_Enabled,
-      SPI_Wire        => Serial_Interface_4Wire,
-      Self_Test       => Self_Test_Normal,
-      Full_Scale      => Fullscale_2g,
-      Filter_BW       => Filter_800Hz);
 
-   if Accelerometer.Device_Id /= I_Am_LIS3DSH then
-      All_LEDs_On;
-      My_Delay (100);
-      All_LEDs_Off;
-      My_Delay (100);
-   else
-      loop
-         Accelerometer.Get_Accelerations (Values);
-         if abs Values.X > abs Values.Y then
-            if Values.X > Threshold_High then
-               STM32.Board.Red_LED.Set;
-            elsif Values.X < Threshold_Low then
-               STM32.Board.Green_LED.Set;
-            end if;
-            My_Delay (10);
-         else
-            if Values.Y > Threshold_High then
-               STM32.Board.Orange_LED.Set;
-            elsif Values.Y < Threshold_Low then
-               STM32.Board.Blue_LED.Set;
-            end if;
-            My_Delay (10);
+   Synth.Set_Frequency (STM32.Board.Audio_Rate);
+   STM32.Board.Audio_DAC.Set_Volume (60);
+
+   STM32.Board.Audio_DAC.Play;
+
+   Audio_TX_DMA_Int.Start (Destination => STM32.Board.Audio_I2S.Data_Register_Address,
+                           Source_0    => Audio_Data_0'Address,
+                           Source_1    => Audio_Data_1'Address,
+                           Data_Count  => Audio_Data_0'Length);
+
+   loop
+      if STM32.User_Button.Has_Been_Pressed then
+         Note := Note * 2.0;
+         if Note > 880.0 then
+            Note := 110.0;
          end if;
-         All_LEDs_Off;
-      end loop;
-   end if;
+      end if;
+
+      Synth.Set_Note_Frequency (Note);
+      Audio_TX_DMA_Int.Wait_For_Transfer_Complete;
+
+      if Audio_TX_DMA_Int.Not_In_Transfer = Audio_Data_0'Address then
+         Synth.Receive (Audio_Data_0);
+      else
+         Synth.Receive (Audio_Data_1);
+      end if;
+
+   end loop;
 end Main;

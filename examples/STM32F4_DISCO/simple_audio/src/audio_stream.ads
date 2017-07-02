@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,66 +29,45 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This is a demo of the features available on the STM32F4-DISCOVERY board.
---
---  Tilt the board and the LED closer to the ground will light up.
+with System;               use System;
+with HAL;                  use HAL;
+with STM32.DMA;            use STM32.DMA;
+with STM32.Device;         use STM32.Device;
+with Ada.Interrupts;
+with Ada.Interrupts.Names;
 
-with Ada.Real_Time;      use Ada.Real_Time;
-with HAL;                use HAL;
-with STM32.Board;        use STM32.Board;
-with LIS3DSH;            use LIS3DSH;
+package Audio_Stream is
 
-procedure Main is
+   protected type Double_Buffer_Controller
+     (Controller : not null access DMA_Controller;
+      Stream     : DMA_Stream_Selector;
+      ID         : Ada.Interrupts.Interrupt_ID)
+   is
 
-   Values : LIS3DSH.Axes_Accelerations;
+      procedure Start
+        (Destination : Address;
+         Source_0    : Address;
+         Source_1    : Address;
+         Data_Count  : UInt16);
 
-   Threshold_High : constant LIS3DSH.Axis_Acceleration :=  200;
-   Threshold_Low  : constant LIS3DSH.Axis_Acceleration := -200;
+      entry Wait_For_Transfer_Complete;
 
-   procedure My_Delay (Milli : Natural);
+      function Not_In_Transfer return Address;
 
-   procedure My_Delay (Milli : Natural) is
-   begin
-      delay until Clock + Milliseconds (Milli);
-   end My_Delay;
+   private
+      procedure Interrupt_Handler;
+      pragma Attach_Handler (Interrupt_Handler, ID);
 
-begin
-   Initialize_LEDs;
+      Interrupt_Triggered : Boolean := False;
+      Buffer_0            : Address := Null_Address;
+      Buffer_1            : Address := Null_Address;
+   end Double_Buffer_Controller;
 
-   Initialize_Accelerometer;
+   Audio_TX_DMA        : STM32.DMA.DMA_Controller renames DMA_1;
+   Audio_TX_DMA_Chan   : STM32.DMA.DMA_Channel_Selector renames STM32.DMA.Channel_0;
+   Audio_TX_DMA_Stream : STM32.DMA.DMA_Stream_Selector renames STM32.DMA.Stream_5;
+   Audio_TX_DMA_Int    : Double_Buffer_Controller (Audio_TX_DMA'Access,
+                                                   Audio_TX_DMA_Stream,
+                                                   Ada.Interrupts.Names.DMA1_Stream5_Interrupt);
 
-   Accelerometer.Configure
-     (Output_DataRate => Data_Rate_100Hz,
-      Axes_Enable     => XYZ_Enabled,
-      SPI_Wire        => Serial_Interface_4Wire,
-      Self_Test       => Self_Test_Normal,
-      Full_Scale      => Fullscale_2g,
-      Filter_BW       => Filter_800Hz);
-
-   if Accelerometer.Device_Id /= I_Am_LIS3DSH then
-      All_LEDs_On;
-      My_Delay (100);
-      All_LEDs_Off;
-      My_Delay (100);
-   else
-      loop
-         Accelerometer.Get_Accelerations (Values);
-         if abs Values.X > abs Values.Y then
-            if Values.X > Threshold_High then
-               STM32.Board.Red_LED.Set;
-            elsif Values.X < Threshold_Low then
-               STM32.Board.Green_LED.Set;
-            end if;
-            My_Delay (10);
-         else
-            if Values.Y > Threshold_High then
-               STM32.Board.Orange_LED.Set;
-            elsif Values.Y < Threshold_Low then
-               STM32.Board.Blue_LED.Set;
-            end if;
-            My_Delay (10);
-         end if;
-         All_LEDs_Off;
-      end loop;
-   end if;
-end Main;
+end Audio_Stream;
