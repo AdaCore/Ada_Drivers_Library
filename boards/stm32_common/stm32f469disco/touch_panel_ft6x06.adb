@@ -42,9 +42,11 @@ with HAL.Touch_Panel;      use HAL.Touch_Panel;
 
 with FT6x06;               use FT6x06;
 with Ada.Real_Time;        use Ada.Real_Time;
+with STM32.DMA;            use STM32.DMA;
 
 package body Touch_Panel_FT6x06 is
 
+   procedure Initialize_DMA;
    procedure TP_Init_Pins;
    --  Initializes the Touch Panel GPIO pins
 
@@ -64,6 +66,42 @@ package body Touch_Panel_FT6x06 is
                      Resistors   => Pull_Up));
       Lock (TP_INT);
    end TP_Init_Pins;
+
+   --------------------
+   -- Initialize_DMA --
+   --------------------
+
+   procedure Initialize_DMA is
+      Config : DMA_Stream_Configuration;
+   begin
+
+      Enable_Clock (I2C_TX_RX_DMA);
+
+      -- TX and RX config --
+      Config.Increment_Peripheral_Address := False;
+      Config.Increment_Memory_Address := True;
+      Config.Peripheral_Data_Format := Bytes;
+      Config.Memory_Data_Format := Bytes;
+      Config.Operation_Mode := Normal_Mode;
+      Config.Priority := Priority_High;
+      Config.FIFO_Enabled := False;
+      Config.FIFO_Threshold := FIFO_Threshold_Full_Configuration;
+      Config.Memory_Burst_Size := Memory_Burst_Inc4;
+      Config.Peripheral_Burst_Size := Peripheral_Burst_Single;
+
+      -- TX DMA --
+
+      Config.Channel   := I2C_TX_DMA_Chan;
+      Config.Direction := Memory_To_Peripheral;
+      Configure (I2C_TX_RX_DMA, I2C_TX_DMA_Stream, Config);
+
+      -- RX DMA --
+
+      Config.Channel   := I2C_RX_DMA_Chan;
+      Config.Direction := Peripheral_To_Memory;
+      Configure (I2C_TX_RX_DMA, I2C_RX_DMA_Stream, Config);
+
+   end Initialize_DMA;
 
    ----------------
    -- Initialize --
@@ -87,6 +125,11 @@ package body Touch_Panel_FT6x06 is
                                        SCL_AF      => TP_I2C_AF,
                                        Clock_Speed => 100_000);
       end if;
+
+      Initialize_DMA;
+      TP_I2C.Set_TX_DMA_Handler (I2C_TX_DMA_Int'Access);
+      TP_I2C.Set_RX_DMA_Handler (I2C_RX_DMA_Int'Access);
+      TP_I2C.Set_Polling_Threshold (0);
 
       This.TP_Set_Use_Interrupts (False);
       This.Set_Orientation (Orientation);
