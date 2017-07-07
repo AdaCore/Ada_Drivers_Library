@@ -45,6 +45,10 @@ package STM32.DMA.Interrupts is
 
       procedure Abort_Transfer (Result : out DMA_Error_Code);
 
+      procedure Clear_Transfer_State;
+
+      function Buffer_Error return Boolean;
+
       entry Wait_For_Completion (Status : out DMA_Error_Code);
 
    private
@@ -54,6 +58,7 @@ package STM32.DMA.Interrupts is
 
       No_Transfer_In_Progess : Boolean := True;
       Last_Status            : DMA_Error_Code := DMA_No_Error;
+      Had_Buffer_Error       : Boolean := False;
    end DMA_Interrupt_Controller;
 
    type DMA_Interrupt_Controller_Access is access all DMA_Interrupt_Controller;

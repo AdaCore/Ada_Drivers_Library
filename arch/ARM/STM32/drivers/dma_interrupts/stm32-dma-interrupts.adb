@@ -43,6 +43,7 @@ package body STM32.DMA.Interrupts is
       is
       begin
          No_Transfer_In_Progess := False;
+         Had_Buffer_Error := False;
 
          Clear_All_Status (Controller.all, Stream);
 
@@ -64,6 +65,26 @@ package body STM32.DMA.Interrupts is
                          Result => Result);
          No_Transfer_In_Progess := Result = DMA_No_Error;
       end Abort_Transfer;
+
+      --------------------------
+      -- Clear_Transfer_State --
+      --------------------------
+
+      procedure Clear_Transfer_State
+      is
+      begin
+         No_Transfer_In_Progess := True;
+         Last_Status := DMA_Transfer_Error;
+      end Clear_Transfer_State;
+
+      ------------------
+      -- Buffer_Error --
+      ------------------
+
+      function Buffer_Error return Boolean is
+      begin
+         return Had_Buffer_Error;
+      end Buffer_Error;
 
       -------------------------
       -- Wait_For_Completion --
@@ -87,6 +108,7 @@ package body STM32.DMA.Interrupts is
                case Flag is
                   when FIFO_Error_Indicated =>
                      Last_Status := DMA_FIFO_Error;
+                     Had_Buffer_Error := True;
                      if not Enabled (Controller.all, Stream) then
                         --  If the stream was disabled by hardware, the transfer
                         --  is stopped. Otherwise we can ignore the even.
