@@ -876,15 +876,15 @@ package body STM32.SDMMC is
    function Read_Blocks
      (This : in out SDMMC_Controller;
       Addr : UInt64;
-      Data : out SD_Data) return SD_Error
+      Data : out HAL.Block_Drivers.Block) return SD_Error
    is
-      subtype UInt32_Data is SD_Data (1 .. 4);
+      subtype UInt32_Data is HAL.Block_Drivers.Block (1 .. 4);
       function To_Data is new Ada.Unchecked_Conversion
         (UInt32, UInt32_Data);
       R_Addr   : UInt64 := Addr;
       N_Blocks : Positive;
       Err      : SD_Error;
-      Idx      : UInt16 := Data'First;
+      Idx      : Natural := Data'First;
       Dead     : UInt32 with Unreferenced;
 
    begin
@@ -998,10 +998,9 @@ package body STM32.SDMMC is
 
    function Read_Blocks_DMA
      (This : in out SDMMC_Controller;
-      Addr       : UInt64;
-      DMA        : STM32.DMA.DMA_Controller;
-      Stream     : STM32.DMA.DMA_Stream_Selector;
-      Data       : out SD_Data) return SD_Error
+      Addr :        UInt64;
+      DMA  : in out STM32.DMA.Interrupts.DMA_Interrupt_Controller;
+      Data :    out HAL.Block_Drivers.Block) return SD_Error
    is
       Read_Address : constant UInt64 :=
                        (if This.Card_Type = High_Capacity_SD_Card
@@ -1017,8 +1016,8 @@ package body STM32.SDMMC is
       use STM32.DMA;
    begin
       if not STM32.DMA.Compatible_Alignments
-        (DMA,
-         Stream,
+        (DMA.Controller.all,
+         DMA.Stream,
          This.Periph.FIFO'Address,
          Data_Addr)
       then
@@ -1038,16 +1037,9 @@ package body STM32.SDMMC is
       Enable_Interrupt (This, Data_End_Interrupt);
       Enable_Interrupt (This, RX_Overrun_Interrupt);
 
-      STM32.DMA.Start_Transfer_with_Interrupts
-        (This               => DMA,
-         Stream             => Stream,
-         Source             => This.Periph.FIFO'Address,
-         Destination        => Data_Addr,
-         Data_Count         => UInt16 (Data_Len_Words), -- because DMA is set up with words
-         Enabled_Interrupts => (Transfer_Error_Interrupt    => True,
-                                FIFO_Error_Interrupt        => True,
-                                Transfer_Complete_Interrupt => True,
-                                others                      => False));
+      DMA.Start_Transfer (Source      => This.Periph.FIFO'Address,
+                          Destination => Data_Addr,
+                          Data_Count  => UInt16 (Data_Len_Words)); -- because DMA is set up with words
 
       Send_Cmd (This, Set_Blocklen, 512, Err);
 
@@ -1083,10 +1075,9 @@ package body STM32.SDMMC is
 
    function Write_Blocks_DMA
      (This : in out SDMMC_Controller;
-      Addr       : UInt64;
-      DMA        : STM32.DMA.DMA_Controller;
-      Stream     : STM32.DMA.DMA_Stream_Selector;
-      Data       : SD_Data) return SD_Error
+      Addr :        UInt64;
+      DMA  : in out STM32.DMA.Interrupts.DMA_Interrupt_Controller;
+      Data :        HAL.Block_Drivers.Block) return SD_Error
    is
       Write_Address : constant UInt64 :=
                        (if This.Card_Type = High_Capacity_SD_Card
@@ -1109,8 +1100,8 @@ package body STM32.SDMMC is
    begin
 
       if not STM32.DMA.Compatible_Alignments
-        (DMA,
-         Stream,
+        (DMA.Controller.all,
+         DMA.Stream,
          This.Periph.FIFO'Address,
          Data_Addr)
       then
@@ -1154,17 +1145,9 @@ package body STM32.SDMMC is
       Enable_Interrupt (This, Data_End_Interrupt);
       Enable_Interrupt (This, TX_Underrun_Interrupt);
 
-      --  start DMA first (gives time to setup)
-      STM32.DMA.Start_Transfer_with_Interrupts
-        (This               => DMA,
-         Stream             => Stream,
-         Destination        => This.Periph.FIFO'Address,
-         Source             => Data_Addr,
-         Data_Count         => UInt16 (Data_Len_Words), -- DMA uses words
-         Enabled_Interrupts => (Transfer_Error_Interrupt    => True,
-                                FIFO_Error_Interrupt        => True,
-                                Transfer_Complete_Interrupt => True,
-                                others                      => False));
+      DMA.Start_Transfer (Source      => Data_Addr,
+                          Destination => This.Periph.FIFO'Address,
+                          Data_Count  => UInt16 (Data_Len_Words)); -- DMA uses words
 
       --  set block size
       Send_Cmd (This, Set_Blocklen, 512, Err);

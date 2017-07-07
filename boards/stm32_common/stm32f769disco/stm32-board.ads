@@ -32,14 +32,14 @@
 --  This file provides declarations for devices on the STM32F7 Discovery kits
 --  manufactured by ST Microelectronics.
 
-with Ada.Interrupts.Names;  use Ada.Interrupts;
+with Ada.Interrupts.Names; use Ada.Interrupts;
 
-with STM32.Device;  use STM32.Device;
-
-with STM32.DMA;     use STM32.DMA;
-with STM32.FMC;     use STM32.FMC;
-with STM32.GPIO;    use STM32.GPIO;
-with STM32.I2C;     use STM32.I2C;
+with STM32.Device;         use STM32.Device;
+with STM32.DMA;            use STM32.DMA;
+with STM32.DMA.Interrupts; use STM32.DMA.Interrupts;
+with STM32.FMC;            use STM32.FMC;
+with STM32.GPIO;           use STM32.GPIO;
+with STM32.I2C;            use STM32.I2C;
 
 use STM32;
 
@@ -198,12 +198,11 @@ package STM32.Board is
    SD_Pins_AF        : constant GPIO_Alternate_Function := GPIO_AF_SDMMC2_10;
    SD_Pins_2         : constant GPIO_Points := (PD6, PD7, PG9, PG10);
    SD_Pins_AF_2      : constant GPIO_Alternate_Function := GPIO_AF_SDMMC2_11;
-   SD_Rx_IRQ         : Ada.Interrupts.Interrupt_ID renames
-                         Ada.Interrupts.Names.DMA2_Stream0_Interrupt;
-   SD_Tx_IRQ         : Ada.Interrupts.Interrupt_ID renames
-                         Ada.Interrupts.Names.DMA2_Stream5_Interrupt;
    SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
                          Ada.Interrupts.Names.SDMMC2_Interrupt;
+
+   SD_Rx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream3;
+   SD_Tx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream6;
 
    SDCard_Device : aliased SDCard.SDCard_Controller (SDMMC_2'Access);
 

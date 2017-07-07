@@ -36,10 +36,11 @@
 --  SDCard driver. Controls the SDMMC peripheral.
 
 with System;
-with STM32_SVD.SDMMC; use STM32_SVD.SDMMC;
-with HAL.SDMMC;       use HAL.SDMMC;
-
+with STM32_SVD.SDMMC;      use STM32_SVD.SDMMC;
+with HAL.SDMMC;            use HAL.SDMMC;
+with HAL.Block_Drivers;
 with STM32.DMA;
+with STM32.DMA.Interrupts;
 
 package STM32.SDMMC is
 
@@ -54,28 +55,23 @@ package STM32.SDMMC is
      (This      : in out SDMMC_Controller;
       Info      : out Card_Information) return SD_Error;
 
-   type SD_Data is array (UInt16 range <>) of UInt8
-   with Pack;
-
    function Read_Blocks
      (This : in out SDMMC_Controller;
       Addr : UInt64;
-      Data : out SD_Data) return SD_Error
+      Data : out HAL.Block_Drivers.Block) return SD_Error
      with Pre => Data'Length mod 512 = 0;
 
    function Read_Blocks_DMA
      (This   : in out SDMMC_Controller;
-      Addr   : UInt64;
-      DMA    : STM32.DMA.DMA_Controller;
-      Stream : STM32.DMA.DMA_Stream_Selector;
-      Data   : out SD_Data) return SD_Error;
+      Addr   :        UInt64;
+      DMA    : in out STM32.DMA.Interrupts.DMA_Interrupt_Controller;
+      Data   :    out HAL.Block_Drivers.Block) return SD_Error;
 
    function Write_Blocks_DMA
      (This   : in out SDMMC_Controller;
-      Addr   : UInt64;
-      DMA    : STM32.DMA.DMA_Controller;
-      Stream : STM32.DMA.DMA_Stream_Selector;
-      Data   : SD_Data) return SD_Error;
+      Addr   :        UInt64;
+      DMA    : in out STM32.DMA.Interrupts.DMA_Interrupt_Controller;
+      Data   :        HAL.Block_Drivers.Block) return SD_Error;
 
    function Stop_Transfer
      (This : in out SDMMC_Controller) return SD_Error;
