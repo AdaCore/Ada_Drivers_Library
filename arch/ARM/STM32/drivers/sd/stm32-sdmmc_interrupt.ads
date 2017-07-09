@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                     Copyright (C) 2016-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -32,63 +32,35 @@
 --   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
-with HAL.SDMMC;
-with STM32.SDMMC;
+with HAL.SDMMC;           use HAL.SDMMC;
+with Ada.Interrupts;
 
-with HAL;               use HAL;
-with HAL.Block_Drivers; use HAL.Block_Drivers;
+limited with STM32.SDMMC;
 
-package SDCard is
+package STM32.SDMMC_Interrupt is
 
-   type SDCard_Controller
-     (Device : not null access STM32.SDMMC.SDMMC_Controller) is
-   limited new Block_Driver with private;
+   ------------------
+   -- SDMMC_Status --
+   ------------------
 
-   Device_Error : exception;
+   protected type SDMMC_Interrupt_Handler
+     (Interrupt_ID : Ada.Interrupts.Interrupt_ID)
+   is
+      pragma Interrupt_Priority (250);
 
-   procedure Initialize
-     (This : in out SDCard_Controller);
-   --  Initilizes the Controller's pins
+      procedure Set_Transfer_State (This : in out STM32.SDMMC.SDMMC_Controller);
+      procedure Clear_Transfer_State;
+      entry Wait_Transfer (Status : out SD_Error);
 
-   function Card_Present
-     (This : in out SDCard_Controller) return Boolean;
-   --  Whether a SD-Card is present in the sdcard reader
+   private
+      procedure Interrupt;
+      pragma Attach_Handler (Interrupt, Interrupt_ID);
 
-   function Get_Card_Information
-     (This : in out SDCard_Controller)
-      return HAL.SDMMC.Card_Information
-     with Pre => This.Card_Present;
-   --  Retrieves the card informations
+      Finished  : Boolean := True;
+      SD_Status : SD_Error;
+      Device    : access STM32.SDMMC.SDMMC_Controller;
+   end SDMMC_Interrupt_Handler;
 
-   function Block_Size
-     (This : in out SDCard_Controller)
-     return UInt32;
-   --  The insterted card block size. 512 Bytes for sd-cards
+   type SDMMC_Interrupt_Handler_Access is access all SDMMC_Interrupt_Handler;
 
-   overriding function Read
-     (This         : in out SDCard_Controller;
-      Block_Number : UInt64;
-      Data         : out Block) return Boolean
-     with Pre => Data'Length <= 16#10000#;
-   --  Reads Data.
-   --  Data size needs to be a multiple of the card's block size and maximum
-   --  length is 2**16
-
-   overriding function Write
-     (This         : in out SDCard_Controller;
-      Block_Number : UInt64;
-      Data         : Block) return Boolean
-     with Pre => Data'Length <= 16#10000#;
-   --  Writes Data.
-   --  Data size needs to be a multiple of the card's block size and maximum
-   --  length is 2**16
-
-private
-
-   type SDCard_Controller
-     (Device : not null access STM32.SDMMC.SDMMC_Controller) is
-   limited new HAL.Block_Drivers.Block_Driver with record
-      Card_Detected : Boolean := False;
-   end record;
-
-end SDCard;
+end STM32.SDMMC_Interrupt;

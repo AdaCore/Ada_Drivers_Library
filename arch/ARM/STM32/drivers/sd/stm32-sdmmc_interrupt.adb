@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                     Copyright (C) 2016-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -32,63 +32,83 @@
 --   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
-with HAL.SDMMC;
-with STM32.SDMMC;
+with STM32.SDMMC; use STM32.SDMMC;
 
-with HAL;               use HAL;
-with HAL.Block_Drivers; use HAL.Block_Drivers;
+package body STM32.SDMMC_Interrupt is
 
-package SDCard is
+   -----------------------------
+   -- SDMMC_Interrupt_Handler --
+   -----------------------------
 
-   type SDCard_Controller
-     (Device : not null access STM32.SDMMC.SDMMC_Controller) is
-   limited new Block_Driver with private;
+   protected body SDMMC_Interrupt_Handler
+   is
 
-   Device_Error : exception;
+      -------------------
+      -- Wait_Transfer --
+      -------------------
 
-   procedure Initialize
-     (This : in out SDCard_Controller);
-   --  Initilizes the Controller's pins
+      entry Wait_Transfer (Status : out SD_Error) when Finished is
+      begin
+         Status := SD_Status;
+      end Wait_Transfer;
 
-   function Card_Present
-     (This : in out SDCard_Controller) return Boolean;
-   --  Whether a SD-Card is present in the sdcard reader
+      ----------------------
+      -- Set_Transferring --
+      ----------------------
 
-   function Get_Card_Information
-     (This : in out SDCard_Controller)
-      return HAL.SDMMC.Card_Information
-     with Pre => This.Card_Present;
-   --  Retrieves the card informations
+      procedure Set_Transfer_State (This : in out STM32.SDMMC.SDMMC_Controller)
+      is
+      begin
+         Finished  := False;
+         Device    := This'Unchecked_Access;
+      end Set_Transfer_State;
 
-   function Block_Size
-     (This : in out SDCard_Controller)
-     return UInt32;
-   --  The insterted card block size. 512 Bytes for sd-cards
+      --------------------------
+      -- Clear_Transfer_State --
+      --------------------------
 
-   overriding function Read
-     (This         : in out SDCard_Controller;
-      Block_Number : UInt64;
-      Data         : out Block) return Boolean
-     with Pre => Data'Length <= 16#10000#;
-   --  Reads Data.
-   --  Data size needs to be a multiple of the card's block size and maximum
-   --  length is 2**16
+      procedure Clear_Transfer_State
+      is
+      begin
+         Finished := True;
+         SD_Status := Error;
+      end Clear_Transfer_State;
 
-   overriding function Write
-     (This         : in out SDCard_Controller;
-      Block_Number : UInt64;
-      Data         : Block) return Boolean
-     with Pre => Data'Length <= 16#10000#;
-   --  Writes Data.
-   --  Data size needs to be a multiple of the card's block size and maximum
-   --  length is 2**16
+      ---------------
+      -- Interrupt --
+      ---------------
 
-private
+      procedure Interrupt
+      is
+      begin
+         Finished := True;
 
-   type SDCard_Controller
-     (Device : not null access STM32.SDMMC.SDMMC_Controller) is
-   limited new HAL.Block_Drivers.Block_Driver with record
-      Card_Detected : Boolean := False;
-   end record;
+         if Get_Flag (Device.all, Data_End) then
+            Clear_Flag (Device.all, Data_End);
+            SD_Status := OK;
 
-end SDCard;
+         elsif Get_Flag (Device.all, Data_CRC_Fail) then
+            Clear_Flag (Device.all, Data_CRC_Fail);
+            SD_Status := CRC_Check_Fail;
+
+         elsif Get_Flag (Device.all, Data_Timeout) then
+            Clear_Flag (Device.all, Data_Timeout);
+            SD_Status := Timeout_Error;
+
+         elsif Get_Flag (Device.all, RX_Overrun) then
+            Clear_Flag (Device.all, RX_Overrun);
+            SD_Status := Rx_Overrun;
+
+         elsif Get_Flag (Device.all, TX_Underrun) then
+            Clear_Flag (Device.all, TX_Underrun);
+            SD_Status := Tx_Underrun;
+         end if;
+
+         for Int in SDMMC_Interrupts loop
+            Disable_Interrupt (Device.all, Int);
+         end loop;
+      end Interrupt;
+
+   end SDMMC_Interrupt_Handler;
+
+end STM32.SDMMC_Interrupt;
