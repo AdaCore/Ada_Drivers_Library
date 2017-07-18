@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                       Copyright (C) 2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,25 +29,44 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with OpenMV;
-with OpenMV.LCD_Shield;
-with OpenMV.Sensor;
+with STM32.DMA.Interrupts; use STM32.DMA.Interrupts;
 
-with Last_Chance_Handler;
-pragma Unreferenced (Last_Chance_Handler);
+package STM32.I2C.DMA is
 
-procedure Main is
-begin
-   OpenMV.Initialize_LEDs;
-   OpenMV.Set_RGB_LED (OpenMV.Off);
-   OpenMV.LCD_Shield.Initialize;
-   OpenMV.Sensor.Initialize;
+   subtype Parent is I2C_Port;
+   type I2C_Port_DMA is limited new Parent with private;
 
-   loop
-      --  Take a snapshot...
-      OpenMV.Sensor.Snapshot (OpenMV.LCD_Shield.Bitmap);
+   procedure Set_TX_DMA_Handler (This : in out I2C_Port_DMA;
+                                 DMA  : DMA_Interrupt_Controller_Access);
 
-      --  ...and display it.
-      OpenMV.LCD_Shield.Display;
-   end loop;
-end Main;
+   procedure Set_RX_DMA_Handler (This : in out I2C_Port_DMA;
+                                 DMA  : DMA_Interrupt_Controller_Access);
+
+   procedure Set_Polling_Threshold (This      : in out I2C_Port_DMA;
+                                    Threshold : Natural);
+   --  Bellow a certain amount of data, polling is faster and more efficient
+   --  than DMA.
+
+private
+
+   type I2C_Port_DMA is limited new Parent with record
+      TX_DMA    : DMA_Interrupt_Controller_Access := null;
+      RX_DMA    : DMA_Interrupt_Controller_Access := null;
+      Threshold : Natural := 5;
+   end record;
+
+   overriding
+   procedure Data_Send
+     (This    : in out I2C_Port_DMA;
+      Data    :        HAL.I2C.I2C_Data;
+      Timeout :        Natural;
+      Status  : out    HAL.I2C.I2C_Status);
+
+   overriding
+   procedure Data_Receive
+     (This    : in out I2C_Port_DMA;
+      Data    :    out HAL.I2C.I2C_Data;
+      Timeout :        Natural;
+      Status  : out    HAL.I2C.I2C_Status);
+
+end STM32.I2C.DMA;

@@ -40,7 +40,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with System;
 
 with STM32_SVD.SPI; use STM32_SVD.SPI;
 
@@ -699,6 +698,18 @@ package body STM32.SPI is
          Reset_CRC (This);
       end if;
    end Transmit_Receive;
+
+   ---------------------------
+   -- Data_Register_Address --
+   ---------------------------
+
+   function Data_Register_Address
+     (This : SPI_Port)
+      return System.Address
+   is
+   begin
+      return This.Periph.DR'Address;
+   end Data_Register_Address;
 
    -----------------------------
    -- Send_Receive_16bit_Mode --

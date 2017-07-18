@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                    Copyright (C) 2016-2017, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,25 +29,33 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with OpenMV;
-with OpenMV.LCD_Shield;
-with OpenMV.Sensor;
+with Ada.Interrupts;
 
-with Last_Chance_Handler;
-pragma Unreferenced (Last_Chance_Handler);
+package STM32.DMA.Interrupts is
 
-procedure Main is
-begin
-   OpenMV.Initialize_LEDs;
-   OpenMV.Set_RGB_LED (OpenMV.Off);
-   OpenMV.LCD_Shield.Initialize;
-   OpenMV.Sensor.Initialize;
+   protected type DMA_Interrupt_Controller
+     (Controller : not null access DMA_Controller;
+      Stream     : DMA_Stream_Selector;
+      ID         : Ada.Interrupts.Interrupt_ID)
+   is
 
-   loop
-      --  Take a snapshot...
-      OpenMV.Sensor.Snapshot (OpenMV.LCD_Shield.Bitmap);
+      procedure Start_Transfer (Source      : Address;
+                                Destination : Address;
+                                Data_Count  : UInt16);
 
-      --  ...and display it.
-      OpenMV.LCD_Shield.Display;
-   end loop;
-end Main;
+      procedure Abort_Transfer (Result : out DMA_Error_Code);
+
+      entry Wait_For_Completion (Status : out DMA_Error_Code);
+
+   private
+
+      procedure Interrupt_Handler;
+      pragma Attach_Handler (Interrupt_Handler, ID);
+
+      No_Transfer_In_Progess : Boolean := True;
+      Last_Status            : DMA_Error_Code := DMA_No_Error;
+   end DMA_Interrupt_Controller;
+
+   type DMA_Interrupt_Controller_Access is access all DMA_Interrupt_Controller;
+
+end STM32.DMA.Interrupts;

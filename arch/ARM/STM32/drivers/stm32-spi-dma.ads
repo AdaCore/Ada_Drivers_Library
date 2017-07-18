@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                    Copyright (C) 2016-2017, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,25 +29,56 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with OpenMV;
-with OpenMV.LCD_Shield;
-with OpenMV.Sensor;
+with STM32.DMA.Interrupts; use STM32.DMA.Interrupts;
 
-with Last_Chance_Handler;
-pragma Unreferenced (Last_Chance_Handler);
+package STM32.SPI.DMA is
 
-procedure Main is
-begin
-   OpenMV.Initialize_LEDs;
-   OpenMV.Set_RGB_LED (OpenMV.Off);
-   OpenMV.LCD_Shield.Initialize;
-   OpenMV.Sensor.Initialize;
+   subtype Parent is SPI_Port;
+   type SPI_Port_DMA is limited new Parent with private;
 
-   loop
-      --  Take a snapshot...
-      OpenMV.Sensor.Snapshot (OpenMV.LCD_Shield.Bitmap);
+   procedure Set_TX_DMA_Handler (This : in out SPI_Port_DMA;
+                                 DMA  : DMA_Interrupt_Controller_Access);
 
-      --  ...and display it.
-      OpenMV.LCD_Shield.Display;
-   end loop;
-end Main;
+   procedure Set_Polling_Threshold (This      : in out SPI_Port_DMA;
+                                    Threshold : Natural);
+
+   overriding
+   procedure Configure (This : in out SPI_Port_DMA;
+                        Conf : SPI_Configuration);
+
+   overriding
+   procedure Transmit
+     (This   : in out SPI_Port_DMA;
+      Data   : HAL.SPI.SPI_Data_8b;
+      Status : out HAL.SPI.SPI_Status;
+      Timeout : Natural := 1000);
+
+   overriding
+   procedure Transmit
+     (This   : in out SPI_Port_DMA;
+      Data   : HAL.SPI.SPI_Data_16b;
+      Status : out HAL.SPI.SPI_Status;
+      Timeout : Natural := 1000);
+
+   overriding
+   procedure Receive
+     (This    : in out SPI_Port_DMA;
+      Data    : out HAL.SPI.SPI_Data_8b;
+      Status  : out HAL.SPI.SPI_Status;
+      Timeout : Natural := 1000);
+
+   overriding
+   procedure Receive
+     (This    : in out SPI_Port_DMA;
+      Data    : out HAL.SPI.SPI_Data_16b;
+      Status  : out HAL.SPI.SPI_Status;
+      Timeout : Natural := 1000);
+
+private
+
+   type SPI_Port_DMA is limited new Parent with record
+      TX_DMA    : DMA_Interrupt_Controller_Access := null;
+      Threshold : Natural := 5;
+   end record;
+
+end STM32.SPI.DMA;

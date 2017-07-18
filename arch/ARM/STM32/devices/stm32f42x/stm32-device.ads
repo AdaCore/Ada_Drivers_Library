@@ -42,19 +42,23 @@
 --  This file provides declarations for devices on the STM32F42xx MCUs
 --  manufactured by ST Microelectronics.  For example, an STM32F429.
 
-with STM32_SVD;     use STM32_SVD;
+with STM32_SVD;            use STM32_SVD;
 
-with STM32.DMA;     use STM32.DMA;
-with STM32.GPIO;    use STM32.GPIO;
-with STM32.ADC;     use STM32.ADC;
-with STM32.USARTs;  use STM32.USARTs;
-with STM32.SPI;     use STM32.SPI;
-with STM32.I2S;     use STM32.I2S;
-with STM32.I2C;     use STM32.I2C;
-with STM32.Timers;  use STM32.Timers;
-with STM32.DAC;     use STM32.DAC;
-with STM32.RTC;     use STM32.RTC;
-with STM32.CRC;     use STM32.CRC;
+with STM32.DMA;            use STM32.DMA;
+with STM32.DMA.Interrupts; use STM32.DMA.Interrupts;
+with STM32.GPIO;           use STM32.GPIO;
+with STM32.ADC;            use STM32.ADC;
+with STM32.USARTs;         use STM32.USARTs;
+with STM32.SPI;            use STM32.SPI;
+with STM32.SPI.DMA;        use STM32.SPI.DMA;
+with STM32.I2S;            use STM32.I2S;
+with STM32.I2C;            use STM32.I2C;
+with STM32.I2C.DMA;        use STM32.I2C.DMA;
+with STM32.Timers;         use STM32.Timers;
+with STM32.DAC;            use STM32.DAC;
+with STM32.RTC;            use STM32.RTC;
+with STM32.CRC;            use STM32.CRC;
+with Ada.Interrupts.Names;
 
 package STM32.Device is
    pragma Elaborate_Body;
@@ -371,6 +375,40 @@ package STM32.Device is
    DMA_1 : aliased DMA_Controller with Import, Volatile, Address => DMA1_Base;
    DMA_2 : aliased DMA_Controller with Import, Volatile, Address => DMA2_Base;
 
+   DMA1_Stream0 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_0, Ada.Interrupts.Names.DMA1_Stream0_Interrupt);
+   DMA1_Stream1 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_1, Ada.Interrupts.Names.DMA1_Stream1_Interrupt);
+   DMA1_Stream2 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_2, Ada.Interrupts.Names.DMA1_Stream2_Interrupt);
+   DMA1_Stream3 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_3, Ada.Interrupts.Names.DMA1_Stream3_Interrupt);
+   DMA1_Stream4 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_4, Ada.Interrupts.Names.DMA1_Stream4_Interrupt);
+   DMA1_Stream5 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_5, Ada.Interrupts.Names.DMA1_Stream5_Interrupt);
+   DMA1_Stream6 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_6, Ada.Interrupts.Names.DMA1_Stream6_Interrupt);
+   DMA1_Stream7 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_7, Ada.Interrupts.Names.DMA1_Stream7_Interrupt);
+
+   DMA2_Stream0 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_0, Ada.Interrupts.Names.DMA2_Stream0_Interrupt);
+   DMA2_Stream1 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_1, Ada.Interrupts.Names.DMA2_Stream1_Interrupt);
+   DMA2_Stream2 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_2, Ada.Interrupts.Names.DMA2_Stream2_Interrupt);
+   DMA2_Stream3 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_3, Ada.Interrupts.Names.DMA2_Stream3_Interrupt);
+   DMA2_Stream4 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_4, Ada.Interrupts.Names.DMA2_Stream4_Interrupt);
+   DMA2_Stream5 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_5, Ada.Interrupts.Names.DMA2_Stream5_Interrupt);
+   DMA2_Stream6 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_6, Ada.Interrupts.Names.DMA2_Stream6_Interrupt);
+   DMA2_Stream7 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_7, Ada.Interrupts.Names.DMA2_Stream7_Interrupt);
+
    procedure Enable_Clock (This : aliased in out DMA_Controller);
    procedure Reset (This : aliased in out DMA_Controller);
 
@@ -384,12 +422,16 @@ package STM32.Device is
    I2C_2 : aliased I2C_Port (Internal_I2C_Port_2'Access);
    I2C_3 : aliased I2C_Port (Internal_I2C_Port_3'Access);
 
-   function As_Port_Id (Port : I2C_Port) return I2C_Port_Id with Inline;
+   I2C_1_DMA : aliased I2C_Port_DMA (Internal_I2C_Port_1'Access);
+   I2C_2_DMA : aliased I2C_Port_DMA (Internal_I2C_Port_2'Access);
+   I2C_3_DMA : aliased I2C_Port_DMA (Internal_I2C_Port_3'Access);
 
-   procedure Enable_Clock (This : I2C_Port);
+   function As_Port_Id (Port : I2C_Port'Class) return I2C_Port_Id with Inline;
+
+   procedure Enable_Clock (This : I2C_Port'Class);
    procedure Enable_Clock (This : I2C_Port_Id);
 
-   procedure Reset (This : I2C_Port);
+   procedure Reset (This : I2C_Port'Class);
    procedure Reset (This : I2C_Port_Id);
 
    Internal_SPI_1 : aliased Internal_SPI_Port with Import, Volatile, Address => SPI1_Base;
@@ -406,8 +448,15 @@ package STM32.Device is
    SPI_5 : aliased SPI_Port (Internal_SPI_5'Access);
    SPI_6 : aliased SPI_Port (Internal_SPI_6'Access);
 
-   procedure Enable_Clock (This : SPI_Port);
-   procedure Reset (This : SPI_Port);
+   SPI_1_DMA : aliased SPI_Port_DMA (Internal_SPI_1'Access);
+   SPI_2_DMA : aliased SPI_Port_DMA (Internal_SPI_2'Access);
+   SPI_3_DMA : aliased SPI_Port_DMA (Internal_SPI_3'Access);
+   SPI_4_DMA : aliased SPI_Port_DMA (Internal_SPI_4'Access);
+   SPI_5_DMA : aliased SPI_Port_DMA (Internal_SPI_5'Access);
+   SPI_6_DMA : aliased SPI_Port_DMA (Internal_SPI_6'Access);
+
+   procedure Enable_Clock (This : SPI_Port'Class);
+   procedure Reset (This : SPI_Port'Class);
 
    Internal_I2S_1 : aliased Internal_I2S_Port with Import, Volatile, Address => SPI1_Base;
    Internal_I2S_2 : aliased Internal_I2S_Port with Import, Volatile, Address => SPI2_Base;

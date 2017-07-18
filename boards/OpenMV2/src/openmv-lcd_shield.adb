@@ -129,6 +129,7 @@ package body OpenMV.LCD_Shield is
                    X_End   => 127,
                    Y_Start => 0,
                    Y_End   => 159);
+
       Turn_On (LCD_Driver);
 
       LCD_Driver.Initialize_Layer (Layer  => 1,
@@ -140,20 +141,20 @@ package body OpenMV.LCD_Shield is
       Is_Initialized := True;
    end Initialize;
 
-   ----------------
-   -- Get_Bitmap --
-   ----------------
+   ------------
+   -- Bitmap --
+   ------------
 
-   function Get_Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer is
+   function Bitmap return not null HAL.Bitmap.Any_Bitmap_Buffer is
    begin
       return LCD_Driver.Hidden_Buffer (1);
-   end Get_Bitmap;
+   end Bitmap;
 
-   ----------------------
-   -- Rotate_Screen_90 --
-   ----------------------
+   -----------------------
+   -- Rotate_Screen_180 --
+   -----------------------
 
-   procedure Rotate_Screen_90 is
+   procedure Rotate_Screen_180 is
    begin
       Set_Memory_Data_Access
         (LCD                 => LCD_Driver,
@@ -163,7 +164,7 @@ package body OpenMV.LCD_Shield is
          Row_Addr_Order      => Row_Address_Top_Bottom,
          Column_Addr_Order   => Column_Address_Left_Right,
          Row_Column_Exchange => False);
-   end Rotate_Screen_90;
+   end Rotate_Screen_180;
 
    ---------------------
    -- Rotate_Screen_0 --

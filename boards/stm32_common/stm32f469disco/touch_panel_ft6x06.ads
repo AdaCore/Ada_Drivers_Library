@@ -34,8 +34,11 @@ with HAL.Framebuffer;
 
 private with FT6x06;
 private with STM32.Device;
-private with STM32.I2C;
+private with STM32.I2C.DMA;
+private with STM32.DMA;
+private with STM32.DMA.Interrupts;
 private with STM32.GPIO;
+private with Ada.Interrupts.Names;
 
 package Touch_Panel_FT6x06 is
 
@@ -58,10 +61,26 @@ package Touch_Panel_FT6x06 is
 
 private
 
-   TP_I2C        : STM32.I2C.I2C_Port renames STM32.Device.I2C_1;
+   TP_I2C        : STM32.I2C.DMA.I2C_Port_DMA renames STM32.Device.I2C_1_DMA;
    TP_I2C_SCL    : STM32.GPIO.GPIO_Point renames STM32.Device.PB8;
    TP_I2C_SDA    : STM32.GPIO.GPIO_Point renames STM32.Device.PB9;
    TP_I2C_AF     : STM32.GPIO_Alternate_Function renames STM32.Device.GPIO_AF_I2C1_4;
+
+   I2C_TX_RX_DMA     : STM32.DMA.DMA_Controller renames STM32.Device.DMA_1;
+
+   I2C_TX_DMA_Chan   : STM32.DMA.DMA_Channel_Selector renames STM32.DMA.Channel_1;
+   I2C_TX_DMA_Stream : STM32.DMA.DMA_Stream_Selector renames STM32.DMA.Stream_6;
+   I2C_TX_DMA_Int    : aliased STM32.DMA.Interrupts.DMA_Interrupt_Controller
+     (I2C_TX_RX_DMA'Access,
+      I2C_TX_DMA_Stream,
+      Ada.Interrupts.Names.DMA1_Stream6_Interrupt);
+
+   I2C_RX_DMA_Chan   : STM32.DMA.DMA_Channel_Selector renames STM32.DMA.Channel_1;
+   I2C_RX_DMA_Stream : STM32.DMA.DMA_Stream_Selector renames STM32.DMA.Stream_0;
+   I2C_RX_DMA_Int    : aliased STM32.DMA.Interrupts.DMA_Interrupt_Controller
+     (I2C_TX_RX_DMA'Access,
+      I2C_RX_DMA_Stream,
+      Ada.Interrupts.Names.DMA1_Stream0_Interrupt);
 
    type Touch_Panel is limited new FT6x06.FT6x06_Device
      (Port     => TP_I2C'Access,

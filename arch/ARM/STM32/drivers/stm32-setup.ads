@@ -43,7 +43,7 @@ with STM32.GPIO; use STM32.GPIO;
 
 package STM32.Setup is
 
-   procedure Setup_I2C_Master (Port           : in out I2C_Port;
+   procedure Setup_I2C_Master (Port           : in out I2C_Port'Class;
                                SDA, SCL       : GPIO_Point;
                                SDA_AF, SCL_AF : GPIO_Alternate_Function;
                                Clock_Speed    : UInt32);
