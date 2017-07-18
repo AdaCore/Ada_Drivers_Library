@@ -43,7 +43,7 @@ with System;
 --  @summary File handling for FAT FS
 private package Filesystem.FAT.Files is
 
-   type File_Data is array (FAT_File_Size range <>) of Interfaces.Unsigned_8;
+   type File_Data is array (FAT_File_Size range <>) of HAL.UInt8;
 
    function Open
      (Parent : FAT_Node;

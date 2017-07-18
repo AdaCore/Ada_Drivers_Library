@@ -389,8 +389,6 @@ package body Filesystem.FAT is
      (FS     : not null access FAT_Filesystem;
       Status : out Status_Code)
    is
-      use type HAL.Byte_Array;
-
       subtype Disk_Parameter_Block is Block (0 .. 91);
       function To_Disk_Parameter is new Ada.Unchecked_Conversion
         (Disk_Parameter_Block, FAT_Disk_Parameter);
@@ -517,7 +515,7 @@ package body Filesystem.FAT is
       end if;
 
       if not FS.Controller.Read
-        (Unsigned_64 (FS.LBA) + Unsigned_64 (Block), FS.Window)
+        (FS.LBA + Block, FS.Window)
       then
          FS.Window_Block  := 16#FFFF_FFFF#;
 
@@ -888,7 +886,7 @@ package body Filesystem.FAT is
          FS.FAT_Block := Block_Num;
 
          if not FS.Controller.Read
-           (Unsigned_64 (FS.LBA) + Unsigned_64 (FS.FAT_Block),
+           (FS.LBA + FS.FAT_Block,
             FS.FAT_Window)
          then
             FS.FAT_Block := 16#FFFF_FFFF#;
@@ -937,10 +935,7 @@ package body Filesystem.FAT is
       if Block_Num /= FS.FAT_Block then
          FS.FAT_Block := Block_Num;
 
-         if not FS.Controller.Read
-           (Unsigned_64 (FS.LBA) + Unsigned_64 (FS.FAT_Block),
-            FS.FAT_Window)
-         then
+         if not FS.Controller.Read (FS.LBA + FS.FAT_Block, FS.FAT_Window) then
             FS.FAT_Block := 16#FFFF_FFFF#;
             return Disk_Error;
          end if;
@@ -950,10 +945,7 @@ package body Filesystem.FAT is
 
       FS.FAT_Window (Idx .. Idx + 3) := From_Cluster (Value);
 
-      if not FS.Controller.Write
-        (Unsigned_64 (FS.LBA) + Unsigned_64 (FS.FAT_Block),
-         FS.FAT_Window)
-      then
+      if not FS.Controller.Write (FS.LBA + FS.FAT_Block, FS.FAT_Window) then
          return Disk_Error;
       end if;
 
@@ -967,7 +959,6 @@ package body Filesystem.FAT is
    procedure Write_FSInfo
      (FS : in out FAT_Filesystem)
    is
-      use type HAL.Byte_Array;
       subtype FSInfo_Block is Block (0 .. 11);
       function From_FSInfo is new Ada.Unchecked_Conversion
         (FAT_FS_Info, FSInfo_Block);
@@ -1101,10 +1092,7 @@ package body Filesystem.FAT is
      (FS : in out FAT_Filesystem) return Status_Code
    is
    begin
-      if FS.Controller.Write
-        (Unsigned_64 (FS.LBA) + Unsigned_64 (FS.Window_Block),
-         FS.Window)
-      then
+      if FS.Controller.Write (FS.LBA + FS.Window_Block, FS.Window) then
          return OK;
       else
          return Disk_Error;

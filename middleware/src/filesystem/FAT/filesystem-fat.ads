@@ -31,6 +31,7 @@
 
 with System;
 with Interfaces;        use Interfaces;
+with HAL;               use HAL;
 with HAL.Block_Drivers; use HAL.Block_Drivers;
 
 package Filesystem.FAT is

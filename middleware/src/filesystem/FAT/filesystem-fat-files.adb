@@ -218,13 +218,15 @@ package body Filesystem.FAT.Files is
       Addr   : System.Address;
       Length : in out FAT_File_Size) return Status_Code
    is
-      function To_U32 is new Ada.Unchecked_Conversion
-        (System.Address, Unsigned_32);
+      type Address is mod 2 ** System.Word_Size;
+
+      function To_Address is new Ada.Unchecked_Conversion
+        (System.Address, Address);
 
       Data        : File_Data (1 .. Length) with Import, Address => Addr;
       --  Byte array representation of the buffer to read
 
-      Addr_Int    : constant Unsigned_32 := To_U32 (Addr);
+      Addr_Int    : constant Unsigned_64 := Unsigned_64 (To_Address (Addr));
 
       Idx         : FAT_File_Size;
       --  Index from the current block
@@ -291,7 +293,7 @@ package body Filesystem.FAT.Files is
 
                if not File.FS.Controller.Read
                  (Absolute_Block (File),
-                  HAL.Byte_Array
+                  HAL.UInt8_Array
                     (Data
                       (Data_Idx ..
                        Data_Idx +

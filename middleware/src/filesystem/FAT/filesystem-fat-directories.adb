@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
+with HAL; use HAL;
 
 package body Filesystem.FAT.Directories is
 
