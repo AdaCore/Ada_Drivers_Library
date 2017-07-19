@@ -42,7 +42,7 @@ package Filesystem.VFS is
 
    function Mount_Volume
      (Mount_Point : Mount_Path;
-      FS          : Filesystem_Access) return Status_Code;
+      FS          : Any_Filesystem) return Status_Code;
 
    function Mount_Drive
      (Mount_Point : Mount_Path;
@@ -53,13 +53,13 @@ package Filesystem.VFS is
    function Open
      (Path   : String;
       Status : out Status_Code)
-      return Directory_Handle;
+      return Any_Directory_Handle;
 
    function Open
      (Path   : String;
       Mode   : File_Mode;
       Status : out Status_Code)
-      return File_Handle;
+      return Any_File_Handle;
 
 private
 
@@ -67,25 +67,25 @@ private
       Is_Free  : Boolean := True;
       Name     : String (1 .. MAX_MOUNT_NAME_LENGTH);
       Name_Len : Positive;
-      FS       : Filesystem_Access;
+      FS       : Any_Filesystem;
    end record;
 
    subtype Mount_Index is Integer range 0 .. MAX_MOUNT_POINTS;
    subtype Valid_Mount_Index is Mount_Index range 1 .. MAX_MOUNT_POINTS;
    type Mount_Array is array (Valid_Mount_Index) of Mount_Record;
 
-   type VFS_Directory_Handle is new Directory_Handle_Object with record
+   type VFS_Directory_Handle is new Directory_Handle with record
       Is_Free  : Boolean := True;
       Mount_Id : Mount_Index;
    end record;
 
    overriding function Get_FS
-     (Dir : access VFS_Directory_Handle) return Filesystem_Access;
+     (Dir : access VFS_Directory_Handle) return Any_Filesystem;
    --  Return the filesystem the handle belongs to.
 
    overriding function Read
      (Dir    : access VFS_Directory_Handle;
-      Status : out Status_Code) return Node_Access;
+      Status : out Status_Code) return Any_Node_Handle;
    --  Reads the next directory entry. If no such entry is there, an error
    --  code is returned in Status.
 

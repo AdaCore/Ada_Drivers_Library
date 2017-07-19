@@ -84,137 +84,137 @@ package Filesystem is
    --  representation
 
    type Filesystem is limited interface;
-   type Filesystem_Access is access all Filesystem'Class;
+   type Any_Filesystem is access all Filesystem'Class;
 
-   type Directory_Handle_Object is limited interface;
-   type Directory_Handle is access all Directory_Handle_Object'Class;
+   type Directory_Handle is limited interface;
+   type Any_Directory_Handle is access all Directory_Handle'Class;
 
-   type File_Handle_Object is limited interface;
-   type File_Handle is access all File_Handle_Object'Class;
+   type File_Handle is limited interface;
+   type Any_File_Handle is access all File_Handle'Class;
 
-   type Node is interface;
-   type Node_Access is access all Node'Class;
+   type Node_Handle is interface;
+   type Any_Node_Handle is access all Node_Handle'Class;
 
    ---------------------------
    --  Directory operations --
    ---------------------------
 
    function Open
-     (FS     : access Filesystem;
+     (This   : access Filesystem;
       Path   : String;
       Status : out Status_Code)
-      return Directory_Handle is abstract;
+      return Any_Directory_Handle is abstract;
    --  Open a new Directory Handle at the given Filesystem Path
 
    function Open
-     (N      : Node;
-      Status : out Status_Code) return Directory_Handle is abstract
-     with Pre'Class => N.Is_Subdirectory;
+     (This   : Node_Handle;
+      Status : out Status_Code) return Any_Directory_Handle is abstract
+     with Pre'Class => This.Is_Subdirectory;
 
    function Get_FS
-     (Dir : access Directory_Handle_Object) return Filesystem_Access
+     (This : access Directory_Handle) return Any_Filesystem
       is abstract;
    --  Return the filesystem the handle belongs to.
 
    function Root_Node
-     (FS     : access Filesystem;
+     (This     : access Filesystem;
       As     : String;
       Status : out Status_Code)
-      return Node_Access is abstract;
+      return Any_Node_Handle is abstract;
    --  Open a new Directory Handle at the given Filesystem Path
 
    function Read
-     (Dir    : access Directory_Handle_Object;
-      Status : out Status_Code) return Node_Access is abstract;
+     (This   : access Directory_Handle;
+      Status : out Status_Code) return Any_Node_Handle is abstract;
    --  Reads the next directory entry. If no such entry is there, an error
    --  code is returned in Status.
 
-   procedure Reset (Dir : access Directory_Handle_Object) is abstract;
+   procedure Reset (This : access Directory_Handle) is abstract;
    --  Resets the handle to the first node
 
-   procedure Close (Dir : access Directory_Handle_Object) is abstract;
+   procedure Close (This : access Directory_Handle) is abstract;
    --  Closes the handle, and free the associated resources.
 
    ---------------------
    -- Node operations --
    ---------------------
 
-   function Get_FS (N : Node) return Filesystem_Access is abstract;
+   function Get_FS (This : Node_Handle) return Any_Filesystem is abstract;
 
-   function Basename (N : Node) return String is abstract;
+   function Basename (This : Node_Handle) return String is abstract;
 
-   function Is_Read_Only (N : Node) return Boolean is abstract;
+   function Is_Read_Only (This : Node_Handle) return Boolean is abstract;
 
-   function Is_Hidden (N : Node) return Boolean is abstract;
+   function Is_Hidden (This : Node_Handle) return Boolean is abstract;
 
-   function Is_Subdirectory (N : Node) return Boolean is abstract;
+   function Is_Subdirectory (This : Node_Handle) return Boolean is abstract;
 
-   function Is_Symlink (N : Node) return Boolean is abstract;
+   function Is_Symlink (This : Node_Handle) return Boolean is abstract;
 
-   function Size (N : Node) return File_Size is abstract;
+   function Size (This : Node_Handle) return File_Size is abstract;
 
    ---------------------
    -- File operations --
    ---------------------
 
    function Open
-     (FS     : access Filesystem;
+     (This   : access Filesystem;
       Path   : String;
       Mode   : File_Mode;
       Status : out Status_Code)
-      return File_Handle is abstract;
+      return Any_File_Handle is abstract;
    --  Open a new File Handle at the given Filesystem Path
 
    function Open
-     (Parent : Node;
+     (This   : Node_Handle;
       Name   : String;
       Mode   : File_Mode;
-      Status : out Status_Code) return File_Handle is abstract
-     with Pre'Class => Is_Subdirectory (Parent);
+      Status : out Status_Code) return Any_File_Handle is abstract
+     with Pre'Class => Is_Subdirectory (This);
 
    function Get_FS
-     (File : access File_Handle_Object) return Filesystem_Access is abstract;
+     (This : access File_Handle) return Any_Filesystem is abstract;
 
    function Size
-     (File : access File_Handle_Object) return File_Size is abstract;
+     (This : access File_Handle) return File_Size is abstract;
 
    function Mode
-     (File : access File_Handle_Object) return File_Mode is abstract;
+     (This : access File_Handle) return File_Mode is abstract;
 
    function Read
-     (File   : access File_Handle_Object;
+     (This   : access File_Handle;
       Addr   : System.Address;
       Length : in out File_Size) return Status_Code is abstract;
 
    generic
       type T is private;
    function Generic_Read
-     (File  : File_Handle;
+     (This  : Any_File_Handle;
       Value : out T) return Status_Code;
 
    function Write
-     (File   : access File_Handle_Object;
+     (This   : access File_Handle;
       Addr   : System.Address;
       Length : File_Size) return Status_Code is abstract;
 
    generic
       type T is private;
    function Generic_Write
-     (File  : File_Handle;
+     (This  : Any_File_Handle;
       Value : T) return Status_Code;
 
    function Offset
-     (File : access File_Handle_Object) return File_Size is abstract;
+     (This : access File_Handle) return File_Size is abstract;
 
    function Flush
-     (File : access File_Handle_Object) return Status_Code is abstract;
+     (This : access File_Handle) return Status_Code is abstract;
 
    function Seek
-     (File   : access File_Handle_Object;
+     (This   : access File_Handle;
       Origin : Seek_Mode;
       Amount : in out File_Size) return Status_Code is abstract;
 
-   procedure Close (File : access File_Handle_Object) is abstract;
+   procedure Close (This : access File_Handle) is abstract;
 
    -------------------
    -- FS operations --
@@ -226,6 +226,6 @@ package Filesystem is
       FS         : not null access Filesystem) return Status_Code is abstract;
    --  Open the FS partition located at the specified LBA.
 
-   procedure Close (FS : not null access Filesystem) is abstract;
+   procedure Close (This : not null access Filesystem) is abstract;
 
 end Filesystem;

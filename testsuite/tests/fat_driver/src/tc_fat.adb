@@ -21,14 +21,14 @@ procedure TC_FAT is
                         Dirname  : String)
                         return Boolean;
 
-   function Compute_Hash (Handle : Filesystem.File_Handle)
+   function Compute_Hash (Handle : Filesystem.Any_File_Handle)
                           return Message_Digest;
 
    ------------------
    -- Compute_Hash --
    ------------------
 
-   function Compute_Hash (Handle : Filesystem.File_Handle)
+   function Compute_Hash (Handle : Filesystem.Any_File_Handle)
                           return Message_Digest
    is
       Context : aliased GNAT.MD5.Context := GNAT.MD5.Initial_Context;
@@ -56,9 +56,9 @@ procedure TC_FAT is
    ---------------
 
    function Check_Dir (Dirname : String) return Boolean is
-      Handle : Filesystem.Directory_Handle;
+      Handle : Filesystem.Any_Directory_Handle;
       Status : Status_Code;
-      Node   : Filesystem.Node_Access;
+      Node   : Filesystem.Any_Node_Handle;
    begin
       Put_Line ("Checking directory: '" & Dirname & "'");
       Handle := Filesystem.VFS.Open (Dirname, Status);
@@ -100,7 +100,7 @@ procedure TC_FAT is
                         Dirname  : String)
                         return Boolean
    is
-      Handle : Filesystem.File_Handle;
+      Handle : Filesystem.Any_File_Handle;
       Status : Status_Code;
       Path   : constant String := Dirname & "/" & Basename;
    begin
@@ -129,7 +129,7 @@ procedure TC_FAT is
    end Check_File;
 
    FS            : aliased Native_FS_Driver;
-   Disk_Img      : Any_File_Handle;
+   Disk_Img      : HAL.Filesystem.Any_File_Handle;
    Disk_Img_Path : constant String := "fat.fs";
 
    Status : Status_Code;

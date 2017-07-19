@@ -472,8 +472,8 @@ package body Filesystem.FAT is
 
    overriding procedure Close (FS : not null access FAT_Filesystem)
    is
-      File : File_Handle;
-      Dir  : Directory_Handle;
+      File : Any_File_Handle;
+      Dir  : Any_Directory_Handle;
    begin
       for J in The_File_Handles'Range loop
          if not The_File_Handles (J).Is_Free
@@ -535,7 +535,7 @@ package body Filesystem.FAT is
      (FS     : access FAT_Filesystem;
       As     : String;
       Status : out Status_Code)
-      return Node_Access
+      return Any_Node_Handle
    is
    begin
       FS.Root_Entry.L_Name := -As;
@@ -550,10 +550,10 @@ package body Filesystem.FAT is
    overriding function Open
      (FS     : access FAT_Filesystem;
       Path   : String;
-      Status : out Status_Code) return Directory_Handle
+      Status : out Status_Code) return Any_Directory_Handle
    is
    begin
-      return Directory_Handle (FAT_Open (FS, Path, Status));
+      return Any_Directory_Handle (FAT_Open (FS, Path, Status));
    end Open;
 
    --------------
@@ -590,10 +590,10 @@ package body Filesystem.FAT is
 
    overriding function Open
      (D_Entry : FAT_Node;
-      Status  : out Status_Code) return Directory_Handle
+      Status  : out Status_Code) return Any_Directory_Handle
    is
    begin
-      return Directory_Handle (D_Entry.FAT_Open (Status));
+      return Any_Directory_Handle (D_Entry.FAT_Open (Status));
    end Open;
 
    ----------
@@ -660,7 +660,7 @@ package body Filesystem.FAT is
 
    overriding function Read
      (Dir    : access FAT_Directory_Handle;
-      Status : out Status_Code) return Node_Access
+      Status : out Status_Code) return Any_Node_Handle
    is
    begin
       Status := Directories.Read (Dir, Dir.Current_Node);
@@ -690,7 +690,7 @@ package body Filesystem.FAT is
      (FS     : access FAT_Filesystem;
       Path   : String;
       Mode   : File_Mode;
-      Status : out Status_Code) return File_Handle
+      Status : out Status_Code) return Any_File_Handle
    is
       Parent_E : FAT_Node;
 
@@ -721,7 +721,7 @@ package body Filesystem.FAT is
      (Parent : FAT_Node;
       Name   : String;
       Mode   : File_Mode;
-      Status : out Status_Code) return File_Handle
+      Status : out Status_Code) return Any_File_Handle
    is
       Handle : FAT_File_Handle_Access;
    begin
@@ -734,7 +734,7 @@ package body Filesystem.FAT is
 
       Status := Files.Open (Parent, -Name, Mode, Handle);
 
-      return File_Handle (Handle);
+      return Any_File_Handle (Handle);
    end Open;
 
    ----------

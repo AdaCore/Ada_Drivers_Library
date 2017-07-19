@@ -52,7 +52,7 @@ package Filesystem.FAT is
 
    type FAT_Filesystem is limited new Filesystem with private;
 
-   type FAT_Node is new Node with private;
+   type FAT_Node is new Node_Handle with private;
 
    -----------------------
    -- PATH MANIPULATION --
@@ -80,16 +80,16 @@ package Filesystem.FAT is
    overriding function Open
      (FS     : access FAT_Filesystem;
       Path   : String;
-      Status : out Status_Code) return Directory_Handle;
+      Status : out Status_Code) return Any_Directory_Handle;
    overriding function Open
      (D_Entry : FAT_Node;
-      Status  : out Status_Code) return Directory_Handle;
+      Status  : out Status_Code) return Any_Directory_Handle;
 
    overriding function Root_Node
      (FS     : access FAT_Filesystem;
       As     : String;
       Status : out Status_Code)
-      return Node_Access;
+      return Any_Node_Handle;
    function Long_Name (E : FAT_Node) return FAT_Name;
    function Short_Name (E : FAT_Node) return FAT_Name;
    overriding function Basename (E : FAT_Node) return String;
@@ -102,7 +102,7 @@ package Filesystem.FAT is
    function Is_Archive (E : FAT_Node) return Boolean;
    overriding function Size (E : FAT_Node) return File_Size;
    overriding function Get_FS
-     (E : FAT_Node) return Filesystem_Access;
+     (E : FAT_Node) return Any_Filesystem;
 
    -------------------
    -- FILE HANDLING --
@@ -112,13 +112,13 @@ package Filesystem.FAT is
      (FS     : access FAT_Filesystem;
       Path   : String;
       Mode   : File_Mode;
-      Status : out Status_Code) return File_Handle;
+      Status : out Status_Code) return Any_File_Handle;
 
    overriding function Open
      (Parent : FAT_Node;
       Name   : String;
       Mode   : File_Mode;
-      Status : out Status_Code) return File_Handle
+      Status : out Status_Code) return Any_File_Handle
    with Pre => Name'Length <= MAX_FILENAME_LENGTH;
 
    --------------------
@@ -383,7 +383,7 @@ private
    type Entry_Index is new Unsigned_16;
    Null_Index : Entry_Index := 16#FFFF#;
 
-   type FAT_Directory_Handle is limited new Directory_Handle_Object with record
+   type FAT_Directory_Handle is limited new Directory_Handle with record
       Is_Free         : Boolean := True;
       FS              : FAT_Filesystem_Access;
       Current_Index   : Entry_Index;
@@ -394,11 +394,11 @@ private
    end record;
 
    overriding function Get_FS
-     (Dir : access FAT_Directory_Handle) return Filesystem_Access;
+     (Dir : access FAT_Directory_Handle) return Any_Filesystem;
 
    overriding function Read
      (Dir    : access FAT_Directory_Handle;
-      Status : out Status_Code) return Node_Access;
+      Status : out Status_Code) return Any_Node_Handle;
 
    overriding procedure Reset (Dir : access FAT_Directory_Handle);
 
@@ -423,7 +423,7 @@ private
       Archive      : Boolean;
    end record with Size => 8, Pack;
 
-   type FAT_Node is new Node with record
+   type FAT_Node is new Node_Handle with record
       FS            : FAT_Filesystem_Access;
       L_Name        : FAT_Name;
       S_Name        : String (1 .. 8);
@@ -442,7 +442,7 @@ private
       --  Whether changes need to be written on disk
    end record;
 
-   type FAT_File_Handle is limited new File_Handle_Object with record
+   type FAT_File_Handle is limited new File_Handle with record
       Is_Free         : Boolean := True;
       FS              : FAT_Filesystem_Access;
       Mode            : File_Mode := Read_Mode;
@@ -468,7 +468,7 @@ private
    type FAT_File_Handle_Access is access all FAT_File_Handle;
 
    overriding function Get_FS
-     (File : access FAT_File_Handle) return Filesystem_Access;
+     (File : access FAT_File_Handle) return Any_Filesystem;
 
    overriding function Size (File : access FAT_File_Handle) return File_Size;
 
@@ -675,15 +675,15 @@ private
    --  for the trailing ASCII.NUL + 0xFFFF sequence.
 
    overriding function Get_FS
-     (Dir : access FAT_Directory_Handle) return Filesystem_Access
-   is (Filesystem_Access (Dir.FS));
+     (Dir : access FAT_Directory_Handle) return Any_Filesystem
+   is (Any_Filesystem (Dir.FS));
 
    overriding function Get_FS
-     (File : access FAT_File_Handle) return Filesystem_Access
-   is (Filesystem_Access (File.FS));
+     (File : access FAT_File_Handle) return Any_Filesystem
+   is (Any_Filesystem (File.FS));
 
-   overriding function Get_FS (E : FAT_Node) return Filesystem_Access
-   is (Filesystem_Access (E.FS));
+   overriding function Get_FS (E : FAT_Node) return Any_Filesystem
+   is (Any_Filesystem (E.FS));
 
    function Long_Name (E : FAT_Node) return FAT_Name
    is (if E.L_Name.Len > 0 then E.L_Name else Short_Name (E));

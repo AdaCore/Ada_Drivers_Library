@@ -36,12 +36,12 @@ package body Filesystem is
    ------------------
 
    function Generic_Read
-     (File  : File_Handle;
+     (This  : Any_File_Handle;
       Value : out T) return Status_Code
    is
       L : File_Size := T'Size / 8;
    begin
-      return File.Read (Value'Address, L);
+      return This.Read (Value'Address, L);
    end Generic_Read;
 
    -------------------
@@ -49,11 +49,11 @@ package body Filesystem is
    -------------------
 
    function Generic_Write
-     (File  : File_Handle;
+     (This  : Any_File_Handle;
       Value : T) return Status_Code
    is
    begin
-      return File.Write (Value'Address, T'Size / 8);
+      return This.Write (Value'Address, T'Size / 8);
    end Generic_Write;
 
 end Filesystem;

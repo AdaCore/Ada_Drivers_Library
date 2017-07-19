@@ -43,7 +43,7 @@ package body Filesystem.VFS is
                        Path  : Mount_Path);
    procedure Split
      (Path        : String;
-      FS          : out Filesystem_Access;
+      FS          : out Any_Filesystem;
       Start_Index : out Natural);
 
    ----------
@@ -71,7 +71,7 @@ package body Filesystem.VFS is
 
    procedure Split
      (Path        : String;
-      FS          : out Filesystem_Access;
+      FS          : out Any_Filesystem;
       Start_Index : out Natural)
    is
    begin
@@ -112,7 +112,7 @@ package body Filesystem.VFS is
 
    function Mount_Volume
      (Mount_Point : Mount_Path;
-      FS          : Filesystem_Access) return Status_Code
+      FS          : Any_Filesystem) return Status_Code
    is
       Idx : Natural := 0;
    begin
@@ -199,10 +199,10 @@ package body Filesystem.VFS is
    function Open
      (Path   : String;
       Status : out Status_Code)
-      return Directory_Handle
+      return Any_Directory_Handle
    is
       Idx : Natural;
-      FS  : Filesystem_Access;
+      FS  : Any_Filesystem;
    begin
       if Path = "/" then
          for J in Handles'Range loop
@@ -240,10 +240,10 @@ package body Filesystem.VFS is
      (Path   : String;
       Mode   : File_Mode;
       Status : out Status_Code)
-      return File_Handle
+      return Any_File_Handle
    is
       Idx : Natural;
-      FS  : Filesystem_Access;
+      FS  : Any_Filesystem;
    begin
       Split (Path, FS, Idx);
 
@@ -260,7 +260,7 @@ package body Filesystem.VFS is
    ------------
 
    overriding function Get_FS
-     (Dir : access VFS_Directory_Handle) return Filesystem_Access
+     (Dir : access VFS_Directory_Handle) return Any_Filesystem
    is
       pragma Unreferenced (Dir);
    begin
@@ -273,7 +273,7 @@ package body Filesystem.VFS is
 
    overriding function Read
      (Dir    : access VFS_Directory_Handle;
-      Status : out Status_Code) return Node_Access
+      Status : out Status_Code) return Any_Node_Handle
    is
    begin
       loop
