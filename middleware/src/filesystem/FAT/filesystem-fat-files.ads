@@ -63,7 +63,7 @@ private package Filesystem.FAT.Files is
 --     function Mode (File : access FAT_File_Handle) return File_Mode;
 
    function Read
-     (File   : access FAT_File_Handle;
+     (File   : in out FAT_File_Handle;
       Addr   : System.Address;
       Length : in out FAT_File_Size) return Status_Code
      with Pre => Mode (File) /= Write_Mode;
@@ -75,7 +75,7 @@ private package Filesystem.FAT.Files is
 --     --  Current index within the file
 --
    function Write
-     (File   : access FAT_File_Handle;
+     (File   : in out FAT_File_Handle;
       Addr   : System.Address;
       Length : FAT_File_Size) return Status_Code
      with
@@ -84,16 +84,16 @@ private package Filesystem.FAT.Files is
    --  @return number of bytes written (at most Data'Length), or -1 on error.
 
    function Flush
-     (File : access FAT_File_Handle) return Status_Code;
+     (File : in out FAT_File_Handle) return Status_Code;
    --  force writing file to disk at this very moment (slow!)
 
    function Seek
-     (File   : access FAT_File_Handle;
+     (File   : in out FAT_File_Handle;
       Amount : in out FAT_File_Size;
       Origin : Seek_Mode) return Status_Code;
    --  Moves the current file position from "Origin" of "Amount" bytes.
 
-   procedure Close (File : access FAT_File_Handle);
+   procedure Close (File : in out FAT_File_Handle);
    --  invalidates the handle, and ensures that
    --  everything is flushed to the disk
 

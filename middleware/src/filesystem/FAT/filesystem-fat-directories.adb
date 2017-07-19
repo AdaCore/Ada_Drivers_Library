@@ -103,7 +103,7 @@ package body Filesystem.FAT.Directories is
    ----------
 
    function Find
-     (FS     : access FAT_Filesystem;
+     (FS     : in out FAT_Filesystem;
       Path   : String;
       DEntry : out FAT_Node) return Status_Code
    is
@@ -205,11 +205,11 @@ package body Filesystem.FAT.Directories is
    -- Root_Entry --
    ----------------
 
-   function Root_Entry (FS : not null access FAT_Filesystem) return FAT_Node
+   function Root_Entry (FS : in out FAT_Filesystem) return FAT_Node
    is
       Ret : FAT_Node;
    begin
-      Ret.FS            := FAT_Filesystem_Access (FS);
+      Ret.FS            := FS'Unchecked_Access;
       Ret.Attributes    := (Subdirectory => True,
                             others       => False);
       Ret.Is_Root       := True;
@@ -471,7 +471,7 @@ package body Filesystem.FAT.Directories is
    ----------
 
    function Read
-     (Dir    : access FAT_Directory_Handle;
+     (Dir    : in out FAT_Directory_Handle;
       DEntry : out FAT_Node) return Status_Code
    is
    begin
@@ -570,7 +570,7 @@ package body Filesystem.FAT.Directories is
       Handle.FS.Window (64 .. 95) := (others => 0);
       Ret := Handle.FS.Write_Window;
 
-      Close (Handle);
+      Close (Handle.all);
 
       return Ret;
    end Create_Subdir;
@@ -605,7 +605,7 @@ package body Filesystem.FAT.Directories is
                            Archive      => True),
          E             => New_File);
 
-      Close (Handle);
+      Close (Handle.all);
 
       if Ret /= OK then
          return Ret;
@@ -634,7 +634,7 @@ package body Filesystem.FAT.Directories is
          return Ret;
       end if;
 
-      while Read (Handle, Ent) = OK loop
+      while Read (Handle.all, Ent) = OK loop
          if -Long_Name (Ent) = "." then
             null;
          elsif -Long_Name (Ent) = ".." then
@@ -649,14 +649,14 @@ package body Filesystem.FAT.Directories is
             end if;
 
             if Ret /= OK then
-               Close (Handle);
+               Close (Handle.all);
 
                return Ret;
             end if;
          end if;
       end loop;
 
-      Close (Handle);
+      Close (Handle.all);
 
       --  Free the clusters associated to the subdirectory
       Ret := Delete_Entry (Parent, Dir);
@@ -700,7 +700,7 @@ package body Filesystem.FAT.Directories is
          return Ret;
       end if;
 
-      while Read (Handle, Child_Ent) = OK loop
+      while Read (Handle.all, Child_Ent) = OK loop
          if Long_Name (Child_Ent) = Long_Name (Ent) then
             Block_Off := Natural
               ((FAT_File_Size (Handle.Current_Index - 1) * 32)
@@ -714,7 +714,7 @@ package body Filesystem.FAT.Directories is
          end if;
       end loop;
 
-      Close (Handle);
+      Close (Handle.all);
 
       return Ret;
    end Delete_Entry;
@@ -1092,10 +1092,10 @@ package body Filesystem.FAT.Directories is
       To_Short_Name (Name, SName, SExt);
 
       --  Look for an already existing entry, and compute the short name
-      Reset (Parent);
+      Reset (Parent.all);
 
       loop
-         Status := Read (Parent, DEntry);
+         Status := Read (Parent.all, DEntry);
 
          if Status /= OK then
             --  no such existing entry, we're good
@@ -1116,7 +1116,7 @@ package body Filesystem.FAT.Directories is
          end if;
       end loop;
 
-      Reset (Parent);
+      Reset (Parent.all);
 
       --  Look for an already existing entry that has been deleted and so that
       --  we could reuse
@@ -1204,7 +1204,7 @@ package body Filesystem.FAT.Directories is
             --  Now write down the new entries:
 
             --  First reset the directory handle
-            Reset (Parent);
+            Reset (Parent.all);
 
             --  Retrieve the block number relative to the first block of the
             --  directory content
@@ -1270,7 +1270,7 @@ package body Filesystem.FAT.Directories is
             end loop;
 
             Status := Parent.FS.Write_Window;
-            Reset (Parent);
+            Reset (Parent.all);
          end;
       end if;
 

@@ -78,7 +78,7 @@ package Filesystem.FAT is
    ------------------------
 
    overriding function Open
-     (FS     : access FAT_Filesystem;
+     (FS     : in out FAT_Filesystem;
       Path   : String;
       Status : out Status_Code) return Any_Directory_Handle;
    overriding function Open
@@ -86,7 +86,7 @@ package Filesystem.FAT is
       Status  : out Status_Code) return Any_Directory_Handle;
 
    overriding function Root_Node
-     (FS     : access FAT_Filesystem;
+     (FS     : in out FAT_Filesystem;
       As     : String;
       Status : out Status_Code)
       return Any_Node_Handle;
@@ -109,7 +109,7 @@ package Filesystem.FAT is
    -------------------
 
    overriding function Open
-     (FS     : access FAT_Filesystem;
+     (FS     : in out FAT_Filesystem;
       Path   : String;
       Mode   : File_Mode;
       Status : out Status_Code) return Any_File_Handle;
@@ -128,10 +128,10 @@ package Filesystem.FAT is
    overriding function Open
      (Controller  : HAL.Block_Drivers.Any_Block_Driver;
       LBA         : Block_Number;
-      FS          : not null access FAT_Filesystem) return Status_Code;
+      FS          : in out FAT_Filesystem) return Status_Code;
    --  Opens a FAT partition at the given LBA
 
-   overriding procedure Close (FS : not null access FAT_Filesystem);
+   overriding procedure Close (FS : in out FAT_Filesystem);
 
    -----------------------
    -- FAT FS PROPERTIES --
@@ -394,18 +394,18 @@ private
    end record;
 
    overriding function Get_FS
-     (Dir : access FAT_Directory_Handle) return Any_Filesystem;
+     (Dir : FAT_Directory_Handle) return Any_Filesystem;
 
    overriding function Read
-     (Dir    : access FAT_Directory_Handle;
+     (Dir    : in out FAT_Directory_Handle;
       Status : out Status_Code) return Any_Node_Handle;
 
-   overriding procedure Reset (Dir : access FAT_Directory_Handle);
+   overriding procedure Reset (Dir : in out FAT_Directory_Handle);
 
-   overriding procedure Close (Dir : access FAT_Directory_Handle);
+   overriding procedure Close (Dir : in out FAT_Directory_Handle);
 
    function FAT_Open
-     (FS     : access FAT_Filesystem;
+     (FS     : in out FAT_Filesystem;
       Path   : String;
       Status : out Status_Code) return access FAT_Directory_Handle'Class;
    function FAT_Open
@@ -468,36 +468,36 @@ private
    type FAT_File_Handle_Access is access all FAT_File_Handle;
 
    overriding function Get_FS
-     (File : access FAT_File_Handle) return Any_Filesystem;
+     (File : in out FAT_File_Handle) return Any_Filesystem;
 
-   overriding function Size (File : access FAT_File_Handle) return File_Size;
+   overriding function Size (File : FAT_File_Handle) return File_Size;
 
-   overriding function Mode (File : access FAT_File_Handle) return File_Mode;
+   overriding function Mode (File : FAT_File_Handle) return File_Mode;
 
    overriding function Read
-     (File   : access FAT_File_Handle;
+     (File   : in out FAT_File_Handle;
       Addr   : System.Address;
       Length : in out File_Size) return Status_Code;
    --  read data from file.
    --  @return number of bytes read (at most Data'Length), or -1 on error.
 
    overriding function Offset
-     (File : access FAT_File_Handle) return File_Size;
+     (File : FAT_File_Handle) return File_Size;
    --  Current index within the file
 
    overriding function Write
-     (File   : access FAT_File_Handle;
+     (File   : in out FAT_File_Handle;
       Addr   : System.Address;
       Length : File_Size) return Status_Code;
    --  write to file
    --  @return number of bytes written (at most Data'Length), or -1 on error.
 
    overriding function Flush
-     (File : access FAT_File_Handle) return Status_Code;
+     (File : in out FAT_File_Handle) return Status_Code;
    --  force writing file to disk at this very moment (slow!)
 
    overriding function Seek
-     (File   : access FAT_File_Handle;
+     (File   : in out FAT_File_Handle;
       Origin : Seek_Mode;
       Amount : in out File_Size) return Status_Code;
    --  Moves the current file position to "Amount", according to the Origin
@@ -505,7 +505,7 @@ private
    --  file, it stops at the file boundary and returns the actual amount of
    --  bytes moved.
 
-   overriding procedure Close (File : access FAT_File_Handle);
+   overriding procedure Close (File : in out FAT_File_Handle);
    --  invalidates the handle, and ensures that
    --  everything is flushed to the disk
 
@@ -675,11 +675,11 @@ private
    --  for the trailing ASCII.NUL + 0xFFFF sequence.
 
    overriding function Get_FS
-     (Dir : access FAT_Directory_Handle) return Any_Filesystem
+     (Dir : FAT_Directory_Handle) return Any_Filesystem
    is (Any_Filesystem (Dir.FS));
 
    overriding function Get_FS
-     (File : access FAT_File_Handle) return Any_Filesystem
+     (File : in out FAT_File_Handle) return Any_Filesystem
    is (Any_Filesystem (File.FS));
 
    overriding function Get_FS (E : FAT_Node) return Any_Filesystem

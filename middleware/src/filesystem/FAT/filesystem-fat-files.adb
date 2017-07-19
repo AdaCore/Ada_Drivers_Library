@@ -34,21 +34,21 @@ with Filesystem.FAT.Directories;
 
 package body Filesystem.FAT.Files is
 
-   function Absolute_Block (File : access FAT_File_Handle) return Block_Number
+   function Absolute_Block (File : in out FAT_File_Handle) return Block_Number
      with Inline_Always;
 
-   function Ensure_Buffer (File : access FAT_File_Handle) return Status_Code
+   function Ensure_Buffer (File : in out FAT_File_Handle) return Status_Code
      with Inline_Always;
 
    function Next_Block
-     (File : access FAT_File_Handle;
+     (File : in out FAT_File_Handle;
       Inc  : Positive := 1) return Status_Code;
 
    --------------------
    -- Absolute_Block --
    --------------------
 
-   function Absolute_Block (File : access FAT_File_Handle) return Block_Number
+   function Absolute_Block (File : in out FAT_File_Handle) return Block_Number
    is (File.FS.LBA +
          File.FS.Cluster_To_Block (File.Current_Cluster) +
          File.Current_Block);
@@ -57,7 +57,7 @@ package body Filesystem.FAT.Files is
    -- Ensure_Buffer --
    -------------------
 
-   function Ensure_Buffer (File : access FAT_File_Handle) return Status_Code
+   function Ensure_Buffer (File : in out FAT_File_Handle) return Status_Code
    is
    begin
       if not File.Buffer_Filled and then File.Mode /= Write_Mode then
@@ -81,7 +81,7 @@ package body Filesystem.FAT.Files is
    ----------------
 
    function Next_Block
-     (File : access FAT_File_Handle;
+     (File : in out FAT_File_Handle;
       Inc  : Positive := 1) return Status_Code
    is
       Todo   : Block_Offset := Block_Offset (Inc);
@@ -214,7 +214,7 @@ package body Filesystem.FAT.Files is
    ----------
 
    function Read
-     (File   : access FAT_File_Handle;
+     (File   : in out FAT_File_Handle;
       Addr   : System.Address;
       Length : in out FAT_File_Size) return Status_Code
    is
@@ -387,7 +387,7 @@ package body Filesystem.FAT.Files is
    -----------
 
    function Write
-     (File   : access FAT_File_Handle;
+     (File   : in out  FAT_File_Handle;
       Addr   : System.Address;
       Length : FAT_File_Size) return Status_Code
    is
@@ -529,7 +529,7 @@ package body Filesystem.FAT.Files is
    -----------
 
    function Flush
-     (File : access FAT_File_Handle) return Status_Code
+     (File : in out FAT_File_Handle) return Status_Code
    is
    begin
       if File.Buffer_Dirty then
@@ -551,7 +551,7 @@ package body Filesystem.FAT.Files is
    ----------
 
    function Seek
-     (File   : access FAT_File_Handle;
+     (File   : in out FAT_File_Handle;
       Amount : in out FAT_File_Size;
       Origin : Seek_Mode) return Status_Code
    is
@@ -625,7 +625,7 @@ package body Filesystem.FAT.Files is
    -- Close --
    -----------
 
-   procedure Close (File : access FAT_File_Handle)
+   procedure Close (File : in out FAT_File_Handle)
    is
       pragma Unreferenced (File);
    begin

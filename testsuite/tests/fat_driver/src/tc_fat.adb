@@ -151,7 +151,7 @@ begin
       FAT_FS := new FAT_Filesystem;
       Status := Open (Controller => Disk'Unchecked_Access,
                       LBA        => 0,
-                      FS         => FAT_FS);
+                      FS         => FAT_FS.all);
 
       if Status /= OK then
          Put_Line ("Cannot open FAT FS - Status:" & Status'Img);

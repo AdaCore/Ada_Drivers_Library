@@ -80,19 +80,19 @@ private
    end record;
 
    overriding function Get_FS
-     (Dir : access VFS_Directory_Handle) return Any_Filesystem;
+     (Dir : VFS_Directory_Handle) return Any_Filesystem;
    --  Return the filesystem the handle belongs to.
 
    overriding function Read
-     (Dir    : access VFS_Directory_Handle;
+     (Dir    : in out VFS_Directory_Handle;
       Status : out Status_Code) return Any_Node_Handle;
    --  Reads the next directory entry. If no such entry is there, an error
    --  code is returned in Status.
 
-   overriding procedure Reset (Dir : access VFS_Directory_Handle);
+   overriding procedure Reset (Dir : in out VFS_Directory_Handle);
    --  Resets the handle to the first node
 
-   overriding procedure Close (Dir : access VFS_Directory_Handle);
+   overriding procedure Close (Dir : in out VFS_Directory_Handle);
    --  Closes the handle, and free the associated resources.
 
 end Filesystem.VFS;

@@ -48,7 +48,7 @@ package body Filesystem.FAT is
    function Find_Free_Handle return FAT_File_Handle_Access;
 
    procedure Initialize_FS
-     (FS     : not null access FAT_Filesystem;
+     (FS     : in out FAT_Filesystem;
       Status : out Status_Code);
 
    ----------------------
@@ -362,7 +362,7 @@ package body Filesystem.FAT is
    overriding function Open
      (Controller  : HAL.Block_Drivers.Any_Block_Driver;
       LBA         : Block_Number;
-      FS          : not null access FAT_Filesystem) return Status_Code
+      FS          : in out FAT_Filesystem) return Status_Code
    is
       Status : Status_Code;
    begin
@@ -386,7 +386,7 @@ package body Filesystem.FAT is
    -------------------
 
    procedure Initialize_FS
-     (FS     : not null access FAT_Filesystem;
+     (FS     : in out FAT_Filesystem;
       Status : out Status_Code)
    is
       subtype Disk_Parameter_Block is Block (0 .. 91);
@@ -470,26 +470,22 @@ package body Filesystem.FAT is
    -- Close --
    -----------
 
-   overriding procedure Close (FS : not null access FAT_Filesystem)
+   overriding procedure Close (FS : in out FAT_Filesystem)
    is
-      File : Any_File_Handle;
-      Dir  : Any_Directory_Handle;
    begin
       for J in The_File_Handles'Range loop
          if not The_File_Handles (J).Is_Free
-           and then The_File_Handles (J).FS = FS
+           and then The_File_Handles (J).FS = FS'Unchecked_Access
          then
-            File := The_File_Handles (J)'Access;
-            Close (File);
+            The_File_Handles (J).Close;
          end if;
       end loop;
 
       for J in The_Dir_Handles'Range loop
          if not The_Dir_Handles (J).Is_Free
-           and then The_Dir_Handles (J).FS = FS
+           and then The_Dir_Handles (J).FS = FS'Unchecked_Access
          then
-            Dir := The_Dir_Handles (J)'Access;
-            Close (Dir);
+            The_Dir_Handles (J).Close;
          end if;
       end loop;
 
@@ -532,7 +528,7 @@ package body Filesystem.FAT is
    ----------------
 
    overriding function Root_Node
-     (FS     : access FAT_Filesystem;
+     (FS     : in out FAT_Filesystem;
       As     : String;
       Status : out Status_Code)
       return Any_Node_Handle
@@ -548,7 +544,7 @@ package body Filesystem.FAT is
    ----------
 
    overriding function Open
-     (FS     : access FAT_Filesystem;
+     (FS     : in out FAT_Filesystem;
       Path   : String;
       Status : out Status_Code) return Any_Directory_Handle
    is
@@ -561,7 +557,7 @@ package body Filesystem.FAT is
    --------------
 
    function FAT_Open
-     (FS     : access FAT_Filesystem;
+     (FS     : in out FAT_Filesystem;
       Path   : String;
       Status : out Status_Code) return access FAT_Directory_Handle'Class
    is
@@ -646,7 +642,7 @@ package body Filesystem.FAT is
    -- Reset --
    -----------
 
-   overriding procedure Reset (Dir : access FAT_Directory_Handle)
+   overriding procedure Reset (Dir : in out FAT_Directory_Handle)
    is
    begin
       Dir.Current_Block   := Cluster_To_Block (Dir.FS.all, Dir.Start_Cluster);
@@ -659,11 +655,13 @@ package body Filesystem.FAT is
    ----------
 
    overriding function Read
-     (Dir    : access FAT_Directory_Handle;
+     (Dir    : in out FAT_Directory_Handle;
       Status : out Status_Code) return Any_Node_Handle
    is
+      Node : FAT_Node;
    begin
-      Status := Directories.Read (Dir, Dir.Current_Node);
+      Status := Directories.Read (Dir, Node);
+      Dir.Current_Node := Node;
       return Dir.Current_Node'Unchecked_Access;
    end Read;
 
@@ -671,7 +669,7 @@ package body Filesystem.FAT is
    -- Close --
    -----------
 
-   overriding procedure Close (Dir : access FAT_Directory_Handle)
+   overriding procedure Close (Dir : in out FAT_Directory_Handle)
    is
    begin
       Dir.FS              := null;
@@ -687,7 +685,7 @@ package body Filesystem.FAT is
    ----------
 
    overriding function Open
-     (FS     : access FAT_Filesystem;
+     (FS     : in out FAT_Filesystem;
       Path   : String;
       Mode   : File_Mode;
       Status : out Status_Code) return Any_File_Handle
@@ -741,7 +739,7 @@ package body Filesystem.FAT is
    -- Size --
    ----------
 
-   overriding function Size (File : access FAT_File_Handle) return File_Size
+   overriding function Size (File : FAT_File_Handle) return File_Size
    is
    begin
       return File_Size (File.D_Entry.Size);
@@ -751,7 +749,7 @@ package body Filesystem.FAT is
    -- Mode --
    ----------
 
-   overriding function Mode (File : access FAT_File_Handle) return File_Mode
+   overriding function Mode (File : FAT_File_Handle) return File_Mode
    is
    begin
       return File.Mode;
@@ -762,7 +760,7 @@ package body Filesystem.FAT is
    ----------
 
    overriding function Read
-     (File   : access FAT_File_Handle;
+     (File   : in out FAT_File_Handle;
       Addr   : System.Address;
       Length : in out File_Size) return Status_Code
    is
@@ -793,7 +791,7 @@ package body Filesystem.FAT is
    ------------
 
    overriding function Offset
-     (File : access FAT_File_Handle) return File_Size
+     (File : FAT_File_Handle) return File_Size
    is (File_Size (File.File_Index));
 
    ----------------
@@ -801,7 +799,7 @@ package body Filesystem.FAT is
    ----------------
 
    overriding function Write
-     (File   : access FAT_File_Handle;
+     (File   : in out FAT_File_Handle;
       Addr   : System.Address;
       Length : File_Size) return Status_Code
    is
@@ -814,7 +812,7 @@ package body Filesystem.FAT is
    ----------------
 
    overriding function Flush
-     (File : access FAT_File_Handle) return Status_Code
+     (File : in out FAT_File_Handle) return Status_Code
    is
    begin
       return Files.Flush (File);
@@ -825,7 +823,7 @@ package body Filesystem.FAT is
    ---------------
 
    overriding function Seek
-     (File   : access FAT_File_Handle;
+     (File   : in out FAT_File_Handle;
       Origin : Seek_Mode;
       Amount : in out File_Size) return Status_Code
    is
@@ -842,7 +840,7 @@ package body Filesystem.FAT is
    -- File_Close --
    ----------------
 
-   overriding procedure Close (File : access FAT_File_Handle)
+   overriding procedure Close (File : in out FAT_File_Handle)
    is
    begin
       Files.Close (File);

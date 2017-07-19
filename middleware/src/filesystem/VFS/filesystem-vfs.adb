@@ -165,7 +165,7 @@ package body Filesystem.VFS is
             FAT_FS := new FAT_Filesystem;
             Status := Open (Controller => Device,
                             LBA        => LBA (MBR, P),
-                            FS         => FAT_FS);
+                            FS         => FAT_FS.all);
             return Mount_Volume (Mount_Point, FAT_FS);
          end if;
       end loop;
@@ -260,7 +260,7 @@ package body Filesystem.VFS is
    ------------
 
    overriding function Get_FS
-     (Dir : access VFS_Directory_Handle) return Any_Filesystem
+     (Dir : VFS_Directory_Handle) return Any_Filesystem
    is
       pragma Unreferenced (Dir);
    begin
@@ -272,7 +272,7 @@ package body Filesystem.VFS is
    ----------
 
    overriding function Read
-     (Dir    : access VFS_Directory_Handle;
+     (Dir    : in out VFS_Directory_Handle;
       Status : out Status_Code) return Any_Node_Handle
    is
    begin
@@ -296,7 +296,7 @@ package body Filesystem.VFS is
    -- Reset --
    -----------
 
-   overriding procedure Reset (Dir : access VFS_Directory_Handle)
+   overriding procedure Reset (Dir : in out VFS_Directory_Handle)
    is
    begin
       Dir.Mount_Id := 0;
@@ -306,7 +306,7 @@ package body Filesystem.VFS is
    -- Close --
    -----------
 
-   overriding procedure Close (Dir : access VFS_Directory_Handle)
+   overriding procedure Close (Dir : in out VFS_Directory_Handle)
    is
    begin
       Dir.Is_Free := True;

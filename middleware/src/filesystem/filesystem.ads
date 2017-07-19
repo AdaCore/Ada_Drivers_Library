@@ -100,7 +100,7 @@ package Filesystem is
    ---------------------------
 
    function Open
-     (This   : access Filesystem;
+     (This   : in out Filesystem;
       Path   : String;
       Status : out Status_Code)
       return Any_Directory_Handle is abstract;
@@ -112,27 +112,27 @@ package Filesystem is
      with Pre'Class => This.Is_Subdirectory;
 
    function Get_FS
-     (This : access Directory_Handle) return Any_Filesystem
+     (This : Directory_Handle) return Any_Filesystem
       is abstract;
    --  Return the filesystem the handle belongs to.
 
    function Root_Node
-     (This     : access Filesystem;
+     (This   : in out Filesystem;
       As     : String;
       Status : out Status_Code)
       return Any_Node_Handle is abstract;
    --  Open a new Directory Handle at the given Filesystem Path
 
    function Read
-     (This   : access Directory_Handle;
+     (This   : in out Directory_Handle;
       Status : out Status_Code) return Any_Node_Handle is abstract;
    --  Reads the next directory entry. If no such entry is there, an error
    --  code is returned in Status.
 
-   procedure Reset (This : access Directory_Handle) is abstract;
+   procedure Reset (This : in out Directory_Handle) is abstract;
    --  Resets the handle to the first node
 
-   procedure Close (This : access Directory_Handle) is abstract;
+   procedure Close (This : in out Directory_Handle) is abstract;
    --  Closes the handle, and free the associated resources.
 
    ---------------------
@@ -158,7 +158,7 @@ package Filesystem is
    ---------------------
 
    function Open
-     (This   : access Filesystem;
+     (This   : in out Filesystem;
       Path   : String;
       Mode   : File_Mode;
       Status : out Status_Code)
@@ -173,16 +173,16 @@ package Filesystem is
      with Pre'Class => Is_Subdirectory (This);
 
    function Get_FS
-     (This : access File_Handle) return Any_Filesystem is abstract;
+     (This : in out File_Handle) return Any_Filesystem is abstract;
 
    function Size
-     (This : access File_Handle) return File_Size is abstract;
+     (This : File_Handle) return File_Size is abstract;
 
    function Mode
-     (This : access File_Handle) return File_Mode is abstract;
+     (This : File_Handle) return File_Mode is abstract;
 
    function Read
-     (This   : access File_Handle;
+     (This   : in out File_Handle;
       Addr   : System.Address;
       Length : in out File_Size) return Status_Code is abstract;
 
@@ -193,7 +193,7 @@ package Filesystem is
       Value : out T) return Status_Code;
 
    function Write
-     (This   : access File_Handle;
+     (This   : in out File_Handle;
       Addr   : System.Address;
       Length : File_Size) return Status_Code is abstract;
 
@@ -204,17 +204,17 @@ package Filesystem is
       Value : T) return Status_Code;
 
    function Offset
-     (This : access File_Handle) return File_Size is abstract;
+     (This : File_Handle) return File_Size is abstract;
 
    function Flush
-     (This : access File_Handle) return Status_Code is abstract;
+     (This : in out File_Handle) return Status_Code is abstract;
 
    function Seek
-     (This   : access File_Handle;
+     (This   : in out File_Handle;
       Origin : Seek_Mode;
       Amount : in out File_Size) return Status_Code is abstract;
 
-   procedure Close (This : access File_Handle) is abstract;
+   procedure Close (This : in out File_Handle) is abstract;
 
    -------------------
    -- FS operations --
@@ -223,9 +223,9 @@ package Filesystem is
    function Open
      (Controller : HAL.Block_Drivers.Any_Block_Driver;
       LBA        : Block_Number;
-      FS         : not null access Filesystem) return Status_Code is abstract;
+      FS         : in out Filesystem) return Status_Code is abstract;
    --  Open the FS partition located at the specified LBA.
 
-   procedure Close (This : not null access Filesystem) is abstract;
+   procedure Close (This : in out Filesystem) is abstract;
 
 end Filesystem;

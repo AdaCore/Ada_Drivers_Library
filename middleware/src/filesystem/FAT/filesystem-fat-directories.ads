@@ -32,7 +32,7 @@
 private package Filesystem.FAT.Directories is
 
    function Find
-     (FS     : access FAT_Filesystem;
+     (FS     : in out FAT_Filesystem;
       Path   : String;
       DEntry : out FAT_Node) return Status_Code;
 
@@ -42,10 +42,10 @@ private package Filesystem.FAT.Directories is
       DEntry     : out FAT_Node) return Status_Code
      with Pre => Is_Subdirectory (Parent);
 
-   function Root_Entry (FS : not null access FAT_Filesystem) return FAT_Node;
+   function Root_Entry (FS : in out FAT_Filesystem) return FAT_Node;
 
    function Read
-     (Dir    : access FAT_Directory_Handle;
+     (Dir    : in out FAT_Directory_Handle;
       DEntry : out FAT_Node) return Status_Code;
 
    function Next_Entry
