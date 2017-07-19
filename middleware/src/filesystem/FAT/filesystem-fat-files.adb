@@ -376,6 +376,9 @@ package body Filesystem.FAT.Files is
          exit when Data_Length = 0;
       end loop;
 
+      --  Update the number of bytes we actually read
+      Length := Data_Idx - Data'First;
+
       return OK;
    end Read;
 
