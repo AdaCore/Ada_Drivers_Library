@@ -57,7 +57,6 @@ package body Compare_Files is
          loop
             Ada.Streams.Stream_IO.Read (File, Item => Buffer, Last => Last);
             Hash.Update (Context, Buffer (1 .. Last));
-            Ada.Streams.Stream_IO.Read (File, Item => Buffer, Last => Last);
             exit when Last < Buffer'Last;
          end loop;
          Ada.Streams.Stream_IO.Close (File);
