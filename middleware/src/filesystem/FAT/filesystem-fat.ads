@@ -458,7 +458,7 @@ private
       --  Whether there's a discrepency between the disk data and the buffer
       Buffer_Dirty    : Boolean := False;
       --  The actual file index
-      Bytes_Total     : FAT_File_Size := 0;
+      File_Index      : FAT_File_Size := 0;
       --  The associated directory entry
       D_Entry         : FAT_Node;
       --  The parent's directory directory entry

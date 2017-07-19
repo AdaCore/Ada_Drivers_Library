@@ -202,7 +202,7 @@ package body Filesystem.FAT.Files is
       File.Buffer          := (others => 0);
       File.Buffer_Filled   := False;
       File.Buffer_Dirty    := False;
-      File.Bytes_Total     := 0;
+      File.File_Index      := 0;
       File.D_Entry         := Node;
       File.Parent          := Parent;
 
@@ -255,7 +255,8 @@ package body Filesystem.FAT.Files is
          return Access_Denied;
       end if;
 
-      if File.Bytes_Total = File.D_Entry.Size
+      --  Are we at then end of the file?
+      if File.File_Index = File.D_Entry.Size
         or else Data_Length = 0
       then
          Length := 0;
@@ -271,11 +272,11 @@ package body Filesystem.FAT.Files is
 
       --  Clamp the number of data to read to the size of the file
       Data_Length := FAT_File_Size'Min
-        (File.D_Entry.Size - File.Bytes_Total,
+        (File.D_Entry.Size - File.File_Index,
          Data_Length);
 
       loop
-         Idx := File.Bytes_Total mod File.FS.Block_Size;
+         Idx := File.File_Index mod File.FS.Block_Size;
 
          if Idx = 0 and then Data_Length >= File.FS.Block_Size then
             --  Case where the data to read is aligned on a block, and
@@ -338,8 +339,8 @@ package body Filesystem.FAT.Files is
             end if;
 
             Data_Idx := Data_Idx + FAT_File_Size (N_Blocks) * 512;
-            File.Bytes_Total :=
-              File.Bytes_Total + FAT_File_Size (N_Blocks) * 512;
+            File.File_Index :=
+              File.File_Index + FAT_File_Size (N_Blocks) * 512;
             Data_Length := Data_Length - FAT_File_Size (N_Blocks) * 512;
 
          else
@@ -359,7 +360,7 @@ package body Filesystem.FAT.Files is
               (File.Buffer (Natural (Idx) .. Natural (Idx + R_Length - 1)));
 
             Data_Idx           := Data_Idx + R_Length;
-            File.Bytes_Total := File.Bytes_Total + R_Length;
+            File.File_Index := File.File_Index + R_Length;
             Data_Length        := Data_Length - R_Length;
 
             if Idx + R_Length = File.FS.Block_Size then
@@ -415,11 +416,11 @@ package body Filesystem.FAT.Files is
       procedure Inc_Size (Amount : FAT_File_Size)
       is
       begin
-         Data_Idx          := Data_Idx + Amount;
-         File.Bytes_Total  := File.Bytes_Total + Amount;
-         Data_Length       := Data_Length - Amount;
+         Data_Idx        := Data_Idx + Amount;
+         File.File_Index := File.File_Index + Amount;
+         Data_Length     := Data_Length - Amount;
 
-         Directories.Set_Size (File.D_Entry, File.Bytes_Total);
+         Directories.Set_Size (File.D_Entry, File.File_Index);
       end Inc_Size;
 
    begin
@@ -436,7 +437,7 @@ package body Filesystem.FAT.Files is
          end if;
       end if;
 
-      Idx := File.Bytes_Total mod File.FS.Block_Size;
+      Idx := File.File_Index mod File.FS.Block_Size;
 
       if Data_Length < File.FS.Block_Size then
          --  First fill the buffer
@@ -457,7 +458,7 @@ package body Filesystem.FAT.Files is
 
          --  If we stopped on the boundaries of a new block, then move on to
          --  the next block
-         if (File.Bytes_Total mod File.FS.Block_Size) = 0 then
+         if (File.File_Index mod File.FS.Block_Size) = 0 then
             Status := Next_Block (File);
 
             if Status /= OK then
@@ -572,33 +573,33 @@ package body Filesystem.FAT.Files is
             New_Pos := File.D_Entry.Size - Amount;
 
          when Forward =>
-            if Amount + File.Bytes_Total > File.D_Entry.Size then
-               Amount := File.D_Entry.Size - File.Bytes_Total;
+            if Amount + File.File_Index > File.D_Entry.Size then
+               Amount := File.D_Entry.Size - File.File_Index;
             end if;
 
-            New_Pos := File.Bytes_Total + Amount;
+            New_Pos := File.File_Index + Amount;
 
          when Backward =>
-            if Amount > File.Bytes_Total then
-               Amount := File.Bytes_Total;
+            if Amount > File.File_Index then
+               Amount := File.File_Index;
             end if;
 
-            New_Pos := File.Bytes_Total - Amount;
+            New_Pos := File.File_Index - Amount;
       end case;
 
-      if New_Pos < File.Bytes_Total then
+      if New_Pos < File.File_Index then
          --  Rewind the file pointer to the beginning of the file
          --  ??? A better check would be to first check if we're still in the
          --  same cluster, in which case we wouldn't need to do this rewind,
          --  but even if it's the case, we're still safe here, although a bit
          --  slower than we could.
-         File.Bytes_Total     := 0;
+         File.File_Index      := 0;
          File.Current_Cluster := File.D_Entry.Start_Cluster;
          File.Current_Block   := 0;
          File.Buffer_Filled   := False;
       end if;
 
-      N_Blocks := (New_Pos - File.Bytes_Total) / File.FS.Block_Size;
+      N_Blocks := (New_Pos - File.File_Index) / File.FS.Block_Size;
 
       if N_Blocks > 0 then
          Status := Next_Block (File, Positive (N_Blocks));
@@ -608,7 +609,7 @@ package body Filesystem.FAT.Files is
          end if;
       end if;
 
-      File.Bytes_Total := New_Pos;
+      File.File_Index := New_Pos;
 
       if Ensure_Buffer (File) /= OK then
          return Disk_Error;

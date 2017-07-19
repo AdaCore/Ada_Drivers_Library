@@ -794,7 +794,7 @@ package body Filesystem.FAT is
 
    overriding function Offset
      (File : access FAT_File_Handle) return File_Size
-   is (File_Size (File.Bytes_Total));
+   is (File_Size (File.File_Index));
 
    ----------------
    -- File_Write --
