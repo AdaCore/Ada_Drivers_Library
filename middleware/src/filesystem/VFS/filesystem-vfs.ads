@@ -52,14 +52,14 @@ package Filesystem.VFS is
 
    function Open
      (Path   : String;
-      Status : out Status_Code)
-      return Any_Directory_Handle;
+      Handle : out Any_Directory_Handle)
+      return Status_Code;
 
    function Open
      (Path   : String;
       Mode   : File_Mode;
-      Status : out Status_Code)
-      return Any_File_Handle;
+      Handle : out Any_File_Handle)
+      return Status_Code;
 
 private
 
@@ -85,7 +85,7 @@ private
 
    overriding function Read
      (Dir    : in out VFS_Directory_Handle;
-      Status : out Status_Code) return Any_Node_Handle;
+      Handle : out Any_Node_Handle) return Status_Code;
    --  Reads the next directory entry. If no such entry is there, an error
    --  code is returned in Status.
 

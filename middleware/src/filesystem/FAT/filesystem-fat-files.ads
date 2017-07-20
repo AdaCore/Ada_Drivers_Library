@@ -49,7 +49,7 @@ private package Filesystem.FAT.Files is
      (Parent : FAT_Node;
       Name   : FAT_Name;
       Mode   : File_Mode;
-      File   : access FAT_File_Handle) return Status_Code;
+      File   : FAT_File_Handle_Access) return Status_Code;
    --  open the file given by the directory entry and return
    --  handle.
    --  if Mode is Read_Mode, then the file is returned with read-only access

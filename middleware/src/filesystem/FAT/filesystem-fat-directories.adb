@@ -492,14 +492,14 @@ package body Filesystem.FAT.Directories is
       Name    : FAT_Name;
       New_Dir : out FAT_Node) return Status_Code
    is
-      Handle       : access FAT_Directory_Handle;
+      Handle       : FAT_Directory_Handle_Access;
       Ret          : Status_Code;
       Block        : Block_Offset;
       Dot          : FAT_Directory_Entry;
       Dot_Dot      : FAT_Directory_Entry;
 
    begin
-      Handle := Dir.FAT_Open (Ret);
+      Ret := Dir.FAT_Open (Handle);
 
       if Ret /= OK then
          return Ret;
@@ -584,11 +584,11 @@ package body Filesystem.FAT.Directories is
       Name     : FAT_Name;
       New_File : out FAT_Node) return Status_Code
    is
-      Handle       : access FAT_Directory_Handle;
+      Handle       : FAT_Directory_Handle_Access;
       Ret          : Status_Code;
 
    begin
-      Handle := Dir.FAT_Open (Ret);
+      Ret := Dir.FAT_Open (Handle);
 
       if Ret /= OK then
          return Ret;
@@ -623,12 +623,12 @@ package body Filesystem.FAT.Directories is
       Recursive : Boolean) return Status_Code
    is
       Parent    : FAT_Node;
-      Handle    : access FAT_Directory_Handle;
+      Handle    : FAT_Directory_Handle_Access;
       Ent       : FAT_Node;
       Ret       : Status_Code;
 
    begin
-      Handle := Dir.FAT_Open (Ret);
+      Ret := Dir.FAT_Open (Handle);
 
       if Ret /= OK then
          return Ret;
@@ -677,7 +677,7 @@ package body Filesystem.FAT.Directories is
       Ent : FAT_Node) return Status_Code
    is
       Current   : Cluster_Type := Ent.Start_Cluster;
-      Handle    : access FAT_Directory_Handle;
+      Handle    : FAT_Directory_Handle_Access;
       Next      : Cluster_Type;
       Child_Ent : FAT_Node;
       Ret       : Status_Code;
@@ -695,7 +695,7 @@ package body Filesystem.FAT.Directories is
       end loop;
 
       --  Mark the parent's entry as deleted
-      Handle := Dir.FAT_Open (Ret);
+      Ret := Dir.FAT_Open (Handle);
       if Ret /= OK then
          return Ret;
       end if;

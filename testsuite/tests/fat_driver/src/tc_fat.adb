@@ -61,7 +61,7 @@ procedure TC_FAT is
       Node   : Filesystem.Any_Node_Handle;
    begin
       Put_Line ("Checking directory: '" & Dirname & "'");
-      Handle := Filesystem.VFS.Open (Dirname, Status);
+      Status := Filesystem.VFS.Open (Dirname, Handle);
 
       if Status /= OK then
          Put_Line ("Cannot open directory: '" & Dirname & "'");
@@ -70,8 +70,7 @@ procedure TC_FAT is
       end if;
 
       loop
-         Node := Handle.Read (Status);
-         if Status = OK and then Node /= null then
+         if Handle.Read (Node) = OK and then Node /= null then
             if Node.Basename = "." or else Node.Basename = ".." then
                null; --  do nothing
             elsif Node.Is_Subdirectory then
@@ -106,7 +105,7 @@ procedure TC_FAT is
    begin
       Put_Line ("Checking file: '" & Path & "'");
 
-      Handle := Filesystem.VFS.Open (Path, Read_Mode, Status);
+      Status := Filesystem.VFS.Open (Path, Read_Mode, Handle);
 
       if Status /= OK then
          Put_Line ("Cannot open file: '" & Path & "'");

@@ -165,7 +165,7 @@ package body Filesystem.FAT.Files is
      (Parent : FAT_Node;
       Name   : FAT_Name;
       Mode   : File_Mode;
-      File   : access FAT_File_Handle) return Status_Code
+      File   : FAT_File_Handle_Access) return Status_Code
    is
       Node : FAT_Node;
       Ret  : Status_Code;

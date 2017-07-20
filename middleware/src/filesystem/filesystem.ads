@@ -102,13 +102,13 @@ package Filesystem is
    function Open
      (This   : in out Filesystem;
       Path   : String;
-      Status : out Status_Code)
-      return Any_Directory_Handle is abstract;
+      Handle : out Any_Directory_Handle)
+      return Status_Code is abstract;
    --  Open a new Directory Handle at the given Filesystem Path
 
    function Open
      (This   : Node_Handle;
-      Status : out Status_Code) return Any_Directory_Handle is abstract
+      Handle : out Any_Directory_Handle) return Status_Code is abstract
      with Pre'Class => This.Is_Subdirectory;
 
    function Get_FS
@@ -119,13 +119,13 @@ package Filesystem is
    function Root_Node
      (This   : in out Filesystem;
       As     : String;
-      Status : out Status_Code)
-      return Any_Node_Handle is abstract;
+      Handle : out Any_Node_Handle)
+      return Status_Code is abstract;
    --  Open a new Directory Handle at the given Filesystem Path
 
    function Read
      (This   : in out Directory_Handle;
-      Status : out Status_Code) return Any_Node_Handle is abstract;
+      Handle : out Any_Node_Handle) return Status_Code is abstract;
    --  Reads the next directory entry. If no such entry is there, an error
    --  code is returned in Status.
 
@@ -161,15 +161,15 @@ package Filesystem is
      (This   : in out Filesystem;
       Path   : String;
       Mode   : File_Mode;
-      Status : out Status_Code)
-      return Any_File_Handle is abstract;
+      Handle : out Any_File_Handle)
+      return Status_Code is abstract;
    --  Open a new File Handle at the given Filesystem Path
 
    function Open
      (This   : Node_Handle;
       Name   : String;
       Mode   : File_Mode;
-      Status : out Status_Code) return Any_File_Handle is abstract
+      Handle : out Any_File_Handle) return Status_Code is abstract
      with Pre'Class => Is_Subdirectory (This);
 
    function Get_FS

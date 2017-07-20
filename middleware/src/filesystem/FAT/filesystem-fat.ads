@@ -80,16 +80,16 @@ package Filesystem.FAT is
    overriding function Open
      (FS     : in out FAT_Filesystem;
       Path   : String;
-      Status : out Status_Code) return Any_Directory_Handle;
+      Handle : out Any_Directory_Handle) return Status_Code;
    overriding function Open
      (D_Entry : FAT_Node;
-      Status  : out Status_Code) return Any_Directory_Handle;
+      Handle  : out Any_Directory_Handle) return Status_Code;
 
    overriding function Root_Node
      (FS     : in out FAT_Filesystem;
       As     : String;
-      Status : out Status_Code)
-      return Any_Node_Handle;
+      Handle : out Any_Node_Handle)
+      return Status_Code;
    function Long_Name (E : FAT_Node) return FAT_Name;
    function Short_Name (E : FAT_Node) return FAT_Name;
    overriding function Basename (E : FAT_Node) return String;
@@ -112,13 +112,13 @@ package Filesystem.FAT is
      (FS     : in out FAT_Filesystem;
       Path   : String;
       Mode   : File_Mode;
-      Status : out Status_Code) return Any_File_Handle;
+      Handle : out Any_File_Handle) return Status_Code;
 
    overriding function Open
      (Parent : FAT_Node;
       Name   : String;
       Mode   : File_Mode;
-      Status : out Status_Code) return Any_File_Handle
+      Handle : out Any_File_Handle) return Status_Code
    with Pre => Name'Length <= MAX_FILENAME_LENGTH;
 
    --------------------
@@ -393,12 +393,15 @@ private
       Current_Node    : aliased FAT_Node;
    end record;
 
+   type FAT_Directory_Handle_Access is access all FAT_Directory_Handle;
+   type Any_FAT_Directory_Handle is access all FAT_Directory_Handle'Class;
+
    overriding function Get_FS
      (Dir : FAT_Directory_Handle) return Any_Filesystem;
 
    overriding function Read
      (Dir    : in out FAT_Directory_Handle;
-      Status : out Status_Code) return Any_Node_Handle;
+      Handle : out Any_Node_Handle) return Status_Code;
 
    overriding procedure Reset (Dir : in out FAT_Directory_Handle);
 
@@ -407,12 +410,10 @@ private
    function FAT_Open
      (FS     : in out FAT_Filesystem;
       Path   : String;
-      Status : out Status_Code) return access FAT_Directory_Handle'Class;
+      Handle : out FAT_Directory_Handle_Access) return Status_Code;
    function FAT_Open
      (D_Entry : FAT_Node;
-      Status  : out Status_Code) return access FAT_Directory_Handle'Class;
-
-   type FAT_Directory_Handle_Access is access all FAT_Directory_Handle'Class;
+      Handle  : out FAT_Directory_Handle_Access) return Status_Code;
 
    type FAT_Directory_Entry_Attribute is record
       Read_Only    : Boolean;

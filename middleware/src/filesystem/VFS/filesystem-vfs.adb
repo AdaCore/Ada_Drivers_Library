@@ -198,8 +198,8 @@ package body Filesystem.VFS is
 
    function Open
      (Path   : String;
-      Status : out Status_Code)
-      return Any_Directory_Handle
+      Handle : out Any_Directory_Handle)
+      return Status_Code
    is
       Idx : Natural;
       FS  : Any_Filesystem;
@@ -209,26 +209,26 @@ package body Filesystem.VFS is
             if Handles (J).Is_Free then
                Handles (J).Is_Free := False;
                Handles (J).Mount_Id := 0;
-               Status := OK;
-               return Handles (J)'Access;
+               Handle := Handles (J)'Access;
+               return OK;
             end if;
          end loop;
 
-         Status := Too_Many_Open_Files;
-         return null;
+         Handle := null;
+         return Too_Many_Open_Files;
       end if;
 
       Split (Path, FS, Idx);
 
       if FS = null then
-         Status := No_Such_Path;
-         return null;
+         Handle := null;
+         return No_Such_Path;
       end if;
 
       if Idx > Path'Last then
-         return FS.Open ("/", Status);
+         return FS.Open ("/", Handle);
       else
-         return FS.Open (Path (Idx .. Path'Last), Status);
+         return FS.Open (Path (Idx .. Path'Last), Handle);
       end if;
    end Open;
 
@@ -239,8 +239,8 @@ package body Filesystem.VFS is
    function Open
      (Path   : String;
       Mode   : File_Mode;
-      Status : out Status_Code)
-      return Any_File_Handle
+      Handle : out Any_File_Handle)
+      return Status_Code
    is
       Idx : Natural;
       FS  : Any_Filesystem;
@@ -248,11 +248,11 @@ package body Filesystem.VFS is
       Split (Path, FS, Idx);
 
       if FS = null then
-         Status := No_Such_Path;
-         return null;
+         Handle := null;
+         return No_Such_Path;
       end if;
 
-      return FS.Open (Path (Idx .. Path'Last), Mode, Status);
+      return FS.Open (Path (Idx .. Path'Last), Mode, Handle);
    end Open;
 
    ------------
@@ -273,13 +273,13 @@ package body Filesystem.VFS is
 
    overriding function Read
      (Dir    : in out VFS_Directory_Handle;
-      Status : out Status_Code) return Any_Node_Handle
+      Handle : out Any_Node_Handle) return Status_Code
    is
    begin
       loop
          if Dir.Mount_Id = Mount_Points'Last then
-            Status := No_More_Entries;
-            return null;
+            Handle := null;
+            return No_More_Entries;
          end if;
 
          Dir.Mount_Id := Dir.Mount_Id + 1;
@@ -287,7 +287,7 @@ package body Filesystem.VFS is
          if not Mount_Points (Dir.Mount_Id).Is_Free then
             return Mount_Points (Dir.Mount_Id).FS.Root_Node
               (Name (Mount_Points (Dir.Mount_Id)),
-               Status);
+               Handle);
          end if;
       end loop;
    end Read;
