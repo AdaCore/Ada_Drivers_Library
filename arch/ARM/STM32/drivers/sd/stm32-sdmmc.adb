@@ -34,6 +34,7 @@ with Ada.Real_Time;          use Ada.Real_Time;
 with System;                 use System;
 with System.Machine_Code;
 
+with SDMMC_SVD;              use SDMMC_SVD;
 with STM32.Device;           use STM32.Device;
 with STM32_SVD.RCC;          use STM32_SVD.RCC;
 with SDMMC_Init;

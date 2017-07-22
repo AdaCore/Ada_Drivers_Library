@@ -36,9 +36,9 @@
 --  SDCard driver. Controls the SDMMC peripheral.
 
 with System;
-with STM32_SVD.SDIO;    use STM32_SVD.SDIO;
+with SDMMC_SVD_Periph;
 
-with HAL.SDMMC;         use HAL.SDMMC;
+with HAL.SDMMC;             use HAL.SDMMC;
 with HAL.Block_Drivers;
 with STM32.DMA;
 with STM32.DMA.Interrupts;
@@ -48,7 +48,7 @@ with STM32.SDMMC_Interrupt;
 package STM32.SDMMC is
 
    type SDMMC_Controller
-     (Periph : not null access STM32_SVD.SDIO.SDIO_Peripheral)
+     (Periph : not null access SDMMC_SVD_Periph.Peripheral)
    is limited new HAL.Block_Drivers.Block_Driver
      and
        SDMMC_Driver
@@ -182,7 +182,7 @@ package STM32.SDMMC is
 private
 
    type SDMMC_Controller
-     (Periph : not null access STM32_SVD.SDIO.SDIO_Peripheral)
+     (Periph : not null access SDMMC_SVD_Periph.Peripheral)
    is limited new HAL.Block_Drivers.Block_Driver
      and
        SDMMC_Driver
