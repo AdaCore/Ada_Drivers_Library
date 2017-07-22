@@ -1,6 +1,7 @@
 with "../../../boards/config";
 with "../../../hal/HAL";
 with "../cortex_m/cortex_m4f";
+with "../../../middleware/sdmmc";
 
 library project STM32F40x is
 
@@ -19,7 +20,9 @@ library project STM32F40x is
       "devices/stm32f40x",
       "drivers/i2c_stm32f4",
       "drivers/power_control_stm32f4",
-      "drivers/uart_stm32f4");
+      "drivers/uart_stm32f4",
+      "drivers/sd",
+      "drivers/sd/sdio");
 
    package Compiler renames Config.Compiler;
 
