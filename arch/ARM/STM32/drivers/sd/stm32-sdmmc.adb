@@ -566,21 +566,21 @@ package body STM32.SDMMC is
       This.Periph.DCTRL := (others => <>);
    end Disable_Data;
 
-   -------------------------
-   -- Set_DMA_Controllers --
-   -------------------------
+   --------------------------
+   -- Enable_DMA_Transfers --
+   --------------------------
 
-   procedure Set_DMA_Controllers
+   procedure Enable_DMA_Transfers
      (This   : in out SDMMC_Controller;
-      RX_Int : STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access;
-      TX_Int : STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access;
-      SD_Int : STM32.SDMMC_Interrupt.SDMMC_Interrupt_Handler_Access)
+      RX_Int : not null STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access;
+      TX_Int : not null STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access;
+      SD_Int : not null STM32.SDMMC_Interrupt.SDMMC_Interrupt_Handler_Access)
    is
    begin
       This.TX_DMA_Int := TX_Int;
       This.RX_DMA_Int := RX_Int;
       This.SD_Int     := SD_Int;
-   end Set_DMA_Controllers;
+   end Enable_DMA_Transfers;
 
    --------------------------
    -- Has_Card_Information --

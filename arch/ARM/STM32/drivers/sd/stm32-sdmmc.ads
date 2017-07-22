@@ -162,11 +162,14 @@ package STM32.SDMMC is
      (This : in out SDMMC_Controller);
    --  Sets DCFGR.DTEN to False to stop the data transfer mode.
 
-   procedure Set_DMA_Controllers
+   procedure Enable_DMA_Transfers
      (This   : in out SDMMC_Controller;
-      RX_Int : STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access;
-      TX_Int : STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access;
-      SD_Int : STM32.SDMMC_Interrupt.SDMMC_Interrupt_Handler_Access);
+      RX_Int : not null STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access;
+      TX_Int : not null STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access;
+      SD_Int : not null STM32.SDMMC_Interrupt.SDMMC_Interrupt_Handler_Access);
+   --  Enable DMA for SDMMC tranfers by setting the required interrupt
+   --  controllers. See the examples for more info on how to initialize DMA for
+   --  SDMMC.
 
    function Has_Card_Information
      (This : SDMMC_Controller)

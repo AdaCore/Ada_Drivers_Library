@@ -118,9 +118,9 @@ package body SDCard is
           Peripheral_Burst_Size        => Peripheral_Burst_Inc4));
       Clear_All_Status (SD_DMA, SD_DMA_Tx_Stream);
 
-      This.Device.Set_DMA_Controllers (RX_Int => SD_Rx_DMA_Int'Access,
-                                       TX_Int => SD_Tx_DMA_Int'Access,
-                                       SD_Int => SD_Interrupt_Handler'Access);
+      This.Device.Enable_DMA_Transfers (RX_Int => SD_Rx_DMA_Int'Access,
+                                        TX_Int => SD_Tx_DMA_Int'Access,
+                                        SD_Int => SD_Interrupt_Handler'Access);
    end Initialize;
 
    ------------------
