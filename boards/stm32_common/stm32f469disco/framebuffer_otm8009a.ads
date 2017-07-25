@@ -43,7 +43,7 @@ private with STM32.GPIO;
 package Framebuffer_OTM8009A is
 
    LCD_Natural_Width  : constant := Framebuffer_DSI.LCD_Natural_Width;
-   LCD_Natural_Height : constant := Framebuffer_DSI.LCD_Natural_Width;
+   LCD_Natural_Height : constant := Framebuffer_DSI.LCD_Natural_Height;
 
    type Frame_Buffer is limited
      new HAL.Framebuffer.Frame_Buffer_Display with private;
