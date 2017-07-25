@@ -88,6 +88,13 @@ package body Bitmap_File_Output is
       Hdr.Size      := (Data_Size + 54) / 4;
       Hdr.Offset    := 54;
 
+      --  Set the reserved fields to a known value to avoid "random" data in
+      --  the output file. This is necessary because we use this output in the
+      --  test-suite where we can't afford to have different outputs between
+      --  two execution of the tests.
+      Hdr.Reserved1 := 0;
+      Hdr.Reserved2 := 0;
+
       Inf.Struct_Size := 40;
       Inf.Width := Integer_32 (Bitmap.Width);
       Inf.Height := Integer_32 (Bitmap.Height);
