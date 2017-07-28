@@ -543,7 +543,8 @@ package body Filesystem.FAT.Files is
          File.Buffer_Dirty := False;
       end if;
 
-      return OK;
+      return Directories.Update_Entry (Parent => File.Parent,
+                                       Value  => File.D_Entry);
    end Flush;
 
    ----------
@@ -627,13 +628,9 @@ package body Filesystem.FAT.Files is
 
    procedure Close (File : in out FAT_File_Handle)
    is
-      pragma Unreferenced (File);
+      Status : Status_Code with Unreferenced;
    begin
-      null;
---        Status : Status_Code with Unreferenced;
---     begin
---        Status := Directories.Update_Entry (File.Parent, File.D_Entry);
---        Status := Flush (File);
+      Status := Flush (File);
    end Close;
 
 end Filesystem.FAT.Files;
