@@ -1,0 +1,43 @@
+--- Log test begin ---
+--- Test priorities ---
+Pop : The queue is empty
+Prio: 8 -> Prio 8 - 1
+Prio: 5 -> Prio 5 - 1
+Prio: 5 -> Prio 5 - 2
+Prio: 2 -> Prio 2 - 1
+Prio: 1 -> Prio 1 - 1
+Prio: 1 -> Prio 1 - 2
+Pop : The queue is empty
+--- Test insert lower prio in full queue ---
+Prio: 8 -> Prio 8 - 1
+Prio: 5 -> Prio 5 - 1
+Prio: 5 -> Prio 5 - 2
+Prio: 2 -> Prio 2 - 1
+Prio: 1 -> Prio 1 - 1
+Prio: 1 -> Prio 1 - 2
+Pop : The queue is empty
+--- Test insert low prio in full queue ---
+Prio: 8 -> Prio 8 - 1
+Prio: 5 -> Prio 5 - 1
+Prio: 5 -> Prio 5 - 2
+Prio: 2 -> Prio 2 - 1
+Prio: 1 -> Prio 1 - 1
+Prio: 1 -> Prio 1 - 2
+Pop : The queue is empty
+--- Test insert high prio in full queue ---
+Prio: 9 -> Prio 9 - This message should be accepted
+Prio: 8 -> Prio 8 - 1
+Prio: 5 -> Prio 5 - 1
+Prio: 5 -> Prio 5 - 2
+Prio: 2 -> Prio 2 - 1
+Prio: 1 -> Prio 1 - 1
+Pop : The queue is empty
+--- Test insert too long message ---
+Prio: 8 -> Prio 8 - 1
+Prio: 5 -> Prio 5 - 1
+Prio: 5 -> Prio 5 - 2
+Prio: 2 -> Prio 2 - 1
+Prio: 1 -> Prio 1 - 1
+Prio: 1 -> Prio 1 - 2
+Pop : The queue is empty
+--- Log test end ---

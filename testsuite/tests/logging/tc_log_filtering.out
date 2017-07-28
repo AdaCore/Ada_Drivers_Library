@@ -1,0 +1,15 @@
+--- Log test begin ---
+Prio: 0 -> This Debug should print
+Prio: 0 -> This Warning should print
+Prio: 0 -> This Error should print
+Prio: 1 -> This Debug should print prio 1
+Prio: 2 -> This Warning should print prio 2
+Prio: 3 -> This Error should print prio 3
+Prio: 1 -> DEBUG: This Debug should print with prefix
+Prio: 2 -> This Warning should print without prefix
+Prio: 3 -> This Error should print without prefix
+Prio: 2 -> WARNING: This Warning should print with prefix
+Prio: 3 -> This Error should print without prefix
+Prio: 3 -> ERROR: This Error should print with prefix
+Prio: 3 -> ERROR: This should print in the Error category
+--- Log test end ---

@@ -1,0 +1,9 @@
+--- Log test begin ---
+Prio: 3 -> ERROR: Error, prio 3
+Prio: 2 -> WARNING: Warning, prio 2
+Prio: 1 -> DEBUG: Debug, prio 1
+Prio: 0 -> DEBUG: Debug, prio 0
+Prio: 0 -> WARNING: Warning, prio 0
+Prio: 0 -> ERROR: Error, prio 0
+Pop : The queue is empty
+--- Log test end ---
