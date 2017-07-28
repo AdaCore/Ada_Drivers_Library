@@ -2,27 +2,197 @@ private with Ada.Containers.Vectors;
 private with Ada.Direct_IO;
 private with Ada.Strings.Unbounded;
 
-with HAL;            use HAL;
 with HAL.Filesystem; use HAL.Filesystem;
+with System;
 
 --  Simple wrappers around the Ada standard library to provide implementations
 --  for HAL.Filesystem interfaces.
 
 package Native.Filesystem is
 
+   package HALFS renames HAL.Filesystem;
+
    ----------------------
    -- Native_FS_Driver --
    ----------------------
 
-   type Native_FS_Driver is limited new FS_Driver with private;
-   type Native_FS_Driver_Ref is access Native_FS_Driver;
+   type Native_FS_Driver is limited new HALFS.Filesystem_Driver with private;
+   type Native_FS_Driver_Access is access all Native_FS_Driver;
 
-   procedure Destroy (This : in out Native_FS_Driver_Ref);
+   type File_Handle is limited new HALFS.File_Handle with private;
+   type File_Handle_Access is access all File_Handle;
+
+   type Directory_Handle is limited new HALFS.Directory_Handle with private;
+   type Directory_Handle_Access is access all Directory_Handle;
+
+   type Node_Handle is new HALFS.Node_Handle with private;
+   type Node_Handle_Access is access all Node_Handle;
+
+   ---------------------------
+   --  Directory operations --
+   ---------------------------
+
+   overriding
+   function Open
+     (This   : in out Native_FS_Driver;
+      Path   : String;
+      Handle : out Any_Directory_Handle)
+      return Status_Code;
+   --  Open a new Directory Handle at the given Filesystem Path
+
+   overriding
+   function Create_File (This : in out Native_FS_Driver;
+                         Path : String)
+                         return Status_Code;
+
+   overriding
+   function Unlink (This : in out Native_FS_Driver;
+                    Path : String)
+                    return Status_Code;
+   --  Remove the regular file located at Path in the This filesystem
+
+   overriding
+   function Remove_Directory (This : in out Native_FS_Driver;
+                              Path : String)
+                              return Status_Code;
+   --  Remove the directory located at Path in the This filesystem
+
+   overriding
+   function Get_FS
+     (This : Directory_Handle) return Any_Filesystem;
+   --  Return the filesystem the handle belongs to.
+
+   overriding
+   function Root_Node
+     (This   : in out Native_FS_Driver;
+      As     : String;
+      Handle : out Any_Node_Handle)
+      return Status_Code;
+   --  Open a new Directory Handle at the given Filesystem Path
+
+   overriding
+   function Read
+     (This   : in out Directory_Handle;
+      Handle : out Any_Node_Handle)
+      return Status_Code;
+   --  Reads the next directory entry. If no such entry is there, an error
+   --  code is returned in Status.
+
+   overriding
+   procedure Reset (This : in out Directory_Handle);
+   --  Resets the handle to the first node
+
+   overriding
+   procedure Close (This : in out Directory_Handle);
+   --  Closes the handle, and free the associated resources.
+
+   ---------------------
+   -- Node operations --
+   ---------------------
+
+   overriding
+   function Get_FS (This : Node_Handle) return Any_Filesystem;
+
+   overriding
+   function Basename (This : Node_Handle) return String;
+
+   overriding
+   function Is_Read_Only (This : Node_Handle) return Boolean;
+
+   overriding
+   function Is_Hidden (This : Node_Handle) return Boolean;
+
+   overriding
+   function Is_Subdirectory (This : Node_Handle) return Boolean;
+
+   overriding
+   function Is_Symlink (This : Node_Handle) return Boolean;
+
+   overriding
+   function Size (This : Node_Handle) return File_Size;
+
+   overriding
+   procedure Close (This : in out Node_Handle);
+
+   ---------------------
+   -- File operations --
+   ---------------------
+
+   overriding
+   function Open
+     (This   : in out Native_FS_Driver;
+      Path   : String;
+      Mode   : File_Mode;
+      Handle : out Any_File_Handle)
+      return Status_Code;
+   --  Open a new File Handle at the given Filesystem Path
+
+   overriding
+   function Open
+     (This   : Node_Handle;
+      Name   : String;
+      Mode   : File_Mode;
+      Handle : out Any_File_Handle)
+      return Status_Code
+     with Pre'Class => Is_Subdirectory (This);
+
+   overriding
+   function Get_FS
+     (This : in out File_Handle) return Any_Filesystem;
+
+   overriding
+   function Size
+     (This : File_Handle) return File_Size;
+
+   overriding
+   function Mode
+     (This : File_Handle) return File_Mode;
+
+   overriding
+   function Read
+     (This   : in out File_Handle;
+      Addr   : System.Address;
+      Length : in out File_Size)
+      return Status_Code;
+
+   overriding
+   function Write
+     (This   : in out File_Handle;
+      Addr   : System.Address;
+      Length : File_Size)
+      return Status_Code;
+
+   overriding
+   function Offset
+     (This : File_Handle) return File_Size;
+
+   overriding
+   function Flush
+     (This : in out File_Handle) return Status_Code;
+
+   overriding
+   function Seek
+     (This   : in out File_Handle;
+      Origin : Seek_Mode;
+      Amount : in out File_Size)
+      return Status_Code;
+
+   overriding
+   procedure Close (This : in out File_Handle);
+
+   -------------------
+   -- FS operations --
+   -------------------
+
+   overriding
+   procedure Close (This : in out Native_FS_Driver);
+
+   procedure Destroy (This : in out Native_FS_Driver_Access);
 
    function Create
      (FS       : out Native_FS_Driver;
-      Root_Dir : Pathname)
-      return Status_Kind;
+      Root_Dir : String)
+      return Status_Code;
    --  Create a Native_FS_Driver considering Root_Dir as its root directory.
    --  All other pathnames in this API are processed as relative to it.
    --
@@ -30,108 +200,39 @@ package Native.Filesystem is
    --  ".." directory will access the parent of the root directory, not the
    --  root directory itself.
 
-   overriding function Create_Node
+   type File_Kind is (Regular_File, Directory);
+
+   function Create_Node
      (This : in out Native_FS_Driver;
-      Path : Pathname;
+      Path : String;
       Kind : File_Kind)
-      return Status_Kind;
+      return Status_Code;
 
-   overriding function Create_Directory
+   function Create_Directory
      (This : in out Native_FS_Driver;
-      Path : Pathname)
-      return Status_Kind;
+      Path : String)
+      return Status_Code;
 
-   overriding function Unlink
-     (This : in out Native_FS_Driver;
-      Path : Pathname)
-      return Status_Kind;
-
-   overriding function Remove_Directory
-     (This : in out Native_FS_Driver;
-      Path : Pathname)
-      return Status_Kind;
-
-   overriding function Rename
+   function Rename
      (This     : in out Native_FS_Driver;
-      Old_Path : Pathname;
-      New_Path : Pathname)
-      return Status_Kind;
+      Old_Path : String;
+      New_Path : String)
+      return Status_Code;
 
-   overriding function Truncate_File
+   function Truncate_File
      (This   : in out Native_FS_Driver;
-      Path   : Pathname;
-      Length : IO_Count)
-      return Status_Kind;
-
-   overriding function Open
-     (This   : in out Native_FS_Driver;
-      Path   : Pathname;
-      Mode   : File_Mode;
-      Handle : out Any_File_Handle)
-      return Status_Kind;
-
-   overriding function Open_Directory
-     (This   : in out Native_FS_Driver;
-      Path   : Pathname;
-      Handle : out Any_Directory_Handle)
-      return Status_Kind;
-
-   ------------------------
-   -- Native_File_Handle --
-   ------------------------
-
-   type Native_File_Handle is limited new File_Handle with private;
-   type Native_File_Handle_Ref is access Native_File_Handle;
-
-   overriding function Read
-     (This : in out Native_File_Handle;
-      Data : out UInt8_Array)
-      return Status_Kind;
-
-   overriding function Write
-     (This : in out Native_File_Handle;
-      Data : UInt8_Array)
-      return Status_Kind;
-
-   overriding function Seek
-     (This   : in out Native_File_Handle;
-      Offset : IO_Count)
-      return Status_Kind;
-
-   overriding function Close
-     (This : in out Native_File_Handle)
-      return Status_Kind;
-
-   -----------------------------
-   -- Native_Directory_Handle --
-   -----------------------------
-
-   type Native_Directory_Handle is limited new Directory_Handle with private;
-   type Native_Directory_Handle_Ref is access Native_Directory_Handle;
-
-   overriding function Read_Entry
-     (This         : in out Native_Directory_Handle;
-      Entry_Number : Positive;
-      Dir_Entry    : out Directory_Entry)
-      return Status_Kind;
-
-   overriding function Entry_Name
-     (This         : in out Native_Directory_Handle;
-      Entry_Number : Positive)
-      return Pathname;
-
-   overriding function Close
-     (This : in out Native_Directory_Handle)
-      return Status_Kind;
+      Path   : String;
+      Length : File_Size)
+      return Status_Code;
 
    -------------
    -- Helpers --
    -------------
 
    function Join
-     (Prefix, Suffix           : Pathname;
+     (Prefix, Suffix           : String;
       Ignore_Absolute_Suffixes : Boolean)
-      return Pathname;
+      return String;
    --  Like Ada.Directories.Compose, but also accepts a full path as Suffix.
    --  For instance:
    --
@@ -149,63 +250,70 @@ private
 
    package Byte_IO is new Ada.Direct_IO (UInt8);
 
-   type Native_FS_Driver is limited new FS_Driver with record
+   type Native_FS_Driver is limited new HAL.Filesystem.Filesystem with record
       Root_Dir          : Ada.Strings.Unbounded.Unbounded_String;
       --  Path on the host file system to be used as root directory for this FS
 
-      Free_File_Handles : Native_File_Handle_Ref;
+      Free_File_Handles : File_Handle_Access;
       --  Linked list of file handles available to use
 
-      Free_Dir_Handles : Native_Directory_Handle_Ref;
+      Free_Dir_Handles : Directory_Handle_Access;
       --  Likend list of directory handles available to use
    end record;
 
    function Get_Handle
      (FS : in out Native_FS_Driver)
-      return Native_File_Handle_Ref;
+      return File_Handle_Access;
    function Get_Handle
      (FS : in out Native_FS_Driver)
-      return Native_Directory_Handle_Ref;
+      return Directory_Handle_Access;
    --  Return an existing free handle or create one if none is available
 
    procedure Add_Free_Handle
      (FS     : in out Native_FS_Driver;
-      Handle : in out Native_File_Handle_Ref)
+      Handle : in out File_Handle_Access)
      with Pre => Handle /= null,
      Post => Handle = null;
    procedure Add_Free_Handle
      (FS     : in out Native_FS_Driver;
-      Handle : in out Native_Directory_Handle_Ref)
+      Handle : in out Directory_Handle_Access)
      with Pre => Handle /= null,
      Post => Handle = null;
    --  Add Handle to the list of available handles
 
-   type Native_File_Handle is limited new File_Handle with record
-      FS   : Native_FS_Driver_Ref;
+   type File_Handle is limited new HALFS.File_Handle with record
+      FS   : Native_FS_Driver_Access;
       --  The filesystem that owns this handle
 
-      Next : Native_File_Handle_Ref;
+      Next : File_Handle_Access;
       --  If this handle is used, this is undefined. Otherwise,
       --  this is the next free handle in the list (see
       --  Native_FS_Driver.Free_File_Handles).
 
       File : Byte_IO.File_Type;
+
+      Mode : File_Mode;
    end record;
 
-   type Directory_Data_Entry is record
-      Kind : File_Kind;
-      Name : Ada.Strings.Unbounded.Unbounded_String;
+   type Node_Handle is new HALFS.Node_Handle with record
+      FS        : Native_FS_Driver_Access;
+      Kind      : File_Kind;
+      Name      : Ada.Strings.Unbounded.Unbounded_String;
+      Read_Only : Boolean;
+      Hidden    : Boolean;
+      Symlink   : Boolean;
+      Size      : File_Size;
    end record;
-   --  Set of information we handle for a directory entry
+   --  Set of information we handle for a node
 
-   package Directory_Data_Vectors is new Ada.Containers.Vectors
-     (Positive, Directory_Data_Entry);
+   package Node_Vectors is new Ada.Containers.Vectors
+     (Positive, Node_Handle);
 
-   type Native_Directory_Handle is limited new Directory_Handle with record
-      FS   : Native_FS_Driver_Ref;
+   type Directory_Handle is limited new HALFS.Directory_Handle with record
+      FS   : Native_FS_Driver_Access;
       --  The filesystem that owns this handle
 
-      Next      : Native_Directory_Handle_Ref;
+      Next      : Directory_Handle_Access;
       --  If this handle is used, this is undefined. Otherwise,
       --  this is the next free handle in the list (see
       --  Native_FS_Driver.Free_Dir_Handles).
@@ -213,7 +321,7 @@ private
       Full_Name : Ada.Strings.Unbounded.Unbounded_String;
       --  Absolute path for this directory
 
-      Data : Directory_Data_Vectors.Vector;
+      Data : Node_Vectors.Vector;
       --  Vector of entries for this directory.
       --
       --  On one hand, HAL.Filesystem exposes an index-based API to access
@@ -221,6 +329,9 @@ private
       --  kind of single-linked list. What we do here is that when we open a
       --  directory, we immediately get all entries and build a vector out of
       --  it for convenient random access.
+
+      Index : Positive;
+      --  Current index in the vector of Node
    end record;
 
 end Native.Filesystem;

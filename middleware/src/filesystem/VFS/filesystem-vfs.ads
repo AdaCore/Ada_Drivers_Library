@@ -32,6 +32,9 @@
 --  Simple virtual file system allowing to mount actual fs into a virtual
 --  fs environment composed of 1 level of virtual directories.
 
+with HAL.Filesystem; use HAL.Filesystem;
+with HAL.Block_Drivers;
+
 package Filesystem.VFS is
 
    MAX_MOUNT_POINTS : constant := 2;
@@ -60,6 +63,9 @@ package Filesystem.VFS is
       Mode   : File_Mode;
       Handle : out Any_File_Handle)
       return Status_Code;
+
+   function Unlink (Path : String) return Status_Code;
+   function Remove_Directory (Path : String) return Status_Code;
 
 private
 

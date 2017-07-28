@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,173 +29,199 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
-
---  Provide common interfaces to deal with filesystems
+with System;
 
 package HAL.Filesystem is
+   type Status_Code is
+     (OK,
+      Non_Empty_Directory,
+      Disk_Error, --  A hardware error occurred in the low level disk I/O
+      Disk_Full,
+      Internal_Error,
+      Drive_Not_Ready,
+      No_Such_File,
+      No_Such_Path,
+      Not_Mounted, --  The mount point is invalid
+      Invalid_Name,
+      Access_Denied,
+      Already_Exists,
+      Invalid_Object_Entry,
+      Write_Protected,
+      Invalid_Drive,
+      No_Filesystem, --  The volume is not a FAT volume
+      Locked,
+      Too_Many_Open_Files, --  All available handles are used
+      Invalid_Parameter,
+      Input_Output_Error,
+      No_MBR_Found,
+      No_Partition_Found,
+      No_More_Entries,
+      Read_Only_File_System,
+      Operation_Not_Permitted);
 
-   subtype Pathname is String;
+   type File_Mode is (Read_Mode, Write_Mode, Read_Write_Mode);
+   type Seek_Mode is
+     (
+      --  Seek from the beginning of the file, forward
+      From_Start,
+      --  Seek from the end of the file, backward
+      From_End,
+      --  Seek from the current position, forward
+      Forward,
+      --  Seek from the current position, backward
+      Backward);
 
-   type File_Kind is (Regular_File, Directory);
+   type File_Size is new HAL.UInt64;
+   --  Modern fs all support 64-bit file size. Only old or limited ones support
+   --  max 32-bit (FAT in particular). So let's see big and not limit ourselves
+   --  in this API with 32-bit only.
 
-   type File_Mode is (Read_Only, Write_Only, Read_Write);
-
-   type Status_Kind is (Status_Ok,
-                        Symbolic_Links_Loop,
-                        Permission_Denied,
-                        Input_Output_Error,
-                        No_Such_File_Or_Directory,
-                        Filename_Is_Too_Long,
-                        Not_A_Directory,
-                        Representation_Overflow,
-                        Invalid_Argument,
-                        Not_Enough_Space,
-                        Not_Enough_Memory,
-                        Bad_Address,
-                        File_Exists,
-                        Read_Only_File_System,
-                        Operation_Not_Permitted,
-                        No_Space_Left_On_Device,
-                        Too_Many_Links,
-                        Resource_Busy,
-                        Buffer_Is_Too_Small,
-                        Read_Would_Block,
-                        Call_Was_Interrupted);
-
-   type User_ID is new Natural;
-   type Group_ID is new Natural;
-   type IO_Count is new Unsigned_64;
-
-   type FS_Driver is limited interface;
-   type Any_FS_Driver is access all FS_Driver'Class;
-   --  Interface to provide access a filesystem
-
-   type File_Handle is limited interface;
-   type Any_File_Handle is access all File_Handle'Class;
-   --  Interface to provide access to a regular file
+   type Filesystem_Driver is limited interface;
+   type Any_Filesystem_Driver is access all Filesystem_Driver'Class;
 
    type Directory_Handle is limited interface;
    type Any_Directory_Handle is access all Directory_Handle'Class;
-   --  Interface to provide access to a directory
 
-   --  ??? Document error cases for all primitives below
+   type File_Handle is limited interface;
+   type Any_File_Handle is access all File_Handle'Class;
 
-   ---------------
-   -- FS_Driver --
-   ---------------
+   type Node_Handle is interface;
+   type Any_Node_Handle is access all Node_Handle'Class;
 
-   function Create_Node (This : in out FS_Driver;
-                         Path : Pathname;
-                         Kind : File_Kind)
-                         return Status_Kind is abstract;
-   --  Create a Kind node in the This filesystem at the Path location
+   ---------------------------
+   --  Directory operations --
+   ---------------------------
 
-   function Create_Directory (This : in out FS_Driver;
-                              Path : Pathname)
-                              return Status_Kind is abstract;
-   --  Shortcut for Create_Node (This, Path, Directory)
+   function Open
+     (This   : in out Filesystem_Driver;
+      Path   : String;
+      Handle : out Any_Directory_Handle)
+      return Status_Code is abstract;
+   --  Open a new Directory Handle at the given Filesystem_Driver Path
 
-   function Unlink (This : in out FS_Driver;
-                    Path : Pathname)
-                    return Status_Kind is abstract;
-   --  Remove the regular file located at Path in the This filesystem
+   function Create_File (This : in out Filesystem_Driver;
+                         Path : String)
+                         return Status_Code is abstract;
 
-   function Remove_Directory (This : in out FS_Driver;
-                              Path : Pathname)
-                              return Status_Kind is abstract;
-   --  Remove the directory located at Path in the This filesystem
+   function Unlink (This : in out Filesystem_Driver;
+                    Path : String)
+                    return Status_Code is abstract;
+   --  Remove the regular file located at Path in the This filesystem_Driver
 
-   function Rename (This     : in out FS_Driver;
-                    Old_Path : Pathname;
-                    New_Path : Pathname)
-                    return Status_Kind is abstract;
-   --  Move a node in the This filesystem
+   function Remove_Directory (This : in out Filesystem_Driver;
+                              Path : String)
+                              return Status_Code is abstract;
+   --  Remove the directory located at Path in the This filesystem_Driver
 
-   function Truncate_File (This   : in out FS_Driver;
-                           Path   : Pathname;
-                           Length : IO_Count)
-                           return Status_Kind is abstract;
-   --  Assuming Path designates a regular file, set its size to be Length. This
-   --  operation preserves the first Length UInt8s and leaves the other with
-   --  undefined values.
+   function Get_FS
+     (This : Directory_Handle) return Any_Filesystem_Driver
+      is abstract;
+   --  Return the filesystem_Driver the handle belongs to.
 
-   function Open (This   : in out FS_Driver;
-                  Path   : Pathname;
-                  Mode   : File_Mode;
-                  Handle : out Any_File_Handle)
-                  return Status_Kind is abstract;
-   --  Assuming Path designates a regular file, open it with the given Mode and
-   --  create a Handle for it.
-   --
-   --  The This filesystem owns the resulting handle. Callers are simply
-   --  expected to call Close on it when done with the file.
+   function Root_Node
+     (This   : in out Filesystem_Driver;
+      As     : String;
+      Handle : out Any_Node_Handle)
+      return Status_Code is abstract;
+   --  Open a new Directory Handle at the given Filesystem_Driver Path
 
-   function Open_Directory (This   : in out FS_Driver;
-                            Path   : Pathname;
-                            Handle : out Any_Directory_Handle)
-                            return Status_Kind is abstract;
-   --  Assuming Path designates a directory, open it and create a Handle for
-   --  it.
-   --
-   --  The This filesystem owns the resulting handle. Callers are simply
-   --  expected to call Close on it when done with the directory.
-   --
-   --  ??? Does this handler also contains entry for the current directory and
-   --  the parent one?
+   function Read
+     (This   : in out Directory_Handle;
+      Handle : out Any_Node_Handle)
+      return Status_Code is abstract;
+   --  Reads the next directory entry. If no such entry is there, an error
+   --  code is returned in Status.
 
-   ------------------
-   --  File_Handle --
-   ------------------
+   procedure Reset (This : in out Directory_Handle) is abstract;
+   --  Resets the handle to the first node
 
-   function Read (This : in out File_Handle;
-                  Data : out UInt8_Array)
-                  return Status_Kind is abstract;
-   --  Read the next Data'Length UInt8s in This and put to in Data. If there
-   --  isn't enough UInt8 to read to fill Data, return Input_Output_Error.
+   procedure Close (This : in out Directory_Handle) is abstract;
+   --  Closes the handle, and free the associated resources.
 
-   function Write (This : in out File_Handle;
-                   Data : UInt8_Array)
-                   return Status_Kind is abstract;
-   --  Write UInt8s in Data to This. This overrides the next Data'Length UInt8s in
-   --  this file, if they exist, it extends the file otherwise.
+   ---------------------
+   -- Node operations --
+   ---------------------
 
-   function Seek (This   : in out File_Handle;
-                  Offset : IO_Count)
-                  return Status_Kind is abstract;
-   --  Set the read/write cursor of This to point to its UInt8 at the absolute
-   --  Offset.
-   --
-   --  ??? What should happen if this offset is beyond the end of the file?
+   function Get_FS (This : Node_Handle) return Any_Filesystem_Driver is abstract;
 
-   function Close (This : in out File_Handle)
-                   return Status_Kind is abstract;
-   --  Close This. If this succeeds, This should not be used again afterwards.
+   function Basename (This : Node_Handle) return String is abstract;
 
-   ----------------------
-   -- Directory_Handle --
-   ----------------------
+   function Is_Read_Only (This : Node_Handle) return Boolean is abstract;
 
-   type Directory_Entry is record
-      Entry_Type  : File_Kind;
-   end record;
+   function Is_Hidden (This : Node_Handle) return Boolean is abstract;
 
-   function Read_Entry (This         : in out Directory_Handle;
-                        Entry_Number : Positive;
-                        Dir_Entry    : out Directory_Entry)
-                        return Status_Kind is abstract;
-   --  Read the Entry_Number'th entry in This. If it exists, store its
-   --  details in Dir_Entry and return Status_Ok. Otherwise, return
-   --  No_Such_File_Or_Directory.
+   function Is_Subdirectory (This : Node_Handle) return Boolean is abstract;
 
-   function Entry_Name (This         : in out Directory_Handle;
-                        Entry_Number : Positive)
-                        return Pathname is abstract;
-   --  Return the name for the Entry_Number directory entry. This is a simple
-   --  name (not a path). Return an empty string if this entry does not exist.
+   function Is_Symlink (This : Node_Handle) return Boolean is abstract;
 
-   function Close (This : in out Directory_Handle)
-                   return Status_Kind is abstract;
-   --  Close This. If this succeeds, This should not be used again afterwards.
+   function Size (This : Node_Handle) return File_Size is abstract;
+
+   procedure Close (This : in out Node_Handle) is abstract;
+
+   ---------------------
+   -- File operations --
+   ---------------------
+
+   function Open
+     (This   : in out Filesystem_Driver;
+      Path   : String;
+      Mode   : File_Mode;
+      Handle : out Any_File_Handle)
+      return Status_Code is abstract;
+   --  Open a new File Handle at the given Filesystem_Driver Path
+
+   function Open
+     (This   : Node_Handle;
+      Name   : String;
+      Mode   : File_Mode;
+      Handle : out Any_File_Handle)
+      return Status_Code is abstract
+     with Pre'Class => Is_Subdirectory (This);
+
+   function Get_FS
+     (This : in out File_Handle) return Any_Filesystem_Driver is abstract;
+
+   function Size
+     (This : File_Handle) return File_Size is abstract;
+
+   function Mode
+     (This : File_Handle) return File_Mode is abstract;
+
+   function Read
+     (This   : in out File_Handle;
+      Addr   : System.Address;
+      Length : in out File_Size)
+      return Status_Code is abstract
+     with Pre'Class => Mode (This) /= Write_Mode;
+
+   function Write
+     (This   : in out File_Handle;
+      Addr   : System.Address;
+      Length : File_Size)
+      return Status_Code is abstract
+     with
+       Pre'Class => Mode (This) = Write_Mode or else Mode (This) = Read_Write_Mode;
+
+   function Offset
+     (This : File_Handle)
+      return File_Size is abstract;
+
+   function Flush
+     (This : in out File_Handle)
+      return Status_Code is abstract;
+
+   function Seek
+     (This   : in out File_Handle;
+      Origin : Seek_Mode;
+      Amount : in out File_Size)
+      return Status_Code is abstract;
+
+   procedure Close (This : in out File_Handle) is abstract;
+
+   -------------------
+   -- FS operations --
+   -------------------
+
+   procedure Close (This : in out Filesystem_Driver) is abstract;
 
 end HAL.Filesystem;

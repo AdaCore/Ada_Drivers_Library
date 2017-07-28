@@ -42,13 +42,15 @@ package body File_Block_Drivers is
       Data         : out Block)
       return Boolean
    is
+      Amount : File_Size := File_Size (Block_Number * 512);
    begin
 
-      if This.File.Seek (IO_Count (Block_Number * 512)) /= Status_Ok then
+      if This.File.Seek (From_Start, Amount) /= OK then
          return False;
       end if;
 
-      return This.File.Read (Data) = Status_Ok;
+      Amount := Data'Length;
+      return This.File.Read (Data'Address, Amount) = OK;
    end Read;
 
    ----------
@@ -62,13 +64,15 @@ package body File_Block_Drivers is
       Data         : Block)
       return Boolean
    is
+      Amount : File_Size := File_Size (Block_Number * 512);
    begin
 
-      if This.File.Seek (IO_Count (Block_Number * 512)) /= Status_Ok then
+      if This.File.Seek (From_Start, Amount) /= OK then
          return False;
       end if;
 
-      return This.File.Write (Data) = Status_Ok;
+      Amount := Data'Length;
+      return This.File.Write (Data'Address, Amount) = OK;
    end Write;
 
 end File_Block_Drivers;

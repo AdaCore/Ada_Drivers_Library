@@ -35,7 +35,7 @@ package body Pathname_Manipulation is
    -- Root_Dir --
    --------------
 
-   procedure Root_Dir (Path        :     Pathname;
+   procedure Root_Dir (Path        :     String;
                        Start, Stop : out Integer)
    is
    begin
@@ -59,7 +59,7 @@ package body Pathname_Manipulation is
    -- Root_Dir --
    --------------
 
-   function Root_Dir (Path : Pathname) return Pathname is
+   function Root_Dir (Path : String) return String is
       Start, Stop : Integer;
    begin
       Root_Dir (Path, Start, Stop);

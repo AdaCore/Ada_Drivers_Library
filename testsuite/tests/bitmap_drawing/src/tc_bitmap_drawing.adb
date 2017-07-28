@@ -34,25 +34,25 @@ procedure TC_Bitmap_Drawing is
 
    FS       : Native_FS_Driver;
    BMP_File : Any_File_Handle;
-   Status   : Status_Kind;
+   Status   : Status_Code;
    BM       : constant not null Any_Bitmap_Buffer := Allocate_Bitmap;
 
    Filename : constant String := "test.bmp";
 begin
-   if FS.Create (Root_Dir => Test_Dir) /= Status_Ok then
+   if FS.Create (Root_Dir => Test_Dir) /= OK then
       raise Program_Error with "Cannot create native file system at '" &
         Test_Dir & "'";
    end if;
 
    Status := FS.Create_Node (Filename, Regular_File);
 
-   if Status /= Status_Ok then
+   if Status /= OK then
       raise Program_Error with "Cannot Create BMP file";
    end if;
 
-   Status := FS.Open (Filename, Write_Only, BMP_File);
+   Status := FS.Open (Filename, Write_Mode, BMP_File);
 
-   if Status /= Status_Ok or else BMP_File = null then
+   if Status /= OK or else BMP_File = null then
       raise Program_Error with "Cannot open BMP file";
    end if;
 
@@ -106,10 +106,8 @@ begin
               Synchronous => True);
 
 
-   Write_BMP_File (BMP_File.all, BM.all);
-   if BMP_File.Close /= Status_Ok then
-      raise Program_Error with "Cannot close BMP file";
-   end if;
+   Write_BMP_File (BMP_File, BM.all);
+   BMP_File.Close;
 
    if not Compare_Files.Binnary_Equal (Test_Dir & "/" & Filename,
                                        Test_Dir & "/ref.bmp")

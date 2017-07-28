@@ -31,6 +31,7 @@
 
 with Interfaces; use Interfaces;
 with HAL;        use HAL;
+with Filesystem; use Filesystem;
 
 package body Bitmap_File_Output is
 
@@ -70,12 +71,11 @@ package body Bitmap_File_Output is
    -- Write_BMP_File --
    --------------------
 
-   procedure Write_BMP_File (File   : in out File_Handle'Class;
+   procedure Write_BMP_File (File   : Any_File_Handle;
                              Bitmap : Bitmap_Buffer'Class)
    is
-      Hdr    : Header;
-      Inf    : Info;
-      Status : Status_Kind;
+      Hdr         : Header;
+      Inf         : Info;
       Row_Size    : constant Integer_32 := Integer_32 (Bitmap.Width * 24);
       Row_Padding : constant Integer_32 := (32 - (Row_Size mod 32)) mod 32 / 8;
       Data_Size   : constant Integer_32 := (Row_Size + Row_Padding) * Integer_32 (Bitmap.Height);
@@ -83,6 +83,9 @@ package body Bitmap_File_Output is
       RGB_Pix : Bitmap_Color;
       Pix_Out : UInt8_Array (1 .. 3);
       Padding : constant UInt8_Array (1 .. Integer (Row_Padding)) := (others => 0);
+
+      function Write is new Filesystem.Generic_Write (Header);
+      function Write is new Filesystem.Generic_Write (Info);
    begin
       Hdr.Signature := 16#4D42#;
       Hdr.Size      := (Data_Size + 54) / 4;
@@ -107,15 +110,12 @@ package body Bitmap_File_Output is
       Inf.Palette_Size := 0;
       Inf.Important := 0;
 
-      Status := File.Write (Hdr.Arr);
 
-      if Status /= Status_Ok then
+      if Write (File, Hdr) /= OK then
          raise Program_Error;
       end if;
 
-      Status := File.Write (Inf.Arr);
-
-      if Status /= Status_Ok then
+      if Write (File, Inf) /= OK then
          raise Program_Error;
       end if;
 
@@ -128,16 +128,12 @@ package body Bitmap_File_Output is
             Pix_Out (2) := RGB_Pix.Green;
             Pix_Out (3) := RGB_Pix.Red;
 
-            Status := File.Write (Pix_Out);
-
-            if Status /= Status_Ok then
+            if File.Write (Pix_Out'Address, Pix_Out'Length) /= OK then
                raise Program_Error;
             end if;
          end loop;
 
-         Status := File.Write (Padding);
-
-         if Status /= Status_Ok then
+         if File.Write (Padding'Address, Padding'Length) /= OK then
             raise Program_Error;
          end if;
       end loop;

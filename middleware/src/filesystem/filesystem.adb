@@ -29,6 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with System;
+with HAL.Filesystem; use HAL.Filesystem;
+
 package body Filesystem is
 
    ------------------
@@ -39,7 +42,7 @@ package body Filesystem is
      (This  : Any_File_Handle;
       Value : out T) return Status_Code
    is
-      L : File_Size := T'Size / 8;
+      L : File_Size := T'Size / System.Storage_Unit;
    begin
       return This.Read (Value'Address, L);
    end Generic_Read;
@@ -53,7 +56,7 @@ package body Filesystem is
       Value : T) return Status_Code
    is
    begin
-      return This.Write (Value'Address, T'Size / 8);
+      return This.Write (Value'Address, T'Size / System.Storage_Unit);
    end Generic_Write;
 
 end Filesystem;

@@ -77,9 +77,7 @@ private package Filesystem.FAT.Files is
    function Write
      (File   : in out FAT_File_Handle;
       Addr   : System.Address;
-      Length : FAT_File_Size) return Status_Code
-     with
-       Pre => Mode (File) = Write_Mode or else Mode (File) = Read_Write_Mode;
+      Length : FAT_File_Size) return Status_Code;
    --  write to file
    --  @return number of bytes written (at most Data'Length), or -1 on error.
 

@@ -256,6 +256,40 @@ package body Filesystem.VFS is
    end Open;
 
    ------------
+   -- Unlink --
+   ------------
+
+   function Unlink (Path : String) return Status_Code is
+      Idx : Natural;
+      FS  : Any_Filesystem;
+   begin
+      Split (Path, FS, Idx);
+
+      if FS = null then
+         return No_Such_Path;
+      end if;
+
+      return FS.Unlink (Path (Idx .. Path'Last));
+   end Unlink;
+
+   ----------------------
+   -- Remove_Directory --
+   ----------------------
+
+   function Remove_Directory (Path : String) return Status_Code is
+      Idx : Natural;
+      FS  : Any_Filesystem;
+   begin
+      Split (Path, FS, Idx);
+
+      if FS = null then
+         return No_Such_Path;
+      end if;
+
+      return FS.Remove_Directory (Path (Idx .. Path'Last));
+   end Remove_Directory;
+
+   ------------
    -- Get_FS --
    ------------
 

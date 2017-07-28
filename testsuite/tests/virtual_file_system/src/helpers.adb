@@ -2,23 +2,24 @@ with Ada.Command_Line;
 with Ada.Directories;
 with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
+with Filesystem.VFS;
 
 package body Helpers is
 
-   Program_Abspath : constant Pathname := Native.Filesystem.Join
+   Program_Abspath : constant String := Native.Filesystem.Join
      (Ada.Directories.Current_Directory, Ada.Command_Line.Command_Name, False);
-   Test_Dir : constant Pathname := Ada.Directories.Containing_Directory
+   Test_Dir : constant String := Ada.Directories.Containing_Directory
      (Ada.Directories.Containing_Directory (Program_Abspath));
-   Material_Dir : constant Pathname :=
+   Material_Dir : constant String :=
      Ada.Directories.Compose (Test_Dir, "material");
 
    ----------
    -- Test --
    ----------
 
-   procedure Test (Status : Status_Kind) is
+   procedure Test (Status : Status_Code) is
    begin
-      if Status /= Status_Ok then
+      if Status /= OK then
          raise Program_Error;
       end if;
    end Test;
@@ -28,14 +29,14 @@ package body Helpers is
    ------------
 
    function Create
-     (Root_Dir          : Pathname;
+     (Root_Dir          : String;
       Create_If_Missing : Boolean := False)
-      return Native.Filesystem.Native_FS_Driver_Ref
+      return Native.Filesystem.Native_FS_Driver_Access
    is
       use Native.Filesystem;
-      Abs_Root_Dir : constant Pathname := Ada.Directories.Compose
+      Abs_Root_Dir : constant String := Ada.Directories.Compose
         (Material_Dir, Root_Dir);
-      Result       : constant Native_FS_Driver_Ref := new Native_FS_Driver;
+      Result       : constant Native_FS_Driver_Access := new Native_FS_Driver;
    begin
       if Create_If_Missing
         and then not Ada.Directories.Exists (Abs_Root_Dir)
@@ -57,6 +58,7 @@ package body Helpers is
 
       Buffer : UInt8_Array_Access := new UInt8_Array (1 .. 1024);
       Last   : Natural := 0;
+      Amount : File_Size;
    begin
       loop
          --  If the buffer is full, reallocate it twice bigger
@@ -75,8 +77,9 @@ package body Helpers is
          --  As File_Handle.Read does not tell us how many bytes it could read
          --  when it cannot fill the buffer, read byte by byte...
 
-         case File.Read (Buffer (Last + 1 .. Last + 1)) is
-            when Status_Ok =>
+         Amount := 1;
+         case File.Read (Buffer (Last + 1)'Address, Amount) is
+            when OK =>
                null;
             when Input_Output_Error =>
                exit;
@@ -126,49 +129,47 @@ package body Helpers is
    -- Dump --
    ----------
 
-   procedure Dump (FS : in out FS_Driver'Class; Dir : Pathname) is
+   procedure Dump (Dir : String) is
       DH     : Any_Directory_Handle;
-      DE     : Directory_Entry;
+      Node   : Any_Node_Handle;
       I      : Positive := 1;
-      Status : Status_Kind;
+      Status : Status_Code;
    begin
       Put_Line ("Entering " & Dir);
-      Test (FS.Open_Directory (Dir, DH));
+      Test (Filesystem.VFS.Open (Dir, DH));
 
       loop
-         Status := DH.Read_Entry (I, DE);
-         exit when Status = No_Such_File_Or_Directory;
+         Status := DH.Read (Node);
+         exit when Status /= OK;
          Test (Status);
 
          declare
-            Name : constant Pathname :=
-              Native.Filesystem.Join (Dir, DH.Entry_Name (I), True);
+            Name : constant String :=
+              Native.Filesystem.Join (Dir, Node.Basename, True);
          begin
-            case DE.Entry_Type is
-               when Regular_File =>
-                  Put_Line ("  File: " & Name);
+            if Node.Is_Subdirectory then
+               Dump (Name);
+            else
+               Put_Line ("  File: " & Name);
+               declare
+                  File : Any_File_Handle;
+               begin
+                  Test (Filesystem.VFS.Open (Name, Read_Mode, File));
                   declare
-                     File : Any_File_Handle;
+                     Content : constant UInt8_Array := Read_File (File.all);
                   begin
-                     Test (FS.Open (Name, Read_Only, File));
-                     declare
-                        Content : constant UInt8_Array := Read_File (File.all);
-                     begin
-                        Put_Line ("  Contents: " & Quote_Bytes (Content));
-                     end;
-                     Test (File.Close);
+                     Put_Line ("  Contents: " & Quote_Bytes (Content));
                   end;
-
-               when Directory =>
-                  Dump (FS, Name);
-            end case;
+                  File.Close;
+               end;
+            end if;
          end;
 
          I := I + 1;
       end loop;
 
       Put_Line ("Leaving " & Dir);
-      Test (DH.Close);
+      DH.Close;
    end Dump;
 
 end Helpers;

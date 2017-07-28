@@ -31,7 +31,6 @@
 
 with Ada.Unchecked_Conversion;
 with Filesystem.FAT.Directories;
-
 with Filesystem.FAT.Files;
 
 package body Filesystem.FAT is
@@ -359,7 +358,7 @@ package body Filesystem.FAT is
    -- Open --
    ----------
 
-   overriding function Open
+   function Open
      (Controller  : HAL.Block_Drivers.Any_Block_Driver;
       LBA         : Block_Number;
       FS          : in out FAT_Filesystem) return Status_Code
@@ -585,18 +584,6 @@ package body Filesystem.FAT is
    -- Open --
    ----------
 
-   overriding function Open
-     (D_Entry : FAT_Node;
-      Handle  : out Any_Directory_Handle) return Status_Code
-   is
-   begin
-      return D_Entry.FAT_Open (FAT_Directory_Handle_Access (Handle));
-   end Open;
-
-   ----------
-   -- Open --
-   ----------
-
    function FAT_Open
      (D_Entry : FAT_Node;
       Handle  : out FAT_Directory_Handle_Access) return Status_Code
@@ -680,6 +667,62 @@ package body Filesystem.FAT is
       Dir.Is_Free         := True;
    end Close;
 
+   ------------
+   -- Unlink --
+   ------------
+
+   overriding
+   function Unlink (This : in out FAT_Filesystem;
+                    Path : String)
+                    return Status_Code
+   is
+      Parent_E : FAT_Node;
+      Node     : FAT_Node;
+   begin
+      if Is_Root (Path) then
+         return No_Such_File;
+      end if;
+
+      if Directories.Find (This, Parent (Path), Parent_E) /= OK then
+         return No_Such_File;
+      end if;
+
+      if Directories.Find (Parent_E, -Basename (Path), Node) /= OK then
+         return No_Such_File;
+      end if;
+
+      return Directories.Delete_Entry (Dir => Parent_E,
+                                       Ent => Node);
+   end Unlink;
+
+   ----------------------
+   -- Remove_Directory --
+   ----------------------
+
+   overriding
+   function Remove_Directory (This : in out FAT_Filesystem;
+                              Path : String)
+                              return Status_Code
+   is
+      E      : aliased FAT_Node;
+      Full   : constant String := Normalize (Path);
+
+      Status : Status_Code;
+   begin
+      if not Is_Root (Full) then
+         Status := Directories.Find (This, Full, E);
+
+         if Status /= OK then
+            return Status;
+         end if;
+
+      else
+         return Invalid_Parameter;
+      end if;
+
+      return Directories.Delete_Subdir (E, False);
+   end Remove_Directory;
+
    ----------
    -- Open --
    ----------
@@ -718,15 +761,18 @@ package body Filesystem.FAT is
       Mode   : File_Mode;
       Handle : out Any_File_Handle) return Status_Code
    is
+      FAT_Handle : FAT_File_Handle_Access;
+      Ret : Status_Code;
    begin
-      Handle := Any_File_Handle (Find_Free_File_Handle);
+      FAT_Handle := Find_Free_File_Handle;
 
-      if Handle = null then
+      if FAT_Handle = null then
          return Too_Many_Open_Files;
       end if;
 
-      return Files.Open (Parent, -Name, Mode,
-                         FAT_File_Handle_Access (Handle));
+      Ret := Files.Open (Parent, -Name, Mode, FAT_Handle);
+      Handle := Any_File_Handle (FAT_Handle);
+      return Ret;
    end Open;
 
    ----------
@@ -1090,5 +1136,14 @@ package body Filesystem.FAT is
          return Disk_Error;
       end if;
    end Write_Window;
+
+   -----------
+   -- Close --
+   -----------
+
+   overriding procedure Close (E : in out FAT_Node) is
+   begin
+      null;
+   end Close;
 
 end Filesystem.FAT;

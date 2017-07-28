@@ -14,26 +14,28 @@ package body Native.Filesystem is
                  renames Ada.Strings.Unbounded.To_Unbounded_String;
 
    procedure Destroy is new Ada.Unchecked_Deallocation
-     (Native_File_Handle, Native_File_Handle_Ref);
+     (File_Handle, File_Handle_Access);
    procedure Destroy is new Ada.Unchecked_Deallocation
-     (Native_Directory_Handle, Native_Directory_Handle_Ref);
+     (Directory_Handle, Directory_Handle_Access);
+   procedure Destroy is new Ada.Unchecked_Deallocation
+     (Node_Handle, Node_Handle_Access);
 
-   function "<" (Left, Right : Directory_Data_Entry) return Boolean is
+   function "<" (Left, Right : Node_Handle) return Boolean is
      (Ada.Strings.Unbounded."<" (Left.Name, Right.Name));
 
-   package Directory_Data_Sorting is
-     new Directory_Data_Vectors.Generic_Sorting;
+   package Node_Sorting is
+     new Node_Vectors.Generic_Sorting;
 
    --  Most of the time, standard operations give us no reliable way to
    --  determine specifically what triggered a failure, so use the following
    --  error code as a "generic" one.
 
-   Generic_Error : constant Status_Kind := Input_Output_Error;
+   Generic_Error : constant Status_Code := Input_Output_Error;
 
    function Absolute_Path
      (This          : Native_FS_Driver;
-      Relative_Path : Pathname)
-      return Pathname
+      Relative_Path : String)
+      return String
    is (if Relative_Path = ""
        then +This.Root_Dir
        else Join (+This.Root_Dir, Relative_Path, True));
@@ -44,12 +46,12 @@ package body Native.Filesystem is
 
    function Get_Handle
      (FS : in out Native_FS_Driver)
-      return Native_File_Handle_Ref
+      return File_Handle_Access
    is
-      Result : Native_File_Handle_Ref := FS.Free_File_Handles;
+      Result : File_Handle_Access := FS.Free_File_Handles;
    begin
       if Result = null then
-         Result := new Native_File_Handle'
+         Result := new File_Handle'
            (FS     => FS'Unrestricted_Access,
             others => <>);
       else
@@ -64,12 +66,12 @@ package body Native.Filesystem is
 
    function Get_Handle
      (FS : in out Native_FS_Driver)
-      return Native_Directory_Handle_Ref
+      return Directory_Handle_Access
    is
-      Result : Native_Directory_Handle_Ref := FS.Free_Dir_Handles;
+      Result : Directory_Handle_Access := FS.Free_Dir_Handles;
    begin
       if Result = null then
-         Result := new Native_Directory_Handle'
+         Result := new Directory_Handle'
            (FS     => FS'Unrestricted_Access,
             others => <>);
       else
@@ -84,7 +86,7 @@ package body Native.Filesystem is
 
    procedure Add_Free_Handle
      (FS     : in out Native_FS_Driver;
-      Handle : in out Native_File_Handle_Ref)
+      Handle : in out File_Handle_Access)
    is
    begin
       Handle.Next := FS.Free_File_Handles;
@@ -98,7 +100,7 @@ package body Native.Filesystem is
 
    procedure Add_Free_Handle
      (FS     : in out Native_FS_Driver;
-      Handle : in out Native_Directory_Handle_Ref)
+      Handle : in out Directory_Handle_Access)
    is
    begin
       Handle.Next := FS.Free_Dir_Handles;
@@ -110,15 +112,15 @@ package body Native.Filesystem is
    -- Destroy --
    -------------
 
-   procedure Destroy (This : in out Native_FS_Driver_Ref) is
+   procedure Destroy (This : in out Native_FS_Driver_Access) is
       procedure Destroy is new Ada.Unchecked_Deallocation
-        (Native_FS_Driver, Native_FS_Driver_Ref);
+        (Native_FS_Driver, Native_FS_Driver_Access);
    begin
       --  Free all handles
 
       while This.Free_File_Handles /= null loop
          declare
-            H : constant Native_File_Handle_Ref := This.Free_File_Handles.Next;
+            H : constant File_Handle_Access := This.Free_File_Handles.Next;
          begin
             Destroy (This.Free_File_Handles);
             This.Free_File_Handles := H;
@@ -126,7 +128,7 @@ package body Native.Filesystem is
       end loop;
       while This.Free_Dir_Handles /= null loop
          declare
-            H : constant Native_Directory_Handle_Ref :=
+            H : constant Directory_Handle_Access :=
               This.Free_Dir_Handles.Next;
          begin
             Destroy (This.Free_Dir_Handles);
@@ -143,36 +145,36 @@ package body Native.Filesystem is
 
    function Create
      (FS       : out Native_FS_Driver;
-      Root_Dir : Pathname)
-      return Status_Kind
+      Root_Dir : String)
+      return Status_Code
    is
    begin
       declare
          use type Ada.Directories.File_Kind;
       begin
          if Ada.Directories.Kind (Root_Dir) /= Ada.Directories.Directory then
-            return Invalid_Argument;
+            return Invalid_Parameter;
          end if;
       exception
          when Ada.Directories.Name_Error =>
-            return Invalid_Argument;
+            return Invalid_Parameter;
       end;
 
       FS.Root_Dir := Ada.Strings.Unbounded.To_Unbounded_String (Root_Dir);
-      return Status_Ok;
+      return OK;
    end Create;
 
    -----------------
    -- Create_Node --
    -----------------
 
-   overriding function Create_Node
+   function Create_Node
      (This : in out Native_FS_Driver;
-      Path : Pathname;
+      Path : String;
       Kind : File_Kind)
-      return Status_Kind
+      return Status_Code
    is
-      Abs_Path : constant Pathname := Absolute_Path (This, Path);
+      Abs_Path : constant String := Absolute_Path (This, Path);
    begin
       case Kind is
          when Regular_File =>
@@ -202,17 +204,17 @@ package body Native.Filesystem is
             end;
       end case;
 
-      return Status_Ok;
+      return OK;
    end Create_Node;
 
    ----------------------
    -- Create_Directory --
    ----------------------
 
-   overriding function Create_Directory
+   function Create_Directory
      (This : in out Native_FS_Driver;
-      Path : Pathname)
-      return Status_Kind
+      Path : String)
+      return Status_Code
    is
    begin
       return This.Create_Node (Absolute_Path (This, Path), Directory);
@@ -222,14 +224,15 @@ package body Native.Filesystem is
    -- Unlink --
    ------------
 
-   overriding function Unlink
+   overriding
+   function Unlink
      (This : in out Native_FS_Driver;
-      Path : Pathname)
-      return Status_Kind
+      Path : String)
+      return Status_Code
    is
    begin
       Ada.Directories.Delete_File (Absolute_Path (This, Path));
-      return Status_Ok;
+      return OK;
    exception
       when Ada.Directories.Name_Error
          | Ada.Directories.Use_Error
@@ -243,12 +246,12 @@ package body Native.Filesystem is
 
    overriding function Remove_Directory
      (This : in out Native_FS_Driver;
-      Path : Pathname)
-      return Status_Kind
+      Path : String)
+      return Status_Code
    is
    begin
       Ada.Directories.Delete_Directory (Absolute_Path (This, Path));
-      return Status_Ok;
+      return OK;
    exception
       when Ada.Directories.Name_Error
          | Ada.Directories.Use_Error
@@ -257,20 +260,77 @@ package body Native.Filesystem is
    end Remove_Directory;
 
    ------------
+   -- Get_FS --
+   ------------
+
+   overriding
+   function Get_FS
+     (This : Directory_Handle) return Any_Filesystem
+   is (Any_Filesystem (This.FS));
+
+   ---------------
+   -- Root_Node --
+   ---------------
+
+   overriding
+   function Root_Node
+     (This   : in out Native_FS_Driver;
+      As     : String;
+      Handle : out Any_Node_Handle)
+      return Status_Code
+   is
+      Ret : constant Node_Handle_Access := new Node_Handle;
+   begin
+      Ret.FS := This'Unchecked_Access;
+      Ret.Kind := Directory;
+      Ret.Name := +As;
+      Ret.Read_Only := False;
+      Ret.Hidden := False;
+      Ret.Symlink := False;
+      Ret.Size := 0;
+
+      Handle := Any_Node_Handle (Ret);
+      return OK;
+   end Root_Node;
+
+   ----------
+   -- Read --
+   ----------
+
+   overriding
+   function Read
+     (This   : in out Directory_Handle;
+      Handle : out Any_Node_Handle) return Status_Code
+   is
+      Ret : Node_Handle_Access;
+   begin
+      if This.Index > This.Data.Last_Index then
+         Handle := null;
+         return No_More_Entries;
+      else
+         Ret := new Node_Handle;
+         Ret.all := This.Data.Element (This.Index);
+         Handle := Any_Node_Handle (Ret);
+         This.Index := This.Index + 1;
+         return OK;
+      end if;
+   end Read;
+
+   ------------
    -- Rename --
    ------------
 
-   overriding function Rename
+   function Rename
      (This     : in out Native_FS_Driver;
-      Old_Path : Pathname;
-      New_Path : Pathname)
-      return Status_Kind
+      Old_Path : String;
+      New_Path : String)
+      return Status_Code
    is
-      Old_Abs_Path : constant Pathname := Absolute_Path (This, Old_Path);
-      New_Abs_Path : constant Pathname := Absolute_Path (This, New_Path);
+      Old_Abs_Path : constant String := Absolute_Path (This, Old_Path);
+      New_Abs_Path : constant String := Absolute_Path (This, New_Path);
    begin
       Ada.Directories.Rename (Old_Abs_Path, New_Abs_Path);
-      return Status_Ok;
+      return OK;
    exception
       when Ada.Directories.Name_Error
          | Ada.Directories.Use_Error
@@ -282,11 +342,11 @@ package body Native.Filesystem is
    -- Truncate_File --
    -------------------
 
-   overriding function Truncate_File
+   function Truncate_File
      (This   : in out Native_FS_Driver;
-      Path   : Pathname;
-      Length : IO_Count)
-      return Status_Kind
+      Path   : String;
+      Length : File_Size)
+      return Status_Code
    is
       pragma Unreferenced (This, Path, Length);
    begin
@@ -303,20 +363,20 @@ package body Native.Filesystem is
 
    overriding function Open
      (This   : in out Native_FS_Driver;
-      Path   : Pathname;
+      Path   : String;
       Mode   : File_Mode;
       Handle : out Any_File_Handle)
-      return Status_Kind
+      return Status_Code
    is
-      Result : Native_File_Handle_Ref := This.Get_Handle;
+      Result : File_Handle_Access := This.Get_Handle;
    begin
       begin
          Byte_IO.Open
            (File => Result.File,
             Mode => (case Mode is
-                     when Read_Only => Byte_IO.In_File,
-                     when Write_Only => Byte_IO.Out_File,
-                     when Read_Write => Byte_IO.Inout_File),
+                     when Read_Mode       => Byte_IO.In_File,
+                     when Write_Mode      => Byte_IO.Out_File,
+                     when Read_Write_Mode => Byte_IO.Inout_File),
             Name => Absolute_Path (This, Path));
       exception
          when Byte_IO.Status_Error
@@ -325,23 +385,40 @@ package body Native.Filesystem is
             Destroy (Result);
             return Generic_Error;
       end;
+      Result.Mode := Mode;
       Handle := Result.all'Access;
-      return Status_Ok;
+      return OK;
    end Open;
 
-   --------------------
-   -- Open_Directory --
-   --------------------
+   ----------
+   -- Open --
+   ----------
 
-   overriding function Open_Directory
+   overriding
+   function Open
+     (This   : Node_Handle;
+      Name   : String;
+      Mode   : File_Mode;
+      Handle : out Any_File_Handle) return Status_Code
+   is
+   begin
+      raise Program_Error with "Not implemented...";
+      return Input_Output_Error;
+   end Open;
+
+   ----------
+   -- Open --
+   ----------
+
+   overriding function Open
      (This   : in out Native_FS_Driver;
-      Path   : Pathname;
+      Path   : String;
       Handle : out Any_Directory_Handle)
-      return Status_Kind
+      return Status_Code
    is
       use Ada.Strings.Unbounded;
 
-      Result : Native_Directory_Handle_Ref := This.Get_Handle;
+      Result : Directory_Handle_Access := This.Get_Handle;
       Search : Ada.Directories.Search_Type;
    begin
       begin
@@ -376,11 +453,16 @@ package body Native.Filesystem is
               and then +Name /= ".."
             then
                Result.Data.Append
-                 ((Kind => (case Kind is
+                 ((FS        => This'Unchecked_Access,
+                   Kind => (case Kind is
                             when Ada.Directories.Ordinary_File => Regular_File,
                             when Ada.Directories.Directory     => Directory,
                             when others => raise Program_Error),
-                   Name => Name));
+                   Name      => Name,
+                   Read_Only => False,
+                   Hidden    => False,
+                   Symlink   => False,
+                   Size      => File_Size (Ada.Directories.Size (E))));
             end if;
          end;
       end loop;
@@ -389,26 +471,56 @@ package body Native.Filesystem is
       --  Make sure entries are sorted so that we get determinism. This is
       --  convenient for testing.
 
-      Directory_Data_Sorting.Sort (Result.Data);
+      Node_Sorting.Sort (Result.Data);
+      Result.Index := Result.Data.First_Index;
 
       Handle := Result.all'Access;
-      return Status_Ok;
-   end Open_Directory;
+      return OK;
+   end Open;
+
+   ------------
+   -- Get_FS --
+   ------------
+
+   overriding
+   function Get_FS
+     (This : in out File_Handle) return Any_Filesystem
+   is (Any_Filesystem (This.FS));
+
+   ----------
+   -- Size --
+   ----------
+
+   overriding
+   function Size
+     (This : File_Handle) return File_Size
+   is (File_Size (Byte_IO.Size (This.File)));
+
+   ----------
+   -- Mode --
+   ----------
+
+   overriding
+   function Mode
+     (This : File_Handle) return File_Mode
+   is (This.Mode);
 
    ----------
    -- Read --
    ----------
 
    overriding function Read
-     (This : in out Native_File_Handle;
-      Data : out UInt8_Array)
-      return Status_Kind
+     (This   : in out File_Handle;
+      Addr   : System.Address;
+      Length : in out File_Size)
+      return Status_Code
    is
+      Data : UInt8_Array (1 .. Natural (Length)) with Address => Addr;
    begin
       for B of Data loop
          Byte_IO.Read (This.File, B);
       end loop;
-      return Status_Ok;
+      return OK;
    exception
       when Byte_IO.Mode_Error
          | Byte_IO.End_Error
@@ -422,15 +534,17 @@ package body Native.Filesystem is
    -----------
 
    overriding function Write
-     (This : in out Native_File_Handle;
-      Data : UInt8_Array)
-      return Status_Kind
+     (This   : in out File_Handle;
+      Addr   : System.Address;
+      Length : File_Size)
+      return Status_Code
    is
+      Data : UInt8_Array (1 .. Natural (Length)) with Address => Addr;
    begin
       for B of Data loop
          Byte_IO.Write (This.File, B);
       end loop;
-      return Status_Ok;
+      return OK;
    exception
       when Byte_IO.Mode_Error
          | Byte_IO.Use_Error
@@ -438,90 +552,183 @@ package body Native.Filesystem is
          return Generic_Error;
    end Write;
 
+   ------------
+   -- Offset --
+   ------------
+
+   overriding
+   function Offset
+     (This : File_Handle) return File_Size
+   is
+   begin
+      return File_Size (Byte_IO.Index (This.File));
+   end Offset;
+
+   -----------
+   -- Flush --
+   -----------
+
+   overriding
+   function Flush
+     (This : in out File_Handle) return Status_Code
+   is
+   begin
+      Byte_IO.Flush (This.File);
+      return OK;
+   end Flush;
+
    ----------
    -- Seek --
    ----------
 
    overriding function Seek
-     (This   : in out Native_File_Handle;
-      Offset : IO_Count)
-      return Status_Kind
+     (This   : in out File_Handle;
+      Origin : Seek_Mode;
+      Amount : in out File_Size)
+      return Status_Code
    is
+      use type Byte_IO.Positive_Count;
+
+      Index : Byte_IO.Positive_Count;
    begin
-      Byte_IO.Set_Index (This.File, Byte_IO.Positive_Count (Offset + 1));
-      return Status_Ok;
+      case Origin is
+         when From_Start =>
+            Index := Byte_IO.Positive_Count (Amount + 1);
+         when From_End =>
+            Index := Byte_IO.Size (This.File) - Byte_IO.Count (Amount);
+         when Forward =>
+            Index := Byte_IO.Index (This.File) + Byte_IO.Positive_Count (Amount);
+         when Backward =>
+            Index := Byte_IO.Index (This.File) - Byte_IO.Positive_Count (Amount);
+      end case;
+
+      Byte_IO.Set_Index (This.File, Index);
+      return OK;
    end Seek;
 
    -----------
    -- Close --
    -----------
 
-   overriding function Close
-     (This : in out Native_File_Handle)
-      return Status_Kind
+   overriding procedure Close
+     (This : in out File_Handle)
    is
-      This_Ref : Native_File_Handle_Ref := This'Unrestricted_Access;
+      This_Access : File_Handle_Access := This'Unrestricted_Access;
    begin
       begin
          Byte_IO.Close (This.File);
       exception
          when Byte_IO.Status_Error =>
-            return Generic_Error;
+            null;
       end;
 
-      This_Ref.FS.Add_Free_Handle (This_Ref);
-      return Status_Ok;
+      This_Access.FS.Add_Free_Handle (This_Access);
    end Close;
-
-   ----------------
-   -- Read_Entry --
-   ----------------
-
-   overriding function Read_Entry
-     (This         : in out Native_Directory_Handle;
-      Entry_Number : Positive;
-      Dir_Entry    : out Directory_Entry)
-      return Status_Kind
-   is
-   begin
-      if Entry_Number > This.Data.Last_Index then
-         return No_Such_File_Or_Directory;
-      end if;
-
-      Dir_Entry := (Entry_Type => This.Data.Element (Entry_Number).Kind);
-      return Status_Ok;
-   end Read_Entry;
-
-   ----------------
-   -- Entry_Name --
-   ----------------
-
-   overriding function Entry_Name
-     (This         : in out Native_Directory_Handle;
-      Entry_Number : Positive)
-      return Pathname
-   is
-   begin
-      if Entry_Number > This.Data.Last_Index then
-         return "";
-      end if;
-
-      return +This.Data.Element (Entry_Number).Name;
-   end Entry_Name;
 
    -----------
    -- Close --
    -----------
 
-   overriding function Close
-     (This : in out Native_Directory_Handle)
-      return Status_Kind
+   overriding
+   procedure Close (This : in out Native_FS_Driver) is
+      Tmp : Native_FS_Driver_Access := This'Unchecked_Access;
+   begin
+      Destroy (Tmp);
+   end Close;
+
+   -----------
+   -- Reset --
+   -----------
+
+   overriding
+   procedure Reset (This : in out Directory_Handle) is
+   begin
+      This.Index := This.Data.First_Index;
+   end Reset;
+
+   -----------
+   -- Close --
+   -----------
+
+   overriding procedure Close
+     (This : in out Directory_Handle)
    is
-      This_Ref : Native_Directory_Handle_Ref := This'Unrestricted_Access;
+      This_Access : Directory_Handle_Access := This'Unrestricted_Access;
    begin
       This.Data.Clear;
-      This_Ref.FS.Add_Free_Handle (This_Ref);
-      return Status_Ok;
+      This_Access.FS.Add_Free_Handle (This_Access);
+   end Close;
+
+   ---------------------
+   -- Node operations --
+   ---------------------
+
+   ------------
+   -- Get_FS --
+   ------------
+
+   overriding
+   function Get_FS (This : Node_Handle) return Any_Filesystem
+   is (Any_Filesystem (This.FS));
+
+
+   --------------
+   -- Basename --
+   --------------
+
+   overriding
+   function Basename (This : Node_Handle) return String
+   is (+This.Name);
+
+   ------------------
+   -- Is_Read_Only --
+   ------------------
+
+   overriding
+   function Is_Read_Only (This : Node_Handle) return Boolean
+   is (This.Read_Only);
+
+      ---------------
+   -- Is_Hidden --
+   ---------------
+
+   overriding
+   function Is_Hidden (This : Node_Handle) return Boolean
+   is (This.Hidden);
+
+   ---------------------
+   -- Is_Subdirectory --
+   ---------------------
+
+   overriding
+   function Is_Subdirectory (This : Node_Handle) return Boolean
+   is (This.Kind = Directory);
+
+   ----------------
+   -- Is_Symlink --
+   ----------------
+
+   overriding
+   function Is_Symlink (This : Node_Handle) return Boolean
+   is (This.Symlink);
+
+   ----------
+   -- Size --
+   ----------
+
+   overriding
+   function Size (This : Node_Handle) return File_Size
+   is (This.Size);
+
+   -----------
+   -- Close --
+   -----------
+
+   overriding
+   procedure Close (This : in out Node_Handle) is
+      Hack : Node_Handle_Access := This'Unchecked_Access;
+   begin
+      Destroy (Hack);
    end Close;
 
    ----------
@@ -529,9 +736,9 @@ package body Native.Filesystem is
    ----------
 
    function Join
-     (Prefix, Suffix           : Pathname;
+     (Prefix, Suffix           : String;
       Ignore_Absolute_Suffixes : Boolean)
-      return Pathname
+      return String
    is
       use Ada.Strings.Unbounded;
 

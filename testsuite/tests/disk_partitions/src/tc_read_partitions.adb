@@ -7,19 +7,19 @@ with Test_Directories;   use Test_Directories;
 
 procedure TC_Read_Partitions is
 
-   procedure List_Partitions (FS : in out FS_Driver'Class;
-                              Path_To_Disk_Image : Pathname);
+   procedure List_Partitions (FS : in out HAL.Filesystem.Filesystem'Class;
+                              Path_To_Disk_Image : String);
 
    ---------------------
    -- List_Partitions --
    ---------------------
 
-   procedure List_Partitions (FS : in out FS_Driver'Class;
-                              Path_To_Disk_Image : Pathname)
+   procedure List_Partitions (FS : in out HAL.Filesystem.Filesystem'Class;
+                              Path_To_Disk_Image : String)
    is
       File : Any_File_Handle;
    begin
-      if FS.Open (Path_To_Disk_Image, Read_Only, File) /= Status_Ok then
+      if FS.Open (Path_To_Disk_Image, Read_Mode, File) /= OK then
          Put_Line ("Cannot open disk image '" & Path_To_Disk_Image & "'");
          return;
       end if;
@@ -52,7 +52,7 @@ procedure TC_Read_Partitions is
 
    FS   : aliased Native_FS_Driver;
 begin
-   if FS.Create (Root_Dir => Test_Dir) /= Status_Ok then
+   if FS.Create (Root_Dir => Test_Dir) /= OK then
       raise Program_Error with "Cannot create native file system at '" &
         Test_Dir & "'";
    end if;

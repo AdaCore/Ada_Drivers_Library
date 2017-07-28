@@ -34,7 +34,7 @@ with HAL.Bitmap;     use HAL.Bitmap;
 
 package Bitmap_File_Output is
 
-   procedure Write_BMP_File (File   : in out File_Handle'Class;
+   procedure Write_BMP_File (File   : Any_File_Handle;
                              Bitmap : Bitmap_Buffer'Class);
 
 end Bitmap_File_Output;

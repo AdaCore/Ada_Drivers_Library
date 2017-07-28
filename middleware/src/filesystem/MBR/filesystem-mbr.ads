@@ -31,6 +31,7 @@
 
 with Interfaces;
 with HAL.Block_Drivers;
+with HAL.Filesystem;    use HAL.Filesystem;
 
 package Filesystem.MBR is
 

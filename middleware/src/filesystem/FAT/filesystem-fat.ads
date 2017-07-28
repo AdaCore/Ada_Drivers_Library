@@ -33,6 +33,7 @@ with System;
 with Interfaces;        use Interfaces;
 with HAL;               use HAL;
 with HAL.Block_Drivers; use HAL.Block_Drivers;
+with HAL.Filesystem;    use HAL.Filesystem;
 
 package Filesystem.FAT is
 
@@ -50,7 +51,7 @@ package Filesystem.FAT is
 
    type FAT_Name is private;
 
-   type FAT_Filesystem is limited new Filesystem with private;
+   type FAT_Filesystem is limited new HAL.Filesystem.Filesystem with private;
 
    type FAT_Node is new Node_Handle with private;
 
@@ -81,9 +82,6 @@ package Filesystem.FAT is
      (FS     : in out FAT_Filesystem;
       Path   : String;
       Handle : out Any_Directory_Handle) return Status_Code;
-   overriding function Open
-     (D_Entry : FAT_Node;
-      Handle  : out Any_Directory_Handle) return Status_Code;
 
    overriding function Root_Node
      (FS     : in out FAT_Filesystem;
@@ -101,6 +99,7 @@ package Filesystem.FAT is
      (E : FAT_Node) return Boolean;
    function Is_Archive (E : FAT_Node) return Boolean;
    overriding function Size (E : FAT_Node) return File_Size;
+   overriding procedure Close (E : in out FAT_Node);
    overriding function Get_FS
      (E : FAT_Node) return Any_Filesystem;
 
@@ -112,23 +111,26 @@ package Filesystem.FAT is
      (FS     : in out FAT_Filesystem;
       Path   : String;
       Mode   : File_Mode;
-      Handle : out Any_File_Handle) return Status_Code;
+      Handle : out Any_File_Handle)
+      return Status_Code;
 
    overriding function Open
      (Parent : FAT_Node;
       Name   : String;
       Mode   : File_Mode;
-      Handle : out Any_File_Handle) return Status_Code
+      Handle : out Any_File_Handle)
+      return Status_Code
    with Pre => Name'Length <= MAX_FILENAME_LENGTH;
 
    --------------------
    -- FAT FILESYSTEM --
    --------------------
 
-   overriding function Open
+   function Open
      (Controller  : HAL.Block_Drivers.Any_Block_Driver;
       LBA         : Block_Number;
-      FS          : in out FAT_Filesystem) return Status_Code;
+      FS          : in out FAT_Filesystem)
+      return Status_Code;
    --  Opens a FAT partition at the given LBA
 
    overriding procedure Close (FS : in out FAT_Filesystem);
@@ -289,7 +291,7 @@ private
       Last_Allocated_Cluster at 8 range 0 .. 31;
    end record;
 
-   type FAT_Filesystem is limited new Filesystem with record
+   type FAT_Filesystem is limited new HAL.Filesystem.Filesystem with record
       Initialized     : Boolean := False;
       Disk_Parameters : FAT_Disk_Parameter;
       LBA             : Block_Number;
@@ -309,11 +311,13 @@ private
 
    function Ensure_Block
      (FS                : in out FAT_Filesystem;
-      Block             : Block_Offset) return Status_Code;
+      Block             : Block_Offset)
+      return Status_Code;
    --  Ensures the block is visible within the FS window.
    --  Block_Base_OFfset returns the index within the FS window of the block
 
-   function Write_Window (FS : in out FAT_Filesystem) return Status_Code;
+   function Write_Window (FS : in out FAT_Filesystem)
+                          return Status_Code;
 
    function Cluster_To_Block
      (FS      : FAT_Filesystem;
@@ -331,7 +335,8 @@ private
    function Set_FAT
      (FS      : in out FAT_Filesystem;
       Cluster : Cluster_Type;
-      Value   : Cluster_Type) return Status_Code;
+      Value   : Cluster_Type)
+      return Status_Code;
 
    function Get_Free_Cluster
      (FS       : in out FAT_Filesystem;
@@ -401,19 +406,32 @@ private
 
    overriding function Read
      (Dir    : in out FAT_Directory_Handle;
-      Handle : out Any_Node_Handle) return Status_Code;
+      Handle : out Any_Node_Handle)
+      return Status_Code;
 
    overriding procedure Reset (Dir : in out FAT_Directory_Handle);
 
    overriding procedure Close (Dir : in out FAT_Directory_Handle);
 
+   overriding
+   function Unlink (This : in out FAT_Filesystem;
+                    Path : String)
+                    return Status_Code;
+
+   overriding
+   function Remove_Directory (This : in out FAT_Filesystem;
+                              Path : String)
+                              return Status_Code;
    function FAT_Open
      (FS     : in out FAT_Filesystem;
       Path   : String;
-      Handle : out FAT_Directory_Handle_Access) return Status_Code;
+      Handle : out FAT_Directory_Handle_Access)
+      return Status_Code;
+
    function FAT_Open
      (D_Entry : FAT_Node;
-      Handle  : out FAT_Directory_Handle_Access) return Status_Code;
+      Handle  : out FAT_Directory_Handle_Access)
+      return Status_Code;
 
    type FAT_Directory_Entry_Attribute is record
       Read_Only    : Boolean;
@@ -446,7 +464,7 @@ private
    type FAT_File_Handle is limited new File_Handle with record
       Is_Free         : Boolean := True;
       FS              : FAT_Filesystem_Access;
-      Mode            : File_Mode := Read_Mode;
+      Mode            : File_Mode;
       --  The current cluster from which we read or write
       Current_Cluster : Cluster_Type := 0;
       --  The current block from which we read or write, offset from
@@ -471,36 +489,43 @@ private
    overriding function Get_FS
      (File : in out FAT_File_Handle) return Any_Filesystem;
 
-   overriding function Size (File : FAT_File_Handle) return File_Size;
+   overriding function Size (File : FAT_File_Handle)
+                             return File_Size;
 
-   overriding function Mode (File : FAT_File_Handle) return File_Mode;
+   overriding function Mode (File : FAT_File_Handle)
+                             return File_Mode;
 
    overriding function Read
      (File   : in out FAT_File_Handle;
       Addr   : System.Address;
-      Length : in out File_Size) return Status_Code;
+      Length : in out File_Size)
+      return Status_Code;
    --  read data from file.
    --  @return number of bytes read (at most Data'Length), or -1 on error.
 
    overriding function Offset
-     (File : FAT_File_Handle) return File_Size;
+     (File : FAT_File_Handle)
+      return File_Size;
    --  Current index within the file
 
    overriding function Write
      (File   : in out FAT_File_Handle;
       Addr   : System.Address;
-      Length : File_Size) return Status_Code;
+      Length : File_Size)
+      return Status_Code;
    --  write to file
    --  @return number of bytes written (at most Data'Length), or -1 on error.
 
    overriding function Flush
-     (File : in out FAT_File_Handle) return Status_Code;
+     (File : in out FAT_File_Handle)
+      return Status_Code;
    --  force writing file to disk at this very moment (slow!)
 
    overriding function Seek
      (File   : in out FAT_File_Handle;
       Origin : Seek_Mode;
-      Amount : in out File_Size) return Status_Code;
+      Amount : in out File_Size)
+      return Status_Code;
    --  Moves the current file position to "Amount", according to the Origin
    --  parameter. If the command makes the file pointer move outside of the
    --  file, it stops at the file boundary and returns the actual amount of

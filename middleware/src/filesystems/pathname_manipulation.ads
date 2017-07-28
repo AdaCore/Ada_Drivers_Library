@@ -33,9 +33,9 @@ with HAL.Filesystem; use HAL.Filesystem;
 
 package Pathname_Manipulation is
 
-   procedure Root_Dir (Path        :     Pathname;
+   procedure Root_Dir (Path        :     String;
                        Start, Stop : out Integer);
 
-   function Root_Dir (Path : Pathname) return Pathname;
+   function Root_Dir (Path : String) return String;
 
 end Pathname_Manipulation;

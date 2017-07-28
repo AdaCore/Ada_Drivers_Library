@@ -122,7 +122,10 @@ package body Partitions is
       Address : Logical_Block_Address := EBR_Address;
    begin
       loop
-         if not Disk.Read (UInt64 (Address), EBR) or else EBR (510 .. 511) /= (16#55#, 16#AA#) then
+         if not Disk.Read (UInt64 (Address), EBR)
+           or else
+             EBR (510 .. 511) /= (16#55#, 16#AA#)
+         then
             return Invalid_Parition;
          end if;
 
