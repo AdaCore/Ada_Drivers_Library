@@ -1,0 +1,8 @@
+Checking directory: '/disk_img/read_test'
+Checking directory: '/disk_img/read_test/lvl1_a'
+Checking directory: '/disk_img/read_test/lvl1_b'
+Checking directory: '/disk_img/read_test/lvl1_b/lvl2_a_directory_with_a_long_name_to_check_if_this_is_correctly_handled_by_the_fat_driver'
+Checking directory: '/disk_img/read_test/lvl1_c'
+Checking directory: '/disk_img/read_test/lvl1_c/lvl2_b'
+Checking directory: '/disk_img/read_test/lvl1_c/lvl2_b/lvl3_a'
+PASS

@@ -29,72 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Streams;
-with Ada.Streams.Stream_IO;
+with HAL.Filesystem; use HAL.Filesystem;
 
-with GNAT.MD5; use GNAT.MD5;
+package Copy_Files is
 
-package body Compare_Files is
+   function Copy (A_Path, B_Path : String) return Boolean;
 
-   package Hash renames GNAT.MD5;
-
-   ------------------
-   -- Compute_Hash --
-   ------------------
-
-   function Compute_Hash (Handle : Any_File_Handle)
-                          return String
-   is
-      Context : aliased GNAT.MD5.Context := GNAT.MD5.Initial_Context;
-
-      Buffer : Ada.Streams.Stream_Element_Array (1 .. 512);
-      Last   : Ada.Streams.Stream_Element_Offset;
-      Size   : File_Size;
-      Status : Status_Code;
-      pragma Unreferenced (Status);
-      use type Ada.Streams.Stream_Element_Offset;
-   begin
-      loop
-         Size := Buffer'Length;
-         Status := Handle.Read (Addr   => Buffer'Address,
-                                Length => Size);
-         Last := Ada.Streams.Stream_Element_Offset (Size);
-         Hash.Update (Context, Buffer (1 .. Last));
-         exit when Last < Buffer'Last;
-      end loop;
-      return Hash.Digest (Context);
-   end Compute_Hash;
-
-   -------------------
-   -- Binnary_Equal --
-   -------------------
-
-   function Binnary_Equal (A_Path, B_Path : String) return Boolean is
-
-      function Compute_Hash (Path : String) return Message_Digest;
-
-      function Compute_Hash (Path : String) return Message_Digest
-      is
-         Context : aliased GNAT.MD5.Context := GNAT.MD5.Initial_Context;
-
-         File   : Ada.Streams.Stream_IO.File_Type;
-         Buffer : Ada.Streams.Stream_Element_Array (1 .. 4096);
-         Last   : Ada.Streams.Stream_Element_Offset;
-         use type Ada.Streams.Stream_Element_Offset;
-      begin
-         Ada.Streams.Stream_IO.Open (File,
-                                     Mode => Ada.Streams.Stream_IO.In_File,
-                                     Name => Path);
-         loop
-            Ada.Streams.Stream_IO.Read (File, Item => Buffer, Last => Last);
-            Hash.Update (Context, Buffer (1 .. Last));
-            exit when Last < Buffer'Last;
-         end loop;
-         Ada.Streams.Stream_IO.Close (File);
-         return Hash.Digest (Context);
-      end Compute_Hash;
-   begin
-      return Compute_Hash (A_Path) = Compute_Hash (B_Path);
-   end Binnary_Equal;
-
-end Compare_Files;
+end Copy_Files;

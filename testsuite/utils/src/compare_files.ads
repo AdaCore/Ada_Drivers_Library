@@ -29,7 +29,12 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with HAL.Filesystem; use HAL.Filesystem;
+
 package Compare_Files is
+
+   function Compute_Hash (Handle : Any_File_Handle)
+                          return String;
 
    function Binnary_Equal (A_Path, B_Path : String) return Boolean;
 

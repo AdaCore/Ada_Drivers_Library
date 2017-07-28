@@ -6,59 +6,28 @@ with Test_Directories;   use Test_Directories;
 with File_Block_Drivers; use File_Block_Drivers;
 
 with Filesystem.VFS;     use Filesystem.VFS;
-with Filesystem;         use Filesystem;
 with Filesystem.FAT;     use Filesystem.FAT;
+with Compare_Files;
 
-with GNAT.MD5;           use GNAT.MD5;
-with Ada.Streams;
+procedure TC_FAT_Read is
 
-procedure TC_FAT is
-
-   package Hash renames GNAT.MD5;
 
    function Check_Dir (Dirname : String) return Boolean;
    function Check_File (Basename : String;
                         Dirname  : String)
                         return Boolean;
+   function Check_Expected_Number return Boolean;
 
-   function Compute_Hash (Handle : Filesystem.Any_File_Handle)
-                          return Message_Digest;
-
-   ------------------
-   -- Compute_Hash --
-   ------------------
-
-   function Compute_Hash (Handle : Filesystem.Any_File_Handle)
-                          return Message_Digest
-   is
-      Context : aliased GNAT.MD5.Context := GNAT.MD5.Initial_Context;
-
-      Buffer : Ada.Streams.Stream_Element_Array (1 .. 512);
-      Last   : Ada.Streams.Stream_Element_Offset;
-      Size   : Filesystem.File_Size;
-      Status : Status_Code;
-      pragma Unreferenced (Status);
-      use type Ada.Streams.Stream_Element_Offset;
-   begin
-      loop
-         Size := Buffer'Length;
-         Status := Handle.Read (Addr   => Buffer'Address,
-                                Length => Size);
-         Last := Ada.Streams.Stream_Element_Offset (Size);
-         Hash.Update (Context, Buffer (1 .. Last));
-         exit when Last < Buffer'Last;
-      end loop;
-      return Hash.Digest (Context);
-   end Compute_Hash;
+   Number_Of_Files_Checked : Natural := 0;
 
    ---------------
    -- Check_Dir --
    ---------------
 
    function Check_Dir (Dirname : String) return Boolean is
-      Handle : Filesystem.Any_Directory_Handle;
+      Handle : Any_Directory_Handle;
       Status : Status_Code;
-      Node   : Filesystem.Any_Node_Handle;
+      Node   : Any_Node_Handle;
    begin
       Put_Line ("Checking directory: '" & Dirname & "'");
       Status := Filesystem.VFS.Open (Dirname, Handle);
@@ -99,12 +68,10 @@ procedure TC_FAT is
                         Dirname  : String)
                         return Boolean
    is
-      Handle : Filesystem.Any_File_Handle;
+      Handle : Any_File_Handle;
       Status : Status_Code;
       Path   : constant String := Dirname & "/" & Basename;
    begin
-      Put_Line ("Checking file: '" & Path & "'");
-
       Status := Filesystem.VFS.Open (Path, Read_Mode, Handle);
 
       if Status /= OK then
@@ -112,33 +79,72 @@ procedure TC_FAT is
          Put_Line ("Status: " & Status'Img);
          return False;
       end if;
-      Put_Line ("File size :" & Handle.Size'Img);
-      declare
-         Hash_Str : constant String := Compute_Hash (Handle);
-      begin
-         Put_Line ("Compute Hash:" & Hash_Str);
 
+      declare
+         Hash_Str : constant String := Compare_Files.Compute_Hash (Handle);
+      begin
          if Hash_Str /= Basename then
             Put_Line ("Error: Hash is different than filename");
             return False;
          else
+            Number_Of_Files_Checked := Number_Of_Files_Checked + 1;
             return True;
          end if;
       end;
    end Check_File;
 
-   FS            : aliased Native_FS_Driver;
-   Disk_Img      : HAL.Filesystem.Any_File_Handle;
-   Disk_Img_Path : constant String := "fat.fs";
+   ---------------------------
+   -- Check_Expected_Number --
+   ---------------------------
+
+   function Check_Expected_Number return Boolean is
+      Handle : Any_File_Handle;
+      Status : Status_Code;
+      Path   : constant String := "/disk_img/number_of_files_to_check";
+      C      : Character;
+      Amount : File_Size;
+   begin
+      Status := Filesystem.VFS.Open (Path, Read_Mode, Handle);
+
+      if Status /= OK then
+         Put_Line ("Cannot open file: '" & Path & "'");
+         Put_Line ("Status: " & Status'Img);
+         return False;
+      end if;
+
+      Amount := 1;
+      Status := Handle.Read (C'Address, Amount);
+
+      if Status /= OK then
+         Put_Line ("Cannot read file: '" & Path & "'");
+         Put_Line ("Status: " & Status'Img);
+         return False;
+      end if;
+
+      if C in '0' .. '9'
+        and then
+          Number_Of_Files_Checked = (Character'Pos (C) - Character'Pos ('0'))
+      then
+         return True;
+      else
+         Put_Line ("Incorrect number of files");
+         return False;
+      end if;
+   end Check_Expected_Number;
+
+   FS                 : aliased Native_FS_Driver;
+   Disk_Img           : HAL.Filesystem.Any_File_Handle;
+   Disk_Img_Path      : constant String := "fat.fs";
 
    Status : Status_Code;
 begin
-   if FS.Create (Root_Dir => Test_Dir) /= Status_Ok then
+
+   if FS.Create (Root_Dir => Test_Dir) /= OK then
       raise Program_Error with "Cannot create native file system at '" &
         Test_Dir & "'";
    end if;
 
-   if FS.Open (Disk_Img_Path, Read_Only, Disk_Img) /= Status_Ok then
+   if FS.Open (Disk_Img_Path, Read_Mode, Disk_Img) /= OK then
       Put_Line ("Cannot open disk image '" & Disk_Img_Path & "'");
       return;
    end if;
@@ -164,11 +170,14 @@ begin
          return;
       end if;
 
-      if Check_Dir ("/disk_img") then
+      if Check_Dir ("/disk_img/read_test")
+        and then
+          Check_Expected_Number
+      then
          Put_Line ("PASS");
       else
          Put_Line ("FAIL");
       end if;
 
    end;
-end TC_FAT;
+end TC_FAT_Read;
