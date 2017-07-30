@@ -376,6 +376,23 @@ package body File_IO is
       end if;
    end Reset;
 
+   -----------------
+   -- Create_File --
+   -----------------
+
+   function Create_File (Path : String) return Status_Code is
+      Idx : Natural;
+      FS  : Any_Filesystem_Driver;
+   begin
+      Split (Path, FS, Idx);
+
+      if FS = null then
+         return No_Such_Path;
+      end if;
+
+      return Convert (FS.Create_File (Path (Idx .. Path'Last)));
+   end Create_File;
+
    ------------
    -- Unlink --
    ------------

@@ -667,6 +667,28 @@ package body Filesystem.FAT is
       Dir.Is_Free         := True;
    end Close;
 
+   -----------------
+   -- Create_File --
+   -----------------
+
+   overriding
+   function Create_File (This : in out FAT_Filesystem;
+                         Path : String)
+                         return Status_Code
+   is
+      Parent_E : FAT_Node;
+      Node     : FAT_Node;
+      Ret      : Status_Code;
+   begin
+      if Directories.Find (This, Parent (Path), Parent_E) /= OK then
+         return No_Such_File;
+      end if;
+
+      Ret := Directories.Create_File_Node (Parent_E, -Basename (Path), Node);
+
+      return Ret;
+   end Create_File;
+
    ------------
    -- Unlink --
    ------------

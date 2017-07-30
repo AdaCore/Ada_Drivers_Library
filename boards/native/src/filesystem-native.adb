@@ -220,6 +220,19 @@ package body Filesystem.Native is
       return This.Create_Node (Absolute_Path (This, Path), Directory);
    end Create_Directory;
 
+   -----------------
+   -- Create_File --
+   -----------------
+
+   overriding
+   function Create_File (This : in out Native_FS_Driver;
+                         Path : String)
+                         return Status_Code
+   is
+   begin
+      return This.Create_Node (Path, Regular_File);
+   end Create_File;
+
    ------------
    -- Unlink --
    ------------

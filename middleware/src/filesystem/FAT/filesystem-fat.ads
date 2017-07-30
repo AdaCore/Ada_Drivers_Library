@@ -413,6 +413,11 @@ private
    overriding procedure Close (Dir : in out FAT_Directory_Handle);
 
    overriding
+   function Create_File (This : in out FAT_Filesystem;
+                         Path : String)
+                         return Status_Code;
+
+   overriding
    function Unlink (This : in out FAT_Filesystem;
                     Path : String)
                     return Status_Code;

@@ -35,15 +35,24 @@ procedure TC_Bitmap_Drawing is
    Status   : Status_Code;
    BM       : constant not null Any_Bitmap_Buffer := Allocate_Bitmap;
 
-   Filename : constant String := "/" & Test_Dir_Mount_Name & "/test.bmp";
+   Filename : constant String := "/test.bmp";
+
+   Filepath : constant String := "/" & Test_Dir_Mount_Name & Filename;
+   --  Path of the file in the mounted directory
 begin
 
    Test_Directories.Mount_Test_Directory;
 
-   Status := Open (BMP_File, Filename, Read_Write_Mode);
+   Status := Create_File (Filepath);
 
    if Status /= OK then
       raise Program_Error with "Cannot Create BMP file";
+   end if;
+
+   Status := Open (BMP_File, Filepath, Read_Write_Mode);
+
+   if Status /= OK then
+      raise Program_Error with "Cannot Open BMP file";
    end if;
 
    BM.Set_Source (Black);

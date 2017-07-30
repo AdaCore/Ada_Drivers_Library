@@ -158,6 +158,8 @@ package File_IO is
 
    procedure Reset (Dir : in out Directory_Descriptor);
 
+   function Create_File (Path : String) return Status_Code;
+
    function Unlink (Path : String) return Status_Code;
 
    function Remove_Directory (Path : String) return Status_Code;

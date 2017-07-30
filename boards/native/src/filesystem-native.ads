@@ -41,6 +41,11 @@ package Filesystem.Native is
    --  Open a new Directory Handle at the given Filesystem Path
 
    overriding
+   function Create_File (This : in out Native_FS_Driver;
+                         Path : String)
+                         return Status_Code;
+
+   overriding
    function Unlink (This : in out Native_FS_Driver;
                     Path : String)
                     return Status_Code;
