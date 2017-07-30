@@ -31,7 +31,7 @@
 
 with Interfaces;
 with HAL.Block_Drivers;
-with HAL.Filesystem;    use HAL.Filesystem;
+with File_IO;
 
 package Filesystem.MBR is
 
@@ -44,7 +44,7 @@ package Filesystem.MBR is
 
    function Read
      (Controller  : HAL.Block_Drivers.Any_Block_Driver;
-      MBR         : out Master_Boot_Record) return Status_Code;
+      MBR         : out Master_Boot_Record) return File_IO.Status_Code;
 
    function Active  (MBR : Master_Boot_Record;
                      P   : Partition_Number) return Boolean;
@@ -65,7 +65,7 @@ package Filesystem.MBR is
      (Controller  : HAL.Block_Drivers.Any_Block_Driver;
       MBR         : Master_Boot_Record;
       P           : Partition_Number;
-      EBR         : out Extended_Boot_Record) return Status_Code;
+      EBR         : out Extended_Boot_Record) return File_IO.Status_Code;
 
    function Get_Type (EBR : Extended_Boot_Record) return Partition_Type;
    function LBA     (EBR : Extended_Boot_Record) return Block_Number;
@@ -75,7 +75,7 @@ package Filesystem.MBR is
 
    function Read_Next
      (Controller : HAL.Block_Drivers.Any_Block_Driver;
-      EBR        : in out Extended_Boot_Record) return Status_Code;
+      EBR        : in out Extended_Boot_Record) return File_IO.Status_Code;
 
 private
 

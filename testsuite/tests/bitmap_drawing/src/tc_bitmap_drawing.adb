@@ -1,11 +1,10 @@
 with Test_Directories;     use Test_Directories;
 with Ada.Text_IO;          use Ada.Text_IO;
-with Native.Filesystem;    use Native.Filesystem;
 with HAL;                  use HAL;
-with HAL.Filesystem;       use HAL.Filesystem;
 with HAL.Bitmap;           use HAL.Bitmap;
 with Memory_Mapped_Bitmap; use Memory_Mapped_Bitmap;
 with Bitmap_File_Output;   use Bitmap_File_Output;
+with File_IO;              use File_IO;
 with Compare_Files;
 
 procedure TC_Bitmap_Drawing is
@@ -32,28 +31,19 @@ procedure TC_Bitmap_Drawing is
       return Any_Bitmap_Buffer (BM);
    end Allocate_Bitmap;
 
-   FS       : Native_FS_Driver;
-   BMP_File : Any_File_Handle;
+   BMP_File : File_Descriptor;
    Status   : Status_Code;
    BM       : constant not null Any_Bitmap_Buffer := Allocate_Bitmap;
 
-   Filename : constant String := "test.bmp";
+   Filename : constant String := "/" & Test_Dir_Mount_Name & "/test.bmp";
 begin
-   if FS.Create (Root_Dir => Test_Dir) /= OK then
-      raise Program_Error with "Cannot create native file system at '" &
-        Test_Dir & "'";
-   end if;
 
-   Status := FS.Create_Node (Filename, Regular_File);
+   Test_Directories.Mount_Test_Directory;
+
+   Status := Open (BMP_File, Filename, Read_Write_Mode);
 
    if Status /= OK then
       raise Program_Error with "Cannot Create BMP file";
-   end if;
-
-   Status := FS.Open (Filename, Write_Mode, BMP_File);
-
-   if Status /= OK or else BMP_File = null then
-      raise Program_Error with "Cannot open BMP file";
    end if;
 
    BM.Set_Source (Black);
@@ -107,7 +97,7 @@ begin
 
 
    Write_BMP_File (BMP_File, BM.all);
-   BMP_File.Close;
+   Close (BMP_File);
 
    if not Compare_Files.Binnary_Equal (Test_Dir & "/" & Filename,
                                        Test_Dir & "/ref.bmp")

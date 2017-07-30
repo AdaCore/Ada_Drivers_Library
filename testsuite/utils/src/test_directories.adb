@@ -29,18 +29,32 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Directories;
+with File_IO;        use File_IO;
+with HAL.Filesystem;
 
-package body Copy_Files is
+package body Test_Directories is
 
-   ----------
-   -- Copy --
-   ----------
+   use type HAL.Filesystem.Status_Code;
 
-   function Copy (A_Path, B_Path : String) return Boolean is
+   FS : aliased Native_FS_Driver;
+
+   --------------------------
+   -- Mount_Test_Directory --
+   --------------------------
+
+   procedure Mount_Test_Directory
+     (Mount_Name : String := Test_Dir_Mount_Name)
+   is
    begin
-      Ada.Directories.Copy_File (A_Path, B_Path);
-      return True;
-   end Copy;
+      if FS.Create (Root_Dir => Test_Dir) /= HAL.Filesystem.OK then
+         raise Program_Error with "Cannot create native file system at '" &
+           Test_Dir & "'";
+      end if;
 
-end Copy_Files;
+      if Mount_Volume (Mount_Name, FS'Access) /= OK then
+         raise Program_Error with "Cannot mount native file system at '" &
+           Mount_Name & "'";
+      end if;
+   end Mount_Test_Directory;
+
+end Test_Directories;

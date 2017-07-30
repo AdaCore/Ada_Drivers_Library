@@ -1,16 +1,14 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
-with Native.Filesystem;  use Native.Filesystem;
-with HAL.Filesystem;     use HAL.Filesystem;
+with Filesystem.Native;  use Filesystem.Native;
 with Test_Directories;   use Test_Directories;
 with File_Block_Drivers; use File_Block_Drivers;
-
-with Filesystem.VFS;     use Filesystem.VFS;
+with File_IO;            use File_IO;
 with Filesystem.FAT;     use Filesystem.FAT;
+with HAL.Filesystem;     use HAL.Filesystem;
 with Compare_Files;
 
 procedure TC_FAT_Read is
-
 
    function Check_Dir (Dirname : String) return Boolean;
    function Check_File (Basename : String;
@@ -25,12 +23,11 @@ procedure TC_FAT_Read is
    ---------------
 
    function Check_Dir (Dirname : String) return Boolean is
-      Handle : Any_Directory_Handle;
-      Status : Status_Code;
-      Node   : Any_Node_Handle;
+      DD     : Directory_Descriptor;
+      Status : File_IO.Status_Code;
    begin
       Put_Line ("Checking directory: '" & Dirname & "'");
-      Status := Filesystem.VFS.Open (Dirname, Handle);
+      Status := Open (DD, Dirname);
 
       if Status /= OK then
          Put_Line ("Cannot open directory: '" & Dirname & "'");
@@ -39,22 +36,26 @@ procedure TC_FAT_Read is
       end if;
 
       loop
-         if Handle.Read (Node) = OK and then Node /= null then
-            if Node.Basename = "." or else Node.Basename = ".." then
-               null; --  do nothing
-            elsif Node.Is_Subdirectory then
+         declare
+            Ent : constant Directory_Entry := Read (DD);
+         begin
+            if Ent /= Invalid_Dir_Entry then
+               if Ent.Name = "." or else Ent.Name = ".." then
+                  null; --  do nothing
+               elsif Ent.Subdirectory then
 
-               if not Check_Dir (Dirname & "/" & Node.Basename) then
-                  return False;
+                  if not Check_Dir (Dirname & "/" & Ent.Name) then
+                     return False;
+                  end if;
+               elsif not Ent.Symlink then
+                  if not Check_File (Ent.Name, Dirname) then
+                     return False;
+                  end if;
                end if;
-            elsif not Node.Is_Symlink then
-               if not Check_File (Node.Basename, Dirname) then
-                  return False;
-               end if;
+            else
+               exit;
             end if;
-         else
-            exit;
-         end if;
+         end;
       end loop;
 
       return True;
@@ -68,11 +69,11 @@ procedure TC_FAT_Read is
                         Dirname  : String)
                         return Boolean
    is
-      Handle : Any_File_Handle;
-      Status : Status_Code;
+      FD     : File_Descriptor;
+      Status : File_IO.Status_Code;
       Path   : constant String := Dirname & "/" & Basename;
    begin
-      Status := Filesystem.VFS.Open (Path, Read_Mode, Handle);
+      Status := Open (FD, Path, Read_Mode);
 
       if Status /= OK then
          Put_Line ("Cannot open file: '" & Path & "'");
@@ -81,7 +82,7 @@ procedure TC_FAT_Read is
       end if;
 
       declare
-         Hash_Str : constant String := Compare_Files.Compute_Hash (Handle);
+         Hash_Str : constant String := Compare_Files.Compute_Hash (FD);
       begin
          if Hash_Str /= Basename then
             Put_Line ("Error: Hash is different than filename");
@@ -98,13 +99,13 @@ procedure TC_FAT_Read is
    ---------------------------
 
    function Check_Expected_Number return Boolean is
-      Handle : Any_File_Handle;
-      Status : Status_Code;
+      FD     : File_Descriptor;
+      Status : File_IO.Status_Code;
       Path   : constant String := "/disk_img/number_of_files_to_check";
       C      : Character;
-      Amount : File_Size;
+      Amount : File_IO.File_Size;
    begin
-      Status := Filesystem.VFS.Open (Path, Read_Mode, Handle);
+      Status := Open (FD, Path, Read_Mode);
 
       if Status /= OK then
          Put_Line ("Cannot open file: '" & Path & "'");
@@ -113,9 +114,7 @@ procedure TC_FAT_Read is
       end if;
 
       Amount := 1;
-      Status := Handle.Read (C'Address, Amount);
-
-      if Status /= OK then
+      if Read (FD, C'Address, Amount) /= Amount then
          Put_Line ("Cannot read file: '" & Path & "'");
          Put_Line ("Status: " & Status'Img);
          return False;
@@ -132,52 +131,44 @@ procedure TC_FAT_Read is
       end if;
    end Check_Expected_Number;
 
-   FS                 : aliased Native_FS_Driver;
-   Disk_Img           : HAL.Filesystem.Any_File_Handle;
-   Disk_Img_Path      : constant String := "fat.fs";
-
-   Status : Status_Code;
+   Disk_Img_Path : constant String := "/test_dir/fat.fs";
+   Disk          : aliased File_Block_Driver;
+   FAT_FS        : access FAT_Filesystem;
+   FIO_Status    : File_IO.Status_Code;
+   HALFS_Status  : HAL.Filesystem.Status_Code;
 begin
 
-   if FS.Create (Root_Dir => Test_Dir) /= OK then
-      raise Program_Error with "Cannot create native file system at '" &
-        Test_Dir & "'";
-   end if;
+   Test_Directories.Mount_Test_Directory ("test_dir");
 
-   if FS.Open (Disk_Img_Path, Read_Mode, Disk_Img) /= OK then
+   if not Disk.Open (Disk_Img_Path) then
       Put_Line ("Cannot open disk image '" & Disk_Img_Path & "'");
       return;
    end if;
 
-   declare
-      Disk   : aliased File_Block_Driver (Disk_Img);
-      FAT_FS : access FAT_Filesystem;
-   begin
-      FAT_FS := new FAT_Filesystem;
-      Status := Open (Controller => Disk'Unchecked_Access,
-                      LBA        => 0,
-                      FS         => FAT_FS.all);
+   FAT_FS := new FAT_Filesystem;
+   HALFS_Status := Open (Controller => Disk'Unchecked_Access,
+                         LBA        => 0,
+                         FS         => FAT_FS.all);
 
-      if Status /= OK then
-         Put_Line ("Cannot open FAT FS - Status:" & Status'Img);
-         return;
-      end if;
+   if HALFS_Status /= OK then
+      Put_Line ("Cannot open FAT FS - Status:" & HALFS_Status'Img);
+      return;
+   end if;
 
-      Status := Filesystem.VFS.Mount_Volume (Mount_Point => "disk_img",
-                                             FS          => FAT_FS);
-      if Status /= OK then
-         Put_Line ("Cannot mount volume - Status: " & Status'Img);
-         return;
-      end if;
+   FIO_Status := File_IO.Mount_Volume (Mount_Point => "disk_img",
+                                       FS          => FAT_FS);
+   if FIO_Status /= OK then
+      Put_Line ("Cannot mount volume - Status: " & FIO_Status'Img);
+      return;
+   end if;
 
-      if Check_Dir ("/disk_img/read_test")
-        and then
-          Check_Expected_Number
-      then
-         Put_Line ("PASS");
-      else
-         Put_Line ("FAIL");
-      end if;
+   if Check_Dir ("/disk_img/read_test")
+     and then
+       Check_Expected_Number
+   then
+      Put_Line ("PASS");
+   else
+      Put_Line ("FAIL");
+   end if;
 
-   end;
 end TC_FAT_Read;

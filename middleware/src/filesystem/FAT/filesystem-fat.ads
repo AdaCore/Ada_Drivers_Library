@@ -31,7 +31,6 @@
 
 with System;
 with Interfaces;        use Interfaces;
-with HAL;               use HAL;
 with HAL.Block_Drivers; use HAL.Block_Drivers;
 with HAL.Filesystem;    use HAL.Filesystem;
 
@@ -51,7 +50,7 @@ package Filesystem.FAT is
 
    type FAT_Name is private;
 
-   type FAT_Filesystem is limited new HAL.Filesystem.Filesystem with private;
+   type FAT_Filesystem is limited new Filesystem_Driver with private;
 
    type FAT_Node is new Node_Handle with private;
 
@@ -101,7 +100,7 @@ package Filesystem.FAT is
    overriding function Size (E : FAT_Node) return File_Size;
    overriding procedure Close (E : in out FAT_Node);
    overriding function Get_FS
-     (E : FAT_Node) return Any_Filesystem;
+     (E : FAT_Node) return Any_Filesystem_Driver;
 
    -------------------
    -- FILE HANDLING --
@@ -291,7 +290,7 @@ private
       Last_Allocated_Cluster at 8 range 0 .. 31;
    end record;
 
-   type FAT_Filesystem is limited new HAL.Filesystem.Filesystem with record
+   type FAT_Filesystem is limited new Filesystem_Driver with record
       Initialized     : Boolean := False;
       Disk_Parameters : FAT_Disk_Parameter;
       LBA             : Block_Number;
@@ -402,7 +401,7 @@ private
    type Any_FAT_Directory_Handle is access all FAT_Directory_Handle'Class;
 
    overriding function Get_FS
-     (Dir : FAT_Directory_Handle) return Any_Filesystem;
+     (Dir : FAT_Directory_Handle) return Any_Filesystem_Driver;
 
    overriding function Read
      (Dir    : in out FAT_Directory_Handle;
@@ -487,7 +486,7 @@ private
    type FAT_File_Handle_Access is access all FAT_File_Handle;
 
    overriding function Get_FS
-     (File : in out FAT_File_Handle) return Any_Filesystem;
+     (File : in out FAT_File_Handle) return Any_Filesystem_Driver;
 
    overriding function Size (File : FAT_File_Handle)
                              return File_Size;
@@ -701,15 +700,15 @@ private
    --  for the trailing ASCII.NUL + 0xFFFF sequence.
 
    overriding function Get_FS
-     (Dir : FAT_Directory_Handle) return Any_Filesystem
-   is (Any_Filesystem (Dir.FS));
+     (Dir : FAT_Directory_Handle) return Any_Filesystem_Driver
+   is (Any_Filesystem_Driver (Dir.FS));
 
    overriding function Get_FS
-     (File : in out FAT_File_Handle) return Any_Filesystem
-   is (Any_Filesystem (File.FS));
+     (File : in out FAT_File_Handle) return Any_Filesystem_Driver
+   is (Any_Filesystem_Driver (File.FS));
 
-   overriding function Get_FS (E : FAT_Node) return Any_Filesystem
-   is (Any_Filesystem (E.FS));
+   overriding function Get_FS (E : FAT_Node) return Any_Filesystem_Driver
+   is (Any_Filesystem_Driver (E.FS));
 
    function Long_Name (E : FAT_Node) return FAT_Name
    is (if E.L_Name.Len > 0 then E.L_Name else Short_Name (E));
@@ -740,9 +739,6 @@ private
 
    function Get_Start_Cluster (E : FAT_Node) return Cluster_Type
    is (E.Start_Cluster);
-
-   overriding function Size (E : FAT_Node) return File_Size
-   is (File_Size (E.Size));
 
    function Size (E : FAT_Node) return FAT_File_Size
    is (E.Size);

@@ -8,7 +8,7 @@ with System;
 --  Simple wrappers around the Ada standard library to provide implementations
 --  for HAL.Filesystem interfaces.
 
-package Native.Filesystem is
+package Filesystem.Native is
 
    package HALFS renames HAL.Filesystem;
 
@@ -41,11 +41,6 @@ package Native.Filesystem is
    --  Open a new Directory Handle at the given Filesystem Path
 
    overriding
-   function Create_File (This : in out Native_FS_Driver;
-                         Path : String)
-                         return Status_Code;
-
-   overriding
    function Unlink (This : in out Native_FS_Driver;
                     Path : String)
                     return Status_Code;
@@ -59,7 +54,7 @@ package Native.Filesystem is
 
    overriding
    function Get_FS
-     (This : Directory_Handle) return Any_Filesystem;
+     (This : Directory_Handle) return Any_Filesystem_Driver;
    --  Return the filesystem the handle belongs to.
 
    overriding
@@ -91,7 +86,7 @@ package Native.Filesystem is
    ---------------------
 
    overriding
-   function Get_FS (This : Node_Handle) return Any_Filesystem;
+   function Get_FS (This : Node_Handle) return Any_Filesystem_Driver;
 
    overriding
    function Basename (This : Node_Handle) return String;
@@ -138,7 +133,7 @@ package Native.Filesystem is
 
    overriding
    function Get_FS
-     (This : in out File_Handle) return Any_Filesystem;
+     (This : in out File_Handle) return Any_Filesystem_Driver;
 
    overriding
    function Size
@@ -250,7 +245,7 @@ private
 
    package Byte_IO is new Ada.Direct_IO (UInt8);
 
-   type Native_FS_Driver is limited new HAL.Filesystem.Filesystem with record
+   type Native_FS_Driver is limited new Filesystem_Driver with record
       Root_Dir          : Ada.Strings.Unbounded.Unbounded_String;
       --  Path on the host file system to be used as root directory for this FS
 
@@ -334,4 +329,4 @@ private
       --  Current index in the vector of Node
    end record;
 
-end Native.Filesystem;
+end Filesystem.Native;

@@ -32,6 +32,28 @@
 package body File_Block_Drivers is
 
    ----------
+   -- Open --
+   ----------
+
+   function Open (This : in out File_Block_Driver;
+                  Path : String)
+                  return Boolean
+   is
+   begin
+      return Open (This.FD, Path, Read_Write_Mode) = OK;
+   end Open;
+
+   -----------
+   -- Close --
+   -----------
+
+   procedure Close (This : in out File_Block_Driver) is
+   begin
+      Close (This.FD);
+   end Close;
+
+
+   ----------
    -- Read --
    ----------
 
@@ -45,12 +67,12 @@ package body File_Block_Drivers is
       Amount : File_Size := File_Size (Block_Number * 512);
    begin
 
-      if This.File.Seek (From_Start, Amount) /= OK then
+      if Seek (This.FD, From_Start, Amount) /= OK then
          return False;
       end if;
 
       Amount := Data'Length;
-      return This.File.Read (Data'Address, Amount) = OK;
+      return Read (This.FD, Data'Address, Amount) = Amount;
    end Read;
 
    ----------
@@ -67,12 +89,12 @@ package body File_Block_Drivers is
       Amount : File_Size := File_Size (Block_Number * 512);
    begin
 
-      if This.File.Seek (From_Start, Amount) /= OK then
+      if Seek (This.FD, From_Start, Amount) /= OK then
          return False;
       end if;
 
       Amount := Data'Length;
-      return This.File.Write (Data'Address, Amount) = OK;
+      return Write (This.FD, Data'Address, Amount) = Amount;
    end Write;
 
 end File_Block_Drivers;

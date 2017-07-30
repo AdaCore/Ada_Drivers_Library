@@ -39,23 +39,24 @@ package body Filesystem.MBR is
 
    function Read
      (Controller  : HAL.Block_Drivers.Any_Block_Driver;
-      MBR         : out Master_Boot_Record) return Status_Code
+      MBR         : out Master_Boot_Record)
+      return File_IO.Status_Code
    is
       Tmp  : aliased Master_Boot_Record;
       Data : aliased HAL.UInt8_Array (1 .. 512) with Address => Tmp'Address;
    begin
       --  Let's read the MBR: located in the first block
       if not Controller.Read (0, Data) then
-         return Disk_Error;
+         return File_IO.Disk_Error;
       end if;
 
       MBR := Tmp;
 
       if MBR.Signature /= 16#AA55# then
-         return No_MBR_Found;
+         return File_IO.No_MBR_Found;
       end if;
 
-      return OK;
+      return File_IO.OK;
    end Read;
 
    -------------------
@@ -66,7 +67,8 @@ package body Filesystem.MBR is
      (Controller  : HAL.Block_Drivers.Any_Block_Driver;
       MBR         : Master_Boot_Record;
       P           : Partition_Number;
-      EBR         : out Extended_Boot_Record) return Status_Code
+      EBR         : out Extended_Boot_Record)
+      return File_IO.Status_Code
    is
       BA : constant Block_Number := LBA (MBR, P);
       Tmp  : aliased Extended_Boot_Record;
@@ -74,16 +76,16 @@ package body Filesystem.MBR is
    begin
       --  Let's read the MBR: located in the first block
       if not Controller.Read (HAL.UInt64 (BA), Data) then
-         return Disk_Error;
+         return File_IO.Disk_Error;
       end if;
 
       EBR := Tmp;
 
       if EBR.Signature /= 16#AA55# then
-         return No_MBR_Found;
+         return File_IO.No_MBR_Found;
       end if;
 
-      return OK;
+      return File_IO.OK;
    end Read_Extended;
 
    ------------
@@ -176,7 +178,8 @@ package body Filesystem.MBR is
 
    function Read_Next
      (Controller : HAL.Block_Drivers.Any_Block_Driver;
-      EBR        : in out Extended_Boot_Record) return Status_Code
+      EBR        : in out Extended_Boot_Record)
+      return File_IO.Status_Code
    is
       BA   : constant Block_Number := Block_Number (EBR.P_Entries (2).LBA);
       Tmp  : aliased Extended_Boot_Record;
@@ -184,16 +187,16 @@ package body Filesystem.MBR is
    begin
       --  Let's read the MBR: located in the first block
       if not Controller.Read (BA, Data) then
-         return Disk_Error;
+         return File_IO.Disk_Error;
       end if;
 
       EBR := Tmp;
 
       if EBR.Signature /= 16#AA55# then
-         return No_MBR_Found;
+         return File_IO.No_MBR_Found;
       end if;
 
-      return OK;
+      return File_IO.OK;
    end Read_Next;
 
 end Filesystem.MBR;

@@ -31,7 +31,6 @@
 
 with Interfaces; use Interfaces;
 with HAL;        use HAL;
-with Filesystem; use Filesystem;
 
 package body Bitmap_File_Output is
 
@@ -71,7 +70,7 @@ package body Bitmap_File_Output is
    -- Write_BMP_File --
    --------------------
 
-   procedure Write_BMP_File (File   : Any_File_Handle;
+   procedure Write_BMP_File (File   : in out File_Descriptor;
                              Bitmap : Bitmap_Buffer'Class)
    is
       Hdr         : Header;
@@ -84,8 +83,8 @@ package body Bitmap_File_Output is
       Pix_Out : UInt8_Array (1 .. 3);
       Padding : constant UInt8_Array (1 .. Integer (Row_Padding)) := (others => 0);
 
-      function Write is new Filesystem.Generic_Write (Header);
-      function Write is new Filesystem.Generic_Write (Info);
+--        function Write is new Generic_Write (Header);
+--        function Write is new Generic_Write (Info);
    begin
       Hdr.Signature := 16#4D42#;
       Hdr.Size      := (Data_Size + 54) / 4;
@@ -111,11 +110,11 @@ package body Bitmap_File_Output is
       Inf.Important := 0;
 
 
-      if Write (File, Hdr) /= OK then
+      if Write (File, Hdr'Address, Hdr'Size / 8) /= (Hdr'Size  / 8) then
          raise Program_Error;
       end if;
 
-      if Write (File, Inf) /= OK then
+      if Write (File, Inf'Address, Inf'Size / 8) /= (Inf'Size  / 8) then
          raise Program_Error;
       end if;
 
@@ -128,12 +127,14 @@ package body Bitmap_File_Output is
             Pix_Out (2) := RGB_Pix.Green;
             Pix_Out (3) := RGB_Pix.Red;
 
-            if File.Write (Pix_Out'Address, Pix_Out'Length) /= OK then
+            if Write (File, Pix_Out'Address, Pix_Out'Length) /= Pix_Out'Length
+            then
                raise Program_Error;
             end if;
          end loop;
 
-         if File.Write (Padding'Address, Padding'Length) /= OK then
+         if Write (File, Padding'Address, Padding'Length) /= Padding'Length
+         then
             raise Program_Error;
          end if;
       end loop;

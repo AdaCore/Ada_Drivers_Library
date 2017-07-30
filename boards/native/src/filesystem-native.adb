@@ -1,7 +1,7 @@
 with Ada.Directories;
 with Ada.Unchecked_Deallocation;
 
-package body Native.Filesystem is
+package body Filesystem.Native is
 
    --  ??? There are a bunch of 'Unrestricted_Access here because the
    --  HAL.Filesystem API embeds implicit references to filesystems. It
@@ -265,8 +265,8 @@ package body Native.Filesystem is
 
    overriding
    function Get_FS
-     (This : Directory_Handle) return Any_Filesystem
-   is (Any_Filesystem (This.FS));
+     (This : Directory_Handle) return Any_Filesystem_Driver
+   is (Any_Filesystem_Driver (This.FS));
 
    ---------------
    -- Root_Node --
@@ -484,8 +484,8 @@ package body Native.Filesystem is
 
    overriding
    function Get_FS
-     (This : in out File_Handle) return Any_Filesystem
-   is (Any_Filesystem (This.FS));
+     (This : in out File_Handle) return Any_Filesystem_Driver
+   is (Any_Filesystem_Driver (This.FS));
 
    ----------
    -- Size --
@@ -516,16 +516,20 @@ package body Native.Filesystem is
       return Status_Code
    is
       Data : UInt8_Array (1 .. Natural (Length)) with Address => Addr;
+      Ret : File_Size := 0;
    begin
       for B of Data loop
          Byte_IO.Read (This.File, B);
+         Ret := Ret + 1;
       end loop;
+      Length := Ret;
       return OK;
    exception
       when Byte_IO.Mode_Error
          | Byte_IO.End_Error
          | Byte_IO.Data_Error
          =>
+         Length := Ret;
          return Generic_Error;
    end Read;
 
@@ -668,9 +672,8 @@ package body Native.Filesystem is
    ------------
 
    overriding
-   function Get_FS (This : Node_Handle) return Any_Filesystem
-   is (Any_Filesystem (This.FS));
-
+   function Get_FS (This : Node_Handle) return Any_Filesystem_Driver
+   is (Any_Filesystem_Driver (This.FS));
 
    --------------
    -- Basename --
@@ -794,4 +797,4 @@ package body Native.Filesystem is
       return +Result;
    end Join;
 
-end Native.Filesystem;
+end Filesystem.Native;

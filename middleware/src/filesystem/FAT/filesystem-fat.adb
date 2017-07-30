@@ -1146,4 +1146,11 @@ package body Filesystem.FAT is
       null;
    end Close;
 
+   ----------
+   -- Size --
+   ----------
+
+   overriding function Size (E : FAT_Node) return File_Size
+   is (File_Size (E.Size));
+
 end Filesystem.FAT;

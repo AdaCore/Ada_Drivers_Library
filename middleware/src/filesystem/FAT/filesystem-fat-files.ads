@@ -65,8 +65,7 @@ private package Filesystem.FAT.Files is
    function Read
      (File   : in out FAT_File_Handle;
       Addr   : System.Address;
-      Length : in out FAT_File_Size) return Status_Code
-     with Pre => Mode (File) /= Write_Mode;
+      Length : in out FAT_File_Size) return Status_Code;
    --  read data from file.
    --  @return number of bytes read (at most Data'Length), or -1 on error.
 

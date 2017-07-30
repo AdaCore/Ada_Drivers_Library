@@ -34,6 +34,7 @@ with Filesystem.FAT.Directories;
 
 package body Filesystem.FAT.Files is
 
+
    function Absolute_Block (File : in out FAT_File_Handle) return Block_Number
      with Inline_Always;
 
