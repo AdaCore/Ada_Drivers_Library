@@ -1,4 +1,4 @@
-Disk 'disk_8_partitions.img' has  8 parition(s)
+Disk '/test_dir/disk_8_partitions.img' has  8 parition(s)
  - partition : 1
       Status: 128
       Kind:  1

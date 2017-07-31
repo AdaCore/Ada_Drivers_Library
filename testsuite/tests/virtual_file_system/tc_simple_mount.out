@@ -1,8 +1,0 @@
-Dumping the "one_file" mounted as /one_file:
-Entering /
-Entering /one_file
-  File: /one_file/hello.txt
-  Contents: HELLO\x0a
-Leaving /one_file
-Leaving /
-Done.
