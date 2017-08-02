@@ -34,89 +34,131 @@ with HAL; use HAL;
 
 package Semihosting.Filesystem is
 
-   type SHFS is new HAL.Filesystem.FS_Driver with private;
+   type SHFS is new HAL.Filesystem.Filesystem_Driver with private;
    type Any_SHFS is access all SHFS'Class;
+
+   type File_Kind is (Regular_File, Directory);
 
    -------------------------------
    --  FS_Driver implementation --
    -------------------------------
 
    overriding
-   function Create_Node (This : in out SHFS;
-                         Path : Pathname;
-                         Kind : File_Kind)
-                         return Status_Kind;
+   function Create_File (This : in out SHFS;
+                         Path : String)
+                         return Status_Code;
 
-   overriding
+   function Create_Node (This : in out SHFS;
+                         Path : String;
+                         Kind : File_Kind)
+                         return Status_Code;
+
    function Create_Directory (This : in out SHFS;
-                              Path : Pathname)
-                              return Status_Kind;
+                              Path : String)
+                              return Status_Code;
 
    overriding
    function Unlink (This : in out SHFS;
-                    Path : Pathname)
-                    return Status_Kind;
+                    Path : String)
+                    return Status_Code;
 
    overriding
    function Remove_Directory (This : in out SHFS;
-                              Path : Pathname)
-                              return Status_Kind;
+                              Path : String)
+                              return Status_Code;
 
-   overriding
    function Rename (This : in out SHFS;
-                    Old_Path : Pathname;
-                    New_Path : Pathname)
-                    return Status_Kind;
+                    Old_Path : String;
+                    New_Path : String)
+                    return Status_Code;
 
-   overriding
    function Truncate_File (This   : in out SHFS;
-                           Path   : Pathname;
-                           Length : IO_Count)
-                           return Status_Kind;
+                           Path   : String;
+                           Length : File_Size)
+                           return Status_Code;
 
    overriding
    function Open (This    : in out SHFS;
-                  Path    : Pathname;
+                  Path    : String;
                   Mode    : File_Mode;
                   Handler : out Any_File_Handle)
-                  return Status_Kind;
+                  return Status_Code;
 
    overriding
-   function Open_Directory (This   : in out SHFS;
-                            Path   : Pathname;
-                            Handle : out Any_Directory_Handle)
-                            return Status_Kind;
+   function Open (This   : in out SHFS;
+                  Path   : String;
+                  Handle : out Any_Directory_Handle)
+                  return Status_Code;
+
+   overriding
+   function Root_Node
+     (This   : in out SHFS;
+      As     : String;
+      Handle : out Any_Node_Handle)
+      return Status_Code
+   is (Operation_Not_Permitted);
+
+   overriding
+   procedure Close (This : in out SHFS);
+
 private
 
    type SHFS_File_Handle;
    type SHFS_File_Handle_Access is access all SHFS_File_Handle;
 
    type SHFS_File_Handle is new File_Handle with record
-      FD      : SH_Word;
-      Is_Open : Boolean := False;
-      Next    : SHFS_File_Handle_Access := null;
+      FS                : Any_SHFS;
+      FD                : SH_Word;
+      Absolute_Position : File_Size;
+      Is_Open           : Boolean := False;
+      Next              : SHFS_File_Handle_Access := null;
    end record;
 
    overriding
-   function Read (This : in out SHFS_File_Handle;
-                  Data : out UInt8_Array)
-                  return Status_Kind;
+   function Get_FS
+     (This : in out SHFS_File_Handle)
+      return Any_Filesystem_Driver;
 
    overriding
-   function Write (This : in out SHFS_File_Handle;
-                   Data : UInt8_Array)
-                   return Status_Kind;
+   function Size
+     (This : SHFS_File_Handle) return File_Size;
+
+   overriding
+   function Mode
+     (This : SHFS_File_Handle) return File_Mode;
+
+   overriding
+   function Read (This   : in out SHFS_File_Handle;
+                  Addr   : System.Address;
+                  Length : in out File_Size)
+                  return Status_Code;
+
+   overriding
+   function Write (This   : in out SHFS_File_Handle;
+                   Addr   : System.Address;
+                   Length : File_Size)
+                   return Status_Code;
+
+   overriding
+   function Offset
+     (This : SHFS_File_Handle)
+      return File_Size;
+
+   overriding
+   function Flush
+     (This : in out SHFS_File_Handle)
+      return Status_Code;
 
    overriding
    function Seek (This   : in out SHFS_File_Handle;
-                  Offset : IO_Count)
-                  return Status_Kind;
+                  Origin : Seek_Mode;
+                  Amount : in out File_Size)
+                  return Status_Code;
 
    overriding
-   function Close (This   : in out SHFS_File_Handle)
-                  return Status_Kind;
+   procedure Close (This : in out SHFS_File_Handle);
 
-   type SHFS is new HAL.Filesystem.FS_Driver with record
+   type SHFS is new HAL.Filesystem.Filesystem_Driver with record
       File_Handles : SHFS_File_Handle_Access := null;
    end record;
 
