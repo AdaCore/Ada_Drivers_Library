@@ -169,12 +169,12 @@ begin
       raise Program_Error with "Cannot copy disk image";
    end if;
 
-
-   if not Disk.Open (Copy_Disk_Img_Path) then
-      Put_Line ("Cannot open disk image '" & Copy_Disk_Img_Path & "'");
+   Status := Disk.Open (Copy_Disk_Img_Path, Read_Write_Mode);
+   if Status /= OK then
+      Put_Line ("Cannot open disk image '" & Copy_Disk_Img_Path & "': " &
+                  Status'Img);
       return;
    end if;
-
 
    declare
    begin

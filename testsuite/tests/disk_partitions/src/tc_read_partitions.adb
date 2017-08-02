@@ -2,8 +2,11 @@ with Ada.Text_IO;        use Ada.Text_IO;
 with Partitions;         use Partitions;
 with File_Block_Drivers; use File_Block_Drivers;
 with Test_Directories;   use Test_Directories;
+with File_IO;
 
 procedure TC_Read_Partitions is
+
+   use type File_IO.Status_Code;
 
    procedure List_Partitions (Path_To_Disk_Image : String);
 
@@ -16,8 +19,10 @@ procedure TC_Read_Partitions is
       Disk    : aliased File_Block_Driver;
       Nbr     : Natural;
       P_Entry : Partition_Entry;
+      Status  : File_IO.Status_Code;
    begin
-      if not Disk.Open (Path_To_Disk_Image) then
+      Status := Disk.Open (Path_To_Disk_Image, File_IO.Read_Mode);
+      if Status /= File_IO.OK then
          Put_Line ("Cannot open disk image '" & Path_To_Disk_Image & "'");
          return;
       end if;

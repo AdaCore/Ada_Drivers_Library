@@ -140,8 +140,10 @@ begin
 
    Test_Directories.Mount_Test_Directory ("test_dir");
 
-   if not Disk.Open (Disk_Img_Path) then
-      Put_Line ("Cannot open disk image '" & Disk_Img_Path & "'");
+   FIO_Status := Disk.Open (Disk_Img_Path, Read_Mode);
+   if FIO_Status /= OK then
+      Put_Line ("Cannot open disk image '" & Disk_Img_Path & "': " &
+                  FIO_Status'Img);
       return;
    end if;
 

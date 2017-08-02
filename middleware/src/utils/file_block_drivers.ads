@@ -41,8 +41,9 @@ package File_Block_Drivers is
      limited new Block_Driver with private;
 
    function Open (This : in out File_Block_Driver;
-                  Path : String)
-                  return Boolean;
+                  Path : String;
+                  Mode : File_Mode)
+                  return Status_Code;
 
    procedure Close (This : in out File_Block_Driver);
 
@@ -63,6 +64,7 @@ package File_Block_Drivers is
 private
    type File_Block_Driver is
      limited new Block_Driver with record
-      FD : File_Descriptor;
+      FD   : File_Descriptor;
+      Mode : File_Mode;
    end record;
 end File_Block_Drivers;

@@ -36,11 +36,13 @@ package body File_Block_Drivers is
    ----------
 
    function Open (This : in out File_Block_Driver;
-                  Path : String)
-                  return Boolean
+                  Path : String;
+                  Mode : File_Mode)
+                  return Status_Code
    is
    begin
-      return Open (This.FD, Path, Read_Write_Mode) = OK;
+      This.Mode := Mode;
+      return Open (This.FD, Path, Mode);
    end Open;
 
    -----------
@@ -67,6 +69,11 @@ package body File_Block_Drivers is
       Amount : File_Size := File_Size (Block_Number * 512);
    begin
 
+      if This.Mode = Write_Mode then
+         --  Write only...
+         return False;
+      end if;
+
       if Seek (This.FD, From_Start, Amount) /= OK then
          return False;
       end if;
@@ -88,6 +95,11 @@ package body File_Block_Drivers is
    is
       Amount : File_Size := File_Size (Block_Number * 512);
    begin
+
+      if This.Mode = Read_Mode then
+         --  Read only...
+         return False;
+      end if;
 
       if Seek (This.FD, From_Start, Amount) /= OK then
          return False;
