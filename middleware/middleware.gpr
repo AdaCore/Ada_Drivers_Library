@@ -4,8 +4,7 @@ with "../boards/config";
 library project Middleware is
 
    for Source_Dirs use
-     ("src/filesystems",
-      "src/filesystem/**",
+     ("src/filesystem/",
       "src/BLE",
       "src/utils",
       "src/audio",
