@@ -29,6 +29,11 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  This packages provide a low level driver for the FAT file system
+--  architecture. It is recommended to _not_ use this interface directly but to
+--  access the file system using the File_IO package. For more info, see the
+--  file system chapter of the documentation.
+
 with System;
 with Interfaces;        use Interfaces;
 with HAL.Block_Drivers; use HAL.Block_Drivers;

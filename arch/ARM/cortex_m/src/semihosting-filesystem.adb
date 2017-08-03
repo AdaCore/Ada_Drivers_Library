@@ -29,6 +29,11 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  This package use the ARM semihosting feature to provide a low level driver
+--  to access the host file system. It is recommended to _not_ use this
+--  interface directly but to access the file system using the File_IO package.
+--  For more info, see the file system chapter of the documentation.
+
 package body Semihosting.Filesystem is
 
    -----------------

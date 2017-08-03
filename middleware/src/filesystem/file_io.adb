@@ -445,6 +445,12 @@ package body File_IO is
          return Status;
       end if;
 
+      Status := Create_File (Destination_Path);
+      if Status /= OK then
+         Close (Src);
+         return Status;
+      end if;
+
       Status := Open (Dst, Destination_Path, Write_Only);
       if Status /= OK then
          Close (Src);

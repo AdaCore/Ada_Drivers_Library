@@ -29,6 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  This package provides a user friendly interface to the file system. For
+--  more info, see the file system chapter of the documentation.
+
 with System;
 with HAL.Block_Drivers;
 
