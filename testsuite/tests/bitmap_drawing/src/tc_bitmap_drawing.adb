@@ -49,7 +49,7 @@ begin
       raise Program_Error with "Cannot Create BMP file";
    end if;
 
-   Status := Open (BMP_File, Filepath, Read_Write_Mode);
+   Status := Open (BMP_File, Filepath, Read_Write);
 
    if Status /= OK then
       raise Program_Error with "Cannot Open BMP file";

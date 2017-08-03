@@ -21,7 +21,7 @@ procedure TC_Read_Partitions is
       P_Entry : Partition_Entry;
       Status  : File_IO.Status_Code;
    begin
-      Status := Disk.Open (Path_To_Disk_Image, File_IO.Read_Mode);
+      Status := Disk.Open (Path_To_Disk_Image, File_IO.Read_Only);
       if Status /= File_IO.OK then
          Put_Line ("Cannot open disk image '" & Path_To_Disk_Image & "'");
          return;

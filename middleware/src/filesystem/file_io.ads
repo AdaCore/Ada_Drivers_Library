@@ -66,7 +66,7 @@ package File_IO is
       Read_Only_File_System,
       Operation_Not_Permitted);
 
-   type File_Mode is (Read_Mode, Write_Mode, Read_Write_Mode);
+   type File_Mode is (Read_Only, Write_Only, Read_Write);
    type Seek_Mode is
      (
       --  Seek from the beginning of the file, forward
@@ -235,9 +235,9 @@ private
       Operation_Not_Permitted => HAL.Filesystem.Operation_Not_Permitted'Enum_Rep);
 
    for File_Mode use
-     (Read_Mode       => HAL.Filesystem.Read_Mode'Enum_Rep,
-      Write_Mode      => HAL.Filesystem.Write_Mode'Enum_Rep,
-      Read_Write_Mode => HAL.Filesystem.Read_Write_Mode'Enum_Rep);
+     (Read_Only  => HAL.Filesystem.Read_Only'Enum_Rep,
+      Write_Only => HAL.Filesystem.Write_Only'Enum_Rep,
+      Read_Write => HAL.Filesystem.Read_Write'Enum_Rep);
 
    for Seek_Mode use
      (From_Start => HAL.Filesystem.From_Start'Enum_Rep,

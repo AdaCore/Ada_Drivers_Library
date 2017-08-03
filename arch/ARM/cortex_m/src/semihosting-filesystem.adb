@@ -150,7 +150,7 @@ package body Semihosting.Filesystem is
          return No_Such_File;
       end if;
 
-      if Mode /= Read_Mode then
+      if Mode /= Read_Only then
          return Read_Only_File_System;
       end if;
 
@@ -349,7 +349,7 @@ package body Semihosting.Filesystem is
    overriding
    function Mode
      (This : SHFS_File_Handle) return File_Mode
-   is (Read_Mode);
+   is (Read_Only);
 
    ------------
    -- Offset --

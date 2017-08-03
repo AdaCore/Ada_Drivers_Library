@@ -73,7 +73,7 @@ procedure TC_FAT_Read is
       Status : File_IO.Status_Code;
       Path   : constant String := Dirname & "/" & Basename;
    begin
-      Status := Open (FD, Path, Read_Mode);
+      Status := Open (FD, Path, Read_Only);
 
       if Status /= OK then
          Put_Line ("Cannot open file: '" & Path & "'");
@@ -105,7 +105,7 @@ procedure TC_FAT_Read is
       C      : Character;
       Amount : File_IO.File_Size;
    begin
-      Status := Open (FD, Path, Read_Mode);
+      Status := Open (FD, Path, Read_Only);
 
       if Status /= OK then
          Put_Line ("Cannot open file: '" & Path & "'");
@@ -140,7 +140,7 @@ begin
 
    Test_Directories.Mount_Test_Directory ("test_dir");
 
-   FIO_Status := Disk.Open (Disk_Img_Path, Read_Mode);
+   FIO_Status := Disk.Open (Disk_Img_Path, Read_Only);
    if FIO_Status /= OK then
       Put_Line ("Cannot open disk image '" & Disk_Img_Path & "': " &
                   FIO_Status'Img);

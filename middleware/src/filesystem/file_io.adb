@@ -440,12 +440,12 @@ package body File_IO is
       Buffer           : HAL.UInt8_Array (1 .. Buffer_Size);
       Src_Len, Dst_Len : File_Size;
    begin
-      Status := Open (Src, Source_Path, Read_Mode);
+      Status := Open (Src, Source_Path, Read_Only);
       if Status /= OK then
          return Status;
       end if;
 
-      Status := Open (Dst, Destination_Path, Write_Mode);
+      Status := Open (Dst, Destination_Path, Write_Only);
       if Status /= OK then
          Close (Src);
          return Status;

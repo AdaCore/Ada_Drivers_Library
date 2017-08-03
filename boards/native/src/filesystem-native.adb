@@ -387,9 +387,9 @@ package body Filesystem.Native is
          Byte_IO.Open
            (File => Result.File,
             Mode => (case Mode is
-                     when Read_Mode       => Byte_IO.In_File,
-                     when Write_Mode      => Byte_IO.Out_File,
-                     when Read_Write_Mode => Byte_IO.Inout_File),
+                     when Read_Only  => Byte_IO.In_File,
+                     when Write_Only => Byte_IO.Out_File,
+                     when Read_Write => Byte_IO.Inout_File),
             Name => Absolute_Path (This, Path));
       exception
          when Byte_IO.Status_Error

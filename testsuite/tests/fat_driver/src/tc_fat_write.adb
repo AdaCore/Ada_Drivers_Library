@@ -39,7 +39,7 @@ procedure TC_FAT_Write is
       use type Ada.Streams.Stream_Element_Offset;
 
    begin
-      Status := Open (FD, Filename, Write_Mode);
+      Status := Open (FD, Filename, Write_Only);
 
       if Status /= OK then
          Put_Line ("Cannot open file: '" & Filename & "'");
@@ -73,7 +73,7 @@ procedure TC_FAT_Write is
       FD     : File_Descriptor;
       Status : Status_Code;
    begin
-      Status := Open (FD, Filename, Read_Mode);
+      Status := Open (FD, Filename, Read_Only);
 
       if Status /= OK then
          Put_Line ("Cannot open file: '" & Filename & "'");
@@ -169,7 +169,7 @@ begin
       raise Program_Error with "Cannot copy disk image";
    end if;
 
-   Status := Disk.Open (Copy_Disk_Img_Path, Read_Write_Mode);
+   Status := Disk.Open (Copy_Disk_Img_Path, Read_Write);
    if Status /= OK then
       Put_Line ("Cannot open disk image '" & Copy_Disk_Img_Path & "': " &
                   Status'Img);

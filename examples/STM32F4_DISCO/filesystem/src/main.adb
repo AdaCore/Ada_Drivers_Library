@@ -85,7 +85,7 @@ procedure Main is
       Disk    : aliased File_Block_Driver;
       Status  : Status_Code;
    begin
-      Status := Disk.Open (Path_To_Disk_Image, Read_Mode);
+      Status := Disk.Open (Path_To_Disk_Image, Read_Only);
       if Status /= OK then
          Semihosting.Log_Line ("Cannot open disk image '" &
                                  Path_To_Disk_Image & "' : " &
@@ -129,7 +129,7 @@ begin
 
 
    --  Open a file on the host
-   Status := Open (FD, "/host/tmp/test.shfs", Read_Mode);
+   Status := Open (FD, "/host/tmp/test.shfs", Read_Only);
    if Status /= OK then
       Semihosting.Log_Line ("Open Error: " & Status'Img);
       return;

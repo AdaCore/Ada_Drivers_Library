@@ -61,7 +61,7 @@ package body Filesystem.FAT.Files is
    function Ensure_Buffer (File : in out FAT_File_Handle) return Status_Code
    is
    begin
-      if not File.Buffer_Filled and then File.Mode /= Write_Mode then
+      if not File.Buffer_Filled and then File.Mode /= Write_Only then
          if not File.FS.Controller.Read
            (Absolute_Block (File),
             File.Buffer)
@@ -138,7 +138,7 @@ package body Filesystem.FAT.Files is
                --  Nominal case: there's a next cluster
                File.Current_Cluster := Next;
 
-            elsif File.Mode /= Read_Mode then
+            elsif File.Mode /= Read_Only then
                --  Allocate a new cluster
                File.Current_Cluster :=
                  File.FS.New_Cluster (File.Current_Cluster);
@@ -174,7 +174,7 @@ package body Filesystem.FAT.Files is
       Ret := Directories.Find (Parent, Name, Node);
 
       if Ret /= OK then
-         if Mode = Read_Mode then
+         if Mode = Read_Only then
             return No_Such_File;
          end if;
 
@@ -185,7 +185,7 @@ package body Filesystem.FAT.Files is
          return Ret;
       end if;
 
-      if Mode = Write_Mode then
+      if Mode = Write_Only then
          Directories.Set_Size (Node, 0);
          --  Free the cluster chain if > 1 cluster
          Ret := Directories.Adjust_Clusters (Node);
@@ -251,7 +251,7 @@ package body Filesystem.FAT.Files is
          return Invalid_Parameter;
       end if;
 
-      if File.Mode = Write_Mode then
+      if File.Mode = Write_Only then
          Length := 0;
          return Access_Denied;
       end if;
@@ -428,7 +428,7 @@ package body Filesystem.FAT.Files is
       end Inc_Size;
 
    begin
-      if File.Is_Free or File.Mode = Read_Mode then
+      if File.Is_Free or File.Mode = Read_Only then
          return Access_Denied;
       end if;
 

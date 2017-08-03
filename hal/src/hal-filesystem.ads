@@ -59,7 +59,7 @@ package HAL.Filesystem is
       Read_Only_File_System,
       Operation_Not_Permitted);
 
-   type File_Mode is (Read_Mode, Write_Mode, Read_Write_Mode);
+   type File_Mode is (Read_Only, Write_Only, Read_Write);
    type Seek_Mode is
      (
       --  Seek from the beginning of the file, forward
@@ -192,7 +192,7 @@ package HAL.Filesystem is
       Addr   : System.Address;
       Length : in out File_Size)
       return Status_Code is abstract
-     with Pre'Class => Mode (This) /= Write_Mode;
+     with Pre'Class => Mode (This) in Read_Only | Read_Write;
 
    function Write
      (This   : in out File_Handle;
@@ -200,7 +200,7 @@ package HAL.Filesystem is
       Length : File_Size)
       return Status_Code is abstract
      with
-       Pre'Class => Mode (This) = Write_Mode or else Mode (This) = Read_Write_Mode;
+       Pre'Class => Mode (This) in Write_Only | Read_Write;
 
    function Offset
      (This : File_Handle)

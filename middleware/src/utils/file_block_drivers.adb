@@ -69,8 +69,7 @@ package body File_Block_Drivers is
       Amount : File_Size := File_Size (Block_Number * 512);
    begin
 
-      if This.Mode = Write_Mode then
-         --  Write only...
+      if This.Mode = Write_Only then
          return False;
       end if;
 
@@ -96,8 +95,7 @@ package body File_Block_Drivers is
       Amount : File_Size := File_Size (Block_Number * 512);
    begin
 
-      if This.Mode = Read_Mode then
-         --  Read only...
+      if This.Mode = Read_Only then
          return False;
       end if;
 
