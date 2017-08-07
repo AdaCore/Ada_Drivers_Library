@@ -14,12 +14,22 @@ package STM32_SVD.SDIO is
    -- Registers --
    ---------------
 
-   subtype POWER_PWRCTRL_Field is HAL.UInt2;
+   --  PWRCTRL
+   type POWER_PWRCTRL_Field is
+     (
+      --  The clock to card is stopped.
+      Power_Off,
+      --  The card is clocked.
+      Power_On)
+     with Size => 2;
+   for POWER_PWRCTRL_Field use
+     (Power_Off => 0,
+      Power_On => 3);
 
    --  power control register
    type POWER_Register is record
       --  PWRCTRL
-      PWRCTRL       : POWER_PWRCTRL_Field := 16#0#;
+      PWRCTRL       : POWER_PWRCTRL_Field := STM32_SVD.SDIO.Power_Off;
       --  unspecified
       Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
@@ -32,7 +42,34 @@ package STM32_SVD.SDIO is
    end record;
 
    subtype CLKCR_CLKDIV_Field is HAL.UInt8;
-   subtype CLKCR_WIDBUS_Field is HAL.UInt2;
+
+   --  Wide bus mode enable bit
+   type CLKCR_WIDBUS_Field is
+     (
+      --  Default bus mode: SDMMC_D0 is used.
+      Bus_Wide_1B,
+      --  4-wide bus mode: SDMMC_D[3:0] used.
+      Bus_Wide_4B,
+      --  8-wide bus mode: SDMMC_D[7:0] used.
+      Bus_Wide_8B)
+     with Size => 2;
+   for CLKCR_WIDBUS_Field use
+     (Bus_Wide_1B => 0,
+      Bus_Wide_4B => 1,
+      Bus_Wide_8B => 2);
+
+   --  SDIO_CK dephasing selection bit
+   type CLKCR_NEGEDGE_Field is
+     (
+      --  Cmd and Data changed on the SDMMCCLK falling edge succeeding the
+      --  rising edge of SDMMC_CK.
+      Edge_Rising,
+      --  Cmd and Data changed on the SDMMC_CK falling edge.
+      Edge_Falling)
+     with Size => 1;
+   for CLKCR_NEGEDGE_Field use
+     (Edge_Rising => 0,
+      Edge_Falling => 1);
 
    --  SDI clock control register
    type CLKCR_Register is record
@@ -45,9 +82,9 @@ package STM32_SVD.SDIO is
       --  Clock divider bypass enable bit
       BYPASS         : Boolean := False;
       --  Wide bus mode enable bit
-      WIDBUS         : CLKCR_WIDBUS_Field := 16#0#;
+      WIDBUS         : CLKCR_WIDBUS_Field := STM32_SVD.SDIO.Bus_Wide_1B;
       --  SDIO_CK dephasing selection bit
-      NEGEDGE        : Boolean := False;
+      NEGEDGE        : CLKCR_NEGEDGE_Field := STM32_SVD.SDIO.Edge_Rising;
       --  HW Flow Control enable
       HWFC_EN        : Boolean := False;
       --  unspecified
@@ -68,14 +105,28 @@ package STM32_SVD.SDIO is
    end record;
 
    subtype CMD_CMDINDEX_Field is HAL.UInt6;
-   subtype CMD_WAITRESP_Field is HAL.UInt2;
+
+   --  Wait for response bits
+   type CMD_WAITRESP_Field is
+     (
+      --  No response, expect CMDSENT flag.
+      No_Response,
+      --  Short response, expect CMDREND or CCRCFAIL flag.
+      Short_Response,
+      --  Long response, expect CMDREND or CCRCFAIL flag.
+      Long_Response)
+     with Size => 2;
+   for CMD_WAITRESP_Field use
+     (No_Response => 0,
+      Short_Response => 1,
+      Long_Response => 3);
 
    --  command register
    type CMD_Register is record
       --  Command index
       CMDINDEX       : CMD_CMDINDEX_Field := 16#0#;
       --  Wait for response bits
-      WAITRESP       : CMD_WAITRESP_Field := 16#0#;
+      WAITRESP       : CMD_WAITRESP_Field := STM32_SVD.SDIO.No_Response;
       --  CPSM waits for interrupt request
       WAITINT        : Boolean := False;
       --  CPSM Waits for ends of data transfer (CmdPend internal signal).
@@ -143,21 +194,94 @@ package STM32_SVD.SDIO is
       Reserved_25_31 at 0 range 25 .. 31;
    end record;
 
-   subtype DCTRL_DBLOCKSIZE_Field is HAL.UInt4;
+   --  Data transfer direction selection
+   type DCTRL_DTDIR_Field is
+     (
+      --  Data is sent to the card
+      Controller_To_Card,
+      --  Data is read from the card
+      Card_To_Controller)
+     with Size => 1;
+   for DCTRL_DTDIR_Field use
+     (Controller_To_Card => 0,
+      Card_To_Controller => 1);
+
+   --  Data transfer mode selection 1: Stream or SDIO multibyte data transfer.
+   type DCTRL_DTMODE_Field is
+     (
+      --  Block data transfer
+      Block,
+      --  Stream or SDIO multibyte data transfer
+      Stream)
+     with Size => 1;
+   for DCTRL_DTMODE_Field use
+     (Block => 0,
+      Stream => 1);
+
+   --  Data block size
+   type DCTRL_DBLOCKSIZE_Field is
+     (
+      --  Block length = 2**0 = 1 byte
+      Block_1B,
+      --  Block length = 2**1 = 2 byte
+      Block_2B,
+      --  Block length = 2**2 = 4 byte
+      Block_4B,
+      --  Block length = 2**3 = 8 byte
+      Block_8B,
+      --  Block length = 2**4 = 16 byte
+      Block_16B,
+      --  Block length = 2**5 = 32 byte
+      Block_32B,
+      --  Block length = 2**6 = 64 byte
+      Block_64B,
+      --  Block length = 2**7 = 128 byte
+      Block_128B,
+      --  Block length = 2**8 = 256 byte
+      Block_256B,
+      --  Block length = 2**9 = 512 byte
+      Block_512B,
+      --  Block length = 2**10 = 1024 byte
+      Block_1024B,
+      --  Block length = 2**11 = 2048 byte
+      Block_2048B,
+      --  Block length = 2**12 = 4096 byte
+      Block_4096B,
+      --  Block length = 2**13 = 8192 byte
+      Block_8192B,
+      --  Block length = 2**14 = 16384 byte
+      Block_16384B)
+     with Size => 4;
+   for DCTRL_DBLOCKSIZE_Field use
+     (Block_1B => 0,
+      Block_2B => 1,
+      Block_4B => 2,
+      Block_8B => 3,
+      Block_16B => 4,
+      Block_32B => 5,
+      Block_64B => 6,
+      Block_128B => 7,
+      Block_256B => 8,
+      Block_512B => 9,
+      Block_1024B => 10,
+      Block_2048B => 11,
+      Block_4096B => 12,
+      Block_8192B => 13,
+      Block_16384B => 14);
 
    --  data control register
    type DCTRL_Register is record
       --  DTEN
       DTEN           : Boolean := False;
       --  Data transfer direction selection
-      DTDIR          : Boolean := False;
+      DTDIR          : DCTRL_DTDIR_Field := STM32_SVD.SDIO.Controller_To_Card;
       --  Data transfer mode selection 1: Stream or SDIO multibyte data
       --  transfer.
-      DTMODE         : Boolean := False;
+      DTMODE         : DCTRL_DTMODE_Field := STM32_SVD.SDIO.Block;
       --  DMA enable bit
       DMAEN          : Boolean := False;
       --  Data block size
-      DBLOCKSIZE     : DCTRL_DBLOCKSIZE_Field := 16#0#;
+      DBLOCKSIZE     : DCTRL_DBLOCKSIZE_Field := STM32_SVD.SDIO.Block_1B;
       --  Read wait start
       RWSTART        : Boolean := False;
       --  Read wait stop

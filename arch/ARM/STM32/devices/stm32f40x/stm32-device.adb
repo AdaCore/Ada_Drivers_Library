@@ -733,6 +733,35 @@ package body STM32.Device is
    -- Enable_Clock --
    ------------------
 
+   procedure Enable_Clock (This : in out SDMMC_Controller)
+   is
+   begin
+      if This.Periph.all'Address /= SDIO_Base then
+         raise Unknown_Device;
+      end if;
+
+      RCC_Periph.APB2ENR.SDIOEN := True;
+   end Enable_Clock;
+
+   -----------
+   -- Reset --
+   -----------
+
+   procedure Reset (This : in out SDMMC_Controller)
+   is
+   begin
+      if This.Periph.all'Address /= SDIO_Base then
+         raise Unknown_Device;
+      end if;
+
+      RCC_Periph.APB2RSTR.SDIORST := True;
+      RCC_Periph.APB2RSTR.SDIORST := False;
+   end Reset;
+
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
    procedure Enable_Clock (This : in out CRC_32) is
       pragma Unreferenced (This);
    begin

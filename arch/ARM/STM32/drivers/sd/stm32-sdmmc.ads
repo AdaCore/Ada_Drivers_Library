@@ -36,49 +36,69 @@
 --  SDCard driver. Controls the SDMMC peripheral.
 
 with System;
-with STM32_SVD.SDIO; use STM32_SVD.SDIO;
+with SDMMC_SVD_Periph;
 
-with HAL.SDMMC;      use HAL.SDMMC;
-
+with HAL.SDMMC;             use HAL.SDMMC;
+with HAL.Block_Drivers;
 with STM32.DMA;
+with STM32.DMA.Interrupts;
+
+with STM32.SDMMC_Interrupt;
 
 package STM32.SDMMC is
 
    type SDMMC_Controller
-     (Periph : not null access STM32_SVD.SDIO.SDIO_Peripheral)
-   is limited private;
+     (Periph : not null access SDMMC_SVD_Periph.Peripheral)
+   is limited new HAL.Block_Drivers.Block_Driver
+     and
+       SDMMC_Driver
+   with private;
+
+   procedure Ensure_Card_Informations (This : in out SDMMC_Controller);
+   --  Make sure the sdcard information is read and stored in the Controller
+   --  structure
 
    procedure Set_Clk_Src_Speed
      (This : in out SDMMC_Controller;
       CLK  : UInt32);
 
    function Initialize
-     (This      : in out SDMMC_Controller;
-      Info      : out Card_Information) return SD_Error;
+     (This      : in out SDMMC_Controller) return SD_Error;
 
-   type SD_Data is array (UInt16 range <>) of UInt8
-   with Pack;
+   overriding function Read
+     (This         : in out SDMMC_Controller;
+      Block_Number : UInt64;
+      Data         : out HAL.Block_Drivers.Block) return Boolean
+     with Pre => Data'Length <= 16#10000#;
+   --  Reads Data.
+   --  Data size needs to be a multiple of the card's block size and maximum
+   --  length is 2**16
+
+   overriding function Write
+     (This         : in out SDMMC_Controller;
+      Block_Number : UInt64;
+      Data         : HAL.Block_Drivers.Block) return Boolean
+     with Pre => Data'Length <= 16#10000#;
+   --  Writes Data.
+   --  Data size needs to be a multiple of the card's block size and maximum
+   --  length is 2**16
 
    function Read_Blocks
      (This : in out SDMMC_Controller;
       Addr : UInt64;
-      Data : out SD_Data) return SD_Error
+      Data : out HAL.Block_Drivers.Block) return SD_Error
      with Pre => Data'Length mod 512 = 0;
 
    function Read_Blocks_DMA
      (This   : in out SDMMC_Controller;
-      Addr   : UInt64;
-      DMA    : STM32.DMA.DMA_Controller;
-      Stream : STM32.DMA.DMA_Stream_Selector;
-      Data   : out SD_Data) return SD_Error
+      Addr   :        UInt64;
+      Data   :    out HAL.Block_Drivers.Block) return SD_Error
      with Pre => Data'Length <= 65536;
 
    function Write_Blocks_DMA
      (This   : in out SDMMC_Controller;
-      Addr   : UInt64;
-      DMA    : STM32.DMA.DMA_Controller;
-      Stream : STM32.DMA.DMA_Stream_Selector;
-      Data   : SD_Data) return SD_Error
+      Addr   :        UInt64;
+      Data   :        HAL.Block_Drivers.Block) return SD_Error
      with Pre => Data'Length <= 65535;
 
    function Stop_Transfer
@@ -142,16 +162,46 @@ package STM32.SDMMC is
      (This : in out SDMMC_Controller);
    --  Sets DCFGR.DTEN to False to stop the data transfer mode.
 
+   procedure Enable_DMA_Transfers
+     (This   : in out SDMMC_Controller;
+      RX_Int : not null STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access;
+      TX_Int : not null STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access;
+      SD_Int : not null STM32.SDMMC_Interrupt.SDMMC_Interrupt_Handler_Access);
+   --  Enable DMA for SDMMC tranfers by setting the required interrupt
+   --  controllers. See the examples for more info on how to initialize DMA for
+   --  SDMMC.
+
+   function Has_Card_Information
+     (This : SDMMC_Controller)
+      return Boolean;
+
+   function Card_Information
+     (This : SDMMC_Controller)
+      return HAL.SDMMC.Card_Information
+   with Pre => This.Has_Card_Information;
+
+   procedure Clear_Card_Information
+     (This : in out SDMMC_Controller);
 private
 
    type SDMMC_Controller
-     (Periph : not null access STM32_SVD.SDIO.SDIO_Peripheral)
-   is limited new SDMMC_Driver with record
-      CLK_In    : UInt32 := 48_000_000; --  By default at hardware reset
-      RCA       : UInt16;
-      Card_Type : Supported_SD_Memory_Cards :=
-                    STD_Capacity_SD_Card_V1_1;
-      Operation : SDMMC_Operation := No_Operation;
+     (Periph : not null access SDMMC_SVD_Periph.Peripheral)
+   is limited new HAL.Block_Drivers.Block_Driver
+     and
+       SDMMC_Driver
+   with record
+      CLK_In     : UInt32 := 48_000_000; --  By default at hardware reset
+      RCA        : UInt16;
+      Card_Type  : Supported_SD_Memory_Cards :=
+        STD_Capacity_SD_Card_V1_1;
+      Operation  : SDMMC_Operation := No_Operation;
+
+      Has_Info   : Boolean := False;
+      Info       : HAL.SDMMC.Card_Information;
+
+      TX_DMA_Int : STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access := null;
+      RX_DMA_Int : STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access := null;
+      SD_Int     : STM32.SDMMC_Interrupt.SDMMC_Interrupt_Handler_Access := null;
    end record;
 
    overriding procedure Delay_Milliseconds

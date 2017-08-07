@@ -43,6 +43,7 @@
 --  manufactured by ST Microelectronics.  For example, an STM32F429.
 
 with STM32_SVD;            use STM32_SVD;
+with STM32_SVD.SDIO;
 
 with STM32.DMA;            use STM32.DMA;
 with STM32.DMA.Interrupts; use STM32.DMA.Interrupts;
@@ -58,6 +59,7 @@ with STM32.Timers;         use STM32.Timers;
 with STM32.DAC;            use STM32.DAC;
 with STM32.RTC;            use STM32.RTC;
 with STM32.CRC;            use STM32.CRC;
+with STM32.SDMMC;          use STM32.SDMMC;
 with Ada.Interrupts.Names;
 
 package STM32.Device is
@@ -300,6 +302,7 @@ package STM32.Device is
    GPIO_AF_USART1_7    : constant GPIO_Alternate_Function;
    GPIO_AF_USART2_7    : constant GPIO_Alternate_Function;
    GPIO_AF_USART3_7    : constant GPIO_Alternate_Function;
+   GPIO_AF_I2S3ext_7   : constant GPIO_Alternate_Function;
    GPIO_AF_UART4_8     : constant GPIO_Alternate_Function;
    GPIO_AF_UART5_8     : constant GPIO_Alternate_Function;
    GPIO_AF_USART6_8    : constant GPIO_Alternate_Function;
@@ -315,6 +318,7 @@ package STM32.Device is
    GPIO_AF_OTG2_HS_10  : constant GPIO_Alternate_Function;
    GPIO_AF_ETH_11      : constant GPIO_Alternate_Function;
    GPIO_AF_FMC_12      : constant GPIO_Alternate_Function;
+   GPIO_AF_SDIO_12     : constant GPIO_Alternate_Function;
    GPIO_AF_OTG2_FS_12  : constant GPIO_Alternate_Function;
    GPIO_AF_DCMI_13     : constant GPIO_Alternate_Function;
    GPIO_AF_LTDC_13     : constant GPIO_Alternate_Function;
@@ -498,6 +502,21 @@ package STM32.Device is
 
    procedure Reset (This : in out Timer);
 
+   -----------
+   -- SDMMC --
+   -----------
+
+   SDIO : aliased SDMMC_Controller (STM32_SVD.SDIO.SDIO_Periph'Access);
+
+   type SDIO_Clock_Source is (Src_Sysclk, Src_48Mhz);
+
+   procedure Enable_Clock (This : in out SDMMC_Controller);
+   procedure Reset (This : in out SDMMC_Controller);
+
+   ---------
+   -- CRC --
+   ---------
+
    CRC_Unit : CRC_32 with Import, Volatile, Address => CRC_Base;
 
    procedure Enable_Clock (This : in out CRC_32);
@@ -589,6 +608,7 @@ private
    GPIO_AF_USART1_7    : constant GPIO_Alternate_Function := 7;
    GPIO_AF_USART2_7    : constant GPIO_Alternate_Function := 7;
    GPIO_AF_USART3_7    : constant GPIO_Alternate_Function := 7;
+   GPIO_AF_I2S3ext_7   : constant GPIO_Alternate_Function := 7;
    GPIO_AF_UART4_8     : constant GPIO_Alternate_Function := 8;
    GPIO_AF_UART5_8     : constant GPIO_Alternate_Function := 8;
    GPIO_AF_USART6_8    : constant GPIO_Alternate_Function := 8;
@@ -604,6 +624,7 @@ private
    GPIO_AF_OTG2_HS_10  : constant GPIO_Alternate_Function := 10;
    GPIO_AF_ETH_11      : constant GPIO_Alternate_Function := 11;
    GPIO_AF_FMC_12      : constant GPIO_Alternate_Function := 12;
+   GPIO_AF_SDIO_12     : constant GPIO_Alternate_Function := 12;
    GPIO_AF_OTG2_FS_12  : constant GPIO_Alternate_Function := 12;
    GPIO_AF_DCMI_13     : constant GPIO_Alternate_Function := 13;
    GPIO_AF_LTDC_13     : constant GPIO_Alternate_Function := 13;

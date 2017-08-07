@@ -30,13 +30,18 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with Ada.Real_Time;       use Ada.Real_Time;
-with System;              use System;
+with Ada.Real_Time;          use Ada.Real_Time;
+with System;                 use System;
 with System.Machine_Code;
 
-with STM32.Device;  use STM32.Device;
-with STM32_SVD.RCC; use STM32_SVD.RCC;
+with SDMMC_SVD;              use SDMMC_SVD;
+with STM32.Device;           use STM32.Device;
+with STM32_SVD.RCC;          use STM32_SVD.RCC;
 with SDMMC_Init;
+with STM32.DMA;              use STM32.DMA;
+with Cortex_M.Cache;         use Cortex_M.Cache;
+with STM32.DMA.Interrupts;   use STM32.DMA.Interrupts;
+with STM32.SDMMC_Interrupt;  use STM32.SDMMC_Interrupt;
 
 package body STM32.SDMMC is
 
@@ -122,6 +127,27 @@ package body STM32.SDMMC is
       end loop;
    end DCTRL_Write_Delay;
 
+   ------------------------------
+   -- Ensure_Card_Informations --
+   ------------------------------
+
+   procedure Ensure_Card_Informations
+     (This : in out SDMMC_Controller)
+   is
+      Ret : SD_Error;
+   begin
+      if This.Has_Info then
+         return;
+      end if;
+
+      Ret := STM32.SDMMC.Initialize (This);
+
+      if Ret = OK then
+         This.Has_Info := True;
+      else
+         This.Has_Info := False;
+      end if;
+   end Ensure_Card_Informations;
    ------------------------
    -- Clear_Static_Flags --
    ------------------------
@@ -540,6 +566,54 @@ package body STM32.SDMMC is
       This.Periph.DCTRL := (others => <>);
    end Disable_Data;
 
+   --------------------------
+   -- Enable_DMA_Transfers --
+   --------------------------
+
+   procedure Enable_DMA_Transfers
+     (This   : in out SDMMC_Controller;
+      RX_Int : not null STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access;
+      TX_Int : not null STM32.DMA.Interrupts.DMA_Interrupt_Controller_Access;
+      SD_Int : not null STM32.SDMMC_Interrupt.SDMMC_Interrupt_Handler_Access)
+   is
+   begin
+      This.TX_DMA_Int := TX_Int;
+      This.RX_DMA_Int := RX_Int;
+      This.SD_Int     := SD_Int;
+   end Enable_DMA_Transfers;
+
+   --------------------------
+   -- Has_Card_Information --
+   --------------------------
+
+   function Has_Card_Information
+     (This : SDMMC_Controller)
+      return Boolean
+   is (This.Has_Info);
+
+   ----------------------
+   -- Card_Information --
+   ----------------------
+
+   function Card_Information
+     (This : SDMMC_Controller)
+      return HAL.SDMMC.Card_Information
+   is
+   begin
+      return This.Info;
+   end Card_Information;
+
+   ----------------------------
+   -- Clear_Card_Information --
+   ----------------------------
+
+   procedure Clear_Card_Information
+     (This : in out SDMMC_Controller)
+   is
+   begin
+      This.Has_Info := False;
+   end Clear_Card_Information;
+
    ---------------
    -- Read_FIFO --
    ---------------
@@ -857,17 +931,160 @@ package body STM32.SDMMC is
    ----------------
 
    function Initialize
-     (This      : in out SDMMC_Controller;
-      Info      : out Card_Information) return SD_Error
+     (This      : in out SDMMC_Controller) return SD_Error
    is
       Ret : SD_Error;
    begin
-      SDMMC_Init.Card_Identification_Process (This, Info, Ret);
-      This.Card_Type := Info.Card_Type;
-      This.RCA       := Info.RCA;
+      SDMMC_Init.Card_Identification_Process (This, This.Info, Ret);
+      This.Card_Type := This.Info.Card_Type;
+      This.RCA       := This.Info.RCA;
 
       return Ret;
    end Initialize;
+
+   ----------
+   -- Read --
+   ----------
+
+   overriding
+   function Read
+     (This         : in out SDMMC_Controller;
+      Block_Number : UInt64;
+      Data         : out HAL.Block_Drivers.Block) return Boolean
+   is
+      Ret     : Boolean;
+      SD_Err  : SD_Error;
+      DMA_Err : DMA_Error_Code;
+   begin
+
+      Ensure_Card_Informations (This);
+
+      if This.RX_DMA_Int = null or else This.SD_Int = null then
+         SD_Err := Read_Blocks
+           (This,
+            Block_Number * UInt64 (This.Info.Card_Block_Size),
+            Data);
+         return SD_Err = OK;
+      end if;
+
+      This.SD_Int.Set_Transfer_State (This);
+
+      SD_Err := Read_Blocks_DMA
+        (This,
+         Block_Number * UInt64 (This.Info.Card_Block_Size),
+         Data);
+
+      if SD_Err /= OK then
+         This.RX_DMA_Int.Clear_Transfer_State;
+         This.SD_Int.Clear_Transfer_State;
+         This.RX_DMA_Int.Abort_Transfer (DMA_Err);
+
+         return False;
+      end if;
+
+      This.SD_Int.Wait_Transfer (SD_Err);
+
+      if SD_Err /= OK then
+         This.RX_DMA_Int.Clear_Transfer_State;
+      else
+         This.RX_DMA_Int.Wait_For_Completion (DMA_Err);
+
+         loop
+            exit when not Get_Flag (This, RX_Active);
+         end loop;
+      end if;
+
+      Ret := SD_Err = OK and then DMA_Err = DMA_No_Error;
+
+      if Last_Operation (This) =
+        Read_Multiple_Blocks_Operation
+      then
+         SD_Err := Stop_Transfer (This);
+         Ret := Ret and then SD_Err = OK;
+      end if;
+
+      Clear_All_Status (This.RX_DMA_Int.Controller.all, This.RX_DMA_Int.Stream);
+      Disable (This.RX_DMA_Int.Controller.all, This.RX_DMA_Int.Stream);
+      Disable_Data (This);
+      Clear_Static_Flags (This);
+
+      Cortex_M.Cache.Invalidate_DCache
+        (Start => Data'Address,
+         Len   => Data'Length);
+
+      return Ret;
+   end Read;
+
+   -----------
+   -- Write --
+   -----------
+
+   overriding
+   function Write
+     (This         : in out SDMMC_Controller;
+      Block_Number : UInt64;
+      Data         : HAL.Block_Drivers.Block) return Boolean
+   is
+      Ret     : SD_Error;
+      DMA_Err : DMA_Error_Code;
+   begin
+      if This.TX_DMA_Int = null then
+         raise Program_Error with "No TX DMA controller";
+      end if;
+
+      if This.SD_Int = null then
+         raise Program_Error with "No SD interrupt controller";
+      end if;
+
+      Ensure_Card_Informations (This);
+
+      --  Flush the data cache
+      Cortex_M.Cache.Clean_DCache
+        (Start => Data (Data'First)'Address,
+         Len   => Data'Length);
+
+      This.SD_Int.Set_Transfer_State (This);
+
+      Ret := Write_Blocks_DMA
+        (This,
+         Block_Number * UInt64 (This.Info.Card_Block_Size),
+         Data);
+      --  this always leaves the last 12 byte standing. Why?
+      --  also...NDTR is not what it should be.
+
+      if Ret /= OK then
+         This.TX_DMA_Int.Clear_Transfer_State;
+         This.SD_Int.Clear_Transfer_State;
+         This.TX_DMA_Int.Abort_Transfer (DMA_Err);
+
+         return False;
+      end if;
+
+      This.TX_DMA_Int.Wait_For_Completion (DMA_Err); -- this unblocks
+      This.SD_Int.Wait_Transfer (Ret); -- TX underrun!
+
+      --  this seems slow. Do we have to wait?
+      loop
+         --  FIXME: some people claim, that this goes wrong with multiblock, see
+         --  http://blog.frankvh.com/2011/09/04/stm32f2xx-sdio-sd-card-interface/
+         exit when not Get_Flag (This, TX_Active);
+      end loop;
+
+      Clear_All_Status (This.TX_DMA_Int.Controller.all, This.TX_DMA_Int.Stream);
+      Disable (This.TX_DMA_Int.Controller.all, This.TX_DMA_Int.Stream);
+
+      declare
+         Data_Incomplete : constant Boolean :=
+                             This.TX_DMA_Int.Buffer_Error and then
+                                 Items_Transferred (This.TX_DMA_Int.Controller.all, This.TX_DMA_Int.Stream)
+                                 /= Data'Length / 4;
+      begin
+         return Ret = OK
+           and then DMA_Err = DMA_No_Error
+           and then not Data_Incomplete;
+      end;
+   end Write;
+
 
    -----------------
    -- Read_Blocks --
@@ -876,15 +1093,15 @@ package body STM32.SDMMC is
    function Read_Blocks
      (This : in out SDMMC_Controller;
       Addr : UInt64;
-      Data : out SD_Data) return SD_Error
+      Data : out HAL.Block_Drivers.Block) return SD_Error
    is
-      subtype UInt32_Data is SD_Data (1 .. 4);
+      subtype UInt32_Data is HAL.Block_Drivers.Block (1 .. 4);
       function To_Data is new Ada.Unchecked_Conversion
         (UInt32, UInt32_Data);
       R_Addr   : UInt64 := Addr;
       N_Blocks : Positive;
       Err      : SD_Error;
-      Idx      : UInt16 := Data'First;
+      Idx      : Natural := Data'First;
       Dead     : UInt32 with Unreferenced;
 
    begin
@@ -998,10 +1215,8 @@ package body STM32.SDMMC is
 
    function Read_Blocks_DMA
      (This : in out SDMMC_Controller;
-      Addr       : UInt64;
-      DMA        : STM32.DMA.DMA_Controller;
-      Stream     : STM32.DMA.DMA_Stream_Selector;
-      Data       : out SD_Data) return SD_Error
+      Addr :        UInt64;
+      Data :    out HAL.Block_Drivers.Block) return SD_Error
    is
       Read_Address : constant UInt64 :=
                        (if This.Card_Type = High_Capacity_SD_Card
@@ -1014,11 +1229,10 @@ package body STM32.SDMMC is
 
       Err            : SD_Error;
       Command        : SD_Command;
-      use STM32.DMA;
    begin
       if not STM32.DMA.Compatible_Alignments
-        (DMA,
-         Stream,
+        (This.RX_DMA_Int.Controller.all,
+         This.RX_DMA_Int.Stream,
          This.Periph.FIFO'Address,
          Data_Addr)
       then
@@ -1038,16 +1252,9 @@ package body STM32.SDMMC is
       Enable_Interrupt (This, Data_End_Interrupt);
       Enable_Interrupt (This, RX_Overrun_Interrupt);
 
-      STM32.DMA.Start_Transfer_with_Interrupts
-        (This               => DMA,
-         Stream             => Stream,
-         Source             => This.Periph.FIFO'Address,
-         Destination        => Data_Addr,
-         Data_Count         => UInt16 (Data_Len_Words), -- because DMA is set up with words
-         Enabled_Interrupts => (Transfer_Error_Interrupt    => True,
-                                FIFO_Error_Interrupt        => True,
-                                Transfer_Complete_Interrupt => True,
-                                others                      => False));
+      This.RX_DMA_Int.Start_Transfer (Source      => This.Periph.FIFO'Address,
+                                      Destination => Data_Addr,
+                                      Data_Count  => UInt16 (Data_Len_Words)); -- because DMA is set up with words
 
       Send_Cmd (This, Set_Blocklen, 512, Err);
 
@@ -1083,10 +1290,8 @@ package body STM32.SDMMC is
 
    function Write_Blocks_DMA
      (This : in out SDMMC_Controller;
-      Addr       : UInt64;
-      DMA        : STM32.DMA.DMA_Controller;
-      Stream     : STM32.DMA.DMA_Stream_Selector;
-      Data       : SD_Data) return SD_Error
+      Addr :        UInt64;
+      Data :        HAL.Block_Drivers.Block) return SD_Error
    is
       Write_Address : constant UInt64 :=
                        (if This.Card_Type = High_Capacity_SD_Card
@@ -1104,13 +1309,11 @@ package body STM32.SDMMC is
       Timeout    : Boolean := False;
       Command    : SD_Command;
       Rca        : constant UInt32 := Shift_Left (UInt32 (This.RCA), 16);
-
-      use STM32.DMA;
    begin
 
       if not STM32.DMA.Compatible_Alignments
-        (DMA,
-         Stream,
+        (This.TX_DMA_Int.Controller.all,
+         This.TX_DMA_Int.Stream,
          This.Periph.FIFO'Address,
          Data_Addr)
       then
@@ -1154,17 +1357,9 @@ package body STM32.SDMMC is
       Enable_Interrupt (This, Data_End_Interrupt);
       Enable_Interrupt (This, TX_Underrun_Interrupt);
 
-      --  start DMA first (gives time to setup)
-      STM32.DMA.Start_Transfer_with_Interrupts
-        (This               => DMA,
-         Stream             => Stream,
-         Destination        => This.Periph.FIFO'Address,
-         Source             => Data_Addr,
-         Data_Count         => UInt16 (Data_Len_Words), -- DMA uses words
-         Enabled_Interrupts => (Transfer_Error_Interrupt    => True,
-                                FIFO_Error_Interrupt        => True,
-                                Transfer_Complete_Interrupt => True,
-                                others                      => False));
+      This.TX_DMA_Int.Start_Transfer (Source      => Data_Addr,
+                                      Destination => This.Periph.FIFO'Address,
+                                      Data_Count  => UInt16 (Data_Len_Words)); -- DMA uses words
 
       --  set block size
       Send_Cmd (This, Set_Blocklen, 512, Err);

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -11,7 +11,7 @@
 --        notice, this list of conditions and the following disclaimer in   --
 --        the documentation and/or other materials provided with the        --
 --        distribution.                                                     --
---     3. Neither the name of STMicroelectronics nor the names of its       --
+--     3. Neither the name of the copyright holder nor the names of its     --
 --        contributors may be used to endorse or promote products derived   --
 --        from this software without specific prior written permission.     --
 --                                                                          --
@@ -27,68 +27,11 @@
 --   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
 --   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
---  This file is based on:                                                  --
---   @file    stm32f769i_discovery_sd.h                                     --
---   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
-with HAL.SDMMC;
-with STM32.SDMMC;
+with STM32_SVD.SDIO;
 
-with HAL;               use HAL;
-with HAL.Block_Drivers; use HAL.Block_Drivers;
+--  SVD files for the STM32F4 and STM32F7 have different names for the SDMMC
+--  device (SDIO or SDMMC). This provides a common name for the SVD package.
 
-package SDCard is
-
-   type SDCard_Controller
-     (Device : not null access STM32.SDMMC.SDMMC_Controller) is
-   limited new Block_Driver with private;
-
-   Device_Error : exception;
-
-   procedure Initialize
-     (This : in out SDCard_Controller);
-   --  Initilizes the Controller's pins
-
-   function Card_Present
-     (This : in out SDCard_Controller) return Boolean;
-   --  Whether a SD-Card is present in the sdcard reader
-
-   function Get_Card_Information
-     (This : in out SDCard_Controller)
-      return HAL.SDMMC.Card_Information
-     with Pre => This.Card_Present;
-   --  Retrieves the card informations
-
-   function Block_Size
-     (This : in out SDCard_Controller)
-     return UInt32;
-   --  The insterted card block size. 512 Bytes for sd-cards
-
-   overriding function Read
-     (This         : in out SDCard_Controller;
-      Block_Number : UInt64;
-      Data         : out Block) return Boolean
-     with Pre => Data'Length <= 16#10000#;
-   --  Reads Data.
-   --  Data size needs to be a multiple of the card's block size and maximum
-   --  length is 2**16
-
-   overriding function Write
-     (This         : in out SDCard_Controller;
-      Block_Number : UInt64;
-      Data         : Block) return Boolean
-     with Pre => Data'Length <= 16#10000#;
-   --  Writes Data.
-   --  Data size needs to be a multiple of the card's block size and maximum
-   --  length is 2**16
-
-private
-
-   type SDCard_Controller
-     (Device : not null access STM32.SDMMC.SDMMC_Controller) is
-   limited new HAL.Block_Drivers.Block_Driver with record
-      Card_Detected : Boolean := False;
-   end record;
-
-end SDCard;
+package SDMMC_SVD renames STM32_SVD.SDIO;
