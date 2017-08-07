@@ -84,6 +84,7 @@ projects = [
 
             # STM32F4 DISCO
             ("/examples/STM32F4_DISCO/accelerometer/accelerometer.gpr",                                  BOTH_RAVENSCAR),
+            ("/examples/STM32F4_DISCO/simple_audio/simple_audio.gpr",                                    BOTH_RAVENSCAR),
             ("/examples/STM32F4_DISCO/filesystem/filesystem.gpr",                                        BOTH_RAVENSCAR),
 
             # STM32F469 Discovery

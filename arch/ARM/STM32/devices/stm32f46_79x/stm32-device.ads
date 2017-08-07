@@ -511,19 +511,23 @@ package STM32.Device is
    procedure Enable_Clock (This : aliased in out SPI_Port'Class);
    procedure Reset (This : in out SPI_Port'Class);
 
-   Internal_I2S_1 : aliased Internal_I2S_Port with Import, Volatile, Address => SPI1_Base;
-   Internal_I2S_2 : aliased Internal_I2S_Port with Import, Volatile, Address => SPI2_Base;
-   Internal_I2S_3 : aliased Internal_I2S_Port with Import, Volatile, Address => SPI3_Base;
-   Internal_I2S_4 : aliased Internal_I2S_Port with Import, Volatile, Address => SPI4_Base;
-   Internal_I2S_5 : aliased Internal_I2S_Port with Import, Volatile, Address => SPI5_Base;
-   Internal_I2S_6 : aliased Internal_I2S_Port with Import, Volatile, Address => SPI6_Base;
+   Internal_I2S_1     : aliased Internal_I2S_Port with Import, Volatile, Address => SPI1_Base;
+   Internal_I2S_2     : aliased Internal_I2S_Port with Import, Volatile, Address => SPI2_Base;
+   Internal_I2S_3     : aliased Internal_I2S_Port with Import, Volatile, Address => SPI3_Base;
+   Internal_I2S_4     : aliased Internal_I2S_Port with Import, Volatile, Address => SPI4_Base;
+   Internal_I2S_5     : aliased Internal_I2S_Port with Import, Volatile, Address => SPI5_Base;
+   Internal_I2S_6     : aliased Internal_I2S_Port with Import, Volatile, Address => SPI6_Base;
+   Internal_I2S_2_Ext : aliased Internal_I2S_Port with Import, Volatile, Address => I2S2ext_Base;
+   Internal_I2S_3_Ext : aliased Internal_I2S_Port with Import, Volatile, Address => I2S3ext_Base;
 
-   I2S_1 : aliased I2S_Port (Internal_I2S_1'Access);
-   I2S_2 : aliased I2S_Port (Internal_I2S_2'Access);
-   I2S_3 : aliased I2S_Port (Internal_I2S_3'Access);
-   I2S_4 : aliased I2S_Port (Internal_I2S_4'Access);
-   I2S_5 : aliased I2S_Port (Internal_I2S_5'Access);
-   I2S_6 : aliased I2S_Port (Internal_I2S_6'Access);
+   I2S_1     : aliased I2S_Port (Internal_I2S_1'Access, Extended => False);
+   I2S_2     : aliased I2S_Port (Internal_I2S_2'Access, Extended => False);
+   I2S_3     : aliased I2S_Port (Internal_I2S_3'Access, Extended => False);
+   I2S_4     : aliased I2S_Port (Internal_I2S_4'Access, Extended => False);
+   I2S_5     : aliased I2S_Port (Internal_I2S_5'Access, Extended => False);
+   I2S_6     : aliased I2S_Port (Internal_I2S_6'Access, Extended => False);
+   I2S_2_Ext : aliased I2S_Port (Internal_I2S_2_Ext'Access, Extended => True);
+   I2S_3_Ext : aliased I2S_Port (Internal_I2S_3_Ext'Access, Extended => True);
 
    procedure Enable_Clock (This : I2S_Port);
    procedure Reset (This : in out I2S_Port);

@@ -31,18 +31,12 @@
 
 --  This is a demo of the features available on the STM32F4-DISCOVERY board.
 --
---  Tilt the board and the LED closer to the ground will light up. Press the
---  blue button to enter sound mode where a two tone audio is played in the
---  headphone jack. Press the black button to reset.
+--  Tilt the board and the LED closer to the ground will light up.
 
 with Ada.Real_Time;      use Ada.Real_Time;
 with HAL;                use HAL;
 with STM32.Board;        use STM32.Board;
-with STM32.User_Button;
 with LIS3DSH;            use LIS3DSH;
-with HAL.Audio;          use HAL.Audio;
-with Simple_Synthesizer;
-with CS43L22;
 
 procedure Main is
 
@@ -58,17 +52,8 @@ procedure Main is
       delay until Clock + Milliseconds (Milli);
    end My_Delay;
 
-   Synth : Simple_Synthesizer.Synthesizer;
-   Audio_Data : Audio_Buffer (1 .. 128);
-
 begin
    Initialize_LEDs;
-
-   STM32.User_Button.Initialize;
-
-   Initialize_Audio;
-   Synth.Set_Frequency (STM32.Board.Audio_Rate);
-   STM32.Board.Audio_DAC.Set_Volume (60);
 
    Initialize_Accelerometer;
 
@@ -103,29 +88,7 @@ begin
             end if;
             My_Delay (10);
          end if;
-
-         if STM32.User_Button.Has_Been_Pressed then
-            --  Go to the sound loop
-            exit;
-         end if;
-
          All_LEDs_Off;
       end loop;
    end if;
-
-   STM32.Board.Audio_DAC.Play;
-   loop
-      for Cnt in 1 .. 1_000 loop
-         if Cnt < 500 then
-            Synth.Set_Note_Frequency (440.0);
-            All_LEDs_On;
-         else
-            Synth.Set_Note_Frequency (880.0);
-            All_LEDs_Off;
-         end if;
-
-         Synth.Receive (Audio_Data);
-         STM32.Board.Audio_I2S.Transmit (Audio_Data);
-      end loop;
-   end loop;
 end Main;

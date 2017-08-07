@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,44 +29,45 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
+with System;               use System;
+with HAL;                  use HAL;
+with STM32.DMA;            use STM32.DMA;
+with STM32.Device;         use STM32.Device;
+with Ada.Interrupts;
+with Ada.Interrupts.Names;
 
-package HAL.Audio is
+package Audio_Stream is
 
-   type Audio_Buffer is array (Natural range <>) of Integer_16
-     with Component_Size => 16, Alignment => 16;
+   protected type Double_Buffer_Controller
+     (Controller : not null access DMA_Controller;
+      Stream     : DMA_Stream_Selector;
+      ID         : Ada.Interrupts.Interrupt_ID)
+   is
 
-   type Audio_Volume is new Natural range 0 .. 100;
+      procedure Start
+        (Destination : Address;
+         Source_0    : Address;
+         Source_1    : Address;
+         Data_Count  : UInt16);
 
-   type Audio_Frequency is
-     (Audio_Freq_8kHz,
-      Audio_Freq_11kHz,
-      Audio_Freq_16kHz,
-      Audio_Freq_22kHz,
-      Audio_Freq_32kHz,
-      Audio_Freq_44kHz,
-      Audio_Freq_48kHz,
-      Audio_Freq_96kHz)
-     with Size => 32;
-   for Audio_Frequency use
-     (Audio_Freq_8kHz  =>  8_000,
-      Audio_Freq_11kHz => 11_025,
-      Audio_Freq_16kHz => 16_000,
-      Audio_Freq_22kHz => 22_050,
-      Audio_Freq_32kHz => 32_000,
-      Audio_Freq_44kHz => 44_100,
-      Audio_Freq_48kHz => 48_000,
-      Audio_Freq_96kHz => 96_000);
+      entry Wait_For_Transfer_Complete;
 
-   type Audio_Stream is limited interface;
+      function Not_In_Transfer return Address;
 
-   procedure Set_Frequency (This      : in out Audio_Stream;
-                            Frequency : Audio_Frequency) is abstract;
+   private
+      procedure Interrupt_Handler;
+      pragma Attach_Handler (Interrupt_Handler, ID);
 
-   procedure Transmit (This : in out Audio_Stream;
-                       Data : Audio_Buffer) is abstract;
+      Interrupt_Triggered : Boolean := False;
+      Buffer_0            : Address := Null_Address;
+      Buffer_1            : Address := Null_Address;
+   end Double_Buffer_Controller;
 
-   procedure Receive (This : in out Audio_Stream;
-                      Data : out Audio_Buffer) is abstract;
+   Audio_TX_DMA        : STM32.DMA.DMA_Controller renames DMA_1;
+   Audio_TX_DMA_Chan   : STM32.DMA.DMA_Channel_Selector renames STM32.DMA.Channel_0;
+   Audio_TX_DMA_Stream : STM32.DMA.DMA_Stream_Selector renames STM32.DMA.Stream_5;
+   Audio_TX_DMA_Int    : Double_Buffer_Controller (Audio_TX_DMA'Access,
+                                                   Audio_TX_DMA_Stream,
+                                                   Ada.Interrupts.Names.DMA1_Stream5_Interrupt);
 
-end HAL.Audio;
+end Audio_Stream;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,44 +29,62 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces; use Interfaces;
+--  This is a demo of the features available on the STM32F4-DISCOVERY board.
+--
+--  Press the blue button to change the note of the sound played in the
+--  headphone jack. Press the black button to reset.
 
-package HAL.Audio is
+with HAL;                  use HAL;
+with STM32.Device;         use STM32.Device;
+with STM32.Board;          use STM32.Board;
+with HAL.Audio;            use HAL.Audio;
+with Simple_Synthesizer;
+with Audio_Stream;         use Audio_Stream;
+with System;               use System;
+with Interfaces;           use Interfaces;
+with STM32.User_Button;
 
-   type Audio_Buffer is array (Natural range <>) of Integer_16
-     with Component_Size => 16, Alignment => 16;
+procedure Main is
 
-   type Audio_Volume is new Natural range 0 .. 100;
+   Synth : Simple_Synthesizer.Synthesizer
+     (Stereo    => True,
+      Amplitude => Natural (Integer_16'Last / 3));
+   Audio_Data_0 : Audio_Buffer (1 .. 64);
+   Audio_Data_1 : Audio_Buffer (1 .. 64);
+   Note : Float := 110.0;
+begin
+   Initialize_LEDs;
 
-   type Audio_Frequency is
-     (Audio_Freq_8kHz,
-      Audio_Freq_11kHz,
-      Audio_Freq_16kHz,
-      Audio_Freq_22kHz,
-      Audio_Freq_32kHz,
-      Audio_Freq_44kHz,
-      Audio_Freq_48kHz,
-      Audio_Freq_96kHz)
-     with Size => 32;
-   for Audio_Frequency use
-     (Audio_Freq_8kHz  =>  8_000,
-      Audio_Freq_11kHz => 11_025,
-      Audio_Freq_16kHz => 16_000,
-      Audio_Freq_22kHz => 22_050,
-      Audio_Freq_32kHz => 32_000,
-      Audio_Freq_44kHz => 44_100,
-      Audio_Freq_48kHz => 48_000,
-      Audio_Freq_96kHz => 96_000);
+   Initialize_Audio;
+   STM32.User_Button.Initialize;
 
-   type Audio_Stream is limited interface;
 
-   procedure Set_Frequency (This      : in out Audio_Stream;
-                            Frequency : Audio_Frequency) is abstract;
+   Synth.Set_Frequency (STM32.Board.Audio_Rate);
+   STM32.Board.Audio_DAC.Set_Volume (60);
 
-   procedure Transmit (This : in out Audio_Stream;
-                       Data : Audio_Buffer) is abstract;
+   STM32.Board.Audio_DAC.Play;
 
-   procedure Receive (This : in out Audio_Stream;
-                      Data : out Audio_Buffer) is abstract;
+   Audio_TX_DMA_Int.Start (Destination => STM32.Board.Audio_I2S.Data_Register_Address,
+                           Source_0    => Audio_Data_0'Address,
+                           Source_1    => Audio_Data_1'Address,
+                           Data_Count  => Audio_Data_0'Length);
 
-end HAL.Audio;
+   loop
+      if STM32.User_Button.Has_Been_Pressed then
+         Note := Note * 2.0;
+         if Note > 880.0 then
+            Note := 110.0;
+         end if;
+      end if;
+
+      Synth.Set_Note_Frequency (Note);
+      Audio_TX_DMA_Int.Wait_For_Transfer_Complete;
+
+      if Audio_TX_DMA_Int.Not_In_Transfer = Audio_Data_0'Address then
+         Synth.Receive (Audio_Data_0);
+      else
+         Synth.Receive (Audio_Data_1);
+      end if;
+
+   end loop;
+end Main;

@@ -1,0 +1,17 @@
+with "../../../boards/stm32f407_discovery/stm32f407_discovery.gpr";
+
+project Simple_Audio extends "../../shared/common/common.gpr" is
+
+  for Runtime ("Ada") use STM32F407_Discovery'Runtime ("Ada");
+  for Target use "arm-eabi";
+  for Main use ("main.adb");
+  for Languages use ("Ada");
+  for Source_Dirs use ("src");
+  for Object_Dir use "obj";
+  for Create_Missing_Dirs use "True";
+   
+  package Linker is
+     for Default_Switches ("Ada") use ("-Wl,--print-memory-usage");
+  end Linker;
+
+end Simple_Audio;
