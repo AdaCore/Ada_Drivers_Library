@@ -182,10 +182,28 @@ private
       Pt      : Point);
 
    overriding
+   procedure Set_Pixel
+     (Buffer  : in out SSD1306_Bitmap_Buffer;
+      Pt      : Point;
+      Color   : Bitmap_Color);
+
+   overriding
+   procedure Set_Pixel
+     (Buffer  : in out SSD1306_Bitmap_Buffer;
+      Pt      : Point;
+      Raw     : UInt32);
+
+   overriding
    function Pixel
      (Buffer : SSD1306_Bitmap_Buffer;
       Pt     : Point)
       return Bitmap_Color;
+
+   overriding
+   function Pixel
+     (Buffer : SSD1306_Bitmap_Buffer;
+      Pt     : Point)
+      return UInt32;
 
    SSD1306_I2C_Addr : constant := 16#78#;
 
