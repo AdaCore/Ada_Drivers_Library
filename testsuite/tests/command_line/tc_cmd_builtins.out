@@ -1,0 +1,12 @@
+$ help
+Here is the list of commands available:
+ - help
+ - echo
+Use 'help <command name>' for more information.
+$ help echo
+Usage: echo [-n] [STRING]...
+Display text.
+ -n : Do no output the trailing newline
+$ echo -n test
+test$ echo test
+test

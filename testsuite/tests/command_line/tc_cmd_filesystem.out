@@ -1,0 +1,37 @@
+$ help
+Here is the list of commands available:
+ - cat
+ - touch
+ - rmdir
+ - ls
+ - help
+ - echo
+Use 'help <command name>' for more information.
+$ help ls
+Usage: ls [-a] [-r|-R] [FILE]...
+List information about files and directories.
+ -a     : do not ignore hidden files or directories
+ -r, -R : list subdirectories recursively
+$ ls /test_dir/test_material
+sub1 sub2 test.txt
+$ ls -r /test_dir/test_material
+/test_dir/test_material:
+sub1 sub2 test.txt
+/test_dir/test_material/sub1:
+test.txt
+/test_dir/test_material/sub2:
+sub2-1 test.txt
+/test_dir/test_material/sub2/sub2-1:
+test.txt
+$ ls -r -a /test_dir/test_material
+/test_dir/test_material:
+sub1 sub2 test.txt
+/test_dir/test_material/sub1:
+test.txt
+/test_dir/test_material/sub2:
+sub2-1 test.txt
+/test_dir/test_material/sub2/sub2-1:
+test.txt
+$ cat /test_dir/test_material/test.txt
+Text in a file
+

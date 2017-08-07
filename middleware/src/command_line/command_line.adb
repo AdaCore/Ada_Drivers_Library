@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2017, AdaCore                       --
+--                     Copyright (C) 2017-2018, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -142,7 +142,7 @@ package body Command_Line is
 
          --  No arguments, display the list of commands
 
-         Put_Line ("Here's the list of command available:");
+         Put_Line ("Here is the list of commands available:");
          while Cmd_Driver /= null loop
             Put_Line (" - " & Cmd_Driver.Name);
             Cmd_Driver := Cmd_Driver.Next;
