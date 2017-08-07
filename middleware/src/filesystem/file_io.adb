@@ -514,7 +514,7 @@ package body File_IO is
       Start_Index : out Natural)
    is
    begin
-      if Path (Path'First) /= '/' then
+      if Path'Length >= 1 and then Path (Path'First) /= '/' then
          FS := null;
          Start_Index := 0;
 
