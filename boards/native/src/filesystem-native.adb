@@ -511,7 +511,9 @@ package body Filesystem.Native is
                    Read_Only => False,
                    Hidden    => False,
                    Symlink   => False,
-                   Size      => File_Size (Ada.Directories.Size (E))));
+                   Size      => (if Kind = Ada.Directories.Ordinary_File then
+                                    File_Size (Ada.Directories.Size (E))
+                                 else 0)));
             end if;
          end;
       end loop;
