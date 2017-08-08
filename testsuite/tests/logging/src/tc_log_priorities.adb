@@ -23,7 +23,8 @@ procedure TC_Log_Priorities is
       Length : Natural;
       Prio   : Natural;
    begin
-      if Log.Pop (Str, Length, Prio) then
+      Log.Pop (Str, Length, Prio);
+      if Length /= 0 then
          Ada.Text_IO.Put_Line ("Prio:" & Prio'Img & " -> " &
                                  Str (Str'First .. Str'First + Length - 1));
       else

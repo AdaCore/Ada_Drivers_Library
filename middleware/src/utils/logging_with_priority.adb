@@ -189,10 +189,9 @@ package body Logging_With_Priority is
    -- Pop --
    ---------
 
-   function Pop (Str    : out String;
-                 Length : out Natural;
-                 Prio   : out Priorities)
-                 return Boolean
+   procedure Pop (Str    : out String;
+                  Length : out Natural;
+                  Prio   : out Priorities)
    is
       Top_Id : Message_Id := Queue (Queue'First);
    begin
@@ -216,9 +215,8 @@ package body Logging_With_Priority is
             end loop;
             Queue (Queue'Last) := Invalid_Id;
          end;
-         return True;
       else
-         return False;
+         Length := 0;
       end if;
    end Pop;
 

@@ -57,9 +57,9 @@ package body Logging is
    function Priority (Cat : Categories) return Priorities renames Log_Categories.Priority;
    procedure Set_Priority (Cat : Categories; Prio : Priorities) renames Log_Categories.Set_Priority;
 
-   function Pop (Str    : out String;
-                 Length : out Natural;
-                 Prio   : out Priorities)
-                 return Boolean renames Log_Prio.Pop;
+   procedure Pop (Str    : out String;
+                  Length : out Natural;
+                  Prio   : out Priorities)
+                  renames Log_Prio.Pop;
 
 end Logging;

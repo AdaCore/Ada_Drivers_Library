@@ -123,10 +123,9 @@ package Logging is
    -- Output --
    ------------
 
-   function Pop (Str    : out String;
-                 Length : out Natural;
-                 Prio   : out Priorities)
-                 return Boolean
+   procedure Pop (Str    : out String;
+                  Length : out Natural;
+                  Prio   : out Priorities)
      with Pre => Str'Length = Maximum_Message_Length;
    --  Remove the top priority message from the queue
 

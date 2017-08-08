@@ -54,11 +54,11 @@ package Logging_With_Priority is
    --  The message might be reject later if the queue is full and a message
    --  with higher priority is inserted.
 
-   function Pop (Str    : out String;
-                 Length : out Natural;
-                 Prio   : out Priorities)
-                 return Boolean
+   procedure Pop (Str    : out String;
+                  Length : out Natural;
+                  Prio   : out Priorities)
      with Pre => Str'Length = Maximum_Message_Length;
-   --  Remove the top priority message from the queue
+   --  Remove the top priority message from the queue. Length will be zero when
+   --  there's no message in the queue.
 
 end Logging_With_Priority;
