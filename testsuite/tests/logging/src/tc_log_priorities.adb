@@ -44,6 +44,11 @@ procedure TC_Log_Priorities is
       Log.Log_Line ("Prio 1 - 2", 1);
       Log.Log_Line ("Prio 5 - 2", 5);
       Log.Log_Line ("Prio 8 - 1", 8);
+
+      if not Log.Full then
+         raise Program_Error with "The queue should be full";
+      end if;
+
    end Fill_Queue;
 
    -----------------
@@ -56,6 +61,10 @@ procedure TC_Log_Priorities is
       for Cnt in 1 .. 6 loop
          Pop_And_Print;
       end loop;
+
+      if not Log.Empty then
+         raise Program_Error with "The queue should be empty";
+      end if;
    end Empty_Queue;
 
 

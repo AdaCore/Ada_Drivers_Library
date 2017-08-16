@@ -129,4 +129,10 @@ package Logging is
      with Pre => Str'Length = Maximum_Message_Length;
    --  Remove the top priority message from the queue
 
+   function Full return Boolean;
+   --  Return True if the message queue is full
+
+   function Empty return Boolean;
+   --  Return True if the message queue is empty
+
 end Logging;

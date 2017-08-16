@@ -62,14 +62,9 @@ package body Logging_With_Priority is
 
    procedure Deallocate (Id : in out Message_Id);
 
-   function Queue_Not_Full return Boolean
-   is (Queue (Queue'Last) = Invalid_Id)
-   with Ghost;
-   --  If the last element is an invalid message ID, the queue is not full
-
    procedure Insert_Fifo_Within_Priorities (Id   : Valid_Message_Id;
                                             Prio : Priorities)
-     with Pre => Queue_Not_Full;
+     with Pre => not Full;
 
    --------------
    -- Allocate --
@@ -219,5 +214,26 @@ package body Logging_With_Priority is
          Length := 0;
       end if;
    end Pop;
+
+   ----------
+   -- Full --
+   ----------
+
+   function Full return Boolean is
+   begin
+      --  If the last element is not an invalid message ID, the queue is not
+      --  full.
+      return Queue (Queue'Last) /= Invalid_Id;
+   end Full;
+
+   -----------
+   -- Empty --
+   -----------
+
+   function Empty return Boolean is
+   begin
+      --  If the first element is an invalid message ID, the queue is empty
+      return Queue (Queue'First) = Invalid_Id;
+   end Empty;
 
 end Logging_With_Priority;
