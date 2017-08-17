@@ -61,4 +61,10 @@ package Logging_With_Priority is
    --  Remove the top priority message from the queue. Length will be zero when
    --  there's no message in the queue.
 
+   function Full return Boolean;
+   --  Return True if the message queue is full
+
+   function Empty return Boolean;
+   --  Return True if the message queue is empty
+
 end Logging_With_Priority;

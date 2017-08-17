@@ -64,9 +64,17 @@ begin
    Log.Set_Priority (Error, 3);
    Log.Log_Line (Error, "Error, prio 3");
 
+   if not Log.Full then
+      Ada.Text_IO.Put_Line ("The queue should be full");
+   end if;
+
    for Cnt in 1 .. 7 loop
       Pop_And_Print;
    end loop;
+
+   if not Log.Empty then
+      Ada.Text_IO.Put_Line ("The queue should be empty");
+   end if;
 
    Ada.Text_IO.Put_Line ("--- Log test end ---");
 end TC_Log_Prio_And_Cat;

@@ -61,5 +61,7 @@ package body Logging is
                   Length : out Natural;
                   Prio   : out Priorities)
                   renames Log_Prio.Pop;
+   function Full return Boolean renames Log_Prio.Full;
+   function Empty return Boolean renames Log_Prio.Empty;
 
 end Logging;
