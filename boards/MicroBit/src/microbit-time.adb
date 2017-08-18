@@ -40,7 +40,7 @@ package body MicroBit.Time is
 
    package Clocks renames nRF51.Clock;
 
-   Clock_Ms  : Time_Ms := 0;
+   Clock_Ms  : Time_Ms := 0 with Volatile;
    Period_Ms : constant Time_Ms := 1;
 
    Subscribers : array (1 .. 10) of Tick_Callback := (others => null);
@@ -188,6 +188,56 @@ package body MicroBit.Time is
       end loop;
       return False;
    end Tick_Unsubscribe;
+
+   ---------------
+   -- HAL_Delay --
+   ---------------
+
+   Delay_Instance : aliased MB_Delays;
+
+   function HAL_Delay return not null HAL.Time.Any_Delays is
+   begin
+      return Delay_Instance'Access;
+   end HAL_Delay;
+
+   ------------------------
+   -- Delay_Microseconds --
+   ------------------------
+
+   overriding
+   procedure Delay_Microseconds (This : in out MB_Delays;
+                                 Us   : Integer)
+   is
+      pragma Unreferenced (This);
+   begin
+      Delay_Ms (UInt64 (Us / 1000));
+   end Delay_Microseconds;
+
+   ------------------------
+   -- Delay_Milliseconds --
+   ------------------------
+
+   overriding
+   procedure Delay_Milliseconds (This : in out MB_Delays;
+                                 Ms   : Integer)
+   is
+      pragma Unreferenced (This);
+   begin
+      Delay_Ms (UInt64 (Ms));
+   end Delay_Milliseconds;
+
+   -------------------
+   -- Delay_Seconds --
+   -------------------
+
+   overriding
+   procedure Delay_Seconds (This : in out MB_Delays;
+                            S    : Integer)
+   is
+      pragma Unreferenced (This);
+   begin
+      Delay_Ms (UInt64 (S * 1000));
+   end Delay_Seconds;
 
 begin
    Initialize;
