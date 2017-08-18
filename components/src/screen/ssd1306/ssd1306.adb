@@ -478,4 +478,17 @@ package body SSD1306 is
       end if;
    end Pixel;
 
+   ----------
+   -- Fill --
+   ----------
+
+   overriding
+   procedure Fill
+     (Buffer : in out SSD1306_Bitmap_Buffer)
+   is
+      Val : constant UInt8 := (if Buffer.Native_Source /= 0 then 16#FF# else 0);
+   begin
+      Buffer.Data := (others => Val);
+   end Fill;
+
 end SSD1306;

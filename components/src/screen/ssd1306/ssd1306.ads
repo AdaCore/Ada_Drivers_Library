@@ -205,6 +205,10 @@ private
       Pt     : Point)
       return UInt32;
 
+   overriding
+   procedure Fill
+     (Buffer : in out SSD1306_Bitmap_Buffer);
+
    SSD1306_I2C_Addr : constant := 16#78#;
 
    type Bit_Array is array (Natural range <>) of Bit with Pack;
