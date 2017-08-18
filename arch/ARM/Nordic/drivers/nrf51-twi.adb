@@ -120,6 +120,8 @@ package body nRF51.TWI is
    is
       pragma Unreferenced (Timeout);
       Index : Integer := Data'First + 1;
+      Evt_Err : UInt32;
+      Err_Src : ERRORSRC_Register with Unreferenced;
    begin
       if Data'Length = 0 then
          Status := Ok;
@@ -132,7 +134,7 @@ package body nRF51.TWI is
       This.Periph.ERRORSRC.DNACK   := Errorsrc_Dnack_Field_Reset;
 
       --  Set Address
-      This.Periph.ADDRESS.ADDRESS := UInt7 (Addr);
+      This.Periph.ADDRESS.ADDRESS := UInt7 (Addr / 2);
 
       --  Prepare first byte
       This.Periph.TXD.TXD := Data (Data'First);
@@ -144,7 +146,9 @@ package body nRF51.TWI is
 
          loop
 
-            if This.Periph.EVENTS_ERROR /= 0 then
+            Evt_Err := This.Periph.EVENTS_ERROR;
+            if Evt_Err /= 0 then
+               Err_Src := This.Periph.ERRORSRC;
                Status := Err_Error;
                --  Clear the error
                This.Periph.EVENTS_ERROR := 0;
