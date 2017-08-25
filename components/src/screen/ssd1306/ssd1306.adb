@@ -115,7 +115,12 @@ package body SSD1306 is
       Write_Command (This, COM_SCAN_DEC);
 
       Write_Command (This, SET_COMPINS);
-      Write_Command (This, 16#02#);
+      if This.Height > 32 then
+         Write_Command (This, 16#12#);
+      else
+         Write_Command (This, 16#02#);
+      end if;
+
       Write_Command (This, SET_CONTRAST);
       Write_Command (This, 16#AF#);
 
@@ -297,7 +302,7 @@ package body SSD1306 is
       if Layer /= 1 or else Mode /= M_1 then
          raise Program_Error;
       end if;
-      This.Memory_Layer.Actual_Width := This.Width;
+      This.Memory_Layer.Actual_Width  := This.Width;
       This.Memory_Layer.Actual_Height := This.Height;
       This.Memory_Layer.Addr := This.Memory_Layer.Data'Address;
       This.Memory_Layer.Actual_Color_Mode := Mode;
@@ -401,7 +406,7 @@ package body SSD1306 is
    is
       X     : constant Natural := Buffer.Width - 1 - Pt.X;
       Y     : constant Natural := Buffer.Height - 1 - Pt.Y;
-      Index : constant Natural :=  X + (Y / 8) * Buffer.Actual_Width;
+      Index : constant Natural := X + (Y / 8) * Buffer.Actual_Width;
       Byte  : UInt8 renames Buffer.Data (Buffer.Data'First + Index);
    begin
 
