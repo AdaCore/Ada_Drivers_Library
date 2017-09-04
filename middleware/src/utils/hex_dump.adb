@@ -34,7 +34,8 @@ with HAL; use HAL;
 package body Hex_Dump is
 
    procedure Hex_Dump (Data     : HAL.UInt8_Array;
-                       Put_Line : Put_Line_Procedure)
+                       Put_Line : Put_Line_Procedure;
+                       Base_Addr : HAL.UInt64 := 0)
    is
 
       function UInt8_To_Char (Val : UInt8) return Character;
@@ -91,7 +92,7 @@ package body Hex_Dump is
       --------------------
 
       procedure Start_New_Line is
-         Addr_Val : UInt64 := UInt64 (Addr);
+         Addr_Val : UInt64 := UInt64 (Addr) + Base_Addr;
       begin
 
          --  Address

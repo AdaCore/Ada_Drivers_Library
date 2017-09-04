@@ -35,7 +35,8 @@ package Hex_Dump is
 
    type Put_Line_Procedure is access procedure (Str : String);
 
-   procedure Hex_Dump (Data     : HAL.UInt8_Array;
-                       Put_Line : Put_Line_Procedure);
+   procedure Hex_Dump (Data      : HAL.UInt8_Array;
+                       Put_Line  : Put_Line_Procedure;
+                       Base_Addr : HAL.UInt64 := 0);
 
 end Hex_Dump;
