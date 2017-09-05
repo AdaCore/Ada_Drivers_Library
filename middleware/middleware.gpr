@@ -8,6 +8,7 @@ library project Middleware is
       "src/BLE",
       "src/utils",
       "src/audio",
+      "src/monitor",
       "src/bitmap");
 
    for Languages use ("Ada");
