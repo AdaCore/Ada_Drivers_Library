@@ -1,6 +1,6 @@
 We understand that there might be some confusion between the two repositories
 `Ada_Drivers_Library` and `bb-runtimes`. Who does what? What should go where?
-This page will try to provide and answer.
+This page will try to provide an answer.
 
 Don't hesitate to ask more questions on this subject or suggest improvements to
 this page.
