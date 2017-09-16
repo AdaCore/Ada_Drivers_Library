@@ -783,15 +783,14 @@ package body Filesystem.FAT.Directories is
       Ret      : Entry_Index;
       Cluster  : Cluster_Type := Parent.Start_Cluster;
       Block    : Block_Offset := Cluster_To_Block (Parent.FS.all, Cluster);
-      Index    : Entry_Index := 0;
-
    begin
+      Parent.Current_Index := 0;
       loop
          Status := Next_Entry
            (Parent.FS,
             Current_Cluster => Cluster,
             Current_Block   => Block,
-            Current_Index   => Index,
+            Current_Index   => Parent.Current_Index,
             DEntry          => D_Entry);
 
          if Status /= OK then
@@ -800,8 +799,8 @@ package body Filesystem.FAT.Directories is
 
          if D_Entry.Attributes = VFAT_Directory_Entry_Attribute then
             if Sequence = 0 then
-               --  Current_Index points to the next unread value.
-               --  So the just read entry is at Current_Index - 1
+               --  Parent.Current_Index points to the next unread value.
+               --  So the just read entry is at Parent.Current_Index - 1
                Ret := Parent.Current_Index - 1;
             end if;
 
