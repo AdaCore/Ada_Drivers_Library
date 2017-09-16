@@ -22,6 +22,7 @@ procedure TC_FAT_Write is
    function Write_File (Filename : String) return String;
    function Check_File (Filename : String; Md5 : String) return Boolean;
    function Delete_Tree (Filename : String) return Boolean;
+   function Check_Read_Test_Dir return Boolean;
 
    ----------------
    -- Write_File --
@@ -84,6 +85,7 @@ procedure TC_FAT_Write is
       if Size (FD) /= Test_File_Size then
          Put_Line ("Error: wrong file size: " & Size (FD)'Img &
                      " (expected " & Test_File_Size'Img & ")");
+         return False;
       end if;
 
       declare
@@ -153,6 +155,28 @@ procedure TC_FAT_Write is
       end if;
    end Delete_Tree;
 
+   -------------------------
+   -- Check_Read_Test_Dir --
+   -------------------------
+
+   function Check_Read_Test_Dir return Boolean is
+      Dir      : Directory_Descriptor;
+      Status   : Status_Code;
+      Filename : constant String := "/disk_img/read_test/";
+   begin
+      Status := Open (Dir, Filename);
+
+      if Status /= OK then
+         Put_Line ("Cannot open directory: '" & Filename & "'");
+         Put_Line ("Status: " & Status'Img);
+         return False;
+      else
+         Close (Dir);
+         return True;
+      end if;
+   end Check_Read_Test_Dir;
+
+
    Disk_Img_Path      : constant String := "/" & Test_Dir_Mount_Name & "/fat.fs";
    Copy_Disk_Img_Path : constant String := "/" & Test_Dir_Mount_Name & "/obj/fat.fs.copy";
    Disk               : aliased File_Block_Driver;
@@ -160,6 +184,7 @@ procedure TC_FAT_Write is
 
    Status       : Status_Code;
    HALFS_Status : HAL.Filesystem.Status_Code;
+
 begin
 
    Test_Directories.Mount_Test_Directory;
@@ -195,14 +220,32 @@ begin
          return;
       end if;
 
+      --  Check if the "read_test" directory is here
+      if Check_Read_Test_Dir then
+         Put_Line ("PASS");
+      else
+         Put_Line ("FAIL");
+      end if;
+
+
       --  Make some room for the file that we will create
-      if not Delete_Tree ("/disk_img/read_test") then
-         Put_Line ("Cannot delete directory");
+      if not Delete_Tree ("/disk_img/read_test/lvl1_b") then
+         Put_Line ("Cannot delete directory lvl1_b");
+      end if;
+      if not Delete_Tree ("/disk_img/read_test/lvl1_c") then
+         Put_Line ("Cannot delete directory lvl1_c");
       end if;
 
       if Check_File (Filename => "/disk_img/write_test",
                      Md5      => Write_File ("/disk_img/write_test"))
       then
+         Put_Line ("PASS");
+      else
+         Put_Line ("FAIL");
+      end if;
+
+      --  Check if the "read_test" directory is still here
+      if Check_Read_Test_Dir then
          Put_Line ("PASS");
       else
          Put_Line ("FAIL");
