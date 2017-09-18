@@ -353,6 +353,12 @@ package HAL.SDMMC is
       App_Cmd            => (Cmd => App_Cmd,
                              Rsp => Rsp_R1,
                              Tfr => Tfr_No),
+      Write_Single_Block => (Cmd => Write_Single_Block,
+                             Rsp => Rsp_R1,
+                             Tfr => Tfr_Write),
+      Write_Multi_Block  => (Cmd => Write_Multi_Block,
+                             Rsp => Rsp_R1,
+                             Tfr => Tfr_Write_Multi),
       others             => (Cmd => 0,
                              Rsp => Rsp_Invalid,
                              Tfr => Tfr_Invalid));
