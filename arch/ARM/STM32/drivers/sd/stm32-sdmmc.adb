@@ -1074,6 +1074,12 @@ package body STM32.SDMMC is
          exit when not Get_Flag (This, TX_Active);
       end loop;
 
+      if Last_Operation (This) =
+        Write_Multiple_Blocks_Operation
+      then
+         Ret := Stop_Transfer (This);
+      end if;
+
       Clear_All_Status (This.TX_DMA_Int.Controller.all, This.TX_DMA_Int.Stream);
       Disable (This.TX_DMA_Int.Controller.all, This.TX_DMA_Int.Stream);
 
@@ -1288,9 +1294,9 @@ package body STM32.SDMMC is
       return Err;
    end Read_Blocks_DMA;
 
-   ---------------------
-   --  Write_Blocks_DMA
-   ---------------------
+   ----------------------
+   -- Write_Blocks_DMA --
+   ----------------------
 
    function Write_Blocks_DMA
      (This : in out SDMMC_Controller;
