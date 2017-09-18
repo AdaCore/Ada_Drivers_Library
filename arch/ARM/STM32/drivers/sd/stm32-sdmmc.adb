@@ -356,6 +356,10 @@ package body STM32.SDMMC is
    is
       CMD_Reg : CMD_Register  := This.Periph.CMD;
    begin
+      if Cmd.Rsp = Rsp_Invalid or else Cmd.Tfr = Tfr_Invalid then
+         raise Program_Error with "Not implemented";
+      end if;
+
       This.Periph.ARG := Arg;
       CMD_Reg.CMDINDEX := CMD_CMDINDEX_Field (Cmd.Cmd);
       CMD_Reg.WAITRESP := (case Cmd.Rsp is
