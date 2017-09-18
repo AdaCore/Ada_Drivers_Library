@@ -47,7 +47,7 @@ package body Monitor.Block_Drivers is
    begin
       if This.Enabled then
          This.Put_Line ("[START] read from block device at block #" &
-                          Block_Number'Img);
+                          Block_Number'Img & " Size:" & Data'Length'Img);
       end if;
 
       Ret := This.Driver_Under_Monitoring.Read (Block_Number, Data);
@@ -82,7 +82,7 @@ package body Monitor.Block_Drivers is
    begin
       if This.Enabled then
          This.Put_Line ("[START] write to block device at block #" &
-                          Block_Number'Img);
+                          Block_Number'Img & " Size:" & Data'Length'Img);
       end if;
 
       Ret := This.Driver_Under_Monitoring.Write (Block_Number, Data);
