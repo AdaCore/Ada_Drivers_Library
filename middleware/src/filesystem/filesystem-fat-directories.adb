@@ -1020,7 +1020,7 @@ package body Filesystem.FAT.Directories is
                elsif SName (J) in '0' .. '9' then
                   Idx := J;
                else
-                  SName (SName'Last - 2 .. SName'Last) := "~1";
+                  SName (SName'Last - 1 .. SName'Last) := "~1";
 
                   return;
                end if;
