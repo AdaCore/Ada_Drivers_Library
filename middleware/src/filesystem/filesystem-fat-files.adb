@@ -437,6 +437,10 @@ package body Filesystem.FAT.Files is
          return Access_Denied;
       end if;
 
+      if Data_Length = 0 then
+         return OK;
+      end if;
+
       --  Initialize the current cluster if not already done
       if File.Current_Cluster = 0 then
          Status := Next_Block (File);
