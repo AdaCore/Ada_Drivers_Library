@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -30,7 +30,8 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with HAL.UART; use HAL.UART;
+with HAL.UART;                 use HAL.UART;
+with HAL.Bitmap;               use HAL.Bitmap;
 
 package body AdaFruit.Thermal_Printer is
 
@@ -223,7 +224,41 @@ package body AdaFruit.Thermal_Printer is
          end loop;
          Write (This, Str);
 
-         --  delay until Clock + Microseconds (10000 * Str'Length);
+         This.Time.Delay_Microseconds (600 * Str'Length);
+      end loop;
+   end Print_Bitmap;
+
+   ------------------
+   -- Print_Bitmap --
+   ------------------
+
+   procedure Print_Bitmap (This : in out TP_Device;
+                           BM   : not null HAL.Bitmap.Any_Bitmap_Buffer)
+   is
+      Nbr_Of_Rows    : constant Natural := BM.Height;
+      Nbr_Of_Columns : constant Natural := BM.Width;
+      Str : String (1 .. Nbr_Of_Columns / 8);
+   begin
+
+      Write (This, ASCII.DC2 & 'v' &
+               To_Char (UInt8 (Nbr_Of_Rows rem 256)) &
+               To_Char (UInt8 (Nbr_Of_Rows / 256)));
+
+      for Row in 0 .. Nbr_Of_Rows - 1 loop
+         for Colum in 0 .. (Nbr_Of_Columns / 8) - 1 loop
+            declare
+               B : UInt8 := 0;
+               Str_Index : constant Natural := Str'First + Colum;
+            begin
+               for X in 0 .. 7 loop
+                  B := B or (if BM.Pixel (((Colum * 8) + X, Row)).Red < 127
+                             then 2**X else 0);
+               end loop;
+               Str (Str_Index) := To_Char (B);
+            end;
+         end loop;
+         Write (This, Str);
+
          This.Time.Delay_Microseconds (600 * Str'Length);
       end loop;
    end Print_Bitmap;
