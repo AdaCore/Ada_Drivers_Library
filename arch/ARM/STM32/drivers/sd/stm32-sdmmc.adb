@@ -356,6 +356,10 @@ package body STM32.SDMMC is
    is
       CMD_Reg : CMD_Register  := This.Periph.CMD;
    begin
+      if Cmd.Rsp = Rsp_Invalid or else Cmd.Tfr = Tfr_Invalid then
+         raise Program_Error with "Not implemented";
+      end if;
+
       This.Periph.ARG := Arg;
       CMD_Reg.CMDINDEX := CMD_CMDINDEX_Field (Cmd.Cmd);
       CMD_Reg.WAITRESP := (case Cmd.Rsp is
@@ -1070,6 +1074,12 @@ package body STM32.SDMMC is
          exit when not Get_Flag (This, TX_Active);
       end loop;
 
+      if Last_Operation (This) =
+        Write_Multiple_Blocks_Operation
+      then
+         Ret := Stop_Transfer (This);
+      end if;
+
       Clear_All_Status (This.TX_DMA_Int.Controller.all, This.TX_DMA_Int.Stream);
       Disable (This.TX_DMA_Int.Controller.all, This.TX_DMA_Int.Stream);
 
@@ -1284,9 +1294,9 @@ package body STM32.SDMMC is
       return Err;
    end Read_Blocks_DMA;
 
-   ---------------------
-   --  Write_Blocks_DMA
-   ---------------------
+   ----------------------
+   -- Write_Blocks_DMA --
+   ----------------------
 
    function Write_Blocks_DMA
      (This : in out SDMMC_Controller;

@@ -31,15 +31,18 @@
 
 with Ada.Command_Line;
 with Ada.Directories;
-with HAL.Filesystem;    use HAL.Filesystem;
-with Native.Filesystem; use Native.Filesystem;
+with Filesystem.Native; use Filesystem.Native;
 
 package Test_Directories is
-   Program_Abspath : constant Pathname := Native.Filesystem.Join
+   Program_Abspath : constant String := Filesystem.Native.Join
      (Ada.Directories.Current_Directory, Ada.Command_Line.Command_Name, False);
    --  Absolute path of the test executable
 
-   Test_Dir : constant Pathname := Ada.Directories.Containing_Directory
+   Test_Dir : constant String := Ada.Directories.Containing_Directory
      (Ada.Directories.Containing_Directory (Program_Abspath));
    --  Absolute path to the test directory
+
+   Test_Dir_Mount_Name : constant String := "test_dir";
+
+   procedure Mount_Test_Directory (Mount_Name : String := Test_Dir_Mount_Name);
 end Test_Directories;

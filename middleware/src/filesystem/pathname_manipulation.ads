@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2017, AdaCore                       --
+--                     Copyright (C) 2015-2016, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +29,11 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with File_IO;
+package Pathname_Manipulation is
 
-package Compare_Files is
+   procedure Root_Dir (Path        :     String;
+                       Start, Stop : out Integer);
 
-   function Compute_Hash (FD : in out File_IO.File_Descriptor)
-                          return String;
+   function Root_Dir (Path : String) return String;
 
-   function Binnary_Equal (A_Path, B_Path : String) return Boolean;
-
-end Compare_Files;
+end Pathname_Manipulation;

@@ -29,13 +29,32 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with File_IO;
+with File_IO;        use File_IO;
+with HAL.Filesystem;
 
-package Compare_Files is
+package body Test_Directories is
 
-   function Compute_Hash (FD : in out File_IO.File_Descriptor)
-                          return String;
+   use type HAL.Filesystem.Status_Code;
 
-   function Binnary_Equal (A_Path, B_Path : String) return Boolean;
+   FS : aliased Native_FS_Driver;
 
-end Compare_Files;
+   --------------------------
+   -- Mount_Test_Directory --
+   --------------------------
+
+   procedure Mount_Test_Directory
+     (Mount_Name : String := Test_Dir_Mount_Name)
+   is
+   begin
+      if FS.Create (Root_Dir => Test_Dir) /= HAL.Filesystem.OK then
+         raise Program_Error with "Cannot create native file system at '" &
+           Test_Dir & "'";
+      end if;
+
+      if Mount_Volume (Mount_Name, FS'Access) /= OK then
+         raise Program_Error with "Cannot mount native file system at '" &
+           Mount_Name & "'";
+      end if;
+   end Mount_Test_Directory;
+
+end Test_Directories;

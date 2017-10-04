@@ -29,13 +29,14 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with File_IO;
+with HAL;
 
-package Compare_Files is
+package Hex_Dump is
 
-   function Compute_Hash (FD : in out File_IO.File_Descriptor)
-                          return String;
+   type Put_Line_Procedure is access procedure (Str : String);
 
-   function Binnary_Equal (A_Path, B_Path : String) return Boolean;
+   procedure Hex_Dump (Data      : HAL.UInt8_Array;
+                       Put_Line  : Put_Line_Procedure;
+                       Base_Addr : HAL.UInt64 := 0);
 
-end Compare_Files;
+end Hex_Dump;

@@ -32,12 +32,20 @@
 --  Simulate a disk by readind into a file
 
 with HAL.Block_Drivers; use HAL.Block_Drivers;
-with HAL.Filesystem;    use HAL.Filesystem;
 with HAL;               use HAL;
+with File_IO;           use File_IO;
 
 package File_Block_Drivers is
 
-   type File_Block_Driver (File : not null Any_File_Handle) is new Block_Driver with private;
+   type File_Block_Driver is
+     limited new Block_Driver with private;
+
+   function Open (This : in out File_Block_Driver;
+                  Path : String;
+                  Mode : File_Mode)
+                  return Status_Code;
+
+   procedure Close (This : in out File_Block_Driver);
 
    overriding
    function Read
@@ -54,5 +62,9 @@ package File_Block_Drivers is
       return Boolean;
 
 private
-   type File_Block_Driver (File : not null Any_File_Handle) is new Block_Driver with null record;
+   type File_Block_Driver is
+     limited new Block_Driver with record
+      FD   : File_Descriptor;
+      Mode : File_Mode;
+   end record;
 end File_Block_Drivers;

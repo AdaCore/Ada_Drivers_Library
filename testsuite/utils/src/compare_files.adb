@@ -31,12 +31,44 @@
 
 with Ada.Streams;
 with Ada.Streams.Stream_IO;
-
+with File_IO;  use File_IO;
 with GNAT.MD5; use GNAT.MD5;
 
 package body Compare_Files is
 
    package Hash renames GNAT.MD5;
+
+   ------------------
+   -- Compute_Hash --
+   ------------------
+
+   function Compute_Hash (FD : in out File_IO.File_Descriptor)
+                          return String
+   is
+      Context : aliased GNAT.MD5.Context := GNAT.MD5.Initial_Context;
+
+      Buffer : Ada.Streams.Stream_Element_Array (1 .. 512);
+      Last   : Ada.Streams.Stream_Element_Offset;
+      Size   : File_Size;
+      Status : Status_Code;
+      pragma Unreferenced (Status);
+      use type Ada.Streams.Stream_Element_Offset;
+   begin
+      loop
+         Size := Buffer'Length;
+         Size := Read (FD,
+                       Addr   => Buffer'Address,
+                       Length => Size);
+         Last := Ada.Streams.Stream_Element_Offset (Size);
+         Hash.Update (Context, Buffer (1 .. Last));
+         exit when Last < Buffer'Last;
+      end loop;
+      return Hash.Digest (Context);
+   end Compute_Hash;
+
+   -------------------
+   -- Binnary_Equal --
+   -------------------
 
    function Binnary_Equal (A_Path, B_Path : String) return Boolean is
 
@@ -57,7 +89,6 @@ package body Compare_Files is
          loop
             Ada.Streams.Stream_IO.Read (File, Item => Buffer, Last => Last);
             Hash.Update (Context, Buffer (1 .. Last));
-            Ada.Streams.Stream_IO.Read (File, Item => Buffer, Last => Last);
             exit when Last < Buffer'Last;
          end loop;
          Ada.Streams.Stream_IO.Close (File);

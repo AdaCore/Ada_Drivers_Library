@@ -201,8 +201,8 @@ package STM32.Board is
    SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
                          Ada.Interrupts.Names.SDMMC2_Interrupt;
 
-   SD_Rx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream3;
-   SD_Tx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream6;
+   SD_Rx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream0;
+   SD_Tx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream5;
 
    SDCard_Device : aliased SDCard.SDCard_Controller (SDMMC_2'Access);
 

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                        Copyright (C) 2017, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,82 +29,95 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package body File_Block_Drivers is
+with Hex_Dump;
 
-   ----------
-   -- Open --
-   ----------
-
-   function Open (This : in out File_Block_Driver;
-                  Path : String;
-                  Mode : File_Mode)
-                  return Status_Code
-   is
-   begin
-      This.Mode := Mode;
-      return Open (This.FD, Path, Mode);
-   end Open;
-
-   -----------
-   -- Close --
-   -----------
-
-   procedure Close (This : in out File_Block_Driver) is
-   begin
-      Close (This.FD);
-   end Close;
-
+package body Monitor.Block_Drivers is
 
    ----------
    -- Read --
    ----------
 
-   overriding
-   function Read
-     (This         : in out File_Block_Driver;
+   overriding function Read
+     (This         : in out Block_Driver_Monitor;
       Block_Number : UInt64;
       Data         : out Block)
       return Boolean
    is
-      Amount : File_Size := File_Size (Block_Number * 512);
+      Ret : Boolean;
    begin
-
-      if This.Mode = Write_Only then
-         return False;
+      if This.Enabled then
+         This.Put_Line ("[START] read from block device at block #" &
+                          Block_Number'Img & " Size:" & Data'Length'Img);
       end if;
 
-      if Seek (This.FD, From_Start, Amount) /= OK then
-         return False;
+      Ret := This.Driver_Under_Monitoring.Read (Block_Number, Data);
+
+      if This.Enabled then
+         if Ret then
+            This.Put_Line ("[OK] read from block device at block #" &
+                             Block_Number'Img & " - Data:");
+            Hex_Dump.Hex_Dump (Data,
+                               This.Put_Line,
+                               Base_Addr => Block_Number * 512);
+         else
+            This.Put_Line ("[FAIL] read from block device at block #" &
+                             Block_Number'Img);
+         end if;
       end if;
 
-      Amount := Data'Length;
-      return Read (This.FD, Data'Address, Amount) = Amount;
+      return Ret;
    end Read;
 
-   ----------
-   -- Read --
-   ----------
+   -----------
+   -- Write --
+   -----------
 
-   overriding
-   function Write
-     (This         : in out File_Block_Driver;
+   overriding function Write
+     (This         : in out Block_Driver_Monitor;
       Block_Number : UInt64;
       Data         : Block)
       return Boolean
    is
-      Amount : File_Size := File_Size (Block_Number * 512);
+      Ret : Boolean;
    begin
-
-      if This.Mode = Read_Only then
-         return False;
+      if This.Enabled then
+         This.Put_Line ("[START] write to block device at block #" &
+                          Block_Number'Img & " Size:" & Data'Length'Img);
       end if;
 
-      if Seek (This.FD, From_Start, Amount) /= OK then
-         return False;
-      end if;
+      Ret := This.Driver_Under_Monitoring.Write (Block_Number, Data);
 
-      Amount := Data'Length;
-      return Write (This.FD, Data'Address, Amount) = Amount;
+      if This.Enabled then
+         if Ret then
+            This.Put_Line ("[OK] write to block device at block #" &
+                             Block_Number'Img & " - Data:");
+         else
+            This.Put_Line ("[FAIL] write to block device at block #" &
+                             Block_Number'Img & " - Data:");
+         end if;
+         Hex_Dump.Hex_Dump (Data,
+                            This.Put_Line,
+                            Base_Addr => Block_Number * 512);
+      end if;
+      return Ret;
    end Write;
 
-end File_Block_Drivers;
+   ------------
+   -- Enable --
+   ------------
+
+   procedure Enable (This : in out Block_Driver_Monitor) is
+   begin
+      This.Enabled := True;
+   end Enable;
+
+   -------------
+   -- Disable --
+   -------------
+
+   procedure Disable (This : in out Block_Driver_Monitor) is
+   begin
+      This.Enabled := False;
+   end Disable;
+
+end Monitor.Block_Drivers;

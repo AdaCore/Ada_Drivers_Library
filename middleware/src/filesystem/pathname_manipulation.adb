@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2017, AdaCore                       --
+--                     Copyright (C) 2015-2016, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +29,45 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with File_IO;
+package body Pathname_Manipulation is
 
-package Compare_Files is
+   --------------
+   -- Root_Dir --
+   --------------
 
-   function Compute_Hash (FD : in out File_IO.File_Descriptor)
-                          return String;
+   procedure Root_Dir (Path        :     String;
+                       Start, Stop : out Integer)
+   is
+   begin
+      Start := Path'First;
+      Stop := Start;
+      if Path'Length = 0 then
+         return;
+      end if;
 
-   function Binnary_Equal (A_Path, B_Path : String) return Boolean;
+      while Start <= Path'Last and then Path (Start) = '/' loop
+         Start := Start + 1;
+      end loop;
 
-end Compare_Files;
+      Stop := Start;
+      while Stop + 1 <= Path'Last and then Path (Stop + 1) /= '/' loop
+         Stop := Stop + 1;
+      end loop;
+   end Root_Dir;
+
+   --------------
+   -- Root_Dir --
+   --------------
+
+   function Root_Dir (Path : String) return String is
+      Start, Stop : Integer;
+   begin
+      Root_Dir (Path, Start, Stop);
+      if Start not in Path'Range or else Stop not in Path'Range then
+         return "";
+      else
+         return Path (Start .. Stop);
+      end if;
+   end Root_Dir;
+
+end Pathname_Manipulation;

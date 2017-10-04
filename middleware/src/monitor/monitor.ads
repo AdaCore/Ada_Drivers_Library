@@ -29,13 +29,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with File_IO;
+package Monitor is
 
-package Compare_Files is
-
-   function Compute_Hash (FD : in out File_IO.File_Descriptor)
-                          return String;
-
-   function Binnary_Equal (A_Path, B_Path : String) return Boolean;
-
-end Compare_Files;
+end Monitor;

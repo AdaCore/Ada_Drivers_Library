@@ -29,13 +29,44 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with File_IO;
+with HAL;               use HAL;
+with HAL.Block_Drivers; use HAL.Block_Drivers;
 
-package Compare_Files is
+package Monitor.Block_Drivers is
 
-   function Compute_Hash (FD : in out File_IO.File_Descriptor)
-                          return String;
+   type Put_Line_Procedure is access procedure (Str : String);
 
-   function Binnary_Equal (A_Path, B_Path : String) return Boolean;
+   type Block_Driver_Monitor
+     (Driver_Under_Monitoring : not null Any_Block_Driver;
+      Put_Line                : not null Put_Line_Procedure)
+   is new Block_Driver with private;
 
-end Compare_Files;
+   overriding
+   function Read
+     (This         : in out Block_Driver_Monitor;
+      Block_Number : UInt64;
+      Data         : out Block)
+     return Boolean;
+
+   overriding
+   function Write
+     (This         : in out Block_Driver_Monitor;
+      Block_Number : UInt64;
+      Data         : Block)
+     return Boolean;
+
+   procedure Enable (This : in out Block_Driver_Monitor);
+   --  Enable monitor's output (default)
+
+   procedure Disable (This : in out Block_Driver_Monitor);
+   --  Disable monitor's output
+
+private
+
+   type Block_Driver_Monitor
+     (Driver_Under_Monitoring : not null Any_Block_Driver;
+      Put_Line                : not null Put_Line_Procedure)
+   is new Block_Driver with record
+      Enabled : Boolean := True;
+   end record;
+end Monitor.Block_Drivers;

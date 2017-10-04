@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2017, AdaCore                       --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +29,15 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with File_IO;
+with HAL;            use HAL;
 
-package Compare_Files is
+package Filesystem is
 
-   function Compute_Hash (FD : in out File_IO.File_Descriptor)
-                          return String;
+   MAX_PATH_LENGTH  : constant := 1024;
+   --  Maximum size of a path name length
 
-   function Binnary_Equal (A_Path, B_Path : String) return Boolean;
+   subtype Block_Number is HAL.UInt64;
+   --  To account GUID partitions, and large disks, we need a 64-bit
+   --  representation
 
-end Compare_Files;
+end Filesystem;
