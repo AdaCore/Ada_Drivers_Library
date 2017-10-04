@@ -29,7 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL; use HAL;
+with HAL;      use HAL;
+with HAL.Time;
 
 package MicroBit.Time is
 
@@ -59,5 +60,22 @@ package MicroBit.Time is
           Post => (if Tick_Unsubscribe'Result then not Tick_Subscriber (Callback));
    --  Unsubscribe a callback to the tick event. The function return True on
    --  success, False if the callback was not a subscriber.
+
+   function HAL_Delay return not null HAL.Time.Any_Delays;
+private
+
+   type MB_Delays is new HAL.Time.Delays with null record;
+
+   overriding
+   procedure Delay_Microseconds (This : in out MB_Delays;
+                                 Us   : Integer);
+
+   overriding
+   procedure Delay_Milliseconds (This : in out MB_Delays;
+                                 Ms   : Integer);
+
+   overriding
+   procedure Delay_Seconds      (This : in out MB_Delays;
+                                 S    : Integer);
 
 end MicroBit.Time;
