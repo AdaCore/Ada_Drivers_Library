@@ -174,7 +174,6 @@ package body STM32.DMA2D_Bitmap is
       end if;
 
       declare
-         use type System.Address;
          S_Buf       : constant Memory_Mapped_Bitmap_Buffer'Class :=
                          Memory_Mapped_Bitmap_Buffer'Class (Src_Buffer);
          DMA_Buf_Src : constant DMA2D_Buffer := To_DMA2D_Buffer (S_Buf);
@@ -232,7 +231,6 @@ package body STM32.DMA2D_Bitmap is
       end if;
 
       declare
-         use type System.Address;
          S_Buf       : constant Memory_Mapped_Bitmap_Buffer'Class :=
                          Memory_Mapped_Bitmap_Buffer'Class (Src_Buffer);
          DMA_Buf_Src : constant DMA2D_Buffer := To_DMA2D_Buffer (S_Buf);

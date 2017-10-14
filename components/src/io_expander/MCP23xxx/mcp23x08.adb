@@ -294,7 +294,7 @@ package body MCP23x08 is
    begin
       This.Points (Pin) := (Device => This'Unchecked_Access,
                             Pin    => Pin);
-      return This.Points (Pin)'Unchecked_Access;
+      return This.Points (Pin)'Unrestricted_Access;
    end As_GPIO_Point;
 
    ----------

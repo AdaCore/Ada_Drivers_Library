@@ -402,7 +402,6 @@ package body RPi.Firmware is
 
    function Do_Transaction return Boolean
    is
-      use System.Storage_Elements;
       Res : UInt32 with Unreferenced;
       Ret : UInt32;
 

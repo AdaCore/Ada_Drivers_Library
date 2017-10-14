@@ -32,7 +32,6 @@
 with Ada.Real_Time;           use Ada.Real_Time;
 
 with HAL.SDMMC;               use HAL.SDMMC;
-with STM32_SVD.RCC;           use STM32_SVD.RCC;
 
 with STM32.Board;             use STM32.Board;
 with STM32.Device;            use STM32.Device;

@@ -50,8 +50,6 @@ package RPi is
 
 private
 
-   use type System.Storage_Elements.Integer_Address;
-
    function To_BUS (Address : System.Address) return BUS_Address is
      ((BUS_Address ((System.Storage_Elements.To_Integer (Address)))
        and 16#3fff_ffff#) or 16#C000_0000#);

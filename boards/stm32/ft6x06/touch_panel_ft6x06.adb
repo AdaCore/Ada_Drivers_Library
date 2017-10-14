@@ -38,8 +38,6 @@ with STM32.I2C;            use STM32.I2C;
 --  with STM32.GPIO;           use STM32.GPIO;
 with HAL.Touch_Panel;      use HAL.Touch_Panel;
 
-with FT6x06;               use FT6x06;
-
 with STM32.EXTI; use STM32.EXTI;
 with STM32.GPIO; use STM32.GPIO;
 
