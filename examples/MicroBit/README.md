@@ -65,7 +65,7 @@ Shawn Nock's GitHub repository: https://github.com/nocko/zfp-nrf51
 
 ```
 $ cd Ada_Drivers_Library/examples/MicroBit/
-$ git clone https://github.com/nocko/zfp-nrf51
+$ git clone https://github.com/Fabien-Chouteau/zfp-nrf51
 ```
 
 ## Open the example project and build it
