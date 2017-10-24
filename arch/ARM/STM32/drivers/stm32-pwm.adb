@@ -67,17 +67,24 @@ package body STM32.PWM is
      (This  : in out PWM_Modulator;
       Value : Percentage)
    is
-      Pulse : UInt16;
+      Pulse16 : UInt16;
+      Pulse32 : UInt32;
    begin
       This.Duty_Cycle := Value;
 
       if Value = 0 then
          Set_Compare_Value (This.Generator.all, This.Channel, UInt16'(0));
       else
-         Pulse := UInt16 ((Timer_Period (This) + 1) * UInt32 (Value) / 100) - 1;
-         --  for a Value of 0, the computation of Pulse wraps around to
-         --  65535, so we only compute it when not zero
-         Set_Compare_Value (This.Generator.all, This.Channel, Pulse);
+         --  for a Value of 0, the computation of Pulse wraps around, so we
+         --  only compute it when not zero
+
+         if Has_32bit_CC_Values (This.Generator.all) then
+            Pulse32 := UInt32 ((Timer_Period (This) + 1) * UInt32 (Value) / 100) - 1;
+            Set_Compare_Value (This.Generator.all, This.Channel, Pulse32);
+         else
+            Pulse16 := UInt16 ((Timer_Period (This) + 1) * UInt32 (Value) / 100) - 1;
+            Set_Compare_Value (This.Generator.all, This.Channel, Pulse16);
+         end if;
       end if;
    end Set_Duty_Cycle;
 
@@ -89,17 +96,23 @@ package body STM32.PWM is
      (This  : in out PWM_Modulator;
       Value : Microseconds)
    is
-      Pulse         : UInt16;
+      Pulse16       : UInt16;
+      Pulse32       : UInt32;
       Period        : constant UInt32 := Timer_Period (This) + 1;
       uS_Per_Period : constant UInt32 := Microseconds_Per_Period (This);
    begin
       if Value = 0 then
          Set_Compare_Value (This.Generator.all, This.Channel, UInt16'(0));
       else
-         Pulse := UInt16 ((Period * Value) / uS_Per_Period) - 1;
-         --  for a Value of 0, the computation of Pulse wraps around to
-         --  65535, so we only compute it when not zero
-         Set_Compare_Value (This.Generator.all, This.Channel, Pulse);
+         --  for a Value of 0, the computation of Pulse wraps around, so we
+         --  only compute it when not zero
+         if Has_32bit_CC_Values (This.Generator.all) then
+            Pulse32 := UInt32 ((Period / uS_Per_Period) * Value) - 1;
+            Set_Compare_Value (This.Generator.all, This.Channel, Pulse32);
+         else
+            Pulse16 := UInt16 ((Period * Value) / uS_Per_Period) - 1;
+            Set_Compare_Value (This.Generator.all, This.Channel, Pulse16);
+         end if;
       end if;
    end Set_Duty_Time;
 
