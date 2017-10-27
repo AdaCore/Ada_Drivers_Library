@@ -113,9 +113,67 @@ There are 4 seek modes available:
 
 Use `Flush` to force all buffered data to be written on the file.
 
-### Close
+### Close file
 
 Use `Close` to close the file descriptor and free the associated resources.
+
+### Opening a directory
+
+To open a directory, use the `Open` function:
+
+```ada
+   DD : Directory_Descriptor;
+begin
+   if Open (DD, "/host/tmp/") /= OK then
+      --  Error handling...
+   end if;
+```
+
+### Traversing a directory
+
+Use the `Read` function read a `Directory_Entry`:
+
+```ada
+type Directory_Entry (Name_Length : Natural) is record
+      Name         : String (1 .. Name_Length);
+      Subdirectory : Boolean;
+      Read_Only    : Boolean;
+      Hidden       : Boolean;
+      Symlink      : Boolean;
+      Size         : File_Size;
+end record;
+```
+
+Be careful, `Directory_Entry` is a discriminated type which means that once you
+have declared a variable of this type you can only assign a value with the same
+discriminant.
+
+For this reason, it's safer to always declare a new variable for each call to
+`Read`. Here is a typical example of how to traverse all the entries of a
+directory:
+
+```ada
+loop
+   declare
+      E : constant Directory_Entry := Read (DD);
+   begin
+
+      exit when E = Invalid_Dir_Entry;
+
+      --  Use the directory entry here
+
+   end;
+end loop;
+```
+
+Once you went through all the entries of the directory, the `Read` function
+will return `Invalid_Dir_Entry`.
+
+You can use the `Reset` function to start reading from the first entry again.
+
+### Close directory
+
+Use `Close` to close the directory descriptor and free the associated resources.
 
 ## Mounting a file system
 
