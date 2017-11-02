@@ -12,7 +12,7 @@ a file system` to learn how to add a file system.
 
 To open a file, use the `Open` function:
 
-```ada=
+```ada
    FD : File_Descriptor;
 begin
    if Open (FD, "/host/tmp/file.txt", Read_Only) /= OK then
@@ -27,7 +27,7 @@ You can open the file in `Read_Only`, `Write_Only` or `Read_Write` mode.
 Once the file descriptor is open in `Read_Only` or `Read_Write` mode you can
 use the `Read` function to get data from the file:
 
-```ada=
+```ada
 
    Data : HAL.UInt8_Array (1 .. 10);
 begin
@@ -43,7 +43,7 @@ value is the number of bytes actually read.
 A a safer and cleaner alternative is to use the generic function `Generic_Read`
 and instantiate it for the type of data that you want to read:
 
-```ada=
+```ada
    type Custom_Type is [...];
 
    function Read is new Generic_Read (Custom_Type);
@@ -58,7 +58,7 @@ begin
 
 Writing operations are very similar to the reading operations:
 
-```ada=
+```ada
 
    Data : HAL.UInt8_Array (1 .. 10) := (others => 0);
 begin
@@ -69,7 +69,7 @@ begin
 
 And the generic version:
 
-```ada=
+```ada
    type Custom_Type is [...];
 
    function Write is new Generic_Write (Custom_Type);
@@ -87,7 +87,7 @@ offset.
 
 `Offset` will give you the current value of the Offset.
 
-```ada=
+```ada
    Current_Offset : File_Size;
 begin
    Current_Offset := Offset (FD);
@@ -95,7 +95,7 @@ begin
 
 The function `Seek` is used to change the offset:
 
-```ada=
+```ada
    Amount : File_Size := 10;
 begin
    if Seek (FD, Forward, Amount) /= OK then
@@ -113,9 +113,67 @@ There are 4 seek modes available:
 
 Use `Flush` to force all buffered data to be written on the file.
 
-### Close
+### Close file
 
 Use `Close` to close the file descriptor and free the associated resources.
+
+### Opening a directory
+
+To open a directory, use the `Open` function:
+
+```ada
+   DD : Directory_Descriptor;
+begin
+   if Open (DD, "/host/tmp/") /= OK then
+      --  Error handling...
+   end if;
+```
+
+### Traversing a directory
+
+Use the `Read` function read a `Directory_Entry`:
+
+```ada
+type Directory_Entry (Name_Length : Natural) is record
+      Name         : String (1 .. Name_Length);
+      Subdirectory : Boolean;
+      Read_Only    : Boolean;
+      Hidden       : Boolean;
+      Symlink      : Boolean;
+      Size         : File_Size;
+end record;
+```
+
+Be careful, `Directory_Entry` is a discriminated type which means that once you
+have declared a variable of this type you can only assign a value with the same
+discriminant.
+
+For this reason, it's safer to always declare a new variable for each call to
+`Read`. Here is a typical example of how to traverse all the entries of a
+directory:
+
+```ada
+loop
+   declare
+      E : constant Directory_Entry := Read (DD);
+   begin
+
+      exit when E = Invalid_Dir_Entry;
+
+      --  Use the directory entry here
+
+   end;
+end loop;
+```
+
+Once you went through all the entries of the directory, the `Read` function
+will return `Invalid_Dir_Entry`.
+
+You can use the `Reset` function to start reading from the first entry again.
+
+### Close directory
+
+Use `Close` to close the directory descriptor and free the associated resources.
 
 ## Mounting a file system
 
@@ -123,7 +181,7 @@ To mount a file system you will need a file system driver. Please find below
 detailed instructions on how to instantiate and mount the different file
 systems available in `Ada_Drivers_Library`.
 
-```Ada=
+```Ada
    if Mount_Volume ("mount_point", A_File_System_Driver) /= OK then
       --  Error handling...
    end
@@ -138,7 +196,7 @@ Please note that for the moment only FAT file systems are supported.
 
 In `Ada_Drivers_Library` disk drive are accessed with a `Block_Driver` interface.
 
-```Ada=
+```Ada
    if Mount_Drive ("mount_point", A_Block_Driver) /= OK then
       --  Error handling...
    end if;
@@ -169,7 +227,7 @@ computer.
 
 To use the ARM semihosting file system you first have to declare it:
 
-```ada=
+```ada
 
 with Semihosting.Filesystem; use Semihosting.Filesystem;
 
@@ -181,7 +239,7 @@ package body My_Package is
 
 and finally, mount the file system:
 
-```ada=
+```ada
    if Mount_Volume ("host", Semihosting_FS'Access) /= OK then
       --  Error handling
    end if;
@@ -198,13 +256,13 @@ The native file system is used on non embedded platform (Windows, Linux, etc.)
 to provide access to the OS file system through the common interface of
 `Ada_Drivers_Library`. This is mostly useful for testing purposes.
 
-It is implemented in the package `Semihosting.Filesystem`.
+It is implemented in the package `Filesystem.Native`.
 
 #### How to mount a native file system
 
 To use the native file system you first have to declare it:
 
-```ada=
+```ada
 
 with Filesystem.Native; use Filesystem.Native;
 
@@ -217,7 +275,7 @@ package body My_Package is
 then use the `Create` function to specify which directory on the host file
 system will be the root of the Native file system driver:
 
-```ada=
+```ada
    if Native_FS.Create ("/home/username") /= OK then
       --  Error handling
    end if;
@@ -225,7 +283,7 @@ system will be the root of the Native file system driver:
 
 and finally, mount the file system:
 
-```ada=
+```ada
    if Mount_Volume ("mount_point", FS'Access) /= OK then
       --  Error handling
    end if;
