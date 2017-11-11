@@ -39,7 +39,7 @@ project Demo_GPIO extends "../../../../../examples/shared/common/common.gpr" is
          when "Production" =>
             for Default_Switches ("ada") use (
                 "-g",
-                "-O3",
+                "-O2",
                 "-gnatp",
                 "-gnatn2",    -- honor Inline requests
                 "-Winline",  -- warn if cannot honor Inline aspect/pragma

@@ -110,16 +110,16 @@ package body STM32.Board is
    ---------------------
 
    procedure Initialize_LEDs is
-      Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (All_LEDs);
 
-      Configuration.Mode        := Mode_Out;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Speed       := Speed_100MHz;
-      Configuration.Resistors   := Floating;
-      Configure_IO (All_LEDs,
-                    Config => Configuration);
+      Configure_IO
+        (All_LEDs,
+         (Mode        => Mode_Out,
+          Output_Type => Push_Pull,
+          Speed       => Speed_100MHz,
+          Resistors   => Floating));
+
       All_LEDs_Off;
    end Initialize_LEDs;
 
@@ -144,12 +144,12 @@ package body STM32.Board is
       Enable_Clock (Port);
       Reset (Port);
 
-      Configure_Alternate_Function (Points, GPIO_AF_I2C2_4);
       Configure_IO (Points,
-                    (Speed       => Speed_25MHz,
-                     Mode        => Mode_AF,
-                     Output_Type => Open_Drain,
-                     Resistors   => Floating));
+                    (AF_Speed       => Speed_25MHz,
+                     Mode           => Mode_AF,
+                     AF             => GPIO_AF_I2C2_4,
+                     AF_Output_Type => Open_Drain,
+                     Resistors      => Floating));
       Lock (Points);
    end Initialize_I2C_GPIO;
 

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2016, AdaCore                         --
+--                  Copyright (C) 2015-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -103,12 +103,9 @@ procedure Demo_DAC_Basic is
       Output : constant GPIO_Point := (if Output_Channel = Channel_1
                                        then DAC_Channel_1_IO
                                        else DAC_Channel_2_IO);
-      Config : GPIO_Port_Configuration;
    begin
       Enable_Clock (Output);
-      Config.Mode := Mode_Analog;
-      Config.Resistors := Floating;
-      Configure_IO (Output, Config);
+      Configure_IO (Output, (Mode => Mode_Analog, Resistors => Floating));
    end Configure_DAC_GPIO;
 
 begin

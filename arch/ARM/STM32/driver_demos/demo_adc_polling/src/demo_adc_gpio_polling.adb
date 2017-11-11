@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                  Copyright (C) 2016-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -76,7 +76,6 @@ procedure Demo_ADC_GPIO_Polling is
    Raw : UInt32 := 0;
 
    Successful : Boolean;
-   Timed_Out  : exception;
 
    procedure Print (X, Y : Natural; Value : String);
 
@@ -99,7 +98,7 @@ procedure Demo_ADC_GPIO_Polling is
    procedure Configure_Analog_Input is
    begin
       Enable_Clock (Input);
-      Configure_IO (Input, (Mode => Mode_Analog, others => <>));
+      Configure_IO (Input, (Mode => Mode_Analog, Resistors => Floating));
    end Configure_Analog_Input;
 
 begin
@@ -136,13 +135,12 @@ begin
 
       Poll_For_Status (Converter, Regular_Channel_Conversion_Complete, Successful);
       if not Successful then
-         raise Timed_Out;
+         Red_LED.Toggle;
+      else
+         Green_LED.Toggle;
+         Raw := UInt32 (Conversion_Value (Converter));
+         Print (0, 0, Raw'Img);
       end if;
-
-      Raw := UInt32 (Conversion_Value (Converter));
-      Print (0, 0, Raw'Img);
-
-      Green_LED.Toggle;
 
       delay until Clock + Milliseconds (200); -- slow it down to ease reading
    end loop;

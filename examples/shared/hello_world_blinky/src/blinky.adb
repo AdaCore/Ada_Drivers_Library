@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                  Copyright (C) 2015-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -65,15 +65,15 @@ procedure Blinky is
    --  for the sake of illustration.
 
    procedure Initialize_LEDs is
-      Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (All_LEDs);
 
-      Configuration.Mode        := Mode_Out;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Speed       := Speed_100MHz;
-      Configuration.Resistors   := Floating;
-      Configure_IO (All_LEDs, Configuration);
+      Configure_IO
+        (All_LEDs,
+         (Mode       => Mode_Out,
+         Output_Type => Push_Pull,
+         Speed       => Speed_100MHz,
+         Resistors   => Floating));
    end Initialize_LEDs;
 
 begin

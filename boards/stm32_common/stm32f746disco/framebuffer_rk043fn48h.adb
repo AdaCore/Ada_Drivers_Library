@@ -69,15 +69,16 @@ package body Framebuffer_RK043FN48H is
    begin
       Enable_Clock (LTDC_Pins);
 
-      Configure_Alternate_Function
-        (LCD_CTRL_PINS & LCD_RGB_AF14, GPIO_AF_LTDC_14);
-      Configure_Alternate_Function (LCD_RGB_AF9, GPIO_AF_LTDC_9);
       Configure_IO
         (Points => LTDC_Pins,
-         Config => (Speed       => Speed_50MHz,
-                    Mode        => Mode_AF,
-                    Output_Type => Push_Pull,
-                    Resistors   => Floating));
+         Config => (Mode           => Mode_AF,
+                    AF             => GPIO_AF_LTDC_14,
+                    AF_Speed       => Speed_50MHz,
+                    AF_Output_Type => Push_Pull,
+                    Resistors      => Floating));
+
+      Configure_Alternate_Function (LCD_RGB_AF9, GPIO_AF_LTDC_9);
+
       Lock (LTDC_Pins);
 
       Configure_IO
@@ -86,6 +87,7 @@ package body Framebuffer_RK043FN48H is
                     Mode        => Mode_Out,
                     Output_Type => Push_Pull,
                     Resistors   => Pull_Down));
+
       Lock (LCD_ENABLE & LCD_BL_CTRL);
    end Init_Pins;
 
