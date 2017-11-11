@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2016, AdaCore                         --
+--                 Copyright (C) 2015-2017, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -104,19 +104,17 @@ package body Encoder_Emulator is
    ----------------
 
    procedure Initialize is
-      Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (Emulator_Points);
-
       Enable_Clock (Emulator_Timer);
 
-      Configuration.Mode := Mode_AF;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Resistors := Pull_Up;
-      Configuration.Speed := Speed_100MHz;
-
-      Configure_IO (Emulator_Points, Configuration);
-      Configure_Alternate_Function (Emulator_Points, Emulator_AF);
+      Configure_IO
+        (Emulator_Points,
+         (Mode           => Mode_AF,
+          AF             => Emulator_AF,
+          Resistors      => Pull_Up,
+          AF_Output_Type => Push_Pull,
+          AF_Speed       => Speed_100MHz));
 
       Configure
         (Emulator_Timer,
