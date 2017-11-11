@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2016, AdaCore                         --
+--                 Copyright (C) 2015-2017, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -62,19 +62,17 @@ procedure Demo_USART_Interrupts is
    -----------------------------
 
    procedure Initialize_STMicro_UART is
-      Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (Transceiver);
       Enable_Clock (RX_Pin & TX_Pin);
 
-      Configuration.Mode := Mode_AF;
-      Configuration.Speed := Speed_50MHz;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Resistors := Pull_Up;
-
-      Configure_IO (RX_Pin & TX_Pin, Config => Configuration);
-
-      Configure_Alternate_Function (RX_Pin & TX_Pin,  AF => Transceiver_AF);
+      Configure_IO
+        (RX_Pin & TX_Pin,
+         (Mode           => Mode_AF,
+          AF             => Transceiver_AF,
+          Resistors      => Pull_Up,
+          AF_Output_Type => Push_Pull,
+          AF_Speed       => Speed_50MHz));
    end Initialize_STMicro_UART;
 
    ----------------

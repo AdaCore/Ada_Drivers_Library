@@ -59,11 +59,14 @@ package body Touch_Panel_FT6x06 is
    begin
       Enable_Clock (TP_INT);
 
+--        Configure_IO (TP_INT,
+--                      (Speed       => Speed_50MHz,
+--                       Mode        => Mode_In,
+--                       Output_Type => Open_Drain,
+--                       Resistors   => Pull_Up));
       Configure_IO (TP_INT,
-                    (Speed       => Speed_50MHz,
-                     Mode        => Mode_In,
-                     Output_Type => Open_Drain,
-                     Resistors   => Pull_Up));
+                    (Mode      => Mode_In,
+                     Resistors => Pull_Up));
       Lock (TP_INT);
    end TP_Init_Pins;
 

@@ -347,10 +347,20 @@ package body STM32.GPIO is
    is
       Index : constant GPIO_Pin_Index := GPIO_Pin'Pos (This.Pin);
    begin
-      This.Periph.MODER.Arr (Index)     := Pin_IO_Modes'Enum_Rep (Config.Mode);
-      This.Periph.OTYPER.OT.Arr (Index) := Config.Output_Type = Open_Drain;
-      This.Periph.OSPEEDR.Arr (Index)   := Pin_Output_Speeds'Enum_Rep (Config.Speed);
-      This.Periph.PUPDR.Arr (Index)     := Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
+      This.Periph.MODER.Arr (Index) := Pin_IO_Modes'Enum_Rep (Config.Mode);
+      This.Periph.PUPDR.Arr (Index) := Internal_Pin_Resistors'Enum_Rep (Config.Resistors);
+
+      case Config.Mode is
+         when Mode_In | Mode_Analog =>
+            null;
+         when Mode_Out =>
+            This.Periph.OTYPER.OT.Arr (Index) := Config.Output_Type = Open_Drain;
+            This.Periph.OSPEEDR.Arr (Index)   := Pin_Output_Speeds'Enum_Rep (Config.Speed);
+         when Mode_AF =>
+            This.Periph.OTYPER.OT.Arr (Index) := Config.AF_Output_Type = Open_Drain;
+            This.Periph.OSPEEDR.Arr (Index)   := Pin_Output_Speeds'Enum_Rep (Config.AF_Speed);
+            Configure_Alternate_Function (This, Config.AF);
+      end case;
    end Configure_IO;
 
    ------------------

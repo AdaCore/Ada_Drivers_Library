@@ -48,7 +48,6 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 with STM32.Board;  use STM32.Board;
 with STM32.Device; use STM32.Device;
 with STM32.PWM;    use STM32.PWM;
-with STM32.GPIO;   use STM32.GPIO;
 with STM32.Timers; use STM32.Timers;
 
 procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
@@ -83,26 +82,6 @@ procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
    Requested_Frequency : constant Hertz := 30_000;  -- arbitrary
 
    Power_Control : PWM_Modulator;
-
-   procedure Configure_LEDs;
-   --  initialize all of the LEDs to be in the AF mode
-
-   --------------------
-   -- Configure_LEDs --
-   --------------------
-
-   procedure Configure_LEDs is
-      Configuration : GPIO_Port_Configuration;
-   begin
-      Enable_Clock (GPIO_D);
-
-      Configuration.Mode        := Mode_AF;  -- essential
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Speed       := Speed_50MHz;
-      Configuration.Resistors   := Floating;
-
-      Configure_IO (All_LEDs, Configuration);
-   end Configure_LEDs;
 
    --  The SFP run-time library for these boards is intended for certified
    --  environments and so does not contain the full set of facilities defined
@@ -139,8 +118,6 @@ procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
    --  that value, thus the waxing/waning effect.
 
 begin
-   Configure_LEDs;
-
    Configure_PWM_Timer (Selected_Timer'Access, Requested_Frequency);
 
    Power_Control.Attach_PWM_Channel

@@ -72,16 +72,16 @@ procedure Demo_Timer_PWM is -- low-level demo of the PWM capabilities
    procedure Configure_LEDs;
 
    procedure Configure_LEDs is
-      Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (GPIO_D);
 
-      Configuration.Mode        := Mode_AF;  -- essential
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Speed       := Speed_50MHz;
-      Configuration.Resistors   := Floating;
-
-      Configure_IO (All_LEDs, Configuration);
+      Configure_IO
+        (All_LEDs,
+         (Mode_AF,
+          AF             => GPIO_AF_TIM4_2,
+          AF_Speed       => Speed_50MHz,
+          AF_Output_Type => Push_Pull,
+          Resistors      => Floating));
    end Configure_LEDs;
 
    --  The SFP run-time library for these boards is intended for certified
@@ -142,9 +142,6 @@ begin
       Polarity => High);
 
    Set_Autoreload_Preload (Timer_4, True);
-
-   Configure_Alternate_Function (All_LEDs, AF => GPIO_AF_TIM4_2);
-   --  Note we configured the LEDs to be in the AF mode in Configure_LEDs
 
    Enable_Channel (Timer_4, Output_Channel);
 

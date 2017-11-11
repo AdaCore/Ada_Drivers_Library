@@ -71,15 +71,15 @@ procedure Demo_GPIO is
    --  to demonstrate the use of the GPIO interface.
 
    procedure Initialize_LEDs is
-      Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (GPIO_D);
 
-      Configuration.Mode        := Mode_Out;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Speed       := Speed_100MHz;
-      Configuration.Resistors   := Floating;
-      Configure_IO (Pattern, Config => Configuration);
+      Configure_IO
+        (Pattern,
+         (Mode        => Mode_Out,
+          Resistors   => Floating,
+          Speed       => Speed_100MHz,
+          Output_Type => Push_Pull));
    end Initialize_LEDs;
 
 begin

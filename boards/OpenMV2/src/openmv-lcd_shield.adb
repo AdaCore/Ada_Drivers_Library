@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -69,10 +69,10 @@ package body OpenMV.LCD_Shield is
 
       STM32.Device.Enable_Clock (All_Points);
 
-      GPIO_Conf.Mode        := STM32.GPIO.Mode_Out;
-      GPIO_Conf.Output_Type := STM32.GPIO.Push_Pull;
-      GPIO_Conf.Speed       := STM32.GPIO.Speed_100MHz;
-      GPIO_Conf.Resistors   := STM32.GPIO.Floating;
+      GPIO_Conf := (Mode        => STM32.GPIO.Mode_Out,
+                    Output_Type => STM32.GPIO.Push_Pull,
+                    Speed       => STM32.GPIO.Speed_100MHz,
+                    Resistors   => STM32.GPIO.Floating);
 
       STM32.GPIO.Configure_IO (All_Points, GPIO_Conf);
 

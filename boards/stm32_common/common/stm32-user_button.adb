@@ -125,10 +125,8 @@ package body STM32.User_Button is
       Enable_Clock (User_Button_Point);
 
       User_Button_Point.Configure_IO
-        ((Mode        => Mode_In,
-          Output_Type => Open_Drain,
-          Speed       => Speed_50MHz,
-          Resistors   => (if Use_Rising_Edge then Pull_Down else Pull_Up)));
+        ((Mode      => Mode_In,
+          Resistors => (if Use_Rising_Edge then Pull_Down else Pull_Up)));
 
       --  Connect the button's pin to the External Interrupt Handler
       User_Button_Point.Configure_Trigger (Edge);
