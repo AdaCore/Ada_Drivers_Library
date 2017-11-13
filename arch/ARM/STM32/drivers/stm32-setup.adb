@@ -51,11 +51,18 @@ package body STM32.Setup is
       Configure_Alternate_Function (SDA, SDA_AF);
       Configure_Alternate_Function (SCL, SCL_AF);
 
-      Configure_IO (SDA & SCL,
-                    (Speed       => Speed_High,
-                     Mode        => Mode_AF,
-                     Output_Type => Open_Drain,
-                     Resistors   => Floating));
+      Configure_IO (SDA,
+                    (Mode           => Mode_AF,
+                     AF             => SDA_AF,
+                     AF_Speed       => Speed_High,
+                     AF_Output_Type => Open_Drain,
+                     Resistors      => Floating));
+      Configure_IO (SCL,
+                    (Mode           => Mode_AF,
+                     AF             => SCL_AF,
+                     AF_Speed       => Speed_High,
+                     AF_Output_Type => Open_Drain,
+                     Resistors      => Floating));
       Lock (SDA & SCL);
 
       -- I2C --

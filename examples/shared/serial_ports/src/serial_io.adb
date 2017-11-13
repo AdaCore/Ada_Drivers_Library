@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -44,14 +44,13 @@ package body Serial_IO is
       Enable_Clock (Device_Pins);
       Enable_Clock (Device.Transceiver.all);
 
-      Configuration.Mode        := Mode_AF;
-      Configuration.Speed       := Speed_50MHz;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Resistors   := Pull_Up;
+      Configuration := (Mode           => Mode_AF,
+                        AF             => Device.Transceiver_AF,
+                        AF_Speed       => Speed_50MHz,
+                        AF_Output_Type => Push_Pull,
+                        Resistors      => Pull_Up);
 
       Configure_IO (Device_Pins, Configuration);
-
-      Configure_Alternate_Function (Device_Pins, Device.Transceiver_AF);
    end Initialize_Peripheral;
 
    ---------------

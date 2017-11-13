@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2016, AdaCore                         --
+--                 Copyright (C) 2015-2017, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -55,19 +55,17 @@ procedure Demo_USART_Polling is
    --------------------------
 
    procedure Initialize_UART_GPIO is
-      Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (USART_1);
       Enable_Clock (RX_Pin & TX_Pin);
 
-      Configuration.Mode := Mode_AF;
-      Configuration.Speed := Speed_50MHz;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Resistors := Pull_Up;
-
-      Configure_IO (RX_Pin & TX_Pin, Configuration);
-
-      Configure_Alternate_Function (RX_Pin & TX_Pin, AF => GPIO_AF_USART1_7);
+      Configure_IO
+        (RX_Pin & TX_Pin,
+         (Mode           => Mode_AF,
+          AF             => GPIO_AF_USART1_7,
+          Resistors      => Pull_Up,
+          AF_Speed       => Speed_50MHz,
+          AF_Output_Type => Push_Pull));
    end Initialize_UART_GPIO;
 
    ----------------

@@ -122,11 +122,11 @@ package body Audio is
       Enable_Clock (SAI_Pins);
       Configure_IO
         (SAI_Pins,
-         (Mode        => Mode_AF,
-          Output_Type => Push_Pull,
-          Speed       => Speed_High,
-          Resistors   => Floating));
-      Configure_Alternate_Function (SAI_Pins, SAI_Pins_AF);
+         (Mode           => Mode_AF,
+          AF             => SAI_Pins_AF,
+          AF_Output_Type => Push_Pull,
+          AF_Speed       => Speed_High,
+          Resistors      => Floating));
 
       Enable_Clock (Audio_DMA);
 

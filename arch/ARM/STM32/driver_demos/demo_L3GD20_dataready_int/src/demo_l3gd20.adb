@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                  Copyright (C) 2016-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -129,16 +129,12 @@ procedure Demo_L3GD20 is
    ------------------------------
 
    procedure Configure_Gyro_Interrupt is
-      Config : GPIO_Port_Configuration;
       --  This is the required port/pin configuration on STM32F429 Disco
       --  boards for interrupt 2 on the L3GD20 gyro. See the F429 Disco
       --  User Manual, Table 6, pg 19.
    begin
       Enable_Clock (MEMS_INT2);
-      Config.Mode := Mode_In;
-      Config.Resistors := Floating;
-      Config.Speed := Speed_50MHz;
-      Configure_IO (MEMS_INT2, Config);
+      Configure_IO (MEMS_INT2, (Mode => Mode_In, Resistors => Floating));
 
       Configure_Trigger (MEMS_INT2, Interrupt_Rising_Edge);
 
