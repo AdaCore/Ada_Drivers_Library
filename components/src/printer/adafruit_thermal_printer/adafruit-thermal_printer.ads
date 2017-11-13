@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,9 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL; use HAL;
+with HAL;        use HAL;
 with HAL.UART;
 with HAL.Time;
+with HAL.Bitmap;
 
 package AdaFruit.Thermal_Printer is
 
@@ -75,6 +76,10 @@ package AdaFruit.Thermal_Printer is
    procedure Print_Bitmap (This : in out TP_Device;
                            BM   : Thermal_Printer_Bitmap)
      with Pre => BM'Length (1) = 384;
+
+   procedure Print_Bitmap (This : in out TP_Device;
+                           BM   : not null HAL.Bitmap.Any_Bitmap_Buffer)
+     with Pre => BM.Width = 384;
 
    procedure Wake (This : in out TP_Device);
    procedure Reset (This : in out TP_Device);
