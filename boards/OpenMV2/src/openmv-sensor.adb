@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -216,18 +216,21 @@ package body OpenMV.Sensor is
 
          Enable_Clock (DCMI_Out_Points);
          --  Sensor PowerDown, Reset and FSIN
-         GPIO_Conf.Mode := Mode_Out;
-         GPIO_Conf.Output_Type := Push_Pull;
-         GPIO_Conf.Resistors := Pull_Down;
+         GPIO_Conf := (Mode        => Mode_Out,
+                       Output_Type => Push_Pull,
+                       Speed       => Speed_100MHz,  -- not specified in previous version of this module
+                       Resistors   => Pull_Down);
          Configure_IO (DCMI_Out_Points, GPIO_Conf);
 
          Clear (DCMI_Out_Points);
 
-         GPIO_Conf.Mode := Mode_AF;
-         GPIO_Conf.Output_Type := Push_Pull;
-         GPIO_Conf.Resistors := Pull_Down;
+         GPIO_Conf := (Mode           => Mode_AF,
+                       AF             => GPIO_AF_DCMI_13,
+                       AF_Speed       => Speed_100MHz,  -- not specified in previous version of this module
+                       AF_Output_Type => Push_Pull,
+                       Resistors      => Pull_Down);
+
          Configure_IO (DCMI_AF_Points, GPIO_Conf);
-         Configure_Alternate_Function (DCMI_AF_Points, GPIO_AF_DCMI_13);
       end Initialize_IO;
 
       ---------------------

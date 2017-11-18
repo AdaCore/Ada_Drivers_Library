@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -39,16 +39,15 @@ package body OpenMV is
    ---------------------
 
    procedure Initialize_LEDs is
-      Conf : GPIO_Port_Configuration;
    begin
       Enable_Clock (All_LEDs);
 
-      Conf.Mode        := Mode_Out;
-      Conf.Output_Type := Push_Pull;
-      Conf.Speed       := Speed_100MHz;
-      Conf.Resistors   := Floating;
-
-      Configure_IO (All_LEDs, Conf);
+      Configure_IO
+        (All_LEDs,
+         (Mode        => Mode_Out,
+          Output_Type => Push_Pull,
+          Speed       => Speed_100MHz,
+          Resistors   => Floating));
    end Initialize_LEDs;
 
    -----------------
@@ -139,16 +138,13 @@ package body OpenMV is
 
       STM32.Device.Enable_Clock (Shield_SPI_Points);
 
-      GPIO_Conf.Speed       := STM32.GPIO.Speed_100MHz;
-      GPIO_Conf.Mode        := STM32.GPIO.Mode_AF;
-      GPIO_Conf.Output_Type := STM32.GPIO.Push_Pull;
-      GPIO_Conf.Resistors   := STM32.GPIO.Pull_Down; --  SPI low polarity
+      GPIO_Conf := (Mode           => STM32.GPIO.Mode_AF,
+                    AF             => GPIO_AF_SPI2_5,
+                    Resistors      => STM32.GPIO.Pull_Down, --  SPI low polarity
+                    AF_Speed       => STM32.GPIO.Speed_100MHz,
+                    AF_Output_Type => STM32.GPIO.Push_Pull);
 
       STM32.GPIO.Configure_IO (Shield_SPI_Points, GPIO_Conf);
-
-      STM32.GPIO.Configure_Alternate_Function
-        (Shield_SPI_Points,
-         GPIO_AF_SPI2_5);
 
       STM32.Device.Enable_Clock (Shield_SPI);
 
@@ -179,14 +175,13 @@ package body OpenMV is
       Enable_Clock (Shield_USART);
       Enable_Clock (Shield_USART_Points);
 
-      Configuration.Mode := Mode_AF;
-      Configuration.Speed := Speed_50MHz;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Resistors := Pull_Up;
+      Configuration := (Mode           => STM32.GPIO.Mode_AF,
+                        AF             => Shield_USART_AF,
+                        Resistors      => STM32.GPIO.Pull_Up,
+                        AF_Speed       => STM32.GPIO.Speed_50MHz,
+                        AF_Output_Type => STM32.GPIO.Push_Pull);
 
       Configure_IO (Shield_USART_Points, Configuration);
-
-      Configure_Alternate_Function (Shield_USART_Points, Shield_USART_AF);
 
       Disable (Shield_USART);
 

@@ -321,16 +321,13 @@ package body STM32.PWM is
      (Output : GPIO_Point;
       PWM_AF : GPIO_Alternate_Function)
    is
-      Configuration : GPIO_Port_Configuration;
    begin
-      Configuration.Mode        := Mode_AF;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Speed       := Speed_100MHz;
-      Configuration.Resistors   := Floating;
-
-      Output.Configure_IO (Configuration);
-
-      Output.Configure_Alternate_Function (PWM_AF);
+      Output.Configure_IO
+        ((Mode_AF,
+          AF             => PWM_AF,
+          Resistors      => Floating,
+          AF_Output_Type => Push_Pull,
+          AF_Speed       => Speed_100MHz));
 
       Output.Lock;
    end Configure_PWM_GPIO;

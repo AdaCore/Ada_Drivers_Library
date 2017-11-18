@@ -68,16 +68,15 @@ package body STM32.Board is
    ---------------------
 
    procedure Initialize_LEDs is
-      Conf : GPIO_Port_Configuration;
    begin
       Enable_Clock (All_LEDs);
 
-      Conf.Mode        := Mode_Out;
-      Conf.Output_Type := Push_Pull;
-      Conf.Speed       := Speed_100MHz;
-      Conf.Resistors   := Floating;
-
-      Configure_IO (All_LEDs, Conf);
+      Configure_IO
+        (All_LEDs,
+         (Mode        => Mode_Out,
+          Output_Type => Push_Pull,
+          Speed       => Speed_100MHz,
+          Resistors   => Floating));
    end Initialize_LEDs;
 
    ------------------------
@@ -93,10 +92,10 @@ package body STM32.Board is
       Init_Chip_Select : declare
          Config : GPIO_Port_Configuration;
       begin
-         Config.Speed := Speed_25MHz;
-         Config.Mode := Mode_Out;
-         Config.Output_Type := Push_Pull;
-         Config.Resistors := Pull_Up;
+         Config := (Mode        => Mode_Out,
+                    Speed       => Speed_25MHz,
+                    Output_Type => Push_Pull,
+                    Resistors   => Pull_Up);
 
          Configure_IO (NCS_MEMS_SPI, Config);
       end Init_Chip_Select;
@@ -104,16 +103,13 @@ package body STM32.Board is
       Init_SPI_IO_Pins : declare
          Config : GPIO_Port_Configuration;
       begin
-         Config.Speed       := Speed_100MHz;
-         Config.Mode        := Mode_AF;
-         Config.Output_Type := Push_Pull;
-         Config.Resistors   := Floating;
+         Config := (Mode           => Mode_AF,
+                    AF             => GPIO_AF_SPI5_5,
+                    AF_Speed       => Speed_100MHz,
+                    AF_Output_Type => Push_Pull,
+                    Resistors      => Floating);
 
          Configure_IO (SPI5_SCK & SPI5_MISO & SPI5_MOSI, Config);
-
-         Configure_Alternate_Function
-           (SPI5_SCK & SPI5_MISO & SPI5_MOSI,
-            GPIO_AF_SPI5_5);
       end Init_SPI_IO_Pins;
 
       Init_SPI_Port : declare
@@ -149,14 +145,9 @@ package body STM32.Board is
    --------------------------------
 
    procedure Configure_User_Button_GPIO is
-      Config : GPIO_Port_Configuration;
    begin
       Enable_Clock (User_Button_Point);
-
-      Config.Mode := Mode_In;
-      Config.Resistors := Floating;
-
-      User_Button_Point.Configure_IO (Config);
+      User_Button_Point.Configure_IO ((Mode_In, Resistors => Floating));
    end Configure_User_Button_GPIO;
 
 end STM32.Board;
