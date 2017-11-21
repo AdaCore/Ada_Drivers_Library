@@ -62,12 +62,12 @@ package body Framebuffer_ILI9341 is
       Enable_Clock (SPI_Pins);
       Enable_Clock (LCD_SPI);
 
-      Conf.Speed       := Speed_100MHz;
-      Conf.Mode        := Mode_AF;
-      Conf.Output_Type := Push_Pull;
-      Conf.Resistors   := Floating;
+      Conf := (Mode           => Mode_AF,
+               AF             => GPIO_AF_SPI5_5,
+               AF_Speed       => Speed_100MHz,
+               AF_Output_Type => Push_Pull,
+               Resistors      => Floating);
 
-      Configure_Alternate_Function (SPI_Pins, GPIO_AF_SPI5_5);
       Configure_IO (SPI_Pins, Conf);
 
       Reset (LCD_SPI);
@@ -104,14 +104,15 @@ package body Framebuffer_ILI9341 is
                     Output_Type => Push_Pull,
                     Resistors   => Floating));
 
-      Configure_Alternate_Function (LCD_PINS, GPIO_AF_LTDC_14);
-      Configure_Alternate_Function (LCD_RGB_AF9, GPIO_AF_LTDC_9);
       Configure_IO
         (Points => LCD_PINS,
-         Config => (Speed       => Speed_50MHz,
-                    Mode        => Mode_AF,
-                    Output_Type => Push_Pull,
-                    Resistors   => Floating));
+         Config => (AF_Speed       => Speed_50MHz,
+                    AF             => GPIO_AF_LTDC_14,
+                    Mode           => Mode_AF,
+                    AF_Output_Type => Push_Pull,
+                    Resistors      => Floating));
+
+      Configure_Alternate_Function (LCD_RGB_AF9, GPIO_AF_LTDC_9);
 
       --  Set LCD_CSX: Chip Unselect
       Set (LCD_CSX);

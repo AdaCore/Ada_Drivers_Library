@@ -71,16 +71,15 @@ package body STM32.Board is
    ---------------------
 
    procedure Initialize_LEDs is
-      Configuration : GPIO_Port_Configuration;
    begin
       Enable_Clock (All_LEDs);
 
-      Configuration.Mode        := Mode_Out;
-      Configuration.Output_Type := Push_Pull;
-      Configuration.Speed       := Speed_100MHz;
-      Configuration.Resistors   := Floating;
-      Configure_IO (All_LEDs,
-                    Config => Configuration);
+      Configure_IO
+        (All_LEDs,
+         (Mode_Out,
+          Resistors   => Floating,
+          Output_Type => Push_Pull,
+          Speed       => Speed_100MHz));
    end Initialize_LEDs;
 
    ----------------------
@@ -103,12 +102,11 @@ package body STM32.Board is
          Enable_Clock (Audio_I2S_Points);
 
          Configure_IO (Audio_I2S_Points,
-                       (Speed       => Speed_High,
-                        Mode        => Mode_AF,
-                        Output_Type => Push_Pull,
-                        Resistors   => Floating));
-
-         Configure_Alternate_Function (Audio_I2S_Points, GPIO_AF_I2S3_6);
+            (Mode           => Mode_AF,
+             Resistors      => Floating,
+             AF_Speed       => Speed_High,
+             AF_Output_Type => Push_Pull,
+             AF             => GPIO_AF_I2S3_6));
 
          Lock (Audio_I2S_Points);
 
@@ -172,14 +170,9 @@ package body STM32.Board is
    --------------------------------
 
    procedure Configure_User_Button_GPIO is
-      Config : GPIO_Port_Configuration;
    begin
       Enable_Clock (User_Button_Point);
-
-      Config.Mode := Mode_In;
-      Config.Resistors := Floating;
-
-      Configure_IO (User_Button_Point, Config);
+      Configure_IO (User_Button_Point, (Mode_In, Resistors => Floating));
    end Configure_User_Button_GPIO;
 
    ------------------------------
@@ -220,28 +213,26 @@ package body STM32.Board is
       ---------------
 
       procedure Init_GPIO is
-         Config : GPIO_Port_Configuration;
          SPI_Points : constant GPIO_Points := Acc_SPI_MOSI_Pin &
            Acc_SPI_MISO_Pin & Acc_SPI_SCK_Pin;
       begin
          Enable_Clock (SPI_Points);
 
-         Config.Output_Type := Push_Pull;
-         Config.Resistors   := Floating;
-         Config.Speed       := Speed_50MHz;
-         Config.Mode        := Mode_AF;
-
-         Configure_IO (SPI_Points, Config);
-         Configure_Alternate_Function (SPI_Points, Acc_SPI_AF);
+         Configure_IO (SPI_Points,
+            (Mode_AF,
+             AF             => Acc_SPI_AF,
+             Resistors      => Floating,
+             AF_Speed       => Speed_50MHz,
+             AF_Output_Type => Push_Pull));
 
          Enable_Clock (Acc_Chip_Select_Pin);
 
-         Config.Mode        := Mode_Out;
-         Config.Output_Type := Push_Pull;
-         Config.Resistors   := Pull_Up;
-         Config.Speed       := Speed_25MHz;
+         Acc_Chip_Select_Pin.Configure_IO
+           ((Mode_Out,
+            Resistors   => Pull_Up,
+            Output_Type => Push_Pull,
+            Speed       => Speed_25MHz));
 
-         Acc_Chip_Select_Pin.Configure_IO (Config);
          Acc_Chip_Select_Pin.Set;
       end Init_GPIO;
 

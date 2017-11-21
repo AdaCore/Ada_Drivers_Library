@@ -59,20 +59,27 @@ package body SDCard is
 
       --  GPIO configuration for the SDIO pins
       Configure_IO
-        (SD_Pins & SD_Pins_2,
-         (Mode        => Mode_AF,
-          Output_Type => Push_Pull,
-          Speed       => Speed_High,
-          Resistors   => Pull_Up));
-      Configure_Alternate_Function (SD_Pins, SD_Pins_AF);
-      Configure_Alternate_Function (SD_Pins_2, SD_Pins_AF_2);
+        (SD_Pins,
+         (Mode           => Mode_AF,
+          AF             => SD_Pins_AF,
+          AF_Output_Type => Push_Pull,
+          AF_Speed       => Speed_High,
+          Resistors      => Pull_Up));
+
+      Configure_IO
+        (SD_Pins_2,
+         (Mode           => Mode_AF,
+          AF             => SD_Pins_AF_2,
+          AF_Output_Type => Push_Pull,
+          AF_Speed       => Speed_High,
+          Resistors      => Pull_Up));
 
       --  GPIO configuration for the SD-Detect pin
       Configure_IO
         (SD_Detect_Pin,
          (Mode        => Mode_In,
-          Output_Type => Open_Drain,
-          Speed       => Speed_High,
+--            Output_Type => Open_Drain,
+--            Speed       => Speed_High,
           Resistors   => Pull_Up));
 
       --  Enable the SDIO clock
