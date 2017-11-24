@@ -61,9 +61,9 @@ package STM32.SPI is
 
    type SPI_Mode is (Master, Slave);
 
-   type SPI_CLock_Polarity is (High, Low);
+   type SPI_Clock_Polarity is (High, Low);
 
-   type SPI_CLock_Phase is (P1Edge, P2Edge);
+   type SPI_Clock_Phase is (P1Edge, P2Edge);
 
    type SPI_Slave_Management is (Software_Managed, Hardware_Managed);
 
@@ -76,8 +76,8 @@ package STM32.SPI is
       Direction           : SPI_Data_Direction;
       Mode                : SPI_Mode;
       Data_Size           : HAL.SPI.SPI_Data_Size;
-      Clock_Polarity      : SPI_CLock_Polarity;
-      Clock_Phase         : SPI_CLock_Phase;
+      Clock_Polarity      : SPI_Clock_Polarity;
+      Clock_Phase         : SPI_Clock_Phase;
       Slave_Management    : SPI_Slave_Management;
       Baud_Rate_Prescaler : SPI_Baud_Rate_Prescaler;
       First_Bit           : SPI_First_Bit;
