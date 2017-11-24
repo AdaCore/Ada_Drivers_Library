@@ -48,9 +48,6 @@ package body STM32.Setup is
       --  GPIO --
       Enable_Clock (SDA & SCL);
 
-      Configure_Alternate_Function (SDA, SDA_AF);
-      Configure_Alternate_Function (SCL, SCL_AF);
-
       Configure_IO (SDA,
                     (Mode           => Mode_AF,
                      AF             => SDA_AF,
@@ -63,7 +60,6 @@ package body STM32.Setup is
                      AF_Speed       => Speed_High,
                      AF_Output_Type => Open_Drain,
                      Resistors      => Floating));
-      Lock (SDA & SCL);
 
       -- I2C --
 
