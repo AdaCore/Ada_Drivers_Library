@@ -60,6 +60,7 @@ package body STM32.Setup is
                      AF_Speed       => Speed_High,
                      AF_Output_Type => Open_Drain,
                      Resistors      => Floating));
+      Lock (SDA & SCL);
 
       -- I2C --
 
