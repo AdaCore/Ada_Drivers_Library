@@ -328,8 +328,6 @@ package body STM32.PWM is
           Resistors      => Floating,
           AF_Output_Type => Push_Pull,
           AF_Speed       => Speed_100MHz));
-
-      Output.Lock;
    end Configure_PWM_GPIO;
 
    ----------------------------------
