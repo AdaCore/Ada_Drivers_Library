@@ -150,14 +150,14 @@ begin
 
    Enable (VBat.ADC.all);
 
-   Start_Conversion (VBat.ADC.all);
-
    Start_Transfer
      (Controller,
       Stream,
       Source      => Data_Register_Address (VBat.ADC.all),
       Destination => Counts'Address,
       Data_Count  => 1);  -- ie, 1 halfword
+
+   Start_Conversion (VBat.ADC.all);
 
    loop
       Voltage := ((UInt32 (Counts) * VBat_Bridge_Divisor) * ADC_Supply_Voltage) / 16#FFF#;
