@@ -64,7 +64,7 @@ and new drivers.
 # 6. Roadmap
 
 Here is a list of projects that we are either dreaming about or already working
-on. If you are interested by one of those, please contact us on the projects's
+on. If you are interested by one of those, please contact us on the project's
 GitHub page.
 
 * ARM
@@ -85,5 +85,8 @@ GitHub page.
  * [un_pola: DIY instant camera with OpenMV](https://github.com/Fabien-Chouteau/un_pola)
  * [bare metal demos: Various Ada Demos on STM32*-Disco boards using this library](https://github.com/lambourg/Ada_Bare_Metal_Demos)
  * [SPARK Railway Demo: Simulated railway network in SPARK/Ada](https://github.com/AdaCore/SPARK_Railway_Simulation_Demo)
+ * [NXT Lego Robotics: Ada drivers and demos for Lego NXT sensors and motors](https://github.com/AdaCore/Robotics_with_Ada)
+ * [Bosch 9DOF IMU demo: Bosch 9DOF IMU driving a 3-D model of a lunar lander](
+https://github.com/AdaCore/Lunar_Lander_Rotation_Demo)
 
 (Add yours to the list!)
