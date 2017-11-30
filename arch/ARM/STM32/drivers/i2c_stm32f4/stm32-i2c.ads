@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                  Copyright (C) 2015-2017, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -85,6 +85,7 @@ package STM32.I2C is
    end record;
 
    type Internal_I2C_Port is private;
+
    type I2C_Port (Periph : not null access Internal_I2C_Port) is
       limited new HAL.I2C.I2C_Port with private;
 
@@ -93,7 +94,9 @@ package STM32.I2C is
       Conf : I2C_Configuration)
      with Post => Port_Enabled (This);
 
-   procedure Set_State (This : in out I2C_Port; Enabled : Boolean);
+   procedure Set_State (This : in out I2C_Port; Enabled : Boolean) with
+     Post => (Enabled = Port_Enabled (This));
+
    function Port_Enabled (This : I2C_Port) return Boolean;
 
    overriding
@@ -153,6 +156,7 @@ package STM32.I2C is
       return Boolean;
 
 private
+
    type I2C_State is
      (Reset,
       Ready,
@@ -202,7 +206,7 @@ private
 
    --  Higher level flag handling
 
-   procedure Wait_Flag
+   procedure Wait_While_Flag
      (This    : in out I2C_Port;
       Flag    :        I2C_Status_Flag;
       F_State :        Boolean;

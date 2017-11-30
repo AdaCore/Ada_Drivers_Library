@@ -266,30 +266,29 @@ package body STM32.I2C is
 --        Port.CR1.PE := True;
 --     end Clear_Stop_Detection_Status;
 
-   ---------------
-   -- Wait_Flag --
-   ---------------
+   ---------------------
+   -- Wait_While_Flag --
+   ---------------------
 
-   procedure Wait_Flag
+   procedure Wait_While_Flag
      (This    : in out I2C_Port;
       Flag    :        I2C_Status_Flag;
       F_State :        Boolean;
       Timeout :        Natural;
       Status  :    out HAL.I2C.I2C_Status)
    is
-      Start : constant Time := Clock;
+      Deadline : constant Time := Clock + Milliseconds (Timeout);
    begin
       while Flag_Status (This, Flag) = F_State loop
-         if Clock - Start > Milliseconds (Timeout) then
+         if Clock > Deadline then
             This.State := Ready;
-            Status       := HAL.I2C.Err_Timeout;
-
+            Status := HAL.I2C.Err_Timeout;
             return;
          end if;
       end loop;
 
       Status := HAL.I2C.Ok;
-   end Wait_Flag;
+   end Wait_While_Flag;
 
    ----------------------
    -- Wait_Master_Flag --
@@ -301,7 +300,7 @@ package body STM32.I2C is
       Timeout :        Natural;
       Status  :    out HAL.I2C.I2C_Status)
    is
-      Start : constant Time := Clock;
+      Deadline : constant Time := Clock + Milliseconds (Timeout);
    begin
       while not Flag_Status (This, Flag) loop
          if This.Periph.SR1.AF then
@@ -311,14 +310,14 @@ package body STM32.I2C is
             --  Clear the AF flag
             This.Periph.SR1.AF := False;
             This.State := Ready;
-            Status       := HAL.I2C.Err_Error;
+            Status := HAL.I2C.Err_Error;
 
             return;
          end if;
 
-         if Clock - Start > Milliseconds (Timeout) then
+         if Clock > Deadline then
             This.State := Ready;
-            Status       := HAL.I2C.Err_Timeout;
+            Status := HAL.I2C.Err_Timeout;
 
             return;
          end if;
@@ -340,7 +339,7 @@ package body STM32.I2C is
    begin
       This.Periph.CR1.START := True;
 
-      Wait_Flag (This, Start_Bit, False, Timeout, Status);
+      Wait_While_Flag (This, Start_Bit, False, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
          return;
@@ -390,7 +389,7 @@ package body STM32.I2C is
       This.Periph.CR1.ACK := True;
       This.Periph.CR1.START := True;
 
-      Wait_Flag (This, Start_Bit, False, Timeout, Status);
+      Wait_While_Flag (This, Start_Bit, False, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
          return;
@@ -434,7 +433,7 @@ package body STM32.I2C is
             --  Generate a re-start
             This.Periph.CR1.START := True;
 
-            Wait_Flag (This, Start_Bit, False, Timeout, Status);
+            Wait_While_Flag (This, Start_Bit, False, Timeout, Status);
 
             if Status /= HAL.I2C.Ok then
                return;
@@ -463,7 +462,7 @@ package body STM32.I2C is
    begin
       This.Periph.CR1.START := True;
 
-      Wait_Flag (This, Start_Bit, False, Timeout, Status);
+      Wait_While_Flag (This, Start_Bit, False, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
          return;
@@ -484,7 +483,7 @@ package body STM32.I2C is
       Clear_Address_Sent_Status (This);
 
       --  Wait until TXE flag is set
-      Wait_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
+      Wait_While_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
          return;
@@ -496,7 +495,7 @@ package body STM32.I2C is
          when HAL.I2C.Memory_Size_16b =>
             This.Periph.DR.DR := UInt8 (Shift_Right (Mem_Addr, 8));
 
-            Wait_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
+            Wait_While_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
 
             if Status /= HAL.I2C.Ok then
                return;
@@ -506,7 +505,7 @@ package body STM32.I2C is
       end case;
 
       --  Wait until TXE flag is set
-      Wait_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
+      Wait_While_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
 
    end Mem_Request_Write;
 
@@ -526,7 +525,7 @@ package body STM32.I2C is
       This.Periph.CR1.ACK := True;
       This.Periph.CR1.START := True;
 
-      Wait_Flag (This, Start_Bit, False, Timeout, Status);
+      Wait_While_Flag (This, Start_Bit, False, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
          return;
@@ -548,7 +547,7 @@ package body STM32.I2C is
       Clear_Address_Sent_Status (This);
 
       --  Wait until TXE flag is set
-      Wait_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
+      Wait_While_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
          return;
@@ -560,7 +559,7 @@ package body STM32.I2C is
          when HAL.I2C.Memory_Size_16b =>
             This.Periph.DR.DR := UInt8 (Shift_Right (Mem_Addr, 8));
 
-            Wait_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
+            Wait_While_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
 
             if Status /= HAL.I2C.Ok then
                return;
@@ -570,7 +569,7 @@ package body STM32.I2C is
       end case;
 
       --  Wait until TXE flag is set
-      Wait_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
+      Wait_While_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
          return;
@@ -579,7 +578,7 @@ package body STM32.I2C is
       --  We now need to reset and send the slave address in read mode
       This.Periph.CR1.START := True;
 
-      Wait_Flag (This, Start_Bit, False, Timeout, Status);
+      Wait_While_Flag (This, Start_Bit, False, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
          return;
@@ -613,7 +612,7 @@ package body STM32.I2C is
          return;
       end if;
 
-      Wait_Flag (This, Busy, True, Timeout, Status);
+      Wait_While_Flag (This, Busy, True, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
          Status := HAL.I2C.Busy;
@@ -670,7 +669,7 @@ package body STM32.I2C is
          return;
       end if;
 
-      Wait_Flag (This, Busy, True, Timeout, Status);
+      Wait_While_Flag (This, Busy, True, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
          Status := HAL.I2C.Busy;
@@ -741,7 +740,7 @@ package body STM32.I2C is
          return;
       end if;
 
-      Wait_Flag (This, Busy, True, Timeout, Status);
+      Wait_While_Flag (This, Busy, True, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
          Status := HAL.I2C.Busy;
@@ -802,7 +801,7 @@ package body STM32.I2C is
          return;
       end if;
 
-      Wait_Flag (This, Busy, True, Timeout, Status);
+      Wait_While_Flag (This, Busy, True, Timeout, Status);
 
       if Status /= HAL.I2C.Ok then
          Status := HAL.I2C.Busy;
@@ -844,7 +843,7 @@ package body STM32.I2C is
       end if;
 
       --  Use a dispatching call in case Data_Receive is overridden for DMA
-      --  transfert.
+      --  transfer.
       Dispatch (This).Data_Receive (Data, Timeout, Status);
 
       This.State := Ready;
@@ -854,8 +853,7 @@ package body STM32.I2C is
    -- Set_State --
    ---------------
 
-   procedure Set_State (This : in out I2C_Port; Enabled : Boolean)
-   is
+   procedure Set_State (This : in out I2C_Port; Enabled : Boolean) is
    begin
       This.Periph.CR1.PE := Enabled;
    end Set_State;
@@ -864,8 +862,7 @@ package body STM32.I2C is
    -- Port_Enabled --
    ------------------
 
-   function Port_Enabled (This : I2C_Port) return Boolean
-   is
+   function Port_Enabled (This : I2C_Port) return Boolean is
    begin
       return This.Periph.CR1.PE;
    end Port_Enabled;
@@ -950,11 +947,7 @@ package body STM32.I2C is
       Idx : Natural := Data'First;
    begin
       while Idx <= Data'Last loop
-         Wait_Flag (This,
-                    Tx_Data_Register_Empty,
-                    False,
-                    Timeout,
-                    Status);
+         Wait_While_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
 
          if Status /= HAL.I2C.Ok then
             return;
@@ -974,12 +967,7 @@ package body STM32.I2C is
          end if;
       end loop;
 
-      Wait_Flag (This,
-                 Tx_Data_Register_Empty,
-                 False,
-                 Timeout,
-                 Status);
-
+      Wait_While_Flag (This, Tx_Data_Register_Empty, False, Timeout, Status);
    end Data_Send;
 
    ------------------
@@ -997,12 +985,7 @@ package body STM32.I2C is
       while Idx <= Data'Last loop
          if Idx = Data'Last then
             --  One UInt8 to read
-            Wait_Flag
-              (This,
-               Rx_Data_Register_Not_Empty,
-               False,
-               Timeout,
-               Status);
+            Wait_While_Flag (This, Rx_Data_Register_Not_Empty, False, Timeout, Status);
             if Status /= HAL.I2C.Ok then
                return;
             end if;
@@ -1014,11 +997,7 @@ package body STM32.I2C is
             --  Two bytes to read
             This.Periph.CR1.ACK := False;
 
-            Wait_Flag (This,
-                       Byte_Transfer_Finished,
-                       False,
-                       Timeout,
-                       Status);
+            Wait_While_Flag (This, Byte_Transfer_Finished, False, Timeout, Status);
             if Status /= HAL.I2C.Ok then
                return;
             end if;
@@ -1033,11 +1012,7 @@ package body STM32.I2C is
 
          elsif Idx + 2 = Data'Last then
             --  Three bytes to read
-            Wait_Flag (This,
-                       Byte_Transfer_Finished,
-                       False,
-                       Timeout,
-                       Status);
+            Wait_While_Flag (This, Byte_Transfer_Finished, False, Timeout, Status);
             if Status /= HAL.I2C.Ok then
                return;
             end if;
@@ -1048,11 +1023,7 @@ package body STM32.I2C is
             Data (Idx) := This.Periph.DR.DR;
             Idx := Idx + 1;
 
-            Wait_Flag (This,
-                       Byte_Transfer_Finished,
-                       False,
-                       Timeout,
-                       Status);
+            Wait_While_Flag (This, Byte_Transfer_Finished, False, Timeout, Status);
             if Status /= HAL.I2C.Ok then
                return;
             end if;
@@ -1067,12 +1038,7 @@ package body STM32.I2C is
 
          else
             --  One byte to read
-            Wait_Flag
-              (This,
-               Rx_Data_Register_Not_Empty,
-               False,
-               Timeout,
-               Status);
+            Wait_While_Flag (This, Rx_Data_Register_Not_Empty, False, Timeout, Status);
             if Status /= HAL.I2C.Ok then
                return;
             end if;
@@ -1080,11 +1046,7 @@ package body STM32.I2C is
             Data (Idx) := This.Periph.DR.DR;
             Idx := Idx + 1;
 
-            Wait_Flag (This,
-                       Byte_Transfer_Finished,
-                       False,
-                       Timeout,
-                       Status);
+            Wait_While_Flag (This, Byte_Transfer_Finished, False, Timeout, Status);
 
             if Status = HAL.I2C.Ok then
                Data (Idx) := This.Periph.DR.DR;
