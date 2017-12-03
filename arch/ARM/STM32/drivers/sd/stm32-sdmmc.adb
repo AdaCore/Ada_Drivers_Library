@@ -966,7 +966,7 @@ package body STM32.SDMMC is
       if This.RX_DMA_Int = null or else This.SD_Int = null then
          SD_Err := Read_Blocks
            (This,
-            Block_Number * UInt64 (This.Info.Card_Block_Size),
+            Block_Number * 512,
             Data);
          return SD_Err = OK;
       end if;
@@ -975,7 +975,7 @@ package body STM32.SDMMC is
 
       SD_Err := Read_Blocks_DMA
         (This,
-         Block_Number * UInt64 (This.Info.Card_Block_Size),
+         Block_Number * 512,
          Data);
 
       if SD_Err /= OK then
@@ -1051,7 +1051,7 @@ package body STM32.SDMMC is
 
       Ret := Write_Blocks_DMA
         (This,
-         Block_Number * UInt64 (This.Info.Card_Block_Size),
+         Block_Number * 512,
          Data);
       --  this always leaves the last 12 byte standing. Why?
       --  also...NDTR is not what it should be.
