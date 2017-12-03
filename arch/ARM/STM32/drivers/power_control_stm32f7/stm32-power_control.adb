@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2016, AdaCore                       --
+--                     Copyright (C) 2016-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,8 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32_SVD.PWR; use STM32_SVD.PWR;
-with STM32_SVD.RCC; use STM32_SVD.RCC;
+with STM32_SVD.PWR;       use STM32_SVD.PWR;
+with STM32_SVD.RCC;       use STM32_SVD.RCC;
+with Cortex_M_SVD.SCB;    use Cortex_M_SVD.SCB;
+with System.Machine_Code; use System.Machine_Code;
 
 package body STM32.Power_Control is
 
@@ -60,5 +62,97 @@ package body STM32.Power_Control is
    begin
       PWR_Periph.CR1.DBP := False;
    end Enable_Backup_Domain_Protection;
+
+   -----------------
+   -- Wakeup_Flag --
+   -----------------
+
+   function Wakeup_Flag (Pin : Wakeup_Pin) return Boolean
+   is (PWR_Periph.CSR2.WUPF.Arr (Integer (Pin)));
+
+   -----------------------
+   -- Clear_Wakeup_Flag --
+   -----------------------
+
+   procedure Clear_Wakeup_Flag (Pin : Wakeup_Pin) is
+   begin
+      PWR_Periph.CR2.CWUPF.Arr (Integer (Pin)) := True;
+   end Clear_Wakeup_Flag;
+
+   ------------------
+   -- Standby_Flag --
+   ------------------
+
+   function Standby_Flag return Boolean
+   is (PWR_Periph.CSR1.SBF);
+
+   ------------------------
+   -- Clear_Standby_Flag --
+   ------------------------
+
+   procedure Clear_Standby_Flag is
+   begin
+      PWR_Periph.CR1.CSBF := True;
+   end Clear_Standby_Flag;
+
+   ------------------------------
+   -- Set_Power_Down_Deepsleep --
+   ------------------------------
+
+   procedure Set_Power_Down_Deepsleep (Enabled : Boolean := True) is
+   begin
+      PWR_Periph.CR1.PDDS := Enabled;
+   end Set_Power_Down_Deepsleep;
+
+   -----------------------------
+   -- Set_Low_Power_Deepsleep --
+   -----------------------------
+
+   procedure Set_Low_Power_Deepsleep (Enabled : Boolean := True) is
+   begin
+      PWR_Periph.CR1.LPDS := Enabled;
+   end Set_Low_Power_Deepsleep;
+
+   -----------------------
+   -- Enable_Wakeup_Pin --
+   -----------------------
+
+   procedure Enable_Wakeup_Pin (Pin     : Wakeup_Pin;
+                                Enabled : Boolean := True) is
+   begin
+      PWR_Periph.CSR2.EWUP.Arr (Integer (Pin)) := Enabled;
+   end Enable_Wakeup_Pin;
+
+   -----------------------------
+   -- Set_Wakeup_Pin_Polarity --
+   -----------------------------
+
+   procedure Set_Wakeup_Pin_Polarity (Pin : Wakeup_Pin;
+                                      Pol : Wakeup_Pin_Polarity)
+   is
+   begin
+      PWR_Periph.CR2.WUPP.Arr (Integer (Pin)) := Pol = Falling_Edge;
+   end Set_Wakeup_Pin_Polarity;
+
+   ------------------------
+   -- Enter_Standby_Mode --
+   ------------------------
+
+   procedure Enter_Standby_Mode is
+   begin
+      for Pin in Wakeup_Pin loop
+         Clear_Wakeup_Flag (Pin);
+      end loop;
+
+      Clear_Standby_Flag;
+
+      Set_Power_Down_Deepsleep;
+
+      SCB_Periph.SCR.SLEEPDEEP := True;
+
+      loop
+         Asm ("wfi", Volatile => True);
+      end loop;
+   end Enter_Standby_Mode;
 
 end STM32.Power_Control;
