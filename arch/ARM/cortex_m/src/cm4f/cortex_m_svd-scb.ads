@@ -564,11 +564,11 @@ package Cortex_M_SVD.SCB is
       --  Indicates sleep-on-exit when returning from Handler mode to Thread
       --  mode
       SLEEPONEXIT   : Boolean := False;
-      --  unspecified
-      Reserved_2_2  : HAL.Bit := 16#0#;
       --  Controls whether the processor uses sleep or deep sleep as its
       --  low-power mode
       SLEEPDEEP     : Boolean := False;
+      --  unspecified
+      Reserved_3_3  : HAL.Bit := 16#0#;
       --  Send event on pending bit
       SEVONPEND     : Boolean := False;
       --  unspecified
@@ -580,8 +580,8 @@ package Cortex_M_SVD.SCB is
    for SCR_Register use record
       Reserved_0_0  at 0 range 0 .. 0;
       SLEEPONEXIT   at 0 range 1 .. 1;
-      Reserved_2_2  at 0 range 2 .. 2;
-      SLEEPDEEP     at 0 range 3 .. 3;
+      SLEEPDEEP     at 0 range 2 .. 2;
+      Reserved_3_3  at 0 range 3 .. 3;
       SEVONPEND     at 0 range 4 .. 4;
       Reserved_5_31 at 0 range 5 .. 31;
    end record;
