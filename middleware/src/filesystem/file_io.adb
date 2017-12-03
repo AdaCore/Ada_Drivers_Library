@@ -188,7 +188,7 @@ package body File_IO is
       return File_Size
    is
       Ret    : HALFS.File_Size;
-      Status : Status_Code with Unreferenced;
+      Status : Status_Code;
    begin
       if File.Handle = null then
          return 0;
@@ -197,7 +197,11 @@ package body File_IO is
       Ret := Convert (Length);
       Status := Convert (File.Handle.Read (Addr, Ret));
 
-      return Convert (Ret);
+      if Status /= OK then
+         return 0;
+      else
+         return Convert (Ret);
+      end if;
    end Read;
 
    -----------
@@ -211,7 +215,7 @@ package body File_IO is
       return File_Size
    is
       Ret    : HALFS.File_Size;
-      Status : Status_Code with Unreferenced;
+      Status : Status_Code;
    begin
       if File.Handle = null then
          return 0;
@@ -220,7 +224,11 @@ package body File_IO is
       Ret := Convert (Length);
       Status := Convert (File.Handle.Write (Addr, Ret));
 
-      return Convert (Ret);
+      if Status /= OK then
+         return 0;
+      else
+         return Convert (Ret);
+      end if;
    end Write;
 
    ------------
@@ -459,6 +467,9 @@ package body File_IO is
 
       loop
          Src_Len := Read (Src, Buffer'Address, Buffer'Length);
+
+         exit when Src_Len = 0;
+
          Dst_Len := Write (Dst, Buffer'Address, Src_Len);
 
          if Dst_Len /= Src_Len then
