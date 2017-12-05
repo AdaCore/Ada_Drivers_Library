@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2016, AdaCore                       --
+--                     Copyright (C) 2016-2017, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -36,4 +36,54 @@ package STM32.Power_Control is
 
    procedure Disable_Backup_Domain_Protection;
    procedure Enable_Backup_Domain_Protection;
+
+   function Standby_Flag return Boolean;
+   --  This flag is set by hardware and cleared only by a POR/PDR (power-on
+   --  reset/power-down reset) or by calling the Clear_Standby_Flag procedure.
+
+   procedure Clear_Standby_Flag;
+
+   procedure Set_Power_Down_Deepsleep (Enabled : Boolean := True);
+   --  When enabled, the MCU enters Standby mode when CPU enters deepsleep.
+   --  When disabled, the MCU enters Stop mode when CPU enters deepsleep.
+
+   procedure Set_Low_Power_Deepsleep (Enabled : Boolean := True);
+   --  When enabled, the voltage regulator is in low-power during MCU Stop mode.
+   --  When disabled, the voltage regulator is on during MCU Stop mode.
+
+
+   type Wakeup_Pin is range 1 .. 6;
+   --  Pin 1 -> PA0
+   --  Pin 2 -> PA2
+   --  Pin 3 -> PC1
+   --  Pin 4 -> PC13
+   --  Pin 5 -> PI8
+   --  Pin 6 -> PI11
+
+   type Wakeup_Pin_Polarity is (Rising_Edge, Falling_Edge);
+
+   function Wakeup_Flag (Pin : Wakeup_Pin) return Boolean;
+   --  This flag is set by hardware and cleared either by a system reset or by
+   --  calling the Clear_Wakeup_Flag procedure.
+
+   procedure Clear_Wakeup_Flag (Pin : Wakeup_Pin);
+
+   procedure Enable_Wakeup_Pin (Pin     : Wakeup_Pin;
+                                Enabled : Boolean := True);
+   --  When enabled, the wakeup pin (PA0) is used for wakeup from Standby mode
+   --  and forced in input pull down configuration (rising edge on WKUP pin
+   --  wakes-up the system from Standby mode).
+   --  When disabled, the wakeup  pin is used for general purpose I/O. An event
+   --  on the wakeup  pin does not wakeup the device from Standby mode.
+
+   procedure Set_Wakeup_Pin_Polarity (Pin : Wakeup_Pin;
+                                      Pol : Wakeup_Pin_Polarity);
+   --  Set the polarity used for event detection on external wake-up pin
+
+   procedure Enter_Standby_Mode
+     with No_Return;
+   --  Clear the wakeup and standby flag, set the power-down on CPU deep sleep
+   --  and trigger MCU deep sleep.
+   --  MCU gets out of standby with a reset, so this procedure does not return.
+
 end STM32.Power_Control;
