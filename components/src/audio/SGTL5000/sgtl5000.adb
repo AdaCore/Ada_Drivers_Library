@@ -125,7 +125,7 @@ package body SGTL5000 is
       This.Modify (ANA_ADC_CTRL_REG,
                    2#0000_0001_1111_1111#,
                    UInt16 (Left) or Shift_Left (UInt16 (Right), 4)
-                   or (if Minus_6db then 2#000_0001_000_0000# else 0));
+                   or (if Minus_6db then 2#000_0001_0000_0000# else 0));
    end Set_ADC_Volume;
 
    ---------------------------
@@ -344,7 +344,7 @@ package body SGTL5000 is
       if Reftop_PowerUp then
          Value := Value or 2**5;
       end if;
-      if ADC_Mono then
+      if not ADC_Mono then
          Value := Value or 2**6;
       end if;
       if VAG_PowerUp then
@@ -368,7 +368,7 @@ package body SGTL5000 is
       if Linreg_Simple_PowerUp then
          Value := Value or 2**13;
       end if;
-      if DAC_Mono then
+      if not DAC_Mono then
          Value := Value or 2**14;
       end if;
       This.I2C_Write (ANA_POWER_REG, Value);
@@ -481,7 +481,7 @@ package body SGTL5000 is
    is
    begin
       This.Modify (SSS_CTRL_REG,
-                   2#0000_0000_11_0000#,
+                   2#0000_0000_1100_0000#,
                    (case Source is
                        when ADC    => 2#0000_0000_0000_0000#,
                        when I2S_In => 2#0000_0000_0100_0000#));
