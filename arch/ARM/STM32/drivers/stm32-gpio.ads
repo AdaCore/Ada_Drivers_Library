@@ -160,6 +160,7 @@ package STM32.GPIO is
 
    overriding
    function Set (This : GPIO_Point) return Boolean with
+     Pre => Pin_IO_Mode (This) /= Mode_AF,
      Inline;
    --  Returns True if the bit specified by This.Pin is set (not zero) in the
    --  input data register of This.Port.all; returns False otherwise.
@@ -196,6 +197,8 @@ package STM32.GPIO is
       Config : GPIO_Port_Configuration);
    --  For Point.Pin on the Point.Port.all, configures the
    --  characteristics specified by Config
+
+   function Pin_IO_Mode (This : GPIO_Point) return Pin_IO_Modes with Inline;
 
    function Interrupt_Line_Number
      (This : GPIO_Point) return EXTI.External_Line_Number;

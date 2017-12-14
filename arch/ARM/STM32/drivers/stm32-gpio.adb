@@ -80,14 +80,23 @@ package body STM32.GPIO is
 
    overriding
    function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode is
-      Index : constant GPIO_Pin_Index := GPIO_Pin'Pos (This.Pin);
    begin
-      case This.Periph.MODER.Arr (Index) is
-         when Pin_IO_Modes'Enum_Rep (Mode_Out) => return HAL.GPIO.Output;
-         when Pin_IO_Modes'Enum_Rep (Mode_In) => return HAL.GPIO.Input;
-         when others => return HAL.GPIO.Unknown;
+      case Pin_IO_Mode (This) is
+         when Mode_Out => return HAL.GPIO.Output;
+         when Mode_In  => return HAL.GPIO.Input;
+         when others   => return HAL.GPIO.Unknown;
       end case;
    end Mode;
+
+   -----------------
+   -- Pin_IO_Mode --
+   -----------------
+
+   function Pin_IO_Mode (This : GPIO_Point) return Pin_IO_Modes is
+      Index : constant GPIO_Pin_Index := GPIO_Pin'Pos (This.Pin);
+   begin
+      return Pin_IO_Modes'Val (This.Periph.MODER.Arr (Index));
+   end Pin_IO_Mode;
 
    --------------
    -- Set_Mode --
