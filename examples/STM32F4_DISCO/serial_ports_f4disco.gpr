@@ -1,6 +1,6 @@
-with "../../boards/stm32f429_discovery/stm32f429_discovery_full.gpr";
+with "../../boards/stm32f407_discovery/stm32f407_discovery_full.gpr";
 
-project Serial_Ports_F429Disco extends "../shared/common/common.gpr" is
+project Serial_Ports_F4Disco extends "../shared/common/common.gpr" is
 
    for Languages use ("Ada");
 
@@ -8,9 +8,9 @@ project Serial_Ports_F429Disco extends "../shared/common/common.gpr" is
 
    for Source_Dirs use ("../shared/serial_ports/src");
 
-   for Object_Dir use "../shared/serial_ports/obj/stm32f429disco";
+   for Object_Dir use "../shared/serial_ports/obj/stm32f407disco";
 
-   for Runtime ("Ada") use STM32F429_Discovery_Full'Runtime("Ada");
+   for Runtime ("Ada") use STM32F407_Discovery_Full'Runtime("Ada");
 
    for Create_Missing_Dirs use "True";
 
@@ -18,4 +18,4 @@ project Serial_Ports_F429Disco extends "../shared/common/common.gpr" is
       for Global_Configuration_Pragmas use "../shared/serial_ports/gnat.adc";
    end Builder;
 
-end Serial_Ports_F429Disco;
+end Serial_Ports_F4Disco;

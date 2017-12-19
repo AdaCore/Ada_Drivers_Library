@@ -45,7 +45,6 @@ with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 --  an exception is propagated. We need it in the executable, therefore it
 --  must be somewhere in the closure of the context clauses.
 
-with STM32.Device;  use STM32.Device;
 with STM32.Board;   use STM32.Board;
 
 with STM32.GPIO;    use STM32.GPIO;
@@ -57,27 +56,8 @@ procedure Blinky is
 
    Next_Release : Time := Clock;
 
-   procedure Initialize_LEDs;
-   --  Enables the clock and configures the GPIO pins and port connected to the
-   --  LEDs on the target board so that we can drive them via GPIO commands.
-   --  Note that the STM32.Board package provides a procedure (with the same
-   --  name) to do this directly, for convenience, but we do not use it here
-   --  for the sake of illustration.
-
-   procedure Initialize_LEDs is
-   begin
-      Enable_Clock (All_LEDs);
-
-      Configure_IO
-        (All_LEDs,
-         (Mode       => Mode_Out,
-         Output_Type => Push_Pull,
-         Speed       => Speed_100MHz,
-         Resistors   => Floating));
-   end Initialize_LEDs;
-
 begin
-   Initialize_LEDs;
+   STM32.Board.Initialize_LEDs;
 
    loop
       Toggle (All_LEDs);

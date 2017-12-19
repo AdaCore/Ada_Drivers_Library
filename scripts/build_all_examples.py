@@ -86,6 +86,8 @@ projects = [
             ("/examples/STM32F4_DISCO/accelerometer/accelerometer.gpr",                                  BOTH_RAVENSCAR),
             ("/examples/STM32F4_DISCO/simple_audio/simple_audio.gpr",                                    BOTH_RAVENSCAR),
             ("/examples/STM32F4_DISCO/filesystem/filesystem.gpr",                                        BOTH_RAVENSCAR),
+            ("/examples/STM32F4_DISCO/blinky_f4disco.gpr",                                               BOTH_RAVENSCAR),
+            ("/examples/STM32F4_DISCO/serial_ports_f4disco.gpr",                                         RAVENSCAR_FULL),
 
             # STM32F469 Discovery
             ("/examples/STM32F469_Discovery/dma2d_stm32f469disco.gpr",                                   BOTH_RAVENSCAR),
