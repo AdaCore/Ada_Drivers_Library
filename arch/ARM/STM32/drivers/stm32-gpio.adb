@@ -255,6 +255,19 @@ package body STM32.GPIO is
       end loop;
    end Toggle;
 
+   -----------
+   -- Drive --
+   -----------
+
+   procedure Drive (This : in out GPIO_Point; Condition : Boolean) is
+   begin
+      if Condition then
+         This.Set;
+      else
+         This.Clear;
+      end if;
+   end Drive;
+
    ------------
    -- Locked --
    ------------

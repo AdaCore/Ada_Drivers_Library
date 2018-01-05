@@ -183,6 +183,11 @@ package STM32.GPIO is
    --  For This.Port.all, negates the output data register bit specified by
    --  This.Pin (one becomes zero and vice versa). Other pins are unaffected.
 
+   procedure Drive (This : in out GPIO_Point; Condition : Boolean) with
+      Post => (This.Set = Condition),
+      Inline;
+   --  Drives This high or low (set or clear) based on the value of Condition
+
    procedure Lock (This : GPIO_Point) with
      Pre  => not Locked (This),
      Post => Locked (This);
