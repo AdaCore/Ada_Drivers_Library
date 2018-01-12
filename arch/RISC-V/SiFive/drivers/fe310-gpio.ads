@@ -45,6 +45,13 @@ package FE310.GPIO is
    procedure Set_IO_Function (This : in out GPIO_Point;
                               Func : IO_Function);
 
+   procedure Invert (This    : in out GPIO_Point;
+                     Enabled : Boolean := True);
+   --  Invert the output level
+
+   function Inverted (This : GPIO_Point) return Boolean;
+
+
    ---------------
    --  HAL.GPIO --
    ---------------
