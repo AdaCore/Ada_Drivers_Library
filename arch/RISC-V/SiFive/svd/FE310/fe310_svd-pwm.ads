@@ -16,6 +16,78 @@ package FE310_SVD.PWM is
 
    subtype CONFIG_SCALE_Field is HAL.UInt4;
 
+   --  CONFIG_CMP_CENTER array
+   type CONFIG_CMP_CENTER_Field_Array is array (0 .. 3) of Boolean
+     with Component_Size => 1, Size => 4;
+
+   --  Type definition for CONFIG_CMP_CENTER
+   type CONFIG_CMP_CENTER_Field
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  CMP_CENTER as a value
+            Val : HAL.UInt4;
+         when True =>
+            --  CMP_CENTER as an array
+            Arr : CONFIG_CMP_CENTER_Field_Array;
+      end case;
+   end record
+     with Unchecked_Union, Size => 4;
+
+   for CONFIG_CMP_CENTER_Field use record
+      Val at 0 range 0 .. 3;
+      Arr at 0 range 0 .. 3;
+   end record;
+
+   --  CONFIG_CMP_GANG array
+   type CONFIG_CMP_GANG_Field_Array is array (0 .. 3) of Boolean
+     with Component_Size => 1, Size => 4;
+
+   --  Type definition for CONFIG_CMP_GANG
+   type CONFIG_CMP_GANG_Field
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  CMP_GANG as a value
+            Val : HAL.UInt4;
+         when True =>
+            --  CMP_GANG as an array
+            Arr : CONFIG_CMP_GANG_Field_Array;
+      end case;
+   end record
+     with Unchecked_Union, Size => 4;
+
+   for CONFIG_CMP_GANG_Field use record
+      Val at 0 range 0 .. 3;
+      Arr at 0 range 0 .. 3;
+   end record;
+
+   --  CONFIG_CMP_IP array
+   type CONFIG_CMP_IP_Field_Array is array (0 .. 3) of Boolean
+     with Component_Size => 1, Size => 4;
+
+   --  Type definition for CONFIG_CMP_IP
+   type CONFIG_CMP_IP_Field
+     (As_Array : Boolean := False)
+   is record
+      case As_Array is
+         when False =>
+            --  CMP_IP as a value
+            Val : HAL.UInt4;
+         when True =>
+            --  CMP_IP as an array
+            Arr : CONFIG_CMP_IP_Field_Array;
+      end case;
+   end record
+     with Unchecked_Union, Size => 4;
+
+   for CONFIG_CMP_IP_Field use record
+      Val at 0 range 0 .. 3;
+      Arr at 0 range 0 .. 3;
+   end record;
+
    --  PWM Configuration Register.
    type CONFIG_Register is record
       SCALE          : CONFIG_SCALE_Field := 16#0#;
@@ -30,20 +102,14 @@ package FE310_SVD.PWM is
       ENONESHOT      : Boolean := False;
       --  unspecified
       Reserved_14_15 : HAL.UInt2 := 16#0#;
-      CMP_CENTER_0   : Boolean := False;
-      CMP_CENTER_1   : Boolean := False;
-      CMP_CENTER_2   : Boolean := False;
-      CMP_CENTER_3   : Boolean := False;
+      CMP_CENTER     : CONFIG_CMP_CENTER_Field :=
+                        (As_Array => False, Val => 16#0#);
       --  unspecified
       Reserved_20_23 : HAL.UInt4 := 16#0#;
-      CMP_GANG_0     : Boolean := False;
-      CMP_GANG_1     : Boolean := False;
-      CMP_GANG_2     : Boolean := False;
-      CMP_GANG_3     : Boolean := False;
-      CMP_IP_0       : Boolean := False;
-      CMP_IP_1       : Boolean := False;
-      CMP_IP_2       : Boolean := False;
-      CMP_IP_3       : Boolean := False;
+      CMP_GANG       : CONFIG_CMP_GANG_Field :=
+                        (As_Array => False, Val => 16#0#);
+      CMP_IP         : CONFIG_CMP_IP_Field :=
+                        (As_Array => False, Val => 16#0#);
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
@@ -58,209 +124,56 @@ package FE310_SVD.PWM is
       ENALWAYS       at 0 range 12 .. 12;
       ENONESHOT      at 0 range 13 .. 13;
       Reserved_14_15 at 0 range 14 .. 15;
-      CMP_CENTER_0   at 0 range 16 .. 16;
-      CMP_CENTER_1   at 0 range 17 .. 17;
-      CMP_CENTER_2   at 0 range 18 .. 18;
-      CMP_CENTER_3   at 0 range 19 .. 19;
+      CMP_CENTER     at 0 range 16 .. 19;
       Reserved_20_23 at 0 range 20 .. 23;
-      CMP_GANG_0     at 0 range 24 .. 24;
-      CMP_GANG_1     at 0 range 25 .. 25;
-      CMP_GANG_2     at 0 range 26 .. 26;
-      CMP_GANG_3     at 0 range 27 .. 27;
-      CMP_IP_0       at 0 range 28 .. 28;
-      CMP_IP_1       at 0 range 29 .. 29;
-      CMP_IP_2       at 0 range 30 .. 30;
-      CMP_IP_3       at 0 range 31 .. 31;
+      CMP_GANG       at 0 range 24 .. 27;
+      CMP_IP         at 0 range 28 .. 31;
    end record;
 
-   subtype COUNT_16_CNT_Field is HAL.UInt31;
+   subtype COUNT_CNT_Field is HAL.UInt31;
 
    --  PWM Count Register.
-   type COUNT_16_Register is record
-      CNT            : COUNT_16_CNT_Field := 16#0#;
+   type COUNT_Register is record
+      CNT            : COUNT_CNT_Field := 16#0#;
       --  unspecified
       Reserved_31_31 : HAL.Bit := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for COUNT_16_Register use record
+   for COUNT_Register use record
       CNT            at 0 range 0 .. 30;
       Reserved_31_31 at 0 range 31 .. 31;
    end record;
 
-   subtype COUNT_8_CNT_Field is HAL.UInt23;
-
-   --  PWM Count Register.
-   type COUNT_8_Register is record
-      CNT            : COUNT_8_CNT_Field := 16#0#;
-      --  unspecified
-      Reserved_23_31 : HAL.UInt9 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for COUNT_8_Register use record
-      CNT            at 0 range 0 .. 22;
-      Reserved_23_31 at 0 range 23 .. 31;
-   end record;
-
-   subtype SCALE_COUNT_16_CNT_Field is HAL.UInt16;
+   subtype SCALE_COUNT_CNT_Field is HAL.UInt16;
 
    --  PWM Scaled Conunter Register.
-   type SCALE_COUNT_16_Register is record
-      CNT            : SCALE_COUNT_16_CNT_Field := 16#0#;
+   type SCALE_COUNT_Register is record
+      CNT            : SCALE_COUNT_CNT_Field := 16#0#;
       --  unspecified
       Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for SCALE_COUNT_16_Register use record
+   for SCALE_COUNT_Register use record
       CNT            at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
-   subtype SCALE_COUNT_8_CNT_Field is HAL.UInt9;
-
-   --  PWM Scaled Conunter Register.
-   type SCALE_COUNT_8_Register is record
-      CNT           : SCALE_COUNT_8_CNT_Field := 16#0#;
-      --  unspecified
-      Reserved_9_31 : HAL.UInt23 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for SCALE_COUNT_8_Register use record
-      CNT           at 0 range 0 .. 8;
-      Reserved_9_31 at 0 range 9 .. 31;
-   end record;
-
-   subtype COMPARE_0_16_COMPARE_Field is HAL.UInt16;
+   subtype COMPARE_COMPARE_Field is HAL.UInt16;
 
    --  PWM Compare Register.
-   type COMPARE_0_16_Register is record
-      COMPARE        : COMPARE_0_16_COMPARE_Field := 16#0#;
+   type COMPARE_Register is record
+      COMPARE        : COMPARE_COMPARE_Field := 16#0#;
       --  unspecified
       Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
      with Volatile_Full_Access, Size => 32,
           Bit_Order => System.Low_Order_First;
 
-   for COMPARE_0_16_Register use record
-      COMPARE        at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype COMPARE_0_8_COMPARE_Field is HAL.UInt16;
-
-   --  PWM Compare Register.
-   type COMPARE_0_8_Register is record
-      COMPARE        : COMPARE_0_8_COMPARE_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.UInt16 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for COMPARE_0_8_Register use record
-      COMPARE        at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype COMPARE_1_16_COMPARE_Field is HAL.UInt16;
-
-   --  PWM Compare Register.
-   type COMPARE_1_16_Register is record
-      COMPARE        : COMPARE_1_16_COMPARE_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.UInt16 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for COMPARE_1_16_Register use record
-      COMPARE        at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype COMPARE_1_8_COMPARE_Field is HAL.UInt16;
-
-   --  PWM Compare Register.
-   type COMPARE_1_8_Register is record
-      COMPARE        : COMPARE_1_8_COMPARE_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.UInt16 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for COMPARE_1_8_Register use record
-      COMPARE        at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype COMPARE_2_16_COMPARE_Field is HAL.UInt16;
-
-   --  PWM Compare Register.
-   type COMPARE_2_16_Register is record
-      COMPARE        : COMPARE_2_16_COMPARE_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.UInt16 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for COMPARE_2_16_Register use record
-      COMPARE        at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype COMPARE_2_8_COMPARE_Field is HAL.UInt16;
-
-   --  PWM Compare Register.
-   type COMPARE_2_8_Register is record
-      COMPARE        : COMPARE_2_8_COMPARE_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.UInt16 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for COMPARE_2_8_Register use record
-      COMPARE        at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype COMPARE_3_16_COMPARE_Field is HAL.UInt16;
-
-   --  PWM Compare Register.
-   type COMPARE_3_16_Register is record
-      COMPARE        : COMPARE_3_16_COMPARE_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.UInt16 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for COMPARE_3_16_Register use record
-      COMPARE        at 0 range 0 .. 15;
-      Reserved_16_31 at 0 range 16 .. 31;
-   end record;
-
-   subtype COMPARE_3_8_COMPARE_Field is HAL.UInt16;
-
-   --  PWM Compare Register.
-   type COMPARE_3_8_Register is record
-      COMPARE        : COMPARE_3_8_COMPARE_Field := 16#0#;
-      --  unspecified
-      Reserved_16_31 : HAL.UInt16 := 16#0#;
-   end record
-     with Volatile_Full_Access, Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for COMPARE_3_8_Register use record
+   for COMPARE_Register use record
       COMPARE        at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
@@ -269,62 +182,33 @@ package FE310_SVD.PWM is
    -- Peripherals --
    -----------------
 
-   type PWM0_Disc is
-     (
-      PWM0_Disc_16,
-      PWM0_Disc_8);
-
    --  Pulse-Width Modulation.
-   type PWM_Peripheral
-     (Discriminent : PWM0_Disc := PWM0_Disc_16)
-   is record
+   type PWM_Peripheral is record
       --  PWM Configuration Register.
-      CONFIG         : aliased CONFIG_Register;
-      case Discriminent is
-         when PWM0_Disc_16 =>
-            --  PWM Count Register.
-            COUNT_16 : aliased COUNT_16_Register;
-            --  PWM Scaled Conunter Register.
-            SCALE_COUNT_16 : aliased SCALE_COUNT_16_Register;
-            --  PWM Compare Register.
-            COMPARE_0_16 : aliased COMPARE_0_16_Register;
-            --  PWM Compare Register.
-            COMPARE_1_16 : aliased COMPARE_1_16_Register;
-            --  PWM Compare Register.
-            COMPARE_2_16 : aliased COMPARE_2_16_Register;
-            --  PWM Compare Register.
-            COMPARE_3_16 : aliased COMPARE_3_16_Register;
-         when PWM0_Disc_8 =>
-            --  PWM Count Register.
-            COUNT_8 : aliased COUNT_8_Register;
-            --  PWM Scaled Conunter Register.
-            SCALE_COUNT_8 : aliased SCALE_COUNT_8_Register;
-            --  PWM Compare Register.
-            COMPARE_0_8 : aliased COMPARE_0_8_Register;
-            --  PWM Compare Register.
-            COMPARE_1_8 : aliased COMPARE_1_8_Register;
-            --  PWM Compare Register.
-            COMPARE_2_8 : aliased COMPARE_2_8_Register;
-            --  PWM Compare Register.
-            COMPARE_3_8 : aliased COMPARE_3_8_Register;
-      end case;
+      CONFIG      : aliased CONFIG_Register;
+      --  PWM Count Register.
+      COUNT       : aliased COUNT_Register;
+      --  PWM Scaled Conunter Register.
+      SCALE_COUNT : aliased SCALE_COUNT_Register;
+      --  PWM Compare Register.
+      COMPARE0    : aliased COMPARE_Register;
+      --  PWM Compare Register.
+      COMPARE1    : aliased COMPARE_Register;
+      --  PWM Compare Register.
+      COMPARE2    : aliased COMPARE_Register;
+      --  PWM Compare Register.
+      COMPARE3    : aliased COMPARE_Register;
    end record
-     with Unchecked_Union, Volatile;
+     with Volatile;
 
    for PWM_Peripheral use record
-      CONFIG         at 16#0# range 0 .. 31;
-      COUNT_16       at 16#8# range 0 .. 31;
-      SCALE_COUNT_16 at 16#10# range 0 .. 31;
-      COMPARE_0_16   at 16#20# range 0 .. 31;
-      COMPARE_1_16   at 16#24# range 0 .. 31;
-      COMPARE_2_16   at 16#28# range 0 .. 31;
-      COMPARE_3_16   at 16#2C# range 0 .. 31;
-      COUNT_8        at 16#8# range 0 .. 31;
-      SCALE_COUNT_8  at 16#10# range 0 .. 31;
-      COMPARE_0_8    at 16#20# range 0 .. 31;
-      COMPARE_1_8    at 16#24# range 0 .. 31;
-      COMPARE_2_8    at 16#28# range 0 .. 31;
-      COMPARE_3_8    at 16#2C# range 0 .. 31;
+      CONFIG      at 16#0# range 0 .. 31;
+      COUNT       at 16#8# range 0 .. 31;
+      SCALE_COUNT at 16#10# range 0 .. 31;
+      COMPARE0    at 16#20# range 0 .. 31;
+      COMPARE1    at 16#24# range 0 .. 31;
+      COMPARE2    at 16#28# range 0 .. 31;
+      COMPARE3    at 16#2C# range 0 .. 31;
    end record;
 
    --  Pulse-Width Modulation.
