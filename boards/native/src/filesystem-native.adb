@@ -576,8 +576,10 @@ package body Filesystem.Native is
       Length := Ret;
       return OK;
    exception
+      when Byte_IO.End_Error =>
+         Length := Ret;
+         return OK;
       when Byte_IO.Mode_Error
-         | Byte_IO.End_Error
          | Byte_IO.Data_Error
          =>
          Length := Ret;
