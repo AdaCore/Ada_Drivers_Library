@@ -71,11 +71,9 @@ package HAL.GPIO is
    --  no actual effect on the line. For example trying to set the IO when
    --  another device is pulling the line to low.
 
-   procedure Set (This : in out GPIO_Point) is abstract
-     with Pre'Class => This.Mode = Output;
+   procedure Set (This : in out GPIO_Point) is abstract;
 
-   procedure Clear (This : in out GPIO_Point) is abstract
-     with Pre'Class => This.Mode = Output;
+   procedure Clear (This : in out GPIO_Point) is abstract;
 
    procedure Toggle (This : in out GPIO_Point) is abstract
      with Pre'Class => This.Mode = Output;
