@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--                       Copyright (C) 2018, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,63 +29,74 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.GPIO;
+with FE310_SVD.PWM;
 
-package FE310.GPIO is
+package FE310.PWM is
 
-   subtype GPIO_Pin_Index is Natural range 0 .. 31;
+   type Internal_PWM is limited private;
 
-   type GPIO_Point (Pin : GPIO_Pin_Index) is new HAL.GPIO.GPIO_Point with
-     private;
+   type PWM_Device (Periph : not null access Internal_PWM) is
+     limited private;
 
-   type IO_Function is (Disabled, IOF0, IOF1);
-   --  Alternative function for a GPIO pin (UART, SPI, PWM, etc).
-   --  The IOF values are defined in the package FE310.Device.
+   subtype Count_Value is FE310_SVD.PWM.COUNT_CNT_Field;
 
-   procedure Set_IO_Function (This : in out GPIO_Point;
-                              Func : IO_Function);
+   function Count (This : PWM_Device) return Count_Value;
 
-   procedure Invert (This    : in out GPIO_Point;
-                     Enabled : Boolean := True);
-   --  Invert the output level
+   procedure Set_Count (This  : in out PWM_Device;
+                        Value : Count_Value);
 
-   function Inverted (This : GPIO_Point) return Boolean;
+   subtype Scaled_Value is FE310_SVD.PWM.SCALE_COUNT_CNT_Field;
 
+   function Scaled_Counter (This : PWM_Device)
+                            return Scaled_Value;
 
-   ---------------
-   --  HAL.GPIO --
-   ---------------
+   -- Enable --
 
-   overriding
-   function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode;
+   procedure Enable_Continous (This : in out PWM_Device);
+   procedure Enable_One_Shot (This : in out PWM_Device);
 
-   overriding
-   function Set_Mode (This : in out GPIO_Point;
-                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean;
+   procedure Disable (This : in out PWM_Device);
 
-   overriding
-   function Pull_Resistor (This : GPIO_Point)
-                           return HAL.GPIO.GPIO_Pull_Resistor;
+   -- Configuration --
 
-   overriding
-   function Set_Pull_Resistor (This : in out GPIO_Point;
-                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
+   procedure Configure (This          : in out PWM_Device;
+                        Scale         : FE310_SVD.PWM.CONFIG_SCALE_Field;
+                        Sticky        : Boolean;
+                        Reset_To_Zero : Boolean;
+                        Deglitch      : Boolean);
+
+   -- Comparators --
+
+   subtype Comparator_ID is Natural range 0 .. 3;
+
+   procedure Configure (This           : in out PWM_Device;
+                        ID             : Comparator_ID;
+                        Compare_Center : Boolean;
+                        Compare_Gang   : Boolean);
+
+   -- Compare Value --
+
+   subtype Compare_Value is FE310_SVD.PWM.COMPARE_COMPARE_Field;
+
+   procedure Set_Compare (This  : in out PWM_Device;
+                          ID    : Comparator_ID;
+                          Value : Compare_Value);
+
+   function Compare (This : PWM_Device;
+                     ID   : Comparator_ID)
+                     return Compare_Value;
+
+   -- Interrupts --
+
+   function Interrupt_Pending (This : PWM_Device;
+                               ID   : Comparator_ID)
                                return Boolean;
 
-   overriding
-   function Set (This : GPIO_Point) return Boolean;
-
-   overriding
-   procedure Set (This : in out GPIO_Point);
-
-   overriding
-   procedure Clear (This : in out GPIO_Point);
-
-   overriding
-   procedure Toggle (This : in out GPIO_Point);
-
 private
-   type GPIO_Point (Pin : GPIO_Pin_Index) is new HAL.GPIO.GPIO_Point with
-     null record;
 
-end FE310.GPIO;
+   type Internal_PWM is new FE310_SVD.PWM.PWM_Peripheral;
+
+   type PWM_Device (Periph : not null access Internal_PWM) is
+     limited null record;
+
+end FE310.PWM;

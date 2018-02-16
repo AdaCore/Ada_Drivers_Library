@@ -51,6 +51,22 @@ package body FE310.GPIO is
       end case;
    end Set_IO_Function;
 
+   ------------
+   -- Invert --
+   ------------
+
+   procedure Invert (This    : in out GPIO_Point;
+                     Enabled : Boolean := True)
+   is
+   begin
+      GPIO0_Periph.OUT_XOR.Arr (This.Pin) := Enabled;
+   end Invert;
+
+   --  Invert the output level
+
+   function Inverted (This : GPIO_Point) return Boolean
+   is (GPIO0_Periph.OUT_XOR.Arr (This.Pin));
+
    ----------
    -- Mode --
    ----------

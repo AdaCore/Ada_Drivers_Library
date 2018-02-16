@@ -31,6 +31,7 @@
 
 with FE310.GPIO; use FE310.GPIO;
 with FE310.UART; use FE310.UART;
+with FE310.PWM;  use FE310.PWM;
 
 with FE310_SVD;
 
@@ -69,18 +70,18 @@ package FE310.Device is
    P30 : aliased GPIO_Point (Pin => 30);
    P31 : aliased GPIO_Point (Pin => 31);
 
-   IOF_UART0 : constant IO_Function := IOF0;
-   IOF_UART1 : constant IO_Function := IOF0;
-   IOF_QSPI1 : constant IO_Function := IOF0;
-   IOF_QSPI2 : constant IO_Function := IOF0;
-   IOF_PWM0  : constant IO_Function := IOF1;
-   IOF_PWM1  : constant IO_Function := IOF1;
-   IOF_PWM2  : constant IO_Function := IOF1;
-
    Internal_UART0 : aliased Internal_UART with Import, Volatile, Address => FE310_SVD.UART0_Base;
    Internal_UART1 : aliased Internal_UART with Import, Volatile, Address => FE310_SVD.UART1_Base;
 
    UART0 : aliased UART_Port (Internal_UART0'Access);
    UART1 : aliased UART_Port (Internal_UART1'Access);
+
+   Internal_PWM0 : aliased Internal_PWM with Import, Volatile, Address => FE310_SVD.PWM0_Base;
+   Internal_PWM1 : aliased Internal_PWM with Import, Volatile, Address => FE310_SVD.PWM1_Base;
+   Internal_PWM2 : aliased Internal_PWM with Import, Volatile, Address => FE310_SVD.PWM2_Base;
+
+   PWM0 : aliased  PWM_Device (Internal_PWM0'Access);
+   PWM1 : aliased  PWM_Device (Internal_PWM1'Access);
+   PWM2 : aliased  PWM_Device (Internal_PWM2'Access);
 
 end FE310.Device;
