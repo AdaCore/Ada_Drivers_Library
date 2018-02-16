@@ -5,6 +5,7 @@ library project Middleware is
 
    for Source_Dirs use
      ("src/filesystem/",
+      "src/command_line",
       "src/BLE",
       "src/utils",
       "src/audio",
