@@ -24,13 +24,13 @@ $ sudo apt-get install python-pip
 $ pip install --pre -U pyocd
 ```
 
-pyOCD will need premissions to talk with the Micro:Bit. Instead of running the
-pyOCD as priviledged user (root), it's better to add a UDEV rules saying that
-the device is accessible for non-priviledged users:
+pyOCD will need permissions to talk with the Micro:Bit. Instead of running the
+pyOCD as privileged user (root), it's better to add a UDEV rules saying that
+the device is accessible for non-privileged users:
 
 `$ sudo sh -c 'echo SUBSYSTEM==\"usb\", ATTR{idVendor}==\"0d28\", ATTR{idProduct}==\"0204\", MODE:=\"666\" > /etc/udev/rules.d/mbed.rules'`
 
-Now that there's a new UDEV rule and if you already pluged your Micro:Bit
+Now that there's a new UDEV rule and if you already plugged your Micro:Bit
 before, you have to unplug it and plug it back again.
 
 To run pyOCD, use the following command:
@@ -61,7 +61,7 @@ At this point, pyOCD is waiting for a connection from Gdb.
 ## Install the Ada ZFP run-time
 
 Go to the Micro:Bit example directory and download or clone the run-time from
-Shawn Nock's GitHub repository: https://github.com/nocko/zfp-nrf51
+this GitHub repository: https://github.com/Fabien-Chouteau/zfp-nrf51
 
 ```
 $ cd Ada_Drivers_Library/examples/MicroBit/
