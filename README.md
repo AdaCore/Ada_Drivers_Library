@@ -88,5 +88,6 @@ GitHub page.
  * [NXT Lego Robotics: Ada drivers and demos for Lego NXT sensors and motors](https://github.com/AdaCore/Robotics_with_Ada)
  * [Bosch 9DOF IMU demo: Bosch 9DOF IMU driving a 3-D model of a lunar lander](
 https://github.com/AdaCore/Lunar_Lander_Rotation_Demo)
+ * [Bare metal sudoku solver](https://github.com/stangassinger/sudoku)
 
 (Add yours to the list!)
