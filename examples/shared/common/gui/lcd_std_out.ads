@@ -32,7 +32,6 @@
 --  This package provides a set of convenience routines for putting characters
 --  and strings out to the LCD.
 
-with STM32.Device;  use STM32.Device;
 with BMP_Fonts;     use BMP_Fonts;
 
 with HAL.Bitmap;

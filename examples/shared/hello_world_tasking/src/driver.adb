@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 with STM32.Board;       use STM32.Board;
-with STM32.User_Button; use STM32.User_Button;
+with STM32.User_Button;
 with Ada.Real_Time;     use Ada.Real_Time;
 
 use STM32;

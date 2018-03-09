@@ -42,9 +42,8 @@
 
 with Last_Chance_Handler;      pragma Unreferenced (Last_Chance_Handler);
 
-with STM32.Device; use STM32.Device;
 with STM32.Board;  use STM32.Board;
-with LCD_Std_Out;  use LCD_Std_Out;
+with LCD_Std_Out;
 
 with L3GD20;       use L3GD20;
 with Output_Utils; use Output_Utils;

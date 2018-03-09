@@ -31,7 +31,7 @@
 
 with HAL;      use HAL;
 with HAL.I2C;  use HAL.I2C;
-with HAL.Time; use HAL.Time;
+with HAL.Time;
 
 package SGTL5000 is
 

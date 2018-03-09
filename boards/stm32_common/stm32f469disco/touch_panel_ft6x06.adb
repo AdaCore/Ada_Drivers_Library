@@ -35,12 +35,11 @@ with Ada.Unchecked_Conversion;
 
 with STM32.Board;          use STM32.Board;
 with STM32.Device;         use STM32.Device;
-with STM32.I2C;            use STM32.I2C;
+with STM32.I2C;
 with STM32.GPIO;           use STM32.GPIO;
 with STM32.Setup;
 with HAL.Touch_Panel;      use HAL.Touch_Panel;
 
-with FT6x06;               use FT6x06;
 with Ada.Real_Time;        use Ada.Real_Time;
 with STM32.DMA;            use STM32.DMA;
 

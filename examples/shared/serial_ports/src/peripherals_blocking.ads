@@ -29,9 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.Device; use STM32.Device;
+with STM32.Device;       use STM32.Device;
 
-with Serial_IO.Blocking;  use Serial_IO.Blocking;
+with Serial_IO.Blocking;
 
 use Serial_IO;
 

@@ -148,7 +148,6 @@ begin
    Enable (Timer_4);
 
    declare
-      use STM32;
       Arg       : Long_Float := 0.0;
       Pulse     : UInt16;
       Increment : constant Long_Float := 0.00003;

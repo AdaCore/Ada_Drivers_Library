@@ -38,6 +38,7 @@ private with Ada.Containers.Vectors;
 private with Ada.Direct_IO;
 private with Ada.Strings.Unbounded;
 
+with HAL;            use HAL;
 with HAL.Filesystem; use HAL.Filesystem;
 with System;
 

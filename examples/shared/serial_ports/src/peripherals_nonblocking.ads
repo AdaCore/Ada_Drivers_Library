@@ -34,7 +34,7 @@ with Ada.Interrupts.Names;  use Ada.Interrupts.Names;
 
 with STM32.Device;          use STM32.Device;
 
-with Serial_IO.Nonblocking; use Serial_IO.Nonblocking;
+with Serial_IO.Nonblocking;
 
 use Serial_IO;
 

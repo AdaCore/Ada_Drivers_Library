@@ -32,7 +32,6 @@
 with nRF51.Tasks;
 with nRF51.Events;
 with nRF51.Radio;     use nRF51.Radio;
-with NRF51_SVD.RADIO; use NRF51_SVD.RADIO;
 with nRF51.Clock;     use nRF51.Clock;
 
 with Bluetooth_Low_Energy.Packets; use Bluetooth_Low_Energy.Packets;
