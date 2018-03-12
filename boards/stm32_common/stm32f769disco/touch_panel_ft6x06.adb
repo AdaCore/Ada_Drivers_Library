@@ -35,13 +35,10 @@ with Ada.Real_Time;        use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 
 with STM32.Board;          use STM32.Board;
-with STM32.Device;         use STM32.Device;
 with STM32.I2C;            use STM32.I2C;
 with STM32.Setup;
---  with STM32.GPIO;           use STM32.GPIO;
 with HAL.Touch_Panel;      use HAL.Touch_Panel;
 
-with FT6x06;               use FT6x06;
 
 package body Touch_Panel_FT6x06 is
 

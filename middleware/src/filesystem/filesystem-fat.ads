@@ -36,6 +36,7 @@
 
 with System;
 with Interfaces;        use Interfaces;
+with HAL;               use HAL;
 with HAL.Block_Drivers; use HAL.Block_Drivers;
 with HAL.Filesystem;    use HAL.Filesystem;
 

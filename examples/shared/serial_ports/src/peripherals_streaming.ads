@@ -29,11 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with STM32.Device; use STM32.Device;
+with STM32.Device;        use STM32.Device;
 
-with Serial_IO.Streaming;  use Serial_IO.Streaming;
-
-use Serial_IO;
+with Serial_IO;           use Serial_IO;
+with Serial_IO.Streaming;
 
 package Peripherals_Streaming is
 

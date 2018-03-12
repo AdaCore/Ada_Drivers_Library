@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 with System.Storage_Elements; use System.Storage_Elements;
-with Bitmap_Color_Conversion; use Bitmap_Color_Conversion;
+with Bitmap_Color_Conversion;
 
 package body Memory_Mapped_Bitmap is
 

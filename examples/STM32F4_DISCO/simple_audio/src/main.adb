@@ -35,7 +35,6 @@
 --  headphone jack. Press the black button to reset.
 
 with HAL;                  use HAL;
-with STM32.Device;         use STM32.Device;
 with STM32.Board;          use STM32.Board;
 with HAL.Audio;            use HAL.Audio;
 with Simple_Synthesizer;

@@ -31,7 +31,6 @@
 
 with Ada.Unchecked_Conversion;
 
-with STM32.Device;          use STM32.Device;
 with STM32.DMA2D.Interrupt;
 with STM32.DMA2D.Polling;
 with STM32.SDRAM;           use STM32.SDRAM;

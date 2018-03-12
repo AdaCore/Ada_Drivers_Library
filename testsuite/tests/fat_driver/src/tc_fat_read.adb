@@ -1,7 +1,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
-with Filesystem.Native;  use Filesystem.Native;
-with Test_Directories;   use Test_Directories;
+with Test_Directories;
 with File_Block_Drivers; use File_Block_Drivers;
 with File_IO;            use File_IO;
 with Filesystem.FAT;     use Filesystem.FAT;

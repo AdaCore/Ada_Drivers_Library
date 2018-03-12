@@ -1,6 +1,5 @@
 with Ada.Text_IO;        use Ada.Text_IO;
 
-with Filesystem.Native;  use Filesystem.Native;
 with Test_Directories;   use Test_Directories;
 with File_Block_Drivers; use File_Block_Drivers;
 with File_IO;            use File_IO;
@@ -37,7 +36,6 @@ procedure TC_FAT_Write is
       Buffer : Ada.Streams.Stream_Element_Array (1 .. Test_File_Size);
       Last   : Ada.Streams.Stream_Element_Offset;
       Size   : File_Size;
-      use type Ada.Streams.Stream_Element_Offset;
 
    begin
       Status := Open (FD, Filename, Write_Only);
