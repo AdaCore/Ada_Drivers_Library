@@ -55,7 +55,7 @@ procedure Demo_PWM_ADT is  -- demo the higher-level PWM abstract data type
    Selected_Timer : STM32.Timers.Timer renames Timer_4;
    --  NOT arbitrary! We drive the on-board LEDs that are tied to the channels
    --  of Timer_4 on some boards. Not all boards have this association. If you
-   --  use a difference board, select a GPIO point connected to your selected
+   --  use a different board, select a GPIO point connected to your selected
    --  timer and drive that instead.
 
    Timer_AF : constant STM32.GPIO_Alternate_Function := GPIO_AF_TIM4_2;
@@ -134,11 +134,11 @@ begin
       Increment : constant Long_Float := 0.00003;
       --  The Increment value controls the rate at which the brightness
       --  increases and decreases. The value is more or less arbitrary, but
-      --  note that the effect of optimization is observable.
+      --  note that the effect of compiler optimization is observable.
    begin
       loop
          Value := Percentage (50.0 * (1.0 + Sine (Arg)));
-         Set_Duty_Cycle (Power_Control, Value);
+         Power_Control.Set_Duty_Cycle (Value);
          Arg := Arg + Increment;
       end loop;
    end;
