@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--                       Copyright (C) 2018, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,26 +29,31 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HiFive1.LEDs; use HiFive1.LEDs;
-with HiFive1.Time; use HiFive1.Time;
+with HAL;      use HAL;
+with HAL.Time;
 
-procedure Main is
+package HiFive1.Time is
 
-begin
-   HiFive1.LEDs.Initialize;
+   procedure Delay_Us (Us : Positive);
+   procedure Delay_Ms (Ms : Positive);
+   procedure Delay_S (S : Positive);
 
-   --  Blinky!
-   loop
-      Turn_On (Red_LED);
-      Delay_S (1);
-      Turn_Off (Red_LED);
+   function HAL_Delay return not null HAL.Time.Any_Delays;
 
-      Turn_On (Green_LED);
-      Delay_S (1);
-      Turn_Off (Green_LED);
+private
 
-      Turn_On (Blue_LED);
-      Delay_S (1);
-      Turn_Off (Blue_LED);
-   end loop;
-end Main;
+   type HF1_Delays is new HAL.Time.Delays with null record;
+
+   overriding
+   procedure Delay_Microseconds (This : in out HF1_Delays;
+                                 Us   : Integer);
+
+   overriding
+   procedure Delay_Milliseconds (This : in out HF1_Delays;
+                                 Ms   : Integer);
+
+   overriding
+   procedure Delay_Seconds      (This : in out HF1_Delays;
+                                 S    : Integer);
+
+end HiFive1.Time;

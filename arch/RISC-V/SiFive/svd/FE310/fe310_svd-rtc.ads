@@ -76,15 +76,15 @@ package FE310_SVD.RTC is
      with Volatile;
 
    for RTC_Peripheral use record
-      CONFIG      at 16#40# range 0 .. 31;
-      LO          at 16#48# range 0 .. 31;
-      HI          at 16#4C# range 0 .. 31;
-      SCALE_COUNT at 16#50# range 0 .. 31;
-      COMPARE     at 16#60# range 0 .. 31;
+      CONFIG      at 16#0# range 0 .. 31;
+      LO          at 16#8# range 0 .. 31;
+      HI          at 16#C# range 0 .. 31;
+      SCALE_COUNT at 16#10# range 0 .. 31;
+      COMPARE     at 16#20# range 0 .. 31;
    end record;
 
    --  Real-Time Clock.
    RTC_Periph : aliased RTC_Peripheral
-     with Import, Address => System'To_Address (16#10000000#);
+     with Import, Address => System'To_Address (16#10000040#);
 
 end FE310_SVD.RTC;

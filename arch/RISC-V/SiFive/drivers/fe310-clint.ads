@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--                       Copyright (C) 2018, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,26 +29,14 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HiFive1.LEDs; use HiFive1.LEDs;
-with HiFive1.Time; use HiFive1.Time;
+package FE310.CLINT is
 
-procedure Main is
+   subtype Machine_Time_Value is UInt64;
 
-begin
-   HiFive1.LEDs.Initialize;
+   function Machine_Time return Machine_Time_Value;
 
-   --  Blinky!
-   loop
-      Turn_On (Red_LED);
-      Delay_S (1);
-      Turn_Off (Red_LED);
+   procedure Set_Machine_Time_Compare (Value : Machine_Time_Value);
 
-      Turn_On (Green_LED);
-      Delay_S (1);
-      Turn_Off (Green_LED);
+   function Machine_Time_Compare return Machine_Time_Value;
 
-      Turn_On (Blue_LED);
-      Delay_S (1);
-      Turn_Off (Blue_LED);
-   end loop;
-end Main;
+end FE310.CLINT;

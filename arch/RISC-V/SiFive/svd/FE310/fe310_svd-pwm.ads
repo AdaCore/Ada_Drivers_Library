@@ -148,7 +148,7 @@ package FE310_SVD.PWM is
 
    subtype SCALE_COUNT_CNT_Field is HAL.UInt16;
 
-   --  PWM Scaled Conunter Register.
+   --  PWM Scaled Counter Register.
    type SCALE_COUNT_Register is record
       CNT            : SCALE_COUNT_CNT_Field := 16#0#;
       --  unspecified
@@ -188,7 +188,7 @@ package FE310_SVD.PWM is
       CONFIG      : aliased CONFIG_Register;
       --  PWM Count Register.
       COUNT       : aliased COUNT_Register;
-      --  PWM Scaled Conunter Register.
+      --  PWM Scaled Counter Register.
       SCALE_COUNT : aliased SCALE_COUNT_Register;
       --  PWM Compare Register.
       COMPARE0    : aliased COMPARE_Register;

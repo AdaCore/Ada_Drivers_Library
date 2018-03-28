@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--                       Copyright (C) 2018, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,26 +29,36 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HiFive1.LEDs; use HiFive1.LEDs;
-with HiFive1.Time; use HiFive1.Time;
+with FE310_SVD.CLINT; use FE310_SVD.CLINT;
 
-procedure Main is
+package body FE310.CLINT is
 
-begin
-   HiFive1.LEDs.Initialize;
+   function Machine_Time return Machine_Time_Value is
+      High : UInt32;
+      Low : UInt32;
+   begin
+      loop
+         High := CLINT_Periph.MTIME_HI;
+         Low := CLINT_Periph.MTIME_LO;
+         exit when CLINT_Periph.MTIME_HI = High;
+      end loop;
 
-   --  Blinky!
-   loop
-      Turn_On (Red_LED);
-      Delay_S (1);
-      Turn_Off (Red_LED);
+      return Machine_Time_Value (High) * 2**32 + Machine_Time_Value (Low);
+   end Machine_Time;
 
-      Turn_On (Green_LED);
-      Delay_S (1);
-      Turn_Off (Green_LED);
 
-      Turn_On (Blue_LED);
-      Delay_S (1);
-      Turn_Off (Blue_LED);
-   end loop;
-end Main;
+   procedure Set_Machine_Time_Compare (Value : Machine_Time_Value) is
+   begin
+      CLINT_Periph.MTIMECMP_LO := UInt32'Last;
+      CLINT_Periph.MTIMECMP_HI := UInt32 (Value / 2**32);
+      CLINT_Periph.MTIMECMP_LO := UInt32 (Value rem 2**32);
+   end Set_Machine_Time_Compare;
+
+
+   function Machine_Time_Compare return Machine_Time_Value is
+   begin
+      return Machine_Time_Value (CLINT_Periph.MTIMECMP_HI) * 2**32 + Machine_Time_Value (CLINT_Periph.MTIMECMP_LO);
+   end Machine_Time_Compare;
+
+
+end FE310.CLINT;
