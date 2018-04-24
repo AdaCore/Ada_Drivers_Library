@@ -119,6 +119,7 @@ def middleware_config(config):
     config.add_source_dir('middleware/src/audio', origin)
     config.add_source_dir('middleware/src/monitor', origin)
     config.add_source_dir('middleware/src/bitmap', origin)
+    config.add_source_dir('middleware/src/command_line', origin)
     config.add_source_dir('middleware/sdmmc', origin)
 
     runtime_profile = config.get_config("Runtime_Profile")

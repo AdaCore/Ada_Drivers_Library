@@ -90,6 +90,7 @@ library project STM32F769_Discovery_SFP is
     Src_Dirs_Root & "/middleware/src/audio", -- From middleware config
     Src_Dirs_Root & "/middleware/src/monitor", -- From middleware config
     Src_Dirs_Root & "/middleware/src/bitmap", -- From middleware config
+    Src_Dirs_Root & "/middleware/src/command_line", -- From middleware config
     Src_Dirs_Root & "/middleware/sdmmc", -- From middleware config
     Src_Dirs_Root & "/middleware/src/ravenscar-common", -- From middleware config
     Src_Dirs_Root & "/components/src/**", -- From components config
