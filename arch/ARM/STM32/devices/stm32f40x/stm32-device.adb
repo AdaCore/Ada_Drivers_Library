@@ -30,15 +30,13 @@
 ------------------------------------------------------------------------------
 
 with System; use System;
-pragma Warnings (Off, "* is an internal GNAT unit");
-with System.BB.Parameters;
-pragma Warnings (On, "* is an internal GNAT unit");
+with ADL_Config;
 
 with STM32_SVD.RCC; use STM32_SVD.RCC;
 
 package body STM32.Device is
 
-   HSE_VALUE : constant := System.BB.Parameters.HSE_Clock;
+   HSE_VALUE : constant := ADL_Config.High_Speed_External_Clock;
    --  External oscillator in Hz
 
    HSI_VALUE : constant := 16_000_000;
