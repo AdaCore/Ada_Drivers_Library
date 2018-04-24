@@ -39,6 +39,8 @@ library project HiFive1_ZFP is
    for Runtime ("Ada") use "zfp-hifive1";
 
    Vendor                         := "SiFive";            -- From board definition
+   Max_Mount_Points               := "2";                 -- From default value
+   Max_Mount_Name_Length          := "128";               -- From default value
    Runtime_Profile                := "zfp";               -- From command line
    Device_Name                    := "FE310";             -- From board definition
    Device_Family                  := "FE3";               -- From board definition
@@ -48,6 +50,7 @@ library project HiFive1_ZFP is
    Board                          := "HiFive1";           -- From command line
    Has_ZFP_Runtime                := "True";              -- From board definition
    Has_Ravenscar_SFP_Runtime      := "False";             -- From board definition
+   Max_Path_Length                := "1024";              -- From default value
    Runtime_Name_Suffix            := "hifive1";           -- From board definition
    Architecture                   := "RISC-V";            -- From board definition
 

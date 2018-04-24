@@ -108,8 +108,9 @@ def linker_script_config(config):
 
 
 def middleware_config(config):
-    # config.query_integer_key('MAX_PATH', 0, default="1024")
-    # config.query_integer_key('MAX_FILE_DESC', 0, default="10")
+    config.query_integer_key('Max_Path_Length', 0, default="1024")
+    config.query_integer_key('Max_Mount_Points', 0, default="2")
+    config.query_integer_key('Max_Mount_Name_Length', 0, default="128")
 
     origin = "middleware config"
     config.add_source_dir('middleware/src/filesystem', origin)

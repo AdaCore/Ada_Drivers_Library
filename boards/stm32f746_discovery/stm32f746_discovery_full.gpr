@@ -39,6 +39,8 @@ library project STM32F746_Discovery_Full is
    for Runtime ("Ada") use "ravenscar-full-stm32f746disco";
 
    Vendor                         := "STMicro";           -- From board definition
+   Max_Mount_Points               := "2";                 -- From default value
+   Max_Mount_Name_Length          := "128";               -- From default value
    Runtime_Profile                := "ravenscar-full";    -- From command line
    Device_Name                    := "STM32F746NGHx";     -- From board definition
    Device_Family                  := "STM32F7";           -- From board definition
@@ -49,6 +51,7 @@ library project STM32F746_Discovery_Full is
    Has_ZFP_Runtime                := "False";             -- From board definition
    Has_Ravenscar_SFP_Runtime      := "True";              -- From board definition
    High_Speed_External_Clock      := "25000000";          -- From board definition
+   Max_Path_Length                := "1024";              -- From default value
    Runtime_Name_Suffix            := "stm32f746disco";    -- From board definition
    Architecture                   := "ARM";               -- From board definition
 
