@@ -1,12 +1,14 @@
-with "../../boards/stm32f469_discovery/stm32f469_discovery.gpr";
+with "../../boards/stm32f469_discovery/stm32f469_discovery_full.gpr";
 
 project Draw_STM32F469Disco extends "../shared/common/common.gpr" is
 
-   for Runtime ("Ada") use STM32F469_Discovery'Runtime("Ada");
+   for Runtime ("Ada") use STM32F469_Discovery_Full'Runtime("Ada");
    for Object_Dir use "../shared/draw/obj/stm32f469disco";
    for Create_Missing_Dirs use "True";
 
    for Main use ("draw.adb");
    for Source_Dirs use ("../shared/draw/src");
+
+   package Compiler renames STM32F469_Discovery_Full.Compiler;
 
 end Draw_STM32F469Disco;

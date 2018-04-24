@@ -1,5 +1,4 @@
-with "../../boards/MicroBit/microbit.gpr";
-with "../../boards/config";
+with "../../boards/MicroBit/microbit_zfp.gpr";
 
 project MicroBit_Example is
 
@@ -11,7 +10,7 @@ project MicroBit_Example is
   for Object_Dir use "obj";
   for Create_Missing_Dirs use "True";
 
-  package Compiler renames Config.Compiler;
+  package Compiler renames MicroBit_ZFP.Compiler;
 
   package Linker is
      for Default_Switches ("Ada") use ("-Wl,--print-memory-usage",

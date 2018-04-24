@@ -18,4 +18,6 @@ project Serial_Ports_F4Disco extends "../shared/common/common.gpr" is
       for Global_Configuration_Pragmas use "../shared/serial_ports/gnat.adc";
    end Builder;
 
+   package Compiler renames STM32F407_Discovery_Full.Compiler;
+
 end Serial_Ports_F4Disco;

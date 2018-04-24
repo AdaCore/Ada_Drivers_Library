@@ -1,8 +1,8 @@
-with "../../boards/stm32f407_discovery/stm32f407_discovery.gpr";
+with "../../boards/stm32f407_discovery/stm32f407_discovery_full.gpr";
 
 project Blinky_F4Disco extends "../shared/common/common.gpr" is
 
-  for Runtime ("Ada") use STM32F407_Discovery'Runtime("Ada");
+  for Runtime ("Ada") use STM32F407_Discovery_Full'Runtime("Ada");
   for Target use "arm-eabi";
   for Main use ("blinky.adb");
   for Languages use ("Ada");
@@ -10,4 +10,5 @@ project Blinky_F4Disco extends "../shared/common/common.gpr" is
   for Object_Dir use "../shared/hello_world_blinky/obj/stm32f407disco";
   for Create_Missing_Dirs use "True";
 
+  package Compiler renames STM32F407_Discovery_Full.Compiler;
 end Blinky_F4Disco;
