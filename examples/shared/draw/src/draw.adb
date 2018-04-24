@@ -62,7 +62,7 @@ is
       LCD_Std_Out.Clear_Screen;
       LCD_Std_Out.Put_Line ("Touch the screen to draw or");
       LCD_Std_Out.Put_Line ("press the blue button for");
-      LCD_Std_Out.Put_Line ("a demo of drawing pimitives.");
+      LCD_Std_Out.Put_Line ("a demo of drawing primitives.");
 
       Display.Update_Layer (1, Copy_Back => True);
    end Clear;
