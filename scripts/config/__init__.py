@@ -23,9 +23,8 @@ class Database:
     def print_remaining_pre_defined(self):
         for key in self.pre_defined_params:
             origin = self.pre_defined_params[key]['origin']
-            print "warning: key '%s' from %s " + \
-                  "was not used in the configuration" \
-                  % (key, origin)
+            print "warning: key '%s' from %s " % (key, origin) + \
+                  "was not used in the configuration"
 
     def add_to_configuration(self, key, kind, value, origin):
         self.configuration[key] = {'value':  value,
