@@ -36,6 +36,7 @@ library project STM32F407_Discovery_Full is
    for Library_Dir use "obj/full_lib_" & Build;
    for Library_Kind use "static";
    for Library_Name use "ada_drivers_library";
+   for Target use "arm-eabi";
    for Runtime ("Ada") use "ravenscar-full-stm32f4";
 
    Vendor                         := "STMicro";           -- From board definition

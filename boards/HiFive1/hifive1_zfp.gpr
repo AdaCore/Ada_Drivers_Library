@@ -36,6 +36,7 @@ library project HiFive1_ZFP is
    for Library_Dir use "obj/zfp_lib_" & Build;
    for Library_Kind use "static";
    for Library_Name use "ada_drivers_library";
+   for Target use "riscv32-elf";
    for Runtime ("Ada") use "zfp-hifive1";
 
    Vendor                         := "SiFive";            -- From board definition

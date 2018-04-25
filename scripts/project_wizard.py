@@ -250,7 +250,7 @@ def ADL_configuration(config, project_directory, project_name,
 description = \
 """Welcome to the Ada Drivers Library (ADL) project wizard. This script will
 ask you some questions to define the ADL configuration of your project. It will
-then generate the different files required to used ADL based on this
+then generate the different files required to use ADL based on this
 configuration."""
 
 parser = argparse.ArgumentParser(description=description)

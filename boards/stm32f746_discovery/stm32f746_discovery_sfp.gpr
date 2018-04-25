@@ -36,6 +36,7 @@ library project STM32F746_Discovery_SFP is
    for Library_Dir use "obj/sfp_lib_" & Build;
    for Library_Kind use "static";
    for Library_Name use "ada_drivers_library";
+   for Target use "arm-eabi";
    for Runtime ("Ada") use "ravenscar-sfp-stm32f746disco";
 
    Vendor                         := "STMicro";           -- From board definition

@@ -61,7 +61,7 @@ class Database:
 
     def gpr_configuration(self, src_root_dir, extra_source_dir):
         out = ""
-        arch = self.get_config("ARCH")
+        arch = self.get_config("Architecture")
         runtime = self.get_config("Runtime_Name")
 
         if arch is not None and arch != "Native":

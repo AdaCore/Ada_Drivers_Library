@@ -36,6 +36,7 @@ library project MicroBit_ZFP is
    for Library_Dir use "obj/zfp_lib_" & Build;
    for Library_Kind use "static";
    for Library_Name use "ada_drivers_library";
+   for Target use "arm-eabi";
    for Runtime ("Ada") use "zfp-nrf51";
 
    Vendor                         := "Nordic";            -- From board definition
