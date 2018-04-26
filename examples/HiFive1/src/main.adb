@@ -29,12 +29,17 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with FE310;
 with HiFive1.LEDs; use HiFive1.LEDs;
 with HiFive1.Time; use HiFive1.Time;
 
 procedure Main is
 
 begin
+   FE310.Set_SPI_Flash_Clock_Divider (2);
+   FE310.Load_Internal_Oscilator_Calibration;
+   FE310.Use_Crystal_Oscillator;
+
    HiFive1.LEDs.Initialize;
 
    --  Blinky!

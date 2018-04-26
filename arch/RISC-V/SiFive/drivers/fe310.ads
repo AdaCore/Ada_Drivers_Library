@@ -35,5 +35,27 @@ package FE310 is
 
    function CPU_Frequency return UInt32;
    --  Compute CPU frequency
+
+   procedure Load_Internal_Oscilator_Calibration;
+   --  Read the calibration setting from the OTP memory ant write it to the
+   --  oscillator configuration register.
+   --  After execution of this procedure, the (undivided) internal oscillator
+   --  frequency should be about 72 MHz
+
+   subtype PLL_Output_Divider is Integer range 1 .. 128;
+
+   procedure Use_Crystal_Oscillator (Divider : in PLL_Output_Divider := 1)
+     with Pre => (Divider = 1) or (Divider rem 2 = 0);
+
+   subtype Internal_Oscillator_Divider is Integer range 1 .. 64;
+
+   procedure Use_Internal_Oscillator (Divider : in Internal_Oscillator_Divider := 5);
+
+   subtype SPI_Clock_Divider is Integer range 2 .. 8192;
+
+   procedure Set_SPI_Flash_Clock_Divider (Divider : in SPI_Clock_Divider)
+     with Pre => Divider rem 2 = 0;
+
+   function SPI_Flash_Clock_Divider return SPI_Clock_Divider;
 end FE310;
 

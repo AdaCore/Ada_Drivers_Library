@@ -29,16 +29,126 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with FE310_SVD.OTP_Mem; use FE310_SVD.OTP_Mem;
+with FE310_SVD.PRIC; use FE310_SVD.PRIC;
+with FE310_SVD.SPI; use FE310_SVD.SPI;
+
 package body FE310 is
 
    --  External_Clock : constant := 32_768;
+   Crystal_Frequency : constant := 16_000_000;
+   HFROSC_Frequency : constant := 72_000_000;  -- High frequency internal oscillator
 
    -------------------
    -- CPU_Frequency --
    -------------------
 
    function CPU_Frequency return UInt32 is
+      Freq : UInt32;
    begin
-      return 1_6954_396;
+      if PRIC_Periph.PLLCFG.SEL = Internal then
+         Freq := HFROSC_Frequency / (UInt32 (PRIC_Periph.HFROSCCFG.DIV) + 1);
+      else
+         if PRIC_Periph.PLLCFG.REFSEL = Crystal then
+            Freq := Crystal_Frequency;
+         else
+            Freq := HFROSC_Frequency;
+         end if;
+
+         if PRIC_Periph.PLLCFG.BYPASS = False then
+            Freq := Freq / (UInt32 (PRIC_Periph.PLLCFG.R) + 1)
+              * (2 * (UInt32 (PRIC_Periph.PLLCFG.F) + 1))
+              / (2**(Natural (PRIC_Periph.PLLCFG.Q)));
+         end if;
+
+         if PRIC_Periph.PLLOUTDIV.DIV_BY_1 = False then
+               Freq := Freq / (2 * (UInt32 (PRIC_Periph.PLLOUTDIV.DIV) + 1));
+         end if;
+      end if;
+
+      return Freq;
    end CPU_Frequency;
+
+   -----------------------------------------
+   -- Load_Internal_Oscilator_Calibration --
+   -----------------------------------------
+
+   procedure Load_Internal_Oscilator_Calibration is
+   begin
+      PRIC_Periph.HFROSCCFG.TRIM := OTP_Mem_Periph.HFROSC_TRIM.VALUE - 1;
+   end Load_Internal_Oscilator_Calibration;
+
+   ----------------------------
+   -- Use_Crystal_Oscillator --
+   ----------------------------
+
+   procedure Use_Crystal_Oscillator (Divider : in PLL_Output_Divider := 1) is
+   begin
+      --  Use internal oscillator during switch
+      PRIC_Periph.HFROSCCFG.DIV := 4;  --  Divide by 5, Freq = 14.4 MHz
+      PRIC_Periph.HFROSCCFG.ENABLE := True;
+      loop
+         exit when PRIC_Periph.HFROSCCFG.READY;
+      end loop;
+      PRIC_Periph.PLLCFG.SEL := Internal;
+
+      --  Start the crystal oscillator
+      PRIC_Periph.HFXOSCCFG.ENABLE := True;
+      loop
+         exit when PRIC_Periph.HFXOSCCFG.READY;
+      end loop;
+
+      --  Configure the final divider
+      if Divider = 1 then
+         PRIC_Periph.PLLOUTDIV.DIV_BY_1 := True;
+      else
+         PRIC_Periph.PLLOUTDIV.DIV_BY_1 := False;
+         PRIC_Periph.PLLOUTDIV.DIV := PLLOUTDIV_DIV_Field ((Divider / 2) - 1);
+      end if;
+
+      --  Switch to crystal oscillator
+      PRIC_Periph.PLLCFG.REFSEL := Crystal;
+      PRIC_Periph.PLLCFG.BYPASS := True;
+      PRIC_Periph.PLLCFG.SEL := Pll;
+
+      --  Disable internal oscillator
+      PRIC_Periph.HFROSCCFG.ENABLE := False;
+   end Use_Crystal_Oscillator;
+
+   -----------------------------
+   -- Use_Internal_Oscillator --
+   -----------------------------
+
+   procedure Use_Internal_Oscillator (Divider : in Internal_Oscillator_Divider := 5) is
+   begin
+      PRIC_Periph.HFROSCCFG.DIV := HFROSCCFG_DIV_Field (Divider - 1);
+      PRIC_Periph.HFROSCCFG.ENABLE := True;
+      loop
+         exit when PRIC_Periph.HFROSCCFG.READY;
+      end loop;
+      PRIC_Periph.PLLCFG.SEL := Internal;
+
+      --  Disable crystal oscillator and PLL
+      PRIC_Periph.HFXOSCCFG.ENABLE := False;
+      PRIC_Periph.PLLCFG.BYPASS := True;
+   end Use_Internal_Oscillator;
+
+   ---------------------------------
+   -- Set_SPI_Flash_Clock_Divider --
+   ---------------------------------
+
+   procedure Set_SPI_Flash_Clock_Divider (Divider : in SPI_Clock_Divider) is
+   begin
+      QSPI0_Periph.SCKDIV.SCALE := (UInt12 (Divider) / 2) - 1;
+   end Set_SPI_Flash_Clock_Divider;
+
+   -----------------------------
+   -- SPI_Flash_Clock_Divider --
+   -----------------------------
+
+   function SPI_Flash_Clock_Divider return SPI_Clock_Divider is
+   begin
+      return 2 * (Integer (QSPI0_Periph.SCKDIV.SCALE) + 1);
+   end SPI_Flash_Clock_Divider;
+
 end FE310;
