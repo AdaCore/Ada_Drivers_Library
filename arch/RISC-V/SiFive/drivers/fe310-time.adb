@@ -1,6 +1,8 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2018, AdaCore                        --
+--            Copyright (C) 2018, AdaCore and other contributors            --
+--  See https://github.com/AdaCore/Ada_Drivers_Library/graphs/contributors  --
+--  for more information                                                    --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,10 +31,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with FE310; use FE310;
 with FE310.CLINT; use FE310.CLINT;
-with HiFive1; use HiFive1;
 
-package body HiFive1.Time is
+package body FE310.Time is
 
    ---------------
    -- HAL_Delay --
@@ -123,5 +125,4 @@ package body HiFive1.Time is
       Delay_S (S);
    end Delay_Seconds;
 
-
-end HiFive1.Time;
+end FE310.Time;

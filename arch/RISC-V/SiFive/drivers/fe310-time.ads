@@ -1,6 +1,8 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2018, AdaCore                        --
+--            Copyright (C) 2018, AdaCore and other contributors            --
+--  See https://github.com/AdaCore/Ada_Drivers_Library/graphs/contributors  --
+--  for more information                                                    --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,10 +31,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL;      use HAL;
 with HAL.Time;
 
-package HiFive1.Time is
+package FE310.Time is
 
    procedure Delay_Us (Us : Positive);
    procedure Delay_Ms (Ms : Positive);
@@ -56,4 +57,4 @@ private
    procedure Delay_Seconds      (This : in out HF1_Delays;
                                  S    : Integer);
 
-end HiFive1.Time;
+end FE310.Time;

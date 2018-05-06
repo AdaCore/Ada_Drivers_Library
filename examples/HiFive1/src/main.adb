@@ -1,6 +1,8 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--          Copyright (C) 2017-2018, AdaCore and other contributors         --
+--  See https://github.com/AdaCore/Ada_Drivers_Library/graphs/contributors  --
+--  for more information                                                    --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -31,7 +33,7 @@
 
 with FE310;
 with HiFive1.LEDs; use HiFive1.LEDs;
-with HiFive1.Time; use HiFive1.Time;
+with FE310.Time; use FE310.Time;
 
 procedure Main is
 

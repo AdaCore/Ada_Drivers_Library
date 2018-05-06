@@ -1,6 +1,8 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--          Copyright (C) 2017-2018, AdaCore and other contributors         --
+--  See https://github.com/AdaCore/Ada_Drivers_Library/graphs/contributors  --
+--  for more information                                                    --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +31,14 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with FE310.Time; use FE310.Time;
+with FE310_SVD.CLINT; use FE310_SVD.CLINT;
 with FE310_SVD.OTP_Mem; use FE310_SVD.OTP_Mem;
 with FE310_SVD.PRIC; use FE310_SVD.PRIC;
 with FE310_SVD.SPI; use FE310_SVD.SPI;
 
 package body FE310 is
 
-   --  External_Clock : constant := 32_768;
    Crystal_Frequency : constant := 16_000_000;
    HFROSC_Frequency : constant := 72_000_000;  -- High frequency internal oscillator
 
@@ -132,6 +135,67 @@ package body FE310 is
       PRIC_Periph.HFXOSCCFG.ENABLE := False;
       PRIC_Periph.PLLCFG.BYPASS := True;
    end Use_Internal_Oscillator;
+
+   ------------
+   -- Use_PLL--
+   ------------
+
+   procedure Use_PLL (Reference : in PLL_Reference;
+                      Internal_Osc_Div : in Internal_Oscillator_Divider  := 5;
+                      R_Div : in PLL_R;
+                      F_Mul : in PLL_F;
+                      Q_Div : in PLL_Q;
+                      Output_Div : in PLL_Output_Divider) is
+   begin
+      --  Use internal oscillator during switch
+      PRIC_Periph.HFROSCCFG.DIV := HFROSCCFG_DIV_Field (Internal_Osc_Div - 1);
+      PRIC_Periph.HFROSCCFG.ENABLE := True;
+      loop
+         exit when PRIC_Periph.HFROSCCFG.READY;
+      end loop;
+      PRIC_Periph.PLLCFG.SEL := Internal;
+
+      if Reference = Crystal then
+         --  Start the crystal oscillator
+         PRIC_Periph.HFXOSCCFG.ENABLE := True;
+         loop
+            exit when PRIC_Periph.HFXOSCCFG.READY;
+         end loop;
+      else
+         PRIC_Periph.HFXOSCCFG.ENABLE := False;
+      end if;
+
+      --  Configure the PLL
+      PRIC_Periph.PLLCFG.REFSEL := PLLCFG_REFSEL_Field (Reference);
+      PRIC_Periph.PLLCFG.R := PLLCFG_R_Field (R_Div - 1);
+      PRIC_Periph.PLLCFG.F := PLLCFG_F_Field ((F_Mul / 2) - 1);
+      PRIC_Periph.PLLCFG.Q := PLLCFG_Q_Field (PLL_Q'Enum_Rep (Q_Div));
+
+      --  Configure the final divider
+      if Output_Div = 1 then
+         PRIC_Periph.PLLOUTDIV.DIV_BY_1 := True;
+      else
+         PRIC_Periph.PLLOUTDIV.DIV_BY_1 := False;
+         PRIC_Periph.PLLOUTDIV.DIV := PLLOUTDIV_DIV_Field ((Output_Div / 2) - 1);
+      end if;
+
+      --  Start the PLL
+      PRIC_Periph.PLLCFG.BYPASS := False;
+      Delay_Us (150);
+
+      loop
+         exit when PRIC_Periph.PLLCFG.LOCK;
+      end loop;
+
+      --  Switch to PLL
+      PRIC_Periph.PLLCFG.SEL := Pll;
+
+      --  Disable internal oscillator if the crystal reference is used
+      if Reference = Crystal then
+         PRIC_Periph.HFROSCCFG.ENABLE := False;
+      end if;
+
+   end Use_PLL;
 
    ---------------------------------
    -- Set_SPI_Flash_Clock_Divider --
