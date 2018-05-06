@@ -38,8 +38,17 @@ with FE310.Time; use FE310.Time;
 procedure Main is
 
 begin
+   --  The SPI flash clock divider should be as small as possible to increase
+   --  the execution speed of instructions that are not yet in the instruction
+   --  cache.
    FE310.Set_SPI_Flash_Clock_Divider (2);
+
+   --  Load the internal oscillator factory calibration to be sure it
+   --  oscillates at a known frequency.
    FE310.Load_Internal_Oscilator_Calibration;
+
+   --  Use the HiFive1 16 MHz crystal oscillator which is more acurate than the
+   --  internal oscollator.
    FE310.Use_Crystal_Oscillator;
 
    HiFive1.LEDs.Initialize;
