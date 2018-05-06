@@ -35,33 +35,33 @@ package FE310_SVD.SPI is
      (
       --  Data is sampled on the leading edge of SCK and shifted on the
       --  trailing edge of SCK.
-      SCKMODE_CPHA_0,
+      Val_0,
       --  Data is shifted on the leading edge of SCK and sampled on the
       --  trailing edge of SCK.
-      SCKMODE_CPHA_1)
+      Val_1)
      with Size => 1;
    for SCKMODE_CPHA use
-     (SCKMODE_CPHA_0 => 0,
-      SCKMODE_CPHA_1 => 1);
+     (Val_0 => 0,
+      Val_1 => 1);
 
    --  Serial Clock Polarity
    type SCKMODE_CPOL is
      (
       --  Inactive state of SCK is logical 0.
-      SCKMODE_CPOL_0,
+      Val_0,
       --  Inactive state of SCK is logical 1.
-      SCKMODE_CPOL_1)
+      Val_1)
      with Size => 1;
    for SCKMODE_CPOL use
-     (SCKMODE_CPOL_0 => 0,
-      SCKMODE_CPOL_1 => 1);
+     (Val_0 => 0,
+      Val_1 => 1);
 
    --  Serial Clock Mode Register.
    type SCKMODE_Register is record
       --  Serial Clock Phase
-      PHA           : SCKMODE_CPHA := FE310_SVD.SPI.SCKMODE_CPHA_0;
+      PHA           : SCKMODE_CPHA := FE310_SVD.SPI.Val_0;
       --  Serial Clock Polarity
-      POL           : SCKMODE_CPOL := FE310_SVD.SPI.SCKMODE_CPOL_0;
+      POL           : SCKMODE_CPOL := FE310_SVD.SPI.Val_0;
       --  unspecified
       Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
