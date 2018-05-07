@@ -9,6 +9,6 @@ project TC extends "../../utils/test_utils.gpr" is
    for Exec_Dir use "bin";
    for Create_Missing_Dirs use "True";
 
-   package Compiler renames Test_Utils.Compiler;
+   package Compiler renames Native.Compiler;
 
 end TC;

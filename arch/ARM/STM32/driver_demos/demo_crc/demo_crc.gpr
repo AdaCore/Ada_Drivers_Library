@@ -1,8 +1,8 @@
-with "../../../../../boards/stm32f429_discovery/stm32f429_discovery.gpr";
+with "../../../../../boards/stm32f429_discovery/stm32f429_discovery_full.gpr";
 
 project Demo_CRC extends "../../../../../examples/shared/common/common.gpr" is
 
-   for Runtime ("Ada") use STM32F429_Discovery'Runtime ("Ada");
+   for Runtime ("Ada") use STM32F429_Discovery_Full'Runtime ("Ada");
 
    for Target use "arm-eabi";
 
@@ -15,5 +15,7 @@ project Demo_CRC extends "../../../../../examples/shared/common/common.gpr" is
    for Create_Missing_Dirs use "True";
 
    for Main use ("demo_crc.adb");
+
+   package Compiler renames STM32F429_Discovery_Full.Compiler;
 
 end Demo_CRC;

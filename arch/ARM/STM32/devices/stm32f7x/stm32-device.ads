@@ -42,9 +42,7 @@
 --  This file provides declarations for devices on the STM32F42xxx MCUs
 --  manufactured by ST Microelectronics.  For example, an STM32F429.
 
-pragma Warnings (Off, "* is an internal GNAT unit");
-private with System.BB.Parameters;
-pragma Warnings (On, "* is an internal GNAT unit");
+private with ADL_Config;
 
 with STM32_SVD;     use STM32_SVD;
 with STM32_SVD.SAI;
@@ -651,7 +649,7 @@ package STM32.Device is
 
 private
 
-   HSE_VALUE : constant UInt32 := System.BB.Parameters.HSE_Clock;
+   HSE_VALUE : constant UInt32 := ADL_Config.High_Speed_External_Clock;
 
    GPIO_AF_RTC_50Hz_0  : constant GPIO_Alternate_Function := 0;
    GPIO_AF_MCO_0       : constant GPIO_Alternate_Function := 0;

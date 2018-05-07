@@ -47,13 +47,13 @@ package body File_IO is
 
    type Mount_Record is record
       Is_Free  : Boolean := True;
-      Name     : String (1 .. MAX_MOUNT_NAME_LENGTH);
+      Name     : String (1 .. Max_Mount_Name_Length);
       Name_Len : Positive;
       FS       : Any_Filesystem_Driver;
    end record;
 
-   subtype Mount_Index is Integer range 0 .. MAX_MOUNT_POINTS;
-   subtype Valid_Mount_Index is Mount_Index range 1 .. MAX_MOUNT_POINTS;
+   subtype Mount_Index is Integer range 0 .. Max_Mount_Points;
+   subtype Valid_Mount_Index is Mount_Index range 1 .. Max_Mount_Points;
    type Mount_Array is array (Valid_Mount_Index) of Mount_Record;
 
    type VFS_Directory_Handle is new Directory_Handle with record

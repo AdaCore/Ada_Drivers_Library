@@ -37,10 +37,9 @@ with HAL.Block_Drivers;
 
 with HAL.Filesystem;
 
-package File_IO is
+with ADL_Config;
 
-   MAX_PATH_LENGTH  : constant := 1024;
-   --  Maximum size of a path name length
+package File_IO is
 
    type Status_Code is
      (OK,
@@ -175,11 +174,11 @@ package File_IO is
    -- Mounting --
    --------------
 
-   MAX_MOUNT_POINTS : constant := 2;
-   MAX_MOUNT_NAME_LENGTH : constant := 128;
+   Max_Mount_Points : constant := ADL_Config.Max_Mount_Points;
+   Max_Mount_Name_Length : constant := ADL_Config.Max_Mount_Name_Length;
 
    subtype Mount_Path is String
-     with Dynamic_Predicate => Mount_Path'Length <= MAX_MOUNT_NAME_LENGTH;
+     with Dynamic_Predicate => Mount_Path'Length <= Max_Mount_Name_Length;
 
    function Mount_Volume
      (Mount_Point : Mount_Path;

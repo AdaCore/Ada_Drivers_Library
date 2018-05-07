@@ -30,10 +30,11 @@
 ------------------------------------------------------------------------------
 
 with HAL;
+with ADL_Config;
 
 package Filesystem is
 
-   MAX_PATH_LENGTH  : constant := 1024;
+   Max_Path_Length  : constant := ADL_Config.Max_Path_Length;
    --  Maximum size of a path name length
 
    subtype Block_Number is HAL.UInt64;

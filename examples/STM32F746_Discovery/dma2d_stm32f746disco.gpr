@@ -1,12 +1,14 @@
-with "../../boards/stm32f746_discovery/stm32f746_discovery.gpr";
+with "../../boards/stm32f746_discovery/stm32f746_discovery_full.gpr";
 
 project Dma2d_STM32F746Disco extends "../shared/common/common.gpr" is
 
-   for Runtime ("Ada") use STM32F746_Discovery'Runtime("Ada");
+   for Runtime ("Ada") use STM32F746_Discovery_Full'Runtime("Ada");
    for Object_Dir use "../shared/stm32_dma2d/obj/stm32f746disco";
    for Create_Missing_Dirs use "True";
 
    for Main use ("dma2d.adb");
    for Source_Dirs use ("../shared/stm32_dma2d/src");
+
+   package Compiler renames STM32F746_Discovery_Full.Compiler;
 
 end Dma2d_STM32F746Disco;

@@ -41,9 +41,7 @@
 with Ada.Real_Time;     use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 
-pragma Warnings (Off, "* is an internal GNAT unit");
-with System.BB.Parameters; use System.BB.Parameters;
-pragma Warnings (On, "* is an internal GNAT unit");
+with ADL_Config;
 
 with HAL.DSI;           use HAL.DSI;
 with STM32_SVD.DSI;     use STM32_SVD.DSI;
@@ -170,7 +168,7 @@ package body STM32.DSI is
       --  Where F_PHY_Mhz = (PLLNDIV * HSE_MHz) / (IDF * ODF)
       --  => UIX4 = 4_000 * IDF * ODV / (PLLNDIV * HSE_MHz)
       declare
-         HSE_MHz          : constant UInt32 := HSE_Clock / 1_000_000;
+         HSE_MHz          : constant UInt32 := ADL_Config.High_Speed_External_Clock / 1_000_000;
          IDF              : constant UInt32 := UInt32 (PLL_IN_Div);
          ODF              : constant UInt32 :=
                               Shift_Left

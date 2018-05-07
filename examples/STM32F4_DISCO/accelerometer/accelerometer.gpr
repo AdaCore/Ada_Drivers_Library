@@ -1,8 +1,8 @@
-with "../../../boards/stm32f407_discovery/stm32f407_discovery.gpr";
+with "../../../boards/stm32f407_discovery/stm32f407_discovery_full.gpr";
 
 project Accelerometer extends "../../shared/common/common.gpr" is
 
-  for Runtime ("Ada") use STM32F407_Discovery'Runtime ("Ada");
+  for Runtime ("Ada") use STM32F407_Discovery_Full'Runtime ("Ada");
   for Target use "arm-eabi";
   for Main use ("main.adb");
   for Languages use ("Ada");
@@ -13,5 +13,7 @@ project Accelerometer extends "../../shared/common/common.gpr" is
   package Linker is
      for Default_Switches ("Ada") use ("-Wl,--print-memory-usage");
   end Linker;
+
+  package Compiler renames STM32F407_Discovery_Full.Compiler;
 
 end Accelerometer;
