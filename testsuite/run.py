@@ -10,6 +10,7 @@ import sys
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 TESTS_DIR = os.path.join(ROOT_DIR, 'testsuite', 'tests')
+COV_DIR = os.path.join(ROOT_DIR, 'testsuite', 'coverage_results')
 
 
 def run_program(*argv):
@@ -23,12 +24,12 @@ def run_program(*argv):
     try:
         stdout = stdout.decode('ascii')
     except UnicodeError:
-        return 'stdout is not ASCII'
+        return (p.returncode, 'stdout is not ASCII', stderr)
 
     try:
         stderr = stderr.decode('ascii')
     except UnicodeError:
-        return 'stderr is not ASCII'
+        return (p.returncode, stdout, 'stderr is not ASCII')
 
     return (p.returncode, stdout, stderr)
 
@@ -65,10 +66,14 @@ class Testcase:
         Return None if test is successful.
         """
 
+        build_args = ['gprbuild', '-f', '-j0', '-p', '-q', '-P', self.project_file]
+
+        if args.coverage:
+            build_args += ['-largs', '-lgcov', '-cargs', '-fprofile-arcs', '-ftest-coverage']
+
         # Build test drivers
-        returncode, stdout, stderr = run_program(
-            'gprbuild', '-j0', '-p', '-q', '-P', self.project_file,
-        )
+        returncode, stdout, stderr = run_program(*build_args)
+
         if returncode:
             return 'Build error (gprbuild returned {}):\n{}'.format(
                 returncode, stderr
@@ -142,6 +147,27 @@ def find_testcases():
             yield Testcase(dirpath)
 
 
+def gcda_files():
+    l = []
+    for root, dirs, files in os.walk(ROOT_DIR):
+        for file in files:
+            if file.endswith(".gcda") and not "b__" in file:
+                l.append(os.path.join(root, file))
+    return l
+
+
+def coverage_analysis():
+
+    files = gcda_files()
+
+    if not os.path.exists(COV_DIR):
+        os.makedirs(COV_DIR)
+
+    print "Coverage analysis (%d files)..." % len(files)
+    os.chdir(COV_DIR)
+    run_program(*(['gcov'] + files))
+
+
 parser = argparse.ArgumentParser('Run the testsuite')
 
 parser.add_argument(
@@ -152,6 +178,12 @@ parser.add_argument(
 parser.add_argument(
     '--verbose', action='store_true',
     help='Print exit code and output for all tests, regardless of results'
+)
+
+parser.add_argument(
+    '--coverage', action="store_true",
+    help="Compute testsuite code coverage",
+    default=False
 )
 
 parser.add_argument(
@@ -174,6 +206,10 @@ def main(args):
             print('\x1b[31mFAIL\x1b[0m {}:\n{}'.format(tc.name, error))
         else:
             print('\x1b[32mOK\x1b[0m   {}'.format(tc.name))
+
+    if args.coverage:
+        coverage_analysis()
+
     if at_least_one_error:
         sys.exit(1)
 

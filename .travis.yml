@@ -34,4 +34,7 @@ script:
   - $PWD/gnat-gpl-2017-x86_64-linux-bin/bin/gprbuild --version
 
   # Start the testsuite
-  - python $PWD/testsuite/run.py
+  - python $PWD/testsuite/run.py --coverage
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
