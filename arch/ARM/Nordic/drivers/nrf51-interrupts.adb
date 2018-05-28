@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                    Copyright (C) 2016-2018, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -30,8 +30,15 @@
 ------------------------------------------------------------------------------
 
 with Cortex_M.NVIC;
+with System.Machine_Code; use System.Machine_Code;
 
 package body nRF51.Interrupts is
+
+   Handlers : array (nRF51.Interrupts.Interrupt_Name) of Handler
+     := (others => null);
+
+   procedure GNAT_IRQ_Handler;
+   pragma Export (Asm, GNAT_IRQ_Handler, "__gnat_irq_trap");
 
    ------------------
    -- Set_Priority --
@@ -68,5 +75,37 @@ package body nRF51.Interrupts is
    begin
       return Cortex_M.NVIC.Pending (Int'Enum_Rep);
    end Pending;
+
+   --------------
+   -- Register --
+   --------------
+
+   procedure Register (Id  : nRF51.Interrupts.Interrupt_Name;
+                       Hdl : Handler)
+   is
+   begin
+      Handlers (Id) := Hdl;
+   end Register;
+
+   ----------------------
+   -- GNAT_IRQ_Handler --
+   ----------------------
+
+   procedure GNAT_IRQ_Handler is
+      Id  : nRF51.Interrupts.Interrupt_Name;
+      IPSR : UInt32;
+   begin
+      Asm ("mrs %0, ipsr",
+           UInt32'Asm_Output ("=r", IPSR),
+           Volatile => True);
+
+      IPSR := IPSR and 16#FF#;
+
+      Id := nRF51.Interrupts.Interrupt_Name'Val (IPSR - 16);
+
+      if Handlers (Id) /= null then
+         Handlers (Id).all;
+      end if;
+   end GNAT_IRQ_Handler;
 
 end nRF51.Interrupts;
