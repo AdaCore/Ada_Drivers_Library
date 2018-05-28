@@ -2,7 +2,7 @@ with "../../boards/MicroBit/microbit_zfp.gpr";
 
 project MicroBit_Example is
 
-  for Runtime ("ada") use Project'Project_Dir & "/zfp-nrf51";
+  for Runtime ("ada") use "zfp-microbit";
   for Target use "arm-eabi";
   for Main use ("main.adb");
   for Languages use ("Ada");
