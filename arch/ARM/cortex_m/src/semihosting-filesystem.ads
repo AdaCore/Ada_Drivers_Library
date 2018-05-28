@@ -100,8 +100,7 @@ package Semihosting.Filesystem is
      (This   : in out SHFS;
       As     : String;
       Handle : out Any_Node_Handle)
-      return Status_Code
-   is (Operation_Not_Permitted);
+      return Status_Code;
 
    overriding
    procedure Close (This : in out SHFS);
