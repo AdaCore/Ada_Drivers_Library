@@ -190,6 +190,22 @@ package body Semihosting.Filesystem is
       return Operation_Not_Permitted;
    end Open;
 
+   ---------------
+   -- Root_Node --
+   ---------------
+
+   overriding
+   function Root_Node
+     (This   : in out SHFS;
+      As     : String;
+      Handle : out Any_Node_Handle)
+      return Status_Code
+   is
+      pragma Unreferenced (As, Handle, This);
+   begin
+      return Operation_Not_Permitted;
+   end Root_Node;
+
    ---------------------
    -- Get_File_Handle --
    ---------------------
