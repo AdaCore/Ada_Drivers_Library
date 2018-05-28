@@ -32,7 +32,8 @@
 
 package body Bluetooth_Low_Energy.Beacon is
 
-   function Make_Beacon_Packet (UUID         : BLE_UUID;
+   function Make_Beacon_Packet (MAC          : UInt8_Array;
+                                UUID         : BLE_UUID;
                                 Major, Minor : UInt16;
                                 Power        : Integer_8)
                                 return BLE_Packet
@@ -41,7 +42,7 @@ package body Bluetooth_Low_Energy.Beacon is
    begin
       Set_Header (Pck, 16#42#);
       --  MAC
-      Push (Pck, (16#FE#, 16#CA#, 16#EF#, 16#BE#, 16#AD#, 16#DE#));
+      Push (Pck, MAC);
       --  Flag length
       Push (Pck, UInt8 (2));
       --  Flag type
