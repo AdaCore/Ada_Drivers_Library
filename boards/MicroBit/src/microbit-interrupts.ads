@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2016, AdaCore                       --
+--                       Copyright (C) 2018, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +29,15 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Bluetooth_Low_Energy.Packets; use Bluetooth_Low_Energy.Packets;
-with Interfaces;                   use Interfaces;
+with nRF51.Interrupts;
 
-package Bluetooth_Low_Energy.Beacon is
+package MicroBit.Interrupts is
 
-   function Make_Beacon_Packet (MAC          : UInt8_Array;
-                                UUID         : BLE_UUID;
-                                Major, Minor : UInt16;
-                                Power        : Integer_8) return BLE_Packet;
-end Bluetooth_Low_Energy.Beacon;
+   type Handler is access procedure;
+
+   procedure Register (Id  : nRF51.Interrupts.Interrupt_Name;
+                       Hdl : Handler);
+   --  Register a handler for the given interrupt. There can be only one handler
+   --  for each interrupt so the previous one, if any, will be removed.
+
+end MicroBit.Interrupts;
