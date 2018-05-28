@@ -54,10 +54,12 @@ package body Beacon is
         Make_UUID ((1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16));
    begin
 
-      Beacon_Packet := Make_Beacon_Packet (UUID  => Beacon_UUID,
-                                           Major => 0,
-                                           Minor => 0,
-                                           Power => 0);
+      Beacon_Packet := Make_Beacon_Packet
+        (MAC   => (16#A1#, 16#AD#, 16#A1#, 16#AD#, 16#A1#, 16#AD#),
+         UUID  => Beacon_UUID,
+         Major => 0,
+         Minor => 0,
+         Power => 0);
 
       --  Setup high frequency clock for BLE transmission
       Set_High_Freq_Source (HFCLK_RC);
