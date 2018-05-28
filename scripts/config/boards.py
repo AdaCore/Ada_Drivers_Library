@@ -131,7 +131,7 @@ def load_board_config(config):
         config.pre_define('Has_ZFP_Runtime', 'True', origin)
         config.pre_define('Has_Ravenscar_SFP_Runtime', 'False', origin)
         config.pre_define('Has_Ravenscar_Full_Runtime', 'False', origin)
-        config.pre_define('Runtime_Name_Suffix', 'nrf51', origin)
+        config.pre_define('Runtime_Name_Suffix', 'microbit', origin)
         config.add_source_dir('boards/MicroBit/src/', origin)
 
     elif board == "HiFive1":

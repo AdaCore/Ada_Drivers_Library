@@ -37,7 +37,7 @@ library project MicroBit_ZFP is
    for Library_Kind use "static";
    for Library_Name use "ada_drivers_library";
    for Target use "arm-eabi";
-   for Runtime ("Ada") use "zfp-nrf51";
+   for Runtime ("Ada") use "zfp-microbit";
 
    Vendor                         := "Nordic";            -- From board definition
    Max_Mount_Points               := "2";                 -- From default value
@@ -45,14 +45,14 @@ library project MicroBit_ZFP is
    Runtime_Profile                := "zfp";               -- From command line
    Device_Name                    := "nRF51822xxAA";      -- From board definition
    Device_Family                  := "nRF51";             -- From board definition
-   Runtime_Name                   := "zfp-nrf51";         -- From default value
+   Runtime_Name                   := "zfp-microbit";      -- From default value
    Has_Ravenscar_Full_Runtime     := "False";             -- From board definition
    CPU_Core                       := "ARM Cortex-M0";     -- From mcu definition
    Board                          := "MicroBit";          -- From command line
    Has_ZFP_Runtime                := "True";              -- From board definition
    Has_Ravenscar_SFP_Runtime      := "False";             -- From board definition
    Max_Path_Length                := "1024";              -- From default value
-   Runtime_Name_Suffix            := "nrf51";             -- From board definition
+   Runtime_Name_Suffix            := "microbit";          -- From board definition
    Architecture                   := "ARM";               -- From board definition
 
    --  Project source directories
