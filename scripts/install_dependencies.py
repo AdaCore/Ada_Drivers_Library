@@ -72,6 +72,15 @@ git_repos = [("https://github.com/AdaCore/embedded-runtimes",
               "embedded-runtimes",
               False,
               ["python", ROOT_DIR + "/embedded-runtimes/install.py"]),
+<<<<<<< HEAD
+=======
+
+             ("https://github.com/Fabien-Chouteau/zfp-nrf51",
+              None,
+              "examples/MicroBit/zfp-nrf51",
+              False,
+              None),
+>>>>>>> HiFive1 example: Update for GNAT Community 2018
              ]
 
 parser = argparse.ArgumentParser('Download and install dependencies')
