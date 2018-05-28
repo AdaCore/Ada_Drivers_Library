@@ -72,12 +72,6 @@ git_repos = [("https://github.com/AdaCore/embedded-runtimes",
               "embedded-runtimes",
               False,
               ["python", ROOT_DIR + "/embedded-runtimes/install.py"]),
-
-             ("https://github.com/Fabien-Chouteau/zfp-nrf51",
-              None,
-              "examples/MicroBit/zfp-nrf51",
-              False,
-              None),
              ]
 
 parser = argparse.ArgumentParser('Download and install dependencies')
