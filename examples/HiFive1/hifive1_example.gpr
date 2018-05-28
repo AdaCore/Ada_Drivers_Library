@@ -2,8 +2,8 @@ with "../../boards/HiFive1/hifive1_zfp.gpr";
 
 project HiFive1_Example is
 
-  for Runtime ("ada") use Project'Project_Dir & "/zfp-hifive1";
-  for Target use "riscv32-unknown-elf";
+  for Runtime ("ada") use "zfp-hifive1";
+  for Target use "riscv32-elf";
   for Main use ("main.adb");
   for Languages use ("Ada");
   for Source_Dirs use ("src");

@@ -78,12 +78,6 @@ git_repos = [("https://github.com/AdaCore/embedded-runtimes",
               "examples/MicroBit/zfp-nrf51",
               False,
               None),
-
-             ("https://github.com/Fabien-Chouteau/zfp-hifive1.git",
-              None,
-              "examples/HiFive1/zfp-hifive1",
-              False,
-              None)
              ]
 
 parser = argparse.ArgumentParser('Download and install dependencies')
