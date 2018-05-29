@@ -76,17 +76,9 @@ package body FE310.Time is
    -- Delay_Milliseconds --
    ------------------------
 
-   procedure Delay_Ms (Ms : Positive)
-   is
-      Start_Time : Machine_Time_Value;
-      End_Time : Machine_Time_Value;
+   procedure Delay_Ms (Ms : Positive) is
    begin
-      Start_Time := Machine_Time;
-      End_Time := Start_Time + (Machine_Time_Value (Ms) * Machine_Time_Value (LF_Clock_Frequency)) / 1_000;
-
-      loop
-         exit when Machine_Time >= End_Time;
-      end loop;
+      Delay_Us (Ms * 1_000);
    end Delay_Ms;
 
    overriding
@@ -102,17 +94,9 @@ package body FE310.Time is
    -- Delay_Seconds --
    -------------------
 
-   procedure Delay_S (S : Positive)
-   is
-      Start_Time : Machine_Time_Value;
-      End_Time : Machine_Time_Value;
+   procedure Delay_S (S : Positive) is
    begin
-      Start_Time := Machine_Time;
-      End_Time := Start_Time + (Machine_Time_Value (S) * Machine_Time_Value (LF_Clock_Frequency));
-
-      while Machine_Time < End_Time loop
-         null;
-      end loop;
+      Delay_Us (S * 1_000_000);
    end Delay_S;
 
    overriding
