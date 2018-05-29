@@ -44,11 +44,15 @@ package body FE310.CLINT is
       High : UInt32;
       Low : UInt32;
    begin
-      loop
-         High := CLINT_Periph.MTIME_HI;
-         Low := CLINT_Periph.MTIME_LO;
-         exit when CLINT_Periph.MTIME_HI = High;
-      end loop;
+      High := CLINT_Periph.MTIME_HI;
+      Low := CLINT_Periph.MTIME_LO;
+
+      --  Handle the case where the timer registers were read during the
+      --  incrementation of the high part
+      if CLINT_Periph.MTIME_HI /= High then
+         High := High + 1;
+         Low := 0;
+      end if;
 
       return Machine_Time_Value (High) * 2**32 + Machine_Time_Value (Low);
    end Machine_Time;

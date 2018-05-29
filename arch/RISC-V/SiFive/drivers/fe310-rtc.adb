@@ -44,11 +44,15 @@ package body FE310.RTC is
       Low_Reg : UInt32;
       High_Reg : HI_Register;
    begin
-      loop
-         High_Reg := RTC_Periph.HI;
-         Low_Reg := RTC_Periph.LO;
-         exit when RTC_Periph.HI = High_Reg;
-      end loop;
+      High_Reg := RTC_Periph.HI;
+      Low_Reg := RTC_Periph.LO;
+
+      --  Handle the case where the timer registers were read during the
+      --  incrementation of the high part
+      if RTC_Periph.HI /= High_Reg then
+         High_Reg.CNT := High_Reg.CNT + 1;
+         Low_Reg := 0;
+      end if;
 
       return Count_Value (High_Reg.CNT) * 2**32 + Count_Value (Low_Reg);
    end Count;
