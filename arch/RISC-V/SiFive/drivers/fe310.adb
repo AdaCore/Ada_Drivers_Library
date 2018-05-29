@@ -1,8 +1,9 @@
 ------------------------------------------------------------------------------
 --                                                                          --
 --          Copyright (C) 2017-2018, AdaCore and other contributors         --
---  See https://github.com/AdaCore/Ada_Drivers_Library/graphs/contributors  --
---  for more information                                                    --
+--                                                                          --
+--      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
+--                           for more information                           --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -85,7 +86,7 @@ package body FE310 is
    -- Use_Crystal_Oscillator --
    ----------------------------
 
-   procedure Use_Crystal_Oscillator (Divider : in PLL_Output_Divider := 1) is
+   procedure Use_Crystal_Oscillator (Divider : PLL_Output_Divider := 1) is
    begin
       --  Use internal oscillator during switch
       PRIC_Periph.HFROSCCFG.DIV := 4;  --  Divide by 5, Freq = 14.4 MHz
@@ -122,7 +123,7 @@ package body FE310 is
    -- Use_Internal_Oscillator --
    -----------------------------
 
-   procedure Use_Internal_Oscillator (Divider : in Internal_Oscillator_Divider := 5) is
+   procedure Use_Internal_Oscillator (Divider : Internal_Oscillator_Divider := 5) is
    begin
       PRIC_Periph.HFROSCCFG.DIV := HFROSCCFG_DIV_Field (Divider - 1);
       PRIC_Periph.HFROSCCFG.ENABLE := True;
@@ -140,12 +141,12 @@ package body FE310 is
    -- Use_PLL--
    ------------
 
-   procedure Use_PLL (Reference : in PLL_Reference;
-                      Internal_Osc_Div : in Internal_Oscillator_Divider  := 5;
-                      R_Div : in PLL_R;
-                      F_Mul : in PLL_F;
-                      Q_Div : in PLL_Q;
-                      Output_Div : in PLL_Output_Divider) is
+   procedure Use_PLL (Reference : PLL_Reference;
+                      Internal_Osc_Div : Internal_Oscillator_Divider  := 5;
+                      R_Div : PLL_R;
+                      F_Mul : PLL_F;
+                      Q_Div : PLL_Q;
+                      Output_Div : PLL_Output_Divider) is
    begin
       --  Use internal oscillator during switch
       PRIC_Periph.HFROSCCFG.DIV := HFROSCCFG_DIV_Field (Internal_Osc_Div - 1);
@@ -201,7 +202,7 @@ package body FE310 is
    -- Set_SPI_Flash_Clock_Divider --
    ---------------------------------
 
-   procedure Set_SPI_Flash_Clock_Divider (Divider : in SPI_Clock_Divider) is
+   procedure Set_SPI_Flash_Clock_Divider (Divider : SPI_Clock_Divider) is
    begin
       QSPI0_Periph.SCKDIV.SCALE := (UInt12 (Divider) / 2) - 1;
    end Set_SPI_Flash_Clock_Divider;

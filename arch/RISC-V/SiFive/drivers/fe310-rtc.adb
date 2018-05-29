@@ -1,8 +1,9 @@
 ------------------------------------------------------------------------------
 --                                                                          --
 --            Copyright (C) 2018, AdaCore and other contributors            --
---  See https://github.com/AdaCore/Ada_Drivers_Library/graphs/contributors  --
---  for more information                                                    --
+--                                                                          --
+--      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
+--                           for more information                           --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -86,7 +87,8 @@ package body FE310.RTC is
    -- Scaled_Counter --
    --------------------
 
-   function Scaled_Counter return Scaled_Value is (RTC_Periph.SCALE_COUNT);
+   function Scaled_Counter return Scaled_Value
+   is (RTC_Periph.SCALE_COUNT);
 
    ---------------
    -- Configure --
@@ -110,13 +112,15 @@ package body FE310.RTC is
    -- Compare --
    -------------
 
-   function Compare return Compare_Value is (RTC_Periph.COMPARE);
+   function Compare return Compare_Value
+   is (RTC_Periph.COMPARE);
 
    -----------------------
    -- Interrupt_Pending --
    -----------------------
 
-   function Interrupt_Pending return Boolean is (RTC_Periph.CONFIG.CMP_IP);
+   function Interrupt_Pending return Boolean
+   is (RTC_Periph.CONFIG.CMP_IP);
 
 
 end FE310.RTC;

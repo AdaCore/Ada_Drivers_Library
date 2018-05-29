@@ -1,8 +1,9 @@
 ------------------------------------------------------------------------------
 --                                                                          --
 --            Copyright (C) 2018, AdaCore and other contributors            --
---  See https://github.com/AdaCore/Ada_Drivers_Library/graphs/contributors  --
---  for more information                                                    --
+--                                                                          --
+--      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
+--                           for more information                           --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -35,6 +36,10 @@ with FE310_SVD.CLINT; use FE310_SVD.CLINT;
 
 package body FE310.CLINT is
 
+   ------------------
+   -- Machine_Time --
+   ------------------
+
    function Machine_Time return Machine_Time_Value is
       High : UInt32;
       Low : UInt32;
@@ -48,6 +53,9 @@ package body FE310.CLINT is
       return Machine_Time_Value (High) * 2**32 + Machine_Time_Value (Low);
    end Machine_Time;
 
+   ------------------------------
+   -- Set_Machine_Time_Compare --
+   ------------------------------
 
    procedure Set_Machine_Time_Compare (Value : Machine_Time_Value) is
    begin
@@ -56,10 +64,14 @@ package body FE310.CLINT is
       CLINT_Periph.MTIMECMP_LO := UInt32 (Value rem 2**32);
    end Set_Machine_Time_Compare;
 
+   --------------------------
+   -- Machine_Time_Compare --
+   --------------------------
 
    function Machine_Time_Compare return Machine_Time_Value is
    begin
-      return Machine_Time_Value (CLINT_Periph.MTIMECMP_HI) * 2**32 + Machine_Time_Value (CLINT_Periph.MTIMECMP_LO);
+      return Machine_Time_Value (CLINT_Periph.MTIMECMP_HI) * 2**32 +
+             Machine_Time_Value (CLINT_Periph.MTIMECMP_LO);
    end Machine_Time_Compare;
 
 

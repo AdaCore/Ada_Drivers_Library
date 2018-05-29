@@ -1,8 +1,9 @@
 ------------------------------------------------------------------------------
 --                                                                          --
 --            Copyright (C) 2018, AdaCore and other contributors            --
---  See https://github.com/AdaCore/Ada_Drivers_Library/graphs/contributors  --
---  for more information                                                    --
+--                                                                          --
+--      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
+--                           for more information                           --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -42,10 +43,8 @@ package body FE310.Time is
 
    Delay_Instance : aliased HF1_Delays;
 
-   function HAL_Delay return not null HAL.Time.Any_Delays is
-   begin
-      return Delay_Instance'Access;
-   end HAL_Delay;
+   function HAL_Delay return not null HAL.Time.Any_Delays
+   is (Delay_Instance'Access);
 
    ------------------------
    -- Delay_Microseconds --
