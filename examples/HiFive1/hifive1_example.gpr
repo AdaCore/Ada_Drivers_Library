@@ -1,5 +1,4 @@
-with "../../boards/HiFive1/hifive1.gpr";
-with "../../boards/config";
+with "../../boards/HiFive1/hifive1_zfp.gpr";
 
 project HiFive1_Example is
 
@@ -11,7 +10,7 @@ project HiFive1_Example is
   for Object_Dir use "obj";
   for Create_Missing_Dirs use "True";
 
-  package Compiler renames Config.Compiler;
+  package Compiler renames HiFive1_ZFP.Compiler;
 
   package Linker is
      for Default_Switches ("Ada") use ("-Wl,--print-memory-usage",

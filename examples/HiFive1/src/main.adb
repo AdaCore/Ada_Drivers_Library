@@ -48,7 +48,7 @@ begin
    FE310.Load_Internal_Oscilator_Calibration;
 
    --  Use the HiFive1 16 MHz crystal oscillator which is more acurate than the
-   --  internal oscollator.
+   --  internal oscillator.
    FE310.Use_Crystal_Oscillator;
 
    HiFive1.LEDs.Initialize;
