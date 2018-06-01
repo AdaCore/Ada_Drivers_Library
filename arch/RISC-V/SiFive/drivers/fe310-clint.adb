@@ -1,6 +1,9 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--            Copyright (C) 2018, AdaCore and other contributors            --
+--                                                                          --
+--      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
+--                           for more information                           --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,30 +32,51 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310.Device; use FE310.Device;
-with FE310.GPIO;   use FE310.GPIO;
+with FE310_SVD.CLINT; use FE310_SVD.CLINT;
 
-package HiFive1 is
+package body FE310.CLINT is
 
-   HF1_Pin_0  : GPIO_Point renames P16; -- IOF 0: UART 0 RX
-   HF1_Pin_1  : GPIO_Point renames P17; -- IOF 0: UART 0 TX
-   HF1_Pin_2  : GPIO_Point renames P18;
-   HF1_Pin_3  : GPIO_Point renames P19; --                    | IOF 1 : PWM 1
-   HF1_Pin_4  : GPIO_Point renames P20; --                    | IOF 1 : PWM 1
-   HF1_Pin_5  : GPIO_Point renames P21; --                    | IOF 1 : PWM 1
-   HF1_Pin_6  : GPIO_Point renames P22; --                    | IOF 1 : PWM 1
-   HF1_Pin_7  : GPIO_Point renames P23;
-   HF1_Pin_8  : GPIO_Point renames P00; --                    | IOF 1 : PWM 0
-   HF1_Pin_9  : GPIO_Point renames P01; --                    | IOF 1 : PWM 0
-   HF1_Pin_10 : GPIO_Point renames P02; --                    | IOF 1 : PWM 0
-   HF1_Pin_11 : GPIO_Point renames P03; -- IOF 0: SPI 1 MOSI  | IOF 1 : PWM 0
-   HF1_Pin_12 : GPIO_Point renames P04; -- IOF 0: SPI 1 MISO
-   HF1_Pin_13 : GPIO_Point renames P05; -- IOF 0: SPI 1 SCK
-   --  HF1_Pin_14 is not connected
-   HF1_Pin_15 : GPIO_Point renames P09;
-   HF1_Pin_16 : GPIO_Point renames P10; --                    | IOF 1 : PWM 2
-   HF1_Pin_17 : GPIO_Point renames P11; --                    | IOF 1 : PWM 2
-   HF1_Pin_18 : GPIO_Point renames P12; --                    | IOF 1 : PWM 2
-   HF1_Pin_19 : GPIO_Point renames P13; --                    | IOF 1 : PWM 2
+   ------------------
+   -- Machine_Time --
+   ------------------
 
-end HiFive1;
+   function Machine_Time return Machine_Time_Value is
+      High : UInt32;
+      Low : UInt32;
+   begin
+      High := CLINT_Periph.MTIME_HI;
+      Low := CLINT_Periph.MTIME_LO;
+
+      --  Handle the case where the timer registers were read during the
+      --  incrementation of the high part
+      if CLINT_Periph.MTIME_HI /= High then
+         High := High + 1;
+         Low := 0;
+      end if;
+
+      return Machine_Time_Value (High) * 2**32 + Machine_Time_Value (Low);
+   end Machine_Time;
+
+   ------------------------------
+   -- Set_Machine_Time_Compare --
+   ------------------------------
+
+   procedure Set_Machine_Time_Compare (Value : Machine_Time_Value) is
+   begin
+      CLINT_Periph.MTIMECMP_LO := UInt32'Last;
+      CLINT_Periph.MTIMECMP_HI := UInt32 (Value / 2**32);
+      CLINT_Periph.MTIMECMP_LO := UInt32 (Value rem 2**32);
+   end Set_Machine_Time_Compare;
+
+   --------------------------
+   -- Machine_Time_Compare --
+   --------------------------
+
+   function Machine_Time_Compare return Machine_Time_Value is
+   begin
+      return Machine_Time_Value (CLINT_Periph.MTIMECMP_HI) * 2**32 +
+             Machine_Time_Value (CLINT_Periph.MTIMECMP_LO);
+   end Machine_Time_Compare;
+
+
+end FE310.CLINT;

@@ -1,6 +1,9 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--            Copyright (C) 2018, AdaCore and other contributors            --
+--                                                                          --
+--      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
+--                           for more information                           --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,30 +32,40 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310.Device; use FE310.Device;
-with FE310.GPIO;   use FE310.GPIO;
+with FE310_SVD.RTC;
 
-package HiFive1 is
+package FE310.RTC is
 
-   HF1_Pin_0  : GPIO_Point renames P16; -- IOF 0: UART 0 RX
-   HF1_Pin_1  : GPIO_Point renames P17; -- IOF 0: UART 0 TX
-   HF1_Pin_2  : GPIO_Point renames P18;
-   HF1_Pin_3  : GPIO_Point renames P19; --                    | IOF 1 : PWM 1
-   HF1_Pin_4  : GPIO_Point renames P20; --                    | IOF 1 : PWM 1
-   HF1_Pin_5  : GPIO_Point renames P21; --                    | IOF 1 : PWM 1
-   HF1_Pin_6  : GPIO_Point renames P22; --                    | IOF 1 : PWM 1
-   HF1_Pin_7  : GPIO_Point renames P23;
-   HF1_Pin_8  : GPIO_Point renames P00; --                    | IOF 1 : PWM 0
-   HF1_Pin_9  : GPIO_Point renames P01; --                    | IOF 1 : PWM 0
-   HF1_Pin_10 : GPIO_Point renames P02; --                    | IOF 1 : PWM 0
-   HF1_Pin_11 : GPIO_Point renames P03; -- IOF 0: SPI 1 MOSI  | IOF 1 : PWM 0
-   HF1_Pin_12 : GPIO_Point renames P04; -- IOF 0: SPI 1 MISO
-   HF1_Pin_13 : GPIO_Point renames P05; -- IOF 0: SPI 1 SCK
-   --  HF1_Pin_14 is not connected
-   HF1_Pin_15 : GPIO_Point renames P09;
-   HF1_Pin_16 : GPIO_Point renames P10; --                    | IOF 1 : PWM 2
-   HF1_Pin_17 : GPIO_Point renames P11; --                    | IOF 1 : PWM 2
-   HF1_Pin_18 : GPIO_Point renames P12; --                    | IOF 1 : PWM 2
-   HF1_Pin_19 : GPIO_Point renames P13; --                    | IOF 1 : PWM 2
+   subtype Count_Value is UInt48;
 
-end HiFive1;
+   function Count return Count_Value;
+
+   procedure Set_Count (Value : Count_Value);
+
+   subtype Scaled_Value is UInt32;
+
+   function Scaled_Counter return Scaled_Value;
+
+   -- Enable --
+
+   procedure Enable;
+
+   procedure Disable;
+
+   -- Configuration --
+
+   procedure Set_Scale (Scale : FE310_SVD.RTC.CONFIG_SCALE_Field);
+
+   -- Compare Value --
+
+   subtype Compare_Value is UInt32;
+
+   procedure Set_Compare (Value : Compare_Value);
+
+   function Compare return Compare_Value;
+
+   -- Interrupts --
+
+   function Interrupt_Pending return Boolean;
+
+end FE310.RTC;

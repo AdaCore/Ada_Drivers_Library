@@ -1,6 +1,9 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--            Copyright (C) 2018, AdaCore and other contributors            --
+--                                                                          --
+--      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
+--                           for more information                           --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,30 +32,30 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310.Device; use FE310.Device;
-with FE310.GPIO;   use FE310.GPIO;
+with HAL.Time;
 
-package HiFive1 is
+package FE310.Time is
 
-   HF1_Pin_0  : GPIO_Point renames P16; -- IOF 0: UART 0 RX
-   HF1_Pin_1  : GPIO_Point renames P17; -- IOF 0: UART 0 TX
-   HF1_Pin_2  : GPIO_Point renames P18;
-   HF1_Pin_3  : GPIO_Point renames P19; --                    | IOF 1 : PWM 1
-   HF1_Pin_4  : GPIO_Point renames P20; --                    | IOF 1 : PWM 1
-   HF1_Pin_5  : GPIO_Point renames P21; --                    | IOF 1 : PWM 1
-   HF1_Pin_6  : GPIO_Point renames P22; --                    | IOF 1 : PWM 1
-   HF1_Pin_7  : GPIO_Point renames P23;
-   HF1_Pin_8  : GPIO_Point renames P00; --                    | IOF 1 : PWM 0
-   HF1_Pin_9  : GPIO_Point renames P01; --                    | IOF 1 : PWM 0
-   HF1_Pin_10 : GPIO_Point renames P02; --                    | IOF 1 : PWM 0
-   HF1_Pin_11 : GPIO_Point renames P03; -- IOF 0: SPI 1 MOSI  | IOF 1 : PWM 0
-   HF1_Pin_12 : GPIO_Point renames P04; -- IOF 0: SPI 1 MISO
-   HF1_Pin_13 : GPIO_Point renames P05; -- IOF 0: SPI 1 SCK
-   --  HF1_Pin_14 is not connected
-   HF1_Pin_15 : GPIO_Point renames P09;
-   HF1_Pin_16 : GPIO_Point renames P10; --                    | IOF 1 : PWM 2
-   HF1_Pin_17 : GPIO_Point renames P11; --                    | IOF 1 : PWM 2
-   HF1_Pin_18 : GPIO_Point renames P12; --                    | IOF 1 : PWM 2
-   HF1_Pin_19 : GPIO_Point renames P13; --                    | IOF 1 : PWM 2
+   procedure Delay_Us (Us : Positive);
+   procedure Delay_Ms (Ms : Positive);
+   procedure Delay_S (S : Positive);
 
-end HiFive1;
+   function HAL_Delay return not null HAL.Time.Any_Delays;
+
+private
+
+   type HF1_Delays is new HAL.Time.Delays with null record;
+
+   overriding
+   procedure Delay_Microseconds (This : in out HF1_Delays;
+                                 Us   : Integer);
+
+   overriding
+   procedure Delay_Milliseconds (This : in out HF1_Delays;
+                                 Ms   : Integer);
+
+   overriding
+   procedure Delay_Seconds      (This : in out HF1_Delays;
+                                 S    : Integer);
+
+end FE310.Time;

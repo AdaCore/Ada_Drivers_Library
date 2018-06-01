@@ -1,6 +1,9 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--          Copyright (C) 2017-2018, AdaCore and other contributors         --
+--                                                                          --
+--      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
+--                           for more information                           --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -30,10 +33,57 @@
 ------------------------------------------------------------------------------
 
 with HAL; use HAL;
+with FE310_SVD.PRIC;
 
 package FE310 is
 
+   LF_Clock_Frequency : constant := 32768;
+
    function CPU_Frequency return UInt32;
    --  Compute CPU frequency
+
+   procedure Load_Internal_Oscilator_Calibration;
+   --  Read the calibration setting from the OTP memory ant write it to the
+   --  oscillator configuration register.
+   --  After execution of this procedure, the (undivided) internal oscillator
+   --  frequency should be about 72 MHz
+
+   subtype PLL_Output_Divider is Integer range 1 .. 128;
+
+   procedure Use_Crystal_Oscillator (Divider : PLL_Output_Divider := 1)
+     with Pre => (Divider = 1) or (Divider rem 2 = 0);
+
+   subtype Internal_Oscillator_Divider is Integer range 1 .. 64;
+
+   procedure Use_Internal_Oscillator (Divider : Internal_Oscillator_Divider := 5);
+
+   type PLL_Reference is new FE310_SVD.PRIC.PLLCFG_REFSEL_Field;
+
+   subtype PLL_R is Integer range 1 .. 4;
+   subtype PLL_F is Integer range 2 .. 128;
+
+   type PLL_Q is (Div_By_2, Div_By_4, Div_By_8);
+
+   procedure Use_PLL (Reference : PLL_Reference;
+                      Internal_Osc_Div : Internal_Oscillator_Divider  := 5;
+                      R_Div : PLL_R;
+                      F_Mul : PLL_F;
+                      Q_Div : PLL_Q;
+                      Output_Div : PLL_Output_Divider)
+     with Pre => ((Internal_Osc_Div >= 2) and (Internal_Osc_Div <= 12)) and
+                 (F_Mul rem 2 = 0);
+
+
+   subtype SPI_Clock_Divider is Integer range 2 .. 8192;
+
+   procedure Set_SPI_Flash_Clock_Divider (Divider : SPI_Clock_Divider)
+     with Pre => Divider rem 2 = 0;
+
+   function SPI_Flash_Clock_Divider return SPI_Clock_Divider;
+
+private
+
+   for PLL_Q use (Div_By_2 => 1, Div_By_4 => 2, Div_By_8 => 3);
+
 end FE310;
 

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2017-2018, AdaCore and other contributors         --
+--            Copyright (C) 2018, AdaCore and other contributors            --
 --                                                                          --
 --      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
 --                           for more information                           --
@@ -32,40 +32,99 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310;
-with HiFive1.LEDs; use HiFive1.LEDs;
-with FE310.Time; use FE310.Time;
+with FE310_SVD.RTC; use FE310_SVD.RTC;
 
-procedure Main is
+package body FE310.RTC is
 
-begin
-   --  The SPI flash clock divider should be as small as possible to increase
-   --  the execution speed of instructions that are not yet in the instruction
-   --  cache.
-   FE310.Set_SPI_Flash_Clock_Divider (2);
+   -----------
+   -- Count --
+   -----------
 
-   --  Load the internal oscillator factory calibration to be sure it
-   --  oscillates at a known frequency.
-   FE310.Load_Internal_Oscilator_Calibration;
+   function Count return Count_Value is
+      Low_Reg : UInt32;
+      High_Reg : HI_Register;
+   begin
+      High_Reg := RTC_Periph.HI;
+      Low_Reg := RTC_Periph.LO;
 
-   --  Use the HiFive1 16 MHz crystal oscillator which is more acurate than the
-   --  internal oscillator.
-   FE310.Use_Crystal_Oscillator;
+      --  Handle the case where the timer registers were read during the
+      --  incrementation of the high part
+      if RTC_Periph.HI /= High_Reg then
+         High_Reg.CNT := High_Reg.CNT + 1;
+         Low_Reg := 0;
+      end if;
 
-   HiFive1.LEDs.Initialize;
+      return Count_Value (High_Reg.CNT) * 2**32 + Count_Value (Low_Reg);
+   end Count;
 
-   --  Blinky!
-   loop
-      Turn_On (Red_LED);
-      Delay_S (1);
-      Turn_Off (Red_LED);
+   ---------------
+   -- Set_Count --
+   ---------------
 
-      Turn_On (Green_LED);
-      Delay_S (1);
-      Turn_Off (Green_LED);
+   procedure Set_Count (Value : Count_Value) is
+   begin
+      RTC_Periph.CONFIG.ENALWAYS := False;
+      RTC_Periph.HI.CNT := UInt16 (Value / 2**32);
+      RTC_Periph.LO := UInt32 (Value rem 2**32);
+      RTC_Periph.CONFIG.ENALWAYS := True;
+   end Set_Count;
 
-      Turn_On (Blue_LED);
-      Delay_S (1);
-      Turn_Off (Blue_LED);
-   end loop;
-end Main;
+   ----------------------
+   -- Enable_Continous --
+   ----------------------
+
+   procedure Enable is
+   begin
+      RTC_Periph.CONFIG.ENALWAYS := True;
+   end Enable;
+
+   -------------
+   -- Disable --
+   -------------
+
+   procedure Disable is
+   begin
+      RTC_Periph.CONFIG.ENALWAYS := False;
+   end Disable;
+
+   --------------------
+   -- Scaled_Counter --
+   --------------------
+
+   function Scaled_Counter return Scaled_Value
+   is (RTC_Periph.SCALE_COUNT);
+
+   ---------------
+   -- Configure --
+   ---------------
+
+   procedure Set_Scale (Scale : FE310_SVD.RTC.CONFIG_SCALE_Field) is
+   begin
+      RTC_Periph.CONFIG.SCALE := Scale;
+   end Set_Scale;
+
+   -----------------
+   -- Set_Compare --
+   -----------------
+
+   procedure Set_Compare (Value : Compare_Value) is
+   begin
+      RTC_Periph.COMPARE := Value;
+   end Set_Compare;
+
+   -------------
+   -- Compare --
+   -------------
+
+   function Compare return Compare_Value
+   is (RTC_Periph.COMPARE);
+
+   -----------------------
+   -- Interrupt_Pending --
+   -----------------------
+
+   function Interrupt_Pending return Boolean
+   is (RTC_Periph.CONFIG.CMP_IP);
+
+
+end FE310.RTC;
