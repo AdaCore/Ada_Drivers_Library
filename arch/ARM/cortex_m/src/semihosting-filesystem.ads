@@ -95,6 +95,7 @@ package Semihosting.Filesystem is
                   Handle : out Any_Directory_Handle)
                   return Status_Code;
 
+   pragma Warnings (Off, "formal * not referenced");
    overriding
    function Root_Node
      (This   : in out SHFS;
@@ -102,6 +103,7 @@ package Semihosting.Filesystem is
       Handle : out Any_Node_Handle)
       return Status_Code
    is (Operation_Not_Permitted);
+   pragma Warnings (On, "formal * not referenced");
 
    overriding
    procedure Close (This : in out SHFS);
