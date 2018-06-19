@@ -129,9 +129,7 @@ package body nRF51.TWI is
       end if;
 
       --  Clear errors
-      This.Periph.ERRORSRC.OVERRUN := Errorsrc_Overrun_Field_Reset;
-      This.Periph.ERRORSRC.ANACK   := Errorsrc_Anack_Field_Reset;
-      This.Periph.ERRORSRC.DNACK   := Errorsrc_Dnack_Field_Reset;
+      This.Periph.ERRORSRC := (Clear, Clear, Clear, 0);
 
       --  Set Address
       This.Periph.ADDRESS.ADDRESS := UInt7 (Addr / 2);
@@ -197,17 +195,22 @@ package body nRF51.TWI is
       end if;
 
       --  Clear errors
-      This.Periph.ERRORSRC.OVERRUN := Clear;
-      This.Periph.ERRORSRC.ANACK   := Clear;
-      This.Periph.ERRORSRC.DNACK   := Clear;
+      This.Periph.ERRORSRC := (Clear, Clear, Clear, 0);
 
       --  Set Address
-      This.Periph.ADDRESS.ADDRESS := UInt7 (Addr);
+      This.Periph.ADDRESS.ADDRESS := UInt7 (Addr / 2);
 
-      --  Configure SHORTS to automatically suspend TWI port when receiving a
-      --  byte.
-      This.Periph.SHORTS.BB_SUSPEND := Enabled;
-      This.Periph.SHORTS.BB_STOP    := Disabled;
+
+      if Data'Length = 1 then
+         --  Only one byte to receive so we stop at the next one
+         This.Periph.SHORTS.BB_STOP := Enabled;
+         This.Periph.SHORTS.BB_SUSPEND := Disabled;
+      else
+         --  Configure SHORTS to automatically suspend TWI port when receiving a
+         --  byte.
+         This.Periph.SHORTS.BB_SUSPEND := Enabled;
+         This.Periph.SHORTS.BB_STOP := Disabled;
+      end if;
 
       --  Start RX sequence
       This.Periph.TASKS_STARTRX := 1;
@@ -229,7 +232,11 @@ package body nRF51.TWI is
             exit when This.Periph.EVENTS_RXDREADY /= 0;
          end loop;
 
-         if Index = Data'Last and then This.Do_Stop_Sequence then
+         --  Clear the event
+         This.Periph.EVENTS_RXDREADY := 0;
+         Data (Index) := This.Periph.RXD.RXD;
+
+         if Index = Data'Last - 1 and then This.Do_Stop_Sequence then
 
             --  Configure SHORTS to automatically stop the TWI port and produce
             --  a STOP event on the bus when receiving a byte.
@@ -237,10 +244,7 @@ package body nRF51.TWI is
             This.Periph.SHORTS.BB_STOP    := Enabled;
          end if;
 
-         --  Clear the event
-         This.Periph.EVENTS_RXDREADY := 0;
-
-         Data (Index) := This.Periph.RXD.RXD;
+         This.Periph.TASKS_RESUME := 1;
       end loop;
 
       Status := Ok;
@@ -281,6 +285,7 @@ package body nRF51.TWI is
       This.Do_Stop_Sequence := True;
 
       if Status /= Ok then
+         This.Stop_Sequence;
          return;
       end if;
 
@@ -323,6 +328,7 @@ package body nRF51.TWI is
       This.Do_Stop_Sequence := True;
 
       if Status /= Ok then
+         This.Stop_Sequence;
          return;
       end if;
 
