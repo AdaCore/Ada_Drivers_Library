@@ -58,6 +58,7 @@ package body MicroBit.I2C is
                       when S400kbps => nRF51.TWI.TWI_400kbps)
         );
 
+      nRF51.Device.TWI_0.Enable;
       Init_Done := True;
    end Initialize;
 
