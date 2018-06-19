@@ -45,8 +45,7 @@ package MicroBit.I2C is
    --   - P19 -> SCL
    --   - P20 -> SDA
 
-   function Controller return not null Any_I2C_Port
-     with Pre => Initialized;
+   function Controller return not null Any_I2C_Port;
    --  Return the HAL.I2C controller implementation
 
 end MicroBit.I2C;
