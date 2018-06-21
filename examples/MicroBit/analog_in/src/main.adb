@@ -30,23 +30,19 @@
 ------------------------------------------------------------------------------
 
 with MicroBit.IOs;
-with MicroBit.Time;
 
 procedure Main is
+
+   Value : MicroBit.IOs.Analog_Value;
 begin
 
    --  Loop forever
    loop
-      --  Turn on the LED connected to pin 0
-      MicroBit.IOs.Set (0, True);
 
-      --  Wait 500 milliseconds
-      MicroBit.Time.Delay_Ms (500);
+      --  Read analog value of pin
+      Value := MicroBit.IOs.Analog (1);
 
-      --  Turn off the LED connected to pin 0
-      MicroBit.IOs.Set (0, False);
-
-      --  Wait 500 milliseconds
-      MicroBit.Time.Delay_Ms (500);
+      --  Write analog value of pin 0
+      MicroBit.IOs.Write (0, Value);
    end loop;
 end Main;

@@ -30,23 +30,22 @@
 ------------------------------------------------------------------------------
 
 with MicroBit.IOs;
-with MicroBit.Time;
 
 procedure Main is
 begin
 
    --  Loop forever
    loop
-      --  Turn on the LED connected to pin 0
-      MicroBit.IOs.Set (0, True);
 
-      --  Wait 500 milliseconds
-      MicroBit.Time.Delay_Ms (500);
+      --  Check if pin 1 is high
+      if MicroBit.IOs.Set (1) then
 
-      --  Turn off the LED connected to pin 0
-      MicroBit.IOs.Set (0, False);
+         --  Turn off the LED connected to pin 0
+         MicroBit.IOs.Set (0, False);
+      else
 
-      --  Wait 500 milliseconds
-      MicroBit.Time.Delay_Ms (500);
+         --  Turn on the LED connected to pin 0
+         MicroBit.IOs.Set (0, True);
+      end if;
    end loop;
 end Main;

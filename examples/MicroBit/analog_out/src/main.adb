@@ -37,16 +37,15 @@ begin
 
    --  Loop forever
    loop
-      --  Turn on the LED connected to pin 0
-      MicroBit.IOs.Set (0, True);
 
-      --  Wait 500 milliseconds
-      MicroBit.Time.Delay_Ms (500);
+      --  Loop for value between 0 and 128
+      for Value in MicroBit.IOs.Analog_Value range 0 .. 128 loop
 
-      --  Turn off the LED connected to pin 0
-      MicroBit.IOs.Set (0, False);
+         --  Write the analog value of pin 0
+         MicroBit.IOs.Write (0, Value);
 
-      --  Wait 500 milliseconds
-      MicroBit.Time.Delay_Ms (500);
+         --  Wait 20 milliseconds
+         MicroBit.Time.Delay_Ms (20);
+      end loop;
    end loop;
 end Main;
