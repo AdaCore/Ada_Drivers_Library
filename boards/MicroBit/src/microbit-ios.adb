@@ -459,18 +459,4 @@ package body MicroBit.IOs is
       return Analog_Value (Wait_For_Result);
    end Analog;
 
-   -------------
-   -- Touched --
-   -------------
-
-   function Touched
-     (Pin : Pin_Id)
-      return Boolean
-   is
-   begin
-      --  Generated stub: replace with real body!
-      raise Program_Error with "Unimplemented function Is_Touched";
-      return Touched (Pin => Pin);
-   end Touched;
-
 end MicroBit.IOs;
