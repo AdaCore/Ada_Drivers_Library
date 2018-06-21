@@ -55,6 +55,10 @@ package MicroBit.IOs is
 
    type Analog_Value is range 0 .. 1023;
 
+   procedure Set_Analog_Period_Us (Period : Natural);
+   --  Set the period (in microseconds) of the PWM signal for all analog output
+   --  pins.
+
    procedure Write (Pin : Pin_Id; Value : Analog_Value)
      with Pre => Supports (Pin, Analog);
 
