@@ -52,4 +52,10 @@ package nRF51.GPIO.Tasks_And_Events is
    --  When the tasks associated with Chan is triggered, Action (Set, Clear,
    --  Toggle) is applied to GPIO_Pin.
 
+   function Out_Task (Chan : GPIOTE_Channel) return Task_Type;
+   --  Return the nRF51 task associated with Chan
+
+   function In_Event (Chan : GPIOTE_Channel) return Event_Type;
+   --  Return the nRF51 event associated with Chan
+
 end nRF51.GPIO.Tasks_And_Events;

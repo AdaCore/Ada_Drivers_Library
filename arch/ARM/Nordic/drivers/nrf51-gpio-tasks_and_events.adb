@@ -85,4 +85,18 @@ package body nRF51.GPIO.Tasks_And_Events is
       CONFIG.MODE := Task_k;
    end Enable_Task;
 
+   --------------
+   -- Out_Task --
+   --------------
+
+   function Out_Task (Chan : GPIOTE_Channel) return Task_Type
+   is (Task_Type (GPIOTE_Periph.TASKS_OUT (Integer (Chan))'Address));
+
+     --------------
+     -- In_Event --
+     --------------
+
+   function In_Event (Chan : GPIOTE_Channel) return Event_Type
+   is (Event_Type (GPIOTE_Periph.EVENTS_IN (Integer (Chan))'Address));
+
 end nRF51.GPIO.Tasks_And_Events;
