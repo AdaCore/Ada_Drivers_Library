@@ -5,7 +5,7 @@ import os
 import os.path
 import subprocess
 import sys
-import distutils.spawn
+
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
@@ -32,7 +32,7 @@ def run_program(*argv):
 def gprbuild(project_file, debug=False):
     extra_args = []
 
-    extra_args = extra_args + ["-XADL_BUILD=" +
+    extra_args = extra_args + ["-XPLATFORM_BUILD=" +
                                ("Debug" if debug else "Production")]
 
     print "Building '%s'" % project_file
@@ -117,13 +117,12 @@ projects = [
 
             # MicroBit
             "/boards/MicroBit/microbit_zfp.gpr",
-            "/examples/MicroBit/text_scrolling/text_scrolling.gpr",
+            "/examples/MicroBit/microbit_example.gpr",
             "/examples/MicroBit/digital_in/digital_in.gpr",
             "/examples/MicroBit/music/music.gpr",
             "/examples/MicroBit/analog_in/analog_in.gpr",
             "/examples/MicroBit/analog_out/analog_out.gpr",
             "/examples/MicroBit/digital_out/digital_out.gpr",
-            "/examples/MicroBit/BLE_beacon/BLE_beacon.gpr",
 
             # STM32 driver examples
             STM_DRIVERS + "/demo_adc_dma/demo_adc_dma.gpr",
@@ -151,12 +150,6 @@ projects = [
             STM_DRIVERS + "/demo_usart_interrupts/demo_usart_interrupts.gpr",
             STM_DRIVERS + "/demo_usart_polling/demo_usart_polling.gpr",
             ]
-
-# Check if RISC-V32 compiler is available
-if distutils.spawn.find_executable("riscv32-elf-gnatls"):
-
-    # Add RISC-V32 projects
-    projects += ["/examples/HiFive1/hifive1_example.gpr"]
 
 parser = argparse.ArgumentParser('Compile all the Ada_Drivers_Library examples')
 
