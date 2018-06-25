@@ -9,10 +9,11 @@ import sys
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
 
-def run_program(*argv):
+def run_program(argv, cwd=os.path.dirname(os.path.realpath(__file__))):
     print "$ %s" % " ".join(argv)
     p = subprocess.Popen(
         argv,
+        cwd=cwd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
     )
@@ -39,8 +40,7 @@ def git_clone(repo_url, branch, dst, recursive=False):
 
     # Clone the repo
     returncode, stdout, stderr = run_program(
-        'git', 'clone', repo_url, dst, *extra_args
-    )
+        ['git', 'clone', repo_url, dst] + extra_args)
     print stdout
 
     if returncode:
@@ -67,11 +67,11 @@ def git_clone(repo_url, branch, dst, recursive=False):
 #  - Destination directory
 #  - Recursive clone?
 #  - install command (if any)
-git_repos = [("https://github.com/AdaCore/embedded-runtimes",
-              "gpl2017_uninstall",
-              "embedded-runtimes",
+git_repos = [("https://github.com/AdaCore/bb-runtimes",
+              None,
+              "bb-runtimes",
               False,
-              ["python", ROOT_DIR + "/embedded-runtimes/install.py"]),
+              ["python", ROOT_DIR + "/bb-runtimes/install.py", "--arch=arm-eabi"]),
              ]
 
 parser = argparse.ArgumentParser('Download and install dependencies')
@@ -104,7 +104,7 @@ def main(args):
         if build_cmd:
             print "Running build command:"
 
-            ret, stdout, stderr = run_program(*build_cmd)
+            ret, stdout, stderr = run_program(build_cmd, dest)
 
             print stdout
 
