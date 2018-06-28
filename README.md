@@ -3,18 +3,25 @@
 
 # 1. Introduction
 
-This repository contains Ada source code and complete sample GNAT projects for
-selected bare-board platforms supported by GNAT.  Initially the repository
-contains software for ARM platforms from a specific vendor, but we intend this
-to be a location for both AdaCore and the community in general to contribute
-support for additional processors, platforms, and vendors.
+This repository contains drivers and sample projects to program
+micro-controllers with the Ada and SPARK languages. The library also provides
+some middleware services and drivers for external devices such as sensors. We
+intend this to be a location for both AdaCore and the community in general to
+contribute support for additional processors, platforms, and vendors.
 
-# 2. Getting started
+# 3. Supported hardware
 
-To start using the Ada_Drivers_Library, please go to the [examples directory](examples/)
-where you will find instructions to run your first project.
+Ada_Drivers_Library provides support for various devices in the ARM Cortex-M
+and RISC-V architectures. Some devices are only partially supported. Go to the
+[boards directory](boards/) for a list of supported hardware.
 
-# 3. License
+# 3. Getting started
+
+To start using the Ada_Drivers_Library, please go to the [examples
+directory](examples/) where you will find instructions to run your first
+project.
+
+# 4. License
 
 All files are provided under a 3-clause Berkeley Software Distribution (BSD)
 license. As such, and within the conditions required by the license, the files
@@ -22,7 +29,7 @@ are available both for proprietary ("commercial") and non-proprietary use.
 
 For details, see the `LICENSE` file in the root directory.
 
-# 4. Requirements
+# 5. Requirements
 
 The software is written in Ada 2012 and uses, for example, preconditions,
 postconditions, and the high-level iterator form of for-loops.
@@ -35,31 +42,9 @@ wishing to submit additions to the library should see the GNAT Reference Manual
 for details.
 
 Therefore, building with the sources requires a compiler supporting both Ada
-2012 and the GNAT-defined pragma `Volatile_Full_Access`. The "GNAT GPL 2017"
-compiler for ARM ELF is one such compiler [(Download it
-here)](http://libre.adacore.com/download/configurations). A recent GNAT Pro
-compiler for that target will also suffice.
-
-# 5. Content
-
-Initial provision is for the hardware in the STM32F4 family of 32-bit MCUs, as
-defined in the "RM0090 Reference Manual" (Doc ID 018909 Rev 6, Feb 2014) by
-STMicroelectronics and made available on the "STM32F4 Discovery" and the
-"STM32F429 Discovery" kit boards.
-
-Specifically, there are low-level device drivers, higher-level component drivers,
-small demonstration programs for the drivers, and larger example applications.
-"Component" drivers are those that are implemented using the lower-level device
-drivers (e.g., SPI or GPIO), such as the gyroscope and accelerometer on the
-Discovery boards.
-
-The small driver demonstration programs and the larger applications programs are
-provided as full projects, including GNAT project files, and are ready to build
-either within GPS or on the command-line.
-
-Not all devices defined by the Reference Manual are supported, and not all those
-supported are complete. We encourage contributions of corrections, enhancements,
-and new drivers.
+2012 and the GNAT-defined pragma `Volatile_Full_Access`. For instance a recent
+GNAT Pro compiler or GNAT Community 2018 for ARM ELF or RISC-V ELF [(Download
+here)](http://adacore.com/download).
 
 # 6. Roadmap
 
@@ -91,3 +76,4 @@ https://github.com/AdaCore/Lunar_Lander_Rotation_Demo)
  * [Bare metal sudoku solver](https://github.com/stangassinger/sudoku)
 
 (Add yours to the list!)
+
