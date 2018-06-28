@@ -36,17 +36,10 @@ then restarting the service by doing
 $ sudo udevadm trigger
 ```
 
-## Open one of example projects and build it
+## Open the example project and build it
 
 Start GNAT Programming studio (GPS) and open the micro:bit example project:
-
- - [Text Scrolling](text_scrolling/)
- - [Digital Output](digital_out/)
- - [Digital Input](digital_in/)
- - [Analog Output](analog_out/)
- - [Analog Input](analog_in/)
- - [Music](music/)
- - [BLE beacon](BLE_beacon/)
+"Ada_Drivers_Library/examples/MicroBit/microbit_example.gpr".
 
 Press F4 and then press Enter to build the project.
 
