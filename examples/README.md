@@ -21,7 +21,8 @@ Most of the boards/micro-controller supported are based on the ARM Cortex-M
 architecture. If you have a GNAT Pro subscription, you can download the
 compiler (GNAT) and IDE (GNAT Programming Studio) from your account. Otherwise,
 AdaCore provides a community version of GNAT that you can download
-[here](http://libre.adacore.com/download/configurations).
+[here](http://adacore.com/download). We recomend to download the cross compiler
+and also the native one because it contains the GNAT Programming Studio IDE.
 
 Follow the instructions to install GNAT and GPS.
 
@@ -58,9 +59,11 @@ git clone --recursive https://github.com/AdaCore/Ada_Drivers_Library.git
 
 ## Build and install the run-times
 
-Not all the GNAT run-times used in the Ada_Drivers_Library are packaged with the compiler.
+Not all the GNAT run-times used in the Ada_Drivers_Library are packaged with
+the compiler.
 
-To build and install the missing run-times, use the `install_dependencies.py` script:
+To build and install the missing run-times, use the `install_dependencies.py`
+script:
 
 ```shell
 python ./scripts/install_dependencies.py
@@ -91,8 +94,8 @@ For the STM32 board, use the "Flash to board" button in the tool bar.
 #
 ### We need your help
 
-If you notice an error in these instructions, or if you want
-to improve them, please go to [Ada_Drivers_Library GitHub
+If you notice an error in these instructions, or if you want to improve them,
+please go to [Ada_Drivers_Library GitHub
 repository](https://github.com/AdaCore/Ada_Drivers_Library). Thank you in
 advance.
 
