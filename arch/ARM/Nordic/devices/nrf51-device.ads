@@ -36,6 +36,8 @@ with nRF51.TWI;     use nRF51.TWI;
 with NRF51_SVD.TWI;
 with nRF51.Timers;  use nRF51.Timers;
 with NRF51_SVD.TIMER;
+with nRF51.UART;    use nRF51.UART;
+with NRF51_SVD.UART;
 
 
 package nRF51.Device is
@@ -78,6 +80,8 @@ package nRF51.Device is
 
    TWI_0 : aliased TWI_Master (NRF51_SVD.TWI.TWI0_Periph'Access);
    TWI_1 : aliased TWI_Master (NRF51_SVD.TWI.TWI1_Periph'Access);
+
+   UART_0 : aliased nRF51.UART.UART (NRF51_SVD.UART.UART0_Periph'Access);
 
    Timer_0 : aliased Timer (NRF51_SVD.TIMER.TIMER0_Periph'Access);
    Timer_1 : aliased Timer (NRF51_SVD.TIMER.TIMER1_Periph'Access);
