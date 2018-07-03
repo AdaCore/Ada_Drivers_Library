@@ -9,7 +9,6 @@ env:
     - TOOLS_DIR=$HOME/build_tools
     - GNAT_BIN_PATH=$TOOLS_DIR/gnat-community-2018-x86_64-linux-bin
     - GNAT_ARM_BIN_PATH=$TOOLS_DIR/gnat-community-2018-arm-elf-bin
-    - GNAT_RV32_BIN_PATH=$TOOLS_DIR/gnat-community-2018-riscv32-elf-bin
     - INSTALL_CONTROL_SCRIPT=$PWD/scripts/GNAT_CE_2018_install_control.qs
 
 os:
@@ -26,25 +25,21 @@ install:
   # not, download it.
   - test -f $GNAT_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5b0d7bffa3f5d709751e3e04 -O $GNAT_BIN_PATH)
   - test -f $GNAT_ARM_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5b0c1227a3f5d7097625478d -O $GNAT_ARM_BIN_PATH)
-  - test -f $GNAT_RV32_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5b0c154aa3f5d70976254791 -O $GNAT_RV32_BIN_PATH)
 
   - wget https://raw.githubusercontent.com/AdaCore/gnat_community_install_script/master/install_package.sh
   - wget https://raw.githubusercontent.com/AdaCore/gnat_community_install_script/master/install_script.qs
 
   - sh install_package.sh $GNAT_BIN_PATH $TOOLS_DIR/native/
   - sh install_package.sh $GNAT_ARM_BIN_PATH $TOOLS_DIR/arm-elf/
-  - sh install_package.sh $GNAT_RV32_BIN_PATH $TOOLS_DIR/riscv32-elf/
 
   # Add GNAT to $PATH
   - export PATH=$PATH:$TOOLS_DIR/native/bin/
   - export PATH=$PATH:$TOOLS_DIR/arm-elf/bin/
-  - export PATH=$PATH:$TOOLS_DIR/riscv32-elf/bin/
 
 script:
   # Show GNAT version for the record
   - $TOOLS_DIR/native/bin/gprbuild --version
   - $TOOLS_DIR/arm-elf/bin/gprbuild --version
-  - $TOOLS_DIR/riscv32-elf/bin/gprbuild --version
 
   # Install extra run-times
   - python $PWD/scripts/install_dependencies.py
