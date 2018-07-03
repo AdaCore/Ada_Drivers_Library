@@ -7,7 +7,9 @@ python:
 env:
   global:
     - TOOLS_DIR=$HOME/build_tools
-    - GNAT_TAR_PATH=$TOOLS_DIR/gnat-gpl-2017-x86_64-linux-bin.tar.gz
+    - GNAT_BIN_PATH=$TOOLS_DIR/gnat-community-2018-x86_64-linux-bin
+    - GNAT_ARM_BIN_PATH=$TOOLS_DIR/gnat-community-2018-arm-elf-bin
+    - INSTALL_CONTROL_SCRIPT=$PWD/scripts/GNAT_CE_2018_install_control.qs
 
 os:
   - linux
@@ -21,17 +23,29 @@ cache:
 install:
   # Check if the GNAT package is already available in the cache directory. If
   # not, download it.
-  - test -f  $GNAT_TAR_PATH ||( mkdir -p $TOOLS_DIR && wget http://mirrors.cdn.adacore.com/art/591c6d80c7a447af2deed1d7 -O $GNAT_TAR_PATH)
+  - test -f $GNAT_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5b0d7bffa3f5d709751e3e04 -O $GNAT_BIN_PATH)
+  - test -f $GNAT_ARM_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5b0c1227a3f5d7097625478d -O $GNAT_ARM_BIN_PATH)
 
-  # Extract GNAT from its package
-  - tar -xf $GNAT_TAR_PATH
+  - wget https://raw.githubusercontent.com/AdaCore/gnat_community_install_script/master/install_package.sh
+  - wget https://raw.githubusercontent.com/AdaCore/gnat_community_install_script/master/install_script.qs
+
+  - sh install_package.sh $GNAT_BIN_PATH $TOOLS_DIR/native/
+  - sh install_package.sh $GNAT_ARM_BIN_PATH $TOOLS_DIR/arm-elf/
 
   # Add GNAT to $PATH
-  - export PATH=$PATH:$PWD/gnat-gpl-2017-x86_64-linux-bin/bin/
+  - export PATH=$PATH:$TOOLS_DIR/native/bin/
+  - export PATH=$PATH:$TOOLS_DIR/arm-elf/bin/
 
 script:
   # Show GNAT version for the record
-  - $PWD/gnat-gpl-2017-x86_64-linux-bin/bin/gprbuild --version
+  - $TOOLS_DIR/native/bin/gprbuild --version
+  - $TOOLS_DIR/arm-elf/bin/gprbuild --version
+
+  # Install extra run-times
+  - python $PWD/scripts/install_dependencies.py
+
+  # Build all examples
+  - python $PWD/scripts/build_all_examples.py
 
   # Start the testsuite
   - python $PWD/testsuite/run.py
