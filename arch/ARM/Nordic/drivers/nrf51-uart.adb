@@ -1,21 +1,71 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--            Copyright (C) 2018, AdaCore and other contributors            --
+--                                                                          --
+--      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
+--                           for more information                           --
+--                                                                          --
+--  Redistribution and use in source and binary forms, with or without      --
+--  modification, are permitted provided that the following conditions are  --
+--  met:                                                                    --
+--     1. Redistributions of source code must retain the above copyright    --
+--        notice, this list of conditions and the following disclaimer.     --
+--     2. Redistributions in binary form must reproduce the above copyright --
+--        notice, this list of conditions and the following disclaimer in   --
+--        the documentation and/or other materials provided with the        --
+--        distribution.                                                     --
+--     3. Neither the name of the copyright holder nor the names of its     --
+--        contributors may be used to endorse or promote products derived   --
+--        from this software without specific prior written permission.     --
+--                                                                          --
+--   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS    --
+--   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT      --
+--   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  --
+--   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT   --
+--   HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, --
+--   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT       --
+--   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  --
+--   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  --
+--   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT    --
+--   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  --
+--   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
+--                                                                          --
+------------------------------------------------------------------------------`
+
 with NRF51_SVD.UART;  use NRF51_SVD.UART;
 
 package body nRF51.UART is
    
+   ------------
+   -- Enable --
+   ------------
+
    procedure Enable (This : in out UART) is
    begin
       This.Periph.ENABLE.ENABLE := Enabled;
    end Enable;
+
+   -------------
+   -- Disable --
+   -------------
 
    procedure Disable (This : in out UART) is
    begin
       This.Periph.ENABLE.ENABLE := Disabled;
    end Disable;
 
+   -------------
+   -- Enabled --
+   -------------
+
    function Enabled (This : UART) return Boolean is
    begin
       return This.Periph.ENABLE.ENABLE = Enabled;
    end Enabled;
+
+   ---------------
+   -- Configure --
+   ---------------
 
    procedure Configure (This   : in out UART;
                         RX_Pin : GPIO_Pin_Index;
@@ -43,17 +93,29 @@ package body nRF51.UART is
                                    when UART_1M_Baud => 16#1000_0000#);
    end Configure;
 
+   ----------------
+   -- Disconnect --
+   ----------------
+
    procedure Disconnect (This : in out UART) is
    begin
       This.Periph.PSELRXD := 16#FFFF_FFFF#;
       This.Periph.PSELTXD := 16#FFFF_FFFF#;
    end Disconnect;
 
+   ---------------
+   -- Data_Size --
+   ---------------
+
    overriding function Data_Size (Port : UART) return UART_Data_Size is
       pragma Unreferenced (Port);
    begin
       return Data_Size_8b;
    end Data_Size;
+
+   --------------
+   -- Transmit --
+   --------------
 
    overriding procedure Transmit
      (This    : in out UART;
@@ -114,6 +176,10 @@ package body nRF51.UART is
       Status := Ok;
    end Transmit;
 
+   -------------
+   -- Receive --
+   -------------
+
    overriding procedure Receive
      (This    : in out UART;
       Data    : out UART_Data_8b;
@@ -163,22 +229,30 @@ package body nRF51.UART is
       Status := Ok;
    end Receive;
    
-    overriding procedure Transmit
+   --------------
+   -- Transmit --
+   --------------
+
+   overriding procedure Transmit
      (This    : in out UART;
       Data    : UART_Data_9b;
       Status  : out UART_Status;
       Timeout : Natural := 1000) is
    begin
-      null;
+      Status := Err_Error;
    end Transmit;
    
+   -------------
+   -- Receive --
+   -------------
+
    overriding procedure Receive
      (This    : in out UART;
       Data    : out UART_Data_9b;
       Status  : out UART_Status;
       Timeout : Natural := 1000) is
    begin
-      null;
+      Status := Err_Error;
    end Receive;
    
 end nRF51.UART;
