@@ -238,6 +238,7 @@ package body nRF51.UART is
       Data    : UART_Data_9b;
       Status  : out UART_Status;
       Timeout : Natural := 1000) is
+      pragma Unreferenced (Data, Timeout);
    begin
       Status := Err_Error;
    end Transmit;
@@ -251,6 +252,7 @@ package body nRF51.UART is
       Data    : out UART_Data_9b;
       Status  : out UART_Status;
       Timeout : Natural := 1000) is
+      pragma Unreferenced (Data, Timeout);
    begin
       Status := Err_Error;
    end Receive;
