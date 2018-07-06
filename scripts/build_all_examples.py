@@ -117,12 +117,13 @@ projects = [
 
             # MicroBit
             "/boards/MicroBit/microbit_zfp.gpr",
-            "/examples/MicroBit/microbit_example.gpr",
+            "/examples/MicroBit/text_scrolling/text_scrolling.gpr",
             "/examples/MicroBit/digital_in/digital_in.gpr",
             "/examples/MicroBit/music/music.gpr",
             "/examples/MicroBit/analog_in/analog_in.gpr",
             "/examples/MicroBit/analog_out/analog_out.gpr",
             "/examples/MicroBit/digital_out/digital_out.gpr",
+            "/examples/MicroBit/BLE_beacon/BLE_beacon.gpr",
 
             # STM32 driver examples
             STM_DRIVERS + "/demo_adc_dma/demo_adc_dma.gpr",
