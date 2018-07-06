@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                        Copyright (C) 2016, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,25 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with MicroBit.Display;
-with MicroBit.Time;
-with Beacon;
-
-procedure Main is
-begin
-
-   MicroBit.Display.Set_Animation_Step_Duration (80);
-
-   Beacon.Initialize_Radio;
-
-   loop
-
-      if not MicroBit.Display.Animation_In_Progress then
-         MicroBit.Display.Display_Async ("MAKE WITH Ada!  ");
-      end if;
-
-      Beacon.Send_Beacon_Packet;
-
-      MicroBit.Time.Delay_Ms (500);
-   end loop;
-end Main;
+package Beacon is
+   procedure Initialize_Radio;
+   procedure Send_Beacon_Packet;
+end Beacon;

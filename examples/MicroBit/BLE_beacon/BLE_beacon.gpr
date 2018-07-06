@@ -1,6 +1,6 @@
-with "../../boards/MicroBit/microbit_zfp.gpr";
+with "../../../boards/MicroBit/microbit_zfp.gpr";
 
-project MicroBit_Example is
+project BLE_Beacon is
 
   for Runtime ("ada") use "zfp-microbit";
   for Target use "arm-eabi";
@@ -22,4 +22,4 @@ project MicroBit_Example is
      for Communication_Protocol use "remote";
   end Ide;
 
-end MicroBit_Example;
+end BLE_Beacon;
