@@ -32,6 +32,7 @@
 --  This file provides declarations for devices on the STM32F7 Discovery kits
 --  manufactured by ST Microelectronics.
 
+with System;
 with Ada.Interrupts.Names; use Ada.Interrupts;
 
 with STM32.Device;         use STM32.Device;
@@ -202,9 +203,14 @@ package STM32.Board is
                          Ada.Interrupts.Names.SDMMC2_Interrupt;
 
    DMA2_Stream0 : aliased DMA_Interrupt_Controller
-     (DMA_2'Access, Stream_0, Ada.Interrupts.Names.DMA2_Stream0_Interrupt);
+     (DMA_2'Access, Stream_0,
+      Ada.Interrupts.Names.DMA2_Stream0_Interrupt,
+      System.Interrupt_Priority'Last);
+
    DMA2_Stream5 : aliased DMA_Interrupt_Controller
-     (DMA_2'Access, Stream_5, Ada.Interrupts.Names.DMA2_Stream5_Interrupt);
+     (DMA_2'Access, Stream_5,
+      Ada.Interrupts.Names.DMA2_Stream5_Interrupt,
+      System.Interrupt_Priority'Last);
 
    SD_Rx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream0;
    SD_Tx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream5;

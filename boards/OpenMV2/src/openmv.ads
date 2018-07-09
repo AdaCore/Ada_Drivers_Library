@@ -43,6 +43,7 @@ with STM32.USARTs;         use STM32.USARTs;
 with HAL.UART;
 
 with Ada.Interrupts.Names;
+with System;
 
 package OpenMV is
    pragma Elaborate_Body;
@@ -122,7 +123,9 @@ private
      STM32.DMA.Stream_4;
 
    DMA1_Stream4 : aliased DMA_Interrupt_Controller
-     (DMA_1'Access, Stream_4, Ada.Interrupts.Names.DMA1_Stream4_Interrupt);
+     (DMA_1'Access, Stream_4,
+      Ada.Interrupts.Names.DMA1_Stream4_Interrupt,
+      System.Interrupt_Priority'Last);
 
    Shield_SPI_DMA_Int    : STM32.DMA.Interrupts.DMA_Interrupt_Controller renames
      DMA1_Stream4;
@@ -154,7 +157,9 @@ private
    -----------------
 
    DMA2_Stream1 : aliased DMA_Interrupt_Controller
-     (DMA_2'Access, Stream_1, Ada.Interrupts.Names.DMA2_Stream1_Interrupt);
+     (DMA_2'Access, Stream_1,
+      Ada.Interrupts.Names.DMA2_Stream1_Interrupt,
+      System.Interrupt_Priority'Last);
 
    Sensor_DMA        : STM32.DMA.DMA_Controller renames DMA_2;
    Sensor_DMA_Chan   : STM32.DMA.DMA_Channel_Selector renames

@@ -33,6 +33,7 @@
 --  manufactured by ST Microelectronics.
 
 with Ada.Interrupts.Names;  use Ada.Interrupts;
+with System;
 
 with STM32.Device;          use STM32.Device;
 
@@ -177,9 +178,14 @@ package STM32.Board is
                          Ada.Interrupts.Names.SDMMC1_Interrupt;
 
    DMA2_Stream3 : aliased DMA_Interrupt_Controller
-     (DMA_2'Access, Stream_3, Ada.Interrupts.Names.DMA2_Stream3_Interrupt);
+     (DMA_2'Access, Stream_3,
+      Ada.Interrupts.Names.DMA2_Stream3_Interrupt,
+      System.Interrupt_Priority'Last);
+
    DMA2_Stream6 : aliased DMA_Interrupt_Controller
-     (DMA_2'Access, Stream_6, Ada.Interrupts.Names.DMA2_Stream6_Interrupt);
+     (DMA_2'Access, Stream_6,
+      Ada.Interrupts.Names.DMA2_Stream6_Interrupt,
+      System.Interrupt_Priority'Last);
 
    SD_Rx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream3;
    SD_Tx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream6;

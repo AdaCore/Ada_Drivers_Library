@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016-2017, AdaCore                      --
+--                    Copyright (C) 2016-2018, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -36,8 +36,10 @@ package STM32.DMA.Interrupts is
    protected type DMA_Interrupt_Controller
      (Controller : not null access DMA_Controller;
       Stream     : DMA_Stream_Selector;
-      ID         : Ada.Interrupts.Interrupt_ID)
+      ID         : Ada.Interrupts.Interrupt_ID;
+      Priority   : System.Interrupt_Priority)
    is
+      pragma Interrupt_Priority (Priority);
 
       procedure Start_Transfer (Source      : Address;
                                 Destination : Address;
