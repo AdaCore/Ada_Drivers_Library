@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2018, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -200,6 +200,11 @@ package STM32.Board is
    SD_Pins_AF_2      : constant GPIO_Alternate_Function := GPIO_AF_SDMMC2_11;
    SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
                          Ada.Interrupts.Names.SDMMC2_Interrupt;
+
+   DMA2_Stream0 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_0, Ada.Interrupts.Names.DMA2_Stream0_Interrupt);
+   DMA2_Stream5 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_5, Ada.Interrupts.Names.DMA2_Stream5_Interrupt);
 
    SD_Rx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream0;
    SD_Tx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream5;

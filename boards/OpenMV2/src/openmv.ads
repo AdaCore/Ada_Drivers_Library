@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2018, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -35,13 +35,14 @@ with STM32.GPIO;    use STM32.GPIO;
 use STM32;  -- for base addresses
 with STM32.SPI;
 with STM32.SPI.DMA;
-with STM32.Timers; use STM32.Timers;
-with STM32.DMA;
-with STM32.DMA.Interrupts;
-with STM32.I2C; use STM32.I2C;
-with STM32.USARTs; use STM32.USARTs;
-
+with STM32.Timers;         use STM32.Timers;
+with STM32.DMA;            use STM32.DMA;
+with STM32.DMA.Interrupts; use STM32.DMA.Interrupts;
+with STM32.I2C;            use STM32.I2C;
+with STM32.USARTs;         use STM32.USARTs;
 with HAL.UART;
+
+with Ada.Interrupts.Names;
 
 package OpenMV is
    pragma Elaborate_Body;
@@ -119,6 +120,10 @@ private
      STM32.DMA.Channel_0;
    Shield_SPI_DMA_Stream : STM32.DMA.DMA_Stream_Selector renames
      STM32.DMA.Stream_4;
+
+   DMA1_Stream4 : aliased DMA_Interrupt_Controller
+     (DMA_1'Access, Stream_4, Ada.Interrupts.Names.DMA1_Stream4_Interrupt);
+
    Shield_SPI_DMA_Int    : STM32.DMA.Interrupts.DMA_Interrupt_Controller renames
      DMA1_Stream4;
 
@@ -147,6 +152,9 @@ private
    -----------------
    --  Sensor DMA --
    -----------------
+
+   DMA2_Stream1 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_1, Ada.Interrupts.Names.DMA2_Stream1_Interrupt);
 
    Sensor_DMA        : STM32.DMA.DMA_Controller renames DMA_2;
    Sensor_DMA_Chan   : STM32.DMA.DMA_Channel_Selector renames

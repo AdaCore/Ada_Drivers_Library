@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2017, AdaCore                     --
+--                     Copyright (C) 2015-2018, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -30,7 +30,6 @@
 ------------------------------------------------------------------------------
 
 with STM32.DCMI;
-with STM32.DMA;     use STM32.DMA;
 with Ada.Real_Time; use Ada.Real_Time;
 with OV2640;        use OV2640;
 with OV7725;        use OV7725;
