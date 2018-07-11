@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                     Copyright (C) 2015-2018, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -33,6 +33,7 @@
 --  manufactured by ST Microelectronics.
 
 with Ada.Interrupts.Names;  use Ada.Interrupts;
+with System;
 
 with STM32.Device;          use STM32.Device;
 
@@ -211,6 +212,16 @@ package STM32.Board is
    SD_Pins_AF_2      : constant GPIO_Alternate_Function := GPIO_AF_SDIO_12;
    SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
                          Ada.Interrupts.Names.SDIO_Interrupt;
+
+   DMA2_Stream3 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_3,
+      Ada.Interrupts.Names.DMA2_Stream3_Interrupt,
+      System.Interrupt_Priority'Last);
+
+   DMA2_Stream6 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_6,
+      Ada.Interrupts.Names.DMA2_Stream6_Interrupt,
+      System.Interrupt_Priority'Last);
 
    SD_Rx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream3;
    SD_Tx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream6;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                  Copyright (C) 2015-2018, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -39,6 +39,7 @@ private with STM32.DMA;
 private with STM32.DMA.Interrupts;
 private with STM32.GPIO;
 private with Ada.Interrupts.Names;
+private with System;
 
 package Touch_Panel_FT6x06 is
 
@@ -73,14 +74,16 @@ private
    I2C_TX_DMA_Int    : aliased STM32.DMA.Interrupts.DMA_Interrupt_Controller
      (I2C_TX_RX_DMA'Access,
       I2C_TX_DMA_Stream,
-      Ada.Interrupts.Names.DMA1_Stream6_Interrupt);
+      Ada.Interrupts.Names.DMA1_Stream6_Interrupt,
+      System.Interrupt_Priority'Last);
 
    I2C_RX_DMA_Chan   : STM32.DMA.DMA_Channel_Selector renames STM32.DMA.Channel_1;
    I2C_RX_DMA_Stream : STM32.DMA.DMA_Stream_Selector renames STM32.DMA.Stream_0;
    I2C_RX_DMA_Int    : aliased STM32.DMA.Interrupts.DMA_Interrupt_Controller
      (I2C_TX_RX_DMA'Access,
       I2C_RX_DMA_Stream,
-      Ada.Interrupts.Names.DMA1_Stream0_Interrupt);
+      Ada.Interrupts.Names.DMA1_Stream0_Interrupt,
+      System.Interrupt_Priority'Last);
 
    type Touch_Panel is limited new FT6x06.FT6x06_Device
      (Port     => TP_I2C'Access,
