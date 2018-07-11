@@ -6,13 +6,13 @@ package ADL_Config is
    Runtime_Profile                : constant String  := "zfp";               -- From command line
    Device_Name                    : constant String  := "nRF51822xxAA";      -- From board definition
    Device_Family                  : constant String  := "nRF51";             -- From board definition
-   Runtime_Name                   : constant String  := "zfp-nrf51";         -- From default value
+   Runtime_Name                   : constant String  := "zfp-microbit";      -- From default value
    Has_Ravenscar_Full_Runtime     : constant String  := "False";             -- From board definition
    CPU_Core                       : constant String  := "ARM Cortex-M0";     -- From mcu definition
    Board                          : constant String  := "MicroBit";          -- From command line
    Has_ZFP_Runtime                : constant String  := "True";              -- From board definition
    Has_Ravenscar_SFP_Runtime      : constant String  := "False";             -- From board definition
    Max_Path_Length                : constant         := 1024;                -- From default value
-   Runtime_Name_Suffix            : constant String  := "nrf51";             -- From board definition
+   Runtime_Name_Suffix            : constant String  := "microbit";          -- From board definition
    Architecture                   : constant String  := "ARM";               -- From board definition
 end ADL_Config;

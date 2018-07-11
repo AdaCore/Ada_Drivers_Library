@@ -48,7 +48,6 @@ package body MicroBit.Time is
    procedure Initialize;
    procedure Update_Clock;
    procedure RTC1_IRQHandler;
-   pragma Export (C, RTC1_IRQHandler, "RTC1_IRQHandler");
 
    ----------------
    -- Initialize --
@@ -74,6 +73,9 @@ package body MicroBit.Time is
       Enable_Event (RTC_1, Compare_0_Event);
 
       nRF51.Events.Enable_Interrupt (nRF51.Events.RTC_1_COMPARE_0);
+
+      nRF51.Interrupts.Register (nRF51.Interrupts.RTC1_Interrupt,
+                                 RTC1_IRQHandler'Access);
 
       nRF51.Interrupts.Enable (nRF51.Interrupts.RTC1_Interrupt);
 

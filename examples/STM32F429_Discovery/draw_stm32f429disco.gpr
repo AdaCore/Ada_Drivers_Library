@@ -11,7 +11,7 @@ project Draw_STM32F429Disco extends "../shared/common/common.gpr" is
 
    package Linker is
       for Default_Switches ("ada") use
-        ("-gc-section", "-Wl,--print-memory-usage");
+        ("-Wl,-gc-section", "-Wl,--print-memory-usage");
    end Linker;
 
    package Compiler renames STM32F429_Discovery_Full.Compiler;

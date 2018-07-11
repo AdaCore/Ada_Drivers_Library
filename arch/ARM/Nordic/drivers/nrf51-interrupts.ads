@@ -73,6 +73,13 @@ package nRF51.Interrupts is
    procedure Disable (Int : Interrupt_Name);
    function Pending (Int : Interrupt_Name) return Boolean;
 
+   type Handler is access procedure;
+
+   procedure Register (Id  : nRF51.Interrupts.Interrupt_Name;
+                       Hdl : Handler);
+   --  Register a handler for the given interrupt. There can be only one handler
+   --  for each interrupt so the previous one, if any, will be removed.
+
 private
    for Interrupt_Name use
      (POWER_CLOCK_Interrupt => 0,
