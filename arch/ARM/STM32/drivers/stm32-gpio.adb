@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2017, AdaCore                         --
+--                 Copyright (C) 2015-2018, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -84,7 +84,7 @@ package body STM32.GPIO is
       case Pin_IO_Mode (This) is
          when Mode_Out => return HAL.GPIO.Output;
          when Mode_In  => return HAL.GPIO.Input;
-         when others   => return HAL.GPIO.Unknown;
+         when others   => return HAL.GPIO.Unknown_Mode;
       end case;
    end Mode;
 
@@ -103,10 +103,9 @@ package body STM32.GPIO is
    --------------
 
    overriding
-   function Set_Mode
+   procedure Set_Mode
      (This : in out GPIO_Point;
       Mode : HAL.GPIO.GPIO_Config_Mode)
-      return Boolean
    is
       Index : constant GPIO_Pin_Index := GPIO_Pin'Pos (This.Pin);
    begin
@@ -116,7 +115,6 @@ package body STM32.GPIO is
          when HAL.GPIO.Input =>
             This.Periph.MODER.Arr (Index) := Pin_IO_Modes'Enum_Rep (Mode_In);
       end case;
-      return True;
    end Set_Mode;
 
    -------------------
@@ -144,10 +142,9 @@ package body STM32.GPIO is
    -----------------------
 
    overriding
-   function Set_Pull_Resistor
+   procedure Set_Pull_Resistor
      (This : in out GPIO_Point;
       Pull : HAL.GPIO.GPIO_Pull_Resistor)
-      return Boolean
    is
       Index : constant GPIO_Pin_Index := GPIO_Pin'Pos (This.Pin);
    begin
@@ -159,7 +156,6 @@ package body STM32.GPIO is
          when HAL.GPIO.Pull_Down =>
             This.Periph.PUPDR.Arr (Index) := 2;
       end case;
-      return True;
    end Set_Pull_Resistor;
 
    ---------

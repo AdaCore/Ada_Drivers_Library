@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                    Copyright (C) 2015-2018, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -121,20 +121,28 @@ private
    --  Internal implementation of HAL.GPIO interface
 
    overriding
+   function Support (This : MCP23_GPIO_Point;
+                     Capa : HAL.GPIO.Capability)
+                     return Boolean
+   is (case Capa is
+          when HAL.GPIO.Pull_Down => False,
+          when others             => True);
+
+   overriding
    function Mode (This : MCP23_GPIO_Point) return HAL.GPIO.GPIO_Mode;
 
    overriding
-   function Set_Mode (This : in out MCP23_GPIO_Point;
-                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean;
+   procedure Set_Mode (This : in out MCP23_GPIO_Point;
+                       Mode : HAL.GPIO.GPIO_Config_Mode);
 
    overriding
    function Pull_Resistor (This : MCP23_GPIO_Point)
                            return HAL.GPIO.GPIO_Pull_Resistor;
 
    overriding
-   function Set_Pull_Resistor (This : in out MCP23_GPIO_Point;
-                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
-                               return Boolean;
+   procedure Set_Pull_Resistor (This : in out MCP23_GPIO_Point;
+                                Pull : HAL.GPIO.GPIO_Pull_Resistor);
+
    overriding
    function Set (This : MCP23_GPIO_Point) return Boolean;
 

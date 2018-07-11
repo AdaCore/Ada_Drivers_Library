@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--                    Copyright (C) 2017-2018, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -38,18 +38,17 @@ package body HiFive1.LEDs is
    ----------------
 
    procedure Initialize is
-      Unref : Boolean with Unreferenced;
    begin
-      Unref := Green_LED.Set_Mode (Output);
-      Unref := Green_LED.Set_Pull_Resistor (Pull_Up);
+      Green_LED.Set_Mode (Output);
+      Green_LED.Set_Pull_Resistor (Pull_Up);
       Turn_Off (Green_LED);
 
-      Unref := Red_LED.Set_Mode (Output);
-      Unref := Red_LED.Set_Pull_Resistor (Pull_Up);
+      Red_LED.Set_Mode (Output);
+      Red_LED.Set_Pull_Resistor (Pull_Up);
       Turn_Off (Red_LED);
 
-      Unref := Blue_LED.Set_Mode (Output);
-      Unref := Blue_LED.Set_Pull_Resistor (Pull_Up);
+      Blue_LED.Set_Mode (Output);
+      Blue_LED.Set_Pull_Resistor (Pull_Up);
       Turn_Off (Blue_LED);
    end Initialize;
 

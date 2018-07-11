@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2017, AdaCore                       --
+--                     Copyright (C) 2017-2018, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -63,25 +63,27 @@ begin
 
    -- State with only inputs and a point pull resistor --
 
-   pragma Assert (No_Pull_Wire.Point (1).Set_Pull_Resistor (Pull_Up),
+   pragma Assert (No_Pull_Wire.Point (1).Support (Pull_Up),
                   "It should be possible to change the pull resitor");
+   No_Pull_Wire.Point (1).Set_Pull_Resistor (Pull_Up);
 
    pragma Assert (No_Pull_Wire.Point (1).Set,
                   "State of wire with one pull up point should be high");
 
 
-   Unref := No_Pull_Wire.Point (1).Set_Pull_Resistor (Pull_Down);
+   No_Pull_Wire.Point (1).Set_Pull_Resistor (Pull_Down);
    pragma Assert (not No_Pull_Wire.Point (1).Set,
                   "State of wire with one pull down point should be low");
 
    -- State with one input one output and no pull resistor --
 
-   pragma Assert (No_Pull_Wire.Point (1).Set_Mode (Input),
+   pragma Assert (No_Pull_Wire.Point (1).Support (Input),
                   "It should be possible to change the mode");
-   Unref := No_Pull_Wire.Point (1).Set_Pull_Resistor (Pull_Down);
+   No_Pull_Wire.Point (1).Set_Mode (Input);
+   No_Pull_Wire.Point (1).Set_Pull_Resistor (Pull_Down);
 
-   Unref := No_Pull_Wire.Point (2).Set_Mode (Output);
-   Unref := No_Pull_Wire.Point (2).Set_Pull_Resistor (Floating);
+   No_Pull_Wire.Point (2).Set_Mode (Output);
+   No_Pull_Wire.Point (2).Set_Pull_Resistor (Floating);
 
    No_Pull_Wire.Point (2).Set;
    pragma Assert (No_Pull_Wire.Point (1).Set, "Should be high");
@@ -90,18 +92,18 @@ begin
 
    -- State with one input one output and point pull resistor --
 
-   Unref := No_Pull_Wire.Point (1).Set_Mode (Input);
-   Unref := No_Pull_Wire.Point (1).Set_Pull_Resistor (Pull_Up);
+   No_Pull_Wire.Point (1).Set_Mode (Input);
+   No_Pull_Wire.Point (1).Set_Pull_Resistor (Pull_Up);
 
-   Unref := No_Pull_Wire.Point (2).Set_Mode (Output);
-   Unref := No_Pull_Wire.Point (2).Set_Pull_Resistor (Floating);
+   No_Pull_Wire.Point (2).Set_Mode (Output);
+   No_Pull_Wire.Point (2).Set_Pull_Resistor (Floating);
 
    No_Pull_Wire.Point (2).Set;
    pragma Assert (No_Pull_Wire.Point (1).Set, "Should be high");
    No_Pull_Wire.Point (2).Clear;
    pragma Assert (not No_Pull_Wire.Point (1).Set, "Should be low");
 
-   Unref := No_Pull_Wire.Point (1).Set_Pull_Resistor (Pull_Down);
+   No_Pull_Wire.Point (1).Set_Pull_Resistor (Pull_Down);
 
    No_Pull_Wire.Point (2).Set;
    pragma Assert (No_Pull_Wire.Point (1).Set, "Should be high");
@@ -111,7 +113,7 @@ begin
    -- Opposite pull on the same wire --
    declare
    begin
-      Unref := Pull_Down_Wire.Point (1).Set_Pull_Resistor (Pull_Up);
+      Pull_Down_Wire.Point (1).Set_Pull_Resistor (Pull_Up);
    exception
       when Invalid_Configuration =>
          Put_Line ("Expected exception on oppposite pull (1)");
@@ -119,7 +121,7 @@ begin
 
    declare
    begin
-      Unref := Pull_Up_Wire.Point (1).Set_Pull_Resistor (Pull_Down);
+      Pull_Up_Wire.Point (1).Set_Pull_Resistor (Pull_Down);
    exception
       when Invalid_Configuration =>
          Put_Line ("Expected exception on oppposite pull (2)");
@@ -128,8 +130,8 @@ begin
    -- Two output point on a wire --
    declare
    begin
-      Unref := Pull_Up_Wire.Point (1).Set_Mode (Output);
-      Unref := Pull_Up_Wire.Point (2).Set_Mode (Output);
+      Pull_Up_Wire.Point (1).Set_Mode (Output);
+      Pull_Up_Wire.Point (2).Set_Mode (Output);
    exception
       when Invalid_Configuration =>
          Put_Line ("Expected exception on multiple output points");
@@ -138,10 +140,10 @@ begin
    -- Unknon state --
    declare
    begin
-      Unref := No_Pull_Wire.Point (1).Set_Mode (Input);
-      Unref := No_Pull_Wire.Point (1).Set_Pull_Resistor (Floating);
-      Unref := No_Pull_Wire.Point (2).Set_Mode (Input);
-      Unref := No_Pull_Wire.Point (2).Set_Pull_Resistor (Floating);
+      No_Pull_Wire.Point (1).Set_Mode (Input);
+      No_Pull_Wire.Point (1).Set_Pull_Resistor (Floating);
+      No_Pull_Wire.Point (2).Set_Mode (Input);
+      No_Pull_Wire.Point (2).Set_Pull_Resistor (Floating);
       Unref := No_Pull_Wire.Point (2).Set;
    exception
       when Unknown_State =>

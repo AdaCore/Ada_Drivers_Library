@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                    Copyright (C) 2015-2018, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -314,13 +314,12 @@ package body MCP23x08 is
    --------------
 
    overriding
-   function Set_Mode (This : in out MCP23_GPIO_Point;
-                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean
+   procedure Set_Mode (This : in out MCP23_GPIO_Point;
+                       Mode : HAL.GPIO.GPIO_Config_Mode)
    is
    begin
       This.Device.Configure_Mode (Pin    => This.Pin,
                                   Output => (Mode = HAL.GPIO.Output));
-      return True;
    end Set_Mode;
 
    -------------------
@@ -343,17 +342,11 @@ package body MCP23x08 is
    -----------------------
 
    overriding
-   function Set_Pull_Resistor (This : in out MCP23_GPIO_Point;
-                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
-                               return Boolean
+   procedure Set_Pull_Resistor (This : in out MCP23_GPIO_Point;
+                                Pull : HAL.GPIO.GPIO_Pull_Resistor)
    is
    begin
-      if Pull = HAL.GPIO.Pull_Down then
-         return False;
-      else
-         This.Device.Configure_Pull (This.Pin, Pull = HAL.GPIO.Pull_Up);
-         return True;
-      end if;
+      This.Device.Configure_Pull (This.Pin, Pull = HAL.GPIO.Pull_Up);
    end Set_Pull_Resistor;
 
    ---------

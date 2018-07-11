@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2018, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -31,33 +31,47 @@
 
 package HAL.GPIO is
 
-   type GPIO_Mode is (Unknown, Input, Output);
-   --  Possible modes for a GPIO point. Unknown means that the point is
-   --  configured in a mode that is not described in this interface. For
+   type Capability is (Unknown_Mode, Input, Output,   -- Mode
+                       Floating, Pull_Up, Pull_Down); -- Resistor
+
+   subtype GPIO_Mode is Capability range Unknown_Mode .. Output;
+   --  Possible modes for a GPIO point. Unknown_Mode means that the point
+   --  is configured in a mode that is not described in this interface. For
    --  instance alternate function mode on an STM32 micro-controller.
 
    subtype GPIO_Config_Mode is GPIO_Mode range Input .. Output;
    --  Modes a GPIO point can be configured in
 
-   type GPIO_Pull_Resistor is (Floating, Pull_Up, Pull_Down);
+   subtype GPIO_Pull_Resistor is Capability range Floating .. Pull_Down;
 
    type GPIO_Point is limited interface;
 
    type Any_GPIO_Point is access all GPIO_Point'Class;
 
-   function Mode (This : GPIO_Point) return GPIO_Mode is abstract;
+   function Support (This : GPIO_Point;
+                     Capa : Capability)
+                     return Boolean
+                     is abstract;
+   --  Return True if the GPIO_Point supports the given capability
 
-   function Set_Mode (This : in out GPIO_Point;
-                      Mode : GPIO_Config_Mode) return Boolean is abstract;
-   --  Return False if the mode is not available
+   function Mode (This : GPIO_Point) return GPIO_Mode is abstract;
+   --  Return the current mode of the GPIO_Point
+
+   procedure Set_Mode (This : in out GPIO_Point;
+                       Mode : GPIO_Config_Mode)
+   is abstract
+     with Pre'Class => This.Support (Mode);
+   --  Set the mode of the GPIO_Point, iff the mode is supported
 
    function Pull_Resistor (This : GPIO_Point)
                            return GPIO_Pull_Resistor is abstract;
+   --  Return the current pull resistor mode
 
-   function Set_Pull_Resistor (This : in out GPIO_Point;
-                               Pull : GPIO_Pull_Resistor)
-                               return Boolean is abstract;
-   --  Return False if pull is not available for this GPIO point
+   procedure Set_Pull_Resistor (This : in out GPIO_Point;
+                                Pull : GPIO_Pull_Resistor)
+   is abstract
+     with Pre'Class => This.Support (Pull);
+   --  Set the pull resistor of the GPIO_Point, iff the pull mode is supported
 
    function Set (This : GPIO_Point) return Boolean is abstract;
    --  Read actual state of the GPIO_Point.
