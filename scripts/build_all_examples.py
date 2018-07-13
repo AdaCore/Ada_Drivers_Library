@@ -5,7 +5,7 @@ import os
 import os.path
 import subprocess
 import sys
-
+import distutils.spawn
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
@@ -32,7 +32,7 @@ def run_program(*argv):
 def gprbuild(project_file, debug=False):
     extra_args = []
 
-    extra_args = extra_args + ["-XPLATFORM_BUILD=" +
+    extra_args = extra_args + ["-XADL_BUILD=" +
                                ("Debug" if debug else "Production")]
 
     print "Building '%s'" % project_file
@@ -145,6 +145,12 @@ projects = [
             STM_DRIVERS + "/demo_usart_interrupts/demo_usart_interrupts.gpr",
             STM_DRIVERS + "/demo_usart_polling/demo_usart_polling.gpr",
             ]
+
+# Check if RISC-V32 compiler is available
+if distutils.spawn.find_executable("riscv32-elf-gnatls"):
+
+    # Add RISC-V32 projects
+    projects += ["/examples/HiFive1/hifive1_example.gpr"]
 
 parser = argparse.ArgumentParser('Compile all the Ada_Drivers_Library examples')
 
