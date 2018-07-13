@@ -56,7 +56,7 @@ package body MicroBit.Time is
    procedure Initialize is
    begin
       if not Clocks.Low_Freq_Running then
-         Clocks.Set_Low_Freq_Source (Clocks.LFCLK_XTAL);
+         Clocks.Set_Low_Freq_Source (Clocks.LFCLK_SYNTH);
          Clocks.Start_Low_Freq;
 
          loop
