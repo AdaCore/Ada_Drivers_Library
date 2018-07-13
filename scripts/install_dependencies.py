@@ -71,23 +71,7 @@ git_repos = [("https://github.com/AdaCore/bb-runtimes",
               None,
               "bb-runtimes",
               False,
-<<<<<<< HEAD
-              ["python", ROOT_DIR + "/embedded-runtimes/install.py"]),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-             ("https://github.com/Fabien-Chouteau/zfp-nrf51",
-              None,
-              "examples/MicroBit/zfp-nrf51",
-              False,
-              None),
->>>>>>> HiFive1 example: Update for GNAT Community 2018
-=======
->>>>>>> Micro:bit example: Update for GNAT Community 2018
-=======
               ["python", ROOT_DIR + "/bb-runtimes/install.py", "--arch=arm-eabi"]),
->>>>>>> scripts/install_dependencies.py: Update for community-2018 branch
              ]
 
 parser = argparse.ArgumentParser('Download and install dependencies')
