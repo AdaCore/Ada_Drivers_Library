@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2017, AdaCore                       --
+--                     Copyright (C) 2017-2018, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -64,11 +64,18 @@ private
    end record;
 
    overriding
+   function Support (This : Wire_Point;
+                     Capa : HAL.GPIO.Capability)
+                     return Boolean
+   is (case Capa is
+          when others => True);
+
+   overriding
    function Mode (This : Wire_Point) return GPIO_Mode is (This.Current_Mode);
 
    overriding
-   function Set_Mode (This : in out Wire_Point;
-                      Mode : GPIO_Config_Mode) return Boolean;
+   procedure Set_Mode (This : in out Wire_Point;
+                       Mode : GPIO_Config_Mode);
    --  Return False if the mode is not available
 
    overriding
@@ -76,9 +83,8 @@ private
                            return GPIO_Pull_Resistor is (This.Current_Pull);
 
    overriding
-   function Set_Pull_Resistor (This : in out Wire_Point;
-                               Pull : GPIO_Pull_Resistor)
-                               return Boolean;
+   procedure Set_Pull_Resistor (This : in out Wire_Point;
+                                Pull : GPIO_Pull_Resistor);
 
    overriding
    function Set (This : Wire_Point) return Boolean;

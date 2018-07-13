@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                    Copyright (C) 2016-2018, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -68,20 +68,27 @@ package nRF51.GPIO is
    end record;
 
    overriding
+   function Support (This : GPIO_Point;
+                     Capa : HAL.GPIO.Capability)
+                     return Boolean
+   is (case Capa is
+          when others => True);
+   --  nRF51 supports all GPIO capabilities
+
+   overriding
    function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode;
 
    overriding
-   function Set_Mode (This : in out GPIO_Point;
-                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean;
+   procedure Set_Mode (This : in out GPIO_Point;
+                       Mode : HAL.GPIO.GPIO_Config_Mode);
 
    overriding
    function Pull_Resistor (This : GPIO_Point)
                            return HAL.GPIO.GPIO_Pull_Resistor;
 
    overriding
-   function Set_Pull_Resistor (This : in out GPIO_Point;
-                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
-                               return Boolean;
+   procedure Set_Pull_Resistor (This : in out GPIO_Point;
+                                Pull : HAL.GPIO.GPIO_Pull_Resistor);
 
    overriding
    function Set (This : GPIO_Point) return Boolean with

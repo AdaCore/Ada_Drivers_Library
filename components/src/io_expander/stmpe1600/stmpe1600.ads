@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2017, AdaCore                          --
+--                    Copyright (C) 2017-2018, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -152,13 +152,21 @@ private
    type STMPE1600_Pin_Array is
      array (STMPE1600_Pin_Number) of aliased STMPE1600_Pin;
 
+   overriding
+   function Support (This : STMPE1600_Pin;
+                     Capa : HAL.GPIO.Capability)
+                     return Boolean
+   is (case Capa is
+          when HAL.GPIO.Pull_Up | HAL.GPIO.Pull_Down => False,
+          when others                                => True);
+   --  STMPE1600 doesn't have internal pull resistors
 
    overriding
    function Mode (This : STMPE1600_Pin) return HAL.GPIO.GPIO_Mode;
 
    overriding
-   function Set_Mode (This : in out STMPE1600_Pin;
-                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean;
+   procedure Set_Mode (This : in out STMPE1600_Pin;
+                       Mode : HAL.GPIO.GPIO_Config_Mode);
 
    overriding
    function Pull_Resistor (This : STMPE1600_Pin)
@@ -166,9 +174,9 @@ private
      (HAL.GPIO.Floating);
 
    overriding
-   function Set_Pull_Resistor (This : in out STMPE1600_Pin;
-                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
-                               return Boolean is (Pull = HAL.GPIO.Floating);
+   procedure Set_Pull_Resistor (This : in out STMPE1600_Pin;
+                                Pull : HAL.GPIO.GPIO_Pull_Resistor)
+   is null;
    --  STMPE1600 doesn't have internal pull resistors
 
    overriding

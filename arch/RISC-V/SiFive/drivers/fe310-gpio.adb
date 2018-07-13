@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--                     Copyright (C) 2017-2018, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -75,7 +75,7 @@ package body FE310.GPIO is
    function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode is
    begin
       if GPIO0_Periph.IO_FUNC_EN.Arr (This.Pin) then
-         return Unknown;
+         return Unknown_Mode;
       elsif GPIO0_Periph.OUTPUT_EN.Arr (This.Pin) then
          return Output;
       else
@@ -88,14 +88,14 @@ package body FE310.GPIO is
    --------------
 
    overriding
-   function Set_Mode (This : in out GPIO_Point;
-                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean is
+   procedure Set_Mode (This : in out GPIO_Point;
+                       Mode : HAL.GPIO.GPIO_Config_Mode)
+   is
    begin
       --  Input mode is always on to make sure we can read IO state even in
       --  output mode.
       GPIO0_Periph.INPUT_EN.Arr (This.Pin) := True;
       GPIO0_Periph.OUTPUT_EN.Arr (This.Pin) := Mode = Output;
-      return True;
    end Set_Mode;
 
    -------------------
@@ -118,16 +118,12 @@ package body FE310.GPIO is
    -----------------------
 
    overriding
-   function Set_Pull_Resistor (This : in out GPIO_Point;
-                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
-                               return Boolean is
+   procedure Set_Pull_Resistor (This : in out GPIO_Point;
+                                Pull : HAL.GPIO.GPIO_Pull_Resistor)
+
+   is
    begin
-      if Pull = Pull_Down then
-         return False;
-      else
-         GPIO0_Periph.PULLUP.Arr (This.Pin) := Pull = Pull_Up;
-         return True;
-      end if;
+      GPIO0_Periph.PULLUP.Arr (This.Pin) := Pull = Pull_Up;
    end Set_Pull_Resistor;
 
    ---------

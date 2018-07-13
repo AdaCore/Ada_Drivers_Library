@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                     Copyright (C) 2016-2018, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -48,8 +48,8 @@ package body nRF51.GPIO is
    --------------
 
    overriding
-   function Set_Mode (This : in out GPIO_Point;
-                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean
+   procedure Set_Mode (This : in out GPIO_Point;
+                       Mode : HAL.GPIO.GPIO_Config_Mode)
    is
       CNF : PIN_CNF_Register renames GPIO_Periph.PIN_CNF (This.Pin);
    begin
@@ -59,7 +59,6 @@ package body nRF51.GPIO is
       CNF.INPUT := (case Mode is
                        when HAL.GPIO.Input  => Connect,
                        when HAL.GPIO.Output => Disconnect);
-      return True;
    end Set_Mode;
 
    ---------
@@ -96,9 +95,8 @@ package body nRF51.GPIO is
    -----------------------
 
    overriding
-   function Set_Pull_Resistor (This : in out GPIO_Point;
-                               Pull : HAL.GPIO.GPIO_Pull_Resistor)
-                               return Boolean
+   procedure Set_Pull_Resistor (This : in out GPIO_Point;
+                                Pull : HAL.GPIO.GPIO_Pull_Resistor)
    is
    begin
       GPIO_Periph.PIN_CNF (This.Pin).PULL :=
@@ -106,7 +104,6 @@ package body nRF51.GPIO is
             when HAL.GPIO.Floating  => Disabled,
             when HAL.GPIO.Pull_Down => Pulldown,
             when HAL.GPIO.Pull_Up   => Pullup);
-      return True;
    end Set_Pull_Resistor;
 
    ---------

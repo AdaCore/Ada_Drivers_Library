@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2017, AdaCore                          --
+--                    Copyright (C) 2017-2018, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -338,21 +338,22 @@ package body STMPE1600 is
    --------------
 
    overriding
-   function Set_Mode (This : in out STMPE1600_Pin;
-                      Mode : HAL.GPIO.GPIO_Config_Mode) return Boolean
+   procedure Set_Mode (This : in out STMPE1600_Pin;
+                       Mode : HAL.GPIO.GPIO_Config_Mode)
    is
    begin
-      Set_Pin_Direction (This.Port.all, This.Pin, (case Mode is
-                                                      when HAL.GPIO.Input => Input,
-                                                      when HAL.GPIO.Output => Output));
-      return True;
+      Set_Pin_Direction (This.Port.all, This.Pin,
+                         (case Mode is
+                             when HAL.GPIO.Input => Input,
+                             when HAL.GPIO.Output => Output));
    end Set_Mode;
 
    ---------
    -- Set --
    ---------
 
-   overriding function Set (This : STMPE1600_Pin) return Boolean
+   overriding
+   function Set (This : STMPE1600_Pin) return Boolean
    is
    begin
       return Pin_State (This.Port.all, This.Pin);
@@ -362,7 +363,8 @@ package body STMPE1600 is
    -- Set --
    ---------
 
-   overriding procedure Set (This : in out STMPE1600_Pin)
+   overriding
+   procedure Set (This : in out STMPE1600_Pin)
    is
    begin
       Set_Pin_State (This.Port.all, This.Pin, True);
@@ -372,7 +374,8 @@ package body STMPE1600 is
    -- Clear --
    -----------
 
-   overriding procedure Clear (This : in out STMPE1600_Pin)
+   overriding
+   procedure Clear (This : in out STMPE1600_Pin)
    is
    begin
       Set_Pin_State (This.Port.all, This.Pin, False);
@@ -382,7 +385,8 @@ package body STMPE1600 is
    -- Toggle --
    ------------
 
-   overriding procedure Toggle (This : in out STMPE1600_Pin)
+   overriding
+   procedure Toggle (This : in out STMPE1600_Pin)
    is
    begin
       if This.Set then

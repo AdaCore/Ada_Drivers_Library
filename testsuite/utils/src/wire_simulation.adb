@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2017, AdaCore                       --
+--                     Copyright (C) 2017-2018, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -49,10 +49,9 @@ package body Wire_Simulation is
    -- Set_Mode --
    --------------
 
-   overriding function Set_Mode
+   overriding procedure Set_Mode
      (This : in out Wire_Point;
       Mode : GPIO_Config_Mode)
-      return Boolean
    is
    begin
       This.Current_Mode := Input;
@@ -61,17 +60,15 @@ package body Wire_Simulation is
       end if;
       This.Current_Mode := Mode;
       This.Wire.Update_Wire_State;
-      return True;
    end Set_Mode;
 
    -----------------------
    -- Set_Pull_Resistor --
    -----------------------
 
-   overriding function Set_Pull_Resistor
+   overriding procedure Set_Pull_Resistor
      (This : in out Wire_Point;
       Pull : GPIO_Pull_Resistor)
-      return Boolean
    is
    begin
       This.Current_Pull := Floating;
@@ -93,7 +90,6 @@ package body Wire_Simulation is
       else
          This.Current_Pull := Pull;
          This.Wire.Update_Wire_State;
-         return True;
       end if;
    end Set_Pull_Resistor;
 
@@ -160,7 +156,7 @@ package body Wire_Simulation is
       Has_Pull_Up : constant Boolean :=
         This.At_Least_One_Pull_Up or This.Default_Pull = Pull_Up;
       Has_Pull_Down : constant Boolean :=
-        This.At_Least_One_Pull_Down  or This.Default_Pull = Pull_Down;
+        This.At_Least_One_Pull_Down or This.Default_Pull = Pull_Down;
 
       State : Wire_State := Unknown;
    begin
