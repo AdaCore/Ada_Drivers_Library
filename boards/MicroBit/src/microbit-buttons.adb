@@ -97,13 +97,6 @@ package body MicroBit.Buttons is
 
    function State (Button : Button_Id) return Button_State is
    begin
-      if Button =  Button_B then
-         --  For a reason that I don't understand right now, the B button is a
-         --  always detected as pressed (low). As far as I can see the code is
-         --  the same as button A and probing the hardware didn't show any
-         --  problem...
-         raise Program_Error with "Button B is not working...";
-      end if;
       return States (Button);
    end State;
 
