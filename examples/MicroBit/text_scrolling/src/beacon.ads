@@ -29,13 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Bluetooth_Low_Energy.Packets; use Bluetooth_Low_Energy.Packets;
-with Interfaces;                   use Interfaces;
-
-package Bluetooth_Low_Energy.Beacon is
-
-   function Make_Beacon_Packet (MAC          : UInt8_Array;
-                                UUID         : BLE_UUID;
-                                Major, Minor : UInt16;
-                                Power        : Integer_8) return BLE_Packet;
-end Bluetooth_Low_Energy.Beacon;
+package Beacon is
+   procedure Initialize_Radio;
+   procedure Send_Beacon_Packet;
+end Beacon;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2016, AdaCore                       --
+--                       Copyright (C) 2016, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +29,26 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Bluetooth_Low_Energy.Packets; use Bluetooth_Low_Energy.Packets;
-with Interfaces;                   use Interfaces;
+with MicroBit.Display;
+with MicroBit.Time;
+with Beacon;
 
-package Bluetooth_Low_Energy.Beacon is
+procedure Main is
+begin
 
-   function Make_Beacon_Packet (MAC          : UInt8_Array;
-                                UUID         : BLE_UUID;
-                                Major, Minor : UInt16;
-                                Power        : Integer_8) return BLE_Packet;
-end Bluetooth_Low_Energy.Beacon;
+   MicroBit.Display.Set_Animation_Step_Duration (80);
+
+   Beacon.Initialize_Radio;
+
+   loop
+
+      if not MicroBit.Display.Animation_In_Progress then
+         MicroBit.Display.Display_Async ("BLE beacon  ");
+      end if;
+
+      Beacon.Send_Beacon_Packet;
+
+      MicroBit.Time.Delay_Ms (500);
+   end loop;
+end Main;
+

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2016, AdaCore                       --
+--                       Copyright (C) 2018, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +29,23 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Bluetooth_Low_Energy.Packets; use Bluetooth_Low_Energy.Packets;
-with Interfaces;                   use Interfaces;
+with MicroBit.Music; use MicroBit.Music;
 
-package Bluetooth_Low_Energy.Beacon is
+procedure Main is
 
-   function Make_Beacon_Packet (MAC          : UInt8_Array;
-                                UUID         : BLE_UUID;
-                                Major, Minor : UInt16;
-                                Power        : Integer_8) return BLE_Packet;
-end Bluetooth_Low_Energy.Beacon;
+   My_Little_Melody : constant MicroBit.Music.Melody :=
+     ((C4,   400),
+      (G3,   800),
+      (B3,   400),
+      (Rest, 400),
+      (A3,   400),
+      (G3,   400));
+begin
+
+   --  Loop forever
+   loop
+
+      --  Play the little melody on pin 0
+      MicroBit.Music.Play (0, My_Little_Melody);
+   end loop;
+end Main;

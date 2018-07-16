@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                       Copyright (C) 2018, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,25 +29,42 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with MicroBit.Display;
-with MicroBit.Time;
-with Beacon;
+with MicroBit.I2C;
 
-procedure Main is
-begin
+package body MicroBit.Accelerometer is
 
-   MicroBit.Display.Set_Animation_Step_Duration (80);
+   Init_Done : Boolean := False;
+   Acc       : MMA8653.MMA8653_Accelerometer (MicroBit.I2C.Controller);
 
-   Beacon.Initialize_Radio;
+   -----------------
+   -- Initialized --
+   -----------------
 
-   loop
+   function Initialized return Boolean
+   is (Init_Done);
 
-      if not MicroBit.Display.Animation_In_Progress then
-         MicroBit.Display.Display_Async ("MAKE WITH Ada!  ");
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize is
+   begin
+      if not MicroBit.I2C.Initialized then
+         MicroBit.I2C.Initialize;
       end if;
 
-      Beacon.Send_Beacon_Packet;
+      Acc.Configure (MMA8653.Two_G,
+                     MMA8653.High_Resolution,
+                     MMA8653.High_Resolution);
 
-      MicroBit.Time.Delay_Ms (500);
-   end loop;
-end Main;
+      Init_Done := True;
+   end Initialize;
+
+   ----------
+   -- Data --
+   ----------
+
+   function Data return MMA8653.All_Axes_Data
+   is (Acc.Read_Data);
+
+end MicroBit.Accelerometer;

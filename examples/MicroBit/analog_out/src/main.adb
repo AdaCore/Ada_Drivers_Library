@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2016, AdaCore                       --
+--                       Copyright (C) 2018, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +29,23 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Bluetooth_Low_Energy.Packets; use Bluetooth_Low_Energy.Packets;
-with Interfaces;                   use Interfaces;
+with MicroBit.IOs;
+with MicroBit.Time;
 
-package Bluetooth_Low_Energy.Beacon is
+procedure Main is
+begin
 
-   function Make_Beacon_Packet (MAC          : UInt8_Array;
-                                UUID         : BLE_UUID;
-                                Major, Minor : UInt16;
-                                Power        : Integer_8) return BLE_Packet;
-end Bluetooth_Low_Energy.Beacon;
+   --  Loop forever
+   loop
+
+      --  Loop for value between 0 and 128
+      for Value in MicroBit.IOs.Analog_Value range 0 .. 128 loop
+
+         --  Write the analog value of pin 0
+         MicroBit.IOs.Write (0, Value);
+
+         --  Wait 20 milliseconds
+         MicroBit.Time.Delay_Ms (20);
+      end loop;
+   end loop;
+end Main;

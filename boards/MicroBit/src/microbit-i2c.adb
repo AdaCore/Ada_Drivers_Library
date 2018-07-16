@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2016, AdaCore                       --
+--                       Copyright (C) 2018, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +29,44 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Bluetooth_Low_Energy.Packets; use Bluetooth_Low_Energy.Packets;
-with Interfaces;                   use Interfaces;
+with nRF51.Device;
+with nRF51.TWI;
 
-package Bluetooth_Low_Energy.Beacon is
+package body MicroBit.I2C is
 
-   function Make_Beacon_Packet (MAC          : UInt8_Array;
-                                UUID         : BLE_UUID;
-                                Major, Minor : UInt16;
-                                Power        : Integer_8) return BLE_Packet;
-end Bluetooth_Low_Energy.Beacon;
+   Init_Done : Boolean := False;
+
+   -----------------
+   -- Initialized --
+   -----------------
+
+   function Initialized return Boolean
+   is (Init_Done);
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize (S : Speed := S400kbps) is
+   begin
+      nRF51.Device.TWI_0.Configure
+        (SCL   => MB_SCL.Pin,
+         SDA   => MB_SDA.Pin,
+         Speed => (case S is
+                      when S100kbps => nRF51.TWI.TWI_100kbps,
+                      when S250kbps => nRF51.TWI.TWI_250kbps,
+                      when S400kbps => nRF51.TWI.TWI_400kbps)
+        );
+
+      nRF51.Device.TWI_0.Enable;
+      Init_Done := True;
+   end Initialize;
+
+   ----------------
+   -- Controller --
+   ----------------
+
+   function Controller return not null Any_I2C_Port
+   is (nRF51.Device.TWI_0'Access);
+
+end MicroBit.I2C;

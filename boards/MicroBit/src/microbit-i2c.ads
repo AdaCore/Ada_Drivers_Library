@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2016, AdaCore                       --
+--                       Copyright (C) 2018, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +29,23 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Bluetooth_Low_Energy.Packets; use Bluetooth_Low_Energy.Packets;
-with Interfaces;                   use Interfaces;
+with HAL.I2C; use HAL.I2C;
 
-package Bluetooth_Low_Energy.Beacon is
+package MicroBit.I2C is
 
-   function Make_Beacon_Packet (MAC          : UInt8_Array;
-                                UUID         : BLE_UUID;
-                                Major, Minor : UInt16;
-                                Power        : Integer_8) return BLE_Packet;
-end Bluetooth_Low_Energy.Beacon;
+   type Speed is (S100kbps, S250kbps, S400kbps);
+
+   function Initialized return Boolean;
+   --  Return True if the I2C controller is initialized and ready to use
+
+   procedure Initialize (S : Speed := S400kbps)
+     with Post => Initialized;
+   --  Initialize the I2C controller at given speed, using the micro:bit I2C
+   --  pins:
+   --   - P19 -> SCL
+   --   - P20 -> SDA
+
+   function Controller return not null Any_I2C_Port;
+   --  Return the HAL.I2C controller implementation
+
+end MicroBit.I2C;

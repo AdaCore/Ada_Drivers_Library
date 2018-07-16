@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2016, AdaCore                       --
+--                       Copyright (C) 2018, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +29,50 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Bluetooth_Low_Energy.Packets; use Bluetooth_Low_Energy.Packets;
-with Interfaces;                   use Interfaces;
+package body MicroBit.Music is
 
-package Bluetooth_Low_Energy.Beacon is
+   ----------
+   -- Play --
+   ----------
 
-   function Make_Beacon_Packet (MAC          : UInt8_Array;
-                                UUID         : BLE_UUID;
-                                Major, Minor : UInt16;
-                                Power        : Integer_8) return BLE_Packet;
-end Bluetooth_Low_Energy.Beacon;
+   procedure Play
+     (Pin : Pin_Id;
+      P : Pitch)
+   is
+   begin
+      if P = Rest then
+
+         --  Disable PWM on the pin by giving it a digital value
+         Set (Pin, False);
+      else
+
+         --  Enable PWM with a 50% duty cycle
+         Write (Pin, 512);
+
+         --  Set the period corresponding to the required pitch
+         Set_Analog_Period_Us (1_000_000 / Natural (P));
+      end if;
+   end Play;
+
+   ----------
+   -- Play --
+   ----------
+
+   procedure Play (Pin : Pin_Id; N : Note) is
+   begin
+      Play (Pin, N.P);
+      MicroBit.Time.Delay_Ms (N.Ms);
+   end Play;
+
+   ----------
+   -- Play --
+   ----------
+
+   procedure Play (Pin : Pin_Id; M : Melody) is
+   begin
+      for N of M loop
+         Play (Pin, N);
+      end loop;
+   end Play;
+
+end MicroBit.Music;
