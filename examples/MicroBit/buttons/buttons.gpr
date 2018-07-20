@@ -17,4 +17,10 @@ project Buttons is
                                        "-Wl,--gc-sections");
   end Linker;
 
+  package Ide is
+    for Program_Host use ":1234";
+    for Communication_Protocol use "remote";
+    for Connection_Tool use "pyocd";
+  end Ide;
+
 end Buttons;
