@@ -118,6 +118,7 @@ projects = [
             # MicroBit
             "/boards/MicroBit/microbit_zfp.gpr",
             "/examples/MicroBit/text_scrolling/text_scrolling.gpr",
+            "/examples/MicroBit/buttons/buttons.gpr",
             "/examples/MicroBit/digital_in/digital_in.gpr",
             "/examples/MicroBit/music/music.gpr",
             "/examples/MicroBit/analog_in/analog_in.gpr",

@@ -1,15 +1,15 @@
 Digital Output Example
 ======================
 
-In this example we will see how to control a pin as digital output. This means
-that the voltage of the pin will be either 0 volts or 3.3 volts.
+In this example we will see how to control a pin as digital output by flashing
+an external LED. This means that the voltage on the pin connected to the LED 
+will be either 0 volts or 3.3 volts.
 
 Wiring Diagram
 ==============
 
-We will use an LED to see the state of the output. Wiring the LED directly from
-the output pin to ground will make it burn, so we have to add a resistor to
-limit the flow of current.
+Wiring the LED directly from the output pin to ground will make it burn, so we 
+have to add a resistor to limit the flow of current.
 
 Extra hardware:
 

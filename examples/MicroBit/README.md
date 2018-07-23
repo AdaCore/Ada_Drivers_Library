@@ -41,6 +41,7 @@ $ sudo udevadm trigger
 Start GNAT Programming studio (GPS) and open the micro:bit example project:
 
  - [Text Scrolling](text_scrolling/)
+ - [Buttons](buttons/)
  - [Digital Output](digital_out/)
  - [Digital Input](digital_in/)
  - [Analog Output](analog_out/)

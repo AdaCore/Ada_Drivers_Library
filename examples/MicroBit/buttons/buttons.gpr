@@ -1,6 +1,6 @@
 with "../../../boards/MicroBit/microbit_zfp.gpr";
 
-project Analog_Out is
+project Buttons is
 
   for Runtime ("ada") use "zfp-microbit";
   for Target use "arm-eabi";
@@ -18,9 +18,9 @@ project Analog_Out is
   end Linker;
 
   package Ide is
-     for Program_Host use ":1234";
-     for Communication_Protocol use "remote";
-     for Connection_Tool use "pyocd";
+    for Program_Host use ":1234";
+    for Communication_Protocol use "remote";
+    for Connection_Tool use "pyocd";
   end Ide;
-  
-end Analog_Out;
+
+end Buttons;

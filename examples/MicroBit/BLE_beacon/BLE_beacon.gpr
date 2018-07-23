@@ -20,6 +20,7 @@ project BLE_Beacon is
   package Ide is
      for Program_Host use ":1234";
      for Communication_Protocol use "remote";
+     for Connection_Tool use "pyocd";
   end Ide;
 
 end BLE_Beacon;
