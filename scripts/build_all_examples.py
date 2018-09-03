@@ -32,8 +32,8 @@ def run_program(*argv):
 def gprbuild(project_file, debug=False):
     extra_args = []
 
-    extra_args = extra_args + ["-XADL_BUILD=" +
-                               ("Debug" if debug else "Production")]
+    extra_args += ["-XADL_BUILD=" + ("Debug" if debug else "Production")]
+    extra_args += ["-XADL_BUILD_CHECKS=Enabled"]
 
     print "Building '%s'" % project_file
 

@@ -186,8 +186,11 @@ def ADL_configuration(config, project_directory, project_name,
     gpr += "library project %s is\n" % project_name
 
     gpr += """
-   type BUILD_TYPE is ("Debug", "Production");
-   Build : BUILD_Type := external ("ADL_BUILD", "Debug");
+   type Build_Type is ("Debug", "Production");
+   Build : Build_Type := external ("ADL_BUILD", "Debug");
+
+   type Build_Checks_Type is ("Disabled", "Enabled");
+   Build_Checks : Build_Checks_Type := external ("ADL_BUILD_CHECKS", "Disabled");
 
    --  Target architecture
    Target := Project'Target;
@@ -195,24 +198,42 @@ def ADL_configuration(config, project_directory, project_name,
    --  Callgraph info is not available on all architectures
    Callgraph_Switch := ();
    case Target is
-      when "riscv32-unknown-elf" =>
-         null;
+      when "riscv32-unknown-elf" => null;
+      when others => Callgraph_Switch := ("-fcallgraph-info=su");
+   end case;
+
+   Build_Checks_Switches := ();
+   case Build_Checks is
+      when "Disabled" => null;
       when others =>
-         Callgraph_Switch := ("-fcallgraph-info=su");
+         Build_Checks_Switches :=
+           ("-gnaty", "-gnatyM120", "-gnatyO", --  Style checks
+            "-gnatwe"); --  Warnings as errors
    end case;
 
    package Compiler is
       case Build is
          when "Production" =>
             for Default_Switches ("Ada") use
-              ("-g", "-O3", "-gnatp", "-gnatn");
+              ("-O3",     -- Optimization
+               "-gnatp",  -- Supress checks
+               "-gnatn"); -- Enable inlining
          when "Debug" =>
             for Default_Switches ("Ada") use
-              ("-g", "-O0", "-gnata") & Callgraph_Switch;
+              ("-O0",    -- No optimization
+               "-gnata") -- Enable assertions
+              & Callgraph_Switch;
       end case;
+
       for Default_Switches ("ada") use Compiler'Default_Switches ("Ada") &
-        ("-gnatwa", "-gnatwe", "-gnatQ", "-gnatw.X", "-gnaty", "-gnatyO",
-         "-gnatyM120", "-ffunction-sections", "-fdata-sections");
+        Callgraph_Switch &
+        Build_Checks_Switches &
+        ("-g",       -- Debug info
+         "-gnatwa",  -- All warnings
+         "-gnatQ",   -- Don't quit. Generate ALI and tree files even if illegalities
+         "-gnatw.X", -- Disable warnings for No_Exception_Propagation
+         "-ffunction-sections", -- Create a linker section for each function
+         "-fdata-sections");  -- Create a linker section for each data
    end Compiler;
 
 """
@@ -268,7 +289,7 @@ parser.add_argument('--script-mode', action="store_true",
                     help="""Enable script mode. In script mode there is no input required from the user.
                     Configuration values will be taken from pre-defined values
                     (--input-config or command line definitions), or default
-                    value if any. The configuration will fail if there are now
+                    value if any. The configuration will fail if there are no
                     pre-defined or default value for a key. This mode can be
                     used to automatically generated ADL project file from a
                     known configuration.""")
