@@ -65,5 +65,5 @@ build: off
 
 # Run the test scripts
 test_script:
-- cmd: python scripts/build_all_examples.py
+- cmd: python scripts/build_all_examples.py --prod-only
 - cmd: python testsuite/run.py

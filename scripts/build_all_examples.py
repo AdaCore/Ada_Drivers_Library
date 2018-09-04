@@ -162,6 +162,11 @@ if distutils.spawn.find_executable("riscv32-elf-gnatls"):
 parser = argparse.ArgumentParser('Compile all the Ada_Drivers_Library examples')
 
 parser.add_argument(
+    '--prod-only', action='store_true',
+    help='Only compile in production mode'
+)
+
+parser.add_argument(
     'pattern', nargs='*',
     help='List of patterns to filter the set of examples to build'
 )
@@ -181,7 +186,8 @@ def main(args):
         if args.pattern and not any(pat in prj for pat in args.pattern):
             continue
 
-        ret = ret or gprbuild(ROOT_DIR + prj, debug=True)
+        if not args.prod_only:
+            ret = ret or gprbuild(ROOT_DIR + prj, debug=True)
         ret = ret or gprbuild(ROOT_DIR + prj, debug=False)
 
     if ret:
