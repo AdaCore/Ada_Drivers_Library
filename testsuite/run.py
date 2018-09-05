@@ -67,7 +67,8 @@ class Testcase:
 
         # Build test drivers
         returncode, stdout, stderr = run_program(
-            'gprbuild', '-j0', '-p', '-q', '-P', self.project_file,
+            'gprbuild', '-j0', '-p', '-q', '-XADL_BUILD_CHECKS=Enabled',
+            '-P', self.project_file,
         )
         if returncode:
             return 'Build error (gprbuild returned {}):\n{}'.format(
