@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016-2017, AdaCore                      --
+--                    Copyright (C) 2016-2018, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -37,9 +37,11 @@ package body STM32.DMA.Interrupts is
       -- Start_Transfer --
       --------------------
 
-      procedure Start_Transfer (Source      : Address;
-                                Destination : Address;
-                                Data_Count  : UInt16)
+      procedure Start_Transfer
+        (Source             : Address;
+         Destination        : Address;
+         Data_Count         : UInt16;
+         Enabled_Interrupts : Interrupt_Selections := (others => True))
       is
       begin
          No_Transfer_In_Progess := False;
@@ -47,11 +49,13 @@ package body STM32.DMA.Interrupts is
 
          Clear_All_Status (Controller.all, Stream);
 
-         Start_Transfer_with_Interrupts (This               => Controller.all,
-                                         Stream             => Stream,
-                                         Source             => Source,
-                                         Destination        => Destination,
-                                         Data_Count         => Data_Count);
+         Start_Transfer_with_Interrupts
+           (This               => Controller.all,
+            Stream             => Stream,
+            Source             => Source,
+            Destination        => Destination,
+            Data_Count         => Data_Count,
+            Enabled_Interrupts => Enabled_Interrupts);
       end Start_Transfer;
 
       --------------------

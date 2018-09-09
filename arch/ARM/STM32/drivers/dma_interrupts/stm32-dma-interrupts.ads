@@ -41,9 +41,11 @@ package STM32.DMA.Interrupts is
    is
       pragma Interrupt_Priority (Priority);
 
-      procedure Start_Transfer (Source      : Address;
-                                Destination : Address;
-                                Data_Count  : UInt16);
+      procedure Start_Transfer
+        (Source             : Address;
+         Destination        : Address;
+         Data_Count         : UInt16;
+         Enabled_Interrupts : Interrupt_Selections := (others => True));
 
       procedure Abort_Transfer (Result : out DMA_Error_Code);
 
