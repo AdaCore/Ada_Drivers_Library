@@ -42,6 +42,11 @@ package STM32.DMA.Interrupts is
       pragma Interrupt_Priority (Priority);
 
       procedure Start_Transfer
+        (Source      : Address;
+         Destination : Address;
+         Data_Count  : UInt16);
+
+      procedure Start_Transfer_With_Interrupts
         (Source             : Address;
          Destination        : Address;
          Data_Count         : UInt16;
@@ -60,9 +65,10 @@ package STM32.DMA.Interrupts is
       procedure Interrupt_Handler;
       pragma Attach_Handler (Interrupt_Handler, ID);
 
-      No_Transfer_In_Progess : Boolean := True;
-      Last_Status            : DMA_Error_Code := DMA_No_Error;
-      Had_Buffer_Error       : Boolean := False;
+      No_Transfer_In_Progess : Boolean              := True;
+      Last_Status            : DMA_Error_Code       := DMA_No_Error;
+      Had_Buffer_Error       : Boolean              := False;
+      Enabled_Interrupts     : Interrupt_Selections := (others => False);
    end DMA_Interrupt_Controller;
 
    type DMA_Interrupt_Controller_Access is access all DMA_Interrupt_Controller;

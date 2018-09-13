@@ -38,12 +38,30 @@ package body STM32.DMA.Interrupts is
       --------------------
 
       procedure Start_Transfer
+        (Source      : Address;
+         Destination : Address;
+         Data_Count  : UInt16)
+      is
+      begin
+         Start_Transfer_With_Interrupts
+           (Source             => Source,
+            Destination        => Destination,
+            Data_Count         => Data_Count,
+            Enabled_Interrupts => (others => True));
+      end Start_Transfer;
+
+      ------------------------------------
+      -- Start_Transfer_With_Interrupts --
+      ------------------------------------
+
+      procedure Start_Transfer_With_Interrupts
         (Source             : Address;
          Destination        : Address;
          Data_Count         : UInt16;
          Enabled_Interrupts : Interrupt_Selections := (others => True))
       is
       begin
+         DMA_Interrupt_Controller.Enabled_Interrupts := Enabled_Interrupts;
          No_Transfer_In_Progess := False;
          Had_Buffer_Error := False;
 
@@ -56,7 +74,7 @@ package body STM32.DMA.Interrupts is
             Destination        => Destination,
             Data_Count         => Data_Count,
             Enabled_Interrupts => Enabled_Interrupts);
-      end Start_Transfer;
+      end Start_Transfer_With_Interrupts;
 
       --------------------
       -- Abort_Transfer --
@@ -106,23 +124,42 @@ package body STM32.DMA.Interrupts is
       -----------------------
 
       procedure Interrupt_Handler is
+         Candidate_Flags : constant array (DMA_Interrupt) of DMA_Status_Flag
+           := (Direct_Mode_Error_Interrupt
+                 => Direct_Mode_Error_Indicated,
+               Transfer_Error_Interrupt
+                 => Transfer_Error_Indicated,
+               Half_Transfer_Complete_Interrupt
+                 => Half_Transfer_Complete_Indicated,
+               Transfer_Complete_Interrupt
+                 => Transfer_Complete_Indicated,
+               FIFO_Error_Interrupt
+                 => FIFO_Error_Indicated);
       begin
-         for Flag in DMA_Status_Flag loop
-            if Status (Controller.all, Stream, Flag) then
-               case Flag is
+         for Interrupt in DMA_Interrupt loop
+            --  Only check the interrupts that are actually enabled
+            if Enabled_Interrupts (Interrupt)
+              and then Status (Controller.all,
+                               Stream,
+                               Candidate_Flags (Interrupt))
+            then
+               --  Treat the indicated interrupt appropriately
+               case Candidate_Flags (Interrupt) is
                   when FIFO_Error_Indicated =>
                      Last_Status := DMA_FIFO_Error;
                      Had_Buffer_Error := True;
                      if not Enabled (Controller.all, Stream) then
-                        --  If the stream was disabled by hardware, the transfer
-                        --  is stopped. Otherwise we can ignore the even.
+                        --  If the stream was disabled by hardware,
+                        --  the transfer is stopped. Otherwise we can
+                        --  ignore the event.
                         No_Transfer_In_Progess := True;
                      end if;
                   when Direct_Mode_Error_Indicated =>
                      Last_Status := DMA_Direct_Mode_Error;
                      if not Enabled (Controller.all, Stream) then
-                        --  If the stream was disabled by hardware, the transfer
-                        --  is stopped. Otherwise we can ignore the even.
+                        --  If the stream was disabled by hardware,
+                        --  the transfer is stopped. Otherwise we can
+                        --  ignore the even.
                         No_Transfer_In_Progess := True;
                      end if;
                   when Transfer_Error_Indicated =>
@@ -134,10 +171,13 @@ package body STM32.DMA.Interrupts is
                      Last_Status := DMA_No_Error;
                      No_Transfer_In_Progess := True;
                end case;
-               Clear_Status (Controller.all, Stream, Flag);
+               Clear_Status (Controller.all,
+                             Stream,
+                             Candidate_Flags (Interrupt));
             end if;
          end loop;
       end Interrupt_Handler;
+
    end DMA_Interrupt_Controller;
 
 end STM32.DMA.Interrupts;
