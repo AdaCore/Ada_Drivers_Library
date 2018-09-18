@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016-2017, AdaCore                      --
+--                    Copyright (C) 2016-2018, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -47,11 +47,16 @@ package body STM32.DMA.Interrupts is
 
          Clear_All_Status (Controller.all, Stream);
 
-         Start_Transfer_with_Interrupts (This               => Controller.all,
-                                         Stream             => Stream,
-                                         Source             => Source,
-                                         Destination        => Destination,
-                                         Data_Count         => Data_Count);
+         --  We don't use Half_Transfer_Complete_Interrupt, so don't
+         --  enable it.
+         Start_Transfer_with_Interrupts
+           (This               => Controller.all,
+            Stream             => Stream,
+            Source             => Source,
+            Destination        => Destination,
+            Data_Count         => Data_Count,
+            Enabled_Interrupts => (Half_Transfer_Complete_Interrupt => False,
+                                   others                           => True));
       end Start_Transfer;
 
       --------------------
@@ -102,8 +107,17 @@ package body STM32.DMA.Interrupts is
       -----------------------
 
       procedure Interrupt_Handler is
+         --  We didn't enable the Half_Transfer_Complete_Interrupt,
+         --  and we don't have anything useful to do with it anyway,
+         --  so we can safely ignore the corresponding status
+         --  indication; not least because under some circumstances
+         --  (possibly, a short transfer) the flag remains set after
+         --  clearing, thus failing the postcondition on Clear_Status.
+         subtype Checked_Status_Flag is DMA_Status_Flag
+         with Static_Predicate =>
+             Checked_Status_Flag /= Half_Transfer_Complete_Indicated;
       begin
-         for Flag in DMA_Status_Flag loop
+         for Flag in Checked_Status_Flag loop
             if Status (Controller.all, Stream, Flag) then
                case Flag is
                   when FIFO_Error_Indicated =>
@@ -118,14 +132,12 @@ package body STM32.DMA.Interrupts is
                      Last_Status := DMA_Direct_Mode_Error;
                      if not Enabled (Controller.all, Stream) then
                         --  If the stream was disabled by hardware, the transfer
-                        --  is stopped. Otherwise we can ignore the even.
+                        --  is stopped. Otherwise we can ignore the event.
                         No_Transfer_In_Progess := True;
                      end if;
                   when Transfer_Error_Indicated =>
                      Last_Status := DMA_Transfer_Error;
                      No_Transfer_In_Progess := True;
-                  when Half_Transfer_Complete_Indicated =>
-                     null;
                   when Transfer_Complete_Indicated =>
                      Last_Status := DMA_No_Error;
                      No_Transfer_In_Progess := True;
