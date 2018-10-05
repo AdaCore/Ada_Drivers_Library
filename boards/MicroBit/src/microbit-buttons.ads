@@ -35,6 +35,7 @@ package MicroBit.Buttons is
    type Button_Id is (Button_A, Button_B);
 
    function State (Button : Button_Id) return Button_State;
+   --  Indicate the current state of the requested button
 
    type Button_Callback is access procedure (Button : Button_Id;
                                              State  : Button_State);
