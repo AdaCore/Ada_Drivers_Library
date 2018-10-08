@@ -34,8 +34,9 @@ with MicroBit.Time; use MicroBit.Time;
 
 package body MicroBit.Buttons is
 
+   type Button_State_Array is array (Button_Id) of Button_State;
    Points : constant array (Button_Id) of GPIO_Point := (MB_P5, MB_P11);
-   States : array (Button_Id) of Button_State := (others => Released);
+   States : Button_State_Array := (others => Released);
    Subscribers : array (1 .. 10) of Button_Callback := (others => null);
 
    procedure Initialize;
@@ -68,25 +69,28 @@ package body MicroBit.Buttons is
    ------------------
 
    procedure Tick_Handler is
-      New_State : Button_State;
+      Prev_States : constant Button_State_Array := States;
    begin
+      --  Update all components of States array
 
       for Id in Button_Id loop
          if not Set (Points (Id)) then
-            New_State := Pressed;
+            States (Id) := Pressed;
          else
-            New_State := Released;
+            States (Id) := Released;
          end if;
+      end loop;
 
-         if States (Id) /= New_State then
+      --  Notify changes to subscribers
+
+      for Id in Button_Id loop
+         if States (Id) /= Prev_States (Id) then
             for Sub of Subscribers loop
 
                if Sub /= null then
-                  Sub.all (Id, New_State);
+                  Sub.all (Id, States (Id));
                end if;
             end loop;
-
-            States (Id) := New_State;
          end if;
       end loop;
    end Tick_Handler;
