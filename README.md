@@ -1,5 +1,6 @@
-[![Build Status](https://travis-ci.org/AdaCore/Ada_Drivers_Library.svg?branch=master)](https://travis-ci.org/AdaCore/Ada_Drivers_Library)
-[![Build status](https://ci.appveyor.com/api/projects/status/dvay075xkwxgppwm?svg=true)](https://ci.appveyor.com/project/AdaCore/ada-drivers-library)
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/ada-lang/Ada_Drivers_Library)
+[![Linux Build Status](https://travis-ci.org/AdaCore/Ada_Drivers_Library.svg?branch=master)](https://travis-ci.org/AdaCore/Ada_Drivers_Library)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/github/AdaCore/Ada_Drivers_Library?branch=master&svg=true)](https://ci.appveyor.com/project/github-integration-adacore/ada-drivers-library)
 
 # 1. Introduction
 
