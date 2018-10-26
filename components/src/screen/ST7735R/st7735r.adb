@@ -60,31 +60,34 @@ package body ST7735R is
 
    function To_UInt8 is new Ada.Unchecked_Conversion (MADCTL, UInt8);
 
-   procedure Write_Command (LCD : ST7735R_Screen;
+   procedure Write_Command (LCD : ST7735R_Screen'Class;
                             Cmd : UInt8);
-   procedure Write_Command (LCD  : ST7735R_Screen;
+   procedure Write_Command (LCD  : ST7735R_Screen'Class;
                             Cmd  : UInt8;
                             Data : HAL.UInt8_Array);
 
-   procedure Write_Data (LCD : ST7735R_Screen;
-                         Data : UInt8);
-   pragma Unreferenced (Write_Data);
-   procedure Write_Data (LCD  : ST7735R_Screen;
+   procedure Write_Pix_Repeat (LCD   : ST7735R_Screen'Class;
+                               Data  : UInt16;
+                               Count : Natural);
+   --  Send the same pixel data Count times. This is used to fill an area with
+   --  the same color without allocating a buffer.
+
+   procedure Write_Data (LCD  : ST7735R_Screen'Class;
                          Data : HAL.UInt8_Array);
 
-   procedure Read_Data (LCD  : ST7735R_Screen;
+   procedure Read_Data (LCD  : ST7735R_Screen'Class;
                         Data : out UInt16);
 
-   procedure Set_Command_Mode (LCD : ST7735R_Screen);
-   procedure Set_Data_Mode (LCD : ST7735R_Screen);
-   procedure Start_Transaction (LCD : ST7735R_Screen);
-   procedure End_Transaction (LCD : ST7735R_Screen);
+   procedure Set_Command_Mode (LCD : ST7735R_Screen'Class);
+   procedure Set_Data_Mode (LCD : ST7735R_Screen'Class);
+   procedure Start_Transaction (LCD : ST7735R_Screen'Class);
+   procedure End_Transaction (LCD : ST7735R_Screen'Class);
 
    ----------------------
    -- Set_Command_Mode --
    ----------------------
 
-   procedure Set_Command_Mode (LCD : ST7735R_Screen) is
+   procedure Set_Command_Mode (LCD : ST7735R_Screen'Class) is
    begin
       LCD.RS.Clear;
    end Set_Command_Mode;
@@ -93,7 +96,7 @@ package body ST7735R is
    -- Set_Data_Mode --
    -------------------
 
-   procedure Set_Data_Mode (LCD : ST7735R_Screen) is
+   procedure Set_Data_Mode (LCD : ST7735R_Screen'Class) is
    begin
       LCD.RS.Set;
    end Set_Data_Mode;
@@ -102,7 +105,7 @@ package body ST7735R is
    -- Start_Transaction --
    -----------------------
 
-   procedure Start_Transaction (LCD : ST7735R_Screen) is
+   procedure Start_Transaction (LCD : ST7735R_Screen'Class) is
    begin
       LCD.CS.Clear;
    end Start_Transaction;
@@ -111,7 +114,7 @@ package body ST7735R is
    -- End_Transaction --
    ---------------------
 
-   procedure End_Transaction (LCD : ST7735R_Screen) is
+   procedure End_Transaction (LCD : ST7735R_Screen'Class) is
    begin
       LCD.CS.Set;
    end End_Transaction;
@@ -120,7 +123,7 @@ package body ST7735R is
    -- Write_Command --
    -------------------
 
-   procedure Write_Command (LCD : ST7735R_Screen;
+   procedure Write_Command (LCD : ST7735R_Screen'Class;
                             Cmd : UInt8)
    is
       Status : SPI_Status;
@@ -140,7 +143,7 @@ package body ST7735R is
    -- Write_Command --
    -------------------
 
-   procedure Write_Command (LCD  : ST7735R_Screen;
+   procedure Write_Command (LCD  : ST7735R_Screen'Class;
                             Cmd  : UInt8;
                             Data : HAL.UInt8_Array)
    is
@@ -153,27 +156,7 @@ package body ST7735R is
    -- Write_Data --
    ----------------
 
-   procedure Write_Data (LCD : ST7735R_Screen;
-                         Data : UInt8)
-   is
-      Status : SPI_Status;
-   begin
-      Start_Transaction (LCD);
-      Set_Data_Mode (LCD);
-      LCD.Port.Transmit (SPI_Data_8b'(1 => Data),
-                         Status);
-      End_Transaction (LCD);
-      if Status /= Ok then
-         --  No error handling...
-         raise Program_Error;
-      end if;
-   end Write_Data;
-
-   ----------------
-   -- Write_Data --
-   ----------------
-
-   procedure Write_Data (LCD  : ST7735R_Screen;
+   procedure Write_Data (LCD  : ST7735R_Screen'Class;
                          Data : HAL.UInt8_Array)
    is
       Status : SPI_Status;
@@ -188,11 +171,38 @@ package body ST7735R is
       End_Transaction (LCD);
    end Write_Data;
 
+   ----------------------
+   -- Write_Pix_Repeat --
+   ----------------------
+
+   procedure Write_Pix_Repeat (LCD   : ST7735R_Screen'Class;
+                               Data  : UInt16;
+                               Count : Natural)
+   is
+      Status : SPI_Status;
+      Data8  : constant SPI_Data_8b :=
+        SPI_Data_8b'(1 => UInt8 (Shift_Right (Data, 8) and 16#FF#),
+                     2 => UInt8 (Data and 16#FF#));
+   begin
+      Write_Command (LCD, 16#2C#);
+      Start_Transaction (LCD);
+      Set_Data_Mode (LCD);
+      for X in 1 .. Count loop
+         LCD.Port.Transmit (Data8, Status);
+         if Status /= Ok then
+            --  No error handling...
+            raise Program_Error;
+         end if;
+      end loop;
+
+      End_Transaction (LCD);
+   end Write_Pix_Repeat;
+
    ---------------
    -- Read_Data --
    ---------------
 
-   procedure Read_Data (LCD  : ST7735R_Screen;
+   procedure Read_Data (LCD  : ST7735R_Screen'Class;
                         Data : out UInt16)
    is
       SPI_Data : SPI_Data_16b (1 .. 1);
@@ -683,11 +693,13 @@ package body ST7735R is
       Width   : Positive := Positive'Last;
       Height  : Positive := Positive'Last)
    is
-      pragma Unreferenced (X, Y, Width, Height, Display);
+      pragma Unreferenced (X, Y);
    begin
       if Layer /= 1 or else Mode /= RGB_565 then
          raise Program_Error;
       end if;
+      Display.Layer.Width := Width;
+      Display.Layer.Height := Height;
    end Initialize_Layer;
 
    -----------------
@@ -834,5 +846,96 @@ package body ST7735R is
       Pt     : Point)
       return UInt32
    is (UInt32 (Buffer.LCD.Pixel (UInt16 (Pt.X), UInt16 (Pt.Y))));
+
+   ----------
+   -- Fill --
+   ----------
+
+   overriding
+   procedure Fill
+     (Buffer : in out ST7735R_Bitmap_Buffer)
+   is
+   begin
+      --  Set the drawing area over the entire layer
+      Set_Address (Buffer.LCD.all,
+                   0, UInt16 (Buffer.Width - 1),
+                   0, UInt16 (Buffer.Height - 1));
+
+      --  Fill the drawing area with a single color
+      Write_Pix_Repeat (Buffer.LCD.all,
+                        UInt16 (Buffer.Native_Source and 16#FFFF#),
+                        Buffer.Width * Buffer.Height);
+   end Fill;
+
+   ---------------
+   -- Fill_Rect --
+   ---------------
+
+   overriding
+   procedure Fill_Rect
+     (Buffer : in out ST7735R_Bitmap_Buffer;
+      Area   : Rect)
+   is
+   begin
+      --  Set the drawing area coresponding to the rectangle to draw
+      Set_Address (Buffer.LCD.all,
+                   UInt16 (Area.Position.X),
+                   UInt16 (Area.Position.X + Area.Width - 1),
+                   UInt16 (Area.Position.Y),
+                   UInt16 (Area.Position.Y + Area.Height - 1));
+
+      --  Fill the drawing area with a single color
+      Write_Pix_Repeat (Buffer.LCD.all,
+                        UInt16 (Buffer.Native_Source and 16#FFFF#),
+                        Area.Width * Area.Height);
+   end Fill_Rect;
+
+   ------------------------
+   -- Draw_Vertical_Line --
+   ------------------------
+
+   overriding
+   procedure Draw_Vertical_Line
+     (Buffer : in out ST7735R_Bitmap_Buffer;
+      Pt     : Point;
+      Height : Integer)
+   is
+   begin
+      --  Set the drawing area coresponding to the line to draw
+      Set_Address (Buffer.LCD.all,
+                   UInt16 (Pt.X),
+                   UInt16 (Pt.X),
+                   UInt16 (Pt.Y),
+                   UInt16 (Pt.Y + Height - 1));
+
+      --  Fill the drawing area with a single color
+      Write_Pix_Repeat (Buffer.LCD.all,
+                        UInt16 (Buffer.Native_Source and 16#FFFF#),
+                        Height);
+   end Draw_Vertical_Line;
+
+   --------------------------
+   -- Draw_Horizontal_Line --
+   --------------------------
+
+   overriding
+   procedure Draw_Horizontal_Line
+     (Buffer : in out ST7735R_Bitmap_Buffer;
+      Pt     : Point;
+      Width  : Integer)
+   is
+   begin
+      --  Set the drawing area coresponding to the line to draw
+      Set_Address (Buffer.LCD.all,
+                   UInt16 (Pt.X),
+                   UInt16 (Pt.X + Width),
+                   UInt16 (Pt.Y),
+                   UInt16 (Pt.Y));
+
+      --  Fill the drawing area with a single color
+      Write_Pix_Repeat (Buffer.LCD.all,
+                        UInt16 (Buffer.Native_Source and 16#FFFF#),
+                        Width);
+   end Draw_Horizontal_Line;
 
 end ST7735R;
