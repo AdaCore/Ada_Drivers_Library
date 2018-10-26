@@ -36,6 +36,10 @@ package body MicroBit.I2C is
 
    Init_Done : Boolean := False;
 
+   Device : nRF51.TWI.TWI_Master renames nRF51.Device.TWI_0;
+   --  This device should not conflict with the device used in MicroBit.SPI.
+   --  See nRF51 Series Reference Manual, chapter Memory.Instantiation.
+
    -----------------
    -- Initialized --
    -----------------
@@ -49,7 +53,7 @@ package body MicroBit.I2C is
 
    procedure Initialize (S : Speed := S400kbps) is
    begin
-      nRF51.Device.TWI_0.Configure
+      Device.Configure
         (SCL   => MB_SCL.Pin,
          SDA   => MB_SDA.Pin,
          Speed => (case S is
@@ -58,7 +62,7 @@ package body MicroBit.I2C is
                       when S400kbps => nRF51.TWI.TWI_400kbps)
         );
 
-      nRF51.Device.TWI_0.Enable;
+      Device.Enable;
       Init_Done := True;
    end Initialize;
 
@@ -67,6 +71,6 @@ package body MicroBit.I2C is
    ----------------
 
    function Controller return not null Any_I2C_Port
-   is (nRF51.Device.TWI_0'Access);
+   is (Device'Access);
 
 end MicroBit.I2C;
