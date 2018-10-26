@@ -29,14 +29,15 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.GPIO;    use nRF51.GPIO;
-with nRF51.RTC;     use nRF51.RTC;
+with nRF51.GPIO;       use nRF51.GPIO;
+with nRF51.RTC;        use nRF51.RTC;
 with NRF51_SVD.RTC;
-with nRF51.TWI;     use nRF51.TWI;
+with nRF51.TWI;        use nRF51.TWI;
 with NRF51_SVD.TWI;
-with nRF51.Timers;  use nRF51.Timers;
+with nRF51.SPI_Master; use nRF51.SPI_Master;
+with NRF51_SVD.SPI;
+with nRF51.Timers;     use nRF51.Timers;
 with NRF51_SVD.TIMER;
-
 
 package nRF51.Device is
 
@@ -76,8 +77,19 @@ package nRF51.Device is
    RTC_0 : aliased Real_Time_Counter (NRF51_SVD.RTC.RTC0_Periph'Access);
    RTC_1 : aliased Real_Time_Counter (NRF51_SVD.RTC.RTC1_Periph'Access);
 
+
+   --  Be carefull of shared resources between the TWI and SPI controllers.
+   --  TWI_O and SPI_Master_0 cannot be used at the same time.
+   --  TWI_1 and SPI_Master_1 cannot be used at the same time.
+   --
+   --  See nRF51 Series Reference Manual, chapter Memory.Instantiation.
+
    TWI_0 : aliased TWI_Master (NRF51_SVD.TWI.TWI0_Periph'Access);
    TWI_1 : aliased TWI_Master (NRF51_SVD.TWI.TWI1_Periph'Access);
+
+   SPI_Master_0 : aliased nRF51.SPI_Master.SPI_Master (NRF51_SVD.SPI.SPI0_Periph'Access);
+   SPI_Master_1 : aliased nRF51.SPI_Master.SPI_Master (NRF51_SVD.SPI.SPI1_Periph'Access);
+
 
    Timer_0 : aliased Timer (NRF51_SVD.TIMER.TIMER0_Periph'Access);
    Timer_1 : aliased Timer (NRF51_SVD.TIMER.TIMER1_Periph'Access);
