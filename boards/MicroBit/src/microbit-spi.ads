@@ -29,48 +29,27 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.Device;
-with nRF51.TWI;
+with HAL.SPI; use HAL.SPI;
 
-package body MicroBit.I2C is
+package MicroBit.SPI is
 
-   Init_Done : Boolean := False;
+   type Speed is (S125kbps, S250kbps, S500kbps, S1Mbps, S2Mbps, S4Mbps, S8Mbps);
 
-   Device : nRF51.TWI.TWI_Master renames nRF51.Device.TWI_0;
-   --  This device should not conflict with the device used in MicroBit.SPI.
-   --  See nRF51 Series Reference Manual, chapter Memory.Instantiation.
+   type SPI_Mode is (Mode_0, Mode_1, Mode_2, Mode_3);
 
-   -----------------
-   -- Initialized --
-   -----------------
+   function Initialized return Boolean;
+   --  Return True if the SPI controller is initialized and ready to use
 
-   function Initialized return Boolean
-   is (Init_Done);
+   procedure Initialize (S    : Speed := S1Mbps;
+                         Mode : SPI_Mode := Mode_0)
+     with Post => Initialized;
+   --  Initialize the SPI controller at given speed, using the micro:bit SPI
+   --  pins:
+   --   - P15 -> MOSI
+   --   - P14 -> MISO
+   --   - p13 -> Clock
 
-   ----------------
-   -- Initialize --
-   ----------------
+   function Controller return not null Any_SPI_Port;
+   --  Return the HAL.SPI controller implementation
 
-   procedure Initialize (S : Speed := S400kbps) is
-   begin
-      Device.Configure
-        (SCL   => MB_SCL.Pin,
-         SDA   => MB_SDA.Pin,
-         Speed => (case S is
-                      when S100kbps => nRF51.TWI.TWI_100kbps,
-                      when S250kbps => nRF51.TWI.TWI_250kbps,
-                      when S400kbps => nRF51.TWI.TWI_400kbps)
-        );
-
-      Device.Enable;
-      Init_Done := True;
-   end Initialize;
-
-   ----------------
-   -- Controller --
-   ----------------
-
-   function Controller return not null Any_I2C_Port
-   is (Device'Access);
-
-end MicroBit.I2C;
+end MicroBit.SPI;

@@ -30,14 +30,14 @@
 ------------------------------------------------------------------------------
 
 with nRF51.Device;
-with nRF51.TWI;
+with nRF51.SPI_Master; use nRF51.SPI_Master;
 
-package body MicroBit.I2C is
+package body MicroBit.SPI is
 
    Init_Done : Boolean := False;
 
-   Device : nRF51.TWI.TWI_Master renames nRF51.Device.TWI_0;
-   --  This device should not conflict with the device used in MicroBit.SPI.
+   Device : SPI_Master renames nRF51.Device.SPI_Master_1;
+   --  This device should not conflict with the device used in MicroBit.I2C
    --  See nRF51 Series Reference Manual, chapter Memory.Instantiation.
 
    -----------------
@@ -51,18 +51,37 @@ package body MicroBit.I2C is
    -- Initialize --
    ----------------
 
-   procedure Initialize (S : Speed := S400kbps) is
+   procedure Initialize
+     (S    : Speed := S1Mbps;
+      Mode : SPI_Mode := Mode_0)
+   is
    begin
       Device.Configure
-        (SCL   => MB_SCL.Pin,
-         SDA   => MB_SDA.Pin,
-         Speed => (case S is
-                      when S100kbps => nRF51.TWI.TWI_100kbps,
-                      when S250kbps => nRF51.TWI.TWI_250kbps,
-                      when S400kbps => nRF51.TWI.TWI_400kbps)
-        );
+        (SCK       => MB_SCK.Pin,
+         MOSI      => MB_MOSI.Pin,
+         MISO      => MB_MISO.Pin,
+
+         Speed     => (case S is
+                          when S125kbps => SPI_125kbps,
+                          when S250kbps => SPI_250kbps,
+                          when S500kbps => SPI_500kbps,
+                          when S1Mbps => SPI_1Mbps,
+                          when S2Mbps => SPI_2Mbps,
+                          when S4Mbps => SPI_4Mbps,
+                          when S8Mbps => SPI_8Mbps),
+
+         Bit_Order => Most_Significant_First,
+
+         Polarity  => (case Mode is
+                          when Mode_0 | Mode_1 => Active_High,
+                          when Mode_2 | Mode_3 => Active_Low),
+
+         Phase     => (case Mode is
+                          when Mode_0 | Mode_2 => Sample_Leading_Edge,
+                          when Mode_1 | Mode_3 => Sample_Trailing_Edge));
 
       Device.Enable;
+
       Init_Done := True;
    end Initialize;
 
@@ -70,7 +89,7 @@ package body MicroBit.I2C is
    -- Controller --
    ----------------
 
-   function Controller return not null Any_I2C_Port
+   function Controller return not null Any_SPI_Port
    is (Device'Access);
 
-end MicroBit.I2C;
+end MicroBit.SPI;

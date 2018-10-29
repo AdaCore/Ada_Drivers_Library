@@ -281,6 +281,8 @@ private
 
    type ST7735R_Bitmap_Buffer is new Soft_Drawing_Bitmap_Buffer with record
       LCD           : Any_ST7735R_Device := null;
+      Width         : Natural := 0;
+      Height        : Natural := 0;
       Native_Source : UInt32;
    end record;
 
@@ -339,6 +341,34 @@ private
    overriding
    function Buffer_Size (Buffer : ST7735R_Bitmap_Buffer) return Natural is
       (0);
+
+   --  Overriding some drawing primitives to improve performances in buffer-less
+   --  mode.
+
+   overriding
+   procedure Fill
+     (Buffer : in out ST7735R_Bitmap_Buffer)
+     with Pre => Buffer.LCD /= null;
+
+   overriding
+   procedure Fill_Rect
+     (Buffer : in out ST7735R_Bitmap_Buffer;
+      Area   : Rect)
+     with Pre => Buffer.LCD /= null;
+
+   overriding
+   procedure Draw_Vertical_Line
+     (Buffer : in out ST7735R_Bitmap_Buffer;
+      Pt     : Point;
+      Height : Integer)
+     with Pre => Buffer.LCD /= null;
+
+   overriding
+   procedure Draw_Horizontal_Line
+     (Buffer : in out ST7735R_Bitmap_Buffer;
+      Pt     : Point;
+      Width  : Integer)
+     with Pre => Buffer.LCD /= null;
 
    type ST7735R_Screen
      (Port : not null Any_SPI_Port;
