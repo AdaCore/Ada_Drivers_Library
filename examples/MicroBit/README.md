@@ -1,4 +1,4 @@
-The Micro:Bit is a very small ARM Cortex-M0 board designed by the BBC for
+The micro:bit is a very small ARM Cortex-M0 board designed by the BBC for
 computer education. It's fitted with a [Nordic
 nRF51](https://www.nordicsemi.com/eng/Products/Bluetooth-low-energy/nRF51822)
 Bluetooth enabled microcontroller and an embedded programmer. You can get it
@@ -8,8 +8,9 @@ at:
  - [Kitronik (UK/EU)](https://www.kitronik.co.uk/5613-bbc-microbit-board-only.html)
  - [ThePiHut (UK/EU)](https://thepihut.com/collections/microbit/products/micro-bit)
  - [AdaFruit (US)](https://www.adafruit.com/products/3362)
+ - [Core Electronics (Australia)](https://core-electronics.com.au/brands/microbit-australia)
 
-# How to setup the Ada development environment for the Micro:Bit
+# How to set up the Ada development environment for the micro:bit
 
 GNAT Community now comes with micro:bit and pyOCD support built-in. So you only
 need to download the ARM ELF and the native package from
@@ -17,7 +18,7 @@ need to download the ARM ELF and the native package from
 
 ## pyOCD programmer
 
-The Micro:Bit comes with an embedded programming/debugging probe implementing
+The micro:bit comes with an embedded programming/debugging probe implementing
 the
 [CMSIS-DAP](https://docs.mbed.com/docs/mbed-os-handbook/en/latest/advanced/DAP/)
 protocol defined by ARM.
@@ -61,4 +62,4 @@ micro:bit.
 
 After a few seconds, you should see a text scrolling on the LED matrix.
 
-That's it, you are ready to hack the micro:bit with Ada!
+That's it! You are ready to hack the micro:bit with Ada!
