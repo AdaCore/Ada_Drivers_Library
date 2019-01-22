@@ -65,8 +65,8 @@ package HAL.Bitmap is
          when M_1 => 1);
 
    type Point is record
-      X : Natural;
-      Y : Natural;
+      X : Integer;
+      Y : Integer;
    end record;
 
    function "+" (P1, P2 : Point) return Point

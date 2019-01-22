@@ -116,17 +116,21 @@ package body Memory_Mapped_Bitmap is
      (Buffer : in out Memory_Mapped_Bitmap_Buffer;
       Pt     : Point)
    is
-      X0     : Natural := Pt.X;
-      Y0     : Natural := Pt.Y;
+      X0     : Natural;
+      Y0     : Natural;
       Offset : Natural;
 
       Value  : constant UInt32 := Buffer.Native_Source;
    begin
       if Pt.X >= Buffer.Width
         or else Pt.Y >= Buffer.Height
+        or else Pt.X < 0
+        or else Pt.Y < 0
       then
          return;
       end if;
+      X0 := Pt.X;
+      Y0 := Pt.Y;
 
       if Buffer.Swapped then
          Handle_Swap (Buffer, X0, Y0);
