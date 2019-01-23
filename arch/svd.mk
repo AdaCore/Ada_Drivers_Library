@@ -20,7 +20,7 @@ svd:
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/Cortex_M/cm4.svd --boolean -o $(CORTEX_DIR)/cm4 -p Cortex_M_SVD --base-types-package HAL --gen-uint-always
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/Cortex_M/cm4f.svd --boolean -o $(CORTEX_DIR)/cm4f -p Cortex_M_SVD --base-types-package HAL --gen-uint-always
 
-	rm -rf $(NORIC_DIR)/nrf*
+	rm -rf $(NORDIC_DIR)/nrf*
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/Nordic/nrf51.svd --boolean -o $(NORDIC_DIR)/nrf51 -p NRF51_SVD --base-types-package HAL --gen-uint-always
 
 	rm -rf $(SIFIVE_DIR)/FE*
