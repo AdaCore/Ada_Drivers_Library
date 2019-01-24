@@ -35,7 +35,7 @@ with Bitmap_Color_Conversion;
 package body Memory_Mapped_Bitmap is
 
    procedure Handle_Swap
-     (Buffer : Bitmap_Buffer'Class;
+     (Buffer : Memory_Mapped_Bitmap_Buffer'Class;
       X      : in out Natural;
       Y      : in out Natural);
 
@@ -44,19 +44,19 @@ package body Memory_Mapped_Bitmap is
    -----------------
 
    procedure Handle_Swap
-     (Buffer : Bitmap_Buffer'Class;
+     (Buffer : Memory_Mapped_Bitmap_Buffer'Class;
       X      : in out Natural;
       Y      : in out Natural)
    is
       Tmp : Natural;
    begin
-      if not Buffer.Swapped then
+      if not Buffer.Currently_Swapped then
          return;
       end if;
 
       Tmp := X;
       X := Y;
-      Y := Buffer.Width - Tmp - 1;
+      Y := Buffer.Actual_Width - Tmp - 1;
    end Handle_Swap;
 
    ----------------
@@ -130,11 +130,12 @@ package body Memory_Mapped_Bitmap is
 
       if Buffer.Swapped then
          Handle_Swap (Buffer, X0, Y0);
-         Offset := X0 + Y0 * Buffer.Height;
+         Offset := X0 + Y0 * Buffer.Actual_Height;
 
       else
-         Offset := Pt.X + Pt.Y * Buffer.Width;
+         Offset := Pt.X + Pt.Y * Buffer.Actual_Width;
       end if;
+
 
       case Buffer.Color_Mode is
          when ARGB_8888 =>
@@ -308,12 +309,12 @@ package body Memory_Mapped_Bitmap is
 
       Native_Color : UInt32;
    begin
-      if Buffer.Swapped then
+      if Buffer.Currently_Swapped then
          Handle_Swap (Buffer, X0, Y0);
-         Offset := X0 + Y0 * Buffer.Height;
+         Offset := X0 + Y0 * Buffer.Actual_Height;
 
       else
-         Offset := Pt.X + Pt.Y * Buffer.Width;
+         Offset := Pt.X + Pt.Y * Buffer.Actual_Width;
       end if;
 
       case Buffer.Color_Mode is

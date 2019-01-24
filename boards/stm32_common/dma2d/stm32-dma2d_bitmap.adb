@@ -54,8 +54,13 @@ package body STM32.DMA2D_Bitmap is
       Ret : DMA2D_Buffer (Color_Mode);
    begin
       Ret.Addr := Buffer.Memory_Address;
-      Ret.Width := Buffer.Width;
-      Ret.Height := Buffer.Height;
+      if not Buffer.Swapped then
+         Ret.Width := Buffer.Width;
+         Ret.Height := Buffer.Height;
+      else
+         Ret.Width := Buffer.Height;
+         Ret.Height := Buffer.Width;
+      end if;
       return Ret;
    end To_DMA2D_Buffer;
 
