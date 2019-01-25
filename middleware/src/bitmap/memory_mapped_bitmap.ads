@@ -76,11 +76,11 @@ package Memory_Mapped_Bitmap is
 
    overriding
    function Width (Buffer : Memory_Mapped_Bitmap_Buffer) return Natural is
-     (if Buffer.Currently_Swapped then Buffer.Actual_Height else Buffer.Actual_Width);
+     (Buffer.Actual_Width);
 
    overriding
    function Height (Buffer : Memory_Mapped_Bitmap_Buffer) return Natural is
-     (if Buffer.Currently_Swapped then Buffer.Actual_Width else Buffer.Actual_Height);
+     (Buffer.Actual_Height);
 
    overriding
    function Swapped (Buffer : Memory_Mapped_Bitmap_Buffer) return Boolean is

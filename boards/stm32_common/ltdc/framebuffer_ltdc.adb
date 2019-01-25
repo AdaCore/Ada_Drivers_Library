@@ -126,7 +126,7 @@ package body Framebuffer_LTDC is
                Display.Buffers (Layer, Buf).Currently_Swapped := Display.Swapped;
                Tmp := Display.Buffers (Layer, Buf).Actual_Width;
                Display.Buffers (Layer, Buf).Actual_Width :=
-                 Display.Buffers (Layer, Buf).Height;
+                 Display.Buffers (Layer, Buf).Actual_Height;
                Display.Buffers (Layer, Buf).Actual_Height := Tmp;
                Display.Buffers (Layer, Buf).Set_Source (HAL.Bitmap.Black);
                Display.Buffers (Layer, Buf).Fill;
