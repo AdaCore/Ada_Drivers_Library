@@ -1,0 +1,14 @@
+with "../../boards/nucleo_f446ze/nucleo_f446ze_full.gpr";
+
+project Blinky_F446ZE extends "../shared/common/common.gpr" is
+
+  for Runtime ("Ada") use NUCLEO_F446ZE_Full'Runtime("Ada");
+  for Target use "arm-eabi";
+  for Main use ("blinky.adb");
+  for Languages use ("Ada");
+  for Source_Dirs use ("../shared/hello_world_blinky/src");
+  for Object_Dir use "../shared/hello_world_blinky/obj/nucleo_f446ze";
+  for Create_Missing_Dirs use "True";
+
+  package Compiler renames NUCLEO_F446ZE_Full.Compiler;
+end Blinky_F446ZE;

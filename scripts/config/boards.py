@@ -8,6 +8,7 @@ def list_of_boards():
             'STM32F469_Discovery',
             'STM32F746_Discovery',
             'STM32F769_Discovery',
+            'NUCLEO_F446ZE',
             'Crazyflie',
             'OpenMV2',
             "MicroBit",
@@ -19,7 +20,9 @@ def load_board_config(config):
     board = config.get_config("Board")
     origin = 'board definition'
 
-    if board == "STM32F407_Discovery":
+    # The NUCLEO-F446ZE has an STM32F446ZE microcontroller. However the
+    # 446 is not supported yet, so we use the 407 that is very similar.
+    if board == "STM32F407_Discovery" or board == "NUCLEO_F446ZE":
         config.pre_define('Architecture', 'ARM', origin)
         config.pre_define('Vendor', 'STMicro', origin)
         config.pre_define('Device_Family', 'STM32F4', origin)
@@ -29,7 +32,13 @@ def load_board_config(config):
         config.pre_define('Has_Ravenscar_SFP_Runtime', 'True', origin)
         config.pre_define('Has_Ravenscar_Full_Runtime', 'True', origin)
         config.pre_define('Runtime_Name_Suffix', 'stm32f4', origin)
-        config.add_source_dir('boards/stm32_common/stm32f407disco/', origin)
+
+        if board == "STM32F407_Discovery":
+            config.add_source_dir('boards/stm32_common/stm32f407disco/',
+                                  origin)
+        else:
+            config.add_source_dir('boards/stm32_common/nucleo_f446ze/', origin)
+
         config.add_source_dir('boards/stm32_common/common/', origin)
 
     elif board == "STM32F429_Discovery":

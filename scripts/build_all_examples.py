@@ -108,6 +108,11 @@ projects = [
             "/examples/STM32F769_Discovery/dma2d_stm32f769disco.gpr",
             "/examples/STM32F769_Discovery/draw_stm32f769disco.gpr",
 
+            # NUCLEO-F446ZE
+            "/boards/nucleo_f446ze/nucleo_f446ze_full.gpr",
+            "/boards/nucleo_f446ze/nucleo_f446ze_sfp.gpr",
+            "/examples/nucleo_f446ze/blinky_f446ze.gpr",
+
             # OpenMV2
             "/boards/OpenMV2/openmv2_full.gpr",
             "/boards/OpenMV2/openmv2_sfp.gpr",
