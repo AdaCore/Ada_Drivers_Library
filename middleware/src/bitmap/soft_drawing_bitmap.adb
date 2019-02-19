@@ -732,6 +732,18 @@ package body Soft_Drawing_Bitmap is
       Degree : constant Integer := InputPoints'Last - InputPoints'First;
       BinomialCoeffs : NaturalArr (0 .. Degree);
       FloatX, FloatY, T, TotalCoeff : Float;
+
+      function Power(A : Float; B : Natural) return Float is
+         Total : Float := 1.0;
+         Count : Natural := B;
+      begin
+         while Count > 0 loop
+            Count := Count - 1;
+            Total := Total * A;
+         end loop;
+         return Total;
+      end Power;
+
    begin
       Binomial_Coefficients (BinomialCoeffs);
       for I in Points'Range loop
@@ -739,7 +751,7 @@ package body Soft_Drawing_Bitmap is
          FloatY := 0.0;
          T := Float (I) / Float (N);
          for K in 0 .. Degree loop
-            TotalCoeff := (Float (BinomialCoeffs (K)) * ((1.0 - T) ** (Degree - K)) * (T ** K));
+            TotalCoeff := (Float (BinomialCoeffs (K)) * Power((1.0 - T), (Degree - K)) * Power(T, K));
             FloatX := FloatX + (TotalCoeff * Float (InputPoints (InputPoints'First + K).X));
             FloatY := FloatY + (TotalCoeff * Float (InputPoints (InputPoints'First + K).Y));
          end loop;
