@@ -732,7 +732,7 @@ package body Soft_Drawing_Bitmap is
       Degree : constant Integer := InputPoints'Last - InputPoints'First;
       BinomialCoeffs : NaturalArr (0 .. Degree);
       FloatX, FloatY, T, TotalCoeff : Float;
-
+      function Power(A : Float; B : Natural) return Float;
       function Power(A : Float; B : Natural) return Float is
          Total : Float := 1.0;
          Count : Natural := B;
