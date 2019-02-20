@@ -69,7 +69,7 @@ package HAL.Bitmap is
       Y : Natural;
    end record;
 
-   type PointsArr is array (Natural range <>) of Point;
+   type Point_Array is array (Natural range <>) of Point;
 
    function "+" (P1, P2 : Point) return Point
      is ((P1.X + P2.X, P1.Y + P2.Y));
@@ -282,7 +282,7 @@ package HAL.Bitmap is
 
    procedure Bezier
      (Buffer         : in out Bitmap_Buffer;
-      InputPoints    : PointsArr;
+      Input_Points   : Point_Array;
       N              : Positive := 20;
       Thickness      : Natural := 1) is abstract;
 
