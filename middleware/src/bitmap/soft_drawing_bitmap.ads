@@ -172,4 +172,28 @@ package Soft_Drawing_Bitmap is
       N              : Positive := 20;
       Thickness      : Natural := 1);
 
+   overriding
+   procedure Bezier
+     (Buffer         : in out Soft_Drawing_Bitmap_Buffer;
+      Input_Points   : Point_Array;
+      N              : Positive := 20;
+      Thickness      : Natural := 1);
+
+private
+
+   type Natural_Array is array (Natural range <>) of Natural;
+
+   procedure Cubic_Bezier_Points
+     (P1, P2, P3, P4 : Point;
+      N              : Positive;
+      Points         : in out Point_Array);
+
+   procedure Bezier_Points
+     (Input_Points : Point_Array;
+      N            : Positive;
+      Points       : in out Point_Array);
+
+   procedure Binomial_Coefficients
+     (Outputs : in out Natural_Array);
+
 end Soft_Drawing_Bitmap;

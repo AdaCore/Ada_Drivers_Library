@@ -676,18 +676,15 @@ package body Soft_Drawing_Bitmap is
       end loop;
    end Fill_Circle;
 
-   ------------------
-   -- Cubic_Bezier --
-   ------------------
+   -------------------------
+   -- Cubic_Bezier_Points --
+   -------------------------
 
-   overriding
-   procedure Cubic_Bezier
-     (Buffer         : in out Soft_Drawing_Bitmap_Buffer;
-      P1, P2, P3, P4 : Point;
-      N              : Positive := 20;
-      Thickness      : Natural := 1)
+   procedure Cubic_Bezier_Points
+     (P1, P2, P3, P4 : Point;
+      N              : Positive;
+      Points         : in out Point_Array)
    is
-      Points : array (0 .. N) of Point;
    begin
       for I in Points'Range loop
          declare
@@ -707,10 +704,122 @@ package body Soft_Drawing_Bitmap is
                                     D * Float (P4.Y));
          end;
       end loop;
+   end Cubic_Bezier_Points;
+
+   ---------------------------
+   -- Binomial_Coefficients --
+   ---------------------------
+
+   procedure Binomial_Coefficients
+     (Outputs     : in out Natural_Array)
+   is
+      N : constant Integer := Outputs'Length - 1;
+      F : constant Natural := Outputs'First;
+      L : constant Natural := Outputs'Last;
+      X : Natural;
+   begin
+      if N < 0 then
+         return;
+      end if;
+      Outputs (F) := 1;
+      Outputs (L) := 1;
+      for I in 0 .. (N / 2) - 1 loop
+         X := Outputs (F + I) * (N - I) / (I + 1);
+         Outputs (F + I + 1) := X;
+         Outputs (F + N - I - 1) := X;
+      end loop;
+   end Binomial_Coefficients;
+
+   -------------------
+   -- Bezier_Points --
+   -------------------
+
+   procedure Bezier_Points
+     (Input_Points : Point_Array;
+      N            : Positive;
+      Points       : in out Point_Array)
+   is
+      Degree : constant Integer := Input_Points'Last - Input_Points'First;
+      Binomial_Coeffs : Natural_Array (0 .. Degree);
+      Float_X, Float_Y, T, Total_Coeff : Float;
+
+      -----------
+      -- Power --
+      -----------
+
+      function Power (A : Float; B : Natural) return Float;
+
+      function Power (A : Float; B : Natural) return Float
+      is
+         Result : Float := 1.0;
+         Exp : Natural := B;
+         Base : Float := A;
+      begin
+         while Exp /= 0 loop
+            if Exp mod 2 = 1 then
+               Result := Result * Base;
+            end if;
+            Exp := Exp / 2;
+            exit when Exp = 0;
+            Base := Base * Base;
+         end loop;
+         return Result;
+      end Power;
+
+   begin
+      Binomial_Coefficients (Binomial_Coeffs);
+      for I in Points'Range loop
+         Float_X := 0.0;
+         Float_Y := 0.0;
+         T := Float (I) / Float (N);
+         for K in 0 .. Degree loop
+            Total_Coeff := (Float (Binomial_Coeffs (K)) * Power ((1.0 - T), (Degree - K)) * Power (T, K));
+            Float_X := Float_X + (Total_Coeff * Float (Input_Points (Input_Points'First + K).X));
+            Float_Y := Float_Y + (Total_Coeff * Float (Input_Points (Input_Points'First + K).Y));
+         end loop;
+         Points (I).X := Natural (Float_X);
+         Points (I).Y := Natural (Float_Y);
+      end loop;
+   end Bezier_Points;
+
+   ------------------
+   -- Cubic_Bezier --
+   ------------------
+
+   overriding
+   procedure Cubic_Bezier
+     (Buffer         : in out Soft_Drawing_Bitmap_Buffer;
+      P1, P2, P3, P4 : Point;
+      N              : Positive := 20;
+      Thickness      : Natural := 1)
+   is
+      Points : Point_Array (0 .. N);
+   begin
+      Cubic_Bezier_Points (P1, P2, P3, P4, N, Points);
       for I in Points'First .. Points'Last - 1 loop
          Dispatch (Buffer).Draw_Line (Points (I), Points (I + 1),
                                       Thickness => Thickness);
       end loop;
    end Cubic_Bezier;
+
+   ------------
+   -- Bezier --
+   ------------
+
+   overriding
+   procedure Bezier
+     (Buffer         : in out Soft_Drawing_Bitmap_Buffer;
+      Input_Points   : Point_Array;
+      N              : Positive := 20;
+      Thickness      : Natural := 1)
+   is
+      Points : Point_Array (0 .. N);
+   begin
+      Bezier_Points (Input_Points, N, Points);
+      for I in Points'First .. Points'Last - 1 loop
+         Dispatch (Buffer).Draw_Line (Points (I), Points (I + 1),
+                                      Thickness => Thickness);
+      end loop;
+   end Bezier;
 
 end Soft_Drawing_Bitmap;

@@ -10,7 +10,7 @@ some middleware services and drivers for external devices such as sensors. We
 intend this to be a location for both AdaCore and the community in general to
 contribute support for additional processors, platforms, and vendors.
 
-# 3. Supported hardware
+# 2. Supported hardware
 
 Ada_Drivers_Library provides support for various devices in the ARM Cortex-M
 and RISC-V architectures. Some devices are only partially supported. Go to the
@@ -75,6 +75,7 @@ GitHub page.
  * [Bosch 9DOF IMU demo: Bosch 9DOF IMU driving a 3-D model of a lunar lander](
 https://github.com/AdaCore/Lunar_Lander_Rotation_Demo)
  * [Bare metal sudoku solver](https://github.com/stangassinger/sudoku)
+ * [Demo of an Ada physics engine](https://github.com/Kidev/DemoAdaPhysics2D)
 
 (Add yours to the list!)
 
