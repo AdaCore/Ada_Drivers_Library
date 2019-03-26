@@ -18,6 +18,8 @@ def list_of_devices(config):
         return ['nRF51822xxAA']
     elif family == "FE3":
         return ['FE310']
+    elif family == "E3":
+        return ['E31']
     else:
         print "fatal error, unknown family '%s'" % family
         sys.exit(1)
@@ -43,7 +45,7 @@ def list_of_families(config):
     elif vendor == "Nordic":
         return ["nRF51"]
     elif vendor == "SiFive":
-        return ['FE3']
+        return ['FE3', 'E3']
     else:
         print "fatal error, unknown vendor '%s'" % vendor
         sys.exit(1)
@@ -155,6 +157,11 @@ def load_device_config(config):
     elif mcu == 'FE310':
         src += ['arch/RISC-V/SiFive/svd/FE310/',
                 'arch/RISC-V/SiFive/devices/FE310/',
+                'arch/RISC-V/SiFive/drivers/']
+
+    elif mcu == 'E31':
+        src += ['arch/RISC-V/SiFive/svd/E31/',
+                'arch/RISC-V/SiFive/devices/E31/',
                 'arch/RISC-V/SiFive/drivers/']
 
     else:

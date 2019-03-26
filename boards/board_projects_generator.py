@@ -6,6 +6,7 @@ from subprocess import check_call
 BOARDS = {
     'Crazyflie':           { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
     'HiFive1':             { 'rts_profiles': ['zfp']},
+    'E31Arty':             { 'rts_profiles': ['zfp']},
     'MicroBit':            { 'rts_profiles': ['zfp']},
     'Native':              { 'rts_profiles': ['none']},
     'OpenMV2':             { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
@@ -20,6 +21,7 @@ BOARDS = {
 
 FOLDERS = {'Crazyflie': 'crazyflie',
            'HiFive1': 'HiFive1',
+           'E31Arty': 'E31Arty',
            'MicroBit': 'MicroBit',
            'Native': 'native',
            'OpenMV2': 'OpenMV2',

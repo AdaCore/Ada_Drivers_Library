@@ -1,8 +1,8 @@
-with "../../boards/HiFive1/hifive1_zfp.gpr";
+with "../../boards/E31Arty/e31arty_zfp.gpr";
 
-project HiFive1_Example is
+project E31Arty_Example is
 
-  for Runtime ("ada") use "zfp-hifive1";
+  for Runtime ("ada") use "zfp-e31arty";
   for Target use "riscv32-elf";
   for Main use ("main.adb");
   for Languages use ("Ada");
@@ -10,7 +10,7 @@ project HiFive1_Example is
   for Object_Dir use "obj";
   for Create_Missing_Dirs use "True";
 
-  package Compiler renames HiFive1_ZFP.Compiler;
+  package Compiler renames E31Arty_ZFP.Compiler;
 
   package Linker is
      for Default_Switches ("Ada") use ("-Wl,--print-memory-usage",
@@ -22,4 +22,4 @@ project HiFive1_Example is
      for Communication_Protocol use "remote";
   end Ide;
 
-end HiFive1_Example;
+end E31Arty_Example;

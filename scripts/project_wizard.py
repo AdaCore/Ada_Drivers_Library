@@ -47,7 +47,7 @@ def mcu_config(config):
             core = "ARM Cortex-M7F"
         elif device.startswith("nRF51"):
             core = "ARM Cortex-M0"
-        elif device.startswith("FE3"):
+        elif device.startswith("FE3") or device.startswith("E3"):
             core = "RISC-V32"
 
         config.set_config_string_key("CPU_Core", core, "mcu definition")
@@ -57,7 +57,7 @@ def mcu_config(config):
         if family.startswith("STM32"):
             config.query_integer_key("High_Speed_External_Clock",
                                      1000000, 32000000)
-        elif family.startswith("FE310"):
+        elif family.startswith("FE310") or family.startswith("E31"):
             config.query_integer_key("FLASH_SIZE")
 
         load_cpu_config(config)

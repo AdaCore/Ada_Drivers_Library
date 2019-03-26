@@ -147,7 +147,7 @@ package E31_SVD.UART is
    -----------------
 
    --  Universal Asynchronous Receiver/Transmitter.
-   type UART0_Peripheral is record
+   type UART_Peripheral is record
       --  Transmit Data Register.
       TXDATA : aliased TXDATA_Register;
       --  Receive Data Register.
@@ -165,7 +165,7 @@ package E31_SVD.UART is
    end record
      with Volatile;
 
-   for UART0_Peripheral use record
+   for UART_Peripheral use record
       TXDATA at 16#0# range 0 .. 31;
       RXDATA at 16#4# range 0 .. 31;
       TXCTRL at 16#8# range 0 .. 31;
@@ -176,7 +176,7 @@ package E31_SVD.UART is
    end record;
 
    --  Universal Asynchronous Receiver/Transmitter.
-   UART0_Periph : aliased UART0_Peripheral
+   UART0_Periph : aliased UART_Peripheral
      with Import, Address => UART0_Base;
 
 end E31_SVD.UART;

@@ -33,27 +33,15 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with E31Arty;
-with E31Arty.LEDs; use E31Arty.LEDs;
-with E31.Time; use E31.Time;
+with HAL; use HAL;
 
-procedure Main is
+package E31 is
 
-begin
-   E31Arty.LEDs.Initialize;
+   LF_Clock_Frequency : constant := 32768;
 
-   --  Blinky!
-   loop
-      Turn_On (Red_LED);
-      Delay_S (1);
-      Turn_Off (Red_LED);
+   function CPU_Frequency return UInt32;
+   --  Compute CPU frequency
+private
 
-      Turn_On (Green_LED);
-      Delay_S (1);
-      Turn_Off (Green_LED);
+end E31;
 
-      Turn_On (Blue_LED);
-      Delay_S (1);
-      Turn_Off (Blue_LED);
-   end loop;
-end Main;

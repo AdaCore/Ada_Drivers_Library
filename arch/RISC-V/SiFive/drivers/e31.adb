@@ -33,27 +33,14 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with E31Arty;
-with E31Arty.LEDs; use E31Arty.LEDs;
-with E31.Time; use E31.Time;
+package body E31 is
 
-procedure Main is
+   -------------------
+   -- CPU_Frequency --
+   -------------------
 
-begin
-   E31Arty.LEDs.Initialize;
-
-   --  Blinky!
-   loop
-      Turn_On (Red_LED);
-      Delay_S (1);
-      Turn_Off (Red_LED);
-
-      Turn_On (Green_LED);
-      Delay_S (1);
-      Turn_Off (Green_LED);
-
-      Turn_On (Blue_LED);
-      Delay_S (1);
-      Turn_Off (Blue_LED);
-   end loop;
-end Main;
+   function CPU_Frequency return UInt32 is
+   begin
+      return 65_000_000;
+   end CPU_Frequency;
+end E31;

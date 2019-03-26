@@ -1,10 +1,7 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2017-2018, AdaCore and other contributors         --
+--                    Copyright (C) 2017-2018, AdaCore                      --
 --          Copyright (C) 2019, Boran Car <boran.car@hex-five.com>          --
---                                                                          --
---      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
---                           for more information                           --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -33,27 +30,49 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with E31Arty;
-with E31Arty.LEDs; use E31Arty.LEDs;
-with E31.Time; use E31.Time;
+with HAL.GPIO; use HAL.GPIO;
 
-procedure Main is
+package body E31Arty.LEDs is
 
-begin
-   E31Arty.LEDs.Initialize;
+   ----------------
+   -- Initialize --
+   ----------------
 
-   --  Blinky!
-   loop
-      Turn_On (Red_LED);
-      Delay_S (1);
-      Turn_Off (Red_LED);
-
-      Turn_On (Green_LED);
-      Delay_S (1);
+   procedure Initialize is
+   begin
+      Green_LED.Set_Mode (Output);
+      Green_LED.Set_Pull_Resistor (Pull_Up);
       Turn_Off (Green_LED);
 
-      Turn_On (Blue_LED);
-      Delay_S (1);
+      Red_LED.Set_Mode (Output);
+      Red_LED.Set_Pull_Resistor (Pull_Up);
+      Turn_Off (Red_LED);
+
+      Blue_LED.Set_Mode (Output);
+      Blue_LED.Set_Pull_Resistor (Pull_Up);
       Turn_Off (Blue_LED);
-   end loop;
-end Main;
+   end Initialize;
+
+   ------------------
+   -- All_LEDs_Off --
+   ------------------
+
+   procedure All_LEDs_Off is
+   begin
+      Turn_Off (Green_LED);
+      Turn_Off (Blue_LED);
+      Turn_Off (Red_LED);
+   end All_LEDs_Off;
+
+   -----------------
+   -- All_LEDs_On --
+   -----------------
+
+   procedure All_LEDs_On is
+   begin
+      Turn_On (Green_LED);
+      Turn_On (Blue_LED);
+      Turn_On (Red_LED);
+   end All_LEDs_On;
+
+end E31Arty.LEDs;

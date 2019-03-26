@@ -13,6 +13,7 @@ def list_of_boards():
             'OpenMV2',
             "MicroBit",
             "HiFive1",
+            "E31Arty",
             'Native']
 
 
@@ -154,6 +155,18 @@ def load_board_config(config):
         config.pre_define('Runtime_Name_Suffix', 'hifive1', origin)
         config.add_memory('rom', 'board_flash', '0x20400000', '512M')
         config.add_source_dir('boards/HiFive1/src/', origin)
+
+    elif board == "E31Arty":
+        config.pre_define('Architecture', 'RISC-V', origin)
+        config.pre_define('Vendor', 'SiFive', origin)
+        config.pre_define('Device_Family', 'E3', origin)
+        config.pre_define('Device_Name', 'E31', origin)
+        config.pre_define('Has_ZFP_Runtime', 'True', origin)
+        config.pre_define('Has_Ravenscar_SFP_Runtime', 'False', origin)
+        config.pre_define('Has_Ravenscar_Full_Runtime', 'False', origin)
+        config.pre_define('Runtime_Name_Suffix', 'e31arty', origin)
+        config.add_memory('rom', 'board_flash', '0x40400000', '512M')
+        config.add_source_dir('boards/E31Arty/src/', origin)
 
     elif board == "Native":
         config.pre_define('Architecture', 'Native', origin)
