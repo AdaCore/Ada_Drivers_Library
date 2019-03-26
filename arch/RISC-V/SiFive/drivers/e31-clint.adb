@@ -32,9 +32,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310_SVD.CLINT; use FE310_SVD.CLINT;
+with E31_SVD.CLINT; use E31_SVD.CLINT;
 
-package body FE310.CLINT is
+package body E31.CLINT is
 
    ------------------
    -- Machine_Time --
@@ -79,4 +79,4 @@ package body FE310.CLINT is
    end Machine_Time_Compare;
 
 
-end FE310.CLINT;
+end E31.CLINT;

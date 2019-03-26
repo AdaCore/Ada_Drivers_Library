@@ -31,7 +31,7 @@
 
 with HAL.GPIO;
 
-package FE310.GPIO is
+package E31.GPIO is
 
    subtype GPIO_Pin_Index is Natural range 0 .. 31;
 
@@ -40,7 +40,7 @@ package FE310.GPIO is
 
    type IO_Function is (Disabled, IOF0, IOF1);
    --  Alternative function for a GPIO pin (UART, SPI, PWM, etc).
-   --  The IOF values are defined in the package FE310.Device.
+   --  The IOF values are defined in the package E31.Device.
 
    procedure Set_IO_Function (This : in out GPIO_Point;
                               Func : IO_Function);
@@ -95,4 +95,4 @@ private
    type GPIO_Point (Pin : GPIO_Pin_Index) is new HAL.GPIO.GPIO_Point with
      null record;
 
-end FE310.GPIO;
+end E31.GPIO;

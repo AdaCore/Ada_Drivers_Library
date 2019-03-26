@@ -34,7 +34,7 @@
 
 with HAL.Time;
 
-package FE310.Time is
+package E31.Time is
 
    procedure Delay_Us (Us : Positive);
    procedure Delay_Ms (Ms : Positive);
@@ -58,4 +58,4 @@ private
    procedure Delay_Seconds      (This : in out HF1_Delays;
                                  S    : Integer);
 
-end FE310.Time;
+end E31.Time;

@@ -29,10 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310_SVD.GPIO; use FE310_SVD.GPIO;
-with HAL.GPIO;       use HAL.GPIO;
+with E31_SVD.GPIO; use E31_SVD.GPIO;
+with HAL.GPIO;     use HAL.GPIO;
 
-package body FE310.GPIO is
+package body E31.GPIO is
 
    ---------------------
    -- Set_IO_Function --
@@ -166,4 +166,4 @@ package body FE310.GPIO is
       GPIO0_Periph.PORT.Arr (This.Pin) := not GPIO0_Periph.VALUE.Arr (This.Pin);
    end Toggle;
 
-end FE310.GPIO;
+end E31.GPIO;

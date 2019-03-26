@@ -29,13 +29,13 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310_SVD.UART; use FE310_SVD.UART;
+with E31_SVD.UART; use E31_SVD.UART;
 
 ----------------
--- FE310.UART --
+-- E31.UART --
 ----------------
 
-package body FE310.UART is
+package body E31.UART is
 
    -------------------
    -- Set_Stop_Bits --
@@ -191,7 +191,7 @@ package body FE310.UART is
       Timeout : Natural := 1000)
    is
    begin
-      raise Program_Error with "FE310 UART only support 8bit mode";
+      raise Program_Error with "E31 UART only support 8bit mode";
    end Transmit;
 
    -------------
@@ -230,7 +230,7 @@ package body FE310.UART is
       Timeout : Natural := 1000)
    is
    begin
-      raise Program_Error with "FE310 UART only support 8bit mode";
+      raise Program_Error with "E31 UART only support 8bit mode";
    end Receive;
 
-end FE310.UART;
+end E31.UART;

@@ -32,10 +32,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310; use FE310;
-with FE310.CLINT; use FE310.CLINT;
+with E31; use E31;
+with E31.CLINT; use E31.CLINT;
 
-package body FE310.Time is
+package body E31.Time is
 
    ---------------
    -- HAL_Delay --
@@ -108,4 +108,4 @@ package body FE310.Time is
       Delay_S (S);
    end Delay_Seconds;
 
-end FE310.Time;
+end E31.Time;

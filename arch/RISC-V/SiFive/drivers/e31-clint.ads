@@ -32,7 +32,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package FE310.CLINT is
+package E31.CLINT is
 
    subtype Machine_Time_Value is UInt64;
 
@@ -42,4 +42,4 @@ package FE310.CLINT is
 
    function Machine_Time_Compare return Machine_Time_Value;
 
-end FE310.CLINT;
+end E31.CLINT;

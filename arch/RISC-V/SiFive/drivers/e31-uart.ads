@@ -31,9 +31,9 @@
 
 with HAL.UART; use HAL.UART;
 
-private with FE310_SVD.UART;
+private with E31_SVD.UART;
 
-package FE310.UART is
+package E31.UART is
 
    type Internal_UART is limited private;
 
@@ -78,7 +78,7 @@ package FE310.UART is
    overriding
    function Data_Size (Port : UART_Port) return UART_Data_Size
    is (Data_Size_8b);
-   --  FE310 UARTs are 8bits only
+   --  E31 UARTs are 8bits only
 
    overriding
    procedure Transmit
@@ -110,9 +110,9 @@ package FE310.UART is
 
 private
 
-   type Internal_UART is new FE310_SVD.UART.UART_Peripheral;
+   type Internal_UART is new E31_SVD.UART.UART_Peripheral;
 
    type UART_Port (Periph : not null access Internal_UART) is
      limited new HAL.UART.UART_Port with null record;
 
-end FE310.UART;
+end E31.UART;
