@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2017, AdaCore                     --
+--                     Copyright (C) 2015-2019, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -57,6 +57,8 @@ package Filesystem.FAT is
    type FAT_Name is private;
 
    type FAT_Filesystem is limited new Filesystem_Driver with private;
+
+   type FAT_Filesystem_Access is access all FAT_Filesystem;
 
    type FAT_Node is new Node_Handle with private;
 
@@ -168,7 +170,6 @@ private
    type Cluster_Type is new Interfaces.Unsigned_32;
    subtype Valid_Cluster is Cluster_Type range 2 .. 16#0FFF_FFFF#;
    type Block_Offset is new Interfaces.Unsigned_32;
-   type FAT_Filesystem_Access is access all FAT_Filesystem;
    type FAT_File_Size is new Interfaces.Unsigned_32;
    --  FAT Filesystem does not support files >= 4GB (e.g. 2**32)
 
