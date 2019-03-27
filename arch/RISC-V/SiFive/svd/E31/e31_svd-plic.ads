@@ -1,4 +1,4 @@
---  This spec has been automatically generated from FE310.svd
+--  This spec has been automatically generated from E31.svd
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
@@ -7,7 +7,7 @@ pragma Style_Checks (Off);
 with HAL;
 with System;
 
-package FE310_SVD.PLIC is
+package E31_SVD.PLIC is
    pragma Preelaborate;
 
    ---------------
@@ -31,31 +31,44 @@ package FE310_SVD.PLIC is
    end record;
 
    --  PLIC Interrupt Priority Register.
-   type PRIORITY_Registers is array (0 .. 51) of PRIORITY_Register;
+   type PRIORITY_Registers is array (0 .. 26) of PRIORITY_Register;
 
    --  PENDING_INT array
-   type PENDING_INT_Field_Array is array (0 .. 31) of Boolean
-     with Component_Size => 1, Size => 32;
+   type PENDING_INT_Field_Array is array (0 .. 26) of Boolean
+     with Component_Size => 1, Size => 27;
 
-   --  PLIC Interrupt Pending Register.
-   type PENDING_Register
+   --  Type definition for PENDING_INT
+   type PENDING_INT_Field
      (As_Array : Boolean := False)
    is record
       case As_Array is
          when False =>
             --  INT as a value
-            Val : HAL.UInt32;
+            Val : HAL.UInt27;
          when True =>
             --  INT as an array
             Arr : PENDING_INT_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32, Volatile_Full_Access, Object_Size => 32,
+     with Unchecked_Union, Size => 27;
+
+   for PENDING_INT_Field use record
+      Val at 0 range 0 .. 26;
+      Arr at 0 range 0 .. 26;
+   end record;
+
+   --  PLIC Interrupt Pending Register.
+   type PENDING_Register is record
+      INT            : PENDING_INT_Field := (As_Array => False, Val => 16#0#);
+      --  unspecified
+      Reserved_27_31 : HAL.UInt5 := 16#0#;
+   end record
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for PENDING_Register use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
+      INT            at 0 range 0 .. 26;
+      Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
    --  PLIC Interrupt Pending Register.
@@ -66,28 +79,42 @@ package FE310_SVD.PLIC is
    ---------------------------------------
 
    --  ENABLE_TARGET_ENABLE_INT array
-   type ENABLE_TARGET_ENABLE_INT_Field_Array is array (0 .. 31) of Boolean
-     with Component_Size => 1, Size => 32;
+   type ENABLE_TARGET_ENABLE_INT_Field_Array is array (0 .. 26) of Boolean
+     with Component_Size => 1, Size => 27;
 
-   --  PLIC Interrupt Enable Register.
-   type ENABLE_TARGET_ENABLE_Register
+   --  Type definition for ENABLE_TARGET_ENABLE_INT
+   type ENABLE_TARGET_ENABLE_INT_Field
      (As_Array : Boolean := False)
    is record
       case As_Array is
          when False =>
             --  INT as a value
-            Val : HAL.UInt32;
+            Val : HAL.UInt27;
          when True =>
             --  INT as an array
             Arr : ENABLE_TARGET_ENABLE_INT_Field_Array;
       end case;
    end record
-     with Unchecked_Union, Size => 32, Volatile_Full_Access, Object_Size => 32,
+     with Unchecked_Union, Size => 27;
+
+   for ENABLE_TARGET_ENABLE_INT_Field use record
+      Val at 0 range 0 .. 26;
+      Arr at 0 range 0 .. 26;
+   end record;
+
+   --  PLIC Interrupt Enable Register.
+   type ENABLE_TARGET_ENABLE_Register is record
+      INT            : ENABLE_TARGET_ENABLE_INT_Field :=
+                        (As_Array => False, Val => 16#0#);
+      --  unspecified
+      Reserved_27_31 : HAL.UInt5 := 16#0#;
+   end record
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for ENABLE_TARGET_ENABLE_Register use record
-      Val at 0 range 0 .. 31;
-      Arr at 0 range 0 .. 31;
+      INT            at 0 range 0 .. 26;
+      Reserved_27_31 at 0 range 27 .. 31;
    end record;
 
    --  PLIC Interrupt Enable Register.
@@ -166,7 +193,7 @@ package FE310_SVD.PLIC is
      with Volatile;
 
    for PLIC_Peripheral use record
-      PRIORITY      at 16#0# range 0 .. 1663;
+      PRIORITY      at 16#0# range 0 .. 863;
       PENDING       at 16#1000# range 0 .. 63;
       TARGET_ENABLE at 16#2000# range 0 .. 63;
       TARGET        at 16#200000# range 0 .. 63;
@@ -176,4 +203,4 @@ package FE310_SVD.PLIC is
    PLIC_Periph : aliased PLIC_Peripheral
      with Import, Address => PLIC_Base;
 
-end FE310_SVD.PLIC;
+end E31_SVD.PLIC;

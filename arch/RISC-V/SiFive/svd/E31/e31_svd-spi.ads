@@ -1,4 +1,4 @@
---  This spec has been automatically generated from FE310.svd
+--  This spec has been automatically generated from E31.svd
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
@@ -7,7 +7,7 @@ pragma Style_Checks (Off);
 with HAL;
 with System;
 
-package FE310_SVD.SPI is
+package E31_SVD.SPI is
    pragma Preelaborate;
 
    ---------------
@@ -22,7 +22,7 @@ package FE310_SVD.SPI is
       --  unspecified
       Reserved_12_31 : HAL.UInt20 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for SCKDIV_Register use record
@@ -32,12 +32,11 @@ package FE310_SVD.SPI is
 
    --  Serial Clock Phase
    type SCKMODE_CPHA is
-     (
-      --  Data is sampled on the leading edge of SCK and shifted on the
-      --  trailing edge of SCK.
+     (--  Data is sampled on the leading edge of SCK and shifted on the trailing edge
+--  of SCK.
       Val_0,
-      --  Data is shifted on the leading edge of SCK and sampled on the
-      --  trailing edge of SCK.
+      --  Data is shifted on the leading edge of SCK and sampled on the trailing edge
+--  of SCK.
       Val_1)
      with Size => 1;
    for SCKMODE_CPHA use
@@ -46,8 +45,7 @@ package FE310_SVD.SPI is
 
    --  Serial Clock Polarity
    type SCKMODE_CPOL is
-     (
-      --  Inactive state of SCK is logical 0.
+     (--  Inactive state of SCK is logical 0.
       Val_0,
       --  Inactive state of SCK is logical 1.
       Val_1)
@@ -59,13 +57,13 @@ package FE310_SVD.SPI is
    --  Serial Clock Mode Register.
    type SCKMODE_Register is record
       --  Serial Clock Phase
-      PHA           : SCKMODE_CPHA := FE310_SVD.SPI.Val_0;
+      PHA           : SCKMODE_CPHA := E31_SVD.SPI.Val_0;
       --  Serial Clock Polarity
-      POL           : SCKMODE_CPOL := FE310_SVD.SPI.Val_0;
+      POL           : SCKMODE_CPOL := E31_SVD.SPI.Val_0;
       --  unspecified
       Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for SCKMODE_Register use record
@@ -75,8 +73,7 @@ package FE310_SVD.SPI is
    end record;
 
    type CSMODE_Chip_Select_Modes is
-     (
-      --  Assert/de-assert CS at the beginning/end of each frame.
+     (--  Assert/de-assert CS at the beginning/end of each frame.
       Auto,
       --  Keep CS continuously asserted after the initial frame.
       Hold,
@@ -90,11 +87,11 @@ package FE310_SVD.SPI is
 
    --  Chip Select Mode Register.
    type CSMODE_Register is record
-      MODE          : CSMODE_Chip_Select_Modes := FE310_SVD.SPI.Auto;
+      MODE          : CSMODE_Chip_Select_Modes := E31_SVD.SPI.Auto;
       --  unspecified
       Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for CSMODE_Register use record
@@ -114,7 +111,7 @@ package FE310_SVD.SPI is
       --  unspecified
       Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DELAY0_Register use record
@@ -136,7 +133,7 @@ package FE310_SVD.SPI is
       --  unspecified
       Reserved_24_31 : HAL.UInt8 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DELAY1_Register use record
@@ -147,8 +144,7 @@ package FE310_SVD.SPI is
    end record;
 
    type FMT_SPI_Protocol is
-     (
-      --  Data Pins: DQ0 (MOSI), DQ1 (MISO).
+     (--  Data Pins: DQ0 (MOSI), DQ1 (MISO).
       Single,
       --  Data Pins: DQ0, DQ1.
       Dual,
@@ -161,8 +157,7 @@ package FE310_SVD.SPI is
       Quad => 2);
 
    type FMT_SPI_Endianness is
-     (
-      --  Tansmit most-significant bit first.
+     (--  Tansmit most-significant bit first.
       Msb_First,
       --  Transmit least-significant bit first.
       Lsb_First)
@@ -172,10 +167,8 @@ package FE310_SVD.SPI is
       Lsb_First => 1);
 
    type FMT_SPI_IO_Direction is
-     (
-      --  For dual and quad protocols, the DQ pins are tri-stated. For the
-      --  single protocol, the DQ0 pin is driven with the transmit data as
-      --  normal.
+     (--  For dual and quad protocols, the DQ pins are tri-stated. For the single
+--  protocol, the DQ0 pin is driven with the transmit data as normal.
       Rx,
       --  The receive FIFO is not populated.
       Tx)
@@ -188,16 +181,16 @@ package FE310_SVD.SPI is
 
    --  Frame Format Register.
    type FMT_Register is record
-      PROTO          : FMT_SPI_Protocol := FE310_SVD.SPI.Single;
-      ENDIAN         : FMT_SPI_Endianness := FE310_SVD.SPI.Msb_First;
-      DIR            : FMT_SPI_IO_Direction := FE310_SVD.SPI.Rx;
+      PROTO          : FMT_SPI_Protocol := E31_SVD.SPI.Single;
+      ENDIAN         : FMT_SPI_Endianness := E31_SVD.SPI.Msb_First;
+      DIR            : FMT_SPI_IO_Direction := E31_SVD.SPI.Rx;
       --  unspecified
       Reserved_4_15  : HAL.UInt12 := 16#0#;
       LEN            : FMT_LEN_Field := 16#0#;
       --  unspecified
       Reserved_20_31 : HAL.UInt12 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for FMT_Register use record
@@ -218,7 +211,7 @@ package FE310_SVD.SPI is
       Reserved_8_30 : HAL.UInt23 := 16#0#;
       FULL          : Boolean := False;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for TXDATA_Register use record
@@ -236,7 +229,7 @@ package FE310_SVD.SPI is
       Reserved_8_30 : HAL.UInt23 := 16#0#;
       EMPTY         : Boolean := False;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for RXDATA_Register use record
@@ -253,7 +246,7 @@ package FE310_SVD.SPI is
       --  unspecified
       Reserved_3_31 : HAL.UInt29 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for TXMARK_Register use record
@@ -269,7 +262,7 @@ package FE310_SVD.SPI is
       --  unspecified
       Reserved_3_31 : HAL.UInt29 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for RXMARK_Register use record
@@ -283,7 +276,7 @@ package FE310_SVD.SPI is
       --  unspecified
       Reserved_1_31 : HAL.UInt31 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for FCTRL_Register use record
@@ -312,7 +305,7 @@ package FE310_SVD.SPI is
       CMD_CODE       : FFMT_CMD_CODE_Field := 16#0#;
       PAD_CODE       : FFMT_PAD_CODE_Field := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for FFMT_Register use record
@@ -334,7 +327,7 @@ package FE310_SVD.SPI is
       --  unspecified
       Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for IE_Register use record
@@ -350,7 +343,7 @@ package FE310_SVD.SPI is
       --  unspecified
       Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for IP_Register use record
@@ -364,7 +357,7 @@ package FE310_SVD.SPI is
    -----------------
 
    --  Serial Peripheral Interface.
-   type SPI_Peripheral is record
+   type QSPI0_Peripheral is record
       --  Serial Clock Divisor Register.
       SCKDIV  : aliased SCKDIV_Register;
       --  Serial Clock Mode Register.
@@ -400,7 +393,7 @@ package FE310_SVD.SPI is
    end record
      with Volatile;
 
-   for SPI_Peripheral use record
+   for QSPI0_Peripheral use record
       SCKDIV  at 16#0# range 0 .. 31;
       SCKMODE at 16#4# range 0 .. 31;
       CSID    at 16#10# range 0 .. 31;
@@ -420,15 +413,7 @@ package FE310_SVD.SPI is
    end record;
 
    --  Serial Peripheral Interface.
-   QSPI0_Periph : aliased SPI_Peripheral
-     with Import, Address => System'To_Address (16#10014000#);
+   QSPI0_Periph : aliased QSPI0_Peripheral
+     with Import, Address => QSPI0_Base;
 
-   --  Serial Peripheral Interface.
-   QSPI1_Periph : aliased SPI_Peripheral
-     with Import, Address => System'To_Address (16#10024000#);
-
-   --  Serial Peripheral Interface.
-   QSPI2_Periph : aliased SPI_Peripheral
-     with Import, Address => System'To_Address (16#10034000#);
-
-end FE310_SVD.SPI;
+end E31_SVD.SPI;

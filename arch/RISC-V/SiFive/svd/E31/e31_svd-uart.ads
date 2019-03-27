@@ -1,4 +1,4 @@
---  This spec has been automatically generated from FE310.svd
+--  This spec has been automatically generated from E31.svd
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
@@ -7,7 +7,7 @@ pragma Style_Checks (Off);
 with HAL;
 with System;
 
-package FE310_SVD.UART is
+package E31_SVD.UART is
    pragma Preelaborate;
 
    ---------------
@@ -23,7 +23,7 @@ package FE310_SVD.UART is
       Reserved_8_30 : HAL.UInt23 := 16#0#;
       FULL          : Boolean := False;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for TXDATA_Register use record
@@ -41,7 +41,7 @@ package FE310_SVD.UART is
       Reserved_8_30 : HAL.UInt23 := 16#0#;
       EMPTY         : Boolean := False;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for RXDATA_Register use record
@@ -62,7 +62,7 @@ package FE310_SVD.UART is
       --  unspecified
       Reserved_19_31 : HAL.UInt13 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for TXCTRL_Register use record
@@ -84,7 +84,7 @@ package FE310_SVD.UART is
       --  unspecified
       Reserved_19_31 : HAL.UInt13 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for RXCTRL_Register use record
@@ -101,7 +101,7 @@ package FE310_SVD.UART is
       --  unspecified
       Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for IP_Register use record
@@ -117,7 +117,7 @@ package FE310_SVD.UART is
       --  unspecified
       Reserved_2_31 : HAL.UInt30 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for IE_Register use record
@@ -134,7 +134,7 @@ package FE310_SVD.UART is
       --  unspecified
       Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for DIV_Register use record
@@ -147,7 +147,7 @@ package FE310_SVD.UART is
    -----------------
 
    --  Universal Asynchronous Receiver/Transmitter.
-   type UART_Peripheral is record
+   type UART0_Peripheral is record
       --  Transmit Data Register.
       TXDATA : aliased TXDATA_Register;
       --  Receive Data Register.
@@ -165,7 +165,7 @@ package FE310_SVD.UART is
    end record
      with Volatile;
 
-   for UART_Peripheral use record
+   for UART0_Peripheral use record
       TXDATA at 16#0# range 0 .. 31;
       RXDATA at 16#4# range 0 .. 31;
       TXCTRL at 16#8# range 0 .. 31;
@@ -176,11 +176,7 @@ package FE310_SVD.UART is
    end record;
 
    --  Universal Asynchronous Receiver/Transmitter.
-   UART0_Periph : aliased UART_Peripheral
-     with Import, Address => System'To_Address (16#10013000#);
+   UART0_Periph : aliased UART0_Peripheral
+     with Import, Address => UART0_Base;
 
-   --  Universal Asynchronous Receiver/Transmitter.
-   UART1_Periph : aliased UART_Peripheral
-     with Import, Address => System'To_Address (16#10023000#);
-
-end FE310_SVD.UART;
+end E31_SVD.UART;
