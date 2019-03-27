@@ -20,8 +20,9 @@ procedure TC_Bitmap_Drawing is
 
    function Allocate_Bitmap return not null Any_Bitmap_Buffer is
       type Pixel_Data is new HAL.UInt16_Array (1 .. BM_Height * BM_Height) with Pack;
-      BM : constant Any_Memory_Mapped_Bitmap_Buffer := new Memory_Mapped_Bitmap_Buffer;
-      Data : constant access Pixel_Data := new Pixel_Data;
+      type Pixel_Data_Access is access all Pixel_Data;
+      BM   : constant Any_Memory_Mapped_Bitmap_Buffer := new Memory_Mapped_Bitmap_Buffer;
+      Data : constant Pixel_Data_Access := new Pixel_Data;
    begin
       BM.Actual_Width := BM_Width;
       BM.Actual_Height := BM_Height;

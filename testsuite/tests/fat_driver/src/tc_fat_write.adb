@@ -178,7 +178,7 @@ procedure TC_FAT_Write is
    Disk_Img_Path      : constant String := "/" & Test_Dir_Mount_Name & "/fat.fs";
    Copy_Disk_Img_Path : constant String := "/" & Test_Dir_Mount_Name & "/obj/fat.fs.copy";
    Disk               : aliased File_Block_Driver;
-   FAT_FS             : access FAT_Filesystem;
+   FAT_FS             : FAT_Filesystem_Access;
 
    Status       : Status_Code;
    HALFS_Status : HAL.Filesystem.Status_Code;
@@ -211,8 +211,9 @@ begin
          return;
       end if;
 
-      Status := Mount_Volume (Mount_Point => "disk_img",
-                              FS          => FAT_FS);
+      Status := Mount_Volume
+        (Mount_Point => "disk_img",
+         FS          => HAL.Filesystem.Any_Filesystem_Driver (FAT_FS));
       if Status /= OK then
          Put_Line ("Cannot mount volume - Status: " & Status'Img);
          return;

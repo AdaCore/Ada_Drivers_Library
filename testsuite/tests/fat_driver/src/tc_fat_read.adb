@@ -132,7 +132,7 @@ procedure TC_FAT_Read is
 
    Disk_Img_Path : constant String := "/test_dir/fat.fs";
    Disk          : aliased File_Block_Driver;
-   FAT_FS        : access FAT_Filesystem;
+   FAT_FS        : FAT_Filesystem_Access;
    FIO_Status    : File_IO.Status_Code;
    HALFS_Status  : HAL.Filesystem.Status_Code;
 begin
@@ -157,7 +157,7 @@ begin
    end if;
 
    FIO_Status := File_IO.Mount_Volume (Mount_Point => "disk_img",
-                                       FS          => FAT_FS);
+                                       FS          => Any_Filesystem_Driver (FAT_FS));
    if FIO_Status /= OK then
       Put_Line ("Cannot mount volume - Status: " & FIO_Status'Img);
       return;
