@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---            Copyright (C) 2018, AdaCore and other contributors            --
+--            Copyright (C) 2019, AdaCore and other contributors            --
 --                                                                          --
 --      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
 --                           for more information                           --
@@ -32,30 +32,83 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Time;
+with HAL; use HAL;
+with SiFive; use SiFive;
+with SiFive.CLINT; use SiFive.CLINT;
 
-package FE310.Time is
+package body SiFive.Time is
 
-   procedure Delay_Us (Us : Positive);
-   procedure Delay_Ms (Ms : Positive);
-   procedure Delay_S (S : Positive);
+   ---------------
+   -- HAL_Delay --
+   ---------------
 
-   function HAL_Delay return not null HAL.Time.Any_Delays;
+   LF_Clock_Frequency : constant := 32768;
 
-private
+   Delay_Instance : aliased HF1_Delays;
 
-   type HF1_Delays is new HAL.Time.Delays with null record;
+   function HAL_Delay return not null HAL.Time.Any_Delays
+   is (Delay_Instance'Access);
+
+   ------------------------
+   -- Delay_Microseconds --
+   ------------------------
+
+   procedure Delay_Us (Us : Positive)
+   is
+      Start_Time : Machine_Time_Value;
+      End_Time : Machine_Time_Value;
+   begin
+      Start_Time := Machine_Time;
+      End_Time := Start_Time + (Machine_Time_Value (Us) * Machine_Time_Value (LF_Clock_Frequency)) / 1_000_000;
+
+      loop
+         exit when Machine_Time >= End_Time;
+      end loop;
+   end Delay_Us;
 
    overriding
    procedure Delay_Microseconds (This : in out HF1_Delays;
-                                 Us   : Integer);
+                                 Us   : Integer)
+   is
+      pragma Unreferenced (This);
+   begin
+      Delay_Us (Us);
+   end Delay_Microseconds;
+
+   ------------------------
+   -- Delay_Milliseconds --
+   ------------------------
+
+   procedure Delay_Ms (Ms : Positive) is
+   begin
+      Delay_Us (Ms * 1_000);
+   end Delay_Ms;
 
    overriding
    procedure Delay_Milliseconds (This : in out HF1_Delays;
-                                 Ms   : Integer);
+                                 Ms   : Integer)
+   is
+      pragma Unreferenced (This);
+   begin
+      Delay_Ms (Ms);
+   end Delay_Milliseconds;
+
+   -------------------
+   -- Delay_Seconds --
+   -------------------
+
+   procedure Delay_S (S : Positive) is
+   begin
+      Delay_Us (S * 1_000_000);
+   end Delay_S;
 
    overriding
-   procedure Delay_Seconds      (This : in out HF1_Delays;
-                                 S    : Integer);
+   procedure Delay_Seconds (This : in out HF1_Delays;
+                            S    : Integer)
+   is
+      pragma Unreferenced (This);
+   begin
+      Delay_S (S);
+   end Delay_Seconds;
 
-end FE310.Time;
+end SiFive.Time;

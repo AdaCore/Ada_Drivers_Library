@@ -412,8 +412,4 @@ package SiFive_SVD.SPI is
       IP      at 16#74# range 0 .. 31;
    end record;
 
-   --  Serial Peripheral Interface.
-   QSPI_Periph : aliased QSPI_Peripheral
-     with Import, Address => QSPI_Base;
-
 end SiFive_SVD.SPI;

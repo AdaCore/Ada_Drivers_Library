@@ -32,10 +32,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310.Time;        use FE310.Time;
-with FE310_SVD.OTP_Mem; use FE310_SVD.OTP_Mem;
-with FE310_SVD.PRIC;    use FE310_SVD.PRIC;
-with FE310_SVD.SPI;     use FE310_SVD.SPI;
+with SiFive.Time;        use SiFive.Time;
 
 package body FE310 is
 

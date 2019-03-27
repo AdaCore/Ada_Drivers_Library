@@ -211,8 +211,4 @@ package SiFive_SVD.PWM is
       COMPARE3    at 16#2C# range 0 .. 31;
    end record;
 
-   --  Pulse-Width Modulation.
-   PWM_Periph : aliased PWM_Peripheral
-     with Import, Address => PWM_Base;
-
 end SiFive_SVD.PWM;

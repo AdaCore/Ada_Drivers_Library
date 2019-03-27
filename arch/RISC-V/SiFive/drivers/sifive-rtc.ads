@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---            Copyright (C) 2018, AdaCore and other contributors            --
+--            Copyright (C) 2019, AdaCore and other contributors            --
 --                                                                          --
 --      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
 --                           for more information                           --
@@ -32,51 +32,40 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310_SVD.CLINT; use FE310_SVD.CLINT;
+with SiFive_SVD.RTC;
 
-package body FE310.CLINT is
+package SiFive.RTC is
 
-   ------------------
-   -- Machine_Time --
-   ------------------
+   subtype Count_Value is UInt48;
 
-   function Machine_Time return Machine_Time_Value is
-      High : UInt32;
-      Low : UInt32;
-   begin
-      High := CLINT_Periph.MTIME_HI;
-      Low := CLINT_Periph.MTIME_LO;
+   function Count return Count_Value;
 
-      --  Handle the case where the timer registers were read during the
-      --  incrementation of the high part
-      if CLINT_Periph.MTIME_HI /= High then
-         High := High + 1;
-         Low := 0;
-      end if;
+   procedure Set_Count (Value : Count_Value);
 
-      return Machine_Time_Value (High) * 2**32 + Machine_Time_Value (Low);
-   end Machine_Time;
+   subtype Scaled_Value is UInt32;
 
-   ------------------------------
-   -- Set_Machine_Time_Compare --
-   ------------------------------
+   function Scaled_Counter return Scaled_Value;
 
-   procedure Set_Machine_Time_Compare (Value : Machine_Time_Value) is
-   begin
-      CLINT_Periph.MTIMECMP_LO := UInt32'Last;
-      CLINT_Periph.MTIMECMP_HI := UInt32 (Value / 2**32);
-      CLINT_Periph.MTIMECMP_LO := UInt32 (Value rem 2**32);
-   end Set_Machine_Time_Compare;
+   -- Enable --
 
-   --------------------------
-   -- Machine_Time_Compare --
-   --------------------------
+   procedure Enable;
 
-   function Machine_Time_Compare return Machine_Time_Value is
-   begin
-      return Machine_Time_Value (CLINT_Periph.MTIMECMP_HI) * 2**32 +
-             Machine_Time_Value (CLINT_Periph.MTIMECMP_LO);
-   end Machine_Time_Compare;
+   procedure Disable;
 
+   -- Configuration --
 
-end FE310.CLINT;
+   procedure Set_Scale (Scale : SiFive_SVD.RTC.CONFIG_SCALE_Field);
+
+   -- Compare Value --
+
+   subtype Compare_Value is UInt32;
+
+   procedure Set_Compare (Value : Compare_Value);
+
+   function Compare return Compare_Value;
+
+   -- Interrupts --
+
+   function Interrupt_Pending return Boolean;
+
+end SiFive.RTC;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--         Copyright (C) 2017-2019, AdaCore and other contributors          --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,46 +29,48 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310.GPIO; use FE310.GPIO;
-with FE310.UART; use FE310.UART;
-with FE310.PWM;  use FE310.PWM;
+with SiFive.GPIO; use SiFive.GPIO;
+with SiFive.UART; use SiFive.UART;
+with SiFive.PWM;  use SiFive.PWM;
 
 with FE310_SVD;
 
 package FE310.Device is
 
-   P00 : aliased GPIO_Point (Pin => 00);
-   P01 : aliased GPIO_Point (Pin => 01);
-   P02 : aliased GPIO_Point (Pin => 02);
-   P03 : aliased GPIO_Point (Pin => 03);
-   P04 : aliased GPIO_Point (Pin => 04);
-   P05 : aliased GPIO_Point (Pin => 05);
-   P06 : aliased GPIO_Point (Pin => 06);
-   P07 : aliased GPIO_Point (Pin => 07);
-   P08 : aliased GPIO_Point (Pin => 08);
-   P09 : aliased GPIO_Point (Pin => 09);
-   P10 : aliased GPIO_Point (Pin => 10);
-   P11 : aliased GPIO_Point (Pin => 11);
-   P12 : aliased GPIO_Point (Pin => 12);
-   P13 : aliased GPIO_Point (Pin => 13);
-   P14 : aliased GPIO_Point (Pin => 14);
-   P15 : aliased GPIO_Point (Pin => 15);
-   P16 : aliased GPIO_Point (Pin => 16);
-   P17 : aliased GPIO_Point (Pin => 17);
-   P18 : aliased GPIO_Point (Pin => 18);
-   P19 : aliased GPIO_Point (Pin => 19);
-   P20 : aliased GPIO_Point (Pin => 20);
-   P21 : aliased GPIO_Point (Pin => 21);
-   P22 : aliased GPIO_Point (Pin => 22);
-   P23 : aliased GPIO_Point (Pin => 23);
-   P24 : aliased GPIO_Point (Pin => 24);
-   P25 : aliased GPIO_Point (Pin => 25);
-   P26 : aliased GPIO_Point (Pin => 26);
-   P27 : aliased GPIO_Point (Pin => 27);
-   P28 : aliased GPIO_Point (Pin => 28);
-   P29 : aliased GPIO_Point (Pin => 29);
-   P30 : aliased GPIO_Point (Pin => 30);
-   P31 : aliased GPIO_Point (Pin => 31);
+   Internal_GPIO0 : aliased Internal_GPIO with Import, Volatile, Address => FE310_SVD.GPIO0_Base;
+
+   P00 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 00);
+   P01 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 01);
+   P02 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 02);
+   P03 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 03);
+   P04 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 04);
+   P05 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 05);
+   P06 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 06);
+   P07 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 07);
+   P08 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 08);
+   P09 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 09);
+   P10 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 10);
+   P11 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 11);
+   P12 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 12);
+   P13 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 13);
+   P14 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 14);
+   P15 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 15);
+   P16 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 16);
+   P17 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 17);
+   P18 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 18);
+   P19 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 19);
+   P20 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 20);
+   P21 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 21);
+   P22 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 22);
+   P23 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 23);
+   P24 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 24);
+   P25 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 25);
+   P26 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 26);
+   P27 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 27);
+   P28 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 28);
+   P29 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 29);
+   P30 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 30);
+   P31 : aliased GPIO_Point (Periph => Internal_GPIO0'Access, Pin => 31);
 
    IOF_UART0 : constant IO_Function := IOF0;
    IOF_UART1 : constant IO_Function := IOF0;

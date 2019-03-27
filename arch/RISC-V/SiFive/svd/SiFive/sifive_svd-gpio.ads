@@ -502,8 +502,4 @@ package SiFive_SVD.GPIO is
       OUT_XOR       at 16#40# range 0 .. 31;
    end record;
 
-   --  General purpose input/output controller.
-   GPIO_Periph : aliased GPIO_Peripheral
-     with Import, Address => GPIO_Base;
-
 end SiFive_SVD.GPIO;

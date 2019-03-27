@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--         Copyright (C) 2017-2019, AdaCore and other contributors          --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -31,9 +31,9 @@
 
 with HAL.UART; use HAL.UART;
 
-private with FE310_SVD.UART;
+private with SiFive_SVD.UART;
 
-package FE310.UART is
+package SiFive.UART is
 
    type Internal_UART is limited private;
 
@@ -43,7 +43,7 @@ package FE310.UART is
    type Stop_Bits is (Stopbits_1, Stopbits_2);
    procedure Set_Stop_Bits (This : in out UART_Port; To : Stop_Bits);
 
-   subtype Baud_Rates is UInt32;
+   subtype Baud_Rates is HAL.UInt32;
    procedure Set_Baud_Rate (This : in out UART_Port;  To : Baud_Rates);
 
    procedure Enable_RX (This : in out UART_Port);
@@ -69,7 +69,7 @@ package FE310.UART is
    procedure Disable_TX_Interrupt (This : in out UART_Port);
 
    procedure Set_Interrupt_Thresholds (This   : in out UART_Port;
-                                       RX, TX : UInt3);
+                                       RX, TX : HAL.UInt3);
 
    ---------------
    --  HAL.GPIO --
@@ -78,7 +78,7 @@ package FE310.UART is
    overriding
    function Data_Size (Port : UART_Port) return UART_Data_Size
    is (Data_Size_8b);
-   --  FE310 UARTs are 8bits only
+   --  SiFive UARTs are 8bits only
 
    overriding
    procedure Transmit
@@ -110,9 +110,9 @@ package FE310.UART is
 
 private
 
-   type Internal_UART is new FE310_SVD.UART.UART_Peripheral;
+   type Internal_UART is new SiFive_SVD.UART.UART_Peripheral;
 
    type UART_Port (Periph : not null access Internal_UART) is
      limited new HAL.UART.UART_Port with null record;
 
-end FE310.UART;
+end SiFive.UART;

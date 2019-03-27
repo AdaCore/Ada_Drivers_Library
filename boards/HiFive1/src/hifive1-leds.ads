@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310.GPIO;
+with SiFive.GPIO;
 
 package HiFive1.LEDs is
 
@@ -42,9 +42,9 @@ package HiFive1.LEDs is
    procedure Initialize;
    --  MUST be called prior to any use of the LEDs
 
-   procedure Turn_On  (This : in out User_LED) renames FE310.GPIO.Clear;
-   procedure Turn_Off (This : in out User_LED) renames FE310.GPIO.Set;
-   procedure Toggle   (This : in out User_LED) renames FE310.GPIO.Toggle;
+   procedure Turn_On  (This : in out User_LED) renames SiFive.GPIO.Clear;
+   procedure Turn_Off (This : in out User_LED) renames SiFive.GPIO.Set;
+   procedure Toggle   (This : in out User_LED) renames SiFive.GPIO.Toggle;
 
    procedure All_LEDs_Off with Inline;
    procedure All_LEDs_On with Inline;

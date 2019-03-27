@@ -157,8 +157,4 @@ package SiFive_SVD.PRIC is
       PLLOUTDIV at 16#C# range 0 .. 31;
    end record;
 
-   --  Power, Reset, Clock, Interrupt.
-   PRIC_Periph : aliased PRIC_Peripheral
-     with Import, Address => PRIC_Base;
-
 end SiFive_SVD.PRIC;

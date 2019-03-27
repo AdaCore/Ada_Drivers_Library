@@ -154,6 +154,7 @@ def load_device_config(config):
 
     elif mcu == 'FE310':
         src += ['arch/RISC-V/SiFive/svd/FE310/',
+                'arch/RISC-V/SiFive/svd/SiFive/',
                 'arch/RISC-V/SiFive/devices/FE310/',
                 'arch/RISC-V/SiFive/drivers/']
 

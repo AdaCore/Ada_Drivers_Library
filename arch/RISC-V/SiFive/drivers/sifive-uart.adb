@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--         Copyright (C) 2017-2019, AdaCore and other contributors          --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,13 +29,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310_SVD.UART; use FE310_SVD.UART;
+with HAL; use HAL;
+with SiFive_SVD.UART; use SiFive_SVD.UART;
 
 ----------------
--- FE310.UART --
+-- SiFive.UART --
 ----------------
 
-package body FE310.UART is
+package body SiFive.UART is
+
+   CPU_Frequency : constant := 65_000_000;
 
    -------------------
    -- Set_Stop_Bits --
@@ -191,7 +194,7 @@ package body FE310.UART is
       Timeout : Natural := 1000)
    is
    begin
-      raise Program_Error with "FE310 UART only support 8bit mode";
+      raise Program_Error with "SiFive UART only support 8bit mode";
    end Transmit;
 
    -------------
@@ -230,7 +233,7 @@ package body FE310.UART is
       Timeout : Natural := 1000)
    is
    begin
-      raise Program_Error with "FE310 UART only support 8bit mode";
+      raise Program_Error with "SiFive UART only support 8bit mode";
    end Receive;
 
-end FE310.UART;
+end SiFive.UART;

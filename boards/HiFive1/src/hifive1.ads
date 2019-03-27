@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 with FE310.Device; use FE310.Device;
-with FE310.GPIO;   use FE310.GPIO;
+with SiFive.GPIO;  use SiFive.GPIO;
 
 package HiFive1 is
 

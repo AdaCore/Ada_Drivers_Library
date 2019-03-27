@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---            Copyright (C) 2018, AdaCore and other contributors            --
+--            Copyright (C) 2019, AdaCore and other contributors            --
 --                                                                          --
 --      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
 --                           for more information                           --
@@ -32,40 +32,30 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310_SVD.RTC;
+with HAL.Time;
 
-package FE310.RTC is
+package SiFive.Time is
 
-   subtype Count_Value is UInt48;
+   procedure Delay_Us (Us : Positive);
+   procedure Delay_Ms (Ms : Positive);
+   procedure Delay_S (S : Positive);
 
-   function Count return Count_Value;
+   function HAL_Delay return not null HAL.Time.Any_Delays;
 
-   procedure Set_Count (Value : Count_Value);
+private
 
-   subtype Scaled_Value is UInt32;
+   type HF1_Delays is new HAL.Time.Delays with null record;
 
-   function Scaled_Counter return Scaled_Value;
+   overriding
+   procedure Delay_Microseconds (This : in out HF1_Delays;
+                                 Us   : Integer);
 
-   -- Enable --
+   overriding
+   procedure Delay_Milliseconds (This : in out HF1_Delays;
+                                 Ms   : Integer);
 
-   procedure Enable;
+   overriding
+   procedure Delay_Seconds      (This : in out HF1_Delays;
+                                 S    : Integer);
 
-   procedure Disable;
-
-   -- Configuration --
-
-   procedure Set_Scale (Scale : FE310_SVD.RTC.CONFIG_SCALE_Field);
-
-   -- Compare Value --
-
-   subtype Compare_Value is UInt32;
-
-   procedure Set_Compare (Value : Compare_Value);
-
-   function Compare return Compare_Value;
-
-   -- Interrupts --
-
-   function Interrupt_Pending return Boolean;
-
-end FE310.RTC;
+end SiFive.Time;

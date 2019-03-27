@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---            Copyright (C) 2018, AdaCore and other contributors            --
+--         Copyright (C) 2018-2019, AdaCore and other contributors          --
 --                                                                          --
 --      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
 --                           for more information                           --
@@ -32,80 +32,52 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310; use FE310;
-with FE310.CLINT; use FE310.CLINT;
+with HAL; use HAL;
+with SiFive_SVD.CLINT; use SiFive_SVD.CLINT;
 
-package body FE310.Time is
+package body SiFive.CLINT is
 
-   ---------------
-   -- HAL_Delay --
-   ---------------
+   ------------------
+   -- Machine_Time --
+   ------------------
 
-   Delay_Instance : aliased HF1_Delays;
-
-   function HAL_Delay return not null HAL.Time.Any_Delays
-   is (Delay_Instance'Access);
-
-   ------------------------
-   -- Delay_Microseconds --
-   ------------------------
-
-   procedure Delay_Us (Us : Positive)
-   is
-      Start_Time : Machine_Time_Value;
-      End_Time : Machine_Time_Value;
+   function Machine_Time return Machine_Time_Value is
+      High : UInt32;
+      Low : UInt32;
    begin
-      Start_Time := Machine_Time;
-      End_Time := Start_Time + (Machine_Time_Value (Us) * Machine_Time_Value (LF_Clock_Frequency)) / 1_000_000;
+      High := CLINT_Periph.MTIME_HI;
+      Low := CLINT_Periph.MTIME_LO;
 
-      loop
-         exit when Machine_Time >= End_Time;
-      end loop;
-   end Delay_Us;
+      --  Handle the case where the timer registers were read during the
+      --  incrementation of the high part
+      if CLINT_Periph.MTIME_HI /= High then
+         High := High + 1;
+         Low := 0;
+      end if;
 
-   overriding
-   procedure Delay_Microseconds (This : in out HF1_Delays;
-                                 Us   : Integer)
-   is
-      pragma Unreferenced (This);
+      return Machine_Time_Value (High) * 2**32 + Machine_Time_Value (Low);
+   end Machine_Time;
+
+   ------------------------------
+   -- Set_Machine_Time_Compare --
+   ------------------------------
+
+   procedure Set_Machine_Time_Compare (Value : Machine_Time_Value) is
    begin
-      Delay_Us (Us);
-   end Delay_Microseconds;
+      CLINT_Periph.MTIMECMP_LO := UInt32'Last;
+      CLINT_Periph.MTIMECMP_HI := UInt32 (Value / 2**32);
+      CLINT_Periph.MTIMECMP_LO := UInt32 (Value rem 2**32);
+   end Set_Machine_Time_Compare;
 
-   ------------------------
-   -- Delay_Milliseconds --
-   ------------------------
+   --------------------------
+   -- Machine_Time_Compare --
+   --------------------------
 
-   procedure Delay_Ms (Ms : Positive) is
+   function Machine_Time_Compare return Machine_Time_Value is
    begin
-      Delay_Us (Ms * 1_000);
-   end Delay_Ms;
+      return Machine_Time_Value (CLINT_Periph.MTIMECMP_HI) * 2**32 +
+             Machine_Time_Value (CLINT_Periph.MTIMECMP_LO);
+   end Machine_Time_Compare;
 
-   overriding
-   procedure Delay_Milliseconds (This : in out HF1_Delays;
-                                 Ms   : Integer)
-   is
-      pragma Unreferenced (This);
-   begin
-      Delay_Ms (Ms);
-   end Delay_Milliseconds;
 
-   -------------------
-   -- Delay_Seconds --
-   -------------------
-
-   procedure Delay_S (S : Positive) is
-   begin
-      Delay_Us (S * 1_000_000);
-   end Delay_S;
-
-   overriding
-   procedure Delay_Seconds (This : in out HF1_Delays;
-                            S    : Integer)
-   is
-      pragma Unreferenced (This);
-   begin
-      Delay_S (S);
-   end Delay_Seconds;
-
-end FE310.Time;
+end SiFive.CLINT;

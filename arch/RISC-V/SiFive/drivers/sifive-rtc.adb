@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2017-2019, AdaCore and other contributors         --
+--         Copyright (C) 2018-2019, AdaCore and other contributors          --
 --                                                                          --
 --      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
 --                           for more information                           --
@@ -32,66 +32,99 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL; use HAL;
-with SiFive_SVD.OTP_Mem; use SiFive_SVD.OTP_mem;
-with SiFive_SVD.PRIC;    use SiFive_SVD.PRIC;
-with SiFive_SVD.SPI;     use SiFive_SVD.SPI;
+with SiFive_SVD.RTC; use SiFive_SVD.RTC;
 
-with FE310_SVD;
+package body SiFive.RTC is
 
-package FE310 is
+   -----------
+   -- Count --
+   -----------
 
-   LF_Clock_Frequency : constant := 32768;
+   function Count return Count_Value is
+      Low_Reg : UInt32;
+      High_Reg : HI_Register;
+   begin
+      High_Reg := RTC_Periph.HI;
+      Low_Reg := RTC_Periph.LO;
 
-   function CPU_Frequency return UInt32;
-   --  Compute CPU frequency
+      --  Handle the case where the timer registers were read during the
+      --  incrementation of the high part
+      if RTC_Periph.HI /= High_Reg then
+         High_Reg.CNT := High_Reg.CNT + 1;
+         Low_Reg := 0;
+      end if;
 
-   procedure Load_Internal_Oscilator_Calibration;
-   --  Read the calibration setting from the OTP memory ant write it to the
-   --  oscillator configuration register.
-   --  After execution of this procedure, the (undivided) internal oscillator
-   --  frequency should be about 72 MHz
+      return Count_Value (High_Reg.CNT) * 2**32 + Count_Value (Low_Reg);
+   end Count;
 
-   subtype PLL_Output_Divider is Integer range 1 .. 128;
+   ---------------
+   -- Set_Count --
+   ---------------
 
-   procedure Use_Crystal_Oscillator (Divider : PLL_Output_Divider := 1)
-     with Pre => (Divider = 1) or (Divider rem 2 = 0);
+   procedure Set_Count (Value : Count_Value) is
+   begin
+      RTC_Periph.CONFIG.ENALWAYS := False;
+      RTC_Periph.HI.CNT := UInt16 (Value / 2**32);
+      RTC_Periph.LO := UInt32 (Value rem 2**32);
+      RTC_Periph.CONFIG.ENALWAYS := True;
+   end Set_Count;
 
-   subtype Internal_Oscillator_Divider is Integer range 1 .. 64;
+   ----------------------
+   -- Enable_Continous --
+   ----------------------
 
-   procedure Use_Internal_Oscillator (Divider : Internal_Oscillator_Divider := 5);
+   procedure Enable is
+   begin
+      RTC_Periph.CONFIG.ENALWAYS := True;
+   end Enable;
 
-   type PLL_Reference is new SiFive_SVD.PRIC.PLLCFG_REFSEL_Field;
+   -------------
+   -- Disable --
+   -------------
 
-   subtype PLL_R is Integer range 1 .. 4;
-   subtype PLL_F is Integer range 2 .. 128;
+   procedure Disable is
+   begin
+      RTC_Periph.CONFIG.ENALWAYS := False;
+   end Disable;
 
-   type PLL_Q is (Div_By_2, Div_By_4, Div_By_8);
+   --------------------
+   -- Scaled_Counter --
+   --------------------
 
-   procedure Use_PLL (Reference : PLL_Reference;
-                      Internal_Osc_Div : Internal_Oscillator_Divider  := 5;
-                      R_Div : PLL_R;
-                      F_Mul : PLL_F;
-                      Q_Div : PLL_Q;
-                      Output_Div : PLL_Output_Divider)
-     with Pre => ((Internal_Osc_Div >= 2) and (Internal_Osc_Div <= 12)) and
-                 (F_Mul rem 2 = 0);
+   function Scaled_Counter return Scaled_Value
+   is (RTC_Periph.SCALE_COUNT);
+
+   ---------------
+   -- Configure --
+   ---------------
+
+   procedure Set_Scale (Scale : SiFive_SVD.RTC.CONFIG_SCALE_Field) is
+   begin
+      RTC_Periph.CONFIG.SCALE := Scale;
+   end Set_Scale;
+
+   -----------------
+   -- Set_Compare --
+   -----------------
+
+   procedure Set_Compare (Value : Compare_Value) is
+   begin
+      RTC_Periph.COMPARE := Value;
+   end Set_Compare;
+
+   -------------
+   -- Compare --
+   -------------
+
+   function Compare return Compare_Value
+   is (RTC_Periph.COMPARE);
+
+   -----------------------
+   -- Interrupt_Pending --
+   -----------------------
+
+   function Interrupt_Pending return Boolean
+   is (RTC_Periph.CONFIG.CMP_IP);
 
 
-   subtype SPI_Clock_Divider is Integer range 2 .. 8192;
-
-   procedure Set_SPI_Flash_Clock_Divider (Divider : SPI_Clock_Divider)
-     with Pre => Divider rem 2 = 0;
-
-   function SPI_Flash_Clock_Divider return SPI_Clock_Divider;
-
-private
-
-   OTP_Mem_Periph : aliased OTP_Mem_Peripheral with Import, Volatile, Address => FE310_SVD.OTP_Mem_Base;
-   PRIC_Periph    : aliased PRIC_Peripheral with Import, Volatile, Address => FE310_SVD.PRIC_Base;
-   QSPI0_Periph   : aliased QSPI_Peripheral with Import, Volatile, Address => FE310_SVD.QSPI0_Base;
-
-   for PLL_Q use (Div_By_2 => 1, Div_By_4 => 2, Div_By_8 => 3);
-
-end FE310;
-
+end SiFive.RTC;

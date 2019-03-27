@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2017-2018, AdaCore                     --
+--         Copyright (C) 2017-2019, AdaCore and other contributors          --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -31,16 +31,20 @@
 
 with HAL.GPIO;
 
-package FE310.GPIO is
+private with SiFive_SVD.GPIO;
+
+package SiFive.GPIO is
+
+   type Internal_GPIO is limited private;
 
    subtype GPIO_Pin_Index is Natural range 0 .. 31;
 
-   type GPIO_Point (Pin : GPIO_Pin_Index) is new HAL.GPIO.GPIO_Point with
+   type GPIO_Point (Periph : not null access Internal_GPIO; Pin : GPIO_Pin_Index) is new HAL.GPIO.GPIO_Point with
      private;
 
    type IO_Function is (Disabled, IOF0, IOF1);
    --  Alternative function for a GPIO pin (UART, SPI, PWM, etc).
-   --  The IOF values are defined in the package FE310.Device.
+   --  The IOF values are defined in the package SiFive.Device.
 
    procedure Set_IO_Function (This : in out GPIO_Point;
                               Func : IO_Function);
@@ -92,7 +96,10 @@ package FE310.GPIO is
    procedure Toggle (This : in out GPIO_Point);
 
 private
-   type GPIO_Point (Pin : GPIO_Pin_Index) is new HAL.GPIO.GPIO_Point with
+
+   type Internal_GPIO is new SiFive_SVD.GPIO.GPIO_Peripheral;
+
+   type GPIO_Point (Periph : not null access Internal_GPIO; Pin : GPIO_Pin_Index) is new HAL.GPIO.GPIO_Point with
      null record;
 
-end FE310.GPIO;
+end SiFive.GPIO;

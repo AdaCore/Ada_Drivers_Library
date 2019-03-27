@@ -34,7 +34,7 @@
 
 with FE310;
 with HiFive1.LEDs; use HiFive1.LEDs;
-with FE310.Time; use FE310.Time;
+with SiFive.Time;  use SiFive.Time;
 
 procedure Main is
 

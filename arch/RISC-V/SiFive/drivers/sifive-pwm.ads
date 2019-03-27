@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2018, AdaCore                        --
+--            Copyright (C) 2019, AdaCore and other contributors            --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,23 +29,23 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with FE310_SVD.PWM;
+with SiFive_SVD.PWM;
 
-package FE310.PWM is
+package SiFive.PWM is
 
    type Internal_PWM is limited private;
 
    type PWM_Device (Periph : not null access Internal_PWM) is
      limited private;
 
-   subtype Count_Value is FE310_SVD.PWM.COUNT_CNT_Field;
+   subtype Count_Value is SiFive_SVD.PWM.COUNT_CNT_Field;
 
    function Count (This : PWM_Device) return Count_Value;
 
    procedure Set_Count (This  : in out PWM_Device;
                         Value : Count_Value);
 
-   subtype Scaled_Value is FE310_SVD.PWM.SCALE_COUNT_CNT_Field;
+   subtype Scaled_Value is SiFive_SVD.PWM.SCALE_COUNT_CNT_Field;
 
    function Scaled_Counter (This : PWM_Device)
                             return Scaled_Value;
@@ -60,7 +60,7 @@ package FE310.PWM is
    -- Configuration --
 
    procedure Configure (This          : in out PWM_Device;
-                        Scale         : FE310_SVD.PWM.CONFIG_SCALE_Field;
+                        Scale         : SiFive_SVD.PWM.CONFIG_SCALE_Field;
                         Sticky        : Boolean;
                         Reset_To_Zero : Boolean;
                         Deglitch      : Boolean);
@@ -76,7 +76,7 @@ package FE310.PWM is
 
    -- Compare Value --
 
-   subtype Compare_Value is FE310_SVD.PWM.COMPARE_COMPARE_Field;
+   subtype Compare_Value is SiFive_SVD.PWM.COMPARE_COMPARE_Field;
 
    procedure Set_Compare (This  : in out PWM_Device;
                           ID    : Comparator_ID;
@@ -94,9 +94,9 @@ package FE310.PWM is
 
 private
 
-   type Internal_PWM is new FE310_SVD.PWM.PWM_Peripheral;
+   type Internal_PWM is new SiFive_SVD.PWM.PWM_Peripheral;
 
    type PWM_Device (Periph : not null access Internal_PWM) is
      limited null record;
 
-end FE310.PWM;
+end SiFive.PWM;

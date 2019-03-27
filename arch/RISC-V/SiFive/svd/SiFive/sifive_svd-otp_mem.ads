@@ -81,8 +81,4 @@ package SiFive_SVD.OTP_Mem is
       LAST_FENCE  at 16#1FF4# range 0 .. 95;
    end record;
 
-   --  One-Time Programmable Memory.
-   OTP_Mem_Periph : aliased OTP_Mem_Peripheral
-     with Import, Address => OTP_Mem_Base;
-
 end SiFive_SVD.OTP_Mem;

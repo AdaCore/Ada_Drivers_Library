@@ -175,8 +175,4 @@ package SiFive_SVD.UART is
       DIV    at 16#18# range 0 .. 31;
    end record;
 
-   --  Universal Asynchronous Receiver/Transmitter.
-   UART_Periph : aliased UART_Peripheral
-     with Import, Address => UART_Base;
-
 end SiFive_SVD.UART;

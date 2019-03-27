@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2018, AdaCore                        --
+--         Copyright (C) 2018-2019, AdaCore and other contributors          --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package body FE310.PWM is
+package body SiFive.PWM is
 
    -----------
    -- Count --
@@ -92,7 +92,7 @@ package body FE310.PWM is
 
    procedure Configure
      (This          : in out PWM_Device;
-      Scale         : FE310_SVD.PWM.CONFIG_SCALE_Field;
+      Scale         : SiFive_SVD.PWM.CONFIG_SCALE_Field;
       Sticky        : Boolean;
       Reset_To_Zero : Boolean;
       Deglitch      : Boolean)
@@ -161,4 +161,4 @@ package body FE310.PWM is
       return Boolean
    is (This.Periph.CONFIG.CMP_IP.Arr (ID));
 
-end FE310.PWM;
+end SiFive.PWM;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---            Copyright (C) 2018, AdaCore and other contributors            --
+--         Copyright (C) 2018-2019, AdaCore and other contributors          --
 --                                                                          --
 --      See github.com/AdaCore/Ada_Drivers_Library/graphs/contributors      --
 --                           for more information                           --
@@ -32,9 +32,11 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package FE310.CLINT is
+with HAL;
 
-   subtype Machine_Time_Value is UInt64;
+package SiFive.CLINT is
+
+   subtype Machine_Time_Value is HAL.UInt64;
 
    function Machine_Time return Machine_Time_Value;
 
@@ -42,4 +44,4 @@ package FE310.CLINT is
 
    function Machine_Time_Compare return Machine_Time_Value;
 
-end FE310.CLINT;
+end SiFive.CLINT;
