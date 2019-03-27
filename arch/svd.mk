@@ -25,3 +25,6 @@ svd:
 
 	rm -rf $(SIFIVE_DIR)/FE*
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/SiFive/FE310.svd --boolean -o $(SIFIVE_DIR)/FE310 -p FE310_SVD --base-types-package HAL --gen-uint-always
+
+	rm -rf $(SIFIVE_DIR)/E*
+	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/SiFive/E31.svd --boolean -o $(SIFIVE_DIR)/E31 -p E31_SVD --base-types-package HAL --gen-uint-always
