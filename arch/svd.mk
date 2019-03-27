@@ -23,5 +23,10 @@ svd:
 	rm -rf $(NORDIC_DIR)/nrf*
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/Nordic/nrf51.svd --boolean -o $(NORDIC_DIR)/nrf51 -p NRF51_SVD --base-types-package HAL --gen-uint-always
 
-	rm -rf $(SIFIVE_DIR)/FE*
+	rm -rf $(SIFIVE_DIR)/SiFive
+	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/SiFive/SiFive.svd --boolean -o $(SIFIVE_DIR)/SiFive -p SiFive_SVD --base-types-package HAL --gen-uint-always
+	rm $(SIFIVE_DIR)/SiFive/sifive_svd.ads
+
+	rm -rf $(SIFIVE_DIR)/FE310
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/SiFive/FE310.svd --boolean -o $(SIFIVE_DIR)/FE310 -p FE310_SVD --base-types-package HAL --gen-uint-always
+	rm $(SIFIVE_DIR)/FE310/fe310_svd-*

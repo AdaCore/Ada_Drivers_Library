@@ -1,4 +1,4 @@
---  This spec has been automatically generated from FE310.svd
+--  This spec has been automatically generated from SiFive.svd
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
@@ -7,7 +7,7 @@ pragma Style_Checks (Off);
 with HAL;
 with System;
 
-package FE310_SVD.CLINT is
+package SiFive_SVD.CLINT is
    pragma Preelaborate;
 
    ---------------
@@ -43,6 +43,6 @@ package FE310_SVD.CLINT is
 
    --  Core Local Interruptor.
    CLINT_Periph : aliased CLINT_Peripheral
-     with Import, Address => System'To_Address (16#2000000#);
+     with Import, Address => CLINT_Base;
 
-end FE310_SVD.CLINT;
+end SiFive_SVD.CLINT;

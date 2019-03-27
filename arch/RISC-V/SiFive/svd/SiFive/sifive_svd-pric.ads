@@ -1,4 +1,4 @@
---  This spec has been automatically generated from FE310.svd
+--  This spec has been automatically generated from SiFive.svd
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
@@ -7,7 +7,7 @@ pragma Style_Checks (Off);
 with HAL;
 with System;
 
-package FE310_SVD.PRIC is
+package SiFive_SVD.PRIC is
    pragma Preelaborate;
 
    ---------------
@@ -28,7 +28,7 @@ package FE310_SVD.PRIC is
       ENABLE         : Boolean := False;
       READY          : Boolean := False;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for HFROSCCFG_Register use record
@@ -47,7 +47,7 @@ package FE310_SVD.PRIC is
       ENABLE        : Boolean := False;
       READY         : Boolean := False;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for HFXOSCCFG_Register use record
@@ -61,8 +61,7 @@ package FE310_SVD.PRIC is
    subtype PLLCFG_Q_Field is HAL.UInt2;
 
    type PLLCFG_SEL_Field is
-     (
-      --  The HFROSCCLK directly drives HFCLK.
+     (--  The HFROSCCLK directly drives HFCLK.
       Internal,
       --  Drive the final HFCLK with PLL output, bypassed or otherwise.
       Pll)
@@ -72,8 +71,7 @@ package FE310_SVD.PRIC is
       Pll => 1);
 
    type PLLCFG_REFSEL_Field is
-     (
-      --  Internal Oscillator.
+     (--  Internal Oscillator.
       Internal,
       --  Crystal OScillator.
       Crystal)
@@ -91,14 +89,14 @@ package FE310_SVD.PRIC is
       Q              : PLLCFG_Q_Field := 16#0#;
       --  unspecified
       Reserved_12_15 : HAL.UInt4 := 16#0#;
-      SEL            : PLLCFG_SEL_Field := FE310_SVD.PRIC.Internal;
-      REFSEL         : PLLCFG_REFSEL_Field := FE310_SVD.PRIC.Internal;
+      SEL            : PLLCFG_SEL_Field := SiFive_SVD.PRIC.Internal;
+      REFSEL         : PLLCFG_REFSEL_Field := SiFive_SVD.PRIC.Internal;
       BYPASS         : Boolean := False;
       --  unspecified
       Reserved_19_30 : HAL.UInt12 := 16#0#;
       LOCK           : Boolean := False;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for PLLCFG_Register use record
@@ -125,7 +123,7 @@ package FE310_SVD.PRIC is
       --  unspecified
       Reserved_9_31 : HAL.UInt23 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for PLLOUTDIV_Register use record
@@ -161,6 +159,6 @@ package FE310_SVD.PRIC is
 
    --  Power, Reset, Clock, Interrupt.
    PRIC_Periph : aliased PRIC_Peripheral
-     with Import, Address => System'To_Address (16#10008000#);
+     with Import, Address => PRIC_Base;
 
-end FE310_SVD.PRIC;
+end SiFive_SVD.PRIC;

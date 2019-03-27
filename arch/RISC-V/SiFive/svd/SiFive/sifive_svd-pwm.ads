@@ -1,4 +1,4 @@
---  This spec has been automatically generated from FE310.svd
+--  This spec has been automatically generated from SiFive.svd
 
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2012;
@@ -7,7 +7,7 @@ pragma Style_Checks (Off);
 with HAL;
 with System;
 
-package FE310_SVD.PWM is
+package SiFive_SVD.PWM is
    pragma Preelaborate;
 
    ---------------
@@ -111,7 +111,7 @@ package FE310_SVD.PWM is
       CMP_IP         : CONFIG_CMP_IP_Field :=
                         (As_Array => False, Val => 16#0#);
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for CONFIG_Register use record
@@ -138,7 +138,7 @@ package FE310_SVD.PWM is
       --  unspecified
       Reserved_31_31 : HAL.Bit := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for COUNT_Register use record
@@ -154,7 +154,7 @@ package FE310_SVD.PWM is
       --  unspecified
       Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for SCALE_COUNT_Register use record
@@ -170,7 +170,7 @@ package FE310_SVD.PWM is
       --  unspecified
       Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access, Object_Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for COMPARE_Register use record
@@ -212,15 +212,7 @@ package FE310_SVD.PWM is
    end record;
 
    --  Pulse-Width Modulation.
-   PWM0_Periph : aliased PWM_Peripheral
-     with Import, Address => System'To_Address (16#10015000#);
+   PWM_Periph : aliased PWM_Peripheral
+     with Import, Address => PWM_Base;
 
-   --  Pulse-Width Modulation.
-   PWM1_Periph : aliased PWM_Peripheral
-     with Import, Address => System'To_Address (16#10025000#);
-
-   --  Pulse-Width Modulation.
-   PWM2_Periph : aliased PWM_Peripheral
-     with Import, Address => System'To_Address (16#10035000#);
-
-end FE310_SVD.PWM;
+end SiFive_SVD.PWM;
