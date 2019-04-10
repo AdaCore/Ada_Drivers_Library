@@ -12,6 +12,7 @@ def list_of_boards():
             'OpenMV2',
             "MicroBit",
             "HiFive1",
+            'SAMV71_XPLAINED',
             'Native']
 
 
@@ -145,6 +146,18 @@ def load_board_config(config):
         config.pre_define('Runtime_Name_Suffix', 'hifive1', origin)
         config.add_memory('rom', 'board_flash', '0x20400000', '512M')
         config.add_source_dir('boards/HiFive1/src/', origin)
+
+    elif board == "SAMV71_XPLAINED":
+        config.pre_define('Architecture', 'ARM', origin)
+        config.pre_define('Vendor', 'Atmel', origin)
+        config.pre_define('Device_Family', 'SAM', origin)
+        config.pre_define('Device_Name', 'ATSAMV71x', origin)
+        config.pre_define('Has_ZFP_Runtime', 'True', origin)
+        config.pre_define('Has_Ravenscar_SFP_Runtime', 'True', origin)
+        config.pre_define('Has_Ravenscar_Full_Runtime', 'True', origin)
+        config.pre_define('Runtime_Name_Suffix', 'samv71', origin)
+        config.add_source_dir('boards/samv71_xplained/src/', origin)
+
 
     elif board == "Native":
         config.pre_define('Architecture', 'Native', origin)

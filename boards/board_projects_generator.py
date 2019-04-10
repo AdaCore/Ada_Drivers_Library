@@ -14,6 +14,7 @@ BOARDS = {
     'STM32F469_Discovery': { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
     'STM32F746_Discovery': { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
     'STM32F769_Discovery': { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
+    'SAMV71_XPLAINED' :    { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
     }
 
 
@@ -26,7 +27,8 @@ FOLDERS = {'Crazyflie': 'crazyflie',
            'STM32F429_Discovery': 'stm32f429_discovery',
            'STM32F469_Discovery': 'stm32f469_discovery',
            'STM32F746_Discovery': 'stm32f746_discovery',
-           'STM32F769_Discovery': 'stm32f769_discovery'}
+           'STM32F769_Discovery': 'stm32f769_discovery',
+           'SAMV71_XPLAINED': 'samv71_xplained'}
 
 
 def gen_project(board_name, rts):

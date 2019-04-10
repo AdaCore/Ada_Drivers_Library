@@ -1,0 +1,51 @@
+with "../../../../../boards/samv71_xplained/samv71_xplained_full.gpr";
+
+project Demo_SPI extends "../../../../../examples/shared/common/common.gpr" is
+
+   for Languages use ("Ada");
+   for Main use ("demo_spi");
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj/" & Samv71_Xplained_Full.Build;
+   for Runtime ("ada") use Samv71_Xplained_Full'Runtime ("Ada");
+   for Create_Missing_Dirs use "true";
+   type App_Builds is
+      ("Debug", "Production");
+   App_Build : App_Builds := external ("APP_BUILD", "Production");
+   for Object_Dir use "obj/" & App_Build;
+   type Lch_Type is
+      ("led", "lcd");
+   Lch : Lch_Type := external ("LCH");
+   type Rts_Type is
+      ("ravenscar-sfp", "ravenscar-full");
+   Rts_Profile : Rts_Type := external ("RTS_Profile");
+   type Loader_Type is
+      ("RAM", "ROM");
+   Loader : Loader_Type := external ("LOADER");
+   type Build_Type is
+      ("Debug", "Production");
+   Adl_Build : Build_Type := external ("ADL_BUILD");
+
+   for Target use "arm-eabi";
+
+   package Builder is
+      for Global_Configuration_Pragmas use "gnat.adc";
+      for Switches ("ada") use ("-g", "-j0");
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-O0", "-g");
+   end Compiler;
+
+   package Ide is
+      for Connection_Tool use "openocd";
+      for Connection_Config_File use "../atmel_samv71_xplained_ultra.cfg";
+      for Program_Host use "localhost:4242";
+      for Communication_Protocol use "remote";
+   end Ide;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-Wl,--print-memory-usage", "-g", "-Wl,--gc-sections");
+   end Linker;
+
+end Demo_SPI;
+

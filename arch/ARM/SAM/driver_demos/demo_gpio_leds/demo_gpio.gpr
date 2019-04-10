@@ -1,0 +1,54 @@
+with "../../../../../boards/samv71_xplained/samv71_xplained_full.gpr";
+
+project Demo_GPIO extends "../../../../../examples/shared/common/common.gpr" is
+
+   for Languages use ("Ada");
+   for Main use ("demo_gpio");
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj/" & SAMV71_XPLAINED_Full.Build;
+   for Runtime ("Ada") use SAMV71_XPLAINED_Full'Runtime("Ada");
+   for Create_Missing_Dirs use "true";
+
+   package Builder is
+      for Global_Configuration_Pragmas use "gnat.adc";
+   end Builder;
+
+   type App_Builds is ("Debug", "Production");
+   App_Build : App_Builds := external ("APP_BUILD", "Production");
+
+   for Object_Dir use "obj/" & App_Build;
+
+   package Compiler is
+      case App_Build is
+         when "Debug" =>
+             for Default_Switches ("ada") use
+               ("-g",
+           --     "-gnatwa",
+                "-gnata",    -- enable pre/postconditions
+                "-gnatQ",
+                "-gnatw.X",  -- disable warnings about exceptions and LCH
+                "-ffunction-sections",
+                "-fdata-sections");
+
+         when "Production" =>
+            for Default_Switches ("ada") use (
+                "-g",
+                "-O2",
+                "-gnatp",
+                "-gnatn2",    -- honor Inline requests
+                "-Winline",  -- warn if cannot honor Inline aspect/pragma
+                "-gnatw.X",
+                "-ffunction-sections",
+                "-fdata-sections");
+      end case;
+   end Compiler;
+
+   package Ide is
+      for Connection_Tool use "openocd";
+      for Connection_Config_File use "../atmel_samv71_xplained_ultra.cfg";
+      for Program_Host use "localhsot:4242";
+      for Communication_Protocol use "remote";
+   end Ide;
+
+end Demo_GPIO;
+

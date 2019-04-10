@@ -18,6 +18,8 @@ def list_of_devices(config):
         return ['nRF51822xxAA']
     elif family == "FE3":
         return ['FE310']
+    elif family == "SAM":
+        return ['ATSAMV71x']
     else:
         print "fatal error, unknown family '%s'" % family
         sys.exit(1)
@@ -26,7 +28,7 @@ def list_of_devices(config):
 def list_of_vendors(config):
     arch = config.get_config("Architecture")
     if arch == "ARM":
-        return ["STMicro", "Nordic"]
+        return ["STMicro", "Nordic", "Atmel"]
     elif arch == "RISC-V":
         return ["SiFive"]
     elif arch == "Native":
@@ -44,6 +46,8 @@ def list_of_families(config):
         return ["nRF51"]
     elif vendor == "SiFive":
         return ['FE3']
+    elif vendor == "Atmel":
+        return ["SAM"]
     else:
         print "fatal error, unknown vendor '%s'" % vendor
         sys.exit(1)
@@ -156,6 +160,11 @@ def load_device_config(config):
         src += ['arch/RISC-V/SiFive/svd/FE310/',
                 'arch/RISC-V/SiFive/devices/FE310/',
                 'arch/RISC-V/SiFive/drivers/']
+
+    elif mcu == 'ATSAMV71x':
+        src += ['arch/ARM/SAM/devices/',
+                'arch/ARM/SAM/drivers/',
+                'arch/ARM/SAM/svd/atsamv71q21/']
 
     else:
         print "Unknown MCU device %s." % mcu

@@ -49,6 +49,8 @@ def mcu_config(config):
             core = "ARM Cortex-M0"
         elif device.startswith("FE3"):
             core = "RISC-V32"
+        elif device.startswith("ATSAMV7"):
+            core = "ARM Cortex-M7F"
 
         config.set_config_string_key("CPU_Core", core, "mcu definition")
 

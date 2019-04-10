@@ -3,6 +3,7 @@ CORTEX_DIR=$(PWD)/ARM/cortex_m/src
 STM_DIR=$(PWD)/ARM/STM32/svd
 NORDIC_DIR=$(PWD)/ARM/Nordic/svd
 SIFIVE_DIR=$(PWD)/RISC-V/SiFive/svd
+SAM_DIR=$(PWD)/ARM/SAM/svd
 
 all: svd
 
@@ -25,3 +26,6 @@ svd:
 
 	rm -rf $(SIFIVE_DIR)/FE*
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/SiFive/FE310.svd --boolean -o $(SIFIVE_DIR)/FE310 -p FE310_SVD --base-types-package HAL --gen-uint-always
+
+        rm -rf $(SAM_DIR)/atsam*
+	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/ATMEL/ATSAMV71Q21.svd --boolean -o $(SAM_DIR)/atsamv71 -p SAM_SVD --base-types-package HAL --gen-uint-always
