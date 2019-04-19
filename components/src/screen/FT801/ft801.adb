@@ -1,312 +1,342 @@
 with Ada.Real_Time; use Ada.Real_Time;
 
+with FT801.Registers; use FT801.Registers;
+with FT801.Display_List;
+
 package body FT801 is
-   
+
    procedure Wait (Period : Time_Span)
    is
    begin
       delay until (Period + Clock);
    end Wait;
-   
-   
-   
-   procedure Initialize (This : in out FT801_Device)
+
+   procedure Host_Memory_Write (This : FT801_Device;
+                                Address : UInt22;
+                                Payload : UInt8_Array)
    is
-       GPIO_Dir_Reg : UInt8 := This.Read_Reg8 (Reg => REG_GPIO_DIR);
+      Status : SPI_Status;
+      Packet : constant UInt8_Array := Create_Header (Address   => Address,
+                                                      Direction => Write) & Payload;
    begin
-      --  Set SPI Freq under 11 MHz
-      
-      --  set PD high
-      Set (This => This.PD);
-      
-      --  bootup graphics controller
-      This.Reset;
-      
-      --  Configure display registers
-      This.Write_Reg16 (Reg => REG_HCYCLE,
-                   Val => This.Settings.HCycle);
-      This.Write_Reg16 (Reg => REG_HOFFSET,
-                   Val => This.Settings.Hoffset);
-      This.Write_Reg16 (Reg => REG_HSYNC0,
-                   Val => This.Settings.Hsync0);
-      This.Write_Reg16 (Reg => REG_HSYNC1,
-                   Val => This.Settings.Hsync1);
-      This.Write_Reg16 (Reg => REG_VCYCLE,
-                   Val => This.Settings.Vcycle);
-      This.Write_Reg16 (Reg => REG_VOFFSET,
-                   Val => This.Settings.Voffset);
-      This.Write_Reg16 (Reg => REG_VSYNC0,
-                   Val => This.Settings.Vsync0);
-      This.Write_Reg16 (Reg => REG_VSYNC1,
-                   Val => This.Settings.Vsync1);
-      This.Write_Reg8 (Reg => REG_SWIZZLE,
-                  Val => This.Settings.Swizzle);
-      This.Write_Reg8 (Reg => REG_PCLK_POL,
-                  Val => This.Settings.Polarity);
-      This.Write_Reg8 (Reg => REG_CSPREAD,
-                  Val => 1);
-      This.Write_Reg16 (Reg => REG_HSIZE,
-                   Val => This.Settings.Width);
-      This.Write_Reg16 (Reg => REG_VSIZE,
-                   Val => This.Settings.Height);
-        
-      if This.Settings.Ext_Clock then
-         This.Send_Host_Command (Cmd => CLKEXT);
-      else
-         This.Send_Host_Command (Cmd => CLKINT);
+
+      This.Port.Transmit (Data => SPI_Data_8b (Packet),
+                          Status => Status);
+      if Status /= Ok then
+         raise Program_Error;
       end if;
-      
-      GPIO_Dir_Reg := GPIO_Dir_Reg or Shift_Left (Value  => 1,
-                                                  Amount => 7);
-      This.Write_Reg8 (Reg => REG_GPIO_DIR,
-                       Val => GPIO_Dir_Reg);
-                              
-      --  Set SPI Freq back up to 30MHz
-      
-   end Initialize;
-   
-   procedure Cycle_PD (This : in out FT801_Device)
+   end Host_Memory_Write;
+
+   procedure Host_Memory_Read (This : FT801_Device;
+                               Address : UInt22;
+                               Payload : out UInt8_Array)
    is
+      Status : SPI_Status;
+      TX_Packet : constant UInt8_Array := Create_Header (Address   => Address,
+                                                         Direction => Read) & 0;
    begin
-      Set (This => This.PD);
-      Wait (Period => Milliseconds (20));
-      Clear (This => This.PD);
-      Wait (Period => Milliseconds (20));
-      Set (This => This.PD);
-      Wait (Period => Milliseconds (20));
-   end Cycle_PD;
-   
-   procedure Internal_Clock (This : in out FT801_Device)
+      This.Port.Transmit (Data   => SPI_Data_8b (TX_Packet),
+                          Status => Status);
+      if Status /= Ok then
+         raise Program_Error;
+      end if;
+
+      for I in Payload'Range loop
+         declare
+            Tx : constant SPI_Data_8b (1 .. 1) := (1 => 0);
+            Rx : SPI_Data_8b (1 .. 1)
+              with Address => Payload (I)'Address;
+         begin
+            This.Port.Transmit (Data => Tx,
+                                Status => Status);
+            if Status /= Ok then
+               raise Program_Error;
+            end if;
+
+            This.Port.Receive (Data => Rx,
+                               Status => Status);
+
+            if Status /= Ok then
+               raise Program_Error;
+            end if;
+         end;
+      end loop;
+   end Host_Memory_Read;
+
+   function Create_Header (Address : UInt22;
+                           Direction : Read_Or_Write) return Header
    is
+      Cast_Address : UInt24 := UInt24 (Address);
+      Mapped_Address : UInt8_Array (1 .. 3)
+        with Address => Cast_Address'Address;
+      Ret            : Header;
    begin
-      This.Send_Host_Command (Cmd => ACTIVE);
-      Wait (Period => Milliseconds (20));
-      
-      --  TODO: fill this in
-   end Internal_Clock;
-   
-   procedure Reset (This : in out FT801_Device)
-   is
-   begin
-      This.Cycle_PD;
-      This.Internal_Clock;
-   end Reset;
-   
+      Ret (1) := 2#0011_1111# and Mapped_Address (3);
+      case Direction is
+         when Read =>
+            null;
+         when Write =>
+            Ret (1) := 2#1000_0000# or Ret (1);
+      end case;
+
+      Ret (2) := Mapped_Address (2);
+      Ret (3) := Mapped_Address (1);
+
+      return Ret;
+   end Create_Header;
+
    procedure Send_Host_Command (This : in out FT801_Device;
                                 Cmd  : Command_Table)
    is
-      Arr : SPI_Data_8b := (Cmd, 0, 0);
+      Arr : constant SPI_Data_8b := (Command_Table'Pos (Cmd), 0, 0);
       Status : SPI_Status;
    begin
       This.Port.Transmit (Data => Arr,
                           Status => Status);
       if Status /= Ok then
          raise Program_Error;
-      end if;   
+      end if;
+      Wait (Period => Milliseconds (20));
    end Send_Host_Command;
-   
-   procedure Write_Reg8 (This : FT801_Device;
-                         Reg : UInt24;
-                         Val : UInt8)
+
+
+   procedure Initialize (This : in out FT801_Device;
+                         Settings : Display_Settings)
    is
-      Reg_Arr : UInt8_Array (1 .. 3)
-        with Address => Reg'Address;
-      Data : SPI_Data_8b := (Reg_Arr (3) or 16#80#,
-                             Reg_Arr (2),
-                             Reg_Arr (1),
-                             Val);
-      Status : SPI_Status;
+      GPIO_Dir_Reg : REG_GPIO_DIR_Reg;
    begin
-      This.Port.Transmit (Data => Data,
-                          Status => Status);
-      if Status /= OK then
-         raise Program_Error;
+      This.Settings := Settings;
+
+      --  Set SPI Freq under 11 MHz
+
+      --  set PD high
+      Set (This => This.PD.all);
+
+      --  bootup graphics controller
+      Reset (This => This);
+
+      --  Configure display registers
+      Write_Register (This => This,
+                      Reg  => REG_HCYCLE,
+                      Val  => REG_HCYCLE_Reg'(Cycles => This.Settings.HCycle,
+                                              others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_HOFFSET,
+                      Val  => REG_HOFFSET_Reg'(Cycles => This.Settings.Hoffset,
+                                              others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_HSYNC0,
+                      Val  => REG_HSYNC0_Reg'(Cycles => This.Settings.Hsync0,
+                                              others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_HSYNC1,
+                      Val  => REG_HSYNC1_Reg'(Cycles => This.Settings.Hsync1,
+                                              others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_VCYCLE,
+                      Val  => REG_VCYCLE_Reg'(Lines => This.Settings.VCycle,
+                                              others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_VOFFSET,
+                      Val  => REG_VOFFSET_Reg'(Lines => This.Settings.Voffset,
+                                              others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_VSYNC0,
+                      Val  => REG_VSYNC0_Reg'(Lines => This.Settings.Vsync0,
+                                              others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_VSYNC1,
+                      Val  => REG_VSYNC1_Reg'(Lines => This.Settings.Vsync1,
+                                              others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_SWIZZLE,
+                      Val  => REG_SWIZZLE_Reg'(Pin_Cfg => This.Settings.Swizzle,
+                                              others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_PCLK_POL,
+                      Val  => REG_PCLK_POL_Reg'(Falling_Edge => This.Settings.Polarity,
+                                               others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_CSPREAD,
+                      Val  => REG_CSPREAD_Reg'(Early => True,
+                                              others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_HSIZE,
+                      Val  => REG_HSIZE_Reg'(Cycles => This.Settings.Width,
+                                              others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_VSIZE,
+                      Val  => REG_VSIZE_Reg'(Lines => This.Settings.Height,
+                                              others => <>).Val);
+
+      if This.Settings.Ext_Clock then
+         Send_Host_Command (This => This,
+                            Cmd  => CLKEXT);
+      else
+         Send_Host_Command (This => This,
+                            Cmd => CLKINT);
       end if;
-      
-   end Write_Reg8;
-   
-   function Read_Reg8 (This : FT801_Device;
-                        Reg : UInt24)
-                        return UInt8
+
+      Read_Register (This => This,
+                            Reg => REG_GPIO_DIR,
+                          Val => GPIO_Dir_Reg.Val);
+
+      GPIO_Dir_Reg.GPIO7_Dir := Output;
+
+      Write_Register (This => This,
+                            Reg => REG_GPIO_DIR,
+                           Val => GPIO_Dir_Reg.Val);
+
+
+      --  Set SPI Freq back up to 30MHz
+
+   end Initialize;
+
+   procedure Cycle_PD (This : in out FT801_Device)
    is
-      Reg_Arr : UInt8_Array (1 .. 3)
-        with Address => Reg'Address;
-      Data : SPI_Data_8b := (Reg_Arr (3),
-                             Reg_Arr (2),
-                             Reg_Arr (1),
-                             0);
-      Status : SPI_Status;
-      Ret : SPI_Data_8b (1 .. 1);
    begin
-      This.Port.Transmit (Data => Data,
-                          Status => Status);
-      if Status /= OK then
-         raise Program_Error;
-      end if;
-      This.Port.Receive (Data => Ret,
-                         Status => Status);
-      if Status /= OK then
-         raise Program_Error;
-      end if;
-      
-      return Ret (1);
-   end Read_Reg8;
-   
-   procedure Write_Reg16 (This : FT801_Device;
-                          Reg : UInt24;
-                          Val : UInt16)
+      Set (This => This.PD.all);
+      Wait (Period => Milliseconds (20));
+      Clear (This => This.PD.all);
+      Wait (Period => Milliseconds (20));
+      Set (This => This.PD.all);
+      Wait (Period => Milliseconds (20));
+   end Cycle_PD;
+
+   procedure Internal_Clock (This : in out FT801_Device)
    is
-      Reg_Arr : UInt8_Array (1 .. 3)
-        with Address => Reg'Address;
-      Val_Array : UInt8_Array (1 .. 2)
-        with Address => Val'Address;
-      Data : SPI_Data_8b := (Reg_Arr (3) or 16#80#,
-                             Reg_Arr (2),
-                             Reg_Arr (1),
-                             Val (1),
-                             Val (2));
-      Status : SPI_Status;
    begin
-      This.Port.Transmit (Data => Data,
-                          Status => Status);
-      if Status /= OK then
-         raise Program_Error;
-      end if;
-      
-   end Write_Reg16;
-   
-   procedure Write_Reg32 (This : FT801_Device;
-                          Reg : UInt24;
-                          Val : UInt32)
+      Send_Host_Command (This => This,
+                         Cmd  => ACTIVE);
+      Wait (Period => Milliseconds (20));
+
+      --  TODO: fill this in
+   end Internal_Clock;
+
+   procedure Reset (This : in out FT801_Device)
    is
-      Reg_Arr : UInt8_Array (1 .. 3)
-        with Address => Reg'Address;
-      Val_Array : UInt8_Array (1 .. 4)
-        with Address => Val'Address;
-      Data : SPI_Data_8b := (Reg_Arr (3) or 16#80#,
-                             Reg_Arr (2),
-                             Reg_Arr (1),
-                             Val (1),
-                             Val (2),
-                             Val (3),
-                             Val (4));
-      Status : SPI_Status;
    begin
-      This.Port.Transmit (Data => Data,
-                          Status => Status);
-      if Status /= OK then
-         raise Program_Error;
-      end if;
-      
-   end Write_Reg32;
-   
-   function Read_Reg16 (This : FT801_Device;
-                        Reg : UInt24)
-                        return UInt8
-   is
-      Reg_Arr : UInt8_Array (1 .. 3)
-        with Address => Reg'Address;
-      Data : SPI_Data_8b := (Reg_Arr (3),
-                             Reg_Arr (2),
-                             Reg_Arr (1),
-                             0);
-      Status : SPI_Status;
-      Ret : SPI_Data_16b (1 .. 1);
-   begin
-      This.Port.Transmit (Data => Data,
-                          Status => Status);
-      if Status /= OK then
-         raise Program_Error;
-      end if;
-      This.Port.Receive (Data => Ret,
-                         Status => Status);
-      if Status /= OK then
-         raise Program_Error;
-      end if;
-      
-      return Ret (1);
-   end Read_Reg16;
-   
-   procedure DL (This : FT801_Device;
-                 Cmds : Cmd_List)
-   is
-      Counter : Positive := 0;
-   begin
-      for I in Cmds'Range loop
-         This.Write_Reg32 (Reg => RAM_DL_Address + Counter,
-                           Val => Cmds (I));
-         Counter = Counter + 4;
-      end loop;
-   end DL;
-   
+      Cycle_PD (This => This);
+      Internal_Clock (This => This);
+   end Reset;
+
+
    procedure Display_On (This : in out FT801_Device)
    is
-      Reg : UInt8 := This.Read_Reg8 (Reg => REG_GPIO);
+      Reg : REG_GPIO_Reg;
    begin
-      Reg := Reg or Shift_Left (Value  => 1,
-                                Amount => 7);
-      This.Write_Reg8 (Reg => REG_GPIO,
-                       Val => Reg); 
+      Read_Register (This => This,
+                     Reg  => REG_GPIO,
+                     Val  => Reg.Val);
+      Reg.GPIO7 := True;
+
+      Write_Register (This => This,
+                      Reg  => REG_GPIO,
+                      Val  => Reg.Val);
    end Display_On;
-   
+
    procedure Display_Off (This : in out FT801_Device)
    is
-      Reg : UInt8 := This.Read_Reg8 (Reg => REG_GPIO);
+      Reg : REG_GPIO_Reg;
    begin
-      Reg := Reg or not Shift_Left (Value  => 1,
-                                    Amount => 7);
-      This.Write_Reg8 (Reg => REG_GPIO,
-                       Val => Reg);
+      Read_Register (This => This,
+                     Reg  => REG_GPIO,
+                     Val  => Reg.Val);
+      Reg.GPIO7 := False;
+
+      Write_Register (This => This,
+                      Reg  => REG_GPIO,
+                      Val  => Reg.Val);
    end Display_Off;
-   
+
    procedure Enable_Interrupts (This : FT801_Device;
-                                Mask : UInt8 := 0)
+                                Mask : Interrupts)
    is
+
    begin
-      This.Write_Reg8 (Reg => REG_INT_EN,
-                       Val => 1);
-      This.Write_Reg8 (Reg => REG_INT_MASK,
-                       Val => Mask);
+      Write_Register (This => This,
+                      Reg  => REG_INT_EN,
+                      Val  => REG_INT_EN_Reg'(Enable => True,
+                                              others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_INT_MASK,
+                      Val  => REG_INT_MASK_Reg'(Mask => Mask,
+                                               others => <>).Val);
    end Enable_Interrupts;
-   
+
    procedure Disable_Interrupts (This : FT801_Device)
    is
    begin
-      This.Write_Reg8 (Reg => REG_INT_EN,
-                       Val => 0);
+      Write_Register (This => This,
+                      Reg  => REG_INT_EN,
+                      Val  => REG_INT_EN_Reg'(Enable => False,
+                                              others => <>).Val);
    end Disable_Interrupts;
-   
-   function Read_Interrupt_Flags (This : FT801_Device) return UInt8
+
+   function Read_Interrupts (This : FT801_Device) return Interrupts
    is
+      Reg : REG_INT_FLAGS_Reg;
    begin
-      return This.Read_Reg8 (Reg => REG_INT_FLAGS);
-   end Read_Interrupt_Flags;
-                        
-   procedure Draw_Bitmap (This : in out FT801_Device;
+      Read_Register (This => This,
+                     Reg  => REG_INT_FLAGS,
+                     Val  => Reg.Val);
+      return Reg.Mask;
+   end Read_Interrupts;
+
+   procedure Draw_Bitmap (This : FT801_Device;
                           Format : Graphics_Bitmap_Format;
+                          Width  : UInt10;
+                          Height : UInt10;
                           Img : UInt8_Array)
    is
+      Status : SPI_Status;
    begin
-      --  TODO: write image to RAM_G
-      
-      This.DL (Cmds => (CMD_CLEAR (True, True, True),
-                        CMD_BEGIN (BITMAPS),
-                        CMD_END,
-                        CMD_DISPLAY));
-                        
-                        
-      
-   end Draw_Bitmap;   
-      
-  
-                        
-                        
-   
-   
-      
-   
-   
-   
-     
+      Host_Memory_Write (This    => This,
+                         Address => RAM_G_Address,
+                         Payload => Img);
+
+      This.CPCMD_DL_START;
+
+
+      Display_List.Send_Cmd_List (This => This,
+                                  Cmds => (Display_List.Clear'(Color   => True,
+                                                               Stencil => True,
+                                                               Tag     => True,
+                                                               others  => <>).Val,
+                                           Display_List.Bitmap_Source'(Addr => RAM_G_Address,
+                                                                       others  => <>).Val,
+                                           Display_List.Bitmap_Layout'(Format     => Format,
+                                                                       Linestride => Width,
+                                                                       Height     => Height,
+                                                                       others     => <>).Val,
+                                           Display_List.Bitmap_Size'(Filter => False,
+                                                                     Wrapx  => False,
+                                                                     WrapY  => False,
+                                                                     Width  => Width,
+                                                                     Height => Height,
+                                                                     others  => <>).Val,
+                                           Display_List.Cmd_Begin'(Prim => BITMAPS,
+                                                                   others  => <>).Val,
+                                           Display_List.Cmd_End'(others => <>).Val));
+
+      Display_List.Send_Cmd_List (This => This,
+                                  Cmds => ())
+      This.DL (Cmds => DLCMD_Display'(others => <>).Val);
+      This.CPCMD_SWAP;
+      --  TODO: write to REG_CMD_WRITE with ending FIFO address
+      --  TODO: wait for REG_CMD_READ to equal the ending FIFO address
+
+   end Draw_Bitmap;
+
+
+
+
+
+
+
+
+
+
+
 
 end FT801;

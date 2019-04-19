@@ -122,6 +122,13 @@ package SAM.GPIO is
    procedure Enable_Clock (Point : GPIO_Point);
    procedure Disable_Clock (Port : GPIO_Port);
    procedure Disable_Clock (Point : GPIO_Point);
+
+   type Interrupt_Trigger_Type is
+     (Any_Edge, Rising_Edge, Falling_Edge, Low, High);
+
+   procedure Enable_Interrupt (This : GPIO_Point;
+                               Trigger : Interrupt_Trigger_Type);
+   procedure Disable_Interrupt (This : GPIO_Point);
 private
 
    type GPIO_Port is new SAM_SVD.PIO.PIO_Peripheral;

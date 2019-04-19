@@ -287,4 +287,36 @@ package body SAM.GPIO is
       SAM.PMC.Disable_Peripheral_Clock (ID => Group_ID (GPIO => Point));
    end Disable_Clock;
 
+   procedure Enable_Interrupt (This : GPIO_Point;
+                               Trigger : Interrupt_Trigger_Type)
+   is
+   begin
+      This.Periph.PIO_IER.Arr (This.Pin) := True;
+      case Trigger is
+         when Rising_Edge =>
+            This.Periph.PIO_AIMER.Arr (This.Pin) := True;
+            This.Periph.PIO_ESR.Arr (This.Pin) := True;
+            This.Periph.PIO_REHLSR.Arr (This.Pin) := True;
+         when Falling_Edge =>
+            This.Periph.PIO_AIMER.Arr (This.Pin) := True;
+            This.Periph.PIO_ESR.Arr (This.Pin) := True;
+            This.Periph.PIO_FELLSR.Arr (This.Pin) := True;
+         when Low =>
+            This.Periph.PIO_AIMER.Arr (This.Pin) := True;
+            This.Periph.PIO_LSR.Arr (This.Pin) := True;
+            This.Periph.PIO_FELLSR.Arr (This.Pin) := True;
+         when High =>
+            This.Periph.PIO_AIMER.Arr (This.Pin) := True;
+            This.Periph.PIO_LSR.Arr (This.Pin) := True;
+            This.Periph.PIO_REHLSR.Arr (This.Pin) := True;
+         when Any_Edge =>
+            This.Periph.PIO_AIMDR.Arr (This.Pin) := True
+   end Enable_Interrupt;
+
+   procedure Disable_Interrupt (This : GPIO_Point)
+   is
+   begin
+      This.Periph.PIO_IDR.Arr (This.Pin) := True;
+   end Disable_Interrupt;
+
 end SAM.GPIO;
