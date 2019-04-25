@@ -6,15 +6,6 @@ private with Ada.Real_Time;
 
 package FT801 is
 
-   pragma Warnings (Off);
--------------------------------------------------------------------------------------------------------------------------------------------------------------
---  Display parameters used for various options are
---  FT800_DisplayResolution         Width   Height  Swizzle Polarity    PClk    HCycle  Hoffset     Hsync0      Hsync1      VCycle  Voffset     Vsync0  Vsync1
---  FT_DISPLAY_QVGA_320x240         320     240     3       0           8       408     70          0           10          263         13      0       2
---  FT_DISPLAY_WQVGA_480x272        480     272     0       1           5       548     43          0           41          292         12      0       10
---------------------------------------------------------------------------------------------------------------------------------------------------------------
-   pragma Warnings (On);
-
    type Display_Settings is record
       Width       : UInt10;
       Height      : UInt10;
@@ -36,16 +27,19 @@ package FT801 is
    type FT801_Device (Port     : not null Any_SPI_Port;
                       PD       : not null Any_GPIO_Point) is private;
 
-   procedure Initialize (This : in out FT801_Device;
+   procedure Initialize (This     : in out FT801_Device;
                          Settings : Display_Settings);
+
+   procedure Display_On (This : in out FT801_Device);
+   procedure Display_Off (This : in out FT801_Device);
 
    procedure Reset (This : in out FT801_Device);
 
    type Interrupts is record
-      Swap : Boolean;
-      Rsv  : Boolean;
-      Tag  : Boolean;
-      Sound : Boolean;
+      Swap              : Boolean;
+      Rsv               : Boolean;
+      Tag               : Boolean;
+      Sound             : Boolean;
       Playback          : Boolean;
       CmdEmpty          : Boolean;
       CmdFlag           : Boolean;
@@ -100,10 +94,10 @@ package FT801 is
       X, Y : Integer;
    end record;
 
-   procedure Draw_Bitmap (This   : FT801_Device;
+   procedure Draw_Bitmap (This   : in out FT801_Device;
                           Format : Graphics_Bitmap_Format;
-                          Width  : UInt10;
-                          Height : UInt10;
+                          Width  : UInt9;
+                          Height : UInt9;
                           Img    : UInt8_Array);
 
 --     procedure Draw_Rectangle (This : FT801_Device;
@@ -117,7 +111,7 @@ package FT801 is
 --                            Text : String);
 
 private
-   
+
    type Fifo_Pointer_Type is mod 4096;
 
    type FT801_Device (Port     : not null Any_SPI_Port;
@@ -170,8 +164,6 @@ private
       CLK48M  => 16#62#,
 
       CORERST => 16#68#);
-
-
 
    procedure Send_Host_Command (This : in out FT801_Device;
                                 Cmd  : Command_Table);
@@ -293,8 +285,6 @@ private
 --     procedure Set_Display_Enable (This   : in out FT801_Device;
 --                                   Enable : Boolean);
 
-   procedure Display_On (This : in out FT801_Device);
-   procedure Display_Off (This : in out FT801_Device);
 
    procedure Cycle_PD (This : in out FT801_Device);
    procedure Internal_Clock (This : in out FT801_Device);

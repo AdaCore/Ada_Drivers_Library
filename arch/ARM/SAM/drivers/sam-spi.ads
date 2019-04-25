@@ -146,12 +146,6 @@ package SAM.SPI is
       Status  : out HAL.SPI.SPI_Status;
       Timeout : Natural := SPI_Timeout);
 
-   procedure Transfer (This    : in out SPI_Port;
-                       Tx_Data : UInt8;
-                       Rx_Data : out UInt8;
-                       Status  : out HAL.SPI.SPI_Status;
-                       Timeout : Natural := SPI_Timeout);
-
    overriding
    procedure Receive
      (This    : in out SPI_Port;

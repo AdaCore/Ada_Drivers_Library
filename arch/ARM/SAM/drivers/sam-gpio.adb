@@ -310,7 +310,8 @@ package body SAM.GPIO is
             This.Periph.PIO_LSR.Arr (This.Pin) := True;
             This.Periph.PIO_REHLSR.Arr (This.Pin) := True;
          when Any_Edge =>
-            This.Periph.PIO_AIMDR.Arr (This.Pin) := True
+            This.Periph.PIO_AIMDR.Arr (This.Pin) := True;
+      end case;
    end Enable_Interrupt;
 
    procedure Disable_Interrupt (This : GPIO_Point)
@@ -318,5 +319,11 @@ package body SAM.GPIO is
    begin
       This.Periph.PIO_IDR.Arr (This.Pin) := True;
    end Disable_Interrupt;
+
+   function Read_Interrupt_Status (This : GPIO_Point) return Boolean
+   is
+   begin
+      return This.Periph.PIO_ISR.Arr (This.Pin);
+   end Read_Interrupt_Status;
 
 end SAM.GPIO;

@@ -1,6 +1,6 @@
 package FT801.Registers is
 
-   type Register is 
+   type Register is
      (REG_ID,
       REG_FRAMES,
       REG_CLOCK,
@@ -77,7 +77,7 @@ package FT801.Registers is
       REG_CTOUCH_TOUCH3_XY,
       REG_TRACKER)
      with Size => 22;
-   
+
    for Register use
      (REG_ID => 16#102400#,
       REG_FRAMES => 16#102404#,
@@ -154,15 +154,15 @@ package FT801.Registers is
       REG_CTOUCH_TOUCH2_XY => 16#102574#,
       REG_CTOUCH_TOUCH3_XY => 16#102578#,
       REG_TRACKER => 16#109000#);
-         
+
    procedure Write_Register (This : FT801_Device;
                              Reg  : Register;
                              Val  : UInt32);
-   
+
    procedure Read_Register (This : FT801_Device;
                             Reg  : Register;
                             Val  : out UInt32);
-   
+
    type REG_PCLK_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
@@ -173,33 +173,33 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_PCLK_Reg use record
       RSVD at 0 range 8 .. 31;
       Div at 0 range 0 .. 7;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_PCLK_POL_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
-            RSVD : Uint31 := 0;
+            RSVD : UInt31 := 0;
             Falling_Edge : Boolean := False;
          when True =>
             Val : UInt32;
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_PCLK_POL_Reg use record
       RSVD at 0 range 1 .. 31;
       Falling_Edge at 0 range 0 .. 0;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_CSPREAD_Reg (As_Val : Boolean := False) is record
       case As_Val is
-         when False => 
+         when False =>
             RSVD : UInt31 := 0;
             Early : Boolean := True;
          when True =>
@@ -207,16 +207,16 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_CSPREAD_Reg use record
       RSVD at 0 range 1 .. 31;
       Early at 0 range 0 .. 0;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_SWIZZLE_Reg (As_Val : Boolean := False) is record
       case As_Val is
-         when False => 
+         when False =>
             RSVD : UInt28 := 0;
             Pin_Cfg : UInt4 := 0;
          when True =>
@@ -224,16 +224,16 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_SWIZZLE_Reg use record
       RSVD at 0 range 4 .. 31;
       Pin_Cfg at 0 range 0 .. 3;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_DITHER_Reg (As_Val : Boolean := False) is record
       case As_Val is
-         when False => 
+         when False =>
             RSVD : UInt31 := 16#1B6#;
             Enable : Boolean := False;
          when True =>
@@ -241,16 +241,16 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_DITHER_Reg use record
       RSVD at 0 range 1 .. 31;
       Enable at 0 range 0 .. 0;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_OUTBITS_Reg (As_Val : Boolean := False) is record
       case As_Val is
-         when False => 
+         when False =>
             RSVD : UInt23 := 0;
             B    : UInt3 := 6;
             G    : UInt3 := 6;
@@ -260,7 +260,7 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_OUTBITS_Reg use record
       RSVD at 0 range 9 .. 31;
       B at 0 range 0 .. 2;
@@ -268,10 +268,10 @@ package FT801.Registers is
       R at 0 range 6 .. 8;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_ROTATE_Reg (As_Val : Boolean := False) is record
       case As_Val is
-         when False => 
+         when False =>
             RSVD : UInt31 := 0;
             Enable : Boolean := False;
          when True =>
@@ -279,16 +279,16 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_ROTATE_Reg use record
       RSVD at 0 range 1 .. 31;
       Enable at 0 range 0 .. 0;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_VSYNC1_Reg (As_Val : Boolean := False) is record
       case As_Val is
-         when False => 
+         when False =>
             RSVD : UInt22 := 0;
             Lines : UInt10 := 16#0A#;
          when True =>
@@ -296,7 +296,7 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_VSYNC1_Reg use record
       RSVD at 0 range 10 .. 31;
       Lines at 0 range 0 .. 9;
@@ -305,7 +305,7 @@ package FT801.Registers is
 
    type REG_VSYNC0_Reg (As_Val : Boolean := False) is record
       case As_Val is
-         when False => 
+         when False =>
             RSVD : UInt22 := 0;
             Lines : UInt10 := 0;
          when True =>
@@ -313,13 +313,13 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_VSYNC0_Reg use record
       RSVD at 0 range 10 .. 31;
       Lines at 0 range 0 .. 9;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_VSIZE_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
@@ -330,16 +330,16 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_VSIZE_Reg use record
       RSVD at 0 range 10 .. 31;
       Lines at 0 range 0 .. 9;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_VOFFSET_Reg (As_Val : Boolean := False) is record
       case As_Val is
-         when False => 
+         when False =>
             RSVD : UInt22 := 0;
             Lines : UInt10 := 16#00C#;
          when True =>
@@ -347,13 +347,13 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_VOFFSET_Reg use record
       RSVD at 0 range 10 .. 31;
       Lines at 0 range 0 .. 9;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_VCYCLE_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
@@ -364,16 +364,16 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_VCYCLE_Reg use record
       RSVD at 0 range 10 .. 31;
       Lines at 0 range 0 .. 9;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_HSYNC1_Reg (As_Val : Boolean := False) is record
       case As_Val is
-         when False => 
+         when False =>
             RSVD : UInt22 := 0;
             Cycles : UInt10 := 16#029#;
          when True =>
@@ -381,16 +381,16 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_HSYNC1_Reg use record
       RSVD at 0 range 10 .. 31;
       Cycles at 0 range 0 .. 9;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_HSYNC0_Reg (As_Val : Boolean := False) is record
       case As_Val is
-         when False => 
+         when False =>
             RSVD : UInt22 := 0;
             Cycles : UInt10 := 0;
          when True =>
@@ -398,13 +398,13 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_HSYNC0_Reg use record
       RSVD at 0 range 10 .. 31;
       Cycles at 0 range 0 .. 9;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_HSIZE_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
@@ -415,13 +415,13 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_HSIZE_Reg use record
       RSVD at 0 range 10 .. 31;
       Cycles at 0 range 0 .. 9;
       Val at 0 range 0 .. 31;
    end record;
-      
+
    type REG_HOFFSET_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
@@ -432,13 +432,13 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_HOFFSET_Reg use record
       RSVD at 0 range 10 .. 31;
       Cycles at 0 range 0 .. 9;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_HCYCLE_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
@@ -449,21 +449,21 @@ package FT801.Registers is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_HCYCLE_Reg use record
       RSVD at 0 range 10 .. 31;
       Cycles at 0 range 0 .. 9;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type GPIO_Direction is
      (Input, Output)
      with Size => 1;
-   
+
    for GPIO_Direction use
      (Input => 0,
       Output => 1);
-   
+
    type REG_GPIO_DIR_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
@@ -475,13 +475,13 @@ package FT801.Registers is
             GPIO4_Dir : GPIO_Direction := Input;
             GPIO5_Dir : GPIO_Direction := Input;
             GPIO6_Dir : GPIO_Direction := Input;
-            GPIO7_Dir : GPIO_Direction := Output;       
+            GPIO7_Dir : GPIO_Direction := Output;
          when True =>
             Val : UInt32;
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_GPIO_DIR_Reg use record
       RSVD at 0 range 8 .. 31;
       GPIO0_Dir at 0 range 0 .. 0;
@@ -494,7 +494,7 @@ package FT801.Registers is
       GPIO7_Dir at 0 range 7 .. 7;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_GPIO_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
@@ -506,13 +506,13 @@ package FT801.Registers is
             GPIO4 : Boolean := False;
             GPIO5 : Boolean := False;
             GPIO6 : Boolean := False;
-            GPIO7 : Boolean := False;       
+            GPIO7 : Boolean := False;
          when True =>
             Val : UInt32;
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_GPIO_Reg use record
       RSVD at 0 range 8 .. 31;
       GPIO0 at 0 range 0 .. 0;
@@ -525,82 +525,81 @@ package FT801.Registers is
       GPIO7 at 0 range 7 .. 7;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_INT_MASK_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
             RSVD : UInt24 := 0;
-            Mask : Interrupts := (others => True);      
+            Mask : Interrupts := (others => True);
          when True =>
             Val : UInt32;
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_INT_MASK_Reg use record
       RSVD at 0 range 8 .. 31;
       Mask at 0 range 0 .. 7;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_INT_EN_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
             RSVD : UInt31 := 0;
-            Enable : Boolean := False;      
+            Enable : Boolean := False;
          when True =>
             Val : UInt32;
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_INT_EN_Reg use record
       RSVD at 0 range 1 .. 31;
       Enable at 0 range 0 .. 0;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type REG_INT_FLAGS_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
             RSVD : UInt24 := 0;
-            Mask : Interrupts := (others => False);     
+            Mask : Interrupts := (others => False);
          when True =>
             Val : UInt32;
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_INT_FLAGS_Reg use record
       RSVD at 0 range 8 .. 31;
       Mask at 0 range 0 .. 7;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type Swap_Type is
      (Immediate, After_Scan_Out)
      with Size => 2;
-   
-   for Swap_Type use 
+
+   for Swap_Type use
      (Immediate      => 1,
       After_Scan_Out => 2);
-   
+
    type REG_DLSWAP_Reg (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
             RSVD : UInt30 := 0;
-            Swap : Swap_Type := After_Scan_Out;    
+            Swap : Swap_Type := After_Scan_Out;
          when True =>
             Val : UInt32;
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for REG_DLSWAP_Reg use record
       RSVD at 0 range 2 .. 31;
       Swap at 0 range 0 .. 1;
       Val at 0 range 0 .. 31;
    end record;
-      
 
 end FT801.Registers;

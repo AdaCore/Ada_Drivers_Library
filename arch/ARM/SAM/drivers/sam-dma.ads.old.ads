@@ -3,15 +3,15 @@ pragma Restrictions (No_Elaboration_Code);
 with System;         use System;
 with Ada.Real_Time;  use Ada.Real_Time;
 
-private with SAM_SVD.XDMAC;
+--  private with SAM_SVD.XDMAC;
 
 package SAM.DMA is
 
-   type DMA_Controller is limited private;
-   
+--   type DMA_Controller is limited private;
+
    type HW_Iface_Number is
-     (HSMCI_TXRX, 
-      SPI0_TX, SPI0_RX, 
+     (HSMCI_TXRX,
+      SPI0_TX, SPI0_RX,
       SPI1_TX, SPI1_RX,
       QSPI_TX, QSPI_RX,
       USART0_TX, USART0_RX,
@@ -42,59 +42,59 @@ package SAM.DMA is
       I2SC1_TX_Left, I2SC1_RX_Left,
       I2SC0_TX_Right, I2SC0_RX_Right,
       I2SC1_TX_Right, I2SC1_RX_Right);
-   
+
    for HW_Iface_Number use
-     (HSMCI_TXRX => 0, 
-      SPI0_TX => 1, 
-      SPI0_RX => 2, 
-      SPI1_TX => 3, 
+     (HSMCI_TXRX => 0,
+      SPI0_TX => 1,
+      SPI0_RX => 2,
+      SPI1_TX => 3,
       SPI1_RX => 4,
-      QSPI_TX => 5, 
+      QSPI_TX => 5,
       QSPI_RX => 6,
-      USART0_TX => 7, 
+      USART0_TX => 7,
       USART0_RX => 8,
-      USART1_TX => 9, 
+      USART1_TX => 9,
       USART1_RX => 10,
-      USART2_TX => 11, 
+      USART2_TX => 11,
       USART2_RX => 12,
       PWM0_TX => 13,
-      TWIHS0_TX => 14, 
+      TWIHS0_TX => 14,
       TWIHS0_RX => 15,
-      TWIHS1_TX => 16, 
+      TWIHS1_TX => 16,
       TWIHS1_RX => 17,
-      TWIHS2_TX => 18, 
+      TWIHS2_TX => 18,
       TWIHS2_RX => 19,
-      UART0_TX => 20, 
+      UART0_TX => 20,
       UART0_RX => 21,
-      UART1_TX => 22, 
+      UART1_TX => 22,
       UART1_RX => 23,
-      UART2_TX => 24, 
+      UART2_TX => 24,
       UART2_RX => 25,
-      UART3_TX => 26, 
+      UART3_TX => 26,
       UART3_RX => 27,
-      UART4_TX => 28, 
+      UART4_TX => 28,
       UART4_RX => 29,
       DACC0_TX => 30,
       DACC1_TX => 31,
-      SSC_TX => 32, 
+      SSC_TX => 32,
       SSC_RX => 33,
       PIOA_RX => 34,
       AFEC0_RX => 35,
       AFEC1_RX => 36,
-      AES_TX => 37, 
+      AES_TX => 37,
       AES_RX => 38,
       PWM1_TX => 39,
       TC0_RX => 40,
       TC3_RX => 41,
       TC6_RX => 42,
       TC9_RX => 43,
-      I2SC0_TX_Left => 44, 
+      I2SC0_TX_Left => 44,
       I2SC0_RX_Left => 45,
-      I2SC1_TX_Left => 46, 
+      I2SC1_TX_Left => 46,
       I2SC1_RX_Left => 47,
-      I2SC0_TX_Right => 48, 
+      I2SC0_TX_Right => 48,
       I2SC0_RX_Right => 49,
-      I2SC1_TX_Right => 50, 
+      I2SC1_TX_Right => 50,
       I2SC1_RX_Right => 51);
 
    --  Do not change the order of the enumerals in the types in this package.
@@ -629,6 +629,6 @@ package SAM.DMA is
 
 private
 
-   type DMA_Controller is new STM32_SVD.DMA.DMA_Peripheral;
+--   type DMA_Controller is new STM32_SVD.DMA.DMA_Peripheral;
 
 end STM32.DMA;

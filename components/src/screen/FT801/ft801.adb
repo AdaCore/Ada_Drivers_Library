@@ -2,6 +2,7 @@ with Ada.Real_Time; use Ada.Real_Time;
 
 with FT801.Registers; use FT801.Registers;
 with FT801.Display_List;
+with FT801.Coproc;
 
 package body FT801 is
 
@@ -104,10 +105,17 @@ package body FT801 is
                          Settings : Display_Settings)
    is
       GPIO_Dir_Reg : REG_GPIO_DIR_Reg;
+      Chipid : UInt32;
    begin
       This.Settings := Settings;
 
-      --  Set SPI Freq under 11 MHz
+      Read_Register (This => This,
+                     Reg  => REG_ID,
+                     Val  => Chipid);
+
+      if Chipid /= 16#7C# then
+         raise Program_Error;
+      end if;
 
       --  set PD high
       Set (This => This.PD.all);
@@ -167,7 +175,13 @@ package body FT801 is
       Write_Register (This => This,
                       Reg  => REG_VSIZE,
                       Val  => REG_VSIZE_Reg'(Lines => This.Settings.Height,
-                                              others => <>).Val);
+                                             others => <>).Val);
+      Write_Register (This => This,
+                      Reg  => REG_PCLK,
+                      Val  => REG_PCLK_Reg'(Div => This.Settings.PClk,
+                                             others => <>).Val);
+
+
 
       if This.Settings.Ext_Clock then
          Send_Host_Command (This => This,
@@ -178,8 +192,8 @@ package body FT801 is
       end if;
 
       Read_Register (This => This,
-                            Reg => REG_GPIO_DIR,
-                          Val => GPIO_Dir_Reg.Val);
+                     Reg  => REG_GPIO_DIR,
+                     Val  => GPIO_Dir_Reg.Val);
 
       GPIO_Dir_Reg.GPIO7_Dir := Output;
 
@@ -205,12 +219,23 @@ package body FT801 is
 
    procedure Internal_Clock (This : in out FT801_Device)
    is
+      Bootup : constant UInt8_Array := (0, 0, 0, 2,
+                                        7, 0, 0, 38,
+                                        0, 0, 0, 0);
+
    begin
       Send_Host_Command (This => This,
                          Cmd  => ACTIVE);
       Wait (Period => Milliseconds (20));
 
-      --  TODO: fill this in
+      Host_Memory_Write (This    => This,
+                         Address => RAM_DL_Address,
+                         Payload => Bootup);
+      Write_Register (This => This,
+                      Reg  => REG_DLSWAP,
+                      Val  => REG_DLSWAP_Reg'(others => <>).Val);
+      This.Fifo_Ptr := 0;
+
    end Internal_Clock;
 
    procedure Reset (This : in out FT801_Device)
@@ -283,19 +308,18 @@ package body FT801 is
       return Reg.Mask;
    end Read_Interrupts;
 
-   procedure Draw_Bitmap (This : FT801_Device;
+   procedure Draw_Bitmap (This   : in out FT801_Device;
                           Format : Graphics_Bitmap_Format;
-                          Width  : UInt10;
-                          Height : UInt10;
-                          Img : UInt8_Array)
+                          Width  : UInt9;
+                          Height : UInt9;
+                          Img    : UInt8_Array)
    is
-      Status : SPI_Status;
    begin
       Host_Memory_Write (This    => This,
                          Address => RAM_G_Address,
                          Payload => Img);
 
-      This.CPCMD_DL_START;
+      Coproc.Cmd_Start (This => This);
 
 
       Display_List.Send_Cmd_List (This => This,
@@ -306,7 +330,7 @@ package body FT801 is
                                            Display_List.Bitmap_Source'(Addr => RAM_G_Address,
                                                                        others  => <>).Val,
                                            Display_List.Bitmap_Layout'(Format     => Format,
-                                                                       Linestride => Width,
+                                                                       Linestride => UInt10 (Width),
                                                                        Height     => Height,
                                                                        others     => <>).Val,
                                            Display_List.Bitmap_Size'(Filter => False,
@@ -315,28 +339,16 @@ package body FT801 is
                                                                      Width  => Width,
                                                                      Height => Height,
                                                                      others  => <>).Val,
-                                           Display_List.Cmd_Begin'(Prim => BITMAPS,
+                                           Display_List.Cmd_Begin'(Prim => Display_List.BITMAPS,
                                                                    others  => <>).Val,
                                            Display_List.Cmd_End'(others => <>).Val));
 
-      Display_List.Send_Cmd_List (This => This,
-                                  Cmds => ())
-      This.DL (Cmds => DLCMD_Display'(others => <>).Val);
-      This.CPCMD_SWAP;
-      --  TODO: write to REG_CMD_WRITE with ending FIFO address
-      --  TODO: wait for REG_CMD_READ to equal the ending FIFO address
+      Coproc.Cmd_End (This => This);
+      Registers.Write_Register (This => This,
+                                Reg  => REG_CMD_WRITE,
+                                Val  => UInt32 (This.Fifo_Ptr));
 
    end Draw_Bitmap;
-
-
-
-
-
-
-
-
-
-
 
 
 end FT801;

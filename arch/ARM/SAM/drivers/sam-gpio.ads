@@ -129,6 +129,8 @@ package SAM.GPIO is
    procedure Enable_Interrupt (This : GPIO_Point;
                                Trigger : Interrupt_Trigger_Type);
    procedure Disable_Interrupt (This : GPIO_Point);
+
+   function Read_Interrupt_Status (This : GPIO_Point) return Boolean;
 private
 
    type GPIO_Port is new SAM_SVD.PIO.PIO_Peripheral;

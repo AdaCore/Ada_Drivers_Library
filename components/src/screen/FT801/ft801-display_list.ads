@@ -1,11 +1,11 @@
 package FT801.Display_List is
-   
+
    type Cmd_List is array (Natural range <>) of UInt32;
-   
-   procedure Send_Cmd_List (This : FT801_Device;
+
+   procedure Send_Cmd_List (This : in out FT801_Device;
                             Cmds : Cmd_List);
-   
-    type Graphics_Primitives is
+
+   type Graphics_Primitives is
      (BITMAPS,
       POINTS,
       LINES,
@@ -16,7 +16,7 @@ package FT801.Display_List is
       EDGE_STRIP_B,
       RECTS)
      with Size => 4;
-   
+
    for Graphics_Primitives use
      (BITMAPS      => 1,
       POINTS       => 2,
@@ -26,7 +26,7 @@ package FT801.Display_List is
       EDGE_STRIP_L => 6,
       EDGE_STRIP_A => 7,
       EDGE_STRIP_B => 8,
-      RECTS        => 9);  
+      RECTS        => 9);
 
    type Cmd_Begin (As_Val : Boolean := False) is record
       case As_Val is
@@ -39,17 +39,17 @@ package FT801.Display_List is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for Cmd_Begin use record
       Cmd at 0 range 24 .. 31;
       RSVD at 0 range 4 .. 23;
       Prim at 0 range 0 .. 3;
       Val at 0 range 0 .. 31;
-   end record; 
-      
+   end record;
+
    type Bitmap_Layout (As_Val : Boolean := False) is record
       case As_Val is
-         when False => 
+         when False =>
             Cmd        : UInt8 := 16#07#;
             Format     : Graphics_Bitmap_Format;
             Linestride : UInt10;
@@ -59,7 +59,7 @@ package FT801.Display_List is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for Bitmap_Layout use record
       Cmd at 0 range 24 .. 31;
       Format at 0 range 19 .. 23;
@@ -67,7 +67,7 @@ package FT801.Display_List is
       Height at 0 range 0 .. 8;
       Val at 0 range 0 .. 31;
    end record;
-  
+
    type Bitmap_Size (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
@@ -83,7 +83,7 @@ package FT801.Display_List is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for Bitmap_Size use record
       Cmd at 0 range 24 .. 31;
       RSVD at 0 range 21 .. 23;
@@ -94,7 +94,7 @@ package FT801.Display_List is
       Height at 0 range 0 .. 8;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type Bitmap_Source (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
@@ -106,14 +106,14 @@ package FT801.Display_List is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for Bitmap_Source use record
       Cmd at 0 range 24 .. 31;
       RSVD at 0 range 20 .. 23;
       Addr at 0 range 0 .. 19;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type Clear (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
@@ -127,7 +127,7 @@ package FT801.Display_List is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for Clear use record
       Cmd at 0 range 24 .. 31;
       RSVD at 0 range 3 .. 23;
@@ -136,10 +136,10 @@ package FT801.Display_List is
       Tag at 0 range 0 .. 0;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type Display (As_Val : Boolean := False) is record
       case As_Val is
-         when False =>          
+         when False =>
             Cmd : UInt8 := 0;
             RSVD : UInt24 := 0;
          when True =>
@@ -147,13 +147,13 @@ package FT801.Display_List is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for Display use record
       Cmd at 0 range 24 .. 31;
       RSVD at 0 range 0 .. 23;
       Val at 0 range 0 .. 31;
    end record;
-   
+
    type Cmd_End (As_Val : Boolean := False) is record
       case As_Val is
          when False =>
@@ -164,7 +164,7 @@ package FT801.Display_List is
       end case;
    end record
      with Unchecked_Union, Size => 32;
-   
+
    for Cmd_End use record
       Cmd at 0 range 24 .. 31;
       RSVD at 0 range 0 .. 23;
