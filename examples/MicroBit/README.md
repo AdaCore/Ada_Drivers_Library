@@ -13,7 +13,7 @@ at:
 
 GNAT Community now comes with micro:bit and pyOCD support built-in. So you only
 need to download the ARM ELF and the native package from
-[here](adacore.com/download)
+[here](https://www.adacore.com/download)
 
 ## pyOCD programmer
 
