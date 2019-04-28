@@ -47,7 +47,7 @@ package MicroBit.SPI is
    --  pins:
    --   - P15 -> MOSI
    --   - P14 -> MISO
-   --   - p13 -> Clock
+   --   - P13 -> Clock
 
    function Controller return not null Any_SPI_Port;
    --  Return the HAL.SPI controller implementation
