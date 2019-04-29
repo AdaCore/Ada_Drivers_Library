@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--                        Copyright (C) 2019, AdaCore                       --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,70 +29,57 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.GPIO; use nRF51.GPIO;
+package body NeoPixel is
 
-package MicroBit.IOs is
+   Stride : constant array (LED_Mode) of Positive :=
+     (RGBW => 4, others => 3);
 
-   type Pin_Id is range 0 .. 20;
+   ------------
+   -- Create --
+   ------------
 
-   type IO_Features is (Digital, Analog, Touch);
+   function Create (Mode : LED_Mode; Count : Positive) return LED_Strip is
+   begin
+      return LED_Strip'(Mode     => Mode,
+                        Count    => Count,
+                        Buf_Last => Count * Stride (Mode) - 1,
+                        Buffer   => (others => 0));
+   end Create;
 
-   function Supports (Pin : Pin_Id; Feature : IO_Features) return Boolean is
-     (case Feature is
-         when Digital => (case Pin is
-                             when 0 .. 16 | 19 .. 20 => True,
-                             when others             => False),
-         when Analog  => (case Pin is
-                             when 0 .. 4 | 10 => True,
-                             when others                 => False),
-         when Touch   => (case Pin is
-                             when 0 | 1 | 2 => True,
-                             when others    => False));
+   type Component_Indices is array (LED_Component) of Integer;
+   Mode_Indices : constant array (LED_Mode) of Component_Indices :=
+     (RGB  => (LED_Red => 0, LED_Green => 1, LED_Blue => 2, LED_White => -1),
+      GRB  => (LED_Red => 1, LED_Green => 0, LED_Blue => 2, LED_White => -1),
+      RGBW => (LED_Red => 0, LED_Green => 1, LED_Blue => 2, LED_White => 3));
 
-   procedure Set (Pin : Pin_Id; Value : Boolean)
-     with Pre => Supports (Pin, Digital);
+   ---------------
+   -- Set_Color --
+   ---------------
 
-   function Set (Pin : Pin_Id) return Boolean
-     with Pre => Supports (Pin, Digital);
+   procedure Set_Color
+     (Strip : in out LED_Strip;
+      Index : Natural;
+      Color : LED_Values)
+   is
+      pragma Assert (Index < Strip.Count);
+      Base    : constant Natural := Index * Stride (Strip.Mode);
+      Indices : constant Component_Indices := Mode_Indices (Strip.Mode);
+   begin
+      for J in LED_Red .. (if Strip.Mode = RGBW then LED_White else LED_Blue) loop
+         Strip.Buffer (Base + Indices (J)) := Color (J);
+      end loop;
+   end Set_Color;
 
-   type Analog_Value is range 0 .. 1023;
+   ----------
+   -- Show --
+   ----------
 
-   procedure Set_Analog_Period_Us (Period : Natural);
-   --  Set the period (in microseconds) of the PWM signal for all analog output
-   --  pins.
+   procedure Show
+     (Strip : LED_Strip;
+      Write : access procedure (Buffer : UInt8_Array))
+   is
+   begin
+      Write (Strip.Buffer);
+   end Show;
 
-   procedure Write (Pin : Pin_Id; Value : Analog_Value)
-     with Pre => Supports (Pin, Analog);
-
-   function Analog (Pin : Pin_Id) return Analog_Value
-     with Pre => Supports (Pin, Analog);
-   --  Read the voltagle applied to the pin. 0 means 0V 1023 means 3.3V
-
-private
-
-   --  Mapping between pin id and GPIO_Points
-
-   Points : array (Pin_Id) of GPIO_Point :=
-     (0  => MB_P0,
-      1  => MB_P1,
-      2  => MB_P2,
-      3  => MB_P3,
-      4  => MB_P4,
-      5  => MB_P5,
-      6  => MB_P6,
-      7  => MB_P7,
-      8  => MB_P8,
-      9  => MB_P9,
-      10 => MB_P10,
-      11 => MB_P11,
-      12 => MB_P12,
-      13 => MB_P13,
-      14 => MB_P14,
-      15 => MB_P15,
-      16 => MB_P16,
-      17 => MB_P0,  --  There's no pin17, using P0 to fill in...
-      18 => MB_P0,  --  There's no pin18, using P0 to fill in...
-      19 => MB_P19,
-      20 => MB_P20);
-
-end MicroBit.IOs;
+end NeoPixel;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2017, AdaCore                        --
+--                       Copyright (C) 2019, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,70 +29,28 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.GPIO; use nRF51.GPIO;
+with MicroBit.Buttons;
+with MicroBit.Time;
 
-package MicroBit.IOs is
+with NeoPixel; use NeoPixel;
 
-   type Pin_Id is range 0 .. 20;
+with LED_Demo; use LED_Demo;
 
-   type IO_Features is (Digital, Analog, Touch);
+procedure Main is
 
-   function Supports (Pin : Pin_Id; Feature : IO_Features) return Boolean is
-     (case Feature is
-         when Digital => (case Pin is
-                             when 0 .. 16 | 19 .. 20 => True,
-                             when others             => False),
-         when Analog  => (case Pin is
-                             when 0 .. 4 | 10 => True,
-                             when others                 => False),
-         when Touch   => (case Pin is
-                             when 0 | 1 | 2 => True,
-                             when others    => False));
+   Discard : Boolean;
 
-   procedure Set (Pin : Pin_Id; Value : Boolean)
-     with Pre => Supports (Pin, Digital);
+begin
+   Set_Color (Strip, 0, Red);
+   Set_Color (Strip, 2, Green);
+   Set_Color (Strip, 4, Blue);
+   Discard := MicroBit.Buttons.Subscribe (Button_CB'Access);
 
-   function Set (Pin : Pin_Id) return Boolean
-     with Pre => Supports (Pin, Digital);
-
-   type Analog_Value is range 0 .. 1023;
-
-   procedure Set_Analog_Period_Us (Period : Natural);
-   --  Set the period (in microseconds) of the PWM signal for all analog output
-   --  pins.
-
-   procedure Write (Pin : Pin_Id; Value : Analog_Value)
-     with Pre => Supports (Pin, Analog);
-
-   function Analog (Pin : Pin_Id) return Analog_Value
-     with Pre => Supports (Pin, Analog);
-   --  Read the voltagle applied to the pin. 0 means 0V 1023 means 3.3V
-
-private
-
-   --  Mapping between pin id and GPIO_Points
-
-   Points : array (Pin_Id) of GPIO_Point :=
-     (0  => MB_P0,
-      1  => MB_P1,
-      2  => MB_P2,
-      3  => MB_P3,
-      4  => MB_P4,
-      5  => MB_P5,
-      6  => MB_P6,
-      7  => MB_P7,
-      8  => MB_P8,
-      9  => MB_P9,
-      10 => MB_P10,
-      11 => MB_P11,
-      12 => MB_P12,
-      13 => MB_P13,
-      14 => MB_P14,
-      15 => MB_P15,
-      16 => MB_P16,
-      17 => MB_P0,  --  There's no pin17, using P0 to fill in...
-      18 => MB_P0,  --  There's no pin18, using P0 to fill in...
-      19 => MB_P19,
-      20 => MB_P20);
-
-end MicroBit.IOs;
+   loop
+      if Changed then
+         Show (Strip, Kitronik_Write'Access);
+         Changed := False;
+      end if;
+      MicroBit.Time.Delay_Ms (20);
+   end loop;
+end Main;

@@ -121,6 +121,7 @@ def middleware_config(config):
     config.add_source_dir('middleware/src/bitmap', origin)
     config.add_source_dir('middleware/src/command_line', origin)
     config.add_source_dir('middleware/src/sdmmc', origin)
+    config.add_source_dir('middleware/src/neopixel', origin)
 
     runtime_profile = config.get_config("Runtime_Profile")
 
