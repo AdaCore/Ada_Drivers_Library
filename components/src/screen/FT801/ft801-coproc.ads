@@ -17,19 +17,15 @@ package FT801.Coproc is
    OPT_NOSECS    : constant := 32768;
    OPT_NOHANDS   : constant := 49152;
 
-   type Fifo_Pointer is range 0 .. 4095;
+   type Coproc_List is array (Natural range <>) of UInt32;
 
-   type Cmd_Fifo is record
-      Pointer : Fifo_Pointer := 0;
-   end record;
-
-   procedure Cmd_Start (This : in out FT801_Device);
-
-   procedure Cmd_End (This : in out FT801_Device);
+   procedure Send_Coproc_Cmds (This : in out FT801_Device;
+                               Cmds : Coproc_List);
 
    CMD_DLSTART   : constant UInt32 := 16#FFFF_FF00#;
    CMD_DLSWAP    : constant UInt32 := 16#FFFF_FF01#;
    CMD_COLDSTART : constant UInt32 := 16#FFFF_FF32#;
+   CMD_LOGO      : constant UInt32 := 16#FFFF_FF31#;
 
    type CMD_INTERRUPT (As_Array : Boolean := False) is record
       case As_Array is
@@ -37,7 +33,7 @@ package FT801.Coproc is
             Cmd : UInt32 := 16#FFFF_FF02#;
             MS  : UInt32;
          when True =>
-            Arr : UInt8_Array (1 .. 8);
+            Arr : Coproc_List (1 .. 2);
       end case;
    end record
      with Unchecked_Union, Size => 64;
@@ -48,8 +44,74 @@ package FT801.Coproc is
       Arr at 0 range 0 .. 63;
    end record;
 
+   type CMD_MEMCPY (As_Array : Boolean := False) is record
+      case As_Array is
+         when False =>
+            Cmd : UInt32 := 16#FFFF_FF1D#;
+            Dst : UInt32;
+            Src : UInt32;
+            Num : UInt32;
+         when True =>
+            Arr : Coproc_List (1 .. 4);
+      end case;
+   end record
+     with Unchecked_Union, Size => 128;
+
+   for CMD_MEMCPY use record
+      Cmd at 0 range 0 .. 31;
+      Dst at 4 range 0 .. 31;
+      Src at 8 range 0 .. 31;
+      Num at 12 range 0 .. 31;
+      Arr at 0 range 0 .. 127;
+   end record;
+
+   type CMD_MEMZERO (As_Array : Boolean := False) is record
+      case As_Array is
+         when False =>
+            Cmd : UInt32 := 16#FFFF_FF1C#;
+            Ptr : UInt32;
+            Num : UInt32;         when True =>
+            Arr : Coproc_List (1 .. 3);
+      end case;
+   end record
+     with Unchecked_Union, Size => 96;
+
+   for CMD_MEMZERO use record
+      Cmd at 0 range 0 .. 31;
+      Ptr at 4 range 0 .. 31;
+      Num at 8 range 0 .. 31;
+      Arr at 0 range 0 .. 95;
+   end record;
+
+   type CMD_MEMSET (As_Array : Boolean := False) is record
+      case As_Array is
+         when False =>
+            Cmd : UInt32 := 16#FFFF_FF1B#;
+            Ptr : UInt32;
+            Value : UInt32;
+            Num : UInt32;
+         when True =>
+            Arr : Coproc_List (1 .. 4);
+      end case;
+   end record
+     with Unchecked_Union, Size => 128;
+
+   for CMD_MEMSET use record
+      Cmd at 0 range 0 .. 31;
+      Ptr at 4 range 0 .. 31;
+      Value at 8 range 0 .. 31;
+      Num at 12 range 0 .. 31;
+      Arr at 0 range 0 .. 127;
+   end record;
+
+   function Fault_Occured (This : FT801_Device) return Boolean;
+
+   procedure Recover_Fault (This : FT801_Device);
 
 
+private
+
+   function Compute_Free_Space (This : FT801_Device) return Fifo_Pointer_Type;
 
 
 

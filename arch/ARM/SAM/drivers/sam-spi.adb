@@ -99,6 +99,12 @@ package body SAM.SPI is
    is
       PCS : UInt4;
    begin
+      if not This.Periph.SPI_MR.PCSDEC then
+         PCS := Get_PCS (NPCS => This.CS);
+      else
+         PCS := UInt4 (This.CS);
+      end if;
+
       for I in Data'Range loop
          if not Poll_For_TX_Ready (This    => This,
                                    Timeout => Timeout)
@@ -106,17 +112,12 @@ package body SAM.SPI is
             Status := HAL.SPI.Err_Timeout;
             return;
          end if;
-         if not This.Periph.SPI_MR.PCSDEC then
-            PCS := Get_PCS (NPCS => This.CS);
-         else
-            PCS := UInt4 (This.CS);
-         end if;
 
          This.Periph.SPI_TDR := (TD => SPI_SPI_TDR_TD_Field (Data (I)),
                                  PCS => PCS,
                                  others => <>);
       end loop;
-
+      This.Periph.SPI_CR.LASTXFER := True;
       Status := HAL.SPI.Ok;
    end Transmit;
 
@@ -124,11 +125,17 @@ package body SAM.SPI is
    procedure Transmit
      (This   : in out SPI_Port;
       Data   : HAL.SPI.SPI_Data_16b;
-      Status : out HAL.SPI.SPI_Status;
+      Status  : out HAL.SPI.SPI_Status;
       Timeout : Natural := SPI_Timeout)
    is
       PCS : UInt4;
    begin
+      if not This.Periph.SPI_MR.PCSDEC then
+         PCS := Get_PCS (NPCS => This.CS);
+      else
+         PCS := UInt4 (This.CS);
+      end if;
+
       for I in Data'Range loop
          if not Poll_For_TX_Ready (This    => This,
                                    Timeout => Timeout)
@@ -136,17 +143,12 @@ package body SAM.SPI is
             Status := HAL.SPI.Err_Timeout;
             return;
          end if;
-         if not This.Periph.SPI_MR.PCSDEC then
-            PCS := Get_PCS (NPCS => This.CS);
-         else
-            PCS := UInt4 (This.CS);
-         end if;
 
          This.Periph.SPI_TDR := (TD => SPI_SPI_TDR_TD_Field (Data (I)),
                                  PCS => PCS,
                                  others => <>);
       end loop;
-
+      This.Periph.SPI_CR.LASTXFER := True;
       Status := HAL.SPI.Ok;
    end Transmit;
 
@@ -206,6 +208,65 @@ package body SAM.SPI is
 
       Status := HAL.SPI.Ok;
    end Receive;
+
+   overriding
+   procedure Transfer
+     (This    : in out SPI_Port;
+      Tx_Data    : HAL.SPI.SPI_Data_8b;
+      Rx_Data    : out HAL.SPI.SPI_Data_8b;
+      Status  : out HAL.SPI.SPI_Status;
+      Timeout    : Natural := SPI_Timeout)
+   is
+      PCS : UInt4;
+   begin
+      if not This.Periph.SPI_MR.PCSDEC then
+         PCS := Get_PCS (NPCS => This.CS);
+      else
+         PCS := UInt4 (This.CS);
+      end if;
+
+      --  Clear any pending RX's
+      if This.Poll_For_RX_Ready (Timeout => 10) then
+         Rx_Data (Rx_Data'First) := HAL.UInt8 (This.Periph.SPI_RDR.RD);
+      end if;
+
+      for I in Tx_Data'Range loop
+         declare
+            Tx : HAL.SPI.SPI_Data_8b (1 .. 1)
+              with Address => Tx_Data (I)'Address;
+            Rx : HAL.SPI.SPI_Data_8b (1 .. 1)
+              with Address => Rx_Data (I)'Address;
+
+            use HAL.SPI;
+         begin
+--              This.Transmit (Data    => Tx,
+--                             Status  => Status,
+--                             Timeout => Timeout);
+--              if Status /= Ok then
+--                 return;
+--              end if;
+
+            if not Poll_For_TX_Ready (This    => This,
+                                      Timeout => Timeout)
+            then
+               Status := HAL.SPI.Err_Timeout;
+               return;
+            end if;
+
+            This.Periph.SPI_TDR := (TD     => SPI_SPI_TDR_TD_Field (Tx (1)),
+                                    PCS    => PCS,
+                                    others => <>);
+
+            This.Receive (Data    => Rx,
+                          Status  => Status,
+                          Timeout => Timeout);
+            if Status /= Ok then
+               return;
+            end if;
+         end;
+      end loop;
+      This.Periph.SPI_CR.LASTXFER := True;
+   end Transfer;
 
    ------------
    -- Enable --

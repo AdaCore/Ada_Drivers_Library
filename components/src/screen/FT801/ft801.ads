@@ -21,8 +21,39 @@ package FT801 is
       Vsync0      : UInt10 := 0;
       Vsync1      : UInt10 := 10;
       Ext_Clock   : Boolean := True;
-      Disp_Signal : Positive := 31;
    end record;
+
+   WQVGA_480x272 : constant Display_Settings :=
+                     Display_Settings'(Width       => 480,
+                                       Height      => 272,
+                                       Swizzle     => 0,
+                                       Polarity    => True,
+                                       PClk        => 5,
+                                       HCycle      => 548,
+                                       Hoffset     => 43,
+                                       Hsync0      => 0,
+                                       Hsync1      => 41,
+                                       VCycle      => 292,
+                                       Voffset     => 12,
+                                       Vsync0      => 0,
+                                       Vsync1      => 10,
+                                       Ext_Clock   => True);
+
+   QVGA_320x240 : constant Display_Settings :=
+                    Display_Settings'(Width       => 320,
+                                      Height      => 240,
+                                      Swizzle     => 2,
+                                      Polarity    => False,
+                                      PClk        => 8,
+                                      HCycle      => 408,
+                                      Hoffset     => 70,
+                                      Hsync0      => 0,
+                                      Hsync1      => 10,
+                                      VCycle      => 263,
+                                      Voffset     => 13,
+                                      Vsync0      => 0,
+                                      Vsync1      => 2,
+                                      Ext_Clock   => True);
 
    type FT801_Device (Port     : not null Any_SPI_Port;
                       PD       : not null Any_GPIO_Point) is private;
@@ -98,6 +129,8 @@ package FT801 is
                           Format : Graphics_Bitmap_Format;
                           Width  : UInt9;
                           Height : UInt9;
+                          X      : UInt9;
+                          Y      : UInt9;
                           Img    : UInt8_Array);
 
 --     procedure Draw_Rectangle (This : FT801_Device;
@@ -110,14 +143,54 @@ package FT801 is
 --                            Upper_Right : Screen_Coordinate;
 --                            Text : String);
 
-private
+   procedure Draw_Logo (This : in out FT801_Device);
 
-   type Fifo_Pointer_Type is mod 4096;
+   procedure Play_Logo (This : in out FT801_Device);
+
+   procedure Clear_Screen (This : in out FT801_Device);
+
+   procedure Fill_G_Ram (This   : in out FT801_Device;
+                         Start  : UInt22;
+                         Buffer : UInt8_Array);
+
+   procedure Publish_G_Ram_Bitmap (This   : in out FT801_Device;
+                                   Width  : UInt9;
+                                   Height : UInt9;
+                                   X      : UInt9;
+                                   Y      : UInt9;
+                                   Format : Graphics_Bitmap_Format);
+
+   procedure Wait_For_Coproc_Sync (This : FT801_Device);
+
+   type Dl_Pointer_Type is range 0 .. 8191;
+   type Fifo_Pointer_Type is mod 4096
+     with Size => 12;
+
+   RAM_G_Address : constant := 16#0000_0000#;
+
+   ROM_CHIPID_Address : constant := 16#0C_0000#;
+
+   ROM_FONT_Address : constant := 16#B0_B23C#;
+
+   ROM_FONT_ADDR_Address : constant := 16#0F_FFFC#;
+
+   RAM_DL_Address : constant := 16#10_0000#;
+
+   RAM_PAL_Address : constant := 16#10_2000#;
+
+   REG_Address : constant := 16#10_2400#;
+
+   RAM_CMD_Address : constant := 16#10_8000#;
+
+   RAM_SCREENSHOT_Address : constant := 16#1C_2000#;
+
+private
 
    type FT801_Device (Port     : not null Any_SPI_Port;
                       PD       : not null Any_GPIO_Point)
    is record
       Settings : Display_Settings;
+      Dl_Ptr   : Dl_Pointer_Type := 0;
       Fifo_Ptr : Fifo_Pointer_Type := 0;
    end record;
 
@@ -170,11 +243,13 @@ private
 
    procedure Host_Memory_Write (This : FT801_Device;
                                 Address : UInt22;
-                                Payload : UInt8_Array);
+                                Payload : UInt8_Array)
+     with Pre => Payload'Length > 0;
 
    procedure Host_Memory_Read (This : FT801_Device;
                                Address : UInt22;
-                               Payload : out UInt8_Array);
+                               Payload : out UInt8_Array)
+     with Pre => Payload'Length > 0;
 
    subtype Header is UInt8_Array (1 .. 3);
 
@@ -183,30 +258,6 @@ private
    function Create_Header (Address : UInt22;
                            Direction : Read_Or_Write) return Header;
 
-
-
-
-
-
-
-
-   RAM_G_Address : constant := 16#0000_0000#;
-
-   ROM_CHIPID_Address : constant := 16#0C_0000#;
-
-   ROM_FONT_Address : constant := 16#B0_B23C#;
-
-   ROM_FONT_ADDR_Address : constant := 16#0F_FFFC#;
-
-   RAM_DL_Address : constant := 16#10_0000#;
-
-   RAM_PAL_Address : constant := 16#10_2000#;
-
-   REG_Address : constant := 16#10_2400#;
-
-   RAM_CMD_Address : constant := 16#10_8000#;
-
-   RAM_SCREENSHOT_Address : constant := 16#1C_2000#;
 
    type Read_Write is
      (READ, WRITE);
