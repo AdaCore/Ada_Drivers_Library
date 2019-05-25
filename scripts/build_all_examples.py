@@ -130,6 +130,9 @@ projects = [
             "/examples/MicroBit/analog_out/analog_out.gpr",
             "/examples/MicroBit/digital_out/digital_out.gpr",
             "/examples/MicroBit/BLE_beacon/BLE_beacon.gpr",
+            "/examples/MicroBit/servos/servos.gpr",
+            "/examples/MicroBit/neopixel/neopixel.gpr",
+            "/examples/MicroBit/follower/follower.gpr",
 
             # STM32 driver examples
             STM_DRIVERS + "/demo_adc_dma/demo_adc_dma.gpr",
