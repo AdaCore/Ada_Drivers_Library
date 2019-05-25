@@ -37,7 +37,7 @@ with System.Machine_Code; use System, System.Machine_Code;
 with NRF51_SVD.GPIO; use NRF51_SVD.GPIO;
 with MicroBit.Time;
 
-package body MicroBit.IOs.LEDs is
+package body MicroBit.IOs.NeoPixel is
 
    -----------
    -- Write --
@@ -109,4 +109,4 @@ package body MicroBit.IOs.LEDs is
            Clobber => "r0,r6");
    end Write;
 
-end MicroBit.IOs.LEDs;
+end MicroBit.IOs.NeoPixel;

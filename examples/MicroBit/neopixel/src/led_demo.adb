@@ -29,13 +29,13 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with MicroBit.IOs.LEDs;
+with MicroBit.IOs.NeoPixel;
 
 package body LED_Demo is
 
    procedure Kitronik_Write (Buffer : UInt8_Array) is
    begin
-      MicroBit.IOs.LEDs.Write (Pin => 0, Values => Buffer);
+      MicroBit.IOs.NeoPixel.Write (Pin => 0, Values => Buffer);
    end Kitronik_Write;
 
    procedure Button_CB

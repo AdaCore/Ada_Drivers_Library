@@ -34,9 +34,9 @@
 
 with HAL; use HAL;
 
-package MicroBit.IOs.LEDs is
+package MicroBit.IOs.NeoPixel is
 
    procedure Write (Pin : Pin_Id; Values : UInt8_Array)
      with Pre => Supports (Pin, Digital);
 
-end MicroBit.IOs.LEDs;
+end MicroBit.IOs.NeoPixel;
