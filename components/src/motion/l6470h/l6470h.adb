@@ -38,8 +38,6 @@ package body L6470h is
    begin
       Next_Release := Next_Release + Period;
       delay until Next_Release;
---      Daley_Handler.Reset;
---      Daley_Handler.Wait;
    end Wait;
 
    procedure Initialize is
@@ -193,7 +191,6 @@ package body L6470h is
       Raw_Cmd : Hal.UInt8 renames As_Pointer (Cmd'Address).all;
 
       Get_Cmd : constant Hal.Spi.SPI_Data_8b (1 .. 1) := (1 => Hal.UInt8 (Raw_Cmd));
---      Data              : Hal.SPI.SPI_Data_8b (1 .. 1) := (1 => 0);
 
       Status     : Hal.Spi.SPI_Status;
       use type Hal.SPI.SPI_Status;
