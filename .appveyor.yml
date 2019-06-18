@@ -7,10 +7,9 @@ version: 0.0.{build}
 environment:
   PYTHON: C:\\Python27
   TOOLS_DIR: C:\ADL_tools\
-  GNAT_NATIVE_INSTALLER: C:\ADL_tools\gnat-community-2018-x86_64-windows-bin.exe
-  GNAT_ARM_ELF_INSTALLER: C:\ADL_tools\gnat-community-2018-arm-elf-windows-bin.exe
+  GNAT_NATIVE_INSTALLER: C:\ADL_tools\gnat-community-2019-x86_64-windows-bin.exe
+  GNAT_ARM_ELF_INSTALLER: C:\ADL_tools\gnat-community-2019-arm-elf-windows-bin.exe
   INSTALL_DIR: C:\Install\
-  INSTALL_CONTROL_SCRIPT: C:\projects\ada-drivers-library\scripts\GNAT_CE_2018_install_control.qs
 
 # Cache directories will be preseved from one build to the other
 cache:
@@ -33,8 +32,8 @@ install:
 - cmd: dir %INSTALL_DIR%
 
 # Download compiler installer if not already in the tool dir
-- ps: If (Test-Path $env:GNAT_NATIVE_INSTALLER){echo compiler already in cache}Else{(new-object net.webclient).DownloadFile('http://mirrors.cdn.adacore.com/art/5b30f4e6c7a4477116360355', $env:GNAT_NATIVE_INSTALLER)}
-- ps: If (Test-Path $env:GNAT_ARM_ELF_INSTALLER){echo compiler already in cache}Else{(new-object net.webclient).DownloadFile('http://mirrors.cdn.adacore.com/art/5b0843e7a3f5d75c215f46b6', $env:GNAT_ARM_ELF_INSTALLER)}
+- ps: If (Test-Path $env:GNAT_NATIVE_INSTALLER){echo compiler already in cache}Else{(new-object net.webclient).DownloadFile('http://mirrors.cdn.adacore.com/art/5ce0326131e87a8f1d425400', $env:GNAT_NATIVE_INSTALLER)}
+- ps: If (Test-Path $env:GNAT_ARM_ELF_INSTALLER){echo compiler already in cache}Else{(new-object net.webclient).DownloadFile('http://mirrors.cdn.adacore.com/art/5ce032d531e87a8f1d425409', $env:GNAT_ARM_ELF_INSTALLER)}
 
 # Show content of tool dir again so we can see if the download was ok
 - cmd: dir %TOOLS_DIR%

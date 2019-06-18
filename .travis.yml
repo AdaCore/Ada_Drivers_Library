@@ -7,10 +7,9 @@ python:
 env:
   global:
     - TOOLS_DIR=$HOME/build_tools
-    - GNAT_BIN_PATH=$TOOLS_DIR/gnat-community-2018-x86_64-linux-bin
-    - GNAT_ARM_BIN_PATH=$TOOLS_DIR/gnat-community-2018-arm-elf-bin
-    - GNAT_RV32_BIN_PATH=$TOOLS_DIR/gnat-community-2018-riscv32-elf-bin
-    - INSTALL_CONTROL_SCRIPT=$PWD/scripts/GNAT_CE_2018_install_control.qs
+    - GNAT_BIN_PATH=$TOOLS_DIR/gnat-community-2019-x86_64-linux-bin
+    - GNAT_ARM_BIN_PATH=$TOOLS_DIR/gnat-community-2019-arm-elf-bin
+    - GNAT_RV32_BIN_PATH=$TOOLS_DIR/gnat-community-2019-riscv32-elf-bin
 
 os:
   - linux
@@ -24,9 +23,9 @@ cache:
 install:
   # Check if the GNAT package is already available in the cache directory. If
   # not, download it.
-  - test -f $GNAT_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5b0d7bffa3f5d709751e3e04 -O $GNAT_BIN_PATH)
-  - test -f $GNAT_ARM_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5b0c1227a3f5d7097625478d -O $GNAT_ARM_BIN_PATH)
-  - test -f $GNAT_RV32_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5b0c154aa3f5d70976254791 -O $GNAT_RV32_BIN_PATH)
+  - test -f $GNAT_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5cdffc5409dcd015aaf82626 -O $GNAT_BIN_PATH)
+  - test -f $GNAT_ARM_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5ce0010709dcd015aaf8262b -O $GNAT_ARM_BIN_PATH)
+  - test -f $GNAT_RV32_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5cdfe11309dcd015aaf825da -O $GNAT_RV32_BIN_PATH)
 
   - wget https://raw.githubusercontent.com/AdaCore/gnat_community_install_script/master/install_package.sh
   - wget https://raw.githubusercontent.com/AdaCore/gnat_community_install_script/master/install_script.qs
