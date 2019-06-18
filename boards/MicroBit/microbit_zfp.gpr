@@ -45,6 +45,7 @@ library project MicroBit_ZFP is
         Build_Checks_Switches &
         ("-g",       -- Debug info
          "-gnatwa",  -- All warnings
+         "-gnatw_A", -- Turn off warnings for anonymous allocators
          "-gnatQ",   -- Don't quit. Generate ALI and tree files even if illegalities
          "-gnatw.X", -- Disable warnings for No_Exception_Propagation
          "-ffunction-sections", -- Create a linker section for each function
