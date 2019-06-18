@@ -51,8 +51,8 @@ def git_clone(repo_url, branch, dst, recursive=False):
 
     if branch:
         # Clone the repo
-        returncode, stdout, stderr = run_program(
-            'git', '-C', dst, 'checkout', '-b', branch, "origin/" + branch)
+        returncode, stdout, stderr = run_program([
+            'git', '-C', dst, 'checkout', '-b', branch, "origin/" + branch])
         print stdout
 
         if returncode:
@@ -68,7 +68,7 @@ def git_clone(repo_url, branch, dst, recursive=False):
 #  - Recursive clone?
 #  - install command (if any)
 git_repos = [("https://github.com/AdaCore/bb-runtimes",
-              None,
+              "community-2019",
               "bb-runtimes",
               False,
               ["python", ROOT_DIR + "/bb-runtimes/install.py", "--arch=arm-eabi"]),
