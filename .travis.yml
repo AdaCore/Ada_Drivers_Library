@@ -30,9 +30,9 @@ install:
   - wget https://raw.githubusercontent.com/AdaCore/gnat_community_install_script/master/install_package.sh
   - wget https://raw.githubusercontent.com/AdaCore/gnat_community_install_script/master/install_script.qs
 
-  - sh install_package.sh $GNAT_BIN_PATH $TOOLS_DIR/native/
-  - sh install_package.sh $GNAT_ARM_BIN_PATH $TOOLS_DIR/arm-elf/
-  - sh install_package.sh $GNAT_RV32_BIN_PATH $TOOLS_DIR/riscv32-elf/
+  - test -d $TOOLS_DIR/native/ ||( sh install_package.sh $GNAT_BIN_PATH $TOOLS_DIR/native/)
+  - test -d $TOOLS_DIR/arm-elf/ ||( sh install_package.sh $GNAT_ARM_BIN_PATH $TOOLS_DIR/arm-elf/)
+  - test -d $TOOLS_DIR/riscv32-elf/ ||( sh install_package.sh $GNAT_RV32_BIN_PATH $TOOLS_DIR/riscv32-elf/)
 
   # Add GNAT to $PATH
   - export PATH=$PATH:$TOOLS_DIR/native/bin/
