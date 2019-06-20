@@ -55,7 +55,10 @@ package body Cortex_M.Cache is
       Reg_Address : System.Address;
    procedure Cache_Maintenance
      (Start : System.Address;
-      Len   : Natural) with Inline_Always;
+      Len   : Natural);
+   --  FIXME: The Inline_Always is removed as workaround GNAT Community 2019
+   --  bug.
+   --    with Inline_Always;
 
    ---------
    -- DSB --
