@@ -31,7 +31,6 @@
 
 with HAL;                         use HAL;
 
-with nRF51.GPIO;                  use nRF51.GPIO;
 with nRF51.ADC;                   use nRF51.ADC;
 with nRF51.Device;                use nRF51.Device;
 with nRF51.PPI;                   use nRF51.PPI;
@@ -92,30 +91,6 @@ package body MicroBit.IOs is
    --
    --  For a PWM X, GPIOTE channel X is configure to do a pin toggle when its
    --  task is activated by one of the two PPI channels described above.
-
-   --  Mapping between pin id and GPIO_Points
-   Points : array (Pin_Id) of GPIO_Point :=
-     (0  => MB_P0,
-      1  => MB_P1,
-      2  => MB_P2,
-      3  => MB_P3,
-      4  => MB_P4,
-      5  => MB_P5,
-      6  => MB_P6,
-      7  => MB_P7,
-      8  => MB_P8,
-      9  => MB_P9,
-      10 => MB_P10,
-      11 => MB_P11,
-      12 => MB_P12,
-      13 => MB_P13,
-      14 => MB_P14,
-      15 => MB_P15,
-      16 => MB_P16,
-      17 => MB_P0,  --  There's no pin17, using P0 to fill in...
-      18 => MB_P0,  --  There's no pin18, using P0 to fill in...
-      19 => MB_P19,
-      20 => MB_P20);
 
    --  We keep track of the current mode of the pin to be able to detect when a
    --  change of configuration is needed.
