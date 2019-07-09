@@ -107,6 +107,7 @@ library project STM32F407_Discovery_Full is
     Src_Dirs_Root & "/middleware/src/bitmap", -- From middleware config
     Src_Dirs_Root & "/middleware/src/command_line", -- From middleware config
     Src_Dirs_Root & "/middleware/src/sdmmc", -- From middleware config
+    Src_Dirs_Root & "/middleware/src/neopixel", -- From middleware config
     Src_Dirs_Root & "/middleware/src/ravenscar-common", -- From middleware config
     Src_Dirs_Root & "/components/src/**", -- From components config
      "src/full/");
