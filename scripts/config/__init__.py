@@ -51,7 +51,7 @@ class Database:
                       (key, "\"" + str(value) + "\";", origin)
             elif kind == "bool":
                 out += "   %-30s : constant Boolean := %-20s -- From %s\n" % \
-                      (key, str(value), origin)
+                      (key, str(value) + ';', origin)
             else:
                 print "fatal error, unknown kind '%s' for config key '%s'" % \
                       (kind, key)
@@ -77,6 +77,23 @@ class Database:
 
         out += "\n"
 
+        # Device configuration
+        out += "   package Device_Configuration is\n"
+        out += '      for CPU_Name use "%s";\n' % self.get_config("CPU_Core");
+
+        if len(self.memory_names()):
+           out += '\n      for Memories use ("' + '", "'.join(self.memory_names())
+           out += '");\n'
+
+           for mem in self.memories:
+               out += '\n      for Mem_Kind ("%(name)s") use "%(kind)s";\n' % (mem)
+               out += '      for Address  ("%(name)s") use "%(addr)s";\n' % (mem)
+               out += '      for Size     ("%(name)s") use "%(size)s";\n' % (mem)
+
+           out += '\n      for Boot_Memory use "%s";\n' % self.get_config("Boot_Memory")
+        out += '   end Device_Configuration;\n\n'
+
+        # Config keys and values
         for key in self.configuration:
             origin = self.configuration[key]['origin']
             value = self.configuration[key]['value']
@@ -214,70 +231,6 @@ class Database:
                            'name': name,
                            'addr': addr,
                            'size': size}]
-
-    def print_linker_script(self):
-
-        text_section = self.get_config("Linker_Text_Section")
-        rodata_section = self.get_config("Linker_RO_Data_Section")
-        data_section = self.get_config("Linker_Data_Section")
-        bss_section = self.get_config("Linker_BSS_Section")
-
-        print "MEMORY"
-        print "{"
-        for mem in self.memories:
-            if mem['kind'] == 'ROM':
-                print " %s (rxai!w) : ORIGIN = %s, LENGTH = %s" % \
-                      (mem['name'], mem['addr'], mem['size'])
-            elif mem['kind'] == 'RAM':
-                print " %s (wxa!ri) : ORIGIN = %s, LENGTH = %s" % \
-                      (mem['name'], mem['addr'], mem['size'])
-            else:
-                print "fatal error, unknown memory kind '%s'" % mem['kind']
-                sys.exit(1)
-        print "}"
-
-        print "\n.text:"
-        print "{"
-        print " *(.text.unlikely .text.unlikely.*)"
-        print " *(.text.startup .text.startup.*)"
-        print " *(.text .text.*)"
-        print " *(.gnu.linkonce.t.*)"
-        print "} > %s" % text_section
-        print "\n.rodata:"
-        print "{"
-        print " *(.rdata)"
-        print " *(.rodata .rodata.*)"
-        print " *(.gnu.linkonce.r.*)"
-        print "} > %s" % rodata_section
-
-        for mem in self.memories:
-            if mem['kind'] == 'RAM':
-                print "\n.%s_data:" % mem['name']
-                print "{"
-                print " *(.%s_data .%s_data.*)" % \
-                      (mem['name'], mem['name'])
-                print "} > %s" % mem['name']
-            elif mem['kind'] == 'ROM':
-                print "\n.%s_rodata:" % mem['name']
-                print "{"
-                print " *(.%s_rodata .%s_rodata.*)" % \
-                      (mem['name'], mem['name'])
-                print "} > %s" % mem['name']
-
-        print "\n.data:"
-        print "{"
-        print " *(.data .data.*)"
-        print " *(.gnu.linkonce.d.*)"
-        print "} > %s" % data_section
-        print "\n.sdata:"
-        print "{"
-        print " *(.sdata .sdata.*)"
-        print " *(.gnu.linkonce.s.*)"
-        print "} > %s" % data_section
-        print "\n.bss:"
-        print "{"
-        print " *(.bss .bss.*)"
-        print "} > %s" % bss_section
 
     def memory_names(self):
         list = []

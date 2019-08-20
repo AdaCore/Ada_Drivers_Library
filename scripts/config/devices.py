@@ -156,6 +156,7 @@ def load_device_config(config):
         src += ['arch/RISC-V/SiFive/svd/FE310/',
                 'arch/RISC-V/SiFive/devices/FE310/',
                 'arch/RISC-V/SiFive/drivers/']
+        config.add_memory('ram', 'RAM', '0x80000000', '16K')
 
     else:
         print "Unknown MCU device %s." % mcu

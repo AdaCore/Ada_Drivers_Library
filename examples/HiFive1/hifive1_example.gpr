@@ -2,7 +2,7 @@ with "../../boards/HiFive1/hifive1_zfp.gpr";
 
 project HiFive1_Example is
 
-  for Runtime ("ada") use "zfp-hifive1";
+  for Runtime ("ada") use HiFive1_ZFP'Runtime ("Ada");
   for Target use "riscv32-elf";
   for Main use ("main.adb");
   for Languages use ("Ada");
@@ -13,8 +13,10 @@ project HiFive1_Example is
   package Compiler renames HiFive1_ZFP.Compiler;
 
   package Linker is
-     for Default_Switches ("Ada") use ("-Wl,--print-memory-usage",
-                                       "-Wl,--gc-sections");
+     for Default_Switches ("Ada") use
+       HiFive1_ZFP.Linker_Switches &
+       ("-Wl,--print-memory-usage",
+        "-Wl,--gc-sections");
   end Linker;
 
   package Ide is

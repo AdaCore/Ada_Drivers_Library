@@ -30,6 +30,7 @@ FOLDERS = {'Crazyflie': 'crazyflie',
            'STM32F769_Discovery': 'stm32f769_discovery',
            'NUCLEO_F446ZE':       'nucleo_f446ze'}
 
+USE_STARTUP_GEN = ['HiFive1']
 
 def gen_project(board_name, rts):
     assert board_name is not None, "board is undefined"
@@ -63,7 +64,8 @@ def gen_project(board_name, rts):
             "-s", source_dir_name,
             "-o", object_dir_name,
             "Board=%s" % board_name,
-            "Runtime_Profile=%s" % rts]
+            "Runtime_Profile=%s" % rts,
+            "Use_Startup_Gen=" + ("True" if board_name in USE_STARTUP_GEN else "False")]
     check_call(args)
 
 

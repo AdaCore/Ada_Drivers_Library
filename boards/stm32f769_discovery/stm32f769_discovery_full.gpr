@@ -52,14 +52,21 @@ library project STM32F769_Discovery_Full is
          "-fdata-sections");  -- Create a linker section for each data
    end Compiler;
 
+
    for Languages use ("Ada");
    for Create_Missing_Dirs use "True";
    for Object_Dir use "obj/full_" & Build;
    for Library_Dir use "obj/full_lib_" & Build;
    for Library_Kind use "static";
    for Library_Name use "ada_drivers_library";
+
+   Linker_Switches := ();
    for Target use "arm-eabi";
    for Runtime ("Ada") use "ravenscar-full-stm32f769disco";
+
+   package Device_Configuration is
+      for CPU_Name use "ARM Cortex-M7F";
+   end Device_Configuration;
 
    Vendor                         := "STMicro";           -- From board definition
    Max_Mount_Points               := "2";                 -- From default value
@@ -74,6 +81,7 @@ library project STM32F769_Discovery_Full is
    Has_ZFP_Runtime                := "False";             -- From board definition
    Has_Ravenscar_SFP_Runtime      := "True";              -- From board definition
    High_Speed_External_Clock      := "25000000";          -- From board definition
+   Use_Startup_Gen                := "False";             -- From command line
    Max_Path_Length                := "1024";              -- From default value
    Runtime_Name_Suffix            := "stm32f769disco";    -- From board definition
    Architecture                   := "ARM";               -- From board definition

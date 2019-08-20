@@ -151,7 +151,7 @@ def load_board_config(config):
         config.pre_define('Has_ZFP_Runtime', 'True', origin)
         config.pre_define('Has_Ravenscar_SFP_Runtime', 'False', origin)
         config.pre_define('Has_Ravenscar_Full_Runtime', 'False', origin)
-        config.pre_define('Runtime_Name_Suffix', 'hifive1', origin)
+        config.pre_define('Runtime_Name_Suffix', 'rv32imc', origin)
         config.add_memory('rom', 'board_flash', '0x20400000', '512M')
         config.add_source_dir('boards/HiFive1/src/', origin)
 

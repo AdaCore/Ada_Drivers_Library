@@ -6,13 +6,16 @@ package ADL_Config is
    Runtime_Profile                : constant String  := "zfp";               -- From command line
    Device_Name                    : constant String  := "FE310";             -- From board definition
    Device_Family                  : constant String  := "FE3";               -- From board definition
-   Runtime_Name                   : constant String  := "zfp-hifive1";       -- From default value
+   Boot_Memory                    : constant String  := "board_flash";       -- From default value
+   Runtime_Name                   : constant String  := "zfp-rv32imc";       -- From default value
    Has_Ravenscar_Full_Runtime     : constant String  := "False";             -- From board definition
    CPU_Core                       : constant String  := "RISC-V32";          -- From mcu definition
    Board                          : constant String  := "HiFive1";           -- From command line
    Has_ZFP_Runtime                : constant String  := "True";              -- From board definition
    Has_Ravenscar_SFP_Runtime      : constant String  := "False";             -- From board definition
+   Has_Custom_Memory_Area_1       : constant Boolean := False;               -- From default value
+   Use_Startup_Gen                : constant Boolean := True;                -- From command line
    Max_Path_Length                : constant         := 1024;                -- From default value
-   Runtime_Name_Suffix            : constant String  := "hifive1";           -- From board definition
+   Runtime_Name_Suffix            : constant String  := "rv32imc";           -- From board definition
    Architecture                   : constant String  := "RISC-V";            -- From board definition
 end ADL_Config;

@@ -13,6 +13,7 @@ package ADL_Config is
    Has_ZFP_Runtime                : constant String  := "False";             -- From board definition
    Has_Ravenscar_SFP_Runtime      : constant String  := "True";              -- From board definition
    High_Speed_External_Clock      : constant         := 8000000;             -- From board definition
+   Use_Startup_Gen                : constant Boolean := False;               -- From command line
    Max_Path_Length                : constant         := 1024;                -- From default value
    Runtime_Name_Suffix            : constant String  := "stm32f469disco";    -- From board definition
    Architecture                   : constant String  := "ARM";               -- From board definition

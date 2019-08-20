@@ -52,14 +52,33 @@ library project HiFive1_ZFP is
          "-fdata-sections");  -- Create a linker section for each data
    end Compiler;
 
-   for Languages use ("Ada");
+
+   for Languages use ("Ada", "Asm_CPP");
    for Create_Missing_Dirs use "True";
    for Object_Dir use "obj/zfp_" & Build;
    for Library_Dir use "obj/zfp_lib_" & Build;
    for Library_Kind use "static";
    for Library_Name use "ada_drivers_library";
+
+   Linker_Switches := ("-T", Project'Project_dir & "/src/zfp/link.ld");
    for Target use "riscv32-elf";
-   for Runtime ("Ada") use "zfp-hifive1";
+   for Runtime ("Ada") use "zfp-rv32imc";
+
+   package Device_Configuration is
+      for CPU_Name use "RISC-V32";
+
+      for Memories use ("board_flash", "RAM");
+
+      for Mem_Kind ("board_flash") use "rom";
+      for Address  ("board_flash") use "0x20400000";
+      for Size     ("board_flash") use "512M";
+
+      for Mem_Kind ("RAM") use "ram";
+      for Address  ("RAM") use "0x80000000";
+      for Size     ("RAM") use "16K";
+
+      for Boot_Memory use "board_flash";
+   end Device_Configuration;
 
    Vendor                         := "SiFive";            -- From board definition
    Max_Mount_Points               := "2";                 -- From default value
@@ -67,14 +86,17 @@ library project HiFive1_ZFP is
    Runtime_Profile                := "zfp";               -- From command line
    Device_Name                    := "FE310";             -- From board definition
    Device_Family                  := "FE3";               -- From board definition
-   Runtime_Name                   := "zfp-hifive1";       -- From default value
+   Boot_Memory                    := "board_flash";       -- From default value
+   Runtime_Name                   := "zfp-rv32imc";       -- From default value
    Has_Ravenscar_Full_Runtime     := "False";             -- From board definition
    CPU_Core                       := "RISC-V32";          -- From mcu definition
    Board                          := "HiFive1";           -- From command line
    Has_ZFP_Runtime                := "True";              -- From board definition
    Has_Ravenscar_SFP_Runtime      := "False";             -- From board definition
+   Has_Custom_Memory_Area_1       := "False";             -- From default value
+   Use_Startup_Gen                := "True";              -- From command line
    Max_Path_Length                := "1024";              -- From default value
-   Runtime_Name_Suffix            := "hifive1";           -- From board definition
+   Runtime_Name_Suffix            := "rv32imc";           -- From board definition
    Architecture                   := "RISC-V";            -- From board definition
 
    --  Project source directories
