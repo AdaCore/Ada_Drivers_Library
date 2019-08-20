@@ -52,6 +52,7 @@ library project Native is
          "-fdata-sections");  -- Create a linker section for each data
    end Compiler;
 
+
    for Languages use ("Ada");
    for Create_Missing_Dirs use "True";
    for Object_Dir use "obj_" & Build;
@@ -59,12 +60,19 @@ library project Native is
    for Library_Kind use "static";
    for Library_Name use "ada_drivers_library";
 
+   Linker_Switches := ();
+
+   package Device_Configuration is
+      for CPU_Name use "None";
+   end Device_Configuration;
+
    Max_Mount_Points               := "2";                 -- From default value
    Max_Mount_Name_Length          := "128";               -- From default value
    Has_Ravenscar_Full_Runtime     := "False";             -- From default value
    Board                          := "Native";            -- From command line
    Has_ZFP_Runtime                := "False";             -- From default value
    Has_Ravenscar_SFP_Runtime      := "False";             -- From default value
+   Use_Startup_Gen                := "False";             -- From command line
    Max_Path_Length                := "1024";              -- From default value
    Architecture                   := "Native";            -- From board definition
 

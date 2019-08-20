@@ -6,6 +6,7 @@ package ADL_Config is
    Board                          : constant String  := "Native";            -- From command line
    Has_ZFP_Runtime                : constant String  := "False";             -- From default value
    Has_Ravenscar_SFP_Runtime      : constant String  := "False";             -- From default value
+   Use_Startup_Gen                : constant Boolean := False;               -- From command line
    Max_Path_Length                : constant         := 1024;                -- From default value
    Architecture                   : constant String  := "Native";            -- From board definition
 end ADL_Config;

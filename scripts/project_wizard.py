@@ -4,6 +4,7 @@ import os
 import argparse
 import config
 import config.user_input.console
+from build_all_examples import run_program
 
 from config.boards import list_of_boards, load_board_config
 from config.devices import list_of_devices, list_of_vendors, \
@@ -68,9 +69,9 @@ def mcu_config(config):
 
 
 def linker_script_config(config):
-    config.query_bool_key('Generate_Linker_Script', default="True")
+    config.query_bool_key('Use_Startup_Gen', default="False")
 
-    if config.get_config('Generate_Linker_Script') == "True":
+    if config.get_config('Use_Startup_Gen') == "True":
         config.query_bool_key('Has_Custom_Memory_Area_1', default="False")
 
         cnt = 1
@@ -90,21 +91,8 @@ def linker_script_config(config):
             config.query_bool_key('Has_Custom_Memory_Area_%d' % cnt,
                                   default="False")
 
-        config.query_bool_key('Custom_Memory_Layout', default='False')
-        if config.get_config('Custom_Memory_Layout') == "True":
-
-            config.query_enum_key('Linker_Text_Section', config.memory_names(),
-                                  default=config.default_rom_area())
-            config.query_enum_key('Linker_RO_Data_Section',
-                                  config.memory_names(),
-                                  default=config.default_rom_area())
-            config.query_enum_key('Linker_Data_Section', config.memory_names(),
-                                  default=config.default_ram_area())
-            config.query_enum_key('Linker_BSS_Section', config.memory_names(),
-                                  default=config.default_ram_area())
-
-        print "\nLinker script:"
-        config.print_linker_script()
+    if len(config.memory_names()) > 0:
+        config.query_string_key('Boot_Memory', default=config.memory_names()[0])
 
 
 def middleware_config(config):
@@ -168,8 +156,7 @@ def ADL_configuration(config, project_directory, project_name,
     board_config(config)
     mcu_config(config)
     runtime_config(config)
-    # Linker script configuration is not available for the moment
-    # linker_script_config(config)
+    linker_script_config(config)
     middleware_config(config)
     components_config(config)
 
@@ -238,13 +225,24 @@ def ADL_configuration(config, project_directory, project_name,
          "-fdata-sections");  -- Create a linker section for each data
    end Compiler;
 
+
 """
-    gpr += "   for Languages use (\"Ada\");\n"
+    if config.get_config ("Use_Startup_Gen") == "True":
+        gpr += '   for Languages use ("Ada", "Asm_CPP");\n'
+    else:
+        gpr += '   for Languages use ("Ada");\n'
+
     gpr += "   for Create_Missing_Dirs use \"True\";\n"
     gpr += "   for Object_Dir use \"%s_\" & Build;\n" % object_dir_name
     gpr += "   for Library_Dir use \"%s_lib_\" & Build;\n" % object_dir_name
     gpr += "   for Library_Kind use \"static\";\n"
     gpr += "   for Library_Name use \"ada_drivers_library\";\n"
+
+    if config.get_config ("Use_Startup_Gen") == "True":
+        gpr += '\n   Linker_Switches := ' + \
+               '("-T", Project\'Project_dir & "/%s/link.ld");\n' % source_dir_name
+    else:
+        gpr += '\n   Linker_Switches := ();\n'
 
     gpr += config.gpr_configuration(relative_ADL_root_path, source_dir_name)
     gpr += "end %s;\n" % project_name
@@ -266,6 +264,14 @@ def ADL_configuration(config, project_directory, project_name,
         f.write(ada)
 
     config.print_remaining_pre_defined()
+
+    # Run startup-gen
+    if config.get_config ("Use_Startup_Gen") == "True":
+        print " -> Generating startup files."
+        run_program ('startup-gen',
+                     '-P', gpr_path,
+                     '-l', os.path.join(source_dir, "link.ld"),
+                     '-s', os.path.join(source_dir, "crt0.S"))
 
     print "Your Ada Drivers Library project is now ready to use."
 
