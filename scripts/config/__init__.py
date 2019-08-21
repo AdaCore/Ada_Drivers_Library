@@ -78,20 +78,25 @@ class Database:
         out += "\n"
 
         # Device configuration
-        out += "   package Device_Configuration is\n"
-        out += '      for CPU_Name use "%s";\n' % self.get_config("CPU_Core");
+        if arch is not None and arch != "Native":
+            out += "   package Device_Configuration is\n"
+            out += '      for CPU_Name use "%s";\n' % self.get_config("CPU_Core");
+            out += '      for Number_Of_Interrupts use "%d";\n' % self.get_config("Number_Of_Interrupts");
 
-        if len(self.memory_names()):
-           out += '\n      for Memories use ("' + '", "'.join(self.memory_names())
-           out += '");\n'
+            for cnt in range(self.get_config("Number_Of_Interrupts")):
+                out += '      for Interrupt ("%d") use "%s";\n' % (cnt, "adl_irq")
 
-           for mem in self.memories:
-               out += '\n      for Mem_Kind ("%(name)s") use "%(kind)s";\n' % (mem)
-               out += '      for Address  ("%(name)s") use "%(addr)s";\n' % (mem)
-               out += '      for Size     ("%(name)s") use "%(size)s";\n' % (mem)
+            if len(self.memory_names()):
+               out += '\n      for Memories use ("' + '", "'.join(self.memory_names())
+               out += '");\n'
 
-           out += '\n      for Boot_Memory use "%s";\n' % self.get_config("Boot_Memory")
-        out += '   end Device_Configuration;\n\n'
+               for mem in self.memories:
+                   out += '\n      for Mem_Kind ("%(name)s") use "%(kind)s";\n' % (mem)
+                   out += '      for Address  ("%(name)s") use "%(addr)s";\n' % (mem)
+                   out += '      for Size     ("%(name)s") use "%(size)s";\n' % (mem)
+
+               out += '\n      for Boot_Memory use "%s";\n' % self.get_config("Boot_Memory")
+            out += '   end Device_Configuration;\n\n'
 
         # Config keys and values
         for key in self.configuration:

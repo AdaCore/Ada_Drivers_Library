@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016-2018, AdaCore                      --
+--                    Copyright (C) 2016-2019, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -38,7 +38,7 @@ package body nRF51.Interrupts is
      := (others => null);
 
    procedure GNAT_IRQ_Handler;
-   pragma Export (Asm, GNAT_IRQ_Handler, "__gnat_irq_trap");
+   pragma Export (Asm, GNAT_IRQ_Handler, "__adl_irq_handler");
 
    ------------------
    -- Set_Priority --

@@ -152,6 +152,19 @@ def load_device_config(config):
                 'arch/ARM/Nordic/drivers/',
                 'arch/ARM/Nordic/svd/nrf51/']
 
+        config.pre_define('Number_Of_Interrupts', 32, origin)
+
+        if mcu.endswith ('AB'):
+            config.add_memory('rom', 'flash', '0x00000000', '128K')
+        else:
+            config.add_memory('rom', 'flash', '0x00000000', '256K')
+
+
+        if mcu.endswith ('AC'):
+            config.add_memory('ram', 'ram', '0x20000000', '32K')
+        else:
+            config.add_memory('ram', 'ram', '0x20000000', '16K')
+
     elif mcu == 'FE310':
         src += ['arch/RISC-V/SiFive/svd/FE310/',
                 'arch/RISC-V/SiFive/devices/FE310/',

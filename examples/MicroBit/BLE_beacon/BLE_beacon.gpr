@@ -2,7 +2,7 @@ with "../../../boards/MicroBit/microbit_zfp.gpr";
 
 project BLE_Beacon is
 
-  for Runtime ("ada") use "zfp-microbit";
+  for Runtime ("ada") use MicroBit_ZFP'Runtime ("Ada");
   for Target use "arm-eabi";
   for Main use ("main.adb");
   for Languages use ("Ada");
@@ -13,8 +13,10 @@ project BLE_Beacon is
   package Compiler renames MicroBit_ZFP.Compiler;
 
   package Linker is
-     for Default_Switches ("Ada") use ("-Wl,--print-memory-usage",
-                                       "-Wl,--gc-sections");
+     for Default_Switches ("Ada") use
+       MicroBit_ZFP.Linker_Switches &
+       ("-Wl,--print-memory-usage",
+        "-Wl,--gc-sections");
   end Linker;
 
   package Ide is

@@ -66,6 +66,7 @@ library project Crazyflie_Full is
 
    package Device_Configuration is
       for CPU_Name use "ARM Cortex-M4F";
+      for Number_Of_Interrupts use "0";
    end Device_Configuration;
 
    Vendor                         := "STMicro";           -- From board definition
@@ -74,12 +75,13 @@ library project Crazyflie_Full is
    Runtime_Profile                := "ravenscar-full";    -- From command line
    Device_Name                    := "STM32F405RGTx";     -- From board definition
    Device_Family                  := "STM32F4";           -- From board definition
+   Has_Ravenscar_SFP_Runtime      := "True";              -- From board definition
    Runtime_Name                   := "ravenscar-full-stm32f4"; -- From default value
    Has_Ravenscar_Full_Runtime     := "True";              -- From board definition
    CPU_Core                       := "ARM Cortex-M4F";    -- From mcu definition
    Board                          := "Crazyflie";         -- From command line
    Has_ZFP_Runtime                := "False";             -- From board definition
-   Has_Ravenscar_SFP_Runtime      := "True";              -- From board definition
+   Number_Of_Interrupts           := "0";                 -- From default value
    High_Speed_External_Clock      := "8000000";           -- From board definition
    Use_Startup_Gen                := "False";             -- From command line
    Max_Path_Length                := "1024";              -- From default value
