@@ -30,7 +30,7 @@ FOLDERS = {'Crazyflie': 'crazyflie',
            'STM32F769_Discovery': 'stm32f769_discovery',
            'NUCLEO_F446ZE':       'nucleo_f446ze'}
 
-USE_STARTUP_GEN = ['HiFive1']
+USE_STARTUP_GEN = ['HiFive1', 'MicroBit']
 
 def gen_project(board_name, rts):
     assert board_name is not None, "board is undefined"

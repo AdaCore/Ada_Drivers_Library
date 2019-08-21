@@ -53,36 +53,84 @@ library project MicroBit_ZFP is
    end Compiler;
 
 
-   for Languages use ("Ada");
+   for Languages use ("Ada", "Asm_CPP");
    for Create_Missing_Dirs use "True";
    for Object_Dir use "obj/zfp_" & Build;
    for Library_Dir use "obj/zfp_lib_" & Build;
    for Library_Kind use "static";
    for Library_Name use "ada_drivers_library";
 
-   Linker_Switches := ();
+   Linker_Switches := ("-T", Project'Project_dir & "/src/zfp/link.ld");
    for Target use "arm-eabi";
-   for Runtime ("Ada") use "zfp-microbit";
+   for Runtime ("Ada") use "zfp-cortex-m0";
 
    package Device_Configuration is
       for CPU_Name use "ARM Cortex-M0";
+      for Number_Of_Interrupts use "32";
+      for Interrupt ("0") use "adl_irq";
+      for Interrupt ("1") use "adl_irq";
+      for Interrupt ("2") use "adl_irq";
+      for Interrupt ("3") use "adl_irq";
+      for Interrupt ("4") use "adl_irq";
+      for Interrupt ("5") use "adl_irq";
+      for Interrupt ("6") use "adl_irq";
+      for Interrupt ("7") use "adl_irq";
+      for Interrupt ("8") use "adl_irq";
+      for Interrupt ("9") use "adl_irq";
+      for Interrupt ("10") use "adl_irq";
+      for Interrupt ("11") use "adl_irq";
+      for Interrupt ("12") use "adl_irq";
+      for Interrupt ("13") use "adl_irq";
+      for Interrupt ("14") use "adl_irq";
+      for Interrupt ("15") use "adl_irq";
+      for Interrupt ("16") use "adl_irq";
+      for Interrupt ("17") use "adl_irq";
+      for Interrupt ("18") use "adl_irq";
+      for Interrupt ("19") use "adl_irq";
+      for Interrupt ("20") use "adl_irq";
+      for Interrupt ("21") use "adl_irq";
+      for Interrupt ("22") use "adl_irq";
+      for Interrupt ("23") use "adl_irq";
+      for Interrupt ("24") use "adl_irq";
+      for Interrupt ("25") use "adl_irq";
+      for Interrupt ("26") use "adl_irq";
+      for Interrupt ("27") use "adl_irq";
+      for Interrupt ("28") use "adl_irq";
+      for Interrupt ("29") use "adl_irq";
+      for Interrupt ("30") use "adl_irq";
+      for Interrupt ("31") use "adl_irq";
+
+      for Memories use ("flash", "ram");
+
+      for Mem_Kind ("flash") use "rom";
+      for Address  ("flash") use "0x00000000";
+      for Size     ("flash") use "256K";
+
+      for Mem_Kind ("ram") use "ram";
+      for Address  ("ram") use "0x20000000";
+      for Size     ("ram") use "16K";
+
+      for Boot_Memory use "flash";
    end Device_Configuration;
 
    Vendor                         := "Nordic";            -- From board definition
    Max_Mount_Points               := "2";                 -- From default value
+   Boot_Memory                    := "flash";             -- From default value
    Max_Mount_Name_Length          := "128";               -- From default value
    Runtime_Profile                := "zfp";               -- From command line
    Device_Name                    := "nRF51822xxAA";      -- From board definition
    Device_Family                  := "nRF51";             -- From board definition
-   Runtime_Name                   := "zfp-microbit";      -- From default value
+   Has_Ravenscar_SFP_Runtime      := "False";             -- From board definition
+   Runtime_Name                   := "zfp-cortex-m0";     -- From default value
    Has_Ravenscar_Full_Runtime     := "False";             -- From board definition
    CPU_Core                       := "ARM Cortex-M0";     -- From mcu definition
    Board                          := "MicroBit";          -- From command line
    Has_ZFP_Runtime                := "True";              -- From board definition
-   Has_Ravenscar_SFP_Runtime      := "False";             -- From board definition
-   Use_Startup_Gen                := "False";             -- From command line
+   Number_Of_Interrupts           := "32";                -- From MCU definition
+   Has_Custom_Memory_Area_1       := "False";             -- From default value
+   Use_Startup_Gen                := "True";              -- From command line
    Max_Path_Length                := "1024";              -- From default value
-   Runtime_Name_Suffix            := "microbit";          -- From board definition
+   Runtime_Name_Suffix            := "cortex-m0";         -- From board definition
    Architecture                   := "ARM";               -- From board definition
 
    --  Project source directories

@@ -64,6 +64,8 @@ def mcu_config(config):
         load_cpu_config(config)
         load_device_config(config)
 
+        config.query_integer_key("Number_Of_Interrupts", default = 0)
+
     # TDOD: Is the SVD mapping available?
     # TODO: Does the user want to generate it?
 

@@ -62,10 +62,6 @@ library project Native is
 
    Linker_Switches := ();
 
-   package Device_Configuration is
-      for CPU_Name use "None";
-   end Device_Configuration;
-
    Max_Mount_Points               := "2";                 -- From default value
    Max_Mount_Name_Length          := "128";               -- From default value
    Has_Ravenscar_Full_Runtime     := "False";             -- From default value
