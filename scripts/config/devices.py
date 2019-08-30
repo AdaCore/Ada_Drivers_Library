@@ -1,6 +1,21 @@
 #! /usr/bin/env python
 
 import sys
+from peripherals import *
+
+
+class U540(SOC):
+    def __init__(self):
+        super(U540, self).__init__("SiFive")
+        self.add(SiFiveGPIO_0(0x10060000, 0x1000, '0', 16))
+
+        self.add(SiFiveSPI_0(0x10040000, 0x1000, '0'))
+        self.add(SiFiveSPI_0(0x10041000, 0x1000, '1'))
+        self.add(SiFiveSPI_0(0x10050000, 0x1000, '2'))
+
+        self.add(SiFivePWM_0(0x10020000, 0x1000, '0'))
+        self.add(SiFivePWM_0(0x10021000, 0x1000, '1'))
+
 
 
 def list_of_devices(config):
@@ -18,6 +33,8 @@ def list_of_devices(config):
         return ['nRF51822xxAA']
     elif family == "FE3":
         return ['FE310']
+    elif family == "U5":
+        return ['U540']
     else:
         print "fatal error, unknown family '%s'" % family
         sys.exit(1)
@@ -43,17 +60,18 @@ def list_of_families(config):
     elif vendor == "Nordic":
         return ["nRF51"]
     elif vendor == "SiFive":
-        return ['FE3']
+        return ['FE3', 'U5']
     else:
         print "fatal error, unknown vendor '%s'" % vendor
         sys.exit(1)
 
 
-def load_device_config(config):
+def load_device_config(config, source_dir):
     mcu = config.get_config("Device_Name")
     origin = 'MCU definition'
-
+    dev = None
     src = []
+
     if mcu == 'STM32F407VGTx' or mcu == 'STM32F405RGTx':
         src += ['arch/ARM/STM32/devices/stm32f40x/',
                 'arch/ARM/STM32/svd/stm32f40x',
@@ -171,8 +189,15 @@ def load_device_config(config):
                 'arch/RISC-V/SiFive/drivers/']
         config.add_memory('ram', 'RAM', '0x80000000', '16K')
 
+    elif mcu == 'U540':
+        dev = U540()
+
     else:
         print "Unknown MCU device %s." % mcu
+
+    if dev:
+        dev.write_device_spec(source_dir)
+        src += dev.source_dirs()
 
     for d in src:
         config.add_source_dir(d, origin)

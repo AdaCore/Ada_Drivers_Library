@@ -33,5 +33,9 @@ def load_cpu_config(config):
         None
         # No source dirs for RISC-V32
 
+    elif cpu == "RISC-V64":
+        None
+        # No source dirs for RISC-V64
+
     else:
         print "Unknown CPU core %s." % cpu

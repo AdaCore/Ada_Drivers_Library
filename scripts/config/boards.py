@@ -13,6 +13,7 @@ def list_of_boards():
             'OpenMV2',
             "MicroBit",
             "HiFive1",
+            "Unleashed",
             'Native']
 
 
@@ -154,6 +155,17 @@ def load_board_config(config):
         config.pre_define('Runtime_Name_Suffix', 'rv32imc', origin)
         config.add_memory('rom', 'board_flash', '0x20400000', '512M')
         config.add_source_dir('boards/HiFive1/src/', origin)
+
+    elif board == "Unleashed":
+        config.pre_define('Architecture', 'RISC-V', origin)
+        config.pre_define('Vendor', 'SiFive', origin)
+        config.pre_define('Device_Family', 'U5', origin)
+        config.pre_define('Device_Name', 'U540', origin)
+        config.pre_define('Has_ZFP_Runtime', 'True', origin)
+        config.pre_define('Has_Ravenscar_SFP_Runtime', 'True', origin)
+        config.pre_define('Has_Ravenscar_Full_Runtime', 'True', origin)
+        config.pre_define('Runtime_Name_Suffix', 'unleashed', origin)
+        config.add_source_dir('boards/Unleashed/src/', origin)
 
     elif board == "Native":
         config.pre_define('Architecture', 'Native', origin)
