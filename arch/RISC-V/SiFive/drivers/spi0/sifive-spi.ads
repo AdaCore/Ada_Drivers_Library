@@ -65,29 +65,34 @@ package SiFive.SPI is
                         Phase      : Clock_Phase;
                         Endianness : SPI_Endianness);
 
+   overriding
    function Data_Size (This : SPI_Controller)
                        return SPI_Data_Size
    is (Data_Size_8b);
    --  Only 8bit per frame supported
 
+   overriding
    procedure Transmit
      (This    : in out SPI_Controller;
       Data    : SPI_Data_8b;
       Status  : out SPI_Status;
       Timeout : Natural := 1000);
 
+   overriding
    procedure Transmit
      (This    : in out SPI_Controller;
       Data    : SPI_Data_16b;
       Status  : out SPI_Status;
       Timeout : Natural := 1000);
 
+   overriding
    procedure Receive
      (This    : in out SPI_Controller;
       Data    : out SPI_Data_8b;
       Status  : out SPI_Status;
       Timeout : Natural := 1000);
 
+   overriding
    procedure Receive
      (This    : in out SPI_Controller;
       Data    : out SPI_Data_16b;

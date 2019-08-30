@@ -101,6 +101,7 @@ package body SiFive.SPI is
    -- Transmit --
    --------------
 
+   overriding
    procedure Transmit
      (This    : in out SPI_Controller;
       Data    : SPI_Data_8b;
@@ -128,6 +129,7 @@ package body SiFive.SPI is
    -- Transmit --
    --------------
 
+   overriding
    procedure Transmit
      (This    : in out SPI_Controller;
       Data    : SPI_Data_16b;
@@ -142,6 +144,7 @@ package body SiFive.SPI is
    -- Receive --
    -------------
 
+   overriding
    procedure Receive
      (This    : in out SPI_Controller;
       Data    : out SPI_Data_8b;
@@ -169,6 +172,7 @@ package body SiFive.SPI is
    -- Receive --
    -------------
 
+   overriding
    procedure Receive
      (This    : in out SPI_Controller;
       Data    : out SPI_Data_16b;
