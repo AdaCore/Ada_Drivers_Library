@@ -132,3 +132,21 @@ class SiFivePWM_0(SiFive):
         out += "   PWM%s : aliased SiFive.PWM.PWM_Device (PWM%s_Internal'Access);\n"\
                % (self._port_id, self._port_id)
         return out + "\n"
+
+
+class SiFiveUART_0(SiFive):
+    def __init__(self, base_addr, size, port_id):
+        super(SiFiveUART_0, self).__init__()
+
+        self._port_id = port_id
+
+        self.set_reg(base_addr, size);
+        self.add_source_dir('arch/RISC-V/SiFive/drivers/uart0');
+        self.add_dependency("SiFive.UART")
+        self.add_dependency("System")
+
+    def generate_device_spec(self):
+        out = "   -- UART%s --\n\n" % self._port_id
+        out += "   UART%s : aliased SiFive.UART.UART_Device (%d);\n" \
+               % (self._port_id, self._base_addr)
+        return out + "\n"

@@ -16,6 +16,8 @@ class U540(SOC):
         self.add(SiFivePWM_0(0x10020000, 0x1000, '0'))
         self.add(SiFivePWM_0(0x10021000, 0x1000, '1'))
 
+        self.add(SiFiveUART_0(0x10010000, 0x1000, '0'))
+        self.add(SiFiveUART_0(0x10011000, 0x1000, '1'))
 
 
 def list_of_devices(config):

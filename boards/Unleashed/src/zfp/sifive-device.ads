@@ -2,6 +2,7 @@ with SiFive.GPIO; use SiFive.GPIO;
 with SiFive.SPI; use SiFive.SPI;
 with SiFive.PWM; use SiFive.PWM;
 with System; use System;
+with SiFive.UART; use SiFive.UART;
 
 package SiFive.Device is
 
@@ -49,5 +50,13 @@ package SiFive.Device is
    PWM1_Internal : aliased SiFive.PWM.Internal_PWM
       with Import, Address => System'To_Address (268570624);
    PWM1 : aliased SiFive.PWM.PWM_Device (PWM1_Internal'Access);
+
+   -- UART0 --
+
+   UART0 : aliased SiFive.UART.UART_Device (268500992);
+
+   -- UART1 --
+
+   UART1 : aliased SiFive.UART.UART_Device (268505088);
 
 end SiFive.Device;

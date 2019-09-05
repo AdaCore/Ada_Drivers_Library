@@ -96,6 +96,7 @@ library project Unleashed_ZFP is
     Src_Dirs_Root & "/arch/RISC-V/SiFive/", -- From MCU definition
     Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/spi0", -- From MCU definition
     Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/pwm0", -- From MCU definition
+    Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/uart0", -- From MCU definition
     Src_Dirs_Root & "/middleware/src/filesystem", -- From middleware config
     Src_Dirs_Root & "/middleware/src/BLE", -- From middleware config
     Src_Dirs_Root & "/middleware/src/utils", -- From middleware config
