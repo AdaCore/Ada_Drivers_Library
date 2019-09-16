@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2018, AdaCore                        --
+--                    Copyright (C) 2018-2019, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO; use Ada.Text_IO;
+with MicroBit.Console; use MicroBit.Console;
 with MicroBit.Display; use MicroBit.Display;
 with MicroBit.IOs; use MicroBit.IOs;
 with MicroBit.Servos; use MicroBit.Servos;

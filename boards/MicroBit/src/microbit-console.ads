@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                       Copyright (C) 2019, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,42 +29,21 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.Device;
-with nRF51.GPIO;
+package MicroBit.Console is
 
-package MicroBit is
+   procedure Get (C : out Character);
+   --  Get a character from the USB/serial console
 
-   --  http://tech.microbit.org/hardware/edgeconnector_ds/
+   procedure Put (C : Character);
+   --  Print a character on the USB/serial console
 
-   MB_P0   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P03;  --  0 pad on edge connector
-   MB_P1   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P02;  --  1 pad on edge connector
-   MB_P2   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P01;  --  2 pad on edge connector
-   MB_P3   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P04;  --  Display column 1
-   MB_P4   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P05;  --  Display column 2
-   MB_P5   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P17;  --  Button A
-   MB_P6   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P12;  --  Display column 9
-   MB_P7   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P11;  --  Display column 8
-   MB_P8   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P18;
-   MB_P9   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P10;  --  Display column 7
-   MB_P10  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P06;  --  Display column 3
-   MB_P11  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P26;  --  Button B
-   MB_P12  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P20;
-   MB_P13  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P23;  --  SCK
-   MB_P14  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P22;  --  MISO
-   MB_P15  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P21;  --  MOSI
-   MB_P16  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P16;
-   MB_P19  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P00;  --  SCL
-   MB_P20  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P30;  --  SDA
+   procedure Put (Str : String);
+   --  Print a string on the USB/serial console
 
-   MB_SCK  : nRF51.GPIO.GPIO_Point renames MB_P13;
-   MB_MISO : nRF51.GPIO.GPIO_Point renames MB_P14;
-   MB_MOSI : nRF51.GPIO.GPIO_Point renames MB_P15;
+   procedure Put_Line (Str : String);
+   --  Print a string on the USB/serial console and add a line terminator
 
-   MB_SCL  : nRF51.GPIO.GPIO_Point renames MB_P19;
-   MB_SDA  : nRF51.GPIO.GPIO_Point renames MB_P20;
+   procedure New_Line;
+   --  Print a line terminator on the USB/serial console
 
-   MB_UART_TX : nRF51.GPIO.GPIO_Point renames nRF51.Device.P24;
-   MB_UART_RX : nRF51.GPIO.GPIO_Point renames nRF51.Device.P25;
-
-
-end MicroBit;
+end MicroBit.Console;
