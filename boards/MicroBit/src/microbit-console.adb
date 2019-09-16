@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                       Copyright (C) 2019, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,42 +29,83 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with HAL;          use HAL;
+with HAL.UART;     use HAL.UART;
 with nRF51.Device;
-with nRF51.GPIO;
+with nRF51.UART;   use nRF51.UART;
 
-package MicroBit is
+package body MicroBit.Console is
 
-   --  http://tech.microbit.org/hardware/edgeconnector_ds/
+   UART : nRF51.UART.UART_Device renames nRF51.Device.UART_0;
 
-   MB_P0   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P03;  --  0 pad on edge connector
-   MB_P1   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P02;  --  1 pad on edge connector
-   MB_P2   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P01;  --  2 pad on edge connector
-   MB_P3   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P04;  --  Display column 1
-   MB_P4   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P05;  --  Display column 2
-   MB_P5   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P17;  --  Button A
-   MB_P6   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P12;  --  Display column 9
-   MB_P7   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P11;  --  Display column 8
-   MB_P8   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P18;
-   MB_P9   : nRF51.GPIO.GPIO_Point renames nRF51.Device.P10;  --  Display column 7
-   MB_P10  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P06;  --  Display column 3
-   MB_P11  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P26;  --  Button B
-   MB_P12  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P20;
-   MB_P13  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P23;  --  SCK
-   MB_P14  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P22;  --  MISO
-   MB_P15  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P21;  --  MOSI
-   MB_P16  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P16;
-   MB_P19  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P00;  --  SCL
-   MB_P20  : nRF51.GPIO.GPIO_Point renames nRF51.Device.P30;  --  SDA
+   ---------
+   -- Get --
+   ---------
 
-   MB_SCK  : nRF51.GPIO.GPIO_Point renames MB_P13;
-   MB_MISO : nRF51.GPIO.GPIO_Point renames MB_P14;
-   MB_MOSI : nRF51.GPIO.GPIO_Point renames MB_P15;
+   procedure Get (C : out Character) is
+      Data   : UART_Data_8b (1 .. 1);
+      Status : UART_Status;
+   begin
+      UART.Receive (Data, Status);
+      C := Character'Val (Data (Data'First));
+   end Get;
 
-   MB_SCL  : nRF51.GPIO.GPIO_Point renames MB_P19;
-   MB_SDA  : nRF51.GPIO.GPIO_Point renames MB_P20;
+   ---------
+   -- Put --
+   ---------
 
-   MB_UART_TX : nRF51.GPIO.GPIO_Point renames nRF51.Device.P24;
-   MB_UART_RX : nRF51.GPIO.GPIO_Point renames nRF51.Device.P25;
+   procedure Put (C : Character) is
+      Data   : constant UART_Data_8b (1 .. 1) :=
+        (1 => UInt8 (Character'Pos (C)));
 
+      Status : UART_Status;
+   begin
+      UART.Transmit (Data, Status);
+   end Put;
 
-end MicroBit;
+   ---------
+   -- Put --
+   ---------
+
+   procedure Put (Str : String) is
+      Data   : UART_Data_8b (Str'First .. Str'Last);
+
+      Status : UART_Status;
+   begin
+      for Index in Str'Range loop
+         Data (Index) := UInt8 (Character'Pos (Str (Index)));
+      end loop;
+      UART.Transmit (Data, Status);
+   end Put;
+
+   --------------
+   -- Put_Line --
+   --------------
+
+   procedure Put_Line (Str : String) is
+      Data   : UART_Data_8b (Str'First .. Str'Last + 2);
+
+      Status : UART_Status;
+   begin
+      for Index in Str'Range loop
+         Data (Index) := UInt8 (Character'Pos (Str (Index)));
+      end loop;
+      Data (Data'Last - 1) := Character'Pos (ASCII.CR);
+      Data (Data'Last) := Character'Pos (ASCII.LF);
+      UART.Transmit (Data, Status);
+   end Put_Line;
+
+   --------------
+   -- New_Line --
+   --------------
+
+   procedure New_Line is
+   begin
+      Put (ASCII.CR & ASCII.LF);
+   end New_Line;
+
+begin
+   UART.Configure (nRF51.UART.Baud115200, Parity => False);
+   UART.Enable (MB_UART_TX.Pin, MB_UART_RX.Pin);
+end MicroBit.Console;
+

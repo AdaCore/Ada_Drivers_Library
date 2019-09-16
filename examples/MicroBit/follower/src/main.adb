@@ -29,8 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO; use Ada.Text_IO;
-
+with MicroBit.Console; use MicroBit.Console;
 with MicroBit.Display; use MicroBit.Display;
 with MicroBit.IOs; use MicroBit.IOs;
 with MicroBit.Servos; use MicroBit.Servos;
