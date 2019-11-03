@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2018, AdaCore                        --
+--                    Copyright (C) 2018-2019, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -33,14 +33,7 @@ with MMA8653;
 
 package MicroBit.Accelerometer is
 
-   function Initialized return Boolean;
-   --  Return True if the Accelerometer is initialized and ready to use
-
-   procedure Initialize
-     with Post => Initialized;
-   --  Initialize the accelerometer using the micro:bit I2C port
-
-   function Data return MMA8653.All_Axes_Data
-     with Pre => Initialized;
+   function Data return MMA8653.All_Axes_Data;
+   --  Return the acceleration value for each of the three axes (X, Y, Z)
 
 end MicroBit.Accelerometer;

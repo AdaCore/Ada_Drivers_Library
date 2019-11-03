@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2018-2019, AdaCore                      --
+--                       Copyright (C) 2019, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,36 +29,94 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with MicroBit.I2C;
-
-package body MicroBit.Accelerometer is
-
-   Acc  : MMA8653.MMA8653_Accelerometer (MicroBit.I2C.Controller);
-
-   procedure Initialize;
+package body MicroBit.Display.Symbols is
 
    ----------------
-   -- Initialize --
+   -- Left_Arrow --
    ----------------
 
-   procedure Initialize is
+   procedure Left_Arrow is
    begin
-      if not MicroBit.I2C.Initialized then
-         MicroBit.I2C.Initialize;
-      end if;
+      Set (0, 2);
+      Set (1, 2);
+      Set (2, 2);
+      Set (3, 2);
+      Set (4, 2);
+      Set (1, 2);
 
-      Acc.Configure (MMA8653.Two_G,
-                     MMA8653.High_Resolution,
-                     MMA8653.High_Resolution);
-   end Initialize;
+      Set (1, 1);
+      Set (2, 0);
+      Set (1, 3);
+      Set (2, 4);
+   end Left_Arrow;
 
-   ----------
-   -- Data --
-   ----------
+   -----------------
+   -- Right_Arrow --
+   -----------------
 
-   function Data return MMA8653.All_Axes_Data
-   is (Acc.Read_Data);
+   procedure Right_Arrow is
+   begin
+      Set (0, 2);
+      Set (1, 2);
+      Set (2, 2);
+      Set (3, 2);
+      Set (4, 2);
 
-begin
-   Initialize;
-end MicroBit.Accelerometer;
+      Set (3, 1);
+      Set (2, 0);
+      Set (3, 3);
+      Set (2, 4);
+   end Right_Arrow;
+
+   --------------
+   -- Up_Arrow --
+   --------------
+
+   procedure Up_Arrow is
+   begin
+      Set (2, 0);
+      Set (2, 1);
+      Set (2, 2);
+      Set (2, 3);
+      Set (2, 4);
+
+      Set (1, 1);
+      Set (0, 2);
+      Set (3, 1);
+      Set (4, 2);
+   end Up_Arrow;
+
+   ----------------
+   -- Down_Arrow --
+   ----------------
+
+   procedure Down_Arrow is
+   begin
+      Set (2, 0);
+      Set (2, 1);
+      Set (2, 2);
+      Set (2, 3);
+      Set (2, 4);
+
+      Set (1, 3);
+      Set (0, 2);
+      Set (3, 3);
+      Set (4, 2);
+   end Down_Arrow;
+
+   -----------
+   -- Smile --
+   -----------
+
+   procedure Smile is
+   begin
+      Set (1, 1);
+      Set (3, 1);
+      Set (0, 3);
+      Set (1, 4);
+      Set (2, 4);
+      Set (3, 4);
+      Set (4, 3);
+   end Smile;
+
+end MicroBit.Display.Symbols;
