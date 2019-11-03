@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2018-2019, AdaCore                      --
+--                       Copyright (C) 2019, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,36 +29,15 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with MicroBit.I2C;
+--  This package provides procedures to draw symbols on the MicroBit 5x5 LED
+--  display.
 
-package body MicroBit.Accelerometer is
+package MicroBit.Display.Symbols is
 
-   Acc  : MMA8653.MMA8653_Accelerometer (MicroBit.I2C.Controller);
+   procedure Left_Arrow;
+   procedure Right_Arrow;
+   procedure Up_Arrow;
+   procedure Down_Arrow;
+   procedure Smile;
 
-   procedure Initialize;
-
-   ----------------
-   -- Initialize --
-   ----------------
-
-   procedure Initialize is
-   begin
-      if not MicroBit.I2C.Initialized then
-         MicroBit.I2C.Initialize;
-      end if;
-
-      Acc.Configure (MMA8653.Two_G,
-                     MMA8653.High_Resolution,
-                     MMA8653.High_Resolution);
-   end Initialize;
-
-   ----------
-   -- Data --
-   ----------
-
-   function Data return MMA8653.All_Axes_Data
-   is (Acc.Read_Data);
-
-begin
-   Initialize;
-end MicroBit.Accelerometer;
+end MicroBit.Display.Symbols;
