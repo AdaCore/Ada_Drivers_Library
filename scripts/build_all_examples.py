@@ -133,6 +133,7 @@ projects = [
             "/examples/MicroBit/servos/servos.gpr",
             "/examples/MicroBit/neopixel/neopixel.gpr",
             "/examples/MicroBit/follower/follower.gpr",
+            "/examples/MicroBit/accelerometer/accelerometer.gpr",
 
             # STM32 driver examples
             STM_DRIVERS + "/demo_adc_dma/demo_adc_dma.gpr",
