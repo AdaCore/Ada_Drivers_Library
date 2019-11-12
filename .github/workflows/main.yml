@@ -1,0 +1,55 @@
+name: Build and test
+on: [pull_request, push]
+
+jobs:
+  linux-build:
+    name: Build and test on Linux
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ada-actions/toolchain@ce2020
+      with:
+        distrib: community
+    - uses: ada-actions/toolchain@ce2020
+      with:
+        distrib: community
+        target: arm-elf
+    - uses: ada-actions/toolchain@ce2020
+      with:
+        distrib: community
+        target: riscv32-elf
+    - run: python $PWD/scripts/install_dependencies.py
+    - run: python $PWD/scripts/build_all_examples.py
+    - run: python $PWD/testsuite/run.py
+
+  win-build:
+    name: Build and test on Windows
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ada-actions/toolchain@ce2020
+      with:
+        distrib: community
+    - uses: ada-actions/toolchain@ce2020
+      with:
+        distrib: community
+        target: arm-elf
+    - run: python $PWD/scripts/install_dependencies.py
+    - run: python $PWD/scripts/build_all_examples.py
+    - run: python $PWD/testsuite/run.py
+
+  macos-build:
+    name: Build and test on macOS
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ada-actions/toolchain@dev
+      with:
+        distrib: community
+    - uses: ada-actions/toolchain@dev
+      with:
+        distrib: community
+        target: arm-elf
+    - run: python $PWD/scripts/install_dependencies.py
+    - run: python $PWD/scripts/build_all_examples.py
+    - run: python $PWD/testsuite/run.py
