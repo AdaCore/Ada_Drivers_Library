@@ -1,0 +1,54 @@
+name: Build and test
+on: [pull_request, push]
+
+jobs:
+  linux-build:
+    name: Build and test on Linux
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ada-actions/toolchain@ce2020
+      with:
+        distrib: community
+    - uses: ada-actions/toolchain@ce2020
+      with:
+        distrib: community
+        target: arm-elf
+    - uses: ada-actions/toolchain@ce2020
+      with:
+        distrib: community
+        target: riscv32-elf
+    - name: Install Python 3.x (required for the testsuite)
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - run: python3 $PWD/scripts/install_dependencies.py
+    - run: python3 $PWD/scripts/build_all_examples.py
+    - run: python3 $PWD/testsuite/run.py
+
+  win-build:
+    name: Build and test on Windows
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ada-actions/toolchain@ce2020
+      with:
+        distrib: community
+    - uses: ada-actions/toolchain@ce2020
+      with:
+        distrib: community
+        target: arm-elf
+    - name: Install Python 3.x (required for the testsuite)
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Remove built-in arm-eabi Ravenscar run-times
+      run:  rm -Recurse -Force "d:\a\_temp\gnat-2020-20200429-arm-elf-windows64-bin\arm-elf\arm-eabi\lib\gnat\ravenscar*"
+      shell: pwsh
+    - name: Remove built-in arm-eabi ZFP run-times
+      run:  rm -Recurse -Force "d:\a\_temp\gnat-2020-20200429-arm-elf-windows64-bin\arm-elf\arm-eabi\lib\gnat\zfp*"
+      shell: pwsh
+
+    - run: python $PWD/scripts/install_dependencies.py
+    - run: python $PWD/scripts/build_all_examples.py
+    - run: python $PWD/testsuite/run.py
