@@ -89,6 +89,7 @@ projects = [
 
             # Feather STM32F405
             "/examples/feather_stm32f405/blinky/blinky.gpr",
+            "/examples/feather_stm32f405/charlie_wing/charlie_wing.gpr",
 
             # STM32F469 Discovery
             "/boards/stm32f469_discovery/stm32f469_discovery_full.gpr",
