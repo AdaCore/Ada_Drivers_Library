@@ -16,6 +16,7 @@ BOARDS = {
     'STM32F746_Discovery': { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
     'STM32F769_Discovery': { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
     'NUCLEO_F446ZE':       { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
+    'Feather_STM32F405':   { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
     }
 
 
@@ -30,7 +31,8 @@ FOLDERS = {'Crazyflie': 'crazyflie',
            'STM32F469_Discovery': 'stm32f469_discovery',
            'STM32F746_Discovery': 'stm32f746_discovery',
            'STM32F769_Discovery': 'stm32f769_discovery',
-           'NUCLEO_F446ZE':       'nucleo_f446ze'}
+           'NUCLEO_F446ZE':       'nucleo_f446ze',
+           'Feather_STM32F405':   'feather_stm32f405'}
 
 USE_STARTUP_GEN = ['HiFive1', 'MicroBit']
 

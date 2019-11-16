@@ -1,0 +1,14 @@
+with "../../../boards/feather_stm32f405/feather_stm32f405_full.gpr";
+
+project Blinky is
+
+  for Runtime ("Ada") use Feather_STM32F405_Full'Runtime("Ada");
+  for Target use "arm-eabi";
+  for Main use ("main.adb");
+  for Languages use ("Ada");
+  for Source_Dirs use ("src");
+  for Object_Dir use "obj/";
+  for Create_Missing_Dirs use "True";
+
+  package Compiler renames Feather_STM32F405_Full.Compiler;
+end Blinky;
