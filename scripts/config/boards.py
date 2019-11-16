@@ -10,6 +10,7 @@ def list_of_boards():
             'STM32F769_Discovery',
             'NUCLEO_F446ZE',
             'Crazyflie',
+            'Feather_STM32F405',
             'OpenMV2',
             "MicroBit",
             "HiFive1",
@@ -120,6 +121,18 @@ def load_board_config(config):
         config.pre_define('Has_Ravenscar_Full_Runtime', 'True', origin)
         config.pre_define('Runtime_Name_Suffix', 'stm32f4', origin)
         config.add_source_dir('boards/crazyflie/src/', origin)
+
+    elif board == "Feather_STM32F405":
+        config.pre_define('Architecture', 'ARM', origin)
+        config.pre_define('Vendor', 'STMicro', origin)
+        config.pre_define('Device_Family', 'STM32F4', origin)
+        config.pre_define('Device_Name', 'STM32F405RGTx', origin)
+        config.pre_define('High_Speed_External_Clock', '12000000', origin)
+        config.pre_define('Has_ZFP_Runtime', 'False', origin)
+        config.pre_define('Has_Ravenscar_SFP_Runtime', 'True', origin)
+        config.pre_define('Has_Ravenscar_Full_Runtime', 'True', origin)
+        config.pre_define('Runtime_Name_Suffix', 'feather_stm32f405', origin)
+        config.add_source_dir('boards/feather_stm32f405/src/', origin)
 
     elif board == "OpenMV2":
         config.pre_define('Architecture', 'ARM', origin)
