@@ -31,9 +31,9 @@
 
 package nRF51.Temperature is
 
-   type Temp_Celcius is delta 0.25 range
+   type Temp_Celsius is delta 0.25 range
      -2_147_483_648.0 / 4 .. 2_147_483_647.0 / 4;
 
-   function Read return Temp_Celcius;
+   function Read return Temp_Celsius;
 
 end nRF51.Temperature;
