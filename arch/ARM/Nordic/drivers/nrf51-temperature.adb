@@ -35,13 +35,13 @@ with HAL;            use HAL;
 package body nRF51.Temperature is
 
    type RAW_Temp is delta 0.25 range
-     Temp_Celcius'First * 4.0 .. Temp_Celcius'Last * 4.0;
+     Temp_Celsius'First * 4.0 .. Temp_Celsius'Last * 4.0;
 
    ----------
    -- Read --
    ----------
 
-   function Read return Temp_Celcius is
+   function Read return Temp_Celsius is
       Raw : RAW_Temp;
    begin
 
@@ -56,7 +56,7 @@ package body nRF51.Temperature is
       end loop;
 
       Raw := RAW_Temp (TEMP_Periph.TEMP);
-      return Temp_Celcius (Raw / 4);
+      return Temp_Celsius (Raw / 4);
    end Read;
 
 end nRF51.Temperature;
