@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 
 import sys
+import os
+import json
 from peripherals import *
 
 
@@ -33,6 +35,10 @@ def list_of_devices(config):
                 'STM32F769NIHx']
     elif family == "nRF51":
         return ['nRF51822xxAA']
+    elif family == "SAMD51":
+        return ['ATSAMD51G18A', 'ATSAMD51G19A', 'ATSAMD51J18A', 'ATSAMD51J19A',
+                'ATSAMD51J20A', 'ATSAMD51N19A', 'ATSAMD51N20A', 'ATSAMD51P19A',
+                'ATSAMD51P20A']
     elif family == "FE3":
         return ['FE310']
     elif family == "U5":
@@ -45,7 +51,7 @@ def list_of_devices(config):
 def list_of_vendors(config):
     arch = config.get_config("Architecture")
     if arch == "ARM":
-        return ["STMicro", "Nordic"]
+        return ["STMicro", "Nordic", "Microchip"]
     elif arch == "RISC-V":
         return ["SiFive"]
     elif arch == "Native":
@@ -61,6 +67,8 @@ def list_of_families(config):
         return ["STM32F4", "STM32F7"]
     elif vendor == "Nordic":
         return ["nRF51"]
+    elif vendor == "Microchip":
+        return ["SAMD51"]
     elif vendor == "SiFive":
         return ['FE3', 'U5']
     else:
@@ -193,6 +201,34 @@ def load_device_config(config, source_dir):
 
     elif mcu == 'U540':
         dev = U540()
+
+    elif mcu.startswith('ATSAMD51'):
+        device_dir = os.path.join('arch/ARM/Microchip/SAM/devices/SAMD51/', mcu)
+
+        root_dir = os.path.dirname(os.path.realpath(__file__))
+        root_dir = os.path.join(root_dir, '..', '..')
+        with open(os.path.join(root_dir, device_dir, 'device_info.json'), 'r') as f:
+            info = json.load(f)
+
+        print(json.dumps(info))
+
+        config.add_memory(info['memories'][info['boot_mem']]['type'],
+                          info['boot_mem'],
+                          info['memories'][info['boot_mem']]['start'],
+                          info['memories'][info['boot_mem']]['size'])
+
+        for mem in info['memories']:
+            if mem != info['boot_mem']:
+                config.add_memory(info['memories'][mem]['type'],
+                                  mem,
+                                  info['memories'][mem]['start'],
+                                  info['memories'][mem]['size'])
+
+        for driver in info['drivers']:
+            src += ['arch/ARM/Microchip/SAM/drivers/' + driver]
+
+        src += ['arch/ARM/Microchip/SAM/drivers/samd51_clock_setup']
+        src += ['arch/ARM/Microchip/SAM', device_dir]
 
     else:
         print "Unknown MCU device %s." % mcu

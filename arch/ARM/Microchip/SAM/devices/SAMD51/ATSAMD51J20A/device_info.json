@@ -1,0 +1,32 @@
+{
+  "name": "ATSAMD51J20A",
+  "architecture": "CORTEX-M4",
+  "has_FPU": true,
+  "has_MPU": true,
+  "drivers": [
+    "adc_u2500",
+    "dmac_u2503",
+    "gclk_u2122",
+    "oscctrl_u2401",
+    "port_u2210",
+    "sercom_u2201"
+  ],
+  "memories": {
+    "HSRAM": {
+      "type": "ram",
+      "start": "0x20000000",
+      "size": "0x40000"
+    },
+    "FLASH": {
+      "type": "rom",
+      "start": "0x00000000",
+      "size": "0x100000"
+    },
+    "BKUPRAM": {
+      "type": "ram",
+      "start": "0x47000000",
+      "size": "0x2000"
+    }
+  },
+  "boot_mem": "FLASH"
+}

@@ -14,6 +14,7 @@ def list_of_boards():
             "MicroBit",
             "HiFive1",
             "Unleashed",
+            "Metro_M4_Express",
             'Native']
 
 
@@ -143,6 +144,17 @@ def load_board_config(config):
         config.pre_define('Has_Ravenscar_Full_Runtime', 'False', origin)
         config.pre_define('Runtime_Name_Suffix', 'cortex-m0', origin)
         config.add_source_dir('boards/MicroBit/src/', origin)
+
+    elif board == "Metro_M4_Express":
+        config.pre_define('Architecture', 'ARM', origin)
+        config.pre_define('Vendor', 'Microchip', origin)
+        config.pre_define('Device_Family', 'SAMD51', origin)
+        config.pre_define('Device_Name', 'ATSAMD51J19A', origin)
+        config.pre_define('Has_ZFP_Runtime', 'True', origin)
+        config.pre_define('Has_Ravenscar_SFP_Runtime', 'False', origin)
+        config.pre_define('Has_Ravenscar_Full_Runtime', 'False', origin)
+        config.pre_define('Runtime_Name_Suffix', 'cortex-m4f', origin)
+        config.add_source_dir('boards/metro_m4_express/src/', origin)
 
     elif board == "HiFive1":
         config.pre_define('Architecture', 'RISC-V', origin)

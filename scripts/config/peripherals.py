@@ -39,6 +39,9 @@ class SOC(object):
         self._periphs.append(p)
         self._src += p.source_dirs()
 
+    def add_source_dir(self, dir):
+        self._src.append(dir)
+
     def source_dirs(self):
         # return list of uniq source dirs
         return list(set(self._src))
@@ -63,7 +66,7 @@ class SOC(object):
         return out
 
     def write_device_spec(self, source_dir):
-        filename = "sifive-device.ads"
+        filename = self._root_package.lower().replace('.', '-') + "-device.ads"
         with open(os.path.join(source_dir, filename), "w") as file:
             file.write(self.generate_device_spec());
 
