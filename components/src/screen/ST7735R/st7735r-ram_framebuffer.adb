@@ -45,11 +45,12 @@ package body ST7735R.RAM_Framebuffer is
       Width   : Positive := Positive'Last;
       Height  : Positive := Positive'Last)
    is
-      pragma Unreferenced (X, Y, Width, Height);
    begin
       if Layer /= 1 or else Mode /= RGB_565 then
          raise Program_Error;
       end if;
+
+      Parent (Display).Initialize_Layer (Layer, Mode, X, Y, Width, Height);
 
       Display.Memory_Layer.Actual_Width := Screen_Width;
       Display.Memory_Layer.Actual_Height := Screen_Height;
