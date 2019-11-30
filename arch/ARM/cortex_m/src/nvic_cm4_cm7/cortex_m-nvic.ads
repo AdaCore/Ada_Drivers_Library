@@ -43,10 +43,11 @@
 --  STM32F4 (ARM Cortex M4F) microcontrollers from ST Microelectronics.
 
 with System;
-with HAL;            use HAL;
-with Ada.Interrupts; use Ada.Interrupts;
+with HAL;    use HAL;
 
 package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
+
+   type Interrupt_ID is range 0 .. 240;
 
    --  0 bits for pre-emption priority;  4 bits for subpriority
    Priority_Group_0 : constant UInt32 := 16#00000007#;
