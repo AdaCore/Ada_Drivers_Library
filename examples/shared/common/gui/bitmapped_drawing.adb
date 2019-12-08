@@ -247,5 +247,4 @@ package body Bitmapped_Drawing is
       end if;
    end Draw_String;
 
-
 end Bitmapped_Drawing;

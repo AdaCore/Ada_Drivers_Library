@@ -76,4 +76,3 @@ package Bitmapped_Drawing is
       Fast       : Boolean := True);
 
 end Bitmapped_Drawing;
-
