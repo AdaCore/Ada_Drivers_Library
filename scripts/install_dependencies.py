@@ -71,7 +71,7 @@ git_repos = [("https://github.com/AdaCore/bb-runtimes",
               False,
               "bb-runtimes",
               False,
-              ["python", ROOT_DIR + "/bb-runtimes/install.py", "--arch=arm-eabi"]),
+              [sys.executable, ROOT_DIR + "/bb-runtimes/install.py", "--arch=arm-eabi"]),
              ]
 
 parser = argparse.ArgumentParser('Download and install dependencies')
