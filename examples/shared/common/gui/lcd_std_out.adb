@@ -200,22 +200,12 @@ package body LCD_Std_Out is
    ---------
 
    procedure Internal_Put (Msg : Character) is
-      X : Natural;
    begin
       if Char_Count * Char_Width > Max_Width then
-         --  go to the next line down
-         Current_Y := Current_Y + Char_Height;
-         if Current_Y > Max_Height then
-            Current_Y := 0;
-         end if;
-         --  and start at beginning of the line
-         X := 0;
-         Char_Count := 0;
-      else
-         X := Char_Count * Char_Width;
+         New_Line;
       end if;
 
-      Draw_Char (X, Current_Y, Msg);
+      Draw_Char (Char_Count * Char_Width, Current_Y, Msg);
       Char_Count := Char_Count + 1;
    end Internal_Put;
 
