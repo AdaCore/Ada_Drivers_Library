@@ -23,9 +23,9 @@ cache:
 install:
   # Check if the GNAT package is already available in the cache directory. If
   # not, download it.
-  - test -f $GNAT_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5cdffc5409dcd015aaf82626 -O $GNAT_BIN_PATH)
-  - test -f $GNAT_ARM_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5ce0010709dcd015aaf8262b -O $GNAT_ARM_BIN_PATH)
-  - test -f $GNAT_RV32_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget http://mirrors.cdn.adacore.com/art/5cdfe11309dcd015aaf825da -O $GNAT_RV32_BIN_PATH)
+  - test -f $GNAT_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget https://community.download.adacore.com/v1/0cd3e2a668332613b522d9612ffa27ef3eb0815b?filename=gnat-community-2019-20190517-x86_64-linux-bin -O $GNAT_BIN_PATH)
+  - test -f $GNAT_ARM_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget https://community.download.adacore.com/v1/6696259f92b40178ab1cc1d3e005acf705dc4162?filename=gnat-community-2019-20190517-arm-elf-linux64-bin -O $GNAT_ARM_BIN_PATH)
+  - test -f $GNAT_RV32_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget https://community.download.adacore.com/v1/179a91e48f749b2aa8233bc63b3be75168bbb785?filename=gnat-community-2019-20190517-riscv32-elf-linux64-bin -O $GNAT_RV32_BIN_PATH)
 
   - wget https://raw.githubusercontent.com/AdaCore/gnat_community_install_script/master/install_package.sh
   - wget https://raw.githubusercontent.com/AdaCore/gnat_community_install_script/master/install_script.qs
