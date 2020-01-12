@@ -152,7 +152,7 @@ package body Cortex_M.NVIC is
       Index        : constant Natural :=
         Integer (Shift_Right (IRQn_As_Word, 5));
    begin
-       NVIC.ISER (Index) := Shift_Left (1, Integer (IRQn_As_Word and 16#1F#));
+      NVIC.ISER (Index) := Shift_Left (1, Integer (IRQn_As_Word and 16#1F#));
    end Enable_Interrupt;
 
    -----------------------
