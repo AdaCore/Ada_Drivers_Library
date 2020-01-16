@@ -76,6 +76,7 @@ GitHub page.
 https://github.com/AdaCore/Lunar_Lander_Rotation_Demo)
  * [Bare metal sudoku solver](https://github.com/stangassinger/sudoku)
  * [Demo of an Ada physics engine](https://github.com/Kidev/DemoAdaPhysics2D)
+ * [High Integrity Sumobot: A fully functional sumobot written in Ada/SPARK](https://github.com/bosepchuk/High_Integrity_Sumobot)
 
 (Add yours to the list!)
 
