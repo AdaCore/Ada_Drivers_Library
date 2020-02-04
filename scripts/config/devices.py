@@ -33,6 +33,8 @@ def list_of_devices(config):
                 'STM32F769NIHx']
     elif family == "nRF51":
         return ['nRF51822xxAA']
+    elif family == "nRF52":
+        return ['nRF52832xxAA']
     elif family == "FE3":
         return ['FE310']
     elif family == "U5":
@@ -60,7 +62,7 @@ def list_of_families(config):
     if vendor == "STMicro":
         return ["STM32F4", "STM32F7"]
     elif vendor == "Nordic":
-        return ["nRF51"]
+        return ["nRF51", "nRF52"]
     elif vendor == "SiFive":
         return ['FE3', 'U5']
     else:
@@ -168,8 +170,9 @@ def load_device_config(config, source_dir):
                 'arch/ARM/STM32/drivers/sd/sdmmc/']
 
     elif mcu.startswith('nRF51'):
-        src += ['arch/ARM/Nordic/devices/',
-                'arch/ARM/Nordic/drivers/',
+        src += ['arch/ARM/Nordic/devices/nrf51',
+                'arch/ARM/Nordic/drivers/nrf_common',
+                'arch/ARM/Nordic/drivers/nrf51',
                 'arch/ARM/Nordic/svd/nrf51/']
 
         config.pre_define('Number_Of_Interrupts', 32, origin)
@@ -184,6 +187,17 @@ def load_device_config(config, source_dir):
             config.add_memory('ram', 'ram', '0x20000000', '32K')
         else:
             config.add_memory('ram', 'ram', '0x20000000', '16K')
+
+    elif mcu.startswith('nRF52'):
+        src += ['arch/ARM/Nordic/devices/nrf52',
+                'arch/ARM/Nordic/drivers/nrf_common',
+                'arch/ARM/Nordic/drivers/nrf52',
+                'arch/ARM/Nordic/svd/nrf52/']
+
+        config.pre_define('Number_Of_Interrupts', 128, origin)
+
+        config.add_memory('rom', 'flash', '0x00000000', '512K')
+        config.add_memory('ram', 'ram', '0x20000000', '64K')
 
     elif mcu == 'FE310':
         src += ['arch/RISC-V/SiFive/svd/FE310/',

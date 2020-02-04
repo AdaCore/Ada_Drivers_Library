@@ -48,6 +48,8 @@ def mcu_config(config, source_dir):
             core = "ARM Cortex-M7F"
         elif device.startswith("nRF51"):
             core = "ARM Cortex-M0"
+        elif device.startswith("nRF52"):
+            core = "ARM Cortex-M4F"
         elif device.startswith("FE3"):
             core = "RISC-V32"
         elif device.startswith("U5"):

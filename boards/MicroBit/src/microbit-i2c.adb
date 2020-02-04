@@ -29,16 +29,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.Device;
-with nRF51.TWI;
+with nRF.Device;
+with nRF.TWI;
 
 package body MicroBit.I2C is
 
    Init_Done : Boolean := False;
 
-   Device : nRF51.TWI.TWI_Master renames nRF51.Device.TWI_0;
+   Device : nRF.TWI.TWI_Master renames nRF.Device.TWI_0;
    --  This device should not conflict with the device used in MicroBit.SPI.
-   --  See nRF51 Series Reference Manual, chapter Memory.Instantiation.
+   --  See nRF Series Reference Manual, chapter Memory.Instantiation.
 
    -----------------
    -- Initialized --
@@ -57,9 +57,9 @@ package body MicroBit.I2C is
         (SCL   => MB_SCL.Pin,
          SDA   => MB_SDA.Pin,
          Speed => (case S is
-                      when S100kbps => nRF51.TWI.TWI_100kbps,
-                      when S250kbps => nRF51.TWI.TWI_250kbps,
-                      when S400kbps => nRF51.TWI.TWI_400kbps)
+                      when S100kbps => nRF.TWI.TWI_100kbps,
+                      when S250kbps => nRF.TWI.TWI_250kbps,
+                      when S400kbps => nRF.TWI.TWI_400kbps)
         );
 
       Device.Enable;

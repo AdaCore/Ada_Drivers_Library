@@ -8,6 +8,7 @@ BOARDS = {
     'HiFive1':             { 'rts_profiles': ['zfp']},
     'Unleashed':           { 'rts_profiles': ['zfp', 'ravenscar-sfp', 'ravenscar-full']},
     'MicroBit':            { 'rts_profiles': ['zfp']},
+    'NRF52_DK':            { 'rts_profiles': ['zfp']},
     'Native':              { 'rts_profiles': ['none']},
     'OpenMV2':             { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
     'STM32F407_Discovery': { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
@@ -24,6 +25,7 @@ FOLDERS = {'Crazyflie': 'crazyflie',
            'HiFive1': 'HiFive1',
            'Unleashed': 'Unleashed',
            'MicroBit': 'MicroBit',
+	   'NRF52_DK': 'NRF52_DK',
            'Native': 'native',
            'OpenMV2': 'OpenMV2',
            'STM32F407_Discovery': 'stm32f407_discovery',
@@ -34,7 +36,7 @@ FOLDERS = {'Crazyflie': 'crazyflie',
            'NUCLEO_F446ZE':       'nucleo_f446ze',
            'Feather_STM32F405':   'feather_stm32f405'}
 
-USE_STARTUP_GEN = ['HiFive1', 'MicroBit']
+USE_STARTUP_GEN = ['HiFive1', 'MicroBit', 'NRF52_DK']
 
 def gen_project(board_name, rts):
     assert board_name is not None, "board is undefined"

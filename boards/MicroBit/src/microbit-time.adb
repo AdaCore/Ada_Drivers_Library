@@ -29,16 +29,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.Clock;
-with nRF51.Device;        use nRF51.Device;
-with nRF51.RTC;           use nRF51.RTC;
-with nRF51.Events;
-with nRF51.Interrupts;
+with nRF.Clock;
+with nRF.Device;        use nRF.Device;
+with nRF.RTC;           use nRF.RTC;
+with nRF.Events;
+with nRF.Interrupts;
 with System.Machine_Code; use System.Machine_Code;
 
 package body MicroBit.Time is
 
-   package Clocks renames nRF51.Clock;
+   package Clocks renames nRF.Clock;
 
    Clock_Ms  : Time_Ms := 0 with Volatile;
    Period_Ms : constant Time_Ms := 1;
@@ -72,12 +72,12 @@ package body MicroBit.Time is
 
       Enable_Event (RTC_1, Compare_0_Event);
 
-      nRF51.Events.Enable_Interrupt (nRF51.Events.RTC_1_COMPARE_0);
+      nRF.Events.Enable_Interrupt (nRF.Events.RTC_1_COMPARE_0);
 
-      nRF51.Interrupts.Register (nRF51.Interrupts.RTC1_Interrupt,
+      nRF.Interrupts.Register (nRF.Interrupts.RTC1_Interrupt,
                                  RTC1_IRQHandler'Access);
 
-      nRF51.Interrupts.Enable (nRF51.Interrupts.RTC1_Interrupt);
+      nRF.Interrupts.Enable (nRF.Interrupts.RTC1_Interrupt);
 
       Start (RTC_1);
    end Initialize;
@@ -101,7 +101,7 @@ package body MicroBit.Time is
       Clear (RTC_1);
       Start (RTC_1);
 
-      nRF51.Events.Clear (nRF51.Events.RTC_1_COMPARE_0);
+      nRF.Events.Clear (nRF.Events.RTC_1_COMPARE_0);
 
       Update_Clock;
 
