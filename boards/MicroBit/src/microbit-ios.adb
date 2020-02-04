@@ -31,13 +31,13 @@
 
 with HAL;                         use HAL;
 
-with nRF51.ADC;                   use nRF51.ADC;
-with nRF51.Device;                use nRF51.Device;
-with nRF51.PPI;                   use nRF51.PPI;
-with nRF51.Timers;                use nRF51.Timers;
-with nRF51.GPIO.Tasks_And_Events; use nRF51.GPIO.Tasks_And_Events;
-with nRF51.Events;                use nRF51.Events;
-with nRF51.Interrupts;            use nRF51.Interrupts;
+with nRF.ADC;                   use nRF.ADC;
+with nRF.Device;                use nRF.Device;
+with nRF.PPI;                   use nRF.PPI;
+with nRF.Timers;                use nRF.Timers;
+with nRF.GPIO.Tasks_And_Events; use nRF.GPIO.Tasks_And_Events;
+with nRF.Events;                use nRF.Events;
+with nRF.Interrupts;            use nRF.Interrupts;
 
 package body MicroBit.IOs is
 
@@ -186,7 +186,7 @@ package body MicroBit.IOs is
    procedure Deallocate_PWM (Pin : Pin_Id) is
    begin
       if PWM_Alloc (Pin) /= No_PWM then
-         nRF51.GPIO.Tasks_And_Events.Disable (GPIOTE_Channel (PWM_Alloc (Pin)));
+         nRF.GPIO.Tasks_And_Events.Disable (GPIOTE_Channel (PWM_Alloc (Pin)));
          PWMs (PWM_Alloc (Pin)).Taken := False;
          PWM_Alloc (Pin) := No_PWM;
       end if;
@@ -203,19 +203,19 @@ package body MicroBit.IOs is
 
       --  Use one PPI channel to triggerd GPTIOTE OUT task on the compare event
       --  associated with this PWM_Id;
-      nRF51.PPI.Configure
+      nRF.PPI.Configure
         (Chan    => Chan1,
          Evt_EP  => PWM_Timer.Compare_Event (Timer_Channel (Id)),
          Task_EP => Out_Task (GPIOTE_Channel (Id)));
 
       --  Use another PPI channel to triggerd GPTIOTE OUT task on compare 3 event
-      nRF51.PPI.Configure
+      nRF.PPI.Configure
         (Chan    => Chan2,
          Evt_EP  => PWM_Timer.Compare_Event (PWM_Global_Compare),
          Task_EP => Out_Task (GPIOTE_Channel (Id)));
 
-      nRF51.PPI.Enable_Channel (Chan1);
-      nRF51.PPI.Enable_Channel (Chan2);
+      nRF.PPI.Enable_Channel (Chan1);
+      nRF.PPI.Enable_Channel (Chan2);
    end Configure_PPI;
 
    ----------------------
@@ -225,7 +225,7 @@ package body MicroBit.IOs is
    procedure Configure_GPIOTE (Id : PWM_Id) is
    begin
       --  Configure the GPIOTE OUT task to toggle the pin
-      nRF51.GPIO.Tasks_And_Events.Enable_Task
+      nRF.GPIO.Tasks_And_Events.Enable_Task
         (Chan          => GPIOTE_Channel (Id),
          GPIO_Pin      => Points (PWMs (Id).Pin).Pin,
          Action        => Toggle_Pin,
@@ -277,10 +277,10 @@ package body MicroBit.IOs is
 
       Enable_Interrupt (PWM_Timer.Compare_Event (PWM_Global_Compare));
 
-      nRF51.Interrupts.Register (PWM_Interrupt,
+      nRF.Interrupts.Register (PWM_Interrupt,
                                  PWM_Timer_Handler'Access);
 
-      nRF51.Interrupts.Enable (PWM_Interrupt);
+      nRF.Interrupts.Enable (PWM_Interrupt);
    end Init_PWM_Timer;
 
    ---------

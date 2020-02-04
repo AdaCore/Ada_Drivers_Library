@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.GPIO;    use nRF51.GPIO;
+with nRF.GPIO;    use nRF.GPIO;
 with MicroBit.Time; use MicroBit.Time;
 
 package body MicroBit.Buttons is

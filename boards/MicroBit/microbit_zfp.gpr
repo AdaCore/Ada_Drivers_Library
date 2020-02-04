@@ -142,8 +142,9 @@ library project MicroBit_ZFP is
     Src_Dirs_Root & "/arch/ARM/cortex_m/src/cm0", -- From arch definition
     Src_Dirs_Root & "/arch/ARM/cortex_m/src/nocache", -- From arch definition
     Src_Dirs_Root & "/arch/ARM/cortex_m/src/nvic_cm0", -- From arch definition
-    Src_Dirs_Root & "/arch/ARM/Nordic/devices/", -- From MCU definition
-    Src_Dirs_Root & "/arch/ARM/Nordic/drivers/", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/Nordic/devices/nrf51", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/Nordic/drivers/nrf_common", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/Nordic/drivers/nrf51", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/Nordic/svd/nrf51/", -- From MCU definition
     Src_Dirs_Root & "/middleware/src/filesystem", -- From middleware config
     Src_Dirs_Root & "/middleware/src/BLE", -- From middleware config

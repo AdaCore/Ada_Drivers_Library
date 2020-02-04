@@ -29,16 +29,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.Device;
-with nRF51.SPI_Master; use nRF51.SPI_Master;
+with nRF.Device;
+with nRF.SPI_Master; use nRF.SPI_Master;
 
 package body MicroBit.SPI is
 
    Init_Done : Boolean := False;
 
-   Device : SPI_Master renames nRF51.Device.SPI_Master_1;
+   Device : SPI_Master renames nRF.Device.SPI_Master_1;
    --  This device should not conflict with the device used in MicroBit.I2C
-   --  See nRF51 Series Reference Manual, chapter Memory.Instantiation.
+   --  See nRF Series Reference Manual, chapter Memory.Instantiation.
 
    -----------------
    -- Initialized --

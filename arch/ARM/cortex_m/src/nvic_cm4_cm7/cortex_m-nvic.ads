@@ -44,9 +44,11 @@
 
 with System;
 with HAL;            use HAL;
-with Ada.Interrupts; use Ada.Interrupts;
 
 package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
+
+   subtype Interrupt_ID is Natural range 0 .. 240;
+   subtype Interrupt_Priority is UInt32;
 
    --  0 bits for pre-emption priority;  4 bits for subpriority
    Priority_Group_0 : constant UInt32 := 16#00000007#;
@@ -248,5 +250,3 @@ private
    --  STM32F4XX uses 4 bits for the priority levels
 
 end Cortex_M.NVIC;
-
-

@@ -31,12 +31,12 @@
 
 with HAL;          use HAL;
 with HAL.UART;     use HAL.UART;
-with nRF51.Device;
-with nRF51.UART;   use nRF51.UART;
+with nRF.Device;
+with nRF.UART;   use nRF.UART;
 
 package body MicroBit.Console is
 
-   UART : nRF51.UART.UART_Device renames nRF51.Device.UART_0;
+   UART : nRF.UART.UART_Device renames nRF.Device.UART_0;
 
    ---------
    -- Get --
@@ -105,7 +105,7 @@ package body MicroBit.Console is
    end New_Line;
 
 begin
-   UART.Configure (nRF51.UART.Baud115200, Parity => False);
+   UART.Configure (nRF.UART.Baud115200, Parity => False);
    UART.Enable (MB_UART_TX.Pin, MB_UART_RX.Pin);
 end MicroBit.Console;
 

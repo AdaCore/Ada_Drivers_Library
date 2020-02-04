@@ -34,7 +34,7 @@
 
 with System.Machine_Code; use System, System.Machine_Code;
 
-with NRF51_SVD.GPIO; use NRF51_SVD.GPIO;
+with NRF_SVD.GPIO; use NRF_SVD.GPIO;
 with MicroBit.Time;
 
 package body MicroBit.IOs.NeoPixel is
