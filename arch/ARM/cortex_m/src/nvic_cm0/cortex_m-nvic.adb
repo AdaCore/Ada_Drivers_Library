@@ -77,19 +77,19 @@ package body Cortex_M.NVIC is
    -- Enable_ --
    -------------
 
-   procedure Enable (IRQn : Interrupt_ID) is
+   procedure Enable_Interrupt (IRQn : Interrupt_ID) is
    begin
       NVIC_Periph.NVIC_ISER := Shift_Left (1, IRQn);
-   end Enable;
+   end Enable_Interrupt;
 
    -------------
    -- Disable --
    -------------
 
-   procedure Disable (IRQn : Interrupt_ID) is
+   procedure Disable_Interrupt (IRQn : Interrupt_ID) is
    begin
       NVIC_Periph.NVIC_ICER := Shift_Left (1, IRQn);
-   end Disable;
+   end Disable_Interrupt;
 
    -------------
    -- Enabled --
@@ -128,4 +128,3 @@ package body Cortex_M.NVIC is
    end Clear_Pending;
 
 end Cortex_M.NVIC;
-

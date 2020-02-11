@@ -53,9 +53,9 @@ package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
      (IRQn     : Interrupt_ID;
       Priority : Interrupt_Priority) with Inline;
 
-   procedure Enable (IRQn : Interrupt_ID) with Inline;
+   procedure Enable_Interrupt (IRQn : Interrupt_ID) with Inline;
 
-   procedure Disable (IRQn : Interrupt_ID) with Inline;
+   procedure Disable_Interrupt (IRQn : Interrupt_ID) with Inline;
 
    function Enabled (IRQn : Interrupt_ID) return Boolean with Inline;
 
@@ -66,5 +66,3 @@ package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
    procedure Clear_Pending (IRQn : Interrupt_ID) with Inline;
 
 end Cortex_M.NVIC;
-
-

@@ -55,7 +55,7 @@ package body nRF51.Interrupts is
 
    procedure Enable (Int : Interrupt_Name) is
    begin
-      Cortex_M.NVIC.Enable (Int'Enum_Rep);
+      Cortex_M.NVIC.Enable_Interrupt (Int'Enum_Rep);
    end Enable;
 
    -------------
@@ -64,7 +64,7 @@ package body nRF51.Interrupts is
 
    procedure Disable (Int : Interrupt_Name) is
    begin
-      Cortex_M.NVIC.Disable (Int'Enum_Rep);
+      Cortex_M.NVIC.Disable_Interrupt (Int'Enum_Rep);
    end Disable;
 
    -------------
