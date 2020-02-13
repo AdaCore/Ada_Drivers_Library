@@ -29,8 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Cortex_M.NVIC;
 with System.Machine_Code; use System.Machine_Code;
+with HAL; use HAL;
 
 package body nRF51.Interrupts is
 

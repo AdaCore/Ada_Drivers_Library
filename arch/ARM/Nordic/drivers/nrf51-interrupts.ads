@@ -29,7 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL; use HAL;
+
+with Cortex_M.NVIC; use Cortex_M.NVIC;
 
 package nRF51.Interrupts is
    type Interrupt_Name is
@@ -65,8 +66,6 @@ package nRF51.Interrupts is
       Unused_Interrupt_5,
       Unused_Interrupt_6,
       Unused_Interrupt_7);
-
-   subtype Interrupt_Priority is UInt8;
 
    procedure Set_Priority (Int : Interrupt_Name; Prio : Interrupt_Priority);
    procedure Enable (Int : Interrupt_Name);

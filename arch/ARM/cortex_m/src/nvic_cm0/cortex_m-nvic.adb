@@ -64,11 +64,13 @@ package body Cortex_M.NVIC is
       IPR_Index : constant Natural := IRQn / 4;
       IP_Index  : constant Natural := IRQn mod 4;
       IPR       : As_Array;
+      Value     : constant UInt32 :=
+        Shift_Left (Priority, 8 - NVIC_PRIO_BITS) and 16#FF#;
    begin
 
       IPR.IPR := NVIC_Periph.NVIC_IPR (IPR_Index);
 
-      IPR.Arr (IP_Index) := Priority;
+      IPR.Arr (IP_Index) := UInt8(Value);
 
       NVIC_Periph.NVIC_IPR (IPR_Index) := IPR.IPR;
    end Set_Priority;
