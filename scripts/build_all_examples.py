@@ -139,6 +139,12 @@ projects = [
             "/examples/MicroBit/follower/follower.gpr",
             "/examples/MicroBit/accelerometer/accelerometer.gpr",
 
+            # NRF52_SDK
+            "/boards/NRF52_DK/nrf52_dk_zfp.gpr",
+            "/examples/NRF52_DK/buttons/buttons.gpr",
+            "/examples/NRF52_DK/BLE_beacon/BLE_beacon.gpr",
+            "/examples/NRF52_DK/digital_out/digital_out.gpr",
+
             # STM32 driver examples
             STM_DRIVERS + "/demo_adc_dma/demo_adc_dma.gpr",
             STM_DRIVERS + "/demo_adc_interrupts/demo_adc_interrupts.gpr",
