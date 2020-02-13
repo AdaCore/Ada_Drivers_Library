@@ -39,9 +39,9 @@ begin
    Beacon.Initialize_Radio;
 
    loop
-      Turn_On(LED1);
+      Turn_On (LED1);
       Beacon.Send_Beacon_Packet;
-      Turn_Off(LED1);
+      Turn_Off (LED1);
       NRF52_DK.Time.Delay_Ms (500);
    end loop;
 end Main;

@@ -38,17 +38,17 @@ begin
 
       loop
 
-	 if This.Periph.EVENTS_ERROR /= 0 then
-	    Status := Err_Error;
-	    --  Clear the error
-	    This.Periph.EVENTS_ERROR := 0;
+         if This.Periph.EVENTS_ERROR /= 0 then
+            Status := Err_Error;
+            --  Clear the error
+            This.Periph.EVENTS_ERROR := 0;
 
-	    Stop_Sequence (This);
+            Stop_Sequence (This);
 
-	    return;
-	 end if;
+            return;
+         end if;
 
-	 exit when This.Periph.EVENTS_RXDREADY /= 0;
+         exit when This.Periph.EVENTS_RXDREADY /= 0;
       end loop;
 
       --  Clear the event
@@ -57,10 +57,10 @@ begin
 
       if Index = Data'Last - 1 and then This.Do_Stop_Sequence then
 
-	 --  Configure SHORTS to automatically stop the TWI port and produce
-	 --  a STOP event on the bus when receiving a byte.
-	 This.Periph.SHORTS.BB_SUSPEND := Disabled;
-	 This.Periph.SHORTS.BB_STOP    := Enabled;
+         --  Configure SHORTS to automatically stop the TWI port and produce
+         --  a STOP event on the bus when receiving a byte.
+         This.Periph.SHORTS.BB_SUSPEND := Disabled;
+         This.Periph.SHORTS.BB_STOP    := Enabled;
       end if;
 
       This.Periph.TASKS_RESUME := 1;

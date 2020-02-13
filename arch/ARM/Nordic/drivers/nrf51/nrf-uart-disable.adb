@@ -1,4 +1,4 @@
-separate(nRF.UART)
+separate (nRF.UART)
 procedure Disable (This : in out UART_Device) is
 begin
    This.Periph.ENABLE.ENABLE := Disabled;

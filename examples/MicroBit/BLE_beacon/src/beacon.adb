@@ -29,10 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with nRF51.Tasks;
-with nRF51.Events;
-with nRF51.Radio;     use nRF51.Radio;
-with nRF51.Clock;     use nRF51.Clock;
+with nRF.Tasks;
+with nRF.Events;
+with nRF.Radio;     use nRF.Radio;
+with nRF.Clock;     use nRF.Clock;
 
 with Bluetooth_Low_Energy.Packets; use Bluetooth_Low_Energy.Packets;
 with Bluetooth_Low_Energy;         use Bluetooth_Low_Energy;
@@ -116,16 +116,16 @@ package body Beacon is
       Set_Packet (Memory_Address (Beacon_Packet));
 
       --  Clear all events
-      nRF51.Events.Clear (nRF51.Events.Radio_DISABLED);
-      nRF51.Events.Clear (nRF51.Events.Radio_ADDRESS);
-      nRF51.Events.Clear (nRF51.Events.Radio_PAYLOAD);
-      nRF51.Events.Clear (nRF51.Events.Radio_END);
+      nRF.Events.Clear (nRF.Events.Radio_DISABLED);
+      nRF.Events.Clear (nRF.Events.Radio_ADDRESS);
+      nRF.Events.Clear (nRF.Events.Radio_PAYLOAD);
+      nRF.Events.Clear (nRF.Events.Radio_END);
 
       --  Start transmission
-      nRF51.Tasks.Trigger (nRF51.Tasks.Radio_TXEN);
+      nRF.Tasks.Trigger (nRF.Tasks.Radio_TXEN);
 
       --  Wait for end of transmission
-      while not nRF51.Events.Triggered (nRF51.Events.Radio_DISABLED) loop
+      while not nRF.Events.Triggered (nRF.Events.Radio_DISABLED) loop
          null;
       end loop;
    end Send_Beacon_Packet;

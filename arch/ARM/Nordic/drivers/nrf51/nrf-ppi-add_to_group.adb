@@ -1,4 +1,4 @@
-separate(nRF.PPI)
+separate (nRF.PPI)
 procedure Add_To_Group
   (Chan  : Channel_ID;
    Group : Group_ID)

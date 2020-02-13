@@ -1,6 +1,11 @@
-separate(nRF.Temperature)
+with HAL;
+
+separate (nRF.Temperature)
 function Read return Temp_Celsius is
+   use type HAL.UInt32;
+
    Raw : RAW_Temp;
+
 begin
 
    --  Clear event
