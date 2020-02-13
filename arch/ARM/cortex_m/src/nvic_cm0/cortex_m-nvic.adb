@@ -68,7 +68,7 @@ package body Cortex_M.NVIC is
 
       IPR.IPR := NVIC_Periph.NVIC_IPR (IPR_Index);
 
-      IPR.Arr (IP_Index) := Priority;
+      IPR.Arr (IP_Index) := UInt8(Priority);
 
       NVIC_Periph.NVIC_IPR (IPR_Index) := IPR.IPR;
    end Set_Priority;
