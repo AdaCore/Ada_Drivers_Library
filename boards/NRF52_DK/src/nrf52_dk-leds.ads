@@ -1,6 +1,6 @@
-with nRF.Device; use NRF.Device;
-with nRF.GPIO; use NRF.GPIO;
-  
+with nRF.Device; use nRF.Device;
+with nRF.GPIO; use nRF.GPIO;
+
 package NRF52_DK.LEDs is
 
    subtype User_LED is GPIO_Point;
@@ -8,10 +8,10 @@ package NRF52_DK.LEDs is
    LED2 : User_LED renames P18;
    LED3 : User_LED renames P19;
    LED4 : User_LED renames P20;
-   
-   procedure Initialize_LEDs;
-   
-   procedure Turn_On( This : in out User_LED);
-   procedure Turn_Off( This : in out User_LED);
 
-end NRF52_DK.LEDS;
+   procedure Initialize_LEDs;
+
+   procedure Turn_On (This : in out User_LED);
+   procedure Turn_Off (This : in out User_LED);
+
+end NRF52_DK.LEDs;

@@ -1,6 +1,6 @@
-separate(NRF.UART)
+separate (nRF.UART)
 procedure Enable (This : in out UART_Device;
-		  Tx, Rx : GPIO_Pin_Index)
+                  Tx, Rx : GPIO_Pin_Index)
 is
 begin
    This.Periph.PSELTXD := UInt32 (Tx);

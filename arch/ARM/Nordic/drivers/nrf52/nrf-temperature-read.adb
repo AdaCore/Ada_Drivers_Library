@@ -1,4 +1,4 @@
-separate(nRF.Temperature)
+separate (nRF.Temperature)
 function Read return Temp_Celsius is
    Raw : RAW_Temp;
 begin

@@ -1,4 +1,4 @@
-separate(nRF.UART)
+separate (nRF.UART)
 overriding
 procedure Transmit
   (This    : in out UART_Device;
@@ -16,7 +16,7 @@ begin
    for C of Data loop
       --  Wait for TX Ready event
       while UART0_Periph.EVENTS_TXDRDY.EVENTS_TXDRDY = False loop
-	 null;
+         null;
       end loop;
 
       --  Clear the event

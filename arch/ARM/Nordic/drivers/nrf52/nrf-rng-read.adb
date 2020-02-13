@@ -1,4 +1,4 @@
-separate(nRF.RNG)
+separate (nRF.RNG)
 function Read return UInt8 is
 begin
    --  Clear event
@@ -7,7 +7,7 @@ begin
    --  Start random numnber generator
    RNG_Periph.TASKS_START.TASKS_START := True;
 
-   while RNG_Periph.EVENTS_VALRDY.EVENTS_VALRDY = FALSE loop
+   while RNG_Periph.EVENTS_VALRDY.EVENTS_VALRDY = False loop
          null;
    end loop;
 

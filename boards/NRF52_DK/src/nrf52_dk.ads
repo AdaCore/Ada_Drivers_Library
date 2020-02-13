@@ -34,8 +34,8 @@ with nRF.GPIO;
 
 package NRF52_DK is
 
-   -- DK Headers are "Arduino compatible" these names reflect the
-   -- Arduino locations of these peripherals
+   --  DK Headers are "Arduino compatible" these names reflect the
+   --  Arduino locations of these peripherals
 
    DK_SCK  : nRF.GPIO.GPIO_Point renames nRF.Device.P25;
    DK_MISO : nRF.GPIO.GPIO_Point renames nRF.Device.P24;

@@ -30,7 +30,7 @@
 ------------------------------------------------------------------------------
 
 with nRF.Device;  use nRF.Device;
-with NRF.GPIO;    use nRF.GPIO;
+with nRF.GPIO;    use nRF.GPIO;
 with NRF52_DK.Time; use NRF52_DK.Time;
 
 package body NRF52_DK.Buttons is
