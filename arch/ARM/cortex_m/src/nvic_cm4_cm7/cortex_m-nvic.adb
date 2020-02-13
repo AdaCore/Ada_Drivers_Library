@@ -47,19 +47,20 @@ package body Cortex_M.NVIC is
    -- Priority_Grouping --
    -----------------------
 
-   function Priority_Grouping return UInt32 is
+   function Priority_Grouping return Interrupt_Priority is
    begin
-      return Shift_Right (SCB.AIRCR and SCB_AIRCR_PRIGROUP_Mask,
-                          SCB_AIRCR_PRIGROUP_Pos);
+      return Interrupt_Priority
+        (Shift_Right (SCB.AIRCR and SCB_AIRCR_PRIGROUP_Mask,
+         SCB_AIRCR_PRIGROUP_Pos));
    end Priority_Grouping;
 
    ---------------------------
    -- Set_Priority_Grouping --
    ---------------------------
 
-   procedure Set_Priority_Grouping (Priority_Group : UInt32) is
+   procedure Set_Priority_Grouping (Priority_Group : Interrupt_Priority) is
       Reg_Value : UInt32;
-      PriorityGroupTmp : constant UInt32 := Priority_Group and 16#07#;
+      PriorityGroupTmp : constant UInt32 := UInt32 (Priority_Group) and 16#07#;
       Key              : constant := 16#5FA#;
    begin
       Reg_Value := SCB.AIRCR;
@@ -77,11 +78,11 @@ package body Cortex_M.NVIC is
 
    procedure Set_Priority
      (IRQn     : Interrupt_ID;
-      Priority : UInt32)
+      Priority : Interrupt_Priority)
    is
       Index : constant Natural := Integer (IRQn);
       Value : constant UInt32 :=
-        Shift_Left (Priority, 8 - NVIC_PRIO_BITS) and 16#FF#;
+        Shift_Left (UInt32 (Priority), 8 - NVIC_PRIO_BITS) and 16#FF#;
    begin
       --  IRQ numbers are never less than 0 in the current definition, hence
       --  the code is different from that in the CMSIS.
@@ -93,17 +94,19 @@ package body Cortex_M.NVIC is
    ----------------------
 
    function Encoded_Priority
-     (Priority_Group : UInt32;  Preempt_Priority : UInt32;  Subpriority : UInt32)
-      return UInt32
+     (Priority_Group   : Interrupt_Priority;
+      Preempt_Priority : Interrupt_Priority;
+      Subpriority      : Interrupt_Priority)
+      return Interrupt_Priority
    is
-      PriorityGroupTmp    : constant UInt32 := Priority_Group and 16#07#;
-      PreemptPriorityBits : UInt32;
-      SubPriorityBits     : UInt32;
-      Temp1 : UInt32;
-      Temp2 : UInt32;
-      Temp3 : UInt32;
-      Temp4 : UInt32;
-      Temp5 : UInt32;
+      PriorityGroupTmp    : constant Interrupt_Priority := Priority_Group and 16#07#;
+      PreemptPriorityBits : Interrupt_Priority;
+      SubPriorityBits     : Interrupt_Priority;
+      Temp1 : Interrupt_Priority;
+      Temp2 : Interrupt_Priority;
+      Temp3 : Interrupt_Priority;
+      Temp4 : Interrupt_Priority;
+      Temp5 : Interrupt_Priority;
    begin
       if (7 - PriorityGroupTmp) > NVIC_PRIO_BITS then
          PreemptPriorityBits := NVIC_PRIO_BITS;
@@ -133,10 +136,10 @@ package body Cortex_M.NVIC is
 
    procedure Set_Priority
      (IRQn             : Interrupt_ID;
-      Preempt_Priority : UInt32;
-      Subpriority      : UInt32)
+      Preempt_Priority : Interrupt_Priority;
+      Subpriority      : Interrupt_Priority)
    is
-      Priority_Group : constant UInt32 := Priority_Grouping;
+      Priority_Group : constant Interrupt_Priority := Priority_Grouping;
    begin
       Set_Priority
         (IRQn,

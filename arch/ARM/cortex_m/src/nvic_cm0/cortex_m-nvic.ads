@@ -46,8 +46,8 @@ with HAL;                  use HAL;
 
 package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
 
-   subtype Interrupt_ID is Natural range 0 .. 31;
-   subtype Interrupt_Priority is UInt8;
+   type Interrupt_ID is new Natural range 0 .. 31;
+   type Interrupt_Priority is new UInt8;
 
    procedure Set_Priority
      (IRQn     : Interrupt_ID;

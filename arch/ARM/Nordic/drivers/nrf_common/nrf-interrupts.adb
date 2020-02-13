@@ -29,7 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Cortex_M.NVIC;
+with HAL; use HAL;
+
 with System.Machine_Code; use System.Machine_Code;
 
 package body nRF.Interrupts is
