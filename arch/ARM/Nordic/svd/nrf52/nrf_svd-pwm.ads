@@ -2,11 +2,11 @@
 --
 --  All rights reserved.
 --
---  Redistribution and use in source and binary forms, with or without
---  modification, are permitted provided that the following conditions are met:
+--  Redistribution and use in source and binary forms, with or without modification,
+--  are permitted provided that the following conditions are met:
 --
---  1. Redistributions of source code must retain the above copyright notice,
---  this list of conditions and the following disclaimer.
+--  1. Redistributions of source code must retain the above copyright notice, this
+--  list of conditions and the following disclaimer.
 --
 --  2. Redistributions in binary form, except as embedded into a Nordic
 --  Semiconductor ASA integrated circuit in a product or a software update for
@@ -21,20 +21,19 @@
 --  4. This software, with or without modification, must only be used with a
 --  Nordic Semiconductor ASA integrated circuit.
 --
---  5. Any software provided in binary form under this license must not be
---  reverse engineered, decompiled, modified and/or disassembled.
+--  5. Any software provided in binary form under this license must not be reverse
+--  engineered, decompiled, modified and/or disassembled.
 --
---  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY
---  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
---  WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A
---  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR
---  ASA OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
---  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
---  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
---  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
---  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
---  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
---  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+--  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+--  OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--  DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+--  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+--  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+--  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+--  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+--  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+--  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 --  This spec has been automatically generated from nrf52.svd
@@ -53,142 +52,24 @@ package NRF_SVD.PWM is
    -- Registers --
    ---------------
 
-   --  Stops PWM pulse generation on all channels at the end of current PWM
-   --  period, and stops sequence playback
-   type TASKS_STOP_Register is record
-      --  Write-only.
-      TASKS_STOP    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STOP_Register use record
-      TASKS_STOP    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
+   --  Description collection[0]: Loads the first PWM value on all enabled channels from sequence 0, and starts playing that sequence at the rate defined in SEQ[0]REFRESH and/or DECODER.MODE. Causes PWM generation to start it was not running.
 
    --  Description collection[0]: Loads the first PWM value on all enabled
    --  channels from sequence 0, and starts playing that sequence at the rate
    --  defined in SEQ[0]REFRESH and/or DECODER.MODE. Causes PWM generation to
    --  start it was not running.
-   type TASKS_SEQSTART_Register is record
-      --  Write-only.
-      TASKS_SEQSTART : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_SEQSTART_Register use record
-      TASKS_SEQSTART at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  Description collection[0]: Loads the first PWM value on all enabled
-   --  channels from sequence 0, and starts playing that sequence at the rate
-   --  defined in SEQ[0]REFRESH and/or DECODER.MODE. Causes PWM generation to
-   --  start it was not running.
-   type TASKS_SEQSTART_Registers is array (0 .. 1) of TASKS_SEQSTART_Register;
-
-   --  Steps by one value in the current sequence on all enabled channels if
-   --  DECODER.MODE=NextStep. Does not cause PWM generation to start it was not
-   --  running.
-   type TASKS_NEXTSTEP_Register is record
-      --  Write-only.
-      TASKS_NEXTSTEP : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_NEXTSTEP_Register use record
-      TASKS_NEXTSTEP at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  Response to STOP task, emitted when PWM pulses are no longer generated
-   type EVENTS_STOPPED_Register is record
-      EVENTS_STOPPED : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_STOPPED_Register use record
-      EVENTS_STOPPED at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
+   type TASKS_SEQSTART_Registers is array (0 .. 1) of HAL.UInt32;
 
    --  Description collection[0]: First PWM period started on sequence 0
-   type EVENTS_SEQSTARTED_Register is record
-      EVENTS_SEQSTARTED : Boolean := False;
-      --  unspecified
-      Reserved_1_31     : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_SEQSTARTED_Register use record
-      EVENTS_SEQSTARTED at 0 range 0 .. 0;
-      Reserved_1_31     at 0 range 1 .. 31;
-   end record;
 
    --  Description collection[0]: First PWM period started on sequence 0
-   type EVENTS_SEQSTARTED_Registers is array (0 .. 1)
-     of EVENTS_SEQSTARTED_Register;
+   type EVENTS_SEQSTARTED_Registers is array (0 .. 1) of HAL.UInt32;
+
+   --  Description collection[0]: Emitted at end of every sequence 0, when last value from RAM has been applied to wave counter
 
    --  Description collection[0]: Emitted at end of every sequence 0, when last
    --  value from RAM has been applied to wave counter
-   type EVENTS_SEQEND_Register is record
-      EVENTS_SEQEND : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_SEQEND_Register use record
-      EVENTS_SEQEND at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Description collection[0]: Emitted at end of every sequence 0, when last
-   --  value from RAM has been applied to wave counter
-   type EVENTS_SEQEND_Registers is array (0 .. 1) of EVENTS_SEQEND_Register;
-
-   --  Emitted at the end of each PWM period
-   type EVENTS_PWMPERIODEND_Register is record
-      EVENTS_PWMPERIODEND : Boolean := False;
-      --  unspecified
-      Reserved_1_31       : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_PWMPERIODEND_Register use record
-      EVENTS_PWMPERIODEND at 0 range 0 .. 0;
-      Reserved_1_31       at 0 range 1 .. 31;
-   end record;
-
-   --  Concatenated sequences have been played the amount of times defined in
-   --  LOOP.CNT
-   type EVENTS_LOOPSDONE_Register is record
-      EVENTS_LOOPSDONE : Boolean := False;
-      --  unspecified
-      Reserved_1_31    : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_LOOPSDONE_Register use record
-      EVENTS_LOOPSDONE at 0 range 0 .. 0;
-      Reserved_1_31    at 0 range 1 .. 31;
-   end record;
+   type EVENTS_SEQEND_Registers is array (0 .. 1) of HAL.UInt32;
 
    --  Shortcut between SEQEND[0] event and STOP task
    type SHORTS_SEQEND0_STOP_Field is
@@ -1084,7 +965,7 @@ package NRF_SVD.PWM is
       --  Description cluster[0]: Time added after the sequence
       ENDDELAY : aliased ENDDELAY_SEQ_Register;
    end record
-     with Size => 256 - 128;
+     with Size => 128;
 
    for PWM_SEQ_Cluster use record
       PTR      at 16#0# range 0 .. 31;
@@ -1169,7 +1050,7 @@ package NRF_SVD.PWM is
    type PWM_Peripheral is record
       --  Stops PWM pulse generation on all channels at the end of current PWM
       --  period, and stops sequence playback
-      TASKS_STOP          : aliased TASKS_STOP_Register;
+      TASKS_STOP          : aliased HAL.UInt32;
       --  Description collection[0]: Loads the first PWM value on all enabled
       --  channels from sequence 0, and starts playing that sequence at the
       --  rate defined in SEQ[0]REFRESH and/or DECODER.MODE. Causes PWM
@@ -1178,20 +1059,20 @@ package NRF_SVD.PWM is
       --  Steps by one value in the current sequence on all enabled channels if
       --  DECODER.MODE=NextStep. Does not cause PWM generation to start it was
       --  not running.
-      TASKS_NEXTSTEP      : aliased TASKS_NEXTSTEP_Register;
+      TASKS_NEXTSTEP      : aliased HAL.UInt32;
       --  Response to STOP task, emitted when PWM pulses are no longer
       --  generated
-      EVENTS_STOPPED      : aliased EVENTS_STOPPED_Register;
+      EVENTS_STOPPED      : aliased HAL.UInt32;
       --  Description collection[0]: First PWM period started on sequence 0
       EVENTS_SEQSTARTED   : aliased EVENTS_SEQSTARTED_Registers;
       --  Description collection[0]: Emitted at end of every sequence 0, when
       --  last value from RAM has been applied to wave counter
       EVENTS_SEQEND       : aliased EVENTS_SEQEND_Registers;
       --  Emitted at the end of each PWM period
-      EVENTS_PWMPERIODEND : aliased EVENTS_PWMPERIODEND_Register;
+      EVENTS_PWMPERIODEND : aliased HAL.UInt32;
       --  Concatenated sequences have been played the amount of times defined
       --  in LOOP.CNT
-      EVENTS_LOOPSDONE    : aliased EVENTS_LOOPSDONE_Register;
+      EVENTS_LOOPSDONE    : aliased HAL.UInt32;
       --  Shortcut register
       SHORTS              : aliased SHORTS_Register;
       --  Enable or disable interrupt

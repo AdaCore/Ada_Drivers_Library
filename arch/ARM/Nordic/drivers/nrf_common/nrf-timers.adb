@@ -37,19 +37,29 @@ package body nRF.Timers is
    -- Start --
    -----------
 
-   procedure Start (This : in out Timer) is separate;
+   procedure Start (This : in out Timer) is
+   begin
+      This.Periph.TASKS_START := 1;
+   end Start;
 
    ----------
    -- Stop --
    ----------
 
-   procedure Stop (This : in out Timer) is separate;
+   procedure Stop (This : in out Timer) is
+   begin
+      This.Periph.TASKS_STOP := 1;
+   end Stop;
 
    -----------
    -- Clear --
    -----------
 
-   procedure Clear (This : in out Timer) is separate;
+   procedure Clear (This : in out Timer) is
+   begin
+      This.Periph.TASKS_CLEAR := 1;
+   end Clear;
+
 
    -------------------
    -- Set_Prescaler --
@@ -169,8 +179,10 @@ package body nRF.Timers is
    -------------
 
    procedure Capture (This : in out Timer;
-                      Chan : Timer_Channel)
-   is separate;
+                      Chan : Timer_Channel) is
+   begin
+      This.Periph.TASKS_CAPTURE (Integer (Chan)) := 1;
+   end Capture;
 
    -------------
    -- Capture --
@@ -249,3 +261,4 @@ package body nRF.Timers is
    is (Event_Type (This.Periph.EVENTS_COMPARE (Integer (Chan))'Address));
 
 end nRF.Timers;
+

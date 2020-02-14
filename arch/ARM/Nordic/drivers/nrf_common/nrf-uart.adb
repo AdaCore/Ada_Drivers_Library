@@ -50,13 +50,34 @@ package body nRF.UART is
    ------------
 
    procedure Enable (This : in out UART_Device;
-                     Tx, Rx : GPIO_Pin_Index) is separate;
+                     Tx, Rx : GPIO_Pin_Index) is
+   begin
+      This.Periph.PSELTXD := UInt32 (Tx);
+      This.Periph.PSELRXD := UInt32 (Rx);
+      This.Periph.ENABLE.ENABLE := Enabled;
 
+      --  Start TX and RX
+      This.Periph.TASKS_STARTRX := 1;
+      This.Periph.TASKS_STARTTX := 1;
+
+      --  Send a first character to start the TXREADY events (See nRF Series
+      --  Reference Manual Version 3.0 Figure 68: UART transmission).
+      This.Periph.TXD.TXD := 0;
+   end Enable;
    -------------
    -- Disable --
    -------------
 
-   procedure Disable (This : in out UART_Device) is separate;
+   procedure Disable (This : in out UART_Device) is
+   begin
+      This.Periph.ENABLE.ENABLE := Disabled;
+      This.Periph.PSELTXD := 16#FFFF_FFFF#;
+      This.Periph.PSELRXD := 16#FFFF_FFFF#;
+
+      --  Stop TX and RX
+      This.Periph.TASKS_STOPTX := 1;
+      This.Periph.TASKS_STOPRX := 1;
+   end Disable;
 
    -------------------------
    -- Enable_Flow_Control --
@@ -93,7 +114,29 @@ package body nRF.UART is
       Data    :        UART_Data_8b;
       Status  :    out UART_Status;
       Timeout :        Natural := 1_000)
-   is separate;
+   is
+      pragma Unreferenced (Timeout);
+   begin
+      if Data'Length = 0 then
+         Status := HAL.UART.Ok;
+         return;
+      end if;
+
+      for C of Data loop
+         --  Wait for TX Ready event
+         while UART0_Periph.EVENTS_TXDRDY = 0 loop
+            null;
+         end loop;
+
+            --  Clear the event
+         This.Periph.EVENTS_TXDRDY := 0;
+
+         --  Send a character
+         This.Periph.TXD.TXD := C;
+      end loop;
+
+      Status := HAL.UART.Ok;
+   end Transmit;
 
    -------------
    -- Receive --
@@ -105,7 +148,29 @@ package body nRF.UART is
       Data    :    out UART_Data_8b;
       Status  :    out UART_Status;
       Timeout :        Natural := 1_000)
-   is separate;
+   is
+      pragma Unreferenced (Timeout);
+   begin
+      if Data'Length = 0 then
+         Status := HAL.UART.Ok;
+         return;
+      end if;
+
+      for C of Data loop
+         --  Wait for RX Ready event
+         while UART0_Periph.EVENTS_RXDRDY = 0 loop
+            null;
+         end loop;
+
+         --  Read a character
+         C := This.Periph.RXD.RXD;
+
+         --  Clear the RX event for the character we just received
+         UART0_Periph.EVENTS_RXDRDY := 0;
+      end loop;
+
+      Status := HAL.UART.Ok;
+   end Receive;
 
    --------------
    -- Transmit --

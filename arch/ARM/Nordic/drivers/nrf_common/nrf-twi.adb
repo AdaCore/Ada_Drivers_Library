@@ -39,7 +39,18 @@ package body nRF.TWI is
    -- Stop_Sequence --
    -------------------
 
-   procedure Stop_Sequence (This : in out TWI_Master'Class) is separate;
+   procedure Stop_Sequence (This : in out TWI_Master'Class) is
+   begin
+      --  Stop sequence
+
+      This.Periph.EVENTS_STOPPED := 0;
+
+      This.Periph.TASKS_STOP := 1;
+
+      while This.Periph.EVENTS_STOPPED = 0 loop
+         null;
+      end loop;
+   end Stop_Sequence;
 
    ------------
    -- Enable --
@@ -106,7 +117,65 @@ package body nRF.TWI is
       Data    : I2C_Data;
       Status  : out I2C_Status;
       Timeout : Natural := 1000)
-   is separate;
+   is
+      pragma Unreferenced (Timeout);
+      Index : Integer := Data'First + 1;
+      Evt_Err : UInt32;
+      Err_Src : ERRORSRC_Register with Unreferenced;
+   begin
+      if Data'Length = 0 then
+         Status := Ok;
+         return;
+      end if;
+
+      --  Clear errors
+      This.Periph.ERRORSRC := (Clear, Clear, Clear, 0);
+
+      --  Set Address
+      This.Periph.ADDRESS.ADDRESS := UInt7 (Addr / 2);
+
+      --  Prepare first byte
+      This.Periph.TXD.TXD := Data (Data'First);
+
+      --  Start TX sequence
+      This.Periph.TASKS_STARTTX := 1;
+
+      loop
+
+         loop
+
+            Evt_Err := This.Periph.EVENTS_ERROR;
+            if Evt_Err /= 0 then
+               Err_Src := This.Periph.ERRORSRC;
+               Status := Err_Error;
+               --  Clear the error
+               This.Periph.EVENTS_ERROR := 0;
+
+               --  Stop sequence
+               This.Periph.TASKS_STOP := 1;
+
+               return;
+            end if;
+
+            exit when This.Periph.EVENTS_TXDSENT /= 0;
+         end loop;
+
+         --  Clear the event
+         This.Periph.EVENTS_TXDSENT := 0;
+
+         exit when Index > Data'Last;
+
+         This.Periph.TXD.TXD := Data (Index);
+         Index := Index + 1;
+      end loop;
+
+      if This.Do_Stop_Sequence then
+         Stop_Sequence (This);
+      end if;
+
+      Status := Ok;
+   end Master_Transmit;
+
 
    --------------------
    -- Master_Receive --
@@ -118,7 +187,69 @@ package body nRF.TWI is
       Data    : out I2C_Data;
       Status  : out I2C_Status;
       Timeout : Natural := 1000)
-   is separate;
+   is
+      pragma Unreferenced (Timeout);
+   begin
+      if Data'Length = 0 then
+         Status := Ok;
+         return;
+      end if;
+
+      --  Clear errors
+      This.Periph.ERRORSRC := (Clear, Clear, Clear, 0);
+
+      --  Set Address
+      This.Periph.ADDRESS.ADDRESS := UInt7 (Addr / 2);
+
+
+      if Data'Length = 1 then
+         --  Only one byte to receive so we stop at the next one
+         This.Periph.SHORTS.BB_STOP := Enabled;
+         This.Periph.SHORTS.BB_SUSPEND := Disabled;
+      else
+         --  Configure SHORTS to automatically suspend TWI port when receiving a
+         --  byte.
+         This.Periph.SHORTS.BB_SUSPEND := Enabled;
+         This.Periph.SHORTS.BB_STOP := Disabled;
+      end if;
+
+      --  Start RX sequence
+      This.Periph.TASKS_STARTRX := 1;
+
+      for Index in Data'Range loop
+
+         loop
+
+            if This.Periph.EVENTS_ERROR /= 0 then
+               Status := Err_Error;
+               --  Clear the error
+               This.Periph.EVENTS_ERROR := 0;
+
+               Stop_Sequence (This);
+
+               return;
+            end if;
+
+            exit when This.Periph.EVENTS_RXDREADY /= 0;
+         end loop;
+
+         --  Clear the event
+         This.Periph.EVENTS_RXDREADY := 0;
+         Data (Index) := This.Periph.RXD.RXD;
+
+         if Index = Data'Last - 1 and then This.Do_Stop_Sequence then
+
+            --  Configure SHORTS to automatically stop the TWI port and produce
+            --  a STOP event on the bus when receiving a byte.
+            This.Periph.SHORTS.BB_SUSPEND := Disabled;
+            This.Periph.SHORTS.BB_STOP    := Enabled;
+         end if;
+
+         This.Periph.TASKS_RESUME := 1;
+      end loop;
+
+      Status := Ok;
+   end Master_Receive;
 
    ---------------
    -- Mem_Write --

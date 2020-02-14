@@ -2,11 +2,11 @@
 --
 --  All rights reserved.
 --
---  Redistribution and use in source and binary forms, with or without
---  modification, are permitted provided that the following conditions are met:
+--  Redistribution and use in source and binary forms, with or without modification,
+--  are permitted provided that the following conditions are met:
 --
---  1. Redistributions of source code must retain the above copyright notice,
---  this list of conditions and the following disclaimer.
+--  1. Redistributions of source code must retain the above copyright notice, this
+--  list of conditions and the following disclaimer.
 --
 --  2. Redistributions in binary form, except as embedded into a Nordic
 --  Semiconductor ASA integrated circuit in a product or a software update for
@@ -21,20 +21,19 @@
 --  4. This software, with or without modification, must only be used with a
 --  Nordic Semiconductor ASA integrated circuit.
 --
---  5. Any software provided in binary form under this license must not be
---  reverse engineered, decompiled, modified and/or disassembled.
+--  5. Any software provided in binary form under this license must not be reverse
+--  engineered, decompiled, modified and/or disassembled.
 --
---  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY
---  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
---  WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A
---  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR
---  ASA OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
---  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
---  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
---  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
---  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
---  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
---  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+--  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+--  OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--  DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+--  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+--  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+--  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+--  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+--  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+--  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 --  This spec has been automatically generated from nrf52.svd
@@ -52,151 +51,6 @@ package NRF_SVD.SAADC is
    ---------------
    -- Registers --
    ---------------
-
-   --  Start the ADC and prepare the result buffer in RAM
-   type TASKS_START_Register is record
-      --  Write-only.
-      TASKS_START   : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_START_Register use record
-      TASKS_START   at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Take one ADC sample, if scan is enabled all channels are sampled
-   type TASKS_SAMPLE_Register is record
-      --  Write-only.
-      TASKS_SAMPLE  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_SAMPLE_Register use record
-      TASKS_SAMPLE  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Stop the ADC and terminate any on-going conversion
-   type TASKS_STOP_Register is record
-      --  Write-only.
-      TASKS_STOP    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STOP_Register use record
-      TASKS_STOP    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Starts offset auto-calibration
-   type TASKS_CALIBRATEOFFSET_Register is record
-      --  Write-only.
-      TASKS_CALIBRATEOFFSET : Boolean := False;
-      --  unspecified
-      Reserved_1_31         : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_CALIBRATEOFFSET_Register use record
-      TASKS_CALIBRATEOFFSET at 0 range 0 .. 0;
-      Reserved_1_31         at 0 range 1 .. 31;
-   end record;
-
-   --  The ADC has started
-   type EVENTS_STARTED_Register is record
-      EVENTS_STARTED : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_STARTED_Register use record
-      EVENTS_STARTED at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  The ADC has filled up the Result buffer
-   type EVENTS_END_Register is record
-      EVENTS_END    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_END_Register use record
-      EVENTS_END    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  A conversion task has been completed. Depending on the mode, multiple
-   --  conversions might be needed for a result to be transferred to RAM.
-   type EVENTS_DONE_Register is record
-      EVENTS_DONE   : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_DONE_Register use record
-      EVENTS_DONE   at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  A result is ready to get transferred to RAM.
-   type EVENTS_RESULTDONE_Register is record
-      EVENTS_RESULTDONE : Boolean := False;
-      --  unspecified
-      Reserved_1_31     : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_RESULTDONE_Register use record
-      EVENTS_RESULTDONE at 0 range 0 .. 0;
-      Reserved_1_31     at 0 range 1 .. 31;
-   end record;
-
-   --  Calibration is complete
-   type EVENTS_CALIBRATEDONE_Register is record
-      EVENTS_CALIBRATEDONE : Boolean := False;
-      --  unspecified
-      Reserved_1_31        : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_CALIBRATEDONE_Register use record
-      EVENTS_CALIBRATEDONE at 0 range 0 .. 0;
-      Reserved_1_31        at 0 range 1 .. 31;
-   end record;
-
-   --  The ADC has stopped
-   type EVENTS_STOPPED_Register is record
-      EVENTS_STOPPED : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_STOPPED_Register use record
-      EVENTS_STOPPED at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
 
    -----------------------------------
    -- EVENTS_CH cluster's Registers --
@@ -2252,26 +2106,26 @@ package NRF_SVD.SAADC is
    --  Analog to Digital Converter
    type SAADC_Peripheral is record
       --  Start the ADC and prepare the result buffer in RAM
-      TASKS_START           : aliased TASKS_START_Register;
+      TASKS_START           : aliased HAL.UInt32;
       --  Take one ADC sample, if scan is enabled all channels are sampled
-      TASKS_SAMPLE          : aliased TASKS_SAMPLE_Register;
+      TASKS_SAMPLE          : aliased HAL.UInt32;
       --  Stop the ADC and terminate any on-going conversion
-      TASKS_STOP            : aliased TASKS_STOP_Register;
+      TASKS_STOP            : aliased HAL.UInt32;
       --  Starts offset auto-calibration
-      TASKS_CALIBRATEOFFSET : aliased TASKS_CALIBRATEOFFSET_Register;
+      TASKS_CALIBRATEOFFSET : aliased HAL.UInt32;
       --  The ADC has started
-      EVENTS_STARTED        : aliased EVENTS_STARTED_Register;
+      EVENTS_STARTED        : aliased HAL.UInt32;
       --  The ADC has filled up the Result buffer
-      EVENTS_END            : aliased EVENTS_END_Register;
+      EVENTS_END            : aliased HAL.UInt32;
       --  A conversion task has been completed. Depending on the mode, multiple
       --  conversions might be needed for a result to be transferred to RAM.
-      EVENTS_DONE           : aliased EVENTS_DONE_Register;
+      EVENTS_DONE           : aliased HAL.UInt32;
       --  A result is ready to get transferred to RAM.
-      EVENTS_RESULTDONE     : aliased EVENTS_RESULTDONE_Register;
+      EVENTS_RESULTDONE     : aliased HAL.UInt32;
       --  Calibration is complete
-      EVENTS_CALIBRATEDONE  : aliased EVENTS_CALIBRATEDONE_Register;
+      EVENTS_CALIBRATEDONE  : aliased HAL.UInt32;
       --  The ADC has stopped
-      EVENTS_STOPPED        : aliased EVENTS_STOPPED_Register;
+      EVENTS_STOPPED        : aliased HAL.UInt32;
       --  Unspecified
       EVENTS_CH             : aliased EVENTS_CH_Clusters;
       --  Enable or disable interrupt

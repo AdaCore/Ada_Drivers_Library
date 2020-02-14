@@ -2,11 +2,11 @@
 --
 --  All rights reserved.
 --
---  Redistribution and use in source and binary forms, with or without
---  modification, are permitted provided that the following conditions are met:
+--  Redistribution and use in source and binary forms, with or without modification,
+--  are permitted provided that the following conditions are met:
 --
---  1. Redistributions of source code must retain the above copyright notice,
---  this list of conditions and the following disclaimer.
+--  1. Redistributions of source code must retain the above copyright notice, this
+--  list of conditions and the following disclaimer.
 --
 --  2. Redistributions in binary form, except as embedded into a Nordic
 --  Semiconductor ASA integrated circuit in a product or a software update for
@@ -21,20 +21,19 @@
 --  4. This software, with or without modification, must only be used with a
 --  Nordic Semiconductor ASA integrated circuit.
 --
---  5. Any software provided in binary form under this license must not be
---  reverse engineered, decompiled, modified and/or disassembled.
+--  5. Any software provided in binary form under this license must not be reverse
+--  engineered, decompiled, modified and/or disassembled.
 --
---  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY
---  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
---  WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A
---  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR
---  ASA OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
---  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
---  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
---  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
---  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
---  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
---  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+--  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+--  OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--  DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+--  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+--  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+--  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+--  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+--  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+--  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 --  This spec has been automatically generated from nrf52.svd
@@ -52,79 +51,6 @@ package NRF_SVD.PDM is
    ---------------
    -- Registers --
    ---------------
-
-   --  Starts continuous PDM transfer
-   type TASKS_START_Register is record
-      --  Write-only.
-      TASKS_START   : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_START_Register use record
-      TASKS_START   at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Stops PDM transfer
-   type TASKS_STOP_Register is record
-      --  Write-only.
-      TASKS_STOP    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STOP_Register use record
-      TASKS_STOP    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  PDM transfer has started
-   type EVENTS_STARTED_Register is record
-      EVENTS_STARTED : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_STARTED_Register use record
-      EVENTS_STARTED at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  PDM transfer has finished
-   type EVENTS_STOPPED_Register is record
-      EVENTS_STOPPED : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_STOPPED_Register use record
-      EVENTS_STOPPED at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  The PDM has written the last sample specified by SAMPLE.MAXCNT (or the
-   --  last sample after a STOP task has been received) to Data RAM
-   type EVENTS_END_Register is record
-      EVENTS_END    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_END_Register use record
-      EVENTS_END    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
 
    --  Enable or disable interrupt for STARTED event
    type INTEN_STARTED_Field is
@@ -616,16 +542,16 @@ package NRF_SVD.PDM is
    --  Pulse Density Modulation (Digital Microphone) Interface
    type PDM_Peripheral is record
       --  Starts continuous PDM transfer
-      TASKS_START    : aliased TASKS_START_Register;
+      TASKS_START    : aliased HAL.UInt32;
       --  Stops PDM transfer
-      TASKS_STOP     : aliased TASKS_STOP_Register;
+      TASKS_STOP     : aliased HAL.UInt32;
       --  PDM transfer has started
-      EVENTS_STARTED : aliased EVENTS_STARTED_Register;
+      EVENTS_STARTED : aliased HAL.UInt32;
       --  PDM transfer has finished
-      EVENTS_STOPPED : aliased EVENTS_STOPPED_Register;
+      EVENTS_STOPPED : aliased HAL.UInt32;
       --  The PDM has written the last sample specified by SAMPLE.MAXCNT (or
       --  the last sample after a STOP task has been received) to Data RAM
-      EVENTS_END     : aliased EVENTS_END_Register;
+      EVENTS_END     : aliased HAL.UInt32;
       --  Enable or disable interrupt
       INTEN          : aliased INTEN_Register;
       --  Enable interrupt

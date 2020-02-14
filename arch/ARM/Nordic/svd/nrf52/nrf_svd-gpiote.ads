@@ -2,11 +2,11 @@
 --
 --  All rights reserved.
 --
---  Redistribution and use in source and binary forms, with or without
---  modification, are permitted provided that the following conditions are met:
+--  Redistribution and use in source and binary forms, with or without modification,
+--  are permitted provided that the following conditions are met:
 --
---  1. Redistributions of source code must retain the above copyright notice,
---  this list of conditions and the following disclaimer.
+--  1. Redistributions of source code must retain the above copyright notice, this
+--  list of conditions and the following disclaimer.
 --
 --  2. Redistributions in binary form, except as embedded into a Nordic
 --  Semiconductor ASA integrated circuit in a product or a software update for
@@ -21,20 +21,19 @@
 --  4. This software, with or without modification, must only be used with a
 --  Nordic Semiconductor ASA integrated circuit.
 --
---  5. Any software provided in binary form under this license must not be
---  reverse engineered, decompiled, modified and/or disassembled.
+--  5. Any software provided in binary form under this license must not be reverse
+--  engineered, decompiled, modified and/or disassembled.
 --
---  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY
---  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
---  WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A
---  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR
---  ASA OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
---  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
---  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
---  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
---  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
---  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
---  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+--  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+--  OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--  DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+--  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+--  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+--  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+--  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+--  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+--  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 --  This spec has been automatically generated from nrf52.svd
@@ -53,99 +52,29 @@ package NRF_SVD.GPIOTE is
    -- Registers --
    ---------------
 
-   --  Description collection[0]: Task for writing to pin specified in
-   --  CONFIG[0].PSEL. Action on pin is configured in CONFIG[0].POLARITY.
-   type TASKS_OUT_Register is record
-      --  Write-only.
-      TASKS_OUT     : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_OUT_Register use record
-      TASKS_OUT     at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
+   --  Description collection[0]: Task for writing to pin specified in CONFIG[0].PSEL. Action on pin is configured in CONFIG[0].POLARITY.
 
    --  Description collection[0]: Task for writing to pin specified in
    --  CONFIG[0].PSEL. Action on pin is configured in CONFIG[0].POLARITY.
-   type TASKS_OUT_Registers is array (0 .. 7) of TASKS_OUT_Register;
+   type TASKS_OUT_Registers is array (0 .. 7) of HAL.UInt32;
+
+   --  Description collection[0]: Task for writing to pin specified in CONFIG[0].PSEL. Action on pin is to set it high.
 
    --  Description collection[0]: Task for writing to pin specified in
    --  CONFIG[0].PSEL. Action on pin is to set it high.
-   type TASKS_SET_Register is record
-      --  Write-only.
-      TASKS_SET     : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
+   type TASKS_SET_Registers is array (0 .. 7) of HAL.UInt32;
 
-   for TASKS_SET_Register use record
-      TASKS_SET     at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Description collection[0]: Task for writing to pin specified in
-   --  CONFIG[0].PSEL. Action on pin is to set it high.
-   type TASKS_SET_Registers is array (0 .. 7) of TASKS_SET_Register;
+   --  Description collection[0]: Task for writing to pin specified in CONFIG[0].PSEL. Action on pin is to set it low.
 
    --  Description collection[0]: Task for writing to pin specified in
    --  CONFIG[0].PSEL. Action on pin is to set it low.
-   type TASKS_CLR_Register is record
-      --  Write-only.
-      TASKS_CLR     : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
+   type TASKS_CLR_Registers is array (0 .. 7) of HAL.UInt32;
 
-   for TASKS_CLR_Register use record
-      TASKS_CLR     at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Description collection[0]: Task for writing to pin specified in
-   --  CONFIG[0].PSEL. Action on pin is to set it low.
-   type TASKS_CLR_Registers is array (0 .. 7) of TASKS_CLR_Register;
+   --  Description collection[0]: Event generated from pin specified in CONFIG[0].PSEL
 
    --  Description collection[0]: Event generated from pin specified in
    --  CONFIG[0].PSEL
-   type EVENTS_IN_Register is record
-      EVENTS_IN     : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_IN_Register use record
-      EVENTS_IN     at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Description collection[0]: Event generated from pin specified in
-   --  CONFIG[0].PSEL
-   type EVENTS_IN_Registers is array (0 .. 7) of EVENTS_IN_Register;
-
-   --  Event generated from multiple input GPIO pins with SENSE mechanism
-   --  enabled
-   type EVENTS_PORT_Register is record
-      EVENTS_PORT   : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_PORT_Register use record
-      EVENTS_PORT   at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
+   type EVENTS_IN_Registers is array (0 .. 7) of HAL.UInt32;
 
    --  Write '1' to Enable interrupt for IN[0] event
    type INTENSET_IN0_Field is
@@ -432,7 +361,7 @@ package NRF_SVD.GPIOTE is
       EVENTS_IN   : aliased EVENTS_IN_Registers;
       --  Event generated from multiple input GPIO pins with SENSE mechanism
       --  enabled
-      EVENTS_PORT : aliased EVENTS_PORT_Register;
+      EVENTS_PORT : aliased HAL.UInt32;
       --  Enable interrupt
       INTENSET    : aliased INTENSET_Register;
       --  Disable interrupt

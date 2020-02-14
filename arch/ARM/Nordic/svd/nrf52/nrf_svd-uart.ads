@@ -2,11 +2,11 @@
 --
 --  All rights reserved.
 --
---  Redistribution and use in source and binary forms, with or without
---  modification, are permitted provided that the following conditions are met:
+--  Redistribution and use in source and binary forms, with or without modification,
+--  are permitted provided that the following conditions are met:
 --
---  1. Redistributions of source code must retain the above copyright notice,
---  this list of conditions and the following disclaimer.
+--  1. Redistributions of source code must retain the above copyright notice, this
+--  list of conditions and the following disclaimer.
 --
 --  2. Redistributions in binary form, except as embedded into a Nordic
 --  Semiconductor ASA integrated circuit in a product or a software update for
@@ -21,20 +21,19 @@
 --  4. This software, with or without modification, must only be used with a
 --  Nordic Semiconductor ASA integrated circuit.
 --
---  5. Any software provided in binary form under this license must not be
---  reverse engineered, decompiled, modified and/or disassembled.
+--  5. Any software provided in binary form under this license must not be reverse
+--  engineered, decompiled, modified and/or disassembled.
 --
---  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY
---  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
---  WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A
---  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR
---  ASA OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
---  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
---  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
---  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
---  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
---  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
---  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+--  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+--  OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--  DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+--  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+--  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+--  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+--  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+--  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+--  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 --  This spec has been automatically generated from nrf52.svd
@@ -52,165 +51,6 @@ package NRF_SVD.UART is
    ---------------
    -- Registers --
    ---------------
-
-   --  Start UART receiver
-   type TASKS_STARTRX_Register is record
-      --  Write-only.
-      TASKS_STARTRX : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STARTRX_Register use record
-      TASKS_STARTRX at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Stop UART receiver
-   type TASKS_STOPRX_Register is record
-      --  Write-only.
-      TASKS_STOPRX  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STOPRX_Register use record
-      TASKS_STOPRX  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Start UART transmitter
-   type TASKS_STARTTX_Register is record
-      --  Write-only.
-      TASKS_STARTTX : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STARTTX_Register use record
-      TASKS_STARTTX at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Stop UART transmitter
-   type TASKS_STOPTX_Register is record
-      --  Write-only.
-      TASKS_STOPTX  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STOPTX_Register use record
-      TASKS_STOPTX  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Suspend UART
-   type TASKS_SUSPEND_Register is record
-      --  Write-only.
-      TASKS_SUSPEND : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_SUSPEND_Register use record
-      TASKS_SUSPEND at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  CTS is activated (set low). Clear To Send.
-   type EVENTS_CTS_Register is record
-      EVENTS_CTS    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_CTS_Register use record
-      EVENTS_CTS    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  CTS is deactivated (set high). Not Clear To Send.
-   type EVENTS_NCTS_Register is record
-      EVENTS_NCTS   : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_NCTS_Register use record
-      EVENTS_NCTS   at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Data received in RXD
-   type EVENTS_RXDRDY_Register is record
-      EVENTS_RXDRDY : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_RXDRDY_Register use record
-      EVENTS_RXDRDY at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Data sent from TXD
-   type EVENTS_TXDRDY_Register is record
-      EVENTS_TXDRDY : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_TXDRDY_Register use record
-      EVENTS_TXDRDY at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Error detected
-   type EVENTS_ERROR_Register is record
-      EVENTS_ERROR  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_ERROR_Register use record
-      EVENTS_ERROR  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Receiver timeout
-   type EVENTS_RXTO_Register is record
-      EVENTS_RXTO   : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_RXTO_Register use record
-      EVENTS_RXTO   at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
 
    --  Shortcut between CTS event and STARTRX task
    type SHORTS_CTS_STARTRX_Field is
@@ -773,27 +613,27 @@ package NRF_SVD.UART is
    --  Universal Asynchronous Receiver/Transmitter
    type UART_Peripheral is record
       --  Start UART receiver
-      TASKS_STARTRX : aliased TASKS_STARTRX_Register;
+      TASKS_STARTRX : aliased HAL.UInt32;
       --  Stop UART receiver
-      TASKS_STOPRX  : aliased TASKS_STOPRX_Register;
+      TASKS_STOPRX  : aliased HAL.UInt32;
       --  Start UART transmitter
-      TASKS_STARTTX : aliased TASKS_STARTTX_Register;
+      TASKS_STARTTX : aliased HAL.UInt32;
       --  Stop UART transmitter
-      TASKS_STOPTX  : aliased TASKS_STOPTX_Register;
+      TASKS_STOPTX  : aliased HAL.UInt32;
       --  Suspend UART
-      TASKS_SUSPEND : aliased TASKS_SUSPEND_Register;
+      TASKS_SUSPEND : aliased HAL.UInt32;
       --  CTS is activated (set low). Clear To Send.
-      EVENTS_CTS    : aliased EVENTS_CTS_Register;
+      EVENTS_CTS    : aliased HAL.UInt32;
       --  CTS is deactivated (set high). Not Clear To Send.
-      EVENTS_NCTS   : aliased EVENTS_NCTS_Register;
+      EVENTS_NCTS   : aliased HAL.UInt32;
       --  Data received in RXD
-      EVENTS_RXDRDY : aliased EVENTS_RXDRDY_Register;
+      EVENTS_RXDRDY : aliased HAL.UInt32;
       --  Data sent from TXD
-      EVENTS_TXDRDY : aliased EVENTS_TXDRDY_Register;
+      EVENTS_TXDRDY : aliased HAL.UInt32;
       --  Error detected
-      EVENTS_ERROR  : aliased EVENTS_ERROR_Register;
+      EVENTS_ERROR  : aliased HAL.UInt32;
       --  Receiver timeout
-      EVENTS_RXTO   : aliased EVENTS_RXTO_Register;
+      EVENTS_RXTO   : aliased HAL.UInt32;
       --  Shortcut register
       SHORTS        : aliased SHORTS_Register;
       --  Enable interrupt

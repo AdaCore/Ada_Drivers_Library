@@ -2,11 +2,11 @@
 --
 --  All rights reserved.
 --
---  Redistribution and use in source and binary forms, with or without
---  modification, are permitted provided that the following conditions are met:
+--  Redistribution and use in source and binary forms, with or without modification,
+--  are permitted provided that the following conditions are met:
 --
---  1. Redistributions of source code must retain the above copyright notice,
---  this list of conditions and the following disclaimer.
+--  1. Redistributions of source code must retain the above copyright notice, this
+--  list of conditions and the following disclaimer.
 --
 --  2. Redistributions in binary form, except as embedded into a Nordic
 --  Semiconductor ASA integrated circuit in a product or a software update for
@@ -21,20 +21,19 @@
 --  4. This software, with or without modification, must only be used with a
 --  Nordic Semiconductor ASA integrated circuit.
 --
---  5. Any software provided in binary form under this license must not be
---  reverse engineered, decompiled, modified and/or disassembled.
+--  5. Any software provided in binary form under this license must not be reverse
+--  engineered, decompiled, modified and/or disassembled.
 --
---  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY
---  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
---  WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A
---  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR
---  ASA OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
---  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
---  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
---  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
---  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
---  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
---  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+--  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+--  OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--  DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+--  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+--  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+--  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+--  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+--  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+--  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 --  This spec has been automatically generated from nrf52.svd
@@ -52,296 +51,6 @@ package NRF_SVD.RADIO is
    ---------------
    -- Registers --
    ---------------
-
-   --  Enable RADIO in TX mode
-   type TASKS_TXEN_Register is record
-      --  Write-only.
-      TASKS_TXEN    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_TXEN_Register use record
-      TASKS_TXEN    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Enable RADIO in RX mode
-   type TASKS_RXEN_Register is record
-      --  Write-only.
-      TASKS_RXEN    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_RXEN_Register use record
-      TASKS_RXEN    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Start RADIO
-   type TASKS_START_Register is record
-      --  Write-only.
-      TASKS_START   : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_START_Register use record
-      TASKS_START   at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Stop RADIO
-   type TASKS_STOP_Register is record
-      --  Write-only.
-      TASKS_STOP    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STOP_Register use record
-      TASKS_STOP    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Disable RADIO
-   type TASKS_DISABLE_Register is record
-      --  Write-only.
-      TASKS_DISABLE : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_DISABLE_Register use record
-      TASKS_DISABLE at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Start the RSSI and take one single sample of the receive signal
-   --  strength.
-   type TASKS_RSSISTART_Register is record
-      --  Write-only.
-      TASKS_RSSISTART : Boolean := False;
-      --  unspecified
-      Reserved_1_31   : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_RSSISTART_Register use record
-      TASKS_RSSISTART at 0 range 0 .. 0;
-      Reserved_1_31   at 0 range 1 .. 31;
-   end record;
-
-   --  Stop the RSSI measurement
-   type TASKS_RSSISTOP_Register is record
-      --  Write-only.
-      TASKS_RSSISTOP : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_RSSISTOP_Register use record
-      TASKS_RSSISTOP at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  Start the bit counter
-   type TASKS_BCSTART_Register is record
-      --  Write-only.
-      TASKS_BCSTART : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_BCSTART_Register use record
-      TASKS_BCSTART at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Stop the bit counter
-   type TASKS_BCSTOP_Register is record
-      --  Write-only.
-      TASKS_BCSTOP  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_BCSTOP_Register use record
-      TASKS_BCSTOP  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  RADIO has ramped up and is ready to be started
-   type EVENTS_READY_Register is record
-      EVENTS_READY  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_READY_Register use record
-      EVENTS_READY  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Address sent or received
-   type EVENTS_ADDRESS_Register is record
-      EVENTS_ADDRESS : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_ADDRESS_Register use record
-      EVENTS_ADDRESS at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  Packet payload sent or received
-   type EVENTS_PAYLOAD_Register is record
-      EVENTS_PAYLOAD : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_PAYLOAD_Register use record
-      EVENTS_PAYLOAD at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  Packet sent or received
-   type EVENTS_END_Register is record
-      EVENTS_END    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_END_Register use record
-      EVENTS_END    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  RADIO has been disabled
-   type EVENTS_DISABLED_Register is record
-      EVENTS_DISABLED : Boolean := False;
-      --  unspecified
-      Reserved_1_31   : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_DISABLED_Register use record
-      EVENTS_DISABLED at 0 range 0 .. 0;
-      Reserved_1_31   at 0 range 1 .. 31;
-   end record;
-
-   --  A device address match occurred on the last received packet
-   type EVENTS_DEVMATCH_Register is record
-      EVENTS_DEVMATCH : Boolean := False;
-      --  unspecified
-      Reserved_1_31   : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_DEVMATCH_Register use record
-      EVENTS_DEVMATCH at 0 range 0 .. 0;
-      Reserved_1_31   at 0 range 1 .. 31;
-   end record;
-
-   --  No device address match occurred on the last received packet
-   type EVENTS_DEVMISS_Register is record
-      EVENTS_DEVMISS : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_DEVMISS_Register use record
-      EVENTS_DEVMISS at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  Sampling of receive signal strength complete.
-   type EVENTS_RSSIEND_Register is record
-      EVENTS_RSSIEND : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_RSSIEND_Register use record
-      EVENTS_RSSIEND at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  Bit counter reached bit count value.
-   type EVENTS_BCMATCH_Register is record
-      EVENTS_BCMATCH : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_BCMATCH_Register use record
-      EVENTS_BCMATCH at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  Packet received with CRC ok
-   type EVENTS_CRCOK_Register is record
-      EVENTS_CRCOK  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_CRCOK_Register use record
-      EVENTS_CRCOK  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Packet received with CRC error
-   type EVENTS_CRCERROR_Register is record
-      EVENTS_CRCERROR : Boolean := False;
-      --  unspecified
-      Reserved_1_31   : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_CRCERROR_Register use record
-      EVENTS_CRCERROR at 0 range 0 .. 0;
-      Reserved_1_31   at 0 range 1 .. 31;
-   end record;
 
    --  Shortcut between READY event and START task
    type SHORTS_READY_START_Field is
@@ -1890,46 +1599,46 @@ package NRF_SVD.RADIO is
    --  2.4 GHz Radio
    type RADIO_Peripheral is record
       --  Enable RADIO in TX mode
-      TASKS_TXEN      : aliased TASKS_TXEN_Register;
+      TASKS_TXEN      : aliased HAL.UInt32;
       --  Enable RADIO in RX mode
-      TASKS_RXEN      : aliased TASKS_RXEN_Register;
+      TASKS_RXEN      : aliased HAL.UInt32;
       --  Start RADIO
-      TASKS_START     : aliased TASKS_START_Register;
+      TASKS_START     : aliased HAL.UInt32;
       --  Stop RADIO
-      TASKS_STOP      : aliased TASKS_STOP_Register;
+      TASKS_STOP      : aliased HAL.UInt32;
       --  Disable RADIO
-      TASKS_DISABLE   : aliased TASKS_DISABLE_Register;
+      TASKS_DISABLE   : aliased HAL.UInt32;
       --  Start the RSSI and take one single sample of the receive signal
       --  strength.
-      TASKS_RSSISTART : aliased TASKS_RSSISTART_Register;
+      TASKS_RSSISTART : aliased HAL.UInt32;
       --  Stop the RSSI measurement
-      TASKS_RSSISTOP  : aliased TASKS_RSSISTOP_Register;
+      TASKS_RSSISTOP  : aliased HAL.UInt32;
       --  Start the bit counter
-      TASKS_BCSTART   : aliased TASKS_BCSTART_Register;
+      TASKS_BCSTART   : aliased HAL.UInt32;
       --  Stop the bit counter
-      TASKS_BCSTOP    : aliased TASKS_BCSTOP_Register;
+      TASKS_BCSTOP    : aliased HAL.UInt32;
       --  RADIO has ramped up and is ready to be started
-      EVENTS_READY    : aliased EVENTS_READY_Register;
+      EVENTS_READY    : aliased HAL.UInt32;
       --  Address sent or received
-      EVENTS_ADDRESS  : aliased EVENTS_ADDRESS_Register;
+      EVENTS_ADDRESS  : aliased HAL.UInt32;
       --  Packet payload sent or received
-      EVENTS_PAYLOAD  : aliased EVENTS_PAYLOAD_Register;
+      EVENTS_PAYLOAD  : aliased HAL.UInt32;
       --  Packet sent or received
-      EVENTS_END      : aliased EVENTS_END_Register;
+      EVENTS_END      : aliased HAL.UInt32;
       --  RADIO has been disabled
-      EVENTS_DISABLED : aliased EVENTS_DISABLED_Register;
+      EVENTS_DISABLED : aliased HAL.UInt32;
       --  A device address match occurred on the last received packet
-      EVENTS_DEVMATCH : aliased EVENTS_DEVMATCH_Register;
+      EVENTS_DEVMATCH : aliased HAL.UInt32;
       --  No device address match occurred on the last received packet
-      EVENTS_DEVMISS  : aliased EVENTS_DEVMISS_Register;
+      EVENTS_DEVMISS  : aliased HAL.UInt32;
       --  Sampling of receive signal strength complete.
-      EVENTS_RSSIEND  : aliased EVENTS_RSSIEND_Register;
+      EVENTS_RSSIEND  : aliased HAL.UInt32;
       --  Bit counter reached bit count value.
-      EVENTS_BCMATCH  : aliased EVENTS_BCMATCH_Register;
+      EVENTS_BCMATCH  : aliased HAL.UInt32;
       --  Packet received with CRC ok
-      EVENTS_CRCOK    : aliased EVENTS_CRCOK_Register;
+      EVENTS_CRCOK    : aliased HAL.UInt32;
       --  Packet received with CRC error
-      EVENTS_CRCERROR : aliased EVENTS_CRCERROR_Register;
+      EVENTS_CRCERROR : aliased HAL.UInt32;
       --  Shortcut register
       SHORTS          : aliased SHORTS_Register;
       --  Enable interrupt

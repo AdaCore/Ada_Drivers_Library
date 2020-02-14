@@ -37,19 +37,27 @@ package body nRF.RTC is
    -- Start --
    -----------
 
-   procedure Start (This : Real_Time_Counter) is separate;
+   procedure Start (This : Real_Time_Counter) is
+   begin
+      This.Periph.TASKS_START := 1;
+   end Start;
 
    ----------
    -- Stop --
    ----------
-
-   procedure Stop (This : Real_Time_Counter) is separate;
+   procedure Stop (This : Real_Time_Counter) is
+   begin
+      This.Periph.TASKS_STOP := 1;
+   end Stop;
 
    -----------
    -- Clear --
    -----------
 
-   procedure Clear (This : Real_Time_Counter) is separate;
+   procedure Clear (This : Real_Time_Counter) is
+   begin
+      This.Periph.TASKS_CLEAR := 1;
+   end Clear;
 
    -------------------
    -- Set_Prescaler --

@@ -2,11 +2,11 @@
 --
 --  All rights reserved.
 --
---  Redistribution and use in source and binary forms, with or without
---  modification, are permitted provided that the following conditions are met:
+--  Redistribution and use in source and binary forms, with or without modification,
+--  are permitted provided that the following conditions are met:
 --
---  1. Redistributions of source code must retain the above copyright notice,
---  this list of conditions and the following disclaimer.
+--  1. Redistributions of source code must retain the above copyright notice, this
+--  list of conditions and the following disclaimer.
 --
 --  2. Redistributions in binary form, except as embedded into a Nordic
 --  Semiconductor ASA integrated circuit in a product or a software update for
@@ -21,20 +21,19 @@
 --  4. This software, with or without modification, must only be used with a
 --  Nordic Semiconductor ASA integrated circuit.
 --
---  5. Any software provided in binary form under this license must not be
---  reverse engineered, decompiled, modified and/or disassembled.
+--  5. Any software provided in binary form under this license must not be reverse
+--  engineered, decompiled, modified and/or disassembled.
 --
---  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY
---  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
---  WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A
---  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR
---  ASA OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
---  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
---  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
---  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
---  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
---  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
---  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+--  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+--  OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--  DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+--  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+--  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+--  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+--  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+--  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+--  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 --  This spec has been automatically generated from nrf52.svd
@@ -52,165 +51,6 @@ package NRF_SVD.TWI is
    ---------------
    -- Registers --
    ---------------
-
-   --  Start TWI receive sequence
-   type TASKS_STARTRX_Register is record
-      --  Write-only.
-      TASKS_STARTRX : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STARTRX_Register use record
-      TASKS_STARTRX at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Start TWI transmit sequence
-   type TASKS_STARTTX_Register is record
-      --  Write-only.
-      TASKS_STARTTX : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STARTTX_Register use record
-      TASKS_STARTTX at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Stop TWI transaction
-   type TASKS_STOP_Register is record
-      --  Write-only.
-      TASKS_STOP    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STOP_Register use record
-      TASKS_STOP    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Suspend TWI transaction
-   type TASKS_SUSPEND_Register is record
-      --  Write-only.
-      TASKS_SUSPEND : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_SUSPEND_Register use record
-      TASKS_SUSPEND at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Resume TWI transaction
-   type TASKS_RESUME_Register is record
-      --  Write-only.
-      TASKS_RESUME  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_RESUME_Register use record
-      TASKS_RESUME  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  TWI stopped
-   type EVENTS_STOPPED_Register is record
-      EVENTS_STOPPED : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_STOPPED_Register use record
-      EVENTS_STOPPED at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  TWI RXD byte received
-   type EVENTS_RXDREADY_Register is record
-      EVENTS_RXDREADY : Boolean := False;
-      --  unspecified
-      Reserved_1_31   : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_RXDREADY_Register use record
-      EVENTS_RXDREADY at 0 range 0 .. 0;
-      Reserved_1_31   at 0 range 1 .. 31;
-   end record;
-
-   --  TWI TXD byte sent
-   type EVENTS_TXDSENT_Register is record
-      EVENTS_TXDSENT : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_TXDSENT_Register use record
-      EVENTS_TXDSENT at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  TWI error
-   type EVENTS_ERROR_Register is record
-      EVENTS_ERROR  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_ERROR_Register use record
-      EVENTS_ERROR  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  TWI byte boundary, generated before each byte that is sent or received
-   type EVENTS_BB_Register is record
-      EVENTS_BB     : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_BB_Register use record
-      EVENTS_BB     at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  TWI entered the suspended state
-   type EVENTS_SUSPENDED_Register is record
-      EVENTS_SUSPENDED : Boolean := False;
-      --  unspecified
-      Reserved_1_31    : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_SUSPENDED_Register use record
-      EVENTS_SUSPENDED at 0 range 0 .. 0;
-      Reserved_1_31    at 0 range 1 .. 31;
-   end record;
 
    --  Shortcut between BB event and SUSPEND task
    type SHORTS_BB_SUSPEND_Field is
@@ -787,28 +627,28 @@ package NRF_SVD.TWI is
    --  I2C compatible Two-Wire Interface 0
    type TWI_Peripheral is record
       --  Start TWI receive sequence
-      TASKS_STARTRX    : aliased TASKS_STARTRX_Register;
+      TASKS_STARTRX    : aliased HAL.UInt32;
       --  Start TWI transmit sequence
-      TASKS_STARTTX    : aliased TASKS_STARTTX_Register;
+      TASKS_STARTTX    : aliased HAL.UInt32;
       --  Stop TWI transaction
-      TASKS_STOP       : aliased TASKS_STOP_Register;
+      TASKS_STOP       : aliased HAL.UInt32;
       --  Suspend TWI transaction
-      TASKS_SUSPEND    : aliased TASKS_SUSPEND_Register;
+      TASKS_SUSPEND    : aliased HAL.UInt32;
       --  Resume TWI transaction
-      TASKS_RESUME     : aliased TASKS_RESUME_Register;
+      TASKS_RESUME     : aliased HAL.UInt32;
       --  TWI stopped
-      EVENTS_STOPPED   : aliased EVENTS_STOPPED_Register;
+      EVENTS_STOPPED   : aliased HAL.UInt32;
       --  TWI RXD byte received
-      EVENTS_RXDREADY  : aliased EVENTS_RXDREADY_Register;
+      EVENTS_RXDREADY  : aliased HAL.UInt32;
       --  TWI TXD byte sent
-      EVENTS_TXDSENT   : aliased EVENTS_TXDSENT_Register;
+      EVENTS_TXDSENT   : aliased HAL.UInt32;
       --  TWI error
-      EVENTS_ERROR     : aliased EVENTS_ERROR_Register;
+      EVENTS_ERROR     : aliased HAL.UInt32;
       --  TWI byte boundary, generated before each byte that is sent or
       --  received
-      EVENTS_BB        : aliased EVENTS_BB_Register;
+      EVENTS_BB        : aliased HAL.UInt32;
       --  TWI entered the suspended state
-      EVENTS_SUSPENDED : aliased EVENTS_SUSPENDED_Register;
+      EVENTS_SUSPENDED : aliased HAL.UInt32;
       --  Shortcut register
       SHORTS           : aliased SHORTS_Register;
       --  Enable interrupt

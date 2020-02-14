@@ -2,11 +2,11 @@
 --
 --  All rights reserved.
 --
---  Redistribution and use in source and binary forms, with or without
---  modification, are permitted provided that the following conditions are met:
+--  Redistribution and use in source and binary forms, with or without modification,
+--  are permitted provided that the following conditions are met:
 --
---  1. Redistributions of source code must retain the above copyright notice,
---  this list of conditions and the following disclaimer.
+--  1. Redistributions of source code must retain the above copyright notice, this
+--  list of conditions and the following disclaimer.
 --
 --  2. Redistributions in binary form, except as embedded into a Nordic
 --  Semiconductor ASA integrated circuit in a product or a software update for
@@ -21,20 +21,19 @@
 --  4. This software, with or without modification, must only be used with a
 --  Nordic Semiconductor ASA integrated circuit.
 --
---  5. Any software provided in binary form under this license must not be
---  reverse engineered, decompiled, modified and/or disassembled.
+--  5. Any software provided in binary form under this license must not be reverse
+--  engineered, decompiled, modified and/or disassembled.
 --
---  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY
---  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
---  WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A
---  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR
---  ASA OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
---  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
---  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
---  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
---  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
---  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
---  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+--  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+--  OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--  DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+--  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+--  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+--  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+--  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+--  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+--  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 --  This spec has been automatically generated from nrf52.svd
@@ -52,167 +51,6 @@ package NRF_SVD.CLOCK is
    ---------------
    -- Registers --
    ---------------
-
-   --  Start HFCLK crystal oscillator
-   type TASKS_HFCLKSTART_Register is record
-      --  Write-only.
-      TASKS_HFCLKSTART : Boolean := False;
-      --  unspecified
-      Reserved_1_31    : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_HFCLKSTART_Register use record
-      TASKS_HFCLKSTART at 0 range 0 .. 0;
-      Reserved_1_31    at 0 range 1 .. 31;
-   end record;
-
-   --  Stop HFCLK crystal oscillator
-   type TASKS_HFCLKSTOP_Register is record
-      --  Write-only.
-      TASKS_HFCLKSTOP : Boolean := False;
-      --  unspecified
-      Reserved_1_31   : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_HFCLKSTOP_Register use record
-      TASKS_HFCLKSTOP at 0 range 0 .. 0;
-      Reserved_1_31   at 0 range 1 .. 31;
-   end record;
-
-   --  Start LFCLK source
-   type TASKS_LFCLKSTART_Register is record
-      --  Write-only.
-      TASKS_LFCLKSTART : Boolean := False;
-      --  unspecified
-      Reserved_1_31    : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_LFCLKSTART_Register use record
-      TASKS_LFCLKSTART at 0 range 0 .. 0;
-      Reserved_1_31    at 0 range 1 .. 31;
-   end record;
-
-   --  Stop LFCLK source
-   type TASKS_LFCLKSTOP_Register is record
-      --  Write-only.
-      TASKS_LFCLKSTOP : Boolean := False;
-      --  unspecified
-      Reserved_1_31   : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_LFCLKSTOP_Register use record
-      TASKS_LFCLKSTOP at 0 range 0 .. 0;
-      Reserved_1_31   at 0 range 1 .. 31;
-   end record;
-
-   --  Start calibration of LFRC oscillator
-   type TASKS_CAL_Register is record
-      --  Write-only.
-      TASKS_CAL     : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_CAL_Register use record
-      TASKS_CAL     at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Start calibration timer
-   type TASKS_CTSTART_Register is record
-      --  Write-only.
-      TASKS_CTSTART : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_CTSTART_Register use record
-      TASKS_CTSTART at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Stop calibration timer
-   type TASKS_CTSTOP_Register is record
-      --  Write-only.
-      TASKS_CTSTOP  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_CTSTOP_Register use record
-      TASKS_CTSTOP  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  HFCLK oscillator started
-   type EVENTS_HFCLKSTARTED_Register is record
-      EVENTS_HFCLKSTARTED : Boolean := False;
-      --  unspecified
-      Reserved_1_31       : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_HFCLKSTARTED_Register use record
-      EVENTS_HFCLKSTARTED at 0 range 0 .. 0;
-      Reserved_1_31       at 0 range 1 .. 31;
-   end record;
-
-   --  LFCLK started
-   type EVENTS_LFCLKSTARTED_Register is record
-      EVENTS_LFCLKSTARTED : Boolean := False;
-      --  unspecified
-      Reserved_1_31       : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_LFCLKSTARTED_Register use record
-      EVENTS_LFCLKSTARTED at 0 range 0 .. 0;
-      Reserved_1_31       at 0 range 1 .. 31;
-   end record;
-
-   --  Calibration of LFCLK RC oscillator complete event
-   type EVENTS_DONE_Register is record
-      EVENTS_DONE   : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_DONE_Register use record
-      EVENTS_DONE   at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Calibration timer timeout
-   type EVENTS_CTTO_Register is record
-      EVENTS_CTTO   : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_CTTO_Register use record
-      EVENTS_CTTO   at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
 
    --  Write '1' to Enable interrupt for HFCLKSTARTED event
    type INTENSET_HFCLKSTARTED_Field is
@@ -761,27 +599,27 @@ package NRF_SVD.CLOCK is
    --  Clock control
    type CLOCK_Peripheral is record
       --  Start HFCLK crystal oscillator
-      TASKS_HFCLKSTART    : aliased TASKS_HFCLKSTART_Register;
+      TASKS_HFCLKSTART    : aliased HAL.UInt32;
       --  Stop HFCLK crystal oscillator
-      TASKS_HFCLKSTOP     : aliased TASKS_HFCLKSTOP_Register;
+      TASKS_HFCLKSTOP     : aliased HAL.UInt32;
       --  Start LFCLK source
-      TASKS_LFCLKSTART    : aliased TASKS_LFCLKSTART_Register;
+      TASKS_LFCLKSTART    : aliased HAL.UInt32;
       --  Stop LFCLK source
-      TASKS_LFCLKSTOP     : aliased TASKS_LFCLKSTOP_Register;
+      TASKS_LFCLKSTOP     : aliased HAL.UInt32;
       --  Start calibration of LFRC oscillator
-      TASKS_CAL           : aliased TASKS_CAL_Register;
+      TASKS_CAL           : aliased HAL.UInt32;
       --  Start calibration timer
-      TASKS_CTSTART       : aliased TASKS_CTSTART_Register;
+      TASKS_CTSTART       : aliased HAL.UInt32;
       --  Stop calibration timer
-      TASKS_CTSTOP        : aliased TASKS_CTSTOP_Register;
+      TASKS_CTSTOP        : aliased HAL.UInt32;
       --  HFCLK oscillator started
-      EVENTS_HFCLKSTARTED : aliased EVENTS_HFCLKSTARTED_Register;
+      EVENTS_HFCLKSTARTED : aliased HAL.UInt32;
       --  LFCLK started
-      EVENTS_LFCLKSTARTED : aliased EVENTS_LFCLKSTARTED_Register;
+      EVENTS_LFCLKSTARTED : aliased HAL.UInt32;
       --  Calibration of LFCLK RC oscillator complete event
-      EVENTS_DONE         : aliased EVENTS_DONE_Register;
+      EVENTS_DONE         : aliased HAL.UInt32;
       --  Calibration timer timeout
-      EVENTS_CTTO         : aliased EVENTS_CTTO_Register;
+      EVENTS_CTTO         : aliased HAL.UInt32;
       --  Enable interrupt
       INTENSET            : aliased INTENSET_Register;
       --  Disable interrupt

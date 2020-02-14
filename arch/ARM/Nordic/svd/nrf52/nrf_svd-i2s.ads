@@ -2,11 +2,11 @@
 --
 --  All rights reserved.
 --
---  Redistribution and use in source and binary forms, with or without
---  modification, are permitted provided that the following conditions are met:
+--  Redistribution and use in source and binary forms, with or without modification,
+--  are permitted provided that the following conditions are met:
 --
---  1. Redistributions of source code must retain the above copyright notice,
---  this list of conditions and the following disclaimer.
+--  1. Redistributions of source code must retain the above copyright notice, this
+--  list of conditions and the following disclaimer.
 --
 --  2. Redistributions in binary form, except as embedded into a Nordic
 --  Semiconductor ASA integrated circuit in a product or a software update for
@@ -21,20 +21,19 @@
 --  4. This software, with or without modification, must only be used with a
 --  Nordic Semiconductor ASA integrated circuit.
 --
---  5. Any software provided in binary form under this license must not be
---  reverse engineered, decompiled, modified and/or disassembled.
+--  5. Any software provided in binary form under this license must not be reverse
+--  engineered, decompiled, modified and/or disassembled.
 --
---  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY
---  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
---  WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A
---  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR
---  ASA OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
---  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
---  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
---  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
---  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
---  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
---  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+--  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+--  OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--  DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+--  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+--  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+--  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+--  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+--  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+--  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 --  This spec has been automatically generated from nrf52.svd
@@ -52,85 +51,6 @@ package NRF_SVD.I2S is
    ---------------
    -- Registers --
    ---------------
-
-   --  Starts continuous I2S transfer. Also starts MCK generator when this is
-   --  enabled.
-   type TASKS_START_Register is record
-      --  Write-only.
-      TASKS_START   : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_START_Register use record
-      TASKS_START   at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Stops I2S transfer. Also stops MCK generator. Triggering this task will
-   --  cause the {event:STOPPED} event to be generated.
-   type TASKS_STOP_Register is record
-      --  Write-only.
-      TASKS_STOP    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STOP_Register use record
-      TASKS_STOP    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  The RXD.PTR register has been copied to internal double-buffers. When
-   --  the I2S module is started and RX is enabled, this event will be
-   --  generated for every RXTXD.MAXCNT words that are received on the SDIN
-   --  pin.
-   type EVENTS_RXPTRUPD_Register is record
-      EVENTS_RXPTRUPD : Boolean := False;
-      --  unspecified
-      Reserved_1_31   : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_RXPTRUPD_Register use record
-      EVENTS_RXPTRUPD at 0 range 0 .. 0;
-      Reserved_1_31   at 0 range 1 .. 31;
-   end record;
-
-   --  I2S transfer stopped.
-   type EVENTS_STOPPED_Register is record
-      EVENTS_STOPPED : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_STOPPED_Register use record
-      EVENTS_STOPPED at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  The TDX.PTR register has been copied to internal double-buffers. When
-   --  the I2S module is started and TX is enabled, this event will be
-   --  generated for every RXTXD.MAXCNT words that are sent on the SDOUT pin.
-   type EVENTS_TXPTRUPD_Register is record
-      EVENTS_TXPTRUPD : Boolean := False;
-      --  unspecified
-      Reserved_1_31   : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_TXPTRUPD_Register use record
-      EVENTS_TXPTRUPD at 0 range 0 .. 0;
-      Reserved_1_31   at 0 range 1 .. 31;
-   end record;
 
    --  Enable or disable interrupt for RXPTRUPD event
    type INTEN_RXPTRUPD_Field is
@@ -968,22 +888,22 @@ package NRF_SVD.I2S is
    type I2S_Peripheral is record
       --  Starts continuous I2S transfer. Also starts MCK generator when this
       --  is enabled.
-      TASKS_START     : aliased TASKS_START_Register;
+      TASKS_START     : aliased HAL.UInt32;
       --  Stops I2S transfer. Also stops MCK generator. Triggering this task
       --  will cause the {event:STOPPED} event to be generated.
-      TASKS_STOP      : aliased TASKS_STOP_Register;
+      TASKS_STOP      : aliased HAL.UInt32;
       --  The RXD.PTR register has been copied to internal double-buffers. When
       --  the I2S module is started and RX is enabled, this event will be
       --  generated for every RXTXD.MAXCNT words that are received on the SDIN
       --  pin.
-      EVENTS_RXPTRUPD : aliased EVENTS_RXPTRUPD_Register;
+      EVENTS_RXPTRUPD : aliased HAL.UInt32;
       --  I2S transfer stopped.
-      EVENTS_STOPPED  : aliased EVENTS_STOPPED_Register;
+      EVENTS_STOPPED  : aliased HAL.UInt32;
       --  The TDX.PTR register has been copied to internal double-buffers. When
       --  the I2S module is started and TX is enabled, this event will be
       --  generated for every RXTXD.MAXCNT words that are sent on the SDOUT
       --  pin.
-      EVENTS_TXPTRUPD : aliased EVENTS_TXPTRUPD_Register;
+      EVENTS_TXPTRUPD : aliased HAL.UInt32;
       --  Enable or disable interrupt
       INTEN           : aliased INTEN_Register;
       --  Enable interrupt

@@ -53,7 +53,7 @@ package body nRF.SPI_Master is
       This.Periph.TXD.TXD := Data_Out;
 
       --  Wait for the RX ready event
-      while This.Periph.EVENTS_READY.EVENTS_READY = False loop
+      while This.Periph.EVENTS_READY = 0 loop
          null;
       end loop;
 
@@ -61,7 +61,7 @@ package body nRF.SPI_Master is
       Data_In := This.Periph.RXD.RXD;
 
       --  Clear event
-      This.Periph.EVENTS_READY.EVENTS_READY := False;
+      This.Periph.EVENTS_READY := 0;
    end Transfer;
 
    ------------
@@ -163,7 +163,7 @@ package body nRF.SPI_Master is
       Unused : UInt8;
    begin
       --  Clear any previous event
-      This.Periph.EVENTS_READY.EVENTS_READY := False;
+      This.Periph.EVENTS_READY := 0;
 
       for Elt of Data loop
          Transfer (This, Data_Out => Elt, Data_In => Unused);
@@ -187,7 +187,7 @@ package body nRF.SPI_Master is
       Unused : UInt8;
    begin
       --  Clear any previous event
-      This.Periph.EVENTS_READY.EVENTS_READY := False;
+      This.Periph.EVENTS_READY := 0;
 
       if This.Periph.CONFIG.ORDER = Msbfirst then
          for Elt of Data loop
@@ -226,7 +226,7 @@ package body nRF.SPI_Master is
       pragma Unreferenced (Timeout);
    begin
       --  Clear any previous event
-      This.Periph.EVENTS_READY.EVENTS_READY := False;
+      This.Periph.EVENTS_READY := 0;
 
       for Elt of Data loop
          Transfer (This, Data_Out => 0, Data_In => Elt);
@@ -250,7 +250,7 @@ package body nRF.SPI_Master is
       Byte : UInt8;
    begin
       --  Clear any previous event
-      This.Periph.EVENTS_READY.EVENTS_READY := False;
+      This.Periph.EVENTS_READY := 0;
 
       if This.Periph.CONFIG.ORDER = Msbfirst then
          for Elt of Data loop

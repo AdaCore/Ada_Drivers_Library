@@ -2,11 +2,11 @@
 --
 --  All rights reserved.
 --
---  Redistribution and use in source and binary forms, with or without
---  modification, are permitted provided that the following conditions are met:
+--  Redistribution and use in source and binary forms, with or without modification,
+--  are permitted provided that the following conditions are met:
 --
---  1. Redistributions of source code must retain the above copyright notice,
---  this list of conditions and the following disclaimer.
+--  1. Redistributions of source code must retain the above copyright notice, this
+--  list of conditions and the following disclaimer.
 --
 --  2. Redistributions in binary form, except as embedded into a Nordic
 --  Semiconductor ASA integrated circuit in a product or a software update for
@@ -21,20 +21,19 @@
 --  4. This software, with or without modification, must only be used with a
 --  Nordic Semiconductor ASA integrated circuit.
 --
---  5. Any software provided in binary form under this license must not be
---  reverse engineered, decompiled, modified and/or disassembled.
+--  5. Any software provided in binary form under this license must not be reverse
+--  engineered, decompiled, modified and/or disassembled.
 --
---  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY
---  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
---  WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A
---  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR
---  ASA OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
---  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
---  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
---  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
---  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
---  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
---  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+--  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+--  OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--  DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+--  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+--  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+--  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+--  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+--  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+--  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 --  This spec has been automatically generated from nrf52.svd
@@ -52,326 +51,6 @@ package NRF_SVD.NFCT is
    ---------------
    -- Registers --
    ---------------
-
-   --  Activate NFC peripheral for incoming and outgoing frames, change state
-   --  to activated
-   type TASKS_ACTIVATE_Register is record
-      --  Write-only.
-      TASKS_ACTIVATE : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_ACTIVATE_Register use record
-      TASKS_ACTIVATE at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  Disable NFC peripheral
-   type TASKS_DISABLE_Register is record
-      --  Write-only.
-      TASKS_DISABLE : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_DISABLE_Register use record
-      TASKS_DISABLE at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Enable NFC sense field mode, change state to sense mode
-   type TASKS_SENSE_Register is record
-      --  Write-only.
-      TASKS_SENSE   : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_SENSE_Register use record
-      TASKS_SENSE   at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Start transmission of a outgoing frame, change state to transmit
-   type TASKS_STARTTX_Register is record
-      --  Write-only.
-      TASKS_STARTTX : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STARTTX_Register use record
-      TASKS_STARTTX at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Initializes the EasyDMA for receive.
-   type TASKS_ENABLERXDATA_Register is record
-      --  Write-only.
-      TASKS_ENABLERXDATA : Boolean := False;
-      --  unspecified
-      Reserved_1_31      : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_ENABLERXDATA_Register use record
-      TASKS_ENABLERXDATA at 0 range 0 .. 0;
-      Reserved_1_31      at 0 range 1 .. 31;
-   end record;
-
-   --  Force state machine to IDLE state
-   type TASKS_GOIDLE_Register is record
-      --  Write-only.
-      TASKS_GOIDLE  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_GOIDLE_Register use record
-      TASKS_GOIDLE  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Force state machine to SLEEP_A state
-   type TASKS_GOSLEEP_Register is record
-      --  Write-only.
-      TASKS_GOSLEEP : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_GOSLEEP_Register use record
-      TASKS_GOSLEEP at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  The NFC peripheral is ready to receive and send frames
-   type EVENTS_READY_Register is record
-      EVENTS_READY  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_READY_Register use record
-      EVENTS_READY  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Remote NFC field detected
-   type EVENTS_FIELDDETECTED_Register is record
-      EVENTS_FIELDDETECTED : Boolean := False;
-      --  unspecified
-      Reserved_1_31        : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_FIELDDETECTED_Register use record
-      EVENTS_FIELDDETECTED at 0 range 0 .. 0;
-      Reserved_1_31        at 0 range 1 .. 31;
-   end record;
-
-   --  Remote NFC field lost
-   type EVENTS_FIELDLOST_Register is record
-      EVENTS_FIELDLOST : Boolean := False;
-      --  unspecified
-      Reserved_1_31    : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_FIELDLOST_Register use record
-      EVENTS_FIELDLOST at 0 range 0 .. 0;
-      Reserved_1_31    at 0 range 1 .. 31;
-   end record;
-
-   --  Marks the start of the first symbol of a transmitted frame
-   type EVENTS_TXFRAMESTART_Register is record
-      EVENTS_TXFRAMESTART : Boolean := False;
-      --  unspecified
-      Reserved_1_31       : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_TXFRAMESTART_Register use record
-      EVENTS_TXFRAMESTART at 0 range 0 .. 0;
-      Reserved_1_31       at 0 range 1 .. 31;
-   end record;
-
-   --  Marks the end of the last transmitted on-air symbol of a frame
-   type EVENTS_TXFRAMEEND_Register is record
-      EVENTS_TXFRAMEEND : Boolean := False;
-      --  unspecified
-      Reserved_1_31     : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_TXFRAMEEND_Register use record
-      EVENTS_TXFRAMEEND at 0 range 0 .. 0;
-      Reserved_1_31     at 0 range 1 .. 31;
-   end record;
-
-   --  Marks the end of the first symbol of a received frame
-   type EVENTS_RXFRAMESTART_Register is record
-      EVENTS_RXFRAMESTART : Boolean := False;
-      --  unspecified
-      Reserved_1_31       : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_RXFRAMESTART_Register use record
-      EVENTS_RXFRAMESTART at 0 range 0 .. 0;
-      Reserved_1_31       at 0 range 1 .. 31;
-   end record;
-
-   --  Received data have been checked (CRC, parity) and transferred to RAM,
-   --  and EasyDMA has ended accessing the RX buffer
-   type EVENTS_RXFRAMEEND_Register is record
-      EVENTS_RXFRAMEEND : Boolean := False;
-      --  unspecified
-      Reserved_1_31     : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_RXFRAMEEND_Register use record
-      EVENTS_RXFRAMEEND at 0 range 0 .. 0;
-      Reserved_1_31     at 0 range 1 .. 31;
-   end record;
-
-   --  NFC error reported. The ERRORSTATUS register contains details on the
-   --  source of the error.
-   type EVENTS_ERROR_Register is record
-      EVENTS_ERROR  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_ERROR_Register use record
-      EVENTS_ERROR  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  NFC RX frame error reported. The FRAMESTATUS.RX register contains
-   --  details on the source of the error.
-   type EVENTS_RXERROR_Register is record
-      EVENTS_RXERROR : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_RXERROR_Register use record
-      EVENTS_RXERROR at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  RX buffer (as defined by PACKETPTR and MAXLEN) in Data RAM full.
-   type EVENTS_ENDRX_Register is record
-      EVENTS_ENDRX  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_ENDRX_Register use record
-      EVENTS_ENDRX  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Transmission of data in RAM has ended, and EasyDMA has ended accessing
-   --  the TX buffer
-   type EVENTS_ENDTX_Register is record
-      EVENTS_ENDTX  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_ENDTX_Register use record
-      EVENTS_ENDTX  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Auto collision resolution process has started
-   type EVENTS_AUTOCOLRESSTARTED_Register is record
-      EVENTS_AUTOCOLRESSTARTED : Boolean := False;
-      --  unspecified
-      Reserved_1_31            : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_AUTOCOLRESSTARTED_Register use record
-      EVENTS_AUTOCOLRESSTARTED at 0 range 0 .. 0;
-      Reserved_1_31            at 0 range 1 .. 31;
-   end record;
-
-   --  NFC Auto collision resolution error reported.
-   type EVENTS_COLLISION_Register is record
-      EVENTS_COLLISION : Boolean := False;
-      --  unspecified
-      Reserved_1_31    : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_COLLISION_Register use record
-      EVENTS_COLLISION at 0 range 0 .. 0;
-      Reserved_1_31    at 0 range 1 .. 31;
-   end record;
-
-   --  NFC Auto collision resolution successfully completed
-   type EVENTS_SELECTED_Register is record
-      EVENTS_SELECTED : Boolean := False;
-      --  unspecified
-      Reserved_1_31   : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_SELECTED_Register use record
-      EVENTS_SELECTED at 0 range 0 .. 0;
-      Reserved_1_31   at 0 range 1 .. 31;
-   end record;
-
-   --  EasyDMA is ready to receive or send frames.
-   type EVENTS_STARTED_Register is record
-      EVENTS_STARTED : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_STARTED_Register use record
-      EVENTS_STARTED at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
 
    --  Shortcut between FIELDDETECTED event and ACTIVATE task
    type SHORTS_FIELDDETECTED_ACTIVATE_Field is
@@ -2103,53 +1782,53 @@ package NRF_SVD.NFCT is
    type NFCT_Peripheral is record
       --  Activate NFC peripheral for incoming and outgoing frames, change
       --  state to activated
-      TASKS_ACTIVATE           : aliased TASKS_ACTIVATE_Register;
+      TASKS_ACTIVATE           : aliased HAL.UInt32;
       --  Disable NFC peripheral
-      TASKS_DISABLE            : aliased TASKS_DISABLE_Register;
+      TASKS_DISABLE            : aliased HAL.UInt32;
       --  Enable NFC sense field mode, change state to sense mode
-      TASKS_SENSE              : aliased TASKS_SENSE_Register;
+      TASKS_SENSE              : aliased HAL.UInt32;
       --  Start transmission of a outgoing frame, change state to transmit
-      TASKS_STARTTX            : aliased TASKS_STARTTX_Register;
+      TASKS_STARTTX            : aliased HAL.UInt32;
       --  Initializes the EasyDMA for receive.
-      TASKS_ENABLERXDATA       : aliased TASKS_ENABLERXDATA_Register;
+      TASKS_ENABLERXDATA       : aliased HAL.UInt32;
       --  Force state machine to IDLE state
-      TASKS_GOIDLE             : aliased TASKS_GOIDLE_Register;
+      TASKS_GOIDLE             : aliased HAL.UInt32;
       --  Force state machine to SLEEP_A state
-      TASKS_GOSLEEP            : aliased TASKS_GOSLEEP_Register;
+      TASKS_GOSLEEP            : aliased HAL.UInt32;
       --  The NFC peripheral is ready to receive and send frames
-      EVENTS_READY             : aliased EVENTS_READY_Register;
+      EVENTS_READY             : aliased HAL.UInt32;
       --  Remote NFC field detected
-      EVENTS_FIELDDETECTED     : aliased EVENTS_FIELDDETECTED_Register;
+      EVENTS_FIELDDETECTED     : aliased HAL.UInt32;
       --  Remote NFC field lost
-      EVENTS_FIELDLOST         : aliased EVENTS_FIELDLOST_Register;
+      EVENTS_FIELDLOST         : aliased HAL.UInt32;
       --  Marks the start of the first symbol of a transmitted frame
-      EVENTS_TXFRAMESTART      : aliased EVENTS_TXFRAMESTART_Register;
+      EVENTS_TXFRAMESTART      : aliased HAL.UInt32;
       --  Marks the end of the last transmitted on-air symbol of a frame
-      EVENTS_TXFRAMEEND        : aliased EVENTS_TXFRAMEEND_Register;
+      EVENTS_TXFRAMEEND        : aliased HAL.UInt32;
       --  Marks the end of the first symbol of a received frame
-      EVENTS_RXFRAMESTART      : aliased EVENTS_RXFRAMESTART_Register;
+      EVENTS_RXFRAMESTART      : aliased HAL.UInt32;
       --  Received data have been checked (CRC, parity) and transferred to RAM,
       --  and EasyDMA has ended accessing the RX buffer
-      EVENTS_RXFRAMEEND        : aliased EVENTS_RXFRAMEEND_Register;
+      EVENTS_RXFRAMEEND        : aliased HAL.UInt32;
       --  NFC error reported. The ERRORSTATUS register contains details on the
       --  source of the error.
-      EVENTS_ERROR             : aliased EVENTS_ERROR_Register;
+      EVENTS_ERROR             : aliased HAL.UInt32;
       --  NFC RX frame error reported. The FRAMESTATUS.RX register contains
       --  details on the source of the error.
-      EVENTS_RXERROR           : aliased EVENTS_RXERROR_Register;
+      EVENTS_RXERROR           : aliased HAL.UInt32;
       --  RX buffer (as defined by PACKETPTR and MAXLEN) in Data RAM full.
-      EVENTS_ENDRX             : aliased EVENTS_ENDRX_Register;
+      EVENTS_ENDRX             : aliased HAL.UInt32;
       --  Transmission of data in RAM has ended, and EasyDMA has ended
       --  accessing the TX buffer
-      EVENTS_ENDTX             : aliased EVENTS_ENDTX_Register;
+      EVENTS_ENDTX             : aliased HAL.UInt32;
       --  Auto collision resolution process has started
-      EVENTS_AUTOCOLRESSTARTED : aliased EVENTS_AUTOCOLRESSTARTED_Register;
+      EVENTS_AUTOCOLRESSTARTED : aliased HAL.UInt32;
       --  NFC Auto collision resolution error reported.
-      EVENTS_COLLISION         : aliased EVENTS_COLLISION_Register;
+      EVENTS_COLLISION         : aliased HAL.UInt32;
       --  NFC Auto collision resolution successfully completed
-      EVENTS_SELECTED          : aliased EVENTS_SELECTED_Register;
+      EVENTS_SELECTED          : aliased HAL.UInt32;
       --  EasyDMA is ready to receive or send frames.
-      EVENTS_STARTED           : aliased EVENTS_STARTED_Register;
+      EVENTS_STARTED           : aliased HAL.UInt32;
       --  Shortcut register
       SHORTS                   : aliased SHORTS_Register;
       --  Enable or disable interrupt
