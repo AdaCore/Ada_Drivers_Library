@@ -2,11 +2,11 @@
 --
 --  All rights reserved.
 --
---  Redistribution and use in source and binary forms, with or without
---  modification, are permitted provided that the following conditions are met:
+--  Redistribution and use in source and binary forms, with or without modification,
+--  are permitted provided that the following conditions are met:
 --
---  1. Redistributions of source code must retain the above copyright notice,
---  this list of conditions and the following disclaimer.
+--  1. Redistributions of source code must retain the above copyright notice, this
+--  list of conditions and the following disclaimer.
 --
 --  2. Redistributions in binary form, except as embedded into a Nordic
 --  Semiconductor ASA integrated circuit in a product or a software update for
@@ -21,20 +21,19 @@
 --  4. This software, with or without modification, must only be used with a
 --  Nordic Semiconductor ASA integrated circuit.
 --
---  5. Any software provided in binary form under this license must not be
---  reverse engineered, decompiled, modified and/or disassembled.
+--  5. Any software provided in binary form under this license must not be reverse
+--  engineered, decompiled, modified and/or disassembled.
 --
---  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY
---  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
---  WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A
---  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR
---  ASA OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
---  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
---  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
---  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
---  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
---  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
---  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--  THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+--  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+--  OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+--  DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+--  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+--  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+--  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+--  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+--  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+--  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 --  This spec has been automatically generated from nrf52.svd
@@ -52,152 +51,6 @@ package NRF_SVD.QDEC is
    ---------------
    -- Registers --
    ---------------
-
-   --  Task starting the quadrature decoder
-   type TASKS_START_Register is record
-      --  Write-only.
-      TASKS_START   : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_START_Register use record
-      TASKS_START   at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Task stopping the quadrature decoder
-   type TASKS_STOP_Register is record
-      --  Write-only.
-      TASKS_STOP    : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_STOP_Register use record
-      TASKS_STOP    at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Read and clear ACC and ACCDBL
-   type TASKS_READCLRACC_Register is record
-      --  Write-only.
-      TASKS_READCLRACC : Boolean := False;
-      --  unspecified
-      Reserved_1_31    : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_READCLRACC_Register use record
-      TASKS_READCLRACC at 0 range 0 .. 0;
-      Reserved_1_31    at 0 range 1 .. 31;
-   end record;
-
-   --  Read and clear ACC
-   type TASKS_RDCLRACC_Register is record
-      --  Write-only.
-      TASKS_RDCLRACC : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_RDCLRACC_Register use record
-      TASKS_RDCLRACC at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  Read and clear ACCDBL
-   type TASKS_RDCLRDBL_Register is record
-      --  Write-only.
-      TASKS_RDCLRDBL : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for TASKS_RDCLRDBL_Register use record
-      TASKS_RDCLRDBL at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
-
-   --  Event being generated for every new sample value written to the SAMPLE
-   --  register
-   type EVENTS_SAMPLERDY_Register is record
-      EVENTS_SAMPLERDY : Boolean := False;
-      --  unspecified
-      Reserved_1_31    : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_SAMPLERDY_Register use record
-      EVENTS_SAMPLERDY at 0 range 0 .. 0;
-      Reserved_1_31    at 0 range 1 .. 31;
-   end record;
-
-   --  Non-null report ready
-   type EVENTS_REPORTRDY_Register is record
-      EVENTS_REPORTRDY : Boolean := False;
-      --  unspecified
-      Reserved_1_31    : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_REPORTRDY_Register use record
-      EVENTS_REPORTRDY at 0 range 0 .. 0;
-      Reserved_1_31    at 0 range 1 .. 31;
-   end record;
-
-   --  ACC or ACCDBL register overflow
-   type EVENTS_ACCOF_Register is record
-      EVENTS_ACCOF  : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_ACCOF_Register use record
-      EVENTS_ACCOF  at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  Double displacement(s) detected
-   type EVENTS_DBLRDY_Register is record
-      EVENTS_DBLRDY : Boolean := False;
-      --  unspecified
-      Reserved_1_31 : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_DBLRDY_Register use record
-      EVENTS_DBLRDY at 0 range 0 .. 0;
-      Reserved_1_31 at 0 range 1 .. 31;
-   end record;
-
-   --  QDEC has been stopped
-   type EVENTS_STOPPED_Register is record
-      EVENTS_STOPPED : Boolean := False;
-      --  unspecified
-      Reserved_1_31  : HAL.UInt31 := 16#0#;
-   end record
-     with Volatile_Full_Access, Object_Size => 32,
-          Bit_Order => System.Low_Order_First;
-
-   for EVENTS_STOPPED_Register use record
-      EVENTS_STOPPED at 0 range 0 .. 0;
-      Reserved_1_31  at 0 range 1 .. 31;
-   end record;
 
    --  Shortcut between REPORTRDY event and READCLRACC task
    type SHORTS_REPORTRDY_READCLRACC_Field is
@@ -952,26 +805,26 @@ package NRF_SVD.QDEC is
    --  Quadrature Decoder
    type QDEC_Peripheral is record
       --  Task starting the quadrature decoder
-      TASKS_START      : aliased TASKS_START_Register;
+      TASKS_START      : aliased HAL.UInt32;
       --  Task stopping the quadrature decoder
-      TASKS_STOP       : aliased TASKS_STOP_Register;
+      TASKS_STOP       : aliased HAL.UInt32;
       --  Read and clear ACC and ACCDBL
-      TASKS_READCLRACC : aliased TASKS_READCLRACC_Register;
+      TASKS_READCLRACC : aliased HAL.UInt32;
       --  Read and clear ACC
-      TASKS_RDCLRACC   : aliased TASKS_RDCLRACC_Register;
+      TASKS_RDCLRACC   : aliased HAL.UInt32;
       --  Read and clear ACCDBL
-      TASKS_RDCLRDBL   : aliased TASKS_RDCLRDBL_Register;
+      TASKS_RDCLRDBL   : aliased HAL.UInt32;
       --  Event being generated for every new sample value written to the
       --  SAMPLE register
-      EVENTS_SAMPLERDY : aliased EVENTS_SAMPLERDY_Register;
+      EVENTS_SAMPLERDY : aliased HAL.UInt32;
       --  Non-null report ready
-      EVENTS_REPORTRDY : aliased EVENTS_REPORTRDY_Register;
+      EVENTS_REPORTRDY : aliased HAL.UInt32;
       --  ACC or ACCDBL register overflow
-      EVENTS_ACCOF     : aliased EVENTS_ACCOF_Register;
+      EVENTS_ACCOF     : aliased HAL.UInt32;
       --  Double displacement(s) detected
-      EVENTS_DBLRDY    : aliased EVENTS_DBLRDY_Register;
+      EVENTS_DBLRDY    : aliased HAL.UInt32;
       --  QDEC has been stopped
-      EVENTS_STOPPED   : aliased EVENTS_STOPPED_Register;
+      EVENTS_STOPPED   : aliased HAL.UInt32;
       --  Shortcut register
       SHORTS           : aliased SHORTS_Register;
       --  Enable interrupt

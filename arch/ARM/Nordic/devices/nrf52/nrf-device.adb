@@ -210,8 +210,8 @@ begin
    if Errata_36 then
       --  Workaround for Errata 36 "CLOCK: Some registers are not reset when
       --  expected"
-      CLOCK_Periph.EVENTS_DONE.EVENTS_DONE := False;
-      CLOCK_Periph.EVENTS_CTTO.EVENTS_CTTO := False;
+      CLOCK_Periph.EVENTS_DONE := 0;
+      CLOCK_Periph.EVENTS_CTTO := 0;
       CLOCK_Periph.CTIV.CTIV := 0;
    end if;
 
