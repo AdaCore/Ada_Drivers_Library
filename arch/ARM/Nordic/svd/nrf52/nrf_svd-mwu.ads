@@ -2718,7 +2718,7 @@ package NRF_SVD.MWU is
       --  Description cluster[0]: End address of region 0
       END_k : aliased HAL.UInt32;
    end record
-     with Size => 128;
+     with Size => 64;
 
    for REGION_Cluster use record
       START at 16#0# range 0 .. 31;
@@ -2777,7 +2777,7 @@ package NRF_SVD.MWU is
       --  Description cluster[0]: Subregions of region 0
       SUBS  : aliased SUBS_PREGION_Register;
    end record
-     with Size => 128;
+     with Size => 96;
 
    for PREGION_Cluster use record
       START at 16#0# range 0 .. 31;
@@ -2838,8 +2838,8 @@ package NRF_SVD.MWU is
       REGIONEN       at 16#510# range 0 .. 31;
       REGIONENSET    at 16#514# range 0 .. 31;
       REGIONENCLR    at 16#518# range 0 .. 31;
-      REGION         at 16#600# range 0 .. 511;
-      PREGION        at 16#6C0# range 0 .. 255;
+      REGION         at 16#600# range 0 .. 255;
+      PREGION        at 16#6C0# range 0 .. 191;
    end record;
 
    --  Memory Watch Unit

@@ -29,9 +29,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL; use HAL;
+with Cortex_M.NVIC;
 
 package nRF.Interrupts is
+
    type Interrupt_Name is
      (POWER_CLOCK_Interrupt,
       RADIO_Interrupt,
@@ -66,7 +67,7 @@ package nRF.Interrupts is
       Unused_Interrupt_6,
       Unused_Interrupt_7);
 
-   subtype Interrupt_Priority is UInt8;
+   subtype Interrupt_Priority is Cortex_M.NVIC.Interrupt_Priority;
 
    procedure Set_Priority (Int : Interrupt_Name; Prio : Interrupt_Priority);
    procedure Enable (Int : Interrupt_Name);

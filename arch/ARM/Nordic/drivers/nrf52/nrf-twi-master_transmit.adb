@@ -1,4 +1,4 @@
-separate(nRF.TWI)
+separate (nRF.TWI)
 overriding procedure Master_Transmit
      (This    : in out TWI_Master;
       Addr    : I2C_Address;
@@ -32,20 +32,20 @@ begin
 
       loop
 
-	 Evt_Err := This.Periph.EVENTS_ERROR.EVENTS_ERROR;
-	 if Evt_Err /= False then
-	    Err_Src := This.Periph.ERRORSRC;
-	    Status := Err_Error;
-	    --  Clear the error
-	    This.Periph.EVENTS_ERROR.EVENTS_ERROR := False;
+         Evt_Err := This.Periph.EVENTS_ERROR.EVENTS_ERROR;
+         if Evt_Err /= False then
+            Err_Src := This.Periph.ERRORSRC;
+            Status := Err_Error;
+            --  Clear the error
+            This.Periph.EVENTS_ERROR.EVENTS_ERROR := False;
 
-	    --  Stop sequence
-	    This.Periph.TASKS_STOP.TASKS_STOP := True;
+            --  Stop sequence
+            This.Periph.TASKS_STOP.TASKS_STOP := True;
 
-	    return;
-	 end if;
+            return;
+         end if;
 
-	 exit when This.Periph.EVENTS_TXDSENT.EVENTS_TXDSENT /= False;
+         exit when This.Periph.EVENTS_TXDSENT.EVENTS_TXDSENT /= False;
       end loop;
 
       --  Clear the event

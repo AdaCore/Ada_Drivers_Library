@@ -1,4 +1,4 @@
-separate(nRF.RNG)
+separate (nRF.RNG)
 function Read return UInt8 is
 begin
    --  Clear event

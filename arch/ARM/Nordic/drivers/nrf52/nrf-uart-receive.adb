@@ -1,4 +1,4 @@
-separate(nRF.UART)
+separate (nRF.UART)
 overriding
 procedure Receive
   (This    : in out UART_Device;
@@ -16,7 +16,7 @@ begin
    for C of Data loop
       --  Wait for RX Ready event
       while UART0_Periph.EVENTS_RXDRDY.EVENTS_RXDRDY = False loop
-	 null;
+         null;
       end loop;
 
       --  Read a character

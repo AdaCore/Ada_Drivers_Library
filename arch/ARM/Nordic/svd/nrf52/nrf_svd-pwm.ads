@@ -1084,7 +1084,7 @@ package NRF_SVD.PWM is
       --  Description cluster[0]: Time added after the sequence
       ENDDELAY : aliased ENDDELAY_SEQ_Register;
    end record
-     with Size => 256;
+     with Size => 256 - 128;
 
    for PWM_SEQ_Cluster use record
       PTR      at 16#0# range 0 .. 31;
@@ -1238,7 +1238,7 @@ package NRF_SVD.PWM is
       PRESCALER           at 16#50C# range 0 .. 31;
       DECODER             at 16#510# range 0 .. 31;
       LOOP_k              at 16#514# range 0 .. 31;
-      SEQ                 at 16#520# range 0 .. 511;
+      SEQ                 at 16#520# range 0 .. 255;
       PSEL                at 16#560# range 0 .. 127;
    end record;
 

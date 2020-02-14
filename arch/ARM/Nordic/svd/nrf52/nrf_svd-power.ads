@@ -1008,7 +1008,7 @@ package NRF_SVD.POWER is
       --  Description cluster[0]: RAM0 power control clear register
       POWERCLR : aliased POWERCLR_RAM_Register;
    end record
-     with Size => 128;
+     with Size => 96;
 
    for RAM_Cluster use record
       POWER    at 16#0# range 0 .. 31;
@@ -1079,7 +1079,7 @@ package NRF_SVD.POWER is
       RAMON             at 16#524# range 0 .. 31;
       RAMONB            at 16#554# range 0 .. 31;
       DCDCEN            at 16#578# range 0 .. 31;
-      RAM               at 16#900# range 0 .. 1023;
+      RAM               at 16#900# range 0 .. 767;
    end record;
 
    --  Power control
