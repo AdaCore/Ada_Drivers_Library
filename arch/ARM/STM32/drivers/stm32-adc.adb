@@ -414,6 +414,15 @@ package body STM32.ADC is
       end if;
    end Start_Conversion;
 
+   ---------------------
+   -- Stop_Conversion --
+   ---------------------
+
+   procedure Stop_Conversion (This : in out Analog_To_Digital_Converter) is
+   begin
+      This.CR2.SWSTART := False;
+   end Stop_Conversion;
+
    ------------------------
    -- Conversion_Started --
    ------------------------
