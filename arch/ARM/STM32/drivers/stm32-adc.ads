@@ -321,6 +321,9 @@ package STM32.ADC is
      Pre => Enabled (This) and Regular_Conversions_Expected (This) > 0;
    --  Starts the conversion(s) for the regular channels
 
+   procedure Stop_Conversion (This : in out Analog_To_Digital_Converter);
+   --  Stops the conversion(s) for the regular channels
+
    function Conversion_Started (This : Analog_To_Digital_Converter)
      return Boolean;
    --  Returns whether the regular channels' conversions have started. Note
