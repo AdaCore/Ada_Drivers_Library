@@ -29,8 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL;           use HAL;
-with HAL.SPI;       use HAL.SPI;
+with HAL;         use HAL;
+with HAL.SPI;     use HAL.SPI;
 with nRF.GPIO;    use nRF.GPIO;
 with NRF_SVD.SPI;
 
