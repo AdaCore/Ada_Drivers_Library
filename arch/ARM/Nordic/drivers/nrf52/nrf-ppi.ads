@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2020, AdaCore                        --
+--                    Copyright (C) 2016-2020, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,11 +29,23 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-separate (nRF.PPI)
-procedure Remove_From_Group
-  (Chan  : Channel_ID;
-   Group : Group_ID)
-is
-begin
-   PPI_Periph.CHG (Group).CH.Arr (Chan) := Excluded;
-end Remove_From_Group;
+package nRF.PPI is
+
+   subtype Channel_ID is Natural range 0 .. 15;
+   subtype Group_ID is Natural range 0 .. 5;
+
+   procedure Configure (Chan    : Channel_ID;
+                        Evt_EP  : Event_Type;
+                        Task_EP : Task_Type);
+
+   procedure Enable_Channel (Chan : Channel_ID);
+   procedure Disable_Channel (Chan : Channel_ID);
+
+   procedure Add_To_Group (Chan  : Channel_ID;
+                           Group : Group_ID);
+   procedure Remove_From_Group (Chan  : Channel_ID;
+                                Group : Group_ID);
+
+   procedure Enable_Group (Group : Group_ID);
+   procedure Disable_Group (Group : Group_ID);
+end nRF.PPI;
