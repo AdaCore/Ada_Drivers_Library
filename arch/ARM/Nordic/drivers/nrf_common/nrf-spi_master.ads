@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2018, AdaCore                        --
+--                    Copyright (C) 2018-2020, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,8 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL;           use HAL;
-with HAL.SPI;       use HAL.SPI;
+with HAL;         use HAL;
+with HAL.SPI;     use HAL.SPI;
 with nRF.GPIO;    use nRF.GPIO;
 with NRF_SVD.SPI;
 

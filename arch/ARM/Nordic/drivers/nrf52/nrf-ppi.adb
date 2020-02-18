@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                       Copyright (C) 2016-2020, AdaCore                   --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -53,13 +53,23 @@ package body nRF.PPI is
    -- Enable_Channel --
    --------------------
 
-   procedure Enable_Channel (Chan : Channel_ID) is separate;
+   procedure Enable_Channel (Chan : Channel_ID) is
+      Arr : CHENSET_CH_Field_Array := (others => Chenset_Ch0_Field_Reset);
+   begin
+      Arr (Chan) := Set;
+      PPI_Periph.CHENSET.Arr := Arr;
+   end Enable_Channel;
 
    ---------------------
    -- Disable_Channel --
    ---------------------
 
-   procedure Disable_Channel (Chan : Channel_ID) is separate;
+   procedure Disable_Channel (Chan : Channel_ID) is
+      Arr : CHENCLR_CH_Field_Array := (others => Chenclr_Ch0_Field_Reset);
+   begin
+      Arr (Chan) := Clear;
+      PPI_Periph.CHENCLR.Arr := Arr;
+   end Disable_Channel;
 
    ------------------
    -- Add_To_Group --
@@ -68,7 +78,10 @@ package body nRF.PPI is
    procedure Add_To_Group
      (Chan  : Channel_ID;
       Group : Group_ID)
-   is separate;
+   is
+   begin
+      PPI_Periph.CHG (Group).Arr (Chan) := Included;
+   end Add_To_Group;
 
    -----------------------
    -- Remove_From_Group --
@@ -77,7 +90,10 @@ package body nRF.PPI is
    procedure Remove_From_Group
      (Chan  : Channel_ID;
       Group : Group_ID)
-   is separate;
+   is
+   begin
+      PPI_Periph.CHG (Group).Arr (Chan) := Excluded;
+   end Remove_From_Group;
 
    ------------------
    -- Enable_Group --

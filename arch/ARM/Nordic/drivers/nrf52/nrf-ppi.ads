@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2020, AdaCore                        --
+--                    Copyright (C) 2016-2020, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,10 +29,23 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-separate (nRF.Clock)
-procedure Set_High_Freq_External_Frequency (Freq : High_Freq_Ext_Freq) is
-begin
-   CLOCK_Periph.XTALFREQ.XTALFREQ := (case Freq is
-      when HFCLK_16MHz => Val_16Mhz,
-      when HFCLK_32MHz => Val_32Mhz);
-end Set_High_Freq_External_Frequency;
+package nRF.PPI is
+
+   subtype Channel_ID is Natural range 0 .. 15;
+   subtype Group_ID is Natural range 0 .. 5;
+
+   procedure Configure (Chan    : Channel_ID;
+                        Evt_EP  : Event_Type;
+                        Task_EP : Task_Type);
+
+   procedure Enable_Channel (Chan : Channel_ID);
+   procedure Disable_Channel (Chan : Channel_ID);
+
+   procedure Add_To_Group (Chan  : Channel_ID;
+                           Group : Group_ID);
+   procedure Remove_From_Group (Chan  : Channel_ID;
+                                Group : Group_ID);
+
+   procedure Enable_Group (Group : Group_ID);
+   procedure Disable_Group (Group : Group_ID);
+end nRF.PPI;

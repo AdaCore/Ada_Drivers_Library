@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                    Copyright (C) 2016-2020, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -79,6 +79,7 @@ package nRF.Device is
 
    RTC_0 : aliased Real_Time_Counter (NRF_SVD.RTC.RTC0_Periph'Access);
    RTC_1 : aliased Real_Time_Counter (NRF_SVD.RTC.RTC1_Periph'Access);
+   RTC_2 : aliased Real_Time_Counter (NRF_SVD.RTC.RTC2_Periph'Access);
 
 
    --  Be carefull of shared resources between the TWI and SPI controllers.
@@ -90,8 +91,10 @@ package nRF.Device is
    TWI_0 : aliased TWI_Master (NRF_SVD.TWI.TWI0_Periph'Access);
    TWI_1 : aliased TWI_Master (NRF_SVD.TWI.TWI1_Periph'Access);
 
+
    SPI_Master_0 : aliased nRF.SPI_Master.SPI_Master (NRF_SVD.SPI.SPI0_Periph'Access);
    SPI_Master_1 : aliased nRF.SPI_Master.SPI_Master (NRF_SVD.SPI.SPI1_Periph'Access);
+   SPI_Master_2 : aliased nRF.SPI_Master.SPI_Master (NRF_SVD.SPI.SPI2_Periph'Access);
 
 
    Timer_0 : aliased Timer (NRF_SVD.TIMER.TIMER0_Periph'Access);
