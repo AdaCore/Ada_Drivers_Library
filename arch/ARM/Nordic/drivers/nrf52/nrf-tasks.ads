@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                    Copyright (C) 2016-2020, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -48,7 +48,6 @@ with NRF_SVD.UART;
 with NRF_SVD.QDEC;
 with NRF_SVD.SAADC;
 with HAL; use HAL;
-
 
 package nRF.Tasks is
 
