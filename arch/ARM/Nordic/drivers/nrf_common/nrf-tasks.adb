@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                    Copyright (C) 2016-2020, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -62,6 +62,5 @@ package body nRF.Tasks is
    begin
       return To_UInt32 (System.Address (T));
    end Get_Address;
-
 
 end nRF.Tasks;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                       Copyright (C) 2016, AdaCore                        --
+--                    Copyright (C) 2016-2020, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -46,6 +46,5 @@ package NRF52_DK is
 
    DK_UART_TX : nRF.GPIO.GPIO_Point renames nRF.Device.P12;
    DK_UART_RX : nRF.GPIO.GPIO_Point renames nRF.Device.P11;
-
 
 end NRF52_DK;
