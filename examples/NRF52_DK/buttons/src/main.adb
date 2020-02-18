@@ -1,6 +1,8 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2018-2020, AdaCore                      --
+--  Copyright © AdaCore and other contributors, 2018-2020                   --
+--  See https://github.com/AdaCore/Ada_Drivers_Library/graphs/contributors  --
+--  for more information                                                    --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
