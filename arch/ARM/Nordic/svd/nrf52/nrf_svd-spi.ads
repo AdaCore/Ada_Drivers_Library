@@ -158,27 +158,6 @@ package NRF_SVD.SPI is
       Reserved_4_31 at 0 range 4 .. 31;
    end record;
 
-   ----------------------------------
-   -- SPI_PSEL cluster's Registers --
-   ----------------------------------
-
-   --  Unspecified
-   type SPI_PSEL_Cluster is record
-      --  Pin select for SCK
-      SCK  : aliased HAL.UInt32;
-      --  Pin select for MOSI
-      MOSI : aliased HAL.UInt32;
-      --  Pin select for MISO
-      MISO : aliased HAL.UInt32;
-   end record
-     with Size => 96;
-
-   for SPI_PSEL_Cluster use record
-      SCK  at 16#0# range 0 .. 31;
-      MOSI at 16#4# range 0 .. 31;
-      MISO at 16#8# range 0 .. 31;
-   end record;
-
    subtype RXD_RXD_Field is HAL.UInt8;
 
    --  RXD register
@@ -268,14 +247,6 @@ package NRF_SVD.SPI is
       Reserved_3_31 at 0 range 3 .. 31;
    end record;
 
-   ----------------------------------
-   -- SPI_PSEL cluster's Registers --
-   ----------------------------------
-
-   ----------------------------------
-   -- SPI_PSEL cluster's Registers --
-   ----------------------------------
-
    -----------------
    -- Peripherals --
    -----------------
@@ -290,8 +261,12 @@ package NRF_SVD.SPI is
       INTENCLR     : aliased INTENCLR_Register;
       --  Enable SPI
       ENABLE       : aliased ENABLE_Register;
-      --  Unspecified
-      PSEL         : aliased SPI_PSEL_Cluster;
+      --  Pin select for SCK.
+      PSELSCK      : aliased HAL.UInt32;
+      --  Pin select for MISO.
+      PSELMISO     : aliased HAL.UInt32;
+      --  Pin select for MOSI.
+      PSELMOSI     : aliased HAL.UInt32;
       --  RXD register
       RXD          : aliased RXD_Register;
       --  TXD register
@@ -308,7 +283,9 @@ package NRF_SVD.SPI is
       INTENSET     at 16#304# range 0 .. 31;
       INTENCLR     at 16#308# range 0 .. 31;
       ENABLE       at 16#500# range 0 .. 31;
-      PSEL         at 16#508# range 0 .. 95;
+      PSELSCK      at 16#508# range 0 .. 31;
+      PSELMISO     at 16#50C# range 0 .. 31;
+      PSELMOSI     at 16#510# range 0 .. 31;
       RXD          at 16#518# range 0 .. 31;
       TXD          at 16#51C# range 0 .. 31;
       FREQUENCY    at 16#524# range 0 .. 31;
