@@ -77,6 +77,7 @@ https://github.com/AdaCore/Lunar_Lander_Rotation_Demo)
  * [Bare metal sudoku solver](https://github.com/stangassinger/sudoku)
  * [Demo of an Ada physics engine](https://github.com/Kidev/DemoAdaPhysics2D)
  * [High Integrity Sumobot: A fully functional sumobot written in Ada/SPARK](https://github.com/bosepchuk/High_Integrity_Sumobot)
+ * [RC Car: A remotely-controlled car built without the NXT Brick, using Ada and SPARK](https://github.com/AdaCore/RC_Car_Demo)
 
 (Add yours to the list!)
 
