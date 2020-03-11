@@ -8,7 +8,7 @@ ENTRY(_start);
 
 MEMORY
 {
-  board_flash (rx) : ORIGIN = 0x20400000, LENGTH = 0x20000000
+  board_flash (rx) : ORIGIN = 0x20100000, LENGTH = 0x2000000
   RAM (rwx) : ORIGIN = 0x80000000, LENGTH = 0x4000
 }
 

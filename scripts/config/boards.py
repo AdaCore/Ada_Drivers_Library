@@ -15,6 +15,7 @@ def list_of_boards():
             "MicroBit",
             "NRF52_DK",
             "HiFive1",
+            "HiFive1_rev_B",
             "Unleashed",
             'Native']
 
@@ -179,6 +180,18 @@ def load_board_config(config):
         config.pre_define('Has_Ravenscar_Full_Runtime', 'False', origin)
         config.pre_define('Runtime_Name_Suffix', 'rv32imc', origin)
         config.add_memory('rom', 'board_flash', '0x20400000', '512M')
+        config.add_source_dir('boards/HiFive1/src/', origin)
+
+    elif board == "HiFive1_rev_B":
+        config.pre_define('Architecture', 'RISC-V', origin)
+        config.pre_define('Vendor', 'SiFive', origin)
+        config.pre_define('Device_Family', 'FE3', origin)
+        config.pre_define('Device_Name', 'FE310', origin)
+        config.pre_define('Has_ZFP_Runtime', 'True', origin)
+        config.pre_define('Has_Ravenscar_SFP_Runtime', 'False', origin)
+        config.pre_define('Has_Ravenscar_Full_Runtime', 'False', origin)
+        config.pre_define('Runtime_Name_Suffix', 'rv32imc', origin)
+        config.add_memory('rom', 'board_flash', '0x20100000', '32M')
         config.add_source_dir('boards/HiFive1/src/', origin)
 
     elif board == "Unleashed":
