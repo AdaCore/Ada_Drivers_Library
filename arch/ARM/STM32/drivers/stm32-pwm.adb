@@ -50,7 +50,8 @@ package body STM32.PWM is
 
    procedure Configure_PWM_GPIO
      (Output : GPIO_Point;
-      PWM_AF : GPIO_Alternate_Function);
+      PWM_AF : GPIO_Alternate_Function;
+      AF_Speed : Pin_Output_Speeds);
 
    --  TODO: move these two functions to the STM32.Device packages?
    function Has_APB2_Frequency  (This : Timer) return Boolean;
@@ -172,7 +173,8 @@ package body STM32.PWM is
       Channel   : Timer_Channel;
       Point     : GPIO_Point;
       PWM_AF    : GPIO_Alternate_Function;
-      Polarity  : Timer_Output_Compare_Polarity := High)
+      Polarity  : Timer_Output_Compare_Polarity := High;
+      AF_Speed  : Pin_Output_Speeds := Speed_100MHz)
    is
    begin
       This.Channel := Channel;
@@ -180,7 +182,7 @@ package body STM32.PWM is
 
       Enable_Clock (Point);
 
-      Configure_PWM_GPIO (Point, PWM_AF);
+      Configure_PWM_GPIO (Point, PWM_AF, AF_Speed);
 
       Configure_Channel_Output
         (This.Generator.all,
@@ -209,7 +211,8 @@ package body STM32.PWM is
       Polarity                 : Timer_Output_Compare_Polarity;
       Idle_State               : Timer_Capture_Compare_State;
       Complementary_Polarity   : Timer_Output_Compare_Polarity;
-      Complementary_Idle_State : Timer_Capture_Compare_State)
+      Complementary_Idle_State : Timer_Capture_Compare_State;
+      AF_Speed                 : Pin_Output_Speeds := Speed_100MHz)
    is
    begin
       This.Channel := Channel;
@@ -218,8 +221,8 @@ package body STM32.PWM is
       Enable_Clock (Point);
       Enable_Clock (Complementary_Point);
 
-      Configure_PWM_GPIO (Point, PWM_AF);
-      Configure_PWM_GPIO (Complementary_Point, PWM_AF);
+      Configure_PWM_GPIO (Point, PWM_AF, AF_Speed);
+      Configure_PWM_GPIO (Complementary_Point, PWM_AF, AF_Speed);
 
       Configure_Channel_Output
         (This.Generator.all,
@@ -319,7 +322,8 @@ package body STM32.PWM is
 
    procedure Configure_PWM_GPIO
      (Output : GPIO_Point;
-      PWM_AF : GPIO_Alternate_Function)
+      PWM_AF : GPIO_Alternate_Function;
+      AF_Speed : Pin_Output_Speeds)
    is
    begin
       Output.Configure_IO
@@ -327,7 +331,7 @@ package body STM32.PWM is
           AF             => PWM_AF,
           Resistors      => Floating,
           AF_Output_Type => Push_Pull,
-          AF_Speed       => Speed_100MHz));
+          AF_Speed       => AF_Speed));
    end Configure_PWM_GPIO;
 
    ----------------------------------
