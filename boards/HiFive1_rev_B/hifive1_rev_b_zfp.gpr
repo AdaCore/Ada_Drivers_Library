@@ -71,7 +71,7 @@ library project HiFive1_rev_B_ZFP is
       for Memories use ("board_flash", "RAM");
 
       for Mem_Kind ("board_flash") use "rom";
-      for Address  ("board_flash") use "0x20100000";
+      for Address  ("board_flash") use "0x20010000";
       for Size     ("board_flash") use "32M";
 
       for Mem_Kind ("RAM") use "ram";
