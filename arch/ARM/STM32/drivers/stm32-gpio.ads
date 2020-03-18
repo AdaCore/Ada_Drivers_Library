@@ -174,23 +174,29 @@ package STM32.GPIO is
 
    overriding
    procedure Set (This : in out GPIO_Point) with
+     Pre => (Pin_IO_Mode (This) = Mode_Out),
+     Post => (This.Set = True),
      Inline;
    --  For This.Port.all, sets the output data register bit specified by
    --  This.Pin to one. Other pins are unaffected.
 
    overriding
    procedure Clear (This : in out GPIO_Point) with
+     Pre => (Pin_IO_Mode (This) = Mode_Out),
+     Post => (This.Set = False),
      Inline;
    --  For This.Port.all, sets the output data register bit specified by
    --  This.Pin to zero. Other pins are unaffected.
 
    overriding
    procedure Toggle (This : in out GPIO_Point) with
+     Pre => (Pin_IO_Mode (This) = Mode_Out),
      Inline;
    --  For This.Port.all, negates the output data register bit specified by
    --  This.Pin (one becomes zero and vice versa). Other pins are unaffected.
 
    procedure Drive (This : in out GPIO_Point; Condition : Boolean) with
+      Pre => (Pin_IO_Mode (This) = Mode_Out),
       Post => (This.Set = Condition),
       Inline;
    --  Drives This high or low (set or clear) based on the value of Condition
