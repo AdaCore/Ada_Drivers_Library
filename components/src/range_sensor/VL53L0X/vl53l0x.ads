@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2017, AdaCore                           --
+--                 Copyright (C) 2017, 2020, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -63,6 +63,8 @@ package VL53L0X is
 
    function Read_Id (This : VL53L0X_Ranging_Sensor) return HAL.UInt16;
 
+   function Read_Revision (This : VL53L0X_Ranging_Sensor) return HAL.UInt8;
+
    procedure Set_Device_Address
      (This   : in out VL53L0X_Ranging_Sensor;
       Addr   : HAL.I2C.I2C_Address;
@@ -80,6 +82,13 @@ package VL53L0X is
    procedure Perform_Ref_Calibration
      (This   : in out VL53L0X_Ranging_Sensor;
       Status : out Boolean);
+
+   procedure Start_Continuous
+     (This      :     VL53L0X.VL53L0X_Ranging_Sensor;
+      Period_Ms :     HAL.UInt32;
+      Status    : out Boolean);
+   --  Start cyclic reads.
+   --  If Period_Ms is 0, run as fast as possible.
 
    procedure Start_Range_Single_Millimeters
      (This   : VL53L0X_Ranging_Sensor;
