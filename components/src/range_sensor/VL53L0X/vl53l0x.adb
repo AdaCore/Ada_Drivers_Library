@@ -65,6 +65,30 @@ package body VL53L0X is
       VHV_Init : UInt8;
       Status   : out Boolean);
 
+   ----------------------------
+   -- Get_GPIO_Functionality --
+   ----------------------------
+
+   function Get_GPIO_Functionality (This : VL53L0X_Ranging_Sensor)
+                                   return VL53L0X_GPIO_Functionality
+   is
+      Data   : UInt8;
+      Status : Boolean;
+      Result : VL53L0X_GPIO_Functionality := No_Interrupt;
+   begin
+      Read (This, REG_SYSTEM_INTERRUPT_CONFIG_GPIO, Data, Status);
+      if Status and then Data in 1 .. 4 then
+         case Data is
+            when 1 => Result := Level_Low;
+            when 2 => Result := Level_High;
+            when 3 => Result := Out_Of_Window;
+            when 4 => Result := New_Sample_Ready;
+            when others => null;
+         end case;
+      end if;
+      return Result;
+   end Get_GPIO_Functionality;
+
    ---------------
    -- I2C_Write --
    ---------------
