@@ -912,7 +912,7 @@ package body VL53L0X is
       end if;
 
       while not Range_Value_Available (This) loop
-         Delay_Milliseconds (1);
+         This.Timing.Delay_Milliseconds (1);
       end loop;
 
       return Read_Range_Millimeters (This);
