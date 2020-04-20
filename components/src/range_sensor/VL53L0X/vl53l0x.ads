@@ -109,9 +109,15 @@ package VL53L0X is
 
    function Read_Range_Millimeters
      (This : VL53L0X_Ranging_Sensor) return HAL.UInt16
-     with Pre => Range_Value_Available (This);
+   with Pre => Range_Value_Available (This);
    --  Read the available ranging value
 
+   generic
+      with procedure Delay_Milliseconds (Count : Positive) is <>;
+      --  Issue a relative delay for Count milliseconds. This formal
+      --  subprogram removes the dependency on Ada.Real_Time so that
+      --  this driver can be used with runtimes that do not have that
+      --  language-defined facility.
    function Read_Range_Single_Millimeters
      (This : VL53L0X_Ranging_Sensor) return HAL.UInt16
    with Pre => Get_GPIO_Functionality (This) = New_Sample_Ready;

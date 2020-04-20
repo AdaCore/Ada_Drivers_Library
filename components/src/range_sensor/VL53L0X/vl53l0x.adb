@@ -34,7 +34,6 @@
 --   COPYRIGHT(c) 2016 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
-with Ada.Real_Time;
 with Ada.Unchecked_Conversion;
 
 with HAL;        use HAL;
@@ -906,7 +905,6 @@ package body VL53L0X is
      (This : VL53L0X_Ranging_Sensor) return HAL.UInt16
    is
       Status : Boolean;
-      use type Ada.Real_Time.Time;
    begin
       Start_Range_Single_Millimeters (This, Status);
       if not Status then
@@ -914,7 +912,7 @@ package body VL53L0X is
       end if;
 
       while not Range_Value_Available (This) loop
-         delay until Ada.Real_Time.Clock + Ada.Real_Time.Milliseconds (1);
+         Delay_Milliseconds (1);
       end loop;
 
       return Read_Range_Millimeters (This);
