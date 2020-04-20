@@ -34,6 +34,7 @@
 ------------------------------------------------------------------------------
 
 with HAL.I2C;
+with HAL.Time;
 
 package VL53L0X is
 
@@ -45,7 +46,8 @@ package VL53L0X is
      with Size => 32;
 
    type VL53L0X_Ranging_Sensor
-     (Port  : not null HAL.I2C.Any_I2C_Port) is limited private;
+     (Port   : not null HAL.I2C.Any_I2C_Port;
+      Timing : not null HAL.Time.Any_Delays) is limited private;
 
    type VL53L0X_GPIO_Functionality is
      (No_Interrupt,
@@ -112,12 +114,6 @@ package VL53L0X is
    with Pre => Range_Value_Available (This);
    --  Read the available ranging value
 
-   generic
-      with procedure Delay_Milliseconds (Count : Positive) is <>;
-      --  Issue a relative delay for Count milliseconds. This formal
-      --  subprogram removes the dependency on Ada.Real_Time so that
-      --  this driver can be used with runtimes that do not have that
-      --  language-defined facility.
    function Read_Range_Single_Millimeters
      (This : VL53L0X_Ranging_Sensor) return HAL.UInt16
    with Pre => Get_GPIO_Functionality (This) = New_Sample_Ready;
@@ -307,7 +303,8 @@ private
       Part_UID_Lower                    : HAL.UInt32;
    end record;
 
-   type VL53L0X_Ranging_Sensor (Port : not null HAL.I2C.Any_I2C_Port)
+   type VL53L0X_Ranging_Sensor (Port   : not null HAL.I2C.Any_I2C_Port;
+                                Timing : not null HAL.Time.Any_Delays)
    is limited record
       --  Default address: can be changed by software
       I2C_Address            : HAL.I2C.I2C_Address := 16#52#;
