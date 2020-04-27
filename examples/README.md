@@ -49,7 +49,7 @@ board (for instance [Micro:bit](MicroBit/)).
 
 ## Clone the repository
 
-If you are on Windows, we recomand to use the 
+If you are on Windows, we recommend to use the 
 [GitHub Desktop application](https://desktop.github.com/).
 
 Otherwise, from the command line:
