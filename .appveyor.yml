@@ -57,12 +57,12 @@ install:
 - ps: arm-eabi-gnatls -v
 
 # Install optional dependencies
-- cmd: python scripts/install_dependencies.py
+- cmd: python3 scripts/install_dependencies.py
 
 # We don't need a build step
 build: off
 
 # Run the test scripts
 test_script:
-- cmd: python scripts/build_all_examples.py --prod-only
-- cmd: python testsuite/run.py
+- cmd: python3 scripts/build_all_examples.py --prod-only
+- cmd: python3 testsuite/run.py
