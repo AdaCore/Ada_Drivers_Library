@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from subprocess import check_call
 
@@ -64,7 +64,7 @@ def gen_project(board_name, rts):
         object_dir_name = "obj"
         source_dir_name = "config_src"
 
-    args = ["python",
+    args = ["python3",
             "../scripts/project_wizard.py",
             "--script-mode",
             "-d", FOLDERS[board_name],
@@ -79,7 +79,7 @@ def gen_project(board_name, rts):
 
 if __name__ == "__main__":
     for b in BOARDS:
-        print "\n=== %s ===" % b
+        print("\n=== %s ===" % b)
         for rts in BOARDS[b]['rts_profiles']:
-            print "\n=== %s" % rts
+            print("\n=== %s" % rts)
             gen_project(b, rts)

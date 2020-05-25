@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 import sys
-from peripherals import *
+from config.peripherals import *
 
 
 class U540(SOC):
@@ -40,7 +40,7 @@ def list_of_devices(config):
     elif family == "U5":
         return ['U540']
     else:
-        print "fatal error, unknown family '%s'" % family
+        print("fatal error, unknown family '%s'" % family)
         sys.exit(1)
 
 
@@ -53,7 +53,7 @@ def list_of_vendors(config):
     elif arch == "Native":
         return []
     else:
-        print "fatal error, unknown architecture '%s'" % arch
+        print("fatal error, unknown architecture '%s'" % arch)
         sys.exit(1)
 
 
@@ -66,7 +66,7 @@ def list_of_families(config):
     elif vendor == "SiFive":
         return ['FE3', 'U5']
     else:
-        print "fatal error, unknown vendor '%s'" % vendor
+        print("fatal error, unknown vendor '%s'" % vendor)
         sys.exit(1)
 
 
@@ -209,7 +209,7 @@ def load_device_config(config, source_dir):
         dev = U540()
 
     else:
-        print "Unknown MCU device %s." % mcu
+        print("Unknown MCU device %s." % mcu)
 
     if dev:
         dev.write_device_spec(source_dir)
