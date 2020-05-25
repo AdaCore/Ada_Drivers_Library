@@ -209,4 +209,4 @@ def load_board_config(config):
         config.pre_define('Architecture', 'Native', origin)
         config.add_source_dir('boards/native/src/', origin)
     else:
-        print "Unknown board %s." % board
+        print("Unknown board %s." % board)
