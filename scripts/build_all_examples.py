@@ -1,4 +1,4 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python3
 
 import argparse
 import os
@@ -11,20 +11,10 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 
 def run_program(*argv):
-    print "$ %s" % " ".join(argv)
+    print("$ %s" % " ".join(argv))
     p = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     stdout, stderr = p.communicate()
-
-    try:
-        stdout = stdout.decode('ascii')
-    except UnicodeError:
-        return 'stdout is not ASCII'
-
-    try:
-        stderr = stderr.decode('ascii')
-    except UnicodeError:
-        return 'stderr is not ASCII'
 
     return (p.returncode, stdout, stderr)
 
@@ -35,19 +25,19 @@ def gprbuild(project_file, debug=False):
     extra_args += ["-XADL_BUILD=" + ("Debug" if debug else "Production")]
     extra_args += ["-XADL_BUILD_CHECKS=Enabled"]
 
-    print "Building '%s'" % project_file
+    print("Building '%s'" % project_file)
 
     # Build the project
     returncode, stdout, stderr = run_program(
         'gprbuild', '-j0', '-p', '-q', '-s', '-P', project_file, *extra_args
     )
 
-    print stdout
+    print(stdout)
 
     if returncode:
-        print 'Build error (gprbuild returned {}):\n{}'.format(
+        print('Build error (gprbuild returned {}):\n{}'.format(
             returncode, stderr
-        )
+        ))
 
     # Clean to avoid error in the next build with a different run-time or
     # compile switches.
@@ -195,7 +185,7 @@ def main(args):
     # Check if we can actually detect a build failure
     ret = gprbuild("This_Project_Doesnt_Exist", debug=False)
     if not ret:
-        print "Build failure is not detected"
+        print("Build failure is not detected")
         sys.exit(1)
 
     ret = 0
