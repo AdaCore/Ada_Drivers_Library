@@ -5,10 +5,10 @@ version: 0.0.{build}
 
 # Setup python for build and test-suite scripts
 environment:
-  PYTHON: C:\\Python27
+  PYTHON: C:\\Python37
   TOOLS_DIR: C:\ADL_tools\
-  GNAT_NATIVE_INSTALLER: C:\ADL_tools\gnat-community-2019-x86_64-windows-bin.exe
-  GNAT_ARM_ELF_INSTALLER: C:\ADL_tools\gnat-community-2019-arm-elf-windows-bin.exe
+  GNAT_NATIVE_INSTALLER: C:\ADL_tools\gnat-community-2020-x86_64-windows-bin.exe
+  GNAT_ARM_ELF_INSTALLER: C:\ADL_tools\gnat-community-2020-arm-elf-windows-bin.exe
   INSTALL_DIR: C:\Install\
 
 # Cache directories will be preseved from one build to the other
@@ -32,8 +32,8 @@ install:
 - cmd: dir %INSTALL_DIR%
 
 # Download compiler installer if not already in the tool dir
-- ps: If (Test-Path $env:GNAT_NATIVE_INSTALLER){echo compiler already in cache}Else{(new-object net.webclient).DownloadFile('https://community.download.adacore.com/v1/c13b2d02d23057d9251bcdc9a073cb932177f016?filename=gnat-community-2019-20190517-x86_64-windows-bin.exe', $env:GNAT_NATIVE_INSTALLER)}
-- ps: If (Test-Path $env:GNAT_ARM_ELF_INSTALLER){echo compiler already in cache}Else{(new-object net.webclient).DownloadFile('https://community.download.adacore.com/v1/06e1ece65684785160796678c1944460e34e2e97?filename=gnat-community-2019-20190517-arm-elf-windows64-bin.exe', $env:GNAT_ARM_ELF_INSTALLER)}
+- ps: If (Test-Path $env:GNAT_NATIVE_INSTALLER){echo compiler already in cache}Else{(new-object net.webclient).DownloadFile('https://community.download.adacore.com/v1/966801764ae160828c97d2c33000e9feb08d4cce?filename=gnat-2020-20200429-x86_64-windows-bin.exe', $env:GNAT_NATIVE_INSTALLER)}
+- ps: If (Test-Path $env:GNAT_ARM_ELF_INSTALLER){echo compiler already in cache}Else{(new-object net.webclient).DownloadFile('https://community.download.adacore.com/v1/955b7bccce241e9931124be4df11fa7bd5cb5aef?filename=gnat-2020-20200429-arm-elf-windows64-bin.exe', $env:GNAT_ARM_ELF_INSTALLER)}
 
 # Show content of tool dir again so we can see if the download was ok
 - cmd: dir %TOOLS_DIR%

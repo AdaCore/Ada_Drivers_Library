@@ -1,15 +1,15 @@
-# We are using Python 2.7 to run the testsuite
+# We are using Python 3.7 to run the testsuite
 language: python
 python:
-  - "2.7"
+  - "3.7"
 
 # Global variables
 env:
   global:
     - TOOLS_DIR=$HOME/build_tools
-    - GNAT_BIN_PATH=$TOOLS_DIR/gnat-community-2019-x86_64-linux-bin
-    - GNAT_ARM_BIN_PATH=$TOOLS_DIR/gnat-community-2019-arm-elf-bin
-    - GNAT_RV32_BIN_PATH=$TOOLS_DIR/gnat-community-2019-riscv32-elf-bin
+    - GNAT_BIN_PATH=$TOOLS_DIR/gnat-community-2020-x86_64-linux-bin
+    - GNAT_ARM_BIN_PATH=$TOOLS_DIR/gnat-community-2020-arm-elf-bin
+    - GNAT_RV32_BIN_PATH=$TOOLS_DIR/gnat-community-2020-riscv32-elf-bin
 
 os:
   - linux
@@ -23,9 +23,9 @@ cache:
 install:
   # Check if the GNAT package is already available in the cache directory. If
   # not, download it.
-  - test -f $GNAT_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget https://community.download.adacore.com/v1/0cd3e2a668332613b522d9612ffa27ef3eb0815b?filename=gnat-community-2019-20190517-x86_64-linux-bin -O $GNAT_BIN_PATH)
-  - test -f $GNAT_ARM_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget https://community.download.adacore.com/v1/6696259f92b40178ab1cc1d3e005acf705dc4162?filename=gnat-community-2019-20190517-arm-elf-linux64-bin -O $GNAT_ARM_BIN_PATH)
-  - test -f $GNAT_RV32_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget https://community.download.adacore.com/v1/179a91e48f749b2aa8233bc63b3be75168bbb785?filename=gnat-community-2019-20190517-riscv32-elf-linux64-bin -O $GNAT_RV32_BIN_PATH)
+  - test -f $GNAT_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget https://community.download.adacore.com/v1/4d99b7b2f212c8efdab2ba8ede474bb9fa15888d?filename=gnat-2020-20200429-x86_64-linux-bin -O $GNAT_BIN_PATH)
+  - test -f $GNAT_ARM_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget https://community.download.adacore.com/v1/2b8ddb644a06808e7d2c6b62edf16d31b02f514f?filename=gnat-2020-20200429-arm-elf-linux64-bin -O $GNAT_ARM_BIN_PATH)
+  - test -f $GNAT_RV32_BIN_PATH ||( mkdir -p $TOOLS_DIR &&  wget https://community.download.adacore.com/v1/fe26719b2279dee730d3e5a239d95c9fe926c83d?filename=gnat-2020-20200429-riscv32-elf-linux64-bin -O $GNAT_RV32_BIN_PATH)
 
   - wget https://raw.githubusercontent.com/AdaCore/gnat_community_install_script/master/install_package.sh
   - wget https://raw.githubusercontent.com/AdaCore/gnat_community_install_script/master/install_script.qs
