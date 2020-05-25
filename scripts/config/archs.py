@@ -38,4 +38,4 @@ def load_cpu_config(config):
         # No source dirs for RISC-V64
 
     else:
-        print "Unknown CPU core %s." % cpu
+        print("Unknown CPU core %s." % cpu)

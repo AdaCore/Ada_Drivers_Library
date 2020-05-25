@@ -62,10 +62,10 @@ def query_string(question, default):
 def query_choice(question, choices, default):
 
     while True:
-        print question
+        print(question)
         cnt = 0
         for item in choices:
-            print " - (%d) %s" % (cnt, item)
+            print(" - (%d) %s" % (cnt, item))
             cnt += 1
         sys.stdout.write("? ")
         choice = raw_input()
