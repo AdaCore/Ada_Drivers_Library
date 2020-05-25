@@ -1,4 +1,4 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python3
 
 import argparse
 import difflib
@@ -19,16 +19,6 @@ def run_program(*argv):
         stderr=subprocess.PIPE
     )
     stdout, stderr = p.communicate()
-
-    try:
-        stdout = stdout.decode('ascii')
-    except UnicodeError:
-        return 'stdout is not ASCII'
-
-    try:
-        stderr = stderr.decode('ascii')
-    except UnicodeError:
-        return 'stderr is not ASCII'
 
     return (p.returncode, stdout, stderr)
 
@@ -95,12 +85,8 @@ class Testcase:
         Helper for run, execute a single test driver.
         """
         # Get the expected output
-        with open(expected_output_fn, 'r') as f:
+        with open(expected_output_fn, 'rb') as f:
             expected_output = f.read()
-            try:
-                expected_output = expected_output.decode('ascii')
-            except UnicodeError:
-                return 'Expected output is not ASCII'
             expected_output = expected_output.splitlines()
 
         # Run the program, get its output
@@ -116,7 +102,7 @@ class Testcase:
         if returncode or stderr:
             return program_returned_msg
         elif args.verbose:
-            print program_returned_msg
+            print(program_returned_msg)
 
         stdout = stdout.splitlines()
 
@@ -131,7 +117,7 @@ class Testcase:
                 )
             ))
         elif args.verbose:
-            print "\n".join(stdout)
+            print("\n".join(stdout))
 
 
 def find_testcases():
