@@ -49,20 +49,27 @@ install:
 - cmd: dir %INSTALL_DIR%
 - cmd: dir C:\Install\
 
-# Add compiler to the PATH
-- ps: $env:Path += ";" + $env:INSTALL_DIR +"\native\bin"
-- ps: $env:Path += ";" + $env:INSTALL_DIR +"\arm-elf\bin"
+# Add Python in PATH. There is already a default Python in Path (2.7) so we
+# have to put the new one first.
+- ps: $env:Path = $env:PYTHON + ";" + $env:Path
+- ps: $env:Path = $env:PYTHON + "\Scripts" + ";" + $env:Path
 
+# Add compiler to the PATH
+- ps: $env:Path += ";" + $env:INSTALL_DIR + "\native\bin"
+- ps: $env:Path += ";" + $env:INSTALL_DIR + "\arm-elf\bin"
+ 
 # Check that we can run the compiler (also display the version)
 - ps: arm-eabi-gnatls -v
 
 # Install optional dependencies
-- cmd: python3 scripts/install_dependencies.py
+- cmd: python --version
+- cmd: python scripts/install_dependencies.py
 
 # We don't need a build step
 build: off
 
 # Run the test scripts
 test_script:
-- cmd: python3 scripts/build_all_examples.py --prod-only
-- cmd: python3 testsuite/run.py
+- cmd: python --version
+- cmd: python scripts/build_all_examples.py --prod-only
+- cmd: python testsuite/run.py
