@@ -61,6 +61,11 @@ install:
 # Check that we can run the compiler (also display the version)
 - ps: arm-eabi-gnatls -v
 
+# Remove built-in run-times before installing fresh one. This is a workaround
+# for "Access is denied" in the bb-runtime Python script on appveyor.
+- ps: rm -Recurse -Force $env:INSTALL_DIR"\arm-elf\arm-eabi\lib\gnat\ravenscar*"
+- ps: rm -Recurse -Force $env:INSTALL_DIR"\arm-elf\arm-eabi\lib\gnat\zfp*"
+
 # Install optional dependencies
 - cmd: python --version
 - cmd: python scripts/install_dependencies.py
