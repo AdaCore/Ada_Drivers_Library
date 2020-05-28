@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015, 2020 AdaCore                        --
+--                   Copyright (C) 2015-2020 AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -156,7 +156,7 @@ package body STM32.Board is
    end Initialize_I2C_GPIO;
 
    -------------------
-   -- TP_I2C_Config --
+   -- Configure_I2C --
    -------------------
 
    procedure Configure_I2C (Port : in out I2C_Port)
@@ -174,6 +174,10 @@ package body STM32.Board is
                others          => <>));
       end if;
    end Configure_I2C;
+
+   ------------------------
+   -- Initialize_EXT_SPI --
+   ------------------------
 
    procedure Initialize_EXT_SPI
    is
@@ -209,5 +213,21 @@ package body STM32.Board is
           CRC_Poly            => 0));
       EXT_SPI.Enable;
    end Initialize_EXT_SPI;
+
+   ----------------------
+   -- Configure_EXT_CS --
+   ----------------------
+
+   procedure Configure_EXT_CS (Pin : in out STM32.GPIO.GPIO_Point)
+   is
+   begin
+      STM32.Device.Enable_Clock (Pin);
+      STM32.GPIO.Configure_IO
+        (Pin,
+         (Mode        => STM32.GPIO.Mode_Out,
+          Resistors   => STM32.GPIO.Floating,
+          Output_Type => STM32.GPIO.Push_Pull,
+          Speed       => STM32.GPIO.Speed_50MHz));
+   end Configure_EXT_CS;
 
 end STM32.Board;
