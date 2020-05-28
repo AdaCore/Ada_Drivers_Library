@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---              Copyright (C) 2015-2016, 2020, AdaCore                      --
+--                 Copyright (C) 2015-2020, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -141,6 +141,10 @@ package STM32.Board is
    EXT_CS1  : GPIO_Point renames PB4;
    EXT_CS2  : GPIO_Point renames PB5;
    EXT_CS3  : GPIO_Point renames PB8;
+
+   procedure Configure_EXT_CS (Pin : in out GPIO_Point)
+   with Pre =>
+     Pin = EXT_CS0 or Pin = EXT_CS1 or Pin = EXT_CS2 or Pin = EXT_CS3;
 
    ---------
    -- USB --
