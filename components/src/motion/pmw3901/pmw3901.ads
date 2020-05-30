@@ -33,16 +33,18 @@
 --  The algorithms used here are derived from Pimoroni's code at
 --  https://github.com/pimoroni/pmw3901-python.
 
-with STM32.GPIO;
-with STM32.SPI;
+with HAL.GPIO;
+with HAL.SPI;
 with HAL.Time;
 with Interfaces;
 
 package PMW3901 is
 
+   SPI_Error : exception;
+
    type PMW3901_Flow_Sensor
-     (Port   : not null access STM32.SPI.SPI_Port;
-      CS     : not null access STM32.GPIO.GPIO_Point;
+     (Port   : not null HAL.SPI.Any_SPI_Port;
+      CS     : not null HAL.GPIO.Any_GPIO_Point;
       Timing : not null HAL.Time.Any_Delays) is limited private;
 
    type Run_Mode is range 0 .. 3 with Size => 2;
@@ -80,13 +82,13 @@ package PMW3901 is
 
    function Is_Valid (M : Motion) return Boolean;
 
-   function Is_Clocked (This : PMW3901_Flow_Sensor) return Boolean;
-
    function Is_Initialized (This : PMW3901_Flow_Sensor) return Boolean;
 
    procedure Initialize (This : in out PMW3901_Flow_Sensor)
    with
-     Pre => Is_Clocked (This);
+     Pre => not Is_Initialized (This);
+   --  NB: does NOT init/configure SPI and GPIO IO, which must be done
+   --  (elsewhere) prior to calling this routine.
 
    procedure Calibrate (This : in out PMW3901_Flow_Sensor)
    with Pre => Is_Initialized (This);
@@ -97,8 +99,8 @@ package PMW3901 is
 private
 
    type PMW3901_Flow_Sensor
-     (Port   : not null access STM32.SPI.SPI_Port;
-      CS     : not null access STM32.GPIO.GPIO_Point;
+     (Port   : not null HAL.SPI.Any_SPI_Port;
+      CS     : not null HAL.GPIO.Any_GPIO_Point;
       Timing : not null HAL.Time.Any_Delays) is limited record
          Initialized : Boolean := False;
       end record;
