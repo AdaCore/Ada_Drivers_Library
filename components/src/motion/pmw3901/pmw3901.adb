@@ -34,7 +34,6 @@
 --  https://github.com/pimoroni/pmw3901-python.
 
 with Ada.Unchecked_Conversion;
-with STM32.Device;
 
 package body PMW3901 is
 
@@ -55,6 +54,10 @@ package body PMW3901 is
                     Register :        HAL.UInt8;
                     Value    :        HAL.UInt8);
 
+   --------------
+   -- Is_Valid --
+   --------------
+
    function Is_Valid (M : Motion) return Boolean
    is
       use type HAL.UInt8;
@@ -63,26 +66,16 @@ package body PMW3901 is
         and not (M.S_Qual < 19 and M.Shutter_Upper = 16#1f#);
    end Is_Valid;
 
-   function Is_Clocked (This : STM32.SPI.SPI_Port'Class) return Boolean;
-   --  It'd be good if this sort of function was declared in STM32.Device
-
-   function Is_Clocked (This : PMW3901_Flow_Sensor) return Boolean
-   is (Is_Clocked (This.Port.all));
+   ----------------
+   -- Initialize --
+   ----------------
 
    procedure Initialize (This : in out PMW3901_Flow_Sensor)
    is
    begin
-      STM32.Device.Enable_Clock (This.CS.all);
-      STM32.GPIO.Configure_IO
-        (This.CS.all,
-         (Mode        => STM32.GPIO.Mode_Out,
-          Resistors   => STM32.GPIO.Floating, -- ?
-          Output_Type => STM32.GPIO.Push_Pull,
-          Speed       => STM32.GPIO.Speed_50MHz));
-
-      This.CS.Drive (False);
+      This.CS.Clear;
       This.Timing.Delay_Milliseconds (50);
-      This.CS.Drive (True);
+      This.CS.Set;
 
       declare
          Chip_ID          : HAL.UInt8;
@@ -98,7 +91,7 @@ package body PMW3901 is
            or Inverted_Chip_ID /= 16#b6#
          then
             --  Can't initialize the wrong sort of chip!
-            return;
+            raise SPI_Error with "no PMW3901 found";
          end if;
       end;
 
@@ -107,17 +100,20 @@ package body PMW3901 is
 
       --  Read the registers once
       declare
-         Buff : STM32.SPI.UInt8_Buffer (0 .. 4);
+         Buff : HAL.SPI.SPI_Data_8b (0 .. 4);
          use type HAL.UInt8;
       begin
          for J in Buff'Range loop
             Buff (J) := Read (This, Reg_Data_Ready + HAL.UInt8 (J));
          end loop;
-         null;
       end;
 
       This.Initialized := True;
    end Initialize;
+
+   ---------------
+   -- Calibrate --
+   ---------------
 
    procedure Calibrate (This : in out PMW3901_Flow_Sensor)
    is
@@ -246,46 +242,67 @@ package body PMW3901 is
                      (16#5a#, 16#50#),
                      (16#40#, 16#80#)));
       This.Timing.Delay_Milliseconds (16#f0#);
-      --  enable LED pulsing???
+      --  enable LED pulsing??? what LED?
       Write_Magics (((16#7f#, 16#14#),
                      (16#6f#, 16#1c#),
                      (16#7f#, 16#00#)));
    end Calibrate;
 
+   -----------------
+   -- Read_Motion --
+   -----------------
+
    function Read_Motion  (This : in out PMW3901_Flow_Sensor) return Motion is
-      subtype Buffer is STM32.SPI.UInt8_Buffer (1 .. 12);
+      subtype Buffer is HAL.SPI.SPI_Data_8b (1 .. 12);
       function Convert is new Ada.Unchecked_Conversion (Buffer, Motion);
-      Dummy : HAL.UInt8;
       Buff : Buffer := (others => 0);
+      Status : HAL.SPI.SPI_Status;
+      use all type HAL.SPI.SPI_Status;
    begin
-      This.CS.Drive (False);
-      This.Port.Transmit_Receive (Outgoing => Reg_Motion_Burst,
-                                 Incoming => Dummy);
-      pragma Warnings (Off, "referenced before it has a value");
-      This.Port.Transmit_Receive (Outgoing => Buff,
-                                 Incoming => Buff,
-                                 Size => 12);
-      pragma Warnings (On, "referenced before it has a value");
-      This.CS.Drive (True);
+      This.CS.Clear;
+      This.Port.Transmit (HAL.SPI.SPI_Data_8b'((1 => Reg_Motion_Burst)),
+                          Status);
+      if Status /= Ok then
+         raise SPI_Error with "PMW3901 SPI transmit failure";
+      end if;
+      This.Port.Receive (Buff, Status);
+      if Status /= Ok then
+         raise SPI_Error with "PMW3901 SPI receive burst failure";
+      end if;
+      This.CS.Set;
       return Convert (Buff);
    end Read_Motion;
+
+   ----------
+   -- Read --
+   ----------
 
    function Read (This     : in out PMW3901_Flow_Sensor;
                   Register : HAL.UInt8) return HAL.UInt8
    is
       use type HAL.UInt8;
       Register_For_Read : constant HAL.UInt8 := Register and 16#7f#;
-      Dummy : HAL.UInt8 := 42;
-      Data : HAL.UInt8 := 43;
+      Data   : HAL.SPI.SPI_Data_8b (0 .. 0);
+      Status : HAL.SPI.SPI_Status;
+      use all type HAL.SPI.SPI_Status;
    begin
-      This.CS.Drive (False);
-      This.Port.Transmit_Receive (Outgoing => Register_For_Read,
-                                  Incoming => Dummy);
-      This.Port.Transmit_Receive (Outgoing => Dummy,
-                                  Incoming => Data);
-      This.CS.Drive (True);
-      return Data;
+      This.CS.Clear;
+      This.Port.Transmit (HAL.SPI.SPI_Data_8b'(1 => Register_For_Read),
+                          Status);
+      if Status /= Ok then
+         raise SPI_Error with "PMW3901 SPI transmit failure";
+      end if;
+      This.Port.Receive (Data, Status);
+      if Status /= Ok then
+         raise SPI_Error with "PMW3901 SPI receive failure";
+      end if;
+      This.CS.Set;
+      return Data (Data'First);
    end Read;
+
+   -----------
+   -- Write --
+   -----------
 
    procedure Write (This     : in out PMW3901_Flow_Sensor;
                     Register :        HAL.UInt8;
@@ -293,18 +310,21 @@ package body PMW3901 is
    is
       use type HAL.UInt8;
       Register_For_Write : constant HAL.UInt8 := Register or 16#80#;
-      Dummy : HAL.UInt8 := 42;
+      Status : HAL.SPI.SPI_Status;
+      use all type HAL.SPI.SPI_Status;
    begin
-      This.CS.Drive (False);
-      This.Port.Transmit_Receive (Outgoing => Register_For_Write,
-                                  Incoming => Dummy);
-      This.Port.Transmit_Receive (Outgoing => Value,
-                                 Incoming => Dummy);
-      This.CS.Drive (True);
+      This.CS.Clear;
+      This.Port.Transmit (HAL.SPI.SPI_Data_8b'(1 => Register_For_Write),
+                          Status);
+      if Status /= Ok then
+         raise SPI_Error with "PMW3901 SPI transmit failure";
+      end if;
+      This.Port.Transmit (HAL.SPI.SPI_Data_8b'(1 => Value),
+                          Status);
+      if Status /= Ok then
+         raise SPI_Error with "PMW3901 SPI transmit failure";
+      end if;
+      This.CS.Set;
    end Write;
-
-   --  => STM32.Device?
-   function Is_Clocked (This : STM32.SPI.SPI_Port'Class) return Boolean
-   is separate;
 
 end PMW3901;
