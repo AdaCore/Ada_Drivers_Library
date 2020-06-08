@@ -12,7 +12,7 @@
 --        notice, this list of conditions and the following disclaimer in   --
 --        the documentation and/or other materials provided with the        --
 --        distribution.                                                     --
---     3. Neither the name of PixArt Imaging nor the names of its           --
+--     3. Neither the name of the copyright holder nor the names of its     --
 --        contributors may be used to endorse or promote products derived   --
 --        from this software without specific prior written permission.     --
 --                                                                          --
@@ -63,22 +63,6 @@ package PMW3901 is
       Shutter_Upper   : HAL.UInt8; --  Shutter is big-endian!
       Shutter_Lower   : HAL.UInt8;
    end record;
-   for Motion use record
-      Frame_From_0    at 0 range 0 .. 0;
-      Mode            at 0 range 1 .. 2;
-      Raw_From_0      at 0 range 4 .. 4;
-      Motion_Occurred at 0 range 7 .. 7;
-      Observation     at 1 range 0 .. 7;
-      Delta_X         at 2 range 0 .. 15;
-      Delta_Y         at 4 range 0 .. 15;
-      S_Qual          at 6 range 0 .. 7;
-      Raw_Data_Sum    at 7 range 0 .. 7;
-      Max_Raw_Data    at 8 range 0 .. 7;
-      Min_Raw_Data    at 9 range 0 .. 7;
-      Shutter_Upper   at 10 range 0 .. 7;
-      Shutter_Lower   at 11 range 0 .. 7;
-   end record;
-   for Motion'Size use 12 * 8;
 
    function Is_Valid (M : Motion) return Boolean;
 
@@ -107,5 +91,22 @@ private
 
    function Is_Initialized (This : PMW3901_Flow_Sensor) return Boolean
      is (This.Initialized);
+
+   for Motion use record
+      Frame_From_0    at 0 range 0 .. 0;
+      Mode            at 0 range 1 .. 2;
+      Raw_From_0      at 0 range 4 .. 4;
+      Motion_Occurred at 0 range 7 .. 7;
+      Observation     at 1 range 0 .. 7;
+      Delta_X         at 2 range 0 .. 15;
+      Delta_Y         at 4 range 0 .. 15;
+      S_Qual          at 6 range 0 .. 7;
+      Raw_Data_Sum    at 7 range 0 .. 7;
+      Max_Raw_Data    at 8 range 0 .. 7;
+      Min_Raw_Data    at 9 range 0 .. 7;
+      Shutter_Upper   at 10 range 0 .. 7;
+      Shutter_Lower   at 11 range 0 .. 7;
+   end record;
+   for Motion'Size use 12 * 8;
 
 end PMW3901;
