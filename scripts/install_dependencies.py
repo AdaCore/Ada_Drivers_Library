@@ -115,6 +115,7 @@ def main(args):
             if ret:
                 print('Dependency install command error' +\
                       ' (returned {}):\n{}'.format(ret, stderr))
+                at_least_one_error = True
 
     if at_least_one_error:
         sys.exit(1)
