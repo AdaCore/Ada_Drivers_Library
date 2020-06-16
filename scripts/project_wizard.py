@@ -233,6 +233,7 @@ def ADL_configuration(config, project_directory, project_name,
          "-gnatw.X", -- Disable warnings for No_Exception_Propagation
          "-ffunction-sections", -- Create a linker section for each function
          "-fdata-sections");  -- Create a linker section for each data
+      for Switches ("semihosting.adb") use ("-O0");
    end Compiler;
 
 
