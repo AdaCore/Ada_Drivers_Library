@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                  Copyright (C) 2016-2020, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -262,7 +262,8 @@ package body Semihosting is
    -------------
 
    procedure Write_0 (Str : String) is
-      Data : UInt8_Array (Str'First .. Str'Last + 1);
+      type Byte_Array is new UInt8_Array with Volatile_Components;
+      Data : Byte_Array (Str'First .. Str'Last + 1);
       Ret  : SH_Word with Unreferenced;
    begin
       if not Semihosting_Enabled then
