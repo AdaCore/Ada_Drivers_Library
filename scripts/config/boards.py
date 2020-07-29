@@ -8,6 +8,7 @@ def list_of_boards():
             'STM32F469_Discovery',
             'STM32F746_Discovery',
             'STM32F769_Discovery',
+            'STM32_H405',
             'NUCLEO_F446ZE',
             'Crazyflie',
             'Feather_STM32F405',
@@ -111,6 +112,18 @@ def load_board_config(config):
         config.add_source_dir('boards/stm32_common/otm8009a', origin)
         config.add_source_dir('boards/stm32_common/sdcard/', origin)
         config.add_source_dir('boards/stm32_common/sdram/', origin)
+
+    elif board == "STM32_H405":
+        config.pre_define('Architecture', 'ARM', origin)
+        config.pre_define('Vendor', 'STMicro', origin)
+        config.pre_define('Device_Family', 'STM32F4', origin)
+        config.pre_define('Device_Name', 'STM32F405RGTx', origin)
+        config.pre_define('High_Speed_External_Clock', '8_000_000', origin)
+        config.pre_define('Has_ZFP_Runtime', 'False', origin)
+        config.pre_define('Has_Ravenscar_SFP_Runtime', 'True', origin)
+        config.pre_define('Has_Ravenscar_Full_Runtime', 'True', origin)
+        config.pre_define('Runtime_Name_Suffix', 'stm32_h405', origin)
+        config.add_source_dir('boards/stm32_h405/src/', origin)
 
     elif board == "Crazyflie":
         config.pre_define('Architecture', 'ARM', origin)
