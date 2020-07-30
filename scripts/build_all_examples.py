@@ -81,6 +81,9 @@ projects = [
             "/examples/feather_stm32f405/blinky/blinky.gpr",
             "/examples/feather_stm32f405/charlie_wing/charlie_wing.gpr",
 
+            # Olimex STM32-H405
+            "/examples/stm32_h405/blinky/blinky.gpr",
+
             # STM32F469 Discovery
             "/boards/stm32f469_discovery/stm32f469_discovery_full.gpr",
             "/boards/stm32f469_discovery/stm32f469_discovery_sfp.gpr",

@@ -29,9 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
--- Olimex STM32-H405
--- Digi-Key part no. 1188-1167-ND
--- https://www.olimex.com/Products/ARM/ST/STM32-H405/resources/STM32-H405_sch.pdf
+--  Olimex STM32-H405
+--  Digi-Key part no. 1188-1167-ND
+--  https://www.olimex.com/Products/ARM/ST/STM32-H405/resources/STM32-H405_sch.pdf
 
 with STM32.GPIO;   use STM32.GPIO;
 with STM32.Device;
@@ -42,8 +42,8 @@ package STM32_H405 is
    EXT1_2  : GPIO_Point renames STM32.Device.PA8;
    EXT1_3  : GPIO_Point renames STM32.Device.PA12;
    EXT1_4  : GPIO_Point renames STM32.Device.PA9;
-   -- EXT1_5  : 3.3V
-   -- EXT1_6  : GND
+   --  EXT1_5  : 3.3V
+   --  EXT1_6  : GND
    EXT1_7  : GPIO_Point renames STM32.Device.PA10;
    EXT1_8  : GPIO_Point renames STM32.Device.PC10;
    EXT1_9  : GPIO_Point renames STM32.Device.PC11;
@@ -60,17 +60,17 @@ package STM32_H405 is
    EXT1_20 : GPIO_Point renames STM32.Device.PC1;
    EXT1_21 : GPIO_Point renames STM32.Device.PB0;
    EXT1_22 : GPIO_Point renames STM32.Device.PA7;
-   -- EXT1_23 : VBAT
+   --  EXT1_23 : VBAT
    EXT1_24 : GPIO_Point renames STM32.Device.PC13;
-   -- EXT1_25 : NRST
+   --  EXT1_25 : NRST
    EXT1_26 : GPIO_Point renames STM32.Device.PB1;
 
-   -- EXT2_1  : VDDA
+   --  EXT2_1  : VDDA
    EXT2_2  : GPIO_Point renames STM32.Device.PC2;
-   -- EXT2_3  : GNDA
+   --  EXT2_3  : GNDA
    EXT2_4  : GPIO_Point renames STM32.Device.PA0;
-   -- EXT2_5  : 3.3V
-   -- EXT2_6  : GND
+   --  EXT2_5  : 3.3V
+   --  EXT2_6  : GND
    EXT2_7  : GPIO_Point renames STM32.Device.PA2;
    EXT2_8  : GPIO_Point renames STM32.Device.PA1;
    EXT2_9  : GPIO_Point renames STM32.Device.PC3;
@@ -87,10 +87,10 @@ package STM32_H405 is
    EXT2_20 : GPIO_Point renames STM32.Device.PC6;
    EXT2_21 : GPIO_Point renames STM32.Device.PC7;
    EXT2_22 : GPIO_Point renames STM32.Device.PC8;
-   -- EXT2_23 : VUSB
+   --  EXT2_23 : VUSB
    EXT2_24 : GPIO_Point renames STM32.Device.PC9;
-   -- EXT2_25 : GND
-   -- EXT2_26 : VIN
+   --  EXT2_25 : GND
+   --  EXT2_26 : VIN
 
    OSC32_IN  : GPIO_Point renames STM32.Device.PC14;
    OSC32_OUT : GPIO_Point renames STM32.Device.PC15;
