@@ -62,7 +62,7 @@ library project STM32_H405_Full is
 
    Linker_Switches := ();
    for Target use "arm-eabi";
-   for Runtime ("Ada") use "ravenscar-full-stm32_h405";
+   for Runtime ("Ada") use "ravenscar-full-stm32f4";
 
    package Device_Configuration is
       for CPU_Name use "ARM Cortex-M4F";
@@ -81,8 +81,8 @@ library project STM32_H405_Full is
    Has_Ravenscar_SFP_Runtime      := "True";              -- From board definition
    Has_Ravenscar_Full_Runtime     := "True";              -- From board definition
    Runtime_Profile                := "ravenscar-full";    -- From user input
-   Runtime_Name_Suffix            := "stm32_h405";        -- From board definition
-   Runtime_Name                   := "ravenscar-full-stm32_h405"; -- From user input
+   Runtime_Name_Suffix            := "stm32f4";           -- From board definition
+   Runtime_Name                   := "ravenscar-full-stm32f4"; -- From user input
    Use_Startup_Gen                := "False";             -- From user input
    Max_Path_Length                := "1024";              -- From user input
    Max_Mount_Points               := "2";                 -- From user input

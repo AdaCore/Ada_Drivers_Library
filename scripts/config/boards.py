@@ -122,7 +122,7 @@ def load_board_config(config):
         config.pre_define('Has_ZFP_Runtime', 'False', origin)
         config.pre_define('Has_Ravenscar_SFP_Runtime', 'True', origin)
         config.pre_define('Has_Ravenscar_Full_Runtime', 'True', origin)
-        config.pre_define('Runtime_Name_Suffix', 'stm32_h405', origin)
+        config.pre_define('Runtime_Name_Suffix', 'stm32f4', origin)
         config.add_source_dir('boards/stm32_h405/src/', origin)
 
     elif board == "Crazyflie":
