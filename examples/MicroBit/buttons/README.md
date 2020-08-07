@@ -6,7 +6,7 @@ In this example we will see how to use the two buttons of the micro:bit.
 Code
 ====
 
-To know if a button is pressed or not, we will use the procedure `State` of the
+To know if a button is pressed or not, we will use the function `State` of the
 `MicroBit.Buttons` package.
 
 ```ada
@@ -24,7 +24,7 @@ Arguments:
 
 Return value:
 
-The procedure `State` return the `Button_State` that can be either `Pressed` or
+The function `State` return the `Button_State` that can be either `Pressed` or
 `Released`.
 
 Here is the code:
