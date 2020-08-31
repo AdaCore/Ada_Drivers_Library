@@ -119,4 +119,67 @@ package body MicroBit.Display.Symbols is
       Set (4, 3);
    end Smile;
 
+   -----------
+   -- Frown --
+   -----------
+   
+   procedure Frown is
+   begin
+      Set (0, 4);
+      Set (1, 1);
+      Set (1, 3);
+      Set (2, 3);
+      Set (3, 1);
+      Set (3, 3);
+      Set (4, 4);
+   end Frown;
+   
+   -----------
+   -- Cross --
+   -----------
+   
+   procedure Cross is
+   begin
+      Set (0, 0);
+      Set (1, 1);
+      Set (2, 2);
+      Set (3, 3);
+      Set (4, 4);
+      Set (0, 4);
+      Set (1, 3);
+      Set (3, 1);
+      Set (4, 0);
+   end Cross;
+   
+   ---------------
+   -- Checkmark --
+   ---------------
+   
+   procedure Checkmark is
+   begin
+      Set (4, 1);
+      Set (3, 2);
+      Set (2, 3);
+      Set (1, 4);
+      Set (0, 3);
+   end Checkmark;
+   
+   -----------
+   -- Heart --
+   -----------
+   
+   procedure Heart is
+   begin
+      Set (0, 1);
+      Set (0, 2);
+      Set (1, 0);
+      Set (1, 3);
+      Set (2, 1);
+      Set (2, 4);
+      Set (3, 0);
+      Set (3, 3);
+      Set (4, 1);
+      Set (4, 2);
+   end Heart;
+
 end MicroBit.Display.Symbols;

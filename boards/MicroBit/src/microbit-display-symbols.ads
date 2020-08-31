@@ -39,5 +39,9 @@ package MicroBit.Display.Symbols is
    procedure Up_Arrow;
    procedure Down_Arrow;
    procedure Smile;
+   procedure Frown;
+   procedure Cross;
+   procedure Checkmark;
+   procedure Heart;
 
 end MicroBit.Display.Symbols;
