@@ -122,7 +122,7 @@ package body MicroBit.Display.Symbols is
    -----------
    -- Frown --
    -----------
-   
+
    procedure Frown is
    begin
       Set (0, 4);
@@ -133,11 +133,11 @@ package body MicroBit.Display.Symbols is
       Set (3, 3);
       Set (4, 4);
    end Frown;
-   
+
    -----------
    -- Cross --
    -----------
-   
+
    procedure Cross is
    begin
       Set (0, 0);
@@ -150,11 +150,11 @@ package body MicroBit.Display.Symbols is
       Set (3, 1);
       Set (4, 0);
    end Cross;
-   
+
    ---------------
    -- Checkmark --
    ---------------
-   
+
    procedure Checkmark is
    begin
       Set (4, 1);
@@ -163,11 +163,11 @@ package body MicroBit.Display.Symbols is
       Set (1, 4);
       Set (0, 3);
    end Checkmark;
-   
+
    -----------
    -- Heart --
    -----------
-   
+
    procedure Heart is
    begin
       Set (0, 1);
