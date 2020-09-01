@@ -43,10 +43,10 @@ jobs:
       with:
         python-version: '3.x'
     - name: Remove built-in arm-eabi Ravenscar run-times
-      run:  rm -Recurse -Force "d:\a\_temp\gnat-2020-20200429-arm-elf-windows64-bin\arm-eabi\lib\gnat\ravenscar*"
+      run:  rm -Recurse -Force "d:\a\_temp\gnat-2020-20200818-arm-elf-windows64-bin\arm-eabi\lib\gnat\ravenscar*"
       shell: pwsh
     - name: Remove built-in arm-eabi ZFP run-times
-      run:  rm -Recurse -Force "d:\a\_temp\gnat-2020-20200429-arm-elf-windows64-bin\arm-eabi\lib\gnat\zfp*"
+      run:  rm -Recurse -Force "d:\a\_temp\gnat-2020-20200818-arm-elf-windows64-bin\arm-eabi\lib\gnat\zfp*"
       shell: pwsh
 
     - run: python $PWD/scripts/install_dependencies.py
