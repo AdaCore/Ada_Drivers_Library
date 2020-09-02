@@ -78,7 +78,7 @@ begin
 
       end if;
 
-      --  Do nothing for 100 miliseconds
+      --  Do nothing for 100 milliseconds
       Time.Sleep (100);
    end loop;
 end Main;
