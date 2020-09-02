@@ -2,17 +2,17 @@ Music Example
 =============
 
 In this example we will see how to play some simple music with the micro:bit
-and a piezzo buzzer.
+and a piezo buzzer.
 
-In the [Analog Out](../analog_out) we said the the analog output was actually a
-Pulse Width Modulation (PWM) signal. When a piezzo buzzer is connect to an
-analog output, changing the frequency of the PWM signal means changing the note
-that the buzzer will play.
+In the [Analog Out](../analog_out) we said that the analog output was actually a
+Pulse Width Modulation (PWM) signal. When a piezo buzzer is connected to a PWM
+a note is produced, changing the frequency of the PWM signal means changing the 
+note that the buzzer will play.
 
 Wiring Diagram
 ==============
 
-For this example we simply connect a piezzo buzzer to pin 0 and ground.
+For this example we simply connect a piezo buzzer to pin 0 and ground.
 
 Extra hardware:
 
@@ -43,7 +43,7 @@ So we declare our little melody like so:
       (G3,   400));
 ```
 
-Not the melody is constant because we are not going to change it during the
+The melody is constant because we are not going to change it during the
 execution of the program.
 
 Then we simply have to call the procedure `Play` of the package 
