@@ -17,7 +17,7 @@ For this example we simply connect a piezo buzzer to pin 0 and ground.
 Extra hardware:
 
  - A breadboard
- - A piezzo buzzer
+ - A piezo buzzer
 
 Wiring:
 
