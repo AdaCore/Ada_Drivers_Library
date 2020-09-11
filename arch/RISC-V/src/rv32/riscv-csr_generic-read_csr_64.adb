@@ -33,8 +33,20 @@ with HAL; use HAL;
 
 separate (RISCV.CSR_Generic)
 function Read_CSR_64 return HAL.UInt64 is
-   function Low is new Read_CSR (Reg_Name, UInt32);
-   function High is new Read_CSR (Reg_Name & "h", UInt32);
+   function R_Low is new Read_CSR (Reg_Name, UInt32);
+   function R_High is new Read_CSR (Reg_Name & "h", UInt32);
+
+   Low, High_1, High_2 : UInt32;
 begin
-   return Shift_Left(UInt64 (High), 32) + UInt64 (Low);
+
+   --  Read the High register twice in case Low overflows while we read
+   High_1 := R_High;
+   Low := R_Low;
+   High_2 := R_High;
+
+   if High_2 /= High_1 then
+      return Shift_Left (UInt64 (High_2), 32);
+   else
+      return Shift_Left (UInt64 (High_1), 32) + UInt64 (Low);
+   end if;
 end Read_CSR_64;
