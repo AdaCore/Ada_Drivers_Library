@@ -47,9 +47,85 @@ package RISCV.CSR_Generic is
 
    generic
       Reg_Name : String;
+      type Reg_Type is private;
+   function Swap_CSR (Val : Reg_Type) return Reg_Type
+     with Inline_Always;
+
+   generic
+      Reg_Name : String;
+      type Reg_Type is private;
+   procedure Set_Bits_CSR (Val : Reg_Type)
+     with Inline_Always;
+
+   generic
+      Reg_Name : String;
+      type Reg_Type is private;
+   function Read_And_Set_Bits_CSR (Val : Reg_Type) return Reg_Type
+     with Inline_Always;
+
+   generic
+      Reg_Name : String;
+      type Reg_Type is private;
+   procedure Clear_Bits_CSR (Val : Reg_Type)
+     with Inline_Always;
+
+   generic
+      Reg_Name : String;
+      type Reg_Type is private;
+   function Read_And_Clear_Bits_CSR (Val : Reg_Type) return Reg_Type
+     with Inline_Always;
+
+   --  Package to access Read/Write CSR
+   generic
+      Reg_Name : String;
+      type Reg_Type is private;
+   package CSR_RW_Pck is
+
+      function Read is new Read_CSR (Reg_Name, Reg_Type);
+      procedure Write is new Write_CSR (Reg_Name, Reg_Type);
+      function Swap is new Swap_CSR (Reg_Name, Reg_Type);
+
+      procedure Set_Bits is new Set_Bits_CSR (Reg_Name, Reg_Type);
+      function Read_And_Set_Bits is new Read_And_Set_Bits_CSR (Reg_Name, Reg_Type);
+
+      procedure Clear_Bits is new Clear_Bits_CSR (Reg_Name, Reg_Type);
+      function Read_And_Clear_Bits is new Read_And_Clear_Bits_CSR (Reg_Name, Reg_Type);
+
+   end CSR_RW_Pck;
+
+   --  Package to access Read-only CSR
+   generic
+      Reg_Name : String;
+      type Reg_Type is private;
+   package CSR_RO_Pck is
+      function Read is new Read_CSR (Reg_Name, Reg_Type);
+   end CSR_RO_Pck;
+
+   generic
+      Reg_Name : String;
    function Read_CSR_64 return HAL.UInt64
      with Inline_Always;
    --  Some CSR always have a 64bit precision on all RV32 and RV64 systems.
    --  This function abstracts the hanlding of low and high CSRs on RV32.
+
+   generic
+      Reg_Name : String;
+   procedure Write_CSR_64 (Val : HAL.UInt64)
+     with Inline_Always;
+   --  Some CSR always have a 64bit precision on all RV32 and RV64 systems.
+   --  This function abstracts the hanlding of low and high CSRs on RV32.
+
+   generic
+      Reg_Name : String;
+   package CSR_RW_64_Pck is
+      function Read is new Read_CSR_64 (Reg_Name);
+      procedure Write is new Write_CSR_64 (Reg_Name);
+   end CSR_RW_64_Pck;
+
+   generic
+      Reg_Name : String;
+   package CSR_RO_64_Pck is
+      function Read is new Read_CSR_64 (Reg_Name);
+   end CSR_RO_64_Pck;
 
 end RISCV.CSR_Generic;
