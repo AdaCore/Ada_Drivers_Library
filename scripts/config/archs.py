@@ -30,12 +30,12 @@ def load_cpu_config(config):
         config.add_source_dir('arch/ARM/cortex_m/src/nvic_cm4_cm7', origin)
 
     elif cpu == "RISC-V32":
-        None
-        # No source dirs for RISC-V32
+        config.add_source_dir('arch/RISC-V/src/', origin)
+        config.add_source_dir('arch/RISC-V/src/rv32', origin)
 
     elif cpu == "RISC-V64":
-        None
-        # No source dirs for RISC-V64
+        config.add_source_dir('arch/RISC-V/src/', origin)
+        config.add_source_dir('arch/RISC-V/src/rv64', origin)
 
     else:
         print("Unknown CPU core %s." % cpu)

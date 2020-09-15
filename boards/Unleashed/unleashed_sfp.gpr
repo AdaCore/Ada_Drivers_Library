@@ -92,6 +92,8 @@ library project Unleashed_SFP is
    for Source_Dirs use (
     Src_Dirs_Root & "/hal/src/", -- From HAL config
     Src_Dirs_Root & "/boards/Unleashed/src/", -- From board definition
+    Src_Dirs_Root & "/arch/RISC-V/src/", -- From arch definition
+    Src_Dirs_Root & "/arch/RISC-V/src/rv64", -- From arch definition
     Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/gpio0", -- From MCU definition
     Src_Dirs_Root & "/arch/RISC-V/SiFive/", -- From MCU definition
     Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/spi0", -- From MCU definition
