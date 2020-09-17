@@ -83,6 +83,7 @@ projects = [
 
             # Olimex STM32-H405
             "/examples/stm32_h405/blinky/blinky.gpr",
+            "/examples/stm32_h405/lcd_test/lcd_test.gpr",
 
             # STM32F469 Discovery
             "/boards/stm32f469_discovery/stm32f469_discovery_full.gpr",
