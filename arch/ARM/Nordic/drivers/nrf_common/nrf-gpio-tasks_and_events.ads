@@ -40,7 +40,34 @@ package nRF.GPIO.Tasks_And_Events is
    procedure Enable_Event (Chan     : GPIOTE_Channel;
                            GPIO_Pin : GPIO_Pin_Index;
                            Polarity : Event_Polarity);
-   --  When GPIO_Pin value changes the event associated with Chan is raised
+   --  When GPIO_Pin value changes (as specified by Polarity) the
+   --  event associated with Chan is raised.
+
+   procedure Enable_Channel_Interrupt (Chan : GPIOTE_Channel);
+   --  If enabled, Channel interrupts are triggered when the Event is
+   --  raised.
+
+   function Channel_Event_Is_Set (Chan: GPIOTE_Channel) return Boolean
+   with Inline;
+
+   procedure Acknowledge_Channel_Interrupt (Chan : GPIOTE_Channel)
+   with Pre => Channel_Event_Is_Set (Chan);
+   --  All channel (and port) events share the same interrupt, so
+   --  acknowledging another event's interrupt would lose the event.
+
+   procedure Disable_Channel_Interrupt (Chan : GPIOTE_Channel);
+
+   procedure Enable_Port_Interrupt;
+   --  The Port event occurs when any GPIO pin's state matches the
+   --  Pin_Sense_Mode with which that pin was configured. No other
+   --  configuration is required.
+
+   function Port_Event_Is_Set return Boolean
+   with Inline;
+
+   procedure Acknowledge_Port_Interrupt;
+
+   procedure Disable_Port_Interrupt;
 
    type Task_Action is (Set_Pin, Clear_Pin, Toggle_Pin);
    type Init_Value is (Init_Set, Init_Clear);
