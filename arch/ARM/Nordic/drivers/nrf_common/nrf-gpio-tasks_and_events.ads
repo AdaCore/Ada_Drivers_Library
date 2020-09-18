@@ -47,7 +47,7 @@ package nRF.GPIO.Tasks_And_Events is
    --  If enabled, Channel interrupts are triggered when the Event is
    --  raised.
 
-   function Channel_Event_Is_Set (Chan: GPIOTE_Channel) return Boolean
+   function Channel_Event_Is_Set (Chan : GPIOTE_Channel) return Boolean
    with Inline;
 
    procedure Acknowledge_Channel_Interrupt (Chan : GPIOTE_Channel)

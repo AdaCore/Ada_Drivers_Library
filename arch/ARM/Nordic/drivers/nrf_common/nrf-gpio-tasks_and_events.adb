@@ -56,7 +56,7 @@ package body nRF.GPIO.Tasks_And_Events is
    -- Channel_Event_Is_Set --
    --------------------------
 
-   function Channel_Event_Is_Set (Chan: GPIOTE_Channel) return Boolean is
+   function Channel_Event_Is_Set (Chan : GPIOTE_Channel) return Boolean is
       (GPIOTE_Periph.EVENTS_IN (Integer (Chan)) /= 0);
 
    -------------
@@ -76,7 +76,7 @@ package body nRF.GPIO.Tasks_And_Events is
    is
       INTENCLR : INTENCLR_Register renames GPIOTE_Periph.INTENCLR;
    begin
-      INTENCLR.IN_K.Arr (Integer (Chan)) := Clear;
+      INTENCLR.IN_k.Arr (Integer (Chan)) := Clear;
    end Disable_Channel_Interrupt;
 
    ----------------------------
@@ -98,7 +98,7 @@ package body nRF.GPIO.Tasks_And_Events is
    is
       INTENSET : INTENSET_Register renames GPIOTE_Periph.INTENSET;
    begin
-      INTENSET.IN_K.Arr (Integer (Chan)) := Set;
+      INTENSET.IN_k.Arr (Integer (Chan)) := Set;
    end Enable_Channel_Interrupt;
 
    ------------------
