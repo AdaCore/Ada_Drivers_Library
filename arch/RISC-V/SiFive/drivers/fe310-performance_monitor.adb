@@ -40,7 +40,7 @@ package body FE310.Performance_Monitor is
       type Set_Of_Events is array (Events) of Boolean;
       Event_Group_Selector : Event_Group;
    function Compute_Event_Mask (S : in Set_Of_Events) return Unsigned_XLEN;
-   --  Computes and returns the counter event selector value given a set of 
+   --  Computes and returns the counter event selector value given a set of
    --  events and the group selector. See the FE310 Manual Section 3.8,
    --  Table 3.
 
@@ -57,7 +57,7 @@ package body FE310.Performance_Monitor is
       end loop;
       return Event_Mask;
    end Compute_Event_Mask;
-   
+
 
    -----------------------
    -- Set_Commit_Events --
@@ -145,7 +145,6 @@ package body FE310.Performance_Monitor is
          when 4 =>
             return Mhpmcounter4.Read;
       end case;
-
    end Read_Counter;
 
 end FE310.Performance_Monitor;

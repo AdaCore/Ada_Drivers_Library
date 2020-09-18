@@ -50,8 +50,8 @@ is
                           Conditional_Branch,
                           JAL_Instruction,
                           JALR_Instruction,
-                          Integer_Multiplication, -- FE310 only, not E31
-                          Integer_Division);      -- FE310 only, not E31
+                          Integer_Multiplication,
+                          Integer_Division);
 
 
    type Set_Of_Commit_Events is array (Commit_Events) of Boolean;
@@ -74,7 +74,7 @@ is
                               Branch_Target_Misprediction,
                               Pipeline_Flush_From_CSR_Write,
                               Pipeline_Flish_From_Other,
-                              Integer_Multiplication_Interlock); -- FE310 only
+                              Integer_Multiplication_Interlock);
 
    type Set_Of_Micro_Arch_Events is
      array (Micro_Arch_Events) of Boolean;
@@ -84,7 +84,6 @@ is
 
    procedure Set_Micro_Arch_Events (C : in Counter_Id;
                                     S : in Set_Of_Micro_Arch_Events);
-
 
 
    --  Memory System Events
