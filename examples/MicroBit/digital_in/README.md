@@ -14,7 +14,7 @@ Extra hardware:
 
  - A breadboard
  - An LED
- - A 47k ohm resistor
+ - A 470 ohm resistor
  - A push button
 
 Wiring:
@@ -43,12 +43,12 @@ The procedure `Set` has a precondition that the pin must support digital IO.
 As you can see, the function `Set` to read the pin has the same name as the
 procedure `set` that we used to control the pin in the
 [Digital Out](../Digital_out) example. It is called overloading, two subprograms
-with the same name that provide different service.
+with the same name that provide different services.
 
 In the code, we are going to write an infinite loop that reads the state of pin
-1. If it is high, it means the button is not pressed so we turn off the LED on
-pin 0. It if it is low, it means the button is pressed so we turn on the LED on
-pin 0.
+`1`. If it is high, it means the button is not pressed so we turn off the LED on
+pin `0`. It if it is low, it means the button is pressed so we turn on the LED on
+pin `0`.
 
 Here is the code:
 ```ada
@@ -71,4 +71,5 @@ begin
          MicroBit.IOs.Set (0, True);
       end if;
    end loop;
-end Main;```
+end Main;
+```

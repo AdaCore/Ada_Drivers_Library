@@ -31,7 +31,7 @@ the micro:bit is vertical.
 
 Note that the type used to store the values of the accelerometer is declared in
 the package `MMA8653` (the driver), so we have to `with` and `use` this package
-to be have acces to the operations for this type.
+to have access to the operations for this type.
 
 ```ada
 if Data.Y < -200 then

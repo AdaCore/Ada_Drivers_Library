@@ -15,7 +15,7 @@ Extra hardware:
 
  - A breadboard
  - An LED
- - A 47k ohm resistor
+ - A 470 ohm resistor
 
 Wiring:
 
