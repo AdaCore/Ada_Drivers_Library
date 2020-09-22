@@ -9,6 +9,7 @@ all: svd
 svd:
 	rm -rf $(STM_DIR)/stm32*
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/ST/STM32F40x.svd --boolean -o $(STM_DIR)/stm32f40x -p STM32_SVD --base-types-package HAL --gen-uint-always
+	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/ST/STM32F401.svd --boolean -o $(STM_DIR)/stm32f401 -p STM32_SVD --base-types-package HAL --gen-uint-always
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/ST/STM32F429x.svd --boolean -o $(STM_DIR)/stm32f429x -p STM32_SVD --base-types-package HAL --gen-uint-always
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/ST/STM32F46_79x.svd --boolean -o $(STM_DIR)/stm32f46_79x -p STM32_SVD --base-types-package HAL --gen-uint-always
 	$(SVD2ADA_DIR)/svd2ada $(SVD2ADA_DIR)/CMSIS-SVD/ST/STM32F7x.svd --boolean -o $(STM_DIR)/stm32f7x -p STM32_SVD --base-types-package HAL --gen-uint-always
