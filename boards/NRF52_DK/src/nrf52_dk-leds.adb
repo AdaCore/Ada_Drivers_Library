@@ -46,12 +46,12 @@ package body NRF52_DK.LEDs is
 
    procedure Turn_On (This : in out User_LED) is
    begin
-      This.Clear;
+      This.Set;
    end Turn_On;
 
    procedure Turn_Off (This : in out User_LED) is
    begin
-      This.Set;
+      This.Clear;
    end Turn_Off;
 
 end NRF52_DK.LEDs;
