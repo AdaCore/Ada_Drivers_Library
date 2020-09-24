@@ -38,7 +38,8 @@ package body nRF.GPIO.Tasks_And_Events is
    -- Acknowledge_Channel_Interrupt --
    -----------------------------------
 
-   procedure Acknowledge_Channel_Interrupt (Chan : GPIOTE_Channel) is
+   procedure Acknowledge_Channel_Interrupt (Chan : GPIOTE_Channel)
+   is
    begin
       GPIOTE_Periph.EVENTS_IN (Integer (Chan)) := 0;
    end Acknowledge_Channel_Interrupt;
@@ -47,23 +48,25 @@ package body nRF.GPIO.Tasks_And_Events is
    -- Acknowledge_Port_Interrupt --
    --------------------------------
 
-   procedure Acknowledge_Port_Interrupt is
+   procedure Acknowledge_Port_Interrupt
+   is
    begin
       GPIOTE_Periph.EVENTS_PORT := 0;
    end Acknowledge_Port_Interrupt;
 
-   --------------------------
-   -- Channel_Event_Is_Set --
-   --------------------------
+   -----------------------
+   -- Channel_Event_Set --
+   -----------------------
 
-   function Channel_Event_Is_Set (Chan : GPIOTE_Channel) return Boolean is
-      (GPIOTE_Periph.EVENTS_IN (Integer (Chan)) /= 0);
+   function Channel_Event_Set (Chan : GPIOTE_Channel) return Boolean
+   is (GPIOTE_Periph.EVENTS_IN (Integer (Chan)) /= 0);
 
    -------------
    -- Disable --
    -------------
 
-   procedure Disable (Chan : GPIOTE_Channel) is
+   procedure Disable (Chan : GPIOTE_Channel)
+   is
    begin
       GPIOTE_Periph.CONFIG (Integer (Chan)).MODE := Disabled;
    end Disable;
@@ -161,12 +164,12 @@ package body nRF.GPIO.Tasks_And_Events is
    function Out_Task (Chan : GPIOTE_Channel) return Task_Type
    is (Task_Type (GPIOTE_Periph.TASKS_OUT (Integer (Chan))'Address));
 
-   -----------------------
-   -- Port_Event_Is_Set --
-   -----------------------
+   --------------------
+   -- Port_Event_Set --
+   --------------------
 
-   function Port_Event_Is_Set return Boolean is
-     (GPIOTE_Periph.EVENTS_PORT /= 0);
+   function Port_Event_Set return Boolean
+   is (GPIOTE_Periph.EVENTS_PORT /= 0);
 
    --------------
    -- In_Event --

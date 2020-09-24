@@ -47,11 +47,11 @@ package nRF.GPIO.Tasks_And_Events is
    --  If enabled, Channel interrupts are triggered when the Event is
    --  raised.
 
-   function Channel_Event_Is_Set (Chan : GPIOTE_Channel) return Boolean
+   function Channel_Event_Set (Chan : GPIOTE_Channel) return Boolean
    with Inline;
 
    procedure Acknowledge_Channel_Interrupt (Chan : GPIOTE_Channel)
-   with Pre => Channel_Event_Is_Set (Chan);
+   with Pre => Channel_Event_Set (Chan);
    --  All channel (and port) events share the same interrupt, so
    --  acknowledging another event's interrupt would lose the event.
 
@@ -62,7 +62,7 @@ package nRF.GPIO.Tasks_And_Events is
    --  Pin_Sense_Mode with which that pin was configured. No other
    --  configuration is required.
 
-   function Port_Event_Is_Set return Boolean
+   function Port_Event_Set return Boolean
    with Inline;
 
    procedure Acknowledge_Port_Interrupt;
