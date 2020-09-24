@@ -34,14 +34,75 @@ with HAL;              use HAL;
 
 package body nRF.GPIO.Tasks_And_Events is
 
+   -----------------------------------
+   -- Acknowledge_Channel_Interrupt --
+   -----------------------------------
+
+   procedure Acknowledge_Channel_Interrupt (Chan : GPIOTE_Channel)
+   is
+   begin
+      GPIOTE_Periph.EVENTS_IN (Integer (Chan)) := 0;
+   end Acknowledge_Channel_Interrupt;
+
+   --------------------------------
+   -- Acknowledge_Port_Interrupt --
+   --------------------------------
+
+   procedure Acknowledge_Port_Interrupt
+   is
+   begin
+      GPIOTE_Periph.EVENTS_PORT := 0;
+   end Acknowledge_Port_Interrupt;
+
+   -----------------------
+   -- Channel_Event_Set --
+   -----------------------
+
+   function Channel_Event_Set (Chan : GPIOTE_Channel) return Boolean
+   is (GPIOTE_Periph.EVENTS_IN (Integer (Chan)) /= 0);
+
    -------------
    -- Disable --
    -------------
 
-   procedure Disable (Chan : GPIOTE_Channel) is
+   procedure Disable (Chan : GPIOTE_Channel)
+   is
    begin
       GPIOTE_Periph.CONFIG (Integer (Chan)).MODE := Disabled;
    end Disable;
+
+   -------------------------------
+   -- Disable_Channel_Interrupt --
+   -------------------------------
+
+   procedure Disable_Channel_Interrupt (Chan : GPIOTE_Channel)
+   is
+      INTENCLR : INTENCLR_Register renames GPIOTE_Periph.INTENCLR;
+   begin
+      INTENCLR.IN_k.Arr (Integer (Chan)) := Clear;
+   end Disable_Channel_Interrupt;
+
+   ----------------------------
+   -- Disable_Port_Interrupt --
+   ----------------------------
+
+   procedure Disable_Port_Interrupt
+   is
+      INTENCLR : INTENCLR_Register renames GPIOTE_Periph.INTENCLR;
+   begin
+      INTENCLR.PORT := Clear;
+   end Disable_Port_Interrupt;
+
+   ------------------------------
+   -- Enable_Channel_Interrupt --
+   ------------------------------
+
+   procedure Enable_Channel_Interrupt (Chan : GPIOTE_Channel)
+   is
+      INTENSET : INTENSET_Register renames GPIOTE_Periph.INTENSET;
+   begin
+      INTENSET.IN_k.Arr (Integer (Chan)) := Set;
+   end Enable_Channel_Interrupt;
 
    ------------------
    -- Enable_Event --
@@ -61,6 +122,17 @@ package body nRF.GPIO.Tasks_And_Events is
                           when Any_Change   => Toggle);
       CONFIG.MODE := Event;
    end Enable_Event;
+
+   ---------------------------
+   -- Enable_Port_Interrupt --
+   ---------------------------
+
+   procedure Enable_Port_Interrupt
+   is
+      INTENSET : INTENSET_Register renames GPIOTE_Periph.INTENSET;
+   begin
+      INTENSET.PORT := Set;
+   end Enable_Port_Interrupt;
 
    -----------------
    -- Enable_Task --
@@ -92,9 +164,16 @@ package body nRF.GPIO.Tasks_And_Events is
    function Out_Task (Chan : GPIOTE_Channel) return Task_Type
    is (Task_Type (GPIOTE_Periph.TASKS_OUT (Integer (Chan))'Address));
 
-     --------------
-     -- In_Event --
-     --------------
+   --------------------
+   -- Port_Event_Set --
+   --------------------
+
+   function Port_Event_Set return Boolean
+   is (GPIOTE_Periph.EVENTS_PORT /= 0);
+
+   --------------
+   -- In_Event --
+   --------------
 
    function In_Event (Chan : GPIOTE_Channel) return Event_Type
    is (Event_Type (GPIOTE_Periph.EVENTS_IN (Integer (Chan))'Address));
