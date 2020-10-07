@@ -45,6 +45,10 @@ package body STM32.Setup is
    is
       I2C_Conf : I2C_Configuration;
    begin
+      if STM32.I2C.Port_Enabled (Port) then
+         return;
+      end if;
+
       --  GPIO --
       Enable_Clock (SDA & SCL);
 
