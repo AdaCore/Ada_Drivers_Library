@@ -43,7 +43,6 @@ with Cortex_M_SVD.NVIC; use Cortex_M_SVD.NVIC;
 
 package body Cortex_M.NVIC is
 
-
    ------------------
    -- Set_Priority --
    ------------------
@@ -64,11 +63,13 @@ package body Cortex_M.NVIC is
       IPR_Index : constant Natural := Natural (IRQn) / 4;
       IP_Index  : constant Natural := Natural (IRQn) mod 4;
       IPR       : As_Array;
+      Value     : constant UInt8 :=
+        Shift_Left (UInt8 (Priority), 8 - NVIC_PRIO_BITS) and 16#FF#;
    begin
 
       IPR.IPR := NVIC_Periph.NVIC_IPR (IPR_Index);
 
-      IPR.Arr (IP_Index) := UInt8 (Priority);
+      IPR.Arr (IP_Index) := Value;
 
       NVIC_Periph.NVIC_IPR (IPR_Index) := IPR.IPR;
    end Set_Priority;
