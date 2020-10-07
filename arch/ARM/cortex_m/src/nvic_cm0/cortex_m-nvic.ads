@@ -46,8 +46,11 @@ with HAL;                  use HAL;
 
 package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
 
+   NVIC_PRIO_BITS : constant := 2;
+   --  All Cortex M0 parts have 2 bit priority mask
+
    type Interrupt_ID is new Natural range 0 .. 31;
-   type Interrupt_Priority is new UInt8;
+   type Interrupt_Priority is new UInt8 range 0 .. (2**NVIC_PRIO_BITS - 1);
 
    procedure Set_Priority
      (IRQn     : Interrupt_ID;
