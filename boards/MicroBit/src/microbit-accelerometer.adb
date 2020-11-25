@@ -30,6 +30,9 @@
 ------------------------------------------------------------------------------
 
 with MicroBit.I2C;
+with MicroBit.Display;
+with MicroBit.Display.Symbols;
+with MicroBit.Time;
 
 package body MicroBit.Accelerometer is
 
@@ -45,6 +48,21 @@ package body MicroBit.Accelerometer is
    begin
       if not MicroBit.I2C.Initialized then
          MicroBit.I2C.Initialize;
+      end if;
+
+      if not Acc.Check_Device_Id then
+
+         --  The expected accelerometer is not deteced. Maybe this is running on
+         --  a micro:bit v1.5 with a different accelerometer.
+
+         --  Show a blinking frown face...
+         Display.Clear;
+         loop
+            Display.Symbols.Frown;
+            Time.Delay_Ms (500);
+            Display.Clear;
+            Time.Delay_Ms (500);
+         end loop;
       end if;
 
       Acc.Configure (MMA8653.Two_G,
