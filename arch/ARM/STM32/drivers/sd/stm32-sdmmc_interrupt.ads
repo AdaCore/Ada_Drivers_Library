@@ -34,6 +34,7 @@
 
 with HAL.SDMMC;           use HAL.SDMMC;
 with Ada.Interrupts;
+with System;
 
 limited with STM32.SDMMC;
 
