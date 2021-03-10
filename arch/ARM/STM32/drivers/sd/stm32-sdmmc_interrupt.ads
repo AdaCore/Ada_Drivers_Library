@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2016-2017, AdaCore                     --
+--                     Copyright (C) 2016-2021, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -44,9 +44,10 @@ package STM32.SDMMC_Interrupt is
    ------------------
 
    protected type SDMMC_Interrupt_Handler
-     (Interrupt_ID : Ada.Interrupts.Interrupt_ID)
+     (Interrupt_ID : Ada.Interrupts.Interrupt_ID;
+      Priority     : System.Interrupt_Priority)
    is
-      pragma Interrupt_Priority (250);
+      pragma Interrupt_Priority (Priority);
 
       procedure Set_Transfer_State (This : in out STM32.SDMMC.SDMMC_Controller);
       procedure Clear_Transfer_State;
