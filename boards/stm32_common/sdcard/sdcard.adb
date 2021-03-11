@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2021, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -39,9 +39,13 @@ with STM32.GPIO;              use STM32.GPIO;
 with STM32.SDMMC;             use STM32.SDMMC;
 with STM32.SDMMC_Interrupt;   use STM32.SDMMC_Interrupt;
 
+with System;
+
 package body SDCard is
 
-   SD_Interrupt_Handler : aliased SDMMC_Interrupt_Handler (SD_Interrupt);
+   SD_Interrupt_Handler : aliased SDMMC_Interrupt_Handler
+     (Interrupt_ID => SD_Interrupt,
+      Priority     => System.Interrupt_Priority'Last);
 
    ----------------
    -- Initialize --
