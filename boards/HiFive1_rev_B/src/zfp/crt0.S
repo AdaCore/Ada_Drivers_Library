@@ -1,3 +1,15 @@
+        /*********/
+        /* .data */
+        /*********/
+         .section .data.argv
+argv_str:
+        .ascii  "main\0"
+
+        .align 4
+argv:
+        .word argv_str
+        .word 0
+
         /**********/
         /* _start */
         /**********/
@@ -12,6 +24,7 @@ _start:
         la gp, __global_pointer$
 .option pop
         la sp, __stack_end
+
 
         /* Load data section */
         .type _startup_copy_data,@function
@@ -43,9 +56,37 @@ _startup_clear_bss:
 2:
         .size _startup_clear_bss, . - _startup_clear_bss
 
+
+        /* Call static constructors */
+.weak __libc_init_array
+        la t0, __libc_init_array
+        beq t0, zero, .skip_libc_init
+        jalr t0
+.skip_libc_init:
+
+        /* Call main, with argc, argv  */
+        la a0, 1
+        la a1, argv
         call main
+
+        /* Save main's return value */
+        mv t0, a0
+
+        /* static destructors */
+.weak __libc_fini_array
+        la t0, __libc_fini_array
+        beq t0, zero, .skip_libc_fini
+        jalr t0
+.skip_libc_fini:
+
+        /* Restore main's return value */
+        mv a0, t0
+
         call __gnat_exit
 2:      j 2b
+
+
+
 
         .globl __gnat_exit
         .type __gnat_exit,@function
@@ -53,12 +94,28 @@ _startup_clear_bss:
         .type abort,@function
 abort:
 __gnat_exit:
-
-        /* Use ebreak on RISC-V32 until QEMU is updated to 4.0 */
-        ebreak
+        /* Write to the SiFive Test device on QEMU to shutdown */
+        li t0, 0x5555
+        li t1, 0x100000
+        sw t0, (t1)
 
         j __gnat_exit
 
         /* Weak alias _exit to __gnat_exit */
         .weak      _exit
         .set _exit,__gnat_exit
+
+
+        .globl putchar
+        .type putchar,@function
+putchar:
+        li t1, 268513280
+        li t1, 0x10013000
+        li t2, 0x80000000
+.loop:
+        lw t3, 0(t1)
+        and t3, t3, t2
+        bnez t3, .loop
+
+        sb a0, 0(t1)
+        ret

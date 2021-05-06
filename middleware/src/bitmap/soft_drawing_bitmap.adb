@@ -471,7 +471,9 @@ package body Soft_Drawing_Bitmap is
 
    begin
       if Radius = 0 then
-         Dispatch (Buffer).Fill_Rect (Area'Update (Position => (X0, Y0)));
+         Dispatch (Buffer).Fill_Rect ((Position => (X0, Y0),
+                                       Width    => Area.Width,
+                                       Height   => Area.Height));
          return;
       end if;
 

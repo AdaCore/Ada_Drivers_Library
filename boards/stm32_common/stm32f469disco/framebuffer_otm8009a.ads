@@ -31,12 +31,10 @@
 
 with HAL;             use HAL;
 with HAL.Framebuffer; use HAL.Framebuffer;
-with HAL.Bitmap;
 
 with Framebuffer_DSI;
 
 private with STM32.Device;
-private with STM32.DMA2D_Bitmap;
 private with STM32.DSI;
 private with STM32.GPIO;
 

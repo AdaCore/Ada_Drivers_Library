@@ -62,15 +62,15 @@ library project Native is
 
    Linker_Switches := ();
 
-   Max_Mount_Points               := "2";                 -- From default value
-   Max_Mount_Name_Length          := "128";               -- From default value
-   Has_Ravenscar_Full_Runtime     := "False";             -- From default value
-   Board                          := "Native";            -- From command line
-   Has_ZFP_Runtime                := "False";             -- From default value
-   Has_Ravenscar_SFP_Runtime      := "False";             -- From default value
-   Use_Startup_Gen                := "False";             -- From command line
-   Max_Path_Length                := "1024";              -- From default value
    Architecture                   := "Native";            -- From board definition
+   Board                          := "Native";            -- From command line
+   Has_Ravenscar_Full_Runtime     := "False";             -- From default value
+   Has_Ravenscar_SFP_Runtime      := "False";             -- From default value
+   Has_ZFP_Runtime                := "False";             -- From default value
+   Max_Mount_Name_Length          := "128";               -- From default value
+   Max_Mount_Points               := "2";                 -- From default value
+   Max_Path_Length                := "1024";              -- From default value
+   Use_Startup_Gen                := "False";             -- From command line
 
    --  Project source directories
    Src_Dirs_Root := "../..";
