@@ -39,7 +39,7 @@ class Database:
 
     def ada_configuration(self):
         out = ""
-        for key in self.configuration:
+        for key in sorted(self.configuration):
             origin = self.configuration[key]['origin']
             value = self.configuration[key]['value']
             kind = self.configuration[key]['kind']
@@ -99,7 +99,7 @@ class Database:
             out += '   end Device_Configuration;\n\n'
 
         # Config keys and values
-        for key in self.configuration:
+        for key in sorted(self.configuration):
             origin = self.configuration[key]['origin']
             value = self.configuration[key]['value']
             out += "   %-30s := %-20s -- From %s\n" % \

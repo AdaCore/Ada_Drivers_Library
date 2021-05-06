@@ -34,7 +34,7 @@ def list_of_devices(config):
     elif family == "nRF51":
         return ['nRF51822xxAA']
     elif family == "nRF52":
-        return ['nRF52832xxAA']
+        return ['nRF52832xxAA', 'nRF52833xxAA']
     elif family == "FE3":
         return ['FE310']
     elif family == "U5":
@@ -196,8 +196,16 @@ def load_device_config(config, source_dir):
 
         config.pre_define('Number_Of_Interrupts', 128, origin)
 
-        config.add_memory('rom', 'flash', '0x00000000', '512K')
-        config.add_memory('ram', 'ram', '0x20000000', '64K')
+        if mcu.startswith('nRF52832'):
+            if mcu.endswith ('AA'):
+                config.add_memory('rom', 'flash', '0x00000000', '512K')
+                config.add_memory('ram', 'ram', '0x20000000', '64K')
+            elif mcu.endswith ('AB'):
+                config.add_memory('rom', 'flash', '0x00000000', '256K')
+                config.add_memory('ram', 'ram', '0x20000000', '32K')
+        elif mcu.startswith('nRF52833'):
+            config.add_memory('rom', 'flash', '0x00000000', '512K')
+            config.add_memory('ram', 'ram', '0x20000000', '128K')
 
     elif mcu == 'FE310':
         src += ['arch/RISC-V/SiFive/svd/FE310/',
