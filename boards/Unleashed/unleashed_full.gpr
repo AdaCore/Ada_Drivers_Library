@@ -69,23 +69,23 @@ library project Unleashed_Full is
       for Number_Of_Interrupts use "0";
    end Device_Configuration;
 
-   Vendor                         := "SiFive";            -- From board definition
-   Max_Mount_Points               := "2";                 -- From default value
-   Max_Mount_Name_Length          := "128";               -- From default value
-   Runtime_Profile                := "ravenscar-full";    -- From command line
-   Device_Name                    := "U540";              -- From board definition
-   Device_Family                  := "U5";                -- From board definition
-   Has_Ravenscar_SFP_Runtime      := "True";              -- From board definition
-   Runtime_Name                   := "ravenscar-full-unleashed"; -- From default value
-   Has_Ravenscar_Full_Runtime     := "True";              -- From board definition
-   CPU_Core                       := "RISC-V64";          -- From mcu definition
-   Board                          := "Unleashed";         -- From command line
-   Has_ZFP_Runtime                := "True";              -- From board definition
-   Number_Of_Interrupts           := "0";                 -- From default value
-   Use_Startup_Gen                := "False";             -- From command line
-   Max_Path_Length                := "1024";              -- From default value
-   Runtime_Name_Suffix            := "unleashed";         -- From board definition
    Architecture                   := "RISC-V";            -- From board definition
+   Board                          := "Unleashed";         -- From command line
+   CPU_Core                       := "RISC-V64";          -- From mcu definition
+   Device_Family                  := "U5";                -- From board definition
+   Device_Name                    := "U540";              -- From board definition
+   Has_Ravenscar_Full_Runtime     := "True";              -- From board definition
+   Has_Ravenscar_SFP_Runtime      := "True";              -- From board definition
+   Has_ZFP_Runtime                := "True";              -- From board definition
+   Max_Mount_Name_Length          := "128";               -- From default value
+   Max_Mount_Points               := "2";                 -- From default value
+   Max_Path_Length                := "1024";              -- From default value
+   Number_Of_Interrupts           := "0";                 -- From default value
+   Runtime_Name                   := "ravenscar-full-unleashed"; -- From default value
+   Runtime_Name_Suffix            := "unleashed";         -- From board definition
+   Runtime_Profile                := "ravenscar-full";    -- From command line
+   Use_Startup_Gen                := "False";             -- From command line
+   Vendor                         := "SiFive";            -- From board definition
 
    --  Project source directories
    Src_Dirs_Root := "../..";
@@ -94,11 +94,11 @@ library project Unleashed_Full is
     Src_Dirs_Root & "/boards/Unleashed/src/", -- From board definition
     Src_Dirs_Root & "/arch/RISC-V/src/", -- From arch definition
     Src_Dirs_Root & "/arch/RISC-V/src/rv64", -- From arch definition
-    Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/gpio0", -- From MCU definition
     Src_Dirs_Root & "/arch/RISC-V/SiFive/", -- From MCU definition
     Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/spi0", -- From MCU definition
-    Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/pwm0", -- From MCU definition
     Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/uart0", -- From MCU definition
+    Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/gpio0", -- From MCU definition
+    Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/pwm0", -- From MCU definition
     Src_Dirs_Root & "/middleware/src/filesystem", -- From middleware config
     Src_Dirs_Root & "/middleware/src/BLE", -- From middleware config
     Src_Dirs_Root & "/middleware/src/utils", -- From middleware config

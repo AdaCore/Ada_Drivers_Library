@@ -68,7 +68,7 @@ def git_clone(repo_url, branch, dst, recursive=False):
 #  - Recursive clone?
 #  - install command (if any)
 git_repos = [("https://github.com/AdaCore/bb-runtimes",
-              False,
+              "community-2021",
               "bb-runtimes",
               False,
               [sys.executable, ROOT_DIR + "/bb-runtimes/install.py",

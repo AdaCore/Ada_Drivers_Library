@@ -39,7 +39,7 @@ class Database:
 
     def ada_configuration(self):
         out = ""
-        for key in self.configuration:
+        for key in sorted(self.configuration):
             origin = self.configuration[key]['origin']
             value = self.configuration[key]['value']
             kind = self.configuration[key]['kind']
@@ -96,10 +96,15 @@ class Database:
                    out += '      for Size     ("%(name)s") use "%(size)s";\n' % (mem)
 
                out += '\n      for Boot_Memory use "%s";\n' % self.get_config("Boot_Memory")
+
+            for key in ['hifive1_uart_root', 'qemu_sifive_test_exit']:
+                if key in self.configuration:
+                    out += '      for User_Tag ("%s") use "%s";\n' % (key, self.configuration[key]['value'])
+
             out += '   end Device_Configuration;\n\n'
 
         # Config keys and values
-        for key in self.configuration:
+        for key in sorted(self.configuration):
             origin = self.configuration[key]['origin']
             value = self.configuration[key]['value']
             out += "   %-30s := %-20s -- From %s\n" % \

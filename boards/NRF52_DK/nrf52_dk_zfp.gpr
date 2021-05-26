@@ -209,25 +209,25 @@ library project NRF52_DK_ZFP is
       for Boot_Memory use "flash";
    end Device_Configuration;
 
-   Vendor                         := "Nordic";            -- From board definition
-   Max_Mount_Points               := "2";                 -- From default value
-   Boot_Memory                    := "flash";             -- From default value
-   Max_Mount_Name_Length          := "128";               -- From default value
-   Runtime_Profile                := "zfp";               -- From command line
-   Device_Name                    := "nRF52832xxAA";      -- From board definition
-   Device_Family                  := "nRF52";             -- From board definition
-   Has_Ravenscar_SFP_Runtime      := "False";             -- From board definition
-   Runtime_Name                   := "zfp-cortex-m4f";    -- From default value
-   Has_Ravenscar_Full_Runtime     := "False";             -- From board definition
-   CPU_Core                       := "ARM Cortex-M4F";    -- From mcu definition
-   Board                          := "NRF52_DK";          -- From command line
-   Has_ZFP_Runtime                := "True";              -- From board definition
-   Number_Of_Interrupts           := "128";               -- From MCU definition
-   Has_Custom_Memory_Area_1       := "False";             -- From default value
-   Use_Startup_Gen                := "True";              -- From command line
-   Max_Path_Length                := "1024";              -- From default value
-   Runtime_Name_Suffix            := "cortex-m4f";        -- From board definition
    Architecture                   := "ARM";               -- From board definition
+   Board                          := "NRF52_DK";          -- From command line
+   Boot_Memory                    := "flash";             -- From default value
+   CPU_Core                       := "ARM Cortex-M4F";    -- From mcu definition
+   Device_Family                  := "nRF52";             -- From board definition
+   Device_Name                    := "nRF52832xxAA";      -- From board definition
+   Has_Custom_Memory_Area_1       := "False";             -- From default value
+   Has_Ravenscar_Full_Runtime     := "False";             -- From board definition
+   Has_Ravenscar_SFP_Runtime      := "False";             -- From board definition
+   Has_ZFP_Runtime                := "True";              -- From board definition
+   Max_Mount_Name_Length          := "128";               -- From default value
+   Max_Mount_Points               := "2";                 -- From default value
+   Max_Path_Length                := "1024";              -- From default value
+   Number_Of_Interrupts           := "128";               -- From MCU definition
+   Runtime_Name                   := "zfp-cortex-m4f";    -- From default value
+   Runtime_Name_Suffix            := "cortex-m4f";        -- From board definition
+   Runtime_Profile                := "zfp";               -- From command line
+   Use_Startup_Gen                := "True";              -- From command line
+   Vendor                         := "Nordic";            -- From board definition
 
    --  Project source directories
    Src_Dirs_Root := "../..";

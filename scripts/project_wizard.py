@@ -62,8 +62,9 @@ def mcu_config(config, source_dir):
         if family.startswith("STM32"):
             config.query_integer_key("High_Speed_External_Clock",
                                      1000000, 32000000)
-        elif family.startswith("FE310"):
-            config.query_integer_key("FLASH_SIZE")
+        elif family.startswith("FE3"):
+            config.query_integer_key("hifive1_uart_root")
+            config.query_bool_key("qemu_sifive_test_exit")
 
         load_cpu_config(config)
         load_device_config(config, source_dir)

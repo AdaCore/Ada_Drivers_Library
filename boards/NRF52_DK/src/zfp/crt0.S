@@ -1,6 +1,13 @@
 	.syntax unified
+
+#if defined(__SOFTFP__)
 	.cpu cortex-m0
-	.thumb
+#else
+        /* FPU support means at least cortex-m4 compatibility */
+        .cpu cortex-m4
+#endif
+
+        .thumb
 
 	.text
 	.globl __vectors
@@ -8,22 +15,22 @@
 	.section .vectors,"a"
 __vectors:
 	/* Cortex-M core interrupts */
-	.word   __stack_end          /* stack top address */
-	.word   _start               /* 1 Reset */
-	.word   fault                /* 2 NMI. */
-	.word   fault                /* 3 Hard fault. */
-	.word   fault                /* 4 Mem manage. */
-	.word   fault                /* 5 Bus fault. */
-	.word   fault                /* 6 Usage fault. */
-	.word   fault                /* 7 reserved. */
-	.word   fault                /* 8 reserved. */
-	.word   fault                /* 9 reserved. */
-	.word   fault                /* 10 reserved. */
-	.word   __gnat_sv_call_trap  /* 11 SVCall. */
-	.word   __gnat_bkpt_trap     /* 12 Breakpoint. */
-	.word   fault                /* 13 reserved. */
-	.word   __gnat_pend_sv_trap  /* 14 PendSV. */
-	.word   __gnat_sys_tick_trap /* 15 Systick. */
+	.word   __stack_end              /* stack top address */
+	.word   Reset_Handler            /* 1 Reset */
+	.word   NMI_Handler              /* 2 NMI. */
+	.word   HardFault_Handler        /* 3 Hard fault. */
+	.word   MemoryManagement_Handler /* 4 Mem manage. */
+	.word   BusFault_Handler         /* 5 Bus fault. */
+	.word   UsageFault_Handler       /* 6 Usage fault. */
+	.word   Reserved_Handler         /* 7 reserved. */
+	.word   Reserved_Handler         /* 8 reserved. */
+	.word   Reserved_Handler         /* 9 reserved. */
+	.word   Reserved_Handler         /* 10 reserved. */
+	.word   SVC_Handler              /* 11 SVCall. */
+	.word   DebugMon_Handler         /* 12 Breakpoint. */
+	.word   Reserved_Handler         /* 13 reserved. */
+	.word   PendSV_Handler           /* 14 PendSV. */
+	.word   SysTick_Handler          /* 15 Systick. */
 	/* MCU interrupts */
         .word __adl_irq_handler /* 0 */
         .word __adl_irq_handler /* 1 */
@@ -155,304 +162,309 @@ __vectors:
         .word __adl_irq_handler /* 127 */
 
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
    .weak      __adl_irq_handler
-   .thumb_set __adl_irq_handler,__gnat_irq_trap
+   .thumb_set __adl_irq_handler,__common_int_handler
 
 	.text
 
    .weak      __unknown_interrupt_handler
-   .thumb_set __unknown_interrupt_handler,__gnat_irq_trap
+   .thumb_set __unknown_interrupt_handler,__common_int_handler
 
+.macro weak_handler name
 	.thumb_func
-.weak __gnat_irq_trap
-.type __gnat_irq_trap, %function
-__gnat_irq_trap:
+.weak \name
+.type \name, %function
+\name:
 0:	b 0b
-	.size __gnat_irq_trap, . - __gnat_irq_trap
+	.size \name, . - \name
+.endm
 
-	.thumb_func
-.weak __gnat_sv_call_trap
-.type __gnat_sv_call_trap, %function
-__gnat_sv_call_trap:
-0:	b 0b
-	.size __gnat_sv_call_trap, . - __gnat_sv_call_trap
+weak_handler NMI_Handler
+weak_handler HardFault_Handler
+weak_handler MemoryManagement_Handler
+weak_handler BusFault_Handler
+weak_handler UsageFault_Handler
+weak_handler Reserved_Handler
+weak_handler SVC_Handler
+weak_handler DebugMon_Handler
+weak_handler PendSV_Handler
+weak_handler SysTick_Handler
+weak_handler __common_int_handler
 
-	.thumb_func
-.weak __gnat_pend_sv_trap
-.type __gnat_pend_sv_trap, %function
-__gnat_pend_sv_trap:
-0:	b 0b
-	.size __gnat_pend_sv_trap, . - __gnat_pend_sv_trap
+        /*********/
+        /* .data */
+        /*********/
+        .section .data.argv
+argv_str:
+        .ascii  "main\0"
 
-	.thumb_func
-.weak __gnat_sys_tick_trap
-.type __gnat_sys_tick_trap, %function
-__gnat_sys_tick_trap:
-0:	b 0b
-	.size __gnat_sys_tick_trap, . - __gnat_sys_tick_trap
+        .align 4
+argv:
+        .word argv_str
+        .word 0
 
-	.thumb_func
-fault:	b fault
-
+        /*****************/
+        /* Reset_Handler */
+        /*****************/
 
 	.text
 	.thumb_func
-	.globl _start
+	.globl Reset_Handler
 
-_start:
+Reset_Handler:
 
 	/* Set the stack pointer */
 	ldr	r1,=__stack_end
@@ -490,8 +502,48 @@ _startup_clear_bss:
 1:
         .size _startup_clear_bss, . - _startup_clear_bss
 
-	bl	main
+#if !defined(__SOFTFP__)
+        /**************/
+        /* Enable FPU */
+        /**************/
 
-	bl	_exit
+        movw     r0,#0xED88
+        movt     r0,#0xE000
+        ldr      r1,[r0]
+        orr      r1,r1,#(0xF << 20)
+        str      r1,[r0]
 
-hang:   b .
+        dsb
+        isb
+#endif
+
+        /* Call static constructors */
+.weak __libc_init_array
+        ldr     r5,=__libc_init_array
+        cmp     r5,#0
+        beq     .skip_libc_init
+        blx     r5
+.skip_libc_init:
+
+        /* Call main, with argc, argv */
+        movs    r0,#1
+        ldr	r1,=argv
+        bl	main
+
+        /* Save main's return value */
+        mov r4, r0
+
+        /* static destructors */
+.weak __libc_fini_array
+        ldr     r5,=__libc_fini_array
+        cmp     r5,#0
+        beq     .skip_libc_fini
+        blx     r5
+.skip_libc_fini:
+
+        /* Restore main's return value */
+        mov r0, r4
+
+        bl	_exit
+        bl	Reset_Handler
+	.size Reserved_Handler, . - Reset_Handler

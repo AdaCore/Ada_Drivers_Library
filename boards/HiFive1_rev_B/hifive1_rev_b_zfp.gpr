@@ -62,7 +62,7 @@ library project HiFive1_rev_B_ZFP is
 
    Linker_Switches := ("-T", Project'Project_dir & "/src/zfp/link.ld");
    for Target use "riscv32-elf";
-   for Runtime ("Ada") use "zfp-rv32imc";
+   for Runtime ("Ada") use "zfp-rv32imac";
 
    package Device_Configuration is
       for CPU_Name use "RISC-V32";
@@ -79,27 +79,31 @@ library project HiFive1_rev_B_ZFP is
       for Size     ("RAM") use "16K";
 
       for Boot_Memory use "board_flash";
+      for User_Tag ("hifive1_uart_root") use "268513280";
+      for User_Tag ("qemu_sifive_test_exit") use "True";
    end Device_Configuration;
 
-   Vendor                         := "SiFive";            -- From board definition
-   Max_Mount_Points               := "2";                 -- From default value
-   Boot_Memory                    := "board_flash";       -- From default value
-   Max_Mount_Name_Length          := "128";               -- From default value
-   Runtime_Profile                := "zfp";               -- From command line
-   Device_Name                    := "FE310";             -- From board definition
-   Device_Family                  := "FE3";               -- From board definition
-   Has_Ravenscar_SFP_Runtime      := "False";             -- From board definition
-   Runtime_Name                   := "zfp-rv32imc";       -- From default value
-   Has_Ravenscar_Full_Runtime     := "False";             -- From board definition
-   CPU_Core                       := "RISC-V32";          -- From mcu definition
-   Board                          := "HiFive1_rev_B";     -- From command line
-   Has_ZFP_Runtime                := "True";              -- From board definition
-   Number_Of_Interrupts           := "0";                 -- From default value
-   Has_Custom_Memory_Area_1       := "False";             -- From default value
-   Use_Startup_Gen                := "True";              -- From command line
-   Max_Path_Length                := "1024";              -- From default value
-   Runtime_Name_Suffix            := "rv32imc";           -- From board definition
    Architecture                   := "RISC-V";            -- From board definition
+   Board                          := "HiFive1_rev_B";     -- From command line
+   Boot_Memory                    := "board_flash";       -- From default value
+   CPU_Core                       := "RISC-V32";          -- From mcu definition
+   Device_Family                  := "FE3";               -- From board definition
+   Device_Name                    := "FE310";             -- From board definition
+   Has_Custom_Memory_Area_1       := "False";             -- From default value
+   Has_Ravenscar_Full_Runtime     := "False";             -- From board definition
+   Has_Ravenscar_SFP_Runtime      := "False";             -- From board definition
+   Has_ZFP_Runtime                := "True";              -- From board definition
+   Max_Mount_Name_Length          := "128";               -- From default value
+   Max_Mount_Points               := "2";                 -- From default value
+   Max_Path_Length                := "1024";              -- From default value
+   Number_Of_Interrupts           := "0";                 -- From default value
+   Runtime_Name                   := "zfp-rv32imac";      -- From default value
+   Runtime_Name_Suffix            := "rv32imac";          -- From board definition
+   Runtime_Profile                := "zfp";               -- From command line
+   Use_Startup_Gen                := "True";              -- From command line
+   Vendor                         := "SiFive";            -- From board definition
+   hifive1_uart_root              := "268513280";         -- From board definition
+   qemu_sifive_test_exit          := "True";              -- From board definition
 
    --  Project source directories
    Src_Dirs_Root := "../..";

@@ -69,24 +69,24 @@ library project STM32F407_Discovery_Full is
       for Number_Of_Interrupts use "0";
    end Device_Configuration;
 
-   Vendor                         := "STMicro";           -- From board definition
-   Max_Mount_Points               := "2";                 -- From default value
-   Max_Mount_Name_Length          := "128";               -- From default value
-   Runtime_Profile                := "ravenscar-full";    -- From command line
-   Device_Name                    := "STM32F407VGTx";     -- From board definition
-   Device_Family                  := "STM32F4";           -- From board definition
-   Has_Ravenscar_SFP_Runtime      := "True";              -- From board definition
-   Runtime_Name                   := "ravenscar-full-stm32f4"; -- From default value
-   Has_Ravenscar_Full_Runtime     := "True";              -- From board definition
-   CPU_Core                       := "ARM Cortex-M4F";    -- From mcu definition
-   Board                          := "STM32F407_Discovery"; -- From command line
-   Has_ZFP_Runtime                := "False";             -- From board definition
-   Number_Of_Interrupts           := "0";                 -- From default value
-   High_Speed_External_Clock      := "8000000";           -- From board definition
-   Use_Startup_Gen                := "False";             -- From command line
-   Max_Path_Length                := "1024";              -- From default value
-   Runtime_Name_Suffix            := "stm32f4";           -- From board definition
    Architecture                   := "ARM";               -- From board definition
+   Board                          := "STM32F407_Discovery"; -- From command line
+   CPU_Core                       := "ARM Cortex-M4F";    -- From mcu definition
+   Device_Family                  := "STM32F4";           -- From board definition
+   Device_Name                    := "STM32F407VGTx";     -- From board definition
+   Has_Ravenscar_Full_Runtime     := "True";              -- From board definition
+   Has_Ravenscar_SFP_Runtime      := "True";              -- From board definition
+   Has_ZFP_Runtime                := "False";             -- From board definition
+   High_Speed_External_Clock      := "8000000";           -- From board definition
+   Max_Mount_Name_Length          := "128";               -- From default value
+   Max_Mount_Points               := "2";                 -- From default value
+   Max_Path_Length                := "1024";              -- From default value
+   Number_Of_Interrupts           := "0";                 -- From default value
+   Runtime_Name                   := "ravenscar-full-stm32f4"; -- From default value
+   Runtime_Name_Suffix            := "stm32f4";           -- From board definition
+   Runtime_Profile                := "ravenscar-full";    -- From command line
+   Use_Startup_Gen                := "False";             -- From command line
+   Vendor                         := "STMicro";           -- From board definition
 
    --  Project source directories
    Src_Dirs_Root := "../..";

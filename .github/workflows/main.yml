@@ -7,14 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ada-actions/toolchain@ce2020
+    - uses: ada-actions/toolchain@ce2021
       with:
         distrib: community
-    - uses: ada-actions/toolchain@ce2020
+    - uses: ada-actions/toolchain@ce2021
       with:
         distrib: community
         target: arm-elf
-    - uses: ada-actions/toolchain@ce2020
+    - uses: ada-actions/toolchain@ce2021
       with:
         distrib: community
         target: riscv32-elf
@@ -31,10 +31,10 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ada-actions/toolchain@ce2020
+    - uses: ada-actions/toolchain@ce2021
       with:
         distrib: community
-    - uses: ada-actions/toolchain@ce2020
+    - uses: ada-actions/toolchain@ce2021
       with:
         distrib: community
         target: arm-elf
@@ -43,10 +43,10 @@ jobs:
       with:
         python-version: '3.x'
     - name: Remove built-in arm-eabi Ravenscar run-times
-      run:  rm -Recurse -Force "d:\a\_temp\gnat-2020-20200818-arm-elf-windows64-bin\arm-eabi\lib\gnat\ravenscar*"
+      run:  rm -Recurse -Force "d:\a\_temp\gnat-2021-20210519-arm-elf-windows64-bin\arm-eabi\lib\gnat\ravenscar*"
       shell: pwsh
     - name: Remove built-in arm-eabi ZFP run-times
-      run:  rm -Recurse -Force "d:\a\_temp\gnat-2020-20200818-arm-elf-windows64-bin\arm-eabi\lib\gnat\zfp*"
+      run:  rm -Recurse -Force "d:\a\_temp\gnat-2021-20210519-arm-elf-windows64-bin\arm-eabi\lib\gnat\zfp*"
       shell: pwsh
 
     - run: python $PWD/scripts/install_dependencies.py
