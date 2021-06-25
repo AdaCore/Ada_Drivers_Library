@@ -68,7 +68,7 @@ def git_clone(repo_url, branch, dst, recursive=False):
 #  - Recursive clone?
 #  - install command (if any)
 git_repos = [("https://github.com/AdaCore/bb-runtimes",
-              "community-2021",
+              None,
               "bb-runtimes",
               False,
               [sys.executable, ROOT_DIR + "/bb-runtimes/install.py",
@@ -87,7 +87,6 @@ parser.add_argument(
 
 
 def main(args):
-    at_least_one_error = False
 
     print("ROOT_DIR :" + ROOT_DIR)
     ret = 0
@@ -103,7 +102,7 @@ def main(args):
             print("%s already cloned" % dest)
 
         if ret:
-            at_least_one_error = True
+            sys.exit(1)
 
         if build_cmd:
             print("Running build command:")
@@ -115,10 +114,7 @@ def main(args):
             if ret:
                 print('Dependency install command error' +\
                       ' (returned {}):\n{}'.format(ret, stderr))
-                at_least_one_error = True
-
-    if at_least_one_error:
-        sys.exit(1)
+                sys.exit(1)
 
 if __name__ == '__main__':
     main(parser.parse_args())
