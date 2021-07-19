@@ -154,6 +154,26 @@ package SGTL5000 is
                                   Charge_Pump_Src          : Charge_Pump_Source;
                                   Linereg_Out_Voltage      : Linear_Regulator_Out_Voltage);
 
+   type Lineout_Current is (C_0_18ma, C_0_27ma, C_0_36ma, C_0_45ma, C_0_54ma)
+     with Size => 4;
+
+   for Lineout_Current use (C_0_18ma => 0,
+                            C_0_27ma => 1,
+                            C_0_36ma => 3,
+                            C_0_45ma => 7,
+                            C_0_54ma => 15);
+
+   procedure Set_Lineout_Control (This                   : in out SGTL5000_DAC;
+                                  Out_Current            : Lineout_Current;
+                                  Amp_Analog_GND_Voltage : UInt6);
+   --  Amp_Analog_GND_Voltage (15mV steps), usually VDDIO/2:
+   --  0x00 = 0.800 V
+   --  ...
+   --  0x1F = 1.575 V
+   --  ...
+   --  0x23 = 1.675 V
+   --  0x24-0x3F are invalid
+
    procedure Set_Analog_Power (This                      : in out SGTL5000_DAC;
                                DAC_Mono                  : Boolean := False;
                                Linreg_Simple_PowerUp     : Boolean := False;
@@ -193,6 +213,12 @@ package SGTL5000 is
                                 Rate : Rate_Mode;
                                 FS   : SYS_FS_Freq;
                                 MCLK : MCLK_Mode);
+
+   procedure Set_PLL (This            : in out SGTL5000_DAC;
+                      PLL_Output_Freq : Natural;
+                      MCLK_Freq       : Natural);
+   --  If sampling frequency = 44.1kHz then PLL_Output_Freq should be 180.6336
+   --  MHz else PLL_Output_Freq should be 196.608 MHz
 
    type SCLKFREQ_Mode is (SCLKFREQ_64FS,
                           SCLKFREQ_32FS);
