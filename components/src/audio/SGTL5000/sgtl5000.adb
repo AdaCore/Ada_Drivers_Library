@@ -57,16 +57,19 @@ package body SGTL5000 is
                         Reg   : UInt16;
                         Value : UInt16)
    is
-      Status : I2C_Status with Unreferenced;
+      Status : I2C_Status;
 
    begin
-      This.Port.Mem_Write
+      This.Port.Master_Transmit
         (Addr          => SGTL5000_QFN20_I2C_Addr,
-         Mem_Addr      => Reg,
-         Mem_Addr_Size => Memory_Size_16b,
-         Data          => (1 => UInt8 (Shift_Right (Value, 8) and 16#FF#),
-                           2 => UInt8 (Value and 16#FF#)),
+         Data          => (1 => UInt8 (Shift_Right (Reg, 8) and 16#FF#),
+                           2 => UInt8 (Reg and 16#FF#),
+                           3 => UInt8 (Shift_Right (Value, 8) and 16#FF#),
+                           4 => UInt8 (Value and 16#FF#)),
          Status        => Status);
+      if Status /= Ok then
+         raise Program_Error;
+      end if;
    end I2C_Write;
 
    --------------
@@ -87,6 +90,9 @@ package body SGTL5000 is
          Mem_Addr_Size => Memory_Size_16b,
          Data          => Data,
          Status        => Status);
+      if Status /= Ok then
+         raise Program_Error;
+      end if;
       return Shift_Left (UInt16 (Data (1)), 8) or UInt16 (Data (2));
    end I2C_Read;
 
@@ -300,8 +306,23 @@ package body SGTL5000 is
       end if;
 
       Value := Value or UInt16 (Linereg_Out_Voltage);
-      This.I2C_Write (LINE_OUT_CTRL_REG, Value);
+      This.I2C_Write (LINREG_CTRL_REG, Value);
    end Set_Linereg_Control;
+
+   -------------------------
+   -- Set_Lineout_Control --
+   -------------------------
+
+   procedure Set_Lineout_Control (This                   : in out SGTL5000_DAC;
+                                  Out_Current            : Lineout_Current;
+                                  Amp_Analog_GND_Voltage : UInt6)
+   is
+   begin
+      This.I2C_Write (LINE_OUT_CTRL_REG,
+                      Shift_Left (UInt16 (Out_Current'Enum_Rep), 8)
+                      or
+                      UInt16 (Amp_Analog_GND_Voltage));
+   end Set_Lineout_Control;
 
    ----------------------
    -- Set_Analog_Power --
@@ -406,6 +427,34 @@ package body SGTL5000 is
       This.I2C_Write (CLK_CTRL_REG, Value);
    end Set_Clock_Control;
 
+   -------------
+   -- Set_PLL --
+   -------------
+
+   procedure Set_PLL (This            : in out SGTL5000_DAC;
+                      PLL_Output_Freq : Natural;
+                      MCLK_Freq       : Natural)
+   is
+      Int_Divisor : constant Natural := PLL_Output_Freq / MCLK_Freq;
+      Frac_Divisor : constant Natural :=
+        Natural (((Float (PLL_Output_Freq) / Float (MCLK_Freq)) - Float (Int_Divisor)) * 2048.0);
+   begin
+      This.I2C_Write
+        (PLL_CTRL_REG,
+         Shift_Left (UInt16 (Int_Divisor), 11) or UInt16 (Frac_Divisor));
+
+      --  Wait for PLL lock
+      loop
+         declare
+            Status : constant UInt16 := This.I2C_Read (ANA_STATUS_REG);
+         begin
+
+            --  Check PLL_IS_LOCKED bit
+            exit when (Status and 2#0001_0000#) /= 0;
+         end;
+      end loop;
+   end Set_PLL;
+
    ---------------------
    -- Set_I2S_Control --
    ---------------------
@@ -425,12 +474,12 @@ package body SGTL5000 is
                             when SCLKFREQ_64FS => 2#0_0000_0000#,
                             when SCLKFREQ_32FS => 2#1_0000_0000#);
 
-      if Invert_SCLK then
-         Value := Value or 2#0100_0000#;
-      end if;
-
       if Master_Mode then
          Value := Value or 2#1000_0000#;
+      end if;
+
+      if Invert_SCLK then
+         Value := Value or 2#0100_0000#;
       end if;
 
       Value := Value or (case Data_Len is
