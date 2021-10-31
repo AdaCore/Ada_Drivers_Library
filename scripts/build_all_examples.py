@@ -106,6 +106,11 @@ projects = [
             "/examples/STM32F769_Discovery/dma2d_stm32f769disco.gpr",
             "/examples/STM32F769_Discovery/draw_stm32f769disco.gpr",
 
+            # NUCLEO-F401RE
+            "/boards/nucleo_f401re/nucleo_f401re_full.gpr",
+            "/boards/nucleo_f401re/nucleo_f401re_sfp.gpr",
+            "/examples/nucleo_f401re/blinky_f401re.gpr",
+
             # NUCLEO-F446ZE
             "/boards/nucleo_f446ze/nucleo_f446ze_full.gpr",
             "/boards/nucleo_f446ze/nucleo_f446ze_sfp.gpr",
