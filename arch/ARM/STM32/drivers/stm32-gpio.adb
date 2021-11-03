@@ -293,7 +293,7 @@ package body STM32.GPIO is
       --  3) do step 1 again
       --  4) read the entire LCKR register
       --  5) read the entire LCKR register again (optional)
-      --
+
       --  Throughout the sequence the same value for the lower 16 bits of the
       --  word must be maintained (i.e., the pin mask), including when clearing
       --  the LCCK bit in the upper half.
