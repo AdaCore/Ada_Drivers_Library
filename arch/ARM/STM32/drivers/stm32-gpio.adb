@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2018, AdaCore                         --
+--                 Copyright (C) 2015-2021, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -279,34 +279,42 @@ package body STM32.GPIO is
    ------------------
 
    procedure Lock_The_Pin (This : in out GPIO_Port;  Pin : GPIO_Pin) is
-      Temp : UInt32;
-      pragma Volatile (Temp);
-
       use System.Machine_Code;
       use ASCII;
    begin
-      --  As per the Reference Manual (RM0090; Doc ID 018909 Rev 6) pg 282,
-      --  a specific sequence is required to set the Lock bit. Throughout the
-      --  sequence the same value for the lower 15 bits of the word must be
-      --  used (ie the pin number). The lock bit is referred to as LCKK in
-      --  the doc.
+      --  As per the Reference Manual (RM0090; Doc ID 018909 Rev 6) pg 282, a
+      --  specific sequence is required to set a pin's lock bit. The sequence
+      --  writes and reads values from the port's LCKR register. Remember that
+      --  this 32-bit register has 16 bits for the pin mask (0 .. 15), with bit
+      --  #16 used as the "lock control bit".
+      --
+      --  1) write a 1 to the lock control bit with a 1 in the pin bit mask for the pin to be locked
+      --  2) write a 0 to the lock control bit with a 1 in the pin bit mask for the pin to be locked
+      --  3) do step 1 again
+      --  4) read the entire LCKR register
+      --  5) read the entire LCKR register again (optional)
+      --
+      --  Throughout the sequence the same value for the lower 16 bits of the
+      --  word must be maintained (i.e., the pin mask), including when clearing
+      --  the LCCK bit in the upper half.
 
---        Temp := LCCK or Pin'Enum_Rep;
---
---        --  set the lock bit
---        Port.LCKR := Temp;
---
---        --  clear the lock bit
---        Port.LCKR := Pin'Enum_Rep;
---
---        --  set the lock bit again
---        Port.LCKR := Temp;
---
---        --  read the lock bit
---        Temp := Port.LCKR;
---
---        --  read the lock bit again
---        Temp := Port.LCKR;
+      --  Expressed in Ada the sequence would be as follows:
+      --        Temp := LCCK or Pin'Enum_Rep;
+      --
+      --        --  set the lock bit and pin bit, others will be unchanged
+      --        Port.LCKR := Temp;
+      --
+      --        --  clear the lock bit but keep the pin mask unchanged
+      --        Port.LCKR := Pin'Enum_Rep;
+      --
+      --        --  set the lock bit again, with both lock bit and pin mask set as before
+      --        Port.LCKR := Temp;
+      --
+      --        --  read the lock bit to complete key lock sequence
+      --        Temp := Port.LCKR;
+      --
+      --        --  read the lock bit again (optional)
+      --        Temp := Port.LCKR;
 
       --  We use the following assembly language sequence because the above
       --  high-level version in Ada works only if the optimizer is enabled.
@@ -315,22 +323,16 @@ package body STM32.GPIO is
       --  We don't want the functionality to depend on the switches, and we
       --  don't want to preclude debugging, hence the following:
 
-      Asm ("orr  r3, %2, #65536"  & LF & HT &
-           "str  r3, %0"          & LF & HT &
-           "ldr  r3, %0"          & LF & HT &  -- temp <- pin or LCCK
-           "str  r3, [%1, #28]"   & LF & HT &  -- temp -> lckr
-           "str  %2, [%1, #28]"   & LF & HT &  -- pin -> lckr
-           "ldr  r3, %0"          & LF & HT &
-           "str  r3, [%1, #28]"   & LF & HT &  -- temp -> lckr
-           "ldr  r3, [%1, #28]"   & LF & HT &
-           "str  r3, %0"          & LF & HT &  -- temp <- lckr
-           "ldr  r3, [%1, #28]"   & LF & HT &
-           "str  r3, %0"          & LF & HT,   -- temp <- lckr
-           Inputs => (Address'Asm_Input ("r", This'Address), -- %1
-                     (GPIO_Pin'Asm_Input ("r", Pin))),            -- %2
-           Outputs => (UInt32'Asm_Output ("=m", Temp)),  -- %0
+      Asm ("orr  r3, %1, #65536"  & LF & HT &  -- Temp := LCCK or Pin, ie both set
+           "str  r3, [%0, #28]"   & LF & HT &  -- Port.LCKR := Temp
+           "str  %1, [%0, #28]"   & LF & HT &  -- Port.LCKR := Pin alone, LCCK bit cleared
+           "str  r3, [%0, #28]"   & LF & HT &  -- Port.LCKR := Temp
+           "ldr  r3, [%0, #28]"   & LF & HT &  -- Temp := Port.LCKR
+           "ldr  r3, [%0, #28]"   & LF & HT,   -- Temp := Port.LCKR
+           Inputs => (Address'Asm_Input ("r", This'Address), -- %0
+                     (GPIO_Pin'Asm_Input ("r", Pin))),       -- %1
            Volatile => True,
-           Clobber  => ("r2, r3"));
+           Clobber  => ("r3"));
    end Lock_The_Pin;
 
    ----------
