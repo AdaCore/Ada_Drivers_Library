@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 package HAL.Block_Drivers is
+   pragma Preelaborate;
 
    type Block_Driver is limited interface;
    type Any_Block_Driver is access all Block_Driver'Class;

@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 package HAL.GPIO is
+   pragma Preelaborate;
 
    type Capability is (Unknown_Mode, Input, Output,   -- Mode
                        Floating, Pull_Up, Pull_Down); -- Resistor

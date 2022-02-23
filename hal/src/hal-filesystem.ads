@@ -32,6 +32,8 @@
 with System;
 
 package HAL.Filesystem is
+   pragma Preelaborate;
+
    type Status_Code is
      (OK,
       Non_Empty_Directory,

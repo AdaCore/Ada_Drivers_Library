@@ -32,6 +32,7 @@
 with HAL.Bitmap;
 
 package HAL.Framebuffer is
+   pragma Preelaborate;
 
    subtype FB_Color_Mode is HAL.Bitmap.Bitmap_Color_Mode range
      HAL.Bitmap.ARGB_8888 .. HAL.Bitmap.M_1;

@@ -32,6 +32,7 @@
 --  Display Serial Interface
 
 package HAL.DSI is
+   pragma Preelaborate;
 
    subtype DSI_Virtual_Channel_ID is UInt2;
 
