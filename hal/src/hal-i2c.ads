@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 package HAL.I2C is
+   pragma Preelaborate;
 
    type I2C_Status is
      (Ok,

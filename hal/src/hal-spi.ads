@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 package HAL.SPI is
+   pragma Preelaborate;
 
    type SPI_Status is
      (Ok,

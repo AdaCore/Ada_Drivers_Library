@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 package HAL.Touch_Panel is
+   pragma Preelaborate;
 
    type TP_Touch_State is record
       X      : Natural;

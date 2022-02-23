@@ -32,6 +32,7 @@
 with System;
 
 package HAL.Bitmap is
+   pragma Preelaborate;
 
    type Orientation_Mode is
      (Default,

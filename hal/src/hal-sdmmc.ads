@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 package HAL.SDMMC is
+   pragma Preelaborate;
 
    type SD_Error is
      (OK,

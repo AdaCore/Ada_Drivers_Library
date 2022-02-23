@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 package HAL.UART is
+   pragma Preelaborate;
 
    type UART_Status is
      (Ok,

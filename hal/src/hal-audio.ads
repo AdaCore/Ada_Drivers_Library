@@ -32,6 +32,7 @@
 with Interfaces; use Interfaces;
 
 package HAL.Audio is
+   pragma Preelaborate;
 
    type Audio_Buffer is array (Natural range <>) of Integer_16
      with Component_Size => 16, Alignment => 2;
