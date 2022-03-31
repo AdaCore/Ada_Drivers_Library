@@ -31,6 +31,7 @@
 
 with nRF.Device;
 with nRF.TWI;
+with nRF.GPIO; use nRF.GPIO;
 
 package body MicroBit.I2C is
 
@@ -52,14 +53,11 @@ package body MicroBit.I2C is
    ----------------
 
    procedure Initialize (S : Speed := S400kbps) is
-      Config   : GPIO_Configuration := (Mode => Mode_In,
-                                        Resistors => Pull_Up,
-                                        Input_Buffer => Input_Buffer_Connect,
-                                        Drive => Drive_S0D1,
-                                        Sense => Sense_Disabled);
-
-      GPIO_Pin_SCL : GPIO_Point := (Pin => MB_SCL.Pin);
-      GPIO_Pin_SDA : GPIO_Point := (Pin => MB_SDA.Pin);
+       Config   : constant GPIO_Configuration := (Mode => Mode_In,
+                                                  Resistors => Pull_Up,
+                                                  Input_Buffer => Input_Buffer_Connect,
+                                                  Drive => Drive_S0D1,
+                                                  Sense => Sense_Disabled);
    begin
       Device.Configure
         (SCL   => MB_SCL.Pin,
@@ -70,9 +68,9 @@ package body MicroBit.I2C is
                       when S400kbps => nRF.TWI.TWI_400kbps)
         );
 
-      --Inicialize the GPIO Pins for SCL & SDA
-      Configure_IO(GPIO_Pin_SCL, Config);
-      Configure_IO(GPIO_Pin_SDA, Config);
+      --  Initialize the GPIO Pins for SCL & SDA
+      Configure_IO(MB_SCL, Config);
+      Configure_IO(MB_SDA, Config);
 
       Device.Enable;
       Init_Done := True;
