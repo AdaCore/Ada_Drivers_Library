@@ -6,26 +6,25 @@
 
 with HAL;        use HAL;
 with HAL.I2C;    use HAL.I2C;
-with HAL.I2C.Master;    use HAL.I2C.Master;
 
 -- I2C 8-bit IO expander with quasi bidirectional I/O, no data
 -- direction, no latch
 
 package PCF8574 is
 
-   subtype Module_Address is I2C_7bit_Address range 16#20# .. 16#2F#;
+   subtype PCF8574_Address is I2C_Address range 16#40# .. 16#5F#;
 
-   type Module is tagged private;
-   type Any_Module is access all Module'Class;
+   type PCF8574_Module is tagged private;
+   type Any_PCF8574_Module is access all PCF8574_Module'Class;
 
-   procedure Configure (This : in out Module;
-                        Port : Any_I2C_Master_Port;
-                        Addr : Module_Address);
+   procedure Configure (This : in out PCF8574_Module;
+                        Port : Any_I2C_Port;
+                        Addr : PCF8574_Address);
 
-   procedure Set (This : Module; Data : UInt8);
+   procedure Set (This : PCF8574_Module; Data : UInt8);
 
-   function Get (This : Module) return UInt8;
-   procedure Get (This : Module; Data : out UInt8);
+   function Get (This : PCF8574_Module) return UInt8;
+   procedure Get (This : PCF8574_Module; Data : out UInt8);
    -- when reading the input from keys (buttons) carefully read the
    -- datasheet. The input line should be set high before reading.
    -- E.g. if all lines are key input:
@@ -33,9 +32,9 @@ package PCF8574 is
    -- Keys := M.Get;
 
 private
-   type Module is tagged record
-      Port : Any_I2C_Master_Port;
-      Addr : Module_Address;
+   type PCF8574_Module is tagged record
+      Port : Any_I2C_Port;
+      Addr : PCF8574_Address;
    end record;
 
 end PCF8574;

@@ -11,9 +11,9 @@ package body PCF8574 is
    --  Configure  --
    -----------------
 
-   procedure Configure (This : in out Module;
-                        Port : Any_I2C_Master_Port;
-                        Addr : Module_Address)
+   procedure Configure (This : in out PCF8574_Module;
+                        Port : Any_I2C_Port;
+                        Addr : PCF8574_Address)
    is begin
       This.Port := Port;
       This.Addr := Addr;
@@ -23,7 +23,7 @@ package body PCF8574 is
    --  Get  --
    -----------
 
-   function Get (This : Module) return UInt8
+   function Get (This : PCF8574_Module) return UInt8
    is
       Val    : I2C_Data (1 .. 1);
       Status : I2C_Status;
@@ -41,7 +41,7 @@ package body PCF8574 is
    --  Set  --
    -----------
 
-   procedure Set (This : Module; Data : UInt8)
+   procedure Set (This : PCF8574_Module; Data : UInt8)
    is
       Status : I2C_Status;
    begin
