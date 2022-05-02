@@ -7,18 +7,6 @@
 
 package body PCF8574 is
 
-   -----------------
-   --  Configure  --
-   -----------------
-
-   procedure Configure (This : in out PCF8574_Module;
-                        Port : Any_I2C_Port;
-                        Addr : PCF8574_Address)
-   is begin
-      This.Port := Port;
-      This.Addr := Addr;
-   end Configure;
-
    -----------
    --  Get  --
    -----------
@@ -28,11 +16,12 @@ package body PCF8574 is
       Val    : I2C_Data (1 .. 1);
       Status : I2C_Status;
    begin
-      This.Port.Receive (This.Addr, Val, Status);
+      --  if not This.Is_Initialized then raise Program_Error; end if;
+      This.Port.Master_Receive (This.Addr, Val, Status);
       return Val(1);
    end Get;
 
-   procedure Get (This : Module; Data : out UInt8)
+   procedure Get (This : PCF8574_Module; Data : out UInt8)
    is begin
       Data := Get (This);
    end Get;
@@ -45,7 +34,7 @@ package body PCF8574 is
    is
       Status : I2C_Status;
    begin
-      This.Port.Transmit (This.Addr, (1=>Data), Status);
+      This.Port.Master_Transmit (This.Addr, (1=>Data), Status);
    end Set;
 
 end PCF8574;

@@ -14,12 +14,11 @@ package PCF8574 is
 
    subtype PCF8574_Address is I2C_Address range 16#40# .. 16#5F#;
 
-   type PCF8574_Module is tagged private;
+   type PCF8574_Module (Port : not null Any_I2C_Port;
+                        Addr : I2C_Address) is tagged private;
+
    type Any_PCF8574_Module is access all PCF8574_Module'Class;
 
-   procedure Configure (This : in out PCF8574_Module;
-                        Port : Any_I2C_Port;
-                        Addr : PCF8574_Address);
 
    procedure Set (This : PCF8574_Module; Data : UInt8);
 
@@ -32,9 +31,8 @@ package PCF8574 is
    -- Keys := M.Get;
 
 private
-   type PCF8574_Module is tagged record
-      Port : Any_I2C_Port;
-      Addr : PCF8574_Address;
-   end record;
+
+   type PCF8574_Module (Port : not null Any_I2C_Port;
+                        Addr : I2C_Address) is tagged null record;
 
 end PCF8574;
