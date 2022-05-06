@@ -70,7 +70,7 @@ package body LCD_HD44780.PCF8574 is
 
 
    overriding
-   procedure Set_Backlight (This  : LCD_PCF8574;
+   procedure Set_Backlight (This  : in out LCD_PCF8574;
                             Is_On : Boolean := True)
    is
       Bl : Boolean renames I2C_Shadow (This.Pins (Backlight));
@@ -95,9 +95,9 @@ package body LCD_HD44780.PCF8574 is
 
 
    overriding
-   procedure Output (This    : in out LCD_PCF8574;
-                     Cmd     :        UInt8;
-                     Is_Data :        Boolean := False)
+   procedure Output (This    : LCD_PCF8574;
+                     Cmd     : UInt8;
+                     Is_Data : Boolean := False)
    is
       RW_Bit : constant Bit_Number := This.Pins (ReadWrite);
       RS_Bit : constant Bit_Number := This.Pins (RegSel);

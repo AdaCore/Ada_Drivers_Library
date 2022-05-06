@@ -29,7 +29,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  driver for text based LCDs in the typical sizes of 16x2 or 20x4
+--  driver for text based LCDs in the typical sizes of 8x1, 16x2 or 20x4
 
 with HAL; use HAL;
 with HAL.Time;
@@ -51,38 +51,38 @@ package LCD_HD44780 is
 
    type Any_LCD_Module is access all LCD_Module'Class;
 
-   procedure Initialize (This : not null Any_LCD_Module);
+   procedure Initialize (This : in out LCD_Module);
 
-   procedure Put (This : not null Any_LCD_Module; C : Character) with Inline;
-   procedure Put (This : not null Any_LCD_Module; Text : String);
+   procedure Put (This : in out LCD_Module; C : Character) with Inline;
+   procedure Put (This : in out LCD_Module; Text : String);
    --  output at the current cursor location
 
-   procedure Put (This : not null Any_LCD_Module;
+   procedure Put (This : in out LCD_Module;
                   X    : Char_Position;
                   Y    : Line_Position;
                   Text : String);
    --  output at the specified cursor location
 
-   procedure Clear_Screen (This : not null Any_LCD_Module);
+   procedure Clear_Screen (This : in out LCD_Module);
    --  clear display and move cursor to home position
 
-   procedure Home (This : not null Any_LCD_Module);
+   procedure Home (This : in out LCD_Module);
    --  move cursor to home position
 
-   procedure Goto_XY (This : not null Any_LCD_Module; X : Char_Position; Y : Line_Position);
+   procedure Goto_XY (This : in out LCD_Module; X : Char_Position; Y : Line_Position);
    --  move cursor into line Y and before character position X.  Lines
    --  are numbered 1 to 2 (or 1 to 4 on big displays).  The left most
    --  character position is Y = 1.  The right most position is
    --  defined by Display_Width;
 
-   procedure Set_Backlight (This : LCD_Module;
+   procedure Set_Backlight (This : in out LCD_Module;
                             Is_On : Boolean := True) is abstract;
 
    type HD44780_Pins is (Enable, ReadWrite, RegSel, Backlight, D0, D1, D2, D3, D4, D5, D6, D7);
    subtype HD44780_4bit_Pins is HD44780_Pins range Enable .. D3;
 
    type Command_Type is new UInt8;
-   procedure Command (This : not null Any_LCD_Module; Cmd : Command_Type)
+   procedure Command (This : in out LCD_Module; Cmd : Command_Type)
    with Inline;
    --  send the command code Cmd to the display
 
@@ -126,9 +126,9 @@ private
 
    procedure Toggle_Enable (This : LCD_Module) is null;
 
-   procedure Output (This    : in out LCD_Module;
-                     Cmd     :        UInt8;
-                     Is_Data :        Boolean := False) is null;
+   procedure Output (This    : LCD_Module;
+                     Cmd     : UInt8;
+                     Is_Data : Boolean := False) is null;
 
    procedure Init_4bit_Mode (This : LCD_Module) is null;
 

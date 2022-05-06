@@ -57,65 +57,67 @@
 package body LCD_HD44780 is
 
    --  initialize display
-   procedure Initialize (This : not null Any_LCD_Module) is
+   procedure Initialize (This : in out LCD_Module) is
+      Dispatch : constant Any_LCD_Module := This'Unchecked_Access;
    begin
-      This.Init_4bit_Mode;
+      Dispatch.Init_4bit_Mode;
 
       --  now we can use the standard Command routine for set up
-      Command (This, Commands.Display_On); --  implies blink off and cursor off
-      Clear_Screen (This);
-      Command (This, Commands.Entry_Inc);
+      Dispatch.Command (Commands.Display_On); --  implies blink off and cursor off
+      This.Clear_Screen;
+      Dispatch.Command (Commands.Entry_Inc);
    end Initialize;
 
    --  output at the current cursor location
-   procedure Put (This : not null Any_LCD_Module; C : Character) is
+   procedure Put (This : in out LCD_Module; C : Character) is
    begin
       This.Output (Character'Pos (C), Is_Data => True);
    end Put;
 
    --  output at the current cursor location
-   procedure Put (This : not null Any_LCD_Module; Text : String) is
+   procedure Put (This : in out LCD_Module; Text : String) is
    begin
       for C of Text loop
-         Put (This, C);
+         This.Put (C);
       end loop;
    end Put;
 
    --  output at the specified cursor location
-   procedure Put (This : not null Any_LCD_Module;
+   procedure Put (This : in out LCD_Module;
                   X    : Char_Position;
                   Y    : Line_Position;
                   Text : String)
    is
    begin
-      Goto_XY (This, X, Y);
-      Put (This, Text);
+      This.Goto_XY (X, Y);
+      This.Put (Text);
    end Put;
 
    --  output the command code Cmd to the display
-   procedure Command (This : not null Any_LCD_Module; Cmd : Command_Type) is
+   procedure Command (This : in out LCD_Module; Cmd : Command_Type) is
+      Dispatch : constant Any_LCD_Module := This'Unchecked_Access;
    begin
-      This.Output (UInt8 (Cmd), Is_Data => False);
+      Dispatch.Output (UInt8 (Cmd), Is_Data => False);
    end Command;
 
    --  clear display and move cursor to home position
-   procedure Clear_Screen (This : not null Any_LCD_Module) is
+   procedure Clear_Screen (This : in out LCD_Module) is
    begin
-      Command (This, Commands.Clear);
+      This.Command (Commands.Clear);
       This.Time.Delay_Microseconds (1_500);
    end Clear_Screen;
 
    --  move cursor to home position
-   procedure Home (This : not null Any_LCD_Module) is
+   procedure Home (This : in out LCD_Module) is
    begin
-      Command (This, 16#02#);
+      This.Command (16#02#);
    end Home;
 
    --  move cursor into line Y and before character position X.  Lines
    --  are numbered 1 to 2 (or 1 to 4 on big displays).  The left most
    --  character position is Y = 1.  The right most position is
    --  defined by Lcd.Display.Width;
-   procedure Goto_XY (This : not null Any_LCD_Module;
+   procedure Goto_XY (This : in out LCD_Module;
                       X    : Char_Position;
                       Y    : Line_Position)
    is

@@ -67,7 +67,7 @@ package LCD_HD44780.PCF8574 is
                     Mapping        : Bit_Mapping := Standard_Mapping) return LCD_PCF8574;
 
    overriding
-   procedure Set_Backlight (This  : LCD_PCF8574;
+   procedure Set_Backlight (This  : in out LCD_PCF8574;
                             Is_On : Boolean := True);
 
 private
@@ -85,9 +85,9 @@ private
    procedure Toggle_Enable (This : LCD_PCF8574);
 
    overriding
-   procedure Output (This    : in out LCD_PCF8574;
-                     Cmd     :        UInt8;
-                     Is_Data :        Boolean := False);
+   procedure Output (This    : LCD_PCF8574;
+                     Cmd     : UInt8;
+                     Is_Data : Boolean := False);
 
    overriding
    procedure Init_4bit_Mode (This : LCD_PCF8574);
