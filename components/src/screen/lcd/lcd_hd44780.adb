@@ -70,8 +70,9 @@ package body LCD_HD44780 is
 
    --  output at the current cursor location
    procedure Put (This : in out LCD_Module; C : Character) is
+      Dispatch : constant Any_LCD_Module := This'Unchecked_Access;
    begin
-      This.Output (Character'Pos (C), Is_Data => True);
+      Dispatch.Output (Character'Pos (C), Is_Data => True);
    end Put;
 
    --  output at the current cursor location
