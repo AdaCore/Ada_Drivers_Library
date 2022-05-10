@@ -52,11 +52,12 @@
 --  sent to the DR for the next read from the MPU.  By the register
 --  selector (RS) signal, these two registers can be selected
 
-
-
 package body LCD_HD44780 is
 
-   --  initialize display
+   ----------------
+   -- Initialize --
+   ----------------
+
    procedure Initialize (This : in out LCD_Module) is
       Dispatch : constant Any_LCD_Module := This'Unchecked_Access;
    begin
@@ -67,6 +68,10 @@ package body LCD_HD44780 is
       This.Clear_Screen;
       Dispatch.Command (Commands.Entry_Inc);
    end Initialize;
+
+   ---------
+   -- Put --
+   ---------
 
    --  output at the current cursor location
    procedure Put (This : in out LCD_Module; C : Character) is
@@ -94,12 +99,20 @@ package body LCD_HD44780 is
       This.Put (Text);
    end Put;
 
+   -------------
+   -- Command --
+   -------------
+
    --  output the command code Cmd to the display
    procedure Command (This : in out LCD_Module; Cmd : Command_Type) is
       Dispatch : constant Any_LCD_Module := This'Unchecked_Access;
    begin
       Dispatch.Output (UInt8 (Cmd), Is_Data => False);
    end Command;
+
+   ------------------
+   -- Clear_Screen --
+   ------------------
 
    --  clear display and move cursor to home position
    procedure Clear_Screen (This : in out LCD_Module) is
@@ -108,11 +121,19 @@ package body LCD_HD44780 is
       This.Time.Delay_Microseconds (1_500);
    end Clear_Screen;
 
+   ----------
+   -- Home --
+   ----------
+
    --  move cursor to home position
    procedure Home (This : in out LCD_Module) is
    begin
       This.Command (16#02#);
    end Home;
+
+   -------------
+   -- Goto_XY --
+   -------------
 
    --  move cursor into line Y and before character position X.  Lines
    --  are numbered 1 to 2 (or 1 to 4 on big displays).  The left most
@@ -130,7 +151,6 @@ package body LCD_HD44780 is
       when 2 => Command (This, 16#C0# + Command_Type (X) - 1);
       when 3 => Command (This, 16#80# + Command_Type (X + This.Display_Width) - 1);
       when 4 => Command (This, 16#C0# + Command_Type (X + This.Display_Width) - 1);
-      --  when others => null;
       end case;
    end Goto_XY;
 

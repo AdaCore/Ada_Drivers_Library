@@ -116,7 +116,6 @@ package LCD_HD44780 is
       Move_Display_Right      : constant Command_Type := 16#1C#;
    end Commands;
 
-
 private
 
    type LCD_Module (Display_Width  : Char_Position;

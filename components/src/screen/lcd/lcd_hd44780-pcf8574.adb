@@ -36,14 +36,17 @@ pragma Restrictions (No_Implicit_Heap_Allocations);
 
 package body LCD_HD44780.PCF8574 is
 
-
    type Shadow_Bits is array (Bit_Number) of Boolean
    with Pack, Size => 8;
 
    I2C_Shadow : Shadow_Bits;
 
-   procedure Write_Shadow (This : Lcd_Pcf8574)
+   procedure Write_Shadow (This : LCD_PCF8574)
    with Inline;
+
+   ------------
+   -- Create --
+   ------------
 
    function Create (Display_Width  : Char_Position;
                     Display_Height : Line_Position;
@@ -59,6 +62,9 @@ package body LCD_HD44780.PCF8574 is
       end return;
    end Create;
 
+   ------------------
+   -- Write_Shadow --
+   ------------------
 
    procedure Write_Shadow (This : LCD_PCF8574)
    is
@@ -68,6 +74,9 @@ package body LCD_HD44780.PCF8574 is
       This.I2C_Driver.Set (Shadow_As_Byte);
    end Write_Shadow;
 
+   -------------------
+   -- Set_Backlight --
+   -------------------
 
    overriding
    procedure Set_Backlight (This  : in out LCD_PCF8574;
@@ -79,6 +88,9 @@ package body LCD_HD44780.PCF8574 is
       This.Write_Shadow;
    end Set_Backlight;
 
+   -------------------
+   -- Toggle_Enable --
+   -------------------
 
    overriding
    procedure Toggle_Enable (This : LCD_PCF8574)
@@ -93,6 +105,9 @@ package body LCD_HD44780.PCF8574 is
       This.Time.Delay_Microseconds (280);
    end Toggle_Enable;
 
+   ------------
+   -- Output --
+   ------------
 
    overriding
    procedure Output (This    : LCD_PCF8574;
@@ -134,6 +149,9 @@ package body LCD_HD44780.PCF8574 is
       This.Time.Delay_Microseconds (50);
    end Output;
 
+   --------------------
+   -- Init_4bit_Mode --
+   --------------------
 
    overriding
    procedure Init_4bit_Mode (This : LCD_PCF8574)
