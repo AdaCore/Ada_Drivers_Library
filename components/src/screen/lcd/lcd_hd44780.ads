@@ -81,6 +81,17 @@ package LCD_HD44780 is
    type HD44780_Pins is (Enable, ReadWrite, RegSel, Backlight, D0, D1, D2, D3, D4, D5, D6, D7);
    subtype HD44780_4bit_Pins is HD44780_Pins range Enable .. D3;
 
+   --
+   --  Custom Characters
+   --
+   type Custom_Character_Definition is array (1 .. 8) of UInt5;
+   subtype Custom_Character_Index is Integer range 0 .. 7;
+   procedure Create_Custom_Character (This       : in out LCD_Module;
+                                      Position   :        Custom_Character_Index;
+                                      Definition :        Custom_Character_Definition);
+   function Custom_Char (From_Index : Custom_Character_Index) return Character;
+
+
    type Command_Type is new UInt8;
    procedure Command (This : in out LCD_Module; Cmd : Command_Type)
    with Inline;

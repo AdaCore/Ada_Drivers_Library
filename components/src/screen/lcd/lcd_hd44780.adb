@@ -154,4 +154,31 @@ package body LCD_HD44780 is
       end case;
    end Goto_XY;
 
+   -----------------------------
+   -- Create_Custom_Character --
+   -----------------------------
+
+   procedure Create_Custom_Character (This       : in out LCD_Module;
+                                      Position   :        Custom_Character_Index;
+                                      Definition :        Custom_Character_Definition)
+   is
+      Start_Address : constant := 16#40#;
+      Dispatch : constant Any_LCD_Module := This'Unchecked_Access;
+   begin
+      Dispatch.Output (UInt8 (Start_Address + 8 * Position), Is_Data => False);
+      for Line of Definition loop
+         Dispatch.Output (UInt8 (Line), Is_Data => True);
+      end loop;
+   end Create_Custom_Character;
+
+   -----------------
+   -- Custom_Char --
+   -----------------
+
+   function Custom_Char (From_Index : Custom_Character_Index) return Character
+   is
+   begin
+      return Character'Val (From_Index);
+   end Custom_Char;
+
 end LCD_HD44780;
