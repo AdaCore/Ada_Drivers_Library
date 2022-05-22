@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2022, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -42,7 +42,8 @@ package Serial_IO is
       Rx_Pin         : GPIO_Point;
    end record;
 
-   procedure Initialize_Peripheral (Device : access Peripheral_Descriptor);
+   procedure Initialize_Hardware (Device : access Peripheral_Descriptor);
+   --  enable clocks, configure GPIO pins, etc.
 
    procedure Configure
      (Device    : access Peripheral_Descriptor;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2016, AdaCore                          --
+--                    Copyright (C) 2016-2022, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -59,10 +59,12 @@
 
 --  with GNAT.IO;                    use GNAT.IO;
 --  with GNAT.Serial_Communications; use GNAT.Serial_Communications;
+--  with Ada.Command_Line;           use Ada.Command_Line;
 --
---  procedure Host is
---     COM  : aliased Serial_Port;
---     COM3 : constant Port_Name := Name (3);
+--  procedure Streaming_Host is
+--     COM     : aliased Serial_Port;
+--     COM_Num : constant Port_Name := Name (Integer'Value (Argument (1)));
+--     --  hence one argument, correspopnding to a COM port number on Windows
 --
 --     Outgoing : String (1 .. 1024); -- arbitrary
 --     Last     : Natural;
@@ -110,14 +112,16 @@ with Serial_IO.Streaming;   use Serial_IO.Streaming;
 
 procedure Demo_Serial_Port_Streaming is
 begin
-   Initialize (COM);
+   Initialize_Hardware (COM);
    Configure (COM, Baud_Rate => 115_200);
 
    loop
       declare
+         --  get the incoming msg from the serial port
          Incoming : constant String := String'Input (COM'Access);
       begin
-         String'Output (COM'Access, "'" & Incoming & "'");
+         --  echo the received msg content
+         String'Output (COM'Access, "Received '" & Incoming & "'");
       end;
    end loop;
 end Demo_Serial_Port_Streaming;

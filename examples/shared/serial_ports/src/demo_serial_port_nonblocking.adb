@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2022, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,8 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  A demonstration of a higher-level USART interface, using non-blocking I/O.
---  The file declares the main procedure for the demonstration.
+--  A demonstration of a higher-level USART interface, using interrupts to
+--  achieve non-blocking I/O (calls to Send and Receive return potentially
+--  prior to I/O completion).  This file declares the main procedure.
 
 with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
 --  The "last chance handler" is the user-defined routine that is called when
@@ -51,25 +52,20 @@ procedure Demo_Serial_Port_Nonblocking is
       Outgoing : aliased Message (Physical_Size => 1024);  -- arbitrary size
    begin
       Set (Outgoing, To => This);
-      Put (COM, Outgoing'Unchecked_Access);
+      Send (COM, Outgoing'Access);
       Await_Transmission_Complete (Outgoing);
-      --  We must await xmit completion because Put does not wait
    end Send;
 
 begin
-   Initialize (COM);
-
+   Initialize_Hardware (COM);
    Configure (COM, Baud_Rate => 115_200);
 
+   Incoming.Set_Terminator (To => ASCII.CR);
    Send ("Enter text, terminated by CR.");
-
-   Set_Terminator (Incoming, To => ASCII.CR);
    loop
-      Get (COM, Incoming'Unchecked_Access);
+      Receive (COM, Incoming'Access);
       Await_Reception_Complete (Incoming);
-      --  We must await reception completion because Get does not wait
-
-      Send ("Received : " & Content (Incoming));
+      Send ("Received : " & Incoming.Content);
    end loop;
 end Demo_Serial_Port_Nonblocking;
 

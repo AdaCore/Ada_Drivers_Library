@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2017, AdaCore                     --
+--                     Copyright (C) 2015-2022, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -33,11 +33,11 @@ with STM32.Device; use STM32.Device;
 
 package body Serial_IO is
 
-   ----------------
-   -- Initialize --
-   ----------------
+   -------------------------
+   -- Initialize_Hardware --
+   -------------------------
 
-   procedure Initialize_Peripheral (Device : access Peripheral_Descriptor) is
+   procedure Initialize_Hardware (Device : access Peripheral_Descriptor) is
       Configuration : GPIO_Port_Configuration;
       Device_Pins   : constant GPIO_Points := Device.Rx_Pin & Device.Tx_Pin;
    begin
@@ -51,7 +51,7 @@ package body Serial_IO is
                         Resistors      => Pull_Up);
 
       Configure_IO (Device_Pins, Configuration);
-   end Initialize_Peripheral;
+   end Initialize_Hardware;
 
    ---------------
    -- Configure --
