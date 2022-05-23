@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2022, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -33,22 +33,14 @@ with STM32.Device; use STM32.Device;
 
 package body Serial_IO.Nonblocking is
 
-   ----------------
-   -- Initialize --
-   ----------------
-
-   procedure Initialize (This : in out Serial_Port) is
+   -------------------------
+   -- Initialize_Hardware -- 
+   -------------------------
+   
+   procedure Initialize_Hardware (This : in out Serial_Port) is
    begin
-      Serial_IO.Initialize_Peripheral (This.Device);
-      This.Initialized := True;
-   end Initialize;
-
-   -----------------
-   -- Initialized --
-   -----------------
-
-   function Initialized (This : Serial_Port) return Boolean is
-     (This.Initialized);
+      Serial_IO.Initialize_Hardware (This.Device);
+   end Initialize_Hardware;
 
    ---------------
    -- Configure --
@@ -65,99 +57,30 @@ package body Serial_IO.Nonblocking is
    begin
       Serial_IO.Configure (This.Device, Baud_Rate, Parity, Data_Bits, End_Bits, Control);
    end Configure;
+   
+   ----------
+   -- Send --
+   ----------
 
-   ---------
-   -- Put --
-   ---------
-
-   procedure Put (This : in out Serial_Port;  Msg : not null access Message) is
+   procedure Send (This : in out Serial_Port;  Msg : not null access Message) is
    begin
-      This.Control.Start_Sending (Msg);
-   end Put;
-
-   ---------
-   -- Get --
-   ---------
-
-   procedure Get (This : in out Serial_Port;  Msg : not null access Message) is
-   begin
-      This.Control.Start_Receiving (Msg);
-   end Get;
+      This.Start_Sending (Msg);
+   end Send;
 
    -------------
-   -- Sending --
+   -- Receive --
    -------------
 
-   function Sending (This : in out Serial_Port) return Boolean is
+   procedure Receive (This : in out Serial_Port;  Msg : not null access Message) is
    begin
-      return This.Control.Sending;
-   end Sending;
+      This.Start_Receiving (Msg);
+   end Receive;
 
-   ---------------
-   -- Receiving --
-   ---------------
+   -----------------
+   -- Serial_Port --
+   -----------------
 
-   function Receiving (This : in out Serial_Port) return Boolean is
-   begin
-      return This.Control.Receiving;
-   end Receiving;
-
-   ----------------
-   -- Controller --
-   ----------------
-
-   protected body Controller is
-
-      -------------------
-      -- Detect_Errors --
-      -------------------
-
-      procedure Detect_Errors (Is_Xmit_IRQ : Boolean) is
-      begin
-         if Status (Port.Device.Transceiver.all, Parity_Error_Indicated) and
-           Interrupt_Enabled (Port.Device.Transceiver.all, Parity_Error)
-         then
-            Clear_Status (Port.Device.Transceiver.all, Parity_Error_Indicated);
-            if Is_Xmit_IRQ then
-               Outgoing_Msg.Note_Error (Parity_Error_Detected);
-            else
-               Incoming_Msg.Note_Error (Parity_Error_Detected);
-            end if;
-         end if;
-
-         if Status (Port.Device.Transceiver.all, Framing_Error_Indicated) and
-           Interrupt_Enabled (Port.Device.Transceiver.all, Error)
-         then
-            Clear_Status (Port.Device.Transceiver.all, Framing_Error_Indicated);
-            if Is_Xmit_IRQ then
-               Outgoing_Msg.Note_Error (Frame_Error_Detected);
-            else
-               Incoming_Msg.Note_Error (Frame_Error_Detected);
-            end if;
-         end if;
-
-         if Status (Port.Device.Transceiver.all, USART_Noise_Error_Indicated) and
-           Interrupt_Enabled (Port.Device.Transceiver.all, Error)
-         then
-            Clear_Status (Port.Device.Transceiver.all, USART_Noise_Error_Indicated);
-            if Is_Xmit_IRQ then
-               Outgoing_Msg.Note_Error (Noise_Error_Detected);
-            else
-               Incoming_Msg.Note_Error (Noise_Error_Detected);
-            end if;
-         end if;
-
-         if Status (Port.Device.Transceiver.all, Overrun_Error_Indicated) and
-           Interrupt_Enabled (Port.Device.Transceiver.all, Error)
-         then
-            Clear_Status (Port.Device.Transceiver.all, Overrun_Error_Indicated);
-            if Is_Xmit_IRQ then
-               Outgoing_Msg.Note_Error (Overrun_Error_Detected);
-            else
-               Incoming_Msg.Note_Error (Overrun_Error_Detected);
-            end if;
-         end if;
-      end Detect_Errors;
+   protected body Serial_Port is
 
       -------------------------
       -- Handle_Transmission --
@@ -169,13 +92,12 @@ package body Serial_IO.Nonblocking is
          --    -- handle the extra byte required for the 9th bit
          --  else  -- 8 data bits so no extra byte involved
          Transmit
-           (Port.Device.Transceiver.all,
+           (Device.Transceiver.all,
             Character'Pos (Outgoing_Msg.Content_At (Next_Out)));
          Next_Out := Next_Out + 1;
          --  end if;
-         Awaiting_Transfer := Awaiting_Transfer - 1;
-         if Awaiting_Transfer = 0 then
-            Disable_Interrupts (Port.Device.Transceiver.all, Source => Transmission_Complete);
+         if Next_Out > Outgoing_Msg.Length then
+            Disable_Interrupts (Device.Transceiver.all, Source => Transmission_Complete);
             Outgoing_Msg.Signal_Transmission_Complete;
             Outgoing_Msg := null;
          end if;
@@ -186,7 +108,7 @@ package body Serial_IO.Nonblocking is
       ----------------------
 
       procedure Handle_Reception is
-         Received_Char : constant Character := Character'Val (Current_Input (Port.Device.Transceiver.all));
+         Received_Char : constant Character := Character'Val (Current_Input (Device.Transceiver.all));
       begin
          if Received_Char /= Terminator (Incoming_Msg.all) then
             Incoming_Msg.Append (Received_Char);
@@ -194,41 +116,41 @@ package body Serial_IO.Nonblocking is
 
          if Received_Char = Incoming_Msg.Terminator or
             Incoming_Msg.Length = Incoming_Msg.Physical_Size
-         then
-            --  reception complete
+         then -- reception complete
             loop
-               exit when not Status (Port.Device.Transceiver.all, Read_Data_Register_Not_Empty);
+               --  wait for device to clear the status
+               exit when not Status (Device.Transceiver.all, Read_Data_Register_Not_Empty);
             end loop;
-            Disable_Interrupts (Port.Device.Transceiver.all, Source => Received_Data_Not_Empty);
+            Disable_Interrupts (Device.Transceiver.all, Source => Received_Data_Not_Empty);
             Incoming_Msg.Signal_Reception_Complete;
             Incoming_Msg := null;
          end if;
       end Handle_Reception;
 
-      -----------------
-      -- IRQ_Handler --
-      -----------------
+      ---------
+      -- ISR --
+      ---------
 
-      procedure IRQ_Handler is
+      procedure ISR is
       begin
          --  check for data arrival
-         if Status (Port.Device.Transceiver.all, Read_Data_Register_Not_Empty) and
-           Interrupt_Enabled (Port.Device.Transceiver.all, Received_Data_Not_Empty)
+         if Status (Device.Transceiver.all, Read_Data_Register_Not_Empty) and
+           Interrupt_Enabled (Device.Transceiver.all, Received_Data_Not_Empty)
          then
             Detect_Errors (Is_Xmit_IRQ => False);
             Handle_Reception;
-            Clear_Status (Port.Device.Transceiver.all, Read_Data_Register_Not_Empty);
+            Clear_Status (Device.Transceiver.all, Read_Data_Register_Not_Empty);
          end if;
 
          --  check for transmission ready
-         if Status (Port.Device.Transceiver.all, Transmission_Complete_Indicated) and
-           Interrupt_Enabled (Port.Device.Transceiver.all, Transmission_Complete)
+         if Status (Device.Transceiver.all, Transmission_Complete_Indicated) and
+           Interrupt_Enabled (Device.Transceiver.all, Transmission_Complete)
          then
             Detect_Errors (Is_Xmit_IRQ => True);
             Handle_Transmission;
-            Clear_Status (Port.Device.Transceiver.all, Transmission_Complete_Indicated);
+            Clear_Status (Device.Transceiver.all, Transmission_Complete_Indicated);
          end if;
-      end IRQ_Handler;
+      end ISR;
 
       -------------------
       -- Start_Sending --
@@ -237,12 +159,11 @@ package body Serial_IO.Nonblocking is
       procedure Start_Sending (Msg : not null access Message) is
       begin
          Outgoing_Msg := Msg;
-         Awaiting_Transfer := Msg.Length;
          Next_Out := 1;
 
-         Enable_Interrupts (Port.Device.Transceiver.all, Parity_Error);
-         Enable_Interrupts (Port.Device.Transceiver.all, Error);
-         Enable_Interrupts (Port.Device.Transceiver.all, Transmission_Complete);
+         Enable_Interrupts (Device.Transceiver.all, Parity_Error);
+         Enable_Interrupts (Device.Transceiver.all, Error);
+         Enable_Interrupts (Device.Transceiver.all, Transmission_Complete);
       end Start_Sending;
 
       ---------------------
@@ -254,29 +175,62 @@ package body Serial_IO.Nonblocking is
          Incoming_Msg := Msg;
          Incoming_Msg.Clear;
 
-         Enable_Interrupts (Port.Device.Transceiver.all, Parity_Error);
-         Enable_Interrupts (Port.Device.Transceiver.all, Error);
-         Enable_Interrupts (Port.Device.Transceiver.all, Received_Data_Not_Empty);
+         Enable_Interrupts (Device.Transceiver.all, Parity_Error);
+         Enable_Interrupts (Device.Transceiver.all, Error);
+         Enable_Interrupts (Device.Transceiver.all, Received_Data_Not_Empty);
       end Start_Receiving;
 
-      -------------
-      -- Sending --
-      -------------
+      -------------------
+      -- Detect_Errors --
+      -------------------
 
-      function Sending return Boolean is
+      procedure Detect_Errors (Is_Xmit_IRQ : Boolean) is
       begin
-         return Outgoing_Msg /= null;
-      end Sending;
+         if Status (Device.Transceiver.all, Parity_Error_Indicated) and
+           Interrupt_Enabled (Device.Transceiver.all, Parity_Error)
+         then
+            Clear_Status (Device.Transceiver.all, Parity_Error_Indicated);
+            if Is_Xmit_IRQ then
+               Outgoing_Msg.Note_Error (Parity_Error_Detected);
+            else
+               Incoming_Msg.Note_Error (Parity_Error_Detected);
+            end if;
+         end if;
 
-      ---------------
-      -- Receiving --
-      ---------------
+         if Status (Device.Transceiver.all, Framing_Error_Indicated) and
+           Interrupt_Enabled (Device.Transceiver.all, Error)
+         then
+            Clear_Status (Device.Transceiver.all, Framing_Error_Indicated);
+            if Is_Xmit_IRQ then
+               Outgoing_Msg.Note_Error (Frame_Error_Detected);
+            else
+               Incoming_Msg.Note_Error (Frame_Error_Detected);
+            end if;
+         end if;
 
-      function Receiving return Boolean is
-      begin
-         return Incoming_Msg /= null;
-      end Receiving;
+         if Status (Device.Transceiver.all, USART_Noise_Error_Indicated) and
+           Interrupt_Enabled (Device.Transceiver.all, Error)
+         then
+            Clear_Status (Device.Transceiver.all, USART_Noise_Error_Indicated);
+            if Is_Xmit_IRQ then
+               Outgoing_Msg.Note_Error (Noise_Error_Detected);
+            else
+               Incoming_Msg.Note_Error (Noise_Error_Detected);
+            end if;
+         end if;
 
-   end Controller;
+         if Status (Device.Transceiver.all, Overrun_Error_Indicated) and
+           Interrupt_Enabled (Device.Transceiver.all, Error)
+         then
+            Clear_Status (Device.Transceiver.all, Overrun_Error_Indicated);
+            if Is_Xmit_IRQ then
+               Outgoing_Msg.Note_Error (Overrun_Error_Detected);
+            else
+               Incoming_Msg.Note_Error (Overrun_Error_Detected);
+            end if;
+         end if;
+      end Detect_Errors;
+      
+   end Serial_Port;
 
 end Serial_IO.Nonblocking;

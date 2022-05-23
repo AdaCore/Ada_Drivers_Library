@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2016, AdaCore                          --
+--                    Copyright (C) 2016-2022, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -34,22 +34,14 @@ with HAL;           use HAL;
 
 package body Serial_IO.Streaming is
 
-   ----------------
-   -- Initialize --
-   ----------------
+   -------------------------
+   -- Initialize_Hardware --
+   -------------------------
 
-   procedure Initialize (This : out Serial_Port) is
+   procedure Initialize_Hardware (This : out Serial_Port) is
    begin
-      Serial_IO.Initialize_Peripheral (This.Device);
-      This.Initialized := True;
-   end Initialize;
-
-   -----------------
-   -- Initialized --
-   -----------------
-
-   function Initialized (This : Serial_Port) return Boolean is
-     (This.Initialized);
+      Serial_IO.Initialize_Hardware (This.Device);
+   end Initialize_Hardware;
 
    ---------------
    -- Configure --
@@ -84,7 +76,7 @@ package body Serial_IO.Streaming is
 
    procedure Set_Read_Timeout
      (This : in out Serial_Port;
-      Wait : Time_Span := Time_Span_Last)
+      Wait : Time_Span)
    is
    begin
       This.Timeout := Wait;

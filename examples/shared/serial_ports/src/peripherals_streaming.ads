@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                  Copyright (C) 2015-2022, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -36,7 +36,8 @@ with Serial_IO.Streaming;
 
 package Peripherals_Streaming is
 
-   --  the specific port, pins, and USART selections are arbitrary.
+   --  the USART selection is arbitrary but the AF number and the pins must
+   --  be those required by that USART
    Peripheral : aliased Serial_IO.Peripheral_Descriptor :=
                   (Transceiver    => USART_1'Access,
                    Transceiver_AF => GPIO_AF_USART1_7,

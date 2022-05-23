@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                    Copyright (C) 2015-2022, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -48,12 +48,7 @@ package Serial_IO.Blocking is
    type Serial_Port (Device : not null access Peripheral_Descriptor) is
      tagged limited private;
 
-   procedure Initialize (This : out Serial_Port)
-     with Post => (Initialized (This));
-
-   function Initialized (This : Serial_Port) return Boolean with Inline;
-
-   Serial_Port_Uninitialized : exception;
+   procedure Initialize_Hardware (This : out Serial_Port);
 
    procedure Configure
      (This      : in out Serial_Port;
@@ -61,27 +56,20 @@ package Serial_IO.Blocking is
       Parity    : Parities     := No_Parity;
       Data_Bits : Word_Lengths := Word_Length_8;
       End_Bits  : Stop_Bits    := Stopbits_1;
-      Control   : Flow_Control := No_Flow_Control)
-     with
-       Pre => (Initialized (This) or else raise Serial_Port_Uninitialized);
+      Control   : Flow_Control := No_Flow_Control);
 
-   procedure Put (This : in out Serial_Port; Msg : not null access Message) with
-     Pre => (Initialized (This) or else raise Serial_Port_Uninitialized);
+   procedure Send (This : in out Serial_Port; Msg : not null access Message);
    --  Sends Msg.Length characters of Msg via USART attached to This. Callers
    --  wait until all characters are sent.
 
-   procedure Get (This : in out Serial_Port;  Msg : not null access Message) with
-     Pre  => (Initialized (This) or else raise Serial_Port_Uninitialized),
+   procedure Receive (This : in out Serial_Port;  Msg : not null access Message) with
      Post => Msg.Length <= Msg.Physical_Size and
              Msg.Content_At (Msg.Length) /= Msg.Terminator;
    --  Callers wait until all characters are received.
 
 private
 
-   type Serial_Port (Device : access Peripheral_Descriptor) is tagged limited
-      record
-         Initialized : Boolean := False;
-      end record;
+   type Serial_Port (Device : access Peripheral_Descriptor) is tagged limited null record;
 
    procedure Await_Send_Ready (This : USART) with Inline;
 
