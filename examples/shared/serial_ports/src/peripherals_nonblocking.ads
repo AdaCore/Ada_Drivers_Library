@@ -50,7 +50,7 @@ package Peripherals_Nonblocking is
                    Rx_Pin         => PB7);
 
    COM : Nonblocking.Serial_Port (Device       => Peripheral'Access,
-                                  IRQ          => USART1_Interrupt, 
+                                  IRQ          => USART1_Interrupt,
                                   IRQ_Priority => Interrupt_Priority'Last);
 
 end Peripherals_Nonblocking;

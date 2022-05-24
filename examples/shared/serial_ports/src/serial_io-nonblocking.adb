@@ -34,9 +34,9 @@ with STM32.Device; use STM32.Device;
 package body Serial_IO.Nonblocking is
 
    -------------------------
-   -- Initialize_Hardware -- 
+   -- Initialize_Hardware --
    -------------------------
-   
+
    procedure Initialize_Hardware (This : in out Serial_Port) is
    begin
       Serial_IO.Initialize_Hardware (This.Device);
@@ -57,7 +57,7 @@ package body Serial_IO.Nonblocking is
    begin
       Serial_IO.Configure (This.Device, Baud_Rate, Parity, Data_Bits, End_Bits, Control);
    end Configure;
-   
+
    ----------
    -- Send --
    ----------
@@ -230,7 +230,7 @@ package body Serial_IO.Nonblocking is
             end if;
          end if;
       end Detect_Errors;
-      
+
    end Serial_Port;
 
 end Serial_IO.Nonblocking;

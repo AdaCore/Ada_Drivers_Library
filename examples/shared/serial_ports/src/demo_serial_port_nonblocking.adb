@@ -63,7 +63,7 @@ begin
    Configure (COM, Baud_Rate => 115_200);
 
    Incoming.Set_Terminator (To => ASCII.CR);
-   Send ("Enter text, terminated by CR.");   
+   Send ("Enter text, terminated by CR.");
    loop
       Nonblocking.Receive (COM, Incoming'Access);
       Await_Reception_Complete (Incoming);

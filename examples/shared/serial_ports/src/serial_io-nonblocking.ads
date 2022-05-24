@@ -67,23 +67,23 @@ package Serial_IO.Nonblocking is
       Control   : Flow_Control := No_Flow_Control);
    --  A convenience wrapper for Serial_IO.Configure
 
-   procedure Send 
-     (This : in out Serial_Port; 
-      Msg  : not null access Message) 
+   procedure Send
+     (This : in out Serial_Port;
+      Msg  : not null access Message)
    with Inline;
    --  Start sending the content of Msg.all, returning potentially
    --  prior to the completion of the message transmission
 
-   procedure Receive 
-     (This : in out Serial_Port;  
-      Msg  : not null access Message) 
+   procedure Receive
+     (This : in out Serial_Port;
+      Msg  : not null access Message)
    with Inline;
    --  Start receiving Msg.all content, ending when the specified
    --  Msg.Terminator character is received (it is not stored), or
    --  the physical capacity of Msg.all is reached
 
 private
-  
+
    protected type Serial_Port
      (Device       : not null access Peripheral_Descriptor;
       IRQ          : Interrupt_ID;
@@ -91,16 +91,16 @@ private
    --  with
    --     Interrupt_Priority => IRQ_Priority
    is
-   
+
       pragma Interrupt_Priority (IRQ_Priority);
       --  use pragma as workaround for bug in CE_2021 frontend (V523-041)
-      
+
       procedure Start_Sending (Msg : not null access Message);
 
       procedure Start_Receiving (Msg : not null access Message);
 
    private
-   
+
       Next_Out     : Positive;
       Outgoing_Msg : access Message;
       Incoming_Msg : access Message;
