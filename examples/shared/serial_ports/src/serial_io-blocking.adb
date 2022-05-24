@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                  Copyright (C) 2015-2022, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -34,22 +34,14 @@ with HAL;           use HAL;
 
 package body Serial_IO.Blocking is
 
-   ----------------
-   -- Initialize --
-   ----------------
+   -------------------------
+   -- Initialize_Hardware --
+   -------------------------
 
-   procedure Initialize (This : out Serial_Port) is
+   procedure Initialize_Hardware (This : out Serial_Port) is
    begin
-      Serial_IO.Initialize_Peripheral (This.Device);
-      This.Initialized := True;
-   end Initialize;
-
-   -----------------
-   -- Initialized --
-   -----------------
-
-   function Initialized (This : Serial_Port) return Boolean is
-     (This.Initialized);
+      Serial_IO.Initialize_Hardware (This.Device);
+   end Initialize_Hardware;
 
    ---------------
    -- Configure --
@@ -67,11 +59,11 @@ package body Serial_IO.Blocking is
       Serial_IO.Configure (This.Device, Baud_Rate, Parity, Data_Bits, End_Bits, Control);
    end Configure;
 
-   ---------
-   -- Put --
-   ---------
+   ----------
+   -- Send --
+   ----------
 
-   procedure Put (This : in out Serial_Port;  Msg : not null access Message) is
+   procedure Send (This : in out Serial_Port;  Msg : not null access Message) is
    begin
       for Next in 1 .. Msg.Length loop
          Await_Send_Ready (This.Device.Transceiver.all);
@@ -79,13 +71,13 @@ package body Serial_IO.Blocking is
            (This.Device.Transceiver.all,
             Character'Pos (Msg.Content_At (Next)));
       end loop;
-   end Put;
+   end Send;
 
-   ---------
-   -- Get --
-   ---------
+   -------------
+   -- Receive --
+   -------------
 
-   procedure Get (This : in out Serial_Port;  Msg : not null access Message) is
+   procedure Receive (This : in out Serial_Port;  Msg : not null access Message) is
       Received_Char : Character;
       Raw           : UInt9;
    begin
@@ -97,7 +89,7 @@ package body Serial_IO.Blocking is
          exit Receiving when Received_Char = Msg.Terminator;
          Msg.Append (Received_Char);
       end loop Receiving;
-   end Get;
+   end Receive;
 
    ----------------------
    -- Await_Send_Ready --

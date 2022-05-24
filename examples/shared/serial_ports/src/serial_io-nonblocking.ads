@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2022, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -30,8 +30,8 @@
 ------------------------------------------------------------------------------
 
 --  This package defines an abstract data type for a "serial port" providing
---  non-blocking input (Get) and output (Put) procedures. The procedures are
---  considered non-blocking because they return to the caller (potentially)
+--  non-blocking input (Receive) and output (Send) procedures. The procedures
+--  are considered non-blocking because they return to the caller (potentially)
 --  before the entire message is received or sent.
 --
 --  The serial port abstraction is a wrapper around a USART peripheral,
@@ -40,26 +40,23 @@
 --  Interrupts are used to send and receive characters.
 --
 --  NB: clients must not send or receive messages until any prior sending or
---  receiving is completed. See the two functions Sending and Receiving and
---  the preconditions on Put and Get.
+--  receiving is completed.
 
 with Message_Buffers; use Message_Buffers;
 with Ada.Interrupts;  use Ada.Interrupts;
+with System;          use System;
 
 package Serial_IO.Nonblocking is
    pragma Elaborate_Body;
 
    type Serial_Port
-     (IRQ    : Interrupt_ID;
-      Device : not null access Peripheral_Descriptor)
-   is tagged limited private;
+     (Device       : not null access Peripheral_Descriptor;
+      IRQ          : Interrupt_ID;
+      IRQ_Priority : Interrupt_Priority)
+   is limited private;
 
-   procedure Initialize (This : in out Serial_Port) with
-     Post => Initialized (This);
-
-   function Initialized (This : Serial_Port) return Boolean with Inline;
-
-   Serial_Port_Uninitialized : exception;
+   procedure Initialize_Hardware (This : in out Serial_Port);
+   --  A convenience wrapper for Serial_IO.Initialize_Hardware
 
    procedure Configure
      (This      : in out Serial_Port;
@@ -67,70 +64,53 @@ package Serial_IO.Nonblocking is
       Parity    : Parities     := No_Parity;
       Data_Bits : Word_Lengths := Word_Length_8;
       End_Bits  : Stop_Bits    := Stopbits_1;
-      Control   : Flow_Control := No_Flow_Control)
-     with
-       Pre => (Initialized (This) or else raise Serial_Port_Uninitialized);
+      Control   : Flow_Control := No_Flow_Control);
+   --  A convenience wrapper for Serial_IO.Configure
 
-   procedure Put (This : in out Serial_Port; Msg : not null access Message) with
-     Pre => (Initialized (This) or else raise Serial_Port_Uninitialized)
-            and then
-            not Sending (This),
-     Inline;
+   procedure Send
+     (This : in out Serial_Port;
+      Msg  : not null access Message)
+   with Inline;
+   --  Start sending the content of Msg.all, returning potentially
+   --  prior to the completion of the message transmission
 
-   procedure Get (This : in out Serial_Port;  Msg : not null access Message) with
-     Pre => (Initialized (This) or else raise Serial_Port_Uninitialized)
-            and then
-            not Receiving (This),
-     Inline;
-
-   function Sending (This : in out Serial_Port) return Boolean;
-   --  Returns whether This is currently sending a message.
-
-   function Receiving (This : in out Serial_Port) return Boolean;
-   --  Returns whether This is currently receiving a message.
+   procedure Receive
+     (This : in out Serial_Port;
+      Msg  : not null access Message)
+   with Inline;
+   --  Start receiving Msg.all content, ending when the specified
+   --  Msg.Terminator character is received (it is not stored), or
+   --  the physical capacity of Msg.all is reached
 
 private
 
-   --  The protected type defining the interrupt handling for sending and
-   --  receiving characters via the USART attached to the serial port. Each
-   --  serial port type a component of this protected type.
-   protected type Controller (IRQ : Interrupt_ID;  Port : access Serial_Port) is
+   protected type Serial_Port
+     (Device       : not null access Peripheral_Descriptor;
+      IRQ          : Interrupt_ID;
+      IRQ_Priority : Interrupt_Priority)
+   --  with
+   --     Interrupt_Priority => IRQ_Priority
+   is
 
-      pragma Interrupt_Priority;
+      pragma Interrupt_Priority (IRQ_Priority);
+      --  use pragma as workaround for bug in CE_2021 frontend (V523-041)
 
       procedure Start_Sending (Msg : not null access Message);
-      --  error: internal call cannot appear in precondition of protected operation
-      --  with Pre => not Sending;
 
       procedure Start_Receiving (Msg : not null access Message);
-      --  error: internal call cannot appear in precondition of protected operation
-      --  with Pre => not Receiving;
-
-      function Sending   return Boolean;
-      function Receiving return Boolean;
 
    private
 
-      Next_Out          : Positive;
-      Awaiting_Transfer : Natural;
-      Outgoing_Msg      : access Message;
-      Incoming_Msg      : access Message;
+      Next_Out     : Positive;
+      Outgoing_Msg : access Message;
+      Incoming_Msg : access Message;
 
       procedure Handle_Transmission with Inline;
-      procedure Handle_Reception with Inline;
+      procedure Handle_Reception    with Inline;
       procedure Detect_Errors (Is_Xmit_IRQ : Boolean) with Inline;
 
-      procedure IRQ_Handler with Attach_Handler => IRQ;
+      procedure ISR with Attach_Handler => IRQ;
 
-   end Controller;
-
-
-   type Serial_Port
-     (IRQ    : Interrupt_ID;
-      Device : not null access Peripheral_Descriptor)
-   is tagged limited record
-      Initialized : Boolean := False;
-      Control     : Controller (IRQ, Serial_Port'Access);
-   end record;
+   end Serial_Port;
 
 end Serial_IO.Nonblocking;

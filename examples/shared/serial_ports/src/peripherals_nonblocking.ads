@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2022, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -31,6 +31,7 @@
 
 with Ada.Interrupts;        use Ada.Interrupts;
 with Ada.Interrupts.Names;  use Ada.Interrupts.Names;
+with System;                use System;
 
 with STM32.Device;          use STM32.Device;
 
@@ -40,14 +41,16 @@ use Serial_IO;
 
 package Peripherals_Nonblocking is
 
+   --  the USART selection is arbitrary but the AF number and the pins must
+   --  be those required by that USART
    Peripheral : aliased Serial_IO.Peripheral_Descriptor :=
                   (Transceiver    => USART_1'Access,
                    Transceiver_AF => GPIO_AF_USART1_7,
                    Tx_Pin         => PB6,
                    Rx_Pin         => PB7);
 
-   Transceiver_Interrupt : constant Interrupt_ID := USART1_Interrupt;
-
-   COM : Nonblocking.Serial_Port (Transceiver_Interrupt, Peripheral'Access);
+   COM : Nonblocking.Serial_Port (Device       => Peripheral'Access,
+                                  IRQ          => USART1_Interrupt,
+                                  IRQ_Priority => Interrupt_Priority'Last);
 
 end Peripherals_Nonblocking;
