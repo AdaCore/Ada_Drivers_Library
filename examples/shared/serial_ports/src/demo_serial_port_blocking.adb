@@ -53,7 +53,7 @@ procedure Demo_Serial_Port_Blocking is
    procedure Send (This : String) is
    begin
       Set (Outgoing, To => This);
-      Blocking.Send (COM, Outgoing'Access);
+      Blocking.Send (COM, Outgoing'Unchecked_Access);
       --  Send won't return until the entire message has been sent
    end Send;
 
@@ -61,11 +61,10 @@ begin
    Initialize_Hardware (COM);
    Configure (COM, Baud_Rate => 115_200);
 
-   Send ("Enter text, terminated by CR.");
-
    Incoming.Set_Terminator (To => ASCII.CR);
+   Send ("Enter text, terminated by CR.");
    loop
-      Blocking.Receive (COM, Incoming'Access);
+      Blocking.Receive (COM, Incoming'Unchecked_Access);
       Send ("Received : " & Incoming.Content);
    end loop;
 end Demo_Serial_Port_Blocking;
