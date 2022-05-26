@@ -77,7 +77,10 @@ package Serial_IO.Nonblocking is
    procedure Receive
      (This : in out Serial_Port;
       Msg  : not null access Message)
-   with Inline;
+   with
+      Post => Msg.Length <= Msg.Physical_Size and
+              (if Msg.Length > 0 then Msg.Content_At (Msg.Length) /= Msg.Terminator),
+              Inline;
    --  Start receiving Msg.all content, ending when the specified
    --  Msg.Terminator character is received (it is not stored), or
    --  the physical capacity of Msg.all is reached

@@ -64,7 +64,7 @@ package Serial_IO.Blocking is
 
    procedure Receive (This : in out Serial_Port;  Msg : not null access Message) with
      Post => Msg.Length <= Msg.Physical_Size and
-             Msg.Content_At (Msg.Length) /= Msg.Terminator;
+             (if Msg.Length > 0 then Msg.Content_At (Msg.Length) /= Msg.Terminator);
    --  Callers wait until all characters are received.
 
 private

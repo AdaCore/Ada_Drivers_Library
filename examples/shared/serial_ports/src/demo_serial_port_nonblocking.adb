@@ -47,15 +47,16 @@ use Serial_IO;
 procedure Demo_Serial_Port_Nonblocking is
 
    Incoming : aliased Message (Physical_Size => 1024);  -- arbitrary size
+   Outgoing : aliased Message (Physical_Size => 1024);  -- arbitrary size
 
    procedure Send (This : String);
 
    procedure Send (This : String) is
-      Outgoing : aliased Message (Physical_Size => 1024);  -- arbitrary size
    begin
       Set (Outgoing, To => This);
-      Nonblocking.Send (COM, Outgoing'Access);
+      Nonblocking.Send (COM, Outgoing'Unchecked_Access);
       Await_Transmission_Complete (Outgoing);
+      --  Send can/will return before the entire message has been sent
    end Send;
 
 begin
@@ -65,7 +66,7 @@ begin
    Incoming.Set_Terminator (To => ASCII.CR);
    Send ("Enter text, terminated by CR.");
    loop
-      Nonblocking.Receive (COM, Incoming'Access);
+      Nonblocking.Receive (COM, Incoming'Unchecked_Access);
       Await_Reception_Complete (Incoming);
       Send ("Received : " & Incoming.Content);
    end loop;
