@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2017, AdaCore                       --
+--                    Copyright (C) 2017-2022, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -34,40 +34,50 @@ with HAL;                  use HAL;
 with STM32.DMA;            use STM32.DMA;
 with STM32.Device;         use STM32.Device;
 with Ada.Interrupts;
-with Ada.Interrupts.Names;
+with Ada.Interrupts.Names; use Ada.Interrupts.Names;
 
 package Audio_Stream is
 
    protected type Double_Buffer_Controller
      (Controller : not null access DMA_Controller;
       Stream     : DMA_Stream_Selector;
-      ID         : Ada.Interrupts.Interrupt_ID)
+      IRQ        : Ada.Interrupts.Interrupt_ID)
    is
 
       procedure Start
         (Destination : Address;
          Source_0    : Address;
          Source_1    : Address;
-         Data_Count  : UInt16);
+         Data_Count  : UInt16)
+      with
+         Pre => Destination /= Null_Address and then
+                Source_0    /= Null_Address and then
+                Source_1    /= Null_Address and then
+                Source_0    /= Destination  and then
+                Source_1    /= Destination  and then
+                Source_0    /= Source_1;
 
       entry Wait_For_Transfer_Complete;
 
       function Not_In_Transfer return Address;
 
    private
-      procedure Interrupt_Handler;
-      pragma Attach_Handler (Interrupt_Handler, ID);
+
+      procedure Interrupt_Handler with Attach_Handler => IRQ;
 
       Interrupt_Triggered : Boolean := False;
       Buffer_0            : Address := Null_Address;
       Buffer_1            : Address := Null_Address;
+
    end Double_Buffer_Controller;
 
-   Audio_TX_DMA        : STM32.DMA.DMA_Controller renames DMA_1;
-   Audio_TX_DMA_Chan   : STM32.DMA.DMA_Channel_Selector renames STM32.DMA.Channel_0;
-   Audio_TX_DMA_Stream : STM32.DMA.DMA_Stream_Selector renames STM32.DMA.Stream_5;
-   Audio_TX_DMA_Int    : Double_Buffer_Controller (Audio_TX_DMA'Access,
-                                                   Audio_TX_DMA_Stream,
-                                                   Ada.Interrupts.Names.DMA1_Stream5_Interrupt);
+   Audio_TX_DMA        : DMA_Controller renames DMA_1;
+   Audio_TX_DMA_Chan   : DMA_Channel_Selector renames STM32.DMA.Channel_0;
+   Audio_TX_DMA_Stream : DMA_Stream_Selector renames STM32.DMA.Stream_5;
+
+   Audio_TX_DMA_Int    : Double_Buffer_Controller
+     (Audio_TX_DMA'Access,
+      Audio_TX_DMA_Stream,
+      DMA1_Stream5_Interrupt);
 
 end Audio_Stream;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                        Copyright (C) 2017, AdaCore                       --
+--                    Copyright (C) 2017-2022, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -43,14 +43,19 @@ with System;               use System;
 with Interfaces;           use Interfaces;
 with STM32.User_Button;
 
+with Last_Chance_Handler;  pragma Unreferenced (Last_Chance_Handler);
+
 procedure Main is
 
    Synth : Simple_Synthesizer.Synthesizer
      (Stereo    => True,
       Amplitude => Natural (Integer_16'Last / 3));
+
    Audio_Data_0 : Audio_Buffer (1 .. 64);
    Audio_Data_1 : Audio_Buffer (1 .. 64);
+
    Note : Float := 110.0;
+
 begin
    Initialize_LEDs;
 
