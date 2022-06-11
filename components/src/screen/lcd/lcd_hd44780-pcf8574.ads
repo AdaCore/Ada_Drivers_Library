@@ -32,7 +32,6 @@
 --  driver for text based LCDs connected via I2C port expander PCF8574
 
 with HAL.Time;
-with HAL.I2C;
 with PCF8574;
 
 package LCD_HD44780.PCF8574 is
