@@ -99,7 +99,8 @@ package body Cortex_M.NVIC is
       Subpriority      : Interrupt_Priority)
       return Interrupt_Priority
    is
-      PriorityGroupTmp    : constant Interrupt_Priority := Priority_Group and 16#07#;
+      PriorityGroupTmp    : constant Interrupt_Priority :=
+         Priority_Group and 16#07#;
       PreemptPriorityBits : Interrupt_Priority;
       SubPriorityBits     : Interrupt_Priority;
       Temp1 : Interrupt_Priority;
@@ -251,4 +252,3 @@ package body Cortex_M.NVIC is
    end Reset_System;
 
 end Cortex_M.NVIC;
-

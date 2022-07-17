@@ -97,7 +97,8 @@ package body Semihosting is
    -- Generic_SH_Call --
    ---------------------
 
-   function Generic_SH_Call (R0 : SH_Word; R1 : System.Address) return SH_Word is
+   function Generic_SH_Call (R0 : SH_Word; R1 : System.Address)
+      return SH_Word is
    begin
       return Generic_SH_Call (R0, To_SH_u32 (R1));
    end Generic_SH_Call;
@@ -299,6 +300,5 @@ package body Semihosting is
    begin
       Write_C (ASCII.LF);
    end Log_New_Line;
-
 
 end Semihosting;

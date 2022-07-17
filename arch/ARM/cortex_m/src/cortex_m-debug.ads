@@ -30,6 +30,7 @@
 ------------------------------------------------------------------------------
 
 package Cortex_M.Debug is
+   pragma Preelaborate;
 
    function Halting_Debug_Enabled return Boolean;
 

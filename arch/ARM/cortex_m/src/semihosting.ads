@@ -33,6 +33,7 @@ with System;
 with HAL;
 
 package Semihosting is
+   pragma Preelaborate;
 
    type SH_Word is new HAL.UInt32;
 

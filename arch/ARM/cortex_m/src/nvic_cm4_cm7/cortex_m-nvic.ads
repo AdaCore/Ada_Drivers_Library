@@ -46,6 +46,7 @@ with System;
 with HAL;            use HAL;
 
 package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
+   pragma Elaborate_Body;
 
    type Interrupt_ID is new Natural range 0 .. 240;
    type Interrupt_Priority is new UInt32;
@@ -64,7 +65,6 @@ package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
 
    --  4 bits for pre-emption priority;  0 bits for subpriority
    Priority_Group_4 : constant UInt32 := 16#00000003#;
-
 
    procedure Set_Priority_Grouping (Priority_Group : Interrupt_Priority)
      with Inline;
@@ -110,7 +110,6 @@ private
    type Words is array (Natural range <>) of UInt32;
    type UInt8s is array (Natural range <>) of UInt8;
 
-
    type Nested_Vectored_Interrupt_Controller is record
       ISER      : Words (0 .. 7);
       --  Interrupt Set Enable Register
@@ -150,7 +149,6 @@ private
       Reserved5 at 1008 range 0 .. 20607;  -- 2576 UInt8s
       STIR      at 3584 range 0 .. 31;     -- 4 UInt8s
    end record;
-
 
    type System_Control_Block is record
       CPUID     : UInt32;
@@ -221,7 +219,6 @@ private
       CPACR     at 136 range 0 .. 31;              -- Offset: 0x088
    end record;
 
-
    SCS_Base  : constant := 16#E000_E000#;
    --  system control space base address
    NVIC_Base : constant := SCS_Base +  16#0100#;
@@ -237,7 +234,6 @@ private
      Volatile,
      Address => System'To_Address (NVIC_Base);
    pragma Import (Ada, NVIC);
-
 
    SCB_AIRCR_PRIGROUP_Pos  : constant := 8;
    SCB_AIRCR_PRIGROUP_Mask : constant UInt32 :=

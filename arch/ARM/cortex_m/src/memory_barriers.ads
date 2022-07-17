@@ -32,6 +32,7 @@
 --  This file provides utility functions for ARM Cortex microcontrollers
 
 package Memory_Barriers is
+   pragma Preelaborate;
 
    procedure Data_Synchronization_Barrier with Inline;
    --  Injects instruction "DSB Sy" i.e., a "full system" domain barrier
@@ -39,4 +40,3 @@ package Memory_Barriers is
    procedure DSB renames Data_Synchronization_Barrier;
 
 end Memory_Barriers;
-

@@ -39,6 +39,7 @@
 --    https://developer.arm.com/documentation/ddi0419/e
 
 package Cortex_M.Hints is
+   pragma Preelaborate;
 
    procedure Send_Event with Inline;
    --  A6.7.57 SEV
