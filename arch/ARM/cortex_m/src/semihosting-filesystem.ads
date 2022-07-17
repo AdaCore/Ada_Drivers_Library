@@ -38,6 +38,7 @@ with HAL.Filesystem; use HAL.Filesystem;
 with HAL; use HAL;
 
 package Semihosting.Filesystem is
+   pragma Preelaborate;
 
    type SHFS is new HAL.Filesystem.Filesystem_Driver with private;
    type Any_SHFS is access all SHFS'Class;

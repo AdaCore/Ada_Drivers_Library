@@ -45,6 +45,7 @@
 with HAL;                  use HAL;
 
 package Cortex_M.NVIC is  -- the Nested Vectored Interrupt Controller
+   pragma Preelaborate;
 
    NVIC_PRIO_BITS : constant := 2;
    --  All Cortex M0 parts have 2 bit priority mask

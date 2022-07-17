@@ -51,10 +51,14 @@ package Cortex_M.DWT is  --  Data Watchpoint Trace
    --  below. The values are just the NUMCOMP nibble and the boolean flags in
    --  the next nibble.
    No_DWT_Present                            : constant UInt32 := 0;
-   Only_One_Comparator                       : constant UInt32 := 16#1000_0000#;  --  268435456 dec
-   One_Comparator_Watchpoints                : constant UInt32 := 16#1F00_0000#;  --  520093696 dec
-   Four_Comparators_Watchpoints_And_Triggers : constant UInt32 := 16#4000_0000#;  -- 1073741824 dec
-   Four_Comparators_Watchpoints_Only         : constant UInt32 := 16#4F00_0000#;  -- 1325400064 dec
+   Only_One_Comparator                       : constant UInt32 :=
+      16#1000_0000#; --  268435456 dec
+   One_Comparator_Watchpoints                : constant UInt32 :=
+      16#1F00_0000#; --  520093696 dec
+   Four_Comparators_Watchpoints_And_Triggers : constant UInt32 :=
+      16#4000_0000#; -- 1073741824 dec
+   Four_Comparators_Watchpoints_Only         : constant UInt32 :=
+      16#4F00_0000#; -- 1325400064 dec
 
    function DWT_Reset_Value return UInt32 with Inline;
    --  Returns the value of the DWT.CTRL register as a word, for convenient

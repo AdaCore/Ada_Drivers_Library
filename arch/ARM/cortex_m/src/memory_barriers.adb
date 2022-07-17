@@ -44,4 +44,3 @@ package body Memory_Barriers is
    end Data_Synchronization_Barrier;
 
 end Memory_Barriers;
-

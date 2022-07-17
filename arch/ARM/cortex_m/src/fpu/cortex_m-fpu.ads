@@ -47,6 +47,7 @@
 with HAL; use HAL;
 
 package Cortex_M.FPU is
+   pragma Preelaborate;
 
    function Sqrt (X : Float) return Float;
 

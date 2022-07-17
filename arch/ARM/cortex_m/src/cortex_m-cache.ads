@@ -35,6 +35,7 @@
 with System;
 
 package Cortex_M.Cache is
+   pragma Elaborate_Body;
 
    procedure Enable_I_Cache;
 
