@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015-2018, AdaCore                      --
+--                    Copyright (C) 2015-2018, 2022, AdaCore                --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -303,9 +303,12 @@ package body MCP23x08 is
 
    overriding
    function Mode (This : MCP23_GPIO_Point) return HAL.GPIO.GPIO_Mode is
-      pragma Unreferenced (This);
    begin
-      return HAL.GPIO.Output;
+      if This.Device.Is_Output (This.Pin) then
+         return HAL.GPIO.Output;
+      else
+         return HAL.GPIO.Input;
+      end if;
    end Mode;
 
 
