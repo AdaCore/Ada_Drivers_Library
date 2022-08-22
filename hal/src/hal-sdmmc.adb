@@ -29,6 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with Interfaces;
+
 package body HAL.SDMMC is
 
    --------------
@@ -56,7 +58,7 @@ package body HAL.SDMMC is
       Status : out SD_Error)
    is
       S_Arg : constant UInt32 :=
-                Shift_Left (UInt32 (Rca), 16);
+                Interfaces.Shift_Left (UInt32 (Rca), 16);
    begin
       Send_Cmd (This, Cmd_Desc (App_Cmd), S_Arg, Status);
 
