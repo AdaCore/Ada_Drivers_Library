@@ -50,7 +50,7 @@ package HAL is
      with Size => 7;
    type UInt9 is mod 2**9
      with Size => 9;
-   type UInt8 is new Interfaces.Unsigned_8;
+   subtype UInt8 is Interfaces.Unsigned_8;
    type UInt10 is mod 2**10
      with Size => 10;
    type UInt11 is mod 2**11
@@ -63,7 +63,7 @@ package HAL is
      with Size => 14;
    type UInt15 is mod 2**15
      with Size => 15;
-   type UInt16 is new Interfaces.Unsigned_16;
+   subtype UInt16 is Interfaces.Unsigned_16;
    type UInt17 is mod 2**17
      with Size => 17;
    type UInt18 is mod 2**18
@@ -94,7 +94,7 @@ package HAL is
      with Size => 30;
    type UInt31 is mod 2**31
      with Size => 31;
-   type UInt32 is new Interfaces.Unsigned_32;
+   subtype UInt32 is Interfaces.Unsigned_32;
    type UInt33 is mod 2**33
      with Size => 33;
    type UInt34 is mod 2**34
@@ -157,7 +157,7 @@ package HAL is
      with Size => 62;
    type UInt63 is mod 2**63
      with Size => 63;
-   type UInt64 is new Interfaces.Unsigned_64;
+   subtype UInt64 is Interfaces.Unsigned_64;
 
    type UInt8_Array is array (Natural range <>) of UInt8;
    type UInt16_Array is array (Natural range <>) of UInt16;
