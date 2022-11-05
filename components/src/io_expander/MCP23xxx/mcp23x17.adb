@@ -62,7 +62,7 @@ package body MCP23x17 is
    function Read_Bit
      (This : MCP23x17_IO_Expander;
       Addr : Register_Address;
-      Pin  : Mcp23x17_Pin_Number)
+      Pin  : MCP23x17_Pin_Number)
       return Boolean;
 
    ------------------
@@ -266,11 +266,11 @@ package body MCP23x17 is
       Reg : constant Register_Address :=
            (if Pin.Port = A then GP_IO_A else GP_IO_B);
       Val : UInt8;
-      IOs : Port_Io_Array;
+      IOs : Port_IO_Array;
    begin
       Loc_IO_Read (This, Reg, Val);
       IOs := + Val;
-      return IOs (Pin.Pin_Nr);
+      return IOs(Pin.Pin_Nr);
    end Is_Set;
 
    ---------
@@ -330,7 +330,7 @@ package body MCP23x17 is
    end Get_IO;
 
    --  Return the current status of all pins of a given port in an array
-   procedure Get_IO (This : in out MCP23x17_Io_Expander;
+   procedure Get_IO (This : in out MCP23x17_IO_Expander;
                      Port : MCP23x17_Port;
                      IOs  : out Port_IO_Array)
    is
@@ -348,7 +348,7 @@ package body MCP23x17 is
       when A => Loc_IO_Write (This, GP_IO_A, +IOs);
       when B => Loc_IO_Write (This, GP_IO_B, +IOs);
       end case;
-   end Set_Io;
+   end Set_IO;
 
    -------------------
    -- As_GPIO_Point --
@@ -475,7 +475,7 @@ package body MCP23x17 is
    end Set_Module_Configuration;
 
    --  return the current module configuration.
-   procedure Get_Module_Configuration (This : in out MCP23x17_Io_Expander;
+   procedure Get_Module_Configuration (This : in out MCP23x17_IO_Expander;
                                        Conf : out Module_Configuration)
    is
       function "+" is new Ada.Unchecked_Conversion (Source => UInt8,

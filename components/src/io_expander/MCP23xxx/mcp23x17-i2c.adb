@@ -46,10 +46,10 @@ package body MCP23x17.I2C is
       Status : I2C_Status;
    begin
       This.Port.Mem_Write
-        (BASE_ADDRESS or I2C_Address (This.Addr),
+        (Base_Address or I2C_Address (This.Addr),
          UInt16 (Addr),
          Memory_Size_8b,
-         [1 => Value],
+         (1 => Value),
          Status,
          1000);
 
@@ -73,7 +73,7 @@ package body MCP23x17.I2C is
       Status : I2C_Status;
    begin
       This.Port.Mem_Read
-        (BASE_ADDRESS or I2C_Address (This.Addr),
+        (Base_Address or I2C_Address (This.Addr),
          UInt16 (Addr),
          Memory_Size_8b,
          Ret,
