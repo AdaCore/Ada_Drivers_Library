@@ -269,8 +269,8 @@ package body MCP23x17 is
       IOs : Port_IO_Array;
    begin
       Loc_IO_Read (This, Reg, Val);
-      IOs := + Val;
-      return IOs(Pin.Pin_Nr);
+      IOs := +Val;
+      return IOs (Pin.Pin_Nr);
    end Is_Set;
 
    ---------
