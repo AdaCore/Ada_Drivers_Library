@@ -20,14 +20,14 @@ def run_program(argv, cwd=os.path.dirname(os.path.realpath(__file__))):
     stdout, stderr = p.communicate()
 
     try:
-        stdout = stdout.decode('ascii')
+        stdout = stdout.decode(sys.stdout.encoding)
     except UnicodeError:
-        return 'stdout is not ASCII'
+        return (-1, '', 'error decode stdout text')
 
     try:
-        stderr = stderr.decode('ascii')
+        stderr = stderr.decode(sys.stdout.encoding)
     except UnicodeError:
-        return 'stderr is not ASCII'
+        return (-1, '', 'error decode stderr text')
 
     return (p.returncode, stdout, stderr)
 
