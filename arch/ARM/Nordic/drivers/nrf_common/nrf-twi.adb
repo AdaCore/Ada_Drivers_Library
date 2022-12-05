@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016-2020, AdaCore                      --
+--                    Copyright (C) 2016-2022, AdaCore                      --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -134,6 +134,11 @@ package body nRF.TWI is
       --  Set Address
       This.Periph.ADDRESS.ADDRESS := UInt7 (Addr / 2);
 
+      --  Configure SHORTS to neither suspend nor stop the TWI port
+      --  after the next byte transfer.
+      This.Periph.SHORTS.BB_SUSPEND := Disabled;
+      This.Periph.SHORTS.BB_STOP := Disabled;
+
       --  Prepare first byte
       This.Periph.TXD.TXD := Data (Data'First);
 
@@ -200,7 +205,6 @@ package body nRF.TWI is
 
       --  Set Address
       This.Periph.ADDRESS.ADDRESS := UInt7 (Addr / 2);
-
 
       if Data'Length = 1 then
          --  Only one byte to receive so we stop at the next one
