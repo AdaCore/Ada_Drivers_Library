@@ -14,6 +14,7 @@ def list_of_boards():
             'Feather_STM32F405',
             'OpenMV2',
             "MicroBit",
+            "MicroBit_v2",
             "NRF52_DK",
             "HiFive1",
             "HiFive1_rev_B",
@@ -171,6 +172,17 @@ def load_board_config(config):
         config.pre_define('Has_Ravenscar_Full_Runtime', 'False', origin)
         config.pre_define('Runtime_Name_Suffix', 'cortex-m0', origin)
         config.add_source_dir('boards/MicroBit/src/', origin)
+
+    elif board == "MicroBit_v2":
+        config.pre_define('Architecture', 'ARM', origin)
+        config.pre_define('Vendor', 'Nordic', origin)
+        config.pre_define('Device_Family', 'nRF52', origin)
+        config.pre_define('Device_Name', 'nRF52833xxAA', origin)
+        config.pre_define('Has_ZFP_Runtime', 'True', origin)
+        config.pre_define('Has_Ravenscar_SFP_Runtime', 'False', origin)
+        config.pre_define('Has_Ravenscar_Full_Runtime', 'False', origin)
+        config.pre_define('Runtime_Name_Suffix', 'cortex-m4f', origin)
+        config.add_source_dir('boards/MicroBit_v2/src/', origin)
 
     elif board == "NRF52_DK":
         config.pre_define('Architecture', 'ARM', origin)

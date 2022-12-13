@@ -133,6 +133,9 @@ projects = [
             "/examples/MicroBit/follower/follower.gpr",
             "/examples/MicroBit/accelerometer/accelerometer.gpr",
 
+            # MicroBit v2
+            "/examples/MicroBit_v2/text_scrolling/text_scrolling.gpr",
+
             # NRF52_SDK
             "/boards/NRF52_DK/nrf52_dk_zfp.gpr",
             "/examples/NRF52_DK/buttons/buttons.gpr",
