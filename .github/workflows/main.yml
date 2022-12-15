@@ -6,49 +6,66 @@ jobs:
     name: Build and test on Linux
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: ada-actions/toolchain@ce2021
-      with:
-        distrib: community
-    - uses: ada-actions/toolchain@ce2021
-      with:
-        distrib: community
-        target: arm-elf
-    - uses: ada-actions/toolchain@ce2021
-      with:
-        distrib: community
-        target: riscv32-elf
+    - uses: actions/checkout@v3
+
+    - run: |
+       wget -q https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.2.0-1/gnat-x86_64-linux-12.2.0-1.tar.gz
+       tar xf gnat-x86_64-linux-12.2.0-1.tar.gz
+       echo "${PWD}/gnat-x86_64-linux-12.2.0-1/bin" >> $GITHUB_PATH
+       
+       wget -q https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.2.0-1/gnat-arm-elf-linux64-12.2.0-1.tar.gz
+       tar xf gnat-arm-elf-linux64-12.2.0-1.tar.gz
+       echo "${PWD}/gnat-arm-elf-linux64-12.2.0-1/bin" >> $GITHUB_PATH
+
+       wget -q https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.2.0-1/gnat-riscv64-elf-linux64-12.2.0-1.tar.gz
+       tar xf gnat-riscv64-elf-linux64-12.2.0-1.tar.gz
+       echo "${PWD}/gnat-riscv64-elf-linux64-12.2.0-1/bin" >> $GITHUB_PATH
+
+       wget -q https://github.com/alire-project/GNAT-FSF-builds/releases/download/gprbuild-22.0.0-1/gprbuild-x86_64-linux-22.0.0-1.tar.gz
+       tar xf gprbuild-x86_64-linux-22.0.0-1.tar.gz
+       echo "${PWD}/gprbuild-x86_64-linux-22.0.0-1/bin" >> $GITHUB_PATH
+
     - name: Install Python 3.x (required for the testsuite)
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-    - run: python3 $PWD/scripts/install_dependencies.py
+
     - run: python3 $PWD/scripts/build_all_examples.py
     - run: python3 $PWD/testsuite/run.py
 
   win-build:
     name: Build and test on Windows
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
-    - uses: actions/checkout@v1
-    - uses: ada-actions/toolchain@ce2021
+    - uses: actions/checkout@v3
+    
+    - name: Install msys2
+      uses: msys2/setup-msys2@v2
       with:
-        distrib: community
-    - uses: ada-actions/toolchain@ce2021
-      with:
-        distrib: community
-        target: arm-elf
-    - name: Install Python 3.x (required for the testsuite)
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-    - name: Remove built-in arm-eabi Ravenscar run-times
-      run:  rm -Recurse -Force "d:\a\_temp\gnat-2021-20210519-arm-elf-windows64-bin\arm-eabi\lib\gnat\ravenscar*"
-      shell: pwsh
-    - name: Remove built-in arm-eabi ZFP run-times
-      run:  rm -Recurse -Force "d:\a\_temp\gnat-2021-20210519-arm-elf-windows64-bin\arm-eabi\lib\gnat\zfp*"
-      shell: pwsh
+        install: >-
+          base-devel
+          wget
+          mingw-w64-x86_64-python
+    
+    - run: |
+       wget -q https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.2.0-1/gnat-x86_64-windows64-12.2.0-1.tar.gz
+       tar xf gnat-x86_64-windows64-12.2.0-1.tar.gz
+       export PATH=${PWD}/gnat-x86_64-windows64-12.2.0-1/bin:$PATH
+       
+       wget -q https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.2.0-1/gnat-arm-elf-windows64-12.2.0-1.tar.gz
+       tar xf gnat-arm-elf-windows64-12.2.0-1.tar.gz
+       export PATH=${PWD}/gnat-arm-elf-windows64-12.2.0-1/bin:$PATH
 
-    - run: python $PWD/scripts/install_dependencies.py
-    - run: python $PWD/scripts/build_all_examples.py
-    - run: python $PWD/testsuite/run.py
+       wget -q https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-12.2.0-1/gnat-riscv64-elf-windows64-12.2.0-1.tar.gz
+       tar xf gnat-riscv64-elf-windows64-12.2.0-1.tar.gz
+       export PATH=${PWD}/gnat-riscv64-elf-windows64-12.2.0-1/bin:$PATH
+
+       wget -q https://github.com/alire-project/GNAT-FSF-builds/releases/download/gprbuild-22.0.0-1/gprbuild-x86_64-windows64-22.0.0-1.tar.gz
+       tar xf gprbuild-x86_64-windows64-22.0.0-1.tar.gz
+       export PATH=${PWD}/gprbuild-x86_64-windows64-22.0.0-1/bin:$PATH
+
+       python $PWD/scripts/build_all_examples.py
+       python $PWD/testsuite/run.py
