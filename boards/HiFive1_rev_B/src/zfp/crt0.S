@@ -106,6 +106,7 @@ __gnat_exit:
         .set _exit,__gnat_exit
 
 
+
         .globl putchar
         .type putchar,@function
 putchar:

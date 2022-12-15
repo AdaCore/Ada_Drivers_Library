@@ -47,8 +47,8 @@ def gprbuild(project_file, debug=False):
 
 
 # Run-time profiles
-RAVENSCAR_FULL = ["ravenscar-full"]
-RAVENSCAR_SFP = ["ravenscar-sfp"]
+RAVENSCAR_FULL = ["embedded"]
+RAVENSCAR_SFP = ["light-tasking"]
 BOTH_RAVENSCAR = RAVENSCAR_FULL + RAVENSCAR_SFP
 
 # There's no ZFP value in the RTS variable so far so we'll use an empty string

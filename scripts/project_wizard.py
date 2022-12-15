@@ -123,7 +123,7 @@ def middleware_config(config):
     if runtime_profile is None:
         runtime_profile = ''
 
-    if runtime_profile.startswith("ravenscar"):
+    if runtime_profile.startswith("light-tasking") or runtime_profile.startswith("embedded"):
         config.add_source_dir('middleware/src/ravenscar-common', origin)
 
 
@@ -138,11 +138,11 @@ def runtime_config(config):
 
     profiles = []
     if config.get_config("Has_Ravenscar_Full_Runtime") == "True":
-        profiles.append("ravenscar-full")
+        profiles.append("embedded")
     if config.get_config("Has_Ravenscar_SFP_Runtime") == "True":
-        profiles.append("ravenscar-sfp")
+        profiles.append("light-tasking")
     if config.get_config("Has_ZFP_Runtime") == "True":
-        profiles.append("zfp")
+        profiles.append("light")
 
     if len(profiles) > 0:
         config.query_enum_key('Runtime_Profile',  profiles,

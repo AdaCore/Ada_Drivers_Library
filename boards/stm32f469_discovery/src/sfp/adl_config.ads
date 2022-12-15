@@ -13,9 +13,9 @@ package ADL_Config is
    Max_Mount_Points               : constant         := 2;                   -- From default value
    Max_Path_Length                : constant         := 1024;                -- From default value
    Number_Of_Interrupts           : constant         := 0;                   -- From default value
-   Runtime_Name                   : constant String  := "ravenscar-sfp-stm32f469disco"; -- From default value
+   Runtime_Name                   : constant String  := "light-tasking-stm32f469disco"; -- From default value
    Runtime_Name_Suffix            : constant String  := "stm32f469disco";    -- From board definition
-   Runtime_Profile                : constant String  := "ravenscar-sfp";     -- From command line
+   Runtime_Profile                : constant String  := "light-tasking";     -- From command line
    Use_Startup_Gen                : constant Boolean := False;               -- From command line
    Vendor                         : constant String  := "STMicro";           -- From board definition
 end ADL_Config;

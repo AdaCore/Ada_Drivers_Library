@@ -23,6 +23,8 @@ SECTIONS
     KEEP (*(SORT_NONE(.start)))
     *(.text .text.* .gnu.linkonce.t*)
     *(.gnu.warning)
+    KEEP (*(.init))
+    KEEP (*(.fini))
   } >  board_flash
 
   .eh_frame_hdr :

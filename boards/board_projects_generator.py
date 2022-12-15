@@ -4,22 +4,22 @@ from subprocess import check_call
 
 
 BOARDS = {
-    'Crazyflie':           { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
-    'HiFive1':             { 'rts_profiles': ['zfp']},
-    'HiFive1_rev_B':       { 'rts_profiles': ['zfp']},
-    'Unleashed':           { 'rts_profiles': ['zfp', 'ravenscar-sfp', 'ravenscar-full']},
-    'MicroBit':            { 'rts_profiles': ['zfp']},
-    'NRF52_DK':            { 'rts_profiles': ['zfp']},
+    'Crazyflie':           { 'rts_profiles': ['light-tasking', 'embedded']},
+    'HiFive1':             { 'rts_profiles': ['light']},
+    'HiFive1_rev_B':       { 'rts_profiles': ['light']},
+    'Unleashed':           { 'rts_profiles': ['light', 'light-tasking', 'embedded']},
+    'MicroBit':            { 'rts_profiles': ['light']},
+    'NRF52_DK':            { 'rts_profiles': ['light']},
     'Native':              { 'rts_profiles': ['none']},
-    'OpenMV2':             { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
-    'STM32F407_Discovery': { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
-    'STM32F429_Discovery': { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
-    'STM32F469_Discovery': { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
-    'STM32F746_Discovery': { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
-    'STM32F769_Discovery': { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
-    'NUCLEO_F446ZE':       { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
-    'Feather_STM32F405':   { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
-    'STM32_H405':          { 'rts_profiles': ['ravenscar-sfp', 'ravenscar-full']},
+    'OpenMV2':             { 'rts_profiles': ['light-tasking', 'embedded']},
+    'STM32F407_Discovery': { 'rts_profiles': ['light-tasking', 'embedded']},
+    'STM32F429_Discovery': { 'rts_profiles': ['light-tasking', 'embedded']},
+    'STM32F469_Discovery': { 'rts_profiles': ['light-tasking', 'embedded']},
+    'STM32F746_Discovery': { 'rts_profiles': ['light-tasking', 'embedded']},
+    'STM32F769_Discovery': { 'rts_profiles': ['light-tasking', 'embedded']},
+    'NUCLEO_F446ZE':       { 'rts_profiles': ['light-tasking', 'embedded']},
+    'Feather_STM32F405':   { 'rts_profiles': ['light-tasking', 'embedded']},
+    'STM32_H405':          { 'rts_profiles': ['light-tasking', 'embedded']},
     }
 
 
@@ -46,11 +46,11 @@ def gen_project(board_name, rts):
     assert board_name is not None, "board is undefined"
     assert board_name in BOARDS, "%s is undefined" % board_name
 
-    if rts == 'zfp':
+    if rts == 'light':
         suffix = 'ZFP'
-    elif rts == 'ravenscar-sfp':
+    elif rts == 'light-tasking':
         suffix = 'SFP'
-    elif rts == 'ravenscar-full':
+    elif rts == 'embedded':
         suffix = 'Full'
     elif rts == 'none':
         suffix = None

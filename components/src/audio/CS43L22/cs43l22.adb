@@ -39,7 +39,7 @@ package body CS43L22 is
                         Reg   : UInt8;
                         Value : UInt8)
    is
-      Status : I2C_Status with Unreferenced;
+      Status : I2C_Status;
 
    begin
       This.Port.Mem_Write

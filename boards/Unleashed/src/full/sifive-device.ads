@@ -1,8 +1,8 @@
 with SiFive.UART; use SiFive.UART;
-with System; use System;
 with SiFive.SPI; use SiFive.SPI;
-with SiFive.PWM; use SiFive.PWM;
 with SiFive.GPIO; use SiFive.GPIO;
+with System; use System;
+with SiFive.PWM; use SiFive.PWM;
 
 package SiFive.Device is
 

@@ -338,7 +338,7 @@ package body FT5336 is
                                     Enabled : Boolean)
    is
       Reg_Value : UInt8 := 0;
-      Status    : Boolean with Unreferenced;
+      Status    : Boolean;
    begin
       if Enabled then
          Reg_Value := FT5336_G_MODE_INTERRUPT_TRIGGER;

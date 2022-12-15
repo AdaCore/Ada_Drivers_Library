@@ -62,7 +62,7 @@ library project MicroBit_ZFP is
 
    Linker_Switches := ("-T", Project'Project_dir & "/src/zfp/link.ld");
    for Target use "arm-eabi";
-   for Runtime ("Ada") use "zfp-cortex-m0";
+   for Runtime ("Ada") use "light-cortex-m0";
 
    package Device_Configuration is
       for CPU_Name use "ARM Cortex-M0";
@@ -127,9 +127,9 @@ library project MicroBit_ZFP is
    Max_Mount_Points               := "2";                 -- From default value
    Max_Path_Length                := "1024";              -- From default value
    Number_Of_Interrupts           := "32";                -- From MCU definition
-   Runtime_Name                   := "zfp-cortex-m0";     -- From default value
+   Runtime_Name                   := "light-cortex-m0";   -- From default value
    Runtime_Name_Suffix            := "cortex-m0";         -- From board definition
-   Runtime_Profile                := "zfp";               -- From command line
+   Runtime_Profile                := "light";             -- From command line
    Use_Startup_Gen                := "True";              -- From command line
    Vendor                         := "Nordic";            -- From board definition
 

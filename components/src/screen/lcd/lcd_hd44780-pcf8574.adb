@@ -35,6 +35,7 @@ pragma Restrictions (No_Allocators);
 pragma Restrictions (No_Implicit_Heap_Allocations);
 
 package body LCD_HD44780.PCF8574 is
+   pragma Warnings (Off, "renamed variable * is not referenced");
 
    type Shadow_Bits is array (Bit_Number) of Boolean
    with Pack, Size => 8;

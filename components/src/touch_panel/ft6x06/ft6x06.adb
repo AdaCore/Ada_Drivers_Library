@@ -69,7 +69,7 @@ package body FT6x06 is
       Enabled : Boolean)
    is
       Reg_Value : UInt8 := 0;
-      Status    : Boolean with Unreferenced;
+      Status    : Boolean;
    begin
       if Enabled then
          Reg_Value := FT6206_G_MODE_INTERRUPT_TRIGGER;

@@ -134,7 +134,7 @@ package body AK8963 is
       Reg    : UInt16;
       Data   : UInt8)
    is
-      Status : I2C_Status with Unreferenced;
+      Status : I2C_Status;
    begin
       Device.I2C_Port.Mem_Write
         (Device.Address,

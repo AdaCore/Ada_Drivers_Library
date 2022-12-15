@@ -62,7 +62,7 @@ library project STM32F746_Discovery_Full is
 
    Linker_Switches := ();
    for Target use "arm-eabi";
-   for Runtime ("Ada") use "ravenscar-full-stm32f746disco";
+   for Runtime ("Ada") use "embedded-stm32f746disco";
 
    package Device_Configuration is
       for CPU_Name use "ARM Cortex-M7F";
@@ -82,9 +82,9 @@ library project STM32F746_Discovery_Full is
    Max_Mount_Points               := "2";                 -- From default value
    Max_Path_Length                := "1024";              -- From default value
    Number_Of_Interrupts           := "0";                 -- From default value
-   Runtime_Name                   := "ravenscar-full-stm32f746disco"; -- From default value
+   Runtime_Name                   := "embedded-stm32f746disco"; -- From default value
    Runtime_Name_Suffix            := "stm32f746disco";    -- From board definition
-   Runtime_Profile                := "ravenscar-full";    -- From command line
+   Runtime_Profile                := "embedded";          -- From command line
    Use_Startup_Gen                := "False";             -- From command line
    Vendor                         := "STMicro";           -- From board definition
 
