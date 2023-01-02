@@ -46,7 +46,7 @@ package body WM8994 is
                         Reg   : UInt16;
                         Value : UInt16)
    is
-      Status : I2C_Status with Unreferenced;
+      Status : I2C_Status;
       Data   : I2C_Data (1 .. 2);
       Check  : UInt16 with Unreferenced;
    begin

@@ -31,7 +31,6 @@
 
 with STM32.GPIO;
 with STM32.Device;
-with OpenMV;
 with ST7735R;                 use ST7735R;
 with ST7735R.RAM_Framebuffer; use ST7735R.RAM_Framebuffer;
 with Ravenscar_Time;

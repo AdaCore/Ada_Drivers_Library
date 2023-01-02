@@ -33,15 +33,6 @@ Then we clone the Ada_Drivers_Library repository:
 
 ```$ git clone https://github.com/AdaCore/Ada_Drivers_Library.git Ada_Drivers_Library/repo/```
 
-## Installing run-times
-
-It is possible that your project requires run-time that are not distributed
-with GNAT. In that case you may have to build them from the repository.
-
-ADL provides a script for easy installation of run-time:
-
-``` $ ./Ada_Drivers_Library/repo/scripts/install_dependencies.py```
-
 ## Project Wizard
 
 Next, we use the project wizard to configure and generate the ADL project.

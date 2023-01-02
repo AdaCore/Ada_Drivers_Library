@@ -20,18 +20,19 @@ boards, in that case the code is stored in the [shared](shared/) directory.
 Most of the boards/micro-controller supported are based on the ARM Cortex-M
 architecture. If you have a GNAT Pro subscription, you can download the
 compiler (GNAT) and IDE (GNAT Programming Studio) from your account. Otherwise,
-AdaCore provides a community version of GNAT that you can download
-[here](http://adacore.com/download). We recomend to download the cross compiler
-and also the native one because it contains the GNAT Programming Studio IDE.
+there are GNAT FSF and GPRbuild releases from the Alire project that you can
+download [here](https://github.com/alire-project/GNAT-FSF-builds/releases).
 
-Follow the instructions to install GNAT and GPS.
+A public release of GNAT Studio is also available
+[here](https://github.com/AdaCore/gnatstudio/releases).
 
 ### stlink
 
 For the STM32 board we recommend to use the open-source probe interface
 [stlink](https://github.com/texane/stlink).
 
-On Windows, stlink should be included with your cross-compiler installation.
+On Windows, you can get it from the [Msys2 package
+manager](https://packages.msys2.org/package/mingw-w64-x86_64-stlink).
 
 On Linux, you have to download the source and compile the tool:
 
@@ -55,18 +56,6 @@ If you are on Windows, we recommend to use the
 Otherwise, from the command line:
 ```shell
 git clone --recursive https://github.com/AdaCore/Ada_Drivers_Library.git
-```
-
-## Build and install the run-times
-
-Not all the GNAT run-times used in the Ada_Drivers_Library are packaged with
-the compiler.
-
-To build and install the missing run-times, use the `install_dependencies.py`
-script:
-
-```shell
-python ./scripts/install_dependencies.py
 ```
 
 ## Open an example project

@@ -45,16 +45,6 @@ def gprbuild(project_file, debug=False):
 
     return returncode
 
-
-# Run-time profiles
-RAVENSCAR_FULL = ["ravenscar-full"]
-RAVENSCAR_SFP = ["ravenscar-sfp"]
-BOTH_RAVENSCAR = RAVENSCAR_FULL + RAVENSCAR_SFP
-
-# There's no ZFP value in the RTS variable so far so we'll use an empty string
-# for now.
-ZFP = [""]
-
 STM_DRIVERS = "/arch/ARM/STM32/driver_demos/"
 
 # List of project to compile

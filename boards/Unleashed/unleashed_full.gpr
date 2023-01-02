@@ -62,7 +62,7 @@ library project Unleashed_Full is
 
    Linker_Switches := ();
    for Target use "riscv32-elf";
-   for Runtime ("Ada") use "ravenscar-full-unleashed";
+   for Runtime ("Ada") use "embedded-unleashed";
 
    package Device_Configuration is
       for CPU_Name use "RISC-V64";
@@ -81,9 +81,9 @@ library project Unleashed_Full is
    Max_Mount_Points               := "2";                 -- From default value
    Max_Path_Length                := "1024";              -- From default value
    Number_Of_Interrupts           := "0";                 -- From default value
-   Runtime_Name                   := "ravenscar-full-unleashed"; -- From default value
+   Runtime_Name                   := "embedded-unleashed"; -- From default value
    Runtime_Name_Suffix            := "unleashed";         -- From board definition
-   Runtime_Profile                := "ravenscar-full";    -- From command line
+   Runtime_Profile                := "embedded";          -- From command line
    Use_Startup_Gen                := "False";             -- From command line
    Vendor                         := "SiFive";            -- From board definition
 
@@ -94,11 +94,11 @@ library project Unleashed_Full is
     Src_Dirs_Root & "/boards/Unleashed/src/", -- From board definition
     Src_Dirs_Root & "/arch/RISC-V/src/", -- From arch definition
     Src_Dirs_Root & "/arch/RISC-V/src/rv64", -- From arch definition
-    Src_Dirs_Root & "/arch/RISC-V/SiFive/", -- From MCU definition
-    Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/spi0", -- From MCU definition
-    Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/uart0", -- From MCU definition
     Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/gpio0", -- From MCU definition
     Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/pwm0", -- From MCU definition
+    Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/uart0", -- From MCU definition
+    Src_Dirs_Root & "/arch/RISC-V/SiFive/", -- From MCU definition
+    Src_Dirs_Root & "/arch/RISC-V/SiFive/drivers/spi0", -- From MCU definition
     Src_Dirs_Root & "/middleware/src/filesystem", -- From middleware config
     Src_Dirs_Root & "/middleware/src/BLE", -- From middleware config
     Src_Dirs_Root & "/middleware/src/utils", -- From middleware config

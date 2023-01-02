@@ -62,7 +62,7 @@ library project HiFive1_ZFP is
 
    Linker_Switches := ("-T", Project'Project_dir & "/src/zfp/link.ld");
    for Target use "riscv32-elf";
-   for Runtime ("Ada") use "zfp-rv32imac";
+   for Runtime ("Ada") use "light-rv32imac";
 
    package Device_Configuration is
       for CPU_Name use "RISC-V32";
@@ -97,9 +97,9 @@ library project HiFive1_ZFP is
    Max_Mount_Points               := "2";                 -- From default value
    Max_Path_Length                := "1024";              -- From default value
    Number_Of_Interrupts           := "0";                 -- From default value
-   Runtime_Name                   := "zfp-rv32imac";      -- From default value
+   Runtime_Name                   := "light-rv32imac";    -- From default value
    Runtime_Name_Suffix            := "rv32imac";          -- From board definition
-   Runtime_Profile                := "zfp";               -- From command line
+   Runtime_Profile                := "light";             -- From command line
    Use_Startup_Gen                := "True";              -- From command line
    Vendor                         := "SiFive";            -- From board definition
    hifive1_uart_root              := "268513280";         -- From board definition

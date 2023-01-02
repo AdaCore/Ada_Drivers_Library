@@ -34,6 +34,8 @@ with HAL;              use HAL;
 
 package body nRF.GPIO.Tasks_And_Events is
 
+   pragma Warnings (Off, "renamed variable * is not referenced");
+
    -----------------------------------
    -- Acknowledge_Channel_Interrupt --
    -----------------------------------

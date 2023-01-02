@@ -5,9 +5,11 @@ You can get it at [sifive.com](https://www.sifive.com/products/hifive1/).
 
 ## How to setup the Ada development environment for the HiFive1
 
-GNAT Community now comes with HiFive1 support built-in. So you only need to
-download the RISC-V32 ELF and the native package from
-[here](adacore.com/download).
+You can use GNAT FSF riscv64-elf and GPRbuild releases from the Alire project,
+download [here](https://github.com/alire-project/GNAT-FSF-builds/releases).
+
+A public release of GNAT Studio is also available
+[here](https://github.com/AdaCore/gnatstudio/releases).
 
 ## Building the example
 

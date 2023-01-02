@@ -11,9 +11,11 @@ at:
 
 # How to setup the Ada development environment for the Micro:Bit
 
-GNAT Community now comes with micro:bit and pyOCD support built-in. So you only
-need to download the ARM ELF and the native package from
-[here](https://www.adacore.com/download)
+You can use GNAT FSF arm-elf and GPRbuild releases from the Alire project,
+download [here](https://github.com/alire-project/GNAT-FSF-builds/releases).
+
+A public release of GNAT Studio is also available
+[here](https://github.com/AdaCore/gnatstudio/releases).
 
 ## pyOCD programmer
 

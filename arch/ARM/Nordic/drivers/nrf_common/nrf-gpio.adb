@@ -33,6 +33,12 @@ with NRF_SVD.GPIO; use NRF_SVD.GPIO;
 
 package body nRF.GPIO is
 
+   pragma Warnings (Off, "renamed variable * is not referenced");
+
+   ----------
+   -- Mode --
+   ----------
+
    overriding
    function Mode (This : GPIO_Point) return HAL.GPIO.GPIO_Mode is
       CNF : PIN_CNF_Register renames GPIO_Periph.PIN_CNF (This.Pin);

@@ -874,7 +874,7 @@ package body VL53L0X is
    function Range_Value_Available
      (This : VL53L0X_Ranging_Sensor) return Boolean
    is
-      Status : Boolean with Unreferenced;
+      Status : Boolean;
       Val    : UInt8;
    begin
       Read (This, REG_RESULT_INTERRUPT_STATUS, Val, Status);
@@ -888,7 +888,7 @@ package body VL53L0X is
    function Read_Range_Millimeters
      (This : VL53L0X_Ranging_Sensor) return HAL.UInt16
    is
-      Status : Boolean with Unreferenced;
+      Status : Boolean;
       Ret    : HAL.UInt16;
    begin
       Read (This, REG_RESULT_RANGE_STATUS + 10, Ret, Status);
@@ -973,7 +973,7 @@ package body VL53L0X is
    procedure Clear_Interrupt_Mask
      (This : VL53L0X_Ranging_Sensor)
    is
-      Status : Boolean with Unreferenced;
+      Status : Boolean;
 --        Tmp    : UInt8;
    begin
 --        for J in 1 .. 3 loop
@@ -1398,7 +1398,7 @@ package body VL53L0X is
       function To_U32 is new Ada.Unchecked_Conversion
         (Fix_Point_16_16, UInt32);
       Reg : UInt16;
-      Status : Boolean with Unreferenced;
+      Status : Boolean;
    begin
       --  Encoded as Fixed Point 9.7. Let's translate.
       Reg := UInt16 (Shift_Right (To_U32 (Rate_Limit), 9) and 16#FFFF#);

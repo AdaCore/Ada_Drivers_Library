@@ -14,9 +14,9 @@ package ADL_Config is
    Max_Mount_Points               : constant         := 2;                   -- From default value
    Max_Path_Length                : constant         := 1024;                -- From default value
    Number_Of_Interrupts           : constant         := 128;                 -- From MCU definition
-   Runtime_Name                   : constant String  := "zfp-cortex-m4f";    -- From default value
+   Runtime_Name                   : constant String  := "light-cortex-m4f";  -- From default value
    Runtime_Name_Suffix            : constant String  := "cortex-m4f";        -- From board definition
-   Runtime_Profile                : constant String  := "zfp";               -- From command line
+   Runtime_Profile                : constant String  := "light";             -- From command line
    Use_Startup_Gen                : constant Boolean := True;                -- From command line
    Vendor                         : constant String  := "Nordic";            -- From board definition
 end ADL_Config;

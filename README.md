@@ -1,7 +1,6 @@
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/ada-lang/Ada_Drivers_Library)
-[![Linux Build Status](https://travis-ci.org/AdaCore/Ada_Drivers_Library.svg?branch=master)](https://travis-ci.org/AdaCore/Ada_Drivers_Library)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/github/AdaCore/Ada_Drivers_Library?branch=master&svg=true)](https://ci.appveyor.com/project/github-integration-adacore/ada-drivers-library)
-
+![CI status](https://github.com/AdaCore/Ada_Drivers_Library/actions/workflows/main.yml/badge.svg)
+  
 # 1. Introduction
 
 This repository contains drivers and sample projects to program
@@ -44,8 +43,8 @@ for details.
 
 Therefore, building with the sources requires a compiler supporting both Ada
 2012 and the GNAT-defined pragma `Volatile_Full_Access`. For instance a recent
-GNAT Pro compiler or GNAT Community 2018 for ARM ELF or RISC-V ELF [(Download
-here)](http://adacore.com/download).
+GNAT Pro compiler or GNAT FSF 12 for ARM ELF or RISC-V ELF [(Download
+here)](https://github.com/alire-project/GNAT-FSF-builds/releases).
 
 # 6. Roadmap
 
