@@ -67,6 +67,11 @@ projects = [
             "/examples/STM32F4_DISCO/blinky_f4disco.gpr",
             "/examples/STM32F4_DISCO/serial_ports_f4disco.gpr",
 
+            # STM32F4XX M
+            "/boards/stm32f4xx_m/stm32f4xx_m_full.gpr",
+            "/boards/stm32f4xx_m/stm32f4xx_m_sfp.gpr",
+            "/examples/stm32f4xx_m/blinky/blinky.gpr",
+
             # Feather STM32F405
             "/examples/feather_stm32f405/blinky/blinky.gpr",
             "/examples/feather_stm32f405/charlie_wing/charlie_wing.gpr",
