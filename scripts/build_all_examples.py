@@ -71,6 +71,7 @@ projects = [
             "/boards/stm32f4xx_m/stm32f4xx_m_full.gpr",
             "/boards/stm32f4xx_m/stm32f4xx_m_sfp.gpr",
             "/examples/stm32f4xx_m/blinky/blinky.gpr",
+            "/examples/stm32f4xx_m/flash/flash.gpr",
 
             # Feather STM32F405
             "/examples/feather_stm32f405/blinky/blinky.gpr",
