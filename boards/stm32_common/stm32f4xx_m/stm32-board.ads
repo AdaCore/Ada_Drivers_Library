@@ -32,10 +32,15 @@
 --  This file provides declarations for devices on the STM32F4XX M board
 --  manufactured by DevEBox.
 
+with System;
+with Ada.Interrupts.Names; use Ada.Interrupts;
+
 with STM32.Device;  use STM32.Device;
+with STM32.DMA;             use STM32.DMA;
+with STM32.DMA.Interrupts;  use STM32.DMA.Interrupts;
 with STM32.GPIO;    use STM32.GPIO;
 
-with Ada.Interrupts.Names; use Ada.Interrupts;
+with SDCard;
 
 package STM32.Board is
    pragma Elaborate_Body;
@@ -59,7 +64,44 @@ package STM32.Board is
    procedure Toggle_LEDs (These : in out GPIO_Points)
      renames STM32.GPIO.Toggle;
 
-   --  User button
+   --------------------------
+   -- micro SD card reader --
+   --------------------------
+
+   SD_Detect_Pin     : STM32.GPIO.GPIO_Point renames PC11;
+   --  There is no dedicated pin for card detection, reuse DAT3 pin
+
+   SD_DMA            : DMA_Controller renames DMA_2;
+   SD_DMA_Rx_Stream  : DMA_Stream_Selector renames Stream_3;
+   SD_DMA_Rx_Channel : DMA_Channel_Selector renames Channel_4;
+   SD_DMA_Tx_Stream  : DMA_Stream_Selector renames Stream_6;
+   SD_DMA_Tx_Channel : DMA_Channel_Selector renames Channel_4;
+   SD_Pins           : constant GPIO_Points :=
+                         (PC8, PC9, PC10, PC11, PC12, PD2);
+   SD_Pins_AF        : constant GPIO_Alternate_Function := GPIO_AF_SDIO_12;
+   SD_Pins_2         : constant GPIO_Points := (1 .. 0 => <>);
+   SD_Pins_AF_2      : constant GPIO_Alternate_Function := GPIO_AF_SDIO_12;
+   SD_Interrupt      : Ada.Interrupts.Interrupt_ID renames
+                         Ada.Interrupts.Names.SDIO_Interrupt;
+
+   DMA2_Stream3 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_3,
+      Ada.Interrupts.Names.DMA2_Stream3_Interrupt,
+      System.Interrupt_Priority'Last);
+
+   DMA2_Stream6 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_6,
+      Ada.Interrupts.Names.DMA2_Stream6_Interrupt,
+      System.Interrupt_Priority'Last);
+
+   SD_Rx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream3;
+   SD_Tx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream6;
+
+   SDCard_Device : aliased SDCard.SDCard_Controller (SDIO'Access);
+
+   ------------------
+   --  User button --
+   ------------------
 
    User_Button_Point     : GPIO_Point renames PA0;
    User_Button_Interrupt : constant Interrupt_ID := Names.EXTI0_Interrupt;
