@@ -53,6 +53,19 @@ package SDCard is
    function Card_Present
      (This : in out SDCard_Controller) return Boolean;
    --  Whether a SD-Card is present in the sdcard reader
+   --
+   --  If there is no separate pin on the device for card detection, then a pin
+   --  shared with the data transmission line is used. In this case, card
+   --  detection cannot work simultaneously with other subprograms, and caution
+   --  is required when using it. In this configuration, the card detection
+   --  mode operates immediately after the Initialize function is called until
+   --  the Card_Present function returns True. From that moment on, the
+   --  controller switches to normal operation mode, and the Card_Present
+   --  function will keep returning True until the next Initialize function
+   --  call.
+
+   function Has_SD_Detect_Pin return Boolean;
+   --  Whether the dedicated SD card detection pin is present on the device
 
    function Get_Card_Information
      (This : in out SDCard_Controller)

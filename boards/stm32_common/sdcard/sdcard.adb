@@ -47,6 +47,15 @@ package body SDCard is
      (Interrupt_ID => SD_Interrupt,
       Priority     => System.Interrupt_Priority'Last);
 
+   -----------------------
+   -- Has_SD_Detect_Pin --
+   -----------------------
+
+   function Has_SD_Detect_Pin return Boolean is
+   begin
+      return (for all Pin of SD_Pins => Pin.Pin /= SD_Detect_Pin.Pin);
+   end Has_SD_Detect_Pin;
+
    ----------------
    -- Initialize --
    ----------------
@@ -78,12 +87,19 @@ package body SDCard is
           Resistors      => Pull_Up));
 
       --  GPIO configuration for the SD-Detect pin
-      Configure_IO
-        (SD_Detect_Pin,
-         (Mode        => Mode_In,
---            Output_Type => Open_Drain,
---            Speed       => Speed_High,
-          Resistors   => Pull_Up));
+      if Has_SD_Detect_Pin then
+         Configure_IO
+           (SD_Detect_Pin,
+            (Mode        => Mode_In,
+             Resistors   => Pull_Up));
+      else
+         Configure_IO
+           (SD_Detect_Pin,
+            (Mode        => Mode_In,
+             Resistors   => Pull_Down));
+
+         This.Card_Detected := False;
+      end if;
 
       --  Enable the SDIO clock
       STM32.Device.Enable_Clock (This.Device.all);
@@ -140,8 +156,30 @@ package body SDCard is
    function Card_Present
      (This : in out SDCard_Controller) return Boolean
    is
+      function Card_Detect return Boolean;
+      --  Check SD_Detect_Pin depending on the presence of a dedicated pin
+
+      -----------------
+      -- Card_Detect --
+      -----------------
+
+      function Card_Detect return Boolean is
+      begin
+         if Has_SD_Detect_Pin then
+            --  We have a dedicated pin.
+            return not STM32.GPIO.Set (SD_Detect_Pin);
+         elsif This.Card_Detected then
+            --  We have no dedicated pin.
+            --  In normal operation mode no detection is possible.
+            return True;
+         else
+            --  We have no dedicated pin. Check DAT3 pin
+            return STM32.GPIO.Set (SD_Detect_Pin);
+         end if;
+      end Card_Detect;
+
    begin
-      if STM32.GPIO.Set (SD_Detect_Pin) then
+      if not Card_Detect then
          --  No card
          This.Device.Clear_Card_Information;
          This.Card_Detected := False;
@@ -152,7 +190,21 @@ package body SDCard is
             delay until Clock + Milliseconds (50);
          end if;
 
-         This.Card_Detected := not STM32.GPIO.Set (SD_Detect_Pin);
+         if Has_SD_Detect_Pin then
+            This.Card_Detected := Card_Detect;
+
+         elsif not This.Card_Detected and Card_Detect then
+            --  Reconfigure the SD_Detect_Pin pin to SDIO function
+            Configure_IO
+              (SD_Detect_Pin,
+               (Mode           => Mode_AF,
+                AF             => SD_Pins_AF,
+                AF_Output_Type => Push_Pull,
+                AF_Speed       => Speed_High,
+                Resistors      => Pull_Up));
+
+            This.Card_Detected := True;
+         end if;
       end if;
 
       return This.Card_Detected;
