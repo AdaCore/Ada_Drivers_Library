@@ -92,6 +92,7 @@ def load_board_config(config):
         config.pre_define('Runtime_Name_Suffix', 'stm32f4', origin)
         config.add_source_dir('boards/stm32_common/stm32f4xx_m/', origin)
         config.add_source_dir('boards/stm32_common/common/', origin)
+        config.add_source_dir('boards/stm32_common/sdcard/', origin)
 
     elif board == "STM32F746_Discovery":
         config.pre_define('Architecture', 'ARM', origin)
