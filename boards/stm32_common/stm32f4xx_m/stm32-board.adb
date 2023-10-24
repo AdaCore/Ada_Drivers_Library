@@ -37,7 +37,7 @@ package body STM32.Board is
 
    procedure All_LEDs_Off is
    begin
-      Clear (All_LEDs);
+      Set (All_LEDs);
    end All_LEDs_Off;
 
    -----------------
@@ -46,7 +46,7 @@ package body STM32.Board is
 
    procedure All_LEDs_On is
    begin
-      Set (All_LEDs);
+      Clear (All_LEDs);
    end All_LEDs_On;
 
    ---------------------
