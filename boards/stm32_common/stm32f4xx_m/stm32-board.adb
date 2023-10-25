@@ -29,6 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with HAL.SPI;
+with STM32.SPI;
+
 package body STM32.Board is
 
    ------------------
@@ -64,6 +67,54 @@ package body STM32.Board is
           Output_Type => Push_Pull,
           Speed       => Speed_100MHz));
    end Initialize_LEDs;
+
+   -----------------------------
+   -- Initialize_Flash_Memory --
+   -----------------------------
+
+   procedure Initialize_Flash_Memory is
+      SPI      : STM32.SPI.SPI_Port renames STM32.Device.SPI_1;
+
+      SPI_SCK  : STM32.GPIO.GPIO_Point renames STM32.Device.PB3;
+      SPI_MISO : STM32.GPIO.GPIO_Point renames STM32.Device.PB4;
+      SPI_MOSI : STM32.GPIO.GPIO_Point renames STM32.Device.PB5;
+      SPI_CS   : STM32.GPIO.GPIO_Point renames STM32.Device.PA15;
+
+      SPI_Pins : constant STM32.GPIO.GPIO_Points :=
+        (SPI_SCK, SPI_MISO, SPI_MOSI);
+   begin
+      STM32.Device.Enable_Clock (SPI_Pins & SPI_CS);
+
+      STM32.GPIO.Configure_IO
+        (SPI_CS,
+         (Mode        => STM32.GPIO.Mode_Out,
+          Resistors   => STM32.GPIO.Floating,
+          Output_Type => STM32.GPIO.Push_Pull,
+          Speed       => STM32.GPIO.Speed_100MHz));
+
+      STM32.GPIO.Configure_IO
+        (SPI_Pins,
+         (Mode           => STM32.GPIO.Mode_AF,
+          Resistors      => STM32.GPIO.Pull_Up,
+          AF_Output_Type => STM32.GPIO.Push_Pull,
+          AF_Speed       => STM32.GPIO.Speed_100MHz,
+          AF             => STM32.Device.GPIO_AF_SPI1_5));
+
+      STM32.Device.Enable_Clock (SPI);
+
+      STM32.SPI.Configure
+        (SPI,
+         (Direction           => STM32.SPI.D2Lines_FullDuplex,
+          Mode                => STM32.SPI.Master,
+          Data_Size           => HAL.SPI.Data_Size_8b,
+          Clock_Polarity      => STM32.SPI.High,   --   Mode 3
+          Clock_Phase         => STM32.SPI.P2Edge,
+          Slave_Management    => STM32.SPI.Software_Managed,
+          Baud_Rate_Prescaler => STM32.SPI.BRP_2,
+          First_Bit           => STM32.SPI.MSB,
+          CRC_Poly            => 0));
+      --  SPI1 sits on APB2, which is 84MHz, so SPI rate in 84/2=42MHz
+   end Initialize_Flash_Memory;
 
    --------------------------------
    -- Configure_User_Button_GPIO --
