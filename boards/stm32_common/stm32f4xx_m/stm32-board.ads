@@ -41,6 +41,7 @@ with STM32.DMA.Interrupts;  use STM32.DMA.Interrupts;
 with STM32.GPIO;    use STM32.GPIO;
 
 with SDCard;
+with W25Q16;
 
 package STM32.Board is
    pragma Elaborate_Body;
@@ -110,5 +111,16 @@ package STM32.Board is
    --  Configures the GPIO port/pin for the K1 user button. Sufficient
    --  for polling the button, and necessary for having the button generate
    --  interrupts.
+
+   ------------------
+   -- Flash memory --
+   ------------------
+
+   Flash : W25Q16.Flash_Memory
+     (SPI => STM32.Device.SPI_1'Access,
+      CS  => STM32.Device.PA15'Access);
+
+   procedure Initialize_Flash_Memory;
+   --  MUST be called prior to any use of the Flash
 
 end STM32.Board;
