@@ -92,7 +92,7 @@ library project STM32F4XX_M_Full is
    Src_Dirs_Root := "../..";
    for Source_Dirs use (
     Src_Dirs_Root & "/hal/src/", -- From HAL config
-    Src_Dirs_Root & "/boards/stm32_common/stm32f4xx_m/", -- From board definition
+    Src_Dirs_Root & "/boards/stm32f4xx_m/src/", -- From board definition
     Src_Dirs_Root & "/boards/stm32_common/common/", -- From board definition
     Src_Dirs_Root & "/boards/stm32_common/sdcard/", -- From board definition
     Src_Dirs_Root & "/arch/ARM/cortex_m/src", -- From arch definition
