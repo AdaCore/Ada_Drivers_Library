@@ -71,6 +71,7 @@ board you have:
  - [STM32F4_DISCO](STM32F4_DISCO)
  - [STM32F746_Discovery](STM32F746_Discovery)
  - [STM32F769_Discovery](STM32F769_Discovery)
+ - [stm32f4xx_m](stm32f4xx_m)
 
 ## Compile the project
 
