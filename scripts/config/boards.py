@@ -90,7 +90,7 @@ def load_board_config(config):
         config.pre_define('Has_Ravenscar_SFP_Runtime', 'True', origin)
         config.pre_define('Has_Ravenscar_Full_Runtime', 'True', origin)
         config.pre_define('Runtime_Name_Suffix', 'stm32f4', origin)
-        config.add_source_dir('boards/stm32_common/stm32f4xx_m/', origin)
+        config.add_source_dir('boards/stm32f4xx_m/src/', origin)
         config.add_source_dir('boards/stm32_common/common/', origin)
         config.add_source_dir('boards/stm32_common/sdcard/', origin)
 
