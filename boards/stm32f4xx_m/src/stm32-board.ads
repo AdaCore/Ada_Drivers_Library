@@ -35,10 +35,11 @@
 with System;
 with Ada.Interrupts.Names; use Ada.Interrupts;
 
-with STM32.Device;  use STM32.Device;
+with STM32.Device;          use STM32.Device;
 with STM32.DMA;             use STM32.DMA;
 with STM32.DMA.Interrupts;  use STM32.DMA.Interrupts;
-with STM32.GPIO;    use STM32.GPIO;
+with STM32.GPIO;            use STM32.GPIO;
+with STM32.SPI;             use STM32.SPI;
 
 with SDCard;
 with W25Q16;
@@ -100,9 +101,24 @@ package STM32.Board is
 
    SDCard_Device : aliased SDCard.SDCard_Controller (SDIO'Access);
 
-   ------------------
-   --  User button --
-   ------------------
+   ---------------
+   -- SPI2 Pins --
+   ---------------
+
+   --  External TFT connector
+
+   TFT_RS       : GPIO_Point renames PC5;
+   TFT_BLK      : GPIO_Point renames PB1;  --  LCD backlight
+   TFT_CS       : GPIO_Point renames PB12;
+   SPI2_SCK     : GPIO_Point renames PB13;
+   SPI2_MISO    : GPIO_Point renames PB14;
+   SPI2_MOSI    : GPIO_Point renames PB15;
+
+   TFT_SPI : SPI_Port renames SPI_2;
+
+   -----------------
+   -- User button --
+   -----------------
 
    User_Button_Point     : GPIO_Point renames PA0;
    User_Button_Interrupt : constant Interrupt_ID := Names.EXTI0_Interrupt;

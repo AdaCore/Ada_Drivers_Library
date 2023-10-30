@@ -50,7 +50,7 @@ package body ILI9341.Device.Bitmap is
    procedure Copy_Rect
      (Src_Buffer  : HAL.Bitmap.Bitmap_Buffer'Class;
       Src_Pt      : HAL.Bitmap.Point;
-      This        : in out Bitmap_Buffer;
+      Dst_Buffer  : in out Bitmap_Buffer;
       Dst_Pt      : HAL.Bitmap.Point;
       Width       : Natural;
       Height      : Natural;
@@ -71,7 +71,7 @@ package body ILI9341.Device.Bitmap is
       then
          --  Fallback to the slow copying
          Soft_Drawing_Bitmap.Copy_Rect
-           (Src_Buffer, Src_Pt, Parent (This), Dst_Pt,
+           (Src_Buffer, Src_Pt, Parent (Dst_Buffer), Dst_Pt,
             Width, Height, Synchronous);
 
          return;

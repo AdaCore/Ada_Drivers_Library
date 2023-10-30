@@ -67,6 +67,12 @@ projects = [
             "/examples/STM32F4_DISCO/blinky_f4disco.gpr",
             "/examples/STM32F4_DISCO/serial_ports_f4disco.gpr",
 
+            # STM32 F4VE
+            "/boards/stm32_f4ve/stm32_f4ve_full.gpr",
+            "/boards/stm32_f4ve/stm32_f4ve_sfp.gpr",
+            "/examples/stm32_f4ve/blinky_stm32_f4ve.gpr",
+            "/examples/stm32_f4ve/lcd/lcd.gpr",
+
             # STM32F4XX M
             "/boards/stm32f4xx_m/stm32f4xx_m_full.gpr",
             "/boards/stm32f4xx_m/stm32f4xx_m_sfp.gpr",

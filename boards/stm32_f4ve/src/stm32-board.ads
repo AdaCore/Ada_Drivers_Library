@@ -44,6 +44,7 @@ with STM32.SPI;               use STM32.SPI;
 
 with SDCard;
 with W25Q16;
+with Display_ILI9341;
 
 package STM32.Board is
    pragma Elaborate_Body;
@@ -67,6 +68,36 @@ package STM32.Board is
    procedure All_LEDs_On  with Inline;
    procedure Toggle_LEDs (These : in out GPIO_Points)
      renames STM32.GPIO.Toggle;
+
+   ----------
+   -- FSMC --
+   ----------
+
+   FSMC_D : constant GPIO_Points :=
+     (PD14, PD15, PD0, PD1, PE7, PE8, PE9, PE10,
+      PE11, PE12, PE13, PE14, PE15, PD8, PD9, PD10);
+   --  Data pins (D0 .. D15)
+
+   FSMC_A18 : GPIO_Point renames PD13;
+   --  Only one address pin is connected to the TFT header
+
+   FSMC_NE1 : GPIO_Point renames PD7;  --  Chip select pin for TFT LCD
+   FSMC_NWE : GPIO_Point renames PD5;  --  Write enable pin
+   FSMC_NOE : GPIO_Point renames PD4;  --  Output enable pin
+
+   TFT_Pins  : constant GPIO_Points :=
+     FSMC_A18 & FSMC_D & FSMC_NE1 & FSMC_NWE & FSMC_NOE;
+
+   procedure Initialize_FSMC (Pins : GPIO_Points);
+   --  Enable FSMC and initialize given FSMC pins
+
+   ---------
+   -- TFT --
+   ---------
+
+   Display : Display_ILI9341.Display;
+
+   TFT_Bitmap : Display_ILI9341.Bitmap_Buffer := Display.Buffer;
 
    --------------------------
    -- micro SD card reader --
@@ -107,14 +138,19 @@ package STM32.Board is
    -- SPI2 Pins --
    ---------------
 
+   SPI2_SCK     : GPIO_Point renames PB13;
+   SPI2_MISO    : GPIO_Point renames PB14;
+   SPI2_MOSI    : GPIO_Point renames PB15;
+
    --  External TFT connector
 
    TFT_RS       : GPIO_Point renames PC5;
    TFT_BLK      : GPIO_Point renames PB1;  --  LCD backlight
    TFT_CS       : GPIO_Point renames PB12;
-   SPI2_SCK     : GPIO_Point renames PB13;
-   SPI2_MISO    : GPIO_Point renames PB14;
-   SPI2_MOSI    : GPIO_Point renames PB15;
+
+   -----------------
+   -- Touch Panel --
+   -----------------
 
    TFT_SPI : SPI_Port renames SPI_2;
 

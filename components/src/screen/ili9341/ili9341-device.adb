@@ -80,6 +80,7 @@ package body ILI9341.Device is
       Send_Command (Data, ILI9341_VCOM1, [16#3E#, 16#28#]);
       Send_Command (Data, ILI9341_VCOM2, [16#86#]);
       Send_Command (Data, ILI9341_MAC, [16#C8#]);
+      --  FIXME: Doesn't match Portrait_1 ???
       Send_Command (Data, ILI9341_FRC, [16#00#, 16#18#]);
 
       case Connection is

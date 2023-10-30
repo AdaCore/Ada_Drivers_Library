@@ -65,11 +65,26 @@ package ILI9341.Device.Bitmap is
    function Get_Bitmap
      (This : not null access ILI9341_Device) return Bitmap_Buffer;
 
-   overriding
-   function Width (This : Bitmap_Buffer) return Natural is (240);
+private
+
+   type Bitmap_Buffer
+     (Device : not null access ILI9341_Device) is new Parent with
+   record
+      Source : HAL.UInt32;
+   end record;
 
    overriding
-   function Height (This : Bitmap_Buffer) return Natural is (320);
+   function Source (This : Bitmap_Buffer) return HAL.UInt32 is (This.Source);
+
+   overriding
+   function Width (This : Bitmap_Buffer) return Natural is
+     (if This.Device.Orientation in Portrait_1 | Portrait_2 then 240
+      else 320);
+
+   overriding
+   function Height (This : Bitmap_Buffer) return Natural is
+     (if This.Device.Orientation in Portrait_1 | Portrait_2 then 320
+      else 240);
 
    overriding
    function Swapped (This : Bitmap_Buffer) return Boolean is (False);
@@ -121,21 +136,10 @@ package ILI9341.Device.Bitmap is
    procedure Copy_Rect
      (Src_Buffer  : HAL.Bitmap.Bitmap_Buffer'Class;
       Src_Pt      : HAL.Bitmap.Point;
-      This        : in out Bitmap_Buffer;
+      Dst_Buffer  : in out Bitmap_Buffer;
       Dst_Pt      : HAL.Bitmap.Point;
       Width       : Natural;
       Height      : Natural;
       Synchronous : Boolean);
-
-private
-
-   type Bitmap_Buffer
-     (Device : not null access ILI9341_Device) is new Parent with
-   record
-      Source : HAL.UInt32;
-   end record;
-
-   overriding
-   function Source (This : Bitmap_Buffer) return HAL.UInt32 is (This.Source);
 
 end ILI9341.Device.Bitmap;
