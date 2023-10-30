@@ -127,4 +127,22 @@ package body STM32.Board is
       --  SPI1 sits on APB2, which is 84MHz, so SPI rate in 84/2=42MHz
    end Initialize_Flash_Memory;
 
+   ---------------------
+   -- Initialize_FSMC --
+   ---------------------
+
+   procedure Initialize_FSMC (Pins : GPIO_Points) is
+   begin
+      Enable_FSMC_Clock;
+      Enable_Clock (Pins);
+
+      STM32.GPIO.Configure_IO
+        (Pins,
+         (STM32.GPIO.Mode_AF,
+          Resistors      => STM32.GPIO.Floating,
+          AF_Output_Type => STM32.GPIO.Push_Pull,
+          AF_Speed       => STM32.GPIO.Speed_100MHz,
+          AF             => STM32.Device.GPIO_AF_FMC_12));
+   end Initialize_FSMC;
+
 end STM32.Board;
