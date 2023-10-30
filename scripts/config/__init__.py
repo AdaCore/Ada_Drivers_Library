@@ -59,10 +59,9 @@ class Database:
 
         return out
 
-    def gpr_configuration(self, src_root_dir, extra_source_dir):
-        out = ""
+    def target(self):
         arch = self.get_config("Architecture")
-        runtime = self.get_config("Runtime_Name")
+        target = ""
 
         if arch is not None and arch != "Native":
             if arch == "ARM":
@@ -70,7 +69,12 @@ class Database:
             elif arch == "RISC-V":
                 target = "riscv32-elf"
 
-            out += "   for Target use \"%s\";\n" % target
+        return target
+
+    def gpr_configuration(self, src_root_dir, extra_source_dir):
+        out = ""
+        arch = self.get_config("Architecture")
+        runtime = self.get_config("Runtime_Name")
 
         if runtime is not None:
             out += "   for Runtime (\"Ada\") use \"%s\";\n" % runtime

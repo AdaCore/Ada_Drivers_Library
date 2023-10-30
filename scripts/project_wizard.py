@@ -192,6 +192,11 @@ def ADL_configuration(config, project_directory, project_name,
    Build_Checks : Build_Checks_Type := external ("ADL_BUILD_CHECKS", "Disabled");
 
    --  Target architecture
+"""
+
+    gpr += '   for Target use \"%s\";' % config.target()
+
+    gpr += """
    Target := Project'Target;
 
    --  Callgraph info is not available on all architectures
