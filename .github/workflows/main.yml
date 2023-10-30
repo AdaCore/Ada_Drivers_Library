@@ -28,7 +28,7 @@ jobs:
     - name: Install Python 3.x (required for the testsuite)
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
+        python-version: '3.11'
 
     - run: python3 $PWD/scripts/build_all_examples.py
     - run: python3 $PWD/testsuite/run.py
