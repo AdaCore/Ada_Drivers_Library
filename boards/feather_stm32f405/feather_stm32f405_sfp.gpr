@@ -8,6 +8,7 @@ library project Feather_STM32F405_SFP is
    Build_Checks : Build_Checks_Type := external ("ADL_BUILD_CHECKS", "Disabled");
 
    --  Target architecture
+   for Target use "arm-eabi";
    Target := Project'Target;
 
    --  Callgraph info is not available on all architectures
@@ -61,7 +62,6 @@ library project Feather_STM32F405_SFP is
    for Library_Name use "ada_drivers_library";
 
    Linker_Switches := ();
-   for Target use "arm-eabi";
    for Runtime ("Ada") use "light-tasking-feather_stm32f405";
 
    package Device_Configuration is

@@ -8,6 +8,7 @@ library project HiFive1_ZFP is
    Build_Checks : Build_Checks_Type := external ("ADL_BUILD_CHECKS", "Disabled");
 
    --  Target architecture
+   for Target use "riscv32-elf";
    Target := Project'Target;
 
    --  Callgraph info is not available on all architectures
@@ -61,7 +62,6 @@ library project HiFive1_ZFP is
    for Library_Name use "ada_drivers_library";
 
    Linker_Switches := ("-T", Project'Project_dir & "/src/zfp/link.ld");
-   for Target use "riscv32-elf";
    for Runtime ("Ada") use "light-rv32imac";
 
    package Device_Configuration is

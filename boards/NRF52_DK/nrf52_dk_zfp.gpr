@@ -8,6 +8,7 @@ library project NRF52_DK_ZFP is
    Build_Checks : Build_Checks_Type := external ("ADL_BUILD_CHECKS", "Disabled");
 
    --  Target architecture
+   for Target use "arm-eabi";
    Target := Project'Target;
 
    --  Callgraph info is not available on all architectures
@@ -61,7 +62,6 @@ library project NRF52_DK_ZFP is
    for Library_Name use "ada_drivers_library";
 
    Linker_Switches := ("-T", Project'Project_dir & "/src/zfp/link.ld");
-   for Target use "arm-eabi";
    for Runtime ("Ada") use "light-cortex-m4f";
 
    package Device_Configuration is
