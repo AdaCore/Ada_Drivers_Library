@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2023, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,44 +29,38 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with HAL;             use HAL;
-with HAL.Framebuffer; use HAL.Framebuffer;
+package body ILI9341.SPI_Connector is
 
-with Framebuffer_LTDC;
-private with ILI9341.Device;
-private with ILI9341.SPI_Connector;
+   ------------------
+   -- Send_Command --
+   ------------------
 
-private with STM32.GPIO;
-private with STM32.Device;
+   procedure Send_Command
+     (This : ILI9341_Connector;
+      Cmd  : HAL.UInt8;
+      Data : HAL.UInt8_Array)
+   is
+      use HAL.SPI;
+      Status : SPI_Status;
+   begin
+      This.WRX.Clear;
+      This.Chip_Select.Clear;
+      This.Port.Transmit (SPI_Data_8b'(1 => Cmd), Status);
 
-package Framebuffer_ILI9341 is
+      if Status /= Ok then
+         raise Program_Error;
+      end if;
 
-   type Frame_Buffer is limited
-     new Framebuffer_LTDC.Frame_Buffer with private;
+      if Data'Length > 0 then
+         This.WRX.Set;
+         This.Port.Transmit (SPI_Data_8b (Data), Status);
 
-   procedure Initialize
-     (Display     : in out Frame_Buffer;
-      Orientation : HAL.Framebuffer.Display_Orientation := Default;
-      Mode        : HAL.Framebuffer.Wait_Mode := Interrupt);
+         if Status /= Ok then
+            raise Program_Error;
+         end if;
+      end if;
 
-private
+      This.Chip_Select.Set;
+   end Send_Command;
 
-   --  Chip select and Data/Command select for the LCD screen
-   LCD_CSX      : STM32.GPIO.GPIO_Point renames STM32.Device.PC2;
-   LCD_WRX_DCX  : STM32.GPIO.GPIO_Point renames STM32.Device.PD13;
-   LCD_RESET    : STM32.GPIO.GPIO_Point renames STM32.Device.PD12;
-
-   package RGB_SPI_Device is new ILI9341.Device
-     (ILI9341_Connector => ILI9341.SPI_Connector.ILI9341_Connector,
-      Send_Command      => ILI9341.SPI_Connector.Send_Command,
-      Connection        => ILI9341.RGB,
-      Connector         =>
-        (Port        => STM32.Device.SPI_5'Access,
-         Chip_Select => LCD_CSX'Access,
-         WRX         => LCD_WRX_DCX'Access));
-
-   type Frame_Buffer is limited new Framebuffer_LTDC.Frame_Buffer with record
-      Device : RGB_SPI_Device.ILI9341_Device;
-   end record;
-
-end Framebuffer_ILI9341;
+end ILI9341.SPI_Connector;
