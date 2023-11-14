@@ -114,6 +114,19 @@ package ILI9341.Device.Bitmap is
    function Buffer_Size (This : Bitmap_Buffer) return Natural is
      (This.Width * This.Height * 18 / 8);
 
+   overriding
+   procedure Fill (This : in out Bitmap_Buffer);
+
+   overriding
+   procedure Copy_Rect
+     (Src_Buffer  : HAL.Bitmap.Bitmap_Buffer'Class;
+      Src_Pt      : HAL.Bitmap.Point;
+      This        : in out Bitmap_Buffer;
+      Dst_Pt      : HAL.Bitmap.Point;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean);
+
 private
 
    type Bitmap_Buffer
