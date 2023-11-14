@@ -33,6 +33,7 @@ pragma Ada_2022;
 
 with ILI9341.Regs; use ILI9341.Regs;
 with Bitmap_Color_Conversion;
+with System.Storage_Elements;
 
 package body ILI9341.Device.Bitmap is
    use HAL;
@@ -40,6 +41,95 @@ package body ILI9341.Device.Bitmap is
    procedure Set_Cursor_Position
      (From : HAL.Bitmap.Point;
       To   : HAL.Bitmap.Point);
+
+   ---------------
+   -- Copy_Rect --
+   ---------------
+
+   overriding
+   procedure Copy_Rect
+     (Src_Buffer  : HAL.Bitmap.Bitmap_Buffer'Class;
+      Src_Pt      : HAL.Bitmap.Point;
+      This        : in out Bitmap_Buffer;
+      Dst_Pt      : HAL.Bitmap.Point;
+      Width       : Natural;
+      Height      : Natural;
+      Synchronous : Boolean)
+   is
+      use type HAL.Bitmap.Bitmap_Color_Mode;
+      use type System.Storage_Elements.Storage_Offset;
+
+      Mode : constant HAL.Bitmap.Bitmap_Color_Mode := Src_Buffer.Color_Mode;
+      Pixel_Size : constant Positive := HAL.Bitmap.Bits_Per_Pixel (Mode);
+      Src_Width : constant Natural := Src_Buffer.Width;
+   begin
+      --  TODO: speed up if Src_Buffet=This by r/w a bunch of pixels
+
+      if Pixel_Size < 8
+        or Mode = HAL.Bitmap.A_8
+        or not Src_Buffer.Mapped_In_RAM
+      then
+         --  Fallback to the slow copying
+         Soft_Drawing_Bitmap.Copy_Rect
+           (Src_Buffer, Src_Pt, Parent (This), Dst_Pt,
+            Width, Height, Synchronous);
+
+         return;
+      end if;
+
+      if Width = Src_Buffer.Width then
+         --  Copy rectangle in one go
+         Set_Cursor_Position
+           (Dst_Pt,
+            (Dst_Pt.X + Width - 1, Dst_Pt.Y + Height - 1));
+
+         Send_Command (Connector, ILI9341_GRAM, []);
+
+         Write_Pixels
+           (This    => Connector,
+            Mode    => Src_Buffer.Color_Mode,
+            Address => Src_Buffer.Memory_Address +
+              System.Storage_Elements.Storage_Offset
+                (Src_Pt.Y * Width * Pixel_Size / 8),
+            Count   => Width * Height,
+            Repeat  => 1);
+      else
+         for DY in 0 .. 0 + Height - 1 loop
+            Set_Cursor_Position
+              ((Y => Dst_Pt.Y + DY, X => Dst_Pt.X),
+               (Y => Dst_Pt.Y + DY, X => Dst_Pt.X + Width - 1));
+
+            Send_Command (Connector, ILI9341_GRAM, []);
+
+            Write_Pixels
+              (This    => Connector,
+               Mode    => Src_Buffer.Color_Mode,
+               Address => Src_Buffer.Memory_Address +
+                 System.Storage_Elements.Storage_Offset
+                   ((Src_Pt.Y + DY) * Src_Width * Pixel_Size / 8),
+               Count   => Width,
+               Repeat  => 1);
+         end loop;
+      end if;
+   end Copy_Rect;
+
+   ----------
+   -- Fill --
+   ----------
+
+   overriding
+   procedure Fill (This : in out Bitmap_Buffer) is
+   begin
+      Set_Cursor_Position ((0, 0), (This.Width - 1, This.Height - 1));
+      Send_Command (Connector, ILI9341_GRAM, []);
+
+      Write_Pixels
+        (This    => Connector,
+         Mode    => HAL.Bitmap.RGB_888,
+         Address => This.Source'Address,
+         Count   => 1,
+         Repeat  => This.Width * This.Height);
+   end Fill;
 
    ----------------
    -- Get_Bitmap --
@@ -63,6 +153,10 @@ package body ILI9341.Device.Bitmap is
       return Bitmap_Color_Conversion.Bitmap_Color_To_Word
         (HAL.Bitmap.RGB_888, This.Pixel (Point));
    end Pixel;
+
+   -----------
+   -- Pixel --
+   -----------
 
    overriding
    function Pixel
