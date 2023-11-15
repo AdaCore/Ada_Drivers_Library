@@ -105,6 +105,7 @@ library project STM32F407_Discovery_Full is
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/dma/", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/dma_interrupts/", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/crc_stm32f4/", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/fsmc/", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/i2c_stm32f4", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/power_control_stm32f4", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/uart_stm32f4/", -- From MCU definition

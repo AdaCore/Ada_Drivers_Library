@@ -727,6 +727,24 @@ package body STM32.Device is
       RCC_Periph.AHB2RSTR.DCMIRST := False;
    end Reset_DCMI;
 
+   -----------------------
+   -- Enable_FSMC_Clock --
+   -----------------------
+
+   procedure Enable_FSMC_Clock is
+   begin
+      STM32_SVD.RCC.RCC_Periph.AHB3ENR.FSMCEN := True;
+   end Enable_FSMC_Clock;
+
+   ------------------------
+   -- Disable_FSMC_Clock --
+   ------------------------
+
+   procedure Disable_FSMC_Clock is
+   begin
+      STM32_SVD.RCC.RCC_Periph.AHB3ENR.FSMCEN := False;
+   end Disable_FSMC_Clock;
+
    ------------------
    -- Enable_Clock --
    ------------------

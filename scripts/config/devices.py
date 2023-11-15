@@ -83,6 +83,7 @@ def load_device_config(config, source_dir):
                 'arch/ARM/STM32/drivers/dma/',
                 'arch/ARM/STM32/drivers/dma_interrupts/',
                 'arch/ARM/STM32/drivers/crc_stm32f4/',
+                'arch/ARM/STM32/drivers/fsmc/',
                 'arch/ARM/STM32/drivers/i2c_stm32f4',
                 'arch/ARM/STM32/drivers/power_control_stm32f4',
                 'arch/ARM/STM32/drivers/uart_stm32f4/',
