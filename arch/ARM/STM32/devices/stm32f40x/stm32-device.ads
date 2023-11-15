@@ -435,6 +435,13 @@ package STM32.Device is
 
    procedure Reset (This : in out CRC_32);
 
+   ----------
+   -- FSMC --
+   ----------
+
+   procedure Enable_FSMC_Clock;
+   procedure Disable_FSMC_Clock;
+
    -----------------------------
    -- Reset and Clock Control --
    -----------------------------
