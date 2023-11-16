@@ -1,0 +1,15 @@
+with "../../boards/stm32_f4ve/stm32_f4ve_full.gpr";
+
+project Blinky_STM32_F4VE extends "../shared/common/common.gpr" is
+
+  for Runtime ("Ada") use STM32_F4VE_Full'Runtime("Ada");
+  for Target use "arm-eabi";
+  for Main use ("blinky.adb");
+  for Languages use ("Ada");
+  for Source_Dirs use ("../shared/hello_world_blinky/src");
+  for Object_Dir use "../shared/hello_world_blinky/obj/stm32_f4ve";
+  for Create_Missing_Dirs use "True";
+
+  package Compiler renames STM32_F4VE_Full.Compiler;
+
+end Blinky_STM32_F4VE;
