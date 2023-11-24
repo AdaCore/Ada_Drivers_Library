@@ -40,11 +40,11 @@ with STM32.Device;            use STM32.Device;
 with STM32.DMA;               use STM32.DMA;
 with STM32.DMA.Interrupts;    use STM32.DMA.Interrupts;
 with STM32.GPIO;              use STM32.GPIO;
-with STM32.SPI;               use STM32.SPI;
 
 with SDCard;
 with W25Q16;
 with Display_ILI9341;
+with Touch_Panel_XPT2046;
 
 package STM32.Board is
    pragma Elaborate_Body;
@@ -95,9 +95,19 @@ package STM32.Board is
    -- TFT --
    ---------
 
+   SPI2_SCK     : GPIO_Point renames PB13;
+   SPI2_MISO    : GPIO_Point renames PB14;
+   SPI2_MOSI    : GPIO_Point renames PB15;
+
+   TFT_RS       : GPIO_Point renames PC5;  --  PEN IRQ
+   TFT_BLK      : GPIO_Point renames PB1;  --  LCD backlight
+   TFT_CS       : GPIO_Point renames PB12;
+
    Display : Display_ILI9341.Display;
 
    TFT_Bitmap : Display_ILI9341.Bitmap_Buffer := Display.Buffer;
+
+   Touch_Panel : Touch_Panel_XPT2046.Touch_Panel;
 
    --------------------------
    -- micro SD card reader --
@@ -133,26 +143,6 @@ package STM32.Board is
    SD_Tx_DMA_Int     : DMA_Interrupt_Controller renames DMA2_Stream6;
 
    SDCard_Device : aliased SDCard.SDCard_Controller (SDIO'Access);
-
-   ---------------
-   -- SPI2 Pins --
-   ---------------
-
-   SPI2_SCK     : GPIO_Point renames PB13;
-   SPI2_MISO    : GPIO_Point renames PB14;
-   SPI2_MOSI    : GPIO_Point renames PB15;
-
-   --  External TFT connector
-
-   TFT_RS       : GPIO_Point renames PC5;
-   TFT_BLK      : GPIO_Point renames PB1;  --  LCD backlight
-   TFT_CS       : GPIO_Point renames PB12;
-
-   -----------------
-   -- Touch Panel --
-   -----------------
-
-   TFT_SPI : SPI_Port renames SPI_2;
 
    ------------------
    -- User buttons --
