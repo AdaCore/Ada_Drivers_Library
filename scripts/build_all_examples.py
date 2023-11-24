@@ -71,6 +71,7 @@ projects = [
             "/boards/stm32_f4ve/stm32_f4ve_full.gpr",
             "/boards/stm32_f4ve/stm32_f4ve_sfp.gpr",
             "/examples/stm32_f4ve/blinky_stm32_f4ve.gpr",
+            "/examples/stm32_f4ve/draw/draw.gpr",
             "/examples/stm32_f4ve/lcd/lcd.gpr",
 
             # STM32F4XX M

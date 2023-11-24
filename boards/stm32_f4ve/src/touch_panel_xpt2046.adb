@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2023, AdaCore                           --
+--                       Copyright (C) 2023, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -30,76 +30,37 @@
 ------------------------------------------------------------------------------
 
 with HAL.SPI;
+with STM32.Board;
+with STM32.GPIO;
 with STM32.SPI;
 
-package body STM32.Board is
+package body Touch_Panel_XPT2046 is
 
-   ------------------
-   -- All_LEDs_Off --
-   ------------------
+   ----------------
+   -- Initialize --
+   ----------------
 
-   procedure All_LEDs_Off is
-   begin
-      Set (All_LEDs);
-   end All_LEDs_Off;
-
-   -----------------
-   -- All_LEDs_On --
-   -----------------
-
-   procedure All_LEDs_On is
-   begin
-      Clear (All_LEDs);
-   end All_LEDs_On;
-
-   --------------------------------
-   -- Configure_User_Button_GPIO --
-   --------------------------------
-
-   procedure Configure_User_Button_GPIO is
-   begin
-      Enable_Clock (All_Buttons);
-      Configure_IO (All_Buttons, (Mode_In, Resistors => Floating));
-   end Configure_User_Button_GPIO;
-
-   ---------------------
-   -- Initialize_LEDs --
-   ---------------------
-
-   procedure Initialize_LEDs is
-   begin
-      Enable_Clock (All_LEDs);
-
-      Configure_IO
-        (All_LEDs,
-         (Mode_Out,
-          Resistors   => Floating,
-          Output_Type => Push_Pull,
-          Speed       => Speed_100MHz));
-
-      All_LEDs_Off;
-   end Initialize_LEDs;
-
-   -----------------------------
-   -- Initialize_Flash_Memory --
-   -----------------------------
-
-   procedure Initialize_Flash_Memory is
-      SPI      : STM32.SPI.SPI_Port renames STM32.Device.SPI_1;
-
-      SPI_SCK  : STM32.GPIO.GPIO_Point renames STM32.Device.PB3;
-      SPI_MISO : STM32.GPIO.GPIO_Point renames STM32.Device.PB4;
-      SPI_MOSI : STM32.GPIO.GPIO_Point renames STM32.Device.PB5;
-      SPI_CS   : STM32.GPIO.GPIO_Point renames STM32.Device.PA15;
-
+   procedure Initialize
+     (This        : in out Touch_Panel;
+      Orientation : HAL.Framebuffer.Display_Orientation :=
+        HAL.Framebuffer.Default)
+   is
       SPI_Pins : constant STM32.GPIO.GPIO_Points :=
-        (SPI_SCK, SPI_MISO, SPI_MOSI);
+        (STM32.Board.SPI2_SCK,
+         STM32.Board.SPI2_MISO,
+         STM32.Board.SPI2_MOSI);
    begin
-      STM32.Device.Enable_Clock (SPI_Pins & SPI_CS);
+      STM32.Device.Enable_Clock (STM32.Board.TFT_RS);
+      STM32.Device.Enable_Clock (STM32.Board.TFT_CS);
+      STM32.Device.Enable_Clock (SPI_Pins);
+      STM32.Device.Enable_Clock (STM32.Device.SPI_2);
 
-      STM32.GPIO.Configure_IO
-        (SPI_CS,
-         (Mode        => STM32.GPIO.Mode_Out,
+      STM32.Board.TFT_RS.Configure_IO  --  Pen IRQ pin
+        ((Mode        => STM32.GPIO.Mode_In,
+          Resistors   => STM32.GPIO.Floating));
+
+      STM32.Board.TFT_CS.Configure_IO
+        ((Mode        => STM32.GPIO.Mode_Out,
           Resistors   => STM32.GPIO.Floating,
           Output_Type => STM32.GPIO.Push_Pull,
           Speed       => STM32.GPIO.Speed_100MHz));
@@ -110,40 +71,44 @@ package body STM32.Board is
           Resistors      => STM32.GPIO.Pull_Up,
           AF_Output_Type => STM32.GPIO.Push_Pull,
           AF_Speed       => STM32.GPIO.Speed_100MHz,
-          AF             => STM32.Device.GPIO_AF_SPI1_5));
-
-      STM32.Device.Enable_Clock (SPI);
+          AF             => STM32.Device.GPIO_AF_SPI2_5));
 
       STM32.SPI.Configure
-        (SPI,
+        (STM32.Device.SPI_2,
          (Direction           => STM32.SPI.D2Lines_FullDuplex,
           Mode                => STM32.SPI.Master,
           Data_Size           => HAL.SPI.Data_Size_8b,
-          Clock_Polarity      => STM32.SPI.High,   --   Mode 3
-          Clock_Phase         => STM32.SPI.P2Edge,
+          Clock_Polarity      => STM32.SPI.Low,  -- Mode 0
+          Clock_Phase         => STM32.SPI.P1Edge,
           Slave_Management    => STM32.SPI.Software_Managed,
-          Baud_Rate_Prescaler => STM32.SPI.BRP_2,
+          Baud_Rate_Prescaler => STM32.SPI.BRP_32,
           First_Bit           => STM32.SPI.MSB,
           CRC_Poly            => 0));
-      --  SPI1 sits on APB2, which is 84MHz, so SPI rate in 84/2=42MHz
-   end Initialize_Flash_Memory;
+      --  SPI2 sits on APB1, which is 42MHz, so SPI rate in 42/32=1.3MHz
+
+      This.Set_Orientation (Orientation);
+
+      This.Calibrate
+        (Min_X => 300,
+         Max_X => 3768,
+         Min_Y => 140,
+         Max_Y => 3813);
+   end Initialize;
 
    ---------------------
-   -- Initialize_FSMC --
+   -- Set_Orientation --
    ---------------------
 
-   procedure Initialize_FSMC (Pins : GPIO_Points) is
+   procedure Set_Orientation
+     (This        : in out Touch_Panel;
+      Orientation : HAL.Framebuffer.Display_Orientation) is
    begin
-      Enable_FSMC_Clock;
-      Enable_Clock (Pins);
+      case Orientation is
+         when HAL.Framebuffer.Default | HAL.Framebuffer.Portrait =>
+            This.Set_Bounds (240, 320, HAL.Touch_Panel.Invert_Y);
+         when HAL.Framebuffer.Landscape =>
+            This.Set_Bounds (240, 320, HAL.Touch_Panel.Swap_XY);
+      end case;
+   end Set_Orientation;
 
-      STM32.GPIO.Configure_IO
-        (Pins,
-         (STM32.GPIO.Mode_AF,
-          Resistors      => STM32.GPIO.Floating,
-          AF_Output_Type => STM32.GPIO.Push_Pull,
-          AF_Speed       => STM32.GPIO.Speed_100MHz,
-          AF             => STM32.Device.GPIO_AF_FMC_12));
-   end Initialize_FSMC;
-
-end STM32.Board;
+end Touch_Panel_XPT2046;
