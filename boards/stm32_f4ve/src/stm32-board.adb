@@ -146,4 +146,40 @@ package body STM32.Board is
           AF             => STM32.Device.GPIO_AF_FMC_12));
    end Initialize_FSMC;
 
+   ---------------------
+   -- Initialize_UART --
+   ---------------------
+
+   procedure Initialize_UART
+     (Speed  : STM32.USARTs.Baud_Rates := 115_200;
+      Stop   : STM32.USARTs.Stop_Bits := STM32.USARTs.Stopbits_1;
+      Parity : STM32.USARTs.Parities := STM32.USARTs.No_Parity;
+      Flow   : STM32.USARTs.Flow_Control := STM32.USARTs.No_Flow_Control)
+   is
+      TX_Pin : GPIO_Point renames STM32.Device.PA9;
+      RX_Pin : GPIO_Point renames STM32.Device.PA10;
+   begin
+      Enable_Clock (UART);
+      Enable_Clock (RX_Pin & TX_Pin);
+
+      Configure_IO
+        (TX_Pin & RX_Pin,
+         (Mode           => Mode_AF,
+          AF             => GPIO_AF_USART1_7,
+          Resistors      => Pull_Up,
+          AF_Speed       => Speed_50MHz,
+          AF_Output_Type => Push_Pull));
+
+      UART.Disable;
+
+      UART.Set_Baud_Rate    (Speed);
+      UART.Set_Mode         (STM32.USARTs.Tx_Rx_Mode);
+      UART.Set_Stop_Bits    (Stop);
+      UART.Set_Word_Length  (STM32.USARTs.Word_Length_8);
+      UART.Set_Parity       (Parity);
+      UART.Set_Flow_Control (Flow);
+
+      UART.Enable;
+   end Initialize_UART;
+
 end STM32.Board;

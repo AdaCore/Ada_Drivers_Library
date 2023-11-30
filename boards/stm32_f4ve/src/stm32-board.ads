@@ -40,6 +40,7 @@ with STM32.Device;            use STM32.Device;
 with STM32.DMA;               use STM32.DMA;
 with STM32.DMA.Interrupts;    use STM32.DMA.Interrupts;
 with STM32.GPIO;              use STM32.GPIO;
+with STM32.USARTs;
 
 with SDCard;
 with W25Q16;
@@ -172,5 +173,17 @@ package STM32.Board is
 
    procedure Initialize_Flash_Memory;
    --  MUST be called prior to any use of the Flash
+
+   ----------
+   -- UART --
+   ----------
+
+   UART : STM32.USARTs.USART renames STM32.Device.USART_1;
+
+   procedure Initialize_UART
+     (Speed  : STM32.USARTs.Baud_Rates := 115_200;
+      Stop   : STM32.USARTs.Stop_Bits := STM32.USARTs.Stopbits_1;
+      Parity : STM32.USARTs.Parities := STM32.USARTs.No_Parity;
+      Flow   : STM32.USARTs.Flow_Control := STM32.USARTs.No_Flow_Control);
 
 end STM32.Board;
