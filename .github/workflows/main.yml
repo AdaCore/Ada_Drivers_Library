@@ -32,6 +32,7 @@ jobs:
 
     - run: python3 $PWD/scripts/build_all_examples.py
     - run: python3 $PWD/testsuite/run.py
+    - run: python3 $PWD/scripts/check_readme.py
 
   win-build:
     name: Build and test on Windows
