@@ -15,6 +15,51 @@ Ada_Drivers_Library provides support for various devices in the ARM Cortex-M
 and RISC-V architectures. Some devices are only partially supported. Go to the
 [boards directory](boards/) for a list of supported hardware.
 
+## Board list
+
+| Arch   | Board                 |
+| ------ | --------------------- |
+| ARM    | [STM32F407_Discovery] |
+| ARM    | [STM32F429_Discovery] |
+| ARM    | [STM32F469_Discovery] |
+| ARM    | [STM32F4XX_M]         |
+| ARM    | [STM32_F4VE]          |
+| ARM    | [STM32F746_Discovery] |
+| ARM    | [STM32F769_Discovery] |
+| ARM    | [STM32_H405]          |
+| ARM    | [NUCLEO_F446ZE]       |
+| ARM    | [Crazyflie]           |
+| ARM    | [Feather_STM32F405]   |
+| ARM    | [OpenMV2]             |
+| ARM    | [MicroBit]            |
+| ARM    | [NRF52_DK]            |
+| RISC-V | [HiFive1]             |
+| RISC-V | [HiFive1_rev_B]       |
+| RISC-V | [Unleashed]           |
+|        | [Native]              |
+
+<!-- Examples: -->
+[HiFive1]:             examples/HiFive1/README.md
+[HiFive1_rev_B]:       examples/HiFive1_rev_B/README.md
+[MicroBit]:            examples/MicroBit/README.md
+[NRF52_DK]:            examples/NRF52_DK/README.md
+[OpenMV2]:             examples/OpenMV2/README.md
+[STM32F429_Discovery]: examples/STM32F429_Discovery/README.md
+[STM32F469_Discovery]: examples/STM32F469_Discovery/README.md
+[STM32F407_Discovery]: examples/STM32F4_DISCO/README.md
+[STM32_F4VE]:          examples/stm32_f4ve/README.md
+[STM32F4XX_M]:         examples/stm32f4xx_m/README.md
+[STM32F746_Discovery]: examples/STM32F746_Discovery/README.md
+[STM32F769_Discovery]: examples/STM32F769_Discovery/README.md
+
+<!-- Undocumented: -->
+[STM32_H405]:        examples/stm32_h405/
+[NUCLEO_F446ZE]:     examples/nucleo_f446ze/
+[Feather_STM32F405]: examples/feather_stm32f405
+[Crazyflie]:         boards/crazyflie/
+[Unleashed]:         examples/Unleashed
+[Native]:            boards/native
+
 # 3. Getting started
 
 To start using the Ada_Drivers_Library, please go to the [examples
