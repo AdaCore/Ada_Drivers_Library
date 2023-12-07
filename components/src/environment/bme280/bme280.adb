@@ -128,7 +128,34 @@ package body BME280 is
 
             Value.T3 := Unsigned_16 (Data (16#8C#)) +
               Shift_Left (Unsigned_16 (Data (16#8D#)), 8);
+
+            Value.H1 := Unsigned_8 (Data (16#A1#));
          end;
+
+         declare
+            use type HAL.UInt8;
+            Data : HAL.UInt8_Array (16#E1# .. 16#E7#);
+         begin
+            Read (Data, Success);
+
+            if not Success then
+               return;
+            end if;
+
+            Value.H2 := Unsigned_16 (Data (16#E1#)) +
+              Shift_Left (Unsigned_16 (Data (16#E2#)), 8);
+
+            Value.H3 := Unsigned_8 (Data (16#E3#));
+
+            Value.H4 := Shift_Left (Unsigned_16 (Data (16#E4#)), 4) +
+              Unsigned_16 (Data (16#E5#) and 16#0F#);
+
+            Value.H5 := Shift_Right (Unsigned_16 (Data (16#E5#)), 4) +
+              Shift_Left (Unsigned_16 (Data (16#E6#)), 4);
+
+            Value.H6 := Unsigned_8 (Data (16#E7#));
+         end;
+
       end Read_Calibration;
 
       ----------------------
@@ -196,6 +223,46 @@ package body BME280 is
 
    end Generic_Sensor;
 
+   --------------
+   -- Humidity --
+   --------------
+
+   function Humidity
+     (Value       : Measurement;
+      Temperature : Deci_Celsius;
+      Calibration : Calibration_Constants) return Relative_Humidity
+   is
+      Var_1 : constant Integer :=
+        Integer (Temperature / Deci_Celsius'Small) - 76800;
+      Var_2 : Integer := Integer (Value.Raw_Hum) * 16384;
+      Var_3 : Integer := Integer (Calibration.H4) * 1048576;
+      Var_4 : Integer := Integer (Calibration.H5) * Var_1;
+      Var_5 : Integer := (Var_2 - Var_3 - Var_4 + 16384) / 32768;
+
+   begin
+      --  var2 = (var1 * ((int32_t)calib_data->dig_h6)) / 1024;
+      Var_2 := Var_1 * Integer (Calibration.H6) / 1024;
+      --  var3 = (var1 * ((int32_t)calib_data->dig_h3)) / 2048;
+      Var_3 := Var_1 * Integer (Calibration.H3) / 2048;
+      --  var4 = ((var2 * (var3 + (int32_t)32768)) / 1024) + (int32_t)2097152;
+      Var_4 := Var_2 * (Var_3 + 32768) / 1024 + 2097152;
+      --  var2 = ((var4 * ((int32_t)calib_data->dig_h2)) + 8192) / 16384;
+      Var_2 := (Var_4 * Integer (Calibration.H2) + 8192) / 16384;
+      --  var3 = var5 * var2;
+      Var_3 := Var_5 * Var_2;
+      --  var4 = ((var3 / 32768) * (var3 / 32768)) / 128;
+      Var_4 := (Var_3 / 32768)**2 / 128;
+      --  var5 = var3 - ((var4 * ((int32_t)calib_data->dig_h1)) / 16);
+      Var_5 := Var_3  - Var_4 * Integer (Calibration.H1) / 16;
+      Var_5 := Integer'Max (0, Integer'Min (100 * 2 ** 10, Var_5 / 4096));
+
+      return Relative_Humidity'Small * Var_5;
+   end Humidity;
+
+   -----------------
+   -- Temperature --
+   -----------------
+
    function Temperature
      (Value       : Measurement;
       Calibration : Calibration_Constants) return Deci_Celsius
@@ -207,7 +274,7 @@ package body BME280 is
         (Diff * Integer (Calibration.T2)) / 2 ** 11;
 
       Val_2 : constant Integer :=
-        (Diff / 2) ** 2 / 2 ** 11 * Integer (Calibration.T3) / 2 ** 14;
+        (Diff / 2) ** 2 / 2 ** 12 * Integer (Calibration.T3) / 2 ** 14;
 
    begin
       return Deci_Celsius'Small * (Val_1 + Val_2);

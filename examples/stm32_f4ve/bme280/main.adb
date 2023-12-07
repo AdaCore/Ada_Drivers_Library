@@ -70,6 +70,7 @@ procedure Main is
    Calib       : BME280.Calibration_Constants;
    Measurement : BME280.Measurement;
    Temp        : BME280.Deci_Celsius;
+   Humi        : BME280.Relative_Humidity;
 
 begin
    STM32.Board.Initialize_LEDs;
@@ -91,7 +92,8 @@ begin
 
       if Ok then
          Temp := BME280.Temperature (Measurement, Calib);
-         Put_Line (Temp'Image);
+         Humi := BME280.Humidity (Measurement, Temp, Calib);
+         Put_Line (Temp'Image & Humi'Image);
       end if;
 
       Next := Next + Ada.Real_Time.Milliseconds (500);

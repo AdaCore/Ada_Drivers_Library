@@ -40,6 +40,12 @@ package BME280 is
       T1 : Interfaces.Unsigned_16;
       T2 : Interfaces.Unsigned_16;
       T3 : Interfaces.Unsigned_16;
+      H1 : Interfaces.Unsigned_8;
+      H2 : Interfaces.Unsigned_16;
+      H3 : Interfaces.Unsigned_8;
+      H4 : Interfaces.Unsigned_16 range 0 .. 4095;
+      H5 : Interfaces.Unsigned_16 range 0 .. 4095;
+      H6 : Interfaces.Unsigned_8;
    end record;
 
    type Measurement is private;
@@ -50,6 +56,15 @@ package BME280 is
    function Temperature
      (Value       : Measurement;
       Calibration : Calibration_Constants) return Deci_Celsius;
+
+   Humidity_Small : constant := 1.0 / 2 ** 10;
+
+   type Relative_Humidity is delta Humidity_Small range 0.0 .. 100.0;
+
+   function Humidity
+     (Value       : Measurement;
+      Temperature : Deci_Celsius;
+      Calibration : Calibration_Constants) return Relative_Humidity;
 
    type Oversampling_Kind is (Skip, X1, X2, X4, X8, X16);
    type IRR_Filter_Kind is (Off, X1, X2, X4, X8, X16);
