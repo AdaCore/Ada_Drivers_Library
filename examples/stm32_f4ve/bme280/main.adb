@@ -44,10 +44,12 @@ with Bitmapped_Drawing;
 procedure Main is
    use type Ada.Real_Time.Time;
 
+   procedure Put_Line (Text : String);
+
    procedure Put_Line (Text : String) is
    begin
       STM32.Board.TFT_Bitmap.Set_Source (HAL.Bitmap.Black);
-      STM32.Board.TFT_Bitmap.Fill_Rect (Area => ((5, 5),100, 10));
+      STM32.Board.TFT_Bitmap.Fill_Rect (Area => ((5, 5), 100, 10));
 
       Bitmapped_Drawing.Draw_String
         (STM32.Board.TFT_Bitmap,
@@ -66,11 +68,12 @@ procedure Main is
 
    --  Bitmap : Display_ILI9341.Bitmap_Buffer renames STM32.Board.TFT_Bitmap;
 
-   Ok : Boolean;
+   Ok          : Boolean;
    Calib       : BME280.Calibration_Constants;
    Measurement : BME280.Measurement;
    Temp        : BME280.Deci_Celsius;
    Humi        : BME280.Relative_Humidity;
+   Press       : BME280.Pressure_Pa;
 
 begin
    STM32.Board.Initialize_LEDs;
@@ -93,7 +96,8 @@ begin
       if Ok then
          Temp := BME280.Temperature (Measurement, Calib);
          Humi := BME280.Humidity (Measurement, Temp, Calib);
-         Put_Line (Temp'Image & Humi'Image);
+         Press := BME280.Pressure (Measurement, Temp, Calib);
+         Put_Line (Temp'Image & Humi'Image & Press'Image);
       end if;
 
       Next := Next + Ada.Real_Time.Milliseconds (500);

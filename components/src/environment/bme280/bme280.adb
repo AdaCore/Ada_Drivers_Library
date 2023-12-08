@@ -31,6 +31,8 @@
 
 pragma Ada_2022;
 
+with Ada.Unchecked_Conversion;
+
 package body BME280 is
 
    package body Generic_Sensor is
@@ -110,6 +112,15 @@ package body BME280 is
          Success : out Boolean)
       is
          use Interfaces;
+
+         function Cast is new Ada.Unchecked_Conversion
+           (Unsigned_16, Integer_16);
+
+         function To_Unsigned (LSB, MSB : HAL.UInt8) return Unsigned_16 is
+           (Unsigned_16 (LSB) + Shift_Left (Unsigned_16 (MSB), 8));
+
+         function To_Integer (LSB, MSB : HAL.UInt8) return Integer_16 is
+            (Cast (To_Unsigned (LSB, MSB)));
       begin
          declare
             Data : HAL.UInt8_Array (16#88# .. 16#A1#);
@@ -120,14 +131,19 @@ package body BME280 is
                return;
             end if;
 
-            Value.T1 := Unsigned_16 (Data (16#88#)) +
-              Shift_Left (Unsigned_16 (Data (16#89#)), 8);
+            Value.T1 := To_Unsigned (Data (16#88#), Data (16#89#));
+            Value.T2 := To_Integer (Data (16#8A#), Data (16#8B#));
+            Value.T3 := To_Integer (Data (16#8C#), Data (16#8D#));
 
-            Value.T2 := Unsigned_16 (Data (16#8A#)) +
-              Shift_Left (Unsigned_16 (Data (16#8B#)), 8);
-
-            Value.T3 := Unsigned_16 (Data (16#8C#)) +
-              Shift_Left (Unsigned_16 (Data (16#8D#)), 8);
+            Value.P1 := To_Unsigned (Data (16#8E#), Data (16#8F#));
+            Value.P2 := To_Integer (Data (16#90#), Data (16#91#));
+            Value.P3 := To_Integer (Data (16#92#), Data (16#93#));
+            Value.P4 := To_Integer (Data (16#94#), Data (16#95#));
+            Value.P5 := To_Integer (Data (16#96#), Data (16#97#));
+            Value.P6 := To_Integer (Data (16#98#), Data (16#99#));
+            Value.P7 := To_Integer (Data (16#9A#), Data (16#9B#));
+            Value.P8 := To_Integer (Data (16#9C#), Data (16#9D#));
+            Value.P9 := To_Integer (Data (16#9E#), Data (16#9F#));
 
             Value.H1 := Unsigned_8 (Data (16#A1#));
          end;
@@ -142,9 +158,7 @@ package body BME280 is
                return;
             end if;
 
-            Value.H2 := Unsigned_16 (Data (16#E1#)) +
-              Shift_Left (Unsigned_16 (Data (16#E2#)), 8);
-
+            Value.H2 := To_Integer (Data (16#E1#), Data (16#E2#));
             Value.H3 := Unsigned_8 (Data (16#E3#));
 
             Value.H4 := Shift_Left (Unsigned_16 (Data (16#E4#)), 4) +
@@ -258,6 +272,56 @@ package body BME280 is
 
       return Relative_Humidity'Small * Var_5;
    end Humidity;
+
+   --------------
+   -- Pressure --
+   --------------
+
+   function Pressure
+     (Value       : Measurement;
+      Temperature : Deci_Celsius;
+      Calibration : Calibration_Constants) return Pressure_Pa
+   is
+      use Interfaces;
+
+      Var_1 : Integer_64 :=
+        Integer_64 (Temperature / Deci_Celsius'Small) - 128000;
+
+      Var_2 : Integer_64 := Var_1**2 * Integer_64 (Calibration.P6);
+      Var_3 : constant Integer_64 := 140737488355328;
+      Var_4 : Integer_64 := 1048576 - Integer_64 (Value.Raw_Press);
+
+      Result : Pressure_Pa'Base;
+   begin
+      Var_2 := Var_2 + Var_1 * Integer_64 (Calibration.P5) * 131072;
+      Var_2 := Var_2 + Integer_64 (Calibration.P4) * 34359738368;
+
+      Var_1 := Var_1 ** 2 * Integer_64 (Calibration.P3) / 256 +
+        Var_1 * Integer_64 (Calibration.P2) * 4096;
+
+      Var_1 := (Var_3 + Var_1) * Integer_64 (Calibration.P1) / 8589934592;
+
+      if Var_1 = 0 then
+         return Pressure_Pa'First;
+      end if;
+
+      Var_4 := (Var_4 * 2147483648 - Var_2) * 3125 / Var_1;
+      Var_1 := Integer_64 (Calibration.P9) * (Var_4 / 8192)**2 / 33554432;
+      Var_2 := Integer_64 (Calibration.P8) * Var_4 / 524288;
+
+      Var_4 := (Var_4 + Var_1 + Var_2) / 256
+        + Integer_64 (Calibration.P7) * 16;
+
+      Result := Pressure_Pa'Small * Integer (Var_4);
+
+      if Result < Pressure_Pa'First then
+         return Pressure_Pa'First;
+      elsif Result > Pressure_Pa'Last then
+         return Pressure_Pa'Last;
+      else
+         return Result;
+      end if;
+   end Pressure;
 
    -----------------
    -- Temperature --

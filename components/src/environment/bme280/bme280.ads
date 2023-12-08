@@ -38,10 +38,19 @@ package BME280 is
 
    type Calibration_Constants is record
       T1 : Interfaces.Unsigned_16;
-      T2 : Interfaces.Unsigned_16;
-      T3 : Interfaces.Unsigned_16;
+      T2 : Interfaces.Integer_16;
+      T3 : Interfaces.Integer_16;
+      P1 : Interfaces.Unsigned_16;
+      P2 : Interfaces.Integer_16;
+      P3 : Interfaces.Integer_16;
+      P4 : Interfaces.Integer_16;
+      P5 : Interfaces.Integer_16;
+      P6 : Interfaces.Integer_16;
+      P7 : Interfaces.Integer_16;
+      P8 : Interfaces.Integer_16;
+      P9 : Interfaces.Integer_16;
       H1 : Interfaces.Unsigned_8;
-      H2 : Interfaces.Unsigned_16;
+      H2 : Interfaces.Integer_16;
       H3 : Interfaces.Unsigned_8;
       H4 : Interfaces.Unsigned_16 range 0 .. 4095;
       H5 : Interfaces.Unsigned_16 range 0 .. 4095;
@@ -65,6 +74,16 @@ package BME280 is
      (Value       : Measurement;
       Temperature : Deci_Celsius;
       Calibration : Calibration_Constants) return Relative_Humidity;
+
+   Pressure_Small : constant := 1.0 / 2 ** 8;
+
+   type Pressure_Pa is delta Pressure_Small range 30_000.0 .. 110_000.0;
+   --  Pressure in Pa
+
+   function Pressure
+     (Value       : Measurement;
+      Temperature : Deci_Celsius;
+      Calibration : Calibration_Constants) return Pressure_Pa;
 
    type Oversampling_Kind is (Skip, X1, X2, X4, X8, X16);
    type IRR_Filter_Kind is (Off, X1, X2, X4, X8, X16);
@@ -124,9 +143,9 @@ private
    for Sensor_Mode use (Sleep => 0, Forced => 1, Normal => 3);
 
    type Measurement is record
-      Raw_Press : HAL.Uint20;
-      Raw_Temp  : HAL.Uint20;
-      Raw_Hum   : HAL.Uint16;
+      Raw_Press : HAL.UInt20;
+      Raw_Temp  : HAL.UInt20;
+      Raw_Hum   : HAL.UInt16;
    end record;
 
 end BME280;
