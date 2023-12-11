@@ -29,20 +29,24 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  This package provides an easy way to setup BME280 connected via I2C.
+
 with HAL.I2C;
 
 generic
    I2C_Port    : not null HAL.I2C.Any_I2C_Port;
-   I2C_Address : HAL.UInt7;
+   I2C_Address : HAL.UInt7 := 16#76#;  --  The BME280 7-bit I2C address
 package BME280.I2C is
 
    procedure Read
      (Data    : out HAL.UInt8_Array;
       Success : out Boolean);
+   --  Read registers starting from Data'First
 
    procedure Write
      (Data    : HAL.UInt8_Array;
       Success : out Boolean);
+   --  Write registers starting from Data'First
 
    package Sensor is new Generic_Sensor (Read, Write);
 

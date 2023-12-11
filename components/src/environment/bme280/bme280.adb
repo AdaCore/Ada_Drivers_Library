@@ -35,6 +35,10 @@ with Ada.Unchecked_Conversion;
 
 package body BME280 is
 
+   OS_Map : constant array (Oversampling_Kind) of Natural :=
+     [Skip => 0, X1 => 1, X2 => 2, X4 => 4, X8 => 8, X16 => 16];
+   --  Map Oversamping_Kind to the integer value
+
    package body Generic_Sensor is
 
       -------------------
@@ -206,9 +210,30 @@ package body BME280 is
       -- Reset --
       -----------
 
-      procedure Reset (Success : out Boolean) is
+      procedure Reset
+        (Timer   : not null HAL.Time.Any_Delays;
+         Success : out Boolean)
+      is
+         use type HAL.UInt8;
+
+         Data : HAL.UInt8_Array (16#F3# .. 16#F3#);
       begin
          Write ([16#E0# => 16#B6#], Success);
+
+         if not Success then
+            return;
+         end if;
+
+         for J in 1 .. 3 loop
+            Timer.Delay_Milliseconds (2);
+            Read (Data, Success);
+
+            if Success and then (Data (Data'First) and 1) = 0 then
+               return;
+            end if;
+         end loop;
+
+         Success := False;
       end Reset;
 
       -----------
@@ -272,6 +297,19 @@ package body BME280 is
 
       return Relative_Humidity'Small * Var_5;
    end Humidity;
+
+   --------------------------
+   -- Max_Measurement_Time --
+   --------------------------
+
+   function Max_Measurement_Time
+     (Humidity    : Oversampling_Kind := X1;
+      Pressure    : Oversampling_Kind := X1;
+      Temperature : Oversampling_Kind := X1) return Positive is
+        (1_250
+         + (if Temperature = Skip then 0 else 2_300 * OS_Map (Temperature))
+         + (if Pressure = Skip then 0 else 2_300 * OS_Map (Pressure) + 575)
+         + (if Humidity = Skip then 0 else 2_300 * OS_Map (Humidity) + 575));
 
    --------------
    -- Pressure --
@@ -343,5 +381,18 @@ package body BME280 is
    begin
       return Deci_Celsius'Small * (Val_1 + Val_2);
    end Temperature;
+
+   ------------------------------
+   -- Typical_Measurement_Time --
+   ------------------------------
+
+   function Typical_Measurement_Time
+     (Humidity    : Oversampling_Kind := X1;
+      Pressure    : Oversampling_Kind := X1;
+      Temperature : Oversampling_Kind := X1) return Positive is
+        (1_000
+         + (if Temperature = Skip then 0 else 2_000 * OS_Map (Temperature))
+         + (if Pressure = Skip then 0 else 2_000 * OS_Map (Pressure) + 500)
+         + (if Humidity = Skip then 0 else 2_000 * OS_Map (Humidity) + 500));
 
 end BME280;
