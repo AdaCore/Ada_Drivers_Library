@@ -30,43 +30,24 @@
 ------------------------------------------------------------------------------
 
 with Ada.Real_Time;
+with Ada.Text_IO;
 
-with HAL.Bitmap;
+with Ravenscar_Time;
 
 with STM32.Board;
-with Display_ILI9341;
-
-with BME280.I2C;
 with STM32.Device;
 with STM32.Setup;
-with BMP_Fonts;
-with Bitmapped_Drawing;
+
+with BME280.I2C;
+
 procedure Main is
    use type Ada.Real_Time.Time;
-
-   procedure Put_Line (Text : String);
-
-   procedure Put_Line (Text : String) is
-   begin
-      STM32.Board.TFT_Bitmap.Set_Source (HAL.Bitmap.Black);
-      STM32.Board.TFT_Bitmap.Fill_Rect (Area => ((5, 5), 100, 10));
-
-      Bitmapped_Drawing.Draw_String
-        (STM32.Board.TFT_Bitmap,
-         (5, 5),
-         Text,
-         BMP_Fonts.Font8x8,
-         HAL.Bitmap.Green,
-         HAL.Bitmap.Black);
-   end Put_Line;
 
    package BME280_I2C is new BME280.I2C
      (I2C_Port    => STM32.Device.I2C_1'Access,
       I2C_Address => 16#76#);
 
    Next : Ada.Real_Time.Time := Ada.Real_Time.Clock;
-
-   --  Bitmap : Display_ILI9341.Bitmap_Buffer renames STM32.Board.TFT_Bitmap;
 
    Ok          : Boolean;
    Calib       : BME280.Calibration_Constants;
@@ -77,7 +58,6 @@ procedure Main is
 
 begin
    STM32.Board.Initialize_LEDs;
-   STM32.Board.Display.Initialize;
    STM32.Setup.Setup_I2C_Master
      (Port        => STM32.Device.I2C_1,
       SDA         => STM32.Device.PB9,
@@ -86,18 +66,58 @@ begin
       SCL_AF      => STM32.Device.GPIO_AF_I2C1_4,
       Clock_Speed => 400_000);
 
+   --  Look for BME280 chip
+   if not BME280_I2C.Sensor.Check_Chip_Id then
+      Ada.Text_IO.Put_Line ("BME280 not found.");
+      raise Program_Error;
+   end if;
+
+   --  Reset BME280
+   BME280_I2C.Sensor.Reset (Ravenscar_Time.Delays, Ok);
+   pragma Assert (Ok);
+
+   --  Read calibration data into Clib
    BME280_I2C.Sensor.Read_Calibration (Calib, Ok);
-   BME280_I2C.Sensor.Start (Success => Ok);
+
+   --  Consigure IRR filter and minimal incativity delay
+   BME280_I2C.Sensor.Configure
+     (Standby    => 0.5,
+      Filter     => BME280.X16,
+      SPI_3_Wire => False,
+      Success    => Ok);
+   pragma Assert (Ok);
+
+   --  Enable cycling of measurements with given oversamplig
+   BME280_I2C.Sensor.Start
+     (Mode        => BME280.Normal,
+      Humidity    => BME280.X1,
+      Pressure    => BME280.X16,
+      Temperature => BME280.X2,
+      Success     => Ok);
+
+   --  Wait for the first measurement
+   Ravenscar_Time.Delays.Delay_Milliseconds
+     (BME280.Max_Measurement_Time
+        (Humidity    => BME280.X1,
+         Pressure    => BME280.X16,
+         Temperature => BME280.X2) / 1000 + 1);
 
    loop
       STM32.Board.Toggle (STM32.Board.D1_LED);
+
+      --  Read raw values from the sensor
       BME280_I2C.Sensor.Read_Measurement (Measurement, Ok);
 
       if Ok then
+         --  Decode temperature, humidity and pressure
          Temp := BME280.Temperature (Measurement, Calib);
          Humi := BME280.Humidity (Measurement, Temp, Calib);
          Press := BME280.Pressure (Measurement, Temp, Calib);
-         Put_Line (Temp'Image & Humi'Image & Press'Image);
+
+         Ada.Text_IO.Put_Line
+           ("T=" & Temp'Image &
+              " H=" & Humi'Image &
+              " P=" & Press'Image);
       end if;
 
       Next := Next + Ada.Real_Time.Milliseconds (500);
