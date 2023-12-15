@@ -74,6 +74,7 @@ projects = [
             "/examples/stm32_f4ve/draw/draw.gpr",
             "/examples/stm32_f4ve/lcd/lcd.gpr",
             "/examples/stm32_f4ve/bme280/bme280.gpr",
+            "/examples/stm32_f4ve/bme280_lcd/bme280_lcd.gpr",
 
             # STM32F4XX M
             "/boards/stm32f4xx_m/stm32f4xx_m_full.gpr",
