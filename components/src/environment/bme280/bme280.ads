@@ -31,7 +31,6 @@
 
 with Interfaces;
 with HAL;
-with HAL.Time;
 
 package BME280 is
    pragma Preelaborate;
@@ -119,66 +118,6 @@ package BME280 is
       Pressure    : Oversampling_Kind := X1;
       Temperature : Oversampling_Kind := X1) return Positive;
    --  Typical measurement time in microseconds
-
-   generic
-      with procedure Read
-        (Data    : out HAL.UInt8_Array;
-         Success : out Boolean);
-      --  Read the values from the BME280 chip registers into Data.
-      --  Each element in the Data corresponds to a specific register address
-      --  in the chip, so Data'Range determines the range of registers to read.
-      --  The value read from register X will be stored in Data(X), so
-      --  Data'Range should be of the Register_Address subtype.
-
-      with procedure Write
-        (Data    : HAL.UInt8_Array;
-         Success : out Boolean);
-      --  Write the values from Data to the BME280 chip registers.
-      --  Each element in the Data corresponds to a specific register address
-      --  in the chip, so Data'Range determines the range of registers to
-      --  write. The value for register X will be read from Data(X), so
-      --  Data'Range should be of the Register_Address subtype.
-
-   package Generic_Sensor is
-
-      function Check_Chip_Id (Expect : HAL.UInt8 := 16#60#) return Boolean;
-      --  Read the chip ID and check that it matches
-
-      procedure Reset
-        (Timer   : not null HAL.Time.Any_Delays;
-         Success : out Boolean);
-      --  Issue a soft reset and wait until the chip is ready.
-
-      procedure Configure
-        (Standby    : Standby_Duration := 1000.0;
-         Filter     : IRR_Filter_Kind := Off;
-         SPI_3_Wire : Boolean := False;
-         Success    : out Boolean);
-      --  Configure the sensor to use IRR filtering and/or SPI 3-wire mode
-
-      procedure Start
-        (Mode        : Sensor_Mode := Normal;
-         Humidity    : Oversampling_Kind := X1;
-         Pressure    : Oversampling_Kind := X1;
-         Temperature : Oversampling_Kind := X1;
-         Success     : out Boolean);
-      --  Change sensor mode. Mainly used to start one measurement or enable
-      --  perpetual cycling of measurements and inactive periods.
-
-      function Measuring return Boolean;
-      --  Check if a measurement is in progress
-
-      procedure Read_Measurement
-        (Value   : out Measurement;
-         Success : out Boolean);
-      --  Read the raw measurement values from the sensor
-
-      procedure Read_Calibration
-        (Value   : out Calibration_Constants;
-         Success : out Boolean);
-      --  Read the calibration constants from the sensor
-
-   end Generic_Sensor;
 
 private
 

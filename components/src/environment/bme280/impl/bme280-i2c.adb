@@ -29,32 +29,53 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This package offers a straightforward method for setting up the BME280
---  when connected via SPI, especially useful when the use of only one sensor
---  is required. If you need multiple sensors, it is preferable to use the
---  BME280.SPI_Sensors package, which provides the appropriate tagged type.
+package body BME280.I2C is
 
-with HAL.GPIO;
-with HAL.SPI;
-
-with BME280.Generic_Sensor;
-
-generic
-   SPI_Port : not null HAL.SPI.Any_SPI_Port;
-   SPI_CS   : not null HAL.GPIO.Any_GPIO_Point;
-package BME280.SPI is
+   ----------
+   -- Read --
+   ----------
 
    procedure Read
      (Data    : out HAL.UInt8_Array;
-      Success : out Boolean);
-   --  Read registers starting from Data'First
+      Success : out Boolean)
+   is
+      use type HAL.I2C.I2C_Status;
+      use type HAL.UInt10;
+
+      Status : HAL.I2C.I2C_Status;
+   begin
+      I2C_Port.Mem_Read
+        (Addr          => 2 * HAL.UInt10 (I2C_Address),
+         Mem_Addr      => HAL.UInt16 (Data'First),
+         Mem_Addr_Size => HAL.I2C.Memory_Size_8b,
+         Data          => Data,
+         Status        => Status);
+
+      Success := Status = HAL.I2C.Ok;
+   end Read;
+
+   -----------
+   -- Write --
+   -----------
 
    procedure Write
      (Address : Register_Address;
       Data    : HAL.UInt8;
-      Success : out Boolean);
-   --  Write the value to the BME280 chip register with given Address.
+      Success : out Boolean)
+   is
+      use type HAL.I2C.I2C_Status;
+      use type HAL.UInt10;
 
-   package Sensor is new Generic_Sensor (Read, Write);
+      Status : HAL.I2C.I2C_Status;
+   begin
+      I2C_Port.Mem_Write
+        (Addr          => 2 * HAL.UInt10 (I2C_Address),
+         Mem_Addr      => HAL.UInt16 (Address),
+         Mem_Addr_Size => HAL.I2C.Memory_Size_8b,
+         Data          => (1 => Data),
+         Status        => Status);
 
-end BME280.SPI;
+      Success := Status = HAL.I2C.Ok;
+   end Write;
+
+end BME280.I2C;

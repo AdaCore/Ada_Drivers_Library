@@ -47,7 +47,7 @@ with Display_ILI9341;
 with Bitmapped_Drawing;
 with BMP_Fonts;
 
-with BME280.I2C;
+with BME280.I2C_Sensors;
 
 with GUI;
 with GUI_Buttons;
@@ -55,9 +55,10 @@ with GUI_Buttons;
 procedure Main is
    use type Ada.Real_Time.Time;
 
-   package BME280_I2C is new BME280.I2C
+   Sensor : BME280.I2C_Sensors.BME280_I2C_Sensor :=
      (I2C_Port    => STM32.Device.I2C_1'Access,
-      I2C_Address => 16#76#);
+      I2C_Address => 16#76#,
+      Calibration => <>);
 
    procedure Configure_Sensor;
    --  Restart sensor with new settings according to GUI state
@@ -68,8 +69,7 @@ procedure Main is
       Press       : BME280.Pressure_Pa;
    end record;
 
-   function Read_Sensor
-     (Calib : BME280.Calibration_Constants) return Sensor_Data;
+   function Read_Sensor return Sensor_Data;
 
    function Min (Left, Right : Sensor_Data) return Sensor_Data is
      (Temp  => BME280.Deci_Celsius'Min (Left.Temp,  Right.Temp),
@@ -149,7 +149,7 @@ procedure Main is
       Ok : Boolean;
    begin
       --  Consigure IRR filter and minimal incativity delay
-      BME280_I2C.Sensor.Configure
+      Sensor.Configure
         (Standby    => 0.5,
          Filter     => Filter (GUI.State (+Fi_No .. +Fi_16)),
          SPI_3_Wire => False,
@@ -157,7 +157,7 @@ procedure Main is
       pragma Assert (Ok);
 
       --  Enable cycling of measurements with given oversamplig
-      BME280_I2C.Sensor.Start
+      Sensor.Start
         (Mode        => BME280.Normal,
          Humidity    => Oversampling (GUI.State (+Hu_X1 .. +Hu_16)),
          Pressure    => Oversampling (GUI.State (+Pr_X1 .. +Pr_16)),
@@ -291,22 +291,20 @@ procedure Main is
    -- Read_Sensor --
    -----------------
 
-   function Read_Sensor
-     (Calib : BME280.Calibration_Constants) return Sensor_Data
-   is
+   function Read_Sensor return Sensor_Data is
       Ok          : Boolean;
       Measurement : BME280.Measurement;
       Temp        : BME280.Deci_Celsius;
    begin
-      BME280_I2C.Sensor.Read_Measurement (Measurement, Ok);
+      Sensor.Read_Measurement (Measurement, Ok);
       pragma Assert (Ok);
 
-      Temp := BME280.Temperature (Measurement, Calib);
+      Temp := Sensor.Temperature (Measurement);
 
       return
-        (Temp => Temp,
-         Humi => BME280.Humidity (Measurement, Temp, Calib),
-         Press => BME280.Pressure (Measurement, Temp, Calib));
+        (Temp  => Temp,
+         Humi  => Sensor.Humidity (Measurement, Temp),
+         Press => Sensor.Pressure (Measurement, Temp));
    end Read_Sensor;
 
    Empty : constant Sensor_Limits :=
@@ -324,7 +322,6 @@ procedure Main is
 
    Next        : Ada.Real_Time.Time := Ada.Real_Time.Clock;
    Ok          : Boolean;
-   Calib       : BME280.Calibration_Constants;
    Next_Limits : Sensor_Limits;
 begin
    STM32.Board.Initialize_LEDs;
@@ -347,17 +344,17 @@ begin
       Clock_Speed => 400_000);
 
    --  Look for BME280 chip
-   if not BME280_I2C.Sensor.Check_Chip_Id then
+   if not Sensor.Check_Chip_Id then
       Ada.Text_IO.Put_Line ("BME280 not found.");
       raise Program_Error;
    end if;
 
    --  Reset BME280
-   BME280_I2C.Sensor.Reset (Ravenscar_Time.Delays, Ok);
+   Sensor.Reset (Ravenscar_Time.Delays, Ok);
    pragma Assert (Ok);
 
    --  Read calibration data into Clib
-   BME280_I2C.Sensor.Read_Calibration (Calib, Ok);
+   Sensor.Read_Calibration (Ok);
 
    Configure_Sensor;
 
@@ -369,7 +366,7 @@ begin
          Temperature => BME280.X1) / 1000 + 1);
 
    --  Predict boundaries from the first sensor measurement
-   Next_Limits.Min := Read_Sensor (Calib);
+   Next_Limits.Min := Read_Sensor;
    Next_Limits.Max := Next_Limits.Min;
    Make_Wider (Next_Limits);
 
@@ -385,7 +382,7 @@ begin
          for X in 0 .. LCD.Width - 1 loop
             STM32.Board.Toggle (STM32.Board.D1_LED);
 
-            Data := Read_Sensor (Calib);
+            Data := Read_Sensor;
 
             Next_Limits :=
               (Min => Min (Data, Next_Limits.Min),

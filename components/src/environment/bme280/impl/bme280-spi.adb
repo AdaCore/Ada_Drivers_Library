@@ -29,32 +29,58 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This package offers a straightforward method for setting up the BME280
---  when connected via SPI, especially useful when the use of only one sensor
---  is required. If you need multiple sensors, it is preferable to use the
---  BME280.SPI_Sensors package, which provides the appropriate tagged type.
+package body BME280.SPI is
 
-with HAL.GPIO;
-with HAL.SPI;
-
-with BME280.Generic_Sensor;
-
-generic
-   SPI_Port : not null HAL.SPI.Any_SPI_Port;
-   SPI_CS   : not null HAL.GPIO.Any_GPIO_Point;
-package BME280.SPI is
+   ----------
+   -- Read --
+   ----------
 
    procedure Read
      (Data    : out HAL.UInt8_Array;
-      Success : out Boolean);
-   --  Read registers starting from Data'First
+      Success : out Boolean)
+   is
+      use type HAL.UInt8;
+      use all type HAL.SPI.SPI_Status;
+
+      Addr : HAL.UInt8;
+      Status : HAL.SPI.SPI_Status;
+   begin
+      SPI.SPI_CS.Clear;
+
+      Addr := HAL.UInt8 (Data'First) or 16#80#;
+      SPI_Port.Transmit (HAL.SPI.SPI_Data_8b'(1 => Addr), Status);
+
+      if Status = Ok then
+         SPI_Port.Receive (HAL.SPI.SPI_Data_8b (Data), Status);
+      end if;
+
+      SPI.SPI_CS.Set;
+
+      Success := Status = Ok;
+   end Read;
+
+   -----------
+   -- Write --
+   -----------
 
    procedure Write
      (Address : Register_Address;
       Data    : HAL.UInt8;
-      Success : out Boolean);
-   --  Write the value to the BME280 chip register with given Address.
+      Success : out Boolean)
+   is
+      use type HAL.UInt8;
+      use all type HAL.SPI.SPI_Status;
 
-   package Sensor is new Generic_Sensor (Read, Write);
+      Prefix : constant HAL.UInt8 := HAL.UInt8 (Address) and 16#7F#;
+      Status : HAL.SPI.SPI_Status;
+   begin
+      SPI.SPI_CS.Clear;
+
+      SPI_Port.Transmit (HAL.SPI.SPI_Data_8b'(Prefix, Data), Status);
+
+      SPI.SPI_CS.Set;
+
+      Success := Status = Ok;
+   end Write;
 
 end BME280.SPI;
