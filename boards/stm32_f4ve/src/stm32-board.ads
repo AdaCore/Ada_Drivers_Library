@@ -104,11 +104,11 @@ package STM32.Board is
    TFT_BLK      : GPIO_Point renames PB1;  --  LCD backlight
    TFT_CS       : GPIO_Point renames PB12;
 
-   Display : Display_ILI9341.Display;
+   Display : aliased Display_ILI9341.Display;
 
-   TFT_Bitmap : Display_ILI9341.Bitmap_Buffer := Display.Buffer;
+   TFT_Bitmap : aliased Display_ILI9341.Bitmap_Buffer := Display.Buffer;
 
-   Touch_Panel : Touch_Panel_XPT2046.Touch_Panel;
+   Touch_Panel : aliased Touch_Panel_XPT2046.Touch_Panel;
 
    --------------------------
    -- micro SD card reader --
