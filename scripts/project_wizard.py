@@ -188,8 +188,9 @@ def ADL_configuration(config, project_directory, project_name,
    type Build_Type is ("Debug", "Production");
    Build : Build_Type := external ("ADL_BUILD", "Debug");
 
-   type Build_Checks_Type is ("Disabled", "Enabled");
-   Build_Checks : Build_Checks_Type := external ("ADL_BUILD_CHECKS", "Disabled");
+   type Disabled_Or_Enabled_Type is ("Disabled", "Enabled");
+   Build_Checks : Disabled_Or_Enabled_Type := external ("ADL_BUILD_CHECKS", "Disabled");
+   Callgraphs : Disabled_Or_Enabled_Type := external ("CALLGRAPHS", "Enabled");
 
    --  Target architecture
 """
@@ -199,11 +200,17 @@ def ADL_configuration(config, project_directory, project_name,
     gpr += """
    Target := Project'Target;
 
-   --  Callgraph info is not available on all architectures
+   --  Callgraph info is not available on all architectures, and not always
+   --  desired
    Callgraph_Switch := ();
-   case Target is
-      when "riscv32-unknown-elf" => null;
-      when others => Callgraph_Switch := ("-fcallgraph-info=su");
+   case Callgraphs is
+      when "Enabled" =>
+         case Target is
+            when "riscv32-unknown-elf" => null;
+            when others => Callgraph_Switch := ("-fcallgraph-info=su");
+         end case;
+      when "Disabled" =>
+         null;
    end case;
 
    Build_Checks_Switches := ();
