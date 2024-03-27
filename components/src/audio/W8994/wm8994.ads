@@ -152,12 +152,4 @@ private
       Time     : not null HAL.Time.Any_Delays)
    is tagged limited null record;
 
-   procedure I2C_Write (This     : in out WM8994_Device;
-                        Register : UInt16;
-                        Value    : UInt16);
-
-   function I2C_Read (This     : in out WM8994_Device;
-                      Register : UInt16)
-                      return UInt16;
-
 end WM8994;
