@@ -31,20 +31,20 @@
 
 package body WM8994 is
 
-   WM8994_CHIPID_ADDR      : constant := 16#00#;
+   WM8994_CHIPID_ADDR : constant := 16#00#;
 
-   Output_Enabled          : Boolean := False;
-   Input_Enabled           : Boolean := False;
+   Output_Enabled     : Boolean := False;
+   Input_Enabled      : Boolean := False;
    pragma Unreferenced (Input_Enabled);
-
 
    ---------------
    -- I2C_Write --
    ---------------
 
-   procedure I2C_Write (This  : in out WM8994_Device;
-                        Reg   : UInt16;
-                        Value : UInt16)
+   procedure I2C_Write
+     (This     : in out WM8994_Device;
+      Register : UInt16;
+      Value    : UInt16)
    is
       Status : I2C_Status;
       Data   : I2C_Data (1 .. 2);
@@ -56,13 +56,13 @@ package body WM8994 is
 
       This.Port.Mem_Write
         (Addr          => This.I2C_Addr,
-         Mem_Addr      => Reg,
+         Mem_Addr      => Register,
          Mem_Addr_Size => Memory_Size_16b,
          Data          => Data,
          Status        => Status);
 
-      if Reg /= 0 then
-         Check := I2C_Read (This, Reg);
+      if Register /= 0 then
+         Check := I2C_Read (This, Register);
       end if;
    end I2C_Write;
 
@@ -70,40 +70,40 @@ package body WM8994 is
    -- I2C_Read --
    --------------
 
-   function I2C_Read (This : in out WM8994_Device;
-                      Reg : UInt16)
-                      return UInt16
+   function I2C_Read
+     (This : in out WM8994_Device;
+      Register : UInt16)
+   return UInt16
    is
       Status : I2C_Status;
       Data   : I2C_Data (1 .. 2);
-      Ret    : UInt16;
+      Result : UInt16;
    begin
       This.Port.Mem_Read
         (Addr          => This.I2C_Addr,
-         Mem_Addr      => Reg,
+         Mem_Addr      => Register,
          Mem_Addr_Size => Memory_Size_16b,
          Data          => Data,
          Status        => Status);
-      Ret := Shift_Left (UInt16 (Data (1)), 8) or UInt16 (Data (2));
-
-      return Ret;
+      Result := Shift_Left (UInt16 (Data (1)), 8) or UInt16 (Data (2));
+      return Result;
    end I2C_Read;
 
-   ----------
-   -- Init --
-   ----------
+   ----------------
+   -- Initialize --
+   ----------------
 
-   procedure Init
+   procedure Initialize
      (This      : in out WM8994_Device;
       Input     : Input_Device;
       Output    : Output_Device;
-      Volume    : UInt8;
+      Volume    : Volume_Level;
       Frequency : Audio_Frequency)
    is
       Power_Mgnt_Reg_1 : UInt16 := 0;
-
    begin
-      --  WM8994 Errata work-arounds
+      --  WM8994 Errata work-arounds.
+      --  See https://github.com/STMicroelectronics/stm32-wm8994/blob/main/wm8994.c
       I2C_Write (This, 16#102#, 16#0003#);
       I2C_Write (This, 16#817#, 16#0000#);
       I2C_Write (This, 16#102#, 16#0000#);
@@ -302,16 +302,16 @@ package body WM8994 is
          --  Volume Control
          This.Set_Volume (Volume);
       end if;
-   end Init;
+   end Initialize;
 
    -------------
-   -- Read_ID --
+   -- Chip_ID --
    -------------
 
-   function Read_ID (This : in out WM8994_Device) return UInt16 is
+   function Chip_ID (This : in out WM8994_Device) return UInt16 is
    begin
       return This.I2C_Read (WM8994_CHIPID_ADDR);
-   end Read_ID;
+   end Chip_ID;
 
    ----------
    -- Play --
@@ -375,7 +375,7 @@ package body WM8994 is
          --  Disable DAC1 and DAC2
          I2C_Write (This, 16#05#, 16#0000#);
 
-         --  Reset Codec by writing in 0x0000 address register
+         --  Reset Codec by writing in 16#0000 address register
          I2C_Write (This, 16#0000#, 16#0000#);
       end if;
    end Stop;
@@ -384,13 +384,10 @@ package body WM8994 is
    -- Set_Volume --
    ----------------
 
-   procedure Set_Volume (This : in out WM8994_Device; Volume : Volume_Level)
+   procedure Set_Volume
+     (This   : in out WM8994_Device;
+      Volume : Volume_Level)
    is
-      --  Actual Volume in range 0 .. 16#3F#
-      Converted_Volume : constant UInt16 :=
-                           (if Volume = 100 then 63
-                            else UInt16 (Volume) * 63 / 100);
-
    begin
       if Volume = 0 then
          --  Mute the codec
@@ -399,16 +396,16 @@ package body WM8994 is
          This.Set_Mute (Mute_Off);
 
          --  Left Headphone Volume
-         I2C_Write (This, 16#1C#, Converted_Volume or 16#140#);
+         I2C_Write (This, 16#1C#, Volume or 16#140#);
 
          --  Right Headphone volume
-         I2C_Write (This, 16#1D#, Converted_Volume or 16#140#);
+         I2C_Write (This, 16#1D#, Volume or 16#140#);
 
          --  Left Speaker volume
-         I2C_Write (This, 16#26#, Converted_Volume or 16#140#);
+         I2C_Write (This, 16#26#, Volume or 16#140#);
 
          --  Right Speaker volume
-         I2C_Write (This, 16#27#, Converted_Volume or 16#140#);
+         I2C_Write (This, 16#27#, Volume or 16#140#);
       end if;
    end Set_Volume;
 
@@ -438,8 +435,9 @@ package body WM8994 is
    -- Set_Output_Mode --
    ---------------------
 
-   procedure Set_Output_Mode (This   : in out WM8994_Device;
-                              Device : Output_Device)
+   procedure Set_Output_Mode
+     (This   : in out WM8994_Device;
+      Device : Output_Device)
    is
    begin
       case Device is
@@ -495,32 +493,62 @@ package body WM8994 is
    -- Set_Frequency --
    -------------------
 
-   procedure Set_Frequency (This  : in out WM8994_Device;
-                            Freq : Audio_Frequency)
+   procedure Set_Frequency
+     (This  : in out WM8994_Device;
+      Freq : Audio_Frequency)
    is
    begin
+      --  In the following, the values written set both the AIF1_SR [3:0] bits
+      --  and the AIF1CLK_RATE [3:0] bits (the latter to set the ratio). The
+      --  ratio is always 256, which is indicated by the bit pattern 2#0011#,
+      --  so the lower digits in the values is always 3 in hex.
+      --
+      --  See the table labled "Register 0210h AIF1 Rate" pages 285 and 286 of
+      --  WM8994_Rev4.6 from Cirrus Logic
       case Freq is
          when Audio_Freq_8kHz =>
             --  AIF1 Sample Rate = 8 (kHz), ratio=256
             I2C_Write (This, 16#210#, 16#0003#);
-         when Audio_Freq_16kHz =>
-            --  AIF1 Sample Rate = 16 (kHz), ratio=256
-            I2C_Write (This, 16#210#, 16#0033#);
-         when Audio_Freq_48kHz =>
-            --  AIF1 Sample Rate = 48 (kHz), ratio=256
-            I2C_Write (This, 16#210#, 16#0083#);
-         when Audio_Freq_96kHz =>
-            --  AIF1 Sample Rate = 96 (kHz), ratio=256
-            I2C_Write (This, 16#210#, 16#00A3#);
+
          when Audio_Freq_11kHz =>
             --  AIF1 Sample Rate = 11.025 (kHz), ratio=256
             I2C_Write (This, 16#210#, 16#0013#);
+
+         when Audio_Freq_12kHz =>
+            --  AIF1 Sample Rate = 12 (kHz), ratio=256
+            I2C_Write (This, 16#210#, 16#0023#);
+
+         when Audio_Freq_16kHz =>
+            --  AIF1 Sample Rate = 16 (kHz), ratio=256
+            I2C_Write (This, 16#210#, 16#0033#);
+
          when Audio_Freq_22kHz =>
             --  AIF1 Sample Rate = 22.050 (kHz), ratio=256
             I2C_Write (This, 16#210#, 16#0043#);
+
+         when Audio_Freq_24kHz =>
+            --  AIF1 Sample Rate = 24 (kHz), ratio=256
+            I2C_Write (This, 16#210#, 16#0053#);
+
+         when Audio_Freq_32kHz =>
+            --  AIF1 Sample Rate = 32 (kHz), ratio=256
+            I2C_Write (This, 16#210#, 16#0063#);
+
          when Audio_Freq_44kHz =>
             --  AIF1 Sample Rate = 44.1 (kHz), ratio=256
             I2C_Write (This, 16#210#, 16#0073#);
+
+         when Audio_Freq_48kHz =>
+            --  AIF1 Sample Rate = 48 (kHz), ratio=256
+            I2C_Write (This, 16#210#, 16#0083#);
+
+         when Audio_Freq_88kHz =>
+            --  AIF1 Sample Rate = 88.2 (kHz), ratio=256
+            I2C_Write (This, 16#210#, 16#0093#);
+
+         when Audio_Freq_96kHz =>
+            --  AIF1 Sample Rate = 96 (kHz), ratio=256
+            I2C_Write (This, 16#210#, 16#00A3#);
       end case;
    end Set_Frequency;
 
