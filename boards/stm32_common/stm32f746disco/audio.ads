@@ -44,9 +44,9 @@ package Audio is
    type WM8994_Audio_Device (Port : not null Any_I2C_Port) is
      tagged limited private;
 
-   type Audio_Output_Device is new WM8994.Output_Device
-     range WM8994.Speaker .. WM8994.Auto;
-   --  Only No_Output is not included
+   type Audio_Output_Device is new WM8994.Output_Device with
+     Static_Predicate => Audio_Output_Device in
+       Headphone | Speaker | Both;
 
    type Audio_Frequency is new WM8994.Audio_Frequency;
 
@@ -68,15 +68,16 @@ package Audio is
    procedure Start_Playing
      (This   : in out WM8994_Audio_Device;
       Buffer : Audio_Buffer);
-   --  Start playing, for the first time, content from the audio file/stream.
+   --  Start playing, for the first time, content from the specified buffer.
    --  This routine must be called, perhaps just once but more than once if the
    --  other routines below are called. The effect is to tell the underlying
    --  WM8994 codec where the buffer to be played is located, and cause the
-   --  codec to start playing that buffer. Playing continues after the call
-   --  returns. An additional mechanism, outside this package, updates the
-   --  content of the buffer while the codec is playing it. That update/play
-   --  process continues until either there is no more music to be played, or
-   --  Stop or Pause is called.
+   --  codec to start playing the contents.
+   --
+   --  NB: playing continues after the call returns. An additional mechanism,
+   --  outside this package, updates the content of the buffer while the codec
+   --  is playing it. That update/play process continues until either there is
+   --  no more music to be played, or Stop or Pause is called.
 
    procedure Pause
      (This : in out WM8994_Audio_Device);
@@ -109,7 +110,18 @@ private
      (Port : not null Any_I2C_Port)
    is tagged limited record
       Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
-      Sink   : Audio_Output_Device; --  := No_Output;  -- TODO...
+      Output : WM8994.Output_Device := WM8994.No_Output;
+      --  The initial value of Output is overwritten by Initialize. The value
+      --  No_Output will trigger a C_E if ever referenced, so it is used as a
+      --  check that Initialize has been called. We need the component Output
+      --  itself for the sake of a clean parameter profile for Set_Frequency,
+      --  otherwise clients would have to pass another parameter to specify
+      --  the output device selection again (after having done so when calling
+      --  Initialize). That's because Set_Frequency needs to do enough hardware
+      --  re-initialization to accommodate the new frequency, but doing so
+      --  requires the output device selection so that the re-init can select
+      --  the active slots. Just activating all slots (as is done in the STM
+      --  C code) doesn't work (at least in the current Ada code).
    end record;
 
 end Audio;
