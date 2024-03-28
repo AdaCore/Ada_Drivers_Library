@@ -44,7 +44,7 @@ package Audio is
    type WM8994_Audio_Device (Port : not null Any_I2C_Port) is
      tagged limited private;
 
-   type Audio_Output_Device is new WM8994.Output_Device 
+   type Audio_Output_Device is new WM8994.Output_Device
      range WM8994.Speaker .. WM8994.Auto;
    --  Only No_Output is not included
 
@@ -57,13 +57,45 @@ package Audio is
    type Audio_Buffer is array (Natural range <>) of UInt16
      with Component_Size => 16, Alignment => 2;
    --  TODO: change to signed 16-bit, since that's apparently what should be used for PCM samples,
-   --  so revert the change to HAL.Audio.Audio_Buffer (so it is INteger_16 again) and use that.
+   --  so revert the change to HAL.Audio.Audio_Buffer (so it is Integer_16 again) and use that.
 
    procedure Initialize
      (This      : in out WM8994_Audio_Device;
       Volume    : Audio_Volume;
       Frequency : Audio_Frequency;
       Sink      : Audio_Output_Device);
+   --  This routine initializes the hardware and configures the volume,
+   --  sampling frequency, and output device (the sink). This routine must be
+   --  called, before any others. The routines for setting the volume and
+   --  the output frequency are optional.
+
+   procedure Start_Playing
+     (This   : in out WM8994_Audio_Device;
+      Buffer : Audio_Buffer);
+   --  Start playing, for the first time, content from the audio file/stream.
+   --  This routine must be called, perhaps just once but more than once if the
+   --  other routines below are called. The effect is to tell the underlying
+   --  WM8994 codec where the buffer to be played is located, and cause the
+   --  codec to start playing that buffer. Playing continues after the call
+   --  returns. An additional mechanism, outside this package, updates the
+   --  content of the buffer while the codec is playing it. That update/play
+   --  process continues until either there is no more music to be played, or
+   --  Stop or Pause is called.
+
+   procedure Pause
+     (This : in out WM8994_Audio_Device);
+   --  After calling Pause, only Resume should be called for resuming play (do
+   --  not call Start_Playing again).
+
+   procedure Resume
+     (This : in out WM8994_Audio_Device);
+   --  Procedure Resume should be called only when the audio is playing or
+   --  paused (not stopped).
+
+   procedure Stop
+     (This : in out WM8994_Audio_Device);
+   --  Stops the hardware and update/play process. Once called, you must call
+   --  Start_Playing again if you want to restart the output.
 
    procedure Set_Volume
      (This   : in out WM8994_Audio_Device;
@@ -73,19 +105,6 @@ package Audio is
      (This      : in out WM8994_Audio_Device;
       Frequency : Audio_Frequency);
 
-   procedure Play
-     (This   : in out WM8994_Audio_Device;
-      Buffer : Audio_Buffer);
-
-   procedure Pause
-     (This : in out WM8994_Audio_Device);
-
-   procedure Resume
-     (This : in out WM8994_Audio_Device);
-
-   procedure Stop
-     (This : in out WM8994_Audio_Device);
-
 private
 
    Audio_I2C_Addr  : constant I2C_Address := 16#34#;
@@ -94,7 +113,7 @@ private
      (Port : not null Any_I2C_Port)
    is tagged limited record
       Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
-      Sink   : Audio_Output_Device;
+      Sink   : Audio_Output_Device := No_Output;
    end record;
 
 end Audio;

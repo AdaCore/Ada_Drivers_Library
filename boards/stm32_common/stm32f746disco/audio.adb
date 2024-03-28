@@ -290,11 +290,11 @@ package body Audio is
                                     Clock_Speed => 100_000);
    end Initialize_Audio_I2C;
 
-   ----------
-   -- Play --
-   ----------
+   -------------------
+   -- Start_Playing --
+   -------------------
 
-   procedure Play
+   procedure Start_Playing
      (This   : in out WM8994_Audio_Device;
       Buffer : Audio_Buffer)
    is
@@ -316,7 +316,7 @@ package body Audio is
       if not Enabled (Audio_SAI, SAI_Out_Block) then
          Enable (Audio_SAI, SAI_Out_Block);
       end if;
-   end Play;
+   end Start_Playing;
 
    -----------
    -- Pause --
