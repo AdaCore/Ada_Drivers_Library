@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                  Copyright (C) 2016-2024, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -32,10 +32,10 @@
 --   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
---  with HAL.Audio; use HAL.Audio;
-with HAL; use HAL;
+with HAL;       use HAL;
 with HAL.I2C;   use HAL.I2C;
 with Ravenscar_Time;
+with Interfaces; use Interfaces;
 
 with WM8994;
 
@@ -49,15 +49,11 @@ package Audio is
    --  Only No_Output is not included
 
    type Audio_Frequency is new WM8994.Audio_Frequency;
-   --  TODO: use HAL.Audio package's type, with WM8994 additions to that type
 
    type Audio_Volume is range 0 .. 100; -- a percentage
-   --  TODO: use HAL.Audio package's type
 
-   type Audio_Buffer is array (Natural range <>) of UInt16
+   type Audio_Buffer is array (Natural range <>) of Integer_16
      with Component_Size => 16, Alignment => 2;
-   --  TODO: change to signed 16-bit, since that's apparently what should be used for PCM samples,
-   --  so revert the change to HAL.Audio.Audio_Buffer (so it is Integer_16 again) and use that.
 
    procedure Initialize
      (This      : in out WM8994_Audio_Device;
@@ -113,7 +109,7 @@ private
      (Port : not null Any_I2C_Port)
    is tagged limited record
       Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
-      Sink   : Audio_Output_Device := No_Output;
+      Sink   : Audio_Output_Device; --  := No_Output;  -- TODO...
    end record;
 
 end Audio;
