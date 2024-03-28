@@ -51,8 +51,11 @@ package body WM8994 is
    is
       Power_Mgnt_Reg_1 : UInt16 := 0;
    begin
-      --  WM8994 Errata work-arounds.
-      --  See https://github.com/STMicroelectronics/stm32-wm8994/blob/main/wm8994.c
+      --  WM8994 Errata work-arounds. See
+      --  https://github.com/STMicroelectronics/stm32-wm8994/blob/main/wm8994.c
+      --  These registers are not documented, and the effects of these writes
+      --  are not documented anywhere either. Nobody seems to have written it
+      --  down anywhere.
       I2C_Write (This, 16#102#, 16#0003#);
       I2C_Write (This, 16#817#, 16#0000#);
       I2C_Write (This, 16#102#, 16#0000#);
