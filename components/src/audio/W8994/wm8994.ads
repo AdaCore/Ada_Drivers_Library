@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2024, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,7 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Driver for the WM8994 CODEC
+--  This package provides a simple driver for the WM8994 CODEC. It does not
+--  provide a full definition of the WM8994's functionality.
 
 with HAL;      use HAL;
 with HAL.I2C;  use HAL.I2C;
@@ -87,23 +88,20 @@ package WM8994 is
       Audio_Freq_88kHz => 88_200,
       Audio_Freq_96kHz => 96_000);
 
-   --  TODO: support 24K and 32K frequencies
-
    type Mute is
      (Mute_On,
       Mute_Off);
 
    type Stop_Mode is
      (Stop_Power_Down_Sw,
+      --  Stop_Power_Down_Sw only mutes the audio codec, it does not alter
+      --  hardware settings. When resuming from this mode the codec keeps the
+      --  previous initialization so there is no need to re-initialize the
+      --  codec registers.
       Stop_Power_Down_Hw);
-   --  Stop_Power_Down_Sw:
-   --  only mutes the audio codec. When resuming from this mode the codec
-   --  keeps the previous initialization (no need to re-Initialize the codec
-   --  registers).
-   --  Stop_Power_Down_Hw:
-   --  Physically power down the codec. When resuming from this mode, the codec
-   --  is set to default configuration (user should re-Initialize the codec in
-   --  order to play again the audio stream).
+      --  Stop_Power_Down_Hw physically powers down the codec hardware. When
+      --  resuming from this mode, the codec is set to default configuration
+      --  so users should re-initialize the codec.
 
    Max_Volume : constant := 16#3F#;
 
