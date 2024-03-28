@@ -84,11 +84,9 @@ package body Audio is
 
       Set_Audio_Clock (Frequency);
 
-      --  Initialize the SAI
       Initialize_Audio_Out_Pins;
       Initialize_Audio_DMA;
       Initialize_SAI_Out (Frequency, Sink);
-
       Initialize_Audio_I2C;
 
       if This.Device.Chip_ID /= WM8994.WM8994_ID then
@@ -102,7 +100,7 @@ package body Audio is
          Volume    => As_Device_Volume (Volume),
          Frequency => WM8994.Audio_Frequency (Frequency));
 
-      This.Sink := Sink;
+      This.Output := WM8994.Output_Device (Sink);
       --  For sake of any individual calls to Set_Frequency, assuming the STM
       --  code is correct that we also need to set the clocks when setting the
       --  frequency
@@ -128,7 +126,12 @@ package body Audio is
      (This      : in out WM8994_Audio_Device;
       Frequency : Audio_Frequency)
    is
+      use type WM8994.Output_Device;
    begin
+      if This.Output = WM8994.No_Output then
+         raise Constraint_Error with "No prior call to Initialize";
+      end if;
+
       --  The following is per the example source file from STM,
       --  STM32746G-Disco_example\board_drivers\stm32746g_discovery_audio.c,
       --  whereas the WM8894 driver just has a specific function that writes
@@ -136,7 +139,7 @@ package body Audio is
       --  clock configuration too.
       Set_Audio_Clock (Frequency);
       STM32.SAI.Disable (Audio_SAI, SAI_Out_Block);
-      Initialize_SAI_Out (Frequency, This.Sink);
+      Initialize_SAI_Out (Frequency, Audio_Output_Device (This.Output));
       STM32.SAI.Enable (Audio_SAI, SAI_Out_Block);
    end Set_Frequency;
 
@@ -257,7 +260,7 @@ package body Audio is
          FS_Offset    => Before_First_Bit);
 
       case Sink is
-         when Headphone | Auto =>
+         when Headphone =>
             Active_Slots := Slot_0 or Slot_2;
          when Speaker =>
             Active_Slots := Slot_1 or Slot_3;
