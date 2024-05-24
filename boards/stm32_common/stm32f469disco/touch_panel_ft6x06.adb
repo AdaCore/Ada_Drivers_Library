@@ -31,8 +31,6 @@
 
 --  Based on ft6x06.h from MCD Application Team
 
-with Ada.Unchecked_Conversion;
-
 with STM32.Board;          use STM32.Board;
 with STM32.Device;         use STM32.Device;
 with STM32.I2C;
