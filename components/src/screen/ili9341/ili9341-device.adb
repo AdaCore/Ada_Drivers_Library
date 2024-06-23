@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2023, AdaCore                     --
+--                     Copyright (C) 2015-2024, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -117,7 +117,13 @@ package body ILI9341.Device is
       Time.Delay_Milliseconds (150);
 
       Send_Command (Data, ILI9341_DISPLAY_ON, []);
-      Send_Command (Data, ILI9341_GRAM, []);
+
+      case Connection is
+         when RGB =>
+            Send_Command (Data, ILI9341_GRAM, []);
+         when Serial | Parallel =>
+            null;
+      end case;
    end Initialize;
 
    ---------------------

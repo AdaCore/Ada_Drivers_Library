@@ -1,0 +1,8 @@
+library project STM32_F4VE_Full_SPI
+  extends "../../../boards/stm32_f4ve/stm32_f4ve_full.gpr"
+is
+   for Source_Dirs use ("spi");
+   for Library_Dir use "obj/spi_lib";
+   for Object_Dir use "obj/spi_obj";
+
+end STM32_F4VE_Full_SPI;
