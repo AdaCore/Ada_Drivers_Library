@@ -29,38 +29,49 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with System;
+with HAL.Framebuffer;
 
-with HAL.Bitmap;
-with HAL.GPIO;
-with HAL.SPI;
+with STM32.Device;
 
-package ILI9341.SPI_Connector is
+with ILI9341.Device.Bitmap;
+with ILI9341.Device;
+with ILI9341.SPI_Connector;
 
-   type ILI9341_Connector is record
-      Port        : HAL.SPI.Any_SPI_Port;
-      Chip_Select : HAL.GPIO.Any_GPIO_Point;
-      WRX         : HAL.GPIO.Any_GPIO_Point;
+package Display_ILI9341 is
+
+   type Display is tagged limited private;
+
+   procedure Initialize (This : in out Display);
+   --  Configure FSMC, turn backlight on and initialize the display
+
+   procedure Set_Orientation
+     (This        : in out Display;
+      Orientation : HAL.Framebuffer.Display_Orientation);
+
+   package ILI9341_Device is new ILI9341.Device
+     (ILI9341_Connector => ILI9341.SPI_Connector.ILI9341_Connector,
+      Send_Command      => ILI9341.SPI_Connector.Send_Command,
+      Connection        => ILI9341.Parallel,
+      Connector         =>
+        (Port        => STM32.Device.SPI_1'Access,
+         Chip_Select => STM32.Device.PA4'Access,
+         WRX         => STM32.Device.PA2'Access));
+
+   package ILI9341_Bitmap is new ILI9341_Device.Bitmap
+     (ILI9341.SPI_Connector.Write_Pixels,
+      ILI9341.SPI_Connector.Read_Pixels);
+
+   subtype Bitmap_Buffer is ILI9341_Bitmap.Bitmap_Buffer;
+
+   function Buffer (This : in out Display) return Bitmap_Buffer;
+
+private
+
+   type Display is tagged limited record
+      Device : aliased ILI9341_Device.ILI9341_Device;
    end record;
-   --  ILI9341 connected over SPI
 
-   procedure Send_Command
-     (This : ILI9341_Connector;
-      Cmd  : HAL.UInt8;
-      Data : HAL.UInt8_Array);
-   --  Send ILI9341 command over SPI
+   function Buffer (This : in out Display) return Bitmap_Buffer is
+     (ILI9341_Bitmap.Get_Bitmap (This.Device'Access));
 
-   procedure Write_Pixels
-     (This    : ILI9341_Connector;
-      Mode    : HAL.Bitmap.Bitmap_Color_Mode;
-      Address : System.Address;
-      Count   : Positive;
-      Repeat  : Positive);
-
-   procedure Read_Pixels
-     (This    : ILI9341_Connector;
-      Cmd     : HAL.UInt8;
-      Address : System.Address;
-      Count   : Positive);
-
-end ILI9341.SPI_Connector;
+end Display_ILI9341;
