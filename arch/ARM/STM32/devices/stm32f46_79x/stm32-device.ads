@@ -629,6 +629,24 @@ package STM32.Device is
 
    RTC : aliased RTC_Device;
 
+   --------------
+   -- Ethernet --
+   --------------
+
+   procedure Enable_Eth
+     (MAC     : Boolean := True;
+      MAC_TX  : Boolean := True;
+      MAC_RX  : Boolean := True;
+      MAC_PTP : Boolean := True);
+   --  Enable/disable Ethernet MAC clocks:
+   --  * MAC - Ethernet MAC clock enable
+   --  * MAC_TX - Ethernet Transmission clock enable
+   --  * MAC_RX - Ethernet Reception clock enable
+   --  * MAC_PTP - Ethernet PTP clock enable
+
+   procedure Reset_Eth;
+   --  Ethernet MAC reset
+
 private
 
    GPIO_AF_RTC_50Hz_0  : constant GPIO_Alternate_Function := 0;

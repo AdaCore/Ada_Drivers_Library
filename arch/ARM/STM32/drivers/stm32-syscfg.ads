@@ -57,4 +57,9 @@ package STM32.SYSCFG is
 
    procedure Clear_External_Interrupt (Pin : GPIO_Pin) with Inline;
 
+   procedure Configure_RMII (RMII : Boolean := True);
+   --  Ethernet PHY interface selection:
+   --  * RMII=False - MII
+   --  * RMII=True  - RMII
+
 end STM32.SYSCFG;
