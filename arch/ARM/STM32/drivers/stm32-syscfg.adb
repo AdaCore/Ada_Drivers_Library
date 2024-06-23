@@ -132,4 +132,13 @@ package body STM32.SYSCFG is
       Clear_External_Interrupt (External_Line_Number'Val (GPIO_Pin'Pos (Pin)));
    end Clear_External_Interrupt;
 
+   --------------------
+   -- Configure_RMII --
+   --------------------
+
+   procedure Configure_RMII (RMII : Boolean := True) is
+   begin
+      STM32_SVD.SYSCFG.SYSCFG_Periph.PMC.MII_RMII_SEL := RMII;
+   end Configure_RMII;
+
 end STM32.SYSCFG;

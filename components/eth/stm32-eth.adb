@@ -30,8 +30,8 @@
 ------------------------------------------------------------------------------
 with STM32.GPIO;
 with STM32.Device;
-with STM32_SVD.RCC;
-with STM32_SVD.SYSCFG;
+with STM32.RCC;
+with STM32.SYSCFG;
 with STM32_SVD.Ethernet; use STM32_SVD.Ethernet;
 with STM32.SDRAM;
 with Ada.Real_Time;
@@ -61,7 +61,13 @@ package body STM32.Eth is
    is
       use STM32.GPIO;
       use STM32.Device;
-      use STM32_SVD.RCC;
+
+      Config : constant GPIO_Port_Configuration :=
+        (Mode_AF,
+         Floating,
+         Push_Pull,
+         Speed_100MHz,
+         GPIO_AF_ETH_11);
    begin
       --  Enable GPIO clocks
 
@@ -70,41 +76,27 @@ package body STM32.Eth is
       Enable_Clock (GPIO_G);
 
       --  Enable SYSCFG clock
-      RCC_Periph.APB2ENR.SYSCFGEN := True;
+      STM32.RCC.SYSCFG_Clock_Enable;
 
       --  Select RMII (before enabling the clocks)
-      STM32_SVD.SYSCFG.SYSCFG_Periph.PMC.MII_RMII_SEL := True;
+      STM32.SYSCFG.Configure_RMII (RMII => True);
 
-      Configure_Alternate_Function (PA1,  GPIO_AF_ETH_11); -- RMII_REF_CLK
-      Configure_Alternate_Function (PA2,  GPIO_AF_ETH_11); -- RMII_MDIO
-      Configure_Alternate_Function (PA7,  GPIO_AF_ETH_11); -- RMII_CRS_DV
-      Configure_Alternate_Function (PC1,  GPIO_AF_ETH_11); -- RMII_MDC
-      Configure_Alternate_Function (PC4,  GPIO_AF_ETH_11); -- RMII_RXD0
-      Configure_Alternate_Function (PC5,  GPIO_AF_ETH_11); -- RMII_RXD1
-      Configure_Alternate_Function (PG2,  GPIO_AF_ETH_11); -- RMII_RXER
-      Configure_Alternate_Function (PG11, GPIO_AF_ETH_11); -- RMII_TX_EN
-      Configure_Alternate_Function (PG13, GPIO_AF_ETH_11); -- RMII_TXD0
-      Configure_Alternate_Function (PG14, GPIO_AF_ETH_11); -- RMII_TXD1
-      Configure_IO (PA1, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
-      Configure_IO (PA2, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
-      Configure_IO (PA7, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
-      Configure_IO (PC1, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
-      Configure_IO (PC4, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
-      Configure_IO (PC5, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
-      Configure_IO (PG2, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
-      Configure_IO (PG11, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
-      Configure_IO (PG13, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
-      Configure_IO (PG14, (Mode_AF, Push_Pull, Speed_100MHz, Floating));
+      Configure_IO (PA1, Config);   --  RMII_REF_CLK
+      Configure_IO (PA2, Config);   --  RMII_MDIO
+      Configure_IO (PA7, Config);   --  RMII_CRS_DV
+      Configure_IO (PC1, Config);   --  RMII_MDC
+      Configure_IO (PC4, Config);   --  RMII_RXD0
+      Configure_IO (PC5, Config);   --  RMII_RXD1
+      Configure_IO (PG2, Config);   --  RMII_RXER
+      Configure_IO (PG11, Config);  --  RMII_TX_EN
+      Configure_IO (PG13, Config);  --  RMII_TXD0
+      Configure_IO (PG14, Config);  --  RMII_TXD1
 
       --  Enable clocks
-      RCC_Periph.AHB1ENR.ETHMACEN := True;
-      RCC_Periph.AHB1ENR.ETHMACTXEN := True;
-      RCC_Periph.AHB1ENR.ETHMACRXEN := True;
-      RCC_Periph.AHB1ENR.ETHMACPTPEN := True;
+      STM32.Device.Enable_Eth;
 
       --  Reset
-      RCC_Periph.AHB1RSTR.ETHMACRST := True;
-      RCC_Periph.AHB1RSTR.ETHMACRST := False;
+      STM32.Device.Reset_Eth;
 
       --  Software reset
       Ethernet_DMA_Periph.DMABMR.SR := True;
