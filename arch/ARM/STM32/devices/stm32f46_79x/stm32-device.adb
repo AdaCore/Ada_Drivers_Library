@@ -1080,4 +1080,30 @@ package body STM32.Device is
       RCC_Periph.AHB1RSTR.CRCRST := False;
    end Reset;
 
+   ----------------
+   -- Enable_Eth --
+   ----------------
+
+   procedure Enable_Eth
+     (MAC     : Boolean := True;
+      MAC_TX  : Boolean := True;
+      MAC_RX  : Boolean := True;
+      MAC_PTP : Boolean := True) is
+   begin
+      RCC_Periph.AHB1ENR.ETHMACEN := MAC;
+      RCC_Periph.AHB1ENR.ETHMACTXEN := MAC_TX;
+      RCC_Periph.AHB1ENR.ETHMACRXEN := MAC_RX;
+      RCC_Periph.AHB1ENR.ETHMACPTPEN := MAC_PTP;
+   end Enable_Eth;
+
+   ---------------
+   -- Reset_Eth --
+   ---------------
+
+   procedure Reset_Eth is
+   begin
+      RCC_Periph.AHB1RSTR.ETHMACRST := True;
+      RCC_Periph.AHB1RSTR.ETHMACRST := False;
+   end Reset_Eth;
+
 end STM32.Device;
