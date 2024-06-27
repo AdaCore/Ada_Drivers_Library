@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2023, AdaCore                     --
+--                     Copyright (C) 2015-2024, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,7 +29,44 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with Bitmap_Color_Conversion;
+
+with ILI9341.Regs;
+
 package body ILI9341.SPI_Connector is
+
+   -----------------
+   -- Read_Pixels --
+   -----------------
+
+   procedure Read_Pixels
+     (This    : ILI9341_Connector;
+      Cmd     : HAL.UInt8;
+      Address : System.Address;
+      Count   : Positive)
+   is
+      use all type HAL.SPI.SPI_Status;
+
+      subtype Raw_Buffer is HAL.SPI.SPI_Data_8b (1 .. 3 * Count);
+
+      Raw_Pixels : Raw_Buffer
+        with Import, Address => Address;
+
+      Status : HAL.SPI.SPI_Status;
+   begin
+      This.WRX.Clear;
+      This.Chip_Select.Clear;
+      This.Port.Transmit (HAL.SPI.SPI_Data_8b'(1 => Cmd), Status);
+
+      if Status /= Ok then
+         raise Program_Error;
+      end if;
+
+      This.WRX.Set;
+      This.Port.Receive (Raw_Pixels, Status);
+
+      This.Chip_Select.Set;
+   end Read_Pixels;
 
    ------------------
    -- Send_Command --
@@ -41,6 +78,7 @@ package body ILI9341.SPI_Connector is
       Data : HAL.UInt8_Array)
    is
       use HAL.SPI;
+
       Status : SPI_Status;
    begin
       This.WRX.Clear;
@@ -60,7 +98,126 @@ package body ILI9341.SPI_Connector is
          end if;
       end if;
 
-      This.Chip_Select.Set;
+      if Cmd not in ILI9341.Regs.ILI9341_GRAM then
+         This.Chip_Select.Set;
+      end if;
    end Send_Command;
+
+   ------------------
+   -- Write_Pixels --
+   ------------------
+
+   procedure Write_Pixels
+     (This    : ILI9341_Connector;
+      Mode    : HAL.Bitmap.Bitmap_Color_Mode;
+      Address : System.Address;
+      Count   : Positive;
+      Repeat  : Positive)
+   is
+
+      procedure Transmit (Color : HAL.Bitmap.Bitmap_Color);
+      --  Transmit RGB on a single pixel
+
+      --------------
+      -- Transmit --
+      --------------
+
+      procedure Transmit (Color : HAL.Bitmap.Bitmap_Color) is
+         Status : HAL.SPI.SPI_Status;
+
+         Pixel : HAL.SPI.SPI_Data_8b (1 .. 4)
+           with Import, Address => Color'Address;
+      begin
+         This.Port.Transmit (Pixel (1 .. 3), Status);
+      end Transmit;
+
+   begin
+      This.WRX.Set;
+
+      case Mode is
+         when HAL.Bitmap.RGB_888 =>
+            --  Native format for SPI interface
+            declare
+               subtype Raw_Buffer is HAL.SPI.SPI_Data_8b (1 .. 3 * Count);
+
+               Raw_Pixels : Raw_Buffer
+                 with Import, Address => Address;
+
+               Status : HAL.SPI.SPI_Status;
+            begin
+               for Step in 1 .. Repeat loop
+                  This.Port.Transmit (Raw_Pixels, Status);
+               end loop;
+            end;
+
+         when HAL.Bitmap.ARGB_8888 =>
+            declare
+               subtype Raw_Buffer is HAL.UInt32_Array (1 .. Count);
+
+               Raw_Pixels : Raw_Buffer
+                 with Import, Address => Address;
+            begin
+               for Step in 1 .. Repeat loop
+                  for Raw of Raw_Pixels loop
+                     declare
+                        Color : constant HAL.Bitmap.Bitmap_Color :=
+                          Bitmap_Color_Conversion.Word_To_Bitmap_Color
+                            (Mode, Raw);
+                     begin
+                        Transmit (Color);
+                     end;
+                  end loop;
+               end loop;
+            end;
+
+         when HAL.Bitmap.RGB_565 |
+              HAL.Bitmap.ARGB_1555 |
+              HAL.Bitmap.ARGB_4444 |
+              HAL.Bitmap.AL_88 =>
+            declare
+               subtype Raw_Buffer is HAL.UInt16_Array (1 .. Count);
+
+               Raw_Pixels : Raw_Buffer
+                 with Import, Address => Address;
+            begin
+               for Step in 1 .. Repeat loop
+                  for Raw of Raw_Pixels loop
+                     declare
+                        Color : constant HAL.Bitmap.Bitmap_Color :=
+                          Bitmap_Color_Conversion.Word_To_Bitmap_Color
+                            (Mode, HAL.UInt32 (Raw));
+                     begin
+                        Transmit (Color);
+                     end;
+                  end loop;
+               end loop;
+            end;
+
+         when HAL.Bitmap.L_8 | HAL.Bitmap.AL_44 =>
+            declare
+               subtype Raw_Buffer is HAL.UInt8_Array (1 .. Count);
+
+               Raw_Pixels : Raw_Buffer
+                 with Import, Address => Address;
+            begin
+               for Step in 1 .. Repeat loop
+                  for Raw of Raw_Pixels loop
+                     declare
+                        Color : constant HAL.Bitmap.Bitmap_Color :=
+                          Bitmap_Color_Conversion.Word_To_Bitmap_Color
+                            (Mode, HAL.UInt32 (Raw));
+                     begin
+                        Transmit (Color);
+                     end;
+                  end loop;
+               end loop;
+            end;
+
+         when others =>
+            raise Program_Error;
+      end case;
+
+      This.Chip_Select.Set;
+   end Write_Pixels;
 
 end ILI9341.SPI_Connector;

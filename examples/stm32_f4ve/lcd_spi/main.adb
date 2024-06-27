@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2024, AdaCore                     --
+--                       Copyright (C) 2024, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,38 +29,43 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with System;
+with Ada.Real_Time;
 
 with HAL.Bitmap;
-with HAL.GPIO;
-with HAL.SPI;
 
-package ILI9341.SPI_Connector is
+with STM32.Board;
+with Display_ILI9341;
 
-   type ILI9341_Connector is record
-      Port        : HAL.SPI.Any_SPI_Port;
-      Chip_Select : HAL.GPIO.Any_GPIO_Point;
-      WRX         : HAL.GPIO.Any_GPIO_Point;
-   end record;
-   --  ILI9341 connected over SPI
+procedure Main is
+   use type Ada.Real_Time.Time;
 
-   procedure Send_Command
-     (This : ILI9341_Connector;
-      Cmd  : HAL.UInt8;
-      Data : HAL.UInt8_Array);
-   --  Send ILI9341 command over SPI
+   Next : Ada.Real_Time.Time := Ada.Real_Time.Clock;
 
-   procedure Write_Pixels
-     (This    : ILI9341_Connector;
-      Mode    : HAL.Bitmap.Bitmap_Color_Mode;
-      Address : System.Address;
-      Count   : Positive;
-      Repeat  : Positive);
+   Bitmap : Display_ILI9341.Bitmap_Buffer renames STM32.Board.TFT_Bitmap;
 
-   procedure Read_Pixels
-     (This    : ILI9341_Connector;
-      Cmd     : HAL.UInt8;
-      Address : System.Address;
-      Count   : Positive);
+begin
+   --  STM32.Board.Initialize_LEDs;
+   STM32.Board.Display.Initialize;
 
-end ILI9341.SPI_Connector;
+   Bitmap.Set_Source (HAL.Bitmap.Black);
+   Bitmap.Fill;
+
+   for X in 0 .. 31 loop
+      for Y in 0 .. 31 loop
+         Bitmap.Set_Source
+           ((Alpha => 255,
+             Green  => 128,
+             Red    => HAL.UInt8 (X * 8),
+             Blue   => HAL.UInt8 (Y * 8)));
+
+         Bitmap.Fill_Rect (((X * 7, Y * 10), 6, 9));
+      end loop;
+   end loop;
+
+   loop
+      --  STM32.Board.Toggle (STM32.Board.D1_LED);
+
+      Next := Next + Ada.Real_Time.Milliseconds (500);
+      delay until Next;
+   end loop;
+end Main;
