@@ -204,7 +204,7 @@ package body STM32.USARTs is
 
    procedure Transmit (This : in out USART;  Data : UInt9) is
    begin
-      This.Periph.DR.DR := Data;
+      This.Periph.DR := (DR => Data, others => 0);
    end Transmit;
 
    ---------
