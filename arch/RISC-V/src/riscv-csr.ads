@@ -39,7 +39,7 @@ package RISCV.CSR is
    package Mvendorid is new CSR_RO_Pck ("mvendorid", Unsigned_XLEN);
    package Marchid   is new CSR_RO_Pck ("marchid", Unsigned_XLEN);
    package Mimpid    is new CSR_RO_Pck ("mimpid", Unsigned_XLEN);
-   package Mhardid   is new CSR_RO_Pck ("mhardid", Unsigned_XLEN);
+   package Mhartid   is new CSR_RO_Pck ("mhartid", Unsigned_XLEN);
 
    -- Machine Trap Setup --
    package Mstatus    is new CSR_RW_Pck ("mstatus", Unsigned_XLEN);
