@@ -62,6 +62,7 @@
 
 with STM32.GPIO;   use STM32.GPIO;
 with STM32.Timers; use STM32.Timers;
+with System;       use System;
 
 package STM32.PWM is
    pragma Elaborate_Body;
@@ -148,6 +149,9 @@ package STM32.PWM is
 
    subtype Percentage is Integer range 0 .. 100;
 
+   function Calculate_Compare_Value
+     (This : in out PWM_Modulator; Value : Percentage) return UInt32;
+
    procedure Set_Duty_Cycle
      (This  : in out PWM_Modulator;
       Value : Percentage)
@@ -189,6 +193,10 @@ package STM32.PWM is
      (This     : in PWM_Modulator;
       Polarity : in Timer_Output_Compare_Polarity);
    --  Set the polarity of the complimentary output of This modulator.
+
+   function Data_Register_Address
+     (This : PWM_Modulator) return Address with Inline;
+   --  Returns the address of the Timer DMAR Register.
 
    Invalid_Request : exception;
    --  Raised when the requested frequency is too high or too low for the given
