@@ -29,9 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with System;        use System;
 with STM32_SVD;     use STM32_SVD;
 with STM32.Device;  use STM32.Device;
+with System.Storage_Elements; use System.Storage_Elements;
 
 package body STM32.PWM is
 
@@ -60,6 +60,23 @@ package body STM32.PWM is
    function Has_APB1_Frequency (This : Timer) return Boolean;
    --  timers 3, 4, 6, 7, 12, 13, 14
 
+   -----------------------------
+   -- Calculate_Compare_Value --
+   -----------------------------
+
+   function Calculate_Compare_Value
+     (This : in out PWM_Modulator; Value : Percentage) return UInt32 is
+      Period : constant UInt32 := Timer_Period (This);
+   begin
+      if Value = 0 then
+         return 0;
+      elsif Period < 42949672 then
+         return ((Period + 1) * UInt32 (Value) / 100) - 1;
+      else
+         return ((Period + 1) / 100 * UInt32 (Value)) - 1;
+      end if;
+   end Calculate_Compare_Value;
+
    --------------------
    -- Set_Duty_Cycle --
    --------------------
@@ -68,25 +85,16 @@ package body STM32.PWM is
      (This  : in out PWM_Modulator;
       Value : Percentage)
    is
-      Pulse16 : UInt16;
-      Pulse32 : UInt32;
+      Pulse32 : constant UInt32 := Calculate_Compare_Value (This, Value);
    begin
       This.Duty_Cycle := Value;
 
-      if Value = 0 then
-         Set_Compare_Value (This.Generator.all, This.Channel, UInt16'(0));
+      if Has_32bit_CC_Values (This.Generator.all) then
+         Set_Compare_Value (This.Generator.all, This.Channel, Pulse32);
       else
-         --  for a Value of 0, the computation of Pulse wraps around, so we
-         --  only compute it when not zero
-
-         if Has_32bit_CC_Values (This.Generator.all) then
-            Pulse32 := UInt32 ((Timer_Period (This) + 1) * UInt32 (Value) / 100) - 1;
-            Set_Compare_Value (This.Generator.all, This.Channel, Pulse32);
-         else
-            Pulse16 := UInt16 ((Timer_Period (This) + 1) * UInt32 (Value) / 100) - 1;
-            Set_Compare_Value (This.Generator.all, This.Channel, Pulse16);
-         end if;
+         Set_Compare_Value (This.Generator.all, This.Channel, UInt16 (Pulse32));
       end if;
+
    end Set_Duty_Cycle;
 
    -------------------
@@ -437,5 +445,15 @@ package body STM32.PWM is
       This'Address = STM32_SVD.TIM12_Base or
       This'Address = STM32_SVD.TIM13_Base or
       This'Address = STM32_SVD.TIM14_Base);
+
+   ---------------------------
+   -- Data_Register_Address --
+   ---------------------------
+
+   function Data_Register_Address
+     (This : PWM_Modulator) return Address is
+   begin
+      return This.Generator.all'Address + 16#4C#;
+   end Data_Register_Address;
 
 end STM32.PWM;
