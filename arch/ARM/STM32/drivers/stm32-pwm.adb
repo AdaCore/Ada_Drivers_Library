@@ -31,7 +31,6 @@
 
 with STM32_SVD;     use STM32_SVD;
 with STM32.Device;  use STM32.Device;
-with System.Storage_Elements; use System.Storage_Elements;
 
 package body STM32.PWM is
 
@@ -453,7 +452,7 @@ package body STM32.PWM is
    function Data_Register_Address
      (This : PWM_Modulator) return Address is
    begin
-      return This.Generator.all'Address + 16#4C#;
+      return STM32.Timers.Data_Register_Address (This.Generator.all);
    end Data_Register_Address;
 
 end STM32.PWM;
