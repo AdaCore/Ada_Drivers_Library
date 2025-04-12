@@ -452,7 +452,7 @@ package body STM32.PWM is
    function Data_Register_Address
      (This : PWM_Modulator) return Address is
    begin
-      return STM32.Timers.Data_Register_Address (This.Generator.all);
+      return Data_Register_Address (This.Generator.all);
    end Data_Register_Address;
 
 end STM32.PWM;
