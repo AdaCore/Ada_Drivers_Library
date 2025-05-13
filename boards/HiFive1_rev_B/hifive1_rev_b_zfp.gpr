@@ -8,13 +8,13 @@ library project HiFive1_rev_B_ZFP is
    Build_Checks : Build_Checks_Type := external ("ADL_BUILD_CHECKS", "Disabled");
 
    --  Target architecture
-   for Target use "riscv32-elf";
+   for Target use "riscv64-elf";
    Target := Project'Target;
 
    --  Callgraph info is not available on all architectures
    Callgraph_Switch := ();
    case Target is
-      when "riscv32-unknown-elf" => null;
+      when "riscv64-elf" => null;
       when others => Callgraph_Switch := ("-fcallgraph-info=su");
    end case;
 

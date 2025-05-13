@@ -22,7 +22,7 @@ This will create a folder named `obj` in the same directory with the elf-formate
 binary plus some auxiliary files. Inside this folder run the following command
 to create the `hex` file:
 
-`$ riscv32-elf-objcopy -O ihex main main.hex`
+`$ riscv64-elf-objcopy -O ihex main main.hex`
 
 This new revision of the HiFive board allows the `hex` file to be uploaded
 through the USB connection that should appear in your file manager. Just copy
