@@ -394,6 +394,10 @@ package body Semihosting.Filesystem is
    function Flush
      (This : in out SHFS_File_Handle)
       return Status_Code
-   is (OK);
+   is
+      pragma Unreferenced (This);
+   begin
+      return OK;
+   end Flush;
 
 end Semihosting.Filesystem;
