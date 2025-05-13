@@ -33,6 +33,8 @@ with System.Machine_Code; use System.Machine_Code;
 
 package body RISCV.CSR_Generic is
 
+   NL : constant String := ASCII.CR & ASCII.LF;
+
    --------------
    -- Read_CSR --
    --------------
@@ -40,7 +42,8 @@ package body RISCV.CSR_Generic is
    function Read_CSR return Reg_Type is
       Ret : Reg_Type;
    begin
-      Asm ("csrr %0, " & Reg_Name,
+      Asm (".option arch, +zicsr" & NL &
+           "csrr %0, " & Reg_Name,
            Outputs  => Reg_Type'Asm_Output ("=r", Ret),
            Volatile => True);
       return Ret;
@@ -52,7 +55,8 @@ package body RISCV.CSR_Generic is
 
    procedure Write_CSR (Val : Reg_Type) is
    begin
-      Asm ("csrw " & Reg_Name & ", %0",
+      Asm (".option arch, +zicsr" & NL &
+           "csrw " & Reg_Name & ", %0",
            Inputs   => Reg_Type'Asm_Input ("r", Val),
            Volatile => True);
    end Write_CSR;
@@ -64,7 +68,8 @@ package body RISCV.CSR_Generic is
    function Swap_CSR (Val : Reg_Type) return Reg_Type is
       Ret : Reg_Type;
    begin
-      Asm ("csrrw %1, " & Reg_Name & ", %0",
+      Asm (".option arch, +zicsr" & NL &
+           "csrrw %1, " & Reg_Name & ", %0",
            Inputs   => Reg_Type'Asm_Input ("r", Val),
            Outputs  => Reg_Type'Asm_Output ("=r", Ret),
            Volatile => True);
@@ -77,7 +82,8 @@ package body RISCV.CSR_Generic is
 
    procedure Set_Bits_CSR (Val : Reg_Type) is
    begin
-      Asm ("csrs " & Reg_Name & ", %0",
+      Asm (".option arch, +zicsr" & NL &
+           "csrs " & Reg_Name & ", %0",
            Inputs   => Reg_Type'Asm_Input ("r", Val),
            Volatile => True);
    end Set_Bits_CSR;
@@ -89,7 +95,8 @@ package body RISCV.CSR_Generic is
    function Read_And_Set_Bits_CSR (Val : Reg_Type) return Reg_Type is
       Ret : Reg_Type;
    begin
-      Asm ("csrrs %1, " & Reg_Name & ", %0",
+      Asm (".option arch, +zicsr" & NL &
+           "csrrs %1, " & Reg_Name & ", %0",
            Inputs   => Reg_Type'Asm_Input ("r", Val),
            Outputs  => Reg_Type'Asm_Output ("=r", Ret),
            Volatile => True);
@@ -102,7 +109,8 @@ package body RISCV.CSR_Generic is
 
    procedure Clear_Bits_CSR (Val : Reg_Type) is
    begin
-      Asm ("csrc " & Reg_Name & ", %0",
+      Asm (".option arch, +zicsr" & NL &
+           "csrc " & Reg_Name & ", %0",
            Inputs   => Reg_Type'Asm_Input ("r", Val),
            Volatile => True);
    end Clear_Bits_CSR;
@@ -114,7 +122,8 @@ package body RISCV.CSR_Generic is
    function Read_And_Clear_Bits_CSR (Val : Reg_Type) return Reg_Type is
       Ret : Reg_Type;
    begin
-      Asm ("csrrc %1, " & Reg_Name & ", %0",
+      Asm (".option arch, +zicsr" & NL &
+           "csrrc %1, " & Reg_Name & ", %0",
            Inputs   => Reg_Type'Asm_Input ("r", Val),
            Outputs  => Reg_Type'Asm_Output ("=r", Ret),
            Volatile => True);
