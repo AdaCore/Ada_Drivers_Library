@@ -67,7 +67,7 @@ class Database:
             if arch == "ARM":
                 target = "arm-eabi"
             elif arch == "RISC-V":
-                target = "riscv32-elf"
+                target = "riscv64-elf"
 
         return target
 

@@ -8,7 +8,7 @@ library project HiFive1_ZFP is
    Build_Checks : Build_Checks_Type := external ("ADL_BUILD_CHECKS", "Disabled");
 
    --  Target architecture
-   for Target use "riscv32-elf";
+   for Target use "riscv64-elf";
    Target := Project'Target;
 
    --  Callgraph info is not available on all architectures
