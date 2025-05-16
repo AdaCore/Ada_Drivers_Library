@@ -437,6 +437,9 @@ package STM32.Timers is
    procedure Disable_Capture_Compare_DMA
      (This : in out Timer);
 
+   function Data_Register_Address
+     (This : Timer) return Address with Inline;
+
    ----------------------------------------------------------------------------
 
    --  Output Compare Management ----------------------------------------------
