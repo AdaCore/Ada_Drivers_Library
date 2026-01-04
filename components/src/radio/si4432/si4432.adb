@@ -570,24 +570,16 @@ package body Si4432 is
      (This  : Si4432_Driver;
       Value : UInt9)
    is
-      Data : constant Unsigned_16 := Unsigned_16 (Value);
-   begin
-      Write_Register
-        (This,
-         Frequency_Deviation_Name,
-         Register (Data and 16#FF#));
+      Data : HAL.SPI.SPI_Data_8b (1 .. 2);
+      Reg  : Modulation_Mode_Control_2_Register with Import,
+        Address => Data (1)'Address;
 
-      if (Data and 2#1_0000_0000#) /= 0 then
-         declare
-            R    : Register := Read_Register
-              (This, Modulation_Mode_Control_2_Name);
-            Reg  : Modulation_Mode_Control_2_Register with Import,
-              Address => R'Address;
-         begin
-            Reg.fd := 1;
-            Write_Register (This, Modulation_Mode_Control_2_Name, R);
-         end;
-      end if;
+   begin
+      Data (1) := UInt8 (Read_Register (This, Modulation_Mode_Control_2_Name));
+      Reg.fd   :=
+        (if (Unsigned_16 (Value) and 2#1_0000_0000#) > 0 then 1 else 0);
+      Data (2) := UInt8 (Unsigned_16 (Value) and 16#FF#);
+      Write_Register (This, Modulation_Mode_Control_2_Name, Data);
    end Set_Frequency_Deviation;
 
    -----------------------------
@@ -1435,7 +1427,8 @@ package body Si4432 is
 
    begin
       Data (1) := UInt8 (Read_Register (This, Header_Control_2_Name));
-      Reg.prealen := Bit (Unsigned_16 (Value) and 2#1_0000_0000#);
+      Reg.prealen :=
+        (if (Unsigned_16 (Value) and 2#1_0000_0000#) > 0 then 1 else 0);
       Data (2) := UInt8 (Local and 16#FF#);
 
       Write_Register (This, Header_Control_2_Name, Data);
@@ -2774,9 +2767,20 @@ package body Si4432 is
       Data : SPI_Data_8b) is
    begin
       Set_Packet_Length (This, Data'Length);
-      Write_Register (This, FIFO_Access_Name, Data);
+      Write_FIFO (This, Data);
       Set_State (This, TX);
    end Send;
+
+   ----------------
+   -- Write_FIFO --
+   ----------------
+
+   procedure Write_FIFO
+     (This : Si4432_Driver;
+      Data : SPI_Data_8b) is
+   begin
+      Write_Register (This, FIFO_Access_Name, Data);
+   end Write_FIFO;
 
    ------------------
    -- Get_Received --
@@ -2790,13 +2794,23 @@ package body Si4432 is
         (Get_Received_Packet_Length (This));
       Length   : constant Natural := Natural'Min (Received, Data'Length);
    begin
-      Read_Register
-        (This, FIFO_Access_Name, Data (Data'First .. Data'First + Length - 1));
+      Read_FIFO (This, Data (Data'First .. Data'First + Length - 1));
 
       if Received <= Data'Length then
          Clear_RX_FIFO (This);
       end if;
    end Get_Received;
+
+   ---------------
+   -- Read_FIFO --
+   ---------------
+
+   procedure Read_FIFO
+     (This : Si4432_Driver;
+      Data : out SPI_Data_8b) is
+   begin
+      Read_Register (This, FIFO_Access_Name, Data);
+   end Read_FIFO;
 
    -------------------
    -- Clear_RX_FIFO --
