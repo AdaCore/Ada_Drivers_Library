@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2026, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -32,6 +32,7 @@
 with STM32.DMA2D.Interrupt;
 with STM32.DMA2D.Polling;
 with STM32.SDRAM;           use STM32.SDRAM;
+with Cortex_M.Cache;
 
 package body Framebuffer_LTDC is
 
@@ -377,12 +378,18 @@ package body Framebuffer_LTDC is
             null;
          when 1 =>
             Display.Buffers (LCD_Layer, 2).Wait_Transfer;
+            Cortex_M.Cache.Clean_DCache
+              (Display.Buffers (LCD_Layer, 2).Addr,
+               Display.Buffers (LCD_Layer, 2).Buffer_Size);
             STM32.LTDC.Set_Frame_Buffer
               (Layer => LCD_Layer,
                Addr  => Display.Buffers (LCD_Layer, 2).Addr);
             Display.Current (LCD_Layer) := 2;
          when 2 =>
             Display.Buffers (LCD_Layer, 1).Wait_Transfer;
+            Cortex_M.Cache.Clean_DCache
+              (Display.Buffers (LCD_Layer, 1).Addr,
+               Display.Buffers (LCD_Layer, 1).Buffer_Size);
             STM32.LTDC.Set_Frame_Buffer
               (Layer => LCD_Layer,
                Addr  => Display.Buffers (LCD_Layer, 1).Addr);
