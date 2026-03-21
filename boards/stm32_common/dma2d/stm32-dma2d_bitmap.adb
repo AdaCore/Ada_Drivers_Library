@@ -153,7 +153,8 @@ package body STM32.DMA2D_Bitmap is
                X      => Area.Position.X,
                Y      => Area.Position.Y,
                Width  => Area.Width,
-               Height => Area.Height);
+               Height => Area.Height,
+               Synchronous => True);
          else
             DMA2D_Fill_Rect
               (DMA_Buf,
@@ -161,7 +162,8 @@ package body STM32.DMA2D_Bitmap is
                X      => Area.Position.Y,
                Y      => Buffer.Width - Area.Position.X - Area.Width,
                Width  => Area.Height,
-               Height => Area.Width);
+               Height => Area.Width,
+               Synchronous => True);
          end if;
       else
          Parent (Buffer).Fill_Rect (Area);
