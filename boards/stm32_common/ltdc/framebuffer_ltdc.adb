@@ -373,8 +373,17 @@ package body Framebuffer_LTDC is
                       then STM32.LTDC.Layer1
                       else STM32.LTDC.Layer2);
    begin
+      --  For each active layer, Wait_Transfer ensures any in-progress DMA2D
+      --  operation on the buffer has completed before we proceed. We then clean
+      --  the D-cache for the buffer about to become visible, so that the LTDC
+      --  sees all CPU writes even when the framebuffer resides in cacheable
+      --  memory. If the SDRAM is not cacheable, no dirty cache lines will be
+      --  found, but we retain the call as a defensive measure for portability
+      --  across configurations.
       case Display.Current (LCD_Layer) is
          when 0 =>
+            --  Layer not yet initialized (no buffer assigned), so there is
+            --  nothing to swap or flush.
             null;
          when 1 =>
             Display.Buffers (LCD_Layer, 2).Wait_Transfer;
