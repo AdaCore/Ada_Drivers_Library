@@ -411,11 +411,11 @@ package STM32_SVD.Ethernet is
       --  no description available
       DAIF           : Boolean := False;
       --  no description available
-      RAM            : Boolean := False;
+      PAM            : Boolean := False;  -- was RAM, incorrectly named in original SVD (see corrected SVD file)
       --  no description available
       BFD            : Boolean := False;
       --  no description available
-      PCF            : Boolean := False;
+      PCF            : HAL.UInt2 := 0;   -- incorrectly set to 1 bit in original SVD (see corrected SVD file)
       --  no description available
       SAIF           : Boolean := False;
       --  no description available
@@ -423,7 +423,7 @@ package STM32_SVD.Ethernet is
       --  no description available
       HPF            : Boolean := False;
       --  unspecified
-      Reserved_10_30 : HAL.UInt21 := 16#0#;
+      Reserved_11_30 : HAL.UInt20 := 16#0#;  -- incorrectly set to 21 bits in original SVD (see corrected SVD file)
       --  no description available
       RA             : Boolean := False;
    end record
@@ -435,13 +435,13 @@ package STM32_SVD.Ethernet is
       HU             at 0 range 1 .. 1;
       HM             at 0 range 2 .. 2;
       DAIF           at 0 range 3 .. 3;
-      RAM            at 0 range 4 .. 4;
+      PAM            at 0 range 4 .. 4;
       BFD            at 0 range 5 .. 5;
-      PCF            at 0 range 6 .. 6;
-      SAIF           at 0 range 7 .. 7;
-      SAF            at 0 range 8 .. 8;
-      HPF            at 0 range 9 .. 9;
-      Reserved_10_30 at 0 range 10 .. 30;
+      PCF            at 0 range 6 .. 7;
+      SAIF           at 0 range 8 .. 8;
+      SAF            at 0 range 9 .. 9;
+      HPF            at 0 range 10 .. 10;
+      Reserved_11_30 at 0 range 11 .. 30;
       RA             at 0 range 31 .. 31;
    end record;
 
@@ -484,7 +484,7 @@ package STM32_SVD.Ethernet is
    --  Ethernet MAC MII data register
    type MACMIIDR_Register is record
       --  no description available
-      TD             : MACMIIDR_TD_Field := 16#0#;
+      MD             : MACMIIDR_TD_Field := 16#0#; -- was TD, incorrectly named in original SVD (see corrected SVD file)
       --  unspecified
       Reserved_16_31 : HAL.UInt16 := 16#0#;
    end record
@@ -492,7 +492,7 @@ package STM32_SVD.Ethernet is
           Bit_Order => System.Low_Order_First;
 
    for MACMIIDR_Register use record
-      TD             at 0 range 0 .. 15;
+      MD             at 0 range 0 .. 15;
       Reserved_16_31 at 0 range 16 .. 31;
    end record;
 
@@ -594,34 +594,51 @@ package STM32_SVD.Ethernet is
       WFFRPR         at 0 range 31 .. 31;
    end record;
 
-   --  Ethernet MAC debug register
+   --  Ethernet MAC debug register. The package from SVD does not correspond
+   --  to the documentation. Therefore we change this register definition
+   --  manually. See RM0385 Rev 8 pages 1610 and 1611.
+   --  TODO: update the SVD file so this manual change isn't necessary!
    type MACDBGR_Register is record
-      --  Read-only. CR
-      CR            : Boolean;
-      --  Read-only. CSR
-      CSR           : Boolean;
-      --  Read-only. ROR
-      ROR           : Boolean;
-      --  Read-only. MCF
-      MCF           : Boolean;
-      --  Read-only. MCP
-      MCP           : Boolean;
-      --  Read-only. MCFHP
-      MCFHP         : Boolean;
-      --  unspecified
-      Reserved_6_31 : HAL.UInt26;
+      Reserved_26_31                         : HAL.UInt6;
+      Tx_FIFO_Full                           : Boolean;       -- TFF
+      Tx_FIFO_Not_Empty                      : Boolean;       -- TFNE
+      Reserved_23                            : HAL.Bit := 0;
+      Tx_FIFO_Write_Active                   : Boolean;       -- TFWA
+      Tx_FIFO_Read_Status                    : HAL.UInt2;     -- TFRS
+      MAC_Transmitter_Paused                 : Boolean;       -- MTP
+      MAC_Transmit_Frame_Controller_Status   : HAL.UInt2;     -- MTFCS
+      MAC_MII_Transmit_Engine_Active         : Boolean;       -- MMTEA
+      Reserved_10_15                         : HAL.UInt6 := 0;
+      Rx_FIFO_Fill_Level                     : HAL.UInt2;     -- RFFL
+      Reserved_7                             : HAL.Bit := 0;
+      Rx_FIFO_Read_Controller_Status         : HAL.UInt2;     -- RFRCS
+      Rx_FIFO_Write_Controller_Active        : Boolean;       -- RFWRA
+      Reserved_3                             : HAL.Bit := 0;
+      MAC_Small_FIFO_RW_Controller_Status    : HAL.UInt2;     -- MSFRWCS
+      MAC_MII_Receive_Protocol_Engine_Active : Boolean;       -- MMRPEA
    end record
-     with Volatile_Full_Access, Size => 32,
+     with Volatile_Full_Access,
+          Size => 32,
           Bit_Order => System.Low_Order_First;
 
    for MACDBGR_Register use record
-      CR            at 0 range 0 .. 0;
-      CSR           at 0 range 1 .. 1;
-      ROR           at 0 range 2 .. 2;
-      MCF           at 0 range 3 .. 3;
-      MCP           at 0 range 4 .. 4;
-      MCFHP         at 0 range 5 .. 5;
-      Reserved_6_31 at 0 range 6 .. 31;
+      Reserved_26_31                         at 0 range 26 .. 31;
+      Tx_FIFO_Full                           at 0 range 25 .. 25;
+      Tx_FIFO_Not_Empty                      at 0 range 24 .. 24;
+      Reserved_23                            at 0 range 23 .. 23;
+      Tx_FIFO_Write_Active                   at 0 range 22 .. 22;
+      Tx_FIFO_Read_Status                    at 0 range 20 .. 21;
+      MAC_Transmitter_Paused                 at 0 range 19 .. 19;
+      MAC_Transmit_Frame_Controller_Status   at 0 range 17 .. 18;
+      MAC_MII_Transmit_Engine_Active         at 0 range 16 .. 16;
+      Reserved_10_15                         at 0 range 10 .. 15;
+      Rx_FIFO_Fill_Level                     at 0 range  8 .. 9;
+      Reserved_7                             at 0 range  7 .. 7;
+      Rx_FIFO_Read_Controller_Status         at 0 range  5 .. 6;
+      Rx_FIFO_Write_Controller_Active        at 0 range  4 .. 4;
+      Reserved_3                             at 0 range  3 .. 3;
+      MAC_Small_FIFO_RW_Controller_Status    at 0 range  1 .. 2;
+      MAC_MII_Receive_Protocol_Engine_Active at 0 range  0 .. 0;
    end record;
 
    --  Ethernet MAC interrupt status register
