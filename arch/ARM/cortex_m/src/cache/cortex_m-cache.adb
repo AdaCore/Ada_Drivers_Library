@@ -1,7 +1,7 @@
 
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2026, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -90,24 +90,24 @@ package body Cortex_M.Cache is
       if not D_Cache_Enabled then
          return;
       end if;
-
       declare
          function To_U32 is new Ada.Unchecked_Conversion
            (System.Address, UInt32);
-
-         Op_Size   : Integer_32 := Integer_32 (Len);
-         Op_Addr   : UInt32 := To_U32 (Start);
-         Reg       : UInt32 with Volatile, Address => Reg_Address;
-
+         Aligned_Addr : constant UInt32 := To_U32 (Start) and not (Data_Cache_Line_Size - 1);
+         Aligned_Size : constant UInt32 := UInt32 (Len) + (To_U32 (Start) - Aligned_Addr);
+         Op_Size      : Integer_32 := Integer_32 (Aligned_Size);
+         --  Op_Size is extended by the number of bytes trimmed from the start,
+         --  ensuring the final partial line is covered
+         Op_Addr      : UInt32 := Aligned_Addr;
+         --  Op_Addr starts at Start rounded down to the nearest cache line
+         Reg          : UInt32 with Volatile, Address => Reg_Address;
       begin
          DSB;
-
          while Op_Size > 0 loop
             Reg     := Op_Addr;
             Op_Addr := Op_Addr + Data_Cache_Line_Size;
             Op_Size := Op_Size - Integer_32 (Data_Cache_Line_Size);
          end loop;
-
          DSB;
          ISB;
       end;
