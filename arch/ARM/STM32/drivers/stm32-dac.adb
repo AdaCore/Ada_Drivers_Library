@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2026, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -115,11 +115,9 @@ package body STM32.DAC is
                when DAC_Resolution_12_Bits =>
                   case Alignment is
                      when Left_Aligned =>
-                        This.DHR12L1.DACC1DHR :=
-                          UInt12 (Value and Max_12bit_Resolution);
+                        This.DHR12L1.DACC1DHR := UInt12 (Value and Max_12bit_Resolution);
                      when Right_Aligned =>
-                        This.DHR12R1.DACC1DHR :=
-                          UInt12 (Value and Max_12bit_Resolution);
+                        This.DHR12R1.DACC1DHR := UInt12 (Value and Max_12bit_Resolution);
                   end case;
                when DAC_Resolution_8_Bits =>
                   This.DHR8R1.DACC1DHR := UInt8 (Value and Max_8bit_Resolution);
@@ -130,11 +128,9 @@ package body STM32.DAC is
                when DAC_Resolution_12_Bits =>
                   case Alignment is
                      when Left_Aligned =>
-                        This.DHR12L2.DACC2DHR :=
-                          UInt12 (Value and Max_12bit_Resolution);
+                        This.DHR12L2.DACC2DHR := UInt12 (Value and Max_12bit_Resolution);
                      when Right_Aligned =>
-                        This.DHR12R2.DACC2DHR :=
-                          UInt12 (Value and Max_12bit_Resolution);
+                        This.DHR12R2.DACC2DHR := UInt12 (Value and Max_12bit_Resolution);
                   end case;
                when DAC_Resolution_8_Bits =>
                   This.DHR8R2.DACC2DHR := UInt8 (Value and Max_8bit_Resolution);
@@ -142,6 +138,35 @@ package body STM32.DAC is
 
       end case;
    end Set_Output;
+
+   -----------------------------
+   -- Set_Dual_Channel_Output --
+   -----------------------------
+
+   procedure Set_Dual_Channel_Output
+     (This           : in out Digital_To_Analog_Converter;
+      Channel_2_Data : UInt16;
+      Channel_1_Data : UInt16;
+      Resolution     : DAC_Resolution;
+      Alignment      : Data_Alignment)
+   is
+   begin
+      --  See RM0385 Rev 8, sections 16.5.9 .. 16.5.11 for these registers
+      case Resolution is
+         when DAC_Resolution_12_Bits =>
+            case Alignment is
+               when Left_Aligned =>
+                  This.DHR12LD.DACC2DHR := UInt12 (Channel_2_Data and Max_12bit_Resolution);
+                  This.DHR12LD.DACC1DHR := UInt12 (Channel_1_Data and Max_12bit_Resolution);
+               when Right_Aligned =>
+                  This.DHR12RD.DACC2DHR := UInt12 (Channel_2_Data and Max_12bit_Resolution);
+                  This.DHR12RD.DACC1DHR := UInt12 (Channel_1_Data and Max_12bit_Resolution);
+            end case;
+         when DAC_Resolution_8_Bits =>
+            This.DHR8RD.DACC2DHR := UInt8 (Channel_2_Data and Max_8bit_Resolution);
+            This.DHR8RD.DACC1DHR := UInt8 (Channel_1_Data and Max_8bit_Resolution);
+      end case;
+   end Set_Dual_Channel_Output;
 
    ------------------------------------
    -- Trigger_Conversion_By_Software --
@@ -194,21 +219,15 @@ package body STM32.DAC is
          when DAC_Resolution_12_Bits =>
             case Alignment is
                when Left_Aligned =>
-                  This.DHR12LD.DACC1DHR :=
-                    UInt12 (Channel_1_Value and Max_12bit_Resolution);
-                  This.DHR12LD.DACC2DHR :=
-                    UInt12 (Channel_2_Value and Max_12bit_Resolution);
+                  This.DHR12LD.DACC1DHR := UInt12 (Channel_1_Value and Max_12bit_Resolution);
+                  This.DHR12LD.DACC2DHR := UInt12 (Channel_2_Value and Max_12bit_Resolution);
                when Right_Aligned =>
-                  This.DHR12RD.DACC1DHR :=
-                    UInt12 (Channel_1_Value and Max_12bit_Resolution);
-                  This.DHR12RD.DACC2DHR :=
-                    UInt12 (Channel_2_Value and Max_12bit_Resolution);
+                  This.DHR12RD.DACC1DHR := UInt12 (Channel_1_Value and Max_12bit_Resolution);
+                  This.DHR12RD.DACC2DHR := UInt12 (Channel_2_Value and Max_12bit_Resolution);
             end case;
          when DAC_Resolution_8_Bits =>
-            This.DHR8RD.DACC1DHR :=
-              UInt8 (Channel_1_Value and Max_8bit_Resolution);
-            This.DHR8RD.DACC2DHR :=
-              UInt8 (Channel_2_Value and Max_8bit_Resolution);
+            This.DHR8RD.DACC1DHR := UInt8 (Channel_1_Value and Max_8bit_Resolution);
+            This.DHR8RD.DACC2DHR := UInt8 (Channel_2_Value and Max_8bit_Resolution);
       end case;
    end Set_Dual_Output_Voltages;
 
@@ -682,10 +701,36 @@ package body STM32.DAC is
                when DAC_Resolution_8_Bits =>
                   Result := This.DHR8R2'Address;
             end case;
-
       end case;
 
       return Result;
    end Data_Address;
+
+   ----------------------------------
+   -- Data_Address_Dual_Conversion --
+   ----------------------------------
+
+   function Data_Address_Dual_Conversion
+     (This       : Digital_To_Analog_Converter;
+      Resolution : DAC_Resolution;
+      Alignment  : Data_Alignment)
+     return Address
+   is
+      Result : Address;
+   begin
+      case Resolution is
+         when DAC_Resolution_12_Bits =>
+            case Alignment is
+               when Left_Aligned =>
+                  Result := This.DHR12LD'Address;
+               when Right_Aligned =>
+                  Result := This.DHR12RD'Address;
+            end case;
+         when DAC_Resolution_8_Bits =>
+            Result := This.DHR8RD'Address;
+      end case;
+
+      return Result;
+   end Data_Address_Dual_Conversion;
 
 end STM32.DAC;
