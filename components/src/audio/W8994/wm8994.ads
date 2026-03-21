@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2024, AdaCore                     --
+--                     Copyright (C) 2015-2026, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -38,10 +38,13 @@ with HAL.Time;
 
 package WM8994 is
 
-   --  TODO: see page 144 Datasheet WM8994_Rev4.6, from Cirrus Logic regarding
-   --  "For suppression of pop noise ..."
+   type Audio_CODEC
+     (Port     : not null Any_I2C_Port;
+      I2C_Addr : UInt10;
+      Time     : not null HAL.Time.Any_Delays)
+   is tagged limited private;
 
-   type Output_Device is
+   type Analog_Outputs is
      (No_Output,
       Speaker,
       Headphone,
@@ -52,8 +55,6 @@ package WM8994 is
      (No_Input,
       Microphone,
       Input_Line);
-
-   WM8994_ID : constant := 16#8994#;
 
    type Audio_Frequency is
      (Audio_Freq_8kHz,
@@ -88,7 +89,18 @@ package WM8994 is
       Audio_Freq_88kHz => 88_200,
       Audio_Freq_96kHz => 96_000);
 
-   type Mute is
+   Max_Volume : constant := 16#3F#;
+
+   subtype Volume_Level is UInt16 range 0 .. Max_Volume;
+
+   procedure Initialize
+     (This      : in out Audio_CODEC;
+      Input     : Input_Device;
+      Output    : Analog_Outputs;
+      Volume    : Volume_Level;
+      Frequency : Audio_Frequency);
+
+   type Mute_Modes is
      (Mute_On,
       Mute_Off);
 
@@ -103,48 +115,33 @@ package WM8994 is
       --  resuming from this mode, the codec is set to default configuration
       --  so users should re-initialize the codec.
 
-   Max_Volume : constant := 16#3F#;
+   WM8994_ID : constant := 16#8994#;
 
-   subtype Volume_Level is UInt16 range 0 .. Max_Volume;
+   function Chip_ID (This : in out Audio_CODEC) return UInt16;
 
-   type WM8994_Device
-     (Port     : not null Any_I2C_Port;
-      I2C_Addr : UInt10;
-      Time     : not null HAL.Time.Any_Delays)
-   is tagged limited private;
+   procedure Play (This : in out Audio_CODEC);
 
-   procedure Initialize
-     (This      : in out WM8994_Device;
-      Input     : Input_Device;
-      Output    : Output_Device;
-      Volume    : Volume_Level;
-      Frequency : Audio_Frequency);
+   procedure Pause (This : in out Audio_CODEC);
 
-   function Chip_ID (This : in out WM8994_Device) return UInt16;
+   procedure Resume (This : in out Audio_CODEC);
 
-   procedure Play (This : in out WM8994_Device);
+   procedure Stop (This : in out Audio_CODEC; Cmd : Stop_Mode);
 
-   procedure Pause (This : in out WM8994_Device);
+   procedure Set_Volume (This : in out Audio_CODEC; Volume : Volume_Level);
 
-   procedure Resume (This : in out WM8994_Device);
+   procedure Set_Mute (This : in out Audio_CODEC; Cmd : Mute_Modes);
 
-   procedure Stop (This : in out WM8994_Device; Cmd : Stop_Mode);
+   procedure Set_Output_Mode (This : in out Audio_CODEC;
+                              Device : Analog_Outputs);
 
-   procedure Set_Volume (This : in out WM8994_Device; Volume : Volume_Level);
-
-   procedure Set_Mute (This : in out WM8994_Device; Cmd : Mute);
-
-   procedure Set_Output_Mode (This : in out WM8994_Device;
-                              Device : Output_Device);
-
-   procedure Set_Frequency (This : in out WM8994_Device;
+   procedure Set_Frequency (This : in out Audio_CODEC;
                             Freq : Audio_Frequency);
 
-   procedure Reset (This : in out WM8994_Device);
+   procedure Reset (This : in out Audio_CODEC);
 
 private
 
-   type WM8994_Device
+   type Audio_CODEC
      (Port     : not null Any_I2C_Port;
       I2C_Addr : UInt10;
       Time     : not null HAL.Time.Any_Delays)
