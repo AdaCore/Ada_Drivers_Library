@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2026, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -51,7 +51,9 @@ package STM32.DAC is
 
    type DAC_Channel is (Channel_1, Channel_2);
 
-   --  Note that Channel 1 is tied to GPIO pin PA4, and Channel 2 to PA5
+   --  Note that Channel 1 is tied to GPIO pin PA4, and Channel 2 to PA5.
+   --  Note that Channel 1 is mapped to DMA1 Stream 5 channel 7.
+   --  Note that Channel 2 is mapped on DMA1 Stream 6 channel 7.
 
    procedure Enable
      (This    : in out Digital_To_Analog_Converter;
@@ -88,6 +90,8 @@ package STM32.DAC is
    Max_8bit_Resolution  : constant := 16#00FF#;
 
    type Data_Alignment is (Left_Aligned, Right_Aligned);
+   --  These only apply when using 12-bit resolution. For 8-bit resolution the
+   --  alignment is always right-aligned.
 
    procedure Set_Output
      (This       : in out Digital_To_Analog_Converter;
@@ -101,6 +105,18 @@ package STM32.DAC is
    --  The output voltage = ((Value / Max_nbit_Counts) * VRef+), where VRef+ is
    --  the reference input voltage and the 'n' of Max_nbit_Counts is either 12
    --  or 8.
+
+   procedure Set_Dual_Channel_Output
+     (This           : in out Digital_To_Analog_Converter;
+      Channel_2_Data : UInt16;
+      Channel_1_Data : UInt16;
+      Resolution     : DAC_Resolution;
+      Alignment      : Data_Alignment);
+   --  This routine writes the 32-bit value, composed from the two 16-bit
+   --  values, with the necessary layout (8/12left-right alignment) to
+   --  the appropriate output register for conversion on both channels
+   --  simultaneously. DMA is the alternative to software calling this
+   --  procedure.
 
    procedure Trigger_Conversion_By_Software
      (This    : in out Digital_To_Analog_Converter;
@@ -328,7 +344,17 @@ package STM32.DAC is
       Alignment  : Data_Alignment)
      return Address;
    --  Returns the address of the Data Holding register within This, for the
-   --  specified Channel, at the specified Resolution and Alignment.
+   --  specified Channel, given the specified Resolution and Alignment.
+   --
+   --  This function is stricly for use with DMA, all others use the API above.
+
+   function Data_Address_Dual_Conversion
+     (This       : Digital_To_Analog_Converter;
+      Resolution : DAC_Resolution;
+      Alignment  : Data_Alignment)
+     return Address;
+   --  Returns the address of the Data Holding register within This, for the
+   --  dual conversion case, given the specified Resolution and Alignment.
    --
    --  This function is stricly for use with DMA, all others use the API above.
 
