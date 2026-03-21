@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2024, AdaCore                     --
+--                     Copyright (C) 2015-2026, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -28,6 +28,7 @@
 --   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
 ------------------------------------------------------------------------------
+
 with WM8994.IO; use WM8994.IO;
 
 package body WM8994 is
@@ -43,9 +44,9 @@ package body WM8994 is
    ----------------
 
    procedure Initialize
-     (This      : in out WM8994_Device;
+     (This      : in out Audio_CODEC;
       Input     : Input_Device;
-      Output    : Output_Device;
+      Output    : Analog_Outputs;
       Volume    : Volume_Level;
       Frequency : Audio_Frequency)
    is
@@ -260,7 +261,7 @@ package body WM8994 is
    -- Chip_ID --
    -------------
 
-   function Chip_ID (This : in out WM8994_Device) return UInt16 is
+   function Chip_ID (This : in out Audio_CODEC) return UInt16 is
    begin
       return I2C_Read (This, WM8994_CHIPID_ADDR);
    end Chip_ID;
@@ -269,7 +270,7 @@ package body WM8994 is
    -- Play --
    ----------
 
-   procedure Play (This : in out WM8994_Device) is
+   procedure Play (This : in out Audio_CODEC) is
    begin
       This.Set_Mute (Mute_Off);
    end Play;
@@ -278,7 +279,7 @@ package body WM8994 is
    -- Pause --
    -----------
 
-   procedure Pause (This : in out WM8994_Device) is
+   procedure Pause (This : in out Audio_CODEC) is
    begin
       --  Pause the audio playing
       This.Set_Mute (Mute_On);
@@ -291,7 +292,7 @@ package body WM8994 is
    -- Resume --
    ------------
 
-   procedure Resume (This : in out WM8994_Device) is
+   procedure Resume (This : in out Audio_CODEC) is
    begin
       This.Set_Mute (Mute_Off);
    end Resume;
@@ -300,7 +301,7 @@ package body WM8994 is
    -- Stop --
    ----------
 
-   procedure Stop (This : in out WM8994_Device; Cmd : Stop_Mode) is
+   procedure Stop (This : in out Audio_CODEC; Cmd : Stop_Mode) is
    begin
       if Output_Enabled then
          --  Mute the output first
@@ -337,7 +338,7 @@ package body WM8994 is
    ----------------
 
    procedure Set_Volume
-     (This   : in out WM8994_Device;
+     (This   : in out Audio_CODEC;
       Volume : Volume_Level)
    is
    begin
@@ -365,7 +366,7 @@ package body WM8994 is
    -- Set_Mute --
    --------------
 
-   procedure Set_Mute (This : in out WM8994_Device; Cmd : Mute) is
+   procedure Set_Mute (This : in out Audio_CODEC; Cmd : Mute_Modes) is
    begin
       if Output_Enabled then
          case Cmd is
@@ -388,8 +389,8 @@ package body WM8994 is
    ---------------------
 
    procedure Set_Output_Mode
-     (This   : in out WM8994_Device;
-      Device : Output_Device)
+     (This   : in out Audio_CODEC;
+      Device : Analog_Outputs)
    is
    begin
       case Device is
@@ -446,7 +447,7 @@ package body WM8994 is
    -------------------
 
    procedure Set_Frequency
-     (This  : in out WM8994_Device;
+     (This  : in out Audio_CODEC;
       Freq : Audio_Frequency)
    is
    begin
@@ -508,7 +509,7 @@ package body WM8994 is
    -- Reset --
    -----------
 
-   procedure Reset (This : in out WM8994_Device) is
+   procedure Reset (This : in out Audio_CODEC) is
    begin
       I2C_Write (This, WM8994_SW_Reset, 16#0000#);
       Output_Enabled := False;
