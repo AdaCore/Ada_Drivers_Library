@@ -206,4 +206,44 @@ package STM32.Board is
    --  for polling the button, and necessary for having the button generate
    --  interrupts.
 
+  --------------------------------------
+  -- Ethernet Physical Layer I/O Pins --
+  --------------------------------------
+
+   --  Serial Management Interface (SMI) comm pins for connecting the MAC with
+   --  the PHY for RMII. See RM0385 Rev 8, pg 1533.
+   RMII_REF_CLK : GPIO_Point renames PA1;
+   RMII_MDIO    : GPIO_Point renames PA2;
+   RMII_MDC     : GPIO_Point renames PC1;
+
+   --  RMII pins. See RM0385 Rev 8, pp. 1536 and 1538 for overview, and the
+   --  actual board's User Manual (eg, UM1907 STM32F746G-DISCO Appendix A:
+   --  IO Assignment) for the pins.
+   RMII_CRS_DV  : GPIO_Point renames PA7;
+   RMII_RXD0    : GPIO_Point renames PC4;
+   RMII_RXD1    : GPIO_Point renames PC5;
+   RMII_RXER    : GPIO_Point renames PG2;
+   RMII_TX_EN   : GPIO_Point renames PG11;
+   RMII_TXD0    : GPIO_Point renames PG13;
+   RMII_TXD1    : GPIO_Point renames PG14;
+
+   --  Note: On this board, these are the only pins that can perform these
+   --  functions.
+
+   All_RMII_Pins : constant GPIO_Points := (RMII_REF_CLK,
+                                            RMII_MDIO,
+                                            RMII_CRS_DV,
+                                            RMII_MDC,
+                                            RMII_RXD0,
+                                            RMII_RXD1,
+                                            RMII_RXER,
+                                            RMII_TX_EN,
+                                            RMII_TXD0,
+                                            RMII_TXD1);
+
+   --  These need to be two separate routines due to hardware initialization
+   --  issues with the Ethernet device.
+   procedure Enable_RMII_Pins_Clocks;
+   procedure Configure_RMII_Pins;
+
 end STM32.Board;
