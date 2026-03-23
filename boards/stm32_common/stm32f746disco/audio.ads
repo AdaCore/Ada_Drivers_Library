@@ -65,17 +65,15 @@ package Audio is
    --  called, before any others. The routines for setting the volume and
    --  the output frequency are optional.
 
-   procedure Start_Playing
+   procedure Play
      (This   : in out WM8994_Audio_CODEC;
       Buffer : Audio_Buffer);
-   --  Start playing, for the first time, content from the specified buffer.
-   --  This routine must be called, perhaps just once but more than once if the
-   --  other routines below are called. The effect is to tell the underlying
-   --  WM8994 codec where the buffer to be played is located, and cause the
-   --  codec to start playing the contents.
+   --  Start playing content from the specified buffer. The effect is to tell
+   --  the underlying WM8994 CODEC where the buffer to be played is located,
+   --  and cause the CODEC to start playing the contents.
    --
    --  NB: playing continues after the call returns. An additional mechanism,
-   --  outside this package, updates the content of the buffer while the codec
+   --  outside this package, updates the content of the buffer while the CODEC
    --  is playing it. That update/play process continues until either there is
    --  no more music to be played, or Stop or Pause is called.
 
