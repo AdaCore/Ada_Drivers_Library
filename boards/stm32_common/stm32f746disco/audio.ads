@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2016-2024, AdaCore                        --
+--                  Copyright (C) 2016-2026, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -41,11 +41,11 @@ with WM8994;
 
 package Audio is
 
-   type WM8994_Audio_Device (Port : not null Any_I2C_Port) is
+   type WM8994_Audio_CODEC (Port : not null Any_I2C_Port) is
      tagged limited private;
 
-   type Audio_Output_Device is new WM8994.Output_Device with
-     Static_Predicate => Audio_Output_Device in
+   type Audio_Outputs is new WM8994.Analog_Outputs with
+     Static_Predicate => Audio_Outputs in
        Headphone | Speaker | Both;
 
    type Audio_Frequency is new WM8994.Audio_Frequency;
@@ -56,17 +56,17 @@ package Audio is
      with Component_Size => 16, Alignment => 2;
 
    procedure Initialize
-     (This      : in out WM8994_Audio_Device;
+     (This      : in out WM8994_Audio_CODEC;
       Volume    : Audio_Volume;
       Frequency : Audio_Frequency;
-      Sink      : Audio_Output_Device);
+      Sink      : Audio_Outputs);
    --  This routine initializes the hardware and configures the volume,
    --  sampling frequency, and output device (the sink). This routine must be
    --  called, before any others. The routines for setting the volume and
    --  the output frequency are optional.
 
    procedure Start_Playing
-     (This   : in out WM8994_Audio_Device;
+     (This   : in out WM8994_Audio_CODEC;
       Buffer : Audio_Buffer);
    --  Start playing, for the first time, content from the specified buffer.
    --  This routine must be called, perhaps just once but more than once if the
@@ -80,40 +80,40 @@ package Audio is
    --  no more music to be played, or Stop or Pause is called.
 
    procedure Pause
-     (This : in out WM8994_Audio_Device);
+     (This : in out WM8994_Audio_CODEC);
    --  After calling Pause, only Resume should be called for resuming play (do
    --  not call Start_Playing again).
 
    procedure Resume
-     (This : in out WM8994_Audio_Device);
+     (This : in out WM8994_Audio_CODEC);
    --  Procedure Resume should be called only when the audio is playing or
    --  paused (not stopped).
 
    procedure Stop
-     (This : in out WM8994_Audio_Device);
+     (This : in out WM8994_Audio_CODEC);
    --  Stops the hardware and update/play process. Once called, you must call
    --  Start_Playing again if you want to restart the output.
 
    procedure Set_Volume
-     (This   : in out WM8994_Audio_Device;
+     (This   : in out WM8994_Audio_CODEC;
       Volume : Audio_Volume);
 
    procedure Set_Frequency
-     (This      : in out WM8994_Audio_Device;
+     (This      : in out WM8994_Audio_CODEC;
       Frequency : Audio_Frequency);
 
 private
 
    Audio_I2C_Addr  : constant I2C_Address := 16#34#;
 
-   type WM8994_Audio_Device
+   type WM8994_Audio_CODEC
      (Port : not null Any_I2C_Port)
    is tagged limited record
-      Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
-      Output : WM8994.Output_Device := WM8994.No_Output;
-      --  The initial value of Output is overwritten by Initialize. The value
+      Device : WM8994.Audio_CODEC (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
+      Sink   : WM8994.Analog_Outputs := WM8994.No_Output;
+      --  The initial value of Sink is overwritten by Initialize. The value
       --  No_Output will trigger a C_E if ever referenced, so it is used as a
-      --  check that Initialize has been called. We need the component Output
+      --  check that Initialize has been called. We need the component Sink
       --  itself for the sake of a clean parameter profile for Set_Frequency,
       --  otherwise clients would have to pass another parameter to specify
       --  the output device selection again (after having done so when calling
