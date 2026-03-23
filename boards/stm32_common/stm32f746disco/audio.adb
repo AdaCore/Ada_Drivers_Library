@@ -161,7 +161,7 @@ package body Audio is
             --  HSE/PLLM = 1MHz = PLLI2S VCO Input
             Configure_SAI_I2S_Clock
               (Audio_SAI,
-               PLLI2SN    => 429,  --  VCO Sink = 429MHz
+               PLLI2SN    => 429,  --  VCO Output = 429MHz
                PLLI2SQ    => 2,    --  SAI Clk(First level) = 214.5 MHz
                PLLI2SDIVQ => 19);  --  I2S Clk = 215.4 / 19 = 11.289 MHz
 
@@ -169,11 +169,11 @@ package body Audio is
               Audio_Freq_48kHz | Audio_Freq_96kHz =>
             Configure_SAI_I2S_Clock
               (Audio_SAI,
-               PLLI2SN    => 344,  --  VCO Sink = 344MHz
+               PLLI2SN    => 344,  --  VCO Output = 344MHz
                PLLI2SQ    => 7,    --  SAI Clk(First level) = 49.142 MHz
                PLLI2SDIVQ => 1);   --  I2S Clk = 49.142 MHz
 
-         when Audio_Freq_12khz | Audio_Freq_24khz | Audio_Freq_88khz =>
+         when Audio_Freq_12kHz | Audio_Freq_24kHz | Audio_Freq_88kHz =>
             raise Program_Error with "freq not yet implemented";
             --  FIXME!
       end case;
@@ -297,7 +297,7 @@ package body Audio is
    -- Start_Playing --
    -------------------
 
-   procedure Start_Playing
+   procedure Play
      (This   : in out WM8994_Audio_CODEC;
       Buffer : Audio_Buffer)
    is
@@ -319,7 +319,7 @@ package body Audio is
       if not Enabled (Audio_SAI, SAI_Out_Block) then
          Enable (Audio_SAI, SAI_Out_Block);
       end if;
-   end Start_Playing;
+   end Play;
 
    -----------
    -- Pause --
