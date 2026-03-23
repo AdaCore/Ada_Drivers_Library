@@ -156,7 +156,7 @@ package STM32.Board is
    Audio_DMA_Out_Stream    : DMA_Stream_Selector renames Stream_4;
    Audio_DMA_Out_Channel   : DMA_Channel_Selector renames Channel_3;
 
-   Audio_Device : aliased Audio.WM8994_Audio_Device (Audio_I2C'Access);
+   Audio_Device : aliased Audio.WM8994_Audio_CODEC (Audio_I2C'Access);
 
    --------------------------
    -- micro SD card reader --

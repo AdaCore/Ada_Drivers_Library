@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                  Copyright (C) 2016-2026, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -61,7 +61,7 @@ package body Audio is
    procedure Initialize_Audio_DMA;
    --  Configure the DMA channel to the SAI peripheral
 
-   procedure Initialize_SAI_Out (Freq : Audio_Frequency; Sink : Audio_Output_Device);
+   procedure Initialize_SAI_Out (Freq : Audio_Frequency; Sink : Audio_Outputs);
 
    procedure Initialize_Audio_I2C;
    --  Initialize the I2C Port to send commands to the driver
@@ -74,10 +74,10 @@ package body Audio is
    ----------------
 
    procedure Initialize
-     (This      : in out WM8994_Audio_Device;
+     (This      : in out WM8994_Audio_CODEC;
       Volume    : Audio_Volume;
       Frequency : Audio_Frequency;
-      Sink      : Audio_Output_Device)
+      Sink      : Audio_Outputs)
    is
    begin
       STM32.SAI.Deinitialize (Audio_SAI, SAI_Out_Block);
@@ -96,11 +96,11 @@ package body Audio is
       This.Device.Reset;
       This.Device.Initialize
         (Input     => WM8994.No_Input,
-         Output    => WM8994.Output_Device (Sink),
+         Output    => WM8994.Analog_Outputs (Sink),
          Volume    => As_Device_Volume (Volume),
          Frequency => WM8994.Audio_Frequency (Frequency));
 
-      This.Output := WM8994.Output_Device (Sink);
+      This.Sink := WM8994.Analog_Outputs (Sink);
       --  For sake of any individual calls to Set_Frequency, assuming the STM
       --  code is correct that we also need to set the clocks when setting the
       --  frequency
@@ -111,7 +111,7 @@ package body Audio is
    ----------------
 
    procedure Set_Volume
-     (This   : in out WM8994_Audio_Device;
+     (This   : in out WM8994_Audio_CODEC;
       Volume : Audio_Volume)
    is
    begin
@@ -123,12 +123,12 @@ package body Audio is
    -------------------
 
    procedure Set_Frequency
-     (This      : in out WM8994_Audio_Device;
+     (This      : in out WM8994_Audio_CODEC;
       Frequency : Audio_Frequency)
    is
-      use type WM8994.Output_Device;
+      use type WM8994.Analog_Outputs;
    begin
-      if This.Output = WM8994.No_Output then
+      if This.Sink = WM8994.No_Output then
          raise Constraint_Error with "No prior call to Initialize";
       end if;
 
@@ -139,7 +139,7 @@ package body Audio is
       --  clock configuration too.
       Set_Audio_Clock (Frequency);
       STM32.SAI.Disable (Audio_SAI, SAI_Out_Block);
-      Initialize_SAI_Out (Frequency, Audio_Output_Device (This.Output));
+      Initialize_SAI_Out (Frequency, Audio_Outputs (This.Sink));
       STM32.SAI.Enable (Audio_SAI, SAI_Out_Block);
    end Set_Frequency;
 
@@ -161,7 +161,7 @@ package body Audio is
             --  HSE/PLLM = 1MHz = PLLI2S VCO Input
             Configure_SAI_I2S_Clock
               (Audio_SAI,
-               PLLI2SN    => 429,  --  VCO Output = 429MHz
+               PLLI2SN    => 429,  --  VCO Sink = 429MHz
                PLLI2SQ    => 2,    --  SAI Clk(First level) = 214.5 MHz
                PLLI2SDIVQ => 19);  --  I2S Clk = 215.4 / 19 = 11.289 MHz
 
@@ -169,7 +169,7 @@ package body Audio is
               Audio_Freq_48kHz | Audio_Freq_96kHz =>
             Configure_SAI_I2S_Clock
               (Audio_SAI,
-               PLLI2SN    => 344,  --  VCO Output = 344MHz
+               PLLI2SN    => 344,  --  VCO Sink = 344MHz
                PLLI2SQ    => 7,    --  SAI Clk(First level) = 49.142 MHz
                PLLI2SDIVQ => 1);   --  I2S Clk = 49.142 MHz
 
@@ -229,7 +229,7 @@ package body Audio is
 
    procedure Initialize_SAI_Out
      (Freq : Audio_Frequency;
-      Sink : Audio_Output_Device)
+      Sink : Audio_Outputs)
    is
       Active_Slots : SAI_Slots;
    begin
@@ -298,7 +298,7 @@ package body Audio is
    -------------------
 
    procedure Start_Playing
-     (This   : in out WM8994_Audio_Device;
+     (This   : in out WM8994_Audio_CODEC;
       Buffer : Audio_Buffer)
    is
    begin
@@ -325,7 +325,7 @@ package body Audio is
    -- Pause --
    -----------
 
-   procedure Pause (This : in out WM8994_Audio_Device) is
+   procedure Pause (This : in out WM8994_Audio_CODEC) is
    begin
       This.Device.Pause;
       DMA_Pause (Audio_SAI, SAI_Out_Block);
@@ -335,7 +335,7 @@ package body Audio is
    -- Resume --
    ------------
 
-   procedure Resume (This : in out WM8994_Audio_Device) is
+   procedure Resume (This : in out WM8994_Audio_CODEC) is
    begin
       This.Device.Resume;
       DMA_Resume (Audio_SAI, SAI_Out_Block);
@@ -345,7 +345,7 @@ package body Audio is
    -- Stop --
    ----------
 
-   procedure Stop (This : in out WM8994_Audio_Device) is
+   procedure Stop (This : in out WM8994_Audio_CODEC) is
    begin
       This.Device.Stop (WM8994.Stop_Power_Down_Sw);
       DMA_Stop (Audio_SAI, SAI_Out_Block);
