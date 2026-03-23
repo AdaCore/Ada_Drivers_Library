@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2026, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -102,5 +102,31 @@ package body STM32.Board is
       Enable_Clock (User_Button_Point);
       Configure_IO (User_Button_Point, (Mode_In, Resistors => Floating));
    end Configure_User_Button_GPIO;
+
+   -----------------------------
+   -- Enable_RMII_Pins_Clocks --
+   -----------------------------
+
+   procedure Enable_RMII_Pins_Clocks is
+   begin
+      Enable_Clock (GPIO_A);
+      Enable_Clock (GPIO_C);
+      Enable_Clock (GPIO_G);
+   end Enable_RMII_Pins_Clocks;
+
+   -------------------------
+   -- Configure_RMII_Pins --
+   -------------------------
+
+   procedure Configure_RMII_Pins is
+   begin
+      Configure_IO (All_RMII_Pins,
+                    Config => (Mode           => Mode_AF,
+                               Resistors      => Floating,
+                               AF_Output_Type => Push_Pull,
+                               AF_Speed       => Speed_100MHz,
+                               AF             => GPIO_AF_ETH_11));
+      --  All are AF_11, per RM0385 Rev 8, pg 1531
+   end Configure_RMII_Pins;
 
 end STM32.Board;
