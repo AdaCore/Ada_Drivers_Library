@@ -32,12 +32,12 @@
 --   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
-with HAL;       use HAL;
-with HAL.I2C;   use HAL.I2C;
-with Ravenscar_Time;
+with HAL;        use HAL;
+with HAL.I2C;    use HAL.I2C;
 with Interfaces; use Interfaces;
-
 with WM8994;
+
+private with Ravenscar_Time;
 
 package Audio is
 
