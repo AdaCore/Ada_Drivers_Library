@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2026, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -141,9 +141,7 @@ package body STM32.SDRAM is
       SDRAM_Conf      : FMC_SDRAM_Init_Config;
       SDCLK           : constant Unsigned_32 :=
         Unsigned_32 (STM32.Device.System_Clock_Frequencies.SYSCLK / 2);
-      SDPeriod_In_ns  : constant Unsigned_32 :=
-                          1_000_000_000 / SDCLK;
-      Refresh_Delay   : Unsigned_32;
+      SDPeriod_In_Ns  : constant Unsigned_32 := 1_000_000_000 / SDCLK;
 
    begin
       if Initialized then
@@ -171,22 +169,19 @@ package body STM32.SDRAM is
       --  100 MHz of SD clock frequency (200MHz / 2)
       --  1 Clock cycle = 1 / 100MHz = 10ns
 
-      Refresh_Delay :=
-        (SDRAM_Min_Delay_In_ns - SDPeriod_In_ns + 1) / SDPeriod_In_ns;
-
       Timing_Conf :=
         (
          --  2 Clock cycles for Load to Active delay
          LoadToActiveDelay    => 2,
 
-         --  min = 60ns: 6 * 10.0
-         ExitSelfRefreshDelay => FMC_SDRAM_Timing (Refresh_Delay),
-
-         --  in range [42ns, 120k ns] => using 4 * 11.1 ns
-         SelfRefreshTime      => 4,
-
-         --  min = 60ns
-         RowCycleDelay        => FMC_SDRAM_Timing (Refresh_Delay),
+         --  Each timing parameter is computed as a cycle count by dividing the
+         --  required minimum time (in ns) by the SDCLK period, using ceiling
+         --  division to ensure the minimum is always satisfied regardless of
+         --  clock frequency. The timing constants are defined in STM32.Board
+         --  and reflect the IS42S32400F SDRAM datasheet specifications.
+         ExitSelfRefreshDelay => FMC_SDRAM_Timing ((SDRAM_TXSR_In_Ns + SDPeriod_In_Ns - 1) / SDPeriod_In_Ns),
+         SelfRefreshTime      => FMC_SDRAM_Timing ((SDRAM_TRAS_In_Ns + SDPeriod_In_Ns - 1) / SDPeriod_In_Ns),
+         RowCycleDelay        => FMC_SDRAM_Timing ((SDRAM_TRC_In_Ns  + SDPeriod_In_Ns - 1) / SDPeriod_In_Ns),
 
          --  min = 20ns
          WriteRecoveryTime    => 2,
@@ -241,8 +236,7 @@ package body STM32.SDRAM is
    begin
       Initialize;
       Rounded_Size := Amount + Align;
-      Rounded_Size :=
-        Rounded_Size - Rounded_Size rem Align;
+      Rounded_Size := Rounded_Size - Rounded_Size rem Align;
 
       G_Base_Addr := G_Base_Addr + Rounded_Size;
 
