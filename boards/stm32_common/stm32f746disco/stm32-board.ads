@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2018, AdaCore                         --
+--                 Copyright (C) 2015-2026, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -116,7 +116,9 @@ package STM32.Board is
    SDRAM_Read_Pipe       : constant STM32.FMC.FMC_SDRAM_Read_Pipe_Delay :=
                              STM32.FMC.FMC_ReadPipe_Delay_0;
    SDRAM_Refresh_Cnt     : constant := 1539;
-   SDRAM_Min_Delay_In_ns : constant := 60;
+   SDRAM_TRAS_In_Ns      : constant := 42;  --  IS42S32400F min self-refresh time
+   SDRAM_TRC_In_Ns       : constant := 60;  --  IS42S32400F min row cycle time
+   SDRAM_TXSR_In_Ns      : constant := 70;  --  IS42S32400F min exit self-refresh delay
 
    ---------
    -- I2C --
