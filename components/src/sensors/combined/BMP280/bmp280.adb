@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2025, AdaCore                             --
+--                  Copyright (C) 2026, AdaCore                             --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -32,14 +32,14 @@
 package body BMP280 is
 
    function Time_Standby_To_UInt3
-     (Time_Standby : Time_Standby_Type) return UInt3;
+     (Time_Standby : Standby_Milliseconds) return UInt3;
 
    ----------------
    -- Initialize --
    ----------------
 
    procedure Initialize
-     (This  : in out BMP280_Device;
+     (This  : in out BMP280_Pressure_Sensor;
       CS    : Any_GPIO_Point;
       SPI   : Any_SPI_Port;
       Error : out Boolean) is
@@ -77,7 +77,7 @@ package body BMP280 is
    -- CS_Low --
    ------------
 
-   procedure CS_Low (This : BMP280_Device) is
+   procedure CS_Low (This : BMP280_Pressure_Sensor) is
    begin
       if This.Holder.CS /= null then
          This.Holder.CS.Clear;
@@ -88,7 +88,7 @@ package body BMP280 is
    -- CS_High --
    -------------
 
-   procedure CS_High (This : BMP280_Device) is
+   procedure CS_High (This : BMP280_Pressure_Sensor) is
    begin
       if This.Holder.CS /= null then
          This.Holder.CS.Set;
@@ -100,7 +100,7 @@ package body BMP280 is
    -------------------
 
    function Read_Register
-     (This     : BMP280_Device;
+     (This     : BMP280_Pressure_Sensor;
       Register : Register_Name)
       return UInt8
    is
@@ -131,7 +131,7 @@ package body BMP280 is
    --------------------
 
    procedure Write_Register
-     (This     : BMP280_Device;
+     (This     : BMP280_Pressure_Sensor;
       Register : Register_Name;
       Data     : UInt8)
    is
@@ -161,7 +161,7 @@ package body BMP280 is
    -------------------
 
    function Read_Register
-     (This : BMP280_Device;
+     (This : BMP280_Pressure_Sensor;
       Msb  : Register_Name;
       Lsb  : Register_Name)
       return UInt16 is
@@ -175,7 +175,7 @@ package body BMP280 is
    -------------------
 
    function Read_Register
-     (This : BMP280_Device;
+     (This : BMP280_Pressure_Sensor;
       Msb  : Register_Name;
       Lsb  : Register_Name)
       return Interfaces.Integer_16
@@ -190,7 +190,7 @@ package body BMP280 is
    -- Read_Trim_Registers --
    -------------------------
 
-   procedure Read_Trim_Registers (This : in out BMP280_Device) is
+   procedure Read_Trim_Registers (This : in out BMP280_Pressure_Sensor) is
    begin
       This.Holder.Dig_T1 := Integer_32
         (UInt16'(Read_Register (This, dig_T1_msb, dig_T1_lsb)));
@@ -234,18 +234,18 @@ package body BMP280 is
    -------------------
 
    function Read_Register
-     (This      : BMP280_Device;
-      Precision : Precision_Type;
-      Msb       : Register_Name;
-      Lsb       : Register_Name;
-      Xlsb      : Register_Name)
+     (This  : BMP280_Pressure_Sensor;
+      Resol : Resolution;
+      Msb   : Register_Name;
+      Lsb   : Register_Name;
+      Xlsb  : Register_Name)
       return Interfaces.Integer_32
    is
       Xlsb_Data : UInt8 := Read_Register (This, Xlsb);
       Sb_Data   : constant UInt32 := UInt32
         (UInt16'(Read_Register (This => This, Msb => Msb, Lsb => Lsb)));
    begin
-      case Precision is
+      case Resol is
          when Skipped | Ultra_Low_Power =>
             null;
 
@@ -270,7 +270,7 @@ package body BMP280 is
    -- Get_Chip_ID --
    -----------------
 
-   function Get_Chip_ID (This : BMP280_Device) return Chip_ID is
+   function Get_Chip_ID (This : BMP280_Pressure_Sensor) return Chip_ID is
    begin
       return Chip_ID (Read_Register (This, id));
    end Get_Chip_ID;
@@ -279,7 +279,7 @@ package body BMP280 is
    -- Reset --
    -----------
 
-   procedure Reset (This : BMP280_Device) is
+   procedure Reset (This : BMP280_Pressure_Sensor) is
    begin
       Write_Register
         (This     => This,
@@ -291,10 +291,10 @@ package body BMP280 is
    -- Get_Status --
    ----------------
 
-   function Get_Status (This : BMP280_Device) return Status_Type
+   function Get_Status (This : BMP280_Pressure_Sensor) return Device_Status
    is
       Data     : UInt8;
-      Register : Status_Type with Import, Address =>  Data'Address;
+      Register : Device_Status with Import, Address => Data'Address;
    begin
       Data := Read_Register (This, status);
       return Register;
@@ -304,7 +304,7 @@ package body BMP280 is
    -- Is_Measuring_Set --
    ----------------------
 
-   function Is_Measuring_Set (Status : Status_Type) return Boolean is
+   function Is_Measuring_Set (Status : Device_Status) return Boolean is
    begin
       return Status.Measuring = 1;
    end Is_Measuring_Set;
@@ -313,7 +313,7 @@ package body BMP280 is
    -- Is_Im_Update_Set --
    ----------------------
 
-   function Is_Im_Update_Set (Status : Status_Type) return Boolean is
+   function Is_Im_Update_Set (Status : Device_Status) return Boolean is
    begin
       return Status.Im_Update = 1;
    end Is_Im_Update_Set;
@@ -323,8 +323,8 @@ package body BMP280 is
    --------------------
 
    procedure Set_Power_Mode
-     (This       : BMP280_Device;
-      Power_Mode : Power_Mode_Type)
+     (This       : BMP280_Pressure_Sensor;
+      Power_Mode : Power_Modes)
    is
       Data     : UInt8;
       Register : Ctrl_Meas_Register with Import, Address => Data'Address;
@@ -339,14 +339,14 @@ package body BMP280 is
    ------------------------
 
    procedure Set_Temp_Precision
-     (This      : BMP280_Device;
-      Precision : Precision_Type)
+     (This  : BMP280_Pressure_Sensor;
+      Value : Resolution)
    is
       Data     : UInt8;
       Register : Ctrl_Meas_Register with Import, Address => Data'Address;
    begin
       Data := Read_Register (This, ctrl_meas);
-      Register.osrs_t := Precision;
+      Register.osrs_t := Value;
       Write_Register (This, ctrl_meas, Data);
    end Set_Temp_Precision;
 
@@ -355,14 +355,14 @@ package body BMP280 is
    -------------------------
 
    procedure Set_Press_Precision
-     (This      : BMP280_Device;
-      Precision : Precision_Type)
+     (This  : BMP280_Pressure_Sensor;
+      Value : Resolution)
    is
       Data     : UInt8;
       Register : Ctrl_Meas_Register with Import, Address => Data'Address;
    begin
       Data := Read_Register (This, ctrl_meas);
-      Register.osrs_p := Precision;
+      Register.osrs_p := Value;
       Write_Register (This, ctrl_meas, Data);
    end Set_Press_Precision;
 
@@ -371,11 +371,11 @@ package body BMP280 is
    ----------------------
 
    procedure Set_Time_Standby
-     (This         : BMP280_Device;
-      Time_Standby : Time_Standby_Type)
+     (This         : BMP280_Pressure_Sensor;
+      Time_Standby : Standby_Milliseconds)
    is
-      Data         : UInt8;
-      Register     : Config_Register with Import, Address => Data'Address;
+      Data     : UInt8;
+      Register : Config_Register with Import, Address => Data'Address;
    begin
       Data := Read_Register (This, config);
       Register.t_sb := Time_Standby_To_UInt3 (Time_Standby);
@@ -387,8 +387,8 @@ package body BMP280 is
    ----------------
 
    procedure Set_Filter
-     (This     : BMP280_Device;
-      Filter   : Filter_Type)
+     (This   : BMP280_Pressure_Sensor;
+      Filter : Filters)
    is
       Data     : UInt8;
       Register : Config_Register with Import, Address => Data'Address;
@@ -403,7 +403,7 @@ package body BMP280 is
    ----------------
 
    function Get_T_Fine
-     (This  : BMP280_Device;
+     (This  : BMP280_Pressure_Sensor;
       Adc_T : Interfaces.Integer_32)
       return Interfaces.Integer_32
    is
@@ -420,11 +420,11 @@ package body BMP280 is
       return var1 + var2;
    end Get_T_Fine;
 
-   --------------
-   -- Get_Temp --
-   --------------
+   ---------------------
+   -- Get_Temperature --
+   ---------------------
 
-   function Get_Temp (This : BMP280_Device) return Temperature
+   function Get_Temperature (This : BMP280_Pressure_Sensor) return Temperature
    is
       Val        : constant UInt8 := Read_Register (This, ctrl_meas);
       Resolution : Ctrl_Meas_Register with Import, Address => Val'Address;
@@ -436,21 +436,21 @@ package body BMP280 is
       end if;
 
       Adc_T := Read_Register
-        (This      => This,
-         Precision => Resolution.osrs_t,
-         Msb       => temp_msb,
-         Lsb       => temp_lsb,
-         Xlsb      => temp_xlsb);
+        (This       => This,
+         Resol => Resolution.osrs_t,
+         Msb        => temp_msb,
+         Lsb        => temp_lsb,
+         Xlsb       => temp_xlsb);
       T := (Get_T_Fine (This, Adc_T) * 5 + 128) / 256;
 
       return Temperature (Float (T) / 100.0);
-   end Get_Temp;
+   end Get_Temperature;
 
-   ---------------
-   -- Get_Press --
-   ---------------
+   ------------------
+   -- Get_Pressure --
+   ------------------
 
-   function Get_Press (This : BMP280_Device) return Pressure
+   function Get_Pressure (This : BMP280_Pressure_Sensor) return Pressure
    is
       Val        : constant UInt8 := Read_Register (This, ctrl_meas);
       Resolution : Ctrl_Meas_Register with Import, Address => Val'Address;
@@ -479,14 +479,14 @@ package body BMP280 is
 
       Adc_T := Read_Register
         (This      => This,
-         Precision => Resolution.osrs_t,
+         Resol => Resolution.osrs_t,
          Msb       => temp_msb,
          Lsb       => temp_lsb,
          Xlsb      => temp_xlsb);
 
       Adc_P := Read_Register
         (This      => This,
-         Precision => Resolution.osrs_p,
+         Resol => Resolution.osrs_p,
          Msb       => press_msb,
          Lsb       => press_lsb,
          Xlsb      => press_xlsb);
@@ -511,13 +511,13 @@ package body BMP280 is
       P := (((P + Var1 + Var2) / 256) + (Integer_64 (dig_P7) * 16));
 
       return Pressure (Float (P) / 25600.0);
-   end Get_Press;
+   end Get_Pressure;
 
    ------------------
    -- Set_SPI_Mode --
    ------------------
 
-   procedure Set_SPI_Mode (This : BMP280_Device; Mode : SPI_Mode)
+   procedure Set_SPI_Mode (This : BMP280_Pressure_Sensor; Mode : SPI_Mode)
    is
       Data     : UInt8;
       Register : Config_Register with Import, Address => Data'Address;
@@ -536,7 +536,7 @@ package body BMP280 is
    ----------------------
 
    function Time_Standby_To_UInt3
-     (Time_Standby : Time_Standby_Type) return UInt3 is
+     (Time_Standby : Standby_Milliseconds) return UInt3 is
    begin
       return (if    Time_Standby = 0.5    then 2#000#
               elsif Time_Standby = 62.5   then 2#001#

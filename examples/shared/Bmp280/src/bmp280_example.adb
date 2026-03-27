@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2025, AdaCore                             --
+--                  Copyright (C) 2026, AdaCore                             --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -67,7 +67,7 @@ procedure Bmp280_Example is
    SPI4_Pins : constant GPIO_Points :=
      (STM32.Device.PE2, STM32.Device.PE5, STM32.Device.PE6);
    SPI       : SPI_Port renames STM32.Device.SPI_4;
-   Device    : BMP280_Device;
+   Device    : BMP280_Pressure_Sensor;
    Error     : Boolean;
 
    procedure Init_Pins;
@@ -215,8 +215,8 @@ begin
          delay until Next_Release;
          LCD_Std_Out.Clear_Screen;
 
-         LCD_Std_Out.Put_Line ("T :" & Get_Temp (Device)'Img);
-         LCD_Std_Out.Put_Line ("P :" & Get_Press (Device)'Img);
+         LCD_Std_Out.Put_Line ("T :" & Get_Temperature (Device)'Img);
+         LCD_Std_Out.Put_Line ("P :" & Get_Pressure (Device)'Img);
          Display.Update_Layer (1, Copy_Back => True);
       end loop;
    end if;

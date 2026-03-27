@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2025, AdaCore                             --
+--                  Copyright (C) 2026, AdaCore                             --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -43,11 +43,11 @@ package BMP280 is
    type Pressure is delta 0.0001 range 300.0 .. 1100.0; -- hPa
    type Temperature is delta 0.01 range -40.0 .. 85.0;  -- °C
 
-   type Status_Type is private;
+   type Device_Status is private;
 
-   type Power_Mode_Type is (Sleep, Forced, Normal) with Size => UInt2'Size;
+   type Power_Modes is (Sleep, Forced, Normal) with Size => UInt2'Size;
 
-   type Precision_Type is
+   type Resolution is
      (Skipped,
       Ultra_Low_Power,
       Low_Power,
@@ -56,90 +56,89 @@ package BMP280 is
       Ultra_High_Resolution)
      with Size => UInt3'Size;
 
-   type Time_Standby_Type is delta 0.01 range 0.05 .. 4000.00
+   type Standby_Milliseconds is delta 0.01 range 0.05 .. 4000.00
      with Static_Predicate =>
-       Time_Standby_Type in
+       Standby_Milliseconds in
          0.5 | 62.5 | 125.0 | 250.0 | 500.0
            | 1000.0 | 2000.0 | 4000.0;
    --  Time_Standby in ms
 
    type SPI_Mode is (SPI4W, SPI3W);
 
-   type Filter_Type is range 0 .. 7;
+   type Filters is range 0 .. 7;
 
-   -------------------
-   -- BMP280_Device --
-   -------------------
+   ----------------------------
+   -- BMP280_Pressure_Sensor --
+   ----------------------------
 
-   type BMP280_Device is limited private;
+   type BMP280_Pressure_Sensor is limited private;
 
    procedure Initialize
-     (This : in out BMP280_Device;
-      CS   : Any_GPIO_Point;
-      SPI  : Any_SPI_Port;
-     Error : out Boolean);
+     (This  : in out BMP280_Pressure_Sensor;
+      CS    : Any_GPIO_Point;
+      SPI   : Any_SPI_Port;
+      Error : out Boolean);
 
-   function Get_Chip_ID (This : BMP280_Device) return Chip_ID;
+   function Get_Chip_ID (This : BMP280_Pressure_Sensor) return Chip_ID;
 
-   procedure Reset (This : BMP280_Device);
+   procedure Reset (This : BMP280_Pressure_Sensor);
 
-   function Is_Measuring_Set (Status : Status_Type) return Boolean;
-   function Is_Im_Update_Set (Status : Status_Type) return Boolean;
+   function Get_Status (This : BMP280_Pressure_Sensor) return Device_Status;
 
-   function Get_Status (This : BMP280_Device) return Status_Type;
+   function Is_Measuring_Set (Status : Device_Status) return Boolean;
+   function Is_Im_Update_Set (Status : Device_Status) return Boolean;
 
    procedure Set_Power_Mode
-     (This       : BMP280_Device;
-      Power_Mode : Power_Mode_Type);
+     (This       : BMP280_Pressure_Sensor;
+      Power_Mode : Power_Modes);
 
    procedure Set_Temp_Precision
-     (This      : BMP280_Device;
-      Precision : Precision_Type);
+     (This  : BMP280_Pressure_Sensor;
+      Value : Resolution);
 
    procedure Set_Press_Precision
-     (This      : BMP280_Device;
-      Precision : Precision_Type);
+     (This  : BMP280_Pressure_Sensor;
+      Value : Resolution);
 
    procedure Set_Time_Standby
-     (This         : BMP280_Device;
-      Time_Standby : Time_Standby_Type);
+     (This         : BMP280_Pressure_Sensor;
+      Time_Standby : Standby_Milliseconds);
 
    procedure Set_Filter
-     (This   : BMP280_Device;
-      Filter : Filter_Type);
+     (This   : BMP280_Pressure_Sensor;
+      Filter : Filters);
 
-   function Get_Press (This : BMP280_Device) return Pressure;
+   function Get_Pressure (This : BMP280_Pressure_Sensor) return Pressure;
 
-   function Get_Temp (This : BMP280_Device) return Temperature;
+   function Get_Temperature (This : BMP280_Pressure_Sensor) return Temperature;
 
-   procedure Set_SPI_Mode (This : BMP280_Device; Mode : SPI_Mode);
+   procedure Set_SPI_Mode (This : BMP280_Pressure_Sensor; Mode : SPI_Mode);
 
 private
 
    type Register_Size is new UInt8;
 
-   type Status_Type is record
+   type Device_Status is record
       Im_Update : Bit;
       Reserved1 : UInt2;
       Measuring : Bit;
       Reserved2 : UInt4;
    end record with Size => Register_Size'Size;
 
-   for Status_Type use record
+   for Device_Status use record
       Im_Update at 0 range 0 .. 0;
       Reserved1 at 0 range 1 .. 2;
       Measuring at 0 range 3 .. 3;
       Reserved2 at 0 range 4 .. 7;
    end record;
 
-   for Power_Mode_Type use
+   for Power_Modes use
      (Sleep  => 2#00#,
       Forced => 2#01#,
       Normal => 2#11#);
 
-   for Precision_Type use
-     (
-      Skipped               => 2#000#,
+   for Resolution use
+     (Skipped               => 2#000#,
       Ultra_Low_Power       => 2#001#,
       Low_Power             => 2#010#,
       Standard_Resolution   => 2#011#,
@@ -147,9 +146,9 @@ private
       Ultra_High_Resolution => 2#101#);
 
    type Ctrl_Meas_Register is record
-      mode   : Power_Mode_Type;
-      osrs_p : Precision_Type;
-      osrs_t : Precision_Type;
+      mode   : Power_Modes;
+      osrs_p : Resolution;
+      osrs_t : Resolution;
    end record with Size => Register_Size'Size;
 
    for Ctrl_Meas_Register use record
@@ -263,46 +262,46 @@ private
       Cmd  at 0 range 7 .. 7;
    end record;
 
-   procedure CS_Low (This : BMP280_Device);
+   procedure CS_Low (This : BMP280_Pressure_Sensor);
 
-   procedure CS_High (This : BMP280_Device);
+   procedure CS_High (This : BMP280_Pressure_Sensor);
 
    function Read_Register
-     (This     : BMP280_Device;
+     (This     : BMP280_Pressure_Sensor;
       Register : Register_Name)
       return UInt8;
 
    function Read_Register
-     (This : BMP280_Device;
+     (This : BMP280_Pressure_Sensor;
       Msb  : Register_Name;
       Lsb  : Register_Name)
       return UInt16;
 
    function Read_Register
-     (This : BMP280_Device;
+     (This : BMP280_Pressure_Sensor;
       Msb  : Register_Name;
       Lsb  : Register_Name)
       return Interfaces.Integer_16;
 
    procedure Write_Register
-     (This     : BMP280_Device;
+     (This     : BMP280_Pressure_Sensor;
       Register : Register_Name;
       Data     : UInt8);
 
-   procedure Read_Trim_Registers (This : in out BMP280_Device);
+   procedure Read_Trim_Registers (This : in out BMP280_Pressure_Sensor);
 
    function Get_T_Fine
-     (This  : BMP280_Device;
+     (This  : BMP280_Pressure_Sensor;
       Adc_T : Interfaces.Integer_32)
       return Interfaces.Integer_32;
 
    function Read_Register
-     (This      : BMP280_Device;
-      Precision : Precision_Type;
-      Msb       : Register_Name;
-      Lsb       : Register_Name;
-      Xlsb      : Register_Name)
-      return Interfaces.Integer_32 with Pre => (Precision /= Skipped);
+     (This  : BMP280_Pressure_Sensor;
+      Resol : Resolution;
+      Msb   : Register_Name;
+      Lsb   : Register_Name;
+      Xlsb  : Register_Name)
+      return Interfaces.Integer_32 with Pre => (Resol /= Skipped);
 
    type Holder_Type is record
       CS      : Any_GPIO_Point;
@@ -323,7 +322,7 @@ private
       dig_P9  : Integer_32;
    end record;
 
-   type BMP280_Device is limited record
+   type BMP280_Pressure_Sensor is limited record
       Holder : Holder_Type;
    end record;
 
