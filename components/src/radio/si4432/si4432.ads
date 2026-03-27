@@ -1921,6 +1921,16 @@ package Si4432 is
      (This : Si4432_Driver)
       return FIFO_Threshold;
 
+   procedure Write_FIFO
+     (This : Si4432_Driver;
+      Data : SPI_Data_8b);
+   --  Write data to the FIFO
+
+   procedure Read_FIFO
+     (This : Si4432_Driver;
+      Data : out SPI_Data_8b);
+   --  Read data from the FIFO
+
 private
 
    type Register_Address is range 16#00# .. 16#7F# with Size => UInt7'Size;
