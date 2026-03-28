@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                  Copyright (C) 2015-2026, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -50,9 +50,7 @@ package body STM32.RNG.Polling is
    begin
       Enable_RNG_Clock;
       Enable_RNG;
-
-      --  Discard the first randomly generated number, according to STM32F4
-      --  docs.
+      --  Discard the first generated number, according to STM32F4 docs.
       Discard := Random;
    end Initialize_RNG;
 
@@ -61,10 +59,17 @@ package body STM32.RNG.Polling is
    ------------
 
    function Random return UInt32 is
+      Max_Attempts : constant := 1000; 
+      --  The above is arbitrary. It needs to be long enough that normal
+      --  behavior will not be flagged. Longer than that is fine. The point
+      --  is to not hang forever.
    begin
-      while not RNG_Data_Ready loop
-         null;
-      end loop;
+      Await_Ready : for K in 1 .. Max_Attempts loop
+         exit when RNG_Data_Ready;
+         if K = Max_Attempts then
+            raise Program_Error with "RNG data not ready";
+         end if;
+      end loop Await_Ready;
       return RNG_Data;
    end Random;
 
