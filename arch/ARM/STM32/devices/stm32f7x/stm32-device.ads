@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2018, AdaCore                     --
+--                     Copyright (C) 2015-2026, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -39,8 +39,8 @@
 --   COPYRIGHT(c) 2014 STMicroelectronics                                   --
 ------------------------------------------------------------------------------
 
---  This file provides declarations for devices on the STM32F42xxx MCUs
---  manufactured by ST Microelectronics.  For example, an STM32F429.
+--  This file provides declarations for devices on the STM32F7x MCUs
+--  manufactured by ST Microelectronics.  For example, an STM32F746.
 
 private with ADL_Config;
 
@@ -60,6 +60,7 @@ with STM32.SPI.DMA;   use STM32.SPI.DMA;
 with STM32.I2S;       use STM32.I2S;
 with STM32.Timers;    use STM32.Timers;
 with STM32.RTC;       use STM32.RTC;
+with STM32.CRC;       use STM32.CRC;
 
 package STM32.Device is
    pragma Elaborate_Body;
@@ -541,6 +542,14 @@ package STM32.Device is
    procedure Enable_Clock (This : in out SAI_Port);
    procedure Reset (This : in out SAI_Port);
    function Get_Input_Clock (Periph : SAI_Port) return UInt32;
+
+   ---------
+   -- CRC --
+   ---------
+
+   CRC_Unit : CRC_32 with Volatile, Address => STM32_SVD.CRC_Base, Import;
+
+   procedure Enable_Clock (This : in out CRC_32);
 
    -----------
    -- SDMMC --
