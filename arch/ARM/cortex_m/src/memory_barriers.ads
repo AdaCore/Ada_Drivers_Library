@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2026, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,14 +29,18 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This file provides utility functions for ARM Cortex microcontrollers
+--  This unit provides memory barrier routines for ARM Cortex microcontrollers
 
 package Memory_Barriers is
    pragma Preelaborate;
 
-   procedure Data_Synchronization_Barrier with Inline;
+   procedure Data_Synchronization_Barrier with Inline_Always;
    --  Injects instruction "DSB Sy" i.e., a "full system" domain barrier
 
+   procedure Instruction_Synchronization_Barrier with Inline_Always;
+   --  Injects instruction "ISB"
+
    procedure DSB renames Data_Synchronization_Barrier;
+   procedure ISB renames Instruction_Synchronization_Barrier;
 
 end Memory_Barriers;
