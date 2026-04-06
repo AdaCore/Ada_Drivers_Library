@@ -152,6 +152,7 @@ def load_device_config(config, source_dir):
                 'arch/ARM/STM32/drivers/ltdc/',
                 'arch/ARM/STM32/drivers/sai/',
                 'arch/ARM/STM32/drivers/sd/',
+                'arch/ARM/STM32/drivers/crc_stm32f7/',
                 'arch/ARM/STM32/drivers/sd/sdmmc/']
 
     elif mcu == 'STM32F769NIHx':
@@ -167,6 +168,7 @@ def load_device_config(config, source_dir):
                 'arch/ARM/STM32/drivers/ltdc/',
                 'arch/ARM/STM32/drivers/dsi/',
                 'arch/ARM/STM32/drivers/sai/',
+                'arch/ARM/STM32/drivers/crc_stm32f7/',
                 'arch/ARM/STM32/drivers/sd/',
                 'arch/ARM/STM32/drivers/sd/sdmmc/']
 
