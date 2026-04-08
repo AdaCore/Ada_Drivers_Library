@@ -5,7 +5,7 @@ import os
 import os.path
 import subprocess
 import sys
-import distutils.spawn
+import shutil
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
@@ -173,7 +173,7 @@ projects = [
             ]
 
 # Check if RISC-V32 compiler is available
-if distutils.spawn.find_executable("riscv64-elf-gnatls"):
+if shutil.which("riscv64-elf-gnatls"):
 
     # Add RISC-V32 projects
     projects += ["/examples/HiFive1/hifive1_example.gpr"]
