@@ -77,9 +77,11 @@ private
      (Device       : not null access USART;
       IRQ          : Interrupt_ID;
       IRQ_Priority : Interrupt_Priority)
-   with
-      Interrupt_Priority => IRQ_Priority
    is
+      pragma Interrupt_Priority (IRQ_Priority);
+      --  FIXME: this is supposed to be an aspect, however with FSF GNAT 12
+      --  the compiler does not have IRQ_Priority in scope when an aspect is
+      --  used and rejects it.
 
       procedure Start_Sending (Msg : not null access Message);
 
