@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2016, AdaCore                         --
+--                 Copyright (C) 2015-2026, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -41,7 +41,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with System;
 with Interfaces; use Interfaces;
 
 package body LIS3DSH is
@@ -111,16 +110,12 @@ package body LIS3DSH is
       Axes : out Axes_Accelerations)
    is
 
-      Buffer : array (0 .. 5) of UInt8 with Alignment => 2, Size => 48;
-      Scaled : Float;
+      type Device_Data is array (0 .. 5) of UInt8 with Alignment => 2, Size => 48;
 
-      type Integer16_Pointer is access all Integer_16
-        with Storage_Size => 0;
+      Buffer : Device_Data;
 
-      function As_Pointer is new Ada.Unchecked_Conversion
-        (Source => System.Address, Target => Integer16_Pointer);
-      --  So that we can treat the address of a UInt8 as a pointer to a two-UInt8
-      --  sequence representing a signed Integer_16 quantity
+      function As_Axes_Accelerations is new Ada.Unchecked_Conversion
+        (Source => Device_Data, Target => Axes_Accelerations);
 
    begin
       This.Loc_IO_Read (Buffer (0), OUT_X_L);
@@ -130,26 +125,13 @@ package body LIS3DSH is
       This.Loc_IO_Read (Buffer (4), OUT_Z_L);
       This.Loc_IO_Read (Buffer (5), OUT_Z_H);
 
-      Get_X : declare
-         Raw : Integer_16 renames As_Pointer (Buffer (0)'Address).all;
+      Scale_Them : declare
+         Raw : Axes_Accelerations renames As_Axes_Accelerations (Buffer);
       begin
-         Scaled := Float (Raw) * This.Sensitivity;
-         Axes.X := Axis_Acceleration (Scaled);
-      end Get_X;
-
-      Get_Y : declare
-         Raw : Integer_16 renames As_Pointer (Buffer (2)'Address).all;
-      begin
-         Scaled := Float (Raw) * This.Sensitivity;
-         Axes.Y := Axis_Acceleration (Scaled);
-      end Get_Y;
-
-      Get_Z : declare
-         Raw : Integer_16 renames As_Pointer (Buffer (4)'Address).all;
-      begin
-         Scaled := Float (Raw) * This.Sensitivity;
-         Axes.Z := Axis_Acceleration (Scaled);
-      end Get_Z;
+         Axes.X := Axis_Acceleration (Float (Raw.X) * This.Sensitivity);
+         Axes.Y := Axis_Acceleration (Float (Raw.Y) * This.Sensitivity);
+         Axes.Z := Axis_Acceleration (Float (Raw.Z) * This.Sensitivity);
+      end Scale_Them;
    end Get_Accelerations;
 
    ---------------
