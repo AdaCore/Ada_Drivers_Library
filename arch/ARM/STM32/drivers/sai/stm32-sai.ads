@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                  Copyright (C) 2016-2026, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -188,7 +188,7 @@ package STM32.SAI is
      (FS_Frame,
       FS_Frame_And_Channel_Identification)
      with Size => 1;
-   --  Meaningless and is not used in AC’97 or SPDIF audio block
+   --  Meaningless and is not used in AC'97 or SPDIF audio block
    --  configuration. It must be configured when the audio block is disabled.
    --
    --  In case of FS_Frame_And_Channel_Identification, the number of slots
@@ -206,7 +206,7 @@ package STM32.SAI is
       FS_Active_High)
      with Size => 1;
    --  It is used to configure the level of the start of frame on the FS
-   --  signal. It is meaningless and is not used in AC’97 or SPDIF audio
+   --  signal. It is meaningless and is not used in AC'97 or SPDIF audio
    --  block configuration.
    --
    --  FS_Active_Low: FS is active low (falling edge)
@@ -216,7 +216,7 @@ package STM32.SAI is
      (First_Bit,
       Before_First_Bit)
      with Size => 1;
-   --  Meaningless and is not used in AC’97 or SPDIF audio block
+   --  Meaningless and is not used in AC'97 or SPDIF audio block
    --  configuration. This bit must be configured when the audio block
    --  is disabled.
    --  First_Bit: FS is asserted on the first bit of the slot 0.
@@ -231,7 +231,7 @@ package STM32.SAI is
    --  The slot size must be higher or equal to the data size. If this
    --  condition is not respected, the behavior of the SAI will be
    --  undetermined.
-   --  Ignored in AC’97 or SPDIF mode.
+   --  Ignored in AC'97 or SPDIF mode.
    --  Data_Size: The slot size is equivalent to the data size (specified in
    --    DS[3:0] in the SAI_xCR1 register).
 
