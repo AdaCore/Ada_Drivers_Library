@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2015, AdaCore                           --
+--                 Copyright (C) 2015-2026, AdaCore                         --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -40,7 +40,17 @@ package body Memory_Barriers is
    procedure Data_Synchronization_Barrier is
       pragma Suppress (All_Checks);
    begin
-      Asm ("DSB #0xF", Volatile => True);    -- 15 is 'Sy", ie "full system"
+      Asm ("DSB #0xF", Volatile => True);  -- 15 is 'Sy", ie "full system"
    end Data_Synchronization_Barrier;
+
+   -----------------------------------------
+   -- Instruction_Synchronization_Barrier --
+   -----------------------------------------
+
+   procedure Instruction_Synchronization_Barrier is
+      pragma Suppress (All_Checks);
+   begin
+      Asm ("ISB", Volatile => True);
+   end Instruction_Synchronization_Barrier;
 
 end Memory_Barriers;
