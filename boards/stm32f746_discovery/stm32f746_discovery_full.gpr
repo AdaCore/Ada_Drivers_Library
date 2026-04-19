@@ -114,6 +114,9 @@ library project STM32F746_Discovery_Full is
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/power_control_stm32f7", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/ltdc/", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/sai/", -- From MCU definition
+
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/crc_stm32f7/", -- manually added but the MCU definition has been updated
+
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/sd/", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/sd/sdmmc/", -- From MCU definition
     Src_Dirs_Root & "/middleware/src/filesystem", -- From middleware config

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2026, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -1088,5 +1088,15 @@ package body STM32.Device is
       RCC_Periph.AHB1RSTR.ETHMACRST := True;
       RCC_Periph.AHB1RSTR.ETHMACRST := False;
    end Reset_Eth;
+
+   ------------------
+   -- Enable_Clock --
+   ------------------
+
+   procedure Enable_Clock (This : in out CRC_32) is
+      pragma Unreferenced (This);
+   begin
+      RCC_Periph.AHB1ENR.CRCEN := True;
+   end Enable_Clock;
 
 end STM32.Device;
