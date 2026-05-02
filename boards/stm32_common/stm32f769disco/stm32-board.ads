@@ -125,7 +125,11 @@ package STM32.Board is
    SDRAM_Read_Pipe       : constant STM32.FMC.FMC_SDRAM_Read_Pipe_Delay :=
                              STM32.FMC.FMC_ReadPipe_Delay_0;
    SDRAM_Refresh_Cnt     : constant := 16#0603#;
-   SDRAM_Min_Delay_In_ns : constant := 60;
+   --  SDRAM AC timings (ns) for the on-board Micron MT48LC4M32B2B5-6A
+   --  Values from the ST BSP in stm32f769i_discovery_sdram.c at SDCLK = 100 MHz:
+   SDRAM_TRAS_In_Ns      : constant := 42;  --  TRAS
+   SDRAM_TRC_In_Ns       : constant := 60;  --  TRC
+   SDRAM_TXSR_In_Ns      : constant := 67;  --  TXSR
 
    ---------
    -- I2C --
