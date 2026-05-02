@@ -116,9 +116,11 @@ package STM32.Board is
    SDRAM_Read_Pipe       : constant STM32.FMC.FMC_SDRAM_Read_Pipe_Delay :=
                              STM32.FMC.FMC_ReadPipe_Delay_0;
    SDRAM_Refresh_Cnt     : constant := 1539;
-   SDRAM_TRAS_In_Ns      : constant := 42;  --  IS42S32400F min self-refresh time
-   SDRAM_TRC_In_Ns       : constant := 60;  --  IS42S32400F min row cycle time
-   SDRAM_TXSR_In_Ns      : constant := 70;  --  IS42S32400F min exit self-refresh delay
+   --  SDRAM AC timings (ns) for the on-board Micron MT48LC4M32B2B5-6A
+   --  Values from the ST BSP in stm32746g_discovery_sdram.c at SDCLK = 100 MHz:
+   SDRAM_TRAS_In_Ns      : constant := 42;  --  TRAS
+   SDRAM_TRC_In_Ns       : constant := 60;  --  TRC
+   SDRAM_TXSR_In_Ns      : constant := 67;  --  TXSR
 
    ---------
    -- I2C --
