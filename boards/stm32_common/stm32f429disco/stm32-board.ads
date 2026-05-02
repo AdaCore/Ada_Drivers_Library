@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                  Copyright (C) 2015-2016, AdaCore                        --
+--                  Copyright (C) 2015-2026, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -132,7 +132,12 @@ package STM32.Board is
    SDRAM_Read_Pipe       : constant STM32.FMC.FMC_SDRAM_Read_Pipe_Delay :=
                              STM32.FMC.FMC_ReadPipe_Delay_1;
    SDRAM_Refresh_Cnt     : constant := 1386;
-   SDRAM_Min_Delay_In_ns : constant := 70;
+
+   --  SDRAM AC timings (ns) for the on-board ISSI IS42S16400J
+   --  Values from the ST BSP in stm32f429i_discovery_sdram.c at SDCLK = 90 MHz:
+   SDRAM_TRAS_In_Ns      : constant := 42;  --  TRAS  
+   SDRAM_TRC_In_Ns       : constant := 70;  --  TRC   
+   SDRAM_TXSR_In_Ns      : constant := 70;  --  TXSR
 
    ---------------
    -- SPI5 Pins --
