@@ -83,6 +83,7 @@ def load_device_config(config, source_dir):
                 'arch/ARM/STM32/drivers/dma/',
                 'arch/ARM/STM32/drivers/dma_interrupts/',
                 'arch/ARM/STM32/drivers/crc_stm32f4/',
+                'arch/ARM/STM32/drivers/devid_stm32f4/',
                 'arch/ARM/STM32/drivers/fsmc/',
                 'arch/ARM/STM32/drivers/i2c_stm32f4',
                 'arch/ARM/STM32/drivers/power_control_stm32f4',
@@ -99,6 +100,7 @@ def load_device_config(config, source_dir):
                 'arch/ARM/STM32/drivers/fmc/',
                 'arch/ARM/STM32/drivers/dma2d/',
                 'arch/ARM/STM32/drivers/crc_stm32f4/',
+                'arch/ARM/STM32/drivers/devid_stm32f4/',
                 'arch/ARM/STM32/drivers/i2c_stm32f4',
                 'arch/ARM/STM32/drivers/power_control_stm32f4',
                 'arch/ARM/STM32/drivers/uart_stm32f4/',
@@ -114,6 +116,7 @@ def load_device_config(config, source_dir):
                 'arch/ARM/STM32/drivers/fmc/',
                 'arch/ARM/STM32/drivers/dma2d/',
                 'arch/ARM/STM32/drivers/crc_stm32f4/',
+                'arch/ARM/STM32/drivers/devid_stm32f4/',
                 'arch/ARM/STM32/drivers/i2c_stm32f4',
                 'arch/ARM/STM32/drivers/power_control_stm32f4',
                 'arch/ARM/STM32/drivers/uart_stm32f4/',
@@ -131,9 +134,10 @@ def load_device_config(config, source_dir):
                 'arch/ARM/STM32/drivers/fmc/',
                 'arch/ARM/STM32/drivers/dma2d/',
                 'arch/ARM/STM32/drivers/crc_stm32f4/',
+                'arch/ARM/STM32/drivers/uart_stm32f4/',
+                'arch/ARM/STM32/drivers/devid_stm32f4/',
                 'arch/ARM/STM32/drivers/i2c_stm32f4',
                 'arch/ARM/STM32/drivers/power_control_stm32f4',
-                'arch/ARM/STM32/drivers/uart_stm32f4/',
                 'arch/ARM/STM32/drivers/ltdc/',
                 'arch/ARM/STM32/drivers/sai/',
                 'arch/ARM/STM32/drivers/sd/',
@@ -153,6 +157,7 @@ def load_device_config(config, source_dir):
                 'arch/ARM/STM32/drivers/sai/',
                 'arch/ARM/STM32/drivers/sd/',
                 'arch/ARM/STM32/drivers/crc_stm32f7/',
+                'arch/ARM/STM32/drivers/devid_stm32f7/',
                 'arch/ARM/STM32/drivers/sd/sdmmc/']
 
     elif mcu == 'STM32F769NIHx':
@@ -169,6 +174,7 @@ def load_device_config(config, source_dir):
                 'arch/ARM/STM32/drivers/dsi/',
                 'arch/ARM/STM32/drivers/sai/',
                 'arch/ARM/STM32/drivers/crc_stm32f7/',
+                'arch/ARM/STM32/drivers/devid_stm32f7/',
                 'arch/ARM/STM32/drivers/sd/',
                 'arch/ARM/STM32/drivers/sd/sdmmc/']
 
