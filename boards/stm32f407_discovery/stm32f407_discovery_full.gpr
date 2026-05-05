@@ -109,6 +109,7 @@ library project STM32F407_Discovery_Full is
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/i2c_stm32f4", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/power_control_stm32f4", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/uart_stm32f4/", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/devid_stm32f4/", -- added manually
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/sd/", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/sd/sdio/", -- From MCU definition
     Src_Dirs_Root & "/middleware/src/filesystem", -- From middleware config
