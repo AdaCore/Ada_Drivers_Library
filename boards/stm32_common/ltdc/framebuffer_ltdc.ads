@@ -138,6 +138,33 @@ package Framebuffer_LTDC is
    --  Updates all initialized layers at once with their respective hidden
    --  buffer
 
+   procedure Update_Layer_Async
+     (Display : in out Frame_Buffer;
+      Layer   : Positive)
+     with Pre => Initialized (Display, Layer);
+   --  Like Update_Layer (without Copy_Back) but returns without waiting
+   --  for the LTDC to apply the swap. The caller can then do other
+   --  useful work while the LTDC finishes scanning the current frame
+   --  and performs the reload at vertical blank, rather than stalling
+   --  on a hardware-paced wait whose length is determined by display
+   --  timing.
+   --
+   --  Until the swap takes effect the LTDC keeps scanning what is now
+   --  the hidden buffer, so callers must not write to it until
+   --  Wait_For_Update has returned. There is no Copy_Back option:
+   --  copying into the now-hidden buffer would race with the
+   --  in-progress scanout.
+   --
+   --  Prefer the synchronous Update_Layer when the next operation must
+   --  read or write the now-hidden buffer (for example Update_Layer
+   --  with Copy_Back => True): it blocks until the LTDC has applied
+   --  the swap, so the buffer the caller treats as hidden really is
+   --  no longer being scanned out.
+
+   procedure Wait_For_Update (Display : in out Frame_Buffer);
+   --  Block until any reload requested by Update_Layer_Async has been
+   --  applied by the LTDC. No-op if no reload is pending.
+
    overriding function Color_Mode
      (Display : Frame_Buffer;
       Layer   : Positive) return HAL.Framebuffer.FB_Color_Mode

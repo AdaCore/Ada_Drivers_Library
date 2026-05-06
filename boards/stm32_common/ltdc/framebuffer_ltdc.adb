@@ -486,6 +486,29 @@ package body Framebuffer_LTDC is
       end loop;
    end Update_Layers;
 
+   ------------------------
+   -- Update_Layer_Async --
+   ------------------------
+
+   procedure Update_Layer_Async
+     (Display : in out Frame_Buffer;
+      Layer   : Positive)
+   is
+   begin
+      Internal_Update_Layer (Display, Layer);
+      STM32.LTDC.Reload_Config_Async;
+   end Update_Layer_Async;
+
+   ---------------------
+   -- Wait_For_Update --
+   ---------------------
+
+   procedure Wait_For_Update (Display : in out Frame_Buffer) is
+      pragma Unreferenced (Display);
+   begin
+      STM32.LTDC.Wait_For_Reload;
+   end Wait_For_Update;
+
    ----------------
    -- Color_Mode --
    ----------------
