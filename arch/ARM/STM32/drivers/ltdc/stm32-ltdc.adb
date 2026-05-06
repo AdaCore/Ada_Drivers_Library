@@ -235,6 +235,24 @@ package body STM32.LTDC is
       end if;
    end Reload_Config;
 
+   -------------------------
+   -- Reload_Config_Async --
+   -------------------------
+
+   procedure Reload_Config_Async is
+   begin
+      Sync.Apply_On_VSync;
+   end Reload_Config_Async;
+
+   ---------------------
+   -- Wait_For_Reload --
+   ---------------------
+
+   procedure Wait_For_Reload is
+   begin
+      Sync.Wait;
+   end Wait_For_Reload;
+
    ------------------
    -- To_LTDC_Mode --
    ------------------

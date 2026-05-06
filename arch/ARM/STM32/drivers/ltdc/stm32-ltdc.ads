@@ -110,6 +110,35 @@ package STM32.LTDC is
 
    procedure Reload_Config (Immediate : Boolean := False);
 
+   procedure Reload_Config_Async;
+   --  Request a register reload at the next vertical blank and return
+   --  immediately, without waiting for the LTDC to apply it. The caller
+   --  can then do other useful work while the LTDC finishes scanning
+   --  the current frame and performs the reload at vertical blank,
+   --  rather than stalling on a hardware-paced wait whose length is
+   --  determined by display timing rather than by anything the caller
+   --  controls.
+   --
+   --  The now-hidden buffer remains live to the LTDC until the swap
+   --  takes effect, so the caller must leave that buffer untouched
+   --  until Wait_For_Reload returns.
+   --
+   --  Prefer the synchronous Reload_Config (Immediate => False) when
+   --  the next operation must read or write the now-hidden buffer
+   --  (for example a Copy_Back of the newly visible image into the
+   --  new hidden buffer): it blocks until the LTDC confirms the
+   --  reload, so the buffer the caller treats as hidden really is no
+   --  longer being scanned out. Use Reload_Config (Immediate => True)
+   --  only at setup or configuration time, when an unconditional
+   --  reload that is not aligned to vertical blank is acceptable.
+
+   procedure Wait_For_Reload;
+   --  Block until the LTDC has applied a reload previously requested by
+   --  Reload_Config_Async. Returns immediately if no reload is pending. Call
+   --  before any operation that needs the new buffer to be visible, or that
+   --  must write into the now-hidden buffer that the LTDC may still be
+   --  scanning.
+
    function To_LTDC_Mode (HAL_Mode : HAL.Framebuffer.FB_Color_Mode)
                           return STM32.LTDC.Pixel_Format;
    --  Convert HAL.Framebuffer color mode to LTDC color mode
