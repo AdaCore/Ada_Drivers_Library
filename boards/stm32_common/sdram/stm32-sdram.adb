@@ -58,7 +58,7 @@ package body STM32.SDRAM is
       Configure_IO (SDRAM_PINS,
                     (Mode           => Mode_AF,
                      AF             => GPIO_AF_FMC_12,
-                     AF_Speed       => Speed_50MHz,
+                     AF_Speed       => Speed_Very_High,
                      AF_Output_Type => Push_Pull,
                      Resistors      => Pull_Up));
 
@@ -242,6 +242,5 @@ package body STM32.SDRAM is
 
       return Ret;
    end Reserve;
-
 
 end STM32.SDRAM;
