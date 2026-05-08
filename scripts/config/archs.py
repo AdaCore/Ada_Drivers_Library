@@ -21,6 +21,7 @@ def load_cpu_config(config):
         config.add_source_dir('arch/ARM/cortex_m/src/fpu', origin)
         config.add_source_dir('arch/ARM/cortex_m/src/nocache', origin)
         config.add_source_dir('arch/ARM/cortex_m/src/nvic_cm4_cm7', origin)
+        config.add_source_dir('arch/ARM/cortex_m/src/mpu_cm4_cm7', origin)
 
     elif cpu == "ARM Cortex-M7F":
         config.add_source_dir('arch/ARM/cortex_m/src', origin)
@@ -28,6 +29,7 @@ def load_cpu_config(config):
         config.add_source_dir('arch/ARM/cortex_m/src/fpu', origin)
         config.add_source_dir('arch/ARM/cortex_m/src/cache', origin)
         config.add_source_dir('arch/ARM/cortex_m/src/nvic_cm4_cm7', origin)
+        config.add_source_dir('arch/ARM/cortex_m/src/mpu_cm4_cm7', origin)
 
     elif cpu == "RISC-V32":
         config.add_source_dir('arch/RISC-V/src/', origin)
