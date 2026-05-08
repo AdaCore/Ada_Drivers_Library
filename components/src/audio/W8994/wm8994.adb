@@ -46,7 +46,7 @@ package body WM8994 is
    procedure Initialize
      (This      : in out Audio_CODEC;
       Input     : Input_Device;
-      Output    : Analog_Outputs;
+      Output    : Output_Device;
       Volume    : Volume_Level;
       Frequency : Audio_Frequency)
    is
@@ -366,7 +366,7 @@ package body WM8994 is
    -- Set_Mute --
    --------------
 
-   procedure Set_Mute (This : in out Audio_CODEC; Cmd : Mute_Modes) is
+   procedure Set_Mute (This : in out Audio_CODEC; Cmd : Mute_Mode) is
    begin
       if Output_Enabled then
          case Cmd is
@@ -390,7 +390,7 @@ package body WM8994 is
 
    procedure Set_Output_Mode
      (This   : in out Audio_CODEC;
-      Device : Analog_Outputs)
+      Device : Output_Device)
    is
    begin
       case Device is
