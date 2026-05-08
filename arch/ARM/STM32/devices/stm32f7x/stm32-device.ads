@@ -551,6 +551,10 @@ package STM32.Device is
 
    procedure Enable_Clock (This : in out CRC_32);
 
+   procedure Disable_Clock (This : in out CRC_32);
+
+   procedure Reset (This : in out CRC_32);
+
    -----------
    -- SDMMC --
    -----------
