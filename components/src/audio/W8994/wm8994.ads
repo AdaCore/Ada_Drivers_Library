@@ -44,7 +44,7 @@ package WM8994 is
       Time     : not null HAL.Time.Any_Delays)
    is tagged limited private;
 
-   type Analog_Outputs is
+   type Output_Device is
      (No_Output,
       Speaker,
       Headphone,
@@ -96,11 +96,11 @@ package WM8994 is
    procedure Initialize
      (This      : in out Audio_CODEC;
       Input     : Input_Device;
-      Output    : Analog_Outputs;
+      Output    : Output_Device;
       Volume    : Volume_Level;
       Frequency : Audio_Frequency);
 
-   type Mute_Modes is
+   type Mute_Mode is
      (Mute_On,
       Mute_Off);
 
@@ -129,10 +129,10 @@ package WM8994 is
 
    procedure Set_Volume (This : in out Audio_CODEC; Volume : Volume_Level);
 
-   procedure Set_Mute (This : in out Audio_CODEC; Cmd : Mute_Modes);
+   procedure Set_Mute (This : in out Audio_CODEC; Cmd : Mute_Mode);
 
    procedure Set_Output_Mode (This : in out Audio_CODEC;
-                              Device : Analog_Outputs);
+                              Device : Output_Device);
 
    procedure Set_Frequency (This : in out Audio_CODEC;
                             Freq : Audio_Frequency);
