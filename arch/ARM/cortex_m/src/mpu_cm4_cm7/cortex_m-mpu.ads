@@ -29,15 +29,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This package provides subprograms to configure the Memory Protection
---  Unit (MPU) on the Cortex-M7 family of CPU.
---
---  On Cortex-M7, the MPU is required when the D-cache is enabled in order
---  to prevent speculative reads from causing bus contention on external
---  memory interfaces (e.g., FMC/SDRAM). Without MPU configuration, the
---  default memory map treats all external memory as Normal, allowing the
---  CPU to issue speculative reads that can starve bus masters such as the
---  LTDC display controller.
+--  This package provides support for configuring the Memory Protection
+--  Unit (MPU) on Cortex-M3, -M4, and -M7 MCUs. It does not support the M0+
+--  family, nor the M33.
 
 with HAL;
 with System;

@@ -100,6 +100,7 @@ library project STM32F4XX_M_Full is
     Src_Dirs_Root & "/arch/ARM/cortex_m/src/fpu", -- From arch definition
     Src_Dirs_Root & "/arch/ARM/cortex_m/src/nocache", -- From arch definition
     Src_Dirs_Root & "/arch/ARM/cortex_m/src/nvic_cm4_cm7", -- From arch definition
+    Src_Dirs_Root & "/arch/ARM/cortex_m/src/mpu_cm4_cm7", -- From arch definition
     Src_Dirs_Root & "/arch/ARM/STM32/devices/stm32f40x/", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/svd/stm32f40x", -- From MCU definition
     Src_Dirs_Root & "/arch/ARM/STM32/drivers/", -- From MCU definition
