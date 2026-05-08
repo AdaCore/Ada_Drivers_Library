@@ -145,6 +145,9 @@ private
      (Port     : not null Any_I2C_Port;
       I2C_Addr : UInt10;
       Time     : not null HAL.Time.Any_Delays)
-   is tagged limited null record;
+   is tagged limited record
+      Output_Enabled : Boolean := False;
+      Input_Enabled  : Boolean := False;
+   end record;
 
 end WM8994;
