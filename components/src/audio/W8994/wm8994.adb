@@ -35,10 +35,6 @@ package body WM8994 is
 
    WM8994_CHIPID_ADDR : constant := 16#00#;
 
-   Output_Enabled     : Boolean := False;
-   Input_Enabled      : Boolean := False;
-   pragma Unreferenced (Input_Enabled);
-
    ----------------
    -- Initialize --
    ----------------
@@ -69,8 +65,8 @@ package body WM8994 is
 
       This.Time.Delay_Milliseconds (50);
 
-      Output_Enabled := Output /= No_Output;
-      Input_Enabled  := Input /= No_Input;
+      This.Output_Enabled := Output /= No_Output;
+      This.Input_Enabled  := Input /= No_Input;
 
       This.Set_Output_Mode (Output);
 
@@ -303,7 +299,7 @@ package body WM8994 is
 
    procedure Stop (This : in out Audio_CODEC; Cmd : Stop_Mode) is
    begin
-      if Output_Enabled then
+      if This.Output_Enabled then
          --  Mute the output first
          This.Set_Mute (Mute_On);
 
@@ -311,7 +307,7 @@ package body WM8994 is
             return;
          end if;
 
-         Output_Enabled := False;
+         This.Output_Enabled := False;
 
          --  Mute the AIF1 Timeslot 0 DAC1 path
          I2C_Write (This, WM8994_AIF1_DAC1_Filter1, 16#0200#);
@@ -368,7 +364,7 @@ package body WM8994 is
 
    procedure Set_Mute (This : in out Audio_CODEC; Cmd : Mute_Mode) is
    begin
-      if Output_Enabled then
+      if This.Output_Enabled then
          case Cmd is
             when Mute_On =>
                --  Soft Mute the AIF1 Timeslot 0 DAC1 path L&R
@@ -512,8 +508,8 @@ package body WM8994 is
    procedure Reset (This : in out Audio_CODEC) is
    begin
       I2C_Write (This, WM8994_SW_Reset, 16#0000#);
-      Output_Enabled := False;
-      Input_Enabled  := False;
+      This.Output_Enabled := False;
+      This.Input_Enabled  := False;
    end Reset;
 
 end WM8994;
