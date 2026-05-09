@@ -96,11 +96,11 @@ package body Audio is
       This.Device.Reset;
       This.Device.Initialize
         (Input     => WM8994.No_Input,
-         Output    => WM8994.Analog_Outputs (Sink),
+         Output    => WM8994.Output_Device (Sink),
          Volume    => As_Device_Volume (Volume),
          Frequency => WM8994.Audio_Frequency (Frequency));
 
-      This.Sink := WM8994.Analog_Outputs (Sink);
+      This.Sink := WM8994.Output_Device (Sink);
       --  For sake of any individual calls to Set_Frequency, assuming the STM
       --  code is correct that we also need to set the clocks when setting the
       --  frequency
@@ -126,7 +126,7 @@ package body Audio is
      (This      : in out WM8994_Audio_CODEC;
       Frequency : Audio_Frequency)
    is
-      use type WM8994.Analog_Outputs;
+      use type WM8994.Output_Device;
    begin
       if This.Sink = WM8994.No_Output then
          raise Constraint_Error with "No prior call to Initialize";

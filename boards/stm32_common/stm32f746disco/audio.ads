@@ -44,7 +44,7 @@ package Audio is
    type WM8994_Audio_CODEC (Port : not null Any_I2C_Port) is
      tagged limited private;
 
-   type Audio_Outputs is new WM8994.Analog_Outputs with
+   type Audio_Outputs is new WM8994.Output_Device with
      Static_Predicate => Audio_Outputs in
        Headphone | Speaker | Both;
 
@@ -108,7 +108,7 @@ private
      (Port : not null Any_I2C_Port)
    is tagged limited record
       Device : WM8994.Audio_CODEC (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
-      Sink   : WM8994.Analog_Outputs := WM8994.No_Output;
+      Sink   : WM8994.Output_Device := WM8994.No_Output;
       --  The initial value of Sink is overwritten by Initialize. The value
       --  No_Output will trigger a C_E if ever referenced, so it is used as a
       --  check that Initialize has been called. We need the component Sink
