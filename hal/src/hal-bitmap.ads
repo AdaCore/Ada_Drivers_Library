@@ -310,7 +310,7 @@ package HAL.Bitmap is
    Dark_Olive_Green    : constant Bitmap_Color := (255, 085, 107, 047);
    Olive_Drab          : constant Bitmap_Color := (255, 107, 142, 035);
    Lawn_Green          : constant Bitmap_Color := (255, 124, 252, 000);
-   Chart_Reuse         : constant Bitmap_Color := (255, 127, 255, 000);
+   Chartreuse          : constant Bitmap_Color := (255, 127, 255, 000);
    Green_Yellow        : constant Bitmap_Color := (255, 173, 255, 047);
    Dark_Green          : constant Bitmap_Color := (255, 000, 100, 000);
    Green               : constant Bitmap_Color := (255, 000, 255, 000);
