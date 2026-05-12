@@ -423,4 +423,7 @@ package HAL.Bitmap is
    White_Smoke         : constant Bitmap_Color := (255, 245, 245, 245);
    White               : constant Bitmap_Color := (255, 255, 255, 255);
 
+   Chart_Reuse         : Bitmap_Color renames Chartreuse;
+   --  Retain the original 'spelling' for backwards compatibility
+
 end HAL.Bitmap;
