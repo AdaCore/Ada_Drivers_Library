@@ -65,7 +65,7 @@ package body WM8994 is
 
       This.Time.Delay_Milliseconds (50);
 
-      This.Output_Enabled := Output /= No_Output;
+      This.Current_Output := Output;
       This.Input_Enabled  := Input /= No_Input;
 
       This.Set_Output_Mode (Output);
@@ -126,12 +126,12 @@ package body WM8994 is
       --  Enable AIF1 Clock, AIF1 Clock Source = MCLK1 pin
       I2C_Write (This, WM8994_AIF1_Clocking1, 16#0001#);
 
-      if Output /= No_Output then
-         --  Analog Output Configuration
+      if Output = Speaker or else Output = Both then
+         --  Speaker Analog Output Configuration
 
          --  Enable SPKRVOL PGA, Enable SPKMIXR, Enable SPKLVOL PGA, Enable
          --  SPKMIXL
-         I2C_Write (This, 16#03#, 16#0300#);
+         I2C_Write (This, WM8994_PWR_Management_3, 16#0300#);
 
          --  Left Speaker Mixer Volume = 0dB
          I2C_Write (This, WM8994_SPKMIXL_ATT, 16#0000#);
@@ -145,16 +145,28 @@ package body WM8994 is
          I2C_Write (This, WM8994_Speaker_Mixer, 16#0300#);
 
          --  Enable bias generator, Enable VMID, Enable SPKOUTL, Enable SPKOUTR
-         I2C_Write (This, WM8994_PWR_Management_1, 16#3003#);
+         Power_Mgnt_Reg_1 := Power_Mgnt_Reg_1 or 16#3003#;
+         I2C_Write (This, WM8994_PWR_Management_1, Power_Mgnt_Reg_1);
 
-         --  Headphone/Speaker Enable
+         --  Unmute DAC 2 (Left)
+         I2C_Write (This, WM8994_DAC2_Left_Vol, 16#00C0#);
+
+         --  Unmute DAC 2 (Right)
+         I2C_Write (This, WM8994_DAC2_Right_Vol, 16#00C0#);
+
+         --  Unmute the AIF1 Timeslot 1 DAC2 path
+         I2C_Write (This, WM8994_AIF1_DAC2_Filter1, 16#0000#);
+      end if;
+
+      if Output = Headphone or else Output = Auto or else Output = Both then
+         --  Headphone Analog Output Configuration
 
          --  Enable Class W, Class W Envelope Tracking = AIF1 Timeslot 0
          I2C_Write (This, WM8994_CLASS_W, 16#0001#);
 
          --  Enable bias generator, Enable VMID, Enable HPOUT1 (Left) and
-         --  Enable HPOUT1 (Right) input stages idem for Speaker
-         Power_Mgnt_Reg_1 := Power_Mgnt_Reg_1 or 16#0303# or 16#3003#;
+         --  Enable HPOUT1 (Right) input stages
+         Power_Mgnt_Reg_1 := Power_Mgnt_Reg_1 or 16#0303#;
          I2C_Write (This, WM8994_PWR_Management_1, Power_Mgnt_Reg_1);
 
          --  Enable HPOUT1 (Left) and HPOUT1 (Right) intermediate stages
@@ -170,15 +182,17 @@ package body WM8994 is
          I2C_Write (This, WM8994_Output_Mixer_1, 16#0001#);
 
          --  Select DAC1 (Right) to Right Headphone Output PGA (HPOUT1RVOL)
-         --  path.
+         --  path
          I2C_Write (This, WM8994_Output_Mixer_2, 16#0001#);
 
          --  Enable Left Output Mixer (MIXOUTL), Enable Right Output Mixer
-         --  (MIXOUTR) idem for SPKOUTL and SPKOUTR.
-         I2C_Write (This, WM8994_PWR_Management_3, 16#0030# or 16#0300#);
+         --  (MIXOUTR)
+         I2C_Write (This, WM8994_PWR_Management_3,
+                    (if Output = Both then 16#0030# or 16#0300#
+                                      else 16#0030#));
 
          --  Enable DC Servo and trigger start-up mode on left and right
-         --  channels.
+         --  channels
          I2C_Write (This, WM8994_DC_Servo1, 16#0033#);
 
          --  Add Delay
@@ -188,26 +202,17 @@ package body WM8994 is
          --  stages. Remove clamps.
          I2C_Write (This, WM8994_Analog_HP, 16#00EE#);
 
-         --  Unmutes
-
          --  Unmute DAC 1 (Left)
          I2C_Write (This, WM8994_DAC1_Left_Vol, 16#00C0#);
 
          --  Unmute DAC 1 (Right)
          I2C_Write (This, WM8994_DAC1_Right_Vol, 16#00C0#);
 
-         --  Unmute the AIF1 Timeslot 0 DAC path
+         --  Unmute the AIF1 Timeslot 0 DAC1 path
          I2C_Write (This, WM8994_AIF1_DAC1_Filter1, 16#0000#);
+      end if;
 
-         --  Unmute DAC 2 (Left)
-         I2C_Write (This, WM8994_DAC2_Left_Vol, 16#00C0#);
-
-         --  Unmute DAC 2 (Right)
-         I2C_Write (This, WM8994_DAC2_Right_Vol, 16#00C0#);
-
-         --  Unmute the AIF1 Timeslot 1 DAC2 path
-         I2C_Write (This, WM8994_AIF1_DAC2_Filter1, 16#0000#);
-
+      if Output /= No_Output then
          --  Volume Control
          This.Set_Volume (Volume);
       end if;
@@ -277,11 +282,7 @@ package body WM8994 is
 
    procedure Pause (This : in out Audio_CODEC) is
    begin
-      --  Pause the audio playing
       This.Set_Mute (Mute_On);
-
-      --  CODEC in powersave mode
-      I2C_Write (This, WM8994_PWR_Management_2, 16#01#);
    end Pause;
 
    ------------
@@ -299,7 +300,7 @@ package body WM8994 is
 
    procedure Stop (This : in out Audio_CODEC; Cmd : Stop_Mode) is
    begin
-      if This.Output_Enabled then
+      if This.Current_Output /= No_Output then
          --  Mute the output first
          This.Set_Mute (Mute_On);
 
@@ -307,7 +308,7 @@ package body WM8994 is
             return;
          end if;
 
-         This.Output_Enabled := False;
+         This.Current_Output := No_Output;
 
          --  Mute the AIF1 Timeslot 0 DAC1 path
          I2C_Write (This, WM8994_AIF1_DAC1_Filter1, 16#0200#);
@@ -344,17 +345,26 @@ package body WM8994 is
       else
          This.Set_Mute (Mute_Off);
 
-         --  Left Headphone Volume
-         I2C_Write (This, WM8994_Left_Output_Vol, Volume or 16#140#);
+         if This.Current_Output = Headphone
+           or else This.Current_Output = Auto
+           or else This.Current_Output = Both
+         then
+            --  Left Headphone Volume
+            I2C_Write (This, WM8994_Left_Output_Vol, Volume or 16#140#);
 
-         --  Right Headphone volume
-         I2C_Write (This, WM8994_Right_Output_Vol, Volume or 16#140#);
+            --  Right Headphone Volume
+            I2C_Write (This, WM8994_Right_Output_Vol, Volume or 16#140#);
+         end if;
 
-         --  Left Speaker volume
-         I2C_Write (This, WM8994_SPK_Left_Vol, Volume or 16#140#);
+         if This.Current_Output = Speaker
+           or else This.Current_Output = Both
+         then
+            --  Left Speaker volume
+            I2C_Write (This, WM8994_SPK_Left_Vol, Volume or 16#140#);
 
-         --  Right Speaker volume
-         I2C_Write (This, WM8994_SPK_Right_Vol, Volume or 16#140#);
+            --  Right Speaker volume
+            I2C_Write (This, WM8994_SPK_Right_Vol, Volume or 16#140#);
+         end if;
       end if;
    end Set_Volume;
 
@@ -364,18 +374,36 @@ package body WM8994 is
 
    procedure Set_Mute (This : in out Audio_CODEC; Cmd : Mute_Mode) is
    begin
-      if This.Output_Enabled then
+      if This.Current_Output /= No_Output then
          case Cmd is
             when Mute_On =>
-               --  Soft Mute the AIF1 Timeslot 0 DAC1 path L&R
-               I2C_Write (This, WM8994_AIF1_DAC1_Filter1, 16#0200#);
-               --  Soft Mute the AIF1 Timeslot 1 DAC2 path L&R
-               I2C_Write (This, WM8994_AIF1_DAC2_Filter1, 16#0200#);
+               if This.Current_Output = Headphone
+                 or else This.Current_Output = Auto
+                 or else This.Current_Output = Both
+               then
+                  --  Soft Mute the AIF1 Timeslot 0 DAC1 path L&R
+                  I2C_Write (This, WM8994_AIF1_DAC1_Filter1, 16#0200#);
+               end if;
+               if This.Current_Output = Speaker
+                 or else This.Current_Output = Both
+               then
+                  --  Soft Mute the AIF1 Timeslot 1 DAC2 path L&R
+                  I2C_Write (This, WM8994_AIF1_DAC2_Filter1, 16#0200#);
+               end if;
             when Mute_Off =>
-               --  Unmute the AIF1 Timeslot 0 DAC1 path L&R
-               I2C_Write (This, WM8994_AIF1_DAC1_Filter1, 16#0000#);
-               --  Unmute the AIF1 Timeslot 1 DAC2 path L&R
-               I2C_Write (This, WM8994_AIF1_DAC2_Filter1, 16#0000#);
+               if This.Current_Output = Headphone
+                 or else This.Current_Output = Auto
+                 or else This.Current_Output = Both
+               then
+                  --  Unmute the AIF1 Timeslot 0 DAC1 path L&R
+                  I2C_Write (This, WM8994_AIF1_DAC1_Filter1, 16#0000#);
+               end if;
+               if This.Current_Output = Speaker
+                 or else This.Current_Output = Both
+               then
+                  --  Unmute the AIF1 Timeslot 1 DAC2 path L&R
+                  I2C_Write (This, WM8994_AIF1_DAC2_Filter1, 16#0000#);
+               end if;
          end case;
       end if;
    end Set_Mute;
@@ -401,13 +429,13 @@ package body WM8994 is
          when Speaker =>
             --  Enable DAC1 (left), DAC1 (Right)
             I2C_Write (This, WM8994_PWR_Management_5, 16#0C0C#);
-            --  Enable the AIF1 Timeslot 0 (Left) to DAC1 (left) mixer path
+            --  Disable the AIF1 Timeslot 0 (Left) to DAC1 (left) mixer path
             I2C_Write (This, WM8994_AIF1_DAC1_LMR, 16#0000#);
-            --  Enable the AIF1 Timeslot 0 (Right) to DAC 1 (Right) mixer path
+            --  Disable the AIF1 Timeslot 0 (Right) to DAC 1 (Right) mixer path
             I2C_Write (This, WM8994_AIF1_DAC1_RMR, 16#0000#);
-            --  Disable the AIF1 Timeslot 1 (Left) to DAC 2 (Left) mixer path
+            --  Enable the AIF1 Timeslot 1 (Left) to DAC 2 (Left) mixer path
             I2C_Write (This, WM8994_AIF1_DAC2_LMR, 16#0002#);
-            --  Disable the AIF1 Timeslot 1 (Right) to DAC 2 (Right) mixer path
+            --  Enable the AIF1 Timeslot 1 (Right) to DAC 2 (Right) mixer path
             I2C_Write (This, WM8994_AIF1_DAC2_RMR, 16#0002#);
 
          when Headphone | Auto =>
@@ -508,7 +536,7 @@ package body WM8994 is
    procedure Reset (This : in out Audio_CODEC) is
    begin
       I2C_Write (This, WM8994_SW_Reset, 16#0000#);
-      This.Output_Enabled := False;
+      This.Current_Output := No_Output;
       This.Input_Enabled  := False;
    end Reset;
 
