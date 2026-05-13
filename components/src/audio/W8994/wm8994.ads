@@ -116,6 +116,7 @@ package WM8994 is
       --  so users should re-initialize the codec.
 
    WM8994_ID : constant := 16#8994#;
+   --  The expected value returned by function Chip_Id
 
    function Chip_ID (This : in out Audio_CODEC) return UInt16;
 
@@ -125,17 +126,25 @@ package WM8994 is
 
    procedure Resume (This : in out Audio_CODEC);
 
-   procedure Stop (This : in out Audio_CODEC; Cmd : Stop_Mode);
+   procedure Stop
+     (This : in out Audio_CODEC;
+      Mode : Stop_Mode);
 
-   procedure Set_Volume (This : in out Audio_CODEC; Volume : Volume_Level);
+   procedure Set_Volume
+     (This   : in out Audio_CODEC;
+      Volume : Volume_Level);
 
-   procedure Set_Mute (This : in out Audio_CODEC; Cmd : Mute_Mode);
+   procedure Set_Mute
+     (This : in out Audio_CODEC;
+      Mode : Mute_Mode);
 
-   procedure Set_Output_Mode (This : in out Audio_CODEC;
-                              Device : Output_Device);
+   procedure Set_Output_Device
+     (This : in out Audio_CODEC;
+      Device : Output_Device);
 
-   procedure Set_Frequency (This : in out Audio_CODEC;
-                            Freq : Audio_Frequency);
+   procedure Set_Frequency
+     (This : in out Audio_CODEC;
+      Freq : Audio_Frequency);
 
    procedure Reset (This : in out Audio_CODEC);
 
