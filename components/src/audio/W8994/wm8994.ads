@@ -146,8 +146,8 @@ private
       I2C_Addr : UInt10;
       Time     : not null HAL.Time.Any_Delays)
    is tagged limited record
-      Output_Enabled : Boolean := False;
-      Input_Enabled  : Boolean := False;
+      Current_Output : Output_Device := No_Output;
+      Input_Enabled  : Boolean       := False;
    end record;
 
 end WM8994;
