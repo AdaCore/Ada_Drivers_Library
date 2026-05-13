@@ -42,7 +42,6 @@ package body WM8994.IO is
    is
       Status : I2C_Status;
       Data   : I2C_Data (1 .. 2);
-      Check  : UInt16 with Unreferenced;
    begin
       --  Device is MSB first
       Data (1) := UInt8 (Shift_Right (Value and 16#FF00#, 8));
@@ -54,10 +53,6 @@ package body WM8994.IO is
          Mem_Addr_Size => Memory_Size_16b,
          Data          => Data,
          Status        => Status);
-
-      if Register /= 0 then
-         Check := I2C_Read (This, Register);
-      end if;
    end I2C_Write;
 
    --------------
