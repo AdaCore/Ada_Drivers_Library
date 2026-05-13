@@ -77,6 +77,7 @@ package body Audio is
      (This      : in out WM8994_Audio_CODEC;
       Volume    : Audio_Volume;
       Frequency : Audio_Frequency;
+      Bit_Width : Audio_Bit_Width;
       Sink      : Audio_Outputs)
    is
    begin
@@ -98,7 +99,8 @@ package body Audio is
         (Input     => WM8994.No_Input,
          Output    => WM8994.Output_Device (Sink),
          Volume    => As_Device_Volume (Volume),
-         Frequency => WM8994.Audio_Frequency (Frequency));
+         Frequency => WM8994.Audio_Frequency (Frequency),
+         Bit_Width => WM8994.Audio_Sample_Width (Bit_Width));
 
       This.Sink := WM8994.Output_Device (Sink);
       --  For sake of any individual calls to Set_Frequency, assuming the STM

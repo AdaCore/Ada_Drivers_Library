@@ -50,20 +50,25 @@ package Audio is
 
    type Audio_Frequency is new WM8994.Audio_Frequency;
 
+   type Audio_Bit_Width is new WM8994.Audio_Sample_Width;
+
    type Audio_Volume is range 0 .. 100; -- a percentage
 
    type Audio_Buffer is array (Natural range <>) of Integer_16
      with Component_Size => 16, Alignment => 2;
+   --  TODO: change the component to a signed 32-bit quantity, so that any
+   --  sample bit width up to 32 bits could be supported. Otherwise we can
+   --  only support 16-bit samples. See procedure Initialize below.
 
    procedure Initialize
      (This      : in out WM8994_Audio_CODEC;
       Volume    : Audio_Volume;
       Frequency : Audio_Frequency;
+      Bit_Width : Audio_Bit_Width;  -- must be 16 bits due to Audio_Buffer component size
       Sink      : Audio_Outputs);
-   --  This routine initializes the hardware and configures the volume,
-   --  sampling frequency, and output device (the sink). This routine must be
-   --  called, before any others. The routines for setting the volume and
-   --  the output frequency are optional.
+   --  This routine initializes the hardware and configures the volume, sampling
+   --  frequency, output device (the sink), and the sampling bit width. This
+   --  routine must be called, before any others.
 
    procedure Play
      (This   : in out WM8994_Audio_CODEC;
