@@ -89,6 +89,12 @@ package WM8994 is
       Audio_Freq_88kHz => 88_200,
       Audio_Freq_96kHz => 96_000);
 
+   type Audio_Sample_Width is
+     (Audio_16_Bits,
+      Audio_20_Bits,
+      Audio_24_Bits,
+      Audio_32_Bits);
+
    Max_Volume : constant := 16#3F#;
 
    subtype Volume_Level is UInt16 range 0 .. Max_Volume;
@@ -98,7 +104,8 @@ package WM8994 is
       Input     : Input_Device;
       Output    : Output_Device;
       Volume    : Volume_Level;
-      Frequency : Audio_Frequency);
+      Frequency : Audio_Frequency;
+      Bit_Width : Audio_Sample_Width);
 
    type Mute_Mode is
      (Mute_On,
@@ -130,13 +137,18 @@ package WM8994 is
      (This : in out Audio_CODEC;
       Mode : Stop_Mode);
 
-   procedure Set_Volume
-     (This   : in out Audio_CODEC;
-      Volume : Volume_Level);
-
    procedure Set_Mute
      (This : in out Audio_CODEC;
       Mode : Mute_Mode);
+
+   procedure Reset (This : in out Audio_CODEC);
+
+   --  The following procedures allow changes during execution but are not
+   --  required because procedure Initialize sets their values.
+
+   procedure Set_Volume
+     (This   : in out Audio_CODEC;
+      Volume : Volume_Level);
 
    procedure Set_Output_Device
      (This : in out Audio_CODEC;
@@ -146,7 +158,9 @@ package WM8994 is
      (This : in out Audio_CODEC;
       Freq : Audio_Frequency);
 
-   procedure Reset (This : in out Audio_CODEC);
+   procedure Set_Sample_Width
+     (This      : in out Audio_CODEC;
+      Bit_Width : Audio_Sample_Width);
 
 private
 

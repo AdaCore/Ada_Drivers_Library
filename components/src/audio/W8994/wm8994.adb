@@ -77,7 +77,8 @@ package body WM8994 is
       Input     : Input_Device;
       Output    : Output_Device;
       Volume    : Volume_Level;
-      Frequency : Audio_Frequency)
+      Frequency : Audio_Frequency;
+      Bit_Width : Audio_Sample_Width)
    is
       Power_Mgnt_Reg_1 : UInt16 := 0;
    begin
@@ -132,8 +133,8 @@ package body WM8994 is
 
       This.Set_Frequency (Frequency);
 
-      --  AIF1 Word Length = 16-bits, AIF1 Format = I2S (Default Register Value)
-      I2C_Write (This, WM8994_AIF1_Control1, 16#4010#);
+      This.Set_Sample_Width (Bit_Width);
+
       --  slave mode
       I2C_Write (This, WM8994_AIF1_Master_Slave, 16#0000#);
 
@@ -147,11 +148,11 @@ package body WM8994 is
       --  headphone (if active). Each call ORs its power bits into
       --  Power_Mgnt_Reg_1 before writing PWR_Management_1, so that both
       --  sets of bits are present if both outputs are enabled.
-      if Output = Speaker or else Output = Both then
+      if Output in Speaker | Both then
          Enable_Speaker_Output (This, Power_Mgnt_Reg_1);
       end if;
 
-      if Output = Headphone or else Output = Auto or else Output = Both then
+      if Output in Headphone | Auto | Both then
          Enable_Headphone_Output (This, Power_Mgnt_Reg_1,
                                   Include_Speaker => Output = Both);
       end if;
@@ -179,9 +180,7 @@ package body WM8994 is
    -------------
 
    function Chip_ID (This : in out Audio_CODEC) return UInt16 is
-   begin
-      return I2C_Read (This, WM8994_CHIPID_ADDR);
-   end Chip_ID;
+     (I2C_Read (This, WM8994_CHIPID_ADDR));
 
    ----------
    -- Play --
@@ -619,5 +618,30 @@ package body WM8994 is
       --  AIF ADC1 HPF enable, HPF cut = hifi mode fc=4Hz at fs=48kHz
       I2C_Write (This, WM8994_AIF1_ADC1_Filters, 16#1800#);
    end Enable_Line_Input;
+
+   ---------------------
+   -- Set_Sample_Width --
+   ---------------------
+
+   procedure Set_Sample_Width
+     (This      : in out Audio_CODEC;
+      Bit_Width : Audio_Sample_Width)
+   is
+      --  AIF1_WL[1:0] occupies bits 6:5 of AIF1_Control1 (Register 0300h).
+      --  All other bits (format, source select, boost, invert) are preserved
+      --  via read-modify-write.
+      --  Per WM8994_Rev4.6, p.177, Register R768 (0300h), bits 6:5:
+      --    00 = 16 bits, 01 = 20 bits, 10 = 24 bits, 11 = 32 bits.
+      AIF1_WL_Mask : constant UInt16 := not 16#0060#;
+      WL_Bits      : constant array (Audio_Sample_Width) of UInt16 :=
+        (Audio_16_Bits => 16#0000#,
+         Audio_20_Bits => 16#0020#,
+         Audio_24_Bits => 16#0040#,
+         Audio_32_Bits => 16#0060#);
+      Current : constant UInt16 := I2C_Read (This, WM8994_AIF1_Control1);
+   begin
+      I2C_Write (This, WM8994_AIF1_Control1,
+                 (Current and AIF1_WL_Mask) or WL_Bits (Bit_Width));
+   end Set_Sample_Width;
 
 end WM8994;
