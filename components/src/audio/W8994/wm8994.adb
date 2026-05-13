@@ -40,7 +40,7 @@ package body WM8994 is
    --  must not be called outside of Initialize: each sequence depends on the
    --  shared Power_Mgnt_Reg_1 accumulator being correct on entry, and on the
    --  digital path (clocking, DAC routing) having already been configured by
-   --  Set_Output_Mode and Set_Frequency before any of them are called.
+   --  Set_Output_Device and Set_Frequency before any of them are called.
 
    procedure Enable_Speaker_Output
      (This             : in out Audio_CODEC;
@@ -101,7 +101,7 @@ package body WM8994 is
       This.Current_Output := Output;
       This.Input_Enabled  := Input /= No_Input;
 
-      This.Set_Output_Mode (Output);
+      This.Set_Output_Device (Output);
 
       case Input is
          when No_Input =>
@@ -214,12 +214,15 @@ package body WM8994 is
    -- Stop --
    ----------
 
-   procedure Stop (This : in out Audio_CODEC; Cmd : Stop_Mode) is
+   procedure Stop
+     (This : in out Audio_CODEC;
+      Mode : Stop_Mode)
+   is
    begin
       if This.Current_Output /= No_Output then
          This.Set_Mute (Mute_On);
 
-         if Cmd = Stop_Power_Down_Sw then
+         if Mode = Stop_Power_Down_Sw then
             return;
          end if;
 
@@ -275,10 +278,13 @@ package body WM8994 is
    -- Set_Mute --
    --------------
 
-   procedure Set_Mute (This : in out Audio_CODEC; Cmd : Mute_Mode) is
+   procedure Set_Mute
+     (This : in out Audio_CODEC;
+      Mode : Mute_Mode)
+   is
    begin
       if This.Current_Output /= No_Output then
-         case Cmd is
+         case Mode is
             when Mute_On =>
                if This.Current_Output in Headphone | Auto | Both then
                   --  Soft Mute the AIF1 Timeslot 0 DAC1 path L&R
@@ -301,11 +307,11 @@ package body WM8994 is
       end if;
    end Set_Mute;
 
-   ---------------------
-   -- Set_Output_Mode --
-   ---------------------
+   -----------------------
+   -- Set_Output_Device --
+   -----------------------
 
-   procedure Set_Output_Mode
+   procedure Set_Output_Device
      (This   : in out Audio_CODEC;
       Device : Output_Device)
    is
@@ -357,7 +363,7 @@ package body WM8994 is
             --  Enable the AIF1 Timeslot 1 (Right) to DAC 2 (Right) mixer path
             I2C_Write (This, WM8994_AIF1_DAC2_RMR, 16#0002#);
       end case;
-   end Set_Output_Mode;
+   end Set_Output_Device;
 
    -------------------
    -- Set_Frequency --
