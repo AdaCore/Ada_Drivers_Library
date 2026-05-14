@@ -167,17 +167,22 @@ package body Audio is
                PLLI2SQ    => 2,    --  SAI Clk(First level) = 214.5 MHz
                PLLI2SDIVQ => 19);  --  I2S Clk = 215.4 / 19 = 11.289 MHz
 
-         when Audio_Freq_8kHz  | Audio_Freq_16kHz |
-              Audio_Freq_48kHz | Audio_Freq_96kHz =>
+         when Audio_Freq_8kHz  | Audio_Freq_12kHz | Audio_Freq_16kHz |
+              Audio_Freq_24kHz | Audio_Freq_48kHz | Audio_Freq_96kHz =>
             Configure_SAI_I2S_Clock
               (Audio_SAI,
                PLLI2SN    => 344,  --  VCO Output = 344MHz
                PLLI2SQ    => 7,    --  SAI Clk(First level) = 49.142 MHz
                PLLI2SDIVQ => 1);   --  I2S Clk = 49.142 MHz
 
-         when Audio_Freq_12kHz | Audio_Freq_24kHz | Audio_Freq_88kHz =>
-            raise Program_Error with "freq not yet implemented";
-            --  FIXME!
+         when Audio_Freq_88kHz =>
+            --  Best rational approx of 88200*256 Hz = 22.5792 MHz from 1 MHz VCO;
+            --  271/4/3 = 22.583 MHz, MCKDIV=0 -> FS = 88216 Hz (0.018% error)
+            Configure_SAI_I2S_Clock
+              (Audio_SAI,
+               PLLI2SN    => 271,   --  VCO Output = 271MHz
+               PLLI2SQ    => 4,     --  SAI Clk(First level) = 67.75 MHz
+               PLLI2SDIVQ => 3);    --  SAI Clk = 22.583 MHz
       end case;
    end Set_Audio_Clock;
 
@@ -295,9 +300,9 @@ package body Audio is
                                     Clock_Speed => 100_000);
    end Initialize_Audio_I2C;
 
-   -------------------
-   -- Start_Playing --
-   -------------------
+   ----------
+   -- Play --
+   ----------
 
    procedure Play
      (This   : in out WM8994_Audio_CODEC;
