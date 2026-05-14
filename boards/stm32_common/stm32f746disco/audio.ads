@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                    Copyright (C) 2016, AdaCore                           --
+--                  Copyright (C) 2016-2026, AdaCore                        --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -32,50 +32,99 @@
 --   @author  MCD Application Team                                          --
 ------------------------------------------------------------------------------
 
-with HAL.Audio; use HAL.Audio;
-with HAL.I2C;   use HAL.I2C;
-with Ravenscar_Time;
+with HAL;        use HAL;
+with HAL.I2C;    use HAL.I2C;
+with Interfaces; use Interfaces;
+with WM8994;
 
-private with WM8994;
+private with Ravenscar_Time;
 
 package Audio is
 
-   type WM8994_Audio_Device (Port : not null Any_I2C_Port) is
+   type WM8994_Audio_CODEC (Port : not null Any_I2C_Port) is
      tagged limited private;
 
-   procedure Initialize_Audio_Out
-     (This      : in out WM8994_Audio_Device;
+   type Audio_Outputs is new WM8994.Output_Device with
+     Static_Predicate => Audio_Outputs in
+       Headphone | Speaker | Both;
+
+   type Audio_Frequency is new WM8994.Audio_Frequency;
+
+   type Audio_Bit_Width is new WM8994.Audio_Sample_Width;
+
+   type Audio_Volume is range 0 .. 100; -- a percentage
+
+   type Audio_Buffer is array (Natural range <>) of Integer_16
+     with Component_Size => 16, Alignment => 2;
+   --  TODO: change the component to a signed 32-bit quantity, so that any
+   --  sample bit width up to 32 bits could be supported. Otherwise we can
+   --  only support 16-bit samples. See procedure Initialize below.
+
+   procedure Initialize
+     (This      : in out WM8994_Audio_CODEC;
       Volume    : Audio_Volume;
-      Frequency : Audio_Frequency);
+      Frequency : Audio_Frequency;
+      Bit_Width : Audio_Bit_Width;  -- must be 16 bits due to Audio_Buffer component size
+      Sink      : Audio_Outputs);
+   --  This routine initializes the hardware and configures the volume, sampling
+   --  frequency, output device (the sink), and the sampling bit width. This
+   --  routine must be called, before any others.
+
+   procedure Play
+     (This   : in out WM8994_Audio_CODEC;
+      Buffer : Audio_Buffer);
+   --  Start playing content from the specified buffer. The effect is to tell
+   --  the underlying WM8994 CODEC where the buffer to be played is located,
+   --  and cause the CODEC to start playing the contents.
+   --
+   --  NB: playing continues after the call returns. An additional mechanism,
+   --  outside this package, updates the content of the buffer while the CODEC
+   --  is playing it. That update/play process continues until either there is
+   --  no more music to be played, or Stop or Pause is called.
+
+   procedure Pause
+     (This : in out WM8994_Audio_CODEC);
+   --  After calling Pause, only Resume should be called for resuming play (do
+   --  not call Start_Playing again).
+
+   procedure Resume
+     (This : in out WM8994_Audio_CODEC);
+   --  Procedure Resume should be called only when the audio is playing or
+   --  paused (not stopped).
+
+   procedure Stop
+     (This : in out WM8994_Audio_CODEC);
+   --  Stops the hardware and update/play process. Once called, you must call
+   --  Start_Playing again if you want to restart the output.
 
    procedure Set_Volume
-     (This   : in out WM8994_Audio_Device;
+     (This   : in out WM8994_Audio_CODEC;
       Volume : Audio_Volume);
 
    procedure Set_Frequency
-     (This   : in out WM8994_Audio_Device;
+     (This      : in out WM8994_Audio_CODEC;
       Frequency : Audio_Frequency);
-
-   procedure Play
-     (This   : in out WM8994_Audio_Device;
-      Buffer : Audio_Buffer);
-
-   procedure Pause
-     (This : in out WM8994_Audio_Device);
-
-   procedure Resume
-     (This : in out WM8994_Audio_Device);
-
-   procedure Stop
-     (This : in out WM8994_Audio_Device);
 
 private
 
    Audio_I2C_Addr  : constant I2C_Address := 16#34#;
 
-   type WM8994_Audio_Device (Port : not null Any_I2C_Port) is
-     tagged limited record
-      Device : WM8994.WM8994_Device (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
+   type WM8994_Audio_CODEC
+     (Port : not null Any_I2C_Port)
+   is tagged limited record
+      Device : WM8994.Audio_CODEC (Port, Audio_I2C_Addr, Ravenscar_Time.Delays);
+      Sink   : WM8994.Output_Device := WM8994.No_Output;
+      --  The initial value of Sink is overwritten by Initialize. The value
+      --  No_Output will trigger a C_E if ever referenced, so it is used as a
+      --  check that Initialize has been called. We need the component Sink
+      --  itself for the sake of a clean parameter profile for Set_Frequency,
+      --  otherwise clients would have to pass another parameter to specify
+      --  the output device selection again (after having done so when calling
+      --  Initialize). That's because Set_Frequency needs to do enough hardware
+      --  re-initialization to accommodate the new frequency, but doing so
+      --  requires the output device selection so that the re-init can select
+      --  the active slots. Just activating all slots (as is done in the STM
+      --  C code) doesn't work (at least in the current Ada code).
    end record;
 
 end Audio;

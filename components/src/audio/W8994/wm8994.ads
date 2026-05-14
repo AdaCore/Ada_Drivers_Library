@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                     Copyright (C) 2015-2016, AdaCore                     --
+--                     Copyright (C) 2015-2026, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,7 +29,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Driver for the WM8994 CODEC
+--  This package provides a simple driver for the WM8994 CODEC. It does not
+--  provide a full definition of the WM8994's functionality.
 
 with HAL;      use HAL;
 with HAL.I2C;  use HAL.I2C;
@@ -37,90 +38,139 @@ with HAL.Time;
 
 package WM8994 is
 
+   type Audio_CODEC
+     (Port     : not null Any_I2C_Port;
+      I2C_Addr : UInt10;
+      Time     : not null HAL.Time.Any_Delays)
+   is tagged limited private;
+
    type Output_Device is
      (No_Output,
       Speaker,
       Headphone,
       Both,
       Auto);
+
    type Input_Device is
      (No_Input,
       Microphone,
       Input_Line);
 
-   WM8994_ID : constant := 16#8994#;
-
    type Audio_Frequency is
      (Audio_Freq_8kHz,
       Audio_Freq_11kHz,
+      Audio_Freq_12kHz,
       Audio_Freq_16kHz,
       Audio_Freq_22kHz,
+      Audio_Freq_24kHz,
+      Audio_Freq_32kHz,
       Audio_Freq_44kHz,
       Audio_Freq_48kHz,
+      Audio_Freq_88kHz,
       Audio_Freq_96kHz)
      with Size => 32;
+   --  Sample rates from 8kHz to 96kHz are all supported, per Datasheet
+   --  WM8994_Rev4.6, pages 43 and 93, from Cirrus Logic. See all Tables 37
+   --  and 41.
+   --
+   --  Note that 88.2kHz and 96kHz modes are supported for AIF1 input (DAC
+   --  playback) only.
+
    for Audio_Frequency use
      (Audio_Freq_8kHz  =>  8_000,
       Audio_Freq_11kHz => 11_025,
+      Audio_Freq_12kHz => 12_000,
       Audio_Freq_16kHz => 16_000,
       Audio_Freq_22kHz => 22_050,
+      Audio_Freq_24kHz => 24_000,
+      Audio_Freq_32kHz => 32_000,
       Audio_Freq_44kHz => 44_100,
       Audio_Freq_48kHz => 48_000,
+      Audio_Freq_88kHz => 88_200,
       Audio_Freq_96kHz => 96_000);
 
-   type Mute is
+   type Audio_Sample_Width is
+     (Audio_16_Bits,
+      Audio_20_Bits,
+      Audio_24_Bits,
+      Audio_32_Bits);
+
+   Max_Volume : constant := 16#3F#;
+
+   subtype Volume_Level is UInt16 range 0 .. Max_Volume;
+
+   procedure Initialize
+     (This      : in out Audio_CODEC;
+      Input     : Input_Device;
+      Output    : Output_Device;
+      Volume    : Volume_Level;
+      Frequency : Audio_Frequency;
+      Bit_Width : Audio_Sample_Width);
+
+   type Mute_Mode is
      (Mute_On,
       Mute_Off);
 
    type Stop_Mode is
      (Stop_Power_Down_Sw,
+      --  Stop_Power_Down_Sw only mutes the audio codec, it does not alter
+      --  hardware settings. When resuming from this mode the codec keeps the
+      --  previous initialization so there is no need to re-initialize the
+      --  codec registers.
       Stop_Power_Down_Hw);
-   --  Stop_Power_Down_Sw:
-   --  only mutes the audio codec. When resuming from this mode the codec
-   --  keeps the previous initialization (no need to re-Initialize the codec
-   --  registers).
-   --  Stop_Power_Down_Hw:
-   --  Physically power down the codec. When resuming from this mode, the codec
-   --  is set to default configuration (user should re-Initialize the codec in
-   --  order to play again the audio stream).
+      --  Stop_Power_Down_Hw physically powers down the codec hardware. When
+      --  resuming from this mode, the codec is set to default configuration
+      --  so users should re-initialize the codec.
 
-   subtype Volume_Level is UInt8 range 0 .. 100;
+   WM8994_ID : constant := 16#8994#;
+   --  The expected value returned by function Chip_Id
 
-   type WM8994_Device
+   function Chip_ID (This : in out Audio_CODEC) return UInt16;
+
+   procedure Play (This : in out Audio_CODEC);
+
+   procedure Pause (This : in out Audio_CODEC);
+
+   procedure Resume (This : in out Audio_CODEC);
+
+   procedure Stop
+     (This : in out Audio_CODEC;
+      Mode : Stop_Mode);
+
+   procedure Set_Mute
+     (This : in out Audio_CODEC;
+      Mode : Mute_Mode);
+
+   procedure Reset (This : in out Audio_CODEC);
+
+   --  The following procedures allow changes during execution but are not
+   --  required because procedure Initialize sets their values.
+
+   procedure Set_Volume
+     (This   : in out Audio_CODEC;
+      Volume : Volume_Level);
+
+   procedure Set_Output_Device
+     (This : in out Audio_CODEC;
+      Device : Output_Device);
+
+   procedure Set_Frequency
+     (This : in out Audio_CODEC;
+      Freq : Audio_Frequency);
+
+   procedure Set_Sample_Width
+     (This      : in out Audio_CODEC;
+      Bit_Width : Audio_Sample_Width);
+
+private
+
+   type Audio_CODEC
      (Port     : not null Any_I2C_Port;
       I2C_Addr : UInt10;
       Time     : not null HAL.Time.Any_Delays)
-   is tagged limited private;
-
-   procedure Init (This      : in out WM8994_Device;
-                   Input     : Input_Device;
-                   Output    : Output_Device;
-                   Volume    : UInt8;
-                   Frequency : Audio_Frequency);
-
-   function Read_ID (This : in out WM8994_Device) return UInt16;
-   procedure Play (This : in out WM8994_Device);
-   procedure Pause (This : in out WM8994_Device);
-   procedure Resume (This : in out WM8994_Device);
-   procedure Stop (This : in out WM8994_Device; Cmd : Stop_Mode);
-   procedure Set_Volume (This : in out WM8994_Device; Volume : Volume_Level);
-   procedure Set_Mute (This : in out WM8994_Device; Cmd : Mute);
-   procedure Set_Output_Mode (This : in out WM8994_Device;
-                              Device : Output_Device);
-   procedure Set_Frequency (This : in out WM8994_Device;
-                            Freq : Audio_Frequency);
-   procedure Reset (This : in out WM8994_Device);
-
-private
-   type WM8994_Device (Port     : not null Any_I2C_Port;
-                       I2C_Addr : UInt10;
-                       Time     : not null HAL.Time.Any_Delays) is tagged limited null record;
-
-   procedure I2C_Write (This   : in out WM8994_Device;
-                        Reg   : UInt16;
-                        Value : UInt16);
-   function I2C_Read (This : in out WM8994_Device;
-                      Reg : UInt16)
-                      return UInt16;
+   is tagged limited record
+      Current_Output : Output_Device := No_Output;
+      Input_Enabled  : Boolean       := False;
+   end record;
 
 end WM8994;
