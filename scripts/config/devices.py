@@ -186,13 +186,12 @@ def load_device_config(config, source_dir):
 
         config.pre_define('Number_Of_Interrupts', 32, origin)
 
-        if mcu.endswith ('AB'):
+        if mcu.endswith('AB'):
             config.add_memory('rom', 'flash', '0x00000000', '128K')
         else:
             config.add_memory('rom', 'flash', '0x00000000', '256K')
 
-
-        if mcu.endswith ('AC'):
+        if mcu.endswith('AC'):
             config.add_memory('ram', 'ram', '0x20000000', '32K')
         else:
             config.add_memory('ram', 'ram', '0x20000000', '16K')

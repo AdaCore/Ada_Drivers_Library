@@ -15,9 +15,9 @@ top_readme_file = os.path.join(ADL_root_dir, "README.md")
 undocumented = []
 
 error = \
-"""Next boards were not mentioned in the top README.md file!
-Please, append each of them to the table in the Board List section.
-"""
+    """Next boards were not mentioned in the top README.md file!
+    Please, append each of them to the table in the Board List section.
+    """
 
 with open(top_readme_file, 'r', encoding='utf-8') as file:
     lines = [line for line in file]

@@ -4,22 +4,23 @@ from subprocess import check_call
 
 
 BOARDS = {
-    'Crazyflie':           { 'rts_profiles': ['light-tasking', 'embedded']},
-    'HiFive1':             { 'rts_profiles': ['light']},
-    'HiFive1_rev_B':       { 'rts_profiles': ['light']},
-    'Unleashed':           { 'rts_profiles': ['light', 'light-tasking', 'embedded']},
-    'MicroBit':            { 'rts_profiles': ['light']},
-    'NRF52_DK':            { 'rts_profiles': ['light']},
-    'Native':              { 'rts_profiles': ['none']},
-    'OpenMV2':             { 'rts_profiles': ['light-tasking', 'embedded']},
-    'STM32F407_Discovery': { 'rts_profiles': ['light-tasking', 'embedded']},
-    'STM32F429_Discovery': { 'rts_profiles': ['light-tasking', 'embedded']},
-    'STM32F469_Discovery': { 'rts_profiles': ['light-tasking', 'embedded']},
-    'STM32F746_Discovery': { 'rts_profiles': ['light-tasking', 'embedded']},
-    'STM32F769_Discovery': { 'rts_profiles': ['light-tasking', 'embedded']},
-    'NUCLEO_F446ZE':       { 'rts_profiles': ['light-tasking', 'embedded']},
-    'Feather_STM32F405':   { 'rts_profiles': ['light-tasking', 'embedded']},
-    'STM32_H405':          { 'rts_profiles': ['light-tasking', 'embedded']},
+    'Crazyflie':           {'rts_profiles': ['light-tasking', 'embedded']},
+    'HiFive1':             {'rts_profiles': ['light']},
+    'HiFive1_rev_B':       {'rts_profiles': ['light']},
+    'Unleashed':           {'rts_profiles': ['light',
+                                             'light-tasking', 'embedded']},
+    'MicroBit':            {'rts_profiles': ['light']},
+    'NRF52_DK':            {'rts_profiles': ['light']},
+    'Native':              {'rts_profiles': ['none']},
+    'OpenMV2':             {'rts_profiles': ['light-tasking', 'embedded']},
+    'STM32F407_Discovery': {'rts_profiles': ['light-tasking', 'embedded']},
+    'STM32F429_Discovery': {'rts_profiles': ['light-tasking', 'embedded']},
+    'STM32F469_Discovery': {'rts_profiles': ['light-tasking', 'embedded']},
+    'STM32F746_Discovery': {'rts_profiles': ['light-tasking', 'embedded']},
+    'STM32F769_Discovery': {'rts_profiles': ['light-tasking', 'embedded']},
+    'NUCLEO_F446ZE':       {'rts_profiles': ['light-tasking', 'embedded']},
+    'Feather_STM32F405':   {'rts_profiles': ['light-tasking', 'embedded']},
+    'STM32_H405':          {'rts_profiles': ['light-tasking', 'embedded']},
     }
 
 
@@ -28,7 +29,7 @@ FOLDERS = {'Crazyflie': 'crazyflie',
            'HiFive1_rev_B': 'HiFive1_rev_B',
            'Unleashed': 'Unleashed',
            'MicroBit': 'MicroBit',
-	   'NRF52_DK': 'NRF52_DK',
+           'NRF52_DK': 'NRF52_DK',
            'Native': 'native',
            'OpenMV2': 'OpenMV2',
            'STM32F407_Discovery': 'stm32f407_discovery',
@@ -41,6 +42,7 @@ FOLDERS = {'Crazyflie': 'crazyflie',
            'STM32_H405':          'stm32_h405'}
 
 USE_STARTUP_GEN = ['HiFive1', 'HiFive1_rev_B', 'MicroBit', 'NRF52_DK']
+
 
 def gen_project(board_name, rts):
     assert board_name is not None, "board is undefined"
@@ -75,7 +77,8 @@ def gen_project(board_name, rts):
             "-o", object_dir_name,
             "Board=%s" % board_name,
             "Runtime_Profile=%s" % rts,
-            "Use_Startup_Gen=" + ("True" if board_name in USE_STARTUP_GEN else "False")]
+            "Use_Startup_Gen=" + (
+                "True" if board_name in USE_STARTUP_GEN else "False")]
     check_call(args)
 
 

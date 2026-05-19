@@ -1,5 +1,6 @@
 import os
 
+
 class Peripheral(object):
     def __init__(self):
         self._base_addr = 0
@@ -65,7 +66,7 @@ class SOC(object):
     def write_device_spec(self, source_dir):
         filename = "sifive-device.ads"
         with open(os.path.join(source_dir, filename), "w") as file:
-            file.write(self.generate_device_spec());
+            file.write(self.generate_device_spec())
 
 
 class SiFive(Peripheral):
@@ -120,16 +121,19 @@ class SiFivePWM_0(SiFive):
 
         self._port_id = port_id
 
-        self.set_reg(base_addr, size);
-        self.add_source_dir('arch/RISC-V/SiFive/drivers/pwm0');
+        self.set_reg(base_addr, size)
+        self.add_source_dir('arch/RISC-V/SiFive/drivers/pwm0')
         self.add_dependency("SiFive.PWM")
         self.add_dependency("System")
 
     def generate_device_spec(self):
         out = "   -- PWM%s --\n\n" % self._port_id
-        out += "   PWM%s_Internal : aliased SiFive.PWM.Internal_PWM\n" % self._port_id
-        out += "      with Import, Address => System'To_Address (%d);\n" % (self._base_addr)
-        out += "   PWM%s : aliased SiFive.PWM.PWM_Device (PWM%s_Internal'Access);\n"\
+        out += "   PWM%s_Internal : aliased SiFive.PWM.Internal_PWM\n" % \
+            self._port_id
+        out += "      with Import, Address => System'To_Address (%d);\n" % \
+            (self._base_addr)
+        out += "   PWM%s : aliased SiFive.PWM.PWM_Device "\
+               "(PWM%s_Internal'Access);\n"\
                % (self._port_id, self._port_id)
         return out + "\n"
 
@@ -140,8 +144,8 @@ class SiFiveUART_0(SiFive):
 
         self._port_id = port_id
 
-        self.set_reg(base_addr, size);
-        self.add_source_dir('arch/RISC-V/SiFive/drivers/uart0');
+        self.set_reg(base_addr, size)
+        self.add_source_dir('arch/RISC-V/SiFive/drivers/uart0')
         self.add_dependency("SiFive.UART")
         self.add_dependency("System")
 

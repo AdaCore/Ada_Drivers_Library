@@ -23,7 +23,7 @@ class Database:
     def print_remaining_pre_defined(self):
         for key in self.pre_defined_params:
             origin = self.pre_defined_params[key]['origin']
-            print("warning: key '%s' from %s " % (key, origin) + \
+            print("warning: key '%s' from %s " % (key, origin) +
                   "was not used in the configuration")
 
     def add_to_configuration(self, key, kind, value, origin):
@@ -53,7 +53,7 @@ class Database:
                 out += "   %-30s : constant Boolean := %-20s -- From %s\n" % \
                       (key, str(value) + ';', origin)
             else:
-                print("fatal error, unknown kind '%s' for config key '%s'" % \
+                print("fatal error, unknown kind '%s' for config key '%s'" %
                       (kind, key))
                 sys.exit(1)
 
@@ -84,26 +84,36 @@ class Database:
         # Device configuration
         if arch is not None and arch != "Native":
             out += "   package Device_Configuration is\n"
-            out += '      for CPU_Name use "%s";\n' % self.get_config("CPU_Core");
-            out += '      for Number_Of_Interrupts use "%d";\n' % self.get_config("Number_Of_Interrupts");
+            out += '      for CPU_Name use "%s";\n' % \
+                self.get_config("CPU_Core")
+            out += '      for Number_Of_Interrupts use "%d";\n' % \
+                self.get_config("Number_Of_Interrupts")
 
             for cnt in range(self.get_config("Number_Of_Interrupts")):
-                out += '      for Interrupt ("%d") use "%s";\n' % (cnt, "adl_irq")
+                out += '      for Interrupt ("%d") use "%s";\n' % \
+                    (cnt, "adl_irq")
 
             if len(self.memory_names()):
-               out += '\n      for Memories use ("' + '", "'.join(self.memory_names())
-               out += '");\n'
+                out += '\n      for Memories use ("' + '", "'.join(
+                    self.memory_names())
+                out += '");\n'
 
-               for mem in self.memories:
-                   out += '\n      for Mem_Kind ("%(name)s") use "%(kind)s";\n' % (mem)
-                   out += '      for Address  ("%(name)s") use "%(addr)s";\n' % (mem)
-                   out += '      for Size     ("%(name)s") use "%(size)s";\n' % (mem)
+                for mem in self.memories:
+                    out += '\n'
+                    out += '      for Mem_Kind ("%(name)s") use "%(kind)s";\n'\
+                        % (mem)
+                    out += '      for Address  ("%(name)s") use "%(addr)s";\n'\
+                        % (mem)
+                    out += '      for Size     ("%(name)s") use "%(size)s";\n'\
+                        % (mem)
 
-               out += '\n      for Boot_Memory use "%s";\n' % self.get_config("Boot_Memory")
+                out += '\n      for Boot_Memory use "%s";\n' % \
+                       self.get_config("Boot_Memory")
 
             for key in ['hifive1_uart_root', 'qemu_sifive_test_exit']:
                 if key in self.configuration:
-                    out += '      for User_Tag ("%s") use "%s";\n' % (key, self.configuration[key]['value'])
+                    out += '      for User_Tag ("%s") use "%s";\n' % \
+                            (key, self.configuration[key]['value'])
 
             out += '   end Device_Configuration;\n\n'
 
@@ -158,11 +168,11 @@ class Database:
 
         if validation(value):
             self.add_to_configuration(key, validation.kind(), value, origin)
-            print("For key '%s', take value '%s' from %s" % \
+            print("For key '%s', take value '%s' from %s" %
                   (key, value, origin))
             del self.pre_defined_params[key]
         else:
-            print("Invalid value '%s' for key '%s' from %s" % \
+            print("Invalid value '%s' for key '%s' from %s" %
                   (value, key, origin))
             print("Valid values are : %s" % str(validation))
             sys.exit(1)
@@ -180,7 +190,7 @@ class Database:
                                           default,
                                           "default value")
             else:
-                print("fatal error, user doesn't want to use default " + \
+                print("fatal error, user doesn't want to use default " +
                       "value for key '%s'" % key)
                 sys.exit(1)
         else:
@@ -231,11 +241,11 @@ class Database:
             key = key.strip()
             val = val.strip()
             if key and val:
-                print("Add pre definition '%s' => '%s' from file '%s'" % \
+                print("Add pre definition '%s' => '%s' from file '%s'" %
                       (key, val, file.name))
                 self.pre_define(key, val, "%s:%d" % (file.name, line_cnt))
             else:
-                print("invalid input configuration line at %s:%d" % \
+                print("invalid input configuration line at %s:%d" %
                       (file.name, line_cnt))
 
     # Memory layout config #

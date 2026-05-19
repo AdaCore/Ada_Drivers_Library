@@ -45,132 +45,135 @@ def gprbuild(project_file, debug=False):
 
     return returncode
 
+
 STM_DRIVERS = "/arch/ARM/STM32/driver_demos/"
 
 # List of project to compile
 projects = [
-            # STM32F429 Discovery
-            "/boards/stm32f429_discovery/stm32f429_discovery_full.gpr",
-            "/boards/stm32f429_discovery/stm32f429_discovery_sfp.gpr",
-            "/examples/STM32F429_Discovery/draw_stm32f429disco.gpr",
-            "/examples/STM32F429_Discovery/blinky_f429disco.gpr",
-            "/examples/STM32F429_Discovery/dma2d_stm32f429disco.gpr",
-            "/examples/STM32F429_Discovery/serial_ports_f429disco.gpr",
+    # STM32F429 Discovery
+    "/boards/stm32f429_discovery/stm32f429_discovery_full.gpr",
+    "/boards/stm32f429_discovery/stm32f429_discovery_sfp.gpr",
+    "/examples/STM32F429_Discovery/draw_stm32f429disco.gpr",
+    "/examples/STM32F429_Discovery/blinky_f429disco.gpr",
+    "/examples/STM32F429_Discovery/dma2d_stm32f429disco.gpr",
+    "/examples/STM32F429_Discovery/serial_ports_f429disco.gpr",
 
 
-            # STM32F4 DISCO
-            "/boards/stm32f407_discovery/stm32f407_discovery_full.gpr",
-            "/boards/stm32f407_discovery/stm32f407_discovery_sfp.gpr",
-            "/examples/STM32F4_DISCO/accelerometer/accelerometer.gpr",
-            "/examples/STM32F4_DISCO/simple_audio/simple_audio.gpr",
-            "/examples/STM32F4_DISCO/filesystem/filesystem.gpr",
-            "/examples/STM32F4_DISCO/blinky_f4disco.gpr",
-            "/examples/STM32F4_DISCO/serial_ports_f4disco.gpr",
+    # STM32F4 DISCO
+    "/boards/stm32f407_discovery/stm32f407_discovery_full.gpr",
+    "/boards/stm32f407_discovery/stm32f407_discovery_sfp.gpr",
+    "/examples/STM32F4_DISCO/accelerometer/accelerometer.gpr",
+    "/examples/STM32F4_DISCO/simple_audio/simple_audio.gpr",
+    "/examples/STM32F4_DISCO/filesystem/filesystem.gpr",
+    "/examples/STM32F4_DISCO/blinky_f4disco.gpr",
+    "/examples/STM32F4_DISCO/serial_ports_f4disco.gpr",
 
-            # STM32 F4VE
-            "/boards/stm32_f4ve/stm32_f4ve_full.gpr",
-            "/boards/stm32_f4ve/stm32_f4ve_sfp.gpr",
-            "/examples/stm32_f4ve/blinky_stm32_f4ve.gpr",
-            "/examples/stm32_f4ve/draw/draw.gpr",
-            "/examples/stm32_f4ve/lcd/lcd.gpr",
-            "/examples/stm32_f4ve/lcd_spi/lcd_spi.gpr",
+    # STM32 F4VE
+    "/boards/stm32_f4ve/stm32_f4ve_full.gpr",
+    "/boards/stm32_f4ve/stm32_f4ve_sfp.gpr",
+    "/examples/stm32_f4ve/blinky_stm32_f4ve.gpr",
+    "/examples/stm32_f4ve/draw/draw.gpr",
+    "/examples/stm32_f4ve/lcd/lcd.gpr",
+    "/examples/stm32_f4ve/lcd_spi/lcd_spi.gpr",
 
-            # STM32F4XX M
-            "/boards/stm32f4xx_m/stm32f4xx_m_full.gpr",
-            "/boards/stm32f4xx_m/stm32f4xx_m_sfp.gpr",
-            "/examples/stm32f4xx_m/blinky/blinky.gpr",
-            "/examples/stm32f4xx_m/flash/flash.gpr",
-            "/examples/stm32f4xx_m/sdcard_fs/sdcard_fs.gpr",
-            "/examples/stm32f4xx_m/sdcard_raw_io/sdcard_raw_io.gpr",
+    # STM32F4XX M
+    "/boards/stm32f4xx_m/stm32f4xx_m_full.gpr",
+    "/boards/stm32f4xx_m/stm32f4xx_m_sfp.gpr",
+    "/examples/stm32f4xx_m/blinky/blinky.gpr",
+    "/examples/stm32f4xx_m/flash/flash.gpr",
+    "/examples/stm32f4xx_m/sdcard_fs/sdcard_fs.gpr",
+    "/examples/stm32f4xx_m/sdcard_raw_io/sdcard_raw_io.gpr",
 
-            # Feather STM32F405
-            "/examples/feather_stm32f405/blinky/blinky.gpr",
-            "/examples/feather_stm32f405/charlie_wing/charlie_wing.gpr",
+    # Feather STM32F405
+    "/examples/feather_stm32f405/blinky/blinky.gpr",
+    "/examples/feather_stm32f405/charlie_wing/charlie_wing.gpr",
 
-            # Olimex STM32-H405
-            "/examples/stm32_h405/blinky/blinky.gpr",
-            "/examples/stm32_h405/lcd_test/lcd_test.gpr",
+    # Olimex STM32-H405
+    "/examples/stm32_h405/blinky/blinky.gpr",
+    "/examples/stm32_h405/lcd_test/lcd_test.gpr",
 
-            # STM32F469 Discovery
-            "/boards/stm32f469_discovery/stm32f469_discovery_full.gpr",
-            "/boards/stm32f469_discovery/stm32f469_discovery_sfp.gpr",
-            "/examples/STM32F469_Discovery/dma2d_stm32f469disco.gpr",
-            "/examples/STM32F469_Discovery/draw_stm32f469disco.gpr",
-            "/examples/STM32F469_Discovery/hello_world_tasking_f469disco.gpr",
+    # STM32F469 Discovery
+    "/boards/stm32f469_discovery/stm32f469_discovery_full.gpr",
+    "/boards/stm32f469_discovery/stm32f469_discovery_sfp.gpr",
+    "/examples/STM32F469_Discovery/dma2d_stm32f469disco.gpr",
+    "/examples/STM32F469_Discovery/draw_stm32f469disco.gpr",
+    "/examples/STM32F469_Discovery/hello_world_tasking_f469disco.gpr",
 
 
-            # STM32F746 Discovery
-            "/boards/stm32f746_discovery/stm32f746_discovery_full.gpr",
-            "/boards/stm32f746_discovery/stm32f746_discovery_sfp.gpr",
-            "/examples/STM32F746_Discovery/dma2d_stm32f746disco.gpr",
-            "/examples/STM32F746_Discovery/draw_stm32f746disco.gpr",
-            "/examples/STM32F746_Discovery/blinky_f7disco.gpr",
+    # STM32F746 Discovery
+    "/boards/stm32f746_discovery/stm32f746_discovery_full.gpr",
+    "/boards/stm32f746_discovery/stm32f746_discovery_sfp.gpr",
+    "/examples/STM32F746_Discovery/dma2d_stm32f746disco.gpr",
+    "/examples/STM32F746_Discovery/draw_stm32f746disco.gpr",
+    "/examples/STM32F746_Discovery/blinky_f7disco.gpr",
 
-            # STM32F769 Discovery
-            "/boards/stm32f769_discovery/stm32f769_discovery_full.gpr",
-            "/boards/stm32f769_discovery/stm32f769_discovery_sfp.gpr",
-            "/examples/STM32F769_Discovery/dma2d_stm32f769disco.gpr",
-            "/examples/STM32F769_Discovery/draw_stm32f769disco.gpr",
+    # STM32F769 Discovery
+    "/boards/stm32f769_discovery/stm32f769_discovery_full.gpr",
+    "/boards/stm32f769_discovery/stm32f769_discovery_sfp.gpr",
+    "/examples/STM32F769_Discovery/dma2d_stm32f769disco.gpr",
+    "/examples/STM32F769_Discovery/draw_stm32f769disco.gpr",
 
-            # NUCLEO-F446ZE
-            "/boards/nucleo_f446ze/nucleo_f446ze_full.gpr",
-            "/boards/nucleo_f446ze/nucleo_f446ze_sfp.gpr",
-            "/examples/nucleo_f446ze/blinky_f446ze.gpr",
+    # NUCLEO-F446ZE
+    "/boards/nucleo_f446ze/nucleo_f446ze_full.gpr",
+    "/boards/nucleo_f446ze/nucleo_f446ze_sfp.gpr",
+    "/examples/nucleo_f446ze/blinky_f446ze.gpr",
 
-            # OpenMV2
-            "/boards/OpenMV2/openmv2_full.gpr",
-            "/boards/OpenMV2/openmv2_sfp.gpr",
-            "/examples/OpenMV2/openmv2_example.gpr",
-            "/examples/OpenMV2/openmv2_example.gpr",
-            "/examples/OpenMV2/openmv2_example.gpr",
+    # OpenMV2
+    "/boards/OpenMV2/openmv2_full.gpr",
+    "/boards/OpenMV2/openmv2_sfp.gpr",
+    "/examples/OpenMV2/openmv2_example.gpr",
+    "/examples/OpenMV2/openmv2_example.gpr",
+    "/examples/OpenMV2/openmv2_example.gpr",
 
-            # MicroBit
-            "/boards/MicroBit/microbit_zfp.gpr",
-            "/examples/MicroBit/text_scrolling/text_scrolling.gpr",
-            "/examples/MicroBit/buttons/buttons.gpr",
-            "/examples/MicroBit/digital_in/digital_in.gpr",
-            "/examples/MicroBit/music/music.gpr",
-            "/examples/MicroBit/analog_in/analog_in.gpr",
-            "/examples/MicroBit/analog_out/analog_out.gpr",
-            "/examples/MicroBit/digital_out/digital_out.gpr",
-            "/examples/MicroBit/BLE_beacon/BLE_beacon.gpr",
-            "/examples/MicroBit/servos/servos.gpr",
-            "/examples/MicroBit/neopixel/neopixel.gpr",
-            "/examples/MicroBit/follower/follower.gpr",
-            "/examples/MicroBit/accelerometer/accelerometer.gpr",
+    # MicroBit
+    "/boards/MicroBit/microbit_zfp.gpr",
+    "/examples/MicroBit/text_scrolling/text_scrolling.gpr",
+    "/examples/MicroBit/buttons/buttons.gpr",
+    "/examples/MicroBit/digital_in/digital_in.gpr",
+    "/examples/MicroBit/music/music.gpr",
+    "/examples/MicroBit/analog_in/analog_in.gpr",
+    "/examples/MicroBit/analog_out/analog_out.gpr",
+    "/examples/MicroBit/digital_out/digital_out.gpr",
+    "/examples/MicroBit/BLE_beacon/BLE_beacon.gpr",
+    "/examples/MicroBit/servos/servos.gpr",
+    "/examples/MicroBit/neopixel/neopixel.gpr",
+    "/examples/MicroBit/follower/follower.gpr",
+    "/examples/MicroBit/accelerometer/accelerometer.gpr",
 
-            # NRF52_SDK
-            "/boards/NRF52_DK/nrf52_dk_zfp.gpr",
-            "/examples/NRF52_DK/buttons/buttons.gpr",
-            "/examples/NRF52_DK/BLE_beacon/BLE_beacon.gpr",
-            "/examples/NRF52_DK/digital_out/digital_out.gpr",
+    # NRF52_SDK
+    "/boards/NRF52_DK/nrf52_dk_zfp.gpr",
+    "/examples/NRF52_DK/buttons/buttons.gpr",
+    "/examples/NRF52_DK/BLE_beacon/BLE_beacon.gpr",
+    "/examples/NRF52_DK/digital_out/digital_out.gpr",
 
-            # STM32 driver examples
-            STM_DRIVERS + "/demo_adc_dma/demo_adc_dma.gpr",
-            STM_DRIVERS + "/demo_adc_interrupts/demo_adc_interrupts.gpr",
-            STM_DRIVERS + "/demo_adc_polling/demo_adc_polling.gpr",
-            STM_DRIVERS + "/demo_adc_timer_dma/demo_adc_timer_dma.gpr",
-            STM_DRIVERS + "/demo_adc_timer_triggered/demo_adc_timer_triggered.gpr",
-            STM_DRIVERS + "/demo_crc/demo_crc.gpr",
-            STM_DRIVERS + "/demo_dac_basic/demo_dac_basic.gpr",
-            STM_DRIVERS + "/demo_dac_dma/demo_dac_dma.gpr",
-            STM_DRIVERS + "/demo_dma_mem_to_mem/demo_dma_mem_to_mem.gpr",
-            STM_DRIVERS + "/demo_dma_mem_to_peripheral/demo_usart_dma_continuous.gpr",
-            STM_DRIVERS + "/demo_gpio_direct_leds/demo_gpio.gpr",
-            STM_DRIVERS + "/demo_independent_watchdog/demo_iwdg.gpr",
-            STM_DRIVERS + "/demo_L3GD20_dataready_int/demo_l3gd20_dataready_int.gpr",
-            STM_DRIVERS + "/demo_L3GD20_fifo_int/demo_l3gd20_fifo_int.gpr",
-            STM_DRIVERS + "/demo_L3GD20_polling/demo_l3gd20.gpr",
-            STM_DRIVERS + "/demo_LIS3DSH_pwm/demo_lis3dsh_pwm.gpr",
-            STM_DRIVERS + "/demo_LIS3DSH_tilt/demo_lis3dsh_tilt.gpr",
-            STM_DRIVERS + "/demo_rng/demo_rng.gpr",
-            STM_DRIVERS + "/demo_timer_interrupts_basic/demo_basic_timer_interrupts.gpr",
-            STM_DRIVERS + "/demo_timer_interrupts_multichannel/demo_timer_interrupts_multichannel.gpr",
-            STM_DRIVERS + "/demo_timer_pwm/demo_timer_pwm.gpr",
-            STM_DRIVERS + "/demo_timer_quad_encoder/demo_timer_quad_encoder.gpr",
-            STM_DRIVERS + "/demo_usart_interrupts/demo_usart_interrupts.gpr",
-            STM_DRIVERS + "/demo_usart_polling/demo_usart_polling.gpr",
-            ]
+    # STM32 driver examples
+    STM_DRIVERS + "/demo_adc_dma/demo_adc_dma.gpr",
+    STM_DRIVERS + "/demo_adc_interrupts/demo_adc_interrupts.gpr",
+    STM_DRIVERS + "/demo_adc_polling/demo_adc_polling.gpr",
+    STM_DRIVERS + "/demo_adc_timer_dma/demo_adc_timer_dma.gpr",
+    STM_DRIVERS + "/demo_adc_timer_triggered/demo_adc_timer_triggered.gpr",
+    STM_DRIVERS + "/demo_crc/demo_crc.gpr",
+    STM_DRIVERS + "/demo_dac_basic/demo_dac_basic.gpr",
+    STM_DRIVERS + "/demo_dac_dma/demo_dac_dma.gpr",
+    STM_DRIVERS + "/demo_dma_mem_to_mem/demo_dma_mem_to_mem.gpr",
+    STM_DRIVERS + "/demo_dma_mem_to_peripheral/demo_usart_dma_continuous.gpr",
+    STM_DRIVERS + "/demo_gpio_direct_leds/demo_gpio.gpr",
+    STM_DRIVERS + "/demo_independent_watchdog/demo_iwdg.gpr",
+    STM_DRIVERS + "/demo_L3GD20_dataready_int/demo_l3gd20_dataready_int.gpr",
+    STM_DRIVERS + "/demo_L3GD20_fifo_int/demo_l3gd20_fifo_int.gpr",
+    STM_DRIVERS + "/demo_L3GD20_polling/demo_l3gd20.gpr",
+    STM_DRIVERS + "/demo_LIS3DSH_pwm/demo_lis3dsh_pwm.gpr",
+    STM_DRIVERS + "/demo_LIS3DSH_tilt/demo_lis3dsh_tilt.gpr",
+    STM_DRIVERS + "/demo_rng/demo_rng.gpr",
+    STM_DRIVERS + ("/demo_timer_interrupts_basic/"
+                   "demo_basic_timer_interrupts.gpr"),
+    STM_DRIVERS + ("/demo_timer_interrupts_multichannel/"
+                   "demo_timer_interrupts_multichannel.gpr"),
+    STM_DRIVERS + "/demo_timer_pwm/demo_timer_pwm.gpr",
+    STM_DRIVERS + "/demo_timer_quad_encoder/demo_timer_quad_encoder.gpr",
+    STM_DRIVERS + "/demo_usart_interrupts/demo_usart_interrupts.gpr",
+    STM_DRIVERS + "/demo_usart_polling/demo_usart_polling.gpr",
+]
 
 # Check if RISC-V32 compiler is available
 if shutil.which("riscv64-elf-gnatls"):
@@ -178,7 +181,7 @@ if shutil.which("riscv64-elf-gnatls"):
     # Add RISC-V32 projects
     projects += ["/examples/HiFive1/hifive1_example.gpr"]
 
-parser = argparse.ArgumentParser('Compile all the Ada_Drivers_Library examples')
+parser = argparse.ArgumentParser('Compile all Ada_Drivers_Library examples')
 
 parser.add_argument(
     '--prod-only', action='store_true',
