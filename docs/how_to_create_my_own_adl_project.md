@@ -37,7 +37,7 @@ Then we clone the Ada_Drivers_Library repository:
 
 Next, we use the project wizard to configure and generate the ADL project.
 
-The [project_wizard](script/project_wizard.py) provides an interface to
+The [project_wizard](../scripts/project_wizard.py) provides an interface to
 create an ADL project. This script will ask a series of questions to define the
 ADL configuration of your project and then generate the different files
 required to use ADL based on this configuration. The questions are for
