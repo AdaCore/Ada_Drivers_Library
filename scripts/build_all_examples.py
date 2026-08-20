@@ -56,6 +56,7 @@ projects = [
             "/examples/STM32F429_Discovery/blinky_f429disco.gpr",
             "/examples/STM32F429_Discovery/dma2d_stm32f429disco.gpr",
             "/examples/STM32F429_Discovery/serial_ports_f429disco.gpr",
+            "/examples/STM32F429_Discovery/flash_f429disco.gpr",
 
 
             # STM32F4 DISCO
