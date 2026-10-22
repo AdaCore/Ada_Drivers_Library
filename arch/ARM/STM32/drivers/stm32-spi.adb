@@ -508,11 +508,11 @@ package body STM32.SPI is
          null;
       end loop;
 
+      Status := HAL.SPI.Ok;
       if CRC_Enabled (This) and CRC_Error_Indicated (This) then
          Reset_CRC (This);
          Status := HAL.SPI.Err_Error;
       end if;
-      Status := HAL.SPI.Ok;
    end Receive;
 
    -------------
@@ -542,11 +542,11 @@ package body STM32.SPI is
          null;
       end loop;
 
+      Status := HAL.SPI.Ok;
       if CRC_Enabled (This) and CRC_Error_Indicated (This) then
          Reset_CRC (This);
          Status := HAL.SPI.Err_Error;
       end if;
-      Status := HAL.SPI.Ok;
    end Receive;
 
    -------------
